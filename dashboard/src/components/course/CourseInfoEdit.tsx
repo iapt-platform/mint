@@ -94,7 +94,7 @@ const CourseInfoEditWidget = ({
           } else if (typeof values.cover[0].response === "undefined") {
             _cover = values.cover[0].uid;
           } else {
-            _cover = values.cover[0].response.data.url;
+            _cover = values.cover[0].response.data.id;
           }
 
           const res = await put<ICourseDataRequest, ICourseResponse>(
@@ -165,7 +165,10 @@ const CourseInfoEditWidget = ({
                   {
                     uid: res.data.cover,
                     name: "cover",
-                    thumbUrl: API_HOST + res.data.cover,
+                    thumbUrl:
+                      res.data.cover_url && res.data.cover_url.length > 1
+                        ? res.data.cover_url[1]
+                        : undefined,
                   },
                 ]
               : [],
