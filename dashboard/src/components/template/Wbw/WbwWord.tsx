@@ -38,6 +38,7 @@ export type TFieldName =
   | "bookMarkColor"
   | "bookMarkText"
   | "locked"
+  | "attachments"
   | "confidence";
 
 export interface IWbwField {
@@ -50,6 +51,13 @@ export enum WbwStatus {
   auto = 3,
   apply = 5,
   manual = 7,
+}
+
+export interface IWbwAttachment {
+  id: string;
+  content_type: string;
+  size: number;
+  title: string;
 }
 export interface WbwElement<R> {
   value: R;
@@ -79,7 +87,7 @@ export interface IWbw {
   bookMarkText?: WbwElement<string | null>;
   locked?: boolean;
   confidence: number;
-  attachments?: UploadFile[];
+  attachments?: IWbwAttachment[];
   hasComment?: boolean;
 }
 export interface IWbwFields {
