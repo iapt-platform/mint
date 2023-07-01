@@ -686,6 +686,9 @@ class CorpusController extends Controller
                 if(isset($word->cf)){
                     $wbwData['confidence'] = (float)$word->cf->__toString();
                 }
+                if(isset($word->attachments)){
+                    $wbwData['attachments'] = json_decode($word->attachments->__toString());
+                }
                 if(isset($word->pali['status'])){
                     $wbwData['word']['status'] = (int)$word->pali['status'];
                 }
