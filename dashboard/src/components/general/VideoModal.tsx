@@ -31,11 +31,10 @@ export const VideoModalWidget = ({ src, type, trigger }: IWidget) => {
         onOk={handleOk}
         onCancel={handleCancel}
         width={1000}
+        destroyOnClose
       >
-        <Video src={src} type={type} />
-        <div>
-          src = {src}
-          type = {type}
+        <div style={{ height: 600 }}>
+          <Video src={src} type={type} />
         </div>
       </Modal>
     </>
