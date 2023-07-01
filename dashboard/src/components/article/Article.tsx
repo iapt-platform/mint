@@ -67,6 +67,7 @@ interface IWidgetArticle {
   active?: boolean;
   onArticleChange?: Function;
   onFinal?: Function;
+  onLoad?: Function;
 }
 const ArticleWidget = ({
   type,
@@ -83,6 +84,7 @@ const ArticleWidget = ({
   active = false,
   onArticleChange,
   onFinal,
+  onLoad,
 }: IWidgetArticle) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
 
@@ -255,6 +257,10 @@ const ArticleWidget = ({
                 break;
               default:
                 break;
+            }
+
+            if (typeof onLoad !== "undefined") {
+              onLoad(json.data);
             }
           } else {
             setShowSkeleton(false);
