@@ -9,6 +9,9 @@ use App\Models\Collection;
 use App\Models\Channel;
 use App\Models\CourseMember;
 use App\Http\Api\AuthApi;
+use App\Models\Attachment;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CourseResource extends JsonResource
 {
@@ -40,6 +43,18 @@ class CourseResource extends JsonResource
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];
+        if(Str::isUuid($this->cover)){
+            $coverId = Attachment::find($this->cover);
+            $cover_url = [];
+            if($coverId){
+                $cover_url[] = Storage::disk('public')->url($coverId->bucket.'/'.$coverId->name);
+                $cover_url[] = Storage::disk('public')->url($coverId->bucket.'/'.$coverId->id.'_s.jpg');
+                $cover_url[] = Storage::disk('public')->url($coverId->bucket.'/'.$coverId->id.'_m.jpg');
+                $cover_url[] = Storage::disk('public')->url($coverId->bucket.'/'.$coverId->id.'_l.jpg');
+                $data['cover_url'] = $cover_url;
+            }
+        }
+
         $textbook = Collection::where('uid',$this->anthology_id)->select(['uid','title','owner'])->first();
         if($textbook){
             $data['anthology_id'] = $textbook->uid;
