@@ -107,15 +107,15 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
 
   //生成视频播放按钮
   const videoList = data.attachments?.filter((item) =>
-    item.type?.includes("video")
+    item.content_type?.includes("video")
   );
   const videoIcon = videoList ? (
     <WbwVideoButton
       video={videoList?.map((item) => {
         return {
-          url: item.url ? item.url : "",
-          type: item.type,
-          title: item.name,
+          videoId: item.id,
+          type: item.content_type,
+          title: item.title,
         };
       })}
     />
