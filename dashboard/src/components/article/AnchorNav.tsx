@@ -9,9 +9,11 @@ interface IHeadingAnchor {
 }
 interface IWidget {
   content?: string;
+  open?: boolean;
 }
-const AnchorNavWidget = ({ content }: IWidget) => {
+const AnchorNavWidget = ({ open = false, content }: IWidget) => {
   const [heading, setHeading] = useState<IHeadingAnchor[]>([]);
+
   useEffect(() => {
     let heading = document.querySelectorAll("h1,h2,h3,h4,h5,h6");
     let headingAnchor: IHeadingAnchor[] = [];
@@ -24,13 +26,15 @@ const AnchorNavWidget = ({ content }: IWidget) => {
       headingAnchor.push({ key: `#${id}`, label: element.innerHTML });
     }
     setHeading(headingAnchor);
-  }, [content]);
-  return (
+  }, [open]);
+  return open ? (
     <Anchor offsetTop={50}>
       {heading.map((item, index) => {
         return <Link key={index} href={item.key} title={item.label}></Link>;
       })}
     </Anchor>
+  ) : (
+    <></>
   );
 };
 
