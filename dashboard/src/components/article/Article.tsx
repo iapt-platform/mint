@@ -16,11 +16,12 @@ import TocTree from "./TocTree";
 import PaliText from "../template/Wbw/PaliText";
 import ArticleSkeleton from "./ArticleSkeleton";
 
-import {
-  IViewRequest,
-  IViewStoreResponse,
-} from "../../pages/studio/recent/list";
 import { modeChange } from "../../reducers/article-mode";
+import { IViewRequest, IViewStoreResponse } from "../api/view";
+import {
+  IRecentRequest,
+  IRecentResponse,
+} from "../../pages/studio/recent/list";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -201,6 +202,21 @@ const ArticleWidget = ({
       }
       console.log("article url", url);
       setShowSkeleton(true);
+      if (typeof articleId !== "undefined") {
+        const param = {
+          mode: srcDataMode,
+          channel: channelId !== null ? channelId : undefined,
+          book: book !== null ? book : undefined,
+          para: para !== null ? para : undefined,
+        };
+        post<IRecentRequest, IRecentResponse>("/v2/recent", {
+          type: type,
+          article_id: articleId,
+          param: JSON.stringify(param),
+        }).then((json) => {
+          console.log("recent", json);
+        });
+      }
       get<IArticleResponse>(url)
         .then((json) => {
           console.log("article", json);
