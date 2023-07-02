@@ -1308,7 +1308,7 @@ function ReanderMainMenu(){
 
 function loadContribution(){
     $.getJSON(
-        "/api/v2/sent_history?view=contribution", function() {
+        "/api/v2/sent_history_contribution", function() {
             console.log( "success" );
             }
     )

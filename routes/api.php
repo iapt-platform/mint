@@ -83,6 +83,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::delete('like', [LikeController::class, 'delete']);
     Route::apiResource('like',LikeController::class);
     Route::apiResource('sent_history',SentHistoryController::class);
+    Route::get('sent_history_contribution',[SentHistoryController::class,'contribution']);
     Route::apiResource('palitext',PaliTextController::class);
     Route::apiResource('channel',ChannelController::class);
     Route::get('channel-my-number', [ChannelController::class, 'showMyNumber']);
