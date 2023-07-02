@@ -1,8 +1,15 @@
 import { Button, Dropdown } from "antd";
 import { useState } from "react";
-import { EditOutlined, CopyOutlined, MoreOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  CopyOutlined,
+  MoreOutlined,
+  FieldTimeOutlined,
+  LinkOutlined,
+} from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { ISentence } from "../SentEdit";
+import SentHistoryModal from "../../corpus/SentHistoryModal";
 
 interface IWidget {
   data: ISentence;
@@ -17,7 +24,9 @@ const SentEditMenuWidget = ({
   onConvert,
 }: IWidget) => {
   const [isHover, setIsHover] = useState(false);
+  const [timelineOpen, setTimelineOpen] = useState(false);
 
+  console.log("data", data);
   const onClick: MenuProps["onClick"] = (e) => {
     console.log(e);
     switch (e.key) {
@@ -31,6 +40,9 @@ const SentEditMenuWidget = ({
           onConvert("markdown");
         }
         break;
+      case "timeline":
+        setTimelineOpen(true);
+        break;
       default:
         break;
     }
@@ -39,6 +51,7 @@ const SentEditMenuWidget = ({
     {
       key: "timeline",
       label: "时间线",
+      icon: <FieldTimeOutlined />,
     },
     {
       type: "divider",
@@ -57,8 +70,9 @@ const SentEditMenuWidget = ({
       type: "divider",
     },
     {
-      key: "share",
-      label: "分享",
+      key: "copy-link",
+      label: "复制链接",
+      icon: <LinkOutlined />,
     },
   ];
 
@@ -71,6 +85,11 @@ const SentEditMenuWidget = ({
         setIsHover(false);
       }}
     >
+      <SentHistoryModal
+        open={timelineOpen}
+        onClose={() => setTimelineOpen(false)}
+        sentId={data.id}
+      />
       <div
         style={{
           marginTop: "-1.2em",
