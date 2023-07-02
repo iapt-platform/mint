@@ -49,6 +49,7 @@ const Widget = () => {
   console.log("mode", mode);
   const [rightPanel, setRightPanel] = useState<TPanelName>("close");
   const [searchParams, setSearchParams] = useSearchParams();
+  const [anchorNavOpen, setAnchorNavOpen] = useState(false);
   const paraChange = useAppSelector(paraParam);
 
   useEffect(() => {
@@ -152,6 +153,12 @@ const Widget = () => {
               style={{ display: "block", color: "white" }}
               icon={<ColumnOutlinedIcon />}
               type="text"
+              onClick={() => setAnchorNavOpen((value) => !value)}
+            />
+            <Button
+              style={{ display: "block", color: "white" }}
+              icon={<ColumnOutlinedIcon />}
+              type="text"
               onClick={() =>
                 setRightPanel((value) => (value === "close" ? "open" : "close"))
               }
@@ -226,7 +233,7 @@ const Widget = () => {
             />
           </div>
           <div key="RightPanel">
-            <AnchorNav />
+            <AnchorNav open={anchorNavOpen} />
             <RightPanel
               curr={rightPanel}
               type={type as ArticleType}
