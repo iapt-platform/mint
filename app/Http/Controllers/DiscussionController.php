@@ -42,19 +42,11 @@ class DiscussionController extends Controller
         if(!empty($search)){
             $table->where('title', 'like', $search."%");
         }
-        if(!empty($request->get('order')) && !empty($request->get('dir'))){
-            $table->orderBy($request->get('order'),$request->get('dir'));
-        }else{
-            $table->orderBy('updated_at','desc');
-        }
+        $table->orderBy($request->get('order','updated_at'),$request->get('dir','desc'));
         $count = $table->count();
-        if(!empty($request->get('limit'))){
-            $offset = 0;
-            if(!empty($request->get("offset"))){
-                $offset = $request->get("offset");
-            }
-            $table->skip($offset)->take($request->get('limit'));
-        }
+        $table->skip($request->get("offset",0))
+              ->take($request->get('limit',1000));
+
         $result = $table->get();
         if($result){
 			return $this->ok(["rows"=>DiscussionResource::collection($result),"count"=>$count]);
