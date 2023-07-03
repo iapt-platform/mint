@@ -123,11 +123,15 @@ class MdRender{
                 # 处理每个参数
                 if($param->getName() === "param"){
                     $param_id++;
-                    $props["{$param_id}"] = $param->__toString();
+                    $paramName = "";
                     foreach($param->attributes() as $pa => $pa_value){
                         if($pa === "name"){
                             $props["{$pa_value}"] = $param->__toString();
+                            $paramName = $pa_value;
                         }
+                    }
+                    if(empty($paramName)){
+                        $props["{$param_id}"] = $param->__toString();
                     }
                 }
             }
