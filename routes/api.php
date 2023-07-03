@@ -51,6 +51,7 @@ use App\Http\Controllers\WbwController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\ProgressImgController;
+use App\Http\Controllers\RecentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -153,6 +154,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('attachment',AttachmentController::class);
     Route::apiResource('api',ApiController::class);
     Route::apiResource('progress-img',ProgressImgController::class);
+    Route::apiResource('recent',RecentController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
