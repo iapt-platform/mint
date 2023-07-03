@@ -164,7 +164,7 @@ class TemplateRender{
         $type = $this->get_param($this->param,"type",1);
         $id = $this->get_param($this->param,"id",2);
         $title = $this->get_param($this->param,"title",3);
-        $channel = $this->get_param($this->param,"channel",4);
+        $channel = $this->get_param($this->param,"channel",4,$this->channel_id);
         $style = $this->get_param($this->param,"style",5);
         $props = [
                     "type" => $type,
@@ -172,9 +172,6 @@ class TemplateRender{
                     "channel" => $channel,
                     'style' => $style,
                 ];
-        if(empty($channel)){
-            $props['channel'] = $this->channel_id;
-        }
         if(!empty($title)){
             $props['title'] = $title;
         }
