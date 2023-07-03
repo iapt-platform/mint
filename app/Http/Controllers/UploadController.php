@@ -33,13 +33,14 @@ class UploadController extends Controller
         $file = $request->file('file');
 
        //Move Uploaded File
-        $filename = $file->store('public/upload');
+        $bucket = date("Y-m-d");
+        $filename = $file->store('tmp/'.date("Y-m-d"),'local');
 
         $json = array(
             'name' => $filename,
             'size' => $file->getSize(),
             'type' => $file->getMimeType(),
-            'url' => str_replace('public','storage',$filename),
+            'url' => storage_path('app/'.$filename),
             'uid' => Str::uuid(),
             );
         return $this->ok($json);
