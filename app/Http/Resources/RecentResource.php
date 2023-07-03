@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\ChannelApi;
 use App\Models\Sentence;
+use App\Models\Article;
 
 class RecentResource extends JsonResource
 {
