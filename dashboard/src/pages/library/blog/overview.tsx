@@ -27,7 +27,7 @@ const Widget = () => {
             <TopArticles studio={studio ? studio : ""} />
           </div>
           <div>
-            <AuthorTimeLine />
+            <AuthorTimeLine studioName={studio} />
           </div>
         </Col>
       </Row>
