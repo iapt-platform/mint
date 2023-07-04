@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Input } from "antd";
+import { Input, Tabs } from "antd";
 import { Layout, Affix, Col, Row } from "antd";
 
 import AnthologyList from "../../../components/article/AnthologyList";
 import AnthologyStudioList from "../../../components/article/AnthologyStudioList";
+import ArticleListPublic from "../../../components/article/ArticleListPublic";
 
 const { Content, Header } = Layout;
 const { Search } = Input;
@@ -48,10 +49,24 @@ const Widget = () => {
           <Col flex="auto"></Col>
           <Col flex="1260px">
             <Row>
-              <Col span="18">
-                <AnthologyList searchKey={searchKey} />
+              <Col span="16">
+                <Tabs
+                  size="small"
+                  items={[
+                    {
+                      label: `Anthology`,
+                      key: "anthology",
+                      children: <AnthologyList searchKey={searchKey} />,
+                    },
+                    {
+                      label: `Article`,
+                      key: "article",
+                      children: <ArticleListPublic search={searchKey} />,
+                    },
+                  ]}
+                />
               </Col>
-              <Col span="6">
+              <Col span="8" style={{ padding: 8 }}>
                 <AnthologyStudioList />
               </Col>
             </Row>
