@@ -1,41 +1,57 @@
 import { Timeline } from "antd";
+import { useEffect, useState } from "react";
+import { useIntl } from "react-intl";
+import { get } from "../../request";
+import TimeShow from "../general/TimeShow";
 
-interface IAuthorTimeLine {
-  label: string;
-  content: string;
-  type: string;
+interface IMilestone {
+  date: string;
+  event: string;
 }
-const TimeLineWidget = () => {
-  const data: IAuthorTimeLine[] = [
-    {
-      label: "2015-09-1",
-      content: "Technical testing",
-      type: "translation",
-    },
-    {
-      label: "2015-09-1",
-      content: "Technical testing",
-      type: "translation",
-    },
-    {
-      label: "2015-09-1",
-      content: "Technical testing",
-      type: "translation",
-    },
-    {
-      label: "2015-09-1",
-      content: "Technical testing",
-      type: "translation",
-    },
-  ];
+interface IMilestoneResponse {
+  ok: boolean;
+  message: string;
+  data: IMilestone[];
+}
+
+interface IWidget {
+  studioName?: string;
+}
+const TimeLineWidget = ({ studioName }: IWidget) => {
+  const [milestone, setMilestone] = useState<IMilestone[]>([]);
+  const intl = useIntl();
+
+  useEffect(() => {
+    if (typeof studioName === "undefined") {
+      return;
+    }
+    get<IMilestoneResponse>(`/v2/milestone/${studioName}`).then((json) => {
+      if (json.ok) {
+        setMilestone(
+          json.data.sort((a, b) => {
+            if (a.date > b.date) {
+              return -1;
+            } else {
+              return 1;
+            }
+          })
+        );
+      }
+    });
+  }, [studioName]);
 
   return (
     <>
-      <Timeline mode={"left"} style={{ width: "100%" }}>
-        {data.map((item, id) => {
+      <Timeline mode="left" style={{ width: "100%" }}>
+        {milestone.map((item, id) => {
           return (
-            <Timeline.Item key={id} label={item.label}>
-              {item.content}
+            <Timeline.Item
+              key={id}
+              label={<TimeShow time={item.date} showIcon={false} />}
+            >
+              {intl.formatMessage({
+                id: `labels.${item.event}`,
+              })}
             </Timeline.Item>
           );
         })}
