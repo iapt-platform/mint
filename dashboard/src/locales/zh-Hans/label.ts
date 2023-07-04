@@ -11,7 +11,7 @@ const items = {
   "labels.upload": "上传",
   "labels.first-term": "第一个术语",
   "labels.sign-in": "注册",
-  "labels.first-wbw": "第一个术语",
+  "labels.first-wbw": "第一个逐词解析",
   "labels.first-translation": "第一个译文",
   "labels.first-course": "第一个课程",
 };
