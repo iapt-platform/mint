@@ -21,7 +21,7 @@ const IconParamList = (prop: IWidgetIconParamList) => {
       <Space>
         {prop.data.map((item, id) => {
           return (
-            <Space>
+            <Space key={id}>
               {item.icon} {item.label}
             </Space>
           );
