@@ -22,7 +22,6 @@ const AnthologyStudioListWidget = () => {
     console.log("useEffect");
     let url = `/v2/anthology?view=studio_list`;
     get<IAnthologyStudioListApiResponse>(url).then(function (json) {
-      console.log("ajex", json);
       let newTree: IAnthologyStudioData[] = json.data.rows.map((item) => {
         return {
           count: item.count,
@@ -41,7 +40,7 @@ const AnthologyStudioListWidget = () => {
         dataSource={tableData}
         renderItem={(item) => (
           <List.Item>
-            <Link to={`/blog/${item.studio.studioName}/anthology`}>
+            <Link to={`/blog/${item.studio.realName}/anthology`}>
               <Space>
                 <StudioName data={item.studio} />
                 <span>({item.count})</span>
