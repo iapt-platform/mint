@@ -53,18 +53,16 @@ class ProgressChapterController extends Controller
 			case 'studio':
                 #查询该studio的channel
 				$name = $request->get('name');
-				$userinfo = new \UserInfo();
-				$studio = $userinfo->getUserByName($name);
-				if($studio == false){
+                $studioId = StudioApi::getIdByName($request->get('name'));
+				if($studioId === false){
 					return $this->error('no user');
 				}
-                $channels = Channel::where('owner_uid',$studio['userid'])->select('uid')->get();
-                $aChannel = [];
-                foreach ($channels as $channel) {
-                    # code...
-                    $aChannel[] = $channel->uid;
+                $table = Channel::where('owner_uid',$studioId);
+                if($request->get('public')==="true"){
+                    $table = $table->where('status',30);
                 }
-                $chapters = ProgressChapter::whereIn('progress_chapters.channel_id', $aChannel)
+                $channels = $table->select('uid')->get();
+                $chapters = ProgressChapter::whereIn('progress_chapters.channel_id', $channels)
                                         ->leftJoin('pali_texts', function($join)
                                                 {
                                                     $join->on('progress_chapters.book', '=', 'pali_texts.book');
@@ -72,6 +70,8 @@ class ProgressChapterController extends Controller
                                                 })
                                         ->where('progress','>',0.85)
                                         ->orderby('progress_chapters.created_at','desc')
+                                        ->skip($request->get("offset",0))
+                                        ->take($request->get("limit",1000))
                                         ->get();
 				$all_count = ProgressChapter::whereIn('progress_chapters.channel_id', $aChannel)
 									->where('progress','>',0.85)->count();
