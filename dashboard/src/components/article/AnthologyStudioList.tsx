@@ -33,10 +33,10 @@ const AnthologyStudioListWidget = () => {
   }, []);
 
   return (
-    <Card title="作者">
+    <Card title="作者" size="small">
       <List
         itemLayout="vertical"
-        size="large"
+        size="small"
         dataSource={tableData}
         renderItem={(item) => (
           <List.Item>
