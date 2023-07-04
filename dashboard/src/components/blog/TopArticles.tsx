@@ -39,8 +39,8 @@ const TopArticlesWidget = (prop: IWidgetTopArticles) => {
 
   const list = data.map((item, id) => {
     return (
-      <Col flex="400px">
-        <TopArticleCard data={item} key={id} />
+      <Col flex="400px" key={id}>
+        <TopArticleCard data={item} />
       </Col>
     );
   });
