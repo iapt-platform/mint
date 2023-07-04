@@ -52,6 +52,7 @@ use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\ProgressImgController;
 use App\Http\Controllers\RecentController;
+use App\Http\Controllers\MilestoneController;
 
 /*
 |--------------------------------------------------------------------------
@@ -155,6 +156,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('api',ApiController::class);
     Route::apiResource('progress-img',ProgressImgController::class);
     Route::apiResource('recent',RecentController::class);
+    Route::apiResource('milestone',MilestoneController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
