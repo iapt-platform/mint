@@ -39,7 +39,8 @@ export interface IUserApiResponse {
 export interface IStudioApiResponse {
   id: string;
   nickName: string;
-  studioName: string;
+  studioName?: string;
+  realName: string;
   avatar?: string;
   owner: IUserApiResponse;
 }
