@@ -50,7 +50,7 @@ class UpgradeWbwAnalyses extends Command
         }else{
             $it = Wbw::where('id',$this->argument('id'))->orderby('id')->cursor();
         }
-        
+
         foreach ($it as $wbwrow) {
             $counter++;
             WbwAnalysis::where('wbw_id',$wbwrow->id)->delete();
@@ -64,10 +64,11 @@ class UpgradeWbwAnalyses extends Command
             }catch(Exception $e){
                 continue;
             }
-            
+
             $wordsList = $xmlWord->xpath('//word');
             foreach ($wordsList as $word) {
                 $pali = $word->real->__toString();
+                $factors = [];
                 foreach ($word as $key => $value) {
                     $strValue = $value->__toString();
                     if ($strValue !== "?" && $strValue !== "" && $strValue !== ".ctl." && $strValue !== ".a." && $strValue !== " " && mb_substr($strValue, 0, 3, "UTF-8") !== "[a]" && $strValue !== "_un_auto_factormean_" && $strValue !== "_un_auto_mean_") {
@@ -104,10 +105,23 @@ class UpgradeWbwAnalyses extends Command
                             case 'org':
                                 $newData['type']=4;
                                 WbwAnalysis::insert($newData);
+                                $factors=explode("+",$strValue);
                                 break;
                             case 'om':
                                 $newData['type']=5;
                                 WbwAnalysis::insert($newData);
+                                # 存储拆分意思
+                                $newData['type']=7;
+                                $factorMeaning = explode('+',$strValue);
+                                foreach ( $factors as $index => $factor) {
+                                    if(isset($factorMeaning[$index]) &&
+                                      !empty($factorMeaning[$index]) &&
+                                      $factorMeaning[$index] !== "↓↓" ){
+                                        $newData['wbw_word'] = $factor;
+                                        $newData['data'] = $factorMeaning[$index];
+                                        WbwAnalysis::insert($newData);
+                                    }
+                                }
                                 break;
                             case 'parent':
                                 $newData['type']=6;

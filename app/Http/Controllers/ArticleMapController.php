@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ArticleCollection;
 use App\Models\Article;
+use App\Models\Collection;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\ArticleMapResource;
@@ -26,7 +27,8 @@ class ArticleMapController extends Controller
                 $table = ArticleCollection::where('article_id',$request->get('id'));
                 break;
         }
-        $result = $table->select(['id','collect_id','article_id','level','title','children'])->orderBy('id')->get();
+        $result = $table->select(['id','collect_id','article_id','level','title','children','deleted_at'])
+                        ->orderBy('id')->get();
         return $this->ok(["rows"=>ArticleMapResource::collection($result),"count"=>count($result)]);
     }
 
@@ -45,7 +47,7 @@ class ArticleMapController extends Controller
             ]);
         switch ($validated['operation']) {
             case 'add':
-                # code...
+                # 添加多个文章到文集
                 $count=0;
                 foreach ($request->get('article_id') as $key => $article) {
                     # code...
@@ -67,7 +69,7 @@ class ArticleMapController extends Controller
                 return $this->ok($count);
                 break;
             default:
-                # code...
+                return $this->error('unknown operation');
                 break;
         }
     }
@@ -112,6 +114,7 @@ class ArticleMapController extends Controller
                     $new->save();
                     $count++;
                 }
+                ArticleMapController::updateCollection($id);
                 return $this->ok($count);
                 break;
         }
@@ -126,5 +129,50 @@ class ArticleMapController extends Controller
     public function destroy(ArticleCollection $articleCollection)
     {
         //
+    }
+
+    public static function deleteArticle(string $articleId){
+        //查找有这个文章的文集
+        $collections = ArticleCollection::where('article_id',$articleId)
+                                        ->select('collect_id')
+                                        ->groupBy('collect_id')
+                                        ->get();
+        //设置为删除
+        ArticleCollection::where('article_id',$articleId)
+                         ->update(['deleted_at'=>now()]);
+        //查找没有下级文章的文集
+        $updateCollections = ArticleCollection::where('article_id',$articleId)
+                                            ->where('children',0)
+                                            ->select('collect_id')
+                                            ->groupBy('collect_id')
+                                            ->get();
+        //真的删除没有下级文章的文集中的文章
+        $count = ArticleCollection::where('article_id',$articleId)
+                                  ->where('children',0)
+                                  ->delete();
+        //更新改动的文集
+        foreach ($updateCollections as  $collection) {
+            # code...
+            ArticleMapController::updateCollection($collection->collect_id);
+        }
+        return [count($collections),$count];
+    }
+
+    public static function deleteCollection(string $collectionId){
+        $count = ArticleCollection::where('collect_id',$collectionId)
+                                  ->delete();
+        return $count;
+    }
+
+    /**
+     * 用表中的数据生成json，更新collection 表中的字段
+     */
+    public static function updateCollection(string $collectionId){
+        $result = ArticleCollection::where('collect_id',$collectionId)
+                        ->select(['article_id','level','title'])
+                        ->orderBy('id')->get();
+        Collection::where('uid',$collectionId)
+                  ->update(['article_list'=>json_encode($result,JSON_UNESCAPED_UNICODE)]);
+        return count($result);
     }
 }

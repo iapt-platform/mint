@@ -24,17 +24,17 @@ class GroupMemberController extends Controller
             case 'group':
 	            # 获取 group 内所有 成员
                 $user = AuthApi::current($request);
-                if($user){
-                    //TODO 判断当前用户是否有指定的 group 的权限
-
-                    if(GroupInfo::where('uid',$request->get('id'))->where('owner',$user['user_uid'])->exists()){
-                        $table = GroupMember::where('group_id', $request->get('id'));
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
+                    //判断当前用户是否有指定的 group 的权限
+                    if(GroupMember::where('group_id', $request->get('id'))
+                            ->where('user_id',$user['user_uid'])
+                            ->exists()){
+                                $table = GroupMember::where('group_id', $request->get('id'));
                     }else{
                         return $this->error(__('auth.failed'));
                     }
-                }else{
-                    return $this->error(__('auth.failed'));
-                }
 				break;
         }
         if(isset($_GET["search"])){
@@ -78,7 +78,7 @@ class GroupMemberController extends Controller
 		if($result){
 			return $this->ok(["rows"=>GroupMemberResource::collection($result),"count"=>$count,'role'=>$role]);
 		}else{
-			return $this->error("没有查询到数据");
+			return $this->error("没有查询到数据",[],200);
 		}
     }
 

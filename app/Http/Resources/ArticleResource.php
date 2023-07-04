@@ -4,10 +4,15 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\MdRender;
-use App\Http\Api\UserApi;
 use App\Models\CourseMember;
 use App\Models\Course;
+use App\Models\Collection;
+use App\Models\ArticleCollection;
 use Illuminate\Support\Facades\Log;
+use App\Http\Api\UserApi;
+use App\Http\Api\StudioApi;
+use App\Http\Api\AuthApi;
+use App\Http\Controllers\ArticleController;
 
 class ArticleResource extends JsonResource
 {
@@ -24,13 +29,28 @@ class ArticleResource extends JsonResource
             "title" => $this->title,
             "subtitle" => $this->subtitle,
             "summary" => $this->summary,
-            "studio"=> \App\Http\Api\StudioApi::getById($this->owner),
-            "editor"=> \App\Http\Api\UserApi::getById($this->editor_id),
+            "studio"=> StudioApi::getById($this->owner),
+            "editor"=> UserApi::getById($this->editor_id),
             "status" => $this->status,
             "lang" => $this->lang,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
         ];
+        $user = AuthApi::current($request);
+        if($user){
+            $canEdit = ArticleController::userCanEdit($user['user_uid'],$this);
+            if($canEdit){
+                $data['role'] = 'editor';
+            }
+        }
+
+        //查询文集
+        $collectionCount = ArticleCollection::where('article_id',$this->uid)->count();
+        if($collectionCount>0){
+            $data['anthology_count'] = $collectionCount;
+            $collection = ArticleCollection::where('article_id',$this->uid)->first();
+            $data['anthology_first'] = Collection::find($collection->collect_id);
+        }
         if(isset($this->content) && !empty($this->content)){
             if($request->has('channel')){
                 $channel = $request->get('channel');
@@ -49,7 +69,6 @@ class ArticleResource extends JsonResource
                          * 查询用户在课程中的channel
                          */
                         $userId = UserApi::getIdByName($request->get('user'));
-                        Log::info("userId:{$userId}");
 
                         $userInCourse = CourseMember::where('course_id',$request->get('course'))
                                     ->where('user_id',$userId)
@@ -71,8 +90,6 @@ class ArticleResource extends JsonResource
                     $channel = Course::where('id',$request->get('course'))->value('channel_id');
                 }
             }
-            Log::info("channel:{$channel}");
-            Log::info("query_id:{$query_id}");
             if($request->has('mode')){
                 $mode = $request->get('mode');
             }else{

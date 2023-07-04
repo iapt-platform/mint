@@ -13,12 +13,16 @@ class ShareTest extends TestCase
      *
      * @return void
      */
-    public function test_example()
+    public function test_index()
     {
-        $token = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2NjgyMzE3MTksImV4cCI6MTY5OTc2NzcxOSwidWlkIjoiYmE1NDYzZjMtNzJkMS00NDEwLTg1OGUtZWFkZDEwODg0NzEzIiwiaWQiOiI0In0.LV4ItC5VCqXpbKIXT1zePcnfi-heCf3Df63w7qbXsT1i5KJtwJJC938CLgANjqwcQFa3lrR5TqvT1kkqD-Mmgg';
         $response = $this->withHeaders([
-            'Authorization' => $token,
+            'Authorization' => env('TEST_USER_TOKEN'),
         ])->get('/api/v2/share?view=group&id=8079d293-5057-449f-b8b2-6482531d2434');
+
+        $response->assertOk();
+        $response = $this->withHeaders([
+            'Authorization' => env('TEST_USER_TOKEN'),
+        ])->get('/api/v2/share?view=res&id=0b750ac3-771e-4346-994c-1d87ea6d68a0');
 
         $response->assertOk();
     }

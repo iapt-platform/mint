@@ -11,12 +11,14 @@
         "fruitcake/laravel-cors": "^3.0",
         "godruoyi/php-snowflake": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "intervention/image": "^2.7",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "mustache/mustache": "^2.14",
         "php-amqplib/php-amqplib": ">=3.0",
-        "php-ffmpeg/php-ffmpeg": "^1.1"
+        "php-ffmpeg/php-ffmpeg": "^1.1",
+        "phpoffice/phpspreadsheet": "^1.28"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

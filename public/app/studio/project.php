@@ -62,7 +62,7 @@ if ($_COOKIE["uid"]) {
 }
 if(isset($_POST["channal"])){
     $channelClass = new Channal(redis_connect());
-    $channelInfo = $channelClass->getChannal($_POST["channal"]); 
+    $channelInfo = $channelClass->getChannal($_POST["channal"]);
 }
 
 
@@ -172,14 +172,14 @@ switch ($op) {
                                     $block_data[] = array
 									(
 										$snowId,
-										$block_id, 
-										"", 
-										$_POST["channal"], 
-										$_COOKIE['userid'], 
-										$_COOKIE['uid'], 
-										$book, 
-										$iPar, 
-										"_none_", 
+										$block_id,
+										"",
+										$_POST["channal"],
+										$_COOKIE['userid'],
+										$_COOKIE['uid'],
+										$book,
+										$iPar,
+										"_none_",
 										$channelInfo["lang"],
 										$channelInfo["status"],
 										mTime(),
@@ -223,16 +223,16 @@ switch ($op) {
                                         $wbw_data[] = array
 										(
 											$snowflake->id(),
-											UUID::v4(), 
-											$block_id, 
-											$book, 
-											$iPar, 
-											$result["wid"], 
-											$result["real"], 
-											$strXml, 
-											mTime(), 
-											mTime(), 
-											0, 
+											UUID::v4(),
+											$block_id,
+											$book,
+											$iPar,
+											$result["wid"],
+											$result["real"],
+											$strXml,
+											mTime(),
+											mTime(),
+											0,
 											$_COOKIE['userid'],
 											$_COOKIE['uid']
 										);
@@ -246,22 +246,22 @@ switch ($op) {
                             PDO_Connect(_FILE_DB_USER_WBW_,_DB_USERNAME_,_DB_PASSWORD_);
                             $PDO->beginTransaction();
 
-                            $query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_." 
-									( 
+                            $query = "INSERT INTO "._TABLE_USER_WBW_BLOCK_."
+									(
 										id,
-										uid , 
-										parent_id , 
-										channel_uid , 
-									 	creator_uid , 
+										uid ,
+										parent_id ,
+										channel_uid ,
+									 	creator_uid ,
 										editor_id,
-										book_id , 
-										paragraph , 
-									  	style , 
-									  	lang , 
-									  	status , 
+										book_id ,
+										paragraph ,
+									  	style ,
+									  	lang ,
+									  	status ,
 									  	create_time ,
-									  	modify_time 
-									) 
+									  	modify_time
+									)
 									  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
                             $stmt = $PDO->prepare($query);
                             foreach ($block_data as $oneParam) {
@@ -280,19 +280,19 @@ switch ($op) {
                             // 开始一个事务，关闭自动提交
 
                             $PDO->beginTransaction();
-                            $query = "INSERT INTO "._TABLE_USER_WBW_." 
-										( 
+                            $query = "INSERT INTO "._TABLE_USER_WBW_."
+										(
 										  id,
-										  uid , 
-										  block_uid , 
-										  book_id , 
-										  paragraph , 
-										  wid , 
-										  word , 
-										  data , 
-										  create_time , 
-										  modify_time , 
-										  status , 
+										  uid ,
+										  block_uid ,
+										  book_id ,
+										  paragraph ,
+										  wid ,
+										  word ,
+										  data ,
+										  create_time ,
+										  modify_time ,
+										  status ,
 										  creator_uid ,
 										  editor_id
 										)
@@ -315,7 +315,7 @@ switch ($op) {
                             $PDO_File = new PDO(_FILE_DB_FILEINDEX_,_DB_USERNAME_,_DB_PASSWORD_,array(PDO::ATTR_PERSISTENT=>true));
                             $PDO_File->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                            $queryInsert = "INSERT INTO \""._TABLE_FILEINDEX_."\"  
+                            $queryInsert = "INSERT INTO \""._TABLE_FILEINDEX_."\"
  (
                                     id,
 									uid,
@@ -337,7 +337,7 @@ switch ($op) {
 									accese_time,
 									accesed_at,
 									updated_at,
-									created_at) 
+									created_at)
 									VALUES (? , ? , ? , ? , ?, ? ,? , ? , ? , ?, ? ,? , ? , ? , ?, ? ,? , ? , ? , ?, ? )";
                             $stmtDEST = $PDO_File->prepare($queryInsert);
                             $doc_id = UUID::v4();
@@ -369,17 +369,17 @@ switch ($op) {
                                     $created_at
                                 );
                             try{
-                                $stmtDEST->execute($commitData); 
+                                $stmtDEST->execute($commitData);
                                 echo "成功新建一个文件.";
                                 echo "<a href=\"editor.php?op=opendb&doc_id={$doc_id}\">{$_local->gui->open}</a>";
                             }catch(PDOException $e){
                                 echo($e->getMessage().PHP_EOL);
                                 echo "<pre>";
                                 print_r($commitData);
-                                echo "</pre>";                                
+                                echo "</pre>";
                                 exit;
                             }
-                            
+
 
                         }
                         break;
@@ -1009,7 +1009,7 @@ exit;
                                 //获取文件路径
                                 echo "共享的文档，复制并打开...";
                                 PDO_Connect(_FILE_DB_USERINFO_);
-                                $query = "select userid from user where id='$owner'";
+                                $query = "SELECT userid from "._TABLE_USER_INFO_." where id='$owner'";
                                 $FetchUid = PDO_FetchOne($query);
                                 if ($FetchUid) {
                                     $source = _DIR_USER_DOC_ . "/" . $FetchUid . _DIR_MYDOCUMENT_ . "/" . $filename;

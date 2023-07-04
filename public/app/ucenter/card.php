@@ -9,7 +9,7 @@ require_once '../ucenter/function.php';
 if (isset($_GET["id"])) {
 	$output["id"]=$_GET["id"];
 	PDO_Connect( _FILE_DB_USERINFO_);
-    $query = "SELECT userid as id ,username,nickname,create_time FROM user WHERE userid=?";
+    $query = "SELECT userid as id ,username,nickname,create_time FROM "._TABLE_USER_INFO_." WHERE userid=?";
 	$channel = PDO_FetchRow($query, array($_GET["id"]));
 	$strData="";
 	if ($channel) {

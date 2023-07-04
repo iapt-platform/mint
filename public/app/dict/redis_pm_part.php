@@ -7,7 +7,7 @@ if (PHP_SAPI == "cli") {
 	if ($redis != false) {
 		$dbh = new PDO(_DICT_DB_PM_, Database["user"], Database["password"], array(PDO::ATTR_PERSISTENT => true));
 		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-		$query = "SELECT pali,parts from "._TABLE_DICT_PM_." where 1 group by pali";
+		$query = "SELECT pali,parts from "._TABLE_DICT_PM_." group by pali";
 		$stmt = $dbh->query($query);
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			# code...
@@ -19,7 +19,7 @@ if (PHP_SAPI == "cli") {
 	}else{
 		fwrite(STDERR,"redis connect is fail".PHP_EOL);
 	}
-	
+
 }
 
 ?>

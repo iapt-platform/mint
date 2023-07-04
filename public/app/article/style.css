@@ -185,9 +185,9 @@
 	width: 40%;
 	max-width: 40%;
 }
-img {
-	width: 90%;
-	/*max-width: 40%;*/
+.content_inner img {
+	/*width: 90%;*/
+	max-width: 90%;
 }
 
 /*

@@ -5,13 +5,22 @@ use App\Models\Share;
 use App\Models\Article;
 use App\Models\Channel;
 use App\Models\Collection;
+use App\Http\Api\ChannelApi;
 
 class ShareApi{
 
-    /*
-    获取某用户的可见的协作资源
-    $res_type 见readme.md#资源类型 -1全部类型资源
-    */
+    /**
+     * 获取某用户的可见的协作资源
+     * $res_type 见readme.md#资源类型 -1全部类型资源
+     * ## 资源类型
+     *  1 PCS 文档
+     *  2 Channel 版本
+     *  3 Article 文章
+     *  4 Collection 文集
+     *  5 版本片段
+     * power 权限 10: 只读  20：编辑 30： 拥有者
+     */
+
     public static function getResList($user_uid,$res_type=-1){
         # 找我加入的群
         $my_group = GroupMember::where("user_id",$user_uid)->select('group_id')->get();
@@ -111,13 +120,41 @@ class ShareApi{
     /**
      * 获取对某个共享资源的权限
      */
-    public static function getResPower($user_uid,$res_id){
-            if($userid==='0'){
+    public static function getResPower($user_uid,$res_id,$res_type=0){
+            if(empty($user_uid)){
                 #未登录用户 没有共享资源
                 return 0;
             }
+            //查看是否为资源拥有者
+            if($res_type!=0){
+                switch ($res_type) {
+                    case 2:
+                        # channel
+                        $channel = ChannelApi::getById($res_id);
+                        if($channel){
+                            if($channel['studio_id'] === $user_uid){
+                                return 30;
+                            }
+                        }
+                        break;
+                    case 3:
+                        //Article
+                        $owner = Article::where('uid',$res_id)->value('owner');
+                        if($owner === $user_uid){
+                            return 30;
+                        }
+                        break;
+                    case 4:
+                        $owner = Collection::where('uid',$res_id)->value('owner');
+                        if($owner === $user_uid){
+                            return 30;
+                        }
+                        //文集
+                        break;
+                }
+            }
             # 找我加入的群
-            $my_group = Group::where("user_id",$user_uid)->select('group_id')->get();
+            $my_group = GroupMember::where("user_id",$user_uid)->select('group_id')->get();
             $userList[] = $user_uid;
             foreach ($my_group as $key => $value) {
                 $userList[]=$value["group_id"];

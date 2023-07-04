@@ -5,6 +5,7 @@ use Illuminate\Support\Str;
 use mustache\mustache;
 use App\Models\DhammaTerm;
 use App\Models\PaliText;
+use App\Models\Channel;
 use App\Http\Controllers\CorpusController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -36,7 +37,12 @@ class MdRender{
         return $html;
     }
     public static function xmlQueryId(string $xml, string $id):string{
-        $dom = simplexml_load_string($xml);
+        try{
+            $dom = simplexml_load_string($xml);
+        }catch(\Exception $e){
+            Log::error($e);
+            return "<div></div>";
+        }
         $tpl_list = $dom->xpath('//MdTpl');
         foreach ($tpl_list as $key => $tpl) {
             foreach ($tpl->children() as  $param) {
@@ -57,7 +63,12 @@ class MdRender{
     }
     public static function take_sentence(string $xml):array{
         $output = [];
-        $dom = simplexml_load_string($xml);
+        try{
+            $dom = simplexml_load_string($xml);
+        }catch(\Exception $e){
+            Log::error($e);
+            return $output;
+        }
         $tpl_list = $dom->xpath('//MdTpl');
         foreach ($tpl_list as $key => $tpl) {
             foreach($tpl->attributes() as $a => $a_value){
@@ -85,8 +96,15 @@ class MdRender{
          * 获取模版参数
          * 生成react 组件参数
          */
-        //$xml = str_replace(['<b>','</b>'],['',''],$xml);
-        $dom = simplexml_load_string($xml);
+        try{
+            $dom = simplexml_load_string($xml);
+        }catch(\Exception $e){
+            Log::error($e);
+            Log::error($xml);
+            return "<span>xml解析错误{$e}</span>";
+        }
+
+        $channelInfo = Channel::find($channelId);
 
         $tpl_list = $dom->xpath('//MdTpl');
         foreach ($tpl_list as $key => $tpl) {
@@ -116,7 +134,7 @@ class MdRender{
             /**
              * 生成模版参数
              */
-            $tplRender = new TemplateRender($props,$channelId,$mode);
+            $tplRender = new TemplateRender($props,$channelInfo,$mode);
             $tplProps = $tplRender->render($tpl_name);
             if($tplProps){
                 $tpl->addAttribute("props",$tplProps['props']);
@@ -129,16 +147,62 @@ class MdRender{
         return $html;
     }
 
-    public static function render2($markdown,$channelId='',$queryId=null,$mode='read'){
-        $wiki = MdRender::markdown2wiki($markdown);
+    public static function render2($markdown,$channelId='',$queryId=null,$mode='read',$channelType,$contentType="markdown"){
+        $wiki = MdRender::markdown2wiki($markdown,$channelType,$contentType);
         $html = MdRender::wiki2xml($wiki);
         if(!is_null($queryId)){
             $html = MdRender::xmlQueryId($html, $queryId);
         }
         $tpl = MdRender::xml2tpl($html,$channelId,$mode);
+        //生成可展开组件
+        $tpl = str_replace("<div/>","<div></div>",$tpl);
+        $pattern = '/<li><div>(.+?)<\/div><\/li>/';
+        $replacement = '<li><MdTpl name="toggle" tpl="toggle" props=""><div>$1</div></MdTpl></li>';
+        $tpl = preg_replace($pattern,$replacement,$tpl);
         return $tpl;
     }
-    public static function markdown2wiki(string $markdown): string{
+    public static function markdown2wiki(string $markdown,$channelType,$contentType): string{
+                /**
+         * nissaya
+         * aaa=bbb\n
+         * {{nissaya|aaa|bbb}}
+         */
+        if($channelType==='nissaya'){
+            if($contentType === "json"){
+                $json = json_decode($markdown);
+                $nissayaWord = [];
+                foreach ($json as $word) {
+                    if(count($word->sn) === 1){
+                        //只输出第一层级
+                        $str = "{{nissaya|";
+                        if(isset($word->word->value)){
+                            $str .= $word->word->value;
+                        }
+                        $str .= "|";
+                        if(isset($word->meaning->value)){
+                            $str .= $word->meaning->value;
+                        }
+                        $str .= "}}";
+                        $nissayaWord[] = $str;
+                    }
+
+                }
+                $markdown = implode('',$nissayaWord);
+            }else{
+                $pattern = '/(.+?)=(.+?)\n/';
+                $replacement = '{{nissaya|$1|$2}}';
+                $markdown = preg_replace($pattern,$replacement,$markdown);
+                $pattern = '/(.+?)=(.?)\n/';
+                $replacement = '{{nissaya|$1|$2}}';
+                $markdown = preg_replace($pattern,$replacement,$markdown);
+                $pattern = '/(.?)=(.+?)\n/';
+                $replacement = '{{nissaya|$1|$2}}';
+                $markdown = preg_replace($pattern,$replacement,$markdown);
+            }
+        }
+        //$markdown = preg_replace("/\n\n/","<div></div>",$markdown);
+
+
         /**
          * 替换换行符
          * react 无法处理 <br> 替换为<div></div>代替换行符作用
@@ -160,20 +224,28 @@ class MdRender{
         $replacement = '{{sent|$1}}';
         $html = preg_replace($pattern,$replacement,$html);
 
-        #替换注释
+        #替换单行注释
         #<code>bla</code>
-        #{{note:bla}}
+        #{{note|bla}}
         $pattern = '/<code>(.+?)<\/code>/';
         $replacement = '{{note|$1}}';
         $html = preg_replace($pattern,$replacement,$html);
+
+        #替换多行注释
+        #<pre><code>bla</code></pre>
+        #{{note|bla}}
+        $pattern = '/<pre><code>([\w\W]+?)<\/code><\/pre>/';
+        $replacement = '{{note|$1}}';
+        $html = preg_replace($pattern,$replacement,$html);
+
         return $html;
     }
 
     /**
      *
      */
-    public static function render($markdown,$channelId,$queryId=null,$mode='read'){
-        return MdRender::render2($markdown,$channelId,$queryId,$mode);
+    public static function render($markdown,$channelId,$queryId=null,$mode='read',$channelType='translation',$contentType="markdown"){
+        return MdRender::render2($markdown,$channelId,$queryId,$mode,$channelType,$contentType);
     }
 
 }

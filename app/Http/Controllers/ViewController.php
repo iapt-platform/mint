@@ -8,6 +8,9 @@ use App\Models\PaliText;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use App\Http\Resources\ViewResource;
+use App\Http\Api\AuthApi;
+use App\Http\Api\StudioApi;
 
 class ViewController extends Controller
 {
@@ -23,9 +26,6 @@ class ViewController extends Controller
                 break;
             case 'chapter':
                 # code...
-                $channel = $request->get("channel");
-                $book = $request->get("book");
-                $para = $request->get("para");
                 $target_id = ProgressChapter::where("channel_id",$request->get("channel"))
                                             ->where("book",$request->get("book"))
                                             ->where("para",$request->get("para"))
@@ -47,7 +47,7 @@ class ViewController extends Controller
         }else{
             return false;
         }
-        
+
     }
     /**
      * Display a listing of the resource.
@@ -69,25 +69,55 @@ class ViewController extends Controller
                 return $this->ok($count);
                 break;
             case 'user-recent':
-                if(!isset($_COOKIE["user_uid"])){
-                    return $this->error("no login");
+                $user = AuthApi::current($request);
+                if(!$user){
+                    return $this->error(__('auth.failed'));
                 }
-                $user_id = $_COOKIE["user_uid"];
+                $user_id = $user["user_uid"];
 				$views =  View::where("user_id",$user_id)->orderBy('created_at','desc');
-				if($request->has("take")){
-					$views = $views->take($request->get("take"));
-				}else{
-					$views = $views->take(10);
-				}
+				$views = $views->take($request->get("take",10));
                 $items = $views->get();
-                
                 return $this->ok($items);
+                break;
+            case 'user':
+                $user = AuthApi::current($request);
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
+                $user_id = $user["user_uid"];
+                $table =  View::where("user_id",$user_id);
+                break;
+            case 'studio':
+                # 获取studio内所有 数据
+                $user = AuthApi::current($request);
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
+                //判断当前用户是否有指定的studio的权限
+                $studioId = StudioApi::getIdByName($request->get('name'));
+                if($user['user_uid'] !== $studioId){
+                    return $this->error(__('auth.failed'));
+                }
+                $table = View::where('user_id',$studioId);
                 break;
             default:
                 # code...
                 break;
         }
-        
+        //处理搜索
+        if($request->has("search")){
+            $table = $table->where('name', 'like', "%".$request->get("search")."%");
+        }
+        //获取记录总条数
+        $count = $table->count();
+        //处理排序
+        $table = $table->orderBy($request->get("order",'updated_at'),$request->get("dir",'desc'));
+        //处理分页
+        $table = $table->skip($request->get("offset",0))
+                       ->take($request->get("limit",20));
+        //获取数据
+        $result = $table->get();
+        return $this->ok(["rows"=>ViewResource::collection($result),"count"=>$count]);
     }
 
     /**
@@ -111,27 +141,23 @@ class ViewController extends Controller
 */
         //根据target type 获取 target id
         $target_id = $this->getTargetId($request);
+        if(!$target_id){
+            return $this->error('no id');
+        }
         $clientIp = request()->ip();
         $param = [
             'target_id' => $target_id,
             'target_type' => $request->get("target_type"),
         ];
-        if(isset($_COOKIE['user_uid'])){
+        $user = AuthApi::current($request);
+        if($user){
             //已经登陆
-			Log::info('已经登陆');
-            $user_id = $_COOKIE['user_uid'];
+            $user_id = $user['user_uid'];
             $param['user_id'] = $user_id;
-        }else{
-			Log::info('没有登陆');
-            $param['user_ip'] = $clientIp;
         }
-		
+        $param['user_ip'] = $clientIp;
         $new = View::firstOrNew($param);
-		Log::info('获取记录或新建');
-		Log::info(print_r($new, true));
         $new->user_ip = $clientIp;
-		//获取标题 和 meta数据
-		Log::info('获取标题 和 meta数据');
 
 		switch($request->get("target_type")){
 			case "chapter":
@@ -142,20 +168,21 @@ class ViewController extends Controller
 				$new->org_title = PaliText::where("book",$request->get("book"))
 										->where("paragraph",$request->get("para"))
 										->value("toc");
-				Log::info('获取标题 成功');
-
+				//获取标题 成功
 				$new->meta = \json_encode([
 					"book"=>$request->get("book"),
 					"para"=>$request->get("para"),
 					"channel"=>$request->get("channel"),
+                    "mode"=>$request->get("mode","read"),
 				]);
-				Log::info('获取meta数据成功');
-
 				break;
+            default:
+                return $this->error('未知的数据类型');
+                break;
 		}
 		$new->count = $new->count+1;
         $new->save();
-		Log::info('保存成功');
+		//保存成功
 
         $count = View::where("target_id",$new->target_id)->count();
         return $this->ok($count);

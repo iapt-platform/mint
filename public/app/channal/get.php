@@ -6,7 +6,7 @@ require_once "../public/_pdo.php";
 require_once '../ucenter/function.php';
 require_once '../share/function.php';
 
-if(!isset($_COOKIE["userid"])){
+if(!isset($_COOKIE["userid"]) || !isset($_COOKIE["user_uid"])){
 	echo json_encode(array(), JSON_UNESCAPED_UNICODE);
 	exit;
 }
@@ -73,9 +73,9 @@ $output = array();
 foreach ($channelList as $key => $value) {
     # code...
 	$new = $value;
-	$name = $_userinfo->getName($value["owner_uid"]);	
+	$name = $_userinfo->getName($value["owner_uid"]);
 	$new["username"] = $name["username"];
-	$new["nickname"] = $name["nickname"];	
+	$new["nickname"] = $name["nickname"];
 	$new["count"] = 0;
     $new["all"] = 1;
     $new["owner"] = $value["owner_uid"];

@@ -10,9 +10,11 @@ class AuthApi{
     public static function current(Request $request){
         if($request->hasHeader('Authorization')){
             $token = $request->header('Authorization');
-            Log::info('token:'.$token);
             if(\substr($token,0,6) === 'Bearer'){
                 $token = trim(substr($token,6));
+                if($token === "null"){
+                    return false;
+                }
                 $jwt = JWT::decode($token,new Key(env('APP_KEY'),'HS512'));
                 if($jwt->exp < time()){
                     return false;

@@ -4,9 +4,9 @@ require_once "../public/_pdo.php";
 require_once '../public/function.php';
 
 global $PDO;
-PDO_Connect("" . _FILE_DB_USERINFO_);
+PDO_Connect(_FILE_DB_USERINFO_);
 
-$query = "UPDATE user SET  setting = ? where  userid = ?  ";
+$query = "UPDATE "._TABLE_USER_INFO_." SET  setting = ? where  userid = ?  ";
 $sth = $PDO->prepare($query);
 
 $sth->execute(array($_POST["data"], $_COOKIE["userid"]));

@@ -17,10 +17,11 @@ class TemplateRender{
      * int $mode  'read' | 'edit'
      * @return void
      */
-    public function __construct($param, $channel_id, $mode)
+    public function __construct($param, $channelInfo, $mode)
     {
         $this->param = $param;
-        $this->channel_id = $channel_id;
+        $this->channel_id = $channelInfo->uid;
+        $this->channelInfo = $channelInfo;
         $this->mode = $mode;
     }
 
@@ -45,6 +46,9 @@ class TemplateRender{
             case 'article':
                 $result = $this->render_article();
                 break;
+            case 'nissaya':
+                $result = $this->render_nissaya();
+                break;
             default:
                 # code...
                 $result = [
@@ -61,21 +65,38 @@ class TemplateRender{
     private function render_term(){
         $word = $this->get_param($this->param,"word",1);
         $channelId = $this->channel_id;
+        $channelInfo = $this->channelInfo;
         $props = Cache::remember("/term/{$this->channel_id}/{$word}",
               60,
-              function() use($word,$channelId){
-                $tplParam = DhammaTerm::where("word",$word)->first();
+              function() use($word,$channelId,$channelInfo){
+                //先查属于这个channel 的
+                $tplParam = DhammaTerm::where("word",$word)->where('channal',$channelId)->first();
+                if(!$tplParam){
+                    //没有，再查这个studio的
+                    $tplParam = DhammaTerm::where("word",$word)
+                                          ->where('owner',$channelInfo->owner_uid)
+                                          ->first();
+                }
                 $output = [
                     "word" => $word,
-                    "channel" => $channelId,
+                    "parentChannelId" => $channelId,
+                    "parentStudioId" => $channelInfo->owner_uid,
                     ];
                     $innerString = $output["word"];
                 if($tplParam){
                     $output["id"] = $tplParam->guid;
                     $output["meaning"] = $tplParam->meaning;
+                    $output["channel"] = $tplParam->channal;
                     $innerString = "{$output["meaning"]}({$output["word"]})";
                     if(!empty($tplParam->other_meaning)){
                         $output["meaning2"] = $tplParam->other_meaning;
+                    }
+                    if($tplParam->note){
+                        $output["summary"] = $tplParam->note;
+                    }else{
+                        //使用社区note
+                        //获取channel 语言
+                        //查找社区解释
                     }
                 }
                 $output['innerHtml'] = $innerString;
@@ -105,7 +126,22 @@ class TemplateRender{
             'tpl'=>'note',
             ];
     }
+    private  function render_nissaya(){
 
+        $pali =  $this->get_param($this->param,"pali",1);
+        $meaning = $this->get_param($this->param,"meaning",2);
+        $innerString = "";
+        $props = [
+            "pali" => $pali,
+            "meaning" => $meaning,
+        ];
+        return [
+            'props'=>base64_encode(\json_encode($props)),
+            'html'=>$innerString,
+            'tag'=>'span',
+            'tpl'=>'nissaya',
+            ];
+    }
     private  function render_exercise(){
 
         $id = $this->get_param($this->param,"id",1);
@@ -202,6 +238,9 @@ class TemplateRender{
         }
         $Sent = new CorpusController();
         $props = $Sent->getSentTpl($sentId,$channels,$this->mode,true);
+        if($props === false){
+            $props['error']="句子模版渲染错误。句子参数个数不符。应该是四个。";
+        }
         if($this->mode==='read'){
             $tpl = "sentread";
         }else{
@@ -219,7 +258,7 @@ class TemplateRender{
         if(isset($param[$name])){
             return trim($param[$name]);
         }else if(isset($param["{$id}"])){
-            return trim($param["1"]);
+            return trim($param["{$id}"]);
         }else{
             return $default;
         }

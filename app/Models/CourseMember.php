@@ -12,5 +12,5 @@ class CourseMember extends Model
     protected $casts = [
         'id' => 'string'
     ];
-    public  $incrementing = false;
+
 }
