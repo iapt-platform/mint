@@ -73,7 +73,7 @@ class ProgressChapterController extends Controller
                                         ->skip($request->get("offset",0))
                                         ->take($request->get("limit",1000))
                                         ->get();
-				$all_count = ProgressChapter::whereIn('progress_chapters.channel_id', $aChannel)
+				$all_count = ProgressChapter::whereIn('progress_chapters.channel_id', $channels)
 									->where('progress','>',0.85)->count();
                 break;
             case 'tag':
@@ -257,11 +257,29 @@ class ProgressChapterController extends Controller
                     $where1 = " ";
                     $in1 = " ";
                 }
-                if(Str::isUuid($channel_id)){
-                    $channel = "and channel_id = '{$channel_id}' ";
+                if($request->has('studio')){
+                    $studioId = StudioApi::getIdByName($request->get('studio'));
+                    $table = Channel::where('owner_uid',$studioId);
+                    if($request->get('public')==="true"){
+                        $table = $table->where('status',30);
+                    }
+                    $channels = $table->select('uid')->get();
+                    $arrChannel = [];
+                    foreach ($channels as $oneChannel) {
+                        # code...
+                        if(Str::isUuid($oneChannel->uid)){
+                            $arrChannel[] = "'{$oneChannel->uid}'";
+                        }
+                    }
+                    $channel = "and channel_id in (".implode(',',$arrChannel).") ";
                 }else{
-                    $channel = "";
+                    if(Str::isUuid($channel_id)){
+                        $channel = "and channel_id = '{$channel_id}' ";
+                    }else{
+                        $channel = "";
+                    }
                 }
+
                 //完成度过滤
                 $param[] = $minProgress;
 
