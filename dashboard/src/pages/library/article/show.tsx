@@ -85,7 +85,7 @@ const Widget = () => {
     /**
      * 启动时载入格位公式字典
      */
-    get<IApiResponseDictList>(`/v2/userdict?view=word&word=_formula_`).then(
+    get<IApiResponseDictList>(`/v2/userdict?view=dict&name=_formula_`).then(
       (json) => {
         console.log("_formula_ ok", json.data.count);
         //存储到redux
