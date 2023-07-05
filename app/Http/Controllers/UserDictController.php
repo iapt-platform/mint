@@ -61,7 +61,13 @@ class UserDictController extends Controller
                 $table = UserDict::where("dict_id",$dict_id)->where("word",$request->get('word'));
                 break;
             case 'dict':
-                $dict_id = DictApi::getSysDict($request->get('name'));
+                $dict_id = false;
+                if($request->has('name')){
+                   $dict_id = DictApi::getSysDict($request->get('name'));
+                }else if($request->has('id')){
+                    $dict_id = $request->get('id');
+                }
+
                 if($dict_id===false){
                     $this->error('no dict',[],404);
                 }
