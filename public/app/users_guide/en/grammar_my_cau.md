@@ -1,6 +1,6 @@
 # indicate adverbial of reason
 
-|grammatical features|indication|function word in translation|relation|
+|grammatical features|indication|function word<br>in translation|relation|
 |-|-|-|-|
 |[**instrumental** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/instr.html)|indicate **adverbial of reason**|according to……|[adverbial of reason ➡ verb<br>CAU](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/instr/instr-cau.html)|
 |[**ablative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/cau.html)|indicate **adverbial of reason**|because of……|[adverbial of reason ➡ verb<br>CAU](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/abl/abl-cau.html)|

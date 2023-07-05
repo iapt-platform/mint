@@ -1,6 +1,6 @@
 # several possible
 
-|grammatical features|indication|function word in translation|relation|
+|grammatical features|indication|function word<br>in translation|relation|
 |-|-|-|-|
 |present tense|be doing|——|mark the main verb|
 |past tense|……ed|——|mark the main verb|

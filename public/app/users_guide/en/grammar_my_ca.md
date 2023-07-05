@@ -1,6 +1,6 @@
 # parallel construction
 
-|sentence pattern|indication|function word in translation|
+|sentence pattern|indication|function word<br>in translation|
 |-|-|-|
 |……ceva……ca|parallel construction|not only…… but also……|
 |……ca……ca|parallel construction|……and……|

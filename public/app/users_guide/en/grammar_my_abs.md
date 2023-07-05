@@ -1,7 +1,7 @@
 # 缅文语尾(多种可能)
 
 
-|grammatical features|indication|function word in translation|relation|
+|grammatical features|indication|function word<br>in translation|relation|
 |-|-|-|-|
 |[**absolutive** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/verbal/ger.html)|indicate the action priority in time|after having [done]|[prior **verb** ➡ later **verb**<br>ADV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/verb/ger.html)|
 |[Derivative Noun](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/verbal/pp.html)|indicate the action priority in time|after having [done]|[prior **verb** ➡ later **verb**<br>ADV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/verb/ger.html)|

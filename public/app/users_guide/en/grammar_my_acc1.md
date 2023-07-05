@@ -1,6 +1,6 @@
 # Object
 
-|grammatical features|indication|function word in translation|relation|
+|grammatical features|indication|function word<br>in translation|relation|
 |-|-|-|-|
 |[**accusative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|indicate **patient in active** voice|——|[patient ➡ active verb<br>IOV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-iov.html)|
 |[**nominative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/nom.html)|indicate **patient in passive** voice|…… be done|[patient ➡ passive verb<br>AOV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/nom/nom-aov.html)|

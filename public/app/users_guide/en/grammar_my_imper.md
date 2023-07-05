@@ -1,5 +1,5 @@
 # imperative
 
-|grammatical features|indication|function word in translation|relation|
+|grammatical features|indication|function word<br>in translation|relation|
 |-|-|-|-|
 |-|-|-|-|
