@@ -3,6 +3,7 @@ import { ProList } from "@ant-design/pro-components";
 
 import { get } from "../../request";
 import { IChapterListResponse } from "../../components/api/Corpus";
+import { Link } from "react-router-dom";
 
 const { Paragraph } = Typography;
 
@@ -14,6 +15,7 @@ interface IItem {
   book: number;
   paragraph: number;
   path: string;
+  channelId: string;
   progress: number;
   view: number;
   createdAt: number;
@@ -26,8 +28,19 @@ const TopChapterWidget = ({ studioName }: IWidget) => {
   return (
     <ProList<IItem>
       metas={{
-        title: { dataIndex: "title" },
+        title: {
+          render: (dom, entity, index, action, schema) => {
+            return (
+              <Link
+                to={`/article/chapter/${entity.book}-${entity.paragraph}?mode=read&channel=${entity.channelId}`}
+              >
+                {entity.title ? entity.title : entity.subTitle}
+              </Link>
+            );
+          },
+        },
         subTitle: {},
+        description: { dataIndex: "path" },
         type: {},
         avatar: {},
         content: {
@@ -66,6 +79,7 @@ const TopChapterWidget = ({ studioName }: IWidget) => {
             title: item.title,
             subTitle: item.toc,
             summary: item.summary,
+            channelId: item.channel_id,
             path: item.path,
             progress: item.progress,
             createdAt: createdAt.getTime(),
