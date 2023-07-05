@@ -768,6 +768,8 @@ function palicanon_render_chapter_row(chapter,isSub=false) {
     html +=  "</div>";
 	html += "</div>";
 	html += '<div class="title_right" >';
+    html += "<span></span>";
+    /*
     if(isSub){
         html += "<span></span>";
     }else{
@@ -785,7 +787,7 @@ function palicanon_render_chapter_row(chapter,isSub=false) {
         }
         html += "' />";
     }
-
+*/
 	html += "</div>";
 	html += "</div>";
 
