@@ -45,7 +45,7 @@ const AnthologyTocTreeWidget = ({
           if (typeof onArticleSelect !== "undefined") {
             onArticleSelect(keys);
           } else {
-            navigate(`/article/article/${keys[0]}/read`);
+            navigate(`/article/article/${keys[0]}?mode=read`);
           }
         }}
       />
