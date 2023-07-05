@@ -69,13 +69,9 @@ class GroupController extends Controller
             }
         }
 
-        if(isset($_GET["limit"])){
-            $offset = 0;
-            if(isset($_GET["offset"])){
-                $offset = $_GET["offset"];
-            }
-            $table = $table->skip($offset)->take($_GET["limit"]);
-        }
+        $table->skip($request->get('offset',0))
+              ->take($request->get('limit',1000));
+
         $result = $table->get();
 		if($result){
 			return $this->ok(["rows"=>GroupResource::collection($result),"count"=>$count]);

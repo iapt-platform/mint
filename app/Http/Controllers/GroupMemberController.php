@@ -47,14 +47,11 @@ class GroupMemberController extends Controller
             $table = $table->orderBy('updated_at','desc');
         }
 
-        if(isset($_GET["limit"])){
-            $offset = 0;
-            if(isset($_GET["offset"])){
-                $offset = $_GET["offset"];
-            }
-            $table = $table->skip($offset)->take($_GET["limit"]);
-        }
+        $table->skip($request->get('offset',0))
+              ->take($request->get('limit',1000));
+
         $result = $table->get();
+
         foreach ($result as $key => $value) {
             # 找到当前用户
             if($user["user_uid"]===$value->user_id){
