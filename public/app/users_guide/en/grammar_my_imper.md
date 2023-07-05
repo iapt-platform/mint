@@ -1,4 +1,4 @@
-# 命令祈愿
+# imperative
 
 |grammatical features|indication|function word in translation|relation|
 |-|-|-|-|

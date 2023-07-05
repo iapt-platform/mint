@@ -1,5 +1,5 @@
-# 表示并列关系——“或”
+# parallel construction
 
-|巴利|含义|翻译建议|
+|sentence pattern|indication|function word in translation|
 |-|-|-|
-|……vā……vā句式|表达**并列关系**|……或……<br>……or……|
+|……vā……vā|indicate **parallel construction**|……or……|

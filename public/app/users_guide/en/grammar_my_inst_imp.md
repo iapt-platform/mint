@@ -1,6 +1,6 @@
-# 注释书中的方式状语
+# manner adverbial
 
 |grammatical features|indication|function word in translation|relation|
 |-|-|-|-|
-|vasena<br>vasa的[**instrumental** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/instr.html)|表达**方式**|用……，以……方式，通过……<br>by way of……|[方式 ➡ 动词<br>IMP](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/instr/instr-imp.html)|
-|[**ablative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/abl.html)|表达**方式**|作为……，用……，以……，通过……<br>as…|[方式 ➡ 动词<br>IMP](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/instr/instr-imp.html)|
+|vasena<br>[**instrumental** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/instr.html) of vasa|indicate **manner adverbial**|by way of……|[manner adverbial ➡ verb<br>IMP](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/instr/instr-imp.html)|
+|[**ablative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/abl.html)|indicate **manner adverbial**|as…|[manner adverbial ➡ verb<br>IMP](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/instr/instr-imp.html)|

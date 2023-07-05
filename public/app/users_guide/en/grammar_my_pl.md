@@ -1,3 +1,2 @@
-# 缅文语尾
-
-- 复数（主/呼）
+# plural form
+nominative case or vocative case

@@ -1,5 +1,5 @@
-# 表示复数将来式
+# future tense plural form
 
 |grammatical features|indication|function word in translation|relation|
 |-|-|-|-|
-|动词将来式|将来可能发生的动作|将……，会……，能……|
+|future tense|action in future|will……, be going to……|

@@ -1,5 +1,5 @@
-# 表达强调和对比
+# emphasis by contrast
 
-|位置|含义|翻译建议|
+|grammatical features|indication|function word in translation|
 |-|-|-|
-|位于名词、代词、成分助词之后|表达**强调和对比的作用**|就是<br>just|
+|after noun or pron|indicate **emphasis**|by contrast<br>just|

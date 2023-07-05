@@ -1,6 +1,6 @@
-# 表示表语
+# several possible
 
 |grammatical features|indication|function word in translation|relation|
 |-|-|-|-|
-|[**nominative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|表达**强调**表语|就是……|[主 ➡ **表**<br>NIO](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/nom/nom-nio.html)|
-|[数词eka](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|位于含数字“一”的数量词之后，表示限定于某个范围|一起，一并|[副词 ➡ 动词<br>ADV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/nom/nom-nio.html)|
+|[**nominative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|indicate **emphasis** predicative|就是……|[subject ➡ **predicative**<br>NIO](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/nom/nom-nio.html)|
+|[numeral “eka”](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|after numeral “eka”, indicate range restriction|together|[adverb ➡ verb<br>ADV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-adv.html)|

@@ -1,6 +1,6 @@
-# 缅文语尾(多种可能)
+# quotation mark
 
 
 |grammatical features|indication|function word in translation|relation|
 |-|-|-|-|
-|[indeclinable “iti”](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/other/iti.html)|quotation mark|quotation mark|[引号 ➡ 引号外<br>QUM](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/other/iti.html)|
+|[indeclinable “iti”](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/other/iti.html)|quotation mark|“……”|[quotation mark ➡ verb<br>QUM](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/other/iti.html)|
