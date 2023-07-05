@@ -8,6 +8,7 @@ import { useAppSelector } from "../../../hooks";
 import { currentUser as _currentUser } from "../../../reducers/current-user";
 import { useEffect, useRef, useState } from "react";
 import ArticleDrawer from "../../../components/article/ArticleDrawer";
+import { useNavigate } from "react-router-dom";
 
 export interface IRecentRequest {
   type: ArticleType;
@@ -97,6 +98,18 @@ const Widget = () => {
                   key={index}
                   onClick={(event) => {
                     if (event.ctrlKey) {
+                      let url = `/article/${row.type}/${row.articleId}?mode=`;
+                      url += row.param?.mode ? row.param?.mode : "read";
+                      url += row.param?.channel
+                        ? `&channel=${row.param?.channel}`
+                        : "";
+                      url += row.param?.book ? `&book=${row.param?.book}` : "";
+                      url += row.param?.para ? `&par=${row.param?.para}` : "";
+                      const fullUrl =
+                        process.env.REACT_APP_WEB_HOST +
+                        process.env.PUBLIC_URL +
+                        url;
+                      window.open(fullUrl, "_blank");
                     } else {
                       setParam({
                         type: row.type,
