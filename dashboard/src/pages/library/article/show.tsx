@@ -85,13 +85,13 @@ const Widget = () => {
     /**
      * 启动时载入格位公式字典
      */
-    get<IApiResponseDictList>(`/v2/userdict?view=dict&name=_formula_`).then(
-      (json) => {
-        console.log("_formula_ ok", json.data.count);
-        //存储到redux
-        store.dispatch(add(json.data.rows));
-      }
-    );
+    get<IApiResponseDictList>(
+      `/v2/userdict?view=dict&id=2142c229-8860-4ca5-a82e-1afc7e4f1e5d`
+    ).then((json) => {
+      console.log("_formula_ ok", json.data.count);
+      //存储到redux
+      store.dispatch(add(json.data.rows));
+    });
   }, []);
   const rightBarWidth = "48px";
   const channelId = id?.split("_").slice(1);
