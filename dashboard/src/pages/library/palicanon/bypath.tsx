@@ -126,10 +126,12 @@ const Widget = () => {
                 tag={bookTag}
                 onChapterClick={(e: IChapterClickEvent) => {
                   if (e.event.ctrlKey) {
-                    window.open(
-                      `/my/palicanon/chapter/${e.para.Book}-${e.para.Paragraph}`,
-                      "_blank"
-                    );
+                    const url = `/palicanon/chapter/${e.para.Book}-${e.para.Paragraph}`;
+                    const fullUrl =
+                      process.env.REACT_APP_WEB_HOST +
+                      process.env.PUBLIC_URL +
+                      url;
+                    window.open(fullUrl, "_blank");
                   } else {
                     setIsModalOpen(true);
                     setOpenPara({ book: e.para.Book, para: e.para.Paragraph });
