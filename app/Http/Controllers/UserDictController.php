@@ -60,6 +60,13 @@ class UserDictController extends Controller
                 }
                 $table = UserDict::where("dict_id",$dict_id)->where("word",$request->get('word'));
                 break;
+            case 'dict':
+                $dict_id = DictApi::getSysDict($request->get('name'));
+                if($dict_id===false){
+                    $this->error('no dict',[],404);
+                }
+                $table = UserDict::select($indexCol)
+                                 ->where("dict_id",$dict_id);
 			default:
 				# code...
 				break;
@@ -67,6 +74,9 @@ class UserDictController extends Controller
         if(isset($_GET["search"])){
             $table->where('word', 'like', $_GET["search"]."%");
         }
+
+        $count = $table->count();
+
         if(isset($_GET["order"]) && isset($_GET["dir"])){
             $table->orderBy($_GET["order"],$_GET["dir"]);
         }else{
@@ -76,14 +86,10 @@ class UserDictController extends Controller
                 $table->orderBy('updated_at','desc');
             }
         }
-        $count = $table->count();
-        if(isset($_GET["limit"])){
-            $offset = 0;
-            if(isset($_GET["offset"])){
-                $offset = $_GET["offset"];
-            }
-            $table->skip($offset)->take($_GET["limit"]);
-        }
+
+        $table->skip($request->get('offset',0))
+              ->take($request->get('limit',1000));
+
         $result = $table->get();
 		if($result){
 			return $this->ok(["rows"=>UserDictResource::collection($result),"count"=>$count]);
