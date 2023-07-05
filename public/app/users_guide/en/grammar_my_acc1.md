@@ -1,12 +1,12 @@
-# 表示宾语
+# Object
 
-|语法特征|含义|翻译建议|关系|
+|grammatical features|indication|function word in translation|relation|
 |-|-|-|-|
-|[**宾**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|表达**受动者**|把……|[受动者 ➡ 动词<br>IOV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-iov.html)|
-|[**宾**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|表达主动语态的**双宾语**|使**A**变成B|[受动者·主 ➡ 动词<br>DIO-P](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-dio.html#dio-p)|
-|[**宾**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|表达**主动**语态的**双宾语**|使A变成**B**|[受动者·次 ➡ 动词<br>DIO-S](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-dio.html#dio-s)|
-|[**主**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/nom.html)|表达**被动**语态**双宾语**|**A**被弄成B|[被动者·主 ➡ 被动动词<br>DAO-P](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/nom/nom-dao.html)|
-|[**主**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/nom.html)|表达**被动**语态**双宾语**|A被弄成**B**|[被动者·次 ➡ 被动动词<br>DAO-P](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/nom/nom-dao.html)|
-|[**主**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/nom.html)|表达**被动者**|被……|[被动者 ➡ 被动动词<br>AOV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/nom/nom-aov.html)|
-|[**属**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/nom.html)|表达**被动者**|……的|[受动者 ➡ 动词<br>IOV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/gen/gen-iov.html)|
-|[**具**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/inst.html)|表达**使役宾语**/**发动主语**|……|[使役宾语/发动主语 ➡ 使役动词<br>IOV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/verb/cau_verb.html)|
+|[**accusative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|indicate **patient in active** voice|——|[patient ➡ active verb<br>IOV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-iov.html)|
+|[**nominative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/nom.html)|indicate **patient in passive** voice|…… be done|[patient ➡ passive verb<br>AOV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/nom/nom-aov.html)|
+|[**accusative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|indicate **primary object** in active voice|make **A** as B|[primary object ➡ active verb<br>DIO-P](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-dio.html#dio-p)|
+|[**accusative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|indicate **secondary object** in active voice|make A as **B**|[secondary object ➡ active verb<br>DIO-S](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-dio.html#dio-s)|
+|[**nominative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/nom.html)|indicate **primary object** in passive voice|**A** be made as B|[primary object ➡ passive verb<br>DAO-P](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/nom/nom-dao.html)|
+|[**nominative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/nom.html)|indicate **secondary object** in passive voice|A be made as **B**|[secondary object ➡ passive verb<br>DAO-P](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/nom/nom-dao.html)|
+|[**genitive** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/nom.html)|indicate **patient**|doing of **A**|[patient ➡ verb<br>IOV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/gen/gen-iov.html)|
+|[**instrumental** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/inst.html)|indicate **causal object/Radial subject**|make **sb** to do|[causal object/Radial subject ➡ causative verb<br>IOV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/verb/cau_verb.html)|

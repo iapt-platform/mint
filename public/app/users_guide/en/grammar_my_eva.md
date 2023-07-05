@@ -1,3 +1,3 @@
-# 表示强调
+# emphasis
 
-巴利词eva的一种情况，表示：只、就。强调紧挨着eva的前面的词。
+pāḷi word “*eva*”, means just or only.

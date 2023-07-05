@@ -1,5 +1,5 @@
 # 表示复数将来式
 
-|语法特征|含义|翻译建议|关系|
+|grammatical features|indication|function word in translation|relation|
 |-|-|-|-|
 |动词将来式|将来可能发生的动作|将……，会……，能……|

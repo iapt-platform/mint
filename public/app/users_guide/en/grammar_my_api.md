@@ -1,3 +1,3 @@
-# 表示也
+# also / too
 
-巴利词api的一种情况，表示：也。
+pāḷi word “*api*”, means also or too.

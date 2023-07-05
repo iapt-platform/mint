@@ -1,9 +1,9 @@
-# 表示并列
+# parallel construction
 
-|巴利|含义|翻译建议|
+|sentence pattern|indication|function word in translation|
 |-|-|-|
-|……ceva……ca句式|表达**并列关系**|既……又……<br>not only…… but also……|
-|……ca……ca句式|表达**并列关系**|……和……<br>……and……|
-|……api……api|表达**并列关系**|……也是……也是<br>……as well as……|
-|……iti……iti|表达**并列关系**|……、……、<br>……, ……,|
-|……vā……vā|表达**并列关系**|不管……还是……<br>no matter …… or ……|
+|……ceva……ca|parallel construction|not only…… but also……|
+|……ca……ca|parallel construction|……and……|
+|……api……api|parallel construction|……as well as……|
+|……iti……iti|parallel construction|……、……、<br>……, ……,|
+|……vā……vā|parallel construction|no matter …… or ……|

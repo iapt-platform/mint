@@ -1,7 +1,7 @@
-# 表示副词
+# indicate Adverb
 
-|语法特征|含义|翻译建议|关系|
+|grammatical features|indication|function word in translation|relation|
 |-|-|-|-|
-|[**宾**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|用于修饰动词|……地|[副词 ➡ 动词<br>ADV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-adv.html)|
-|副词|用于修饰动词|……地|[副词 ➡ 动词<br>ADV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-adv.html)|
-|[**宾**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|表达**受动者**|把……|[受动者 ➡ 动词<br>IOV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-iov.html)|
+|[**accusative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|**accusative case of noun** is used to qualify verb|……ly|[adverb ➡ verb<br>ADV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-adv.html)|
+|Adverb|**Adverb** is used to qualify verb|……ly|[adverb ➡ verb<br>ADV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-adv.html)|
+|[**accusative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/acc.html)|indicate **patient**|——|[patient ➡ verb<br>IOV](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/acc/acc-iov.html)|

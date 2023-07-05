@@ -1,5 +1,5 @@
-# 表示比较
+# Object of Comparison
 
-|语法特征|含义|翻译建议|关系|
+|grammatical features|indication|function word in translation|relation|
 |-|-|-|-|
-|[来**源**格](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/abl.html)|表达**比较**|比……少|[**参照** ➡ **形容词**比较级<br>COC](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/abl/abl-coc.html)|
+|[**ablative** case](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/declension/abl.html)|indicate **Object of Comparison**|less ……**than A**|[**Object of Comparison** ➡ **comparative adjective**<br>COC](https://assets-hk.wikipali.org/pali-handbook/zh-Hans/basic-relation/abl/abl-coc.html)|
