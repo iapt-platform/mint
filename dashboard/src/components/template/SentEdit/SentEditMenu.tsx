@@ -26,7 +26,6 @@ const SentEditMenuWidget = ({
   const [isHover, setIsHover] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
 
-  console.log("data", data);
   const onClick: MenuProps["onClick"] = (e) => {
     console.log(e);
     switch (e.key) {
