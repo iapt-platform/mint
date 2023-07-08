@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Column } from "@ant-design/plots";
 import { put } from "../../../request";
 import { StatisticCard } from "@ant-design/pro-components";
@@ -18,11 +18,12 @@ interface IApiRequest {
 }
 
 interface IWidget {
+  title?: React.ReactNode;
   type: "average" | "count" | "delay";
   api?: string;
 }
 
-const ApiDelayHourWidget = ({ type, api = "all" }: IWidget) => {
+const ApiDelayHourWidget = ({ title, type, api = "all" }: IWidget) => {
   const [delayData, setDelayData] = useState<IApiDelay[]>([]);
 
   useEffect(() => {
@@ -50,13 +51,12 @@ const ApiDelayHourWidget = ({ type, api = "all" }: IWidget) => {
 
   return (
     <StatisticCard
-      style={{ width: 400 }}
       statistic={{
-        title: "平均响应时间",
+        title: title,
         value: "",
         suffix: "/ ms",
       }}
-      chart={<Column {...config} />}
+      chart={<Column {...config} height={300} />}
     />
   );
 };
