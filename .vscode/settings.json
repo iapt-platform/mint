@@ -9,7 +9,6 @@
     "source.fixAll.eslint": true
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "rust-analyzer.cargo.runBuildScripts": true,
   // https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc
   "files.watcherExclude": {
     "**/.git/**": true,
@@ -29,5 +28,8 @@
   },
   "[python]": {
     "editor.defaultFormatter": "ms-python.python"
+  },
+  "[php]": {
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
   }
 }

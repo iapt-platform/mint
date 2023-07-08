@@ -4,6 +4,7 @@
     "ms-python.python",
     "golang.go",
     "rust-lang.rust-analyzer",
+    "bmewburn.vscode-intelephense-client",
     "redhat.ansible",
     "redhat.vscode-xml",
     "redhat.vscode-yaml",

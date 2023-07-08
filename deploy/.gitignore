@@ -1,0 +1,4 @@
+/clients/
+/tmp/
+/roles/mint/files/dashboard/
+*.log

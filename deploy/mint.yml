@@ -1,0 +1,9 @@
+- hosts: all
+  roles:
+    - ubuntu
+    - os
+
+- hosts: www
+  roles:
+    - php
+    - mint
