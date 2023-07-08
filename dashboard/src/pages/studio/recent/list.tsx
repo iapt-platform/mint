@@ -1,14 +1,19 @@
 import { useIntl } from "react-intl";
-import { Dropdown, Typography } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { Dropdown, Space, Typography } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { ActionType, ProTable } from "@ant-design/pro-components";
+
 import { get } from "../../../request";
 import { ArticleMode, ArticleType } from "../../../components/article/Article";
 import { useAppSelector } from "../../../hooks";
 import { currentUser as _currentUser } from "../../../reducers/current-user";
-import { useEffect, useRef, useState } from "react";
 import ArticleDrawer from "../../../components/article/ArticleDrawer";
-import { useNavigate } from "react-router-dom";
+import {
+  ArticleOutlinedIcon,
+  ChapterOutlinedIcon,
+  ParagraphOutlinedIcon,
+} from "../../../assets/icon";
 
 export interface IRecentRequest {
   type: ArticleType;
@@ -93,38 +98,57 @@ const Widget = () => {
             tip: "过长会自动收缩",
             ellipsis: true,
             render: (text, row, index, action) => {
+              let icon = <></>;
+              switch (row.type) {
+                case "article":
+                  icon = <ArticleOutlinedIcon />;
+                  break;
+                case "chapter":
+                  icon = <ChapterOutlinedIcon />;
+                  break;
+                case "para":
+                  icon = <ParagraphOutlinedIcon />;
+                  break;
+                default:
+                  break;
+              }
               return (
-                <Typography.Link
-                  key={index}
-                  onClick={(event) => {
-                    if (event.ctrlKey) {
-                      let url = `/article/${row.type}/${row.articleId}?mode=`;
-                      url += row.param?.mode ? row.param?.mode : "read";
-                      url += row.param?.channel
-                        ? `&channel=${row.param?.channel}`
-                        : "";
-                      url += row.param?.book ? `&book=${row.param?.book}` : "";
-                      url += row.param?.para ? `&par=${row.param?.para}` : "";
-                      const fullUrl =
-                        process.env.REACT_APP_WEB_HOST +
-                        process.env.PUBLIC_URL +
-                        url;
-                      window.open(fullUrl, "_blank");
-                    } else {
-                      setParam({
-                        type: row.type,
-                        articleId: row.articleId,
-                        mode: row.param?.mode as ArticleMode,
-                        channelId: row.param?.channel,
-                        book: row.param?.book,
-                        para: row.param?.para,
-                      });
-                      setArticleOpen(true);
-                    }
-                  }}
-                >
-                  {row.title}
-                </Typography.Link>
+                <Space>
+                  {icon}
+                  <Typography.Link
+                    key={index}
+                    onClick={(event) => {
+                      if (event.ctrlKey || event.metaKey) {
+                        let url = `/article/${row.type}/${row.articleId}?mode=`;
+                        url += row.param?.mode ? row.param?.mode : "read";
+                        url += row.param?.channel
+                          ? `&channel=${row.param?.channel}`
+                          : "";
+                        url += row.param?.book
+                          ? `&book=${row.param?.book}`
+                          : "";
+                        url += row.param?.para ? `&par=${row.param?.para}` : "";
+                        const fullUrl =
+                          process.env.REACT_APP_WEB_HOST +
+                          process.env.PUBLIC_URL +
+                          url;
+                        window.open(fullUrl, "_blank");
+                      } else {
+                        setParam({
+                          type: row.type,
+                          articleId: row.articleId,
+                          mode: row.param?.mode as ArticleMode,
+                          channelId: row.param?.channel,
+                          book: row.param?.book,
+                          para: row.param?.para,
+                        });
+                        setArticleOpen(true);
+                      }
+                    }}
+                  >
+                    {row.title}
+                  </Typography.Link>
+                </Space>
               );
             },
           },
