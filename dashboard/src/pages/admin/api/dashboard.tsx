@@ -18,9 +18,9 @@ const Widget = () => {
         direction={responsive ? "column" : "row"}
         title="总量"
       >
-        <ApiDelayHour type="count" />
+        <ApiDelayHour type="average" title={"平均相应时间"} />
         <Divider type={responsive ? "horizontal" : "vertical"} />
-        <ApiDelayHour type="average" />
+        <ApiDelayHour type="count" title={"请求次数"} />
         <Divider type={responsive ? "horizontal" : "vertical"} />
         <ApiGauge />
       </StatisticCard.Group>
