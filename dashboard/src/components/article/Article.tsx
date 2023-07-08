@@ -88,10 +88,11 @@ const ArticleWidget = ({
   onLoad,
 }: IWidgetArticle) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
-
+  const [articleHtml, setArticleHtml] = useState<string[]>(["<span />"]);
   const [extra, setExtra] = useState(<></>);
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [unauthorized, setUnauthorized] = useState(false);
+  const [remains, setRemains] = useState(false);
 
   const channels = channelId?.split("_");
 
@@ -217,11 +218,18 @@ const ArticleWidget = ({
           console.log("recent", json);
         });
       }
+
       get<IArticleResponse>(url)
         .then((json) => {
           console.log("article", json);
           if (json.ok) {
             setArticleData(json.data);
+            if (json.data.content) {
+              setArticleHtml([json.data.content]);
+            }
+            if (json.data.from) {
+              setRemains(true);
+            }
             setShowSkeleton(false);
 
             setExtra(
@@ -269,7 +277,6 @@ const ArticleWidget = ({
                     console.log("view", json.data);
                   });
                 }
-
                 break;
               default:
                 break;
@@ -278,6 +285,10 @@ const ArticleWidget = ({
             if (typeof onLoad !== "undefined") {
               onLoad(json.data);
             }
+
+            console.log("lazy load begin", json.data);
+            //lazy load
+            //getNextPara(json.data);
           } else {
             setShowSkeleton(false);
             setUnauthorized(true);
@@ -302,6 +313,41 @@ const ArticleWidget = ({
     userName,
   ]);
 
+  const getNextPara = (next: IArticleDataResponse): void => {
+    if (
+      typeof next.paraId === "undefined" ||
+      typeof next.mode === "undefined" ||
+      typeof next.from === "undefined" ||
+      typeof next.to === "undefined"
+    ) {
+      setRemains(false);
+      return;
+    }
+    let url = `/v2/corpus-chapter/${next.paraId}?mode=${next.mode}`;
+    url += `&from=${next.from}`;
+    url += `&to=${next.to}`;
+    url += channels ? `&channels=${channels}` : "";
+    console.log("lazy load", url);
+    get<IArticleResponse>(url).then((json) => {
+      if (json.ok) {
+        if (typeof json.data.content === "string") {
+          const content: string = json.data.content;
+          setArticleData((origin) => {
+            if (origin) {
+              origin.from = json.data.from;
+            }
+            return origin;
+          });
+          setArticleHtml((origin) => {
+            return [...origin, content];
+          });
+        }
+
+        //getNextPara(json.data);
+      }
+    });
+    return;
+  };
   return (
     <div>
       {showSkeleton ? (
@@ -320,13 +366,19 @@ const ArticleWidget = ({
           subTitle={articleData?.subtitle}
           summary={articleData?.summary}
           content={articleData ? articleData.content : ""}
-          html={articleData?.html}
+          html={articleHtml}
           path={articleData?.path}
           created_at={articleData?.created_at}
           updated_at={articleData?.updated_at}
           channels={channels}
           type={type}
           articleId={articleId}
+          remains={remains}
+          onEnd={() => {
+            if (type === "chapter" && articleData) {
+              getNextPara(articleData);
+            }
+          }}
         />
       )}
 
