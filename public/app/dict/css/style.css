@@ -37,6 +37,7 @@ body {
 #dict_ref {
 	flex: 6;
 	padding: 0.5em 1.5em;
+    width: 100%;
 }
 
 #dict_user {
