@@ -122,20 +122,22 @@ class ArticleController extends Controller
     public function index(Request $request)
     {
         //
-        $indexCol = ['uid','title','subtitle','summary','owner','lang','status','updated_at','created_at'];
+        $table = Article::select(['uid','title','subtitle',
+                                'summary','owner','lang',
+                                'status','updated_at','created_at']);
         switch ($request->get('view')) {
             case 'studio':
 				# 获取studio内所有channel
-                $user = \App\Http\Api\AuthApi::current($request);
+                $user = AuthApi::current($request);
                 if(!$user){
-                    return $this->error(__('auth.failed'));
+                    return $this->error(__('auth.failed'),[],401);
                 }
                 //判断当前用户是否有指定的studio的权限
                 $studioId = StudioApi::getIdByName($request->get('name'));
                 if($user['user_uid'] !== $studioId){
-                    return $this->error(__('auth.failed'));
+                    return $this->error(__('auth.failed'),[],403);
                 }
-                $table = Article::select($indexCol);
+
                 if($request->get('view2','my')==='my'){
                     $table = $table->where('owner', $studioId);
                 }else{
@@ -170,6 +172,12 @@ class ArticleController extends Controller
                     }
                 }
 				break;
+            case 'public':
+                $table = $table->where('status',30);
+                break;
+            default:
+                $this->error("view error");
+                break;
         }
         //处理搜索
         if($request->has("search") && !empty($request->has("search"))){
@@ -178,29 +186,14 @@ class ArticleController extends Controller
         //获取记录总条数
         $count = $table->count();
         //处理排序
-        if(isset($_GET["order"]) && isset($_GET["dir"])){
-            $table = $table->orderBy($_GET["order"],$_GET["dir"]);
-        }else{
-            //默认排序
-            $table = $table->orderBy('updated_at','desc');
-        }
+        $table = $table->orderBy($request->get("order",'updated_at'),
+                                 $request->get("dir",'desc'));
         //处理分页
-        if($request->has("limit")){
-
-            if($request->has("offset")){
-                $offset = $request->get("offset");
-            }else{
-                $offset = 0;
-            }
-            $table = $table->skip($offset)->take($request->get("limit"));
-        }
+        $table = $table->skip($request->get("offset",0))
+                       ->take($request->get("limit",1000));
         //获取数据
         $result = $table->get();
-        if($result){
-			return $this->ok(["rows"=>ArticleResource::collection($result),"count"=>$count]);
-		}else{
-			return $this->error("没有查询到数据");
-		}
+		return $this->ok(["rows"=>ArticleResource::collection($result),"count"=>$count]);
     }
 
         /**
@@ -316,6 +309,39 @@ class ArticleController extends Controller
             return $this->error(__('auth.failed'),[],401);
         }
         return $this->ok(new ArticleResource($article));
+    }
+    /**
+     * Display the specified resource.
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $article
+     * @return \Illuminate\Http\Response
+     */
+    public function preview(Request  $request,string $articleId)
+    {
+        //
+        $article = Article::find($articleId);
+        if(!$article){
+            return $this->error("no recorder");
+        }
+        //判断权限
+        $user = AuthApi::current($request);
+        if(!$user){
+            $user_uid="";
+        }else{
+            $user_uid=$user['user_uid'];
+        }
+
+        $canRead = ArticleController::userCanRead($user_uid,$article);
+        if(!$canRead){
+            return $this->error(__('auth.failed'),[],401);
+        }
+        if($request->has('content')){
+            $article->content = $request->get('content');
+            return $this->ok(new ArticleResource($article));
+        }else{
+            return $this->error('no content',[],200);
+        }
+
     }
 
     /**

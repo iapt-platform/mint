@@ -414,19 +414,47 @@ class CorpusController extends Controller
                 $toc = [];
             }
         }
+
+        $pFrom = $request->get('from',$paraFrom);
+        $pTo = $request->get('to',$paraTo);
+        //根据句子的长度找到这次应该加载的句子
+        $maxLen = 3000;
+        $paliText = PaliText::select(['paragraph','lenght'])
+                            ->where('book',$sentId[0])
+                            ->whereBetween('paragraph',[$pFrom,$pTo])
+                            ->get();
+        $sumLen = 0;
+        $currTo = $pTo;
+        foreach ($paliText as $para) {
+            $sumLen += $para->lenght;
+            if($sumLen > $maxLen){
+                $currTo = $para->paragraph;
+                break;
+            }
+        }
         $record = Sentence::select($this->selectCol)
-                    ->where('book_id',$sentId[0])
-                    ->whereBetween('paragraph',[$paraFrom,$paraTo])
-                    ->whereIn('channel_uid',$channels)
-                    ->orderBy('paragraph')
-                    ->orderBy('word_start')
-                    ->get();
+                          ->where('book_id',$sentId[0])
+                          ->whereBetween('paragraph',[$pFrom,$currTo])
+                          ->whereIn('channel_uid',$channels)
+                          ->orderBy('paragraph')
+                          ->orderBy('word_start')
+                          ->get();
         if(count($record) ===0){
             return $this->error("no data");
         }
         $this->result['content'] = $this->makeContent($record,$mode,$indexChannel,$indexedHeading);
-        $this->result['toc'] = TocResource::collection($toc);
-        Log::info("show chapter");
+        if(!$request->has('from')){
+            //第一次才显示toc
+            $this->result['toc'] = TocResource::collection($toc);
+        }
+        if($currTo < $pTo){
+            $this->result['from'] = $currTo+1;
+            $this->result['to'] = $pTo;
+            $this->result['paraId'] = $id;
+            $this->result['channels'] = $request->get('channels');
+            $this->result['mode'] = $request->get('mode');
+        }
+
         return $this->ok($this->result);
     }
 
@@ -685,6 +713,9 @@ class CorpusController extends Controller
                 }
                 if(isset($word->cf)){
                     $wbwData['confidence'] = (float)$word->cf->__toString();
+                }
+                if(isset($word->attachments)){
+                    $wbwData['attachments'] = json_decode($word->attachments->__toString());
                 }
                 if(isset($word->pali['status'])){
                     $wbwData['word']['status'] = (int)$word->pali['status'];

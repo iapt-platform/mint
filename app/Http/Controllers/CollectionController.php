@@ -87,10 +87,10 @@ class CollectionController extends Controller
                 $table = $table->orderBy('updated_at','desc');
             }
         }
-        if($request->has("limit")){
-            $table = $table->skip($request->get("offset",0))
-                           ->take($request->get("limit"));
-        }
+
+        $table = $table->skip($request->get("offset",0))
+                       ->take($request->get("limit",1000));
+
         $result = $table->get();
 		return $this->ok(["rows"=>CollectionResource::collection($result),"count"=>$count]);
     }

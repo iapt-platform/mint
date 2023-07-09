@@ -45,20 +45,18 @@ class CourseMemberController extends Controller
         if(isset($_GET["search"])){
             $table = $table->where('title', 'like', $_GET["search"]."%");
         }
+
         $count = $table->count();
+
         if(isset($_GET["order"]) && isset($_GET["dir"])){
             $table = $table->orderBy($_GET["order"],$_GET["dir"]);
         }else{
             $table = $table->orderBy('updated_at','desc');
         }
 
-        if(isset($_GET["limit"])){
-            $offset = 0;
-            if(isset($_GET["offset"])){
-                $offset = $_GET["offset"];
-            }
-            $table = $table->skip($offset)->take($_GET["limit"]);
-        }
+        $table->skip($request->get('offset',0))
+              ->take($request->get('limit',1000));
+
         $result = $table->get();
 
         //获取当前用户角色

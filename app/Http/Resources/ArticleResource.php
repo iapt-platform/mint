@@ -8,11 +8,13 @@ use App\Models\CourseMember;
 use App\Models\Course;
 use App\Models\Collection;
 use App\Models\ArticleCollection;
+use App\Models\Channel;
 use Illuminate\Support\Facades\Log;
 use App\Http\Api\UserApi;
 use App\Http\Api\StudioApi;
 use App\Http\Api\AuthApi;
 use App\Http\Controllers\ArticleController;
+use App\Http\Api\ChannelApi;
 
 class ArticleResource extends JsonResource
 {
@@ -55,7 +57,17 @@ class ArticleResource extends JsonResource
             if($request->has('channel')){
                 $channel = $request->get('channel');
             }else{
-                $channel = '';
+                //查找用户默认channel
+                $studioChannel = Channel::where('owner_uid',$this->owner)
+                                        ->where('type','translation')
+                                        ->get();
+                if($studioChannel){
+                    $channel = $studioChannel[0]->uid;
+                }else{
+                    $channel = ChannelApi::getSysChannel('_community_translation_'.strtolower($this->lang).'_',
+                                                        '_community_translation_en_');
+                }
+
             }
             $data["content"] = $this->content;
             $data["content_type"] = $this->content_type;

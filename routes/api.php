@@ -48,6 +48,11 @@ use App\Http\Controllers\WordIndexController;
 use App\Http\Controllers\StudioController;
 use App\Http\Controllers\GrammarGuideController;
 use App\Http\Controllers\WbwController;
+use App\Http\Controllers\AttachmentController;
+use App\Http\Controllers\ApiController;
+use App\Http\Controllers\ProgressImgController;
+use App\Http\Controllers\RecentController;
+use App\Http\Controllers\MilestoneController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +85,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::delete('like', [LikeController::class, 'delete']);
     Route::apiResource('like',LikeController::class);
     Route::apiResource('sent_history',SentHistoryController::class);
+    Route::get('sent_history_contribution',[SentHistoryController::class,'contribution']);
     Route::apiResource('palitext',PaliTextController::class);
     Route::apiResource('channel',ChannelController::class);
     Route::get('channel-my-number', [ChannelController::class, 'showMyNumber']);
@@ -92,6 +98,8 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('dict',DictController::class);
     Route::apiResource('article',ArticleController::class);
     Route::get('article-my-number', [ArticleController::class, 'showMyNumber']);
+    Route::put('article-preview/{id}', [ArticleController::class, 'preview']);
+
     Route::apiResource('group',GroupController::class);
     Route::get('group-my-number', [GroupController::class, 'showMyNumber']);
 
@@ -144,9 +152,13 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('studio',StudioController::class);
     Route::apiResource('grammar-guide',GrammarGuideController::class);
     Route::apiResource('wbw',WbwController::class);
+    Route::apiResource('attachment',AttachmentController::class);
+    Route::apiResource('api',ApiController::class);
+    Route::apiResource('progress-img',ProgressImgController::class);
+    Route::apiResource('recent',RecentController::class);
+    Route::apiResource('milestone',MilestoneController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
-
         header("Content-Type: {$type1}/{$type1}");
         header("Content-Disposition: attachment; filename=\"{$filename}\"");
         $content = Cache::get("download/tmp/{$uuid}");

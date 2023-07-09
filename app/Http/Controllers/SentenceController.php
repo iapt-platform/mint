@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Sentence;
 use App\Models\Channel;
+use App\Models\SentHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Resources\SentResource;
@@ -234,10 +235,22 @@ class SentenceController extends Controller
             $row->create_time = time()*1000;
             $row->modify_time = time()*1000;
             $row->save();
+
+            //保存历史记录
+            $this->saveHistory($row->uid,$user["user_uid"],$sent['content']);
         }
         return $this->ok(count($request->get('sentences')));
     }
 
+    private function saveHistory($uid,$editor,$content){
+        $newHis = new SentHistory();
+        $newHis->id = app('snowflake')->id();
+        $newHis->sent_uid = $uid;
+        $newHis->user_uid = $editor;
+        $newHis->content = $content;
+        $newHis->create_time = time()*1000;
+        $newHis->save();
+    }
     /**
      * Display the specified resource.
      *
@@ -304,6 +317,8 @@ class SentenceController extends Controller
             $sent->pr_id = $request->get('prId');
         }
         $sent->save();
+        //保存历史记录
+        $this->saveHistory($sent->uid,$user["user_uid"],$request->get('content'));
         return $this->ok(new SentResource($sent));
     }
 
