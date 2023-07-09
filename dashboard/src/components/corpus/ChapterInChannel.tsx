@@ -10,6 +10,7 @@ import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { IStudio } from "../auth/StudioName";
 import { useState } from "react";
+import { ProgressOutlinedIcon } from "../../assets/icon";
 
 const { Text } = Typography;
 
@@ -96,7 +97,7 @@ const ChapterInChannelWidget = ({
                     {item.hit} | <LikeOutlined />
                     {item.like} |
                     <TimeShow time={item.updatedAt} /> |
-                    <EyeOutlined />
+                    <ProgressOutlinedIcon />
                     {`${item.progress}%`}
                   </Space>
                 </Text>
