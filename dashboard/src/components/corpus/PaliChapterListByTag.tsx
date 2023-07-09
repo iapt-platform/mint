@@ -27,6 +27,8 @@ const PaliChapterListByTagWidget = (prop: IWidgetPaliChapterListByTag) => {
             Path: item.path,
             Book: item.book,
             Paragraph: item.paragraph,
+            chapterStrLen: item.chapter_strlen,
+            paragraphCount: item.chapter_len,
             progressLine: item.progress_line,
           };
         });
@@ -38,17 +40,15 @@ const PaliChapterListByTagWidget = (prop: IWidgetPaliChapterListByTag) => {
   }, [prop.tag]);
 
   return (
-    <>
-      <PaliChapterList
-        data={tableData}
-        maxLevel={1}
-        onChapterClick={(e: IChapterClickEvent) => {
-          if (typeof prop.onChapterClick !== "undefined") {
-            prop.onChapterClick(e);
-          }
-        }}
-      />
-    </>
+    <PaliChapterList
+      data={tableData}
+      maxLevel={1}
+      onChapterClick={(e: IChapterClickEvent) => {
+        if (typeof prop.onChapterClick !== "undefined") {
+          prop.onChapterClick(e);
+        }
+      }}
+    />
   );
 };
 

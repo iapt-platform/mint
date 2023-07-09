@@ -17,7 +17,7 @@ interface IWidget {
   id?: string;
   title?: string;
   subtitle?: string;
-  coverUrl?: string;
+  coverUrl?: string[];
   startAt?: string;
   endAt?: string;
   teacher?: IUser;
@@ -58,7 +58,11 @@ const CourseHeadWidget = ({
               <Image
                 width={200}
                 style={{ borderRadius: 12 }}
-                src={API_HOST + "/" + coverUrl}
+                src={coverUrl && coverUrl.length > 1 ? coverUrl[1] : undefined}
+                preview={{
+                  src:
+                    coverUrl && coverUrl.length > 0 ? coverUrl[0] : undefined,
+                }}
                 fallback={`${API_HOST}/app/course/img/default.jpg`}
               />
               <Space direction="vertical">

@@ -27,74 +27,75 @@ const WbwDetailWidget = ({
   onCommentCountChange,
 }: IWidget) => {
   const intl = useIntl();
-  const [currWbwData, setCurrWbwData] = useState(data);
+  const [currWbwData, setCurrWbwData] = useState<IWbw>(
+    JSON.parse(JSON.stringify(data))
+  );
   useEffect(() => {
-    setCurrWbwData(data);
+    setCurrWbwData(JSON.parse(JSON.stringify(data)));
   }, [data]);
+
   function fieldChanged(field: TFieldName, value: string) {
     console.log("field", field, "value", value);
-    let mData = currWbwData;
-    switch (field) {
-      case "note":
-        mData.note = { value: value, status: 7 };
-        break;
-      case "bookMarkColor":
-        mData.bookMarkColor = { value: parseInt(value), status: 7 };
-        break;
-      case "bookMarkText":
-        mData.bookMarkText = { value: value, status: 7 };
-        break;
-      case "word":
-        mData.word = { value: value, status: 7 };
-        break;
-      case "real":
-        mData.real = { value: value, status: 7 };
-        break;
-      case "meaning":
-        mData.meaning = { value: value, status: 7 };
-        break;
-      case "factors":
-        mData.factors = { value: value, status: 7 };
-        break;
-      case "factorMeaning":
-        mData.factorMeaning = { value: value, status: 7 };
-        break;
-      case "parent":
-        mData.parent = { value: value, status: 7 };
-        break;
-      case "parent2":
-        mData.parent2 = { value: value, status: 7 };
-        break;
-      case "grammar2":
-        mData.grammar2 = { value: value, status: 7 };
-        break;
-      case "case":
-        const arrCase = value.split("#");
-        mData.case = { value: value, status: 7 };
-        mData.type = { value: arrCase[0] ? arrCase[0] : "", status: 7 };
-        mData.grammar = { value: arrCase[1] ? arrCase[1] : "", status: 7 };
-        break;
-      case "relation":
-        mData.relation = { value: value, status: 7 };
-        break;
-      case "confidence":
-        mData.confidence = parseFloat(value);
-        break;
-      case "locked":
-        mData.locked = JSON.parse(value);
-        break;
-      default:
-        break;
-    }
-    setCurrWbwData(mData);
+    setCurrWbwData((origin) => {
+      switch (field) {
+        case "note":
+          origin.note = { value: value, status: 7 };
+          break;
+        case "bookMarkColor":
+          origin.bookMarkColor = { value: parseInt(value), status: 7 };
+          break;
+        case "bookMarkText":
+          origin.bookMarkText = { value: value, status: 7 };
+          break;
+        case "word":
+          origin.word = { value: value, status: 7 };
+          break;
+        case "real":
+          origin.real = { value: value, status: 7 };
+          break;
+        case "meaning":
+          origin.meaning = { value: value, status: 7 };
+          break;
+        case "factors":
+          origin.factors = { value: value, status: 7 };
+          break;
+        case "factorMeaning":
+          origin.factorMeaning = { value: value, status: 7 };
+          break;
+        case "parent":
+          origin.parent = { value: value, status: 7 };
+          break;
+        case "parent2":
+          origin.parent2 = { value: value, status: 7 };
+          break;
+        case "grammar2":
+          origin.grammar2 = { value: value, status: 7 };
+          break;
+        case "case":
+          const arrCase = value.split("#");
+          origin.case = { value: value, status: 7 };
+          origin.type = { value: arrCase[0] ? arrCase[0] : "", status: 7 };
+          origin.grammar = { value: arrCase[1] ? arrCase[1] : "", status: 7 };
+          break;
+        case "relation":
+          origin.relation = { value: value, status: 7 };
+          break;
+        case "confidence":
+          origin.confidence = parseFloat(value);
+          break;
+        case "locked":
+          origin.locked = JSON.parse(value);
+          break;
+        case "attachments":
+          //mData.attachments = value;
+          break;
+        default:
+          break;
+      }
+      return origin;
+    });
   }
 
-  const items = [
-    {
-      key: "user-dict",
-      label: intl.formatMessage({ id: "buttons.save.publish" }),
-    },
-  ];
   return (
     <div
       style={{
@@ -192,14 +193,15 @@ const WbwDetailWidget = ({
                     fieldChanged(e.field, e.value);
                   }}
                   onUpload={(fileList: UploadFile<IAttachmentResponse>[]) => {
-                    let mData = currWbwData;
+                    let mData = JSON.parse(JSON.stringify(currWbwData));
                     mData.attachments = fileList.map((item) => {
                       return {
-                        uid: item.uid,
-                        name: item.name,
-                        size: item.size,
-                        type: item.type,
-                        url: item.response?.data.url,
+                        id: item.response ? item.response?.data.id : item.uid,
+                        title: item.name,
+                        size: item.size ? item.size : 0,
+                        content_type: item.response
+                          ? item.response?.data.content_type
+                          : "",
                       };
                     });
                     setCurrWbwData(mData);

@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
 import { Layout, Row, Col, Typography } from "antd";
-import CreateFeedback from "../feedback/CreateFeedback";
 
 const { Footer } = Layout;
-const { Title } = Typography;
+const { Paragraph } = Typography;
 
 const FooterBarWidget = () => {
   //Library foot bar
@@ -12,7 +11,7 @@ const FooterBarWidget = () => {
     <Footer>
       <Row>
         <Col span={8}>
-          <Title level={5}>相关链接</Title>
+          <Paragraph strong>相关链接</Paragraph>
           <ul>
             <li>
               <Link to="www.github.com/iapt-platform/mint" target="_blank">
@@ -23,7 +22,7 @@ const FooterBarWidget = () => {
           </ul>
         </Col>
         <Col span={16}>
-          <Title level={5}>问题反馈</Title>
+          <Paragraph strong>问题反馈</Paragraph>
         </Col>
       </Row>
       <Row>

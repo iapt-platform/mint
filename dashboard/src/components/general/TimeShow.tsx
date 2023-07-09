@@ -1,13 +1,16 @@
-import { Space, Tooltip } from "antd";
+import { Space, Tooltip, Typography } from "antd";
 import { useIntl } from "react-intl";
 import { FieldTimeOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
+import { BaseType } from "antd/lib/typography/Base";
+const { Text } = Typography;
 
 interface IWidgetTimeShow {
   showIcon?: boolean;
   showTooltip?: boolean;
   time?: string;
   title?: string;
+  type?: BaseType;
 }
 
 const TimeShowWidget = ({
@@ -15,6 +18,7 @@ const TimeShowWidget = ({
   showTooltip = true,
   time,
   title,
+  type,
 }: IWidgetTimeShow) => {
   const intl = useIntl(); //i18n
   const [passTime, setPassTime] = useState<string>();
@@ -25,7 +29,7 @@ const TimeShowWidget = ({
       return;
     }
     let timer = setInterval(() => {
-      setMTime((mTime) => mTime + 1);
+      setMTime((origin) => origin + 1);
     }, 1000 * 60);
     return () => {
       clearInterval(timer);
@@ -50,17 +54,17 @@ const TimeShowWidget = ({
     const time = new Date(t);
     let pass = currDate.getTime() - time.getTime();
     let strPassTime = "";
-    if (pass < 120 * 1000) {
+    if (pass < 60 * 1000) {
       //二分钟内
       strPassTime =
         Math.floor(pass / 1000) +
         intl.formatMessage({ id: "utilities.time.secs_ago" });
-    } else if (pass < 7200 * 1000) {
+    } else if (pass < 3600 * 1000) {
       //二小时内
       strPassTime =
         Math.floor(pass / 1000 / 60) +
         intl.formatMessage({ id: "utilities.time.mins_ago" });
-    } else if (pass < 3600 * 48 * 1000) {
+    } else if (pass < 3600 * 24 * 1000) {
       //二天内
       strPassTime =
         Math.floor(pass / 1000 / 3600) +
@@ -70,7 +74,7 @@ const TimeShowWidget = ({
       strPassTime =
         Math.floor(pass / 1000 / 3600 / 24) +
         intl.formatMessage({ id: "utilities.time.days_ago" });
-    } else if (pass < 3600 * 24 * 60 * 1000) {
+    } else if (pass < 3600 * 24 * 30 * 1000) {
       //二个月内
       strPassTime =
         Math.floor(pass / 1000 / 3600 / 24 / 7) +
@@ -99,11 +103,13 @@ const TimeShowWidget = ({
 
   return (
     <Tooltip title={tooltip} color={color} key={color}>
-      <Space>
-        {icon}
-        {title}
-        {passTime}
-      </Space>
+      <Text type={type}>
+        <Space>
+          {icon}
+          {title}
+          {passTime}
+        </Space>
+      </Text>
     </Tooltip>
   );
 };

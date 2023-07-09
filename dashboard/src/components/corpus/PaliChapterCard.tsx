@@ -1,9 +1,9 @@
-import { Row, Col } from "antd";
+import { Row, Col, Space } from "antd";
 import { Typography } from "antd";
 import { TinyLine } from "@ant-design/plots";
 import TocPath from "./TocPath";
 
-const { Title, Link } = Typography;
+const { Title, Text, Link } = Typography;
 
 export interface IPaliChapterData {
   Title: string;
@@ -12,6 +12,8 @@ export interface IPaliChapterData {
   Path: string;
   Book: number;
   Paragraph: number;
+  chapterStrLen: number;
+  paragraphCount: number;
   progressLine?: number[];
 }
 
@@ -68,7 +70,13 @@ const PaliChapterCardWidget = ({ data, onTitleClick }: IWidget) => {
             </Col>
           </Row>
           <Row>
-            <Col></Col>
+            <Col>
+              <Text type="secondary">
+                <Space>
+                  字符数{data.chapterStrLen} | 段落数{data.paragraphCount}
+                </Space>
+              </Text>
+            </Col>
           </Row>
           <Row>
             <Col span={16}></Col>

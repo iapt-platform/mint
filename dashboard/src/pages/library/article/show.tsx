@@ -4,7 +4,9 @@ import { Key } from "antd/lib/table/interface";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ColumnOutlinedIcon } from "../../../assets/icon";
+import { IArticleDataResponse } from "../../../components/api/Article";
 import { IApiResponseDictList } from "../../../components/api/Dict";
+import AnchorNav from "../../../components/article/AnchorNav";
 
 import Article, {
   ArticleMode,
@@ -47,6 +49,7 @@ const Widget = () => {
   console.log("mode", mode);
   const [rightPanel, setRightPanel] = useState<TPanelName>("close");
   const [searchParams, setSearchParams] = useSearchParams();
+  const [anchorNavOpen, setAnchorNavOpen] = useState(false);
   const paraChange = useAppSelector(paraParam);
 
   useEffect(() => {
@@ -82,13 +85,13 @@ const Widget = () => {
     /**
      * 启动时载入格位公式字典
      */
-    get<IApiResponseDictList>(`/v2/userdict?view=word&word=_formula_`).then(
-      (json) => {
-        console.log("_formula_ ok", json.data.count);
-        //存储到redux
-        store.dispatch(add(json.data.rows));
-      }
-    );
+    get<IApiResponseDictList>(
+      `/v2/userdict?view=dict&id=2142c229-8860-4ca5-a82e-1afc7e4f1e5d`
+    ).then((json) => {
+      console.log("_formula_ ok", json.data.count);
+      //存储到redux
+      store.dispatch(add(json.data.rows));
+    });
   }, []);
   const rightBarWidth = "48px";
   const channelId = id?.split("_").slice(1);
@@ -146,6 +149,12 @@ const Widget = () => {
               }}
             />
             <Divider type="vertical" />
+            <Button
+              style={{ display: "block", color: "white" }}
+              icon={<ColumnOutlinedIcon />}
+              type="text"
+              onClick={() => setAnchorNavOpen((value) => !value)}
+            />
             <Button
               style={{ display: "block", color: "white" }}
               icon={<ColumnOutlinedIcon />}
@@ -220,9 +229,11 @@ const Widget = () => {
                 });
                 navigate(url);
               }}
+              onLoad={(article: IArticleDataResponse) => {}}
             />
           </div>
           <div key="RightPanel">
+            <AnchorNav open={anchorNavOpen} />
             <RightPanel
               curr={rightPanel}
               type={type as ArticleType}

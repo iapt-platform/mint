@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { Avatar, List, message, Typography } from "antd";
+import { Avatar, List, message, Typography, Image } from "antd";
 import { ICourse } from "../../pages/library/course/course";
 import { ICourseListResponse } from "../api/Course";
 import { API_HOST, get } from "../../request";
@@ -26,7 +26,7 @@ const CourseListWidget = ({ type }: IWidget) => {
             subtitle: item.subtitle,
             teacher: item.teacher,
             intro: item.content,
-            coverUrl: item.cover,
+            coverUrl: item.cover_url,
           };
         });
         setData(course);
@@ -51,7 +51,22 @@ const CourseListWidget = ({ type }: IWidget) => {
         <List.Item
           key={item.title}
           extra={
-            <img width={128} alt="logo" src={API_HOST + "/" + item.coverUrl} />
+            <Image
+              width={128}
+              style={{ borderRadius: 12 }}
+              src={
+                item.coverUrl && item.coverUrl.length > 1
+                  ? item.coverUrl[1]
+                  : undefined
+              }
+              preview={{
+                src:
+                  item.coverUrl && item.coverUrl.length > 0
+                    ? item.coverUrl[0]
+                    : undefined,
+              }}
+              fallback={`${API_HOST}/app/course/img/default.jpg`}
+            />
           }
         >
           <List.Item.Meta

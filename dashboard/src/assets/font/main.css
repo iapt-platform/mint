@@ -241,21 +241,6 @@
   font-display: fallback;
 }
 
-/*缅文*/
-@font-face {
-  font-family: "Padauk";
-  font-style: normal;
-  font-weight: 400;
-  src: local("Padauk"), url(./Padauk/Padauk-Regular.ttf) format("truetype");
-  font-display: fallback;
-}
-@font-face {
-  font-family: "Padauk";
-  font-style: normal;
-  font-weight: 700;
-  src: local("Padauk Bold"), url(./Padauk/Padauk-Bold.ttf) format("truetype");
-  font-display: fallback;
-}
 /*Noto Sans Myanmar*/
 @font-face {
   font-family: "Noto Sans Myanmar";

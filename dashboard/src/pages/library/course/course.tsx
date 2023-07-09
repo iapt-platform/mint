@@ -28,7 +28,7 @@ export interface ICourse {
   startAt?: string; //课程开始时间
   endAt?: string; //课程结束时间
   intro?: string; //简介
-  coverUrl?: string; //封面图片文件名
+  coverUrl?: string[]; //封面图片文件名
   join?: TCourseJoinMode;
   exp?: TCourseExpRequest;
 }
@@ -53,7 +53,7 @@ const Widget = () => {
           startAt: json.data.start_at,
           endAt: json.data.end_at,
           intro: json.data.content,
-          coverUrl: json.data.cover,
+          coverUrl: json.data.cover_url,
           join: json.data.join,
           exp: json.data.request_exp,
         };

@@ -45,6 +45,7 @@ export interface ICourseDataResponse {
   end_at: string; //课程结束时间
   content: string; //简介
   cover: string; //封面图片文件名
+  cover_url?: string[]; //封面图片文件名
   member_count: number;
   join: TCourseJoinMode;
   request_exp: TCourseExpRequest;

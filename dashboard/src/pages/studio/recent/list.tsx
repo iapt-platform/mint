@@ -1,210 +1,282 @@
-import { useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
-import { Link } from "react-router-dom";
-import { Dropdown } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { Dropdown, Space, Typography } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { ProTable } from "@ant-design/pro-components";
-import { get } from "../../../request";
-import { ArticleType } from "../../../components/article/Article";
+import { ActionType, ProTable } from "@ant-design/pro-components";
 
-export interface IViewRequest {
-  target_type: ArticleType;
-  book: number;
-  para: number;
-  channel: string;
-  mode: string;
+import { get } from "../../../request";
+import { ArticleMode, ArticleType } from "../../../components/article/Article";
+import { useAppSelector } from "../../../hooks";
+import { currentUser as _currentUser } from "../../../reducers/current-user";
+import ArticleDrawer from "../../../components/article/ArticleDrawer";
+import {
+  ArticleOutlinedIcon,
+  ChapterOutlinedIcon,
+  ParagraphOutlinedIcon,
+} from "../../../assets/icon";
+
+export interface IRecentRequest {
+  type: ArticleType;
+  article_id: string;
+  param?: string;
 }
-export interface IMetaChapter {
-  book: number;
-  para: number;
-  channel: string;
-  mode: string;
+interface IParam {
+  book?: string;
+  para?: string;
+  channel?: string;
+  mode?: string;
 }
-interface IViewData {
+interface IRecentData {
   id: string;
-  target_id: string;
-  target_type: ArticleType;
-  updated_at: string;
   title: string;
-  org_title: string;
-  meta: string;
+  type: ArticleType;
+  article_id: string;
+  param: string | null;
+  updated_at: string;
 }
-export interface IViewStoreResponse {
+
+export interface IRecentResponse {
   ok: boolean;
   message: string;
-  data: number;
+  data: IRecentData;
 }
-export interface IViewResponse {
-  ok: boolean;
-  message: string;
-  data: IViewData;
-}
-export interface IViewListResponse {
+interface IRecentListResponse {
   ok: boolean;
   message: string;
   data: {
-    rows: IViewData[];
+    rows: IRecentData[];
     count: number;
   };
 }
 
-export interface IView {
+interface IRecent {
   id: string;
   title: string;
-  subtitle: string;
   type: ArticleType;
+  articleId: string;
   updatedAt: string;
-  meta: IMetaChapter;
+  param?: IParam;
 }
-
+interface IArticleParam {
+  type: ArticleType;
+  articleId: string;
+  mode?: ArticleMode;
+  channelId?: string;
+  book?: string;
+  para?: string;
+}
 const Widget = () => {
   const intl = useIntl();
-  const { studioname } = useParams();
-  return (
-    <ProTable<IView>
-      columns={[
-        {
-          title: intl.formatMessage({
-            id: "dict.fields.sn.label",
-          }),
-          dataIndex: "sn",
-          key: "sn",
-          width: 50,
-          search: false,
-        },
-        {
-          title: intl.formatMessage({
-            id: "forms.fields.title.label",
-          }),
-          dataIndex: "title",
-          key: "title",
-          tip: "过长会自动收缩",
-          ellipsis: true,
-          render: (text, row, index, action) => {
-            return (
-              <div key={index}>
-                <div>
-                  <Link
-                    to={`/article/chapter/${row.meta.book}-${row.meta.para}`}
-                    target="_blank"
-                  >
-                    {row.title ? row.title : row.subtitle}
-                  </Link>
-                </div>
-                <div>{row.title ? row.subtitle : undefined}</div>
-              </div>
-            );
-          },
-        },
-        {
-          title: intl.formatMessage({
-            id: "forms.fields.type.label",
-          }),
-          dataIndex: "type",
-          key: "type",
-          width: 100,
-          search: false,
-          filters: true,
-          onFilter: true,
-          valueEnum: {
-            all: { text: "全部", status: "Default" },
-            chapter: { text: "章节", status: "Success" },
-          },
-        },
-        {
-          title: intl.formatMessage({
-            id: "forms.fields.updated-at.label",
-          }),
-          key: "updated-at",
-          width: 100,
-          search: false,
-          dataIndex: "updatedAt",
-          valueType: "date",
-        },
-        {
-          title: intl.formatMessage({ id: "buttons.option" }),
-          key: "option",
-          width: 120,
-          valueType: "option",
-          render: (text, row, index, action) => [
-            <Dropdown.Button
-              type="link"
-              key={index}
-              trigger={["click", "contextMenu"]}
-              menu={{
-                items: [
-                  {
-                    key: "open",
-                    label: "在藏经阁中打开",
-                    icon: <SearchOutlined />,
-                  },
-                  {
-                    key: "share",
-                    label: "分享",
-                    icon: <SearchOutlined />,
-                  },
-                  {
-                    key: "delete",
-                    label: "删除",
-                    icon: <SearchOutlined />,
-                  },
-                ],
-                onClick: (e) => {
-                  switch (e.key) {
-                    case "share":
-                      break;
-                    case "delete":
-                      break;
-                    default:
-                      break;
-                  }
-                },
-              }}
-            >
-              {intl.formatMessage({ id: "buttons.edit" })}
-            </Dropdown.Button>,
-          ],
-        },
-      ]}
-      request={async (params = {}, sorter, filter) => {
-        console.log(params, sorter, filter);
-        let url = `/v2/view?view=studio&name=${studioname}`;
-        const offset =
-          ((params.current ? params.current : 1) - 1) *
-          (params.pageSize ? params.pageSize : 10);
-        url += `&limit=${params.pageSize}&offset=${offset}`;
-        url += params.keyword ? "&search=" + params.keyword : "";
+  const user = useAppSelector(_currentUser);
+  const ref = useRef<ActionType>();
+  const [articleOpen, setArticleOpen] = useState(false);
+  const [param, setParam] = useState<IArticleParam>();
 
-        const res = await get<IViewListResponse>(url);
-        console.log("article list", res);
-        const items: IView[] = res.data.rows.map((item, id) => {
+  useEffect(() => {
+    ref.current?.reload();
+  }, [user]);
+  return (
+    <>
+      <ProTable<IRecent>
+        actionRef={ref}
+        columns={[
+          {
+            title: intl.formatMessage({
+              id: "dict.fields.sn.label",
+            }),
+            dataIndex: "sn",
+            key: "sn",
+            width: 50,
+            search: false,
+          },
+          {
+            title: intl.formatMessage({
+              id: "forms.fields.title.label",
+            }),
+            dataIndex: "title",
+            key: "title",
+            tip: "过长会自动收缩",
+            ellipsis: true,
+            render: (text, row, index, action) => {
+              let icon = <></>;
+              switch (row.type) {
+                case "article":
+                  icon = <ArticleOutlinedIcon />;
+                  break;
+                case "chapter":
+                  icon = <ChapterOutlinedIcon />;
+                  break;
+                case "para":
+                  icon = <ParagraphOutlinedIcon />;
+                  break;
+                default:
+                  break;
+              }
+              return (
+                <Space>
+                  {icon}
+                  <Typography.Link
+                    key={index}
+                    onClick={(event) => {
+                      if (event.ctrlKey || event.metaKey) {
+                        let url = `/article/${row.type}/${row.articleId}?mode=`;
+                        url += row.param?.mode ? row.param?.mode : "read";
+                        url += row.param?.channel
+                          ? `&channel=${row.param?.channel}`
+                          : "";
+                        url += row.param?.book
+                          ? `&book=${row.param?.book}`
+                          : "";
+                        url += row.param?.para ? `&par=${row.param?.para}` : "";
+                        const fullUrl =
+                          process.env.REACT_APP_WEB_HOST +
+                          process.env.PUBLIC_URL +
+                          url;
+                        window.open(fullUrl, "_blank");
+                      } else {
+                        setParam({
+                          type: row.type,
+                          articleId: row.articleId,
+                          mode: row.param?.mode as ArticleMode,
+                          channelId: row.param?.channel,
+                          book: row.param?.book,
+                          para: row.param?.para,
+                        });
+                        setArticleOpen(true);
+                      }
+                    }}
+                  >
+                    {row.title}
+                  </Typography.Link>
+                </Space>
+              );
+            },
+          },
+          {
+            title: intl.formatMessage({
+              id: "forms.fields.type.label",
+            }),
+            dataIndex: "type",
+            key: "type",
+            width: 100,
+            search: false,
+            filters: true,
+            onFilter: true,
+            valueEnum: {
+              all: { text: "全部", status: "Default" },
+              chapter: { text: "章节", status: "Success" },
+              article: { text: "文章", status: "Success" },
+              para: { text: "段落", status: "Success" },
+              sent: { text: "句子", status: "Success" },
+            },
+          },
+          {
+            title: intl.formatMessage({
+              id: "forms.fields.updated-at.label",
+            }),
+            key: "updated-at",
+            width: 100,
+            search: false,
+            dataIndex: "updatedAt",
+            valueType: "date",
+          },
+          {
+            title: intl.formatMessage({ id: "buttons.option" }),
+            key: "option",
+            width: 120,
+            valueType: "option",
+            render: (text, row, index, action) => [
+              <Dropdown.Button
+                type="link"
+                key={index}
+                trigger={["click", "contextMenu"]}
+                menu={{
+                  items: [
+                    {
+                      key: "open",
+                      label: "在藏经阁中打开",
+                      icon: <SearchOutlined />,
+                    },
+                    {
+                      key: "share",
+                      label: "分享",
+                      icon: <SearchOutlined />,
+                    },
+                    {
+                      key: "delete",
+                      label: "删除",
+                      icon: <SearchOutlined />,
+                    },
+                  ],
+                  onClick: (e) => {
+                    switch (e.key) {
+                      case "share":
+                        break;
+                      case "delete":
+                        break;
+                      default:
+                        break;
+                    }
+                  },
+                }}
+              >
+                {intl.formatMessage({ id: "buttons.edit" })}
+              </Dropdown.Button>,
+            ],
+          },
+        ]}
+        request={async (params = {}, sorter, filter) => {
+          console.log(params, sorter, filter);
+          if (typeof user === "undefined") {
+            return {
+              total: 0,
+              succcess: false,
+              data: [],
+            };
+          }
+          let url = `/v2/recent?view=user&id=${user?.id}`;
+          const offset =
+            ((params.current ? params.current : 1) - 1) *
+            (params.pageSize ? params.pageSize : 10);
+          url += `&limit=${params.pageSize}&offset=${offset}`;
+          url += params.keyword ? "&search=" + params.keyword : "";
+          console.log("url", url);
+          const res = await get<IRecentListResponse>(url);
+          console.log("article list", res);
+          const items: IRecent[] = res.data.rows.map((item, id) => {
+            return {
+              sn: id + 1,
+              id: item.id,
+              title: item.title,
+              type: item.type,
+              articleId: item.article_id,
+              param: item.param ? JSON.parse(item.param) : undefined,
+              updatedAt: item.updated_at,
+            };
+          });
           return {
-            sn: id + 1,
-            id: item.id,
-            title: item.title,
-            subtitle: item.org_title,
-            type: item.target_type,
-            meta: JSON.parse(item.meta),
-            updatedAt: item.updated_at,
+            total: res.data.count,
+            succcess: true,
+            data: items,
           };
-        });
-        return {
-          total: res.data.count,
-          succcess: true,
-          data: items,
-        };
-      }}
-      rowKey="id"
-      bordered
-      pagination={{
-        showQuickJumper: true,
-        showSizeChanger: true,
-      }}
-      search={false}
-      options={{
-        search: true,
-      }}
-    />
+        }}
+        rowKey="id"
+        bordered
+        pagination={{
+          showQuickJumper: true,
+          showSizeChanger: true,
+        }}
+        search={false}
+        options={{
+          search: true,
+        }}
+      />
+      <ArticleDrawer
+        {...param}
+        open={articleOpen}
+        onClose={() => setArticleOpen(false)}
+      />
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Badge, Card, List, message, Modal } from "antd";
+import { Badge, Card, List, message, Modal, Skeleton } from "antd";
 
 import { get } from "../../request";
 import { useEffect, useState } from "react";
@@ -36,6 +36,7 @@ interface IWidget {
 const RelatedParaWidget = ({ book, para, trigger, onSelect }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tableData, setTableData] = useState<IRelatedParaData[]>([]);
+  const [load, setLoad] = useState(true);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -50,16 +51,19 @@ const RelatedParaWidget = ({ book, para, trigger, onSelect }: IWidget) => {
   };
   useEffect(() => {
     if (typeof book === "number" && typeof para === "number" && isModalOpen) {
+      setLoad(true);
       get<IRelatedParaResponse>(
         `/v2/related-paragraph?book=${book}&para=${para}`
-      ).then((json) => {
-        console.log("import", json);
-        if (json.ok) {
-          setTableData(json.data.rows);
-        } else {
-          message.error(json.message);
-        }
-      });
+      )
+        .then((json) => {
+          console.log("import", json);
+          if (json.ok) {
+            setTableData(json.data.rows);
+          } else {
+            message.error(json.message);
+          }
+        })
+        .finally(() => setLoad(false));
     }
   }, [book, para, isModalOpen]);
 
@@ -72,54 +76,60 @@ const RelatedParaWidget = ({ book, para, trigger, onSelect }: IWidget) => {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <List
-          itemLayout="vertical"
-          size="small"
-          split={false}
-          dataSource={tableData}
-          renderItem={(item) => {
-            const isPali = item.tags?.find((tag) => tag.name === "pāḷi");
-            const isAttha = item.tags?.find((tag) => tag.name === "aṭṭhakathā");
-            const isTika = item.tags?.find((tag) => tag.name === "ṭīkā");
-            return (
-              <List.Item>
-                <Badge.Ribbon
-                  text={
-                    isPali
-                      ? "pāḷi"
-                      : isAttha
-                      ? "aṭṭhakathā"
-                      : isTika
-                      ? "ṭīkā"
-                      : undefined
-                  }
-                  color={
-                    isPali
-                      ? "volcano"
-                      : isAttha
-                      ? "green"
-                      : isTika
-                      ? "cyan"
-                      : undefined
-                  }
-                >
-                  <Card
-                    title={
-                      <Link
-                        to={`/article/para?book=${item.book}&par=${item.para}`}
-                      >
-                        {item.book_title_pali}
-                      </Link>
+        {load ? (
+          <Skeleton paragraph={{ rows: 4 }} active />
+        ) : (
+          <List
+            itemLayout="vertical"
+            size="small"
+            split={false}
+            dataSource={tableData}
+            renderItem={(item) => {
+              const isPali = item.tags?.find((tag) => tag.name === "pāḷi");
+              const isAttha = item.tags?.find(
+                (tag) => tag.name === "aṭṭhakathā"
+              );
+              const isTika = item.tags?.find((tag) => tag.name === "ṭīkā");
+              return (
+                <List.Item>
+                  <Badge.Ribbon
+                    text={
+                      isPali
+                        ? "pāḷi"
+                        : isAttha
+                        ? "aṭṭhakathā"
+                        : isTika
+                        ? "ṭīkā"
+                        : undefined
                     }
-                    size="small"
+                    color={
+                      isPali
+                        ? "volcano"
+                        : isAttha
+                        ? "green"
+                        : isTika
+                        ? "cyan"
+                        : undefined
+                    }
                   >
-                    <TocPath data={item.path} />
-                  </Card>
-                </Badge.Ribbon>
-              </List.Item>
-            );
-          }}
-        />
+                    <Card
+                      title={
+                        <Link
+                          to={`/article/para?book=${item.book}&par=${item.para}`}
+                        >
+                          {item.book_title_pali}
+                        </Link>
+                      }
+                      size="small"
+                    >
+                      <TocPath data={item.path} />
+                    </Card>
+                  </Badge.Ribbon>
+                </List.Item>
+              );
+            }}
+          />
+        )}
       </Modal>
     </>
   );

@@ -44,7 +44,8 @@ interface DataItem {
   course_start_at?: string; //课程开始时间
   course_end_at?: string; //课程结束时间
   intro_markdown?: string; //简介
-  cover_img_name?: string; //封面图片文件名
+  coverId: string;
+  coverUrl?: string[]; //封面图片文件名
   myStatus?: TCourseMemberStatus;
   countProgressing?: number;
 }
@@ -150,7 +151,17 @@ const Widget = () => {
               return (
                 <Space key={index}>
                   <Image
-                    src={`${API_HOST}/${row.cover_img_name}`}
+                    src={
+                      row.coverUrl && row.coverUrl.length > 1
+                        ? row.coverUrl[1]
+                        : ""
+                    }
+                    preview={{
+                      src:
+                        row.coverUrl && row.coverUrl.length > 0
+                          ? row.coverUrl[0]
+                          : "",
+                    }}
                     width={64}
                     fallback={`${API_HOST}/app/course/img/default.jpg`}
                   />
@@ -347,7 +358,8 @@ const Widget = () => {
               title: item.title,
               subtitle: item.subtitle,
               teacher: item.teacher?.nickName,
-              cover_img_name: item.cover,
+              coverId: item.cover,
+              coverUrl: item.cover_url,
               type: item.publicity,
               member_count: item.member_count,
               myStatus: item.my_status,

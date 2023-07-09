@@ -11,6 +11,7 @@ import {
 } from "@ant-design/pro-components";
 
 import { message, Form } from "antd";
+import { get as getToken } from "../../reducers/current-user";
 
 import { API_HOST, get, put } from "../../request";
 import {
@@ -23,7 +24,7 @@ import PublicitySelect from "../../components/studio/PublicitySelect";
 import { IUserListResponse } from "../../components/api/Auth";
 import MDEditor from "@uiw/react-md-editor";
 import { DefaultOptionType } from "antd/lib/select";
-import { UploadFile } from "antd/es/upload/interface";
+import { UploadChangeParam, UploadFile } from "antd/es/upload/interface";
 import { IAttachmentResponse } from "../../components/api/Attachments";
 
 import { IAnthologyListResponse } from "../../components/api/Article";
@@ -93,7 +94,7 @@ const CourseInfoEditWidget = ({
           } else if (typeof values.cover[0].response === "undefined") {
             _cover = values.cover[0].uid;
           } else {
-            _cover = values.cover[0].response.data.url;
+            _cover = values.cover[0].response.data.id;
           }
 
           const res = await put<ICourseDataRequest, ICourseResponse>(
@@ -164,7 +165,10 @@ const CourseInfoEditWidget = ({
                   {
                     uid: res.data.cover,
                     name: "cover",
-                    thumbUrl: API_HOST + "/" + res.data.cover,
+                    thumbUrl:
+                      res.data.cover_url && res.data.cover_url.length > 1
+                        ? res.data.cover_url[1]
+                        : undefined,
                   },
                 ]
               : [],
@@ -190,9 +194,17 @@ const CourseInfoEditWidget = ({
               name: "file",
               listType: "picture-card",
               className: "avatar-uploader",
+              headers: {
+                Authorization: `Bearer ${getToken()}`,
+              },
+              onRemove: (file: UploadFile<any>): boolean => {
+                console.log("remove", file);
+                return true;
+              },
             }}
-            action={`${API_HOST}/api/v2/attachments`}
+            action={`${API_HOST}/api/v2/attachment`}
             extra="封面必须为正方形。最大512*512"
+            onChange={(info: UploadChangeParam<UploadFile<any>>) => {}}
           />
         </ProForm.Group>
         <ProForm.Group>

@@ -94,6 +94,11 @@ export interface IArticleDataResponse {
   editor?: IUser;
   created_at: string;
   updated_at: string;
+  from?: number;
+  to?: number;
+  mode?: string;
+  paraId?: string;
+  channels?: string;
 }
 export interface IArticleResponse {
   ok: boolean;

@@ -1,8 +1,9 @@
 import { Button, List } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { IView, IViewListResponse } from "../../pages/studio/recent/list";
+
 import { get } from "../../request";
+import { IView, IViewListResponse } from "../api/view";
 
 const RecentWidget = () => {
   const [listData, setListData] = useState<IView[]>([]);

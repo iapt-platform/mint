@@ -14,6 +14,7 @@ interface IWidget {
   type?: string;
   tags?: string[];
   searchKey?: string;
+  studioName?: string;
   onTagClick?: Function;
 }
 
@@ -23,6 +24,7 @@ const ChapterListWidget = ({
   lang = "zh",
   type = "translation",
   tags = [],
+  studioName,
   onTagClick,
 }: IWidget) => {
   const [tableData, setTableData] = useState<ChapterData[]>([]);
@@ -35,7 +37,11 @@ const ChapterListWidget = ({
     } else {
       const strTags = tags.length > 0 ? "&tags=" + tags.join() : "";
       const offset = (currPage - 1) * 20;
-      url = `/v2/progress?view=chapter${strTags}&offset=${offset}&progress=${progress}&lang=${lang}&channel_type=${type}`;
+      url = `/v2/progress?view=chapter`;
+      if (typeof studioName !== "undefined") {
+        url += `&studio=${studioName}&public=true`;
+      }
+      url += `${strTags}&offset=${offset}&progress=${progress}&lang=${lang}&channel_type=${type}`;
     }
     console.log("url", url);
     get<IChapterListResponse>(url).then((json) => {
@@ -75,7 +81,7 @@ const ChapterListWidget = ({
         setTableData([]);
       }
     });
-  }, [progress, lang, type, tags, currPage, searchKey]);
+  }, [currPage, lang, progress, searchKey, studioName, tags, type]);
 
   return (
     <List

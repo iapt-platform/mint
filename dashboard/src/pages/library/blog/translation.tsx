@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 
 import BlogNav from "../../../components/blog/BlogNav";
+import CommunityChapter from "../../../components/corpus/CommunityChapter";
 
 const Widget = () => {
   // TODO
@@ -9,6 +10,7 @@ const Widget = () => {
   return (
     <>
       <BlogNav selectedKey="palicanon" studio={studio ? studio : ""} />
+      <CommunityChapter studioName={studio} />
     </>
   );
 };

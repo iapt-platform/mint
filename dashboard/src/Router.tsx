@@ -22,6 +22,8 @@ import AdminRelation from "./pages/admin/relation";
 import AdminRelationList from "./pages/admin/relation/list";
 import AdminNissayaEnding from "./pages/admin/nissaya-ending";
 import AdminNissayaEndingList from "./pages/admin/nissaya-ending/list";
+import AdminApi from "./pages/admin/api";
+import AdminApiDashboard from "./pages/admin/api/dashboard";
 
 import LibraryHome from "./pages/library";
 import LibraryCommunity from "./pages/library/community";
@@ -107,6 +109,9 @@ const Widget = () => {
     <ConfigProvider prefixCls={theme}>
       <Routes>
         <Route path="admin" element={<AdminHome />}>
+          <Route path="api" element={<AdminApi />}>
+            <Route path="dashboard" element={<AdminApiDashboard />} />
+          </Route>
           <Route path="relation" element={<AdminRelation />}>
             <Route path="list" element={<AdminRelationList />} />
           </Route>

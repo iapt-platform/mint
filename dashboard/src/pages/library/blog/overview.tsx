@@ -1,16 +1,17 @@
 import { useParams } from "react-router-dom";
-import { Row, Col } from "antd";
+import { Row, Col, Space } from "antd";
 import { Affix } from "antd";
 
 import BlogNav from "../../../components/blog/BlogNav";
 import Profile from "../../../components/blog/Profile";
 import AuthorTimeLine from "../../../components/blog/TimeLine";
 import TopArticles from "../../../components/blog/TopArticles";
+import TopChapter from "../../../components/corpus/TopChapter";
 
 const Widget = () => {
   // TODO
   const { studio } = useParams(); //url 参数
-
+  //<TopArticles studio={studio ? studio : ""} />
   return (
     <>
       <Affix offsetTop={0}>
@@ -23,12 +24,10 @@ const Widget = () => {
         </Col>
 
         <Col flex="900px">
-          <div>
-            <TopArticles studio={studio ? studio : ""} />
-          </div>
-          <div>
-            <AuthorTimeLine />
-          </div>
+          <Space direction="vertical" size={50}>
+            <TopChapter studioName={studio} />
+            <AuthorTimeLine studioName={studio} />
+          </Space>
         </Col>
       </Row>
     </>

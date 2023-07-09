@@ -16,6 +16,17 @@ type IWidgetHeadBar = {
 const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   const items: MenuProps["items"] = [
     {
+      label: "API",
+      key: "api",
+      icon: <HomeOutlined />,
+      children: [
+        {
+          label: <Link to="/admin/api/dashboard">dashboard</Link>,
+          key: "dashboard",
+        },
+      ],
+    },
+    {
       label: "管理",
       key: "manage",
       icon: <HomeOutlined />,

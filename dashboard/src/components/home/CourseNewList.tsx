@@ -24,7 +24,7 @@ const CourseNewListWidget = () => {
             subtitle: item.subtitle,
             teacher: item.teacher,
             intro: item.content,
-            coverUrl: item.cover,
+            coverUrl: item.cover_url,
           };
         });
         setData(course);

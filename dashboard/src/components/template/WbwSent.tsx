@@ -246,6 +246,7 @@ export const WbwSentCtl = ({
       note: item.note,
       bmt: item.bookMarkText,
       bmc: item.bookMarkColor,
+      attachments: JSON.stringify(item.attachments),
       cf: item.confidence,
     };
   };

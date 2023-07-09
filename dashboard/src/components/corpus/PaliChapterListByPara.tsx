@@ -26,6 +26,8 @@ const PaliChapterListByParaWidget = ({ chapter, onChapterClick }: IWidget) => {
           Path: item.path,
           Book: item.book,
           Paragraph: item.paragraph,
+          chapterStrLen: item.chapter_strlen,
+          paragraphCount: item.chapter_len,
           progressLine: item.progress_line,
         };
       });

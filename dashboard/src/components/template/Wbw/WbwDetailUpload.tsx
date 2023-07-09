@@ -16,11 +16,16 @@ const WbwDetailUploadWidget = ({ data, onUpload }: IWidget) => {
 
   const props: UploadProps = {
     name: "file",
-    action: `${API_HOST}/api/v2/attachments`,
+    action: `${API_HOST}/api/v2/attachment`,
     headers: {
       Authorization: `Bearer ${getToken()}`,
     },
-    defaultFileList: data.attachments,
+    defaultFileList: data.attachments?.map((item) => {
+      return {
+        uid: item.id,
+        name: item.title ? item.title : "",
+      };
+    }),
     onChange(info) {
       console.log("onchange", info);
       if (typeof onUpload !== "undefined") {
