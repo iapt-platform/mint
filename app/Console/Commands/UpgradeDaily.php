@@ -57,7 +57,7 @@ class UpgradeDaily extends Command
         //更新单词首选意思
         $this->call('upgrade:dict.default.meaning');
         //社区术语表
-        $this->call('upgrade:community.term',['zh-Hans']);
+        $this->call('upgrade:community.term',['lang'=>'zh-Hans']);
 
         #译文进度
         $this->call('upgrade:progress');
@@ -86,7 +86,6 @@ class UpgradeDaily extends Command
 				'type' => 'wechat',
 			]);
 		}
-
 
         return 0;
     }
