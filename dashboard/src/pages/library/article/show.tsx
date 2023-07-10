@@ -15,6 +15,7 @@ import Article, {
 
 import MainMenu from "../../../components/article/MainMenu";
 import ModeSwitch from "../../../components/article/ModeSwitch";
+import Navigate from "../../../components/article/Navigate";
 import RightPanel, { TPanelName } from "../../../components/article/RightPanel";
 import ToolButtonDiscussion from "../../../components/article/ToolButtonDiscussion";
 import ToolButtonNav from "../../../components/article/ToolButtonNav";
@@ -230,6 +231,27 @@ const Widget = () => {
                 navigate(url);
               }}
               onLoad={(article: IArticleDataResponse) => {}}
+            />
+            <Navigate
+              type={type as ArticleType}
+              articleId={id}
+              onChange={(
+                event: React.MouseEvent<HTMLElement, MouseEvent>,
+                newId: string
+              ) => {
+                let url = `/article/${type}/${newId}?mode=${currMode}`;
+                searchParams.forEach((value, key) => {
+                  console.log(value, key);
+                  if (key !== "mode") {
+                    url += `&${key}=${value}`;
+                  }
+                });
+                if (event.ctrlKey || event.metaKey) {
+                  window.open(url, "_blank");
+                } else {
+                  navigate(url);
+                }
+              }}
             />
           </div>
           <div key="RightPanel">

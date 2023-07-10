@@ -53,13 +53,12 @@ export type ArticleType =
  * exercise-list/articleId?course=id&exercise=id&mode=ArticleMode
  * sent-original/id
  */
-interface IWidgetArticle {
+interface IWidget {
   type?: ArticleType;
-  id?: string;
+  articleId?: string;
   book?: string | null;
   para?: string | null;
   channelId?: string | null;
-  articleId?: string;
   anthologyId?: string;
   courseId?: string;
   exerciseId?: string;
@@ -72,7 +71,6 @@ interface IWidgetArticle {
 }
 const ArticleWidget = ({
   type,
-  id,
   book,
   para,
   channelId,
@@ -86,7 +84,7 @@ const ArticleWidget = ({
   onArticleChange,
   onFinal,
   onLoad,
-}: IWidgetArticle) => {
+}: IWidget) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [articleHtml, setArticleHtml] = useState<string[]>(["<span />"]);
   const [extra, setExtra] = useState(<></>);
@@ -348,6 +346,8 @@ const ArticleWidget = ({
     });
     return;
   };
+
+  //const comment = <CommentListCard resId={articleData?.uid} resType="article" />
   return (
     <div>
       {showSkeleton ? (
@@ -384,7 +384,6 @@ const ArticleWidget = ({
 
       {extra}
       <Divider />
-      <CommentListCard resId={articleData?.uid} resType="article" />
     </div>
   );
 };

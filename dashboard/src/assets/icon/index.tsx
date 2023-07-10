@@ -163,6 +163,22 @@ const ParagraphOutlined = () => (
     ></path>
   </svg>
 );
+
+const ProgressOutlined = () => (
+  <svg
+    viewBox="0 0 1024 1024"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    p-id="2309"
+    width="1em"
+    height="1em"
+  >
+    <path
+      d="M537.6 469.7088V486.4h409.6v25.6A435.2 435.2 0 1 1 512 76.8h25.6v392.9088zM128 512a384 384 0 0 0 767.1808 25.6H486.4V512 128.8192A384 384 0 0 0 128 512z m794.6752-144.3328a25.6 25.6 0 0 1-48.2816 16.9984 385.1264 385.1264 0 0 0-235.3152-235.1616 25.6 25.6 0 0 1 16.9472-48.2816 436.3264 436.3264 0 0 1 266.6496 266.4448z"
+      p-id="2310"
+    ></path>
+  </svg>
+);
 export const DictIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DictSvg} {...props} />
 );
@@ -201,3 +217,7 @@ export const ArticleOutlinedIcon = (
 export const ParagraphOutlinedIcon = (
   props: Partial<CustomIconComponentProps>
 ) => <Icon component={ParagraphOutlined} {...props} />;
+
+export const ProgressOutlinedIcon = (
+  props: Partial<CustomIconComponentProps>
+) => <Icon component={ProgressOutlined} {...props} />;
