@@ -99,6 +99,10 @@ import StudioSetting from "./pages/studio/setting";
 
 import StudioAnalysis from "./pages/studio/analysis";
 import StudioAnalysisList from "./pages/studio/analysis/list";
+
+import StudioInvite from "./pages/studio/invite";
+import StudioInviteList from "./pages/studio/invite/list";
+
 import { ConfigProvider } from "antd";
 import { useAppSelector } from "./hooks";
 import { currTheme } from "./reducers/theme";
@@ -123,7 +127,7 @@ const Widget = () => {
         <Route path="anonymous" element={<Anonymous />}>
           <Route path="users">
             <Route path="sign-in" element={<NutUsersSignIn />} />
-            <Route path="sign-up" element={<NutUsersSignUp />} />
+            <Route path="sign-up/:token" element={<NutUsersSignUp />} />
 
             <Route path="unlock">
               <Route path="new" element={<NutUsersUnlockNew />} />
@@ -274,6 +278,9 @@ const Widget = () => {
 
           <Route path="exp" element={<StudioAnalysis />}>
             <Route path="list" element={<StudioAnalysisList />} />
+          </Route>
+          <Route path="invite" element={<StudioInvite />}>
+            <Route path="list" element={<StudioInviteList />} />
           </Route>
         </Route>
       </Routes>
