@@ -122,7 +122,7 @@ class UpgradeDict extends Command
 														if(isset($newPart[$part])){
 															$newPart[$part][0]++;
 														}else{
-															$partExists = Cache::remember('dict/part/'.$part,1000,function() use($part){
+															$partExists = Cache::remember('dict/part/'.$part,env('CACHE_EXPIRE',1000),function() use($part){
 																return UserDict::where('word',$part)->exists();
 															});
 															if(!$partExists){

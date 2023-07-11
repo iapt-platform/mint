@@ -21,7 +21,9 @@ class VocabularyController extends Controller
         switch ($request->get("view")) {
             case 'key':
                 $key = $request->get("key");
-                $result = Cache::remember("/dict_vocabulary/{$key}",10,function() use($key){
+                $result = Cache::remember("/dict_vocabulary/{$key}",
+                        env('CACHE_EXPIRE',3600*24),
+                        function() use($key){
                         return Vocabulary::whereRaw('word like ? or word_en like ?',[$key."%",$key."%"])
                                     ->whereOr('word_en','like',$key."%")
                                     ->orderBy('strlen')
