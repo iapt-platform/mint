@@ -54,6 +54,7 @@ use App\Http\Controllers\ProgressImgController;
 use App\Http\Controllers\RecentController;
 use App\Http\Controllers\MilestoneController;
 use App\Http\Controllers\ArticleNavController;
+use App\Http\Controllers\InviteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -159,6 +160,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('recent',RecentController::class);
     Route::apiResource('milestone',MilestoneController::class);
     Route::apiResource('article-nav',ArticleNavController::class);
+    Route::apiResource('invite',InviteController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
