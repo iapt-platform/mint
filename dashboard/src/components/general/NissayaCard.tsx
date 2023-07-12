@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Modal, Popover, Typography } from "antd";
+import { Modal, Popover, Skeleton, Typography } from "antd";
 
 import { get } from "../../request";
 import { get as getLang } from "../../locales";
@@ -58,7 +58,7 @@ interface IWidget {
   cache?: boolean;
 }
 const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
-  const [guide, setGuide] = useState("Loading");
+  const [guide, setGuide] = useState<string>();
 
   useEffect(() => {
     const uiLang = getLang();
@@ -81,7 +81,11 @@ const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
     });
   }, [cache, text]);
 
-  return <Marked text={guide} />;
+  return guide ? (
+    <Marked text={guide} />
+  ) : (
+    <Skeleton title={{ width: 200 }} paragraph={{ rows: 4 }} active />
+  );
 };
 
 export default NissayaCardWidget;
