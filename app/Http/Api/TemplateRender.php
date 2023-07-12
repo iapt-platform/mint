@@ -67,7 +67,7 @@ class TemplateRender{
         $channelId = $this->channel_id;
         $channelInfo = $this->channelInfo;
         $props = Cache::remember("/term/{$this->channel_id}/{$word}",
-              60,
+                env('CACHE_EXPIRE',3600*24),
               function() use($word,$channelId,$channelInfo){
                 //先查属于这个channel 的
                 $tplParam = DhammaTerm::where("word",$word)->where('channal',$channelId)->first();
@@ -77,12 +77,13 @@ class TemplateRender{
                                           ->where('owner',$channelInfo->owner_uid)
                                           ->first();
                 }
+
                 $output = [
                     "word" => $word,
                     "parentChannelId" => $channelId,
                     "parentStudioId" => $channelInfo->owner_uid,
                     ];
-                    $innerString = $output["word"];
+                $innerString = $output["word"];
                 if($tplParam){
                     $output["id"] = $tplParam->guid;
                     $output["meaning"] = $tplParam->meaning;
@@ -94,9 +95,16 @@ class TemplateRender{
                     if($tplParam->note){
                         $output["summary"] = $tplParam->note;
                     }else{
-                        //使用社区note
+                        //本人没有解释内容的。用社区数据。
+                        //TODO 由作者（读者）设置是否使用社区数据
                         //获取channel 语言
+                        //使用社区note
+                        $community_channel = ChannelApi::getSysChannel("_community_term_zh-hans_");
                         //查找社区解释
+                        $community_note = DhammaTerm::where("word",$word)
+                                                    ->where('channal',$community_channel)->value('note');
+                        $output["summary"] = $tplParam->note;
+                        $output["community"] = true;
                     }
                 }
                 $output['innerHtml'] = $innerString;
@@ -186,7 +194,7 @@ class TemplateRender{
         $paraId = $this->get_param($this->param,"para",1);
         $channelId = $this->channel_id;
         $props = Cache::remember("/quote/{$channelId}/{$paraId}",
-              60,
+              env('CACHE_EXPIRE',3600*24),
               function() use($paraId,$channelId){
                 $para = \explode('-',$paraId);
                 $output = [
