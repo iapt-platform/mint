@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class UserInfo extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'id';
+    public  $incrementing = true;
 }
