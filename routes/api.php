@@ -55,6 +55,7 @@ use App\Http\Controllers\RecentController;
 use App\Http\Controllers\MilestoneController;
 use App\Http\Controllers\ArticleNavController;
 use App\Http\Controllers\InviteController;
+use App\Http\Controllers\SignUpController;
 
 /*
 |--------------------------------------------------------------------------
@@ -161,6 +162,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('milestone',MilestoneController::class);
     Route::apiResource('article-nav',ArticleNavController::class);
     Route::apiResource('invite',InviteController::class);
+    Route::apiResource('sign-up',SignUpController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
