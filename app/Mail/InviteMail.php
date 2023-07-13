@@ -12,16 +12,18 @@ class InviteMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $invite;
+    protected $uuid;
+    protected $lang;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(string $uuid)
+    public function __construct(string $uuid,string $lang='en')
     {
         //
-        $this->invite = $uuid;
+        $this->uuid = $uuid;
+        $this->lang = $lang;
     }
 
     /**
@@ -31,10 +33,9 @@ class InviteMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.invite')
+        return $this->view('emails.invite_'.$this->lang)
                     ->with([
-                        'url' => env('APP_URL').'/anonymous/users/sign-up/'.$this->invite,
-                        'uuid' => $this->invite,
+                        'url' => env('APP_URL').'/anonymous/users/sign-up/'.$this->uuid,
                     ]);
     }
 }
