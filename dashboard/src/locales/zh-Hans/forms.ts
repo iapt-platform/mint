@@ -2,6 +2,7 @@ const items = {
   "forms.fields.email.label": "电子邮箱",
   "forms.fields.email.or.username.label": "电子邮箱/用户名",
   "forms.fields.password.label": "密码",
+  "forms.fields.confirm-password.label": "确认密码",
   "forms.fields.id.label": "ID",
   "forms.fields.message.label": "消息",
   "forms.fields.created-at.label": "创建时间",
@@ -64,6 +65,8 @@ const items = {
   "forms.message.res.remove": "将此此资源从群中移除吗？",
   "forms.fields.parent2.label": "衍生原型",
   "forms.fields.parent2.tooltip": "最长为 256个字符",
+  "forms.fields.username.label": "用户名(登录名)",
+  "forms.fields.nickname.label": "昵称",
 };
 
 export default items;

@@ -1,14 +1,14 @@
 import { Outlet } from "react-router-dom";
-import { Col, Layout, Row } from "antd";
+import { Col, Row } from "antd";
 import UiLangSelect from "../../components/general/UiLangSelect";
 import img_banner from "../../assets/library/images/wikipali_logo_library.svg";
 
 const Widget = () => {
   return (
     <>
-      <Layout style={{ textAlign: "right", backgroundColor: "#3e3e3e" }}>
+      <div style={{ textAlign: "right", backgroundColor: "#3e3e3e" }}>
         <UiLangSelect />
-      </Layout>
+      </div>
       <div style={{ paddingTop: "3em", backgroundColor: "#3e3e3e" }}>
         <Row>
           <Col flex="auto"></Col>

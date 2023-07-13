@@ -45,6 +45,7 @@ const items = {
   "columns.studio.advance.title": "高级",
   "columns.studio.setting.title": "设置",
   "columns.exp.title": "经验",
+  "columns.studio.invite.title": "注册邀请",
   ...buttons,
   ...forms,
   ...tables,

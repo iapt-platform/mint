@@ -51,6 +51,7 @@ const items = {
   "buttons.download": "下载",
   "buttons.download.link": "下载链接",
   "buttons.lookup": "查字典",
+  "buttons.invite": "邀请",
 };
 
 export default items;

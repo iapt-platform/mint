@@ -1,4 +1,4 @@
-import { Button, Popover } from "antd";
+import { Button, Popover, Skeleton } from "antd";
 import { Typography } from "antd";
 import { SearchOutlined, EditOutlined } from "@ant-design/icons";
 import { ProCard } from "@ant-design/pro-components";
@@ -10,8 +10,15 @@ import { useEffect, useState } from "react";
 import { ITermDataResponse } from "../api/Term";
 import { changedTerm, refresh } from "../../reducers/term-change";
 import { useAppSelector } from "../../hooks";
+import { get } from "../../request";
 
 const { Text, Link } = Typography;
+
+interface ITermSummary {
+  ok: boolean;
+  message: string;
+  data: string;
+}
 
 interface IWidgetTermCtl {
   id?: string;
@@ -22,6 +29,7 @@ interface IWidgetTermCtl {
   parentChannelId?: string;
   parentStudioId?: string;
   summary?: string;
+  isCommunity?: string;
 }
 const TermCtl = ({
   id,
@@ -32,9 +40,12 @@ const TermCtl = ({
   parentChannelId,
   parentStudioId,
   summary,
+  isCommunity,
 }: IWidgetTermCtl) => {
   const [openPopover, setOpenPopover] = useState(false);
   const [termData, setTermData] = useState<ITerm>();
+  const [content, setContent] = useState<string>();
+
   const newTerm: ITermDataResponse | undefined = useAppSelector(changedTerm);
 
   useEffect(() => {
@@ -73,6 +84,26 @@ const TermCtl = ({
           open={openPopover}
           onOpenChange={(visible) => {
             setOpenPopover(visible);
+            if (
+              visible &&
+              typeof content === "undefined" &&
+              typeof id !== "undefined"
+            ) {
+              const value = sessionStorage.getItem(`term/summary/${id}`);
+              if (value !== null) {
+                setContent(value);
+                return;
+              } else {
+                const url = `/v2/term-summary/${id}`;
+                console.log("url", url);
+                get<ITermSummary>(url).then((json) => {
+                  if (json.ok) {
+                    setContent(json.data !== "" ? json.data : " ");
+                    sessionStorage.setItem(`term/summary/${id}`, json.data);
+                  }
+                });
+              }
+            }
           }}
           content={
             <ProCard
@@ -113,12 +144,22 @@ const TermCtl = ({
                 />,
               ]}
             >
-              <div>{termData.summary}</div>
+              <div>
+                {content ? (
+                  content
+                ) : (
+                  <Skeleton
+                    title={{ width: 200 }}
+                    paragraph={{ rows: 4 }}
+                    active
+                  />
+                )}
+              </div>
             </ProCard>
           }
           placement="bottom"
         >
-          <Link>
+          <Link style={{ color: isCommunity ? "green" : undefined }}>
             {termData?.meaning
               ? termData?.meaning
               : termData?.word

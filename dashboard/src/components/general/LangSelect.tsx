@@ -25,8 +25,9 @@ export const LangValueEnum = () => {
 
 interface IWidget {
   width?: number | "md" | "sm" | "xl" | "xs" | "lg";
+  label?: string;
 }
-const LangSelectWidget = ({ width }: IWidget) => {
+const LangSelectWidget = ({ width, label }: IWidget) => {
   const intl = useIntl();
 
   const langOptions = [
@@ -55,7 +56,9 @@ const LangSelectWidget = ({ width }: IWidget) => {
       showSearch
       debounceTime={300}
       allowClear={false}
-      label={intl.formatMessage({ id: "forms.fields.lang.label" })}
+      label={
+        label ? label : intl.formatMessage({ id: "forms.fields.lang.label" })
+      }
       rules={[
         {
           required: true,

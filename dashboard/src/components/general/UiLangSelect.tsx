@@ -41,7 +41,7 @@ const UiLangSelectWidget = () => {
 
   return (
     <Dropdown menu={{ items, onClick }} placement="bottomRight">
-      <Button ghost icon={<GlobalOutlined />}>
+      <Button ghost style={{ border: "unset" }} icon={<GlobalOutlined />}>
         {curr}
       </Button>
     </Dropdown>

@@ -1,6 +1,7 @@
 import { Timeline } from "antd";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
+import { StartUpIcon, TermIcon2, TermOutlinedIcon } from "../../assets/icon";
 import { get } from "../../request";
 import TimeShow from "../general/TimeShow";
 
@@ -44,9 +45,24 @@ const TimeLineWidget = ({ studioName }: IWidget) => {
     <>
       <Timeline mode="left" style={{ width: "100%" }}>
         {milestone.map((item, id) => {
+          let icon = <></>;
+          switch (item.event) {
+            case "sign-in":
+              icon = (
+                <StartUpIcon style={{ fontSize: "2em", background: "unset" }} />
+              );
+              break;
+            case "first-term":
+              icon = <TermIcon2 style={{ fontSize: "2em" }} />;
+              break;
+            default:
+              break;
+          }
           return (
             <Timeline.Item
+              style={{ backgroundColor: "unset" }}
               key={id}
+              dot={icon}
               label={<TimeShow time={item.date} showIcon={false} />}
             >
               {intl.formatMessage({

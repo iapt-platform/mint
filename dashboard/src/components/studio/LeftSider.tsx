@@ -176,6 +176,16 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
           ),
           key: "group",
         },
+        {
+          label: (
+            <Link to={`/studio/${studioname}/invite/list`}>
+              {intl.formatMessage({
+                id: "columns.studio.invite.title",
+              })}
+            </Link>
+          ),
+          key: "invite",
+        },
       ],
     },
   ];
