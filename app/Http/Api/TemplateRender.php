@@ -6,6 +6,7 @@ use App\Models\PaliText;
 use App\Http\Controllers\CorpusController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Http\Api\ChannelApi;
 
 class TemplateRender{
     protected $param = [];
@@ -67,7 +68,7 @@ class TemplateRender{
         $channelId = $this->channel_id;
         $channelInfo = $this->channelInfo;
         $props = Cache::remember("/term/{$this->channel_id}/{$word}",
-              60,
+                env('CACHE_EXPIRE',3600*24),
               function() use($word,$channelId,$channelInfo){
                 //先查属于这个channel 的
                 $tplParam = DhammaTerm::where("word",$word)->where('channal',$channelId)->first();
@@ -77,27 +78,50 @@ class TemplateRender{
                                           ->where('owner',$channelInfo->owner_uid)
                                           ->first();
                 }
+                if(!$tplParam){
+                    //没有，再查社区
+                    $community_channel = ChannelApi::getSysChannel("_community_term_zh-hans_");
+                    $tplParam = DhammaTerm::where("word",$word)
+                                          ->where('channal',$community_channel)
+                                          ->first();
+                    if($tplParam){
+                        $isCommunity = true;
+                    }
+                }
                 $output = [
                     "word" => $word,
                     "parentChannelId" => $channelId,
                     "parentStudioId" => $channelInfo->owner_uid,
                     ];
-                    $innerString = $output["word"];
+                $innerString = $output["word"];
                 if($tplParam){
                     $output["id"] = $tplParam->guid;
                     $output["meaning"] = $tplParam->meaning;
                     $output["channel"] = $tplParam->channal;
+                    if(isset($isCommunity)){
+                        $output["isCommunity"] = true;
+                    }
                     $innerString = "{$output["meaning"]}({$output["word"]})";
                     if(!empty($tplParam->other_meaning)){
                         $output["meaning2"] = $tplParam->other_meaning;
                     }
+                    /*
                     if($tplParam->note){
                         $output["summary"] = $tplParam->note;
                     }else{
-                        //使用社区note
+                        //本人没有解释内容的。用社区数据。
+                        //TODO 由作者（读者）设置是否使用社区数据
                         //获取channel 语言
+                        //使用社区note
+                        $community_channel = ChannelApi::getSysChannel("_community_term_zh-hans_");
                         //查找社区解释
+                        $community_note = DhammaTerm::where("word",$word)
+                                                    ->where('channal',$community_channel)
+                                                    ->value('note');
+                        $output["summary"] = $tplParam->note;
+                        $output["community"] = true;
                     }
+                    */
                 }
                 $output['innerHtml'] = $innerString;
                 return $output;
@@ -186,7 +210,7 @@ class TemplateRender{
         $paraId = $this->get_param($this->param,"para",1);
         $channelId = $this->channel_id;
         $props = Cache::remember("/quote/{$channelId}/{$paraId}",
-              60,
+              env('CACHE_EXPIRE',3600*24),
               function() use($paraId,$channelId){
                 $para = \explode('-',$paraId);
                 $output = [

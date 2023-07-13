@@ -176,9 +176,11 @@ class TurboSplit
         $search = $word;
 
 		//获取单词权重
-		$row = Cache::remember('palicanon/wordpart/weight/'.$search, 10 , function() use($search) {
-			return WordPart::where('word',$search)->value('weight');
-		});
+		$row = Cache::remember('palicanon/wordpart/weight/'.$search,
+                env('CACHE_EXPIRE',3600*24) ,
+                function() use($search) {
+                    return WordPart::where('word',$search)->value('weight');
+                });
 		if ($row) {
 			//找到
 			return array($row,0);
@@ -202,9 +204,11 @@ class TurboSplit
 			$base_weight = 0;
 			$len = 0;
 			foreach ($newWord as $x => $x_value) {
-				$row = Cache::remember('palicanon/wordpart/weight/'.$search, 10 , function() use($x) {
-					return WordPart::where('word',$x)->value('weight');
-				});
+				$row = Cache::remember('palicanon/wordpart/weight/'.$search,
+                        env('CACHE_EXPIRE',3600*24) ,
+                        function() use($x) {
+                            return WordPart::where('word',$x)->value('weight');
+                        });
 				if ($row) {
 					if ($row > $base_weight) {
 						$base_weight = $row;
@@ -230,9 +234,11 @@ class TurboSplit
 
 		$isFound = false;
 		$count = 0;
-		$wordPart  = Cache::remember("turbosplit/part/{$word}",10,function() use($word){
-			return implode(',',$this->dict_lookup($word));
-		});
+		$wordPart  = Cache::remember("turbosplit/part/{$word}",
+                        env('CACHE_EXPIRE',3600*24),
+                        function() use($word){
+                            return implode(',',$this->dict_lookup($word));
+                        });
 		$arrWordPart = explode(',',$wordPart);
 		$word_count = $arrWordPart[0];
 		$case_len = $arrWordPart[1];
@@ -244,13 +250,15 @@ class TurboSplit
 
 		//fomular of confidence value 信心值计算公式
 		if ($isFound) {
-			$cf  = Cache::remember("turbosplit/confidence/".$word,1000,function() use($word,$count,$case_len){
-				$len = mb_strlen($word, "UTF-8") - $case_len;
-				$len_correct = 1.2;
-				$count2 = 1.1 + pow($count, 1.18);
-				$conf_num = pow(1 / $count2, pow(($len - 0.5), $len_correct));
-				return round(1 / (1 + 640 * $conf_num), 9);
-			});
+			$cf  = Cache::remember("turbosplit/confidence/".$word,
+                    env('CACHE_EXPIRE',1000),
+                    function() use($word,$count,$case_len){
+                        $len = mb_strlen($word, "UTF-8") - $case_len;
+                        $len_correct = 1.2;
+                        $count2 = 1.1 + pow($count, 1.18);
+                        $conf_num = pow(1 / $count2, pow(($len - 0.5), $len_correct));
+                        return round(1 / (1 + 640 * $conf_num), 9);
+                    });
 			return ($cf);
 		} else {
 			return (-1);

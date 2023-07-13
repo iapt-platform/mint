@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 require_once __DIR__.'/../../../public/app/ucenter/function.php';
 
 use Illuminate\Http\Request;
+use App\Models\UserInfo;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Http\Api;
@@ -67,17 +68,20 @@ class AuthController extends Controller
         //
     }
     public function signIn(Request $request){
-        $userInfo = new \UserInfo();
-        $user = $userInfo->signIn($request->get('username'),$request->get('password'));
+
+        $user = UserInfo::where('username',$request->get('username'))
+                        ->where('password',md5($request->get('password')))
+                        ->first();
         if($user){
             $ExpTime = time() + 60 * 60 * 24 * 365;
             $key = env('APP_KEY');
             $payload = [
                 'nbf' => time(),
                 'exp' => $ExpTime,
-                'uid' => $user['userid'],
-                'id' => $user['id'],
+                'uid' => $user->userid,
+                'id' => $user->id,
             ];
+            Log::info('JWT::encode.key='.$key);
             $jwt = JWT::encode($payload,$key,'HS512');
             return $this->ok($jwt);
         }else{

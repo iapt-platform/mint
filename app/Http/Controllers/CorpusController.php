@@ -572,14 +572,16 @@ class CorpusController extends Controller
 
                             break;
                         case 'nissaya':
-                            $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",10,
-                            function() use($row,$mode){
-                                return MdRender::render($row->content,$row->channel_uid,null,$mode,"nissaya",$row->content_type);
-                            });
+                            $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",
+                                                env('CACHE_EXPIRE',3600*24),
+                                                function() use($row,$mode){
+                                                    return MdRender::render($row->content,$row->channel_uid,null,$mode,"nissaya",$row->content_type);
+                                                });
                             break;
                         default:
                             //译文需要markdown渲染
-                            $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",10,
+                            $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",
+                                                env('CACHE_EXPIRE',3600*24),
                                                 function() use($row){
                                                     return MdRender::render($row->content,$row->channel_uid);
                                                 });
@@ -807,15 +809,15 @@ class CorpusController extends Controller
     public static function sentResCount($book,$para,$start,$end){
 		$sentId = "{$book}-{$para}-{$start}-{$end}";
 		$channelCount = Cache::remember("/sentence/{$sentId}/channels/count",
-                          60,
+                          env('CACHE_EXPIRE',3600*24),
                           function() use($book,$para,$start,$end){
-			$channels =  Sentence::where('book_id',$book)
-							->where('paragraph',$para)
-							->where('word_start',$start)
-							->where('word_end',$end)
-							->select('channel_uid')
-                            ->groupBy('channel_uid')
-							->get();
+			                $channels =  Sentence::where('book_id',$book)
+                                ->where('paragraph',$para)
+                                ->where('word_start',$start)
+                                ->where('word_end',$end)
+                                ->select('channel_uid')
+                                ->groupBy('channel_uid')
+                                ->get();
             $channelList = [];
             foreach ($channels as $key => $value) {
                 # code...
