@@ -13,10 +13,12 @@ class AuthApi{
             if(\substr($token,0,6) === 'Bearer'){
                 $token = trim(substr($token,6));
                 if($token === "null"){
+                    Log::error('token=null');
                     return false;
                 }
                 $jwt = JWT::decode($token,new Key(env('APP_KEY'),'HS512'));
                 if($jwt->exp < time()){
+                    Log::error('Expired');
                     return false;
                 }else{
                     //有效的token
@@ -26,8 +28,10 @@ class AuthApi{
                 return false;
             }
         }else if(isset($_COOKIE['user_uid'])){
+            Log::error('no token');
             return ['user_uid'=>$_COOKIE['user_uid'],'user_id'=>$_COOKIE['user_id']];
         }else{
+            Log::error('no token');
             return false;
         }
     }
