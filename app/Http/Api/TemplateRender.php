@@ -6,6 +6,7 @@ use App\Models\PaliText;
 use App\Http\Controllers\CorpusController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Http\Api\ChannelApi;
 
 class TemplateRender{
     protected $param = [];
@@ -77,7 +78,16 @@ class TemplateRender{
                                           ->where('owner',$channelInfo->owner_uid)
                                           ->first();
                 }
-
+                if(!$tplParam){
+                    //没有，再查社区
+                    $community_channel = ChannelApi::getSysChannel("_community_term_zh-hans_");
+                    $tplParam = DhammaTerm::where("word",$word)
+                                          ->where('channal',$community_channel)
+                                          ->first();
+                    if($tplParam){
+                        $isCommunity = true;
+                    }
+                }
                 $output = [
                     "word" => $word,
                     "parentChannelId" => $channelId,
@@ -88,10 +98,14 @@ class TemplateRender{
                     $output["id"] = $tplParam->guid;
                     $output["meaning"] = $tplParam->meaning;
                     $output["channel"] = $tplParam->channal;
+                    if(isset($isCommunity)){
+                        $output["isCommunity"] = true;
+                    }
                     $innerString = "{$output["meaning"]}({$output["word"]})";
                     if(!empty($tplParam->other_meaning)){
                         $output["meaning2"] = $tplParam->other_meaning;
                     }
+                    /*
                     if($tplParam->note){
                         $output["summary"] = $tplParam->note;
                     }else{
@@ -102,10 +116,12 @@ class TemplateRender{
                         $community_channel = ChannelApi::getSysChannel("_community_term_zh-hans_");
                         //查找社区解释
                         $community_note = DhammaTerm::where("word",$word)
-                                                    ->where('channal',$community_channel)->value('note');
+                                                    ->where('channal',$community_channel)
+                                                    ->value('note');
                         $output["summary"] = $tplParam->note;
                         $output["community"] = true;
                     }
+                    */
                 }
                 $output['innerHtml'] = $innerString;
                 return $output;
