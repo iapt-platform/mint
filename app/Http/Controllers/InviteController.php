@@ -75,14 +75,15 @@ class InviteController extends Controller
             return $this->error(__('validation.exists',['email']),[],200);
         }
 
-
+        $uuid = Str::uuid();
         Mail::to($request->get('email'))
-            ->send(new InviteMail());
+            ->locale(strtolower($request->get('lang')))
+            ->send(new InviteMail($uuid,strtolower($request->get('lang'))));
         if(Mail::failures()){
             return $this->error('send email fail',[],200);
         }else{
             $invite = new Invite;
-            $invite->id = Str::uuid();
+            $invite->id = $uuid;
             $invite->email = $request->get('email');
             $invite->user_uid = $user['user_uid'];
             $invite->status = 'invited';
