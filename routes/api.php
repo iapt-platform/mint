@@ -56,6 +56,7 @@ use App\Http\Controllers\MilestoneController;
 use App\Http\Controllers\ArticleNavController;
 use App\Http\Controllers\InviteController;
 use App\Http\Controllers\SignUpController;
+use App\Http\Controllers\TermSummaryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,7 +108,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::get('group-my-number', [GroupController::class, 'showMyNumber']);
 
     Route::get('auth/current',[AuthController::class,'getUserInfoByToken']);
-    Route::post('auth/signin',[AuthController::class,'signIn']);
+    Route::post('sign-in',[AuthController::class,'signIn']);
 
     Route::apiResource('corpus',CorpusController::class);
     Route::get('corpus/sent/{id}',[CorpusController::class,'showSent']);
@@ -163,6 +164,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('article-nav',ArticleNavController::class);
     Route::apiResource('invite',InviteController::class);
     Route::apiResource('sign-up',SignUpController::class);
+    Route::apiResource('term-summary',TermSummaryController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
