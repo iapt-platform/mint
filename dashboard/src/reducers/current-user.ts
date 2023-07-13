@@ -12,24 +12,21 @@ export const TO_HOME = "/";
 const KEY = "token";
 export const DURATION = 60 * 60 * 24;
 
-const IS_LOCAL_ENABLE = process.env.REACT_APP_ENABLE_LOCAL_TOKEN === "true";
-
 export const get = (): string | null => {
-  const token = sessionStorage.getItem(KEY);
+  let token = sessionStorage.getItem(KEY);
   if (token) {
     return token;
   }
-  if (IS_LOCAL_ENABLE) {
-    return localStorage.getItem(KEY);
+  token = localStorage.getItem(KEY);
+  if (token) {
+    return token;
   }
   return null;
 };
 
 const set = (token: string) => {
   sessionStorage.setItem(KEY, token);
-  if (IS_LOCAL_ENABLE) {
-    localStorage.setItem(KEY, token);
-  }
+  localStorage.setItem(KEY, token);
 };
 
 const remove = () => {
