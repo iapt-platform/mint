@@ -166,7 +166,9 @@ class MdRender{
         return $tpl;
     }
     public static function markdown2wiki(string $markdown,$channelType,$contentType): string{
-                /**
+        //$markdown = mb_convert_encoding($markdown,'UTF-8','UTF-8');
+        $markdown = iconv('UTF-8','UTF-8//IGNORE',$markdown);
+        /**
          * nissaya
          * aaa=bbb\n
          * {{nissaya|aaa|bbb}}
