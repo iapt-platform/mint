@@ -209,7 +209,7 @@ const Widget = () => {
         >
           <div
             key="Article"
-            style={{ marginLeft: "auto", marginRight: "auto", width: 1200 }}
+            style={{ marginLeft: "auto", marginRight: "auto", width: 1100 }}
           >
             <Article
               active={true}
