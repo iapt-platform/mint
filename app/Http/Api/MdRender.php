@@ -217,7 +217,7 @@ class MdRender{
          * markdown -> html
          */
         //$markdown = str_replace(['[[',']]'],['㐛','㐚'],$markdown);
-        //$html = Str::markdown($markdown);
+        $html = Str::markdown($markdown);
         //$html = str_replace(['㐛','㐚'],['[[',']]'],$html);
 
         #替换术语
