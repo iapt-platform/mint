@@ -50,8 +50,8 @@ class WbwController extends Controller
         if($channel->owner_uid !== $user["user_uid"]){
             //判断是否为协作
             $power = ShareApi::getResPower($user["user_uid"],$channel->uid);
-            if($power<30){
-                return $this->error(__('auth.failed'));
+            if($power < 20){
+                return $this->error(__('auth.failed'),[],403);
             }
         }
         //查看WbwBlock是否已经建立
