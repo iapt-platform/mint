@@ -11,6 +11,7 @@ use App\Http\Resources\SentResource;
 use App\Http\Api\AuthApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
+use Illuminate\Support\Facades\Log;
 
 class SentenceController extends Controller
 {
@@ -86,7 +87,7 @@ class SentenceController extends Controller
                 $user = AuthApi::current($request);
                 if($user){
                     //自己的
-                    $channelMy = $channelTable->where('owner_uid',$user['user_uid'])->get();
+                    $channelMy = Channel::where('owner_uid',$user['user_uid'])->get();
                     //协作
                     $channelShare = ShareApi::getResList($user['user_uid'],2);
                 }
