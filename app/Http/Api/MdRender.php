@@ -191,7 +191,6 @@ class MdRender{
                         $str .= "}}";
                         $nissayaWord[] = $str;
                     }
-
                 }
                 $markdown = implode('',$nissayaWord);
             }else{
