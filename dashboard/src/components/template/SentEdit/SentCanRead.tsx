@@ -8,6 +8,7 @@ import { ISentenceListResponse } from "../../api/Corpus";
 
 import { ISentence } from "../SentEdit";
 import SentCell from "./SentCell";
+import SentAdd from "./SentAdd";
 interface IWidget {
   book: number;
   para: number;
@@ -81,6 +82,12 @@ const SentCanReadWidget = ({
           onClick={() => load()}
         />
       </div>
+      <SentAdd
+        book={book}
+        para={para}
+        wordStart={wordStart}
+        wordEnd={wordEnd}
+      />
       {sentData.map((item, id) => {
         return <SentCell data={item} key={id} isPr={false} />;
       })}
