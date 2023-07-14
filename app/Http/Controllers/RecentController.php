@@ -27,7 +27,7 @@ class RecentController extends Controller
                 break;
         }
 
-        $table->orderBy($request->get('order','created_at'),$request->get('dir','desc'));
+        $table->orderBy($request->get('order','updated_at'),$request->get('dir','desc'));
         $count = $table->count();
         $table->skip($request->get("offset",0))
               ->take($request->get('limit',1000));

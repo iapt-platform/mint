@@ -166,7 +166,9 @@ class MdRender{
         return $tpl;
     }
     public static function markdown2wiki(string $markdown,$channelType,$contentType): string{
-                /**
+        //$markdown = mb_convert_encoding($markdown,'UTF-8','UTF-8');
+        $markdown = iconv('UTF-8','UTF-8//IGNORE',$markdown);
+        /**
          * nissaya
          * aaa=bbb\n
          * {{nissaya|aaa|bbb}}
@@ -189,7 +191,6 @@ class MdRender{
                         $str .= "}}";
                         $nissayaWord[] = $str;
                     }
-
                 }
                 $markdown = implode('',$nissayaWord);
             }else{
@@ -216,9 +217,9 @@ class MdRender{
         /**
          * markdown -> html
          */
-        //$markdown = str_replace(['[[',']]'],['㐛','㐚'],$markdown);
+        $markdown = str_replace(['[[',']]'],['㐛','㐚'],$markdown);
         $html = Str::markdown($markdown);
-        //$html = str_replace(['㐛','㐚'],['[[',']]'],$html);
+        $html = str_replace(['㐛','㐚'],['[[',']]'],$html);
 
         #替换术语
         $pattern = "/\[\[(.+?)\]\]/";

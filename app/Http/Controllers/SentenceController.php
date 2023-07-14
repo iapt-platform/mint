@@ -210,9 +210,9 @@ class SentenceController extends Controller
         }
         if($channel->owner_uid !== $user["user_uid"]){
             //判断是否为协作
-            $power = ShareApi::getResPower($user["user_uid"],$channel->uid);
-            if($power<30){
-                return $this->error(__('auth.failed'));
+            $power = ShareApi::getResPower($user["user_uid"],$channel->uid,2);
+            if($power < 20){
+                return $this->error(__('auth.failed'),[],403);
             }
         }
         foreach ($request->get('sentences') as $key => $sent) {
@@ -287,7 +287,10 @@ class SentenceController extends Controller
         }
         if($channel->owner_uid !== $user["user_uid"]){
             //TODO 判断是否为协作
-            return $this->error(__('auth.failed'),[],403);
+            $power = ShareApi::getResPower($user["user_uid"],$channel->uid,2);
+            if($power < 20){
+                return $this->error(__('auth.failed'),[],403);
+            }
         }
 
         $sent = Sentence::firstOrNew([
