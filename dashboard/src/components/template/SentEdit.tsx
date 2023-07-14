@@ -31,6 +31,7 @@ export interface ISentence {
   studio?: IStudio;
   updateAt: string;
   suggestionCount?: ISuggestionCount;
+  openInEditMode?: boolean;
 }
 export interface ISentenceId {
   book: number;
