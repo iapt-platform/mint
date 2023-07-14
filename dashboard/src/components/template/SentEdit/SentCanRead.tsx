@@ -9,6 +9,10 @@ import { ISentenceListResponse } from "../../api/Corpus";
 import { ISentence } from "../SentEdit";
 import SentCell from "./SentCell";
 import SentAdd from "./SentAdd";
+import { useAppSelector } from "../../../hooks";
+import { currentUser as _currentUser } from "../../../reducers/current-user";
+import { IChannel } from "../../channel/Channel";
+
 interface IWidget {
   book: number;
   para: number;
@@ -28,6 +32,7 @@ const SentCanReadWidget = ({
   onReload,
 }: IWidget) => {
   const [sentData, setSentData] = useState<ISentence[]>([]);
+  const user = useAppSelector(_currentUser);
 
   const load = () => {
     get<ISentenceListResponse>(
@@ -83,13 +88,42 @@ const SentCanReadWidget = ({
         />
       </div>
       <SentAdd
-        book={book}
-        para={para}
-        wordStart={wordStart}
-        wordEnd={wordEnd}
+        onSelect={(channel: IChannel) => {
+          if (typeof user === "undefined") {
+            return;
+          }
+          const sentData: ISentence = {
+            content: "",
+            contentType: "markdown",
+            html: "",
+            book: book,
+            para: para,
+            wordStart: wordStart,
+            wordEnd: wordEnd,
+            editor: {
+              id: user.id,
+              nickName: user.nickName,
+              userName: user.realName,
+            },
+            channel: channel,
+            updateAt: "",
+            openInEditMode: true,
+          };
+          setSentData((origin) => {
+            return [sentData, ...origin];
+          });
+        }}
       />
+
       {sentData.map((item, id) => {
-        return <SentCell data={item} key={id} isPr={false} />;
+        return (
+          <SentCell
+            data={item}
+            key={id}
+            isPr={false}
+            editMode={item.openInEditMode}
+          />
+        );
       })}
     </>
   );
