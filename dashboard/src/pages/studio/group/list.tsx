@@ -14,8 +14,9 @@ import GroupCreate from "../../../components/group/GroupCreate";
 import { RoleValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
 import { useEffect, useRef, useState } from "react";
-import { renderBadge } from "../channel/list";
+
 import StudioName, { IStudio } from "../../../components/auth/StudioName";
+import { renderBadge } from "../../../components/channel/ChannelTable";
 
 const { Text } = Typography;
 

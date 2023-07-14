@@ -20,11 +20,9 @@ import { delete_, get } from "../../request";
 import { PublicityValueEnum } from "../../components/studio/table";
 import { useEffect, useRef, useState } from "react";
 import Share, { EResType } from "../share/Share";
-import {
-  IResNumberResponse,
-  renderBadge,
-} from "../../pages/studio/channel/list";
+
 import StudioName, { IStudio } from "../auth/StudioName";
+import { IResNumberResponse, renderBadge } from "../channel/ChannelTable";
 
 const { Text } = Typography;
 
