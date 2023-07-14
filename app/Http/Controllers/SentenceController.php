@@ -22,7 +22,7 @@ class SentenceController extends Controller
     public function index(Request $request)
     {
         $result=false;
-		$indexCol = ['id','book_id','paragraph','word_start','word_end','content','content_type','channel_uid','editor_uid','acceptor_uid','pr_edit_at','updated_at'];
+		$indexCol = ['id','uid','book_id','paragraph','word_start','word_end','content','content_type','channel_uid','editor_uid','acceptor_uid','pr_edit_at','updated_at'];
 
 		switch ($request->get('view')) {
             case 'public':
