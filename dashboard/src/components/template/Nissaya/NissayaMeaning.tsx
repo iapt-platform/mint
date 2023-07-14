@@ -52,18 +52,18 @@ const NissayaMeaningWidget = ({ text, code = "my" }: IWidget) => {
     return <></>;
   }
   return (
-    <Space>
+    <span>
       {words?.map((item, id) => {
         return (
           <span key={id}>
             <Lookup search={item.base}>{item.base}</Lookup>
             {item.ending?.map((item, id) => {
               return <NissayaCardPop text={item} key={id} trigger={item} />;
-            })}
+            })}{" "}
           </span>
         );
       })}
-    </Space>
+    </span>
   );
 };
 

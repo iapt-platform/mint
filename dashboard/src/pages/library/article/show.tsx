@@ -3,6 +3,8 @@ import { Header } from "antd/lib/layout/layout";
 import { Key } from "antd/lib/table/interface";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { FieldTimeOutlined } from "@ant-design/icons";
+
 import { ColumnOutlinedIcon } from "../../../assets/icon";
 import { IArticleDataResponse } from "../../../components/api/Article";
 import { IApiResponseDictList } from "../../../components/api/Dict";
@@ -27,11 +29,13 @@ import ToolButtonToc from "../../../components/article/ToolButtonToc";
 import Avatar from "../../../components/auth/Avatar";
 import { IChannel } from "../../../components/channel/Channel";
 import NetStatus from "../../../components/general/NetStatus";
+import RecentModal from "../../../components/recent/RecentModal";
 import { useAppSelector } from "../../../hooks";
 import { add } from "../../../reducers/inline-dict";
 import { paraParam } from "../../../reducers/para-change";
 import { get } from "../../../request";
 import store from "../../../store";
+import { IRecent } from "../../../components/recent/RecentList";
 
 /**
  * type:
@@ -51,6 +55,8 @@ const Widget = () => {
   const [rightPanel, setRightPanel] = useState<TPanelName>("close");
   const [searchParams, setSearchParams] = useSearchParams();
   const [anchorNavOpen, setAnchorNavOpen] = useState(false);
+  const [recentModalOpen, setRecentModalOpen] = useState(false);
+
   const paraChange = useAppSelector(paraParam);
 
   useEffect(() => {
@@ -180,6 +186,35 @@ const Widget = () => {
           >
             <div>
               <Space direction="vertical">
+                <RecentModal
+                  trigger={<Button icon={<FieldTimeOutlined />} />}
+                  open={recentModalOpen}
+                  onOpen={(isOpen: boolean) => setRecentModalOpen(isOpen)}
+                  onSelect={(
+                    event: React.MouseEvent<HTMLElement, MouseEvent>,
+                    param: IRecent
+                  ) => {
+                    setRecentModalOpen(false);
+                    let url = `/article/${param.type}/${param.articleId}?mode=`;
+                    url += param.param?.mode ? param.param?.mode : "read";
+                    url += param.param?.channel
+                      ? `&channel=${param.param?.channel}`
+                      : "";
+                    url += param.param?.book
+                      ? `&book=${param.param?.book}`
+                      : "";
+                    url += param.param?.para ? `&par=${param.param?.para}` : "";
+                    if (event.ctrlKey || event.metaKey) {
+                      const fullUrl =
+                        process.env.REACT_APP_WEB_HOST +
+                        process.env.PUBLIC_URL +
+                        url;
+                      window.open(fullUrl, "_blank");
+                    } else {
+                      navigate(url);
+                    }
+                  }}
+                />
                 <ToolButtonToc
                   type={type as ArticleType}
                   articleId={id}
@@ -209,7 +244,7 @@ const Widget = () => {
         >
           <div
             key="Article"
-            style={{ marginLeft: "auto", marginRight: "auto", width: 1200 }}
+            style={{ marginLeft: "auto", marginRight: "auto", width: 1100 }}
           >
             <Article
               active={true}
