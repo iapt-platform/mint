@@ -16,25 +16,30 @@ import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
 import { nissayaBase } from "../Nissaya/NissayaMeaning";
 import { useIntl } from "react-intl";
 
-interface ISentCell {
+interface IWidget {
   data: ISentence;
   wordWidget?: boolean;
   isPr?: boolean;
+  editMode?: boolean;
 }
 const SentCellWidget = ({
   data,
   wordWidget = false,
   isPr = false,
-}: ISentCell) => {
+  editMode = false,
+}: IWidget) => {
   const intl = useIntl();
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(editMode);
   const [sentData, setSentData] = useState<ISentence>(data);
   const endings = useAppSelector(getEnding);
-
   const acceptPr = useAppSelector(sentence);
+
+  console.log("edit mode", editMode);
+
   useEffect(() => {
     setSentData(data);
   }, [data]);
+
   useEffect(() => {
     if (typeof acceptPr !== "undefined" && !isPr) {
       if (
