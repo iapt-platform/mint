@@ -18,7 +18,7 @@ const ChannelPickerWidget = ({
   trigger,
   type,
   articleId,
-  multiSelect,
+  multiSelect = true,
   open = false,
   onClose,
   onSelect,
@@ -60,7 +60,7 @@ const ChannelPickerWidget = ({
         <ChannelPickerTable
           type={type}
           articleId={articleId}
-          multiSelect={true}
+          multiSelect={multiSelect}
           onSelect={(channels: IChannel[]) => {
             console.log(channels);
             handleCancel();
