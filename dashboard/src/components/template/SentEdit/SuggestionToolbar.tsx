@@ -56,6 +56,8 @@ const SuggestionToolbarWidget = ({ data, isPr = false, onAccept }: IWidget) => {
         }}
       />
       {CommentCount}
+      <Divider type="vertical" />
+      <Text copyable={{ text: data.content }}></Text>
     </Space>
   );
   return <Text type="secondary">{isPr ? prButton : normalButton}</Text>;

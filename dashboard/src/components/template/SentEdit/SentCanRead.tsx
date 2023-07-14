@@ -8,6 +8,7 @@ import { ISentenceListResponse } from "../../api/Corpus";
 
 import { ISentence } from "../SentEdit";
 import SentCell from "./SentCell";
+import SentAdd from "./SentAdd";
 interface IWidget {
   book: number;
   para: number;
@@ -34,7 +35,7 @@ const SentCanReadWidget = ({
     )
       .then((json) => {
         if (json.ok) {
-          console.log("pr load", json.data.rows);
+          console.log("sent load", json.data.rows);
           const newData: ISentence[] = json.data.rows.map((item) => {
             return {
               id: item.id,
@@ -47,6 +48,7 @@ const SentCanReadWidget = ({
               editor: item.editor,
               studio: item.studio,
               channel: item.channel,
+              suggestionCount: item.suggestionCount,
               updateAt: item.updated_at,
             };
           });
@@ -80,8 +82,14 @@ const SentCanReadWidget = ({
           onClick={() => load()}
         />
       </div>
+      <SentAdd
+        book={book}
+        para={para}
+        wordStart={wordStart}
+        wordEnd={wordEnd}
+      />
       {sentData.map((item, id) => {
-        return <SentCell data={item} key={id} isPr={true} />;
+        return <SentCell data={item} key={id} isPr={false} />;
       })}
     </>
   );
