@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
 import { get } from "../../request";
 import { ICommentAnchorResponse } from "../api/Comment";
+import { ISentenceResponse } from "../api/Corpus";
 import MdView from "../template/MdView";
 import AnchorCard from "./AnchorCard";
+import { TResType } from "./DiscussionListCard";
 
 interface IWidget {
-  id?: string;
+  resId?: string;
+  resType?: TResType;
+  topicId?: string;
 }
-const DiscussionAnchorWidget = ({ id }: IWidget) => {
+const DiscussionAnchorWidget = ({ resId, resType, topicId }: IWidget) => {
   const [content, setContent] = useState<string>();
   useEffect(() => {
-    if (typeof id === "string") {
-      get<ICommentAnchorResponse>(`/v2/discussion-anchor/${id}`).then(
+    if (typeof topicId === "string") {
+      get<ICommentAnchorResponse>(`/v2/discussion-anchor/${topicId}`).then(
         (json) => {
           console.log(json);
           if (json.ok) {
@@ -20,13 +24,26 @@ const DiscussionAnchorWidget = ({ id }: IWidget) => {
         }
       );
     }
-  }, [id]);
+  }, [topicId]);
+
+  useEffect(() => {
+    switch (resType) {
+      case "sentence":
+        get<ISentenceResponse>(`/v2/sentence/${resId}`).then((json) => {
+          if (json.ok) {
+            setContent(json.data.html);
+          }
+        });
+        break;
+
+      default:
+        break;
+    }
+  }, [resId, resType]);
   return (
-    <div>
-      <AnchorCard>
-        <MdView html={content} />
-      </AnchorCard>
-    </div>
+    <AnchorCard>
+      <MdView html={content} />
+    </AnchorCard>
   );
 };
 
