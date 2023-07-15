@@ -10,8 +10,9 @@ const { Title, Text } = Typography;
 
 interface IWidget {
   topicId?: string;
+  onReady?: Function;
 }
-const DiscussionTopicInfoWidget = ({ topicId }: IWidget) => {
+const DiscussionTopicInfoWidget = ({ topicId, onReady }: IWidget) => {
   const [data, setData] = useState<IComment>();
   useEffect(() => {
     if (typeof topicId === "undefined") {
@@ -27,6 +28,7 @@ const DiscussionTopicInfoWidget = ({ topicId }: IWidget) => {
             id: item.id,
             resId: item.res_id,
             resType: item.res_type,
+            parent: item.parent,
             user: item.editor,
             title: item.title,
             content: item.content,
@@ -34,6 +36,10 @@ const DiscussionTopicInfoWidget = ({ topicId }: IWidget) => {
             updatedAt: item.updated_at,
           };
           setData(discussion);
+          if (typeof onReady !== "undefined") {
+            console.log("on ready");
+            onReady(discussion);
+          }
         } else {
           message.error(json.message);
         }
