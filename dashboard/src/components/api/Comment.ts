@@ -1,4 +1,5 @@
 import { TContentType } from "../discussion/DiscussionCreate";
+import { TResType } from "../discussion/DiscussionListCard";
 import { IUserApiData } from "./Auth";
 
 export interface ICommentRequest {
@@ -17,7 +18,7 @@ export interface ICommentRequest {
 export interface ICommentApiData {
   id: string;
   res_id: string;
-  res_type: string;
+  res_type: TResType;
   title?: string;
   content?: string;
   content_type?: TContentType;
