@@ -67,10 +67,16 @@ interface IChannelItem {
 interface IWidget {
   studioName?: string;
   type?: string;
+  disableChannels?: string[];
   onSelect?: Function;
 }
 
-const ChannelTableWidget = ({ studioName, type, onSelect }: IWidget) => {
+const ChannelTableWidget = ({
+  studioName,
+  disableChannels,
+  type,
+  onSelect,
+}: IWidget) => {
   const intl = useIntl();
 
   const [openCreate, setOpenCreate] = useState(false);
@@ -79,6 +85,11 @@ const ChannelTableWidget = ({ studioName, type, onSelect }: IWidget) => {
   const [myNumber, setMyNumber] = useState<number>(0);
   const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
   const [collaborator, setCollaborator] = useState<string>();
+
+  useEffect(() => {
+    ref.current?.reload();
+  }, [disableChannels]);
+
   useEffect(() => {
     /**
      * 获取各种课程的数量
@@ -157,6 +168,7 @@ const ChannelTableWidget = ({ studioName, type, onSelect }: IWidget) => {
                 <>
                   <div key={1}>
                     <Button
+                      disabled={disableChannels?.includes(row.uid)}
                       type="link"
                       key={index}
                       onClick={() => {

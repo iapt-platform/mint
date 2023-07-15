@@ -6,13 +6,15 @@ import { IChannel } from "../../channel/Channel";
 import ChannelTableModal from "../../channel/ChannelTableModal";
 
 interface IWidget {
+  disableChannels?: string[];
   onSelect?: Function;
 }
-const Widget = ({ onSelect }: IWidget) => {
+const Widget = ({ disableChannels, onSelect }: IWidget) => {
   const [channelPickerOpen, setChannelPickerOpen] = useState(false);
 
   return (
     <ChannelTableModal
+      disableChannels={disableChannels}
       trigger={
         <Button
           type="dashed"

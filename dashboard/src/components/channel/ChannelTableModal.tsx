@@ -12,6 +12,7 @@ interface IWidget {
   type?: ArticleType | "editable";
   articleId?: string;
   multiSelect?: boolean;
+  disableChannels?: string[];
   open?: boolean;
   onClose?: Function;
   onSelect?: Function;
@@ -21,6 +22,7 @@ const ChannelTableModalWidget = ({
   type,
   articleId,
   multiSelect = true,
+  disableChannels,
   open = false,
   onClose,
   onSelect,
@@ -63,6 +65,7 @@ const ChannelTableModalWidget = ({
         <ChannelTable
           studioName={user?.realName}
           type={type}
+          disableChannels={disableChannels}
           onSelect={(channel: IChannel) => {
             handleCancel();
             if (typeof onClose !== "undefined") {
