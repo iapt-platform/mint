@@ -222,7 +222,9 @@ const ArticleWidget = ({
           console.log("article", json);
           if (json.ok) {
             setArticleData(json.data);
-            if (json.data.content) {
+            if (json.data.html) {
+              setArticleHtml([json.data.html]);
+            } else if (json.data.content) {
               setArticleHtml([json.data.content]);
             }
             if (json.data.from) {
@@ -283,10 +285,6 @@ const ArticleWidget = ({
             if (typeof onLoad !== "undefined") {
               onLoad(json.data);
             }
-
-            console.log("lazy load begin", json.data);
-            //lazy load
-            //getNextPara(json.data);
           } else {
             setShowSkeleton(false);
             setUnauthorized(true);
