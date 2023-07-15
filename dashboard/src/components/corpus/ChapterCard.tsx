@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { Row, Col, Progress, Space } from "antd";
 import { Typography } from "antd";
@@ -36,6 +37,7 @@ interface IWidgetChapterCard {
 }
 
 const ChpterCardWidget = ({ data, onTagClick }: IWidgetChapterCard) => {
+  const intl = useIntl();
   const path = JSON.parse(data.path);
   let url = `/article/chapter/${data.book}-${data.paragraph}`;
   url += data.channel.id ? `?channel=${data.channel.id}` : "";
@@ -83,7 +85,12 @@ const ChpterCardWidget = ({ data, onTagClick }: IWidgetChapterCard) => {
             </div>
             <Space>
               <ChannelListItem channel={data.channel} studio={data.studio} />
-              <TimeShow time={data.updatedAt} title="UpdatedAt" />
+              <TimeShow
+                time={data.updatedAt}
+                title={intl.formatMessage({
+                  id: "labels.updated-at",
+                })}
+              />
             </Space>
           </div>
         </Col>

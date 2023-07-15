@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { Button, Card, Dropdown, Space } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
@@ -11,6 +12,7 @@ interface IWidget {
   onSelect?: Function;
 }
 const CommentShowWidget = ({ data, onEdit, onSelect }: IWidget) => {
+  const intl = useIntl();
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     switch (e.key) {
@@ -53,37 +55,36 @@ const CommentShowWidget = ({ data, onEdit, onSelect }: IWidget) => {
     },
   ];
   return (
-    <div>
-      <Card
-        size="small"
-        title={
-          <Space>
-            {data.user.nickName}
-            <TimeShow time={data.updatedAt} title="UpdatedAt" />
-          </Space>
-        }
-        extra={
-          <Dropdown menu={{ items, onClick }} placement="bottomRight">
-            <Button
-              shape="circle"
-              size="small"
-              icon={<MoreOutlined />}
-            ></Button>
-          </Dropdown>
-        }
-        style={{ width: "100%" }}
+    <Card
+      size="small"
+      title={
+        <Space>
+          {data.user.nickName}
+          <TimeShow
+            time={data.updatedAt}
+            title={intl.formatMessage({
+              id: "labels.updated-at",
+            })}
+          />
+        </Space>
+      }
+      extra={
+        <Dropdown menu={{ items, onClick }} placement="bottomRight">
+          <Button shape="circle" size="small" icon={<MoreOutlined />}></Button>
+        </Dropdown>
+      }
+      style={{ width: "100%" }}
+    >
+      <span
+        onClick={(e) => {
+          if (typeof onSelect !== "undefined") {
+            onSelect();
+          }
+        }}
       >
-        <span
-          onClick={(e) => {
-            if (typeof onSelect !== "undefined") {
-              onSelect();
-            }
-          }}
-        >
-          {data.content}
-        </span>
-      </Card>
-    </div>
+        {data.content}
+      </span>
+    </Card>
   );
 };
 
