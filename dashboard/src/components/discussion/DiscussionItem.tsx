@@ -3,11 +3,12 @@ import { useState } from "react";
 import { IUser } from "../auth/User";
 import CommentShow from "./DiscussionShow";
 import CommentEdit from "./DiscussionEdit";
+import { TResType } from "./DiscussionListCard";
 
 export interface IComment {
   id?: string; //id未提供为新建
   resId?: string;
-  resType?: string;
+  resType?: TResType;
   user: IUser;
   parent?: string;
   title?: string;
@@ -24,7 +25,6 @@ interface IWidget {
 }
 const DiscussionItemWidget = ({ data, onSelect, onCreated }: IWidget) => {
   const [edit, setEdit] = useState(false);
-  console.log(data);
   return (
     <div style={{ display: "flex" }}>
       <div style={{ width: "2em" }}>
