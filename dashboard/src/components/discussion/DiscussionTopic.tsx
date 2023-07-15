@@ -2,15 +2,29 @@ import { Divider } from "antd";
 
 import CommentTopicInfo from "./DiscussionTopicInfo";
 import CommentTopicChildren from "./DiscussionTopicChildren";
+import { IComment } from "./DiscussionItem";
 
 interface IWidget {
   topicId?: string;
   onItemCountChange?: Function;
+  onTopicReady?: Function;
 }
-const DiscussionTopicWidget = ({ topicId, onItemCountChange }: IWidget) => {
+const DiscussionTopicWidget = ({
+  topicId,
+  onTopicReady,
+  onItemCountChange,
+}: IWidget) => {
   return (
-    <div>
-      <CommentTopicInfo topicId={topicId} />
+    <>
+      <CommentTopicInfo
+        topicId={topicId}
+        onReady={(value: IComment) => {
+          console.log("on Topic Ready", value);
+          if (typeof onTopicReady !== "undefined") {
+            onTopicReady(value);
+          }
+        }}
+      />
       <Divider />
       <CommentTopicChildren
         topicId={topicId}
@@ -21,7 +35,7 @@ const DiscussionTopicWidget = ({ topicId, onItemCountChange }: IWidget) => {
           }
         }}
       />
-    </div>
+    </>
   );
 };
 
