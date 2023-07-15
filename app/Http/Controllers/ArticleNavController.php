@@ -54,7 +54,7 @@ class ArticleNavController extends Controller
                 $nav['next']['subtitle'] = $next->text;
                 break;
             default:
-                $this->error('type?');
+                return $this->error('type?');
                 break;
         }
         return $this->ok(new ArticleNavResource($nav));
