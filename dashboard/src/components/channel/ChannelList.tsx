@@ -1,5 +1,6 @@
+import { useIntl } from "react-intl";
 import { useState, useEffect } from "react";
-import { List, message, Space, Tag } from "antd";
+import { Card, List, message, Space, Tag } from "antd";
 
 import type { IChannelApiData } from "../api/Channel";
 import { IApiResponseChannelList } from "../api/Corpus";
@@ -30,9 +31,9 @@ const ChannelListWidget = ({
   filter = defaultChannelFilterProps,
 }: IWidgetChannelList) => {
   const [tableData, setTableData] = useState<IChannelList[]>([]);
+  const intl = useIntl();
 
   useEffect(() => {
-    console.log("palichapterlist useEffect");
     let url = `/v2/progress?view=channel&channel_type=${filter.channelType}&lang=${filter.lang}&progress=${filter.chapterProgress}`;
     get<IApiResponseChannelList>(url).then(function (json) {
       if (json.ok) {
@@ -54,9 +55,14 @@ const ChannelListWidget = ({
       }
     });
   }, [filter]);
+
   return (
-    <>
-      <h3>Channel</h3>
+    <Card
+      title={intl.formatMessage({
+        id: `columns.studio.channel.title`,
+      })}
+      size="small"
+    >
       <List
         itemLayout="vertical"
         size="small"
@@ -70,7 +76,7 @@ const ChannelListWidget = ({
           </List.Item>
         )}
       />
-    </>
+    </Card>
   );
 };
 
