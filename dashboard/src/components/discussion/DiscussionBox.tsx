@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Drawer } from "antd";
+import { Divider, Drawer } from "antd";
 import CommentTopic from "./DiscussionTopic";
 import CommentListCard, { TResType } from "./DiscussionListCard";
 import { IComment } from "./DiscussionItem";
+import DiscussionAnchor from "./DiscussionAnchor";
 
 export interface IAnswerCount {
   id: string;
@@ -54,6 +55,8 @@ const DiscussionBoxWidget = ({
         open={open}
         maskClosable={false}
       >
+        <DiscussionAnchor resId={resId} resType={resType} />
+        <Divider></Divider>
         <CommentListCard
           resId={resId}
           resType={resType}
@@ -66,7 +69,7 @@ const DiscussionBoxWidget = ({
           }}
         />
         <Drawer
-          title="回答"
+          title="Answer"
           width={480}
           onClose={() => {
             setChildrenDrawer(false);
