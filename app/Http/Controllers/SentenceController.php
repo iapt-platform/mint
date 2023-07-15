@@ -87,7 +87,9 @@ class SentenceController extends Controller
                 $user = AuthApi::current($request);
                 if($user){
                     //自己的
-                    $channelMy = Channel::where('owner_uid',$user['user_uid'])->get();
+                    $channelMy = Channel::where('owner_uid',$user['user_uid'])
+                                        ->where('type',$type)
+                                        ->get();
                     //协作
                     $channelShare = ShareApi::getResList($user['user_uid'],2);
                 }

@@ -193,7 +193,8 @@ class MdRender{
                     }
                 }
                 $markdown = implode('',$nissayaWord);
-            }else{
+            }else if($contentType === "markdown"){
+                /*
                 $pattern = '/(.+?)=(.+?)\n/';
                 $replacement = '{{nissaya|$1|$2}}';
                 $markdown = preg_replace($pattern,$replacement,$markdown);
@@ -203,6 +204,20 @@ class MdRender{
                 $pattern = '/(.?)=(.+?)\n/';
                 $replacement = '{{nissaya|$1|$2}}';
                 $markdown = preg_replace($pattern,$replacement,$markdown);
+                */
+                $lines = explode("\n",$markdown);
+                $newLines = array();
+                foreach ($lines as  $line) {
+                    if(strstr($line,'=') === FALSE){
+                        $newLines[] = $line;
+                    }else{
+                        $nissaya = explode('=',$line);
+                        $meaning = array_slice($nissaya,1);
+                        $meaning = implode('=',$meaning);
+                        $newLines[] = "{{nissaya|{$nissaya[0]}|{$meaning}}}";
+                    }
+                }
+                $markdown = implode("\n",$newLines);
             }
         }
         //$markdown = preg_replace("/\n\n/","<div></div>",$markdown);
