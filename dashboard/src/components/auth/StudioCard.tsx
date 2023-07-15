@@ -11,38 +11,35 @@ const StudioCardWidget = ({ studio, children }: IWidget) => {
   const intl = useIntl();
 
   return (
-    <>
-      <Popover
-        content={
-          <>
-            <div style={{ display: "flex" }}>
-              <div style={{ paddingRight: 8 }}>
-                <Avatar style={{ backgroundColor: "#87d068" }} size="small">
-                  {studio?.nickName.slice(0, 1)}
-                </Avatar>
-              </div>
+    <Popover
+      content={
+        <>
+          <div style={{ display: "flex" }}>
+            <div style={{ paddingRight: 8 }}>
+              <Avatar style={{ backgroundColor: "#87d068" }} size="small">
+                {studio?.nickName.slice(0, 1)}
+              </Avatar>
+            </div>
+            <div>
+              <div>{studio?.nickName}</div>
               <div>
-                <div>{studio?.nickName}</div>
-                <div>译文(2) | 课程(3)</div>
-                <div>
-                  <Link
-                    to={`/blog/${studio?.studioName}/overview`}
-                    target="_blank"
-                  >
-                    {intl.formatMessage({
-                      id: "columns.library.blog.label",
-                    })}
-                  </Link>
-                </div>
+                <Link
+                  to={`/blog/${studio?.studioName}/overview`}
+                  target="_blank"
+                >
+                  {intl.formatMessage({
+                    id: "columns.library.blog.label",
+                  })}
+                </Link>
               </div>
             </div>
-          </>
-        }
-        placement="bottomRight"
-      >
-        {children}
-      </Popover>
-    </>
+          </div>
+        </>
+      }
+      placement="bottomRight"
+    >
+      {children}
+    </Popover>
   );
 };
 
