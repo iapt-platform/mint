@@ -2,7 +2,7 @@ import { Divider, Space, Tooltip, Typography } from "antd";
 import { CommentOutlined, LikeOutlined } from "@ant-design/icons";
 import { ISentence } from "../SentEdit";
 import { useState } from "react";
-import CommentBox from "../../comment/CommentBox";
+import CommentBox from "../../discussion/CommentBox";
 import SuggestionBox from "./SuggestionBox";
 import PrAcceptButton from "./PrAcceptButton";
 import { HandOutlinedIcon } from "../../../assets/icon";

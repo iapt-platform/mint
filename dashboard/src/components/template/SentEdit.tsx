@@ -5,7 +5,7 @@ import { IStudio } from "../auth/StudioName";
 
 import type { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
-import { TContentType } from "../comment/CommentCreate";
+import { TContentType } from "../discussion/CommentCreate";
 import { ITocPathNode } from "../corpus/TocPath";
 import SentContent from "./SentEdit/SentContent";
 import SentTab from "./SentEdit/SentTab";

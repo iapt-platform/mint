@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-import CommentTopic from "../../../components/comment/CommentTopic";
+import CommentTopic from "../../../components/discussion/CommentTopic";
 
 const Widget = () => {
   // TODO

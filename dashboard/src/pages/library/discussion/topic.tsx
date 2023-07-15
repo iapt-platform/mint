@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { Tabs } from "antd";
 import { useParams } from "react-router-dom";
-import CommentAnchor from "../../../components/comment/CommentAnchor";
-import { IComment } from "../../../components/comment/CommentItem";
-import CommentListCard from "../../../components/comment/CommentListCard";
+import CommentAnchor from "../../../components/discussion/CommentAnchor";
+import { IComment } from "../../../components/discussion/CommentItem";
+import CommentListCard from "../../../components/discussion/CommentListCard";
 
-import CommentTopic from "../../../components/comment/CommentTopic";
+import CommentTopic from "../../../components/discussion/CommentTopic";
 
 const Widget = () => {
   // TODO
