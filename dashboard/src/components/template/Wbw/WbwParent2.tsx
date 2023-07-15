@@ -7,8 +7,8 @@ interface IWidget {
 }
 const WbwParent2Widget = ({ data }: IWidget) => {
   const intl = useIntl();
-  return data.grammar2 ? (
-    data.grammar2.value !== "" ? (
+  return data.grammar2?.value ? (
+    data.grammar2.value.trim() !== "" ? (
       <Tooltip title={data.parent2?.value}>
         <Tag color={"yellow"}>
           {intl.formatMessage({

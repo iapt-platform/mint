@@ -94,13 +94,13 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
     />
   );
 
-  const noteIcon = data.note ? (
-    <Popover content={data.note.value} placement="bottom">
-      <InfoCircleOutlined style={{ color: "blue" }} />
-    </Popover>
-  ) : (
-    <></>
-  );
+  const noteIcon = data.note?.value ? (
+    data.note.value.trim() !== "" ? (
+      <Popover content={data.note?.value} placement="bottom">
+        <InfoCircleOutlined style={{ color: "blue" }} />
+      </Popover>
+    ) : undefined
+  ) : undefined;
   const color = data.bookMarkColor?.value
     ? bookMarkColor[data.bookMarkColor.value]
     : "white";
@@ -125,16 +125,15 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
     <ApartmentOutlined style={{ color: "blue" }} />
   ) : undefined;
 
-  const bookMarkIcon = data.bookMarkText ? (
-    <Popover
-      content={<Paragraph copyable>{data.bookMarkText.value}</Paragraph>}
-      placement="bottom"
-    >
-      <TagTwoTone twoToneColor={color} />
-    </Popover>
-  ) : (
-    <></>
-  );
+  const bookMarkIcon =
+    data.bookMarkText?.value && data.bookMarkText.value.trim() !== "" ? (
+      <Popover
+        content={<Paragraph copyable>{data.bookMarkText.value}</Paragraph>}
+        placement="bottom"
+      >
+        <TagTwoTone twoToneColor={color} />
+      </Popover>
+    ) : undefined;
   const classPali = data.style?.value === "note" ? "wbw_note" : "pali";
   let padding: string;
   if (typeof data.real !== "undefined" && data.real.value !== "") {
