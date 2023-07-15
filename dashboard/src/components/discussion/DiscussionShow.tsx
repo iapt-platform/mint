@@ -3,7 +3,7 @@ import { Button, Card, Dropdown, Space } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 
-import { IComment } from "./CommentItem";
+import { IComment } from "./DiscussionItem";
 import TimeShow from "../general/TimeShow";
 
 interface IWidget {
@@ -11,7 +11,7 @@ interface IWidget {
   onEdit?: Function;
   onSelect?: Function;
 }
-const CommentShowWidget = ({ data, onEdit, onSelect }: IWidget) => {
+const DiscussionShowWidget = ({ data, onEdit, onSelect }: IWidget) => {
   const intl = useIntl();
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
@@ -88,4 +88,4 @@ const CommentShowWidget = ({ data, onEdit, onSelect }: IWidget) => {
   );
 };
 
-export default CommentShowWidget;
+export default DiscussionShowWidget;

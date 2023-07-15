@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Drawer } from "antd";
-import CommentTopic from "./CommentTopic";
-import CommentListCard, { TResType } from "./CommentListCard";
-import { IComment } from "./CommentItem";
+import CommentTopic from "./DiscussionTopic";
+import CommentListCard, { TResType } from "./DiscussionListCard";
+import { IComment } from "./DiscussionItem";
 
 export interface IAnswerCount {
   id: string;
@@ -14,7 +14,7 @@ interface IWidget {
   resType?: TResType;
   onCommentCountChange?: Function;
 }
-const CommentBoxWidget = ({
+const DiscussionBoxWidget = ({
   trigger,
   resId,
   resType,
@@ -85,4 +85,4 @@ const CommentBoxWidget = ({
   );
 };
 
-export default CommentBoxWidget;
+export default DiscussionBoxWidget;

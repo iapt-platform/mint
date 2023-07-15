@@ -4,10 +4,10 @@ import { Card, message, Typography } from "antd";
 
 import { get } from "../../request";
 import { ICommentListResponse } from "../api/Comment";
-import CommentCreate from "./CommentCreate";
-import { IComment } from "./CommentItem";
-import CommentList from "./CommentList";
-import { IAnswerCount } from "./CommentBox";
+import CommentCreate from "./DiscussionCreate";
+import { IComment } from "./DiscussionItem";
+import CommentList from "./DiscussionList";
+import { IAnswerCount } from "./DiscussionBox";
 
 export type TResType = "article" | "channel" | "chapter" | "sentence" | "wbw";
 interface IWidget {
@@ -18,7 +18,7 @@ interface IWidget {
   onSelect?: Function;
   onItemCountChange?: Function;
 }
-const CommentListCardWidget = ({
+const DiscussionListCardWidget = ({
   resId,
   resType,
   topicId,
@@ -124,4 +124,4 @@ const CommentListCardWidget = ({
   );
 };
 
-export default CommentListCardWidget;
+export default DiscussionListCardWidget;

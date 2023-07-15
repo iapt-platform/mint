@@ -4,7 +4,7 @@ import { message } from "antd";
 import { ProForm, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, Row, Space } from "antd";
 
-import { IComment } from "./CommentItem";
+import { IComment } from "./DiscussionItem";
 import { put } from "../../request";
 import { ICommentRequest, ICommentResponse } from "../api/Comment";
 
@@ -12,7 +12,7 @@ interface IWidget {
   data: IComment;
   onCreated?: Function;
 }
-const CommentEditWidget = ({ data, onCreated }: IWidget) => {
+const DiscussionEditWidget = ({ data, onCreated }: IWidget) => {
   const intl = useIntl();
   const formItemLayout = {
     labelCol: { span: 4 },
@@ -85,4 +85,4 @@ const CommentEditWidget = ({ data, onCreated }: IWidget) => {
   );
 };
 
-export default CommentEditWidget;
+export default DiscussionEditWidget;

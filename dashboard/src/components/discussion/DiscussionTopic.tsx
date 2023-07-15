@@ -1,13 +1,13 @@
 import { Divider } from "antd";
 
-import CommentTopicInfo from "./CommentTopicInfo";
-import CommentTopicChildren from "./CommentTopicChildren";
+import CommentTopicInfo from "./DiscussionTopicInfo";
+import CommentTopicChildren from "./DiscussionTopicChildren";
 
 interface IWidget {
   topicId?: string;
   onItemCountChange?: Function;
 }
-const CommentTopicWidget = ({ topicId, onItemCountChange }: IWidget) => {
+const DiscussionTopicWidget = ({ topicId, onItemCountChange }: IWidget) => {
   return (
     <div>
       <CommentTopicInfo topicId={topicId} />
@@ -25,4 +25,4 @@ const CommentTopicWidget = ({ topicId, onItemCountChange }: IWidget) => {
   );
 };
 
-export default CommentTopicWidget;
+export default DiscussionTopicWidget;

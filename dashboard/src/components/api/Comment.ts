@@ -1,4 +1,4 @@
-import { TContentType } from "../discussion/CommentCreate";
+import { TContentType } from "../discussion/DiscussionCreate";
 import { IUserApiData } from "./Auth";
 
 export interface ICommentRequest {

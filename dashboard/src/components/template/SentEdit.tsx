@@ -1,11 +1,10 @@
 import { Card } from "antd";
 import { useEffect, useState } from "react";
-import { TChannelType } from "../api/Channel";
 import { IStudio } from "../auth/StudioName";
 
 import type { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
-import { TContentType } from "../discussion/CommentCreate";
+import { TContentType } from "../discussion/DiscussionCreate";
 import { ITocPathNode } from "../corpus/TocPath";
 import SentContent from "./SentEdit/SentContent";
 import SentTab from "./SentEdit/SentTab";

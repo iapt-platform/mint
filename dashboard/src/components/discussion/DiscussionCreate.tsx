@@ -10,7 +10,7 @@ import { Col, Row, Space } from "antd";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-import { IComment } from "./CommentItem";
+import { IComment } from "./DiscussionItem";
 import { post } from "../../request";
 import { ICommentRequest, ICommentResponse } from "../api/Comment";
 import { useAppSelector } from "../../hooks";
@@ -27,7 +27,7 @@ interface IWidget {
   onCreated?: Function;
   contentType?: TContentType;
 }
-const CommentCreateWidget = ({
+const DiscussionCreateWidget = ({
   resId,
   resType,
   contentType = "html",
@@ -179,4 +179,4 @@ const CommentCreateWidget = ({
   }
 };
 
-export default CommentCreateWidget;
+export default DiscussionCreateWidget;

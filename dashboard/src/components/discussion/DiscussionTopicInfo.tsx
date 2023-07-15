@@ -4,14 +4,14 @@ import { get } from "../../request";
 import { ICommentResponse } from "../api/Comment";
 import TimeShow from "../general/TimeShow";
 
-import { IComment } from "./CommentItem";
+import { IComment } from "./DiscussionItem";
 
 const { Title, Text } = Typography;
 
 interface IWidget {
   topicId?: string;
 }
-const CommentTopicInfoWidget = ({ topicId }: IWidget) => {
+const DiscussionTopicInfoWidget = ({ topicId }: IWidget) => {
   const [data, setData] = useState<IComment>();
   useEffect(() => {
     if (typeof topicId === "undefined") {
@@ -65,4 +65,4 @@ const CommentTopicInfoWidget = ({ topicId }: IWidget) => {
   );
 };
 
-export default CommentTopicInfoWidget;
+export default DiscussionTopicInfoWidget;

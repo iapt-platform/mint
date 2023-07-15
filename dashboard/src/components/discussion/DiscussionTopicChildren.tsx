@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { get } from "../../request";
 import { ICommentListResponse } from "../api/Comment";
-import CommentCreate from "./CommentCreate";
+import CommentCreate from "./DiscussionCreate";
 
-import CommentItem, { IComment } from "./CommentItem";
+import CommentItem, { IComment } from "./DiscussionItem";
 
 interface IWidget {
   topicId?: string;
   onItemCountChange?: Function;
 }
-const CommentTopicChildrenWidget = ({
+const DiscussionTopicChildrenWidget = ({
   topicId,
   onItemCountChange,
 }: IWidget) => {
@@ -87,4 +87,4 @@ const CommentTopicChildrenWidget = ({
   );
 };
 
-export default CommentTopicChildrenWidget;
+export default DiscussionTopicChildrenWidget;

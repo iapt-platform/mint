@@ -1,8 +1,8 @@
 import { Avatar } from "antd";
 import { useState } from "react";
 import { IUser } from "../auth/User";
-import CommentShow from "./CommentShow";
-import CommentEdit from "./CommentEdit";
+import CommentShow from "./DiscussionShow";
+import CommentEdit from "./DiscussionEdit";
 
 export interface IComment {
   id?: string; //id未提供为新建
@@ -22,7 +22,7 @@ interface IWidget {
   onSelect?: Function;
   onCreated?: Function;
 }
-const CommentItemWidget = ({ data, onSelect, onCreated }: IWidget) => {
+const DiscussionItemWidget = ({ data, onSelect, onCreated }: IWidget) => {
   const [edit, setEdit] = useState(false);
   console.log(data);
   return (
@@ -53,4 +53,4 @@ const CommentItemWidget = ({ data, onSelect, onCreated }: IWidget) => {
   );
 };
 
-export default CommentItemWidget;
+export default DiscussionItemWidget;

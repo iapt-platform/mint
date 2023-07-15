@@ -1,13 +1,13 @@
 import { List, Space } from "antd";
 import { MessageOutlined } from "@ant-design/icons";
 
-import { IComment } from "./CommentItem";
+import { IComment } from "./DiscussionItem";
 
 interface IWidget {
   data: IComment[];
   onSelect?: Function;
 }
-const CommentListWidget = ({ data, onSelect }: IWidget) => {
+const DiscussionListWidget = ({ data, onSelect }: IWidget) => {
   return (
     <div>
       <List
@@ -53,4 +53,4 @@ const CommentListWidget = ({ data, onSelect }: IWidget) => {
   );
 };
 
-export default CommentListWidget;
+export default DiscussionListWidget;

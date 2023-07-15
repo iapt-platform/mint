@@ -11,7 +11,7 @@ import { ITextbook, refresh } from "../../reducers/current-course";
 import ExerciseList from "./ExerciseList";
 import ExerciseAnswer from "../course/ExerciseAnswer";
 import "./article.css";
-import CommentListCard from "../discussion/CommentListCard";
+import CommentListCard from "../discussion/DiscussionListCard";
 import TocTree from "./TocTree";
 import PaliText from "../template/Wbw/PaliText";
 import ArticleSkeleton from "./ArticleSkeleton";

@@ -1,5 +1,5 @@
 import modal from "antd/lib/modal";
-import CommentCreate from "../discussion/CommentCreate";
+import CommentCreate from "../discussion/DiscussionCreate";
 
 const CreateFeedbackWidget = () => {
   const path = window.location.pathname;
