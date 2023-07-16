@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { get } from "../../request";
+import { IArticleResponse } from "../api/Article";
 import { ICommentAnchorResponse } from "../api/Comment";
 import { ISentenceResponse } from "../api/Corpus";
 import MdView from "../template/MdView";
@@ -31,11 +32,18 @@ const DiscussionAnchorWidget = ({ resId, resType, topicId }: IWidget) => {
       case "sentence":
         get<ISentenceResponse>(`/v2/sentence/${resId}`).then((json) => {
           if (json.ok) {
-            setContent(json.data.html);
+            const id = `${json.data.book}-${json.data.paragraph}-${json.data.word_start}-${json.data.word_end}`;
+            const channel = json.data.channel.id;
+            const url = `/v2/corpus-sent/${id}?mode=edit&channels=${channel}`;
+            console.log("url", url);
+            get<IArticleResponse>(url).then((json) => {
+              if (json.ok) {
+                setContent(json.data.content);
+              }
+            });
           }
         });
         break;
-
       default:
         break;
     }
