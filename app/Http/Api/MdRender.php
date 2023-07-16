@@ -90,7 +90,7 @@ class MdRender{
         }
         return $output;
     }
-    public static function xml2tpl(string $xml, $channelId="",$mode='read'):string{
+    public static function xml2tpl(string $xml, $channelId=[],$mode='read'):string{
         /**
          * 解析xml
          * 获取模版参数
@@ -104,7 +104,7 @@ class MdRender{
             return "<span>xml解析错误{$e}</span>";
         }
 
-        $channelInfo = Channel::find($channelId);
+
 
         $tpl_list = $dom->xpath('//MdTpl');
         foreach ($tpl_list as $key => $tpl) {
@@ -138,6 +138,7 @@ class MdRender{
             /**
              * 生成模版参数
              */
+            $channelInfo = Channel::whereIn('uid',$channelId)->get();
             $tplRender = new TemplateRender($props,$channelInfo,$mode);
             $tplProps = $tplRender->render($tpl_name);
             if($tplProps){
@@ -151,7 +152,7 @@ class MdRender{
         return $html;
     }
 
-    public static function render2($markdown,$channelId='',$queryId=null,$mode='read',$channelType,$contentType="markdown"){
+    public static function render2($markdown,$channelId=[],$queryId=null,$mode='read',$channelType,$contentType="markdown"){
         $wiki = MdRender::markdown2wiki($markdown,$channelType,$contentType);
         $html = MdRender::wiki2xml($wiki);
         if(!is_null($queryId)){
@@ -264,7 +265,7 @@ class MdRender{
     }
 
     /**
-     *
+     * string[] $channelId
      */
     public static function render($markdown,$channelId,$queryId=null,$mode='read',$channelType='translation',$contentType="markdown"){
         return MdRender::render2($markdown,$channelId,$queryId,$mode,$channelType,$contentType);

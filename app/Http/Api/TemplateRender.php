@@ -11,7 +11,7 @@ use App\Http\Api\ChannelApi;
 class TemplateRender{
     protected $param = [];
     protected $mode = "read";
-    protected $channel_id = "";
+    protected $channel_id = [];
 
     /**
      * Create a new command instance.
@@ -21,7 +21,9 @@ class TemplateRender{
     public function __construct($param, $channelInfo, $mode)
     {
         $this->param = $param;
-        $this->channel_id = $channelInfo->uid;
+        foreach ($channelInfo as $value) {
+            $this->channel_id[] = $value->uid;
+        }
         $this->channelInfo = $channelInfo;
         $this->mode = $mode;
     }
@@ -65,9 +67,9 @@ class TemplateRender{
 
     private function render_term(){
         $word = $this->get_param($this->param,"word",1);
-        $channelId = $this->channel_id;
-        $channelInfo = $this->channelInfo;
-        $props = Cache::remember("/term/{$this->channel_id}/{$word}",
+        $channelId = $this->channel_id[0];
+        $channelInfo = $this->channelInfo[0];
+        $props = Cache::remember("/term/{$channelId}/{$word}",
                 env('CACHE_EXPIRE',3600*24),
               function() use($word,$channelId,$channelInfo){
                 //先查属于这个channel 的
@@ -173,7 +175,7 @@ class TemplateRender{
         $props = [
                     "id" => $id,
                     "title" => $title,
-                    "channel" => $this->channel_id,
+                    "channel" => $this->channel_id[0],
                 ];
 
         return [
@@ -188,7 +190,7 @@ class TemplateRender{
         $type = $this->get_param($this->param,"type",1);
         $id = $this->get_param($this->param,"id",2);
         $title = $this->get_param($this->param,"title",3);
-        $channel = $this->get_param($this->param,"channel",4,$this->channel_id);
+        $channel = $this->get_param($this->param,"channel",4,$this->channel_id[0]);
         $style = $this->get_param($this->param,"style",5);
         $props = [
                     "type" => $type,
@@ -208,7 +210,7 @@ class TemplateRender{
     }
     private  function render_quote(){
         $paraId = $this->get_param($this->param,"para",1);
-        $channelId = $this->channel_id;
+        $channelId = $this->channel_id[0];
         $props = Cache::remember("/quote/{$channelId}/{$paraId}",
               env('CACHE_EXPIRE',3600*24),
               function() use($paraId,$channelId){
@@ -247,7 +249,7 @@ class TemplateRender{
         if(!empty($channel)){
             $mChannel = $channel;
         }else{
-            $mChannel = $this->channel_id;
+            $mChannel = $this->channel_id[0];
         }
         $sentInfo = explode('@',trim($sid));
         $sentId = $sentInfo[0];

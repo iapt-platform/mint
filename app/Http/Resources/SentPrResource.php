@@ -35,7 +35,7 @@ class SentPrResource extends JsonResource
             "editor"=> StudioApi::getById($this->editor_uid),
             "channel"=> $channel,
             "content"=>$this->content,
-            "html"=> MdRender::render($this->content,$this->channel_uid,null,$mode,$channel['type']),
+            "html"=> MdRender::render($this->content,[$this->channel_uid],null,$mode,$channel['type']),
             "role"=>$role,
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,

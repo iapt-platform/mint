@@ -187,7 +187,7 @@ class DiscussionController extends Controller
                 }
                 $sentId = "{$sent['book']}-{$sent['paragraph']}-{$sent['word_begin']}-{$sent['word_end']}";
                 $channel = $wbwBlock->channel_uid;
-                $content = MdRender::render("{{".$sentId."}}",$channel);
+                $content = MdRender::render("{{".$sentId."}}",[$channel]);
                 return $this->ok($content);
                 break;
 

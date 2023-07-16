@@ -107,7 +107,7 @@ class ArticleResource extends JsonResource
             }else{
                 $mode = 'read';
             }
-            $data["html"] = MdRender::render($this->content,$channel,$query_id,$mode);
+            $data["html"] = MdRender::render($this->content,[$channel],$query_id,$mode);
         }
         return $data;
     }

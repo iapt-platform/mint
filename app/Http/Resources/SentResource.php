@@ -39,9 +39,14 @@ class SentResource extends JsonResource
                 "studio" => StudioApi::getById($channel["studio_id"]),
                 "updated_at"=> $this->updated_at,
             ];
+        if($request->has('channels')){
+            $channels = explode(',',$request->get('channels'));
+        }else{
+            $channels = [$this->channel_uid];
+        }
         if($request->get('html',true)){
             $data['html'] = MdRender::render($this->content,
-                                             $this->channel_uid,
+                                             [$this->channel_uid],
                                              null,
                                              $mode,
                                              $channel['type'],
