@@ -2,12 +2,12 @@ import { Outlet } from "react-router-dom";
 
 import HeadBar from "../../../components/library/HeadBar";
 import FooterBar from "../../../components/library/FooterBar";
-import { Col, Row } from "antd";
+import { Col, Layout, Row } from "antd";
 
 const Widget = () => {
   // TODO
   return (
-    <div>
+    <Layout>
       <HeadBar selectedKeys="discussion" />
       <Row>
         <Col flex={"auto"}></Col>
@@ -17,7 +17,7 @@ const Widget = () => {
         <Col flex={"auto"}></Col>
       </Row>
       <FooterBar />
-    </div>
+    </Layout>
   );
 };
 

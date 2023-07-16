@@ -1,7 +1,7 @@
 import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
-import { TContentType } from "../comment/CommentCreate";
+import { TContentType } from "../discussion/DiscussionCreate";
 import { ISuggestionCount, IWidgetSentEditInner } from "../template/SentEdit";
 import { TChannelType } from "./Channel";
 import { TagNode } from "./Tag";

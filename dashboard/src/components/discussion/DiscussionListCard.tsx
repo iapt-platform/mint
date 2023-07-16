@@ -4,10 +4,10 @@ import { Card, message, Typography } from "antd";
 
 import { get } from "../../request";
 import { ICommentListResponse } from "../api/Comment";
-import CommentCreate from "./CommentCreate";
-import { IComment } from "./CommentItem";
-import CommentList from "./CommentList";
-import { IAnswerCount } from "./CommentBox";
+import CommentCreate from "./DiscussionCreate";
+import { IComment } from "./DiscussionItem";
+import CommentList from "./DiscussionList";
+import { IAnswerCount } from "./DiscussionBox";
 
 export type TResType = "article" | "channel" | "chapter" | "sentence" | "wbw";
 interface IWidget {
@@ -18,7 +18,7 @@ interface IWidget {
   onSelect?: Function;
   onItemCountChange?: Function;
 }
-const CommentListCardWidget = ({
+const DiscussionListCardWidget = ({
   resId,
   resType,
   topicId,
@@ -44,8 +44,7 @@ const CommentListCardWidget = ({
     let url: string = "";
     if (typeof topicId !== "undefined") {
       url = `/v2/discussion?view=question-by-topic&id=${topicId}`;
-    }
-    if (typeof resId !== "undefined") {
+    } else if (typeof resId !== "undefined") {
       url = `/v2/discussion?view=question&id=${resId}`;
     }
     if (url === "") {
@@ -88,40 +87,38 @@ const CommentListCardWidget = ({
   }
 
   return (
-    <div>
-      <Card title="讨论" extra={"More"}>
-        {data.length > 0 ? (
-          <CommentList
-            onSelect={(
-              e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-              comment: IComment
-            ) => {
-              if (typeof onSelect !== "undefined") {
-                onSelect(e, comment);
-              }
-            }}
-            data={data}
-          />
-        ) : undefined}
+    <Card title="讨论" extra={"More"}>
+      {data.length > 0 ? (
+        <CommentList
+          onSelect={(
+            e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+            comment: IComment
+          ) => {
+            if (typeof onSelect !== "undefined") {
+              onSelect(e, comment);
+            }
+          }}
+          data={data}
+        />
+      ) : undefined}
 
-        {resId && resType ? (
-          <CommentCreate
-            contentType="markdown"
-            resId={resId}
-            resType={resType}
-            onCreated={(e: IComment) => {
-              const newData = JSON.parse(JSON.stringify(e));
-              console.log("create", e);
-              if (typeof onItemCountChange !== "undefined") {
-                onItemCountChange(data.length + 1);
-              }
-              setData([...data, newData]);
-            }}
-          />
-        ) : undefined}
-      </Card>
-    </div>
+      {resId && resType ? (
+        <CommentCreate
+          contentType="markdown"
+          resId={resId}
+          resType={resType}
+          onCreated={(e: IComment) => {
+            const newData = JSON.parse(JSON.stringify(e));
+            console.log("create", e);
+            if (typeof onItemCountChange !== "undefined") {
+              onItemCountChange(data.length + 1);
+            }
+            setData([...data, newData]);
+          }}
+        />
+      ) : undefined}
+    </Card>
   );
 };
 
-export default CommentListCardWidget;
+export default DiscussionListCardWidget;

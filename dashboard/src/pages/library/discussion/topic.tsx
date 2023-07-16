@@ -1,54 +1,46 @@
 import { useNavigate } from "react-router-dom";
-import { Tabs } from "antd";
+import { Button, Card, Divider } from "antd";
 import { useParams } from "react-router-dom";
-import CommentAnchor from "../../../components/comment/CommentAnchor";
-import { IComment } from "../../../components/comment/CommentItem";
-import CommentListCard from "../../../components/comment/CommentListCard";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
-import CommentTopic from "../../../components/comment/CommentTopic";
+import CommentAnchor from "../../../components/discussion/DiscussionAnchor";
+import { IComment } from "../../../components/discussion/DiscussionItem";
+import CommentTopic from "../../../components/discussion/DiscussionTopic";
+import { useState } from "react";
 
 const Widget = () => {
-  // TODO
   const { id } = useParams(); //url 参数
   const navigate = useNavigate();
+  const [discussion, setDiscussion] = useState<IComment>();
   return (
-    <div>
-      <div>
-        <CommentAnchor id={id} />
-      </div>
-      <div>
-        <Tabs
-          defaultActiveKey="current"
-          items={[
-            {
-              label: `当前`,
-              key: "current",
-              children: <CommentTopic topicId={id} />,
-            },
-            {
-              label: `全部`,
-              key: "all",
-              children: (
-                <CommentListCard
-                  topicId={id}
-                  onSelect={(
-                    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-                    comment: IComment
-                  ) => {
-                    navigate(`/discussion/topic/${comment.id}`);
-                  }}
-                />
-              ),
-            },
-            {
-              label: `类似`,
-              key: "sim",
-              children: "",
-            },
-          ]}
+    <>
+      <CommentAnchor resId={discussion?.resId} resType={discussion?.resType} />
+      <Divider></Divider>
+      <Card
+        title={
+          <Button
+            type="link"
+            disabled={discussion ? false : true}
+            icon={<ArrowLeftOutlined />}
+            onClick={() =>
+              navigate(
+                `/discussion/show/${discussion?.resType}/${discussion?.resId}`
+              )
+            }
+          >
+            {"全部"}
+          </Button>
+        }
+      >
+        <CommentTopic
+          topicId={id}
+          onTopicReady={(value: IComment) => {
+            console.log("onTopicReady");
+            setDiscussion(value);
+          }}
         />
-      </div>
-    </div>
+      </Card>
+    </>
   );
 };
 

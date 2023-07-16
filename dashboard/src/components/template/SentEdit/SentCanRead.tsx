@@ -32,6 +32,8 @@ const SentCanReadWidget = ({
   onReload,
 }: IWidget) => {
   const [sentData, setSentData] = useState<ISentence[]>([]);
+  const [channels, setChannels] = useState<string[]>();
+
   const user = useAppSelector(_currentUser);
 
   const load = () => {
@@ -41,6 +43,10 @@ const SentCanReadWidget = ({
       .then((json) => {
         if (json.ok) {
           console.log("sent load", json.data.rows);
+          const channels: string[] = json.data.rows.map(
+            (item) => item.channel.id
+          );
+          setChannels(channels);
           const newData: ISentence[] = json.data.rows.map((item) => {
             return {
               id: item.id,
@@ -88,6 +94,7 @@ const SentCanReadWidget = ({
         />
       </div>
       <SentAdd
+        disableChannels={channels}
         onSelect={(channel: IChannel) => {
           if (typeof user === "undefined") {
             return;
