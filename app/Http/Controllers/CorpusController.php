@@ -285,7 +285,7 @@ class CorpusController extends Controller
                     ->whereIn('channel_uid',$tranChannels)
                     ->first();
         if($title){
-            $this->result['title'] = MdRender::render($title->content,$title->channel_uid);
+            $this->result['title'] = MdRender::render($title->content,[$title->channel_uid]);
         }
 
         /**
@@ -386,7 +386,7 @@ class CorpusController extends Controller
                     ->whereIn('channel_uid',$tranChannels)
                     ->first();
         if($title){
-            $this->result['title'] = MdRender::render($title->content,$title->channel_uid);
+            $this->result['title'] = MdRender::render($title->content,[$title->channel_uid]);
         }
 
         /**
@@ -590,7 +590,7 @@ class CorpusController extends Controller
                             $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",
                                                 env('CACHE_EXPIRE',3600*24),
                                                 function() use($row,$mode){
-                                                    return MdRender::render($row->content,$row->channel_uid,null,$mode,"nissaya",$row->content_type);
+                                                    return MdRender::render($row->content,[$row->channel_uid],null,$mode,"nissaya",$row->content_type);
                                                 });
                             break;
                         default:
@@ -598,7 +598,7 @@ class CorpusController extends Controller
                             $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",
                                                 env('CACHE_EXPIRE',3600*24),
                                                 function() use($row){
-                                                    return MdRender::render($row->content,$row->channel_uid);
+                                                    return MdRender::render($row->content,[$row->channel_uid]);
                                                 });
                             break;
                     }
