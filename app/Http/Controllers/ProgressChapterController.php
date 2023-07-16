@@ -196,10 +196,10 @@ class ProgressChapterController extends Controller
              * 某个章节 有多少channel
              */
 
-                $chapters = ProgressChapter::select('book','para','progress_chapters.uid','progress_chapters.channel_id','progress','updated_at')
-                                            ->with(['channel' => function($query) {
-                                                return $query->select('*');
-                                            }])
+                $chapters = ProgressChapter::select('book','para','progress_chapters.uid',
+                                                    'progress_chapters.channel_id','progress',
+                                                    'channels.owner_uid','progress_chapters.updated_at')
+                                            ->leftJoin('channels','progress_chapters.channel_id', '=', 'channels.uid')
                                             ->where("book",$request->get('book'))
                                             ->where("para",$request->get('par'))
                                             ->orderBy('progress','desc')
@@ -225,7 +225,7 @@ class ProgressChapterController extends Controller
                         }
                     }
                     $chapters[$key]->likes = $likes;
-                    $chapters[$key]->studio = StudioApi::getById($value->channel->owner_uid);
+                    $chapters[$key]->studio = StudioApi::getById($value->owner_uid);
                     $progress_key="/chapter_dynamic/{$value->book}/{$value->para}/ch_{$value->channel_id}";
                     $chapters[$key]->progress_line = Cache::get($progress_key);
                 }
