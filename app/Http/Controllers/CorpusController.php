@@ -138,24 +138,32 @@ class CorpusController extends Controller
     }
     /**
      * Display the specified resource.
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function showSent($id)
+    public function showSent(Request  $request, string $id)
     {
-        //
-        $param = \explode('_',$id);
-        if(count($param)>1){
-            $channels = array_slice($param,1);
-        }else{
-            $channels = [];
-        }
-        $this->result['content'] = getSentTpl($param[0],$channels);
+        $channels = \explode('_',$request->get('channels'));
+
+        $this->result['uid'] = "";
+        $this->result['title'] = "";
+        $this->result['subtitle'] = "";
+        $this->result['summary'] = "";
+        $this->result['lang'] = "";
+        $this->result['status'] = 30;
+        $this->result['content'] = $this->getSentTpl($id,$channels,$request->get('mode','edit'));
         return $this->ok($this->result);
     }
+    /**
+     * 获取某句子的全部译文
 
-    public function showSentences($type,$id,$mode='read'){
+     * @param  \Illuminate\Http\Request  $request
+     * @param string $type
+     * @param string $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showSentences(Request $request, string $type, string $id){
         $param = \explode('_',$id);
         $sentId = \explode('-',$param[0]);
         $channels = [];
@@ -195,6 +203,12 @@ class CorpusController extends Controller
             return $this->error("no data");
         }
 
+        $this->result['uid'] = "";
+        $this->result['title'] = "";
+        $this->result['subtitle'] = "";
+        $this->result['summary'] = "";
+        $this->result['lang'] = "";
+        $this->result['status'] = 30;
         $this->result['content'] = $this->makeContent($record,$mode,$indexChannel);
         return $this->ok($this->result);
     }
@@ -460,7 +474,8 @@ class CorpusController extends Controller
 
     private function getChannelIndex($channels,$type=null){
         #获取channel索引表
-        $channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','name','owner_uid'])->get();
+        $channelInfo = Channel::whereIn("uid",$channels)
+                        ->select(['uid','type','name','owner_uid'])->get();
         $indexChannel = [];
         foreach ($channelInfo as $key => $value) {
             # code...

@@ -263,6 +263,7 @@ class SentenceController extends Controller
     public function show(Sentence $sentence)
     {
         //
+        return $this->ok(new SentResource($sentence));
     }
 
 
