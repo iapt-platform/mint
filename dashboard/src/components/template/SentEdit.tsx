@@ -85,6 +85,8 @@ export const SentEditInner = ({
     }
   }, []);
 
+  const channelsId = translation?.map((item) => item.channel.id);
+
   return (
     <Card
       bodyStyle={{ paddingBottom: 0 }}
@@ -115,6 +117,7 @@ export const SentEditInner = ({
         para={para}
         wordStart={wordStart}
         wordEnd={wordEnd}
+        channelsId={channelsId}
         path={path}
         tranNum={tranNum}
         nissayaNum={nissayaNum}

@@ -19,6 +19,7 @@ interface IWidget {
   wordStart: number;
   wordEnd: number;
   type: TChannelType;
+  channelsId?: string[];
   reload?: boolean;
   onReload?: Function;
 }
@@ -28,6 +29,7 @@ const SentCanReadWidget = ({
   wordStart,
   wordEnd,
   type,
+  channelsId,
   reload = false,
   onReload,
 }: IWidget) => {
@@ -37,9 +39,11 @@ const SentCanReadWidget = ({
   const user = useAppSelector(_currentUser);
 
   const load = () => {
-    get<ISentenceListResponse>(
-      `/v2/sentence?view=sent-can-read&sentence=${book}-${para}-${wordStart}-${wordEnd}&type=${type}&mode=edit`
-    )
+    const sentId = `${book}-${para}-${wordStart}-${wordEnd}`;
+    let url = `/v2/sentence?view=sent-can-read&sentence=${sentId}&type=${type}&mode=edit`;
+    url += channelsId ? `&channels=${channelsId.join()}` : "";
+    console.log("url", url);
+    get<ISentenceListResponse>(url)
       .then((json) => {
         if (json.ok) {
           console.log("sent load", json.data.rows);
@@ -74,14 +78,17 @@ const SentCanReadWidget = ({
         }
       });
   };
+
   useEffect(() => {
     load();
   }, []);
+
   useEffect(() => {
     if (reload) {
       load();
     }
   }, [reload]);
+
   return (
     <>
       <div style={{ display: "flex", justifyContent: "space-between" }}>

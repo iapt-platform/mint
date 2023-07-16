@@ -25,6 +25,7 @@ interface IWidget {
   para: number;
   wordStart: number;
   wordEnd: number;
+  channelsId?: string[];
   path?: ITocPathNode[];
   layout?: "row" | "column";
   tranNum?: number;
@@ -42,6 +43,7 @@ const SentTabWidget = ({
   para,
   wordStart,
   wordEnd,
+  channelsId,
   path,
   tranNum,
   nissayaNum,
@@ -180,6 +182,7 @@ const SentTabWidget = ({
                 wordStart={parseInt(sId[2])}
                 wordEnd={parseInt(sId[3])}
                 type="commentary"
+                channelsId={channelsId}
               />
             ),
           },
