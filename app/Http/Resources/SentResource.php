@@ -46,7 +46,7 @@ class SentResource extends JsonResource
         }
         if($request->get('html',true)){
             $data['html'] = MdRender::render($this->content,
-                                             [$this->channel_uid],
+                                             $channels,
                                              null,
                                              $mode,
                                              $channel['type'],
