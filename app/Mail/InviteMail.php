@@ -33,7 +33,7 @@ class InviteMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.invite_'.$this->lang)
+        return $this->view('emails.invite.'.$this->lang)
                     ->with([
                         'url' => env('APP_URL').'/anonymous/users/sign-up/'.$this->uuid,
                     ]);
