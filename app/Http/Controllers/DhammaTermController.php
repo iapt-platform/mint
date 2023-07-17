@@ -561,6 +561,7 @@ class DhammaTermController extends Controller
                     continue;
                 }
             }
+            $row->word = $word;
             $row->word_en = Tools::getWordEn($word);
             $row->meaning = $meaning;
             $row->other_meaning = $other_meaning;
