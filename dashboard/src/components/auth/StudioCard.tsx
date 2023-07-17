@@ -17,7 +17,7 @@ const StudioCardWidget = ({ studio, children }: IWidget) => {
           <div style={{ display: "flex" }}>
             <div style={{ paddingRight: 8 }}>
               <Avatar style={{ backgroundColor: "#87d068" }} size="small">
-                {studio?.nickName.slice(0, 1)}
+                {studio?.nickName?.slice(0, 1)}
               </Avatar>
             </div>
             <div>
