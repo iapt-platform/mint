@@ -77,7 +77,6 @@ class InviteController extends Controller
 
         $uuid = Str::uuid();
         Mail::to($request->get('email'))
-            ->locale(strtolower($request->get('lang')))
             ->send(new InviteMail($uuid,strtolower($request->get('lang'))));
         if(Mail::failures()){
             return $this->error('send email fail',[],200);
