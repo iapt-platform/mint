@@ -4,9 +4,11 @@
         <title>invite</title>
 </head>
 <body>
-<div>wikipali 注册邀请</div>
-<div>点击此链接注册wikipali账号。此链接邀请只可以注册一个账户。有效期7天。</div>
-<a href='{{ $url }}'>{{ $url }}</a><br>
-<div>此邮件为系统自动发送，请勿回复。</div>
+<div>wikipali sign up invitation</div>
+<div>click this link to sign up on wikipali.</div>
+<div><a href='{{ $url }}'>{{ $url }}</a></div>
+<div>This link will be expired within 7 days.<br>
+This email is sent automatically by system, please don't reply.</div>
+
 </body>
 </html>
