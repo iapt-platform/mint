@@ -433,7 +433,7 @@ class DhammaTermController extends Controller
                 if($owner_id !== $user["user_uid"]){
                     //判断是否为协作
                     $power = ShareApi::getResPower($user["user_uid"],$request->get('id'));
-                    if($power<30){
+                    if($power<20){
                         return $this->error(__('auth.failed'),[],403);
                     }
                 }
