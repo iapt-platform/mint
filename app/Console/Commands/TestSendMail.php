@@ -42,7 +42,7 @@ class TestSendMail extends Command
     {
         $uuid = Str::uuid();
         Mail::to("visuddhinanda@gmail.com")
-            ->send(new InviteMail($uuid,'zh-Hans'));
+            ->send(new InviteMail($uuid,'en'));
         if(Mail::failures()){
             $this->error('send email fail');
         }
