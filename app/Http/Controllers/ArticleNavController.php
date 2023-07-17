@@ -29,12 +29,16 @@ class ArticleNavController extends Controller
                                 ->where('level','<',8)
                                 ->orderBy('paragraph','asc')
                                 ->first();
-                $nav['prev']['id'] = $prev->book . '-' . $prev->paragraph;
-                $nav['prev']['title'] = $prev->toc;
-                $nav['prev']['subtitle'] = $prev->toc;
-                $nav['next']['id'] = $next->book . '-' . $next->paragraph;
-                $nav['next']['title'] = $next->toc;
-                $nav['next']['subtitle'] = $next->toc;
+                if($prev){
+                    $nav['prev']['id'] = $prev->book . '-' . $prev->paragraph;
+                    $nav['prev']['title'] = $prev->toc;
+                    $nav['prev']['subtitle'] = $prev->toc;
+                }
+                if($next){
+                    $nav['next']['id'] = $next->book . '-' . $next->paragraph;
+                    $nav['next']['title'] = $next->toc;
+                    $nav['next']['subtitle'] = $next->toc;
+                }
                 break;
             case 'para':
                 $para = explode('-',$request->get('id'));
@@ -46,12 +50,16 @@ class ArticleNavController extends Controller
                                 ->where('paragraph','>',$para[1])
                                 ->orderBy('paragraph','asc')
                                 ->first();
-                $nav['prev']['id'] = $prev->book . '-' . $prev->paragraph;
-                $nav['prev']['title'] = $prev->text;
-                $nav['prev']['subtitle'] = $prev->text;
-                $nav['next']['id'] = $next->book . '-' . $next->paragraph;
-                $nav['next']['title'] = $next->text;
-                $nav['next']['subtitle'] = $next->text;
+                if($prev){
+                    $nav['prev']['id'] = $prev->book . '-' . $prev->paragraph;
+                    $nav['prev']['title'] = $prev->text;
+                    $nav['prev']['subtitle'] = $prev->text;
+                }
+                if($next){
+                    $nav['next']['id'] = $next->book . '-' . $next->paragraph;
+                    $nav['next']['title'] = $next->text;
+                    $nav['next']['subtitle'] = $next->text;
+                }
                 break;
             default:
                 return $this->error('type?');
