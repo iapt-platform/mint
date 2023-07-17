@@ -2,6 +2,7 @@ import { useIntl } from "react-intl";
 import {
   ProForm,
   ProFormDependency,
+  ProFormInstance,
   ProFormText,
 } from "@ant-design/pro-components";
 import { Button, message, Modal, Result } from "antd";
@@ -11,7 +12,7 @@ import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { get, post } from "../../../request";
 import { IInviteResponse } from "../../../pages/studio/invite/list";
 import LangSelect from "../../general/LangSelect";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 interface IFormData {
   email: string;
@@ -44,6 +45,7 @@ const SignUpWidget = ({ token }: IWidget) => {
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
   const [nickname, setNickname] = useState<string>();
+  const formRef = useRef<ProFormInstance>();
   return success ? (
     <Result
       status="success"
@@ -59,6 +61,7 @@ const SignUpWidget = ({ token }: IWidget) => {
     />
   ) : (
     <ProForm<IFormData>
+      formRef={formRef}
       onFinish={async (values: IFormData) => {
         if (typeof token === "undefined") {
           return;
@@ -70,7 +73,7 @@ const SignUpWidget = ({ token }: IWidget) => {
         const user = {
           token: token,
           username: values.username,
-          nickname: values.nickname,
+          nickname: values.nickname ? values.nickname : values.username,
           email: values.email,
           password: values.password,
           lang: values.lang,
@@ -116,6 +119,11 @@ const SignUpWidget = ({ token }: IWidget) => {
           width="md"
           name="username"
           required
+          fieldProps={{
+            onChange: (event) => {
+              setNickname(event.target.value);
+            },
+          }}
           label={intl.formatMessage({
             id: "forms.fields.username.label",
           })}
@@ -136,7 +144,7 @@ const SignUpWidget = ({ token }: IWidget) => {
           label={intl.formatMessage({
             id: "forms.fields.password.label",
           })}
-          rules={[{ required: true, max: 32, min: 4 }]}
+          rules={[{ required: true, max: 32, min: 6 }]}
         />
       </ProForm.Group>
       <ProForm.Group>
@@ -152,7 +160,7 @@ const SignUpWidget = ({ token }: IWidget) => {
           label={intl.formatMessage({
             id: "forms.fields.confirm-password.label",
           })}
-          rules={[{ required: true, max: 32, min: 4 }]}
+          rules={[{ required: true, max: 32, min: 6 }]}
         />
       </ProForm.Group>
       <ProForm.Group>
@@ -173,7 +181,7 @@ const SignUpWidget = ({ token }: IWidget) => {
                 label={intl.formatMessage({
                   id: "forms.fields.nickname.label",
                 })}
-                rules={[{ required: true, max: 32, min: 4 }]}
+                rules={[{ required: false, max: 32, min: 4 }]}
               />
             );
           }}
