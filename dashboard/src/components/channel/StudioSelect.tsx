@@ -14,7 +14,7 @@ interface IStudioListResponse {
 
 interface IOptions {
   value: string;
-  label: string;
+  label?: string;
 }
 interface IWidget {
   studioName?: string;

@@ -4,7 +4,7 @@ import StudioCard from "./StudioCard";
 
 export interface IStudio {
   id: string;
-  nickName: string;
+  nickName?: string;
   studioName?: string;
   realName?: string;
   avatar?: string;
@@ -22,7 +22,7 @@ const StudioNameWidget = ({
   onClick,
 }: IWidghtStudio) => {
   // TODO
-  const avatar = <Avatar size="small">{data?.nickName.slice(0, 1)}</Avatar>;
+  const avatar = <Avatar size="small">{data?.nickName?.slice(0, 1)}</Avatar>;
   return (
     <StudioCard studio={data}>
       <Space

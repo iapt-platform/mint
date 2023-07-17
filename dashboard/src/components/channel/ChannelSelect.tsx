@@ -44,7 +44,10 @@ const ChannelSelectWidget = ({
           //获取studio list
           let studio = new Map<string, string>();
           for (const iterator of json.data.rows) {
-            studio.set(iterator.studio.id, iterator.studio.nickName);
+            studio.set(
+              iterator.studio.id,
+              iterator.studio.nickName ? iterator.studio.nickName : ""
+            );
           }
           let channels: IOption[] = [{ value: "", label: "通用于此Studio" }];
           if (typeof parentChannelId === "string") {

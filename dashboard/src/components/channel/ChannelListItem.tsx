@@ -17,7 +17,7 @@ const ChannelListItemWidget = ({
   showProgress,
   showLike,
 }: IWidget) => {
-  const studioName = studio.nickName.slice(0, 2);
+  const studioName = studio.nickName?.slice(0, 2);
   return (
     <>
       <Space>
