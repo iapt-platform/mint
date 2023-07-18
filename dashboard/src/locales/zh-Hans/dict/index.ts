@@ -155,6 +155,8 @@ const items = {
   "dict.fields.type.note.label": "注释",
   "dict.fields.type.vind.short.label": "动不变",
   "dict.fields.type.vind.label": "动不变",
+  "dict.fields.type.vdn.label": "衍生动名词",
+  "dict.fields.type.vdn.short.label": "动名",
 };
 
 export default items;
