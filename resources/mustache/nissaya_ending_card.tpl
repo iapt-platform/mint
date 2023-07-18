@@ -7,5 +7,5 @@
 |{{title_case}}|{{title_content}}|{{title_local_ending}}|{{title_local_relation}}|{{title_relation}}|
 |-|-|-|-|-|
 {{#row}}
-|**{{case}}**|{{summary}}|{{local_ending}}|{{local_relation}}|`{{relation}}`|
+|**{{spell}}{{case}}**|{{summary}}|{{local_ending}}|{{local_relation}}|`{{relation}}`|
 {{/row}}
