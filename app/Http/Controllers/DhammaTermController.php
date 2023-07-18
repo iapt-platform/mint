@@ -281,6 +281,7 @@ class DhammaTermController extends Controller
         if(!$user){
             return $this->error(__('auth.failed'));
         }
+        //TODO 权限判断
         $dhammaTerm = DhammaTerm::find($id);
         $dhammaTerm->word = $request->get("word");
         $dhammaTerm->word_en = Tools::getWordEn($request->get("word"));
@@ -290,7 +291,7 @@ class DhammaTermController extends Controller
         $dhammaTerm->tag = $request->get("tag");
         $dhammaTerm->channal = $request->get("channal");
         $dhammaTerm->language = $request->get("language");
-        if($request->has("channal") && Str::isUuid($request->has("channal"))){
+        if($request->has("channal") && Str::isUuid($request->get("channal"))){
             $channelInfo = ChannelApi::getById($request->get("channal"));
             if(!$channelInfo){
                 return $this->error("channel id failed");
@@ -302,8 +303,6 @@ class DhammaTermController extends Controller
             $dhammaTerm->owner = StudioApi::getIdByName($request->get("studioName"));
         }else if($request->has("studioId")){
             $dhammaTerm->owner = $request->get("studioId");
-        }else{
-            $dhammaTerm->owner = null;
         }
 
         $dhammaTerm->editor_id = $user["user_id"];
