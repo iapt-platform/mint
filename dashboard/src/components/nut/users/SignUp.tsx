@@ -127,7 +127,13 @@ const SignUpWidget = ({ token }: IWidget) => {
           label={intl.formatMessage({
             id: "forms.fields.username.label",
           })}
-          rules={[{ required: true, max: 255, min: 4 }]}
+          rules={[
+            { required: true, max: 32, min: 6 },
+            {
+              pattern: new RegExp("^[0-9a-zA-Z_]{1,}", "g"),
+              message: "只允许数字，字母，下划线",
+            },
+          ]}
         />
       </ProForm.Group>
       <ProForm.Group>
