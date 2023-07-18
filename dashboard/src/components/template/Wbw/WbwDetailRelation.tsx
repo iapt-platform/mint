@@ -62,17 +62,48 @@ const WbwDetailRelationWidget = ({ data, onChange, onAdd }: IWidget) => {
   }, [data.relation]);
 
   useEffect(() => {
-    const caseEnd = data.case?.value?.split("$");
-    if (typeof caseEnd === "undefined") {
+    let grammar = data.case?.value
+      ?.replace("#", "$")
+      .replaceAll(".", "")
+      .split("$");
+    if (data.grammar2?.value) {
+      if (grammar) {
+        grammar = [data.grammar2?.value, ...grammar];
+      } else {
+        grammar = [data.grammar2?.value];
+      }
+    }
+    console.log("grammar", grammar);
+    if (typeof grammar === "undefined") {
       return;
     }
     const mRelation = relations
-      ?.filter(
-        (value) =>
-          value.case === caseEnd[caseEnd.length - 1].replaceAll(".", "") ||
-          value.case === "" ||
-          value.case === null
-      )
+      ?.filter((value) => {
+        let caseMatch = true;
+        let spellMatch = true;
+        if (!value.from) {
+          return false;
+        }
+        if (value.from?.case) {
+          let matchCount = 0;
+          if (grammar) {
+            for (const iterator of value.from.case) {
+              if (grammar?.includes(iterator)) {
+                matchCount++;
+              }
+            }
+          }
+          if (matchCount !== value.from.case.length) {
+            caseMatch = false;
+          }
+        }
+        if (value.from?.spell) {
+          if (data.real.value !== value.from?.spell) {
+            spellMatch = false;
+          }
+        }
+        return caseMatch && spellMatch;
+      })
       .map((item) => {
         const localName = terms?.find(
           (term) => term.word === item.name
@@ -88,7 +119,13 @@ const WbwDetailRelationWidget = ({ data, onChange, onAdd }: IWidget) => {
         };
       });
     setOptions(mRelation);
-  }, [data.case?.value, relations, terms]);
+  }, [
+    data.case?.value,
+    data.grammar2?.value,
+    data.real.value,
+    relations,
+    terms,
+  ]);
   return (
     <List
       itemLayout="vertical"
