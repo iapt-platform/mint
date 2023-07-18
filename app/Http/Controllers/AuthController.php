@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-require_once __DIR__.'/../../../public/app/ucenter/function.php';
-
 use Illuminate\Http\Request;
 use App\Models\UserInfo;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use App\Http\Api;
+use App\Http\Api\AuthApi;
 use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
@@ -88,14 +86,14 @@ class AuthController extends Controller
         }
     }
     public function getUserInfoByToken(Request $request){
-        $curr = \App\Http\Api\AuthApi::current($request);
+        $curr = AuthApi::current($request);
         if($curr){
-            $userinfo = new \UserInfo();
-		    $username = $userinfo->getName($curr['user_uid']);
+            $userInfo = UserInfo::where('userid',$curr['user_uid'])
+                            ->first();
             $user = [
                 "id"=>$curr['user_uid'],
-                "nickName"=> $username['nickname'],
-                "realName"=> $username['username'],
+                "nickName"=> $userInfo->nickname,
+                "realName"=> $userInfo->username,
                 "avatar"=> "",
                 "roles"=> [],
                 "token"=>\substr($request->header('Authorization'),7) ,
