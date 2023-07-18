@@ -155,18 +155,7 @@ const ChpaterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
                   },
                 }}
               >
-                <Link
-                  to={
-                    `/article/chapter/${row.book}-${row.paragraph}/edit` +
-                    channelId
-                      ? `?channel=${channelId}`
-                      : ""
-                  }
-                >
-                  {intl.formatMessage({
-                    id: "buttons.edit",
-                  })}
-                </Link>
+                <></>
               </Dropdown.Button>,
             ];
           },
