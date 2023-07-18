@@ -19,6 +19,7 @@ class RelationResource extends JsonResource
             "id"=>$this->id,
             "name"=> $this->name,
             "case"=> $this->case,
+            "from"=> json_decode($this->from),
             "to"=> json_decode($this->to),
             "editor"=> UserApi::getById($this->editor_id),
             "created_at"=> $this->created_at,

@@ -20,33 +20,25 @@ class RelationController extends Controller
     public function index(Request $request)
     {
         //
-        $table = Relation::select(['id','name','case','to','editor_id','updated_at','created_at']);
+        $table = Relation::select(['id','name','case','from','to','editor_id','updated_at','created_at']);
         if(($request->has('case'))){
-            $table->whereIn('case', explode(",",$request->get('case')) );
+            $table = $table->whereIn('case', explode(",",$request->get('case')) );
         }
         if(($request->has('search'))){
-            $table->where('name', 'like', $request->get('search')."%");
+            $table = $table->where('name', 'like', $request->get('search')."%");
         }
         if(!empty($request->get('order')) && !empty($request->get('dir'))){
-            $table->orderBy($request->get('order'),$request->get('dir'));
+            $table = $table->orderBy($request->get('order'),$request->get('dir'));
         }else{
-            $table->orderBy('updated_at','desc');
+            $table = $table->orderBy('updated_at','desc');
         }
         $count = $table->count();
-        if(!empty($request->get('limit'))){
-            $offset = 0;
-            if(!empty($request->get("offset"))){
-                $offset = $request->get("offset");
-            }
-            $table->skip($offset)->take($request->get('limit'));
-        }
+
+        $table = $table->skip($request->get("offset",0))
+                       ->take($request->get('limit',1000));
         $result = $table->get();
 
-		if($result){
-			return $this->ok(["rows"=>RelationResource::collection($result),"count"=>$count]);
-		}else{
-			return $this->error("没有查询到数据");
-		}
+        return $this->ok(["rows"=>RelationResource::collection($result),"count"=>$count]);
     }
 
 
@@ -61,7 +53,7 @@ class RelationController extends Controller
         //
         $user = AuthApi::current($request);
         if(!$user){
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),[],401);
         }
         //TODO 判断权限
         $validated = $request->validate([
@@ -74,6 +66,11 @@ class RelationController extends Controller
             $new->case = $request->get('case');
         }else{
             $new->case = null;
+        }
+        if($request->has('from')){
+            $new->from = json_encode($request->get('from'),JSON_UNESCAPED_UNICODE);
+        }else{
+            $new->from = null;
         }
         if($request->has('to')){
             $new->to = json_encode($request->get('to'),JSON_UNESCAPED_UNICODE);
@@ -96,7 +93,6 @@ class RelationController extends Controller
     {
         //
         return $this->ok(new RelationResource($relation));
-
     }
 
 
@@ -120,6 +116,11 @@ class RelationController extends Controller
             $relation->case = $request->get('case');
         }else{
             $relation->case = null;
+        }
+        if($request->has('from')){
+            $relation->from = json_encode($request->get('from'),JSON_UNESCAPED_UNICODE);
+        }else{
+            $relation->from = null;
         }
         if($request->has('to')){
             $relation->to = json_encode($request->get('to'),JSON_UNESCAPED_UNICODE);
