@@ -50,7 +50,6 @@ const SentContentWidget = ({
 
   useEffect(() => {
     const width = divShell.current?.offsetWidth;
-    console.log("settings", width);
     if (width && width < 550) {
       setLayoutDirection("column");
       return;
@@ -86,7 +85,6 @@ const SentContentWidget = ({
   useLayoutEffect(() => {
     const width = divShell.current?.offsetWidth;
     setDivShellWidth(width);
-    console.log("width", width);
     if (width && width < 550) {
       setLayoutDirection("column");
       return;

@@ -34,8 +34,6 @@ const SentCellWidget = ({
   const endings = useAppSelector(getEnding);
   const acceptPr = useAppSelector(sentence);
 
-  console.log("edit mode", editMode);
-
   useEffect(() => {
     setSentData(data);
   }, [data]);
@@ -71,7 +69,6 @@ const SentCellWidget = ({
           }
         }}
         onConvert={(format: string) => {
-          console.log("format", format);
           switch (format) {
             case "json":
               const wbw: IWbw[] = data.content.split("\n").map((item, id) => {

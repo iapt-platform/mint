@@ -41,7 +41,7 @@ interface IRecent {
   updatedAt: string;
   param?: IParam;
 }
-interface IArticleParam {
+export interface IArticleParam {
   type: ArticleType;
   articleId: string;
   mode?: ArticleMode;

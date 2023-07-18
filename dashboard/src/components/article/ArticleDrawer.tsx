@@ -1,5 +1,6 @@
-import { Drawer } from "antd";
+import { Button, Drawer, Space } from "antd";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import Article, { ArticleMode, ArticleType } from "./Article";
 
@@ -36,9 +37,21 @@ const ArticleDrawerWidget = ({
 
   const onDrawerClose = () => {
     setOpenDrawer(false);
+    if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
+      document.getElementsByTagName("body")[0].removeAttribute("style");
+    }
     if (typeof onClose !== "undefined") {
       onClose();
     }
+  };
+
+  const getUrl = (openMode?: string): string => {
+    let url = `/article/${type}/${articleId}?mode=`;
+    url += openMode ? openMode : mode ? mode : "read";
+    url += channelId ? `&channel=${channelId}` : "";
+    url += book ? `&book=${book}` : "";
+    url += para ? `&par=${para}` : "";
+    return url;
   };
 
   return (
@@ -51,6 +64,16 @@ const ArticleDrawerWidget = ({
         onClose={onDrawerClose}
         open={openDrawer}
         destroyOnClose={true}
+        extra={
+          <Space>
+            <Button>
+              <Link to={getUrl()}>在单页面中打开</Link>
+            </Button>
+            <Button>
+              <Link to={getUrl("edit")}>翻译模式</Link>
+            </Button>
+          </Space>
+        }
       >
         <Article
           active={true}
