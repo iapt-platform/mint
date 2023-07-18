@@ -11,12 +11,16 @@ import TermList from "../../../components/term/TermList";
 import ShareModal from "../../../components/share/ShareModal";
 import { useIntl } from "react-intl";
 import { EResType } from "../../../components/share/Share";
+import { IArticleParam } from "../recent/list";
+import ArticleDrawer from "../../../components/article/ArticleDrawer";
 
 const Widget = () => {
   const { channelId } = useParams(); //url 参数
   const { studioname } = useParams();
   const [title, setTitle] = useState("");
   const intl = useIntl();
+  const [articleOpen, setArticleOpen] = useState(false);
+  const [param, setParam] = useState<IArticleParam>();
 
   useEffect(() => {
     get<IApiResponseChannel>(`/v2/channel/${channelId}`).then((json) => {
@@ -48,7 +52,31 @@ const Widget = () => {
           {
             label: `chapter`,
             key: "chapter",
-            children: <ChapterInChannelList channelId={channelId} />,
+            children: (
+              <ChapterInChannelList
+                channelId={channelId}
+                onSelect={(
+                  event: React.MouseEvent<HTMLElement, MouseEvent>,
+                  chapter: IArticleParam
+                ) => {
+                  if (event.ctrlKey || event.metaKey) {
+                    let url = `/article/${chapter.type}/${chapter.articleId}?mode=`;
+                    url += chapter?.mode ? chapter?.mode : "read";
+                    url += chapter?.channelId
+                      ? `&channel=${chapter.channelId}`
+                      : "";
+                    const fullUrl =
+                      process.env.REACT_APP_WEB_HOST +
+                      process.env.PUBLIC_URL +
+                      url;
+                    window.open(fullUrl, "_blank");
+                  } else {
+                    setParam(chapter);
+                    setArticleOpen(true);
+                  }
+                }}
+              />
+            ),
           },
           {
             label: `term`,
@@ -56,6 +84,11 @@ const Widget = () => {
             children: <TermList channelId={channelId} />,
           },
         ]}
+      />
+      <ArticleDrawer
+        {...param}
+        open={articleOpen}
+        onClose={() => setArticleOpen(false)}
       />
     </Card>
   );
