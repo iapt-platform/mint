@@ -36,6 +36,9 @@ const ArticleDrawerWidget = ({
 
   const onDrawerClose = () => {
     setOpenDrawer(false);
+    if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
+      document.getElementsByTagName("body")[0].removeAttribute("style");
+    }
     if (typeof onClose !== "undefined") {
       onClose();
     }
