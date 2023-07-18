@@ -9,6 +9,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { get } from "../../request";
 
 import { IChapterListResponse } from "../../components/api/Corpus";
+import { IArticleParam } from "../../pages/studio/recent/list";
 
 const { Text } = Typography;
 
@@ -27,9 +28,9 @@ interface IItem {
 }
 interface IWidget {
   channelId?: string;
-  onChange?: Function;
+  onSelect?: Function;
 }
-const ChpaterInChannelListWidget = ({ channelId, onChange }: IWidget) => {
+const ChpaterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
   const intl = useIntl();
 
   return (
@@ -56,16 +57,22 @@ const ChpaterInChannelListWidget = ({ channelId, onChange }: IWidget) => {
             return (
               <div key={index}>
                 <div key={1}>
-                  <Link
-                    to={
-                      `/article/chapter/${row.book}-${row.paragraph}` +
-                      channelId
-                        ? `?channel=${channelId}`
-                        : ""
-                    }
+                  <Button
+                    type="link"
+                    onClick={(event) => {
+                      if (typeof onSelect !== "undefined") {
+                        const chapter: IArticleParam = {
+                          type: "chapter",
+                          articleId: `${row.book}-${row.paragraph}`,
+                          mode: "read",
+                          channelId: channelId,
+                        };
+                        onSelect(event, chapter);
+                      }
+                    }}
                   >
                     {row.title ? row.title : row.subTitle}
-                  </Link>
+                  </Button>
                 </div>
                 <Text type="secondary" key={2}>
                   {row.subTitle}
