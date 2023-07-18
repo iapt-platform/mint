@@ -66,8 +66,12 @@ const ArticleDrawerWidget = ({
         destroyOnClose={true}
         extra={
           <Space>
-            <Link to={getUrl()}>在单页面中打开</Link>
-            <Link to={getUrl("edit")}>翻译模式</Link>
+            <Button>
+              <Link to={getUrl()}>在单页面中打开</Link>
+            </Button>
+            <Button>
+              <Link to={getUrl("edit")}>翻译模式</Link>
+            </Button>
           </Space>
         }
       >
