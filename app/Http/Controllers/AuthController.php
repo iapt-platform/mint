@@ -81,11 +81,9 @@ class AuthController extends Controller
                 'uid' => $user->userid,
                 'id' => $user->id,
             ];
-            Log::info('JWT::encode.key='.$key);
             $jwt = JWT::encode($payload,$key,'HS512');
             return $this->ok($jwt);
         }else{
-            Log::info($userInfo->getLog());
             return $this->error('invalid token');
         }
     }
