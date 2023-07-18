@@ -27,19 +27,25 @@ const TermModalWidget = ({
 }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const modalClone = () => {
+    setIsModalOpen(false);
+    if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
+      document.getElementsByTagName("body")[0].removeAttribute("style");
+    }
+  };
   const showModal = () => {
     setIsModalOpen(true);
   };
 
   const handleOk = () => {
-    setIsModalOpen(false);
+    modalClone();
     if (typeof onClose !== "undefined") {
       onClose();
     }
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    modalClone();
     if (typeof onClose !== "undefined") {
       onClose();
     }
