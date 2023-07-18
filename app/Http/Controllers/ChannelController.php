@@ -495,20 +495,23 @@ class ChannelController extends Controller
     {
         //鉴权
         $user = AuthApi::current($request);
-        if($user && $channel->owner_uid === $user["user_uid"]){
-            $channel->name = $request->get('name');
-            $channel->type = $request->get('type');
-            $channel->summary = $request->get('summary');
-            $channel->lang = $request->get('lang');
-            $channel->status = $request->get('status');
-            $channel->save();
-            return $this->ok($channel);
-        }else{
-            //非所有者鉴权失败
-            //TODO 判断是否为协作
-            return $this->error(__('auth.failed'));
+        if(!$user){
+            return $this->error(__('auth.failed'),[],401);
         }
-
+        if($channel->owner_uid !== $user["user_uid"]){
+            //判断是否为协作
+            $power = ShareApi::getResPower($user["user_uid"],$request->get('id'));
+            if($power < 30){
+                return $this->error(__('auth.failed'),[],403);
+            }
+        }
+        $channel->name = $request->get('name');
+        $channel->type = $request->get('type');
+        $channel->summary = $request->get('summary');
+        $channel->lang = $request->get('lang');
+        $channel->status = $request->get('status');
+        $channel->save();
+        return $this->ok($channel);
     }
 
     /**
