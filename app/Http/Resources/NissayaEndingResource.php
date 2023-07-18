@@ -29,17 +29,20 @@ class NissayaEndingResource extends JsonResource
             "updated_at"=> $this->updated_at,
         ];
 
-        $uiLang = strtolower($request->get('ui-lang','en')) ;
-        $term_channel = ChannelApi::getSysChannel("_System_Grammar_Term_{$uiLang}_");
-        if($term_channel){
-            $term = DhammaTerm::where("word",$this->ending)
-                                          ->where('channal',$term_channel)
-                                          ->first();
-            $data['term_channel'] = $term_channel;
-            if($term){
-                $data['term_id'] = $term->guid;
+        if($this->lang === 'my'){
+            $uiLang = strtolower($request->get('ui-lang','en')) ;
+            $term_channel = ChannelApi::getSysChannel("_System_Grammar_Term_{$uiLang}_");
+            if($term_channel){
+                $term = DhammaTerm::where("word",$this->ending)
+                                            ->where('channal',$term_channel)
+                                            ->first();
+                $data['term_channel'] = $term_channel;
+                if($term){
+                    $data['term_id'] = $term->guid;
+                }
             }
         }
+
         return $data;
     }
 }
