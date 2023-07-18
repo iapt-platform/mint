@@ -1,5 +1,5 @@
 import { useIntl } from "react-intl";
-import { Button, Dropdown, Modal, message } from "antd";
+import { Button, Dropdown, Modal, message, Space } from "antd";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import {
   PlusOutlined,
@@ -14,12 +14,15 @@ import { IDeleteResponse } from "../../../components/api/Article";
 
 import { useRef } from "react";
 
+import { get as getUiLang } from "../../../locales";
 import { IUser } from "../../../reducers/current-user";
 import NissayaEndingEdit from "../../../components/admin/relation/NissayaEndingEdit";
 import { LangValueEnum } from "../../../components/general/LangSelect";
 import { NissayaCardModal } from "../../../components/general/NissayaCard";
 import DataImport from "../../../components/admin/relation/DataImport";
 import { CaseValueEnum } from "../relation/list";
+import TermModal from "../../../components/term/TermModal";
+import { ITermDataResponse } from "../../../components/api/Term";
 
 export interface INissayaEndingRequest {
   id?: string;
@@ -29,6 +32,8 @@ export interface INissayaEndingRequest {
   case?: string;
   editor?: IUser;
   count?: number;
+  term_id?: string;
+  term_channel?: string;
   updated_at?: string;
   created_at?: string;
 }
@@ -53,6 +58,8 @@ export interface INissayaEnding {
   relation?: string;
   case?: string;
   count?: number;
+  termId?: string;
+  termChannel?: string;
   updatedAt?: number;
   createdAt?: number;
 }
@@ -124,17 +131,33 @@ const Widget = () => {
             search: false,
             render: (text, row, index, action) => {
               return (
-                <NissayaEndingEdit
-                  id={row.id}
-                  trigger={
-                    <Button type="link" size="small">
-                      {row.ending}
-                    </Button>
-                  }
-                  onSuccess={() => {
-                    ref.current?.reload();
-                  }}
-                />
+                <Space>
+                  <NissayaEndingEdit
+                    id={row.id}
+                    trigger={
+                      <Button type="link" size="small">
+                        {row.ending}
+                      </Button>
+                    }
+                    onSuccess={() => {
+                      ref.current?.reload();
+                    }}
+                  />
+                  {row.termChannel ? (
+                    <TermModal
+                      onUpdate={(value: ITermDataResponse) => {
+                        //onModalClose();
+                      }}
+                      onClose={() => {
+                        //onModalClose();
+                      }}
+                      trigger={<Button size="small">术语维护</Button>}
+                      id={row.termId}
+                      word={row.ending}
+                      channelId={row.termChannel}
+                    />
+                  ) : undefined}
+                </Space>
               );
             },
           },
@@ -247,7 +270,8 @@ const Widget = () => {
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
           url += `&limit=${params.pageSize}&offset=${offset}`;
-          if (typeof params.keyword !== "undefined") {
+          url += "&ui-lang=" + getUiLang();
+          if (params.keyword) {
             url += "&search=" + (params.keyword ? params.keyword : "");
           }
           if (params.relation) {
@@ -259,6 +283,7 @@ const Widget = () => {
           if (filter.lang) {
             url += `&lang=${filter.lang.join()}`;
           }
+          console.log("url", url);
           const res = await get<INissayaEndingListResponse>(url);
           const items: INissayaEnding[] = res.data.rows.map((item, id) => {
             const date = new Date(item.created_at ? item.created_at : 0);
@@ -271,6 +296,8 @@ const Widget = () => {
               relation: item.relation,
               case: item.case,
               count: item.count,
+              termId: item.term_id,
+              termChannel: item.term_channel,
               createdAt: date.getTime(),
               updatedAt: date2.getTime(),
             };
