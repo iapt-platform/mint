@@ -27,11 +27,8 @@ class RelationController extends Controller
         if(($request->has('search'))){
             $table = $table->where('name', 'like', $request->get('search')."%");
         }
-        if(!empty($request->get('order')) && !empty($request->get('dir'))){
-            $table = $table->orderBy($request->get('order'),$request->get('dir'));
-        }else{
-            $table = $table->orderBy('updated_at','desc');
-        }
+
+        $table = $table->orderBy($request->get('order','updated_at'),$request->get('dir','desc'));
         $count = $table->count();
 
         $table = $table->skip($request->get("offset",0))
