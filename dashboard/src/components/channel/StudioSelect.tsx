@@ -28,12 +28,20 @@ const StudioSelectWidget = ({ studioName, onSelect }: IWidget) => {
     let url = `/v2/studio?view=collaboration-channel&studio_name=${studioName}`;
     get<IStudioListResponse>(url).then((json) => {
       if (json.ok) {
-        const data = json.data.rows.map((item) => {
-          return {
-            value: item.id,
-            label: item.nickName,
-          };
-        });
+        const data = json.data.rows
+          .sort((a, b) => {
+            if (a.nickName && b.nickName && a.nickName < b.nickName) {
+              return -1;
+            } else {
+              return 1;
+            }
+          })
+          .map((item) => {
+            return {
+              value: item.id,
+              label: item.nickName,
+            };
+          });
         setAnthology([{ value: "all", label: "全部" }, ...data]);
       }
     });
