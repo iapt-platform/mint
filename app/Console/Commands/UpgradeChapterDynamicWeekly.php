@@ -58,6 +58,7 @@ class UpgradeChapterDynamicWeekly extends Command
         }
         $chapters = $table->get();
         $bar = $this->output->createProgressBar(count($chapters));
+
         foreach ($chapters as $key => $chapter) {
             #章节长度
             $paraEnd = PaliText::where('book',$chapter->book)
@@ -79,7 +80,9 @@ class UpgradeChapterDynamicWeekly extends Command
             }
             $key="/chapter_dynamic/{$chapter->book}/{$chapter->para}/global";
             Cache::put($key,$progress,3600*24*7);
+
             $bar->advance();
+            sleep(2);
 
             if($this->option('test')){
                 $this->info("key:{$key}");
@@ -130,6 +133,7 @@ class UpgradeChapterDynamicWeekly extends Command
             $key="/chapter_dynamic/{$chapter->book}/{$chapter->para}/ch_{$chapter->channel_id}";
             Cache::put($key,$progress,3600*24*7);
             $bar->advance();
+            sleep(2);
 
             if($this->option('test')){
                 $this->info("key:{$key}");

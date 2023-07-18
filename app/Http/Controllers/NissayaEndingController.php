@@ -37,30 +37,24 @@ class NissayaEndingController extends Controller
         if(($request->has('relation'))){
             $table->where('relation', $request->get('relation'));
         }
+        if(($request->has('case'))){
+            $table->where('case', $request->get('case'));
+        }
 
         if(($request->has('search'))){
-            $table->where('ending', 'like', $request->get('search')."%");
+            $table->where('ending', 'like', "%".$request->get('search')."%");
         }
-        if(!empty($request->get('order')) && !empty($request->get('dir'))){
-            $table->orderBy($request->get('order'),$request->get('dir'));
-        }else{
-            $table->orderBy('updated_at','desc');
-        }
+
         $count = $table->count();
-        if(!empty($request->get('limit'))){
-            $offset = 0;
-            if(!empty($request->get("offset"))){
-                $offset = $request->get("offset");
-            }
-            $table->skip($offset)->take($request->get('limit'));
-        }
+
+        $table->orderBy($request->get('order','updated_at'),
+                        $request->get('dir','desc'));
+
+        $table->skip($request->get("offset",0))
+              ->take($request->get('limit',1000));
         $result = $table->get();
 
-		if($result){
-			return $this->ok(["rows"=>NissayaEndingResource::collection($result),"count"=>$count]);
-		}else{
-			return $this->error("没有查询到数据");
-		}
+        return $this->ok(["rows"=>NissayaEndingResource::collection($result),"count"=>$count]);
     }
 
     public function vocabulary(Request $request){
