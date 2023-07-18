@@ -145,13 +145,23 @@ class NissayaEndingController extends Controller
             $cardData['title_relation'] = "关系";
             foreach ($relations as $key => $relation) {
                 $relationInTerm = DhammaTerm::where('channal',$localTerm)->where('word',$relation['name'])->first();
-                if(empty($relation->case)){
+                if(empty($relation->from)){
                     $cardData['row'][] = ["relation"=>$relation->name];
                     continue;
                 }
-                $case = $relation->case;
-                # 格位
-                $newLine['case'] = __("grammar.".$case);
+                $from = json_decode($relation->from);
+                if(isset($from->case)){
+                    $cases = $from->case;
+                    $localCase  =[];
+                    foreach ($cases as $case) {
+                        $localCase[] =  __("grammar.".$case);
+                    }
+                    # 格位
+                    $newLine['case'] = implode(';',$localCase);
+                }
+                if(isset($from->spell)){
+                    $newLine['spell'] = $from->spell;
+                }
                 //含义
                 if($relationInTerm){
                     $newLine['other_meaning'] = $relationInTerm->other_meaning;
