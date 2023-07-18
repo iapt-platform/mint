@@ -126,7 +126,7 @@ const WbwDetailWidget = ({
             children: (
               <div>
                 <WbwDetailBasic
-                  data={data}
+                  data={currWbwData}
                   onChange={(e: IWbwField) => {
                     console.log("WbwDetailBasic onchange", e);
                     fieldChanged(e.field, e.value);
