@@ -1,6 +1,7 @@
 import {
   ModalForm,
   ProForm,
+  ProFormDependency,
   ProFormInstance,
   ProFormSelect,
   ProFormText,
@@ -32,7 +33,50 @@ const RelationEditWidget = ({
   const formRef = useRef<ProFormInstance>();
   const intl = useIntl();
 
-  const _verb = ["v", "pass", "caus", "ger", "fpp", "pp", "n", "adv"];
+  const _verb = [
+    "n",
+    "ti",
+    "v",
+    "v:ind",
+    "ind",
+    "sg",
+    "pl",
+    "nom",
+    "acc",
+    "gen",
+    "dat",
+    "inst",
+    "voc",
+    "abl",
+    "loc",
+    "base",
+    "imp",
+    "opt",
+    "pres",
+    "aor",
+    "fut",
+    "1p",
+    "2p",
+    "3p",
+    "prp",
+    "pp",
+    "grd",
+    "fpp",
+    "vdn",
+    "ger",
+    "inf",
+    "adj",
+    "pron",
+    "caus",
+    "num",
+    "adv",
+    "conj",
+    "pre",
+    "suf",
+    "ti:base",
+    "n:base",
+    "v:base",
+  ];
   const verbOptions = _verb.map((item) => {
     return {
       value: item,
@@ -50,21 +94,24 @@ const RelationEditWidget = ({
       autoFocusFirstInput
       modalProps={{
         destroyOnClose: true,
-        onCancel: () => console.log("run"),
+        onCancel: () => console.log("onCancel"),
       }}
-      submitTimeout={2000}
+      submitTimeout={3000}
       onFinish={async (values) => {
         console.log("submit", values);
+        let data = values;
+        data.from = { spell: values.fromSpell, case: values.fromCase };
+        console.log("data", data);
         let res: IRelationResponse;
         if (typeof id === "undefined") {
           res = await post<IRelationRequest, IRelationResponse>(
             `/v2/relation`,
-            values
+            data
           );
         } else {
           res = await put<IRelationRequest, IRelationResponse>(
             `/v2/relation/${id}`,
-            values
+            data
           );
         }
         console.log(res);
@@ -91,6 +138,7 @@ const RelationEditWidget = ({
                   id: id,
                   name: res.data.name,
                   case: res.data.case,
+                  from: res.data.from,
                   to: res.data.to,
                 };
               } else {
@@ -111,8 +159,50 @@ const RelationEditWidget = ({
         />
       </ProForm.Group>
       <ProForm.Group>
-        <CaseSelect width="md" name="case" />
-
+        <ProFormSelect
+          options={[
+            {
+              value: "case",
+              label: intl.formatMessage({ id: "forms.fields.case.label" }),
+            },
+            {
+              value: "spell",
+              label: intl.formatMessage({ id: "buttons.spell" }),
+            },
+          ]}
+          width="md"
+          name="fromType"
+          allowClear={false}
+          label={intl.formatMessage({ id: "forms.fields.from.label" })}
+        />
+        <ProFormDependency name={["fromType"]}>
+          {({ fromType }) => {
+            console.log("from type", fromType);
+            return (
+              <>
+                <ProFormSelect
+                  hidden={fromType === "spell"}
+                  options={verbOptions}
+                  fieldProps={{
+                    mode: "tags",
+                  }}
+                  width="md"
+                  name="fromCase"
+                  allowClear={false}
+                  label={intl.formatMessage({ id: "forms.fields.case.label" })}
+                />
+                <ProFormText
+                  hidden={fromType === "case"}
+                  width="md"
+                  name="fromSpell"
+                  label={intl.formatMessage({ id: "buttons.spell" })}
+                />
+              </>
+            );
+          }}
+        </ProFormDependency>
+      </ProForm.Group>
+      <ProForm.Group>
         <ProFormSelect
           options={verbOptions}
           fieldProps={{
@@ -121,7 +211,7 @@ const RelationEditWidget = ({
           width="md"
           name="to"
           allowClear={false}
-          label={intl.formatMessage({ id: "forms.fields.case.label" })}
+          label={intl.formatMessage({ id: "forms.fields.to.label" })}
         />
       </ProForm.Group>
     </ModalForm>
