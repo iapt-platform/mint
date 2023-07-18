@@ -68,6 +68,7 @@ export interface IRelationRequest {
   id?: string;
   name: string;
   case?: string | null;
+  from?: IFrom | null;
   to?: string[];
   editor?: IUser;
   updated_at?: string;
@@ -86,11 +87,18 @@ export interface IRelationResponse {
   message: string;
   data: IRelationRequest;
 }
+interface IFrom {
+  spell?: string;
+  case?: string[];
+}
 export interface IRelation {
   sn?: number;
   id?: string;
   name: string;
   case?: string | null;
+  from?: IFrom | null;
+  fromCase?: string[];
+  fromSpell?: string;
   to?: string[];
   updatedAt?: number;
   createdAt?: number;
@@ -153,8 +161,9 @@ const Widget = () => {
             title: intl.formatMessage({
               id: "forms.fields.relation.label",
             }),
-            dataIndex: "relation",
-            key: "relation",
+            dataIndex: "name",
+            key: "name",
+            sorter: (a, b) => (a < b ? 1 : -1),
             render: (text, row, index, action) => {
               return (
                 <RelationEdit
@@ -186,12 +195,26 @@ const Widget = () => {
           },
           {
             title: intl.formatMessage({
-              id: "forms.fields.case.label",
+              id: "forms.fields.from.label",
             }),
-            dataIndex: "case",
-            key: "case",
-            filters: true,
-            valueEnum: CaseValueEnum(),
+            dataIndex: "from",
+            key: "from",
+            render: (text, row, index, action) => {
+              const spell = row.from?.spell;
+              const fromCase = row.from?.case?.map((item, id) => (
+                <Tag key={id}>
+                  {intl.formatMessage({
+                    id: `dict.fields.type.${item}.label`,
+                  })}
+                </Tag>
+              ));
+              return (
+                <>
+                  {spell}
+                  {fromCase}
+                </>
+              );
+            },
           },
           {
             title: intl.formatMessage({
@@ -278,6 +301,19 @@ const Widget = () => {
           if (filter.case) {
             url += `&case=${filter.case.join()}`;
           }
+          if (sorter) {
+            for (const key in sorter) {
+              if (Object.prototype.hasOwnProperty.call(sorter, key)) {
+                const element = sorter[key];
+                const dir = element === "ascend" ? "asc" : "desc";
+                let orderby = key;
+                if (orderby === "updatedAt") {
+                  orderby = "updated_at";
+                }
+                url += `&order=${orderby}&dir=${dir}`;
+              }
+            }
+          }
           console.log("url", url);
           const res = await get<IRelationListResponse>(url);
           const items: IRelation[] = res.data.rows.map((item, id) => {
@@ -288,6 +324,7 @@ const Widget = () => {
               id: item.id,
               name: item.name,
               case: item.case,
+              from: item.from,
               to: item.to,
               createdAt: date.getTime(),
               updatedAt: date2.getTime(),
