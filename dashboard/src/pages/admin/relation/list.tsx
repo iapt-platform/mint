@@ -161,8 +161,9 @@ const Widget = () => {
             title: intl.formatMessage({
               id: "forms.fields.relation.label",
             }),
-            dataIndex: "relation",
-            key: "relation",
+            dataIndex: "name",
+            key: "name",
+            sorter: (a, b) => (a < b ? 1 : -1),
             render: (text, row, index, action) => {
               return (
                 <RelationEdit
@@ -299,6 +300,19 @@ const Widget = () => {
           }
           if (filter.case) {
             url += `&case=${filter.case.join()}`;
+          }
+          if (sorter) {
+            for (const key in sorter) {
+              if (Object.prototype.hasOwnProperty.call(sorter, key)) {
+                const element = sorter[key];
+                const dir = element === "ascend" ? "asc" : "desc";
+                let orderby = key;
+                if (orderby === "updatedAt") {
+                  orderby = "updated_at";
+                }
+                url += `&order=${orderby}&dir=${dir}`;
+              }
+            }
           }
           console.log("url", url);
           const res = await get<IRelationListResponse>(url);
