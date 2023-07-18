@@ -130,6 +130,7 @@ const init = () => {
           id: item.id,
           name: item.name,
           case: item.case,
+          from: item.from,
           to: item.to,
         };
       });
