@@ -16,7 +16,6 @@ import {
   IRelationResponse,
 } from "../../../pages/admin/relation/list";
 import { get, post, put } from "../../../request";
-import CaseSelect from "./CaseSelect";
 
 interface IWidget {
   trigger?: JSX.Element;
@@ -139,6 +138,8 @@ const RelationEditWidget = ({
                   name: res.data.name,
                   case: res.data.case,
                   from: res.data.from,
+                  fromCase: res.data.from?.case,
+                  fromSpell: res.data.from?.spell,
                   to: res.data.to,
                 };
               } else {
