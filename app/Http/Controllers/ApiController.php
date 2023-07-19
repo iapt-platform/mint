@@ -46,7 +46,6 @@ class ApiController extends Controller
         $value = 0;
         for ($i=$begin; $i <= $currTime; $i++) {
             $keyApi = $key.$request->get('api','all')."/".$i;
-            //Log::info('redis:'.$keyApi.'/delay'.':'.Redis::get($keyApi.'/delay'));
             if(!empty(Redis::get($keyApi.'/delay'))){
                 if($request->get('item') === 'average'){
                     $value += intval(Redis::get($keyApi.'/delay') / Redis::get($keyApi.'/count'));

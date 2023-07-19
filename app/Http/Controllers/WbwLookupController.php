@@ -380,24 +380,20 @@ class WbwLookupController extends Controller
                     //根据base 查找词意
                     if(!empty($data['parent'])){
                         if(isset($indexed[$data['parent']['value']])){
-                            Log::info($data['parent']['value']."=".count($indexed[$data['parent']['value']]));
                             foreach ($indexed[$data['parent']['value']] as $value) {
                                 //非base优先
                                 $increment = 10;
                                 $meaning = $this->insertValue(explode('$',$value->mean),$meaning,$increment,false);
                             }
                         }else{
-                            Log::error("no set parent".$data['parent']['value']);
+                            //Log::error("no set parent".$data['parent']['value']);
                         }
                     }
                     if(count($meaning)>0){
                         arsort($meaning);
-                        Log::info('meanings=');
-                        Log::info(array_keys($meaning));
                         $first = array_keys($meaning)[0];
                         $data['meaning'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
                     }
-
                 }
             }
             $wbwContent[]  = $data;

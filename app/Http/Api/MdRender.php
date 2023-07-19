@@ -9,27 +9,101 @@ use App\Models\Channel;
 use App\Http\Controllers\CorpusController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+define("STACK_DEEP",8);
 
 class MdRender{
+
+    public static function tplSplit($tpl){
+        $before = strstr($tpl,'{{',true);
+        if(empty($before)){
+            //未找到
+            return ['data'=>[$tpl,'',''],'error'=>0];
+        }else{
+            $pointer = strlen($before);
+            $stack = array();
+            $stack[] = $pointer;
+            $after = substr($tpl,$pointer+2) ;
+            while (!empty($after) && count($stack)>0 && count($stack)<STACK_DEEP) {
+                $nextBegin = strpos($after,"{{");
+                $nextEnd = strpos($after,"}}");
+                if($nextBegin !== FALSE){
+                    if($nextBegin < $nextEnd){
+                        //有嵌套找到最后一个}}
+                        $pointer = $pointer + 2 + $nextBegin;
+                        $stack[] = $pointer;
+                        $after = substr($tpl,$pointer+2);
+                    }else if($nextEnd !== FALSE){
+                        //无嵌套有结束
+                        $pointer = $pointer + 2 + $nextEnd;
+                        array_pop($stack);
+                        $after = substr($tpl,$pointer+2);
+                    }else{
+                        //无结束符 没找到
+                        break;
+                    }
+                }else if($nextEnd !== FALSE){
+                    $pointer = $pointer + 2 + $nextEnd;
+                    array_pop($stack);
+                    $after = substr($tpl,$pointer+2);
+                }else{
+                    //没找到
+                    break;
+                }
+            }
+            if(count($stack)>0){
+                if(count($stack) === STACK_DEEP){
+                    return ['data'=>[$tpl,'',''],'error'=>2];
+                }else{
+                    //未关闭
+                    return ['data'=>[$tpl,'',''],'error'=>1];
+                }
+            }else{
+                return ['data'=>
+                        [
+                            $before,
+                            substr($tpl,strlen($before),$pointer-strlen($before)+2),
+                            substr($tpl,$pointer+2)
+                        ],
+                        'error'=>0
+                ];
+            }
+        }
+    }
+
     public static function wiki2xml(string $wiki):string{
         /**
          * 替换{{}} 到xml之前 要先把换行符号去掉
          */
-        $html = str_replace("\n","",$wiki);
-
-        $pattern = "/\{\{(.+?)\|/";
-        $replacement = '<MdTpl name="$1"><param>';
-        $html = preg_replace($pattern,$replacement,$html);
-        $html = str_replace("}}","</param></MdTpl>",$html);
-        $html = str_replace("|","</param><param>",$html);
+        $wiki = str_replace("\n","",$wiki);
 
         /**
-         * 替换变量名
+         * 把模版转换为xml
          */
+        $remain = $wiki;
+        $buffer = array();
+        do {
+            $arrWiki = MdRender::tplSplit($remain);
+            $buffer[] = $arrWiki['data'][0];
+            $tpl = $arrWiki['data'][1];
+            if(!empty($tpl)){
+                $pattern = "/\{\{(.+?)\|/";
+                $replacement = '<MdTpl name="$1"><param>';
+                $tpl = preg_replace($pattern,$replacement,$tpl);
+                $tpl = str_replace("}}","</param></MdTpl>",$tpl);
+                $tpl = str_replace("|","</param><param>",$tpl);
+                /**
+                 * 替换变量名
+                 */
 
-        $pattern = "/<param>([a-z]+?)=/";
-        $replacement = '<param name="$1">';
-        $html = preg_replace($pattern,$replacement,$html);
+                $pattern = "/<param>([a-z]+?)=/";
+                $replacement = '<param name="$1">';
+                $tpl = preg_replace($pattern,$replacement,$tpl);
+                $buffer[] = $tpl;
+            }
+            $remain = $arrWiki['data'][2];
+        } while (!empty($remain));
+
+        $html = implode('' , $buffer);
 
         $html = str_replace("<p>","<div>",$html);
         $html = str_replace("</p>","</div>",$html);
@@ -270,5 +344,15 @@ class MdRender{
     public static function render($markdown,$channelId,$queryId=null,$mode='read',$channelType='translation',$contentType="markdown"){
         return MdRender::render2($markdown,$channelId,$queryId,$mode,$channelType,$contentType);
     }
+
+    public static function fix($html){
+        $doc = new \DOMDocument();
+        $doc->substituteEntities = false;
+        $content = mb_convert_encoding($html, 'html-entities', 'utf-8');
+        $doc->loadHTML($content);
+        $html = $doc->saveHTML();
+        return $html;
+    }
+
 
 }
