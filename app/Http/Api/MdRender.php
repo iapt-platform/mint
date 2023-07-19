@@ -14,12 +14,12 @@ define("STACK_DEEP",8);
 class MdRender{
 
     public static function tplSplit($tpl){
-        $before = strstr($tpl,'{{',true);
-        if(empty($before)){
+        $before = strpos($tpl,'{{');
+        if($before === FALSE){
             //未找到
             return ['data'=>[$tpl,'',''],'error'=>0];
         }else{
-            $pointer = strlen($before);
+            $pointer = $before;
             $stack = array();
             $stack[] = $pointer;
             $after = substr($tpl,$pointer+2) ;
@@ -60,8 +60,8 @@ class MdRender{
             }else{
                 return ['data'=>
                         [
-                            $before,
-                            substr($tpl,strlen($before),$pointer-strlen($before)+2),
+                            substr($tpl,0,$before),
+                            substr($tpl,$before,$pointer-$before+2),
                             substr($tpl,$pointer+2)
                         ],
                         'error'=>0
