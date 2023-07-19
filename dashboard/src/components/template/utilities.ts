@@ -20,7 +20,7 @@ export function XmlToReact(
   text: string,
   wordWidget: boolean = false,
   convertor?: TCodeConvertor
-): React.ReactNode[] {
+): React.ReactNode[] | undefined {
   //console.log("html string:", text);
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(
@@ -44,6 +44,7 @@ export function XmlToReact(
         }
       }
     }
+    console.log("attr", output);
     return output;
   }
 
@@ -51,7 +52,7 @@ export function XmlToReact(
     node: ChildNode,
     wordWidget: boolean = false,
     convertor?: TCodeConvertor
-  ): React.ReactNode[] {
+  ): React.ReactNode[] | undefined {
     let output: React.ReactNode[] = [];
     for (let i = 0; i < node.childNodes.length; i++) {
       const value = node.childNodes[i];
@@ -142,6 +143,10 @@ export function XmlToReact(
           return [];
       }
     }
-    return output;
+    if (output.length > 0) {
+      return output;
+    } else {
+      return undefined;
+    }
   }
 }
