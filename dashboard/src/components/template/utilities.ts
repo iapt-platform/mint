@@ -44,7 +44,6 @@ export function XmlToReact(
         }
       }
     }
-    console.log("attr", output);
     return output;
   }
 
