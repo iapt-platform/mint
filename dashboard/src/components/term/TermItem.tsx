@@ -11,7 +11,7 @@ const { Text } = Typography;
 interface IWidget {
   data?: ITermDataResponse;
 }
-const Widget = ({ data }: IWidget) => {
+const TermItemWidget = ({ data }: IWidget) => {
   return (
     <Card
       title={
@@ -68,4 +68,4 @@ const Widget = ({ data }: IWidget) => {
   );
 };
 
-export default Widget;
+export default TermItemWidget;
