@@ -6,6 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\StudioApi;
 use App\Http\Api\UserApi;
+use App\Http\Api\MdRender;
 
 class TermResource extends JsonResource
 {
@@ -33,8 +34,18 @@ class TermResource extends JsonResource
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];
+
         if(!empty($this->channal)){
+            $channelId = $this->channal;
             $data["channel"] = ChannelApi::getById($this->channal);
+        }else{
+            $channelId = ChannelApi::getSysChannel('_community_translation_'.$this->language.'_');
+            if(empty($channelId)){
+                $channelId = ChannelApi::getSysChannel('_community_translation_zh-hans_');
+            }
+        }
+        if(!empty($this->note) && !empty($channelId)){
+            $data["html"] = MdRender::render($this->note,[$channelId],null,'read');
         }
         return $data;
     }
