@@ -258,7 +258,7 @@ const Widget = () => {
             dataIndex: "editor",
             key: "editor",
             render: (text, row, index, action) => {
-              return row.editor?.realName;
+              return row.editor?.nickName;
             },
           },
           {
