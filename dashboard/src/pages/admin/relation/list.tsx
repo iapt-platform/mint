@@ -118,6 +118,7 @@ export interface IRelation {
   fromCase?: string[];
   fromSpell?: string;
   to?: string[];
+  editor?: IUser;
   updated_at?: string;
   created_at?: string;
 }
@@ -250,7 +251,16 @@ const Widget = () => {
               ));
             },
           },
-
+          {
+            title: intl.formatMessage({
+              id: "forms.fields.editor.label",
+            }),
+            dataIndex: "editor",
+            key: "editor",
+            render: (text, row, index, action) => {
+              return row.editor?.nickName;
+            },
+          },
           {
             title: intl.formatMessage({
               id: "forms.fields.updated-at.label",
@@ -333,6 +343,7 @@ const Widget = () => {
               case: item.case,
               from: item.from,
               to: item.to,
+              editor: item.editor,
               created_at: item.created_at,
               updated_at: item.updated_at,
             };

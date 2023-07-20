@@ -67,6 +67,7 @@ const items = {
   "forms.fields.parent2.tooltip": "最长为 256个字符",
   "forms.fields.username.label": "用户名(登录名)",
   "forms.fields.nickname.label": "昵称",
+  "forms.fields.editor.label": "编辑者",
 };
 
 export default items;
