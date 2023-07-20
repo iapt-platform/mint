@@ -1,4 +1,4 @@
-# adverbial of space-time
+# adverb of space or time
 
 |grammatical features|indication|function word<br>in translation|relation|
 |-|-|-|-|
