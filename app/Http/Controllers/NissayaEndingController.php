@@ -194,7 +194,7 @@ class NissayaEndingController extends Controller
                 }
                 //关系名称
                 $newLine['relation'] =  $relation['name'];
-                $newLine['relation_link'] =  env('APP_URL').'/term/list/'.$relation['name'];
+                $newLine['relation_link'] =  env('DASHBOARD_URL').'/term/list/'.$relation['name'];
                 $cardData['row'][] = $newLine;
             }
         }
