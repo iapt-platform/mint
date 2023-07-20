@@ -22,6 +22,7 @@ export interface ITermDataResponse {
   meaning: string;
   other_meaning: string;
   note: string;
+  html?: string;
   channal: string;
   channel?: IChannel;
   studio: IStudio;

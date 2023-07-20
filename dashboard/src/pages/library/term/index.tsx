@@ -8,7 +8,7 @@ const Widget = () => {
   // TODO
   return (
     <Layout>
-      <HeadBar selectedKeys="dict" />
+      <HeadBar selectedKeys="term" />
       <Outlet />
       <FooterBar />
     </Layout>

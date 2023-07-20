@@ -13,10 +13,16 @@ interface ValueType {
 }
 interface IWidget {
   value?: string;
+  api?: string;
   onSearch?: Function;
   onSplit?: Function;
 }
-const SearchVocabularyWidget = ({ value, onSplit, onSearch }: IWidget) => {
+const SearchVocabularyWidget = ({
+  value,
+  api = "vocabulary",
+  onSplit,
+  onSearch,
+}: IWidget) => {
   const [options, setOptions] = useState<ValueType[]>([]);
   const [fetching, setFetching] = useState(false);
 
@@ -71,7 +77,7 @@ const SearchVocabularyWidget = ({ value, onSplit, onSearch }: IWidget) => {
       return;
     }
 
-    get<IVocabularyListResponse>(`/v2/vocabulary?view=key&key=${value}`)
+    get<IVocabularyListResponse>(`/v2/${api}?view=key&key=${value}`)
       .then((json) => {
         const words: ValueType[] = json.data.rows.map((item) => {
           return renderItem(item.word, item.count, item.meaning);
