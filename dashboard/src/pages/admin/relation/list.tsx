@@ -19,6 +19,23 @@ import RelationEdit from "../../../components/admin/relation/RelationEdit";
 import DataImport from "../../../components/admin/relation/DataImport";
 import { useAppSelector } from "../../../hooks";
 import { getTerm } from "../../../reducers/term-vocabulary";
+import { SortOrder } from "antd/lib/table/interface";
+
+export const getSorterUrl = (sorter?: Record<string, SortOrder>): string => {
+  let url: string = "";
+  for (const key in sorter) {
+    if (Object.prototype.hasOwnProperty.call(sorter, key)) {
+      const element = sorter[key];
+      const dir = element === "ascend" ? "asc" : "desc";
+      let orderby = key;
+      if (orderby === "updatedAt") {
+        orderby = "updated_at";
+      }
+      url = `&order=${orderby}&dir=${dir}`;
+    }
+  }
+  return url;
+};
 
 export const CaseValueEnum = () => {
   const intl = useIntl();
@@ -163,7 +180,7 @@ const Widget = () => {
             }),
             dataIndex: "name",
             key: "name",
-            sorter: (a, b) => (a < b ? 1 : -1),
+            sorter: true,
             render: (text, row, index, action) => {
               return (
                 <RelationEdit
@@ -301,19 +318,8 @@ const Widget = () => {
           if (filter.case) {
             url += `&case=${filter.case.join()}`;
           }
-          if (sorter) {
-            for (const key in sorter) {
-              if (Object.prototype.hasOwnProperty.call(sorter, key)) {
-                const element = sorter[key];
-                const dir = element === "ascend" ? "asc" : "desc";
-                let orderby = key;
-                if (orderby === "updatedAt") {
-                  orderby = "updated_at";
-                }
-                url += `&order=${orderby}&dir=${dir}`;
-              }
-            }
-          }
+          url += getSorterUrl(sorter);
+
           console.log("url", url);
           const res = await get<IRelationListResponse>(url);
           const items: IRelation[] = res.data.rows.map((item, id) => {
