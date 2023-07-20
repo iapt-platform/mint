@@ -294,7 +294,7 @@ const Widget = () => {
           const res = await get<INissayaEndingListResponse>(url);
           const items: INissayaEnding[] = res.data.rows.map((item, id) => {
             return {
-              sn: id + 1,
+              sn: offset + id + 1,
               id: item.id,
               ending: item.ending,
               lang: item.lang,
