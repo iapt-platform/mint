@@ -116,7 +116,6 @@ class UpgradeCommunityTerm extends Command
                             }
                         }
                     }
-
                 }
                 //计算该术语总得分
                 $score["{$key}"] = $iExp*$noteStrLen;

@@ -24,7 +24,9 @@ class NissayaEndingController extends Controller
     public function index(Request $request)
     {
         //
-        $table = NissayaEnding::select(['id','ending','lang','relation','case','count','editor_id','updated_at']);
+        $table = NissayaEnding::select(['id','ending','lang','relation',
+                                        'case','count','editor_id',
+                                        'created_at','updated_at']);
 
         if(($request->has('case'))){
             $table->whereIn('case', explode(",",$request->get('case')) );
@@ -154,10 +156,12 @@ class NissayaEndingController extends Controller
                     $cases = $from->case;
                     $localCase  =[];
                     foreach ($cases as $case) {
-                        $localCase[] =  __("grammar.".$case);
+                        $localCase[] = ['label'=>__("grammar.".$case),
+                                        'link'=>env('APP_URL').'/term/list/'.$case
+                                        ];
                     }
                     # 格位
-                    $newLine['case'] = implode(';',$localCase);
+                    $newLine['case'] = $localCase;
                 }
                 if(isset($from->spell)){
                     $newLine['spell'] = $from->spell;
@@ -189,7 +193,8 @@ class NissayaEndingController extends Controller
                     $newLine['local_relation'] =  $relationInTerm->meaning;
                 }
                 //关系名称
-                $newLine['relation'] =  strtoupper($relation['name']);
+                $newLine['relation'] =  $relation['name'];
+                $newLine['relation_link'] =  env('APP_URL').'/term/list/'.$relation['name'];
                 $cardData['row'][] = $newLine;
             }
         }
