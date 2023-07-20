@@ -5,14 +5,14 @@ import HeadBar from "../../../components/library/HeadBar";
 import FooterBar from "../../../components/library/FooterBar";
 
 const Widget = () => {
-	// TODO
-	return (
-		<Layout>
-			<HeadBar selectedKeys="dict" />
-			<Outlet />
-			<FooterBar />
-		</Layout>
-	);
+  // TODO
+  return (
+    <Layout>
+      <HeadBar selectedKeys="dict" />
+      <Outlet />
+      <FooterBar />
+    </Layout>
+  );
 };
 
 export default Widget;
