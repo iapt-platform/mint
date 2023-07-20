@@ -175,11 +175,7 @@ class DhammaTermController extends Controller
                        ->take($request->get('limit',1000));
         $result = $table->get();
 
-		if($result){
-			return $this->ok(["rows"=>TermResource::collection($result),"count"=>$count]);
-		}else{
-			return $this->error("没有查询到数据");
-		}
+        return $this->ok(["rows"=>TermResource::collection($result),"count"=>$count]);
     }
 
     /**
