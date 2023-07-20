@@ -4,15 +4,17 @@ const { Text } = Typography;
 
 interface IWidget {
   html?: string;
+  placeholder?: string;
   wordWidget?: boolean;
   convertor?: TCodeConvertor;
 }
 const Widget = ({
-  html = "<div></div>",
+  html,
   wordWidget = false,
+  placeholder,
   convertor,
 }: IWidget) => {
-  const jsx = XmlToReact(html, wordWidget, convertor);
+  const jsx = html ? XmlToReact(html, wordWidget, convertor) : placeholder;
   return <Text>{jsx}</Text>;
 };
 
