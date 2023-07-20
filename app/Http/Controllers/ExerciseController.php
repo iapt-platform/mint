@@ -74,7 +74,7 @@ class ExerciseController extends Controller
         foreach ($members as  $member) {
             # code...
             $data = [
-                'user' => UserApi::getById($member->user_id),
+                'user' => UserApi::getByUuid($member->user_id),
                 'wbw' => 0,
                 'translation' => 0,
                 'question' => 0,

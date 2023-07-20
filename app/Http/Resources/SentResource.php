@@ -34,7 +34,7 @@ class SentResource extends JsonResource
                 "paragraph"=> $this->paragraph,
                 "word_start"=> $this->word_start,
                 "word_end"=> $this->word_end,
-                "editor"=> UserApi::getById($this->editor_uid),
+                "editor"=> UserApi::getByUuid($this->editor_uid),
                 "channel"=> $channel,
                 "studio" => StudioApi::getById($channel["studio_id"]),
                 "updated_at"=> $this->updated_at,
@@ -61,7 +61,7 @@ class SentResource extends JsonResource
                                                                 );
         }
         if(isset($this->acceptor_uid) && !empty($this->acceptor_uid)){
-            $data["acceptor"]=UserApi::getById($this->acceptor_uid);
+            $data["acceptor"]=UserApi::getByUuid($this->acceptor_uid);
             $data["pr_edit_at"]=$this->pr_edit_at;
         }
         return $data;
