@@ -157,7 +157,7 @@ class NissayaEndingController extends Controller
                     $localCase  =[];
                     foreach ($cases as $case) {
                         $localCase[] = ['label'=>__("grammar.".$case),
-                                        'link'=>env('APP_URL').'/term/list/'.$case
+                                        'link'=>env('DASHBOARD_URL').'/term/list/'.$case
                                         ];
                     }
                     # 格位
