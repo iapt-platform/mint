@@ -23,6 +23,7 @@ class UserApi{
             'id'=>$id,
             'nickName'=>$studio['nickname'],
             'userName'=>$studio['username'],
+            'realName'=>$studio['username'],
             'avatar'=>'',
         ];
     }
