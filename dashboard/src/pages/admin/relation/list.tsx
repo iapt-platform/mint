@@ -20,6 +20,7 @@ import DataImport from "../../../components/admin/relation/DataImport";
 import { useAppSelector } from "../../../hooks";
 import { getTerm } from "../../../reducers/term-vocabulary";
 import { SortOrder } from "antd/lib/table/interface";
+import TimeShow from "../../../components/general/TimeShow";
 
 export const getSorterUrl = (sorter?: Record<string, SortOrder>): string => {
   let url: string = "";
@@ -117,8 +118,8 @@ export interface IRelation {
   fromCase?: string[];
   fromSpell?: string;
   to?: string[];
-  updatedAt?: number;
-  createdAt?: number;
+  updated_at?: string;
+  created_at?: string;
 }
 const Widget = () => {
   const intl = useIntl(); //i18n
@@ -254,13 +255,15 @@ const Widget = () => {
             title: intl.formatMessage({
               id: "forms.fields.updated-at.label",
             }),
-            key: "updated-at",
+            key: "updated_at",
             width: 100,
             search: false,
-            dataIndex: "updatedAt",
+            dataIndex: "updated_at",
             valueType: "date",
-            sorter: (a, b) =>
-              a.updatedAt && b.updatedAt ? a.updatedAt - b.updatedAt : 0,
+            sorter: true,
+            render: (text, row, index, action) => {
+              return <TimeShow time={row.updated_at} showIcon={false} />;
+            },
           },
           {
             title: intl.formatMessage({ id: "buttons.option" }),
@@ -323,8 +326,6 @@ const Widget = () => {
           console.log("url", url);
           const res = await get<IRelationListResponse>(url);
           const items: IRelation[] = res.data.rows.map((item, id) => {
-            const date = new Date(item.created_at ? item.created_at : 0);
-            const date2 = new Date(item.updated_at ? item.updated_at : 0);
             return {
               sn: offset + id + 1,
               id: item.id,
@@ -332,8 +333,8 @@ const Widget = () => {
               case: item.case,
               from: item.from,
               to: item.to,
-              createdAt: date.getTime(),
-              updatedAt: date2.getTime(),
+              created_at: item.created_at,
+              updated_at: item.updated_at,
             };
           });
           console.log("relation", items);
