@@ -1,4 +1,4 @@
-h1,
+.pcd_article h1,
 h2,
 h3,
 h4,
@@ -6,25 +6,30 @@ h5,
 h6 {
   font-weight: 700;
 }
-h2 {
+.pcd_article h2 {
   margin-top: 1em;
-  font-size: 180%;
+  font-size: 200%;
   border-bottom: 1px solid gray;
 }
-h3 {
-  margin-top: 0.5em;
+.pcd_article h2 {
+  margin-top: 1em;
   font-size: 150%;
+  border-bottom: 1px solid gray;
 }
-h4 {
-  font-size: 120%;
+.pcd_article h3 {
+  margin-top: 0.5em;
+  font-size: 130%;
 }
-h5 {
+.pcd_article h4 {
   font-size: 110%;
 }
-h6 {
+.pcd_article h5 {
   font-size: 100%;
 }
-blockquote {
+.pcd_article h6 {
+  font-size: 100%;
+}
+.pcd_article blockquote {
   margin-left: 1em;
   border-left: 4px solid #dad9d9;
   padding-left: 0.5em;
