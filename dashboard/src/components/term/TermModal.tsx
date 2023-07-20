@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "antd";
 import TermEdit from "./TermEdit";
 import { ITermDataResponse } from "../api/Term";
 
 interface IWidget {
   trigger?: React.ReactNode;
+  open?: boolean;
   id?: string;
   word?: string;
   studioName?: string;
@@ -16,6 +17,7 @@ interface IWidget {
 }
 const TermModalWidget = ({
   trigger,
+  open = false,
   id,
   word,
   studioName,
@@ -25,9 +27,17 @@ const TermModalWidget = ({
   onUpdate,
   onClose,
 }: IWidget) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(open);
 
-  const modalClone = () => {
+  useEffect(() => {
+    if (open) {
+      showModal();
+    } else {
+      modalClose();
+    }
+  }, [open]);
+
+  const modalClose = () => {
     setIsModalOpen(false);
     if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
       document.getElementsByTagName("body")[0].removeAttribute("style");
@@ -38,14 +48,14 @@ const TermModalWidget = ({
   };
 
   const handleOk = () => {
-    modalClone();
+    modalClose();
     if (typeof onClose !== "undefined") {
       onClose();
     }
   };
 
   const handleCancel = () => {
-    modalClone();
+    modalClose();
     if (typeof onClose !== "undefined") {
       onClose();
     }
