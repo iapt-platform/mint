@@ -20,9 +20,10 @@ import NissayaEndingEdit from "../../../components/admin/relation/NissayaEndingE
 import { LangValueEnum } from "../../../components/general/LangSelect";
 import { NissayaCardModal } from "../../../components/general/NissayaCard";
 import DataImport from "../../../components/admin/relation/DataImport";
-import { CaseValueEnum } from "../relation/list";
+import { CaseValueEnum, getSorterUrl } from "../relation/list";
 import TermModal from "../../../components/term/TermModal";
 import { ITermDataResponse } from "../../../components/api/Term";
+import TimeShow from "../../../components/general/TimeShow";
 
 export interface INissayaEndingRequest {
   id?: string;
@@ -60,7 +61,7 @@ export interface INissayaEnding {
   count?: number;
   termId?: string;
   termChannel?: string;
-  updatedAt?: number;
+  updated_at?: string;
   createdAt?: number;
 }
 const Widget = () => {
@@ -129,6 +130,7 @@ const Widget = () => {
             dataIndex: "ending",
             key: "ending",
             search: false,
+            sorter: true,
             render: (text, row, index, action) => {
               return (
                 <Space>
@@ -177,6 +179,7 @@ const Widget = () => {
             }),
             dataIndex: "relation",
             key: "relation",
+            sorter: true,
           },
           {
             title: intl.formatMessage({
@@ -196,19 +199,21 @@ const Widget = () => {
             width: 100,
             search: false,
             dataIndex: "count",
-            sorter: (a, b) => (a.count && b.count ? a.count - b.count : 0),
+            sorter: true,
           },
           {
             title: intl.formatMessage({
-              id: "forms.fields.created-at.label",
+              id: "forms.fields.updated-at.label",
             }),
-            key: "created-at",
+            key: "updated_at",
             width: 100,
             search: false,
-            dataIndex: "createdAt",
+            dataIndex: "updated_at",
             valueType: "date",
-            sorter: (a, b) =>
-              a.createdAt && b.createdAt ? a.createdAt - b.createdAt : 0,
+            sorter: true,
+            render: (text, row, index, action) => {
+              return <TimeShow time={row.updated_at} showIcon={false} />;
+            },
           },
           {
             title: intl.formatMessage({ id: "buttons.option" }),
@@ -283,11 +288,11 @@ const Widget = () => {
           if (filter.lang) {
             url += `&lang=${filter.lang.join()}`;
           }
+          url += getSorterUrl(sorter);
+
           console.log("url", url);
           const res = await get<INissayaEndingListResponse>(url);
           const items: INissayaEnding[] = res.data.rows.map((item, id) => {
-            const date = new Date(item.created_at ? item.created_at : 0);
-            const date2 = new Date(item.updated_at ? item.updated_at : 0);
             return {
               sn: id + 1,
               id: item.id,
@@ -298,8 +303,7 @@ const Widget = () => {
               count: item.count,
               termId: item.term_id,
               termChannel: item.term_channel,
-              createdAt: date.getTime(),
-              updatedAt: date2.getTime(),
+              updated_at: item.updated_at,
             };
           });
           return {
