@@ -17,23 +17,23 @@ class UserApi{
         return $userinfo->getUserByName($name)['id'];
     }
     public static function getById($id){
-        $userinfo = new \UserInfo();
-        $studio = $userinfo->getName($id);
+
+        $user = UserInfo::where('id',$id)->first();
         return [
             'id'=>$id,
-            'nickName'=>$studio['nickname'],
-            'userName'=>$studio['username'],
-            'realName'=>$studio['username'],
+            'nickName'=>$user['nickname'],
+            'userName'=>$user['username'],
+            'realName'=>$user['username'],
             'avatar'=>'',
         ];
     }
     public static function getByUuid($id){
-        $userinfo = new \UserInfo();
-        $studio = $userinfo->getName($id);
+        $user = UserInfo::where('userid',$id)->first();
         return [
             'id'=>$id,
-            'nickName'=>$studio['nickname'],
-            'userName'=>$studio['username'],
+            'nickName'=>$user['nickname'],
+            'userName'=>$user['username'],
+            'realName'=>$user['username'],
             'avatar'=>'',
         ];
     }

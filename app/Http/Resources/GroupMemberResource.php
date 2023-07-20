@@ -22,7 +22,7 @@ class GroupMemberResource extends JsonResource
             "power"=> $this->power,
             "level"=> $this->level,
             "status"=> $this->status,
-            "user"=> UserApi::getById($this->user_id),
+            "user"=> UserApi::getByUuid($this->user_id),
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];

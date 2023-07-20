@@ -28,7 +28,7 @@ class CourseResource extends JsonResource
             "title"=> $this->title,
             "subtitle"=> $this->subtitle,
             "summary"=> $this->summary,
-            "teacher"=> UserApi::getById($this->teacher),
+            "teacher"=> UserApi::getByUuid($this->teacher),
             "course_count"=>10,
             "member_count"=>CourseMember::where('course_id',$this->id)->count(),
             "publicity"=> $this->publicity,
