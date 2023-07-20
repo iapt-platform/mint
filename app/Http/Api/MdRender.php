@@ -345,14 +345,5 @@ class MdRender{
         return MdRender::render2($markdown,$channelId,$queryId,$mode,$channelType,$contentType);
     }
 
-    public static function fix($html){
-        $doc = new \DOMDocument();
-        $doc->substituteEntities = false;
-        $content = mb_convert_encoding($html, 'html-entities', 'utf-8');
-        $doc->loadHTML($content);
-        $html = $doc->saveHTML();
-        return $html;
-    }
-
 
 }
