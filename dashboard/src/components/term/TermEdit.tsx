@@ -60,6 +60,7 @@ const TermEditWidget = ({
   const [meaningOptions, setMeaningOptions] = useState<ValueType[]>([
     { label: "dd", value: "dd" },
   ]);
+  console.log("channel", channelId);
 
   const [form] = Form.useForm<ITerm>();
   const formRef = useRef<ProFormInstance>();
@@ -193,7 +194,7 @@ const TermEditWidget = ({
             meaning2: [],
             note: "",
             lang: res.data.language,
-            channel: [""],
+            channel: [res.data.studio.id, channelId],
           };
         } else if (typeof studioName !== "undefined") {
           //在studio新建
