@@ -19,7 +19,7 @@ class InviteMail extends Mailable
      *
      * @return void
      */
-    public function __construct(string $uuid,string $lang='en')
+    public function __construct(string $uuid,string $lang='en-US')
     {
         //
         $this->uuid = $uuid;
