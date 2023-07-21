@@ -16,7 +16,53 @@ import {
   IRelationResponse,
 } from "../../../pages/admin/relation/list";
 import { get, post, put } from "../../../request";
+import GrammarSelect from "./GrammarSelect";
 
+export const _verb = [
+  "n",
+  "ti",
+  "v",
+  "v:ind",
+  "ind",
+  "sg",
+  "pl",
+  "nom",
+  "acc",
+  "gen",
+  "dat",
+  "inst",
+  "voc",
+  "abl",
+  "loc",
+  "base",
+  "imp",
+  "opt",
+  "pres",
+  "aor",
+  "fut",
+  "1p",
+  "2p",
+  "3p",
+  "prp",
+  "pp",
+  "grd",
+  "fpp",
+  "vdn",
+  "ger",
+  "inf",
+  "adj",
+  "pron",
+  "caus",
+  "num",
+  "adv",
+  "conj",
+  "pre",
+  "suf",
+  "ti:base",
+  "n:base",
+  "v:base",
+  "vdn",
+];
 interface IWidget {
   trigger?: JSX.Element;
   id?: string;
@@ -32,51 +78,6 @@ const RelationEditWidget = ({
   const formRef = useRef<ProFormInstance>();
   const intl = useIntl();
 
-  const _verb = [
-    "n",
-    "ti",
-    "v",
-    "v:ind",
-    "ind",
-    "sg",
-    "pl",
-    "nom",
-    "acc",
-    "gen",
-    "dat",
-    "inst",
-    "voc",
-    "abl",
-    "loc",
-    "base",
-    "imp",
-    "opt",
-    "pres",
-    "aor",
-    "fut",
-    "1p",
-    "2p",
-    "3p",
-    "prp",
-    "pp",
-    "grd",
-    "fpp",
-    "vdn",
-    "ger",
-    "inf",
-    "adj",
-    "pron",
-    "caus",
-    "num",
-    "adv",
-    "conj",
-    "pre",
-    "suf",
-    "ti:base",
-    "n:base",
-    "v:base",
-    "vdn",
-  ];
   const verbOptions = _verb.map((item) => {
     return {
       value: item,
@@ -98,10 +99,8 @@ const RelationEditWidget = ({
       }}
       submitTimeout={3000}
       onFinish={async (values) => {
-        console.log("submit", values);
         let data = values;
         data.from = { spell: values.fromSpell, case: values.fromCase };
-        console.log("data", data);
         let res: IRelationResponse;
         if (typeof id === "undefined") {
           res = await post<IRelationRequest, IRelationResponse>(
@@ -161,49 +160,13 @@ const RelationEditWidget = ({
           label={intl.formatMessage({ id: "forms.fields.name.label" })}
         />
       </ProForm.Group>
-      <ProForm.Group>
-        <ProFormSelect
-          options={[
-            {
-              value: "case",
-              label: intl.formatMessage({ id: "forms.fields.case.label" }),
-            },
-            {
-              value: "spell",
-              label: intl.formatMessage({ id: "buttons.spell" }),
-            },
-          ]}
+      <ProForm.Group title="from">
+        <GrammarSelect />
+        <ProFormText
           width="md"
-          name="fromType"
-          allowClear={false}
-          label={intl.formatMessage({ id: "forms.fields.from.label" })}
+          name="fromSpell"
+          label={intl.formatMessage({ id: "buttons.spell" })}
         />
-        <ProFormDependency name={["fromType"]}>
-          {({ fromType }) => {
-            console.log("from type", fromType);
-            return (
-              <>
-                <ProFormSelect
-                  hidden={fromType === "spell"}
-                  options={verbOptions}
-                  fieldProps={{
-                    mode: "tags",
-                  }}
-                  width="md"
-                  name="fromCase"
-                  allowClear={false}
-                  label={intl.formatMessage({ id: "forms.fields.case.label" })}
-                />
-                <ProFormText
-                  hidden={fromType === "case"}
-                  width="md"
-                  name="fromSpell"
-                  label={intl.formatMessage({ id: "buttons.spell" })}
-                />
-              </>
-            );
-          }}
-        </ProFormDependency>
       </ProForm.Group>
       <ProForm.Group>
         <ProFormSelect

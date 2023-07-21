@@ -10,7 +10,7 @@ import {
 } from "../../../pages/admin/nissaya-ending/list";
 import { get, post, put } from "../../../request";
 import LangSelect from "../../general/LangSelect";
-import CaseSelect from "./CaseSelect";
+import GrammarSelect from "./GrammarSelect";
 
 interface IWidget {
   trigger?: JSX.Element;
@@ -37,17 +37,21 @@ const NissayaEndingWidget = ({
       }}
       submitTimeout={2000}
       onFinish={async (values) => {
-        console.log(values.ending);
+        let data = values;
+        data.from = {
+          spell: values.fromSpell,
+          case: values.fromCase ? values.fromCase : undefined,
+        };
         let res: INissayaEndingResponse;
         if (typeof id === "undefined") {
           res = await post<INissayaEndingRequest, INissayaEndingResponse>(
             `/v2/nissaya-ending`,
-            values
+            data
           );
         } else {
           res = await put<INissayaEndingRequest, INissayaEndingResponse>(
             `/v2/nissaya-ending/${id}`,
-            values
+            data
           );
         }
         console.log(res);
@@ -76,6 +80,9 @@ const NissayaEndingWidget = ({
                   id: id,
                   ending: res.data.ending,
                   relation: res.data.relation,
+                  from: res.data.from,
+                  fromCase: res.data.from?.case,
+                  fromSpell: res.data.from?.spell,
                   lang: res.data.lang,
                 };
               } else {
@@ -97,16 +104,22 @@ const NissayaEndingWidget = ({
           label={intl.formatMessage({ id: "forms.fields.ending.label" })}
           tooltip="最长为 24 位"
         />
-
+        <LangSelect width="md" />
+      </ProForm.Group>
+      <ProForm.Group>
+        <GrammarSelect />
+        <ProFormText
+          width="md"
+          name="fromSpell"
+          label={intl.formatMessage({ id: "buttons.spell" })}
+        />
+      </ProForm.Group>
+      <ProForm.Group>
         <ProFormText
           width="md"
           name="relation"
           label={intl.formatMessage({ id: "forms.fields.relation.label" })}
         />
-      </ProForm.Group>
-      <ProForm.Group>
-        <CaseSelect width="md" name="case" />
-        <LangSelect width="md" />
       </ProForm.Group>
     </ModalForm>
   );
