@@ -135,7 +135,7 @@ const TermEditWidget = ({
             newValue
           );
         }
-        console.log("term ", res);
+
         if (res.ok) {
           message.success("提交成功");
           if (typeof onUpdate !== "undefined") {

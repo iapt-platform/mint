@@ -93,19 +93,15 @@ export const patch = <Request, Response>(
   });
 };
 
-export const put = <Request, Response>(
+export const put = async <Request, Response>(
   path: string,
   body: Request
 ): Promise<Response> => {
   const data = options("PUT");
   data.body = JSON.stringify(body);
-  return fetch(backend(path), data).then((res) =>
-    res.status === 200
-      ? res.json()
-      : res.json().then((err) => {
-          throw err;
-        })
-  );
+  const response = await fetch(backend(path), data);
+  const res: Response = await response.json();
+  return res;
 };
 
 export const download = (path: string, name: string) => {

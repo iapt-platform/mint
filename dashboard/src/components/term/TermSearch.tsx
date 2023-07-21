@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Col, List, Row } from "antd";
+import { Col, List, Row, Typography } from "antd";
 
 import { get } from "../../request";
 import {
@@ -8,6 +8,7 @@ import {
   ITermResponse,
 } from "../api/Term";
 import TermItem from "./TermItem";
+const { Title } = Typography;
 
 interface IWidget {
   word?: string;
@@ -43,23 +44,25 @@ const TermSearchWidget = ({ word, wordId, compact = false }: IWidget) => {
   }, [word, wordId]);
 
   return (
-    <Row>
-      <Col flex="200px">{compact ? <></> : <></>}</Col>
-      <Col flex="760px">
-        <List
-          itemLayout="vertical"
-          size="large"
-          dataSource={tableData}
-          header={word}
-          renderItem={(item) => (
-            <List.Item>
-              <TermItem data={item} />
-            </List.Item>
-          )}
-        />
-      </Col>
-      <Col flex="200px"></Col>
-    </Row>
+    <>
+      <Row>
+        <Col flex="200px">{compact ? <></> : <></>}</Col>
+        <Col flex="760px">
+          <Title>{word}</Title>
+          <List
+            itemLayout="vertical"
+            size="large"
+            dataSource={tableData}
+            renderItem={(item) => (
+              <List.Item>
+                <TermItem data={item} />
+              </List.Item>
+            )}
+          />
+        </Col>
+        <Col flex="200px"></Col>
+      </Row>
+    </>
   );
 };
 
