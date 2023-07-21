@@ -75,6 +75,7 @@ const RelationEditWidget = ({
     "ti:base",
     "n:base",
     "v:base",
+    "vdn",
   ];
   const verbOptions = _verb.map((item) => {
     return {
