@@ -1,5 +1,5 @@
 import { useIntl } from "react-intl";
-import { Button, Dropdown, Modal, message, Tag, Space, Typography } from "antd";
+import { Button, Dropdown, Modal, message, Tag, Space } from "antd";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import {
   PlusOutlined,
@@ -7,6 +7,7 @@ import {
   ExclamationCircleOutlined,
   ImportOutlined,
   ExportOutlined,
+  TranslationOutlined,
 } from "@ant-design/icons";
 
 import { API_HOST, delete_, get } from "../../../request";
@@ -25,8 +26,6 @@ import TimeShow from "../../../components/general/TimeShow";
 import { ITerm } from "../../../components/term/TermEdit";
 import TermModal from "../../../components/term/TermModal";
 
-const { Text } = Typography;
-
 export const getSorterUrl = (sorter?: Record<string, SortOrder>): string => {
   let url: string = "";
   for (const key in sorter) {
@@ -43,53 +42,11 @@ export const getSorterUrl = (sorter?: Record<string, SortOrder>): string => {
   return url;
 };
 
-export const CaseValueEnum = () => {
-  const intl = useIntl();
-  return {
-    all: {
-      text: "all",
-    },
-    nom: {
-      text: intl.formatMessage({
-        id: "dict.fields.type.nom.label",
-      }),
-    },
-    acc: {
-      text: intl.formatMessage({
-        id: "dict.fields.type.acc.label",
-      }),
-    },
-    gen: {
-      text: intl.formatMessage({
-        id: "dict.fields.type.gen.label",
-      }),
-    },
-    dat: {
-      text: intl.formatMessage({
-        id: "dict.fields.type.dat.label",
-      }),
-    },
-    inst: {
-      text: intl.formatMessage({
-        id: "dict.fields.type.inst.label",
-      }),
-    },
-    abl: {
-      text: intl.formatMessage({
-        id: "dict.fields.type.abl.label",
-      }),
-    },
-    loc: {
-      text: intl.formatMessage({
-        id: "dict.fields.type.loc.label",
-      }),
-    },
-  };
-};
-
 export interface IRelationRequest {
   id?: string;
   name: string;
+  name_channel?: string;
+  name_term?: ITerm;
   case?: string | null;
   from?: IFrom | null;
   to?: string[];
@@ -121,6 +78,8 @@ export interface IRelation {
   sn?: number;
   id?: string;
   name: string;
+  name_channel?: string;
+  name_term?: ITerm;
   case?: string | null;
   from?: IFrom | null;
   fromCase?: string[];
@@ -217,10 +176,29 @@ const Widget = () => {
             dataIndex: "name1",
             key: "name1",
             render: (text, row, index, action) => {
-              const localName = terms?.find(
-                (item) => item.word === row.name
-              )?.meaning;
-              return localName;
+              return row.name_term ? (
+                <TermModal
+                  trigger={
+                    <Button type="link" icon={<TranslationOutlined />}>
+                      {row.name_term?.meaning}
+                    </Button>
+                  }
+                  id={row.name_term.id}
+                  channelId={row.category_channel}
+                  onUpdate={() => ref.current?.reload()}
+                />
+              ) : row.name_channel && row.name ? (
+                <TermModal
+                  trigger={
+                    <Button type="link" key="button" icon={<PlusOutlined />}>
+                      {intl.formatMessage({ id: "buttons.create" })}
+                    </Button>
+                  }
+                  word={row.name}
+                  channelId={row.name_channel}
+                  onUpdate={() => ref.current?.reload()}
+                />
+              ) : undefined;
             },
           },
           {
@@ -270,12 +248,12 @@ const Widget = () => {
             key: "category",
             render: (text, row, index, action) => {
               return (
-                <Space direction="vertical">
+                <Space>
                   {row.category}
                   {row.category_term ? (
                     <TermModal
                       trigger={
-                        <Button type="link">
+                        <Button type="link" icon={<TranslationOutlined />}>
                           {row.category_term?.meaning}
                         </Button>
                       }
@@ -394,6 +372,8 @@ const Widget = () => {
               sn: offset + id + 1,
               id: item.id,
               name: item.name,
+              name_channel: item.name_channel,
+              name_term: item.name_term,
               case: item.case,
               from: item.from,
               to: item.to,
