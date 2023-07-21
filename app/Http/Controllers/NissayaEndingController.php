@@ -146,7 +146,9 @@ class NissayaEndingController extends Controller
             $cardData['title_local_relation'] = "关系";
             $cardData['title_relation'] = "关系";
             foreach ($relations as $key => $relation) {
-                $relationInTerm = DhammaTerm::where('channal',$localTerm)->where('word',$relation['name'])->first();
+                $relationInTerm = DhammaTerm::where('channal',$localTerm)
+                                            ->where('word',$relation['name'])
+                                            ->first();
                 if(empty($relation->from)){
                     $cardData['row'][] = ["relation"=>$relation->name];
                     continue;
@@ -177,7 +179,7 @@ class NissayaEndingController extends Controller
                 //翻译建议
                 $localEnding = '';
                 $localEndingRecord = NissayaEnding::where('relation',$relation['name'])
-                                                ->where('lang',$request->get('lang'));
+                                                  ->where('lang',$request->get('lang'));
                 if(!empty($case)){
                     $localEndingRecord = $localEndingRecord->where('case',$case);
                 }
