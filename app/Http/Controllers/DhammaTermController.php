@@ -278,10 +278,24 @@ class DhammaTermController extends Controller
         //
         $user = AuthApi::current($request);
         if(!$user){
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),[],401);
         }
-        //TODO 权限判断
         $dhammaTerm = DhammaTerm::find($id);
+        if(!$dhammaTerm){
+            return $this->error('404');
+        }
+        if(empty($dhammaTerm->channal)){
+            //查看有没有studio权限
+            if($user['user_uid'] !== $dhammaTerm->owner){
+                return $this->error(__('auth.failed'),[403],200);
+            }
+        }else{
+            //查看有没有channel权限
+            $power = ShareApi::getResPower($user["user_uid"],$dhammaTerm->channal,2);
+            if($power < 20){
+                return $this->error(__('auth.failed'),[403],200);
+            }
+        }
         $dhammaTerm->word = $request->get("word");
         $dhammaTerm->word_en = Tools::getWordEn($request->get("word"));
         $dhammaTerm->meaning = $request->get("meaning");
