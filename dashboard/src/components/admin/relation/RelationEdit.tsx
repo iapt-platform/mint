@@ -142,6 +142,7 @@ const RelationEditWidget = ({
                   fromCase: res.data.from?.case,
                   fromSpell: res.data.from?.spell,
                   to: res.data.to,
+                  category: res.data.category,
                 };
               } else {
                 return {
@@ -214,6 +215,11 @@ const RelationEditWidget = ({
           name="to"
           allowClear={false}
           label={intl.formatMessage({ id: "forms.fields.to.label" })}
+        />
+        <ProFormText
+          width="md"
+          name="category"
+          label={intl.formatMessage({ id: "forms.fields.category.label" })}
         />
       </ProForm.Group>
     </ModalForm>

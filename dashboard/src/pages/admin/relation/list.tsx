@@ -88,6 +88,7 @@ export interface IRelationRequest {
   case?: string | null;
   from?: IFrom | null;
   to?: string[];
+  category?: string;
   editor?: IUser;
   updated_at?: string;
   created_at?: string;
@@ -118,6 +119,7 @@ export interface IRelation {
   fromCase?: string[];
   fromSpell?: string;
   to?: string[];
+  category?: string;
   editor?: IUser;
   updated_at?: string;
   created_at?: string;
@@ -253,6 +255,13 @@ const Widget = () => {
           },
           {
             title: intl.formatMessage({
+              id: "forms.fields.category.label",
+            }),
+            dataIndex: "category",
+            key: "category",
+          },
+          {
+            title: intl.formatMessage({
               id: "forms.fields.editor.label",
             }),
             dataIndex: "editor",
@@ -343,6 +352,7 @@ const Widget = () => {
               case: item.case,
               from: item.from,
               to: item.to,
+              category: item.category,
               editor: item.editor,
               created_at: item.created_at,
               updated_at: item.updated_at,
