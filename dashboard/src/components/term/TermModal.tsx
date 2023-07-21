@@ -81,7 +81,7 @@ const TermModalWidget = ({
           parentChannelId={parentChannelId}
           parentStudioId={parentStudioId}
           onUpdate={(value: ITermDataResponse) => {
-            setIsModalOpen(false);
+            modalClose();
             if (typeof onUpdate !== "undefined") {
               onUpdate(value);
             }
