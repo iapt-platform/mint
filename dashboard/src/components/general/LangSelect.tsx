@@ -32,8 +32,8 @@ const LangSelectWidget = ({ width, label }: IWidget) => {
 
   const langOptions = [
     {
-      value: "English",
-      label: "en-US",
+      value: "en-US",
+      label: "English",
     },
     {
       value: "zh-Hans",

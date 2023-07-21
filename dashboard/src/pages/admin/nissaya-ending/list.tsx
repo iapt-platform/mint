@@ -1,5 +1,5 @@
 import { useIntl } from "react-intl";
-import { Button, Dropdown, Modal, message, Space } from "antd";
+import { Button, Dropdown, Modal, message, Space, Tag } from "antd";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import {
   PlusOutlined,
@@ -20,7 +20,7 @@ import NissayaEndingEdit from "../../../components/admin/relation/NissayaEndingE
 import { LangValueEnum } from "../../../components/general/LangSelect";
 import { NissayaCardModal } from "../../../components/general/NissayaCard";
 import DataImport from "../../../components/admin/relation/DataImport";
-import { CaseValueEnum, getSorterUrl } from "../relation/list";
+import { getSorterUrl, IFrom } from "../relation/list";
 import TermModal from "../../../components/term/TermModal";
 import { ITermDataResponse } from "../../../components/api/Term";
 import TimeShow from "../../../components/general/TimeShow";
@@ -31,6 +31,7 @@ export interface INissayaEndingRequest {
   lang?: string;
   relation?: string;
   case?: string;
+  from?: IFrom | null;
   editor?: IUser;
   count?: number;
   term_id?: string;
@@ -58,6 +59,9 @@ export interface INissayaEnding {
   lang?: string;
   relation?: string;
   case?: string;
+  from?: IFrom | null;
+  fromCase?: string[];
+  fromSpell?: string;
   count?: number;
   termId?: string;
   termChannel?: string;
@@ -173,6 +177,30 @@ const Widget = () => {
             filters: true,
             valueEnum: LangValueEnum(),
           },
+
+          {
+            title: intl.formatMessage({
+              id: "forms.fields.from.label",
+            }),
+            dataIndex: "from",
+            key: "from",
+            render: (text, row, index, action) => {
+              const spell = row.from?.spell;
+              const fromCase = row.from?.case?.map((item, id) => (
+                <Tag key={id}>
+                  {intl.formatMessage({
+                    id: `dict.fields.type.${item}.label`,
+                  })}
+                </Tag>
+              ));
+              return (
+                <>
+                  {spell}
+                  {fromCase}
+                </>
+              );
+            },
+          },
           {
             title: intl.formatMessage({
               id: "forms.fields.relation.label",
@@ -180,16 +208,6 @@ const Widget = () => {
             dataIndex: "relation",
             key: "relation",
             sorter: true,
-          },
-          {
-            title: intl.formatMessage({
-              id: "forms.fields.case.label",
-            }),
-            dataIndex: "case",
-            key: "case",
-            search: false,
-            filters: true,
-            valueEnum: CaseValueEnum(),
           },
           {
             title: intl.formatMessage({
@@ -300,6 +318,7 @@ const Widget = () => {
               lang: item.lang,
               relation: item.relation,
               case: item.case,
+              from: item.from,
               count: item.count,
               termId: item.term_id,
               termChannel: item.term_channel,
