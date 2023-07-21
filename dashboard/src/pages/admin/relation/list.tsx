@@ -1,5 +1,5 @@
 import { useIntl } from "react-intl";
-import { Button, Dropdown, Modal, message, Tag } from "antd";
+import { Button, Dropdown, Modal, message, Tag, Space, Typography } from "antd";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import {
   PlusOutlined,
@@ -11,6 +11,7 @@ import {
 
 import { API_HOST, delete_, get } from "../../../request";
 import { IDeleteResponse } from "../../../components/api/Article";
+import { get as getUiLang } from "../../../locales";
 
 import { useRef } from "react";
 
@@ -21,6 +22,10 @@ import { useAppSelector } from "../../../hooks";
 import { getTerm } from "../../../reducers/term-vocabulary";
 import { SortOrder } from "antd/lib/table/interface";
 import TimeShow from "../../../components/general/TimeShow";
+import { ITerm } from "../../../components/term/TermEdit";
+import TermModal from "../../../components/term/TermModal";
+
+const { Text } = Typography;
 
 export const getSorterUrl = (sorter?: Record<string, SortOrder>): string => {
   let url: string = "";
@@ -89,6 +94,8 @@ export interface IRelationRequest {
   from?: IFrom | null;
   to?: string[];
   category?: string;
+  category_channel?: string;
+  category_term?: ITerm;
   editor?: IUser;
   updated_at?: string;
   created_at?: string;
@@ -120,6 +127,8 @@ export interface IRelation {
   fromSpell?: string;
   to?: string[];
   category?: string;
+  category_channel?: string;
+  category_term?: ITerm;
   editor?: IUser;
   updated_at?: string;
   created_at?: string;
@@ -259,6 +268,40 @@ const Widget = () => {
             }),
             dataIndex: "category",
             key: "category",
+            render: (text, row, index, action) => {
+              return (
+                <Space direction="vertical">
+                  {row.category}
+                  {row.category_term ? (
+                    <TermModal
+                      trigger={
+                        <Button type="link">
+                          {row.category_term?.meaning}
+                        </Button>
+                      }
+                      id={row.category_term.id}
+                      channelId={row.category_channel}
+                      onUpdate={() => ref.current?.reload()}
+                    />
+                  ) : row.category_channel && row.category ? (
+                    <TermModal
+                      trigger={
+                        <Button
+                          type="link"
+                          key="button"
+                          icon={<PlusOutlined />}
+                        >
+                          {intl.formatMessage({ id: "buttons.create" })}
+                        </Button>
+                      }
+                      word={row.category}
+                      channelId={row.category_channel}
+                      onUpdate={() => ref.current?.reload()}
+                    />
+                  ) : undefined}
+                </Space>
+              );
+            },
           },
           {
             title: intl.formatMessage({
@@ -330,6 +373,7 @@ const Widget = () => {
         request={async (params = {}, sorter, filter) => {
           console.log("request", params, sorter, filter);
           let url = `/v2/relation?view=a`;
+          url += "&ui-lang=" + getUiLang();
           const offset =
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
@@ -340,6 +384,7 @@ const Widget = () => {
           if (filter.case) {
             url += `&case=${filter.case.join()}`;
           }
+
           url += getSorterUrl(sorter);
 
           console.log("url", url);
@@ -353,6 +398,8 @@ const Widget = () => {
               from: item.from,
               to: item.to,
               category: item.category,
+              category_channel: item.category_channel,
+              category_term: item.category_term,
               editor: item.editor,
               created_at: item.created_at,
               updated_at: item.updated_at,
