@@ -287,13 +287,13 @@ class DhammaTermController extends Controller
         if(empty($dhammaTerm->channal)){
             //查看有没有studio权限
             if($user['user_uid'] !== $dhammaTerm->owner){
-                return $this->error(__('auth.failed'),[403],200);
+                return $this->error(__('auth.failed'),[403],403);
             }
         }else{
             //查看有没有channel权限
             $power = ShareApi::getResPower($user["user_uid"],$dhammaTerm->channal,2);
             if($power < 20){
-                return $this->error(__('auth.failed'),[403],200);
+                return $this->error(__('auth.failed'),[403],403);
             }
         }
         $dhammaTerm->word = $request->get("word");
