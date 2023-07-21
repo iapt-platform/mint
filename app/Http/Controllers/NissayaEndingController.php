@@ -140,11 +140,13 @@ class NissayaEndingController extends Controller
 
         $relations = Relation::whereIn('name',$myEnding)->get();
         if(count($relations) > 0){
-            $cardData['title_case'] = "格位";
+            $cardData['title_case'] = "本词";
+            $cardData['title_relation'] = "关系";
+            $cardData['title_local_relation'] = "关系";
+            $cardData['title_local_link_to'] = "目标词特征";
             $cardData['title_content'] = "含义";
             $cardData['title_local_ending'] = "翻译建议";
-            $cardData['title_local_relation'] = "关系";
-            $cardData['title_relation'] = "关系";
+
             foreach ($relations as $key => $relation) {
                 $relationInTerm = DhammaTerm::where('channal',$localTerm)
                                             ->where('word',$relation['name'])
@@ -168,14 +170,28 @@ class NissayaEndingController extends Controller
                 if(isset($from->spell)){
                     $newLine['spell'] = $from->spell;
                 }
-                //含义
-                if($relationInTerm){
-                    $newLine['other_meaning'] = $relationInTerm->other_meaning;
-                    $newLine['note'] = $relationInTerm->note;
-                    if(!empty($relationInTerm->note)){
-                        $newLine['summary'] = explode("\n",$relationInTerm->note)[0];
+                //连接到
+                $linkTos = json_decode($relation->to);
+                if(count($linkTos)>0){
+                    $localTo  =[];
+                    foreach ($linkTos as $to) {
+                        $localTo[] = ['label'=>__("grammar.".$to),
+                                        'link'=>env('DASHBOARD_URL').'/term/list/'.$case
+                                        ];
+                    }
+                    # 格位
+                    $newLine['to'] = $localTo;
+                }
+                //含义 用分类字段的term 数据
+                if(isset($relation['category']) && !empty($relation['category'])){
+                    $localCategory = DhammaTerm::where('channal',$localTerm)
+                                                ->where('word',$relation['category'])
+                                                ->first();
+                    if($localCategory){
+                        $newLine['category_note'] = $localCategory->note;
                     }
                 }
+
                 //翻译建议
                 $localEnding = '';
                 $localEndingRecord = NissayaEnding::where('relation',$relation['name'])
