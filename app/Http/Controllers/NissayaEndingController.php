@@ -25,7 +25,7 @@ class NissayaEndingController extends Controller
     {
         //
         $table = NissayaEnding::select(['id','ending','lang','relation',
-                                        'case','count','editor_id',
+                                        'case','from','count','editor_id',
                                         'created_at','updated_at']);
 
         if(($request->has('case'))){
@@ -90,6 +90,11 @@ class NissayaEndingController extends Controller
         $new->lang = $validated['lang'];
         $new->relation = $request->get('relation');
         $new->case = $request->get('case');
+        if($request->has('from')){
+            $new->from = json_encode($request->get('from'),JSON_UNESCAPED_UNICODE);
+        }else{
+            $new->from = null;
+        }
         $new->editor_id = $user['user_uid'];
         $new->save();
         return $this->ok(new NissayaEndingResource($new));
@@ -192,19 +197,21 @@ class NissayaEndingController extends Controller
                     }
                 }
 
-                //翻译建议
-                $localEnding = '';
-                $localEndingRecord = NissayaEnding::where('relation',$relation['name'])
-                                                  ->where('lang',$request->get('lang'));
-                if(!empty($case)){
-                    $localEndingRecord = $localEndingRecord->where('case',$case);
+                /**
+                 * 翻译建议
+                 * relation 和 from 都匹配成功
+                 * from 为空 只匹配 relation
+                 */
+                $arrLocalEnding = array();
+                $localEndings = NissayaEnding::where('relation',$relation['name'])
+                                                  ->where('lang',$request->get('lang'))
+                                                  ->get();
+                foreach ($localEndings as $localEnding) {
+                    if(empty($localEnding->from) || $localEnding->from===$relation->from){
+                        $arrLocalEnding[]=$localEnding->ending;
+                    }
                 }
-                $localLangs = $localEndingRecord->get();
-                foreach ($localLangs as $localLang) {
-                    # code...
-                    $localEnding .= $localLang->ending.",";
-                }
-                $newLine['local_ending'] = $localEnding;
+                $newLine['local_ending'] = implode(';',$arrLocalEnding);
 
                 //本地语言 关系名称
                 if($relationInTerm){
@@ -239,18 +246,30 @@ class NissayaEndingController extends Controller
             return $this->error(__('auth.failed'));
         }
         //查询是否重复
-        if(NissayaEnding::where('ending',$request->get('ending'))
+        /*
+        $table = NissayaEnding::where('ending',$request->get('ending'))
                  ->where('lang',$request->get('lang'))
-                 ->where('relation',$request->get('relation'))
-                 ->where('case',$request->get('case'))
-                 ->exists()){
+                 ->where('relation',$request->get('relation'));
+        $from = json_encode($request->get('from'),JSON_UNESCAPED_UNICODE);
+        if(empty($from)){
+            $table = $table->whereNull('from');
+        }else{
+            $json = $request->get('from');
+            $table = $table->whereJsonContains('from',['case'=>$json['case']]);
+        }
+        if($table->exists()){
             return $this->error(__('validation.exists',['name']));
         }
+*/
         $nissayaEnding->ending = $request->get('ending');
         $nissayaEnding->strlen = mb_strlen($request->get('ending'),"UTF-8") ;
         $nissayaEnding->lang = $request->get('lang');
         $nissayaEnding->relation = $request->get('relation');
-        $nissayaEnding->case = $request->get('case');
+        if($request->has('from') && !empty($request->get('from'))){
+            $nissayaEnding->from = json_encode($request->get('from'),JSON_UNESCAPED_UNICODE);
+        }else{
+            $nissayaEnding->from = null;
+        }
         $nissayaEnding->editor_id = $user['user_uid'];
         $nissayaEnding->save();
         return $this->ok(new NissayaEndingResource($nissayaEnding));
