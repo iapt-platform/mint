@@ -113,7 +113,7 @@ export interface IRelationResponse {
   message: string;
   data: IRelationRequest;
 }
-interface IFrom {
+export interface IFrom {
   spell?: string;
   case?: string[];
 }
