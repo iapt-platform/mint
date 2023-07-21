@@ -36,15 +36,25 @@ class RelationResource extends JsonResource
         if($term_channel){
             $data['category_channel'] = $term_channel;
             if(!empty($this->category)){
-            $term = DhammaTerm::where("word",$this->category)
-                                        ->where('channal',$term_channel)
-                                        ->first();
+                $term = DhammaTerm::where("word",$this->category)
+                                            ->where('channal',$term_channel)
+                                            ->first();
                 if($term){
                     $data['category_term']['channelId'] = $term_channel;
                     $data['category_term']['word'] = $term->word;
                     $data['category_term']['id'] = $term->guid;
                     $data['category_term']['meaning'] = $term->meaning;
                 }
+            }
+            $data['name_channel'] = $term_channel;
+            $term_name = DhammaTerm::where("word",$this->name)
+                ->where('channal',$term_channel)
+                ->first();
+            if($term_name){
+                $data['name_term']['channelId'] = $term_channel;
+                $data['name_term']['word'] = $term_name->word;
+                $data['name_term']['id'] = $term_name->guid;
+                $data['name_term']['meaning'] = $term_name->meaning;
             }
         }
 
