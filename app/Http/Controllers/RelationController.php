@@ -20,7 +20,7 @@ class RelationController extends Controller
     public function index(Request $request)
     {
         //
-        $table = Relation::select(['id','name','case','from','to','editor_id','updated_at','created_at']);
+        $table = Relation::select(['id','name','case','from','to','category','editor_id','updated_at','created_at']);
         if(($request->has('case'))){
             $table = $table->whereIn('case', explode(",",$request->get('case')) );
         }
@@ -59,11 +59,10 @@ class RelationController extends Controller
         $case = $request->get('case','');
         $new = new Relation;
         $new->name = $validated['name'];
-        if($request->has('case')){
-            $new->case = $request->get('case');
-        }else{
-            $new->case = null;
-        }
+
+        $new->case = $request->get('case');
+        $new->category = $request->get('category');
+
         if($request->has('from')){
             $new->from = json_encode($request->get('from'),JSON_UNESCAPED_UNICODE);
         }else{
@@ -109,11 +108,9 @@ class RelationController extends Controller
         }
 
         $relation->name = $request->get('name');
-        if($request->has('case')){
-            $relation->case = $request->get('case');
-        }else{
-            $relation->case = null;
-        }
+        $relation->case = $request->get('case');
+        $relation->category = $request->get('category');
+
         if($request->has('from')){
             $relation->from = json_encode($request->get('from'),JSON_UNESCAPED_UNICODE);
         }else{
