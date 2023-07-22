@@ -69,6 +69,7 @@ const items = {
   "forms.fields.nickname.label": "昵称",
   "forms.fields.editor.label": "编辑者",
   "forms.fields.category.label": "分类",
+  "forms.fields.match.label": "匹配方式",
 };
 
 export default items;

@@ -141,6 +141,7 @@ const RelationEditWidget = ({
                   fromCase: res.data.from?.case,
                   fromSpell: res.data.from?.spell,
                   to: res.data.to,
+                  match: res.data.match,
                   category: res.data.category,
                 };
               } else {
@@ -179,6 +180,23 @@ const RelationEditWidget = ({
           allowClear={false}
           label={intl.formatMessage({ id: "forms.fields.to.label" })}
         />
+        <ProFormSelect
+          options={["gender", "number", "case"].map((item) => {
+            return {
+              value: item,
+              label: item,
+            };
+          })}
+          fieldProps={{
+            mode: "tags",
+          }}
+          width="md"
+          name="match"
+          allowClear={false}
+          label={intl.formatMessage({ id: "forms.fields.match.label" })}
+        />
+      </ProForm.Group>
+      <ProForm.Group>
         <ProFormText
           width="md"
           name="category"
