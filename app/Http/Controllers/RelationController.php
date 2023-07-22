@@ -29,7 +29,18 @@ class RelationController extends Controller
         if(($request->has('search'))){
             $table = $table->where('name', 'like', $request->get('search')."%");
         }
-
+        if(($request->has('from'))){
+            $table = $table->whereJsonContains('from->case',$request->get('from'));
+        }
+        if(($request->has('to'))){
+            $table = $table->whereJsonContains('to',$request->get('to'));
+        }
+        if(($request->has('match'))){
+            $table = $table->whereJsonContains('match',$request->get('match'));
+        }
+        if(($request->has('category'))){
+            $table = $table->where('category',$request->get('category'));
+        }
         $table = $table->orderBy($request->get('order','updated_at'),$request->get('dir','desc'));
         $count = $table->count();
 
