@@ -20,7 +20,9 @@ class RelationController extends Controller
     public function index(Request $request)
     {
         //
-        $table = Relation::select(['id','name','case','from','to','category','editor_id','updated_at','created_at']);
+        $table = Relation::select(['id','name','case','from','to',
+                                    'category','editor_id','match',
+                                    'updated_at','created_at']);
         if(($request->has('case'))){
             $table = $table->whereIn('case', explode(",",$request->get('case')) );
         }
@@ -73,6 +75,11 @@ class RelationController extends Controller
         }else{
             $new->to = null;
         }
+        if($request->has('match')){
+            $new->match = json_encode($request->get('match'),JSON_UNESCAPED_UNICODE);
+        }else{
+            $new->match = null;
+        }
         $new->editor_id = $user['user_uid'];
         $new->save();
         return $this->ok(new RelationResource($new));
@@ -120,6 +127,11 @@ class RelationController extends Controller
             $relation->to = json_encode($request->get('to'),JSON_UNESCAPED_UNICODE);
         }else{
             $relation->to = null;
+        }
+        if($request->has('match')){
+            $relation->match = json_encode($request->get('match'),JSON_UNESCAPED_UNICODE);
+        }else{
+            $relation->match = null;
         }
         $relation->editor_id = $user['user_uid'];
         $relation->save();
