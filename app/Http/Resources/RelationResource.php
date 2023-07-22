@@ -29,7 +29,6 @@ class RelationResource extends JsonResource
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];
-
         $lang = $request->get('ui-lang');
         //TODO 默认英文
         $uiLang = strtolower($request->get('ui-lang','zh-Hans')) ;
