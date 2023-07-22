@@ -50,6 +50,7 @@ export interface IRelationRequest {
   case?: string | null;
   from?: IFrom | null;
   to?: string[];
+  match?: string[];
   category?: string;
   category_channel?: string;
   category_term?: ITerm;
@@ -85,6 +86,7 @@ export interface IRelation {
   fromCase?: string[];
   fromSpell?: string;
   to?: string[];
+  match?: string[];
   category?: string;
   category_channel?: string;
   category_term?: ITerm;
@@ -94,7 +96,6 @@ export interface IRelation {
 }
 const Widget = () => {
   const intl = useIntl(); //i18n
-  const terms = useAppSelector(getTerm);
 
   const showDeleteConfirm = (id?: string, title?: string) => {
     Modal.confirm({
@@ -242,6 +243,16 @@ const Widget = () => {
           },
           {
             title: intl.formatMessage({
+              id: "forms.fields.match.label",
+            }),
+            dataIndex: "to",
+            key: "to",
+            render: (text, row, index, action) => {
+              return row.match?.map((item, id) => <Tag key={id}>{item}</Tag>);
+            },
+          },
+          {
+            title: intl.formatMessage({
               id: "forms.fields.category.label",
             }),
             dataIndex: "category",
@@ -377,6 +388,7 @@ const Widget = () => {
               case: item.case,
               from: item.from,
               to: item.to,
+              match: item.match,
               category: item.category,
               category_channel: item.category_channel,
               category_term: item.category_term,
