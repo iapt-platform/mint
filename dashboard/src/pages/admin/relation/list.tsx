@@ -1,5 +1,5 @@
 import { useIntl } from "react-intl";
-import { Button, Dropdown, Modal, message, Tag, Space } from "antd";
+import { Button, Dropdown, Modal, message, Tag, Space, Tooltip } from "antd";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import {
   PlusOutlined,
@@ -94,6 +94,12 @@ export interface IRelation {
   updated_at?: string;
   created_at?: string;
 }
+interface IParams {
+  from?: string;
+  to?: string;
+  match?: string;
+  category?: string;
+}
 const Widget = () => {
   const intl = useIntl(); //i18n
 
@@ -135,8 +141,11 @@ const Widget = () => {
   const ref = useRef<ActionType>();
   return (
     <>
-      <ProTable<IRelation>
+      <ProTable<IRelation, IParams>
         actionRef={ref}
+        search={{
+          filterType: "light",
+        }}
         columns={[
           {
             title: intl.formatMessage({
@@ -176,6 +185,7 @@ const Widget = () => {
             }),
             dataIndex: "name1",
             key: "name1",
+            search: false,
             render: (text, row, index, action) => {
               return row.name_term ? (
                 <TermModal
@@ -211,11 +221,13 @@ const Widget = () => {
             render: (text, row, index, action) => {
               const spell = row.from?.spell;
               const fromCase = row.from?.case?.map((item, id) => (
-                <Tag key={id}>
-                  {intl.formatMessage({
-                    id: `dict.fields.type.${item}.label`,
-                  })}
-                </Tag>
+                <Tooltip title={item} key={id}>
+                  <Tag key={id}>
+                    {intl.formatMessage({
+                      id: `dict.fields.type.${item}.label`,
+                    })}
+                  </Tag>
+                </Tooltip>
               ));
               return (
                 <>
@@ -233,11 +245,13 @@ const Widget = () => {
             key: "to",
             render: (text, row, index, action) => {
               return row.to?.map((item, id) => (
-                <Tag key={id}>
-                  {intl.formatMessage({
-                    id: `dict.fields.type.${item}.label`,
-                  })}
-                </Tag>
+                <Tooltip title={item} key={id}>
+                  <Tag key={id}>
+                    {intl.formatMessage({
+                      id: `dict.fields.type.${item}.label`,
+                    })}
+                  </Tag>
+                </Tooltip>
               ));
             },
           },
@@ -245,8 +259,8 @@ const Widget = () => {
             title: intl.formatMessage({
               id: "forms.fields.match.label",
             }),
-            dataIndex: "to",
-            key: "to",
+            dataIndex: "match",
+            key: "match",
             render: (text, row, index, action) => {
               return row.match?.map((item, id) => <Tag key={id}>{item}</Tag>);
             },
@@ -257,6 +271,7 @@ const Widget = () => {
             }),
             dataIndex: "category",
             key: "category",
+
             render: (text, row, index, action) => {
               return (
                 <Space>
@@ -374,6 +389,11 @@ const Widget = () => {
             url += `&case=${filter.case.join()}`;
           }
 
+          url += params.match ? `&match=${params.match}` : "";
+          url += params.from ? `&from=${params.from}` : "";
+          url += params.to ? `&to=${params.to}` : "";
+          url += params.category ? `&category=${params.category}` : "";
+
           url += getSorterUrl(sorter);
 
           console.log("url", url);
@@ -410,7 +430,6 @@ const Widget = () => {
           showQuickJumper: true,
           showSizeChanger: true,
         }}
-        search={false}
         options={{
           search: true,
         }}
