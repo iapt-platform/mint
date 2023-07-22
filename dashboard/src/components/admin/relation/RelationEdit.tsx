@@ -141,7 +141,7 @@ const RelationEditWidget = ({
                   fromCase: res.data.from?.case,
                   fromSpell: res.data.from?.spell,
                   to: res.data.to,
-                  match: res.data.match,
+                  match: res.data.match ? res.data.match : undefined,
                   category: res.data.category,
                 };
               } else {
