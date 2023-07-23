@@ -3,9 +3,11 @@ import { Modal, Popover, Skeleton, Typography } from "antd";
 
 import { get } from "../../request";
 import { get as getLang } from "../../locales";
-import { IGuideResponse } from "../api/Guide";
-import Marked from "../general/Marked";
-const { Link } = Typography;
+
+import NissayaCardTable, { INissayaRelation } from "./NissayaCardTable";
+import { ITerm } from "../term/TermEdit";
+
+const { Link, Paragraph, Title } = Typography;
 
 interface INissayaCardModal {
   text?: string;
@@ -41,6 +43,7 @@ export const NissayaCardModal = ({ text, trigger }: INissayaCardModal) => {
     <>
       <span onClick={showModal}>{trigger}</span>
       <Modal
+        width={800}
         title="缅文语尾"
         open={isModalOpen}
         onOk={handleOk}
@@ -53,36 +56,58 @@ export const NissayaCardModal = ({ text, trigger }: INissayaCardModal) => {
   );
 };
 
+interface INissayaCardData {
+  row: INissayaRelation[];
+  ending: ITerm;
+}
+interface INissayaCardResponse {
+  ok: boolean;
+  message: string;
+  data: INissayaCardData;
+}
+
 interface IWidget {
   text?: string;
   cache?: boolean;
 }
 const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
-  const [guide, setGuide] = useState<string>();
-
+  const [cardData, setCardData] = useState<INissayaRelation[]>();
+  const [term, setTerm] = useState<ITerm>();
   useEffect(() => {
     const uiLang = getLang();
     if (cache) {
       const value = sessionStorage.getItem(`nissaya-ending/${uiLang}/${text}`);
       if (value !== null) {
-        setGuide(value);
+        const valueJson: INissayaCardData = JSON.parse(value);
+        setCardData(valueJson.row);
+        setTerm(valueJson.ending);
         return;
       }
     }
 
-    const url = `/v2/nissaya-ending-card?lang=${uiLang}&ending=${text}`;
-    get<IGuideResponse>(url).then((json) => {
+    const url = `/v2/nissaya-card/${text}?lang=${uiLang}&content_type=json`;
+    console.log("url", url);
+    get<INissayaCardResponse>(url).then((json) => {
       if (json.ok) {
-        setGuide(json.data);
+        setCardData(json.data.row);
+        setTerm(json.data.ending);
         if (cache) {
-          sessionStorage.setItem(`nissaya-ending/${uiLang}/${text}`, json.data);
+          sessionStorage.setItem(
+            `nissaya-ending/${uiLang}/${text}`,
+            JSON.stringify(json.data)
+          );
         }
       }
     });
   }, [cache, text]);
 
-  return guide ? (
-    <Marked text={guide} />
+  return cardData ? (
+    <>
+      <Title level={4}>{term?.word}</Title>
+      <Paragraph>{term?.meaning}</Paragraph>
+      <Paragraph>{term?.note}</Paragraph>
+      <NissayaCardTable data={cardData} />
+    </>
   ) : (
     <Skeleton title={{ width: 200 }} paragraph={{ rows: 4 }} active />
   );
