@@ -57,6 +57,7 @@ use App\Http\Controllers\ArticleNavController;
 use App\Http\Controllers\InviteController;
 use App\Http\Controllers\SignUpController;
 use App\Http\Controllers\TermSummaryController;
+use App\Http\Controllers\NissayaCardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -145,6 +146,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::get('nissaya-ending-export',[NissayaEndingController::class,"export"]);
     Route::get('nissaya-ending-import',[NissayaEndingController::class,"import"]);
     Route::get('nissaya-ending-vocabulary',[NissayaEndingController::class,"vocabulary"]);
+    Route::apiResource('nissaya-card',NissayaCardController::class);
     Route::apiResource('relation',RelationController::class);
     Route::get('relation-export',[RelationController::class,"export"]);
     Route::get('relation-import',[RelationController::class,"import"]);
