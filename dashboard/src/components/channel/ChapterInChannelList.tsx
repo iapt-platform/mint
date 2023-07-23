@@ -2,7 +2,6 @@ import { useIntl } from "react-intl";
 import { Progress, Typography } from "antd";
 import { ProTable } from "@ant-design/pro-components";
 import { Link } from "react-router-dom";
-import { Space, Table } from "antd";
 import { Button, Dropdown } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 
