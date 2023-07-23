@@ -129,6 +129,8 @@ const ChpaterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
           width: 120,
           valueType: "option",
           render: (text, row, index, action) => {
+            let editLink = `/article/chapter/${row.book}-${row.paragraph}?mode=edit`;
+            editLink += channelId ? `&channel=${channelId}` : "";
             return [
               <Dropdown.Button
                 key={index}
@@ -155,47 +157,16 @@ const ChpaterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
                   },
                 }}
               >
-                <></>
+                <Link to={editLink}>
+                  {intl.formatMessage({
+                    id: "buttons.translate",
+                  })}
+                </Link>
               </Dropdown.Button>,
             ];
           },
         },
       ]}
-      rowSelection={{
-        // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
-        // 注释该行则默认不显示下拉选项
-        selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-      }}
-      tableAlertRender={({
-        selectedRowKeys,
-        selectedRows,
-        onCleanSelected,
-      }) => (
-        <Space size={24}>
-          <span>
-            {intl.formatMessage({ id: "buttons.selected" })}
-            {selectedRowKeys.length}
-            <Button
-              type="link"
-              style={{ marginInlineStart: 8 }}
-              onClick={onCleanSelected}
-            >
-              {intl.formatMessage({ id: "buttons.unselect" })}
-            </Button>
-          </span>
-        </Space>
-      )}
-      tableAlertOptionRender={() => {
-        return (
-          <Space size={16}>
-            <Button type="link">
-              {intl.formatMessage({
-                id: "buttons.delete.all",
-              })}
-            </Button>
-          </Space>
-        );
-      }}
       request={async (params = {}, sorter, filter) => {
         // TODO
         console.log(params, sorter, filter);
