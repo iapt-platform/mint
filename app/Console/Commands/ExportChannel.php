@@ -46,7 +46,10 @@ class ExportChannel extends Command
         $file = fopen(storage_path("app/{$filename}"),"w");
         fputcsv($file,['id','name','type','language','summary','owner_id','setting','created_at']);
         $bar = $this->output->createProgressBar(Channel::where('status',30)->count());
-        foreach (Channel::where('status',30)->select(['uid','name','type','lang','summary','owner_uid','setting','created_at'])->cursor() as $chapter) {
+        foreach (Channel::where('status',30)
+                ->select(['uid','name','type','lang',
+                          'summary','owner_uid','setting','created_at'])
+                          ->cursor() as $chapter) {
             fputcsv($file,[
                             $chapter->uid,
                             $chapter->name,
