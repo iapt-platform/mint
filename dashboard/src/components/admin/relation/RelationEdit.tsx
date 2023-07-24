@@ -1,7 +1,6 @@
 import {
   ModalForm,
   ProForm,
-  ProFormDependency,
   ProFormInstance,
   ProFormSelect,
   ProFormText,
@@ -78,14 +77,6 @@ const RelationEditWidget = ({
   const formRef = useRef<ProFormInstance>();
   const intl = useIntl();
 
-  const verbOptions = _verb.map((item) => {
-    return {
-      value: item,
-      label: intl.formatMessage({
-        id: `dict.fields.type.${item}.label`,
-      }),
-    };
-  });
   return (
     <ModalForm<IRelation>
       title={title}
@@ -101,6 +92,7 @@ const RelationEditWidget = ({
       onFinish={async (values) => {
         let data = values;
         data.from = { spell: values.fromSpell, case: values.fromCase };
+        data.to = { spell: values.toSpell, case: values.toCase };
         let res: IRelationResponse;
         if (typeof id === "undefined") {
           res = await post<IRelationRequest, IRelationResponse>(
@@ -131,7 +123,7 @@ const RelationEditWidget = ({
               const res = await get<IRelationResponse>(`/v2/relation/${id}`);
               console.log("relation get", res);
               if (res.ok) {
-                setTitle(res.data.name);
+                setTitle(res.data.name + "dd");
 
                 return {
                   id: id,
@@ -141,6 +133,8 @@ const RelationEditWidget = ({
                   fromCase: res.data.from?.case,
                   fromSpell: res.data.from?.spell,
                   to: res.data.to,
+                  toCase: res.data.to?.case,
+                  toSpell: res.data.to?.spell,
                   match: res.data.match ? res.data.match : undefined,
                   category: res.data.category,
                 };
@@ -161,25 +155,23 @@ const RelationEditWidget = ({
           label={intl.formatMessage({ id: "forms.fields.name.label" })}
         />
       </ProForm.Group>
-      <ProForm.Group title="from">
-        <GrammarSelect />
+      <ProForm.Group title="从">
+        <GrammarSelect name="fromCase" />
         <ProFormText
           width="md"
           name="fromSpell"
           label={intl.formatMessage({ id: "buttons.spell" })}
         />
       </ProForm.Group>
-      <ProForm.Group>
-        <ProFormSelect
-          options={verbOptions}
-          fieldProps={{
-            mode: "tags",
-          }}
+      <ProForm.Group title="连接到">
+        <GrammarSelect name="toCase" />
+        <ProFormText
           width="md"
-          name="to"
-          allowClear={false}
-          label={intl.formatMessage({ id: "forms.fields.to.label" })}
+          name="toSpell"
+          label={intl.formatMessage({ id: "buttons.spell" })}
         />
+      </ProForm.Group>
+      <ProForm.Group>
         <ProFormSelect
           options={["gender", "number", "case"].map((item) => {
             return {
@@ -195,8 +187,6 @@ const RelationEditWidget = ({
           allowClear={false}
           label={intl.formatMessage({ id: "forms.fields.match.label" })}
         />
-      </ProForm.Group>
-      <ProForm.Group>
         <ProFormText
           width="md"
           name="category"
