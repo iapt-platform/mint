@@ -26,11 +26,14 @@ import AdminApi from "./pages/admin/api";
 import AdminApiDashboard from "./pages/admin/api/dashboard";
 
 import LibraryHome from "./pages/library";
+
 import LibraryCommunity from "./pages/library/community";
 import LibraryCommunityList from "./pages/library/community/list";
+
 import LibraryPalicanon from "./pages/library/palicanon";
 import LibraryPalicanonByPath from "./pages/library/palicanon/bypath";
 import LibraryPalicanonChapter from "./pages/library/palicanon/chapter";
+
 import LibraryCourse from "./pages/library/course";
 import LibraryCourseList from "./pages/library/course/list";
 import LibraryCourseShow from "./pages/library/course/course";
@@ -38,13 +41,19 @@ import LibraryCourseShow from "./pages/library/course/course";
 import LibraryTerm from "./pages/library/term";
 import LibraryTermShow from "./pages/library/term/show";
 import LibraryTermList from "./pages/library/term/list";
+
 import LibraryDict from "./pages/library/dict";
 import LibraryDictShow from "./pages/library/dict/show";
+
 import LibraryAnthology from "./pages/library/anthology";
 import LibraryAnthologyShow from "./pages/library/anthology/show";
 import LibraryAnthologyList from "./pages/library/anthology/list";
+
 import LibraryArticle from "./pages/library/article";
 import LibraryArticleShow from "./pages/library/article/show";
+
+import LibraryNissaya from "./pages/library/nissaya";
+import LibraryNissayaShow from "./pages/library/nissaya/show";
 
 import LibraryBlog from "./pages/library/blog";
 import LibraryBlogOverview from "./pages/library/blog/overview";
@@ -60,6 +69,7 @@ import LibraryDiscussionShow from "./pages/library/discussion/show";
 
 import LibrarySearch from "./pages/library/search";
 import LibrarySearchKey from "./pages/library/search/search";
+
 import LibraryDownload from "./pages/library/download";
 import LibraryDownloadPage from "./pages/library/download/Download";
 
@@ -209,6 +219,10 @@ const Widget = () => {
             path=":type/:id/:mode/:param"
             element={<LibraryArticleShow />}
           />
+        </Route>
+
+        <Route path="nissaya" element={<LibraryNissaya />}>
+          <Route path="ending/:ending" element={<LibraryNissayaShow />} />
         </Route>
 
         <Route path="discussion" element={<LibraryDiscussion />}>
