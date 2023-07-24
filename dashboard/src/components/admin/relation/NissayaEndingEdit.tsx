@@ -107,7 +107,7 @@ const NissayaEndingWidget = ({
         <LangSelect width="md" />
       </ProForm.Group>
       <ProForm.Group>
-        <GrammarSelect />
+        <GrammarSelect name="fromCase" />
         <ProFormText
           width="md"
           name="fromSpell"

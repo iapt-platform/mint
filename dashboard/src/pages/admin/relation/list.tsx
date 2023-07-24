@@ -19,8 +19,6 @@ import { useRef } from "react";
 import { IUser } from "../../../reducers/current-user";
 import RelationEdit from "../../../components/admin/relation/RelationEdit";
 import DataImport from "../../../components/admin/relation/DataImport";
-import { useAppSelector } from "../../../hooks";
-import { getTerm } from "../../../reducers/term-vocabulary";
 import { SortOrder } from "antd/lib/table/interface";
 import TimeShow from "../../../components/general/TimeShow";
 import { ITerm } from "../../../components/term/TermEdit";
@@ -49,7 +47,7 @@ export interface IRelationRequest {
   name_term?: ITerm;
   case?: string | null;
   from?: IFrom | null;
-  to?: string[];
+  to?: IFrom | null;
   match?: string[];
   category?: string;
   category_channel?: string;
@@ -85,7 +83,9 @@ export interface IRelation {
   from?: IFrom | null;
   fromCase?: string[];
   fromSpell?: string;
-  to?: string[];
+  to?: IFrom | null;
+  toCase?: string[];
+  toSpell?: string;
   match?: string[];
   category?: string;
   category_channel?: string;
@@ -244,7 +244,8 @@ const Widget = () => {
             dataIndex: "to",
             key: "to",
             render: (text, row, index, action) => {
-              return row.to?.map((item, id) => (
+              const spell = row.to?.spell;
+              const toCase = row.to?.case?.map((item, id) => (
                 <Tooltip title={item} key={id}>
                   <Tag key={id}>
                     {intl.formatMessage({
@@ -253,6 +254,12 @@ const Widget = () => {
                   </Tag>
                 </Tooltip>
               ));
+              return (
+                <>
+                  {spell}
+                  {toCase}
+                </>
+              );
             },
           },
           {
@@ -398,6 +405,7 @@ const Widget = () => {
 
           console.log("url", url);
           const res = await get<IRelationListResponse>(url);
+          console.log("data", res.data);
           const items: IRelation[] = res.data.rows.map((item, id) => {
             return {
               sn: offset + id + 1,

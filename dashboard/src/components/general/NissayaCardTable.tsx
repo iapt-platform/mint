@@ -1,25 +1,28 @@
-import { Button, Table, Tag } from "antd";
+import { recordKeyToString } from "@ant-design/pro-components";
+import { Button, Space, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 
 interface ICaseItem {
   label: string;
   link: string;
 }
-interface DataType {
-  key: React.ReactNode;
+interface IRelationNode {
   case?: ICaseItem[];
   spell?: string;
+}
+interface DataType {
+  key: React.ReactNode;
   relation: string;
   localRelation?: string;
-  to?: ICaseItem[];
+  to?: IRelationNode;
+  from?: IRelationNode;
   category?: { name: string; note: string; meaning: string };
   translation?: string;
   children?: DataType[];
 }
 export interface INissayaRelation {
-  case?: ICaseItem[];
-  spell?: string;
-  to?: ICaseItem[];
+  from?: IRelationNode;
+  to?: IRelationNode;
   category?: { name: string; note: string; meaning: string };
   local_ending: string;
   relation: string;
@@ -52,9 +55,8 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
             .map((item, index) => {
               return {
                 key: `c_${index}`,
-                case: item.case,
-                spell: item.spell,
                 relation: item.relation,
+                from: item.from,
                 to: item.to,
                 category: item.category,
                 translation: item.local_ending,
@@ -62,10 +64,9 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
             });
           newData.push({
             key: id,
-            case: item.case,
-            spell: item.spell,
             relation: item.relation,
             to: item.to,
+            from: item.from,
             category: item.category,
             translation: item.local_ending,
             children: children,
@@ -74,9 +75,8 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
       } else {
         newData.push({
           key: id,
-          case: item.case,
-          spell: item.spell,
           relation: item.relation,
+          from: item.to,
           to: item.to,
           category: item.category,
           translation: item.local_ending,
@@ -95,8 +95,8 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           key: "from",
           render: (value, record, index) => {
             return (
-              <>
-                {record.case?.map((item, id) => {
+              <Space>
+                {record.from?.case?.map((item, id) => {
                   return (
                     <Button
                       key={id}
@@ -108,7 +108,8 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
                     </Button>
                   );
                 })}
-              </>
+                {record.from?.spell}
+              </Space>
             );
           },
         },
@@ -130,8 +131,8 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
               return <>{record.category?.meaning}</>;
             } else {
               return (
-                <>
-                  {record.to?.map((item, id) => {
+                <Space>
+                  {record.to?.case?.map((item, id) => {
                     return (
                       <Button
                         key={id}
@@ -143,7 +144,8 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
                       </Button>
                     );
                   })}
-                </>
+                  {record.to?.spell}
+                </Space>
               );
             }
           },
