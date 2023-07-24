@@ -96,33 +96,42 @@ class NissayaCardController extends Controller
                                         ];
                     }
                     # 格位
-                    $newLine['case'] = $localCase;
+                    $newLine['from']['case'] = $localCase;
                 }
                 if(isset($from->spell)){
-                    $newLine['spell'] = $from->spell;
+                    $newLine['from']['spell'] = $from->spell;
                 }
                 //连接到
                 $linkTos = json_decode($relation->to);
-                if(count($linkTos)>0){
+                if(isset($linkTos->case) && is_array($linkTos->case) && count($linkTos->case)>0){
                     $localTo  =[];
-                    foreach ($linkTos as $to) {
+                    foreach ($linkTos->case as $to) {
                         $localTo[] = ['label'=>__("grammar.".$to),
-                                        'link'=>env('DASHBOARD_URL').'/term/list/'.$case
+                                        'link'=>env('DASHBOARD_URL').'/term/list/'.$to
                                         ];
                     }
+
                     # 格位
-                    $newLine['to'] = $localTo;
+                    $newLine['to']['case'] = $localTo;
+                }
+                if(isset($linkTos->spell)){
+                    $newLine['to']['spell'] = $linkTos->spell;
                 }
                 //含义 用分类字段的term 数据
                 if(isset($relation['category']) && !empty($relation['category'])){
+                    $newLine['category']['name'] = $relation['category'];
                     $localCategory = DhammaTerm::where('channal',$localTerm)
                                                 ->where('word',$relation['category'])
                                                 ->first();
+
                     if($localCategory){
-                        $newLine['category'] = ['name'=>$relation['category'],
-                                                'note'=>$localCategory->note,
-                                                'meaning'=>$localCategory->meaning] ;
+                        $newLine['category']['note'] = $localCategory->note;
+                        $newLine['category']['meaning'] =$localCategory->meaning;
+                    }else{
+                        $newLine['category']['note'] = $relation['category'];
+                        $newLine['category']['meaning'] = $relation['category'];
                     }
+
                 }
 
                 /**
