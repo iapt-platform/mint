@@ -95,6 +95,7 @@ export interface IRelation {
   created_at?: string;
 }
 interface IParams {
+  name?: string;
   from?: string;
   to?: string;
   match?: string;
@@ -396,6 +397,7 @@ const Widget = () => {
             url += `&case=${filter.case.join()}`;
           }
 
+          url += params.name ? `&match=${params.name}` : "";
           url += params.match ? `&match=${params.match}` : "";
           url += params.from ? `&from=${params.from}` : "";
           url += params.to ? `&to=${params.to}` : "";
