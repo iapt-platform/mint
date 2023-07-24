@@ -29,6 +29,9 @@ class RelationController extends Controller
         if(($request->has('search'))){
             $table = $table->where('name', 'like', $request->get('search')."%");
         }
+        if(($request->has('name'))){
+            $table = $table->where('name',$request->get('name'));
+        }
         if(($request->has('from'))){
             $table = $table->whereJsonContains('from->case',$request->get('from'));
         }
