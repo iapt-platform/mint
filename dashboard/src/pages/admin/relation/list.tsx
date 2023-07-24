@@ -278,7 +278,7 @@ const Widget = () => {
             }),
             dataIndex: "category",
             key: "category",
-
+            sorter: true,
             render: (text, row, index, action) => {
               return (
                 <Space>
