@@ -158,7 +158,7 @@ const WbwDetailRelationWidget = ({ data, onChange, onAdd }: IWidget) => {
         );
       }}
     >
-      {intl.formatMessage({ id: "buttons.add" })}
+      {intl.formatMessage({ id: "buttons.relate.to" })}
     </Button>
   );
   return (
