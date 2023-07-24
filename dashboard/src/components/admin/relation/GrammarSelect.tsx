@@ -3,12 +3,14 @@ import { ProFormSelect } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 
 interface IWidget {
+  name: string;
   trigger?: JSX.Element;
   id?: string;
   hidden?: boolean;
   onSuccess?: Function;
 }
 const GrammarSelectWidget = ({
+  name,
   trigger = <>{"trigger"}</>,
   id,
   hidden = false,
@@ -76,7 +78,7 @@ const GrammarSelectWidget = ({
         mode: "tags",
       }}
       width="md"
-      name="fromCase"
+      name={name}
       allowClear={false}
       label={intl.formatMessage({ id: "forms.fields.case.label" })}
     />
