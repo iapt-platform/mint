@@ -397,7 +397,7 @@ const Widget = () => {
             url += `&case=${filter.case.join()}`;
           }
 
-          url += params.name ? `&match=${params.name}` : "";
+          url += params.name ? `&name=${params.name}` : "";
           url += params.match ? `&match=${params.match}` : "";
           url += params.from ? `&from=${params.from}` : "";
           url += params.to ? `&to=${params.to}` : "";
