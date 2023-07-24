@@ -95,6 +95,7 @@ export interface IRelation {
   created_at?: string;
 }
 interface IParams {
+  name?: string;
   from?: string;
   to?: string;
   match?: string;
@@ -278,7 +279,7 @@ const Widget = () => {
             }),
             dataIndex: "category",
             key: "category",
-
+            sorter: true,
             render: (text, row, index, action) => {
               return (
                 <Space>
@@ -396,6 +397,7 @@ const Widget = () => {
             url += `&case=${filter.case.join()}`;
           }
 
+          url += params.name ? `&name=${params.name}` : "";
           url += params.match ? `&match=${params.match}` : "";
           url += params.from ? `&from=${params.from}` : "";
           url += params.to ? `&to=${params.to}` : "";
