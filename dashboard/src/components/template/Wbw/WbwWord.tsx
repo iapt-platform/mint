@@ -237,6 +237,7 @@ const WbwWordWidget = ({
         <WbwPali
           key="pali"
           data={wordData}
+          mode={mode}
           display={display}
           onSave={(e: IWbw, isPublish: boolean) => {
             const newData: IWbw = JSON.parse(JSON.stringify(e));

@@ -18,14 +18,16 @@ import store from "../../../store";
 import { lookup } from "../../../reducers/command";
 import { useAppSelector } from "../../../hooks";
 import { add, relationAddParam } from "../../../reducers/relation-add";
+import { ArticleMode } from "../../article/Article";
 
 const { Paragraph } = Typography;
 interface IWidget {
   data: IWbw;
   display?: TWbwDisplayMode;
+  mode?: ArticleMode;
   onSave?: Function;
 }
-const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
+const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
   const [popOpen, setPopOpen] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
   const [hasComment, setHasComment] = useState(data.hasComment);
@@ -118,12 +120,14 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
   ]);
 
   const handleClickChange = (open: boolean) => {
-    if (open) {
-      setPaliColor("lightblue");
-    } else {
-      setPaliColor("unset");
+    if (mode === "wbw") {
+      if (open) {
+        setPaliColor("lightblue");
+      } else {
+        setPaliColor("unset");
+      }
+      setPopOpen(open);
     }
-    setPopOpen(open);
   };
 
   const wbwDetail = (
