@@ -5,7 +5,21 @@ import { DoubleRightOutlined, DoubleLeftOutlined } from "@ant-design/icons";
 import { get } from "../../request";
 import { ArticleType } from "./Article";
 
-const { Paragraph } = Typography;
+const { Paragraph, Text } = Typography;
+
+const EllipsisMiddle: React.FC<{
+  suffixCount: number;
+  maxWidth: number;
+  children?: string;
+}> = ({ suffixCount, maxWidth = 500, children = "" }) => {
+  const start = children.slice(0, children.length - suffixCount).trim();
+  const suffix = children.slice(-suffixCount).trim();
+  return (
+    <Text style={{ maxWidth: maxWidth }} ellipsis={{ suffix }}>
+      {start}
+    </Text>
+  );
+};
 
 interface INavButton {
   title: string;
@@ -55,7 +69,9 @@ const NavigateWidget = ({ type, articleId, onChange }: IWidget) => {
       >
         <Space>
           <DoubleLeftOutlined />
-          {prev?.title}
+          <EllipsisMiddle maxWidth={300} suffixCount={7}>
+            {prev?.title}
+          </EllipsisMiddle>
         </Space>
       </Button>
       <Button
@@ -68,7 +84,9 @@ const NavigateWidget = ({ type, articleId, onChange }: IWidget) => {
         }}
       >
         <Space>
-          {next?.title}
+          <EllipsisMiddle maxWidth={300} suffixCount={7}>
+            {next?.title}
+          </EllipsisMiddle>
           <DoubleRightOutlined />
         </Space>
       </Button>

@@ -55,6 +55,9 @@ const WbwDetailFactorWidget = ({ data, onChange }: IWidget) => {
   }, [data.factors]);
 
   useEffect(() => {
+    if (!data.real.value) {
+      return;
+    }
     const factors = getFactorsInDict(
       data.real.value,
       inlineDict.wordIndex,
@@ -72,7 +75,7 @@ const WbwDetailFactorWidget = ({ data, onChange }: IWidget) => {
   return (
     <AutoComplete
       options={factorOptions}
-      defaultValue={data.factors?.value}
+      value={data.factors?.value}
       onChange={(value: string) => {
         if (typeof onChange !== "undefined") {
           onChange(value);

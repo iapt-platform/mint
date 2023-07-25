@@ -54,7 +54,7 @@ const WbwMeaningSelectWidget = ({ data, onSelect }: IWidget) => {
 
   useEffect(() => {
     //判断单词列表里面是否有这个词
-    if (typeof data.real === "undefined") {
+    if (typeof data.real === "undefined" || data.real.value === null) {
       return;
     }
     if (inlineDict.wordIndex.includes(data.real.value)) {

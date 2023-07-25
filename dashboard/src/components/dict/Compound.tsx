@@ -58,16 +58,15 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
     if (typeof word === "undefined") {
       return;
     }
-    get<IApiResponseDictList>(`/v2/userdict?view=compound&word=${word}`).then(
-      (json) => {
-        if (json.ok) {
-          const data = json.data.rows.map((item) => {
-            return { value: item.factors, label: item.factors };
-          });
-          setCompound(data);
-        }
+    const url = `/v2/userdict?view=compound&word=${word}&order=confidence`;
+    get<IApiResponseDictList>(url).then((json) => {
+      if (json.ok) {
+        const data = json.data.rows.map((item) => {
+          return { value: item.factors, label: item.factors };
+        });
+        setCompound(data);
       }
-    );
+    });
   }, [word]);
   return (
     <div

@@ -39,7 +39,7 @@ interface IMagicDictResponse {
 interface IWbwXml {
   id: string;
   pali: WbwElement<string>;
-  real?: WbwElement<string>;
+  real?: WbwElement<string | null>;
   type?: WbwElement<string | null>;
   gramma?: WbwElement<string | null>;
   mean?: WbwElement<string | null>;
@@ -137,10 +137,11 @@ export const WbwSentCtl = ({
         (value) =>
           value.type?.value !== null &&
           value.type?.value !== ".ctl." &&
+          value.real.value &&
           value.real.value.length > 0
       )
       .forEach((value) => {
-        words.set(value.real.value, 1);
+        words.set(value.real.value ? value.real.value : "", 1);
         if (value.parent?.value) {
           words.set(value.parent.value, 1);
         }
@@ -366,7 +367,7 @@ export const WbwSentCtl = ({
         : ["", ""];
 
       wordData.push({
-        word: data.real.value,
+        word: data.real.value ? data.real.value : "",
         type: wordType,
         grammar: wordGrammar,
         mean: data.meaning?.value,
@@ -434,6 +435,7 @@ export const WbwSentCtl = ({
                   value.sn.length === e.sn.length &&
                   e.sn.slice(0, e.sn.length - 1).join() ===
                     value.sn.slice(0, e.sn.length - 1).join() &&
+                  value.real.value &&
                   value.real.value.length > 0
                 ) {
                   return true;

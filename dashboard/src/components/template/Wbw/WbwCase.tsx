@@ -37,6 +37,9 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
 
   const inlineDict = useAppSelector(_inlineDict);
   useEffect(() => {
+    if (!data.real.value) {
+      return;
+    }
     if (inlineDict.wordIndex.includes(data.real.value)) {
       const result = inlineDict.wordList.filter(
         (word) => word.word === data.real.value
