@@ -20,7 +20,7 @@ class UpgradeProgressChapter extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:progresschapter';
+    protected $signature = 'upgrade:progress.chapter';
 
     /**
      * The console command description.
@@ -120,7 +120,7 @@ class UpgradeProgressChapter extends Command
                             'book'=>$book->book_id,
                             'para'=>$chapter->paragraph,
                             'channel_id'=>$final->channel_id];
-                    
+
                     $rules = array(
                         'book' => 'integer',
                         'para' => 'integer',
@@ -151,14 +151,14 @@ class UpgradeProgressChapter extends Command
                     $chapterData->updated_at = $updateAt;
                     $chapterData->save();
 
-                    $wasCreated = $chapterData->wasRecentlyCreated; 
+                    $wasCreated = $chapterData->wasRecentlyCreated;
                     $wasChanged = $chapterData->wasChanged();
                     #查询路径
                     $path = json_decode(
                                 PaliText::where('book',$book->book_id)
                                 ->where('paragraph',$chapter->paragraph)
                                 ->value('path'));
-                    
+
                     if($path){
                         //查询标签
                         $tags = [];
@@ -176,7 +176,7 @@ class UpgradeProgressChapter extends Command
                                     # code...
                                     $tags[$taguuid['tag_id']]=1;
                                 }
-                                
+
                             }
                         }
 
