@@ -24,6 +24,15 @@ class UserDictController extends Controller
 		$result=false;
 		$indexCol = ['id','word','type','grammar','mean','parent','note','factors','confidence','updated_at','creator_id'];
 		switch ($request->get('view')) {
+            case 'all':
+            # 获取studio内所有channel
+                $user = AuthApi::current($request);
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
+                array_push($indexCol,'dict_id');
+                $table = UserDict::select($indexCol);
+                break;
             case 'studio':
 				# 获取studio内所有channel
                 $user = AuthApi::current($request);
@@ -77,31 +86,19 @@ class UserDictController extends Controller
 				# code...
 				break;
 		}
-        if(isset($_GET["search"])){
-            $table->where('word', 'like', $_GET["search"]."%");
+        if($request->has("search")){
+            $table->where('word', 'like', $request->get("search")."%");
         }
-
         $count = $table->count();
 
-        if(isset($_GET["order"]) && isset($_GET["dir"])){
-            $table->orderBy($_GET["order"],$_GET["dir"]);
-        }else{
-            if($request->get('view') === "compound"){
-                $table->orderBy('confidence','desc');
-            }else{
-                $table->orderBy('updated_at','desc');
-            }
-        }
+        $table->orderBy($request->get('order','updated_at'),
+                        $request->get('dir','desc'));
 
         $table->skip($request->get('offset',0))
-              ->take($request->get('limit',1000));
+              ->take($request->get('limit',200));
 
         $result = $table->get();
-		if($result){
-			return $this->ok(["rows"=>UserDictResource::collection($result),"count"=>$count]);
-		}else{
-			return $this->error("没有查询到数据");
-		}
+        return $this->ok(["rows"=>UserDictResource::collection($result),"count"=>$count]);
     }
 
     /**
