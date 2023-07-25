@@ -22,6 +22,8 @@ import AdminRelation from "./pages/admin/relation";
 import AdminRelationList from "./pages/admin/relation/list";
 import AdminNissayaEnding from "./pages/admin/nissaya-ending";
 import AdminNissayaEndingList from "./pages/admin/nissaya-ending/list";
+import AdminDictionary from "./pages/admin/dictionary";
+import AdminDictionaryList from "./pages/admin/dictionary/list";
 import AdminApi from "./pages/admin/api";
 import AdminApiDashboard from "./pages/admin/api/dashboard";
 
@@ -135,6 +137,9 @@ const Widget = () => {
           <Route path="nissaya-ending" element={<AdminNissayaEnding />}>
             <Route path="list" element={<AdminNissayaEndingList />} />
             <Route path="list/:relation" element={<AdminNissayaEndingList />} />
+          </Route>
+          <Route path="dictionary" element={<AdminDictionary />}>
+            <Route path="list" element={<AdminDictionaryList />} />
           </Route>
         </Route>
         <Route path="anonymous" element={<Anonymous />}>
