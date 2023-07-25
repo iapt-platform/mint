@@ -36,7 +36,7 @@ const WbwDetailAdvanceWidget = ({ data, onChange }: IWidget) => {
       <Input
         showCount
         maxLength={512}
-        defaultValue={data.real?.value}
+        defaultValue={data.real?.value ? data.real?.value : ""}
         onChange={onRealChange}
       />
     </>

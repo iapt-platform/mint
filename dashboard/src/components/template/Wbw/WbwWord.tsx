@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import type { UploadFile } from "antd/es/upload/interface";
 
 import { useAppSelector } from "../../../hooks";
 import { add, updateIndex, wordIndex } from "../../../reducers/inline-dict";
@@ -70,7 +69,7 @@ export interface IWbw {
   para: number;
   sn: number[];
   word: WbwElement<string>;
-  real: WbwElement<string>;
+  real: WbwElement<string | null>;
   meaning?: WbwElement<string | null>;
   type?: WbwElement<string | null>;
   grammar?: WbwElement<string | null>;
@@ -192,7 +191,7 @@ const WbwWordWidget = ({
   };
 
   if (wordData.type?.value === ".ctl.") {
-    if (wordData.word.value.includes("para")) {
+    if (wordData.word.value?.includes("para")) {
       return <WbwPara data={wordData} />;
     } else {
       return <WbwPage data={wordData} />;
@@ -207,7 +206,8 @@ const WbwWordWidget = ({
           if (
             intervalRef.current === null &&
             wordData.real &&
-            wordData.real.value?.length > 0
+            wordData.real.value &&
+            wordData.real.value.length > 0
           ) {
             //开始计时，计时结束查字典
             let words: string[] = [wordData.real.value];

@@ -55,6 +55,9 @@ const WbwDetailFactorWidget = ({ data, onChange }: IWidget) => {
   }, [data.factors]);
 
   useEffect(() => {
+    if (!data.real.value) {
+      return;
+    }
     const factors = getFactorsInDict(
       data.real.value,
       inlineDict.wordIndex,
