@@ -31,25 +31,81 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
   const [hasComment, setHasComment] = useState(data.hasComment);
   /**
    * 处理 relation 链接事件
-   * 点击连接或取消后，打开弹窗
+   * 高亮可能的单词
    */
   const addParam = useAppSelector(relationAddParam);
   useEffect(() => {
-    if (
-      (addParam?.command === "apply" || addParam?.command === "cancel") &&
-      addParam.src_sn === data.sn.join("-") &&
-      addParam.book === data.book &&
-      addParam.para === data.para
-    ) {
-      setPopOpen(true);
-      store.dispatch(
-        add({
-          book: data.book,
-          para: data.para,
-          src_sn: data.sn.join("-"),
-          command: "finish",
-        })
-      );
+    let grammar = data.case?.value
+      ?.replace("#", "$")
+      .replaceAll(".", "")
+      .split("$");
+    if (data.grammar2?.value) {
+      if (grammar) {
+        grammar = [data.grammar2?.value, ...grammar];
+      } else {
+        grammar = [data.grammar2?.value];
+      }
+    }
+    console.log("grammar", grammar);
+    if (typeof grammar === "undefined") {
+      return;
+    }
+    const match = addParam?.relations?.filter((value) => {
+      let caseMatch = true;
+      let spellMatch = true;
+      if (!value.to) {
+        return false;
+      }
+      if (value.to?.case) {
+        let matchCount = 0;
+        if (grammar) {
+          for (const iterator of value.to.case) {
+            if (grammar?.includes(iterator)) {
+              matchCount++;
+            }
+          }
+        }
+        if (matchCount !== value.to.case.length) {
+          caseMatch = false;
+        }
+      }
+      if (value.from?.spell) {
+        if (data.real.value !== value.from?.spell) {
+          spellMatch = false;
+        }
+      }
+      return caseMatch && spellMatch;
+    });
+    if (match && match.length > 0) {
+      setPaliColor("greenyellow");
+    }
+  }, [
+    addParam?.relations,
+    data.case?.value,
+    data.grammar2?.value,
+    data.real.value,
+  ]);
+  /**
+   * 点击连接或取消后，打开弹窗
+   */
+  useEffect(() => {
+    if (addParam?.command === "apply" || addParam?.command === "cancel") {
+      setPaliColor("unset");
+      if (
+        addParam.src_sn === data.sn.join("-") &&
+        addParam.book === data.book &&
+        addParam.para === data.para
+      ) {
+        setPopOpen(true);
+        store.dispatch(
+          add({
+            book: data.book,
+            para: data.para,
+            src_sn: data.sn.join("-"),
+            command: "finish",
+          })
+        );
+      }
     }
   }, [
     addParam?.book,
