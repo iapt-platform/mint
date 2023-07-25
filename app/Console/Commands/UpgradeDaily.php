@@ -49,6 +49,7 @@ class UpgradeDaily extends Command
 			]);
 		}
 
+        $message = "wikipali: 每日统计后台任务执行完毕。";
         //巴利原文段落库目录结构改变时运行
         //$this->call('upgrade:palitext');
         #巴利段落标签
@@ -56,24 +57,35 @@ class UpgradeDaily extends Command
 
         //更新单词首选意思
         $this->call('upgrade:dict.default.meaning');
+        $time = time()-$start;
+        $message .= "dict.default.meaning:{$time}; ";
         //社区术语表
         $this->call('upgrade:community.term',['lang'=>'zh-Hans']);
+        $time = time()-$time;
+        $message .= "community.term:{$time}; ";
 
         #译文进度
         $this->call('upgrade:progress');
-        $this->call('upgrade:progresschapter');
+        $time = time()-$time;
+        $message .= "progress:{$time}; ";
+        $this->call('upgrade:progress.chapter');
+        $time = time()-$time;
+        $message .= "progress.chapter:{$time}; ";
 
         # 逐词译数据库分析
-        $this->call('upgrade:wbwanalyses');
+        $this->call('upgrade:wbw.analyses');
+        $time = time()-$time;
+        $message .= "wbw.analyses:{$time}; ";
 
         $time = time()-$start;
+        $message .= "总时间:{$time}; ";
 
 		if(app()->isLocal()==false){
 			$this->call('message:webhook',[
 				'listener' => 'dingtalk',
 				'url' => 'dingtalk1',
 				'title' => "后台任务",
-				'message' => "wikipali: 每日统计后台任务执行完毕。用时{$time}",
+				'message' => $message,
 			]);
 			//发送dingding消息
 			$this->call('message:webhookarticlenew',[
