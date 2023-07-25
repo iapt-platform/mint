@@ -164,6 +164,9 @@ class UpgradeCompound extends Command
                 $new->flag = 1;
                 $new->save();
             }
+            if(env('APP_ENV','local') !== 'local'){
+                sleep(1);
+            }
 		}
 		//删除旧数据
 		UserDict::where('dict_id',$dict_id)->where('flag',2)->delete();

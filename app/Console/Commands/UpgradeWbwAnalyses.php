@@ -14,7 +14,7 @@ class UpgradeWbwAnalyses extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:wbwanalyses {id?}';
+    protected $signature = 'upgrade:wbw.analyses {id?}';
 
     /**
      * The console command description.
