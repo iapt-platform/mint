@@ -137,8 +137,8 @@ const FullTxtSearchResultWidget = ({
             {"/"}
             <Tag>{item.paragraph}</Tag>
           </Space>
-          <div className="search_content">
-            <Marked text={item.content} />
+          <div>
+            <Marked className="search_content" text={item.content} />
           </div>
         </List.Item>
       )}
