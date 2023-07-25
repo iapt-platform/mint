@@ -18,38 +18,96 @@ import store from "../../../store";
 import { lookup } from "../../../reducers/command";
 import { useAppSelector } from "../../../hooks";
 import { add, relationAddParam } from "../../../reducers/relation-add";
+import { ArticleMode } from "../../article/Article";
 
 const { Paragraph } = Typography;
 interface IWidget {
   data: IWbw;
   display?: TWbwDisplayMode;
+  mode?: ArticleMode;
   onSave?: Function;
 }
-const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
+const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
   const [popOpen, setPopOpen] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
   const [hasComment, setHasComment] = useState(data.hasComment);
   /**
    * 处理 relation 链接事件
-   * 点击连接或取消后，打开弹窗
+   * 高亮可能的单词
    */
   const addParam = useAppSelector(relationAddParam);
   useEffect(() => {
-    if (
-      (addParam?.command === "apply" || addParam?.command === "cancel") &&
-      addParam.src_sn === data.sn.join("-") &&
-      addParam.book === data.book &&
-      addParam.para === data.para
-    ) {
-      setPopOpen(true);
-      store.dispatch(
-        add({
-          book: data.book,
-          para: data.para,
-          src_sn: data.sn.join("-"),
-          command: "finish",
-        })
-      );
+    let grammar = data.case?.value
+      ?.replace("#", "$")
+      .replaceAll(".", "")
+      .split("$");
+    if (data.grammar2?.value) {
+      if (grammar) {
+        grammar = [data.grammar2?.value, ...grammar];
+      } else {
+        grammar = [data.grammar2?.value];
+      }
+    }
+    console.log("grammar", grammar);
+    if (typeof grammar === "undefined") {
+      return;
+    }
+    const match = addParam?.relations?.filter((value) => {
+      let caseMatch = true;
+      let spellMatch = true;
+      if (!value.to) {
+        return false;
+      }
+      if (value.to?.case) {
+        let matchCount = 0;
+        if (grammar) {
+          for (const iterator of value.to.case) {
+            if (grammar?.includes(iterator)) {
+              matchCount++;
+            }
+          }
+        }
+        if (matchCount !== value.to.case.length) {
+          caseMatch = false;
+        }
+      }
+      if (value.from?.spell) {
+        if (data.real.value !== value.from?.spell) {
+          spellMatch = false;
+        }
+      }
+      return caseMatch && spellMatch;
+    });
+    if (match && match.length > 0) {
+      setPaliColor("greenyellow");
+    }
+  }, [
+    addParam?.relations,
+    data.case?.value,
+    data.grammar2?.value,
+    data.real.value,
+  ]);
+  /**
+   * 点击连接或取消后，打开弹窗
+   */
+  useEffect(() => {
+    if (addParam?.command === "apply" || addParam?.command === "cancel") {
+      setPaliColor("unset");
+      if (
+        addParam.src_sn === data.sn.join("-") &&
+        addParam.book === data.book &&
+        addParam.para === data.para
+      ) {
+        setPopOpen(true);
+        store.dispatch(
+          add({
+            book: data.book,
+            para: data.para,
+            src_sn: data.sn.join("-"),
+            command: "finish",
+          })
+        );
+      }
     }
   }, [
     addParam?.book,
@@ -62,12 +120,14 @@ const WbwPaliWidget = ({ data, display, onSave }: IWidget) => {
   ]);
 
   const handleClickChange = (open: boolean) => {
-    if (open) {
-      setPaliColor("lightblue");
-    } else {
-      setPaliColor("unset");
+    if (mode === "wbw") {
+      if (open) {
+        setPaliColor("lightblue");
+      } else {
+        setPaliColor("unset");
+      }
+      setPopOpen(open);
     }
-    setPopOpen(open);
   };
 
   const wbwDetail = (

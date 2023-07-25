@@ -2,6 +2,7 @@
  * 查字典，添加术语命令
  */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IRelation } from "../pages/admin/relation/list";
 
 import type { RootState } from "../store";
 
@@ -11,6 +12,7 @@ export interface IRelationParam {
   src_sn?: string;
   target_id?: string;
   target_spell?: string;
+  relations?: IRelation[];
   command: "add" | "apply" | "cancel" | "finish";
 }
 interface IState {

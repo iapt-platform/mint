@@ -5,11 +5,13 @@ const { Text } = Typography;
 
 interface IWidget {
   text?: string;
+  className?: string;
 }
-const MarkedWidget = ({ text }: IWidget) => {
+const MarkedWidget = ({ text, className }: IWidget) => {
   return (
-    <Text>
+    <Text className={className}>
       <div
+        className={className}
         dangerouslySetInnerHTML={{
           __html: marked.parse(text ? text : ""),
         }}
