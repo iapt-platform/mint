@@ -21,6 +21,7 @@ import { ActionType, ProTable } from "@ant-design/pro-components";
 import DictCreate from "../../components/dict/DictCreate";
 import {
   IApiResponseDictList,
+  IDictInfo,
   IUserDictDeleteRequest,
 } from "../../components/api/Dict";
 import { delete_2, get } from "../../request";
@@ -40,6 +41,7 @@ export interface IWord {
   meaning: string;
   note: string;
   factors: string;
+  dict?: IDictInfo;
   createdAt: number;
 }
 
@@ -180,11 +182,21 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
           },
           {
             title: intl.formatMessage({
+              id: "forms.fields.dict.shortname.label",
+            }),
+            dataIndex: "dict",
+            key: "dict",
+            search: false,
+            render: (text, row, index, action) => {
+              return row.dict?.shortname;
+            },
+          },
+          {
+            title: intl.formatMessage({
               id: "forms.fields.created-at.label",
             }),
             key: "created-at",
             width: 200,
-
             search: false,
             dataIndex: "createdAt",
             valueType: "date",
@@ -193,52 +205,51 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
           {
             title: intl.formatMessage({ id: "buttons.option" }),
             key: "option",
+            hideInTable: view === "all",
             width: 120,
             valueType: "option",
             render: (text, row, index, action) => {
-              return view === "all"
-                ? undefined
-                : [
-                    <Dropdown.Button
-                      key={index}
-                      type="link"
-                      menu={{
-                        items: [
-                          {
-                            key: "remove",
-                            label: intl.formatMessage({
-                              id: "buttons.delete",
-                            }),
-                            icon: <DeleteOutlined />,
-                            danger: true,
-                          },
-                        ],
-                        onClick: (e) => {
-                          switch (e.key) {
-                            case "share":
-                              break;
-                            case "remove":
-                              showDeleteConfirm([row.wordId], row.word);
-                              break;
-                            default:
-                              break;
-                          }
-                        },
-                      }}
-                    >
-                      <Link
-                        onClick={() => {
-                          setWordId(row.wordId);
-                          setDrawerTitle(row.word);
-                          setIsEditOpen(true);
-                        }}
-                      >
-                        {intl.formatMessage({
-                          id: "buttons.edit",
-                        })}
-                      </Link>
-                    </Dropdown.Button>,
-                  ];
+              return [
+                <Dropdown.Button
+                  key={index}
+                  type="link"
+                  menu={{
+                    items: [
+                      {
+                        key: "remove",
+                        label: intl.formatMessage({
+                          id: "buttons.delete",
+                        }),
+                        icon: <DeleteOutlined />,
+                        danger: true,
+                      },
+                    ],
+                    onClick: (e) => {
+                      switch (e.key) {
+                        case "share":
+                          break;
+                        case "remove":
+                          showDeleteConfirm([row.wordId], row.word);
+                          break;
+                        default:
+                          break;
+                      }
+                    },
+                  }}
+                >
+                  <Link
+                    onClick={() => {
+                      setWordId(row.wordId);
+                      setDrawerTitle(row.word);
+                      setIsEditOpen(true);
+                    }}
+                  >
+                    {intl.formatMessage({
+                      id: "buttons.edit",
+                    })}
+                  </Link>
+                </Dropdown.Button>,
+              ];
             },
           },
         ]}
@@ -294,7 +305,6 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
               }
         }
         request={async (params = {}, sorter, filter) => {
-          // TODO
           console.log(params, sorter, filter);
           const offset =
             ((params.current ? params.current : 1) - 1) *
@@ -329,6 +339,7 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
               meaning: item.mean,
               note: item.note,
               factors: item.factors,
+              dict: item.dict,
               createdAt: date.getTime(),
             };
           });

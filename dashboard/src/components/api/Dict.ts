@@ -30,7 +30,11 @@ export interface IDictResponse {
   message: string;
   data: number[];
 }
-
+export interface IDictInfo {
+  id: string;
+  name: string;
+  shortname: string;
+}
 export interface IApiResponseDictData {
   id: string;
   word: string;
@@ -42,6 +46,7 @@ export interface IApiResponseDictData {
   factors: string;
   factormean: string;
   language: string;
+  dict?: IDictInfo;
   dict_id: string;
   dict_name?: string;
   dict_shortname?: string;
