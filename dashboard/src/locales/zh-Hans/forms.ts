@@ -70,6 +70,8 @@ const items = {
   "forms.fields.editor.label": "编辑者",
   "forms.fields.category.label": "分类",
   "forms.fields.match.label": "匹配方式",
+  "forms.fields.dict.name.label": "字典名",
+  "forms.fields.dict.shortname.label": "字典名",
 };
 
 export default items;
