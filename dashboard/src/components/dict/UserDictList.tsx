@@ -186,6 +186,7 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
             }),
             dataIndex: "dict",
             key: "dict",
+            hideInTable: view !== "all",
             search: false,
             render: (text, row, index, action) => {
               return row.dict?.shortname;
