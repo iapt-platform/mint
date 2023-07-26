@@ -22,7 +22,7 @@ class UserDictController extends Controller
     {
         //
 		$result=false;
-		$indexCol = ['id','word','type','grammar','mean','parent','note','factors','confidence','updated_at','creator_id'];
+		$indexCol = ['id','word','type','grammar','mean','parent','note','factors','confidence','dict_id','updated_at','creator_id'];
 		switch ($request->get('view')) {
             case 'all':
             # 获取studio内所有channel
@@ -30,7 +30,6 @@ class UserDictController extends Controller
                 if(!$user){
                     return $this->error(__('auth.failed'));
                 }
-                array_push($indexCol,'dict_id');
                 $table = UserDict::select($indexCol);
                 break;
             case 'studio':

@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\UserApi;
 use App\Models\UserOperationDaily;
+use App\Models\DictInfo;
 
 class UserDictResource extends JsonResource
 {
@@ -36,6 +37,9 @@ class UserDictResource extends JsonResource
                                                 ->where('date_int','<=',date_timestamp_get(date_create($this->updated_at))*1000)
                                                 ->sum('duration');
             $data['exp'] = (int)($exp/1000);
+        }
+        if($request->get('view')==='all'){
+            $data['dict'] = DictInfo::where('id',$this->dict_id)->select(['id','name','shortname'])->first();
         }
         return $data;
     }
