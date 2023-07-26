@@ -35,6 +35,7 @@ const CopyToModalWidget = ({ trigger, channel }: IWidget) => {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
+        destroyOnClose={true}
         footer={[]}
       >
         <CopyToStep
