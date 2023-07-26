@@ -39,6 +39,7 @@ class UpgradeDictId extends Command
      */
     public function handle()
     {
+        $this->info($this->description);
         $user_dict_id = DictApi::getSysDict('community');
         if($user_dict_id){
             $result = DB::select('UPDATE "user_dicts" set "dict_id"=? where "source"=? ',[$user_dict_id,'_USER_WBW_']);
