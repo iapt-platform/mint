@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { Modal, Popover, Skeleton, Typography } from "antd";
+import { Modal, Popover, Skeleton, Space, Typography } from "antd";
 
 import { get } from "../../request";
 import { get as getLang } from "../../locales";
 
 import NissayaCardTable, { INissayaRelation } from "./NissayaCardTable";
 import { ITerm } from "../term/TermEdit";
+import { Link } from "react-router-dom";
 
-const { Link, Paragraph, Title } = Typography;
+const { Paragraph, Title } = Typography;
 
 interface INissayaCardModal {
   text?: string;
@@ -19,7 +20,7 @@ export const NissayaCardPop = ({ text, trigger }: INissayaCardModal) => {
       content={<NissayaCardWidget text={text} cache={true} />}
       placement="bottom"
     >
-      <Link>{trigger}</Link>
+      <Typography.Link>{trigger}</Typography.Link>
     </Popover>
   );
 };
@@ -103,7 +104,10 @@ const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
 
   return cardData ? (
     <>
-      <Title level={4}>{term?.word}</Title>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Title level={4}>{term?.word}</Title>
+        <Link to={`/nissaya/ending/${term?.word}`}>在新窗口打开</Link>
+      </div>
       <Paragraph>{term?.meaning}</Paragraph>
       <Paragraph>{term?.note}</Paragraph>
       <NissayaCardTable data={cardData} />
