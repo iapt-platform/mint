@@ -123,14 +123,16 @@ export interface IApiResponseChannelList {
 
 export interface ISentenceDiffRequest {
   sentences: string[];
-  channel: string;
+  channels: string[];
 }
 export interface ISentenceDiffData {
   book_id: number;
   paragraph: number;
   word_start: number;
   word_end: number;
+  channel_uid: string;
   content: string;
+  updated_at: string;
 }
 export interface ISentenceDiffResponse {
   ok: boolean;
