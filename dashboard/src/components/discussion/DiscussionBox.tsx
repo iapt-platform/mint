@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Divider, Drawer } from "antd";
+import { Button, Divider, Drawer, Space } from "antd";
+import { FullscreenOutlined, FullscreenExitOutlined } from "@ant-design/icons";
+
 import CommentTopic from "./DiscussionTopic";
 import CommentListCard, { TResType } from "./DiscussionListCard";
 import { IComment } from "./DiscussionItem";
@@ -25,7 +27,10 @@ const DiscussionBoxWidget = ({
   const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [topicComment, setTopicComment] = useState<IComment>();
   const [answerCount, setAnswerCount] = useState<IAnswerCount>();
+  const drawerMinWidth = 720;
+  const drawerMaxWidth = 1100;
 
+  const [drawerWidth, setDrawerWidth] = useState(drawerMinWidth);
   const showChildrenDrawer = (
     e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
     comment: IComment
@@ -45,7 +50,24 @@ const DiscussionBoxWidget = ({
       </span>
       <Drawer
         title="Discussion"
-        width={520}
+        extra={
+          <Space>
+            {drawerWidth === drawerMinWidth ? (
+              <Button
+                type="link"
+                icon={<FullscreenOutlined />}
+                onClick={() => setDrawerWidth(drawerMaxWidth)}
+              />
+            ) : (
+              <Button
+                type="link"
+                icon={<FullscreenExitOutlined />}
+                onClick={() => setDrawerWidth(drawerMinWidth)}
+              />
+            )}
+          </Space>
+        }
+        width={drawerWidth}
         onClose={() => {
           setOpen(false);
           if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
