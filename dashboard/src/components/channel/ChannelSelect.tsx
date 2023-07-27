@@ -7,6 +7,7 @@ import { IApiResponseChannelList } from "../api/Channel";
 interface IOption {
   value: string;
   label: string;
+  lang?: string;
 }
 
 interface IWidget {
@@ -63,7 +64,7 @@ const ChannelSelectWidget = ({
               children: json.data.rows
                 .filter((value) => value.studio.id === key)
                 .map((item) => {
-                  return { value: item.uid, label: item.name };
+                  return { value: item.uid, label: item.name, lang: item.lang };
                 }),
             };
             channels.push(node);
