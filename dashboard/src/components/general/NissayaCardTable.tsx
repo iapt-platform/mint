@@ -2,6 +2,10 @@ import { Button, Space, Table, Tag } from "antd";
 import lodash from "lodash";
 import { useEffect, useState } from "react";
 import { ArrowRightOutlined } from "@ant-design/icons";
+
+const randomString = () =>
+  lodash.times(20, () => lodash.random(35).toString(36)).join("");
+
 interface ICaseItem {
   label: string;
   link: string;
@@ -18,6 +22,7 @@ interface DataType {
   from?: IRelationNode;
   category?: { name: string; note: string; meaning: string };
   translation?: string;
+  isChildren?: boolean;
   children?: DataType[];
 }
 export interface INissayaRelation {
@@ -44,44 +49,47 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
     let newData: DataType[] = [];
     data.forEach((item, index) => {
       if (item.category && item.category.name) {
-        if (category.includes(item.category.name)) {
-          //continue;
-        } else {
-          category.push(item.category.name);
+        const key = `${item.from?.spell}-${item.from?.case
+          ?.map((item) => item.label)
+          .join()}-${item.relation}-${item.category}`;
+        if (!category.includes(key)) {
+          category.push(key);
           console.log("category", category);
           //处理children
           const children = data
-            .filter((value) => value.category?.name === item.category?.name)
+            .filter(
+              (value) =>
+                `${value.from?.spell}-${value.from?.case
+                  ?.map((item) => item.label)
+                  .join()}-${value.relation}-${value.category}` === key
+            )
             .map((item, index) => {
               return {
-                key: lodash
-                  .times(20, () => lodash.random(35).toString(36))
-                  .join(""),
+                key: randomString(),
                 relation: item.relation,
                 localRelation: item.local_relation,
                 from: item.from,
                 to: item.to,
                 category: item.category,
                 translation: item.local_ending,
+                isChildren: true,
               };
             });
           console.log("children", children);
           newData.push({
-            key: lodash
-              .times(20, () => lodash.random(35).toString(36))
-              .join(""),
+            key: randomString(),
             relation: item.relation,
             localRelation: item.local_relation,
-            to: item.to,
             from: item.from,
+            to: item.to,
             category: item.category,
             translation: item.local_ending,
-            children: [...children],
+            children: children.length > 1 ? [...children] : undefined,
           });
         }
       } else {
         newData.push({
-          key: lodash.times(20, () => lodash.random(35).toString(36)).join(""),
+          key: randomString(),
           relation: item.relation,
           localRelation: item.local_relation,
           from: item.to,
@@ -125,7 +133,7 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           title: "关系",
           dataIndex: "relation",
           key: "relation",
-          width: "12%",
+          width: "16%",
           render: (value, record, index) => {
             return (
               <Space direction="vertical">
@@ -140,14 +148,7 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           dataIndex: "to",
           key: "to",
           render: (value, record, index) => {
-            if (record.children) {
-              return (
-                <Space>
-                  <ArrowRightOutlined />
-                  {record.category?.meaning}
-                </Space>
-              );
-            } else {
+            if (record.isChildren) {
               return (
                 <Space>
                   <ArrowRightOutlined />
@@ -166,6 +167,13 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
                   {record.to?.spell}
                 </Space>
               );
+            } else {
+              return (
+                <Space>
+                  <ArrowRightOutlined />
+                  {record.category?.meaning}
+                </Space>
+              );
             }
           },
         },
@@ -175,10 +183,10 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           width: "30%",
           key: "address",
           render: (value, record, index) => {
-            if (record.children) {
-              return <>{record.category?.note}</>;
-            } else {
+            if (record.isChildren) {
               return undefined;
+            } else {
+              return <>{record.category?.note}</>;
             }
           },
         },
