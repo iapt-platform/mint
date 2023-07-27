@@ -155,6 +155,13 @@ const ChannelSentDiffWidget = ({
             if (typeof srcChannel === "undefined") {
               return;
             }
+            if (
+              typeof selectedRowKeys === "undefined" ||
+              selectedRowKeys.length === 0
+            ) {
+              message.warning("没有被选择的句子");
+              return;
+            }
             setLoading(true);
             let submitData: ISentenceDiffData[] = [];
             selectedRowKeys?.forEach((value) => {
@@ -230,12 +237,22 @@ const ChannelSentDiffWidget = ({
               dataIndex: "pali",
             },
             {
-              title: `原文-${srcChannel?.name}`,
+              title: (
+                <>
+                  {`原文-`}
+                  <Text strong>{srcChannel?.name}</Text>
+                </>
+              ),
               width: "33%",
               dataIndex: "srcContent",
             },
             {
-              title: `复制到-${destChannel?.name}`,
+              title: (
+                <>
+                  {`复制到-`}
+                  <Text strong>{destChannel?.name}</Text>
+                </>
+              ),
               width: "33%",
               dataIndex: "destContent",
               render: (value, record, index) => {
