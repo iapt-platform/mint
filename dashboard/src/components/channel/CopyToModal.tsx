@@ -29,12 +29,13 @@ const CopyToModalWidget = ({ trigger, channel }: IWidget) => {
     <>
       <span onClick={showModal}>{trigger}</span>
       <Modal
-        width={"80%"}
-        style={{ maxWidth: 1000 }}
+        width={"95%"}
+        style={{ maxWidth: 1500 }}
         title="版本间复制"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
+        destroyOnClose={true}
         footer={[]}
       >
         <CopyToStep

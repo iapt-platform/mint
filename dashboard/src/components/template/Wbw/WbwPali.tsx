@@ -48,7 +48,6 @@ const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
         grammar = [data.grammar2?.value];
       }
     }
-    console.log("grammar", grammar);
     if (typeof grammar === "undefined") {
       return;
     }
@@ -203,7 +202,7 @@ const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
   }
   let pali = <PaliText text={data.word.value} termToLocal={false} />;
   if (data.word.value.indexOf("}") >= 0) {
-    const paliArray = data.word.value.replace("{", "").split("}");
+    const paliArray = data.word.value?.replace("{", "").split("}");
     pali = (
       <>
         <span style={{ fontWeight: 700 }}>

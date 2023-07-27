@@ -1,7 +1,6 @@
-import { Button, Col, List, message, Row, Space, Typography } from "antd";
-import { diffChars } from "diff";
+import { Button, message, Select, Table, Tooltip, Typography } from "antd";
+import { Change, diffChars } from "diff";
 import { useEffect, useState } from "react";
-import { SwapRightOutlined } from "@ant-design/icons";
 
 import { post } from "../../request";
 import {
@@ -15,17 +14,12 @@ import { IChannel } from "./Channel";
 
 const { Text } = Typography;
 
-interface IDiffData {
-  id: string;
+interface IDataType {
+  key: React.Key;
+  sentId: string;
+  pali?: string;
   srcContent?: string;
-  destContent?: string | JSX.Element;
-}
-interface ISentenceData {
-  book: number;
-  paragraph: number;
-  wordStart: number;
-  wordEnd: number;
-  content: string;
+  destContent?: string;
 }
 
 interface IWidget {
@@ -43,100 +37,80 @@ const ChannelSentDiffWidget = ({
   onSubmit,
 }: IWidget) => {
   const [srcApiData, setSrcApiData] = useState<ISentenceDiffData[]>([]);
-  const [srcData, setSrcData] = useState<ISentenceData[]>([]);
-  const [destData, setDestData] = useState<ISentenceData[]>([]);
-  const [diffData, setDiffData] = useState<IDiffData[]>();
+  const [diffData, setDiffData] = useState<IDataType[]>();
   const [loading, setLoading] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>();
+  const [newRowKeys, setNewRowKeys] = useState<React.Key[]>();
+  const [emptyRowKeys, setEmptyRowKeys] = useState<React.Key[]>();
 
   useEffect(() => {
-    if (sentences && srcChannel) {
+    if (sentences && srcChannel && destChannel) {
       post<ISentenceDiffRequest, ISentenceDiffResponse>(`/v2/sent-in-channel`, {
         sentences: sentences,
-        channel: srcChannel.id,
+        channels: ["_System_Pali_VRI_", srcChannel.id, destChannel.id],
       }).then((json) => {
         if (json.ok) {
-          console.log("src", srcChannel.id, json.data.rows);
-          setSrcApiData(json.data.rows);
-          const data = json.data.rows.map((item) => {
-            return {
-              book: item.book_id,
-              paragraph: item.paragraph,
-              wordStart: item.word_start,
-              wordEnd: item.word_end,
-              content: item.content,
-            };
-          });
-          setSrcData(data);
-        }
-      });
-    }
-  }, [srcChannel, sentences]);
+          const apiData = json.data.rows;
+          setSrcApiData(apiData);
+          let newRows: string[] = [];
+          let emptyRows: string[] = [];
+          const diffList: IDataType[] = sentences?.map((item, index) => {
+            const id: string[] = item.split("-");
+            const srcContent = apiData.find(
+              (element) =>
+                element.book_id === parseInt(id[0]) &&
+                element.paragraph === parseInt(id[1]) &&
+                element.word_start === parseInt(id[2]) &&
+                element.word_end === parseInt(id[3]) &&
+                element.channel_uid === srcChannel.id
+            );
 
-  useEffect(() => {
-    if (sentences && destChannel) {
-      post<ISentenceDiffRequest, ISentenceDiffResponse>(`/v2/sent-in-channel`, {
-        sentences: sentences,
-        channel: destChannel.id,
-      }).then((json) => {
-        if (json.ok) {
-          console.log("dest", destChannel.id, json.data.rows);
-          const data = json.data.rows.map((item) => {
-            return {
-              book: item.book_id,
-              paragraph: item.paragraph,
-              wordStart: item.word_start,
-              wordEnd: item.word_end,
-              content: item.content,
-            };
-          });
-          setDestData(data);
-        }
-      });
-    }
-  }, [destChannel, sentences]);
-
-  useEffect(() => {
-    const diffList = sentences?.map((item) => {
-      const id = item.split("-");
-      const srcContent = srcData.find(
-        (element) =>
-          element.book === parseInt(id[0]) &&
-          element.paragraph === parseInt(id[1]) &&
-          element.wordStart === parseInt(id[2]) &&
-          element.wordEnd === parseInt(id[3])
-      );
-
-      const destContent = destData.find(
-        (element) =>
-          element.book === parseInt(id[0]) &&
-          element.paragraph === parseInt(id[1]) &&
-          element.wordStart === parseInt(id[2]) &&
-          element.wordEnd === parseInt(id[3])
-      );
-      const diff = diffChars(
-        destContent ? destContent.content : "",
-        srcContent ? srcContent.content : ""
-      );
-      const diffResult = diff.map((item) => {
-        return (
-          <Text
-            type={
-              item.added ? "success" : item.removed ? "danger" : "secondary"
+            const destContent = apiData.find(
+              (element) =>
+                element.book_id === parseInt(id[0]) &&
+                element.paragraph === parseInt(id[1]) &&
+                element.word_start === parseInt(id[2]) &&
+                element.word_end === parseInt(id[3]) &&
+                element.channel_uid === destChannel.id
+            );
+            if (srcContent && destContent) {
+              const srcDate = new Date(srcContent.updated_at);
+              const destDate = new Date(destContent.updated_at);
+              if (srcDate > destDate) {
+                newRows.push(item);
+              }
             }
-            delete={item.removed ? true : undefined}
-          >
-            {item.value}
-          </Text>
-        );
+            if (
+              typeof destContent === "undefined" ||
+              destContent.content.trim().length === 0
+            ) {
+              emptyRows.push(item);
+            }
+            const paliContent = apiData.find(
+              (element) =>
+                element.book_id === parseInt(id[0]) &&
+                element.paragraph === parseInt(id[1]) &&
+                element.word_start === parseInt(id[2]) &&
+                element.word_end === parseInt(id[3]) &&
+                element.channel_uid !== destChannel.id &&
+                element.channel_uid !== srcChannel.id
+            );
+            return {
+              key: item,
+              sentId: item,
+              pali: paliContent?.content,
+              srcContent: srcContent?.content,
+              destContent: destContent?.content,
+            };
+          });
+          setDiffData(diffList);
+          setNewRowKeys(newRows);
+          setSelectedRowKeys(newRows);
+          setEmptyRowKeys(emptyRows);
+        }
       });
-      return {
-        id: item,
-        srcContent: srcContent?.content,
-        destContent: <>{diffResult}</>,
-      };
-    });
-    setDiffData(diffList);
-  }, [destData, sentences, srcData]);
+    }
+  }, [srcChannel, sentences, destChannel]);
 
   return (
     <div>
@@ -150,20 +124,68 @@ const ChannelSentDiffWidget = ({
         >
           上一步
         </Button>
-        <Space>
-          {srcChannel?.name}
-          <SwapRightOutlined />
-          {destChannel?.name}
-        </Space>
+        <Select
+          defaultValue={"new"}
+          style={{ width: 180 }}
+          onChange={(value: string) => {
+            switch (value) {
+              case "new":
+                setSelectedRowKeys(newRowKeys);
+                break;
+              case "all":
+                setSelectedRowKeys(sentences);
+                break;
+              case "empty":
+                setSelectedRowKeys(emptyRowKeys);
+                break;
+              default:
+                break;
+            }
+          }}
+          options={[
+            { value: "new", label: "仅复制较新的" },
+            { value: "empty", label: "仅复制缺失的" },
+            { value: "all", label: "全部复制" },
+          ]}
+        />
         <Button
           type="primary"
           loading={loading}
           onClick={() => {
+            if (typeof srcChannel === "undefined") {
+              return;
+            }
+            if (
+              typeof selectedRowKeys === "undefined" ||
+              selectedRowKeys.length === 0
+            ) {
+              message.warning("没有被选择的句子");
+              return;
+            }
             setLoading(true);
+            let submitData: ISentenceDiffData[] = [];
+            selectedRowKeys?.forEach((value) => {
+              const id: string[] = value.toString().split("-");
+              const srcContent = srcApiData.find(
+                (element) =>
+                  element.book_id === parseInt(id[0]) &&
+                  element.paragraph === parseInt(id[1]) &&
+                  element.word_start === parseInt(id[2]) &&
+                  element.word_end === parseInt(id[3]) &&
+                  element.channel_uid === srcChannel.id
+              );
+              if (srcContent) {
+                submitData.push(srcContent);
+              }
+            });
+
+            if (typeof submitData === "undefined") {
+              return;
+            }
             post<ISentenceNewRequest, ISentenceNewMultiResponse>(
               `/v2/sentence`,
               {
-                sentences: srcApiData,
+                sentences: submitData,
                 channel: destChannel?.id,
               }
             )
@@ -188,18 +210,80 @@ const ChannelSentDiffWidget = ({
         </Button>
       </div>
       <div style={{ height: 400, overflowY: "scroll" }}>
-        <List
-          footer={<div style={{ textAlign: "center" }}>到底了</div>}
-          bordered
+        <Table
+          pagination={false}
+          rowSelection={{
+            type: "checkbox",
+            selectedRowKeys: selectedRowKeys,
+            onChange: (
+              selectedRowKeys: React.Key[],
+              selectedRows: IDataType[]
+            ) => {
+              console.log(
+                `selectedRowKeys: ${selectedRowKeys}`,
+                "selectedRows: ",
+                selectedRows
+              );
+              setSelectedRowKeys(selectedRowKeys);
+            },
+            getCheckboxProps: (record: IDataType) => ({
+              name: record.pali,
+            }),
+          }}
+          columns={[
+            {
+              title: "pali",
+              width: "33%",
+              dataIndex: "pali",
+            },
+            {
+              title: (
+                <>
+                  {`原文-`}
+                  <Text strong>{srcChannel?.name}</Text>
+                </>
+              ),
+              width: "33%",
+              dataIndex: "srcContent",
+            },
+            {
+              title: (
+                <>
+                  {`复制到-`}
+                  <Text strong>{destChannel?.name}</Text>
+                </>
+              ),
+              width: "33%",
+              dataIndex: "destContent",
+              render: (value, record, index) => {
+                const diff: Change[] = diffChars(
+                  record.destContent ? record.destContent : "",
+                  record.srcContent ? record.srcContent : ""
+                );
+                const diffResult = diff.map((item, id) => {
+                  return (
+                    <Text
+                      key={id}
+                      type={
+                        item.added
+                          ? "success"
+                          : item.removed
+                          ? "danger"
+                          : "secondary"
+                      }
+                      delete={item.removed ? true : undefined}
+                    >
+                      {item.value}
+                    </Text>
+                  );
+                });
+                return (
+                  <Tooltip title={record.destContent}>{diffResult}</Tooltip>
+                );
+              },
+            },
+          ]}
           dataSource={diffData}
-          renderItem={(item) => (
-            <List.Item>
-              <Row style={{ width: "100%" }}>
-                <Col span={12}>{item.srcContent}</Col>
-                <Col span={12}>{item.destContent}</Col>
-              </Row>
-            </List.Item>
-          )}
         />
       </div>
     </div>
