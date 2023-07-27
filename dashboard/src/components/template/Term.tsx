@@ -25,9 +25,9 @@ interface IWidgetTermCtl {
   word?: string;
   meaning?: string;
   meaning2?: string;
-  channel?: string;
-  parentChannelId?: string;
-  parentStudioId?: string;
+  channel?: string /**该术语在term表中的channel_id */;
+  parentChannelId?: string /**该术语所在译文的channel_id */;
+  parentStudioId?: string /**该术语所在译文的studio_id */;
   summary?: string;
   isCommunity?: string;
 }
@@ -57,7 +57,7 @@ const TermCtl = ({
       summary: summary,
       channelId: channel,
     });
-  }, []);
+  }, [id, meaning, meaning2, channel, summary, word]);
 
   useEffect(() => {
     if (newTerm?.word === word) {
@@ -66,11 +66,11 @@ const TermCtl = ({
         word: newTerm?.word,
         meaning: newTerm?.meaning,
         meaning2: newTerm?.other_meaning?.split(","),
-        summary: newTerm?.note,
+        summary: newTerm?.note ? newTerm?.note : "",
         channelId: newTerm?.channal,
       });
     }
-  }, [newTerm]);
+  }, [newTerm, word]);
 
   const onModalClose = () => {
     if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
@@ -191,8 +191,9 @@ const TermCtl = ({
             <Text type="danger">{termData?.word}</Text>
           </Link>
         }
-        word={word}
-        channelId={channel}
+        word={termData?.word}
+        parentChannelId={parentChannelId}
+        parentStudioId={parentStudioId}
       />
     );
   }
