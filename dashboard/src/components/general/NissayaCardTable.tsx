@@ -1,7 +1,7 @@
-import { recordKeyToString } from "@ant-design/pro-components";
 import { Button, Space, Table, Tag } from "antd";
+import lodash from "lodash";
 import { useEffect, useState } from "react";
-
+import { ArrowRightOutlined } from "@ant-design/icons";
 interface ICaseItem {
   label: string;
   link: string;
@@ -11,7 +11,7 @@ interface IRelationNode {
   spell?: string;
 }
 interface DataType {
-  key: React.ReactNode;
+  key: string;
   relation: string;
   localRelation?: string;
   to?: IRelationNode;
@@ -39,50 +39,58 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
       setTableData(undefined);
       return;
     }
+    console.log("data", data);
     let category: string[] = [];
     let newData: DataType[] = [];
-    let id = 0;
-    for (const item of data) {
-      id++;
+    data.forEach((item, index) => {
       if (item.category && item.category.name) {
         if (category.includes(item.category.name)) {
-          continue;
+          //continue;
         } else {
           category.push(item.category.name);
+          console.log("category", category);
           //处理children
           const children = data
             .filter((value) => value.category?.name === item.category?.name)
             .map((item, index) => {
               return {
-                key: `c_${index}`,
+                key: lodash
+                  .times(20, () => lodash.random(35).toString(36))
+                  .join(""),
                 relation: item.relation,
+                localRelation: item.local_relation,
                 from: item.from,
                 to: item.to,
                 category: item.category,
                 translation: item.local_ending,
               };
             });
+          console.log("children", children);
           newData.push({
-            key: id,
+            key: lodash
+              .times(20, () => lodash.random(35).toString(36))
+              .join(""),
             relation: item.relation,
+            localRelation: item.local_relation,
             to: item.to,
             from: item.from,
             category: item.category,
             translation: item.local_ending,
-            children: children,
+            children: [...children],
           });
         }
       } else {
         newData.push({
-          key: id,
+          key: lodash.times(20, () => lodash.random(35).toString(36)).join(""),
           relation: item.relation,
+          localRelation: item.local_relation,
           from: item.to,
           to: item.to,
           category: item.category,
           translation: item.local_ending,
         });
       }
-    }
+    });
 
     setTableData(newData);
   }, [data]);
@@ -90,7 +98,7 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
     <Table
       columns={[
         {
-          title: "本词",
+          title: "本词特征",
           dataIndex: "from",
           key: "from",
           render: (value, record, index) => {
@@ -119,7 +127,12 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           key: "relation",
           width: "12%",
           render: (value, record, index) => {
-            return <>{record.relation}</>;
+            return (
+              <Space direction="vertical">
+                {record.relation}
+                {record.localRelation}
+              </Space>
+            );
           },
         },
         {
@@ -128,10 +141,16 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           key: "to",
           render: (value, record, index) => {
             if (record.children) {
-              return <>{record.category?.meaning}</>;
+              return (
+                <Space>
+                  <ArrowRightOutlined />
+                  {record.category?.meaning}
+                </Space>
+              );
             } else {
               return (
                 <Space>
+                  <ArrowRightOutlined />
                   {record.to?.case?.map((item, id) => {
                     return (
                       <Button
