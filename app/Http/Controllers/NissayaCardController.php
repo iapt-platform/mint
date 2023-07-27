@@ -79,6 +79,7 @@ class NissayaCardController extends Controller
             $cardData['title_local_ending'] = "翻译建议";
 
             foreach ($relations as $key => $relation) {
+                $newLine = array();
                 $relationInTerm = DhammaTerm::where('channal',$localTerm)
                                             ->where('word',$relation['name'])
                                             ->first();
