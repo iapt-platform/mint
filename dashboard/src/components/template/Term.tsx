@@ -11,8 +11,9 @@ import { ITermDataResponse } from "../api/Term";
 import { changedTerm, refresh } from "../../reducers/term-change";
 import { useAppSelector } from "../../hooks";
 import { get } from "../../request";
+import { Link } from "react-router-dom";
 
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 interface ITermSummary {
   ok: boolean;
@@ -111,10 +112,9 @@ const TermCtl = ({
               style={{ maxWidth: 500, minWidth: 300 }}
               actions={[
                 <Button type="link" size="small" icon={<SearchOutlined />}>
-                  更多
-                </Button>,
-                <Button type="link" size="small" icon={<SearchOutlined />}>
-                  详情
+                  <Link to={`/term/list/āraññika`} target="_blank">
+                    详情
+                  </Link>
                 </Button>,
                 <TermModal
                   onUpdate={(value: ITermDataResponse) => {
@@ -159,13 +159,13 @@ const TermCtl = ({
           }
           placement="bottom"
         >
-          <Link style={{ color: isCommunity ? "green" : undefined }}>
+          <Typography.Link style={{ color: isCommunity ? "green" : undefined }}>
             {termData?.meaning
               ? termData?.meaning
               : termData?.word
               ? termData?.word
               : "unknown"}
-          </Link>
+          </Typography.Link>
         </Popover>
         {"("}
         <Text italic>{word}</Text>
@@ -187,9 +187,9 @@ const TermCtl = ({
           onModalClose();
         }}
         trigger={
-          <Link>
+          <Typography.Link>
             <Text type="danger">{termData?.word}</Text>
-          </Link>
+          </Typography.Link>
         }
         word={termData?.word}
         parentChannelId={parentChannelId}
