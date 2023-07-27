@@ -1,6 +1,7 @@
 import { useIntl } from "react-intl";
 import {
   ProForm,
+  ProFormDependency,
   ProFormInstance,
   ProFormSelect,
   ProFormText,
@@ -292,7 +293,12 @@ const TermEditWidget = ({
             id: "term.fields.channel.label",
           })}
         />
-        <LangSelect />
+        <ProFormDependency name={["channel"]}>
+          {({ channel }) => {
+            console.log("channel", channel);
+            return <LangSelect disabled={channel[0] === "" ? false : true} />;
+          }}
+        </ProFormDependency>
       </ProForm.Group>
       <ProForm.Group>
         <Form.Item
