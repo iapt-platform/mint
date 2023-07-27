@@ -296,7 +296,12 @@ const TermEditWidget = ({
         <ProFormDependency name={["channel"]}>
           {({ channel }) => {
             console.log("channel", channel);
-            return <LangSelect disabled={channel[0] === "" ? false : true} />;
+
+            return (
+              <LangSelect
+                disabled={channel ? (channel[0] === "" ? false : true) : false}
+              />
+            );
           }}
         </ProFormDependency>
       </ProForm.Group>
