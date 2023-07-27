@@ -58,6 +58,7 @@ use App\Http\Controllers\InviteController;
 use App\Http\Controllers\SignUpController;
 use App\Http\Controllers\TermSummaryController;
 use App\Http\Controllers\NissayaCardController;
+use App\Http\Controllers\SentInChannelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,7 +81,7 @@ Route::group(['prefix' => 'v2'],function(){
 	Route::get('terms-export',[DhammaTermController::class,"export"]);
     Route::get('terms-import',[DhammaTermController::class,"import"]);
 	Route::apiResource('sentence',SentenceController::class);
-	Route::post('sent-in-channel',[SentenceController::class,"sent_in_channel"]);
+	Route::apiResource('sent-in-channel',SentInChannelController::class);
 	Route::apiResource('sentpr',SentPrController::class);
 	Route::post('sent-pr-tree',[SentPrController::class,"pr_tree"]);
 	Route::apiResource('progress',ProgressChapterController::class);
