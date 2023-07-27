@@ -17,6 +17,7 @@ interface IWidget {
   label?: string;
   parentChannelId?: string;
   parentStudioId?: string;
+  placeholder?: string;
   onSelect?: Function;
 }
 const ChannelSelectWidget = ({
@@ -27,6 +28,7 @@ const ChannelSelectWidget = ({
   label,
   parentChannelId,
   parentStudioId,
+  placeholder,
   onSelect,
 }: IWidget) => {
   return (
@@ -35,6 +37,7 @@ const ChannelSelectWidget = ({
       name={name}
       tooltip={tooltip}
       label={label}
+      placeholder={placeholder}
       request={async ({ keyWords }) => {
         console.log("keyWord", keyWords);
         const json = await get<IApiResponseChannelList>(
