@@ -13,6 +13,7 @@ export interface ITermDataRequest {
   studioName?: string;
   studioId?: string;
   language?: string;
+  copy?: string;
 }
 export interface ITermDataResponse {
   id: number;
