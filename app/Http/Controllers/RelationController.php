@@ -9,6 +9,7 @@ use App\Http\Api\AuthApi;
 use Illuminate\Support\Facades\App;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Illuminate\Support\Facades\Cache;
 
 class RelationController extends Controller
 {
@@ -20,6 +21,12 @@ class RelationController extends Controller
     public function index(Request $request)
     {
         //
+        $key = 'relation-vocabulary';
+        if($request->has('vocabulary')){
+            if(Cache::has($key)){
+                return $this->ok(Cache::get($key));
+            }
+        }
         $table = Relation::select(['id','name','case','from','to',
                                     'category','editor_id','match',
                                     'updated_at','created_at']);
@@ -51,7 +58,14 @@ class RelationController extends Controller
                        ->take($request->get('limit',1000));
         $result = $table->get();
 
-        return $this->ok(["rows"=>RelationResource::collection($result),"count"=>$count]);
+        $output = ["rows"=>RelationResource::collection($result),"count"=>$count];
+
+        if($request->has('vocabulary')){
+            if(!Cache::has($key)){
+                Cache::put($key,$output,env('CACHE_EXPIRE',3600*24));
+            }
+        }
+        return $this->ok($output);
     }
 
 
