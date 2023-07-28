@@ -58,7 +58,11 @@ const ChannelSelectWidget = ({
               iterator.studio.nickName ? iterator.studio.nickName : ""
             );
           }
-          let channels: IOption[] = [{ value: "", label: "通用于此Studio" }];
+          let channels: IOption[] = [];
+          console.log("parentStudioId", parentStudioId);
+          if (user && user.id === parentStudioId) {
+            channels.push({ value: "", label: "通用于此Studio" });
+          }
           if (typeof parentChannelId === "string") {
             channels.push({ value: parentChannelId, label: "仅此版本" });
           }
