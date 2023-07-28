@@ -233,7 +233,11 @@ class CorpusController extends Controller
         }
 
         if($request->has('channels')){
-            $getChannel = explode(",",$request->get('channels'));
+            if(strpos($request->get('channels'),',') === FALSE){
+                $getChannel = explode('_',$request->get('channels'));
+            }else{
+                $getChannel = explode(',',$request->get('channels'));
+            }
             $channels = array_merge($channels,$getChannel );
         }
         $para = explode(",",$request->get('par'));
@@ -319,7 +323,11 @@ class CorpusController extends Controller
         $sentId = \explode('-',$id);
         $channels = [];
         if($request->has('channels')){
-            $channels = explode('_',$request->get('channels'));
+            if(strpos($request->get('channels'),',') === FALSE){
+                $channels = explode('_',$request->get('channels'));
+            }else{
+                $channels = explode(',',$request->get('channels'));
+            }
         }
         $mode = $request->get('mode','read');
         if($mode === 'read'){

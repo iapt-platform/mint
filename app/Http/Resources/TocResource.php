@@ -31,7 +31,11 @@ class TocResource extends JsonResource
             $data['title'] = $title;
         }
         if($request->has('channels')){
-            $channels = explode(',',$request->get('channels'));
+            if(strpos($request->get('channels'),',') ===FALSE){
+                $channels = explode('_',$request->get('channels'));
+            }else{
+                $channels = explode(',',$request->get('channels'));
+            }
             $title= ProgressChapter::where('book',$this->book)
                                 ->where('para',$this->paragraph)
                                 ->where('channel_id',$channels[0])
