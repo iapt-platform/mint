@@ -28,7 +28,7 @@ interface IItem {
   channel?: IChannel;
   meaning: string;
   meaning2: string;
-  note: string;
+  note: string | null;
   createdAt: number;
 }
 

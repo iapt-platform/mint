@@ -21,7 +21,7 @@ export interface ITermDataResponse {
   tag: string;
   meaning: string;
   other_meaning: string;
-  note: string;
+  note: string | null;
   html?: string;
   channal: string;
   channel?: IChannel;

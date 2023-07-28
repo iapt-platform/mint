@@ -1,6 +1,7 @@
 import { useIntl } from "react-intl";
 import {
   ProForm,
+  ProFormDependency,
   ProFormInstance,
   ProFormSelect,
   ProFormText,
@@ -57,10 +58,8 @@ const TermEditWidget = ({
   onUpdate,
 }: IWidget) => {
   const intl = useIntl();
-  const [meaningOptions, setMeaningOptions] = useState<ValueType[]>([
-    { label: "dd", value: "dd" },
-  ]);
-  console.log("channel", channelId);
+  const [meaningOptions, setMeaningOptions] = useState<ValueType[]>([]);
+  //console.log("word", id, word, channelId, studioName);
 
   const [form] = Form.useForm<ITerm>();
   const formRef = useRef<ProFormInstance>();
@@ -119,11 +118,14 @@ const TermEditWidget = ({
           note: values.note,
           channal: values.channel
             ? values.channel[values.channel.length - 1]
+              ? values.channel[values.channel.length - 1]
+              : undefined
             : undefined,
           studioName: studioName,
           studioId: parentStudioId,
           language: values.lang,
         };
+        console.log("value", newValue);
         let res: ITermResponse;
         if (typeof values.id === "undefined") {
           res = await post<ITermDataRequest, ITermResponse>(
@@ -151,7 +153,7 @@ const TermEditWidget = ({
       request={async () => {
         let url: string;
         let data: ITerm = {
-          word: "",
+          word: word ? word : "",
           tag: "",
           meaning: "",
           meaning2: [],
@@ -162,7 +164,7 @@ const TermEditWidget = ({
         if (typeof id !== "undefined") {
           // 如果是编辑，就从服务器拉取数据。
           url = "/v2/terms/" + id;
-          console.log("url", url);
+          console.log("有id", url);
           const res = await get<ITermResponse>(url);
           console.log("request", res);
           let meaning2: string[] = [];
@@ -176,7 +178,7 @@ const TermEditWidget = ({
             tag: res.data.tag,
             meaning: res.data.meaning,
             meaning2: meaning2,
-            note: res.data.note,
+            note: res.data.note ? res.data.note : "",
             lang: res.data.language,
             channel: res.data.channel
               ? [res.data.studio.id, res.data.channel?.id]
@@ -185,6 +187,7 @@ const TermEditWidget = ({
         } else if (typeof channelId !== "undefined") {
           //在channel新建
           url = `/v2/terms?view=create-by-channel&channel=${channelId}&word=${word}`;
+          console.log("在channel新建", url);
           const res = await get<ITermCreateResponse>(url);
           console.log(res);
           data = {
@@ -199,6 +202,7 @@ const TermEditWidget = ({
         } else if (typeof studioName !== "undefined") {
           //在studio新建
           url = `/v2/terms?view=create-by-studio&studio=${studioName}&word=${word}`;
+          console.log("在 studio 新建", url);
         }
 
         return data;
@@ -281,6 +285,7 @@ const TermEditWidget = ({
           parentChannelId={parentChannelId}
           width="md"
           name="channel"
+          placeholder="通用于此Studio"
           tooltip={intl.formatMessage({
             id: "term.fields.channel.tooltip",
           })}
@@ -288,7 +293,17 @@ const TermEditWidget = ({
             id: "term.fields.channel.label",
           })}
         />
-        <LangSelect />
+        <ProFormDependency name={["channel"]}>
+          {({ channel }) => {
+            console.log("channel", channel);
+
+            return (
+              <LangSelect
+                disabled={channel ? (channel[0] === "" ? false : true) : false}
+              />
+            );
+          }}
+        </ProFormDependency>
       </ProForm.Group>
       <ProForm.Group>
         <Form.Item

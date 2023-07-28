@@ -11,8 +11,9 @@ import { ITermDataResponse } from "../api/Term";
 import { changedTerm, refresh } from "../../reducers/term-change";
 import { useAppSelector } from "../../hooks";
 import { get } from "../../request";
+import { Link } from "react-router-dom";
 
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 interface ITermSummary {
   ok: boolean;
@@ -25,9 +26,9 @@ interface IWidgetTermCtl {
   word?: string;
   meaning?: string;
   meaning2?: string;
-  channel?: string;
-  parentChannelId?: string;
-  parentStudioId?: string;
+  channel?: string /**该术语在term表中的channel_id */;
+  parentChannelId?: string /**该术语所在译文的channel_id */;
+  parentStudioId?: string /**该术语所在译文的studio_id */;
   summary?: string;
   isCommunity?: string;
 }
@@ -57,7 +58,7 @@ const TermCtl = ({
       summary: summary,
       channelId: channel,
     });
-  }, []);
+  }, [id, meaning, meaning2, channel, summary, word]);
 
   useEffect(() => {
     if (newTerm?.word === word) {
@@ -66,11 +67,11 @@ const TermCtl = ({
         word: newTerm?.word,
         meaning: newTerm?.meaning,
         meaning2: newTerm?.other_meaning?.split(","),
-        summary: newTerm?.note,
+        summary: newTerm?.note ? newTerm?.note : "",
         channelId: newTerm?.channal,
       });
     }
-  }, [newTerm]);
+  }, [newTerm, word]);
 
   const onModalClose = () => {
     if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
@@ -111,10 +112,9 @@ const TermCtl = ({
               style={{ maxWidth: 500, minWidth: 300 }}
               actions={[
                 <Button type="link" size="small" icon={<SearchOutlined />}>
-                  更多
-                </Button>,
-                <Button type="link" size="small" icon={<SearchOutlined />}>
-                  详情
+                  <Link to={`/term/list/āraññika`} target="_blank">
+                    详情
+                  </Link>
                 </Button>,
                 <TermModal
                   onUpdate={(value: ITermDataResponse) => {
@@ -159,13 +159,13 @@ const TermCtl = ({
           }
           placement="bottom"
         >
-          <Link style={{ color: isCommunity ? "green" : undefined }}>
+          <Typography.Link style={{ color: isCommunity ? "green" : undefined }}>
             {termData?.meaning
               ? termData?.meaning
               : termData?.word
               ? termData?.word
               : "unknown"}
-          </Link>
+          </Typography.Link>
         </Popover>
         {"("}
         <Text italic>{word}</Text>
@@ -187,12 +187,13 @@ const TermCtl = ({
           onModalClose();
         }}
         trigger={
-          <Link>
+          <Typography.Link>
             <Text type="danger">{termData?.word}</Text>
-          </Link>
+          </Typography.Link>
         }
-        word={word}
-        channelId={channel}
+        word={termData?.word}
+        parentChannelId={parentChannelId}
+        parentStudioId={parentStudioId}
       />
     );
   }

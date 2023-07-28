@@ -7,6 +7,7 @@ import { IApiResponseChannelList } from "../api/Channel";
 interface IOption {
   value: string;
   label: string;
+  lang?: string;
 }
 
 interface IWidget {
@@ -17,6 +18,7 @@ interface IWidget {
   label?: string;
   parentChannelId?: string;
   parentStudioId?: string;
+  placeholder?: string;
   onSelect?: Function;
 }
 const ChannelSelectWidget = ({
@@ -27,6 +29,7 @@ const ChannelSelectWidget = ({
   label,
   parentChannelId,
   parentStudioId,
+  placeholder,
   onSelect,
 }: IWidget) => {
   return (
@@ -35,6 +38,7 @@ const ChannelSelectWidget = ({
       name={name}
       tooltip={tooltip}
       label={label}
+      placeholder={placeholder}
       request={async ({ keyWords }) => {
         console.log("keyWord", keyWords);
         const json = await get<IApiResponseChannelList>(
@@ -60,7 +64,7 @@ const ChannelSelectWidget = ({
               children: json.data.rows
                 .filter((value) => value.studio.id === key)
                 .map((item) => {
-                  return { value: item.uid, label: item.name };
+                  return { value: item.uid, label: item.name, lang: item.lang };
                 }),
             };
             channels.push(node);
