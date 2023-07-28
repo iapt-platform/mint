@@ -112,7 +112,7 @@ const TermCtl = ({
               style={{ maxWidth: 500, minWidth: 300 }}
               actions={[
                 <Button type="link" size="small" icon={<SearchOutlined />}>
-                  <Link to={`/term/list/āraññika`} target="_blank">
+                  <Link to={`/term/list/${termData.word}`} target="_blank">
                     详情
                   </Link>
                 </Button>,
