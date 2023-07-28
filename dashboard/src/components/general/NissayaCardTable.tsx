@@ -2,6 +2,7 @@ import { Button, Space, Table, Tag } from "antd";
 import lodash from "lodash";
 import { useEffect, useState } from "react";
 import { ArrowRightOutlined } from "@ant-design/icons";
+import Marked from "./Marked";
 
 const randomString = () =>
   lodash.times(20, () => lodash.random(35).toString(36)).join("");
@@ -186,7 +187,7 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
             if (record.isChildren) {
               return undefined;
             } else {
-              return <>{record.category?.note}</>;
+              return <Marked text={record.category?.note} />;
             }
           },
         },
