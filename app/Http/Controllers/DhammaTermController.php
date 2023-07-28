@@ -233,9 +233,19 @@ class DhammaTermController extends Controller
                     return $this->error("channel id failed");
                 }else{
                     $term->owner = $channelInfo['studio_id'];
+                    $term->language = $channelInfo['lang'];
                 }
             }else{
-                $term->owner = StudioApi::getIdByName($request->get("studioName"));
+                if($request->has("studioId")){
+                    $studioId = $request->get("studioId");
+                }else if($request->has("studioName")){
+                    $studioId = StudioApi::getIdByName($request->get("studioName"));
+                }
+                if(Str::isUuid($studioId)){
+                    $term->owner = $studioId;
+                }else{
+                    return $this->error('not valid studioId');
+                }
             }
             $term->editor_id = $user["user_id"];
             $term->create_time = time()*1000;
