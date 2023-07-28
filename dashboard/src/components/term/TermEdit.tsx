@@ -299,7 +299,13 @@ const TermEditWidget = ({
 
             return (
               <LangSelect
-                disabled={channel ? (channel[0] === "" ? false : true) : false}
+                disabled={
+                  channel
+                    ? channel.length === 0 || channel[0] === ""
+                      ? false
+                      : true
+                    : false
+                }
               />
             );
           }}
