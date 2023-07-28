@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Modal, Popover, Skeleton, Space, Typography } from "antd";
+import { Modal, Popover, Skeleton, Typography } from "antd";
 
 import { get } from "../../request";
 import { get as getLang } from "../../locales";
@@ -17,6 +17,7 @@ interface INissayaCardModal {
 export const NissayaCardPop = ({ text, trigger }: INissayaCardModal) => {
   return (
     <Popover
+      style={{ width: 600 }}
       content={<NissayaCardWidget text={text} cache={true} />}
       placement="bottom"
     >
