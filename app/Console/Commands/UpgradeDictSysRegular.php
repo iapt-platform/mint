@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Http\Api\DictApi;
+use App\Tools\CaseMan;
 
-class UpgradeRegular extends Command
+class UpgradeDictSysRegular extends Command
 {
     /**
      * The name and signature of the console command.
@@ -50,39 +51,9 @@ class UpgradeRegular extends Command
         if(!$dict_id){
             $this->error('没有找到 system_regular 字典');
             return 1;
+        }else{
+            $this->info("dict id:{$dict_id}");
         }
-		$nounEnding = array();
-		$rowCount=0;
-		if(($handle=fopen(public_path('app/public/ending/noun.csv'),'r'))!==FALSE){
-			while(($data=fgetcsv($handle,0,','))!==FALSE){
-				$rowCount++;
-				if($rowCount==1) continue;//忽略首行
-				array_push($nounEnding,$data);
-			}
-		}
-		fclose($handle);
-
-		$adjEnding = array();
-		$rowCount=0;
-		if(($handle=fopen(public_path('app/public/ending/adj.csv'),'r'))!==FALSE){
-			while(($data=fgetcsv($handle,0,','))!==FALSE){
-				$rowCount++;
-				if($rowCount==1) continue;//忽略首行
-				array_push($adjEnding,$data);
-			}
-		}
-		fclose($handle);
-
-		$verbEnding = array();
-		$rowCount=0;
-		if(($handle=fopen(public_path('app/public/ending/verb.csv'),'r'))!==FALSE){
-			while(($data=fgetcsv($handle,0,','))!==FALSE){
-				$rowCount++;
-				if($rowCount==1) continue;//忽略首行
-				array_push($verbEnding,$data);
-			}
-		}
-		fclose($handle);
 
 		if(empty($this->argument('word'))){
 			$words = UserDict::where('type','.n:base.')
@@ -111,116 +82,51 @@ class UpgradeRegular extends Command
 		";
 		$count = DB::select($query);
 		$bar = $this->output->createProgressBar($count[0]->count);
-
-/*
-		$words = UserDict::where('word','ābandhattalakkhaṇa')
-				->select(['word','type','grammar'])
-				->groupBy(['word','type','grammar']);
-		$bar = $this->output->createProgressBar(1);
-*/
+        $caseMan = new CaseMan();
 		foreach ($words->cursor() as $word) {
-			# code...
-			switch($word->type){
-				case ".v:base.":
-					$casetable=$verbEnding;
-					break;
-				case ".n:base.":
-					$casetable = $nounEnding;
-						break;
-				case ".ti:base.":
-				case ".adj:base.":
-					$casetable = $adjEnding;
-					break;
-				case "":
-					$casetable=false;
-					break;
-				default:
-					$casetable=false;
-					break;
-			}
-			if($casetable === false){
-				continue;
-			}
-			if($this->option('debug'))  $this->info("{$word->word}:{$word->type}");
-			foreach($casetable as $thiscase){
-				if($word->type==".v:base."){
-					$endLen = (int)$thiscase[0];
-					$head = mb_substr($word->word,0,(0-$endLen),"UTF-8");//原词剩余的部分
-					$newEnding = $thiscase[1];
-					$newGrammar = $thiscase[2];
-					$newword=$head.$thiscase[1];
-					//动词不做符合规则判定
-					$isMatch = true;
-				}else{
-					$endLen = (int)$thiscase[5];
-					$end = mb_substr($word->word,0-$endLen,NULL,"UTF-8");//原词被切下来的部分
-					$head = mb_substr($word->word,0,(0-$endLen),"UTF-8");//原词剩余的部分
-					$newEnding = $thiscase[3];
-					$newGrammar = $thiscase[4];
-					$newword=$head.$thiscase[2];
-					if($word->type==".n:base."){
-						//名词
-						if($thiscase[0]==$word->grammar  && $thiscase[1]==$end){
-							//符合规则判定成功
-							$isMatch = true;
-						}else{
-							$isMatch = false;
-						}
-					}else{
-						//形容词
-						if($thiscase[1]==$end){
-							//符合规则判定成功
-							$isMatch = true;
-						}else{
-							$isMatch = false;
-						}
-					}
+            if($this->option('debug')){$this->info("{$word->word}:{$word->type}");}
+            $newWords = $caseMan->Declension($word->word,$word->type,$word->grammar,0.5);
+            if($this->option('debug')){$this->info("{$word->word}:".count($newWords));}
+            foreach ($newWords as $newWord) {
+                $new = UserDict::firstOrNew(
+                    [
+                        'word' => $newWord['word'],
+                        'type' => \str_replace(':base','',$word->type),
+                        'grammar' => $newWord['grammar'],
+                        'parent' => $word->word,
+                        'factors' => "{$word->word}+[{$newWord['ending']}]",
+                        'dict_id' => $dict_id,
+                    ],
+                    [
+                        'id' => app('snowflake')->id(),
+                        'source' => '_ROBOT_',
+                        'create_time'=>(int)(microtime(true)*1000)
+                    ]
+                );
+                $new->confidence = 80;
+                $new->language = 'cm';
+                $new->creator_id = 1;
+                $new->flag = 1;
+                $new->save();
+            }
 
-				}
-
-				if($isMatch){
-					if($this->option('debug'))  $this->error($newword.':match');
-					//查询这个词是否在三藏存在
-					$exist = Cache::remember('palicanon/word/exists/'.$newword, 100 , function() use($newword) {
-						return WbwTemplate::where('real',$newword)->exists();
-					});
-					if($exist){
-						if($this->option('debug'))  $this->info('exist');
-						$new = UserDict::firstOrNew(
-							[
-								'word' => $newword,
-								'type' => \str_replace(':base','',$word->type),
-								'grammar' => $newGrammar,
-								'parent' => $word->word,
-								'factors' => "{$word->word}+[{$newEnding}]",
-								'dict_id' => $dict_id,
-							],
-							[
-								'id' => app('snowflake')->id(),
-								'source' => '_ROBOT_',
-								'create_time'=>(int)(microtime(true)*1000)
-							]
-						);
-						$new->confidence = 80;
-						$new->language = 'cm';
-						$new->creator_id = 1;
-						$new->flag = 1;
-						$new->save();
-					}else{
-						if($this->option('debug'))  $this->info('not exist');
-					}
-				}
-			}
 			$bar->advance();
 		}
 		$bar->finish();
 		//删除旧数据
-		$delOld = UserDict::where('dict_id',$dict_id);
+		$table = UserDict::where('dict_id',$dict_id);
 		if(!empty($this->argument('word'))){
-			$delOld = $delOld->where('word',$this->argument('word'));
+			$table = $table->where('word',$this->argument('word'));
 		}
-		$delOld->where('flag',0)->delete();
-		$delOld->where('flag',1)->update(['flag'=>0]);
+		$table->where('flag',0)->delete();
+
+        //DB::enableQueryLog();
+        $newRecord = UserDict::where('dict_id',$dict_id);
+		if(!empty($this->argument('word'))){
+			$newRecord = $newRecord->where('parent',$this->argument('word'));
+		}
+		$newRecord->where('flag',1)->update(['flag'=>0]);
+        //print_r(DB::getQueryLog());
         return 0;
     }
 }
