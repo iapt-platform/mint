@@ -1,6 +1,4 @@
-import { useParams } from "react-router-dom";
 import { useIntl } from "react-intl";
-
 import {
   Button,
   Space,
@@ -28,6 +26,8 @@ import { delete_2, get } from "../../request";
 import { useRef, useState } from "react";
 import DictEdit from "../../components/dict/DictEdit";
 import { IDeleteResponse } from "../../components/api/Article";
+import { getSorterUrl } from "../../pages/admin/relation/list";
+import TimeShow from "../general/TimeShow";
 
 const { Link } = Typography;
 
@@ -42,9 +42,14 @@ export interface IWord {
   note: string;
   factors: string;
   dict?: IDictInfo;
-  createdAt: number;
+  updated_at?: string;
+  created_at?: string;
 }
-
+interface IParams {
+  word?: string;
+  parent?: string;
+  dict?: string;
+}
 interface IWidget {
   studioName?: string;
   view?: "studio" | "all";
@@ -100,7 +105,7 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
 
   return (
     <>
-      <ProTable<IWord>
+      <ProTable<IWord, IParams>
         actionRef={ref}
         columns={[
           {
@@ -161,6 +166,7 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
             key: "meaning",
             tip: "意思过长会自动收缩",
             ellipsis: true,
+            search: false,
           },
           {
             title: intl.formatMessage({
@@ -187,21 +193,24 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
             dataIndex: "dict",
             key: "dict",
             hideInTable: view !== "all",
-            search: false,
+            search: view !== "all" ? false : undefined,
             render: (text, row, index, action) => {
               return row.dict?.shortname;
             },
           },
           {
             title: intl.formatMessage({
-              id: "forms.fields.created-at.label",
+              id: "forms.fields.updated-at.label",
             }),
-            key: "created-at",
+            key: "updated_at",
             width: 200,
             search: false,
-            dataIndex: "createdAt",
+            dataIndex: "updated_at",
             valueType: "date",
-            sorter: (a, b) => a.createdAt - b.createdAt,
+            sorter: true,
+            render: (text, row, index, action) => {
+              return <TimeShow time={row.updated_at} showIcon={false} />;
+            },
           },
           {
             title: intl.formatMessage({ id: "buttons.option" }),
@@ -323,11 +332,18 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
               break;
           }
           url += `&limit=${params.pageSize}&offset=${offset}`;
+
           url += params.keyword ? "&search=" + params.keyword : "";
+
+          url += params.word ? `&word=${params.word}` : "";
+          url += params.parent ? `&parent=${params.parent}` : "";
+          url += params.dict ? `&dict=${params.dict}` : "";
+
+          url += getSorterUrl(sorter);
+
           console.log(url);
           const res = await get<IApiResponseDictList>(url);
           const items: IWord[] = res.data.rows.map((item, id) => {
-            const date = new Date(item.updated_at);
             const id2 =
               ((params.current || 1) - 1) * (params.pageSize || 20) + id + 1;
             return {
@@ -341,7 +357,7 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
               note: item.note,
               factors: item.factors,
               dict: item.dict,
-              createdAt: date.getTime(),
+              updated_at: item.updated_at,
             };
           });
           return {
@@ -356,7 +372,9 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
           showQuickJumper: true,
           showSizeChanger: true,
         }}
-        search={false}
+        search={{
+          filterType: "light",
+        }}
         options={{
           search: true,
         }}
