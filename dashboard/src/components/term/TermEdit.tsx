@@ -298,6 +298,11 @@ const TermEditWidget = ({
         />
         <ProFormDependency name={["channel"]}>
           {({ channel }) => {
+            const hasChannel = channel
+              ? channel.length === 0 || channel[0] === ""
+                ? false
+                : true
+              : false;
             let noChange = true;
             if (!channel || channel.length === 0 || channel[0] === "") {
               if (!channelId || channelId === null || channelId === "") {
@@ -314,15 +319,7 @@ const TermEditWidget = ({
             }
             return (
               <Space>
-                <LangSelect
-                  disabled={
-                    channel
-                      ? channel.length === 0 || channel[0] === ""
-                        ? false
-                        : true
-                      : false
-                  }
-                />
+                <LangSelect disabled={hasChannel} required={!hasChannel} />
                 <ProFormSelect
                   initialValue={"move"}
                   name="copy"
