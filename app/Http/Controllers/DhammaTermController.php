@@ -198,15 +198,15 @@ class DhammaTermController extends Controller
             'meaning' => 'required',
             'language' => 'required'
         ]);
-        #查询重复的
-        /*
-        重复判定：
-        一个channel下面word+tag+language 唯一
-        */
+
+        /**
+         * 查询重复的
+         * 一个channel下面word+tag+language 唯一
+         */
         $table = DhammaTerm::where('owner', $user["user_uid"])
                 ->where('word',$request->get("word"))
                 ->where('tag',$request->get("tag"));
-        if($request->get("channel")){
+        if(!empty($request->get("channel"))){
             $isDoesntExist = $table->where('channel',$request->get("channel"))
                     ->doesntExist();
         }else{
@@ -215,7 +215,7 @@ class DhammaTermController extends Controller
         }
 
         if($isDoesntExist){
-            #不存在插入数据
+            #没有重复的 插入数据
             $term = new DhammaTerm;
             $term->id = app('snowflake')->id();
             $term->guid = Str::uuid();
@@ -225,10 +225,10 @@ class DhammaTermController extends Controller
             $term->other_meaning = $request->get("other_meaning");
             $term->note = $request->get("note");
             $term->tag = $request->get("tag");
-            $term->channal = $request->get("channal");
+            $term->channal = $request->get("channel");
             $term->language = $request->get("language");
-            if($request->has("channal")){
-                $channelInfo = ChannelApi::getById($request->get("channal"));
+            if($request->has("channel")){
+                $channelInfo = ChannelApi::getById($request->get("channel"));
                 if(!$channelInfo){
                     return $this->error("channel id failed");
                 }else{
@@ -294,40 +294,118 @@ class DhammaTermController extends Controller
         if(!$dhammaTerm){
             return $this->error('404');
         }
+
+        $srcCanEdit = true;
         if(empty($dhammaTerm->channal)){
             //查看有没有studio权限
             if($user['user_uid'] !== $dhammaTerm->owner){
-                return $this->error(__('auth.failed'),[403],403);
+                $srcCanEdit = false;
             }
         }else{
             //查看有没有channel权限
             $power = ShareApi::getResPower($user["user_uid"],$dhammaTerm->channal,2);
             if($power < 20){
-                return $this->error(__('auth.failed'),[403],403);
+                $srcCanEdit = false;
             }
         }
+        $destCanEdit = true;
+        if(empty($request->get("channel"))){
+            //查看有没有studio权限
+            if($user['user_uid'] !== $dhammaTerm->owner){
+                $destCanEdit = false;
+            }
+        }else{
+            //查看有没有channel权限
+            $power = ShareApi::getResPower($user["user_uid"],$request->get("channel"),2);
+            if($power < 20){
+                $destCanEdit = false;
+            }
+        }
+
+        $channelSame = true;
+        if(empty($dhammaTerm->channal)){
+            if(empty($request->get("channel"))){
+                $channelSame = true;
+            }else{
+                $channelSame = false;
+            }
+        }else{
+            if($dhammaTerm->channal===$request->get("channel")){
+                $channelSame = true;
+            }else{
+                $channelSame = false;
+            }
+        }
+
+        if($channelSame){
+            //两个一样，只判断源权限
+            if(!$srcCanEdit){
+                return $this->error(__('auth.failed'),[],403);
+            }
+        }else{
+            if($request->get("copy")==='copy'){
+                //复制模式 只判断目标权限
+                if(!$destCanEdit){
+                    return $this->error(__('auth.failed'),[],403);
+                }
+            }else{
+                //移动模式 源目标两个都判断
+                if(!$destCanEdit || !$srcCanEdit){
+                    return $this->error(__('auth.failed'),[],403);
+                }
+            }
+        }
+        if(!$channelSame){
+            /**
+             * 查询重复的
+             * 一个channel下面word+tag+language 唯一
+             *
+             */
+            $exist = false;
+            if(empty($request->get("channel"))){
+                //复制模式必须给channel
+                return $this->error(__('auth.failed'),[],404);
+            }else{
+                $exist = DhammaTerm::where('word',$request->get("word"))
+                                        ->where('tag',$request->get("tag"))
+                                        ->where('channal',$request->get("channel"))
+                                        ->exists();
+            }
+            if($exist){
+                return $this->error("word existed",[],200);
+            }
+        }
+
+        if($request->get("copy")==='copy'){
+            /**新建
+            */
+            $dhammaTerm = new DhammaTerm;
+            $dhammaTerm->id = app('snowflake')->id();
+            $dhammaTerm->guid = Str::uuid();
+        }
+
         $dhammaTerm->word = $request->get("word");
         $dhammaTerm->word_en = Tools::getWordEn($request->get("word"));
         $dhammaTerm->meaning = $request->get("meaning");
         $dhammaTerm->other_meaning = $request->get("other_meaning");
         $dhammaTerm->note = $request->get("note");
         $dhammaTerm->tag = $request->get("tag");
-        $dhammaTerm->channal = $request->get("channal");
+        $dhammaTerm->channal = $request->get("channel");
         $dhammaTerm->language = $request->get("language");
-        if($request->has("channal") && Str::isUuid($request->get("channal"))){
-            $channelInfo = ChannelApi::getById($request->get("channal"));
+
+        if($request->has("studioName")){
+            $dhammaTerm->owner = StudioApi::getIdByName($request->get("studioName"));
+        }else if($request->has("studioId")){
+            $dhammaTerm->owner = $request->get("studioId");
+        }
+        if($request->has("channel") && Str::isUuid($request->get("channel"))){
+            $channelInfo = ChannelApi::getById($request->get("channel"));
             if(!$channelInfo){
                 return $this->error("channel id failed");
             }else{
                 $dhammaTerm->owner = $channelInfo['studio_id'];
             }
         }
-        if($request->has("studioName")){
-            $dhammaTerm->owner = StudioApi::getIdByName($request->get("studioName"));
-        }else if($request->has("studioId")){
-            $dhammaTerm->owner = $request->get("studioId");
-        }
-
         $dhammaTerm->editor_id = $user["user_id"];
         $dhammaTerm->create_time = time()*1000;
         $dhammaTerm->modify_time = time()*1000;
