@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserDict;
+use App\Models\DictInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
@@ -10,6 +11,7 @@ use App\Http\Api;
 use App\Http\Api\AuthApi;
 use App\Http\Api\DictApi;
 use App\Http\Resources\UserDictResource;
+use Illuminate\Support\Str;
 
 class UserDictController extends Controller
 {
@@ -87,6 +89,18 @@ class UserDictController extends Controller
 		}
         if($request->has("search")){
             $table->where('word', 'like', $request->get("search")."%");
+        }
+        if(($request->has('word'))){
+            $table = $table->where('word',$request->get('word'));
+        }
+        if(($request->has('parent'))){
+            $table = $table->where('parent',$request->get('parent'));
+        }
+        if(($request->has('dict'))){
+            $dictId = DictInfo::where('shortname',$request->get('dict'))->value('id');
+            if(Str::isUuid($dictId)){
+                $table = $table->where('dict_id',$dictId);
+            }
         }
         $count = $table->count();
 
