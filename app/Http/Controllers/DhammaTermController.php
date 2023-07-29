@@ -196,7 +196,6 @@ class DhammaTermController extends Controller
         $validated = $request->validate([
             'word' => 'required',
             'meaning' => 'required',
-            'language' => 'required'
         ]);
 
         /**
@@ -207,7 +206,7 @@ class DhammaTermController extends Controller
                 ->where('word',$request->get("word"))
                 ->where('tag',$request->get("tag"));
         if(!empty($request->get("channel"))){
-            $isDoesntExist = $table->where('channel',$request->get("channel"))
+            $isDoesntExist = $table->where('channal',$request->get("channel"))
                     ->doesntExist();
         }else{
             $isDoesntExist = $table->where('language',$request->get("language"))
