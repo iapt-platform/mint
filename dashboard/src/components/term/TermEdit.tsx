@@ -117,7 +117,7 @@ const TermEditWidget = ({
           meaning: values.meaning,
           other_meaning: values.meaning2?.join(),
           note: values.note,
-          channal: values.channel
+          channel: values.channel
             ? values.channel[values.channel.length - 1]
               ? values.channel[values.channel.length - 1]
               : undefined

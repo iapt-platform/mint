@@ -68,8 +68,9 @@ const ChannelSelectWidget = ({
           }
 
           if (user) {
+            //自己的 studio
             channels.push({
-              value: user.realName,
+              value: user.id,
               label: user.realName,
               children: json.data.rows
                 .filter((value) => value.studio.id === user.id)
