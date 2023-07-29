@@ -165,7 +165,7 @@ class UpgradeCompound extends Command
                 $new->save();
             }
             if(env('APP_ENV','local') !== 'local'){
-                sleep(1);
+                usleep(100);
             }
 		}
 		//删除旧数据
