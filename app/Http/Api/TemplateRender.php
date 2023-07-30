@@ -247,17 +247,12 @@ class TemplateRender{
         $sid = $this->get_param($this->param,"sid",1);
         $channel = $this->get_param($this->param,"channel",2);
         if(!empty($channel)){
-            $mChannel = $channel;
+            $channels = explode(',',$channel);
         }else{
-            $mChannel = $this->channel_id[0];
+            $channels = $this->channel_id;
         }
         $sentInfo = explode('@',trim($sid));
         $sentId = $sentInfo[0];
-        if(empty($mChannel)){
-            $channels = [];
-        }else{
-            $channels = [$mChannel];
-        }
         if(isset($sentInfo[1])){
             $channels = [$sentInfo[1]];
         }
