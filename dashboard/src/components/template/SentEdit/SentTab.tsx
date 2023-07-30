@@ -93,7 +93,7 @@ const SentTabWidget = ({
                 );
               }}
             />
-            <Text copyable={{ text: sentId[0] }}>{sentId[0]}</Text>
+            <Text copyable={{ text: `{{${sentId[0]}}}` }}>{sentId[0]}</Text>
             <SentMenu
               book={book}
               para={para}
