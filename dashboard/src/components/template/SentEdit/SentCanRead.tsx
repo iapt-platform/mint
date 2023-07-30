@@ -35,12 +35,11 @@ const SentCanReadWidget = ({
 }: IWidget) => {
   const [sentData, setSentData] = useState<ISentence[]>([]);
   const [channels, setChannels] = useState<string[]>();
-
   const user = useAppSelector(_currentUser);
 
   const load = () => {
     const sentId = `${book}-${para}-${wordStart}-${wordEnd}`;
-    let url = `/v2/sentence?view=sent-can-read&sentence=${sentId}&type=${type}&mode=edit`;
+    let url = `/v2/sentence?view=sent-can-read&sentence=${sentId}&type=${type}&mode=edit&html=true`;
     url += channelsId ? `&channels=${channelsId.join()}` : "";
     console.log("url", url);
     get<ISentenceListResponse>(url)
@@ -64,9 +63,11 @@ const SentCanReadWidget = ({
               studio: item.studio,
               channel: item.channel,
               suggestionCount: item.suggestionCount,
+              translationChannels: channelsId,
               updateAt: item.updated_at,
             };
           });
+          console.log("new data", newData);
           setSentData(newData);
         } else {
           message.error(json.message);
@@ -90,7 +91,7 @@ const SentCanReadWidget = ({
   }, [reload]);
 
   return (
-    <>
+    <div style={{ backgroundColor: "#8080801f" }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <span></span>
         <Button
@@ -120,6 +121,7 @@ const SentCanReadWidget = ({
               userName: user.realName,
             },
             channel: channel,
+            translationChannels: channelsId,
             updateAt: "",
             openInEditMode: true,
           };
@@ -139,7 +141,7 @@ const SentCanReadWidget = ({
           />
         );
       })}
-    </>
+    </div>
   );
 };
 
