@@ -151,6 +151,7 @@ export interface ISentenceRequest {
   prEditor?: string;
   prId?: string;
   prEditAt?: string;
+  channels?: string;
 }
 
 export interface ISentenceData {

@@ -78,9 +78,7 @@ const SentTabWidget = ({
             <TocPath
               link="none"
               data={mPath}
-              trigger={
-                path ? path.length > 0 ? path[0].paliTitle : <></> : <></>
-              }
+              trigger={path ? path.length > 0 ? path[0].title : <></> : <></>}
               onChange={(para: IChapter) => {
                 //点击章节目录
                 const type = para.level
@@ -93,7 +91,7 @@ const SentTabWidget = ({
                 );
               }}
             />
-            <Text copyable={{ text: sentId[0] }}>{sentId[0]}</Text>
+            <Text copyable={{ text: `{{${sentId[0]}}}` }}>{sentId[0]}</Text>
             <SentMenu
               book={book}
               para={para}

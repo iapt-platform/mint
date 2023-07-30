@@ -1,5 +1,4 @@
-import { Space } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector } from "../../../hooks";
 import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
 import Lookup from "../../dict/Lookup";

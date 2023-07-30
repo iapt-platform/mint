@@ -56,6 +56,8 @@ const Widget = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [anchorNavOpen, setAnchorNavOpen] = useState(false);
   const [recentModalOpen, setRecentModalOpen] = useState(false);
+  const [loadedArticleData, setLoadedArticleData] =
+    useState<IArticleDataResponse>();
 
   const paraChange = useAppSelector(paraParam);
 
@@ -125,7 +127,19 @@ const Widget = () => {
             <NetStatus style={{ color: "white" }} />
           </Space>
           <div></div>
-          <div key="right" style={{ display: "flex" }}>
+          <Space key="right">
+            {type === "article" && loadedArticleData ? (
+              <Button
+                ghost
+                onClick={() => {
+                  navigate(
+                    `/studio/${loadedArticleData.studio?.realName}/article/${loadedArticleData.uid}/edit`
+                  );
+                }}
+              >
+                Edit
+              </Button>
+            ) : undefined}
             <Avatar placement="bottom" />
             <Divider type="vertical" />
             <ModeSwitch
@@ -170,7 +184,7 @@ const Widget = () => {
                 setRightPanel((value) => (value === "close" ? "open" : "close"))
               }
             />
-          </div>
+          </Space>
         </Header>
       </Affix>
       <div style={{ width: "100%", display: "flex" }}>
@@ -265,7 +279,9 @@ const Widget = () => {
                 });
                 navigate(url);
               }}
-              onLoad={(article: IArticleDataResponse) => {}}
+              onLoad={(article: IArticleDataResponse) => {
+                setLoadedArticleData(article);
+              }}
             />
             <Navigate
               type={type as ArticleType}

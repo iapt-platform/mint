@@ -37,6 +37,7 @@ export interface ITerm {
   channel?: string[];
   channelId?: string;
   lang?: string;
+  copy?: string;
 }
 
 interface IWidget {
@@ -116,7 +117,7 @@ const TermEditWidget = ({
           meaning: values.meaning,
           other_meaning: values.meaning2?.join(),
           note: values.note,
-          channal: values.channel
+          channel: values.channel
             ? values.channel[values.channel.length - 1]
               ? values.channel[values.channel.length - 1]
               : undefined
@@ -124,6 +125,7 @@ const TermEditWidget = ({
           studioName: studioName,
           studioId: parentStudioId,
           language: values.lang,
+          copy: values.copy,
         };
         console.log("value", newValue);
         let res: ITermResponse;
@@ -283,6 +285,7 @@ const TermEditWidget = ({
         <ChannelSelect
           channelId={channelId}
           parentChannelId={parentChannelId}
+          parentStudioId={parentStudioId}
           width="md"
           name="channel"
           placeholder="通用于此Studio"
@@ -295,12 +298,47 @@ const TermEditWidget = ({
         />
         <ProFormDependency name={["channel"]}>
           {({ channel }) => {
-            console.log("channel", channel);
-
+            const hasChannel = channel
+              ? channel.length === 0 || channel[0] === ""
+                ? false
+                : true
+              : false;
+            let noChange = true;
+            if (!channel || channel.length === 0 || channel[0] === "") {
+              if (!channelId || channelId === null || channelId === "") {
+                noChange = true;
+              } else {
+                noChange = false;
+              }
+            } else {
+              if (channel[0] === channelId) {
+                noChange = true;
+              } else {
+                noChange = false;
+              }
+            }
             return (
-              <LangSelect
-                disabled={channel ? (channel[0] === "" ? false : true) : false}
-              />
+              <Space>
+                <LangSelect disabled={hasChannel} required={!hasChannel} />
+                <ProFormSelect
+                  initialValue={"move"}
+                  name="copy"
+                  allowClear={false}
+                  label=" "
+                  hidden={!id || noChange}
+                  placeholder="Please select other meanings"
+                  options={[
+                    {
+                      value: "move",
+                      label: "move",
+                    },
+                    {
+                      value: "copy",
+                      label: "copy",
+                    },
+                  ]}
+                />
+              </Space>
             );
           }}
         </ProFormDependency>

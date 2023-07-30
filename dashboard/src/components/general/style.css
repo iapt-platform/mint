@@ -13,7 +13,7 @@
   z-index: 1;
   resize: vertical;
   color: var(--main-color);
-  background-color: var(--drop-bg-color);
+  background-color: #e4e45c52;
   border: unset;
   border-radius: 8px;
   padding: 5px;
@@ -29,14 +29,14 @@
   border-left: 1px solid #000;
 }
 .text_input > .menu {
-  background: linear-gradient(45deg, black, transparent);
+  background-color: wheat;
   width: 200px;
   height: 300px;
   box-shadow: #000;
   position: absolute;
   display: none;
   z-index: 100;
-  box-shadow: 0 5px 7px rgb(0 0 0 / 15%);
+  box-shadow: 0 5px 7px rgb(0 0 0 / 25%);
 }
 .text_input > .menu ul {
   list-style-type: none;

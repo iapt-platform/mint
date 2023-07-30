@@ -27,8 +27,14 @@ interface IWidget {
   width?: number | "md" | "sm" | "xl" | "xs" | "lg";
   label?: string;
   disabled?: boolean;
+  required?: boolean;
 }
-const LangSelectWidget = ({ width, label, disabled = false }: IWidget) => {
+const LangSelectWidget = ({
+  width,
+  label,
+  disabled = false,
+  required = true,
+}: IWidget) => {
   const intl = useIntl();
 
   const langOptions = [
@@ -63,7 +69,7 @@ const LangSelectWidget = ({ width, label, disabled = false }: IWidget) => {
       }
       rules={[
         {
-          required: true,
+          required: required,
           message: intl.formatMessage({
             id: "forms.message.lang.required",
           }),

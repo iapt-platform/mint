@@ -23,7 +23,7 @@ interface IWidgetTocPath {
 }
 const TocPathWidget = ({
   data = [],
-  trigger,
+  trigger = "toc",
   link = "self",
   channel,
   onChange,

@@ -144,9 +144,6 @@ const Widget = () => {
     <>
       <ProTable<IRelation, IParams>
         actionRef={ref}
-        search={{
-          filterType: "light",
-        }}
         columns={[
           {
             title: intl.formatMessage({
@@ -442,6 +439,9 @@ const Widget = () => {
         }}
         options={{
           search: true,
+        }}
+        search={{
+          filterType: "light",
         }}
         toolBarRender={() => [
           <DataImport
