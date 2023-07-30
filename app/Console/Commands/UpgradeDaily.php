@@ -59,23 +59,28 @@ class UpgradeDaily extends Command
         $this->call('upgrade:dict.default.meaning');
         $time = time()-$start;
         $message .= "dict.default.meaning:{$time}; ";
+        $currTime = time();
         //社区术语表
         $this->call('upgrade:community.term',['lang'=>'zh-Hans']);
-        $time = time()-$time;
+        $time = time()-$currTime;
         $message .= "community.term:{$time}; ";
+        $currTime = time();
 
         #译文进度
         $this->call('upgrade:progress');
-        $time = time()-$time;
+        $time = time()-$currTime;
         $message .= "progress:{$time}; ";
+        $currTime = time();
         $this->call('upgrade:progress.chapter');
-        $time = time()-$time;
+        $time = time()-$currTime;
         $message .= "progress.chapter:{$time}; ";
+        $currTime = time();
 
         # 逐词译数据库分析
         $this->call('upgrade:wbw.analyses');
-        $time = time()-$time;
+        $time = time()-$currTime;
         $message .= "wbw.analyses:{$time}; ";
+        $currTime = time();
 
         $time = time()-$start;
         $message .= "总时间:{$time}; ";
