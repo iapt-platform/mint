@@ -35,7 +35,6 @@ const SentCellEditableWidget = ({
   const [value, setValue] = useState(data.content);
   const [saving, setSaving] = useState<boolean>(false);
   const [termList, setTermList] = useState<string[]>();
-
   const sentWords = useAppSelector(wordList);
 
   useEffect(() => {
@@ -77,17 +76,21 @@ const SentCellEditableWidget = ({
 
   const save = () => {
     setSaving(true);
-    put<ISentenceRequest, ISentenceResponse>(
-      `/v2/sentence/${data.book}_${data.para}_${data.wordStart}_${data.wordEnd}_${data.channel.id}`,
-      {
-        book: data.book,
-        para: data.para,
-        wordStart: data.wordStart,
-        wordEnd: data.wordEnd,
-        channel: data.channel.id,
-        content: value,
-      }
-    )
+    console.log("on save", data);
+    let url = `/v2/sentence/${data.book}_${data.para}_${data.wordStart}_${data.wordEnd}_${data.channel.id}`;
+    url += "?mode=edit&html=true";
+    console.log("url", url);
+    const body = {
+      book: data.book,
+      para: data.para,
+      wordStart: data.wordStart,
+      wordEnd: data.wordEnd,
+      channel: data.channel.id,
+      content: value,
+      channels: data.translationChannels?.join(),
+    };
+    console.log("body", body);
+    put<ISentenceRequest, ISentenceResponse>(url, body)
       .then((json) => {
         console.log(json);
         setSaving(false);
