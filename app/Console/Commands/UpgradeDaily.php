@@ -60,6 +60,7 @@ class UpgradeDaily extends Command
         $time = time()-$start;
         $message .= "dict.default.meaning:{$time}; ";
         $currTime = time();
+
         //社区术语表
         $this->call('upgrade:community.term',['lang'=>'zh-Hans']);
         $time = time()-$currTime;
@@ -71,6 +72,7 @@ class UpgradeDaily extends Command
         $time = time()-$currTime;
         $message .= "progress:{$time}; ";
         $currTime = time();
+
         $this->call('upgrade:progress.chapter');
         $time = time()-$currTime;
         $message .= "progress.chapter:{$time}; ";
