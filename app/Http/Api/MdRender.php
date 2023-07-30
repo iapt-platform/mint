@@ -227,6 +227,9 @@ class MdRender{
     }
 
     public static function render2($markdown,$channelId=[],$queryId=null,$mode='read',$channelType,$contentType="markdown"){
+        if(empty($markdown)){
+            return "<span></span>";
+        }
         $wiki = MdRender::markdown2wiki($markdown,$channelType,$contentType);
         $html = MdRender::wiki2xml($wiki);
         if(!is_null($queryId)){
