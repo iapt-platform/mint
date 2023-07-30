@@ -31,6 +31,7 @@ export interface ISentence {
   updateAt: string;
   suggestionCount?: ISuggestionCount;
   openInEditMode?: boolean;
+  translationChannels?: string[];
 }
 export interface ISentenceId {
   book: number;
