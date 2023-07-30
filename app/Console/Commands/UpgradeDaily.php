@@ -80,7 +80,7 @@ class UpgradeDaily extends Command
         $this->call('upgrade:wbw.analyses');
         $time = time()-$currTime;
         $message .= "wbw.analyses:{$time}; ";
-        $currTime = time();
+
 
         $time = time()-$start;
         $message .= "总时间:{$time}; ";
