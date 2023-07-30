@@ -124,7 +124,7 @@ class ArticleController extends Controller
         //
         $table = Article::select(['uid','title','subtitle',
                                 'summary','owner','lang',
-                                'status','updated_at','created_at']);
+                                'status','editor_id','updated_at','created_at']);
         switch ($request->get('view')) {
             case 'studio':
 				# 获取studio内所有channel
