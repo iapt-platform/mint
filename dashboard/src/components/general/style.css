@@ -13,7 +13,7 @@
   z-index: 1;
   resize: vertical;
   color: var(--main-color);
-  background-color: var(--drop-bg-color);
+  background-color: #e4e45c52;
   border: unset;
   border-radius: 8px;
   padding: 5px;
