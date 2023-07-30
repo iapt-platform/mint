@@ -178,7 +178,14 @@ class MdRender{
             return "<span>xml解析错误{$e}</span>";
         }
 
-
+        /*
+        $doc = new \DOMDocument();
+        $xml = str_replace('MdTpl','dfn',$xml);
+        $ok = $doc->loadHTML($xml,LIBXML_HTML_NODEFDTD | LIBXML_DTDVALID);
+        if(!$ok){
+            return "<span>xml解析错误</span>";
+        }
+        */
 
         $tpl_list = $dom->xpath('//MdTpl');
         foreach ($tpl_list as $key => $tpl) {
