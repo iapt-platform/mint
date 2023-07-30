@@ -17,7 +17,7 @@ class TurboSplit
         "w_threshhold" => 0.8,
         "forward" => true,
         "sandhi_advance" => false,
-        "lookup_express" => true,/**快速查字典-不去尾 */
+        "lookup_declension" => false,/**快速查字典-不去尾 */
     ];
     protected $node = [];
 	protected $path = array();
@@ -135,12 +135,14 @@ class TurboSplit
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($options=[])
     {
 		for($i=0;$i<$this->MAX_DEEP;$i++ ){
 			array_push($this->path, array("", 0));
 		}
-
+        foreach ($options as $key => $value) {
+            $this->options[$key] = $value;
+        }
         return;
     }
 
@@ -185,7 +187,7 @@ class TurboSplit
 			//找到
 			return array($row,0);
 		} else {
-            if($this->options["lookup_express"]){
+            if($this->options["lookup_declension"]){
                 return array(0,0);
             }
 			//去除尾查
@@ -296,31 +298,6 @@ class TurboSplit
 		//达到最大搜索深度，返回
 		if ($deep >= $this->MAX_DEEP) {
             return ;
-            /*
-			$word = "";
-			$cf = 1.0;
-			for ($i = 0; $i < $deep; $i++) {
-				if (!empty($this->path[$i][0])) {
-					$word .= $this->path[$i][0] ;
-					if($this->isDebug) {
-						$word .= "(" . $this->path[$i][1] . ")";
-					}
-					$word .= "+";
-					$cf = $cf * $this->path[$i][1];
-				}
-			}
-			$len = pow(mb_strlen($strWord, "UTF-8"), 3);
-			$cf += (0 - $len) / ($len + 150);
-			$word .= "{$strWord}";
-			if ($forward == true) {
-				$this->result[$word] = $cf;
-				return 0;
-			} else {
-				$reverseWord = $this->word_reverse($word);
-				$this->result[$reverseWord] = $cf;
-				return 0;
-			}
-*/
 		}
 		//直接找到
 
@@ -455,104 +432,6 @@ class TurboSplit
                 $this->split($node['children'][$key], ($deep + 1), $express, $adj_len, $c_threshhold, $w_threshhold, $forward, $sandhi_advance);
             }
         }
-        /*
-		if (count($output) > 0) {
-			foreach ($output as $part) {
-				$checked = $part[0];
-				$remainder = $part[1];
-				$this->log("剩余部分：{$remainder}");
-				$this->path[$deep][0] = $checked;
-				$this->path[$deep][1] = $part[2];
-
-				if (empty($remainder)) {
-					#全切完了
-					$this->log("全切完了");
-					$word = "";
-					$cf = 1.0;
-					for ($i = 0; $i < $deep; $i++) {
-						$word .= $this->path[$i][0];
-						if ($this->isDebug) {
-							$word .= "(" . $this->path[$i][1] . ")";
-						}
-						$word .= "+";
-						$cf = $cf * $this->path[$i][1];
-					}
-
-					if ($this->isDebug) {
-						$word .= $checked . "({$part[2]})";
-					} else {
-						$word .= $checked;
-					}
-					$cf = $cf * $part[2];
-					if ($cf > $w_threshhold) {
-						if ($forward == true) {
-							$this->result[$word] = $cf;
-							return 0;
-						} else {
-							$reverseWord = $this->word_reverse($word);
-							$this->result[$reverseWord] = $cf;
-							return 0;
-						}
-					}
-				} else {
-                    //还有剩余部分
-					#计算当前信心指数
-					$cf = 1.0;
-					for ($i = 0; $i < $deep; $i++) {
-						$cf = $cf * $this->path[$i][1];
-					}
-					$this->log("计算当前信心指数:{$cf}");
-					if($cf<$w_threshhold){
-						$this->log("信心指数过低，提前返回 {$cf}");
-						return 0;
-					}else{
-						#接着切
-						$this->log("接着切:{$remainder}");
-						$this->split($remainder, ($deep + 1), $express, $adj_len, $c_threshhold, $w_threshhold, $forward, $sandhi_advance);
-					}
-				}
-			}
-		}else {
-			#尾巴查不到了
-			$this->log("尾巴查不到了");
-			$word = "";
-			$cf = 1.0;
-			for ($i = 0; $i < $deep; $i++) {
-				$word .= $this->path[$i][0];
-				if ($this->isDebug) {
-					$word .= "(" . $this->path[$i][1] . ")";
-				}
-				$word .= "+";
-				$cf = $cf * $this->path[$i][1];
-			}
-
-			$len = pow(mb_strlen($strWord, "UTF-8"), 3);
-
-			if ($forward) {
-				$cf =(1-$cf) * $len / ($len + 150);
-			} else {
-				$cf =(1-$cf) * $len / ($len + 5);
-			}
-
-			if ($this->isDebug) {
-				$word = $word.$strWord . "(0)";
-			} else {
-				$word = $word .$strWord;
-			}
-
-			if ($cf > $w_threshhold) {
-				if ($forward == true) {
-					$this->result[$word] = $cf;
-					return 0;
-				}
-				else {
-					$reverseWord = $this->word_reverse($word);
-					$this->result[$reverseWord] = $cf;
-					return 0;
-				}
-			}
-		}
-*/
 	}
 
     /**
