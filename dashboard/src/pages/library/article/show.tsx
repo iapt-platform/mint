@@ -127,7 +127,7 @@ const Widget = () => {
             <NetStatus style={{ color: "white" }} />
           </Space>
           <div></div>
-          <Space key="right" style={{ display: "flex" }}>
+          <Space key="right">
             {type === "article" && loadedArticleData ? (
               <Button
                 ghost
