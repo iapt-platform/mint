@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\PaliSentence;
+use App\Models\PaliText;
 use App\Http\Api\StudioApi;
 use App\Http\Api\UserApi;
 use App\Http\Api\ChannelApi;
@@ -31,14 +32,18 @@ class SentSimResource extends JsonResource
             "editor"=> StudioApi::getById(config("app.admin.root_uuid")),
             "channel"=> ChannelApi::getById($channelId),
             "content"=>$sent->text,
-            "html"=> "<span>{$sent->html}</span>",
+            "html"=> "<span>{$sent->text}</span>",
             "role"=>"member",
             "created_at"=> $sent->created_at,
             "updated_at"=> $sent->updated_at,
         ];
         $resCount = CorpusController::sentResCount($sent->book,$sent->paragraph,$sent->word_begin,$sent->word_end);
-        return [
+        $result = [
             "id" => "{$sent->book}-{$sent->paragraph}-{$sent->word_begin}-{$sent->word_end}",
+            "book"=> $sent->book,
+            "para"=> $sent->paragraph,
+            "wordStart"=> $sent->word_begin,
+            "wordEnd"=> $sent->word_end,
             "origin" =>  [$sentOrg],
             "translation" =>  [],
             "layout" =>   "column",
@@ -48,5 +53,9 @@ class SentSimResource extends JsonResource
             "originNum" =>  $resCount['originNum'],
             "simNum" =>  $resCount['simNum'],
         ];
+        $result['path'] = json_decode(PaliText::where('book',$sent->book)
+                                        ->where('paragraph',$sent->paragraph)
+                                        ->value('path'));
+        return $result;
     }
 }
