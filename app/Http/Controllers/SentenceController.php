@@ -250,7 +250,12 @@ class SentenceController extends Controller
         $newHis->id = app('snowflake')->id();
         $newHis->sent_uid = $uid;
         $newHis->user_uid = $editor;
-        $newHis->content = $content;
+        if(empty($content)){
+            $newHis->content = "";
+        }else{
+            $newHis->content = $content;
+        }
+
         $newHis->create_time = time()*1000;
         $newHis->save();
     }
@@ -290,7 +295,7 @@ class SentenceController extends Controller
             return $this->error("not found channel");
         }
         if($channel->owner_uid !== $user["user_uid"]){
-            //TODO 判断是否为协作
+            // 判断是否为协作
             $power = ShareApi::getResPower($user["user_uid"],$channel->uid,2);
             if($power < 20){
                 return $this->error(__('auth.failed'),[],403);
