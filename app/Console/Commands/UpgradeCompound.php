@@ -105,15 +105,15 @@ class UpgradeCompound extends Command
                             ->where('book',$this->option('book'))
                             ->where('type','<>','.ctl.')
                             ->where('real','<>','')
-                            ->groupBy('real')->cursor();
+                            ->groupBy('real')->get();
         }else{
             $words = WbwTemplate::select('real')
                             ->where('type','<>','.ctl.')
                             ->where('real','<>','')
-                            ->groupBy('real')->cursor();
+                            ->groupBy('real')->get();
         }
 
-		$count = 0;
+		$bar = $this->output->createProgressBar(count($words));
 		foreach ($words as $key => $word) {
             UserDict::where('word',$word->real)
                     ->where('dict_id',$dict_id)
@@ -124,12 +124,10 @@ class UpgradeCompound extends Command
 								->exists();
 
 			if($isExists){
-				$this->info("Exists:{$word->real}");
+				//$this->info("Exists:{$word->real}");
 				//continue;
 			}
-			# code...
-			$count++;
-			$this->info("{$count}:{$word->real}");
+
 			$ts = new TurboSplit();
 
             $parts = $ts->splitA($word->real);
@@ -167,11 +165,12 @@ class UpgradeCompound extends Command
             if(env('APP_ENV','local') !== 'local'){
                 usleep(100);
             }
+            $bar->advance();
 		}
 		//删除旧数据
 		UserDict::where('dict_id',$dict_id)->where('flag',2)->delete();
 		UserDict::where('dict_id',$dict_id)->where('flag',1)->update(['flag'=>0]);
-
+        $bar->finish();
         return 0;
     }
 }
