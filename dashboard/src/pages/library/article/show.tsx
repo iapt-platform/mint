@@ -127,9 +127,10 @@ const Widget = () => {
             <NetStatus style={{ color: "white" }} />
           </Space>
           <div></div>
-          <div key="right" style={{ display: "flex" }}>
+          <Space key="right" style={{ display: "flex" }}>
             {type === "article" && loadedArticleData ? (
               <Button
+                ghost
                 onClick={() => {
                   navigate(
                     `/studio/${loadedArticleData.studio?.realName}/article/${loadedArticleData.uid}/edit`
@@ -183,7 +184,7 @@ const Widget = () => {
                 setRightPanel((value) => (value === "close" ? "open" : "close"))
               }
             />
-          </div>
+          </Space>
         </Header>
       </Affix>
       <div style={{ width: "100%", display: "flex" }}>
