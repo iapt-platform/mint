@@ -16,7 +16,7 @@ paths:
   /users/sign-in:
     $ref: "./resources/auth/users/sign-in.yaml"
   /channel:
-    $ref: "./resources/channel/store.yaml"
+    $ref: "./resources/channel/index.yaml"
   /channel/{channelId}:
     $ref: "./resources/channel/show.yaml"
   /palitext:
