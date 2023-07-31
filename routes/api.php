@@ -59,6 +59,9 @@ use App\Http\Controllers\SignUpController;
 use App\Http\Controllers\TermSummaryController;
 use App\Http\Controllers\NissayaCardController;
 use App\Http\Controllers\SentInChannelController;
+use App\Http\Controllers\ChannelIOController;
+use App\Http\Controllers\ChapterIOController;
+use App\Http\Controllers\SentenceIOController;
 
 /*
 |--------------------------------------------------------------------------
@@ -168,6 +171,10 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('invite',InviteController::class);
     Route::apiResource('sign-up',SignUpController::class);
     Route::apiResource('term-summary',TermSummaryController::class);
+
+    Route::apiResource('channel-io',ChannelIOController::class);
+    Route::apiResource('chapter-io',ChapterIOController::class);
+    Route::apiResource('sentence-io',SentenceIOController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
