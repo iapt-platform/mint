@@ -3,19 +3,21 @@ post:
   tags:
     - channel
   requestBody:
-    description: 新建
     required: true
+    description: 新建channel参数
     content:
       application/json:
         schema:
           type: object
           properties:
-            - name:
+            name:
               type: string
               required: true
-            - studio:
+            studio:
               type: string
-              summary: studio name(owner name)
+          required:
+            - name
+            - studio
   responses:
     "200": # status code
       description: A JSON array of channel information
