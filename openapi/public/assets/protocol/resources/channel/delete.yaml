@@ -1,0 +1,27 @@
+delete:
+  summary: delete the specified resource.
+  tags:
+    - channel
+  description: 删除某个channel
+  parameters:
+    - name: channelId
+      in: path
+      required: true
+      description: channel uuid
+      schema:
+        type: string
+  responses:
+    "200": # status code
+      description: A JSON array of channel information
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                $ref: "./channel.yaml"
