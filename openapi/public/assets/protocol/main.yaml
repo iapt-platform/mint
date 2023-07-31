@@ -4,17 +4,21 @@ info:
   description: International Academy Of Pali Tipitaka(国际巴利三藏学院)
   version: 2022.12.8
 servers:
-  - url: https://spring.wikipali.org/api
+  - url: https://spring.wikipali.org/api/v2
     description: Internal staging server for testing
-  - url: https://www.wikipali.org/api
+  - url: https://www.wikipali.org/api/v2
     description: Main production server
+  - url: http://127.0.0.1:8000/api/v2
+    description: local dev
 paths:
   /users:
     $ref: "./resources/auth/users/index.yaml"
   /users/sign-in:
     $ref: "./resources/auth/users/sign-in.yaml"
   /channel:
-    $ref: "./resources/channel/index.yaml"
+    $ref: "./resources/channel/store.yaml"
+  /channel/{channelId}:
+    $ref: "./resources/channel/show.yaml"
   /palitext:
     $ref: "./resources/corpus/pali-text/index.yaml"
   /discussion:
