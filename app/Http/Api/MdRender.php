@@ -320,6 +320,7 @@ class MdRender{
         $markdown = str_replace(['[[',']]'],['㐛','㐚'],$markdown);
         $html = Str::markdown($markdown);
         $html = str_replace(['㐛','㐚'],['[[',']]'],$html);
+        $html = MdRender::fixHtml($html);
 
         #替换术语
         $pattern = "/\[\[(.+?)\]\]/";
@@ -355,5 +356,13 @@ class MdRender{
         return MdRender::render2($markdown,$channelId,$queryId,$mode,$channelType,$contentType);
     }
 
-
+    public static function  fixHtml($html) {
+        $doc = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $html = mb_convert_encoding($html, 'HTML-ENTITIES', "UTF-8");
+        $doc->loadHTML('<span>'.$html.'</span>',LIBXML_NOERROR  | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $fixed = $doc->saveHTML();
+        $fixed = mb_convert_encoding($fixed, "UTF-8", 'HTML-ENTITIES');
+        return $fixed;
+    }
 }
