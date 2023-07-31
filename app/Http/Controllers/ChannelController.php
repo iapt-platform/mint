@@ -33,6 +33,11 @@ class ChannelController extends Controller
 		$result=false;
 		$indexCol = ['uid','name','summary','type','owner_uid','lang','status','updated_at','created_at'];
 		switch ($request->get('view')) {
+            case 'public':
+                $table = Channel::select($indexCol)
+                            ->where('status',30);
+
+                break;
             case 'studio':
 				# 获取studio内所有channel
                 $user = AuthApi::current($request);
@@ -73,7 +78,7 @@ class ChannelController extends Controller
                     return $this->error(__('auth.failed'));
                 }
                 //判断当前用户是否有指定的studio的权限
-                if($user['user_uid'] !== \App\Http\Api\StudioApi::getIdByName($request->get('name'))){
+                if($user['user_uid'] !== StudioApi::getIdByName($request->get('name'))){
                     return $this->error(__('auth.failed'));
                 }
                 $channelById = [];
@@ -150,9 +155,7 @@ class ChannelController extends Controller
                 $table = Channel::select($indexCol)
                         ->whereIn('uid', $channelId)
                         ->orWhere('owner_uid',$user['user_uid']);
-
                 break;
-
         }
         //处理搜索
         if($request->has("search")){
@@ -161,21 +164,11 @@ class ChannelController extends Controller
         //获取记录总条数
         $count = $table->count();
         //处理排序
-        if($request->has("order") && $request->has("dir")){
-            $table = $table->orderBy($request->get("order"),$request->get("dir"));
-        }else{
-            //默认排序
-            $table = $table->orderBy('updated_at','desc');
-        }
+        $table = $table->orderBy($request->get("order",'updated_at'),
+                                 $request->get("dir",'desc'));
         //处理分页
-        if($request->has("limit")){
-            if($request->has("offset")){
-                $offset = $request->get("offset");
-            }else{
-                $offset = 0;
-            }
-            $table = $table->skip($offset)->take($request->get("limit"));
-        }
+        $table = $table->skip($request->get("offset",0))
+                       ->take($request->get("limit",200));
         //获取数据
         $result = $table->get();
 //TODO 将下面代码转移到resource
@@ -184,19 +177,19 @@ class ChannelController extends Controller
                 //获取进度
                 //获取单句长度
                 $sentLen = PaliSentence::where('book',$request->get('book'))
-                ->whereBetween('paragraph',$chapter)
-                ->orderBy('word_begin')
-                ->select(['book','paragraph','word_begin','word_end','length'])
-                ->get();
+                                        ->whereBetween('paragraph',$chapter)
+                                        ->orderBy('word_begin')
+                                        ->select(['book','paragraph','word_begin','word_end','length'])
+                                        ->get();
             }
             foreach ($result as $key => $value) {
                 if($request->has('progress')){
                     //获取进度
                     $finalTable = Sentence::where('book_id',$request->get('book'))
-                    ->whereBetween('paragraph',$chapter)
-                    ->where('channel_uid',$value->uid)
-                    ->where('strlen','>',0)
-                    ->select(['strlen','book_id','paragraph','word_start','word_end']);
+                                        ->whereBetween('paragraph',$chapter)
+                                        ->where('channel_uid',$value->uid)
+                                        ->where('strlen','>',0)
+                                        ->select(['strlen','book_id','paragraph','word_start','word_end']);
                     if($finalTable->count()>0){
                         $finished = $finalTable->get();
                         $final=[];
@@ -212,33 +205,34 @@ class ChannelController extends Controller
                         }
                         $value['final'] = $final;
                     }
-
                 }
                 //角色
-                if($value->owner_uid===$user['user_uid']){
-                    $value['role'] = 'owner';
-                }else{
-                    if(isset($channelById[$value->uid])){
-                        switch ($channelById[$value->uid]['power']) {
-                            case 10:
-                                # code...
-                                $value['role'] = 'member';
-                                break;
-                            case 20:
-                                $value['role'] = 'editor';
-                                break;
-                            case 30:
-                                $value['role'] = 'owner';
-                                break;
-                            default:
-                                # code...
-                                $value['role'] = $channelById[$value->uid]['power'];
-                                break;
+                if(isset($user['user_uid'])){
+                    if($value->owner_uid===$user['user_uid']){
+                        $value['role'] = 'owner';
+                    }else{
+                        if(isset($channelById[$value->uid])){
+                            switch ($channelById[$value->uid]['power']) {
+                                case 10:
+                                    # code...
+                                    $value['role'] = 'member';
+                                    break;
+                                case 20:
+                                    $value['role'] = 'editor';
+                                    break;
+                                case 30:
+                                    $value['role'] = 'owner';
+                                    break;
+                                default:
+                                    # code...
+                                    $value['role'] = $channelById[$value->uid]['power'];
+                                    break;
+                            }
                         }
                     }
                 }
                 # 获取studio信息
-                $value->studio = \App\Http\Api\StudioApi::getById($value->owner_uid);
+                $value->studio = StudioApi::getById($value->owner_uid);
             }
 			return $this->ok(["rows"=>$result,"count"=>$count]);
 		}else{
