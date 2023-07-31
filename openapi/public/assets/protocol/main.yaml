@@ -23,3 +23,9 @@ paths:
     $ref: "./resources/corpus/pali-text/index.yaml"
   /discussion:
     $ref: "./resources/discussion/index.yaml"
+  /channel-io:
+    $ref: "./resources/io/channel/export.yaml"
+  /chapter-io:
+    $ref: "./resources/io/chapter/export.yaml"
+  /sentence-io:
+    $ref: "./resources/io/sentence/export.yaml"
