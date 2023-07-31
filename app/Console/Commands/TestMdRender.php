@@ -46,7 +46,7 @@ class TestMdRender extends Command
         //$markdown .= "多**行注**释\n\n";
         //$markdown .= "多行注释\n";
         //$markdown .= "}}\n\n";
-        $markdown .= "## heading \n\n";
+        $markdown .= "## heading [[isipatana]]<span>aa \n\n";
         $markdown .= "ddd \n\n";
         $markdown .= "- title \n";
         $markdown .= "  \n";
