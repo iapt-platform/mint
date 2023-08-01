@@ -241,7 +241,7 @@ class ProgressChapterController extends Controller
                 $pt = (new PaliText)->getTable();
 
                 //标签过滤
-                if($request->get('tags') && $request->get('tags')!==''){
+                if($request->has('tags') && !empty($request->get('tags'))){
                     $tags = explode(',',$request->get('tags'));
                     foreach ($tags as $tag) {
                         # code...
@@ -374,7 +374,7 @@ class ProgressChapterController extends Controller
                 $all_count = $count[0]->count;
                 break;
             case 'top':
-            break;
+                break;
             case 'search':
                 $key = $request->get('key');
                 $table = ProgressChapter::where('title','like',"%{$key}%");
@@ -426,6 +426,8 @@ class ProgressChapterController extends Controller
                                                 ->select(['tags.id','tags.name','tags.description'])
                                                 ->get();
                 }
+                break;
+            case 'public':
                 break;
         }
 
