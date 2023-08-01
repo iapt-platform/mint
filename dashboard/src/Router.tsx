@@ -288,7 +288,7 @@ const Widget = () => {
 
           <Route path="article" element={<StudioArticle />}>
             <Route path="list" element={<StudioArticleList />} />
-            <Route path=":articleid/edit" element={<StudioArticleEdit />} />
+            <Route path=":articleId/edit" element={<StudioArticleEdit />} />
           </Route>
 
           <Route path="anthology" element={<StudioAnthology />}>
