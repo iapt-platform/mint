@@ -1,4 +1,4 @@
-import { Button, Popover, Skeleton } from "antd";
+import { Button, Popover, Skeleton, Space } from "antd";
 import { Typography } from "antd";
 import { SearchOutlined, EditOutlined } from "@ant-design/icons";
 import { ProCard } from "@ant-design/pro-components";
@@ -11,9 +11,9 @@ import { ITermDataResponse } from "../api/Term";
 import { changedTerm, refresh } from "../../reducers/term-change";
 import { useAppSelector } from "../../hooks";
 import { get } from "../../request";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 interface ITermSummary {
   ok: boolean;
@@ -46,7 +46,7 @@ const TermCtl = ({
   const [openPopover, setOpenPopover] = useState(false);
   const [termData, setTermData] = useState<ITerm>();
   const [content, setContent] = useState<string>();
-
+  const navigate = useNavigate();
   const newTerm: ITermDataResponse | undefined = useAppSelector(changedTerm);
 
   useEffect(() => {
@@ -82,6 +82,49 @@ const TermCtl = ({
     return (
       <>
         <Popover
+          title={
+            <Space style={{ justifyContent: "space-between", width: "100%" }}>
+              <Text strong>{termData.meaning}</Text>
+              <Space>
+                <Button
+                  onClick={() => {
+                    const fullUrl =
+                      process.env.REACT_APP_WEB_HOST +
+                      process.env.PUBLIC_URL +
+                      `/term/list/${termData.word}`;
+                    window.open(fullUrl, "_blank");
+                  }}
+                  type="link"
+                  size="small"
+                  icon={<SearchOutlined />}
+                />
+                <TermModal
+                  onUpdate={(value: ITermDataResponse) => {
+                    onModalClose();
+                    store.dispatch(refresh(value));
+                  }}
+                  onClose={() => {
+                    onModalClose();
+                  }}
+                  trigger={
+                    <Button
+                      onClick={() => {
+                        setOpenPopover(false);
+                      }}
+                      type="link"
+                      size="small"
+                      icon={<EditOutlined />}
+                    />
+                  }
+                  id={termData.id}
+                  word={termData.word}
+                  channelId={termData.channelId}
+                  parentChannelId={parentChannelId}
+                  parentStudioId={parentStudioId}
+                />
+              </Space>
+            </Space>
+          }
           open={openPopover}
           onOpenChange={(visible) => {
             setOpenPopover(visible);
@@ -107,55 +150,22 @@ const TermCtl = ({
             }
           }}
           content={
-            <ProCard
-              title={word}
-              style={{ maxWidth: 500, minWidth: 300 }}
-              actions={[
-                <Button type="link" size="small" icon={<SearchOutlined />}>
-                  <Link to={`/term/list/${termData.word}`} target="_blank">
-                    详情
-                  </Link>
-                </Button>,
-                <TermModal
-                  onUpdate={(value: ITermDataResponse) => {
-                    onModalClose();
-                    store.dispatch(refresh(value));
-                  }}
-                  onClose={() => {
-                    onModalClose();
-                  }}
-                  trigger={
-                    <Button
-                      onClick={() => {
-                        setOpenPopover(false);
-                      }}
-                      type="link"
-                      size="small"
-                      icon={<EditOutlined />}
-                    >
-                      修改
-                    </Button>
-                  }
-                  id={termData.id}
-                  word={termData.word}
-                  channelId={termData.channelId}
-                  parentChannelId={parentChannelId}
-                  parentStudioId={parentStudioId}
-                />,
-              ]}
-            >
-              <div>
-                {content ? (
-                  content
-                ) : (
-                  <Skeleton
-                    title={{ width: 200 }}
-                    paragraph={{ rows: 4 }}
-                    active
-                  />
-                )}
-              </div>
-            </ProCard>
+            <div style={{ maxWidth: 500, minWidth: 300 }}>
+              <Title level={5}>
+                <Link to={`/term/list/${termData.word}`} target="_blank">
+                  {word}
+                </Link>
+              </Title>
+              {content ? (
+                content
+              ) : (
+                <Skeleton
+                  title={{ width: 200 }}
+                  paragraph={{ rows: 4 }}
+                  active
+                />
+              )}
+            </div>
           }
           placement="bottom"
         >

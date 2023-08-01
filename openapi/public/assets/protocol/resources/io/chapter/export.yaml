@@ -1,8 +1,8 @@
 get:
-  summary: Returns a list of channels.
+  summary: 从某个时间点导出章节索引数据。
   tags:
-    - channel
-  description: 返回多行数据。支持关键字搜索，分页，排序
+    - import-export
+  description: 返回多行数据。支持分页。每次输出会附带符合要求的记录数。根据每次导出数据和记录数计算导出进度。导出的数据如果uid跟原有数据重复，为更新数据。没有的是新数据。
   parameters:
     - name: view
       in: query
@@ -12,31 +12,18 @@ get:
         type: string
         enum:
           - public
-          - studio
-          - user
-    - name: search
+    - name: update_at
       in: query
-      description: 搜索关键字
+      description: 导出的时间点。时间格式"2020-05-14T08:07:30.000000Z"。如果不设置。从最初的数据开始导出。推荐记录每次导出结束的最后一条记录的时间。下次导出用这个时间作为参数。
       schema:
         type: string
-    - name: order
-      in: query
-      description: 排序字段
-      schema:
-        type: string
-    - name: dir
-      in: query
-      description: 排序方向
-      schema:
-        type: string
-        enum:
-          - desc
-          - asc
     - name: limit
       in: query
       description: 每页记录数
       schema:
         type: number
+        minimum: 1
+        maximum: 1000
     - name: offset
       in: query
       description: 从第几条记录开始提取
@@ -59,6 +46,7 @@ get:
                 properties:
                   rows:
                     type: object
-                    $ref: "./channel.yaml"
+                    $ref: "./data.yaml"
                   count:
                     type: number
+                    description: 符合要求的记录总数

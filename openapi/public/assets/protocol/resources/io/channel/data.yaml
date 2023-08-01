@@ -1,0 +1,19 @@
+properties:
+  uid:
+    type: string
+  name:
+    type: string
+  summary:
+    type: string
+  type:
+    type: string
+  owner_uid:
+    type: string
+  lang:
+    type: string
+  status:
+    type: string
+  updated_at:
+    type: string
+  created_at:
+    type: string

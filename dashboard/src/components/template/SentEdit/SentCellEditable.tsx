@@ -38,9 +38,7 @@ const SentCellEditableWidget = ({
   const sentWords = useAppSelector(wordList);
 
   useEffect(() => {
-    console.log("get word list", sentWords);
     const sentId = `${data.book}-${data.para}-${data.wordStart}-${data.wordEnd}`;
-    console.log("word list", sentWords);
     setTermList(sentWords.find((value) => value.sentId === sentId)?.words);
   }, [data.book, data.para, data.wordEnd, data.wordStart, sentWords]);
 
@@ -55,7 +53,6 @@ const SentCellEditableWidget = ({
       text: value,
     })
       .then((json) => {
-        console.log(json);
         setSaving(false);
 
         if (json.ok) {
@@ -76,10 +73,9 @@ const SentCellEditableWidget = ({
 
   const save = () => {
     setSaving(true);
-    console.log("on save", data);
     let url = `/v2/sentence/${data.book}_${data.para}_${data.wordStart}_${data.wordEnd}_${data.channel.id}`;
     url += "?mode=edit&html=true";
-    console.log("url", url);
+    console.log("save url", url);
     const body = {
       book: data.book,
       para: data.para,
@@ -89,10 +85,8 @@ const SentCellEditableWidget = ({
       content: value,
       channels: data.translationChannels?.join(),
     };
-    console.log("body", body);
     put<ISentenceRequest, ISentenceResponse>(url, body)
       .then((json) => {
-        console.log(json);
         setSaving(false);
 
         if (json.ok) {
@@ -129,7 +123,6 @@ const SentCellEditableWidget = ({
         value={value}
         menuOptions={termList}
         onChange={(value: string) => {
-          console.log("change", value);
           setValue(value);
         }}
         placeholder="请输入"
