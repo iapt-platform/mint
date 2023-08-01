@@ -8,6 +8,7 @@ interface IWidget {
   placeholder?: string;
   wordWidget?: boolean;
   convertor?: TCodeConvertor;
+  style?: React.CSSProperties;
 }
 const Widget = ({
   html,
@@ -15,9 +16,14 @@ const Widget = ({
   wordWidget = false,
   placeholder,
   convertor,
+  style,
 }: IWidget) => {
   const jsx = html ? XmlToReact(html, wordWidget, convertor) : placeholder;
-  return <Paragraph className={className}>{jsx}</Paragraph>;
+  return (
+    <Paragraph style={style} className={className}>
+      {jsx}
+    </Paragraph>
+  );
 };
 
 export default Widget;
