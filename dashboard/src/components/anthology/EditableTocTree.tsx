@@ -149,6 +149,11 @@ const EditableTocTreeWidget = ({
           node: TreeNodeData
         ) => {
           if (e.ctrlKey || e.metaKey) {
+            const fullUrl =
+              process.env.REACT_APP_WEB_HOST +
+              process.env.PUBLIC_URL +
+              `/article/article/${node.key}`;
+            window.open(fullUrl, "_blank");
           } else {
             setViewArticleId(node.key);
             setOpenViewer(true);

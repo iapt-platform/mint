@@ -255,7 +255,11 @@ const AnthologyListWidget = ({
                   onClick: (e) => {
                     switch (e.key) {
                       case "open":
-                        window.open(`/anthology/${row.id}`, "_blank");
+                        const fullUrl =
+                          process.env.REACT_APP_WEB_HOST +
+                          process.env.PUBLIC_URL +
+                          `/anthology/${row.id}`;
+                        window.open(fullUrl, "_blank");
                         break;
                       case "share":
                         console.log("share");

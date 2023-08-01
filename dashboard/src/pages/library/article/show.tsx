@@ -298,7 +298,11 @@ const Widget = () => {
                   }
                 });
                 if (event.ctrlKey || event.metaKey) {
-                  window.open(url, "_blank");
+                  const fullUrl =
+                    process.env.REACT_APP_WEB_HOST +
+                    process.env.PUBLIC_URL +
+                    url;
+                  window.open(fullUrl, "_blank");
                 } else {
                   navigate(url);
                 }
