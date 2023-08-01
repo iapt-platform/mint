@@ -2,11 +2,15 @@ import { Button, message } from "antd";
 import { useEffect, useState } from "react";
 import { FileAddOutlined } from "@ant-design/icons";
 
-import { get, put } from "../../request";
+import { get as getUiLang } from "../../locales";
+
+import { get, post, put } from "../../request";
 import {
+  IArticleCreateRequest,
   IArticleMapAddResponse,
   IArticleMapListResponse,
   IArticleMapUpdateRequest,
+  IArticleResponse,
 } from "../api/Article";
 import ArticleListModal from "../article/ArticleListModal";
 import EditableTree, {
@@ -99,6 +103,33 @@ const EditableTocTreeWidget = ({
               }
             })
             .catch((e) => console.error(e));
+        }}
+        onAppend={async (
+          node: TreeNodeData
+        ): Promise<TreeNodeData | undefined> => {
+          if (typeof studioName === "undefined") {
+            return;
+          }
+          const res = await post<IArticleCreateRequest, IArticleResponse>(
+            `/v2/article`,
+            {
+              title: "new article",
+              lang: getUiLang(),
+              studio: studioName,
+            }
+          );
+
+          console.log(res);
+          if (res.ok) {
+            return {
+              key: res.data.uid,
+              title: res.data.title,
+              children: [],
+              level: node.level + 1,
+            };
+          } else {
+            return;
+          }
         }}
       />
     </div>

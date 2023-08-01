@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Tree, Typography } from "antd";
+import { message, Tree } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
 import { Key } from "antd/lib/table/interface";
 import { DeleteOutlined, SaveOutlined } from "@ant-design/icons";
 import { Button, Divider, Space } from "antd";
 import { useIntl } from "react-intl";
-
-const { Text } = Typography;
+import EditableTreeNode from "./EditableTreeNode";
 
 export interface TreeNodeData {
   key: string;
@@ -123,6 +122,7 @@ interface IWidget {
   onSelect?: Function;
   onSave?: Function;
   onAddFile?: Function;
+  onAppend?: Function;
 }
 const EditableTreeWidget = ({
   treeData,
@@ -132,6 +132,7 @@ const EditableTreeWidget = ({
   onSelect,
   onSave,
   onAddFile,
+  onAppend,
 }: IWidget) => {
   const intl = useIntl();
 
@@ -149,13 +150,34 @@ const EditableTreeWidget = ({
     setGData(newTreeData);
     const list = treeToList(newTreeData);
     setListTreeData(list);
-  }, [addOnArticle]);
+  }, [addOnArticle, gData]);
 
   useEffect(() => {
     const data = tocGetTreeData(treeData);
     console.log("tree data", data);
     setGData(data);
   }, [treeData]);
+
+  const appendNode = (key: string, node: TreeNodeData) => {
+    console.log("key", key);
+    const append = (_node: TreeNodeData[]) => {
+      _node.forEach((value, index, array) => {
+        if (value.key === key) {
+          array[index].children.push(node);
+          console.log("key found");
+          return;
+        } else {
+          append(array[index].children);
+        }
+        return;
+      });
+    };
+    const newTree = [...gData];
+    append(newTree);
+    setGData(newTree);
+    const list = treeToList(newTree);
+    setListTreeData(list);
+  };
 
   const onDragEnter: TreeProps["onDragEnter"] = (info) => {
     console.log(info);
@@ -296,20 +318,31 @@ const EditableTreeWidget = ({
           } else {
             setKeys("");
           }
-
-          console.log(selectedKeys);
           if (typeof onSelect !== "undefined") {
             onSelect(selectedKeys);
           }
         }}
         treeData={gData}
         titleRender={(node: TreeNodeData) => {
-          return node.deletedAt ? (
-            <Text delete disabled>
-              {node.title}
-            </Text>
-          ) : (
-            <>{node.title}</>
+          return (
+            <EditableTreeNode
+              node={node}
+              onAdd={async () => {
+                if (typeof onAppend !== "undefined") {
+                  const newNode = await onAppend(node);
+                  console.log("newNode", newNode);
+                  if (newNode) {
+                    appendNode(node.key, newNode);
+                    return true;
+                  } else {
+                    message.error("添加失败");
+                    return false;
+                  }
+                } else {
+                  return false;
+                }
+              }}
+            />
           );
         }}
       />
