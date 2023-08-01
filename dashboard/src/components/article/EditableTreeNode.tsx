@@ -37,7 +37,6 @@ const EditableTreeNodeWidget = ({
   const menu = (
     <Space style={{ visibility: showNodeMenu ? "visible" : "hidden" }}>
       <Button
-        loading={loading}
         size="middle"
         icon={<EditOutlined />}
         type="text"
