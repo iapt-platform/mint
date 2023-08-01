@@ -35,7 +35,7 @@ class StudioApi{
             'id'=>$id,
             'nickName'=>$studio['nickname'],
             'realName'=>$studio['username'],
-            'studioName'=>$studio['nickname'],
+            'studioName'=>$studio['username'],
             'avatar'=>'',
         ];
     }
