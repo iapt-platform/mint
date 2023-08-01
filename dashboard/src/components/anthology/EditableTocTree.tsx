@@ -38,6 +38,42 @@ const EditableTocTreeWidget = ({
   const [updatedArticle, setUpdatedArticle] = useState<TreeNodeData>();
   const [openViewer, setOpenViewer] = useState(false);
   const [viewArticleId, setViewArticleId] = useState<string>();
+
+  const save = (data?: ListNodeData[]) => {
+    console.log("onSave", data);
+    if (typeof data === "undefined") {
+      return;
+    }
+    put<IArticleMapUpdateRequest, IArticleMapAddResponse>(
+      `/v2/article-map/${anthologyId}`,
+      {
+        data: data.map((item) => {
+          let title = "";
+          if (typeof item.title === "string") {
+            title = item.title;
+          }
+          //TODO 整一个string title
+          return {
+            article_id: item.key,
+            level: item.level,
+            title: title,
+            children: item.children,
+          };
+        }),
+        operation: "anthology",
+      }
+    )
+      .finally(() => {})
+      .then((json) => {
+        if (json.ok) {
+          message.success(json.data);
+        } else {
+          message.error(json.message);
+        }
+      })
+      .catch((e) => console.error(e));
+  };
+
   useEffect(() => {
     get<IArticleMapListResponse>(
       `/v2/article-map?view=anthology&id=${anthologyId}`
@@ -80,38 +116,10 @@ const EditableTocTreeWidget = ({
         }
         updatedNode={updatedArticle}
         onChange={(data: ListNodeData[]) => {
-          console.log("onChange", data);
+          save(data);
         }}
         onSave={(data: ListNodeData[]) => {
-          console.log("onSave", data);
-          put<IArticleMapUpdateRequest, IArticleMapAddResponse>(
-            `/v2/article-map/${anthologyId}`,
-            {
-              data: data.map((item) => {
-                let title = "";
-                if (typeof item.title === "string") {
-                  title = item.title;
-                }
-                //TODO 整一个string title
-                return {
-                  article_id: item.key,
-                  level: item.level,
-                  title: title,
-                  children: item.children,
-                };
-              }),
-              operation: "anthology",
-            }
-          )
-            .finally(() => {})
-            .then((json) => {
-              if (json.ok) {
-                message.success(json.data);
-              } else {
-                message.error(json.message);
-              }
-            })
-            .catch((e) => console.error(e));
+          save(data);
         }}
         onAppend={async (
           node: TreeNodeData
