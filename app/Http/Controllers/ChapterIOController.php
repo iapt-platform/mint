@@ -17,7 +17,7 @@ class ChapterIOController extends Controller
     {
         //
         $table = ProgressChapter::select(['uid','book','para',
-                                    'lang','channel_id','progress',
+                                    'channel_id','progress','lang',
                                     'title','summary','updated_at','created_at']);
         switch ($request->get('view')) {
             case 'public':
