@@ -1,5 +1,6 @@
 import { Drawer } from "antd";
 import React, { useEffect, useState } from "react";
+import { IArticleDataResponse } from "../api/Article";
 
 import ArticleEdit from "./ArticleEdit";
 import ArticleEditTools from "./ArticleEditTools";
@@ -9,6 +10,7 @@ interface IWidget {
   articleId?: string;
   open?: boolean;
   onClose?: Function;
+  onChange?: Function;
 }
 
 const ArticleEditDrawerWidget = ({
@@ -16,6 +18,7 @@ const ArticleEditDrawerWidget = ({
   articleId,
   open,
   onClose,
+  onChange,
 }: IWidget) => {
   const [openDrawer, setOpenDrawer] = useState(open);
   const [title, setTitle] = useState("loading");
@@ -71,6 +74,11 @@ const ArticleEditDrawerWidget = ({
             setTitle(title);
             setReadonly(readonly);
             setStudioName(studio);
+          }}
+          onChange={(data: IArticleDataResponse) => {
+            if (typeof onChange !== "undefined") {
+              onChange(data);
+            }
           }}
         />
       </Drawer>

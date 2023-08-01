@@ -7,6 +7,7 @@ import { get as getUiLang } from "../../locales";
 import { get, post, put } from "../../request";
 import {
   IArticleCreateRequest,
+  IArticleDataResponse,
   IArticleMapAddResponse,
   IArticleMapListResponse,
   IArticleMapUpdateRequest,
@@ -17,6 +18,8 @@ import EditableTree, {
   ListNodeData,
   TreeNodeData,
 } from "../article/EditableTree";
+import ArticleEditDrawer from "../article/ArticleEditDrawer";
+import ArticleDrawer from "../article/ArticleDrawer";
 
 interface IWidget {
   anthologyId?: string;
@@ -30,6 +33,11 @@ const EditableTocTreeWidget = ({
 }: IWidget) => {
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
   const [addArticle, setAddArticle] = useState<TreeNodeData>();
+  const [articleId, setArticleId] = useState<string>();
+  const [openEditor, setOpenEditor] = useState(false);
+  const [updatedArticle, setUpdatedArticle] = useState<TreeNodeData>();
+  const [openViewer, setOpenViewer] = useState(false);
+  const [viewArticleId, setViewArticleId] = useState<string>();
   useEffect(() => {
     get<IArticleMapListResponse>(
       `/v2/article-map?view=anthology&id=${anthologyId}`
@@ -70,6 +78,7 @@ const EditableTocTreeWidget = ({
             }}
           />
         }
+        updatedNode={updatedArticle}
         onChange={(data: ListNodeData[]) => {
           console.log("onChange", data);
         }}
@@ -131,6 +140,40 @@ const EditableTocTreeWidget = ({
             return;
           }
         }}
+        onNodeEdit={(key: string) => {
+          setArticleId(key);
+          setOpenEditor(true);
+        }}
+        onTitleClick={(
+          e: React.MouseEvent<HTMLElement, MouseEvent>,
+          node: TreeNodeData
+        ) => {
+          if (e.ctrlKey || e.metaKey) {
+          } else {
+            setViewArticleId(node.key);
+            setOpenViewer(true);
+          }
+        }}
+      />
+      <ArticleEditDrawer
+        articleId={articleId}
+        open={openEditor}
+        onClose={() => setOpenEditor(false)}
+        onChange={(data: IArticleDataResponse) => {
+          console.log("new title", data.title);
+          setUpdatedArticle({
+            key: data.uid,
+            title: data.title,
+            level: 0,
+            children: [],
+          });
+        }}
+      />
+      <ArticleDrawer
+        articleId={viewArticleId}
+        type="article"
+        open={openViewer}
+        onClose={() => setOpenViewer(false)}
       />
     </div>
   );

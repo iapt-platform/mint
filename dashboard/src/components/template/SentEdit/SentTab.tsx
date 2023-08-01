@@ -3,6 +3,7 @@ import {
   TranslationOutlined,
   CloseOutlined,
   BlockOutlined,
+  BarsOutlined,
 } from "@ant-design/icons";
 
 import SentTabButton from "./SentTabButton";
@@ -61,7 +62,6 @@ const SentTabWidget = ({
 }: IWidget) => {
   const intl = useIntl();
   const [isCompact, setIsCompact] = useState(compact);
-
   useEffect(() => setIsCompact(compact), [compact]);
   const mPath = path
     ? [
@@ -78,7 +78,16 @@ const SentTabWidget = ({
   return (
     <>
       <Tabs
-        style={isCompact ? { position: "absolute", marginTop: -32 } : undefined}
+        style={
+          isCompact
+            ? {
+                position: "absolute",
+                marginTop: -32,
+                width: "100%",
+                marginRight: 10,
+              }
+            : undefined
+        }
         tabBarStyle={{ marginBottom: 0 }}
         size="small"
         tabBarGutter={0}

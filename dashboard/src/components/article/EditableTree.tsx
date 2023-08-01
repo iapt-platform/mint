@@ -118,27 +118,57 @@ interface IWidget {
   treeData: ListNodeData[];
   addFileButton?: React.ReactNode;
   addOnArticle?: TreeNodeData;
+  updatedNode?: TreeNodeData;
   onChange?: Function;
   onSelect?: Function;
   onSave?: Function;
   onAddFile?: Function;
   onAppend?: Function;
+  onNodeEdit?: Function;
+  onTitleClick?: Function;
 }
 const EditableTreeWidget = ({
   treeData,
   addFileButton,
   addOnArticle,
+  updatedNode,
   onChange,
   onSelect,
   onSave,
   onAddFile,
   onAppend,
+  onNodeEdit,
+  onTitleClick,
 }: IWidget) => {
   const intl = useIntl();
 
   const [gData, setGData] = useState<TreeNodeData[]>([]);
   const [listTreeData, setListTreeData] = useState<ListNodeData[]>();
   const [keys, setKeys] = useState<Key>("");
+
+  useEffect(() => {
+    //找到节点并更新
+    if (typeof updatedNode === "undefined") {
+      return;
+    }
+    const update = (_node: TreeNodeData[]) => {
+      _node.forEach((value, index, array) => {
+        if (value.key === updatedNode.key) {
+          array[index].title = updatedNode.title;
+          console.log("key found");
+          return;
+        } else {
+          update(array[index].children);
+        }
+        return;
+      });
+    };
+    const newTree = [...gData];
+    update(newTree);
+    setGData(newTree);
+    const list = treeToList(newTree);
+    setListTreeData(list);
+  }, [updatedNode]);
 
   useEffect(() => {
     if (typeof addOnArticle === "undefined") {
@@ -150,7 +180,7 @@ const EditableTreeWidget = ({
     setGData(newTreeData);
     const list = treeToList(newTreeData);
     setListTreeData(list);
-  }, [addOnArticle, gData]);
+  }, [addOnArticle]);
 
   useEffect(() => {
     const data = tocGetTreeData(treeData);
@@ -327,6 +357,11 @@ const EditableTreeWidget = ({
           return (
             <EditableTreeNode
               node={node}
+              onEdit={() => {
+                if (typeof onNodeEdit !== "undefined") {
+                  onNodeEdit(node.key);
+                }
+              }}
               onAdd={async () => {
                 if (typeof onAppend !== "undefined") {
                   const newNode = await onAppend(node);
@@ -340,6 +375,11 @@ const EditableTreeWidget = ({
                   }
                 } else {
                   return false;
+                }
+              }}
+              onTitleClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+                if (typeof onTitleClick !== "undefined") {
+                  onTitleClick(e, node);
                 }
               }}
             />
