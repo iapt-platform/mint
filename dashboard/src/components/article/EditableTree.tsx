@@ -147,6 +147,12 @@ const EditableTreeWidget = ({
   const [keys, setKeys] = useState<Key>("");
 
   useEffect(() => {
+    if (typeof onChange !== "undefined") {
+      onChange(listTreeData);
+    }
+  }, [listTreeData]);
+
+  useEffect(() => {
     //找到节点并更新
     if (typeof updatedNode === "undefined") {
       return;
@@ -170,24 +176,6 @@ const EditableTreeWidget = ({
     setListTreeData(list);
   }, [updatedNode]);
 
-  useEffect(() => {
-    if (typeof addOnArticle === "undefined") {
-      return;
-    }
-    console.log("add ", addOnArticle);
-
-    const newTreeData = [...gData, addOnArticle];
-    setGData(newTreeData);
-    const list = treeToList(newTreeData);
-    setListTreeData(list);
-  }, [addOnArticle]);
-
-  useEffect(() => {
-    const data = tocGetTreeData(treeData);
-    console.log("tree data", data);
-    setGData(data);
-  }, [treeData]);
-
   const appendNode = (key: string, node: TreeNodeData) => {
     console.log("key", key);
     const append = (_node: TreeNodeData[]) => {
@@ -208,6 +196,24 @@ const EditableTreeWidget = ({
     const list = treeToList(newTree);
     setListTreeData(list);
   };
+
+  useEffect(() => {
+    if (typeof addOnArticle === "undefined") {
+      return;
+    }
+    console.log("add ", addOnArticle);
+
+    const newTreeData = [...gData, addOnArticle];
+    setGData(newTreeData);
+    const list = treeToList(newTreeData);
+    setListTreeData(list);
+  }, [addOnArticle]);
+
+  useEffect(() => {
+    const data = tocGetTreeData(treeData);
+    console.log("tree data", data);
+    setGData(data);
+  }, [treeData]);
 
   const onDragEnter: TreeProps["onDragEnter"] = (info) => {
     console.log(info);
@@ -281,9 +287,6 @@ const EditableTreeWidget = ({
     setGData(data);
     const list = treeToList(data);
     setListTreeData(list);
-    if (typeof onChange !== "undefined") {
-      onChange(list);
-    }
   };
 
   return (
@@ -316,9 +319,6 @@ const EditableTreeWidget = ({
             setGData(tmp);
             const list = treeToList(tmp);
             setListTreeData(list);
-            if (typeof onChange !== "undefined") {
-              onChange(list);
-            }
           }}
         >
           {intl.formatMessage({ id: "buttons.remove" })}
