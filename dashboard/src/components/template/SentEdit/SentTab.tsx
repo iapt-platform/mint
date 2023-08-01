@@ -16,6 +16,7 @@ import SentMenu from "./SentMenu";
 import { IChapter } from "../../corpus/BookViewer";
 import store from "../../../store";
 import { change } from "../../../reducers/para-change";
+import { useEffect, useState } from "react";
 
 const { Text } = Typography;
 
@@ -35,7 +36,9 @@ interface IWidget {
   simNum?: number;
   wbwData?: IWbw[];
   magicDictLoading?: boolean;
+  compact?: boolean;
   onMagicDict?: Function;
+  onCompact?: Function;
 }
 const SentTabWidget = ({
   id,
@@ -52,9 +55,14 @@ const SentTabWidget = ({
   simNum = 0,
   wbwData,
   magicDictLoading = false,
+  compact = false,
   onMagicDict,
+  onCompact,
 }: IWidget) => {
   const intl = useIntl();
+  const [isCompact, setIsCompact] = useState(compact);
+
+  useEffect(() => setIsCompact(compact), [compact]);
   const mPath = path
     ? [
         ...path,
@@ -70,6 +78,7 @@ const SentTabWidget = ({
   return (
     <>
       <Tabs
+        style={isCompact ? { position: "absolute", marginTop: -32 } : undefined}
         tabBarStyle={{ marginBottom: 0 }}
         size="small"
         tabBarGutter={0}
@@ -99,6 +108,24 @@ const SentTabWidget = ({
               onMagicDict={(type: string) => {
                 if (typeof onMagicDict !== "undefined") {
                   onMagicDict(type);
+                }
+              }}
+              onMenuClick={(key: string) => {
+                switch (key) {
+                  case "compact" || "normal":
+                    if (typeof onCompact !== "undefined") {
+                      setIsCompact(true);
+                      onCompact(true);
+                    }
+                    break;
+                  case "normal":
+                    if (typeof onCompact !== "undefined") {
+                      setIsCompact(false);
+                      onCompact(false);
+                    }
+                    break;
+                  default:
+                    break;
                 }
               }}
             />

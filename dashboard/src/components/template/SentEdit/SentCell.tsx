@@ -6,7 +6,7 @@ import SentCellEditable from "./SentCellEditable";
 import MdView from "../MdView";
 import EditInfo from "./EditInfo";
 import SuggestionToolbar from "./SuggestionToolbar";
-import { Divider } from "antd";
+import { Divider, Space } from "antd";
 import { useAppSelector } from "../../../hooks";
 import { sentence } from "../../../reducers/accept-pr";
 import { IWbw } from "../Wbw/WbwWord";
@@ -21,18 +21,21 @@ interface IWidget {
   wordWidget?: boolean;
   isPr?: boolean;
   editMode?: boolean;
+  compact?: boolean;
 }
 const SentCellWidget = ({
   data,
   wordWidget = false,
   isPr = false,
   editMode = false,
+  compact = false,
 }: IWidget) => {
   const intl = useIntl();
   const [isEditMode, setIsEditMode] = useState(editMode);
   const [sentData, setSentData] = useState<ISentence>(data);
   const endings = useAppSelector(getEnding);
   const acceptPr = useAppSelector(sentence);
+  const [prOpen, setPrOpen] = useState(false);
 
   useEffect(() => {
     setSentData(data);
@@ -66,6 +69,16 @@ const SentCellWidget = ({
         onModeChange={(mode: string) => {
           if (mode === "edit") {
             setIsEditMode(true);
+          }
+        }}
+        onMenuClick={(key: string) => {
+          switch (key) {
+            case "suggestion":
+              setPrOpen(true);
+              break;
+
+            default:
+              break;
           }
         }}
         onConvert={(format: string) => {
@@ -130,47 +143,55 @@ const SentCellWidget = ({
           }
         }}
       >
-        <EditInfo data={sentData} />
-        {isEditMode ? (
-          <div>
-            {sentData.contentType === "json" ? (
-              <SentWbwEdit
-                data={sentData}
-                onClose={() => {
-                  setIsEditMode(false);
-                }}
-                onSave={(data: ISentence) => {
-                  setSentData(data);
-                }}
-              />
-            ) : (
-              <SentCellEditable
-                data={sentData}
-                isPr={isPr}
-                onClose={() => {
-                  setIsEditMode(false);
-                }}
-                onSave={(data: ISentence) => {
-                  setSentData(data);
-                  setIsEditMode(false);
-                }}
-              />
-            )}
-          </div>
-        ) : (
-          <div style={{ marginLeft: "2em" }}>
+        <Space
+          direction={compact ? "horizontal" : "vertical"}
+          style={{ alignItems: "flex-start" }}
+        >
+          <EditInfo data={sentData} compact={compact} />
+          {isEditMode ? (
+            <div>
+              {sentData.contentType === "json" ? (
+                <SentWbwEdit
+                  data={sentData}
+                  onClose={() => {
+                    setIsEditMode(false);
+                  }}
+                  onSave={(data: ISentence) => {
+                    setSentData(data);
+                  }}
+                />
+              ) : (
+                <SentCellEditable
+                  data={sentData}
+                  isPr={isPr}
+                  onClose={() => {
+                    setIsEditMode(false);
+                  }}
+                  onSave={(data: ISentence) => {
+                    setSentData(data);
+                    setIsEditMode(false);
+                  }}
+                />
+              )}
+            </div>
+          ) : (
             <MdView
+              style={{ marginLeft: compact ? 0 : "2em" }}
               html={sentData.html !== "" ? sentData.html : "请输入"}
               wordWidget={wordWidget}
             />
-          </div>
-        )}
-
-        <div style={{ marginLeft: "2em" }}>
-          <SuggestionToolbar data={sentData} isPr={isPr} />
-        </div>
+          )}
+          <SuggestionToolbar
+            style={{ marginLeft: "2em" }}
+            compact={compact}
+            data={sentData}
+            isPr={isPr}
+            prOpen={prOpen}
+            onPrClose={() => setPrOpen(false)}
+          />
+        </Space>
       </SentEditMenu>
-      <Divider style={{ margin: "10px 0" }} />
+      {compact ? undefined : <Divider style={{ margin: "10px 0" }} />}
     </div>
   );
 };

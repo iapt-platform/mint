@@ -7,14 +7,26 @@ import SuggestionBox from "./SuggestionBox";
 import PrAcceptButton from "./PrAcceptButton";
 import { HandOutlinedIcon } from "../../../assets/icon";
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 interface IWidget {
   data: ISentence;
   isPr?: boolean;
+  style?: React.CSSProperties;
+  compact?: boolean;
+  prOpen?: boolean;
+  onPrClose?: Function;
   onAccept?: Function;
 }
-const SuggestionToolbarWidget = ({ data, isPr = false, onAccept }: IWidget) => {
+const SuggestionToolbarWidget = ({
+  data,
+  isPr = false,
+  onAccept,
+  style,
+  prOpen = false,
+  compact = false,
+  onPrClose,
+}: IWidget) => {
   const [CommentCount, setCommentCount] = useState<number | undefined>(
     data.suggestionCount?.discussion
   );
@@ -33,8 +45,14 @@ const SuggestionToolbarWidget = ({ data, isPr = false, onAccept }: IWidget) => {
     </Space>
   );
   const normalButton = (
-    <Space>
+    <Space size={"small"}>
       <SuggestionBox
+        open={prOpen}
+        onClose={() => {
+          if (typeof onPrClose !== "undefined") {
+            onPrClose();
+          }
+        }}
         data={data}
         trigger={
           <Tooltip title="修改建议">
@@ -42,7 +60,7 @@ const SuggestionToolbarWidget = ({ data, isPr = false, onAccept }: IWidget) => {
           </Tooltip>
         }
       />
-      <Divider type="vertical" />
+      {compact ? undefined : <Divider type="vertical" />}
       <CommentBox
         resId={data.id}
         resType="sentence"
@@ -56,11 +74,15 @@ const SuggestionToolbarWidget = ({ data, isPr = false, onAccept }: IWidget) => {
         }}
       />
       {CommentCount}
-      <Divider type="vertical" />
-      <Text copyable={{ text: data.content }}></Text>
+      {compact ? undefined : <Divider type="vertical" />}
+      {compact ? undefined : <Text copyable={{ text: data.content }}></Text>}
     </Space>
   );
-  return <Text type="secondary">{isPr ? prButton : normalButton}</Text>;
+  return (
+    <Paragraph type="secondary" style={style}>
+      {isPr ? prButton : normalButton}
+    </Paragraph>
+  );
 };
 
 export default SuggestionToolbarWidget;

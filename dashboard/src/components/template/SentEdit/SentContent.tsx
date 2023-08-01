@@ -23,6 +23,7 @@ interface IWidgetSentContent {
   translation?: ISentence[];
   layout?: TDirection;
   magicDict?: string;
+  compact?: boolean;
   onWbwChange?: Function;
   onMagicDictDone?: Function;
 }
@@ -35,6 +36,7 @@ const SentContentWidget = ({
   origin,
   translation,
   layout = "column",
+  compact = false,
   magicDict,
   onWbwChange,
   onMagicDictDone,
@@ -97,7 +99,7 @@ const SentContentWidget = ({
       style={{
         display: "flex",
         flexDirection: layoutDirection,
-        marginBottom: 10,
+        marginBottom: 0,
       }}
     >
       <div
@@ -137,7 +139,7 @@ const SentContentWidget = ({
       </div>
       <div style={{ flex: layoutFlex.right }}>
         {translation?.map((item, id) => {
-          return <SentCell key={id} data={item} />;
+          return <SentCell key={id} data={item} compact={compact} />;
         })}
       </div>
     </div>

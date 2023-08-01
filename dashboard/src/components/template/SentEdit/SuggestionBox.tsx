@@ -13,13 +13,21 @@ export interface IAnswerCount {
 interface IWidget {
   data: ISentence;
   trigger?: JSX.Element;
+  open?: boolean;
+  onClose?: Function;
 }
-const SuggestionBoxWidget = ({ trigger, data }: IWidget) => {
-  const [open, setOpen] = useState(false);
+const SuggestionBoxWidget = ({
+  trigger,
+  data,
+  open = false,
+  onClose,
+}: IWidget) => {
+  const [isOpen, setIsOpen] = useState(open);
   const [reload, setReload] = useState(false);
   const [openNotification, setOpenNotification] = useState(false);
   const [prNumber, setPrNumber] = useState(data.suggestionCount?.suggestion);
 
+  useEffect(() => setIsOpen(open), [open]);
   useEffect(() => {
     if (localStorage.getItem("read_pr_Notification") === "ok") {
       setOpenNotification(false);
@@ -28,11 +36,14 @@ const SuggestionBoxWidget = ({ trigger, data }: IWidget) => {
     }
   }, []);
   const showDrawer = () => {
-    setOpen(true);
+    setIsOpen(true);
   };
 
-  const onClose = () => {
-    setOpen(false);
+  const onBoxClose = () => {
+    setIsOpen(false);
+    if (typeof onClose !== "undefined") {
+      onClose();
+    }
   };
 
   return (
@@ -45,8 +56,8 @@ const SuggestionBoxWidget = ({ trigger, data }: IWidget) => {
       <Drawer
         title="修改建议"
         width={520}
-        onClose={onClose}
-        open={open}
+        onClose={onBoxClose}
+        open={isOpen}
         maskClosable={false}
       >
         <Space direction="vertical" style={{ width: "100%" }}>
