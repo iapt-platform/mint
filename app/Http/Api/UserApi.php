@@ -42,12 +42,24 @@ class UserApi{
     }
     public static function getByUuid($id){
         $user = UserInfo::where('userid',$id)->first();
-        return [
-            'id'=>$id,
-            'nickName'=>$user['nickname'],
-            'userName'=>$user['username'],
-            'realName'=>$user['username'],
-            'avatar'=>'',
-        ];
+        if($user){
+            return [
+                'id'=>$id,
+                'nickName'=>$user['nickname'],
+                'userName'=>$user['username'],
+                'realName'=>$user['username'],
+                'avatar'=>'',
+            ];
+        }else{
+            Log::error('$user=null;$id='.$id);
+            return [
+                'id'=>0,
+                'nickName'=>'unknown',
+                'userName'=>'unknown',
+                'realName'=>'unknown',
+                'avatar'=>'',
+            ];
+        }
+
     }
 }
