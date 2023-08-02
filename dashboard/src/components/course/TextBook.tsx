@@ -17,7 +17,7 @@ const TextBookWidget = ({ anthologyId, courseId }: IWidget) => {
         <Col flex="960px">
           <AnthologyDetail
             aid={anthologyId}
-            onArticleSelect={(keys: string[]) => {
+            onArticleSelect={(anthologyId: string, keys: string[]) => {
               navigate(`/article/textbook/${courseId}_${keys[0]}?mode=read`);
             }}
           />
