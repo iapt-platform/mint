@@ -1,6 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { Breadcrumb, Popover, Tag, Typography } from "antd";
+
 import PaliText from "../template/Wbw/PaliText";
 import React from "react";
+import { fullUrl } from "../../utils";
 
 export interface ITocPathNode {
   key?: string;
@@ -27,7 +30,8 @@ const TocPathWidget = ({
   channel,
   onChange,
 }: IWidgetTocPath): JSX.Element => {
-  console.log("path", data);
+  const navigate = useNavigate();
+
   const fullPath = (
     <Breadcrumb style={{ whiteSpace: "nowrap", width: "100%" }}>
       {data.map((item, id) => {
@@ -41,6 +45,20 @@ const TocPathWidget = ({
             ) => {
               if (typeof onChange !== "undefined") {
                 onChange(item, e);
+              } else {
+                if (item.book && item.paragraph) {
+                  const type = item.level < 8 ? "chapter" : "para";
+                  const param =
+                    type === "para"
+                      ? `&book=${item.book}&par=${item.paragraph}`
+                      : "";
+                  let url = `/article/${type}/${item.book}-${item.paragraph}?mode=read${param}`;
+                  if (e.ctrlKey || e.metaKey) {
+                    window.open(fullUrl(url), "_blank");
+                  } else {
+                    navigate(url);
+                  }
+                }
               }
             }}
             key={id}
