@@ -4,7 +4,7 @@ import { Divider, message, Result, Space, Tag } from "antd";
 import { get, post } from "../../request";
 import store from "../../store";
 import { IArticleDataResponse, IArticleResponse } from "../api/Article";
-import ArticleView from "./ArticleView";
+import ArticleView, { IFirstAnthology } from "./ArticleView";
 import { ICourseCurrUserResponse } from "../api/Course";
 import { ICourseUser, signIn } from "../../reducers/course-user";
 import { ITextbook, refresh } from "../../reducers/current-course";
@@ -68,6 +68,7 @@ interface IWidget {
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
+  onAnthologySelect?: Function;
 }
 const ArticleWidget = ({
   type,
@@ -84,6 +85,7 @@ const ArticleWidget = ({
   onArticleChange,
   onFinal,
   onLoad,
+  onAnthologySelect,
 }: IWidget) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [articleHtml, setArticleHtml] = useState<string[]>(["<span />"]);
@@ -348,6 +350,15 @@ const ArticleWidget = ({
   };
 
   //const comment = <CommentListCard resId={articleData?.uid} resType="article" />
+  let anthology: IFirstAnthology | undefined;
+  if (articleData?.anthology_count && articleData.anthology_first) {
+    anthology = {
+      id: articleData.anthology_first.uid,
+      title: articleData.anthology_first.title,
+      count: articleData?.anthology_count,
+    };
+  }
+
   return (
     <div>
       {showSkeleton ? (
@@ -374,6 +385,7 @@ const ArticleWidget = ({
           type={type}
           articleId={articleId}
           remains={remains}
+          anthology={anthology}
           onEnd={() => {
             if (type === "chapter" && articleData) {
               getNextPara(articleData);
@@ -391,9 +403,14 @@ const ArticleWidget = ({
               onArticleChange(newArticle, target);
             }
           }}
+          onAnthologySelect={(id: string) => {
+            if (typeof onAnthologySelect !== "undefined") {
+              onAnthologySelect(id);
+            }
+          }}
         />
       )}
-
+      <Divider />
       {extra}
       <Divider />
     </div>

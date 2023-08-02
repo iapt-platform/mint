@@ -293,6 +293,16 @@ const Widget = () => {
               onLoad={(article: IArticleDataResponse) => {
                 setLoadedArticleData(article);
               }}
+              onAnthologySelect={(id: string) => {
+                let output: any = { anthology: id };
+                searchParams.forEach((value, key) => {
+                  console.log(value, key);
+                  if (key !== "anthology") {
+                    output[key] = value;
+                  }
+                });
+                setSearchParams(output);
+              }}
             />
             <Navigate
               type={type as ArticleType}
@@ -303,7 +313,6 @@ const Widget = () => {
               ) => {
                 let url = `/article/${type}/${newId}?mode=${currMode}`;
                 searchParams.forEach((value, key) => {
-                  console.log(value, key);
                   if (key !== "mode") {
                     url += `&${key}=${value}`;
                   }
