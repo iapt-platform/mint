@@ -24,6 +24,7 @@ export interface IWidgetArticleData {
   articleId?: string;
   remains?: boolean;
   onEnd?: Function;
+  onPathChange?: Function;
 }
 
 const ArticleViewWidget = ({
@@ -41,6 +42,7 @@ const ArticleViewWidget = ({
   articleId,
   onEnd,
   remains,
+  onPathChange,
 }: IWidgetArticleData) => {
   let currChannelList = <></>;
   switch (type) {
@@ -76,7 +78,18 @@ const ArticleViewWidget = ({
       </div>
 
       <div>
-        <TocPath data={path} channel={channels} />
+        <TocPath
+          data={path}
+          channel={channels}
+          onChange={(
+            node: ITocPathNode,
+            e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
+          ) => {
+            if (typeof onPathChange !== "undefined") {
+              onPathChange(node, e);
+            }
+          }}
+        />
 
         <Title level={4}>
           <div
