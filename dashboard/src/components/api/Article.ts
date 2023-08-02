@@ -89,7 +89,7 @@ export interface IArticleDataResponse {
   status: number;
   lang: string;
   anthology_count?: number;
-  anthology_first?: { title: string };
+  anthology_first?: { uid: string; title: string };
   role?: TRole;
   studio?: IStudio;
   editor?: IUser;
