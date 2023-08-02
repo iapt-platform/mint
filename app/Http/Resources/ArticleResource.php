@@ -15,6 +15,7 @@ use App\Http\Api\StudioApi;
 use App\Http\Api\AuthApi;
 use App\Http\Controllers\ArticleController;
 use App\Http\Api\ChannelApi;
+use Illuminate\Support\Str;
 
 class ArticleResource extends JsonResource
 {
@@ -46,13 +47,67 @@ class ArticleResource extends JsonResource
             }
         }
 
-        //查询文集
+        //查询该文章在哪些文集中出现
         $collectionCount = ArticleCollection::where('article_id',$this->uid)->count();
         if($collectionCount>0){
             $data['anthology_count'] = $collectionCount;
             $collection = ArticleCollection::where('article_id',$this->uid)->first();
             $data['anthology_first'] = Collection::find($collection->collect_id);
         }
+        //path
+        if($request->has('anthology') && Str::isUuid($request->get('anthology'))){
+            $data['path'] = array();
+
+            //anthology title
+            $anthology = Collection::where('uid',$request->get('anthology'))->first();
+            if($anthology){
+                $data['path'][] = ['key'=>$anthology->uid,
+                            'title'=>$anthology->title,
+                            'level'=>0];
+            }
+
+            $currLevel = -1;
+            $aList = ArticleCollection::where('collect_id',$request->get('anthology'))
+                                                ->orderBy('id','desc')
+                                                ->select(['article_id','title','level'])->get();
+            $path = array();
+            foreach ($aList as $article) {
+                if($article->article_id === $this->uid ||
+                ($currLevel >= 0 && $article->level < $currLevel)){
+                    $currLevel = $article->level;
+                    $path[] = ['key'=>$article->article_id,
+                                'title'=>$article->title,
+                                'level'=>$article->level];
+                }
+            }
+            for ($i=count($path)-1; $i >=0 ; $i--) {
+                $data['path'][] = $path[$i];
+            }
+
+            //下级目录
+            $level = -1;
+            $subToc = array();
+            for ($i=count($aList)-1; $i >=0 ; $i--) {
+                $article = $aList[$i];
+                if($level>=0){
+                    if($article->level>$level){
+                        $subToc[] =[
+                            "key"=>$article->article_id,
+                            "title"=>$article->title,
+                            "level"=>$article->level
+                        ];
+                    }else{
+                        break;
+                    }
+                }
+                if($article->article_id === $this->uid){
+                    $level = $article->level;
+                }
+            }
+            $data['toc'] = $subToc;
+        }
+        $collectionCount = ArticleCollection::where('article_id',$this->uid)->count();
+        //render html
         if(isset($this->content) && !empty($this->content)){
             if($request->has('channel')){
                 $channel = $request->get('channel');
