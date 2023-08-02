@@ -31,72 +31,70 @@ export interface ChapterData {
   like: number;
 }
 
-interface IWidgetChapterCard {
+interface IWidget {
   data: ChapterData;
   onTagClick?: Function;
 }
 
-const ChpterCardWidget = ({ data, onTagClick }: IWidgetChapterCard) => {
+const ChapterCardWidget = ({ data, onTagClick }: IWidget) => {
   const intl = useIntl();
   const path = JSON.parse(data.path);
   let url = `/article/chapter/${data.book}-${data.paragraph}`;
   url += data.channel.id ? `?channel=${data.channel.id}` : "";
   return (
-    <>
-      <Row>
-        <Col>
-          <Row>
-            <Col span={16}>
-              <Title level={5}>
-                <Link to={url} target="_blank">
-                  {data.title ? data.title : data.paliTitle}
-                </Link>
-              </Title>
-              <Text type="secondary">{data.paliTitle}</Text>
-              <TocPath data={path} />
-            </Col>
-            <Col span={8}>
-              <Progress percent={data.progress} size="small" />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Paragraph
-                ellipsis={{
-                  rows: 2,
-                  expandable: false,
-                  symbol: "more",
-                }}
-              >
-                {data.summary}
-              </Paragraph>
-            </Col>
-          </Row>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              <TagArea
-                data={data.tag}
-                onTagClick={(tag: string) => {
-                  if (typeof onTagClick !== "undefined") {
-                    onTagClick(tag);
-                  }
-                }}
-              />
-            </div>
-            <Space>
-              <ChannelListItem channel={data.channel} studio={data.studio} />
-              <TimeShow
-                time={data.updatedAt}
-                title={intl.formatMessage({
-                  id: "labels.updated-at",
-                })}
-              />
-            </Space>
+    <Row>
+      <Col>
+        <Row>
+          <Col span={16}>
+            <Title level={5}>
+              <Link to={url} target="_blank">
+                {data.title ? data.title : data.paliTitle}
+              </Link>
+            </Title>
+            <Text type="secondary">{data.paliTitle}</Text>
+            <TocPath data={path} />
+          </Col>
+          <Col span={8}>
+            <Progress percent={data.progress} size="small" />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Paragraph
+              ellipsis={{
+                rows: 2,
+                expandable: false,
+                symbol: "more",
+              }}
+            >
+              {data.summary}
+            </Paragraph>
+          </Col>
+        </Row>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>
+            <TagArea
+              data={data.tag}
+              onTagClick={(tag: string) => {
+                if (typeof onTagClick !== "undefined") {
+                  onTagClick(tag);
+                }
+              }}
+            />
           </div>
-        </Col>
-      </Row>
-    </>
+          <Space>
+            <ChannelListItem channel={data.channel} studio={data.studio} />
+            <TimeShow
+              time={data.updatedAt}
+              title={intl.formatMessage({
+                id: "labels.updated-at",
+              })}
+            />
+          </Space>
+        </div>
+      </Col>
+    </Row>
   );
 };
 
-export default ChpterCardWidget;
+export default ChapterCardWidget;
