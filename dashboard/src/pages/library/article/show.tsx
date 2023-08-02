@@ -232,6 +232,7 @@ const Widget = () => {
                 <ToolButtonToc
                   type={type as ArticleType}
                   articleId={id}
+                  anthologyId={searchParams.get("anthology")}
                   onSelect={(key: Key) => {
                     console.log("toc click", key);
                     let url = `/article/${type}/${key}?`;
