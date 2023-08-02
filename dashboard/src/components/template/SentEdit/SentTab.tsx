@@ -97,16 +97,28 @@ const SentTabWidget = ({
               link="none"
               data={mPath}
               trigger={path ? path.length > 0 ? path[0].title : <></> : <></>}
-              onChange={(para: IChapter) => {
+              onChange={(
+                para: ITocPathNode,
+                e: React.MouseEvent<
+                  HTMLSpanElement | HTMLAnchorElement,
+                  MouseEvent
+                >
+              ) => {
                 //点击章节目录
-                const type = para.level
-                  ? para.level < 8
-                    ? "chapter"
-                    : "para"
-                  : "para";
-                store.dispatch(
-                  change({ book: para.book, para: para.para, type: type })
-                );
+                if (para.book && para.paragraph) {
+                  const type = para.level
+                    ? para.level < 8
+                      ? "chapter"
+                      : "para"
+                    : "para";
+                  store.dispatch(
+                    change({
+                      book: para.book,
+                      para: para.paragraph,
+                      type: type,
+                    })
+                  );
+                }
               }}
             />
             <Text copyable={{ text: `{{${sentId[0]}}}` }}>{sentId[0]}</Text>
