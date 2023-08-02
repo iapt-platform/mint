@@ -306,7 +306,7 @@ class ArticleController extends Controller
 
         $canRead = ArticleController::userCanRead($user_uid,$article);
         if(!$canRead){
-            return $this->error(__('auth.failed'),[],401);
+            return $this->error(__('auth.failed'),[],403);
         }
         return $this->ok(new ArticleResource($article));
     }
