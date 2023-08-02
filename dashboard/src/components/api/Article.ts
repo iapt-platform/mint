@@ -68,6 +68,7 @@ export interface IArticleDataRequest {
   lang: string;
 }
 export interface IChapterToc {
+  key?: string;
   book: number;
   paragraph: number;
   level: number;
