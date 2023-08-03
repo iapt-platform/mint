@@ -1,7 +1,6 @@
-import { List, Space } from "antd";
-import { MessageOutlined } from "@ant-design/icons";
+import { List } from "antd";
 
-import { IComment } from "./DiscussionItem";
+import DiscussionItem, { IComment } from "./DiscussionItem";
 
 interface IWidget {
   data: IComment[];
@@ -9,47 +8,31 @@ interface IWidget {
 }
 const DiscussionListWidget = ({ data, onSelect }: IWidget) => {
   return (
-    <div>
-      <List
-        pagination={{
-          onChange: (page) => {
-            console.log(page);
-          },
-          pageSize: 10,
-        }}
-        itemLayout="horizontal"
-        dataSource={data}
-        renderItem={(item) => (
-          <List.Item
-            actions={[
-              item.childrenCount ? (
-                <Space>
-                  <MessageOutlined /> {item.childrenCount}
-                </Space>
-              ) : (
-                <></>
-              ),
-            ]}
-          >
-            <List.Item.Meta
-              avatar={<></>}
-              title={
-                <span
-                  onClick={(e) => {
-                    if (typeof onSelect !== "undefined") {
-                      onSelect(e, item);
-                    }
-                  }}
-                >
-                  {item.title ? item.title : item.content?.slice(0, 20)}
-                </span>
+    <List
+      pagination={{
+        onChange: (page) => {
+          console.log(page);
+        },
+        pageSize: 10,
+      }}
+      itemLayout="horizontal"
+      dataSource={data}
+      renderItem={(item) => (
+        <List.Item>
+          <DiscussionItem
+            data={item}
+            onSelect={(
+              e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+              data: IComment
+            ) => {
+              if (typeof onSelect !== "undefined") {
+                onSelect(e, data);
               }
-              description={item.content?.slice(0, 40)}
-            />
-          </List.Item>
-        )}
-      />
-    </div>
+            }}
+          />
+        </List.Item>
+      )}
+    />
   );
 };
 
