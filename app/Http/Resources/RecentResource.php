@@ -24,12 +24,14 @@ class RecentResource extends JsonResource
             'param' => $this->param,
             'updated_at' => $this->updated_at,
         ];
+        $title = '';
         switch ($this->type) {
             case 'article':
-                $data['title'] = Article::where('uid',$this->article_id)->value('title');
+                $title = Article::where('uid',$this->article_id)->value('title');
                 break;
             case 'chapter':
-                $para = explode('-',$this->article_id);
+
+
                 if(!empty($this->param)){
                     $param = json_decode($this->param,true);
                     if(isset($param['channel'])){
@@ -40,24 +42,26 @@ class RecentResource extends JsonResource
                 if(!isset($channelId)){
                     $channelId = $paliChannel;
                 }
-
-                $title = Sentence::where('book_id',$para[0])
-                                        ->where('paragraph',$para[1])
+                $para = explode('-',$this->article_id);
+                if(count($para)===2){
+                    $title = Sentence::where('book_id',(int)$para[0])
+                                        ->where('paragraph',(int)$para[1])
                                         ->where('channel_uid',$channelId)
                                         ->value('content');
-                if(empty($title)){
-                    $title = Sentence::where('book_id',$para[0])
-                                        ->where('paragraph',$para[1])
-                                        ->where('channel_uid',$paliChannel)
-                                        ->value('content');
+                    if(empty($title)){
+                        $title = Sentence::where('book_id',(int)$para[0])
+                                            ->where('paragraph',(int)$para[1])
+                                            ->where('channel_uid',$paliChannel)
+                                            ->value('content');
+                    }
                 }
-                $data['title'] = $title;
+
                 break;
             default:
-                $data['title'] = $this->article_id;
+                $title = $this->article_id;
                 break;
         }
-
+        $data['title'] = $title;
         return $data;
     }
 }
