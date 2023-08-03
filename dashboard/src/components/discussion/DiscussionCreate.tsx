@@ -6,7 +6,6 @@ import {
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
-import { Col, Row, Space } from "antd";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
@@ -37,10 +36,7 @@ const DiscussionCreateWidget = ({
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
   const _currUser = useAppSelector(_currentUser);
-  const formItemLayout = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 20 },
-  };
+
   if (typeof _currUser === "undefined") {
     return <></>;
   } else {
@@ -49,20 +45,7 @@ const DiscussionCreateWidget = ({
         <div>{_currUser?.nickName}:</div>
         <div>
           <ProForm<IComment>
-            {...formItemLayout}
-            layout="horizontal"
             formRef={formRef}
-            submitter={{
-              render: (props, doms) => {
-                return (
-                  <Row>
-                    <Col span={14} offset={4}>
-                      <Space>{doms}</Space>
-                    </Col>
-                  </Row>
-                );
-              },
-            }}
             onFinish={async (values) => {
               //新建
               console.log("create", resId, resType, parent);
@@ -115,63 +98,70 @@ const DiscussionCreateWidget = ({
             }}
             params={{}}
           >
-            {parent ? (
-              <></>
-            ) : (
+            <ProForm.Group>
               <ProFormText
                 name="title"
+                hidden={typeof parent !== "undefined"}
                 label={intl.formatMessage({ id: "forms.fields.title.label" })}
                 tooltip="最长为 24 位"
                 placeholder={intl.formatMessage({
                   id: "forms.message.title.required",
                 })}
-                rules={[{ required: true, message: "这是必填项" }]}
+                rules={[{ required: parent ? false : true }]}
               />
-            )}
-            {contentType === "text" ? (
-              <ProFormTextArea
-                name="content"
-                label={intl.formatMessage({ id: "forms.fields.content.label" })}
-                placeholder={intl.formatMessage({
-                  id: "forms.fields.content.placeholder",
-                })}
-              />
-            ) : contentType === "html" ? (
-              <Form.Item
-                name="content"
-                label={intl.formatMessage({ id: "forms.fields.content.label" })}
-                tooltip="可以直接粘贴屏幕截图"
-              >
-                <ReactQuill
-                  theme="snow"
-                  style={{ height: 180 }}
-                  modules={{
-                    toolbar: [
-                      ["bold", "italic", "underline", "strike"],
-                      ["blockquote", "code-block"],
-                      [{ header: 1 }, { header: 2 }],
-                      [{ list: "ordered" }, { list: "bullet" }],
-                      [{ indent: "-1" }, { indent: "+1" }],
-                      [{ size: ["small", false, "large", "huge"] }],
-                      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                      ["link", "image", "video"],
-                      [{ color: [] }, { background: [] }],
-                      [{ font: [] }],
-                      [{ align: [] }],
-                    ],
-                  }}
+            </ProForm.Group>
+            <ProForm.Group>
+              {contentType === "text" ? (
+                <ProFormTextArea
+                  name="content"
+                  label={intl.formatMessage({
+                    id: "forms.fields.content.label",
+                  })}
+                  placeholder={intl.formatMessage({
+                    id: "forms.fields.content.placeholder",
+                  })}
                 />
-              </Form.Item>
-            ) : contentType === "markdown" ? (
-              <Form.Item
-                name="content"
-                label={intl.formatMessage({ id: "forms.fields.content.label" })}
-              >
-                <MDEditor />
-              </Form.Item>
-            ) : (
-              <></>
-            )}
+              ) : contentType === "html" ? (
+                <Form.Item
+                  name="content"
+                  label={intl.formatMessage({
+                    id: "forms.fields.content.label",
+                  })}
+                  tooltip="可以直接粘贴屏幕截图"
+                >
+                  <ReactQuill
+                    theme="snow"
+                    style={{ height: 180 }}
+                    modules={{
+                      toolbar: [
+                        ["bold", "italic", "underline", "strike"],
+                        ["blockquote", "code-block"],
+                        [{ header: 1 }, { header: 2 }],
+                        [{ list: "ordered" }, { list: "bullet" }],
+                        [{ indent: "-1" }, { indent: "+1" }],
+                        [{ size: ["small", false, "large", "huge"] }],
+                        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                        ["link", "image", "video"],
+                        [{ color: [] }, { background: [] }],
+                        [{ font: [] }],
+                        [{ align: [] }],
+                      ],
+                    }}
+                  />
+                </Form.Item>
+              ) : contentType === "markdown" ? (
+                <Form.Item
+                  name="content"
+                  label={intl.formatMessage({
+                    id: "forms.fields.content.label",
+                  })}
+                >
+                  <MDEditor />
+                </Form.Item>
+              ) : (
+                <></>
+              )}
+            </ProForm.Group>
           </ProForm>
         </div>
       </div>
