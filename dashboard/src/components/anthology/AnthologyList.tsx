@@ -23,6 +23,7 @@ import Share, { EResType } from "../share/Share";
 
 import StudioName, { IStudio } from "../auth/StudioName";
 import { IResNumberResponse, renderBadge } from "../channel/ChannelTable";
+import { fullUrl } from "../../utils";
 
 const { Text } = Typography;
 
@@ -255,7 +256,7 @@ const AnthologyListWidget = ({
                   onClick: (e) => {
                     switch (e.key) {
                       case "open":
-                        window.open(`/anthology/${row.id}`, "_blank");
+                        window.open(fullUrl(`/anthology/${row.id}`), "_blank");
                         break;
                       case "share":
                         console.log("share");

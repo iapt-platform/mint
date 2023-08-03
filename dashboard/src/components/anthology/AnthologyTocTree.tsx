@@ -16,14 +16,15 @@ const AnthologyTocTreeWidget = ({
   onSelect,
   onArticleSelect,
 }: IWidget) => {
-  const navigate = useNavigate();
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
 
   useEffect(() => {
-    get<IArticleMapListResponse>(
-      `/v2/article-map?view=anthology&id=${anthologyId}`
-    ).then((json) => {
-      console.log("文集get", json);
+    if (typeof anthologyId === "undefined") {
+      return;
+    }
+    const url = `/v2/article-map?view=anthology&id=${anthologyId}`;
+    console.log("url", url);
+    get<IArticleMapListResponse>(url).then((json) => {
       if (json.ok) {
         const toc: ListNodeData[] = json.data.rows.map((item) => {
           return {
@@ -42,10 +43,11 @@ const AnthologyTocTreeWidget = ({
       <TocTree
         treeData={tocData}
         onSelect={(keys: string[]) => {
-          if (typeof onArticleSelect !== "undefined") {
-            onArticleSelect(keys);
-          } else {
-            navigate(`/article/article/${keys[0]}?mode=read`);
+          if (
+            typeof onArticleSelect !== "undefined" &&
+            typeof anthologyId !== "undefined"
+          ) {
+            onArticleSelect(anthologyId, keys);
           }
         }}
       />

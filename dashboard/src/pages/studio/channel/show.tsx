@@ -13,6 +13,7 @@ import { useIntl } from "react-intl";
 import { EResType } from "../../../components/share/Share";
 import { IArticleParam } from "../recent/list";
 import ArticleDrawer from "../../../components/article/ArticleDrawer";
+import { fullUrl } from "../../../utils";
 
 const Widget = () => {
   const { channelId } = useParams(); //url 参数
@@ -65,11 +66,7 @@ const Widget = () => {
                     url += chapter?.channelId
                       ? `&channel=${chapter.channelId}`
                       : "";
-                    const fullUrl =
-                      process.env.REACT_APP_WEB_HOST +
-                      process.env.PUBLIC_URL +
-                      url;
-                    window.open(fullUrl, "_blank");
+                    window.open(fullUrl(url), "_blank");
                   } else {
                     setParam(chapter);
                     setArticleOpen(true);

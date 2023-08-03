@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Tree, Typography } from "antd";
+import { message, Tree } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
 import { Key } from "antd/lib/table/interface";
 import { DeleteOutlined, SaveOutlined } from "@ant-design/icons";
 import { Button, Divider, Space } from "antd";
 import { useIntl } from "react-intl";
-
-const { Text } = Typography;
+import EditableTreeNode from "./EditableTreeNode";
 
 export interface TreeNodeData {
   key: string;
@@ -119,25 +118,84 @@ interface IWidget {
   treeData: ListNodeData[];
   addFileButton?: React.ReactNode;
   addOnArticle?: TreeNodeData;
+  updatedNode?: TreeNodeData;
   onChange?: Function;
   onSelect?: Function;
   onSave?: Function;
   onAddFile?: Function;
+  onAppend?: Function;
+  onNodeEdit?: Function;
+  onTitleClick?: Function;
 }
 const EditableTreeWidget = ({
   treeData,
   addFileButton,
   addOnArticle,
+  updatedNode,
   onChange,
   onSelect,
   onSave,
   onAddFile,
+  onAppend,
+  onNodeEdit,
+  onTitleClick,
 }: IWidget) => {
   const intl = useIntl();
 
   const [gData, setGData] = useState<TreeNodeData[]>([]);
   const [listTreeData, setListTreeData] = useState<ListNodeData[]>();
   const [keys, setKeys] = useState<Key>("");
+
+  useEffect(() => {
+    if (typeof onChange !== "undefined") {
+      onChange(listTreeData);
+    }
+  }, [listTreeData]);
+
+  useEffect(() => {
+    //找到节点并更新
+    if (typeof updatedNode === "undefined") {
+      return;
+    }
+    const update = (_node: TreeNodeData[]) => {
+      _node.forEach((value, index, array) => {
+        if (value.key === updatedNode.key) {
+          array[index].title = updatedNode.title;
+          console.log("key found");
+          return;
+        } else {
+          update(array[index].children);
+        }
+        return;
+      });
+    };
+    const newTree = [...gData];
+    update(newTree);
+    setGData(newTree);
+    const list = treeToList(newTree);
+    setListTreeData(list);
+  }, [updatedNode]);
+
+  const appendNode = (key: string, node: TreeNodeData) => {
+    console.log("key", key);
+    const append = (_node: TreeNodeData[]) => {
+      _node.forEach((value, index, array) => {
+        if (value.key === key) {
+          array[index].children.push(node);
+          console.log("key found");
+          return;
+        } else {
+          append(array[index].children);
+        }
+        return;
+      });
+    };
+    const newTree = [...gData];
+    append(newTree);
+    setGData(newTree);
+    const list = treeToList(newTree);
+    setListTreeData(list);
+  };
 
   useEffect(() => {
     if (typeof addOnArticle === "undefined") {
@@ -229,9 +287,6 @@ const EditableTreeWidget = ({
     setGData(data);
     const list = treeToList(data);
     setListTreeData(list);
-    if (typeof onChange !== "undefined") {
-      onChange(list);
-    }
   };
 
   return (
@@ -264,9 +319,6 @@ const EditableTreeWidget = ({
             setGData(tmp);
             const list = treeToList(tmp);
             setListTreeData(list);
-            if (typeof onChange !== "undefined") {
-              onChange(list);
-            }
           }}
         >
           {intl.formatMessage({ id: "buttons.remove" })}
@@ -296,20 +348,41 @@ const EditableTreeWidget = ({
           } else {
             setKeys("");
           }
-
-          console.log(selectedKeys);
           if (typeof onSelect !== "undefined") {
             onSelect(selectedKeys);
           }
         }}
         treeData={gData}
         titleRender={(node: TreeNodeData) => {
-          return node.deletedAt ? (
-            <Text delete disabled>
-              {node.title}
-            </Text>
-          ) : (
-            <>{node.title}</>
+          return (
+            <EditableTreeNode
+              node={node}
+              onEdit={() => {
+                if (typeof onNodeEdit !== "undefined") {
+                  onNodeEdit(node.key);
+                }
+              }}
+              onAdd={async () => {
+                if (typeof onAppend !== "undefined") {
+                  const newNode = await onAppend(node);
+                  console.log("newNode", newNode);
+                  if (newNode) {
+                    appendNode(node.key, newNode);
+                    return true;
+                  } else {
+                    message.error("添加失败");
+                    return false;
+                  }
+                } else {
+                  return false;
+                }
+              }}
+              onTitleClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+                if (typeof onTitleClick !== "undefined") {
+                  onTitleClick(e, node);
+                }
+              }}
+            />
           );
         }}
       />

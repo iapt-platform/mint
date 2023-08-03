@@ -3,6 +3,7 @@ import {
   TranslationOutlined,
   CloseOutlined,
   BlockOutlined,
+  BarsOutlined,
 } from "@ant-design/icons";
 
 import SentTabButton from "./SentTabButton";
@@ -16,6 +17,7 @@ import SentMenu from "./SentMenu";
 import { IChapter } from "../../corpus/BookViewer";
 import store from "../../../store";
 import { change } from "../../../reducers/para-change";
+import { useEffect, useState } from "react";
 
 const { Text } = Typography;
 
@@ -35,7 +37,9 @@ interface IWidget {
   simNum?: number;
   wbwData?: IWbw[];
   magicDictLoading?: boolean;
+  compact?: boolean;
   onMagicDict?: Function;
+  onCompact?: Function;
 }
 const SentTabWidget = ({
   id,
@@ -52,9 +56,13 @@ const SentTabWidget = ({
   simNum = 0,
   wbwData,
   magicDictLoading = false,
+  compact = false,
   onMagicDict,
+  onCompact,
 }: IWidget) => {
   const intl = useIntl();
+  const [isCompact, setIsCompact] = useState(compact);
+  useEffect(() => setIsCompact(compact), [compact]);
   const mPath = path
     ? [
         ...path,
@@ -70,6 +78,16 @@ const SentTabWidget = ({
   return (
     <>
       <Tabs
+        style={
+          isCompact
+            ? {
+                position: "absolute",
+                marginTop: -32,
+                width: "100%",
+                marginRight: 10,
+              }
+            : undefined
+        }
         tabBarStyle={{ marginBottom: 0 }}
         size="small"
         tabBarGutter={0}
@@ -79,17 +97,6 @@ const SentTabWidget = ({
               link="none"
               data={mPath}
               trigger={path ? path.length > 0 ? path[0].title : <></> : <></>}
-              onChange={(para: IChapter) => {
-                //点击章节目录
-                const type = para.level
-                  ? para.level < 8
-                    ? "chapter"
-                    : "para"
-                  : "para";
-                store.dispatch(
-                  change({ book: para.book, para: para.para, type: type })
-                );
-              }}
             />
             <Text copyable={{ text: `{{${sentId[0]}}}` }}>{sentId[0]}</Text>
             <SentMenu
@@ -99,6 +106,24 @@ const SentTabWidget = ({
               onMagicDict={(type: string) => {
                 if (typeof onMagicDict !== "undefined") {
                   onMagicDict(type);
+                }
+              }}
+              onMenuClick={(key: string) => {
+                switch (key) {
+                  case "compact" || "normal":
+                    if (typeof onCompact !== "undefined") {
+                      setIsCompact(true);
+                      onCompact(true);
+                    }
+                    break;
+                  case "normal":
+                    if (typeof onCompact !== "undefined") {
+                      setIsCompact(false);
+                      onCompact(false);
+                    }
+                    break;
+                  default:
+                    break;
                 }
               }}
             />

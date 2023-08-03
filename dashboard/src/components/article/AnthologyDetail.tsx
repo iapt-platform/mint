@@ -26,7 +26,6 @@ const AnthologyDetailWidget = ({
   onArticleSelect,
 }: IWidgetAnthologyDetail) => {
   const [tableData, setTableData] = useState<IAnthologyData>();
-  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("useEffect");
@@ -76,14 +75,11 @@ const AnthologyDetailWidget = ({
         <Marked text={tableData?.summary} />
       </Paragraph>
       <Title level={5}>目录</Title>
-
       <AnthologyTocTree
         anthologyId={aid}
-        onSelect={(keys: string[]) => {
+        onArticleSelect={(anthologyId: string, keys: string[]) => {
           if (typeof onArticleSelect !== "undefined") {
-            onArticleSelect(keys);
-          } else {
-            navigate(`/article/article/${keys[0]}?mode=read`);
+            onArticleSelect(anthologyId, keys);
           }
         }}
       />

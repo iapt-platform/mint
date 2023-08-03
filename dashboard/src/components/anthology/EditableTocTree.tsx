@@ -2,17 +2,25 @@ import { Button, message } from "antd";
 import { useEffect, useState } from "react";
 import { FileAddOutlined } from "@ant-design/icons";
 
-import { get, put } from "../../request";
+import { get as getUiLang } from "../../locales";
+
+import { get, post, put } from "../../request";
 import {
+  IArticleCreateRequest,
+  IArticleDataResponse,
   IArticleMapAddResponse,
   IArticleMapListResponse,
   IArticleMapUpdateRequest,
+  IArticleResponse,
 } from "../api/Article";
 import ArticleListModal from "../article/ArticleListModal";
 import EditableTree, {
   ListNodeData,
   TreeNodeData,
 } from "../article/EditableTree";
+import ArticleEditDrawer from "../article/ArticleEditDrawer";
+import ArticleDrawer from "../article/ArticleDrawer";
+import { fullUrl } from "../../utils";
 
 interface IWidget {
   anthologyId?: string;
@@ -26,6 +34,47 @@ const EditableTocTreeWidget = ({
 }: IWidget) => {
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
   const [addArticle, setAddArticle] = useState<TreeNodeData>();
+  const [articleId, setArticleId] = useState<string>();
+  const [openEditor, setOpenEditor] = useState(false);
+  const [updatedArticle, setUpdatedArticle] = useState<TreeNodeData>();
+  const [openViewer, setOpenViewer] = useState(false);
+  const [viewArticleId, setViewArticleId] = useState<string>();
+
+  const save = (data?: ListNodeData[]) => {
+    console.log("onSave", data);
+    if (typeof data === "undefined") {
+      return;
+    }
+    put<IArticleMapUpdateRequest, IArticleMapAddResponse>(
+      `/v2/article-map/${anthologyId}`,
+      {
+        data: data.map((item) => {
+          let title = "";
+          if (typeof item.title === "string") {
+            title = item.title;
+          }
+          //TODO 整一个string title
+          return {
+            article_id: item.key,
+            level: item.level,
+            title: title,
+            children: item.children,
+          };
+        }),
+        operation: "anthology",
+      }
+    )
+      .finally(() => {})
+      .then((json) => {
+        if (json.ok) {
+          message.success(json.data);
+        } else {
+          message.error(json.message);
+        }
+      })
+      .catch((e) => console.error(e));
+  };
+
   useEffect(() => {
     get<IArticleMapListResponse>(
       `/v2/article-map?view=anthology&id=${anthologyId}`
@@ -66,40 +115,75 @@ const EditableTocTreeWidget = ({
             }}
           />
         }
+        updatedNode={updatedArticle}
         onChange={(data: ListNodeData[]) => {
-          console.log("onChange", data);
+          save(data);
         }}
         onSave={(data: ListNodeData[]) => {
-          console.log("onSave", data);
-          put<IArticleMapUpdateRequest, IArticleMapAddResponse>(
-            `/v2/article-map/${anthologyId}`,
-            {
-              data: data.map((item) => {
-                let title = "";
-                if (typeof item.title === "string") {
-                  title = item.title;
-                }
-                //TODO 整一个string title
-                return {
-                  article_id: item.key,
-                  level: item.level,
-                  title: title,
-                  children: item.children,
-                };
-              }),
-              operation: "anthology",
-            }
-          )
-            .finally(() => {})
-            .then((json) => {
-              if (json.ok) {
-                message.success(json.data);
-              } else {
-                message.error(json.message);
-              }
-            })
-            .catch((e) => console.error(e));
+          save(data);
         }}
+        onAppend={async (
+          node: TreeNodeData
+        ): Promise<TreeNodeData | undefined> => {
+          if (typeof studioName === "undefined") {
+            return;
+          }
+          const res = await post<IArticleCreateRequest, IArticleResponse>(
+            `/v2/article`,
+            {
+              title: "new article",
+              lang: getUiLang(),
+              studio: studioName,
+            }
+          );
+
+          console.log(res);
+          if (res.ok) {
+            return {
+              key: res.data.uid,
+              title: res.data.title,
+              children: [],
+              level: node.level + 1,
+            };
+          } else {
+            return;
+          }
+        }}
+        onNodeEdit={(key: string) => {
+          setArticleId(key);
+          setOpenEditor(true);
+        }}
+        onTitleClick={(
+          e: React.MouseEvent<HTMLElement, MouseEvent>,
+          node: TreeNodeData
+        ) => {
+          if (e.ctrlKey || e.metaKey) {
+            window.open(fullUrl(`/article/article/${node.key}`), "_blank");
+          } else {
+            setViewArticleId(node.key);
+            setOpenViewer(true);
+          }
+        }}
+      />
+      <ArticleEditDrawer
+        articleId={articleId}
+        open={openEditor}
+        onClose={() => setOpenEditor(false)}
+        onChange={(data: IArticleDataResponse) => {
+          console.log("new title", data.title);
+          setUpdatedArticle({
+            key: data.uid,
+            title: data.title,
+            level: 0,
+            children: [],
+          });
+        }}
+      />
+      <ArticleDrawer
+        articleId={viewArticleId}
+        type="article"
+        open={openViewer}
+        onClose={() => setOpenViewer(false)}
       />
     </div>
   );

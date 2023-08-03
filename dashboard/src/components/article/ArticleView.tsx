@@ -1,4 +1,4 @@
-import { Typography, Divider, Button, Skeleton } from "antd";
+import { Typography, Divider, Button, Skeleton, Space } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 
 import MdView from "../template/MdView";
@@ -8,7 +8,11 @@ import { ArticleType } from "./Article";
 import VisibleObserver from "../general/VisibleObserver";
 
 const { Paragraph, Title, Text } = Typography;
-
+export interface IFirstAnthology {
+  id: string;
+  title: string;
+  count: number;
+}
 export interface IWidgetArticleData {
   id?: string;
   title?: string;
@@ -23,7 +27,10 @@ export interface IWidgetArticleData {
   type?: ArticleType;
   articleId?: string;
   remains?: boolean;
+  anthology?: IFirstAnthology;
   onEnd?: Function;
+  onPathChange?: Function;
+  onAnthologySelect?: Function;
 }
 
 const ArticleViewWidget = ({
@@ -39,8 +46,11 @@ const ArticleViewWidget = ({
   channels,
   type,
   articleId,
+  anthology,
   onEnd,
   remains,
+  onPathChange,
+  onAnthologySelect,
 }: IWidgetArticleData) => {
   let currChannelList = <></>;
   switch (type) {
@@ -75,8 +85,36 @@ const ArticleViewWidget = ({
         />
       </div>
 
-      <div>
-        <TocPath data={path} channel={channels} />
+      <Space direction="vertical">
+        <Text>
+          {path.length === 0 && anthology ? (
+            <>
+              <Text>{"文集:"}</Text>
+              <Button
+                type="link"
+                onClick={() => {
+                  if (typeof onAnthologySelect !== "undefined") {
+                    onAnthologySelect(anthology.id);
+                  }
+                }}
+              >
+                {anthology.title}
+              </Button>
+            </>
+          ) : undefined}
+        </Text>
+        <TocPath
+          data={path}
+          channel={channels}
+          onChange={(
+            node: ITocPathNode,
+            e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
+          ) => {
+            if (typeof onPathChange !== "undefined") {
+              onPathChange(node, e);
+            }
+          }}
+        />
 
         <Title level={4}>
           <div
@@ -91,7 +129,7 @@ const ArticleViewWidget = ({
           {summary}
         </Paragraph>
         <Divider />
-      </div>
+      </Space>
       {html
         ? html.map((item, id) => {
             return (

@@ -1,5 +1,6 @@
 import { MenuOutlined } from "@ant-design/icons";
 import { Key } from "antd/lib/table/interface";
+import AnthologyTocTree from "../anthology/AnthologyTocTree";
 import { ArticleType } from "./Article";
 
 import PaliTextToc from "./PaliTextToc";
@@ -8,11 +9,16 @@ import ToolButton from "./ToolButton";
 interface IWidget {
   type?: ArticleType;
   articleId?: string;
+  anthologyId?: string | null;
   onSelect?: Function;
 }
-const ToolButtonTocWidget = ({ type, articleId, onSelect }: IWidget) => {
+const ToolButtonTocWidget = ({
+  type,
+  articleId,
+  anthologyId,
+  onSelect,
+}: IWidget) => {
   let tocWidget = <></>;
-
   switch (type) {
     case "chapter":
       const id = articleId?.split("_");
@@ -36,7 +42,20 @@ const ToolButtonTocWidget = ({ type, articleId, onSelect }: IWidget) => {
         }
       }
       break;
-
+    case "article":
+      if (anthologyId) {
+        tocWidget = (
+          <AnthologyTocTree
+            anthologyId={anthologyId}
+            onArticleSelect={(anthologyId: string, keys: string[]) => {
+              if (typeof onSelect !== "undefined" && keys.length > 0) {
+                onSelect(keys[0]);
+              }
+            }}
+          />
+        );
+      }
+      break;
     default:
       break;
   }

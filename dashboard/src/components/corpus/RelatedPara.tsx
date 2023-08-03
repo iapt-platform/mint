@@ -4,6 +4,8 @@ import { Badge, Card, List, message, Modal, Skeleton } from "antd";
 import { get } from "../../request";
 import { useEffect, useState } from "react";
 import TocPath, { ITocPathNode } from "./TocPath";
+import store from "../../store";
+import { change } from "../../reducers/para-change";
 
 interface ITag {
   id?: string;
@@ -122,7 +124,31 @@ const RelatedParaWidget = ({ book, para, trigger, onSelect }: IWidget) => {
                       }
                       size="small"
                     >
-                      <TocPath data={item.path} />
+                      <TocPath
+                        data={item.path}
+                        onChange={(
+                          node: ITocPathNode,
+                          e: React.MouseEvent<
+                            HTMLSpanElement | HTMLAnchorElement,
+                            MouseEvent
+                          >
+                        ) => {
+                          if (node.book && node.paragraph) {
+                            const type = node.level
+                              ? node.level < 8
+                                ? "chapter"
+                                : "para"
+                              : "para";
+                            store.dispatch(
+                              change({
+                                book: node.book,
+                                para: node.paragraph,
+                                type: type,
+                              })
+                            );
+                          }
+                        }}
+                      />
                     </Card>
                   </Badge.Ribbon>
                 </List.Item>

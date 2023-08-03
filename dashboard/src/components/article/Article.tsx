@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
-import { Divider, message, Result, Tag } from "antd";
+import { Divider, message, Result, Space, Tag } from "antd";
 
 import { get, post } from "../../request";
 import store from "../../store";
 import { IArticleDataResponse, IArticleResponse } from "../api/Article";
-import ArticleView from "./ArticleView";
+import ArticleView, { IFirstAnthology } from "./ArticleView";
 import { ICourseCurrUserResponse } from "../api/Course";
 import { ICourseUser, signIn } from "../../reducers/course-user";
 import { ITextbook, refresh } from "../../reducers/current-course";
 import ExerciseList from "./ExerciseList";
 import ExerciseAnswer from "../course/ExerciseAnswer";
 import "./article.css";
-import CommentListCard from "../discussion/DiscussionListCard";
 import TocTree from "./TocTree";
 import PaliText from "../template/Wbw/PaliText";
 import ArticleSkeleton from "./ArticleSkeleton";
@@ -22,6 +21,7 @@ import {
   IRecentRequest,
   IRecentResponse,
 } from "../../pages/studio/recent/list";
+import { ITocPathNode } from "../corpus/TocPath";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -59,7 +59,7 @@ interface IWidget {
   book?: string | null;
   para?: string | null;
   channelId?: string | null;
-  anthologyId?: string;
+  anthologyId?: string | null;
   courseId?: string;
   exerciseId?: string;
   userName?: string;
@@ -68,6 +68,7 @@ interface IWidget {
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
+  onAnthologySelect?: Function;
 }
 const ArticleWidget = ({
   type,
@@ -84,6 +85,7 @@ const ArticleWidget = ({
   onArticleChange,
   onFinal,
   onLoad,
+  onAnthologySelect,
 }: IWidget) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [articleHtml, setArticleHtml] = useState<string[]>(["<span />"]);
@@ -236,17 +238,19 @@ const ArticleWidget = ({
               <TocTree
                 treeData={json.data.toc?.map((item) => {
                   const strTitle = item.title ? item.title : item.pali_title;
+                  const key = item.key
+                    ? item.key
+                    : `${item.book}-${item.paragraph}`;
                   const progress = item.progress?.map((item, id) => (
-                    <Tag key={id}>{Math.round(item * 100)}</Tag>
+                    <Tag key={id}>{Math.round(item * 100) + "%"}</Tag>
                   ));
-
                   return {
-                    key: `${item.book}-${item.paragraph}`,
+                    key: key,
                     title: (
-                      <>
+                      <Space>
                         <PaliText text={strTitle} />
                         {progress}
-                      </>
+                      </Space>
                     ),
                     level: item.level,
                   };
@@ -346,6 +350,15 @@ const ArticleWidget = ({
   };
 
   //const comment = <CommentListCard resId={articleData?.uid} resType="article" />
+  let anthology: IFirstAnthology | undefined;
+  if (articleData?.anthology_count && articleData.anthology_first) {
+    anthology = {
+      id: articleData.anthology_first.uid,
+      title: articleData.anthology_first.title,
+      count: articleData?.anthology_count,
+    };
+  }
+
   return (
     <div>
       {showSkeleton ? (
@@ -372,14 +385,32 @@ const ArticleWidget = ({
           type={type}
           articleId={articleId}
           remains={remains}
+          anthology={anthology}
           onEnd={() => {
             if (type === "chapter" && articleData) {
               getNextPara(articleData);
             }
           }}
+          onPathChange={(
+            node: ITocPathNode,
+            e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
+          ) => {
+            if (typeof onArticleChange !== "undefined") {
+              const newArticle = node.key
+                ? node.key
+                : `${node.book}-${node.paragraph}`;
+              const target = e.ctrlKey || e.metaKey ? "_blank" : "self";
+              onArticleChange(newArticle, target);
+            }
+          }}
+          onAnthologySelect={(id: string) => {
+            if (typeof onAnthologySelect !== "undefined") {
+              onAnthologySelect(id);
+            }
+          }}
         />
       )}
-
+      <Divider />
       {extra}
       <Divider />
     </div>

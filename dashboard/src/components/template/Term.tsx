@@ -12,6 +12,7 @@ import { changedTerm, refresh } from "../../reducers/term-change";
 import { useAppSelector } from "../../hooks";
 import { get } from "../../request";
 import { Link, useNavigate } from "react-router-dom";
+import { fullUrl } from "../../utils";
 
 const { Text, Title } = Typography;
 
@@ -88,11 +89,10 @@ const TermCtl = ({
               <Space>
                 <Button
                   onClick={() => {
-                    const fullUrl =
-                      process.env.REACT_APP_WEB_HOST +
-                      process.env.PUBLIC_URL +
-                      `/term/list/${termData.word}`;
-                    window.open(fullUrl, "_blank");
+                    window.open(
+                      fullUrl(`/term/list/${termData.word}`),
+                      "_blank"
+                    );
                   }}
                   type="link"
                   size="small"

@@ -1,7 +1,7 @@
 import { Divider } from "antd";
 
-import CommentTopicInfo from "./DiscussionTopicInfo";
-import CommentTopicChildren from "./DiscussionTopicChildren";
+import DiscussionTopicInfo from "./DiscussionTopicInfo";
+import DiscussionTopicChildren from "./DiscussionTopicChildren";
 import { IComment } from "./DiscussionItem";
 
 interface IWidget {
@@ -16,7 +16,7 @@ const DiscussionTopicWidget = ({
 }: IWidget) => {
   return (
     <>
-      <CommentTopicInfo
+      <DiscussionTopicInfo
         topicId={topicId}
         onReady={(value: IComment) => {
           console.log("on Topic Ready", value);
@@ -26,7 +26,7 @@ const DiscussionTopicWidget = ({
         }}
       />
       <Divider />
-      <CommentTopicChildren
+      <DiscussionTopicChildren
         topicId={topicId}
         onItemCountChange={(count: number, e: string) => {
           //把新建回答的消息传出去。

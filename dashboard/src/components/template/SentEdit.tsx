@@ -55,6 +55,7 @@ export interface IWidgetSentEditInner {
   commNum?: number;
   originNum: number;
   simNum?: number;
+  compact?: boolean;
 }
 export const SentEditInner = ({
   id,
@@ -72,10 +73,12 @@ export const SentEditInner = ({
   commNum,
   originNum,
   simNum,
+  compact = false,
 }: IWidgetSentEditInner) => {
   const [wbwData, setWbwData] = useState<IWbw[]>();
   const [magicDict, setMagicDict] = useState<string>();
   const [magicDictLoading, setMagicDictLoading] = useState(false);
+  const [isCompact, setIsCompact] = useState(compact);
 
   useEffect(() => {
     const content = origin?.find(
@@ -104,6 +107,7 @@ export const SentEditInner = ({
         translation={translation}
         layout={layout}
         magicDict={magicDict}
+        compact={isCompact}
         onWbwChange={(data: IWbw[]) => {
           setWbwData(data);
         }}
@@ -127,10 +131,12 @@ export const SentEditInner = ({
         simNum={simNum}
         wbwData={wbwData}
         magicDictLoading={magicDictLoading}
+        compact={isCompact}
         onMagicDict={(type: string) => {
           setMagicDict(type);
           setMagicDictLoading(true);
         }}
+        onCompact={(value: boolean) => setIsCompact(value)}
       />
     </Card>
   );

@@ -47,11 +47,21 @@ const PaliChapterHeadWidget = ({ para, onChange }: IWidget) => {
     <>
       <TocPath
         data={pathData}
-        onChange={(e: IChapter) => {
-          message.success(e.book + ":" + e.para);
-          fetchData(e);
-          if (typeof onChange !== "undefined") {
-            onChange(e);
+        onChange={(
+          node: ITocPathNode,
+          e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
+        ) => {
+          message.success(node.book + ":" + node.paragraph);
+          if (node.book && node.paragraph) {
+            const chapter = {
+              book: node.book,
+              para: node.paragraph,
+              level: node.level,
+            };
+            fetchData(chapter);
+            if (typeof onChange !== "undefined") {
+              onChange(chapter);
+            }
           }
         }}
         link={"none"}

@@ -36,6 +36,7 @@ import { paraParam } from "../../../reducers/para-change";
 import { get } from "../../../request";
 import store from "../../../store";
 import { IRecent } from "../../../components/recent/RecentList";
+import { fullUrl } from "../../../utils";
 
 /**
  * type:
@@ -219,11 +220,7 @@ const Widget = () => {
                       : "";
                     url += param.param?.para ? `&par=${param.param?.para}` : "";
                     if (event.ctrlKey || event.metaKey) {
-                      const fullUrl =
-                        process.env.REACT_APP_WEB_HOST +
-                        process.env.PUBLIC_URL +
-                        url;
-                      window.open(fullUrl, "_blank");
+                      window.open(fullUrl(url), "_blank");
                     } else {
                       navigate(url);
                     }
@@ -232,6 +229,7 @@ const Widget = () => {
                 <ToolButtonToc
                   type={type as ArticleType}
                   articleId={id}
+                  anthologyId={searchParams.get("anthology")}
                   onSelect={(key: Key) => {
                     console.log("toc click", key);
                     let url = `/article/${type}/${key}?`;
@@ -267,20 +265,39 @@ const Widget = () => {
               para={searchParams.get("par")}
               channelId={searchParams.get("channel")}
               articleId={id}
+              anthologyId={searchParams.get("anthology")}
               mode={searchParams.get("mode") as ArticleMode}
-              onArticleChange={(article: string) => {
-                console.log("article change", article);
-                let url = `/article/${type}/${article}?mode=${currMode}`;
+              onArticleChange={(article: string, target?: string) => {
+                console.log("article change", article, target);
+                let mType = type;
+                if (article.split("-").length === 2) {
+                  mType = "chapter";
+                }
+                let url = `/article/${mType}/${article}?mode=${currMode}`;
                 searchParams.forEach((value, key) => {
                   console.log(value, key);
                   if (key !== "mode") {
                     url += `&${key}=${value}`;
                   }
                 });
-                navigate(url);
+                if (target === "_blank") {
+                  window.open(fullUrl(url), "_blank");
+                } else {
+                  navigate(url);
+                }
               }}
               onLoad={(article: IArticleDataResponse) => {
                 setLoadedArticleData(article);
+              }}
+              onAnthologySelect={(id: string) => {
+                let output: any = { anthology: id };
+                searchParams.forEach((value, key) => {
+                  console.log(value, key);
+                  if (key !== "anthology") {
+                    output[key] = value;
+                  }
+                });
+                setSearchParams(output);
               }}
             />
             <Navigate
@@ -292,13 +309,12 @@ const Widget = () => {
               ) => {
                 let url = `/article/${type}/${newId}?mode=${currMode}`;
                 searchParams.forEach((value, key) => {
-                  console.log(value, key);
                   if (key !== "mode") {
                     url += `&${key}=${value}`;
                   }
                 });
                 if (event.ctrlKey || event.metaKey) {
-                  window.open(url, "_blank");
+                  window.open(fullUrl(url), "_blank");
                 } else {
                   navigate(url);
                 }

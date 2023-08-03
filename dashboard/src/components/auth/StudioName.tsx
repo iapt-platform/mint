@@ -9,22 +9,24 @@ export interface IStudio {
   realName?: string;
   avatar?: string;
 }
-interface IWidghtStudio {
+interface IWidget {
   data?: IStudio;
   showAvatar?: boolean;
   showName?: boolean;
+  popOver?: React.ReactNode;
   onClick?: Function;
 }
 const StudioNameWidget = ({
   data,
   showAvatar = true,
   showName = true,
+  popOver,
   onClick,
-}: IWidghtStudio) => {
+}: IWidget) => {
   // TODO
   const avatar = <Avatar size="small">{data?.nickName?.slice(0, 1)}</Avatar>;
   return (
-    <StudioCard studio={data}>
+    <StudioCard popOver={popOver} studio={data}>
       <Space
         onClick={() => {
           if (typeof onClick !== "undefined") {
