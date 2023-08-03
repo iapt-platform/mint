@@ -1,8 +1,8 @@
 import { Avatar } from "antd";
 import { useState } from "react";
 import { IUser } from "../auth/User";
-import CommentShow from "./DiscussionShow";
-import CommentEdit from "./DiscussionEdit";
+import DiscussionShow from "./DiscussionShow";
+import DiscussionEdit from "./DiscussionEdit";
 import { TResType } from "./DiscussionListCard";
 
 export interface IComment {
@@ -10,7 +10,7 @@ export interface IComment {
   resId?: string;
   resType?: TResType;
   user: IUser;
-  parent?: string;
+  parent?: string | null;
   title?: string;
   content?: string;
   children?: IComment[];
@@ -25,26 +25,40 @@ interface IWidget {
 }
 const DiscussionItemWidget = ({ data, onSelect, onCreated }: IWidget) => {
   const [edit, setEdit] = useState(false);
+  const [currData, setCurrData] = useState<IComment>(data);
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", width: "100%" }}>
       <div style={{ width: "2em" }}>
         <Avatar size="small">{data.user?.nickName?.slice(0, 1)}</Avatar>
       </div>
       <div style={{ width: "100%" }}>
         {edit ? (
-          <CommentEdit
-            data={data}
+          <DiscussionEdit
+            data={currData}
+            onUpdated={(e: IComment) => {
+              setCurrData(e);
+              setEdit(false);
+            }}
             onCreated={(e: IComment) => {
               if (typeof onCreated !== "undefined") {
                 onCreated(e);
               }
             }}
+            onClose={() => setEdit(false)}
           />
         ) : (
-          <CommentShow
-            data={data}
+          <DiscussionShow
+            data={currData}
             onEdit={() => {
               setEdit(true);
+            }}
+            onSelect={(
+              e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+              data: IComment
+            ) => {
+              if (typeof onSelect !== "undefined") {
+                onSelect(e, data);
+              }
             }}
           />
         )}
