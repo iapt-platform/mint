@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { get } from "../../request";
 import { ICommentListResponse } from "../api/Comment";
-import CommentCreate from "./DiscussionCreate";
+import DiscussionCreate from "./DiscussionCreate";
 
-import CommentItem, { IComment } from "./DiscussionItem";
+import DiscussionItem, { IComment } from "./DiscussionItem";
 
 interface IWidget {
   topicId?: string;
@@ -32,6 +32,7 @@ const DiscussionTopicChildrenWidget = ({
               resId: item.res_id,
               resType: item.res_type,
               user: item.editor,
+              parent: item.parent,
               title: item.title,
               content: item.content,
               createdAt: item.created_at,
@@ -60,11 +61,11 @@ const DiscussionTopicChildrenWidget = ({
         dataSource={data}
         renderItem={(item) => (
           <List.Item>
-            <CommentItem data={item} />
+            <DiscussionItem data={item} />
           </List.Item>
         )}
       />
-      <CommentCreate
+      <DiscussionCreate
         contentType="markdown"
         parent={topicId}
         onCreated={(e: IComment) => {
