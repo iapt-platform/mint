@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Breadcrumb, Popover, Tag, Typography } from "antd";
 
 import PaliText from "../template/Wbw/PaliText";
@@ -31,6 +31,7 @@ const TocPathWidget = ({
   onChange,
 }: IWidgetTocPath): JSX.Element => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const fullPath = (
     <Breadcrumb style={{ whiteSpace: "nowrap", width: "100%" }}>
@@ -52,7 +53,11 @@ const TocPathWidget = ({
                     type === "para"
                       ? `&book=${item.book}&par=${item.paragraph}`
                       : "";
-                  let url = `/article/${type}/${item.book}-${item.paragraph}?mode=read${param}`;
+                  const channel = searchParams.get("channel");
+                  const mode = searchParams.get("mode");
+                  const urlMode = mode ? mode : "read";
+                  let url = `/article/${type}/${item.book}-${item.paragraph}?mode=${urlMode}${param}`;
+                  url += channel ? `&channel=${channel}` : "";
                   if (e.ctrlKey || e.metaKey) {
                     window.open(fullUrl(url), "_blank");
                   } else {
