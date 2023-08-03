@@ -10,6 +10,7 @@ use App\Models\Sentence;
 use Illuminate\Http\Request;
 use App\Http\Resources\DiscussionResource;
 use App\Http\Api\MdRender;
+use App\Http\Api\AuthApi;
 
 class DiscussionController extends Controller
 {
@@ -96,7 +97,7 @@ class DiscussionController extends Controller
      */
     public function store(Request $request)
     {
-        $user = \App\Http\Api\AuthApi::current($request);
+        $user = AuthApi::current($request);
         if(!$user){
             return $this->error(__('auth.failed'));
         }
@@ -208,19 +209,19 @@ class DiscussionController extends Controller
     public function update(Request $request, Discussion $discussion)
     {
         //
-        $user = \App\Http\Api\AuthApi::current($request);
+        $user = AuthApi::current($request);
         if(!$user){
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),[403],403);
         }
         //
-        if($discussion->editor !== $user['user_uid']){
-            return $this->error(__('auth.failed'));
+        if($discussion->editor_uid !== $user['user_uid']){
+            return $this->error(__('auth.failed'),[403],403);
         }
         $discussion->title = $request->get('title',null);
         $discussion->content = $request->get('content',null);
         $discussion->editor_uid = $user['user_uid'];
         $discussion->save();
-        return $this->ok($discussion);
+        return $this->ok(new DiscussionResource($discussion));
 
     }
 
@@ -233,13 +234,13 @@ class DiscussionController extends Controller
     public function destroy(Discussion $discussion)
     {
         //
-        $user = \App\Http\Api\AuthApi::current($request);
+        $user = AuthApi::current($request);
         if(!$user){
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),[401],401);
         }
         //TODO 其他有权限的人也可以删除
         if($discussion->editor !== $user['user_uid']){
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),[403],403);
         }
         $delete = $discussion->delete();
         return $this->ok($delete);
