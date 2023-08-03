@@ -5,8 +5,9 @@ import DiscussionItem, { IComment } from "./DiscussionItem";
 interface IWidget {
   data: IComment[];
   onSelect?: Function;
+  onDelete?: Function;
 }
-const DiscussionListWidget = ({ data, onSelect }: IWidget) => {
+const DiscussionListWidget = ({ data, onSelect, onDelete }: IWidget) => {
   return (
     <List
       pagination={{
@@ -27,6 +28,11 @@ const DiscussionListWidget = ({ data, onSelect }: IWidget) => {
             ) => {
               if (typeof onSelect !== "undefined") {
                 onSelect(e, data);
+              }
+            }}
+            onDelete={() => {
+              if (typeof onDelete !== "undefined") {
+                onDelete(item.id);
               }
             }}
           />

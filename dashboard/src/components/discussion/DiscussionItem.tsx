@@ -22,8 +22,14 @@ interface IWidget {
   data: IComment;
   onSelect?: Function;
   onCreated?: Function;
+  onDelete?: Function;
 }
-const DiscussionItemWidget = ({ data, onSelect, onCreated }: IWidget) => {
+const DiscussionItemWidget = ({
+  data,
+  onSelect,
+  onCreated,
+  onDelete,
+}: IWidget) => {
   const [edit, setEdit] = useState(false);
   const [currData, setCurrData] = useState<IComment>(data);
   return (
@@ -58,6 +64,11 @@ const DiscussionItemWidget = ({ data, onSelect, onCreated }: IWidget) => {
             ) => {
               if (typeof onSelect !== "undefined") {
                 onSelect(e, data);
+              }
+            }}
+            onDelete={(id: string) => {
+              if (typeof onDelete !== "undefined") {
+                onDelete();
               }
             }}
           />

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
-import { Card, message, Typography } from "antd";
+import { Card, message, Skeleton, Typography } from "antd";
 
 import { get } from "../../request";
 import { ICommentListResponse } from "../api/Comment";
@@ -28,6 +28,8 @@ const DiscussionListCardWidget = ({
 }: IWidget) => {
   const intl = useIntl();
   const [data, setData] = useState<IComment[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     console.log("changedAnswerCount", changedAnswerCount);
     const newData = [...data].map((item) => {
@@ -50,6 +52,8 @@ const DiscussionListCardWidget = ({
     if (url === "") {
       return;
     }
+    setLoading(true);
+
     get<ICommentListResponse>(url)
       .then((json) => {
         console.log(json);
@@ -74,6 +78,9 @@ const DiscussionListCardWidget = ({
           message.error(json.message);
         }
       })
+      .finally(() => {
+        setLoading(false);
+      })
       .catch((e) => {
         message.error(e.message);
       });
@@ -89,8 +96,11 @@ const DiscussionListCardWidget = ({
 
   return (
     <Card title="讨论" extra={"More"}>
-      {data.length > 0 ? (
+      {loading ? (
+        <Skeleton title={{ width: 200 }} paragraph={{ rows: 1 }} active />
+      ) : (
         <DiscussionList
+          data={data}
           onSelect={(
             e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
             comment: IComment
@@ -99,9 +109,16 @@ const DiscussionListCardWidget = ({
               onSelect(e, comment);
             }
           }}
-          data={data}
+          onDelete={(id: string) => {
+            setData((origin) => {
+              return origin.filter((value) => value.id !== id);
+            });
+            if (typeof onItemCountChange !== "undefined") {
+              onItemCountChange(data.length - 1);
+            }
+          }}
         />
-      ) : undefined}
+      )}
 
       {resId && resType ? (
         <CommentCreate
@@ -110,7 +127,6 @@ const DiscussionListCardWidget = ({
           resType={resType}
           onCreated={(e: IComment) => {
             const newData = JSON.parse(JSON.stringify(e));
-            console.log("create", e);
             if (typeof onItemCountChange !== "undefined") {
               onItemCountChange(data.length + 1);
             }

@@ -1,4 +1,4 @@
-import { List, message } from "antd";
+import { List, message, Skeleton } from "antd";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { get } from "../../request";
@@ -16,16 +16,20 @@ const DiscussionTopicChildrenWidget = ({
   onItemCountChange,
 }: IWidget) => {
   const intl = useIntl();
-  const [data, setData] = useState<IComment[]>();
+  const [data, setData] = useState<IComment[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (typeof topicId === "undefined") {
       return;
     }
+    setLoading(true);
+
     get<ICommentListResponse>(`/v2/discussion?view=answer&id=${topicId}`)
       .then((json) => {
         console.log(json);
         if (json.ok) {
-          console.log(intl.formatMessage({ id: "flashes.success" }));
+          console.log("ok", json.data);
           const discussions: IComment[] = json.data.rows.map((item) => {
             return {
               id: item.id,
@@ -44,43 +48,54 @@ const DiscussionTopicChildrenWidget = ({
           message.error(json.message);
         }
       })
+      .finally(() => {
+        setLoading(false);
+      })
       .catch((e) => {
         message.error(e.message);
       });
   }, [intl, topicId]);
   return (
     <div>
-      <List
-        pagination={{
-          onChange: (page) => {
-            console.log(page);
-          },
-          pageSize: 10,
-        }}
-        itemLayout="horizontal"
-        dataSource={data}
-        renderItem={(item) => (
-          <List.Item>
-            <DiscussionItem data={item} />
-          </List.Item>
-        )}
-      />
+      {loading ? (
+        <Skeleton title={{ width: 200 }} paragraph={{ rows: 1 }} active />
+      ) : (
+        <List
+          pagination={{
+            onChange: (page) => {
+              console.log(page);
+            },
+            pageSize: 10,
+          }}
+          itemLayout="horizontal"
+          dataSource={data}
+          renderItem={(item) => (
+            <List.Item>
+              <DiscussionItem
+                data={item}
+                onDelete={() => {
+                  console.log("delete", item.id, data);
+                  if (typeof onItemCountChange !== "undefined") {
+                    onItemCountChange(data.length - 1, item.parent);
+                  }
+                  setData((origin) => {
+                    return origin.filter((value) => value.id !== item.id);
+                  });
+                }}
+              />
+            </List.Item>
+          )}
+        />
+      )}
       <DiscussionCreate
         contentType="markdown"
         parent={topicId}
         onCreated={(e: IComment) => {
           console.log("create", e);
           const newData = JSON.parse(JSON.stringify(e));
-          let count = 0;
-          if (typeof data === "undefined") {
-            count = 1;
-            setData([newData]);
-          } else {
-            count = data.length + 1;
-            setData([...data, newData]);
-          }
+          setData([...data, newData]);
           if (typeof onItemCountChange !== "undefined") {
-            onItemCountChange(count, e.parent);
+            onItemCountChange(data.length + 1, e.parent);
           }
         }}
       />
