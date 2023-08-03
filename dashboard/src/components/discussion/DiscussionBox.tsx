@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Button, Divider, Drawer, Space } from "antd";
 import { FullscreenOutlined, FullscreenExitOutlined } from "@ant-design/icons";
 
-import CommentTopic from "./DiscussionTopic";
-import CommentListCard, { TResType } from "./DiscussionListCard";
+import DiscussionTopic from "./DiscussionTopic";
+import DiscussionListCard, { TResType } from "./DiscussionListCard";
 import { IComment } from "./DiscussionItem";
 import DiscussionAnchor from "./DiscussionAnchor";
 
@@ -50,6 +50,7 @@ const DiscussionBoxWidget = ({
       </span>
       <Drawer
         title="Discussion"
+        destroyOnClose
         extra={
           <Space>
             {drawerWidth === drawerMinWidth ? (
@@ -79,7 +80,7 @@ const DiscussionBoxWidget = ({
       >
         <DiscussionAnchor resId={resId} resType={resType} />
         <Divider></Divider>
-        <CommentListCard
+        <DiscussionListCard
           resId={resId}
           resType={resType}
           onSelect={showChildrenDrawer}
@@ -92,13 +93,13 @@ const DiscussionBoxWidget = ({
         />
         <Drawer
           title="Answer"
-          width={480}
+          width={700}
           onClose={() => {
             setChildrenDrawer(false);
           }}
           open={childrenDrawer}
         >
-          <CommentTopic
+          <DiscussionTopic
             topicId={topicComment?.id}
             onItemCountChange={(count: number, parent: string) => {
               setAnswerCount({ id: parent, count: count });
