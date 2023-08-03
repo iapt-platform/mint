@@ -6,6 +6,7 @@ import { useAppSelector } from "../../../hooks";
 import { currentUser as _currentUser } from "../../../reducers/current-user";
 import ArticleDrawer from "../../../components/article/ArticleDrawer";
 import RecentList from "../../../components/recent/RecentList";
+import { fullUrl } from "../../../utils";
 
 export interface IRecentRequest {
   type: ArticleType;
@@ -73,9 +74,8 @@ const Widget = () => {
               : "";
             url += param.param?.book ? `&book=${param.param?.book}` : "";
             url += param.param?.para ? `&par=${param.param?.para}` : "";
-            const fullUrl =
-              process.env.REACT_APP_WEB_HOST + process.env.PUBLIC_URL + url;
-            window.open(fullUrl, "_blank");
+
+            window.open(fullUrl(url), "_blank");
           } else {
             setParam({
               type: param.type,

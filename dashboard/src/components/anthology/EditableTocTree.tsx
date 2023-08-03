@@ -20,6 +20,7 @@ import EditableTree, {
 } from "../article/EditableTree";
 import ArticleEditDrawer from "../article/ArticleEditDrawer";
 import ArticleDrawer from "../article/ArticleDrawer";
+import { fullUrl } from "../../utils";
 
 interface IWidget {
   anthologyId?: string;
@@ -157,11 +158,7 @@ const EditableTocTreeWidget = ({
           node: TreeNodeData
         ) => {
           if (e.ctrlKey || e.metaKey) {
-            const fullUrl =
-              process.env.REACT_APP_WEB_HOST +
-              process.env.PUBLIC_URL +
-              `/article/article/${node.key}`;
-            window.open(fullUrl, "_blank");
+            window.open(fullUrl(`/article/article/${node.key}`), "_blank");
           } else {
             setViewArticleId(node.key);
             setOpenViewer(true);

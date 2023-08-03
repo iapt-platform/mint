@@ -11,6 +11,7 @@ import BookViewer from "../../../components/corpus/BookViewer";
 import { IChapterClickEvent } from "../../../components/corpus/PaliChapterList";
 import { IPaliBookListResponse } from "../../../components/api/Corpus";
 import Recent from "../../../components/corpus/Recent";
+import { fullUrl } from "../../../utils";
 
 const Widget = () => {
   const { root, path } = useParams();
@@ -127,11 +128,7 @@ const Widget = () => {
                 onChapterClick={(e: IChapterClickEvent) => {
                   if (e.event.ctrlKey) {
                     const url = `/palicanon/chapter/${e.para.Book}-${e.para.Paragraph}`;
-                    const fullUrl =
-                      process.env.REACT_APP_WEB_HOST +
-                      process.env.PUBLIC_URL +
-                      url;
-                    window.open(fullUrl, "_blank");
+                    window.open(fullUrl(url), "_blank");
                   } else {
                     setIsModalOpen(true);
                     setOpenPara({ book: e.para.Book, para: e.para.Paragraph });

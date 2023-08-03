@@ -8,6 +8,7 @@ import { useAppSelector } from "../../hooks";
 import { sentenceList } from "../../reducers/sentence";
 import ToolButtonNavMore from "./ToolButtonNavMore";
 import ToolButtonNavSliceTitle from "./ToolButtonNavSliceTitle";
+import { fullUrl } from "../../utils";
 
 const { Text } = Typography;
 
@@ -152,11 +153,7 @@ const ToolButtonNavWidget = ({ type, articleId }: IWidget) => {
 
                   switch (key) {
                     case "copy-link":
-                      const fullUrl =
-                        process.env.REACT_APP_WEB_HOST +
-                        process.env.PUBLIC_URL +
-                        url;
-                      navigator.clipboard.writeText(fullUrl).then(() => {
+                      navigator.clipboard.writeText(fullUrl(url)).then(() => {
                         message.success("链接地址已经拷贝到剪贴板");
                       });
 
