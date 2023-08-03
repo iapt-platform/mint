@@ -231,7 +231,7 @@ class DiscussionController extends Controller
      * @param  \App\Models\Discussion  $discussion
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Discussion $discussion)
+    public function destroy(Request $request,Discussion $discussion)
     {
         //
         $user = AuthApi::current($request);
@@ -239,7 +239,7 @@ class DiscussionController extends Controller
             return $this->error(__('auth.failed'),[401],401);
         }
         //TODO 其他有权限的人也可以删除
-        if($discussion->editor !== $user['user_uid']){
+        if($discussion->editor_uid !== $user['user_uid']){
             return $this->error(__('auth.failed'),[403],403);
         }
         $delete = $discussion->delete();
