@@ -106,7 +106,7 @@ class ArticleResource extends JsonResource
             }
             $data['toc'] = $subToc;
         }
-        $collectionCount = ArticleCollection::where('article_id',$this->uid)->count();
+
         //render html
         if(isset($this->content) && !empty($this->content)){
             if($request->has('channel')){
