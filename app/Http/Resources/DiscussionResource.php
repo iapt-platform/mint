@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Resources;
-use App\Http\Api\StudioApi;
+use App\Http\Api\UserApi;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,7 +22,7 @@ class DiscussionResource extends JsonResource
             "content_type"=> $this->content_type,
             "parent"=> $this->parent,
             "children_count"=> $this->children_count,
-            "editor"=> StudioApi::getById($this->editor_uid),
+            "editor"=> UserApi::getByUuid($this->editor_uid),
             "res_id"=>$this->res_id,
             "res_type"=> $this->res_type,
             "created_at"=> $this->created_at,
