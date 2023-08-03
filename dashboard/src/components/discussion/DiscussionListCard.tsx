@@ -6,7 +6,7 @@ import { get } from "../../request";
 import { ICommentListResponse } from "../api/Comment";
 import CommentCreate from "./DiscussionCreate";
 import { IComment } from "./DiscussionItem";
-import CommentList from "./DiscussionList";
+import DiscussionList from "./DiscussionList";
 import { IAnswerCount } from "./DiscussionBox";
 
 export type TResType = "article" | "channel" | "chapter" | "sentence" | "wbw";
@@ -62,6 +62,7 @@ const DiscussionListCardWidget = ({
               resType: item.res_type,
               user: item.editor,
               title: item.title,
+              parent: item.parent,
               content: item.content,
               childrenCount: item.children_count,
               createdAt: item.created_at,
@@ -89,7 +90,7 @@ const DiscussionListCardWidget = ({
   return (
     <Card title="讨论" extra={"More"}>
       {data.length > 0 ? (
-        <CommentList
+        <DiscussionList
           onSelect={(
             e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
             comment: IComment
