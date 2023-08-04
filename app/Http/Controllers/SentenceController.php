@@ -11,6 +11,7 @@ use App\Http\Resources\SentResource;
 use App\Http\Api\AuthApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\PaliTextApi;
 use Illuminate\Support\Facades\Log;
 
 class SentenceController extends Controller
@@ -23,7 +24,9 @@ class SentenceController extends Controller
     public function index(Request $request)
     {
         $result=false;
-		$indexCol = ['id','uid','book_id','paragraph','word_start','word_end','content','content_type','channel_uid','editor_uid','acceptor_uid','pr_edit_at','updated_at'];
+		$indexCol = ['id','uid','book_id','paragraph',
+                    'word_start','word_end','content','content_type',
+                    'channel_uid','editor_uid','acceptor_uid','pr_edit_at','updated_at'];
 
 		switch ($request->get('view')) {
             case 'public':
@@ -63,6 +66,7 @@ class SentenceController extends Controller
 
                 break;
             case 'channel':
+                //句子编号列表在某个channel下的全部内容
                 $sent = explode(',',$request->get('sentence')) ;
                 $query = [];
                 foreach ($sent as $value) {
@@ -132,6 +136,13 @@ class SentenceController extends Controller
                                 ->where('paragraph',$sent[1])
                                 ->where('word_start',$sent[2])
                                 ->where('word_end',$sent[3]);
+
+            case 'chapter':
+                $chapter =  PaliTextApi::getChapterStartEnd($request->get('book'),$request->get('para'));
+                $table = Sentence::where('book_id',$request->get('book'))
+                                    ->whereBetween('paragraph',$chapter)
+                                    ->whereIn('channel_uid',explode(',',$request->get('channels')));
+                break;
 			default:
 				# code...
 				break;
@@ -146,10 +157,12 @@ class SentenceController extends Controller
         $result = $table->get();
 
 		if($result){
-            if($request->get('view') === 'sent-can-read'){
-                $output = ["rows"=>SentResource::collection($result),"count"=>$count];
+            $output = ["count"=>$count];
+            if($request->get('view') === 'sent-can-read' ||
+                $request->get('view') === 'chapter'){
+                $output["rows"] = SentResource::collection($result);
             }else{
-                $output = ["rows"=>$result,"count"=>$count];
+                $output["rows"] = $result;
             }
             if(isset($totalStrLen)){
                 $output['total_strlen'] = $totalStrLen;
