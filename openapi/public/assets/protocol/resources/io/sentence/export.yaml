@@ -29,7 +29,7 @@ get:
         type: string
     - name: limit
       in: query
-      description: 每页记录数
+      description: 每次提取记录数
       schema:
         type: number
         minimum: 1
