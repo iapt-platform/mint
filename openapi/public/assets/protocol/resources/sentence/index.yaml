@@ -26,6 +26,12 @@ get:
       description: 段落号
       schema:
         type: number
+    - name: channels
+      in: query
+      required: true
+      description: channel uuid 多个channel 用英文逗号分隔
+      schema:
+        type: string
     - name: html
       in: query
       description: 是否由服务器渲染content 默认false
