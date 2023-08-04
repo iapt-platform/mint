@@ -89,6 +89,8 @@ class SentenceController extends Controller
                 $channelPub = $channelTable->where('status',30)->get();
 
                 $user = AuthApi::current($request);
+                $channelShare=array();
+                $channelMy=array();
                 if($user){
                     //自己的
                     $channelMy = Channel::where('owner_uid',$user['user_uid'])
@@ -125,9 +127,13 @@ class SentenceController extends Controller
                     ];
                 }
                 $channels = [];
+                $excludeChannels = explode(',',$request->get('channels')) ;
+
                 foreach ($channelCanRead as $key => $value) {
                     # code...
-                    $channels[] = $key;
+                    if(!in_array($key,$excludeChannels)){
+                        $channels[] = $key;
+                    }
                 }
                 $sent = explode('-',$request->get('sentence')) ;
                 $table = Sentence::select($indexCol)
@@ -136,7 +142,7 @@ class SentenceController extends Controller
                                 ->where('paragraph',$sent[1])
                                 ->where('word_start',$sent[2])
                                 ->where('word_end',$sent[3]);
-
+                break;
             case 'chapter':
                 $chapter =  PaliTextApi::getChapterStartEnd($request->get('book'),$request->get('para'));
                 $table = Sentence::where('book_id',$request->get('book'))
