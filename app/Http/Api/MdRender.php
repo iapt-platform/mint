@@ -170,6 +170,7 @@ class MdRender{
          * 获取模版参数
          * 生成react 组件参数
          */
+        //Log::error($xml);
         try{
             $dom = simplexml_load_string($xml);
         }catch(\Exception $e){
