@@ -1,5 +1,5 @@
 export function fullUrl(url: string): string {
-  return process.env.REACT_APP_WEB_HOST + process.env.PUBLIC_URL + url;
+  return window.location.origin + process.env.PUBLIC_URL + url;
 }
 
 export function PaliToEn(pali: string): string {
