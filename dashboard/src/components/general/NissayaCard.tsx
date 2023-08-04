@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Modal, Popover, Skeleton, Typography } from "antd";
+import { message, Modal, Popover, Skeleton, Typography } from "antd";
 
 import { get } from "../../request";
 import { get as getLang } from "../../locales";
@@ -75,6 +75,8 @@ interface IWidget {
 const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
   const [cardData, setCardData] = useState<INissayaRelation[]>();
   const [term, setTerm] = useState<ITerm>();
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const uiLang = getLang();
     if (cache) {
@@ -83,27 +85,36 @@ const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
         const valueJson: INissayaCardData = JSON.parse(value);
         setCardData(valueJson.row);
         setTerm(valueJson.ending);
+        setLoading(false);
         return;
       }
     }
 
     const url = `/v2/nissaya-card/${text}?lang=${uiLang}&content_type=json`;
     console.log("url", url);
-    get<INissayaCardResponse>(url).then((json) => {
-      if (json.ok) {
-        setCardData(json.data.row);
-        setTerm(json.data.ending);
-        if (cache) {
-          sessionStorage.setItem(
-            `nissaya-ending/${uiLang}/${text}`,
-            JSON.stringify(json.data)
-          );
+    setLoading(true);
+    get<INissayaCardResponse>(url)
+      .then((json) => {
+        if (json.ok) {
+          setCardData(json.data.row);
+          setTerm(json.data.ending);
+          if (cache) {
+            sessionStorage.setItem(
+              `nissaya-ending/${uiLang}/${text}`,
+              JSON.stringify(json.data)
+            );
+          }
+        } else {
+          message.error(json.message);
         }
-      }
-    });
+      })
+      .finally(() => setLoading(false))
+      .catch((e: INissayaCardResponse) => message.error(e.message));
   }, [cache, text]);
 
-  return cardData ? (
+  return loading ? (
+    <Skeleton title={{ width: 200 }} paragraph={{ rows: 4 }} active />
+  ) : (
     <>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Title level={4}>{term?.word}</Title>
@@ -111,10 +122,8 @@ const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
       </div>
       <Paragraph>{term?.meaning}</Paragraph>
       <Paragraph>{term?.note}</Paragraph>
-      <NissayaCardTable data={cardData} />
+      {cardData ? <NissayaCardTable data={cardData} /> : undefined}
     </>
-  ) : (
-    <Skeleton title={{ width: 200 }} paragraph={{ rows: 4 }} active />
   );
 };
 
