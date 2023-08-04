@@ -60,7 +60,7 @@ export const mainMenuItems: MenuProps["items"] = [
   {
     label: (
       <a
-        href="https://asset-hk.wikipali.org/help/zh-Hans"
+        href="https://assets-hk.wikipali.org/help/zh-Hans/"
         target="_blank"
         rel="noreferrer"
       >
@@ -73,7 +73,7 @@ export const mainMenuItems: MenuProps["items"] = [
   {
     label: (
       <a
-        href="https://asset-hk.wikipali.org/handbook/zh-Hans"
+        href="https://assets-hk.wikipali.org/pali-handbook/zh-Hans/"
         target="_blank"
         rel="noreferrer"
       >
@@ -84,7 +84,10 @@ export const mainMenuItems: MenuProps["items"] = [
   },
   {
     label: (
-      <Link to="/calendar">
+      <Link
+        to="https://www-hk.wikipali.org/app/calendar/index.html"
+        target={"_blank"}
+      >
         <FormattedMessage id="columns.library.calendar.title" />
       </Link>
     ),
@@ -92,7 +95,10 @@ export const mainMenuItems: MenuProps["items"] = [
   },
   {
     label: (
-      <Link to="/convertor">
+      <Link
+        to="https://www-hk.wikipali.org/app/tools/unicode.html"
+        target={"_blank"}
+      >
         <FormattedMessage id="columns.library.convertor.title" />
       </Link>
     ),
@@ -100,7 +106,7 @@ export const mainMenuItems: MenuProps["items"] = [
   },
   {
     label: (
-      <Link to="/statistics">
+      <Link to="https://www-hk.wikipali.org/app/statistics/" target={"_blank"}>
         <FormattedMessage id="columns.library.statistics.title" />
       </Link>
     ),

@@ -29,3 +29,7 @@ paths:
     $ref: "./resources/io/chapter/export.yaml"
   /sentence-io:
     $ref: "./resources/io/sentence/export.yaml"
+  /progress:
+    $ref: "./resources/progress/index.yaml"
+  /sentence:
+    $ref: "./resources/sentence/index.yaml"

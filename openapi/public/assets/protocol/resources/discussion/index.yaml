@@ -25,4 +25,4 @@ get:
                 type: boolean
               message:
                 type: string
-$ref: "./store.yaml"
+                $ref: "./data.yaml"

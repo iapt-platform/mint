@@ -36,4 +36,4 @@ post:
                 type: string
               data:
                 type: object
-                $ref: "./discussion.yaml"
+                $ref: "./data.yaml"
