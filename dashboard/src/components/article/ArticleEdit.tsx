@@ -7,7 +7,7 @@ import {
   ProFormTextArea,
 } from "@ant-design/pro-components";
 
-import { Alert, Button, Form, message, Result, Space, Tabs } from "antd";
+import { Alert, Button, Form, message, Result, Space } from "antd";
 
 import { get, put } from "../../request";
 import {
@@ -60,7 +60,7 @@ const ArticleEditWidget = ({
     <>
       {readonly ? (
         <Alert
-          message="文章为只读，如果需要修改，请联络拥有者分配权限。"
+          message="该资源为只读，如果需要修改，请联络拥有者分配权限。"
           type="warning"
           closable
           action={
