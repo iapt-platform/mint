@@ -170,13 +170,18 @@ class MdRender{
          * 获取模版参数
          * 生成react 组件参数
          */
-        //Log::error($xml);
         try{
             $dom = simplexml_load_string($xml);
         }catch(\Exception $e){
             Log::error($e);
             Log::error($xml);
             return "<span>xml解析错误{$e}</span>";
+        }
+
+        if(!$dom){
+            Log::error($e);
+            Log::error($xml);
+            return "<span>xml解析错误</span>";
         }
 
         /*
@@ -280,17 +285,6 @@ class MdRender{
                 }
                 $markdown = implode('',$nissayaWord);
             }else if($contentType === "markdown"){
-                /*
-                $pattern = '/(.+?)=(.+?)\n/';
-                $replacement = '{{nissaya|$1|$2}}';
-                $markdown = preg_replace($pattern,$replacement,$markdown);
-                $pattern = '/(.+?)=(.?)\n/';
-                $replacement = '{{nissaya|$1|$2}}';
-                $markdown = preg_replace($pattern,$replacement,$markdown);
-                $pattern = '/(.?)=(.+?)\n/';
-                $replacement = '{{nissaya|$1|$2}}';
-                $markdown = preg_replace($pattern,$replacement,$markdown);
-                */
                 $lines = explode("\n",$markdown);
                 $newLines = array();
                 foreach ($lines as  $line) {
@@ -308,6 +302,33 @@ class MdRender{
         }
         //$markdown = preg_replace("/\n\n/","<div></div>",$markdown);
 
+                /**
+         * 处理mermaid
+         */
+        if(strpos($markdown,"```mermaid") !== FALSE){
+            $lines = explode("\n",$markdown);
+            $newLines = array();
+            $mermaidBegin = false;
+            $mermaidString = array();
+            foreach ($lines as  $line) {
+                if($line === "```mermaid"){
+                    $mermaidBegin = true;
+                    $mermaidString = [];
+                    continue;
+                }
+                if($mermaidBegin){
+                    if($line === "```"){
+                        $newLines[] = "{{mermaid|".base64_encode(\json_encode($mermaidString))."}}";
+                        $mermaidBegin = false;
+                    }else{
+                        $mermaidString[] = $line;
+                    }
+                }else{
+                    $newLines[] = $line;
+                }
+            }
+            $markdown = implode("\n",$newLines);
+        }
 
         /**
          * 替换换行符
@@ -346,6 +367,7 @@ class MdRender{
         $pattern = '/<pre><code>([\w\W]+?)<\/code><\/pre>/';
         $replacement = '{{note|$1}}';
         $html = preg_replace($pattern,$replacement,$html);
+
 
         return $html;
     }
