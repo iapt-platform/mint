@@ -179,7 +179,6 @@ class MdRender{
         }
 
         if(!$dom){
-            Log::error($e);
             Log::error($xml);
             return "<span>xml解析错误</span>";
         }
