@@ -1,5 +1,6 @@
 import Article from "./Article";
 import Exercise from "./Exercise";
+import Mermaid from "./Mermaid";
 import Nissaya from "./Nissaya";
 import Note from "./Note";
 import ParaHandle from "./ParaHandle";
@@ -42,6 +43,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Toggle props={props ? props : undefined}>{children}</Toggle>;
     case "para":
       return <ParaHandle props={props ? props : ""} />;
+    case "mermaid":
+      return <Mermaid props={props ? props : ""} />;
     default:
       return <>未定义模版({tpl})</>;
   }
