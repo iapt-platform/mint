@@ -174,6 +174,7 @@ const ArticleEditWidget = ({
         <ProForm.Group>
           <Form.Item
             name="content"
+            style={{ width: "100%" }}
             label={
               <Space>
                 {intl.formatMessage({
@@ -189,7 +190,11 @@ const ArticleEditWidget = ({
               </Space>
             }
           >
-            <MDEditor onChange={(value) => setContent(value)} />
+            <MDEditor
+              onChange={(value) => setContent(value)}
+              height={550}
+              style={{ width: "100%" }}
+            />
           </Form.Item>
         </ProForm.Group>
       </ProForm>
