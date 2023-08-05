@@ -1,6 +1,7 @@
 import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
+import { TRole } from "./Auth";
 
 export interface ITermDataRequest {
   id?: string;
@@ -28,6 +29,7 @@ export interface ITermDataResponse {
   channel?: IChannel;
   studio: IStudio;
   editor: IUser;
+  role?: TRole;
   language: string;
   created_at: string;
   updated_at: string;
