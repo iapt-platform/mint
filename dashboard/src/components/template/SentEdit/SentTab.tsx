@@ -1,9 +1,9 @@
+import { useEffect, useState } from "react";
 import { Badge, Space, Tabs, Typography } from "antd";
 import {
   TranslationOutlined,
   CloseOutlined,
   BlockOutlined,
-  BarsOutlined,
 } from "@ant-design/icons";
 
 import SentTabButton from "./SentTabButton";
@@ -14,10 +14,6 @@ import TocPath, { ITocPathNode } from "../../corpus/TocPath";
 import { IWbw } from "../Wbw/WbwWord";
 import RelaGraphic from "../Wbw/RelaGraphic";
 import SentMenu from "./SentMenu";
-import { IChapter } from "../../corpus/BookViewer";
-import store from "../../../store";
-import { change } from "../../../reducers/para-change";
-import { useEffect, useState } from "react";
 
 const { Text } = Typography;
 
@@ -159,6 +155,7 @@ const SentTabWidget = ({
                 wordStart={parseInt(sId[2])}
                 wordEnd={parseInt(sId[3])}
                 type="translation"
+                channelsId={channelsId}
               />
             ),
           },
@@ -182,6 +179,7 @@ const SentTabWidget = ({
                 wordStart={parseInt(sId[2])}
                 wordEnd={parseInt(sId[3])}
                 type="nissaya"
+                channelsId={channelsId}
               />
             ),
           },
