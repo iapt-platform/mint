@@ -2,6 +2,7 @@ import Article from "./Article";
 import Exercise from "./Exercise";
 import Nissaya from "./Nissaya";
 import Note from "./Note";
+import ParaHandle from "./ParaHandle";
 import Quote from "./Quote";
 import SentEdit from "./SentEdit";
 import SentRead from "./SentRead";
@@ -39,6 +40,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Nissaya props={props ? props : ""} />;
     case "toggle":
       return <Toggle props={props ? props : undefined}>{children}</Toggle>;
+    case "para":
+      return <ParaHandle props={props ? props : ""} />;
     default:
       return <>未定义模版({tpl})</>;
   }
