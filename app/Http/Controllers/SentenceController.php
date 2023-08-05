@@ -13,6 +13,7 @@ use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\PaliTextApi;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class SentenceController extends Controller
 {
@@ -348,6 +349,10 @@ class SentenceController extends Controller
             $sent->pr_id = $request->get('prId');
         }
         $sent->save();
+        //清除cache
+        $channelId = $param[4];
+        $currSentId = "{$param[0]}-{$param[1]}-{$param[2]}-{$param[3]}";
+        Cache::forget("/sent/{$channelId}/{$currSentId}");
         //保存历史记录
         $this->saveHistory($sent->uid,$user["user_uid"],$request->get('content'));
         return $this->ok(new SentResource($sent));
