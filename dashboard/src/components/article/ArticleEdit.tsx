@@ -7,7 +7,7 @@ import {
   ProFormTextArea,
 } from "@ant-design/pro-components";
 
-import { Button, Form, message, Result, Space, Tabs } from "antd";
+import { Alert, Button, Form, message, Result, Space, Tabs } from "antd";
 
 import { get, put } from "../../request";
 import {
@@ -58,7 +58,18 @@ const ArticleEditWidget = ({
     />
   ) : (
     <>
-      {readonly ? "只读" : undefined}
+      {readonly ? (
+        <Alert
+          message="文章为只读，如果需要修改，请联络拥有者分配权限。"
+          type="warning"
+          closable
+          action={
+            <Button disabled size="small" type="text">
+              详情
+            </Button>
+          }
+        />
+      ) : undefined}
       <ProForm<IFormData>
         onFinish={async (values: IFormData) => {
           // TODO

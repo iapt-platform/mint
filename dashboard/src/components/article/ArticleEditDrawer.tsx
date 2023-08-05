@@ -54,7 +54,7 @@ const ArticleEditDrawerWidget = ({
     <>
       <span onClick={() => showDrawer()}>{trigger}</span>
       <Drawer
-        title={title + readonly ? "(只读)" : ""}
+        title={title + (readonly ? "(只读)" : "")}
         width={1000}
         placement="right"
         onClose={onDrawerClose}
