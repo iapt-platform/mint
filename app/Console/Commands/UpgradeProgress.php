@@ -16,7 +16,7 @@ class UpgradeProgress extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:progress';
+    protected $signature = 'upgrade:progress {--book=} {--para=} {--channel=}';
 
     /**
      * The console command description.
@@ -44,13 +44,26 @@ class UpgradeProgress extends Command
     {
 		$this->info('upgrade:progress start');
 		$startTime = time();
-
-        $channels = Sentence::where('strlen','>',0)
+        $book = $this->option('book');
+        $para = $this->option('para');
+        $channelId = $this->option('channel');
+        if($book && $para && $channelId){
+            $channels = Sentence::where('strlen','>',0)
+                          ->where('book_id',$book)
+                          ->where('paragraph',$para)
+                          ->where('channel_uid',$channelId)
+                          ->groupby('book_id','paragraph','channel_uid')
+                          ->select('book_id','paragraph','channel_uid')
+                          ->cursor();
+        }else{
+            $channels = Sentence::where('strlen','>',0)
                           ->where('book_id','<',1000)
                           ->where('channel_uid','<>','')
                           ->groupby('book_id','paragraph','channel_uid')
                           ->select('book_id','paragraph','channel_uid')
                           ->cursor();
+        }
+
         $this->info('channels:',count($channels));
         #第二步 更新段落表
         $bar = $this->output->createProgressBar(count($channels));
