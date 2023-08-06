@@ -3,9 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
-use PhpAmqpLib\Message\AMQPMessage;
 
+use App\Http\Api\Mq;
 
 class TestMq extends Command
 {
@@ -14,7 +13,7 @@ class TestMq extends Command
      *
      * @var string
      */
-    protected $signature = 'test:mq ';
+    protected $signature = 'test:mq';
 
     /**
      * The console command description.
@@ -41,23 +40,15 @@ class TestMq extends Command
     public function handle()
     {
         //一对一
-		$connection = new AMQPStreamConnection(MQ_HOST, MQ_PORT, MQ_USERNAME, MQ_PASSWORD);
-		$channel = $connection->channel();
-		$channel->queue_declare('hello', false, true, false, false);
-
-		$msg = new AMQPMessage('Hello World!');
-		$channel->basic_publish($msg, '', 'hello');
-
-		echo " [x] Sent 'Hello World!'\n";
-		$channel->close();
-		$connection->close();
+		Mq::send('hello','ok');
 
         //一对多
+        /*
         $connection = new AMQPStreamConnection(MQ_HOST, MQ_PORT, MQ_USERNAME, MQ_PASSWORD);
         $channel->exchange_declare('hello_exchange','fanout',false,true);
         $channel->queue_declare('hello', false, true, false, false);
         $channel->exchange_bind('hello','exchange',"");
-
+*/
         return 0;
     }
 }

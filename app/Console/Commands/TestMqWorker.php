@@ -39,7 +39,7 @@ class TestMqWorker extends Command
      */
     public function handle()
     {
-		$connection = new AMQPStreamConnection(MQ_HOST, MQ_PORT, MQ_USERNAME, MQ_PASSWORD);
+		$connection = new AMQPStreamConnection(env("MQ_HOST"), env("MQ_PORT"), env("MQ_USERNAME"), env("MQ_PASSWORD"));
 		$channel = $connection->channel();
 
 		$channel->queue_declare('hello', false, true, false, false);
@@ -48,7 +48,7 @@ class TestMqWorker extends Command
 
 		$callback = function ($msg) {
 			echo ' [x] Received ', $msg->body, "\n";
-		  };
+		};
 
 		$channel->basic_consume('hello', '', false, true, false, false, $callback);
 
