@@ -7,7 +7,7 @@ import {
   ProFormTextArea,
 } from "@ant-design/pro-components";
 
-import { Alert, Button, Form, message, Result, Space, Tabs } from "antd";
+import { Alert, Button, Form, message, Result, Space } from "antd";
 
 import { get, put } from "../../request";
 import {
@@ -60,7 +60,7 @@ const ArticleEditWidget = ({
     <>
       {readonly ? (
         <Alert
-          message="文章为只读，如果需要修改，请联络拥有者分配权限。"
+          message="该资源为只读，如果需要修改，请联络拥有者分配权限。"
           type="warning"
           closable
           action={
@@ -133,84 +133,70 @@ const ArticleEditWidget = ({
           };
         }}
       >
-        <Tabs
-          items={[
-            {
-              key: "info",
-              label: intl.formatMessage({ id: "course.basic.info.label" }),
-              children: (
-                <>
-                  <ProForm.Group>
-                    <ProFormText
-                      width="md"
-                      name="title"
-                      required
-                      label={intl.formatMessage({
-                        id: "forms.fields.title.label",
-                      })}
-                      rules={[
-                        {
-                          required: true,
-                          message: intl.formatMessage({
-                            id: "forms.message.title.required",
-                          }),
-                        },
-                      ]}
-                    />
-                    <ProFormText
-                      width="md"
-                      name="subtitle"
-                      label={intl.formatMessage({
-                        id: "forms.fields.subtitle.label",
-                      })}
-                    />
-                  </ProForm.Group>
-                  <ProForm.Group>
-                    <LangSelect width="md" />
-                    <PublicitySelect width="md" />
-                  </ProForm.Group>
-                  <ProForm.Group>
-                    <ProFormTextArea
-                      name="summary"
-                      width="lg"
-                      label={intl.formatMessage({
-                        id: "forms.fields.summary.label",
-                      })}
-                    />
-                  </ProForm.Group>
-                </>
-              ),
-            },
-            {
-              key: "content",
-              label: intl.formatMessage({ id: "forms.fields.content.label" }),
-              forceRender: true,
-              children: (
-                <ProForm.Group>
-                  <Form.Item
-                    name="content"
-                    label={
-                      <Space>
-                        {intl.formatMessage({
-                          id: "forms.fields.content.label",
-                        })}
-                        {articleId ? (
-                          <ArticlePrevDrawer
-                            trigger={<Button>预览</Button>}
-                            articleId={articleId}
-                            content={content}
-                          />
-                        ) : undefined}
-                      </Space>
-                    }
-                  >
-                    <MDEditor onChange={(value) => setContent(value)} />
-                  </Form.Item>
-                </ProForm.Group>
-              ),
-            },
-          ]}
-        />
+        <ProForm.Group>
+          <ProFormText
+            width="md"
+            name="title"
+            required
+            label={intl.formatMessage({
+              id: "forms.fields.title.label",
+            })}
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: "forms.message.title.required",
+                }),
+              },
+            ]}
+          />
+          <ProFormText
+            width="md"
+            name="subtitle"
+            label={intl.formatMessage({
+              id: "forms.fields.subtitle.label",
+            })}
+          />
+        </ProForm.Group>
+        <ProForm.Group>
+          <LangSelect width="md" />
+          <PublicitySelect width="md" />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormTextArea
+            name="summary"
+            width="lg"
+            label={intl.formatMessage({
+              id: "forms.fields.summary.label",
+            })}
+          />
+        </ProForm.Group>
+        <ProForm.Group>
+          <Form.Item
+            name="content"
+            style={{ width: "100%" }}
+            label={
+              <Space>
+                {intl.formatMessage({
+                  id: "forms.fields.content.label",
+                })}
+                {articleId ? (
+                  <ArticlePrevDrawer
+                    trigger={<Button>预览</Button>}
+                    articleId={articleId}
+                    content={content}
+                  />
+                ) : undefined}
+              </Space>
+            }
+          >
+            <MDEditor
+              onChange={(value) => setContent(value)}
+              height={550}
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
+        </ProForm.Group>
       </ProForm>
     </>
   );
