@@ -258,7 +258,6 @@ class MdRender{
     public static function markdown2wiki(string $markdown,$channelType,$contentType): string{
         //$markdown = mb_convert_encoding($markdown,'UTF-8','UTF-8');
         $markdown = iconv('UTF-8','UTF-8//IGNORE',$markdown);
-        Log::info('nissaya');
         /**
          * nissaya
          * aaa=bbb\n
@@ -305,24 +304,19 @@ class MdRender{
                 /**
          * 处理 mermaid
          */
-        Log::info('mermaid');
-        Log::info('mermaid:'.strpos($markdown,"```mermaid"));
         if(strpos($markdown,"```mermaid") !== false){
-            Log::info('has mermaid');
             $lines = explode("\n",$markdown);
             $newLines = array();
             $mermaidBegin = false;
             $mermaidString = array();
             foreach ($lines as  $line) {
                 if($line === "```mermaid"){
-                    Log::info('mermaidBegin');
                     $mermaidBegin = true;
                     $mermaidString = [];
                     continue;
                 }
                 if($mermaidBegin){
                     if($line === "```"){
-                        Log::info('mermaid end');
                         $newLines[] = "{{mermaid|".base64_encode(\json_encode($mermaidString))."}}";
                         $mermaidBegin = false;
                     }else{
