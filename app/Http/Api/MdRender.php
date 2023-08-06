@@ -258,6 +258,7 @@ class MdRender{
     public static function markdown2wiki(string $markdown,$channelType,$contentType): string{
         //$markdown = mb_convert_encoding($markdown,'UTF-8','UTF-8');
         $markdown = iconv('UTF-8','UTF-8//IGNORE',$markdown);
+        Log::info('nissaya');
         /**
          * nissaya
          * aaa=bbb\n
@@ -302,8 +303,9 @@ class MdRender{
         //$markdown = preg_replace("/\n\n/","<div></div>",$markdown);
 
                 /**
-         * 处理mermaid
+         * 处理 mermaid
          */
+        Log::info('mermaid');
         if(strpos($markdown,"```mermaid") !== FALSE){
             $lines = explode("\n",$markdown);
             $newLines = array();
@@ -338,6 +340,7 @@ class MdRender{
         /**
          * markdown -> html
          */
+        Log::info('markdown -> html');
         $markdown = str_replace(['[[',']]'],['㐛','㐚'],$markdown);
         $html = Str::markdown($markdown);
         $html = str_replace(['㐛','㐚'],['[[',']]'],$html);
