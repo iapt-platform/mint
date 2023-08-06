@@ -464,7 +464,7 @@ class CorpusController extends Controller
         if(count($record) ===0){
             return $this->error("no data");
         }
-        $this->result['content'] = $this->makeContent($record,$mode,$indexChannel,$indexedHeading);
+        $this->result['content'] = $this->makeContent($record,$mode,$indexChannel,$indexedHeading,false,true);
         if(!$request->has('from')){
             //第一次才显示toc
             $this->result['toc'] = TocResource::collection($toc);
@@ -520,11 +520,39 @@ class CorpusController extends Controller
             $sentList[$currSentId]=[$value->book_id ,$value->paragraph,$value->word_start,$value->word_end];
             $value['sid'] = "{$currSentId}_{$value->channel_uid}";
         }
+        $channelsId = array();
+        $count = 0;
+        foreach ($indexChannel as $channelId => $info){
+            if($count>0){
+                $channelsId[] = $channelId;
+            }
+            $count++;
+        }
         //遍历列表查找每个句子的所有channel的数据，并填充
         $currPara = "";
         foreach ($sentList as $currSentId => $arrSentId) {
-            if($currPara === ""){
-                $currPara = $arrSentId[0]."-".$arrSentId[1];
+            $para = $arrSentId[0]."-".$arrSentId[1];
+            if($currPara !== $para){
+                $currPara = $para;
+                //输出段落标记
+                if($paraMark){
+                    $sentInPara = array();
+                    foreach ($sentList as $sentId => $sentParam) {
+                        if($sentParam[0]===$arrSentId[0] &&
+                           $sentParam[1]===$arrSentId[1]){
+                            $sentInPara[] = $sentId;
+                        }
+                    }
+                    $mark = [
+                        'book'=>$arrSentId[0],
+                        'para'=>$arrSentId[1],
+                        'channels'=>$channelsId,
+                        'sentences'=>$sentInPara,
+                    ];
+                    $markProps = base64_encode(\json_encode($mark)) ;
+                    $paraWidget = "<MdTpl tpl='para' props='{$markProps}' />";
+                    $content[] = $paraWidget;
+                }
             }
             $sent = $this->newSent($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3]);
             foreach ($indexChannel as $channelId => $info) {
@@ -567,12 +595,12 @@ class CorpusController extends Controller
                         case 'wbw':
                         case 'original':
                             //
-                                // 在编辑模式下。
-                                // 如果是原文，查看是否有逐词解析数据，
-                                // 有的话优先显示。
-                                // 阅读模式直接显示html原文
-                                // 传过来的数据一定有一个原文channel
-                                //
+                            // 在编辑模式下。
+                            // 如果是原文，查看是否有逐词解析数据，
+                            // 有的话优先显示。
+                            // 阅读模式直接显示html原文
+                            // 传过来的数据一定有一个原文channel
+                            //
                             if($mode !== "read"){
 
                                 $newSent['channel']['type'] = "wbw";

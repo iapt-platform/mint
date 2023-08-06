@@ -52,6 +52,9 @@ class TemplateRender{
             case 'nissaya':
                 $result = $this->render_nissaya();
                 break;
+            case 'mermaid':
+                $result = $this->render_mermaid();
+                break;
             default:
                 # code...
                 $result = [
@@ -271,6 +274,18 @@ class TemplateRender{
             'html'=>"",
             'tag'=>'span',
             'tpl'=>$tpl,
+            ];
+    }
+
+    private  function render_mermaid(){
+        $text = json_decode(base64_decode($this->get_param($this->param,"text",1)));
+
+        $props = ["text" => implode("\n",$text)];
+        return [
+            'props'=>base64_encode(\json_encode($props)),
+            'html'=>"mermaid",
+            'tag'=>'div',
+            'tpl'=>'mermaid',
             ];
     }
 
