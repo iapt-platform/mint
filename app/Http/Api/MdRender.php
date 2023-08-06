@@ -344,6 +344,24 @@ class MdRender{
         $html = str_replace(['㐛','㐚'],['[[',']]'],$html);
         $html = MdRender::fixHtml($html);
 
+        for ($i=1; $i<7 ; $i++) {
+            if(strpos($html,"<h{$i}>")===false){
+                continue;
+            }
+            $output = array();
+            $input = $html;
+            $hPos = strpos($input,"<h{$i}>");
+            while ($hPos !== false) {
+                $output[] = substr($input,0,$hPos);
+                $output[] = "<h{$i} id='".Str::uuid()."'>";
+                $input = substr($input,$hPos+4);
+                $hPos = strpos($input,"<h{$i}>");
+            }
+            $output[] = $input;
+            $html = implode('',$output);
+        }
+
+
         #替换术语
         $pattern = "/\[\[(.+?)\]\]/";
         $replacement = '{{term|$1}}';
