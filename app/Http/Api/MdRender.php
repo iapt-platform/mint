@@ -307,7 +307,7 @@ class MdRender{
          */
         Log::info('mermaid');
         Log::info('mermaid:'.strpos($markdown,"```mermaid"));
-        if(strpos($markdown,"```mermaid") !== FALSE){
+        if(strpos($markdown,"```mermaid") !== false){
             Log::info('has mermaid');
             $lines = explode("\n",$markdown);
             $newLines = array();
