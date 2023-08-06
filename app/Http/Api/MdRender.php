@@ -105,8 +105,8 @@ class MdRender{
 
         $html = implode('' , $buffer);
 
-        $html = str_replace("<p>","<div>",$html);
-        $html = str_replace("</p>","</div>",$html);
+        //$html = str_replace("<p>","<div>",$html);
+        //$html = str_replace("</p>","</div>",$html);
         $html = "<span>".$html."</span>";
         return $html;
     }
