@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\DiscussionResource;
 use App\Http\Api\MdRender;
 use App\Http\Api\AuthApi;
+use App\Http\Api\Mq;
 
 class DiscussionController extends Controller
 {
@@ -140,6 +141,7 @@ class DiscussionController extends Controller
             $parentInfo->increment('children_count',1);
             $parentInfo->save();
         }
+        Mq::publish('discussion',$discussion);
 
         return $this->ok(new DiscussionResource($discussion));
     }
