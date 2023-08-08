@@ -48,7 +48,8 @@ class UpgradeWbwAnalyses extends Command
         if(empty($this->argument('id'))){
             $it = Wbw::orderby('id')->cursor();
         }else{
-            $it = Wbw::where('id',$this->argument('id'))->orderby('id')->cursor();
+            $arrId = explode(',',$this->argument('id'));
+            $it = Wbw::whereIn('id',$arrId)->orderby('id')->cursor();
         }
 
         foreach ($it as $wbwrow) {
