@@ -41,17 +41,17 @@ class MqWbwAnalyses extends Command
 		$connection = new AMQPStreamConnection(env("MQ_HOST"), env("MQ_PORT"), env("MQ_USERNAME"), env("MQ_PASSWORD"));
 		$channel = $connection->channel();
 
-		$channel->queue_declare('progress', false, true, false, false);
+		$channel->queue_declare('wbw-analyses', false, true, false, false);
 
-		$this->info(" [*] Waiting for messages. To exit press CTRL+C");
+		$this->info(" [*] Waiting for wbw-analyses. To exit press CTRL+C");
 
 		$callback = function ($msg) {
             $message = json_decode($msg->body);
-            $ok = $this->call('upgrade:wbw.analyses',['id'=>$message]);
-            $this->info("Received id=".$message.' ok='.$ok);
+            $ok = $this->call('upgrade:wbw.analyses',['id'=>implode(',',$message)]);
+            $this->info("Received count=".count($message).' ok='.$ok);
 		};
 
-		$channel->basic_consume('progress', '', false, true, false, false, $callback);
+		$channel->basic_consume('wbw-analyses', '', false, true, false, false, $callback);
 
 		while ($channel->is_open()) {
 			  $channel->wait();
