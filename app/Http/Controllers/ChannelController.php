@@ -507,7 +507,36 @@ class ChannelController extends Controller
         $channel->save();
         return $this->ok($channel);
     }
-
+    /**
+     * patch the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Channel  $channel
+     * @return \Illuminate\Http\Response
+     */
+    public function patch(Request $request, Channel $channel)
+    {
+        //鉴权
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'),[],401);
+        }
+        if($channel->owner_uid !== $user["user_uid"]){
+            //判断是否为协作
+            $power = ShareApi::getResPower($user["user_uid"],$request->get('id'));
+            if($power < 30){
+                return $this->error(__('auth.failed'),[],403);
+            }
+        }
+        if($request->has('name')){$channel->name = $request->get('name');}
+        if($request->has('type')){$channel->type = $request->get('type');}
+        if($request->has('summary')){$channel->summary = $request->get('summary');}
+        if($request->has('lang')){$channel->lang = $request->get('lang');}
+        if($request->has('status')){$channel->status = $request->get('status');}
+        if($request->has('config')){$channel->status = $request->get('config');}
+        $channel->save();
+        return $this->ok($channel);
+    }
     /**
      * Remove the specified resource from storage.
      * @param  \Illuminate\Http\Request  $request
