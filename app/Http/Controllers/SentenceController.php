@@ -268,7 +268,7 @@ class SentenceController extends Controller
             $this->saveHistory($row->uid,$user["user_uid"],$sent['content']);
         }
         if($sentFirst !== null){
-            Mq::send('progress',['book'=>$sentFirst['book_id'],
+            Mq::publish('progress',['book'=>$sentFirst['book_id'],
                                 'para'=>$sentFirst['paragraph'],
                                 'channel'=>$channel->uid,
                                 ]);
@@ -366,7 +366,7 @@ class SentenceController extends Controller
         Cache::forget("/sent/{$channelId}/{$currSentId}");
         //保存历史记录
         $this->saveHistory($sent->uid,$user["user_uid"],$request->get('content'));
-        Mq::send('progress',['book'=>$param[0],
+        Mq::publish('progress',['book'=>$param[0],
                             'para'=>$param[1],
                             'channel'=>$channelId,
                             ]);

@@ -3,7 +3,7 @@ namespace App\Http\Api;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 class Mq{
-    public static function send(string $channelName, $message){
+    public static function publish(string $channelName, $message){
                 //一对一
 		$connection = new AMQPStreamConnection(env("MQ_HOST"), env("MQ_PORT"), env("MQ_USERNAME"), env("MQ_PASSWORD"));
 		$channel = $connection->channel();

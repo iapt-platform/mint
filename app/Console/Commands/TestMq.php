@@ -40,7 +40,7 @@ class TestMq extends Command
     public function handle()
     {
         //一对一
-		Mq::send('hello','ok');
+		Mq::publish('hello','ok');
 
         //一对多
         /*
