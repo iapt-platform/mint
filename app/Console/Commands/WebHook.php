@@ -44,19 +44,18 @@ class WebHook extends Command
     {
 		switch ($this->argument('listener')) {
 			case 'weixin':
-				# code...
 				break;
 			case 'dingtalk':
 				# code...
 				$url = $this->url[$this->argument('url')];
 				$param = [
 				"markdown"=> [
-					"title"=> $this->argument('title'), 
-					"text"=> $this->argument('message'), 
-				], 
+					"title"=> $this->argument('title'),
+					"text"=> $this->argument('message'),
+				],
 				"msgtype"=>"markdown"
 				];
-				break;				
+				break;
 			default:
 				# code...
 				break;
