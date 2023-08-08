@@ -362,9 +362,9 @@ const ChannelTableWidget = ({
                     },
                   }}
                 >
-                  <Link to={`/studio/${studioName}/channel/${row.uid}/edit`}>
+                  <Link to={`/studio/${studioName}/channel/${row.uid}/setting`}>
                     {intl.formatMessage({
-                      id: "buttons.edit",
+                      id: "buttons.setting",
                     })}
                   </Link>
                 </Dropdown.Button>,
