@@ -72,6 +72,11 @@ const items = {
   "forms.fields.match.label": "匹配方式",
   "forms.fields.dict.name.label": "字典名",
   "forms.fields.dict.shortname.label": "字典名",
+  "forms.fields.url.label": "url",
+  "forms.fields.fail.label": "失败",
+  "forms.fields.success.label": "成功",
+  "forms.fields.receiver.label": "接收",
+  "forms.fields.event.label": "事件",
 };
 
 export default items;
