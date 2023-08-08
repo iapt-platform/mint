@@ -62,6 +62,7 @@ use App\Http\Controllers\SentInChannelController;
 use App\Http\Controllers\ChannelIOController;
 use App\Http\Controllers\ChapterIOController;
 use App\Http\Controllers\SentenceIOController;
+use App\Http\Controllers\WebHookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +98,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::get('sent_history_contribution',[SentHistoryController::class,'contribution']);
     Route::apiResource('palitext',PaliTextController::class);
     Route::apiResource('channel',ChannelController::class);
+    Route::patch('channel', [ChannelController::class,"patch"]);
     Route::get('channel-my-number', [ChannelController::class, 'showMyNumber']);
     Route::post('channel-progress',[ChannelController::class,"progress"]);
     Route::delete('userdict', [UserDictController::class, 'delete']);
@@ -175,6 +177,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('channel-io',ChannelIOController::class);
     Route::apiResource('chapter-io',ChapterIOController::class);
     Route::apiResource('sentence-io',SentenceIOController::class);
+    Route::apiResource('webhook',WebHookController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
