@@ -1,4 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { PaliToEn } from "../../utils";
+
+interface IWordWithEn {
+  word: string;
+  en: string;
+}
 
 interface IWidget {
   items?: string[];
@@ -18,29 +24,40 @@ const TermTextAreaMenuWidget = ({
   onChange,
   onSelect,
 }: IWidget) => {
-  console.log("currIndex", currIndex);
-  const filteredItem = searchKey
-    ? items?.filter((value) => value.slice(0, searchKey.length) === searchKey)
-    : items;
+  const [filtered, setFiltered] = useState<IWordWithEn[]>();
   useEffect(() => {
-    if (filteredItem && typeof onChange !== "undefined") {
-      if (currIndex < filteredItem?.length) {
-        onChange(filteredItem[currIndex]);
+    const mWords = items?.map((item) => {
+      return {
+        word: item,
+        en: PaliToEn(item),
+      };
+    });
+    const filteredItem = searchKey
+      ? mWords?.filter(
+          (value) => value.en.slice(0, searchKey.length) === searchKey
+        )
+      : mWords;
+    setFiltered(filteredItem);
+  }, [items, searchKey]);
+
+  useEffect(() => {
+    if (filtered && filtered.length > 0 && typeof onChange !== "undefined") {
+      if (currIndex < filtered.length) {
+        onChange(filtered[currIndex].word);
       } else {
-        onChange(filteredItem[filteredItem.length - 1]);
+        onChange(filtered[filtered.length - 1].word);
       }
     }
-  }, [currIndex]);
+  }, [currIndex, filtered]);
 
   if (visible) {
     return (
       <>
         <div className="term_at_menu_input" key="head">
-          {searchKey}
-          {"|"}
+          {`${searchKey}|`}
         </div>
         <ul className="term_at_menu_ul">
-          {filteredItem?.map((item, index) => {
+          {filtered?.map((item, index) => {
             if (index < maxItem) {
               return (
                 <li
@@ -48,11 +65,11 @@ const TermTextAreaMenuWidget = ({
                   className={index === currIndex ? "term_focus" : undefined}
                   onClick={() => {
                     if (typeof onSelect !== "undefined") {
-                      onSelect(item);
+                      onSelect(item.word);
                     }
                   }}
                 >
-                  {item}
+                  {item.word}
                 </li>
               );
             } else {
