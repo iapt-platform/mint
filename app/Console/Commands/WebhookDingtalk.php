@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class WebhookDingtalk extends Command
 {
@@ -19,7 +20,7 @@ class WebhookDingtalk extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'send webhook message to dingtalk';
 
     /**
      * Create a new command instance.
@@ -39,14 +40,25 @@ class WebhookDingtalk extends Command
     public function handle()
     {
         $url = $this->argument('url');
-        $this->info("url={$url}");
         $param = ["markdown"=> [
                         "title"=> $this->argument('title'),
                         "text"=> $this->argument('message'),
                     ],
                     "msgtype"=>"markdown"
                 ];
-        $response = Http::post($url, $param);
+
+        $this->info("url={$url}");
+        try{
+            $response = Http::post($url, $param);
+            if($response->successful()){
+                return 0;
+            }else{
+                return 1;
+            }
+        }catch(\Exception $e){
+            Log::error($e);
+            return 1;
+        }
         return 0;
     }
 }
