@@ -149,31 +149,29 @@ const SentCellWidget = ({
         >
           <EditInfo data={sentData} compact={compact} />
           {isEditMode ? (
-            <div>
-              {sentData.contentType === "json" ? (
-                <SentWbwEdit
-                  data={sentData}
-                  onClose={() => {
-                    setIsEditMode(false);
-                  }}
-                  onSave={(data: ISentence) => {
-                    setSentData(data);
-                  }}
-                />
-              ) : (
-                <SentCellEditable
-                  data={sentData}
-                  isPr={isPr}
-                  onClose={() => {
-                    setIsEditMode(false);
-                  }}
-                  onSave={(data: ISentence) => {
-                    setSentData(data);
-                    setIsEditMode(false);
-                  }}
-                />
-              )}
-            </div>
+            sentData.contentType === "json" ? (
+              <SentWbwEdit
+                data={sentData}
+                onClose={() => {
+                  setIsEditMode(false);
+                }}
+                onSave={(data: ISentence) => {
+                  setSentData(data);
+                }}
+              />
+            ) : (
+              <SentCellEditable
+                data={sentData}
+                isPr={isPr}
+                onClose={() => {
+                  setIsEditMode(false);
+                }}
+                onSave={(data: ISentence) => {
+                  setSentData(data);
+                  setIsEditMode(false);
+                }}
+              />
+            )
           ) : (
             <MdView
               style={{ marginLeft: compact ? 0 : "2em" }}
