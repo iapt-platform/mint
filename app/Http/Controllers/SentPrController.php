@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Api\AuthApi;
 use App\Models\SentPr;
 use App\Models\Channel;
 use App\Models\PaliSentence;
@@ -11,6 +12,7 @@ use App\Http\Resources\SentPrResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Http\Api\Mq;
 
 require_once __DIR__.'/../../../public/app/ucenter/function.php';
 
@@ -93,7 +95,7 @@ class SentPrController extends Controller
     public function store(Request $request)
     {
         //
-        $user = \App\Http\Api\AuthApi::current($request);
+        $user = AuthApi::current($request);
         if(!$user){
             return $this->error(__('auth.failed'));
         }
@@ -128,6 +130,8 @@ class SentPrController extends Controller
 			$new->create_time = time()*1000;
 			$new->modify_time = time()*1000;
 			$new->save();
+            Mq::publish('suggestion',new SentPrResource($new));
+
 		}
 
 		$robotMessageOk=false;
@@ -227,6 +231,7 @@ class SentPrController extends Controller
 						->where('word_end' , $data['end'])
 						->where('channel_uid' , $data['channel'])
 						->count();
+
 		return $this->ok(["new"=>$info,"count"=>$count,"webhook"=>["message"=>$webHookMessage,"ok"=>$robotMessageOk]]);
 
     }
@@ -251,12 +256,12 @@ class SentPrController extends Controller
      */
     public function update(Request $request, SentPr $sentPr)
     {
-        //
-		if(!isset($_COOKIE['user_uid'])){
-            return $this->error('not login');
-        }else{
-			$user_uid = $_COOKIE['user_uid'];
-		}
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        $user_uid = $user['user_uid'];
+
 		$sentPr = SentPr::where('id',$request->get('id'));
 		if($sentPr->value('editor_uid')==$user_uid){
 			$update = $sentPr->update([
@@ -286,13 +291,17 @@ class SentPrController extends Controller
     public function destroy($id)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
 		$old = SentPr::where('id', $id)->first();
 		$result = SentPr::where('id', $id)
-							->where('editor_uid', $_COOKIE["user_uid"])
-							->delete();
+						->where('editor_uid', $user["user_uid"])
+						->delete();
 		if($result>0){
 					#同时返回此句子pr数量
-		$count = SentPr::where('book_id' , $old->book_id)
+		    $count = SentPr::where('book_id' , $old->book_id)
 						->where('paragraph' , $old->paragraph)
 						->where('word_start' , $old->word_start)
 						->where('word_end' , $old->word_end)
