@@ -26,8 +26,8 @@ import { delete_2, get } from "../../request";
 import { useRef, useState } from "react";
 import DictEdit from "../../components/dict/DictEdit";
 import { IDeleteResponse } from "../../components/api/Article";
-import { getSorterUrl } from "../../pages/admin/relation/list";
 import TimeShow from "../general/TimeShow";
+import { getSorterUrl } from "../../utils";
 
 const { Link } = Typography;
 

@@ -20,10 +20,11 @@ import NissayaEndingEdit from "../../../components/admin/relation/NissayaEndingE
 import { LangValueEnum } from "../../../components/general/LangSelect";
 import { NissayaCardModal } from "../../../components/general/NissayaCard";
 import DataImport from "../../../components/admin/relation/DataImport";
-import { getSorterUrl, IFrom } from "../relation/list";
 import TermModal from "../../../components/term/TermModal";
 import { ITermDataResponse } from "../../../components/api/Term";
 import TimeShow from "../../../components/general/TimeShow";
+import { IFrom } from "../relation/list";
+import { getSorterUrl } from "../../../utils";
 
 export interface INissayaEndingRequest {
   id?: string;

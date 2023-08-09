@@ -25,7 +25,7 @@ import { EResType } from "../../components/share/Share";
 import StudioName, { IStudio } from "../../components/auth/StudioName";
 import StudioSelect from "../../components/channel/StudioSelect";
 import { IChannel } from "./Channel";
-import { getSorterUrl } from "../../pages/admin/relation/list";
+import { getSorterUrl } from "../../utils";
 
 const { Text } = Typography;
 

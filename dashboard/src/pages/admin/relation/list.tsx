@@ -19,26 +19,10 @@ import { useRef } from "react";
 import { IUser } from "../../../reducers/current-user";
 import RelationEdit from "../../../components/admin/relation/RelationEdit";
 import DataImport from "../../../components/admin/relation/DataImport";
-import { SortOrder } from "antd/lib/table/interface";
 import TimeShow from "../../../components/general/TimeShow";
 import { ITerm } from "../../../components/term/TermEdit";
 import TermModal from "../../../components/term/TermModal";
-
-export const getSorterUrl = (sorter?: Record<string, SortOrder>): string => {
-  let url: string = "";
-  for (const key in sorter) {
-    if (Object.prototype.hasOwnProperty.call(sorter, key)) {
-      const element = sorter[key];
-      const dir = element === "ascend" ? "asc" : "desc";
-      let orderby = key;
-      if (orderby === "updatedAt") {
-        orderby = "updated_at";
-      }
-      url = `&order=${orderby}&dir=${dir}`;
-    }
-  }
-  return url;
-};
+import { getSorterUrl } from "../../../utils";
 
 export interface IRelationRequest {
   id?: string;
