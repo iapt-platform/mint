@@ -31,7 +31,9 @@ class ChannelController extends Controller
         //
         $userinfo = new \UserInfo();
 		$result=false;
-		$indexCol = ['uid','name','summary','type','owner_uid','lang','status','updated_at','created_at'];
+		$indexCol = ['uid','name','summary',
+                    'type','owner_uid','lang',
+                    'status','updated_at','created_at'];
 		switch ($request->get('view')) {
             case 'public':
                 $table = Channel::select($indexCol)
@@ -161,10 +163,13 @@ class ChannelController extends Controller
         if($request->has("search")){
             $table = $table->where('name', 'like', "%".$request->get("search")."%");
         }
+        if($request->has("type")){
+            $table = $table->where('type', $request->get("type"));
+        }
         //获取记录总条数
         $count = $table->count();
         //处理排序
-        $table = $table->orderBy($request->get("order",'updated_at'),
+        $table = $table->orderBy($request->get("order",'created_at'),
                                  $request->get("dir",'desc'));
         //处理分页
         $table = $table->skip($request->get("offset",0))
