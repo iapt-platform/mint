@@ -1,7 +1,7 @@
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { Badge, message, Modal, Typography } from "antd";
+import { Alert, Badge, message, Modal, Typography } from "antd";
 import { Button, Dropdown, Popover } from "antd";
 import {
   PlusOutlined,
@@ -145,6 +145,13 @@ const ChannelTableWidget = ({
 
   return (
     <>
+      {channelType ? (
+        <Alert
+          message={`仅显示版本类型${channelType}`}
+          type="success"
+          closable
+        />
+      ) : undefined}
       <ProTable<IChannelItem>
         actionRef={ref}
         columns={[
