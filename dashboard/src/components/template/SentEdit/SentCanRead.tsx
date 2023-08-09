@@ -103,6 +103,7 @@ const SentCanReadWidget = ({
       </div>
       <SentAdd
         disableChannels={channels}
+        type={type}
         onSelect={(channel: IChannel) => {
           if (typeof user === "undefined") {
             return;

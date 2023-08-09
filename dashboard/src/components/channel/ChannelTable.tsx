@@ -68,12 +68,14 @@ interface IWidget {
   studioName?: string;
   type?: string;
   disableChannels?: string[];
+  channelType?: TChannelType;
   onSelect?: Function;
 }
 
 const ChannelTableWidget = ({
   studioName,
   disableChannels,
+  channelType,
   type,
   onSelect,
 }: IWidget) => {
@@ -410,12 +412,17 @@ const ChannelTableWidget = ({
         }}
         */
         request={async (params = {}, sorter, filter) => {
-          // TODO 分页
           console.log(params, sorter, filter);
           let url = `/v2/channel?view=studio&view2=${activeKey}&name=${studioName}`;
+          const offset =
+            ((params.current ? params.current : 1) - 1) *
+            (params.pageSize ? params.pageSize : 20);
+          url += `&limit=${params.pageSize}&offset=${offset}`;
+
           url += collaborator ? "&collaborator=" + collaborator : "";
           url += params.keyword ? "&search=" + params.keyword : "";
-
+          url += channelType ? "&type=" + channelType : "";
+          //url += getSorterUrl(sorter);
           console.log("url", url);
           const res: IApiResponseChannelList = await get(url);
           const items: IChannelItem[] = res.data.rows.map((item, id) => {
