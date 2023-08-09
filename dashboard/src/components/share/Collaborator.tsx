@@ -61,7 +61,6 @@ const CollaboratorWidget = ({ resId, load = false, onReload }: IWidget) => {
       }
       showActions="hover"
       request={async (params = {}, sorter, filter) => {
-        // TODO
         console.log(params, sorter, filter);
 
         let url = `/v2/share?view=res&id=${resId}`;

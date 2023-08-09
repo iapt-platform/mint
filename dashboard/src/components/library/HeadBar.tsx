@@ -122,8 +122,6 @@ type IWidgetHeadBar = {
 };
 const HeadBarWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   //Library head bar
-  // TODO
-
   return (
     <Header
       className="header"

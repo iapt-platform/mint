@@ -24,7 +24,6 @@ const AddMemeberWidget = ({ courseId, onCreated }: IWidget) => {
   const form = (
     <ProForm<IFormData>
       onFinish={async (values: IFormData) => {
-        // TODO
         console.log(values);
         if (typeof courseId !== "undefined") {
           post<ICourseMemberData, ICourseMemberResponse>("/v2/course-member", {

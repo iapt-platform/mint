@@ -253,7 +253,6 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
           );
         }}
         request={async (params = {}, sorter, filter) => {
-          // TODO
           console.log(params, sorter, filter);
           const offset =
             ((params.current ? params.current : 1) - 1) *

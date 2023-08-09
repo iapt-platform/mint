@@ -68,7 +68,6 @@ const CourseMemberWidget = ({ courseId }: IWidget) => {
         }}
         showActions="hover"
         request={async (params = {}, sorter, filter) => {
-          // TODO
           console.log(params, sorter, filter);
 
           let url = `/v2/course-member?view=course&id=${courseId}`;

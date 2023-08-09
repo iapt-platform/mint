@@ -279,7 +279,6 @@ const AnthologyListWidget = ({
           },
         ]}
         request={async (params = {}, sorter, filter) => {
-          // TODO
           console.log(params, sorter, filter);
           let url = `/v2/anthology?view=studio&view2=${activeKey}&name=${studioName}`;
           const offset =

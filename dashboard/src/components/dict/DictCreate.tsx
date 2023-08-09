@@ -29,7 +29,7 @@ const DictCreateWidget = (prop: IWidgetDictCreate) => {
     <>
       <ProForm<IDictFormData>
         onFinish={async (values: IDictFormData) => {
-          // TODO
+          // TODO 是否要删掉？
           console.log(values);
           message.success(intl.formatMessage({ id: "flashes.success" }));
         }}

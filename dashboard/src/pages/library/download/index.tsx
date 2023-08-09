@@ -5,7 +5,6 @@ import FooterBar from "../../../components/library/FooterBar";
 import { Col, Layout, Row } from "antd";
 
 const Widget = () => {
-  // TODO
   return (
     <Layout>
       <HeadBar selectedKeys="discussion" />

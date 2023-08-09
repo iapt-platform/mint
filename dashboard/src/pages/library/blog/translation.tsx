@@ -4,9 +4,7 @@ import BlogNav from "../../../components/blog/BlogNav";
 import CommunityChapter from "../../../components/corpus/CommunityChapter";
 
 const Widget = () => {
-  // TODO
   const { studio } = useParams(); //url 参数
-
   return (
     <>
       <BlogNav selectedKey="palicanon" studio={studio ? studio : ""} />

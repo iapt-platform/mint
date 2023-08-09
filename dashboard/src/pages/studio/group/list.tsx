@@ -222,7 +222,6 @@ const Widget = () => {
           },
         ]}
         request={async (params = {}, sorter, filter) => {
-          // TODO
           console.log(params, sorter, filter);
           let url = `/v2/group?view=studio&name=${studioname}&view2=${activeKey}`;
           const offset =

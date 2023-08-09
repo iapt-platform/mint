@@ -7,7 +7,6 @@ import BookViewer, { IChapter } from "../../../components/corpus/BookViewer";
 const { Sider, Content } = Layout;
 
 const Widget = () => {
-  // TODO
   const { id } = useParams(); //url 参数
   const navigate = useNavigate();
 

@@ -10,7 +10,6 @@ const { Content, Header } = Layout;
 const { Search } = Input;
 
 const Widget = () => {
-  // TODO
   const [searchKey, setSearchKey] = useState<string>();
 
   return (

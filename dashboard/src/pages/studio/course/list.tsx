@@ -335,7 +335,6 @@ const Widget = () => {
         }}
         //从服务端获取数据
         request={async (params = {}, sorter, filter) => {
-          // TODO
           console.log(params, sorter, filter);
           console.log(activeKey);
           let url = `/v2/course?view=${activeKey}&studio=${studioname}`;

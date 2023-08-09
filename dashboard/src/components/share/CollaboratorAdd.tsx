@@ -34,8 +34,6 @@ const CollaboratorAddWidget = ({ resId, resType, onSuccess }: IWidget) => {
     <ProForm<IFormData>
       formRef={formRef}
       onFinish={async (values: IFormData) => {
-        // TODO
-
         if (typeof resId !== "undefined") {
           const postData: IShareRequest = {
             user_id:

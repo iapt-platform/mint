@@ -28,7 +28,6 @@ const Widget = () => {
     >
       <ProForm<IFormData>
         onFinish={async (values: IFormData) => {
-          // TODO
           console.log(values);
           const res = await put<IGroupRequest, IGroupResponse>(
             `/v2/group/${groupId}`,

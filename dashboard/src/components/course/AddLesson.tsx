@@ -19,7 +19,6 @@ const AddLessonWidget = ({ groupId }: IWidget) => {
   const form = (
     <ProForm<IFormData>
       onFinish={async (values: IFormData) => {
-        // TODO
         console.log(values);
         message.success(intl.formatMessage({ id: "flashes.success" }));
       }}

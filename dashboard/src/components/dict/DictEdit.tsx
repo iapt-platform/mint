@@ -18,7 +18,6 @@ const DictEditWidget = ({ wordId }: IWidget) => {
     <>
       <ProForm<IDictFormData>
         onFinish={async (values: IDictFormData) => {
-          // TODO
           console.log(values);
           const request: IDictRequest = {
             id: values.id,

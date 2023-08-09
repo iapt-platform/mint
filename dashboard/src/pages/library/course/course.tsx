@@ -33,7 +33,6 @@ export interface ICourse {
   exp?: TCourseExpRequest;
 }
 const Widget = () => {
-  // TODO
   const { id } = useParams(); //url 参数
   const [courseInfo, setCourseInfo] = useState<ICourse>();
   useEffect(() => {

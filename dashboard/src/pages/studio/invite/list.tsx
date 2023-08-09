@@ -93,7 +93,6 @@ const Widget = () => {
           },
         ]}
         request={async (params = {}, sorter, filter) => {
-          // TODO
           console.log(params, sorter, filter);
           let url = `/v2/invite?view=studio&studio=${studioname}`;
           const offset =

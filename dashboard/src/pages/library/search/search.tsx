@@ -27,7 +27,6 @@ const Widget = () => {
     }
     setBookRoot(currRoot);
   }, []);
-  // TODO
   return (
     <>
       <Row>

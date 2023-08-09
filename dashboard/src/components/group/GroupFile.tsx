@@ -102,7 +102,6 @@ const GroupFileWidget = ({ groupId }: IWidget) => {
           },
         }}
         request={async (params = {}, sorter, filter) => {
-          // TODO
           console.log(params, sorter, filter);
 
           let url = `/v2/share?view=group&id=${groupId}`;

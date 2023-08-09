@@ -7,7 +7,6 @@ import DiscussionListCard, {
 } from "../../../components/discussion/DiscussionListCard";
 
 const Widget = () => {
-  // TODO
   const { type, id } = useParams(); //url 参数
   const navigate = useNavigate();
 

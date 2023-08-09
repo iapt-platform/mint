@@ -72,8 +72,6 @@ const ArticleEditWidget = ({
       ) : undefined}
       <ProForm<IFormData>
         onFinish={async (values: IFormData) => {
-          // TODO
-
           const request = {
             uid: articleId ? articleId : "",
             title: values.title,

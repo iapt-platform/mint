@@ -5,7 +5,6 @@ import HeadBar from "../../../components/library/HeadBar";
 import FooterBar from "../../../components/library/FooterBar";
 
 const Widget = () => {
-  // TODO
   return (
     <Layout>
       <HeadBar selectedKeys="term" />
