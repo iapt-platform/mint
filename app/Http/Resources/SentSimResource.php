@@ -5,7 +5,6 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\PaliSentence;
 use App\Models\PaliText;
-use App\Http\Api\StudioApi;
 use App\Http\Api\UserApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Controllers\CorpusController;
@@ -29,7 +28,7 @@ class SentSimResource extends JsonResource
             "para"=> $sent->paragraph,
             "wordStart"=> $sent->word_begin,
             "wordEnd"=> $sent->word_end,
-            "editor"=> StudioApi::getById(config("app.admin.root_uuid")),
+            "editor"=> UserApi::getByUuid(config("app.admin.root_uuid")),
             "channel"=> ChannelApi::getById($channelId),
             "content"=>$sent->text,
             "html"=> "<span>{$sent->text}</span>",
