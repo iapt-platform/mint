@@ -69,7 +69,7 @@ class WebHookController extends Controller
         }else{
             $new->event = null;
         }
-        $new->status = $request->get('status');
+        $new->status = $request->get('status','active');
         $new->editor_uid = $user['user_uid'];
         $new->save();
         return $this->ok(new WebHookResource($new));
