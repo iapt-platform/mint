@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useIntl } from "react-intl";
+import { Divider } from "antd";
 
 import { ISentence } from "../SentEdit";
 import SentEditMenu from "./SentEditMenu";
@@ -6,7 +8,6 @@ import SentCellEditable from "./SentCellEditable";
 import MdView from "../MdView";
 import EditInfo from "./EditInfo";
 import SuggestionToolbar from "./SuggestionToolbar";
-import { Divider, Space } from "antd";
 import { useAppSelector } from "../../../hooks";
 import { sentence } from "../../../reducers/accept-pr";
 import { IWbw } from "../Wbw/WbwWord";
@@ -14,7 +15,6 @@ import { my_to_roman } from "../../code/my";
 import SentWbwEdit, { sentSave } from "./SentWbwEdit";
 import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
 import { nissayaBase } from "../Nissaya/NissayaMeaning";
-import { useIntl } from "react-intl";
 
 interface IWidget {
   data: ISentence;
