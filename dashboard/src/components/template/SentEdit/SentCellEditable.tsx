@@ -118,7 +118,7 @@ const SentCellEditableWidget = ({
   };
 
   return (
-    <Typography.Paragraph>
+    <Typography.Paragraph style={{ width: "100%" }}>
       <TermTextArea
         value={value}
         menuOptions={termList}
