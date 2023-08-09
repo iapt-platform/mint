@@ -55,30 +55,54 @@ class MqDiscussion extends Command
                     if(!$sentence){
                         return 0;
                     }
-                    $webhook = WebHook::where('res_id',$sentence->channel_uid)
+                    /**生成消息内容 */
+                    $msgTitle = $message->editor->nickName;
+                    if($message->parent){
+                        $parentTitle = Discussion::where('id',$message->parent)->value('title');
+                        $msgTitle .= '回复了 '.$parentTitle;
+                    }else{
+                        $msgTitle .= '创建了讨论';
+                    }
+                    $msgContent = '';
+                    if($message->title){
+                        $msgContent = $message->title.'\n\n';
+                    }
+                    if($message->content){
+                        $msgContent .= $message->content;
+                    }
+
+                    $webhooks = WebHook::where('res_id',$sentence->channel_uid)
                                     ->where('status','active')
-                                    ->first();
-                    if(!$webhook){
-                        return 0;
-                    }
-                    $event = json_decode($webhook->event);
-                    if(!in_array('discussion',$event)){
-                        return 0;
-                    }
-                    switch ($webhook->receiver) {
-                        case 'dingtalk':
-                            $ok = $this->call('webhook:dingtalk',['url'=>$webhook->url,
-                                                                'title'=>'讨论',
-                                                                'message'=>'句子：添加新的讨论',
-                                                                    ]);
-                            $this->info("Received  ok=".$ok);
-                            break;
-                        default:
-                            # code...
-                            break;
+                                    ->get();
+                    foreach ($webhooks as $key => $hook) {
+                        $event = json_decode($hook->event);
+                        if(!in_array('discussion',$event)){
+                            continue;
+                        }
+                        $command = '';
+                        switch ($hook->receiver) {
+                            case 'dingtalk':
+                                $command = 'webhook:dingtalk';
+                                break;
+                            case 'wechat':
+                                $command = 'webhook:wechat';
+                                break;
+                            default:
+                                # code...
+                                break;
+                        }
+                        $ok = $this->call($command,['url'=>$hook->url,
+                                                    'title'=>$msgTitle,
+                                                    'message'=>$msgContent,
+                                                    ]);
+                        $this->info("{$command}  ok={$ok}");
+                        if($ok===0){
+                            WebHook::where('id',$hook->id)->increment('success');
+                        }else{
+                            WebHook::where('id',$hook->id)->increment('fail');
+                        }
                     }
                     break;
-
                 default:
                     # code...
                     break;
