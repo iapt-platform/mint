@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
@@ -25,8 +24,9 @@ import ShareModal from "../../components/share/ShareModal";
 import { EResType } from "../../components/share/Share";
 import StudioName, { IStudio } from "../../components/auth/StudioName";
 import StudioSelect from "../../components/channel/StudioSelect";
-import { ArticleType } from "../article/Article";
 import { IChannel } from "./Channel";
+import { getSorterUrl } from "../../pages/admin/relation/list";
+
 const { Text } = Typography;
 
 export interface IResNumberResponse {
@@ -61,7 +61,7 @@ interface IChannelItem {
   role?: TRole;
   studio?: IStudio;
   publicity: number;
-  createdAt: number;
+  created_at: string;
 }
 
 interface IWidget {
@@ -311,12 +311,12 @@ const ChannelTableWidget = ({
             title: intl.formatMessage({
               id: "forms.fields.created-at.label",
             }),
-            key: "created-at",
+            key: "created_at",
             width: 100,
             search: false,
-            dataIndex: "createdAt",
+            dataIndex: "created_at",
             valueType: "date",
-            sorter: (a, b) => a.createdAt - b.createdAt,
+            sorter: true,
           },
           {
             title: intl.formatMessage({ id: "buttons.option" }),
@@ -422,11 +422,10 @@ const ChannelTableWidget = ({
           url += collaborator ? "&collaborator=" + collaborator : "";
           url += params.keyword ? "&search=" + params.keyword : "";
           url += channelType ? "&type=" + channelType : "";
-          //url += getSorterUrl(sorter);
+          url += getSorterUrl(sorter);
           console.log("url", url);
           const res: IApiResponseChannelList = await get(url);
           const items: IChannelItem[] = res.data.rows.map((item, id) => {
-            const date = new Date(item.created_at);
             return {
               id: id + 1,
               uid: item.uid,
@@ -436,7 +435,7 @@ const ChannelTableWidget = ({
               role: item.role,
               studio: item.studio,
               publicity: item.status,
-              createdAt: date.getTime(),
+              created_at: item.created_at,
             };
           });
           return {
