@@ -143,9 +143,12 @@ const SentCellWidget = ({
           }
         }}
       >
-        <Space
-          direction={compact ? "horizontal" : "vertical"}
-          style={{ alignItems: "flex-start" }}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: compact ? "row" : "column",
+            alignItems: "flex-start",
+          }}
         >
           <EditInfo data={sentData} compact={compact} />
           {isEditMode ? (
@@ -187,7 +190,7 @@ const SentCellWidget = ({
             prOpen={prOpen}
             onPrClose={() => setPrOpen(false)}
           />
-        </Space>
+        </div>
       </SentEditMenu>
       {compact ? undefined : <Divider style={{ margin: "10px 0" }} />}
     </div>
