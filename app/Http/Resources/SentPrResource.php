@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\MdRender;
-use App\Http\Api\StudioApi;
+use App\Http\Api\UserApi;
 use App\Http\Api\AuthApi;
 use App\Http\Api\ChannelApi;
 
@@ -32,7 +32,7 @@ class SentPrResource extends JsonResource
             "paragraph"=> $this->paragraph,
             "word_start"=> $this->word_start,
             "word_end"=> $this->word_end,
-            "editor"=> StudioApi::getById($this->editor_uid),
+            "editor"=> UserApi::getByUuid($this->editor_uid),
             "channel"=> $channel,
             "content"=>$this->content,
             "html"=> MdRender::render($this->content,[$this->channel_uid],null,$mode,$channel['type']),
