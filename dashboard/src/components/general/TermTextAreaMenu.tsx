@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { PaliToEn } from "../../utils";
+import { getPaliBase } from "./PaliEnding";
 
 interface IWordWithEn {
   word: string;
@@ -16,7 +17,7 @@ interface IWidget {
   onSelect?: Function;
 }
 const TermTextAreaMenuWidget = ({
-  items,
+  items = [],
   searchKey,
   maxItem = 10,
   visible = false,
@@ -25,20 +26,37 @@ const TermTextAreaMenuWidget = ({
   onSelect,
 }: IWidget) => {
   const [filtered, setFiltered] = useState<IWordWithEn[]>();
+  const [wordList, setWordList] = useState<IWordWithEn[]>();
+
   useEffect(() => {
-    const mWords = items?.map((item) => {
+    //计算这些单词的base
+    let parents: string[] = [];
+    items?.forEach((value) => {
+      getPaliBase(value).forEach((base) => {
+        if (!parents.includes(base) && !items.includes(base)) {
+          parents.push(base);
+        }
+      });
+    });
+    const wordList = [...parents, ...items];
+    const mWords = wordList?.map((item) => {
       return {
         word: item,
         en: PaliToEn(item),
       };
     });
-    const filteredItem = searchKey
-      ? mWords?.filter(
+    console.log("words", mWords);
+    setWordList(mWords);
+  }, [items]);
+
+  useEffect(() => {
+    const filteredItems = searchKey
+      ? wordList?.filter(
           (value) => value.en.slice(0, searchKey.length) === searchKey
         )
-      : mWords;
-    setFiltered(filteredItem);
-  }, [items, searchKey]);
+      : wordList;
+    setFiltered(filteredItems);
+  }, [wordList, searchKey]);
 
   useEffect(() => {
     if (filtered && filtered.length > 0 && typeof onChange !== "undefined") {
