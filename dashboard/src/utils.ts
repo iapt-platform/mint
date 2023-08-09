@@ -6,14 +6,16 @@ export function fullUrl(url: string): string {
 
 export function PaliToEn(pali: string): string {
   let output: string = pali.toLowerCase();
-  output = output.replaceAll(" ", "_");
-  output = output.replaceAll("-", "_");
   output = output.replaceAll("ā", "a");
   output = output.replaceAll("ī", "i");
   output = output.replaceAll("ū", "u");
   output = output.replaceAll("ḍ", "d");
   output = output.replaceAll("ṭ", "t");
   output = output.replaceAll("ḷ", "l");
+  output = output.replaceAll("ṅ", "n");
+  output = output.replaceAll("ṇ", "n");
+  output = output.replaceAll("ñ", "n");
+  output = output.replaceAll("ṃ", "m");
   return output;
 }
 
