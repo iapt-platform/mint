@@ -2,7 +2,6 @@
  * 查字典，添加术语命令
  */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ArticleMode } from "../components/article/Article";
 import { ENetStatus } from "../components/general/NetStatus";
 
 import type { RootState } from "../store";

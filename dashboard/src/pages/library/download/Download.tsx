@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Typography } from "antd";
+import { Button, Card, Typography } from "antd";
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";

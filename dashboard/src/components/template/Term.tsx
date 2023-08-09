@@ -1,17 +1,16 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Button, Popover, Skeleton, Space } from "antd";
 import { Typography } from "antd";
 import { SearchOutlined, EditOutlined } from "@ant-design/icons";
-import { ProCard } from "@ant-design/pro-components";
 
 import store from "../../store";
 import TermModal from "../term/TermModal";
 import { ITerm } from "../term/TermEdit";
-import { useEffect, useState } from "react";
 import { ITermDataResponse } from "../api/Term";
 import { changedTerm, refresh } from "../../reducers/term-change";
 import { useAppSelector } from "../../hooks";
 import { get } from "../../request";
-import { Link, useNavigate } from "react-router-dom";
 import { fullUrl } from "../../utils";
 
 const { Text, Title } = Typography;
@@ -47,7 +46,6 @@ const TermCtl = ({
   const [openPopover, setOpenPopover] = useState(false);
   const [termData, setTermData] = useState<ITerm>();
   const [content, setContent] = useState<string>();
-  const navigate = useNavigate();
   const newTerm: ITermDataResponse | undefined = useAppSelector(changedTerm);
 
   useEffect(() => {

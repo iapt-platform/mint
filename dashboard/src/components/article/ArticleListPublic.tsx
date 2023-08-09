@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { useIntl } from "react-intl";
 import { useRef } from "react";
 import { Space } from "antd";
 import { ActionType, ProList } from "@ant-design/pro-components";
@@ -31,8 +30,6 @@ interface IWidget {
   studioName?: string;
 }
 const ArticleListWidget = ({ search, studioName }: IWidget) => {
-  const intl = useIntl(); //i18n
-
   const ref = useRef<ActionType>();
 
   return (
