@@ -28,7 +28,7 @@ interface IWidget {
 }
 const TermTextAreaMenuWidget = ({
   items = [],
-  searchKey,
+  searchKey = "",
   maxItem = 10,
   visible = false,
   currIndex = 0,
@@ -38,8 +38,16 @@ const TermTextAreaMenuWidget = ({
   const [filtered, setFiltered] = useState<IWordWithEn[]>();
   const [wordList, setWordList] = useState<IWordWithEn[]>();
   const sysTerms = useAppSelector(getTerm);
-
+  console.log("items", items);
   useEffect(() => {
+    //本句单词
+    const mWords = items?.map((item) => {
+      return {
+        word: item,
+        en: PaliToEn(item),
+      };
+    });
+
     //计算这些单词的base
     let parents: string[] = [];
     items?.forEach((value) => {
@@ -51,14 +59,6 @@ const TermTextAreaMenuWidget = ({
     });
 
     const term = sysTerms ? sysTerms?.map((item) => item.word) : [];
-    //本句单词
-    const mWords = items?.map((item) => {
-      return {
-        word: item,
-        en: PaliToEn(item),
-      };
-    });
-
     //本句单词parent
     const parentTerm = parents?.map((item) => {
       const inSystem = term.includes(item);
@@ -69,6 +69,7 @@ const TermTextAreaMenuWidget = ({
         isTerm: inSystem,
       };
     });
+
     //社区术语
     const sysTerm = term
       .filter((value) => !parents.includes(value))
@@ -80,14 +81,17 @@ const TermTextAreaMenuWidget = ({
         };
       });
     setWordList([...parentTerm, ...mWords, ...sysTerm]);
-  }, [items, sysTerms]);
+
+    //此处千万不能加其他dependency 否则会引起无限循环
+  }, [items]);
 
   useEffect(() => {
-    const filteredItems = searchKey
-      ? wordList?.filter(
-          (value) => value.en.slice(0, searchKey.length) === searchKey
-        )
-      : wordList;
+    const filteredItems =
+      searchKey !== ""
+        ? wordList?.filter(
+            (value) => value.en.slice(0, searchKey.length) === searchKey
+          )
+        : wordList;
     setFiltered(filteredItems);
   }, [wordList, searchKey]);
 
