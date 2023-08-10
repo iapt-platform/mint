@@ -370,6 +370,7 @@ class SentenceController extends Controller
                             'para'=>$param[1],
                             'channel'=>$channelId,
                             ]);
+        Mq::publish('content',new SentResource($sent));
         return $this->ok(new SentResource($sent));
     }
 
