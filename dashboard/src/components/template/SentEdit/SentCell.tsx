@@ -177,7 +177,7 @@ const SentCellWidget = ({
             )
           ) : (
             <MdView
-              style={{ marginLeft: compact ? 0 : "2em" }}
+              style={{ marginLeft: compact ? 0 : "2em", marginBottom: 0 }}
               html={sentData.html !== "" ? sentData.html : "请输入"}
               wordWidget={wordWidget}
             />
