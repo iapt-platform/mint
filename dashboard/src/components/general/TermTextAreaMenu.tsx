@@ -1,10 +1,20 @@
+import { Space, Typography } from "antd";
 import { useEffect, useState } from "react";
+import { RobotOutlined } from "@ant-design/icons";
+
+import { TermIcon } from "../../assets/icon";
+import { useAppSelector } from "../../hooks";
+import { getTerm } from "../../reducers/term-vocabulary";
 import { PaliToEn } from "../../utils";
 import { getPaliBase } from "./PaliEnding";
+
+const { Text } = Typography;
 
 interface IWordWithEn {
   word: string;
   en: string;
+  isBase?: boolean;
+  isTerm?: boolean;
 }
 
 interface IWidget {
@@ -27,6 +37,7 @@ const TermTextAreaMenuWidget = ({
 }: IWidget) => {
   const [filtered, setFiltered] = useState<IWordWithEn[]>();
   const [wordList, setWordList] = useState<IWordWithEn[]>();
+  const sysTerms = useAppSelector(getTerm);
 
   useEffect(() => {
     //计算这些单词的base
@@ -38,16 +49,38 @@ const TermTextAreaMenuWidget = ({
         }
       });
     });
-    const wordList = [...parents, ...items];
-    const mWords = wordList?.map((item) => {
+
+    const term = sysTerms ? sysTerms?.map((item) => item.word) : [];
+    //本句单词
+    const mWords = items?.map((item) => {
       return {
         word: item,
         en: PaliToEn(item),
       };
     });
-    console.log("words", mWords);
-    setWordList(mWords);
-  }, [items]);
+
+    //本句单词parent
+    const parentTerm = parents?.map((item) => {
+      const inSystem = term.includes(item);
+      return {
+        word: item,
+        en: PaliToEn(item),
+        isBase: !inSystem,
+        isTerm: inSystem,
+      };
+    });
+    //社区术语
+    const sysTerm = term
+      .filter((value) => !parents.includes(value))
+      .map((item) => {
+        return {
+          word: item,
+          en: PaliToEn(item),
+          isTerm: true,
+        };
+      });
+    setWordList([...parentTerm, ...mWords, ...sysTerm]);
+  }, [items, sysTerms]);
 
   useEffect(() => {
     const filteredItems = searchKey
@@ -75,24 +108,29 @@ const TermTextAreaMenuWidget = ({
           {`${searchKey}|`}
         </div>
         <ul className="term_at_menu_ul">
-          {filtered?.map((item, index) => {
-            if (index < maxItem) {
-              return (
-                <li
-                  key={index}
-                  className={index === currIndex ? "term_focus" : undefined}
-                  onClick={() => {
-                    if (typeof onSelect !== "undefined") {
-                      onSelect(item.word);
-                    }
-                  }}
+          {filtered?.slice(0, maxItem).map((item, index) => {
+            return (
+              <li
+                key={index}
+                className={index === currIndex ? "term_focus" : undefined}
+                onClick={() => {
+                  if (typeof onSelect !== "undefined") {
+                    onSelect(item.word);
+                  }
+                }}
+              >
+                <Space
+                  style={{ width: "100%", justifyContent: "space-between" }}
                 >
-                  {item.word}
-                </li>
-              );
-            } else {
-              return undefined;
-            }
+                  <Text strong={item.isBase || item.isTerm}>{item.word}</Text>
+                  {item.isTerm ? (
+                    <TermIcon />
+                  ) : item.isBase ? (
+                    <RobotOutlined />
+                  ) : undefined}
+                </Space>
+              </li>
+            );
           })}
         </ul>
       </>
