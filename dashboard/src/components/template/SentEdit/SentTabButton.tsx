@@ -14,6 +14,7 @@ const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
 };
 
 interface IWidget {
+  style?: React.CSSProperties;
   icon?: JSX.Element;
   type: string;
   sentId: string;
@@ -21,6 +22,7 @@ interface IWidget {
   title?: string;
 }
 const SentTabButtonWidget = ({
+  style,
   icon,
   type,
   sentId,
@@ -62,6 +64,7 @@ const SentTabButtonWidget = ({
 
   return (
     <Dropdown.Button
+      style={style}
       size="small"
       type="text"
       menu={menuProps}

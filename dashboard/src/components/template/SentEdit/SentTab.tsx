@@ -58,6 +58,8 @@ const SentTabWidget = ({
 }: IWidget) => {
   const intl = useIntl();
   const [isCompact, setIsCompact] = useState(compact);
+  const [hover, setHover] = useState(false);
+
   useEffect(() => setIsCompact(compact), [compact]);
   const mPath = path
     ? [
@@ -70,144 +72,152 @@ const SentTabWidget = ({
   }
   const sentId = id.split("_");
   const sId = sentId[0].split("-");
-
+  const tabButtonStyle: React.CSSProperties | undefined = compact
+    ? { visibility: hover ? "visible" : "hidden" }
+    : undefined;
   return (
-    <>
-      <Tabs
-        style={
-          isCompact
-            ? {
-                position: "absolute",
-                marginTop: -32,
-                width: "100%",
-                marginRight: 10,
+    <Tabs
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={
+        isCompact
+          ? {
+              position: "absolute",
+              marginTop: -32,
+              width: "100%",
+              marginRight: 10,
+            }
+          : undefined
+      }
+      tabBarStyle={{ marginBottom: 0 }}
+      size="small"
+      tabBarGutter={0}
+      tabBarExtraContent={
+        <Space>
+          <TocPath
+            link="none"
+            data={mPath}
+            trigger={path ? path.length > 0 ? path[0].title : <></> : <></>}
+          />
+          <Text copyable={{ text: `{{${sentId[0]}}}` }}>{sentId[0]}</Text>
+          <SentMenu
+            book={book}
+            para={para}
+            loading={magicDictLoading}
+            onMagicDict={(type: string) => {
+              if (typeof onMagicDict !== "undefined") {
+                onMagicDict(type);
               }
-            : undefined
-        }
-        tabBarStyle={{ marginBottom: 0 }}
-        size="small"
-        tabBarGutter={0}
-        tabBarExtraContent={
-          <Space>
-            <TocPath
-              link="none"
-              data={mPath}
-              trigger={path ? path.length > 0 ? path[0].title : <></> : <></>}
-            />
-            <Text copyable={{ text: `{{${sentId[0]}}}` }}>{sentId[0]}</Text>
-            <SentMenu
-              book={book}
-              para={para}
-              loading={magicDictLoading}
-              onMagicDict={(type: string) => {
-                if (typeof onMagicDict !== "undefined") {
-                  onMagicDict(type);
-                }
-              }}
-              onMenuClick={(key: string) => {
-                switch (key) {
-                  case "compact" || "normal":
-                    if (typeof onCompact !== "undefined") {
-                      setIsCompact(true);
-                      onCompact(true);
-                    }
-                    break;
-                  case "normal":
-                    if (typeof onCompact !== "undefined") {
-                      setIsCompact(false);
-                      onCompact(false);
-                    }
-                    break;
-                  default:
-                    break;
-                }
-              }}
-            />
-          </Space>
-        }
-        items={[
-          {
-            label: (
+            }}
+            onMenuClick={(key: string) => {
+              switch (key) {
+                case "compact" || "normal":
+                  if (typeof onCompact !== "undefined") {
+                    setIsCompact(true);
+                    onCompact(true);
+                  }
+                  break;
+                case "normal":
+                  if (typeof onCompact !== "undefined") {
+                    setIsCompact(false);
+                    onCompact(false);
+                  }
+                  break;
+                default:
+                  break;
+              }
+            }}
+          />
+        </Space>
+      }
+      items={[
+        {
+          label: (
+            <span style={tabButtonStyle}>
               <Badge size="small" count={0}>
                 <CloseOutlined />
               </Badge>
-            ),
-            key: "close",
-            children: <></>,
-          },
-          {
-            label: (
-              <SentTabButton
-                icon={<TranslationOutlined />}
-                type="translation"
-                sentId={id}
-                count={tranNum}
-                title={intl.formatMessage({
-                  id: "channel.type.translation.label",
-                })}
-              />
-            ),
-            key: "translation",
-            children: (
-              <SentCanRead
-                book={parseInt(sId[0])}
-                para={parseInt(sId[1])}
-                wordStart={parseInt(sId[2])}
-                wordEnd={parseInt(sId[3])}
-                type="translation"
-                channelsId={channelsId}
-              />
-            ),
-          },
-          {
-            label: (
-              <SentTabButton
-                icon={<CloseOutlined />}
-                type="nissaya"
-                sentId={id}
-                count={nissayaNum}
-                title={intl.formatMessage({
-                  id: "channel.type.nissaya.label",
-                })}
-              />
-            ),
-            key: "nissaya",
-            children: (
-              <SentCanRead
-                book={parseInt(sId[0])}
-                para={parseInt(sId[1])}
-                wordStart={parseInt(sId[2])}
-                wordEnd={parseInt(sId[3])}
-                type="nissaya"
-                channelsId={channelsId}
-              />
-            ),
-          },
-          {
-            label: (
-              <SentTabButton
-                icon={<TranslationOutlined />}
-                type="commentary"
-                sentId={id}
-                count={commNum}
-                title={intl.formatMessage({
-                  id: "channel.type.commentary.label",
-                })}
-              />
-            ),
-            key: "commentary",
-            children: (
-              <SentCanRead
-                book={parseInt(sId[0])}
-                para={parseInt(sId[1])}
-                wordStart={parseInt(sId[2])}
-                wordEnd={parseInt(sId[3])}
-                type="commentary"
-                channelsId={channelsId}
-              />
-            ),
-          },
-          /*{
+            </span>
+          ),
+          key: "close",
+          children: <></>,
+        },
+        {
+          label: (
+            <SentTabButton
+              style={tabButtonStyle}
+              icon={<TranslationOutlined />}
+              type="translation"
+              sentId={id}
+              count={tranNum}
+              title={intl.formatMessage({
+                id: "channel.type.translation.label",
+              })}
+            />
+          ),
+          key: "translation",
+          children: (
+            <SentCanRead
+              book={parseInt(sId[0])}
+              para={parseInt(sId[1])}
+              wordStart={parseInt(sId[2])}
+              wordEnd={parseInt(sId[3])}
+              type="translation"
+              channelsId={channelsId}
+            />
+          ),
+        },
+        {
+          label: (
+            <SentTabButton
+              style={tabButtonStyle}
+              icon={<CloseOutlined />}
+              type="nissaya"
+              sentId={id}
+              count={nissayaNum}
+              title={intl.formatMessage({
+                id: "channel.type.nissaya.label",
+              })}
+            />
+          ),
+          key: "nissaya",
+          children: (
+            <SentCanRead
+              book={parseInt(sId[0])}
+              para={parseInt(sId[1])}
+              wordStart={parseInt(sId[2])}
+              wordEnd={parseInt(sId[3])}
+              type="nissaya"
+              channelsId={channelsId}
+            />
+          ),
+        },
+        {
+          label: (
+            <SentTabButton
+              style={tabButtonStyle}
+              icon={<TranslationOutlined />}
+              type="commentary"
+              sentId={id}
+              count={commNum}
+              title={intl.formatMessage({
+                id: "channel.type.commentary.label",
+              })}
+            />
+          ),
+          key: "commentary",
+          children: (
+            <SentCanRead
+              book={parseInt(sId[0])}
+              para={parseInt(sId[1])}
+              wordStart={parseInt(sId[2])}
+              wordEnd={parseInt(sId[3])}
+              type="commentary"
+              channelsId={channelsId}
+            />
+          ),
+        },
+        /*{
             label: (
               <SentTabButton
                 icon={<BlockOutlined />}
@@ -230,37 +240,37 @@ const SentTabWidget = ({
               />
             ),
           },*/
-          {
-            label: (
-              <SentTabButton
-                icon={<BlockOutlined />}
-                type="original"
-                sentId={id}
-                count={simNum}
-                title={intl.formatMessage({
-                  id: "buttons.sim",
-                })}
-              />
-            ),
-            key: "sim",
-            children: (
-              <SentSim
-                book={parseInt(sId[0])}
-                para={parseInt(sId[1])}
-                wordStart={parseInt(sId[2])}
-                wordEnd={parseInt(sId[3])}
-                limit={5}
-              />
-            ),
-          },
-          {
-            label: "关系图",
-            key: "relation-graphic",
-            children: <RelaGraphic wbwData={wbwData} />,
-          },
-        ]}
-      />
-    </>
+        {
+          label: (
+            <SentTabButton
+              style={tabButtonStyle}
+              icon={<BlockOutlined />}
+              type="original"
+              sentId={id}
+              count={simNum}
+              title={intl.formatMessage({
+                id: "buttons.sim",
+              })}
+            />
+          ),
+          key: "sim",
+          children: (
+            <SentSim
+              book={parseInt(sId[0])}
+              para={parseInt(sId[1])}
+              wordStart={parseInt(sId[2])}
+              wordEnd={parseInt(sId[3])}
+              limit={5}
+            />
+          ),
+        },
+        {
+          label: <span style={tabButtonStyle}>{"关系图"}</span>,
+          key: "relation-graphic",
+          children: <RelaGraphic wbwData={wbwData} />,
+        },
+      ]}
+    />
   );
 };
 
