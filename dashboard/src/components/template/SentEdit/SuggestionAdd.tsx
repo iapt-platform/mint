@@ -29,19 +29,21 @@ const SuggestionAddWidget = ({ data, onCreate }: IWidget) => {
           添加修改建议
         </Button>
       </div>
-      <div style={{ display: isEditMode ? "block" : "none" }}>
-        <SentCellEditable
-          data={sentData}
-          isPr={true}
-          onClose={() => {
-            setIsEditMode(false);
-          }}
-          onCreate={() => {
-            if (typeof onCreate !== "undefined") {
-              onCreate();
-            }
-          }}
-        />
+      <div>
+        {isEditMode ? (
+          <SentCellEditable
+            data={sentData}
+            isPr={true}
+            onClose={() => {
+              setIsEditMode(false);
+            }}
+            onCreate={() => {
+              if (typeof onCreate !== "undefined") {
+                onCreate();
+              }
+            }}
+          />
+        ) : undefined}
       </div>
     </>
   );
