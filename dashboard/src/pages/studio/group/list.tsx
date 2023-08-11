@@ -17,6 +17,7 @@ import { useEffect, useRef, useState } from "react";
 
 import StudioName, { IStudio } from "../../../components/auth/StudioName";
 import { renderBadge } from "../../../components/channel/ChannelTable";
+import { getSorterUrl } from "../../../utils";
 
 const { Text } = Typography;
 
@@ -35,7 +36,7 @@ interface DataItem {
   name: string;
   description: string;
   role: string;
-  createdAt: number;
+  created_at: string;
   studio?: IStudio;
 }
 
@@ -169,12 +170,12 @@ const Widget = () => {
             title: intl.formatMessage({
               id: "forms.fields.created-at.label",
             }),
-            key: "created-at",
+            key: "created_at",
             width: 100,
             search: false,
-            dataIndex: "createdAt",
+            dataIndex: "created_at",
             valueType: "date",
-            sorter: (a, b) => a.createdAt - b.createdAt,
+            sorter: true,
           },
           {
             title: intl.formatMessage({ id: "buttons.option" }),
@@ -229,17 +230,18 @@ const Widget = () => {
             (params.pageSize ? params.pageSize : 20);
           url += `&limit=${params.pageSize}&offset=${offset}`;
           url += params.keyword ? "&search=" + params.keyword : "";
+          url += getSorterUrl(sorter);
+
           console.log(url);
           const res = await get<IGroupListResponse>(url);
           const items: DataItem[] = res.data.rows.map((item, id) => {
-            const date = new Date(item.created_at);
             return {
               sn: id + 1,
               id: item.uid,
               name: item.name,
               description: item.description,
               role: item.role,
-              createdAt: date.getTime(),
+              created_at: item.created_at,
               studio: item.studio,
             };
           });

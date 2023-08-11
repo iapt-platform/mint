@@ -383,7 +383,6 @@ const Widget = () => {
           url += params.from ? `&from=${params.from}` : "";
           url += params.to ? `&to=${params.to}` : "";
           url += params.category ? `&category=${params.category}` : "";
-
           url += getSorterUrl(sorter);
 
           console.log("url", url);

@@ -37,9 +37,9 @@ export interface IItem {
   shareType: string;
   role?: string;
   publicity: number;
-  createdAt: number;
   final?: IFinal[];
   progress: number;
+  createdAt: number;
 }
 interface IWidget {
   type?: ArticleType | "editable";

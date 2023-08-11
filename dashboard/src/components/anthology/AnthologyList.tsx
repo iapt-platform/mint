@@ -23,7 +23,7 @@ import Share, { EResType } from "../share/Share";
 
 import StudioName, { IStudio } from "../auth/StudioName";
 import { IResNumberResponse, renderBadge } from "../channel/ChannelTable";
-import { fullUrl } from "../../utils";
+import { fullUrl, getSorterUrl } from "../../utils";
 
 const { Text } = Typography;
 
@@ -35,7 +35,7 @@ interface IItem {
   publicity: number;
   articles: number;
   studio?: IStudio;
-  createdAt: number;
+  updated_at: string;
 }
 interface IWidget {
   title?: string;
@@ -204,14 +204,14 @@ const AnthologyListWidget = ({
           },
           {
             title: intl.formatMessage({
-              id: "forms.fields.created-at.label",
+              id: "forms.fields.updated-at.label",
             }),
-            key: "created-at",
+            key: "updated_at",
             width: 100,
             search: false,
-            dataIndex: "createdAt",
+            dataIndex: "updated_at",
             valueType: "date",
-            sorter: (a, b) => a.createdAt - b.createdAt,
+            sorter: true,
           },
           {
             title: intl.formatMessage({ id: "buttons.option" }),
@@ -286,23 +286,20 @@ const AnthologyListWidget = ({
             (params.pageSize ? params.pageSize : 20);
           url += `&limit=${params.pageSize}&offset=${offset}`;
           url += params.keyword ? "&search=" + params.keyword : "";
-          url += sorter.createdAt
-            ? "&order=created_at&dir=" +
-              (sorter.createdAt === "ascend" ? "asc" : "desc")
-            : "";
+
+          url += getSorterUrl(sorter);
 
           const res = await get<IAnthologyListResponse>(url);
           const items: IItem[] = res.data.rows.map((item, id) => {
-            const date = new Date(item.created_at);
             return {
-              sn: id + 1,
+              sn: id + offset + 1,
               id: item.uid,
               title: item.title,
               subtitle: item.subtitle,
               publicity: item.status,
               articles: item.childrenNumber,
               studio: item.studio,
-              createdAt: date.getTime(),
+              updated_at: item.updated_at,
             };
           });
           console.log(items);
