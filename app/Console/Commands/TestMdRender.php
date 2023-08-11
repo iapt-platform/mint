@@ -39,51 +39,66 @@ class TestMdRender extends Command
      */
     public function handle()
     {
-        $markdown = "";
-        //$markdown .= "[[isipatana]] `bla` [[dhammacakka]]\n\n";
-        //$markdown .= "前面的\n";
-        //$markdown .= "{{note|\n";
-        //$markdown .= "多**行注**释\n\n";
-        //$markdown .= "多行注释\n";
-        //$markdown .= "}}\n\n";
-        $markdown .= "## heading [[isipatana]]<span>aa \n\n";
-        $markdown .= "ddd \n\n";
-        $markdown .= "- title \n";
-        $markdown .= "  \n";
-        $markdown .= "  content-1\n";
-        $markdown .= "- title-2 \n";
-        $markdown .= "  \n";
-        $markdown .= "  content-2\n";
-        $markdown .= "  \n";
-        $markdown .= "\n";
-        $markdown .= "\n";
-        $markdown .= "aaa bbb\n";
-        /*
-        $markdown .= "```\n";
-        $markdown .= "content **content**\n";
-        $markdown .= "content **content**\n";
-        $markdown .= "```\n\n";
-        */
-        /*
-        $markdown .= "{{168-916-10-37}}";
-        $markdown .= "{{exercise|1|((168-916-10-37))}}";
+        $data = array();
 
-        $markdown2 = "# heading [[isipatana]] \n\n";
-        $markdown2 .= "{{exercise\n|id=1\n|content={{168-916-10-37}}}}";
-        $markdown2 .= "{{exercise\n|id=2\n|content=# ddd}}";
+        $data['term'] = <<<md
+        ## heading
+        [[bhagavantu]]
+        ```
+        test
+        ```
+        md;
+        $data['noteMulti'] = <<<md
+        ## heading
 
-        $markdown2 .= "{{note|trigger=kacayana|text={{99-556-8-12}}}}";
-        $markdown2 = "aaa=bbb\n";
-        $markdown2 .= "ccc=ddd\n";
-*/
-        //echo MdRender::render($markdown,['00ae2c48-c204-4082-ae79-79ba2740d506']);
-        //$wiki = MdRender::markdown2wiki($markdown2);
-        //$xml = MdRender::wiki2xml($wiki);
+        [点击](http://127.0.0.1:3000/my/article/para/168-876?mode=edit&channel=00ae2c48-c204-4082-ae79-79ba2740d506&book=168&par=876)
+
+        ----
+
+        dfef
+
+        ```
+        bla **content**
+        {{99-556-8-12}}
+        bla **content**
+        ```
+        md;
+        $data['note'] = '`bla bla`';
+        $data['noteTpl'] = <<<md
+        {{note|trigger=kacayana|text={{99-556-8-12}}}}
+        md;
+        $data['trigger'] = <<<md
+        ## heading
+        ddd
+        - title
+          content-1
+        - title-2
+
+          content-2
+
+        aaa bbb
+        md;
+        $data['exercise'] = <<<md
+        {{168-916-10-37}}
+        {{exercise|1|((168-916-10-37))}}
+        {{exercise|
+        id=1|
+        content={{168-916-10-37}}
+        }}
+        {{exercise|
+        id=2|
+        content=# ddd}}
+        md;
+
+        //$wiki = MdRender::markdown2wiki($data['noteMulti']);
+        //$xml = MdRender::wiki2xml($wiki,['00ae2c48-c204-4082-ae79-79ba2740d506']);
+        //$this->info($xml);
+        //$html = MdRender::markdownToHtml($xml);
+        //$this->info($html);
         //$html = MdRender::xmlQueryId($xml, "1");
         //$sent = MdRender::take_sentence($html);
         //print_r($sent);
-        echo Str::markdown($markdown);
-        echo MdRender::render2($markdown,['00ae2c48-c204-4082-ae79-79ba2740d506'],null,'read','nissaya');
+        echo MdRender::render2($data['noteMulti'],['00ae2c48-c204-4082-ae79-79ba2740d506'],null,'read','translation');
         return 0;
     }
 }
