@@ -36,11 +36,11 @@ const SentCellWidget = ({
   const endings = useAppSelector(getEnding);
   const acceptPr = useAppSelector(sentence);
   const [prOpen, setPrOpen] = useState(false);
-
+  /*
   useEffect(() => {
     setSentData(data);
   }, [data]);
-
+*/
   useEffect(() => {
     if (typeof acceptPr !== "undefined" && !isPr) {
       if (
@@ -177,8 +177,13 @@ const SentCellWidget = ({
             )
           ) : (
             <MdView
-              style={{ marginLeft: compact ? 0 : "2em", marginBottom: 0 }}
-              html={sentData.html !== "" ? sentData.html : "请输入"}
+              style={{
+                width: "100%",
+                paddingLeft: compact ? 0 : "2em",
+                marginBottom: 0,
+              }}
+              placeholder="请输入"
+              html={sentData.html}
               wordWidget={wordWidget}
             />
           )}
