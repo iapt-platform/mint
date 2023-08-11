@@ -59,7 +59,7 @@ const SentTabWidget = ({
   const intl = useIntl();
   const [isCompact, setIsCompact] = useState(compact);
   const [hover, setHover] = useState(false);
-
+  const [currKey, setCurrKey] = useState("close");
   useEffect(() => setIsCompact(compact), [compact]);
   const mPath = path
     ? [
@@ -73,19 +73,25 @@ const SentTabWidget = ({
   const sentId = id.split("_");
   const sId = sentId[0].split("-");
   const tabButtonStyle: React.CSSProperties | undefined = compact
-    ? { visibility: hover ? "visible" : "hidden" }
+    ? { visibility: hover || currKey !== "close" ? "visible" : "hidden" }
     : undefined;
+
   return (
     <Tabs
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      activeKey={currKey}
+      onChange={(activeKey: string) => {
+        setCurrKey(activeKey);
+      }}
       style={
         isCompact
           ? {
-              position: "absolute",
+              position: currKey === "close" ? "absolute" : "unset",
               marginTop: -32,
               width: "100%",
               marginRight: 10,
+              backgroundColor: hover || currKey !== "close" ? "white" : "unset",
             }
           : undefined
       }
