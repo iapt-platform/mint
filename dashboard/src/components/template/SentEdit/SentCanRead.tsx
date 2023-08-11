@@ -135,7 +135,7 @@ const SentCanReadWidget = ({
       {sentData.map((item, id) => {
         return (
           <SentCell
-            data={item}
+            initValue={item}
             key={id}
             isPr={false}
             editMode={item.openInEditMode}

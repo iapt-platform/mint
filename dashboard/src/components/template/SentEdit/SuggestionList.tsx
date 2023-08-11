@@ -74,7 +74,7 @@ const SuggestionListWidget = ({
   return (
     <>
       {sentData.map((item, id) => {
-        return <SentCell data={item} key={id} isPr={true} />;
+        return <SentCell initValue={item} key={id} isPr={true} />;
       })}
     </>
   );

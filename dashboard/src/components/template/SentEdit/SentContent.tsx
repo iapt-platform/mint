@@ -133,13 +133,13 @@ const SentContentWidget = ({
               />
             );
           } else {
-            return <SentCell key={id} data={item} wordWidget={true} />;
+            return <SentCell key={id} initValue={item} wordWidget={true} />;
           }
         })}
       </div>
       <div style={{ flex: layoutFlex.right }}>
         {translation?.map((item, id) => {
-          return <SentCell key={id} data={item} compact={compact} />;
+          return <SentCell key={id} initValue={item} compact={compact} />;
         })}
       </div>
     </div>

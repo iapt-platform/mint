@@ -17,14 +17,14 @@ import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
 import { nissayaBase } from "../Nissaya/NissayaMeaning";
 
 interface IWidget {
-  data: ISentence;
+  initValue: ISentence;
   wordWidget?: boolean;
   isPr?: boolean;
   editMode?: boolean;
   compact?: boolean;
 }
 const SentCellWidget = ({
-  data,
+  initValue,
   wordWidget = false,
   isPr = false,
   editMode = false,
@@ -32,7 +32,7 @@ const SentCellWidget = ({
 }: IWidget) => {
   const intl = useIntl();
   const [isEditMode, setIsEditMode] = useState(editMode);
-  const [sentData, setSentData] = useState<ISentence>(data);
+  const [sentData, setSentData] = useState<ISentence>(initValue);
   const endings = useAppSelector(getEnding);
   const acceptPr = useAppSelector(sentence);
   const [prOpen, setPrOpen] = useState(false);
@@ -44,15 +44,15 @@ const SentCellWidget = ({
   useEffect(() => {
     if (typeof acceptPr !== "undefined" && !isPr) {
       if (
-        acceptPr.book === data.book &&
-        acceptPr.para === data.para &&
-        acceptPr.wordStart === data.wordStart &&
-        acceptPr.wordEnd === data.wordEnd &&
-        acceptPr.channel.id === data.channel.id
+        acceptPr.book === initValue.book &&
+        acceptPr.para === initValue.para &&
+        acceptPr.wordStart === initValue.wordStart &&
+        acceptPr.wordEnd === initValue.wordEnd &&
+        acceptPr.channel.id === initValue.channel.id
       )
         setSentData(acceptPr);
     }
-  }, [acceptPr, data, isPr]);
+  }, [acceptPr, initValue, isPr]);
   const sid = `${sentData.book}_${sentData.para}_${sentData.wordStart}_${sentData.wordEnd}_${sentData.channel.id}`;
 
   return (
@@ -65,7 +65,7 @@ const SentCellWidget = ({
         />
       )}
       <SentEditMenu
-        data={data}
+        data={sentData}
         onModeChange={(mode: string) => {
           if (mode === "edit") {
             setIsEditMode(true);
@@ -84,35 +84,38 @@ const SentCellWidget = ({
         onConvert={(format: string) => {
           switch (format) {
             case "json":
-              const wbw: IWbw[] = data.content.split("\n").map((item, id) => {
-                const parts = item.split("=");
-                const word = my_to_roman(parts[0]);
-                const meaning: string = parts.length > 1 ? parts[1].trim() : "";
-                let parent: string = "";
-                let factors: string = "";
-                if (!meaning.includes(" ") && endings) {
-                  const base = nissayaBase(meaning, endings);
-                  parent = base.base;
-                  const end = base.ending ? base.ending : [];
-                  factors = [base.base, ...end].join("+");
-                } else {
-                  factors = meaning.replaceAll(" ", "+");
-                }
-                return {
-                  book: data.book,
-                  para: data.para,
-                  sn: [id],
-                  word: { value: word ? word : parts[0], status: 0 },
-                  real: { value: meaning, status: 0 },
-                  meaning: { value: "", status: 0 },
-                  parent: { value: parent, status: 0 },
-                  factors: {
-                    value: factors,
-                    status: 0,
-                  },
-                  confidence: 0.5,
-                };
-              });
+              const wbw: IWbw[] = sentData.content
+                .split("\n")
+                .map((item, id) => {
+                  const parts = item.split("=");
+                  const word = my_to_roman(parts[0]);
+                  const meaning: string =
+                    parts.length > 1 ? parts[1].trim() : "";
+                  let parent: string = "";
+                  let factors: string = "";
+                  if (!meaning.includes(" ") && endings) {
+                    const base = nissayaBase(meaning, endings);
+                    parent = base.base;
+                    const end = base.ending ? base.ending : [];
+                    factors = [base.base, ...end].join("+");
+                  } else {
+                    factors = meaning.replaceAll(" ", "+");
+                  }
+                  return {
+                    book: sentData.book,
+                    para: sentData.para,
+                    sn: [id],
+                    word: { value: word ? word : parts[0], status: 0 },
+                    real: { value: meaning, status: 0 },
+                    meaning: { value: "", status: 0 },
+                    parent: { value: parent, status: 0 },
+                    factors: {
+                      value: factors,
+                      status: 0,
+                    },
+                    confidence: 0.5,
+                  };
+                });
               setSentData((origin) => {
                 origin.contentType = "json";
                 origin.content = JSON.stringify(wbw);
