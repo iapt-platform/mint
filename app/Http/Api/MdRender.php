@@ -92,6 +92,7 @@ class MdRender{
                 /**
                  * 处理模版 提取参数
                  */
+                $tpl = str_replace("|\n","|",$tpl);
                 $pattern = "/\{\{(.+?)\|/";
                 $replacement = '<MdTpl name="$1"><param>';
                 $tpl = preg_replace($pattern,$replacement,$tpl);
@@ -455,7 +456,7 @@ class MdRender{
 
     public static function markdownToHtml($markdown){
         $markdown = str_replace('MdTpl','mdtpl',$markdown);
-        $markdown = str_replace(['<param>','</param>'],['<span>','</span>'],$markdown);
+        $markdown = str_replace(['<param','</param>'],['<span','</span>'],$markdown);
         $html = Str::markdown($markdown);
         $html = MdRender::fixHtml($html);
 
