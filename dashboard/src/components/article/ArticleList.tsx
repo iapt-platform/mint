@@ -29,7 +29,7 @@ import {
 } from "../../components/api/Article";
 import { PublicityValueEnum } from "../../components/studio/table";
 import { useEffect, useRef, useState } from "react";
-import ArticleTplMaker from "../../components/article/ArticleTplMaker";
+import { ArticleTplModal } from "../template/Builder/ArticleTpl";
 import Share, { EResType } from "../../components/share/Share";
 import AddToAnthology from "../../components/article/AddToAnthology";
 import AnthologySelect from "../../components/anthology/AnthologySelect";
@@ -278,7 +278,7 @@ const ArticleListWidget = ({
                       {
                         key: "tpl",
                         label: (
-                          <ArticleTplMaker
+                          <ArticleTplModal
                             title={row.title}
                             type="article"
                             id={row.id}
