@@ -1,9 +1,22 @@
 import { useEffect, useState } from "react";
-import { Divider, Input, Modal, Select, Space, Tabs, Typography } from "antd";
+import {
+  Button,
+  Divider,
+  Input,
+  Modal,
+  Select,
+  Space,
+  Tabs,
+  Typography,
+} from "antd";
+import { FileAddOutlined } from "@ant-design/icons";
 
 import { ArticleCtl, TDisplayStyle } from "../Article";
 import { ArticleType } from "../../article/Article";
 import { useIntl } from "react-intl";
+import ArticleListModal from "../../article/ArticleListModal";
+import { useAppSelector } from "../../../hooks";
+import { currentUser } from "../../../reducers/current-user";
 const { TextArea } = Input;
 const { Paragraph } = Typography;
 
@@ -15,18 +28,14 @@ interface IWidget {
   onSelect?: Function;
   onCancel?: Function;
 }
-const ArticleTplWidget = ({
-  type,
-  id,
-  title = "title",
-  style = "modal",
-}: IWidget) => {
+const ArticleTplWidget = ({ type, id, title, style = "modal" }: IWidget) => {
   const intl = useIntl(); //i18n
   const [titleText, setTitleText] = useState(title);
   const [styleText, setStyleText] = useState(style);
   const [typeText, setTypeText] = useState(type);
   const [idText, setIdText] = useState(id);
   const [tplText, setTplText] = useState("");
+  const user = useAppSelector(currentUser);
 
   const ids = id?.split("_");
   const id1 = ids ? ids[0] : undefined;
@@ -82,16 +91,30 @@ style=${styleText}`;
         </Space>
         <Space style={{ width: 500 }}>
           {"id："}
-          <Input
-            disabled={id ? true : false}
-            defaultValue={id}
-            width={400}
-            value={idText}
-            placeholder="Title"
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setIdText(event.target.value);
-            }}
-          />
+          <Space>
+            <Input
+              disabled={id ? true : false}
+              defaultValue={id}
+              width={400}
+              value={idText}
+              placeholder="Title"
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setIdText(event.target.value);
+              }}
+            />
+            {typeText === "article" ? (
+              <ArticleListModal
+                studioName={user?.realName}
+                trigger={<Button icon={<FileAddOutlined />} />}
+                multiple={false}
+                onSelect={(id: string, title: string) => {
+                  console.log("add article", id);
+                  setIdText(id);
+                  setTitleText(title);
+                }}
+              />
+            ) : undefined}
+          </Space>
         </Space>
         <Space>
           {"显示为："}
@@ -102,10 +125,9 @@ style=${styleText}`;
               console.log(`selected ${value}`);
               setStyleText(value as TDisplayStyle);
             }}
-            options={[
-              { value: "modal", label: "对话框" },
-              { value: "card", label: "卡片" },
-            ]}
+            options={["modal", "card", "toggle"].map((item) => {
+              return { value: item, label: item };
+            })}
           />
         </Space>
         <Tabs
