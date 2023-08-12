@@ -90,7 +90,6 @@ const Widget = () => {
             search: false,
             dataIndex: "created_at",
             valueType: "date",
-            sorter: true,
           },
         ]}
         request={async (params = {}, sorter, filter) => {
