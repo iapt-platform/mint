@@ -90,6 +90,14 @@ class TestMdRender extends Command
         content=# ddd}}
         md;
 
+        $data['article'] = <<<md
+        {{article|
+        type=article|
+        id=27ade9ad-2d0c-4f66-b857-e9335252cc08|
+        title=第一章 戒律概说（Vinaya）|
+        style=modal}}
+        md;
+
         //$wiki = MdRender::markdown2wiki($data['noteMulti']);
         //$xml = MdRender::wiki2xml($wiki,['00ae2c48-c204-4082-ae79-79ba2740d506']);
         //$this->info($xml);
@@ -98,7 +106,7 @@ class TestMdRender extends Command
         //$html = MdRender::xmlQueryId($xml, "1");
         //$sent = MdRender::take_sentence($html);
         //print_r($sent);
-        echo MdRender::render2($data['noteMulti'],['00ae2c48-c204-4082-ae79-79ba2740d506'],null,'read','translation');
+        echo MdRender::render2($data['article'],['00ae2c48-c204-4082-ae79-79ba2740d506'],null,'read','translation');
         return 0;
     }
 }
