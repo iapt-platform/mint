@@ -14,6 +14,7 @@ import { ISentence } from "../SentEdit";
 import TermTextArea from "../../general/TermTextArea";
 import { useAppSelector } from "../../../hooks";
 import { wordList } from "../../../reducers/sent-word";
+import Builder from "../Builder/Builder";
 
 const { Text } = Typography;
 
@@ -158,6 +159,9 @@ const SentCellEditableWidget = ({
               new line
             </Button>
           </span>
+          <Text keyboard style={{ cursor: "pointer" }}>
+            <Builder trigger={"<t>"} />
+          </Text>
         </div>
         <div>
           <Text keyboard>Ctrl/⌘</Text>➕<Text keyboard>enter</Text>=
