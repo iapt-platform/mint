@@ -61,7 +61,7 @@ export function XmlToReact(
 
       switch (value.nodeType) {
         case 1: //element node
-          console.log("tag name", value.nodeName);
+          //console.log("tag name", value.nodeName);
           const tagName = value.nodeName;
           switch (tagName) {
             case "parsererror":
