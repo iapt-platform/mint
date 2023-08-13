@@ -51,7 +51,7 @@ class MqDiscussion extends Command
                         return 0;
                     }
                     /**生成消息内容 */
-                    $msgTitle = "**{$message->editor->nickName}**";
+                    $msgTitle = $message->editor->nickName;
                     if($message->parent){
                         $parentTitle = Discussion::where('id',$message->parent)->value('title');
                         $msgTitle .= '回复了 '.$parentTitle;
@@ -85,7 +85,7 @@ class MqDiscussion extends Command
                                 break;
                         }
                         $ok = $this->call($command,['url'=>$hook->url,
-                                                    'title'=>"",
+                                                    'title'=>"title",
                                                     'message'=>$msgContent,
                                                     ]);
                         $this->info("{$command}  ok={$ok}");
