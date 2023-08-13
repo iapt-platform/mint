@@ -9,7 +9,7 @@ class Mq{
                 //一对一
 		$connection = new AMQPStreamConnection(env("RABBITMQ_HOST"),
                                                env("RABBITMQ_PORT"),
-                                               env("RABBITMQ_USERNAME"),
+                                               env("RABBITMQ_USER"),
                                                env("RABBITMQ_PASSWORD"),
                                                env("RABBITMQ_VIRTUAL_HOST")
                                             );
@@ -34,7 +34,7 @@ class Mq{
 
         $connection = new AMQPStreamConnection(env("RABBITMQ_HOST"),
                                                env("RABBITMQ_PORT"),
-                                               env("RABBITMQ_USERNAME"),
+                                               env("RABBITMQ_USER"),
                                                env("RABBITMQ_PASSWORD"),
                                                env("RABBITMQ_VIRTUAL_HOST"));
         $channel = $connection->channel();
