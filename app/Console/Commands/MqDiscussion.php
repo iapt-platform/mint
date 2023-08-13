@@ -51,17 +51,15 @@ class MqDiscussion extends Command
                         return 0;
                     }
                     /**生成消息内容 */
-                    $msgTitle = $message->editor->nickName;
+                    $msgTitle = "**{$message->editor->nickName}**";
                     if($message->parent){
                         $parentTitle = Discussion::where('id',$message->parent)->value('title');
                         $msgTitle .= '回复了 '.$parentTitle;
                     }else{
-                        $msgTitle .= '创建了讨论';
+                        $msgTitle .= '创建了讨论 ';
                     }
-                    $msgContent = '';
-                    if($message->title){
-                        $msgContent = $message->title.'\n\n';
-                    }
+                    $msgContent = $msgTitle;
+
                     if($message->content){
                         $msgContent .= $message->content;
                     }
@@ -87,7 +85,7 @@ class MqDiscussion extends Command
                                 break;
                         }
                         $ok = $this->call($command,['url'=>$hook->url,
-                                                    'title'=>$msgTitle,
+                                                    'title'=>"",
                                                     'message'=>$msgContent,
                                                     ]);
                         $this->info("{$command}  ok={$ok}");
