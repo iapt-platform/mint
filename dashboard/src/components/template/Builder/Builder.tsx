@@ -44,7 +44,7 @@ const TplBuilderWidget = ({ trigger }: IWidget) => {
     <>
       <span onClick={showModal}>{trigger}</span>
       <Modal
-        width={"80%"}
+        width={700}
         footer={false}
         title="template builder"
         open={isModalOpen}
