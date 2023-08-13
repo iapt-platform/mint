@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
+use App\Http\Api\Mq;
 
 class MqProgress extends Command
 {
@@ -38,16 +38,10 @@ class MqProgress extends Command
      */
     public function handle()
     {
-		$connection = new AMQPStreamConnection(env("RABBITMQ_HOST"), env("RABBITMQ_PORT"), env("RABBITMQ_USERNAME"), env("RABBITMQ_PASSWORD"));
-		$channel = $connection->channel();
-
-		$channel->queue_declare('progress', false, true, false, false);
-
-		$this->info(" [*] Waiting for messages. To exit press CTRL+C");
-
-		$callback = function ($msg) {
-            $message = json_decode($msg->body);
-
+        $exchange = 'router';
+        $queue = 'progress';
+        $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
+        Mq::worker($exchange,$queue,function ($message){
             $ok = $this->call('upgrade:progress',['--book'=>$message->book,
                                             '--para'=>$message->para,
                                             '--channel'=>$message->channel,
@@ -57,13 +51,8 @@ class MqProgress extends Command
                                                 '--channel'=>$message->channel,
                                                 ]);
             $this->info("Received book=".$message->book.' progress='.$ok.' chapter='.$ok2);
-		};
+        });
 
-		$channel->basic_consume('progress', '', false, true, false, false, $callback);
-
-		while ($channel->is_open()) {
-			  $channel->wait();
-		  }
         return 0;
     }
 }

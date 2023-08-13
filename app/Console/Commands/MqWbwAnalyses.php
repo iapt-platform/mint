@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
+use App\Http\Api\Mq;
 
 class MqWbwAnalyses extends Command
 {
@@ -38,24 +38,14 @@ class MqWbwAnalyses extends Command
      */
     public function handle()
     {
-		$connection = new AMQPStreamConnection(env("RABBITMQ_HOST"), env("RABBITMQ_PORT"), env("RABBITMQ_USERNAME"), env("RABBITMQ_PASSWORD"));
-		$channel = $connection->channel();
-
-		$channel->queue_declare('wbw-analyses', false, true, false, false);
-
-		$this->info(" [*] Waiting for wbw-analyses. To exit press CTRL+C");
-
-		$callback = function ($msg) {
-            $message = json_decode($msg->body);
+        $exchange = 'router';
+        $queue = 'wbw-analyses';
+        $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
+        Mq::worker($exchange,$queue,function ($message){
             $ok = $this->call('upgrade:wbw.analyses',['id'=>implode(',',$message)]);
             $this->info("Received count=".count($message).' ok='.$ok);
-		};
+        });
 
-		$channel->basic_consume('wbw-analyses', '', false, true, false, false, $callback);
-
-		while ($channel->is_open()) {
-			  $channel->wait();
-		  }
         return 0;
     }
 }

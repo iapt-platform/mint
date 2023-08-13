@@ -3,8 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-
-use PhpAmqpLib\Connection\AMQPStreamConnection;
+use App\Http\Api\Mq;
 
 class TestMqWorker extends Command
 {
@@ -13,7 +12,7 @@ class TestMqWorker extends Command
      *
      * @var string
      */
-    protected $signature = 'test:mqworker';
+    protected $signature = 'test:mq.worker';
 
     /**
      * The console command description.
@@ -39,22 +38,12 @@ class TestMqWorker extends Command
      */
     public function handle()
     {
-		$connection = new AMQPStreamConnection(env("RABBITMQ_HOST"), env("RABBITMQ_PORT"), env("RABBITMQ_USERNAME"), env("RABBITMQ_PASSWORD"));
-		$channel = $connection->channel();
-
-		$channel->queue_declare('hello', false, true, false, false);
-
-		echo " [*] Waiting for messages. To exit press CTRL+C\n";
-
-		$callback = function ($msg) {
-			echo ' [x] Received ', $msg->body, "\n";
-		};
-
-		$channel->basic_consume('hello', '', false, true, false, false, $callback);
-
-		while ($channel->is_open()) {
-			  $channel->wait();
-		  }
+        $exchange = 'router';
+        $queue = 'hello';
+        $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
+        Mq::worker($exchange,$queue,function ($message){
+            print_r($message);
+        });
         return 0;
     }
 }

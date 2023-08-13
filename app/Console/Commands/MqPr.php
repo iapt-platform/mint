@@ -3,9 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
+use App\Http\Api\Mq;
 use App\Models\Sentence;
 use App\Models\WebHook;
+use App\Models\PaliSentence;
 
 class MqPr extends Command
 {
@@ -40,16 +41,10 @@ class MqPr extends Command
      */
     public function handle()
     {
-		$connection = new AMQPStreamConnection(env("RABBITMQ_HOST"), env("RABBITMQ_PORT"), env("RABBITMQ_USERNAME"), env("RABBITMQ_PASSWORD"));
-		$channel = $connection->channel();
-
-		$channel->queue_declare('suggestion', false, true, false, false);
-
-		$this->info(" [*] Waiting for suggestion. To exit press CTRL+C");
-
-		$callback = function ($msg) {
-            $message = json_decode($msg->body);
-
+        $exchange = 'router';
+        $queue = 'suggestion';
+        $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
+        Mq::worker($exchange,$queue,function ($message){
             /**生成消息内容 */
             $msgTitle = '';
             $username = $message->editor->nickName;
@@ -61,14 +56,14 @@ class MqPr extends Command
             $prtext = mb_substr($message->content,0,140,"UTF-8");
             $sent_num = "{$message->book}-{$message->paragraph}-{$message->word_start}-{$message->word_end}";
             $link = "https://next.wikipali.org/pcd/article/para/{$message->book}-{$message->paragraph}";
-            $link .= "?book={$message->book}&par={$message->paragraph}&channel={$message->channel_uid}";
+            $link .= "?book={$message->book}&par={$message->paragraph}&channel={$message->channel->id}";
 
             $msgContent = "{$username} 就文句`{$palitext}`提出了修改建议：
             >内容摘要：<font color=\"comment\">{$prtext}</font>，\n
             >句子编号：<font color=\"info\">{$sent_num}</font>\n
             欢迎大家[点击链接]({$link})查看并讨论。";
 
-            $webhooks = WebHook::where('res_id',$message->channel_uid)
+            $webhooks = WebHook::where('res_id',$message->channel->id)
                             ->where('status','active')
                             ->get();
             foreach ($webhooks as $key => $hook) {
@@ -99,6 +94,12 @@ class MqPr extends Command
                     WebHook::where('id',$hook->id)->increment('fail');
                 }
             }
+        });
+
+		$callback = function ($msg) {
+            $message = json_decode($msg->body);
+
+
 
 
 		};
