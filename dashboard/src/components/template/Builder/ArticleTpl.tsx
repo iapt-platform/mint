@@ -9,7 +9,7 @@ import {
   Tabs,
   Typography,
 } from "antd";
-import { FileAddOutlined } from "@ant-design/icons";
+import { FolderOpenOutlined } from "@ant-design/icons";
 
 import { ArticleCtl, TDisplayStyle } from "../Article";
 import { ArticleType } from "../../article/Article";
@@ -17,6 +17,8 @@ import { useIntl } from "react-intl";
 import ArticleListModal from "../../article/ArticleListModal";
 import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
+import ChannelTableModal from "../../channel/ChannelTableModal";
+import { IChannel } from "../../channel/Channel";
 const { TextArea } = Input;
 const { Paragraph } = Typography;
 
@@ -25,12 +27,20 @@ interface IWidget {
   id?: string;
   title?: string;
   style?: TDisplayStyle;
+  channel?: string;
   onSelect?: Function;
   onCancel?: Function;
 }
-const ArticleTplWidget = ({ type, id, title, style = "modal" }: IWidget) => {
+const ArticleTplWidget = ({
+  type,
+  id,
+  channel,
+  title,
+  style = "modal",
+}: IWidget) => {
   const intl = useIntl(); //i18n
-  const [titleText, setTitleText] = useState(title);
+  const [currTitle, setCurrTitle] = useState(title);
+  const [currChannel, setCurrChannel] = useState(channel);
   const [styleText, setStyleText] = useState(style);
   const [typeText, setTypeText] = useState(type);
   const [idText, setIdText] = useState(id);
@@ -46,20 +56,21 @@ const ArticleTplWidget = ({ type, id, title, style = "modal" }: IWidget) => {
     : undefined;
 
   useEffect(() => {
-    setTitleText(title);
+    setCurrTitle(title);
   }, [title]);
   useEffect(() => {
-    let tplText = `{{article|
-type=${typeText}|
-id=${idText}|
-title=${titleText}|
-style=${styleText}`;
+    let tplText = `{{article|\n`;
+    tplText += `type=${typeText}|\n`;
+    tplText += `id=${idText}|\n`;
+    tplText += `title=${currTitle}|\n`;
+    tplText += currChannel ? `channel=${currChannel}|\n` : "";
+    tplText += `style=${styleText}`;
 
     tplText += channels ? `channel=${channels}` : "";
     tplText += "}}";
 
     setTplText(tplText);
-  }, [titleText, styleText, type, id1, channels, typeText, idText]);
+  }, [currTitle, styleText, type, id1, channels, typeText, idText]);
   return (
     <>
       <Space direction="vertical" style={{ width: 500 }}>
@@ -67,10 +78,10 @@ style=${styleText}`;
           {"标题："}
           <Input
             width={400}
-            value={titleText}
+            value={currTitle}
             placeholder="Title"
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setTitleText(event.target.value);
+              setCurrTitle(event.target.value);
             }}
           />
         </Space>
@@ -97,7 +108,7 @@ style=${styleText}`;
               defaultValue={id}
               width={400}
               value={idText}
-              placeholder="Title"
+              placeholder="Id"
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setIdText(event.target.value);
               }}
@@ -105,15 +116,34 @@ style=${styleText}`;
             {typeText === "article" ? (
               <ArticleListModal
                 studioName={user?.realName}
-                trigger={<Button icon={<FileAddOutlined />} />}
+                trigger={<Button icon={<FolderOpenOutlined />} type="text" />}
                 multiple={false}
                 onSelect={(id: string, title: string) => {
-                  console.log("add article", id);
                   setIdText(id);
-                  setTitleText(title);
+                  setCurrTitle(title);
                 }}
               />
             ) : undefined}
+          </Space>
+        </Space>
+        <Space style={{ width: 500 }}>
+          {"channel："}
+          <Space>
+            <Input
+              defaultValue={channel}
+              width={400}
+              value={currChannel}
+              placeholder="channel"
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setCurrChannel(event.target.value);
+              }}
+            />
+            <ChannelTableModal
+              trigger={<Button icon={<FolderOpenOutlined />} type="text" />}
+              onSelect={(channel: IChannel) => {
+                setCurrChannel(channel.id);
+              }}
+            />
           </Space>
         </Space>
         <Space>
@@ -143,7 +173,7 @@ style=${styleText}`;
                 <ArticleCtl
                   type={typeText}
                   id={idText}
-                  title={titleText}
+                  title={currTitle}
                   style={styleText}
                 />
               ),
