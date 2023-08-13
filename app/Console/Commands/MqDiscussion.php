@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Sentence;
 use App\Models\WebHook;
+use App\Models\Discussion;
 use App\Http\Api\Mq;
 
 class MqDiscussion extends Command
