@@ -13,7 +13,7 @@ class TestMdRender extends Command
      *
      * @var string
      */
-    protected $signature = 'test:md.render';
+    protected $signature = 'test:md.render {item?}';
 
     /**
      * The console command description.
@@ -106,7 +106,15 @@ class TestMdRender extends Command
         //$html = MdRender::xmlQueryId($xml, "1");
         //$sent = MdRender::take_sentence($html);
         //print_r($sent);
-        echo MdRender::render2($data['article'],['00ae2c48-c204-4082-ae79-79ba2740d506'],null,'read','translation');
+
+        foreach ($data as $key => $value) {
+            $_item = $this->argument('item');
+            if(!empty($_item) && $key !==$_item){
+                continue;
+            }
+            echo MdRender::render2($value,['00ae2c48-c204-4082-ae79-79ba2740d506'],null,'read','translation');
+        }
+
         return 0;
     }
 }
