@@ -34,7 +34,6 @@ const DiscussionItemWidget = ({
 }: IWidget) => {
   const [edit, setEdit] = useState(false);
   const [currData, setCurrData] = useState<IComment>(data);
-  console.log("isFocus", isFocus);
   return (
     <div
       id={`answer-${data.id}`}
@@ -42,6 +41,8 @@ const DiscussionItemWidget = ({
         display: "flex",
         width: "100%",
         border: isFocus ? "2px solid blue" : "unset",
+        borderRadius: 10,
+        padding: 5,
       }}
     >
       <div style={{ width: "2em" }}>

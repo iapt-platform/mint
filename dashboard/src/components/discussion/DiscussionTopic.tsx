@@ -16,13 +16,11 @@ const DiscussionTopicWidget = ({
   onTopicReady,
   onItemCountChange,
 }: IWidget) => {
-  console.log("focus", focus);
   return (
     <>
       <DiscussionTopicInfo
         topicId={topicId}
         onReady={(value: IComment) => {
-          console.log("on Topic Ready", value);
           if (typeof onTopicReady !== "undefined") {
             onTopicReady(value);
           }

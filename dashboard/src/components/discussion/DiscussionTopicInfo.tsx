@@ -19,9 +19,10 @@ const DiscussionTopicInfoWidget = ({ topicId, onReady }: IWidget) => {
     if (typeof topicId === "undefined") {
       return;
     }
-    get<ICommentResponse>(`/v2/discussion/${topicId}`)
+    const url = `/v2/discussion/${topicId}`;
+    console.log("url", url);
+    get<ICommentResponse>(url)
       .then((json) => {
-        console.log("ICommentResponse", json);
         if (json.ok) {
           console.log("flashes.success");
           const item = json.data;
