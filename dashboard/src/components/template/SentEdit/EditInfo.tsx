@@ -19,18 +19,29 @@ const EditInfoWidget = ({ data, isPr = false, compact = false }: IWidget) => {
     <Space>
       <Channel {...data.channel} />
       <User {...data.editor} showAvatar={isPr ? true : false} />
-      <span>edit</span>
       {data.prEditAt ? (
-        <TimeShow updatedAt={data.prEditAt} />
+        <TimeShow
+          type="secondary"
+          updatedAt={data.prEditAt}
+          createdAt={data.createdAt}
+        />
       ) : (
-        <TimeShow updatedAt={data.updateAt} />
+        <TimeShow
+          type="secondary"
+          updatedAt={data.updateAt}
+          createdAt={data.createdAt}
+        />
       )}
       {data.acceptor ? (
         <User {...data.acceptor} showAvatar={false} />
       ) : undefined}
       {data.acceptor ? "accept at" : undefined}
       {data.prEditAt ? (
-        <TimeShow updatedAt={data.updateAt} showLabel={false} />
+        <TimeShow
+          type="secondary"
+          updatedAt={data.updateAt}
+          showLabel={false}
+        />
       ) : undefined}
     </Space>
   );
