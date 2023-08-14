@@ -15,10 +15,6 @@ const Widget = () => {
   const href = window.location.href.split("#");
   const anchor = href.length > 1 ? href[1] : undefined;
 
-  useEffect(() => {
-    const ele = document.getElementById(`answer-${anchor}`);
-    ele?.scrollIntoView();
-  });
   return (
     <>
       <CommentAnchor resId={discussion?.resId} resType={discussion?.resType} />
