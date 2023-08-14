@@ -2,7 +2,7 @@
 
 all of workers in app/Console/Commands
 
-**run**: php artisan <worker-name>
+**run**: `php artisan <worker-name>`
 
 worker name :
 
