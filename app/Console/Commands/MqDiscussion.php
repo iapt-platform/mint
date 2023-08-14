@@ -54,11 +54,13 @@ class MqDiscussion extends Command
                     }
                     /**生成消息内容 */
                     $msgTitle = '**'. $message->editor->nickName.'**';
+                    $link = "https://staging.wikipali.org/pcd/discussion/topic/";
                     if($message->parent){
                         $parentTitle = Discussion::where('id',$message->parent)->value('title');
-                        $link = "https://staging.wikipali.org/pcd/discussion/topic/{$message->parent}";
+                        $link .= $message->parent;
                         $msgTitle .= "回复了 [{$parentTitle}]({$link})";
                     }else{
+                        $link .= $message->id;
                         $msgTitle .= "创建了讨论[$message->title]({$link})";
                     }
                     $msgContent = $msgTitle;
