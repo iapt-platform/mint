@@ -2,6 +2,7 @@ import { Typography, Space, message } from "antd";
 import { useEffect, useState } from "react";
 import { get } from "../../request";
 import { ICommentResponse } from "../api/Comment";
+import Marked from "../general/Marked";
 import TimeShow from "../general/TimeShow";
 
 import { IComment } from "./DiscussionItem";
@@ -20,7 +21,7 @@ const DiscussionTopicInfoWidget = ({ topicId, onReady }: IWidget) => {
     }
     get<ICommentResponse>(`/v2/discussion/${topicId}`)
       .then((json) => {
-        console.log(json);
+        console.log("ICommentResponse", json);
         if (json.ok) {
           console.log("flashes.success");
           const item = json.data;
@@ -48,25 +49,25 @@ const DiscussionTopicInfoWidget = ({ topicId, onReady }: IWidget) => {
         message.error(e.message);
       });
   }, [topicId]);
+
   return (
     <div>
       <Title editable level={5} style={{ margin: 0 }}>
         {data?.title}
       </Title>
-      <div>
+      <Space direction="vertical">
         <Text type="secondary">
           <Space>
             {data?.user.nickName}
-            <TimeShow updatedAt={data?.updatedAt} createdAt={data?.createdAt} />
+            <TimeShow
+              type="secondary"
+              updatedAt={data?.updatedAt}
+              createdAt={data?.createdAt}
+            />
           </Space>
         </Text>
-      </div>
-      <div
-        style={{ maxWidth: 800, overflow: "auto" }}
-        dangerouslySetInnerHTML={{
-          __html: data?.content ? data?.content : "",
-        }}
-      />
+        <Marked text={data?.content} />
+      </Space>
     </div>
   );
 };
