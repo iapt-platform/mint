@@ -149,10 +149,8 @@ const DiscussionShowWidget = ({
               {data.user.nickName}
               <TimeShow
                 type="secondary"
-                time={data.updatedAt}
-                title={intl.formatMessage({
-                  id: "labels.updated-at",
-                })}
+                updatedAt={data.updatedAt}
+                createdAt={data.createdAt}
               />
             </Space>
           </Text>

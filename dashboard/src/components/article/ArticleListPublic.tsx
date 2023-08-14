@@ -51,7 +51,11 @@ const ArticleListWidget = ({ search, studioName }: IWidget) => {
               return (
                 <Space>
                   {row.editor?.nickName}
-                  <TimeShow time={row.updatedAt} />
+                  <TimeShow
+                    updatedAt={row.updatedAt}
+                    showLabel={false}
+                    showIcon={false}
+                  />
                 </Space>
               );
             },

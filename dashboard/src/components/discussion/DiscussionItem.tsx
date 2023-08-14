@@ -20,20 +20,30 @@ export interface IComment {
 }
 interface IWidget {
   data: IComment;
+  isFocus?: boolean;
   onSelect?: Function;
   onCreated?: Function;
   onDelete?: Function;
 }
 const DiscussionItemWidget = ({
   data,
+  isFocus = false,
   onSelect,
   onCreated,
   onDelete,
 }: IWidget) => {
   const [edit, setEdit] = useState(false);
   const [currData, setCurrData] = useState<IComment>(data);
+  console.log("isFocus", isFocus);
   return (
-    <div style={{ display: "flex", width: "100%" }}>
+    <div
+      id={`answer-${data.id}`}
+      style={{
+        display: "flex",
+        width: "100%",
+        border: isFocus ? "2px solid blue" : "unset",
+      }}
+    >
       <div style={{ width: "2em" }}>
         <Avatar size="small">{data.user?.nickName?.slice(0, 1)}</Avatar>
       </div>

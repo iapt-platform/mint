@@ -57,7 +57,7 @@ const DiscussionTopicInfoWidget = ({ topicId, onReady }: IWidget) => {
         <Text type="secondary">
           <Space>
             {data?.user.nickName}
-            <TimeShow time={data?.createdAt} title="创建" />
+            <TimeShow updatedAt={data?.updatedAt} createdAt={data?.createdAt} />
           </Space>
         </Text>
       </div>

@@ -8,7 +8,9 @@ const { Text } = Typography;
 interface IWidgetTimeShow {
   showIcon?: boolean;
   showTooltip?: boolean;
-  time?: string;
+  showLabel?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
   title?: string;
   type?: BaseType;
 }
@@ -16,7 +18,9 @@ interface IWidgetTimeShow {
 const TimeShowWidget = ({
   showIcon = true,
   showTooltip = true,
-  time,
+  showLabel = true,
+  createdAt,
+  updatedAt,
   title,
   type,
 }: IWidgetTimeShow) => {
@@ -24,8 +28,35 @@ const TimeShowWidget = ({
   const [passTime, setPassTime] = useState<string>();
   const [mTime, setMTime] = useState(0);
 
+  let mTitle: string | undefined;
+  let showTime: string | undefined;
+  if (typeof title === "undefined") {
+    if (updatedAt && createdAt) {
+      if (updatedAt === createdAt) {
+        mTitle = "创建";
+        showTime = createdAt;
+      } else {
+        mTitle = intl.formatMessage({
+          id: "labels.updated-at",
+        });
+        showTime = updatedAt;
+      }
+    } else if (createdAt) {
+      mTitle = "创建";
+      showTime = createdAt;
+    } else if (updatedAt) {
+      mTitle = "修改";
+      showTime = updatedAt;
+    } else {
+      mTitle = undefined;
+      showTime = "";
+    }
+  } else {
+    mTitle = title;
+  }
+
   useEffect(() => {
-    if (typeof time === "undefined") {
+    if (typeof createdAt === "undefined" && typeof updatedAt === "undefined") {
       return;
     }
     let timer = setInterval(() => {
@@ -37,17 +68,18 @@ const TimeShowWidget = ({
   }, []);
 
   useEffect(() => {
-    if (typeof time !== "undefined" && time !== "") {
-      setPassTime(getPassDataTime(time));
+    if (typeof showTime !== "undefined" && showTime !== "") {
+      setPassTime(getPassDataTime(showTime));
     }
-  }, [mTime, time]);
+  }, [mTime, showTime]);
 
-  if (typeof time === "undefined" || time === "") {
+  if (typeof showTime === "undefined") {
     return <></>;
   }
+
   const icon = showIcon ? <FieldTimeOutlined /> : <></>;
 
-  const tooltip: string = getFullDataTime(time);
+  const tooltip: string = getFullDataTime(showTime);
   const color = "lime";
   function getPassDataTime(t: string): string {
     let currDate = new Date();
@@ -106,7 +138,7 @@ const TimeShowWidget = ({
       <Text type={type}>
         <Space>
           {icon}
-          {title}
+          {mTitle}
           {passTime}
         </Space>
       </Text>

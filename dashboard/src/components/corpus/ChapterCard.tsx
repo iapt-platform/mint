@@ -84,12 +84,7 @@ const ChapterCardWidget = ({ data, onTagClick }: IWidget) => {
           </div>
           <Space>
             <ChannelListItem channel={data.channel} studio={data.studio} />
-            <TimeShow
-              time={data.updatedAt}
-              title={intl.formatMessage({
-                id: "labels.updated-at",
-              })}
-            />
+            <TimeShow updatedAt={data.updatedAt} />
           </Space>
         </div>
       </Col>

@@ -209,7 +209,13 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
             valueType: "date",
             sorter: true,
             render: (text, row, index, action) => {
-              return <TimeShow time={row.updated_at} showIcon={false} />;
+              return (
+                <TimeShow
+                  updatedAt={row.updated_at}
+                  showIcon={false}
+                  showLabel={false}
+                />
+              );
             },
           },
           {

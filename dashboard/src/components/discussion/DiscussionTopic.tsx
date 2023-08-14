@@ -6,14 +6,17 @@ import { IComment } from "./DiscussionItem";
 
 interface IWidget {
   topicId?: string;
+  focus?: string;
   onItemCountChange?: Function;
   onTopicReady?: Function;
 }
 const DiscussionTopicWidget = ({
   topicId,
+  focus,
   onTopicReady,
   onItemCountChange,
 }: IWidget) => {
+  console.log("focus", focus);
   return (
     <>
       <DiscussionTopicInfo
@@ -27,6 +30,7 @@ const DiscussionTopicWidget = ({
       />
       <Divider />
       <DiscussionTopicChildren
+        focus={focus}
         topicId={topicId}
         onItemCountChange={(count: number, e: string) => {
           //把新建回答的消息传出去。

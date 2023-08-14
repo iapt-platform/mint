@@ -67,7 +67,7 @@ const AnthologyDetailWidget = ({
       <Paragraph>
         <Space>
           <StudioName data={tableData?.studio} />
-          <TimeShow time={tableData?.updated_at} title="updated" />
+          <TimeShow updatedAt={tableData?.updated_at} />
         </Space>
       </Paragraph>
       <Paragraph>

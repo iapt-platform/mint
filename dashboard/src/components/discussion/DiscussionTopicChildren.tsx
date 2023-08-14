@@ -9,10 +9,12 @@ import DiscussionItem, { IComment } from "./DiscussionItem";
 
 interface IWidget {
   topicId?: string;
+  focus?: string;
   onItemCountChange?: Function;
 }
 const DiscussionTopicChildrenWidget = ({
   topicId,
+  focus,
   onItemCountChange,
 }: IWidget) => {
   const intl = useIntl();
@@ -69,22 +71,26 @@ const DiscussionTopicChildrenWidget = ({
           }}
           itemLayout="horizontal"
           dataSource={data}
-          renderItem={(item) => (
-            <List.Item>
-              <DiscussionItem
-                data={item}
-                onDelete={() => {
-                  console.log("delete", item.id, data);
-                  if (typeof onItemCountChange !== "undefined") {
-                    onItemCountChange(data.length - 1, item.parent);
-                  }
-                  setData((origin) => {
-                    return origin.filter((value) => value.id !== item.id);
-                  });
-                }}
-              />
-            </List.Item>
-          )}
+          renderItem={(item) => {
+            console.log("focus", item.id, focus);
+            return (
+              <List.Item>
+                <DiscussionItem
+                  data={item}
+                  isFocus={item.id === focus ? true : false}
+                  onDelete={() => {
+                    console.log("delete", item.id, data);
+                    if (typeof onItemCountChange !== "undefined") {
+                      onItemCountChange(data.length - 1, item.parent);
+                    }
+                    setData((origin) => {
+                      return origin.filter((value) => value.id !== item.id);
+                    });
+                  }}
+                />
+              </List.Item>
+            );
+          }}
         />
       )}
       <DiscussionCreate

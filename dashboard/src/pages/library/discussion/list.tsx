@@ -73,7 +73,7 @@ const Widget = () => {
             return (
               <Space>
                 {`${row.user.nickName} created on`}
-                <TimeShow time={row.createdAt} title={""} />
+                <TimeShow createdAt={row.createdAt} showLabel={false} />
               </Space>
             );
           },

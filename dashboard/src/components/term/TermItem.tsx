@@ -28,8 +28,7 @@ const TermItemWidget = ({ data }: IWidget) => {
               <Text type="secondary">
                 <UserName {...data?.editor} />
               </Text>
-              <Text type="secondary">update at</Text>
-              <TimeShow time={data?.updated_at} />
+              <TimeShow type="secondary" updatedAt={data?.updated_at} />
             </Space>
           </Space>
         }
