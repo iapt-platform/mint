@@ -7,6 +7,7 @@ use App\Models\Sentence;
 use App\Models\WebHook;
 use App\Models\Discussion;
 use App\Http\Api\Mq;
+use App\Tools\WebHook as WebHookSend;
 
 class MqDiscussion extends Command
 {
@@ -52,17 +53,18 @@ class MqDiscussion extends Command
                         return 0;
                     }
                     /**生成消息内容 */
-                    $msgTitle = $message->editor->nickName;
+                    $msgTitle = '**'. $message->editor->nickName.'**';
                     if($message->parent){
                         $parentTitle = Discussion::where('id',$message->parent)->value('title');
-                        $msgTitle .= '回复了 '.$parentTitle;
+                        $link = "https://staging.wikipali.org/pcd/discussion/topic/{$message->parent}";
+                        $msgTitle .= "回复了 [{$parentTitle}]({$link})";
                     }else{
-                        $msgTitle .= '创建了讨论 ';
+                        $msgTitle .= "创建了讨论[$message->title]({$link})";
                     }
                     $msgContent = $msgTitle;
 
                     if($message->content){
-                        $msgContent .= $message->content;
+                        $msgContent .= "\n>".$message->content;
                     }
 
                     $webhooks = WebHook::where('res_id',$sentence->channel_uid)
@@ -74,21 +76,19 @@ class MqDiscussion extends Command
                             continue;
                         }
                         $command = '';
+                        $whSend = new WebHookSend;
+
                         switch ($hook->receiver) {
                             case 'dingtalk':
-                                $command = 'webhook:dingtalk';
+                                $ok = $whSend->dingtalk($hook->url,null,$msgContent);
                                 break;
                             case 'wechat':
-                                $command = 'webhook:wechat';
+                                $ok = $whSend->wechat($hook->url,null,$msgContent);
                                 break;
                             default:
-                                # code...
+                                $ok=2;
                                 break;
                         }
-                        $ok = $this->call($command,['url'=>$hook->url,
-                                                    'title'=>"title",
-                                                    'message'=>$msgContent,
-                                                    ]);
                         $this->info("{$command}  ok={$ok}");
                         if($ok===0){
                             WebHook::where('id',$hook->id)->increment('success');
