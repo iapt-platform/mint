@@ -59,6 +59,10 @@ const SelectCaseWidget = ({ value, onCaseChange }: IWidget) => {
       value: "voc",
       label: intl.formatMessage({ id: "dict.fields.type.voc.label" }),
     },
+    {
+      value: "?",
+      label: intl.formatMessage({ id: "dict.fields.type.?.label" }),
+    },
   ];
   const case2 = [
     {
@@ -70,6 +74,10 @@ const SelectCaseWidget = ({ value, onCaseChange }: IWidget) => {
       value: "pl",
       label: intl.formatMessage({ id: "dict.fields.type.pl.label" }),
       children: case8,
+    },
+    {
+      value: "?",
+      label: intl.formatMessage({ id: "dict.fields.type.?.label" }),
     },
   ];
   const case3 = [
