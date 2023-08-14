@@ -8,6 +8,7 @@ use App\Models\WebHook;
 use App\Models\Discussion;
 use App\Http\Api\Mq;
 use App\Tools\WebHook as WebHookSend;
+use App\Http\Api\MdRender;
 
 class MqDiscussion extends Command
 {
@@ -52,18 +53,29 @@ class MqDiscussion extends Command
                     if(!$sentence){
                         return 0;
                     }
+                    $contentHtml = MdRender::render($sentence->content,
+                                             [$sentence->channel_uid],
+                                             null,
+                                             'read',
+                                             'translation',
+                                             $sentence->content_type);
+                    $contentTxt = strip_tags($contentHtml);
                     /**生成消息内容 */
-                    $msgTitle = '**'. $message->editor->nickName.'**';
+                    $msgContent = '';
+                    $msgContent .= "\[{$contentTxt}\]";
+                    $msgContent .= '**'. $message->editor->nickName.'**';
                     $link = "https://staging.wikipali.org/pcd/discussion/topic/";
                     if($message->parent){
                         $parentTitle = Discussion::where('id',$message->parent)->value('title');
                         $link .= $message->parent;
-                        $msgTitle .= "回复了 [{$parentTitle}]({$link})";
+                        $id = $message->id;
+                        $msgContent .= "回复了 [{$parentTitle}]({$link}#$id)";
+                        $msgTitle = "回复讨论";
                     }else{
                         $link .= $message->id;
-                        $msgTitle .= "创建了讨论[$message->title]({$link})";
+                        $msgContent .= "创建了讨论[$message->title]({$link})";
+                        $msgTitle = "创建讨论";
                     }
-                    $msgContent = $msgTitle;
 
                     if($message->content){
                         $msgContent .= "\n>".$message->content;
@@ -82,7 +94,7 @@ class MqDiscussion extends Command
 
                         switch ($hook->receiver) {
                             case 'dingtalk':
-                                $ok = $whSend->dingtalk($hook->url,"title",$msgContent);
+                                $ok = $whSend->dingtalk($hook->url,$msgTitle,$msgContent);
                                 break;
                             case 'wechat':
                                 $ok = $whSend->wechat($hook->url,null,$msgContent);
