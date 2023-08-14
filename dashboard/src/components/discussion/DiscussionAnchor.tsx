@@ -1,3 +1,4 @@
+import { Skeleton } from "antd";
 import { useEffect, useState } from "react";
 import { get } from "../../request";
 import { IArticleResponse } from "../api/Article";
@@ -14,6 +15,7 @@ interface IWidget {
 }
 const DiscussionAnchorWidget = ({ resId, resType, topicId }: IWidget) => {
   const [content, setContent] = useState<string>();
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (typeof topicId === "string") {
       get<ICommentAnchorResponse>(`/v2/discussion-anchor/${topicId}`).then(
@@ -30,19 +32,23 @@ const DiscussionAnchorWidget = ({ resId, resType, topicId }: IWidget) => {
   useEffect(() => {
     switch (resType) {
       case "sentence":
-        get<ISentenceResponse>(`/v2/sentence/${resId}`).then((json) => {
-          if (json.ok) {
-            const id = `${json.data.book}-${json.data.paragraph}-${json.data.word_start}-${json.data.word_end}`;
-            const channel = json.data.channel.id;
-            const url = `/v2/corpus-sent/${id}?mode=edit&channels=${channel}`;
-            console.log("url", url);
-            get<IArticleResponse>(url).then((json) => {
-              if (json.ok) {
-                setContent(json.data.content);
-              }
-            });
-          }
-        });
+        const url = `/v2/sentence/${resId}`;
+        console.log("url", url);
+        get<ISentenceResponse>(url)
+          .then((json) => {
+            if (json.ok) {
+              const id = `${json.data.book}-${json.data.paragraph}-${json.data.word_start}-${json.data.word_end}`;
+              const channel = json.data.channel.id;
+              const url = `/v2/corpus-sent/${id}?mode=edit&channels=${channel}`;
+              console.log("url", url);
+              get<IArticleResponse>(url).then((json) => {
+                if (json.ok) {
+                  setContent(json.data.content);
+                }
+              });
+            }
+          })
+          .finally(() => setLoading(false));
         break;
       default:
         break;
@@ -50,7 +56,11 @@ const DiscussionAnchorWidget = ({ resId, resType, topicId }: IWidget) => {
   }, [resId, resType]);
   return (
     <AnchorCard>
-      <MdView html={content} />
+      {loading ? (
+        <Skeleton title={{ width: 200 }} paragraph={{ rows: 4 }} active />
+      ) : (
+        <MdView html={content} />
+      )}
     </AnchorCard>
   );
 };
