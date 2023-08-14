@@ -33,7 +33,9 @@ const TimeShowWidget = ({
   if (typeof title === "undefined") {
     if (updatedAt && createdAt) {
       if (updatedAt === createdAt) {
-        mTitle = "创建";
+        mTitle = intl.formatMessage({
+          id: "labels.created-at",
+        });
         showTime = createdAt;
       } else {
         mTitle = intl.formatMessage({
@@ -42,10 +44,14 @@ const TimeShowWidget = ({
         showTime = updatedAt;
       }
     } else if (createdAt) {
-      mTitle = "创建";
+      mTitle = intl.formatMessage({
+        id: "labels.created-at",
+      });
       showTime = createdAt;
     } else if (updatedAt) {
-      mTitle = "修改";
+      mTitle = intl.formatMessage({
+        id: "labels.updated-at",
+      });
       showTime = updatedAt;
     } else {
       mTitle = undefined;
