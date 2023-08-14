@@ -24,6 +24,7 @@ import TimeShow from "../general/TimeShow";
 import Marked from "../general/Marked";
 import { delete_ } from "../../request";
 import { IDeleteResponse } from "../api/Article";
+import { fullUrl } from "../../utils";
 
 const { Text } = Typography;
 
@@ -79,6 +80,17 @@ const DiscussionShowWidget = ({
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     switch (e.key) {
+      case "copy-link":
+        let url = `/discussion/topic/`;
+        if (data.parent) {
+          url += `${data.parent}#${data.id}`;
+        } else {
+          url += data.id;
+        }
+        navigator.clipboard.writeText(fullUrl(url)).then(() => {
+          message.success("链接地址已经拷贝到剪贴板");
+        });
+        break;
       case "edit":
         if (typeof onEdit !== "undefined") {
           onEdit();
