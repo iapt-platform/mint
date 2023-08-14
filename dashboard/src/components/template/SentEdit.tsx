@@ -29,6 +29,7 @@ export interface ISentence {
   channel: IChannel;
   studio?: IStudio;
   updateAt: string;
+  createdAt?: string;
   suggestionCount?: ISuggestionCount;
   openInEditMode?: boolean;
   translationChannels?: string[];
