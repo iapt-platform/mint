@@ -146,16 +146,18 @@ const DiscussionShowWidget = ({
       size="small"
       title={
         <Space direction="vertical">
-          <Text
-            strong
-            onClick={(e) => {
-              if (typeof onSelect !== "undefined") {
-                onSelect(e, data);
-              }
-            }}
-          >
-            {data.title}
-          </Text>
+          {data.title ? (
+            <Text
+              strong
+              onClick={(e) => {
+                if (typeof onSelect !== "undefined") {
+                  onSelect(e, data);
+                }
+              }}
+            >
+              {data.title}
+            </Text>
+          ) : undefined}
           <Text type="secondary">
             <Space>
               {data.user.nickName}
