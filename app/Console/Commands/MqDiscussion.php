@@ -82,7 +82,7 @@ class MqDiscussion extends Command
 
                         switch ($hook->receiver) {
                             case 'dingtalk':
-                                $ok = $whSend->dingtalk($hook->url,null,$msgContent);
+                                $ok = $whSend->dingtalk($hook->url,"title",$msgContent);
                                 break;
                             case 'wechat':
                                 $ok = $whSend->wechat($hook->url,null,$msgContent);
