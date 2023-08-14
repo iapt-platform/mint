@@ -86,11 +86,9 @@ const TimeShowWidget = ({
     const time = new Date(t);
     let pass = currDate.getTime() - time.getTime();
     let strPassTime = "";
-    if (pass < 60 * 1000) {
-      //二分钟内
-      strPassTime =
-        Math.floor(pass / 1000) +
-        intl.formatMessage({ id: "utilities.time.secs_ago" });
+    if (pass < 100 * 1000) {
+      //一分钟内
+      strPassTime = intl.formatMessage({ id: "utilities.time.now" });
     } else if (pass < 3600 * 1000) {
       //二小时内
       strPassTime =
