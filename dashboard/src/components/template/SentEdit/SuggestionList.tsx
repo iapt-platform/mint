@@ -12,6 +12,7 @@ interface IWidget {
   wordStart: number;
   wordEnd: number;
   channel: IChannel;
+  enable?: boolean;
   reload?: boolean;
   onReload?: Function;
   onChange?: Function;
@@ -23,18 +24,21 @@ const SuggestionListWidget = ({
   wordEnd,
   channel,
   reload = false,
+  enable = true,
   onReload,
   onChange,
 }: IWidget) => {
   const [sentData, setSentData] = useState<ISentence[]>([]);
 
   const load = () => {
-    get<ISuggestionListResponse>(
-      `/v2/sentpr?view=sent-info&book=${book}&para=${para}&start=${wordStart}&end=${wordEnd}&channel=${channel.id}`
-    )
+    if (!enable) {
+      return;
+    }
+    const url = `/v2/sentpr?view=sent-info&book=${book}&para=${para}&start=${wordStart}&end=${wordEnd}&channel=${channel.id}`;
+    console.log("url", url);
+    get<ISuggestionListResponse>(url)
       .then((json) => {
         if (json.ok) {
-          console.log("pr load", json.data.rows);
           const newData: ISentence[] = json.data.rows.map((item) => {
             return {
               id: item.id,
