@@ -585,6 +585,7 @@ class CorpusController extends Controller
                     $newSent['html'] = "";
                     $newSent["editor"]=UserApi::getByUuid($row->editor_uid);
                     $newSent['updateAt'] = $row->updated_at;
+                    $newSent['createdAt'] = $row->created_at;
                     if($mode !== "read"){
                         if(isset($row->acceptor_uid) && !empty($row->acceptor_uid)){
                             $newSent["acceptor"]=UserApi::getByUuid($row->acceptor_uid);
