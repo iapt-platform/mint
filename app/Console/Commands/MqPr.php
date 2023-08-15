@@ -61,11 +61,10 @@ class MqPr extends Command
             $link .= "?book={$message->book}&par={$message->paragraph}&channel={$message->channel->id}";
 
             $msgContent = "{$username} 就文句`{$palitext}`提出了修改建议：";
-            /*
-            >内容摘要：<font color=\"comment\">{$prtext}</font>，\n
-            >句子编号：<font color=\"info\">{$sent_num}</font>\n
-            欢迎大家[点击链接]({$link})查看并讨论。";
-*/
+            $msgContent .= ">内容摘要：<font color=\"comment\">{$prtext}</font>，\n";
+            $msgContent .= ">句子编号：<font color=\"info\">{$sent_num}</font>\n";
+            $msgContent .= "欢迎大家[点击链接]({$link})查看并讨论。";
+
             $webhooks = WebHook::where('res_id',$message->channel->id)
                             ->where('status','active')
                             ->get();
