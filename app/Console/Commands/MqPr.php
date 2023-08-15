@@ -60,7 +60,7 @@ class MqPr extends Command
             $link = "https://next.wikipali.org/pcd/article/para/{$message->book}-{$message->paragraph}";
             $link .= "?book={$message->book}&par={$message->paragraph}&channel={$message->channel->id}";
 
-            $msgContent = "{$username} 就文句`{$palitext}`提出了修改建议：";
+            $msgContent = "{$username} 就文句`{$palitext}`提出了修改建议：\n";
             $msgContent .= ">内容摘要：<font color=\"comment\">{$prtext}</font>，\n";
             $msgContent .= ">句子编号：<font color=\"info\">{$sent_num}</font>\n";
             $msgContent .= "欢迎大家[点击链接]({$link})查看并讨论。";
