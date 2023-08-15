@@ -24,6 +24,7 @@ interface IWidget {
   onSelect?: Function;
   onCreated?: Function;
   onDelete?: Function;
+  onReply?: Function;
 }
 const DiscussionItemWidget = ({
   data,
@@ -31,6 +32,7 @@ const DiscussionItemWidget = ({
   onSelect,
   onCreated,
   onDelete,
+  onReply,
 }: IWidget) => {
   const [edit, setEdit] = useState(false);
   const [currData, setCurrData] = useState<IComment>(data);
@@ -69,17 +71,19 @@ const DiscussionItemWidget = ({
             onEdit={() => {
               setEdit(true);
             }}
-            onSelect={(
-              e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-              data: IComment
-            ) => {
+            onSelect={(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
               if (typeof onSelect !== "undefined") {
-                onSelect(e, data);
+                onSelect(e, currData);
               }
             }}
             onDelete={(id: string) => {
               if (typeof onDelete !== "undefined") {
                 onDelete();
+              }
+            }}
+            onReply={() => {
+              if (typeof onReply !== "undefined") {
+                onReply(currData);
               }
             }}
           />

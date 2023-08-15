@@ -22,6 +22,9 @@ const Widget = () => {
         ) => {
           navigate(`/discussion/topic/${comment.id}`);
         }}
+        onReply={(comment: IComment) =>
+          navigate(`/discussion/topic/${comment.id}`)
+        }
       />
     </>
   );

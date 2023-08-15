@@ -33,12 +33,14 @@ interface IWidget {
   onEdit?: Function;
   onSelect?: Function;
   onDelete?: Function;
+  onReply?: Function;
 }
 const DiscussionShowWidget = ({
   data,
   onEdit,
   onSelect,
   onDelete,
+  onReply,
 }: IWidget) => {
   const intl = useIntl();
   const showDeleteConfirm = (id: string, title: string) => {
@@ -91,6 +93,11 @@ const DiscussionShowWidget = ({
           message.success("链接地址已经拷贝到剪贴板");
         });
         break;
+      case "reply":
+        if (typeof onReply !== "undefined") {
+          onReply();
+        }
+        break;
       case "edit":
         if (typeof onEdit !== "undefined") {
           onEdit();
@@ -109,12 +116,16 @@ const DiscussionShowWidget = ({
   const items: MenuProps["items"] = [
     {
       key: "copy-link",
-      label: "复制链接",
+      label: intl.formatMessage({
+        id: "buttons.copy.link",
+      }),
       icon: <LinkOutlined />,
     },
     {
       key: "reply",
-      label: "回复",
+      label: intl.formatMessage({
+        id: "buttons.reply",
+      }),
       icon: <CommentOutlined />,
       disabled: data.parent ? true : false,
     },
@@ -123,12 +134,16 @@ const DiscussionShowWidget = ({
     },
     {
       key: "edit",
-      label: "编辑",
+      label: intl.formatMessage({
+        id: "buttons.edit",
+      }),
       icon: <EditOutlined />,
     },
     {
       key: "delete",
-      label: "删除",
+      label: intl.formatMessage({
+        id: "buttons.delete",
+      }),
       icon: <DeleteOutlined />,
       danger: true,
       disabled: data.childrenCount ? true : false,
@@ -151,7 +166,7 @@ const DiscussionShowWidget = ({
               strong
               onClick={(e) => {
                 if (typeof onSelect !== "undefined") {
-                  onSelect(e, data);
+                  onSelect(e);
                 }
               }}
             >

@@ -31,10 +31,7 @@ const DiscussionBoxWidget = ({
   const drawerMaxWidth = 1100;
 
   const [drawerWidth, setDrawerWidth] = useState(drawerMinWidth);
-  const showChildrenDrawer = (
-    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-    comment: IComment
-  ) => {
+  const showChildrenDrawer = (comment: IComment) => {
     setChildrenDrawer(true);
     setTopicComment(comment);
   };
@@ -83,7 +80,11 @@ const DiscussionBoxWidget = ({
         <DiscussionListCard
           resId={resId}
           resType={resType}
-          onSelect={showChildrenDrawer}
+          onSelect={(
+            e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+            comment: IComment
+          ) => showChildrenDrawer(comment)}
+          onReply={(comment: IComment) => showChildrenDrawer(comment)}
           changedAnswerCount={answerCount}
           onItemCountChange={(count: number) => {
             if (typeof onCommentCountChange !== "undefined") {

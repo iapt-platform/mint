@@ -17,6 +17,7 @@ interface IWidget {
   changedAnswerCount?: IAnswerCount;
   onSelect?: Function;
   onItemCountChange?: Function;
+  onReply?: Function;
 }
 const DiscussionListCardWidget = ({
   resId,
@@ -25,6 +26,7 @@ const DiscussionListCardWidget = ({
   onSelect,
   changedAnswerCount,
   onItemCountChange,
+  onReply,
 }: IWidget) => {
   const intl = useIntl();
   const [data, setData] = useState<IComment[]>([]);
@@ -115,6 +117,11 @@ const DiscussionListCardWidget = ({
             });
             if (typeof onItemCountChange !== "undefined") {
               onItemCountChange(data.length - 1);
+            }
+          }}
+          onReply={(comment: IComment) => {
+            if (typeof onReply !== "undefined") {
+              onReply(comment);
             }
           }}
         />
