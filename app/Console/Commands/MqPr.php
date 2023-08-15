@@ -48,7 +48,7 @@ class MqPr extends Command
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
         Mq::worker($exchange,$queue,function ($message){
             /**生成消息内容 */
-            $msgTitle = '';
+            $msgTitle = '修改建议';
             $username = $message->editor->nickName;
             $palitext = PaliSentence::where('book',$message->book)
                                 ->where('paragraph',$message->paragraph)
