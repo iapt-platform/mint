@@ -7,6 +7,8 @@ use App\Http\Api\Mq;
 use App\Models\Sentence;
 use App\Models\WebHook;
 use App\Models\PaliSentence;
+use App\Tools\WebHook as WebHookSend;
+use App\Http\Api\MdRender;
 
 class MqPr extends Command
 {
@@ -72,21 +74,18 @@ class MqPr extends Command
                     continue;
                 }
                 $command = '';
+                $whSend = new WebHookSend;
                 switch ($hook->receiver) {
                     case 'dingtalk':
-                        $command = 'webhook:dingtalk';
+                        $ok = $whSend->dingtalk($hook->url,$msgTitle,$msgContent);
                         break;
                     case 'wechat':
-                        $command = 'webhook:wechat';
+                        $ok = $whSend->wechat($hook->url,null,$msgContent);
                         break;
                     default:
-                        # code...
+                        $ok=2;
                         break;
                 }
-                $ok = $this->call($command,['url'=>$hook->url,
-                                            'title'=>$msgTitle,
-                                            'message'=>$msgContent,
-                                            ]);
                 $this->info("{$command}  ok={$ok}");
                 if($ok===0){
                     WebHook::where('id',$hook->id)->increment('success');
