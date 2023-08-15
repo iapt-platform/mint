@@ -37,7 +37,9 @@ const SentTabButtonWidget = ({
       icon: <CalendarOutlined />,
     },
     {
-      label: "复制链接",
+      label: intl.formatMessage({
+        id: "buttons.copy.link",
+      }),
       key: "copyLink",
       icon: <LinkOutlined />,
     },
