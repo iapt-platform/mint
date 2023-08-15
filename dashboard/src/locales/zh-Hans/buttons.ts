@@ -53,6 +53,8 @@ const items = {
   "buttons.lookup": "查字典",
   "buttons.invite": "邀请",
   "buttons.relate.to": "关联到",
+  "buttons.copy.link": "复制链接",
+  "buttons.reply": "回复",
 };
 
 export default items;
