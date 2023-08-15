@@ -86,7 +86,7 @@ const SuggestionBoxWidget = ({
   trigger,
   data,
   open = false,
-  openInDrawer = false,
+  openInDrawer = true,
   onClose,
 }: IWidget) => {
   const [isOpen, setIsOpen] = useState(open);
