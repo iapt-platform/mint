@@ -105,7 +105,7 @@ const Widget = () => {
     });
   }, []);
   const rightBarWidth = "48px";
-  const channelId = id?.split("_").slice(1);
+
   let currMode: ArticleMode;
   if (searchParams.get("mode") !== null) {
     currMode = searchParams.get("mode") as ArticleMode;
@@ -331,7 +331,7 @@ const Widget = () => {
               curr={rightPanel}
               type={type as ArticleType}
               articleId={id ? id : ""}
-              selectedChannelKeys={channelId}
+              selectedChannelsId={searchParams.get("channel")?.split("_")}
               onClose={() => {
                 setRightPanel("close");
               }}
