@@ -7,12 +7,14 @@ interface IWidget {
   onSelect?: Function;
   onDelete?: Function;
   onReply?: Function;
+  onClose?: Function;
 }
 const DiscussionListWidget = ({
   data,
   onSelect,
   onDelete,
   onReply,
+  onClose,
 }: IWidget) => {
   return (
     <List
@@ -44,6 +46,11 @@ const DiscussionListWidget = ({
             onReply={() => {
               if (typeof onReply !== "undefined") {
                 onReply(item);
+              }
+            }}
+            onClose={() => {
+              if (typeof onClose !== "undefined") {
+                onClose(item);
               }
             }}
           />
