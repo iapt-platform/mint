@@ -32,28 +32,38 @@ class DiscussionController extends Controller
 			        return $this->error("无效的id");
                 }
                 $table = Discussion::where('res_id',$topic->res_id);
-                $activeNumber = Discussion::where('res_id',$topic->res_id)->where('status','active')->count();
-                $closeNumber = Discussion::where('res_id',$topic->res_id)->where('status','close')->count();
+                $activeNumber = Discussion::where('res_id',$topic->res_id)
+                                            ->where('status','active')->count();
+                $closeNumber = Discussion::where('res_id',$topic->res_id)
+                                            ->where('status','close')->count();
                 $table->where('status',$request->get('status','active'))
                                     ->where('parent',null);
                 break;
             case 'question':
                 $table = Discussion::where('res_id',$request->get('id'));
-                $activeNumber = Discussion::where('res_id',$request->get('id'))->where('status','active')->count();
-                $closeNumber = Discussion::where('res_id',$request->get('id'))->where('status','close')->count();
+                $activeNumber = Discussion::where('res_id',$request->get('id'))
+                                            ->where('parent',null)
+                                            ->where('status','active')->count();
+                $closeNumber = Discussion::where('res_id',$request->get('id'))
+                                            ->where('parent',null)
+                                            ->where('status','close')->count();
                 $table->where('status',$request->get('status','active'))
                                     ->where('parent',null);
                 break;
             case 'answer':
                 $table = Discussion::where('parent',$request->get('id'));
-                $activeNumber = Discussion::where('parent',$request->get('id'))->where('status','active')->count();
-                $closeNumber = Discussion::where('parent',$request->get('id'))->where('status','close')->count();
+                $activeNumber = Discussion::where('parent',$request->get('id'))
+                                        ->where('status','active')->count();
+                $closeNumber = Discussion::where('parent',$request->get('id'))
+                                        ->where('status','close')->count();
                 $table->where('status',$request->get('status','active'));
                 break;
             case 'all':
                 $table = Discussion::where('parent',null);
-                $activeNumber = Discussion::where('parent',null)->where('status','active')->count();
-                $closeNumber = Discussion::where('parent',null)->where('status','close')->count();
+                $activeNumber = Discussion::where('parent',null)
+                                        ->where('status','active')->count();
+                $closeNumber = Discussion::where('parent',null)
+                                        ->where('status','close')->count();
                 break;
         }
         if(!empty($search)){
