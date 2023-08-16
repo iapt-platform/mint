@@ -16,6 +16,7 @@ import {
   CommentOutlined,
   MessageOutlined,
   ExclamationCircleOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 
@@ -34,6 +35,7 @@ interface IWidget {
   onSelect?: Function;
   onDelete?: Function;
   onReply?: Function;
+  onClose?: Function;
 }
 const DiscussionShowWidget = ({
   data,
@@ -41,6 +43,7 @@ const DiscussionShowWidget = ({
   onSelect,
   onDelete,
   onReply,
+  onClose,
 }: IWidget) => {
   const intl = useIntl();
   const showDeleteConfirm = (id: string, title: string) => {
@@ -103,6 +106,11 @@ const DiscussionShowWidget = ({
           onEdit();
         }
         break;
+      case "close":
+        if (typeof onClose !== "undefined") {
+          onClose();
+        }
+        break;
       case "delete":
         if (data.id) {
           showDeleteConfirm(data.id, data.title ? data.title : "");
@@ -140,6 +148,22 @@ const DiscussionShowWidget = ({
       icon: <EditOutlined />,
     },
     {
+      key: "close",
+      label: intl.formatMessage({
+        id: "buttons.close",
+      }),
+      icon: <CloseOutlined />,
+      disabled: data.status === "close",
+    },
+    {
+      key: "reopen",
+      label: intl.formatMessage({
+        id: "buttons.open",
+      }),
+      icon: <CloseOutlined />,
+      disabled: data.status === "active",
+    },
+    {
       key: "delete",
       label: intl.formatMessage({
         id: "buttons.delete",
@@ -173,7 +197,7 @@ const DiscussionShowWidget = ({
               {data.title}
             </Text>
           ) : undefined}
-          <Text type="secondary">
+          <Text type="secondary" style={{ display: "none" }}>
             <Space>
               {data.user.nickName}
               <TimeShow
@@ -204,7 +228,11 @@ const DiscussionShowWidget = ({
               </>
             ) : undefined}
           </span>
-          <Dropdown menu={{ items, onClick }} placement="bottomRight">
+          <Dropdown
+            menu={{ items, onClick }}
+            placement="bottomRight"
+            trigger={["click"]}
+          >
             <Button
               shape="circle"
               size="small"
