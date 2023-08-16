@@ -25,8 +25,13 @@ import { currentUser as _currentUser } from "../../reducers/current-user";
 
 const { Link } = Typography;
 
+interface IParams {
+  owner?: string;
+}
+
 interface IProgressRequest {
   sentence: string[];
+  owner?: string;
 }
 export interface IItem {
   id: number;
@@ -77,7 +82,7 @@ const ChannelPickerTableWidget = ({
 
   return (
     <>
-      <ProList<IItem>
+      <ProList<IItem, IParams>
         actionRef={ref}
         rowSelection={
           showCheckBox
@@ -161,6 +166,7 @@ const ChannelPickerTableWidget = ({
             `/v2/channel-progress`,
             {
               sentence: sentList,
+              owner: params.owner,
             }
           );
           console.log("progress data", res.data.rows);
@@ -350,7 +356,7 @@ const ChannelPickerTableWidget = ({
               );
             },
           },
-          status: {
+          owner: {
             // 自己扩展的字段，主要用于筛选，不在列表中显示
             title: "版本筛选",
             valueType: "select",
@@ -359,10 +365,10 @@ const ChannelPickerTableWidget = ({
               my: {
                 text: "我的",
               },
-              closed: {
+              cooperator: {
                 text: "协作",
               },
-              processing: {
+              public: {
                 text: "社区公开",
               },
             },
