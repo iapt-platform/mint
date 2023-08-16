@@ -15,7 +15,7 @@ interface IWidget {
   curr?: TPanelName;
   type: ArticleType;
   articleId: string;
-  selectedChannelKeys?: string[];
+  selectedChannelsId?: string[];
   onChannelSelect?: Function;
   onClose?: Function;
   onTabChange?: Function;
@@ -25,7 +25,7 @@ const RightPanelWidget = ({
   type,
   articleId,
   onChannelSelect,
-  selectedChannelKeys,
+  selectedChannelsId,
   onClose,
   onTabChange,
 }: IWidget) => {
@@ -108,7 +108,7 @@ const RightPanelWidget = ({
                 <ChannelPickerTable
                   type={type}
                   articleId={articleId}
-                  selectedKeys={selectedChannelKeys}
+                  selectedKeys={selectedChannelsId}
                   onSelect={(e: IChannel[]) => {
                     console.log(e);
                     if (typeof onChannelSelect !== "undefined") {
