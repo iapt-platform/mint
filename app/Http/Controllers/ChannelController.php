@@ -312,29 +312,47 @@ class ChannelController extends Controller
         }
         $channelById = [];
         $channelId = [];
-        //获取共享channel
-        $allSharedChannels = ShareApi::getResList($user['user_uid'],2);
-        foreach ($allSharedChannels as $key => $value) {
-            # code...
-            $channelId[] = $value['res_id'];
-            $channelById[$value['res_id']] = $value;
+        //我自己的
+        if($request->get('owner')==='all' || $request->get('owner')==='my'){
+            $my = Channel::select($indexCol)->where('owner_uid', $user['user_uid'])->get();
+            foreach ($my as $key => $value) {
+                $channelId[] = $value->uid;
+                $channelById[$value->uid] = ['res_id'=>$value->uid,
+                                            'power'=>30,
+                                            'type'=>2,
+                                            ];
+            }
         }
-        //获取全网公开的有译文的channel
-        if(count($query)>0){
-            $publicChannelsWithContent = Sentence::whereIns(['book_id','paragraph','word_start','word_end'],$query)
-                                        ->where('strlen','>',0)
-                                        ->where('status',30)
-                                        ->groupBy('channel_uid')
-                                        ->select('channel_uid')
-                                        ->get();
-            foreach ($publicChannelsWithContent as $key => $value) {
+
+        //获取共享channel
+        if($request->get('owner')==='all' || $request->get('owner')==='cooperator'){
+            $allSharedChannels = ShareApi::getResList($user['user_uid'],2);
+            foreach ($allSharedChannels as $key => $value) {
                 # code...
-                $value['res_id']=$value->channel_uid;
-                $value['power'] = 10;
-                $value['type'] = 2;
-                if(!isset($channelById[$value['res_id']])){
+                if(!in_array($value['res_id'],$channelId)){
                     $channelId[] = $value['res_id'];
                     $channelById[$value['res_id']] = $value;
+                }
+            }
+        }
+        //获取全网公开的有译文的channel
+        if($request->get('owner')==='all' || $request->get('owner')==='public'){
+            if(count($query)>0){
+                $publicChannelsWithContent = Sentence::whereIns(['book_id','paragraph','word_start','word_end'],$query)
+                                            ->where('strlen','>',0)
+                                            ->where('status',30)
+                                            ->groupBy('channel_uid')
+                                            ->select('channel_uid')
+                                            ->get();
+                foreach ($publicChannelsWithContent as $key => $value) {
+                    # code...
+                    $value['res_id']=$value->channel_uid;
+                    $value['power'] = 10;
+                    $value['type'] = 2;
+                    if(!isset($channelById[$value['res_id']])){
+                        $channelId[] = $value['res_id'];
+                        $channelById[$value['res_id']] = $value;
+                    }
                 }
             }
         }
