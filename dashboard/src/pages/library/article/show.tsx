@@ -310,10 +310,13 @@ const Widget = () => {
               ) => {
                 let url = `/article/${type}/${newId}?mode=${currMode}`;
                 searchParams.forEach((value, key) => {
-                  if (key !== "mode") {
+                  if (key !== "mode" && key !== "par") {
                     url += `&${key}=${value}`;
                   }
                 });
+                if (type === "para") {
+                  url += "&par=" + newId.split("-")[1];
+                }
                 if (event.ctrlKey || event.metaKey) {
                   window.open(fullUrl(url), "_blank");
                 } else {
