@@ -8,6 +8,7 @@ import {
   EditOutlined,
   MoreOutlined,
   CopyOutlined,
+  ReloadOutlined,
 } from "@ant-design/icons";
 
 import { IApiResponseChannelList, IFinal, TChannelType } from "../api/Channel";
@@ -57,6 +58,7 @@ const ChannelPickerTableWidget = ({
   onSelect,
   reload = false,
 }: IWidget) => {
+  console.log("selectedKeys", selectedKeys);
   const intl = useIntl();
   const [selectedRowKeys, setSelectedRowKeys] =
     useState<React.Key[]>(selectedKeys);
@@ -228,13 +230,6 @@ const ChannelPickerTableWidget = ({
         filterType: "light",
       }}
       toolBarRender={() => [
-        <Button
-          onClick={() => {
-            ref.current?.reload();
-          }}
-        >
-          reload
-        </Button>,
         multiSelect ? (
           <Button
             onClick={() => {
@@ -245,6 +240,13 @@ const ChannelPickerTableWidget = ({
             选择
           </Button>
         ) : undefined,
+        <Button
+          type="link"
+          onClick={() => {
+            ref.current?.reload();
+          }}
+          icon={<ReloadOutlined />}
+        />,
       ]}
       metas={{
         title: {
@@ -268,7 +270,7 @@ const ChannelPickerTableWidget = ({
                   padding: "0 5px",
                   background:
                     selectedKeys.includes(entity.uid) && !showCheckBox
-                      ? "linear-gradient(to right,#006112,rgba(0,0,0,0))"
+                      ? "linear-gradient(to left, rgb(109 245 135), rgba(0, 0, 0, 0))"
                       : undefined,
                 }}
               >
