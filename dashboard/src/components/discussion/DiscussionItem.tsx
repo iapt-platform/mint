@@ -13,6 +13,7 @@ export interface IComment {
   parent?: string | null;
   title?: string;
   content?: string;
+  status?: "active" | "close";
   children?: IComment[];
   childrenCount?: number;
   createdAt?: string;
@@ -25,6 +26,7 @@ interface IWidget {
   onCreated?: Function;
   onDelete?: Function;
   onReply?: Function;
+  onClose?: Function;
 }
 const DiscussionItemWidget = ({
   data,
@@ -33,6 +35,7 @@ const DiscussionItemWidget = ({
   onCreated,
   onDelete,
   onReply,
+  onClose,
 }: IWidget) => {
   const [edit, setEdit] = useState(false);
   const [currData, setCurrData] = useState<IComment>(data);
@@ -47,7 +50,7 @@ const DiscussionItemWidget = ({
         padding: 5,
       }}
     >
-      <div style={{ width: "2em" }}>
+      <div style={{ width: "2em", display: "none" }}>
         <Avatar size="small">{data.user?.nickName?.slice(0, 1)}</Avatar>
       </div>
       <div style={{ width: "100%" }}>
@@ -84,6 +87,11 @@ const DiscussionItemWidget = ({
             onReply={() => {
               if (typeof onReply !== "undefined") {
                 onReply(currData);
+              }
+            }}
+            onClose={() => {
+              if (typeof onClose !== "undefined") {
+                onClose();
               }
             }}
           />
