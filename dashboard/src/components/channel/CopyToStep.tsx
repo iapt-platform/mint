@@ -62,6 +62,7 @@ const CopyToStepWidget = ({
         <div style={contentStyle}>
           <ChannelPickerTable
             type="editable"
+            disableChannelId={channel?.id}
             multiSelect={false}
             onSelect={(e: IChannel[]) => {
               console.log("channel", e);

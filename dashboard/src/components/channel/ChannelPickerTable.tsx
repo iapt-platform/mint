@@ -48,6 +48,7 @@ interface IWidget {
   multiSelect?: boolean /*是否支持多选*/;
   selectedKeys?: string[];
   reload?: boolean;
+  disableChannelId?: string;
   onSelect?: Function;
 }
 const ChannelPickerTableWidget = ({
@@ -56,6 +57,7 @@ const ChannelPickerTableWidget = ({
   multiSelect = true,
   selectedKeys = [],
   onSelect,
+  disableChannelId,
   reload = false,
 }: IWidget) => {
   const intl = useIntl();
@@ -280,6 +282,7 @@ const ChannelPickerTableWidget = ({
                     </Space>
                     <Button
                       type="link"
+                      disabled={disableChannelId === entity.uid}
                       onClick={() => {
                         if (typeof onSelect !== "undefined") {
                           const e: IChannel = {
