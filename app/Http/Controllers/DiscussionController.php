@@ -25,27 +25,35 @@ class DiscussionController extends Controller
         //
 		switch ($request->get('view')) {
             case 'question-by-topic':
-                $topic = Discussion::where('id',$request->get('id'))
-                                    ->where('status','active')
-                                    ->select('res_id')->first();
+                $topic = Discussion::where('id',$request->get('id'));
+                $topic->where('status',$request->get('status','active'))
+                    ->select('res_id')->first();
                 if(!$topic){
 			        return $this->error("无效的id");
                 }
-                $table = Discussion::where('res_id',$topic->res_id)
-                                    ->where('status','active')
+                $table = Discussion::where('res_id',$topic->res_id);
+                $activeNumber = Discussion::where('res_id',$topic->res_id)->where('status','active')->count();
+                $closeNumber = Discussion::where('res_id',$topic->res_id)->where('status','close')->count();
+                $table->where('status',$request->get('status','active'))
                                     ->where('parent',null);
                 break;
             case 'question':
-                $table = Discussion::where('res_id',$request->get('id'))
-                                    ->where('status','active')
+                $table = Discussion::where('res_id',$request->get('id'));
+                $activeNumber = Discussion::where('res_id',$request->get('id'))->where('status','active')->count();
+                $closeNumber = Discussion::where('res_id',$request->get('id'))->where('status','close')->count();
+                $table->where('status',$request->get('status','active'))
                                     ->where('parent',null);
                 break;
             case 'answer':
-                $table = Discussion::where('parent',$request->get('id'))
-                                    ->where('status','active');
+                $table = Discussion::where('parent',$request->get('id'));
+                $activeNumber = Discussion::where('parent',$request->get('id'))->where('status','active')->count();
+                $closeNumber = Discussion::where('parent',$request->get('id'))->where('status','close')->count();
+                $table->where('status',$request->get('status','active'));
                 break;
             case 'all':
                 $table = Discussion::where('parent',null);
+                $activeNumber = Discussion::where('parent',null)->where('status','active')->count();
+                $closeNumber = Discussion::where('parent',null)->where('status','close')->count();
                 break;
         }
         if(!empty($search)){
@@ -59,7 +67,11 @@ class DiscussionController extends Controller
         $result = $table->get();
 
         if($result){
-			return $this->ok(["rows"=>DiscussionResource::collection($result),"count"=>$count]);
+			return $this->ok(["rows"=>DiscussionResource::collection($result),
+                              "count"=>$count,
+                              'active'=>$activeNumber,
+                              'close'=>$closeNumber,
+                            ]);
 		}else{
 			return $this->error("没有查询到数据");
 		}
