@@ -1,13 +1,22 @@
-import { useState, useEffect } from "react";
-import { useIntl } from "react-intl";
-import { Card, message, Skeleton, Typography } from "antd";
+import { useEffect, useRef, useState } from "react";
 
-import { get } from "../../request";
-import { ICommentListResponse } from "../api/Comment";
-import CommentCreate from "./DiscussionCreate";
-import { IComment } from "./DiscussionItem";
-import DiscussionList from "./DiscussionList";
+import { Space, Typography } from "antd";
+
+import { get, put } from "../../request";
+import {
+  ICommentListResponse,
+  ICommentRequest,
+  ICommentResponse,
+} from "../api/Comment";
+
+import DiscussionItem, { IComment } from "./DiscussionItem";
+
 import { IAnswerCount } from "./DiscussionBox";
+import { ActionType, ProList } from "@ant-design/pro-components";
+import TimeShow from "../general/TimeShow";
+import { renderBadge } from "../channel/ChannelTable";
+
+const { Text } = Typography;
 
 export type TResType = "article" | "channel" | "chapter" | "sentence" | "wbw";
 interface IWidget {
@@ -28,65 +37,15 @@ const DiscussionListCardWidget = ({
   onItemCountChange,
   onReply,
 }: IWidget) => {
-  const intl = useIntl();
-  const [data, setData] = useState<IComment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const ref = useRef<ActionType>();
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
+  const [activeNumber, setActiveNumber] = useState<number>(0);
+  const [closeNumber, setCloseNumber] = useState<number>(0);
 
   useEffect(() => {
     console.log("changedAnswerCount", changedAnswerCount);
-    const newData = [...data].map((item) => {
-      const newItem = item;
-      if (newItem.id && changedAnswerCount?.id === newItem.id) {
-        newItem.childrenCount = changedAnswerCount.count;
-      }
-      return newItem;
-    });
-    setData(newData);
+    ref.current?.reload();
   }, [changedAnswerCount]);
-
-  useEffect(() => {
-    let url: string = "";
-    if (typeof topicId !== "undefined") {
-      url = `/v2/discussion?view=question-by-topic&id=${topicId}`;
-    } else if (typeof resId !== "undefined") {
-      url = `/v2/discussion?view=question&id=${resId}`;
-    }
-    if (url === "") {
-      return;
-    }
-    setLoading(true);
-
-    get<ICommentListResponse>(url)
-      .then((json) => {
-        console.log(json);
-        if (json.ok) {
-          console.log(intl.formatMessage({ id: "flashes.success" }));
-          const discussions: IComment[] = json.data.rows.map((item) => {
-            return {
-              id: item.id,
-              resId: item.res_id,
-              resType: item.res_type,
-              user: item.editor,
-              title: item.title,
-              parent: item.parent,
-              content: item.content,
-              childrenCount: item.children_count,
-              createdAt: item.created_at,
-              updatedAt: item.updated_at,
-            };
-          });
-          setData(discussions);
-        } else {
-          message.error(json.message);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      })
-      .catch((e) => {
-        message.error(e.message);
-      });
-  }, [intl, resId, topicId]);
 
   if (typeof resId === "undefined" && typeof topicId === "undefined") {
     return (
@@ -97,51 +56,158 @@ const DiscussionListCardWidget = ({
   }
 
   return (
-    <Card title="讨论" extra={"More"}>
-      {loading ? (
-        <Skeleton title={{ width: 200 }} paragraph={{ rows: 1 }} active />
-      ) : (
-        <DiscussionList
-          data={data}
-          onSelect={(
-            e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-            comment: IComment
-          ) => {
-            if (typeof onSelect !== "undefined") {
-              onSelect(e, comment);
-            }
-          }}
-          onDelete={(id: string) => {
-            setData((origin) => {
-              return origin.filter((value) => value.id !== id);
-            });
-            if (typeof onItemCountChange !== "undefined") {
-              onItemCountChange(data.length - 1);
-            }
-          }}
-          onReply={(comment: IComment) => {
-            if (typeof onReply !== "undefined") {
-              onReply(comment);
-            }
-          }}
-        />
-      )}
-
-      {resId && resType ? (
-        <CommentCreate
-          contentType="markdown"
-          resId={resId}
-          resType={resType}
-          onCreated={(e: IComment) => {
-            const newData = JSON.parse(JSON.stringify(e));
-            if (typeof onItemCountChange !== "undefined") {
-              onItemCountChange(data.length + 1);
-            }
-            setData([...data, newData]);
-          }}
-        />
-      ) : undefined}
-    </Card>
+    <ProList<IComment>
+      itemLayout="vertical"
+      rowKey="id"
+      actionRef={ref}
+      metas={{
+        avatar: {
+          render(dom, entity, index, action, schema) {
+            return <></>;
+          },
+        },
+        title: {
+          render(dom, entity, index, action, schema) {
+            return (
+              <Text type="secondary" style={{ fontSize: "80%" }}>
+                <Space>
+                  {entity.user.nickName}
+                  <TimeShow
+                    type="secondary"
+                    updatedAt={entity.updatedAt}
+                    createdAt={entity.createdAt}
+                  />
+                </Space>
+              </Text>
+            );
+          },
+        },
+        content: {
+          render: (text, row, index, action) => {
+            return (
+              <DiscussionItem
+                data={row}
+                onSelect={(
+                  e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+                  data: IComment
+                ) => {
+                  if (typeof onSelect !== "undefined") {
+                    onSelect(e, data);
+                  }
+                }}
+                onDelete={() => {
+                  ref.current?.reload();
+                }}
+                onReply={() => {
+                  if (typeof onReply !== "undefined") {
+                    onReply(row);
+                  }
+                }}
+                onClose={() => {
+                  console.log("comment", row);
+                  put<ICommentRequest, ICommentResponse>(
+                    `/v2/discussion/${row.id}`,
+                    {
+                      title: row.title,
+                      content: row.content,
+                      status: "close",
+                    }
+                  ).then((json) => {
+                    console.log(json);
+                    if (json.ok) {
+                      ref.current?.reload();
+                    }
+                  });
+                }}
+              />
+            );
+          },
+        },
+      }}
+      request={async (params = {}, sorter, filter) => {
+        let url: string = "/v2/discussion?";
+        if (typeof topicId !== "undefined") {
+          url += `view=question-by-topic&id=${topicId}`;
+        } else if (typeof resId !== "undefined") {
+          url += `view=question&id=${resId}`;
+        } else {
+          return {
+            total: 0,
+            succcess: false,
+          };
+        }
+        const offset =
+          ((params.current ? params.current : 1) - 1) *
+          (params.pageSize ? params.pageSize : 20);
+        url += `&limit=${params.pageSize}&offset=${offset}`;
+        url += params.keyword ? "&search=" + params.keyword : "";
+        url += activeKey ? "&status=" + activeKey : "";
+        console.log("url", url);
+        const res = await get<ICommentListResponse>(url);
+        const items: IComment[] = res.data.rows.map((item, id) => {
+          return {
+            id: item.id,
+            resId: item.res_id,
+            resType: item.res_type,
+            user: item.editor,
+            title: item.title,
+            parent: item.parent,
+            content: item.content,
+            status: item.status,
+            childrenCount: item.children_count,
+            createdAt: item.created_at,
+            updatedAt: item.updated_at,
+          };
+        });
+        setActiveNumber(res.data.active);
+        setCloseNumber(res.data.close);
+        return {
+          total: res.data.count,
+          succcess: true,
+          data: items,
+        };
+      }}
+      bordered
+      pagination={{
+        showQuickJumper: true,
+        showSizeChanger: true,
+        pageSize: 20,
+      }}
+      search={false}
+      options={{
+        search: false,
+      }}
+      toolbar={{
+        menu: {
+          activeKey,
+          items: [
+            {
+              key: "active",
+              label: (
+                <span>
+                  active
+                  {renderBadge(activeNumber, activeKey === "active")}
+                </span>
+              ),
+            },
+            {
+              key: "close",
+              label: (
+                <span>
+                  close
+                  {renderBadge(closeNumber, activeKey === "close")}
+                </span>
+              ),
+            },
+          ],
+          onChange(key) {
+            console.log("show course", key);
+            setActiveKey(key);
+            ref.current?.reload();
+          },
+        },
+      }}
+    />
   );
 };
 
