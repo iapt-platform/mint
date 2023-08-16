@@ -89,9 +89,9 @@ const DiscussionItemWidget = ({
                 onReply(currData);
               }
             }}
-            onClose={() => {
+            onClose={(value: boolean) => {
               if (typeof onClose !== "undefined") {
-                onClose();
+                onClose(value);
               }
             }}
           />

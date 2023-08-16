@@ -38,7 +38,7 @@ const DiscussionListCardWidget = ({
   onReply,
 }: IWidget) => {
   const ref = useRef<ActionType>();
-  const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>("active");
   const [activeNumber, setActiveNumber] = useState<number>(0);
   const [closeNumber, setCloseNumber] = useState<number>(0);
 
@@ -68,18 +68,7 @@ const DiscussionListCardWidget = ({
         },
         title: {
           render(dom, entity, index, action, schema) {
-            return (
-              <Text type="secondary" style={{ fontSize: "80%" }}>
-                <Space>
-                  {entity.user.nickName}
-                  <TimeShow
-                    type="secondary"
-                    updatedAt={entity.updatedAt}
-                    createdAt={entity.createdAt}
-                  />
-                </Space>
-              </Text>
-            );
+            return <></>;
           },
         },
         content: {
@@ -103,14 +92,14 @@ const DiscussionListCardWidget = ({
                     onReply(row);
                   }
                 }}
-                onClose={() => {
+                onClose={(value: boolean) => {
                   console.log("comment", row);
                   put<ICommentRequest, ICommentResponse>(
                     `/v2/discussion/${row.id}`,
                     {
                       title: row.title,
                       content: row.content,
-                      status: "close",
+                      status: value ? "close" : "active",
                     }
                   ).then((json) => {
                     console.log(json);

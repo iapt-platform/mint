@@ -108,7 +108,13 @@ const DiscussionShowWidget = ({
         break;
       case "close":
         if (typeof onClose !== "undefined") {
-          onClose();
+          onClose(true);
+        }
+        break;
+
+      case "reopen":
+        if (typeof onClose !== "undefined") {
+          onClose(false);
         }
         break;
       case "delete":
@@ -185,6 +191,16 @@ const DiscussionShowWidget = ({
       size="small"
       title={
         <Space direction="vertical">
+          <Text type="secondary" style={{ fontSize: "80%" }}>
+            <Space>
+              {data.user.nickName}
+              <TimeShow
+                type="secondary"
+                updatedAt={data.updatedAt}
+                createdAt={data.createdAt}
+              />
+            </Space>
+          </Text>
           {data.title ? (
             <Text
               strong
@@ -197,16 +213,6 @@ const DiscussionShowWidget = ({
               {data.title}
             </Text>
           ) : undefined}
-          <Text type="secondary" style={{ display: "none" }}>
-            <Space>
-              {data.user.nickName}
-              <TimeShow
-                type="secondary"
-                updatedAt={data.updatedAt}
-                createdAt={data.createdAt}
-              />
-            </Space>
-          </Text>
         </Space>
       }
       extra={
