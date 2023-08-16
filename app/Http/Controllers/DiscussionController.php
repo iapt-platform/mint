@@ -25,17 +25,24 @@ class DiscussionController extends Controller
         //
 		switch ($request->get('view')) {
             case 'question-by-topic':
-                $topic = Discussion::where('id',$request->get('id'))->select('res_id')->first();
+                $topic = Discussion::where('id',$request->get('id'))
+                                    ->where('status','active')
+                                    ->select('res_id')->first();
                 if(!$topic){
 			        return $this->error("无效的id");
                 }
-                $table = Discussion::where('res_id',$topic->res_id)->where('parent',null);
+                $table = Discussion::where('res_id',$topic->res_id)
+                                    ->where('status','active')
+                                    ->where('parent',null);
                 break;
             case 'question':
-                $table = Discussion::where('res_id',$request->get('id'))->where('parent',null);
+                $table = Discussion::where('res_id',$request->get('id'))
+                                    ->where('status','active')
+                                    ->where('parent',null);
                 break;
             case 'answer':
-                $table = Discussion::where('parent',$request->get('id'));
+                $table = Discussion::where('parent',$request->get('id'))
+                                    ->where('status','active');
                 break;
             case 'all':
                 $table = Discussion::where('parent',null);
@@ -50,6 +57,7 @@ class DiscussionController extends Controller
               ->take($request->get('limit',1000));
 
         $result = $table->get();
+
         if($result){
 			return $this->ok(["rows"=>DiscussionResource::collection($result),"count"=>$count]);
 		}else{
@@ -221,6 +229,7 @@ class DiscussionController extends Controller
         }
         $discussion->title = $request->get('title',null);
         $discussion->content = $request->get('content',null);
+        $discussion->status = $request->get('status','active');
         $discussion->editor_uid = $user['user_uid'];
         $discussion->save();
         return $this->ok(new DiscussionResource($discussion));
