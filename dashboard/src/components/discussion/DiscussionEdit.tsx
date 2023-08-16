@@ -71,6 +71,7 @@ const DiscussionEditWidget = ({
                     parent: json.data.parent,
                     title: json.data.title,
                     content: json.data.content,
+                    status: json.data.status,
                     childrenCount: json.data.children_count,
                     createdAt: json.data.created_at,
                     updatedAt: json.data.updated_at,
