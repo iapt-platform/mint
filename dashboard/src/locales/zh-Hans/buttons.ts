@@ -55,6 +55,7 @@ const items = {
   "buttons.relate.to": "关联到",
   "buttons.copy.link": "复制链接",
   "buttons.reply": "回复",
+  "buttons.open": "打开",
 };
 
 export default items;
