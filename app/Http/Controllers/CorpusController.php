@@ -631,12 +631,20 @@ class CorpusController extends Controller
                                                 });
                             break;
                         default:
-                            //译文需要markdown渲染
-                            $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",
+                        /**
+                         * 译文需要markdown渲染
+                         * 包涵术语的不用cache
+                         */
+                            if(strpos($row->content,'[[')===false){
+                                $newSent['html'] = MdRender::render($row->content,[$row->channel_uid]);
+                            }else{
+                                $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",
                                                 env('CACHE_EXPIRE',3600*24),
                                                 function() use($row){
                                                     return MdRender::render($row->content,[$row->channel_uid]);
                                                 });
+                            }
+
                             break;
                     }
                 }
