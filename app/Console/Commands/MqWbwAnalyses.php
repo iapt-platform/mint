@@ -44,6 +44,7 @@ class MqWbwAnalyses extends Command
         Mq::worker($exchange,$queue,function ($message){
             $ok = $this->call('upgrade:wbw.analyses',['id'=>implode(',',$message)]);
             $this->info("Received count=".count($message).' ok='.$ok);
+            return $ok;
         });
 
         return 0;

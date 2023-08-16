@@ -68,6 +68,8 @@ class MqPr extends Command
             $webhooks = WebHook::where('res_id',$message->channel->id)
                             ->where('status','active')
                             ->get();
+
+            $result=0;
             foreach ($webhooks as $key => $hook) {
                 $event = json_decode($hook->event);
                 if(!in_array('pr',$event)){
@@ -87,27 +89,15 @@ class MqPr extends Command
                         break;
                 }
                 $this->info("{$command}  ok={$ok}");
+                $result+=$ok;
                 if($ok===0){
                     WebHook::where('id',$hook->id)->increment('success');
                 }else{
                     WebHook::where('id',$hook->id)->increment('fail');
                 }
             }
+            return $result;
         });
-
-		$callback = function ($msg) {
-            $message = json_decode($msg->body);
-
-
-
-
-		};
-
-		$channel->basic_consume('suggestion', '', false, true, false, false, $callback);
-
-		while ($channel->is_open()) {
-			  $channel->wait();
-		  }
         return 0;
     }
 }

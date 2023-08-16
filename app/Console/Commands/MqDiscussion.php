@@ -47,6 +47,7 @@ class MqDiscussion extends Command
         $queue = 'discussion';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
         Mq::worker($exchange,$queue,function ($message){
+            $result = 0;
             switch ($message->res_type) {
                 case 'sentence':
                     $sentence = Sentence::where('uid',$message->res_id)->first();
@@ -91,7 +92,7 @@ class MqDiscussion extends Command
                         }
                         $command = '';
                         $whSend = new WebHookSend;
-
+                        $ok = 0;
                         switch ($hook->receiver) {
                             case 'dingtalk':
                                 $ok = $whSend->dingtalk($hook->url,$msgTitle,$msgContent);
@@ -103,6 +104,7 @@ class MqDiscussion extends Command
                                 $ok=2;
                                 break;
                         }
+                        $result += $ok;
                         $this->info("{$command}  ok={$ok}");
                         if($ok===0){
                             WebHook::where('id',$hook->id)->increment('success');
@@ -115,6 +117,7 @@ class MqDiscussion extends Command
                     # code...
                     break;
             }
+            return $result;
         });
 
         return 0;

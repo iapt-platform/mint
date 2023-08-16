@@ -42,7 +42,7 @@ class MqProgress extends Command
         $queue = 'progress';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
         Mq::worker($exchange,$queue,function ($message){
-            $ok = $this->call('upgrade:progress',['--book'=>$message->book,
+            $ok1 = $this->call('upgrade:progress',['--book'=>$message->book,
                                             '--para'=>$message->para,
                                             '--channel'=>$message->channel,
                                             ]);
@@ -50,9 +50,10 @@ class MqProgress extends Command
                                                 '--para'=>$message->para,
                                                 '--channel'=>$message->channel,
                                                 ]);
-            $this->info("Received book=".$message->book.' progress='.$ok.' chapter='.$ok2);
+            $this->info("Received book=".$message->book.' progress='.$ok1.' chapter='.$ok2);
+            return $ok1+$ok2;
         });
-
         return 0;
+
     }
 }
