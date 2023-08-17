@@ -4,7 +4,6 @@ import { MoreOutlined, CheckOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import RelatedPara from "../../corpus/RelatedPara";
 import { ArticleMode } from "../../article/Article";
-import { IResNumber } from "../SentEdit";
 
 interface IWidget {
   book?: number;
