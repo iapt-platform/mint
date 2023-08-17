@@ -113,7 +113,6 @@ export const WbwSentCtl = ({
   const [magic, setMagic] = useState<string>();
   const [loading, setLoading] = useState(false);
   const settings = useAppSelector(settingInfo);
-  const [articleMode, setArticleMode] = useState<ArticleMode | undefined>(mode);
 
   useEffect(() => {
     setMagic(magicDict);
@@ -131,7 +130,7 @@ export const WbwSentCtl = ({
     if (refreshable) {
       setWordData(data);
     }
-  }, [data]);
+  }, [data, refreshable]);
 
   useEffect(() => {
     //发布句子里面的单词的变更。给术语输入菜单用。
