@@ -5,8 +5,9 @@ import { useAppSelector } from "../../../hooks";
 import { settingInfo } from "../../../reducers/setting";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { GetUserSetting } from "../../auth/setting/default";
-import { mode } from "../../../reducers/article-mode";
+import { mode as _mode } from "../../../reducers/article-mode";
 import { IWbw } from "../Wbw/WbwWord";
+import { ArticleMode } from "../../article/Article";
 
 interface ILayoutFlex {
   left: number;
@@ -24,6 +25,7 @@ interface IWidgetSentContent {
   layout?: TDirection;
   magicDict?: string;
   compact?: boolean;
+  mode?: ArticleMode;
   onWbwChange?: Function;
   onMagicDictDone?: Function;
 }
@@ -37,6 +39,7 @@ const SentContentWidget = ({
   translation,
   layout = "column",
   compact = false,
+  mode,
   magicDict,
   onWbwChange,
   onMagicDictDone,
@@ -66,9 +69,19 @@ const SentContentWidget = ({
     }
   }, [settings]);
 
-  const newMode = useAppSelector(mode);
+  const newMode = useAppSelector(_mode);
+
   useEffect(() => {
-    switch (newMode) {
+    console.log("mode", mode);
+    let currMode: ArticleMode;
+    if (typeof mode !== "undefined") {
+      currMode = mode;
+    } else if (typeof newMode !== "undefined") {
+      currMode = newMode;
+    } else {
+      return;
+    }
+    switch (currMode) {
       case "edit":
         setLayoutFlex({
           left: 5,
@@ -82,7 +95,7 @@ const SentContentWidget = ({
         });
         break;
     }
-  }, [newMode]);
+  }, [mode, newMode]);
 
   useLayoutEffect(() => {
     const width = divShell.current?.offsetWidth;
@@ -120,6 +133,7 @@ const SentContentWidget = ({
                 magicDict={magicDict}
                 channelId={item.channel.id}
                 data={JSON.parse(item.content)}
+                mode={mode}
                 onChange={(data: IWbw[]) => {
                   if (typeof onWbwChange !== "undefined") {
                     onWbwChange(data);

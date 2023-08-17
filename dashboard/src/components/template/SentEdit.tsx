@@ -9,6 +9,7 @@ import { ITocPathNode } from "../corpus/TocPath";
 import SentContent from "./SentEdit/SentContent";
 import SentTab from "./SentEdit/SentTab";
 import { IWbw } from "./Wbw/WbwWord";
+import { ArticleMode } from "../article/Article";
 
 export interface ISuggestionCount {
   suggestion?: number;
@@ -57,6 +58,7 @@ export interface IWidgetSentEditInner {
   originNum: number;
   simNum?: number;
   compact?: boolean;
+  mode?: ArticleMode;
 }
 export const SentEditInner = ({
   id,
@@ -75,11 +77,13 @@ export const SentEditInner = ({
   originNum,
   simNum,
   compact = false,
+  mode,
 }: IWidgetSentEditInner) => {
   const [wbwData, setWbwData] = useState<IWbw[]>();
   const [magicDict, setMagicDict] = useState<string>();
   const [magicDictLoading, setMagicDictLoading] = useState(false);
   const [isCompact, setIsCompact] = useState(compact);
+  const [articleMode, setArticleMode] = useState<ArticleMode | undefined>(mode);
 
   useEffect(() => {
     const content = origin?.find(
@@ -109,6 +113,7 @@ export const SentEditInner = ({
         layout={layout}
         magicDict={magicDict}
         compact={isCompact}
+        mode={articleMode}
         onWbwChange={(data: IWbw[]) => {
           setWbwData(data);
         }}
@@ -133,11 +138,13 @@ export const SentEditInner = ({
         wbwData={wbwData}
         magicDictLoading={magicDictLoading}
         compact={isCompact}
+        mode={articleMode}
         onMagicDict={(type: string) => {
           setMagicDict(type);
           setMagicDictLoading(true);
         }}
         onCompact={(value: boolean) => setIsCompact(value)}
+        onModeChange={(value: ArticleMode | undefined) => setArticleMode(value)}
       />
     </Card>
   );

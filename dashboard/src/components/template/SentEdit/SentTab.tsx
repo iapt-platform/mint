@@ -14,6 +14,7 @@ import TocPath, { ITocPathNode } from "../../corpus/TocPath";
 import { IWbw } from "../Wbw/WbwWord";
 import RelaGraphic from "../Wbw/RelaGraphic";
 import SentMenu from "./SentMenu";
+import { ArticleMode } from "../../article/Article";
 
 const { Text } = Typography;
 
@@ -34,8 +35,10 @@ interface IWidget {
   wbwData?: IWbw[];
   magicDictLoading?: boolean;
   compact?: boolean;
+  mode?: ArticleMode;
   onMagicDict?: Function;
   onCompact?: Function;
+  onModeChange?: Function;
 }
 const SentTabWidget = ({
   id,
@@ -53,8 +56,10 @@ const SentTabWidget = ({
   wbwData,
   magicDictLoading = false,
   compact = false,
+  mode,
   onMagicDict,
   onCompact,
+  onModeChange,
 }: IWidget) => {
   const intl = useIntl();
   const [isCompact, setIsCompact] = useState(compact);
@@ -110,6 +115,7 @@ const SentTabWidget = ({
             book={book}
             para={para}
             loading={magicDictLoading}
+            mode={mode}
             onMagicDict={(type: string) => {
               if (typeof onMagicDict !== "undefined") {
                 onMagicDict(type);
@@ -127,6 +133,16 @@ const SentTabWidget = ({
                   if (typeof onCompact !== "undefined") {
                     setIsCompact(false);
                     onCompact(false);
+                  }
+                  break;
+                case "origin-edit":
+                  if (typeof onModeChange !== "undefined") {
+                    onModeChange("edit");
+                  }
+                  break;
+                case "origin-wbw":
+                  if (typeof onModeChange !== "undefined") {
+                    onModeChange("wbw");
                   }
                   break;
                 default:
