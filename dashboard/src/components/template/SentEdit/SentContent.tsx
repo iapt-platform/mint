@@ -132,7 +132,7 @@ const SentContentWidget = ({
                 wordEnd={wordEnd}
                 magicDict={magicDict}
                 channelId={item.channel.id}
-                data={JSON.parse(item.content)}
+                data={JSON.parse(item.content ? item.content : "")}
                 mode={mode}
                 onChange={(data: IWbw[]) => {
                   if (typeof onWbwChange !== "undefined") {

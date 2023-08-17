@@ -15,6 +15,7 @@ import { IWbw } from "../Wbw/WbwWord";
 import RelaGraphic from "../Wbw/RelaGraphic";
 import SentMenu from "./SentMenu";
 import { ArticleMode } from "../../article/Article";
+import { IResNumber } from "../SentEdit";
 
 const { Text } = Typography;
 
@@ -36,6 +37,7 @@ interface IWidget {
   magicDictLoading?: boolean;
   compact?: boolean;
   mode?: ArticleMode;
+  loadedRes?: IResNumber;
   onMagicDict?: Function;
   onCompact?: Function;
   onModeChange?: Function;
@@ -57,6 +59,7 @@ const SentTabWidget = ({
   magicDictLoading = false,
   compact = false,
   mode,
+  loadedRes,
   onMagicDict,
   onCompact,
   onModeChange,
@@ -171,7 +174,12 @@ const SentTabWidget = ({
               icon={<TranslationOutlined />}
               type="translation"
               sentId={id}
-              count={tranNum}
+              count={
+                tranNum
+                  ? tranNum -
+                    (loadedRes?.translation ? loadedRes.translation : 0)
+                  : undefined
+              }
               title={intl.formatMessage({
                 id: "channel.type.translation.label",
               })}
@@ -196,7 +204,11 @@ const SentTabWidget = ({
               icon={<CloseOutlined />}
               type="nissaya"
               sentId={id}
-              count={nissayaNum}
+              count={
+                nissayaNum
+                  ? nissayaNum - (loadedRes?.nissaya ? loadedRes.nissaya : 0)
+                  : undefined
+              }
               title={intl.formatMessage({
                 id: "channel.type.nissaya.label",
               })}
@@ -221,7 +233,11 @@ const SentTabWidget = ({
               icon={<TranslationOutlined />}
               type="commentary"
               sentId={id}
-              count={commNum}
+              count={
+                commNum
+                  ? commNum - (loadedRes?.commentary ? loadedRes.commentary : 0)
+                  : undefined
+              }
               title={intl.formatMessage({
                 id: "channel.type.commentary.label",
               })}

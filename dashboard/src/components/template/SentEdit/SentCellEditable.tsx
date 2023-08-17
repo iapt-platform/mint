@@ -45,6 +45,9 @@ const SentCellEditableWidget = ({
 
   const savePr = () => {
     setSaving(true);
+    if (!value) {
+      return;
+    }
     post<ISentencePrRequest, ISentencePrResponse>(`/v2/sentpr`, {
       book: data.book,
       para: data.para,
@@ -121,7 +124,7 @@ const SentCellEditableWidget = ({
   return (
     <Typography.Paragraph style={{ width: "100%" }}>
       <TermTextArea
-        value={value}
+        value={value ? value : ""}
         menuOptions={termList}
         onChange={(value: string) => {
           setValue(value);

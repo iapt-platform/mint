@@ -85,37 +85,37 @@ const SentCellWidget = ({
           switch (format) {
             case "json":
               const wbw: IWbw[] = sentData.content
-                .split("\n")
-                .map((item, id) => {
-                  const parts = item.split("=");
-                  const word = my_to_roman(parts[0]);
-                  const meaning: string =
-                    parts.length > 1 ? parts[1].trim() : "";
-                  let parent: string = "";
-                  let factors: string = "";
-                  if (!meaning.includes(" ") && endings) {
-                    const base = nissayaBase(meaning, endings);
-                    parent = base.base;
-                    const end = base.ending ? base.ending : [];
-                    factors = [base.base, ...end].join("+");
-                  } else {
-                    factors = meaning.replaceAll(" ", "+");
-                  }
-                  return {
-                    book: sentData.book,
-                    para: sentData.para,
-                    sn: [id],
-                    word: { value: word ? word : parts[0], status: 0 },
-                    real: { value: meaning, status: 0 },
-                    meaning: { value: "", status: 0 },
-                    parent: { value: parent, status: 0 },
-                    factors: {
-                      value: factors,
-                      status: 0,
-                    },
-                    confidence: 0.5,
-                  };
-                });
+                ? sentData.content.split("\n").map((item, id) => {
+                    const parts = item.split("=");
+                    const word = my_to_roman(parts[0]);
+                    const meaning: string =
+                      parts.length > 1 ? parts[1].trim() : "";
+                    let parent: string = "";
+                    let factors: string = "";
+                    if (!meaning.includes(" ") && endings) {
+                      const base = nissayaBase(meaning, endings);
+                      parent = base.base;
+                      const end = base.ending ? base.ending : [];
+                      factors = [base.base, ...end].join("+");
+                    } else {
+                      factors = meaning.replaceAll(" ", "+");
+                    }
+                    return {
+                      book: sentData.book,
+                      para: sentData.para,
+                      sn: [id],
+                      word: { value: word ? word : parts[0], status: 0 },
+                      real: { value: meaning, status: 0 },
+                      meaning: { value: "", status: 0 },
+                      parent: { value: parent, status: 0 },
+                      factors: {
+                        value: factors,
+                        status: 0,
+                      },
+                      confidence: 0.5,
+                    };
+                  })
+                : [];
               setSentData((origin) => {
                 origin.contentType = "json";
                 origin.content = JSON.stringify(wbw);
@@ -126,7 +126,9 @@ const SentCellWidget = ({
               break;
             case "markdown":
               setSentData((origin) => {
-                const wbwData: IWbw[] = JSON.parse(origin.content);
+                const wbwData: IWbw[] = origin.content
+                  ? JSON.parse(origin.content)
+                  : [];
                 const newContent = wbwData
                   .map((item) => {
                     return [

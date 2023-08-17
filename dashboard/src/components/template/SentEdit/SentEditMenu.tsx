@@ -137,9 +137,13 @@ const SentEditMenuWidget = ({
           icon={<CopyOutlined />}
           size="small"
           onClick={() => {
-            navigator.clipboard.writeText(data.content).then(() => {
-              message.success("已经拷贝到剪贴板");
-            });
+            if (data.content) {
+              navigator.clipboard.writeText(data.content).then(() => {
+                message.success("已经拷贝到剪贴板");
+              });
+            } else {
+              message.success("内容为空");
+            }
           }}
         />
         <Dropdown menu={{ items, onClick }} placement="bottomRight">

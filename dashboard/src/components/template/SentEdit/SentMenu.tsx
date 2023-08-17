@@ -4,8 +4,9 @@ import { MoreOutlined, CheckOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import RelatedPara from "../../corpus/RelatedPara";
 import { ArticleMode } from "../../article/Article";
+import { IResNumber } from "../SentEdit";
 
-interface ISentMenu {
+interface IWidget {
   book?: number;
   para?: number;
   loading?: boolean;
@@ -20,7 +21,7 @@ const SentMenuWidget = ({
   loading = false,
   onMagicDict,
   onMenuClick,
-}: ISentMenu) => {
+}: IWidget) => {
   const intl = useIntl();
   const items: MenuProps["items"] = [
     {
