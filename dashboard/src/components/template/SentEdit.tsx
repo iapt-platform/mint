@@ -10,6 +10,15 @@ import SentContent from "./SentEdit/SentContent";
 import SentTab from "./SentEdit/SentTab";
 import { IWbw } from "./Wbw/WbwWord";
 import { ArticleMode } from "../article/Article";
+import { TChannelType } from "../api/Channel";
+
+export interface IResNumber {
+  translation?: number;
+  nissaya?: number;
+  commentary?: number;
+  origin?: number;
+  sim?: number;
+}
 
 export interface ISuggestionCount {
   suggestion?: number;
@@ -17,7 +26,7 @@ export interface ISuggestionCount {
 }
 export interface ISentence {
   id?: string;
-  content: string;
+  content: string | null;
   contentType?: TContentType;
   html: string;
   book: number;
@@ -84,12 +93,31 @@ export const SentEditInner = ({
   const [magicDictLoading, setMagicDictLoading] = useState(false);
   const [isCompact, setIsCompact] = useState(compact);
   const [articleMode, setArticleMode] = useState<ArticleMode | undefined>(mode);
+  const [loadedRes, setLoadedRes] = useState<IResNumber>();
 
+  useEffect(() => {
+    const validRes = (value: ISentence, type: TChannelType) =>
+      value.channel.type === type &&
+      value.content &&
+      value.content.trim().length > 0;
+    if (translation) {
+      const res = {
+        translation: translation.filter((value) =>
+          validRes(value, "translation")
+        ).length,
+        nissaya: translation.filter((value) => validRes(value, "nissaya"))
+          .length,
+        commentary: translation.filter((value) => validRes(value, "commentary"))
+          .length,
+      };
+      setLoadedRes(res);
+    }
+  }, [translation]);
   useEffect(() => {
     const content = origin?.find(
       (value) => value.channel.type === "wbw"
     )?.content;
-    if (typeof content !== "undefined") {
+    if (content) {
       setWbwData(JSON.parse(content));
     }
   }, []);
@@ -135,6 +163,7 @@ export const SentEditInner = ({
         commNum={commNum}
         originNum={originNum}
         simNum={simNum}
+        loadedRes={loadedRes}
         wbwData={wbwData}
         magicDictLoading={magicDictLoading}
         compact={isCompact}
