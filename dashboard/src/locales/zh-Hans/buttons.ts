@@ -54,8 +54,11 @@ const items = {
   "buttons.invite": "邀请",
   "buttons.relate.to": "关联到",
   "buttons.copy.link": "复制链接",
+  "buttons.copy.id": "复制编号",
   "buttons.reply": "回复",
   "buttons.open": "打开",
+  "buttons.compact": "紧凑",
+  "buttons.magic-dict": "神奇字典",
 };
 
 export default items;
