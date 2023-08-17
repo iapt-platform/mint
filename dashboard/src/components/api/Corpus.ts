@@ -146,7 +146,7 @@ export interface ISentenceRequest {
   wordStart: number;
   wordEnd: number;
   channel: string;
-  content: string;
+  content: string | null;
   contentType?: TContentType;
   prEditor?: string;
   prId?: string;
