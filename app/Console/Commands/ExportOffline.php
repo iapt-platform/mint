@@ -37,19 +37,32 @@ class ExportOffline extends Command
      */
     public function handle()
     {
+        //建表
+        $this->info('create db');
+        $this->call('export:create.db');
         //导出channel
+        $this->info('channel');
         $this->call('export:channel');
-        //导出channel
+        //tag
+        $this->info('tag');
         $this->call('export:tag');
         $this->call('export:tag.map');
+        $this->info('pali text');
         $this->call('export:pali.text');
         //导出章节索引
+        $this->info('chapter');
         $this->call('export:chapter.index');
         //导出译文
+        $this->info('sentence');
         $this->call('export:sentence');
         //导出原文
         $this->call('export:sentence',['--type'=>'original']);
-        shell_exec("XZ_OPT=-9 tar jcvf ".storage_path("app/public/export/offline.tar.xz")." ".storage_path("app/public/export/offline"));
+
+        $this->info('zip');
+        $exportFile = storage_path('app/public/export/offline/sentence-'.date("Y-m-d").'.db3');
+        shell_exec("tar jcf ".
+                    storage_path("app/public/export/offline-".date("Y-m-d").".tar.xz")." ".
+                    $exportFile);
         return 0;
     }
 }

@@ -39,22 +39,34 @@ class ExportTag extends Command
      */
     public function handle()
     {
-        $filename = "public/export/offline/tag.csv";
-        Storage::disk('local')->put($filename, "");
-        $file = fopen(storage_path("app/{$filename}"),"w");
-        fputcsv($file,['id','name','description','color','owner_id']);
+        $exportFile = storage_path('app/public/export/offline/sentence-'.date("Y-m-d").'.db3');
+        $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
+        $dbh->beginTransaction();
+
+        $query = "INSERT INTO tag ( id , name ,
+                                    description , color , owner_id  )
+                                    VALUES ( ? , ? , ? , ? , ?  )";
+        try{
+            $stmt = $dbh->prepare($query);
+        }catch(PDOException $e){
+            Log::info($e);
+            return 1;
+        }
+
         $bar = $this->output->createProgressBar(Tag::count());
-        foreach (Tag::select(['id','name','description','color','owner_id'])->cursor() as $chapter) {
-            fputcsv($file,[
-                            $chapter->id,
-                            $chapter->name,
-                            $chapter->description,
-                            $chapter->color,
-                            $chapter->owner_id,
-                            ]);
+        foreach (Tag::select(['id','name','description','color','owner_id'])->cursor() as $row) {
+            $currData = array(
+                $row->id,
+                $row->name,
+                $row->description,
+                $row->color,
+                $row->owner_id,
+            );
+            $stmt->execute($currData);
             $bar->advance();
         }
-        fclose($file);
+        $dbh->commit();
         $bar->finish();
         return 0;
     }
