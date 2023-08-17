@@ -54,9 +54,13 @@ class ExportChapterIndex extends Command
             return 1;
         }
 
-        $bar = $this->output->createProgressBar(ProgressChapter::count());
-        foreach (ProgressChapter::select(['uid','book','para',
-                    'lang','title','channel_id','progress','updated_at'])->cursor() as $row) {
+        $publicChannels = Channel::where('status',30)->select('uid')->get();
+
+        $bar = $this->output->createProgressBar(ProgressChapter::whereIn('channel_id',$publicChannels)->count());
+        foreach (ProgressChapter::whereIn('channel_id',$publicChannels)
+                                ->select(['uid','book','para',
+                                'lang','title','channel_id',
+                                'progress','updated_at'])->cursor() as $row) {
             $currData = array(
                             $row->uid,
                             $row->book,
