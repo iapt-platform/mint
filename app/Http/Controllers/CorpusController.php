@@ -20,6 +20,7 @@ use App\Http\Api\SuggestionApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\UserApi;
 use App\Http\Api\StudioApi;
+use App\Http\Api\AuthApi;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
 use App\Http\Resources\TocResource;
@@ -56,6 +57,9 @@ class CorpusController extends Controller
         'pr_edit_at',
         'updated_at'
     ];
+
+    protected $userUuid=null;
+
     public function __construct()
     {
 
@@ -116,12 +120,12 @@ class CorpusController extends Controller
             array_push($channels,$channelId);
         }
         $record = Sentence::select($this->selectCol)
-        ->where('book_id',$sentId[0])
-        ->where('paragraph',$sentId[1])
-        ->where('word_start',(int)$sentId[2])
-        ->where('word_end',(int)$sentId[3])
-        ->whereIn('channel_uid',$channels)
-        ->get();
+                        ->where('book_id',$sentId[0])
+                        ->where('paragraph',$sentId[1])
+                        ->where('word_start',(int)$sentId[2])
+                        ->where('word_end',(int)$sentId[3])
+                        ->whereIn('channel_uid',$channels)
+                        ->get();
 
         $channelIndex = $this->getChannelIndex($channels);
 
@@ -144,6 +148,10 @@ class CorpusController extends Controller
      */
     public function showSent(Request  $request, string $id)
     {
+        $user = AuthApi::current($request);
+        if($user){
+            $this->userUuid = $user['user_uid'];
+        }
         $channels = \explode('_',$request->get('channels'));
 
         $this->result['uid'] = "";
@@ -164,6 +172,11 @@ class CorpusController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function showSentences(Request $request, string $type, string $id){
+        $user = AuthApi::current($request);
+        if($user){
+            $this->userUuid = $user['user_uid'];
+        }
+
         $param = \explode('_',$id);
         $sentId = \explode('-',$param[0]);
         $channels = [];
@@ -222,6 +235,10 @@ class CorpusController extends Controller
      */
     public function showPara(Request $request)
     {
+        $user = AuthApi::current($request);
+        if($user){
+            $this->userUuid = $user['user_uid'];
+        }
         //
         $channels = [];
         if($request->get('mode') === 'edit'){
@@ -319,6 +336,10 @@ class CorpusController extends Controller
      */
     public function showChapter(Request $request, string $id)
     {
+        $user = AuthApi::current($request);
+        if($user){
+            $this->userUuid = $user['user_uid'];
+        }
         //
         $sentId = \explode('-',$id);
         $channels = [];
@@ -644,7 +665,6 @@ class CorpusController extends Controller
                                                     return MdRender::render($row->content,[$row->channel_uid]);
                                                 });
                             }
-
                             break;
                     }
                 }
@@ -847,7 +867,7 @@ class CorpusController extends Controller
 
 		#生成channel 数量列表
 		$sentId = "{$book}-{$para}-{$word_start}-{$word_end}";
-        $channelCount = CorpusController::sentResCount($book,$para,$word_start,$word_end);
+        $channelCount = CorpusController::sentCanReadCount($book,$para,$word_start,$word_end,$this->userUuid);
         $path = json_decode(PaliText::where('book',$book)->where('paragraph',$para)->value("path"),true);
         $sent["path"] = [];
         foreach ($path as $key => $value) {
@@ -866,15 +886,25 @@ class CorpusController extends Controller
     /**
      * 获取某个句子的相关资源的句子数量
      */
-    public static function sentResCount($book,$para,$start,$end){
+    public static function sentCanReadCount($book,$para,$start,$end,$userUuid){
 		$sentId = "{$book}-{$para}-{$start}-{$end}";
-		$channelCount = Cache::remember("/sentence/{$sentId}/channels/count",
-                          env('CACHE_EXPIRE',3600*24),
-                          function() use($book,$para,$start,$end){
+        $key = "/sentence/{$sentId}/channels/count";
+        if($userUuid){
+            $key .= $userUuid;
+        }
+		$channelCount = Cache::remember($key,env('CACHE_EXPIRE',3600*24),
+                          function() use($book,$para,$start,$end,$userUuid){
+
+                            $channelCanRead = Cache::remember("/channel/can-read/{$userUuid}",
+                                                            env('CACHE_EXPIRE',3600*24),
+                                                function() use($userUuid){
+                                                    return ChannelApi::getCanReadByUser($userUuid);
+                                                });
 			                $channels =  Sentence::where('book_id',$book)
                                 ->where('paragraph',$para)
                                 ->where('word_start',$start)
                                 ->where('word_end',$end)
+                                ->whereIn('channel_uid',$channelCanRead)
                                 ->select('channel_uid')
                                 ->groupBy('channel_uid')
                                 ->get();
