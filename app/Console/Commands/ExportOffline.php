@@ -47,6 +47,7 @@ class ExportOffline extends Command
         $this->info('tag');
         $this->call('export:tag');
         $this->call('export:tag.map');
+        //
         $this->info('pali text');
         $this->call('export:pali.text');
         //导出章节索引
@@ -54,7 +55,8 @@ class ExportOffline extends Command
         $this->call('export:chapter.index');
         //导出译文
         $this->info('sentence');
-        $this->call('export:sentence');
+        $this->call('export:sentence',['--type'=>'translation']);
+        $this->call('export:sentence',['--type'=>'nissaya']);
         //导出原文
         $this->call('export:sentence',['--type'=>'original']);
 
