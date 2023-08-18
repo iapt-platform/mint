@@ -14,7 +14,7 @@ class InstallPaliSeries extends Command
      *
      * @var string
      */
-    protected $signature = 'install:paliseries';
+    protected $signature = 'install:pali.series';
 
     /**
      * The console command description.
@@ -47,11 +47,11 @@ class InstallPaliSeries extends Command
 			#删除目标数据库中数据
 			BookTitle::where('book','>',0)->delete();
 
-		// 打开csv文件并读取数据										
+		// 打开csv文件并读取数据
 			$strFileName = config("app.path.pali_title") . "/pali_serieses.csv";
 			if(!file_exists($strFileName)){
 				return 1;
-			}		
+			}
 			$inputRow = 0;
 			if (($fp = fopen($strFileName, "r")) !== false) {
 				while (($data = fgetcsv($fp, 0, ',')) !== false) {
@@ -62,7 +62,7 @@ class InstallPaliSeries extends Command
 							'title'=>$data[3],
 						];
 
-						BookTitle::create($newData);							
+						BookTitle::create($newData);
 					}
 					$inputRow++;
 				}
