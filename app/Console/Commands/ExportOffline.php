@@ -13,7 +13,7 @@ class ExportOffline extends Command
      *
      * @var string
      */
-    protected $signature = 'export:offline';
+    protected $signature = 'export:offline {format?}';
 
     /**
      * The console command description.
@@ -65,14 +65,25 @@ class ExportOffline extends Command
         $this->info('zip');
         $exportPath = 'app/public/export/offline';
         $exportFile = 'sentence-'.date("Y-m-d").'.db3';
-        $zipFile = "sentence-".date("Y-m-d").".db3.gz";
+        $zipFile = "sentence-".date("Y-m-d").".db3.";
+        if($this->argument('format')==='7z'){
+            $zipFile .= "7z";
+        }else{
+            $zipFile .= "gz";
+        }
+        //
+
 
         $exportFullFileName = storage_path($exportPath.'/'.$exportFile);
         $zipFullFileName = storage_path($exportPath.'/'.$zipFile);
 
         shell_exec("cd ".storage_path($exportPath));
-        shell_exec("gzip -k -q --best -c {$exportFullFileName} > {$zipFullFileName}");
         shell_exec("chmod 600 {$zipFullFileName}");
+        if($this->argument('format')==='7z'){
+            shell_exec("7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on {$zipFullFileName} {$exportFullFileName}");
+        }else{
+            shell_exec("gzip -k -q --best -c {$exportFullFileName} > {$zipFullFileName}");
+        }
 
         $info = array();
         $info[] = ['filename'=>$exportFile,
