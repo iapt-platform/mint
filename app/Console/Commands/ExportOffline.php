@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 
 class ExportOffline extends Command
 {
@@ -37,6 +38,7 @@ class ExportOffline extends Command
      */
     public function handle()
     {
+
         //建表
         $this->info('create db');
         $this->call('export:create.db');
@@ -61,10 +63,21 @@ class ExportOffline extends Command
         $this->call('export:sentence',['--type'=>'original']);
 
         $this->info('zip');
-        $exportFile = storage_path('app/public/export/offline/sentence-'.date("Y-m-d").'.db3');
-        shell_exec("tar jcf ".
-                    storage_path("app/public/export/offline-".date("Y-m-d").".tar.xz")." ".
-                    $exportFile);
+        $exportPath = 'app/public/export/offline';
+        $exportFile = 'sentence-'.date("Y-m-d").'.db3';
+        $zipFile = "sentence-".date("Y-m-d").".db3.gz";
+
+        shell_exec("cd ".storage_path($exportPath));
+        shell_exec("gzip -k -q --best -c {$exportFile} > {$zipFile}");
+        shell_exec("chmod 600 {$zipFile}");
+
+        $info = array();
+        $info[] = ['filename'=>$exportFile,
+                   'create_at'=>date("Y-m-d H:i:s"),
+                   'chapter'=>Cache::get("/export/chapter/count"),
+                   'filesize'=>filename($zipFile),
+                    ];
+        Storage::disk('local')->put("public/export/offline/index.json", json_encode($info));
         return 0;
     }
 }
