@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ProgressChapter;
+use Illuminate\Support\Facades\Cache;
 
 class ExportChapterIndex extends Command
 {
@@ -55,8 +56,9 @@ class ExportChapterIndex extends Command
         }
 
         $publicChannels = Channel::where('status',30)->select('uid')->get();
-
-        $bar = $this->output->createProgressBar(ProgressChapter::whereIn('channel_id',$publicChannels)->count());
+        $rows = ProgressChapter::whereIn('channel_id',$publicChannels)->count();
+        Cache::put("/export/chapter/count",$rows,3600*10);
+        $bar = $this->output->createProgressBar($rows);
         foreach (ProgressChapter::whereIn('channel_id',$publicChannels)
                                 ->select(['uid','book','para',
                                 'lang','title','channel_id',
