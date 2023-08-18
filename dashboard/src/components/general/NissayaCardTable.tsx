@@ -105,6 +105,7 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
   }, [data]);
   return (
     <Table
+      size="small"
       columns={[
         {
           title: "本词特征",
@@ -137,7 +138,7 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           width: "16%",
           render: (value, record, index) => {
             return (
-              <Space direction="vertical">
+              <Space>
                 {record.relation}
                 {record.localRelation}
               </Space>
