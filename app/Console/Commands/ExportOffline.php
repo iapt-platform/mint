@@ -78,12 +78,14 @@ class ExportOffline extends Command
         $zipFullFileName = storage_path($exportPath.'/'.$zipFile);
 
         shell_exec("cd ".storage_path($exportPath));
-        shell_exec("chmod 600 {$zipFullFileName}");
+        shell_exec("chmod 600 {$exportFullFileName}");
         if($this->argument('format')==='7z'){
-            shell_exec("7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on {$zipFullFileName} {$exportFullFileName}");
+            $command = "7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on {$zipFullFileName} {$exportFullFileName}";
         }else{
-            shell_exec("gzip -k -q --best -c {$exportFullFileName} > {$zipFullFileName}");
+            $command = "gzip -k -q --best -c {$exportFullFileName} > {$zipFullFileName}";
         }
+        $this->info($command);
+        shell_exec($command);
 
         $info = array();
         $info[] = ['filename'=>$exportFile,
