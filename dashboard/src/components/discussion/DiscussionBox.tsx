@@ -6,6 +6,7 @@ import DiscussionTopic from "./DiscussionTopic";
 import DiscussionListCard, { TResType } from "./DiscussionListCard";
 import { IComment } from "./DiscussionItem";
 import DiscussionAnchor from "./DiscussionAnchor";
+import { Link } from "react-router-dom";
 
 export interface IAnswerCount {
   id: string;
@@ -50,6 +51,9 @@ const DiscussionBoxWidget = ({
         destroyOnClose
         extra={
           <Space>
+            <Link to={`/discussion/show/${resType}/${resId}`} target="_blank">
+              在新窗口打开
+            </Link>
             {drawerWidth === drawerMinWidth ? (
               <Button
                 type="link"
