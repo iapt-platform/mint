@@ -39,7 +39,6 @@ class ExportOffline extends Command
      */
     public function handle()
     {
-
         //建表
         $this->info('create db');
         $this->call('export:create.db');
@@ -79,7 +78,7 @@ class ExportOffline extends Command
         $info[] = ['filename'=>$exportFile,
                    'create_at'=>date("Y-m-d H:i:s"),
                    'chapter'=>Cache::get("/export/chapter/count"),
-                   'filesize'=>filename($zipFullFileName),
+                   'filesize'=>filesize($zipFullFileName),
                     ];
         Storage::disk('local')->put("public/export/offline/index.json", json_encode($info));
         return 0;
