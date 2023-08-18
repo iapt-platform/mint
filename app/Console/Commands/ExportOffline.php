@@ -68,15 +68,18 @@ class ExportOffline extends Command
         $exportFile = 'sentence-'.date("Y-m-d").'.db3';
         $zipFile = "sentence-".date("Y-m-d").".db3.gz";
 
+        $exportFullFileName = storage_path($exportPath.'/'.$exportFile);
+        $zipFullFileName = storage_path($exportPath.'/'.$zipFile);
+
         shell_exec("cd ".storage_path($exportPath));
-        shell_exec("gzip -k -q --best -c {$exportFile} > {$zipFile}");
-        shell_exec("chmod 600 {$zipFile}");
+        shell_exec("gzip -k -q --best -c {$exportFullFileName} > {$zipFullFileName}");
+        shell_exec("chmod 600 {$zipFullFileName}");
 
         $info = array();
         $info[] = ['filename'=>$exportFile,
                    'create_at'=>date("Y-m-d H:i:s"),
                    'chapter'=>Cache::get("/export/chapter/count"),
-                   'filesize'=>filename($zipFile),
+                   'filesize'=>filename($zipFullFileName),
                     ];
         Storage::disk('local')->put("public/export/offline/index.json", json_encode($info));
         return 0;
