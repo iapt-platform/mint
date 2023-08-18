@@ -111,6 +111,7 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           title: "本词特征",
           dataIndex: "from",
           key: "from",
+          width: 40,
           render: (value, record, index) => {
             return (
               <Space>
@@ -135,7 +136,7 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           title: "关系",
           dataIndex: "relation",
           key: "relation",
-          width: "16%",
+          width: "22%",
           render: (value, record, index) => {
             return (
               <Space>
