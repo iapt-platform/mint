@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ProgressChapter;
+use App\Models\Channel;
 use Illuminate\Support\Facades\Cache;
 
 class ExportChapterIndex extends Command
