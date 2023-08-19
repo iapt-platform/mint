@@ -77,6 +77,8 @@ const items = {
   "forms.fields.success.label": "成功",
   "forms.fields.receiver.label": "接收",
   "forms.fields.event.label": "事件",
+  "forms.message.question.required": "请输入您的问题（必填）",
+  "forms.message.question.description.required": "问题详细描述（选填）",
 };
 
 export default items;
