@@ -3,17 +3,16 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-
 use App\Http\Api\Mq;
 
-class TestMq extends Command
+class MqIssues extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'test:mq';
+    protected $signature = 'mq:issues';
 
     /**
      * The console command description.
@@ -39,17 +38,13 @@ class TestMq extends Command
      */
     public function handle()
     {
-        //一对一
-		//Mq::publish('wbw-analyses',[13607982709477376]);
-		Mq::publish('hello',['hello world']);
-
-        //一对多
-        /*
-        $connection = new AMQPStreamConnection(MQ_HOST, MQ_PORT, MQ_USERNAME, MQ_PASSWORD);
-        $channel->exchange_declare('hello_exchange','fanout',false,true);
-        $channel->queue_declare('hello', false, true, false, false);
-        $channel->exchange_bind('hello','exchange',"");
-*/
+        $exchange = 'router';
+        $queue = 'issues';
+        $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
+        Mq::worker($exchange,$queue,function ($message){
+            print_r($message);
+            return 0;
+        });
         return 0;
     }
 }

@@ -119,7 +119,11 @@ class DhammaTermController extends Controller
                 break;
 			case 'user':
 				# code...
-                $userUid = $_COOKIE['user_uid'];
+                $user = AuthApi::current($request);
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
+                $userUid = $user['user_uid'];
                 $search = $request->get('search');
 				$table = DhammaTerm::select($indexCol)
 									->where('owner', $userUid);

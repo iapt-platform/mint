@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Sentence;
 use App\Models\Channel;
 use App\Http\Api\ChannelApi;
+use Illuminate\Support\Facades\Log;
 
 class ExportSentence extends Command
 {
@@ -63,31 +64,48 @@ class ExportSentence extends Command
                 }
             }
         }
+
+
+        $exportFile = storage_path('app/public/export/offline/sentence-'.date("Y-m-d").'.db3');
+        $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
+        $dbh->beginTransaction();
+
+        if($channel_type === "original"){
+            $table = 'sentence';
+        }else{
+            $table = 'sentence_translation';
+        }
+
+        $query = "INSERT INTO {$table} ( book , paragraph ,
+                                    word_start , word_end , content , channel_id  )
+                                    VALUES ( ? , ? , ? , ? , ? , ? )";
+        try{
+            $stmt = $dbh->prepare($query);
+        }catch(PDOException $e){
+            Log::info($e);
+            return 1;
+        }
+
         $db = Sentence::whereIn('channel_uid',$channels);
-        $file_name = "public/export/offline/sentence_{$file_suf}.csv";
-        Storage::disk('local')->put($file_name, "");
-        $file = fopen(storage_path("app/{$file_name}"),"w");
-        fputcsv($file,['id','book','paragraph','word_start','word_end','content','content_type','html','channel_id','editor_id','language','updated_at']);
         $bar = $this->output->createProgressBar($db->count());
-        foreach ($db->select(['uid','book_id','paragraph','word_start','word_end','content','content_type','channel_uid','editor_uid','language','updated_at'])->cursor() as $chapter) {
-            $content = str_replace("\n","<br />",$chapter->content);
-            fputcsv($file,[
-                            $chapter->uid,
-                            $chapter->book_id,
-                            $chapter->paragraph,
-                            $chapter->word_start,
-                            $chapter->word_end,
-                            $content,
-                            $chapter->content_type,
-                            $content,
-                            $chapter->channel_uid,
-                            $chapter->editor_uid,
-                            $chapter->language,
-                            $chapter->updated_at,
-                            ]);
+        $srcDb = $db->select(['uid','book_id','paragraph',
+                                'word_start','word_end',
+                                'content','content_type','channel_uid',
+                                'editor_uid','language','updated_at'])->cursor();
+        foreach ($srcDb as $sent) {
+            $currData = array(
+                    $sent->book_id,
+                    $sent->paragraph,
+                    $sent->word_start,
+                    $sent->word_end,
+                    $sent->content,
+                    $sent->channel_uid,
+                );
+            $stmt->execute($currData);
             $bar->advance();
         }
-        fclose($file);
+        $dbh->commit();
         $bar->finish();
         return 0;
     }

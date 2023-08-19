@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ProgressChapter;
+use App\Models\Channel;
+use Illuminate\Support\Facades\Cache;
 
 class ExportChapterIndex extends Command
 {
@@ -39,25 +41,43 @@ class ExportChapterIndex extends Command
      */
     public function handle()
     {
-        $filename = "public/export/offline/chapter.csv";
-        Storage::disk('local')->put($filename, "");
-        $file = fopen(storage_path("app/{$filename}"),"w");
-        fputcsv($file,['id','book','paragraph','language','title','channel_id','progress','updated_at']);
-        $bar = $this->output->createProgressBar(ProgressChapter::count());
-        foreach (ProgressChapter::select(['uid','book','para','lang','title','channel_id','progress','updated_at'])->cursor() as $chapter) {
-            fputcsv($file,[
-                            $chapter->uid,
-                            $chapter->book,
-                            $chapter->para,
-                            $chapter->lang,
-                            $chapter->title,
-                            $chapter->channel_id,
-                            $chapter->progress,
-                            $chapter->updated_at,
-                            ]);
+        $exportFile = storage_path('app/public/export/offline/sentence-'.date("Y-m-d").'.db3');
+        $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
+        $dbh->beginTransaction();
+
+        $query = "INSERT INTO chapter ( id , book , paragraph,
+                                    language , title , channel_id , progress,updated_at  )
+                                    VALUES ( ? , ? , ? , ? , ? , ? , ? , ?  )";
+        try{
+            $stmt = $dbh->prepare($query);
+        }catch(PDOException $e){
+            Log::info($e);
+            return 1;
+        }
+
+        $publicChannels = Channel::where('status',30)->select('uid')->get();
+        $rows = ProgressChapter::whereIn('channel_id',$publicChannels)->count();
+        Cache::put("/export/chapter/count",$rows,3600*10);
+        $bar = $this->output->createProgressBar($rows);
+        foreach (ProgressChapter::whereIn('channel_id',$publicChannels)
+                                ->select(['uid','book','para',
+                                'lang','title','channel_id',
+                                'progress','updated_at'])->cursor() as $row) {
+            $currData = array(
+                            $row->uid,
+                            $row->book,
+                            $row->para,
+                            $row->lang,
+                            $row->title,
+                            $row->channel_id,
+                            $row->progress,
+                            $row->updated_at,
+                            );
+            $stmt->execute($currData);
             $bar->advance();
         }
-        fclose($file);
+        $dbh->commit();
         $bar->finish();
         return 0;
     }

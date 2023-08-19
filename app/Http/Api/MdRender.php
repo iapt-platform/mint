@@ -13,6 +13,9 @@ define("STACK_DEEP",8);
 
 class MdRender{
 
+    /**
+     * 按照{{}}把字符串切分成三个部分。模版之前的，模版，和模版之后的
+     */
     public static function tplSplit($tpl){
         $before = strpos($tpl,'{{');
         if($before === FALSE){
@@ -70,11 +73,11 @@ class MdRender{
         }
     }
 
-    public static function wiki2xml(string $wiki):string{
+    public static function wiki2xml(string $wiki,$channelId=[],$mode='read'):string{
         /**
          * 替换{{}} 到xml之前 要先把换行符号去掉
          */
-        $wiki = str_replace("\n","",$wiki);
+        //$wiki = str_replace("\n","",$wiki);
 
         /**
          * 把模版转换为xml
@@ -86,6 +89,10 @@ class MdRender{
             $buffer[] = $arrWiki['data'][0];
             $tpl = $arrWiki['data'][1];
             if(!empty($tpl)){
+                /**
+                 * 处理模版 提取参数
+                 */
+                $tpl = str_replace("|\n","|",$tpl);
                 $pattern = "/\{\{(.+?)\|/";
                 $replacement = '<MdTpl name="$1"><param>';
                 $tpl = preg_replace($pattern,$replacement,$tpl);
@@ -94,10 +101,12 @@ class MdRender{
                 /**
                  * 替换变量名
                  */
-
                 $pattern = "/<param>([a-z]+?)=/";
                 $replacement = '<param name="$1">';
                 $tpl = preg_replace($pattern,$replacement,$tpl);
+                //tpl to react
+                $tpl = MdRender::xml2tpl($tpl,$channelId,$mode);
+
                 $buffer[] = $tpl;
             }
             $remain = $arrWiki['data'][2];
@@ -105,9 +114,6 @@ class MdRender{
 
         $html = implode('' , $buffer);
 
-        $html = str_replace("<p>","<div>",$html);
-        $html = str_replace("</p>","</div>",$html);
-        $html = "<span>".$html."</span>";
         return $html;
     }
     public static function xmlQueryId(string $xml, string $id):string{
@@ -235,7 +241,7 @@ class MdRender{
         }
         $html = str_replace('<?xml version="1.0"?>','',$dom->asXML()) ;
         $html = str_replace(['<xml>','</xml>'],['<span>','</span>'],$html);
-        return $html;
+        return trim($html);
     }
 
     public static function render2($markdown,$channelId=[],$queryId=null,$mode='read',$channelType,$contentType="markdown"){
@@ -243,19 +249,24 @@ class MdRender{
             return "<span></span>";
         }
         $wiki = MdRender::markdown2wiki($markdown,$channelType,$contentType);
-        $html = MdRender::wiki2xml($wiki);
+        $html = MdRender::wiki2xml($wiki,$channelId,$mode);
         if(!is_null($queryId)){
             $html = MdRender::xmlQueryId($html, $queryId);
         }
-        $tpl = MdRender::xml2tpl($html,$channelId,$mode);
+        $html = MdRender::markdownToHtml($html);
+        //$tpl = MdRender::xml2tpl($html,$channelId,$mode);
+
         //生成可展开组件
-        $tpl = str_replace("<div/>","<div></div>",$tpl);
+        $html = str_replace("<div/>","<div></div>",$html);
         $pattern = '/<li><div>(.+?)<\/div><\/li>/';
         $replacement = '<li><MdTpl name="toggle" tpl="toggle" props=""><div>$1</div></MdTpl></li>';
-        $tpl = preg_replace($pattern,$replacement,$tpl);
-        return $tpl;
+        $html = preg_replace($pattern,$replacement,$html);
+
+        return $html;
     }
-    public static function markdown2wiki(string $markdown,$channelType,$contentType): string{
+
+
+    public static function markdown2wiki(string $markdown,$channelType=null,$contentType=null): string{
         //$markdown = mb_convert_encoding($markdown,'UTF-8','UTF-8');
         $markdown = iconv('UTF-8','UTF-8//IGNORE',$markdown);
         /**
@@ -301,7 +312,7 @@ class MdRender{
         }
         //$markdown = preg_replace("/\n\n/","<div></div>",$markdown);
 
-                /**
+        /**
          * 处理 mermaid
          */
         if(strpos($markdown,"```mermaid") !== false){
@@ -339,19 +350,97 @@ class MdRender{
          * markdown -> html
          */
         Log::info('markdown -> html');
+        /*
         $markdown = str_replace(['[[',']]'],['㐛','㐚'],$markdown);
         $html = Str::markdown($markdown);
         $html = str_replace(['㐛','㐚'],['[[',']]'],$html);
         $html = MdRender::fixHtml($html);
 
+        //给H1-6 添加uuid
+        for ($i=1; $i<7 ; $i++) {
+            if(strpos($html,"<h{$i}>")===false){
+                continue;
+            }
+            $output = array();
+            $input = $html;
+            $hPos = strpos($input,"<h{$i}>");
+            while ($hPos !== false) {
+                $output[] = substr($input,0,$hPos);
+                $output[] = "<h{$i} id='".Str::uuid()."'>";
+                $input = substr($input,$hPos+4);
+                $hPos = strpos($input,"<h{$i}>");
+            }
+            $output[] = $input;
+            $html = implode('',$output);
+        }
+*/
+
         #替换术语
         $pattern = "/\[\[(.+?)\]\]/";
         $replacement = '{{term|$1}}';
-        $html = preg_replace($pattern,$replacement,$html);
+        $markdown = preg_replace($pattern,$replacement,$markdown);
 
         #替换句子模版
         $pattern = "/\{\{([0-9].+?)\}\}/";
         $replacement = '{{sent|$1}}';
+        $markdown = preg_replace($pattern,$replacement,$markdown);
+
+        /**
+         * 替换多行注释
+         * ```
+         * bla
+         * bla
+         * ```
+         * {{note|
+         * bla
+         * bla
+         * }}
+         */
+        if(strpos($markdown,"```\n") !== false){
+            $lines = explode("\n",$markdown);
+            $newLines = array();
+            $noteBegin = false;
+            $noteString = array();
+            foreach ($lines as  $line) {
+
+                if($noteBegin){
+                    if($line === "```"){
+                        $newLines[] = "}}";
+                        $noteBegin = false;
+                    }else{
+                        $newLines[] = $line;
+                    }
+                }else{
+                    if($line === "```"){
+                        $noteBegin = true;
+                        $newLines[] = "{{note|";
+                        continue;
+                    }else{
+                       $newLines[] = $line;
+                    }
+                }
+            }
+            if($noteBegin){
+                $newLines[] = "}}";
+            }
+            $markdown = implode("\n",$newLines);
+        }
+
+        /**
+         * 替换单行注释
+         * `bla bla`
+         * {{note|bla}}
+         */
+        $pattern = "/`(.+?)`/";
+        $replacement = '{{note|$1}}';
+        $markdown = preg_replace($pattern,$replacement,$markdown);
+
+/*
+        #替换多行注释
+        #<pre><code>bla</code></pre>
+        #{{note|bla}}
+        $pattern = '/<pre><code>([\w\W]+?)<\/code><\/pre>/';
+        $replacement = '{{note|$1}}';
         $html = preg_replace($pattern,$replacement,$html);
 
         #替换单行注释
@@ -360,15 +449,36 @@ class MdRender{
         $pattern = '/<code>(.+?)<\/code>/';
         $replacement = '{{note|$1}}';
         $html = preg_replace($pattern,$replacement,$html);
+*/
 
-        #替换多行注释
-        #<pre><code>bla</code></pre>
-        #{{note|bla}}
-        $pattern = '/<pre><code>([\w\W]+?)<\/code><\/pre>/';
-        $replacement = '{{note|$1}}';
-        $html = preg_replace($pattern,$replacement,$html);
+        return $markdown;
+    }
 
+    public static function markdownToHtml($markdown){
+        $markdown = str_replace('MdTpl','mdtpl',$markdown);
+        $markdown = str_replace(['<param','</param>'],['<span','</span>'],$markdown);
+        $html = Str::markdown($markdown);
+        $html = MdRender::fixHtml($html);
 
+        $html = str_replace('<hr>','<hr />',$html);
+        //给H1-6 添加uuid
+        for ($i=1; $i<7 ; $i++) {
+            if(strpos($html,"<h{$i}>")===false){
+                continue;
+            }
+            $output = array();
+            $input = $html;
+            $hPos = strpos($input,"<h{$i}>");
+            while ($hPos !== false) {
+                $output[] = substr($input,0,$hPos);
+                $output[] = "<h{$i} id='".Str::uuid()."'>";
+                $input = substr($input,$hPos+4);
+                $hPos = strpos($input,"<h{$i}>");
+            }
+            $output[] = $input;
+            $html = implode('',$output);
+        }
+        $html = str_replace('mdtpl','MdTpl',$html);
         return $html;
     }
 

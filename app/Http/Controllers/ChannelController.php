@@ -31,7 +31,9 @@ class ChannelController extends Controller
         //
         $userinfo = new \UserInfo();
 		$result=false;
-		$indexCol = ['uid','name','summary','type','owner_uid','lang','status','updated_at','created_at'];
+		$indexCol = ['uid','name','summary',
+                    'type','owner_uid','lang',
+                    'status','updated_at','created_at'];
 		switch ($request->get('view')) {
             case 'public':
                 $table = Channel::select($indexCol)
@@ -161,10 +163,13 @@ class ChannelController extends Controller
         if($request->has("search")){
             $table = $table->where('name', 'like', "%".$request->get("search")."%");
         }
+        if($request->has("type")){
+            $table = $table->where('type', $request->get("type"));
+        }
         //获取记录总条数
         $count = $table->count();
         //处理排序
-        $table = $table->orderBy($request->get("order",'updated_at'),
+        $table = $table->orderBy($request->get("order",'created_at'),
                                  $request->get("dir",'desc'));
         //处理分页
         $table = $table->skip($request->get("offset",0))
@@ -307,29 +312,47 @@ class ChannelController extends Controller
         }
         $channelById = [];
         $channelId = [];
-        //获取共享channel
-        $allSharedChannels = ShareApi::getResList($user['user_uid'],2);
-        foreach ($allSharedChannels as $key => $value) {
-            # code...
-            $channelId[] = $value['res_id'];
-            $channelById[$value['res_id']] = $value;
+        //我自己的
+        if($request->get('owner')==='all' || $request->get('owner')==='my'){
+            $my = Channel::select($indexCol)->where('owner_uid', $user['user_uid'])->get();
+            foreach ($my as $key => $value) {
+                $channelId[] = $value->uid;
+                $channelById[$value->uid] = ['res_id'=>$value->uid,
+                                            'power'=>30,
+                                            'type'=>2,
+                                            ];
+            }
         }
-        //获取全网公开的有译文的channel
-        if(count($query)>0){
-            $publicChannelsWithContent = Sentence::whereIns(['book_id','paragraph','word_start','word_end'],$query)
-                                        ->where('strlen','>',0)
-                                        ->where('status',30)
-                                        ->groupBy('channel_uid')
-                                        ->select('channel_uid')
-                                        ->get();
-            foreach ($publicChannelsWithContent as $key => $value) {
+
+        //获取共享channel
+        if($request->get('owner')==='all' || $request->get('owner')==='cooperator'){
+            $allSharedChannels = ShareApi::getResList($user['user_uid'],2);
+            foreach ($allSharedChannels as $key => $value) {
                 # code...
-                $value['res_id']=$value->channel_uid;
-                $value['power'] = 10;
-                $value['type'] = 2;
-                if(!isset($channelById[$value['res_id']])){
+                if(!in_array($value['res_id'],$channelId)){
                     $channelId[] = $value['res_id'];
                     $channelById[$value['res_id']] = $value;
+                }
+            }
+        }
+        //获取全网公开的有译文的channel
+        if($request->get('owner')==='all' || $request->get('owner')==='public'){
+            if(count($query)>0){
+                $publicChannelsWithContent = Sentence::whereIns(['book_id','paragraph','word_start','word_end'],$query)
+                                            ->where('strlen','>',0)
+                                            ->where('status',30)
+                                            ->groupBy('channel_uid')
+                                            ->select('channel_uid')
+                                            ->get();
+                foreach ($publicChannelsWithContent as $key => $value) {
+                    # code...
+                    $value['res_id']=$value->channel_uid;
+                    $value['power'] = 10;
+                    $value['type'] = 2;
+                    if(!isset($channelById[$value['res_id']])){
+                        $channelId[] = $value['res_id'];
+                        $channelById[$value['res_id']] = $value;
+                    }
                 }
             }
         }
@@ -507,7 +530,36 @@ class ChannelController extends Controller
         $channel->save();
         return $this->ok($channel);
     }
-
+    /**
+     * patch the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Channel  $channel
+     * @return \Illuminate\Http\Response
+     */
+    public function patch(Request $request, Channel $channel)
+    {
+        //鉴权
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'),[],401);
+        }
+        if($channel->owner_uid !== $user["user_uid"]){
+            //判断是否为协作
+            $power = ShareApi::getResPower($user["user_uid"],$request->get('id'));
+            if($power < 30){
+                return $this->error(__('auth.failed'),[],403);
+            }
+        }
+        if($request->has('name')){$channel->name = $request->get('name');}
+        if($request->has('type')){$channel->type = $request->get('type');}
+        if($request->has('summary')){$channel->summary = $request->get('summary');}
+        if($request->has('lang')){$channel->lang = $request->get('lang');}
+        if($request->has('status')){$channel->status = $request->get('status');}
+        if($request->has('config')){$channel->status = $request->get('config');}
+        $channel->save();
+        return $this->ok($channel);
+    }
     /**
      * Remove the specified resource from storage.
      * @param  \Illuminate\Http\Request  $request

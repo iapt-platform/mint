@@ -14,6 +14,7 @@ use App\Http\Api\ChannelApi;
 use App\Http\Api\PaliTextApi;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Api\Mq;
 
 class SentenceController extends Controller
 {
@@ -238,8 +239,12 @@ class SentenceController extends Controller
                 return $this->error(__('auth.failed'),[],403);
             }
         }
+        $sentFirst=null;
         foreach ($request->get('sentences') as $key => $sent) {
             # code...
+            if($sentFirst === null){
+                $sentFirst = $sent;
+            }
             $row = Sentence::firstOrNew([
                 "book_id"=>$sent['book_id'],
                 "paragraph"=>$sent['paragraph'],
@@ -248,7 +253,7 @@ class SentenceController extends Controller
                 "channel_uid"=>$channel->uid,
             ],[
                 "id"=>app('snowflake')->id(),
-                "uid"=>Str::orderedUuid(),
+                "uid"=>Str::uuid(),
             ]);
             $row->content = $sent['content'];
             $row->strlen = mb_strlen($sent['content'],"UTF-8");
@@ -261,6 +266,12 @@ class SentenceController extends Controller
 
             //保存历史记录
             $this->saveHistory($row->uid,$user["user_uid"],$sent['content']);
+        }
+        if($sentFirst !== null){
+            Mq::publish('progress',['book'=>$sentFirst['book_id'],
+                                'para'=>$sentFirst['paragraph'],
+                                'channel'=>$channel->uid,
+                                ]);
         }
         return $this->ok(count($request->get('sentences')));
     }
@@ -355,6 +366,11 @@ class SentenceController extends Controller
         Cache::forget("/sent/{$channelId}/{$currSentId}");
         //保存历史记录
         $this->saveHistory($sent->uid,$user["user_uid"],$request->get('content'));
+        Mq::publish('progress',['book'=>$param[0],
+                            'para'=>$param[1],
+                            'channel'=>$channelId,
+                            ]);
+        Mq::publish('content',new SentResource($sent));
         return $this->ok(new SentResource($sent));
     }
 

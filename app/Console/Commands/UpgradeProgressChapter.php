@@ -20,7 +20,7 @@ class UpgradeProgressChapter extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:progress.chapter';
+    protected $signature = 'upgrade:progress.chapter  {--book=} {--para=} {--channel=}';
 
     /**
      * The console command description.
@@ -48,25 +48,41 @@ class UpgradeProgressChapter extends Command
     {
 		$this->info("upgrade:progresschapter start.");
 		$startTime = time();
+        $book = $this->option('book');
+        $para = $this->option('para');
+        $channelId = $this->option('channel');
 
         $tagCount=0;
         #第一步 查询有多少书有译文
-		$books = Sentence::where('strlen','>',0)
-                          ->where('book_id','<',1000)
-                          ->where('channel_uid','<>','')
-                          ->groupby('book_id')
-                          ->select('book_id')
-                          ->get();
+        if($book){
+            $books = Sentence::where('book_id',$book)
+                            ->groupby('book_id')
+                            ->select('book_id')
+                            ->get();
+        }else{
+            $books = Sentence::where('strlen','>',0)
+                ->where('book_id','<',1000)
+                ->where('channel_uid','<>','')
+                ->groupby('book_id')
+                ->select('book_id')
+                ->get();
+        }
+
 
         $bar = $this->output->createProgressBar(count($books));
 
         foreach ($books as $book) {
-            # code...
-            $chapters = PaliText::where('book',$book->book_id)
-                                ->where('level','>',0)
-                                ->where('level','<',8)
-                                ->select('paragraph','chapter_strlen','chapter_len')
-                                ->get();
+            if($para){
+                $table = PaliText::where('book',$book->book_id)
+                            ->where('paragraph','<=',$para);
+            }else{
+                $table = PaliText::where('book',$book->book_id);
+            }
+            $chapters = $table->where('level','>',0)
+                ->where('level','<',8)
+                ->select('paragraph','chapter_strlen','chapter_len')
+                ->get();
+
             foreach ($chapters as $key => $chapter) {
                 # code...
                 $chapter_strlen = PaliSentence::where('book',$book->book_id)
@@ -76,11 +92,14 @@ class UpgradeProgressChapter extends Command
                     $this->error('chapter_strlen is 0 book:'.$book->book_id.' paragraph:'.$chapter->paragraph.'-'.($chapter->paragraph+$chapter->chapter_len-1));
                     continue;
                 }
-                $strlen = Progress::where('book',$book->book_id)
-                                  ->whereBetween('para',[$chapter->paragraph,$chapter->paragraph+$chapter->chapter_len-1])
-                                  ->groupby('channel_id')
-                                  ->selectRaw('channel_id, sum(all_strlen) as cp_len')
-                                  ->get();
+                $table = Progress::where('book',$book->book_id)
+                                  ->whereBetween('para',[$chapter->paragraph,$chapter->paragraph+$chapter->chapter_len-1]);
+                if($channelId){
+                    $table->where('channel_id',$channelId);
+                }
+                $strlen = $table->groupby('channel_id')
+                        ->selectRaw('channel_id, sum(all_strlen) as cp_len')
+                        ->get();
                 foreach ($strlen as $final) {
                     # code...
                     # 计算此段落完成时间

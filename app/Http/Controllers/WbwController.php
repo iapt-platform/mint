@@ -14,6 +14,7 @@ use App\Tools\Tools;
 use App\Http\Api\AuthApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\Mq;
 
 class WbwController extends Controller
 {
@@ -132,6 +133,7 @@ class WbwController extends Controller
         }
 
         $count=0;
+        $wbwId = array();
         foreach ($request->get('data') as $row) {
             $wbw = Wbw::where('block_uid',$wbwBlockId)
                         ->where('wid',$row['sn'])
@@ -146,8 +148,12 @@ class WbwController extends Controller
                 $wbw->data = $wbwData;
                 $wbw->status = 5;
                 $wbw->save();
+                $wbwId[] = $wbw->id;
                 $count++;
             }
+        }
+        if(count($wbwId)>0){
+            Mq::publish('wbw-analyses',$wbwId);
         }
 
         return $this->ok(['rows'=>[],"count"=>$count]);
