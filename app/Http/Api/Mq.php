@@ -7,12 +7,15 @@ use PhpAmqpLib\Exchange\AMQPExchangeType;
 class Mq{
     public static function publish(string $channelName, $message){
                 //一对一
-		$connection = new AMQPStreamConnection(env("RABBITMQ_HOST"),
-                                               env("RABBITMQ_PORT"),
-                                               env("RABBITMQ_USER"),
-                                               env("RABBITMQ_PASSWORD"),
-                                               env("RABBITMQ_VIRTUAL_HOST")
-                                            );
+        $host = env("RABBITMQ_HOST");
+        $port = env("RABBITMQ_PORT");
+        $user = env("RABBITMQ_USER");
+        $password = env("RABBITMQ_PASSWORD");
+        $vhost = env("RABBITMQ_VIRTUAL_HOST");
+        if(empty($host) || empty($port) || empty($user) || empty($password) || empty($vhost)){
+            return;
+        }
+		$connection = new AMQPStreamConnection($host,$port,$user,$password,$vhost);
 		$channel = $connection->channel();
 		$channel->queue_declare($channelName, false, true, false, false);
 
