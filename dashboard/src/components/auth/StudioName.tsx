@@ -23,7 +23,6 @@ const StudioNameWidget = ({
   popOver,
   onClick,
 }: IWidget) => {
-  // TODO
   const avatar = <Avatar size="small">{data?.nickName?.slice(0, 1)}</Avatar>;
   return (
     <StudioCard popOver={popOver} studio={data}>

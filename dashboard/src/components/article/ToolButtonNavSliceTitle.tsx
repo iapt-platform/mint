@@ -1,5 +1,6 @@
 import { Dropdown } from "antd";
 import React from "react";
+import { useIntl } from "react-intl";
 
 interface IWidget {
   label?: React.ReactNode;
@@ -7,6 +8,7 @@ interface IWidget {
 }
 
 const ToolButtonNavSliceTitleWidget = ({ label, onMenuClick }: IWidget) => {
+  const intl = useIntl();
   return (
     <Dropdown.Button
       type="text"
@@ -15,7 +17,9 @@ const ToolButtonNavSliceTitleWidget = ({ label, onMenuClick }: IWidget) => {
         items: [
           {
             key: "copy-link",
-            label: "复制链接",
+            label: intl.formatMessage({
+              id: "buttons.copy.link",
+            }),
           },
           {
             key: "open",

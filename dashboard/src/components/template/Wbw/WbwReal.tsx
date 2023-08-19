@@ -1,4 +1,4 @@
-import { Space, Tooltip } from "antd";
+import { Tooltip } from "antd";
 import { Typography } from "antd";
 import Lookup from "../../dict/Lookup";
 

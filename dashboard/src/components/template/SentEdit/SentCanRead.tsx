@@ -103,6 +103,7 @@ const SentCanReadWidget = ({
       </div>
       <SentAdd
         disableChannels={channels}
+        type={type}
         onSelect={(channel: IChannel) => {
           if (typeof user === "undefined") {
             return;
@@ -134,7 +135,7 @@ const SentCanReadWidget = ({
       {sentData.map((item, id) => {
         return (
           <SentCell
-            data={item}
+            initValue={item}
             key={id}
             isPr={false}
             editMode={item.openInEditMode}

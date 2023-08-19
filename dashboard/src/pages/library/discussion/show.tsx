@@ -7,7 +7,6 @@ import DiscussionListCard, {
 } from "../../../components/discussion/DiscussionListCard";
 
 const Widget = () => {
-  // TODO
   const { type, id } = useParams(); //url 参数
   const navigate = useNavigate();
 
@@ -23,6 +22,9 @@ const Widget = () => {
         ) => {
           navigate(`/discussion/topic/${comment.id}`);
         }}
+        onReply={(comment: IComment) =>
+          navigate(`/discussion/topic/${comment.id}`)
+        }
       />
     </>
   );

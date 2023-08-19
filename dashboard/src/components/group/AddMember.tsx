@@ -22,7 +22,6 @@ const AddMemberWidget = ({ groupId, onCreated }: IWidget) => {
   const form = (
     <ProForm<IFormData>
       onFinish={async (values: IFormData) => {
-        // TODO
         console.log(values);
         if (typeof groupId !== "undefined") {
           post<IGroupMemberData, IGroupMemberResponse>("/v2/group-member", {

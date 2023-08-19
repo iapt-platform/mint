@@ -28,6 +28,7 @@ import {
 } from "../../../components/api/Course";
 import { PublicityValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
+import { getSorterUrl } from "../../../utils";
 
 interface DataItem {
   sn: number;
@@ -38,8 +39,8 @@ interface DataItem {
   course_count?: number; //课程数
   member_count: number; //成员数量
   type: number; //类型-公开/内部
-  createdAt: number; //创建时间
-  updatedAt?: number; //修改时间
+  created_at: string; //创建时间
+  updated_at?: string; //修改时间
   article_id?: string; //文集ID
   course_start_at?: string; //课程开始时间
   course_end_at?: string; //课程结束时间
@@ -224,9 +225,9 @@ const Widget = () => {
             key: "created-at",
             width: 100,
             search: false,
-            dataIndex: "createdAt",
+            dataIndex: "created_at",
             valueType: "date",
-            sorter: (a, b) => a.createdAt - b.createdAt,
+            sorter: true,
           },
           {
             //操作
@@ -335,7 +336,6 @@ const Widget = () => {
         }}
         //从服务端获取数据
         request={async (params = {}, sorter, filter) => {
-          // TODO
           console.log(params, sorter, filter);
           console.log(activeKey);
           let url = `/v2/course?view=${activeKey}&studio=${studioname}`;
@@ -346,14 +346,14 @@ const Widget = () => {
           if (typeof params.keyword !== "undefined") {
             url += "&search=" + (params.keyword ? params.keyword : "");
           }
+          url += getSorterUrl(sorter);
           console.log("url", url);
 
           const res = await get<ICourseListResponse>(url);
           console.log("api data", res);
           const items: DataItem[] = res.data.rows.map((item, id) => {
-            const date = new Date(item.created_at);
             return {
-              sn: id + 1,
+              sn: id + offset + 1,
               id: item.id,
               title: item.title,
               subtitle: item.subtitle,
@@ -364,7 +364,7 @@ const Widget = () => {
               member_count: item.member_count,
               myStatus: item.my_status,
               countProgressing: item.count_progressing,
-              createdAt: date.getTime(),
+              created_at: item.created_at,
             };
           });
           console.log(items);

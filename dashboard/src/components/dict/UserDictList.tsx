@@ -26,8 +26,8 @@ import { delete_2, get } from "../../request";
 import { useRef, useState } from "react";
 import DictEdit from "../../components/dict/DictEdit";
 import { IDeleteResponse } from "../../components/api/Article";
-import { getSorterUrl } from "../../pages/admin/relation/list";
 import TimeShow from "../general/TimeShow";
+import { getSorterUrl } from "../../utils";
 
 const { Link } = Typography;
 
@@ -209,7 +209,13 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
             valueType: "date",
             sorter: true,
             render: (text, row, index, action) => {
-              return <TimeShow time={row.updated_at} showIcon={false} />;
+              return (
+                <TimeShow
+                  updatedAt={row.updated_at}
+                  showIcon={false}
+                  showLabel={false}
+                />
+              );
             },
           },
           {

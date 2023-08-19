@@ -9,6 +9,7 @@ import { RoleValueEnum } from "../../../components/studio/table";
 
 import { useRef, useState } from "react";
 import InviteCreate from "../../../components/invite/InviteCreate";
+import { getSorterUrl } from "../../../utils";
 
 export interface IInviteData {
   id: string;
@@ -37,7 +38,7 @@ interface DataItem {
   id: string;
   email: string;
   status: string;
-  createdAt: number;
+  created_at: string;
 }
 
 const Widget = () => {
@@ -84,16 +85,14 @@ const Widget = () => {
             title: intl.formatMessage({
               id: "forms.fields.created-at.label",
             }),
-            key: "created-at",
+            key: "created_at",
             width: 100,
             search: false,
-            dataIndex: "createdAt",
+            dataIndex: "created_at",
             valueType: "date",
-            sorter: (a, b) => a.createdAt - b.createdAt,
           },
         ]}
         request={async (params = {}, sorter, filter) => {
-          // TODO
           console.log(params, sorter, filter);
           let url = `/v2/invite?view=studio&studio=${studioname}`;
           const offset =
@@ -101,16 +100,18 @@ const Widget = () => {
             (params.pageSize ? params.pageSize : 20);
           url += `&limit=${params.pageSize}&offset=${offset}`;
           url += params.keyword ? "&search=" + params.keyword : "";
+
+          url += getSorterUrl(sorter);
+
           console.log(url);
           const res = await get<IInviteListResponse>(url);
           const items: DataItem[] = res.data.rows.map((item, id) => {
-            const date = new Date(item.created_at);
             return {
-              sn: id + 1,
+              sn: id + offset + 1,
               id: item.id,
               email: item.email,
               status: item.status,
-              createdAt: date.getTime(),
+              created_at: item.created_at,
             };
           });
           console.log(items);

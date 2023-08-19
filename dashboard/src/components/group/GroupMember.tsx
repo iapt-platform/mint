@@ -56,7 +56,6 @@ const GroupMemberWidget = ({ groupId }: IWidgetGroupFile) => {
         }}
         showActions="hover"
         request={async (params = {}, sorter, filter) => {
-          // TODO
           console.log(params, sorter, filter);
 
           let url = `/v2/group-member?view=group&id=${groupId}`;

@@ -19,6 +19,7 @@ import { IChannel } from "../channel/Channel";
 import TermExport from "./TermExport";
 import DataImport from "../admin/relation/DataImport";
 import TermModal from "./TermModal";
+import { getSorterUrl } from "../../utils";
 
 interface IItem {
   sn: number;
@@ -29,7 +30,7 @@ interface IItem {
   meaning: string;
   meaning2: string;
   note: string | null;
-  createdAt: number;
+  updated_at: string;
 }
 
 interface IWidget {
@@ -151,14 +152,14 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
           },
           {
             title: intl.formatMessage({
-              id: "forms.fields.created-at.label",
+              id: "forms.fields.updated-at.label",
             }),
-            key: "created-at",
+            key: "updated_at",
             width: 200,
             search: false,
-            dataIndex: "createdAt",
+            dataIndex: "updated_at",
             valueType: "date",
-            sorter: (a, b) => a.createdAt - b.createdAt,
+            sorter: true,
           },
           {
             title: intl.formatMessage({ id: "buttons.option" }),
@@ -253,7 +254,6 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
           );
         }}
         request={async (params = {}, sorter, filter) => {
-          // TODO
           console.log(params, sorter, filter);
           const offset =
             ((params.current ? params.current : 1) - 1) *
@@ -269,15 +269,12 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
           if (typeof params.keyword !== "undefined") {
             url += "&search=" + (params.keyword ? params.keyword : "");
           }
-
+          url += getSorterUrl(sorter);
           const res = await get<ITermListResponse>(url);
           console.log(res);
           const items: IItem[] = res.data.rows.map((item, id) => {
-            const date = new Date(item.updated_at);
-            const id2 =
-              ((params.current || 1) - 1) * (params.pageSize || 20) + id + 1;
             return {
-              sn: id2,
+              sn: id + offset + 1,
               id: item.guid,
               word: item.word,
               tag: item.tag,
@@ -285,7 +282,7 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
               meaning: item.meaning,
               meaning2: item.other_meaning,
               note: item.note,
-              createdAt: date.getTime(),
+              updated_at: item.updated_at,
             };
           });
           return {

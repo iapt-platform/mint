@@ -6,8 +6,16 @@ interface IWidget {
   data: IComment[];
   onSelect?: Function;
   onDelete?: Function;
+  onReply?: Function;
+  onClose?: Function;
 }
-const DiscussionListWidget = ({ data, onSelect, onDelete }: IWidget) => {
+const DiscussionListWidget = ({
+  data,
+  onSelect,
+  onDelete,
+  onReply,
+  onClose,
+}: IWidget) => {
   return (
     <List
       pagination={{
@@ -33,6 +41,16 @@ const DiscussionListWidget = ({ data, onSelect, onDelete }: IWidget) => {
             onDelete={() => {
               if (typeof onDelete !== "undefined") {
                 onDelete(item.id);
+              }
+            }}
+            onReply={() => {
+              if (typeof onReply !== "undefined") {
+                onReply(item);
+              }
+            }}
+            onClose={() => {
+              if (typeof onClose !== "undefined") {
+                onClose(item);
               }
             }}
           />

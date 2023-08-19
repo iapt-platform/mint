@@ -96,7 +96,7 @@ const ChapterInChannelWidget = ({
                     <EyeOutlined />
                     {item.hit} | <LikeOutlined />
                     {item.like} |
-                    <TimeShow time={item.updatedAt} /> |
+                    <TimeShow updatedAt={item.updatedAt} /> |
                     <ProgressOutlinedIcon />
                     {`${item.progress}%`}
                   </Space>

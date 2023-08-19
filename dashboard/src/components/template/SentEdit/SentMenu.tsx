@@ -1,26 +1,31 @@
+import { useIntl } from "react-intl";
 import { Badge, Button, Dropdown, Space } from "antd";
-import { MoreOutlined } from "@ant-design/icons";
+import { MoreOutlined, CheckOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import RelatedPara from "../../corpus/RelatedPara";
+import { ArticleMode } from "../../article/Article";
 
-interface ISentMenu {
+interface IWidget {
   book?: number;
   para?: number;
   loading?: boolean;
+  mode?: ArticleMode;
   onMagicDict?: Function;
   onMenuClick?: Function;
 }
 const SentMenuWidget = ({
   book,
   para,
+  mode,
   loading = false,
   onMagicDict,
   onMenuClick,
-}: ISentMenu) => {
+}: IWidget) => {
+  const intl = useIntl();
   const items: MenuProps["items"] = [
     {
       key: "magic-dict-current",
-      label: "神奇字典",
+      label: intl.formatMessage({ id: "buttons.magic-dict" }),
     },
     {
       key: "show-commentary",
@@ -32,20 +37,53 @@ const SentMenuWidget = ({
     },
     {
       key: "copy-id",
-      label: "复制句子编号",
+      label: intl.formatMessage({ id: "buttons.copy.id" }),
     },
     {
       key: "copy-link",
-      label: "复制句子链接",
+      label: intl.formatMessage({ id: "buttons.copy.link" }),
     },
     {
       type: "divider",
     },
     {
+      key: "origin",
+      label: "原文模式",
+      children: [
+        {
+          key: "origin-auto",
+          label: "自动",
+          icon: (
+            <CheckOutlined
+              style={{ visibility: mode === undefined ? "visible" : "hidden" }}
+            />
+          ),
+        },
+        {
+          key: "origin-edit",
+          label: "翻译",
+          icon: (
+            <CheckOutlined
+              style={{ visibility: mode === "edit" ? "visible" : "hidden" }}
+            />
+          ),
+        },
+        {
+          key: "origin-wbw",
+          label: "逐词",
+          icon: (
+            <CheckOutlined
+              style={{ visibility: mode === "wbw" ? "visible" : "hidden" }}
+            />
+          ),
+        },
+      ],
+    },
+    {
       key: "compact",
       label: (
         <Space>
-          {"紧凑"}
+          {intl.formatMessage({ id: "buttons.compact" })}
           <Badge count="Beta" showZero color="#faad14" />
         </Space>
       ),

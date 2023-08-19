@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { MoreOutlined } from "@ant-design/icons";
 
 import { useAppSelector } from "../../hooks";
-import { mode } from "../../reducers/article-mode";
+import { mode as _mode } from "../../reducers/article-mode";
 import { post } from "../../request";
 import { ArticleMode } from "../article/Article";
 import WbwWord, {
@@ -84,6 +84,7 @@ interface IWidget {
   layoutDirection?: "h" | "v";
   magicDict?: string;
   refreshable?: boolean;
+  mode?: ArticleMode;
   onMagicDictDone?: Function;
   onChange?: Function;
 }
@@ -98,6 +99,7 @@ export const WbwSentCtl = ({
   display = "block",
   fields,
   layoutDirection = "h",
+  mode,
   magicDict,
   refreshable = false,
   onChange,
@@ -116,7 +118,8 @@ export const WbwSentCtl = ({
     setMagic(magicDict);
   }, [magicDict]);
 
-  const newMode = useAppSelector(mode);
+  const newMode = useAppSelector(_mode);
+
   const update = (data: IWbw[]) => {
     setWordData(data);
     if (typeof onChange !== "undefined") {
@@ -127,7 +130,7 @@ export const WbwSentCtl = ({
     if (refreshable) {
       setWordData(data);
     }
-  }, [data]);
+  }, [data, refreshable]);
 
   useEffect(() => {
     //发布句子里面的单词的变更。给术语输入菜单用。
@@ -154,8 +157,17 @@ export const WbwSentCtl = ({
   }, [book, para, wordData, wordEnd, wordStart]);
 
   useEffect(() => {
-    setDisplayMode(newMode);
-    switch (newMode) {
+    console.log("mode", mode);
+    let currMode: ArticleMode | undefined;
+    if (typeof mode !== "undefined") {
+      currMode = mode;
+    } else if (typeof newMode !== "undefined") {
+      currMode = newMode;
+    } else {
+      currMode = undefined;
+    }
+    setDisplayMode(currMode);
+    switch (currMode) {
       case "edit":
         if (typeof display === "undefined") {
           setWbwMode("block");
@@ -185,7 +197,7 @@ export const WbwSentCtl = ({
         }
         break;
     }
-  }, [newMode]);
+  }, [newMode, mode]);
 
   useEffect(() => {
     if (typeof magic === "undefined") {

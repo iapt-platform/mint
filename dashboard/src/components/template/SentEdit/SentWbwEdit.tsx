@@ -66,7 +66,7 @@ const SentWbwEditWidget = ({ data, onSave, onClose }: IWidget) => {
   const [wbwData, setWbwData] = useState<IWbw[]>([]);
 
   useEffect(() => {
-    if (data.contentType === "json") {
+    if (data.contentType === "json" && data.content) {
       setWbwData(JSON.parse(data.content));
     }
   }, [data.content, data.contentType]);

@@ -3,7 +3,7 @@ import { useIntl } from "react-intl";
 import { TeamOutlined } from "@ant-design/icons";
 import { Button, Space } from "antd";
 
-import ArticleTplMaker from "../../components/article/ArticleTplMaker";
+import { ArticleTplModal } from "../template/Builder/ArticleTpl";
 import ShareModal from "../../components/share/ShareModal";
 import { EResType } from "../../components/share/Share";
 import AddToAnthology from "../../components/article/AddToAnthology";
@@ -40,7 +40,7 @@ const ArticleEditToolsWidget = ({
       <Link to={`/article/article/${articleId}`} target="_blank">
         {intl.formatMessage({ id: "buttons.open.in.library" })}
       </Link>
-      <ArticleTplMaker
+      <ArticleTplModal
         title={title}
         type="article"
         id={articleId}

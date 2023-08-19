@@ -37,7 +37,6 @@ const InviteCreateWidget = ({ studio, onCreate }: IWidget) => {
     <ProForm<IFormData>
       formRef={formRef}
       onFinish={async (values: IFormData) => {
-        // TODO
         if (typeof studio === "undefined") {
           return;
         }

@@ -1,6 +1,6 @@
 import { Typography } from "antd";
 import { TCodeConvertor, XmlToReact } from "./utilities";
-const { Paragraph } = Typography;
+const { Paragraph, Text } = Typography;
 
 interface IWidget {
   html?: string;
@@ -18,7 +18,12 @@ const Widget = ({
   convertor,
   style,
 }: IWidget) => {
-  const jsx = html ? XmlToReact(html, wordWidget, convertor) : placeholder;
+  const jsx =
+    html && html.trim() !== "" ? (
+      XmlToReact(html, wordWidget, convertor)
+    ) : (
+      <Text type="secondary">{placeholder}</Text>
+    );
   return (
     <Paragraph style={style} className={className}>
       {jsx}

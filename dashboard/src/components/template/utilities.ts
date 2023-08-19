@@ -7,6 +7,7 @@ import { roman_to_my, my_to_roman } from "../code/my";
 import { roman_to_si } from "../code/si";
 import { roman_to_thai } from "../code/thai";
 import { roman_to_taitham } from "../code/tai-tham";
+import ParserError from "../general/ParserError";
 
 export type TCodeConvertor =
   | "none"
@@ -24,10 +25,11 @@ export function XmlToReact(
   //console.log("html string:", text);
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(
-    "<root>" + text + "</root>",
-    "text/xml"
+    `<body>${text}</body>`,
+    "application/xml"
   );
   const x = xmlDoc.documentElement;
+  //console.log("解析成功", x);
   return convert(x, wordWidget, convertor);
 
   function getAttr(node: ChildNode, key: number): Object {
@@ -59,7 +61,18 @@ export function XmlToReact(
 
       switch (value.nodeType) {
         case 1: //element node
-          switch (value.nodeName) {
+          //console.log("tag name", value.nodeName);
+          const tagName = value.nodeName;
+          switch (tagName) {
+            case "parsererror":
+              output.push(
+                React.createElement(
+                  ParserError,
+                  getAttr(value, i),
+                  convert(value, wordWidget, convertor)
+                )
+              );
+              break;
             case "MdTpl":
               output.push(
                 React.createElement(
@@ -90,7 +103,7 @@ export function XmlToReact(
             default:
               output.push(
                 React.createElement(
-                  value.nodeName,
+                  tagName,
                   getAttr(value, i),
                   convert(value, wordWidget, convertor)
                 )

@@ -95,16 +95,17 @@ const Widget = () => {
     /**
      * 启动时载入格位公式字典
      */
-    get<IApiResponseDictList>(
-      `/v2/userdict?view=dict&id=2142c229-8860-4ca5-a82e-1afc7e4f1e5d`
-    ).then((json) => {
+    //TODO 存储到session storage
+    const url = `/v2/userdict?view=dict&id=2142c229-8860-4ca5-a82e-1afc7e4f1e5d`;
+    console.log("url", url);
+    get<IApiResponseDictList>(url).then((json) => {
       console.log("_formula_ ok", json.data.count);
       //存储到redux
       store.dispatch(add(json.data.rows));
     });
   }, []);
   const rightBarWidth = "48px";
-  const channelId = id?.split("_").slice(1);
+
   let currMode: ArticleMode;
   if (searchParams.get("mode") !== null) {
     currMode = searchParams.get("mode") as ArticleMode;
@@ -309,10 +310,13 @@ const Widget = () => {
               ) => {
                 let url = `/article/${type}/${newId}?mode=${currMode}`;
                 searchParams.forEach((value, key) => {
-                  if (key !== "mode") {
+                  if (key !== "mode" && key !== "par") {
                     url += `&${key}=${value}`;
                   }
                 });
+                if (type === "para") {
+                  url += "&par=" + newId.split("-")[1];
+                }
                 if (event.ctrlKey || event.metaKey) {
                   window.open(fullUrl(url), "_blank");
                 } else {
@@ -327,7 +331,7 @@ const Widget = () => {
               curr={rightPanel}
               type={type as ArticleType}
               articleId={id ? id : ""}
-              selectedChannelKeys={channelId}
+              selectedChannelsId={searchParams.get("channel")?.split("_")}
               onClose={() => {
                 setRightPanel("close");
               }}

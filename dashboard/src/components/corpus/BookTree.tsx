@@ -81,7 +81,6 @@ const BookTreeWidget = ({
     });
   }
 
-  // TODO
   return (
     <Space direction="vertical" style={{ padding: 10, width: "100%" }}>
       <Space style={{ display: "flex", justifyContent: "space-between" }}>

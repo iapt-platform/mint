@@ -91,3 +91,12 @@
   margin: 0 0.3em 0 1px;
   padding: 0px 2px;
 }
+.edit_icon {
+  display: none;
+  position: absolute;
+  border: 1px solid gray;
+  background-color: wheat;
+}
+.pali_shell:hover .edit_icon {
+  display: inline-block;
+}

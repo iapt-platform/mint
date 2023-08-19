@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Button, Popover, Space, Typography } from "antd";
+import { Button, Popover, Space, Tag, Typography } from "antd";
 import {
   TagTwoTone,
   InfoCircleOutlined,
   CommentOutlined,
   ApartmentOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 
 import "./wbw.css";
@@ -119,14 +120,12 @@ const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
   ]);
 
   const handleClickChange = (open: boolean) => {
-    if (mode === "wbw") {
-      if (open) {
-        setPaliColor("lightblue");
-      } else {
-        setPaliColor("unset");
-      }
-      setPopOpen(open);
+    if (open) {
+      setPaliColor("lightblue");
+    } else {
+      setPaliColor("unset");
     }
+    setPopOpen(open);
   };
 
   const wbwDetail = (
@@ -256,15 +255,24 @@ const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
     //非标点符号
     return (
       <div className="pali_shell">
-        <Popover
-          content={wbwDetail}
-          placement="bottom"
-          trigger="click"
-          open={popOpen}
-          onOpenChange={handleClickChange}
-        >
-          {paliWord}
-        </Popover>
+        <span className="pali_shell_spell">
+          {mode === "edit" ? paliWord : ""}
+          <Popover
+            content={wbwDetail}
+            placement="bottom"
+            trigger="click"
+            open={popOpen}
+            onOpenChange={handleClickChange}
+          >
+            {mode === "wbw" ? (
+              paliWord
+            ) : (
+              <span className="edit_icon">
+                <EditOutlined style={{ cursor: "pointer" }} />
+              </span>
+            )}
+          </Popover>
+        </span>
         <Space>
           {videoIcon}
           {noteIcon}

@@ -6,6 +6,7 @@ import DiscussionTopic from "./DiscussionTopic";
 import DiscussionListCard, { TResType } from "./DiscussionListCard";
 import { IComment } from "./DiscussionItem";
 import DiscussionAnchor from "./DiscussionAnchor";
+import { Link } from "react-router-dom";
 
 export interface IAnswerCount {
   id: string;
@@ -31,10 +32,7 @@ const DiscussionBoxWidget = ({
   const drawerMaxWidth = 1100;
 
   const [drawerWidth, setDrawerWidth] = useState(drawerMinWidth);
-  const showChildrenDrawer = (
-    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-    comment: IComment
-  ) => {
+  const showChildrenDrawer = (comment: IComment) => {
     setChildrenDrawer(true);
     setTopicComment(comment);
   };
@@ -53,6 +51,9 @@ const DiscussionBoxWidget = ({
         destroyOnClose
         extra={
           <Space>
+            <Link to={`/discussion/show/${resType}/${resId}`} target="_blank">
+              在新窗口打开
+            </Link>
             {drawerWidth === drawerMinWidth ? (
               <Button
                 type="link"
@@ -83,7 +84,11 @@ const DiscussionBoxWidget = ({
         <DiscussionListCard
           resId={resId}
           resType={resType}
-          onSelect={showChildrenDrawer}
+          onSelect={(
+            e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+            comment: IComment
+          ) => showChildrenDrawer(comment)}
+          onReply={(comment: IComment) => showChildrenDrawer(comment)}
           changedAnswerCount={answerCount}
           onItemCountChange={(count: number) => {
             if (typeof onCommentCountChange !== "undefined") {

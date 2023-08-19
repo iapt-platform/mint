@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ArticleEditDrawer from "../../../components/article/ArticleEditDrawer";
 
 import ArticleList from "../../../components/article/ArticleList";
@@ -8,7 +8,6 @@ const Widget = () => {
   const { studioname } = useParams(); //url 参数
   const [articleId, setArticleId] = useState<string>();
   const [open, setOpen] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   return (
     <>

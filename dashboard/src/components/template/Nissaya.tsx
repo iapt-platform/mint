@@ -1,4 +1,3 @@
-import { Space } from "antd";
 import NissayaMeaning from "./Nissaya/NissayaMeaning";
 import PaliText from "./Wbw/PaliText";
 

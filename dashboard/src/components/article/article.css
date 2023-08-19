@@ -35,3 +35,35 @@ h6 {
   padding-left: 0.5em;
   color: gray;
 }
+
+.pcd_article table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  display: block;
+  width: -webkit-max-content;
+  width: max-content;
+  max-width: 100%;
+}
+.pcd_article td,
+.pcd_article th {
+  padding: 0;
+}
+
+.pcd_article table th {
+  font-weight: 600;
+}
+.pcd_article table th,
+.pcd_article table td {
+  padding: 6px 13px;
+  border: 1px solid #d0d7de;
+}
+.pcd_article table tr {
+  background-color: #ffffff;
+  border-top: 1px solid hsl(210, 18%, 87%);
+}
+.pcd_article table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+.pcd_article table img {
+  background-color: transparent;
+}

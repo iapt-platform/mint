@@ -1,8 +1,7 @@
-import { useParams } from "react-router-dom";
 import { ActionType, ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
-import { Badge, message, Modal, Typography } from "antd";
+import { Alert, Badge, message, Modal, Typography } from "antd";
 import { Button, Dropdown, Popover } from "antd";
 import {
   PlusOutlined,
@@ -25,8 +24,9 @@ import ShareModal from "../../components/share/ShareModal";
 import { EResType } from "../../components/share/Share";
 import StudioName, { IStudio } from "../../components/auth/StudioName";
 import StudioSelect from "../../components/channel/StudioSelect";
-import { ArticleType } from "../article/Article";
 import { IChannel } from "./Channel";
+import { getSorterUrl } from "../../utils";
+
 const { Text } = Typography;
 
 export interface IResNumberResponse {
@@ -61,19 +61,21 @@ interface IChannelItem {
   role?: TRole;
   studio?: IStudio;
   publicity: number;
-  createdAt: number;
+  created_at: string;
 }
 
 interface IWidget {
   studioName?: string;
   type?: string;
   disableChannels?: string[];
+  channelType?: TChannelType;
   onSelect?: Function;
 }
 
 const ChannelTableWidget = ({
   studioName,
   disableChannels,
+  channelType,
   type,
   onSelect,
 }: IWidget) => {
@@ -143,6 +145,13 @@ const ChannelTableWidget = ({
 
   return (
     <>
+      {channelType ? (
+        <Alert
+          message={`仅显示版本类型${channelType}`}
+          type="success"
+          closable
+        />
+      ) : undefined}
       <ProTable<IChannelItem>
         actionRef={ref}
         columns={[
@@ -309,12 +318,12 @@ const ChannelTableWidget = ({
             title: intl.formatMessage({
               id: "forms.fields.created-at.label",
             }),
-            key: "created-at",
+            key: "created_at",
             width: 100,
             search: false,
-            dataIndex: "createdAt",
+            dataIndex: "created_at",
             valueType: "date",
-            sorter: (a, b) => a.createdAt - b.createdAt,
+            sorter: true,
           },
           {
             title: intl.formatMessage({ id: "buttons.option" }),
@@ -362,9 +371,9 @@ const ChannelTableWidget = ({
                     },
                   }}
                 >
-                  <Link to={`/studio/${studioName}/channel/${row.uid}/edit`}>
+                  <Link to={`/studio/${studioName}/channel/${row.uid}/setting`}>
                     {intl.formatMessage({
-                      id: "buttons.edit",
+                      id: "buttons.setting",
                     })}
                   </Link>
                 </Dropdown.Button>,
@@ -410,16 +419,20 @@ const ChannelTableWidget = ({
         }}
         */
         request={async (params = {}, sorter, filter) => {
-          // TODO 分页
           console.log(params, sorter, filter);
           let url = `/v2/channel?view=studio&view2=${activeKey}&name=${studioName}`;
+          const offset =
+            ((params.current ? params.current : 1) - 1) *
+            (params.pageSize ? params.pageSize : 20);
+          url += `&limit=${params.pageSize}&offset=${offset}`;
+
           url += collaborator ? "&collaborator=" + collaborator : "";
           url += params.keyword ? "&search=" + params.keyword : "";
-
+          url += channelType ? "&type=" + channelType : "";
+          url += getSorterUrl(sorter);
           console.log("url", url);
           const res: IApiResponseChannelList = await get(url);
           const items: IChannelItem[] = res.data.rows.map((item, id) => {
-            const date = new Date(item.created_at);
             return {
               id: id + 1,
               uid: item.uid,
@@ -429,7 +442,7 @@ const ChannelTableWidget = ({
               role: item.role,
               studio: item.studio,
               publicity: item.status,
-              createdAt: date.getTime(),
+              created_at: item.created_at,
             };
           });
           return {

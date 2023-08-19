@@ -5,13 +5,16 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import CommentAnchor from "../../../components/discussion/DiscussionAnchor";
 import { IComment } from "../../../components/discussion/DiscussionItem";
-import CommentTopic from "../../../components/discussion/DiscussionTopic";
-import { useState } from "react";
+import DiscussionTopic from "../../../components/discussion/DiscussionTopic";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 const Widget = () => {
   const { id } = useParams(); //url 参数
   const navigate = useNavigate();
   const [discussion, setDiscussion] = useState<IComment>();
+  const href = window.location.href.split("#");
+  const anchor = href.length > 1 ? href[1] : undefined;
+
   return (
     <>
       <CommentAnchor resId={discussion?.resId} resType={discussion?.resType} />
@@ -32,8 +35,9 @@ const Widget = () => {
           </Button>
         }
       >
-        <CommentTopic
+        <DiscussionTopic
           topicId={id}
+          focus={anchor}
           onTopicReady={(value: IComment) => {
             console.log("onTopicReady");
             setDiscussion(value);

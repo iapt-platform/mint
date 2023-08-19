@@ -22,14 +22,14 @@ interface IItem {
   path: string;
   progress: number;
   view: number;
-  createdAt: number;
-  updatedAt: number;
+  created_at: string;
+  updated_at: string;
 }
 interface IWidget {
   channelId?: string;
   onSelect?: Function;
 }
-const ChpaterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
+const ChapterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
   const intl = useIntl();
 
   return (
@@ -118,9 +118,9 @@ const ChpaterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
           key: "created-at",
           width: 100,
           search: false,
-          dataIndex: "createdAt",
+          dataIndex: "created_at",
           valueType: "date",
-          sorter: (a, b) => a.createdAt - b.createdAt,
+          sorter: false,
         },
         {
           title: intl.formatMessage({ id: "buttons.option" }),
@@ -167,7 +167,7 @@ const ChpaterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
         },
       ]}
       request={async (params = {}, sorter, filter) => {
-        // TODO
+        // TODO 加排序
         console.log(params, sorter, filter);
         const offset = (params.current || 1 - 1) * (params.pageSize || 20);
         const res = await get<IChapterListResponse>(
@@ -175,8 +175,6 @@ const ChpaterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
         );
         console.log(res.data.rows);
         const items: IItem[] = res.data.rows.map((item, id) => {
-          const createdAt = new Date(item.created_at);
-          const updatedAt = new Date(item.updated_at);
           return {
             sn: id + offset + 1,
             book: item.book,
@@ -187,8 +185,8 @@ const ChpaterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
             summary: item.summary,
             path: item.path,
             progress: item.progress,
-            createdAt: createdAt.getTime(),
-            updatedAt: updatedAt.getTime(),
+            created_at: item.created_at,
+            updated_at: item.updated_at,
           };
         });
         return {
@@ -211,4 +209,4 @@ const ChpaterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
   );
 };
 
-export default ChpaterInChannelListWidget;
+export default ChapterInChannelListWidget;

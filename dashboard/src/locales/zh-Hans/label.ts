@@ -15,6 +15,7 @@ const items = {
   "labels.first-translation": "第一个译文",
   "labels.first-course": "第一个课程",
   "labels.updated-at": "更新于",
+  "labels.created-at": "创建于",
 };
 
 export default items;

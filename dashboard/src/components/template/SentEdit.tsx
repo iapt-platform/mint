@@ -9,6 +9,16 @@ import { ITocPathNode } from "../corpus/TocPath";
 import SentContent from "./SentEdit/SentContent";
 import SentTab from "./SentEdit/SentTab";
 import { IWbw } from "./Wbw/WbwWord";
+import { ArticleMode } from "../article/Article";
+import { TChannelType } from "../api/Channel";
+
+export interface IResNumber {
+  translation?: number;
+  nissaya?: number;
+  commentary?: number;
+  origin?: number;
+  sim?: number;
+}
 
 export interface ISuggestionCount {
   suggestion?: number;
@@ -16,7 +26,7 @@ export interface ISuggestionCount {
 }
 export interface ISentence {
   id?: string;
-  content: string;
+  content: string | null;
   contentType?: TContentType;
   html: string;
   book: number;
@@ -29,6 +39,7 @@ export interface ISentence {
   channel: IChannel;
   studio?: IStudio;
   updateAt: string;
+  createdAt?: string;
   suggestionCount?: ISuggestionCount;
   openInEditMode?: boolean;
   translationChannels?: string[];
@@ -56,6 +67,7 @@ export interface IWidgetSentEditInner {
   originNum: number;
   simNum?: number;
   compact?: boolean;
+  mode?: ArticleMode;
 }
 export const SentEditInner = ({
   id,
@@ -74,17 +86,38 @@ export const SentEditInner = ({
   originNum,
   simNum,
   compact = false,
+  mode,
 }: IWidgetSentEditInner) => {
   const [wbwData, setWbwData] = useState<IWbw[]>();
   const [magicDict, setMagicDict] = useState<string>();
   const [magicDictLoading, setMagicDictLoading] = useState(false);
   const [isCompact, setIsCompact] = useState(compact);
+  const [articleMode, setArticleMode] = useState<ArticleMode | undefined>(mode);
+  const [loadedRes, setLoadedRes] = useState<IResNumber>();
 
+  useEffect(() => {
+    const validRes = (value: ISentence, type: TChannelType) =>
+      value.channel.type === type &&
+      value.content &&
+      value.content.trim().length > 0;
+    if (translation) {
+      const res = {
+        translation: translation.filter((value) =>
+          validRes(value, "translation")
+        ).length,
+        nissaya: translation.filter((value) => validRes(value, "nissaya"))
+          .length,
+        commentary: translation.filter((value) => validRes(value, "commentary"))
+          .length,
+      };
+      setLoadedRes(res);
+    }
+  }, [translation]);
   useEffect(() => {
     const content = origin?.find(
       (value) => value.channel.type === "wbw"
     )?.content;
-    if (typeof content !== "undefined") {
+    if (content) {
       setWbwData(JSON.parse(content));
     }
   }, []);
@@ -108,6 +141,7 @@ export const SentEditInner = ({
         layout={layout}
         magicDict={magicDict}
         compact={isCompact}
+        mode={articleMode}
         onWbwChange={(data: IWbw[]) => {
           setWbwData(data);
         }}
@@ -129,14 +163,17 @@ export const SentEditInner = ({
         commNum={commNum}
         originNum={originNum}
         simNum={simNum}
+        loadedRes={loadedRes}
         wbwData={wbwData}
         magicDictLoading={magicDictLoading}
         compact={isCompact}
+        mode={articleMode}
         onMagicDict={(type: string) => {
           setMagicDict(type);
           setMagicDictLoading(true);
         }}
         onCompact={(value: boolean) => setIsCompact(value)}
+        onModeChange={(value: ArticleMode | undefined) => setArticleMode(value)}
       />
     </Card>
   );

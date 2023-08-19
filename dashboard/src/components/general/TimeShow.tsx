@@ -8,7 +8,9 @@ const { Text } = Typography;
 interface IWidgetTimeShow {
   showIcon?: boolean;
   showTooltip?: boolean;
-  time?: string;
+  showLabel?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
   title?: string;
   type?: BaseType;
 }
@@ -16,7 +18,9 @@ interface IWidgetTimeShow {
 const TimeShowWidget = ({
   showIcon = true,
   showTooltip = true,
-  time,
+  showLabel = true,
+  createdAt,
+  updatedAt,
   title,
   type,
 }: IWidgetTimeShow) => {
@@ -24,8 +28,41 @@ const TimeShowWidget = ({
   const [passTime, setPassTime] = useState<string>();
   const [mTime, setMTime] = useState(0);
 
+  let mTitle: string | undefined;
+  let showTime: string | undefined;
+  if (typeof title === "undefined") {
+    if (updatedAt && createdAt) {
+      if (updatedAt === createdAt) {
+        mTitle = intl.formatMessage({
+          id: "labels.created-at",
+        });
+        showTime = createdAt;
+      } else {
+        mTitle = intl.formatMessage({
+          id: "labels.updated-at",
+        });
+        showTime = updatedAt;
+      }
+    } else if (createdAt) {
+      mTitle = intl.formatMessage({
+        id: "labels.created-at",
+      });
+      showTime = createdAt;
+    } else if (updatedAt) {
+      mTitle = intl.formatMessage({
+        id: "labels.updated-at",
+      });
+      showTime = updatedAt;
+    } else {
+      mTitle = undefined;
+      showTime = "";
+    }
+  } else {
+    mTitle = title;
+  }
+
   useEffect(() => {
-    if (typeof time === "undefined") {
+    if (typeof createdAt === "undefined" && typeof updatedAt === "undefined") {
       return;
     }
     let timer = setInterval(() => {
@@ -37,28 +74,27 @@ const TimeShowWidget = ({
   }, []);
 
   useEffect(() => {
-    if (typeof time !== "undefined" && time !== "") {
-      setPassTime(getPassDataTime(time));
+    if (typeof showTime !== "undefined" && showTime !== "") {
+      setPassTime(getPassDataTime(showTime));
     }
-  }, [mTime, time]);
+  }, [mTime, showTime]);
 
-  if (typeof time === "undefined" || time === "") {
+  if (typeof showTime === "undefined") {
     return <></>;
   }
+
   const icon = showIcon ? <FieldTimeOutlined /> : <></>;
 
-  const tooltip: string = getFullDataTime(time);
+  const tooltip: string = getFullDataTime(showTime);
   const color = "lime";
   function getPassDataTime(t: string): string {
     let currDate = new Date();
     const time = new Date(t);
     let pass = currDate.getTime() - time.getTime();
     let strPassTime = "";
-    if (pass < 60 * 1000) {
-      //二分钟内
-      strPassTime =
-        Math.floor(pass / 1000) +
-        intl.formatMessage({ id: "utilities.time.secs_ago" });
+    if (pass < 100 * 1000) {
+      //一分钟内
+      strPassTime = intl.formatMessage({ id: "utilities.time.now" });
     } else if (pass < 3600 * 1000) {
       //二小时内
       strPassTime =
@@ -106,7 +142,7 @@ const TimeShowWidget = ({
       <Text type={type}>
         <Space>
           {icon}
-          {title}
+          {mTitle}
           {passTime}
         </Space>
       </Text>

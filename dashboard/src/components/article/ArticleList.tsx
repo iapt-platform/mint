@@ -29,12 +29,13 @@ import {
 } from "../../components/api/Article";
 import { PublicityValueEnum } from "../../components/studio/table";
 import { useEffect, useRef, useState } from "react";
-import ArticleTplMaker from "../../components/article/ArticleTplMaker";
+import { ArticleTplModal } from "../template/Builder/ArticleTpl";
 import Share, { EResType } from "../../components/share/Share";
 import AddToAnthology from "../../components/article/AddToAnthology";
 import AnthologySelect from "../../components/anthology/AnthologySelect";
 import StudioName, { IStudio } from "../../components/auth/StudioName";
 import { IUser } from "../../components/auth/User";
+import { getSorterUrl } from "../../utils";
 
 const { Text } = Typography;
 
@@ -70,9 +71,9 @@ interface DataItem {
   anthologyCount?: number;
   anthologyTitle?: string;
   publicity: number;
-  createdAt: number;
   studio?: IStudio;
   editor?: IUser;
+  updated_at?: string;
 }
 
 interface IWidget {
@@ -251,14 +252,14 @@ const ArticleListWidget = ({
           },
           {
             title: intl.formatMessage({
-              id: "forms.fields.created-at.label",
+              id: "forms.fields.updated-at.label",
             }),
-            key: "created-at",
+            key: "updated_at",
             width: 100,
             search: false,
-            dataIndex: "createdAt",
+            dataIndex: "updated_at",
             valueType: "date",
-            sorter: (a, b) => a.createdAt - b.createdAt,
+            sorter: true,
           },
           {
             title: intl.formatMessage({ id: "buttons.option" }),
@@ -277,7 +278,7 @@ const ArticleListWidget = ({
                       {
                         key: "tpl",
                         label: (
-                          <ArticleTplMaker
+                          <ArticleTplModal
                             title={row.title}
                             type="article"
                             id={row.id}
@@ -386,17 +387,20 @@ const ArticleListWidget = ({
           const offset =
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 10);
+
           url += `&limit=${params.pageSize}&offset=${offset}`;
           url += params.keyword ? "&search=" + params.keyword : "";
 
           if (typeof anthologyId !== "undefined") {
             url += "&anthology=" + anthologyId;
           }
+
+          url += getSorterUrl(sorter);
+
           const res = await get<IArticleListResponse>(url);
           const items: DataItem[] = res.data.rows.map((item, id) => {
-            const date = new Date(item.created_at);
             return {
-              sn: id + 1,
+              sn: id + offset + 1,
               id: item.uid,
               title: item.title,
               subtitle: item.subtitle,
@@ -404,7 +408,7 @@ const ArticleListWidget = ({
               anthologyCount: item.anthology_count,
               anthologyTitle: item.anthology_first?.title,
               publicity: item.status,
-              createdAt: date.getTime(),
+              updated_at: item.updated_at,
               studio: item.studio,
               editor: item.editor,
             };

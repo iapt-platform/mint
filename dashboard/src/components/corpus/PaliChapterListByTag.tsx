@@ -5,18 +5,21 @@ import { IPaliChapterListResponse } from "../api/Corpus";
 import { IPaliChapterData } from "./PaliChapterCard";
 import PaliChapterList, { IChapterClickEvent } from "./PaliChapterList";
 
-interface IWidgetPaliChapterListByTag {
+interface IWidget {
   tag: string[];
   onChapterClick?: Function;
 }
 
-const PaliChapterListByTagWidget = (prop: IWidgetPaliChapterListByTag) => {
+const PaliChapterListByTagWidget = ({ tag = [], onChapterClick }: IWidget) => {
   const [tableData, setTableData] = useState<IPaliChapterData[]>([]);
 
   useEffect(() => {
-    console.log("palichapterlist useEffect");
-    let url = `/v2/palitext?view=chapter&tags=${prop.tag.join()}`;
-    console.log("tag url", url);
+    if (tag.length === 0) {
+      setTableData([]);
+      return;
+    }
+    let url = `/v2/palitext?view=chapter&tags=${tag.join()}`;
+    console.log("url", url);
     get<IPaliChapterListResponse>(url).then((json) => {
       if (json.ok) {
         let newTree: IPaliChapterData[] = json.data.rows.map((item) => {
@@ -37,15 +40,15 @@ const PaliChapterListByTagWidget = (prop: IWidgetPaliChapterListByTag) => {
         console.error(json.message);
       }
     });
-  }, [prop.tag]);
+  }, [tag]);
 
   return (
     <PaliChapterList
       data={tableData}
       maxLevel={1}
       onChapterClick={(e: IChapterClickEvent) => {
-        if (typeof prop.onChapterClick !== "undefined") {
-          prop.onChapterClick(e);
+        if (typeof onChapterClick !== "undefined") {
+          onChapterClick(e);
         }
       }}
     />

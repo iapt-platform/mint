@@ -14,6 +14,7 @@ import { ISentence } from "../SentEdit";
 import TermTextArea from "../../general/TermTextArea";
 import { useAppSelector } from "../../../hooks";
 import { wordList } from "../../../reducers/sent-word";
+import Builder from "../Builder/Builder";
 
 const { Text } = Typography;
 
@@ -44,6 +45,9 @@ const SentCellEditableWidget = ({
 
   const savePr = () => {
     setSaving(true);
+    if (!value) {
+      return;
+    }
     post<ISentencePrRequest, ISentencePrResponse>(`/v2/sentpr`, {
       book: data.book,
       para: data.para,
@@ -118,9 +122,9 @@ const SentCellEditableWidget = ({
   };
 
   return (
-    <Typography.Paragraph>
+    <Typography.Paragraph style={{ width: "100%" }}>
       <TermTextArea
-        value={value}
+        value={value ? value : ""}
         menuOptions={termList}
         onChange={(value: string) => {
           setValue(value);
@@ -158,6 +162,9 @@ const SentCellEditableWidget = ({
               new line
             </Button>
           </span>
+          <Text keyboard style={{ cursor: "pointer" }}>
+            <Builder trigger={"<t>"} />
+          </Text>
         </div>
         <div>
           <Text keyboard>Ctrl/⌘</Text>➕<Text keyboard>enter</Text>=

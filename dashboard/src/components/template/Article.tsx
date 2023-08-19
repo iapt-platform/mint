@@ -13,7 +13,7 @@ interface IWidgetChapterCtl {
   style?: TDisplayStyle;
 }
 
-const ArticleCtl = ({
+export const ArticleCtl = ({
   type,
   id,
   channel,

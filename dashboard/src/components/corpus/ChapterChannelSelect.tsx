@@ -91,7 +91,7 @@ const ChapterChannelSelectWidget = ({
                   <EyeOutlined />
                   {item.hit} | <LikeOutlined />
                   {item.like} |
-                  <TimeShow time={item.updatedAt} title={item.updatedAt} />
+                  <TimeShow updatedAt={item.updatedAt} />
                 </Space>
               </Text>
             </List.Item>

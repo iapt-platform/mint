@@ -75,7 +75,9 @@ const SuggestionToolbarWidget = ({
       />
       {CommentCount}
       {compact ? undefined : <Divider type="vertical" />}
-      {compact ? undefined : <Text copyable={{ text: data.content }}></Text>}
+      {compact ? undefined : (
+        <Text copyable={{ text: data.content ? data.content : "" }}></Text>
+      )}
     </Space>
   );
   return (

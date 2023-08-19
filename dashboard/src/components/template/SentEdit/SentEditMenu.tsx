@@ -13,6 +13,7 @@ import type { MenuProps } from "antd";
 import { ISentence } from "../SentEdit";
 import SentHistoryModal from "../../corpus/SentHistoryModal";
 import { HandOutlinedIcon, JsonOutlinedIcon } from "../../../assets/icon";
+import { useIntl } from "react-intl";
 
 interface IWidget {
   data: ISentence;
@@ -30,6 +31,7 @@ const SentEditMenuWidget = ({
 }: IWidget) => {
   const [isHover, setIsHover] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
+  const intl = useIntl();
 
   const onClick: MenuProps["onClick"] = (e) => {
     if (typeof onMenuClick !== "undefined") {
@@ -92,7 +94,9 @@ const SentEditMenuWidget = ({
     },
     {
       key: "copy-link",
-      label: "复制链接",
+      label: intl.formatMessage({
+        id: "buttons.copy.link",
+      }),
       icon: <LinkOutlined />,
     },
   ];
@@ -113,7 +117,7 @@ const SentEditMenuWidget = ({
       />
       <div
         style={{
-          marginTop: "-4.2em",
+          marginTop: 0,
           right: 30,
           position: "absolute",
           display: isHover ? "block" : "none",
@@ -133,9 +137,13 @@ const SentEditMenuWidget = ({
           icon={<CopyOutlined />}
           size="small"
           onClick={() => {
-            navigator.clipboard.writeText(data.content).then(() => {
-              message.success("已经拷贝到剪贴板");
-            });
+            if (data.content) {
+              navigator.clipboard.writeText(data.content).then(() => {
+                message.success("已经拷贝到剪贴板");
+              });
+            } else {
+              message.success("内容为空");
+            }
           }}
         />
         <Dropdown menu={{ items, onClick }} placement="bottomRight">

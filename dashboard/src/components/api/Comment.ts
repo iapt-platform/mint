@@ -10,6 +10,7 @@ export interface ICommentRequest {
   content?: string;
   content_type?: TContentType;
   parent?: string;
+  status?: "active" | "close";
   editor?: IUserApiData;
   created_at?: string;
   updated_at?: string;
@@ -23,6 +24,7 @@ export interface ICommentApiData {
   content?: string;
   content_type?: TContentType;
   parent?: string;
+  status?: "active" | "close";
   children_count: number;
   editor: IUserApiData;
   created_at?: string;
@@ -38,7 +40,12 @@ export interface ICommentResponse {
 export interface ICommentListResponse {
   ok: boolean;
   message: string;
-  data: { rows: ICommentApiData[]; count: number };
+  data: {
+    rows: ICommentApiData[];
+    count: number;
+    active: number;
+    close: number;
+  };
 }
 export interface ICommentAnchorResponse {
   ok: boolean;

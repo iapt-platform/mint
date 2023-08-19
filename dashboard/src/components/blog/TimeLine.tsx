@@ -63,7 +63,13 @@ const TimeLineWidget = ({ studioName }: IWidget) => {
               style={{ backgroundColor: "unset" }}
               key={id}
               dot={icon}
-              label={<TimeShow time={item.date} showIcon={false} />}
+              label={
+                <TimeShow
+                  createdAt={item.date}
+                  showIcon={false}
+                  showLabel={false}
+                />
+              }
             >
               {intl.formatMessage({
                 id: `labels.${item.event}`,

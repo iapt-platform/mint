@@ -5,13 +5,10 @@ import { Affix } from "antd";
 import BlogNav from "../../../components/blog/BlogNav";
 import Profile from "../../../components/blog/Profile";
 import AuthorTimeLine from "../../../components/blog/TimeLine";
-import TopArticles from "../../../components/blog/TopArticles";
 import TopChapter from "../../../components/corpus/TopChapter";
 
 const Widget = () => {
-  // TODO
   const { studio } = useParams(); //url 参数
-  //<TopArticles studio={studio ? studio : ""} />
   return (
     <>
       <Affix offsetTop={0}>

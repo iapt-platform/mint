@@ -5,7 +5,6 @@ import FooterBar from "../../../components/library/FooterBar";
 import { Outlet } from "react-router-dom";
 
 const Widget = () => {
-  // TODO
   return (
     <>
       <Layout>

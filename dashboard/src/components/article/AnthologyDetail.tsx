@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Space, Typography } from "antd";
 
@@ -68,7 +67,7 @@ const AnthologyDetailWidget = ({
       <Paragraph>
         <Space>
           <StudioName data={tableData?.studio} />
-          <TimeShow time={tableData?.updated_at} title="updated" />
+          <TimeShow updatedAt={tableData?.updated_at} />
         </Space>
       </Paragraph>
       <Paragraph>

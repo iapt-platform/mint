@@ -14,6 +14,7 @@ const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
 };
 
 interface IWidget {
+  style?: React.CSSProperties;
   icon?: JSX.Element;
   type: string;
   sentId: string;
@@ -21,6 +22,7 @@ interface IWidget {
   title?: string;
 }
 const SentTabButtonWidget = ({
+  style,
   icon,
   type,
   sentId,
@@ -35,7 +37,9 @@ const SentTabButtonWidget = ({
       icon: <CalendarOutlined />,
     },
     {
-      label: "复制链接",
+      label: intl.formatMessage({
+        id: "buttons.copy.link",
+      }),
       key: "copyLink",
       icon: <LinkOutlined />,
     },
@@ -62,6 +66,7 @@ const SentTabButtonWidget = ({
 
   return (
     <Dropdown.Button
+      style={style}
       size="small"
       type="text"
       menu={menuProps}

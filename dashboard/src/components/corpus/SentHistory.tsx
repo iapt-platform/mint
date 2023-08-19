@@ -91,13 +91,7 @@ const SentHistoryWidget = ({ sentId }: IWidget) => {
         },
         description: {
           render: (text, row, index, action) => {
-            return (
-              <TimeShow
-                type="secondary"
-                time={row.createdAt}
-                title="created at"
-              />
-            );
+            return <TimeShow type="secondary" createdAt={row.createdAt} />;
           },
         },
         actions: {

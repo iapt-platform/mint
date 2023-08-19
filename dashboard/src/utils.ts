@@ -1,17 +1,21 @@
+import { SortOrder } from "antd/lib/table/interface";
+
 export function fullUrl(url: string): string {
   return window.location.origin + process.env.PUBLIC_URL + url;
 }
 
 export function PaliToEn(pali: string): string {
   let output: string = pali.toLowerCase();
-  output = output.replaceAll(" ", "_");
-  output = output.replaceAll("-", "_");
   output = output.replaceAll("ā", "a");
   output = output.replaceAll("ī", "i");
   output = output.replaceAll("ū", "u");
   output = output.replaceAll("ḍ", "d");
   output = output.replaceAll("ṭ", "t");
   output = output.replaceAll("ḷ", "l");
+  output = output.replaceAll("ṅ", "n");
+  output = output.replaceAll("ṇ", "n");
+  output = output.replaceAll("ñ", "n");
+  output = output.replaceAll("ṃ", "m");
   return output;
 }
 
@@ -31,3 +35,19 @@ export function PaliReal(inStr: string | undefined | null): string {
   }
   return output;
 }
+
+export const getSorterUrl = (sorter?: Record<string, SortOrder>): string => {
+  let url: string = "";
+  for (const key in sorter) {
+    if (Object.prototype.hasOwnProperty.call(sorter, key)) {
+      const element = sorter[key];
+      const dir = element === "ascend" ? "asc" : "desc";
+      let orderby = key;
+      if (orderby === "updatedAt") {
+        orderby = "updated_at";
+      }
+      url = `&order=${orderby}&dir=${dir}`;
+    }
+  }
+  return url;
+};

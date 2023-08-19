@@ -6,7 +6,7 @@ const { Paragraph } = Typography;
 
 const FooterBarWidget = () => {
   //Library foot bar
-  // TODO
+  // TODO 补充项目信息
   return (
     <Footer>
       <Row>

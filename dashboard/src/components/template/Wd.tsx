@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import { lookup } from "../../reducers/command";
 import store from "../../store";
 import "./style.css";

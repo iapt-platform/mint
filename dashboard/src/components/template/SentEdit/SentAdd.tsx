@@ -4,17 +4,24 @@ import { PlusOutlined } from "@ant-design/icons";
 
 import { IChannel } from "../../channel/Channel";
 import ChannelTableModal from "../../channel/ChannelTableModal";
+import { TChannelType } from "../../api/Channel";
 
 interface IWidget {
   disableChannels?: string[];
+  type?: TChannelType;
   onSelect?: Function;
 }
-const Widget = ({ disableChannels, onSelect }: IWidget) => {
+const Widget = ({
+  disableChannels,
+  type = "translation",
+  onSelect,
+}: IWidget) => {
   const [channelPickerOpen, setChannelPickerOpen] = useState(false);
 
   return (
     <ChannelTableModal
       disableChannels={disableChannels}
+      channelType={type}
       trigger={
         <Button
           type="dashed"

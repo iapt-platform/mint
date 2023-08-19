@@ -6,9 +6,11 @@ import ChannelTable from "./ChannelTable";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 import { IChannel } from "./Channel";
+import { TChannelType } from "../api/Channel";
 
 interface IWidget {
   trigger?: React.ReactNode;
+  channelType?: TChannelType;
   type?: ArticleType | "editable";
   articleId?: string;
   multiSelect?: boolean;
@@ -23,6 +25,7 @@ const ChannelTableModalWidget = ({
   articleId,
   multiSelect = true,
   disableChannels,
+  channelType,
   open = false,
   onClose,
   onSelect,
@@ -65,6 +68,7 @@ const ChannelTableModalWidget = ({
         <ChannelTable
           studioName={user?.realName}
           type={type}
+          channelType={channelType}
           disableChannels={disableChannels}
           onSelect={(channel: IChannel) => {
             handleCancel();
