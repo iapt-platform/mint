@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { message, Modal, Popover, Skeleton, Typography } from "antd";
 
 import { get } from "../../request";
@@ -115,7 +115,7 @@ const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
   return loading ? (
     <Skeleton title={{ width: 200 }} paragraph={{ rows: 4 }} active />
   ) : (
-    <>
+    <div style={{ maxWidth: 750 }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Title level={4}>{term?.word}</Title>
         <Link to={`/nissaya/ending/${term?.word}`}>在新窗口打开</Link>
@@ -123,7 +123,7 @@ const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
       <Paragraph>{term?.meaning}</Paragraph>
       <Paragraph>{term?.note}</Paragraph>
       {cardData ? <NissayaCardTable data={cardData} /> : undefined}
-    </>
+    </div>
   );
 };
 

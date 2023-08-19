@@ -101,11 +101,12 @@ const DiscussionCreateWidget = ({
             <ProForm.Group>
               <ProFormText
                 name="title"
+                width={"lg"}
                 hidden={typeof parent !== "undefined"}
                 label={intl.formatMessage({ id: "forms.fields.title.label" })}
                 tooltip="最长为 24 位"
                 placeholder={intl.formatMessage({
-                  id: "forms.message.title.required",
+                  id: "forms.message.question.required",
                 })}
                 rules={[{ required: parent ? false : true }]}
               />
@@ -153,10 +154,10 @@ const DiscussionCreateWidget = ({
                 <Form.Item
                   name="content"
                   label={intl.formatMessage({
-                    id: "forms.fields.content.label",
+                    id: "forms.message.question.description.required",
                   })}
                 >
-                  <MDEditor />
+                  <MDEditor placeholder="问题的详细描述（选填）" />
                 </Form.Item>
               ) : (
                 <></>
