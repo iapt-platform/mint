@@ -95,8 +95,11 @@ const WbwMeaningSelectWidget = ({ data, onSelect }: IWidget) => {
               (item) => item.id === value.dict_id
             );
           }
-          const wordType =
-            value.type === "" ? "null" : value.type.replaceAll(".", "");
+          const wordType = value.type
+            ? value.type === ""
+              ? "null"
+              : value.type.replaceAll(".", "")
+            : "null";
           let indexCase = mParent[indexParent].dict[indexDict].case.findIndex(
             (item) => item.name === wordType
           );
