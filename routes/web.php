@@ -15,7 +15,7 @@ use App\Http\Controllers\WbwAnalysisController;
 |
 */
 
-Route::redirect('/', '/app/pcdl/index.php');
+Route::redirect('/', '/pcd/community/list');
 Route::redirect('/app', '/app/pcdl/index.php');
 Route::redirect('/app/pcdl', '/app/pcdl/index.php');
 
