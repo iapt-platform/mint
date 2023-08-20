@@ -61,6 +61,8 @@ const items = {
   "buttons.open": "打开",
   "buttons.compact": "紧凑",
   "buttons.magic-dict": "神奇字典",
+  "buttons.theme.ant": "默认",
+  "buttons.theme.dark": "夜间",
 };
 
 export default items;
