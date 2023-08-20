@@ -5,7 +5,7 @@ import type { RootState } from "../store";
 export type TTheme = "dark" | "ant" | undefined;
 
 interface IState {
-  theme?: TTheme;
+  theme?: string;
 }
 
 const initialState: IState = { theme: "ant" };
@@ -14,7 +14,7 @@ export const slice = createSlice({
   name: "theme",
   initialState,
   reducers: {
-    refresh: (state, action: PayloadAction<TTheme>) => {
+    refresh: (state, action: PayloadAction<string>) => {
       state.theme = action.payload;
     },
   },
@@ -22,7 +22,7 @@ export const slice = createSlice({
 
 export const { refresh } = slice.actions;
 
-export const currTheme = (state: RootState): TTheme | undefined =>
+export const currTheme = (state: RootState): string | undefined =>
   state.theme.theme;
 
 export default slice.reducer;

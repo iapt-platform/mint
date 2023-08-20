@@ -11,6 +11,7 @@ interface IWidget {
   articleId?: string;
   multiSelect?: boolean;
   open?: boolean;
+  defaultOwner?: string;
   onClose?: Function;
   onSelect?: Function;
 }
@@ -20,6 +21,7 @@ const ChannelPickerWidget = ({
   articleId,
   multiSelect = true,
   open = false,
+  defaultOwner,
   onClose,
   onSelect,
 }: IWidget) => {
@@ -61,6 +63,7 @@ const ChannelPickerWidget = ({
           type={type}
           articleId={articleId}
           multiSelect={multiSelect}
+          defaultOwner={defaultOwner}
           onSelect={(channels: IChannel[]) => {
             console.log(channels);
             handleCancel();

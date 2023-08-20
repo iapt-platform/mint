@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import { ActionType, ProList } from "@ant-design/pro-components";
-import { Button } from "antd";
+import { Alert, Button } from "antd";
 import { Badge, Dropdown, Space, Table, Typography } from "antd";
 import {
   GlobalOutlined,
@@ -23,7 +23,7 @@ import CopyToModal from "./CopyToModal";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 
-const { Link } = Typography;
+const { Link, Text } = Typography;
 
 interface IParams {
   owner?: string;
@@ -54,6 +54,7 @@ interface IWidget {
   selectedKeys?: string[];
   reload?: boolean;
   disableChannelId?: string;
+  defaultOwner?: string;
   onSelect?: Function;
 }
 const ChannelPickerTableWidget = ({
@@ -63,6 +64,7 @@ const ChannelPickerTableWidget = ({
   selectedKeys = [],
   onSelect,
   disableChannelId,
+  defaultOwner = "all",
   reload = false,
 }: IWidget) => {
   const intl = useIntl();
@@ -71,6 +73,8 @@ const ChannelPickerTableWidget = ({
   const [showCheckBox, setShowCheckBox] = useState<boolean>(false);
   const [copyChannel, setCopyChannel] = useState<IChannel>();
   const [copyOpen, setCopyOpen] = useState<boolean>(false);
+  const [ownerChanged, setOwnerChanged] = useState<boolean>(false);
+
   const user = useAppSelector(_currentUser);
   const ref = useRef<ActionType>();
 
@@ -81,7 +85,24 @@ const ChannelPickerTableWidget = ({
   }, [reload]);
 
   return (
-    <>
+    <Space direction="vertical" style={{ width: "100%" }}>
+      {defaultOwner !== "all" && ownerChanged === false ? (
+        <Alert
+          message={
+            <>
+              {"目前仅显示了版本"}
+              <Text keyboard>
+                {intl.formatMessage({ id: `buttons.channel.${defaultOwner}` })}
+              </Text>
+              {"可以点"}
+              <Text keyboard>{"版本筛选"}</Text>
+              {"显示其他版本"}
+            </>
+          }
+          type="success"
+          closable
+        />
+      ) : undefined}
       <ProList<IItem, IParams>
         actionRef={ref}
         rowSelection={
@@ -162,11 +183,16 @@ const ChannelPickerTableWidget = ({
             const id = element.id.split("_")[1];
             sentList.push(id);
           }
+          const currOwner = params.owner ? params.owner : defaultOwner;
+          if (params.owner) {
+            setOwnerChanged(true);
+          }
+          console.log("owner", currOwner);
           const res = await post<IProgressRequest, IApiResponseChannelList>(
             `/v2/channel-progress`,
             {
               sentence: sentList,
-              owner: params.owner,
+              owner: currOwner,
             }
           );
           console.log("progress data", res.data.rows);
@@ -361,15 +387,17 @@ const ChannelPickerTableWidget = ({
             title: "版本筛选",
             valueType: "select",
             valueEnum: {
-              all: { text: "全部", status: "Default" },
+              all: { text: intl.formatMessage({ id: "buttons.channel.all" }) },
               my: {
-                text: "我的",
+                text: intl.formatMessage({ id: "buttons.channel.my" }),
               },
-              cooperator: {
-                text: "协作",
+              collaborator: {
+                text: intl.formatMessage({
+                  id: "buttons.channel.collaborator",
+                }),
               },
               public: {
-                text: "社区公开",
+                text: intl.formatMessage({ id: "buttons.channel.public" }),
               },
             },
           },
@@ -380,7 +408,7 @@ const ChannelPickerTableWidget = ({
         open={copyOpen}
         onClose={() => setCopyOpen(false)}
       />
-    </>
+    </Space>
   );
 };
 

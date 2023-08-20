@@ -64,6 +64,7 @@ const ModeSwitchWidget = ({
       />
       <ChannelPicker
         open={channelPickerOpen}
+        defaultOwner="my"
         onClose={() => setChannelPickerOpen(false)}
         onSelect={(channels: IChannel[]) => {
           if (newMode) {
