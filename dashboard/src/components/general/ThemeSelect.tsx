@@ -1,4 +1,4 @@
-import { Button, Dropdown, MenuProps, Switch } from "antd";
+import { Button, Dropdown, MenuProps } from "antd";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { ThemeOutlinedIcon } from "../../assets/icon";
@@ -7,7 +7,7 @@ import store from "../../store";
 
 const ThemeSelectWidget = () => {
   const intl = useIntl();
-  const [theme, setTheme] = useState<string>();
+  const [theme, setTheme] = useState<string>("ant");
 
   const items: MenuProps["items"] = [
     {
@@ -29,6 +29,8 @@ const ThemeSelectWidget = () => {
     const currTheme = localStorage.getItem("theme");
     if (currTheme) {
       setTheme(currTheme);
+    } else {
+      setTheme("ant");
     }
   }, []);
 
