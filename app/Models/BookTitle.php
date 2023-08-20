@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class BookTitle extends Model
 {
     use HasFactory;
-	
-	protected $fillable = ['book' , 'paragraph' , 'title'];
+
+	protected $fillable = ['sn','book' , 'paragraph' , 'title'];
 }
