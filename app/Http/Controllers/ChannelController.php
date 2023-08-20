@@ -325,7 +325,7 @@ class ChannelController extends Controller
         }
 
         //获取共享channel
-        if($request->get('owner')==='all' || $request->get('owner')==='cooperator'){
+        if($request->get('owner')==='all' || $request->get('owner')==='collaborator'){
             $allSharedChannels = ShareApi::getResList($user['user_uid'],2);
             foreach ($allSharedChannels as $key => $value) {
                 # code...
@@ -364,8 +364,6 @@ class ChannelController extends Controller
                                         ->select('channel_uid')
                                         ->get();
         }
-
-
 
         //所有需要查询的channel
         $result = Channel::select(['uid','name','summary','type','owner_uid','lang','status','updated_at','created_at'])
