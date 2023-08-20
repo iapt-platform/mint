@@ -1,9 +1,9 @@
-import { Affix, Button, Divider, Space } from "antd";
+import { Affix, Button, Divider, Space, Tooltip } from "antd";
 import { Header } from "antd/lib/layout/layout";
 import { Key } from "antd/lib/table/interface";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { FieldTimeOutlined } from "@ant-design/icons";
+import { FieldTimeOutlined, UnorderedListOutlined } from "@ant-design/icons";
 
 import { ColumnOutlinedIcon } from "../../../assets/icon";
 import { IArticleDataResponse } from "../../../components/api/Article";
@@ -172,20 +172,26 @@ const Widget = () => {
               }}
             />
             <Divider type="vertical" />
-            <Button
-              style={{ display: "block", color: "white" }}
-              icon={<ColumnOutlinedIcon />}
-              type="text"
-              onClick={() => setAnchorNavOpen((value) => !value)}
-            />
-            <Button
-              style={{ display: "block", color: "white" }}
-              icon={<ColumnOutlinedIcon />}
-              type="text"
-              onClick={() =>
-                setRightPanel((value) => (value === "close" ? "open" : "close"))
-              }
-            />
+            <Tooltip title="文章目录" placement="bottomLeft">
+              <Button
+                style={{ display: "block", color: "white" }}
+                icon={<UnorderedListOutlined />}
+                type="text"
+                onClick={() => setAnchorNavOpen((value) => !value)}
+              />
+            </Tooltip>
+            <Tooltip title="侧边栏" placement="bottomLeft">
+              <Button
+                style={{ display: "block", color: "white" }}
+                icon={<ColumnOutlinedIcon />}
+                type="text"
+                onClick={() =>
+                  setRightPanel((value) =>
+                    value === "close" ? "open" : "close"
+                  )
+                }
+              />
+            </Tooltip>
           </Space>
         </Header>
       </Affix>
