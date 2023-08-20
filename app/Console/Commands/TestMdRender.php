@@ -40,7 +40,13 @@ class TestMdRender extends Command
     public function handle()
     {
         $data = array();
-
+        $data['bold'] = <<<md
+        **"aa"**
+        **“aa”**
+        三
+        **“十位”**
+        经
+        md;
         $data['term'] = <<<md
         ## heading
         [[bhagavantu]]
