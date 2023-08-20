@@ -72,7 +72,6 @@ const SentContentWidget = ({
   const newMode = useAppSelector(_mode);
 
   useEffect(() => {
-    console.log("mode", mode);
     let currMode: ArticleMode;
     if (typeof mode !== "undefined") {
       currMode = mode;
