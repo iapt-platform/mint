@@ -108,7 +108,7 @@ const SentCanReadWidget = ({
           if (typeof user === "undefined") {
             return;
           }
-          const sentData: ISentence = {
+          const newSent: ISentence = {
             content: "",
             contentType: "markdown",
             html: "",
@@ -127,7 +127,7 @@ const SentCanReadWidget = ({
             openInEditMode: true,
           };
           setSentData((origin) => {
-            return [sentData, ...origin];
+            return [newSent, ...origin];
           });
         }}
       />
