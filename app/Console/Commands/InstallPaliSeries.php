@@ -57,6 +57,7 @@ class InstallPaliSeries extends Command
 				while (($data = fgetcsv($fp, 0, ',')) !== false) {
 					if($inputRow>0){
 						$newData = [
+							'sn'=>$data[0],
 							'book'=>$data[1],
 							'paragraph'=>$data[2],
 							'title'=>$data[3],
