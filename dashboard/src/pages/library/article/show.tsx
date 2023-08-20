@@ -125,10 +125,10 @@ const Widget = () => {
             padding: "5px",
           }}
         >
-          <Space>
+          <div style={{ display: "flex" }}>
             <MainMenu />
             <NetStatus style={{ color: "white" }} />
-          </Space>
+          </div>
           <div></div>
           <Space key="right">
             {type === "article" && loadedArticleData ? (
