@@ -37,6 +37,7 @@ import { get } from "../../../request";
 import store from "../../../store";
 import { IRecent } from "../../../components/recent/RecentList";
 import { fullUrl } from "../../../utils";
+import ThemeSelect from "../../../components/general/ThemeSelect";
 
 /**
  * type:
@@ -143,6 +144,7 @@ const Widget = () => {
               </Button>
             ) : undefined}
             <Avatar placement="bottom" />
+            <ThemeSelect />
             <Divider type="vertical" />
             <ModeSwitch
               channel={searchParams.get("channel")}
@@ -171,7 +173,6 @@ const Widget = () => {
                 setSearchParams(output);
               }}
             />
-            <Divider type="vertical" />
             <Tooltip title="文章目录" placement="bottomLeft">
               <Button
                 style={{ display: "block", color: "white" }}
