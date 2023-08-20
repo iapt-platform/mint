@@ -36,11 +36,11 @@ const SentCellWidget = ({
   const endings = useAppSelector(getEnding);
   const acceptPr = useAppSelector(sentence);
   const [prOpen, setPrOpen] = useState(false);
-  /*
+
   useEffect(() => {
-    setSentData(data);
-  }, [data]);
-*/
+    setSentData(initValue);
+  }, [initValue]);
+
   useEffect(() => {
     if (typeof acceptPr !== "undefined" && !isPr) {
       if (
@@ -53,7 +53,8 @@ const SentCellWidget = ({
         setSentData(acceptPr);
     }
   }, [acceptPr, initValue, isPr]);
-  const sid = `${sentData.book}_${sentData.para}_${sentData.wordStart}_${sentData.wordEnd}_${sentData.channel.id}`;
+
+  const sid = `${sentData?.book}_${sentData?.para}_${sentData?.wordStart}_${sentData?.wordEnd}_${sentData?.channel.id}`;
 
   return (
     <div style={{ marginBottom: "8px" }}>
