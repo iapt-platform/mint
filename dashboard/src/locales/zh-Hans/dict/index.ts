@@ -111,6 +111,8 @@ const items = {
   "dict.fields.type.pron.short.label": "代",
   "dict.fields.type.num.label": "数词",
   "dict.fields.type.num.short.label": "数",
+  "dict.fields.type.num:base.label": "数词词干",
+  "dict.fields.type.num:base.short.label": "数干",
   "dict.fields.type.adv.label": "副词",
   "dict.fields.type.adv.short.label": "副",
   "dict.fields.type.conj.label": "连词",
@@ -157,6 +159,8 @@ const items = {
   "dict.fields.type.vind.label": "动不变",
   "dict.fields.type.vdn.label": "衍生动名词",
   "dict.fields.type.vdn.short.label": "动名",
+  "dict.fields.type.comp.label": "复合词",
+  "dict.fields.type.comp.short.label": "合",
 };
 
 export default items;

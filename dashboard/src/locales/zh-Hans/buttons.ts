@@ -26,6 +26,8 @@ const items = {
   "buttons.ok": "确定",
   "buttons.close": "关闭",
   "buttons.copy.to": "复制到",
+  "buttons.copy.text": "复制文本",
+  "buttons.copy.pali.text": "复制巴利语文本",
   "buttons.basic.information": "基本信息",
   "buttons.share": "分享",
   "buttons.yes": "是",

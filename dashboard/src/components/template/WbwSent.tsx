@@ -526,6 +526,15 @@ export const WbwSentCtl = ({
               key: "wbw-dict-publish-all",
               label: "发布全部单词",
             },
+            {
+              type: "divider",
+            },
+            {
+              key: "copy-text",
+              label: intl.formatMessage({
+                id: "buttons.copy.pali.text",
+              }),
+            },
           ],
           onClick: ({ key }) => {
             console.log(`Click on item ${key}`);
@@ -536,6 +545,15 @@ export const WbwSentCtl = ({
                 break;
               case "wbw-dict-publish-all":
                 wbwPublish(wordData);
+                break;
+              case "copy-text":
+                const paliText = wordData
+                  .filter((value) => value.type?.value !== ".ctl.")
+                  .map((item) => item.word.value)
+                  .join(" ");
+                navigator.clipboard.writeText(paliText).then(() => {
+                  message.success("已经拷贝到剪贴板");
+                });
                 break;
             }
           },
