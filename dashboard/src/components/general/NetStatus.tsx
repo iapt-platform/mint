@@ -9,7 +9,7 @@ export type ENetStatus = "loading" | "success" | "fail";
 interface IWidget {
   style?: React.CSSProperties;
 }
-const Widget = ({ style }: IWidget) => {
+const NetStatusWidget = ({ style }: IWidget) => {
   const [loading, setLoading] = useState(false);
   const [label, setLabel] = useState("online");
 
@@ -48,4 +48,4 @@ const Widget = ({ style }: IWidget) => {
   );
 };
 
-export default Widget;
+export default NetStatusWidget;
