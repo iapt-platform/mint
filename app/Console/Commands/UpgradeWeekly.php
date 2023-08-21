@@ -40,8 +40,6 @@ class UpgradeWeekly extends Command
         # 段落更新图
         $this->call('upgrade:chapterdynamic');
         $this->call('upgrade:chapter.dynamic.weekly');
-        $this->call('export:offline');
-
         return 0;
     }
 }

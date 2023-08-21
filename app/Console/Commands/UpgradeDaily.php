@@ -67,6 +67,7 @@ class UpgradeDaily extends Command
         $message .= "community.term:{$time}; ";
         $currTime = time();
 
+        /*
         #译文进度
         $this->call('upgrade:progress');
         $time = time()-$currTime;
@@ -82,7 +83,11 @@ class UpgradeDaily extends Command
         $this->call('upgrade:wbw.analyses');
         $time = time()-$currTime;
         $message .= "wbw.analyses:{$time}; ";
-
+*/
+        # 导出离线数据
+        $this->call('export:offline',['format'=>'gz']);
+        $time = time()-$currTime;
+        $message .= "export:offline:{$time}; ";
 
         $time = time()-$start;
         $message .= "总时间:{$time}; ";
