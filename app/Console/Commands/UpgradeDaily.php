@@ -85,7 +85,7 @@ class UpgradeDaily extends Command
         $message .= "wbw.analyses:{$time}; ";
 */
         # 导出离线数据
-        $this->call('export:offline',['format'=>'gz']);
+        $this->call('export:offline',['format'=>'lzma']);
         $time = time()-$currTime;
         $message .= "export:offline:{$time}; ";
 
