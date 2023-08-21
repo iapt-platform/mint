@@ -86,7 +86,7 @@ class InitCs6sentence extends Command
                         }
                     }
 
-					if(strpos($word->word,'{') >=0 ){
+					if(strpos($word->word,'{') !== false ){
                         //一个单词里面含有黑体字的
 						$paliWord = \str_replace("{","<strong>",$word->word) ;
 						$paliWord = \str_replace("}","</strong>",$paliWord) ;
