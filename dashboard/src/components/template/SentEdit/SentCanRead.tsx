@@ -146,10 +146,21 @@ const SentCanReadWidget = ({
       {sentData.map((item, id) => {
         return (
           <SentCell
-            initValue={item}
+            value={item}
             key={id}
             isPr={false}
             editMode={item.openInEditMode}
+            onChange={(value: ISentence) => {
+              console.log("onChange", value);
+              setSentData((origin) => {
+                origin.forEach((value1, index, array) => {
+                  if (value1.id === value.id) {
+                    array[index] = value;
+                  }
+                });
+                return origin;
+              });
+            }}
           />
         );
       })}
