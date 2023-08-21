@@ -92,7 +92,8 @@ class ExportOffline extends Command
         shell_exec($command);
 
         $info = array();
-        $info[] = ['filename'=>$zipFullFileName,
+        $info[] = ['filename'=>$zipFile,
+                   'url'=>Storage::url($exportPath.'/'.$zipFile),
                    'create_at'=>date("Y-m-d H:i:s"),
                    'chapter'=>Cache::get("/export/chapter/count"),
                    'filesize'=>filesize($zipFullFileName),
