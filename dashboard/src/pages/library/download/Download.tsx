@@ -1,15 +1,30 @@
 import { Button, Card, Typography } from "antd";
 
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { GithubOutlined } from "@ant-design/icons";
 
 import bg_png from "../../../assets/library/images/download_bg.png";
 import Marked from "../../../components/general/Marked";
+import { get } from "../../../request";
+
 const { Paragraph } = Typography;
 
+function serverLink(url: string): string {
+  return process.env.REACT_APP_API_HOST
+    ? process.env.REACT_APP_API_HOST + url
+    : window.location.origin + url;
+}
+interface IOfflineIndex {
+  filename: string;
+  url: string;
+  create_at: string;
+  chapter: number;
+  filesize: number;
+}
 const ChapterNewWidget = () => {
   const [github, setGithub] = useState<string>("loading");
+  const [offlineIndex, setOfflineIndex] = useState<IOfflineIndex[]>();
+
   const githubLink =
     "https://raw.githubusercontent.com/ariyamaggika/wikipali-app/master/version.txt";
   const giteeLink =
@@ -35,41 +50,67 @@ const ChapterNewWidget = () => {
       .catch((err) => {
         console.log("请求错误", err);
       });
+
+    get<IOfflineIndex[]>("/v2/offline-index")
+      .then((json) => {
+        console.log("offline", json);
+        setOfflineIndex(json);
+        return json;
+      })
+      .catch((err) => {
+        console.log("请求错误", err);
+      });
   }, []);
   return (
     <Paragraph>
       <div>
         <img alt="code" src={bg_png} />
       </div>
-      <Card
-        title={"中国大陆"}
-        style={{ margin: 10, borderRadius: 8 }}
-        hoverable
-      >
+      <Card title={"App下载"} style={{ margin: 10, borderRadius: 8 }}>
         <Paragraph>
-          <Link to={giteeRelease} target="_blank">
-            Gitee
-          </Link>
-        </Paragraph>
-      </Card>
-      <Card
-        title={"其他地区"}
-        style={{ margin: 10, borderRadius: 8 }}
-        hoverable
-      >
-        <Paragraph>
-          <Button icon={<GithubOutlined />} type="text">
-            <Link
-              to="https://github.com/gohugoio/hugo/releases"
+          {"点链接打开网站下载安卓App安装包"}
+          <Button type="link" size="large" icon={<GithubOutlined />}>
+            <a
+              href="https://github.com/gohugoio/hugo/releases"
               target="_blank"
+              rel="noreferrer"
             >
-              Github
-            </Link>
+              Github下载
+            </a>
+          </Button>
+          <Button type="link" size="large">
+            <a href={giteeRelease} target="_blank" rel="noreferrer">
+              Gitee下载
+            </a>
           </Button>
         </Paragraph>
 
         <Paragraph>
           <Marked text={github} />
+        </Paragraph>
+      </Card>
+      <Card title={"离线数据包"} style={{ margin: 10, borderRadius: 8 }}>
+        <Paragraph>
+          {"点链接下载离线数据包"}
+          {offlineIndex?.map((item, id) => {
+            return (
+              <ul key={id}>
+                <li>
+                  {"文件名:"}
+                  {item.filename}
+                </li>
+                <li>
+                  {"文件大小:"}
+                  {item.filesize}
+                </li>
+                <li>
+                  <Button type="primary">
+                    <a href={item.url}>下载</a>
+                  </Button>
+                </li>
+              </ul>
+            );
+          })}
         </Paragraph>
       </Card>
     </Paragraph>
