@@ -192,7 +192,18 @@ const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
         <TagTwoTone twoToneColor={color} />
       </Popover>
     ) : undefined;
-  const classPali = data.style?.value === "note" ? "wbw_note" : "pali";
+  let classPali: string;
+  switch (data.style?.value) {
+    case "note":
+      classPali = "wbw_note";
+      break;
+    case "bld":
+      classPali = "wbw_bold";
+      break;
+    default:
+      classPali = "pali";
+      break;
+  }
   let padding: string;
   if (typeof data.real !== "undefined" && data.real.value !== "") {
     padding = "4px";

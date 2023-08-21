@@ -67,6 +67,9 @@
 .wbw_note {
   color: #177ddc;
 }
+.wbw_bold {
+  font-weight: 700;
+}
 .block_wbw .wbw_note {
   font-weight: 500;
 }
