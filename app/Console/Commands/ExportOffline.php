@@ -68,6 +68,8 @@ class ExportOffline extends Command
         $zipFile = "sentence-".date("Y-m-d").".db3.";
         if($this->argument('format')==='7z'){
             $zipFile .= "7z";
+        }else if($this->argument('format')==='lzma'){
+            $zipFile .= "lzma";
         }else{
             $zipFile .= "gz";
         }
@@ -81,6 +83,8 @@ class ExportOffline extends Command
         shell_exec("chmod 600 {$exportFullFileName}");
         if($this->argument('format')==='7z'){
             $command = "7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on {$zipFullFileName} {$exportFullFileName}";
+        }else if($this->argument('format')==='lzma'){
+            $command = "xz -k -9 --format=lzma {$exportFullFileName}";
         }else{
             $command = "gzip -k -q --best -c {$exportFullFileName} > {$zipFullFileName}";
         }
@@ -88,7 +92,7 @@ class ExportOffline extends Command
         shell_exec($command);
 
         $info = array();
-        $info[] = ['filename'=>$exportFile,
+        $info[] = ['filename'=>$zipFullFileName,
                    'create_at'=>date("Y-m-d H:i:s"),
                    'chapter'=>Cache::get("/export/chapter/count"),
                    'filesize'=>filesize($zipFullFileName),
