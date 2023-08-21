@@ -17,42 +17,50 @@ import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
 import { nissayaBase } from "../Nissaya/NissayaMeaning";
 
 interface IWidget {
-  initValue: ISentence;
+  initValue?: ISentence;
+  value?: ISentence;
   wordWidget?: boolean;
   isPr?: boolean;
   editMode?: boolean;
   compact?: boolean;
+  onChange?: Function;
 }
 const SentCellWidget = ({
   initValue,
+  value,
   wordWidget = false,
   isPr = false,
   editMode = false,
   compact = false,
+  onChange,
 }: IWidget) => {
   const intl = useIntl();
   const [isEditMode, setIsEditMode] = useState(editMode);
-  const [sentData, setSentData] = useState<ISentence>(initValue);
+  const [sentData, setSentData] = useState<ISentence | undefined>(initValue);
   const endings = useAppSelector(getEnding);
   const acceptPr = useAppSelector(sentence);
   const [prOpen, setPrOpen] = useState(false);
 
-  useEffect(() => {
-    setSentData(initValue);
-  }, [initValue]);
+  console.log("load", initValue, value);
 
   useEffect(() => {
-    if (typeof acceptPr !== "undefined" && !isPr) {
+    if (value) {
+      setSentData(value);
+    }
+  }, [value]);
+
+  useEffect(() => {
+    if (typeof acceptPr !== "undefined" && !isPr && sentData) {
       if (
-        acceptPr.book === initValue.book &&
-        acceptPr.para === initValue.para &&
-        acceptPr.wordStart === initValue.wordStart &&
-        acceptPr.wordEnd === initValue.wordEnd &&
-        acceptPr.channel.id === initValue.channel.id
+        acceptPr.book === sentData.book &&
+        acceptPr.para === sentData.para &&
+        acceptPr.wordStart === sentData.wordStart &&
+        acceptPr.wordEnd === sentData.wordEnd &&
+        acceptPr.channel.id === sentData.channel.id
       )
         setSentData(acceptPr);
     }
-  }, [acceptPr, initValue, isPr]);
+  }, [acceptPr, sentData, isPr]);
 
   const sid = `${sentData?.book}_${sentData?.para}_${sentData?.wordStart}_${sentData?.wordEnd}_${sentData?.channel.id}`;
 
@@ -85,7 +93,7 @@ const SentCellWidget = ({
         onConvert={(format: string) => {
           switch (format) {
             case "json":
-              const wbw: IWbw[] = sentData.content
+              const wbw: IWbw[] = sentData?.content
                 ? sentData.content.split("\n").map((item, id) => {
                     const parts = item.split("=");
                     const word = my_to_roman(parts[0]);
@@ -118,90 +126,101 @@ const SentCellWidget = ({
                   })
                 : [];
               setSentData((origin) => {
-                origin.contentType = "json";
-                origin.content = JSON.stringify(wbw);
-                sentSave(origin, intl);
-                return origin;
+                if (origin) {
+                  origin.contentType = "json";
+                  origin.content = JSON.stringify(wbw);
+                  sentSave(origin, intl);
+                  return origin;
+                }
               });
               setIsEditMode(true);
               break;
             case "markdown":
               setSentData((origin) => {
-                const wbwData: IWbw[] = origin.content
-                  ? JSON.parse(origin.content)
-                  : [];
-                const newContent = wbwData
-                  .map((item) => {
-                    return [
-                      item.word.value,
-                      item.real.value,
-                      item.meaning?.value,
-                    ].join("=");
-                  })
-                  .join("\n");
-                origin.content = newContent;
-                origin.contentType = "markdown";
-                sentSave(origin, intl);
-                return origin;
+                if (origin) {
+                  const wbwData: IWbw[] = origin.content
+                    ? JSON.parse(origin.content)
+                    : [];
+                  const newContent = wbwData
+                    .map((item) => {
+                      return [
+                        item.word.value,
+                        item.real.value,
+                        item.meaning?.value,
+                      ].join("=");
+                    })
+                    .join("\n");
+                  origin.content = newContent;
+                  origin.contentType = "markdown";
+                  sentSave(origin, intl);
+                  return origin;
+                }
               });
               setIsEditMode(true);
               break;
           }
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: compact ? "row" : "column",
-            alignItems: "flex-start",
-          }}
-        >
-          <EditInfo data={sentData} compact={compact} />
-          {isEditMode ? (
-            sentData.contentType === "json" ? (
-              <SentWbwEdit
-                data={sentData}
-                onClose={() => {
-                  setIsEditMode(false);
-                }}
-                onSave={(data: ISentence) => {
-                  setSentData(data);
-                }}
-              />
+        {sentData ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: compact ? "row" : "column",
+              alignItems: "flex-start",
+            }}
+          >
+            <EditInfo data={sentData} compact={compact} />
+            {isEditMode ? (
+              sentData?.contentType === "json" ? (
+                <SentWbwEdit
+                  data={sentData}
+                  onClose={() => {
+                    setIsEditMode(false);
+                  }}
+                  onSave={(data: ISentence) => {
+                    setSentData(data);
+                  }}
+                />
+              ) : (
+                <SentCellEditable
+                  data={sentData}
+                  isPr={isPr}
+                  onClose={() => {
+                    setIsEditMode(false);
+                  }}
+                  onSave={(data: ISentence) => {
+                    setSentData(data);
+                    setIsEditMode(false);
+                    if (typeof onChange !== "undefined") {
+                      onChange(data);
+                    }
+                  }}
+                />
+              )
             ) : (
-              <SentCellEditable
+              <MdView
+                style={{
+                  width: "100%",
+                  paddingLeft: compact ? 0 : "2em",
+                  marginBottom: 0,
+                }}
+                placeholder="请输入"
+                html={sentData.html}
+                wordWidget={wordWidget}
+              />
+            )}
+            {sentData.id ? (
+              <SuggestionToolbar
+                style={{ marginLeft: "2em" }}
+                compact={compact}
                 data={sentData}
                 isPr={isPr}
-                onClose={() => {
-                  setIsEditMode(false);
-                }}
-                onSave={(data: ISentence) => {
-                  setSentData(data);
-                  setIsEditMode(false);
-                }}
+                prOpen={prOpen}
+                onPrClose={() => setPrOpen(false)}
               />
-            )
-          ) : (
-            <MdView
-              style={{
-                width: "100%",
-                paddingLeft: compact ? 0 : "2em",
-                marginBottom: 0,
-              }}
-              placeholder="请输入"
-              html={sentData.html}
-              wordWidget={wordWidget}
-            />
-          )}
-          <SuggestionToolbar
-            style={{ marginLeft: "2em" }}
-            compact={compact}
-            data={sentData}
-            isPr={isPr}
-            prOpen={prOpen}
-            onPrClose={() => setPrOpen(false)}
-          />
-        </div>
+            ) : undefined}
+          </div>
+        ) : undefined}
       </SentEditMenu>
       {compact ? undefined : <Divider style={{ margin: "10px 0" }} />}
     </div>
