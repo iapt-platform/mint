@@ -65,7 +65,7 @@ class MqDiscussion extends Command
                     $msgContent = '';
                     $msgContent .= "\[{$contentTxt}\]";
                     $msgContent .= '**'. $message->editor->nickName.'**';
-                    $link = "https://staging.wikipali.org/pcd/discussion/topic/";
+                    $link = env('APP_URL')."/pcd/discussion/topic/";
                     if($message->parent){
                         $parentTitle = Discussion::where('id',$message->parent)->value('title');
                         $link .= $message->parent;
