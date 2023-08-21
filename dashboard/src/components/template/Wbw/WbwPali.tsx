@@ -198,7 +198,7 @@ const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
       classPali = "wbw_note";
       break;
     case "bld":
-      classPali = "wbw_bold";
+      classPali = "pali wbw_bold";
       break;
     default:
       classPali = "pali";
@@ -210,15 +210,29 @@ const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
   } else {
     padding = "4px 0";
   }
-  let pali = <PaliText text={data.word.value} termToLocal={false} />;
+  let pali = (
+    <PaliText
+      style={{ color: "brown" }}
+      text={data.word.value}
+      termToLocal={false}
+    />
+  );
   if (data.word.value.indexOf("}") >= 0) {
     const paliArray = data.word.value?.replace("{", "").split("}");
     pali = (
       <>
         <span style={{ fontWeight: 700 }}>
-          <PaliText text={paliArray[0]} termToLocal={false} />
+          <PaliText
+            style={{ color: "brown" }}
+            text={paliArray[0]}
+            termToLocal={false}
+          />
         </span>
-        <PaliText text={paliArray[1]} termToLocal={false} />
+        <PaliText
+          style={{ color: "brown" }}
+          text={paliArray[1]}
+          termToLocal={false}
+        />
       </>
     );
   }
