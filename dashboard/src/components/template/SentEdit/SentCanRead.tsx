@@ -129,6 +129,17 @@ const SentCanReadWidget = ({
           setSentData((origin) => {
             return [newSent, ...origin];
           });
+
+          setChannels((origin) => {
+            if (origin) {
+              if (!origin.includes(newSent.channel.id)) {
+                origin.push(newSent.channel.id);
+                return origin;
+              }
+            } else {
+              return [newSent.channel.id];
+            }
+          });
         }}
       />
 
