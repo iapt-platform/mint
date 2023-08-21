@@ -100,6 +100,7 @@ const SentReadFrame = ({
           return (
             <MdView
               key={id}
+              style={{ color: "brown" }}
               html={item.html}
               wordWidget={true}
               convertor={paliCode1}
