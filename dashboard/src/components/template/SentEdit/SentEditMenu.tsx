@@ -16,7 +16,7 @@ import { HandOutlinedIcon, JsonOutlinedIcon } from "../../../assets/icon";
 import { useIntl } from "react-intl";
 
 interface IWidget {
-  data: ISentence;
+  data?: ISentence;
   children?: React.ReactNode;
   onModeChange?: Function;
   onConvert?: Function;
@@ -81,13 +81,13 @@ const SentEditMenuWidget = ({
       key: "markdown",
       label: "To Markdown",
       icon: <FileMarkdownOutlined />,
-      disabled: data.contentType === "markdown",
+      disabled: !data || data.contentType === "markdown",
     },
     {
       key: "json",
       label: "To Json",
       icon: <JsonOutlinedIcon />,
-      disabled: data.contentType === "json",
+      disabled: !data || data.contentType === "json",
     },
     {
       type: "divider",
@@ -113,7 +113,7 @@ const SentEditMenuWidget = ({
       <SentHistoryModal
         open={timelineOpen}
         onClose={() => setTimelineOpen(false)}
-        sentId={data.id}
+        sentId={data?.id}
       />
       <div
         style={{
@@ -137,7 +137,7 @@ const SentEditMenuWidget = ({
           icon={<CopyOutlined />}
           size="small"
           onClick={() => {
-            if (data.content) {
+            if (data?.content) {
               navigator.clipboard.writeText(data.content).then(() => {
                 message.success("已经拷贝到剪贴板");
               });
@@ -146,7 +146,11 @@ const SentEditMenuWidget = ({
             }
           }}
         />
-        <Dropdown menu={{ items, onClick }} placement="bottomRight">
+        <Dropdown
+          disabled={data ? false : true}
+          menu={{ items, onClick }}
+          placement="bottomRight"
+        >
           <Button icon={<MoreOutlined />} size="small" />
         </Dropdown>
       </div>
