@@ -48,7 +48,9 @@ const WbwFactorMeaningWidget = ({
       let myMap = new Map<string, number>();
       let factors: string[] = [];
       for (const iterator of result) {
-        myMap.set(iterator.factormean, 1);
+        if (iterator.factormean) {
+          myMap.set(iterator.factormean, 1);
+        }
       }
       myMap.forEach((value, key, map) => {
         factors.push(key);

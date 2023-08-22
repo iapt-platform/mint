@@ -61,9 +61,15 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
     const url = `/v2/userdict?view=compound&word=${word}&order=confidence`;
     get<IApiResponseDictList>(url).then((json) => {
       if (json.ok) {
-        const data = json.data.rows.map((item) => {
-          return { value: item.factors, label: item.factors };
-        });
+        const data = json.data.rows
+          .filter((value) => typeof value.factors === "string")
+          .map((item) => {
+            if (item.factors) {
+              return { value: item.factors, label: item.factors };
+            } else {
+              return { value: "", label: "" };
+            }
+          });
         setCompound(data);
       }
     });

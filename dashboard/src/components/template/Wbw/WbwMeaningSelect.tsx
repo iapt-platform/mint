@@ -75,6 +75,7 @@ const WbwMeaningSelectWidget = ({ data, onSelect }: IWidget) => {
         const indexParent = mParent.findIndex((item) => item.word === word1);
         result1.forEach((value, index, array) => {
           if (
+            value.parent &&
             value.parent !== "" &&
             !baseRemind.includes(value.parent) &&
             !baseDone.includes(value.parent)

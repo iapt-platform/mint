@@ -23,7 +23,9 @@ export const getFactorsInDict = (
     let myMap = new Map<string, number>();
     let factors: string[] = [];
     for (const iterator of result) {
-      myMap.set(iterator.factors, 1);
+      if (iterator.factors) {
+        myMap.set(iterator.factors, 1);
+      }
     }
     myMap.forEach((value, key, map) => {
       factors.push(key);
@@ -69,7 +71,9 @@ const WbwFactorsWidget = ({ data, display, onChange }: IWidget) => {
       let myMap = new Map<string, number>();
       let factors: string[] = [];
       for (const iterator of result) {
-        myMap.set(iterator.factors, 1);
+        if (iterator.factors) {
+          myMap.set(iterator.factors, 1);
+        }
       }
       myMap.forEach((value, key, map) => {
         factors.push(key);

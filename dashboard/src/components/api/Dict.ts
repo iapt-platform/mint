@@ -5,11 +5,11 @@ import { ICaseListData } from "../dict/CaseList";
 export interface IDictRequest {
   id?: number;
   word: string;
-  type?: string;
-  grammar?: string;
+  type?: string | null;
+  grammar?: string | null;
   mean?: string | null;
   parent?: string | null;
-  note?: string;
+  note?: string | null;
   factors?: string | null;
   factormean?: string | null;
   confidence: number;
@@ -38,13 +38,13 @@ export interface IDictInfo {
 export interface IApiResponseDictData {
   id: string;
   word: string;
-  type: string;
-  grammar: string;
-  mean: string;
-  parent: string;
-  note: string;
-  factors: string;
-  factormean: string;
+  type?: string | null;
+  grammar?: string | null;
+  mean?: string | null;
+  parent?: string | null;
+  note?: string | null;
+  factors?: string | null;
+  factormean?: string | null;
   language: string;
   dict?: IDictInfo;
   dict_id: string;

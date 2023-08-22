@@ -42,7 +42,9 @@ export const getParentInDict = (
     let myMap = new Map<string, number>();
     let parent: string[] = [];
     for (const iterator of result) {
-      myMap.set(iterator.parent, 1);
+      if (iterator.parent) {
+        myMap.set(iterator.parent, 1);
+      }
     }
     myMap.forEach((value, key, map) => {
       parent.push(key);

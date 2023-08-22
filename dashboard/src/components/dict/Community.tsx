@@ -57,18 +57,20 @@ const CommunityWidget = ({ word }: IWidget) => {
             const currScore = Math.floor(
               (it.exp / 3600) * (it.confidence / 100)
             );
-
-            score = meaning.get(it.mean);
-            meaning.set(it.mean, score ? score + currScore : currScore);
+            if (it.mean) {
+              score = meaning.get(it.mean);
+              meaning.set(it.mean, score ? score + currScore : currScore);
+            }
 
             if (it.type || it.grammar) {
               const strCase = it.type + "$" + it.grammar;
               score = grammar.get(strCase);
               grammar.set(strCase, score ? score + currScore : currScore);
             }
-
-            score = parent.get(it.parent);
-            parent.set(it.parent, score ? score + currScore : currScore);
+            if (it.parent) {
+              score = parent.get(it.parent);
+              parent.set(it.parent, score ? score + currScore : currScore);
+            }
 
             if (it.editor) {
               score = editorId.get(it.editor.id);
