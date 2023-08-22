@@ -84,7 +84,12 @@ class TemplateRender{
                 //先查属于这个channel 的
                 $tplParam = DhammaTerm::where("word",$word)->where('channal',$channelId)->first();
                 if(!$tplParam){
-                    //没有，再查这个studio的
+                    /**
+                     * 没有，再查这个studio的
+                     * 按照语言过滤
+                     * 完全匹配的优先
+                     * 语族匹配也行
+                     */
                     $termsInStudio = DhammaTerm::where("word",$word)
                                           ->where('owner',$channelInfo->owner_uid)
                                           ->get();
