@@ -40,6 +40,7 @@ class UpgradeDaily extends Command
      */
     public function handle()
     {
+        Log::info('daily task start');
         $start = time();
 		if(app()->isLocal()==false){
 			$this->call('message:webhook',[
