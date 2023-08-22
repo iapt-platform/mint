@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\ProgressChapter;
 use App\Models\Channel;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class ExportChapterIndex extends Command
 {

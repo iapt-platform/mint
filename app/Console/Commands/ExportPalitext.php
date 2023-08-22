@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use App\Models\PaliText;
+use Illuminate\Support\Facades\Log;
 
 class ExportPalitext extends Command
 {
