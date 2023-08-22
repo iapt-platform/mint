@@ -3,6 +3,7 @@ namespace App\Http\Api;
 
 use App\Models\DhammaTerm;
 use App\Models\PaliText;
+use App\Models\Channel;
 use App\Http\Controllers\CorpusController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -75,16 +76,46 @@ class TemplateRender{
         $props = Cache::remember("/term/{$channelId}/{$word}",
                 env('CACHE_EXPIRE',3600*24),
               function() use($word,$channelId,$channelInfo){
+
+                $lang = Channel::where('uid',$channelId)->value('lang');
+                if(!empty($lang)){
+                    $langFamily = explode('-',$lang)[0];
+                }
                 //先查属于这个channel 的
                 $tplParam = DhammaTerm::where("word",$word)->where('channal',$channelId)->first();
                 if(!$tplParam){
                     //没有，再查这个studio的
-                    $tplParam = DhammaTerm::where("word",$word)
+                    $termsInStudio = DhammaTerm::where("word",$word)
                                           ->where('owner',$channelInfo->owner_uid)
-                                          ->first();
+                                          ->get();
+                    if(count($termsInStudio)>0){
+                        $list = array();
+                        foreach ($termsInStudio as $key=>$term) {
+                            if(empty($term->channal)){
+                                if($term->language===$lang){
+                                    $list[$term->guid]=2;
+                                }else if(strpos($term->language,$langFamily)!==false){
+                                    $list[$term->guid]=1;
+                                }
+                            }
+                        }
+                        if(count($list)>0){
+                            arsort($list);
+                            foreach ($list as $key => $one) {
+                                foreach ($termsInStudio as $term) {
+                                    if($term->guid===$key){
+                                        $tplParam = $term;
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
                 }
                 if(!$tplParam){
                     //没有，再查社区
+
                     $community_channel = ChannelApi::getSysChannel("_community_term_zh-hans_");
                     $tplParam = DhammaTerm::where("word",$word)
                                           ->where('channal',$community_channel)
