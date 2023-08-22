@@ -74,8 +74,6 @@ class ExportOffline extends Command
             $zipFile .= "gz";
         }
         //
-
-
         $exportFullFileName = storage_path($exportPath.'/'.$exportFile);
         $zipFullFileName = storage_path($exportPath.'/'.$zipFile);
 

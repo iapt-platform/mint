@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 
 class UpgradeDaily extends Command
@@ -39,6 +40,7 @@ class UpgradeDaily extends Command
      */
     public function handle()
     {
+        Log::info('daily task start');
         $start = time();
 		if(app()->isLocal()==false){
 			$this->call('message:webhook',[
@@ -48,7 +50,7 @@ class UpgradeDaily extends Command
 				'message' => " wikipali: 每日统计后台任务开始执行。",
 			]);
 		}
-
+        Log::info('wikipali: 每日统计后台任务开始执行');
         $message = "wikipali: 每日统计后台任务执行完毕。";
         //巴利原文段落库目录结构改变时运行
         //$this->call('upgrade:palitext');
@@ -60,12 +62,14 @@ class UpgradeDaily extends Command
         $time = time()-$start;
         $message .= "dict.default.meaning:{$time}; ";
         $currTime = time();
+        Log::info('更新单词首选意思完毕');
 
         //社区术语表
         $this->call('upgrade:community.term',['lang'=>'zh-Hans']);
         $time = time()-$currTime;
         $message .= "community.term:{$time}; ";
         $currTime = time();
+        Log::info('社区术语表完毕');
 
         /*
         #译文进度
@@ -88,6 +92,7 @@ class UpgradeDaily extends Command
         $this->call('export:offline',['format'=>'lzma']);
         $time = time()-$currTime;
         $message .= "export:offline:{$time}; ";
+        Log::info('导出离线数据完毕');
 
         $time = time()-$start;
         $message .= "总时间:{$time}; ";
