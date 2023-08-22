@@ -103,18 +103,21 @@ class DiscussionController extends Controller
                                 ->whereNull('parent')
                                 ->select('title','children_count','editor_uid')
                                 ->orderBy('created_at','desc')->get();
-                $output[] = [
-                    'sentence' => [
-                        'book' => $sentInfo->book_id,
-                        'paragraph' => $sentInfo->paragraph,
-                        'word_start' => $sentInfo->word_start,
-                        'word_end' => $sentInfo->word_end,
-                        'channel_id' => $sentInfo->channel_uid,
-                        'content' => $sentInfo->content,
-                        'pr_count' => count($sentPr),
-                    ],
-                    'pr' => $sentPr,
-                ];
+                if(count($sentPr)>0){
+                    $output[] = [
+                        'sentence' => [
+                            'book' => $sentInfo->book_id,
+                            'paragraph' => $sentInfo->paragraph,
+                            'word_start' => $sentInfo->word_start,
+                            'word_end' => $sentInfo->word_end,
+                            'channel_id' => $sentInfo->channel_uid,
+                            'content' => $sentInfo->content,
+                            'pr_count' => count($sentPr),
+                        ],
+                        'pr' => $sentPr,
+                    ];
+                }
+
             }
 
         }
