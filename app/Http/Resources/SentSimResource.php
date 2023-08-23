@@ -8,6 +8,7 @@ use App\Models\PaliText;
 use App\Http\Api\UserApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Controllers\CorpusController;
+use App\Http\Api\AuthApi;
 
 class SentSimResource extends JsonResource
 {
@@ -36,7 +37,14 @@ class SentSimResource extends JsonResource
             "created_at"=> $sent->created_at,
             "updated_at"=> $sent->updated_at,
         ];
-        $resCount = CorpusController::sentResCount($sent->book,$sent->paragraph,$sent->word_begin,$sent->word_end);
+        $user = AuthApi::current($request);
+        if($user){
+            $userUid = $user['user_uid'];
+        }else{
+            $userUid = null;
+        }
+
+        $resCount = CorpusController::sentCanReadCount($sent->book,$sent->paragraph,$sent->word_begin,$sent->word_end,$userUid);
         $result = [
             "id" => "{$sent->book}-{$sent->paragraph}-{$sent->word_begin}-{$sent->word_end}",
             "book"=> $sent->book,
