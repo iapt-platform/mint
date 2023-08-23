@@ -91,7 +91,7 @@ const SentCanReadWidget = ({
   }, [reload]);
 
   return (
-    <div style={{ backgroundColor: "#8080801f" }}>
+    <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <span></span>
         <Button
