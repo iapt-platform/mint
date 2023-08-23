@@ -886,16 +886,23 @@ class CorpusController extends Controller
     /**
      * 获取某个句子的相关资源的句子数量
      */
-    public static function sentCanReadCount($book,$para,$start,$end,$userUuid){
+    public static function sentCanReadCount($book,$para,$start,$end,$userUuid=null){
 		$sentId = "{$book}-{$para}-{$start}-{$end}";
         $key = "/sentence/{$sentId}/channels/count";
         if($userUuid){
             $key .= $userUuid;
+        }else{
+            $key .= 'guest';
         }
 		$channelCount = Cache::remember($key,env('CACHE_EXPIRE',3600*24),
                           function() use($book,$para,$start,$end,$userUuid){
-
-                            $channelCanRead = Cache::remember("/channel/can-read/{$userUuid}",
+                            $keyCanRead="/channel/can-read/";
+                            if($userUuid){
+                                $keyCanRead .= $userUuid;
+                            }else{
+                                $keyCanRead .= 'guest';
+                            }
+                            $channelCanRead = Cache::remember($keyCanRead,
                                                             env('CACHE_EXPIRE',3600*24),
                                                 function() use($userUuid){
                                                     return ChannelApi::getCanReadByUser($userUuid);
