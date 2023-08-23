@@ -58,16 +58,7 @@ const SuggestionToolbarWidget = ({
             data={data}
             trigger={
               <Tooltip title="修改建议">
-                <HandOutlinedIcon
-                  style={{
-                    cursor: "pointer",
-                    color:
-                      data.suggestionCount?.suggestion &&
-                      data.suggestionCount?.suggestion > 0
-                        ? "#1890ff"
-                        : "unset",
-                  }}
-                />
+                <HandOutlinedIcon />
               </Tooltip>
             }
           />
@@ -77,14 +68,27 @@ const SuggestionToolbarWidget = ({
             resType="sentence"
             trigger={
               <Tooltip title="讨论">
-                <CommentOutlined style={{ cursor: "pointer" }} />
+                <Space
+                  size={"small"}
+                  style={{
+                    cursor: "pointer",
+                    color:
+                      data.suggestionCount?.discussion &&
+                      data.suggestionCount?.discussion > 0
+                        ? "#1890ff"
+                        : "unset",
+                  }}
+                >
+                  <CommentOutlined />
+                  {CommentCount}
+                </Space>
               </Tooltip>
             }
             onCommentCountChange={(count: number) => {
               setCommentCount(count);
             }}
           />
-          {CommentCount}
+
           {compact ? undefined : <Divider type="vertical" />}
           {compact ? undefined : (
             <Text copyable={{ text: data.content ? data.content : "" }}></Text>
