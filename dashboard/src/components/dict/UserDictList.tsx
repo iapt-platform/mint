@@ -35,12 +35,12 @@ export interface IWord {
   sn: number;
   wordId: string;
   word: string;
-  type: string;
-  grammar: string;
-  parent: string;
-  meaning: string;
-  note: string;
-  factors: string;
+  type?: string | null;
+  grammar?: string | null;
+  parent?: string | null;
+  meaning?: string | null;
+  note?: string | null;
+  factors?: string | null;
   dict?: IDictInfo;
   updated_at?: string;
   created_at?: string;

@@ -44,7 +44,7 @@ const CaseFormulaWidget = ({ data, onChange, onCaseChange }: IWidget) => {
       );
     }
     let strFormula: string;
-    if (result.length > 0) {
+    if (result.length > 0 && result[0].mean) {
       strFormula = result[0].mean;
     } else {
       strFormula = "{无}";

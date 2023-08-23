@@ -43,6 +43,7 @@ interface DataNode {
   title: string;
   key: string;
   isLeaf?: boolean;
+  childrenCount?: number;
   children?: DataNode[];
 }
 
@@ -75,8 +76,12 @@ const ToolButtonDiscussionWidget = ({ type, articleId }: IWidget) => {
       console.log("discussion tree", json);
       if (json.ok) {
         const newTree: DataNode[] = json.data.rows.map((item) => {
-          const children = item.pr.map((pr) => {
-            return { title: pr.title, key: pr.title };
+          const children: DataNode[] = item.pr.map((pr) => {
+            return {
+              title: pr.title,
+              key: pr.title,
+              childrenCount: pr.children_count,
+            };
           });
           return {
             title: item.sentence.content,
@@ -109,7 +114,9 @@ const ToolButtonDiscussionWidget = ({ type, articleId }: IWidget) => {
             treeData={treeData}
             titleRender={(node) => {
               const ele = document.getElementById(node.key);
-              const count = node.children?.length;
+              const count = node.childrenCount
+                ? node.childrenCount
+                : node.children?.length;
               return (
                 <div
                   onClick={() => {

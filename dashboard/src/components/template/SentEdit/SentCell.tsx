@@ -41,8 +41,6 @@ const SentCellWidget = ({
   const acceptPr = useAppSelector(sentence);
   const [prOpen, setPrOpen] = useState(false);
 
-  console.log("load", initValue, value);
-
   useEffect(() => {
     if (value) {
       setSentData(value);
@@ -209,16 +207,15 @@ const SentCellWidget = ({
                 wordWidget={wordWidget}
               />
             )}
-            {sentData.id ? (
-              <SuggestionToolbar
-                style={{ marginLeft: "2em" }}
-                compact={compact}
-                data={sentData}
-                isPr={isPr}
-                prOpen={prOpen}
-                onPrClose={() => setPrOpen(false)}
-              />
-            ) : undefined}
+
+            <SuggestionToolbar
+              style={{ marginLeft: "2em" }}
+              compact={compact}
+              data={sentData}
+              isPr={isPr}
+              prOpen={prOpen}
+              onPrClose={() => setPrOpen(false)}
+            />
           </div>
         ) : undefined}
       </SentEditMenu>

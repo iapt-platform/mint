@@ -114,7 +114,13 @@ const SuggestionBoxWidget = ({
 
   return (
     <>
-      <Space onClick={showDrawer}>
+      <Space
+        onClick={showDrawer}
+        style={{
+          cursor: "pointer",
+          color: prNumber && prNumber > 0 ? "#1890ff" : "unset",
+        }}
+      >
         {trigger}
         {prNumber}
       </Space>

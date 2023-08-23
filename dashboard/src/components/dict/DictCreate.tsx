@@ -7,13 +7,13 @@ import DictEditInner from "./DictEditInner";
 export interface IDictFormData {
   id: number;
   word: string;
-  type: string;
-  grammar: string;
-  parent: string;
-  meaning: string;
-  note: string;
-  factors: string;
-  factormeaning: string;
+  type?: string | null;
+  grammar?: string | null;
+  parent?: string | null;
+  meaning?: string | null;
+  note?: string | null;
+  factors?: string | null;
+  factormeaning?: string | null;
   lang: string;
   confidence: number;
 }
