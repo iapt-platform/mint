@@ -30,59 +30,67 @@ const SuggestionToolbarWidget = ({
   const [CommentCount, setCommentCount] = useState<number | undefined>(
     data.suggestionCount?.discussion
   );
-  const prButton = (
-    <Space>
-      <LikeOutlined />
-      <Divider type="vertical" />
-      <PrAcceptButton
-        data={data}
-        onAccept={(value: ISentence) => {
-          if (typeof onAccept !== "undefined") {
-            onAccept(value);
-          }
-        }}
-      />
-    </Space>
-  );
-  const normalButton = (
-    <Space size={"small"}>
-      <SuggestionBox
-        open={prOpen}
-        onClose={() => {
-          if (typeof onPrClose !== "undefined") {
-            onPrClose();
-          }
-        }}
-        data={data}
-        trigger={
-          <Tooltip title="修改建议">
-            <HandOutlinedIcon style={{ cursor: "pointer" }} />
-          </Tooltip>
-        }
-      />
-      {compact ? undefined : <Divider type="vertical" />}
-      <CommentBox
-        resId={data.id}
-        resType="sentence"
-        trigger={
-          <Tooltip title="讨论">
-            <CommentOutlined style={{ cursor: "pointer" }} />
-          </Tooltip>
-        }
-        onCommentCountChange={(count: number) => {
-          setCommentCount(count);
-        }}
-      />
-      {CommentCount}
-      {compact ? undefined : <Divider type="vertical" />}
-      {compact ? undefined : (
-        <Text copyable={{ text: data.content ? data.content : "" }}></Text>
-      )}
-    </Space>
-  );
+
   return (
     <Paragraph type="secondary" style={style}>
-      {isPr ? prButton : normalButton}
+      {isPr ? (
+        <Space>
+          <LikeOutlined />
+          <Divider type="vertical" />
+          <PrAcceptButton
+            data={data}
+            onAccept={(value: ISentence) => {
+              if (typeof onAccept !== "undefined") {
+                onAccept(value);
+              }
+            }}
+          />
+        </Space>
+      ) : (
+        <Space size={"small"}>
+          <SuggestionBox
+            open={prOpen}
+            onClose={() => {
+              if (typeof onPrClose !== "undefined") {
+                onPrClose();
+              }
+            }}
+            data={data}
+            trigger={
+              <Tooltip title="修改建议">
+                <HandOutlinedIcon
+                  style={{
+                    cursor: "pointer",
+                    color:
+                      data.suggestionCount?.suggestion &&
+                      data.suggestionCount?.suggestion > 0
+                        ? "#1890ff"
+                        : "unset",
+                  }}
+                />
+              </Tooltip>
+            }
+          />
+          {compact ? undefined : <Divider type="vertical" />}
+          <CommentBox
+            resId={data.id}
+            resType="sentence"
+            trigger={
+              <Tooltip title="讨论">
+                <CommentOutlined style={{ cursor: "pointer" }} />
+              </Tooltip>
+            }
+            onCommentCountChange={(count: number) => {
+              setCommentCount(count);
+            }}
+          />
+          {CommentCount}
+          {compact ? undefined : <Divider type="vertical" />}
+          {compact ? undefined : (
+            <Text copyable={{ text: data.content ? data.content : "" }}></Text>
+          )}
+        </Space>
+      )}
     </Paragraph>
   );
 };
