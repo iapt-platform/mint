@@ -41,8 +41,6 @@ const SentCellWidget = ({
   const acceptPr = useAppSelector(sentence);
   const [prOpen, setPrOpen] = useState(false);
 
-  console.log("load", initValue, value);
-
   useEffect(() => {
     if (value) {
       setSentData(value);
