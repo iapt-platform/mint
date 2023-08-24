@@ -67,6 +67,7 @@ const items = {
   "buttons.channel.my": "我的",
   "buttons.channel.collaborator": "协作",
   "buttons.channel.public": "公开",
+  "buttons.refresh": "刷新",
 };
 
 export default items;

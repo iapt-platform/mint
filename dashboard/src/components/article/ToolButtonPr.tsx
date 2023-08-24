@@ -1,5 +1,7 @@
+import { useIntl } from "react-intl";
 import { useEffect, useState } from "react";
 import { Button, Tag, Tree } from "antd";
+import { ReloadOutlined } from "@ant-design/icons";
 
 import { HandOutlinedIcon } from "../../assets/icon";
 import ToolButton from "./ToolButton";
@@ -51,6 +53,8 @@ interface IWidget {
 }
 const ToolButtonPrWidget = ({ type, articleId }: IWidget) => {
   const [treeData, setTreeData] = useState<DataNode[]>([]);
+  const [loading, setLoading] = useState(false);
+  const intl = useIntl();
 
   const refresh = () => {
     const pr = document.querySelectorAll("div.tran_sent");
@@ -68,28 +72,31 @@ const ToolButtonPrWidget = ({ type, articleId }: IWidget) => {
       });
     }
     console.log("request pr tree", prRequestData);
+    setLoading(true);
     post<IPrTreeRequest, IPrTreeResponse>("/v2/sent-pr-tree", {
       data: prRequestData,
-    }).then((json) => {
-      console.log("pr tree", json);
-      if (json.ok) {
-        const newTree: DataNode[] = json.data.rows.map((item) => {
-          const children = item.pr.map((pr) => {
-            return { title: pr.content, key: pr.content };
+    })
+      .then((json) => {
+        console.log("pr tree", json);
+        if (json.ok) {
+          const newTree: DataNode[] = json.data.rows.map((item) => {
+            const children = item.pr.map((pr) => {
+              return { title: pr.content, key: pr.content };
+            });
+            return {
+              title: item.sentence.content,
+              key: `${item.sentence.book}_${item.sentence.paragraph}_${item.sentence.word_start}_${item.sentence.word_end}_${item.sentence.channel_id}`,
+              children: children,
+            };
           });
-          return {
-            title: item.sentence.content,
-            key: `${item.sentence.book}_${item.sentence.paragraph}_${item.sentence.word_start}_${item.sentence.word_end}_${item.sentence.channel_id}`,
-            children: children,
-          };
-        });
-        setTreeData(newTree);
-      }
-    });
+          setTreeData(newTree);
+        }
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    refresh();
+    //refresh();
   }, []);
   return (
     <ToolButton
@@ -97,13 +104,21 @@ const ToolButtonPrWidget = ({ type, articleId }: IWidget) => {
       icon={<HandOutlinedIcon />}
       content={
         <>
-          <Button
-            onClick={() => {
-              refresh();
-            }}
-          >
-            refresh
-          </Button>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span></span>
+            <Button
+              type="text"
+              icon={<ReloadOutlined />}
+              loading={loading}
+              onClick={() => {
+                refresh();
+              }}
+            >
+              {intl.formatMessage({
+                id: "buttons.refresh",
+              })}
+            </Button>
+          </div>
           <Tree
             treeData={treeData}
             titleRender={(node) => {
