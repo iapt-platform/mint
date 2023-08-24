@@ -26,10 +26,15 @@ class ViewController extends Controller
                 break;
             case 'chapter':
                 # code...
-                $target_id = ProgressChapter::where("channel_id",$request->get("channel"))
-                                            ->where("book",$request->get("book"))
-                                            ->where("para",$request->get("para"))
+                $channelId = $request->get("channel");
+                if(Str::isUuid($channelId)){
+                    $target_id = ProgressChapter::where("channel_id",$request->get("channel"))
+                                            ->where("book",$request->get("book",0))
+                                            ->where("para",$request->get("para",0))
                                             ->value("uid");
+                }else{
+                    $target_id = false;
+                }
                 break;
             case 'article-instance':
                 # code...
