@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\BookTitle;
 use App\Models\PaliText;
+use Illuminate\Support\Facades\Log;
 
 class SearchBookResource extends JsonResource
 {

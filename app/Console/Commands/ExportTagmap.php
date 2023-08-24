@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use App\Models\TagMap;
+use Illuminate\Support\Facades\Log;
 
 class ExportTagmap extends Command
 {
