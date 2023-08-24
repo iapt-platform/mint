@@ -16,7 +16,7 @@ class SearchBookResource extends JsonResource
      */
     public function toArray($request)
     {
-        $book = BookTitle::find($this->pcd_book_id);
+        $book = BookTitle::where('sn',$this->pcd_book_id)->first();
         $toc = PaliText::where('book',$book->book)->where("paragraph",$book->paragraph)->value('toc');
         return [
             "book"=>$book->book,

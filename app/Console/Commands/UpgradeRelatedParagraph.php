@@ -58,7 +58,7 @@ class UpgradeRelatedParagraph extends Command
             $this->error("can not open csv $strFileName");
             Log::error("can not open csv $strFileName");
         }
-        $bookTitles = BookTitle::orderBy('id','desc')->get();
+        $bookTitles = BookTitle::orderBy('sn','desc')->get();
 
         while (($data = fgetcsv($fp, 0, ',')) !== false) {
             if($inputRow>0){
