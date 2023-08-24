@@ -17,13 +17,19 @@ class SearchBookResource extends JsonResource
     public function toArray($request)
     {
         $book = BookTitle::where('sn',$this->pcd_book_id)->first();
-        $toc = PaliText::where('book',$book->book)->where("paragraph",$book->paragraph)->value('toc');
-        return [
-            "book"=>$book->book,
-            "paragraph"=> $book->paragraph,
-            "paliTitle"=> $toc,
-            'pcdBookId'=>$this->pcd_book_id,
-            "count"=>$this->co,
-        ];
+        if($book){
+            $toc = PaliText::where('book',$book->book)->where("paragraph",$book->paragraph)->value('toc');
+            return [
+                "book"=>$book->book,
+                "paragraph"=> $book->paragraph,
+                "paliTitle"=> $toc,
+                'pcdBookId'=>$this->pcd_book_id,
+                "count"=>$this->co,
+            ];
+        }else{
+            Log::error('book title is null');
+            Log::error($this);
+        }
+
     }
 }
