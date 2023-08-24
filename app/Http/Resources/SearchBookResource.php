@@ -29,7 +29,7 @@ class SearchBookResource extends JsonResource
             ];
         }else{
             Log::error('book title is null');
-            Log::error($this);
+            Log::error(json_encode($this));
         }
 
     }
