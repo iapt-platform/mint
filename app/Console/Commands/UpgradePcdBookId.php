@@ -41,7 +41,7 @@ class UpgradePcdBookId extends Command
     public function handle()
     {
         $table = $this->option('table');
-        $bookTitles = BookTitle::orderBy('id')->get();
+        $bookTitles = BookTitle::orderBy('sn')->get();
         $bar = $this->output->createProgressBar(count($bookTitles));
         foreach ($bookTitles as $key => $value) {
             # code...

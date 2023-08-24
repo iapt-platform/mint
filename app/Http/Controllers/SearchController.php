@@ -284,7 +284,9 @@ class SearchController extends Controller
         if(count($para)>0){
             foreach ($para as $key => $value) {
                 # code...
-                $book_id = BookTitle::where('book',$value['book'])->where('paragraph',$value['paragraph'])->value('id');
+                $book_id = BookTitle::where('book',$value['book'])
+                                    ->where('paragraph',$value['paragraph'])
+                                    ->value('id');
                 if(!empty($book_id)){
                     $searchBookId[] = $book_id;
                 }
