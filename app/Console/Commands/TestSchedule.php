@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class TestSchedule extends Command
 {
@@ -38,6 +39,7 @@ class TestSchedule extends Command
     public function handle()
     {
         Log::info('schedule test start');
+        $this->info('schedule test start');
         return 0;
     }
 }
