@@ -35,7 +35,6 @@ class ViewController extends Controller
                 }else{
                     $target_id = false;
                 }
-
                 break;
             case 'article-instance':
                 # code...
