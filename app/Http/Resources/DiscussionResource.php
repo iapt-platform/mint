@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 use App\Http\Api\UserApi;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\Discussion;
 
 class DiscussionResource extends JsonResource
 {
@@ -15,19 +16,22 @@ class DiscussionResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $data = [
             "id"=>$this->id,
             "title"=> $this->title,
             "content"=> $this->content,
             "content_type"=> $this->content_type,
             "parent"=> $this->parent,
             "status"=> $this->status,
-            "children_count"=> $this->children_count,
             "editor"=> UserApi::getByUuid($this->editor_uid),
             "res_id"=>$this->res_id,
             "res_type"=> $this->res_type,
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];
+        if(empty($this->parent)){
+            $data['children_count'] = Discussion::where('parent',$this->id)->count();
+        }
+        return $data;
     }
 }
