@@ -153,11 +153,22 @@ const DiscussionCreateWidget = ({
               ) : contentType === "markdown" ? (
                 <Form.Item
                   name="content"
-                  label={intl.formatMessage({
-                    id: "forms.message.question.description.required",
-                  })}
+                  label={
+                    typeof parent === "undefined"
+                      ? intl.formatMessage({
+                          id: "forms.message.question.description.option",
+                        })
+                      : intl.formatMessage({
+                          id: "forms.fields.replay.label",
+                        })
+                  }
                 >
-                  <MDEditor placeholder="问题的详细描述（选填）" />
+                  <MDEditor
+                    placeholder={
+                      "问题的详细描述" +
+                      (typeof parent !== "undefined" ? "" : "（选填）")
+                    }
+                  />
                 </Form.Item>
               ) : (
                 <></>
