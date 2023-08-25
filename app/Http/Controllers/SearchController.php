@@ -227,8 +227,12 @@ class SearchController extends Controller
                 break;
         }
 
+        if($result){
+            return $this->ok(["rows"=>SearchBookResource::collection($result),"count"=>count($result)]);
+        }else{
+            return $this->ok(["rows"=>[],"count"=>0]);
+        }
 
-        return $this->ok(["rows"=>SearchBookResource::collection($result),"count"=>count($result)]);
     }
 
     private function getQueryWhere($key,$match){
