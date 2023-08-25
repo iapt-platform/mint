@@ -153,6 +153,7 @@ const DiscussionCreateWidget = ({
               ) : contentType === "markdown" ? (
                 <Form.Item
                   name="content"
+                  rules={[{ required: typeof parent !== "undefined" }]}
                   label={
                     typeof parent === "undefined"
                       ? intl.formatMessage({
