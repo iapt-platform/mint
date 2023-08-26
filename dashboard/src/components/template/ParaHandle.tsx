@@ -68,7 +68,6 @@ interface IWidget {
 }
 const Widget = ({ props }: IWidget) => {
   const prop = JSON.parse(atob(props)) as IWidgetParaHandleCtl;
-  console.log(prop);
   return (
     <>
       <ParaHandleCtl {...prop} />

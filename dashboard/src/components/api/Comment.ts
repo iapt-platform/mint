@@ -25,7 +25,7 @@ export interface ICommentApiData {
   content_type?: TContentType;
   parent?: string;
   status?: "active" | "close";
-  children_count: number;
+  children_count?: number;
   editor: IUserApiData;
   created_at?: string;
   updated_at?: string;

@@ -130,7 +130,7 @@ const Widget = () => {
             <NetStatus style={{ color: "white" }} />
           </div>
           <div></div>
-          <Space key="right">
+          <div style={{ display: "flex" }} key="right">
             {type === "article" && loadedArticleData ? (
               <Button
                 ghost
@@ -193,7 +193,7 @@ const Widget = () => {
                 }
               />
             </Tooltip>
-          </Space>
+          </div>
         </Header>
       </Affix>
       <div style={{ width: "100%", display: "flex" }}>
