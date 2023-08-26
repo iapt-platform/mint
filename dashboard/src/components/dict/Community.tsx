@@ -34,6 +34,7 @@ interface IWidget {
 }
 const CommunityWidget = ({ word }: IWidget) => {
   const intl = useIntl();
+  const [loaded, setLoaded] = useState(false);
   const [wordData, setWordData] = useState<IWord>();
   const minScore = 100; //分数阈值。低于这个分数只显示在弹出菜单中
 
@@ -44,7 +45,13 @@ const CommunityWidget = ({ word }: IWidget) => {
     const url = `/v2/userdict?view=community&word=${word}`;
     get<IApiResponseDictList>(url)
       .then((json) => {
-        console.log("community", json.data.rows);
+        if (json.ok === false) {
+          console.log("dict community", json.message);
+          return;
+        }
+        if (json.data.count > 0) {
+          setLoaded(true);
+        }
         let meaning = new Map<string, number>();
         let grammar = new Map<string, number>();
         let parent = new Map<string, number>();
@@ -170,7 +177,8 @@ const CommunityWidget = ({ word }: IWidget) => {
       </Dropdown>
     ) : undefined
   ) : undefined;
-  return (
+
+  return loaded ? (
     <Card>
       <Title level={5} id={`community`}>
         {"社区字典"}
@@ -267,6 +275,8 @@ const CommunityWidget = ({ word }: IWidget) => {
         </Space>
       </div>
     </Card>
+  ) : (
+    <></>
   );
 };
 
