@@ -44,7 +44,7 @@ interface IWidget {
   compact?: boolean;
 }
 const EditInfoWidget = ({ data, isPr = false, compact = false }: IWidget) => {
-  console.log("data.createdAt", data.createdAt, data.updateAt);
+  //console.log("data.createdAt", data.createdAt, data.updateAt);
   return (
     <div style={{ fontSize: "80%" }}>
       <Text type="secondary">
