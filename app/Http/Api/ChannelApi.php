@@ -47,7 +47,7 @@ class ChannelApi{
         return $output;
     }
     public static function getSysChannel($channel_name,$fallback=""){
-        $channel=  Channel::where('name',$channel_name)
+        $channel = Channel::where('name',$channel_name)
                     ->where('owner_uid',config("app.admin.root_uuid"))
                     ->first();
         if(!$channel){
