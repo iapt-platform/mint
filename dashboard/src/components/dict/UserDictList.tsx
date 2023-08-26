@@ -53,8 +53,13 @@ interface IParams {
 interface IWidget {
   studioName?: string;
   view?: "studio" | "all";
+  dictName?: string;
 }
-const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
+const UserDictListWidget = ({
+  studioName,
+  view = "studio",
+  dictName,
+}: IWidget) => {
   const intl = useIntl();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -344,6 +349,11 @@ const UserDictListWidget = ({ studioName, view = "studio" }: IWidget) => {
           url += params.word ? `&word=${params.word}` : "";
           url += params.parent ? `&parent=${params.parent}` : "";
           url += params.dict ? `&dict=${params.dict}` : "";
+          url += dictName
+            ? dictName !== "all"
+              ? `&dict=${dictName}`
+              : ""
+            : "";
 
           url += getSorterUrl(sorter);
 
