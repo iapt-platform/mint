@@ -49,9 +49,7 @@ const CommunityWidget = ({ word }: IWidget) => {
           console.log("dict community", json.message);
           return;
         }
-        if (json.data.count > 0) {
-          setLoaded(true);
-        }
+
         let meaning = new Map<string, number>();
         let grammar = new Map<string, number>();
         let parent = new Map<string, number>();
@@ -121,6 +119,9 @@ const CommunityWidget = ({ word }: IWidget) => {
         });
         _data.editor.sort((a, b) => b.score - a.score);
         setWordData(_data);
+        if (_data.editor.length > 0) {
+          setLoaded(true);
+        }
       })
       .catch((error) => {
         console.error(error);
