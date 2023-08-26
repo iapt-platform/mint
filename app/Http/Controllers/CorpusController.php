@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+
 use App\Models\Sentence;
 use App\Models\Channel;
 use App\Models\PaliText;
@@ -55,6 +57,8 @@ class CorpusController extends Controller
         'editor_uid',
         'acceptor_uid',
         'pr_edit_at',
+        'create_time',
+        'modify_time',
         'created_at',
         'updated_at',
     ];
@@ -606,7 +610,12 @@ class CorpusController extends Controller
                     $newSent['contentType'] = $row->content_type;
                     $newSent['html'] = "";
                     $newSent["editor"]=UserApi::getByUuid($row->editor_uid);
-                    $newSent['updateAt'] = $row->updated_at;
+                    /**
+                     * TODO 刷库改数据
+                     * 旧版api没有更新updated_at所以造成旧版的数据updated_at数据比modify_time 要晚
+                     */
+                    $newSent['updateAt'] =  $row->updated_at; //
+                    $newSent['updateAt'] = Carbon::createFromTimestampMs($row->modify_time)->toDateTimeString();
                     $newSent['createdAt'] = $row->created_at;
                     if($mode !== "read"){
                         if(isset($row->acceptor_uid) && !empty($row->acceptor_uid)){
