@@ -21,7 +21,9 @@ class DictStatisticController extends Controller
         $all = UserDict::count();
         $query = "SELECT count(*) from (SELECT word from user_dicts ud group by word) as t;";
 		$allVocabulary = DB::select($query);
-        $items[] = ['key'=>'all','title'=>'all','count'=>$all,'vocabulary'=>$allVocabulary[0]->count];
+        $query = "SELECT count(*) from (SELECT parent from user_dicts ud group by parent) as t;";
+		$allParent = DB::select($query);
+        $items[] = ['key'=>'all','title'=>'all','count'=>$all,'vocabulary'=>$allVocabulary[0]->count,'parent'=>$allParent[0]->count];
 
         $dictName = ['robot_compound','system_regular','community_extract','community'];
         foreach ($dictName as $key => $name) {
@@ -29,7 +31,9 @@ class DictStatisticController extends Controller
             $all = UserDict::where('dict_id',$dict->id)->count();
             $query = "SELECT count(*) from (SELECT word from user_dicts ud where dict_id = ? group by word) as t;";
             $vocabulary = DB::select($query,[$dict->id]);
-            $items[] = ['key'=>$dict->shortname,'title'=>$dict->shortname,'count'=>$all,'vocabulary'=>$vocabulary[0]->count];
+            $query = "SELECT count(*) from (SELECT parent from user_dicts ud where dict_id = ? group by parent) as t;";
+            $parent = DB::select($query,[$dict->id]);
+            $items[] = ['key'=>$dict->shortname,'title'=>$dict->shortname,'count'=>$all,'vocabulary'=>$vocabulary[0]->count,'parent'=>$parent[0]->count];
         }
         return $this->ok($items);
     }
