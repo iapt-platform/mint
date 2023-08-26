@@ -55,7 +55,8 @@ class CorpusController extends Controller
         'editor_uid',
         'acceptor_uid',
         'pr_edit_at',
-        'updated_at'
+        'created_at',
+        'updated_at',
     ];
 
     protected $userUuid=null;
