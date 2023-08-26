@@ -10,6 +10,7 @@ interface IDict {
   title: string;
   count: number;
   vocabulary: number;
+  parent: number;
 }
 
 interface IDictStatisticResponse {
@@ -45,7 +46,10 @@ const DictListWidget = () => {
                 statistic={{
                   value: item.count,
                   description: (
-                    <Statistic title="单词表" value={item.vocabulary} />
+                    <>
+                      <Statistic title="单词表" value={item.vocabulary} />
+                      <Statistic title="词干" value={item.parent} />
+                    </>
                   ),
                 }}
                 style={{
