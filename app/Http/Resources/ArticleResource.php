@@ -108,21 +108,25 @@ class ArticleResource extends JsonResource
         }
 
         //render html
+        $channels = array();
         if(isset($this->content) && !empty($this->content)){
             if($request->has('channel')){
-                $channel = $request->get('channel');
+                $channels = explode('_',$request->get('channel')) ;
             }else{
                 //查找用户默认channel
                 $studioChannel = Channel::where('owner_uid',$this->owner)
                                         ->where('type','translation')
                                         ->get();
                 if($studioChannel){
-                    $channel = $studioChannel[0]->uid;
+                    $channelId = $studioChannel[0]->uid;
+                    $channels = [$channelId];
                 }else{
-                    $channel = ChannelApi::getSysChannel('_community_translation_'.strtolower($this->lang).'_',
+                    $channelId = ChannelApi::getSysChannel('_community_translation_'.strtolower($this->lang).'_',
                                                         '_community_translation_en_');
+                    if($channelId){
+                        $channels = [$channelId];
+                    }
                 }
-
             }
             $data["content"] = $this->content;
             $data["content_type"] = $this->content_type;
@@ -141,20 +145,24 @@ class ArticleResource extends JsonResource
                                     ->where('user_id',$userId)
                                     ->first();
                         if($userInCourse){
-                            $channel = $userInCourse->channel_id;
+                            $channelId = $userInCourse->channel_id;
+                            $channels = [$channelId];
                         }
                     }else if($request->get('view')==="answer"){
                         /**
                          * 显示答案
                          * 算法：查询course 答案 channel
                          */
-                        $channel = Course::where('id',$request->get('course'))->value('channel_id');
+                        $channelId = Course::where('id',$request->get('course'))->value('channel_id');
+                        $channels = [$channelId];
                     }else{
                         //显示答案
-                        $channel = Course::where('id',$request->get('course'))->value('channel_id');
+                        $channelId = Course::where('id',$request->get('course'))->value('channel_id');
+                        $channels = [$channelId];
                     }
                 }else{
-                    $channel = Course::where('id',$request->get('course'))->value('channel_id');
+                    $channelId = Course::where('id',$request->get('course'))->value('channel_id');
+                    $channels = [$channelId];
                 }
             }
             if($request->has('mode')){
@@ -162,7 +170,7 @@ class ArticleResource extends JsonResource
             }else{
                 $mode = 'read';
             }
-            $data["html"] = MdRender::render($this->content,[$channel],$query_id,$mode);
+            $data["html"] = MdRender::render($this->content,$channels,$query_id,$mode);
         }
         return $data;
     }
