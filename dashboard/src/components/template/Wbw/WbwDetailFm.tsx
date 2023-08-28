@@ -75,7 +75,6 @@ const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
       const menu = meanings.map((item) => {
         return { key: item, label: item };
       });
-      console.log("menu", menu);
       setItems([...defaultMenu, ...menu]);
     }
   }, [pali, inlineDict]);
