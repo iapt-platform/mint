@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Button, Popover, Space, Tag, Typography } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { Button, Popover, Space, Typography } from "antd";
 import {
   TagTwoTone,
   InfoCircleOutlined,
@@ -32,6 +32,7 @@ const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
   const [popOpen, setPopOpen] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
   const [hasComment, setHasComment] = useState(data.hasComment);
+  const divShell = useRef<HTMLDivElement>(null);
   /**
    * 处理 relation 链接事件
    * 高亮可能的单词
@@ -278,13 +279,20 @@ const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
 
   if (typeof data.real !== "undefined" && data.real.value !== "") {
     //非标点符号
+    //单词在右侧时，为了不遮挡字典，Popover向左移动
+    const rightPanel = document.getElementById("article_right_panel");
+    const rightPanelWidth = rightPanel ? rightPanel.offsetWidth : 0;
+    const containerWidth = window.innerWidth - rightPanelWidth;
+    const divRight = divShell.current?.getBoundingClientRect().right;
+    const toDivRight = divRight ? containerWidth - divRight : 0;
+
     return (
-      <div className="pali_shell">
+      <div className="pali_shell" ref={divShell}>
         <span className="pali_shell_spell">
           {mode === "edit" ? paliWord : ""}
           <Popover
             content={wbwDetail}
-            placement="bottom"
+            placement={toDivRight > 200 ? "bottom" : "bottomRight"}
             trigger="click"
             open={popOpen}
             onOpenChange={handleClickChange}
