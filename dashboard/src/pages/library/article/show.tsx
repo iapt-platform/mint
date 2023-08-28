@@ -332,7 +332,7 @@ const Widget = () => {
               }}
             />
           </div>
-          <div key="RightPanel">
+          <div key="RightPanel" id="article_right_panel">
             <AnchorNav open={anchorNavOpen} />
             <RightPanel
               curr={rightPanel}
