@@ -77,7 +77,7 @@ const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
       });
       setItems([...defaultMenu, ...menu]);
     }
-  }, [pali, inlineDict, defaultMenu]);
+  }, [pali, inlineDict]);
 
   const inputOk = () => {
     setEditable(false);
