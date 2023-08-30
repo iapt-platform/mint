@@ -138,7 +138,7 @@ class WebHookController extends Controller
      * @param  \App\Models\WebHook  $webHook
      * @return \Illuminate\Http\Response
      */
-    public function destroy(string $id)
+    public function destroy(Request $request,string $id)
     {
         //
         $user = AuthApi::current($request);
