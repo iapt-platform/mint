@@ -23,6 +23,7 @@ export function XmlToReact(
   convertor?: TCodeConvertor
 ): React.ReactNode[] | undefined {
   //console.log("html string:", text);
+  text = text.replaceAll("<br>", "<div></div>");
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(
     `<body>${text}</body>`,
