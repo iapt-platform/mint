@@ -7,6 +7,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "doctrine/dbal": "^3.4",
+        "erusev/parsedown": "^1.7",
         "firebase/php-jwt": "^6.2",
         "fruitcake/laravel-cors": "^3.0",
         "godruoyi/php-snowflake": "^2.0",
