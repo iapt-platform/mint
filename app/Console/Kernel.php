@@ -16,7 +16,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        Log::info('schedule start');
         $schedule->command('upgrade:daily')
                  ->dailyAt('00:00')
                  ->emailOutputTo(config("app.email.ScheduleEmailOutputTo"))
