@@ -438,7 +438,6 @@ class MdRender{
         $markdown = str_replace(['<param','</param>'],['<span','</span>'],$markdown);
         $Parsedown = new \Parsedown();
         $html = $Parsedown->text($markdown);
-        Log::info($html);
         $html = MdRender::fixHtml($html);
 
         $html = str_replace('<hr>','<hr />',$html);
