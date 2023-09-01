@@ -31,6 +31,7 @@ const Widget = () => {
                   courseId={courseId}
                   onTitleChange={(title: string) => {
                     setTitle(title);
+                    document.title = `${title}`;
                   }}
                 />
               ),
