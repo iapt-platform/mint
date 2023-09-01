@@ -350,9 +350,7 @@ class MdRender{
          * markdown -> html
          */
         /*
-        $markdown = str_replace(['[[',']]'],['㐛','㐚'],$markdown);
-        $html = Str::markdown($markdown);
-        $html = str_replace(['㐛','㐚'],['[[',']]'],$html);
+
         $html = MdRender::fixHtml($html);
 */
 
@@ -438,7 +436,8 @@ class MdRender{
     public static function markdownToHtml($markdown){
         $markdown = str_replace('MdTpl','mdtpl',$markdown);
         $markdown = str_replace(['<param','</param>'],['<span','</span>'],$markdown);
-        $html = Str::markdown($markdown);
+        $Parsedown = new \Parsedown();
+        $html = $Parsedown->text($markdown);
         $html = MdRender::fixHtml($html);
 
         $html = str_replace('<hr>','<hr />',$html);
