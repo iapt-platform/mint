@@ -16,14 +16,14 @@ const PaliChapterHeadWidget = ({ para, onChange }: IWidget) => {
   const [pathData, setPathData] = useState<ITocPathNode[]>([]);
   const [chapterData, setChapterData] = useState<IChapterInfo>({ title: "" });
   useEffect(() => {
-    console.log("palichapterlist useEffect");
+    console.log("pali chapter list useEffect");
     fetchData(para);
   }, [para]);
 
   function fetchData(para: IChapter) {
     let url = `/v2/palitext?view=paragraph&book=${para.book}&para=${para.para}`;
     get<IApiResponsePaliChapter>(url).then(function (myJson) {
-      console.log("ajex", myJson);
+      console.log("ajax", myJson);
       const data = myJson;
       let path: ITocPathNode[] = JSON.parse(data.data.path);
       path.push({
