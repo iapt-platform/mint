@@ -31,7 +31,7 @@ interface IWidget {
 }
 const TermCommunityWidget = ({ word }: IWidget) => {
   const intl = useIntl();
-  const [loaded, setLoaded] = useState(false);
+  const [show, setShow] = useState(false);
   const [wordData, setWordData] = useState<IWord>();
   const minScore = 100; //分数阈值。低于这个分数只显示在弹出菜单中
 
@@ -104,7 +104,8 @@ const TermCommunityWidget = ({ word }: IWidget) => {
         setWordData(_data);
         console.log("_data", _data);
         if (_data.editor.length > 0) {
-          setLoaded(true);
+          console.log("show", _data.editor.length);
+          setShow(true);
         }
       })
       .catch((error) => {
@@ -163,7 +164,7 @@ const TermCommunityWidget = ({ word }: IWidget) => {
     ) : undefined
   ) : undefined;
 
-  return loaded ? (
+  return show ? (
     <Card>
       <Title level={5} id={`community`}>
         {"社区术语"}
