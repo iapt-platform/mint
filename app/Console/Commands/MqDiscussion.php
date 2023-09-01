@@ -87,7 +87,12 @@ class MqDiscussion extends Command
                                     ->get();
                     foreach ($webhooks as $key => $hook) {
                         $event = json_decode($hook->event);
-                        if(!in_array('discussion',$event)){
+
+                        if(is_array($event)){
+                            if(!in_array('discussion',$event)){
+                                continue;
+                            }
+                        }else{
                             continue;
                         }
                         $command = '';
