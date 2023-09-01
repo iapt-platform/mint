@@ -229,7 +229,9 @@ class MdRender{
             }
             /**
              * 生成模版参数
+             *
              */
+            //TODO 判断$channelId里面的是否都是uuid
             $channelInfo = Channel::whereIn('uid',$channelId)->get();
             $tplRender = new TemplateRender($props,$channelInfo,$mode);
             $tplProps = $tplRender->render($tpl_name);
