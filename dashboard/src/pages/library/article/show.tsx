@@ -36,7 +36,7 @@ import { paraParam } from "../../../reducers/para-change";
 import { get } from "../../../request";
 import store from "../../../store";
 import { IRecent } from "../../../components/recent/RecentList";
-import { fullUrl } from "../../../utils";
+import { convertToPlain, fullUrl } from "../../../utils";
 import ThemeSelect from "../../../components/general/ThemeSelect";
 
 /**
@@ -296,7 +296,8 @@ const Widget = () => {
               }}
               onLoad={(article: IArticleDataResponse) => {
                 setLoadedArticleData(article);
-                document.title = article.title.slice(0, 128);
+
+                document.title = convertToPlain(article.title).slice(0, 128);
               }}
               onAnthologySelect={(id: string) => {
                 let output: any = { anthology: id };
