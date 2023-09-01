@@ -41,11 +41,8 @@ class TestMdRender extends Command
     {
         $data = array();
         $data['bold'] = <<<md
-        **"aa"**
-        **“aa”**
-        三
-        **“十位”**
-        经
+        三十**"aa"** **“aa”** 三 **“十位”** **[[十位]]** 经
+        在[中间]六处为**[ditthippatta]**，在极果为**慧解脱**
         md;
         $data['term'] = <<<md
         ## heading
