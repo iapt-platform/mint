@@ -41,7 +41,7 @@ const Widget = () => {
         request={async () => {
           const res = await get<IGroupResponse>(`/v2/group/${groupId}`);
           setTitle(res.data.name);
-          console.log(res.data);
+          document.title = `${res.data.name}`;
           return {
             id: res.data.uid,
             name: res.data.name,

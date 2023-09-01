@@ -17,6 +17,7 @@ const Widget = () => {
   useEffect(() => {
     get<IGroupResponse>(`/v2/group/${groupId}`).then((json) => {
       setTitle(json.data.name);
+      document.title = `${json.data.name}`;
     });
   }, [groupId]);
   return (

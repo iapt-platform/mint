@@ -26,6 +26,7 @@ const Widget = () => {
   useEffect(() => {
     get<IApiResponseChannel>(`/v2/channel/${channelId}`).then((json) => {
       setTitle(json.data.name);
+      document.title = `${json.data.name}`;
     });
   }, [channelId]);
   return (
