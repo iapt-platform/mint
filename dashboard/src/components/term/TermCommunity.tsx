@@ -39,7 +39,7 @@ const TermCommunityWidget = ({ word }: IWidget) => {
     if (typeof word === "undefined") {
       return;
     }
-    const url = `/v2/terms?view=word&word=${word}`;
+    const url = `/v2/terms?view=word&word=${word}&exp=1`;
     console.log("url", url);
     get<ITermListResponse>(url)
       .then((json) => {
@@ -66,7 +66,8 @@ const TermCommunityWidget = ({ word }: IWidget) => {
 
           if (it.note) {
             score = note.get(it.note);
-            note.set(it.note, score ? score + currScore : currScore);
+            const noteScore = it.note.length;
+            note.set(it.note, score ? score + noteScore : noteScore);
           }
 
           if (it.editor) {
