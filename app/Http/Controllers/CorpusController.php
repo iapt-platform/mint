@@ -576,7 +576,7 @@ class CorpusController extends Controller
                         'sentences'=>$sentInPara,
                     ];
                     $markProps = base64_encode(\json_encode($mark)) ;
-                    $paraWidget = "<MdTpl tpl='para' props='{$markProps}' />";
+                    $paraWidget = "<MdTpl tpl='para' props='{$markProps}' ></MdTpl>";
                     $content[] = $paraWidget;
                 }
             }
@@ -853,9 +853,9 @@ class CorpusController extends Controller
 
 		$sentProps = base64_encode(\json_encode($sent)) ;
         if($mode === 'read'){
-            $sentWidget = "<MdTpl tpl='sentread' props='{$sentProps}' />";
+            $sentWidget = "<MdTpl tpl='sentread' props='{$sentProps}' ></MdTpl>";
         }else{
-            $sentWidget = "<MdTpl tpl='sentedit' props='{$sentProps}' />";
+            $sentWidget = "<MdTpl tpl='sentedit' props='{$sentProps}' ></MdTpl>";
         }
 		//增加标题的html标记
 		if($level>0){
