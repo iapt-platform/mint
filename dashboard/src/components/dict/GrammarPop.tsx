@@ -50,4 +50,16 @@ const GrammarPopWidget = ({ text, gid }: IWidget) => {
   );
 };
 
+interface IWidgetShell {
+  props: string;
+}
+export const GrammarPopShell = ({ props }: IWidgetShell) => {
+  const prop = JSON.parse(atob(props)) as IWidget;
+  return (
+    <>
+      <GrammarPopWidget {...prop} />
+    </>
+  );
+};
+
 export default GrammarPopWidget;

@@ -1,3 +1,4 @@
+import GrammarPop, { GrammarPopShell } from "../dict/GrammarPop";
 import Article from "./Article";
 import Exercise from "./Exercise";
 import Mermaid from "./Mermaid";
@@ -45,6 +46,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <ParaHandle props={props ? props : ""} />;
     case "mermaid":
       return <Mermaid props={props ? props : ""} />;
+    case "grammar-pop":
+      return <GrammarPopShell props={props ? props : ""} />;
     default:
       return <>未定义模版({tpl})</>;
   }
