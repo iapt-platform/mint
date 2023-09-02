@@ -7,22 +7,37 @@ export WORKSPACE=$PWD
 
 # -----------------------------------------------------------------------------
 
-function generate_node() {
-    echo "generate code for node"
-    local target=$WORKSPACE/src/protocols
+function generate_grpc_by_lang() {
+    local target=$WORKSPACE/$1
+    echo "generate code for $1"
     if [ -d $target ]
     then
         rm -r $target
     fi
     mkdir -p $target
-    grpc_tools_node_protoc -I $WORKSPACE/../protocols \
+    $PROTOBUF_ROOT/bin/protoc -I $WORKSPACE/../protocols \
         -I $PROTOBUF_ROOT/include/google/protobuf \
-        --js_out=import_style=commonjs,binary:$target \
-        --grpc_out=grpc_js:$target $WORKSPACE/../protocols/morus.proto
+        --${1}_out=$target --grpc_out=$target \
+        --plugin=protoc-gen-grpc=$PROTOBUF_ROOT/bin/grpc_${1}_plugin \
+        $WORKSPACE/../protocols/*.proto
 }
 
 # -----------------------------------------------------------------------------
-generate_node
+
+declare -a languages=(
+    "php"
+    "python"
+    "ruby"
+    "cpp"
+    "csharp"
+    "java"
+)
+
+for l in "${languages[@]}"
+do
+    generate_grpc_by_lang $l
+done
+
 # -----------------------------------------------------------------------------
 
 echo 'done.'
