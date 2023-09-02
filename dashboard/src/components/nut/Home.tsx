@@ -9,6 +9,7 @@ import TreeTest from "./TreeTest";
 import { Layout, Typography } from "antd";
 import CaseFormula from "../template/Wbw/CaseFormula";
 import EditableLabel from "../general/EditableLabel";
+import Tree from "./test/Tree";
 const { Paragraph } = Typography;
 
 const Widget = () => {
@@ -20,7 +21,7 @@ const Widget = () => {
       </Paragraph>
       <CaseFormula />
       <h2>TreeTest</h2>
-      <TreeTest />
+      <Tree />
 
       <br />
       <FontBox />
