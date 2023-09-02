@@ -59,7 +59,7 @@ export function XmlToReact(
       switch (value.nodeType) {
         case 1: //element node
           const tagName = value.nodeName.toLowerCase();
-          console.log("tag", value.nodeName, tagName);
+          //console.log("tag", value.nodeName, tagName);
           switch (tagName) {
             case "parsererror":
               output.push(
