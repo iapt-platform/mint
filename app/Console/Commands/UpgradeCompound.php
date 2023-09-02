@@ -174,7 +174,7 @@ class UpgradeCompound extends Command
                 $new->save();
             }
             if(env('APP_ENV','local') !== 'local'){
-                usleep(100);
+                usleep(500);
             }
 
 		}
