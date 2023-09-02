@@ -22,19 +22,16 @@ export function XmlToReact(
   convertor?: TCodeConvertor
 ): React.ReactNode[] | undefined {
   //console.log("html string:", text);
-  text = text.replaceAll("<br>", "<div></div>");
   const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(
-    `<body>${text}</body>`,
-    "application/xml"
-  );
+  const xmlDoc = parser.parseFromString(`<body>${text}</body>`, "text/html");
   const x = xmlDoc.documentElement;
   //console.log("解析成功", x);
-  return convert(x, wordWidget, convertor);
+  return convert(x.getElementsByTagName("body")[0], wordWidget, convertor);
 
   function getAttr(node: ChildNode, key: number): Object {
     const ele = node as Element;
     const attr = ele.attributes;
+    //console.log("attr", attr);
     let output: any = { key: key };
     for (let i = 0; i < attr.length; i++) {
       if (attr[i].nodeType === 2) {
@@ -61,8 +58,8 @@ export function XmlToReact(
 
       switch (value.nodeType) {
         case 1: //element node
-          //console.log("tag name", value.nodeName);
-          const tagName = value.nodeName;
+          const tagName = value.nodeName.toLowerCase();
+          console.log("tag", value.nodeName, tagName);
           switch (tagName) {
             case "parsererror":
               output.push(
@@ -73,19 +70,10 @@ export function XmlToReact(
                 )
               );
               break;
-            case "MdTpl":
+            case "mdtpl":
               output.push(
                 React.createElement(
                   MdTpl,
-                  getAttr(value, i),
-                  convert(value, wordWidget, convertor)
-                )
-              );
-              break;
-            case "hr":
-              output.push(
-                React.createElement(
-                  Divider,
                   getAttr(value, i),
                   convert(value, wordWidget, convertor)
                 )
