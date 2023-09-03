@@ -206,19 +206,24 @@ class DictController extends Controller
 
     private function GrmAbbr($input,$dictid){
         $mean = $input;
-
+        $replaced = array();
         foreach (GRM_ABBR as $key => $value) {
-            # code...
+            if(in_array($value["abbr"],$replaced)){
+                continue;
+            }else{
+                $replaced[] = $value["abbr"];
+            }
             if($dictid !== 0){
                 if($value["dictid"]=== $dictid && strpos($input,$value["abbr"]."|") == false){
                     $mean = str_ireplace($value["abbr"],"|@{$value["abbr"]}-{$value["replace"]}",$mean);
                 }
             }else{
                 if( strpos($mean,"|@".$value["abbr"]) == false){
-                    $mean = str_ireplace($value["abbr"],"|@{$value["abbr"]}-{$value["replace"]}|",$mean);
+                    $props=base64_encode(\json_encode(['text'=>$value["abbr"],'gid'=>$value["replace"]]));
+                    $tpl = "<MdTpl name='grammar-pop' tpl='grammar-pop' props='{$props}'></MdTpl>";
+                    $mean = str_ireplace($value["abbr"],$tpl,$mean);
                 }
             }
-
         }
         return $mean;
     }
