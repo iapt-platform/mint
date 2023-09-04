@@ -266,6 +266,8 @@ class SentenceController extends Controller
                 $row->pr_edit_at = $sent["updated_at"];
             }else{
                 $row->editor_uid = $user["user_uid"];
+                $row->acceptor_uid = null;
+                $row->pr_edit_at = null;
             }
             $row->create_time = time()*1000;
             $row->modify_time = time()*1000;
@@ -362,14 +364,18 @@ class SentenceController extends Controller
         }
         $sent->language = $channel->lang;
         $sent->status = $channel->status;
-        $sent->editor_uid = $user["user_uid"];
         $sent->strlen = mb_strlen($request->get('content'),"UTF-8");
         $sent->modify_time = time()*1000;
         if($request->has('prEditor')){
+            $sent->editor_uid = $request->get('prEditor');
             $sent->acceptor_uid = $user["user_uid"];
             $sent->pr_edit_at = $request->get('prEditAt');
-            $sent->editor_uid = $request->get('prEditor');
             $sent->pr_id = $request->get('prId');
+        }else{
+            $sent->editor_uid = $user["user_uid"];
+            $sent->acceptor_uid = null;
+            $sent->pr_edit_at = null;
+            $sent->pr_id = null;
         }
         $sent->save();
         //清除cache
