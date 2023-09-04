@@ -23,6 +23,7 @@ class UserApi{
         if($user){
             return [
                 'id'=>$id,
+                'uid'=>$user->userid,
                 'nickName'=>$user['nickname'],
                 'userName'=>$user['username'],
                 'realName'=>$user['username'],

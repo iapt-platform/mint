@@ -254,11 +254,24 @@ class DhammaTermController extends Controller
             $term->create_time = time()*1000;
             $term->modify_time = time()*1000;
             $term->save();
+            //删除cache
+            $this->deleteCache($term);
             return $this->ok($term);
         }else{
             return $this->error("word existed",[],200);
         }
+    }
 
+    private function deleteCache($term){
+        if(empty($term->channal)){
+            //通用 查询studio所有channel
+            $channels = Channel::where('owner',$term->owner)->select('uid')->get();
+            foreach ($channels as $channel) {
+                Cache::forget("/term/{$channel}/{$term->word}");
+            }
+        }else{
+            Cache::forget("/term/{$term->channal}/{$term->word}");
+        }
     }
 
     /**
@@ -413,6 +426,8 @@ class DhammaTermController extends Controller
         $dhammaTerm->create_time = time()*1000;
         $dhammaTerm->modify_time = time()*1000;
         $dhammaTerm->save();
+        //删除cache
+        $this->deleteCache($dhammaTerm);
 		return $this->ok($dhammaTerm);
 
     }
@@ -448,6 +463,8 @@ class DhammaTermController extends Controller
                         continue;
                     }
                 }
+                        //删除cache
+                $this->deleteCache($term);
                 $count += $term->delete();
             }
         }else{

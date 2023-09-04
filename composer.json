@@ -7,9 +7,12 @@
     "require": {
         "php": "^7.3|^8.0",
         "doctrine/dbal": "^3.4",
+        "erusev/parsedown": "^1.7",
         "firebase/php-jwt": "^6.2",
         "fruitcake/laravel-cors": "^3.0",
         "godruoyi/php-snowflake": "^2.0",
+        "google/protobuf": "3.17",
+        "grpc/grpc": "1.38",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.7",
         "laravel/framework": "^8.75",
@@ -35,7 +38,11 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+            "GPBMetadata\\": [
+                "grpc/GPBMetadata/"
+              ],
+            "Mint\\": "grpc/Mint/"
         }
     },
     "autoload-dev": {

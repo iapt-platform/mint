@@ -9,6 +9,8 @@ use App\Models\Channel;
 use App\Http\Controllers\CorpusController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Tools\Markdown;
+
 define("STACK_DEEP",8);
 
 class MdRender{
@@ -94,7 +96,7 @@ class MdRender{
                  */
                 $tpl = str_replace("|\n","|",$tpl);
                 $pattern = "/\{\{(.+?)\|/";
-                $replacement = '<MdTpl name="$1"><param>';
+                $replacement = '<MdTpl class="tpl" name="$1"><param>';
                 $tpl = preg_replace($pattern,$replacement,$tpl);
                 $tpl = str_replace("}}","</param></MdTpl>",$tpl);
                 $tpl = str_replace("|","</param><param>",$tpl);
@@ -105,6 +107,8 @@ class MdRender{
                 $replacement = '<param name="$1">';
                 $tpl = preg_replace($pattern,$replacement,$tpl);
                 //tpl to react
+                $tpl = str_replace('<param','<span class="param"',$tpl);
+                $tpl = str_replace('</param>','</span>',$tpl);
                 $tpl = MdRender::xml2tpl($tpl,$channelId,$mode);
 
                 $buffer[] = $tpl;
@@ -177,70 +181,91 @@ class MdRender{
          * 生成react 组件参数
          */
         try{
-            $dom = simplexml_load_string($xml);
+            //$dom = simplexml_load_string($xml);
+            $doc = new \DOMDocument();
+            $xml = str_replace('MdTpl','dfn',$xml);
+            $xml = mb_convert_encoding($xml, 'HTML-ENTITIES', "UTF-8");
+            $ok = $doc->loadHTML($xml,LIBXML_NOERROR  | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         }catch(\Exception $e){
             Log::error($e);
             Log::error($xml);
             return "<span>xml解析错误{$e}</span>";
         }
 
+        if(!$ok){
+            return "<span>xml解析错误</span>";
+        }
+/*
         if(!$dom){
             Log::error($xml);
             return "<span>xml解析错误</span>";
         }
+*/
 
-        /*
-        $doc = new \DOMDocument();
-        $xml = str_replace('MdTpl','dfn',$xml);
-        $ok = $doc->loadHTML($xml,LIBXML_HTML_NODEFDTD | LIBXML_DTDVALID);
-        if(!$ok){
-            return "<span>xml解析错误</span>";
-        }
-        */
 
-        $tpl_list = $dom->xpath('//MdTpl');
+        //$tpl_list = $dom->xpath('//MdTpl');
+        $tpl_list = $doc->getElementsByTagName('dfn');
+
         foreach ($tpl_list as $key => $tpl) {
             /**
              * 遍历 MdTpl 处理参数
              */
             $props = [];
             $tpl_name = '';
-            foreach($tpl->attributes() as $a => $a_value){
-                if($a==="name"){
-                    $tpl_name = $a_value;
+            foreach($tpl->attributes as $a => $a_value){
+                if($a_value->nodeName==="name"){
+                    $tpl_name = $a_value->nodeValue;
+                    break;
                 }
             }
             $param_id = 0;
-            foreach ($tpl->children() as  $param) {
+            $child = $tpl->firstChild;
+            while ($child) {
                 # 处理每个参数
-                if($param->getName() === "param"){
+                if($child->nodeName === "span"){
                     $param_id++;
                     $paramName = "";
-                    foreach($param->attributes() as $pa => $pa_value){
-                        if($pa === "name"){
-                            $props["{$pa_value}"] = $param->__toString();
+                    foreach($child->attributes as $pa => $pa_value){
+                        if($pa_value->nodeName === "name"){
+                            $nodeText = $pa_value->nodeValue;
+                            $props["{$nodeText}"] = $child->nodeValue;
                             $paramName = $pa_value;
                         }
                     }
                     if(empty($paramName)){
-                        $props["{$param_id}"] = $param->__toString();
+                        foreach ($child->childNodes as $param_child) {
+                            # code...
+                            if($param_child->nodeType ===3){
+                                $props["{$param_id}"] = $param_child->nodeValue;
+                            }
+                        }
+
                     }
                 }
+                $child = $child->nextSibling;
             }
             /**
              * 生成模版参数
+             *
              */
+            //TODO 判断$channelId里面的是否都是uuid
             $channelInfo = Channel::whereIn('uid',$channelId)->get();
             $tplRender = new TemplateRender($props,$channelInfo,$mode);
             $tplProps = $tplRender->render($tpl_name);
             if($tplProps){
-                $tpl->addAttribute("props",$tplProps['props']);
-                $tpl->addAttribute("tpl",$tplProps['tpl']);
-                $tpl->addChild($tplProps['tag'],$tplProps['html']);
+                $props = $doc->createAttribute("props");
+                $props->nodeValue = $tplProps['props'];
+                $tpl->appendChild($props);
+                $attTpl = $doc->createAttribute("tpl");
+                $attTpl->nodeValue = $tplProps['tpl'];
+                $tpl->appendChild($attTpl);
+                $htmlElement = $doc->createElement($tplProps['tag']);
+                $htmlElement->nodeValue=$tplProps['html'];
+                $tpl->appendChild($htmlElement);
             }
         }
-        $html = str_replace('<?xml version="1.0"?>','',$dom->asXML()) ;
-        $html = str_replace(['<xml>','</xml>'],['<span>','</span>'],$html);
+        $html = $doc->saveHTML();
+        $html = str_replace(['<dfn','</dfn>'],['<MdTpl','</MdTpl>'],$html);
         return trim($html);
     }
 
@@ -350,9 +375,7 @@ class MdRender{
          * markdown -> html
          */
         /*
-        $markdown = str_replace(['[[',']]'],['㐛','㐚'],$markdown);
-        $html = Str::markdown($markdown);
-        $html = str_replace(['㐛','㐚'],['[[',']]'],$html);
+
         $html = MdRender::fixHtml($html);
 */
 
@@ -438,7 +461,8 @@ class MdRender{
     public static function markdownToHtml($markdown){
         $markdown = str_replace('MdTpl','mdtpl',$markdown);
         $markdown = str_replace(['<param','</param>'],['<span','</span>'],$markdown);
-        $html = Str::markdown($markdown);
+
+        $html = Markdown::render($markdown);
         $html = MdRender::fixHtml($html);
 
         $html = str_replace('<hr>','<hr />',$html);

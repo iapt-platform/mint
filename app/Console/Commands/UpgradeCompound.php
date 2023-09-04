@@ -8,6 +8,7 @@ use App\Models\WbwTemplate;
 use App\Models\UserDict;
 use App\Tools\TurboSplit;
 use App\Http\Api\DictApi;
+use Illuminate\Support\Facades\DB;
 
 class UpgradeCompound extends Command
 {
@@ -16,14 +17,14 @@ class UpgradeCompound extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:compound {word?} {--book=} {--debug} {--test}';
+    protected $signature = 'upgrade:compound {word?} {--book=} {--debug} {--test} {--continue}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'auto split compound word';
 
 
 
@@ -105,28 +106,39 @@ class UpgradeCompound extends Command
                             ->where('book',$this->option('book'))
                             ->where('type','<>','.ctl.')
                             ->where('real','<>','')
-                            ->groupBy('real')->get();
+                            ->orderBy('real')
+                            ->groupBy('real')->cursor();
+            $count = DB::select('SELECT count(*) from (
+                                    SELECT "real" from wbw_templates where book = ? and type <> ? and real <> ? group by real) T',
+                                    [$this->option('book'),'.ctl.','']);
         }else{
             $words = WbwTemplate::select('real')
                             ->where('type','<>','.ctl.')
                             ->where('real','<>','')
-                            ->groupBy('real')->get();
+                            ->orderBy('real')
+                            ->groupBy('real')->cursor();
+            $count = DB::select('SELECT count(*) from (
+                SELECT "real" from wbw_templates where type <> ? and real <> ? group by real) T',
+                ['.ctl.','']);
         }
 
-		$bar = $this->output->createProgressBar(count($words));
+		$bar = $this->output->createProgressBar($count[0]->count);
 		foreach ($words as $key => $word) {
+            $bar->advance();
+			if($this->option('continue')){
+                //先看目前字典里有没有已经拆过的这个词
+                $isExists = UserDict::where('word',$word->real)
+                                    ->where('dict_id',$dict_id)
+                                    ->where('flag',1)
+                                    ->exists();
+                if($isExists){
+                   continue;
+                }
+			}
+            //删除该词旧数据
             UserDict::where('word',$word->real)
                     ->where('dict_id',$dict_id)
-                    ->update(['flag'=>2]);
-			//先看目前字典里有没有
-			$isExists = UserDict::where('word',$word->real)
-								->where('dict_id',"<>",$dict_id)
-								->exists();
-
-			if($isExists){
-				//$this->info("Exists:{$word->real}");
-				//continue;
-			}
+                    ->delete();
 
 			$ts = new TurboSplit();
 
@@ -135,7 +147,6 @@ class UpgradeCompound extends Command
                 if(isset($part['type']) && $part['type'] === ".v."){
                     continue;
                 }
-
                 $new = UserDict::firstOrNew(
                     [
                         'word' => $part['word'],
@@ -159,16 +170,15 @@ class UpgradeCompound extends Command
                 $new->note = $part['confidence'];
                 $new->language = 'cm';
                 $new->creator_id = 1;
-                $new->flag = 1;
+                $new->flag = 1;//标记为维护状态
                 $new->save();
             }
             if(env('APP_ENV','local') !== 'local'){
-                usleep(100);
+                usleep(500);
             }
-            $bar->advance();
+
 		}
-		//删除旧数据
-		UserDict::where('dict_id',$dict_id)->where('flag',2)->delete();
+		//维护状态数据改为正常状态
 		UserDict::where('dict_id',$dict_id)->where('flag',1)->update(['flag'=>0]);
         $bar->finish();
         return 0;

@@ -9,6 +9,7 @@ use App\Http\Api\UserApi;
 use App\Http\Api\MdRender;
 use App\Http\Api\ShareApi;
 use App\Http\Api\AuthApi;
+use App\Models\UserOperationDaily;
 
 class TermResource extends JsonResource
 {
@@ -65,6 +66,13 @@ class TermResource extends JsonResource
                     $data["role"] = 'unknown';
                 }
             }
+        }
+        if($request->has('exp')){
+            //毫秒计算的经验值
+            $exp = UserOperationDaily::where('user_id',$this->editor_id)
+                                                ->where('date_int','<=',date_timestamp_get(date_create($this->updated_at))*1000)
+                                                ->sum('duration');
+            $data['exp'] = (int)($exp/1000);
         }
         return $data;
     }
