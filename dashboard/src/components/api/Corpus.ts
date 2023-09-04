@@ -132,6 +132,7 @@ export interface ISentenceDiffData {
   word_end: number;
   channel_uid: string;
   content: string;
+  editor_uid: string;
   updated_at: string;
 }
 export interface ISentenceDiffResponse {
@@ -185,6 +186,7 @@ export interface ISentenceListResponse {
 export interface ISentenceNewRequest {
   sentences: ISentenceDiffData[];
   channel?: string;
+  copy?: boolean;
 }
 export interface ISentenceNewMultiResponse {
   ok: boolean;

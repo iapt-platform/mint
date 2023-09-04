@@ -187,6 +187,7 @@ const ChannelSentDiffWidget = ({
               {
                 sentences: submitData,
                 channel: destChannel?.id,
+                copy: true,
               }
             )
               .then((json) => {

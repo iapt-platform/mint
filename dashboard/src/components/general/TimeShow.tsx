@@ -142,7 +142,7 @@ const TimeShowWidget = ({
       <Text type={type}>
         <Space>
           {icon}
-          {mTitle}
+          {showLabel ? mTitle : ""}
           {passTime}
         </Space>
       </Text>
