@@ -1,7 +1,8 @@
 import { Card } from "antd";
 import { Typography } from "antd";
+import MdView from "../template/MdView";
 
-import IWidgetGrammarPop from "./GrammarPop";
+import GrammarPop from "./GrammarPop";
 
 const { Title, Text } = Typography;
 
@@ -21,18 +22,7 @@ const WordCardByDictWidget = (prop: IWidgetWordCardByDict) => {
         {prop.data.dictname}
       </Title>
       <div>
-        <Text>
-          {prop.data.note.split("|").map((it, id) => {
-            if (it.slice(0, 1) === "@") {
-              const [showText, keyText] = it.slice(1).split("-");
-              return (
-                <IWidgetGrammarPop key={id} gid={keyText} text={showText} />
-              );
-            } else {
-              return <span key={id * 200}>{it}</span>;
-            }
-          })}
-        </Text>
+        <MdView html={prop.data.note} />
       </div>
     </Card>
   );

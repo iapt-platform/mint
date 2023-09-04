@@ -30,6 +30,7 @@ export interface ITermDataResponse {
   studio: IStudio;
   editor: IUser;
   role?: TRole;
+  exp?: number;
   language: string;
   created_at: string;
   updated_at: string;

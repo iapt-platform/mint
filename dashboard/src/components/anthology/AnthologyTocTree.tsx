@@ -17,6 +17,7 @@ const AnthologyTocTreeWidget = ({
   onArticleSelect,
 }: IWidget) => {
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
+  const [expandedKeys, setExpandedKeys] = useState<string[]>();
 
   useEffect(() => {
     if (typeof anthologyId === "undefined") {
@@ -35,23 +36,27 @@ const AnthologyTocTreeWidget = ({
           };
         });
         setTocData(toc);
+        setExpandedKeys(
+          json.data.rows
+            .filter((value) => value.level === 1)
+            .map((item) => (item.article_id ? item.article_id : item.title))
+        );
       }
     });
   }, [anthologyId]);
   return (
-    <div>
-      <TocTree
-        treeData={tocData}
-        onSelect={(keys: string[]) => {
-          if (
-            typeof onArticleSelect !== "undefined" &&
-            typeof anthologyId !== "undefined"
-          ) {
-            onArticleSelect(anthologyId, keys);
-          }
-        }}
-      />
-    </div>
+    <TocTree
+      treeData={tocData}
+      expandedKeys={expandedKeys}
+      onSelect={(keys: string[]) => {
+        if (
+          typeof onArticleSelect !== "undefined" &&
+          typeof anthologyId !== "undefined"
+        ) {
+          onArticleSelect(anthologyId, keys);
+        }
+      }}
+    />
   );
 };
 

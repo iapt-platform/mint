@@ -234,6 +234,18 @@ const DiscussionShowWidget = ({
               </>
             ) : undefined}
           </span>
+          <Button
+            type="text"
+            onClick={() => {
+              if (typeof onReply !== "undefined") {
+                onReply();
+              }
+            }}
+          >
+            {intl.formatMessage({
+              id: "buttons.reply",
+            })}
+          </Button>
           <Dropdown
             menu={{ items, onClick }}
             placement="bottomRight"

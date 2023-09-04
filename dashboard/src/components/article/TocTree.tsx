@@ -1,9 +1,9 @@
 import { Tree, Typography } from "antd";
-import type { TreeProps } from "antd/es/tree";
 import { useEffect, useState } from "react";
 
 import type { ListNodeData } from "./EditableTree";
 import PaliText from "../template/Wbw/PaliText";
+import { Key } from "antd/lib/table/interface";
 
 const { Text } = Typography;
 
@@ -91,37 +91,49 @@ function tocGetTreeData(
 
 interface IWidgetTocTree {
   treeData?: ListNodeData[];
-  expandedKey?: string[];
+  expandedKeys?: Key[];
+  selectedKeys?: Key[];
   onSelect?: Function;
 }
 
-const TocTreeWidget = ({ treeData, expandedKey, onSelect }: IWidgetTocTree) => {
+const TocTreeWidget = ({
+  treeData,
+  expandedKeys,
+  selectedKeys,
+  onSelect,
+}: IWidgetTocTree) => {
   const [tree, setTree] = useState<TreeNodeData[]>();
-  const [expanded, setExpanded] = useState(expandedKey);
-  console.log("new tree data", treeData);
+  const [expanded, setExpanded] = useState<Key[]>();
+  const [selected, setSelected] = useState<Key[]>();
+
   useEffect(() => {
+    console.log("new tree data", treeData);
     if (treeData && treeData.length > 0) {
       const data = tocGetTreeData(treeData);
       setTree(data);
-      setExpanded(expandedKey);
-      console.log("create tree", treeData.length, expandedKey);
+      console.log("create tree", treeData.length);
     } else {
       setTree([]);
     }
-  }, [treeData, expandedKey]);
-  const onNodeSelect: TreeProps["onSelect"] = (selectedKeys, info) => {
-    console.log("selected", selectedKeys);
-    if (typeof onSelect !== "undefined") {
-      onSelect(selectedKeys);
-    }
-  };
+  }, [treeData]);
+
+  useEffect(() => setSelected(selectedKeys), [selectedKeys]);
+  useEffect(() => setExpanded(expandedKeys), [expandedKeys]);
 
   return (
     <Tree
-      onSelect={onNodeSelect}
       treeData={tree}
-      defaultExpandedKeys={expanded}
-      defaultSelectedKeys={expanded}
+      expandedKeys={expanded}
+      selectedKeys={selected}
+      onExpand={(expandedKeys: Key[]) => {
+        setExpanded(expandedKeys);
+      }}
+      onSelect={(selectedKeys: Key[]) => {
+        setSelected(selectedKeys);
+        if (typeof onSelect !== "undefined") {
+          onSelect(selectedKeys);
+        }
+      }}
       blockNode
       titleRender={(node: TreeNodeData) => {
         const currNode =

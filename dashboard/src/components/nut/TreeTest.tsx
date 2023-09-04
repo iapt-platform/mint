@@ -31,7 +31,7 @@ const Widget = () => {
   };
 
   return (
-    <TocTree onSelect={onSelect} treeData={treeData} expandedKey={["0-3"]} />
+    <TocTree onSelect={onSelect} treeData={treeData} expandedKeys={["0-3"]} />
   );
 };
 
