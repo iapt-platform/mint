@@ -1,15 +1,17 @@
 import { ProList } from "@ant-design/pro-components";
-import { Typography } from "antd";
+import { Space } from "antd";
 
 import { get } from "../../request";
+import User from "../auth/User";
 import { IUser } from "../auth/UserName";
 import TimeShow from "../general/TimeShow";
 
-const { Text } = Typography;
-
 interface ISentHistoryData {
+  id: string;
+  sent_uid: string;
   content: string;
   editor: IUser;
+  landmark: string;
   created_at: string;
 }
 
@@ -31,8 +33,6 @@ const SentHistoryWidget = ({ sentId }: IWidget) => {
   return (
     <ProList<ISentHistory>
       rowKey="id"
-      headerTitle={"time line"}
-      showActions="hover"
       request={async (params = {}, sorter, filter) => {
         if (typeof sentId === "undefined") {
           return {
@@ -91,7 +91,12 @@ const SentHistoryWidget = ({ sentId }: IWidget) => {
         },
         description: {
           render: (text, row, index, action) => {
-            return <TimeShow type="secondary" createdAt={row.createdAt} />;
+            return (
+              <Space style={{ fontSize: "80%" }}>
+                <User {...row.editor} />
+                <TimeShow type="secondary" createdAt={row.createdAt} />
+              </Space>
+            );
           },
         },
         actions: {
