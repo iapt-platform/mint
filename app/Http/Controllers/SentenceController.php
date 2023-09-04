@@ -259,13 +259,25 @@ class SentenceController extends Controller
             $row->strlen = mb_strlen($sent['content'],"UTF-8");
             $row->language = $channel->lang;
             $row->status = $channel->status;
-            $row->editor_uid = $user["user_uid"];
+            if($request->has('copy')){
+                //复制句子，保留原作者信息
+                $row->editor_uid = $sent["editor_uid"];
+                $row->acceptor_uid = $user["user_uid"];
+                $row->pr_edit_at = $sent["updated_at"];
+            }else{
+                $row->editor_uid = $user["user_uid"];
+            }
             $row->create_time = time()*1000;
             $row->modify_time = time()*1000;
             $row->save();
 
             //保存历史记录
-            $this->saveHistory($row->uid,$user["user_uid"],$sent['content']);
+            if($request->has('copy')){
+                $this->saveHistory($row->uid,$sent["editor_uid"],$sent['content']);
+            }else{
+                $this->saveHistory($row->uid,$user["user_uid"],$sent['content']);
+            }
+
         }
         if($sentFirst !== null){
             Mq::publish('progress',['book'=>$sentFirst['book_id'],
