@@ -26,9 +26,9 @@ class SentHistoryController extends Controller
                 return $this->error('known view');
                 break;
         }
-
-        $table->orderBy($request->get('order','created_at'),$request->get('dir','desc'));
         $count = $table->count();
+        $table->orderBy($request->get('order','created_at'),
+                        $request->get('dir','desc'));
         $table->skip($request->get("offset",0))
               ->take($request->get('limit',1000));
 
