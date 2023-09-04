@@ -58,7 +58,9 @@ const SentEditMenuWidget = ({
   const items: MenuProps["items"] = [
     {
       key: "timeline",
-      label: "时间线",
+      label: intl.formatMessage({
+        id: "buttons.timeline",
+      }),
       icon: <FieldTimeOutlined />,
     },
     {
