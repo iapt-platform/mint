@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "antd";
+import { useIntl } from "react-intl";
+
 import SentHistory from "./SentHistory";
 
 interface IWidget {
@@ -15,6 +17,7 @@ const SentHistoryModalWidget = ({
   onClose,
 }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(open);
+  const intl = useIntl();
 
   useEffect(() => setIsModalOpen(open), [open]);
 
@@ -41,7 +44,9 @@ const SentHistoryModalWidget = ({
       <span onClick={showModal}>{trigger}</span>
       <Modal
         width={"80%"}
-        title="加入文集"
+        title={intl.formatMessage({
+          id: "buttons.timeline",
+        })}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
