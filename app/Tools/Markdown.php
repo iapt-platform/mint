@@ -5,7 +5,7 @@ use Illuminate\Support\Str;
 class Markdown
 {
     public static function render($text){
-        return Markdown::marked($text);
+        return Markdown::strdown($text);
     }
     public static function marked($text){
             $host = env('MORUS_RPC_SERVER');
