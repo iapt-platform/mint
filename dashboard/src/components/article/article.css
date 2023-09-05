@@ -67,3 +67,7 @@ h6 {
 .pcd_article table img {
   background-color: transparent;
 }
+
+.pcd_article video {
+  max-width: 90%;
+}
