@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "antd";
 import RecentList, { IRecent } from "./RecentList";
+import { useIntl } from "react-intl";
 
 interface IWidget {
   trigger?: React.ReactNode;
@@ -15,6 +16,7 @@ const RecentModalWidget = ({
   onOpen,
 }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(open);
+  const intl = useIntl();
 
   useEffect(() => {
     setIsModalOpen(open);
@@ -48,7 +50,9 @@ const RecentModalWidget = ({
       <span onClick={showModal}>{trigger}</span>
       <Modal
         width={"80%"}
-        title="选择版本风格"
+        title={intl.formatMessage({
+          id: `labels.recent-scan`,
+        })}
         footer={false}
         open={isModalOpen}
         onOk={handleOk}
