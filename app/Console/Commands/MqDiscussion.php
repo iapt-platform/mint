@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\Sentence;
 use App\Models\WebHook;
 use App\Models\Discussion;
+use App\Models\Article;
 use App\Http\Api\Mq;
 use App\Tools\WebHook as WebHookSend;
 use App\Http\Api\MdRender;
@@ -62,25 +63,34 @@ class MqDiscussion extends Command
                                              $sentence->content_type);
                     $contentTxt = strip_tags($contentHtml);
                     /**生成消息内容 */
-                    $msgContent = '';
-                    $msgContent .= "\[{$contentTxt}\]";
-                    $msgContent .= '**'. $message->editor->nickName.'**';
+
+                    $msgParam = array();
+                    $msgParam['anchor-content'] = $contentTxt;
+                    $msgParam['nickname'] = $message->editor->nickName;
                     $link = env('APP_URL')."/pcd/discussion/topic/";
                     if($message->parent){
-                        $parentTitle = Discussion::where('id',$message->parent)->value('title');
-                        $link .= $message->parent;
+                        $msgParam['topic-title'] = Discussion::where('id',$message->parent)->value('title');
                         $id = $message->id;
-                        $msgContent .= "回复了 [{$parentTitle}]({$link}#$id)";
+                        $msgParam['link'] = $link . $message->parent.'#'.$id;
                         $msgTitle = "回复讨论";
+                        $type = 'reply';
                     }else{
-                        $link .= $message->id;
-                        $msgContent .= "创建了讨论[$message->title]({$link})";
+                        $msgParam['title'] = $message->title;
+                        $msgParam['link'] = $link . $message->id;
                         $msgTitle = "创建讨论";
+                        $type = 'create';
+                    }
+                    if($message->content){
+                        $msgParam['content'] = $message->content;
                     }
 
-                    if($message->content){
-                        $msgContent .= "\n>".$message->content;
-                    }
+                    $rootId = UserApi::getById(0)['uid'];
+                    $articleTitle = "webhook://discussion/{$type}/zh-hans";
+                    $tpl = Article::where('owner',$rootId)
+                                  ->where('title',$articleTitle)
+                                  ->value('content');
+                    $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES));
+                    $msgContent = $m->render($tpl,$msgParam);
 
                     $webhooks = WebHook::where('res_id',$sentence->channel_uid)
                                     ->where('status','active')
