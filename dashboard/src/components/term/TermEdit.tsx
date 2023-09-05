@@ -111,7 +111,7 @@ const TermEditWidget = ({
     <>
       {readonly ? (
         <Alert
-          message="该资源为只读，如果需要修改，请联络拥有者分配权限。"
+          message="该资源为只读，如果需要修改，请联络拥有者分配权限。或者您可以在下面的版本选择中选择另一个版本，将该术语保存到一个您有修改权限的版本中。"
           type="warning"
           closable
           action={
@@ -338,7 +338,7 @@ const TermEditWidget = ({
                   noChange = false;
                 }
               } else {
-                if (channel[0] === channelId) {
+                if (channel[1] === channelId) {
                   noChange = true;
                 } else {
                   noChange = false;
@@ -348,7 +348,7 @@ const TermEditWidget = ({
                 <Space>
                   <LangSelect disabled={hasChannel} required={!hasChannel} />
                   <ProFormSelect
-                    initialValue={"move"}
+                    initialValue={"copy"}
                     name="copy"
                     allowClear={false}
                     label=" "
@@ -356,12 +356,13 @@ const TermEditWidget = ({
                     placeholder="Please select other meanings"
                     options={[
                       {
-                        value: "move",
-                        label: "move",
-                      },
-                      {
                         value: "copy",
                         label: "copy",
+                      },
+                      {
+                        value: "move",
+                        label: "move",
+                        disabled: readonly,
                       },
                     ]}
                   />
