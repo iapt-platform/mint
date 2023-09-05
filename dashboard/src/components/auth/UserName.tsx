@@ -2,9 +2,15 @@ export interface IUser {
   id?: string;
   nickName?: string;
   realName?: string;
+}
+interface IWidget {
+  id?: string;
+  nickName?: string;
+  realName?: string;
   onClick?: Function;
 }
-const UserNameWidget = ({ id, nickName, realName, onClick }: IUser) => {
+
+const UserNameWidget = ({ id, nickName, realName, onClick }: IWidget) => {
   return (
     <span
       onClick={(e) => {

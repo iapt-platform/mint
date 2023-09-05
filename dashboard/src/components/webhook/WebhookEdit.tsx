@@ -5,13 +5,14 @@ import {
   ProFormText,
 } from "@ant-design/pro-components";
 import { message, Space, Typography } from "antd";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 
 import { get, post, put } from "../../request";
 import { IWebhookRequest, IWebhookResponse } from "../api/webhook";
 import { TResType } from "../discussion/DiscussionListCard";
+import WebhookTpl, { IWebhookEvent } from "./WebhookTpl";
 
 const { Title } = Typography;
 
@@ -32,6 +33,7 @@ const WebhookEditWidget = ({
   onSuccess,
 }: IWidget) => {
   const formRef = useRef<ProFormInstance>();
+  const [event, setEvent] = useState<IWebhookEvent[]>([]);
   const intl = useIntl();
 
   return (
@@ -52,6 +54,7 @@ const WebhookEditWidget = ({
           let data: IWebhookRequest = values;
           data.res_id = res_id;
           data.res_type = res_type;
+          data.event2 = event;
           let res: IWebhookResponse;
           if (typeof id === "undefined") {
             res = await post<IWebhookRequest, IWebhookResponse>(
@@ -151,6 +154,9 @@ const WebhookEditWidget = ({
             allowClear={false}
             label={intl.formatMessage({ id: "forms.fields.status.label" })}
           />
+        </ProForm.Group>
+        <ProForm.Group>
+          <WebhookTpl onChange={(value: IWebhookEvent[]) => setEvent(value)} />
         </ProForm.Group>
       </ProForm>
     </Space>

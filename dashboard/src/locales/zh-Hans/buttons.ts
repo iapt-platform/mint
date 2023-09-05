@@ -68,6 +68,7 @@ const items = {
   "buttons.channel.collaborator": "协作",
   "buttons.channel.public": "公开",
   "buttons.refresh": "刷新",
+  "buttons.timeline": "时间线",
 };
 
 export default items;

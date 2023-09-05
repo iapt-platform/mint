@@ -5,6 +5,12 @@ export interface IUser {
   nickName: string;
   userName: string;
   avatar?: string;
+}
+interface IWidget {
+  id?: string;
+  nickName?: string;
+  userName?: string;
+  avatar?: string;
   showAvatar?: boolean;
   showName?: boolean;
 }
@@ -14,7 +20,7 @@ const UserWidget = ({
   avatar,
   showAvatar = true,
   showName = true,
-}: IUser) => {
+}: IWidget) => {
   return (
     <Space>
       {showAvatar ? (

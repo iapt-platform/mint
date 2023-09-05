@@ -1,5 +1,6 @@
 import { IUser } from "../auth/User";
 import { TResType } from "../discussion/DiscussionListCard";
+import { IWebhookEvent } from "../webhook/WebhookTpl";
 
 export type TReceiverType = "wechat" | "dingtalk";
 
@@ -9,6 +10,7 @@ export interface IWebhookRequest {
   url: string;
   receiver: TReceiverType;
   event?: string[] | null;
+  event2?: IWebhookEvent[] | null;
   status?: string;
 }
 
@@ -19,6 +21,7 @@ export interface IWebhookApiData {
   url: string;
   receiver: TReceiverType;
   event: string[] | null;
+  event2?: IWebhookEvent[] | null;
   fail: number;
   success: number;
   status: string;
