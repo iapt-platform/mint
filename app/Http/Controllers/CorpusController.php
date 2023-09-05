@@ -615,7 +615,8 @@ class CorpusController extends Controller
                      * 旧版api没有更新updated_at所以造成旧版的数据updated_at数据比modify_time 要晚
                      */
                     $newSent['updateAt'] =  $row->updated_at; //
-                    $newSent['updateAt'] = Carbon::createFromTimestampMs($row->modify_time)->toDateTimeString();
+                    $newSent['updateAt'] = date("Y-m-d H:i:s.",$row->modify_time/1000).($row->modify_time%1000)." UTC";
+
                     $newSent['createdAt'] = $row->created_at;
                     if($mode !== "read"){
                         if(isset($row->acceptor_uid) && !empty($row->acceptor_uid)){

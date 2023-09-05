@@ -9,4 +9,7 @@ class SentHistory extends Model
 {
     use HasFactory;
     const UPDATED_AT = null;
+    protected $casts = [
+		'id' => 'string'
+	];
 }

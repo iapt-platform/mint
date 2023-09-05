@@ -77,6 +77,11 @@ class InitSystemChannel extends Command
             'type'=>'translation',
             'lang'=>'en',
         ],
+        [
+            "name"=>'_System_Quote_',
+            'type'=>'original',
+            'lang'=>'en',
+        ],
     ];
 
     /**
