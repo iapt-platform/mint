@@ -136,10 +136,13 @@ const Widget = () => {
             {type === "article" && loadedArticleData ? (
               <Button
                 ghost
-                onClick={() => {
-                  navigate(
-                    `/studio/${loadedArticleData.studio?.realName}/article/${loadedArticleData.uid}/edit`
-                  );
+                onClick={(event) => {
+                  const url = `/studio/${loadedArticleData.studio?.realName}/article/${loadedArticleData.uid}/edit`;
+                  if (event.ctrlKey || event.metaKey) {
+                    window.open(fullUrl(url), "_blank");
+                  } else {
+                    navigate(url);
+                  }
                 }}
               >
                 Edit
