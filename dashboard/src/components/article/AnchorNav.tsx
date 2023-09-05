@@ -1,5 +1,6 @@
 import { Anchor } from "antd";
 import { useEffect, useState } from "react";
+import { convertToPlain } from "../../utils";
 const { Link } = Anchor;
 
 interface IHeadingAnchor {
@@ -100,7 +101,7 @@ const AnchorNavWidget = ({ open = false, content }: IWidget) => {
         const level = parseInt(heading[index].tagName.replace("H", ""));
         headingAnchor.push({
           key: `#${id}`,
-          label: element.innerHTML,
+          label: convertToPlain(element.innerHTML).slice(0, 30),
           level: level,
         });
       }
