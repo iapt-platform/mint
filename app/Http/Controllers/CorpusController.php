@@ -922,6 +922,7 @@ class CorpusController extends Controller
                                 ->where('paragraph',$para)
                                 ->where('word_start',$start)
                                 ->where('word_end',$end)
+                                ->where('strlen','<>',0)
                                 ->whereIn('channel_uid',$channelCanRead)
                                 ->select('channel_uid')
                                 ->groupBy('channel_uid')
