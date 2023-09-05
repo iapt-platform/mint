@@ -57,6 +57,7 @@ const Widget = () => {
   const [rightPanel, setRightPanel] = useState<TPanelName>("close");
   const [searchParams, setSearchParams] = useSearchParams();
   const [anchorNavOpen, setAnchorNavOpen] = useState(false);
+  const [anchorNavShow, setAnchorNavShow] = useState(true);
   const [recentModalOpen, setRecentModalOpen] = useState(false);
   const [loadedArticleData, setLoadedArticleData] =
     useState<IArticleDataResponse>();
@@ -113,6 +114,7 @@ const Widget = () => {
   } else {
     currMode = "read";
   }
+  console.log(anchorNavOpen, anchorNavShow);
   return (
     <div>
       <Affix offsetTop={0}>
@@ -187,9 +189,14 @@ const Widget = () => {
                 icon={<ColumnOutlinedIcon />}
                 type="text"
                 onClick={() =>
-                  setRightPanel((value) =>
-                    value === "close" ? "open" : "close"
-                  )
+                  setRightPanel((value) => {
+                    if (value === "close") {
+                      setAnchorNavShow(false);
+                    } else {
+                      setAnchorNavShow(true);
+                    }
+                    return value === "close" ? "open" : "close";
+                  })
                 }
               />
             </Tooltip>
@@ -335,7 +342,7 @@ const Widget = () => {
             />
           </div>
           <div key="RightPanel" id="article_right_panel">
-            <AnchorNav open={anchorNavOpen} />
+            <AnchorNav open={anchorNavOpen && anchorNavShow} />
             <RightPanel
               curr={rightPanel}
               type={type as ArticleType}
@@ -343,6 +350,8 @@ const Widget = () => {
               selectedChannelsId={searchParams.get("channel")?.split("_")}
               onClose={() => {
                 setRightPanel("close");
+                console.log("right panel", "close");
+                setAnchorNavShow(true);
               }}
               onTabChange={(curr: TPanelName) => setRightPanel(curr)}
               onChannelSelect={(e: IChannel[]) => {
