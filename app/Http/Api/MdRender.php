@@ -369,7 +369,7 @@ class MdRender{
          * 替换换行符
          * react 无法处理 <br> 替换为<div></div>代替换行符作用
          */
-        $markdown = str_replace('<br>','<div></div>',$markdown);
+        //$markdown = str_replace('<br>','<div></div>',$markdown);
 
         /**
          * markdown -> html
