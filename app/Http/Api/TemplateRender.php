@@ -74,7 +74,7 @@ class TemplateRender{
         $channelId = $this->channel_id[0];
         $channelInfo = $this->channelInfo[0];
         $props = Cache::remember("/term/{$channelId}/{$word}",
-                env('CACHE_EXPIRE',3600*24),
+                env('CACHE_EXPIRE',1),
               function() use($word,$channelId,$channelInfo){
 
                 $lang = Channel::where('uid',$channelId)->value('lang');

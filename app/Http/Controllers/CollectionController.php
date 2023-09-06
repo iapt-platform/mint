@@ -35,9 +35,6 @@ class CollectionController extends Controller
                 $table = Collection::select($indexCol)->selectRaw('count(*) as count')->where('status', 30)->groupBy('owner');
                 break;
 			case 'studio':
-				# code...
-				//$table = Collection::select($indexCol)->where('owner', $_COOKIE["user_uid"]);
-                # 获取studio内所有channel
                 $user = AuthApi::current($request);
                 if(!$user){
                     return $this->error(__('auth.failed'));
@@ -59,7 +56,6 @@ class CollectionController extends Controller
                     }
                     $table = $table->whereIn('uid', $resId)->where('owner','<>', $studioId);
                 }
-
 				break;
 			case 'public':
                 //全网公开
