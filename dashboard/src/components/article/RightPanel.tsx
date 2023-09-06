@@ -12,6 +12,7 @@ import { openPanel, rightPanel } from "../../reducers/right-panel";
 import store from "../../store";
 import DiscussionBox from "../discussion/DiscussionBox";
 import { show } from "../../reducers/discussion";
+import { useIntl } from "react-intl";
 
 export type TPanelName = "dict" | "channel" | "discussion" | "close" | "open";
 interface IWidget {
@@ -35,6 +36,7 @@ const RightPanelWidget = ({
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("dict");
   const _openPanel = useAppSelector(rightPanel);
+  const intl = useIntl();
 
   const divMinWidth = 400;
   const divMaxWidth = 700;
@@ -88,6 +90,7 @@ const RightPanelWidget = ({
         }}
       >
         <Tabs
+          type="card"
           size="small"
           defaultActiveKey={curr}
           activeKey={activeTab}
@@ -129,12 +132,16 @@ const RightPanelWidget = ({
           }}
           items={[
             {
-              label: `字典`,
+              label: intl.formatMessage({
+                id: "columns.library.dict.title",
+              }),
               key: "dict",
               children: <DictComponent />,
             },
             {
-              label: `channel`,
+              label: intl.formatMessage({
+                id: "columns.studio.channel.title",
+              }),
               key: "channel",
               children: (
                 <ChannelPickerTable
@@ -151,7 +158,9 @@ const RightPanelWidget = ({
               ),
             },
             {
-              label: "discussion",
+              label: intl.formatMessage({
+                id: "buttons.discussion",
+              }),
               key: "discussion",
               children: <DiscussionBox />,
             },
