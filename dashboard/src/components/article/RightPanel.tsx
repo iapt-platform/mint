@@ -10,8 +10,10 @@ import { ArticleType } from "./Article";
 import { useAppSelector } from "../../hooks";
 import { openPanel, rightPanel } from "../../reducers/right-panel";
 import store from "../../store";
+import DiscussionBox from "../discussion/DiscussionBox";
+import { show } from "../../reducers/discussion";
 
-export type TPanelName = "dict" | "channel" | "close" | "open";
+export type TPanelName = "dict" | "channel" | "discussion" | "close" | "open";
 interface IWidget {
   curr?: TPanelName;
   type: ArticleType;
@@ -61,6 +63,10 @@ const RightPanelWidget = ({
         setOpen(true);
         setActiveTab(curr);
         break;
+      case "discussion":
+        setOpen(true);
+        setActiveTab(curr);
+        break;
       case "close":
         setOpen(false);
         break;
@@ -107,6 +113,12 @@ const RightPanelWidget = ({
                   size="small"
                   icon={<CloseOutlined />}
                   onClick={() => {
+                    store.dispatch(
+                      show({
+                        type: "discussion",
+                        resType: "sentence",
+                      })
+                    );
                     if (typeof onClose !== "undefined") {
                       onClose();
                     }
@@ -137,6 +149,11 @@ const RightPanelWidget = ({
                   }}
                 />
               ),
+            },
+            {
+              label: "discussion",
+              key: "discussion",
+              children: <DiscussionBox />,
             },
           ]}
         />
