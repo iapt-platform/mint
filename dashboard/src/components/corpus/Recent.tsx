@@ -1,5 +1,6 @@
 import { Button, List } from "antd";
 import { useEffect, useState } from "react";
+import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 
 import { get } from "../../request";
@@ -7,6 +8,7 @@ import { IView, IViewListResponse } from "../api/view";
 
 const RecentWidget = () => {
   const [listData, setListData] = useState<IView[]>([]);
+  const intl = useIntl();
   useEffect(() => {
     let url = `/v2/view?view=user&limit=10`;
     get<IViewListResponse>(url).then((json) => {
@@ -30,7 +32,9 @@ const RecentWidget = () => {
     <div style={{ padding: 6 }}>
       <List
         itemLayout="vertical"
-        header="最近打开"
+        header={intl.formatMessage({
+          id: `labels.recent-scan`,
+        })}
         size="small"
         dataSource={listData}
         renderItem={(item) => {

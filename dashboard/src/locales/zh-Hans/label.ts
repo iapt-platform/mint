@@ -16,6 +16,7 @@ const items = {
   "labels.first-course": "第一个课程",
   "labels.updated-at": "更新于",
   "labels.created-at": "创建于",
+  "labels.recent-scan": "最近打开",
 };
 
 export default items;
