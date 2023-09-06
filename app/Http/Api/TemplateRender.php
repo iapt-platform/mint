@@ -76,7 +76,10 @@ class TemplateRender{
             $langFamily = explode('-',$lang)[0];
         }
         //先查属于这个channel 的
-        $tplParam = DhammaTerm::where("word",$word)->where('channal',$channelId)->first();
+        $tplParam = DhammaTerm::where("word",$word)
+                              ->where('channal',$channelId)
+                              ->orderBy('updated_at','desc')
+                              ->first();
         if(!$tplParam){
             /**
              * 没有，再查这个studio的
@@ -86,6 +89,7 @@ class TemplateRender{
              */
             $termsInStudio = DhammaTerm::where("word",$word)
                                   ->where('owner',$channelInfo->owner_uid)
+                                  ->orderBy('updated_at','desc')
                                   ->get();
             if(count($termsInStudio)>0){
                 $list = array();
