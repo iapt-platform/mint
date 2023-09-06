@@ -1,6 +1,7 @@
-import { Affix, Button, Tabs } from "antd";
+import { Affix, Button, Space, Tabs } from "antd";
 import { useEffect, useState } from "react";
 import { CloseOutlined } from "@ant-design/icons";
+import { FullscreenOutlined, FullscreenExitOutlined } from "@ant-design/icons";
 
 import { IChannel } from "../channel/Channel";
 import ChannelPickerTable from "../channel/ChannelPickerTable";
@@ -31,8 +32,11 @@ const RightPanelWidget = ({
 }: IWidget) => {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("dict");
-
   const _openPanel = useAppSelector(rightPanel);
+
+  const divMinWidth = 400;
+  const divMaxWidth = 700;
+  const [divWidth, setDivWidth] = useState(divMinWidth);
 
   useEffect(() => {
     console.log("panel", _openPanel);
@@ -70,10 +74,11 @@ const RightPanelWidget = ({
       <div
         key="panel"
         style={{
-          width: 350,
+          width: divWidth,
           height: `calc(100vh - 44px)`,
           overflowY: "scroll",
           display: open ? "block" : "none",
+          paddingLeft: 8,
         }}
       >
         <Tabs
@@ -83,16 +88,31 @@ const RightPanelWidget = ({
           onChange={(activeKey: string) => setActiveTab(activeKey)}
           tabBarExtraContent={{
             right: (
-              <Button
-                type="text"
-                size="small"
-                icon={<CloseOutlined />}
-                onClick={() => {
-                  if (typeof onClose !== "undefined") {
-                    onClose();
-                  }
-                }}
-              />
+              <Space>
+                {divWidth === divMinWidth ? (
+                  <Button
+                    type="link"
+                    icon={<FullscreenOutlined />}
+                    onClick={() => setDivWidth(divMaxWidth)}
+                  />
+                ) : (
+                  <Button
+                    type="link"
+                    icon={<FullscreenExitOutlined />}
+                    onClick={() => setDivWidth(divMinWidth)}
+                  />
+                )}
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<CloseOutlined />}
+                  onClick={() => {
+                    if (typeof onClose !== "undefined") {
+                      onClose();
+                    }
+                  }}
+                />
+              </Space>
             ),
           }}
           items={[
