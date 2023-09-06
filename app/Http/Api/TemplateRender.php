@@ -73,10 +73,11 @@ class TemplateRender{
         $word = $this->get_param($this->param,"word",1);
         $channelId = $this->channel_id[0];
         $channelInfo = $this->channelInfo[0];
-        $props = Cache::remember("/term/{$channelId}/{$word}",
-                env('CACHE_EXPIRE',1),
+        $key = "/term/{$channelId}/{$word}";
+        Log::info("term cache key:{$key}");
+        $props = Cache::remember($key,env('CACHE_EXPIRE',1),
               function() use($word,$channelId,$channelInfo){
-
+                Log::info("term render:{$word}-{$channelId}");
                 $lang = Channel::where('uid',$channelId)->value('lang');
                 if(!empty($lang)){
                     $langFamily = explode('-',$lang)[0];
