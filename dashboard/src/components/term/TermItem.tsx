@@ -7,6 +7,7 @@ import UserName from "../auth/UserName";
 import TimeShow from "../general/TimeShow";
 import TermModal from "./TermModal";
 import { useState } from "react";
+import StudioName from "../auth/StudioName";
 
 const { Text } = Typography;
 
@@ -25,6 +26,8 @@ const TermItemWidget = ({ data }: IWidget) => {
               <Text type="secondary">{data?.other_meaning}</Text>
             </Space>
             <Space style={{ fontSize: "80%" }}>
+              <StudioName data={data?.studio} />
+              {data?.channel ? data.channel.name : ""}
               <Text type="secondary">
                 <UserName {...data?.editor} />
               </Text>
