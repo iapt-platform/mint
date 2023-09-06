@@ -265,7 +265,7 @@ class DhammaTermController extends Controller
     private function deleteCache($term){
         if(empty($term->channal)){
             //通用 查询studio所有channel
-            $channels = Channel::where('owner',$term->owner)->select('uid')->get();
+            $channels = Channel::where('owner_uid',$term->owner)->select('uid')->get();
             foreach ($channels as $channel) {
                 Cache::forget("/term/{$channel}/{$term->word}");
             }
@@ -371,33 +371,45 @@ class DhammaTermController extends Controller
                 }
             }
         }
-        if(!$channelSame){
-            /**
-             * 查询重复的
-             * 一个channel下面word+tag+language 唯一
-             *
-             */
-            $exist = false;
-            if(empty($request->get("channel"))){
-                //复制模式必须给channel
-                return $this->error(__('auth.failed'),[],404);
-            }else{
-                $exist = DhammaTerm::where('word',$request->get("word"))
-                                        ->where('tag',$request->get("tag"))
-                                        ->where('channal',$request->get("channel"))
-                                        ->exists();
-            }
-            if($exist){
-                return $this->error("word existed",[],200);
+
+
+        /**
+         * 查询重复的
+         * 一个channel下面word+tag+language+channel 唯一
+         *
+         */
+        $existTerm = DhammaTerm::where('word',$request->get("word"))
+                            ->where('tag',$request->get("tag"));
+        if($request->has("channel")){
+            $existTerm->where('channal',$request->get("channel"));
+        }else{
+            if($request->has("studioName")){
+                $existTerm->where('owner', StudioApi::getIdByName($request->get("studioName")))
+                          ->whereNull('channal')
+                          ->where('language', $request->get("language"));
+            }else if($request->has("studioId")){
+                $existTerm->whereNull('channal')
+                          ->where('owner', $request->get("studioId"))
+                          ->where('language', $request->get("language"));
             }
         }
+        $exist = $existTerm->exists();
+        if($exist){
+            return $this->error("word existed",[],200);
+        }
 
-        if($request->get("copy")==='copy'){
-            /**新建
+
+        if(!$channelSame){
+            /**
+             * 新建
             */
             $dhammaTerm = new DhammaTerm;
             $dhammaTerm->id = app('snowflake')->id();
             $dhammaTerm->guid = Str::uuid();
+        }
+        if($request->get("copy")==='move'){
+            //删除旧数据
+            DhammaTerm::find($id)->delete();
         }
 
         $dhammaTerm->word = $request->get("word");
@@ -463,17 +475,18 @@ class DhammaTermController extends Controller
                         continue;
                     }
                 }
-                        //删除cache
-                $this->deleteCache($term);
                 $count += $term->delete();
+                //删除cache
+                $this->deleteCache($term);
             }
         }else{
             $arrId = json_decode($request->get("id"),true) ;
             foreach ($arrId as $key => $id) {
                 # code...
-                $result = DhammaTerm::where('id', $id)
-                                ->where('owner', $user['user_uid'])
-                                ->delete();
+                $term = DhammaTerm::where('id', $id)
+                                ->where('owner', $user['user_uid']);
+                $term->delete();
+                $this->deleteCache($term);
                 if($result){
                     $count++;
                 }
