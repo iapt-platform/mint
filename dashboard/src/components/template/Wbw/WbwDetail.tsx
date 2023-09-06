@@ -12,7 +12,7 @@ import { LockIcon, UnLockIcon } from "../../../assets/icon";
 import { UploadFile } from "antd/es/upload/interface";
 import { IAttachmentResponse } from "../../api/Attachments";
 import WbwDetailAttachment from "./WbwDetailAttachment";
-import CommentBox from "../../discussion/DiscussionBox";
+import CommentBox from "../../discussion/DiscussionDrawer";
 
 interface IWidget {
   data: IWbw;

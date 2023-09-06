@@ -13,7 +13,7 @@ import WbwDetail from "./WbwDetail";
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import { bookMarkColor } from "./WbwDetailBookMark";
 import WbwVideoButton from "./WbwVideoButton";
-import CommentBox from "../../discussion/DiscussionBox";
+import CommentBox from "../../discussion/DiscussionDrawer";
 import PaliText from "./PaliText";
 import store from "../../../store";
 import { lookup } from "../../../reducers/command";
