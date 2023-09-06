@@ -15,6 +15,7 @@ import { my_to_roman } from "../../code/my";
 import SentWbwEdit, { sentSave } from "./SentWbwEdit";
 import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
 import { nissayaBase } from "../Nissaya/NissayaMeaning";
+import { anchor, message } from "../../../reducers/discussion";
 
 interface IWidget {
   initValue?: ISentence;
@@ -37,9 +38,27 @@ const SentCellWidget = ({
   const intl = useIntl();
   const [isEditMode, setIsEditMode] = useState(editMode);
   const [sentData, setSentData] = useState<ISentence | undefined>(initValue);
+  const [bgColor, setBgColor] = useState<string>();
   const endings = useAppSelector(getEnding);
   const acceptPr = useAppSelector(sentence);
   const [prOpen, setPrOpen] = useState(false);
+  const discussionMessage = useAppSelector(message);
+  const anchorInfo = useAppSelector(anchor);
+  const sid = `${sentData?.book}_${sentData?.para}_${sentData?.wordStart}_${sentData?.wordEnd}_${sentData?.channel.id}`;
+  useEffect(() => {
+    if (discussionMessage?.resId === initValue?.id) {
+      setBgColor("wheat");
+    } else {
+      setBgColor("unset");
+    }
+  }, [discussionMessage?.resId, initValue?.id]);
+
+  useEffect(() => {
+    if (anchorInfo?.resId === initValue?.id) {
+      const ele = document.getElementById(sid);
+      ele?.scrollIntoView();
+    }
+  }, [anchorInfo, initValue?.id, sid]);
 
   useEffect(() => {
     if (value) {
@@ -60,10 +79,8 @@ const SentCellWidget = ({
     }
   }, [acceptPr, sentData, isPr]);
 
-  const sid = `${sentData?.book}_${sentData?.para}_${sentData?.wordStart}_${sentData?.wordEnd}_${sentData?.channel.id}`;
-
   return (
-    <div style={{ marginBottom: "8px" }}>
+    <div style={{ marginBottom: "8px", backgroundColor: bgColor }}>
       {isPr ? undefined : (
         <div
           dangerouslySetInnerHTML={{
