@@ -8,6 +8,7 @@ use App\Http\Api\StudioApi;
 use App\Http\Api\UserApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\SuggestionApi;
+use Illuminate\Support\Str;
 
 class SentResource extends JsonResource
 {
