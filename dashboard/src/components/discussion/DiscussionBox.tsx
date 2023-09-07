@@ -1,37 +1,26 @@
 import { useState } from "react";
-import { Button, Divider, Drawer, Space } from "antd";
-import { FullscreenOutlined, FullscreenExitOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import DiscussionTopic from "./DiscussionTopic";
-import DiscussionListCard, { TResType } from "./DiscussionListCard";
+import DiscussionListCard from "./DiscussionListCard";
 import { IComment } from "./DiscussionItem";
-import DiscussionAnchor from "./DiscussionAnchor";
-import { Link } from "react-router-dom";
+import { useAppSelector } from "../../hooks";
+import { countChange, message, showAnchor } from "../../reducers/discussion";
+import { Button } from "antd";
+import store from "../../store";
 
 export interface IAnswerCount {
   id: string;
   count: number;
 }
-interface IWidget {
-  trigger?: JSX.Element;
-  resId?: string;
-  resType?: TResType;
-  onCommentCountChange?: Function;
-}
-const DiscussionBoxWidget = ({
-  trigger,
-  resId,
-  resType,
-  onCommentCountChange,
-}: IWidget) => {
-  const [open, setOpen] = useState(false);
+
+const DiscussionBoxWidget = () => {
   const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [topicComment, setTopicComment] = useState<IComment>();
   const [answerCount, setAnswerCount] = useState<IAnswerCount>();
-  const drawerMinWidth = 720;
-  const drawerMaxWidth = 1100;
 
-  const [drawerWidth, setDrawerWidth] = useState(drawerMinWidth);
+  const discussionMessage = useAppSelector(message);
+
   const showChildrenDrawer = (comment: IComment) => {
     setChildrenDrawer(true);
     setTopicComment(comment);
@@ -39,51 +28,38 @@ const DiscussionBoxWidget = ({
 
   return (
     <>
-      <span
+      <Button
+        type="link"
         onClick={() => {
-          setOpen(true);
+          store.dispatch(
+            showAnchor({
+              type: "discussion",
+              resId: discussionMessage?.resId,
+              resType: discussionMessage?.resType,
+            })
+          );
         }}
       >
-        {trigger}
-      </span>
-      <Drawer
-        title="Discussion"
-        destroyOnClose
-        extra={
-          <Space>
-            <Link to={`/discussion/show/${resType}/${resId}`} target="_blank">
-              在新窗口打开
-            </Link>
-            {drawerWidth === drawerMinWidth ? (
-              <Button
-                type="link"
-                icon={<FullscreenOutlined />}
-                onClick={() => setDrawerWidth(drawerMaxWidth)}
-              />
-            ) : (
-              <Button
-                type="link"
-                icon={<FullscreenExitOutlined />}
-                onClick={() => setDrawerWidth(drawerMinWidth)}
-              />
-            )}
-          </Space>
-        }
-        width={drawerWidth}
-        onClose={() => {
-          setOpen(false);
-          if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
-            document.getElementsByTagName("body")[0].removeAttribute("style");
-          }
-        }}
-        open={open}
-        maskClosable={false}
-      >
-        <DiscussionAnchor resId={resId} resType={resType} />
-        <Divider></Divider>
+        显示译文
+      </Button>
+      {childrenDrawer ? (
+        <div>
+          <Button
+            shape="circle"
+            icon={<ArrowLeftOutlined />}
+            onClick={() => setChildrenDrawer(false)}
+          />
+          <DiscussionTopic
+            topicId={topicComment?.id}
+            onItemCountChange={(count: number, parent: string) => {
+              setAnswerCount({ id: parent, count: count });
+            }}
+          />
+        </div>
+      ) : (
         <DiscussionListCard
-          resId={resId}
-          resType={resType}
+          resId={discussionMessage?.resId}
+          resType={discussionMessage?.resType}
           onSelect={(
             e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
             comment: IComment
@@ -91,27 +67,16 @@ const DiscussionBoxWidget = ({
           onReply={(comment: IComment) => showChildrenDrawer(comment)}
           changedAnswerCount={answerCount}
           onItemCountChange={(count: number) => {
-            if (typeof onCommentCountChange !== "undefined") {
-              onCommentCountChange(count);
-            }
+            store.dispatch(
+              countChange({
+                count: count,
+                resId: discussionMessage?.resId,
+                resType: discussionMessage?.resType,
+              })
+            );
           }}
         />
-        <Drawer
-          title="Answer"
-          width={700}
-          onClose={() => {
-            setChildrenDrawer(false);
-          }}
-          open={childrenDrawer}
-        >
-          <DiscussionTopic
-            topicId={topicComment?.id}
-            onItemCountChange={(count: number, parent: string) => {
-              setAnswerCount({ id: parent, count: count });
-            }}
-          />
-        </Drawer>
-      </Drawer>
+      )}
     </>
   );
 };

@@ -69,6 +69,7 @@ const items = {
   "buttons.channel.public": "公开",
   "buttons.refresh": "刷新",
   "buttons.timeline": "时间线",
+  "buttons.discussion": "讨论",
 };
 
 export default items;

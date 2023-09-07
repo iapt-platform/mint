@@ -1,6 +1,7 @@
-import { Affix, Button, Tabs } from "antd";
+import { Affix, Button, Space, Tabs } from "antd";
 import { useEffect, useState } from "react";
 import { CloseOutlined } from "@ant-design/icons";
+import { FullscreenOutlined, FullscreenExitOutlined } from "@ant-design/icons";
 
 import { IChannel } from "../channel/Channel";
 import ChannelPickerTable from "../channel/ChannelPickerTable";
@@ -9,8 +10,11 @@ import { ArticleType } from "./Article";
 import { useAppSelector } from "../../hooks";
 import { openPanel, rightPanel } from "../../reducers/right-panel";
 import store from "../../store";
+import DiscussionBox from "../discussion/DiscussionBox";
+import { show } from "../../reducers/discussion";
+import { useIntl } from "react-intl";
 
-export type TPanelName = "dict" | "channel" | "close" | "open";
+export type TPanelName = "dict" | "channel" | "discussion" | "close" | "open";
 interface IWidget {
   curr?: TPanelName;
   type: ArticleType;
@@ -31,8 +35,12 @@ const RightPanelWidget = ({
 }: IWidget) => {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("dict");
-
   const _openPanel = useAppSelector(rightPanel);
+  const intl = useIntl();
+
+  const divMinWidth = 400;
+  const divMaxWidth = 700;
+  const [divWidth, setDivWidth] = useState(divMinWidth);
 
   useEffect(() => {
     console.log("panel", _openPanel);
@@ -57,6 +65,10 @@ const RightPanelWidget = ({
         setOpen(true);
         setActiveTab(curr);
         break;
+      case "discussion":
+        setOpen(true);
+        setActiveTab(curr);
+        break;
       case "close":
         setOpen(false);
         break;
@@ -70,39 +82,66 @@ const RightPanelWidget = ({
       <div
         key="panel"
         style={{
-          width: 350,
+          width: divWidth,
           height: `calc(100vh - 44px)`,
           overflowY: "scroll",
           display: open ? "block" : "none",
+          paddingLeft: 8,
         }}
       >
         <Tabs
+          type="card"
           size="small"
           defaultActiveKey={curr}
           activeKey={activeTab}
           onChange={(activeKey: string) => setActiveTab(activeKey)}
           tabBarExtraContent={{
             right: (
-              <Button
-                type="text"
-                size="small"
-                icon={<CloseOutlined />}
-                onClick={() => {
-                  if (typeof onClose !== "undefined") {
-                    onClose();
-                  }
-                }}
-              />
+              <Space>
+                {divWidth === divMinWidth ? (
+                  <Button
+                    type="link"
+                    icon={<FullscreenOutlined />}
+                    onClick={() => setDivWidth(divMaxWidth)}
+                  />
+                ) : (
+                  <Button
+                    type="link"
+                    icon={<FullscreenExitOutlined />}
+                    onClick={() => setDivWidth(divMinWidth)}
+                  />
+                )}
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<CloseOutlined />}
+                  onClick={() => {
+                    store.dispatch(
+                      show({
+                        type: "discussion",
+                        resType: "sentence",
+                      })
+                    );
+                    if (typeof onClose !== "undefined") {
+                      onClose();
+                    }
+                  }}
+                />
+              </Space>
             ),
           }}
           items={[
             {
-              label: `字典`,
+              label: intl.formatMessage({
+                id: "columns.library.dict.title",
+              }),
               key: "dict",
               children: <DictComponent />,
             },
             {
-              label: `channel`,
+              label: intl.formatMessage({
+                id: "columns.studio.channel.title",
+              }),
               key: "channel",
               children: (
                 <ChannelPickerTable
@@ -117,6 +156,13 @@ const RightPanelWidget = ({
                   }}
                 />
               ),
+            },
+            {
+              label: intl.formatMessage({
+                id: "buttons.discussion",
+              }),
+              key: "discussion",
+              children: <DiscussionBox />,
             },
           ]}
         />

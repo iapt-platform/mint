@@ -22,6 +22,7 @@ import paraChangeReducer from "./reducers/para-change";
 import rightPanelReducer from "./reducers/right-panel";
 import sentWordsReducer from "./reducers/sent-word";
 import netStatusReducer from "./reducers/net-status";
+import discussionReducer from "./reducers/discussion";
 
 const store = configureStore({
   reducer: {
@@ -47,6 +48,7 @@ const store = configureStore({
     rightPanel: rightPanelReducer,
     sentWords: sentWordsReducer,
     netStatus: netStatusReducer,
+    discussion: discussionReducer,
   },
 });
 

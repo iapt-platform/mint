@@ -27,7 +27,7 @@ const TermItemWidget = ({ data }: IWidget) => {
             </Space>
             <Space style={{ fontSize: "80%" }}>
               <StudioName data={data?.studio} />
-              {data?.channel ? data.channel.name : ""}
+              {data?.channel ? data.channel.name : "通用于此studio"}
               <Text type="secondary">
                 <UserName {...data?.editor} />
               </Text>
