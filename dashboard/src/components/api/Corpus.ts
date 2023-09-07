@@ -276,5 +276,5 @@ export interface ISentencePrResponse {
 export interface ISentenceSimListResponse {
   ok: boolean;
   message: string;
-  data: { rows: IWidgetSentEditInner[]; count: number };
+  data: { rows: string[]; count: number };
 }
