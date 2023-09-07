@@ -46,12 +46,16 @@ const SentCellWidget = ({
   const anchorInfo = useAppSelector(anchor);
   const sid = `${sentData?.book}_${sentData?.para}_${sentData?.wordStart}_${sentData?.wordEnd}_${sentData?.channel.id}`;
   useEffect(() => {
-    if (discussionMessage && discussionMessage.resId === initValue?.id) {
+    if (
+      discussionMessage &&
+      discussionMessage.resId &&
+      discussionMessage.resId === initValue?.id
+    ) {
       setBgColor("wheat");
     } else {
       setBgColor("unset");
     }
-  }, [discussionMessage?.resId, initValue?.id]);
+  }, [discussionMessage, initValue?.id]);
 
   useEffect(() => {
     if (anchorInfo && anchorInfo?.resId === initValue?.id) {
