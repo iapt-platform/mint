@@ -51,7 +51,7 @@ const SentCellWidget = ({
       discussionMessage.resId &&
       discussionMessage.resId === initValue?.id
     ) {
-      setBgColor("wheat");
+      setBgColor("#1890ff33");
     } else {
       setBgColor("unset");
     }
