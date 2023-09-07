@@ -302,6 +302,7 @@ const SentTabWidget = ({
               para={parseInt(sId[1])}
               wordStart={parseInt(sId[2])}
               wordEnd={parseInt(sId[3])}
+              channelsId={channelsId}
               limit={5}
             />
           ),
