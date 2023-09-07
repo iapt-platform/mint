@@ -44,9 +44,16 @@ class SentResource extends JsonResource
         }else{
             $channels = [$this->channel_uid];
         }
+        //TODO 找出channel id = '' 的原因
+        $mChannels=array();
+        foreach ($channels as $key => $value) {
+            if(Str::isUuid($value)){
+                $mChannels[] = $value;
+            }
+        }
         if($request->get('html',true)){
             $data['html'] = MdRender::render($this->content,
-                                             $channels,
+                                             $mChannels,
                                              null,
                                              $mode,
                                              $channel['type'],
