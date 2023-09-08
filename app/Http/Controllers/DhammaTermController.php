@@ -372,37 +372,34 @@ class DhammaTermController extends Controller
             }
         }
 
-
-        /**
-         * 查询重复的
-         * 一个channel下面word+tag+language+channel 唯一
-         *
-         */
-        $existTerm = DhammaTerm::where('word',$request->get("word"))
-                            ->where('tag',$request->get("tag"));
-        if($request->has("channel")){
-            $existTerm->where('channal',$request->get("channel"));
-        }else{
-            if($request->has("studioName")){
-                $existTerm->where('owner', StudioApi::getIdByName($request->get("studioName")))
-                          ->whereNull('channal')
-                          ->where('language', $request->get("language"));
-            }else if($request->has("studioId")){
-                $existTerm->whereNull('channal')
-                          ->where('owner', $request->get("studioId"))
-                          ->where('language', $request->get("language"));
-            }
-        }
-        $exist = $existTerm->exists();
-        if($exist){
-            return $this->error("word existed",[],200);
-        }
-
-
         if(!$channelSame){
             /**
              * 新建
             */
+            /**
+             * 查询重复的
+             * 一个channel下面word+tag+language+channel 唯一
+             *
+             */
+            $existTerm = DhammaTerm::where('word',$request->get("word"))
+                                ->where('tag',$request->get("tag"));
+            if($request->has("channel")){
+                $existTerm->where('channal',$request->get("channel"));
+            }else{
+                if($request->has("studioName")){
+                    $existTerm->where('owner', StudioApi::getIdByName($request->get("studioName")))
+                            ->whereNull('channal')
+                            ->where('language', $request->get("language"));
+                }else if($request->has("studioId")){
+                    $existTerm->whereNull('channal')
+                            ->where('owner', $request->get("studioId"))
+                            ->where('language', $request->get("language"));
+                }
+            }
+            $exist = $existTerm->exists();
+            if($exist){
+                return $this->error("word existed",[],200);
+            }
             $dhammaTerm = new DhammaTerm;
             $dhammaTerm->id = app('snowflake')->id();
             $dhammaTerm->guid = Str::uuid();
