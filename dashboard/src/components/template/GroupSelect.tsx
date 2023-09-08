@@ -29,7 +29,7 @@ const Widget = ({
         mode: multiple ? "multiple" : undefined,
       }}
       request={async ({ keyWords }) => {
-        const url = `/v2/group?view=key&key=${keyWords}`;
+        const url = `/v2/group?view=all&search=${keyWords}`;
         console.log("group keyWord", url);
         const json = await get<IGroupListResponse>(url);
         const userList = json.data.rows.map((item) => {
