@@ -101,6 +101,7 @@ export interface IWbwFields {
 export type TWbwDisplayMode = "block" | "inline" | "list";
 interface IWidget {
   data: IWbw;
+  channelId: string;
   display?: TWbwDisplayMode;
   fields?: IWbwFields;
   mode?: ArticleMode;
@@ -110,7 +111,8 @@ interface IWidget {
 }
 const WbwWordWidget = ({
   data,
-  display = "block",
+  channelId,
+  display,
   mode = "edit",
   fields = {
     real: false,
@@ -237,6 +239,7 @@ const WbwWordWidget = ({
         <WbwPali
           key="pali"
           data={wordData}
+          channelId={channelId}
           mode={mode}
           display={display}
           onSave={(e: IWbw, isPublish: boolean) => {
