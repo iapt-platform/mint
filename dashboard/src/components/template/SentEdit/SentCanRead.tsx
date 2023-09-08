@@ -22,6 +22,7 @@ interface IWidget {
   channelsId?: string[];
   reload?: boolean;
   onReload?: Function;
+  onCreate?: Function;
 }
 const SentCanReadWidget = ({
   book,
@@ -32,6 +33,7 @@ const SentCanReadWidget = ({
   channelsId,
   reload = false,
   onReload,
+  onCreate,
 }: IWidget) => {
   const [sentData, setSentData] = useState<ISentence[]>([]);
   const [channels, setChannels] = useState<string[]>();
@@ -140,6 +142,9 @@ const SentCanReadWidget = ({
               return [newSent.channel.id];
             }
           });
+          if (typeof onCreate !== "undefined") {
+            onCreate();
+          }
         }}
       />
 
