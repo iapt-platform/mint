@@ -4,13 +4,14 @@ import { ReloadOutlined } from "@ant-design/icons";
 
 import { get } from "../../../request";
 import { ISentenceSimListResponse } from "../../api/Corpus";
-import { IWidgetSentEditInner, SentEditInner } from "../SentEdit";
+import MdView from "../MdView";
 
 interface IWidget {
   book: number;
   para: number;
   wordStart: number;
   wordEnd: number;
+  channelsId?: string[];
   limit?: number;
   reload?: boolean;
   onReload?: Function;
@@ -21,16 +22,18 @@ const SentSimWidget = ({
   wordStart,
   wordEnd,
   limit,
+  channelsId,
   reload = false,
   onReload,
 }: IWidget) => {
-  const [sentData, setSentData] = useState<IWidgetSentEditInner[]>([]);
+  const [sentData, setSentData] = useState<string[]>([]);
 
   const load = () => {
     let url = `/v2/sent-sim?view=sentence&book=${book}&paragraph=${para}&start=${wordStart}&end=${wordEnd}&limit=10&mode=edit`;
     if (typeof limit !== "undefined") {
       url = url + `&limit=${limit}`;
     }
+    url += channelsId ? `&channels=${channelsId.join()}` : "";
     get<ISentenceSimListResponse>(url)
       .then((json) => {
         if (json.ok) {
@@ -67,7 +70,7 @@ const SentSimWidget = ({
       </div>
 
       {sentData.map((item, id) => {
-        return <SentEditInner {...item} key={id} />;
+        return <MdView html={item} key={id} />;
       })}
     </>
   );
