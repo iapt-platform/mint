@@ -50,9 +50,9 @@ const SentTabWidget = ({
   wordEnd,
   channelsId,
   path,
-  tranNum,
-  nissayaNum,
-  commNum,
+  tranNum = 0,
+  nissayaNum = 0,
+  commNum = 0,
   originNum,
   simNum = 0,
   wbwData,
@@ -68,6 +68,10 @@ const SentTabWidget = ({
   const [isCompact, setIsCompact] = useState(compact);
   const [hover, setHover] = useState(false);
   const [currKey, setCurrKey] = useState("close");
+  const [currTranNum, setCurrTranNum] = useState(tranNum);
+  const [currNissayaNum, setCurrNissayaNum] = useState(nissayaNum);
+  const [currCommNum, setCurrCommNum] = useState(commNum);
+
   useEffect(() => setIsCompact(compact), [compact]);
   const mPath = path
     ? [
@@ -179,8 +183,8 @@ const SentTabWidget = ({
               type="translation"
               sentId={id}
               count={
-                tranNum
-                  ? tranNum -
+                currTranNum
+                  ? currTranNum -
                     (loadedRes?.translation ? loadedRes.translation : 0)
                   : undefined
               }
@@ -198,6 +202,7 @@ const SentTabWidget = ({
               wordEnd={parseInt(sId[3])}
               type="translation"
               channelsId={channelsId}
+              onCreate={() => setCurrTranNum((origin) => origin + 1)}
             />
           ),
         },
@@ -209,8 +214,9 @@ const SentTabWidget = ({
               type="nissaya"
               sentId={id}
               count={
-                nissayaNum
-                  ? nissayaNum - (loadedRes?.nissaya ? loadedRes.nissaya : 0)
+                currNissayaNum
+                  ? currNissayaNum -
+                    (loadedRes?.nissaya ? loadedRes.nissaya : 0)
                   : undefined
               }
               title={intl.formatMessage({
@@ -227,6 +233,7 @@ const SentTabWidget = ({
               wordEnd={parseInt(sId[3])}
               type="nissaya"
               channelsId={channelsId}
+              onCreate={() => setCurrNissayaNum((origin) => origin + 1)}
             />
           ),
         },
@@ -238,8 +245,9 @@ const SentTabWidget = ({
               type="commentary"
               sentId={id}
               count={
-                commNum
-                  ? commNum - (loadedRes?.commentary ? loadedRes.commentary : 0)
+                currCommNum
+                  ? currCommNum -
+                    (loadedRes?.commentary ? loadedRes.commentary : 0)
                   : undefined
               }
               title={intl.formatMessage({
@@ -256,6 +264,7 @@ const SentTabWidget = ({
               wordEnd={parseInt(sId[3])}
               type="commentary"
               channelsId={channelsId}
+              onCreate={() => setCurrCommNum((origin) => origin + 1)}
             />
           ),
         },
