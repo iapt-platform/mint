@@ -51,24 +51,21 @@ class GroupController extends Controller
                     $table = $table->where('owner','<>', $studioId);
                 }
 				break;
-            case 'key':
-                $table = GroupInfo::select($indexCol)->where('name','like', $request->get('key')."%");
+            case 'all':
+                $table = GroupInfo::select($indexCol);
                 break;
         }
         if($request->has("search")){
             $table = $table->where('name', 'like', "%" . $request->get("search")."%");
         }
         $count = $table->count();
-        if(isset($_GET["order"]) && isset($_GET["dir"])){
-            $table = $table->orderBy($_GET["order"],$_GET["dir"]);
-        }else{
-            if($request->get('view') === 'studio_list'){
-                $table = $table->orderBy('count','desc');
-            }else{
-                $table = $table->orderBy('updated_at','desc');
-            }
-        }
 
+        if($request->get('view') === 'studio_list'){
+            $table = $table->orderBy('count','desc');
+        }else{
+            $table = $table->orderBy($request->get('order','updated_at'),
+                                        $request->get('dir','desc'));
+        }
         $table->skip($request->get('offset',0))
               ->take($request->get('limit',1000));
 
