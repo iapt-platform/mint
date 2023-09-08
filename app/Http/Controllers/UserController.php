@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-require_once __DIR__.'/../../../public/app/ucenter/function.php';
 
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
+use App\Models\UserInfo;
 
 class UserController extends Controller
 {
@@ -18,14 +18,20 @@ class UserController extends Controller
         //
         switch ($request->get("view")) {
             case 'key':
-                $userInfo = new \UserInfo();
-                $users = $userInfo->getUserList($request->get("key"));
-                if($users){
-                    return $this->ok(['rows'=>UserResource::collection($users),'count'=>count($users)]);
-                }else{
-                    return $this->error();
-                }
+                $table = UserInfo::where('username','like','%'.$request->get("key").'%')
+                                ->orWhere('nickname','like','%'.$request->get("key").'%');
+
                 break;
+        }
+        $count = $table->count();
+        $table = $table->orderBy($request->get('order','username'),$request->get('dir','desc'));
+        $table = $table->skip($request->get("offset",0))
+                       ->take($request->get('limit',20));
+        $result = $table->get();
+        if($result){
+            return $this->ok(['rows'=>UserResource::collection($result),'count'=>$count]);
+        }else{
+            return $this->error();
         }
     }
 

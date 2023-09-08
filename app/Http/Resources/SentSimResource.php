@@ -22,47 +22,11 @@ class SentSimResource extends JsonResource
     {
         //获取实际句子信息
         $sent = PaliSentence::find($this->sent2);
-        $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
-        $sentOrg = [
-            "id"=>$sent->id,
-            "book"=> $sent->book,
-            "para"=> $sent->paragraph,
-            "wordStart"=> $sent->word_begin,
-            "wordEnd"=> $sent->word_end,
-            "editor"=> UserApi::getByUuid(config("app.admin.root_uuid")),
-            "channel"=> ChannelApi::getById($channelId),
-            "content"=>$sent->text,
-            "html"=> "<span>{$sent->text}</span>",
-            "role"=>"member",
-            "created_at"=> $sent->created_at,
-            "updated_at"=> $sent->updated_at,
-        ];
-        $user = AuthApi::current($request);
-        if($user){
-            $userUid = $user['user_uid'];
-        }else{
-            $userUid = null;
-        }
-
-        $resCount = CorpusController::sentCanReadCount($sent->book,$sent->paragraph,$sent->word_begin,$sent->word_end,$userUid);
-        $result = [
-            "id" => "{$sent->book}-{$sent->paragraph}-{$sent->word_begin}-{$sent->word_end}",
-            "book"=> $sent->book,
-            "para"=> $sent->paragraph,
-            "wordStart"=> $sent->word_begin,
-            "wordEnd"=> $sent->word_end,
-            "origin" =>  [$sentOrg],
-            "translation" =>  [],
-            "layout" =>   "column",
-            "tranNum" =>  $resCount['tranNum'],
-            "nissayaNum" =>  $resCount['nissayaNum'],
-            "commNum" =>  $resCount['commNum'],
-            "originNum" =>  $resCount['originNum'],
-            "simNum" =>  $resCount['simNum'],
-        ];
-        $result['path'] = json_decode(PaliText::where('book',$sent->book)
-                                        ->where('paragraph',$sent->paragraph)
-                                        ->value('path'));
-        return $result;
+        $channels = explode(',',$request->get('channels'));
+        $mode = explode(',',$request->get('mode','read'));
+        $sentId = $sent->book.'-'.$sent->paragraph.'-'.$sent->word_begin.'-'.$sent->word_end;
+        $Sent = new CorpusController();
+        $tpl = $Sent->getSentTpl($sentId,$channels,$mode);
+        return $tpl;
     }
 }
