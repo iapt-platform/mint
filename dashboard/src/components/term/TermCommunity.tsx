@@ -44,10 +44,8 @@ const TermCommunityWidget = ({ word }: IWidget) => {
     get<ITermListResponse>(url)
       .then((json) => {
         if (json.ok === false) {
-          console.log("dict community", json.message);
           return;
         }
-        console.log("count", json.data);
         let meaning = new Map<string, number>();
         let note = new Map<string, number>();
         let editorId = new Map<string, number>();
@@ -102,9 +100,7 @@ const TermCommunityWidget = ({ word }: IWidget) => {
         });
         _data.editor.sort((a, b) => b.score - a.score);
         setWordData(_data);
-        console.log("_data", _data);
         if (_data.editor.length > 0) {
-          console.log("show", _data.editor.length);
           setShow(true);
         }
       })

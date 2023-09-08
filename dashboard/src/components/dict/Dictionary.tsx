@@ -18,8 +18,11 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    setWordSearch(word?.toLowerCase());
+    if (word !== wordSearch) {
+      setWordSearch(word?.toLowerCase());
+    }
   }, [word]);
+
   const dictSearch = (value: string, isFactor?: boolean) => {
     console.log("onSearch", value);
     const word = value.toLowerCase();
