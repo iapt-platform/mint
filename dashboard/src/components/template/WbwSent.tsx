@@ -425,6 +425,7 @@ export const WbwSentCtl = ({
     return (
       <WbwWord
         data={item}
+        channelId={channelId}
         key={id}
         mode={displayMode}
         display={wbwMode}

@@ -11,7 +11,8 @@ class Greeter extends \Mint\Morus\V1\MarkdownStub
         $text = $request->getPayload();
         echo 'Received request: ' . $text . PHP_EOL;
         $response = new \Mint\Morus\V1\MarkdownToHtmlResponse();
-        $response->setPayload("Hello <h1>" . $text . "</h1>");
+        $Parsedown = new Parsedown();
+        $response->setPayload($Parsedown->text($text));
         return $response;
     }
 }
