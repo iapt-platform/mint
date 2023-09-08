@@ -23,6 +23,7 @@ import rightPanelReducer from "./reducers/right-panel";
 import sentWordsReducer from "./reducers/sent-word";
 import netStatusReducer from "./reducers/net-status";
 import discussionReducer from "./reducers/discussion";
+import wbwReducer from "./reducers/wbw";
 
 const store = configureStore({
   reducer: {
@@ -49,6 +50,7 @@ const store = configureStore({
     sentWords: sentWordsReducer,
     netStatus: netStatusReducer,
     discussion: discussionReducer,
+    wbw: wbwReducer,
   },
 });
 
