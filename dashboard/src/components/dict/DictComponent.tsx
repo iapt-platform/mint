@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 
 import { useAppSelector } from "../../hooks";
-import { lookupWord } from "../../reducers/command";
+import { lookup, lookupWord } from "../../reducers/command";
+import store from "../../store";
 import Dictionary from "./Dictionary";
 
 export interface IWidgetDict {
@@ -13,12 +14,20 @@ const DictComponentWidget = ({ word }: IWidgetDict) => {
   const searchWord = useAppSelector(lookupWord);
   useEffect(() => {
     console.log("get command", searchWord);
-    if (typeof searchWord === "string") {
+    if (typeof searchWord === "string" && searchWord !== wordSearch) {
       setWordSearch(searchWord);
     }
   }, [searchWord]);
 
-  return <Dictionary word={wordSearch} compact={true} />;
+  return (
+    <Dictionary
+      word={wordSearch}
+      compact={true}
+      onSearch={(value: string, isFactor?: boolean) => {
+        store.dispatch(lookup(value));
+      }}
+    />
+  );
 };
 
 export default DictComponentWidget;
