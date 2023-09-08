@@ -22,13 +22,36 @@ function generate_grpc_by_lang() {
         $WORKSPACE/../protocols/*.proto
 }
 
+function generate_grpc_for_php() {
+    local target=$WORKSPACE/php
+    echo "generate code for php"
+
+    local -a folders=(
+        "GPBMetadata"
+        "Mint"
+    )
+
+    for f in "${folders[@]}"
+    do
+        if [ -d $target/$f ]
+        then
+            rm -r $target/$f
+        fi
+    done
+    mkdir -p $target
+    $PROTOBUF_ROOT/bin/protoc -I $WORKSPACE/../protocols \
+        -I $PROTOBUF_ROOT/include/google/protobuf \
+        --php_out=$target --grpc_out=generate_server:$target \
+        --plugin=protoc-gen-grpc=$PROTOBUF_ROOT/bin/grpc_php_plugin \
+        $WORKSPACE/../protocols/*.proto
+}
+
 # -----------------------------------------------------------------------------
 
 declare -a languages=(
-    "php"
+    "cpp"
     "python"
     "ruby"
-    "cpp"
     "csharp"
     "java"
 )
@@ -38,6 +61,7 @@ do
     generate_grpc_by_lang $l
 done
 
+generate_grpc_for_php
 # -----------------------------------------------------------------------------
 
 echo 'done.'
