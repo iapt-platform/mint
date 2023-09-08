@@ -20,24 +20,36 @@ import { lookup } from "../../../reducers/command";
 import { useAppSelector } from "../../../hooks";
 import { add, relationAddParam } from "../../../reducers/relation-add";
 import { ArticleMode } from "../../article/Article";
+import { anchor, showWbw } from "../../../reducers/wbw";
 
 const { Paragraph } = Typography;
 interface IWidget {
   data: IWbw;
+  channelId: string;
   display?: TWbwDisplayMode;
   mode?: ArticleMode;
   onSave?: Function;
 }
-const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
+const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
   const [popOpen, setPopOpen] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
   const [hasComment, setHasComment] = useState(data.hasComment);
   const divShell = useRef<HTMLDivElement>(null);
+  const wbwAnchor = useAppSelector(anchor);
+  const addParam = useAppSelector(relationAddParam);
+  const wordSn = `${data.book}-${data.para}-${data.sn.join("-")}`;
+  useEffect(() => {
+    if (wbwAnchor) {
+      if (wbwAnchor.id !== wordSn || wbwAnchor.channel !== channelId) {
+        popOpenChange(false);
+      }
+    }
+  }, [channelId, wbwAnchor, wordSn]);
+
   /**
    * 处理 relation 链接事件
    * 高亮可能的单词
    */
-  const addParam = useAppSelector(relationAddParam);
   useEffect(() => {
     let grammar = data.case?.value
       ?.replace("#", "$")
@@ -120,7 +132,7 @@ const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
     data.sn,
   ]);
 
-  const handleClickChange = (open: boolean) => {
+  const popOpenChange = (open: boolean) => {
     if (open) {
       setPaliColor("lightblue");
     } else {
@@ -295,15 +307,26 @@ const WbwPaliWidget = ({ data, mode, display, onSave }: IWidget) => {
             placement={toDivRight > 200 ? "bottom" : "bottomRight"}
             trigger="click"
             open={popOpen}
-            onOpenChange={handleClickChange}
           >
-            {mode === "wbw" ? (
-              paliWord
-            ) : (
-              <span className="edit_icon">
-                <EditOutlined style={{ cursor: "pointer" }} />
-              </span>
-            )}
+            <span
+              onClick={() => {
+                popOpenChange(true);
+                store.dispatch(
+                  showWbw({
+                    id: wordSn,
+                    channel: channelId,
+                  })
+                );
+              }}
+            >
+              {mode === "wbw" ? (
+                paliWord
+              ) : (
+                <span className="edit_icon">
+                  <EditOutlined style={{ cursor: "pointer" }} />
+                </span>
+              )}
+            </span>
           </Popover>
         </span>
         <Space>
