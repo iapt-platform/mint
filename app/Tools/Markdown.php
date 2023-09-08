@@ -1,6 +1,7 @@
 <?php
 namespace App\Tools;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class Markdown
 {
@@ -18,7 +19,8 @@ class Markdown
         $request->setSanitize(true);
         list($response, $status) = $client->ToHtml($request)->wait();
         if ($status->code !== \Grpc\STATUS_OK) {
-            return "ERROR: " . $status->code . ", " . $status->details;
+            Log::error("ERROR: " . $status->code . ", " . $status->details);
+            return $text;
         }
         return $response->getPayload();
     }
