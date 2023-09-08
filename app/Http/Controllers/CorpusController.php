@@ -327,7 +327,7 @@ class CorpusController extends Controller
         if(count($record) ===0){
             $this->result['content'] = "<span>No Data</span>";
         }else{
-            $this->result['content'] = $this->makeContent($record,$request->get('mode','read'),$indexChannel,$indexedHeading);
+            $this->result['content'] = $this->makeContent($record,$request->get('mode','read'),$indexChannel,$indexedHeading,false,true);
         }
 
         return $this->ok($this->result);
