@@ -20,6 +20,7 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
   useEffect(() => {
     if (word !== wordSearch) {
       setWordSearch(word?.toLowerCase());
+      document.getElementById("pcd_dict_top")?.scrollIntoView();
     }
   }, [word]);
 
@@ -27,12 +28,14 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
     console.log("onSearch", value);
     const word = value.toLowerCase();
     setWordSearch(word);
+    document.getElementById("pcd_dict_top")?.scrollIntoView();
     if (typeof onSearch !== "undefined") {
       onSearch(value, isFactor);
     }
   };
   return (
     <div ref={setContainer}>
+      <div id="pcd_dict_top"></div>
       <Affix offsetTop={0} target={compact ? () => container : undefined}>
         <div
           style={{
