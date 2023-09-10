@@ -14,6 +14,7 @@ import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 import store from "../../../store";
 import { lookup } from "../../../reducers/command";
 import { openPanel } from "../../../reducers/right-panel";
+import { ItemType } from "antd/lib/menu/hooks/useItems";
 
 interface IWFMI {
   pali: string;
@@ -22,7 +23,7 @@ interface IWFMI {
 }
 const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
   const intl = useIntl();
-  const defaultMenu: MenuProps["items"] = [
+  const defaultMenu: ItemType[] = [
     {
       key: "_lookup",
       label: (
@@ -47,7 +48,7 @@ const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
     },
     { key: pali, label: pali },
   ];
-  const [items, setItems] = useState<MenuProps["items"]>(defaultMenu);
+  const [items, setItems] = useState<ItemType[]>(defaultMenu);
   const [input, setInput] = useState<string>();
   const [editable, setEditable] = useState(false);
 
@@ -129,7 +130,15 @@ const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
   ) : (
     <Dropdown
       menu={{
-        items: items,
+        items: [
+          ...items.filter((value, index) => index <= 5),
+          {
+            key: "more",
+            label: "更多",
+            disabled: items.length <= 5,
+            children: items.filter((value, index) => index > 5),
+          },
+        ],
         onClick: (e) => {
           switch (e.key) {
             case "_lookup":
