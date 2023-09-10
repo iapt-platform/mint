@@ -30,7 +30,7 @@ interface IWidgetTermCtl {
   parentChannelId?: string /**该术语所在译文的channel_id */;
   parentStudioId?: string /**该术语所在译文的studio_id */;
   summary?: string;
-  isCommunity?: string;
+  isCommunity?: boolean;
 }
 const TermCtl = ({
   id,
@@ -119,6 +119,7 @@ const TermCtl = ({
                   channelId={termData.channelId}
                   parentChannelId={parentChannelId}
                   parentStudioId={parentStudioId}
+                  community={isCommunity}
                 />
               </Space>
             </Space>
@@ -202,6 +203,7 @@ const TermCtl = ({
         word={termData?.word}
         parentChannelId={parentChannelId}
         parentStudioId={parentStudioId}
+        community={isCommunity}
       />
     );
   }
