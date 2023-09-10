@@ -8,6 +8,7 @@ import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import { PaliReal } from "../../../utils";
 import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
+import { ItemType } from "antd/lib/menu/hooks/useItems";
 
 const { Text } = Typography;
 
@@ -24,7 +25,7 @@ const WbwFactorMeaningWidget = ({
   factors,
 }: IWidget) => {
   const intl = useIntl();
-  const defaultMenu: MenuProps["items"] = [
+  const defaultMenu: ItemType[] = [
     {
       key: "loading",
       label: (
@@ -35,7 +36,7 @@ const WbwFactorMeaningWidget = ({
       ),
     },
   ];
-  const [items, setItems] = useState<MenuProps["items"]>(defaultMenu);
+  const [items, setItems] = useState<ItemType[]>(defaultMenu);
 
   const inlineDict = useAppSelector(_inlineDict);
   useEffect(() => {
@@ -96,7 +97,20 @@ const WbwFactorMeaningWidget = ({
     return (
       <div>
         <Text type="secondary">
-          <Dropdown menu={{ items, onClick }} placement="bottomLeft">
+          <Dropdown
+            menu={{
+              items: [
+                ...items.filter((value, index) => index <= 5),
+                {
+                  key: "more",
+                  label: "更多",
+                  children: items.filter((value, index) => index > 5),
+                },
+              ],
+              onClick,
+            }}
+            placement="bottomLeft"
+          >
             {factorMeaning}
           </Dropdown>
         </Text>
