@@ -262,7 +262,7 @@ class DhammaTermController extends Controller
             $term->save();
             //删除cache
             $this->deleteCache($term);
-            return $this->ok($term);
+            return $this->ok(new TermResource($term));
         }else{
             return $this->error("word existed",[],200);
         }
@@ -343,7 +343,7 @@ class DhammaTermController extends Controller
         $dhammaTerm->save();
         //删除cache
         $this->deleteCache($dhammaTerm);
-		return $this->ok($dhammaTerm);
+		return $this->ok(new TermResource($dhammaTerm));
 
     }
 
