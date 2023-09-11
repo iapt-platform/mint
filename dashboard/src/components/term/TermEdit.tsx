@@ -48,6 +48,7 @@ export interface ITerm {
   note?: string;
   summary?: string;
   channelId?: string;
+  studioId?: string;
   lang?: string;
   save_as?: boolean;
   copy_channel?: string[];
