@@ -138,7 +138,11 @@ const TocTreeWidget = ({
       titleRender={(node: TreeNodeData) => {
         const currNode =
           typeof node.title === "string" ? (
-            <PaliText text={node.title} />
+            node.title === "" ? (
+              "[unnamed]"
+            ) : (
+              <PaliText text={node.title} />
+            )
           ) : (
             <>{node.title}</>
           );
