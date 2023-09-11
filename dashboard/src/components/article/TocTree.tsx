@@ -107,7 +107,6 @@ const TocTreeWidget = ({
   const [selected, setSelected] = useState<Key[]>();
 
   useEffect(() => {
-    console.log("new tree data", treeData);
     if (treeData && treeData.length > 0) {
       const data = tocGetTreeData(treeData);
       setTree(data);
