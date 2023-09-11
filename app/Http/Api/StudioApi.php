@@ -2,6 +2,7 @@
 namespace App\Http\Api;
 
 require_once __DIR__.'/../../../public/app/ucenter/function.php';
+use App\Models\UserInfo;
 
 class StudioApi{
     public static function getIdByName($name){
@@ -26,16 +27,33 @@ class StudioApi{
         if(empty($id)){
             return false;
         }
-        $userinfo = new \UserInfo();
-        $studio = $userinfo->getName($id);
-        if(!$studio){
+        $userInfo = UserInfo::where('userid',$id)->first();
+        if(!$userInfo){
             return false;
         }
         return [
             'id'=>$id,
-            'nickName'=>$studio['nickname'],
-            'realName'=>$studio['username'],
-            'studioName'=>$studio['username'],
+            'nickName'=>$userInfo['nickname'],
+            'realName'=>$userInfo['username'],
+            'studioName'=>$userInfo['username'],
+            'avatar'=>'',
+        ];
+    }
+
+    public static function getByIntId($id){
+        //TODO 改为studio table
+        if(empty($id)){
+            return false;
+        }
+        $userInfo = UserInfo::where('id',$id)->first();
+        if(!$userInfo){
+            return false;
+        }
+        return [
+            'id'=>$userInfo['userid'],
+            'nickName'=>$userInfo['nickname'],
+            'realName'=>$userInfo['username'],
+            'studioName'=>$userInfo['username'],
             'avatar'=>'',
         ];
     }
