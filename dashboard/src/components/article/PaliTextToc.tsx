@@ -30,24 +30,17 @@ const PaliTextTocWidget = ({ book, para, channel, onSelect }: IWidget) => {
       });
       setTocList(toc);
       if (json.data.rows.length > 0) {
-        let currLevel = 0;
         let path: string[] = [];
         for (let index = json.data.rows.length - 1; index >= 0; index--) {
           const element = json.data.rows[index];
-          if (element.book === book && element.paragraph === para) {
-            currLevel = parseInt(element.level);
-          }
-          if (
-            parseInt(element.level) === 1 ||
-            (element.book === book && parseInt(element.level) < currLevel)
-          ) {
-            currLevel = parseInt(element.level);
+          if (element.book === book && para && element.paragraph <= para) {
             path.push(`${element.book}-${element.paragraph}`);
+            break;
           }
         }
         setExpandedKeys(path);
+        setSelectedKeys(path);
       }
-      setSelectedKeys([`${book}-${para}`]);
     });
   }, [book, para]);
 
