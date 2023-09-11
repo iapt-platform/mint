@@ -125,6 +125,7 @@ const TocTreeWidget = ({
       treeData={tree}
       expandedKeys={expanded}
       selectedKeys={selected}
+      autoExpandParent
       onExpand={(expandedKeys: Key[]) => {
         setExpanded(expandedKeys);
       }}
