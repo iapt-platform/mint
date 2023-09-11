@@ -248,7 +248,9 @@ const ArticleWidget = ({
                     key: key,
                     title: (
                       <Space>
-                        <PaliText text={strTitle} />
+                        <PaliText
+                          text={strTitle === "" ? "[unnamed]" : strTitle}
+                        />
                         {progress}
                       </Space>
                     ),
