@@ -28,12 +28,14 @@ interface IWidget {
   label?: string;
   disabled?: boolean;
   required?: boolean;
+  name?: string;
 }
 const LangSelectWidget = ({
   width,
   label,
   disabled = false,
   required = true,
+  name = "lang",
 }: IWidget) => {
   const intl = useIntl();
 
@@ -59,7 +61,7 @@ const LangSelectWidget = ({
     <ProFormSelect
       options={langOptions}
       width={width}
-      name="lang"
+      name={name}
       showSearch
       debounceTime={300}
       allowClear={false}

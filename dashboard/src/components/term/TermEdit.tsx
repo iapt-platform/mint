@@ -1,9 +1,11 @@
 import { useIntl } from "react-intl";
 import {
   ProForm,
+  ProFormCheckbox,
   ProFormDependency,
   ProFormInstance,
   ProFormSelect,
+  ProFormSwitch,
   ProFormText,
 } from "@ant-design/pro-components";
 
@@ -28,6 +30,8 @@ import {
 } from "../api/Term";
 import { get, post, put } from "../../request";
 import MDEditor from "@uiw/react-md-editor";
+import { useAppSelector } from "../../hooks";
+import { currentUser as _currentUser } from "../../reducers/current-user";
 
 interface ValueType {
   key?: string;
@@ -43,10 +47,13 @@ export interface ITerm {
   meaning2?: string[];
   note?: string;
   summary?: string;
-  channel?: string[];
   channelId?: string;
+  studioId?: string;
   lang?: string;
-  copy?: string;
+  save_as?: boolean;
+  copy_channel?: string[];
+  copy_lang?: string;
+  pr?: boolean;
 }
 
 interface IWidget {
@@ -56,6 +63,7 @@ interface IWidget {
   channelId?: string;
   parentChannelId?: string;
   parentStudioId?: string;
+  community?: boolean;
   onUpdate?: Function;
 }
 const TermEditWidget = ({
@@ -65,11 +73,15 @@ const TermEditWidget = ({
   studioName,
   parentChannelId,
   parentStudioId,
+  community = false,
   onUpdate,
 }: IWidget) => {
   const intl = useIntl();
   const [meaningOptions, setMeaningOptions] = useState<ValueType[]>([]);
   const [readonly, setReadonly] = useState(false);
+  const [isSaveAs, setIsSaveAs] = useState(false);
+  const user = useAppSelector(_currentUser);
+
   //console.log("word", id, word, channelId, studioName);
 
   const [form] = Form.useForm<ITerm>();
@@ -107,9 +119,21 @@ const TermEditWidget = ({
       });
     }
   }, [word]);
+
   return (
     <>
-      {readonly ? (
+      {community ? (
+        <Alert
+          message="该资源为社区数据，您可以修改并保存到一个您有修改权限的版本中。"
+          type="info"
+          closable
+          action={
+            <Button disabled size="small" type="text">
+              详情
+            </Button>
+          }
+        />
+      ) : readonly ? (
         <Alert
           message="该资源为只读，如果需要修改，请联络拥有者分配权限。或者您可以在下面的版本选择中选择另一个版本，将该术语保存到一个您有修改权限的版本中。"
           type="warning"
@@ -133,6 +157,11 @@ const TermEditWidget = ({
           ) {
             return;
           }
+          const copy_channel = values.copy_channel
+            ? values.copy_channel[values.copy_channel.length - 1]
+              ? values.copy_channel[values.copy_channel.length - 1]
+              : ""
+            : "";
           const newValue = {
             id: values.id,
             word: values.word,
@@ -140,19 +169,16 @@ const TermEditWidget = ({
             meaning: values.meaning,
             other_meaning: values.meaning2?.join(),
             note: values.note,
-            channel: values.channel
-              ? values.channel[values.channel.length - 1]
-                ? values.channel[values.channel.length - 1]
-                : undefined
-              : undefined,
+            channel: values.save_as ? copy_channel : values.channelId,
+            parent_channel_id: parentChannelId,
             studioName: studioName,
             studioId: parentStudioId,
-            language: values.lang,
-            copy: values.copy,
+            language: values.save_as ? values.copy_lang : values.lang,
+            pr: values.save_as ? values.pr : undefined,
           };
           console.log("value", newValue);
           let res: ITermResponse;
-          if (typeof values.id === "undefined") {
+          if (typeof values.id === "undefined" || community || values.save_as) {
             res = await post<ITermDataRequest, ITermResponse>(
               `/v2/terms`,
               newValue
@@ -184,7 +210,7 @@ const TermEditWidget = ({
             meaning2: [],
             note: "",
             lang: "",
-            channel: [],
+            copy_channel: [],
           };
           if (typeof id !== "undefined") {
             // 如果是编辑，就从服务器拉取数据。
@@ -197,6 +223,17 @@ const TermEditWidget = ({
                 meaning2 = res.data.other_meaning.split(",");
               }
 
+              let realChannelId: string | undefined = "";
+              if (user?.id === parentStudioId) {
+                if (community) {
+                  realChannelId = "";
+                } else {
+                  realChannelId = res.data.channel?.id;
+                }
+              } else {
+                realChannelId = parentChannelId;
+              }
+
               data = {
                 id: res.data.guid,
                 word: res.data.word,
@@ -205,7 +242,8 @@ const TermEditWidget = ({
                 meaning2: meaning2,
                 note: res.data.note ? res.data.note : "",
                 lang: res.data.language,
-                channel: res.data.channel
+                channelId: realChannelId,
+                copy_channel: res.data.channel
                   ? [res.data.studio.id, res.data.channel?.id]
                   : undefined,
               };
@@ -213,9 +251,9 @@ const TermEditWidget = ({
                 setReadonly(true);
               }
             }
-          } else if (typeof channelId !== "undefined") {
+          } else if (typeof parentChannelId !== "undefined") {
             //在channel新建
-            url = `/v2/terms?view=create-by-channel&channel=${channelId}&word=${word}`;
+            url = `/v2/terms?view=create-by-channel&channel=${parentChannelId}&word=${word}`;
             console.log("在channel新建", url);
             const res = await get<ITermCreateResponse>(url);
             console.log(res);
@@ -226,7 +264,8 @@ const TermEditWidget = ({
               meaning2: [],
               note: "",
               lang: res.data.language,
-              channel: [res.data.studio.id, channelId],
+              channelId: user?.id === parentStudioId ? "" : parentChannelId,
+              copy_channel: [res.data.studio.id, parentChannelId],
             };
           } else if (typeof studioName !== "undefined") {
             //在studio新建
@@ -270,7 +309,7 @@ const TermEditWidget = ({
           />
         </ProForm.Group>
         <ProForm.Group>
-          <Form.Item
+          <ProForm.Item
             name="meaning"
             label={intl.formatMessage({
               id: "term.fields.meaning.label",
@@ -286,9 +325,9 @@ const TermEditWidget = ({
               onChange={(value: any) => {}}
               maxLength={128}
             >
-              <Input allowClear showCount={true} />
+              <Input width="md" allowClear showCount={true} />
             </AutoComplete>
-          </Form.Item>
+          </ProForm.Item>
 
           <ProFormSelect
             width="md"
@@ -309,64 +348,39 @@ const TermEditWidget = ({
           />
         </ProForm.Group>
         <ProForm.Group>
-          <ChannelSelect
-            channelId={channelId}
-            parentChannelId={parentChannelId}
-            parentStudioId={parentStudioId}
+          <ProFormSelect
+            initialValue={user?.id === parentStudioId ? "" : parentChannelId}
+            name="channelId"
+            allowClear
+            label="版本"
             width="md"
-            name="channel"
             placeholder="通用于此Studio"
-            tooltip={intl.formatMessage({
-              id: "term.fields.channel.tooltip",
-            })}
-            label={intl.formatMessage({
-              id: "term.fields.channel.label",
-            })}
+            disabled={
+              (!community && readonly) ||
+              (!community && typeof id !== "undefined")
+            }
+            options={[
+              {
+                value: "",
+                label: "通用于我的Studio",
+                disabled: user?.id !== parentStudioId,
+              },
+              {
+                value: parentChannelId,
+                label: "仅用于此版本",
+                disabled: !community && readonly,
+              },
+            ]}
           />
-          <ProFormDependency name={["channel"]}>
-            {({ channel }) => {
-              const hasChannel = channel
-                ? channel.length === 0 || channel[0] === ""
+          <ProFormDependency name={["channelId"]}>
+            {({ channelId }) => {
+              const hasChannel = channelId
+                ? channelId === ""
                   ? false
                   : true
                 : false;
-              let noChange = true;
-              if (!channel || channel.length === 0 || channel[0] === "") {
-                if (!channelId || channelId === null || channelId === "") {
-                  noChange = true;
-                } else {
-                  noChange = false;
-                }
-              } else {
-                if (channel[1] === channelId) {
-                  noChange = true;
-                } else {
-                  noChange = false;
-                }
-              }
               return (
-                <Space>
-                  <LangSelect disabled={hasChannel} required={!hasChannel} />
-                  <ProFormSelect
-                    initialValue={"copy"}
-                    name="copy"
-                    allowClear={false}
-                    label=" "
-                    hidden={!id || noChange}
-                    placeholder="Please select other meanings"
-                    options={[
-                      {
-                        value: "copy",
-                        label: "copy",
-                      },
-                      {
-                        value: "move",
-                        label: "move",
-                        disabled: readonly,
-                      },
-                    ]}
-                  />
-                </Space>
+                <LangSelect disabled={hasChannel} required={!hasChannel} />
               );
             }}
           </ProFormDependency>
@@ -379,6 +393,55 @@ const TermEditWidget = ({
           >
             <MDEditor />
           </Form.Item>
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormSwitch
+            name="save_as"
+            label="另存为"
+            fieldProps={{
+              onChange: (
+                checked: boolean,
+                event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+              ) => {
+                setIsSaveAs(checked);
+              },
+            }}
+          />
+        </ProForm.Group>
+        <ProForm.Group style={{ display: isSaveAs ? "block" : "none" }}>
+          <ChannelSelect
+            channelId={channelId}
+            parentChannelId={parentChannelId}
+            parentStudioId={parentStudioId}
+            width="md"
+            name="copy_channel"
+            placeholder="通用于此Studio"
+            tooltip={intl.formatMessage({
+              id: "term.fields.channel.tooltip",
+            })}
+            label={intl.formatMessage({
+              id: "term.fields.channel.label",
+            })}
+          />
+          <ProFormDependency name={["copy_channel"]}>
+            {({ copy_channel }) => {
+              const hasChannel = copy_channel
+                ? copy_channel.length === 0 || copy_channel[0] === ""
+                  ? false
+                  : true
+                : false;
+              return (
+                <LangSelect
+                  name="copy_lang"
+                  disabled={hasChannel}
+                  required={!hasChannel}
+                />
+              );
+            }}
+          </ProFormDependency>
+        </ProForm.Group>
+        <ProForm.Group style={{ display: isSaveAs ? "block" : "none" }}>
+          <ProFormCheckbox name="pr">同时提交修改建议</ProFormCheckbox>
         </ProForm.Group>
       </ProForm>
     </>

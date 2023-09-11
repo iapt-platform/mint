@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Modal } from "antd";
+import { Modal, Space } from "antd";
 import TermEdit from "./TermEdit";
 import { ITermDataResponse } from "../api/Term";
+import { Link } from "react-router-dom";
 
 interface IWidget {
   trigger?: React.ReactNode;
@@ -12,6 +13,7 @@ interface IWidget {
   channelId?: string;
   parentChannelId?: string;
   parentStudioId?: string;
+  community?: boolean;
   onUpdate?: Function;
   onClose?: Function;
 }
@@ -24,6 +26,7 @@ const TermModalWidget = ({
   channelId,
   parentChannelId,
   parentStudioId,
+  community = false,
   onUpdate,
   onClose,
 }: IWidget) => {
@@ -66,7 +69,18 @@ const TermModalWidget = ({
       <span onClick={showModal}>{trigger}</span>
       <Modal
         width={760}
-        title="术语"
+        title={
+          <Space>
+            {"术语"}
+            <Link
+              to={`/studio/${studioName}/term/list`}
+              target="_blank"
+              style={{ display: "none" }}
+            >
+              在studio中打开
+            </Link>
+          </Space>
+        }
         footer={false}
         destroyOnClose={true}
         open={isModalOpen}
@@ -80,6 +94,7 @@ const TermModalWidget = ({
           channelId={channelId}
           parentChannelId={parentChannelId}
           parentStudioId={parentStudioId}
+          community={community}
           onUpdate={(value: ITermDataResponse) => {
             modalClose();
             if (typeof onUpdate !== "undefined") {

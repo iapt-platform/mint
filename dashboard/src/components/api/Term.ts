@@ -10,11 +10,15 @@ export interface ITermDataRequest {
   meaning: string;
   other_meaning?: string;
   note?: string;
-  channal?: string;
+  channel?: string;
   studioName?: string;
   studioId?: string;
   language?: string;
-  copy?: string;
+  parent_channel_id?: string;
+  save_as?: boolean;
+  copy_channel?: string;
+  copy_lang?: string;
+  pr?: boolean;
 }
 export interface ITermDataResponse {
   id: number;
@@ -32,6 +36,7 @@ export interface ITermDataResponse {
   role?: TRole;
   exp?: number;
   language: string;
+  community?: boolean;
   created_at: string;
   updated_at: string;
 }

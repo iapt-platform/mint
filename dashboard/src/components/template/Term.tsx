@@ -30,7 +30,7 @@ interface IWidgetTermCtl {
   parentChannelId?: string /**该术语所在译文的channel_id */;
   parentStudioId?: string /**该术语所在译文的studio_id */;
   summary?: string;
-  isCommunity?: string;
+  isCommunity?: boolean;
 }
 const TermCtl = ({
   id,
@@ -44,33 +44,45 @@ const TermCtl = ({
   isCommunity,
 }: IWidgetTermCtl) => {
   const [openPopover, setOpenPopover] = useState(false);
-  const [termData, setTermData] = useState<ITerm>();
+  const [termData, setTermData] = useState<ITerm>({
+    id: id,
+    word: word,
+    meaning: meaning,
+    meaning2: meaning2?.split(","),
+    summary: summary,
+    channelId: channel,
+  });
   const [content, setContent] = useState<string>();
+  const [community, setCommunity] = useState(isCommunity);
   const newTerm: ITermDataResponse | undefined = useAppSelector(changedTerm);
 
   useEffect(() => {
-    setTermData({
-      id: id,
-      word: word,
-      meaning: meaning,
-      meaning2: meaning2?.split(","),
-      summary: summary,
-      channelId: channel,
-    });
-  }, [id, meaning, meaning2, channel, summary, word]);
-
-  useEffect(() => {
-    if (newTerm?.word === word) {
-      setTermData({
+    if (newTerm?.word === word && parentStudioId === newTerm?.studio.id) {
+      console.log("studio 匹配");
+      const newData = {
         id: newTerm?.guid,
         word: newTerm?.word,
         meaning: newTerm?.meaning,
         meaning2: newTerm?.other_meaning?.split(","),
         summary: newTerm?.note ? newTerm?.note : "",
         channelId: newTerm?.channal,
-      });
+        studioId: newTerm?.studio.id,
+      };
+      if (
+        termData.channelId &&
+        termData.channelId !== "" &&
+        newTerm?.channal === termData.channelId
+      ) {
+        console.log("channel 匹配");
+        setTermData(newData);
+        setCommunity(false);
+      } else {
+        console.log("channel 不 匹配");
+        setTermData(newData);
+        setCommunity(false);
+      }
     }
-  }, [newTerm, word]);
+  }, [newTerm, parentStudioId, word]);
 
   const onModalClose = () => {
     if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
@@ -119,6 +131,7 @@ const TermCtl = ({
                   channelId={termData.channelId}
                   parentChannelId={parentChannelId}
                   parentStudioId={parentStudioId}
+                  community={community}
                 />
               </Space>
             </Space>
@@ -167,7 +180,7 @@ const TermCtl = ({
           }
           placement="bottom"
         >
-          <Typography.Link style={{ color: isCommunity ? "green" : undefined }}>
+          <Typography.Link style={{ color: community ? "green" : undefined }}>
             {termData?.meaning
               ? termData?.meaning
               : termData?.word
@@ -202,6 +215,7 @@ const TermCtl = ({
         word={termData?.word}
         parentChannelId={parentChannelId}
         parentStudioId={parentStudioId}
+        community={community}
       />
     );
   }
