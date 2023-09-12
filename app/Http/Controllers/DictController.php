@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\UserDict;
 use App\Models\DictInfo;
+use App\Models\GroupMember;
 use Illuminate\Http\Request;
 use App\Tools\CaseMan;
 use Illuminate\Support\Facades\Log;
 use App\Http\Api\DictApi;
+use App\Http\Api\AuthApi;
 
 require_once __DIR__."/../../../public/app/dict/grm_abbr.php";
 
@@ -33,13 +35,33 @@ class DictController extends Controller
         $words[$request->get('word')] = [];
         $userLang = $request->get('lang',"zh");
 
+        /**
+         * 临时代码判断是否在缅汉字典群里面。在群里的用户可以产看缅汉字典pdf
+         */
+        $user = AuthApi::current($request);
+        if($user){
+            $inMyHanGroup = GroupMember::where('group_id','905af467-1bde-4d2c-8dc7-49cfb74e0b09')
+                                       ->where('user_id',$user['user_uid'])->exists();
+        }else{
+            $inMyHanGroup = false;
+        }
+
+
         for ($i=0; $i < 2; $i++) {
             # code...
             $word_base = [];
             foreach ($words as $word => $case) {
                 # code...
                 $searched[] = $word;
-                $result = UserDict::select($indexCol)->where('word',$word)->where('source','_PAPER_')->get();
+                $table = UserDict::select($indexCol)
+                                ->where('word',$word)
+                                ->where('source','_PAPER_');
+                if(!$inMyHanGroup){
+                    $table = $table->where('dict_id','<>','8ae6e0f5-f04c-49fc-a355-4885cc08b4b3');
+                    //测试代码
+                    //$table = $table->where('dict_id','<>','ac9b7b73-b9c0-4d31-a5c9-7c6dc5a2c187');
+                }
+                $result = $table->get();
                 $anchor = $word;
                 $wordData=[
                     'word'=> $word,
