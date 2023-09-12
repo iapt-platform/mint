@@ -109,6 +109,33 @@ CREATE TABLE "tag_map" (
   "tag_id" VARCHAR
 );
 
+DROP TABLE IF EXISTS "dhamma_terms";
+CREATE TABLE dhamma_terms (
+	"uuid" varchar(36) NOT NULL,
+	"word" varchar(1024) NOT NULL,
+	"word_en" varchar(1024) NOT NULL,
+	"meaning" varchar(1024) NOT NULL,
+	"other_meaning" varchar(1024) NULL,
+	"note" text NULL,
+	"tag" varchar(1024) NULL,
+	"channel_id" varchar(36) NULL,
+	"language" varchar(16) NOT NULL DEFAULT 'zh-hans',
+	"owner" varchar(36) NOT NULL,
+	"editor_id" INTEGER NOT NULL,
+	"created_at" timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP,
+	"updated_at" timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP,
+	"deleted_at" timestamp(0) NULL,
+	CONSTRAINT dhamma_terms_pkey PRIMARY KEY (uuid)
+);
+CREATE INDEX "dhamma_terms_channel_index" ON "dhamma_terms"  ("channel_id" ASC);
+CREATE INDEX "dhamma_terms_created_at_index" ON "dhamma_terms"  ("created_at" ASC);
+CREATE INDEX "dhamma_terms_editor_id_index" ON "dhamma_terms"  ("editor_id" ASC);
+CREATE INDEX "dhamma_terms_meaning_index" ON "dhamma_terms"  ("meaning" ASC);
+CREATE INDEX "dhamma_terms_owner_index" ON "dhamma_terms"  ("owner" ASC);
+CREATE INDEX "dhamma_terms_updated_at_index" ON "dhamma_terms"  ("updated_at" ASC);
+CREATE INDEX "dhamma_terms_word_en_index" ON "dhamma_terms"  ("word_en" ASC);
+CREATE INDEX "dhamma_terms_word_index" ON "dhamma_terms"  ("word" ASC);
+
 -- ----------------------------
 -- Indexes structure for table channel
 -- ----------------------------

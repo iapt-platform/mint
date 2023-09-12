@@ -42,6 +42,9 @@ class ExportOffline extends Command
         //建表
         $this->info('create db');
         $this->call('export:create.db');
+        //term
+        $this->info('term');
+        $this->call('export:term');
         //导出channel
         $this->info('channel');
         $this->call('export:channel');
