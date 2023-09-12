@@ -4,6 +4,8 @@ import { message, Tree } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
 import { Key } from "antd/lib/table/interface";
 import { DeleteOutlined, SaveOutlined } from "@ant-design/icons";
+import { FileAddOutlined } from "@ant-design/icons";
+
 import { Button, Divider, Space } from "antd";
 import { useIntl } from "react-intl";
 import EditableTreeNode from "./EditableTreeNode";
@@ -293,7 +295,34 @@ const EditableTreeWidget = ({
     <>
       <Space>
         {addFileButton}
-
+        <Button
+          icon={<FileAddOutlined />}
+          onClick={async () => {
+            if (typeof onAppend !== "undefined") {
+              const newNode = await onAppend({
+                key: "",
+                title: "",
+                children: [],
+                level: 0,
+              });
+              console.log("newNode", newNode);
+              if (newNode) {
+                const append = [...gData, newNode];
+                setGData(append);
+                const list = treeToList(append);
+                setListTreeData(list);
+                return true;
+              } else {
+                message.error("添加失败");
+                return false;
+              }
+            } else {
+              return false;
+            }
+          }}
+        >
+          添加
+        </Button>
         <Button
           icon={<DeleteOutlined />}
           danger
