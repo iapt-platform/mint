@@ -1,20 +1,37 @@
-import { Typography, Space, message } from "antd";
+import { message } from "antd";
 import { useEffect, useState } from "react";
+
 import { get } from "../../request";
 import { ICommentResponse } from "../api/Comment";
-import Marked from "../general/Marked";
-import TimeShow from "../general/TimeShow";
-
-import { IComment } from "./DiscussionItem";
-
-const { Title, Text } = Typography;
+import DiscussionItem, { IComment } from "./DiscussionItem";
 
 interface IWidget {
   topicId?: string;
+  childrenCount?: number;
+  onDelete?: Function;
+  onReply?: Function;
+  onClose?: Function;
   onReady?: Function;
 }
-const DiscussionTopicInfoWidget = ({ topicId, onReady }: IWidget) => {
+const DiscussionTopicInfoWidget = ({
+  topicId,
+  childrenCount,
+  onReady,
+  onDelete,
+  onReply,
+  onClose,
+}: IWidget) => {
   const [data, setData] = useState<IComment>();
+
+  useEffect(() => {
+    setData((origin) => {
+      if (typeof origin !== "undefined") {
+        origin.childrenCount = childrenCount;
+        return origin;
+      }
+    });
+  }, [childrenCount]);
+
   useEffect(() => {
     if (typeof topicId === "undefined") {
       return;
@@ -34,6 +51,8 @@ const DiscussionTopicInfoWidget = ({ topicId, onReady }: IWidget) => {
             user: item.editor,
             title: item.title,
             content: item.content,
+            status: item.status,
+            childrenCount: item.children_count,
             createdAt: item.created_at,
             updatedAt: item.updated_at,
           };
@@ -53,22 +72,28 @@ const DiscussionTopicInfoWidget = ({ topicId, onReady }: IWidget) => {
 
   return (
     <div>
-      <Title editable level={5} style={{ margin: 0 }}>
-        {data?.title}
-      </Title>
-      <Space direction="vertical">
-        <Text type="secondary">
-          <Space>
-            {data?.user.nickName}
-            <TimeShow
-              type="secondary"
-              updatedAt={data?.updatedAt}
-              createdAt={data?.createdAt}
-            />
-          </Space>
-        </Text>
-        <Marked text={data?.content} />
-      </Space>
+      {data ? (
+        <DiscussionItem
+          data={data}
+          onDelete={() => {
+            if (typeof onDelete !== "undefined") {
+              onDelete(data.id);
+            }
+          }}
+          onReply={() => {
+            if (typeof onReply !== "undefined") {
+              onReply(data);
+            }
+          }}
+          onClose={() => {
+            if (typeof onClose !== "undefined") {
+              onClose(data);
+            }
+          }}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
