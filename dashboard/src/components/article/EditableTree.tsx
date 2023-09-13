@@ -321,7 +321,7 @@ const EditableTreeWidget = ({
             }
           }}
         >
-          添加
+          {intl.formatMessage({ id: "buttons.create" })}
         </Button>
         <Button
           icon={<DeleteOutlined />}
