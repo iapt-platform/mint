@@ -1,5 +1,5 @@
 import { Avatar } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IUser } from "../auth/User";
 import DiscussionShow from "./DiscussionShow";
 import DiscussionEdit from "./DiscussionEdit";
@@ -39,6 +39,10 @@ const DiscussionItemWidget = ({
 }: IWidget) => {
   const [edit, setEdit] = useState(false);
   const [currData, setCurrData] = useState<IComment>(data);
+  useEffect(() => {
+    console.log("data", data);
+    setCurrData(data);
+  }, [data]);
   return (
     <div
       id={`answer-${data.id}`}
