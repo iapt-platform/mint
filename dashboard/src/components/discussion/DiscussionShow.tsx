@@ -6,6 +6,7 @@ import {
   message,
   Modal,
   Space,
+  Tag,
   Typography,
 } from "antd";
 import {
@@ -13,7 +14,7 @@ import {
   EditOutlined,
   DeleteOutlined,
   LinkOutlined,
-  CommentOutlined,
+  CheckOutlined,
   MessageOutlined,
   ExclamationCircleOutlined,
   CloseOutlined,
@@ -23,9 +24,11 @@ import type { MenuProps } from "antd";
 import { IComment } from "./DiscussionItem";
 import TimeShow from "../general/TimeShow";
 import Marked from "../general/Marked";
-import { delete_ } from "../../request";
+import { delete_, put } from "../../request";
 import { IDeleteResponse } from "../api/Article";
 import { fullUrl } from "../../utils";
+import { ICommentRequest, ICommentResponse } from "../api/Comment";
+import { useState } from "react";
 
 const { Text } = Typography;
 
@@ -46,6 +49,7 @@ const DiscussionShowWidget = ({
   onClose,
 }: IWidget) => {
   const intl = useIntl();
+  const [closed, setClosed] = useState(data.status);
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
       icon: <ExclamationCircleOutlined />,
@@ -82,6 +86,23 @@ const DiscussionShowWidget = ({
       },
     });
   };
+
+  const close = (value: boolean) => {
+    put<ICommentRequest, ICommentResponse>(`/v2/discussion/${data.id}`, {
+      title: data.title,
+      content: data.content,
+      status: value ? "close" : "active",
+    }).then((json) => {
+      console.log(json);
+      if (json.ok) {
+        setClosed(json.data.status);
+        if (typeof onClose !== "undefined") {
+          onClose(value);
+        }
+      }
+    });
+  };
+
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     switch (e.key) {
@@ -96,26 +117,19 @@ const DiscussionShowWidget = ({
           message.success("链接地址已经拷贝到剪贴板");
         });
         break;
-      case "reply":
-        if (typeof onReply !== "undefined") {
-          onReply();
-        }
-        break;
       case "edit":
         if (typeof onEdit !== "undefined") {
           onEdit();
         }
         break;
       case "close":
-        if (typeof onClose !== "undefined") {
-          onClose(true);
-        }
+        close(true);
+
         break;
 
       case "reopen":
-        if (typeof onClose !== "undefined") {
-          onClose(false);
-        }
+        close(false);
+
         break;
       case "delete":
         if (data.id) {
@@ -126,7 +140,7 @@ const DiscussionShowWidget = ({
         break;
     }
   };
-
+  console.log("children", data.childrenCount);
   const items: MenuProps["items"] = [
     {
       key: "copy-link",
@@ -134,14 +148,6 @@ const DiscussionShowWidget = ({
         id: "buttons.copy.link",
       }),
       icon: <LinkOutlined />,
-    },
-    {
-      key: "reply",
-      label: intl.formatMessage({
-        id: "buttons.reply",
-      }),
-      icon: <CommentOutlined />,
-      disabled: data.parent ? true : false,
     },
     {
       type: "divider",
@@ -159,15 +165,15 @@ const DiscussionShowWidget = ({
         id: "buttons.close",
       }),
       icon: <CloseOutlined />,
-      disabled: data.status === "close",
+      disabled: closed === "close",
     },
     {
       key: "reopen",
       label: intl.formatMessage({
         id: "buttons.open",
       }),
-      icon: <CloseOutlined />,
-      disabled: data.status === "active",
+      icon: <CheckOutlined />,
+      disabled: closed === "active",
     },
     {
       key: "delete",
@@ -176,33 +182,17 @@ const DiscussionShowWidget = ({
       }),
       icon: <DeleteOutlined />,
       danger: true,
-      disabled: data.childrenCount ? true : false,
-    },
-    {
-      type: "divider",
-    },
-    {
-      key: "report-content",
-      label: "举报",
+      disabled: data.childrenCount && data.childrenCount > 0 ? true : false,
     },
   ];
   return (
     <Card
       size="small"
       title={
-        <Space direction="vertical">
-          <Text type="secondary" style={{ fontSize: "80%" }}>
-            <Space>
-              {data.user.nickName}
-              <TimeShow
-                type="secondary"
-                updatedAt={data.updatedAt}
-                createdAt={data.createdAt}
-              />
-            </Space>
-          </Text>
+        <Space direction="vertical" size={"small"}>
           {data.title ? (
             <Text
+              style={{ fontSize: 16 }}
               strong
               onClick={(e) => {
                 if (typeof onSelect !== "undefined") {
@@ -213,6 +203,21 @@ const DiscussionShowWidget = ({
               {data.title}
             </Text>
           ) : undefined}
+          <Text type="secondary" style={{ fontSize: "80%" }}>
+            <Space>
+              {closed === "close" ? (
+                <Tag style={{ backgroundColor: "#8250df", color: "white" }}>
+                  {"closed"}
+                </Tag>
+              ) : undefined}
+              {data.user.nickName}
+              <TimeShow
+                type="secondary"
+                updatedAt={data.updatedAt}
+                createdAt={data.createdAt}
+              />
+            </Space>
+          </Text>
         </Space>
       }
       extra={
@@ -234,18 +239,6 @@ const DiscussionShowWidget = ({
               </>
             ) : undefined}
           </span>
-          <Button
-            type="text"
-            onClick={() => {
-              if (typeof onReply !== "undefined") {
-                onReply();
-              }
-            }}
-          >
-            {intl.formatMessage({
-              id: "buttons.reply",
-            })}
-          </Button>
           <Dropdown
             menu={{ items, onClick }}
             placement="bottomRight"
