@@ -19,45 +19,36 @@ const ToolButtonTocWidget = ({
   onSelect,
 }: IWidget) => {
   let tocWidget = <></>;
-  switch (type) {
-    case "chapter":
-      const id = articleId?.split("_");
-      if (id && id.length > 0) {
-        const sentId = id[0].split("-");
-        if (sentId.length > 1) {
-          tocWidget = (
-            <PaliTextToc
-              book={parseInt(sentId[0])}
-              para={parseInt(sentId[1])}
-              onSelect={(selectedKeys: Key[]) => {
-                if (
-                  typeof onSelect !== "undefined" &&
-                  selectedKeys.length > 0
-                ) {
-                  onSelect(selectedKeys[0]);
-                }
-              }}
-            />
-          );
-        }
-      }
-      break;
-    case "article":
-      if (anthologyId) {
+  if (type === "chapter" || type === "para") {
+    if (articleId) {
+      const sentId = articleId.split("-");
+      if (sentId.length > 1) {
         tocWidget = (
-          <AnthologyTocTree
-            anthologyId={anthologyId}
-            onArticleSelect={(anthologyId: string, keys: string[]) => {
-              if (typeof onSelect !== "undefined" && keys.length > 0) {
-                onSelect(keys[0]);
+          <PaliTextToc
+            book={parseInt(sentId[0])}
+            para={parseInt(sentId[1])}
+            onSelect={(selectedKeys: Key[]) => {
+              if (typeof onSelect !== "undefined" && selectedKeys.length > 0) {
+                onSelect(selectedKeys[0]);
               }
             }}
           />
         );
       }
-      break;
-    default:
-      break;
+    }
+  } else if (type === "article") {
+    if (anthologyId) {
+      tocWidget = (
+        <AnthologyTocTree
+          anthologyId={anthologyId}
+          onArticleSelect={(anthologyId: string, keys: string[]) => {
+            if (typeof onSelect !== "undefined" && keys.length > 0) {
+              onSelect(keys[0]);
+            }
+          }}
+        />
+      );
+    }
   }
 
   return (

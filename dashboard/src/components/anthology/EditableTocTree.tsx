@@ -1,6 +1,6 @@
 import { Button, message } from "antd";
 import { useEffect, useState } from "react";
-import { FileAddOutlined } from "@ant-design/icons";
+import { FolderOpenOutlined } from "@ant-design/icons";
 
 import { get as getUiLang } from "../../locales";
 
@@ -101,7 +101,7 @@ const EditableTocTreeWidget = ({
         addFileButton={
           <ArticleListModal
             studioName={studioName}
-            trigger={<Button icon={<FileAddOutlined />}>添加</Button>}
+            trigger={<Button icon={<FolderOpenOutlined />}>添加</Button>}
             multiple={false}
             onSelect={(id: string, title: string) => {
               console.log("add article", id);
