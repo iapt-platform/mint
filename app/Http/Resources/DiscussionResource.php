@@ -26,12 +26,10 @@ class DiscussionResource extends JsonResource
             "editor"=> UserApi::getByUuid($this->editor_uid),
             "res_id"=>$this->res_id,
             "res_type"=> $this->res_type,
+            'children_count' => Discussion::where('parent',$this->id)->count(),
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];
-        if(empty($this->parent)){
-            $data['children_count'] = Discussion::where('parent',$this->id)->count();
-        }
         return $data;
     }
 }
