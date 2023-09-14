@@ -73,6 +73,7 @@ const TermTextAreaMenuWidget = ({
     //社区术语
     const sysTerm = term
       .filter((value) => !parents.includes(value))
+      .sort((a, b) => a.length - b.length)
       .map((item) => {
         return {
           word: item,
