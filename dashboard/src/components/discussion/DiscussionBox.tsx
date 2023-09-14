@@ -50,6 +50,8 @@ const DiscussionBoxWidget = () => {
             onClick={() => setChildrenDrawer(false)}
           />
           <DiscussionTopic
+            resId={discussionMessage?.resId}
+            resType={discussionMessage?.resType}
             topicId={topicComment?.id}
             onItemCountChange={(count: number, parent: string) => {
               setAnswerCount({ id: parent, count: count });

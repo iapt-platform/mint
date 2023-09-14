@@ -6,7 +6,7 @@ import User from "../auth/User";
 import { IUser } from "../auth/UserName";
 import TimeShow from "../general/TimeShow";
 
-interface ISentHistoryData {
+export interface ISentHistoryData {
   id: string;
   sent_uid: string;
   content: string;
@@ -15,7 +15,7 @@ interface ISentHistoryData {
   created_at: string;
 }
 
-interface ISentHistoryListResponse {
+export interface ISentHistoryListResponse {
   ok: boolean;
   message: string;
   data: { rows: ISentHistoryData[]; count: number };

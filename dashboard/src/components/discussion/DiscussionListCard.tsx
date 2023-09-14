@@ -1,21 +1,17 @@
 import { useEffect, useRef, useState } from "react";
+import { Space, Typography } from "antd";
+import { CommentOutlined } from "@ant-design/icons";
 
-import { Collapse, Typography } from "antd";
-
-import { get, put } from "../../request";
-import {
-  ICommentListResponse,
-  ICommentRequest,
-  ICommentResponse,
-} from "../api/Comment";
-
-import DiscussionItem, { IComment } from "./DiscussionItem";
-
+import { get } from "../../request";
+import { ICommentListResponse } from "../api/Comment";
+import { IComment } from "./DiscussionItem";
 import { IAnswerCount } from "./DiscussionDrawer";
 import { ActionType, ProList } from "@ant-design/pro-components";
 import { renderBadge } from "../channel/ChannelTable";
 import DiscussionCreate from "./DiscussionCreate";
-const { Panel } = Collapse;
+import User from "../auth/User";
+
+const { Link } = Typography;
 
 export type TResType = "article" | "channel" | "chapter" | "sentence" | "wbw";
 
@@ -59,64 +55,54 @@ const DiscussionListCardWidget = ({
       </Typography.Paragraph>
     );
   }
-
   return (
     <>
       <ProList<IComment>
-        itemLayout="vertical"
         rowKey="id"
         actionRef={ref}
         metas={{
           avatar: {
             render(dom, entity, index, action, schema) {
-              return <></>;
+              return (
+                <>
+                  <User {...entity.user} showName={false} />
+                </>
+              );
             },
           },
           title: {
             render(dom, entity, index, action, schema) {
-              return <></>;
-            },
-          },
-          content: {
-            render: (text, row, index, action) => {
               return (
-                <DiscussionItem
-                  data={row}
-                  onSelect={(
-                    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-                    data: IComment
-                  ) => {
-                    if (typeof onSelect !== "undefined") {
-                      onSelect(e, data);
-                    }
-                  }}
-                  onDelete={() => {
-                    ref.current?.reload();
-                  }}
-                  onReply={() => {
-                    if (typeof onReply !== "undefined") {
-                      onReply(row);
-                    }
-                  }}
-                  onClose={(value: boolean) => {
-                    console.log("comment", row);
-                    put<ICommentRequest, ICommentResponse>(
-                      `/v2/discussion/${row.id}`,
-                      {
-                        title: row.title,
-                        content: row.content,
-                        status: value ? "close" : "active",
+                <>
+                  <Link
+                    strong
+                    onClick={(event) => {
+                      if (typeof onSelect !== "undefined") {
+                        onSelect(event, entity);
                       }
-                    ).then((json) => {
-                      console.log(json);
-                      if (json.ok) {
-                        ref.current?.reload();
-                      }
-                    });
-                  }}
-                />
+                    }}
+                  >
+                    {entity.title}
+                  </Link>
+                </>
               );
             },
+          },
+          description: {
+            dataIndex: "content",
+            search: false,
+          },
+          actions: {
+            render: (text, row, index, action) => [
+              row.childrenCount ? (
+                <Space key={index}>
+                  <CommentOutlined />
+                  {row.childrenCount}
+                </Space>
+              ) : (
+                <></>
+              ),
+            ],
           },
         }}
         request={async (params = {}, sorter, filter) => {

@@ -1,18 +1,36 @@
 import { List, message, Skeleton } from "antd";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
+
 import { get } from "../../request";
 import { ICommentListResponse } from "../api/Comment";
+import {
+  ISentHistoryData,
+  ISentHistoryListResponse,
+} from "../corpus/SentHistory";
+import SentHistoryItemWidget from "../corpus/SentHistoryItem";
 import DiscussionCreate from "./DiscussionCreate";
-
 import DiscussionItem, { IComment } from "./DiscussionItem";
+import { TResType } from "./DiscussionListCard";
+
+interface IItem {
+  type: "comment" | "sent";
+  comment?: IComment;
+  sent?: ISentHistoryData;
+  oldSent?: string;
+  date: number;
+}
 
 interface IWidget {
+  resId?: string;
+  resType?: TResType;
   topicId?: string;
   focus?: string;
   onItemCountChange?: Function;
 }
 const DiscussionTopicChildrenWidget = ({
+  resId,
+  resType,
   topicId,
   focus,
   onItemCountChange,
@@ -20,6 +38,9 @@ const DiscussionTopicChildrenWidget = ({
   const intl = useIntl();
   const [data, setData] = useState<IComment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [history, setHistory] = useState<ISentHistoryData[]>([]);
+  const [items, setItems] = useState<IItem[]>();
+
   useEffect(() => {
     if (loading === false) {
       const ele = document.getElementById(`answer-${focus}`);
@@ -27,6 +48,48 @@ const DiscussionTopicChildrenWidget = ({
       console.log("after render");
     }
   });
+
+  useEffect(() => {
+    let first = new Date().getTime();
+    const comment: IItem[] = data.map((item) => {
+      const date = new Date(item.createdAt ? item.createdAt : "").getTime();
+      if (date < first) {
+        first = date;
+      }
+      return {
+        type: "comment",
+        comment: item,
+        date: date,
+      };
+    });
+    const hisFiltered = history.filter(
+      (value) =>
+        new Date(value.created_at ? value.created_at : "").getTime() > first
+    );
+    const his: IItem[] = hisFiltered.map((item, index) => {
+      return {
+        type: "sent",
+        sent: item,
+        date: new Date(item.created_at ? item.created_at : "").getTime(),
+        oldSent: index > 0 ? hisFiltered[index - 1].content : undefined,
+      };
+    });
+    const mixItems = [...comment, ...his];
+    mixItems.sort((a, b) => a.date - b.date);
+    setItems(mixItems);
+  }, [data, history]);
+
+  useEffect(() => {
+    if (resType === "sentence" && resId) {
+      let url = `/v2/sent_history?view=sentence&id=${resId}&order=created_at&dir=asc`;
+      get<ISentHistoryListResponse>(url).then((res) => {
+        if (res.ok) {
+          setHistory(res.data.rows);
+        }
+      });
+    }
+  }, [resId, resType]);
+
   useEffect(() => {
     if (typeof topicId === "undefined") {
       return;
@@ -45,6 +108,8 @@ const DiscussionTopicChildrenWidget = ({
               parent: item.parent,
               title: item.title,
               content: item.content,
+              status: item.status,
+              childrenCount: item.children_count,
               createdAt: item.created_at,
               updatedAt: item.updated_at,
             };
@@ -67,29 +132,38 @@ const DiscussionTopicChildrenWidget = ({
         <Skeleton title={{ width: 200 }} paragraph={{ rows: 1 }} active />
       ) : (
         <List
-          pagination={{
-            onChange: (page) => {
-              console.log(page);
-            },
-            pageSize: 10,
-          }}
+          pagination={false}
           itemLayout="horizontal"
-          dataSource={data}
+          dataSource={items}
           renderItem={(item) => {
             return (
               <List.Item>
-                <DiscussionItem
-                  data={item}
-                  isFocus={item.id === focus ? true : false}
-                  onDelete={() => {
-                    if (typeof onItemCountChange !== "undefined") {
-                      onItemCountChange(data.length - 1, item.parent);
-                    }
-                    setData((origin) => {
-                      return origin.filter((value) => value.id !== item.id);
-                    });
-                  }}
-                />
+                {item.type === "comment" ? (
+                  item.comment ? (
+                    <DiscussionItem
+                      data={item.comment}
+                      isFocus={item.comment.id === focus ? true : false}
+                      onDelete={() => {
+                        if (typeof onItemCountChange !== "undefined") {
+                          onItemCountChange(
+                            data.length - 1,
+                            item.comment?.parent
+                          );
+                        }
+                        setData((origin) => {
+                          return origin.filter(
+                            (value) => value.id !== item.comment?.id
+                          );
+                        });
+                      }}
+                    />
+                  ) : undefined
+                ) : (
+                  <SentHistoryItemWidget
+                    data={item.sent}
+                    oldContent={item.oldSent}
+                  />
+                )}
               </List.Item>
             );
           }}
