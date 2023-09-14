@@ -5,7 +5,13 @@ import DiscussionTopic from "./DiscussionTopic";
 import DiscussionListCard from "./DiscussionListCard";
 import { IComment } from "./DiscussionItem";
 import { useAppSelector } from "../../hooks";
-import { countChange, message, showAnchor } from "../../reducers/discussion";
+import {
+  countChange,
+  IShowDiscussion,
+  message,
+  show,
+  showAnchor,
+} from "../../reducers/discussion";
 import { Button } from "antd";
 import store from "../../store";
 
@@ -39,15 +45,15 @@ const DiscussionBoxWidget = () => {
       <Button
         type="link"
         onClick={() => {
-          store.dispatch(
-            showAnchor({
-              type: "discussion",
-              resId: discussionMessage?.resId
-                ? discussionMessage?.resId
-                : currTopic?.resId,
-              resType: discussionMessage?.resType,
-            })
-          );
+          const anchorInfo: IShowDiscussion = {
+            type: "discussion",
+            resId: discussionMessage?.resId
+              ? discussionMessage?.resId
+              : currTopic?.resId,
+            resType: discussionMessage?.resType,
+          };
+          store.dispatch(show(anchorInfo));
+          store.dispatch(showAnchor(anchorInfo));
         }}
       >
         显示译文
