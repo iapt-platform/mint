@@ -22,6 +22,7 @@ interface IItem {
 }
 
 interface IWidget {
+  topic?: IComment;
   resId?: string;
   resType?: TResType;
   topicId?: string;
@@ -29,6 +30,7 @@ interface IWidget {
   onItemCountChange?: Function;
 }
 const DiscussionTopicChildrenWidget = ({
+  topic,
   resId,
   resType,
   topicId,
@@ -50,18 +52,15 @@ const DiscussionTopicChildrenWidget = ({
   });
 
   useEffect(() => {
-    let first = new Date().getTime();
     const comment: IItem[] = data.map((item) => {
       const date = new Date(item.createdAt ? item.createdAt : "").getTime();
-      if (date < first) {
-        first = date;
-      }
       return {
         type: "comment",
         comment: item,
         date: date,
       };
     });
+    const first = new Date(topic?.createdAt ? topic?.createdAt : "").getTime();
     const hisFiltered = history.filter(
       (value) =>
         new Date(value.created_at ? value.created_at : "").getTime() > first
@@ -77,7 +76,7 @@ const DiscussionTopicChildrenWidget = ({
     const mixItems = [...comment, ...his];
     mixItems.sort((a, b) => a.date - b.date);
     setItems(mixItems);
-  }, [data, history]);
+  }, [data, history, topic?.createdAt]);
 
   useEffect(() => {
     if (resType === "sentence" && resId) {

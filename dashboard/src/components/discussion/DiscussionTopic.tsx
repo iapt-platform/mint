@@ -21,6 +21,7 @@ const DiscussionTopicWidget = ({
 }: IWidget) => {
   const [count, setCount] = useState<number>();
   const [currResId, setCurrResId] = useState<string>();
+  const [topic, setTopic] = useState<IComment>();
   return (
     <>
       <DiscussionTopicInfo
@@ -28,6 +29,7 @@ const DiscussionTopicWidget = ({
         childrenCount={count}
         onReady={(value: IComment) => {
           setCurrResId(value.resId);
+          setTopic(value);
           console.log("onReady", value);
           if (typeof onTopicReady !== "undefined") {
             onTopicReady(value);
@@ -35,6 +37,7 @@ const DiscussionTopicWidget = ({
         }}
       />
       <DiscussionTopicChildren
+        topic={topic}
         resId={currResId}
         resType={resType}
         focus={focus}
