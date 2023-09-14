@@ -29,9 +29,13 @@ const DiscussionBoxWidget = () => {
   const discussionMessage = useAppSelector(message);
 
   useEffect(() => {
-    if (discussionMessage?.topic) {
-      setChildrenDrawer(true);
-      setTopicId(discussionMessage?.topic);
+    if (discussionMessage) {
+      if (discussionMessage.topic) {
+        setChildrenDrawer(true);
+        setTopicId(discussionMessage.topic);
+      } else {
+        setChildrenDrawer(false);
+      }
     }
   }, [discussionMessage]);
 
