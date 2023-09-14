@@ -92,6 +92,7 @@ const RelatedParaWidget = ({ book, para, trigger, onSelect }: IWidget) => {
                 (tag) => tag.name === "aṭṭhakathā"
               );
               const isTika = item.tags?.find((tag) => tag.name === "ṭīkā");
+              const firstPara = item.para.length > 0 ? item.para[0] : 0;
               return (
                 <List.Item>
                   <Badge.Ribbon
@@ -117,7 +118,8 @@ const RelatedParaWidget = ({ book, para, trigger, onSelect }: IWidget) => {
                     <Card
                       title={
                         <Link
-                          to={`/article/para?book=${item.book}&par=${item.para}`}
+                          to={`/article/para/${item.book}-${firstPara}?book=${item.book}&par=${item.para}`}
+                          target="_blank"
                         >
                           {item.book_title_pali}
                         </Link>
