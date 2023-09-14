@@ -74,6 +74,7 @@ class ExportTerm extends Command
                             $row->meaning,
                             $row->other_meaning,
                             $row->note,
+                            $row->tag,
                             $row->channal,
                             $row->language,
                             $row->owner,
