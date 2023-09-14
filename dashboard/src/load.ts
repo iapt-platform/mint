@@ -10,7 +10,7 @@ import { get, IErrorResponse } from "./request";
 import { get as getLang } from "./locales";
 
 import store from "./store";
-import { ITerm, push } from "./reducers/term-vocabulary";
+import { ITerm, update } from "./reducers/term-vocabulary";
 import { push as nissayaEndingPush } from "./reducers/nissaya-ending-vocabulary";
 import { IRelation, IRelationListResponse } from "./pages/admin/relation/list";
 import { pushRelation } from "./reducers/relation";
@@ -99,7 +99,7 @@ const init = () => {
   get<ITermResponse>(`/v2/term-vocabulary?view=grammar&lang=` + getLang()).then(
     (json) => {
       if (json.ok) {
-        store.dispatch(push(json.data.rows));
+        store.dispatch(update(json.data.rows));
       }
     }
   );
@@ -108,7 +108,7 @@ const init = () => {
     `/v2/term-vocabulary?view=community&lang=` + getLang()
   ).then((json) => {
     if (json.ok) {
-      store.dispatch(push(json.data.rows));
+      store.dispatch(update(json.data.rows));
     }
   });
 
