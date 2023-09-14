@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, Divider } from "antd";
 import { useParams } from "react-router-dom";
@@ -6,7 +7,6 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import CommentAnchor from "../../../components/discussion/DiscussionAnchor";
 import { IComment } from "../../../components/discussion/DiscussionItem";
 import DiscussionTopic from "../../../components/discussion/DiscussionTopic";
-import { useEffect, useLayoutEffect, useState } from "react";
 
 const Widget = () => {
   const { id } = useParams(); //url 参数
