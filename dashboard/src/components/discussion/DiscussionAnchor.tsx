@@ -3,17 +3,28 @@ import { useEffect, useState } from "react";
 import { get } from "../../request";
 import { IArticleResponse } from "../api/Article";
 import { ICommentAnchorResponse } from "../api/Comment";
-import { ISentenceResponse } from "../api/Corpus";
+import { ISentenceData, ISentenceResponse } from "../api/Corpus";
 import MdView from "../template/MdView";
 import AnchorCard from "./AnchorCard";
 import { TResType } from "./DiscussionListCard";
+
+export interface IAnchor {
+  type: TResType;
+  sentence?: ISentenceData;
+}
 
 interface IWidget {
   resId?: string;
   resType?: TResType;
   topicId?: string;
+  onLoad?: Function;
 }
-const DiscussionAnchorWidget = ({ resId, resType, topicId }: IWidget) => {
+const DiscussionAnchorWidget = ({
+  resId,
+  resType,
+  topicId,
+  onLoad,
+}: IWidget) => {
   const [content, setContent] = useState<string>();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -46,6 +57,9 @@ const DiscussionAnchorWidget = ({ resId, resType, topicId }: IWidget) => {
                   setContent(json.data.content);
                 }
               });
+              if (typeof onLoad !== "undefined") {
+                onLoad({ type: resType, sentence: json.data });
+              }
             }
           })
           .finally(() => setLoading(false));
