@@ -125,7 +125,9 @@ const FullTxtSearchResultWidget = ({
       renderItem={(item) => (
         <List.Item>
           <Title level={5}>
-            <Link to={`/article/para?book=${item.book}&par=${item.paragraph}`}>
+            <Link
+              to={`/article/para/${item.book}-${item.paragraph}?book=${item.book}&par=${item.paragraph}`}
+            >
               {item.title}
             </Link>
           </Title>
