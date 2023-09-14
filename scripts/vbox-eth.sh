@@ -17,14 +17,15 @@ ip address flush dev $3
 ip address add $1.$2/24 broadcast $1.255 dev $3
 ip route add default via $1.1 dev $3
 
-if [ ! -f /etc/resolv.conf.orig ]
-then
-    cp -v /etc/resolv.conf /etc/resolv.conf.orig
-fi
-
-cat > /etc/resolv.conf <EOF
+cat > /etc/resolv.conf.google <EOF
 nameserver 8.8.8.8
 nameserver 8.8.4.4
 EOF
+
+
+if [ -L /etc/resolv.conf ]
+then
+    ln -svf /etc/resolv.conf.google /etc/resolv.conf
+fi
 
 echo 'done.'
