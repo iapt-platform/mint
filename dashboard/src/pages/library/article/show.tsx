@@ -38,7 +38,11 @@ import store from "../../../store";
 import { IRecent } from "../../../components/recent/RecentList";
 import { convertToPlain, fullUrl } from "../../../utils";
 import ThemeSelect from "../../../components/general/ThemeSelect";
-import { show } from "../../../reducers/discussion";
+import {
+  IShowDiscussion,
+  show,
+  showAnchor,
+} from "../../../reducers/discussion";
 import { openPanel } from "../../../reducers/right-panel";
 import { TResType } from "../../../components/discussion/DiscussionListCard";
 
@@ -314,14 +318,14 @@ const Widget = () => {
                 const paramComment = searchParams.get("comment");
                 const paramType = searchParams.get("dis_type");
                 if (paramTopic !== null && paramType !== null) {
-                  store.dispatch(
-                    show({
-                      type: "discussion",
-                      topic: paramTopic,
-                      resType: paramType as TResType,
-                      comment: paramComment ? paramComment : undefined,
-                    })
-                  );
+                  const anchorInfo: IShowDiscussion = {
+                    type: "discussion",
+                    topic: paramTopic,
+                    resType: paramType as TResType,
+                    comment: paramComment ? paramComment : undefined,
+                  };
+                  store.dispatch(show(anchorInfo));
+                  store.dispatch(showAnchor(anchorInfo));
                   store.dispatch(openPanel("discussion"));
                 }
               }}
