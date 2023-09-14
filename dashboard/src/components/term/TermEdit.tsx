@@ -32,6 +32,8 @@ import { get, post, put } from "../../request";
 import MDEditor from "@uiw/react-md-editor";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
+import store from "../../store";
+import { push } from "../../reducers/term-vocabulary";
 
 interface ValueType {
   key?: string;
@@ -192,6 +194,9 @@ const TermEditWidget = ({
 
           if (res.ok) {
             message.success("提交成功");
+            store.dispatch(
+              push({ word: res.data.word, meaning: res.data.meaning })
+            );
             if (typeof onUpdate !== "undefined") {
               onUpdate(res.data);
             }
