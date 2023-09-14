@@ -13,6 +13,8 @@ export interface IShowDiscussion {
   type: "discussion" | "pr";
   resType?: TResType;
   resId?: string;
+  topic?: string;
+  comment?: string;
 }
 export interface ICount {
   count: number;

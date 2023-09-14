@@ -38,6 +38,9 @@ import store from "../../../store";
 import { IRecent } from "../../../components/recent/RecentList";
 import { convertToPlain, fullUrl } from "../../../utils";
 import ThemeSelect from "../../../components/general/ThemeSelect";
+import { show } from "../../../reducers/discussion";
+import { openPanel } from "../../../reducers/right-panel";
+import { TResType } from "../../../components/discussion/DiscussionListCard";
 
 /**
  * type:
@@ -306,8 +309,21 @@ const Widget = () => {
               }}
               onLoad={(article: IArticleDataResponse) => {
                 setLoadedArticleData(article);
-
                 document.title = convertToPlain(article.title).slice(0, 128);
+                const paramTopic = searchParams.get("topic");
+                const paramComment = searchParams.get("comment");
+                const paramType = searchParams.get("dis_type");
+                if (paramTopic !== null && paramType !== null) {
+                  store.dispatch(
+                    show({
+                      type: "discussion",
+                      topic: paramTopic,
+                      resType: paramType as TResType,
+                      comment: paramComment ? paramComment : undefined,
+                    })
+                  );
+                  store.dispatch(openPanel("discussion"));
+                }
               }}
               onAnthologySelect={(id: string) => {
                 let output: any = { anthology: id };

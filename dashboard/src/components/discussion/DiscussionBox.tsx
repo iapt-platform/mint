@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import DiscussionTopic from "./DiscussionTopic";
@@ -16,14 +16,22 @@ export interface IAnswerCount {
 
 const DiscussionBoxWidget = () => {
   const [childrenDrawer, setChildrenDrawer] = useState(false);
-  const [topicComment, setTopicComment] = useState<IComment>();
+  const [topicId, setTopicId] = useState<string>();
   const [answerCount, setAnswerCount] = useState<IAnswerCount>();
+  const [currTopic, setCurrTopic] = useState<IComment>();
 
   const discussionMessage = useAppSelector(message);
 
+  useEffect(() => {
+    if (discussionMessage?.topic) {
+      setChildrenDrawer(true);
+      setTopicId(discussionMessage?.topic);
+    }
+  }, [discussionMessage]);
+
   const showChildrenDrawer = (comment: IComment) => {
     setChildrenDrawer(true);
-    setTopicComment(comment);
+    setTopicId(comment.id);
   };
 
   return (
@@ -34,7 +42,9 @@ const DiscussionBoxWidget = () => {
           store.dispatch(
             showAnchor({
               type: "discussion",
-              resId: discussionMessage?.resId,
+              resId: discussionMessage?.resId
+                ? discussionMessage?.resId
+                : currTopic?.resId,
               resType: discussionMessage?.resType,
             })
           );
@@ -50,11 +60,14 @@ const DiscussionBoxWidget = () => {
             onClick={() => setChildrenDrawer(false)}
           />
           <DiscussionTopic
-            resId={discussionMessage?.resId}
             resType={discussionMessage?.resType}
-            topicId={topicComment?.id}
+            topicId={topicId}
+            focus={discussionMessage?.comment}
             onItemCountChange={(count: number, parent: string) => {
               setAnswerCount({ id: parent, count: count });
+            }}
+            onTopicReady={(value: IComment) => {
+              setCurrTopic(value);
             }}
           />
         </div>
