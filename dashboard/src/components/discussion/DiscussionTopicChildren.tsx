@@ -17,6 +17,7 @@ interface IItem {
   type: "comment" | "sent";
   comment?: IComment;
   sent?: ISentHistoryData;
+  oldSent?: string;
   date: number;
 }
 
@@ -61,18 +62,18 @@ const DiscussionTopicChildrenWidget = ({
         date: date,
       };
     });
-    const his: IItem[] = history
-      .filter(
-        (value) =>
-          new Date(value.created_at ? value.created_at : "").getTime() > first
-      )
-      .map((item) => {
-        return {
-          type: "sent",
-          sent: item,
-          date: new Date(item.created_at ? item.created_at : "").getTime(),
-        };
-      });
+    const hisFiltered = history.filter(
+      (value) =>
+        new Date(value.created_at ? value.created_at : "").getTime() > first
+    );
+    const his: IItem[] = hisFiltered.map((item, index) => {
+      return {
+        type: "sent",
+        sent: item,
+        date: new Date(item.created_at ? item.created_at : "").getTime(),
+        oldSent: index > 0 ? hisFiltered[index - 1].content : undefined,
+      };
+    });
     const mixItems = [...comment, ...his];
     mixItems.sort((a, b) => a.date - b.date);
     setItems(mixItems);
@@ -80,7 +81,7 @@ const DiscussionTopicChildrenWidget = ({
 
   useEffect(() => {
     if (resType === "sentence" && resId) {
-      let url = `/v2/sent_history?view=sentence&id=${resId}`;
+      let url = `/v2/sent_history?view=sentence&id=${resId}&order=created_at&dir=asc`;
       get<ISentHistoryListResponse>(url).then((res) => {
         if (res.ok) {
           setHistory(res.data.rows);
@@ -158,7 +159,10 @@ const DiscussionTopicChildrenWidget = ({
                     />
                   ) : undefined
                 ) : (
-                  <SentHistoryItemWidget data={item.sent} />
+                  <SentHistoryItemWidget
+                    data={item.sent}
+                    oldContent={item.oldSent}
+                  />
                 )}
               </List.Item>
             );
