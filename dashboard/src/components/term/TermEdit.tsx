@@ -439,7 +439,7 @@ const TermEditWidget = ({
                 <LangSelect
                   name="copy_lang"
                   disabled={hasChannel}
-                  required={!hasChannel}
+                  required={isSaveAs && !hasChannel}
                 />
               );
             }}
