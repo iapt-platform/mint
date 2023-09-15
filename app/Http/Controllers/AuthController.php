@@ -67,9 +67,16 @@ class AuthController extends Controller
     }
     public function signIn(Request $request){
 
-        $user = UserInfo::where('username',$request->get('username'))
-                        ->where('password',md5($request->get('password')))
-                        ->first();
+        $query = UserInfo::where(function ($query) use($request) {
+                            $query->where('username',$request->get('username'))
+                                  ->where('password',md5($request->get('password')));
+                        })
+                        ->orWhere(function ($query) use($request) {
+                            $query->where('email',$request->get('username'))
+                                  ->where('password',md5($request->get('password')));
+                        });
+        Log::info($query->toSql());
+        $user = $query->first();
         if($user){
             $ExpTime = time() + 60 * 60 * 24 * 365;
             $key = env('APP_KEY');
