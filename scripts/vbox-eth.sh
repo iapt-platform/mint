@@ -17,7 +17,7 @@ ip address flush dev $3
 ip address add $1.$2/24 broadcast $1.255 dev $3
 ip route add default via $1.1 dev $3
 
-cat > /etc/resolv.conf.google <EOF
+cat <<EOF > /etc/resolv.conf.google
 nameserver 8.8.8.8
 nameserver 8.8.4.4
 EOF
