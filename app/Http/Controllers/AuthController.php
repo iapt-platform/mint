@@ -75,7 +75,7 @@ class AuthController extends Controller
                             $query->where('email',$request->get('username'))
                                   ->where('password',md5($request->get('password')));
                         });
-        Log::info($query->toSql());
+        //Log::info($query->toSql());
         $user = $query->first();
         if($user){
             $ExpTime = time() + 60 * 60 * 24 * 365;
