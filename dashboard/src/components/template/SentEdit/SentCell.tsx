@@ -60,7 +60,13 @@ const SentCellWidget = ({
   useEffect(() => {
     if (anchorInfo && anchorInfo?.resId === initValue?.id) {
       const ele = document.getElementById(sid);
-      ele?.scrollIntoView();
+      if (ele !== null) {
+        ele.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "nearest",
+        });
+      }
     }
   }, [anchorInfo, initValue?.id, sid]);
 

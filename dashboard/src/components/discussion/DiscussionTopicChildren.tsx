@@ -46,7 +46,10 @@ const DiscussionTopicChildrenWidget = ({
   useEffect(() => {
     if (loading === false) {
       const ele = document.getElementById(`answer-${focus}`);
-      ele?.scrollIntoView();
+      ele?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
       console.log("after render");
     }
   });
