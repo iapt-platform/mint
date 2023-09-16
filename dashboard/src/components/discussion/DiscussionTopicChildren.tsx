@@ -63,11 +63,14 @@ const DiscussionTopicChildrenWidget = ({
         date: date,
       };
     });
-    const first = new Date(topic?.createdAt ? topic?.createdAt : "").getTime();
-    const hisFiltered = history.filter(
+    const topicTime = new Date(
+      topic?.createdAt ? topic?.createdAt : ""
+    ).getTime();
+    const firstHis = history.findIndex(
       (value) =>
-        new Date(value.created_at ? value.created_at : "").getTime() > first
+        new Date(value.created_at ? value.created_at : "").getTime() > topicTime
     );
+    const hisFiltered = history.filter((value, index) => index >= firstHis - 1);
     const his: IItem[] = hisFiltered.map((item, index) => {
       return {
         type: "sent",
