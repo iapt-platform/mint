@@ -95,7 +95,7 @@ const DiscussionTopicChildrenWidget = ({
             type: "sent",
             sent: currSent,
             date: 0,
-            oldSent: currOldSent,
+            oldSent: currOldSent ? currOldSent : currSent[0].content,
           });
         }
         newMixItems.push(value);
@@ -117,7 +117,7 @@ const DiscussionTopicChildrenWidget = ({
         type: "sent",
         sent: currSent,
         date: 0,
-        oldSent: currOldSent,
+        oldSent: currOldSent ? currOldSent : currSent[0].content,
       });
     }
     setItems(newMixItems);
