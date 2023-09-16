@@ -122,8 +122,11 @@ const Widget = () => {
     currMode = "read";
   }
   console.log(anchorNavOpen, anchorNavShow);
+  const scrollToTop = () => {
+    document.getElementById("article-root")?.scrollIntoView();
+  };
   return (
-    <div>
+    <div id="article-root">
       <Affix offsetTop={0}>
         <Header
           style={{
@@ -263,6 +266,7 @@ const Widget = () => {
                       param.push(`${key}=${value}`);
                     });
                     navigate(url + param.join("&"));
+                    scrollToTop();
                   }}
                 />
                 <ToolButtonNav type={type} articleId={id} />
@@ -360,6 +364,7 @@ const Widget = () => {
                   window.open(fullUrl(url), "_blank");
                 } else {
                   navigate(url);
+                  scrollToTop();
                 }
               }}
             />
