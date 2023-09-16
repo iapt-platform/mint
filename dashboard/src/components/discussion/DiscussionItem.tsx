@@ -40,7 +40,6 @@ const DiscussionItemWidget = ({
   const [edit, setEdit] = useState(false);
   const [currData, setCurrData] = useState<IComment>(data);
   useEffect(() => {
-    console.log("data", data);
     setCurrData(data);
   }, [data]);
   return (

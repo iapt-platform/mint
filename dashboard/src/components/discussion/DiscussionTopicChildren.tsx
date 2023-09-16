@@ -8,6 +8,7 @@ import {
   ISentHistoryData,
   ISentHistoryListResponse,
 } from "../corpus/SentHistory";
+import SentHistoryGroup from "../corpus/SentHistoryGroup";
 import SentHistoryItemWidget from "../corpus/SentHistoryItem";
 import DiscussionCreate from "./DiscussionCreate";
 import DiscussionItem, { IComment } from "./DiscussionItem";
@@ -16,7 +17,7 @@ import { TResType } from "./DiscussionListCard";
 interface IItem {
   type: "comment" | "sent";
   comment?: IComment;
-  sent?: ISentHistoryData;
+  sent?: ISentHistoryData[];
   oldSent?: string;
   date: number;
 }
@@ -74,14 +75,52 @@ const DiscussionTopicChildrenWidget = ({
     const his: IItem[] = hisFiltered.map((item, index) => {
       return {
         type: "sent",
-        sent: item,
+        sent: [item],
         date: new Date(item.created_at ? item.created_at : "").getTime(),
         oldSent: index > 0 ? hisFiltered[index - 1].content : undefined,
       };
     });
     const mixItems = [...comment, ...his];
     mixItems.sort((a, b) => a.date - b.date);
-    setItems(mixItems);
+    console.log("mixItems", mixItems);
+    let newMixItems: IItem[] = [];
+    let currSent: ISentHistoryData[] = [];
+    let currOldSent: string | undefined;
+    let sentBegin = false;
+    mixItems.forEach((value, index, array) => {
+      if (value.type === "comment") {
+        if (sentBegin) {
+          sentBegin = false;
+          newMixItems.push({
+            type: "sent",
+            sent: currSent,
+            date: 0,
+            oldSent: currOldSent,
+          });
+        }
+        newMixItems.push(value);
+      } else {
+        if (value.sent && value.sent.length > 0) {
+          if (sentBegin) {
+            currSent.push(value.sent[0]);
+          } else {
+            sentBegin = true;
+            currSent = value.sent;
+            currOldSent = value.oldSent;
+          }
+        }
+      }
+    });
+    if (sentBegin) {
+      sentBegin = false;
+      newMixItems.push({
+        type: "sent",
+        sent: currSent,
+        date: 0,
+        oldSent: currOldSent,
+      });
+    }
+    setItems(newMixItems);
   }, [data, history, topic?.createdAt]);
 
   useEffect(() => {
@@ -164,7 +203,7 @@ const DiscussionTopicChildrenWidget = ({
                     />
                   ) : undefined
                 ) : (
-                  <SentHistoryItemWidget
+                  <SentHistoryGroup
                     data={item.sent}
                     oldContent={item.oldSent}
                   />
