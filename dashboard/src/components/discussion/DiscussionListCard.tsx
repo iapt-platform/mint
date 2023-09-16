@@ -183,7 +183,6 @@ const DiscussionListCardWidget = ({
               },
             ],
             onChange(key) {
-              console.log("show course", key);
               setActiveKey(key);
               ref.current?.reload();
             },
