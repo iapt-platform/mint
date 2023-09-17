@@ -23,6 +23,7 @@ interface IWidget {
   resId?: string;
   resType?: string;
   parent?: string;
+  topic?: IComment;
   onCreated?: Function;
   contentType?: TContentType;
 }
@@ -31,6 +32,7 @@ const DiscussionCreateWidget = ({
   resType,
   contentType = "html",
   parent,
+  topic,
   onCreated,
 }: IWidget) => {
   const intl = useIntl();
@@ -50,6 +52,28 @@ const DiscussionCreateWidget = ({
               //新建
               console.log("create", resId, resType, parent);
               console.log("value", values);
+              if (typeof parent === "undefined") {
+                if (typeof topic !== "undefined" && topic.tplId) {
+                  const newTopic = await post<
+                    ICommentRequest,
+                    ICommentResponse
+                  >(`/v2/discussion`, {
+                    res_id: resId,
+                    res_type: resType,
+                    title: topic.title,
+                    tpl_id: topic.tplId,
+                    content: topic.content,
+                    content_type: "markdown",
+                  });
+                  if (newTopic.ok) {
+                    parent = newTopic.data.id;
+                  } else {
+                    console.error("no parent id");
+                    return;
+                  }
+                }
+              }
+              console.log("parent", parent);
               post<ICommentRequest, ICommentResponse>(`/v2/discussion`, {
                 res_id: resId,
                 res_type: resType,
@@ -102,13 +126,16 @@ const DiscussionCreateWidget = ({
               <ProFormText
                 name="title"
                 width={"lg"}
-                hidden={typeof parent !== "undefined"}
+                hidden={
+                  typeof parent !== "undefined" ||
+                  typeof topic?.tplId !== "undefined"
+                }
                 label={intl.formatMessage({ id: "forms.fields.title.label" })}
                 tooltip="最长为 24 位"
                 placeholder={intl.formatMessage({
                   id: "forms.message.question.required",
                 })}
-                rules={[{ required: parent ? false : true }]}
+                rules={[{ required: parent || topic?.tplId ? false : true }]}
               />
             </ProForm.Group>
             <ProForm.Group>
@@ -153,9 +180,16 @@ const DiscussionCreateWidget = ({
               ) : contentType === "markdown" ? (
                 <Form.Item
                   name="content"
-                  rules={[{ required: typeof parent !== "undefined" }]}
+                  rules={[
+                    {
+                      required:
+                        typeof parent !== "undefined" ||
+                        typeof topic?.tplId !== "undefined",
+                    },
+                  ]}
                   label={
-                    typeof parent === "undefined"
+                    typeof parent === "undefined" &&
+                    typeof topic?.tplId === "undefined"
                       ? intl.formatMessage({
                           id: "forms.message.question.description.option",
                         })
@@ -167,7 +201,10 @@ const DiscussionCreateWidget = ({
                   <MDEditor
                     placeholder={
                       "问题的详细描述" +
-                      (typeof parent !== "undefined" ? "" : "（选填）")
+                      (typeof parent !== "undefined" &&
+                      typeof topic?.tplId !== "undefined"
+                        ? ""
+                        : "（选填）")
                     }
                   />
                 </Form.Item>

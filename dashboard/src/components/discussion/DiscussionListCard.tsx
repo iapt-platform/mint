@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Space, Typography } from "antd";
+import { Button, Space, Typography } from "antd";
 import { CommentOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
@@ -10,6 +10,10 @@ import { ActionType, ProList } from "@ant-design/pro-components";
 import { renderBadge } from "../channel/ChannelTable";
 import DiscussionCreate from "./DiscussionCreate";
 import User from "../auth/User";
+import { IArticleListResponse } from "../api/Article";
+import { useAppSelector } from "../../hooks";
+import { currentUser as _currentUser } from "../../reducers/current-user";
+import { TemplateOutlinedIcon } from "../../assets/icon";
 
 const { Link } = Typography;
 
@@ -38,6 +42,7 @@ const DiscussionListCardWidget = ({
   const [activeNumber, setActiveNumber] = useState<number>(0);
   const [closeNumber, setCloseNumber] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
+  const user = useAppSelector(_currentUser);
 
   useEffect(() => {
     ref.current?.reload();
@@ -74,8 +79,10 @@ const DiscussionListCardWidget = ({
             render(dom, entity, index, action, schema) {
               return (
                 <>
-                  <Link
-                    strong
+                  <Button
+                    size="small"
+                    type="link"
+                    icon={entity.newTpl ? <TemplateOutlinedIcon /> : undefined}
                     onClick={(event) => {
                       if (typeof onSelect !== "undefined") {
                         onSelect(event, entity);
@@ -83,7 +90,7 @@ const DiscussionListCardWidget = ({
                     }}
                   >
                     {entity.title}
-                  </Link>
+                  </Button>
                 </>
               );
             },
@@ -134,6 +141,7 @@ const DiscussionListCardWidget = ({
               user: item.editor,
               title: item.title,
               parent: item.parent,
+              tplId: item.tpl_id,
               content: item.content,
               status: item.status,
               childrenCount: item.children_count,
@@ -141,12 +149,45 @@ const DiscussionListCardWidget = ({
               updatedAt: item.updated_at,
             };
           });
+
+          let topicTpl: IComment[] = [];
+          if (activeKey !== "close") {
+            const urlTpl = `/v2/article?view=studio&name=${user?.realName}&subtitle=_setting_discussion_topic_&content=true`;
+            const resTpl = await get<IArticleListResponse>(urlTpl);
+            if (resTpl.ok) {
+              console.log("resTpl.data.rows", resTpl.data.rows);
+              topicTpl = resTpl.data.rows
+                .filter(
+                  (value) =>
+                    items.findIndex((old) => old.tplId === value.uid) === -1
+                )
+                .map((item, index) => {
+                  return {
+                    tplId: item.uid,
+                    resId: resId,
+                    resType: resType,
+                    user: item.editor
+                      ? item.editor
+                      : { id: "", userName: "", nickName: "" },
+                    title: item.title,
+                    parent: null,
+                    content: item.content,
+                    status: "active",
+                    childrenCount: 0,
+                    newTpl: true,
+                    createdAt: item.created_at,
+                    updatedAt: item.updated_at,
+                  };
+                });
+            }
+          }
+
           setActiveNumber(res.data.active);
           setCloseNumber(res.data.close);
           return {
             total: res.data.count,
             succcess: true,
-            data: items,
+            data: [...topicTpl, ...items],
           };
         }}
         bordered

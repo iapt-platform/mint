@@ -40,10 +40,10 @@ const DiscussionTopicChildrenWidget = ({
 }: IWidget) => {
   const intl = useIntl();
   const [data, setData] = useState<IComment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<ISentHistoryData[]>([]);
   const [items, setItems] = useState<IItem[]>();
-
+  console.log("topicId", topicId);
   useEffect(() => {
     if (loading === false) {
       const ele = document.getElementById(`answer-${focus}`);
@@ -129,20 +129,23 @@ const DiscussionTopicChildrenWidget = ({
   useEffect(() => {
     if (resType === "sentence" && resId) {
       let url = `/v2/sent_history?view=sentence&id=${resId}&order=created_at&dir=asc`;
-      get<ISentHistoryListResponse>(url).then((res) => {
-        if (res.ok) {
-          setHistory(res.data.rows);
-        }
-      });
+      setLoading(true);
+      get<ISentHistoryListResponse>(url)
+        .then((res) => {
+          if (res.ok) {
+            setHistory(res.data.rows);
+          }
+        })
+        .finally(() => setLoading(false));
     }
   }, [resId, resType]);
 
   useEffect(() => {
+    console.log("topicId", topicId);
     if (typeof topicId === "undefined") {
       return;
     }
     setLoading(true);
-
     get<ICommentListResponse>(`/v2/discussion?view=answer&id=${topicId}`)
       .then((json) => {
         if (json.ok) {
@@ -217,8 +220,11 @@ const DiscussionTopicChildrenWidget = ({
         />
       )}
       <DiscussionCreate
+        resId={resId}
+        resType={resType}
         contentType="markdown"
         parent={topicId}
+        topic={topic}
         onCreated={(e: IComment) => {
           const newData = JSON.parse(JSON.stringify(e));
           setData([...data, newData]);
