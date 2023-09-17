@@ -9,6 +9,7 @@ export interface IComment {
   id?: string; //id未提供为新建
   resId?: string;
   resType?: TResType;
+  tplId?: string;
   user: IUser;
   parent?: string | null;
   title?: string;
@@ -16,6 +17,7 @@ export interface IComment {
   status?: "active" | "close";
   children?: IComment[];
   childrenCount?: number;
+  newTpl?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

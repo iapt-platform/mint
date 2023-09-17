@@ -23,6 +23,7 @@ export interface IAnswerCount {
 const DiscussionBoxWidget = () => {
   const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [topicId, setTopicId] = useState<string>();
+  const [topic, setTopic] = useState<IComment>();
   const [answerCount, setAnswerCount] = useState<IAnswerCount>();
   const [currTopic, setCurrTopic] = useState<IComment>();
 
@@ -41,7 +42,13 @@ const DiscussionBoxWidget = () => {
 
   const showChildrenDrawer = (comment: IComment) => {
     setChildrenDrawer(true);
-    setTopicId(comment.id);
+    if (comment.id) {
+      setTopicId(comment.id);
+      setTopic(undefined);
+    } else {
+      setTopicId(undefined);
+      setTopic(comment);
+    }
   };
 
   return (
@@ -72,6 +79,7 @@ const DiscussionBoxWidget = () => {
           <DiscussionTopic
             resType={discussionMessage?.resType}
             topicId={topicId}
+            topic={topic}
             focus={discussionMessage?.comment}
             onItemCountChange={(count: number, parent: string) => {
               setAnswerCount({ id: parent, count: count });

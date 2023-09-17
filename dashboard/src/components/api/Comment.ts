@@ -10,6 +10,7 @@ export interface ICommentRequest {
   content?: string;
   content_type?: TContentType;
   parent?: string;
+  tpl_id?: string;
   status?: "active" | "close";
   editor?: IUserApiData;
   created_at?: string;
@@ -24,6 +25,7 @@ export interface ICommentApiData {
   content?: string;
   content_type?: TContentType;
   parent?: string;
+  tpl_id?: string;
   status?: "active" | "close";
   children_count?: number;
   editor: IUserApiData;

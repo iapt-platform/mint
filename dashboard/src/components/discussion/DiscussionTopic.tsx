@@ -8,6 +8,7 @@ import { TResType } from "./DiscussionListCard";
 interface IWidget {
   resType?: TResType;
   topicId?: string;
+  topic?: IComment;
   focus?: string;
   onItemCountChange?: Function;
   onTopicReady?: Function;
@@ -15,21 +16,23 @@ interface IWidget {
 const DiscussionTopicWidget = ({
   resType,
   topicId,
+  topic,
   focus,
   onTopicReady,
   onItemCountChange,
 }: IWidget) => {
   const [count, setCount] = useState<number>();
   const [currResId, setCurrResId] = useState<string>();
-  const [topic, setTopic] = useState<IComment>();
+  const [currTopic, setCurrTopic] = useState<IComment | undefined>(topic);
   return (
     <>
       <DiscussionTopicInfo
         topicId={topicId}
+        topic={topic}
         childrenCount={count}
         onReady={(value: IComment) => {
           setCurrResId(value.resId);
-          setTopic(value);
+          setCurrTopic(value);
           console.log("onReady", value);
           if (typeof onTopicReady !== "undefined") {
             onTopicReady(value);
@@ -37,8 +40,8 @@ const DiscussionTopicWidget = ({
         }}
       />
       <DiscussionTopicChildren
-        topic={topic}
-        resId={currResId}
+        topic={currTopic}
+        resId={currTopic?.resId}
         resType={resType}
         focus={focus}
         topicId={topicId}

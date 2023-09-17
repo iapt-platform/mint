@@ -7,6 +7,7 @@ import DiscussionItem, { IComment } from "./DiscussionItem";
 
 interface IWidget {
   topicId?: string;
+  topic?: IComment;
   childrenCount?: number;
   onDelete?: Function;
   onReply?: Function;
@@ -15,13 +16,14 @@ interface IWidget {
 }
 const DiscussionTopicInfoWidget = ({
   topicId,
+  topic,
   childrenCount,
   onReady,
   onDelete,
   onReply,
   onClose,
 }: IWidget) => {
-  const [data, setData] = useState<IComment>();
+  const [data, setData] = useState<IComment | undefined>(topic);
 
   useEffect(() => {
     setData((origin) => {
