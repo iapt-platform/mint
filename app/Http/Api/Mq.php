@@ -3,27 +3,35 @@ namespace App\Http\Api;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
+use Illuminate\Support\Facades\Log;
 
 class Mq{
     public static function publish(string $channelName, $message){
                 //一对一
-        $host = env("RABBITMQ_HOST");
-        $port = env("RABBITMQ_PORT");
-        $user = env("RABBITMQ_USER");
-        $password = env("RABBITMQ_PASSWORD");
-        $vhost = env("RABBITMQ_VIRTUAL_HOST");
-        if(empty($host) || empty($port) || empty($user) || empty($password) || empty($vhost)){
+
+        try{
+            $host = env("RABBITMQ_HOST");
+            $port = env("RABBITMQ_PORT");
+            $user = env("RABBITMQ_USER");
+            $password = env("RABBITMQ_PASSWORD");
+            $vhost = env("RABBITMQ_VIRTUAL_HOST");
+            if(empty($host) || empty($port) || empty($user) || empty($password) || empty($vhost)){
+                return;
+            }
+            $connection = new AMQPStreamConnection($host,$port,$user,$password,$vhost);
+            $channel = $connection->channel();
+            $channel->queue_declare($channelName, false, true, false, false);
+
+            $msg = new AMQPMessage(json_encode($message,JSON_UNESCAPED_UNICODE));
+            $channel->basic_publish($msg, '', $channelName);
+
+            $channel->close();
+            $connection->close();
+        }catch(\Exception $e){
+            Log::error($e);
             return;
         }
-		$connection = new AMQPStreamConnection($host,$port,$user,$password,$vhost);
-		$channel = $connection->channel();
-		$channel->queue_declare($channelName, false, true, false, false);
 
-		$msg = new AMQPMessage(json_encode($message,JSON_UNESCAPED_UNICODE));
-		$channel->basic_publish($msg, '', $channelName);
-
-		$channel->close();
-		$connection->close();
     }
 
     /**
