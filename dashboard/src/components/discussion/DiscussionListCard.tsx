@@ -152,7 +152,7 @@ const DiscussionListCardWidget = ({
 
           let topicTpl: IComment[] = [];
           if (activeKey !== "close") {
-            const urlTpl = `/v2/article?view=studio&name=${user?.realName}&subtitle=_setting_discussion_topic_&content=true`;
+            const urlTpl = `/v2/article?view=studio&name=${user?.realName}&subtitle=_template_discussion_topic_&content=true`;
             const resTpl = await get<IArticleListResponse>(urlTpl);
             if (resTpl.ok) {
               console.log("resTpl.data.rows", resTpl.data.rows);
