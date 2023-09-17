@@ -69,7 +69,7 @@ class DiscussionController extends Controller
         if(!empty($search)){
             $table->where('title', 'like', $search."%");
         }
-        $table->orderBy($request->get('order','updated_at'),$request->get('dir','desc'));
+        $table->orderBy($request->get('order','created_at'),$request->get('dir','desc'));
         $count = $table->count();
         $table->skip($request->get("offset",0))
               ->take($request->get('limit',1000));
@@ -163,6 +163,7 @@ class DiscussionController extends Controller
             $discussion->res_id = $request->get('res_id');
             $discussion->res_type = $request->get('res_type');
         }
+        $discussion->tpl_id = $request->get('tpl_id');
         $discussion->title = $request->get('title',null);
         $discussion->content = $request->get('content',null);
         $discussion->content_type = $request->get('content_type',"markdown");

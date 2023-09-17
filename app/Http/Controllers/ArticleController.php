@@ -122,9 +122,14 @@ class ArticleController extends Controller
     public function index(Request $request)
     {
         //
-        $table = Article::select(['uid','title','subtitle',
+        $field = ['uid','title','subtitle',
                                 'summary','owner','lang',
-                                'status','editor_id','updated_at','created_at']);
+                                'status','editor_id','updated_at','created_at'];
+        if($request->get('content')==="true"){
+            $field[] = 'content';
+            $field[] = 'content_type';
+        }
+        $table = Article::select($field);
         switch ($request->get('view')) {
             case 'studio':
 				# 获取studio内所有channel
@@ -180,8 +185,11 @@ class ArticleController extends Controller
                 break;
         }
         //处理搜索
-        if($request->has("search") && !empty($request->has("search"))){
+        if($request->has("search") && !empty($request->get("search"))){
             $table = $table->where('title', 'like', "%".$request->get("search")."%");
+        }
+        if($request->has("subtitle") && !empty($request->get("subtitle"))){
+            $table = $table->where('subtitle', 'like', $request->get("subtitle"));
         }
         //获取记录总条数
         $count = $table->count();
