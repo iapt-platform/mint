@@ -29,6 +29,7 @@ import { IDeleteResponse } from "../api/Article";
 import { fullUrl } from "../../utils";
 import { ICommentRequest, ICommentResponse } from "../api/Comment";
 import { useState } from "react";
+import MdView from "../template/MdView";
 
 const { Text } = Typography;
 
@@ -254,7 +255,7 @@ const DiscussionShowWidget = ({
       }
       style={{ width: "100%" }}
     >
-      <Marked text={data.content} />
+      {data.html ? <MdView html={data.html} /> : <Marked text={data.content} />}
     </Card>
   );
 };

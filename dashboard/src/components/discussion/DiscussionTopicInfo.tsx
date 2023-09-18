@@ -53,6 +53,7 @@ const DiscussionTopicInfoWidget = ({
             user: item.editor,
             title: item.title,
             content: item.content,
+            html: item.html,
             status: item.status,
             childrenCount: item.children_count,
             createdAt: item.created_at,
