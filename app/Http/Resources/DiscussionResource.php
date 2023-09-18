@@ -5,6 +5,9 @@ use App\Http\Api\UserApi;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Discussion;
+use App\Models\Sentence;
+use Illuminate\Support\Str;
+use App\Http\Api\MdRender;
 
 class DiscussionResource extends JsonResource
 {
@@ -16,6 +19,7 @@ class DiscussionResource extends JsonResource
      */
     public function toArray($request)
     {
+
         $data = [
             "id"=>$this->id,
             "title"=> $this->title,
@@ -31,6 +35,22 @@ class DiscussionResource extends JsonResource
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];
+        $channels = array();
+        switch ($this->res_type) {
+            case 'sentence':
+                $channelId = Sentence::where('uid',$this->res_id)->value('channel_uid');
+                if(Str::isUuid($channelId)){
+                    $channels[] = $channelId;
+                }
+                break;
+            default:
+                # code...
+                break;
+        }
+        if(count($channels)>0){
+            $data["html"] = MdRender::render($this->content,$channels,null,'read');
+        }
+
         return $data;
     }
 }
