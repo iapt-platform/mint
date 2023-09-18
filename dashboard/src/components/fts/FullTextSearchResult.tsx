@@ -146,7 +146,7 @@ const FullTxtSearchResultWidget = ({
             </div>
             <Title level={4} style={{ fontWeight: 500 }}>
               <Link
-                to={`/article/para/${item.book}-${item.paragraph}?book=${item.book}&par=${paragraph}`}
+                to={`/article/para/${item.book}-${item.paragraph}?book=${item.book}&par=${paragraph}&focus=${item.paragraph}`}
               >
                 {item.title}
               </Link>
