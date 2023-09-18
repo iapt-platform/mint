@@ -131,8 +131,12 @@ class ArticleController extends Controller
         }
         $table = Article::select($field);
         switch ($request->get('view')) {
+            case 'template':
+                $studioId = StudioApi::getIdByName($request->get('studio_name'));
+                $table = $table->where('owner', $studioId);
+                break;
             case 'studio':
-				# 获取studio内所有channel
+				# 获取studio内所有 article
                 $user = AuthApi::current($request);
                 if(!$user){
                     return $this->error(__('auth.failed'),[],401);
