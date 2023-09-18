@@ -124,21 +124,27 @@ const FullTxtSearchResultWidget = ({
       }}
       renderItem={(item) => (
         <List.Item>
-          <Title level={5}>
+          <div>
+            <Text>{item.path ? item.path[0].title : ""}</Text>
+          </div>
+          <div>
+            <Space style={{ color: "gray", fontSize: "80%" }}>
+              <TocPath data={item.path} style={{ fontSize: "80%" }} />
+              {"/"}
+              <Tag style={{ fontSize: "80%" }}>{item.paragraph}</Tag>
+            </Space>
+          </div>
+          <Title level={4} style={{ fontWeight: 500 }}>
             <Link
               to={`/article/para/${item.book}-${item.paragraph}?book=${item.book}&par=${item.paragraph}`}
             >
               {item.title}
             </Link>
           </Title>
-          <div>
+          <div style={{ display: "none" }}>
             <Text type="secondary">{item.paliTitle}</Text>
           </div>
-          <Space>
-            <TocPath data={item.path} />
-            {"/"}
-            <Tag>{item.paragraph}</Tag>
-          </Space>
+
           <div>
             <Marked className="search_content" text={item.content} />
           </div>
