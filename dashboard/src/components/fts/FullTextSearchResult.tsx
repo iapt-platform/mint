@@ -123,34 +123,44 @@ const FullTxtSearchResultWidget = ({
           return `结果: ${total}`;
         },
       }}
-      renderItem={(item) => (
-        <List.Item>
-          <div>
-            <PaliText text={item.path ? item.path[0].title : ""} />
-          </div>
-          <div>
-            <Space style={{ color: "gray", fontSize: "80%" }}>
-              <TocPath data={item.path?.slice(1)} style={{ fontSize: "80%" }} />
-              {"/"}
-              <Tag style={{ fontSize: "80%" }}>{item.paragraph}</Tag>
-            </Space>
-          </div>
-          <Title level={4} style={{ fontWeight: 500 }}>
-            <Link
-              to={`/article/para/${item.book}-${item.paragraph}?book=${item.book}&par=${item.paragraph}`}
-            >
-              {item.title}
-            </Link>
-          </Title>
-          <div style={{ display: "none" }}>
-            <Text type="secondary">{item.paliTitle}</Text>
-          </div>
+      renderItem={(item) => {
+        const paragraph = [
+          item.paragraph - 1,
+          item.paragraph,
+          item.paragraph + 1,
+        ];
+        return (
+          <List.Item>
+            <div>
+              <PaliText text={item.path ? item.path[0].title : ""} />
+            </div>
+            <div>
+              <Space style={{ color: "gray", fontSize: "80%" }}>
+                <TocPath
+                  data={item.path?.slice(1)}
+                  style={{ fontSize: "80%" }}
+                />
+                {"/"}
+                <Tag style={{ fontSize: "80%" }}>{item.paragraph}</Tag>
+              </Space>
+            </div>
+            <Title level={4} style={{ fontWeight: 500 }}>
+              <Link
+                to={`/article/para/${item.book}-${item.paragraph}?book=${item.book}&par=${paragraph}`}
+              >
+                {item.title}
+              </Link>
+            </Title>
+            <div style={{ display: "none" }}>
+              <Text type="secondary">{item.paliTitle}</Text>
+            </div>
 
-          <div>
-            <Marked className="search_content" text={item.content} />
-          </div>
-        </List.Item>
-      )}
+            <div>
+              <Marked className="search_content" text={item.content} />
+            </div>
+          </List.Item>
+        );
+      }}
     />
   );
 };
