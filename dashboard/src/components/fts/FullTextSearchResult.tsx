@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { get } from "../../request";
 import TocPath, { ITocPathNode } from "../corpus/TocPath";
 import Marked from "../general/Marked";
+import PaliText from "../template/Wbw/PaliText";
 import "./search.css";
 
 const { Title, Text } = Typography;
@@ -21,7 +22,7 @@ interface IFtsData {
 }
 interface IFtsResponse {
   ok: boolean;
-  string: string;
+  message: string;
   data: {
     rows: IFtsData[];
     count: number;
@@ -100,6 +101,8 @@ const FullTxtSearchResultWidget = ({
         });
         setFtsData(result);
         setTotal(json.data.count);
+      } else {
+        console.error(json.message);
       }
     });
   }, [bookId, currPage, keyWord, match, orderBy, pageType, tags, view]);
@@ -122,28 +125,44 @@ const FullTxtSearchResultWidget = ({
           return `结果: ${total}`;
         },
       }}
-      renderItem={(item) => (
-        <List.Item>
-          <Title level={5}>
-            <Link
-              to={`/article/para/${item.book}-${item.paragraph}?book=${item.book}&par=${item.paragraph}`}
-            >
-              {item.title}
-            </Link>
-          </Title>
-          <div>
-            <Text type="secondary">{item.paliTitle}</Text>
-          </div>
-          <Space>
-            <TocPath data={item.path} />
-            {"/"}
-            <Tag>{item.paragraph}</Tag>
-          </Space>
-          <div>
-            <Marked className="search_content" text={item.content} />
-          </div>
-        </List.Item>
-      )}
+      renderItem={(item) => {
+        const paragraph = [
+          item.paragraph - 1,
+          item.paragraph,
+          item.paragraph + 1,
+        ];
+        return (
+          <List.Item>
+            <div>
+              <PaliText text={item.path ? item.path[0].title : ""} />
+            </div>
+            <div>
+              <Space style={{ color: "gray", fontSize: "80%" }}>
+                <TocPath
+                  data={item.path?.slice(1)}
+                  style={{ fontSize: "80%" }}
+                />
+                {"/"}
+                <Tag style={{ fontSize: "80%" }}>{item.paragraph}</Tag>
+              </Space>
+            </div>
+            <Title level={4} style={{ fontWeight: 500 }}>
+              <Link
+                to={`/article/para/${item.book}-${item.paragraph}?book=${item.book}&par=${paragraph}&focus=${item.paragraph}`}
+              >
+                {item.title}
+              </Link>
+            </Title>
+            <div style={{ display: "none" }}>
+              <Text type="secondary">{item.paliTitle}</Text>
+            </div>
+
+            <div>
+              <Marked className="search_content" text={item.content} />
+            </div>
+          </List.Item>
+        );
+      }}
     />
   );
 };

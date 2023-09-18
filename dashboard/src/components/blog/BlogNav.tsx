@@ -1,8 +1,14 @@
 import { Link } from "react-router-dom";
 import { useIntl } from "react-intl";
-import { MailOutlined } from "@ant-design/icons";
+import { HomeOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu, Row, Col } from "antd";
+import {
+  AnthologyOutLinedIcon,
+  CourseOutLinedIcon,
+  TermOutlinedIcon,
+  TranslationOutLinedIcon,
+} from "../../assets/icon";
 
 interface IWidgetBlogNav {
   selectedKey: string;
@@ -21,7 +27,7 @@ const BlogNavWidget = ({ selectedKey, studio }: IWidgetBlogNav) => {
         </Link>
       ),
       key: "overview",
-      icon: <MailOutlined />,
+      icon: <HomeOutlined />,
     },
     {
       label: (
@@ -30,7 +36,7 @@ const BlogNavWidget = ({ selectedKey, studio }: IWidgetBlogNav) => {
         </Link>
       ),
       key: "palicanon",
-      icon: <MailOutlined />,
+      icon: <TranslationOutLinedIcon />,
     },
     {
       label: (
@@ -39,7 +45,7 @@ const BlogNavWidget = ({ selectedKey, studio }: IWidgetBlogNav) => {
         </Link>
       ),
       key: "course",
-      icon: <MailOutlined />,
+      icon: <CourseOutLinedIcon />,
     },
     {
       label: (
@@ -48,7 +54,7 @@ const BlogNavWidget = ({ selectedKey, studio }: IWidgetBlogNav) => {
         </Link>
       ),
       key: "anthology",
-      icon: <MailOutlined />,
+      icon: <AnthologyOutLinedIcon />,
     },
     {
       label: (
@@ -57,7 +63,7 @@ const BlogNavWidget = ({ selectedKey, studio }: IWidgetBlogNav) => {
         </Link>
       ),
       key: "term",
-      icon: <MailOutlined />,
+      icon: <TermOutlinedIcon />,
     },
   ];
   return (
