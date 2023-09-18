@@ -21,6 +21,7 @@ interface IWidgetTocPath {
   trigger?: React.ReactNode;
   link?: ELinkType;
   channel?: string[];
+  style?: React.CSSProperties;
   onChange?: Function;
 }
 const TocPathWidget = ({
@@ -28,13 +29,15 @@ const TocPathWidget = ({
   trigger,
   link = "self",
   channel,
+  style,
   onChange,
 }: IWidgetTocPath): JSX.Element => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-
   const fullPath = (
-    <Breadcrumb style={{ whiteSpace: "nowrap", width: "100%" }}>
+    <Breadcrumb
+      style={{ whiteSpace: "nowrap", width: "100%", fontSize: style?.fontSize }}
+    >
       {data.map((item, id) => {
         return (
           <Breadcrumb.Item
