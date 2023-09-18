@@ -13,7 +13,7 @@ import User from "../auth/User";
 import { IArticleListResponse } from "../api/Article";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
-import { TemplateOutlinedIcon } from "../../assets/icon";
+import { CommentOutlinedIcon, TemplateOutlinedIcon } from "../../assets/icon";
 import { ISentenceResponse } from "../api/Corpus";
 
 export type TResType = "article" | "channel" | "chapter" | "sentence" | "wbw";
@@ -104,7 +104,7 @@ const DiscussionListCardWidget = ({
             render: (text, row, index, action) => [
               row.childrenCount ? (
                 <Space key={index}>
-                  <CommentOutlined />
+                  <CommentOutlinedIcon />
                   {row.childrenCount}
                 </Space>
               ) : (

@@ -20,7 +20,11 @@ export interface IAnswerCount {
   count: number;
 }
 
-const DiscussionBoxWidget = () => {
+interface IWidget {
+  onTopicChange?: Function;
+}
+
+const DiscussionBoxWidget = ({ onTopicChange }: IWidget) => {
   const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [topicId, setTopicId] = useState<string>();
   const [topic, setTopic] = useState<IComment>();
@@ -98,6 +102,7 @@ const DiscussionBoxWidget = () => {
             comment: IComment
           ) => showChildrenDrawer(comment)}
           onReply={(comment: IComment) => showChildrenDrawer(comment)}
+          onReady={() => {}}
           changedAnswerCount={answerCount}
           onItemCountChange={(count: number) => {
             store.dispatch(

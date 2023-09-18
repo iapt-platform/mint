@@ -1,11 +1,11 @@
 import { Divider, Space, Tooltip, Typography } from "antd";
-import { CommentOutlined, LikeOutlined } from "@ant-design/icons";
+import { LikeOutlined } from "@ant-design/icons";
 import { ISentence } from "../SentEdit";
 import { useEffect, useState } from "react";
 import CommentBox from "../../discussion/DiscussionDrawer";
 import SuggestionBox from "./SuggestionBox";
 import PrAcceptButton from "./PrAcceptButton";
-import { HandOutlinedIcon } from "../../../assets/icon";
+import { CommentOutlinedIcon, HandOutlinedIcon } from "../../../assets/icon";
 import store from "../../../store";
 import { count, show } from "../../../reducers/discussion";
 import { useAppSelector } from "../../../hooks";
@@ -95,7 +95,7 @@ const SuggestionToolbarWidget = ({
                 store.dispatch(openPanel("discussion"));
               }}
             >
-              <CommentOutlined />
+              <CommentOutlinedIcon />
               {CommentCount}
             </Space>
           </Tooltip>
