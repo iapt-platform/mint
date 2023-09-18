@@ -290,7 +290,7 @@ class SearchController extends Controller
                 # code...
                 $book_id = BookTitle::where('book',$value['book'])
                                     ->where('paragraph',$value['paragraph'])
-                                    ->value('id');
+                                    ->value('sn');
                 if(!empty($book_id)){
                     $searchBookId[] = $book_id;
                 }
