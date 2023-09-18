@@ -331,6 +331,28 @@ const TemplateOutLined = () => (
     ></path>
   </svg>
 );
+
+const CommentOutLined = () => (
+  <svg
+    viewBox="0 0 1024 1024"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    p-id="4118"
+    width="1em"
+    height="1em"
+  >
+    <path
+      d="M901.12 173.056H136.192c-35.84 0-64.512 28.672-64.512 64.512v518.144c0 35.84 28.672 64.512 64.512 64.512h52.224v40.96c0 25.6 20.48 46.08 46.08 46.08h2.048c9.216 0 31.744-2.048 50.176-24.576l57.344-62.464H901.12c35.84 0 64.512-28.672 64.512-64.512V237.568c0-35.84-28.672-64.512-64.512-64.512z m7.168 582.656c0 4.096-3.072 7.168-7.168 7.168H331.776c-8.192 0-15.36 3.072-21.504 9.216L245.76 842.752v-51.2c0-15.36-13.312-28.672-28.672-28.672h-80.896c-4.096 0-7.168-3.072-7.168-7.168V237.568c0-4.096 3.072-7.168 7.168-7.168H901.12c4.096 0 7.168 3.072 7.168 7.168v518.144z"
+      fill="currentColor"
+      p-id="4119"
+    ></path>
+    <path
+      d="M238.592 375.808h243.712c14.336 0 26.624-12.288 26.624-26.624s-12.288-26.624-26.624-26.624H238.592c-14.336 0-26.624 12.288-26.624 26.624s12.288 26.624 26.624 26.624zM630.784 440.32H238.592c-14.336 0-26.624 12.288-26.624 26.624 0 14.336 12.288 26.624 26.624 26.624h392.192c14.336 0 26.624-12.288 26.624-26.624 0-14.336-11.264-26.624-26.624-26.624z"
+      fill="currentColor"
+      p-id="4120"
+    ></path>
+  </svg>
+);
 export const DictIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DictSvg} {...props} />
 );
@@ -396,3 +418,7 @@ export const ThemeOutlinedIcon = (props: Partial<CustomIconComponentProps>) => (
 export const TemplateOutlinedIcon = (
   props: Partial<CustomIconComponentProps>
 ) => <Icon component={TemplateOutLined} {...props} />;
+
+export const CommentOutlinedIcon = (
+  props: Partial<CustomIconComponentProps>
+) => <Icon component={CommentOutLined} {...props} />;
