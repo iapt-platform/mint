@@ -1,4 +1,4 @@
-import { List, Space, Tag, Typography } from "antd";
+import { List, Skeleton, Space, Tag, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -61,8 +61,8 @@ const FullTxtSearchResultWidget = ({
   pageType,
 }: IWidget) => {
   const [ftsData, setFtsData] = useState<IFtsItem[]>();
-
   const [total, setTotal] = useState<number>();
+  const [loading, setLoading] = useState(false);
   const [currPage, setCurrPage] = useState<number>(1);
 
   useEffect(() => {
@@ -85,29 +85,33 @@ const FullTxtSearchResultWidget = ({
     const offset = (currPage - 1) * 10;
     url += `&limit=10&offset=${offset}`;
     console.log("fetch url", url);
-    get<IFtsResponse>(url).then((json) => {
-      if (json.ok) {
-        const result: IFtsItem[] = json.data.rows.map((item) => {
-          return {
-            book: item.book,
-            paragraph: item.paragraph,
-            title: item.title ? item.title : item.paliTitle,
-            paliTitle: item.paliTitle,
-            content: item.highlight
-              ? item.highlight.replaceAll("** ti ", "**ti ")
-              : item.content,
-            path: item.path,
-          };
-        });
-        setFtsData(result);
-        setTotal(json.data.count);
-      } else {
-        console.error(json.message);
-      }
-    });
+    setLoading(true);
+    get<IFtsResponse>(url)
+      .then((json) => {
+        if (json.ok) {
+          const result: IFtsItem[] = json.data.rows.map((item) => {
+            return {
+              book: item.book,
+              paragraph: item.paragraph,
+              title: item.title ? item.title : item.paliTitle,
+              paliTitle: item.paliTitle,
+              content: item.highlight
+                ? item.highlight.replaceAll("** ti ", "**ti ")
+                : item.content,
+              path: item.path,
+            };
+          });
+          setFtsData(result);
+          setTotal(json.data.count);
+        } else {
+          console.error(json.message);
+        }
+      })
+      .finally(() => setLoading(false));
   }, [bookId, currPage, keyWord, match, orderBy, pageType, tags, view]);
   return (
     <List
+      style={{ width: "100%" }}
       itemLayout="vertical"
       size="small"
       dataSource={ftsData}
@@ -133,33 +137,41 @@ const FullTxtSearchResultWidget = ({
         ];
         return (
           <List.Item>
-            <div>
-              <PaliText text={item.path ? item.path[0].title : ""} />
-            </div>
-            <div>
-              <Space style={{ color: "gray", fontSize: "80%" }}>
-                <TocPath
-                  data={item.path?.slice(1)}
-                  style={{ fontSize: "80%" }}
-                />
-                {"/"}
-                <Tag style={{ fontSize: "80%" }}>{item.paragraph}</Tag>
-              </Space>
-            </div>
-            <Title level={4} style={{ fontWeight: 500 }}>
-              <Link
-                to={`/article/para/${item.book}-${item.paragraph}?book=${item.book}&par=${paragraph}&focus=${item.paragraph}`}
-              >
-                {item.title}
-              </Link>
-            </Title>
-            <div style={{ display: "none" }}>
-              <Text type="secondary">{item.paliTitle}</Text>
-            </div>
+            {loading ? (
+              <div style={{ width: "100%" }}>
+                <Skeleton active />
+              </div>
+            ) : (
+              <div>
+                <div>
+                  <PaliText text={item.path ? item.path[0].title : ""} />
+                </div>
+                <div>
+                  <Space style={{ color: "gray", fontSize: "80%" }}>
+                    <TocPath
+                      data={item.path?.slice(1)}
+                      style={{ fontSize: "80%" }}
+                    />
+                    {"/"}
+                    <Tag style={{ fontSize: "80%" }}>{item.paragraph}</Tag>
+                  </Space>
+                </div>
+                <Title level={4} style={{ fontWeight: 500 }}>
+                  <Link
+                    to={`/article/para/${item.book}-${item.paragraph}?book=${item.book}&par=${paragraph}&focus=${item.paragraph}`}
+                  >
+                    {item.title}
+                  </Link>
+                </Title>
+                <div style={{ display: "none" }}>
+                  <Text type="secondary">{item.paliTitle}</Text>
+                </div>
 
-            <div>
-              <Marked className="search_content" text={item.content} />
-            </div>
+                <div>
+                  <Marked className="search_content" text={item.content} />
+                </div>
+              </div>
+            )}
           </List.Item>
         );
       }}
