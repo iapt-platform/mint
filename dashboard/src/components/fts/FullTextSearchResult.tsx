@@ -22,7 +22,7 @@ interface IFtsData {
 }
 interface IFtsResponse {
   ok: boolean;
-  string: string;
+  message: string;
   data: {
     rows: IFtsData[];
     count: number;
@@ -101,6 +101,8 @@ const FullTxtSearchResultWidget = ({
         });
         setFtsData(result);
         setTotal(json.data.count);
+      } else {
+        console.error(json.message);
       }
     });
   }, [bookId, currPage, keyWord, match, orderBy, pageType, tags, view]);
