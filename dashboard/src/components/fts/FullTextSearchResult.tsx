@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { get } from "../../request";
 import TocPath, { ITocPathNode } from "../corpus/TocPath";
 import Marked from "../general/Marked";
+import PaliText from "../template/Wbw/PaliText";
 import "./search.css";
 
 const { Title, Text } = Typography;
@@ -125,11 +126,11 @@ const FullTxtSearchResultWidget = ({
       renderItem={(item) => (
         <List.Item>
           <div>
-            <Text>{item.path ? item.path[0].title : ""}</Text>
+            <PaliText text={item.path ? item.path[0].title : ""} />
           </div>
           <div>
             <Space style={{ color: "gray", fontSize: "80%" }}>
-              <TocPath data={item.path} style={{ fontSize: "80%" }} />
+              <TocPath data={item.path?.slice(1)} style={{ fontSize: "80%" }} />
               {"/"}
               <Tag style={{ fontSize: "80%" }}>{item.paragraph}</Tag>
             </Space>
