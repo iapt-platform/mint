@@ -3,7 +3,6 @@ import { Button, Popover, Space, Typography } from "antd";
 import {
   TagTwoTone,
   InfoCircleOutlined,
-  CommentOutlined,
   ApartmentOutlined,
   EditOutlined,
 } from "@ant-design/icons";
@@ -21,6 +20,7 @@ import { useAppSelector } from "../../../hooks";
 import { add, relationAddParam } from "../../../reducers/relation-add";
 import { ArticleMode } from "../../article/Article";
 import { anchor, showWbw } from "../../../reducers/wbw";
+import { CommentOutlinedIcon } from "../../../assets/icon";
 
 const { Paragraph } = Typography;
 interface IWidget {
@@ -277,7 +277,9 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
       <CommentBox
         resId={data.uid}
         resType="wbw"
-        trigger={<Button icon={<CommentOutlined />} type="text" title="讨论" />}
+        trigger={
+          <Button icon={<CommentOutlinedIcon />} type="text" title="讨论" />
+        }
         onCommentCountChange={(count: number) => {
           if (count > 0) {
             setHasComment(true);

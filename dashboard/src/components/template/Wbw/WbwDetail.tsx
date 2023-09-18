@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { Dropdown, Tabs, Divider, Button, Switch, Rate } from "antd";
-import { SaveOutlined, CommentOutlined } from "@ant-design/icons";
+import { SaveOutlined } from "@ant-design/icons";
 
 import { IWbw, IWbwField, TFieldName } from "./WbwWord";
 import WbwDetailBasic from "./WbwDetailBasic";
 import WbwDetailBookMark from "./WbwDetailBookMark";
 import WbwDetailNote from "./WbwDetailNote";
 import WbwDetailAdvance from "./WbwDetailAdvance";
-import { LockIcon, UnLockIcon } from "../../../assets/icon";
+import {
+  CommentOutlinedIcon,
+  LockIcon,
+  UnLockIcon,
+} from "../../../assets/icon";
 import { UploadFile } from "antd/es/upload/interface";
 import { IAttachmentResponse } from "../../api/Attachments";
 import WbwDetailAttachment from "./WbwDetailAttachment";
@@ -110,7 +114,7 @@ const WbwDetailWidget = ({
             <CommentBox
               resId={data.uid}
               resType="wbw"
-              trigger={<Button icon={<CommentOutlined />} type="text" />}
+              trigger={<Button icon={<CommentOutlinedIcon />} type="text" />}
               onCommentCountChange={(count: number) => {
                 if (typeof onCommentCountChange !== "undefined") {
                   onCommentCountChange(count);

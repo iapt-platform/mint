@@ -6,13 +6,16 @@ import {
   MoreOutlined,
   FieldTimeOutlined,
   LinkOutlined,
-  CommentOutlined,
   FileMarkdownOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { ISentence } from "../SentEdit";
 import SentHistoryModal from "../../corpus/SentHistoryModal";
-import { HandOutlinedIcon, JsonOutlinedIcon } from "../../../assets/icon";
+import {
+  CommentOutlinedIcon,
+  HandOutlinedIcon,
+  JsonOutlinedIcon,
+} from "../../../assets/icon";
 import { useIntl } from "react-intl";
 
 interface IWidget {
@@ -74,7 +77,7 @@ const SentEditMenuWidget = ({
     {
       key: "discussion",
       label: "discussion",
-      icon: <CommentOutlined />,
+      icon: <CommentOutlinedIcon />,
     },
     {
       type: "divider",

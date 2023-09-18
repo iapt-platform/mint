@@ -1,12 +1,12 @@
 import { useIntl } from "react-intl";
 import { useEffect, useState } from "react";
 import { Button, Tag, Tree } from "antd";
-import { CommentOutlined } from "@ant-design/icons";
 import { ReloadOutlined } from "@ant-design/icons";
 
 import ToolButton from "./ToolButton";
 import { post } from "../../request";
 import { IUser } from "../auth/User";
+import { CommentOutlinedIcon } from "../../assets/icon";
 
 interface IPrTreeData {
   book: number;
@@ -108,7 +108,7 @@ const ToolButtonDiscussionWidget = ({ type, articleId }: IWidget) => {
   return (
     <ToolButton
       title="讨论"
-      icon={<CommentOutlined />}
+      icon={<CommentOutlinedIcon />}
       content={
         <>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
