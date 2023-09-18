@@ -14,8 +14,7 @@ import { IArticleListResponse } from "../api/Article";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 import { TemplateOutlinedIcon } from "../../assets/icon";
-
-const { Link } = Typography;
+import { ISentenceResponse } from "../api/Corpus";
 
 export type TResType = "article" | "channel" | "chapter" | "sentence" | "wbw";
 
@@ -27,6 +26,7 @@ interface IWidget {
   onSelect?: Function;
   onItemCountChange?: Function;
   onReply?: Function;
+  onReady?: Function;
 }
 const DiscussionListCardWidget = ({
   resId,
@@ -36,6 +36,7 @@ const DiscussionListCardWidget = ({
   changedAnswerCount,
   onItemCountChange,
   onReply,
+  onReady,
 }: IWidget) => {
   const ref = useRef<ActionType>();
   const [activeKey, setActiveKey] = useState<React.Key | undefined>("active");
@@ -152,7 +153,17 @@ const DiscussionListCardWidget = ({
 
           let topicTpl: IComment[] = [];
           if (activeKey !== "close") {
-            const urlTpl = `/v2/article?view=studio&name=${user?.realName}&subtitle=_template_discussion_topic_&content=true`;
+            //获取channel模版
+            let studioName: string | undefined;
+            switch (resType) {
+              case "sentence":
+                const url = `/v2/sentence/${resId}`;
+                console.log("url", url);
+                const sentInfo = await get<ISentenceResponse>(url);
+                studioName = sentInfo.data.studio.realName;
+                break;
+            }
+            const urlTpl = `/v2/article?view=studio&name=${studioName}&subtitle=_template_discussion_topic_&content=true`;
             const resTpl = await get<IArticleListResponse>(urlTpl);
             if (resTpl.ok) {
               console.log("resTpl.data.rows", resTpl.data.rows);
@@ -172,6 +183,7 @@ const DiscussionListCardWidget = ({
                     title: item.title,
                     parent: null,
                     content: item.content,
+                    html: item.html,
                     status: "active",
                     childrenCount: 0,
                     newTpl: true,
@@ -184,6 +196,9 @@ const DiscussionListCardWidget = ({
 
           setActiveNumber(res.data.active);
           setCloseNumber(res.data.close);
+          if (typeof onReady !== "undefined") {
+            onReady();
+          }
           return {
             total: res.data.count,
             succcess: true,
