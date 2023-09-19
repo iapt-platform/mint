@@ -11,6 +11,7 @@ use App\Models\PaliText;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\SearchResource;
+use App\Http\Resources\SearchTitleResource;
 use App\Http\Resources\SearchBookResource;
 use Illuminate\Support\Facades\Log;
 use App\Tools\Tools;
@@ -37,6 +38,31 @@ class SearchController extends Controller
                 break;
             case 'page':
                 return $this->page($request);
+                break;
+            case 'title':
+                $key = strtolower($request->get('key'));
+                $table = PaliText::where('level','<',8)
+                                 ->where(function ($query) use($key){
+                                     $query->where('title_en','like',"%{$key}%")
+                                         ->orWhere('title','like',"%{$key}%");
+                                 });
+                Log::info($table->toSql());
+                if($request->has('tags')){
+                    //查询搜索范围
+                    $tagItems = explode(';',$request->get('tags'));
+                    $bookId = [];
+                    foreach ($tagItems as $tagItem) {
+                        # code...
+                        $bookId = array_merge($bookId,$this->getBookIdByTags(explode(',',$tagItem)));
+                    }
+                    $table = $table->whereIn('pcd_book_id',$bookId);
+                }
+                $count = $table->count();
+                $table = $table->orderBy($request->get('orderby','book'),$request->get('dir','asc'));
+                $table = $table->skip($request->get("offset",0))
+                               ->take($request->get('limit',10));
+                $result = $table->get();
+                return $this->ok(["rows"=>SearchTitleResource::collection($result),"count"=>$count]);
                 break;
             default:
                 # code...
@@ -214,12 +240,18 @@ class SearchController extends Controller
                     $result = DB::select($query, $queryWhere['param']);
                 }
                 break;
-            case 'page';
+            case 'page':
                 $type = $request->get('type','P');
                 $word = "{$type}%0{$key}";
                 $queryWhere = "type='.ctl.' AND word like ?";
                 $query = "SELECT pcd_book_id, count(*) as co FROM wbw_templates WHERE {$queryWhere} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
                 $result = DB::select($query, [$word]);
+                break;
+            case 'title':
+                $keyLike = '%'.$key.'%';
+                $queryWhere = "\"level\" < 8 and (\"title_en\"::text like ? or \"title\"::text like ?)";
+                $query = "SELECT pcd_book_id, count(*) as co FROM pali_texts WHERE {$queryWhere} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
+                $result = DB::select($query, [$keyLike,$keyLike]);
                 break;
             default:
                 # code...
