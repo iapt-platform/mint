@@ -64,6 +64,7 @@ use App\Http\Controllers\ChapterIOController;
 use App\Http\Controllers\SentenceIOController;
 use App\Http\Controllers\WebHookController;
 use App\Http\Controllers\DictStatisticController;
+use App\Http\Controllers\SearchTitleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -180,6 +181,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('sentence-io',SentenceIOController::class);
     Route::apiResource('webhook',WebHookController::class);
     Route::apiResource('dict-statistic',DictStatisticController::class);
+    Route::apiResource('search-title-index',SearchTitleController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");

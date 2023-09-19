@@ -177,6 +177,10 @@ class UpgradePaliText extends Command
                     'parent' => $parent,
                     'chapter_strlen'=> $iChapter_strlen,
                 ];
+                if((int)$arrInserString[$iPar][3] < 8){
+                    $newData['title'] = strtolower($arrInserString[$iPar][6]);
+                    $newData['title_en'] = \App\Tools\Tools::getWordEn($newData['title']);
+                }
 
                 $path = [];
 
@@ -200,10 +204,14 @@ class UpgradePaliText extends Command
                 }
                 if(count($path)>0){
                     //插入书名
-                    $bookTitle = BookTitle::where('book',$book)
+                    $pcd_book = BookTitle::where('book',$book)
                                         ->where('paragraph',end($path)['paragraph'])
-                                        ->value('title');
-                    $path[] = ["book"=>0,"paragraph"=>0,"title"=>$bookTitle,"level"=>0];
+                                        ->first();
+                    $path[] = ["book"=>0,"paragraph"=>0,"title"=>$pcd_book->title,"level"=>0];
+                    $book_id = $pcd_book->sn;
+                    if(!empty($book_id)){
+                        $newData['pcd_book_id'] = $book_id;
+                    }
                 }
 
                 # 将路径反向
