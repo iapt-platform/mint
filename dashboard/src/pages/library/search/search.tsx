@@ -59,6 +59,7 @@ const Widget = () => {
                     width={"500px"}
                     value={key}
                     searchPage={searchPage}
+                    view={view}
                     tags={searchParams.get("tags")?.split(",")}
                     onSearch={(value: string) => {
                       navigate(`/search/key/${value}`);

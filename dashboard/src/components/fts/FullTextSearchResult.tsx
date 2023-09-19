@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import { get } from "../../request";
 import TocPath, { ITocPathNode } from "../corpus/TocPath";
+import { TContentType } from "../discussion/DiscussionCreate";
 import Marked from "../general/Marked";
 import PaliText from "../template/Wbw/PaliText";
 import "./search.css";
@@ -16,6 +17,7 @@ interface IFtsData {
   book: number;
   paragraph: number;
   content?: string;
+  content_type?: TContentType;
   title?: string;
   paliTitle?: string;
   path?: ITocPathNode[];
