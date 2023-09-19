@@ -33,6 +33,7 @@ interface IWidget {
   size?: SizeType;
   width?: string | number;
   searchPage?: boolean;
+  view?: string;
   onSearch?: Function;
   onSplit?: Function;
   onPageTypeChange?: Function;
@@ -44,6 +45,7 @@ const FullSearchInputWidget = ({
   size = "middle",
   width,
   onSearch,
+  view = "pali",
   searchPage = false,
   onPageTypeChange,
 }: IWidget) => {
@@ -71,10 +73,18 @@ const FullSearchInputWidget = ({
     if (value === "") {
       return;
     }
-
-    get<IWordIndexListResponse>(
-      `/v2/pali-word-index?view=key&key=${value}`
-    ).then((json) => {
+    let url: string = "";
+    switch (view) {
+      case "pali":
+        url = `/v2/pali-word-index?view=key&key=${value}`;
+        break;
+      case "title":
+        url = `/v2/search-title-index?&key=${value}`;
+        break;
+      default:
+        break;
+    }
+    get<IWordIndexListResponse>(url).then((json) => {
       const words: ValueType[] = json.data.rows.map((item) => {
         return renderItem(item.word, item.count, item.bold);
       });
