@@ -132,11 +132,12 @@ const FullTxtSearchResultWidget = ({
         },
       }}
       renderItem={(item) => {
-        const paragraph = [
-          item.paragraph - 1,
-          item.paragraph,
-          item.paragraph + 1,
-        ];
+        let paragraph: number[];
+        if (view === "title") {
+          paragraph = [item.paragraph, item.paragraph + 1, item.paragraph + 2];
+        } else {
+          paragraph = [item.paragraph - 1, item.paragraph, item.paragraph + 1];
+        }
         return (
           <List.Item>
             {loading ? (

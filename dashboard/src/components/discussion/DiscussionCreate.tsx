@@ -11,10 +11,14 @@ import "react-quill/dist/quill.snow.css";
 
 import { IComment } from "./DiscussionItem";
 import { post } from "../../request";
-import { ICommentRequest, ICommentResponse } from "../api/Comment";
+import {
+  ICommentApiData,
+  ICommentRequest,
+  ICommentResponse,
+} from "../api/Comment";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 
 export type TContentType = "text" | "markdown" | "html" | "json";
@@ -24,8 +28,9 @@ interface IWidget {
   resType?: string;
   parent?: string;
   topic?: IComment;
-  onCreated?: Function;
   contentType?: TContentType;
+  onCreated?: Function;
+  onTopicCreated?: Function;
 }
 const DiscussionCreateWidget = ({
   resId,
@@ -34,10 +39,27 @@ const DiscussionCreateWidget = ({
   parent,
   topic,
   onCreated,
+  onTopicCreated,
 }: IWidget) => {
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
   const _currUser = useAppSelector(_currentUser);
+  const [currParent, setCurrParent] = useState(parent);
+
+  const toIComment = (value: ICommentApiData): IComment => {
+    return {
+      id: value.id,
+      resId: value.res_id,
+      resType: value.res_type,
+      user: value.editor,
+      title: value.title,
+      parent: value.parent,
+      tplId: value.tpl_id,
+      content: value.content,
+      createdAt: value.created_at,
+      updatedAt: value.updated_at,
+    };
+  };
 
   if (typeof _currUser === "undefined") {
     return <></>;
@@ -50,34 +72,38 @@ const DiscussionCreateWidget = ({
             formRef={formRef}
             onFinish={async (values) => {
               //新建
-              console.log("create", resId, resType, parent);
+              console.log("create", resId, resType, currParent, topic);
               console.log("value", values);
-              if (typeof parent === "undefined") {
+              let newParent: string | undefined;
+              if (typeof currParent === "undefined") {
                 if (typeof topic !== "undefined" && topic.tplId) {
-                  const newTopic = await post<
-                    ICommentRequest,
-                    ICommentResponse
-                  >(`/v2/discussion`, {
+                  const topicData: ICommentRequest = {
                     res_id: resId,
                     res_type: resType,
                     title: topic.title,
                     tpl_id: topic.tplId,
                     content: topic.content,
                     content_type: "markdown",
-                  });
+                  };
+                  console.log("create topic", topicData);
+                  const newTopic = await post<
+                    ICommentRequest,
+                    ICommentResponse
+                  >(`/v2/discussion`, topicData);
                   if (newTopic.ok) {
-                    parent = newTopic.data.id;
+                    setCurrParent(newTopic.data.id);
+                    newParent = newTopic.data.id;
                   } else {
                     console.error("no parent id");
                     return;
                   }
                 }
               }
-              console.log("parent", parent);
+              console.log("parent", currParent);
               post<ICommentRequest, ICommentResponse>(`/v2/discussion`, {
                 res_id: resId,
                 res_type: resType,
-                parent: parent,
+                parent: newParent ? newParent : currParent,
                 title: values.title,
                 content: values.content,
                 content_type: contentType,
@@ -87,30 +113,7 @@ const DiscussionCreateWidget = ({
                   if (json.ok) {
                     formRef.current?.resetFields();
                     if (typeof onCreated !== "undefined") {
-                      onCreated({
-                        id: json.data.id,
-                        resId: json.data.res_id,
-                        resType: json.data.res_type,
-                        user: {
-                          id: json.data.editor?.id
-                            ? json.data.editor.id
-                            : "null",
-                          nickName: json.data.editor?.nickName
-                            ? json.data.editor.nickName
-                            : "null",
-                          realName: json.data.editor?.userName
-                            ? json.data.editor.userName
-                            : "null",
-                          avatar: json.data.editor?.avatar
-                            ? json.data.editor.avatar
-                            : "null",
-                        },
-                        title: json.data.title,
-                        parent: json.data.parent,
-                        content: json.data.content,
-                        createdAt: json.data.created_at,
-                        updatedAt: json.data.updated_at,
-                      });
+                      onCreated(toIComment(json.data));
                     }
                   } else {
                     message.error(json.message);
@@ -127,7 +130,7 @@ const DiscussionCreateWidget = ({
                 name="title"
                 width={"lg"}
                 hidden={
-                  typeof parent !== "undefined" ||
+                  typeof currParent !== "undefined" ||
                   typeof topic?.tplId !== "undefined"
                 }
                 label={intl.formatMessage({ id: "forms.fields.title.label" })}
@@ -135,7 +138,9 @@ const DiscussionCreateWidget = ({
                 placeholder={intl.formatMessage({
                   id: "forms.message.question.required",
                 })}
-                rules={[{ required: parent || topic?.tplId ? false : true }]}
+                rules={[
+                  { required: currParent || topic?.tplId ? false : true },
+                ]}
               />
             </ProForm.Group>
             <ProForm.Group>
@@ -183,12 +188,12 @@ const DiscussionCreateWidget = ({
                   rules={[
                     {
                       required:
-                        typeof parent !== "undefined" ||
+                        typeof currParent !== "undefined" ||
                         typeof topic?.tplId !== "undefined",
                     },
                   ]}
                   label={
-                    typeof parent === "undefined" &&
+                    typeof currParent === "undefined" &&
                     typeof topic?.tplId === "undefined"
                       ? intl.formatMessage({
                           id: "forms.message.question.description.option",
@@ -201,7 +206,7 @@ const DiscussionCreateWidget = ({
                   <MDEditor
                     placeholder={
                       "问题的详细描述" +
-                      (typeof parent !== "undefined" &&
+                      (typeof currParent !== "undefined" &&
                       typeof topic?.tplId !== "undefined"
                         ? ""
                         : "（选填）")
