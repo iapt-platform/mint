@@ -1,7 +1,6 @@
 import { IUser } from "../auth/User";
 import { TContentType } from "../discussion/DiscussionCreate";
 import { TResType } from "../discussion/DiscussionListCard";
-import { IUserApiData } from "./Auth";
 
 export interface ICommentRequest {
   id?: string;
@@ -13,7 +12,7 @@ export interface ICommentRequest {
   parent?: string;
   tpl_id?: string;
   status?: "active" | "close";
-  editor?: IUserApiData;
+  editor?: IUser;
   created_at?: string;
   updated_at?: string;
 }
