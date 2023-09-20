@@ -45,6 +45,7 @@ import {
 } from "../../../reducers/discussion";
 import { openPanel } from "../../../reducers/right-panel";
 import { TResType } from "../../../components/discussion/DiscussionListCard";
+import { modeChange } from "../../../reducers/article-mode";
 
 /**
  * type:
@@ -121,6 +122,13 @@ const Widget = () => {
   } else {
     currMode = "read";
   }
+
+  useEffect(() => {
+    //发布mode变更
+    console.log("发布mode变更", currMode);
+    store.dispatch(modeChange(currMode as ArticleMode));
+  }, [currMode]);
+
   console.log(anchorNavOpen, anchorNavShow);
   const scrollToTop = () => {
     document.getElementById("article-root")?.scrollIntoView();

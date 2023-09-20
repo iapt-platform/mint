@@ -14,8 +14,6 @@ import "./article.css";
 import TocTree from "./TocTree";
 import PaliText from "../template/Wbw/PaliText";
 import ArticleSkeleton from "./ArticleSkeleton";
-
-import { modeChange } from "../../reducers/article-mode";
 import { IViewRequest, IViewStoreResponse } from "../api/view";
 import {
   IRecentRequest,
@@ -130,12 +128,6 @@ const ArticleWidget = ({
       }
     }
   }, [articleId, type]);
-
-  useEffect(() => {
-    //发布mode变更
-    console.log("发布mode变更", mode);
-    store.dispatch(modeChange(mode as ArticleMode));
-  }, [mode]);
 
   const srcDataMode = mode === "edit" || mode === "wbw" ? "edit" : "read";
   useEffect(() => {
