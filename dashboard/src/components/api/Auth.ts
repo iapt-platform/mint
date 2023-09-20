@@ -1,3 +1,5 @@
+import { IUser } from "../auth/User";
+
 export type TRole =
   | "owner"
   | "manager"
@@ -14,17 +16,12 @@ export interface IUserRequest {
   nickName?: string;
   avatar?: string;
 }
-export interface IUserApiData {
-  id: string;
-  userName: string;
-  nickName: string;
-  avatar?: string;
-}
+
 export interface IUserListResponse {
   ok: boolean;
   message: string;
   data: {
-    rows: IUserApiData[];
+    rows: IUser[];
     count: number;
   };
 }
