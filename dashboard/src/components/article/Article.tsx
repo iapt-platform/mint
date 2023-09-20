@@ -133,8 +133,8 @@ const ArticleWidget = ({
 
   useEffect(() => {
     //发布mode变更
-    console.log("发布mode变更", mode);
-    store.dispatch(modeChange(mode as ArticleMode));
+    //console.log("发布mode变更", mode);
+    //store.dispatch(modeChange(mode as ArticleMode));
   }, [mode]);
 
   const srcDataMode = mode === "edit" || mode === "wbw" ? "edit" : "read";
