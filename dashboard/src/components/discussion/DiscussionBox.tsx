@@ -91,6 +91,9 @@ const DiscussionBoxWidget = ({ onTopicChange }: IWidget) => {
             onTopicReady={(value: IComment) => {
               setCurrTopic(value);
             }}
+            onTopicDelete={() => {
+              setChildrenDrawer(false);
+            }}
           />
         </div>
       ) : (

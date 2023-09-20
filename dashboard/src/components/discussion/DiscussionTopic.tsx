@@ -12,6 +12,7 @@ interface IWidget {
   focus?: string;
   onItemCountChange?: Function;
   onTopicReady?: Function;
+  onTopicDelete?: Function;
 }
 const DiscussionTopicWidget = ({
   resType,
@@ -20,6 +21,7 @@ const DiscussionTopicWidget = ({
   focus,
   onTopicReady,
   onItemCountChange,
+  onTopicDelete,
 }: IWidget) => {
   const [count, setCount] = useState<number>();
   const [currResId, setCurrResId] = useState<string>();
@@ -36,6 +38,11 @@ const DiscussionTopicWidget = ({
           console.log("onReady", value);
           if (typeof onTopicReady !== "undefined") {
             onTopicReady(value);
+          }
+        }}
+        onDelete={() => {
+          if (typeof onTopicDelete !== "undefined") {
+            onTopicDelete();
           }
         }}
       />
