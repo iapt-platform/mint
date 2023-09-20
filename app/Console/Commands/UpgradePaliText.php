@@ -207,6 +207,9 @@ class UpgradePaliText extends Command
                     $pcd_book = BookTitle::where('book',$book)
                                         ->where('paragraph',end($path)['paragraph'])
                                         ->first();
+                    if(empty($pcd_book)){
+                        Log::error('no pcd book'.end($path)['paragraph']);
+                    }
                     $path[] = ["book"=>0,"paragraph"=>0,"title"=>$pcd_book->title,"level"=>0];
                     $book_id = $pcd_book->sn;
                     if(!empty($book_id)){
