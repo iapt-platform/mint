@@ -101,6 +101,23 @@ class CaseMan
                         $newWord[$word] = false;
                     }
                 }
+                //尝试sandhi
+                //TODO 加两个sandhi
+                foreach ($case->union as $sandhi) {
+                    $sandhiLen = strlen($sandhi[0]);
+                    $sandhiEnd = mb_substr($word, 0 - $sandhiLen, null, "UTF-8");
+                    if ($sandhiEnd === $sandhi[0]) {
+                        $sandhiWord = mb_substr($word, 0, mb_strlen($word, "UTF-8") - $sandhiLen, "UTF-8") . $sandhi[1];
+                        if(!isset($newWord[$sandhiWord])){
+                            $count = WordIndex::where('word',$sandhiWord)->select(['count','bold'])->first();
+                            if($count){
+                                $newWord[$sandhiWord] = ["count"=>$count->count,"bold"=>$count->bold];
+                            }else{
+                                $newWord[$sandhiWord] = false;
+                            }
+                        }
+                    }
+                }
             }
         }
         $result = [];
