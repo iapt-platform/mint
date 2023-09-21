@@ -3216,7 +3216,11 @@ class CaseEnding{
 		["ū","upi"],
 		["u","upi"],
 		["ṃ","mpi"],
+		["a","eva"],
+		["e","eva"],
+		["i","yeva"],
 		["o","ova"],
-		["e","eva"]
+		["u","veva"],
+		["ṃ","meva"],
 	];
 }
