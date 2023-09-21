@@ -90,11 +90,16 @@ export interface IUserDictDeleteRequest {
   id: string;
 }
 
+export interface ICaseItem {
+  word: string;
+  case: ICaseListData[];
+  count: number;
+}
 export interface ICaseListResponse {
   ok: boolean;
   message: string;
   data: {
-    rows: ICaseListData[];
+    rows: ICaseItem[];
     count: number;
   };
 }
