@@ -6,6 +6,7 @@ import BookTree from "../../../components/corpus/BookTree";
 import FullTextSearchResult from "../../../components/fts/FullTextSearchResult";
 import FtsBookList from "../../../components/fts/FtsBookList";
 import FtsSetting from "../../../components/fts/FtsSetting";
+import CaseList from "../../../components/dict/CaseList";
 
 const Widget = () => {
   const { key } = useParams();
@@ -133,6 +134,7 @@ const Widget = () => {
               </Space>
             </Col>
             <Col xs={0} sm={0} md={5}>
+              <CaseList word={key} lines={5} />
               <FtsBookList
                 view={view}
                 keyWord={key}

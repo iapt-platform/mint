@@ -1,4 +1,4 @@
-import { List, Tag, Typography } from "antd";
+import { Button, List, Tag, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { get } from "../../request";
 import { ICaseListResponse } from "../api/Dict";
@@ -11,28 +11,40 @@ export interface ICaseListData {
 }
 interface IWidget {
   word?: string;
+  lines?: number;
 }
-const CaseListWidget = ({ word }: IWidget) => {
+const CaseListWidget = ({ word, lines }: IWidget) => {
   const [caseData, setCaseData] = useState<ICaseListData[]>();
+  const [first, setFirst] = useState<string>();
   const [count, setCount] = useState<number>();
+  const [showAll, setShowAll] = useState(lines ? false : true);
   useEffect(() => {
     if (typeof word === "undefined") {
       return;
     }
     get<ICaseListResponse>(`/v2/case/${word}`).then((json) => {
       console.log("case", json);
-      if (json.ok) {
-        setCaseData(json.data.rows.sort((a, b) => b.count - a.count));
-        setCount(json.data.count);
+      if (json.ok && json.data.rows.length > 0) {
+        const first = json.data.rows.sort((a, b) => b.count - a.count)[0];
+        setCaseData(first.case.sort((a, b) => b.count - a.count));
+        setCount(first.count);
+        setFirst(first.word);
       }
     });
   }, [word]);
   return (
     <div style={{ padding: 4 }}>
       <List
-        header={`单词数：${count}`}
+        header={`${first}：${count}`}
+        footer={
+          lines ? (
+            <Button type="link" onClick={() => setShowAll(!showAll)}>
+              {showAll ? "折叠" : "展开"}
+            </Button>
+          ) : undefined
+        }
         size="small"
-        dataSource={caseData}
+        dataSource={showAll ? caseData : caseData?.slice(0, lines)}
         renderItem={(item) => (
           <List.Item>
             <div

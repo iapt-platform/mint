@@ -12,22 +12,20 @@ const ToStudioWidget = () => {
 
   if (typeof user !== "undefined") {
     return (
-      <>
-        <Link to={`/studio/${user.realName}/home`}>
-          <Button
-            type="primary"
-            style={{
-              paddingLeft: 18,
-              paddingRight: 18,
-              backgroundColor: "#52974e",
-            }}
-          >
-            {intl.formatMessage({
-              id: "columns.studio.title",
-            })}
-          </Button>
+      <Button
+        type="primary"
+        style={{
+          paddingLeft: 18,
+          paddingRight: 18,
+          backgroundColor: "#52974e",
+        }}
+      >
+        <Link to={`/studio/${user.realName}/home`} target="_blank">
+          {intl.formatMessage({
+            id: "columns.studio.title",
+          })}
         </Link>
-      </>
+      </Button>
     );
   } else {
     return <></>;
