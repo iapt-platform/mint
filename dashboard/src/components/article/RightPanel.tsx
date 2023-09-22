@@ -15,6 +15,7 @@ import { show } from "../../reducers/discussion";
 import { useIntl } from "react-intl";
 
 export type TPanelName = "dict" | "channel" | "discussion" | "close" | "open";
+
 interface IWidget {
   curr?: TPanelName;
   type: ArticleType;
@@ -41,6 +42,12 @@ const RightPanelWidget = ({
   const divMinWidth = 400;
   const divMaxWidth = 700;
   const [divWidth, setDivWidth] = useState(divMinWidth);
+
+  const tabInnerStyle: React.CSSProperties = {
+    width: "100%",
+    height: `calc(100vh - 96px)`,
+    overflowY: "scroll",
+  };
 
   useEffect(() => {
     console.log("panel", _openPanel);
@@ -84,9 +91,10 @@ const RightPanelWidget = ({
         style={{
           width: divWidth,
           height: `calc(100vh - 44px)`,
-          overflowY: "scroll",
+          overflowY: "hidden",
           display: open ? "block" : "none",
           paddingLeft: 8,
+          paddingTop: 8,
         }}
       >
         <Tabs
@@ -136,7 +144,11 @@ const RightPanelWidget = ({
                 id: "columns.library.dict.title",
               }),
               key: "dict",
-              children: <DictComponent />,
+              children: (
+                <div style={tabInnerStyle}>
+                  <DictComponent />
+                </div>
+              ),
             },
             {
               label: intl.formatMessage({
@@ -144,17 +156,19 @@ const RightPanelWidget = ({
               }),
               key: "channel",
               children: (
-                <ChannelPickerTable
-                  type={type}
-                  articleId={articleId}
-                  selectedKeys={selectedChannelsId}
-                  onSelect={(e: IChannel[]) => {
-                    console.log(e);
-                    if (typeof onChannelSelect !== "undefined") {
-                      onChannelSelect(e);
-                    }
-                  }}
-                />
+                <div style={tabInnerStyle}>
+                  <ChannelPickerTable
+                    type={type}
+                    articleId={articleId}
+                    selectedKeys={selectedChannelsId}
+                    onSelect={(e: IChannel[]) => {
+                      console.log(e);
+                      if (typeof onChannelSelect !== "undefined") {
+                        onChannelSelect(e);
+                      }
+                    }}
+                  />
+                </div>
               ),
             },
             {
@@ -162,7 +176,11 @@ const RightPanelWidget = ({
                 id: "buttons.discussion",
               }),
               key: "discussion",
-              children: <DiscussionBox />,
+              children: (
+                <div style={tabInnerStyle}>
+                  <DiscussionBox />
+                </div>
+              ),
             },
           ]}
         />
