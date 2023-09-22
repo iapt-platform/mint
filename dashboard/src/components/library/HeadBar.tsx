@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
-import { Button, Layout, Space } from "antd";
+import { Layout, Space } from "antd";
 import { FormattedMessage } from "react-intl";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
 
 import img_banner from "../../assets/library/images/wikipali_logo_library.svg";
 import UiLangSelect from "../general/UiLangSelect";
 import SignInAvatar from "../auth/SignInAvatar";
 import ToStudio from "../auth/ToStudio";
 import ThemeSelect from "../general/ThemeSelect";
+import SearchButton from "../general/SearchButton";
 
 const { Header } = Layout;
 
@@ -153,22 +153,14 @@ const HeadBarWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
             items={mainMenuItems}
           />
         </div>
-        <div>
-          <Space>
-            <Link to="/download/download">下载</Link>
-            <Link to="/search/home">
-              <Button
-                style={{ color: "white" }}
-                icon={<SearchOutlined />}
-                type="text"
-              />
-            </Link>
-            <ToStudio />
-            <SignInAvatar />
-            <UiLangSelect />
-            <ThemeSelect />
-          </Space>
-        </div>
+        <Space>
+          <Link to="/download/download">下载</Link>
+          <SearchButton />
+          <ToStudio />
+          <SignInAvatar />
+          <UiLangSelect />
+          <ThemeSelect />
+        </Space>
       </div>
     </Header>
   );
