@@ -56,25 +56,89 @@ class CaseMan
             if ($wordEnd === $ending[0]) {
                 //匹配成功
                 $word = mb_substr($base, 0, mb_strlen($base, "UTF-8") - $endingLen, "UTF-8") . $ending[1];
+
+                //尝试sandhi
+                //TODO 加两个sandhi
+                $hasSandhi = false;
+                foreach ($case->union as $sandhi) {
+                    $sandhiLen = strlen($sandhi[0]);
+                    $sandhiEnd = mb_substr($word, 0 - $sandhiLen, null, "UTF-8");
+                    if ($sandhiEnd === $sandhi[0]) {
+                        $sandhiWord = mb_substr($word, 0, mb_strlen($word, "UTF-8") - $sandhiLen, "UTF-8") . $sandhi[1];
+                        $count = WordIndex::where('word',$sandhiWord)->select(['count','bold'])->first();
+                        if($count){
+                            $hasSandhi = true;
+                            $newWord[] = ['word'=>$sandhiWord,
+                            'ending'=>$ending[1],
+                            'grammar'=>'.un.',
+                            'factors'=>"{$word}+{$sandhi[2]}",
+                            'count'=>$count->count,
+                            'bold'=>$count->bold
+                            ];
+                        }
+                    }
+                }
                 $count = WordIndex::where('word',$word)->select(['count','bold'])->first();
-                if($count){
+                if($count || $hasSandhi){
                     $newWord[] = ['word'=>$word,
-                                       'ending'=>$ending[1],
-                                       'grammar'=>$ending[3],
-                                       'count'=>$count->count,
-                                       'bold'=>$count->bold
-                                      ];
+                                  'ending'=>$ending[1],
+                                  'grammar'=>$ending[3],
+                                  'factors'=>"{$base}+[{$ending[1]}]",
+                                  'count'=>$count?$count->count:0,
+                                  'bold'=>$count?$count->bold:0
+                                ];
                 }
             }
         }
-        /*
-        $result = [];
-        foreach ($newWord as $key => $value) {
-            $result[] = ['word'=>$key,'ending',"count"=>$value["count"],"bold"=>$value["bold"]];
-        }
-        */
+
         return $newWord;
 	}
+
+    private function endingMatch($base,$ending,$array=null){
+        $case = new CaseEnding();
+        $output = array();
+        $endingLen = mb_strlen($ending[0], "UTF-8");
+        $wordEnd = mb_substr($base, 0 - $endingLen, null, "UTF-8");
+        if ($wordEnd === $ending[0]) {
+            //匹配成功
+            $word = mb_substr($base, 0, mb_strlen($base, "UTF-8") - $endingLen, "UTF-8") . $ending[1];
+            if(is_array($array)){
+                if(!isset($array[$word])){
+                    $count = WordIndex::where('word',$word)->select(['count','bold'])->first();
+                }
+            }else{
+                $count = WordIndex::where('word',$word)->select(['count','bold'])->first();
+            }
+            if(isset($count) && $count){
+                $output[$word] = ["count"=>$count->count,"bold"=>$count->bold];
+            }else{
+                $output[$word] = false;
+            }
+
+            //尝试sandhi
+            //TODO 加两个sandhi
+            foreach ($case->union as $sandhi) {
+                $sandhiLen = strlen($sandhi[0]);
+                $sandhiEnd = mb_substr($word, 0 - $sandhiLen, null, "UTF-8");
+                if ($sandhiEnd === $sandhi[0]) {
+                    $sandhiWord = mb_substr($word, 0, mb_strlen($word, "UTF-8") - $sandhiLen, "UTF-8") . $sandhi[1];
+                    if(is_array($array)){
+                        if(!isset($array[$sandhiWord])){
+                            $count = WordIndex::where('word',$sandhiWord)->select(['count','bold'])->first();
+                        }
+                    }else{
+                        $count = WordIndex::where('word',$sandhiWord)->select(['count','bold'])->first();
+                    }
+                    if(isset($count) && $count){
+                        $output[$sandhiWord] = ["count"=>$count->count,"bold"=>$count->bold];
+                    }else{
+                        $output[$sandhiWord] = false;
+                    }
+                }
+            }
+        }
+        return $output;
+    }
 	/**
      * 从词干到单词的变化
      *
@@ -88,6 +152,13 @@ class CaseMan
             if($ending[4]<$confidence){
                 continue;
             }
+            /*
+            $matched = $this->endingMatch($base,$ending,$newWord);
+            foreach ($matched as $key => $new) {
+                $newWord[$key] = $new;
+            }
+            */
+
             $endingLen = mb_strlen($ending[0], "UTF-8");
             $wordEnd = mb_substr($base, 0 - $endingLen, null, "UTF-8");
             if ($wordEnd === $ending[0]) {
@@ -119,6 +190,7 @@ class CaseMan
                     }
                 }
             }
+
         }
         $result = [];
         foreach ($newWord as $key => $value) {
