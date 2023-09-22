@@ -137,99 +137,100 @@ const Widget = () => {
   };
   return (
     <div id="article-root">
-      <Header
-        style={{
-          height: 44,
-          lineHeight: 44,
-          display: "flex",
-          justifyContent: "space-between",
-          padding: "5px",
-        }}
-      >
-        <div style={{ display: "flex" }} key="left">
-          <MainMenu />
-          <NetStatus style={{ color: "white" }} />
-        </div>
-        <div style={{ display: "flex" }} key="middle"></div>
-        <div style={{ display: "flex" }} key="right">
-          {type === "article" && loadedArticleData ? (
-            <Button
-              ghost
-              onClick={(event) => {
-                const url = `/studio/${loadedArticleData.studio?.realName}/article/${loadedArticleData.uid}/edit`;
-                if (event.ctrlKey || event.metaKey) {
-                  window.open(fullUrl(url), "_blank");
-                } else {
-                  navigate(url);
-                }
-              }}
-            >
-              Edit
-            </Button>
-          ) : undefined}
-          <SearchButton />
-          <Divider type="vertical" />
-          <ToStudio />
-          <Divider type="vertical" />
-          <Avatar placement="bottom" />
-          <Divider type="vertical" />
-          <ThemeSelect />
-          <Divider type="vertical" />
-          <ModeSwitch
-            channel={searchParams.get("channel")}
-            currMode={currMode}
-            onModeChange={(e: ArticleMode) => {
-              let output: any = { mode: e };
-              searchParams.forEach((value, key) => {
-                console.log(value, key);
-                if (key !== "mode") {
-                  output[key] = value;
-                }
-              });
-              setSearchParams(output);
-            }}
-            onChannelChange={(channels: IChannel[], mode: ArticleMode) => {
-              let output: any = {
-                mode: mode,
-                channel: channels.map((item) => item.id).join("_"),
-              };
-              searchParams.forEach((value, key) => {
-                console.log(value, key);
-                if (key !== "mode" && key !== "channel") {
-                  output[key] = value;
-                }
-              });
-              setSearchParams(output);
-            }}
-          />
-          <Tooltip title="文章目录" placement="bottomLeft">
-            <Button
-              style={{ display: "block", color: "white" }}
-              icon={<UnorderedListOutlined />}
-              type="text"
-              onClick={() => setAnchorNavOpen((value) => !value)}
-            />
-          </Tooltip>
-          <Tooltip title="侧边栏" placement="bottomLeft">
-            <Button
-              style={{ display: "block", color: "white" }}
-              icon={<ColumnOutlinedIcon />}
-              type="text"
-              onClick={() =>
-                setRightPanel((value) => {
-                  if (value === "close") {
-                    setAnchorNavShow(false);
+      <Affix offsetTop={0}>
+        <Header
+          style={{
+            height: 44,
+            lineHeight: 44,
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "5px",
+          }}
+        >
+          <div style={{ display: "flex" }} key="left">
+            <MainMenu />
+            <NetStatus style={{ color: "white" }} />
+          </div>
+          <div style={{ display: "flex" }} key="middle"></div>
+          <div style={{ display: "flex" }} key="right">
+            {type === "article" && loadedArticleData ? (
+              <Button
+                ghost
+                onClick={(event) => {
+                  const url = `/studio/${loadedArticleData.studio?.realName}/article/${loadedArticleData.uid}/edit`;
+                  if (event.ctrlKey || event.metaKey) {
+                    window.open(fullUrl(url), "_blank");
                   } else {
-                    setAnchorNavShow(true);
+                    navigate(url);
                   }
-                  return value === "close" ? "open" : "close";
-                })
-              }
+                }}
+              >
+                Edit
+              </Button>
+            ) : undefined}
+            <SearchButton />
+            <Divider type="vertical" />
+            <ToStudio />
+            <Divider type="vertical" />
+            <Avatar placement="bottom" />
+            <Divider type="vertical" />
+            <ThemeSelect />
+            <Divider type="vertical" />
+            <ModeSwitch
+              channel={searchParams.get("channel")}
+              currMode={currMode}
+              onModeChange={(e: ArticleMode) => {
+                let output: any = { mode: e };
+                searchParams.forEach((value, key) => {
+                  console.log(value, key);
+                  if (key !== "mode") {
+                    output[key] = value;
+                  }
+                });
+                setSearchParams(output);
+              }}
+              onChannelChange={(channels: IChannel[], mode: ArticleMode) => {
+                let output: any = {
+                  mode: mode,
+                  channel: channels.map((item) => item.id).join("_"),
+                };
+                searchParams.forEach((value, key) => {
+                  console.log(value, key);
+                  if (key !== "mode" && key !== "channel") {
+                    output[key] = value;
+                  }
+                });
+                setSearchParams(output);
+              }}
             />
-          </Tooltip>
-        </div>
-      </Header>
-
+            <Tooltip title="文章目录" placement="bottomLeft">
+              <Button
+                style={{ display: "block", color: "white" }}
+                icon={<UnorderedListOutlined />}
+                type="text"
+                onClick={() => setAnchorNavOpen((value) => !value)}
+              />
+            </Tooltip>
+            <Tooltip title="侧边栏" placement="bottomLeft">
+              <Button
+                style={{ display: "block", color: "white" }}
+                icon={<ColumnOutlinedIcon />}
+                type="text"
+                onClick={() =>
+                  setRightPanel((value) => {
+                    if (value === "close") {
+                      setAnchorNavShow(false);
+                    } else {
+                      setAnchorNavShow(true);
+                    }
+                    return value === "close" ? "open" : "close";
+                  })
+                }
+              />
+            </Tooltip>
+          </div>
+        </Header>
+      </Affix>
       <div style={{ width: "100%", display: "flex" }}>
         <Affix offsetTop={44}>
           <div
