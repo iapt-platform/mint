@@ -75,12 +75,7 @@ class MdRender{
         }
     }
 
-    public static function wiki2xml(string $wiki,$channelId=[],$mode='read'):string{
-        /**
-         * 替换{{}} 到xml之前 要先把换行符号去掉
-         */
-        //$wiki = str_replace("\n","",$wiki);
-
+    public static function wiki2xml(string $wiki,$channelId=[],$mode='read',$format='html'):string{
         /**
          * 把模版转换为xml
          */
@@ -109,8 +104,7 @@ class MdRender{
                 //tpl to react
                 $tpl = str_replace('<param','<span class="param"',$tpl);
                 $tpl = str_replace('</param>','</span>',$tpl);
-                $tpl = MdRender::xml2tpl($tpl,$channelId,$mode);
-
+                $tpl = MdRender::xml2tpl($tpl,$channelId,$mode,$format);
                 $buffer[] = $tpl;
             }
             $remain = $arrWiki['data'][2];
@@ -174,7 +168,7 @@ class MdRender{
         }
         return $output;
     }
-    public static function xml2tpl(string $xml, $channelId=[],$mode='read'):string{
+    public static function xml2tpl(string $xml, $channelId=[],$mode='read',$format='html'):string{
         /**
          * 解析xml
          * 获取模版参数
@@ -266,15 +260,24 @@ class MdRender{
         }
         $html = $doc->saveHTML();
         $html = str_replace(['<dfn','</dfn>'],['<MdTpl','</MdTpl>'],$html);
-        return trim($html);
+        if($format==='html'){
+            return trim($html);
+        }else{
+            if($tplProps){
+                return "{{"."{$tplProps['tpl']}|{$tplProps['props']}"."}}";
+            }else{
+                return '';
+            }
+        }
+
     }
 
-    public static function render2($markdown,$channelId=[],$queryId=null,$mode='read',$channelType,$contentType="markdown"){
+    public static function render2($markdown,$channelId=[],$queryId=null,$mode='read',$channelType,$contentType="markdown",$format='html'){
         if(empty($markdown)){
             return "<span></span>";
         }
         $wiki = MdRender::markdown2wiki($markdown,$channelType,$contentType);
-        $html = MdRender::wiki2xml($wiki,$channelId,$mode);
+        $html = MdRender::wiki2xml($wiki,$channelId,$mode,$format);
         if(!is_null($queryId)){
             $html = MdRender::xmlQueryId($html, $queryId);
         }
@@ -490,8 +493,8 @@ class MdRender{
     /**
      * string[] $channelId
      */
-    public static function render($markdown,$channelId,$queryId=null,$mode='read',$channelType='translation',$contentType="markdown"){
-        return MdRender::render2($markdown,$channelId,$queryId,$mode,$channelType,$contentType);
+    public static function render($markdown,$channelId,$queryId=null,$mode='read',$channelType='translation',$contentType="markdown",$format='html'){
+        return MdRender::render2($markdown,$channelId,$queryId,$mode,$channelType,$contentType,$format);
     }
 
     public static function  fixHtml($html) {

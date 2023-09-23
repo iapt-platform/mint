@@ -10,10 +10,10 @@ class TestMdRender extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * run php artisan test:md.render term unity
      * @var string
      */
-    protected $signature = 'test:md.render {item?}';
+    protected $signature = 'test:md.render {item?} {--format=html}';
 
     /**
      * The console command description.
@@ -41,8 +41,8 @@ class TestMdRender extends Command
     {
         $data = array();
         $data['bold'] = <<<md
-        三十 **"aa"** **“aa”** 三 **“十位”** **[[十位]]** 经
-        在[中间]六处为**[ditthippatta]**，在极果为**慧解脱**
+        **三十位** 经
+        在[中间]六处为**[[licchavi]]**，在极果为**慧解脱**
         md;
 
         $data['sentence'] = <<<md
@@ -124,7 +124,11 @@ class TestMdRender extends Command
             if(!empty($_item) && $key !==$_item){
                 continue;
             }
-            echo MdRender::render2($value,['00ae2c48-c204-4082-ae79-79ba2740d506'],null,'read','translation');
+            $format = $this->option('format');
+            echo MdRender::render2($value,
+                                  ['00ae2c48-c204-4082-ae79-79ba2740d506'],
+                                  null,'read','translation',
+                                  $contentType="markdown",$format);
         }
 
         return 0;
