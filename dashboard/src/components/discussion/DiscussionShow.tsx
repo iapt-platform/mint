@@ -109,11 +109,16 @@ const DiscussionShowWidget = ({
     switch (e.key) {
       case "copy-link":
         let url = `/discussion/topic/`;
-        if (data.parent) {
-          url += `${data.parent}#${data.id}`;
+        if (data.id) {
+          if (data.parent) {
+            url += `${data.parent}#${data.id}`;
+          } else {
+            url += data.id;
+          }
         } else {
-          url += data.id;
+          url += `${data.tplId}?tpl=true&resId=${data.resId}&resType=${data.resType}`;
         }
+
         navigator.clipboard.writeText(fullUrl(url)).then(() => {
           message.success("链接地址已经拷贝到剪贴板");
         });

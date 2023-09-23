@@ -16,11 +16,20 @@ const Widget = () => {
       <Divider></Divider>
       <DiscussionListCard
         resId={id}
+        resType={type as TResType}
         onSelect={(
           e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
           comment: IComment
         ) => {
-          navigate(`/discussion/topic/${comment.id}`);
+          if (comment.id) {
+            navigate(`/discussion/topic/${comment.id}`);
+          } else {
+            navigate(
+              `/discussion/topic/${
+                comment.tplId
+              }?tpl=true&resId=${id}&resType=${type as TResType}`
+            );
+          }
         }}
         onReply={(comment: IComment) =>
           navigate(`/discussion/topic/${comment.id}`)
