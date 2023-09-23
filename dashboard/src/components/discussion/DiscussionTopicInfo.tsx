@@ -24,7 +24,9 @@ const DiscussionTopicInfoWidget = ({
   onClose,
 }: IWidget) => {
   const [data, setData] = useState<IComment | undefined>(topic);
-
+  useEffect(() => {
+    setData(topic);
+  }, [topic]);
   useEffect(() => {
     setData((origin) => {
       if (typeof origin !== "undefined") {
