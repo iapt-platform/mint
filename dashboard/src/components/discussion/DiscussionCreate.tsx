@@ -18,7 +18,7 @@ import {
 } from "../api/Comment";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 
 export type TContentType = "text" | "markdown" | "html" | "json";
@@ -59,6 +59,8 @@ const DiscussionCreateWidget = ({
   const formRef = useRef<ProFormInstance>();
   const _currUser = useAppSelector(_currentUser);
   const [currParent, setCurrParent] = useState(parent);
+
+  useEffect(() => setCurrParent(parent), [parent]);
 
   if (typeof _currUser === "undefined") {
     return <></>;
