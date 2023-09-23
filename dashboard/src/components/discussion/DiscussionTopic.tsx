@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import DiscussionTopicInfo from "./DiscussionTopicInfo";
 import DiscussionTopicChildren from "./DiscussionTopicChildren";
@@ -26,11 +26,14 @@ const DiscussionTopicWidget = ({
   const [count, setCount] = useState<number>();
   const [currResId, setCurrResId] = useState<string>();
   const [currTopic, setCurrTopic] = useState<IComment | undefined>(topic);
+  useEffect(() => {
+    setCurrTopic(topic);
+  }, [topic]);
   return (
     <>
       <DiscussionTopicInfo
         topicId={topicId}
-        topic={topic}
+        topic={currTopic}
         childrenCount={count}
         onReady={(value: IComment) => {
           setCurrResId(value.resId);
