@@ -108,6 +108,7 @@ class DictController extends Controller
                     $currData = [
                             'dictname'=> $dictInfo->name,
                             'shortname'=> $dictInfo->shortname,
+                            'description'=>$dictInfo->description,
                             'dict_id' => $value->dict_id,
                             'lang' => $dict_lang[0],
                             'word'=> $word,
