@@ -23,6 +23,20 @@ import MDEditor from "@uiw/react-md-editor";
 
 export type TContentType = "text" | "markdown" | "html" | "json";
 
+export const toIComment = (value: ICommentApiData): IComment => {
+  return {
+    id: value.id,
+    resId: value.res_id,
+    resType: value.res_type,
+    user: value.editor,
+    title: value.title,
+    parent: value.parent,
+    tplId: value.tpl_id,
+    content: value.content,
+    createdAt: value.created_at,
+    updatedAt: value.updated_at,
+  };
+};
 interface IWidget {
   resId?: string;
   resType?: string;
@@ -45,21 +59,6 @@ const DiscussionCreateWidget = ({
   const formRef = useRef<ProFormInstance>();
   const _currUser = useAppSelector(_currentUser);
   const [currParent, setCurrParent] = useState(parent);
-
-  const toIComment = (value: ICommentApiData): IComment => {
-    return {
-      id: value.id,
-      resId: value.res_id,
-      resType: value.res_type,
-      user: value.editor,
-      title: value.title,
-      parent: value.parent,
-      tplId: value.tpl_id,
-      content: value.content,
-      createdAt: value.created_at,
-      updatedAt: value.updated_at,
-    };
-  };
 
   if (typeof _currUser === "undefined") {
     return <></>;
@@ -93,6 +92,9 @@ const DiscussionCreateWidget = ({
                   if (newTopic.ok) {
                     setCurrParent(newTopic.data.id);
                     newParent = newTopic.data.id;
+                    if (typeof onTopicCreated !== "undefined") {
+                      onTopicCreated(toIComment(newTopic.data));
+                    }
                   } else {
                     console.error("no parent id");
                     return;
