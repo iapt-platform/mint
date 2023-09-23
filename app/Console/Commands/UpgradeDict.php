@@ -67,13 +67,20 @@ class UpgradeDict extends Command
 									$this->error("not uuid");
 									continue;
 								}
+                                //读取 description
+                                $desFile = $dir."/description.md";
+                                if(file_exists($desFile)){
+                                    $description = file_get_contents($desFile);
+                                }else{
+                                    $description = $this->dictInfo['meta']['description'];
+                                }
 								$tableDict = DictInfo::firstOrNew([
 									"id" => $this->dictInfo['meta']['uuid']
 								]);
 								$tableDict->id = $this->dictInfo['meta']['uuid'];
 								$tableDict->name = $this->dictInfo['meta']['dictname'];
 								$tableDict->shortname = $this->dictInfo['meta']['shortname'];
-								$tableDict->description = $this->dictInfo['meta']['description'];
+								$tableDict->description = $description;
 								$tableDict->src_lang = $this->dictInfo['meta']['src_lang'];
 								$tableDict->dest_lang = $this->dictInfo['meta']['dest_lang'];
 								$tableDict->rows = $this->dictInfo['meta']['rows'];
