@@ -47,7 +47,8 @@ const DiscussionTopicChildrenWidget = ({
   const [items, setItems] = useState<IItem[]>();
   const [currTopic, setCurrTopic] = useState(topic);
 
-  console.log("topicId", topicId);
+  useEffect(() => setCurrTopic(topic), [topic]);
+
   useEffect(() => {
     if (loading === false) {
       const ele = document.getElementById(`answer-${focus}`);
