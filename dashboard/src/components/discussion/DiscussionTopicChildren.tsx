@@ -1,4 +1,5 @@
 import { List, message, Skeleton } from "antd";
+import { IconType } from "antd/lib/notification";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
@@ -9,7 +10,6 @@ import {
   ISentHistoryListResponse,
 } from "../corpus/SentHistory";
 import SentHistoryGroup from "../corpus/SentHistoryGroup";
-import SentHistoryItemWidget from "../corpus/SentHistoryItem";
 import DiscussionCreate from "./DiscussionCreate";
 import DiscussionItem, { IComment } from "./DiscussionItem";
 import { TResType } from "./DiscussionListCard";
@@ -29,6 +29,7 @@ interface IWidget {
   topicId?: string;
   focus?: string;
   onItemCountChange?: Function;
+  onTopicCreate?: Function;
 }
 const DiscussionTopicChildrenWidget = ({
   topic,
@@ -37,6 +38,7 @@ const DiscussionTopicChildrenWidget = ({
   topicId,
   focus,
   onItemCountChange,
+  onTopicCreate,
 }: IWidget) => {
   const intl = useIntl();
   const [data, setData] = useState<IComment[]>([]);
@@ -227,11 +229,16 @@ const DiscussionTopicChildrenWidget = ({
         contentType="markdown"
         parent={topicId}
         topic={currTopic}
-        onCreated={(e: IComment) => {
-          const newData = JSON.parse(JSON.stringify(e));
+        onCreated={(value: IComment) => {
+          const newData = JSON.parse(JSON.stringify(value));
           setData([...data, newData]);
           if (typeof onItemCountChange !== "undefined") {
-            onItemCountChange(data.length + 1, e.parent);
+            onItemCountChange(data.length + 1, value.parent);
+          }
+        }}
+        onTopicCreated={(value: IconType) => {
+          if (typeof onTopicCreate !== "undefined") {
+            onTopicCreate(value);
           }
         }}
       />

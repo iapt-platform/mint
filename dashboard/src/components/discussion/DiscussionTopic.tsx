@@ -25,6 +25,7 @@ const DiscussionTopicWidget = ({
 }: IWidget) => {
   const [count, setCount] = useState<number>();
   const [currResId, setCurrResId] = useState<string>();
+  const [currTopicId, setCurrTopicId] = useState(topicId);
   const [currTopic, setCurrTopic] = useState<IComment | undefined>(topic);
   useEffect(() => {
     setCurrTopic(topic);
@@ -32,7 +33,7 @@ const DiscussionTopicWidget = ({
   return (
     <>
       <DiscussionTopicInfo
-        topicId={topicId}
+        topicId={currTopicId}
         topic={currTopic}
         childrenCount={count}
         onReady={(value: IComment) => {
@@ -61,6 +62,10 @@ const DiscussionTopicWidget = ({
           if (typeof onItemCountChange !== "undefined") {
             onItemCountChange(count, e);
           }
+        }}
+        onTopicCreate={(value: IComment) => {
+          console.log("onTopicCreate", value);
+          setCurrTopicId(value.id);
         }}
       />
     </>
