@@ -40,13 +40,14 @@ class UpgradeSimIndex extends Command
      */
     public function handle()
     {
-        SentSimIndex::where('id','>',0)->delete();
         $result = DB::select('select count(*) from (select sent1 from sent_sims where sim>0.5  group by sent1) T');
         $bar = $this->output->createProgressBar($result[0]->count);
-        foreach (SentSim::selectRaw('sent1,count(*)')->where('sim','>',0.5)->groupBy('sent1')->cursor() as $sent) {
-            SentSimIndex::insert(
-                ['sent_id'=>$sent->sent1,
-                'count'=>$sent->count,]);
+        foreach (SentSim::selectRaw('sent1,count(*)')
+                        ->where('sim','>',0.5)
+                        ->groupBy('sent1')->cursor() as $sent) {
+            SentSimIndex::updateOrInsert(
+                ['sent_id'=>$sent->sent1],
+                ['count'=>$sent->count,]);
             $bar->advance();
         }
         $bar->finish();
