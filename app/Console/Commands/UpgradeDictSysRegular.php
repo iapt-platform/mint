@@ -52,7 +52,7 @@ class UpgradeDictSysRegular extends Command
             $this->error('没有找到 system_regular 字典');
             return 1;
         }else{
-            $this->info("dict id:{$dict_id}");
+            $this->info("system_regular :{$dict_id}");
         }
 
 		if(empty($this->argument('word'))){
@@ -60,6 +60,8 @@ class UpgradeDictSysRegular extends Command
 							->orWhere('type','.v:base.')
 							->orWhere('type','.adj:base.')
 							->orWhere('type','.ti:base.');
+            $init = UserDict::where('dict_id',$dict_id)
+                            ->update(['flag'=>0]);
 		}else{
 			$words = UserDict::where('word',$this->argument('word'))
 							->where(function($query) {
@@ -68,6 +70,9 @@ class UpgradeDictSysRegular extends Command
 								->orWhere('type','.adj:base.')
 								->orWhere('type','.ti:base.');
 							});
+            $init = UserDict::where('dict_id',$dict_id)
+                            ->where('word',$this->argument('word'))
+                            ->update(['flag'=>0]);
 		}
 		$words = $words->select(['word','type','grammar'])
 						->groupBy(['word','type','grammar'])
@@ -94,7 +99,7 @@ class UpgradeDictSysRegular extends Command
                         'type' => \str_replace(':base','',$word->type),
                         'grammar' => $newWord['grammar'],
                         'parent' => $word->word,
-                        'factors' => "{$word->word}+[{$newWord['ending']}]",
+                        'factors' => $newWord['factors'],
                         'dict_id' => $dict_id,
                     ],
                     [
@@ -116,7 +121,7 @@ class UpgradeDictSysRegular extends Command
 		//删除旧数据
 		$table = UserDict::where('dict_id',$dict_id);
 		if(!empty($this->argument('word'))){
-			$table = $table->where('word',$this->argument('word'));
+			$table = $table->where('parent',$this->argument('word'));
 		}
 		$table->where('flag',0)->delete();
 
