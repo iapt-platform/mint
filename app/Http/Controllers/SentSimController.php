@@ -28,7 +28,7 @@ class SentSimController extends Controller
                     return $this->error("no sent");
                 }
                 $table = SentSim::where('sent1',$sentId)
-                                ->where('sim',">",0.7)
+                                ->where('sim',">",0.5)
                                 ->orderBy('sim','desc');
                 break;
         }
