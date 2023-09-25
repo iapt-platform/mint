@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message, Skeleton } from "antd";
 import { useEffect, useState } from "react";
 
 import { get } from "../../../request";
@@ -29,13 +29,14 @@ const SuggestionListWidget = ({
   onChange,
 }: IWidget) => {
   const [sentData, setSentData] = useState<ISentence[]>([]);
-
+  const [loading, setLoading] = useState(false);
   const load = () => {
     if (!enable) {
       return;
     }
     const url = `/v2/sentpr?view=sent-info&book=${book}&para=${para}&start=${wordStart}&end=${wordEnd}&channel=${channel.id}`;
     console.log("url", url);
+    setLoading(true);
     get<ISuggestionListResponse>(url)
       .then((json) => {
         if (json.ok) {
@@ -62,6 +63,7 @@ const SuggestionListWidget = ({
         }
       })
       .finally(() => {
+        setLoading(false);
         if (reload && typeof onReload !== "undefined") {
           onReload();
         }
@@ -69,7 +71,7 @@ const SuggestionListWidget = ({
   };
   useEffect(() => {
     load();
-  }, []);
+  }, [book, channel.id, para, reload, wordEnd, wordStart]);
   useEffect(() => {
     if (reload) {
       load();
@@ -77,9 +79,17 @@ const SuggestionListWidget = ({
   }, [reload]);
   return (
     <>
-      {sentData.map((item, id) => {
-        return <SentCell initValue={item} key={id} isPr={true} />;
-      })}
+      {loading ? (
+        <Skeleton />
+      ) : (
+        <>
+          {sentData.length > 0
+            ? sentData.map((item, id) => {
+                return <SentCell value={item} key={id} isPr={true} />;
+              })
+            : "没有修改建议"}
+        </>
+      )}
     </>
   );
 };

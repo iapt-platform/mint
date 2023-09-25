@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Drawer, Space } from "antd";
+import { Alert, Button, Space } from "antd";
 
 import SuggestionList from "./SuggestionList";
 import SuggestionAdd from "./SuggestionAdd";
 import { ISentence } from "../SentEdit";
 import Marked from "../../general/Marked";
+import { useAppSelector } from "../../../hooks";
+import { message } from "../../../reducers/discussion";
 
 interface ISuggestionWidget {
   data: ISentence;
@@ -21,33 +23,37 @@ const Suggestion = ({
   onPrChange,
 }: ISuggestionWidget) => {
   const [reload, setReload] = useState(false);
+
   return (
     <Space direction="vertical" style={{ width: "100%" }}>
-      <Card
-        title="温馨提示"
-        size="small"
-        style={{
-          width: "100%",
-          display: openNotification ? "block" : "none",
-        }}
-      >
-        <Marked
-          text="此处专为提交修改建议译文。您输入的应该是**译文**
+      {openNotification ? (
+        <Alert
+          message="温馨提示"
+          type="info"
+          showIcon
+          description={
+            <Marked
+              text="此处专为提交修改建议译文。您输入的应该是**译文**
   而不是评论和问题。其他内容，请在讨论页面提交。"
+            />
+          }
+          action={
+            <Button
+              type="text"
+              onClick={() => {
+                localStorage.setItem("read_pr_Notification", "ok");
+                if (typeof onNotificationChange !== "undefined") {
+                  onNotificationChange(false);
+                }
+              }}
+            >
+              知道了
+            </Button>
+          }
+          closable
         />
-        <p style={{ textAlign: "center" }}>
-          <Button
-            onClick={() => {
-              localStorage.setItem("read_pr_Notification", "ok");
-              if (typeof onNotificationChange !== "undefined") {
-                onNotificationChange(false);
-              }
-            }}
-          >
-            知道了
-          </Button>
-        </p>
-      </Card>
+      ) : undefined}
+
       <SuggestionAdd
         data={data}
         onCreate={() => {
@@ -75,25 +81,17 @@ export interface IAnswerCount {
   id: string;
   count: number;
 }
-interface IWidget {
-  data: ISentence;
-  trigger?: JSX.Element;
-  open?: boolean;
-  openInDrawer?: boolean;
-  onClose?: Function;
-}
-const SuggestionBoxWidget = ({
-  trigger,
-  data,
-  open = false,
-  openInDrawer = true,
-  onClose,
-}: IWidget) => {
-  const [isOpen, setIsOpen] = useState(open);
-  const [openNotification, setOpenNotification] = useState(false);
-  const [prNumber, setPrNumber] = useState(data.suggestionCount?.suggestion);
 
-  useEffect(() => setIsOpen(open), [open]);
+const SuggestionBoxWidget = () => {
+  const [openNotification, setOpenNotification] = useState(false);
+  const [sentData, setSentData] = useState<ISentence>();
+  const discussionMessage = useAppSelector(message);
+  useEffect(() => {
+    if (discussionMessage?.type === "pr") {
+      setSentData(discussionMessage.sent);
+    }
+  }, [discussionMessage]);
+
   useEffect(() => {
     if (localStorage.getItem("read_pr_Notification") === "ok") {
       setOpenNotification(false);
@@ -101,70 +99,17 @@ const SuggestionBoxWidget = ({
       setOpenNotification(true);
     }
   }, []);
-  const showDrawer = () => {
-    setIsOpen(true);
-  };
 
-  const onBoxClose = () => {
-    setIsOpen(false);
-    if (typeof onClose !== "undefined") {
-      onClose();
-    }
-  };
-
-  return (
-    <>
-      <Space
-        onClick={showDrawer}
-        style={{
-          cursor: "pointer",
-          color: prNumber && prNumber > 0 ? "#1890ff" : "unset",
-        }}
-      >
-        {trigger}
-        {prNumber}
-      </Space>
-
-      {openInDrawer ? (
-        <Drawer
-          title="修改建议"
-          width={520}
-          onClose={onBoxClose}
-          open={isOpen}
-          maskClosable={false}
-        >
-          <Suggestion
-            data={data}
-            enable={isOpen}
-            openNotification={openNotification}
-            onNotificationChange={(value: boolean) =>
-              setOpenNotification(value)
-            }
-            onPrChange={(value: number) => setPrNumber(value)}
-          />
-        </Drawer>
-      ) : (
-        <div
-          style={{
-            position: "absolute",
-            display: isOpen ? "none" : "none",
-            zIndex: 1030,
-            marginLeft: 300,
-            marginTop: -250,
-          }}
-        >
-          <Suggestion
-            data={data}
-            enable={isOpen}
-            openNotification={openNotification}
-            onNotificationChange={(value: boolean) =>
-              setOpenNotification(value)
-            }
-            onPrChange={(value: number) => setPrNumber(value)}
-          />
-        </div>
-      )}
-    </>
+  return sentData ? (
+    <Suggestion
+      data={sentData}
+      enable={true}
+      openNotification={openNotification}
+      onNotificationChange={(value: boolean) => setOpenNotification(value)}
+      onPrChange={(value: number) => {}}
+    />
+  ) : (
+    <></>
   );
 };
 

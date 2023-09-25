@@ -70,6 +70,7 @@ const items = {
   "buttons.refresh": "刷新",
   "buttons.timeline": "时间线",
   "buttons.discussion": "讨论",
+  "buttons.suggestion": "修改建议",
 };
 
 export default items;

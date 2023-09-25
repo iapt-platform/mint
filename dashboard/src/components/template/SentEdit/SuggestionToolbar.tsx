@@ -44,7 +44,7 @@ const SuggestionToolbarWidget = ({
       setCommentCount(discussionCount.count);
     }
   }, [data.id, discussionCount]);
-
+  const prNumber = data.suggestionCount?.suggestion;
   return (
     <Paragraph type="secondary" style={style}>
       {isPr ? (
@@ -62,20 +62,26 @@ const SuggestionToolbarWidget = ({
         </Space>
       ) : (
         <Space size={"small"}>
-          <SuggestionBox
-            open={prOpen}
-            onClose={() => {
-              if (typeof onPrClose !== "undefined") {
-                onPrClose();
-              }
+          <Space
+            style={{
+              cursor: "pointer",
+              color: prNumber && prNumber > 0 ? "#1890ff" : "unset",
             }}
-            data={data}
-            trigger={
-              <Tooltip title="修改建议">
-                <HandOutlinedIcon />
-              </Tooltip>
-            }
-          />
+            onClick={(event) => {
+              store.dispatch(
+                show({
+                  type: "pr",
+                  sent: data,
+                })
+              );
+              store.dispatch(openPanel("suggestion"));
+            }}
+          >
+            <Tooltip title="修改建议">
+              <HandOutlinedIcon />
+            </Tooltip>
+            {prNumber}
+          </Space>
           {compact ? undefined : <Divider type="vertical" />}
           <Tooltip title="讨论">
             <Space

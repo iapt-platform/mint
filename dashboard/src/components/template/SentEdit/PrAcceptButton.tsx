@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useIntl } from "react-intl";
-import { Button, message } from "antd";
+import { Button, message, Tooltip } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 
 import { put } from "../../../request";
@@ -72,13 +72,15 @@ const PrAcceptButtonWidget = ({ data, onAccept }: IWidget) => {
   };
 
   return (
-    <Button
-      size="small"
-      type="text"
-      icon={<CheckOutlined />}
-      loading={saving}
-      onClick={() => save()}
-    />
+    <Tooltip title="采纳此修改建议">
+      <Button
+        size="small"
+        type="text"
+        icon={<CheckOutlined />}
+        loading={saving}
+        onClick={() => save()}
+      />
+    </Tooltip>
   );
 };
 

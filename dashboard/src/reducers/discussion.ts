@@ -4,6 +4,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { TResType } from "../components/discussion/DiscussionListCard";
+import { ISentence } from "../components/template/SentEdit";
 
 import type { RootState } from "../store";
 
@@ -15,6 +16,7 @@ export interface IShowDiscussion {
   resId?: string;
   topic?: string;
   comment?: string;
+  sent?: ISentence;
 }
 export interface ICount {
   count: number;

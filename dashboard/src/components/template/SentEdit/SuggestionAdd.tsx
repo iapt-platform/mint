@@ -38,6 +38,7 @@ const SuggestionAddWidget = ({ data, onCreate }: IWidget) => {
               setIsEditMode(false);
             }}
             onCreate={() => {
+              setIsEditMode(false);
               if (typeof onCreate !== "undefined") {
                 onCreate();
               }
