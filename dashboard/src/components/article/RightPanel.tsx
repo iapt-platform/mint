@@ -13,8 +13,15 @@ import store from "../../store";
 import DiscussionBox from "../discussion/DiscussionBox";
 import { show } from "../../reducers/discussion";
 import { useIntl } from "react-intl";
+import SuggestionBox from "../template/SentEdit/SuggestionBox";
 
-export type TPanelName = "dict" | "channel" | "discussion" | "close" | "open";
+export type TPanelName =
+  | "dict"
+  | "channel"
+  | "discussion"
+  | "suggestion"
+  | "close"
+  | "open";
 
 interface IWidget {
   curr?: TPanelName;
@@ -73,6 +80,10 @@ const RightPanelWidget = ({
         setActiveTab(curr);
         break;
       case "discussion":
+        setOpen(true);
+        setActiveTab(curr);
+        break;
+      case "suggestion":
         setOpen(true);
         setActiveTab(curr);
         break;
@@ -179,6 +190,17 @@ const RightPanelWidget = ({
               children: (
                 <div style={tabInnerStyle}>
                   <DiscussionBox />
+                </div>
+              ),
+            },
+            {
+              label: intl.formatMessage({
+                id: "buttons.suggestion",
+              }),
+              key: "suggestion",
+              children: (
+                <div style={tabInnerStyle}>
+                  <SuggestionBox />
                 </div>
               ),
             },
