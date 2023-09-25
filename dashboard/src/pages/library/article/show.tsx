@@ -414,6 +414,7 @@ const Widget = () => {
                 }
                 console.log("url", url);
                 navigate(url);
+                scrollToTop();
               }}
             />
           </div>
