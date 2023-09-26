@@ -38,6 +38,8 @@ interface IFtsItem {
   content?: string;
   path?: ITocPathNode[];
 }
+
+export type ISearchView = "pali" | "title";
 interface IWidget {
   keyWord?: string;
   tags?: string[];
@@ -47,7 +49,7 @@ interface IWidget {
   orderBy?: string | null;
   match?: string | null;
   keyWord2?: string;
-  view?: string;
+  view?: ISearchView;
   pageType?: string;
 }
 const FullTxtSearchResultWidget = ({
@@ -138,6 +140,17 @@ const FullTxtSearchResultWidget = ({
         } else {
           paragraph = [item.paragraph - 1, item.paragraph, item.paragraph + 1];
         }
+        let link: string = "";
+        switch (view) {
+          case "pali":
+            link = `/article/para/${item.book}-${item.paragraph}?book=${item.book}&par=${paragraph}&focus=${item.paragraph}`;
+            break;
+          case "title":
+            link = `/article/chapter/${item.book}-${item.paragraph}`;
+            break;
+          default:
+            break;
+        }
         return (
           <List.Item>
             {loading ? (
@@ -160,9 +173,7 @@ const FullTxtSearchResultWidget = ({
                   </Space>
                 </div>
                 <Title level={4} style={{ fontWeight: 500 }}>
-                  <Link
-                    to={`/article/para/${item.book}-${item.paragraph}?book=${item.book}&par=${paragraph}&focus=${item.paragraph}`}
-                  >
+                  <Link to={link} target="_blank">
                     {item.title}
                   </Link>
                 </Title>
