@@ -1,4 +1,4 @@
-import { message, Skeleton } from "antd";
+import { message, Skeleton, Switch } from "antd";
 import { useEffect, useState } from "react";
 
 import { get } from "../../../request";
@@ -11,6 +11,7 @@ interface IWidget {
   para: number;
   wordStart: number;
   wordEnd: number;
+  content?: string | null;
   channel: IChannel;
   enable?: boolean;
   reload?: boolean;
@@ -23,6 +24,7 @@ const SuggestionListWidget = ({
   wordStart,
   wordEnd,
   channel,
+  content,
   reload = false,
   enable = true,
   onReload,
@@ -30,6 +32,7 @@ const SuggestionListWidget = ({
 }: IWidget) => {
   const [sentData, setSentData] = useState<ISentence[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showDiff, setShowDiff] = useState(true);
   const load = () => {
     if (!enable) {
       return;
@@ -83,9 +86,25 @@ const SuggestionListWidget = ({
         <Skeleton />
       ) : (
         <>
+          <div style={{ textAlign: "right" }}>
+            {"文本比对"}
+            <Switch
+              size="small"
+              defaultChecked
+              onChange={(checked) => setShowDiff(checked)}
+            />
+          </div>
           {sentData.length > 0
             ? sentData.map((item, id) => {
-                return <SentCell value={item} key={id} isPr={true} />;
+                return (
+                  <SentCell
+                    value={item}
+                    key={id}
+                    isPr={true}
+                    showDiff={showDiff}
+                    diffText={content}
+                  />
+                );
               })
             : "没有修改建议"}
         </>

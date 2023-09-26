@@ -16,6 +16,7 @@ import SentWbwEdit, { sentSave } from "./SentWbwEdit";
 import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
 import { nissayaBase } from "../Nissaya/NissayaMeaning";
 import { anchor, message } from "../../../reducers/discussion";
+import TextDiff from "../../general/TextDiff";
 
 interface IWidget {
   initValue?: ISentence;
@@ -24,6 +25,8 @@ interface IWidget {
   isPr?: boolean;
   editMode?: boolean;
   compact?: boolean;
+  showDiff?: boolean;
+  diffText?: string | null;
   onChange?: Function;
 }
 const SentCellWidget = ({
@@ -33,6 +36,8 @@ const SentCellWidget = ({
   isPr = false,
   editMode = false,
   compact = false,
+  showDiff = false,
+  diffText,
   onChange,
 }: IWidget) => {
   const intl = useIntl();
@@ -222,6 +227,8 @@ const SentCellWidget = ({
                   }}
                 />
               )
+            ) : showDiff ? (
+              <TextDiff content={sentData.content} oldContent={diffText} />
             ) : (
               <MdView
                 style={{
