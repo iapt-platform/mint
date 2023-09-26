@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import { Row, Col, Breadcrumb, Space, Tabs } from "antd";
 import FullSearchInput from "../../../components/fts/FullSearchInput";
 import BookTree from "../../../components/corpus/BookTree";
-import FullTextSearchResult from "../../../components/fts/FullTextSearchResult";
+import FullTextSearchResult, {
+  ISearchView,
+} from "../../../components/fts/FullTextSearchResult";
 import FtsBookList from "../../../components/fts/FtsBookList";
 import FtsSetting from "../../../components/fts/FtsSetting";
 import CaseList from "../../../components/dict/CaseList";
@@ -123,7 +125,7 @@ const Widget = () => {
                   ]}
                 />
                 <FullTextSearchResult
-                  view={view}
+                  view={view as ISearchView}
                   pageType={pageType}
                   keyWord={key}
                   tags={searchParams.get("tags")?.split(",")}
