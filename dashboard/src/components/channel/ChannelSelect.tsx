@@ -59,10 +59,11 @@ const ChannelSelectWidget = ({
             );
           }
           let channels: IOption[] = [];
-          console.log("parentStudioId", parentStudioId);
+
           if (user && user.id === parentStudioId) {
             channels.push({ value: "", label: "通用于此Studio" });
           }
+
           if (typeof parentChannelId === "string") {
             channels.push({ value: parentChannelId, label: "仅此版本" });
           }
@@ -106,7 +107,14 @@ const ChannelSelectWidget = ({
               };
               return node;
             });
-          channels = [...channels, ...others];
+          channels = [
+            {
+              value: "",
+              label: "通用于此Studio",
+            },
+            ...channels,
+            ...others,
+          ];
 
           console.log("json", channels);
           return channels;
