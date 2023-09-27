@@ -214,7 +214,7 @@ class DhammaTermController extends Controller
             $isDoesntExist = $table->where('channal',$request->get("channel"))
                     ->doesntExist();
         }else{
-            $isDoesntExist = $table->where('language',$request->get("language"))
+            $isDoesntExist = $table->whereNull('channal')->where('language',$request->get("language"))
                 ->doesntExist();
         }
 
