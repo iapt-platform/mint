@@ -82,6 +82,7 @@ const TermEditWidget = ({
   const [meaningOptions, setMeaningOptions] = useState<ValueType[]>([]);
   const [readonly, setReadonly] = useState(false);
   const [isSaveAs, setIsSaveAs] = useState(false);
+  const [currChannel, setCurrChannel] = useState<ValueType[]>([]);
   const user = useAppSelector(_currentUser);
 
   //console.log("word", id, word, channelId, studioName);
@@ -229,14 +230,26 @@ const TermEditWidget = ({
               }
 
               let realChannelId: string | undefined = "";
-              if (user?.id === parentStudioId) {
-                if (community) {
-                  realChannelId = "";
+              if (parentStudioId) {
+                if (user?.id === parentStudioId) {
+                  if (community) {
+                    realChannelId = "";
+                  } else {
+                    realChannelId = res.data.channel?.id;
+                  }
                 } else {
-                  realChannelId = res.data.channel?.id;
+                  realChannelId = parentChannelId;
                 }
               } else {
-                realChannelId = parentChannelId;
+                if (res.data.channel) {
+                  realChannelId = res.data.channel?.id;
+                  setCurrChannel([
+                    {
+                      label: res.data.channel?.name,
+                      value: res.data.channel?.id,
+                    },
+                  ]);
+                }
               }
 
               data = {
@@ -354,10 +367,9 @@ const TermEditWidget = ({
         </ProForm.Group>
         <ProForm.Group>
           <ProFormSelect
-            initialValue={user?.id === parentStudioId ? "" : parentChannelId}
             name="channelId"
             allowClear
-            label="版本"
+            label="版本(已经建立的术语，版本不可修改。可以选择另存为复制到另一个版本。)"
             width="md"
             placeholder="通用于此Studio"
             disabled={
@@ -375,8 +387,10 @@ const TermEditWidget = ({
                 label: "仅用于此版本",
                 disabled: !community && readonly,
               },
+              ...currChannel,
             ]}
           />
+
           <ProFormDependency name={["channelId"]}>
             {({ channelId }) => {
               const hasChannel = channelId
