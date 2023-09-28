@@ -75,7 +75,7 @@ class MdRender{
         }
     }
 
-    public static function wiki2xml(string $wiki,$channelId=[],$mode='read',$format='html'):string{
+    public static function wiki2xml(string $wiki,$channelId=[],$mode='read',$format='react'):string{
         /**
          * 把模版转换为xml
          */
@@ -168,7 +168,7 @@ class MdRender{
         }
         return $output;
     }
-    public static function xml2tpl(string $xml, $channelId=[],$mode='read',$format='html'):string{
+    public static function xml2tpl(string $xml, $channelId=[],$mode='read',$format='react'):string{
         /**
          * 解析xml
          * 获取模版参数
@@ -260,19 +260,21 @@ class MdRender{
         }
         $html = $doc->saveHTML();
         $html = str_replace(['<dfn','</dfn>'],['<MdTpl','</MdTpl>'],$html);
-        if($format==='html'){
+        if($format==='react'){
             return trim($html);
-        }else{
+        }else if($format==='unity'){
             if($tplProps){
                 return "{{"."{$tplProps['tpl']}|{$tplProps['props']}"."}}";
             }else{
                 return '';
             }
+        }else{
+            return '';
         }
 
     }
 
-    public static function render2($markdown,$channelId=[],$queryId=null,$mode='read',$channelType,$contentType="markdown",$format='html'){
+    public static function render2($markdown,$channelId=[],$queryId=null,$mode='read',$channelType,$contentType="markdown",$format='react'){
         if(empty($markdown)){
             return "<span></span>";
         }
@@ -493,8 +495,19 @@ class MdRender{
     /**
      * string[] $channelId
      */
-    public static function render($markdown,$channelId,$queryId=null,$mode='read',$channelType='translation',$contentType="markdown",$format='html'){
-        return MdRender::render2($markdown,$channelId,$queryId,$mode,$channelType,$contentType,$format);
+    public static function render($markdown,$channelId,$queryId=null,$mode='read',$channelType='translation',$contentType="markdown",$format='react'){
+        if(isset($GLOBALS["MdRenderStack"]) && is_numeric($GLOBALS["MdRenderStack"])){
+            $GLOBALS["MdRenderStack"]++;
+        }else{
+            $GLOBALS["MdRenderStack"] = 1;
+        }
+        if($GLOBALS["MdRenderStack"]<3){
+            $output  = MdRender::render2($markdown,$channelId,$queryId,$mode,$channelType,$contentType,$format);
+        }else{
+            $output  = $markdown;
+        }
+        $GLOBALS["MdRenderStack"]--;
+        return $output;
     }
 
     public static function  fixHtml($html) {
