@@ -70,7 +70,6 @@ class TemplateRender{
     }
 
     public function getTermProps($word,$channelId,$channelInfo){
-        Log::info("term render:{$word}-{$channelId}");
         $lang = Channel::where('uid',$channelId)->value('lang');
         if(!empty($lang)){
             $langFamily = explode('-',$lang)[0];
