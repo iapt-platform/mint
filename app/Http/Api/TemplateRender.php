@@ -74,6 +74,8 @@ class TemplateRender{
         $lang = Channel::where('uid',$channelId)->value('lang');
         if(!empty($lang)){
             $langFamily = explode('-',$lang)[0];
+        }else{
+            $langFamily = 'zh';
         }
         //先查属于这个channel 的
         $tplParam = DhammaTerm::where("word",$word)
