@@ -97,7 +97,6 @@ class ExportSentence extends Command
                                 'editor_uid','language','updated_at'])->cursor();
         foreach ($srcDb as $sent) {
             if(Str::isUuid($sent->channel_uid)){
-                Log::info('sent id'.$sent->uid);
                 $channel = ChannelApi::getById($sent->channel_uid);
                 $currData = array(
                         $sent->book_id,
