@@ -24,7 +24,7 @@ interface IFormData {
   uid: string;
   title: string;
   subtitle: string;
-  summary: string;
+  summary?: string | null;
   content?: string;
   content_type?: string;
   status: number;

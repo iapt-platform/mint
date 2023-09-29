@@ -17,7 +17,7 @@ export interface IWidgetArticleData {
   id?: string;
   title?: string;
   subTitle?: string;
-  summary?: string;
+  summary?: string | null;
   content?: string;
   html?: string[];
   path?: ITocPathNode[];

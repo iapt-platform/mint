@@ -61,7 +61,7 @@ export interface IArticleDataRequest {
   uid: string;
   title: string;
   subtitle: string;
-  summary: string;
+  summary?: string | null;
   content?: string;
   content_type?: string;
   status: number;
@@ -80,7 +80,8 @@ export interface IArticleDataResponse {
   uid: string;
   title: string;
   subtitle: string;
-  summary: string;
+  summary: string | null;
+  _summary?: string;
   content?: string;
   content_type?: string;
   toc?: IChapterToc[];
