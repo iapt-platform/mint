@@ -15,6 +15,7 @@ export interface IComment {
   title?: string;
   content?: string;
   html?: string;
+  summary?: string;
   status?: "active" | "close";
   children?: IComment[];
   childrenCount?: number;
