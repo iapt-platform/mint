@@ -268,10 +268,15 @@ class MdRender{
             }else{
                 return '';
             }
+        }else if($format==='text'){
+            if(isset($tplProps['text'])){
+                return $tplProps['text'];
+            }else{
+                return '';
+            }
         }else{
             return '';
         }
-
     }
 
     public static function render2($markdown,$channelId=[],$queryId=null,$mode='read',$channelType,$contentType="markdown",$format='react'){
@@ -286,12 +291,16 @@ class MdRender{
         $html = MdRender::markdownToHtml($html);
         //$tpl = MdRender::xml2tpl($html,$channelId,$mode);
 
-        //生成可展开组件
-        $html = str_replace("<div/>","<div></div>",$html);
-        $pattern = '/<li><div>(.+?)<\/div><\/li>/';
-        $replacement = '<li><MdTpl name="toggle" tpl="toggle" props=""><div>$1</div></MdTpl></li>';
-        $html = preg_replace($pattern,$replacement,$html);
-
+        if($format==='react'){
+            //生成可展开组件
+            $html = str_replace("<div/>","<div></div>",$html);
+            $pattern = '/<li><div>(.+?)<\/div><\/li>/';
+            $replacement = '<li><MdTpl name="toggle" tpl="toggle" props=""><div>$1</div></MdTpl></li>';
+            $html = preg_replace($pattern,$replacement,$html);
+        }
+        if($format==='text'){
+            $html = strip_tags($html);
+        }
         return $html;
     }
 
@@ -492,6 +501,9 @@ class MdRender{
         return $html;
     }
 
+    public static function init(){
+        $GLOBALS["MdRenderStack"] = 0;
+    }
     /**
      * string[] $channelId
      */
