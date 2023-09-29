@@ -49,6 +49,7 @@ class DiscussionResource extends JsonResource
         }
         if(count($channels)>0){
             $data["html"] = MdRender::render($this->content,$channels,null,'read');
+            $data["summary"] = MdRender::render($this->content,$channels,null,'read','translation','markdown','text');
         }
 
         return $data;
