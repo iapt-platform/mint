@@ -8,11 +8,29 @@ export WORKSPACE=$PWD
 # -----------------------------------------------------------------------------
 
 function generate_grpc_by_lang() {
-    local target=$WORKSPACE/tmp/protocols/$1
+    local target=$WORKSPACE/clients/$1
     echo "generate code for grpc-$1"
+    
     if [ -d $target ]
     then
-        rm -r $target
+        if [[ "$1" == "php" ]]
+        then
+            declare -a folders=(
+                "GPBMetadata"
+                "Mint"
+                "Palm"
+            )
+            for f in "${folders[@]}"
+            do
+                local t=$target/$1/$f
+                if [ -d $t ]
+                then
+                    rm -f $t
+                fi
+            done            
+        else
+            rm -r $target
+        fi
     fi
     mkdir -p $target
     $PROTOBUF_ROOT/bin/protoc -I $WORKSPACE/protocols \
@@ -48,16 +66,13 @@ function generate_grpc_web() {
 
 # -----------------------------------------------------------------------------
 
-declare -a languages=(
-    # "node"
-    "php"
+declare -a languages=(    
     "python"
     "ruby"
     "cpp"
-    "csharp"
-    # https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/
-    "java" 
-    # "objective_c"
+    "csharp"    
+    "java"
+    "php"
 )
 
 for l in "${languages[@]}"

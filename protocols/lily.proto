@@ -1,0 +1,46 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.github.saturn_xiv.palm.plugins.lily.v1";
+package palm.lily.v1;
+
+message File {
+  optional string content_type = 1;
+  bytes payload = 2;
+}
+
+// ----------------------------------------------------------------------------
+
+service Excel {
+  rpc Parse(File) returns (ExcelModel) {}
+  rpc Generate(ExcelModel) returns (File) {}
+}
+
+message ExcelModel {
+  message Sheet {
+    message Cell {
+      uint32 row = 1;
+      uint32 col = 2;
+      string val = 3;
+    }
+    string name = 1;
+    repeated Cell cells = 2;
+  }
+  repeated Sheet sheets = 1;
+}
+
+// ----------------------------------------------------------------------------
+
+service Tex {
+  rpc ToPdf(TexToRequest) returns (File) {}
+  rpc ToWord(TexToRequest) returns (File) {}
+}
+
+message TexToRequest { map<string, bytes> files = 1; }
+
+// ----------------------------------------------------------------------------
+
+service Epub {
+  rpc Build(EpubBuildRequest) returns (File) {}
+}
+
+message EpubBuildRequest {}
