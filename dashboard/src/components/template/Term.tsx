@@ -12,8 +12,24 @@ import { changedTerm, refresh } from "../../reducers/term-change";
 import { useAppSelector } from "../../hooks";
 import { get } from "../../request";
 import { fullUrl } from "../../utils";
+import lodash from "lodash";
+import { order, push } from "../../reducers/term-order";
 
 const { Text, Title } = Typography;
+
+interface ITermExtra {
+  pali?: string;
+  meaning2?: string[];
+}
+const TermExtra = ({ pali, meaning2 }: ITermExtra) => (
+  <>
+    {" "}
+    {"("}
+    <Text italic>{pali}</Text>
+    {meaning2 ? <Text>{`,${meaning2}`}</Text> : undefined}
+    {")"}
+  </>
+);
 
 interface ITermSummary {
   ok: boolean;
@@ -55,6 +71,38 @@ const TermCtl = ({
   const [content, setContent] = useState<string>();
   const [community, setCommunity] = useState(isCommunity);
   const newTerm: ITermDataResponse | undefined = useAppSelector(changedTerm);
+  const [isFirst, setIsFirst] = useState(true);
+  const [uid, setUid] = useState<string>(
+    lodash.times(20, () => lodash.random(35).toString(36)).join("")
+  );
+
+  const termOrder = useAppSelector(order);
+
+  useEffect(() => {
+    if (word && parentChannelId) {
+      const currTerm = {
+        word: word,
+        channelId: parentChannelId,
+        first: uid,
+      };
+      store.dispatch(push(currTerm));
+    }
+  }, []);
+
+  useEffect(() => {
+    const index = termOrder?.findIndex(
+      (value) =>
+        value.word === word &&
+        value.channelId === parentChannelId &&
+        value.first === uid
+    );
+
+    if (index === -1) {
+      setIsFirst(false);
+    } else {
+      setIsFirst(true);
+    }
+  }, [parentChannelId, termOrder, uid, word]);
 
   useEffect(() => {
     if (newTerm?.word === word && parentStudioId === newTerm?.studio.id) {
@@ -92,6 +140,7 @@ const TermCtl = ({
   if (typeof termData?.id === "string") {
     return (
       <>
+        <span className="term"></span>
         <Popover
           title={
             <Space style={{ justifyContent: "space-between", width: "100%" }}>
@@ -188,12 +237,9 @@ const TermCtl = ({
               : "unknown"}
           </Typography.Link>
         </Popover>
-        {"("}
-        <Text italic>{word}</Text>
-        {termData?.meaning2 ? (
-          <Text>{`,${termData?.meaning2}`}</Text>
+        {isFirst ? (
+          <TermExtra pali={word} meaning2={termData?.meaning2} />
         ) : undefined}
-        {")"}
       </>
     );
   } else {

@@ -24,6 +24,7 @@ import sentWordsReducer from "./reducers/sent-word";
 import netStatusReducer from "./reducers/net-status";
 import discussionReducer from "./reducers/discussion";
 import wbwReducer from "./reducers/wbw";
+import termOrderReducer from "./reducers/term-order";
 
 const store = configureStore({
   reducer: {
@@ -51,6 +52,7 @@ const store = configureStore({
     netStatus: netStatusReducer,
     discussion: discussionReducer,
     wbw: wbwReducer,
+    termOrder: termOrderReducer,
   },
 });
 
