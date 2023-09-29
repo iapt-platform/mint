@@ -99,6 +99,9 @@ const DiscussionListCardWidget = ({
           description: {
             dataIndex: "content",
             search: false,
+            render(dom, entity, index, action, schema) {
+              return entity.summary ? entity.summary : entity.content;
+            },
           },
           actions: {
             render: (text, row, index, action) => [
@@ -144,6 +147,7 @@ const DiscussionListCardWidget = ({
               parent: item.parent,
               tplId: item.tpl_id,
               content: item.content,
+              summary: item.summary,
               status: item.status,
               childrenCount: item.children_count,
               createdAt: item.created_at,
@@ -184,6 +188,7 @@ const DiscussionListCardWidget = ({
                     parent: null,
                     content: item.content,
                     html: item.html,
+                    summary: item.summary ? item.summary : item._summary,
                     status: "active",
                     childrenCount: 0,
                     newTpl: true,
