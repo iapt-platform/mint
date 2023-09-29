@@ -98,6 +98,7 @@ class ExportOffline extends Command
                    'create_at'=>date("Y-m-d H:i:s"),
                    'chapter'=>Cache::get("/export/chapter/count"),
                    'filesize'=>filesize($zipFullFileName),
+                   'min_app_ver'=>'1.3',
                     ];
         Storage::disk('local')->put("public/export/offline/index.json", json_encode($info));
         return 0;
