@@ -8,6 +8,8 @@ use App\Models\Sentence;
 use App\Models\Channel;
 use App\Http\Api\ChannelApi;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use App\Http\Api\MdRender;
 
 class ExportSentence extends Command
 {
@@ -94,15 +96,26 @@ class ExportSentence extends Command
                                 'content','content_type','channel_uid',
                                 'editor_uid','language','updated_at'])->cursor();
         foreach ($srcDb as $sent) {
-            $currData = array(
-                    $sent->book_id,
-                    $sent->paragraph,
-                    $sent->word_start,
-                    $sent->word_end,
-                    $sent->content,
-                    $sent->channel_uid,
-                );
-            $stmt->execute($currData);
+            if(Str::isUuid($sent->channel_uid)){
+                $channel = ChannelApi::getById($sent->channel_uid);
+                $currData = array(
+                        $sent->book_id,
+                        $sent->paragraph,
+                        $sent->word_start,
+                        $sent->word_end,
+                        MdRender::render($sent->content,
+                                        [$sent->channel_uid],
+                                        null,
+                                        'read',
+                                        $channel['type'],
+                                        $sent->content_type,
+                                        'unity',
+                                        ),
+                        $sent->channel_uid,
+                    );
+                $stmt->execute($currData);
+
+            }
             $bar->advance();
         }
         $dbh->commit();

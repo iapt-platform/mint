@@ -13,7 +13,7 @@ class TestMdRender extends Command
      * run php artisan test:md.render term unity
      * @var string
      */
-    protected $signature = 'test:md.render {item?} {--format=html}';
+    protected $signature = 'test:md.render {item?} {--format=react}';
 
     /**
      * The console command description.
@@ -125,7 +125,7 @@ class TestMdRender extends Command
                 continue;
             }
             $format = $this->option('format');
-            echo MdRender::render2($value,
+            echo MdRender::render($value,
                                   ['00ae2c48-c204-4082-ae79-79ba2740d506'],
                                   null,'read','translation',
                                   $contentType="markdown",$format);

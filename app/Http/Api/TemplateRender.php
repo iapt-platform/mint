@@ -70,10 +70,11 @@ class TemplateRender{
     }
 
     public function getTermProps($word,$channelId,$channelInfo){
-        Log::info("term render:{$word}-{$channelId}");
         $lang = Channel::where('uid',$channelId)->value('lang');
         if(!empty($lang)){
             $langFamily = explode('-',$lang)[0];
+        }else{
+            $langFamily = 'zh';
         }
         //先查属于这个channel 的
         $tplParam = DhammaTerm::where("word",$word)
@@ -249,6 +250,7 @@ class TemplateRender{
         return [
             'props'=>base64_encode(\json_encode($props)),
             'html'=>"",
+            'text'=>$title,
             'tag'=>'span',
             'tpl'=>'article',
             ];

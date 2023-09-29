@@ -98,7 +98,7 @@ class SearchController extends Controller
             case 'complete':
             case 'case':
                 # code...
-                $querySelect_rank_base = " ts_rank('{0.1, 0.2, 0.4, 1}',
+                $querySelect_rank_base = " ts_rank('{0.1, 1, 0.3, 0.2}',
                                                 full_text_search_weighted,
                                                 websearch_to_tsquery('pali', ?)) ";
                 $querySelect_rank_head = implode('+', array_fill(0, count($key), $querySelect_rank_base));
@@ -114,7 +114,7 @@ class SearchController extends Controller
                 # 形似，去掉变音符号
                 $key = Tools::getWordEn($key[0]);
                 $querySelect_rank = "
-                    ts_rank('{0.1, 0.2, 0.4, 1}',
+                    ts_rank('{0.1, 1, 0.3, 0.2}',
                         full_text_search_weighted_unaccent,
                         websearch_to_tsquery('pali_unaccent', ?))
                     AS rank, ";

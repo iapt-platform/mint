@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Api;
 
-require_once __DIR__.'/../../../public/app/ucenter/function.php';
 use App\Models\UserInfo;
 
 class StudioApi{
@@ -13,12 +12,11 @@ class StudioApi{
         if(empty($name)){
             return false;
         }
-        $userinfo = new \UserInfo();
-        $studio = $userinfo->getUserByName($name);
-        if($studio){
-            return $userinfo->getUserByName($name)['userid'];
-        }else{
+        $userInfo = UserInfo::where('username',$name)->first();
+        if(!$userInfo){
             return false;
+        }else{
+            return $userInfo->userid;
         }
 
     }
