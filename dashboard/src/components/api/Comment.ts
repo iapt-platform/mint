@@ -25,6 +25,7 @@ export interface ICommentApiData {
   content?: string;
   content_type?: TContentType;
   html?: string;
+  summary?: string;
   parent?: string;
   tpl_id?: string;
   status?: "active" | "close";

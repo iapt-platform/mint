@@ -15,7 +15,7 @@ interface DataItem {
   id: string;
   title: string;
   subtitle: string;
-  summary: string;
+  summary?: string | null;
   anthologyCount?: number;
   anthologyTitle?: string;
   publicity: number;
