@@ -250,6 +250,7 @@ class TemplateRender{
         return [
             'props'=>base64_encode(\json_encode($props)),
             'html'=>"",
+            'text'=>$title,
             'tag'=>'span',
             'tpl'=>'article',
             ];
