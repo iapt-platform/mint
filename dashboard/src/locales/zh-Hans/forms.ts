@@ -80,6 +80,10 @@ const items = {
   "forms.message.question.required": "请输入您的问题（必填）",
   "forms.message.question.description.option": "问题详细描述（选填）",
   "forms.fields.replay.label": "回复",
+  "forms.status.transferred.label": "等待处理",
+  "forms.status.accept.label": "已经接受",
+  "forms.status.refuse.label": "已经拒绝",
+  "forms.status.cancel.label": "已经撤回",
 };
 
 export default items;
