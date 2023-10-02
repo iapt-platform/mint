@@ -79,8 +79,12 @@ import Studio from "./pages/studio";
 import StudioHome from "./pages/studio/home";
 
 import StudioPalicanon from "./pages/studio/palicanon";
+
 import StudioRecent from "./pages/studio/recent";
 import StudioRecentList from "./pages/studio/recent/list";
+
+import StudioTransfer from "./pages/studio/transfer";
+import StudioTransferList from "./pages/studio/transfer/list";
 
 import StudioChannel from "./pages/studio/channel";
 import StudioChannelList from "./pages/studio/channel/list";
@@ -316,6 +320,9 @@ const Widget = () => {
           </Route>
           <Route path="invite" element={<StudioInvite />}>
             <Route path="list" element={<StudioInviteList />} />
+          </Route>
+          <Route path="transfer" element={<StudioTransfer />}>
+            <Route path="list" element={<StudioTransferList />} />
           </Route>
         </Route>
       </Routes>

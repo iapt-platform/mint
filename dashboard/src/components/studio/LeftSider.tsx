@@ -186,6 +186,16 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
           ),
           key: "invite",
         },
+        {
+          label: (
+            <Link to={`/studio/${studioname}/transfer/list`}>
+              {intl.formatMessage({
+                id: "columns.studio.transfer.title",
+              })}
+            </Link>
+          ),
+          key: "transfer",
+        },
       ],
     },
   ];
