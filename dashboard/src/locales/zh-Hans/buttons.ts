@@ -71,6 +71,8 @@ const items = {
   "buttons.timeline": "时间线",
   "buttons.discussion": "讨论",
   "buttons.suggestion": "修改建议",
+  "buttons.accept": "接受",
+  "buttons.refuse": "拒绝",
 };
 
 export default items;
