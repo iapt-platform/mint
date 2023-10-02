@@ -26,6 +26,8 @@ import StudioName, { IStudio } from "../../components/auth/StudioName";
 import StudioSelect from "../../components/channel/StudioSelect";
 import { IChannel } from "./Channel";
 import { getSorterUrl } from "../../utils";
+import TransferCreate from "../transfer/TransferCreate";
+import { TransferOutLinedIcon } from "../../assets/icon";
 
 const { Text } = Typography;
 
@@ -87,6 +89,9 @@ const ChannelTableWidget = ({
   const [myNumber, setMyNumber] = useState<number>(0);
   const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
   const [collaborator, setCollaborator] = useState<string>();
+  const [transfer, setTransfer] = useState<string>();
+  const [transferName, setTransferName] = useState<string>();
+  const [transferOpen, setTransferOpen] = useState(false);
 
   useEffect(() => {
     ref.current?.reload();
@@ -352,6 +357,13 @@ const ChannelTableWidget = ({
                         icon: <TeamOutlined />,
                       },
                       {
+                        key: "transfer",
+                        label: intl.formatMessage({
+                          id: "columns.studio.transfer.title",
+                        }),
+                        icon: <TransferOutLinedIcon />,
+                      },
+                      {
                         key: "remove",
                         label: intl.formatMessage({
                           id: "buttons.delete",
@@ -364,6 +376,11 @@ const ChannelTableWidget = ({
                       switch (e.key) {
                         case "remove":
                           showDeleteConfirm(row.uid, row.title);
+                          break;
+                        case "transfer":
+                          setTransfer(row.uid);
+                          setTransferName(row.title);
+                          setTransferOpen(true);
                           break;
                         default:
                           break;
@@ -527,6 +544,14 @@ const ChannelTableWidget = ({
             },
           },
         }}
+      />
+      <TransferCreate
+        studioName={studioName}
+        resId={transfer}
+        resType="channel"
+        resName={transferName}
+        open={transferOpen}
+        onOpenChange={(visible: boolean) => setTransferOpen(visible)}
       />
     </>
   );
