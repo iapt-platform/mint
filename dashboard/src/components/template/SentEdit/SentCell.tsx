@@ -17,6 +17,7 @@ import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
 import { nissayaBase } from "../Nissaya/NissayaMeaning";
 import { anchor, message } from "../../../reducers/discussion";
 import TextDiff from "../../general/TextDiff";
+import { sentSave as _sentSave } from "./SentCellEditable";
 
 interface IWidget {
   initValue?: ISentence;
@@ -115,7 +116,24 @@ const SentCellWidget = ({
             case "suggestion":
               setPrOpen(true);
               break;
+            case "paste":
+              navigator.clipboard.readText().then((value: string) => {
+                if (sentData && value !== "") {
+                  sentData.content = value;
+                  _sentSave(
+                    sentData,
+                    (res) => {
+                      setSentData(res);
+                      if (typeof onChange !== "undefined") {
+                        onChange(res);
+                      }
+                    },
+                    () => {}
+                  );
+                }
+              });
 
+              break;
             default:
               break;
           }
@@ -219,8 +237,8 @@ const SentCellWidget = ({
                     setIsEditMode(false);
                   }}
                   onSave={(data: ISentence) => {
-                    setSentData(data);
                     setIsEditMode(false);
+                    setSentData(data);
                     if (typeof onChange !== "undefined") {
                       onChange(data);
                     }
