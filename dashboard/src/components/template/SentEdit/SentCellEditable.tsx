@@ -18,6 +18,52 @@ import Builder from "../Builder/Builder";
 
 const { Text } = Typography;
 
+export const sentSave = (
+  data: ISentence,
+  ok: (res: ISentence) => void,
+  finish: () => void
+) => {
+  let url = `/v2/sentence/${data.book}_${data.para}_${data.wordStart}_${data.wordEnd}_${data.channel.id}`;
+  url += "?mode=edit&html=true";
+  console.log("save url", url);
+  const body = {
+    book: data.book,
+    para: data.para,
+    wordStart: data.wordStart,
+    wordEnd: data.wordEnd,
+    channel: data.channel.id,
+    content: data.content,
+    channels: data.translationChannels?.join(),
+  };
+  put<ISentenceRequest, ISentenceResponse>(url, body)
+    .then((json) => {
+      if (json.ok) {
+        const newData: ISentence = {
+          id: json.data.id,
+          content: json.data.content,
+          html: json.data.html,
+          book: json.data.book,
+          para: json.data.paragraph,
+          wordStart: json.data.word_start,
+          wordEnd: json.data.word_end,
+          editor: json.data.editor,
+          channel: json.data.channel,
+          updateAt: json.data.updated_at,
+        };
+        ok(newData);
+      } else {
+        message.error(json.message);
+      }
+    })
+    .finally(() => {
+      finish();
+    })
+    .catch((e) => {
+      console.error("catch", e);
+      message.error(e.message);
+    });
+};
+
 interface IWidget {
   data: ISentence;
   isPr?: boolean;
@@ -91,8 +137,6 @@ const SentCellEditableWidget = ({
     };
     put<ISentenceRequest, ISentenceResponse>(url, body)
       .then((json) => {
-        setSaving(false);
-
         if (json.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
           if (typeof onSave !== "undefined") {
@@ -114,8 +158,10 @@ const SentCellEditableWidget = ({
           message.error(json.message);
         }
       })
-      .catch((e) => {
+      .finally(() => {
         setSaving(false);
+      })
+      .catch((e) => {
         console.error("catch", e);
         message.error(e.message);
       });
