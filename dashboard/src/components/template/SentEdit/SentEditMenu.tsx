@@ -1,4 +1,4 @@
-import { Button, Dropdown, message } from "antd";
+import { Button, Dropdown, Tooltip, message } from "antd";
 import { useState } from "react";
 import {
   EditOutlined,
@@ -15,6 +15,7 @@ import {
   CommentOutlinedIcon,
   HandOutlinedIcon,
   JsonOutlinedIcon,
+  PasteOutLinedIcon,
 } from "../../../assets/icon";
 import { useIntl } from "react-intl";
 
@@ -128,29 +129,43 @@ const SentEditMenuWidget = ({
           display: isHover ? "block" : "none",
         }}
       >
-        <Button
-          icon={<EditOutlined />}
-          size="small"
-          title="edit"
-          onClick={() => {
-            if (typeof onModeChange !== "undefined") {
-              onModeChange("edit");
-            }
-          }}
-        />
-        <Button
-          icon={<CopyOutlined />}
-          size="small"
-          onClick={() => {
-            if (data?.content) {
-              navigator.clipboard.writeText(data.content).then(() => {
-                message.success("已经拷贝到剪贴板");
-              });
-            } else {
-              message.success("内容为空");
-            }
-          }}
-        />
+        <Tooltip title="编辑">
+          <Button
+            icon={<EditOutlined />}
+            size="small"
+            onClick={() => {
+              if (typeof onModeChange !== "undefined") {
+                onModeChange("edit");
+              }
+            }}
+          />
+        </Tooltip>
+        <Tooltip title="复制">
+          <Button
+            icon={<CopyOutlined />}
+            size="small"
+            onClick={() => {
+              if (data?.content) {
+                navigator.clipboard.writeText(data.content).then(() => {
+                  message.success("已经拷贝到剪贴板");
+                });
+              } else {
+                message.success("内容为空");
+              }
+            }}
+          />
+        </Tooltip>
+        <Tooltip title="粘贴">
+          <Button
+            icon={<PasteOutLinedIcon />}
+            size="small"
+            onClick={() => {
+              if (typeof onMenuClick !== "undefined") {
+                onMenuClick("paste");
+              }
+            }}
+          />
+        </Tooltip>
         <Dropdown
           disabled={data ? false : true}
           menu={{ items, onClick }}
