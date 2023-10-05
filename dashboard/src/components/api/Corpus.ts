@@ -273,8 +273,12 @@ export interface ISentencePrResponse {
   };
 }
 
+export interface ISimSent {
+  sent: string;
+  sim: number;
+}
 export interface ISentenceSimListResponse {
   ok: boolean;
   message: string;
-  data: { rows: string[]; count: number };
+  data: { rows: ISimSent[]; count: number };
 }
