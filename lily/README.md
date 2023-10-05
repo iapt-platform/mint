@@ -2,14 +2,24 @@
 
 ## Setup
 
-```bash
-$ sudo apt install python3-full imagemagick ffmpeg fonts-dejavu-extra texlive-full
-$ python3 -m venv $HOME/local/python3
-$ source $HOME/local/python3/bin/activate
-$ pip install psycopg pika matplotlib ebooklib \
+- Install [Python3.11+](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa)
+
+  ```bash
+  $ sudo add-apt-repository ppa:deadsnakes/ppa
+  $ sudo apt update
+  $ sudo apt install python3.12-full python3.12-dev
+  ```
+
+- Install libraries
+
+  ```bash
+  $ sudo apt install imagemagick ffmpeg fonts-dejavu-extra texlive-full
+  $ python3.12 -m venv $HOME/local/python3
+  $ source $HOME/local/python3/bin/activate
+  $ pip install psycopg pika matplotlib ebooklib \
     grpcio protobuf grpcio-health-checking \
     pandas openpyxl xlrd pyxlsb
-```
+  ```
 
 ## Start
 
