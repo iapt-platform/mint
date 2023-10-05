@@ -28,12 +28,13 @@ class SentSimController extends Controller
                     return $this->error("no sent");
                 }
                 $table = SentSim::where('sent1',$sentId)
-                                ->where('sim',">",0.5)
                                 ->orderBy('sim','desc');
                 break;
         }
+        $table->where('sim','>=',$request->get('sim',0));
         $count = $table->count();
-        $table->skip($request->get("offset",0))->take($request->get('limit',200));
+        $table->skip($request->get("offset",0))
+              ->take($request->get('limit',20));
         $result = $table->get();
         if($result){
             return $this->ok(["rows"=>SentSimResource::collection($result),"count"=>$count]);
