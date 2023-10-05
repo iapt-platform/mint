@@ -26,7 +26,9 @@ class SentSimResource extends JsonResource
         $mode = explode(',',$request->get('mode','read'));
         $sentId = $sent->book.'-'.$sent->paragraph.'-'.$sent->word_begin.'-'.$sent->word_end;
         $Sent = new CorpusController();
-        $tpl = $Sent->getSentTpl($sentId,$channels,$mode);
-        return $tpl;
+        $tpl =
+        $data['sent'] = $Sent->getSentTpl($sentId,$channels,$mode);
+        $data['sim'] = $this->sim;
+        return $data;
     }
 }
