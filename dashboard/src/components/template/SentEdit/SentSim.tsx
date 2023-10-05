@@ -1,9 +1,18 @@
-import { Button, message } from "antd";
+import {
+  Badge,
+  Button,
+  Divider,
+  List,
+  Skeleton,
+  Space,
+  Switch,
+  message,
+} from "antd";
 import { useEffect, useState } from "react";
 import { ReloadOutlined } from "@ant-design/icons";
 
 import { get } from "../../../request";
-import { ISentenceSimListResponse } from "../../api/Corpus";
+import { ISentenceSimListResponse, ISimSent } from "../../api/Corpus";
 import MdView from "../MdView";
 
 interface IWidget {
@@ -21,29 +30,40 @@ const SentSimWidget = ({
   para,
   wordStart,
   wordEnd,
-  limit,
+  limit = 5,
   channelsId,
   reload = false,
   onReload,
 }: IWidget) => {
-  const [sentData, setSentData] = useState<string[]>([]);
+  const [initLoading, setInitLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [sim, setSim] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const [sentData, setSentData] = useState<ISimSent[]>([]);
+  const [remain, setRemain] = useState(0);
 
   const load = () => {
-    let url = `/v2/sent-sim?view=sentence&book=${book}&paragraph=${para}&start=${wordStart}&end=${wordEnd}&limit=10&mode=edit`;
-    if (typeof limit !== "undefined") {
-      url = url + `&limit=${limit}`;
-    }
+    let url = `/v2/sent-sim?view=sentence&book=${book}&paragraph=${para}&start=${wordStart}&end=${wordEnd}&mode=edit`;
+    url += `&limit=${limit}`;
+    url += `&offset=${offset}`;
+    url += `&sim=${sim}`;
+
     url += channelsId ? `&channels=${channelsId.join()}` : "";
+    setLoading(true);
+    console.log("url", url);
     get<ISentenceSimListResponse>(url)
       .then((json) => {
         if (json.ok) {
-          console.log("pr load", json.data.rows);
-          setSentData(json.data.rows);
+          console.log("sim load", json.data.rows);
+          setSentData([...sentData, ...json.data.rows]);
+          setRemain(json.data.count - sentData.length - json.data.rows.length);
         } else {
           message.error(json.message);
         }
       })
       .finally(() => {
+        setInitLoading(false);
+        setLoading(false);
         if (reload && typeof onReload !== "undefined") {
           onReload();
         }
@@ -51,27 +71,59 @@ const SentSimWidget = ({
   };
   useEffect(() => {
     load();
-  }, []);
-  useEffect(() => {
-    if (reload) {
-      load();
-    }
-  }, [reload]);
+  }, [offset, sim]);
+
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span></span>
-        <Button
-          type="link"
-          shape="round"
-          icon={<ReloadOutlined />}
-          onClick={() => load()}
-        />
-      </div>
-
-      {sentData.map((item, id) => {
-        return <MdView html={item} key={id} />;
-      })}
+      <List
+        loading={initLoading}
+        header={
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span></span>
+            <Space>
+              {"只显示相同句"}
+              <Switch
+                onChange={(checked: boolean) => {
+                  if (checked) {
+                    setSim(1);
+                  } else {
+                    setSim(0);
+                  }
+                  setOffset(0);
+                  setSentData([]);
+                }}
+              />
+              <Button
+                type="link"
+                shape="round"
+                icon={<ReloadOutlined />}
+                onClick={() => {}}
+              />
+            </Space>
+          </div>
+        }
+        itemLayout="horizontal"
+        split={false}
+        loadMore={
+          <Divider>
+            <Button
+              disabled={remain <= 0}
+              onClick={() => {
+                setOffset((origin) => origin + limit);
+              }}
+              loading={loading}
+            >
+              load more
+            </Button>
+          </Divider>
+        }
+        dataSource={sentData}
+        renderItem={(item, index) => (
+          <List.Item>
+            <MdView html={item.sent} key={index} style={{ width: "100%" }} />
+          </List.Item>
+        )}
+      />
     </>
   );
 };
