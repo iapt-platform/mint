@@ -45,6 +45,14 @@ $request->getFiles()['section-1.tex'] = <<<'EOF'
 章节1 正文
 \subsection{子章节1.1 标题}
 子章节1-1 正文
+
+
+\newline This is another \verb|\newline| .
+
+\par This is a new paragraph.
+
+\newpage This is a new page.
+
 \subsection{子章节1.2 标题}
 子章节1-2 正文
 EOF;
