@@ -39,7 +39,7 @@ interface IFtsItem {
   path?: ITocPathNode[];
 }
 
-export type ISearchView = "pali" | "title";
+export type ISearchView = "pali" | "title" | "page";
 interface IWidget {
   keyWord?: string;
   tags?: string[];
@@ -146,6 +146,9 @@ const FullTxtSearchResultWidget = ({
             link = `/article/para/${item.book}-${item.paragraph}?book=${item.book}&par=${paragraph}&focus=${item.paragraph}`;
             break;
           case "title":
+            link = `/article/chapter/${item.book}-${item.paragraph}`;
+            break;
+          case "page":
             link = `/article/chapter/${item.book}-${item.paragraph}`;
             break;
           default:
