@@ -156,7 +156,11 @@ const FullSearchInputWidget = ({
         <Input.Search
           size={size}
           width={width}
-          placeholder="search here"
+          placeholder={
+            view === "page"
+              ? "输入页码数字，或者卷号.页码如 1.1"
+              : "search here"
+          }
           onSearch={(value: string) => {
             console.log("on search", value, tags);
             if (typeof onSearch !== "undefined") {
