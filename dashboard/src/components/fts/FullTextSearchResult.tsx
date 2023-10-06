@@ -154,6 +154,12 @@ const FullTxtSearchResultWidget = ({
           default:
             break;
         }
+        let title = "unnamed";
+        if (item.paliTitle) {
+          if (item.paliTitle.length > 0) {
+            title = item.paliTitle;
+          }
+        }
         return (
           <List.Item>
             {loading ? (
@@ -177,7 +183,7 @@ const FullTxtSearchResultWidget = ({
                 </div>
                 <Title level={4} style={{ fontWeight: 500 }}>
                   <Link to={link} target="_blank">
-                    {item.title}
+                    {item.title ? item.title : title}
                   </Link>
                 </Title>
                 <div style={{ display: "none" }}>
