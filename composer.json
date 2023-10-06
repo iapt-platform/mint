@@ -41,7 +41,8 @@
             "GPBMetadata\\": [
                 "grpc/GPBMetadata/"
               ],
-            "Mint\\": "grpc/Mint/"
+            "Mint\\": "grpc/Mint/",
+            "Palm\\": "grpc/Palm/"
         }
     },
     "autoload-dev": {

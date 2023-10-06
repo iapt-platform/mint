@@ -38,10 +38,10 @@ class CaseMan
                     if($ending[2] !== '.n.' || strpos($ending[3],$grammar)!==0){continue 2;}
                     break;
                 case '.ti:base.':
-                    if($ending[2] !== '.ti.' || strpos($ending[3],$grammar)!==0){continue 2;}
+                    if($ending[2] !== '.ti.' && $ending[2] !== '.n.' ){continue 2;}
                     break;
                 case '.adj:base.':
-                    if($ending[2] !== '.ti.' || strpos($ending[3],$grammar)!==0){continue 2;}
+                    if($ending[2] !== '.ti.' && $ending[2] !== '.n.' ){continue 2;}
                     break;
                 case '.v:base.':
                     if($ending[2] !== '.v.'){continue 2;}
@@ -70,7 +70,8 @@ class CaseMan
                             $hasSandhi = true;
                             $newWord[] = ['word'=>$sandhiWord,
                             'ending'=>$ending[1],
-                            'grammar'=>'.un.',
+                            'type'=>'.un.',
+                            'grammar'=>'',
                             'factors'=>"{$word}+{$sandhi[2]}",
                             'count'=>$count->count,
                             'bold'=>$count->bold

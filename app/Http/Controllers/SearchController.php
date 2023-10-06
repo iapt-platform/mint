@@ -16,6 +16,7 @@ use App\Http\Resources\SearchBookResource;
 use Illuminate\Support\Facades\Log;
 use App\Tools\Tools;
 use App\Models\WbwTemplate;
+use App\Models\PageNumber;
 
 
 class SearchController extends Controller
@@ -189,15 +190,22 @@ class SearchController extends Controller
             }
         }
 
-//type='.ctl.' and word like 'P%038'
         $key = $request->get('key');
         $searchKey = '';
-        $table = WbwTemplate::where('type','.ctl.');
-        if(is_numeric($key)){
-            $table = $table->where('word','like',$request->get('type')."%0".$key);
+        $page = explode('.',$key);
+        if(count($page)===2){
+            $table = PageNumber::where('type',$request->get('type'))
+                               ->where('volume',(int)$page[0])
+                               ->where('page',(int)$page[1]);
         }else{
-            $table = $table->where('word',$key);
+            if(is_numeric($key)){
+                $table = PageNumber::where('type',$request->get('type'))->where('page',$key);
+            }else{
+                $table = PageNumber::where('type',$request->get('type'))->where('page',(int)$key);
+            }
         }
+
+
 
         if(count($bookId)>0){
             $table = $table->whereIn('pcd_book_id',$bookId);

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-require_once __DIR__.'/../../../public/app/ucenter/function.php';
-
 use App\Models\Channel;
 use App\Models\Sentence;
 use App\Models\DhammaTerm;
@@ -29,7 +27,6 @@ class ChannelController extends Controller
     public function index(Request $request)
     {
         //
-        $userinfo = new \UserInfo();
 		$result=false;
 		$indexCol = ['uid','name','summary',
                     'type','owner_uid','lang',
@@ -481,21 +478,9 @@ class ChannelController extends Controller
         //
         $indexCol = ['uid','name','summary','type','owner_uid','lang','status','updated_at','created_at'];
 		$channel = Channel::where("uid",$id)->select($indexCol)->first();
-		$userinfo = new \UserInfo();
-        $studio = $userinfo->getName($channel->owner_uid);
-		$channel->owner_info = $studio;
-        $channel->studio = [
-            'id'=>$channel->owner_uid,
-            'nickName'=>$studio['nickname'],
-            'studioName'=>$studio['username'],
-            'avastar'=>'',
-            'owner' => [
-                'id'=>$channel->owner_uid,
-                'nickName'=>$studio['nickname'],
-                'userName'=>$studio['username'],
-                'avastar'=>'',
-            ]
-        ];
+        $studio = StudioApi::getById($channel->owner_uid);
+        $channel->studio = $studio;
+        $channel->owner_info = ['nickname'=>$studio['nickName'],'username'=>$studio['realName']];
 		return $this->ok($channel);
     }
 

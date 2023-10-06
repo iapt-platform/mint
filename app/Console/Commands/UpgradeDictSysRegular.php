@@ -93,10 +93,16 @@ class UpgradeDictSysRegular extends Command
             $newWords = $caseMan->Declension($word->word,$word->type,$word->grammar,0.5);
             if($this->option('debug')){$this->info("{$word->word}:".count($newWords));}
             foreach ($newWords as $newWord) {
+                if(isset($newWord['type'])){
+                    $type = $newWord['type'];
+                }else{
+                    $type = \str_replace(':base','',$word->type);
+                }
+
                 $new = UserDict::firstOrNew(
                     [
                         'word' => $newWord['word'],
-                        'type' => \str_replace(':base','',$word->type),
+                        'type' => $type,
                         'grammar' => $newWord['grammar'],
                         'parent' => $word->word,
                         'factors' => $newWord['factors'],

@@ -49,6 +49,7 @@ class InitCs6sentence extends Command
             $this->error('no channel');
             return 1;
         }
+        $this->info($channelId);
 		$pali = new PaliSentence;
 		if(!empty($this->argument('book'))){
 			$pali = $pali->where('book',$this->argument('book'));
@@ -58,7 +59,7 @@ class InitCs6sentence extends Command
 		}
 		$bar = $this->output->createProgressBar($pali->count());
 		$pali = $pali->select('book','paragraph','word_begin','word_end')->cursor();
-
+        $pageHead = ['M','P','T','V','O'];
 		foreach ($pali as $value) {
 			# code...
 			$words = WbwTemplate::where("book",$value->book)
@@ -74,8 +75,7 @@ class InitCs6sentence extends Command
 			foreach ($words as $word) {
 				# code...
 				//if($word->style != "note" && $word->type != '.ctl.')
-				if( $word->type != '.ctl.')
-                {
+				if( $word->type != '.ctl.'){
                     if($lastWord !== null){
                         if($word->real !== "ti" ){
 
@@ -99,7 +99,16 @@ class InitCs6sentence extends Command
                         }
 					}
 
-				}
+				}else{
+                    $type = substr($word->word,0,1);
+                    if(in_array($type,$pageHead)){
+                        $arrPage = explode('.',$word->word);
+                        if(count($arrPage)===2){
+                            $pageNumber = $arrPage[0].'.'.(int)$arrPage[1];
+                           $sent .= "<code>{$pageNumber}</code>";
+                        }
+                    }
+                }
                 $lastWord = $word;
 			}
 
