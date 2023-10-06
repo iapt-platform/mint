@@ -15,12 +15,16 @@ const Widget = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [bookRoot, setBookRoot] = useState("default");
   const [bookPath, setBookPath] = useState<string[]>([]);
-  const [searchPage, setSearchPage] = useState(false);
   const navigate = useNavigate();
   const [pageType, setPageType] = useState("P");
-  const [view, setView] = useState("pali");
+  const [view, setView] = useState<ISearchView | undefined>("pali");
 
-  useEffect(() => {}, [key, searchParams]);
+  useEffect(() => {
+    const v = searchParams.get("view");
+    if (typeof v === "string") {
+      setView(v as ISearchView);
+    }
+  }, [key, searchParams]);
 
   useEffect(() => {
     let currRoot: string | null;
@@ -61,7 +65,6 @@ const Widget = () => {
                     size="large"
                     width={"500px"}
                     value={key}
-                    searchPage={searchPage}
                     view={view}
                     tags={searchParams.get("tags")?.split(",")}
                     onSearch={(value: string) => {
@@ -90,20 +93,11 @@ const Widget = () => {
                   ))}
                 </Breadcrumb>
                 <Tabs
+                  activeKey={view}
                   onChange={(activeKey: string) => {
-                    setView(activeKey);
-                    searchParams.set("type", activeKey);
+                    setView(activeKey as ISearchView);
+                    searchParams.set("view", activeKey);
                     setSearchParams(searchParams);
-                    switch (activeKey) {
-                      case "pali":
-                        setSearchPage(false);
-                        break;
-                      case "page":
-                        setSearchPage(true);
-                        break;
-                      default:
-                        break;
-                    }
                   }}
                   size="small"
                   items={[
