@@ -92,7 +92,7 @@ const Widget = () => {
                 <Tabs
                   onChange={(activeKey: string) => {
                     setView(activeKey);
-                    searchParams.set(view, activeKey);
+                    searchParams.set("type", activeKey);
                     setSearchParams(searchParams);
                     switch (activeKey) {
                       case "pali":
