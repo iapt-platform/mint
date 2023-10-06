@@ -2,6 +2,7 @@ import { AutoComplete, Badge, Input, Select, Space, Typography } from "antd";
 import { SizeType } from "antd/lib/config-provider/SizeContext";
 import { useState } from "react";
 import { get } from "../../request";
+import { ISearchView } from "./FullTextSearchResult";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -32,8 +33,7 @@ interface IWidget {
   para?: number;
   size?: SizeType;
   width?: string | number;
-  searchPage?: boolean;
-  view?: string;
+  view?: ISearchView;
   onSearch?: Function;
   onSplit?: Function;
   onPageTypeChange?: Function;
@@ -46,7 +46,6 @@ const FullSearchInputWidget = ({
   width,
   onSearch,
   view = "pali",
-  searchPage = false,
   onPageTypeChange,
 }: IWidget) => {
   const [options, setOptions] = useState<ValueType[]>([]);
@@ -112,7 +111,7 @@ const FullSearchInputWidget = ({
   );
   return (
     <Space>
-      {searchPage ? selectBefore : undefined}
+      {view === "page" ? selectBefore : undefined}
       <AutoComplete
         style={{ width: width }}
         value={input}
