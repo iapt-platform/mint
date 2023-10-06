@@ -39,7 +39,7 @@ interface IFtsItem {
   path?: ITocPathNode[];
 }
 
-export type ISearchView = "pali" | "title";
+export type ISearchView = "pali" | "title" | "page";
 interface IWidget {
   keyWord?: string;
   tags?: string[];
@@ -148,8 +148,17 @@ const FullTxtSearchResultWidget = ({
           case "title":
             link = `/article/chapter/${item.book}-${item.paragraph}`;
             break;
+          case "page":
+            link = `/article/chapter/${item.book}-${item.paragraph}`;
+            break;
           default:
             break;
+        }
+        let title = "unnamed";
+        if (item.paliTitle) {
+          if (item.paliTitle.length > 0) {
+            title = item.paliTitle;
+          }
         }
         return (
           <List.Item>
@@ -174,7 +183,7 @@ const FullTxtSearchResultWidget = ({
                 </div>
                 <Title level={4} style={{ fontWeight: 500 }}>
                   <Link to={link} target="_blank">
-                    {item.title}
+                    {item.title ? item.title : title}
                   </Link>
                 </Title>
                 <div style={{ display: "none" }}>

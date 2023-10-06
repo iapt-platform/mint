@@ -4,7 +4,7 @@ require dirname(__FILE__) . '/vendor/autoload.php';
 
 function tex2pdf($host, $request)
 {
-    $client = new Palm\Lily\V1\TexClient($host, [
+    $client = new \Palm\Lily\V1\TexClient($host, [
         'credentials' => Grpc\ChannelCredentials::createInsecure(),
     ]);
 
@@ -16,7 +16,7 @@ function tex2pdf($host, $request)
     echo $response->getContentType() . '(' . strlen($response->getPayload()) . ' bytes)' . PHP_EOL;
 }
 
-$request = new Palm\Lily\V1\TexToRequest();
+$request = new \Palm\Lily\V1\TexToRequest();
 
 $request->getFiles()['main.tex'] = <<<'EOF'
 % 导言区
@@ -66,4 +66,4 @@ $request->getFiles()['section-2.tex'] = <<<'EOF'
 子章节2-2 正文
 EOF;
 
-tex2pdf('localhost:9999', $request);
+tex2pdf('192.168.43.100:9000', $request);
