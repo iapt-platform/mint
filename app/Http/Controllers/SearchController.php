@@ -192,18 +192,19 @@ class SearchController extends Controller
 
         $key = $request->get('key');
         $searchKey = '';
-        if(is_numeric($key)){
-            $table = PageNumber::where('type',$request->get('type'))->where('page',$key);
+        $page = explode('.',$key);
+        if(count($page)===2){
+            $table = PageNumber::where('type',$request->get('type'))
+                               ->where('volume',(int)$page[0])
+                               ->where('page',(int)$page[1]);
         }else{
-            $page = explode('.',$key);
-            if(count($page)===2){
-                $table = PageNumber::where('type',$request->get('type'))
-                                   ->where('volume',$page[0])
-                                   ->where('page',$page[1]);
-            }else{
+            if(is_numeric($key)){
                 $table = PageNumber::where('type',$request->get('type'))->where('page',$key);
+            }else{
+                $table = PageNumber::where('type',$request->get('type'))->where('page',(int)$key);
             }
         }
+
 
 
         if(count($bookId)>0){
