@@ -26,8 +26,8 @@ Route::get('/export/wbw', function (){
     return view('export_wbw',['sentences' => []]);
 });
 
-Route::get('/privacy', function (){
-    $content = file_get_contents(base_path('/documents/mobile/privacy.md'));
+Route::get('/privacy/{file}', function ($file){
+    $content = file_get_contents(base_path("/documents/mobile/privacy/{$file}.md"));
     return view('privacy',['content' => $content]);
 });
 
