@@ -11,15 +11,16 @@ use App\Models\Sentence;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
 use App\Tools\Export;
+use Illuminate\Support\Facades\Log;
 
 class ExportChapter extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan export:chapter 213 1849 a19eaf75-c63f-4b84-8125-1bce18311e23
      * @var string
      */
-    protected $signature = 'export:chapter {book} {para} {channel}';
+    protected $signature = 'export:chapter {book} {para} {channel} {--debug}';
 
     /**
      * The console command description.
@@ -84,7 +85,7 @@ class ExportChapter extends Command
                 $content = array();
 
                 $chapterStart = $sub->paragraph+1;
-                $chapterEnd = $sub->paragraph + $sub->lenght;
+                $chapterEnd = $sub->paragraph + $sub->chapter_len;
                 $chapterBody = PaliText::where('book',$book)
                                           ->whereBetween('paragraph',[$chapterStart,$chapterEnd])
                                           ->orderBy('paragraph')->get();
@@ -96,19 +97,35 @@ class ExportChapter extends Command
                                     ->orderBy('word_start')->get();
                     $sentContent = array();
                     foreach ($translationData as $sent) {
-                        /*
-                        $sentContent[] = MdRender::render($sent->content,
+                        $texText = MdRender::render($sent->content,
                                                         [$sent->channel_uid],
                                                         null,
                                                         'read',
                                                         $channel['type'],
                                                         $sent->content_type,
-                                                        'unity'
-                                                        );*/
-                        $sentContent[] = $sent->content;
+                                                        'tex'
+                                                        );
+                        $sentContent[] = trim($texText);
                     }
-                    $content[] = '\par ';
-                    $content[] = implode(' ',$sentContent);
+                    $paraContent = implode(' ',$sentContent);
+                    if($body->level > 7){
+                        $content[] = '\par '.$paraContent;
+                    }else{
+                        $currLevel = $body->level - $sub->level;
+                        if($currLevel>0){
+                            if(empty($paraContent)){
+                                $subSessionTitle = PaliText::where('book',$book)
+                                                     ->where('paragraph',$body->paragraph)
+                                                     ->value('toc');
+                            }else{
+                                $subSessionTitle = $paraContent;
+                            }
+                            $subStr = array_fill(0,$currLevel,'sub');
+                            $content[] = '\\'. implode('',$subStr) . "section{".$subSessionTitle.'}';
+                        }else{
+                            $content[] = '\par '.$paraContent;
+                        }
+                    }
                     $content[] = "\n";
                 }
 
@@ -122,7 +139,9 @@ class ExportChapter extends Command
             }
         }
         $tex = array();
-        $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES,'delimiters' => '[[ ]]'));
+        $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES,'delimiters' => '[[ ]]','escape'=>function ($value){
+            return $value;
+        }));
         $tpl = file_get_contents(resource_path("mustache/tex/main.tex"));
         $texContent = $m->render($tpl,$bookMeta);
         $tex[] = ['name'=>'main.tex',
@@ -136,9 +155,15 @@ class ExportChapter extends Command
                  ];
         }
 
+        if($this->option('debug')){
+            $dir = "export/{$book}-{$para}-{$channelId}/";
+            foreach ($tex as $key => $section) {
+                Storage::disk('local')->put($dir.$section['name'], $section['content']);
+            }
+        }
         $data = Export::ToPdf($tex);
         if($data['ok']){
-            $filename = "export/test.pdf";
+            $filename = "export/{$book}-{$para}-{$channelId}.pdf";
             $this->info($data['content-type']);
             Storage::disk('local')->put($filename, $data['data']);
         }else{
