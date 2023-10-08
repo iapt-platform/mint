@@ -45,6 +45,10 @@ class UpgradeCompound extends Command
      */
     public function handle()
     {
+        if(file_exists(base_path('.stop'))){
+            $this->info('.stop exists');
+            return 0;
+        }
         $dict_id = DictApi::getSysDict('robot_compound');
         if(!$dict_id){
             $this->error('没有找到 robot_compound 字典');
@@ -63,7 +67,7 @@ class UpgradeCompound extends Command
 			Storage::disk('local')->put("tmp/compound1.csv", "word,type,grammar,parent,factors");
 			foreach ($results as $key => $value) {
 				# code...
-                $output = "{$value['word']},{$value['type']},{$value['grammar']},{$value['parent']},{$value['factors']}";
+                $output = "{$value['word']},{$value['type']},{$value['grammar']},{$value['parent']},{$value['factors']},{$value['confidence']}";
                 $this->info($output);
 				Storage::disk('local')->append("tmp/compound1.csv", $output);
 			}
@@ -84,7 +88,10 @@ class UpgradeCompound extends Command
 			];
 			foreach ($list as $take) {
 				# code...
-				$words = WordIndex::where('final',0)->whereBetween('len',[$take[0],$take[1]])->select('word')->take($take[2])->get();
+				$words = WordIndex::where('final',0)
+                            ->whereBetween('len',[$take[0],$take[1]])
+                            ->select('word')
+                            ->take($take[2])->get();
 				foreach ($words as $word) {
 					$this->info($word->word);
 					Storage::disk('local')->append("tmp/compound.md", "## {$word->word}");
