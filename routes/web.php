@@ -30,4 +30,5 @@ Route::get('/privacy/{file}', function ($file){
     $content = file_get_contents(base_path("/documents/mobile/privacy/{$file}.md"));
     return view('privacy',['content' => $content]);
 });
+Route::redirect('/privacy', '/privacy/index');
 
