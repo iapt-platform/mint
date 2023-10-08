@@ -8,18 +8,22 @@ use App\Http\Controllers\CorpusController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\MdRender;
 
 class TemplateRender{
     protected $param = [];
     protected $mode = "read";
     protected $channel_id = [];
+    protected $format = 'react';
+
 
     /**
      * Create a new command instance.
-     * int $mode  'read' | 'edit'
+     * string $mode  'read' | 'edit'
+     * string $format  'react' | 'text' | 'tex' | 'unity'
      * @return void
      */
-    public function __construct($param, $channelInfo, $mode)
+    public function __construct($param, $channelInfo, $mode,$format='react')
     {
         $this->param = $param;
         foreach ($channelInfo as $value) {
@@ -27,6 +31,7 @@ class TemplateRender{
         }
         $this->channelInfo = $channelInfo;
         $this->mode = $mode;
+        $this->format = $format;
     }
 
     public function render($tpl_name){
@@ -172,31 +177,97 @@ class TemplateRender{
         $channelId = $this->channel_id[0];
         $channelInfo = $this->channelInfo[0];
         $key = "/term/{$channelId}/{$word}";
-        //Log::info("term cache key:{$key}");
         $props = $this->getTermProps($word,$channelId,$channelInfo);
-        return [
-            'props'=>base64_encode(\json_encode($props)),
-            'html'=>$props['innerHtml'],
-            'tag'=>'span',
-            'tpl'=>'term',
-            ];
+
+        $output = $props['word'];
+        switch ($this->format) {
+            case 'react':
+                $output=[
+                    'props'=>base64_encode(\json_encode($props)),
+                    'html'=>$props['innerHtml'],
+                    'tag'=>'span',
+                    'tpl'=>'term',
+                    ];
+                break;
+            case 'unity':
+                $output=[
+                    'props'=>base64_encode(\json_encode($props)),
+                    'tpl'=>'term',
+                    ];
+                break;
+            case 'text':
+                if(isset($props["meaning"])){
+                    $key = 'term-'.$props["word"];
+                    if(isset($GLOBALS[$key])){
+                        $output = $props["meaning"];
+                    }else{
+                        $GLOBALS[$key] = 1;
+                        $output = $props["meaning"].'('.$props["word"].')';
+                    }
+                }else{
+                    $output = $props["word"];
+                }
+                break;
+            case 'tex':
+                if(isset($props["meaning"])){
+                    $key = 'term-'.$props["word"];
+                    if(isset($GLOBALS[$key])){
+                        $output = $props["meaning"];
+                    }else{
+                        $GLOBALS[$key] = 1;
+                        $output = $props["meaning"].'('.$props["word"].')';
+                    }
+                }else{
+                    $output = $props["word"];
+                }
+                break;
+        }
+        return $output;
     }
 
     private  function render_note(){
-
-        $props = ["note" => $this->get_param($this->param,"text",1)];
+        $note = $this->get_param($this->param,"text",1);
         $trigger = $this->get_param($this->param,"trigger",2);
+        $props = ["note" => $note ];
         $innerString = "";
         if(!empty($trigger)){
             $props["trigger"] = $trigger;
             $innerString = $props["trigger"];
         }
-        return [
-            'props'=>base64_encode(\json_encode($props)),
-            'html'=>$innerString,
-            'tag'=>'span',
-            'tpl'=>'note',
-            ];
+        if($this->format==='unity'){
+            $props["note"] = MdRender::render($props["note"],
+                                $this->channel_id,
+                                null,
+                                'read',
+                                'translation',
+                                'markdown',
+                                'unity'
+                                );
+        }
+        $output = $note;
+        switch ($this->format) {
+            case 'react':
+                $output=[
+                    'props'=>base64_encode(\json_encode($props)),
+                    'html'=>$innerString,
+                    'tag'=>'span',
+                    'tpl'=>'note',
+                    ];
+                break;
+            case 'unity':
+                $output=[
+                    'props'=>base64_encode(\json_encode($props)),
+                    'tpl'=>'note',
+                    ];
+                break;
+            case 'text':
+                $output = $trigger;
+                break;
+            case 'tex':
+                $output = $trigger;
+                break;
+        }
+        return $output;
     }
     private  function render_nissaya(){
 

@@ -244,9 +244,9 @@ class MdRender{
              */
             //TODO 判断$channelId里面的是否都是uuid
             $channelInfo = Channel::whereIn('uid',$channelId)->get();
-            $tplRender = new TemplateRender($props,$channelInfo,$mode);
+            $tplRender = new TemplateRender($props,$channelInfo,$mode,$format);
             $tplProps = $tplRender->render($tpl_name);
-            if($tplProps){
+            if($format==='react' && $tplProps){
                 $props = $doc->createAttribute("props");
                 $props->nodeValue = $tplProps['props'];
                 $tpl->appendChild($props);
@@ -260,48 +260,76 @@ class MdRender{
         }
         $html = $doc->saveHTML();
         $html = str_replace(['<dfn','</dfn>'],['<MdTpl','</MdTpl>'],$html);
-        if($format==='react'){
-            return trim($html);
-        }else if($format==='unity'){
-            if($tplProps){
-                return "{{"."{$tplProps['tpl']}|{$tplProps['props']}"."}}";
-            }else{
+        switch ($format) {
+            case 'react':
+                return trim($html);
+                break;
+            case 'unity':
+                if($tplProps){
+                    return "{{"."{$tplProps['tpl']}|{$tplProps['props']}"."}}";
+                }else{
+                    return '';
+                }
+                break;
+            case 'text':
+                return $tplProps;
+                break;
+            case 'tex':
+                return $tplProps;
+                break;
+            default:
                 return '';
-            }
-        }else if($format==='text'){
-            if(isset($tplProps['text'])){
-                return $tplProps['text'];
-            }else{
-                return '';
-            }
-        }else{
-            return '';
+                break;
         }
     }
 
     public static function render2($markdown,$channelId=[],$queryId=null,$mode='read',$channelType,$contentType="markdown",$format='react'){
         if(empty($markdown)){
-            return "<span></span>";
+            switch ($format) {
+                case 'react':
+                    return "<span></span>";
+                    break;
+                default:
+                    return "";
+                    break;
+            }
         }
         $wiki = MdRender::markdown2wiki($markdown,$channelType,$contentType);
         $html = MdRender::wiki2xml($wiki,$channelId,$mode,$format);
         if(!is_null($queryId)){
             $html = MdRender::xmlQueryId($html, $queryId);
         }
-        $html = MdRender::markdownToHtml($html);
+        $html = MdRender::markdownToHtml($html,$format);
         //$tpl = MdRender::xml2tpl($html,$channelId,$mode);
 
-        if($format==='react'){
-            //生成可展开组件
-            $html = str_replace("<div/>","<div></div>",$html);
-            $pattern = '/<li><div>(.+?)<\/div><\/li>/';
-            $replacement = '<li><MdTpl name="toggle" tpl="toggle" props=""><div>$1</div></MdTpl></li>';
-            $html = preg_replace($pattern,$replacement,$html);
+        //后期处理
+        $output = '';
+        switch ($format) {
+            case 'react':
+                //生成可展开组件
+                $html = str_replace("<div/>","<div></div>",$html);
+                $pattern = '/<li><div>(.+?)<\/div><\/li>/';
+                $replacement = '<li><MdTpl name="toggle" tpl="toggle" props=""><div>$1</div></MdTpl></li>';
+                $output = preg_replace($pattern,$replacement,$html);
+                break;
+            case 'text':
+                $html = strip_tags($html);
+                $output = htmlspecialchars_decode($html,ENT_QUOTES);
+                //$output = html_entity_decode($html);
+                break;
+            case 'tex':
+                $html = strip_tags($html);
+                $output = htmlspecialchars_decode($html,ENT_QUOTES);
+                //$output = html_entity_decode($html);
+                break;
+            case 'unity':
+                $html = str_replace(['<strong>','</strong>','<em>','</em>'],['[%b%]','[%/b%]','[%i%]','[%/i%]'],$html);
+                $html = strip_tags($html);
+                $html = str_replace(['[%b%]','[%/b%]','[%i%]','[%/i%]'],['<b>','</b>','<i>','</i>'],$html);
+                $output = htmlspecialchars_decode($html,ENT_QUOTES);
+                break;
         }
-        if($format==='text'){
-            $html = strip_tags($html);
-        }
-        return $html;
+        return $output;
     }
 
 
@@ -453,32 +481,17 @@ class MdRender{
         $replacement = '{{note|$1}}';
         $markdown = preg_replace($pattern,$replacement,$markdown);
 
-/*
-        #替换多行注释
-        #<pre><code>bla</code></pre>
-        #{{note|bla}}
-        $pattern = '/<pre><code>([\w\W]+?)<\/code><\/pre>/';
-        $replacement = '{{note|$1}}';
-        $html = preg_replace($pattern,$replacement,$html);
-
-        #替换单行注释
-        #<code>bla</code>
-        #{{note|bla}}
-        $pattern = '/<code>(.+?)<\/code>/';
-        $replacement = '{{note|$1}}';
-        $html = preg_replace($pattern,$replacement,$html);
-*/
-
         return $markdown;
     }
 
-    public static function markdownToHtml($markdown){
+    public static function markdownToHtml($markdown,$format='react'){
         $markdown = str_replace('MdTpl','mdtpl',$markdown);
         $markdown = str_replace(['<param','</param>'],['<span','</span>'],$markdown);
 
         $html = Markdown::render($markdown);
-        $html = MdRender::fixHtml($html);
-
+        if($format==='react'){
+            $html = MdRender::fixHtml($html);
+        }
         $html = str_replace('<hr>','<hr />',$html);
         //给H1-6 添加uuid
         for ($i=1; $i<7 ; $i++) {
