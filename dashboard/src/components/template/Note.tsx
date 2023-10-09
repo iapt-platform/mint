@@ -5,8 +5,8 @@ import { Typography } from "antd";
 const { Link } = Typography;
 
 interface IWidgetNoteCtl {
-  trigger?: string;
-  note?: string;
+  trigger?: string; //界面上显示的文字
+  note?: string; //note内容
   children?: React.ReactNode;
 }
 const NoteCtl = ({ trigger, note, children }: IWidgetNoteCtl) => {

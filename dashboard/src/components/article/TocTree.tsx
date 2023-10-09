@@ -4,44 +4,55 @@ import { useEffect, useState } from "react";
 import type { ListNodeData } from "./EditableTree";
 import PaliText from "../template/Wbw/PaliText";
 import { Key } from "antd/lib/table/interface";
+import { randomString } from "../../utils";
 
 const { Text } = Typography;
 
+interface IIdMap {
+  key: string;
+  id: string;
+}
 export interface TreeNodeData {
   key: string;
+  id: string;
   title: string | React.ReactNode;
   children?: TreeNodeData[];
   level: number;
-  deletedAt?: string;
+  deletedAt?: string | null;
 }
 
 function tocGetTreeData(
   listData: ListNodeData[],
   active = ""
-): TreeNodeData[] | undefined {
+): [TreeNodeData[] | undefined, IIdMap[]] {
   let treeData: TreeNodeData[] = [];
   let tocActivePath: TreeNodeData[] = [];
   let treeParents = [];
   let rootNode: TreeNodeData = {
-    key: "0",
+    key: randomString(),
+    id: "0",
     title: "root",
     level: 0,
     children: [],
   };
+  let idMap: IIdMap[] = [];
   treeData.push(rootNode);
   let lastInsNode: TreeNodeData = rootNode;
 
   let iCurrLevel = 0;
   for (let index = 0; index < listData.length; index++) {
     const element = listData[index];
-
     let newNode: TreeNodeData = {
-      key: element.key,
+      key: randomString(),
+      id: element.key,
       title: element.title,
       level: element.level,
       deletedAt: element.deletedAt,
     };
-
+    idMap.push({
+      key: newNode.key,
+      id: newNode.id,
+    });
     if (newNode.level > iCurrLevel) {
       //新的层级比较大，为上一个的子目录
       treeParents.push(lastInsNode);
@@ -86,7 +97,7 @@ function tocGetTreeData(
     }
   }
 
-  return treeData[0].children;
+  return [treeData[0].children, idMap];
 }
 
 interface IWidgetTocTree {
@@ -105,11 +116,13 @@ const TocTreeWidget = ({
   const [tree, setTree] = useState<TreeNodeData[]>();
   const [expanded, setExpanded] = useState<Key[]>();
   const [selected, setSelected] = useState<Key[]>();
+  const [keyIdMap, setKeyIdMap] = useState<IIdMap[]>();
 
   useEffect(() => {
     if (treeData && treeData.length > 0) {
-      const data = tocGetTreeData(treeData);
+      const [data, idMap] = tocGetTreeData(treeData);
       setTree(data);
+      setKeyIdMap(idMap);
       console.log("create tree", treeData.length);
     } else {
       setTree([]);
@@ -131,7 +144,10 @@ const TocTreeWidget = ({
       onSelect={(selectedKeys: Key[]) => {
         setSelected(selectedKeys);
         if (typeof onSelect !== "undefined") {
-          onSelect(selectedKeys);
+          const selectedId = keyIdMap
+            ?.filter((value) => selectedKeys.includes(value.key))
+            .map((item) => item.id);
+          onSelect(selectedId);
         }
       }}
       blockNode

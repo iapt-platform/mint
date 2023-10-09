@@ -9,12 +9,14 @@ import { FileAddOutlined } from "@ant-design/icons";
 import { Button, Divider, Space } from "antd";
 import { useIntl } from "react-intl";
 import EditableTreeNode from "./EditableTreeNode";
+import { randomString } from "../../utils";
 
 export interface TreeNodeData {
   key: string;
+  id: string;
   title: string | React.ReactNode;
   children: TreeNodeData[];
-  deletedAt?: string;
+  deletedAt?: string | null;
   level: number;
 }
 export type ListNodeData = {
@@ -22,7 +24,7 @@ export type ListNodeData = {
   title: string | React.ReactNode;
   level: number;
   children?: number;
-  deletedAt?: string;
+  deletedAt?: string | null;
 };
 
 var tocActivePath: TreeNodeData[] = [];
@@ -30,8 +32,10 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
   let treeData = [];
 
   let treeParents = [];
+
   let rootNode: TreeNodeData = {
-    key: "0",
+    key: randomString(),
+    id: "0",
     title: "root",
     level: 0,
     children: [],
@@ -44,7 +48,8 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
     const element = articles[index];
 
     let newNode: TreeNodeData = {
-      key: element.key,
+      key: randomString(),
+      id: element.key,
       title: element.title,
       children: [],
       level: element.level,
@@ -100,7 +105,7 @@ function treeToList(treeNode: TreeNodeData[]): ListNodeData[] {
       children = node.children.length;
     }
     arrTocTree.push({
-      key: node.key,
+      key: node.id,
       title: node.title,
       level: iTocTreeCurrLevel,
       children: children,
@@ -388,7 +393,7 @@ const EditableTreeWidget = ({
               node={node}
               onEdit={() => {
                 if (typeof onNodeEdit !== "undefined") {
-                  onNodeEdit(node.key);
+                  onNodeEdit(node.id);
                 }
               }}
               onAdd={async () => {
