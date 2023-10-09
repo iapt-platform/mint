@@ -75,8 +75,11 @@ class TestMdRender extends Command
         bla **content**
         ```
         md;
-        $data['note'] = '`bla bla`';
+        $data['note'] = '`bla **bold** _em_ bla`';
         $data['noteTpl'] = <<<md
+        {{note|trigger=kacayana|text=bla **bold** _em_ bla}}
+        md;
+        $data['noteTpl2'] = <<<md
         {{note|trigger=kacayana|text={{99-556-8-12}}}}
         md;
         $data['trigger'] = <<<md

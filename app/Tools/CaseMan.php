@@ -221,7 +221,7 @@ class CaseMan
 					$input[$currWord] = false;
 					foreach ($case->ending as  $ending) {
 						# code...
-                        if($ending[1] < 0.5){
+                        if($ending[4] < 0.5){
                             continue;
                         }
 						$endingLen = mb_strlen($ending[1], "UTF-8");

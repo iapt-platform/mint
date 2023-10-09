@@ -17,7 +17,7 @@ class TurboSplit
         "w_threshhold" => 0.8,
         "forward" => true,
         "sandhi_advance" => false,
-        "lookup_declension" => false,/**快速查字典-不去尾 */
+        "lookup_declension" => true,/**快速查字典-不去尾 */
     ];
     protected $node = [];
 	protected $path = array();
@@ -29,7 +29,7 @@ class TurboSplit
 	//过程中最大结果数量
 	protected $MAX_RESULT = 100;
 	//返回值最大结果数量
-	protected $MAX_RESULT2 = 5;
+	protected $MAX_RESULT2 = 8;
 	//最大递归深度
 	protected $MAX_DEEP = 16;
 	//连音规则表
@@ -185,6 +185,7 @@ class TurboSplit
                 });
 		if ($row) {
 			//找到
+            $this->log($search.'='.$row);
 			return array($row,0);
 		} else {
             if($this->options["lookup_declension"]){
@@ -698,7 +699,7 @@ class TurboSplit
 					}
 				}
 			} else {
-				Log::error("{$oneword} 切分失败");
+                $this->log("{$oneword} 切分失败");
 			}
 		}
 		return $output;
