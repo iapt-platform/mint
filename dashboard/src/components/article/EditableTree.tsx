@@ -4,7 +4,7 @@ import { message, Tree } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
 import { Key } from "antd/lib/table/interface";
 import { DeleteOutlined, SaveOutlined } from "@ant-design/icons";
-import { FileAddOutlined } from "@ant-design/icons";
+import { FileAddOutlined, LinkOutlined } from "@ant-design/icons";
 
 import { Button, Divider, Space } from "antd";
 import { useIntl } from "react-intl";
@@ -15,6 +15,7 @@ export interface TreeNodeData {
   key: string;
   id: string;
   title: string | React.ReactNode;
+  icon?: React.ReactNode;
   children: TreeNodeData[];
   deletedAt?: string | null;
   level: number;
@@ -44,6 +45,7 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
   let lastInsNode: TreeNodeData = rootNode;
 
   let iCurrLevel = 0;
+  let keys: string[] = [];
   for (let index = 0; index < articles.length; index++) {
     const element = articles[index];
 
@@ -52,9 +54,13 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
       id: element.key,
       title: element.title,
       children: [],
+      icon: keys.includes(element.key) ? <LinkOutlined /> : undefined,
       level: element.level,
       deletedAt: element.deletedAt,
     };
+    if (!keys.includes(element.key)) {
+      keys.push(element.key);
+    }
     /*
 		if (active == element.article) {
 			newNode["extraClasses"] = "active";
@@ -371,6 +377,7 @@ const EditableTreeWidget = ({
       </Space>
       <Divider></Divider>
       <Tree
+        showIcon
         rootClassName="draggable-tree"
         draggable
         blockNode
