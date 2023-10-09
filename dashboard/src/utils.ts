@@ -1,4 +1,5 @@
 import { SortOrder } from "antd/lib/table/interface";
+import lodash from "lodash";
 
 export function fullUrl(url: string): string {
   return window.location.origin + process.env.PUBLIC_URL + url;
@@ -61,4 +62,8 @@ export const convertToPlain = (html: string): string => {
 
   // Retrieve the text property of the element
   return tempDivElement.textContent || tempDivElement.innerText || "";
+};
+
+export const randomString = (): string => {
+  return lodash.times(20, () => lodash.random(35).toString(36)).join("");
 };

@@ -20,7 +20,7 @@ import EditableTree, {
 } from "../article/EditableTree";
 import ArticleEditDrawer from "../article/ArticleEditDrawer";
 import ArticleDrawer from "../article/ArticleDrawer";
-import { fullUrl } from "../../utils";
+import { fullUrl, randomString } from "../../utils";
 
 interface IWidget {
   anthologyId?: string;
@@ -106,7 +106,8 @@ const EditableTocTreeWidget = ({
             onSelect={(id: string, title: string) => {
               console.log("add article", id);
               const newNode: TreeNodeData = {
-                key: id,
+                key: randomString(),
+                id: id,
                 title: title,
                 children: [],
                 level: 1,
@@ -140,7 +141,8 @@ const EditableTocTreeWidget = ({
           console.log(res);
           if (res.ok) {
             return {
-              key: res.data.uid,
+              key: randomString(),
+              id: res.data.uid,
               title: res.data.title,
               children: [],
               level: node.level + 1,
@@ -158,9 +160,9 @@ const EditableTocTreeWidget = ({
           node: TreeNodeData
         ) => {
           if (e.ctrlKey || e.metaKey) {
-            window.open(fullUrl(`/article/article/${node.key}`), "_blank");
+            window.open(fullUrl(`/article/article/${node.id}`), "_blank");
           } else {
-            setViewArticleId(node.key);
+            setViewArticleId(node.id);
             setOpenViewer(true);
           }
         }}
@@ -172,7 +174,8 @@ const EditableTocTreeWidget = ({
         onChange={(data: IArticleDataResponse) => {
           console.log("new title", data.title);
           setUpdatedArticle({
-            key: data.uid,
+            key: randomString(),
+            id: data.uid,
             title: data.title,
             level: 0,
             children: [],

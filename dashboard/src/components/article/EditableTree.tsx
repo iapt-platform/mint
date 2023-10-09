@@ -4,17 +4,20 @@ import { message, Tree } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
 import { Key } from "antd/lib/table/interface";
 import { DeleteOutlined, SaveOutlined } from "@ant-design/icons";
-import { FileAddOutlined } from "@ant-design/icons";
+import { FileAddOutlined, LinkOutlined } from "@ant-design/icons";
 
 import { Button, Divider, Space } from "antd";
 import { useIntl } from "react-intl";
 import EditableTreeNode from "./EditableTreeNode";
+import { randomString } from "../../utils";
 
 export interface TreeNodeData {
   key: string;
+  id: string;
   title: string | React.ReactNode;
+  icon?: React.ReactNode;
   children: TreeNodeData[];
-  deletedAt?: string;
+  deletedAt?: string | null;
   level: number;
 }
 export type ListNodeData = {
@@ -22,7 +25,7 @@ export type ListNodeData = {
   title: string | React.ReactNode;
   level: number;
   children?: number;
-  deletedAt?: string;
+  deletedAt?: string | null;
 };
 
 var tocActivePath: TreeNodeData[] = [];
@@ -30,8 +33,10 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
   let treeData = [];
 
   let treeParents = [];
+
   let rootNode: TreeNodeData = {
-    key: "0",
+    key: randomString(),
+    id: "0",
     title: "root",
     level: 0,
     children: [],
@@ -40,16 +45,22 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
   let lastInsNode: TreeNodeData = rootNode;
 
   let iCurrLevel = 0;
+  let keys: string[] = [];
   for (let index = 0; index < articles.length; index++) {
     const element = articles[index];
 
     let newNode: TreeNodeData = {
-      key: element.key,
+      key: randomString(),
+      id: element.key,
       title: element.title,
       children: [],
+      icon: keys.includes(element.key) ? <LinkOutlined /> : undefined,
       level: element.level,
       deletedAt: element.deletedAt,
     };
+    if (!keys.includes(element.key)) {
+      keys.push(element.key);
+    }
     /*
 		if (active == element.article) {
 			newNode["extraClasses"] = "active";
@@ -100,7 +111,7 @@ function treeToList(treeNode: TreeNodeData[]): ListNodeData[] {
       children = node.children.length;
     }
     arrTocTree.push({
-      key: node.key,
+      key: node.id,
       title: node.title,
       level: iTocTreeCurrLevel,
       children: children,
@@ -366,6 +377,7 @@ const EditableTreeWidget = ({
       </Space>
       <Divider></Divider>
       <Tree
+        showIcon
         rootClassName="draggable-tree"
         draggable
         blockNode
@@ -388,7 +400,7 @@ const EditableTreeWidget = ({
               node={node}
               onEdit={() => {
                 if (typeof onNodeEdit !== "undefined") {
-                  onNodeEdit(node.key);
+                  onNodeEdit(node.id);
                 }
               }}
               onAdd={async () => {
