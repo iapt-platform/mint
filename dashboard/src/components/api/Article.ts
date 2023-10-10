@@ -120,6 +120,7 @@ export interface IArticleCreateRequest {
   title: string;
   lang: string;
   studio: string;
+  anthologyId?: string;
 }
 
 export interface IAnthologyCreateRequest {
