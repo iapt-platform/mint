@@ -28,12 +28,17 @@ class CollectionResource extends JsonResource
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
         ];
-        if(isset($this->article_list) && !empty($this->article_list) ){
-            $arrList = \json_decode($this->article_list);
-            if(is_array($arrList)){
-                $data["article_list"] = array_slice($arrList,0,4);
+        if($this->fullArticleList===true){
+            $data["article_list"] = \json_decode($this->article_list);
+        }else{
+            if(isset($this->article_list) && !empty($this->article_list) ){
+                $arrList = \json_decode($this->article_list);
+                if(is_array($arrList)){
+                    $data["article_list"] = array_slice($arrList,0,4);
+                }
             }
         }
+
         return $data;
     }
 }
