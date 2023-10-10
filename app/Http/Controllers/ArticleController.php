@@ -254,7 +254,15 @@ class ArticleController extends Controller
 
         $canManage = ArticleController::userCanManage($user_uid,$request->get('studio'));
         if(!$canManage){
-            return $this->error(__('auth.failed'),[],403);
+            //判断是否有文集权限
+            if($request->has('anthologyId')){
+                $currPower = ShareApi::getResPower($user_uid,$request->get('anthologyId'));
+                if($currPower <= 10){
+                    return $this->error(__('auth.failed'),[],403);
+                }
+            }else{
+                return $this->error(__('auth.failed'),[],403);
+            }
         }
         //权限判断结束
 
