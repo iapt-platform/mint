@@ -127,6 +127,7 @@ const EditableTocTreeWidget = ({
           node: TreeNodeData
         ): Promise<TreeNodeData | undefined> => {
           if (typeof studioName === "undefined") {
+            console.log("studio", studioName);
             return;
           }
           const res = await post<IArticleCreateRequest, IArticleResponse>(
@@ -135,6 +136,7 @@ const EditableTocTreeWidget = ({
               title: "new article",
               lang: getUiLang(),
               studio: studioName,
+              anthologyId: anthologyId,
             }
           );
 
