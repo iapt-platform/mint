@@ -18,9 +18,9 @@ interface IFormData {
 
 interface IWidget {
   anthologyId?: string;
-  onTitleChange?: Function;
+  onLoad?: Function;
 }
-const AnthologyInfoEditWidget = ({ anthologyId, onTitleChange }: IWidget) => {
+const AnthologyInfoEditWidget = ({ anthologyId, onLoad }: IWidget) => {
   const intl = useIntl();
 
   return anthologyId ? (
@@ -39,8 +39,8 @@ const AnthologyInfoEditWidget = ({ anthologyId, onTitleChange }: IWidget) => {
         );
         console.log(res);
         if (res.ok) {
-          if (typeof onTitleChange !== "undefined") {
-            onTitleChange(res.data.title);
+          if (typeof onLoad !== "undefined") {
+            onLoad(res.data);
           }
           message.success(
             intl.formatMessage({
@@ -52,13 +52,13 @@ const AnthologyInfoEditWidget = ({ anthologyId, onTitleChange }: IWidget) => {
         }
       }}
       request={async () => {
-        const res = await get<IAnthologyResponse>(
-          `/v2/anthology/${anthologyId}`
-        );
+        const url = `/v2/anthology/${anthologyId}`;
+        console.log("url", url);
+        const res = await get<IAnthologyResponse>(url);
         console.log("文集get", res);
         if (res.ok) {
-          if (typeof onTitleChange !== "undefined") {
-            onTitleChange(res.data.title);
+          if (typeof onLoad !== "undefined") {
+            onLoad(res.data);
           }
 
           return {

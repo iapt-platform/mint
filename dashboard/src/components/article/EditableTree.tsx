@@ -172,7 +172,7 @@ const EditableTreeWidget = ({
     }
     const update = (_node: TreeNodeData[]) => {
       _node.forEach((value, index, array) => {
-        if (value.key === updatedNode.key) {
+        if (value.id === updatedNode.id) {
           array[index].title = updatedNode.title;
           console.log("key found");
           return;

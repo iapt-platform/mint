@@ -5,16 +5,17 @@ import { Button, Card, Space, Tabs } from "antd";
 import { TeamOutlined } from "@ant-design/icons";
 
 import GoBack from "../../../components/studio/GoBack";
-import TocTree from "../../../components/anthology/EditableTocTree";
+import EditableTocTree from "../../../components/anthology/EditableTocTree";
 import AnthologyInfoEdit from "../../../components/article/AnthologyInfoEdit";
 import ShareModal from "../../../components/share/ShareModal";
 import { EResType } from "../../../components/share/Share";
+import { IAnthologyDataResponse } from "../../../components/api/Article";
 
 const Widget = () => {
   const intl = useIntl();
   const [title, setTitle] = useState("");
   const { studioname, anthology_id } = useParams(); //url 参数
-
+  const [anthologyInfo, setAnthologyInfo] = useState<IAnthologyDataResponse>();
   return (
     <>
       <Card
@@ -50,8 +51,9 @@ const Widget = () => {
               children: (
                 <AnthologyInfoEdit
                   anthologyId={anthology_id}
-                  onTitleChange={(title: string) => {
-                    setTitle(title);
+                  onLoad={(value: IAnthologyDataResponse) => {
+                    setTitle(value.title);
+                    setAnthologyInfo(value);
                   }}
                 />
               ),
@@ -60,7 +62,10 @@ const Widget = () => {
               key: "toc",
               label: `目录`,
               children: (
-                <TocTree studioName={studioname} anthologyId={anthology_id} />
+                <EditableTocTree
+                  studioName={anthologyInfo?.studio.realName}
+                  anthologyId={anthology_id}
+                />
               ),
             },
           ]}
