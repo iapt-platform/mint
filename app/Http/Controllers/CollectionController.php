@@ -147,7 +147,7 @@ class CollectionController extends Controller
                     $newOne->create_time = time()*1000;
                     $newOne->modify_time = time()*1000;
                     $newOne->save();
-                    return $this->ok($newOne);
+                    return $this->ok(new CollectionResource($newOne));
                 }
             }else{
                 return $this->error(__('auth.failed'));
@@ -185,10 +185,8 @@ class CollectionController extends Controller
                     return $this->error(__('auth.failed'));
                 }
             }
-			if(!empty($result->article_list)){
-				$result->article_list = \json_decode($result->article_list);
-			}
-			return $this->ok($result);
+            $result->fullArticleList = true;
+			return $this->ok(new CollectionResource($result));
 		}else{
 			return $this->error("没有查询到数据");
 		}
@@ -219,7 +217,7 @@ class CollectionController extends Controller
                 $collection->status = $request->get('status');
                 $collection->modify_time = time()*1000;
                 $collection->save();
-                return $this->ok($collection);
+                return $this->ok(new CollectionResource($collection));
             }else{
                 //鉴权失败
 
