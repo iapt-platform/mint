@@ -36,6 +36,8 @@ import AnthologySelect from "../../components/anthology/AnthologySelect";
 import StudioName, { IStudio } from "../../components/auth/StudioName";
 import { IUser } from "../../components/auth/User";
 import { getSorterUrl } from "../../utils";
+import TransferCreate from "../transfer/TransferCreate";
+import { TransferOutLinedIcon } from "../../assets/icon";
 
 const { Text } = Typography;
 
@@ -94,7 +96,9 @@ const ArticleListWidget = ({
   const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
   const [myNumber, setMyNumber] = useState<number>(0);
   const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
-
+  const [transfer, setTransfer] = useState<string>();
+  const [transferName, setTransferName] = useState<string>();
+  const [transferOpen, setTransferOpen] = useState(false);
   useEffect(() => {
     /**
      * 获取各种课程的数量
@@ -306,6 +310,13 @@ const ArticleListWidget = ({
                         icon: <FolderAddOutlined />,
                       },
                       {
+                        key: "transfer",
+                        label: intl.formatMessage({
+                          id: "columns.studio.transfer.title",
+                        }),
+                        icon: <TransferOutLinedIcon />,
+                      },
+                      {
                         key: "remove",
                         label: intl.formatMessage({
                           id: "buttons.delete",
@@ -321,6 +332,11 @@ const ArticleListWidget = ({
                           break;
                         case "remove":
                           showDeleteConfirm(row.id, row.title);
+                          break;
+                        case "transfer":
+                          setTransfer(row.id);
+                          setTransferName(row.title);
+                          setTransferOpen(true);
                           break;
                         default:
                           break;
@@ -509,6 +525,15 @@ const ArticleListWidget = ({
       >
         <Share resId={shareResId} resType={shareResType} />
       </Modal>
+
+      <TransferCreate
+        studioName={studioName}
+        resId={transfer}
+        resType="article"
+        resName={transferName}
+        open={transferOpen}
+        onOpenChange={(visible: boolean) => setTransferOpen(visible)}
+      />
     </>
   );
 };
