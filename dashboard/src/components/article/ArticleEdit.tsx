@@ -19,6 +19,7 @@ import PublicitySelect from "../../components/studio/PublicitySelect";
 
 import MDEditor from "@uiw/react-md-editor";
 import ArticlePrevDrawer from "../../components/article/ArticlePrevDrawer";
+import { IStudio } from "../auth/StudioName";
 
 interface IFormData {
   uid: string;
@@ -48,6 +49,7 @@ const ArticleEditWidget = ({
   const [unauthorized, setUnauthorized] = useState(false);
   const [readonly, setReadonly] = useState(false);
   const [content, setContent] = useState<string>();
+  const [owner, setOwner] = useState<IStudio>();
 
   return unauthorized ? (
     <Result
@@ -60,7 +62,7 @@ const ArticleEditWidget = ({
     <>
       {readonly ? (
         <Alert
-          message="该资源为只读，如果需要修改，请联络拥有者分配权限。"
+          message={`该资源为只读，如果需要修改，请联络拥有者${owner?.nickName}分配权限。`}
           type="warning"
           closable
           action={
@@ -108,6 +110,7 @@ const ArticleEditWidget = ({
           let mTitle: string,
             mReadonly = false;
           if (res.ok) {
+            setOwner(res.data.studio);
             mReadonly = res.data.role === "editor" ? false : true;
             setReadonly(mReadonly);
             mTitle = res.data.title;

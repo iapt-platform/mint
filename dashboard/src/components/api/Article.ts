@@ -135,8 +135,11 @@ export interface IArticleMapRequest {
   article_id?: string;
   level: number;
   title: string;
+  editor?: IUser;
   children?: number;
-  deleted_at?: string;
+  deleted_at?: string | null;
+  created_at?: string;
+  updated_at?: string;
 }
 export interface IArticleMapListResponse {
   ok: boolean;
