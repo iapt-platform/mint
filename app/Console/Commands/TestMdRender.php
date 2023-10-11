@@ -13,7 +13,7 @@ class TestMdRender extends Command
      * run php artisan test:md.render term unity
      * @var string
      */
-    protected $signature = 'test:md.render {item?} {--format=react}';
+    protected $signature = 'test:md.render {item?} {--format}';
 
     /**
      * The console command description.
@@ -122,18 +122,25 @@ class TestMdRender extends Command
         //$sent = MdRender::take_sentence($html);
         //print_r($sent);
 
-        foreach ($data as $key => $value) {
-            $_item = $this->argument('item');
-            if(!empty($_item) && $key !==$_item){
-                continue;
-            }
-            $format = $this->option('format');
-            echo MdRender::render($value,
-                                  ['00ae2c48-c204-4082-ae79-79ba2740d506'],
-                                  null,'read','translation',
-                                  $contentType="markdown",$format);
+        $formats = $this->option('format');
+        if(empty($format)){
+            $formats = ['react','unity','text','tex'];
+        }else{
+            $formats = [$formats];
         }
-
+        foreach ($formats as $format) {
+            $this->info("format:{$format}");
+            foreach ($data as $key => $value) {
+                $_item = $this->argument('item');
+                if(!empty($_item) && $key !==$_item){
+                    continue;
+                }
+                echo MdRender::render($value,
+                                    ['00ae2c48-c204-4082-ae79-79ba2740d506'],
+                                    null,'read','translation',
+                                    $contentType="markdown",$format);
+            }
+        }
         return 0;
     }
 }
