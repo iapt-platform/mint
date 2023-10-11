@@ -272,10 +272,18 @@ class MdRender{
                 }
                 break;
             case 'text':
-                return $tplProps;
+                if(is_array($tplProps)){
+                    return '';
+                }else{
+                    return $tplProps;
+                }
                 break;
             case 'tex':
-                return $tplProps;
+                if(is_array($tplProps)){
+                    return '';
+                }else{
+                    return $tplProps;
+                }
                 break;
             default:
                 return '';

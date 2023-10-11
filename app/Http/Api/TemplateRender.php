@@ -384,12 +384,33 @@ class TemplateRender{
         }else{
             $tpl = "sentedit";
         }
-        return [
-            'props'=>base64_encode(\json_encode($props)),
-            'html'=>"",
-            'tag'=>'span',
-            'tpl'=>$tpl,
-            ];
+
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'html'=>"",
+                    'tag'=>'span',
+                    'tpl'=>$tpl,
+                    ];
+                break;
+            case 'unity':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'tpl'=>$tpl,
+                    ];
+                break;
+            case 'text':
+                $output = '';
+                break;
+            case 'tex':
+                $output = '';
+                break;
+            default:
+                $output = '';
+                break;
+        }
+        return $output;
     }
 
     private  function render_mermaid(){
