@@ -567,6 +567,7 @@ class TurboSplit
 	}
 
 	public function splitA($word){
+        $caseman = new CaseMan();
 		$output = array();
 		//预处理连音词
 		$word1 = $this->splitSandhi($word);
@@ -578,6 +579,9 @@ class TurboSplit
 		}
 
 		foreach ($arrword as $oneword) {
+            if(mb_strlen($oneword)<5){
+                continue;
+            }
 			$this->result = array(); //清空递归程序的输出容器
             $node = ['word'=>"",'remain'=>$oneword,'children'=>[]];
 			if(mb_strlen($oneword)>35){
@@ -635,7 +639,7 @@ class TurboSplit
                             }
                         }
 						$this->log("结尾词：".$endOfFactor);
-						$caseman = new CaseMan();
+
 						//猜测单词的base
 						$parents = $caseman->WordToBase($oneword,1,false);
 						//找到结尾单词的base
@@ -700,6 +704,21 @@ class TurboSplit
 				}
 			} else {
                 $this->log("{$oneword} 切分失败");
+                $this->log("猜测可能的格位");
+                //猜测单词的base
+				$wordWithType = ['word'=>$oneword,'type'=>'','grammar'=>'','parent'=>'','factors'=>'','confidence'=>0];
+                $parents = $caseman->WordToBase($oneword,1,false);
+                foreach ($parents as $base=>$case) {
+                    foreach ($case as $value) {
+                        $wordWithType['type'] = $value['type'];
+                        $wordWithType['grammar'] = $value['grammar'];
+                        $wordWithType['factors'] = $value['factors'];
+                        $wordWithType['parent'] = $base;
+                        $wordWithType['confidence'] = $value['confidence'];
+                        $this->log("word:{$wordWithType['word']} ; type:{$wordWithType['type']}; grammar:{$wordWithType['grammar']};parent:{$wordWithType['parent']}");
+                        array_push($output,$wordWithType);
+                    }
+                }
 			}
 		}
 		return $output;
