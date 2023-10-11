@@ -115,6 +115,7 @@ function treeToList(treeNode: TreeNodeData[]): ListNodeData[] {
       title: node.title,
       level: iTocTreeCurrLevel,
       children: children,
+      deletedAt: node.deletedAt,
     });
     if (children > 0) {
       iTocTreeCurrLevel++;
