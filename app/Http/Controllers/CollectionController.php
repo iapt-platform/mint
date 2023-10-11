@@ -119,6 +119,17 @@ class CollectionController extends Controller
         return $this->ok(['my'=>$my,'collaboration'=>$collaboration]);
     }
 
+    public static function UserCanEdit($user_uid,$collection){
+        if($collection->owner === $user_uid){
+            return true;
+        }
+        //查协作
+        $currPower = ShareApi::getResPower($user_uid,$collection->uid);
+        if($currPower >= 20){
+            return true;
+        }
+        return false;
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -203,31 +214,28 @@ class CollectionController extends Controller
     {
         //
         $collection  = Collection::find($id);
-        if($collection){
-            //鉴权
-            $user = \App\Http\Api\AuthApi::current($request);
-            if($user && $collection->owner === $user["user_uid"]){
-                $collection->title = $request->get('title');
-                $collection->subtitle = $request->get('subtitle');
-                $collection->summary = $request->get('summary');
-                if($request->has('aritcle_list')){
-                    $collection->article_list = \json_encode($request->get('aritcle_list'));
-                } ;
-                $collection->lang = $request->get('lang');
-                $collection->status = $request->get('status');
-                $collection->modify_time = time()*1000;
-                $collection->save();
-                return $this->ok(new CollectionResource($collection));
-            }else{
-                //鉴权失败
-
-                //TODO 判断是否为协作
-                return $this->error(__('auth.failed'));
-            }
-
-        }else{
+        if(!$collection){
             return $this->error("no recorder");
         }
+        //鉴权
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        if(!CollectionController::UserCanEdit($user["user_uid"],$collection)){
+            return $this->error(__('auth.failed'));
+        }
+        $collection->title = $request->get('title');
+        $collection->subtitle = $request->get('subtitle');
+        $collection->summary = $request->get('summary');
+        if($request->has('aritcle_list')){
+            $collection->article_list = \json_encode($request->get('aritcle_list'));
+        } ;
+        $collection->lang = $request->get('lang');
+        $collection->status = $request->get('status');
+        $collection->modify_time = time()*1000;
+        $collection->save();
+        return $this->ok(new CollectionResource($collection));
     }
 
     /**
