@@ -10,6 +10,7 @@ import {
   IArticleDataResponse,
   IArticleMapAddResponse,
   IArticleMapListResponse,
+  IArticleMapRequest,
   IArticleMapUpdateRequest,
   IArticleResponse,
 } from "../api/Article";
@@ -45,25 +46,26 @@ const EditableTocTreeWidget = ({
     if (typeof data === "undefined") {
       return;
     }
-    put<IArticleMapUpdateRequest, IArticleMapAddResponse>(
-      `/v2/article-map/${anthologyId}`,
-      {
-        data: data.map((item) => {
-          let title = "";
-          if (typeof item.title === "string") {
-            title = item.title;
-          }
-          //TODO 整一个string title
-          return {
-            article_id: item.key,
-            level: item.level,
-            title: title,
-            children: item.children,
-          };
-        }),
-        operation: "anthology",
+    const url = `/v2/article-map/${anthologyId}`;
+    const newData: IArticleMapRequest[] = data.map((item) => {
+      let title = "";
+      if (typeof item.title === "string") {
+        title = item.title;
       }
-    )
+      //TODO 整一个string title
+      return {
+        article_id: item.key,
+        level: item.level,
+        title: title,
+        children: item.children,
+        deleted_at: item.deletedAt,
+      };
+    });
+
+    put<IArticleMapUpdateRequest, IArticleMapAddResponse>(url, {
+      data: newData,
+      operation: "anthology",
+    })
       .finally(() => {})
       .then((json) => {
         if (json.ok) {
