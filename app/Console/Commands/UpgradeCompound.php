@@ -57,22 +57,7 @@ class UpgradeCompound extends Command
 
 		$start = \microtime(true);
 
-		$_word = $this->argument('word');
-		if(!empty($_word)){
-			$ts = new TurboSplit();
-            if($this->option('debug')){
-                $ts->debug(true);
-            }
-			$results = $ts->splitA($_word);
-			Storage::disk('local')->put("tmp/compound1.csv", "word,type,grammar,parent,factors");
-			foreach ($results as $key => $value) {
-				# code...
-                $output = "{$value['word']},{$value['type']},{$value['grammar']},{$value['parent']},{$value['factors']},{$value['confidence']}";
-                $this->info($output);
-				Storage::disk('local')->append("tmp/compound1.csv", $output);
-			}
-			return 0;
-		}
+
 
 		//
 		if($this->option('test')){
@@ -108,7 +93,12 @@ class UpgradeCompound extends Command
 			return 0;
 		}
 
-        if($this->option('book')){
+
+		$_word = $this->argument('word');
+		if(!empty($_word)){
+            $words = array((object)array('real'=>$_word));
+            $count[] = (object)array('count'=>1);
+		}else if($this->option('book')){
             $words = WbwTemplate::select('real')
                             ->where('book',$this->option('book'))
                             ->where('type','<>','.ctl.')
@@ -148,8 +138,13 @@ class UpgradeCompound extends Command
                     ->delete();
 
 			$ts = new TurboSplit();
-
+            if($this->option('debug')){
+                $ts->debug(true);
+            }
             $parts = $ts->splitA($word->real);
+            if(!empty($_word)){
+                Storage::disk('local')->put("tmp/compound1.csv", "word,type,grammar,parent,factors");
+            }
             foreach ($parts as $part) {
                 if(isset($part['type']) && $part['type'] === ".v."){
                     continue;
@@ -179,11 +174,13 @@ class UpgradeCompound extends Command
                 $new->creator_id = 1;
                 $new->flag = 1;//标记为维护状态
                 $new->save();
-            }
-            if(env('APP_ENV','local') !== 'local'){
-                usleep(500);
-            }
 
+                if(!empty($_word)){
+                    $output = "{$part['word']},{$part['type']},{$part['grammar']},{$part['parent']},{$part['factors']},{$part['confidence']}";
+                    $this->info($output);
+                    Storage::disk('local')->append("tmp/compound1.csv", $output);
+                }
+            }
 		}
 		//维护状态数据改为正常状态
 		UserDict::where('dict_id',$dict_id)->where('flag',1)->update(['flag'=>0]);
