@@ -275,10 +275,9 @@ class CorpusController extends Controller
             }else{
                 $this->result['title'] = $chapter->toc;
                 $this->result['sub_title'] = $chapter->toc;
-                $this->result['path'] = json_decode($chapter->path);
+                $this->result['path'] = json_decode($parent->path);
             }
         }
-
         $paraFrom = $para[0];
         $paraTo = end($para);
 
@@ -307,7 +306,7 @@ class CorpusController extends Controller
         //章节译文标题
         $title = Sentence::select($this->selectCol)
                     ->where('book_id',$parent->book)
-                    ->where('paragraph',$parent->paragraph)
+                    ->where('paragraph',$parent->parent)
                     ->whereIn('channel_uid',$tranChannels)
                     ->first();
         if($title){
