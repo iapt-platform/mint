@@ -270,7 +270,6 @@ class TemplateRender{
         return $output;
     }
     private  function render_nissaya(){
-
         $pali =  $this->get_param($this->param,"pali",1);
         $meaning = $this->get_param($this->param,"meaning",2);
         $innerString = "";
@@ -278,12 +277,32 @@ class TemplateRender{
             "pali" => $pali,
             "meaning" => $meaning,
         ];
-        return [
-            'props'=>base64_encode(\json_encode($props)),
-            'html'=>$innerString,
-            'tag'=>'span',
-            'tpl'=>'nissaya',
-            ];
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'html'=>$innerString,
+                    'tag'=>'span',
+                    'tpl'=>'nissaya',
+                    ];
+                break;
+            case 'unity':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'tpl'=>'nissaya',
+                    ];
+                break;
+            case 'text':
+                $output = $pali.'၊'.$meaning;
+                break;
+            case 'tex':
+                $output = $pali.'၊'.$meaning;
+                break;
+            default:
+                $output = $pali.'၊'.$meaning;
+                break;
+        }
+        return $output;
     }
     private  function render_exercise(){
 
@@ -294,13 +313,32 @@ class TemplateRender{
                     "title" => $title,
                     "channel" => $this->channel_id[0],
                 ];
-
-        return [
-            'props'=>base64_encode(\json_encode($props)),
-            'html'=>"",
-            'tag'=>'span',
-            'tpl'=>'exercise',
-            ];
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'html'=>"",
+                    'tag'=>'span',
+                    'tpl'=>'exercise',
+                    ];
+                break;
+            case 'unity':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'tpl'=>'exercise',
+                    ];
+                break;
+            case 'text':
+                $output = $title;
+                break;
+            case 'tex':
+                $output = $title;
+                break;
+            default:
+                $output = '';
+                break;
+        }
+        return $output;
     }
     private  function render_article(){
 
@@ -318,13 +356,33 @@ class TemplateRender{
         if(!empty($title)){
             $props['title'] = $title;
         }
-        return [
-            'props'=>base64_encode(\json_encode($props)),
-            'html'=>"",
-            'text'=>$title,
-            'tag'=>'span',
-            'tpl'=>'article',
-            ];
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'html'=>"",
+                    'text'=>$title,
+                    'tag'=>'span',
+                    'tpl'=>'article',
+                    ];
+                break;
+            case 'unity':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'tpl'=>'article',
+                    ];
+                break;
+            case 'text':
+                $output = $title;
+                break;
+            case 'tex':
+                $output = $title;
+                break;
+            default:
+                $output = '';
+                break;
+        }
+        return $output;
     }
     private  function render_quote(){
         $paraId = $this->get_param($this->param,"para",1);
@@ -353,12 +411,33 @@ class TemplateRender{
                 }
                 return $output;
               });
-        return [
-            'props'=>base64_encode(\json_encode($props)),
-            'html'=>$props["innerString"],
-            'tag'=>'span',
-            'tpl'=>'quote',
-            ];
+
+            switch ($this->format) {
+                case 'react':
+                    $output = [
+                        'props'=>base64_encode(\json_encode($props)),
+                        'html'=>$props["innerString"],
+                        'tag'=>'span',
+                        'tpl'=>'quote',
+                        ];
+                    break;
+                case 'unity':
+                    $output = [
+                        'props'=>base64_encode(\json_encode($props)),
+                        'tpl'=>'quote',
+                        ];
+                    break;
+                case 'text':
+                    $output = $props["innerString"];
+                    break;
+                case 'tex':
+                    $output = $props["innerString"];
+                    break;
+                default:
+                    $output = '';
+                    break;
+            }
+            return $output;
     }
     private  function render_sent(){
 
@@ -417,12 +496,33 @@ class TemplateRender{
         $text = json_decode(base64_decode($this->get_param($this->param,"text",1)));
 
         $props = ["text" => implode("\n",$text)];
-        return [
-            'props'=>base64_encode(\json_encode($props)),
-            'html'=>"mermaid",
-            'tag'=>'div',
-            'tpl'=>'mermaid',
-            ];
+
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'html'=>"mermaid",
+                    'tag'=>'div',
+                    'tpl'=>'mermaid',
+                    ];
+                break;
+            case 'unity':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'tpl'=>'mermaid',
+                    ];
+                break;
+            case 'text':
+                $output = 'mermaid';
+                break;
+            case 'tex':
+                $output = 'mermaid';
+                break;
+            default:
+                $output = 'mermaid';
+                break;
+        }
+        return $output;
     }
 
     private  function get_param(array $param,string $name,int $id,string $default=''){
