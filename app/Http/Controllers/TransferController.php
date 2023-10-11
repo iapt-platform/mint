@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Transfer;
 use App\Models\Channel;
-
+use App\Models\Article;
 use Illuminate\Http\Request;
 use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
+use App\Http\Api\UserApi;
 use App\Http\Resources\TransferResource;
 
 class TransferController extends Controller
@@ -107,7 +108,13 @@ class TransferController extends Controller
                 }
                 $transfer->origin_owner = $oldRes->owner_uid;
                 break;
-
+            case 'article':
+                $oldRes = Article::find($request->get('res_id'));
+                if($oldRes->owner !== $user['user_uid']){
+                    return $this->error(__('auth.failed'),[403],403);
+                }
+                $transfer->origin_owner = $oldRes->owner;
+                break;
             default:
                 # code...
                 break;
@@ -181,6 +188,11 @@ class TransferController extends Controller
                 case 'channel':
                     Channel::where('uid',$transfer->res_id)
                             ->update(['owner_uid'=>$transfer->new_owner]);
+                    break;
+                case 'article':
+                    $userId = UserApi::getIdByUuid($transfer->new_owner);
+                    Article::where('uid',$transfer->res_id)
+                            ->update(['owner'=>$transfer->new_owner,'owner_id'=>$userId]);
                     break;
                 default:
                     # code...
