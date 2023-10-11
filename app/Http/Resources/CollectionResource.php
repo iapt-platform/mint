@@ -25,6 +25,7 @@ class CollectionResource extends JsonResource
             "studio" => StudioApi::getById($this->owner),
             "childrenNumber" => ArticleCollection::where('collect_id',$this->uid)->count(),
             "status" => $this->status,
+            'lang' => $this->lang,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
         ];
