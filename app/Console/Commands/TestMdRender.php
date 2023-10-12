@@ -75,13 +75,16 @@ class TestMdRender extends Command
         bla **content**
         ```
         md;
+
         $data['note'] = '`bla **bold** _em_ bla`';
         $data['noteTpl'] = <<<md
         {{note|trigger=kacayana|text=bla **bold** _em_ bla}}
         md;
+
         $data['noteTpl2'] = <<<md
         {{note|trigger=kacayana|text={{99-556-8-12}}}}
         md;
+
         $data['trigger'] = <<<md
         ## heading
         ddd
@@ -112,7 +115,7 @@ class TestMdRender extends Command
         title=第一章 戒律概说（Vinaya）|
         style=modal}}
         md;
-
+        $data['empty'] = '';
         //$wiki = MdRender::markdown2wiki($data['noteMulti']);
         //$xml = MdRender::wiki2xml($wiki,['00ae2c48-c204-4082-ae79-79ba2740d506']);
         //$this->info($xml);
