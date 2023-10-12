@@ -165,11 +165,8 @@ class ArticleResource extends JsonResource
                     $channels = [$channelId];
                 }
             }
-            if($request->has('mode')){
-                $mode = $request->get('mode');
-            }else{
-                $mode = 'read';
-            }
+
+            $mode = $request->get('mode','read');
             $data["html"] = MdRender::render($this->content,$channels,$query_id,$mode);
             if(empty($this->summary)){
                 $data["_summary"] = MdRender::render($this->content,$channels,$query_id,$mode,'translation','markdown','text');
