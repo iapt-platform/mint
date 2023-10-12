@@ -21,6 +21,7 @@ import {
 } from "../../pages/studio/recent/list";
 import { ITocPathNode } from "../corpus/TocPath";
 import { useSearchParams } from "react-router-dom";
+import { ITermResponse } from "../api/Term";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -190,6 +191,12 @@ const ArticleWidget = ({
             );
           }
           break;
+        case "term":
+          if (typeof articleId !== "undefined") {
+            url = `/v2/terms/${articleId}?mode=${srcDataMode}`;
+            url += channelId ? `&channel=${channelId}` : "";
+          }
+          break;
         default:
           if (typeof articleId !== "undefined") {
             url = `/v2/corpus/${type}/${articleId}/${srcDataMode}?mode=${srcDataMode}`;
@@ -218,87 +225,118 @@ const ArticleWidget = ({
         });
       }
 
-      get<IArticleResponse>(url)
-        .then((json) => {
-          console.log("article", json);
-          if (json.ok) {
-            setArticleData(json.data);
-            if (json.data.html) {
-              setArticleHtml([json.data.html]);
-            } else if (json.data.content) {
-              setArticleHtml([json.data.content]);
+      if (type === "term") {
+        get<ITermResponse>(url)
+          .then((json) => {
+            if (json.ok) {
+              setArticleData({
+                uid: json.data.guid,
+                title: json.data.meaning,
+                subtitle: json.data.word,
+                summary: json.data.note,
+                content: json.data.note ? json.data.note : "",
+                content_type: "markdown",
+                html: json.data.html,
+                path: [],
+                status: 30,
+                lang: json.data.language,
+                created_at: json.data.created_at,
+                updated_at: json.data.updated_at,
+              });
+              if (json.data.html) {
+                setArticleHtml([json.data.html]);
+              } else if (json.data.note) {
+                setArticleHtml([json.data.note]);
+              }
+              setShowSkeleton(false);
             }
-            if (json.data.from) {
-              setRemains(true);
-            }
-            setShowSkeleton(false);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        get<IArticleResponse>(url)
+          .then((json) => {
+            console.log("article", json);
+            if (json.ok) {
+              setArticleData(json.data);
+              if (json.data.html) {
+                setArticleHtml([json.data.html]);
+              } else if (json.data.content) {
+                setArticleHtml([json.data.content]);
+              }
+              if (json.data.from) {
+                setRemains(true);
+              }
+              setShowSkeleton(false);
 
-            setExtra(
-              <TocTree
-                treeData={json.data.toc?.map((item) => {
-                  const strTitle = item.title ? item.title : item.pali_title;
-                  const key = item.key
-                    ? item.key
-                    : `${item.book}-${item.paragraph}`;
-                  const progress = item.progress?.map((item, id) => (
-                    <Tag key={id}>{Math.round(item * 100) + "%"}</Tag>
-                  ));
-                  return {
-                    key: key,
-                    title: (
-                      <Space>
-                        <PaliText
-                          text={strTitle === "" ? "[unnamed]" : strTitle}
-                        />
-                        {progress}
-                      </Space>
-                    ),
-                    level: item.level,
-                  };
-                })}
-                onSelect={(keys: string[]) => {
-                  console.log(keys);
-                  if (
-                    typeof onArticleChange !== "undefined" &&
-                    keys.length > 0
-                  ) {
-                    onArticleChange(keys[0]);
+              setExtra(
+                <TocTree
+                  treeData={json.data.toc?.map((item) => {
+                    const strTitle = item.title ? item.title : item.pali_title;
+                    const key = item.key
+                      ? item.key
+                      : `${item.book}-${item.paragraph}`;
+                    const progress = item.progress?.map((item, id) => (
+                      <Tag key={id}>{Math.round(item * 100) + "%"}</Tag>
+                    ));
+                    return {
+                      key: key,
+                      title: (
+                        <Space>
+                          <PaliText
+                            text={strTitle === "" ? "[unnamed]" : strTitle}
+                          />
+                          {progress}
+                        </Space>
+                      ),
+                      level: item.level,
+                    };
+                  })}
+                  onSelect={(keys: string[]) => {
+                    console.log(keys);
+                    if (
+                      typeof onArticleChange !== "undefined" &&
+                      keys.length > 0
+                    ) {
+                      onArticleChange(keys[0]);
+                    }
+                  }}
+                />
+              );
+
+              switch (type) {
+                case "chapter":
+                  if (typeof articleId === "string" && channelId) {
+                    const [book, para] = articleId?.split("-");
+                    post<IViewRequest, IViewStoreResponse>("/v2/view", {
+                      target_type: type,
+                      book: parseInt(book),
+                      para: parseInt(para),
+                      channel: channelId,
+                      mode: srcDataMode,
+                    }).then((json) => {
+                      console.log("view", json.data);
+                    });
                   }
-                }}
-              />
-            );
+                  break;
+                default:
+                  break;
+              }
 
-            switch (type) {
-              case "chapter":
-                if (typeof articleId === "string" && channelId) {
-                  const [book, para] = articleId?.split("-");
-                  post<IViewRequest, IViewStoreResponse>("/v2/view", {
-                    target_type: type,
-                    book: parseInt(book),
-                    para: parseInt(para),
-                    channel: channelId,
-                    mode: srcDataMode,
-                  }).then((json) => {
-                    console.log("view", json.data);
-                  });
-                }
-                break;
-              default:
-                break;
+              if (typeof onLoad !== "undefined") {
+                onLoad(json.data);
+              }
+            } else {
+              setShowSkeleton(false);
+              setUnauthorized(true);
+              message.error(json.message);
             }
-
-            if (typeof onLoad !== "undefined") {
-              onLoad(json.data);
-            }
-          } else {
-            setShowSkeleton(false);
-            setUnauthorized(true);
-            message.error(json.message);
-          }
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+          })
+          .catch((e) => {
+            console.error(e);
+          });
+      }
     }
   }, [
     active,
