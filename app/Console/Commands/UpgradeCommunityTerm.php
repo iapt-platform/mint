@@ -57,7 +57,8 @@ class UpgradeCommunityTerm extends Command
             $this->error('no channel');
             return 1;
         }
-        $table = DhammaTerm::select('word')->whereIn('language',[$this->argument('lang'),$lang,$langFamily])
+        $table = DhammaTerm::select('word')
+                            ->whereIn('language',[$this->argument('lang'),$lang,$langFamily])
                             ->groupBy('word');
 
 

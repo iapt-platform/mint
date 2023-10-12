@@ -65,6 +65,8 @@ class CorpusController extends Controller
 
     protected $userUuid=null;
 
+    protected $debug=[];
+
     public function __construct()
     {
 
@@ -240,6 +242,9 @@ class CorpusController extends Controller
      */
     public function showPara(Request $request)
     {
+        if($request->has('debug')){
+            $this->debug = explode(',',$request->get('debug'));
+        }
         $user = AuthApi::current($request);
         if($user){
             $this->userUuid = $user['user_uid'];
@@ -340,6 +345,9 @@ class CorpusController extends Controller
      */
     public function showChapter(Request $request, string $id)
     {
+        if($request->has('debug')){
+            $this->debug = explode(',',$request->get('debug'));
+        }
         $user = AuthApi::current($request);
         if($user){
             $this->userUuid = $user['user_uid'];
@@ -667,13 +675,14 @@ class CorpusController extends Controller
                          * 包涵术语的不用cache
                          */
                             if(strpos($row->content,'[[')===false){
-                                $newSent['html'] = MdRender::render($row->content,[$row->channel_uid]);
-                            }else{
                                 $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",
                                                 env('CACHE_EXPIRE',3600*24),
                                                 function() use($row){
                                                     return MdRender::render($row->content,[$row->channel_uid]);
                                                 });
+                            }else{
+                                $mdRender = new MdRender(['debug'=>$this->debug]);
+                                $newSent['html'] = $mdRender->convert($row->content,[$row->channel_uid]);
                             }
                             break;
                     }

@@ -38,17 +38,27 @@ class TermResource extends JsonResource
             "updated_at"=> $this->updated_at,
         ];
 
-        if(!empty($this->channal)){
-            $channelId = $this->channal;
-            $data["channel"] = ChannelApi::getById($this->channal);
+
+        if($request->has('channel')){
+            $channels = explode('_',$request->get('channel')) ;
         }else{
-            $channelId = ChannelApi::getSysChannel('_community_translation_'.$this->language.'_');
-            if(empty($channelId)){
-                $channelId = ChannelApi::getSysChannel('_community_translation_zh-hans_');
+            if(!empty($this->channal)){
+                $channelId = $this->channal;
+                $data["channel"] = ChannelApi::getById($this->channal);
+            }else{
+                $channelId = ChannelApi::getSysChannel('_community_translation_'.$this->language.'_');
+                if(empty($channelId)){
+                    $channelId = ChannelApi::getSysChannel('_community_translation_zh-hans_');
+                }
+            }
+            if(!empty($channelId)){
+                $channels = [$channelId];
+            }else{
+               $channels = [];
             }
         }
-        if(!empty($this->note) && !empty($channelId)){
-            $data["html"] = MdRender::render($this->note,[$channelId],null,'read');
+        if(!empty($this->note)){
+            $data["html"] = MdRender::render($this->note,$channels,null,$request->get('mode','read'));
         }
         $user = AuthApi::current($request);
         if(!$user){

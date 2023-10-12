@@ -14,6 +14,7 @@ class TemplateRender{
     protected $param = [];
     protected $mode = "read";
     protected $channel_id = [];
+    protected $debug = [];
     protected $format = 'react';
 
 
@@ -23,7 +24,7 @@ class TemplateRender{
      * string $format  'react' | 'text' | 'tex' | 'unity'
      * @return void
      */
-    public function __construct($param, $channelInfo, $mode,$format='react')
+    public function __construct($param, $channelInfo, $mode,$format='react',$debug=[])
     {
         $this->param = $param;
         foreach ($channelInfo as $value) {
@@ -32,8 +33,18 @@ class TemplateRender{
         $this->channelInfo = $channelInfo;
         $this->mode = $mode;
         $this->format = $format;
+        $this->debug = $debug;
     }
-
+    private function info($message,$debug){
+        if(in_array($debug,$this->debug)){
+            Log::info($message);
+        }
+    }
+    private function error($message,$debug){
+        if(in_array($debug,$this->debug)){
+            Log::error($message);
+        }
+    }
     public function render($tpl_name){
         switch ($tpl_name) {
             case 'term':
@@ -81,7 +92,8 @@ class TemplateRender{
         }else{
             $langFamily = 'zh';
         }
-        //先查属于这个channel 的
+        $this->info("term:{$word} 先查属于这个channel 的",'term');
+        $this->info('channel id'.$channelId,'term');
         $tplParam = DhammaTerm::where("word",$word)
                               ->where('channal',$channelId)
                               ->orderBy('updated_at','desc')
@@ -93,6 +105,7 @@ class TemplateRender{
              * 完全匹配的优先
              * 语族匹配也行
              */
+            $this->info("没有-再查这个studio的",'term');
             $termsInStudio = DhammaTerm::where("word",$word)
                                   ->where('owner',$channelInfo->owner_uid)
                                   ->orderBy('updated_at','desc')
@@ -123,14 +136,15 @@ class TemplateRender{
             }
         }
         if(!$tplParam){
-            //没有，再查社区
-
+            $this->info("没有，再查社区",'term');
             $community_channel = ChannelApi::getSysChannel("_community_term_zh-hans_");
             $tplParam = DhammaTerm::where("word",$word)
                                   ->where('channal',$community_channel)
                                   ->first();
             if($tplParam){
                 $isCommunity = true;
+            }else{
+                $this->info("查社区没有",'term');
             }
         }
         $output = [

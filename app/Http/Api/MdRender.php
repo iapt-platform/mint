@@ -14,11 +14,29 @@ use App\Tools\Markdown;
 define("STACK_DEEP",8);
 
 class MdRender{
+    /**
+     * 文字渲染模式
+     * read 阅读模式
+     * edit 编辑模式
+     */
+    protected $options = ['mode' => 'read',
+                'channelType'=>'translation',
+                'contentType'=>"markdown",
+                'format'=>'react',
+                'debug'=>[],
+                ];
+
+    public function __construct($options=[])
+    {
+        foreach ($options as $key => $value) {
+            $this->options[$key] = $value;
+        }
+    }
 
     /**
      * 按照{{}}把字符串切分成三个部分。模版之前的，模版，和模版之后的
      */
-    public static function tplSplit($tpl){
+    private function tplSplit($tpl){
         $before = strpos($tpl,'{{');
         if($before === FALSE){
             //未找到
@@ -75,14 +93,14 @@ class MdRender{
         }
     }
 
-    public static function wiki2xml(string $wiki,$channelId=[],$mode='read',$format='react'):string{
+    private function wiki2xml(string $wiki,$channelId=[]):string{
         /**
          * 把模版转换为xml
          */
         $remain = $wiki;
         $buffer = array();
         do {
-            $arrWiki = MdRender::tplSplit($remain);
+            $arrWiki = $this->tplSplit($remain);
             $buffer[] = $arrWiki['data'][0];
             $tpl = $arrWiki['data'][1];
             if(!empty($tpl)){
@@ -104,7 +122,7 @@ class MdRender{
                 //tpl to react
                 $tpl = str_replace('<param','<span class="param"',$tpl);
                 $tpl = str_replace('</param>','</span>',$tpl);
-                $tpl = MdRender::xml2tpl($tpl,$channelId,$mode,$format);
+                $tpl = $this->xml2tpl($tpl,$channelId);
                 $buffer[] = $tpl;
             }
             $remain = $arrWiki['data'][2];
@@ -114,7 +132,7 @@ class MdRender{
 
         return $html;
     }
-    public static function xmlQueryId(string $xml, string $id):string{
+    private function xmlQueryId(string $xml, string $id):string{
         try{
             $dom = simplexml_load_string($xml);
         }catch(\Exception $e){
@@ -168,7 +186,7 @@ class MdRender{
         }
         return $output;
     }
-    public static function xml2tpl(string $xml, $channelId=[],$mode='read',$format='react'):string{
+    private function xml2tpl(string $xml, $channelId=[]):string{
         /**
          * 解析xml
          * 获取模版参数
@@ -189,13 +207,12 @@ class MdRender{
         if(!$ok){
             return "<span>xml解析错误</span>";
         }
-/*
+        /*
         if(!$dom){
             Log::error($xml);
             return "<span>xml解析错误</span>";
         }
-*/
-
+         */
 
         //$tpl_list = $dom->xpath('//MdTpl');
         $tpl_list = $doc->getElementsByTagName('dfn');
@@ -244,9 +261,9 @@ class MdRender{
              */
             //TODO 判断$channelId里面的是否都是uuid
             $channelInfo = Channel::whereIn('uid',$channelId)->get();
-            $tplRender = new TemplateRender($props,$channelInfo,$mode,$format);
+            $tplRender = new TemplateRender($props,$channelInfo,$this->options['mode'],$this->options['format'],$this->options['debug']);
             $tplProps = $tplRender->render($tpl_name);
-            if($format==='react' && $tplProps){
+            if($this->options['format']==='react' && $tplProps){
                 $props = $doc->createAttribute("props");
                 $props->nodeValue = $tplProps['props'];
                 $tpl->appendChild($props);
@@ -260,7 +277,7 @@ class MdRender{
         }
         $html = $doc->saveHTML();
         $html = str_replace(['<dfn','</dfn>'],['<MdTpl','</MdTpl>'],$html);
-        switch ($format) {
+        switch ($this->options['format']) {
             case 'react':
                 return trim($html);
                 break;
@@ -291,57 +308,8 @@ class MdRender{
         }
     }
 
-    public static function render2($markdown,$channelId=[],$queryId=null,$mode='read',$channelType,$contentType="markdown",$format='react'){
-        if(empty($markdown)){
-            switch ($format) {
-                case 'react':
-                    return "<span></span>";
-                    break;
-                default:
-                    return "";
-                    break;
-            }
-        }
-        $wiki = MdRender::markdown2wiki($markdown,$channelType,$contentType);
-        $html = MdRender::wiki2xml($wiki,$channelId,$mode,$format);
-        if(!is_null($queryId)){
-            $html = MdRender::xmlQueryId($html, $queryId);
-        }
-        $html = MdRender::markdownToHtml($html,$format);
-        //$tpl = MdRender::xml2tpl($html,$channelId,$mode);
 
-        //后期处理
-        $output = '';
-        switch ($format) {
-            case 'react':
-                //生成可展开组件
-                $html = str_replace("<div/>","<div></div>",$html);
-                $pattern = '/<li><div>(.+?)<\/div><\/li>/';
-                $replacement = '<li><MdTpl name="toggle" tpl="toggle" props=""><div>$1</div></MdTpl></li>';
-                $output = preg_replace($pattern,$replacement,$html);
-                break;
-            case 'text':
-                $html = strip_tags($html);
-                $output = htmlspecialchars_decode($html,ENT_QUOTES);
-                //$output = html_entity_decode($html);
-                break;
-            case 'tex':
-                $html = strip_tags($html);
-                $output = htmlspecialchars_decode($html,ENT_QUOTES);
-                //$output = html_entity_decode($html);
-                break;
-            case 'unity':
-                $html = str_replace(['<strong>','</strong>','<em>','</em>'],['[%b%]','[%/b%]','[%i%]','[%/i%]'],$html);
-                $html = strip_tags($html);
-                $html = str_replace(['[%b%]','[%/b%]','[%i%]','[%/i%]'],['<b>','</b>','<i>','</i>'],$html);
-                $output = htmlspecialchars_decode($html,ENT_QUOTES);
-                break;
-        }
-        return $output;
-    }
-
-
-    public static function markdown2wiki(string $markdown,$channelType=null,$contentType=null): string{
+    private function markdown2wiki(string $markdown): string{
         //$markdown = mb_convert_encoding($markdown,'UTF-8','UTF-8');
         $markdown = iconv('UTF-8','UTF-8//IGNORE',$markdown);
         /**
@@ -349,8 +317,8 @@ class MdRender{
          * aaa=bbb\n
          * {{nissaya|aaa|bbb}}
          */
-        if($channelType==='nissaya'){
-            if($contentType === "json"){
+        if($this->options['channelType']==='nissaya'){
+            if($this->options['contentType'] === "json"){
                 $json = json_decode($markdown);
                 $nissayaWord = [];
                 foreach ($json as $word) {
@@ -369,7 +337,7 @@ class MdRender{
                     }
                 }
                 $markdown = implode('',$nissayaWord);
-            }else if($contentType === "markdown"){
+            }else if($this->options['contentType'] === "markdown"){
                 $lines = explode("\n",$markdown);
                 $newLines = array();
                 foreach ($lines as  $line) {
@@ -427,7 +395,7 @@ class MdRender{
         /*
 
         $html = MdRender::fixHtml($html);
-*/
+        */
 
         #替换术语
         $pattern = "/\[\[(.+?)\]\]/";
@@ -492,13 +460,13 @@ class MdRender{
         return $markdown;
     }
 
-    public static function markdownToHtml($markdown,$format='react'){
+    private function markdownToHtml($markdown){
         $markdown = str_replace('MdTpl','mdtpl',$markdown);
         $markdown = str_replace(['<param','</param>'],['<span','</span>'],$markdown);
 
         $html = Markdown::render($markdown);
-        if($format==='react'){
-            $html = MdRender::fixHtml($html);
+        if($this->options['format']==='react'){
+            $html = $this->fixHtml($html);
         }
         $html = str_replace('<hr>','<hr />',$html);
         //给H1-6 添加uuid
@@ -521,10 +489,68 @@ class MdRender{
         $html = str_replace('mdtpl','MdTpl',$html);
         return $html;
     }
-
+    private function  fixHtml($html) {
+        $doc = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $html = mb_convert_encoding($html, 'HTML-ENTITIES', "UTF-8");
+        $doc->loadHTML('<span>'.$html.'</span>',LIBXML_NOERROR  | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $fixed = $doc->saveHTML();
+        $fixed = mb_convert_encoding($fixed, "UTF-8", 'HTML-ENTITIES');
+        return $fixed;
+    }
     public static function init(){
         $GLOBALS["MdRenderStack"] = 0;
     }
+
+    public function convert($markdown,$channelId=[],$queryId=null){
+        if(empty($markdown)){
+            switch ($this->options['format']) {
+                case 'react':
+                    return "<span></span>";
+                    break;
+                default:
+                    return "";
+                    break;
+            }
+        }
+        $wiki = $this->markdown2wiki($markdown);
+        $html = $this->wiki2xml($wiki,$channelId);
+        if(!is_null($queryId)){
+            $html = $this->xmlQueryId($html, $queryId);
+        }
+        $html = $this->markdownToHtml($html);
+
+        //后期处理
+        $output = '';
+        switch ($this->options['format']) {
+            case 'react':
+                //生成可展开组件
+                $html = str_replace("<div/>","<div></div>",$html);
+                $pattern = '/<li><div>(.+?)<\/div><\/li>/';
+                $replacement = '<li><MdTpl name="toggle" tpl="toggle" props=""><div>$1</div></MdTpl></li>';
+                $output = preg_replace($pattern,$replacement,$html);
+                break;
+            case 'text':
+                $html = strip_tags($html);
+                $output = htmlspecialchars_decode($html,ENT_QUOTES);
+                //$output = html_entity_decode($html);
+                break;
+            case 'tex':
+                $html = strip_tags($html);
+                $output = htmlspecialchars_decode($html,ENT_QUOTES);
+                //$output = html_entity_decode($html);
+                break;
+            case 'unity':
+                $html = str_replace(['<strong>','</strong>','<em>','</em>'],['[%b%]','[%/b%]','[%i%]','[%/i%]'],$html);
+                $html = strip_tags($html);
+                $html = str_replace(['[%b%]','[%/b%]','[%i%]','[%/i%]'],['<b>','</b>','<i>','</i>'],$html);
+                $output = htmlspecialchars_decode($html,ENT_QUOTES);
+                break;
+        }
+        return $output;
+    }
+
+
     /**
      * string[] $channelId
      */
@@ -535,7 +561,12 @@ class MdRender{
             $GLOBALS["MdRenderStack"] = 1;
         }
         if($GLOBALS["MdRenderStack"]<3){
-            $output  = MdRender::render2($markdown,$channelId,$queryId,$mode,$channelType,$contentType,$format);
+            $mdRender = new MdRender(['mode'=>$mode,
+                                    'channelType'=>$channelType,
+                                    'contentType'=>$contentType,
+                                    'format'=>$format]);
+
+            $output  = $mdRender->convert($markdown,$channelId,$queryId);
         }else{
             $output  = $markdown;
         }
@@ -543,13 +574,5 @@ class MdRender{
         return $output;
     }
 
-    public static function  fixHtml($html) {
-        $doc = new \DOMDocument();
-        libxml_use_internal_errors(true);
-        $html = mb_convert_encoding($html, 'HTML-ENTITIES', "UTF-8");
-        $doc->loadHTML('<span>'.$html.'</span>',LIBXML_NOERROR  | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-        $fixed = $doc->saveHTML();
-        $fixed = mb_convert_encoding($fixed, "UTF-8", 'HTML-ENTITIES');
-        return $fixed;
-    }
+
 }
