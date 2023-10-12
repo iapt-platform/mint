@@ -8,6 +8,7 @@ import TimeShow from "../general/TimeShow";
 import TermModal from "./TermModal";
 import { useState } from "react";
 import StudioName from "../auth/StudioName";
+import { useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 
@@ -16,6 +17,8 @@ interface IWidget {
 }
 const TermItemWidget = ({ data }: IWidget) => {
   const [openTermModal, setOpenTermModal] = useState(false);
+  const navigate = useNavigate();
+
   return (
     <>
       <Card
@@ -58,7 +61,9 @@ const TermItemWidget = ({ data }: IWidget) => {
                   case "edit":
                     setOpenTermModal(true);
                     break;
-
+                  case "translate":
+                    navigate(`/article/term/${data?.guid}`);
+                    break;
                   default:
                     break;
                 }
