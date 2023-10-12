@@ -1,5 +1,9 @@
 import { Button, Card, Dropdown, Space, Typography } from "antd";
-import { MoreOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  MoreOutlined,
+  EditOutlined,
+  TranslationOutlined,
+} from "@ant-design/icons";
 
 import { ITermDataResponse } from "../api/Term";
 import MdView from "../template/MdView";
@@ -52,7 +56,7 @@ const TermItemWidget = ({ data }: IWidget) => {
                 {
                   key: "translate",
                   label: "translate",
-                  icon: <EditOutlined />,
+                  icon: <TranslationOutlined />,
                 },
               ],
               onClick: (e) => {
