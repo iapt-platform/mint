@@ -145,29 +145,32 @@ class UpgradeCompound extends Command
             if(!empty($_word)){
                 Storage::disk('local')->put("tmp/compound1.csv", "word,type,grammar,parent,factors");
             }
+
+            $count = 0;
             foreach ($parts as $part) {
                 if(isset($part['type']) && $part['type'] === ".v."){
                     continue;
                 }
-                $new = UserDict::firstOrNew(
-                    [
-                        'word' => $part['word'],
-                        'factors' => $part['factors'],
-                        'dict_id' => $dict_id,
-                    ],
-                    [
-                        'id' => app('snowflake')->id(),
-                        'source' => '_ROBOT_',
-                        'create_time'=>(int)(microtime(true)*1000),
-                    ]
-                );
+                $count++;
+                $new = new UserDict;
+                $new->id = app('snowflake')->id();
+                $new->word = $part['word'];
+                $new->factors = $part['factors'];
+                $new->dict_id = $dict_id;
+                $new->source = '_ROBOT_';
+                $new->create_time = (int)(microtime(true)*1000);
+
                 if(isset($part['type'])){
                     $new->type = $part['type'];
                 }else{
                     $new->type = ".cp.";
                 }
-                if(isset($part['grammar'])) $new->grammar = $part['grammar'];
-                if(isset($part['parent'])) $new->parent = $part['parent'];
+                if(isset($part['grammar'])){
+                    $new->grammar = $part['grammar'];
+                }
+                if(isset($part['parent'])){
+                    $new->parent = $part['parent'];
+                }
                 $new->confidence = 50*$part['confidence'];
                 $new->note = $part['confidence'];
                 $new->language = 'cm';
@@ -177,6 +180,7 @@ class UpgradeCompound extends Command
 
                 if(!empty($_word)){
                     $output = "{$part['word']},{$part['type']},{$part['grammar']},{$part['parent']},{$part['factors']},{$part['confidence']}";
+                    $this->info($count);
                     $this->info($output);
                     Storage::disk('local')->append("tmp/compound1.csv", $output);
                 }
