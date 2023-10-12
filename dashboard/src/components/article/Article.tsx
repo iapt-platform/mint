@@ -20,6 +20,7 @@ import {
   IRecentResponse,
 } from "../../pages/studio/recent/list";
 import { ITocPathNode } from "../corpus/TocPath";
+import { useSearchParams } from "react-router-dom";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -91,6 +92,7 @@ const ArticleWidget = ({
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [unauthorized, setUnauthorized] = useState(false);
   const [remains, setRemains] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const channels = channelId?.split("_");
 
@@ -135,7 +137,9 @@ const ArticleWidget = ({
     if (!active) {
       return;
     }
+
     if (typeof type !== "undefined") {
+      const debug = searchParams.get("debug");
       let url = "";
       switch (type) {
         case "chapter":
@@ -192,6 +196,9 @@ const ArticleWidget = ({
             url += channelId ? `&channel=${channelId}` : "";
           }
           break;
+      }
+      if (debug) {
+        url += `&debug=${debug}`;
       }
       console.log("article url", url);
       setShowSkeleton(true);
