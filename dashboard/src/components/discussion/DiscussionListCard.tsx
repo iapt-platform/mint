@@ -79,20 +79,19 @@ const DiscussionListCardWidget = ({
           title: {
             render(dom, entity, index, action, schema) {
               return (
-                <>
-                  <Button
-                    size="small"
-                    type="link"
-                    icon={entity.newTpl ? <TemplateOutlinedIcon /> : undefined}
-                    onClick={(event) => {
-                      if (typeof onSelect !== "undefined") {
-                        onSelect(event, entity);
-                      }
-                    }}
-                  >
-                    {entity.title}
-                  </Button>
-                </>
+                <Button
+                  key={index}
+                  size="small"
+                  type="link"
+                  icon={entity.newTpl ? <TemplateOutlinedIcon /> : undefined}
+                  onClick={(event) => {
+                    if (typeof onSelect !== "undefined") {
+                      onSelect(event, entity);
+                    }
+                  }}
+                >
+                  {entity.title}
+                </Button>
               );
             },
           },
@@ -100,15 +99,19 @@ const DiscussionListCardWidget = ({
             dataIndex: "content",
             search: false,
             render(dom, entity, index, action, schema) {
-              return entity.summary ? entity.summary : entity.content;
+              return (
+                <span key={index}>
+                  {entity.summary ? entity.summary : entity.content}
+                </span>
+              );
             },
           },
           actions: {
             render: (text, row, index, action) => [
               row.childrenCount ? (
                 <Space key={index}>
-                  <CommentOutlinedIcon />
-                  {row.childrenCount}
+                  <CommentOutlinedIcon key={"icon"} />
+                  <span key={"count"}>{row.childrenCount}</span>
                 </Space>
               ) : (
                 <></>
