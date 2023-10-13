@@ -99,6 +99,8 @@ const ArticleListWidget = ({
   const [transfer, setTransfer] = useState<string[]>();
   const [transferName, setTransferName] = useState<string>();
   const [transferOpen, setTransferOpen] = useState(false);
+  const [pageSize, setPageSize] = useState(10);
+
   useEffect(() => {
     /**
      * 获取各种课程的数量
@@ -415,8 +417,10 @@ const ArticleListWidget = ({
           let url = `/v2/article?view=studio&view2=${activeKey}&name=${studioName}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
-            (params.pageSize ? params.pageSize : 10);
-
+            (params.pageSize ? params.pageSize : pageSize);
+          if (params.pageSize) {
+            setPageSize(params.pageSize);
+          }
           url += `&limit=${params.pageSize}&offset=${offset}`;
           url += params.keyword ? "&search=" + params.keyword : "";
 
@@ -425,7 +429,7 @@ const ArticleListWidget = ({
           }
 
           url += getSorterUrl(sorter);
-
+          console.log("url", url);
           const res = await get<IArticleListResponse>(url);
           const items: DataItem[] = res.data.rows.map((item, id) => {
             return {
@@ -453,7 +457,7 @@ const ArticleListWidget = ({
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          pageSize: 10,
+          pageSize: pageSize,
         }}
         search={false}
         options={{
