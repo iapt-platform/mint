@@ -89,7 +89,7 @@ const ChannelTableWidget = ({
   const [myNumber, setMyNumber] = useState<number>(0);
   const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
   const [collaborator, setCollaborator] = useState<string>();
-  const [transfer, setTransfer] = useState<string>();
+  const [transfer, setTransfer] = useState<string[]>();
   const [transferName, setTransferName] = useState<string>();
   const [transferOpen, setTransferOpen] = useState(false);
 
@@ -378,7 +378,7 @@ const ChannelTableWidget = ({
                           showDeleteConfirm(row.uid, row.title);
                           break;
                         case "transfer":
-                          setTransfer(row.uid);
+                          setTransfer([row.uid]);
                           setTransferName(row.title);
                           setTransferOpen(true);
                           break;

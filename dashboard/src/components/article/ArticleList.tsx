@@ -96,9 +96,11 @@ const ArticleListWidget = ({
   const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
   const [myNumber, setMyNumber] = useState<number>(0);
   const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
-  const [transfer, setTransfer] = useState<string>();
+  const [transfer, setTransfer] = useState<string[]>();
   const [transferName, setTransferName] = useState<string>();
   const [transferOpen, setTransferOpen] = useState(false);
+  const [pageSize, setPageSize] = useState(10);
+
   useEffect(() => {
     /**
      * 获取各种课程的数量
@@ -334,7 +336,7 @@ const ArticleListWidget = ({
                           showDeleteConfirm(row.id, row.title);
                           break;
                         case "transfer":
-                          setTransfer(row.id);
+                          setTransfer([row.id]);
                           setTransferName(row.title);
                           setTransferOpen(true);
                           break;
@@ -389,21 +391,36 @@ const ArticleListWidget = ({
           onCleanSelected,
         }) => {
           return (
-            <AddToAnthology
-              studioName={studioName}
-              articleIds={selectedRowKeys.map((item) => item.toString())}
-              onFinally={() => {
-                onCleanSelected();
-              }}
-            />
+            <Space>
+              <Button
+                type="link"
+                onClick={() => {
+                  const resId = selectedRowKeys.map((item) => item.toString());
+                  setTransfer(resId);
+                  setTransferName(resId.length + "个文章");
+                  setTransferOpen(true);
+                }}
+              >
+                转让
+              </Button>
+              <AddToAnthology
+                studioName={studioName}
+                articleIds={selectedRowKeys.map((item) => item.toString())}
+                onFinally={() => {
+                  onCleanSelected();
+                }}
+              />
+            </Space>
           );
         }}
         request={async (params = {}, sorter, filter) => {
           let url = `/v2/article?view=studio&view2=${activeKey}&name=${studioName}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
-            (params.pageSize ? params.pageSize : 10);
-
+            (params.pageSize ? params.pageSize : pageSize);
+          if (params.pageSize) {
+            setPageSize(params.pageSize);
+          }
           url += `&limit=${params.pageSize}&offset=${offset}`;
           url += params.keyword ? "&search=" + params.keyword : "";
 
@@ -412,7 +429,7 @@ const ArticleListWidget = ({
           }
 
           url += getSorterUrl(sorter);
-
+          console.log("url", url);
           const res = await get<IArticleListResponse>(url);
           const items: DataItem[] = res.data.rows.map((item, id) => {
             return {
@@ -440,7 +457,7 @@ const ArticleListWidget = ({
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          pageSize: 10,
+          pageSize: pageSize,
         }}
         search={false}
         options={{
