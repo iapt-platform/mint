@@ -2,7 +2,11 @@ import { ModalForm, ProForm } from "@ant-design/pro-components";
 import { Alert, Form, message, notification } from "antd";
 import { TResType } from "./TransferList";
 import { post } from "../../request";
-import { ITransferRequest, ITransferResponse } from "../api/Transfer";
+import {
+  ITransferCreateResponse,
+  ITransferRequest,
+  ITransferResponse,
+} from "../api/Transfer";
 import { useIntl } from "react-intl";
 import UserSelect from "../template/UserSelect";
 import { useEffect, useState } from "react";
@@ -10,7 +14,7 @@ import { useEffect, useState } from "react";
 interface IWidget {
   studioName?: string;
   resType: TResType;
-  resId?: string;
+  resId?: string[];
   resName?: string;
   open?: boolean;
   onOpenChange?: Function;
@@ -55,6 +59,7 @@ const TransferCreateWidget = ({
       onFinish={async (values) => {
         console.log(values);
         if (typeof resId === "undefined") {
+          console.error("res id is undefined");
           return;
         }
         const data = {
@@ -62,7 +67,7 @@ const TransferCreateWidget = ({
           res_id: resId,
           new_owner: values.studio,
         };
-        const res = await post<ITransferRequest, ITransferResponse>(
+        const res = await post<ITransferRequest, ITransferCreateResponse>(
           `/v2/transfer`,
           data
         );
@@ -70,7 +75,7 @@ const TransferCreateWidget = ({
           if (typeof onCreate === "undefined") {
             notification.open({
               message: strTransfer,
-              description: `${resType} ${resName} 已经转出。请等待对方确认。可以在转移管理中查看状态或取消。`,
+              description: `${resType} ${resName} 等 ${res.data} 个资源已经转出。请等待对方确认。可以在转移管理中查看状态或取消。`,
               duration: 0,
             });
           } else {

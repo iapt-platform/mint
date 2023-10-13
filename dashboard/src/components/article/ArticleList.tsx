@@ -96,7 +96,7 @@ const ArticleListWidget = ({
   const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
   const [myNumber, setMyNumber] = useState<number>(0);
   const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
-  const [transfer, setTransfer] = useState<string>();
+  const [transfer, setTransfer] = useState<string[]>();
   const [transferName, setTransferName] = useState<string>();
   const [transferOpen, setTransferOpen] = useState(false);
   useEffect(() => {
@@ -334,7 +334,7 @@ const ArticleListWidget = ({
                           showDeleteConfirm(row.id, row.title);
                           break;
                         case "transfer":
-                          setTransfer(row.id);
+                          setTransfer([row.id]);
                           setTransferName(row.title);
                           setTransferOpen(true);
                           break;
@@ -389,13 +389,26 @@ const ArticleListWidget = ({
           onCleanSelected,
         }) => {
           return (
-            <AddToAnthology
-              studioName={studioName}
-              articleIds={selectedRowKeys.map((item) => item.toString())}
-              onFinally={() => {
-                onCleanSelected();
-              }}
-            />
+            <Space>
+              <Button
+                type="link"
+                onClick={() => {
+                  const resId = selectedRowKeys.map((item) => item.toString());
+                  setTransfer(resId);
+                  setTransferName(resId.length + "个文章");
+                  setTransferOpen(true);
+                }}
+              >
+                转让
+              </Button>
+              <AddToAnthology
+                studioName={studioName}
+                articleIds={selectedRowKeys.map((item) => item.toString())}
+                onFinally={() => {
+                  onCleanSelected();
+                }}
+              />
+            </Space>
           );
         }}
         request={async (params = {}, sorter, filter) => {

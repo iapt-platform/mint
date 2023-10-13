@@ -6,7 +6,7 @@ import { TResType } from "../discussion/DiscussionListCard";
 export type ITransferStatus = "transferred" | "accept" | "refuse" | "cancel";
 export interface ITransferRequest {
   res_type?: TResType;
-  res_id?: string;
+  res_id?: string[];
   new_owner?: string;
   status?: ITransferStatus;
 }
@@ -22,6 +22,11 @@ export interface ITransferResponseData {
   editor?: IUser | null;
   created_at: string;
   updated_at: string;
+}
+export interface ITransferCreateResponse {
+  ok: boolean;
+  message: string;
+  data: number;
 }
 export interface ITransferResponse {
   ok: boolean;
