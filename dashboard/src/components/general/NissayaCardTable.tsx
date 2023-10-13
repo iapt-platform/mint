@@ -93,7 +93,7 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           key: randomString(),
           relation: item.relation,
           localRelation: item.local_relation,
-          from: item.to,
+          from: item.from,
           to: item.to,
           category: item.category,
           translation: item.local_ending,
