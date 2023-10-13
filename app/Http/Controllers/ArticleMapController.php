@@ -9,6 +9,7 @@ use App\Http\Api\ShareApi;
 use App\Http\Api\AuthApi;
 use Illuminate\Http\Request;
 use App\Http\Resources\ArticleMapResource;
+use Illuminate\Support\Facades\Log;
 
 class ArticleMapController extends Controller
 {
@@ -57,6 +58,7 @@ class ArticleMapController extends Controller
             return $this->error(__('auth.failed'));
         }
         if(!CollectionController::UserCanEdit($user["user_uid"],$collection)){
+            Log::error($user["user_uid"].'无文集编辑权限'.$collection->uid);
             return $this->error(__('auth.failed'));
         }
         switch ($validated['operation']) {

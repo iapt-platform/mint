@@ -13,6 +13,7 @@ use App\Http\Api\AuthApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\StudioApi;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ArticleController extends Controller
 {
@@ -247,6 +248,7 @@ class ArticleController extends Controller
         //判断权限
         $user = AuthApi::current($request);
         if(!$user){
+            Log::error('未登录');
             return $this->error(__('auth.failed'),[],401);
         }else{
             $user_uid=$user['user_uid'];
@@ -254,13 +256,16 @@ class ArticleController extends Controller
 
         $canManage = ArticleController::userCanManage($user_uid,$request->get('studio'));
         if(!$canManage){
+            Log::error('userCanManage 失败');
             //判断是否有文集权限
             if($request->has('anthologyId')){
                 $currPower = ShareApi::getResPower($user_uid,$request->get('anthologyId'));
                 if($currPower <= 10){
+                    Log::error('没有文集编辑权限');
                     return $this->error(__('auth.failed'),[],403);
                 }
             }else{
+                Log::error('没有文集id');
                 return $this->error(__('auth.failed'),[],403);
             }
         }

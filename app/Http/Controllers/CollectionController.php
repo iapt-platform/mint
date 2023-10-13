@@ -130,6 +130,17 @@ class CollectionController extends Controller
         }
         return false;
     }
+    public static function UserCanRead($user_uid,$collection){
+        if($collection->owner === $user_uid){
+            return true;
+        }
+        //查协作
+        $currPower = ShareApi::getResPower($user_uid,$collection->uid);
+        if($currPower >= 10){
+            return true;
+        }
+        return false;
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -184,16 +195,20 @@ class CollectionController extends Controller
 		if($result){
             if($result->status<30){
                 //私有文章，判断权限
+                Log::error('私有文章，判断权限'.$id);
                 $user = \App\Http\Api\AuthApi::current($request);
-                if($user){
-                    //判断当前用户是否有指定的studio的权限
-                    if($user['user_uid'] !== $result->owner){
-                        //非所有者
-                        //TODO 判断是否协作
+                if(!$user){
+                    Log::error('未登录');
+                    return $this->error(__('auth.failed'));
+                }
+                //判断当前用户是否有指定的studio的权限
+                if($user['user_uid'] !== $result->owner){
+                    Log::error($user["user_uid"].'私有文章，判断权限'.$id);
+                    //非所有者
+                    if(CollectionController::UserCanRead($user['user_uid'],$result)===false){
+                        Log::error($user["user_uid"].'没有读取权限');
                         return $this->error(__('auth.failed'));
                     }
-                }else{
-                    return $this->error(__('auth.failed'));
                 }
             }
             $result->fullArticleList = true;
