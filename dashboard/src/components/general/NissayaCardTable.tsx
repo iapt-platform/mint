@@ -100,7 +100,7 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
         });
       }
     });
-
+    console.log("newData", newData);
     setTableData(newData);
   }, [data]);
   return (
