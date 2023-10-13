@@ -97,43 +97,45 @@ class TransferController extends Controller
 
         $validated = $request->validate($rules);
 
-        $transfer = new Transfer;
+        $resId = $request->get('res_id');
+        foreach ($resId as $id) {
+            $transfer = new Transfer;
+            //查看权限
+            switch ($request->get('res_type')) {
+                case 'channel':
+                    $oldRes = Channel::find($id);
+                    if($oldRes->owner_uid !== $user['user_uid']){
+                        return $this->error(__('auth.failed'),[403],403);
+                    }
+                    $transfer->origin_owner = $oldRes->owner_uid;
+                    break;
+                case 'article':
+                    $oldRes = Article::find($id);
+                    if($oldRes->owner !== $user['user_uid']){
+                        return $this->error(__('auth.failed'),[403],403);
+                    }
+                    $transfer->origin_owner = $oldRes->owner;
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+            //查重
+            if(Transfer::where('res_id',$id)
+                    ->where('res_type',$request->get('res_type'))
+                    ->where('status','transferred')
+                    ->exists()){
+                        return $this->error('该资源已经进入转让流程',[200],200);
+                    }
+            $transfer->res_id = $id;
+            $transfer->res_type = $request->get('res_type');
 
-        //查看权限
-        switch ($request->get('res_type')) {
-            case 'channel':
-                $oldRes = Channel::find($request->get('res_id'));
-                if($oldRes->owner_uid !== $user['user_uid']){
-                    return $this->error(__('auth.failed'),[403],403);
-                }
-                $transfer->origin_owner = $oldRes->owner_uid;
-                break;
-            case 'article':
-                $oldRes = Article::find($request->get('res_id'));
-                if($oldRes->owner !== $user['user_uid']){
-                    return $this->error(__('auth.failed'),[403],403);
-                }
-                $transfer->origin_owner = $oldRes->owner;
-                break;
-            default:
-                # code...
-                break;
+            $transfer->transferor_id = $user['user_uid'];
+            $transfer->new_owner = $request->get('new_owner');
+            $transfer->save();
         }
-        //查重
-        if(Transfer::where('res_id',$request->get('res_id'))
-                ->where('res_type',$request->get('res_type'))
-                ->where('status','transferred')
-                ->exists()){
-                    return $this->error('该资源已经进入转让流程',[200],200);
-                }
-        $transfer->res_id = $request->get('res_id');
-        $transfer->res_type = $request->get('res_type');
 
-        $transfer->transferor_id = $user['user_uid'];
-        $transfer->new_owner = $request->get('new_owner');
-        $transfer->save();
-        return $this->ok(new TransferResource($transfer));
-
+        return $this->ok(count($resId));
     }
 
     /**
