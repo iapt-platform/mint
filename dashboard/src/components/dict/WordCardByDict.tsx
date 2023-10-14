@@ -4,6 +4,7 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 
 import Marked from "../general/Marked";
 import MdView from "../template/MdView";
+import "./style.css";
 
 const { Title } = Typography;
 
@@ -34,7 +35,7 @@ const WordCardByDictWidget = (prop: IWidgetWordCardByDict) => {
           </Popover>
         ) : undefined}
       </Space>
-      <div>
+      <div className="dict_content">
         <MdView html={prop.data.note} />
       </div>
     </Card>
