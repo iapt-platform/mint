@@ -1,5 +1,11 @@
+import BeiAn from "../general/BeiAn";
+
 const FooterWidget = () => {
-  return <div>Studio Footer</div>;
+  return (
+    <div>
+      <BeiAn />
+    </div>
+  );
 };
 
 export default FooterWidget;

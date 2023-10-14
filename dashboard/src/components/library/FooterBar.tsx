@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Layout, Row, Col, Typography } from "antd";
+import BeiAn from "../general/BeiAn";
 
 const { Footer } = Layout;
 const { Paragraph } = Typography;
@@ -26,7 +27,9 @@ const FooterBarWidget = () => {
         </Col>
       </Row>
       <Row>
-        <Col>Powered by PCDS</Col>
+        <Col>
+          <BeiAn />
+        </Col>
       </Row>
     </Footer>
   );
