@@ -48,7 +48,7 @@ class DictController extends Controller
         if(env('APP_ENV')==='local'){
             $inMyHanGroup = true;
         }
-
+        $resultCount=0;
         for ($i=0; $i < 2; $i++) {
             # code...
             $word_base = [];
@@ -64,6 +64,7 @@ class DictController extends Controller
                     //$table = $table->where('dict_id','<>','ac9b7b73-b9c0-4d31-a5c9-7c6dc5a2c187');
                 }
                 $result = $table->get();
+                $resultCount += count($result);
                 $anchor = $word;
                 $wordData=[
                     'word'=> $word,
@@ -171,7 +172,39 @@ class DictController extends Controller
             }
         }
 
+        if($resultCount<3){
+            //查询内文
+            $table = UserDict::select($indexCol)
+                                ->where('note','like','%'.$word.'%')
+                                ->get();
 
+            $wordData=[
+                'word'=> $word,
+                'factors'=> "",
+                'parents'=> "",
+                'case'=> [],
+                'grammar'=>[],
+                'anchor'=> $anchor,
+                'dict' => [],
+            ];
+            foreach ($table as $key => $value) {
+                $dictInfo= DictInfo::find($value->dict_id);
+                    $dict_lang = explode('-',$dictInfo->dest_lang);
+                    $anchor = "{$word}-{$dictInfo->shortname}";
+                $currData = [
+                    'dictname'=> $dictInfo->name,
+                    'shortname'=> $dictInfo->shortname,
+                    'description'=>$dictInfo->description,
+                    'dict_id' => $value->dict_id,
+                    'lang' => $dict_lang[0],
+                    'word'=> $word,
+                    'note'=> $this->GrmAbbr($value->note,0),
+                    'anchor'=> $anchor,
+                ];
+                $wordData['dict'][] = $currData;
+            }
+            $wordDataOutput[]=$wordData;
+        }
 
 
         $output['words'] = $wordDataOutput;
