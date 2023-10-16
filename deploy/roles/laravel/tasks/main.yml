@@ -1,0 +1,50 @@
+- name: Install node.js packages
+  become: true
+  apt:
+    pkg:
+      - nodejs
+      - npm
+      - yarnpkg
+
+# https://laravel.com/docs/10.x/deployment
+
+- name: clone source code
+  ansible.builtin.git:
+    repo: "https://github.com/iapt-platform/mint.git"
+    dest: "{{ app_deploy_root }}/htdocs"
+    version: "laravel"
+
+- name: install nodejs packages for v1
+  ansible.builtin.shell:
+    cmd: yarnpkg install
+    chdir: "{{ app_deploy_root }}/htdocs/public"
+
+- name: install nodejs packages for v2
+  ansible.builtin.shell:
+    cmd: yarnpkg install
+    chdir: "{{ app_deploy_root }}/htdocs"
+
+- name: autoloader Optimization
+  ansible.builtin.shell:
+    cmd: composer install --optimize-autoloader --no-dev
+    chdir: "{{ app_deploy_root }}/htdocs"
+
+- name: caching configuration
+  ansible.builtin.shell:
+    cmd: php artisan config:cache
+    chdir: "{{ app_deploy_root }}/htdocs"
+
+- name: caching events
+  ansible.builtin.shell:
+    cmd: php artisan event:cache
+    chdir: "{{ app_deploy_root }}/htdocs"
+
+- name: caching routes
+  ansible.builtin.shell:
+    cmd: php artisan route:cache
+    chdir: "{{ app_deploy_root }}/htdocs"
+
+- name: caching views
+  ansible.builtin.shell:
+    cmd: php artisan view:cache
+    chdir: "{{ app_deploy_root }}/htdocs"

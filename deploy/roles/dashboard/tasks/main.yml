@@ -1,0 +1,4 @@
+- name: upload dashboard
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../dashboard/build/"
+    dest: "{{ app_deploy_root }}/dashboard/"
