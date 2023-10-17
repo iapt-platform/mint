@@ -283,10 +283,16 @@ cd ./v1/scripts
 ```
 运行时间较长。本地开发环境大约4小时。
 
-
-运行时间较长。本地开发环境大约4小时。
-
 如果不想等待，可以导入其他人已经部署好的postgresql数据库
+
+### 启动消息队列works
+
+```dash
+php artisan mq:discussion
+php artisan mq:pr
+php artisan mq:progress
+php artisan mq:wbw.analyses
+```
 
 ### 运行dev server
 

@@ -11,7 +11,7 @@ class UpgradeWbwAnalyses extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan upgrade:wbw.analyses 13607580802879488
      * @var string
      */
     protected $signature = 'upgrade:wbw.analyses {id?}';
@@ -71,8 +71,14 @@ class UpgradeWbwAnalyses extends Command
                 $pali = $word->real->__toString();
                 $factors = [];
                 foreach ($word as $key => $value) {
-                    $strValue = $value->__toString();
-                    if ($strValue !== "?" && $strValue !== "" && $strValue !== ".ctl." && $strValue !== ".a." && $strValue !== " " && mb_substr($strValue, 0, 3, "UTF-8") !== "[a]" && $strValue !== "_un_auto_factormean_" && $strValue !== "_un_auto_mean_") {
+                    $strValue = trim($value->__toString());
+                    if ($strValue !== "?" &&
+                        $strValue !== "" &&
+                        $strValue !== ".ctl." &&
+                        $strValue !== ".a." &&
+                        mb_substr($strValue, 0, 3, "UTF-8") !== "[a]" &&
+                        $strValue !== "_un_auto_factormean_" &&
+                        $strValue !== "_un_auto_mean_") {
                         $iType = 0;
                         $lang = 'pali';
                         $newData = [
@@ -128,11 +134,15 @@ class UpgradeWbwAnalyses extends Command
                                 $newData['type']=6;
                                 WbwAnalysis::insert($newData);
                                 break;
+                            case 'case':
+                                $newData['type']=8;
+                                WbwAnalysis::insert($newData);
+                                break;
                             case 'rela':
                             /*
                             <rela>[{"sour_id":"p199-764-6","sour_spell":"dhammacakkappavattanatthaṃ","dest_id":"p199-764-8","dest_spell":"āmantanā","relation":"ADV","note":""}]</rela>
                             */
-                                $newData['type']=7;
+                                $newData['type']=9;
                                 $rlt = json_decode($strValue);
                                 foreach ($rlt as $rltValue) {
                                     # code...

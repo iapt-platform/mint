@@ -10,6 +10,7 @@ use App\Models\Article;
 use App\Http\Api\Mq;
 use App\Tools\WebHook as WebHookSend;
 use App\Http\Api\MdRender;
+use App\Http\Api\UserApi;
 
 class MqDiscussion extends Command
 {
