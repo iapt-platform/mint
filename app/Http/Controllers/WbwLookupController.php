@@ -12,6 +12,7 @@ use App\Tools\CaseMan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Api\DictApi;
+use App\Http\Api\AuthApi;
 
 
 
@@ -152,6 +153,23 @@ class WbwLookupController extends Controller
         }
         return false;
     }
+    private function wbwPreference($word,$field,$userId){
+        $prefix = 'wbw-preference';
+        $fieldMap = ['meaning'=>3,'factors'=>4,'factorMeaning'=>5];
+        $fieldId = $fieldMap[$field];
+        $myPreference = Cache::get("{$prefix}/{$word}/{$fieldId}/{$userId}");
+        if(!empty($myPreference)){
+            Log::info($word.'命中我的wbw-'.$field);
+            return ['value'=>$myPreference,'status'=>5];
+        }else{
+            $myPreference = Cache::get("{$prefix}/{$word}/3/0");
+            if(!empty($myPreference)){
+                Log::info($word.'命中社区wbw-'.$field);
+                return ['value'=>$myPreference,'status'=>5];
+            }
+        }
+        return false;
+    }
     /**
      * 自动查词
      *
@@ -161,6 +179,12 @@ class WbwLookupController extends Controller
     public function store(Request $request)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user ){
+            //未登录用户
+            return $this->error(__('auth.failed'),[],401);
+        }
+
         $startAt = microtime(true)*1000;
 
         // system regular
@@ -194,8 +218,20 @@ class WbwLookupController extends Controller
             if(empty($word['real']['value'])){
                 continue;
             }
-
             $data = $word;
+
+            $preference = $this->wbwPreference($word['real']['value'],'meaning',$user['user_id']);
+            if($preference!==false){
+                $data['meaning'] = $preference;
+            }
+            $preference = $this->wbwPreference($word['real']['value'],'factors',$user['user_id']);
+            if($preference!==false){
+                $data['factors'] = $preference;
+            }
+            $preference = $this->wbwPreference($word['real']['value'],'factorMeaning',$user['user_id']);
+            if($preference!==false){
+                $data['factorMeaning'] = $preference;
+            }
             if(isset($indexed[$word['real']['value']])){
                 //parent
                 $case = [];
@@ -220,13 +256,17 @@ class WbwLookupController extends Controller
                     if(!empty($value->type) && $value->type !== ".cp."){
                         $case = $this->insertValue([$value->type."#".$value->grammar],$case,$increment);
                     }
+                    if($data['factors']['status']<5){
+                        $factors = $this->insertValue([$value->factors],$factors,$increment);
+                    }
+                    if($data['factorMeaning']['status']<5){
+                        $factorMeaning = $this->insertValue([$value->factormean],$factorMeaning,$increment);
+                    }
 
-                    $factors = $this->insertValue([$value->factors],$factors,$increment);
-
-                    $factorMeaning = $this->insertValue([$value->factormean],$factorMeaning,$increment);
-
-                    if($this->langCheck($lang,$value->language)){
-                        $meaning = $this->insertValue(explode('$',$value->mean),$meaning,$increment,false);
+                    if($data['meaning']['status']<5){
+                        if($this->langCheck($lang,$value->language)){
+                            $meaning = $this->insertValue(explode('$',$value->mean),$meaning,$increment,false);
+                        }
                     }
                 }
                 if(count($case)>0){
@@ -250,26 +290,22 @@ class WbwLookupController extends Controller
                     $first = array_keys($factorMeaning)[0];
                     $data['factorMeaning'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
                 }
-                $wbwFactorMeaning = [];
-                if(!empty($data['factors']['value'])){
-                    foreach (explode("+",$data['factors']['value']) as  $factor) {
-                        # code...
-                        $wbwAnalyses = WbwAnalysis::where('wbw_word',$factor)
-                                                    ->where('type',7)
-                                                    ->selectRaw('data,count(*)')
-                                                    ->groupBy("data")
-                                                    ->orderBy("count", "desc")
-                                                    ->first();
-                        if($wbwAnalyses){
-                            $wbwFactorMeaning[]=$wbwAnalyses->data;
-                        }else{
-                            $wbwFactorMeaning[]="";
+                if($data['factorMeaning']['status']<5){
+                    $wbwFactorMeaning = [];
+                    if(!empty($data['factors']['value'])){
+                        foreach (explode("+",$data['factors']['value']) as  $factor) {
+                            $preference = $this->wbwPreference($$factor,'meaning',$user['user_id']);
+                            if($preference!==false){
+                                $wbwFactorMeaning[] = $preference['value'];
+                            }else{
+                                $wbwFactorMeaning[] = $factor;
+                            }
                         }
                     }
+                    $data['factorMeaning'] = ['value'=>implode('+',$wbwFactorMeaning),'status'=>3];
                 }
-                $data['factorMeaning'] = ['value'=>implode('+',$wbwFactorMeaning),'status'=>3];
 
-                if(!empty($data['parent'])){
+                if(empty($data['meaning']['value']) && !empty($data['parent']['value'])){
                     if(isset($indexed[$data['parent']['value']])){
                         foreach ($indexed[$data['parent']['value']] as $value) {
                             //根据base 查找词意
@@ -299,7 +335,6 @@ class WbwLookupController extends Controller
             }
             $orgData[$key] = $data;
         }
-        Log::info($orgData);
         return $this->ok($orgData);
     }
 
