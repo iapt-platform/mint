@@ -6,7 +6,6 @@ use App\Models\UserDict;
 use App\Models\DictInfo;
 use App\Models\WbwTemplate;
 use App\Models\Channel;
-use App\Models\WbwAnalysis;
 use Illuminate\Http\Request;
 use App\Tools\CaseMan;
 use Illuminate\Support\Facades\Log;
@@ -155,7 +154,16 @@ class WbwLookupController extends Controller
     }
     private function wbwPreference($word,$field,$userId){
         $prefix = 'wbw-preference';
-        $fieldMap = ['meaning'=>3,'factors'=>4,'factorMeaning'=>5];
+        $fieldMap = [
+                    'type'=>1,
+                    'grammar'=>2,
+                    'meaning'=>3,
+                    'factors'=>4,
+                    'factorMeaning'=>5,
+                    'parent'=>6,
+                    'part'=>7,
+                    'case'=>8,
+                ];
         $fieldId = $fieldMap[$field];
         $myPreference = Cache::get("{$prefix}/{$word}/{$fieldId}/{$userId}");
         if(!empty($myPreference)){
@@ -232,6 +240,10 @@ class WbwLookupController extends Controller
             if($preference!==false){
                 $data['factorMeaning'] = $preference;
             }
+            $preference = $this->wbwPreference($word['real']['value'],'case',$user['user_id']);
+            if($preference!==false){
+                $data['case'] = $preference;
+            }
             if(isset($indexed[$word['real']['value']])){
                 //parent
                 $case = [];
@@ -249,12 +261,13 @@ class WbwLookupController extends Controller
                         $increment = 1;
                     }
                     //将全部结果加上得分放入数组
-                    if($value->type!=='.cp.'){
+                    if($value->type !== '.cp.'){
                         $parent = $this->insertValue([$value->parent],$parent,$increment);
                     }
-
-                    if(!empty($value->type) && $value->type !== ".cp."){
-                        $case = $this->insertValue([$value->type."#".$value->grammar],$case,$increment);
+                    if($data['case']['status']<5){
+                        if(!empty($value->type) && $value->type !== ".cp."){
+                            $case = $this->insertValue([$value->type."#".$value->grammar],$case,$increment);
+                        }
                     }
                     if($data['factors']['status']<5){
                         $factors = $this->insertValue([$value->factors],$factors,$increment);
