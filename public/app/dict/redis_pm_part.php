@@ -2,6 +2,8 @@
 require_once __DIR__."/../config.php";
 require_once __DIR__."/../redis/function.php";
 
+echo 'discard';
+return;
 if (PHP_SAPI == "cli") {
 	$redis = redis_connect();
 	if ($redis != false) {
