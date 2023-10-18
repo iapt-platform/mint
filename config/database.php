@@ -169,21 +169,22 @@ if(env('APP_ENV'!=='local')){
         'clusters' => [
             'default' => [
                 [
-                'host' => env('REDIS_HOST', '127.0.0.1'),
-                'password' => env('REDIS_PASSWORD', null),
-                'port' => env('REDIS_PORT', '6379'),
-                'database' => env('REDIS_DB', '0'),
-                'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+                    'host' => env('REDIS_HOST', '127.0.0.1'),
+                    'password' => env('REDIS_PASSWORD', null),
+                    'port' => env('REDIS_PORT', '6379'),
+                    'database' => env('REDIS_DB', '0'),
+                    'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
                 ],
             ],
         ],
 
         'cache' => [
-            'url' => env('REDIS_URL'),
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'password' => env('REDIS_PASSWORD', null),
-            'port' => env('REDIS_PORT', '6379'),
+            'url' => env('REDIS_CACHE_URL'),
+            'host' => env('REDIS_CACHE_HOST', '127.0.0.1'),
+            'password' => env('REDIS_CACHE_PASSWORD', null),
+            'port' => env('REDIS_CACHE_PORT', '6379'),
             'database' => env('REDIS_CACHE_DB', '1'),
+            'prefix' => env('REDIS_CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
         ],
     ];
 }
