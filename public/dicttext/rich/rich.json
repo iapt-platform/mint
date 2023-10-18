@@ -47,12 +47,5 @@
 		"table": "uhan",
 		"keycol": "1",
 		"csv": ["uhan.csv"]
-	},
-	{
-		"rediskey": "dict://uhausein",
-		"database": "",
-		"table": "uhausein",
-		"keycol": "1",
-		"csv": ["u_hau_sein.csv"]
 	}
 ]
