@@ -495,9 +495,33 @@ class TemplateRender{
                 break;
             case 'text':
                 $output = '';
+                if(isset($props['translation']) && is_array($props['translation'])){
+                    foreach ($props['translation'] as $key => $value) {
+                        $output .= MdRender::render($value['content'],
+                                    [$value['channel']['id']],
+                                    null,
+                                    'read',
+                                    $value['channel']['type'],
+                                    $value['contentType'],
+                                    'text'
+                                    );
+                    }
+                }
                 break;
             case 'tex':
                 $output = '';
+                if(isset($props['translation']) && is_array($props['translation'])){
+                    foreach ($props['translation'] as $key => $value) {
+                        $output .= MdRender::render($value['content'],
+                                    [$value['channel']['id']],
+                                    null,
+                                    'read',
+                                    $value['channel']['type'],
+                                    $value['contentType'],
+                                    'tex'
+                                    );
+                    }
+                }
                 break;
             default:
                 $output = '';
