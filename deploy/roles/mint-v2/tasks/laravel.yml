@@ -1,11 +1,3 @@
-- name: Install node.js packages
-  become: true
-  apt:
-    pkg:
-      - nodejs
-      - npm
-      - yarnpkg
-
 # https://laravel.com/docs/10.x/deployment
 
 - name: clone source code
@@ -48,3 +40,4 @@
   ansible.builtin.shell:
     cmd: php artisan view:cache
     chdir: "{{ app_deploy_root }}/htdocs"
+

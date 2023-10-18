@@ -10,29 +10,6 @@
       ansible.builtin.shell:
         cmd: NODE_OPTIONS="--max_old_space_size=4096" PUBLIC_URL=/pcd yarn build
         chdir: "{{ playbook_dir }}/../dashboard"
-
-- hosts:
-    - www
-    - php_fpm
-  tasks:
-    - name: create deployment folder
-      become: true
-      ansible.builtin.file:
-        path: "{{ app_deploy_root }}"
-        state: directory
-        owner: "{{ ansible_user }}"
-    - name: create logs folder
-      become: true
-      ansible.builtin.file:
-        path: "{{ app_deploy_root }}/logs"
-        state: directory
-        owner: "www-data"
-        group: "www-data"
-
-- hosts: php_fpm
-  roles:
-    - laravel
-
 - hosts: www
   roles:
-    - dashboard
+    - mint-v2
