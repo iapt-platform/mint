@@ -262,13 +262,13 @@ php artisan migrate
 **Liunx**
 ```dash
 cd ./v1/scripts
-sh ./redis_upgrade.sh
+sh ./upgrade_redis.sh
 ```
 
 **Window**
 ```dash
 cd ./v1/scripts
-./redis_upgrade.bat
+./upgrade_redis.bat
 ```
 
 ## 语料数据库填充
