@@ -6,38 +6,106 @@
     dest: "{{ app_deploy_root }}/htdocs"
     version: "laravel"
 
-- name: install nodejs packages for v1
-  ansible.builtin.shell:
-    cmd: yarnpkg install
-    chdir: "{{ app_deploy_root }}/htdocs/public"
-
 - name: install nodejs packages for v2
   ansible.builtin.shell:
     cmd: yarnpkg install
     chdir: "{{ app_deploy_root }}/htdocs"
 
-- name: autoloader Optimization
+- name: install nodejs packages for v1
+  ansible.builtin.shell:
+    cmd: yarnpkg install
+    chdir: "{{ app_deploy_root }}/htdocs/public"
+
+- name: upload .env(v2)
+  become: true
+  template:
+    src: v2/env.j2
+    dest: "{{ app_deploy_root }}/htdocs/.env"
+    owner: www-data
+    group: www-data
+    mode: "0400"
+
+- name: upload config.php(v1)
+  become: true
+  template:
+    src: v1/config.php.j2
+    dest: "{{ app_deploy_root }}/htdocs/public/app/config.php"
+    owner: www-data
+    group: www-data
+    mode: "0400"
+
+- name: upload config.js(v1)
+  become: true
+  template:
+    src: v1/config.js.j2
+    dest: "{{ app_deploy_root }}/htdocs/public/app/config.js"
+    owner: www-data
+    group: www-data
+    mode: "0444"
+
+- name: setup bootstrap folder
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_root }}/htdocs/bootstrap/cache"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+- name: setup storage folder
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_root }}/htdocs/storage"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+- name: auto-loader optimization for v2
   ansible.builtin.shell:
     cmd: composer install --optimize-autoloader --no-dev
     chdir: "{{ app_deploy_root }}/htdocs"
 
-- name: caching configuration
+- name: auto-loader optimization for v1
   ansible.builtin.shell:
-    cmd: php artisan config:cache
+    cmd: composer install --optimize-autoloader --no-dev
+    chdir: "{{ app_deploy_root }}/htdocs/public"
+
+- name: caching configuration
+  become: true
+  ansible.builtin.shell:
+    cmd: su www-data -pc "php artisan config:cache"
     chdir: "{{ app_deploy_root }}/htdocs"
 
 - name: caching events
+  become: true
   ansible.builtin.shell:
-    cmd: php artisan event:cache
+    cmd: su www-data -pc "php artisan event:cache"
     chdir: "{{ app_deploy_root }}/htdocs"
 
 - name: caching routes
+  become: true
   ansible.builtin.shell:
-    cmd: php artisan route:cache
+    cmd: su www-data -pc "php artisan route:cache"
     chdir: "{{ app_deploy_root }}/htdocs"
 
 - name: caching views
+  become: true
   ansible.builtin.shell:
-    cmd: php artisan view:cache
+    cmd: su www-data -pc "php artisan view:cache"
     chdir: "{{ app_deploy_root }}/htdocs"
 
+- name: create tmp folder for v1
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_root }}/htdocs/public/tmp"
+    state: directory
+    owner: "www-data"
+    group: "www-data"
+
+- name: setup sqlite3 db for v1
+  become: true
+  ansible.builtin.file:
+    src: /var/www/shared/appdata
+    dest: "{{ app_deploy_root }}/htdocs/public/tmp/appdata"
+    state: link
