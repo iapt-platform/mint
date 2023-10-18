@@ -167,13 +167,14 @@ if(env('APP_ENV'!=='local')){
         ],
 
         'clusters' => [
-            'default' => [[
+            'default' => [
+                [
                 'host' => env('REDIS_HOST', '127.0.0.1'),
                 'password' => env('REDIS_PASSWORD', null),
                 'port' => env('REDIS_PORT', '6379'),
                 'database' => env('REDIS_DB', '0'),
                 'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
-            ],
+                ],
             ],
         ],
 
