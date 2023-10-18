@@ -173,7 +173,8 @@ if(env('APP_ENV'!=='local')){
                 'port' => env('REDIS_PORT', '6379'),
                 'database' => env('REDIS_DB', '0'),
                 'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
-            ]],
+            ],
+            ],
         ],
 
         'cache' => [
