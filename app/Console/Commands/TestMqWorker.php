@@ -43,11 +43,11 @@ class TestMqWorker extends Command
         $queue = 'hello';
         $consumerTag = 'consumer';
 
-        $connection = new AMQPStreamConnection(env("RABBITMQ_HOST"),
-                                               env("RABBITMQ_PORT"),
-                                               env("RABBITMQ_USER"),
-                                               env("RABBITMQ_PASSWORD"),
-                                               env("RABBITMQ_VIRTUAL_HOST"));
+        $connection = new AMQPStreamConnection(config("rabbitmq.host"),
+                                            config("rabbitmq.port"),
+                                            config("rabbitmq.user"),
+                                            config("rabbitmq.password"),
+                                            config("rabbitmq.virtual.host"));
         $channel = $connection->channel();
 
         /*

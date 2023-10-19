@@ -57,7 +57,7 @@ class UserStatisticController extends Controller
         //
         $queryUserId = UserApi::getIntIdByName($userName);
         $queryUserUuid = UserApi::getIdByName($userName);
-        $cacheExpiry = env('CACHE_EXPIRE',3600*24);
+        $cacheExpiry = config('cache.expire',3600*24);
         //总经验值
         $expSum = Cache::remember("user/{$userName}/exp/sum",$cacheExpiry,function() use($queryUserId){
 			return UserOperationDaily::where('user_id',$queryUserId)

@@ -22,7 +22,7 @@ class VocabularyController extends Controller
             case 'key':
                 $key = $request->get("key");
                 $result = Cache::remember("/dict_vocabulary/{$key}",
-                        env('CACHE_EXPIRE',3600*24),
+                        config('cache.expire',3600*24),
                         function() use($key){
                         return Vocabulary::whereRaw('word like ? or word_en like ?',[$key."%",$key."%"])
                                     ->whereOr('word_en','like',$key."%")

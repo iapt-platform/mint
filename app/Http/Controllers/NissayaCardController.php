@@ -93,7 +93,7 @@ class NissayaCardController extends Controller
                     $localCase  =[];
                     foreach ($cases as $case) {
                         $localCase[] = ['label'=>__("grammar.".$case),
-                                        'link'=>env('DASHBOARD_URL').'/term/list/'.$case
+                                        'link'=>config('dashboard.url').'/term/list/'.$case
                                         ];
                     }
                     # 格位
@@ -108,7 +108,7 @@ class NissayaCardController extends Controller
                     $localTo  =[];
                     foreach ($linkTos->case as $to) {
                         $localTo[] = ['label'=>__("grammar.".$to),
-                                        'link'=>env('DASHBOARD_URL').'/term/list/'.$to
+                                        'link'=>config('dashboard.url').'/term/list/'.$to
                                         ];
                     }
 
@@ -157,7 +157,7 @@ class NissayaCardController extends Controller
                 }
                 //关系名称
                 $newLine['relation'] =  $relation['name'];
-                $newLine['relation_link'] =  env('DASHBOARD_URL').'/term/list/'.$relation['name'];
+                $newLine['relation_link'] =  config('dashboard.url').'/term/list/'.$relation['name'];
                 $cardData['row'][] = $newLine;
             }
         }

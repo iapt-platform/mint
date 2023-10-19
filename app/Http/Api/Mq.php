@@ -10,11 +10,11 @@ class Mq{
                 //一对一
 
         try{
-            $host = env("RABBITMQ_HOST");
-            $port = env("RABBITMQ_PORT");
-            $user = env("RABBITMQ_USER");
-            $password = env("RABBITMQ_PASSWORD");
-            $vhost = env("RABBITMQ_VIRTUAL_HOST");
+            $host = config("rabbitmq.host");
+            $port = config("rabbitmq.port");
+            $user = config("rabbitmq.user");
+            $password = config("rabbitmq.password");
+            $vhost = config("rabbitmq.virtual.host");
             if(empty($host) || empty($port) || empty($user) || empty($password) || empty($vhost)){
                 return;
             }
@@ -43,11 +43,11 @@ class Mq{
 
         $consumerTag = 'consumer';
 
-        $connection = new AMQPStreamConnection(env("RABBITMQ_HOST"),
-                                               env("RABBITMQ_PORT"),
-                                               env("RABBITMQ_USER"),
-                                               env("RABBITMQ_PASSWORD"),
-                                               env("RABBITMQ_VIRTUAL_HOST"));
+        $connection = new AMQPStreamConnection(config("rabbitmq.host"),
+                                        config("rabbitmq.port"),
+                                        config("rabbitmq.user"),
+                                        config("rabbitmq.password"),
+                                        config("rabbitmq.virtual.host"));
         $channel = $connection->channel();
 
  /*

@@ -15,7 +15,7 @@ class AuthApi{
                 if($token === "null"){
                     return false;
                 }
-                $jwt = JWT::decode($token,new Key(env('APP_KEY'),'HS512'));
+                $jwt = JWT::decode($token,new Key(config('app.key'),'HS512'));
                 if($jwt->exp < time()){
                     //过期
                     return false;

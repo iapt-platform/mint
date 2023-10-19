@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 
 class TestRedis extends Command
 {
@@ -45,10 +46,21 @@ class TestRedis extends Command
             return 'remember ok';
         });
         $this->info("test store remember value=".$remember);
-		Redis::set("test-redis",$value);
-		if(Redis::get("test-redis",function(){
-            return 'aa';
-        })==$value){
+
+        $key = "test-redis";
+		Redis::set($key,$value);
+        if(Redis::exists($key)){
+            $this->info("has key ".$key);
+        }else{
+            $this->error("no key ".$key);
+        }
+        $expire = Redis::expire($key,10);
+        $this->info("key expire ".$expire);
+        $this->info('del key '.Redis::del($key));
+        $getValue = Redis::get($key,function(){
+            return 'this is a test';
+        });
+		if($getValue === $value){
 			$this->info("redis set ok ");
 		}else{
 			$this->error("redis set fail ");
@@ -100,6 +112,17 @@ class TestRedis extends Command
 		});
 		if(Cache::has($key)){
 			$this->info("{$key} exist value=".Cache::get($key));
+		}else{
+			$this->error("cache::remember() fail.");
+		}
+
+        $key = 'cache-key-clusters';
+		$this->info("testing RedisClusters remember()");
+		$value = RedisClusters::remember($key,600,function(){
+			return 'cache-key-clusters';
+		});
+		if(RedisClusters::has($key)){
+			$this->info("{$key} exist value=".RedisClusters::get($key));
 		}else{
 			$this->error("cache::remember() fail.");
 		}

@@ -160,7 +160,7 @@ class DhammaTermController extends Controller
                     }
                     Cache::put($key, $hotMeaning, 3600);
                     return $hotMeaning;
-                }, env('CACHE_EXPIRE',3600*24));
+                }, config('cache.expire',3600*24));
                 return $this->ok(["rows"=>$value,"count"=>count($value)]);
                 break;
 			default:
