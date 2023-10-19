@@ -9,11 +9,6 @@ import { get } from "../../../request";
 
 const { Paragraph } = Typography;
 
-function serverLink(url: string): string {
-  return process.env.REACT_APP_API_HOST
-    ? process.env.REACT_APP_API_HOST + url
-    : window.location.origin + url;
-}
 interface IOfflineIndex {
   filename: string;
   url: string;
