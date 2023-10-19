@@ -180,13 +180,11 @@ if(env('APP_ENV') !== 'local'){
         ],
 
         'cache' => [
-            'url' => env('REDIS_CACHE_URL'),
             'host' => env('REDIS_CACHE_HOST', '127.0.0.1'),
-            'password' => env('REDIS_CACHE_PASSWORD', null),
             'port' => env('REDIS_CACHE_PORT', '6379'),
-            'database' => env('REDIS_CACHE_DB', '1'),
             'prefix' => env('REDIS_CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
         ],
     ];
 }
+
 return $config;
