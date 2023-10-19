@@ -70,21 +70,21 @@ const init = () => {
   );
   const token = getToken();
   if (token) {
-    get<ITokenRefreshResponse | IErrorResponse>("/v2/auth/current").then(
-      (response) => {
-        console.log(response);
-        if ("data" in response) {
-          const it: IUser = {
-            id: response.data.id,
-            nickName: response.data.nickName,
-            realName: response.data.realName,
-            avatar: response.data.avatar,
-            roles: response.data.roles,
-          };
-          store.dispatch(signIn([it, response.data.token]));
-        }
+    get<ITokenRefreshResponse>("/v2/auth/current").then((response) => {
+      console.log(response);
+      if (response.ok) {
+        const it: IUser = {
+          id: response.data.id,
+          nickName: response.data.nickName,
+          realName: response.data.realName,
+          avatar: response.data.avatar,
+          roles: response.data.roles,
+        };
+        store.dispatch(signIn([it, response.data.token]));
+      } else {
+        localStorage.removeItem("token");
       }
-    );
+    });
   } else {
     console.log("no token");
   }
