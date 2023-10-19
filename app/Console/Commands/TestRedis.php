@@ -118,7 +118,7 @@ class TestRedis extends Command
 
         $key = 'cache-key-clusters';
 		$this->info("testing RedisClusters remember()");
-		$value = RedisClusters::remember($key,600,function(){
+		$value = RedisClusters::remember($key,10,function(){
 			return 'cache-key-clusters';
 		});
 		if(RedisClusters::has($key)){
