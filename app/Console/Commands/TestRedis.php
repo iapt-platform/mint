@@ -41,13 +41,19 @@ class TestRedis extends Command
     {
 		$value='this is a test';
 		$this->info("test redis start");
+        $remember = Cache::store('redis')->remember('dd',10,function(){
+            return 'remember ok';
+        });
+        $this->info("test store remember value=".$remember);
 		Redis::set("test-redis",$value);
-		if(Redis::get("test-redis")==$value){
+		if(Redis::get("test-redis",function(){
+            return 'aa';
+        })==$value){
 			$this->info("redis set ok ");
 		}else{
 			$this->error("redis set fail ");
 		}
-		
+
 
 		Redis::hSet("test-redis-hash",'hash',$value);
 		if(Redis::hGet("test-redis-hash",'hash')==$value){
