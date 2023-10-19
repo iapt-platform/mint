@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 $config = [
 
@@ -157,7 +158,7 @@ $config = [
 ];
 
 
-if(env('APP_ENV'!=='local')){
+if(env('APP_ENV') !== 'local'){
     $config['redis'] = [
 
         'client' => env('REDIS_CLIENT', 'phpredis'),
