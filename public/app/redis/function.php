@@ -3,8 +3,7 @@ require_once __DIR__."/../config.php";
 function redis_connect()
 {
 	try {
-        $server = $_SERVER['SERVER_NAME'];
-        if(strpos($server,'wikipali') === false){
+        if(APP_ENV === 'local'){
             //local dev
             $redis = new redis();
             $r_conn = $redis->connect(Redis["host"], Redis["port"]);
