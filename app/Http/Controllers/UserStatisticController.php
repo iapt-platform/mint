@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Api\AuthApi;
 use App\Http\Api\UserApi;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 
 class UserStatisticController extends Controller
 {

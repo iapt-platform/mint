@@ -8,6 +8,7 @@ use App\Models\PaliText;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\DB;
 
 class SentenceInfoController extends Controller

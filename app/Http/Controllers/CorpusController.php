@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use App\Http\Api\MdRender;
 use App\Http\Api\SuggestionApi;
 use App\Http\Api\ChannelApi;

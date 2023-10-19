@@ -16,6 +16,7 @@ use App\Models\Like;
 use Illuminate\Http\Request;
 use App\Http\Api\StudioApi;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 
 class ProgressChapterController extends Controller
 {

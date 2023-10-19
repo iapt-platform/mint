@@ -6,6 +6,7 @@ use App\Models\Vocabulary;
 use Illuminate\Http\Request;
 use App\Http\Resources\VocabularyResource;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\DB;
 
 class VocabularyController extends Controller

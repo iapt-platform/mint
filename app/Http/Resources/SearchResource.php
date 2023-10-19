@@ -7,6 +7,7 @@ use App\Models\PaliText;
 use App\Models\Sentence;
 use App\Http\Api\ChannelApi;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 
 
 class SearchResource extends JsonResource

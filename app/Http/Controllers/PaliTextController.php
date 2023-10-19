@@ -9,6 +9,7 @@ use App\Models\Tag;
 use App\Models\TagMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\Log;
 
 class PaliTextController extends Controller

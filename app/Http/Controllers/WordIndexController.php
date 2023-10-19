@@ -6,6 +6,7 @@ use App\Models\WordIndex;
 use Illuminate\Http\Request;
 use App\Http\Resources\WordIndexResource;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 

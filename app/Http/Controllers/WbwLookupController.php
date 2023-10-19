@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Tools\CaseMan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use App\Http\Api\DictApi;
 use App\Http\Api\AuthApi;
 

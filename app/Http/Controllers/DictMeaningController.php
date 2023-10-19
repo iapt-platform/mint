@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\UserDict;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 
 class DictMeaningController extends Controller
 {

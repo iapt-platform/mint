@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use App\Http\Controllers\DictMeaningController;
 
 class VocabularyResource extends JsonResource

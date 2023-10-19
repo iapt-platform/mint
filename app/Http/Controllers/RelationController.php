@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\App;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 
 class RelationController extends Controller
 {

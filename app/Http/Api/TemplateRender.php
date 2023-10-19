@@ -6,6 +6,7 @@ use App\Models\PaliText;
 use App\Models\Channel;
 use App\Http\Controllers\CorpusController;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\Log;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
