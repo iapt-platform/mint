@@ -17,7 +17,7 @@ class Export
             //Log::info($value['name']);
             //Log::info($value['content']);
         }
-        $host = env('LILY_RPC_SERVER');
+        $host = config('lily.rpc.server');
         $client = new \Palm\Lily\V1\TexClient($host, [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);

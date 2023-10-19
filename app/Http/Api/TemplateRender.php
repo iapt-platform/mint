@@ -402,7 +402,7 @@ class TemplateRender{
         $paraId = $this->get_param($this->param,"para",1);
         $channelId = $this->channel_id[0];
         $props = Cache::remember("/quote/{$channelId}/{$paraId}",
-              env('CACHE_EXPIRE',3600*24),
+              config('cache.expire',3600*24),
               function() use($paraId,$channelId){
                 $para = \explode('-',$paraId);
                 $output = [

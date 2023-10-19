@@ -10,7 +10,7 @@ class Markdown
     }
 
     public static function morus($text){
-        $host = env('MORUS_RPC_SERVER');
+        $host = config('morus.rpc.server');
         $client = new \Mint\Morus\V1\MarkdownClient($host, [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);

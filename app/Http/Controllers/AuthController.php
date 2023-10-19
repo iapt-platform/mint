@@ -79,7 +79,7 @@ class AuthController extends Controller
         $user = $query->first();
         if($user){
             $ExpTime = time() + 60 * 60 * 24 * 365;
-            $key = env('APP_KEY');
+            $key = config('app.key');
             $payload = [
                 'nbf' => time(),
                 'exp' => $ExpTime,

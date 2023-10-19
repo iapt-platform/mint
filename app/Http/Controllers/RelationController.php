@@ -62,7 +62,7 @@ class RelationController extends Controller
 
         if($request->has('vocabulary')){
             if(!Cache::has($key)){
-                Cache::put($key,$output,env('CACHE_EXPIRE',3600*24));
+                Cache::put($key,$output,config('cache.expire',3600*24));
             }
         }
         return $this->ok($output);

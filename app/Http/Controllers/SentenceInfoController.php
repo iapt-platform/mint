@@ -129,7 +129,7 @@ class SentenceInfoController extends Controller
                 # code...
 				$key_sent_id = $sent->book_id.'-'.$sent->paragraph.'-'.$sent->word_start.'-'.$sent->word_end;
 				$para_strlen += Cache::remember('pali-sent/strlen/'.$key_sent_id,
-                                    env('CACHE_EXPIRE',3600*24*30) ,
+                                    config('cache.expire',3600*24*30) ,
                                     function() use($sent) {
                                         return PaliSentence::where('book',$sent->book_id)
                                                 ->where('paragraph',$sent->paragraph)

@@ -45,7 +45,7 @@ class DictController extends Controller
         }else{
             $inMyHanGroup = false;
         }
-        if(env('APP_ENV')==='local'){
+        if(config('app.env')==='local'){
             $inMyHanGroup = true;
         }
         $resultCount=0;

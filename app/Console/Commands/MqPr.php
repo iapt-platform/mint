@@ -57,7 +57,7 @@ class MqPr extends Command
                                 ->value('text');
             $prtext = mb_substr($message->content,0,140,"UTF-8");
             $sent_num = "{$message->book}-{$message->paragraph}-{$message->word_start}-{$message->word_end}";
-            $link = env('APP_URL')."/pcd/article/para/{$message->book}-{$message->paragraph}";
+            $link = config('app.url')."/pcd/article/para/{$message->book}-{$message->paragraph}";
             $link .= "?book={$message->book}&par={$message->paragraph}&channel={$message->channel->id}";
 
             $msgContent = "{$username} 就文句`{$palitext}`提出了修改建议：\n";

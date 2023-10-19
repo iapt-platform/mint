@@ -179,7 +179,7 @@ class TurboSplit
 
 		//获取单词权重
 		$row = Cache::remember('palicanon/wordpart/weight/'.$search,
-                env('CACHE_EXPIRE',3600*24) ,
+                config('cache.expire',3600*24) ,
                 function() use($search) {
                     return WordPart::where('word',$search)->value('weight');
                 });
@@ -208,7 +208,7 @@ class TurboSplit
 			$len = 0;
 			foreach ($newWord as $x => $x_value) {
 				$row = Cache::remember('palicanon/wordpart/weight/'.$search,
-                        env('CACHE_EXPIRE',3600*24) ,
+                        config('cache.expire',3600*24) ,
                         function() use($x) {
                             return WordPart::where('word',$x)->value('weight');
                         });
@@ -238,7 +238,7 @@ class TurboSplit
 		$isFound = false;
 		$count = 0;
 		$wordPart  = Cache::remember("turbosplit/part/{$word}",
-                        env('CACHE_EXPIRE',3600*24),
+                        config('cache.expire',3600*24),
                         function() use($word){
                             return implode(',',$this->dict_lookup($word));
                         });
@@ -254,7 +254,7 @@ class TurboSplit
 		//fomular of confidence value 信心值计算公式
 		if ($isFound) {
 			$cf  = Cache::remember("turbosplit/confidence/".$word,
-                    env('CACHE_EXPIRE',1000),
+                    config('cache.expire',1000),
                     function() use($word,$count,$case_len){
                         $len = mb_strlen($word, "UTF-8") - $case_len;
                         $len_correct = 1.2;

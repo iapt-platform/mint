@@ -55,7 +55,7 @@ class ProgressImgController extends Controller
                     $svg .= '<polyline points="0,0 1,0" /></svg>';
                 }
                 return $svg;
-            } , env('CACHE_EXPIRE',3600*24) );
+            } , config('cache.expire',3600*24) );
             echo $svg;
         }, 200, ['Content-Type' => 'image/svg+xml']);
     /*

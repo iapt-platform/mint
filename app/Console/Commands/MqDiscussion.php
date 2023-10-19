@@ -68,7 +68,7 @@ class MqDiscussion extends Command
                     $msgParam = array();
                     $msgParam['anchor-content'] = $contentTxt;
                     $msgParam['nickname'] = $message->editor->nickName;
-                    $link = env('APP_URL')."/pcd/discussion/topic/";
+                    $link = config('app.url')."/pcd/discussion/topic/";
                     if($message->parent){
                         $msgParam['topic-title'] = Discussion::where('id',$message->parent)->value('title');
                         $id = $message->id;
