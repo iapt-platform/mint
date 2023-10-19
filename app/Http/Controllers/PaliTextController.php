@@ -206,7 +206,7 @@ class PaliTextController extends Controller
                     if(is_object($value)){
                         //TODO $value->book 可能不存在
                         $progress_key="/chapter_dynamic/{$value->book}/{$value->paragraph}/global";
-                        $chapters[$key]->progress_line = Cache::get($progress_key);
+                        $chapters[$key]->progress_line = RedisClusters::get($progress_key);
                     }
                 }
             }

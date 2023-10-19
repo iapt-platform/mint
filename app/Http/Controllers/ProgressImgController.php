@@ -41,10 +41,10 @@ class ProgressImgController extends Controller
         //
         return response()->stream(function () use ($id) {
             $key = str_replace('-','/',$id);
-            $svg = Cache::get('svg/'.$key, function () use ($key) {
+            $svg = RedisClusters::get('svg/'.$key, function () use ($key) {
                 $viewHeight = 60;
                 $svg = "<svg xmlns='http://www.w3.org/2000/svg'  fill='currentColor' viewBox='0 0 300 60'>";
-                $data = Cache::get($key);
+                $data = RedisClusters::get($key);
                 if(is_array($data)){
                     $point = [];
                     foreach ($data as $key => $value) {

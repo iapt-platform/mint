@@ -22,7 +22,7 @@ class VocabularyController extends Controller
         switch ($request->get("view")) {
             case 'key':
                 $key = $request->get("key");
-                $result = Cache::remember("/dict_vocabulary/{$key}",
+                $result = RedisClusters::remember("/dict_vocabulary/{$key}",
                         config('cache.expire',3600*24),
                         function() use($key){
                         return Vocabulary::whereRaw('word like ? or word_en like ?',[$key."%",$key."%"])

@@ -35,7 +35,7 @@ class SearchResource extends JsonResource
         }else if(isset($this->content)){
             $data["content"] = $this->content;
         }else{
-            $channelId = Cache::remember('_System_Pali_VRI_',config('cache.expire',3600*24),function(){
+            $channelId = RedisClusters::remember('_System_Pali_VRI_',config('cache.expire',3600*24),function(){
                 return ChannelApi::getSysChannel('_System_Pali_VRI_');
             });
 

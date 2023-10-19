@@ -24,7 +24,7 @@ class WordIndexController extends Controller
             case 'key':
                 $key = $request->get("key");
                 /*
-                $result = Cache::remember("/word_index/{$key}",10,function() use($key){
+                $result = RedisClusters::remember("/word_index/{$key}",10,function() use($key){
                     return WordIndex::where('word','like',$key."%")
                                     ->whereOr('word_en','like',$key."%")
                                     ->orderBy('word_en')

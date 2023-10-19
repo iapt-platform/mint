@@ -166,12 +166,12 @@ class WbwLookupController extends Controller
                     'case'=>8,
                 ];
         $fieldId = $fieldMap[$field];
-        $myPreference = Cache::get("{$prefix}/{$word}/{$fieldId}/{$userId}");
+        $myPreference = RedisClusters::get("{$prefix}/{$word}/{$fieldId}/{$userId}");
         if(!empty($myPreference)){
             Log::info($word.'命中我的wbw-'.$field);
             return ['value'=>$myPreference,'status'=>5];
         }else{
-            $myPreference = Cache::get("{$prefix}/{$word}/3/0");
+            $myPreference = RedisClusters::get("{$prefix}/{$word}/3/0");
             if(!empty($myPreference)){
                 Log::info($word.'命中社区wbw-'.$field);
                 return ['value'=>$myPreference,'status'=>5];
