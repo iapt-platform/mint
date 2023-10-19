@@ -1,15 +1,26 @@
-# - name: "local compile"
-#   hosts: localhost
-#   connection: local
-#   tasks:
-#     - name: "install dashboard dependencies"
-#       ansible.builtin.shell:
-#         cmd: yarn install
-#         chdir: "{{ playbook_dir }}/../dashboard"
-#     - name: "build dashboard"
-#       ansible.builtin.shell:
-#         cmd: NODE_OPTIONS="--max_old_space_size=4096" PUBLIC_URL=/pcd yarn build
-#         chdir: "{{ playbook_dir }}/../dashboard"
+- name: "local compile"
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: "install dashboard dependencies"
+      ansible.builtin.shell:
+        cmd: yarn install
+        chdir: "{{ playbook_dir }}/../dashboard"
+    - name: "build dashboard"
+      ansible.builtin.shell:
+        cmd: yarn build
+        chdir: "{{ playbook_dir }}/../dashboard"
+      environment:
+        NODE_OPTIONS: "--max_old_space_size=4096"
+        PUBLIC_URL: /pcd
+        REACT_APP_DEFAULT_LOCALE: "zh-Hans"
+        REACT_APP_LANGUAGES: "en-US,zh-Hans,zh-Hant"
+        REACT_APP_ENABLE_LOCAL_TOKEN: "true"
+        REACT_APP_DOCUMENTS_SERVER: "{{ app_documents_server }}"
+        REACT_APP_RPC_SERVER: "{{ app_rpc_server }}"
+        REACT_APP_ASSETS_SERVER: "{{ app_assets_server }}"
+        REACT_APP_API_SERVER: "{{ app_api_server }}"
+        REACT_APP_TOKEN_KEY: "token.20230919"
 
 - hosts: www
   roles:

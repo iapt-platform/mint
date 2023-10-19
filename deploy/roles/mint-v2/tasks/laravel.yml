@@ -23,7 +23,7 @@
     dest: "{{ app_deploy_root }}/htdocs/.env"
     owner: www-data
     group: www-data
-    mode: "0400"
+    mode: "0444"
 
 - name: upload config.php(v1)
   become: true
@@ -32,7 +32,7 @@
     dest: "{{ app_deploy_root }}/htdocs/public/app/config.php"
     owner: www-data
     group: www-data
-    mode: "0400"
+    mode: "0444"
 
 - name: upload config.js(v1)
   become: true
