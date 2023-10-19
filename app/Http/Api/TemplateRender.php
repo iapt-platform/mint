@@ -502,7 +502,7 @@ class TemplateRender{
                                     null,
                                     'read',
                                     $value['channel']['type'],
-                                    $value['contentType'],
+                                    'translation',
                                     'text'
                                     );
                     }
@@ -517,7 +517,7 @@ class TemplateRender{
                                     null,
                                     'read',
                                     $value['channel']['type'],
-                                    $value['contentType'],
+                                    'translation',
                                     'tex'
                                     );
                     }
