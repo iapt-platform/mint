@@ -5,9 +5,12 @@ const BeiAnWidget = () => {
   return (
     <>
       {ending2 === "cc" ? (
-        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">
-          您的备案号
-        </a>
+        <span>
+          {"ICP证："}
+          <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">
+            滇ICP备2023006988号-1
+          </a>
+        </span>
       ) : undefined}
     </>
   );
