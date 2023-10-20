@@ -2,9 +2,9 @@ import { Card, Collapse, Modal } from "antd";
 import { Typography } from "antd";
 import { useState } from "react";
 import Article, { ArticleType } from "../article/Article";
+import { Link } from "react-router-dom";
 
-const { Link } = Typography;
-export type TDisplayStyle = "modal" | "card" | "toggle";
+export type TDisplayStyle = "modal" | "card" | "toggle" | "link";
 interface IWidgetChapterCtl {
   type?: ArticleType;
   id?: string;
@@ -47,7 +47,7 @@ export const ArticleCtl = ({
     case "modal":
       output = (
         <>
-          <Link onClick={showModal}>{aTitle}</Link>
+          <Typography.Link onClick={showModal}>{aTitle}</Typography.Link>
           <Modal
             width={"80%"}
             style={{ maxWidth: 1000 }}
@@ -72,6 +72,15 @@ export const ArticleCtl = ({
             {article}
           </Collapse.Panel>
         </Collapse>
+      );
+      break;
+    case "link":
+      let link = `/article/${type}/${id}?mode=read`;
+      link += channel ? `&channel=${channel}` : "";
+      output = (
+        <Link to={link} target="_blank">
+          {aTitle}
+        </Link>
       );
       break;
     default:

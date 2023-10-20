@@ -155,7 +155,7 @@ const ArticleTplWidget = ({
               console.log(`selected ${value}`);
               setStyleText(value as TDisplayStyle);
             }}
-            options={["modal", "card", "toggle"].map((item) => {
+            options={["modal", "card", "toggle", "link"].map((item) => {
               return { value: item, label: item };
             })}
           />
