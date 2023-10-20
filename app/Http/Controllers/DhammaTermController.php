@@ -6,6 +6,7 @@ use App\Models\DhammaTerm;
 use App\Models\Channel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Http\Api\AuthApi;
@@ -134,7 +135,7 @@ class DhammaTermController extends Controller
 				break;
             case 'hot-meaning':
                 $key='term/hot_meaning';
-                $value = Cache::get($key, function()use($request) {
+                $value = RedisClusters::get($key, function()use($request) {
                     $hotMeaning=[];
                     $words = DhammaTerm::select('word')
                                 ->where('language',$request->get("language"))
@@ -158,7 +159,7 @@ class DhammaTermController extends Controller
                             ];
                         }
                     }
-                    Cache::put($key, $hotMeaning, 3600);
+                    RedisClusters::put($key, $hotMeaning, 3600);
                     return $hotMeaning;
                 }, config('cache.expire',3600*24));
                 return $this->ok(["rows"=>$value,"count"=>count($value)]);
@@ -273,10 +274,10 @@ class DhammaTermController extends Controller
             //通用 查询studio所有channel
             $channels = Channel::where('owner_uid',$term->owner)->select('uid')->get();
             foreach ($channels as $channel) {
-                Cache::forget("/term/{$channel}/{$term->word}");
+                RedisClusters::forget("/term/{$channel}/{$term->word}");
             }
         }else{
-            Cache::forget("/term/{$term->channal}/{$term->word}");
+            RedisClusters::forget("/term/{$term->channal}/{$term->word}");
         }
     }
 
@@ -448,7 +449,7 @@ class DhammaTermController extends Controller
         $fId = Str::uuid();
         $filename = storage_path("app/tmp/{$fId}");
         $writer->save($filename);
-        Cache::put("download/tmp/{$fId}",file_get_contents($filename),300);
+        RedisClusters::put("download/tmp/{$fId}",file_get_contents($filename),300);
         unlink($filename);
         return $this->ok(['uuid'=>$fId,'filename'=>"term.xlsx",'type'=>"application/vnd.ms-excel"]);
     }

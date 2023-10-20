@@ -9,6 +9,7 @@ use App\Models\Tag;
 use App\Models\TagMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\Log;
 
 class PaliTextController extends Controller
@@ -205,7 +206,7 @@ class PaliTextController extends Controller
                     if(is_object($value)){
                         //TODO $value->book 可能不存在
                         $progress_key="/chapter_dynamic/{$value->book}/{$value->paragraph}/global";
-                        $chapters[$key]->progress_line = Cache::get($progress_key);
+                        $chapters[$key]->progress_line = RedisClusters::get($progress_key);
                     }
                 }
             }

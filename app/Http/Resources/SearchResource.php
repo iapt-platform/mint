@@ -7,6 +7,7 @@ use App\Models\PaliText;
 use App\Models\Sentence;
 use App\Http\Api\ChannelApi;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 
 
 class SearchResource extends JsonResource
@@ -34,7 +35,7 @@ class SearchResource extends JsonResource
         }else if(isset($this->content)){
             $data["content"] = $this->content;
         }else{
-            $channelId = Cache::remember('_System_Pali_VRI_',config('cache.expire',3600*24),function(){
+            $channelId = RedisClusters::remember('_System_Pali_VRI_',config('cache.expire',3600*24),function(){
                 return ChannelApi::getSysChannel('_System_Pali_VRI_');
             });
 

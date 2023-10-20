@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\App;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 
 class RelationController extends Controller
 {
@@ -23,8 +24,8 @@ class RelationController extends Controller
         //
         $key = 'relation-vocabulary';
         if($request->has('vocabulary')){
-            if(Cache::has($key)){
-                return $this->ok(Cache::get($key));
+            if(RedisClusters::has($key)){
+                return $this->ok(RedisClusters::get($key));
             }
         }
         $table = Relation::select(['id','name','case','from','to',
@@ -61,8 +62,8 @@ class RelationController extends Controller
         $output = ["rows"=>RelationResource::collection($result),"count"=>$count];
 
         if($request->has('vocabulary')){
-            if(!Cache::has($key)){
-                Cache::put($key,$output,config('cache.expire',3600*24));
+            if(!RedisClusters::has($key)){
+                RedisClusters::put($key,$output,config('cache.expire',3600*24));
             }
         }
         return $this->ok($output);

@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use App\Http\Api\MdRender;
 use App\Http\Api\SuggestionApi;
 use App\Http\Api\ChannelApi;
@@ -663,7 +664,7 @@ class CorpusController extends Controller
 
                             break;
                         case 'nissaya':
-                            $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",
+                            $newSent['html'] = RedisClusters::remember("/sent/{$channelId}/{$currSentId}",
                                                 config('cache.expire',3600*24),
                                                 function() use($row,$mode){
                                                     return MdRender::render($row->content,[$row->channel_uid],null,$mode,"nissaya",$row->content_type);
@@ -675,7 +676,7 @@ class CorpusController extends Controller
                          * 包涵术语的不用cache
                          */
                             if(strpos($row->content,'[[')===false){
-                                $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",
+                                $newSent['html'] = RedisClusters::remember("/sent/{$channelId}/{$currSentId}",
                                                     config('cache.expire',3600*24),
                                                 function() use($row){
                                                     return MdRender::render($row->content,[$row->channel_uid]);
@@ -913,7 +914,7 @@ class CorpusController extends Controller
         }else{
             $key .= 'guest';
         }
-		$channelCount = Cache::remember($key,config('cache.expire',3600*24),
+		$channelCount = RedisClusters::remember($key,config('cache.expire',3600*24),
                           function() use($book,$para,$start,$end,$userUuid){
                             $keyCanRead="/channel/can-read/";
                             if($userUuid){
@@ -921,7 +922,7 @@ class CorpusController extends Controller
                             }else{
                                 $keyCanRead .= 'guest';
                             }
-                            $channelCanRead = Cache::remember($keyCanRead,
+                            $channelCanRead = RedisClusters::remember($keyCanRead,
                                                 config('cache.expire',3600*24),
                                                 function() use($userUuid){
                                                     return ChannelApi::getCanReadByUser($userUuid);

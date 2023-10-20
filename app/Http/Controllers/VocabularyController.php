@@ -6,6 +6,7 @@ use App\Models\Vocabulary;
 use Illuminate\Http\Request;
 use App\Http\Resources\VocabularyResource;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\DB;
 
 class VocabularyController extends Controller
@@ -21,7 +22,7 @@ class VocabularyController extends Controller
         switch ($request->get("view")) {
             case 'key':
                 $key = $request->get("key");
-                $result = Cache::remember("/dict_vocabulary/{$key}",
+                $result = RedisClusters::remember("/dict_vocabulary/{$key}",
                         config('cache.expire',3600*24),
                         function() use($key){
                         return Vocabulary::whereRaw('word like ? or word_en like ?',[$key."%",$key."%"])

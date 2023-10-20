@@ -6,6 +6,7 @@ use App\Models\PaliText;
 use App\Models\Channel;
 use App\Http\Controllers\CorpusController;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\Log;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
@@ -401,7 +402,7 @@ class TemplateRender{
     private  function render_quote(){
         $paraId = $this->get_param($this->param,"para",1);
         $channelId = $this->channel_id[0];
-        $props = Cache::remember("/quote/{$channelId}/{$paraId}",
+        $props = RedisClusters::remember("/quote/{$channelId}/{$paraId}",
               config('cache.expire',3600*24),
               function() use($paraId,$channelId){
                 $para = \explode('-',$paraId);

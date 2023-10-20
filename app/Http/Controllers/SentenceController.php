@@ -14,6 +14,7 @@ use App\Http\Api\ChannelApi;
 use App\Http\Api\PaliTextApi;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use App\Http\Api\Mq;
 
 class SentenceController extends Controller
@@ -381,7 +382,7 @@ class SentenceController extends Controller
         //清除cache
         $channelId = $param[4];
         $currSentId = "{$param[0]}-{$param[1]}-{$param[2]}-{$param[3]}";
-        Cache::forget("/sent/{$channelId}/{$currSentId}");
+        RedisClusters::forget("/sent/{$channelId}/{$currSentId}");
         //保存历史记录
         $this->saveHistory($sent->uid,$user["user_uid"],$request->get('content'));
         Mq::publish('progress',['book'=>$param[0],

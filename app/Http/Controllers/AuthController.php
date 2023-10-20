@@ -107,7 +107,7 @@ class AuthController extends Controller
             ];
             return $this->ok($user);
         }else{
-            return $this->error('invalid token');
+            return $this->error('invalid token',[401],401);
         }
     }
 

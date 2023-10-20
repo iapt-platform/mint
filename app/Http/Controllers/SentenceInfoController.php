@@ -8,6 +8,7 @@ use App\Models\PaliText;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\DB;
 
 class SentenceInfoController extends Controller
@@ -128,7 +129,7 @@ class SentenceInfoController extends Controller
             foreach ($sentFinished as $sent) {
                 # code...
 				$key_sent_id = $sent->book_id.'-'.$sent->paragraph.'-'.$sent->word_start.'-'.$sent->word_end;
-				$para_strlen += Cache::remember('pali-sent/strlen/'.$key_sent_id,
+				$para_strlen += RedisClusters::remember('pali-sent/strlen/'.$key_sent_id,
                                     config('cache.expire',3600*24*30) ,
                                     function() use($sent) {
                                         return PaliSentence::where('book',$sent->book_id)
