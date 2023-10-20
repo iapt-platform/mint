@@ -302,36 +302,9 @@ class ChannelController extends Controller
             }
         }
 
-        #获取 user 在某章节 所有有权限的 channel 列表
-        $user = AuthApi::current($request);
-        if(!$user){
-            return $this->error(__('auth.failed'));
-        }
         $channelById = [];
         $channelId = [];
-        //我自己的
-        if($request->get('owner')==='all' || $request->get('owner')==='my'){
-            $my = Channel::select($indexCol)->where('owner_uid', $user['user_uid'])->get();
-            foreach ($my as $key => $value) {
-                $channelId[] = $value->uid;
-                $channelById[$value->uid] = ['res_id'=>$value->uid,
-                                            'power'=>30,
-                                            'type'=>2,
-                                            ];
-            }
-        }
 
-        //获取共享channel
-        if($request->get('owner')==='all' || $request->get('owner')==='collaborator'){
-            $allSharedChannels = ShareApi::getResList($user['user_uid'],2);
-            foreach ($allSharedChannels as $key => $value) {
-                # code...
-                if(!in_array($value['res_id'],$channelId)){
-                    $channelId[] = $value['res_id'];
-                    $channelById[$value['res_id']] = $value;
-                }
-            }
-        }
         //获取全网公开的有译文的channel
         if($request->get('owner')==='all' || $request->get('owner')==='public'){
             if(count($query)>0){
@@ -353,6 +326,35 @@ class ChannelController extends Controller
                 }
             }
         }
+
+        #获取 user 在某章节 所有有权限的 channel 列表
+        $user = AuthApi::current($request);
+        if($user !== false){
+            //我自己的
+            if($request->get('owner')==='all' || $request->get('owner')==='my'){
+                $my = Channel::select($indexCol)->where('owner_uid', $user['user_uid'])->get();
+                foreach ($my as $key => $value) {
+                    $channelId[] = $value->uid;
+                    $channelById[$value->uid] = ['res_id'=>$value->uid,
+                                                'power'=>30,
+                                                'type'=>2,
+                                                ];
+                }
+            }
+
+            //获取共享channel
+            if($request->get('owner')==='all' || $request->get('owner')==='collaborator'){
+                $allSharedChannels = ShareApi::getResList($user['user_uid'],2);
+                foreach ($allSharedChannels as $key => $value) {
+                    # code...
+                    if(!in_array($value['res_id'],$channelId)){
+                        $channelId[] = $value['res_id'];
+                        $channelById[$value['res_id']] = $value;
+                    }
+                }
+            }
+        }
+
         //所有有这些句子译文的channel
         if(count($query) > 0){
             $allChannels = Sentence::whereIns(['book_id','paragraph','word_start','word_end'],$query)
@@ -363,14 +365,16 @@ class ChannelController extends Controller
         }
 
         //所有需要查询的channel
-        $result = Channel::select(['uid','name','summary','type','owner_uid','lang','status','updated_at','created_at'])
-                        ->whereIn('uid', $channelId)
-                        ->orWhere('owner_uid',$user['user_uid'])
-                        ->get();
+        $table = Channel::select(['uid','name','summary','type','owner_uid','lang','status','updated_at','created_at'])
+                        ->whereIn('uid', $channelId);
+        if($user !== false){
+            $table->orWhere('owner_uid',$user['user_uid']);
+        }
+        $result = $table->get();
 
         foreach ($result as $key => $value) {
             //角色
-            if($value->owner_uid===$user['user_uid']){
+            if($user!==false && $value->owner_uid===$user['user_uid']){
                 $value['role'] = 'owner';
             }else{
                 if(isset($channelById[$value->uid])){
