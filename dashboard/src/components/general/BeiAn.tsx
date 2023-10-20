@@ -1,14 +1,16 @@
+import { useIntl } from "react-intl";
+
 const BeiAnWidget = () => {
-  const hostName = document.location.hostname;
-  const ending = hostName.split(".");
-  const ending2 = ending[ending.length - 1];
+  const intl = useIntl();
   return (
     <>
-      {ending2 === "cc" ? (
+      {process.env.REACT_APP_ICP_CODE ? (
         <span>
-          {"ICP证："}
+          {intl.formatMessage({
+            id: `labels.icp`,
+          })}
           <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">
-            滇ICP备2023006988号-1
+            {process.env.REACT_APP_ICP_CODE}
           </a>
         </span>
       ) : undefined}
