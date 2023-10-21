@@ -67,6 +67,7 @@ use App\Http\Controllers\DictStatisticController;
 use App\Http\Controllers\SearchTitleController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\HealthCheckController;
+use App\Http\Controllers\OfflineIndexController;
 
 /*
 |--------------------------------------------------------------------------
@@ -186,6 +187,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('search-title-index',SearchTitleController::class);
     Route::apiResource('transfer',TransferController::class);
     Route::apiResource('health-check',HealthCheckController::class);
+    Route::apiResource('offline-index',OfflineIndexController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
@@ -197,10 +199,6 @@ Route::group(['prefix' => 'v2'],function(){
     Route::get('palibook/{file}', function ($file) {
         if($file==='default'){$file="defualt";}
         return file_get_contents(public_path("app/palicanon/category/{$file}.json"));
-    });
-
-    Route::get('offline-index', function () {
-        return file_get_contents(storage_path("app/public/export/offline/index.json"));
     });
 
     Route::get('guide/{lang}/{file}', function ($lang,$file) {
