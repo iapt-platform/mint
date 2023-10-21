@@ -20,7 +20,7 @@ class ExportOffline extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'export  offline data for app';
 
     /**
      * Create a new command instance.
