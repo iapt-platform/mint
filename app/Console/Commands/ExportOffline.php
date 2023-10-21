@@ -13,7 +13,7 @@ class ExportOffline extends Command
      * php artisan export:offline lzma
      * @var string
      */
-    protected $signature = 'export:offline {format?}';
+    protected $signature = 'export:offline {format?  : zip file format 7z,lzma,gz }';
 
     /**
      * The console command description.
