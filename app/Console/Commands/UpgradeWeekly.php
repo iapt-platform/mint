@@ -38,7 +38,7 @@ class UpgradeWeekly extends Command
     public function handle()
     {
         # 段落更新图
-        $this->call('upgrade:chapterdynamic');
+        $this->call('upgrade:chapter.dynamic');
         $this->call('upgrade:chapter.dynamic.weekly');
         return 0;
     }
