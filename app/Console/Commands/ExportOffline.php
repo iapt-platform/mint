@@ -67,8 +67,8 @@ class ExportOffline extends Command
 
         $this->info('zip');
         $exportPath = 'app/public/export/offline';
-        $exportFile = 'sentence-'.date("Y-m-d").'.db3';
-        $zipFile = "sentence-".date("Y-m-d").".db3.";
+        $exportFile = 'wikipali-offline-'.date("Y-m-d").'.db3';
+        $zipFile = $exportFile.".db3.";
         if($this->argument('format')==='7z'){
             $zipFile .= "7z";
         }else if($this->argument('format')==='lzma'){
@@ -94,13 +94,12 @@ class ExportOffline extends Command
 
         $info = array();
         $info[] = ['filename'=>$zipFile,
-                   'url'=>Storage::disk('local')->url($exportPath.'/'.$zipFile),
                    'create_at'=>date("Y-m-d H:i:s"),
                    'chapter'=>Cache::get("/export/chapter/count"),
                    'filesize'=>filesize($zipFullFileName),
                    'min_app_ver'=>'1.3',
                     ];
-        Storage::disk('local')->put("public/export/offline/index.json", json_encode($info));
+        Cache::put('/offline/index',$info);
         return 0;
     }
 }
