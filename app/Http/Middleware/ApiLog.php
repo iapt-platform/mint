@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
-use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\Redis;
 
 class ApiLog
@@ -29,7 +28,12 @@ class ApiLog
             $api[] = $delay;
             $api[] = $request->method();
             $api[] = $request->path();
-            Storage::disk('local')->append("logs/api/".date("Y-m-d").".log",\implode(',',$api) );
+            $logFileName = storage_path('logs/api-'.date("Y-m-d").".log");
+            $logFile = fopen($logFileName, "a");
+            if($logFile){
+                fputcsv($logFile, $api);
+                fclose($logFile);
+            }
             //实时监控
             $apiPath = explode('/',$request->path());
             if(count($apiPath)>=3 && $apiPath[2] !== 'api'){
