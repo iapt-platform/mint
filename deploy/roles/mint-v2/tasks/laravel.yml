@@ -52,10 +52,19 @@
     group: www-data
     recurse: yes
 
-- name: setup storage folder
+- name: setup storage folder for v2
   become: true
   ansible.builtin.file:
     path: "{{ app_deploy_root }}/htdocs/storage"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+- name: setup tmp folder for v1
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_root }}/htdocs/public/tmp"
     state: directory
     owner: www-data
     group: www-data
