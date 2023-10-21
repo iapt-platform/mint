@@ -45,6 +45,7 @@ class ExportOffline extends Command
         //term
         $this->info('term');
         $this->call('export:term');
+
         //导出channel
         $this->info('channel');
         $this->call('export:channel');
@@ -68,13 +69,16 @@ class ExportOffline extends Command
         $this->info('zip');
         $exportPath = 'app/public/export/offline';
         $exportFile = 'wikipali-offline-'.date("Y-m-d").'.db3';
-        $zipFile = $exportFile.".db3.";
-        if($this->argument('format')==='7z'){
-            $zipFile .= "7z";
-        }else if($this->argument('format')==='lzma'){
-            $zipFile .= "lzma";
-        }else{
-            $zipFile .= "gz";
+        switch ($this->argument('format')) {
+            case '7z':
+                $zipFile = $exportFile . ".7z";
+                break;
+            case 'lzma':
+                $zipFile = $exportFile . ".lzma";
+                break;
+            default:
+                $zipFile = $exportFile . ".gz";
+                break;
         }
         //
         $exportFullFileName = storage_path($exportPath.'/'.$exportFile);
