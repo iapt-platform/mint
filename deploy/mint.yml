@@ -23,6 +23,7 @@
         REACT_ICP_CODE: "{{ app_icp_code }}"
         REACT_APP_TOKEN_KEY: "token.20230919"
 
-- hosts: www
+- hosts:
+    - php_fpm
   roles:
     - mint-v2
