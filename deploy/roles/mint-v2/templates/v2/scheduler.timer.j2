@@ -2,8 +2,9 @@
 Description=Runs Mint mint-{{ app_deploy_env }} scheduler every minute
 
 [Timer]
+OnBootSec=15minutes
 OnUnitActiveSec=1minute
 Unit=mint-{{ app_deploy_env }}-scheduler.service
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=timers.target

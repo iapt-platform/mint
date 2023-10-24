@@ -16,12 +16,13 @@
         REACT_APP_DEFAULT_LOCALE: "zh-Hans"
         REACT_APP_LANGUAGES: "en-US,zh-Hans,zh-Hant"
         REACT_APP_ENABLE_LOCAL_TOKEN: "true"
+        REACT_APP_TOKEN_KEY: "token.20230919"
         REACT_APP_DOCUMENTS_SERVER: "{{ app_documents_server }}"
         REACT_APP_RPC_SERVER: "{{ app_rpc_server }}"
         REACT_APP_ASSETS_SERVER: "{{ app_assets_server }}"
         REACT_APP_API_SERVER: "{{ app_api_server }}"
         REACT_ICP_CODE: "{{ app_icp_code }}"
-        REACT_APP_TOKEN_KEY: "token.20230919"
+        REACT_APP_QUESTIONNAIRE_LINK: "{{ app_questionnaire_link }}"
 
 - hosts:
     - php_fpm
