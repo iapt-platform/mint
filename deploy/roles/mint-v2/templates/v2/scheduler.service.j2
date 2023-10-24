@@ -1,0 +1,8 @@
+[Unit]
+Description=Mint scheduler for {{ app_deploy_env }}
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+ExecStart=cd {{ app_deploy_root }}/htdocs && /usr/bin/php artisan schedule:run >> {{ app_deploy_root }}/logs/scheduler.log 2>&1
