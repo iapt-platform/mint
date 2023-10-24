@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Layout, Row, Col, Typography } from "antd";
 import BeiAn from "../general/BeiAn";
+import Feedback from "../general/Feedback";
 
 const { Footer } = Layout;
 const { Paragraph } = Typography;
@@ -24,6 +25,7 @@ const FooterBarWidget = () => {
         </Col>
         <Col span={16}>
           <Paragraph strong>问题反馈</Paragraph>
+          <Feedback />
         </Col>
       </Row>
       <Row>

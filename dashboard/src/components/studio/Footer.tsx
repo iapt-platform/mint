@@ -1,9 +1,15 @@
 import BeiAn from "../general/BeiAn";
+import Feedback from "../general/Feedback";
 
 const FooterWidget = () => {
   return (
     <div>
-      <BeiAn />
+      <div>
+        <Feedback />
+      </div>
+      <div>
+        <BeiAn />
+      </div>
     </div>
   );
 };
