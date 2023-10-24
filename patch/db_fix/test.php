@@ -9,8 +9,12 @@ if(php_sapi_name() !== "cli") {
     return;
 }
 
-$src_db = 'db_b';
-$dest_db = 'db_c';
+if(count($argv)<3){
+    echo 'expect 2 db '.(count($argv)-1).' gave';
+    return;
+}
+$src_db = $argv[1];
+$dest_db = $argv[2];
 
 #打开源数据库
 $PDO_SRC = openDb($config[$src_db]);
@@ -26,12 +30,12 @@ foreach ($tables as $tableName => $table) {
     $stmtSrc = $PDO_SRC->prepare($query);
     $stmtSrc->execute();
     $srcData = $stmtSrc->fetch(PDO::FETCH_ASSOC);
-    fwrite(STDOUT,'table 1 count='.$srcData['count'].PHP_EOL);
+    fwrite(STDOUT,"table {$src_db} count=".$srcData['count'].PHP_EOL);
 
     $stmtDest = $PDO_DEST->prepare($query);
     $stmtDest->execute();
     $destData = $stmtDest->fetch(PDO::FETCH_ASSOC);
-    fwrite(STDOUT,'table 2 count='.$destData['count'].PHP_EOL);
+    fwrite(STDOUT,"table {$dest_db} count=".$destData['count'].PHP_EOL);
 
     fwrite(STDOUT,'field='.count($table['fields']).PHP_EOL);
     $fields = '"' . implode('","',$table['fields']) . '"' ;

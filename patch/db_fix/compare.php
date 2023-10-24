@@ -24,7 +24,23 @@ $PDO_SRC->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $PDO_DEST = openDb($config[$dest_db]);
 $PDO_DEST->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+if(isset($argv[3])){
+    $on = false;
+}else{
+    $on = true;
+}
 foreach ($tables as $tableName => $table) {
+    if(isset($argv[3])){
+        if($tableName !== $argv[3]){
+            continue;
+            //$on = true;
+        }
+    }
+    /*
+    if(!$on){
+        continue;
+    }
+    */
     //A -> B 差异
     fwrite(STDOUT,$tableName.PHP_EOL);
     if($table['user'] === false){
@@ -100,7 +116,12 @@ foreach ($tables as $tableName => $table) {
             }
         }else{
             //缺失
-            fwrite(STDERR,$tableName.' new '.$realKey.PHP_EOL);
+            if(isset($srcData['uid'])){
+                $title = $srcData['uid'];
+            }else{
+                $title = '';
+            }
+            fwrite(STDOUT,$tableName." new title={$title} ".$realKey.PHP_EOL);
             $countNew++;
         }
     }
