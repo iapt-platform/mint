@@ -10,17 +10,17 @@ class ExportOffline extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan export:offline lzma
      * @var string
      */
-    protected $signature = 'export:offline {format?}';
+    protected $signature = 'export:offline {format?  : zip file format 7z,lzma,gz }';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'export  offline data for app';
 
     /**
      * Create a new command instance.
@@ -39,6 +39,9 @@ class ExportOffline extends Command
      */
     public function handle()
     {
+        $exportStop = storage_path('app/public/export/offline/.stop');
+        $file = fopen($exportStop,'w');
+        fclose($file);
         //建表
         $this->info('create db');
         $this->call('export:create.db');
@@ -104,6 +107,7 @@ class ExportOffline extends Command
                    'min_app_ver'=>'1.3',
                     ];
         Cache::put('/offline/index',$info);
+        unlink($exportStop);
         return 0;
     }
 }

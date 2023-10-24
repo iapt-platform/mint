@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Tools\RedisClusters;
 use App\Http\Api\Mq;
+use App\Tools\OpsLog;
 
 class SentenceController extends Controller
 {
@@ -379,6 +380,9 @@ class SentenceController extends Controller
             $sent->pr_id = null;
         }
         $sent->save();
+
+        OpsLog::debug($user["user_uid"],$sent);
+
         //清除cache
         $channelId = $param[4];
         $currSentId = "{$param[0]}-{$param[1]}-{$param[2]}-{$param[3]}";
