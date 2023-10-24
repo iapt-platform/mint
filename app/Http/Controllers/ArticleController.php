@@ -14,6 +14,7 @@ use App\Http\Api\ShareApi;
 use App\Http\Api\StudioApi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Tools\OpsLog;
 
 class ArticleController extends Controller
 {
@@ -287,9 +288,11 @@ class ArticleController extends Controller
             $newArticle->owner = $studioUuid;
             $newArticle->owner_id = $user['user_id'];
             $newArticle->editor_id = $user['user_id'];
+            $newArticle->parent = $request->get('parentId');
             $newArticle->create_time = time()*1000;
             $newArticle->modify_time = time()*1000;
             $newArticle->save();
+            OpsLog::debug($user['user_uid'],$newArticle);
 
             if(Str::isUuid($request->get('anthologyId'))){
                 $articleMap = new ArticleCollection();
@@ -413,8 +416,9 @@ class ArticleController extends Controller
         $article->editor_id = $user['user_id'];
         $article->modify_time = time()*1000;
         $article->save();
-        return $this->ok($article);
 
+        OpsLog::debug($user_uid,$article);
+        return $this->ok($article);
     }
 
     /**
