@@ -12,7 +12,7 @@
         chdir: "{{ playbook_dir }}/../dashboard"
       environment:
         NODE_OPTIONS: "--max_old_space_size=4096"
-        PUBLIC_URL: /pcd
+        PUBLIC_URL: "{{ app_dashboard_base_path }}"
         REACT_APP_DEFAULT_LOCALE: "zh-Hans"
         REACT_APP_LANGUAGES: "en-US,zh-Hans,zh-Hant"
         REACT_APP_ENABLE_LOCAL_TOKEN: "true"
