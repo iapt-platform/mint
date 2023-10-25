@@ -6,16 +6,31 @@ use PhpAmqpLib\Exchange\AMQPExchangeType;
 use Illuminate\Support\Facades\Log;
 
 class Mq{
+
+    private static function connection(){
+        $host = config("queue.connections.rabbitmq.host");
+            $port = config("queue.connections.rabbitmq.port");
+            $user = config("queue.connections.rabbitmq.user");
+            $password = config("queue.connections.rabbitmq.password");
+            $vhost = config("queue.connections.rabbitmq.password");
+            if(empty($host) || empty($port) || empty($user) || empty($password) || empty($vhost)){
+                Log::error('rabbitmq set error');
+                return;
+            }
+            $connection = new AMQPStreamConnection($host,$port,$user,$password,$vhost);
+            return $connection;
+    }
     public static function publish(string $channelName, $message){
                 //一对一
 
         try{
-            $host = config("rabbitmq.host");
-            $port = config("rabbitmq.port");
-            $user = config("rabbitmq.user");
-            $password = config("rabbitmq.password");
-            $vhost = config("rabbitmq.virtual.host");
+            $host = config("queue.connections.rabbitmq.host");
+            $port = config("queue.connections.rabbitmq.port");
+            $user = config("queue.connections.rabbitmq.user");
+            $password = config("queue.connections.rabbitmq.password");
+            $vhost = config("queue.connections.rabbitmq.virtual_host");
             if(empty($host) || empty($port) || empty($user) || empty($password) || empty($vhost)){
+                Log::error('rabbitmq set error');
                 return;
             }
             $connection = new AMQPStreamConnection($host,$port,$user,$password,$vhost);
@@ -43,11 +58,21 @@ class Mq{
 
         $consumerTag = 'consumer';
 
-        $connection = new AMQPStreamConnection(config("rabbitmq.host"),
-                                        config("rabbitmq.port"),
-                                        config("rabbitmq.user"),
-                                        config("rabbitmq.password"),
-                                        config("rabbitmq.virtual.host"));
+
+        $host = config("queue.connections.rabbitmq.host");
+        $port = config("queue.connections.rabbitmq.port");
+        $user = config("queue.connections.rabbitmq.user");
+        $password = config("queue.connections.rabbitmq.password");
+        $vhost = config("queue.connections.rabbitmq.virtual_host");
+        $connection = new AMQPStreamConnection($host,$port,$user,$password,$vhost);
+
+    /*
+        $connection = new AMQPStreamConnection(env("RABBITMQ_HOST"),
+                                            env("RABBITMQ_PORT"),
+                                            env("RABBITMQ_USER"),
+                                            env("RABBITMQ_PASSWORD"),
+                                            env("RABBITMQ_VIRTUAL_HOST"));
+*/
         $channel = $connection->channel();
 
  /*
@@ -96,7 +121,7 @@ class Mq{
                     $msg = new AMQPMessage(json_encode(['exchange'=>$exchange,
                                                         'channel'=>$queue,
                                                         'message'=>json_decode($message->body),
-                                                        'result'=>$result,
+                                                        'result'=>0,
                                                         'error'=>$e,
                                                         ],JSON_UNESCAPED_UNICODE));
                     $channelIssues->basic_publish($msg, '', $channelName);
