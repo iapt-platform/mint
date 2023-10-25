@@ -39,16 +39,26 @@ class ExportOffline extends Command
      */
     public function handle()
     {
-        $exportStop = storage_path('app/public/export/offline/.stop');
+        $exportDir = storage_path('app/public/export/offline');
+        if(!is_dir($exportDir)){
+            $res = mkdir($exportDir,0700,true);
+            if(!$res){
+                Log::error('mkdir fail path='.$exportDir);
+                return 1;
+            }
+        }
+        $exportStop = $exportDir.'/.stop';
         $file = fopen($exportStop,'w');
         fclose($file);
+             
         //建表
         $this->info('create db');
         $this->call('export:create.db');
+
         //term
         $this->info('term');
         $this->call('export:term');
-
+        
         //导出channel
         $this->info('channel');
         $this->call('export:channel');
