@@ -16,7 +16,7 @@ class MqDiscussion extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan mq:discussion
      * @var string
      */
     protected $signature = 'mq:discussion';
