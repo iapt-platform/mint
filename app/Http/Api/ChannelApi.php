@@ -1,9 +1,13 @@
 <?php
 namespace App\Http\Api;
 use App\Models\Channel;
+use Illuminate\Support\Str;
 
 class ChannelApi{
     public static function getById($id){
+        if(!Str::isUuid($id)){
+            return false;
+        }
         $channel = Channel::where("uid",$id)->first();
         if($channel){
             return [
