@@ -146,7 +146,7 @@ class UpgradeCommunityTerm extends Command
                             'word_en' =>Tools::getWordEn($word->word),
                             'meaning' => '',
                             'language' => $this->argument('lang'),
-                            'owner' => config("app.admin.root_uuid"),
+                            'owner' => config("mint.admin.root_uuid"),
                             'editor_id' => 0,
                             'create_time' => time()*1000,
                         ]

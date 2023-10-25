@@ -58,7 +58,7 @@ class UserStatisticController extends Controller
         //
         $queryUserId = UserApi::getIntIdByName($userName);
         $queryUserUuid = UserApi::getIdByName($userName);
-        $cacheExpiry = config('cache.expire',3600*24);
+        $cacheExpiry = config('mint.cache.expire');
         //总经验值
         $expSum = RedisClusters::remember("user/{$userName}/exp/sum",$cacheExpiry,function() use($queryUserId){
 			return UserOperationDaily::where('user_id',$queryUserId)

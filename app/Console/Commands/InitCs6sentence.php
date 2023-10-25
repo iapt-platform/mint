@@ -134,7 +134,7 @@ class InitCs6sentence extends Command
                     'create_time' => time()*1000,
 				]
 				);
-            $newRow->editor_uid = config("app.admin.root_uuid");
+            $newRow->editor_uid = config("mint.admin.root_uuid");
             $newRow->content = "<span>{$sent}</span>";
             $newRow->strlen = mb_strlen($sent,"UTF-8");
             $newRow->status = 10;

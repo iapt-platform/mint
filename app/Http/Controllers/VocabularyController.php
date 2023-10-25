@@ -23,7 +23,7 @@ class VocabularyController extends Controller
             case 'key':
                 $key = $request->get("key");
                 $result = RedisClusters::remember("/dict_vocabulary/{$key}",
-                        config('cache.expire',3600*24),
+                        config('mint.cache.expire'),
                         function() use($key){
                         return Vocabulary::whereRaw('word like ? or word_en like ?',[$key."%",$key."%"])
                                     ->whereOr('word_en','like',$key."%")

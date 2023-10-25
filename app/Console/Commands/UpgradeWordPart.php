@@ -60,7 +60,7 @@ class UpgradeWordPart extends Command
         $bar->finish();
 
 		#载入csv数据
-		$csvFile = config("app.path.dict_text") .'/system/part2.csv';
+		$csvFile = config("mint.path.dict_text") .'/system/part2.csv';
 		if (($fp = fopen($csvFile, "r")) !== false) {
 			Log::info("csv load：" . $csvFile);
 			while (($data = fgetcsv($fp, 0, ',')) !== false) {

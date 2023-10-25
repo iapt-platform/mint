@@ -52,12 +52,12 @@ class ChannelApi{
     }
     public static function getSysChannel($channel_name,$fallback=""){
         $channel = Channel::where('name',$channel_name)
-                    ->where('owner_uid',config("app.admin.root_uuid"))
+                    ->where('owner_uid',config("mint.admin.root_uuid"))
                     ->first();
         if(!$channel){
             if(!empty($fallback)){
                 $channel = Channel::where('name',$fallback)
-                                  ->where('owner_uid',config("app.admin.root_uuid"))
+                                  ->where('owner_uid',config("mint.admin.root_uuid"))
                                   ->first();
                 if(!$channel){
                     return false;

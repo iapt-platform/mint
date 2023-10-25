@@ -77,7 +77,7 @@ class InitSystemDict extends Command
             # code...
             $channel = DictInfo::firstOrNew([
                 'name' => $value['name'],
-                'owner_id' => config("app.admin.root_uuid"),
+                'owner_id' => config("mint.admin.root_uuid"),
             ]);
             $channel->shortname = $value['shortname'];
             $channel->description = $value['description'];
