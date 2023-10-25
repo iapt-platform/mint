@@ -64,15 +64,6 @@ const ChapterNewWidget = () => {
       <Card title={"App下载"} style={{ margin: 10, borderRadius: 8 }}>
         <Paragraph>
           {"点链接打开网站下载安卓App安装包"}
-          <Button type="link" size="large" icon={<GithubOutlined />}>
-            <a
-              href="https://github.com/gohugoio/hugo/releases"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Github下载
-            </a>
-          </Button>
           <Button type="link" size="large">
             <a href={giteeRelease} target="_blank" rel="noreferrer">
               Gitee下载

@@ -29,7 +29,7 @@ export const VideoWidget = ({ src, type }: IWidget) => {
         controls: true,
         responsive: true,
         fluid: true,
-        poster: "https://vjs.zencdn.net/v/oceans.png",
+        poster: "",
         sources: [
           {
             src: src ? src : "",

@@ -2,7 +2,12 @@ import { SortOrder } from "antd/lib/table/interface";
 import lodash from "lodash";
 
 export function fullUrl(url: string): string {
-  return window.location.origin + process.env.PUBLIC_URL + url;
+  if (process.env.PUBLIC_URL.includes("http")) {
+    //for CDN
+    return process.env.PUBLIC_URL + url;
+  } else {
+    return window.location.origin + process.env.PUBLIC_URL + url;
+  }
 }
 
 export function PaliToEn(pali: string): string {

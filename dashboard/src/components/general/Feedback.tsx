@@ -1,7 +1,4 @@
-import { useIntl } from "react-intl";
-
 const FeedbackWidget = () => {
-  const intl = useIntl();
   return (
     <>
       {process.env.REACT_APP_QUESTIONNAIRE_LINK ? (
