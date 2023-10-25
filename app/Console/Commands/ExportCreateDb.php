@@ -39,7 +39,8 @@ class ExportCreateDb extends Command
     public function handle()
     {
         $sqlPath = database_path('export/sentence.sql');
-        $exportFile = storage_path('app/public/export/offline/sentence-'.date("Y-m-d").'.db3');
+        $exportDir = storage_path('app/public/export/offline');
+        $exportFile = $exportDir.'/sentence-'.date("Y-m-d").'.db3';
         $file = fopen($exportFile,'w');
         fclose($file);
         $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
