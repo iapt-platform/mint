@@ -36,11 +36,6 @@ const Widget = () => {
   return (
     <div>
       <HeadBar />
-      <div
-        dangerouslySetInnerHTML={{
-          __html: marked.parse("- [Google](https://www.google.com)"),
-        }}
-      ></div>
       <div>Home Page</div>
 
       <InnerDrawer />
