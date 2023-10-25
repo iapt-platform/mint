@@ -45,7 +45,7 @@ class UpgradePaliTextId extends Command
 
         $bar = $this->output->createProgressBar(PaliText::count());
         #载入csv数据
-        $csvFile = config("app.path.pali_title") .'/pali_text_uuid.csv';
+        $csvFile = config("mint.path.pali_title") .'/pali_text_uuid.csv';
         if (($fp = fopen($csvFile, "r")) === false) {
             $this->error( "can not open csv file. filename=" . $csvFile. PHP_EOL) ;
             Log::error( "can not open csv file. filename=" . $csvFile) ;

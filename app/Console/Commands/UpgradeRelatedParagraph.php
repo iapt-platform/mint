@@ -48,7 +48,7 @@ class UpgradeRelatedParagraph extends Command
         #删除目标数据库中数据
         RelatedParagraph::where('book','>',0)->delete();
 		// 打开csv文件并读取数据
-        $strFileName = config("app.path.pali_title") . "/cs6_para.csv";
+        $strFileName = config("mint.path.pali_title") . "/cs6_para.csv";
         if(!file_exists($strFileName)){
             return 1;
         }

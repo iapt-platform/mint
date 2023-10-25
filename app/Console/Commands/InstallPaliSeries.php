@@ -48,7 +48,7 @@ class InstallPaliSeries extends Command
 			BookTitle::where('book','>',0)->delete();
 
 		// 打开csv文件并读取数据
-			$strFileName = config("app.path.pali_title") . "/pali_serieses.csv";
+			$strFileName = config("mint.path.pali_title") . "/pali_serieses.csv";
 			if(!file_exists($strFileName)){
 				return 1;
 			}

@@ -56,7 +56,7 @@ class UpgradePaliText extends Command
 			$_to = $_from;
 		}
 #载入文件列表
-		$fileListFileName = config("app.path.palitext_filelist");
+		$fileListFileName = config("mint.path.palitext_filelist");
 
 		$filelist = array();
 
@@ -72,7 +72,7 @@ class UpgradePaliText extends Command
 			$arrInserString = array();
 			#载入csv数据
 			$FileName = $filelist[$from-1][1];
-			$csvFile = config("app.path.pali_title") .'/'. $from.'_pali.csv';
+			$csvFile = config("mint.path.pali_title") .'/'. $from.'_pali.csv';
 			if (($fp = fopen($csvFile, "r")) !== false) {
                 Log::info("csv load：" . $csvFile);
 				while (($data = fgetcsv($fp, 0, ',')) !== false) {

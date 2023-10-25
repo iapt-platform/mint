@@ -115,7 +115,7 @@ class UpgradeQuote extends Command
                         'uid' =>Str::uuid(),
                     ]
                     );
-                $newRow->editor_uid = config("app.admin.root_uuid");
+                $newRow->editor_uid = config("mint.admin.root_uuid");
                 $newRow->content = trim($sent);
                 $newRow->content_type = "json";
                 $newRow->strlen = mb_strlen($sent,"UTF-8");

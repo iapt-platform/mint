@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SentenceInfoController;
 use App\Http\Controllers\WbwAnalysisController;
+use App\Http\Controllers\PageIndexController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,8 @@ use App\Http\Controllers\WbwAnalysisController;
 Route::redirect('/', '/pcd/community/list');
 Route::redirect('/app', '/app/pcdl/index.php');
 Route::redirect('/app/pcdl', '/app/pcdl/index.php');
+
+Route::get('/', [PageIndexController::class,'index']);
 
 Route::get('/api/sentence/progress/image', [SentenceInfoController::class,'showprogress']);
 Route::get('/api/sentence/progress/daily/image', [SentenceInfoController::class,'showprogressdaily']);

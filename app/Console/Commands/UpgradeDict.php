@@ -84,7 +84,7 @@ class UpgradeDict extends Command
 								$tableDict->src_lang = $this->dictInfo['meta']['src_lang'];
 								$tableDict->dest_lang = $this->dictInfo['meta']['dest_lang'];
 								$tableDict->rows = $this->dictInfo['meta']['rows'];
-								$tableDict->owner_id = config("app.admin.root_uuid");
+								$tableDict->owner_id = config("mint.admin.root_uuid");
 								$tableDict->meta = json_encode($this->dictInfo['meta']);
 								$tableDict->save();
 
@@ -216,7 +216,7 @@ class UpgradeDict extends Command
     public function handle()
     {
 		$this->info("upgrade dict start");
-		$this->scandict(config("app.path.dict_text"));
+		$this->scandict(config("mint.path.dict_text"));
 		$this->info("upgrade dict done");
 
         return 0;

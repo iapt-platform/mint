@@ -63,7 +63,7 @@ class RelationController extends Controller
 
         if($request->has('vocabulary')){
             if(!RedisClusters::has($key)){
-                RedisClusters::put($key,$output,config('cache.expire',3600*24));
+                RedisClusters::put($key,$output,config('mint.cache.expire'));
             }
         }
         return $this->ok($output);

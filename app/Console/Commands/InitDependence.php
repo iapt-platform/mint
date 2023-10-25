@@ -40,15 +40,15 @@ class InitDependence extends Command
     public function handle()
     {
 		#克隆依赖的数据仓库到本地
-		$depDir = $this->info(config("app.path.dependence"));
-		foreach ($this->info(config("app.dependence")) as $key => $value) {
+		$depDir = $this->info(config("mint.path.dependence"));
+		foreach ($this->info(config("mint.dependence")) as $key => $value) {
 			# code...
 			$process = new Process(['git','clone',$value->url,$depDir.'/'.$value->path]);
 			$process->run();
 			if(!$process->isSuccessful()){
 				throw new ProcessFailedException($process);
 			}
-			$this->info($process->getOutput());				
+			$this->info($process->getOutput());
 		}
         return 0;
     }

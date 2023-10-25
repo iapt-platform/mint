@@ -166,7 +166,7 @@ class NissayaEndingController extends Controller
                     $localCase  =[];
                     foreach ($cases as $case) {
                         $localCase[] = ['label'=>__("grammar.".$case),
-                                        'link'=>config('dashboard.url').'/term/list/'.$case
+                                        'link'=>config('mint.server.dashboard_base_path').'/term/list/'.$case
                                         ];
                     }
                     # 格位
@@ -181,7 +181,7 @@ class NissayaEndingController extends Controller
                     $localTo  =[];
                     foreach ($linkTos as $to) {
                         $localTo[] = ['label'=>__("grammar.".$to),
-                                        'link'=>config('dashboard.url').'/term/list/'.$case
+                                        'link'=>config('mint.server.dashboard_base_path').'/term/list/'.$case
                                         ];
                     }
                     # 格位
@@ -219,7 +219,7 @@ class NissayaEndingController extends Controller
                 }
                 //关系名称
                 $newLine['relation'] =  $relation['name'];
-                $newLine['relation_link'] =  config('dashboard.url').'/term/list/'.$relation['name'];
+                $newLine['relation_link'] =  config('mint.server.dashboard_base_path').'/term/list/'.$relation['name'];
                 $cardData['row'][] = $newLine;
             }
         }

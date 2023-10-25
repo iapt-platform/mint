@@ -106,7 +106,7 @@ class InitSystemChannel extends Command
             # code...
             $channel = Channel::firstOrNew([
                 'name' => $value['name'],
-                'owner_uid' => config("app.admin.root_uuid"),
+                'owner_uid' => config("mint.admin.root_uuid"),
             ]);
             if(empty($channel->id)){
                 $channel->id = app('snowflake')->id();
@@ -114,7 +114,7 @@ class InitSystemChannel extends Command
             $channel->type = $value['type'];
             $channel->lang = $value['lang'];
             $channel->editor_id = 0;
-            $channel->owner_uid = config("app.admin.root_uuid");
+            $channel->owner_uid = config("mint.admin.root_uuid");
             $channel->create_time = time()*1000;
             $channel->modify_time = time()*1000;
             $channel->save();

@@ -403,7 +403,7 @@ class TemplateRender{
         $paraId = $this->get_param($this->param,"para",1);
         $channelId = $this->channel_id[0];
         $props = RedisClusters::remember("/quote/{$channelId}/{$paraId}",
-              config('cache.expire',3600*24),
+              config('mint.cache.expire'),
               function() use($paraId,$channelId){
                 $para = \explode('-',$paraId);
                 $output = [

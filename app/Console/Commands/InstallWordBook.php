@@ -56,7 +56,7 @@ class InstallWordBook extends Command
 
 		$bar = $this->output->createProgressBar($_to-$_from+1);
 
-		for ($book=$_from; $book <= $_to; $book++) { 
+		for ($book=$_from; $book <= $_to; $book++) {
 			Log::info("doing ".($book));
 
 			#删除目标数据库中数据
@@ -65,7 +65,7 @@ class InstallWordBook extends Command
 			//分类汇总得到单词表
 			$bookword = array();
 			$fileId = $book-1;
-			if (($fpoutput = fopen(config("app.path.paliword_book") . "/{$fileId}_words.csv", "r")) !== false) {
+			if (($fpoutput = fopen(config("mint.path.paliword_book") . "/{$fileId}_words.csv", "r")) !== false) {
 				$count = 0;
 				while (($data = fgetcsv($fpoutput, 0, ',')) !== false) {
 					$book = $data[1];
@@ -74,7 +74,7 @@ class InstallWordBook extends Command
 					} else {
 						$bookword[$data[3]] = 1;
 					}
-		
+
 					$count++;
 				}
 			}else{
@@ -88,7 +88,7 @@ class InstallWordBook extends Command
 						'wordindex'=>$key,
 						'count'=>$value,
 					];
-					BookWord::create($newData);				
+					BookWord::create($newData);
 				}
 			});
 			$bar->advance();
@@ -98,7 +98,7 @@ class InstallWordBook extends Command
 		$msg = "all done in ". time()-$startTime . "s";
 		$this->info($msg.PHP_EOL);
 		Log::info($msg);
-		
+
         return 0;
     }
 }
