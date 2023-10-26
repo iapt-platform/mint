@@ -114,6 +114,15 @@
     group: root
     mode: "0644"
 
+- name: upload discussion worker service
+  become: true
+  template:
+    src: v2/discussion-worker.service.j2
+    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-discussion-worker.service
+    owner: root
+    group: root
+    mode: "0644"
+
 # - name: run db:migrate
 #   run_once: true
 #   become: true
