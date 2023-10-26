@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\App;
 use App\Models\UserDict;
 use App\Models\DictInfo;
 use App\Models\GroupMember;
@@ -45,7 +46,9 @@ class DictController extends Controller
         }else{
             $inMyHanGroup = false;
         }
-        if(config('app.env')==='local'){
+
+        if (App::environment('local')) {
+            // The environment is local
             $inMyHanGroup = true;
         }
         $resultCount=0;
