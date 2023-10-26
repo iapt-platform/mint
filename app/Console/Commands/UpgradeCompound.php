@@ -9,6 +9,7 @@ use App\Models\UserDict;
 use App\Tools\TurboSplit;
 use App\Http\Api\DictApi;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UpgradeCompound extends Command
 {
