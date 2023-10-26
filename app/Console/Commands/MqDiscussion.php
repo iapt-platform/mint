@@ -50,7 +50,7 @@ class MqDiscussion extends Command
         $queue = 'discussion';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
         Mq::worker($exchange,$queue,function ($message){
-            Log::info('mq discussion start {message}',$message);
+            Log::info('mq discussion start {message}',['message'=>json_encode($message,JSON_UNESCAPED_UNICODE)]);
             $result = 0;
             switch ($message->res_type) {
                 case 'sentence':
