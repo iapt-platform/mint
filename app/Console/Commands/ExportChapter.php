@@ -139,9 +139,11 @@ class ExportChapter extends Command
             }
         }
         $tex = array();
-        $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES,'delimiters' => '[[ ]]','escape'=>function ($value){
-            return $value;
-        }));
+        $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES,
+                                        'delimiters' => '[[ ]]',
+                                        'escape'=>function ($value){
+                                            return $value;
+                                        }));
         $tpl = file_get_contents(resource_path("mustache/tex/main.tex"));
         $texContent = $m->render($tpl,$bookMeta);
         $tex[] = ['name'=>'main.tex',
