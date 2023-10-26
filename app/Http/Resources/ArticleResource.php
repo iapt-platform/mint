@@ -36,6 +36,7 @@ class ArticleResource extends JsonResource
             "editor"=> UserApi::getById($this->editor_id),
             "status" => $this->status,
             "lang" => $this->lang,
+            "parent_uid" => $this->parent,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
         ];
