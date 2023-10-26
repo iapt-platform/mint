@@ -77,7 +77,7 @@ class InviteController extends Controller
 
         $uuid = Str::uuid();
         Mail::to($request->get('email'))
-            ->send(new InviteMail($uuid,$request->get('lang')));
+            ->send(new InviteMail($uuid,$request->get('lang'),$request->get('dashboard')));
         if(Mail::failures()){
             return $this->error('send email fail',[],200);
         }else{
