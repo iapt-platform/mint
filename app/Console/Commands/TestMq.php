@@ -16,7 +16,7 @@ class TestMq extends Command
      *
      * @var string
      */
-    protected $signature = 'test:mq {--discussion}';
+    protected $signature = 'test:mq {--discussion=}';
 
     /**
      * The console command description.
