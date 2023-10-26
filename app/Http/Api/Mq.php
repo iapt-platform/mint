@@ -24,6 +24,7 @@ class Mq{
                 //一对一
 
         try{
+            Log::debug('mq start {channel} {message}',['channel'=>$channelName,'message'=>$message]);
             $host = config("queue.connections.rabbitmq.host");
             $port = config("queue.connections.rabbitmq.port");
             $user = config("queue.connections.rabbitmq.user");
@@ -114,6 +115,7 @@ class Mq{
                     }
                 }catch(\Exception $e){
                     // push to issues
+                    Log::error('mq worker exception',$e);
                     $channelName = 'issues';
                     $channelIssues = $connection->channel();
                     $channelIssues->queue_declare($channelName, false, true, false, false);
