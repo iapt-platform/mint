@@ -2,6 +2,13 @@
 namespace App\Tools;
 
 class Tools{
+    public static function isStop(){
+        if(file_exists(base_path('.stop'))){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     public static function getWordEn($strIn)
         {
