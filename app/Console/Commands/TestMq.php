@@ -42,7 +42,9 @@ class TestMq extends Command
      */
     public function handle()
     {
-
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		Mq::publish('hello',['hello world']);
         $discussion = $this->option('discussion');
         if($discussion && Str::isUuid($discussion)){

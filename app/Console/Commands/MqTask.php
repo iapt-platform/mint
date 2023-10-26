@@ -39,6 +39,9 @@ class MqTask extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $this->info('env='.env("RABBITMQ_HOST"));
         $this->info('config='.config("queue.connections.rabbitmq.host"));
         $exchange = 'router';

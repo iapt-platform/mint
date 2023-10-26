@@ -38,6 +38,9 @@ class ExportCreateDb extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $sqlPath = database_path('export/sentence.sql');
         $exportDir = storage_path('app/public/export/offline');
         $exportFile = $exportDir.'/sentence-'.date("Y-m-d").'.db3';

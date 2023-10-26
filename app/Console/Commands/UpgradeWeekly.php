@@ -37,6 +37,9 @@ class UpgradeWeekly extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         #译文进度
         $this->call('upgrade:progress');
         $time = time()-$currTime;

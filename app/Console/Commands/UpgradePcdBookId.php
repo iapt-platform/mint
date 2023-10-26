@@ -40,6 +40,9 @@ class UpgradePcdBookId extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $table = $this->option('table');
         $bookTitles = BookTitle::orderBy('sn')->get();
         $bar = $this->output->createProgressBar(count($bookTitles));

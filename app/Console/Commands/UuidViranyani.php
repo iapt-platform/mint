@@ -50,6 +50,9 @@ class UuidViranyani extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $old = "C1AB2ABF-EAA8-4EEF-B4D9-3854321852B4";
 		$result = DB::select('UPDATE "articles" set "owner"=? where "owner"=? ',[strtolower($old),$old]);
 		$result = DB::select('UPDATE "channels" set "owner_uid"=? where "owner_uid"=? ',[strtolower($old),$old]);

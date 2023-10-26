@@ -41,6 +41,9 @@ class CacheWbwPreference extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $prefix = 'wbw-preference';
         if($this->option('view')==='all' ||
            $this->option('view')==='my'){

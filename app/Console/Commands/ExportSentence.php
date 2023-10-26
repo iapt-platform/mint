@@ -44,6 +44,9 @@ class ExportSentence extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $channels = [];
         $channel_id = $this->option('channel');
         if($channel_id){

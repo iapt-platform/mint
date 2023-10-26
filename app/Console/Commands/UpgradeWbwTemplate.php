@@ -42,6 +42,9 @@ class UpgradeWbwTemplate extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $start = time();
 		$pali = new PaliSentence;
 		if(!empty($this->argument('book'))){

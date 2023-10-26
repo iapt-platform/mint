@@ -42,6 +42,9 @@ class UpgradeWordPart extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $delete = WordPart::where('id','>',0)->delete();
         #载入纸质词典数据
         $paper = UserDict::selectRaw('word,count(*)')->where("source",'_PAPER_')->groupBy('word')->cursor();

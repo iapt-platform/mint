@@ -40,6 +40,9 @@ class TestRedis extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$value='this is a test';
 		$this->info("test redis start");
         $remember = Cache::store('redis')->remember('dd',10,function(){

@@ -42,6 +42,9 @@ class WebHook extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		switch ($this->argument('listener')) {
 			case 'weixin':
 				break;

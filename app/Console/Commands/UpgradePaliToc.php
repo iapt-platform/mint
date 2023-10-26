@@ -41,6 +41,9 @@ class UpgradePaliToc extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$this->info("upgrade pali text");
 		$startTime = time();
 

@@ -44,6 +44,9 @@ class UpgradeCommunityTerm extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $lang = strtolower($this->argument('lang'));
         $langFamily = explode('-',$lang)[0];
         $localTerm = ChannelApi::getSysChannel(

@@ -38,6 +38,9 @@ class WebHookArticleNew extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		# 获取最新文章数据
 		$url = config('app.url')."/api/v2/progress?view=chapter&channel_type=translation";
 

@@ -42,6 +42,9 @@ class UpgradeProgress extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$this->info('upgrade:progress start');
 		$startTime = time();
         $book = $this->option('book');

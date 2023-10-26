@@ -46,6 +46,9 @@ class UpgradeCompound extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         if(file_exists(base_path('.stop'))){
             $this->info('.stop exists');
             return 0;

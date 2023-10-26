@@ -40,6 +40,9 @@ class ExportPalitext extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $exportFile = storage_path('app/public/export/offline/sentence-'.date("Y-m-d").'.db3');
         $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);

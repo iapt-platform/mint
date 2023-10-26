@@ -38,6 +38,9 @@ class TestSchedule extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         Log::info('schedule test start');
         $this->info('schedule test start');
         return 0;

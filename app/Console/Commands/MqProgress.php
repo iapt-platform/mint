@@ -38,6 +38,9 @@ class MqProgress extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $exchange = 'router';
         $queue = 'progress';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");

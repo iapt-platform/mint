@@ -43,6 +43,9 @@ class UpgradeChapterDynamicWeekly extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$this->info('upgrade:chapter.dynamic.weekly start.');
 
         $startAt = time();

@@ -41,6 +41,9 @@ class CacheDictPreference extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $prefix = 'dict-preference';
         $words = UserDict::select(['word','language'])
                        ->groupBy(['word','language'])
@@ -60,6 +63,9 @@ class CacheDictPreference extends Command
                 Cache::put("{$prefix}/{$word->word}/{$word->language}",$m[0]);
             }
             $bar->advance();
+            if(\App\Tools\Tools::isStop()){
+                return 0;
+            }
         }
         $bar->finish();
 

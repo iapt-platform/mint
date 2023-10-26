@@ -39,6 +39,9 @@ class UpgradePageNumber extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $table = WbwTemplate::where('type','.ctl.')->orderBy('book')->orderBy('paragraph')->cursor();
         $pageHead = ['M','P','T','V','O'];
         $bar = $this->output->createProgressBar(WbwTemplate::where('type','.ctl.')->count());

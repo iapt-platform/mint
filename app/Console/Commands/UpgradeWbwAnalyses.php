@@ -40,6 +40,9 @@ class UpgradeWbwAnalyses extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$startAt = time();
 		$this->info("upgrade:wbwanalyses start");
 

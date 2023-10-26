@@ -38,6 +38,9 @@ class TestJsonToXml extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $array = [
             'pali'=>['status'=>'7','value'=>'bārāṇasiyaṃ'],
             'real'=>['status'=>'7','value'=>'bārāṇasiyaṃ'],

@@ -40,6 +40,9 @@ class TestSendMail extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $uuid = Str::uuid();
         Mail::to("visuddhinanda@gmail.com")
             ->send(new InviteMail($uuid,'en'));
