@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Http\Api\MdRender;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class TestMdRender extends Command
 {
@@ -39,6 +40,8 @@ class TestMdRender extends Command
      */
     public function handle()
     {
+        Log::info('md render start item='.$this->argument('item'));
+
         $data = array();
         $data['bold'] = <<<md
         **三十位** 经
