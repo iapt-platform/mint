@@ -5,6 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
 use App\Http\Api\Mq;
+use App\Models\Discussion;
+use App\Http\Resources\DiscussionResource;
+use Illuminate\Support\Str;
 
 class TestMq extends Command
 {
@@ -13,7 +16,7 @@ class TestMq extends Command
      *
      * @var string
      */
-    protected $signature = 'test:mq';
+    protected $signature = 'test:mq {--discussion}';
 
     /**
      * The console command description.
@@ -39,17 +42,13 @@ class TestMq extends Command
      */
     public function handle()
     {
-        //一对一
-		//Mq::publish('wbw-analyses',[13607982709477376]);
-		Mq::publish('hello',['hello world']);
 
-        //一对多
-        /*
-        $connection = new AMQPStreamConnection(MQ_HOST, MQ_PORT, MQ_USERNAME, MQ_PASSWORD);
-        $channel->exchange_declare('hello_exchange','fanout',false,true);
-        $channel->queue_declare('hello', false, true, false, false);
-        $channel->exchange_bind('hello','exchange',"");
-*/
+		Mq::publish('hello',['hello world']);
+        $discussion = $this->option('discussion');
+        if($discussion && Str::isUuid($discussion)){
+            Mq::publish('discussion',new DiscussionResource(Discussion::find($discussion)));
+        }
+
         return 0;
     }
 }
