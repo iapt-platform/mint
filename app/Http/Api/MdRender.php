@@ -290,17 +290,28 @@ class MdRender{
                 }
                 break;
             case 'text':
-                if(is_array($tplProps)){
-                    return '';
+                if(isset($tplProps)){
+                    if(is_array($tplProps)){
+                        return '';
+                    }else{
+                        return $tplProps;
+                    }
                 }else{
-                    return $tplProps;
+                    Log::error('tplProps undefine');
+                    return '';
                 }
+
                 break;
             case 'tex':
-                if(is_array($tplProps)){
-                    return '';
+                if(isset($tplProps)){
+                    if(is_array($tplProps)){
+                        return '';
+                    }else{
+                        return $tplProps;
+                    }
                 }else{
-                    return $tplProps;
+                    Log::error('tplProps undefine');
+                    return '';
                 }
                 break;
             default:
