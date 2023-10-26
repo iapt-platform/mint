@@ -50,6 +50,7 @@ class MqDiscussion extends Command
         $queue = 'discussion';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
         Mq::worker($exchange,$queue,function ($message){
+            Log::info('mq discussion start {message}',['message'=>json_encode($message,JSON_UNESCAPED_UNICODE)]);
             $result = 0;
             switch ($message->res_type) {
                 case 'sentence':
@@ -91,7 +92,12 @@ class MqDiscussion extends Command
                     $tpl = Article::where('owner',$rootId)
                                   ->where('title',$articleTitle)
                                   ->value('content');
-                    $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES));
+                    if(empty($tpl)){
+                        Log::error('模版不能为空',['tpl_title'=>$articleTitle]);
+                        return 1;
+                    }
+                    $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES,
+                                                'delimiters' => '{% %}',));
                     $msgContent = $m->render($tpl,$msgParam);
 
                     $webhooks = WebHook::where('res_id',$sentence->channel_uid)
