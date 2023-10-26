@@ -11,6 +11,7 @@ use App\Http\Api\Mq;
 use App\Tools\WebHook as WebHookSend;
 use App\Http\Api\MdRender;
 use App\Http\Api\UserApi;
+use Illuminate\Support\Facades\Log;
 
 class MqDiscussion extends Command
 {
@@ -121,7 +122,13 @@ class MqDiscussion extends Command
                                 break;
                         }
                         $result += $ok;
-                        $this->info("{$command}  ok={$ok}");
+                        $logMsg = "{$command}  ok={$ok}";
+                        if($ok === 0){
+                            $this->info($logMsg);
+                        }else{
+                            $this->error($logMsg);
+                        }
+
                         if($ok===0){
                             WebHook::where('id',$hook->id)->increment('success');
                         }else{
