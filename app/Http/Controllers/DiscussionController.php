@@ -12,6 +12,7 @@ use App\Http\Resources\DiscussionResource;
 use App\Http\Api\MdRender;
 use App\Http\Api\AuthApi;
 use App\Http\Api\Mq;
+use Illuminate\Support\Facades\Log;
 
 class DiscussionController extends Controller
 {
@@ -133,7 +134,8 @@ class DiscussionController extends Controller
     {
         $user = AuthApi::current($request);
         if(!$user){
-            return $this->error(__('auth.failed'));
+            Log::error('discussion store auth failed {request}',['request'=>$request]);
+            return $this->error(__('auth.failed'),[401],401);
         }
         //
         // validate
