@@ -45,8 +45,7 @@ class WebHook{
     }
 
     private function send($url, $param){
-        Log::info('webhook send');
-        Log::info($param);
+        Log::info('[webhook send] ',$param);
         try{
             $response = Http::post($url, $param);
             if($response->successful()){
@@ -55,8 +54,7 @@ class WebHook{
                 return 1;
             }
         }catch(\Exception $e){
-            Log::error('webhook send fail');
-            Log::error($e);
+            Log::error('[webhook send fail]',$e);
             return 1;
         }
         return 0;
