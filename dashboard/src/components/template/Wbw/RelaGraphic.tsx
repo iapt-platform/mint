@@ -30,7 +30,7 @@ const RelaGraphicWidget = ({ wbwData }: IWidget) => {
                   .replaceAll("{", "")
                   .replaceAll("}", "")
               : "";
-            return `${relation.sour_id}(${relation.sour_spell}<br />${meaning}) --"${relation.relation}<br />${localName}"--> ${relation.dest_id}(${relation.dest_spell})\n`;
+            return `${relation.sour_id}(${relation.sour_spell}<br />${meaning}) --"${relation.relation}<br />${localName}"--> ${relation.dest_id}("${relation.dest_spell}")\n`;
           });
           return graphic.join("");
         } else {
