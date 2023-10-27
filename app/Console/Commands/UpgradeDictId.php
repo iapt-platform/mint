@@ -39,6 +39,9 @@ class UpgradeDictId extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $this->info($this->description);
         $user_dict_id = DictApi::getSysDict('community');
         if($user_dict_id){

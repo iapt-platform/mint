@@ -42,6 +42,9 @@ class UpgradeQuote extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $start = time();
         $channelId = ChannelApi::getSysChannel('_System_Quote_');
         if($channelId===false){

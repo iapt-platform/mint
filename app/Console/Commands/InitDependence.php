@@ -39,6 +39,9 @@ class InitDependence extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		#克隆依赖的数据仓库到本地
 		$depDir = $this->info(config("mint.path.dependence"));
 		foreach ($this->info(config("mint.dependence")) as $key => $value) {

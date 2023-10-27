@@ -38,6 +38,9 @@ class UpdateRelationTo extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $count=0;
         $all=0;
         foreach (Relation::select(['id','to'])->cursor() as $relation) {

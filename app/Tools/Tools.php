@@ -1,7 +1,16 @@
 <?php
 namespace App\Tools;
+use Illuminate\Support\Facades\Log;
 
 class Tools{
+    public static function isStop(){
+        if(file_exists(base_path('.stop'))){
+            Log::debug('.stop exists');
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     public static function getWordEn($strIn)
         {

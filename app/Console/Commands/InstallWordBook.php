@@ -40,6 +40,9 @@ class InstallWordBook extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$startTime = time();
 
 		$this->info("instert word in palibook ");

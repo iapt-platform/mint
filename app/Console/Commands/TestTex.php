@@ -39,6 +39,9 @@ class TestTex extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $tex = array();
         $content = <<<'EOF'
 % 导言区

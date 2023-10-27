@@ -21,8 +21,7 @@ class Mq{
             return $connection;
     }
     public static function publish(string $channelName, $message){
-                //一对一
-
+       //一对一
         try{
             Log::debug('mq start {channel} {message}',['channel'=>$channelName,'message'=>$message]);
             $host = config("queue.connections.rabbitmq.host");
@@ -111,7 +110,7 @@ class Mq{
                 try{
                     $result = $callback(json_decode($message->body));
                     if($result !== 0){
-                        throw new \Exception('error');
+                        throw new \Exception('task error');
                     }
                 }catch(\Exception $e){
                     // push to issues

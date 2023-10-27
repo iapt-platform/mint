@@ -87,6 +87,9 @@ class UpgradeDictDefaultMeaning extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $_word = $this->argument('word');
         # 获取字典中所有的语言
         $langInDict = UserDict::select('language')->groupBy('language')->get();

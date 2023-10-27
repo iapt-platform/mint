@@ -43,6 +43,9 @@ class UpgradeDictSysWbwExtract extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $user_dict_id = DictApi::getSysDict('community');
         if(!$user_dict_id){
             $this->error('没有找到 community 字典');

@@ -101,6 +101,9 @@ class InitSystemChannel extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $this->info("start");
         foreach ($this->channels as $key => $value) {
             # code...

@@ -39,6 +39,9 @@ class WebhookWechat extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $url = $this->argument('url');
         $title =  $this->argument('title');
         $content = $this->argument('message');

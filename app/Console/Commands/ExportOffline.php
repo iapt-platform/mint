@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class ExportOffline extends Command
 {
@@ -39,6 +40,9 @@ class ExportOffline extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $exportDir = storage_path('app/public/export/offline');
         if(!is_dir($exportDir)){
             $res = mkdir($exportDir,0700,true);
@@ -50,7 +54,7 @@ class ExportOffline extends Command
         $exportStop = $exportDir.'/.stop';
         $file = fopen($exportStop,'w');
         fclose($file);
-             
+
         //建表
         $this->info('create db');
         $this->call('export:create.db');
@@ -58,10 +62,11 @@ class ExportOffline extends Command
         //term
         $this->info('term');
         $this->call('export:term');
-        
+
         //导出channel
         $this->info('channel');
         $this->call('export:channel');
+        
         //tag
         $this->info('tag');
         $this->call('export:tag');
@@ -80,8 +85,14 @@ class ExportOffline extends Command
         $this->call('export:sentence',['--type'=>'original']);
 
         $this->info('zip');
+        
         $exportPath = 'app/public/export/offline';
         $exportFile = 'wikipali-offline-'.date("Y-m-d").'.db3';
+        Log::debug('zip file {filename} {format}',
+                    [
+                        'filename'=>$exportFile,
+                        'format'=>$this->argument('format')
+                    ]);
         switch ($this->argument('format')) {
             case '7z':
                 $zipFile = $exportFile . ".7z";
@@ -118,6 +129,11 @@ class ExportOffline extends Command
                     ];
         Cache::put('/offline/index',$info);
         unlink($exportStop);
+        Log::debug('zip file {filename} in {format} finished',
+                    [
+                        'filename'=>$exportFile,
+                        'format'=>$this->argument('format')
+                    ]);
         return 0;
     }
 }

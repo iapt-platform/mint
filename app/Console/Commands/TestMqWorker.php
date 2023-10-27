@@ -39,15 +39,17 @@ class TestMqWorker extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $exchange = 'router';
         $queue = 'hello';
         $consumerTag = 'consumer';
-
-        $connection = new AMQPStreamConnection(config("rabbitmq.host"),
-                                            config("rabbitmq.port"),
-                                            config("rabbitmq.user"),
-                                            config("rabbitmq.password"),
-                                            config("rabbitmq.virtual.host"));
+        $connection = new AMQPStreamConnection(config("queue.connections.rabbitmq.host"),
+                                            config("queue.connections.rabbitmq.port"),
+                                            config("queue.connections.rabbitmq.user"),
+                                            config("queue.connections.rabbitmq.password"),
+                                            config("queue.connections.rabbitmq.virtual_host"));
         $channel = $connection->channel();
 
         /*

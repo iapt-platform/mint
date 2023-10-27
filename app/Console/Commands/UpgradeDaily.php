@@ -40,6 +40,9 @@ class UpgradeDaily extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         Log::info('daily task start');
         $start = time();
 		if(app()->isLocal()==false){
@@ -52,10 +55,6 @@ class UpgradeDaily extends Command
 		}
         Log::info('wikipali: 每日统计后台任务开始执行');
         $message = "wikipali: 每日统计后台任务执行完毕。";
-        //巴利原文段落库目录结构改变时运行
-        //$this->call('upgrade:palitext');
-        #巴利段落标签
-        //$this->call('upgrade:palitexttag');
 
         //更新单词首选意思
         $this->call('upgrade:dict.default.meaning');
@@ -71,23 +70,6 @@ class UpgradeDaily extends Command
         $currTime = time();
         Log::info('社区术语表完毕');
 
-        /*
-        #译文进度
-        $this->call('upgrade:progress');
-        $time = time()-$currTime;
-        $message .= "progress:{$time}; ";
-        $currTime = time();
-
-        $this->call('upgrade:progress.chapter');
-        $time = time()-$currTime;
-        $message .= "progress.chapter:{$time}; ";
-        $currTime = time();
-
-        # 逐词译数据库分析
-        $this->call('upgrade:wbw.analyses');
-        $time = time()-$currTime;
-        $message .= "wbw.analyses:{$time}; ";
-*/
         # 导出离线数据
         $this->call('export:offline',['format'=>'lzma']);
         $time = time()-$currTime;

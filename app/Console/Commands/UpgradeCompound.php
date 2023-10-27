@@ -9,6 +9,7 @@ use App\Models\UserDict;
 use App\Tools\TurboSplit;
 use App\Http\Api\DictApi;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UpgradeCompound extends Command
 {
@@ -45,6 +46,9 @@ class UpgradeCompound extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         if(file_exists(base_path('.stop'))){
             $this->info('.stop exists');
             return 0;

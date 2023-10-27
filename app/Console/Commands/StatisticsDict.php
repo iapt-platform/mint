@@ -40,6 +40,9 @@ class StatisticsDict extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $file = "public/statistics/lookup-monthly.csv";
         Storage::disk('local')->put($file, "");
         #按月获取数据

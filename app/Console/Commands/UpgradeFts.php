@@ -42,7 +42,9 @@ class UpgradeFts extends Command
      */
     public function handle()
     {
-
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         if($this->option('content')){
             if(!empty($this->argument('para'))){
                 $para = explode('-',$this->argument('para'));

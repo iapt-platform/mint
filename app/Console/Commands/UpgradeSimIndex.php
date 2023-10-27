@@ -40,6 +40,9 @@ class UpgradeSimIndex extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $result = DB::select('select count(*) from (select sent1 from sent_sims where sim>0.5  group by sent1) T');
         $bar = $this->output->createProgressBar($result[0]->count);
         foreach (SentSim::selectRaw('sent1,count(*)')

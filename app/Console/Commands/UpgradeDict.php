@@ -215,6 +215,9 @@ class UpgradeDict extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$this->info("upgrade dict start");
 		$this->scandict(config("mint.path.dict_text"));
 		$this->info("upgrade dict done");

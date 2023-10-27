@@ -37,6 +37,9 @@ class UpgradeAt20230227 extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $this->call('init:system.channel');
         $this->call('init:system.dict');
         $this->call('upgrade:dict');

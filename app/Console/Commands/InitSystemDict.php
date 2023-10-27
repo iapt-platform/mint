@@ -72,6 +72,9 @@ class InitSystemDict extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $this->info("start");
         foreach ($this->dictionary as $key => $value) {
             # code...

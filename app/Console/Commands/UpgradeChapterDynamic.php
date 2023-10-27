@@ -42,6 +42,9 @@ class UpgradeChapterDynamic extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$this->info('upgrade:chapterdynamic start.');
 
         $startAt = time();

@@ -43,6 +43,9 @@ class MqPr extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $exchange = 'router';
         $queue = 'suggestion';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");

@@ -43,6 +43,9 @@ class UpgradeRelatedParagraph extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $this->info("upgrade related.paragraph");
 		$startTime = time();
         #删除目标数据库中数据

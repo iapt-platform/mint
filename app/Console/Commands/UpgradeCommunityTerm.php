@@ -44,6 +44,9 @@ class UpgradeCommunityTerm extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $lang = strtolower($this->argument('lang'));
         $langFamily = explode('-',$lang)[0];
         $localTerm = ChannelApi::getSysChannel(
@@ -81,12 +84,13 @@ class UpgradeCommunityTerm extends Command
                                         ->where('date_int','<=',date_timestamp_get(date_create($term->updated_at))*1000)
                                         ->sum('duration');
                 $iExp = (int)($exp/1000);
-                $noteStrLen = mb_strlen($term->note);
+                $noteStrLen = $term->note? mb_strlen($term->note,'UTF-8'):0;
                 $paliStrLen = 0;
                 $tranStrLen = 0;
                 $noteWithoutPali = "";
-                if(!empty(trim($term->note))){
-                    #查找句子模版
+                if($term->note && !empty(trim($term->note))){
+                    //计算note得分
+                    //查找句子模版
                     $pattern = "/\{\{[0-9].+?\}\}/";
                     //获取去掉句子模版的剩余部分
                     $noteWithoutPali = preg_replace($pattern,"",$term->note);

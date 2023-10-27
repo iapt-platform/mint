@@ -19,7 +19,7 @@ class UpgradeDictSysRegular extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan upgrade:regular
      * @var string
      */
     protected $signature = 'upgrade:regular {word?} {--debug}';
@@ -47,6 +47,9 @@ class UpgradeDictSysRegular extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $dict_id = DictApi::getSysDict('system_regular');
         if(!$dict_id){
             $this->error('没有找到 system_regular 字典');

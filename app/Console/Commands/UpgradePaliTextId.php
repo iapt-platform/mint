@@ -40,6 +40,9 @@ class UpgradePaliTextId extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $this->info("upgrade pali text uuid");
         $startTime = time();
 

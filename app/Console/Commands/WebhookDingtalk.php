@@ -39,6 +39,9 @@ class WebhookDingtalk extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $url = $this->argument('url');
         $param = ["markdown"=> [
                         "title"=> $this->argument('title'),

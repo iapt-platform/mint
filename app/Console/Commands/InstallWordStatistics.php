@@ -40,6 +40,9 @@ class InstallWordStatistics extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$startTime = time();
 
 		$info = "instert wordstatistics ";

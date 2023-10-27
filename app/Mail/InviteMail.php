@@ -14,16 +14,22 @@ class InviteMail extends Mailable
 
     protected $uuid;
     protected $lang;
+    protected $dashboard_url;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(string $uuid,string $lang='en-US')
+    public function __construct(string $uuid,string $lang='en-US',string $dashboard=null)
     {
         //
         $this->uuid = $uuid;
         $this->lang = $lang;
+        if($dashboard && !empty($dashboard)){
+            $this->dashboard_url = $dashboard;
+        }else{
+            $this->dashboard_url = config('mint.server.dashboard_base_path');
+        }
     }
 
     /**
@@ -33,9 +39,10 @@ class InviteMail extends Mailable
      */
     public function build()
     {
+
         return $this->view('emails.invite.'.$this->lang)
                     ->with([
-                        'url' => config('dashboard.url').'/anonymous/users/sign-up/'.$this->uuid,
+                        'url' => $this->dashboard_url.'/anonymous/users/sign-up/'.$this->uuid,
                     ]);
     }
 }

@@ -22,7 +22,7 @@ class ApiLog
         $response = $next($request);
         if (defined('LARAVEL_START'))
         {
-            $delay = round((microtime(true) - LARAVEL_START)*1000,2);
+            $delay = round((microtime(true) - LARAVEL_START)*1000.0);
             $api = [];
             $api[] = date("h:i:sa",LARAVEL_START);
             $api[] = $delay;

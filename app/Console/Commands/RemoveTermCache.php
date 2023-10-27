@@ -40,6 +40,9 @@ class RemoveTermCache extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $word = $this->argument('word');
         $channels = Channel::select('uid')->get();
         if(empty($word)){

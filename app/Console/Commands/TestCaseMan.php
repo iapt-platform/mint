@@ -40,6 +40,9 @@ class TestCaseMan extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$caseMan = new CaseMan();
         $case = $caseMan->Declension($this->argument('word'),'.n:base.','.nt.',0.5);
         print_r($case);

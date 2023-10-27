@@ -43,6 +43,9 @@ class InitCs6sentence extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$start = time();
         $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
         if($channelId === false){
