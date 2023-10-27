@@ -235,7 +235,9 @@ const WbwWordWidget = ({
           setShowRelationTool(false);
         }}
       >
-        {showRelationTool ? <WbwRelationAdd data={data} /> : undefined}
+        {showRelationTool && data.real.value ? (
+          <WbwRelationAdd data={data} />
+        ) : undefined}
         <WbwPali
           key="pali"
           data={wordData}
