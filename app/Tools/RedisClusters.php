@@ -9,7 +9,11 @@ class RedisClusters{
             return json_decode(Redis::get($key),true);
         }else{
             $valueOrg = $callback();
-            $value = json_encode($valueOrg,JSON_UNESCAPED_UNICODE);
+            if($valueOrg === null){
+                $value = null;
+            }else{
+                $value = json_encode($valueOrg,JSON_UNESCAPED_UNICODE);
+            }
             Redis::set($key,$value);
             Redis::expire($key,$expire);
             return $valueOrg;
