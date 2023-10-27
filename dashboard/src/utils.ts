@@ -1,6 +1,15 @@
 import { SortOrder } from "antd/lib/table/interface";
 import lodash from "lodash";
 
+export function dashboardBasePath(): string {
+  if (process.env.PUBLIC_URL.includes("http")) {
+    //for CDN
+    return process.env.PUBLIC_URL;
+  } else {
+    return window.location.origin + process.env.PUBLIC_URL;
+  }
+}
+
 export function fullUrl(url: string): string {
   if (process.env.PUBLIC_URL.includes("http")) {
     //for CDN
