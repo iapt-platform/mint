@@ -52,6 +52,7 @@ class MqDiscussion extends Command
         $exchange = 'router';
         $queue = 'discussion';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
+        Log::info("discussion worker start . Waiting for {$queue}. ");
         Mq::worker($exchange,$queue,function ($message){
             Log::info('mq discussion start {message}',['message'=>json_encode($message,JSON_UNESCAPED_UNICODE)]);
             $result = 0;

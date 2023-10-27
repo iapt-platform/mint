@@ -46,6 +46,7 @@ class ExportChapter extends Command
      */
     public function handle()
     {
+        Log::debug('task export offline chapter-table start');
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
@@ -175,6 +176,7 @@ class ExportChapter extends Command
             $this->error($data['code'].'-'.$data['message']);
         }
 
+        Log::debug('task export offline chapter-table finished');
         return 0;
     }
 }

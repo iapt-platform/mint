@@ -40,10 +40,11 @@ class ExportTagmap extends Command
      */
     public function handle()
     {
+        Log::debug('task: export offline tagmap-table start');
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
-        $exportFile = storage_path('app/public/export/offline/sentence-'.date("Y-m-d").'.db3');
+        $exportFile = storage_path('app/public/export/offline/wikipali-offline-'.date("Y-m-d").'.db3');
         $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
@@ -68,6 +69,7 @@ class ExportTagmap extends Command
         }
         $dbh->commit();
         $bar->finish();
+        Log::debug('task: export offline tagmap-table finished');
         return 0;
     }
 }

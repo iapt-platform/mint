@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ExportCreateDb extends Command
 {
@@ -38,12 +39,13 @@ class ExportCreateDb extends Command
      */
     public function handle()
     {
+        Log::debug('task export offline create-db start');
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
         $sqlPath = database_path('export/sentence.sql');
         $exportDir = storage_path('app/public/export/offline');
-        $exportFile = $exportDir.'/sentence-'.date("Y-m-d").'.db3';
+        $exportFile = $exportDir.'/wikipali-offline-'.date("Y-m-d").'.db3';
         $file = fopen($exportFile,'w');
         fclose($file);
         $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
@@ -55,6 +57,7 @@ class ExportCreateDb extends Command
         foreach ($_arr as $_value) {
             $dbh->query($_value . ';');
         }
+        Log::debug('task export offline create-db finished');
         return 0;
     }
 }

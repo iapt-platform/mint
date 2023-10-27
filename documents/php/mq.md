@@ -4,9 +4,10 @@ all of workers in app/Console/Commands
 
 **run**: `php artisan <worker-name>`
 
-workers name :
+```bash
+php artisan mq:discussion
+php artisan mq:pr
+php artisan mq:progress
+php artisan mq:wbw.analyses
+```
 
-1. mq:discussion
-2. mq:pr
-3. mq:progress
-4. mq:wbw.analyses
