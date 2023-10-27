@@ -88,7 +88,7 @@ class ExportOffline extends Command
         
         $exportPath = 'app/public/export/offline';
         $exportFile = 'wikipali-offline-'.date("Y-m-d").'.db3';
-        Log::debug('zip db file {filename} {format}',
+        Log::debug('zip file {filename} {format}',
                     [
                         'filename'=>$exportFile,
                         'format'=>$this->argument('format')
@@ -129,6 +129,11 @@ class ExportOffline extends Command
                     ];
         Cache::put('/offline/index',$info);
         unlink($exportStop);
+        Log::debug('zip file {filename} in {format} finished',
+                    [
+                        'filename'=>$exportFile,
+                        'format'=>$this->argument('format')
+                    ]);
         return 0;
     }
 }
