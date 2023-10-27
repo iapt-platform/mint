@@ -51,6 +51,7 @@ class CacheDictPreference extends Command
         $count = DB::select('SELECT count(*) from (
                      SELECT word,language from user_dicts group by word,language) T');
         $bar = $this->output->createProgressBar($count[0]->count);
+        $count = 0;
         foreach ($words as $key => $word) {
             $meaning = UserDict::where('word',$word->word)
                 ->where('language',$word->language)
@@ -63,8 +64,11 @@ class CacheDictPreference extends Command
                 Cache::put("{$prefix}/{$word->word}/{$word->language}",$m[0]);
             }
             $bar->advance();
-            if(\App\Tools\Tools::isStop()){
-                return 0;
+            $count++;
+            if($count%1000 === 0){
+                if(\App\Tools\Tools::isStop()){
+                    return 0;
+                }
             }
         }
         $bar->finish();
