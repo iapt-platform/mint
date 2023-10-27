@@ -46,6 +46,7 @@ class ExportChapter extends Command
      */
     public function handle()
     {
+        Log::debug('task export offline chapter-table start');
         $book = $this->argument('book');
         $para = $this->argument('para');
         $channelId = $this->argument('channel');
@@ -172,6 +173,7 @@ class ExportChapter extends Command
             $this->error($data['code'].'-'.$data['message']);
         }
 
+        Log::debug('task export offline chapter-table finished');
         return 0;
     }
 }

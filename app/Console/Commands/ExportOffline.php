@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class ExportOffline extends Command
 {
@@ -62,6 +63,7 @@ class ExportOffline extends Command
         //导出channel
         $this->info('channel');
         $this->call('export:channel');
+        
         //tag
         $this->info('tag');
         $this->call('export:tag');
@@ -80,8 +82,14 @@ class ExportOffline extends Command
         $this->call('export:sentence',['--type'=>'original']);
 
         $this->info('zip');
+        
         $exportPath = 'app/public/export/offline';
         $exportFile = 'wikipali-offline-'.date("Y-m-d").'.db3';
+        Log::debug('zip db file {filename} {format}',
+                    [
+                        'filename'=>$exportFile,
+                        'format'=>$this->argument('format')
+                    ]);
         switch ($this->argument('format')) {
             case '7z':
                 $zipFile = $exportFile . ".7z";

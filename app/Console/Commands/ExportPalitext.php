@@ -40,7 +40,9 @@ class ExportPalitext extends Command
      */
     public function handle()
     {
-        $exportFile = storage_path('app/public/export/offline/sentence-'.date("Y-m-d").'.db3');
+        Log::debug('task export offline palitext-table start');
+
+        $exportFile = storage_path('app/public/export/offline/wikipali-offline-'.date("Y-m-d").'.db3');
         $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
@@ -76,6 +78,7 @@ class ExportPalitext extends Command
         }
         $dbh->commit();
         $bar->finish();
+        Log::debug('task: export offline palitext-table finished');
 
         return 0;
     }

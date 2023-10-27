@@ -44,6 +44,7 @@ class ExportSentence extends Command
      */
     public function handle()
     {
+        Log::debug('task export offline sentence-table start');
         $channels = [];
         $channel_id = $this->option('channel');
         if($channel_id){
@@ -68,7 +69,7 @@ class ExportSentence extends Command
         }
 
 
-        $exportFile = storage_path('app/public/export/offline/sentence-'.date("Y-m-d").'.db3');
+        $exportFile = storage_path('app/public/export/offline/wikipali-offline-'.date("Y-m-d").'.db3');
         $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
@@ -120,6 +121,7 @@ class ExportSentence extends Command
         }
         $dbh->commit();
         $bar->finish();
+        Log::debug('task export sentence finished');
         return 0;
     }
 }
