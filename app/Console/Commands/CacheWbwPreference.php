@@ -62,7 +62,7 @@ class CacheWbwPreference extends Command
                     [$this->option('editor')]);
             }
             $wbw = $wbw->groupBy(['wbw_word','type','editor_id'])->cursor();
-
+            $count = 0;
             $bar = $this->output->createProgressBar($count[0]->count);
             foreach ($wbw as $key => $value) {
                 $data = WbwAnalysis::where('wbw_word',$value->wbw_word)
@@ -72,6 +72,12 @@ class CacheWbwPreference extends Command
                                     ->value('data');
                 Cache::put("{$prefix}/{$value->wbw_word}/{$value->type}/{$value->editor_id}",$data);
                 $bar->advance();
+                $count++;
+                if($count%1000 === 0){
+                    if(\App\Tools\Tools::isStop()){
+                        return 0;
+                    }
+                }
             }
             $bar->finish();
         }
