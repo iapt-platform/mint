@@ -131,10 +131,17 @@ class TestRedis extends Command
         }else{
             $this->info("RedisClusters forget successful ");
         }
+        $null = null;
+		$value = RedisClusters::remember($key,2,function() use($null){
+			return $null;
+		});
+        $this->info("null=".$value);
+        RedisClusters::forget($key);
         $value1 = ['data'=>'cache-key-clusters'];
 		$value = RedisClusters::remember($key,2,function() use($value1){
 			return $value1;
 		});
+
 		if(RedisClusters::has($key)){
 			$this->info("{$key} exist value=");
             var_dump(RedisClusters::get($key));
