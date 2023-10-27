@@ -125,6 +125,9 @@ class UpgradeCompound extends Command
 
 		$bar = $this->output->createProgressBar($count[0]->count);
 		foreach ($words as $key => $word) {
+            if(\App\Tools\Tools::isStop()){
+                return 0;
+            }
             $bar->advance();
 			if($this->option('continue')){
                 //先看目前字典里有没有已经拆过的这个词
