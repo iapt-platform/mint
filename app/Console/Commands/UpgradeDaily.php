@@ -43,38 +43,40 @@ class UpgradeDaily extends Command
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
-        Log::info('daily task start');
+        $env = config('app.env');
+        Log::info('daily task start ',['app.env'=>$env]);
         $start = time();
 		if(app()->isLocal()==false){
+
 			$this->call('message:webhook',[
 				'listener' => 'dingtalk',
 				'url' => 'dingtalk1',
 				'title' => "后台任务",
-				'message' => " wikipali: 每日统计后台任务开始执行。",
+				'message' => " wikipali: 每日统计后台任务开始执行。app.env=".$env,
 			]);
 		}
-        Log::info('wikipali: 每日统计后台任务开始执行');
-        $message = "wikipali: 每日统计后台任务执行完毕。";
+        Log::info('wikipali: 每日统计后台任务开始执行{app.env}',['app.env'=>$env]);
+        $message = "wikipali: 每日统计后台任务执行完毕。".$env;
 
         //更新单词首选意思
         $this->call('upgrade:dict.default.meaning');
         $time = time()-$start;
         $message .= "dict.default.meaning:{$time}; ";
         $currTime = time();
-        Log::info('更新单词首选意思完毕');
+        Log::info('更新单词首选意思完毕'.$env);
 
         //社区术语表
         $this->call('upgrade:community.term',['lang'=>'zh-Hans']);
         $time = time()-$currTime;
         $message .= "community.term:{$time}; ";
         $currTime = time();
-        Log::info('社区术语表完毕');
+        Log::info('社区术语表完毕 {app.env}',['app.env'=>$env]);
 
         # 导出离线数据
         $this->call('export:offline',['format'=>'lzma']);
         $time = time()-$currTime;
         $message .= "export:offline:{$time}; ";
-        Log::info('导出离线数据完毕');
+        Log::info('导出离线数据完毕{app.env}',['app.env'=>$env]);
 
         $time = time()-$start;
         $message .= "总时间:{$time}; ";
@@ -84,7 +86,7 @@ class UpgradeDaily extends Command
 				'listener' => 'dingtalk',
 				'url' => 'dingtalk1',
 				'title' => "后台任务",
-				'message' => $message,
+				'message' => $message.' app.env='.$env,
 			]);
 			//发送dingding消息
 			$this->call('message:webhookarticlenew',[

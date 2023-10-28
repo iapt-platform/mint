@@ -8,6 +8,7 @@ use App\Models\ProgressChapter;
 use App\Models\Channel;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Tools\RedisClusters;
 
 class ExportChapterIndex extends Command
 {
@@ -63,7 +64,7 @@ class ExportChapterIndex extends Command
 
         $publicChannels = Channel::where('status',30)->select('uid')->get();
         $rows = ProgressChapter::whereIn('channel_id',$publicChannels)->count();
-        Cache::put("/export/chapter/count",$rows,3600*10);
+        RedisClusters::put("/export/chapter/count",$rows,3600*10);
         $bar = $this->output->createProgressBar($rows);
         foreach (ProgressChapter::whereIn('channel_id',$publicChannels)
                                 ->select(['uid','book','para',

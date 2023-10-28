@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Redis;
 
 class ExportOffline extends Command
 {
@@ -66,7 +68,7 @@ class ExportOffline extends Command
         //导出channel
         $this->info('channel');
         $this->call('export:channel');
-        
+
         //tag
         $this->info('tag');
         $this->call('export:tag');
@@ -85,7 +87,7 @@ class ExportOffline extends Command
         $this->call('export:sentence',['--type'=>'original']);
 
         $this->info('zip');
-        
+
         $exportPath = 'app/public/export/offline';
         $exportFile = 'wikipali-offline-'.date("Y-m-d").'.db3';
         Log::debug('zip file {filename} {format}',
@@ -109,7 +111,6 @@ class ExportOffline extends Command
         $zipFullFileName = storage_path($exportPath.'/'.$zipFile);
 
         shell_exec("cd ".storage_path($exportPath));
-        shell_exec("chmod 600 {$exportFullFileName}");
         if($this->argument('format')==='7z'){
             $command = "7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on {$zipFullFileName} {$exportFullFileName}";
         }else if($this->argument('format')==='lzma'){
@@ -123,13 +124,14 @@ class ExportOffline extends Command
         $info = array();
         $info[] = ['filename'=>$zipFile,
                    'create_at'=>date("Y-m-d H:i:s"),
-                   'chapter'=>Cache::get("/export/chapter/count"),
+                   'chapter'=>RedisClusters::get("/export/chapter/count"),
                    'filesize'=>filesize($zipFullFileName),
                    'min_app_ver'=>'1.3',
                     ];
-        Cache::put('/offline/index',$info);
+        RedisClusters::put('/offline/index',$info);
         unlink($exportStop);
-        Log::debug('zip file {filename} in {format} finished',
+
+        Log::debug('zip file {filename} in {format} saved.',
                     [
                         'filename'=>$exportFile,
                         'format'=>$this->argument('format')
