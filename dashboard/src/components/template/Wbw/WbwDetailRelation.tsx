@@ -214,7 +214,7 @@ const WbwDetailRelationWidget = ({ data, onChange, onAdd }: IWidget) => {
             <Select
               defaultValue={item.relation}
               placeholder={"请选择关系"}
-              clearIcon={true}
+              allowClear={item.is_new ? true : false}
               style={{ width: 180 }}
               onChange={(value: string) => {
                 if (item.is_new) {
