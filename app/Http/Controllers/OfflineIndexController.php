@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Log;
 
 class OfflineIndexController extends Controller
 {
@@ -15,8 +18,8 @@ class OfflineIndexController extends Controller
     public function index()
     {
         //
-        if(Cache::has('/offline/index')){
-            return Cache::get('/offline/index');
+        if(RedisClusters::has('/offline/index')){
+            return RedisClusters::get('/offline/index');
         }else{
             return [];
         }
@@ -36,12 +39,12 @@ class OfflineIndexController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $filename
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($filename)
     {
-        //
+
     }
 
     /**
