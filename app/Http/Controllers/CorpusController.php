@@ -887,7 +887,7 @@ class CorpusController extends Controller
 
 		#生成channel 数量列表
 		$sentId = "{$book}-{$para}-{$word_start}-{$word_end}";
-        $channelCount = CorpusController::sentCanReadCount($book,$para,$word_start,$word_end,$this->userUuid);
+        $channelCount = CorpusController::_sentCanReadCount($book,$para,$word_start,$word_end,$this->userUuid);
         $path = json_decode(PaliText::where('book',$book)->where('paragraph',$para)->value("path"),true);
         $sent["path"] = [];
         foreach ($path as $key => $value) {
@@ -903,12 +903,75 @@ class CorpusController extends Controller
 		return $sent;
 	}
 
+    public static function _sentCanReadCount($book,$para,$start,$end,$userUuid=null){
+        $keyCanRead="/channel/can-read/";
+        if($userUuid){
+            $keyCanRead .= $userUuid;
+        }else{
+            $keyCanRead .= 'guest';
+        }
+        $channelCanRead = RedisClusters::remember($keyCanRead,
+                            config('mint.cache.expire'),
+                            function() use($userUuid){
+                                return ChannelApi::getCanReadByUser($userUuid);
+                            });
+        $channels =  Sentence::where('book_id',$book)
+            ->where('paragraph',$para)
+            ->where('word_start',$start)
+            ->where('word_end',$end)
+            ->where('strlen','<>',0)
+            ->whereIn('channel_uid',$channelCanRead)
+            ->select('channel_uid')
+            ->groupBy('channel_uid')
+            ->get();
+        $channelList = [];
+        foreach ($channels as $key => $value) {
+            # code...
+            if(Str::isUuid($value->channel_uid)){
+                $channelList[] = $value->channel_uid;
+            }
+        }
+        $simId = PaliSentence::where('book',$book)
+                            ->where('paragraph',$para)
+                            ->where('word_begin',$start)
+                            ->where('word_end',$end)
+                            ->value('id');
+        if($simId){
+            $output["simNum"]=SentSimIndex::where('sent_id',$simId)->value('count');
+        }else{
+            $output["simNum"]=0;
+        }
+        $channelInfo = Channel::whereIn("uid",$channelList)->select('type')->get();
+        $output["tranNum"]=0;
+        $output["nissayaNum"]=0;
+        $output["commNum"]=0;
+        $output["originNum"]=0;
+
+        foreach ($channelInfo as $key => $value) {
+            # code...
+            switch($value->type){
+                case "translation":
+                    $output["tranNum"]++;
+                    break;
+                case "nissaya":
+                    $output["nissayaNum"]++;
+                    break;
+                case "commentary":
+                    $output["commNum"]++;
+                    break;
+                case "original":
+                    $output["originNum"]++;
+                    break;
+            }
+        }
+        return $output;
+    }
     /**
      * 获取某个句子的相关资源的句子数量
      */
     public static function sentCanReadCount($book,$para,$start,$end,$userUuid=null){
 		$sentId = "{$book}-{$para}-{$start}-{$end}";
-        $key = "/sentence/{$sentId}/channels/count";
+        $key = "/sentence/res-count/{$sentId}/";
         if($userUuid){
             $key .= $userUuid;
         }else{
@@ -916,69 +979,8 @@ class CorpusController extends Controller
         }
 		$channelCount = RedisClusters::remember($key,config('mint.cache.expire'),
                           function() use($book,$para,$start,$end,$userUuid){
-                            $keyCanRead="/channel/can-read/";
-                            if($userUuid){
-                                $keyCanRead .= $userUuid;
-                            }else{
-                                $keyCanRead .= 'guest';
-                            }
-                            $channelCanRead = RedisClusters::remember($keyCanRead,
-                                                config('mint.cache.expire'),
-                                                function() use($userUuid){
-                                                    return ChannelApi::getCanReadByUser($userUuid);
-                                                });
-			                $channels =  Sentence::where('book_id',$book)
-                                ->where('paragraph',$para)
-                                ->where('word_start',$start)
-                                ->where('word_end',$end)
-                                ->where('strlen','<>',0)
-                                ->whereIn('channel_uid',$channelCanRead)
-                                ->select('channel_uid')
-                                ->groupBy('channel_uid')
-                                ->get();
-            $channelList = [];
-            foreach ($channels as $key => $value) {
-                # code...
-                if(Str::isUuid($value->channel_uid)){
-                    $channelList[] = $value->channel_uid;
-                }
-            }
-            $simId = PaliSentence::where('book',$book)
-                                 ->where('paragraph',$para)
-                                 ->where('word_begin',$start)
-                                 ->where('word_end',$end)
-                                 ->value('id');
-            if($simId){
-                $output["simNum"]=SentSimIndex::where('sent_id',$simId)->value('count');
-            }else{
-                $output["simNum"]=0;
-            }
-            $channelInfo = Channel::whereIn("uid",$channelList)->select('type')->get();
-            $output["tranNum"]=0;
-            $output["nissayaNum"]=0;
-            $output["commNum"]=0;
-            $output["originNum"]=0;
-
-            foreach ($channelInfo as $key => $value) {
-                # code...
-                switch($value->type){
-                    case "translation":
-                        $output["tranNum"]++;
-                        break;
-                    case "nissaya":
-                        $output["nissayaNum"]++;
-                        break;
-                    case "commentary":
-                        $output["commNum"]++;
-                        break;
-                    case "original":
-                        $output["originNum"]++;
-                        break;
-                }
-            }
-			return $output;
-
-		});
+                            return CorpusController::_sentCanReadCount($book,$para,$start,$end,$userUuid);
+		                });
         return $channelCount;
     }
     private function markdownRender($input){
