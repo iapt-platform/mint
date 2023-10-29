@@ -249,11 +249,11 @@ export interface IChapterLangListResponse {
 }
 
 export interface ISentencePrRequest {
-  book: number;
-  para: number;
-  begin: number;
-  end: number;
-  channel: string;
+  book?: number;
+  para?: number;
+  begin?: number;
+  end?: number;
+  channel?: string;
   text: string;
 }
 export interface ISentencePrResponseData {
