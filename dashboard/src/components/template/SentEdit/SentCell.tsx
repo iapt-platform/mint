@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Divider } from "antd";
+import { Divider, message as AntdMessage } from "antd";
 
 import { ISentence } from "../SentEdit";
 import SentEditMenu from "./SentEditMenu";
@@ -18,6 +18,8 @@ import { nissayaBase } from "../Nissaya/NissayaMeaning";
 import { anchor, message } from "../../../reducers/discussion";
 import TextDiff from "../../general/TextDiff";
 import { sentSave as _sentSave } from "./SentCellEditable";
+import { IDeleteResponse } from "../../api/Article";
+import { delete_ } from "../../../request";
 
 interface IWidget {
   initValue?: ISentence;
@@ -29,6 +31,7 @@ interface IWidget {
   showDiff?: boolean;
   diffText?: string | null;
   onChange?: Function;
+  onDelete?: Function;
 }
 const SentCellWidget = ({
   initValue,
@@ -40,6 +43,7 @@ const SentCellWidget = ({
   showDiff = false,
   diffText,
   onChange,
+  onDelete,
 }: IWidget) => {
   const intl = useIntl();
   const [isEditMode, setIsEditMode] = useState(editMode);
@@ -95,6 +99,21 @@ const SentCellWidget = ({
     }
   }, [acceptPr, sentData, isPr]);
 
+  const deletePr = (id: string) => {
+    delete_<IDeleteResponse>(`/v2/sentpr/${id}`)
+      .then((json) => {
+        if (json.ok) {
+          AntdMessage.success("删除成功");
+          if (typeof onDelete !== "undefined") {
+            onDelete();
+          }
+        } else {
+          AntdMessage.error(json.message);
+        }
+      })
+      .catch((e) => console.log("Oops errors!", e));
+  };
+
   return (
     <div style={{ marginBottom: "8px", backgroundColor: bgColor }}>
       {isPr ? undefined : (
@@ -105,6 +124,7 @@ const SentCellWidget = ({
         />
       )}
       <SentEditMenu
+        isPr={isPr}
         data={sentData}
         onModeChange={(mode: string) => {
           if (mode === "edit") {
@@ -132,7 +152,8 @@ const SentCellWidget = ({
                   );
                 }
               });
-
+              break;
+            case "delete":
               break;
             default:
               break;
@@ -246,7 +267,11 @@ const SentCellWidget = ({
                 />
               )
             ) : showDiff ? (
-              <TextDiff content={sentData.content} oldContent={diffText} />
+              <TextDiff
+                showToolTip={false}
+                content={sentData.content}
+                oldContent={diffText}
+              />
             ) : (
               <MdView
                 style={{
@@ -267,6 +292,11 @@ const SentCellWidget = ({
               isPr={isPr}
               prOpen={prOpen}
               onPrClose={() => setPrOpen(false)}
+              onDelete={() => {
+                if (isPr && sentData.id) {
+                  deletePr(sentData.id);
+                }
+              }}
             />
           </div>
         ) : undefined}
