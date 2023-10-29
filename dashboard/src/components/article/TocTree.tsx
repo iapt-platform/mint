@@ -133,17 +133,19 @@ const TocTreeWidget = ({
   }, [treeData]);
 
   useEffect(() => {
-    if (selectedKeys) {
-      setSelected(selectedKeys);
-    }
+    setSelected(selectedKeys);
   }, [selectedKeys]);
+
+  useEffect(() => {
+    setExpanded(expandedKeys);
+  }, [expandedKeys]);
 
   console.log("selected", selected);
   return (
     <Tree
       treeData={tree}
       selectedKeys={selected}
-      expandedKeys={selected}
+      expandedKeys={expanded}
       autoExpandParent
       onExpand={(expandedKeys: Key[]) => {
         setExpanded(expandedKeys);
