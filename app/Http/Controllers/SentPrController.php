@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Http\Api\Mq;
 
-require_once __DIR__.'/../../../public/app/ucenter/function.php';
-
 class SentPrController extends Controller
 {
     /**
@@ -97,7 +95,7 @@ class SentPrController extends Controller
         //
         $user = AuthApi::current($request);
         if(!$user){
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),401,401);
         }
         $user_uid = $user['user_uid'];
 
@@ -113,26 +111,27 @@ class SentPrController extends Controller
 						->where('content',$data['text'])
 						->where('channel_uid',$data['channel'])
 						->exists();
-		if(!$exists){
-			#不存在，新建
-			$new = new SentPr();
-			$new->id = app('snowflake')->id();
-			$new->book_id = $data['book'];
-			$new->paragraph = $data['para'];
-			$new->word_start = $data['begin'];
-			$new->word_end = $data['end'];
-			$new->channel_uid = $data['channel'];
-			$new->editor_uid = $user_uid;
-			$new->content = $data['text'];
-			$new->language = Channel::where('uid',$data['channel'])->value('lang');
-			$new->status = 1;//未处理状态
-			$new->strlen = mb_strlen($data['text'],"UTF-8");
-			$new->create_time = time()*1000;
-			$new->modify_time = time()*1000;
-			$new->save();
-            Mq::publish('suggestion',new SentPrResource($new));
+        if($exists){
+            return $this->error("已经存在同样的修改建议",200,200);
+        }
 
-		}
+        #不存在，新建
+        $new = new SentPr();
+        $new->id = app('snowflake')->id();
+        $new->book_id = $data['book'];
+        $new->paragraph = $data['para'];
+        $new->word_start = $data['begin'];
+        $new->word_end = $data['end'];
+        $new->channel_uid = $data['channel'];
+        $new->editor_uid = $user_uid;
+        $new->content = $data['text'];
+        $new->language = Channel::where('uid',$data['channel'])->value('lang');
+        $new->status = 1;//未处理状态
+        $new->strlen = mb_strlen($data['text'],"UTF-8");
+        $new->create_time = time()*1000;
+        $new->modify_time = time()*1000;
+        $new->save();
+        Mq::publish('suggestion',new SentPrResource($new));
 
 		$robotMessageOk=false;
 		$webHookMessage="";
@@ -156,9 +155,7 @@ class SentPrController extends Controller
 			*/
 
 			//if(($data['book']==65 && $data['para']>=829 && $data['para']<=1306) || ($data['book']== 67 && $data['para'] >= 759 && $data['para'] <= 1152)){
-				$userinfo = new \UserInfo();
-
-				$username = $userinfo->getName($user_uid)['nickname'];
+				$username = 'nickname';
 				$palitext = PaliSentence::where('book',$data['book'])
 										->where('paragraph',$data['para'])
 										->where('word_begin',$data['begin'])
@@ -254,48 +251,48 @@ class SentPrController extends Controller
      * @param  \App\Models\SentPr  $sentPr
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SentPr $sentPr)
+    public function update(Request $request, string $id)
     {
         $user = AuthApi::current($request);
         if(!$user){
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),401,401);
         }
-        $user_uid = $user['user_uid'];
 
-		$sentPr = SentPr::where('id',$request->get('id'));
-		if($sentPr->value('editor_uid')==$user_uid){
-			$update = $sentPr->update([
-				"content"=>$request->get('text'),
-				"modify_time"=>time()*1000,
-			]);
-			if($update >= 0){
-				$data = SentPr::where('id',$request->get('id'))->first();
-				$data->id = sprintf("%d",$data->id);
-				return $this->ok($data);
-			}else{
-				return $this->error('没有更新');
-			}
-
-		}else{
-			return $this->error('not power');
-		}
+		$sentPr = SentPr::find($id);
+        if(!$sentPr){
+            return $this->error('no res');
+        }
+		if($sentPr->editor_uid !== $user['user_uid']){
+            return $this->error('not power',403,403);
+        }
+        $sentPr->content = $request->get('text');
+        $sentPr->modify_time = time()*1000;
+        $sentPr->save();
+        return $this->ok($sentPr);
 
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  string $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, string $id)
     {
         //
         $user = AuthApi::current($request);
         if(!$user){
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),401,401);
         }
 		$old = SentPr::where('id', $id)->first();
+        if(!$old){
+            return $this->error('no res');
+        }
+        //鉴权
+        if($old->editor_uid !== $user["user_uid"]){
+            return $this->error(__('auth.failed'),403,403);
+        }
 		$result = SentPr::where('id', $id)
 						->where('editor_uid', $user["user_uid"])
 						->delete();
@@ -309,7 +306,7 @@ class SentPrController extends Controller
 						->count();
 			return $this->ok($count);
 		}else{
-			return $this->error('not power');
+			return $this->error('not power',403,403);
 		}
     }
 }
