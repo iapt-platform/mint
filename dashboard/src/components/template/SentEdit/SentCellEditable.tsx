@@ -67,6 +67,7 @@ export const sentSave = (
 interface IWidget {
   data: ISentence;
   isPr?: boolean;
+  isCreatePr?: boolean;
   onSave?: Function;
   onClose?: Function;
   onCreate?: Function;
@@ -77,6 +78,7 @@ const SentCellEditableWidget = ({
   onClose,
   onCreate,
   isPr = false,
+  isCreatePr = false,
 }: IWidget) => {
   const intl = useIntl();
   const [value, setValue] = useState(data.content);
@@ -94,31 +96,56 @@ const SentCellEditableWidget = ({
     if (!value) {
       return;
     }
-    post<ISentencePrRequest, ISentencePrResponse>(`/v2/sentpr`, {
-      book: data.book,
-      para: data.para,
-      begin: data.wordStart,
-      end: data.wordEnd,
-      channel: data.channel.id,
-      text: value,
-    })
-      .then((json) => {
-        setSaving(false);
-
-        if (json.ok) {
-          message.success(intl.formatMessage({ id: "flashes.success" }));
-          if (typeof onCreate !== "undefined") {
-            onCreate();
-          }
-        } else {
-          message.error(json.message);
-        }
+    if (isCreatePr) {
+      post<ISentencePrRequest, ISentencePrResponse>(`/v2/sentpr`, {
+        book: data.book,
+        para: data.para,
+        begin: data.wordStart,
+        end: data.wordEnd,
+        channel: data.channel.id,
+        text: value,
       })
-      .catch((e) => {
-        setSaving(false);
-        console.error("catch", e);
-        message.error(e.message);
-      });
+        .then((json) => {
+          setSaving(false);
+
+          if (json.ok) {
+            message.success(intl.formatMessage({ id: "flashes.success" }));
+            if (typeof onCreate !== "undefined") {
+              onCreate();
+            }
+          } else {
+            message.error(json.message);
+          }
+        })
+        .catch((e) => {
+          setSaving(false);
+          console.error("catch", e);
+          message.error(e.message);
+        });
+    } else {
+      const url = `/v2/sentpr/${data.id}`;
+      console.log("url", url);
+      put<ISentencePrRequest, ISentencePrResponse>(url, {
+        text: value,
+      })
+        .then((json) => {
+          if (json.ok) {
+            message.success(intl.formatMessage({ id: "flashes.success" }));
+            if (typeof onSave !== "undefined") {
+              onSave();
+            }
+          } else {
+            message.error(json.message);
+          }
+        })
+        .finally(() => {
+          setSaving(false);
+        })
+        .catch((e) => {
+          console.error("catch", e);
+          message.error(e.message);
+        });
+    }
   };
 
   const save = () => {
