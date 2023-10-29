@@ -63,12 +63,21 @@ const Widget = () => {
         }}
       >
         <Affix offsetTop={0}>
-          <Article
-            active={true}
-            type={"article"}
-            articleId={parent}
-            mode="read"
-          />
+          <div
+            style={{
+              height: "100vh",
+              overflowY: "scroll",
+              paddingLeft: "0.5em",
+              paddingRight: "0.5em",
+            }}
+          >
+            <Article
+              active={true}
+              type={"article"}
+              articleId={parent}
+              mode="read"
+            />
+          </div>
         </Affix>
       </div>
     </div>

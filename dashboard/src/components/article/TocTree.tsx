@@ -23,13 +23,14 @@ export interface TreeNodeData {
 
 function tocGetTreeData(
   listData: ListNodeData[],
-  active = ""
+  active = "",
+  randomKey = true
 ): [TreeNodeData[] | undefined, IIdMap[]] {
   let treeData: TreeNodeData[] = [];
   let tocActivePath: TreeNodeData[] = [];
   let treeParents = [];
   let rootNode: TreeNodeData = {
-    key: randomString(),
+    key: randomKey ? randomString() : "0",
     id: "0",
     title: "root",
     level: 0,
@@ -43,7 +44,7 @@ function tocGetTreeData(
   for (let index = 0; index < listData.length; index++) {
     const element = listData[index];
     let newNode: TreeNodeData = {
-      key: randomString(),
+      key: randomKey ? randomString() : element.key,
       id: element.key,
       title: element.title,
       level: element.level,
@@ -104,11 +105,13 @@ interface IWidgetTocTree {
   treeData?: ListNodeData[];
   expandedKeys?: Key[];
   selectedKeys?: Key[];
+  randomKey?: boolean;
   onSelect?: Function;
 }
 
 const TocTreeWidget = ({
   treeData,
+  randomKey = true,
   expandedKeys,
   selectedKeys,
   onSelect,
@@ -120,23 +123,29 @@ const TocTreeWidget = ({
 
   useEffect(() => {
     if (treeData && treeData.length > 0) {
-      const [data, idMap] = tocGetTreeData(treeData);
+      const [data, idMap] = tocGetTreeData(treeData, "", randomKey);
       setTree(data);
       setKeyIdMap(idMap);
-      console.log("create tree", treeData.length);
+      console.log(" tree data", data);
     } else {
       setTree([]);
     }
   }, [treeData]);
 
-  useEffect(() => setSelected(selectedKeys), [selectedKeys]);
-  useEffect(() => setExpanded(expandedKeys), [expandedKeys]);
+  useEffect(() => {
+    setSelected(selectedKeys);
+  }, [selectedKeys]);
 
+  useEffect(() => {
+    setExpanded(expandedKeys);
+  }, [expandedKeys]);
+
+  console.log("selected", selected);
   return (
     <Tree
       treeData={tree}
-      expandedKeys={expanded}
       selectedKeys={selected}
+      expandedKeys={expanded}
       autoExpandParent
       onExpand={(expandedKeys: Key[]) => {
         setExpanded(expandedKeys);

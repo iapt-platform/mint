@@ -46,9 +46,10 @@ const PaliTextTocWidget = ({ book, para, channel, onSelect }: IWidget) => {
 
   return (
     <TocTree
+      randomKey={false}
       treeData={tocList}
-      expandedKeys={expandedKeys}
       selectedKeys={selectedKeys}
+      expandedKeys={expandedKeys}
       onSelect={(selectedKeys: Key[]) => {
         if (typeof onSelect !== "undefined") {
           onSelect(selectedKeys);
