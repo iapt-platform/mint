@@ -1,10 +1,12 @@
 import { ProList } from "@ant-design/pro-components";
-import { Space } from "antd";
+import { Space, Typography } from "antd";
 
 import { get } from "../../request";
 import User from "../auth/User";
 import { IUser } from "../auth/UserName";
 import TimeShow from "../general/TimeShow";
+
+const { Paragraph } = Typography;
 
 export interface ISentHistoryData {
   id: string;
@@ -83,7 +85,13 @@ const SentHistoryWidget = ({ sentId }: IWidget) => {
       }}
       metas={{
         title: {
-          dataIndex: "content",
+          render: (text, row, index, action) => {
+            return (
+              <Paragraph copyable={{ text: row.content }}>
+                {row.content}
+              </Paragraph>
+            );
+          },
         },
         avatar: {
           dataIndex: "image",
