@@ -120,7 +120,7 @@ const ArticleListWidget = ({
       icon: <ExclamationCircleOutlined />,
       title:
         intl.formatMessage({
-          id: "message.delete.sure",
+          id: "message.delete.confirm",
         }) +
         intl.formatMessage({
           id: "message.irrevocable",
@@ -195,9 +195,11 @@ const ArticleListWidget = ({
                 <>
                   <div key={1}>
                     <Typography.Link
-                      onClick={() => {
+                      onClick={(
+                        event: React.MouseEvent<HTMLElement, MouseEvent>
+                      ) => {
                         if (typeof onSelect !== "undefined") {
-                          onSelect(row.id, row.title);
+                          onSelect(row.id, row.title, event);
                         }
                       }}
                     >

@@ -100,6 +100,7 @@ export interface IArticleDataResponse {
   to?: number;
   mode?: string;
   paraId?: string;
+  parent_uid?: string;
   channels?: string;
 }
 export interface IArticleResponse {
@@ -121,6 +122,7 @@ export interface IArticleCreateRequest {
   lang: string;
   studio: string;
   anthologyId?: string;
+  parentId?: string;
 }
 
 export interface IAnthologyCreateRequest {

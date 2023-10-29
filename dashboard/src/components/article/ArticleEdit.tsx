@@ -36,6 +36,7 @@ interface IWidget {
   studioName?: string;
   articleId?: string;
   onReady?: Function;
+  onLoad?: Function;
   onChange?: Function;
 }
 
@@ -43,6 +44,7 @@ const ArticleEditWidget = ({
   studioName,
   articleId,
   onReady,
+  onLoad,
   onChange,
 }: IWidget) => {
   const intl = useIntl();
@@ -120,7 +122,12 @@ const ArticleEditWidget = ({
             mTitle = "无权访问";
           }
           if (typeof onReady !== "undefined") {
-            onReady(mTitle, mReadonly, res.data.studio?.realName);
+            onReady(
+              mTitle,
+              mReadonly,
+              res.data.studio?.realName,
+              res.data.parent_uid
+            );
           }
           return {
             uid: res.data.uid,
