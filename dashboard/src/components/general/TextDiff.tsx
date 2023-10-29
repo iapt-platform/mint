@@ -6,8 +6,13 @@ const { Text } = Typography;
 interface IWidget {
   content?: string | null;
   oldContent?: string | null;
+  showToolTip?: boolean;
 }
-const TextDiffWidget = ({ content, oldContent }: IWidget) => {
+const TextDiffWidget = ({
+  content,
+  oldContent,
+  showToolTip = true,
+}: IWidget) => {
   if (content) {
     if (oldContent) {
       const diff: Change[] = diffChars(oldContent, content);
@@ -24,7 +29,11 @@ const TextDiffWidget = ({ content, oldContent }: IWidget) => {
           </Text>
         );
       });
-      return <Tooltip title={content}>{diffResult}</Tooltip>;
+      return showToolTip ? (
+        <Tooltip title={content}>{diffResult}</Tooltip>
+      ) : (
+        <> {diffResult}</>
+      );
     } else {
       return <Text>{content}</Text>;
     }
