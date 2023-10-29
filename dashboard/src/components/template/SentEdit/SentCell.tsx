@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Divider, message as AntdMessage } from "antd";
+import { Divider, message as AntdMessage, Modal } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 import { ISentence } from "../SentEdit";
 import SentEditMenu from "./SentEditMenu";
@@ -154,6 +155,26 @@ const SentCellWidget = ({
               });
               break;
             case "delete":
+              Modal.confirm({
+                icon: <ExclamationCircleOutlined />,
+                title: intl.formatMessage({
+                  id: "message.delete.confirm",
+                }),
+
+                content: "",
+                okText: intl.formatMessage({
+                  id: "buttons.delete",
+                }),
+                okType: "danger",
+                cancelText: intl.formatMessage({
+                  id: "buttons.no",
+                }),
+                onOk() {
+                  if (isPr && sentData && sentData.id) {
+                    deletePr(sentData.id);
+                  }
+                },
+              });
               break;
             default:
               break;
