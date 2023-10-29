@@ -72,8 +72,9 @@ const SuggestionToolbarWidget = ({
                 onDelete();
               }
             }}
+            okType="danger"
             okText={intl.formatMessage({
-              id: `buttons.yes`,
+              id: `buttons.delete`,
             })}
             cancelText={intl.formatMessage({
               id: `buttons.no`,
