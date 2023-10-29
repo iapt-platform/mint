@@ -7,6 +7,7 @@ import {
   FieldTimeOutlined,
   LinkOutlined,
   FileMarkdownOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { ISentence } from "../SentEdit";
@@ -22,6 +23,7 @@ import { useIntl } from "react-intl";
 interface IWidget {
   data?: ISentence;
   children?: React.ReactNode;
+  isPr?: boolean;
   onModeChange?: Function;
   onConvert?: Function;
   onMenuClick?: Function;
@@ -29,6 +31,7 @@ interface IWidget {
 const SentEditMenuWidget = ({
   data,
   children,
+  isPr = false,
   onModeChange,
   onConvert,
   onMenuClick,
@@ -66,6 +69,7 @@ const SentEditMenuWidget = ({
         id: "buttons.timeline",
       }),
       icon: <FieldTimeOutlined />,
+      disabled: isPr,
     },
     {
       type: "divider",
@@ -74,11 +78,13 @@ const SentEditMenuWidget = ({
       key: "suggestion",
       label: "suggestion",
       icon: <HandOutlinedIcon />,
+      disabled: isPr,
     },
     {
       key: "discussion",
       label: "discussion",
       icon: <CommentOutlinedIcon />,
+      disabled: isPr,
     },
     {
       type: "divider",
@@ -87,13 +93,13 @@ const SentEditMenuWidget = ({
       key: "markdown",
       label: "To Markdown",
       icon: <FileMarkdownOutlined />,
-      disabled: !data || data.contentType === "markdown",
+      disabled: !data || data.contentType === "markdown" || isPr,
     },
     {
       key: "json",
       label: "To Json",
       icon: <JsonOutlinedIcon />,
-      disabled: !data || data.contentType === "json",
+      disabled: !data || data.contentType === "json" || isPr,
     },
     {
       type: "divider",
@@ -104,6 +110,15 @@ const SentEditMenuWidget = ({
         id: "buttons.copy.link",
       }),
       icon: <LinkOutlined />,
+    },
+    {
+      key: "delete",
+      label: intl.formatMessage({
+        id: "buttons.delete",
+      }),
+      icon: <DeleteOutlined />,
+      danger: true,
+      disabled: !isPr,
     },
   ];
 
