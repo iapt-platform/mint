@@ -9,11 +9,13 @@ import { post } from "../../request";
 import { useRef } from "react";
 import { IInviteData } from "../../pages/studio/invite/list";
 import LangSelect from "../general/LangSelect";
+import { dashboardBasePath } from "../../utils";
 
 interface IInviteRequest {
   email: string;
   lang: string;
   studio: string;
+  dashboard?: string;
 }
 interface IInviteResponse {
   ok: boolean;
@@ -45,6 +47,7 @@ const InviteCreateWidget = ({ studio, onCreate }: IWidget) => {
           email: values.email,
           lang: values.lang,
           studio: studio,
+          dashboard: dashboardBasePath(),
         });
         console.log(res);
         if (res.ok) {
