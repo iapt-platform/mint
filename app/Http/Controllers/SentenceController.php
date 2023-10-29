@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Tools\RedisClusters;
 use App\Http\Api\Mq;
 use App\Tools\OpsLog;
+use Illuminate\Support\Facades\Redis;
 
 class SentenceController extends Controller
 {
@@ -281,7 +282,10 @@ class SentenceController extends Controller
             }else{
                 $this->saveHistory($row->uid,$user["user_uid"],$sent['content']);
             }
-
+            //清除缓存
+            $sentId = "{$sent['book_id']}-{$sent['paragraph']}-{$sent['word_start']}-{$sent['word_end']}";
+            $hKey = "/sentence/res-count/{$sentId}/";
+            Redis::del($hKey);
         }
         if($sentFirst !== null){
             Mq::publish('progress',['book'=>$sentFirst['book_id'],
@@ -380,7 +384,10 @@ class SentenceController extends Controller
             $sent->pr_id = null;
         }
         $sent->save();
-
+        //清除缓存
+        $sentId = "{$sent['book_id']}-{$sent['paragraph']}-{$sent['word_start']}-{$sent['word_end']}";
+        $hKey = "/sentence/res-count/{$sentId}/";
+        Redis::del($hKey);
         OpsLog::debug($user["user_uid"],$sent);
 
         //清除cache

@@ -14,7 +14,6 @@ use App\Models\Discussion;
 use App\Models\PaliSentence;
 use App\Models\SentSimIndex;
 use Illuminate\Support\Str;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Tools\RedisClusters;
@@ -27,6 +26,7 @@ use App\Http\Api\AuthApi;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
 use App\Http\Resources\TocResource;
+use Illuminate\Support\Facades\Redis;
 
 class CorpusController extends Controller
 {
@@ -971,18 +971,21 @@ class CorpusController extends Controller
      */
     public static function sentCanReadCount($book,$para,$start,$end,$userUuid=null){
 		$sentId = "{$book}-{$para}-{$start}-{$end}";
-        $key = "/sentence/res-count/{$sentId}/";
+        $hKey = "/sentence/res-count/{$sentId}/";
         if($userUuid){
-            $key .= $userUuid;
+            $key = $userUuid;
         }else{
-            $key .= 'guest';
+            $key = 'guest';
         }
-		$channelCount = RedisClusters::remember($key,config('mint.cache.expire'),
-                          function() use($book,$para,$start,$end,$userUuid){
-                            return CorpusController::_sentCanReadCount($book,$para,$start,$end,$userUuid);
-		                });
-        return $channelCount;
+        if(Redis::hExists($hKey,$key)){
+            return json_decode(Redis::hGet($hKey,$key),true);
+        }else{
+            $channelCount = CorpusController::_sentCanReadCount($book,$para,$start,$end,$userUuid);
+            Redis::hSet($hKey,$key,json_encode($channelCount));
+            return $channelCount;
+        }
     }
+
     private function markdownRender($input){
 
     }
