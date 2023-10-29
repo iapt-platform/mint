@@ -1,5 +1,6 @@
-import { message, Skeleton, Switch } from "antd";
+import { Button, List, message, Skeleton, Space, Switch } from "antd";
 import { useEffect, useState } from "react";
+import { ReloadOutlined } from "@ant-design/icons";
 
 import { get } from "../../../request";
 import { ISuggestionListResponse } from "../../api/Suggestion";
@@ -86,27 +87,42 @@ const SuggestionListWidget = ({
         <Skeleton />
       ) : (
         <>
-          <div style={{ textAlign: "right" }}>
-            {"文本比对"}
-            <Switch
-              size="small"
-              defaultChecked
-              onChange={(checked) => setShowDiff(checked)}
-            />
-          </div>
-          {sentData.length > 0
-            ? sentData.map((item, id) => {
-                return (
-                  <SentCell
-                    value={item}
-                    key={id}
-                    isPr={true}
-                    showDiff={showDiff}
-                    diffText={content}
+          <List
+            header={
+              <div style={{ textAlign: "right" }}>
+                <Space>
+                  <Button
+                    type="link"
+                    size="small"
+                    icon={<ReloadOutlined />}
+                    onClick={() => load()}
+                  ></Button>
+                  {"文本比对"}
+                  <Switch
+                    size="small"
+                    defaultChecked
+                    onChange={(checked) => setShowDiff(checked)}
                   />
-                );
-              })
-            : "没有修改建议"}
+                </Space>
+              </div>
+            }
+            itemLayout="vertical"
+            size="small"
+            dataSource={sentData}
+            renderItem={(item, id) => (
+              <List.Item>
+                <SentCell
+                  value={item}
+                  key={id}
+                  isPr={true}
+                  showDiff={showDiff}
+                  diffText={content}
+                  onDelete={() => load()}
+                  onChange={() => load()}
+                />
+              </List.Item>
+            )}
+          />
         </>
       )}
     </>

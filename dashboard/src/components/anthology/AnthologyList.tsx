@@ -79,7 +79,7 @@ const AnthologyListWidget = ({
       icon: <ExclamationCircleOutlined />,
       title:
         intl.formatMessage({
-          id: "message.delete.sure",
+          id: "message.delete.confirm",
         }) +
         intl.formatMessage({
           id: "message.irrevocable",
