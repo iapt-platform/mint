@@ -17,7 +17,13 @@ class Greeter extends \Mint\Morus\V1\MarkdownStub
     }
 }
 
-$port = 9999;
+$param = getopt('', ['port']);
+print_r($param);
+
+if(!isset($param['port'])){
+    echo 'parameter port is required. --port=xxx  ';
+}
+$port = $param['port'];
 $server = new \Grpc\RpcServer();
 $server->addHttp2Port('0.0.0.0:' . $port);
 $server->handle(new Greeter());
