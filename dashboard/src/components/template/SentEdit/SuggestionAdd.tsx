@@ -34,6 +34,7 @@ const SuggestionAddWidget = ({ data, onCreate }: IWidget) => {
           <SentCellEditable
             data={sentData}
             isPr={true}
+            isCreatePr={true}
             onClose={() => {
               setIsEditMode(false);
             }}
