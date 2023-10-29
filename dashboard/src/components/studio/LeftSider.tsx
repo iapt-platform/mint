@@ -202,16 +202,23 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
 
   return (
     <Affix offsetTop={0}>
-      <Sider width={200} breakpoint="lg" className="site-layout-background">
-        <Menu
-          theme="light"
-          onClick={onClick}
-          defaultSelectedKeys={[selectedKeys]}
-          defaultOpenKeys={["basic", "advance", "collaboration"]}
-          mode="inline"
-          items={items}
-        />
-      </Sider>
+      <div
+        style={{
+          height: "100vh",
+          overflowY: "scroll",
+        }}
+      >
+        <Sider width={200} breakpoint="lg" className="site-layout-background">
+          <Menu
+            theme="light"
+            onClick={onClick}
+            defaultSelectedKeys={[selectedKeys]}
+            defaultOpenKeys={["basic", "advance", "collaboration"]}
+            mode="inline"
+            items={items}
+          />
+        </Sider>
+      </div>
     </Affix>
   );
 };
