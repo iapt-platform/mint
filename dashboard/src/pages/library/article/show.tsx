@@ -48,6 +48,7 @@ import { TResType } from "../../../components/discussion/DiscussionListCard";
 import { modeChange } from "../../../reducers/article-mode";
 import SearchButton from "../../../components/general/SearchButton";
 import ToStudio from "../../../components/auth/ToStudio";
+import { currentUser as _currentUser } from "../../../reducers/current-user";
 
 /**
  * type:
@@ -73,6 +74,7 @@ const Widget = () => {
     useState<IArticleDataResponse>();
 
   const paraChange = useAppSelector(paraParam);
+  const user = useAppSelector(_currentUser);
 
   useEffect(() => {
     if (typeof paraChange === "undefined") {
@@ -154,19 +156,35 @@ const Widget = () => {
           <div style={{ display: "flex" }} key="middle"></div>
           <div style={{ display: "flex" }} key="right">
             {type === "article" && loadedArticleData ? (
-              <Button
-                ghost
-                onClick={(event) => {
-                  const url = `/studio/${loadedArticleData.studio?.realName}/article/${loadedArticleData.uid}/edit`;
-                  if (event.ctrlKey || event.metaKey) {
-                    window.open(fullUrl(url), "_blank");
-                  } else {
-                    navigate(url);
-                  }
-                }}
-              >
-                Edit
-              </Button>
+              <>
+                <Button
+                  ghost
+                  onClick={(event) => {
+                    const url = `/studio/${loadedArticleData.studio?.realName}/article/edit/${loadedArticleData.uid}`;
+                    if (event.ctrlKey || event.metaKey) {
+                      window.open(fullUrl(url), "_blank");
+                    } else {
+                      navigate(url);
+                    }
+                  }}
+                >
+                  Edit
+                </Button>
+                <Button
+                  disabled={user ? false : true}
+                  ghost
+                  onClick={(event) => {
+                    const url = `/studio/${user?.nickName}/article/create?parent=${loadedArticleData.uid}`;
+                    if (event.ctrlKey || event.metaKey) {
+                      window.open(fullUrl(url), "_blank");
+                    } else {
+                      navigate(url);
+                    }
+                  }}
+                >
+                  Fork
+                </Button>
+              </>
             ) : undefined}
             <SearchButton />
             <Divider type="vertical" />
