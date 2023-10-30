@@ -1,20 +1,24 @@
 import { Button, Divider, Dropdown, MenuProps, message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { fullUrl } from "../../utils";
 
 interface IWidgetParaHandleCtl {
   book: number;
   para: number;
+  mode?: string;
   channels?: string[];
   sentences: string[];
 }
 const ParaHandleCtl = ({
   book,
   para,
+  mode = "read",
   channels,
   sentences,
 }: IWidgetParaHandleCtl) => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const items: MenuProps["items"] = [
     {
       key: "solo",
@@ -30,8 +34,20 @@ const ParaHandleCtl = ({
     },
   ];
   const onClick: MenuProps["onClick"] = (e) => {
-    const channelQuery = channels?.join("_");
-    const url = `/article/para/${book}-${para}?mode=read&book=${book}&par=${para}&channel=${channelQuery}`;
+    /**
+     * TODO 临时的解决方案。以后应该从传参获取其他参数，然后reducer 通知更新。
+     * 因为如果是Article组件被嵌入其他页面。不能直接更新浏览器，而是应该更新Article组件内部
+     */
+    let url = `/article/para/${book}-${para}?book=${book}&par=${para}`;
+    let param: string[] = [];
+    searchParams.forEach((value, key) => {
+      if (key !== "book" && key !== "par") {
+        param.push(`${key}=${value}`);
+      }
+    });
+    if (param.length > 0) {
+      url += "&" + param.join("&");
+    }
     switch (e.key) {
       case "solo":
         navigate(url);
