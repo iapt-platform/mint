@@ -47,7 +47,7 @@ class ExportOffline extends Command
         }
         $exportDir = storage_path('app/public/export/offline');
         if(!is_dir($exportDir)){
-            $res = mkdir($exportDir,0700,true);
+            $res = mkdir($exportDir,0755,true);
             if(!$res){
                 Log::error('mkdir fail path='.$exportDir);
                 return 1;
