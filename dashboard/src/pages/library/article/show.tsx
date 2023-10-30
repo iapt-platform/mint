@@ -294,10 +294,17 @@ const Widget = () => {
                   anthologyId={searchParams.get("anthology")}
                   onSelect={(key: Key) => {
                     console.log("toc click", key);
-                    let url = `/article/${type}/${key}?`;
+                    const newType = type === "para" ? "chapter" : type;
+                    let url = `/article/${newType}/${key}?`;
                     let param: string[] = [];
-                    searchParams.forEach((value, key) => {
-                      param.push(`${key}=${value}`);
+                    searchParams.forEach((value, searchKey) => {
+                      if (type !== "para") {
+                        param.push(`${searchKey}=${value}`);
+                      } else {
+                        if (searchKey !== "book" && searchKey !== "par") {
+                          param.push(`${searchKey}=${value}`);
+                        }
+                      }
                     });
                     navigate(url + param.join("&"));
                     scrollToTop();
