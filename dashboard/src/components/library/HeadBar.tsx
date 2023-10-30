@@ -10,6 +10,7 @@ import SignInAvatar from "../auth/SignInAvatar";
 import ToStudio from "../auth/ToStudio";
 import ThemeSelect from "../general/ThemeSelect";
 import SearchButton from "../general/SearchButton";
+import { dashboardBasePath } from "../../utils";
 
 const { Header } = Layout;
 
@@ -73,7 +74,10 @@ export const mainMenuItems: MenuProps["items"] = [
   {
     label: (
       <a
-        href={`${process.env.REACT_APP_ASSETS_SERVER}/pali-handbook/zh-Hans/`}
+        href={
+          dashboardBasePath() +
+          `/anthology/0911697e-b8b2-43cf-afe3-f34a65e22bf0`
+        }
         target="_blank"
         rel="noreferrer"
       >
