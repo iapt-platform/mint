@@ -109,8 +109,6 @@
       </article>
 
       <div class="pa3 pa4-ns w-100 w-70-ns center">
-        <h1 class="flex-none">Recent Articles</h1>
-
         <section class="w-100 mw8">
           <div class="relative w-100 mb4">
             <article class="bb b--black-10">

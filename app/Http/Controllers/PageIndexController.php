@@ -29,7 +29,7 @@ class PageIndexController extends Controller
                     'link'=>'dict',
                 ],
             ];
-        return view('solarize',['nav'=>$nav,'title' => '巴 利 圣 典 文 库','subtitle' => '巴利圣典翻译计划欢迎您的参与']);
+        return view('ananke',['nav'=>$nav,'title' => '巴 利 圣 典 文 库','subtitle' => '巴利圣典翻译计划欢迎您的参与']);
     }
-    
+
 }
