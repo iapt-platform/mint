@@ -20,7 +20,7 @@
         REACT_APP_DOCUMENTS_SERVER: "{{ app_documents_server }}"
         REACT_APP_RPC_SERVER: "{{ app_rpc_server }}"
         REACT_APP_ASSETS_SERVER: "{{ app_assets_server }}"
-        REACT_APP_API_SERVER: "{{ app_api_server }}"
+        REACT_APP_API_SERVER: "https://{{ app_domain }}"
         REACT_ICP_CODE: "{{ app_icp_code }}"
         REACT_APP_QUESTIONNAIRE_LINK: "{{ app_questionnaire_link }}"
 
