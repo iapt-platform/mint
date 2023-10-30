@@ -49,6 +49,7 @@ import { modeChange } from "../../../reducers/article-mode";
 import SearchButton from "../../../components/general/SearchButton";
 import ToStudio from "../../../components/auth/ToStudio";
 import { currentUser as _currentUser } from "../../../reducers/current-user";
+import LoginAlert from "../../../components/auth/LoginAlert";
 
 /**
  * type:
@@ -320,6 +321,7 @@ const Widget = () => {
             key="Article"
             style={{ marginLeft: "auto", marginRight: "auto", width: 1100 }}
           >
+            {loadedArticleData ? <LoginAlert /> : undefined}
             <Article
               active={true}
               type={type as ArticleType}
