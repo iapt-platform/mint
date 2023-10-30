@@ -60,7 +60,7 @@ export const mainMenuItems: MenuProps["items"] = [
   {
     label: (
       <a
-        href={`${process.env.REACT_APP_ASSETS_SERVER}/help/zh-Hans/`}
+        href={`${process.env.REACT_APP_DOCUMENTS_SERVER}/help/zh-Hans/`}
         target="_blank"
         rel="noreferrer"
       >
