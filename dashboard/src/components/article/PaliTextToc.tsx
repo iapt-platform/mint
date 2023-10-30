@@ -46,7 +46,6 @@ const PaliTextTocWidget = ({ book, para, channel, onSelect }: IWidget) => {
 
   return (
     <TocTree
-      randomKey={false}
       treeData={tocList}
       selectedKeys={selectedKeys}
       expandedKeys={expandedKeys}
