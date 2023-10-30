@@ -130,6 +130,7 @@ class ExportOffline extends Command
                     ];
         RedisClusters::put('/offline/index',$info);
         unlink($exportStop);
+        unlink($exportFullFileName);
 
         Log::debug('zip file {filename} in {format} saved.',
                     [
