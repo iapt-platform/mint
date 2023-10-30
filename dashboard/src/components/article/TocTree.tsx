@@ -23,14 +23,13 @@ export interface TreeNodeData {
 
 function tocGetTreeData(
   listData: ListNodeData[],
-  active = "",
-  randomKey = true
+  active = ""
 ): [TreeNodeData[] | undefined, IIdMap[]] {
   let treeData: TreeNodeData[] = [];
   let tocActivePath: TreeNodeData[] = [];
   let treeParents = [];
   let rootNode: TreeNodeData = {
-    key: randomKey ? randomString() : "0",
+    key: randomString(),
     id: "0",
     title: "root",
     level: 0,
@@ -44,7 +43,7 @@ function tocGetTreeData(
   for (let index = 0; index < listData.length; index++) {
     const element = listData[index];
     let newNode: TreeNodeData = {
-      key: randomKey ? randomString() : element.key,
+      key: randomString(),
       id: element.key,
       title: element.title,
       level: element.level,
@@ -105,13 +104,11 @@ interface IWidgetTocTree {
   treeData?: ListNodeData[];
   expandedKeys?: Key[];
   selectedKeys?: Key[];
-  randomKey?: boolean;
   onSelect?: Function;
 }
 
 const TocTreeWidget = ({
   treeData,
-  randomKey = true,
   expandedKeys,
   selectedKeys,
   onSelect,
@@ -123,7 +120,7 @@ const TocTreeWidget = ({
 
   useEffect(() => {
     if (treeData && treeData.length > 0) {
-      const [data, idMap] = tocGetTreeData(treeData, "", randomKey);
+      const [data, idMap] = tocGetTreeData(treeData, "");
       setTree(data);
       setKeyIdMap(idMap);
       console.log(" tree data", data);
@@ -133,12 +130,36 @@ const TocTreeWidget = ({
   }, [treeData]);
 
   useEffect(() => {
-    setSelected(selectedKeys);
-  }, [selectedKeys]);
+    if (!keyIdMap) {
+      return;
+    }
+    const realKey = selectedKeys?.map((item) => {
+      const mapIndex = keyIdMap?.findIndex((value) => value.id === item);
+      if (mapIndex !== -1) {
+        return keyIdMap[mapIndex].key;
+      } else {
+        return "";
+      }
+    });
+    console.log("realKey", realKey);
+    setSelected(realKey);
+  }, [keyIdMap, selectedKeys]);
 
   useEffect(() => {
-    setExpanded(expandedKeys);
-  }, [expandedKeys]);
+    if (!keyIdMap) {
+      return;
+    }
+    const realKey = expandedKeys?.map((item) => {
+      const mapIndex = keyIdMap?.findIndex((value) => value.id === item);
+      if (mapIndex !== -1) {
+        return keyIdMap[mapIndex].key;
+      } else {
+        return "";
+      }
+    });
+    console.log("realKey", realKey);
+    setExpanded(realKey);
+  }, [expandedKeys, keyIdMap]);
 
   console.log("selected", selected);
   return (
