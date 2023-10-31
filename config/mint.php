@@ -24,6 +24,8 @@ return [
         'assets' => env('ASSETS_SERVER', "localhost:9999"),
 
         'dashboard_base_path' => env('DASHBOARD_BASE_PATH', "http://127.0.0.1:3000/my"),
+
+        'cdn_urls' => explode(',',env('CDN_URLS', "https://www.wikipali.cc/downloads")),
     ],
 
     'cache' => [

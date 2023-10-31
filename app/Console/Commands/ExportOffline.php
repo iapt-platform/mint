@@ -128,10 +128,13 @@ class ExportOffline extends Command
                     ]);
         $info = array();
         $url = array();
-        $url[] = [
-                'link'=>'https://www.wikipali.cc/downloads/'.$zipFile,
-                'hostname'=>'阿里云·中国',
-            ];
+        foreach (config('mint.server.cdn_urls') as $key => $cdn) {
+            $url[] = [
+                    'link' => $cdn . '/' . $zipFile,
+                    'hostname' =>'cdn-' . $key,
+                ];
+        }
+
         //s3
         Storage::put($zipFile, file_get_contents($zipFullFileName));
         $s3Link = Storage::url($zipFile);
