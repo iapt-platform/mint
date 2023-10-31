@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Cache;
 use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\App;
 
 class OfflineIndexController extends Controller
 {
@@ -19,7 +21,34 @@ class OfflineIndexController extends Controller
     {
         //
         if(RedisClusters::has('/offline/index')){
-            return RedisClusters::get('/offline/index');
+            $fileInfo = RedisClusters::get('/offline/index');
+            foreach ($fileInfo as $key => $file) {
+                $zipFile = $file['filename'];
+                $url = array();
+                foreach (config('mint.server.cdn_urls') as $key => $cdn) {
+                    $url[] = [
+                            'link' => $cdn . '/' . $zipFile,
+                            'hostname' =>'cdn-' . $key,
+                        ];
+                }
+                if (App::environment('local')) {
+                    $s3Link = Storage::url($zipFile);
+                }else{
+                    try{
+                        $s3Link = Storage::temporaryUrl($zipFile, now()->addDays(1));
+                    }catch(\Exception $e){
+                        Log::error('offline-index {Exception}',['exception'=>$e]);
+                        return [];
+                    }
+                }
+                Log::info('offline-index: link='.$s3Link);
+                $url[] = [
+                    'link'=>$s3Link,
+                    'hostname'=>'Amazon cloud storage(Hongkong)',
+                ];
+                $fileInfo[$key]['url'] = $url;
+            }
+            return $fileInfo;
         }else{
             return [];
         }

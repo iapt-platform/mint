@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\App;
 
 class ExportZip extends Command
 {
@@ -97,7 +98,17 @@ class ExportZip extends Command
 
         //s3
         Storage::put($zipFile, file_get_contents($zipFullFileName));
-        $s3Link = Storage::url($zipFile);
+
+        if (App::environment('local')) {
+            $s3Link = Storage::url($zipFile);
+        }else{
+            try{
+                $s3Link = Storage::temporaryUrl($zipFile, now()->addDays(1));
+            }catch(\Exception $e){
+                Log::error('export offline generate temporaryUrl fail {Exception}',['exception'=>$e]);
+                return 1;
+            }
+        }
         Log::info('export offline: link='.$s3Link);
         $url[] = [
             'link'=>$s3Link,
