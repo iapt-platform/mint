@@ -87,10 +87,10 @@ class ExportOffline extends Command
         $this->call('export:sentence',['--type'=>'original']);
 
         $this->info('zip');
-
+        Log::debug('export offline: db写入完毕 开始压缩');
         $exportPath = 'app/public/export/offline';
         $exportFile = 'wikipali-offline-'.date("Y-m-d").'.db3';
-        Log::debug('zip file {filename} {format}',
+        Log::debug('export offline: zip file {filename} {format}',
                     [
                         'filename'=>$exportFile,
                         'format'=>$this->argument('format')
@@ -119,16 +119,25 @@ class ExportOffline extends Command
             $command = "gzip -k -q --best -c {$exportFullFileName} > {$zipFullFileName}";
         }
         $this->info($command);
+        Log::debug('export offline: zip command:'.$command);
         shell_exec($command);
-
+        Log::debug('zip file {filename} in {format} saved.',
+                    [
+                        'filename'=>$exportFile,
+                        'format'=>$this->argument('format')
+                    ]);
         $info = array();
         $url = array();
         $url[] = [
                 'link'=>'https://www.wikipali.cc/downloads/'.$zipFile,
                 'hostname'=>'阿里云·中国',
             ];
+        //s3
+        Storage::put($zipFile, file_get_contents($zipFullFileName));
+        $s3Link = Storage::url($zipFile);
+        Log::info('export offline: link='.$s3Link);
         $url[] = [
-            'link'=>'https://assets.wikipali.org/downloads/'.$zipFile,
+            'link'=>$s3Link,
             'hostname'=>'Amazon cloud hongkong',
         ];
         $info[] = ['filename'=>$zipFile,
@@ -142,11 +151,7 @@ class ExportOffline extends Command
         unlink($exportStop);
         unlink($exportFullFileName);
 
-        Log::debug('zip file {filename} in {format} saved.',
-                    [
-                        'filename'=>$exportFile,
-                        'format'=>$this->argument('format')
-                    ]);
+
         return 0;
     }
 }
