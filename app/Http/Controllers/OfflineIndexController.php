@@ -38,7 +38,7 @@ class OfflineIndexController extends Controller
                         $s3Link = Storage::temporaryUrl($zipFile, now()->addDays(1));
                     }catch(\Exception $e){
                         Log::error('offline-index {Exception}',['exception'=>$e]);
-                        return [];
+                        continue;
                     }
                 }
                 Log::info('offline-index: link='.$s3Link);
@@ -48,7 +48,14 @@ class OfflineIndexController extends Controller
                 ];
                 $fileInfo[$key]['url'] = $url;
             }
-            return $fileInfo;
+            return response()->json($fileInfo,
+                                    200,
+                                    [
+                                        'Content-Type' => 'application/json;charset=UTF-8',
+                                        'Charset' => 'utf-8'
+                                    ],
+                                    JSON_UNESCAPED_UNICODE
+                                );
         }else{
             return [];
         }
