@@ -50,8 +50,8 @@ class MqWbwAnalyses extends Command
             $data = ['id'=>implode(',',$message)];
             $ok = $this->call('upgrade:wbw.analyses',$data);
             if($ok === 0){
-                $this->info("Received count=".count($data['id']).' ok='.$ok);
-                Log::debug('mq:wbw.analyses done count='.count($data['id']));
+                $this->info("Received count=".count($message).' ok='.$ok);
+                Log::debug('mq:wbw.analyses done count='.count($message));
             }else{
                 Log::error('mq:wbw.analyses',$data);
             }
