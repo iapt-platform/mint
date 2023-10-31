@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Http\Api\Mq;
+use Illuminate\Support\Facades\Log;
 
 class MqWbwAnalyses extends Command
 {
@@ -44,9 +45,16 @@ class MqWbwAnalyses extends Command
         $exchange = 'router';
         $queue = 'wbw-analyses';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
+        Log::debug("mq:wbw.analyses start.");
         Mq::worker($exchange,$queue,function ($message){
-            $ok = $this->call('upgrade:wbw.analyses',['id'=>implode(',',$message)]);
-            $this->info("Received count=".count($message).' ok='.$ok);
+            $data = ['id'=>implode(',',$message)];
+            $ok = $this->call('upgrade:wbw.analyses',$data);
+            if($ok === 0){
+                $this->info("Received count=".count($data['id']).' ok='.$ok);
+                Log::debug('mq:wbw.analyses done count='.count($data['id']));
+            }else{
+                Log::error('mq:wbw.analyses',$data);
+            }
             return $ok;
         });
 

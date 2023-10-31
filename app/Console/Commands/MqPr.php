@@ -9,6 +9,7 @@ use App\Models\WebHook;
 use App\Models\PaliSentence;
 use App\Tools\WebHook as WebHookSend;
 use App\Http\Api\MdRender;
+use Illuminate\Support\Facades\Log;
 
 class MqPr extends Command
 {
@@ -49,6 +50,7 @@ class MqPr extends Command
         $exchange = 'router';
         $queue = 'suggestion';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
+        Log::debug("mq:pr start.");
         Mq::worker($exchange,$queue,function ($message){
             /**生成消息内容 */
             $msgTitle = '修改建议';
@@ -93,9 +95,11 @@ class MqPr extends Command
                 }
                 $this->info("{$command}  ok={$ok}");
                 $result+=$ok;
-                if($ok===0){
+                if($ok === 0){
+                    Log::debug('mq:pr: send success {url}',['url'=>$hook->url]);
                     WebHook::where('id',$hook->id)->increment('success');
                 }else{
+                    Log::error('mq:pr: send fail {url}',['url'=>$hook->url]);
                     WebHook::where('id',$hook->id)->increment('fail');
                 }
             }
