@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Models\WbwAnalysis;
 use Illuminate\Support\Facades\DB;
+use App\Tools\RedisClusters;
 
 class CacheWbwPreference extends Command
 {
@@ -53,24 +54,24 @@ class CacheWbwPreference extends Command
              * 最新优先
              */
             $wbw = WbwAnalysis::select(['wbw_word','type','editor_id']);
-            $count = DB::select('SELECT count(*) from (
+            $wbwCount = DB::select('SELECT count(*) from (
                 SELECT wbw_word,type,editor_id from wbw_analyses group by wbw_word,type,editor_id) T');
             if($this->option('editor')){
                 $wbw = $wbw->where('editor_id',$this->option('editor'));
-                $count = DB::select('SELECT count(*) from (
+                $wbwCount = DB::select('SELECT count(*) from (
                     SELECT wbw_word,type,editor_id from wbw_analyses where editor_id=? group by wbw_word,type,editor_id) T',
                     [$this->option('editor')]);
             }
             $wbw = $wbw->groupBy(['wbw_word','type','editor_id'])->cursor();
+            $bar = $this->output->createProgressBar($wbwCount[0]->count);
             $count = 0;
-            $bar = $this->output->createProgressBar($count[0]->count);
             foreach ($wbw as $key => $value) {
                 $data = WbwAnalysis::where('wbw_word',$value->wbw_word)
                                     ->where('type',$value->type)
                                     ->where('editor_id',$value->editor_id)
                                     ->orderBy('updated_at','desc')
                                     ->value('data');
-                Cache::put("{$prefix}/{$value->wbw_word}/{$value->type}/{$value->editor_id}",$data);
+                RedisClusters::put("{$prefix}/{$value->wbw_word}/{$value->type}/{$value->editor_id}",$data);
                 $bar->advance();
                 $count++;
                 if($count%1000 === 0){
