@@ -66,13 +66,6 @@ class Mq{
         $vhost = config("queue.connections.rabbitmq.virtual_host");
         $connection = new AMQPStreamConnection($host,$port,$user,$password,$vhost);
 
-    /*
-        $connection = new AMQPStreamConnection(env("RABBITMQ_HOST"),
-                                            env("RABBITMQ_PORT"),
-                                            env("RABBITMQ_USER"),
-                                            env("RABBITMQ_PASSWORD"),
-                                            env("RABBITMQ_VIRTUAL_HOST"));
-*/
         $channel = $connection->channel();
 
  /*

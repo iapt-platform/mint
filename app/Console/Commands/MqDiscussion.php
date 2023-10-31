@@ -52,7 +52,7 @@ class MqDiscussion extends Command
         $exchange = 'router';
         $queue = 'discussion';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
-        Log::info("discussion worker start . Waiting for {$queue}. ");
+        Log::info("discussion worker start .");
         Mq::worker($exchange,$queue,function ($message){
             Log::info('mq discussion start {message}',['message'=>json_encode($message,JSON_UNESCAPED_UNICODE)]);
             $result = 0;
@@ -97,7 +97,7 @@ class MqDiscussion extends Command
                                   ->where('title',$articleTitle)
                                   ->value('content');
                     if(empty($tpl)){
-                        Log::error('模版不能为空',['tpl_title'=>$articleTitle]);
+                        Log::error('mq:pr 模版不能为空',['tpl_title'=>$articleTitle]);
                         return 1;
                     }
                     $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES,
@@ -139,9 +139,11 @@ class MqDiscussion extends Command
                             $this->error($logMsg);
                         }
 
-                        if($ok===0){
+                        if($ok === 0){
+                            Log::debug('mq:pr: success {url}',['url'=>$hook->url]);
                             WebHook::where('id',$hook->id)->increment('success');
                         }else{
+                            Log::error('mq:pr: success {url}',['url'=>$hook->url]);
                             WebHook::where('id',$hook->id)->increment('fail');
                         }
                     }
