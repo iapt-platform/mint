@@ -122,7 +122,17 @@ class ExportOffline extends Command
         shell_exec($command);
 
         $info = array();
+        $url = array();
+        $url[] = [
+                'link'=>'https://www.wikipali.cc/downloads/'.$zipFile,
+                'hostname'=>'阿里云·中国',
+            ];
+        $url[] = [
+            'link'=>'https://assets.wikipali.org/downloads/'.$zipFile,
+            'hostname'=>'Amazon cloud hongkong',
+        ];
         $info[] = ['filename'=>$zipFile,
+                    'url' => $url,
                    'create_at'=>date("Y-m-d H:i:s"),
                    'chapter'=>RedisClusters::get("/export/chapter/count"),
                    'filesize'=>filesize($zipFullFileName),
