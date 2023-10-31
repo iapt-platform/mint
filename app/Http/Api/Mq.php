@@ -102,6 +102,10 @@ class Mq{
             if($callback !== null){
                 try{
                     $result = $callback(json_decode($message->body));
+                    if(\App\Tools\Tools::isStop()){
+                        Log::debug('mq worker: .stop file exist. cancel the consumer.');
+                        $message->getChannel()->basic_cancel($message->getConsumerTag());
+                    }
                     if($result !== 0){
                         throw new \Exception('task error');
                     }
@@ -123,6 +127,7 @@ class Mq{
                 }
             }
             $message->ack();
+
 
             // Send a message with the string "quit" to cancel the consumer.
             /*
