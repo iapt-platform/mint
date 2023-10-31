@@ -167,8 +167,8 @@ class UpgradeProgressChapter extends Command
                     $chapterData->all_trans = $final->cp_len/$chapter_strlen;
                     $chapterData->public = $final->cp_len/$chapter_strlen;
                     $chapterData->progress = $final->cp_len/$chapter_strlen;
-                    $chapterData->title = mb_substr($title,0,255,"UTF-8");
-                    $chapterData->summary = mb_substr($summaryText,0,255,"UTF-8");
+                    $chapterData->title = $title? mb_substr($title,0,255,"UTF-8"):"";
+                    $chapterData->summary = $summaryText? mb_substr($summaryText,0,255,"UTF-8"):"";
                     $chapterData->created_at = $finalAt;
                     $chapterData->updated_at = $updateAt;
                     $chapterData->save();
