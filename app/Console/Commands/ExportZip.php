@@ -64,6 +64,8 @@ class ExportZip extends Command
         $exportFullFileName = storage_path($exportPath.'/'.$exportFile);
         if(!file_exists($exportFullFileName)){
             Log::error('export offline: no db file {filename}',['filename'=>$exportFullFileName]);
+            $this->error('export offline: no db file {filename}'.$exportFullFileName);
+            return 1;
         }
         $zipFullFileName = storage_path($exportPath.'/'.$zipFile);
 
