@@ -138,7 +138,7 @@ class ExportOffline extends Command
         Log::info('export offline: link='.$s3Link);
         $url[] = [
             'link'=>$s3Link,
-            'hostname'=>'Amazon cloud Hongkong',
+            'hostname'=>'Amazon cloud storage(Hongkong)',
         ];
         $info[] = ['filename'=>$zipFile,
                     'url' => $url,
