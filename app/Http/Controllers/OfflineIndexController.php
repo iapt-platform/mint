@@ -24,7 +24,7 @@ class OfflineIndexController extends Controller
             $fileInfo = RedisClusters::get('/offline/index');
             foreach ($fileInfo as $key => $file) {
                 $zipFile = $file['filename'];
-                $bucket = 'attachments-'.config('app.env');
+                $bucket = config('mint.attachments_bucket_name');
                 $tmpFile =  $bucket.'/'. $zipFile ;
                 $url = array();
                 foreach (config('mint.server.cdn_urls') as $key => $cdn) {

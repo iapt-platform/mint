@@ -26,7 +26,11 @@ return [
         'dashboard_base_path' => env('DASHBOARD_BASE_PATH', "http://127.0.0.1:3000/my"),
 
         'cdn_urls' => explode(',',env('CDN_URLS', "https://www.wikipali.cc/downloads")),
+
+
     ],
+
+    'attachments_bucket_name' => env('ATTACHMENTS_BUCKET_NAME', "attachments-next"),
 
     'cache' => [
         //这个值prod,staging无需设置
