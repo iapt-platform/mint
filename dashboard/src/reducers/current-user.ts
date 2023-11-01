@@ -44,6 +44,7 @@ export interface IUser {
 
 interface IState {
   payload?: IUser;
+  guest?: boolean;
 }
 
 const initialState: IState = {};
@@ -60,10 +61,13 @@ export const slice = createSlice({
       state.payload = undefined;
       remove();
     },
+    guest: (state, action: PayloadAction<boolean>) => {
+      state.guest = action.payload;
+    },
   },
 });
 
-export const { signIn, signOut } = slice.actions;
+export const { signIn, signOut, guest } = slice.actions;
 
 export const isRoot = (state: RootState): boolean =>
   state.currentUser.payload?.roles.includes(ROLE_ROOT) || false;
@@ -71,5 +75,7 @@ export const isAdministrator = (state: RootState): boolean =>
   state.currentUser.payload?.roles.includes(ROLE_ADMINISTRATOR) || false;
 export const currentUser = (state: RootState): IUser | undefined =>
   state.currentUser.payload;
+export const isGuest = (state: RootState): boolean | undefined =>
+  state.currentUser.guest;
 
 export default slice.reducer;
