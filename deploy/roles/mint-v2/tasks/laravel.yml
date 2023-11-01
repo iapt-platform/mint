@@ -114,14 +114,49 @@
     group: root
     mode: "0644"
 
-- name: upload discussion worker service
+- name: upload {{ action }} worker service
   become: true
   template:
-    src: v2/discussion-worker.service.j2
-    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-discussion-worker.service
+    src: v2/queue-worker.service.j2
+    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-{{ action }}-worker.service
     owner: root
     group: root
     mode: "0644"
+  vars:
+    action: "discussion"
+
+- name: upload {{ action }} worker service
+  become: true
+  template:
+    src: v2/queue-worker.service.j2
+    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-{{ action }}-worker.service
+    owner: root
+    group: root
+    mode: "0644"
+  vars:
+    action: "pr"
+
+- name: upload {{ action }} worker service
+  become: true
+  template:
+    src: v2/queue-worker.service.j2
+    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-{{ action }}-worker.service
+    owner: root
+    group: root
+    mode: "0644"
+  vars:
+    action: "progress"
+
+- name: upload {{ action }} worker service
+  become: true
+  template:
+    src: v2/queue-worker.service.j2
+    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-{{ action }}-worker.service
+    owner: root
+    group: root
+    mode: "0644"
+  vars:
+    action: "wbw.analyses"
 
 # - name: run db:migrate
 #   run_once: true
