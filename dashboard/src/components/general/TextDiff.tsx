@@ -30,9 +30,11 @@ const TextDiffWidget = ({
         );
       });
       return showToolTip ? (
-        <Tooltip title={content}>{diffResult}</Tooltip>
+        <Tooltip title={content}>
+          <div>{diffResult}</div>
+        </Tooltip>
       ) : (
-        <> {diffResult}</>
+        <div> {diffResult}</div>
       );
     } else {
       return <Text>{content}</Text>;
