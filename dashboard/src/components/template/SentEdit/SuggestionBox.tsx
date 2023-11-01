@@ -7,6 +7,7 @@ import { ISentence } from "../SentEdit";
 import Marked from "../../general/Marked";
 import { useAppSelector } from "../../../hooks";
 import { message } from "../../../reducers/discussion";
+import { useIntl } from "react-intl";
 
 interface ISuggestionWidget {
   data: ISentence;
@@ -23,6 +24,7 @@ const Suggestion = ({
   onPrChange,
 }: ISuggestionWidget) => {
   const [reload, setReload] = useState(false);
+  const intl = useIntl();
 
   return (
     <Space direction="vertical" style={{ width: "100%" }}>
@@ -47,7 +49,9 @@ const Suggestion = ({
                 }
               }}
             >
-              知道了
+              {intl.formatMessage({
+                id: "buttons.got.it",
+              })}
             </Button>
           }
           closable

@@ -74,6 +74,7 @@ const items = {
   "buttons.accept": "接受",
   "buttons.refuse": "拒绝",
   "buttons.use.as.guest": "以访客身份继续使用",
+  "buttons.got.it": "知道了",
 };
 
 export default items;
