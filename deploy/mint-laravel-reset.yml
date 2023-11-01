@@ -1,0 +1,56 @@
+- hosts: php_fpm
+  tasks:
+    - name: clone source code
+      ansible.builtin.git:
+        repo: "https://github.com/iapt-platform/mint.git"
+        dest: "{{ app_deploy_root }}/htdocs"
+        version: "laravel"
+
+    - name: "chown storage logs folder to {{ ansible_user }}"
+      become: true
+      ansible.builtin.file:
+        path: "{{ app_deploy_root }}/htdocs/storage/logs"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        recurse: true
+
+    - name: "chown bootstrap cache folder to {{ ansible_user }}"
+      become: true
+      ansible.builtin.file:
+        path: "{{ app_deploy_root }}/htdocs/bootstrap/cache"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        recurse: true
+
+    - name: remove composer.lock
+      become: true
+      ansible.builtin.file:
+        path: "{{ app_deploy_root }}/htdocs/composer.lock"
+        state: absent
+
+    - name: remove vendor folder
+      become: true
+      ansible.builtin.file:
+        path: "{{ app_deploy_root }}/htdocs/vendor"
+        state: absent
+
+    - name: auto-loader optimization for v2
+      ansible.builtin.shell:
+        cmd: composer install --optimize-autoloader --no-dev
+        chdir: "{{ app_deploy_root }}/htdocs"
+
+    - name: "chown storage logs folder to www-data"
+      become: true
+      ansible.builtin.file:
+        path: "{{ app_deploy_root }}/htdocs/storage/logs"
+        owner: "www-data"
+        group: "www-data"
+        recurse: true
+
+    - name: "chown bootstrap cache folder to www-data"
+      become: true
+      ansible.builtin.file:
+        path: "{{ app_deploy_root }}/htdocs/bootstrap/cache"
+        owner: "www-data"
+        group: "www-data"
+        recurse: true
