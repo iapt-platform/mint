@@ -2,3 +2,4 @@
 /include/mint/version.hpp
 /config.ini
 /tmp/
+/out/
