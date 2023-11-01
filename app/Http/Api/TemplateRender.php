@@ -210,6 +210,20 @@ class TemplateRender{
                     'tpl'=>'term',
                     ];
                 break;
+            case 'html':
+                if(isset($props["meaning"])){
+                    $key = 'term-'.$props["word"];
+                    $termHead = "<a href='#'>".$props['meaning']."</a>";
+                    if(isset($GLOBALS[$key])){
+                        $output = $termHead;
+                    }else{
+                        $GLOBALS[$key] = 1;
+                        $output = $termHead.'(<em>'.$props["word"].'</em>)';
+                    }
+                }else{
+                    $output = $props["word"];
+                }
+                break;
             case 'text':
                 if(isset($props["meaning"])){
                     $key = 'term-'.$props["word"];
@@ -274,6 +288,33 @@ class TemplateRender{
                     'props'=>base64_encode(\json_encode($props)),
                     'tpl'=>'note',
                     ];
+                break;
+            case 'html':
+                if(isset($GLOBALS['note_sn'])){
+                    $GLOBALS['note_sn']++;
+                }else{
+                    $GLOBALS['note_sn'] = 1;
+                    $GLOBALS['note'] = array();
+                }
+                $GLOBALS['note'][] = [
+                        'sn' => 1,
+                        'trigger' => $trigger,
+                        'content' => MdRender::render($props["note"],
+                                        $this->channel_id,
+                                        null,
+                                        'read',
+                                        'translation',
+                                        'markdown',
+                                        'html'
+                                    ),
+                        ];
+
+                $link="<a href='#footnote-".$GLOBALS['note_sn']."' name='note-".$GLOBALS['note_sn']."'>";
+                if(empty($trigger)){
+                    $output =  $link. "<sup>[" . $GLOBALS['note_sn'] . "]</sup></a>";
+                }else{
+                    $output = $link . $trigger . "</a>";
+                }
                 break;
             case 'text':
                 $output = $trigger;

@@ -289,6 +289,18 @@ class MdRender{
                     return '';
                 }
                 break;
+            case 'html':
+                if(isset($tplProps)){
+                    if(is_array($tplProps)){
+                        return '';
+                    }else{
+                        return $tplProps;
+                    }
+                }else{
+                    Log::error('tplProps undefine');
+                    return '';
+                }
+                break;
             case 'text':
                 if(isset($tplProps)){
                     if(is_array($tplProps)){
@@ -300,7 +312,6 @@ class MdRender{
                     Log::error('tplProps undefine');
                     return '';
                 }
-
                 break;
             case 'tex':
                 if(isset($tplProps)){
@@ -556,6 +567,10 @@ class MdRender{
                 $html = str_replace(['<strong>','</strong>','<em>','</em>'],['[%b%]','[%/b%]','[%i%]','[%/i%]'],$html);
                 $html = strip_tags($html);
                 $html = str_replace(['[%b%]','[%/b%]','[%i%]','[%/i%]'],['<b>','</b>','<i>','</i>'],$html);
+                $output = htmlspecialchars_decode($html,ENT_QUOTES);
+                break;
+            case 'html':
+                $html = str_replace(['<p>','</p>'],['',''],$html);
                 $output = htmlspecialchars_decode($html,ENT_QUOTES);
                 break;
         }
