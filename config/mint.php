@@ -30,7 +30,7 @@ return [
 
     ],
 
-    'attachments_bucket_name' => env('ATTACHMENTS_BUCKET_NAME', "attachments_bucket"),
+    'attachments_bucket_name' => env('ATTACHMENTS_BUCKET_NAME', "attachments-next"),
 
     'cache' => [
         //这个值prod,staging无需设置
