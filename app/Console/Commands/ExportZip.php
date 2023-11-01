@@ -112,6 +112,7 @@ class ExportZip extends Command
             try{
                 $link = Storage::temporaryUrl($tmpFile, now()->addDays(2));
             }catch(\Exception $e){
+                $this->error('generate temporaryUrl fail');
                 Log::error('export offline: generate temporaryUrl fail {Exception}',
                             [
                                 'exception'=>$e,
