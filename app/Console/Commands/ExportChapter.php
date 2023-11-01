@@ -12,15 +12,16 @@ use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
 use App\Tools\Export;
 use Illuminate\Support\Facades\Log;
+use App\Tools\RedisClusters;
 
 class ExportChapter extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan export:chapter 213 1913 a19eaf75-c63f-4b84-8125-1bce18311e23 --format=html
+     * php artisan export:chapter 213 1913 a19eaf75-c63f-4b84-8125-1bce18311e23 213-1913 --format=html
      * @var string
      */
-    protected $signature = 'export:chapter {book} {para} {channel} {--debug} {--format=tex}';
+    protected $signature = 'export:chapter {book} {para} {channel} {filename} {--debug} {--format=tex} ';
 
     /**
      * The console command description.
@@ -46,7 +47,8 @@ class ExportChapter extends Command
      */
     public function handle()
     {
-        Log::debug('task export offline chapter-table start');
+        $this->info('task export chapter start');
+        Log::debug('task export chapter start');
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
@@ -214,26 +216,28 @@ class ExportChapter extends Command
                 Storage::disk('local')->put($dir.$section['name'], $section['content']);
             }
         }
+        //save
         switch ($this->option('format')) {
             case 'tex':
                 $data = Export::ToPdf($tex);
                 if($data['ok']){
-                    $filename = "export/{$book}-{$para}-{$channelId}.pdf";
+                    $filename = "export/".$this->argument('filename');
                     $this->info($data['content-type']);
-                    Storage::disk('local')->put($filename, $data['data']);
+                    Storage::put($filename, $data['data']);
                 }else{
                     $this->error($data['code'].'-'.$data['message']);
                 }
                 break;
             case 'html':
-                $fHtml = "export/".$this->option('format')."/{$book}-{$para}-{$channelId}.html";
-                Storage::disk('local')->put($fHtml, '');
+                $filename = "export/".$this->argument('filename');
+                $file = array();
                 foreach ($tex as $key => $section) {
-                    Storage::disk('local')->append($fHtml, $section['content']);
+                    $file[] = $section['content'];
                 }
+                Storage::put($filename, implode('',$file));
                 break;
         }
-
+        RedisClusters::put('export/done/'.$this->argument('filename'),true,3600*24);
         Log::debug('task export offline chapter-table finished');
         return 0;
     }
