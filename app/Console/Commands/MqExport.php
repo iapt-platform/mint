@@ -45,10 +45,11 @@ class MqExport extends Command
         Log::debug("mq:progress start.");
         Mq::worker($exchange,$queue,function ($message){
             $data = [
-                        '--book'=>$message->book,
-                        '--para'=>$message->para,
-                        '--channel'=>$message->channel,
+                        'book'=>$message->book,
+                        'para'=>$message->para,
+                        'channel'=>$message->channel,
                         '--format'=>$message->format,
+                        'filename'=>$message->filename,
                     ];
             $ok = $this->call('export:chapter',$data);
             if($ok !== 0){
