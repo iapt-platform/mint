@@ -24,6 +24,8 @@ class OfflineIndexController extends Controller
             $fileInfo = RedisClusters::get('/offline/index');
             foreach ($fileInfo as $key => $file) {
                 $zipFile = $file['filename'];
+                $bucket = 'attachments-'.config('app.env');
+                $tmpFile =  "{$bucket}\{$zipFile}";
                 $url = array();
                 foreach (config('mint.server.cdn_urls') as $key => $cdn) {
                     $url[] = [
@@ -32,10 +34,10 @@ class OfflineIndexController extends Controller
                         ];
                 }
                 if (App::environment('local')) {
-                    $s3Link = Storage::url($zipFile);
+                    $s3Link = Storage::url($tmpFile);
                 }else{
                     try{
-                        $s3Link = Storage::temporaryUrl($zipFile, now()->addDays(1));
+                        $s3Link = Storage::temporaryUrl($tmpFile, now()->addDays(2));
                     }catch(\Exception $e){
                         Log::error('offline-index {Exception}',['exception'=>$e]);
                         continue;
