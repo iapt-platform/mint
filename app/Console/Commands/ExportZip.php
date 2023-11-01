@@ -99,7 +99,7 @@ class ExportZip extends Command
         $this->info('upload file='.$zipFile);
         Log::debug('export offline: upload file {filename}',['filename'=>$zipFile]);
 
-        $bucket = 'attachments-'.config('app.env');
+        $bucket = config('mint.attachments_bucket_name');
         $tmpFile =  $bucket.'/'. $zipFile ;
         Storage::put($tmpFile, file_get_contents($zipFullFileName));
 
