@@ -9,7 +9,8 @@ RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 RUN apt -y upgrade
 ENV PHP_VERSION="8.2"
 RUN apt install -y sudo wget unzip \
-    php${PHP_VERSION}-zip php${PHP_VERSION}-grpc php${PHP_VERSION}-protobuf
+    php${PHP_VERSION}-zip php${PHP_VERSION}-grpc php${PHP_VERSION}-protobuf \
+    php-grpc-all-dev
 RUN apt clean
 
 # https://getcomposer.org/download/
@@ -23,7 +24,7 @@ RUN chown deploy:deploy /opt/morus
 USER deploy
 
 COPY morus /opt/morus/
-# RUN cd /opt/morus && composer install
+RUN cd /opt/morus && composer install
 RUN echo "$(date -u +%4Y%m%d%H%M%S)" | sudo tee /VERSION
 
 WORKDIR /opt/morus

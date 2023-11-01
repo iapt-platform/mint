@@ -9,19 +9,7 @@ export WORKSPACE=$PWD
 
 # if [[ "$1" == "php" ]]
 #         then
-#             declare -a folders=(
-#                 "GPBMetadata"
-#                 "Mint"
-#                 "Palm"
-#             )
-#             for f in "${folders[@]}"
-#             do
-#                 local t=$target/$1/$f
-#                 if [ -d $t ]
-#                 then
-#                     rm -f $t
-#                 fi
-#             done            
+           
 #         else
             
 #         fi
@@ -63,6 +51,51 @@ function generate_grpc_web() {
         $WORKSPACE/protocols/*.proto
 }
 
+function generate_for_morus() {
+    echo "generate code for morus project"
+    local target=$WORKSPACE/morus/morus
+    local -a folders=(
+        "GPBMetadata"
+        "Mint"
+        "Palm"
+    )
+    for f in "${folders[@]}"
+    do
+        local t=$target/$f
+        if [ -d $t ]
+        then
+            rm -r $t
+        fi
+    done
+    $PROTOBUF_ROOT/bin/protoc -I $WORKSPACE/protocols \
+        -I $PROTOBUF_ROOT/include/google/protobuf \
+        --php_out=$target --grpc_out=$target \
+        --plugin=protoc-gen-grpc=$PROTOBUF_ROOT/bin/grpc_php_plugin \
+        $WORKSPACE/protocols/morus.proto
+}
+
+function generate_for_lily() {
+    echo "generate code for lily project"
+    local target=$WORKSPACE/lily/lily/palm
+    local -a files=(        
+        "lily_pb2.py"
+        "lily_pb2_grpc.py"
+    )
+    for f in "${files[@]}"
+    do
+        local t=$target/$f
+        if [ -f $t ]
+        then
+            rm $t
+        fi
+    done
+    $PROTOBUF_ROOT/bin/protoc -I $WORKSPACE/protocols \
+        -I $PROTOBUF_ROOT/include/google/protobuf \
+        --python_out=$target --grpc_out=$target \
+        --plugin=protoc-gen-grpc=$PROTOBUF_ROOT/bin/grpc_python_plugin \
+        $WORKSPACE/protocols/lily.proto
+    sed -i 's/import lily_/from . import lily_/g' $target/lily_pb2_grpc.py
+}
 
 # -----------------------------------------------------------------------------
 
@@ -79,6 +112,9 @@ for l in "${languages[@]}"
 do
     generate_grpc_by_lang $l
 done
+
+generate_for_morus
+generate_for_lily
 
 generate_grpc_web $WORKSPACE/../dashboard
 
