@@ -25,7 +25,7 @@ class OfflineIndexController extends Controller
             foreach ($fileInfo as $key => $file) {
                 $zipFile = $file['filename'];
                 $bucket = 'attachments-'.config('app.env');
-                $tmpFile =  "{$bucket}\{$zipFile}";
+                $tmpFile =  $bucket.'/'. $zipFile ;
                 $url = array();
                 foreach (config('mint.server.cdn_urls') as $key => $cdn) {
                     $url[] = [

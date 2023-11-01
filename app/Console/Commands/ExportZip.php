@@ -100,7 +100,7 @@ class ExportZip extends Command
         Log::debug('export offline: upload file {filename}',['filename'=>$zipFile]);
 
         $bucket = 'attachments-'.config('app.env');
-        $tmpFile =  "{$bucket}\{$zipFile}";
+        $tmpFile =  $bucket.'/'. $zipFile ;
         Storage::put($tmpFile, file_get_contents($zipFullFileName));
 
         $this->info('upload done file='.$tmpFile);
