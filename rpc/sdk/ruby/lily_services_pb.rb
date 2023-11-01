@@ -18,15 +18,27 @@ module Palm
           self.unmarshal_class_method = :decode
           self.service_name = 'palm.lily.v1.Excel'
 
-          rpc :Parse, ::Palm::Lily::V1::File, ::Palm::Lily::V1::ExcelModel
-          rpc :Generate, ::Palm::Lily::V1::ExcelModel, ::Palm::Lily::V1::File
+          rpc :Parse, ::Palm::Lily::V1::S3File, ::Palm::Lily::V1::ExcelModel
+          rpc :Generate, ::Palm::Lily::V1::ExcelModel, ::Palm::Lily::V1::S3File
+        end
+
+        Stub = Service.rpc_stub_class
+      end
+      module S3
+        class Service
+
+          include ::GRPC::GenericService
+
+          self.marshal_class_method = :encode
+          self.unmarshal_class_method = :decode
+          self.service_name = 'palm.lily.v1.S3'
+
+          rpc :GetFile, ::Palm::Lily::V1::S3GetFileRequest, ::Palm::Lily::V1::S3GetFileResponse
         end
 
         Stub = Service.rpc_stub_class
       end
       module Tex
-        # ----------------------------------------------------------------------------
-        #
         class Service
 
           include ::GRPC::GenericService
@@ -35,8 +47,8 @@ module Palm
           self.unmarshal_class_method = :decode
           self.service_name = 'palm.lily.v1.Tex'
 
-          rpc :ToPdf, ::Palm::Lily::V1::TexToRequest, ::Palm::Lily::V1::File
-          rpc :ToWord, ::Palm::Lily::V1::TexToRequest, ::Palm::Lily::V1::File
+          rpc :ToPdf, ::Palm::Lily::V1::TexToRequest, ::Palm::Lily::V1::S3File
+          rpc :ToWord, ::Palm::Lily::V1::TexToRequest, ::Palm::Lily::V1::S3File
         end
 
         Stub = Service.rpc_stub_class
@@ -52,7 +64,7 @@ module Palm
           self.unmarshal_class_method = :decode
           self.service_name = 'palm.lily.v1.Epub'
 
-          rpc :Build, ::Palm::Lily::V1::EpubBuildRequest, ::Palm::Lily::V1::File
+          rpc :Build, ::Palm::Lily::V1::EpubBuildRequest, ::Palm::Lily::V1::S3File
         end
 
         Stub = Service.rpc_stub_class

@@ -1,37 +1,7 @@
 import * as jspb from 'google-protobuf'
 
+import * as google_protobuf_duration_pb from 'google-protobuf/google/protobuf/duration_pb';
 
-
-export class File extends jspb.Message {
-  getContentType(): string;
-  setContentType(value: string): File;
-  hasContentType(): boolean;
-  clearContentType(): File;
-
-  getPayload(): Uint8Array | string;
-  getPayload_asU8(): Uint8Array;
-  getPayload_asB64(): string;
-  setPayload(value: Uint8Array | string): File;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): File.AsObject;
-  static toObject(includeInstance: boolean, msg: File): File.AsObject;
-  static serializeBinaryToWriter(message: File, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): File;
-  static deserializeBinaryFromReader(message: File, reader: jspb.BinaryReader): File;
-}
-
-export namespace File {
-  export type AsObject = {
-    contentType?: string,
-    payload: Uint8Array | string,
-  }
-
-  export enum ContentTypeCase { 
-    _CONTENT_TYPE_NOT_SET = 0,
-    CONTENT_TYPE = 1,
-  }
-}
 
 export class ExcelModel extends jspb.Message {
   getSheetsList(): Array<ExcelModel.Sheet>;
@@ -105,9 +75,97 @@ export namespace ExcelModel {
 
 }
 
+export class S3File extends jspb.Message {
+  getBucket(): string;
+  setBucket(value: string): S3File;
+
+  getName(): string;
+  setName(value: string): S3File;
+
+  getContentType(): string;
+  setContentType(value: string): S3File;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): S3File.AsObject;
+  static toObject(includeInstance: boolean, msg: S3File): S3File.AsObject;
+  static serializeBinaryToWriter(message: S3File, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): S3File;
+  static deserializeBinaryFromReader(message: S3File, reader: jspb.BinaryReader): S3File;
+}
+
+export namespace S3File {
+  export type AsObject = {
+    bucket: string,
+    name: string,
+    contentType: string,
+  }
+}
+
+export class S3GetFileRequest extends jspb.Message {
+  getBucket(): string;
+  setBucket(value: string): S3GetFileRequest;
+
+  getName(): string;
+  setName(value: string): S3GetFileRequest;
+
+  getTtl(): google_protobuf_duration_pb.Duration | undefined;
+  setTtl(value?: google_protobuf_duration_pb.Duration): S3GetFileRequest;
+  hasTtl(): boolean;
+  clearTtl(): S3GetFileRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): S3GetFileRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: S3GetFileRequest): S3GetFileRequest.AsObject;
+  static serializeBinaryToWriter(message: S3GetFileRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): S3GetFileRequest;
+  static deserializeBinaryFromReader(message: S3GetFileRequest, reader: jspb.BinaryReader): S3GetFileRequest;
+}
+
+export namespace S3GetFileRequest {
+  export type AsObject = {
+    bucket: string,
+    name: string,
+    ttl?: google_protobuf_duration_pb.Duration.AsObject,
+  }
+}
+
+export class S3GetFileResponse extends jspb.Message {
+  getUrl(): string;
+  setUrl(value: string): S3GetFileResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): S3GetFileResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: S3GetFileResponse): S3GetFileResponse.AsObject;
+  static serializeBinaryToWriter(message: S3GetFileResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): S3GetFileResponse;
+  static deserializeBinaryFromReader(message: S3GetFileResponse, reader: jspb.BinaryReader): S3GetFileResponse;
+}
+
+export namespace S3GetFileResponse {
+  export type AsObject = {
+    url: string,
+  }
+}
+
 export class TexToRequest extends jspb.Message {
+  getTitle(): string;
+  setTitle(value: string): TexToRequest;
+
   getFilesMap(): jspb.Map<string, Uint8Array | string>;
   clearFilesMap(): TexToRequest;
+
+  getTtl(): google_protobuf_duration_pb.Duration | undefined;
+  setTtl(value?: google_protobuf_duration_pb.Duration): TexToRequest;
+  hasTtl(): boolean;
+  clearTtl(): TexToRequest;
+
+  getOwner(): string;
+  setOwner(value: string): TexToRequest;
+  hasOwner(): boolean;
+  clearOwner(): TexToRequest;
+
+  getPublished(): boolean;
+  setPublished(value: boolean): TexToRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TexToRequest.AsObject;
@@ -119,7 +177,21 @@ export class TexToRequest extends jspb.Message {
 
 export namespace TexToRequest {
   export type AsObject = {
+    title: string,
     filesMap: Array<[string, Uint8Array | string]>,
+    ttl?: google_protobuf_duration_pb.Duration.AsObject,
+    owner?: string,
+    published: boolean,
+  }
+
+  export enum TtlCase { 
+    _TTL_NOT_SET = 0,
+    TTL = 7,
+  }
+
+  export enum OwnerCase { 
+    _OWNER_NOT_SET = 0,
+    OWNER = 8,
   }
 }
 

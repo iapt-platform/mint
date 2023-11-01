@@ -8,11 +8,23 @@ public interface TexToRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>map&lt;string, bytes&gt; files = 1;</code>
+   * <code>string title = 1;</code>
+   * @return The title.
+   */
+  java.lang.String getTitle();
+  /**
+   * <code>string title = 1;</code>
+   * @return The bytes for title.
+   */
+  com.google.protobuf.ByteString
+      getTitleBytes();
+
+  /**
+   * <code>map&lt;string, bytes&gt; files = 2;</code>
    */
   int getFilesCount();
   /**
-   * <code>map&lt;string, bytes&gt; files = 1;</code>
+   * <code>map&lt;string, bytes&gt; files = 2;</code>
    */
   boolean containsFiles(
       java.lang.String key);
@@ -23,12 +35,12 @@ public interface TexToRequestOrBuilder extends
   java.util.Map<java.lang.String, com.google.protobuf.ByteString>
   getFiles();
   /**
-   * <code>map&lt;string, bytes&gt; files = 1;</code>
+   * <code>map&lt;string, bytes&gt; files = 2;</code>
    */
   java.util.Map<java.lang.String, com.google.protobuf.ByteString>
   getFilesMap();
   /**
-   * <code>map&lt;string, bytes&gt; files = 1;</code>
+   * <code>map&lt;string, bytes&gt; files = 2;</code>
    */
   /* nullable */
 com.google.protobuf.ByteString getFilesOrDefault(
@@ -36,8 +48,46 @@ com.google.protobuf.ByteString getFilesOrDefault(
       /* nullable */
 com.google.protobuf.ByteString defaultValue);
   /**
-   * <code>map&lt;string, bytes&gt; files = 1;</code>
+   * <code>map&lt;string, bytes&gt; files = 2;</code>
    */
   com.google.protobuf.ByteString getFilesOrThrow(
       java.lang.String key);
+
+  /**
+   * <code>optional .google.protobuf.Duration ttl = 7;</code>
+   * @return Whether the ttl field is set.
+   */
+  boolean hasTtl();
+  /**
+   * <code>optional .google.protobuf.Duration ttl = 7;</code>
+   * @return The ttl.
+   */
+  com.google.protobuf.Duration getTtl();
+  /**
+   * <code>optional .google.protobuf.Duration ttl = 7;</code>
+   */
+  com.google.protobuf.DurationOrBuilder getTtlOrBuilder();
+
+  /**
+   * <code>optional string owner = 8;</code>
+   * @return Whether the owner field is set.
+   */
+  boolean hasOwner();
+  /**
+   * <code>optional string owner = 8;</code>
+   * @return The owner.
+   */
+  java.lang.String getOwner();
+  /**
+   * <code>optional string owner = 8;</code>
+   * @return The bytes for owner.
+   */
+  com.google.protobuf.ByteString
+      getOwnerBytes();
+
+  /**
+   * <code>bool published = 9;</code>
+   * @return The published.
+   */
+  boolean getPublished();
 }

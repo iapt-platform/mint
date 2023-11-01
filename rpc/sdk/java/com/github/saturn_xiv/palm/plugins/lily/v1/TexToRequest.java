@@ -16,6 +16,8 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private TexToRequest() {
+    title_ = "";
+    owner_ = "";
   }
 
   @java.lang.Override
@@ -35,7 +37,7 @@ private static final long serialVersionUID = 0L;
   protected com.google.protobuf.MapField internalGetMapField(
       int number) {
     switch (number) {
-      case 1:
+      case 2:
         return internalGetFiles();
       default:
         throw new RuntimeException(
@@ -50,7 +52,47 @@ private static final long serialVersionUID = 0L;
             com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest.class, com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest.Builder.class);
   }
 
-  public static final int FILES_FIELD_NUMBER = 1;
+  private int bitField0_;
+  public static final int TITLE_FIELD_NUMBER = 1;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object title_ = "";
+  /**
+   * <code>string title = 1;</code>
+   * @return The title.
+   */
+  @java.lang.Override
+  public java.lang.String getTitle() {
+    java.lang.Object ref = title_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      title_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string title = 1;</code>
+   * @return The bytes for title.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getTitleBytes() {
+    java.lang.Object ref = title_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      title_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int FILES_FIELD_NUMBER = 2;
   private static final class FilesDefaultEntryHolder {
     static final com.google.protobuf.MapEntry<
         java.lang.String, com.google.protobuf.ByteString> defaultEntry =
@@ -77,7 +119,7 @@ private static final long serialVersionUID = 0L;
     return internalGetFiles().getMap().size();
   }
   /**
-   * <code>map&lt;string, bytes&gt; files = 1;</code>
+   * <code>map&lt;string, bytes&gt; files = 2;</code>
    */
   @java.lang.Override
   public boolean containsFiles(
@@ -94,14 +136,14 @@ private static final long serialVersionUID = 0L;
     return getFilesMap();
   }
   /**
-   * <code>map&lt;string, bytes&gt; files = 1;</code>
+   * <code>map&lt;string, bytes&gt; files = 2;</code>
    */
   @java.lang.Override
   public java.util.Map<java.lang.String, com.google.protobuf.ByteString> getFilesMap() {
     return internalGetFiles().getMap();
   }
   /**
-   * <code>map&lt;string, bytes&gt; files = 1;</code>
+   * <code>map&lt;string, bytes&gt; files = 2;</code>
    */
   @java.lang.Override
   public /* nullable */
@@ -115,7 +157,7 @@ com.google.protobuf.ByteString defaultValue) {
     return map.containsKey(key) ? map.get(key) : defaultValue;
   }
   /**
-   * <code>map&lt;string, bytes&gt; files = 1;</code>
+   * <code>map&lt;string, bytes&gt; files = 2;</code>
    */
   @java.lang.Override
   public com.google.protobuf.ByteString getFilesOrThrow(
@@ -127,6 +169,90 @@ com.google.protobuf.ByteString defaultValue) {
       throw new java.lang.IllegalArgumentException();
     }
     return map.get(key);
+  }
+
+  public static final int TTL_FIELD_NUMBER = 7;
+  private com.google.protobuf.Duration ttl_;
+  /**
+   * <code>optional .google.protobuf.Duration ttl = 7;</code>
+   * @return Whether the ttl field is set.
+   */
+  @java.lang.Override
+  public boolean hasTtl() {
+    return ((bitField0_ & 0x00000001) != 0);
+  }
+  /**
+   * <code>optional .google.protobuf.Duration ttl = 7;</code>
+   * @return The ttl.
+   */
+  @java.lang.Override
+  public com.google.protobuf.Duration getTtl() {
+    return ttl_ == null ? com.google.protobuf.Duration.getDefaultInstance() : ttl_;
+  }
+  /**
+   * <code>optional .google.protobuf.Duration ttl = 7;</code>
+   */
+  @java.lang.Override
+  public com.google.protobuf.DurationOrBuilder getTtlOrBuilder() {
+    return ttl_ == null ? com.google.protobuf.Duration.getDefaultInstance() : ttl_;
+  }
+
+  public static final int OWNER_FIELD_NUMBER = 8;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object owner_ = "";
+  /**
+   * <code>optional string owner = 8;</code>
+   * @return Whether the owner field is set.
+   */
+  @java.lang.Override
+  public boolean hasOwner() {
+    return ((bitField0_ & 0x00000002) != 0);
+  }
+  /**
+   * <code>optional string owner = 8;</code>
+   * @return The owner.
+   */
+  @java.lang.Override
+  public java.lang.String getOwner() {
+    java.lang.Object ref = owner_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      owner_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>optional string owner = 8;</code>
+   * @return The bytes for owner.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getOwnerBytes() {
+    java.lang.Object ref = owner_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      owner_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int PUBLISHED_FIELD_NUMBER = 9;
+  private boolean published_ = false;
+  /**
+   * <code>bool published = 9;</code>
+   * @return The published.
+   */
+  @java.lang.Override
+  public boolean getPublished() {
+    return published_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -143,12 +269,24 @@ com.google.protobuf.ByteString defaultValue) {
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(title_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, title_);
+    }
     com.google.protobuf.GeneratedMessageV3
       .serializeStringMapTo(
         output,
         internalGetFiles(),
         FilesDefaultEntryHolder.defaultEntry,
-        1);
+        2);
+    if (((bitField0_ & 0x00000001) != 0)) {
+      output.writeMessage(7, getTtl());
+    }
+    if (((bitField0_ & 0x00000002) != 0)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 8, owner_);
+    }
+    if (published_ != false) {
+      output.writeBool(9, published_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -158,6 +296,9 @@ com.google.protobuf.ByteString defaultValue) {
     if (size != -1) return size;
 
     size = 0;
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(title_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, title_);
+    }
     for (java.util.Map.Entry<java.lang.String, com.google.protobuf.ByteString> entry
          : internalGetFiles().getMap().entrySet()) {
       com.google.protobuf.MapEntry<java.lang.String, com.google.protobuf.ByteString>
@@ -166,7 +307,18 @@ com.google.protobuf.ByteString defaultValue) {
           .setValue(entry.getValue())
           .build();
       size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, files__);
+          .computeMessageSize(2, files__);
+    }
+    if (((bitField0_ & 0x00000001) != 0)) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(7, getTtl());
+    }
+    if (((bitField0_ & 0x00000002) != 0)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, owner_);
+    }
+    if (published_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(9, published_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -183,8 +335,22 @@ com.google.protobuf.ByteString defaultValue) {
     }
     com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest other = (com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest) obj;
 
+    if (!getTitle()
+        .equals(other.getTitle())) return false;
     if (!internalGetFiles().equals(
         other.internalGetFiles())) return false;
+    if (hasTtl() != other.hasTtl()) return false;
+    if (hasTtl()) {
+      if (!getTtl()
+          .equals(other.getTtl())) return false;
+    }
+    if (hasOwner() != other.hasOwner()) return false;
+    if (hasOwner()) {
+      if (!getOwner()
+          .equals(other.getOwner())) return false;
+    }
+    if (getPublished()
+        != other.getPublished()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -196,10 +362,23 @@ com.google.protobuf.ByteString defaultValue) {
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + TITLE_FIELD_NUMBER;
+    hash = (53 * hash) + getTitle().hashCode();
     if (!internalGetFiles().getMap().isEmpty()) {
       hash = (37 * hash) + FILES_FIELD_NUMBER;
       hash = (53 * hash) + internalGetFiles().hashCode();
     }
+    if (hasTtl()) {
+      hash = (37 * hash) + TTL_FIELD_NUMBER;
+      hash = (53 * hash) + getTtl().hashCode();
+    }
+    if (hasOwner()) {
+      hash = (37 * hash) + OWNER_FIELD_NUMBER;
+      hash = (53 * hash) + getOwner().hashCode();
+    }
+    hash = (37 * hash) + PUBLISHED_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getPublished());
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -313,7 +492,7 @@ com.google.protobuf.ByteString defaultValue) {
     protected com.google.protobuf.MapField internalGetMapField(
         int number) {
       switch (number) {
-        case 1:
+        case 2:
           return internalGetFiles();
         default:
           throw new RuntimeException(
@@ -324,7 +503,7 @@ com.google.protobuf.ByteString defaultValue) {
     protected com.google.protobuf.MapField internalGetMutableMapField(
         int number) {
       switch (number) {
-        case 1:
+        case 2:
           return internalGetMutableFiles();
         default:
           throw new RuntimeException(
@@ -341,19 +520,33 @@ com.google.protobuf.ByteString defaultValue) {
 
     // Construct using com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest.newBuilder()
     private Builder() {
-
+      maybeForceBuilderInitialization();
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+        getTtlFieldBuilder();
+      }
     }
     @java.lang.Override
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
+      title_ = "";
       internalGetMutableFiles().clear();
+      ttl_ = null;
+      if (ttlBuilder_ != null) {
+        ttlBuilder_.dispose();
+        ttlBuilder_ = null;
+      }
+      owner_ = "";
+      published_ = false;
       return this;
     }
 
@@ -388,9 +581,27 @@ com.google.protobuf.ByteString defaultValue) {
     private void buildPartial0(com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.title_ = title_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
         result.files_ = internalGetFiles();
         result.files_.makeImmutable();
       }
+      int to_bitField0_ = 0;
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.ttl_ = ttlBuilder_ == null
+            ? ttl_
+            : ttlBuilder_.build();
+        to_bitField0_ |= 0x00000001;
+      }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.owner_ = owner_;
+        to_bitField0_ |= 0x00000002;
+      }
+      if (((from_bitField0_ & 0x00000010) != 0)) {
+        result.published_ = published_;
+      }
+      result.bitField0_ |= to_bitField0_;
     }
 
     @java.lang.Override
@@ -437,9 +648,25 @@ com.google.protobuf.ByteString defaultValue) {
 
     public Builder mergeFrom(com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest other) {
       if (other == com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest.getDefaultInstance()) return this;
+      if (!other.getTitle().isEmpty()) {
+        title_ = other.title_;
+        bitField0_ |= 0x00000001;
+        onChanged();
+      }
       internalGetMutableFiles().mergeFrom(
           other.internalGetFiles());
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
+      if (other.hasTtl()) {
+        mergeTtl(other.getTtl());
+      }
+      if (other.hasOwner()) {
+        owner_ = other.owner_;
+        bitField0_ |= 0x00000008;
+        onChanged();
+      }
+      if (other.getPublished() != false) {
+        setPublished(other.getPublished());
+      }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
@@ -467,14 +694,36 @@ com.google.protobuf.ByteString defaultValue) {
               done = true;
               break;
             case 10: {
+              title_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000001;
+              break;
+            } // case 10
+            case 18: {
               com.google.protobuf.MapEntry<java.lang.String, com.google.protobuf.ByteString>
               files__ = input.readMessage(
                   FilesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
               internalGetMutableFiles().getMutableMap().put(
                   files__.getKey(), files__.getValue());
-              bitField0_ |= 0x00000001;
+              bitField0_ |= 0x00000002;
               break;
-            } // case 10
+            } // case 18
+            case 58: {
+              input.readMessage(
+                  getTtlFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              bitField0_ |= 0x00000004;
+              break;
+            } // case 58
+            case 66: {
+              owner_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000008;
+              break;
+            } // case 66
+            case 72: {
+              published_ = input.readBool();
+              bitField0_ |= 0x00000010;
+              break;
+            } // case 72
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -491,6 +740,78 @@ com.google.protobuf.ByteString defaultValue) {
       return this;
     }
     private int bitField0_;
+
+    private java.lang.Object title_ = "";
+    /**
+     * <code>string title = 1;</code>
+     * @return The title.
+     */
+    public java.lang.String getTitle() {
+      java.lang.Object ref = title_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        title_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string title = 1;</code>
+     * @return The bytes for title.
+     */
+    public com.google.protobuf.ByteString
+        getTitleBytes() {
+      java.lang.Object ref = title_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        title_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string title = 1;</code>
+     * @param value The title to set.
+     * @return This builder for chaining.
+     */
+    public Builder setTitle(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      title_ = value;
+      bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string title = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearTitle() {
+      title_ = getDefaultInstance().getTitle();
+      bitField0_ = (bitField0_ & ~0x00000001);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string title = 1;</code>
+     * @param value The bytes for title to set.
+     * @return This builder for chaining.
+     */
+    public Builder setTitleBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      title_ = value;
+      bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
 
     private com.google.protobuf.MapField<
         java.lang.String, com.google.protobuf.ByteString> files_;
@@ -511,7 +832,7 @@ com.google.protobuf.ByteString defaultValue) {
       if (!files_.isMutable()) {
         files_ = files_.copy();
       }
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
       onChanged();
       return files_;
     }
@@ -519,7 +840,7 @@ com.google.protobuf.ByteString defaultValue) {
       return internalGetFiles().getMap().size();
     }
     /**
-     * <code>map&lt;string, bytes&gt; files = 1;</code>
+     * <code>map&lt;string, bytes&gt; files = 2;</code>
      */
     @java.lang.Override
     public boolean containsFiles(
@@ -536,14 +857,14 @@ com.google.protobuf.ByteString defaultValue) {
       return getFilesMap();
     }
     /**
-     * <code>map&lt;string, bytes&gt; files = 1;</code>
+     * <code>map&lt;string, bytes&gt; files = 2;</code>
      */
     @java.lang.Override
     public java.util.Map<java.lang.String, com.google.protobuf.ByteString> getFilesMap() {
       return internalGetFiles().getMap();
     }
     /**
-     * <code>map&lt;string, bytes&gt; files = 1;</code>
+     * <code>map&lt;string, bytes&gt; files = 2;</code>
      */
     @java.lang.Override
     public /* nullable */
@@ -557,7 +878,7 @@ com.google.protobuf.ByteString defaultValue) {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;string, bytes&gt; files = 1;</code>
+     * <code>map&lt;string, bytes&gt; files = 2;</code>
      */
     @java.lang.Override
     public com.google.protobuf.ByteString getFilesOrThrow(
@@ -571,13 +892,13 @@ com.google.protobuf.ByteString defaultValue) {
       return map.get(key);
     }
     public Builder clearFiles() {
-      bitField0_ = (bitField0_ & ~0x00000001);
+      bitField0_ = (bitField0_ & ~0x00000002);
       internalGetMutableFiles().getMutableMap()
           .clear();
       return this;
     }
     /**
-     * <code>map&lt;string, bytes&gt; files = 1;</code>
+     * <code>map&lt;string, bytes&gt; files = 2;</code>
      */
     public Builder removeFiles(
         java.lang.String key) {
@@ -592,11 +913,11 @@ com.google.protobuf.ByteString defaultValue) {
     @java.lang.Deprecated
     public java.util.Map<java.lang.String, com.google.protobuf.ByteString>
         getMutableFiles() {
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
       return internalGetMutableFiles().getMutableMap();
     }
     /**
-     * <code>map&lt;string, bytes&gt; files = 1;</code>
+     * <code>map&lt;string, bytes&gt; files = 2;</code>
      */
     public Builder putFiles(
         java.lang.String key,
@@ -605,17 +926,249 @@ com.google.protobuf.ByteString defaultValue) {
       if (value == null) { throw new NullPointerException("map value"); }
       internalGetMutableFiles().getMutableMap()
           .put(key, value);
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
       return this;
     }
     /**
-     * <code>map&lt;string, bytes&gt; files = 1;</code>
+     * <code>map&lt;string, bytes&gt; files = 2;</code>
      */
     public Builder putAllFiles(
         java.util.Map<java.lang.String, com.google.protobuf.ByteString> values) {
       internalGetMutableFiles().getMutableMap()
           .putAll(values);
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
+      return this;
+    }
+
+    private com.google.protobuf.Duration ttl_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.Duration, com.google.protobuf.Duration.Builder, com.google.protobuf.DurationOrBuilder> ttlBuilder_;
+    /**
+     * <code>optional .google.protobuf.Duration ttl = 7;</code>
+     * @return Whether the ttl field is set.
+     */
+    public boolean hasTtl() {
+      return ((bitField0_ & 0x00000004) != 0);
+    }
+    /**
+     * <code>optional .google.protobuf.Duration ttl = 7;</code>
+     * @return The ttl.
+     */
+    public com.google.protobuf.Duration getTtl() {
+      if (ttlBuilder_ == null) {
+        return ttl_ == null ? com.google.protobuf.Duration.getDefaultInstance() : ttl_;
+      } else {
+        return ttlBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>optional .google.protobuf.Duration ttl = 7;</code>
+     */
+    public Builder setTtl(com.google.protobuf.Duration value) {
+      if (ttlBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ttl_ = value;
+      } else {
+        ttlBuilder_.setMessage(value);
+      }
+      bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional .google.protobuf.Duration ttl = 7;</code>
+     */
+    public Builder setTtl(
+        com.google.protobuf.Duration.Builder builderForValue) {
+      if (ttlBuilder_ == null) {
+        ttl_ = builderForValue.build();
+      } else {
+        ttlBuilder_.setMessage(builderForValue.build());
+      }
+      bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional .google.protobuf.Duration ttl = 7;</code>
+     */
+    public Builder mergeTtl(com.google.protobuf.Duration value) {
+      if (ttlBuilder_ == null) {
+        if (((bitField0_ & 0x00000004) != 0) &&
+          ttl_ != null &&
+          ttl_ != com.google.protobuf.Duration.getDefaultInstance()) {
+          getTtlBuilder().mergeFrom(value);
+        } else {
+          ttl_ = value;
+        }
+      } else {
+        ttlBuilder_.mergeFrom(value);
+      }
+      if (ttl_ != null) {
+        bitField0_ |= 0x00000004;
+        onChanged();
+      }
+      return this;
+    }
+    /**
+     * <code>optional .google.protobuf.Duration ttl = 7;</code>
+     */
+    public Builder clearTtl() {
+      bitField0_ = (bitField0_ & ~0x00000004);
+      ttl_ = null;
+      if (ttlBuilder_ != null) {
+        ttlBuilder_.dispose();
+        ttlBuilder_ = null;
+      }
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional .google.protobuf.Duration ttl = 7;</code>
+     */
+    public com.google.protobuf.Duration.Builder getTtlBuilder() {
+      bitField0_ |= 0x00000004;
+      onChanged();
+      return getTtlFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>optional .google.protobuf.Duration ttl = 7;</code>
+     */
+    public com.google.protobuf.DurationOrBuilder getTtlOrBuilder() {
+      if (ttlBuilder_ != null) {
+        return ttlBuilder_.getMessageOrBuilder();
+      } else {
+        return ttl_ == null ?
+            com.google.protobuf.Duration.getDefaultInstance() : ttl_;
+      }
+    }
+    /**
+     * <code>optional .google.protobuf.Duration ttl = 7;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.Duration, com.google.protobuf.Duration.Builder, com.google.protobuf.DurationOrBuilder> 
+        getTtlFieldBuilder() {
+      if (ttlBuilder_ == null) {
+        ttlBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Duration, com.google.protobuf.Duration.Builder, com.google.protobuf.DurationOrBuilder>(
+                getTtl(),
+                getParentForChildren(),
+                isClean());
+        ttl_ = null;
+      }
+      return ttlBuilder_;
+    }
+
+    private java.lang.Object owner_ = "";
+    /**
+     * <code>optional string owner = 8;</code>
+     * @return Whether the owner field is set.
+     */
+    public boolean hasOwner() {
+      return ((bitField0_ & 0x00000008) != 0);
+    }
+    /**
+     * <code>optional string owner = 8;</code>
+     * @return The owner.
+     */
+    public java.lang.String getOwner() {
+      java.lang.Object ref = owner_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        owner_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>optional string owner = 8;</code>
+     * @return The bytes for owner.
+     */
+    public com.google.protobuf.ByteString
+        getOwnerBytes() {
+      java.lang.Object ref = owner_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        owner_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>optional string owner = 8;</code>
+     * @param value The owner to set.
+     * @return This builder for chaining.
+     */
+    public Builder setOwner(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      owner_ = value;
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional string owner = 8;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearOwner() {
+      owner_ = getDefaultInstance().getOwner();
+      bitField0_ = (bitField0_ & ~0x00000008);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional string owner = 8;</code>
+     * @param value The bytes for owner to set.
+     * @return This builder for chaining.
+     */
+    public Builder setOwnerBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      owner_ = value;
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+
+    private boolean published_ ;
+    /**
+     * <code>bool published = 9;</code>
+     * @return The published.
+     */
+    @java.lang.Override
+    public boolean getPublished() {
+      return published_;
+    }
+    /**
+     * <code>bool published = 9;</code>
+     * @param value The published to set.
+     * @return This builder for chaining.
+     */
+    public Builder setPublished(boolean value) {
+
+      published_ = value;
+      bitField0_ |= 0x00000010;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool published = 9;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearPublished() {
+      bitField0_ = (bitField0_ & ~0x00000010);
+      published_ = false;
+      onChanged();
       return this;
     }
     @java.lang.Override

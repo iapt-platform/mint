@@ -4,99 +4,78 @@
 package com.github.saturn_xiv.palm.plugins.lily.v1;
 
 /**
- * Protobuf type {@code palm.lily.v1.File}
+ * Protobuf type {@code palm.lily.v1.S3GetFileResponse}
  */
-public final class File extends
+public final class S3GetFileResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:palm.lily.v1.File)
-    FileOrBuilder {
+    // @@protoc_insertion_point(message_implements:palm.lily.v1.S3GetFileResponse)
+    S3GetFileResponseOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use File.newBuilder() to construct.
-  private File(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use S3GetFileResponse.newBuilder() to construct.
+  private S3GetFileResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private File() {
-    contentType_ = "";
-    payload_ = com.google.protobuf.ByteString.EMPTY;
+  private S3GetFileResponse() {
+    url_ = "";
   }
 
   @java.lang.Override
   @SuppressWarnings({"unused"})
   protected java.lang.Object newInstance(
       UnusedPrivateParameter unused) {
-    return new File();
+    return new S3GetFileResponse();
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.github.saturn_xiv.palm.plugins.lily.v1.Lily.internal_static_palm_lily_v1_File_descriptor;
+    return com.github.saturn_xiv.palm.plugins.lily.v1.Lily.internal_static_palm_lily_v1_S3GetFileResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.github.saturn_xiv.palm.plugins.lily.v1.Lily.internal_static_palm_lily_v1_File_fieldAccessorTable
+    return com.github.saturn_xiv.palm.plugins.lily.v1.Lily.internal_static_palm_lily_v1_S3GetFileResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.github.saturn_xiv.palm.plugins.lily.v1.File.class, com.github.saturn_xiv.palm.plugins.lily.v1.File.Builder.class);
+            com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse.class, com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse.Builder.class);
   }
 
-  private int bitField0_;
-  public static final int CONTENT_TYPE_FIELD_NUMBER = 1;
+  public static final int URL_FIELD_NUMBER = 1;
   @SuppressWarnings("serial")
-  private volatile java.lang.Object contentType_ = "";
+  private volatile java.lang.Object url_ = "";
   /**
-   * <code>optional string content_type = 1;</code>
-   * @return Whether the contentType field is set.
+   * <code>string url = 1;</code>
+   * @return The url.
    */
   @java.lang.Override
-  public boolean hasContentType() {
-    return ((bitField0_ & 0x00000001) != 0);
-  }
-  /**
-   * <code>optional string content_type = 1;</code>
-   * @return The contentType.
-   */
-  @java.lang.Override
-  public java.lang.String getContentType() {
-    java.lang.Object ref = contentType_;
+  public java.lang.String getUrl() {
+    java.lang.Object ref = url_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      contentType_ = s;
+      url_ = s;
       return s;
     }
   }
   /**
-   * <code>optional string content_type = 1;</code>
-   * @return The bytes for contentType.
+   * <code>string url = 1;</code>
+   * @return The bytes for url.
    */
   @java.lang.Override
   public com.google.protobuf.ByteString
-      getContentTypeBytes() {
-    java.lang.Object ref = contentType_;
+      getUrlBytes() {
+    java.lang.Object ref = url_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      contentType_ = b;
+      url_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
-  }
-
-  public static final int PAYLOAD_FIELD_NUMBER = 2;
-  private com.google.protobuf.ByteString payload_ = com.google.protobuf.ByteString.EMPTY;
-  /**
-   * <code>bytes payload = 2;</code>
-   * @return The payload.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString getPayload() {
-    return payload_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -113,11 +92,8 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (((bitField0_ & 0x00000001) != 0)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, contentType_);
-    }
-    if (!payload_.isEmpty()) {
-      output.writeBytes(2, payload_);
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(url_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, url_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -128,12 +104,8 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (((bitField0_ & 0x00000001) != 0)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, contentType_);
-    }
-    if (!payload_.isEmpty()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(2, payload_);
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(url_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, url_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -145,18 +117,13 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.github.saturn_xiv.palm.plugins.lily.v1.File)) {
+    if (!(obj instanceof com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse)) {
       return super.equals(obj);
     }
-    com.github.saturn_xiv.palm.plugins.lily.v1.File other = (com.github.saturn_xiv.palm.plugins.lily.v1.File) obj;
+    com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse other = (com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse) obj;
 
-    if (hasContentType() != other.hasContentType()) return false;
-    if (hasContentType()) {
-      if (!getContentType()
-          .equals(other.getContentType())) return false;
-    }
-    if (!getPayload()
-        .equals(other.getPayload())) return false;
+    if (!getUrl()
+        .equals(other.getUrl())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -168,55 +135,51 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    if (hasContentType()) {
-      hash = (37 * hash) + CONTENT_TYPE_FIELD_NUMBER;
-      hash = (53 * hash) + getContentType().hashCode();
-    }
-    hash = (37 * hash) + PAYLOAD_FIELD_NUMBER;
-    hash = (53 * hash) + getPayload().hashCode();
+    hash = (37 * hash) + URL_FIELD_NUMBER;
+    hash = (53 * hash) + getUrl().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static com.github.saturn_xiv.palm.plugins.lily.v1.File parseFrom(
+  public static com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.github.saturn_xiv.palm.plugins.lily.v1.File parseFrom(
+  public static com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.github.saturn_xiv.palm.plugins.lily.v1.File parseFrom(
+  public static com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.github.saturn_xiv.palm.plugins.lily.v1.File parseFrom(
+  public static com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.github.saturn_xiv.palm.plugins.lily.v1.File parseFrom(byte[] data)
+  public static com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.github.saturn_xiv.palm.plugins.lily.v1.File parseFrom(
+  public static com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.github.saturn_xiv.palm.plugins.lily.v1.File parseFrom(java.io.InputStream input)
+  public static com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.github.saturn_xiv.palm.plugins.lily.v1.File parseFrom(
+  public static com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -224,26 +187,26 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  public static com.github.saturn_xiv.palm.plugins.lily.v1.File parseDelimitedFrom(java.io.InputStream input)
+  public static com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
 
-  public static com.github.saturn_xiv.palm.plugins.lily.v1.File parseDelimitedFrom(
+  public static com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.github.saturn_xiv.palm.plugins.lily.v1.File parseFrom(
+  public static com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.github.saturn_xiv.palm.plugins.lily.v1.File parseFrom(
+  public static com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -256,7 +219,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.github.saturn_xiv.palm.plugins.lily.v1.File prototype) {
+  public static Builder newBuilder(com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -272,26 +235,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code palm.lily.v1.File}
+   * Protobuf type {@code palm.lily.v1.S3GetFileResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:palm.lily.v1.File)
-      com.github.saturn_xiv.palm.plugins.lily.v1.FileOrBuilder {
+      // @@protoc_insertion_point(builder_implements:palm.lily.v1.S3GetFileResponse)
+      com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.github.saturn_xiv.palm.plugins.lily.v1.Lily.internal_static_palm_lily_v1_File_descriptor;
+      return com.github.saturn_xiv.palm.plugins.lily.v1.Lily.internal_static_palm_lily_v1_S3GetFileResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.github.saturn_xiv.palm.plugins.lily.v1.Lily.internal_static_palm_lily_v1_File_fieldAccessorTable
+      return com.github.saturn_xiv.palm.plugins.lily.v1.Lily.internal_static_palm_lily_v1_S3GetFileResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.github.saturn_xiv.palm.plugins.lily.v1.File.class, com.github.saturn_xiv.palm.plugins.lily.v1.File.Builder.class);
+              com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse.class, com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse.Builder.class);
     }
 
-    // Construct using com.github.saturn_xiv.palm.plugins.lily.v1.File.newBuilder()
+    // Construct using com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse.newBuilder()
     private Builder() {
 
     }
@@ -305,25 +268,24 @@ private static final long serialVersionUID = 0L;
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
-      contentType_ = "";
-      payload_ = com.google.protobuf.ByteString.EMPTY;
+      url_ = "";
       return this;
     }
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.github.saturn_xiv.palm.plugins.lily.v1.Lily.internal_static_palm_lily_v1_File_descriptor;
+      return com.github.saturn_xiv.palm.plugins.lily.v1.Lily.internal_static_palm_lily_v1_S3GetFileResponse_descriptor;
     }
 
     @java.lang.Override
-    public com.github.saturn_xiv.palm.plugins.lily.v1.File getDefaultInstanceForType() {
-      return com.github.saturn_xiv.palm.plugins.lily.v1.File.getDefaultInstance();
+    public com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse getDefaultInstanceForType() {
+      return com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse.getDefaultInstance();
     }
 
     @java.lang.Override
-    public com.github.saturn_xiv.palm.plugins.lily.v1.File build() {
-      com.github.saturn_xiv.palm.plugins.lily.v1.File result = buildPartial();
+    public com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse build() {
+      com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -331,24 +293,18 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.github.saturn_xiv.palm.plugins.lily.v1.File buildPartial() {
-      com.github.saturn_xiv.palm.plugins.lily.v1.File result = new com.github.saturn_xiv.palm.plugins.lily.v1.File(this);
+    public com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse buildPartial() {
+      com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse result = new com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse(this);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
     }
 
-    private void buildPartial0(com.github.saturn_xiv.palm.plugins.lily.v1.File result) {
+    private void buildPartial0(com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse result) {
       int from_bitField0_ = bitField0_;
-      int to_bitField0_ = 0;
       if (((from_bitField0_ & 0x00000001) != 0)) {
-        result.contentType_ = contentType_;
-        to_bitField0_ |= 0x00000001;
+        result.url_ = url_;
       }
-      if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.payload_ = payload_;
-      }
-      result.bitField0_ |= to_bitField0_;
     }
 
     @java.lang.Override
@@ -385,23 +341,20 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.github.saturn_xiv.palm.plugins.lily.v1.File) {
-        return mergeFrom((com.github.saturn_xiv.palm.plugins.lily.v1.File)other);
+      if (other instanceof com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse) {
+        return mergeFrom((com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.github.saturn_xiv.palm.plugins.lily.v1.File other) {
-      if (other == com.github.saturn_xiv.palm.plugins.lily.v1.File.getDefaultInstance()) return this;
-      if (other.hasContentType()) {
-        contentType_ = other.contentType_;
+    public Builder mergeFrom(com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse other) {
+      if (other == com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse.getDefaultInstance()) return this;
+      if (!other.getUrl().isEmpty()) {
+        url_ = other.url_;
         bitField0_ |= 0x00000001;
         onChanged();
-      }
-      if (other.getPayload() != com.google.protobuf.ByteString.EMPTY) {
-        setPayload(other.getPayload());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -430,15 +383,10 @@ private static final long serialVersionUID = 0L;
               done = true;
               break;
             case 10: {
-              contentType_ = input.readStringRequireUtf8();
+              url_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000001;
               break;
             } // case 10
-            case 18: {
-              payload_ = input.readBytes();
-              bitField0_ |= 0x00000002;
-              break;
-            } // case 18
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -456,113 +404,74 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private java.lang.Object contentType_ = "";
+    private java.lang.Object url_ = "";
     /**
-     * <code>optional string content_type = 1;</code>
-     * @return Whether the contentType field is set.
+     * <code>string url = 1;</code>
+     * @return The url.
      */
-    public boolean hasContentType() {
-      return ((bitField0_ & 0x00000001) != 0);
-    }
-    /**
-     * <code>optional string content_type = 1;</code>
-     * @return The contentType.
-     */
-    public java.lang.String getContentType() {
-      java.lang.Object ref = contentType_;
+    public java.lang.String getUrl() {
+      java.lang.Object ref = url_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        contentType_ = s;
+        url_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>optional string content_type = 1;</code>
-     * @return The bytes for contentType.
+     * <code>string url = 1;</code>
+     * @return The bytes for url.
      */
     public com.google.protobuf.ByteString
-        getContentTypeBytes() {
-      java.lang.Object ref = contentType_;
+        getUrlBytes() {
+      java.lang.Object ref = url_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        contentType_ = b;
+        url_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>optional string content_type = 1;</code>
-     * @param value The contentType to set.
+     * <code>string url = 1;</code>
+     * @param value The url to set.
      * @return This builder for chaining.
      */
-    public Builder setContentType(
+    public Builder setUrl(
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
-      contentType_ = value;
+      url_ = value;
       bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
     /**
-     * <code>optional string content_type = 1;</code>
+     * <code>string url = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearContentType() {
-      contentType_ = getDefaultInstance().getContentType();
+    public Builder clearUrl() {
+      url_ = getDefaultInstance().getUrl();
       bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
     /**
-     * <code>optional string content_type = 1;</code>
-     * @param value The bytes for contentType to set.
+     * <code>string url = 1;</code>
+     * @param value The bytes for url to set.
      * @return This builder for chaining.
      */
-    public Builder setContentTypeBytes(
+    public Builder setUrlBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
-      contentType_ = value;
+      url_ = value;
       bitField0_ |= 0x00000001;
-      onChanged();
-      return this;
-    }
-
-    private com.google.protobuf.ByteString payload_ = com.google.protobuf.ByteString.EMPTY;
-    /**
-     * <code>bytes payload = 2;</code>
-     * @return The payload.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getPayload() {
-      return payload_;
-    }
-    /**
-     * <code>bytes payload = 2;</code>
-     * @param value The payload to set.
-     * @return This builder for chaining.
-     */
-    public Builder setPayload(com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      payload_ = value;
-      bitField0_ |= 0x00000002;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>bytes payload = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearPayload() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      payload_ = getDefaultInstance().getPayload();
       onChanged();
       return this;
     }
@@ -579,23 +488,23 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:palm.lily.v1.File)
+    // @@protoc_insertion_point(builder_scope:palm.lily.v1.S3GetFileResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:palm.lily.v1.File)
-  private static final com.github.saturn_xiv.palm.plugins.lily.v1.File DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:palm.lily.v1.S3GetFileResponse)
+  private static final com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.github.saturn_xiv.palm.plugins.lily.v1.File();
+    DEFAULT_INSTANCE = new com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse();
   }
 
-  public static com.github.saturn_xiv.palm.plugins.lily.v1.File getDefaultInstance() {
+  public static com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<File>
-      PARSER = new com.google.protobuf.AbstractParser<File>() {
+  private static final com.google.protobuf.Parser<S3GetFileResponse>
+      PARSER = new com.google.protobuf.AbstractParser<S3GetFileResponse>() {
     @java.lang.Override
-    public File parsePartialFrom(
+    public S3GetFileResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -614,17 +523,17 @@ private static final long serialVersionUID = 0L;
     }
   };
 
-  public static com.google.protobuf.Parser<File> parser() {
+  public static com.google.protobuf.Parser<S3GetFileResponse> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<File> getParserForType() {
+  public com.google.protobuf.Parser<S3GetFileResponse> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.github.saturn_xiv.palm.plugins.lily.v1.File getDefaultInstanceForType() {
+  public com.github.saturn_xiv.palm.plugins.lily.v1.S3GetFileResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

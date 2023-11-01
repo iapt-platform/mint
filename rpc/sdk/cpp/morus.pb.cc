@@ -11,26 +11,28 @@
 #include "google/protobuf/generated_message_reflection.h"
 #include "google/protobuf/reflection_ops.h"
 #include "google/protobuf/wire_format.h"
+#include "google/protobuf/generated_message_tctable_impl.h"
 // @@protoc_insertion_point(includes)
 
 // Must be included last.
 #include "google/protobuf/port_def.inc"
 PROTOBUF_PRAGMA_INIT_SEG
-namespace _pb = ::PROTOBUF_NAMESPACE_ID;
-namespace _pbi = ::PROTOBUF_NAMESPACE_ID::internal;
+namespace _pb = ::google::protobuf;
+namespace _pbi = ::google::protobuf::internal;
+namespace _fl = ::google::protobuf::internal::field_layout;
 namespace mint {
 namespace morus {
 namespace v1 {
-template <typename>
-PROTOBUF_CONSTEXPR MarkdownToHtmlRequest::MarkdownToHtmlRequest(
-    ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.payload_)*/ {
-    &::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized {}
-  }
-
-  , /*decltype(_impl_.sanitize_)*/ false
-
-  , /*decltype(_impl_._cached_size_)*/{}} {}
+        template <typename>
+PROTOBUF_CONSTEXPR MarkdownToHtmlRequest::MarkdownToHtmlRequest(::_pbi::ConstantInitialized)
+    : _impl_{
+      /*decltype(_impl_.payload_)*/ {
+          &::_pbi::fixed_address_empty_string,
+          ::_pbi::ConstantInitialized{},
+      },
+      /*decltype(_impl_.sanitize_)*/ false,
+      /*decltype(_impl_._cached_size_)*/ {},
+    } {}
 struct MarkdownToHtmlRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR MarkdownToHtmlRequestDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
   ~MarkdownToHtmlRequestDefaultTypeInternal() {}
@@ -41,14 +43,15 @@ struct MarkdownToHtmlRequestDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MarkdownToHtmlRequestDefaultTypeInternal _MarkdownToHtmlRequest_default_instance_;
-template <typename>
-PROTOBUF_CONSTEXPR MarkdownToHtmlResponse::MarkdownToHtmlResponse(
-    ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.payload_)*/ {
-    &::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized {}
-  }
-
-  , /*decltype(_impl_._cached_size_)*/{}} {}
+        template <typename>
+PROTOBUF_CONSTEXPR MarkdownToHtmlResponse::MarkdownToHtmlResponse(::_pbi::ConstantInitialized)
+    : _impl_{
+      /*decltype(_impl_.payload_)*/ {
+          &::_pbi::fixed_address_empty_string,
+          ::_pbi::ConstantInitialized{},
+      },
+      /*decltype(_impl_._cached_size_)*/ {},
+    } {}
 struct MarkdownToHtmlResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR MarkdownToHtmlResponseDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
   ~MarkdownToHtmlResponseDefaultTypeInternal() {}
@@ -92,8 +95,8 @@ const ::uint32_t TableStruct_morus_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
 
 static const ::_pbi::MigrationSchema
     schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-        { 0, -1, -1, sizeof(::mint::morus::v1::MarkdownToHtmlRequest)},
-        { 10, -1, -1, sizeof(::mint::morus::v1::MarkdownToHtmlResponse)},
+        {0, -1, -1, sizeof(::mint::morus::v1::MarkdownToHtmlRequest)},
+        {10, -1, -1, sizeof(::mint::morus::v1::MarkdownToHtmlResponse)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -155,22 +158,21 @@ class MarkdownToHtmlRequest::_Internal {
  public:
 };
 
-MarkdownToHtmlRequest::MarkdownToHtmlRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+MarkdownToHtmlRequest::MarkdownToHtmlRequest(::google::protobuf::Arena* arena)
+    : ::google::protobuf::Message(arena) {
   SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:mint.morus.v1.MarkdownToHtmlRequest)
 }
-MarkdownToHtmlRequest::MarkdownToHtmlRequest(const MarkdownToHtmlRequest& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  MarkdownToHtmlRequest* const _this = this; (void)_this;
+MarkdownToHtmlRequest::MarkdownToHtmlRequest(const MarkdownToHtmlRequest& from) : ::google::protobuf::Message() {
+  MarkdownToHtmlRequest* const _this = this;
+  (void)_this;
   new (&_impl_) Impl_{
-      decltype(_impl_.payload_) {}
-
-    , decltype(_impl_.sanitize_) {}
-
-    , /*decltype(_impl_._cached_size_)*/{}};
-
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+      decltype(_impl_.payload_){},
+      decltype(_impl_.sanitize_){},
+      /*decltype(_impl_._cached_size_)*/ {},
+  };
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
   _impl_.payload_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
         _impl_.payload_.Set("", GetArenaForAllocation());
@@ -179,43 +181,35 @@ MarkdownToHtmlRequest::MarkdownToHtmlRequest(const MarkdownToHtmlRequest& from)
     _this->_impl_.payload_.Set(from._internal_payload(), _this->GetArenaForAllocation());
   }
   _this->_impl_.sanitize_ = from._impl_.sanitize_;
+
   // @@protoc_insertion_point(copy_constructor:mint.morus.v1.MarkdownToHtmlRequest)
 }
-
 inline void MarkdownToHtmlRequest::SharedCtor(::_pb::Arena* arena) {
   (void)arena;
   new (&_impl_) Impl_{
-      decltype(_impl_.payload_) {}
-
-    , decltype(_impl_.sanitize_) { false }
-
-    , /*decltype(_impl_._cached_size_)*/{}
+      decltype(_impl_.payload_){},
+      decltype(_impl_.sanitize_){false},
+      /*decltype(_impl_._cached_size_)*/ {},
   };
   _impl_.payload_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
         _impl_.payload_.Set("", GetArenaForAllocation());
   #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
-
 MarkdownToHtmlRequest::~MarkdownToHtmlRequest() {
   // @@protoc_insertion_point(destructor:mint.morus.v1.MarkdownToHtmlRequest)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
-  (void)arena;
-    return;
-  }
+  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   SharedDtor();
 }
-
 inline void MarkdownToHtmlRequest::SharedDtor() {
   ABSL_DCHECK(GetArenaForAllocation() == nullptr);
   _impl_.payload_.Destroy();
 }
-
 void MarkdownToHtmlRequest::SetCachedSize(int size) const {
   _impl_._cached_size_.Set(size);
 }
 
-void MarkdownToHtmlRequest::Clear() {
+PROTOBUF_NOINLINE void MarkdownToHtmlRequest::Clear() {
 // @@protoc_insertion_point(message_clear_start:mint.morus.v1.MarkdownToHtmlRequest)
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -223,69 +217,67 @@ void MarkdownToHtmlRequest::Clear() {
 
   _impl_.payload_.ClearToEmpty();
   _impl_.sanitize_ = false;
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
-const char* MarkdownToHtmlRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    ::uint32_t tag;
-    ptr = ::_pbi::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // string payload = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 10)) {
-          auto str = _internal_mutable_payload();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "mint.morus.v1.MarkdownToHtmlRequest.payload"));
-        } else {
-          goto handle_unusual;
-        }
-        continue;
-      // bool sanitize = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 16)) {
-          _impl_.sanitize_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else {
-          goto handle_unusual;
-        }
-        continue;
-      default:
-        goto handle_unusual;
-    }  // switch
-  handle_unusual:
-    if ((tag == 0) || ((tag & 7) == 4)) {
-      CHK_(ptr);
-      ctx->SetLastTag(tag);
-      goto message_done;
-    }
-    ptr = UnknownFieldParse(
-        tag,
-        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-        ptr, ctx);
-    CHK_(ptr != nullptr);
-  }  // while
-message_done:
+const char* MarkdownToHtmlRequest::_InternalParse(
+    const char* ptr, ::_pbi::ParseContext* ctx) {
+  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
   return ptr;
-failure:
-  ptr = nullptr;
-  goto message_done;
-#undef CHK_
 }
+
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 0, 51, 2> MarkdownToHtmlRequest::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    &_MarkdownToHtmlRequest_default_instance_._instance,
+    ::_pbi::TcParser::GenericFallback,  // fallback
+  }, {{
+    // bool sanitize = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(MarkdownToHtmlRequest, _impl_.sanitize_), 63>(),
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(MarkdownToHtmlRequest, _impl_.sanitize_)}},
+    // string payload = 1;
+    {::_pbi::TcParser::FastUS1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(MarkdownToHtmlRequest, _impl_.payload_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // string payload = 1;
+    {PROTOBUF_FIELD_OFFSET(MarkdownToHtmlRequest, _impl_.payload_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // bool sanitize = 2;
+    {PROTOBUF_FIELD_OFFSET(MarkdownToHtmlRequest, _impl_.sanitize_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
+  }},
+  // no aux_entries
+  {{
+    "\43\7\0\0\0\0\0\0"
+    "mint.morus.v1.MarkdownToHtmlRequest"
+    "payload"
+  }},
+};
 
 ::uint8_t* MarkdownToHtmlRequest::_InternalSerialize(
-    ::uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+    ::uint8_t* target,
+    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:mint.morus.v1.MarkdownToHtmlRequest)
   ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
+  (void)cached_has_bits;
 
   // string payload = 1;
   if (!this->_internal_payload().empty()) {
     const std::string& _s = this->_internal_payload();
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-        _s.data(), static_cast<int>(_s.length()), ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE, "mint.morus.v1.MarkdownToHtmlRequest.payload");
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "mint.morus.v1.MarkdownToHtmlRequest.payload");
     target = stream->WriteStringMaybeAliased(1, _s, target);
   }
 
@@ -297,8 +289,9 @@ failure:
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:mint.morus.v1.MarkdownToHtmlRequest)
   return target;
@@ -314,7 +307,7 @@ failure:
 
   // string payload = 1;
   if (!this->_internal_payload().empty()) {
-    total_size += 1 + ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                     this->_internal_payload());
   }
 
@@ -326,14 +319,14 @@ failure:
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MarkdownToHtmlRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+const ::google::protobuf::Message::ClassData MarkdownToHtmlRequest::_class_data_ = {
+    ::google::protobuf::Message::CopyWithSourceCheck,
     MarkdownToHtmlRequest::MergeImpl
 };
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*MarkdownToHtmlRequest::GetClassData() const { return &_class_data_; }
+const ::google::protobuf::Message::ClassData*MarkdownToHtmlRequest::GetClassData() const { return &_class_data_; }
 
 
-void MarkdownToHtmlRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+void MarkdownToHtmlRequest::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
   auto* const _this = static_cast<MarkdownToHtmlRequest*>(&to_msg);
   auto& from = static_cast<const MarkdownToHtmlRequest&>(from_msg);
   // @@protoc_insertion_point(class_specific_merge_from_start:mint.morus.v1.MarkdownToHtmlRequest)
@@ -347,7 +340,7 @@ void MarkdownToHtmlRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, 
   if (from._internal_sanitize() != 0) {
     _this->_internal_set_sanitize(from._internal_sanitize());
   }
-  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void MarkdownToHtmlRequest::CopyFrom(const MarkdownToHtmlRequest& from) {
@@ -357,7 +350,7 @@ void MarkdownToHtmlRequest::CopyFrom(const MarkdownToHtmlRequest& from) {
   MergeFrom(from);
 }
 
-bool MarkdownToHtmlRequest::IsInitialized() const {
+PROTOBUF_NOINLINE bool MarkdownToHtmlRequest::IsInitialized() const {
   return true;
 }
 
@@ -368,11 +361,10 @@ void MarkdownToHtmlRequest::InternalSwap(MarkdownToHtmlRequest* other) {
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.payload_, lhs_arena,
                                        &other->_impl_.payload_, rhs_arena);
-
-  swap(_impl_.sanitize_, other->_impl_.sanitize_);
+        swap(_impl_.sanitize_, other->_impl_.sanitize_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata MarkdownToHtmlRequest::GetMetadata() const {
+::google::protobuf::Metadata MarkdownToHtmlRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_morus_2eproto_getter, &descriptor_table_morus_2eproto_once,
       file_level_metadata_morus_2eproto[0]);
@@ -383,20 +375,20 @@ class MarkdownToHtmlResponse::_Internal {
  public:
 };
 
-MarkdownToHtmlResponse::MarkdownToHtmlResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+MarkdownToHtmlResponse::MarkdownToHtmlResponse(::google::protobuf::Arena* arena)
+    : ::google::protobuf::Message(arena) {
   SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:mint.morus.v1.MarkdownToHtmlResponse)
 }
-MarkdownToHtmlResponse::MarkdownToHtmlResponse(const MarkdownToHtmlResponse& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  MarkdownToHtmlResponse* const _this = this; (void)_this;
+MarkdownToHtmlResponse::MarkdownToHtmlResponse(const MarkdownToHtmlResponse& from) : ::google::protobuf::Message() {
+  MarkdownToHtmlResponse* const _this = this;
+  (void)_this;
   new (&_impl_) Impl_{
-      decltype(_impl_.payload_) {}
-
-    , /*decltype(_impl_._cached_size_)*/{}};
-
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+      decltype(_impl_.payload_){},
+      /*decltype(_impl_._cached_size_)*/ {},
+  };
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
   _impl_.payload_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
         _impl_.payload_.Set("", GetArenaForAllocation());
@@ -404,107 +396,102 @@ MarkdownToHtmlResponse::MarkdownToHtmlResponse(const MarkdownToHtmlResponse& fro
   if (!from._internal_payload().empty()) {
     _this->_impl_.payload_.Set(from._internal_payload(), _this->GetArenaForAllocation());
   }
+
   // @@protoc_insertion_point(copy_constructor:mint.morus.v1.MarkdownToHtmlResponse)
 }
-
 inline void MarkdownToHtmlResponse::SharedCtor(::_pb::Arena* arena) {
   (void)arena;
   new (&_impl_) Impl_{
-      decltype(_impl_.payload_) {}
-
-    , /*decltype(_impl_._cached_size_)*/{}
+      decltype(_impl_.payload_){},
+      /*decltype(_impl_._cached_size_)*/ {},
   };
   _impl_.payload_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
         _impl_.payload_.Set("", GetArenaForAllocation());
   #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
-
 MarkdownToHtmlResponse::~MarkdownToHtmlResponse() {
   // @@protoc_insertion_point(destructor:mint.morus.v1.MarkdownToHtmlResponse)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
-  (void)arena;
-    return;
-  }
+  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   SharedDtor();
 }
-
 inline void MarkdownToHtmlResponse::SharedDtor() {
   ABSL_DCHECK(GetArenaForAllocation() == nullptr);
   _impl_.payload_.Destroy();
 }
-
 void MarkdownToHtmlResponse::SetCachedSize(int size) const {
   _impl_._cached_size_.Set(size);
 }
 
-void MarkdownToHtmlResponse::Clear() {
+PROTOBUF_NOINLINE void MarkdownToHtmlResponse::Clear() {
 // @@protoc_insertion_point(message_clear_start:mint.morus.v1.MarkdownToHtmlResponse)
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   _impl_.payload_.ClearToEmpty();
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
-const char* MarkdownToHtmlResponse::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    ::uint32_t tag;
-    ptr = ::_pbi::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // string payload = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 10)) {
-          auto str = _internal_mutable_payload();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "mint.morus.v1.MarkdownToHtmlResponse.payload"));
-        } else {
-          goto handle_unusual;
-        }
-        continue;
-      default:
-        goto handle_unusual;
-    }  // switch
-  handle_unusual:
-    if ((tag == 0) || ((tag & 7) == 4)) {
-      CHK_(ptr);
-      ctx->SetLastTag(tag);
-      goto message_done;
-    }
-    ptr = UnknownFieldParse(
-        tag,
-        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-        ptr, ctx);
-    CHK_(ptr != nullptr);
-  }  // while
-message_done:
+const char* MarkdownToHtmlResponse::_InternalParse(
+    const char* ptr, ::_pbi::ParseContext* ctx) {
+  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
   return ptr;
-failure:
-  ptr = nullptr;
-  goto message_done;
-#undef CHK_
 }
+
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 0, 52, 2> MarkdownToHtmlResponse::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    &_MarkdownToHtmlResponse_default_instance_._instance,
+    ::_pbi::TcParser::GenericFallback,  // fallback
+  }, {{
+    // string payload = 1;
+    {::_pbi::TcParser::FastUS1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(MarkdownToHtmlResponse, _impl_.payload_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // string payload = 1;
+    {PROTOBUF_FIELD_OFFSET(MarkdownToHtmlResponse, _impl_.payload_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  // no aux_entries
+  {{
+    "\44\7\0\0\0\0\0\0"
+    "mint.morus.v1.MarkdownToHtmlResponse"
+    "payload"
+  }},
+};
 
 ::uint8_t* MarkdownToHtmlResponse::_InternalSerialize(
-    ::uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+    ::uint8_t* target,
+    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:mint.morus.v1.MarkdownToHtmlResponse)
   ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
+  (void)cached_has_bits;
 
   // string payload = 1;
   if (!this->_internal_payload().empty()) {
     const std::string& _s = this->_internal_payload();
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-        _s.data(), static_cast<int>(_s.length()), ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE, "mint.morus.v1.MarkdownToHtmlResponse.payload");
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "mint.morus.v1.MarkdownToHtmlResponse.payload");
     target = stream->WriteStringMaybeAliased(1, _s, target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:mint.morus.v1.MarkdownToHtmlResponse)
   return target;
@@ -520,21 +507,21 @@ failure:
 
   // string payload = 1;
   if (!this->_internal_payload().empty()) {
-    total_size += 1 + ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                     this->_internal_payload());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MarkdownToHtmlResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+const ::google::protobuf::Message::ClassData MarkdownToHtmlResponse::_class_data_ = {
+    ::google::protobuf::Message::CopyWithSourceCheck,
     MarkdownToHtmlResponse::MergeImpl
 };
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*MarkdownToHtmlResponse::GetClassData() const { return &_class_data_; }
+const ::google::protobuf::Message::ClassData*MarkdownToHtmlResponse::GetClassData() const { return &_class_data_; }
 
 
-void MarkdownToHtmlResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+void MarkdownToHtmlResponse::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
   auto* const _this = static_cast<MarkdownToHtmlResponse*>(&to_msg);
   auto& from = static_cast<const MarkdownToHtmlResponse&>(from_msg);
   // @@protoc_insertion_point(class_specific_merge_from_start:mint.morus.v1.MarkdownToHtmlResponse)
@@ -545,7 +532,7 @@ void MarkdownToHtmlResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg,
   if (!from._internal_payload().empty()) {
     _this->_internal_set_payload(from._internal_payload());
   }
-  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void MarkdownToHtmlResponse::CopyFrom(const MarkdownToHtmlResponse& from) {
@@ -555,7 +542,7 @@ void MarkdownToHtmlResponse::CopyFrom(const MarkdownToHtmlResponse& from) {
   MergeFrom(from);
 }
 
-bool MarkdownToHtmlResponse::IsInitialized() const {
+PROTOBUF_NOINLINE bool MarkdownToHtmlResponse::IsInitialized() const {
   return true;
 }
 
@@ -568,7 +555,7 @@ void MarkdownToHtmlResponse::InternalSwap(MarkdownToHtmlResponse* other) {
                                        &other->_impl_.payload_, rhs_arena);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata MarkdownToHtmlResponse::GetMetadata() const {
+::google::protobuf::Metadata MarkdownToHtmlResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_morus_2eproto_getter, &descriptor_table_morus_2eproto_once,
       file_level_metadata_morus_2eproto[1]);
@@ -577,15 +564,9 @@ void MarkdownToHtmlResponse::InternalSwap(MarkdownToHtmlResponse* other) {
 }  // namespace v1
 }  // namespace morus
 }  // namespace mint
-PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::mint::morus::v1::MarkdownToHtmlRequest*
-Arena::CreateMaybeMessage< ::mint::morus::v1::MarkdownToHtmlRequest >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::mint::morus::v1::MarkdownToHtmlRequest >(arena);
-}
-template<> PROTOBUF_NOINLINE ::mint::morus::v1::MarkdownToHtmlResponse*
-Arena::CreateMaybeMessage< ::mint::morus::v1::MarkdownToHtmlResponse >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::mint::morus::v1::MarkdownToHtmlResponse >(arena);
-}
-PROTOBUF_NAMESPACE_CLOSE
+namespace google {
+namespace protobuf {
+}  // namespace protobuf
+}  // namespace google
 // @@protoc_insertion_point(global_scope)
 #include "google/protobuf/port_undef.inc"

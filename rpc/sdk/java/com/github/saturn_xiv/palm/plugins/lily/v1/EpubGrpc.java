@@ -16,28 +16,28 @@ public final class EpubGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest,
-      com.github.saturn_xiv.palm.plugins.lily.v1.File> getBuildMethod;
+      com.github.saturn_xiv.palm.plugins.lily.v1.S3File> getBuildMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "Build",
       requestType = com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest.class,
-      responseType = com.github.saturn_xiv.palm.plugins.lily.v1.File.class,
+      responseType = com.github.saturn_xiv.palm.plugins.lily.v1.S3File.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest,
-      com.github.saturn_xiv.palm.plugins.lily.v1.File> getBuildMethod() {
-    io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest, com.github.saturn_xiv.palm.plugins.lily.v1.File> getBuildMethod;
+      com.github.saturn_xiv.palm.plugins.lily.v1.S3File> getBuildMethod() {
+    io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest, com.github.saturn_xiv.palm.plugins.lily.v1.S3File> getBuildMethod;
     if ((getBuildMethod = EpubGrpc.getBuildMethod) == null) {
       synchronized (EpubGrpc.class) {
         if ((getBuildMethod = EpubGrpc.getBuildMethod) == null) {
           EpubGrpc.getBuildMethod = getBuildMethod =
-              io.grpc.MethodDescriptor.<com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest, com.github.saturn_xiv.palm.plugins.lily.v1.File>newBuilder()
+              io.grpc.MethodDescriptor.<com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest, com.github.saturn_xiv.palm.plugins.lily.v1.S3File>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "Build"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.github.saturn_xiv.palm.plugins.lily.v1.File.getDefaultInstance()))
+                  com.github.saturn_xiv.palm.plugins.lily.v1.S3File.getDefaultInstance()))
               .setSchemaDescriptor(new EpubMethodDescriptorSupplier("Build"))
               .build();
         }
@@ -97,7 +97,7 @@ public final class EpubGrpc {
     /**
      */
     default void build(com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest request,
-        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.File> responseObserver) {
+        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.S3File> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getBuildMethod(), responseObserver);
     }
   }
@@ -132,7 +132,7 @@ public final class EpubGrpc {
     /**
      */
     public void build(com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest request,
-        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.File> responseObserver) {
+        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.S3File> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getBuildMethod(), getCallOptions()), request, responseObserver);
     }
@@ -156,7 +156,7 @@ public final class EpubGrpc {
 
     /**
      */
-    public com.github.saturn_xiv.palm.plugins.lily.v1.File build(com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest request) {
+    public com.github.saturn_xiv.palm.plugins.lily.v1.S3File build(com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getBuildMethod(), getCallOptions(), request);
     }
@@ -180,7 +180,7 @@ public final class EpubGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.github.saturn_xiv.palm.plugins.lily.v1.File> build(
+    public com.google.common.util.concurrent.ListenableFuture<com.github.saturn_xiv.palm.plugins.lily.v1.S3File> build(
         com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getBuildMethod(), getCallOptions()), request);
@@ -208,7 +208,7 @@ public final class EpubGrpc {
       switch (methodId) {
         case METHODID_BUILD:
           serviceImpl.build((com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest) request,
-              (io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.File>) responseObserver);
+              (io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.S3File>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -233,7 +233,7 @@ public final class EpubGrpc {
           io.grpc.stub.ServerCalls.asyncUnaryCall(
             new MethodHandlers<
               com.github.saturn_xiv.palm.plugins.lily.v1.EpubBuildRequest,
-              com.github.saturn_xiv.palm.plugins.lily.v1.File>(
+              com.github.saturn_xiv.palm.plugins.lily.v1.S3File>(
                 service, METHODID_BUILD)))
         .build();
   }

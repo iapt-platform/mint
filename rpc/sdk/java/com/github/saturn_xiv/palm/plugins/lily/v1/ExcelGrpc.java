@@ -15,27 +15,27 @@ public final class ExcelGrpc {
   public static final java.lang.String SERVICE_NAME = "palm.lily.v1.Excel";
 
   // Static method descriptors that strictly reflect the proto.
-  private static volatile io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.File,
+  private static volatile io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.S3File,
       com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel> getParseMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "Parse",
-      requestType = com.github.saturn_xiv.palm.plugins.lily.v1.File.class,
+      requestType = com.github.saturn_xiv.palm.plugins.lily.v1.S3File.class,
       responseType = com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.File,
+  public static io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.S3File,
       com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel> getParseMethod() {
-    io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.File, com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel> getParseMethod;
+    io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.S3File, com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel> getParseMethod;
     if ((getParseMethod = ExcelGrpc.getParseMethod) == null) {
       synchronized (ExcelGrpc.class) {
         if ((getParseMethod = ExcelGrpc.getParseMethod) == null) {
           ExcelGrpc.getParseMethod = getParseMethod =
-              io.grpc.MethodDescriptor.<com.github.saturn_xiv.palm.plugins.lily.v1.File, com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel>newBuilder()
+              io.grpc.MethodDescriptor.<com.github.saturn_xiv.palm.plugins.lily.v1.S3File, com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "Parse"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.github.saturn_xiv.palm.plugins.lily.v1.File.getDefaultInstance()))
+                  com.github.saturn_xiv.palm.plugins.lily.v1.S3File.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel.getDefaultInstance()))
               .setSchemaDescriptor(new ExcelMethodDescriptorSupplier("Parse"))
@@ -47,28 +47,28 @@ public final class ExcelGrpc {
   }
 
   private static volatile io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel,
-      com.github.saturn_xiv.palm.plugins.lily.v1.File> getGenerateMethod;
+      com.github.saturn_xiv.palm.plugins.lily.v1.S3File> getGenerateMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "Generate",
       requestType = com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel.class,
-      responseType = com.github.saturn_xiv.palm.plugins.lily.v1.File.class,
+      responseType = com.github.saturn_xiv.palm.plugins.lily.v1.S3File.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel,
-      com.github.saturn_xiv.palm.plugins.lily.v1.File> getGenerateMethod() {
-    io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel, com.github.saturn_xiv.palm.plugins.lily.v1.File> getGenerateMethod;
+      com.github.saturn_xiv.palm.plugins.lily.v1.S3File> getGenerateMethod() {
+    io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel, com.github.saturn_xiv.palm.plugins.lily.v1.S3File> getGenerateMethod;
     if ((getGenerateMethod = ExcelGrpc.getGenerateMethod) == null) {
       synchronized (ExcelGrpc.class) {
         if ((getGenerateMethod = ExcelGrpc.getGenerateMethod) == null) {
           ExcelGrpc.getGenerateMethod = getGenerateMethod =
-              io.grpc.MethodDescriptor.<com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel, com.github.saturn_xiv.palm.plugins.lily.v1.File>newBuilder()
+              io.grpc.MethodDescriptor.<com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel, com.github.saturn_xiv.palm.plugins.lily.v1.S3File>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "Generate"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.github.saturn_xiv.palm.plugins.lily.v1.File.getDefaultInstance()))
+                  com.github.saturn_xiv.palm.plugins.lily.v1.S3File.getDefaultInstance()))
               .setSchemaDescriptor(new ExcelMethodDescriptorSupplier("Generate"))
               .build();
         }
@@ -127,7 +127,7 @@ public final class ExcelGrpc {
 
     /**
      */
-    default void parse(com.github.saturn_xiv.palm.plugins.lily.v1.File request,
+    default void parse(com.github.saturn_xiv.palm.plugins.lily.v1.S3File request,
         io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getParseMethod(), responseObserver);
     }
@@ -135,7 +135,7 @@ public final class ExcelGrpc {
     /**
      */
     default void generate(com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel request,
-        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.File> responseObserver) {
+        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.S3File> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGenerateMethod(), responseObserver);
     }
   }
@@ -169,7 +169,7 @@ public final class ExcelGrpc {
 
     /**
      */
-    public void parse(com.github.saturn_xiv.palm.plugins.lily.v1.File request,
+    public void parse(com.github.saturn_xiv.palm.plugins.lily.v1.S3File request,
         io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getParseMethod(), getCallOptions()), request, responseObserver);
@@ -178,7 +178,7 @@ public final class ExcelGrpc {
     /**
      */
     public void generate(com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel request,
-        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.File> responseObserver) {
+        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.S3File> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getGenerateMethod(), getCallOptions()), request, responseObserver);
     }
@@ -202,14 +202,14 @@ public final class ExcelGrpc {
 
     /**
      */
-    public com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel parse(com.github.saturn_xiv.palm.plugins.lily.v1.File request) {
+    public com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel parse(com.github.saturn_xiv.palm.plugins.lily.v1.S3File request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getParseMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public com.github.saturn_xiv.palm.plugins.lily.v1.File generate(com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel request) {
+    public com.github.saturn_xiv.palm.plugins.lily.v1.S3File generate(com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getGenerateMethod(), getCallOptions(), request);
     }
@@ -234,14 +234,14 @@ public final class ExcelGrpc {
     /**
      */
     public com.google.common.util.concurrent.ListenableFuture<com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel> parse(
-        com.github.saturn_xiv.palm.plugins.lily.v1.File request) {
+        com.github.saturn_xiv.palm.plugins.lily.v1.S3File request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getParseMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.github.saturn_xiv.palm.plugins.lily.v1.File> generate(
+    public com.google.common.util.concurrent.ListenableFuture<com.github.saturn_xiv.palm.plugins.lily.v1.S3File> generate(
         com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getGenerateMethod(), getCallOptions()), request);
@@ -269,12 +269,12 @@ public final class ExcelGrpc {
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_PARSE:
-          serviceImpl.parse((com.github.saturn_xiv.palm.plugins.lily.v1.File) request,
+          serviceImpl.parse((com.github.saturn_xiv.palm.plugins.lily.v1.S3File) request,
               (io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel>) responseObserver);
           break;
         case METHODID_GENERATE:
           serviceImpl.generate((com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel) request,
-              (io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.File>) responseObserver);
+              (io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.S3File>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -298,7 +298,7 @@ public final class ExcelGrpc {
           getParseMethod(),
           io.grpc.stub.ServerCalls.asyncUnaryCall(
             new MethodHandlers<
-              com.github.saturn_xiv.palm.plugins.lily.v1.File,
+              com.github.saturn_xiv.palm.plugins.lily.v1.S3File,
               com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel>(
                 service, METHODID_PARSE)))
         .addMethod(
@@ -306,7 +306,7 @@ public final class ExcelGrpc {
           io.grpc.stub.ServerCalls.asyncUnaryCall(
             new MethodHandlers<
               com.github.saturn_xiv.palm.plugins.lily.v1.ExcelModel,
-              com.github.saturn_xiv.palm.plugins.lily.v1.File>(
+              com.github.saturn_xiv.palm.plugins.lily.v1.S3File>(
                 service, METHODID_GENERATE)))
         .build();
   }

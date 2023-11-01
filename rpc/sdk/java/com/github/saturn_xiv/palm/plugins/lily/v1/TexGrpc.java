@@ -16,28 +16,28 @@ public final class TexGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest,
-      com.github.saturn_xiv.palm.plugins.lily.v1.File> getToPdfMethod;
+      com.github.saturn_xiv.palm.plugins.lily.v1.S3File> getToPdfMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "ToPdf",
       requestType = com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest.class,
-      responseType = com.github.saturn_xiv.palm.plugins.lily.v1.File.class,
+      responseType = com.github.saturn_xiv.palm.plugins.lily.v1.S3File.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest,
-      com.github.saturn_xiv.palm.plugins.lily.v1.File> getToPdfMethod() {
-    io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest, com.github.saturn_xiv.palm.plugins.lily.v1.File> getToPdfMethod;
+      com.github.saturn_xiv.palm.plugins.lily.v1.S3File> getToPdfMethod() {
+    io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest, com.github.saturn_xiv.palm.plugins.lily.v1.S3File> getToPdfMethod;
     if ((getToPdfMethod = TexGrpc.getToPdfMethod) == null) {
       synchronized (TexGrpc.class) {
         if ((getToPdfMethod = TexGrpc.getToPdfMethod) == null) {
           TexGrpc.getToPdfMethod = getToPdfMethod =
-              io.grpc.MethodDescriptor.<com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest, com.github.saturn_xiv.palm.plugins.lily.v1.File>newBuilder()
+              io.grpc.MethodDescriptor.<com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest, com.github.saturn_xiv.palm.plugins.lily.v1.S3File>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "ToPdf"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.github.saturn_xiv.palm.plugins.lily.v1.File.getDefaultInstance()))
+                  com.github.saturn_xiv.palm.plugins.lily.v1.S3File.getDefaultInstance()))
               .setSchemaDescriptor(new TexMethodDescriptorSupplier("ToPdf"))
               .build();
         }
@@ -47,28 +47,28 @@ public final class TexGrpc {
   }
 
   private static volatile io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest,
-      com.github.saturn_xiv.palm.plugins.lily.v1.File> getToWordMethod;
+      com.github.saturn_xiv.palm.plugins.lily.v1.S3File> getToWordMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "ToWord",
       requestType = com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest.class,
-      responseType = com.github.saturn_xiv.palm.plugins.lily.v1.File.class,
+      responseType = com.github.saturn_xiv.palm.plugins.lily.v1.S3File.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest,
-      com.github.saturn_xiv.palm.plugins.lily.v1.File> getToWordMethod() {
-    io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest, com.github.saturn_xiv.palm.plugins.lily.v1.File> getToWordMethod;
+      com.github.saturn_xiv.palm.plugins.lily.v1.S3File> getToWordMethod() {
+    io.grpc.MethodDescriptor<com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest, com.github.saturn_xiv.palm.plugins.lily.v1.S3File> getToWordMethod;
     if ((getToWordMethod = TexGrpc.getToWordMethod) == null) {
       synchronized (TexGrpc.class) {
         if ((getToWordMethod = TexGrpc.getToWordMethod) == null) {
           TexGrpc.getToWordMethod = getToWordMethod =
-              io.grpc.MethodDescriptor.<com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest, com.github.saturn_xiv.palm.plugins.lily.v1.File>newBuilder()
+              io.grpc.MethodDescriptor.<com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest, com.github.saturn_xiv.palm.plugins.lily.v1.S3File>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "ToWord"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.github.saturn_xiv.palm.plugins.lily.v1.File.getDefaultInstance()))
+                  com.github.saturn_xiv.palm.plugins.lily.v1.S3File.getDefaultInstance()))
               .setSchemaDescriptor(new TexMethodDescriptorSupplier("ToWord"))
               .build();
         }
@@ -128,14 +128,14 @@ public final class TexGrpc {
     /**
      */
     default void toPdf(com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest request,
-        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.File> responseObserver) {
+        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.S3File> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getToPdfMethod(), responseObserver);
     }
 
     /**
      */
     default void toWord(com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest request,
-        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.File> responseObserver) {
+        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.S3File> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getToWordMethod(), responseObserver);
     }
   }
@@ -170,7 +170,7 @@ public final class TexGrpc {
     /**
      */
     public void toPdf(com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest request,
-        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.File> responseObserver) {
+        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.S3File> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getToPdfMethod(), getCallOptions()), request, responseObserver);
     }
@@ -178,7 +178,7 @@ public final class TexGrpc {
     /**
      */
     public void toWord(com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest request,
-        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.File> responseObserver) {
+        io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.S3File> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getToWordMethod(), getCallOptions()), request, responseObserver);
     }
@@ -202,14 +202,14 @@ public final class TexGrpc {
 
     /**
      */
-    public com.github.saturn_xiv.palm.plugins.lily.v1.File toPdf(com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest request) {
+    public com.github.saturn_xiv.palm.plugins.lily.v1.S3File toPdf(com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getToPdfMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public com.github.saturn_xiv.palm.plugins.lily.v1.File toWord(com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest request) {
+    public com.github.saturn_xiv.palm.plugins.lily.v1.S3File toWord(com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getToWordMethod(), getCallOptions(), request);
     }
@@ -233,7 +233,7 @@ public final class TexGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.github.saturn_xiv.palm.plugins.lily.v1.File> toPdf(
+    public com.google.common.util.concurrent.ListenableFuture<com.github.saturn_xiv.palm.plugins.lily.v1.S3File> toPdf(
         com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getToPdfMethod(), getCallOptions()), request);
@@ -241,7 +241,7 @@ public final class TexGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.github.saturn_xiv.palm.plugins.lily.v1.File> toWord(
+    public com.google.common.util.concurrent.ListenableFuture<com.github.saturn_xiv.palm.plugins.lily.v1.S3File> toWord(
         com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getToWordMethod(), getCallOptions()), request);
@@ -270,11 +270,11 @@ public final class TexGrpc {
       switch (methodId) {
         case METHODID_TO_PDF:
           serviceImpl.toPdf((com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest) request,
-              (io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.File>) responseObserver);
+              (io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.S3File>) responseObserver);
           break;
         case METHODID_TO_WORD:
           serviceImpl.toWord((com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest) request,
-              (io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.File>) responseObserver);
+              (io.grpc.stub.StreamObserver<com.github.saturn_xiv.palm.plugins.lily.v1.S3File>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -299,14 +299,14 @@ public final class TexGrpc {
           io.grpc.stub.ServerCalls.asyncUnaryCall(
             new MethodHandlers<
               com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest,
-              com.github.saturn_xiv.palm.plugins.lily.v1.File>(
+              com.github.saturn_xiv.palm.plugins.lily.v1.S3File>(
                 service, METHODID_TO_PDF)))
         .addMethod(
           getToWordMethod(),
           io.grpc.stub.ServerCalls.asyncUnaryCall(
             new MethodHandlers<
               com.github.saturn_xiv.palm.plugins.lily.v1.TexToRequest,
-              com.github.saturn_xiv.palm.plugins.lily.v1.File>(
+              com.github.saturn_xiv.palm.plugins.lily.v1.S3File>(
                 service, METHODID_TO_WORD)))
         .build();
   }

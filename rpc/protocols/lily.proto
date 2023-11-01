@@ -3,16 +3,13 @@ option java_multiple_files = true;
 option java_package = "com.github.saturn_xiv.palm.plugins.lily.v1";
 package palm.lily.v1;
 
-message File {
-  optional string content_type = 1;
-  bytes payload = 2;
-}
+import "google/protobuf/duration.proto";
 
 // ----------------------------------------------------------------------------
 
 service Excel {
-  rpc Parse(File) returns (ExcelModel) {}
-  rpc Generate(ExcelModel) returns (File) {}
+  rpc Parse(S3File) returns (ExcelModel) {}
+  rpc Generate(ExcelModel) returns (S3File) {}
 }
 
 message ExcelModel {
@@ -27,20 +24,46 @@ message ExcelModel {
   }
   repeated Sheet sheets = 1;
 }
+// ----------------------------------------------------------------------------
 
+service S3 {
+  rpc GetFile(S3GetFileRequest) returns (S3GetFileResponse) {}
+}
+
+message S3File {
+  string bucket = 1;
+  string name = 2;
+
+  string content_type = 9;
+}
+
+message S3GetFileRequest {
+  string bucket = 1;
+  string name = 2;
+  google.protobuf.Duration ttl = 9;
+}
+message S3GetFileResponse {
+  string url = 1;
+}
 // ----------------------------------------------------------------------------
 
 service Tex {
-  rpc ToPdf(TexToRequest) returns (File) {}
-  rpc ToWord(TexToRequest) returns (File) {}
+  rpc ToPdf(TexToRequest) returns (S3File) {}
+  rpc ToWord(TexToRequest) returns (S3File) {}
 }
 
-message TexToRequest { map<string, bytes> files = 1; }
+message TexToRequest {
+  string title = 1;
+  map<string, bytes> files = 2;
+  optional google.protobuf.Duration ttl = 7;
+  optional string owner = 8;
+  bool published = 9;
+}
 
 // ----------------------------------------------------------------------------
 
 service Epub {
-  rpc Build(EpubBuildRequest) returns (File) {}
+  rpc Build(EpubBuildRequest) returns (S3File) {}
 }
 
 message EpubBuildRequest {}
