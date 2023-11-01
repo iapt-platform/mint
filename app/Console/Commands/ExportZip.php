@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\App;
 
 class ExportZip extends Command
 {
@@ -95,12 +96,36 @@ class ExportZip extends Command
                 ];
         }
 
-        //s3
-        Storage::put($zipFile, file_get_contents($zipFullFileName));
-        $s3Link = Storage::url($zipFile);
-        Log::info('export offline: link='.$s3Link);
+        $this->info('upload file='.$zipFile);
+        Log::debug('export offline: upload file {filename}',['filename'=>$zipFile]);
+
+        $bucket = 'attachments-'.config('app.env');
+        $tmpFile =  "{$bucket}\{$zipFile}";
+        Storage::put($tmpFile, file_get_contents($zipFullFileName));
+
+        $this->info('upload done file='.$tmpFile);
+        Log::debug('export offline: upload done {filename}',['filename'=>$tmpFile]);
+
+        if (App::environment('local')) {
+            $link = Storage::url($tmpFile);
+        }else{
+            try{
+                $link = Storage::temporaryUrl($tmpFile, now()->addDays(2));
+            }catch(\Exception $e){
+                $this->error('generate temporaryUrl fail');
+                Log::error('export offline: generate temporaryUrl fail {Exception}',
+                            [
+                                'exception'=>$e,
+                                'file'=>$tmpFile
+                            ]);
+                return 1;
+            }
+        }
+        $this->info('link = '.$link);
+        Log::info('export offline: link='.$link);
+
         $url[] = [
-            'link'=>$s3Link,
+            'link'=>$link,
             'hostname'=>'Amazon cloud storage(Hongkong)',
         ];
         $info[] = ['filename'=>$zipFile,

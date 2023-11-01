@@ -16,7 +16,7 @@ class ExportOffline extends Command
      * php artisan export:offline lzma
      * @var string
      */
-    protected $signature = 'export:offline {format?  : zip file format 7z,lzma,gz }';
+    protected $signature = 'export:offline {format?  : zip file format 7z,lzma,gz } {--shortcut}';
 
     /**
      * The console command description.
@@ -69,22 +69,24 @@ class ExportOffline extends Command
         $this->info('channel');
         $this->call('export:channel');
 
-        //tag
-        $this->info('tag');
-        $this->call('export:tag');
-        $this->call('export:tag.map');
-        //
-        $this->info('pali text');
-        $this->call('export:pali.text');
-        //导出章节索引
-        $this->info('chapter');
-        $this->call('export:chapter.index');
-        //导出译文
-        $this->info('sentence');
-        $this->call('export:sentence',['--type'=>'translation']);
-        $this->call('export:sentence',['--type'=>'nissaya']);
-        //导出原文
-        $this->call('export:sentence',['--type'=>'original']);
+        if(!$this->option('shortcut')){
+            //tag
+            $this->info('tag');
+            $this->call('export:tag');
+            $this->call('export:tag.map');
+            //
+            $this->info('pali text');
+            $this->call('export:pali.text');
+            //导出章节索引
+            $this->info('chapter');
+            $this->call('export:chapter.index');
+            //导出译文
+            $this->info('sentence');
+            $this->call('export:sentence',['--type'=>'translation']);
+            $this->call('export:sentence',['--type'=>'nissaya']);
+            //导出原文
+            $this->call('export:sentence',['--type'=>'original']);
+        }
 
         $this->info('zip');
         Log::debug('export offline: db写入完毕');
