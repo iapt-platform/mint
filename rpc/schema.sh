@@ -7,13 +7,6 @@ export WORKSPACE=$PWD
 
 # -----------------------------------------------------------------------------
 
-# if [[ "$1" == "php" ]]
-#         then
-           
-#         else
-            
-#         fi
-
 function generate_grpc_by_lang() {
     local target=$WORKSPACE/sdk/$1
     echo "generate code for grpc-$1"
@@ -69,9 +62,9 @@ function generate_for_morus() {
     done
     $PROTOBUF_ROOT/bin/protoc -I $WORKSPACE/protocols \
         -I $PROTOBUF_ROOT/include/google/protobuf \
-        --php_out=$target --grpc_out=$target \
+        --php_out=$target --grpc_out=generate_server:$target \
         --plugin=protoc-gen-grpc=$PROTOBUF_ROOT/bin/grpc_php_plugin \
-        $WORKSPACE/protocols/morus.proto
+        $WORKSPACE/protocols/morus.proto    
 }
 
 function generate_for_lily() {
@@ -97,6 +90,19 @@ function generate_for_lily() {
     sed -i 's/import lily_/from . import lily_/g' $target/lily_pb2_grpc.py
 }
 
+function generate_grpc_for_php() {
+    if [ -d $1 ]
+    then
+        rm -r $1
+    fi
+    mkdir -p $1
+    $PROTOBUF_ROOT/bin/protoc -I $WORKSPACE/protocols \
+        -I $PROTOBUF_ROOT/include/google/protobuf \
+        --php_out=$1 --grpc_out=generate_server:$1 \
+        --plugin=protoc-gen-grpc=$PROTOBUF_ROOT/bin/grpc_php_plugin \
+        $WORKSPACE/protocols/*.proto
+}
+
 # -----------------------------------------------------------------------------
 
 declare -a languages=(    
@@ -105,13 +111,13 @@ declare -a languages=(
     "cpp"
     "csharp"    
     "java"
-    "php"
 )
 
 for l in "${languages[@]}"
 do
     generate_grpc_by_lang $l
 done
+generate_grpc_for_php $WORKSPACE/sdk/php
 
 generate_for_morus
 generate_for_lily
