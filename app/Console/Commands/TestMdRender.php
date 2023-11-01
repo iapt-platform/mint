@@ -14,7 +14,7 @@ class TestMdRender extends Command
      * run php artisan test:md.render term unity
      * @var string
      */
-    protected $signature = 'test:md.render {item?} {--format}';
+    protected $signature = 'test:md.render {item?} {--format=}';
 
     /**
      * The console command description.
@@ -59,11 +59,8 @@ class TestMdRender extends Command
         md;
 
         $data['term'] = <<<md
-        ## heading
+        ## term
         [[bhagavantu]]
-        ```
-        test
-        ```
         md;
         $data['noteMulti'] = <<<md
         ## heading
@@ -130,11 +127,11 @@ class TestMdRender extends Command
         //$sent = MdRender::take_sentence($html);
         //print_r($sent);
 
-        $formats = $this->option('format');
+        $format = $this->option('format');
         if(empty($format)){
-            $formats = ['react','unity','text','tex'];
+            $formats = ['react','unity','text','tex','html'];
         }else{
-            $formats = [$formats];
+            $formats = [$format];
         }
         foreach ($formats as $format) {
             $this->info("format:{$format}");

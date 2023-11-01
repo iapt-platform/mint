@@ -17,10 +17,10 @@ class ExportChapter extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan export:chapter 213 1849 a19eaf75-c63f-4b84-8125-1bce18311e23
+     * php artisan export:chapter 213 1913 a19eaf75-c63f-4b84-8125-1bce18311e23 --format=html
      * @var string
      */
-    protected $signature = 'export:chapter {book} {para} {channel} {--debug}';
+    protected $signature = 'export:chapter {book} {para} {channel} {--debug} {--format=tex}';
 
     /**
      * The console command description.
@@ -49,6 +49,17 @@ class ExportChapter extends Command
         Log::debug('task export offline chapter-table start');
         if(\App\Tools\Tools::isStop()){
             return 0;
+        }
+        switch ($this->option('format')) {
+            case 'md':
+                $renderFormat='markdown';
+                break;
+            case 'html':
+                $renderFormat='html';
+                break;
+            default:
+                $renderFormat=$this->option('format');
+                break;
         }
         $book = $this->argument('book');
         $para = $this->argument('para');
@@ -82,7 +93,7 @@ class ExportChapter extends Command
                                     ->where('channel_id',$channelId)
                                     ->first();
             if($chapter){
-                $filename = "{$sub->paragraph}.tex";
+                $filename = "{$sub->paragraph}.".$this->option('format');
                 $bookMeta['sections'][] = ['filename'=>$filename];
                 $paliTitle = PaliText::where('book',$book)->where('paragraph',$sub->paragraph)->value('toc');
                 $title = $chapter->title?$chapter->title:$paliTitle;
@@ -107,13 +118,24 @@ class ExportChapter extends Command
                                                         'read',
                                                         $channel['type'],
                                                         $sent->content_type,
-                                                        'tex'
+                                                        $renderFormat
                                                         );
                         $sentContent[] = trim($texText);
                     }
                     $paraContent = implode(' ',$sentContent);
                     if($body->level > 7){
-                        $content[] = '\par '.$paraContent;
+                        switch ($this->option('format')) {
+                            case 'tex':
+                                $content[] = '\par '.$paraContent;
+                                break;
+                            case 'html':
+                                $content[] = '<p>'.$paraContent.'</p>';
+                                break;
+                            case 'md':
+                                $content[] = "\n\n".$paraContent;
+                                break;
+                        }
+
                     }else{
                         $currLevel = $body->level - $sub->level;
                         if($currLevel>0){
@@ -124,13 +146,26 @@ class ExportChapter extends Command
                             }else{
                                 $subSessionTitle = $paraContent;
                             }
-                            $subStr = array_fill(0,$currLevel,'sub');
-                            $content[] = '\\'. implode('',$subStr) . "section{".$subSessionTitle.'}';
+                            switch ($this->option('format')) {
+                                case 'tex':
+                                    $subStr = array_fill(0,$currLevel,'sub');
+                                    $content[] = '\\'. implode('',$subStr) . "section{".$subSessionTitle.'}';
+                                    break;
+                                case 'md':
+                                    $subStr = array_fill(0,$currLevel,'#');
+                                    $content[] = implode('',$subStr) . " ".$subSessionTitle;
+                                    break;
+                                case 'html':
+                                    $level = $currLevel+2;
+                                    $content[] = "<h{$currLevel}".$subSessionTitle."</h{$currLevel}";
+                                    break;
+                            }
+
                         }else{
                             $content[] = '\par '.$paraContent;
                         }
                     }
-                    $content[] = "\n";
+                    $content[] = "\n\n";
                 }
 
                 $sections[] = [
@@ -148,32 +183,55 @@ class ExportChapter extends Command
                                         'escape'=>function ($value){
                                             return $value;
                                         }));
-        $tpl = file_get_contents(resource_path("mustache/tex/main.tex"));
+        $tpl = file_get_contents(resource_path("mustache/".$this->option('format')."/main.".$this->option('format')));
         $texContent = $m->render($tpl,$bookMeta);
-        $tex[] = ['name'=>'main.tex',
+        $tex[] = ['name'=>'main.'.$this->option('format'),
                   'content'=>$texContent
                  ];
         foreach ($sections as $key => $section) {
-            $tpl = file_get_contents(resource_path("mustache/tex/section.tex"));
+            $tpl = file_get_contents(resource_path("mustache/".$this->option('format')."/section.".$this->option('format')));
             $texContent = $m->render($tpl,$section['body']);
             $tex[] = ['name'=>$section['name'],
                   'content'=>$texContent
                  ];
         }
 
+        //脚注
+        $tplFile = resource_path("mustache/".$this->option('format')."/footnote.".$this->option('format'));
+        if(isset($GLOBALS['note']) &&
+            is_array($GLOBALS['note']) &&
+            count($GLOBALS['note'])>0 &&
+            file_exists($tplFile)){
+            $tpl = file_get_contents($tplFile);
+            $texContent = $m->render($tpl,['footnote'=>$GLOBALS['note']]);
+            $tex[] = ['name'=>'footnote.'.$this->option('format'),
+                        'content'=>$texContent
+                        ];
+        }
         if($this->option('debug')){
-            $dir = "export/{$book}-{$para}-{$channelId}/";
+            $dir = "export/".$this->option('format')."/{$book}-{$para}-{$channelId}/";
             foreach ($tex as $key => $section) {
                 Storage::disk('local')->put($dir.$section['name'], $section['content']);
             }
         }
-        $data = Export::ToPdf($tex);
-        if($data['ok']){
-            $filename = "export/{$book}-{$para}-{$channelId}.pdf";
-            $this->info($data['content-type']);
-            Storage::disk('local')->put($filename, $data['data']);
-        }else{
-            $this->error($data['code'].'-'.$data['message']);
+        switch ($this->option('format')) {
+            case 'tex':
+                $data = Export::ToPdf($tex);
+                if($data['ok']){
+                    $filename = "export/{$book}-{$para}-{$channelId}.pdf";
+                    $this->info($data['content-type']);
+                    Storage::disk('local')->put($filename, $data['data']);
+                }else{
+                    $this->error($data['code'].'-'.$data['message']);
+                }
+                break;
+            case 'html':
+                $fHtml = "export/".$this->option('format')."/{$book}-{$para}-{$channelId}.html";
+                Storage::disk('local')->put($fHtml, '');
+                foreach ($tex as $key => $section) {
+                    Storage::disk('local')->append($fHtml, $section['content']);
+                }
+                break;
         }
 
         Log::debug('task export offline chapter-table finished');
