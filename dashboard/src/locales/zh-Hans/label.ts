@@ -18,6 +18,7 @@ const items = {
   "labels.created-at": "创建于",
   "labels.recent-scan": "最近打开",
   "labels.icp": "ICP:",
+  "labels.no.login": "尚未登录",
 };
 
 export default items;

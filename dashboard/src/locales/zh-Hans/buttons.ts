@@ -73,6 +73,7 @@ const items = {
   "buttons.suggestion": "修改建议",
   "buttons.accept": "接受",
   "buttons.refuse": "拒绝",
+  "buttons.use.as.guest": "以访客身份继续使用",
 };
 
 export default items;

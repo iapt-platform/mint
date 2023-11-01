@@ -49,6 +49,7 @@ import { modeChange } from "../../../reducers/article-mode";
 import SearchButton from "../../../components/general/SearchButton";
 import ToStudio from "../../../components/auth/ToStudio";
 import { currentUser as _currentUser } from "../../../reducers/current-user";
+import LoginAlertModal from "../../../components/auth/LoginAlertModal";
 
 /**
  * type:
@@ -293,10 +294,17 @@ const Widget = () => {
                   anthologyId={searchParams.get("anthology")}
                   onSelect={(key: Key) => {
                     console.log("toc click", key);
-                    let url = `/article/${type}/${key}?`;
+                    const newType = type === "para" ? "chapter" : type;
+                    let url = `/article/${newType}/${key}?`;
                     let param: string[] = [];
-                    searchParams.forEach((value, key) => {
-                      param.push(`${key}=${value}`);
+                    searchParams.forEach((value, searchKey) => {
+                      if (type !== "para") {
+                        param.push(`${searchKey}=${value}`);
+                      } else {
+                        if (searchKey !== "book" && searchKey !== "par") {
+                          param.push(`${searchKey}=${value}`);
+                        }
+                      }
                     });
                     navigate(url + param.join("&"));
                     scrollToTop();
@@ -320,6 +328,7 @@ const Widget = () => {
             key="Article"
             style={{ marginLeft: "auto", marginRight: "auto", width: 1100 }}
           >
+            <LoginAlertModal mode={currMode} />
             <Article
               active={true}
               type={type as ArticleType}

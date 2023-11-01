@@ -20,9 +20,6 @@ import { IChannel } from "./Channel";
 import { ArticleType } from "../article/Article";
 import CopyToModal from "./CopyToModal";
 
-import { useAppSelector } from "../../hooks";
-import { currentUser as _currentUser } from "../../reducers/current-user";
-
 const { Link, Text } = Typography;
 
 interface IParams {
@@ -75,7 +72,6 @@ const ChannelPickerTableWidget = ({
   const [copyOpen, setCopyOpen] = useState<boolean>(false);
   const [ownerChanged, setOwnerChanged] = useState<boolean>(false);
 
-  const user = useAppSelector(_currentUser);
   const ref = useRef<ActionType>();
 
   useEffect(() => {

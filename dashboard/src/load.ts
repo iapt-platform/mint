@@ -1,7 +1,7 @@
 //import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 //import { Duration } from "google-protobuf/google/protobuf/duration_pb";
 
-import { get as getToken, IUser, signIn } from "./reducers/current-user";
+import { get as getToken, guest, IUser, signIn } from "./reducers/current-user";
 //import { DURATION } from "./reducers/current-user";
 import { ISite, refresh as refreshLayout } from "./reducers/layout";
 import { ISettingItem, refresh as refreshSetting } from "./reducers/setting";
@@ -83,10 +83,12 @@ const init = () => {
         store.dispatch(signIn([it, response.data.token]));
       } else {
         localStorage.removeItem("token");
+        store.dispatch(guest(true));
       }
     });
   } else {
     console.log("no token");
+    store.dispatch(guest(true));
   }
 
   //获取用户设置
