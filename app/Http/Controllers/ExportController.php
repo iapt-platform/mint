@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
-
+use App\Console\Commands\ExportChapter;
 
 class ExportController extends Controller
 {
@@ -21,7 +21,9 @@ class ExportController extends Controller
     public function index(Request $request)
     {
         //
-        $filename = Str::uuid().'.'.$request->get('format');
+        $filename = $request->get('book').'-'.
+                    $request->get('par').'-'.
+                    Str::uuid().'.'.$request->get('format');
         Mq::publish('export',[
             'book'=>$request->get('book'),
             'para'=>$request->get('par'),
@@ -52,7 +54,15 @@ class ExportController extends Controller
     public function show($filename)
     {
         //
-        if(RedisClusters::has('export/done/'.$filename)){
+        $exportChapter = new ExportChapter();
+        $exportStatus = $exportChapter->getStatus($filename);
+        if(empty($exportStatus)){
+            return $this->error('no file',200,200);
+        };
+
+        $output = array();
+        $output['status'] = $exportStatus;
+        if($exportStatus['progress']===1){
             if (App::environment('local')) {
                 $s3Link = Storage::url('export/'.$filename);
             }else{
@@ -63,12 +73,10 @@ class ExportController extends Controller
                     return $this->error('temporaryUrl fail',404,404);
                 }
             }
-            Log::info('export: link='.$s3Link);
-
-        }else{
-            return $this->error('no file',200,200);
+            $output['url'] = $s3Link;
         }
-        return $this->ok(['link'=>$s3Link]);
+        return $this->ok($output);
+
     }
 
     /**
