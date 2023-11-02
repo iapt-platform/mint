@@ -352,7 +352,7 @@ id,lang,sn,word_en,word,word2,note
 25757,zh,1,akasanancayatana,ākāsānañcāyatana,Ākāsānañcāyatana,ākāsānañcāyatana：n. 空無辺処.  -upagadeva 空無辺処天.   -kammaṭṭhāna  空無辺処業処.   -kiriyā 空無辺処唯作.   -kusala 空無辺処善.   -dhātu 空無辺所界.   -saññin 空無辺処想者.   -sahagata-saññā-manasikāra 空無辺処と俱行する想作意,16,1
 26059,zh,1,akatannuta,akataññutā,Akataññutā,akataññutā：f.[a-kataññu-tā.BSk.akrtajñatā]  不知恩。,10,1
 26128,zh,1,akatavedita,akataveditā,Akataveditā,akataveditā：f. [a-katavedin-tā.BSk. akrtaveditā]  不感恩。,11,1
-26165,zh,1,akathetva,akathetvā,Akathetvā,akathetvā：[a-kathetvā<katheti] 说かをいで，语らをいで。,9,1
+26165,zh,1,akathetva,akathetvā,Akathetvā,akathetvā：[a-kathetvā&lt;katheti] 说かをいで，语らをいで。,9,1
 26211,zh,1,akatthapakasahi,akaṭṭhapākasāhi,Akaṭṭhapākasāhi,akaṭṭhapākasāhi：m. 耕さずに 熟する米。,15,1
 26326,zh,1,akharika,akhārika,Akhārika,akhārika：a. 不苛の，アルカリ性のない。,8,1
 26602,zh,1,akincannayatana,ākiñcaññāyatana,Ākiñcaññāyatana,ākiñcaññāyatana：n. 無所有処.   -upagadeva 無所有処天.   -kammaṭṭhāna  無所有処業処.   -kiriyā 無所有処唯作.   -kusala 無所有処善.   -dhātu 無所有処界.   -saññā，saññin 無所有処想，想者.   -sappāya-paṭipadā 無所有処利益行道.   -samāpatti 無所有処定.   sahagata-saññā-manasikāra 無所有処と俱行する想作意,15,1
@@ -364,7 +364,7 @@ id,lang,sn,word_en,word,word2,note
 27396,zh,1,akkhaya,akkhaya,Akkhaya,akkhaya：a. [Sk. aksara] 不灭の，不尽の。,7,1
 27469,zh,1,akkheyya,akkheyya,Akkheyya,akkheyya：a.[akkhāti の grd] 语らわるべき，可说の。,8,1
 27713,zh,1,akkodhana,akkodhana,Akkodhana,akkodhana：a. [a-kodhana] 忿なき，親愛なる.akkodho ca anupanāho ca 不忿と不恨。,9,1
-27760,zh,1,akkosaka,akkosaka,Akkosaka,akkosaka：m.[<akkosati] 恶骂者。,8,1
+27760,zh,1,akkosaka,akkosaka,Akkosaka,akkosaka：m.[&lt;akkosati] 恶骂者。,8,1
 27868,zh,1,akkulo pakkulo,akkulo pakkulo,Akkulo Pakkulo,akkulo pakkulo：[ākulo pākulo]  吓し文句の发音。,14,1
 27989,zh,1,akotita,ākoṭita,Ākoṭita,ākoṭita：a. [ākoṭeti の pp.] 打たれた，ノックした，圧した,7,1
 28048,zh,1,akuddha,akuddha,Akuddha,akuddha：a. [a-kuddha] 怒りのない。,7,1
@@ -3191,7 +3191,7 @@ id,lang,sn,word_en,word,word2,note
 488776,zh,1,vipateti,vipāteti,vipāteti,vipāteti，vipāṭeti：[vi-pāṭ の caus．] 裂く，破壊する．pp．vipāṭita	,8,1
 488968,zh,1,vippahina,vippahīna,vippahīna,vippahīna：a．[vippajahati の pp．] 捨断した，棄捨した	,9,1
 489099,zh,1,vippakinna,vippakiṇṇa,vippakiṇṇa,vippakiṇṇa：a．[vippakirati の pp．] 散乱した，混乱の	,10,1
-489643,zh,1,vippavasati,vippavasati,vippavasati,vippavasati：[<vi-pa-vas] ① 不在にする，家から出て住する．② 衣を離れる．pp．vippavuttha 	,11,1
+489643,zh,1,vippavasati,vippavasati,vippavasati,vippavasati：[&lt;vi-pa-vas] ① 不在にする，家から出て住する．② 衣を離れる．pp．vippavuttha 	,11,1
 490202,zh,1,viraddha,viraddha,viraddha,viraddha：a．[virajjhati の pp．] 失敗した，失われた  	,8,1
 490301,zh,1,viradhita,virādhita,virādhita,virādhita：a．[virādheti の pp．] 失敗した，失った	,9,1
 490418,zh,1,viragita,virāgita,virāgita,virāgita：a．① [virājeti の pp．] 捨てた，掃蕩した．② [virājati の caus．の pp．] 輝やける，光線のある	,8,1
