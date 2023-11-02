@@ -16,9 +16,13 @@ use App\Tools\RedisClusters;
 
 class ExportChapter extends Command
 {
+    protected $exportStatusKey = 'export/status';
+    protected $exportStatusExpiry = 3600;
+    protected $currExportStatusKey = '';
     /**
      * The name and signature of the console command.
      * php artisan export:chapter 213 1913 a19eaf75-c63f-4b84-8125-1bce18311e23 213-1913 --format=html
+     * php artisan export:chapter 168 915 19f53a65-81db-4b7d-8144-ac33f1217d34 168-915 --format=html
      * @var string
      */
     protected $signature = 'export:chapter {book} {para} {channel} {filename} {--debug} {--format=tex} ';
@@ -41,6 +45,21 @@ class ExportChapter extends Command
     }
 
     /**
+     * progress: 0-1, error -1
+     * message: string
+     */
+    protected function setStatus($progress,$message=''){
+        RedisClusters::put($this->currExportStatusKey,
+                            [
+                                'progress'=>$progress,
+                                'message'=>$message,
+                            ],
+                            $this->exportStatusExpiry);
+    }
+    public function getStatus($filename){
+        return RedisClusters::get($this->exportStatusKey.'/'.$filename);
+    }
+    /**
      * Execute the console command.
      *
      * @return int
@@ -52,6 +71,11 @@ class ExportChapter extends Command
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
+
+        MdRender::init();
+
+        $this->currExportStatusKey = $this->exportStatusKey . '/' . $this->argument('filename');
+
         switch ($this->option('format')) {
             case 'md':
                 $renderFormat='markdown';
@@ -71,6 +95,10 @@ class ExportChapter extends Command
         if(!$chapter){
             return $this->error("no data");
         }
+
+        $currProgress = 0;
+        $this->setStatus($currProgress,'start');
+
         $bookMeta = array();
         if(empty($chapter->toc)){
             $bookMeta['title'] = "unknown";
@@ -84,10 +112,22 @@ class ExportChapter extends Command
         if($channel){
             $bookMeta['book_author'] = $channel['name'];
         }
+
         $subChapter = PaliText::where('book',$book)->where('parent',$para)
                               ->where('level','<',8)
                               ->orderBy('paragraph')
                               ->get();
+        if(count($subChapter) === 0){
+            //没有子章节
+            $subChapter = PaliText::where('book',$book)->where('paragraph',$para)
+                              ->where('level','<',8)
+                              ->orderBy('paragraph')
+                              ->get();
+        }
+
+
+        $step = 1 / PaliText::where('book',$book)->where('paragraph',$para)->value('chapter_len');
+
         $sections = array();
         foreach ($subChapter as $key => $sub) {
             # code...
@@ -107,6 +147,8 @@ class ExportChapter extends Command
                                           ->whereBetween('paragraph',[$chapterStart,$chapterEnd])
                                           ->orderBy('paragraph')->get();
                 foreach ($chapterBody as $body) {
+                    $currProgress += $step;
+                    $this->setStatus($currProgress,'export chapter '.$body->paragraph);
                     # code...
                     $translationData = Sentence::where('book_id',$book)
                                     ->where('paragraph',$body->paragraph)
@@ -179,6 +221,10 @@ class ExportChapter extends Command
                             ];
             }
         }
+
+        $this->setStatus(0.9,'export content done');
+        Log::debug('导出结束');
+
         $tex = array();
         $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES,
                                         'delimiters' => '[[ ]]',
@@ -198,7 +244,8 @@ class ExportChapter extends Command
                  ];
         }
 
-        //脚注
+        Log::debug('footnote start');
+        //footnote
         $tplFile = resource_path("mustache/".$this->option('format')."/footnote.".$this->option('format'));
         if(isset($GLOBALS['note']) &&
             is_array($GLOBALS['note']) &&
@@ -216,7 +263,12 @@ class ExportChapter extends Command
                 Storage::disk('local')->put($dir.$section['name'], $section['content']);
             }
         }
-        //save
+
+        Log::debug('footnote finished');
+        Log::debug('upload start');
+        $this->setStatus(0.95,'export content done');
+
+        //upload
         switch ($this->option('format')) {
             case 'tex':
                 $data = Export::ToPdf($tex);
@@ -237,7 +289,7 @@ class ExportChapter extends Command
                 Storage::put($filename, implode('',$file));
                 break;
         }
-        RedisClusters::put('export/done/'.$this->argument('filename'),true,3600*24);
+        $this->setStatus(1,'export done');
         Log::debug('task export offline chapter-table finished');
         return 0;
     }
