@@ -30,7 +30,12 @@ return [
 
     ],
 
-    'attachments_bucket_name' => env('ATTACHMENTS_BUCKET_NAME', "attachments-staging"),
+    'attachments' => [
+        'bucket_name' => [
+            'temporary' => env('ATTACHMENTS_TEMPORARY_BUCKET_NAME', "attachments-staging"),
+            'permanent' => env('ATTACHMENTS_PERMANENT_BUCKET_NAME', "attachments-staging"),
+        ],
+    ],
 
     'cache' => [
         //这个值prod,staging无需设置

@@ -96,7 +96,7 @@ class ExportZip extends Command
                 ];
         }
 
-        $bucket = config('mint.attachments_bucket_name');
+        $bucket = config('mint.attachments.bucket_name.temporary');
         $tmpFile =  $bucket.'/'. $zipFile ;
 
         $this->info('upload file='.$tmpFile);
