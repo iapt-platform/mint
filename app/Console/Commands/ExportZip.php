@@ -70,6 +70,10 @@ class ExportZip extends Command
         }
         $zipFullFileName = storage_path($exportPath.'/'.$zipFile);
 
+        unlink($zipFullFileName);
+
+        Log::debug('export offline: delete old file:'.$zipFullFileName);
+
         shell_exec("cd ".storage_path($exportPath));
         if($this->argument('format')==='7z'){
             $command = "7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on {$zipFullFileName} {$exportFullFileName}";
