@@ -18,6 +18,7 @@ class ExportChapter extends Command
     /**
      * The name and signature of the console command.
      * php artisan export:chapter 213 1913 a19eaf75-c63f-4b84-8125-1bce18311e23 --format=html
+     * php artisan export:chapter 213 3  a19eaf75-c63f-4b84-8125-1bce18311e23 --format=html
      * @var string
      */
     protected $signature = 'export:chapter {book} {para} {channel} {--debug} {--format=tex}';
