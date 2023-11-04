@@ -93,13 +93,19 @@ export function XmlToReact(
               );
               break;
             default:
-              output.push(
-                React.createElement(
-                  tagName,
-                  getAttr(value, i),
-                  convert(value, wordWidget, convertor)
-                )
-              );
+              try {
+                output.push(
+                  React.createElement(
+                    tagName,
+                    getAttr(value, i),
+                    convert(value, wordWidget, convertor)
+                  )
+                );
+              } catch (error) {
+                console.log("ParserError", tagName);
+                output.push(React.createElement(ParserError, { key: i }, []));
+              }
+
               break;
           }
 
