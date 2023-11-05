@@ -1,0 +1,14 @@
+{
+  "require": {
+    "grpc/grpc": "v1.57.0",
+    "google/protobuf": "v3.23.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "GPBMetadata\\": [
+        "GPBMetadata/"
+      ],
+      "Mint\\": "Mint/"
+    }
+  }
+}
