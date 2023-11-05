@@ -19,6 +19,8 @@ return [
             'morus' => env('MORUS_RPC_SERVER', "localhost:9999"),
 
             'lily' => env('LILY_RPC_SERVER', "192.168.43.100:9000"),
+
+            'tulip' => env('TULIP_RPC_SERVER', "localhost:9990"),
         ],
 
         'assets' => env('ASSETS_SERVER', "localhost:9999"),
