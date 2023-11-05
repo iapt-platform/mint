@@ -164,10 +164,6 @@ class SearchController extends Controller
 
         $result = DB::select($query, $param);
 
-        //待查询单词列表
-        //$caseMan = new CaseMan();
-        //$wordSpell = $caseMan->BaseToWord($key);
-
         return $this->ok(["rows"=>SearchResource::collection($result),"count"=>$resultCount[0]->co]);
     }
     public function page(Request $request)
