@@ -13,6 +13,8 @@ use App\Models\Wbw;
 use App\Models\Discussion;
 use App\Models\PaliSentence;
 use App\Models\SentSimIndex;
+use App\Models\CustomBookSentence;
+
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -118,13 +120,18 @@ class CorpusController extends Controller
         if(count($sentId) !== 4){
             return false;
         }
-        if($mode==='read'){
-            $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+        if((int)$sentId[0] < 1000){
+            if($mode==='read'){
+                $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+            }else{
+                $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+            }
         }else{
-            $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+
         }
 
-        if($channelId !== false){
+
+        if(isset($channelId) && $channelId){
             array_push($channels,$channelId);
         }
         $record = Sentence::select($this->selectCol)
@@ -136,6 +143,55 @@ class CorpusController extends Controller
                         ->get();
 
         $channelIndex = $this->getChannelIndex($channels);
+
+        if((int)$sentId[0] >= 1000){
+            $orgChannelId = (string)Str::uuid();
+            //载入自定义原文
+            $customOrigin = CustomBookSentence::
+                              where('book',(int)$sentId[0])
+                            ->where('paragraph',(int)$sentId[1])
+                            ->where('word_start',(int)$sentId[2])
+                            ->where('word_end',(int)$sentId[3])
+                            ->get();
+            $toSentFormat = array();
+            $owner_uid = null;
+            foreach ($customOrigin as $custom) {
+                if($owner_uid === null){
+                    $owner_uid = $custom->owner;
+                }
+                $toSentFormat[] = (object)[
+                    'uid'=>$custom->id,
+                    'book_id'=>$custom->book,
+                    'paragraph'=>$custom->paragraph,
+                    'word_start'=>$custom->word_start,
+                    "word_end"=>$custom->word_end,
+                    'channel_uid'=>$orgChannelId,
+                    'content'=>$custom->content,
+                    'content_type'=>$custom->content_type,
+                    'editor_uid'=>$custom->owner,
+                    'acceptor_uid'=>null,
+                    'pr_edit_at'=>null,
+                    'create_time'=>$custom->create_time,
+                    'modify_time'=>$custom->modify_time,
+                    'created_at'=>$custom->created_at,
+                    'updated_at'=>$custom->updated_at,
+                ];
+            }
+            $orgChannel = (object)array(
+                        'uid'=>$orgChannelId,
+                        'type'=>'original',
+                        'name'=>'custom',
+                        'owner_uid'=>$owner_uid,
+                        'studio'=>StudioApi::getById($owner_uid),
+                    );
+            $channelIndex[$orgChannelId] = $orgChannel;
+        }
+
+        if(isset($toSentFormat)){
+            foreach ($toSentFormat as $key => $org) {
+                $record[] = $org;
+            }
+        }
 
         //获取wbw channel
         //目前默认的 wbw channel 是第一个translation channel
@@ -528,7 +584,7 @@ class CorpusController extends Controller
         }
         foreach ($indexChannel as $uid => $value) {
             # 查询studio
-            $indexChannel[$uid]['studio'] = StudioApi::getById($value->owner_uid);
+            $indexChannel[$uid]->studio = StudioApi::getById($value->owner_uid);
         }
         return $indexChannel;
     }
@@ -552,7 +608,7 @@ class CorpusController extends Controller
         foreach ($record as $key => $value) {
             $currSentId = "{$value->book_id}-{$value->paragraph}-{$value->word_start}-{$value->word_end}";
             $sentList[$currSentId]=[$value->book_id ,$value->paragraph,$value->word_start,$value->word_end];
-            $value['sid'] = "{$currSentId}_{$value->channel_uid}";
+            $value->sid = "{$currSentId}_{$value->channel_uid}";
         }
         $channelsId = array();
         $count = 0;
@@ -592,6 +648,11 @@ class CorpusController extends Controller
             foreach ($indexChannel as $channelId => $info) {
                 # code...
                 $sid = "{$currSentId}_{$channelId}";
+                if(isset($info->studio)){
+                    $studioInfo = $info->studio;
+                }else{
+                    $studioInfo = null;
+                }
                 $newSent = [
                     "content"=>"",
                     "html"=> "",
@@ -604,13 +665,13 @@ class CorpusController extends Controller
                         "type"=>$info->type,
                         "id"=> $info->uid,
                     ],
-                    "studio" => $info['studio'],
+                    "studio" => $studioInfo,
                     "updateAt"=> "",
                     "suggestionCount" => SuggestionApi::getCountBySent($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],$channelId),
                 ];
 
                 $row = Arr::first($record,function($value,$key) use($sid){
-                    return $value['sid']===$sid;
+                    return $value->sid===$sid;
                 });
                 if($row){
                     $newSent['id'] = $row->uid;
@@ -885,21 +946,24 @@ class CorpusController extends Controller
 			"translation"=>[],
 		];
 
-		#生成channel 数量列表
-		$sentId = "{$book}-{$para}-{$word_start}-{$word_end}";
-        $channelCount = CorpusController::_sentCanReadCount($book,$para,$word_start,$word_end,$this->userUuid);
-        $path = json_decode(PaliText::where('book',$book)->where('paragraph',$para)->value("path"),true);
-        $sent["path"] = [];
-        foreach ($path as $key => $value) {
-            # code...
-            $value['paliTitle'] = $value['title'];
-            $sent["path"][] = $value;
+        if($book<1000){
+            #生成channel 数量列表
+            $sentId = "{$book}-{$para}-{$word_start}-{$word_end}";
+            $channelCount = CorpusController::_sentCanReadCount($book,$para,$word_start,$word_end,$this->userUuid);
+            $path = json_decode(PaliText::where('book',$book)->where('paragraph',$para)->value("path"),true);
+            $sent["path"] = [];
+            foreach ($path as $key => $value) {
+                # code...
+                $value['paliTitle'] = $value['title'];
+                $sent["path"][] = $value;
+            }
+            $sent["tranNum"] = $channelCount['tranNum'];
+            $sent["nissayaNum"] = $channelCount['nissayaNum'];
+            $sent["commNum"] = $channelCount['commNum'];
+            $sent["originNum"] = $channelCount['originNum'];
+            $sent["simNum"] = $channelCount['simNum'];
         }
-		$sent["tranNum"] = $channelCount['tranNum'];
-		$sent["nissayaNum"] = $channelCount['nissayaNum'];
-		$sent["commNum"] = $channelCount['commNum'];
-		$sent["originNum"] = $channelCount['originNum'];
-		$sent["simNum"] = $channelCount['simNum'];
+
 		return $sent;
 	}
 
