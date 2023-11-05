@@ -73,25 +73,26 @@ class SearchController extends Controller
     public function pali(Request $request)
     {
         //
-        $searchChapters = [];
-        $searchBooks = [];
-        $searchBookId = [];
-        $queryBookId = '';
-
+        $bookId = [];
         if($request->has('book')){
-            $queryBookId = ' AND pcd_book_id = ' . (int)$request->get('book');
+            $bookId = [(int)$request->get('book')];
         }else if($request->has('tags')){
             //查询搜索范围
             //查询搜索范围
             $tagItems = explode(';',$request->get('tags'));
-            $bookId = [];
+
             foreach ($tagItems as $tagItem) {
-                # code...
                 $bookId = array_merge($bookId,$this->getBookIdByTags(explode(',',$tagItem)));
             }
-            $queryBookId = ' AND pcd_book_id in ('.implode(',',$bookId).') ';
         }
 
+        $searchChapters = [];
+        $searchBooks = [];
+        $searchBookId = [];
+        $queryBookId = '';
+        if(count($bookId) > 0){
+            $queryBookId = ' AND pcd_book_id in ('.implode(',',$bookId).') ';
+        }
         $key = explode(';',$request->get('key')) ;
         $param = [];
         $countParam = [];
