@@ -50,7 +50,6 @@ function generate_for_morus() {
     local -a folders=(
         "GPBMetadata"
         "Mint"
-        "Palm"
     )
     for f in "${folders[@]}"
     do
@@ -90,6 +89,29 @@ function generate_for_lily() {
     sed -i 's/import lily_/from . import lily_/g' $target/lily_pb2_grpc.py
 }
 
+
+function generate_for_tulip() {
+    echo "generate code for tulip project"
+    local target=$WORKSPACE/tulip/tulip
+    local -a folders=(
+        "GPBMetadata"
+        "Tulip"        
+    )
+    for f in "${folders[@]}"
+    do
+        local t=$target/$f
+        if [ -d $t ]
+        then
+            rm -r $t
+        fi
+    done
+    $PROTOBUF_ROOT/bin/protoc -I $WORKSPACE/protocols \
+        -I $PROTOBUF_ROOT/include/google/protobuf \
+        --php_out=$target --grpc_out=generate_server:$target \
+        --plugin=protoc-gen-grpc=$PROTOBUF_ROOT/bin/grpc_php_plugin \
+        $WORKSPACE/protocols/tulip.proto    
+}
+
 function generate_grpc_for_php() {
     if [ -d $1 ]
     then
@@ -121,6 +143,7 @@ generate_grpc_for_php $WORKSPACE/sdk/php
 
 generate_for_morus
 generate_for_lily
+generate_for_tulip
 
 generate_grpc_web $WORKSPACE/../dashboard
 
