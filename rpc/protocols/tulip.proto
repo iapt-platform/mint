@@ -1,0 +1,36 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.github.iapt_platform.mint.plugins.tulip.v1";
+package mint.tulip.v1;
+
+// ----------------------------------------------------------------------------
+message SearchRequest {
+  repeated string keywords = 1;
+  int32 book = 2;
+
+  message Page {
+    int32 index = 1;
+    int32 size = 2;
+  }
+  optional Page page = 99;
+}
+
+message SearchResponse {
+  message Item {
+    int32 rank = 1;
+    string highlight = 2;
+    int32 book = 3;
+    int32 paragraph = 4;
+    string content = 5;
+  }
+  repeated Item items = 1;
+
+  SearchRequest.Page page = 98;
+  int32 total = 99;
+}
+
+service Search {
+  rpc Pali(SearchRequest) returns (SearchResponse) {}
+}
+
+// ----------------------------------------------------------------------------
