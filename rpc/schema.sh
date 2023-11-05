@@ -95,7 +95,7 @@ function generate_for_tulip() {
     local target=$WORKSPACE/tulip/tulip
     local -a folders=(
         "GPBMetadata"
-        "Tulip"        
+        "Mint"        
     )
     for f in "${folders[@]}"
     do
