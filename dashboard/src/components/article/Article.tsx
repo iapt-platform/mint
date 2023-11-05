@@ -225,6 +225,7 @@ const ArticleWidget = ({
         });
       }
 
+      console.log("url", url);
       if (type === "term") {
         get<ITermResponse>(url)
           .then((json) => {
