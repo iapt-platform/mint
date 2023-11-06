@@ -38,7 +38,9 @@ class TestSearchPali extends Command
      */
     public function handle()
     {
-        $result = PaliSearch::search(['citta'],2,0,10);
+        //$result = PaliSearch::search(['citta'],[93,94],'case',0,10);
+        //var_dump($result);
+        $result = PaliSearch::book_list(['citta'],[93,94],'case',0,10);
         var_dump($result);
         return 0;
     }
