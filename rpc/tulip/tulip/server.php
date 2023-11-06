@@ -3,6 +3,8 @@
 require dirname(__FILE__) . '/vendor/autoload.php';
 require dirname(__FILE__) . '/config.php';
 
+
+
 class Greeter extends \Mint\Tulip\V1\SearchStub
 {
     private $_pdo = null;
@@ -41,6 +43,17 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         }
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+        /**
+     * Create a new instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->connectDb();
+    }
+
     public function Pali(
         \Mint\Tulip\V1\SearchRequest $request,
         \Grpc\ServerContext $context
@@ -54,13 +67,20 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         /**
          * 查询业务逻辑
          */
-        $this->connectDb();
 
         $searchChapters = [];
         $searchBooks = [];
         $searchBookId = [];
-        $bookId = [$request->getBook()];
-        $queryBookId = ' AND pcd_book_id in ('.implode(',',$bookId).') ';
+        $bookId = [];
+        if($request->getBooks()->count()>0){
+            foreach ($request->getBooks()->getIterator() as $book) {
+                $bookId[] = $book;
+            }
+            $queryBookId = ' AND pcd_book_id in ('.implode(',',$bookId).') ';
+        }else{
+            $queryBookId = '';
+        }
+        echo 'query books = '.implode(',',$bookId).PHP_EOL;
         $param = [];
         $countParam = [];
         $matchMode = 'case';
@@ -148,7 +168,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
 
          //返回数据
         $response = new \Mint\Tulip\V1\SearchResponse();
-        $output = $response->getItems();        
+        $output = $response->getItems();
         foreach ($result as $row) {
             $item = new \Mint\Tulip\V1\SearchResponse\Item;
             $item->setRank($row['rank']);
