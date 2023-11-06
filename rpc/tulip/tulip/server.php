@@ -81,9 +81,11 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             $queryBookId = '';
         }
         echo 'query books = '.implode(',',$bookId).PHP_EOL;
+
+        $matchMode = $request->getMatchMode();
+        echo 'query mode = '.$matchMode.PHP_EOL;
         $param = [];
         $countParam = [];
-        $matchMode = 'case';
         switch ($matchMode) {
             case 'complete':
             case 'case':
@@ -106,7 +108,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
                 break;
             case 'similar':
                 # 形似，去掉变音符号
-                $key = Tools::getWordEn($keyWords[0]);
+                $key = $this->getWordEn($keyWords[0]);
                 $querySelect_rank = "
                     ts_rank('{0.1, 1, 0.3, 0.2}',
                         full_text_search_weighted_unaccent,
@@ -183,6 +185,57 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         return $response;
     }
 
+    /**
+     * @param \Mint\Tulip\V1\SearchRequest $request client request
+     * @param \Grpc\ServerContext $context server request context
+     * @return \Mint\Tulip\V1\BookListResponse for response data, null if if error occured
+     *     initial metadata (if any) and status (if not ok) should be set to $context
+     */
+    public function BookList(
+        \Mint\Tulip\V1\SearchRequest $request,
+        \Grpc\ServerContext $context
+    ): ?\Mint\Tulip\V1\BookListResponse {
+        $keyWords = [];
+        foreach ($request->getKeywords()->getIterator() as $word) {
+            $keyWords[] = $word;
+        }
+        echo "Received request words = ".implode(',',$keyWords) .PHP_EOL;
+        /**
+         * 查询业务逻辑
+         */
+
+         $searchChapters = [];
+         $searchBooks = [];
+         $searchBookId = [];
+         $bookId = [];
+         if($request->getBooks()->count()>0){
+             foreach ($request->getBooks()->getIterator() as $book) {
+                 $bookId[] = $book;
+             }
+             $queryBookId = ' AND pcd_book_id in ('.implode(',',$bookId).') ';
+         }else{
+             $queryBookId = '';
+         }
+         echo 'query books = '.implode(',',$bookId).PHP_EOL;
+ 
+         $matchMode = $request->getMatchMode();
+         echo 'query mode = '.$matchMode.PHP_EOL;
+         $queryWhere = $this->makeQueryWhere($keyWords,$matchMode);
+         $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
+         $result = $this->dbSelect($query, $queryWhere['param']);
+         //返回数据
+         $response = new \Mint\Tulip\V1\BookListResponse();
+         $output = $response->getItems();
+         foreach ($result as $row) {
+             $item = new \Mint\Tulip\V1\BookListResponse\Item;
+             $item->setBook($row['pcd_book_id']);
+             $item->setCount($row['co']);
+             $output[] = $item;
+         }
+         echo "total=".count($output).PHP_EOL;
+         return $response;
+    }
+
     private function makeQueryWhere($key,$match){
         $param = [];
         $queryWhere = '';
@@ -199,11 +252,18 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             case 'similar':
                 # 形似，去掉变音符号
                 $queryWhere = " full_text_search_weighted_unaccent @@ websearch_to_tsquery('pali_unaccent', ?) ";
-                $key = Tools::getWordEn($key[0]);
+                $key = $this->getWordEn($key[0]);
                 $param = [$key];
                 break;
         };
         return (['query'=>$queryWhere,'param'=>$param]);
+    }
+
+    private function getWordEn($strIn)
+    {
+        $out = str_replace(["ā","ī","ū","ṅ","ñ","ṭ","ḍ","ṇ","ḷ","ṃ"],
+                        ["a","i","u","n","n","t","d","n","l","m"], $strIn);
+        return ($out);
     }
 }
 
