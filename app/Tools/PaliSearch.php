@@ -30,7 +30,7 @@ class PaliSearch
         $output['total'] = $response->getTotal();
         $output['rows'] = [];
         foreach ($response->getItems() as $key => $value) {
-            $output['rows'][] = [
+            $output['rows'][] = (object)[
                 'rank' => $value->getRank(),
                 'highlight' => $value->getHighlight(),
                 'book' => $value->getBook(),
@@ -65,7 +65,7 @@ class PaliSearch
         $output = [];
         $output['rows'] = [];
         foreach ($response->getItems() as $key => $value) {
-            $output['rows'][] = [
+            $output['rows'][] = (object)[
                 'pcd_book_id' => $value->getBook(),
                 'co' => $value->getCount(),
             ];
