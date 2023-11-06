@@ -31,6 +31,20 @@ class SearchClient extends \Grpc\BaseStub {
     }
 
     /**
+     * @param \Mint\Tulip\V1\SearchRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Grpc\UnaryCall
+     */
+    public function BookList(\Mint\Tulip\V1\SearchRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/mint.tulip.v1.Search/BookList',
+        $argument,
+        ['\Mint\Tulip\V1\BookListResponse', 'decode'],
+        $metadata, $options);
+    }
+
+    /**
      * @param \Mint\Tulip\V1\UpdateRequest $argument input argument
      * @param array $metadata metadata
      * @param array $options call options
@@ -45,20 +59,6 @@ class SearchClient extends \Grpc\BaseStub {
     }
 
     /**
-     * @param \Mint\Tulip\V1\UploadDictionaryRequest $argument input argument
-     * @param array $metadata metadata
-     * @param array $options call options
-     * @return \Grpc\UnaryCall
-     */
-    public function UploadDictionary(\Mint\Tulip\V1\UploadDictionaryRequest $argument,
-      $metadata = [], $options = []) {
-        return $this->_simpleRequest('/mint.tulip.v1.Search/UploadDictionary',
-        $argument,
-        ['\Mint\Tulip\V1\UploadDictionaryResponse', 'decode'],
-        $metadata, $options);
-    }
-
-    /**
      * @param \Mint\Tulip\V1\UpdateIndexRequest $argument input argument
      * @param array $metadata metadata
      * @param array $options call options
@@ -69,6 +69,20 @@ class SearchClient extends \Grpc\BaseStub {
         return $this->_simpleRequest('/mint.tulip.v1.Search/UpdateIndex',
         $argument,
         ['\Mint\Tulip\V1\UpdateIndexResponse', 'decode'],
+        $metadata, $options);
+    }
+
+    /**
+     * @param \Mint\Tulip\V1\UploadDictionaryRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Grpc\UnaryCall
+     */
+    public function UploadDictionary(\Mint\Tulip\V1\UploadDictionaryRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/mint.tulip.v1.Search/UploadDictionary',
+        $argument,
+        ['\Mint\Tulip\V1\UploadDictionaryResponse', 'decode'],
         $metadata, $options);
     }
 
