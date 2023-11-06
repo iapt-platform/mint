@@ -287,6 +287,66 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         return $response;
     }
 
+    public function Update(
+        \Mint\Tulip\V1\UpdateRequest $request,
+        \Grpc\ServerContext $context
+    ): ?\Mint\Tulip\V1\UpdateResponse {
+        $response = new \Mint\Tulip\V1\UploadDictionaryResponse();
+        $book = $request->getBook();
+        $paragraph = $request->getParagraph();
+        $now = date("Y-m-d H:i:s");
+        //查询是否存在
+        $query = 'SELECT id from fts_texts where book=? and paragraph = ?';
+        $result = dbSelect($query, [$book,$paragraph]);
+        if(count($result) >0 ){
+            //存在 update
+            $query = 'UPDATE fts_texts set 
+                                "bold_single"=?,
+                                "bold_double"=?,
+                                "bold_multiple"=?,
+                                "content"=?,
+                                "pcd_book_id"=?,
+                                "updated_at"=?  where id=? ';
+            $update = dbSelect($query, [
+                                $request->getBold1(),
+                                $request->getBold2(),
+                                $request->getBold3(),
+                                $request->getContent(),
+                                $request->getPcdBookId(),
+                                $now,
+                                $result[0]['id']
+                                    ]);
+        }else{
+            // new
+            $query = "INSERT INTO fts_texts (
+                        book,
+                        paragraph,
+                        wid,
+                        bold_single,
+                        bold_double,
+                        bold_multiple,
+                        \"content\",
+                        created_at,
+                        updated_at,
+                        pcd_book_id) VALUES
+            (?,?,'bodytext',?,?,?,?,?,?,? )";
+            $insert = dbSelect($query, [
+                            $request->getBook(),
+                            $request->getParagraph(),
+                            $request->getBold1(),
+                            $request->getBold2(),
+                            $request->getBold3(),
+                            $request->getContent(),
+                            $now,
+                            $now,
+                            $request->getPcdBookId(),
+                                ]);
+        }
+
+        $response->setCount(0);
+        return $response;
+    }
+
     private function makeQueryWhere($key,$match){
         $param = [];
         $queryWhere = '';
