@@ -8,6 +8,21 @@ require dirname(__FILE__) . '/config.php';
 class Greeter extends \Mint\Tulip\V1\SearchStub
 {
     private $_pdo = null;
+    private function log($level,$message){
+        $output = "[\033[32m".date("Y/m/d h:i:sa") ."\033[0m] ";
+        if($level === 'error'){
+            $output .= "\033[41m" . $level . "\033[0m ";
+        }else{
+            $output .= $level;
+        }
+        
+        $output .= ' ' . $message.PHP_EOL;
+        if($level === 'error'){
+            fwrite(STDERR,$output);
+        }else{
+            fwrite(STDOUT,$output);
+        }
+    }
     private function connectDb(){
         /**
          * 连接数据库
@@ -236,6 +251,40 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
          }
          echo "total=".count($output).PHP_EOL;
          return $response;
+    }
+    /**
+     * @param \Mint\Tulip\V1\UploadDictionaryRequest $request client request
+     * @param \Grpc\ServerContext $context server request context
+     * @return \Mint\Tulip\V1\UploadDictionaryResponse for response data, null if if error occured
+     *     initial metadata (if any) and status (if not ok) should be set to $context
+     */
+    public function UploadDictionary(
+        \Mint\Tulip\V1\UploadDictionaryRequest $request,
+        \Grpc\ServerContext $context
+    ): ?\Mint\Tulip\V1\UploadDictionaryResponse {
+        $response = new \Mint\Tulip\V1\UploadDictionaryResponse();
+        $data = $request->getData();
+        $this->log('debug',"received data size=".strlen($data));
+        $dir = dirname(__FILE__) . '/storage';
+        if(!is_dir($dir)){
+            $res = mkdir($dir,0700,true);
+            if(!$res){
+                $this->log('error',"mkdir fail path=".$dir);
+                $response->setError(1);
+                return $response;
+            }
+        }
+        $filename = $dir.'/pali-'.date("Y-m-d-h-i-sa").'.syn';
+        $size = file_put_contents($filename,$data);
+
+        if($size === false){
+            $this->log('error',"file write fail ");
+            $response->setError(1);
+            return $response;
+        }
+        $this->log('debug',"save file size={$size} ");
+        $response->setError(0);
+        return $response;
     }
 
     private function makeQueryWhere($key,$match){
