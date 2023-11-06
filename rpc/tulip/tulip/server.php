@@ -18,12 +18,14 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         $db .= ";dbname=".Config['database']['name'];
         $db .= ";user=".Config['database']['user'];
         $db .= ";password=".Config['database']['password'].";";
+        echo 'connect to db host='.Config['database']['host'] . ' name='.Config['database']['name'].PHP_EOL;
         try {
             $PDO = new PDO($db,
                         Config['database']['user'],
                         Config['database']['password'],
                         array(PDO::ATTR_PERSISTENT=>true));
         }catch(PDOException $e) {
+            echo 'connect to db fail'.PHP_EOL;
             print $e->getMessage();
             return false;
         }
@@ -62,7 +64,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         foreach ($request->getKeywords()->getIterator() as $word) {
             $keyWords[] = $word;
         }
-        echo "Received request words = ".implode(',',$keyWords) .PHP_EOL;
+        echo "[".date("Y/m/d h:i:sa") ."] pali search: request words = ".implode(',',$keyWords) .PHP_EOL;
 
         /**
          * 查询业务逻辑
@@ -199,7 +201,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         foreach ($request->getKeywords()->getIterator() as $word) {
             $keyWords[] = $word;
         }
-        echo "Received request words = ".implode(',',$keyWords) .PHP_EOL;
+        echo "book list: request words = ".implode(',',$keyWords) .PHP_EOL;
         /**
          * 查询业务逻辑
          */
