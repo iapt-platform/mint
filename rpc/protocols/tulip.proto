@@ -6,7 +6,7 @@ package mint.tulip.v1;
 // ----------------------------------------------------------------------------
 message SearchRequest {
   repeated string keywords = 1;
-  optional repeated int32 books = 2;
+  repeated int32 books = 2;
 
   message Page {
     int32 index = 1;
@@ -52,13 +52,22 @@ message UpdateIndexResponse{
   int32 error = 1;
 }
 
+message UploadDictionaryRequest{
+  string data = 1;
+}
+
+message UploadDictionaryResponse{
+  int32 error = 1;
+}
+
 service Search {
   rpc Pali(SearchRequest) returns (SearchResponse) {}
 
   rpc Update(UpdateRequest) returns (UpdateResponse) {}
 
+  rpc UploadDictionary(UploadDictionaryRequest) returns (UploadDictionaryResponse) {}
+
   rpc UpdateIndex(UpdateIndexRequest) returns (UpdateIndexResponse) {}
-  rpc UpdateIndexAll() returns (UpdateIndexResponse) {}
 
 }
 
