@@ -7,6 +7,7 @@ package mint.tulip.v1;
 message SearchRequest {
   repeated string keywords = 1;
   repeated int32 books = 2;
+  string match_mode = 3;
 
   message Page {
     int32 index = 1;
@@ -27,6 +28,14 @@ message SearchResponse {
 
   SearchRequest.Page page = 98;
   int32 total = 99;
+}
+
+message BookListResponse {
+  message Item {
+    int32 book = 1;
+    int32 count = 2;
+  }
+  repeated Item items = 1;
 }
 
 message UpdateRequest {
@@ -63,11 +72,13 @@ message UploadDictionaryResponse{
 service Search {
   rpc Pali(SearchRequest) returns (SearchResponse) {}
 
+  rpc BookList(SearchRequest) returns (BookListResponse) {}
+
   rpc Update(UpdateRequest) returns (UpdateResponse) {}
 
-  rpc UploadDictionary(UploadDictionaryRequest) returns (UploadDictionaryResponse) {}
-
   rpc UpdateIndex(UpdateIndexRequest) returns (UpdateIndexResponse) {}
+
+  rpc UploadDictionary(UploadDictionaryRequest) returns (UploadDictionaryResponse) {}
 
 }
 

@@ -24,6 +24,10 @@ class SearchRequest extends \Google\Protobuf\Internal\Message
      */
     private $books;
     /**
+     * Generated from protobuf field <code>string match_mode = 3;</code>
+     */
+    protected $match_mode = '';
+    /**
      * Generated from protobuf field <code>optional .mint.tulip.v1.SearchRequest.Page page = 99;</code>
      */
     protected $page = null;
@@ -36,6 +40,7 @@ class SearchRequest extends \Google\Protobuf\Internal\Message
      *
      *     @type array<string>|\Google\Protobuf\Internal\RepeatedField $keywords
      *     @type array<int>|\Google\Protobuf\Internal\RepeatedField $books
+     *     @type string $match_mode
      *     @type \Mint\Tulip\V1\SearchRequest\Page $page
      * }
      */
@@ -84,6 +89,28 @@ class SearchRequest extends \Google\Protobuf\Internal\Message
     {
         $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::INT32);
         $this->books = $arr;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string match_mode = 3;</code>
+     * @return string
+     */
+    public function getMatchMode()
+    {
+        return $this->match_mode;
+    }
+
+    /**
+     * Generated from protobuf field <code>string match_mode = 3;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setMatchMode($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->match_mode = $var;
 
         return $this;
     }

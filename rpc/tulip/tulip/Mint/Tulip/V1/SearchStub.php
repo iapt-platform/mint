@@ -22,6 +22,20 @@ class SearchStub {
     }
 
     /**
+     * @param \Mint\Tulip\V1\SearchRequest $request client request
+     * @param \Grpc\ServerContext $context server request context
+     * @return \Mint\Tulip\V1\BookListResponse for response data, null if if error occured
+     *     initial metadata (if any) and status (if not ok) should be set to $context
+     */
+    public function BookList(
+        \Mint\Tulip\V1\SearchRequest $request,
+        \Grpc\ServerContext $context
+    ): ?\Mint\Tulip\V1\BookListResponse {
+        $context->setStatus(\Grpc\Status::unimplemented());
+        return null;
+    }
+
+    /**
      * @param \Mint\Tulip\V1\UpdateRequest $request client request
      * @param \Grpc\ServerContext $context server request context
      * @return \Mint\Tulip\V1\UpdateResponse for response data, null if if error occured
@@ -31,20 +45,6 @@ class SearchStub {
         \Mint\Tulip\V1\UpdateRequest $request,
         \Grpc\ServerContext $context
     ): ?\Mint\Tulip\V1\UpdateResponse {
-        $context->setStatus(\Grpc\Status::unimplemented());
-        return null;
-    }
-
-    /**
-     * @param \Mint\Tulip\V1\UploadDictionaryRequest $request client request
-     * @param \Grpc\ServerContext $context server request context
-     * @return \Mint\Tulip\V1\UploadDictionaryResponse for response data, null if if error occured
-     *     initial metadata (if any) and status (if not ok) should be set to $context
-     */
-    public function UploadDictionary(
-        \Mint\Tulip\V1\UploadDictionaryRequest $request,
-        \Grpc\ServerContext $context
-    ): ?\Mint\Tulip\V1\UploadDictionaryResponse {
         $context->setStatus(\Grpc\Status::unimplemented());
         return null;
     }
@@ -64,6 +64,20 @@ class SearchStub {
     }
 
     /**
+     * @param \Mint\Tulip\V1\UploadDictionaryRequest $request client request
+     * @param \Grpc\ServerContext $context server request context
+     * @return \Mint\Tulip\V1\UploadDictionaryResponse for response data, null if if error occured
+     *     initial metadata (if any) and status (if not ok) should be set to $context
+     */
+    public function UploadDictionary(
+        \Mint\Tulip\V1\UploadDictionaryRequest $request,
+        \Grpc\ServerContext $context
+    ): ?\Mint\Tulip\V1\UploadDictionaryResponse {
+        $context->setStatus(\Grpc\Status::unimplemented());
+        return null;
+    }
+
+    /**
      * Get the method descriptors of the service for server registration
      *
      * @return array of \Grpc\MethodDescriptor for the service methods
@@ -77,22 +91,28 @@ class SearchStub {
                 '\Mint\Tulip\V1\SearchRequest',
                 \Grpc\MethodDescriptor::UNARY_CALL
             ),
+            '/mint.tulip.v1.Search/BookList' => new \Grpc\MethodDescriptor(
+                $this,
+                'BookList',
+                '\Mint\Tulip\V1\SearchRequest',
+                \Grpc\MethodDescriptor::UNARY_CALL
+            ),
             '/mint.tulip.v1.Search/Update' => new \Grpc\MethodDescriptor(
                 $this,
                 'Update',
                 '\Mint\Tulip\V1\UpdateRequest',
                 \Grpc\MethodDescriptor::UNARY_CALL
             ),
-            '/mint.tulip.v1.Search/UploadDictionary' => new \Grpc\MethodDescriptor(
-                $this,
-                'UploadDictionary',
-                '\Mint\Tulip\V1\UploadDictionaryRequest',
-                \Grpc\MethodDescriptor::UNARY_CALL
-            ),
             '/mint.tulip.v1.Search/UpdateIndex' => new \Grpc\MethodDescriptor(
                 $this,
                 'UpdateIndex',
                 '\Mint\Tulip\V1\UpdateIndexRequest',
+                \Grpc\MethodDescriptor::UNARY_CALL
+            ),
+            '/mint.tulip.v1.Search/UploadDictionary' => new \Grpc\MethodDescriptor(
+                $this,
+                'UploadDictionary',
+                '\Mint\Tulip\V1\UploadDictionaryRequest',
                 \Grpc\MethodDescriptor::UNARY_CALL
             ),
         ];
