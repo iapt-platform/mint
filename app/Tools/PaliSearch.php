@@ -72,4 +72,49 @@ class PaliSearch
         }
         return $output;
     }
+
+    public static function upload_dict($data){
+        $host = config('mint.server.rpc.tulip');
+        Log::debug('tulip host='.$host);
+        $client = new \Mint\Tulip\V1\SearchClient($host, [
+            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+        ]);
+
+        $request = new \Mint\Tulip\V1\UploadDictionaryRequest();
+        $request->setData($data);
+
+        list($response, $status) = $client->UploadDictionary($request)->wait();
+        if ($status->code !== \Grpc\STATUS_OK) {
+            Log::error("ERROR: " . $status->code . ", " . $status->details);
+            return false;
+        }
+        return $response->getError();
+    }
+
+    public static function update($book,$paragraph,
+                                  $bold1,$bold2,$bold3,
+                                  $content,$pcd_book_id){
+        $host = config('mint.server.rpc.tulip');
+        Log::debug('tulip host='.$host);
+        $client = new \Mint\Tulip\V1\SearchClient($host, [
+            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+        ]);
+
+        $request = new \Mint\Tulip\V1\UpdateRequest();
+        $request->setBook($book);
+        $request->setParagraph($paragraph);
+        $request->setLevel(0);
+        $request->setBold1($bold1);
+        $request->setBold2($bold2);
+        $request->setBold3($bold3);
+        $request->setContent($content);
+        $request->setPcdBookId($pcd_book_id);
+
+        list($response, $status) = $client->Update($request)->wait();
+        if ($status->code !== \Grpc\STATUS_OK) {
+            Log::error("ERROR: " . $status->code . ", " . $status->details);
+            return false;
+        }
+        return $response->getCount();
+    }
 }

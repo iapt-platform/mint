@@ -40,8 +40,9 @@ class TestSearchPali extends Command
     {
         //$result = PaliSearch::search(['citta'],[93,94],'case',0,10);
         //var_dump($result);
-        $result = PaliSearch::book_list(['citta'],[93,94],'case',0,10);
-        var_dump($result);
+        //$result = PaliSearch::book_list(['citta'],[93,94],'case',0,10);
+        //var_dump($result);
+        $this->info(PaliSearch::upload_dict('ddd'));
         return 0;
     }
 }
