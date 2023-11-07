@@ -291,13 +291,14 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         \Mint\Tulip\V1\UpdateRequest $request,
         \Grpc\ServerContext $context
     ): ?\Mint\Tulip\V1\UpdateResponse {
-        $response = new \Mint\Tulip\V1\UploadDictionaryResponse();
+        $response = new \Mint\Tulip\V1\UpdateResponse();
         $book = $request->getBook();
         $paragraph = $request->getParagraph();
+        $this->log('debug',"update start book={$book} para={$paragraph} ");
         $now = date("Y-m-d H:i:s");
         //查询是否存在
         $query = 'SELECT id from fts_texts where book=? and paragraph = ?';
-        $result = dbSelect($query, [$book,$paragraph]);
+        $result = $this->dbSelect($query, [$book,$paragraph]);
         if(count($result) >0 ){
             //存在 update
             $query = 'UPDATE fts_texts set 
@@ -307,7 +308,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
                                 "content"=?,
                                 "pcd_book_id"=?,
                                 "updated_at"=?  where id=? ';
-            $update = dbSelect($query, [
+            $update = $this->dbSelect($query, [
                                 $request->getBold1(),
                                 $request->getBold2(),
                                 $request->getBold3(),
@@ -330,7 +331,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
                         updated_at,
                         pcd_book_id) VALUES
             (?,?,'bodytext',?,?,?,?,?,?,? )";
-            $insert = dbSelect($query, [
+            $insert = $this->dbSelect($query, [
                             $request->getBook(),
                             $request->getParagraph(),
                             $request->getBold1(),
@@ -345,6 +346,23 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
 
         $response->setCount(0);
         return $response;
+    }
+
+    private function updateIndex($book,$para){
+        $query = 'UPDATE fts_texts SET content = content,
+        bold_single = bold_single,
+        bold_double = bold_double,
+        bold_multiple = bold_multiple
+        WHERE book = ? AND paragraph = ?';
+        $update = $this->dbSelect($query, [$book,$para]);
+    }
+    
+    private function updateIndexAll(){
+        $query = 'UPDATE fts_texts SET content = content,
+        bold_single = bold_single,
+        bold_double = bold_double,
+        bold_multiple = bold_multiple';
+        $update = $this->dbSelect($query);
     }
 
     private function makeQueryWhere($key,$match){
