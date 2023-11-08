@@ -20,9 +20,13 @@ class SearchRequest extends \Google\Protobuf\Internal\Message
      */
     private $keywords;
     /**
-     * Generated from protobuf field <code>int32 book = 2;</code>
+     * Generated from protobuf field <code>repeated int32 books = 2;</code>
      */
-    protected $book = 0;
+    private $books;
+    /**
+     * Generated from protobuf field <code>string match_mode = 3;</code>
+     */
+    protected $match_mode = '';
     /**
      * Generated from protobuf field <code>optional .mint.tulip.v1.SearchRequest.Page page = 99;</code>
      */
@@ -35,7 +39,8 @@ class SearchRequest extends \Google\Protobuf\Internal\Message
      *     Optional. Data for populating the Message object.
      *
      *     @type array<string>|\Google\Protobuf\Internal\RepeatedField $keywords
-     *     @type int $book
+     *     @type array<int>|\Google\Protobuf\Internal\RepeatedField $books
+     *     @type string $match_mode
      *     @type \Mint\Tulip\V1\SearchRequest\Page $page
      * }
      */
@@ -67,23 +72,45 @@ class SearchRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>int32 book = 2;</code>
-     * @return int
+     * Generated from protobuf field <code>repeated int32 books = 2;</code>
+     * @return \Google\Protobuf\Internal\RepeatedField
      */
-    public function getBook()
+    public function getBooks()
     {
-        return $this->book;
+        return $this->books;
     }
 
     /**
-     * Generated from protobuf field <code>int32 book = 2;</code>
-     * @param int $var
+     * Generated from protobuf field <code>repeated int32 books = 2;</code>
+     * @param array<int>|\Google\Protobuf\Internal\RepeatedField $var
      * @return $this
      */
-    public function setBook($var)
+    public function setBooks($var)
     {
-        GPBUtil::checkInt32($var);
-        $this->book = $var;
+        $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::INT32);
+        $this->books = $arr;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string match_mode = 3;</code>
+     * @return string
+     */
+    public function getMatchMode()
+    {
+        return $this->match_mode;
+    }
+
+    /**
+     * Generated from protobuf field <code>string match_mode = 3;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setMatchMode($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->match_mode = $var;
 
         return $this;
     }

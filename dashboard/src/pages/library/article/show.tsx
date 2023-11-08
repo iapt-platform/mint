@@ -50,6 +50,7 @@ import SearchButton from "../../../components/general/SearchButton";
 import ToStudio from "../../../components/auth/ToStudio";
 import { currentUser as _currentUser } from "../../../reducers/current-user";
 import LoginAlertModal from "../../../components/auth/LoginAlertModal";
+import ShareButton from "../../../components/export/ShareButton";
 
 /**
  * type:
@@ -63,11 +64,11 @@ import LoginAlertModal from "../../../components/auth/LoginAlertModal";
  * @returns
  */
 const Widget = () => {
-  const { type, id, mode = "read" } = useParams(); //url 参数
-  const navigate = useNavigate();
-  console.log("mode", mode);
-  const [rightPanel, setRightPanel] = useState<TPanelName>("close");
+  const { type, id } = useParams(); //url 参数
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const navigate = useNavigate();
+  const [rightPanel, setRightPanel] = useState<TPanelName>("close");
   const [anchorNavOpen, setAnchorNavOpen] = useState(false);
   const [anchorNavShow, setAnchorNavShow] = useState(true);
   const [recentModalOpen, setRecentModalOpen] = useState(false);
@@ -187,6 +188,14 @@ const Widget = () => {
                 </Button>
               </>
             ) : undefined}
+            <ShareButton
+              type={type as ArticleType}
+              book={searchParams.get("book")}
+              para={searchParams.get("par")}
+              channelId={searchParams.get("channel")}
+              articleId={id}
+              anthologyId={searchParams.get("anthology")}
+            />
             <SearchButton />
             <Divider type="vertical" />
             <ToStudio />
