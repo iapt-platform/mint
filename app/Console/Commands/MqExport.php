@@ -10,7 +10,7 @@ class MqExport extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan mq:export
      * @var string
      */
     protected $signature = 'mq:export';
@@ -52,10 +52,10 @@ class MqExport extends Command
                         'filename'=>$message->filename,
                     ];
             if(isset($message->origin) && is_string($message->origin)){
-                $data['origin'] = $message->origin;
+                $data['--origin'] = $message->origin;
             }
             if(isset($message->translation) && is_string($message->translation)){
-                $data['translation'] = $message->translation;
+                $data['--translation'] = $message->translation;
             }
             $ok = $this->call('export:chapter',$data);
             if($ok !== 0){
