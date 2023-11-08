@@ -357,7 +357,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         $update = $this->dbSelect($query, [$book,$para]);
     }
     
-    private function updateIndexAll(){
+    private function _updateIndexAll(){
         $query = 'UPDATE fts_texts SET content = content,
         bold_single = bold_single,
         bold_double = bold_double,
