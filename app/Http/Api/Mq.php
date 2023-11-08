@@ -24,11 +24,12 @@ class Mq
         $connection = new AMQPStreamConnection($host, $port, $user, $password, $vhost);
         return $connection;
     }
+
     public static function publish(string $channelName, $message)
     {
         //一对一
         try {
-            Log::debug('mq start {channel} {message}', ['channel' => $channelName, 'message' => $message]);
+            Log::debug('mq publish {channel} {message}', ['channel' => $channelName, 'message' => $message]);
             $host = config("queue.connections.rabbitmq.host");
             $port = config("queue.connections.rabbitmq.port");
             $user = config("queue.connections.rabbitmq.user");
