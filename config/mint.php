@@ -15,13 +15,13 @@ return [
 
     'server' => [
         'rpc' => [
-            'grpc' => env('GRPC_WEB_SERVER', "localhost:9999"),
+            'grpc' => env('GRPC_WEB_SERVER', "http://localhost:9999"),
 
-            'morus' => env('MORUS_GRPC_SERVER', "localhost:9999"),
+            'morus' => env('MORUS_GRPC_SERVER', "http://localhost:9999"),
 
-            'lily' => env('LILY_GRPC_SERVER', "192.168.43.100:9000"),
+            'lily' => env('LILY_GRPC_SERVER', "http://localhost:9000"),
 
-            'tulip' => env('TULIP_GRPC_SERVER', "localhost:9990"),
+            'tulip' => env('TULIP_GRPC_SERVER', "http://localhost:9990"),
         ],
 
         'assets' => env('ASSETS_SERVER', "localhost:9999"),
