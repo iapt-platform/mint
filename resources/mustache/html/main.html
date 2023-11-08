@@ -11,6 +11,21 @@
         a {
             text-decoration: none;
         }
+        .paragraph {
+            margin-bottom: 1em;
+        }
+
+        .row {
+            display: flex;
+        }
+        @media screen and (max-width: 960px){
+            .row {
+                flex-direction: column;
+            }
+        }
+        .col {
+            flex: 5;
+        }
     </style>
 </head>
 <body>
