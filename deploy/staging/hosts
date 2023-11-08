@@ -58,6 +58,9 @@ app_smtp_password="change-me"
 app_assets_server="https://assets.change-me.org"
 app_grpc_web_server="https://rpc.change-me.org"
 app_documents_server="https://documents.change-me.org"
+app_morus_grpc_server="https://rpc.change-me.org"
+app_lily_grpc_server="https://rpc.change-me.org"
+app_tulip_grpc_server="https://rpc.change-me.org"
 
 app_rabbitmq_host="192.168.0.41"
 app_rabbitmq_port=5672
