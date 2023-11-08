@@ -69,6 +69,7 @@ use App\Http\Controllers\TransferController;
 use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\OfflineIndexController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\ExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -190,7 +191,8 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('health-check',HealthCheckController::class);
     Route::apiResource('offline-index',OfflineIndexController::class);
     Route::apiResource('task',TaskController::class);
-    
+    Route::apiResource('export',ExportController::class);
+
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
         header("Content-Disposition: attachment; filename=\"{$filename}\"");
