@@ -158,13 +158,6 @@
   vars:
     action: "wbw.analyses"
 
-# - name: run db:migrate
-#   run_once: true
-#   become: true
-#   ansible.builtin.shell:
-#     cmd: su www-data -pc "php artisan migrate"
-#     chdir: "{{ app_deploy_root }}/htdocs"
-
 - name: setup sqlite3 db for v1
   become: true
   ansible.builtin.file:
