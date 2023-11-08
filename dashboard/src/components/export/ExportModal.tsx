@@ -1,7 +1,16 @@
-import { Modal, Progress, Select, Typography, message } from "antd";
+import {
+  Modal,
+  Progress,
+  Select,
+  Space,
+  Switch,
+  Typography,
+  message,
+} from "antd";
 import { useEffect, useRef, useState } from "react";
 import { get } from "../../request";
 import { ArticleType } from "../article/Article";
+import ExportSettingLayout from "./ExportSettingLayout";
 
 const { Text } = Typography;
 
@@ -131,30 +140,67 @@ const ExportModalWidget = ({
       okText={"导出"}
       okButtonProps={{ disabled: exportStart }}
     >
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span>格式</span>
-        <Select
-          defaultValue={format}
-          bordered={false}
-          options={[
-            {
-              value: "pdf",
-              label: "PDF",
-              disabled: true,
-            },
-            {
-              value: "word",
-              label: "Word",
-              disabled: true,
-            },
-            {
-              value: "html",
-              label: "Html",
-            },
-          ]}
-          onSelect={(value) => setFormat(value)}
-        />
-      </div>
+      <ExportSettingLayout
+        label="格式"
+        content={
+          <Select
+            defaultValue={format}
+            bordered={false}
+            options={[
+              {
+                value: "pdf",
+                label: "PDF",
+                disabled: true,
+              },
+              {
+                value: "word",
+                label: "Word",
+                disabled: true,
+              },
+              {
+                value: "html",
+                label: "Html",
+              },
+            ]}
+            onSelect={(value) => setFormat(value)}
+          />
+        }
+      />
+      <ExportSettingLayout
+        label="原文"
+        content={<Switch size="small" onChange={(checked) => {}} />}
+      />
+      <ExportSettingLayout
+        label="译文"
+        content={
+          <Switch size="small" defaultChecked onChange={(checked) => {}} />
+        }
+      />
+      <ExportSettingLayout
+        label="对照方式"
+        content={
+          <Select
+            defaultValue={"auto"}
+            bordered={false}
+            options={[
+              {
+                value: "auto",
+                label: "自动",
+              },
+              {
+                value: "col",
+                label: "分栏",
+              },
+              {
+                value: "row",
+                label: "纵列",
+              },
+            ]}
+            onSelect={(value) => setFormat(value)}
+          />
+        }
+      />
+
       <div style={{ display: exportStart ? "block" : "none" }}>
         <Text>{exportStatus ? exportStatus.message : "正在生成……"}</Text>
         <Progress
