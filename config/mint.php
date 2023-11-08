@@ -15,10 +15,13 @@ return [
 
     'server' => [
         'rpc' => [
+            'grpc' => env('GRPC_WEB_SERVER', "http://localhost:9999"),
 
-            'morus' => env('MORUS_RPC_SERVER', "localhost:9999"),
+            'morus' => env('MORUS_GRPC_SERVER', "http://localhost:9999"),
 
-            'lily' => env('LILY_RPC_SERVER', "192.168.43.100:9000"),
+            'lily' => env('LILY_GRPC_SERVER', "http://localhost:9000"),
+
+            'tulip' => env('TULIP_GRPC_SERVER', "http://localhost:9990"),
         ],
 
         'assets' => env('ASSETS_SERVER', "localhost:9999"),
@@ -26,6 +29,15 @@ return [
         'dashboard_base_path' => env('DASHBOARD_BASE_PATH', "http://127.0.0.1:3000/my"),
 
         'cdn_urls' => explode(',',env('CDN_URLS', "https://www.wikipali.cc/downloads")),
+
+
+    ],
+
+    'attachments' => [
+        'bucket_name' => [
+            'temporary' => env('ATTACHMENTS_TEMPORARY_BUCKET_NAME', "attachments-staging"),
+            'permanent' => env('ATTACHMENTS_PERMANENT_BUCKET_NAME', "attachments-staging"),
+        ],
     ],
 
     'cache' => [

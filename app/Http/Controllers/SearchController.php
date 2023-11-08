@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 use App\Tools\Tools;
 use App\Models\WbwTemplate;
 use App\Models\PageNumber;
+use App\Tools\PaliSearch;
 
 
 class SearchController extends Controller
@@ -35,6 +36,7 @@ class SearchController extends Controller
                     return $this->page($request);
                 }else{
                     return $this->pali($request);
+                    //return $this->pali_rpc($request);
                 }
                 break;
             case 'page':
@@ -73,25 +75,26 @@ class SearchController extends Controller
     public function pali(Request $request)
     {
         //
-        $searchChapters = [];
-        $searchBooks = [];
-        $searchBookId = [];
-        $queryBookId = '';
-
+        $bookId = [];
         if($request->has('book')){
-            $queryBookId = ' AND pcd_book_id = ' . (int)$request->get('book');
+            $bookId = [(int)$request->get('book')];
         }else if($request->has('tags')){
             //查询搜索范围
             //查询搜索范围
             $tagItems = explode(';',$request->get('tags'));
-            $bookId = [];
+
             foreach ($tagItems as $tagItem) {
-                # code...
                 $bookId = array_merge($bookId,$this->getBookIdByTags(explode(',',$tagItem)));
             }
-            $queryBookId = ' AND pcd_book_id in ('.implode(',',$bookId).') ';
         }
 
+        $searchChapters = [];
+        $searchBooks = [];
+        $searchBookId = [];
+        $queryBookId = '';
+        if(count($bookId) > 0){
+            $queryBookId = ' AND pcd_book_id in ('.implode(',',$bookId).') ';
+        }
         $key = explode(';',$request->get('key')) ;
         $param = [];
         $countParam = [];
@@ -164,12 +167,32 @@ class SearchController extends Controller
 
         $result = DB::select($query, $param);
 
-        //待查询单词列表
-        //$caseMan = new CaseMan();
-        //$wordSpell = $caseMan->BaseToWord($key);
-
         return $this->ok(["rows"=>SearchResource::collection($result),"count"=>$resultCount[0]->co]);
     }
+    public function pali_rpc(Request $request)
+    {
+        //
+        $bookId = [];
+        if($request->has('book')){
+            $bookId = [(int)$request->get('book')];
+        }else if($request->has('tags')){
+            //查询搜索范围
+            //查询搜索范围
+            $tagItems = explode(';',$request->get('tags'));
+
+            foreach ($tagItems as $tagItem) {
+                $bookId = array_merge($bookId,$this->getBookIdByTags(explode(',',$tagItem)));
+            }
+        }
+
+        $key = explode(';',$request->get('key')) ;
+        $limit = $request->get('limit',10);
+        $offset = $request->get('offset',0);
+        $matchMode = $request->get('match','case');
+        $result = PaliSearch::search($key,$bookId,$matchMode,$offset,$limit);
+        return $this->ok(["rows"=>SearchResource::collection(collect($result['rows'])),"count"=>$result['total']]);
+    }
+
     public function page(Request $request)
     {
         //
@@ -223,10 +246,11 @@ class SearchController extends Controller
         $searchBooks = [];
         $queryBookId = '';
 
+        $bookId = [];
         if($request->has('tags')){
             //查询搜索范围
             $tagItems = explode(';',$request->get('tags'));
-            $bookId = [];
+
             foreach ($tagItems as $tagItem) {
                 # code...
                 $bookId = array_merge($bookId,$this->getBookIdByTags(explode(',',$tagItem)));
@@ -242,10 +266,11 @@ class SearchController extends Controller
                     $queryWhere = "type='.ctl.' AND word = ?";
                     $query = "SELECT pcd_book_id, count(*) as co FROM wbw_templates WHERE {$queryWhere} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
                     $result = DB::select($query, [$key]);
+
                 }else{
-                    $queryWhere = $this->getQueryWhere($key,$request->get('match','case'));
-                    $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
-                    $result = DB::select($query, $queryWhere['param']);
+                    $rpc_result = PaliSearch::book_list(explode(';',$key) ,$bookId,
+                                                    $request->get('match','case'));
+                    $result = collect($rpc_result['rows']);
                 }
                 break;
             case 'page':

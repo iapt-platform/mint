@@ -70,6 +70,10 @@ class ExportZip extends Command
         }
         $zipFullFileName = storage_path($exportPath.'/'.$zipFile);
 
+        unlink($zipFullFileName);
+
+        Log::debug('export offline: delete old file:'.$zipFullFileName);
+
         shell_exec("cd ".storage_path($exportPath));
         if($this->argument('format')==='7z'){
             $command = "7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on {$zipFullFileName} {$exportFullFileName}";
@@ -96,11 +100,12 @@ class ExportZip extends Command
                 ];
         }
 
-        $this->info('upload file='.$zipFile);
-        Log::debug('export offline: upload file {filename}',['filename'=>$zipFile]);
+        $bucket = config('mint.attachments.bucket_name.temporary');
+        $tmpFile =  $bucket.'/'. $zipFile ;
 
-        $bucket = 'attachments-'.config('app.env');
-        $tmpFile =  "{$bucket}\{$zipFile}";
+        $this->info('upload file='.$tmpFile);
+        Log::debug('export offline: upload file {filename}',['filename'=>$tmpFile]);
+
         Storage::put($tmpFile, file_get_contents($zipFullFileName));
 
         $this->info('upload done file='.$tmpFile);
