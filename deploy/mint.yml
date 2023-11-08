@@ -1,6 +1,5 @@
 - name: "local compile"
-  hosts: localhost
-  connection: local
+  hosts: building
   tasks:
     - name: "install dashboard dependencies"
       ansible.builtin.shell:
@@ -18,7 +17,7 @@
         REACT_APP_ENABLE_LOCAL_TOKEN: "true"
         REACT_APP_TOKEN_KEY: "token.20230919"
         REACT_APP_DOCUMENTS_SERVER: "{{ app_documents_server }}"
-        REACT_APP_RPC_SERVER: "{{ app_rpc_server }}"
+        REACT_APP_RPC_SERVER: "{{ app_grpc_web_server }}"
         REACT_APP_ASSETS_SERVER: "{{ app_assets_server }}"
         REACT_APP_API_SERVER: "https://{{ app_domain }}"
         REACT_APP_ICP_CODE: "{{ app_icp_code }}"
