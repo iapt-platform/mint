@@ -348,7 +348,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         return $response;
     }
 
-    private function updateIndex($book,$para){
+    private function _updateIndex($book,$para){
         $query = 'UPDATE fts_texts SET content = content,
         bold_single = bold_single,
         bold_double = bold_double,
