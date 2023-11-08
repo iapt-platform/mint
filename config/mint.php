@@ -15,6 +15,7 @@ return [
 
     'server' => [
         'rpc' => [
+            'grpc' => env('GRPC_WEB_SERVER', "localhost:9999"),
 
             'morus' => env('MORUS_RPC_SERVER', "localhost:9999"),
 
