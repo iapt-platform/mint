@@ -51,6 +51,9 @@ const ExportModalWidget = ({
   const [format, setFormat] = useState<string>("html");
   const [exportStatus, setExportStatus] = useState<IStatus>();
   const [exportStart, setExportStart] = useState(false);
+  const [hasOrigin, setHasOrigin] = useState(false);
+  const [hasTranslation, setHasTranslation] = useState(true);
+
   const filenameRef = useRef(filename);
 
   useEffect(() => {
@@ -88,7 +91,9 @@ const ExportModalWidget = ({
     channel: string,
     format: string
   ): void => {
-    const url = `/v2/export?book=${book}&par=${para}&channel=${channel}&format=${format}`;
+    let url = `/v2/export?book=${book}&par=${para}&channel=${channel}&format=${format}`;
+    url += "&origin=" + (hasOrigin ? "true" : "false");
+    url += "&translation=" + (hasTranslation ? "true" : "false");
     console.log("url", url);
     setExportStart(true);
     get<IExportResponse>(url).then((json) => {
@@ -160,18 +165,31 @@ const ExportModalWidget = ({
       />
       <ExportSettingLayout
         label="原文"
-        content={<Switch size="small" onChange={(checked) => {}} />}
+        content={
+          <Switch
+            disabled={!hasTranslation}
+            size="small"
+            defaultChecked={hasOrigin}
+            onChange={(checked) => setHasOrigin(checked)}
+          />
+        }
       />
       <ExportSettingLayout
         label="译文"
         content={
-          <Switch size="small" defaultChecked onChange={(checked) => {}} />
+          <Switch
+            disabled={!hasOrigin}
+            size="small"
+            defaultChecked={hasTranslation}
+            onChange={(checked) => setHasTranslation(checked)}
+          />
         }
       />
       <ExportSettingLayout
         label="对照方式"
         content={
           <Select
+            disabled
             defaultValue={"auto"}
             bordered={false}
             options={[
