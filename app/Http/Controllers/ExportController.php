@@ -24,11 +24,15 @@ class ExportController extends Controller
         $filename = $request->get('book').'-'.
                     $request->get('par').'-'.
                     Str::uuid().'.'.$request->get('format');
+
+
         Mq::publish('export',[
             'book'=>$request->get('book'),
             'para'=>$request->get('par'),
             'channel'=>$request->get('channel'),
             'format'=>$request->get('format'),
+            'origin'=>$request->get('origin'),
+            'translation'=>$request->get('translation'),
             'filename'=>$filename,
         ]);
         return $this->ok($filename);
@@ -63,11 +67,13 @@ class ExportController extends Controller
         $output = array();
         $output['status'] = $exportStatus;
         if($exportStatus['progress']===1){
+            $bucket = config('mint.attachments.bucket_name.temporary');
+            $tmpFile =  $bucket.'/'. $filename ;
             if (App::environment('local')) {
-                $s3Link = Storage::url('export/'.$filename);
+                $s3Link = Storage::url($tmpFile);
             }else{
                 try{
-                    $s3Link = Storage::temporaryUrl('export/'.$filename, now()->addDays(1));
+                    $s3Link = Storage::temporaryUrl($tmpFile, now()->addDays(7));
                 }catch(\Exception $e){
                     Log::error('export {Exception}',['exception'=>$e]);
                     return $this->error('temporaryUrl fail',404,404);

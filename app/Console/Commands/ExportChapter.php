@@ -330,26 +330,30 @@ class ExportChapter extends Command
         $this->setStatus(0.95,'export content done');
 
         //upload
+        $fileDate = '';
         switch ($this->option('format')) {
             case 'tex':
                 $data = Export::ToPdf($tex);
                 if($data['ok']){
-                    $filename = "export/".$this->argument('filename');
                     $this->info($data['content-type']);
-                    Storage::put($filename, $data['data']);
+                    $fileDate = $data['data'];
                 }else{
                     $this->error($data['code'].'-'.$data['message']);
                 }
                 break;
             case 'html':
-                $filename = "export/".$this->argument('filename');
                 $file = array();
                 foreach ($tex as $key => $section) {
                     $file[] = $section['content'];
                 }
-                Storage::put($filename, implode('',$file));
+                $fileDate = implode('',$file);
                 break;
         }
+        $filename = $this->argument('filename');
+        $bucket = config('mint.attachments.bucket_name.temporary');
+        $tmpFile =  $bucket.'/'. $filename ;
+        Storage::put($tmpFile, $fileDate);
+
         $this->setStatus(1,'export done filename='.$filename);
         Log::debug('task export offline chapter-table finished');
         return 0;
