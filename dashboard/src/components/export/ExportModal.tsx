@@ -1,12 +1,4 @@
-import {
-  Modal,
-  Progress,
-  Select,
-  Space,
-  Switch,
-  Typography,
-  message,
-} from "antd";
+import { Modal, Progress, Select, Switch, Typography, message } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { get } from "../../request";
 import { ArticleType } from "../article/Article";
