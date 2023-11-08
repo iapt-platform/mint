@@ -51,6 +51,12 @@ class MqExport extends Command
                         '--format'=>$message->format,
                         'filename'=>$message->filename,
                     ];
+            if(isset($message->origin) && is_string($message->origin)){
+                $data['origin'] = $message->origin;
+            }
+            if(isset($message->translation) && is_string($message->translation)){
+                $data['translation'] = $message->translation;
+            }
             $ok = $this->call('export:chapter',$data);
             if($ok !== 0){
                 Log::error('mq:progress upgrade:progress fail',$data);
