@@ -354,8 +354,8 @@ class ExportChapter extends Command
         $tmpFile =  $bucket.'/'. $filename ;
         Storage::put($tmpFile, $fileDate);
 
-        $this->setStatus(1,'export done filename='.$filename);
-        Log::debug('task export offline chapter-table finished');
+        $this->setStatus(1,'export chapter done');
+        Log::debug('export chapter done, upload filename='.$tmpFile);
         return 0;
     }
 }
