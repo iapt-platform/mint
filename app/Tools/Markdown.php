@@ -28,7 +28,7 @@ class Markdown
     }
 
     public static function morus($text){
-        $host = config('mint.server.rpc.morus');
+        $host = config('mint.server.rpc.morus.host') . '/'. config('mint.server.rpc.morus.port');
         Log::debug('morus host='.$host);
         $client = new \Mint\Morus\V1\MarkdownClient($host, [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),

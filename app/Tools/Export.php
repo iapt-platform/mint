@@ -17,7 +17,7 @@ class Export
             //Log::info($value['name']);
             //Log::info($value['content']);
         }
-        $host = config('mint.server.rpc.lily');
+        $host = config('mint.server.rpc.lily.host') . '/' . config('mint.server.rpc.lily.port');
         $client = new \Palm\Lily\V1\TexClient($host, [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
