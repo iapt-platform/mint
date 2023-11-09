@@ -10,7 +10,7 @@ class MqExportPaliChapter extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan mq:export.pali.chapter
      * @var string
      */
     protected $signature = 'mq:export.pali.chapter';
