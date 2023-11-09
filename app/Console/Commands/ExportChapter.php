@@ -13,12 +13,14 @@ use App\Http\Api\MdRender;
 use App\Tools\Export;
 use Illuminate\Support\Facades\Log;
 use App\Tools\RedisClusters;
+use Illuminate\Support\Str;
 
 class ExportChapter extends Command
 {
     protected $exportStatusKey = 'export/status';
     protected $exportStatusExpiry = 3600;
     protected $currExportStatusKey = '';
+    protected $realFilename = null;
     /**
      * The name and signature of the console command.
      * php artisan export:chapter 213 1913 a19eaf75-c63f-4b84-8125-1bce18311e23 213-1913 --format=html
@@ -50,11 +52,16 @@ class ExportChapter extends Command
      * message: string
      */
     protected function setStatus($progress,$message=''){
+        $data = [
+                    'progress'=>$progress,
+                    'message'=>$message,
+                    'content-type'=>'application/zip',
+                ];
+        if($this->realFilename){
+            $data['filename'] = $this->realFilename;
+        }
         RedisClusters::put($this->currExportStatusKey,
-                            [
-                                'progress'=>$progress,
-                                'message'=>$message,
-                            ],
+                            $data,
                             $this->exportStatusExpiry);
         $percent = (int)($progress * 100);
         $this->info("[{$percent}%]".$message);
@@ -84,6 +91,7 @@ class ExportChapter extends Command
         MdRender::init();
 
         $this->currExportStatusKey = $this->exportStatusKey . '/' . $this->argument('filename');
+        $this->realFilename = $this->argument('filename').'.zip';
 
         switch ($this->option('format')) {
             case 'md':
@@ -98,7 +106,8 @@ class ExportChapter extends Command
         }
         $book = $this->argument('book');
         $para = $this->argument('para');
-
+        //zip压缩包里面的文件名
+        $realFileName = "{$book}-{$para}.".$this->option('format');
         //获取原文channel
         $orgChannelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
 
@@ -348,15 +357,40 @@ class ExportChapter extends Command
                 $fileDate = implode('',$file);
                 break;
         }
-        $filename = $this->argument('filename');
+
+
+        $zipDir = storage_path('app/export/zip');
+        if(!is_dir($zipDir)){
+            $res = mkdir($zipDir,0755,true);
+            if(!$res){
+                Log::error('mkdir fail path='.$zipDir);
+                return 1;
+            }
+        }
+        $zipFile = $zipDir.'/'.Str::uuid().'.zip';
+
+        Log::debug('export chapter start zip  file='.$zipFile);
+
+        $zipOk = \App\Tools\Tools::zip($zipFile,[$realFileName=>$fileDate]);
+        if(!$zipOk){
+            Log::error('export chapter zip fail zip file='.$zipFile);
+            $this->setStatus(0.99,'export chapter zip fail');
+            $this->error('export chapter zip fail zip file='.$zipFile);
+            //TODO 给客户端返回错误状态
+            return 1;
+        }
+        $this->setStatus(0.96,'export chapter zip success');
+
         $bucket = config('mint.attachments.bucket_name.temporary');
-        $tmpFile =  $bucket.'/'. $filename ;
+        $tmpFile =  $bucket.'/'. $this->realFilename ;
         Log::debug('upload start filename='.$tmpFile);
         $this->setStatus(0.97,'upload start ');
-        Storage::put($tmpFile, $fileDate);
-
+        $zipData = file_get_contents($zipFile);
+        Storage::put($tmpFile, $zipData);
         $this->setStatus(1,'export chapter done');
         Log::debug('export chapter done, upload filename='.$tmpFile);
+
+        unlink($zipFile);
         return 0;
     }
 }
