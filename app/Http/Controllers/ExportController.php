@@ -67,8 +67,10 @@ class ExportController extends Controller
         $output = array();
         $output['status'] = $exportStatus;
         if($exportStatus['progress']===1){
+            $realFilename = $exportStatus['filename'];
             $bucket = config('mint.attachments.bucket_name.temporary');
-            $tmpFile =  $bucket.'/'. $filename ;
+            $tmpFile =  $bucket.'/'. $realFilename ;
+            Log::debug('export download filename='.$tmpFile);
             if (App::environment('local')) {
                 $s3Link = Storage::url($tmpFile);
             }else{
