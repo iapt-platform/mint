@@ -23,7 +23,7 @@ class ExportChapter extends Command
     protected $realFilename = null;
     /**
      * The name and signature of the console command.
-     * php artisan export:chapter 213 1913 a19eaf75-c63f-4b84-8125-1bce18311e23 213-1913 --format=html
+     * php artisan export:chapter 213 3 a19eaf75-c63f-4b84-8125-1bce18311e23 213-3.html --format=html --origin=true
      * php artisan export:chapter 168 915 19f53a65-81db-4b7d-8144-ac33f1217d34 168-915.html --format=html
      * php artisan export:chapter 168 915 19f53a65-81db-4b7d-8144-ac33f1217d34 168-915.html --format=html --origin=true
      * @var string
@@ -280,7 +280,7 @@ class ExportChapter extends Command
                             break;
                         case 'html':
                             $level = $currLevel+2;
-                            $content[] = "<h{$currLevel}".$subSessionTitle."</h{$currLevel}";
+                            $content[] = "<h{$currLevel}>".$subSessionTitle."</h{$currLevel}>";
                             break;
                     }
                 }
