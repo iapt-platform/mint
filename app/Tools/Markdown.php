@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 class Markdown
 {
     public static function render($text){
-        return Markdown::strdown($text);
+        return Markdown::morus($text);
     }
 
     public static function morus($text){
