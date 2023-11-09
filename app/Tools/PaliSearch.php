@@ -5,12 +5,16 @@ use Illuminate\Support\Facades\Log;
 
 class PaliSearch
 {
-    public static function search($words,$books,$matchMode='case',$index=0,$size=10){
-        $host = config('mint.server.rpc.tulip');
+    public static function connect(){
+        $host = config('mint.server.rpc.tulip.host') . ':' . config('mint.server.rpc.tulip.port');
         Log::debug('tulip host='.$host);
         $client = new \Mint\Tulip\V1\SearchClient($host, [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
+        return $client;
+    }
+    public static function search($words,$books,$matchMode='case',$index=0,$size=10){
+        $client = PaliSearch::connect();
 
         $request = new \Mint\Tulip\V1\SearchRequest();
         $request->setKeywords($words);
@@ -42,11 +46,7 @@ class PaliSearch
     }
 
     public static function book_list($words,$books,$matchMode='case',$index=0,$size=10){
-        $host = config('mint.server.rpc.tulip');
-        Log::debug('tulip host='.$host);
-        $client = new \Mint\Tulip\V1\SearchClient($host, [
-            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
-        ]);
+        $client = PaliSearch::connect();
 
         $request = new \Mint\Tulip\V1\SearchRequest();
         $request->setKeywords($words);
@@ -74,11 +74,7 @@ class PaliSearch
     }
 
     public static function upload_dict($data){
-        $host = config('mint.server.rpc.tulip');
-        Log::debug('tulip host='.$host);
-        $client = new \Mint\Tulip\V1\SearchClient($host, [
-            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
-        ]);
+        $client = PaliSearch::connect();
 
         $request = new \Mint\Tulip\V1\UploadDictionaryRequest();
         $request->setData($data);
@@ -94,11 +90,7 @@ class PaliSearch
     public static function update($book,$paragraph,
                                   $bold1,$bold2,$bold3,
                                   $content,$pcd_book_id){
-        $host = config('mint.server.rpc.tulip');
-        Log::debug('tulip host='.$host);
-        $client = new \Mint\Tulip\V1\SearchClient($host, [
-            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
-        ]);
+        $client = PaliSearch::connect();
 
         $request = new \Mint\Tulip\V1\UpdateRequest();
         $request->setBook($book);
