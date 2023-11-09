@@ -326,8 +326,7 @@ class ExportChapter extends Command
         }
 
         Log::debug('footnote finished');
-        Log::debug('upload start');
-        $this->setStatus(0.95,'export content done');
+        $this->setStatus(0.95,'export content done.');
 
         //upload
         $fileDate = '';
@@ -352,6 +351,8 @@ class ExportChapter extends Command
         $filename = $this->argument('filename');
         $bucket = config('mint.attachments.bucket_name.temporary');
         $tmpFile =  $bucket.'/'. $filename ;
+        Log::debug('upload start filename='.$tmpFile);
+        $this->setStatus(0.97,'upload start ');
         Storage::put($tmpFile, $fileDate);
 
         $this->setStatus(1,'export chapter done');
