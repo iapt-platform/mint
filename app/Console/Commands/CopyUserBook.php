@@ -16,7 +16,7 @@ class CopyUserBook extends Command
      *
      * @var string
      */
-    protected $signature = 'copy:user.book {--lang}';
+    protected $signature = 'copy:user.book {--lang} {--book=}';
 
     /**
      * The console command description.
@@ -53,29 +53,39 @@ class CopyUserBook extends Command
         $userBooks = CustomBookSentence::select('book')->groupBy('book')->get();
         $this->info('book '. count($userBooks));
         foreach ($userBooks as $key => $book) {
+            $queryBook = $this->option('book');
+            if(!empty($queryBook)){
+                if($book->book != $queryBook){
+                    continue;
+                }
+            }
             $this->info('doing book '. $book->book);
             $bookInfo = CustomBookSentence::where('book',$book->book)->first();
             $bookLang = $bookInfo->lang;
+            //|| $bookLang === 'false' || $bookLang === 'null'
             if(empty($bookLang) || $bookLang === 'false' || $bookLang === 'null'){
-                $this->error('language can not be empty book='.$book->book);
-                Log::error('copy:user.book language can not be empty , book='.$book->book);
-                continue;
+                $this->info('language can not be empty change to pa, book='.$book->book);
+                Log::warning('copy:user.book language can not be empty ,change to pa, book='.$book->book);
+                $bookLang = 'pa';
             }
-            $channelName = '_user_book_'.$bookInfo->lang;
+            $channelName = '_user_book_'.$bookLang;
             $channel = Channel::where('owner_uid',$bookInfo->owner)
                             ->where('name',$channelName)->first();
             if($channel === null){
+                $channelUuid = Str::uuid();
                 $channel = new Channel;
                 $channel->id = app('snowflake')->id();
+                $channel->uid = $channelUuid;
                 $channel->owner_uid = $bookInfo->owner;
                 $channel->name = $channelName;
                 $channel->type = 'original';
-                $channel->lang = $bookInfo->lang;
+                $channel->lang = $bookLang;
                 $channel->editor_id = 0;
                 $channel->create_time = time()*1000;
                 $channel->modify_time = time()*1000;
                 $channel->status = $bookInfo->status;
                 $channel->save();
+                Log::debug('copy user book : create channel name='.$channelName);
             }
 
             $bar = $this->output->createProgressBar(CustomBookSentence::where('book',$book->book)
@@ -103,8 +113,14 @@ class CopyUserBook extends Command
                 $newRow->strlen = mb_strlen($sentence->content,"UTF-8");
                 $newRow->status = $sentence->status;
                 $newRow->content_type = $sentence->content_type;
-                $newRow->language = $sentence->lang;
-                $newRow->save();
+                $newRow->language = $channel->lang;
+                if(empty($newRow->channel_uid)){
+                    $this->error('channel uuid is null book='.$sentence->book .' para='.$sentence->paragraph);
+                    Log::error('channel uuid is null ',['sentence'=>$sentence->book]);
+                }else{
+                    $newRow->save();
+                }
+
             }
             $bar->finish();
             $this->info("book {$book->book} finished");
