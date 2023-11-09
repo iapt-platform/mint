@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 class PaliSearch
 {
     public static function connect(){
-        $host = config('mint.server.rpc.tulip.host') . '/' . config('mint.server.rpc.tulip.port');
+        $host = config('mint.server.rpc.tulip.host') . ':' . config('mint.server.rpc.tulip.port');
         Log::debug('tulip host='.$host);
         $client = new \Mint\Tulip\V1\SearchClient($host, [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),

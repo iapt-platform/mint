@@ -18,17 +18,17 @@ return [
             'grpc' =>  env('GRPC_WEB_SERVER', "http://localhost:9999"),
 
             'morus' => [
-                'host' => env('MORUS_GRPC_HOST', "http://localhost"),
+                'host' => env('MORUS_GRPC_HOST', "localhost"),
                 'port' => env('MORUS_GRPC_PORT', 9999),
             ],
 
             'lily' => [
-                'host' => env('LILY_GRPC_HOST', "http://192.168.43.100"),
+                'host' => env('LILY_GRPC_HOST', "localhost"),
                 'port' => env('LILY_GRPC_PORT', 9000),
             ],
 
             'tulip' => [
-                'host' => env('LILY_GRPC_HOST', "http://localhost"),
+                'host' => env('LILY_GRPC_HOST', "localhost"),
                 'port' => env('LILY_GRPC_PORT', 9990),
             ],
         ],
