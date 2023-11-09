@@ -322,7 +322,6 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             $query = "INSERT INTO fts_texts (
                         book,
                         paragraph,
-                        wid,
                         bold_single,
                         bold_double,
                         bold_multiple,
@@ -330,7 +329,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
                         created_at,
                         updated_at,
                         pcd_book_id) VALUES
-            (?,?,'bodytext',?,?,?,?,?,?,? )";
+            (?,?,?,?,?,?,?,?,? )";
             $insert = $this->dbSelect($query, [
                             $request->getBook(),
                             $request->getParagraph(),
