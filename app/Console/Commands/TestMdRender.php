@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Http\Api\MdRender;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use App\Tools\Markdown;
 
 class TestMdRender extends Command
 {
@@ -14,7 +15,7 @@ class TestMdRender extends Command
      * run php artisan test:md.render term unity
      * @var string
      */
-    protected $signature = 'test:md.render {item?} {--format=}';
+    protected $signature = 'test:md.render {item?} {--format=} {--driver=str}';
 
     /**
      * The console command description.
@@ -46,8 +47,7 @@ class TestMdRender extends Command
         Log::info('md render start item='.$this->argument('item'));
         $data = array();
         $data['bold'] = <<<md
-        **三十位** 经
-        在[中间]六处为**[[licchavi]]**，在极果为**慧解脱**
+        **三十位** 经在[中间]六处为**[licchavi]**，在极果为**慧解脱**
         md;
 
         $data['sentence'] = <<<md
@@ -118,14 +118,8 @@ class TestMdRender extends Command
         style=modal}}
         md;
         $data['empty'] = '';
-        //$wiki = MdRender::markdown2wiki($data['noteMulti']);
-        //$xml = MdRender::wiki2xml($wiki,['00ae2c48-c204-4082-ae79-79ba2740d506']);
-        //$this->info($xml);
-        //$html = MdRender::markdownToHtml($xml);
-        //$this->info($html);
-        //$html = MdRender::xmlQueryId($xml, "1");
-        //$sent = MdRender::take_sentence($html);
-        //print_r($sent);
+
+        Markdown::driver($this->option('driver'));
 
         $format = $this->option('format');
         if(empty($format)){

@@ -5,8 +5,26 @@ use Illuminate\Support\Facades\Log;
 
 class Markdown
 {
+    public static function driver($driver){
+        switch ($driver) {
+            case 'morus':
+                $GLOBALS['markdown.driver'] = 'morus';
+                break;
+            default:
+                unset($GLOBALS['markdown.driver']);
+                break;
+        }
+    }
     public static function render($text){
-        return Markdown::morus($text);
+        if(isset($GLOBALS['markdown.driver'])){
+            if($GLOBALS['markdown.driver'] === 'morus'){
+                return Markdown::morus($text);
+            }else{
+                return Markdown::strdown($text);
+            }
+        }else{
+            return Markdown::strdown($text);
+        }
     }
 
     public static function morus($text){
