@@ -1,18 +1,21 @@
 -- migrate:up
 -- 创建表结构
 
-CREATE TABLE fts_texts (
-       paragraph        integer,
-       book             integer,
-       wid              varchar(50),
-       -- 单个出现的黑体字，权重较大
-       bold_single      text,
-       -- 成对出现的黑体字，权重一般
-       bold_double      text,
-       -- 连续三个或三个以上的黑体字，权重较低
-       bold_multiple    text,
-       content          text
+CREATE TABLE public.fts_texts (
+	id bigserial NOT NULL,
+	book int4 NOT NULL,
+	paragraph int4 NOT NULL,
+	bold_single text,
+	bold_double text,
+	bold_multiple text,
+	"content" text NOT NULL,
+	created_at timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	pcd_book_id int4 NOT NULL DEFAULT 0,
+	CONSTRAINT fts_texts_pkey PRIMARY KEY (id)
 );
+CREATE INDEX fts_texts_pcd_book_id_index ON public.fts_texts USING btree (pcd_book_id);
+
 
 -- 创建全文检索配置 pali
 CREATE TEXT SEARCH CONFIGURATION pali ( parser = pg_catalog.default );
