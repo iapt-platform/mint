@@ -1,6 +1,6 @@
 # https://laravel.com/docs/10.x/deployment
 
-- name: clone source code
+- name: clone source code(laravel)
   ansible.builtin.git:
     repo: "https://github.com/iapt-platform/mint.git"
     dest: "{{ app_deploy_root }}/htdocs"
@@ -95,6 +95,13 @@
     cmd: su www-data -pc "php artisan view:cache"
     chdir: "{{ app_deploy_root }}/htdocs"
 
+- name: setup sqlite3 db for v1
+  become: true
+  ansible.builtin.file:
+    src: /var/www/shared/appdata
+    dest: "{{ app_deploy_root }}/htdocs/storage/app/data"
+    state: link
+
 # https://laravel.com/docs/10.x/scheduling#running-the-scheduler
 - name: upload scheduler service
   become: true
@@ -114,64 +121,14 @@
     group: root
     mode: "0644"
 
-- name: upload {{ action }} worker service
-  become: true
-  template:
-    src: v2/queue-worker.service.j2
-    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-{{ action }}-worker.service
-    owner: root
-    group: root
-    mode: "0644"
-  vars:
-    action: "discussion"
+- import_tasks: queue-workers.yml
 
-- name: upload {{ action }} worker service
-  become: true
-  template:
-    src: v2/queue-worker.service.j2
-    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-{{ action }}-worker.service
-    owner: root
-    group: root
-    mode: "0644"
-  vars:
-    action: "pr"
+- name: clone source code(agile)
+  ansible.builtin.git:
+    repo: "https://github.com/iapt-platform/mint.git"
+    dest: "{{ app_deploy_root }}/agile"
+    version: "agile"
 
-- name: upload {{ action }} worker service
-  become: true
-  template:
-    src: v2/queue-worker.service.j2
-    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-{{ action }}-worker.service
-    owner: root
-    group: root
-    mode: "0644"
-  vars:
-    action: "progress"
-
-- name: upload {{ action }} worker service
-  become: true
-  template:
-    src: v2/queue-worker.service.j2
-    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-{{ action }}-worker.service
-    owner: root
-    group: root
-    mode: "0644"
-  vars:
-    action: "wbw.analyses"
-
-- name: upload {{ action }} worker service
-  become: true
-  template:
-    src: v2/queue-worker.service.j2
-    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-{{ action }}-worker.service
-    owner: root
-    group: root
-    mode: "0644"
-  vars:
-    action: "export.pali.chapter"
-
-- name: setup sqlite3 db for v1
-  become: true
-  ansible.builtin.file:
-    src: /var/www/shared/appdata
-    dest: "{{ app_deploy_root }}/htdocs/storage/app/data"
-    state: link
+- import_tasks: morus.yml
+- import_tasks: lily.yml
+- import_tasks: tulip.yml
