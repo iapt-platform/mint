@@ -70,6 +70,9 @@ use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\OfflineIndexController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\DictVocabularyController;
+use App\Http\Controllers\DictInfoController;
+use App\Http\Controllers\PgPaliDictDownloadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -192,6 +195,9 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('offline-index',OfflineIndexController::class);
     Route::apiResource('task',TaskController::class);
     Route::apiResource('export',ExportController::class);
+    Route::apiResource('dict-vocabulary',DictVocabularyController::class);
+    Route::apiResource('dict-info',DictInfoController::class);
+    Route::apiResource('pg-pali-dict-download',PgPaliDictDownloadController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
