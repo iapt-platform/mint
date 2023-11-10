@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Http\Api\DictApi;
 use App\Models\UserDict;
+use Illuminate\Support\Facades\Redis;
 
 class ExportFtsPali extends Command
 {
@@ -55,7 +56,8 @@ class ExportFtsPali extends Command
 
         $pageSize = 10000;
         $currPage = 1;
-        $fp = fopen($path."/pali-{$currPage}.syn",'w') or die("Unable to open file!");
+        $filename = "/pali-{$currPage}.syn";
+        $fp = fopen($path.$filename,'w') or die("Unable to open file!");
         $count = 0;
         foreach ($dictId as $key => $value) {
             $words = UserDict::where('dict_id',$value)
@@ -69,6 +71,10 @@ class ExportFtsPali extends Command
                 }
                 if($count % 10000 === 0){
                     fclose($fp);
+                    $redisKey = 'export/fts/pali'.$filename;
+                    $content = file_get_contents($path.$filename);
+                    Redis::set($redisKey,$content);
+                    Redis::expire($redisKey,3600*24*10);
                     $currPage++;
                     $filename = "/pali-{$currPage}.syn";
                     $this->info('new file filename='.$filename);
