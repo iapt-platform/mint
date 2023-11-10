@@ -28,8 +28,8 @@ return [
             ],
 
             'tulip' => [
-                'host' => env('LILY_GRPC_HOST', "localhost"),
-                'port' => env('LILY_GRPC_PORT', 9990),
+                'host' => env('TULIP_GRPC_HOST', "localhost"),
+                'port' => env('TULIP_GRPC_PORT', 9990),
             ],
         ],
 
