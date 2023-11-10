@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\CustomBookSentence;
+use App\Models\CustomBook;
+
 use App\Models\Channel;
 use App\Models\Sentence;
 use Illuminate\Support\Str;
@@ -84,9 +86,21 @@ class CopyUserBook extends Command
                 $channel->create_time = time()*1000;
                 $channel->modify_time = time()*1000;
                 $channel->status = $bookInfo->status;
-                $channel->save();
-                Log::debug('copy user book : create channel name='.$channelName);
+                $saveOk = $channel->save();
+                if($saveOk){
+                    Log::debug('copy user book : create channel success name='.$channelName);
+                }else{
+                    Log::error('copy user book : create channel fail.',['channel'=>$channelName,'book'=>$book->book]);
+                    $this->error('copy user book : create channel fail.  name='.$channelName);
+                    continue;
+                }
             }
+            if(!Str::isUuid($channel->uid)){
+                Log::error('copy user book : channel id error.',['channel'=>$channelName,'book'=>$book->book]);
+                $this->error('copy user book : channel id error.  name='.$channelName);
+                continue;
+            }
+            CustomBook::where('book_id',$book->book)->update(['channel_id'=>$channel->uid]);
 
             $bar = $this->output->createProgressBar(CustomBookSentence::where('book',$book->book)
                                                     ->count());
