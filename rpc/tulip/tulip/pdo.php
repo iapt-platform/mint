@@ -49,4 +49,9 @@ class PdoHelper {
             return $this->_pdo->query($query);
         }
     }
+
+    public function errorInfo()
+    {
+        return $this->_pdo->errorInfo();
+    }
 }
