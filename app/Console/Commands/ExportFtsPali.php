@@ -52,8 +52,11 @@ class ExportFtsPali extends Command
                 return 1;
             }
         }
-        $fp = fopen($path.'/pali.syn','w') or die("Unable to open file!");
-        $count=0;
+
+        $pageSize = 10000;
+        $currPage = 1;
+        $fp = fopen($path."/pali-{$currPage}.syn",'w') or die("Unable to open file!");
+        $count = 0;
         foreach ($dictId as $key => $value) {
             $words = UserDict::where('dict_id',$value)
                              ->select('word')
@@ -63,6 +66,13 @@ class ExportFtsPali extends Command
                 $count++;
                 if($count % 1000 === 0){
                     $this->info($count);
+                }
+                if($count % 10000 === 0){
+                    fclose($fp);
+                    $currPage++;
+                    $filename = "/pali-{$currPage}.syn";
+                    $this->info('new file filename='.$filename);
+                    $fp = fopen($path.$filename,'w') or die("Unable to open file!");
                 }
                 $parent = UserDict::where('dict_id',$value)
                              ->where('word',$word->word)
