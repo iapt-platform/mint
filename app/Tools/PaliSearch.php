@@ -73,19 +73,6 @@ class PaliSearch
         return $output;
     }
 
-    public static function upload_dict($data){
-        $client = PaliSearch::connect();
-
-        $request = new \Mint\Tulip\V1\UploadDictionaryRequest();
-        $request->setData($data);
-
-        list($response, $status) = $client->UploadDictionary($request)->wait();
-        if ($status->code !== \Grpc\STATUS_OK) {
-            Log::error("ERROR: " . $status->code . ", " . $status->details);
-            return false;
-        }
-        return $response->getError();
-    }
 
     public static function update($book,$paragraph,
                                   $bold1,$bold2,$bold3,
