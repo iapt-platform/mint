@@ -35,8 +35,8 @@ class SearchController extends Controller
                 if(substr($key,0,4) === 'para' || in_array(substr($key,0,1),$pageHead)){
                     return $this->page($request);
                 }else{
-                    return $this->pali($request);
-                    //return $this->pali_rpc($request);
+                    //return $this->pali($request);
+                    return $this->pali_rpc($request);
                 }
                 break;
             case 'page':
