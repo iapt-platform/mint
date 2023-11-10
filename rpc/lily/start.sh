@@ -1,5 +1,5 @@
-#!/bin/sh
+#!/bin/bash
 
-export CODE="mint-lily"
+export CODE="palm-lily"
 
-podman run -it --rm --events-backend=file --hostname=palm --network host $CODE
+podman run --rm --events-backend=file --hostname=palm --network host $CODE /bin/bash -i -c "python . $*"
