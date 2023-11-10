@@ -1,6 +1,8 @@
 <?php
 require dirname(__FILE__) . '/vendor/autoload.php';
 require dirname(__FILE__) . '/config.php';
+require dirname(__FILE__) . '/logger.php';
+
 
 $dir = dirname(__FILE__) . '/storage/dict';
 if(!is_dir($dir)){
@@ -12,7 +14,7 @@ if(!is_dir($dir)){
 }
 
 //删除目录下所有文件
-echo 'delete all of file'.PHP_EOL;
+logger('debug','delete all of file');
 $files = scandir($dir);
 foreach ($files as $key => $file) {
     if(is_file($dir.'/'.$file)){
@@ -23,46 +25,47 @@ foreach ($files as $key => $file) {
 $stopFile = $dir.'/.stop';
 $stop = file_put_contents ($stopFile,'stop');
 if($stop === false){
-    echo "create stop file fail ";
+    logger('error',"create stop file fail ");
     return 0;
 }
 
 $filename = $dir.'/pali-'.date("Y-m-d-h-i-sa").'.syn';
 $fp = fopen($filename,'a');
 if(!$fp){
-    echo "open file fail filename=".$filename;
+    logger('error',"open file fail filename=".$filename);
     return 0;
 }
 $client = new GuzzleHttp\Client();
 $currPage = 1;
 
     $urlBase = Config['api_server'] . '/v2/pg-pali-dict-download';
-    echo $urlBase.PHP_EOL;
+    logger('debug','url='.$urlBase);
     do {
         $goNext = false;
         $url = $urlBase . "?page={$currPage}";
-        echo $url.PHP_EOL;
+        logger('debug','url='.$url);
         $res = $client->request('GET', $url);
         $status = $res->getStatusCode();
         if($status === 200){
             $json = json_decode($res->getBody());
             if($json->ok){
                 $content = $json->data;
-                echo strlen($content).PHP_EOL;
+                logger('debug','data size='.strlen($content));
                 fwrite($fp,$content."\n");
+                logger('debug','write to file success');
                 $goNext = true;
             }else{
-                echo 'all done';
+                logger('debug', 'all done');
             }
         }else{
-            echo 'error:'.$status;
+            logger('error', 'status='.$status);
         }
         $currPage++;
-        sleep(5);
+        sleep(1);
     } while ($goNext);
     
 fclose($fp);
-echo 'all done filename='.$filename;
+logger('debug','all done filename='.$filename) ;
 
 unlink($stopFile);
 
