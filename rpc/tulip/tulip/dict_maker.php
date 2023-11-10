@@ -2,7 +2,7 @@
 require dirname(__FILE__) . '/vendor/autoload.php';
 require dirname(__FILE__) . '/config.php';
 
-$dir = dirname(__FILE__) . '/storage';
+$dir = dirname(__FILE__) . '/storage/dict';
 if(!is_dir($dir)){
     $res = mkdir($dir,0700,true);
     if(!$res){
@@ -10,6 +10,23 @@ if(!is_dir($dir)){
         return 0;
     }
 }
+
+//删除目录下所有文件
+echo 'delete all of file'.PHP_EOL;
+$files = scandir($dir);
+foreach ($files as $key => $file) {
+    if(is_file($dir.'/'.$file)){
+        unlink($dir.'/'.$file);
+    }
+}
+
+$stopFile = $dir.'/.stop';
+$stop = file_put_contents ($stopFile,'stop');
+if($stop === false){
+    echo "create stop file fail ";
+    return 0;
+}
+
 $filename = $dir.'/pali-'.date("Y-m-d-h-i-sa").'.syn';
 $fp = fopen($filename,'a');
 if(!$fp){
@@ -41,9 +58,11 @@ $currPage = 1;
             echo 'error:'.$status;
         }
         $currPage++;
+        sleep(5);
     } while ($goNext);
     
 fclose($fp);
 echo 'all done filename='.$filename;
 
+unlink($stopFile);
 
