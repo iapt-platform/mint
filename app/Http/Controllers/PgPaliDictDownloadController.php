@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserDict;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class PgPaliDictDownloadController extends Controller
 {
@@ -15,15 +16,14 @@ class PgPaliDictDownloadController extends Controller
     public function index(Request $request)
     {
         $currPage = $request->get('page',1);
-        $path = storage_path('app/export/fts');
+        $path = 'export/fts/pali';
         $filename = $path."/pali-{$currPage}.syn";
-        if(file_exists($filename)){
-            $content = file_get_contents($filename);
+        if(Redis::exists($filename)){
+            $content = Redis::get($filename);
             return $this->ok($content);
         }else{
             return $this->error('no file',200,200);
         }
-
     }
 
     /**
