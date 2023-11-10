@@ -1,7 +1,8 @@
 {
   "require": {
     "grpc/grpc": "v1.57.0",
-    "google/protobuf": "v3.23.2"
+    "google/protobuf": "v3.23.2",
+    "guzzlehttp/guzzle": "^7.8"
   },
   "autoload": {
     "psr-4": {
