@@ -14,6 +14,7 @@ use App\Models\Discussion;
 use App\Models\PaliSentence;
 use App\Models\SentSimIndex;
 use App\Models\CustomBookSentence;
+use App\Models\CustomBook;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -120,14 +121,15 @@ class CorpusController extends Controller
         if(count($sentId) !== 4){
             return false;
         }
-        if((int)$sentId[0] < 1000){
+        $bookId = (int)$sentId[0];
+        if( $bookId < 1000){
             if($mode==='read'){
                 $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
             }else{
                 $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
             }
         }else{
-
+            $channelId = CustomBook::where('book_id',$bookId)->value('channel_id');
         }
 
 
@@ -143,49 +145,6 @@ class CorpusController extends Controller
                         ->get();
 
         $channelIndex = $this->getChannelIndex($channels);
-
-        if((int)$sentId[0] >= 1000){
-            $orgChannelId = (string)Str::uuid();
-            //载入自定义原文
-            $customOrigin = CustomBookSentence::
-                              where('book',(int)$sentId[0])
-                            ->where('paragraph',(int)$sentId[1])
-                            ->where('word_start',(int)$sentId[2])
-                            ->where('word_end',(int)$sentId[3])
-                            ->get();
-            $toSentFormat = array();
-            $owner_uid = null;
-            foreach ($customOrigin as $custom) {
-                if($owner_uid === null){
-                    $owner_uid = $custom->owner;
-                }
-                $toSentFormat[] = (object)[
-                    'uid'=>$custom->id,
-                    'book_id'=>$custom->book,
-                    'paragraph'=>$custom->paragraph,
-                    'word_start'=>$custom->word_start,
-                    "word_end"=>$custom->word_end,
-                    'channel_uid'=>$orgChannelId,
-                    'content'=>$custom->content,
-                    'content_type'=>$custom->content_type,
-                    'editor_uid'=>$custom->owner,
-                    'acceptor_uid'=>null,
-                    'pr_edit_at'=>null,
-                    'create_time'=>$custom->create_time,
-                    'modify_time'=>$custom->modify_time,
-                    'created_at'=>$custom->created_at,
-                    'updated_at'=>$custom->updated_at,
-                ];
-            }
-            $orgChannel = (object)array(
-                        'uid'=>$orgChannelId,
-                        'type'=>'original',
-                        'name'=>'custom',
-                        'owner_uid'=>$owner_uid,
-                        'studio'=>StudioApi::getById($owner_uid),
-                    );
-            $channelIndex[$orgChannelId] = $orgChannel;
-        }
 
         if(isset($toSentFormat)){
             foreach ($toSentFormat as $key => $org) {
@@ -677,7 +636,7 @@ class CorpusController extends Controller
                     $newSent['id'] = $row->uid;
                     $newSent['content'] = $row->content;
                     $newSent['contentType'] = $row->content_type;
-                    $newSent['html'] = "";
+                    $newSent['html'] = '';
                     $newSent["editor"]=UserApi::getByUuid($row->editor_uid);
                     /**
                      * TODO 刷库改数据
@@ -715,6 +674,7 @@ class CorpusController extends Controller
                                     $wbwData = $this->getWbw($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],$this->wbwChannels[0]);
                                     if($wbwData){
                                         $newSent['content'] = $wbwData;
+                                        $newSent['contentType'] = 'json';
                                         $newSent['html'] = "";
                                     }
                                 }
