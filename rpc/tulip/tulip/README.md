@@ -11,3 +11,7 @@ php dict_maker.php
 2. 复制字典文件到 postgresql 目录
 3. 运行 `php dict_update.php` 令字典文件生效
 4. 运行 `php content_update.php` 重新生成索引
+
+# 定期更新
+
+运行 `php content_download.php` 从 api 获取巴利语全文搜索数据。每次运行时间约 1 小时。
