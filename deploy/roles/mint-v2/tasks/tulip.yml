@@ -1,6 +1,6 @@
 - name: auto-loader optimization for tulip
   ansible.builtin.shell:
-    cmd: composer install --optimize-autoloader --no-dev
+    cmd: composer update --optimize-autoloader --no-dev
     chdir: "{{ app_deploy_root }}/agile/rpc/tulip/tulip"
 
 - name: upload tulip db/.env

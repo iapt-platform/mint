@@ -13,11 +13,13 @@
     group: root
     mode: "0644"
 
-- name: upload lily rpc worker service
+- name: upload lily rpc worker({{ queue }}) service
   become: true
   template:
     src: v2/lily/services/worker.service.j2
-    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-lily-worker.service
+    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-worker-{{ queue }}.service
     owner: root
     group: root
     mode: "0644"
+  vars:
+    queue: "palm.lily.tex-to-pdf"
