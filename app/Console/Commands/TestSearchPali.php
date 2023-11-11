@@ -38,11 +38,11 @@ class TestSearchPali extends Command
      */
     public function handle()
     {
-        //$result = PaliSearch::search(['citta'],[93,94],'case',0,10);
-        //var_dump($result);
-        //$result = PaliSearch::book_list(['citta'],[93,94],'case',0,10);
-        //var_dump($result);
-        //$this->info(PaliSearch::upload_dict('ddd'));
+        $result = PaliSearch::search(['citta'],[93,94],'case',0,10);
+        var_dump($result);
+        $result = PaliSearch::book_list(['citta'],[93,94],'case',0,10);
+        var_dump($result);
+
         $full = '19 . ‘ ‘ ‘ Yathā vā paneke bhonto samaṇabrāhmaṇā saddhādeyyāni bhojanāni bhuñjitvā te evarūpaṃ dūteyyapahiṇagamanānuyogaṃ anuyuttā viharanti , seyyathidaṃ – raññaṃ , rājamahāmattānaṃ , khattiyānaṃ , brāhmaṇānaṃ , gahapatikānaṃ , kumārānaṃ ‘ ‘ idha gaccha , amutrāgaccha , idaṃ hara , amutra idaṃ āharā ’ ’ ti iti vā iti evarūpā dūteyyapahiṇagamanānuyogā paṭivirato samaṇo gotamo ’ ti – iti vā hi , bhikkhave , puthujjano tathāgatassa vaṇṇaṃ vadamāno vadeyya . ';
         $test = 'bhonto samaṇabrāhmaṇā';
         $update = PaliSearch::update(93,50,
