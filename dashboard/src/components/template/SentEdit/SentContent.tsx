@@ -121,7 +121,7 @@ const SentContentWidget = ({
       />
       <div style={{ flex: layoutFlex.left, color: "#9f3a01" }}>
         {origin?.map((item, id) => {
-          if (item.channel.type === "wbw") {
+          if (item.contentType === "json") {
             return (
               <WbwSentCtl
                 key={id}

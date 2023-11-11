@@ -113,9 +113,10 @@ export const SentEditInner = ({
       setLoadedRes(res);
     }
   }, [translation]);
+
   useEffect(() => {
     const content = origin?.find(
-      (value) => value.channel.type === "wbw"
+      (value) => value.contentType === "json"
     )?.content;
     if (content) {
       setWbwData(JSON.parse(content));
