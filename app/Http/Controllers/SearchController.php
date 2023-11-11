@@ -35,8 +35,11 @@ class SearchController extends Controller
                 if(substr($key,0,4) === 'para' || in_array(substr($key,0,1),$pageHead)){
                     return $this->page($request);
                 }else{
-                    //return $this->pali($request);
-                    return $this->pali_rpc($request);
+                    if (App::environment(['local', 'staging'])) {
+                        return $this->pali_rpc($request);
+                    }else{
+                        return $this->pali($request);
+                    }
                 }
                 break;
             case 'page':
@@ -268,9 +271,15 @@ class SearchController extends Controller
                     $result = DB::select($query, [$key]);
 
                 }else{
-                    $rpc_result = PaliSearch::book_list(explode(';',$key) ,$bookId,
-                                                    $request->get('match','case'));
-                    $result = collect($rpc_result['rows']);
+                    if (App::environment(['local', 'staging'])) {
+                        $rpc_result = PaliSearch::book_list(explode(';',$key) ,$bookId,
+                                                        $request->get('match','case'));
+                        $result = collect($rpc_result['rows']);
+                    }else{
+                        $queryWhere = $this->getQueryWhere($key,$request->get('match','case'));
+                        $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
+                        $result = DB::select($query, $queryWhere['param']);
+                    }
                 }
                 break;
             case 'page':
