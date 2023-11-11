@@ -73,6 +73,7 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\DictVocabularyController;
 use App\Http\Controllers\DictInfoController;
 use App\Http\Controllers\PgPaliDictDownloadController;
+use App\Http\Controllers\SearchPaliDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -198,6 +199,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('dict-vocabulary',DictVocabularyController::class);
     Route::apiResource('dict-info',DictInfoController::class);
     Route::apiResource('pg-pali-dict-download',PgPaliDictDownloadController::class);
+    Route::apiResource('pali-search-data',SearchPaliDataController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
