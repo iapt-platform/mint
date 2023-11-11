@@ -3,7 +3,7 @@ import { TCodeConvertor, XmlToReact } from "./utilities";
 const { Paragraph, Text } = Typography;
 
 interface IWidget {
-  html?: string;
+  html?: string | null;
   className?: string;
   placeholder?: string;
   wordWidget?: boolean;
