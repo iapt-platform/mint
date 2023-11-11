@@ -301,7 +301,7 @@ const SentCellWidget = ({
                   marginBottom: 0,
                 }}
                 placeholder="请输入"
-                html={sentData.html}
+                html={sentData.html ? sentData.html : sentData.content}
                 wordWidget={wordWidget}
               />
             )}
