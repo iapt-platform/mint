@@ -10,5 +10,5 @@ define("Config", [
         "user" => "postgres",
         "password" => "123456",
     ],
-    'api_server' => 'http://127.0.0.1:8000/api',
+    'api_server' => 'https://staging.wikipali.org/api',
 ]);
