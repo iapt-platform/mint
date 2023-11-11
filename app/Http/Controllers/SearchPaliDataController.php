@@ -25,7 +25,13 @@ class SearchPaliDataController extends Controller
         $pageSize = $request->get('page_size',1000);
         $start = $request->get('start',1);
         $output = array();
-        for($iPara=$start; $iPara < $start+$pageSize; $iPara++){
+        if($start+$pageSize>$maxParagraph){
+            $endOfPara = $maxParagraph+1;
+        }else{
+            $endOfPara = $start+$pageSize;
+        }
+
+        for($iPara=$start; $iPara < $endOfPara; $iPara++){
             $content = $this->getContent($book,$iPara);
             //查找黑体字
             $words = WbwTemplate::where('book',$book)
