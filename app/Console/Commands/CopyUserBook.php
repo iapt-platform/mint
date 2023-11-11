@@ -18,7 +18,7 @@ class CopyUserBook extends Command
      * php artisan copy:user.book
      * @var string
      */
-    protected $signature = 'copy:user.book {--lang} {--book=}';
+    protected $signature = 'copy:user.book {--lang} {--book=} {--test}';
 
     /**
      * The console command description.
@@ -53,6 +53,10 @@ class CopyUserBook extends Command
             return 0;
         }
 
+        if($this->option('test')){
+            $this->info('run in test mode');
+        }
+
         $this->info('给CustomBook 添加channel');
         foreach (CustomBook::get() as $key => $customBook) {
             $this->info('doing book='.$customBook->book_id);
@@ -81,13 +85,15 @@ class CopyUserBook extends Command
                     $channel->create_time = time()*1000;
                     $channel->modify_time = time()*1000;
                     $channel->status = $customBook->status;
-                    $saveOk = $channel->save();
-                    if($saveOk){
-                        Log::debug('copy user book : create channel success name='.$channelName);
-                    }else{
-                        Log::error('copy user book : create channel fail.',['channel'=>$channelName,'book'=>$book->book]);
-                        $this->error('copy user book : create channel fail.  name='.$channelName);
-                        continue;
+                    if(!$this->option('test')){
+                        $saveOk = $channel->save();
+                        if($saveOk){
+                            Log::debug('copy user book : create channel success name='.$channelName);
+                        }else{
+                            Log::error('copy user book : create channel fail.',['channel'=>$channelName,'book'=>$book->book]);
+                            $this->error('copy user book : create channel fail.  name='.$channelName);
+                            continue;
+                        }
                     }
                 }
                 if(!Str::isUuid($channel->uid)){
@@ -96,7 +102,9 @@ class CopyUserBook extends Command
                     continue;
                 }
                 $customBook->channel_id = $channel->uid;
-                $customBook->save();
+                if(!$this->option('test')){
+                    $customBook->save();
+                }
             }
         }
         $this->info('给CustomBook 添加channel 结束');
@@ -116,11 +124,8 @@ class CopyUserBook extends Command
             }
             $this->info('doing book '. $book->book_id);
 
-            $bar = $this->output->createProgressBar(CustomBookSentence::where('book',$book->book_id)
-                                                    ->count());
             $bookSentence = CustomBookSentence::where('book',$book->book_id)->cursor();
             foreach ($bookSentence as $key => $sentence) {
-                $bar->advance();
                 $newRow = Sentence::firstOrNew(
                     [
                         "book_id" => $sentence->book,
@@ -146,10 +151,11 @@ class CopyUserBook extends Command
                     $this->error('channel uuid is null book='.$sentence->book .' para='.$sentence->paragraph);
                     Log::error('channel uuid is null ',['sentence'=>$sentence->book]);
                 }else{
-                    $newRow->save();
+                    if(!$this->option('test')){
+                        $newRow->save();
+                    }
                 }
             }
-            $bar->finish();
             $this->info("book {$book->book} finished");
         }
         $this->info('all done');
