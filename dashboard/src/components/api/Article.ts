@@ -66,6 +66,8 @@ export interface IArticleDataRequest {
   content_type?: string;
   status: number;
   lang: string;
+  to_tpl?: boolean;
+  anthology_id?: string;
 }
 export interface IChapterToc {
   key?: string;
