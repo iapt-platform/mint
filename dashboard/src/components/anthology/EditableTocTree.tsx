@@ -172,6 +172,7 @@ const EditableTocTreeWidget = ({
         }}
       />
       <ArticleEditDrawer
+        anthologyId={anthologyId}
         articleId={articleId}
         open={openEditor}
         onClose={() => setOpenEditor(false)}
