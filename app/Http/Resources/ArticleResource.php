@@ -3,19 +3,23 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Api\MdRender;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
 use App\Models\CourseMember;
 use App\Models\Course;
 use App\Models\Collection;
 use App\Models\ArticleCollection;
 use App\Models\Channel;
-use Illuminate\Support\Facades\Log;
+
+use App\Http\Controllers\ArticleController;
+
+use App\Http\Api\MdRender;
 use App\Http\Api\UserApi;
 use App\Http\Api\StudioApi;
 use App\Http\Api\AuthApi;
-use App\Http\Controllers\ArticleController;
 use App\Http\Api\ChannelApi;
-use Illuminate\Support\Str;
+
 
 class ArticleResource extends JsonResource
 {
@@ -40,6 +44,13 @@ class ArticleResource extends JsonResource
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
         ];
+        $channels = [];
+        if($request->has('channel')){
+            $channels = explode('_',$request->get('channel')) ;
+        }
+        $mdRender = new MdRender(['format'=>'simple']);
+        $data['title'] = $mdRender->convert($this->title,$channels);
+
         $user = AuthApi::current($request);
         if($user){
             $canEdit = ArticleController::userCanEdit($user['user_uid'],$this);
