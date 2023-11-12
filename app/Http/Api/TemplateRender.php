@@ -250,6 +250,20 @@ class TemplateRender{
                     $output = $props["word"];
                 }
                 break;
+            case 'simple':
+                if(isset($props["meaning"])){
+                    $output = $props["meaning"];
+                }else{
+                    $output = $props["word"];
+                }
+                break;
+            default:
+                if(isset($props["meaning"])){
+                    $output = $props["meaning"];
+                }else{
+                    $output = $props["word"];
+                }
+                break;
         }
         return $output;
     }
@@ -322,6 +336,12 @@ class TemplateRender{
             case 'tex':
                 $output = $trigger;
                 break;
+            case 'simple':
+                $output = '';
+                break;
+            default:
+                $output = '';
+                break;
         }
         return $output;
     }
@@ -352,6 +372,9 @@ class TemplateRender{
                 $output = $pali.'၊'.$meaning;
                 break;
             case 'tex':
+                $output = $pali.'၊'.$meaning;
+                break;
+            case 'simple':
                 $output = $pali.'၊'.$meaning;
                 break;
             default:
@@ -388,6 +411,9 @@ class TemplateRender{
                 $output = $title;
                 break;
             case 'tex':
+                $output = $title;
+                break;
+            case 'simple':
                 $output = $title;
                 break;
             default:
@@ -432,6 +458,9 @@ class TemplateRender{
                 $output = $title;
                 break;
             case 'tex':
+                $output = $title;
+                break;
+            case 'simple':
                 $output = $title;
                 break;
             default:
@@ -489,8 +518,11 @@ class TemplateRender{
                 case 'tex':
                     $output = $props["innerString"];
                     break;
+                case 'simple':
+                    $output = $props["innerString"];
+                    break;
                 default:
-                    $output = '';
+                    $output = $props["innerString"];
                     break;
             }
             return $output;
@@ -539,14 +571,7 @@ class TemplateRender{
                 $output = '';
                 if(isset($props['translation']) && is_array($props['translation'])){
                     foreach ($props['translation'] as $key => $value) {
-                        $output .= MdRender::render($value['content'],
-                                    [$value['channel']['id']],
-                                    null,
-                                    'read',
-                                    $value['channel']['type'],
-                                    'translation',
-                                    'text'
-                                    );
+                        $output .= $value['html'];
                     }
                 }
                 break;
@@ -554,14 +579,26 @@ class TemplateRender{
                 $output = '';
                 if(isset($props['translation']) && is_array($props['translation'])){
                     foreach ($props['translation'] as $key => $value) {
-                        $output .= MdRender::render($value['content'],
-                                    [$value['channel']['id']],
-                                    null,
-                                    'read',
-                                    $value['channel']['type'],
-                                    'translation',
-                                    'tex'
-                                    );
+                        $output .= $value['html'];
+                    }
+                }
+                break;
+            case 'simple':
+                $output = '';
+                if(isset($props['translation']) &&
+                   is_array($props['translation']) &&
+                   count($props['translation']) > 0
+                   ){
+                    $sentences = $props['translation'];
+                }else if(isset($props['origin']) &&
+                         is_array($props['origin']) &&
+                         count($props['origin']) > 0
+                         ){
+                    $sentences = $props['origin'];
+                }
+                if(isset($sentences)){
+                    foreach ($sentences as $key => $value) {
+                        $output .= $value['html'];
                     }
                 }
                 break;
@@ -596,6 +633,9 @@ class TemplateRender{
                 $output = 'mermaid';
                 break;
             case 'tex':
+                $output = 'mermaid';
+                break;
+            case 'simple':
                 $output = 'mermaid';
                 break;
             default:

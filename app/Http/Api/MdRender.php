@@ -302,6 +302,7 @@ class MdRender{
                 }
                 break;
             case 'text':
+            case 'simple':
                 if(isset($tplProps)){
                     if(is_array($tplProps)){
                         return '';
@@ -554,6 +555,7 @@ class MdRender{
                 $output = preg_replace($pattern,$replacement,$html);
                 break;
             case 'text':
+            case 'simple':
                 $html = strip_tags($html);
                 $output = htmlspecialchars_decode($html,ENT_QUOTES);
                 //$output = html_entity_decode($html);
@@ -588,10 +590,13 @@ class MdRender{
             $GLOBALS["MdRenderStack"] = 1;
         }
         if($GLOBALS["MdRenderStack"]<3){
-            $mdRender = new MdRender(['mode'=>$mode,
-                                    'channelType'=>$channelType,
-                                    'contentType'=>$contentType,
-                                    'format'=>$format]);
+            $mdRender = new MdRender(
+                            [
+                                'mode'=>$mode,
+                                'channelType'=>$channelType,
+                                'contentType'=>$contentType,
+                                'format'=>$format
+                            ]);
 
             $output  = $mdRender->convert($markdown,$channelId,$queryId);
         }else{
