@@ -12,6 +12,7 @@ interface IWidget {
   para?: string;
   channelId?: string;
   articleId?: string;
+  anthologyId?: string;
   mode?: ArticleMode;
   open?: boolean;
   onClose?: Function;
@@ -25,6 +26,7 @@ const ArticleDrawerWidget = ({
   para,
   channelId,
   articleId,
+  anthologyId,
   mode,
   open,
   onClose,
