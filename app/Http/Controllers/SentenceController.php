@@ -229,17 +229,17 @@ class SentenceController extends Controller
         $user = AuthApi::current($request);
         if(!$user ){
             //未登录用户
-            return $this->error(__('auth.failed'),[],401);
+            return $this->error(__('auth.failed'),401,401);
         }
         $channel = Channel::where('uid',$request->get('channel'))->first();
         if(!$channel){
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),403,403);
         }
         if($channel->owner_uid !== $user["user_uid"]){
             //判断是否为协作
             $power = ShareApi::getResPower($user["user_uid"],$channel->uid,2);
             if($power < 20){
-                return $this->error(__('auth.failed'),[],403);
+                return $this->error(__('auth.failed'),403,403);
             }
         }
         $sentFirst=null;
