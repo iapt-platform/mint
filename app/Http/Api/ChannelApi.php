@@ -2,6 +2,7 @@
 namespace App\Http\Api;
 use App\Models\Channel;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class ChannelApi{
     public static function getById($id){
@@ -71,4 +72,36 @@ class ChannelApi{
         }
     }
 
+    /**
+     * 获取某个studio 的某个语言的自定义书的channel
+     * 如果没有，建立
+     */
+    public static function userBookGetOrCreate($studioId,$lang){
+        $channelName = '_user_book_'.$lang;
+        $channel = Channel::where('owner_uid',$studioId)
+                        ->where('name',$channelName)->first();
+        if($channel){
+            return $channel->uid;
+        }
+        $channelUuid = Str::uuid();
+        $channel = new Channel;
+        $channel->id = app('snowflake')->id();
+        $channel->uid = $channelUuid;
+        $channel->owner_uid = $customBook->owner;
+        $channel->name = $channelName;
+        $channel->type = 'original';
+        $channel->lang = $bookLang;
+        $channel->editor_id = 0;
+        $channel->create_time = time()*1000;
+        $channel->modify_time = time()*1000;
+        $channel->status = $customBook->status;
+        $saveOk = $channel->save();
+        if($saveOk){
+            Log::debug('copy user book : create channel success name='.$channelName);
+            return $channel->uid;
+        }else{
+            Log::error('copy user book : create channel fail.',['channel'=>$channelName,'book'=>$book->book]);
+            return false;
+        }
+    }
 }
