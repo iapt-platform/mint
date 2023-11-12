@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { useIntl } from "react-intl";
 import {
   ProForm,
+  ProFormInstance,
+  ProFormSwitch,
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
@@ -30,11 +32,13 @@ interface IFormData {
   content_type?: string;
   status: number;
   lang: string;
+  to_tpl?: boolean;
 }
 
 interface IWidget {
   studioName?: string;
   articleId?: string;
+  anthologyId?: string;
   onReady?: Function;
   onLoad?: Function;
   onChange?: Function;
@@ -43,6 +47,7 @@ interface IWidget {
 const ArticleEditWidget = ({
   studioName,
   articleId,
+  anthologyId,
   onReady,
   onLoad,
   onChange,
@@ -52,6 +57,7 @@ const ArticleEditWidget = ({
   const [readonly, setReadonly] = useState(false);
   const [content, setContent] = useState<string>();
   const [owner, setOwner] = useState<IStudio>();
+  const formRef = useRef<ProFormInstance>();
 
   return unauthorized ? (
     <Result
@@ -75,8 +81,9 @@ const ArticleEditWidget = ({
         />
       ) : undefined}
       <ProForm<IFormData>
+        formRef={formRef}
         onFinish={async (values: IFormData) => {
-          const request = {
+          const request: IArticleDataRequest = {
             uid: articleId ? articleId : "",
             title: values.title,
             subtitle: values.subtitle,
@@ -85,18 +92,19 @@ const ArticleEditWidget = ({
             content_type: "markdown",
             status: values.status,
             lang: values.lang,
+            to_tpl: values.to_tpl,
+            anthology_id: anthologyId,
           };
-          console.log("save", request);
-          put<IArticleDataRequest, IArticleResponse>(
-            `/v2/article/${articleId}`,
-            request
-          )
+          const url = `/v2/article/${articleId}`;
+          console.log("save", url, request);
+          put<IArticleDataRequest, IArticleResponse>(url, request)
             .then((res) => {
               console.log("save response", res);
               if (res.ok) {
                 if (typeof onChange !== "undefined") {
                   onChange(res.data);
                 }
+                formRef.current?.setFieldValue("content", res.data.content);
                 message.success(intl.formatMessage({ id: "flashes.success" }));
               } else {
                 message.error(res.message);
@@ -204,6 +212,13 @@ const ArticleEditWidget = ({
               style={{ width: "100%" }}
             />
           </Form.Item>
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormSwitch
+            name="to_tpl"
+            label="转换为模版"
+            disabled={anthologyId ? false : true}
+          />
         </ProForm.Group>
       </ProForm>
     </>
