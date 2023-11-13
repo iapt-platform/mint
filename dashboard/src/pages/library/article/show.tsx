@@ -368,7 +368,10 @@ const Widget = () => {
               }}
               onLoad={(article: IArticleDataResponse) => {
                 setLoadedArticleData(article);
-                document.title = convertToPlain(article.title).slice(0, 128);
+                const windowTitle = article.title_text
+                  ? article.title_text
+                  : article.title;
+                document.title = windowTitle.slice(0, 128);
                 const paramTopic = searchParams.get("topic");
                 const paramComment = searchParams.get("comment");
                 const paramType = searchParams.get("dis_type");
