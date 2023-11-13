@@ -413,7 +413,11 @@ const ArticleWidget = ({
       ) : (
         <ArticleView
           id={articleData?.uid}
-          title={articleData?.title}
+          title={
+            articleData?.title_text
+              ? articleData?.title_text
+              : articleData?.title
+          }
           subTitle={articleData?.subtitle}
           summary={articleData?.summary}
           content={articleData ? articleData.content : ""}
