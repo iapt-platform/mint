@@ -590,15 +590,19 @@ class TemplateRender{
                    count($props['translation']) > 0
                    ){
                     $sentences = $props['translation'];
-                }else if(isset($props['origin']) &&
-                         is_array($props['origin']) &&
-                         count($props['origin']) > 0
-                         ){
-                    $sentences = $props['origin'];
-                }
-                if(isset($sentences)){
                     foreach ($sentences as $key => $value) {
                         $output .= $value['html'];
+                    }
+                }
+                if(empty($output)){
+                    if(isset($props['origin']) &&
+                            is_array($props['origin']) &&
+                            count($props['origin']) > 0
+                            ){
+                        $sentences = $props['origin'];
+                        foreach ($sentences as $key => $value) {
+                            $output .= $value['html'];
+                        }
                     }
                 }
                 break;
