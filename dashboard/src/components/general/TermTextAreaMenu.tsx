@@ -27,7 +27,7 @@ interface IWidget {
   onSelect?: Function;
 }
 const TermTextAreaMenuWidget = ({
-  items = [],
+  items,
   searchKey = "",
   maxItem = 10,
   visible = false,
@@ -39,24 +39,29 @@ const TermTextAreaMenuWidget = ({
   const [wordList, setWordList] = useState<IWordWithEn[]>();
   const sysTerms = useAppSelector(getTerm);
   console.log("items", items);
-  useEffect(() => {
-    //本句单词
-    const mWords = items?.map((item) => {
-      return {
-        word: item,
-        en: PaliToEn(item),
-      };
-    });
 
-    //计算这些单词的base
+  useEffect(() => {
     let parents: string[] = [];
-    items?.forEach((value) => {
-      getPaliBase(value).forEach((base) => {
-        if (!parents.includes(base) && !items.includes(base)) {
-          parents.push(base);
-        }
+    let mWords: IWordWithEn[] = [];
+    //本句单词
+    if (items) {
+      mWords = items?.map((item) => {
+        return {
+          word: item,
+          en: PaliToEn(item),
+        };
       });
-    });
+
+      //计算这些单词的base
+
+      items?.forEach((value) => {
+        getPaliBase(value).forEach((base) => {
+          if (!parents.includes(base) && !items.includes(base)) {
+            parents.push(base);
+          }
+        });
+      });
+    }
 
     const term = sysTerms ? sysTerms?.map((item) => item.word) : [];
     //本句单词parent
@@ -81,6 +86,7 @@ const TermTextAreaMenuWidget = ({
           isTerm: true,
         };
       });
+
     setWordList([...parentTerm, ...mWords, ...sysTerm]);
 
     //此处千万不能加其他dependency 否则会引起无限循环
