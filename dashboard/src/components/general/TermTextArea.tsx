@@ -34,6 +34,8 @@ const TermTextAreaWidget = ({
   const refTextArea = useRef<HTMLTextAreaElement>(null);
   const refShadow = useRef<HTMLDivElement>(null);
 
+  console.log("render");
+
   function term_at_menu_hide() {
     setMenuDisplay("none");
     setTermSearch("");
