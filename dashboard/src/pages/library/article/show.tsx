@@ -300,6 +300,7 @@ const Widget = () => {
                 <ToolButtonToc
                   type={type as ArticleType}
                   articleId={id}
+                  channels={searchParams.get("channel")?.split("_")}
                   anthologyId={searchParams.get("anthology")}
                   onSelect={(key: Key) => {
                     console.log("toc click", key);
@@ -347,13 +348,14 @@ const Widget = () => {
               articleId={id}
               anthologyId={searchParams.get("anthology")}
               mode={searchParams.get("mode") as ArticleMode}
-              onArticleChange={(article: string, target?: string) => {
-                console.log("article change", article, target);
-                let mType = type;
-                if (article.split("-").length === 2) {
-                  mType = "chapter";
-                }
-                let url = `/article/${mType}/${article}?mode=${currMode}`;
+              onArticleChange={(
+                newType: ArticleType,
+                article: string,
+                target?: string
+              ) => {
+                console.log("article change", newType, article, target);
+
+                let url = `/article/${newType}/${article}?mode=${currMode}`;
                 searchParams.forEach((value, key) => {
                   console.log(value, key);
                   if (key !== "mode") {
