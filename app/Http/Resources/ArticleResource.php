@@ -49,7 +49,7 @@ class ArticleResource extends JsonResource
             $channels = explode('_',$request->get('channel')) ;
         }
         $mdRender = new MdRender(['format'=>'simple']);
-        $data['title'] = $mdRender->convert($this->title,$channels);
+        $data['title_text'] = $mdRender->convert($this->title,$channels);
 
         $user = AuthApi::current($request);
         if($user){

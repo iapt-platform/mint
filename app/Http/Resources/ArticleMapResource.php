@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\UserApi;
+use App\Http\Api\MdRender;
 
 class ArticleMapResource extends JsonResource
 {
@@ -27,6 +28,12 @@ class ArticleMapResource extends JsonResource
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
         ];
-        return parent::toArray($request);
+        $channels = [];
+        if($request->has('channel')){
+            $channels = explode('_',$request->get('channel')) ;
+        }
+        $mdRender = new MdRender(['format'=>'simple']);
+        $data['title_text'] = $mdRender->convert($this->title,$channels);
+        return $data;
     }
 }
