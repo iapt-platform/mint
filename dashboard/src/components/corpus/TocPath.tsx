@@ -33,7 +33,7 @@ const TocPathWidget = ({
   onChange,
 }: IWidgetTocPath): JSX.Element => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const fullPath = (
     <Breadcrumb
       style={{ whiteSpace: "nowrap", width: "100%", fontSize: style?.fontSize }}
@@ -73,7 +73,19 @@ const TocPathWidget = ({
           >
             <Typography.Link>
               {item.level < 99 ? (
-                <PaliText text={item.title} />
+                <span
+                  style={
+                    item.level === 0
+                      ? {
+                          padding: 4,
+                          backgroundColor: "#92880052",
+                          borderRadius: 4,
+                        }
+                      : undefined
+                  }
+                >
+                  <PaliText text={item.title} />
+                </span>
               ) : (
                 <Tag>{item.title}</Tag>
               )}
