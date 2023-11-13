@@ -30,7 +30,7 @@ const AnthologyTocTreeWidget = ({
         const toc: ListNodeData[] = json.data.rows.map((item) => {
           return {
             key: item.article_id ? item.article_id : item.title,
-            title: item.title,
+            title: item.title_text ? item.title_text : item.title,
             level: item.level,
             deletedAt: item.deleted_at,
           };
