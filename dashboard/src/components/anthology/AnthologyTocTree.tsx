@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { get } from "../../request";
 import { IArticleMapListResponse } from "../api/Article";
@@ -8,11 +7,13 @@ import TocTree from "../article/TocTree";
 
 interface IWidget {
   anthologyId?: string;
+  channels?: string[];
   onSelect?: Function;
   onArticleSelect?: Function;
 }
 const AnthologyTocTreeWidget = ({
   anthologyId,
+  channels,
   onSelect,
   onArticleSelect,
 }: IWidget) => {
@@ -23,7 +24,8 @@ const AnthologyTocTreeWidget = ({
     if (typeof anthologyId === "undefined") {
       return;
     }
-    const url = `/v2/article-map?view=anthology&id=${anthologyId}`;
+    let url = `/v2/article-map?view=anthology&id=${anthologyId}`;
+    url += channels && channels.length > 0 ? "&channel=" + channels[0] : "";
     console.log("url", url);
     get<IArticleMapListResponse>(url).then((json) => {
       if (json.ok) {
