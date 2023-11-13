@@ -81,6 +81,7 @@ export interface IChapterToc {
 export interface IArticleDataResponse {
   uid: string;
   title: string;
+  title_text?: string;
   subtitle: string;
   summary: string | null;
   _summary?: string;
@@ -139,6 +140,7 @@ export interface IArticleMapRequest {
   article_id?: string;
   level: number;
   title: string;
+  title_text?: string;
   editor?: IUser;
   children?: number;
   deleted_at?: string | null;
