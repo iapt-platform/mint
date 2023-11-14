@@ -115,7 +115,7 @@ class CorpusController extends Controller
     {
         //
     }
-    public function getSentTpl($id,$channels,$mode='edit',$onlyProps=false){
+    public function getSentTpl($id,$channels,$mode='edit',$onlyProps=false,$format='react'){
         $sent = [];
         $sentId = \explode('-',$id);
         if(count($sentId) !== 4){
@@ -161,7 +161,7 @@ class CorpusController extends Controller
                 break;
             }
         }
-        return $this->makeContent($record,$mode,$channelIndex,[],$onlyProps);
+        return $this->makeContent($record,$mode,$channelIndex,[],$onlyProps,false,$format);
     }
     /**
      * Display the specified resource.
@@ -554,7 +554,7 @@ class CorpusController extends Controller
      * $indexChannel channel索引
      * $indexedHeading 标题索引 用于给段落加标题标签 <h1> ect.
      */
-    private function makeContent($record,$mode,$indexChannel,$indexedHeading=[],$onlyProps=false,$paraMark=false){
+    private function makeContent($record,$mode,$indexChannel,$indexedHeading=[],$onlyProps=false,$paraMark=false,$format='react'){
         $content = [];
 		$lastSent = "0-0";
 		$sentCount = 0;
@@ -663,19 +663,20 @@ class CorpusController extends Controller
                             // 传过来的数据一定有一个原文channel
                             //
                             if($mode !== "read"){
-
-                                $newSent['channel']['type'] = "wbw";
-
-                                if(isset($this->wbwChannels[0])){
-                                    $newSent['channel']['name'] = $indexChannel[$this->wbwChannels[0]]->name;
-                                    $newSent['channel']['id'] = $this->wbwChannels[0];
-                                    //存在一个translation channel
-                                    //尝试查找逐词解析数据。找到，替换现有数据
-                                    $wbwData = $this->getWbw($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],$this->wbwChannels[0]);
-                                    if($wbwData){
-                                        $newSent['content'] = $wbwData;
-                                        $newSent['contentType'] = 'json';
-                                        $newSent['html'] = "";
+                                if($info->content_type==='json'){
+                                    $newSent['channel']['type'] = "wbw";
+                                    if(isset($this->wbwChannels[0])){
+                                        $newSent['channel']['name'] = $indexChannel[$this->wbwChannels[0]]->name;
+                                        $newSent['channel']['id'] = $this->wbwChannels[0];
+                                        //存在一个translation channel
+                                        //尝试查找逐词解析数据。找到，替换现有数据
+                                        $wbwData = $this->getWbw($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],
+                                                                $this->wbwChannels[0]);
+                                        if($wbwData){
+                                            $newSent['content'] = $wbwData;
+                                            $newSent['contentType'] = 'json';
+                                            $newSent['html'] = "";
+                                        }
                                     }
                                 }
                             }else{
@@ -685,10 +686,12 @@ class CorpusController extends Controller
 
                             break;
                         case 'nissaya':
-                            $newSent['html'] = RedisClusters::remember("/sent/{$channelId}/{$currSentId}",
+                            $newSent['html'] = RedisClusters::remember("/sent/{$channelId}/{$currSentId}/{$format}",
                                                 config('mint.cache.expire'),
-                                                function() use($row,$mode){
-                                                    return MdRender::render($row->content,[$row->channel_uid],null,$mode,"nissaya",$row->content_type);
+                                                function() use($row,$mode,$format){
+                                                    return MdRender::render($row->content,[$row->channel_uid],
+                                                                            null,$mode,"nissaya",
+                                                                            $row->content_type,$format);
                                                 });
                             break;
                         default:
@@ -697,13 +700,27 @@ class CorpusController extends Controller
                          * 包涵术语的不用cache
                          */
                             if(strpos($row->content,'[[')===false){
-                                $newSent['html'] = RedisClusters::remember("/sent/{$channelId}/{$currSentId}",
+                                $newSent['html'] = MdRender::render($row->content,[$row->channel_uid],
+                                                            null,$mode,'translation',
+                                                            $row->content_type,$format);
+                                /*
+                                RedisClusters::remember("/sent/{$channelId}/{$currSentId}/{$format}",
                                                     config('mint.cache.expire'),
-                                                function() use($row){
-                                                    return MdRender::render($row->content,[$row->channel_uid]);
+                                                function() use($row,$mode,$format){
+                                                    return MdRender::render($row->content,[$row->channel_uid],
+                                                                            null,$mode,'translation',
+                                                                            $row->content_type,$format);
                                                 });
+                                            */
                             }else{
-                                $mdRender = new MdRender(['debug'=>$this->debug]);
+                                $mdRender = new MdRender(
+                                    [
+                                        'debug'=>$this->debug,
+                                        'format'=>$format,
+                                        'mode'=>$mode,
+                                        'channelType'=>'translation',
+                                        'contentType'=>$row->content_type,
+                                    ]);
                                 $newSent['html'] = $mdRender->convert($row->content,[$row->channel_uid]);
                             }
                             break;
