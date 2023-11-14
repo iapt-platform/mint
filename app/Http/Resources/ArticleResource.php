@@ -124,7 +124,14 @@ class ArticleResource extends JsonResource
         if(isset($this->content) && !empty($this->content)){
             if($request->has('channel')){
                 $channels = explode('_',$request->get('channel')) ;
-            }else{
+            }else if($request->has('anthology')){
+                $defaultChannel = Collection::where('uid',$request->get('anthology'))
+                                    ->value('default_channel');
+                if($defaultChannel){
+                    $channels[] = $defaultChannel;
+                }
+            }
+            if(count($channels) === 0){
                 //查找用户默认channel
                 $studioChannel = Channel::where('owner_uid',$this->owner)
                                         ->where('type','translation')
