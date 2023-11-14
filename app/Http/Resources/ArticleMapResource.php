@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\UserApi;
 use App\Http\Api\MdRender;
+use App\Models\Collection;
 
 class ArticleMapResource extends JsonResource
 {
@@ -31,6 +32,11 @@ class ArticleMapResource extends JsonResource
         $channels = [];
         if($request->has('channel')){
             $channels = explode('_',$request->get('channel')) ;
+        }else{
+            $defaultChannel = Collection::where('uid',$this->collect_id)->value('default_channel');
+            if($defaultChannel){
+                $channels[] = $defaultChannel;
+            }
         }
         $mdRender = new MdRender(['format'=>'simple']);
         $data['title_text'] = $mdRender->convert($this->title,$channels);
