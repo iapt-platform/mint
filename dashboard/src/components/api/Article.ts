@@ -1,5 +1,6 @@
 import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
+import { IChannel } from "../channel/Channel";
 import { ITocPathNode } from "../corpus/TocPath";
 import type { IStudioApiResponse, TRole } from "./Auth";
 
@@ -16,6 +17,7 @@ export interface IAnthologyDataRequest {
   article_list?: IArticleListApiResponse[];
   lang: string;
   status: number;
+  default_channel?: string | null;
 }
 export interface IAnthologyDataResponse {
   uid: string;
@@ -24,6 +26,7 @@ export interface IAnthologyDataResponse {
   summary: string;
   article_list: IArticleListApiResponse[];
   studio: IStudioApiResponse;
+  default_channel?: IChannel;
   lang: string;
   status: number;
   childrenNumber: number;
