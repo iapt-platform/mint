@@ -1,24 +1,35 @@
 import { Button, message } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { post } from "../../request";
 import AnthologyModal from "../anthology/AnthologyModal";
 import { IArticleMapAddRequest, IArticleMapAddResponse } from "../api/Article";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
 interface IWidget {
   trigger?: React.ReactNode;
   studioName?: string;
   articleIds?: string[];
+  open?: boolean;
+  onClose?: Function;
   onFinally?: Function;
 }
 const AddToAnthologyWidget = ({
   trigger,
   studioName,
+  open = false,
+  onClose,
   articleIds,
   onFinally,
 }: IWidget) => {
+  const [isModalOpen, setIsModalOpen] = useState(open);
+  const user = useAppSelector(currentUser);
+  useEffect(() => setIsModalOpen(open), [open]);
   return (
     <AnthologyModal
-      studioName={studioName}
-      trigger={trigger ? trigger : <Button type="link">加入文集</Button>}
+      studioName={studioName ? studioName : user?.realName}
+      trigger={trigger}
+      open={isModalOpen}
+      onClose={(isOpen: boolean) => setIsModalOpen(isOpen)}
       onSelect={(id: string) => {
         if (typeof articleIds !== "undefined") {
           post<IArticleMapAddRequest, IArticleMapAddResponse>(
