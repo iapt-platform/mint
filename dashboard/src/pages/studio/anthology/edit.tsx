@@ -50,6 +50,7 @@ const Widget = () => {
               label: intl.formatMessage({ id: "buttons.basic.information" }),
               children: (
                 <AnthologyInfoEdit
+                  studioName={studioname}
                   anthologyId={anthology_id}
                   onLoad={(value: IAnthologyDataResponse) => {
                     setTitle(value.title);
