@@ -40,6 +40,13 @@ class ArticleMapResource extends JsonResource
         }
         $mdRender = new MdRender(['format'=>'simple']);
         $data['title_text'] = $mdRender->convert($this->title,$channels);
+        if ($request->get('view') === 'article') {
+            $collection = Collection::where('uid',$this->collect_id)->first();
+            if($collection){
+                $data['collection']['id']=$collection->uid;
+                $data['collection']['title']=$collection->title;
+            }
+        }
         return $data;
     }
 }
