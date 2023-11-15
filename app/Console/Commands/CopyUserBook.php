@@ -15,10 +15,10 @@ class CopyUserBook extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan copy:user.book
      * @var string
      */
-    protected $signature = 'copy:user.book {--lang} {--book=}';
+    protected $signature = 'copy:user.book {--lang} {--book=} {--test}';
 
     /**
      * The console command description.
@@ -52,68 +52,87 @@ class CopyUserBook extends Command
         if($this->option('lang')){
             return 0;
         }
-        $userBooks = CustomBookSentence::select('book')->groupBy('book')->get();
+
+        if($this->option('test')){
+            $this->info('run in test mode');
+        }
+
+        $this->info('给CustomBook 添加channel');
+        foreach (CustomBook::get() as $key => $customBook) {
+            $this->info('doing book='.$customBook->book_id);
+            if(empty($customBook->channel_id)){
+                $bookLang = $customBook->lang;
+                if(empty($bookLang) || $bookLang === 'false' || $bookLang === 'null'){
+                    $this->info('language can not be empty change to pa, book='.$customBook->book_id);
+                    Log::warning('copy:user.book language can not be empty ,change to pa, book='.$customBook->book_id);
+                    $bookLang = 'pa';
+                }
+                $customBook->lang = $bookLang;
+                $channelName = '_user_book_'.$bookLang;
+                $channel = Channel::where('owner_uid',$customBook->owner)
+                                ->where('name',$channelName)->first();
+                if($channel === null){
+                    $this->info('create new channel');
+                    $channelUuid = Str::uuid();
+                    $channel = new Channel;
+                    $channel->id = app('snowflake')->id();
+                    $channel->uid = $channelUuid;
+                    $channel->owner_uid = $customBook->owner;
+                    $channel->name = $channelName;
+                    $channel->type = 'original';
+                    $channel->lang = $bookLang;
+                    $channel->editor_id = 0;
+                    $channel->create_time = time()*1000;
+                    $channel->modify_time = time()*1000;
+                    $channel->status = $customBook->status;
+                    if(!$this->option('test')){
+                        $saveOk = $channel->save();
+                        if($saveOk){
+                            Log::debug('copy user book : create channel success name='.$channelName);
+                        }else{
+                            Log::error('copy user book : create channel fail.',['channel'=>$channelName,'book'=>$book->book]);
+                            $this->error('copy user book : create channel fail.  name='.$channelName);
+                            continue;
+                        }
+                    }
+                }
+                if(!Str::isUuid($channel->uid)){
+                    Log::error('copy user book : channel id error.',['channel'=>$channelName,'book'=>$book->book]);
+                    $this->error('copy user book : channel id error.  name='.$channelName);
+                    continue;
+                }
+                $customBook->channel_id = $channel->uid;
+                if(!$this->option('test')){
+                    $customBook->save();
+                }
+            }
+        }
+        $this->info('给CustomBook 添加channel 结束');
+
+        $userBooks = CustomBook::get();
         $this->info('book '. count($userBooks));
         foreach ($userBooks as $key => $book) {
             $queryBook = $this->option('book');
             if(!empty($queryBook)){
-                if($book->book != $queryBook){
+                if($book->book_id != $queryBook){
                     continue;
                 }
             }
-            $this->info('doing book '. $book->book);
-            $bookInfo = CustomBookSentence::where('book',$book->book)->first();
-            $bookLang = $bookInfo->lang;
-            //|| $bookLang === 'false' || $bookLang === 'null'
-            if(empty($bookLang) || $bookLang === 'false' || $bookLang === 'null'){
-                $this->info('language can not be empty change to pa, book='.$book->book);
-                Log::warning('copy:user.book language can not be empty ,change to pa, book='.$book->book);
-                $bookLang = 'pa';
-            }
-            $channelName = '_user_book_'.$bookLang;
-            $channel = Channel::where('owner_uid',$bookInfo->owner)
-                            ->where('name',$channelName)->first();
-            if($channel === null){
-                $channelUuid = Str::uuid();
-                $channel = new Channel;
-                $channel->id = app('snowflake')->id();
-                $channel->uid = $channelUuid;
-                $channel->owner_uid = $bookInfo->owner;
-                $channel->name = $channelName;
-                $channel->type = 'original';
-                $channel->lang = $bookLang;
-                $channel->editor_id = 0;
-                $channel->create_time = time()*1000;
-                $channel->modify_time = time()*1000;
-                $channel->status = $bookInfo->status;
-                $saveOk = $channel->save();
-                if($saveOk){
-                    Log::debug('copy user book : create channel success name='.$channelName);
-                }else{
-                    Log::error('copy user book : create channel fail.',['channel'=>$channelName,'book'=>$book->book]);
-                    $this->error('copy user book : create channel fail.  name='.$channelName);
-                    continue;
-                }
-            }
-            if(!Str::isUuid($channel->uid)){
-                Log::error('copy user book : channel id error.',['channel'=>$channelName,'book'=>$book->book]);
-                $this->error('copy user book : channel id error.  name='.$channelName);
+            if(empty($book->channel_id)){
+                $this->error('book channel is empty');
                 continue;
             }
-            CustomBook::where('book_id',$book->book)->update(['channel_id'=>$channel->uid]);
+            $this->info('doing book '. $book->book_id);
 
-            $bar = $this->output->createProgressBar(CustomBookSentence::where('book',$book->book)
-                                                    ->count());
-            $bookSentence = CustomBookSentence::where('book',$book->book)->cursor();
+            $bookSentence = CustomBookSentence::where('book',$book->book_id)->cursor();
             foreach ($bookSentence as $key => $sentence) {
-                $bar->advance();
                 $newRow = Sentence::firstOrNew(
                     [
                         "book_id" => $sentence->book,
                         "paragraph" => $sentence->paragraph,
                         "word_start" => $sentence->word_start,
                         "word_end" => $sentence->word_end,
-                        "channel_uid" => $channel->uid,
+                        "channel_uid" => $book->channel_id,
                     ],
                     [
                         'id' => app('snowflake')->id(),
@@ -127,18 +146,19 @@ class CopyUserBook extends Command
                 $newRow->strlen = mb_strlen($sentence->content,"UTF-8");
                 $newRow->status = $sentence->status;
                 $newRow->content_type = $sentence->content_type;
-                $newRow->language = $channel->lang;
+                $newRow->language = $book->lang;
                 if(empty($newRow->channel_uid)){
                     $this->error('channel uuid is null book='.$sentence->book .' para='.$sentence->paragraph);
                     Log::error('channel uuid is null ',['sentence'=>$sentence->book]);
                 }else{
-                    $newRow->save();
+                    if(!$this->option('test')){
+                        $newRow->save();
+                    }
                 }
-
             }
-            $bar->finish();
             $this->info("book {$book->book} finished");
         }
+        $this->info('all done');
         return 0;
     }
 }

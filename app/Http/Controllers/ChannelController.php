@@ -2,20 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+
 use App\Models\Channel;
 use App\Models\Sentence;
 use App\Models\DhammaTerm;
 use App\Models\WbwBlock;
 use App\Models\PaliSentence;
+use App\Models\CustomBook;
+
 use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+
 use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\PaliTextApi;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
+use App\Http\Api\ChannelApi;
+
 
 class ChannelController extends Controller
 {
@@ -281,24 +287,48 @@ class ChannelController extends Controller
 
         $sent = $request->get('sentence') ;
         $query = [];
+        $queryWithChannel = [];
         $sentContainer = [];
         $sentLenContainer = [];
 
+        $paliChannel = ChannelApi::getSysChannel('_System_Pali_VRI_');
+        $customBookChannel = array();
+
         foreach ($sent as $value) {
             $ids = explode('-',$value);
+            $idWithChannel = $ids;
             if(count($ids)===4){
+                if($ids[0] < 1000){
+                    $idWithChannel[] = $paliChannel;
+                }else{
+                    if(!isset($customBookChannel[$ids[0]])){
+                        $cbChannel = CustomBook::where('book_id',$ids[0])->value('channel_id');
+                        if($cbChannel){
+                            $customBookChannel[$ids[0]] = $cbChannel;
+                        }else{
+                            $customBookChannel[$ids[0]] = $paliChannel;
+                        }
+                    }
+                    $idWithChannel[] = $customBookChannel[$ids[0]];
+                }
                 $sentContainer[$value] = false;
                 $query[] = $ids;
+                $queryWithChannel[] = $idWithChannel;
             }
         }
         //获取单句长度
         if(count($query)>0){
-            $table = PaliSentence::whereIns(['book','paragraph','word_begin','word_end'],$query)
-                                    ->select(['book','paragraph','word_begin','word_end','length']);
+            $table = Sentence::whereIns(['book_id','paragraph','word_start','word_end','channel_uid'],$queryWithChannel)
+                                    ->select(['book_id','paragraph','word_start','word_end','strlen']);
             $sentLen = $table->get();
 
             foreach ($sentLen as $value) {
-                $sentLenContainer["{$value->book}-{$value->paragraph}-{$value->word_begin}-{$value->word_end}"] = $value->length;
+                $strlen = $value->strlen;
+                if(empty($strlen)){
+                    $strlen = 0;
+                }
+                $sentId = "{$value->book_id}-{$value->paragraph}-{$value->word_start}-{$value->word_end}";
+                $sentLenContainer[$sentId] = $strlen;
             }
         }
 

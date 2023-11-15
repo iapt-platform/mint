@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\StudioApi;
+use App\Http\Api\ChannelApi;
 use App\Models\ArticleCollection;
 
 
@@ -29,6 +30,10 @@ class CollectionResource extends JsonResource
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
         ];
+        $channel = ChannelApi::getById($this->default_channel);
+        if($channel){
+            $data['default_channel'] = $channel;
+        }
         if($this->fullArticleList===true){
             $data["article_list"] = \json_decode($this->article_list);
         }else{

@@ -18,6 +18,7 @@ use App\Tools\Tools;
 use App\Models\WbwTemplate;
 use App\Models\PageNumber;
 use App\Tools\PaliSearch;
+use Illuminate\Support\Facades\App;
 
 
 class SearchController extends Controller

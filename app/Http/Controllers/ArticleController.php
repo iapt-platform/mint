@@ -2,18 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 use App\Models\Article;
 use App\Models\ArticleCollection;
 use App\Models\Collection;
+use App\Models\CustomBook;
+use App\Models\CustomBookId;
+use App\Models\Sentence;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Http\Resources\ArticleResource;
 use App\Http\Api\AuthApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\StudioApi;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Http\Api\ChannelApi;
+use App\Http\Api\SentenceApi;
 use App\Tools\OpsLog;
 
 class ArticleController extends Controller
@@ -388,14 +394,14 @@ class ArticleController extends Controller
         //鉴权
         $user = AuthApi::current($request);
         if(!$user){
-            return $this->error(__('auth.failed'),[],401);
+            return $this->error(__('auth.failed'),401,401);
         }else{
             $user_uid=$user['user_uid'];
         }
 
         $canEdit = ArticleController::userCanEdit($user_uid,$article);
         if(!$canEdit){
-            return $this->error(__('auth.failed'),[],401);
+            return $this->error(__('auth.failed'),401,401);
         }
 
         /*
@@ -407,10 +413,21 @@ class ArticleController extends Controller
             return $this->error(__('validation.exists'));
         }*/
 
+        $content = $request->get('content');
+        if($request->get('to_tpl')===true){
+            /**
+             * 转化为模版
+             */
+            $tplContent = $this->toTpl($content,
+                                       $request->get('anthology_id'),
+                                       $user);
+            $content = $tplContent;
+        }
+
         $article->title = $request->get('title');
         $article->subtitle = $request->get('subtitle');
         $article->summary = $request->get('summary');
-        $article->content = $request->get('content');
+        $article->content = $content;
         $article->lang = $request->get('lang');
         $article->status = $request->get('status',10);
         $article->editor_id = $user['user_id'];
@@ -446,5 +463,186 @@ class ArticleController extends Controller
         });
 
         return $this->ok($delete);
+    }
+
+    public function toTpl($content,$anthologyId,$user){
+        //查询书号
+        if(!Str::isUuid($anthologyId)){
+            throw new \Exception('anthology Id not uuid');
+        }
+
+        $bookId = $this->getBookId($anthologyId,$user);
+
+        $tpl = $this->convertToTpl($content,$bookId['book'],$bookId['paragraph']);
+
+        //保存原文到句子表
+        $customBook = $this->getCustomBookByBookId($bookId['book']);
+        $sentenceSave = new SentenceApi;
+        $auth = $sentenceSave->auth($customBook->channel_id,$user['user_uid']);
+        if(!$auth){
+            throw new \Exception('auth fail');
+        }
+        foreach ($tpl['sentences'] as $key => $sentence) {
+            $sentenceSave->store($sentence,$user);
+        }
+        return $tpl['content'];
+    }
+
+    private function getCustomBookByBookId($bookId){
+        return CustomBook::where('book_id',$bookId)->first();
+    }
+
+    private function getBookId($anthologyId,$user){
+        $anthology = Collection::where('uid',$anthologyId)->first();
+        if(!$anthology){
+            throw new \Exception('anthology not exists id='.$anthologyId);
+        }
+        $bookId = $anthology->book_id;
+        if(empty($bookId)){
+            //生成 book id
+            $newBookId = CustomBook::max('book_id') + 1;
+
+            $newBook = new CustomBook;
+            $newBook->id = app('snowflake')->id();
+            $newBook->book_id = $newBookId;
+            $newBook->title = $anthology->title;
+            $newBook->owner = $anthology->owner;
+            $newBook->editor_id = $user['user_id'];
+            $newBook->lang = $anthology->lang;
+            $newBook->status = $anthology->status;
+            //查询anthology所在的studio有没有符合要求的channel 没有的话，建立
+            $channelId = ChannelApi::userBookGetOrCreate($anthology->owner,$anthology->lang);
+            if($channelId === false){
+                throw new \Exception('user book get fail studio='.$anthology->owner.' language='.$anthology->lang);
+            }
+            $newBook->channel_id = $channelId;
+            $ok = $newBook->save();
+            if(!$ok){
+                throw new \Exception('user book create fail studio='.$anthology->owner.' language='.$anthology->lang);
+            }
+            CustomBookId::where('key','max_book_number')->update(['value'=>$newBookId]);
+            $bookId = $newBookId;
+            $anthology->book_id = $newBookId;
+            $anthology->save();
+        }else{
+            $channelId = CustomBook::where('book_id',$bookId)->value('channel_id');
+        }
+        $maxPara = Sentence::where('channel_uid',$channelId)
+                           ->where('book_id',$bookId)->max('paragraph');
+        if(!$maxPara){
+            $maxPara = 0;
+        }
+        return ['book'=>$bookId,'paragraph'=>$maxPara+1];
+    }
+
+    public function convertToTpl($content,$bookId,$paraStart){
+        $newSentence = array();
+        $para = $paraStart;
+		$sentNum = 1;
+		$newText =  "";
+		$isTable=false;
+		$isList=false;
+		$newSent="";
+        $sentences = explode("\n",$content);
+		foreach ($sentences as $row) {
+			//$data 为一行文本
+            $listHead= "";
+            $isList = false;
+
+            $heading = false;
+            $title = false;
+
+			$trimData = trim($row);
+
+            # 判断是否为list
+			$listLeft =strstr($row,"- ",true);
+			if($listLeft !== FALSE){
+                if(ctype_space($listLeft) || empty($listLeft)){
+                    # - 左侧是空，判定为list
+                    $isList=true;
+                    $iListPos = mb_strpos($row,'- ',0,"UTF-8");
+                    $listHead = mb_substr($row,0,$iListPos+2,"UTF-8");
+                    $listBody = mb_substr($row,$iListPos+2,mb_strlen($row,"UTF-8")-$iListPos+2,"UTF-8");
+                }
+			}
+
+            # TODO 判断是否为标题
+			$headingStart =mb_strpos($row,"# ",0,'UTF-8');
+			if($headingStart !== false){
+                $headingLeft = mb_substr($row,0,$headingStart+2,'UTF-8');
+                $title = mb_substr($row,$headingStart+2,null,'UTF-8');
+                if(str_replace('#','', trim($headingLeft)) === ''){
+                    # 除了#没有其他东西，那么是标题
+                    $heading = $headingLeft;
+                    $newText .= $headingLeft;
+                    $newText .='{{'."{$bookId}-{$para}-{$sentNum}-{$sentNum}"."}}\n";
+                    $newSentence[] = $this->newSent($bookId,$para,$sentNum,$sentNum,$title);
+                    $newSent="";
+                    $para++;
+                    $sentNum = 1;
+                    continue;
+                }
+			}
+
+			//判断是否为表格开始
+			if(mb_substr($trimData,0,1,"UTF-8") == "|"){
+				$isTable=true;
+			}
+			if($trimData!="" && $isTable == true){
+				//如果是表格 不新增句子
+				$newSent .= "{$row}\n";
+				continue;
+			}
+            if($isList == true){
+                $newSent .= $listBody;
+            }else{
+                $newSent .= $trimData;
+            }
+
+			#生成句子编号
+			if($trimData==""){
+				#空行
+				if(strlen($newSent)>0){
+					//之前有内容
+					$newText .='{{'."{$bookId}-{$para}-{$sentNum}-{$sentNum}"."}}\n";
+                    $newSentence[] = $this->newSent($bookId,$para,$sentNum,$sentNum,$newSent);
+					$newSent="";
+				}
+				#新的段落 不插入数据库
+				$para++;
+				$sentNum = 1;
+				$newText .="\n";
+				$isTable = false; //表格开始标记
+				$isList = false;
+				continue;
+			}else{
+				$sentNum=$sentNum+10;
+			}
+
+			if(mb_substr($trimData,0,2,"UTF-8")=="{{"){
+				#已经有的句子链接不处理
+				$newText .= $trimData."\n";
+			}else{
+                $newText .= $listHead;
+				$newText .='{{'."{$bookId}-{$para}-{$sentNum}-{$sentNum}"."}}\n";
+                $newSentence[] = $this->newSent($bookId,$para,$sentNum,$sentNum,$newSent);
+				$newSent="";
+			}
+		}
+
+        return [
+            'content' =>$newText,
+            'sentences' =>$newSentence,
+        ];
+    }
+
+    private function newSent($book,$para,$start,$end,$content){
+        return array(
+            'book_id'=>$book,
+            'paragraph'=>$para,
+            'word_start'=>$start,
+            'word_end'=>$end,
+            'content'=>$content,
+        );
     }
 }
