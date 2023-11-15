@@ -140,6 +140,7 @@ export interface IAnthologyCreateRequest {
 export interface IArticleMapRequest {
   id?: string;
   collect_id?: string;
+  collection?: { id: string; title: string };
   article_id?: string;
   level: number;
   title: string;
