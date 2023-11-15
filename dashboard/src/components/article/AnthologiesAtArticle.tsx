@@ -24,7 +24,7 @@ const AnthologiesAtArticleWidget = ({
     let url = `/v2/article-map?view=article&id=${articleId}`;
     console.log("url", url);
     get<IArticleMapListResponse>(url).then((json) => {
-      if (json.ok && json.data.count > 1) {
+      if (json.ok) {
         const anthologies: IList[] = json.data.rows.map((item) => {
           return {
             key: item.collection?.id,
@@ -32,33 +32,38 @@ const AnthologiesAtArticleWidget = ({
           };
         });
         console.log("anthologies", anthologies);
-        setList(anthologies);
+        setList(anthologies.filter((value) => value.key !== anthologyId));
       } else {
         message.error("获取文集列表失败");
       }
     });
   }, [articleId]);
 
+  let title = "";
+  if (anthologyId) {
+    title = "其他文集";
+  } else {
+    title = "文集列表";
+  }
+
   return (
-    <Paragraph>
+    <Paragraph style={{ display: list && list.length > 0 ? "block" : "none" }}>
       <Space>
-        {anthologyId ? "其他文集" : "文集列表"}
-        {list
-          ?.filter((value) => value.key !== anthologyId)
-          .map((item, index) => {
-            return (
-              <Link
-                key={index}
-                onClick={(e) => {
-                  if (typeof onClick !== "undefined") {
-                    onClick(item.key, e);
-                  }
-                }}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+        {title}
+        {list?.map((item, index) => {
+          return (
+            <Link
+              key={index}
+              onClick={(e) => {
+                if (typeof onClick !== "undefined") {
+                  onClick(item.key, e);
+                }
+              }}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
       </Space>
     </Paragraph>
   );
