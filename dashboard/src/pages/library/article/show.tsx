@@ -36,7 +36,7 @@ import { paraParam } from "../../../reducers/para-change";
 import { get } from "../../../request";
 import store from "../../../store";
 import { IRecent } from "../../../components/recent/RecentList";
-import { convertToPlain, fullUrl } from "../../../utils";
+import { fullUrl } from "../../../utils";
 import ThemeSelect from "../../../components/general/ThemeSelect";
 import {
   IShowDiscussion,
