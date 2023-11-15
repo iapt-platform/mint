@@ -1,6 +1,9 @@
 import { ArticleMode, ArticleType } from "./Article";
 import AnthologyDetail from "./AnthologyDetail";
 import "./article.css";
+import { useState } from "react";
+import ErrorResult from "../general/ErrorResult";
+import ArticleSkeleton from "./ArticleSkeleton";
 
 interface IWidget {
   type?: ArticleType;
@@ -10,8 +13,6 @@ interface IWidget {
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
-  onLoading?: Function;
-  onError?: Function;
 }
 const TypeAnthologyWidget = ({
   type,
@@ -19,30 +20,39 @@ const TypeAnthologyWidget = ({
   articleId,
   mode = "read",
   onArticleChange,
-  onLoading,
-  onError,
 }: IWidget) => {
+  const [loading, setLoading] = useState(false);
+  const [errorCode, setErrorCode] = useState<number>();
+
   const channels = channelId?.split("_");
   return (
-    <AnthologyDetail
-      onArticleSelect={(anthologyId: string, keys: string[]) => {
-        if (typeof onArticleChange !== "undefined" && keys.length > 0) {
-          onArticleChange("article", keys[0], { anthologyId: anthologyId });
-        }
-      }}
-      onLoading={(loading: boolean) => {
-        if (typeof onLoading !== "undefined") {
-          onLoading(loading);
-        }
-      }}
-      onError={(code: number, message: string) => {
-        if (typeof onError !== "undefined") {
-          onError(code, message);
-        }
-      }}
-      channels={channels}
-      aid={articleId}
-    />
+    <div>
+      {loading ? (
+        <ArticleSkeleton />
+      ) : errorCode ? (
+        <ErrorResult code={errorCode} />
+      ) : (
+        <></>
+      )}
+      <AnthologyDetail
+        visible={!loading}
+        onArticleSelect={(anthologyId: string, keys: string[]) => {
+          if (typeof onArticleChange !== "undefined" && keys.length > 0) {
+            onArticleChange("article", keys[0], {
+              anthologyId: anthologyId,
+            });
+          }
+        }}
+        onLoading={(loading: boolean) => {
+          setLoading(loading);
+        }}
+        onError={(code: number, message: string) => {
+          setErrorCode(code);
+        }}
+        channels={channels}
+        aid={articleId}
+      />
+    </div>
   );
 };
 

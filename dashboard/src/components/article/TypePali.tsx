@@ -10,6 +10,8 @@ import { IViewRequest, IViewStoreResponse } from "../api/view";
 import { ITocPathNode } from "../corpus/TocPath";
 import { ArticleMode, ArticleType } from "./Article";
 import "./article.css";
+import ArticleSkeleton from "./ArticleSkeleton";
+import ErrorResult from "../general/ErrorResult";
 
 interface IWidget {
   type?: ArticleType;
@@ -22,8 +24,6 @@ interface IWidget {
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
-  onLoading?: Function;
-  onError?: Function;
 }
 const TypePaliWidget = ({
   type,
@@ -32,16 +32,16 @@ const TypePaliWidget = ({
   channelId,
   articleId,
   mode = "read",
-  active = false,
+  active = true,
   onArticleChange,
   onFinal,
   onLoad,
-  onLoading,
-  onError,
 }: IWidget) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [articleHtml, setArticleHtml] = useState<string[]>(["<span />"]);
   const [extra, setExtra] = useState(<></>);
+  const [loading, setLoading] = useState(false);
+  const [errorCode, setErrorCode] = useState<number>();
 
   const [remains, setRemains] = useState(false);
 
@@ -78,13 +78,8 @@ const TypePaliWidget = ({
         break;
     }
 
+    setLoading(true);
     console.log("url", url);
-    if (typeof onLoading !== "undefined") {
-      onLoading(true);
-    }
-
-    console.log("url", url);
-
     get<IArticleResponse>(url)
       .then((json) => {
         console.log("article", json);
@@ -153,19 +148,15 @@ const TypePaliWidget = ({
             onLoad(json.data);
           }
         } else {
-          if (typeof onError !== "undefined") {
-            onError(json.data, json.message);
-          }
           message.error(json.message);
         }
       })
       .finally(() => {
-        if (typeof onLoading !== "undefined") {
-          onLoading(false);
-        }
+        setLoading(false);
       })
       .catch((e) => {
         console.error(e);
+        setErrorCode(e);
       });
   }, [active, type, articleId, srcDataMode, book, para, channelId]);
 
@@ -207,57 +198,70 @@ const TypePaliWidget = ({
 
   return (
     <div>
-      <ArticleView
-        id={articleData?.uid}
-        title={
-          articleData?.title_text ? articleData?.title_text : articleData?.title
-        }
-        subTitle={articleData?.subtitle}
-        summary={articleData?.summary}
-        content={articleData ? articleData.content : ""}
-        html={articleHtml}
-        path={articleData?.path}
-        created_at={articleData?.created_at}
-        updated_at={articleData?.updated_at}
-        channels={channels}
-        type={type}
-        articleId={articleId}
-        remains={remains}
-        onEnd={() => {
-          if (type === "chapter" && articleData) {
-            getNextPara(articleData);
-          }
-        }}
-        onPathChange={(
-          node: ITocPathNode,
-          e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
-        ) => {
-          let newType = type;
-          if (node.level === 0) {
-            switch (type) {
-              case "article":
-                newType = "anthology";
-                break;
-              case "chapter":
-                newType = "series";
-                break;
-              default:
-                break;
+      {loading ? (
+        <ArticleSkeleton />
+      ) : errorCode ? (
+        <ErrorResult code={errorCode} />
+      ) : (
+        <>
+          <ArticleView
+            id={articleData?.uid}
+            title={
+              articleData?.title_text
+                ? articleData?.title_text
+                : articleData?.title
             }
-          }
+            subTitle={articleData?.subtitle}
+            summary={articleData?.summary}
+            content={articleData ? articleData.content : ""}
+            html={articleHtml}
+            path={articleData?.path}
+            created_at={articleData?.created_at}
+            updated_at={articleData?.updated_at}
+            channels={channels}
+            type={type}
+            articleId={articleId}
+            remains={remains}
+            onEnd={() => {
+              if (type === "chapter" && articleData) {
+                getNextPara(articleData);
+              }
+            }}
+            onPathChange={(
+              node: ITocPathNode,
+              e: React.MouseEvent<
+                HTMLSpanElement | HTMLAnchorElement,
+                MouseEvent
+              >
+            ) => {
+              let newType = type;
+              if (node.level === 0) {
+                switch (type) {
+                  case "article":
+                    newType = "anthology";
+                    break;
+                  case "chapter":
+                    newType = "series";
+                    break;
+                  default:
+                    break;
+                }
+              }
 
-          if (typeof onArticleChange !== "undefined") {
-            const newArticle = node.key
-              ? node.key
-              : `${node.book}-${node.paragraph}`;
-            const target = e.ctrlKey || e.metaKey ? "_blank" : "self";
-            onArticleChange(newType, newArticle, target);
-          }
-        }}
-      />
-      <Divider />
-      {extra}
-      <Divider />
+              if (typeof onArticleChange !== "undefined") {
+                const newArticle = node.key
+                  ? node.key
+                  : `${node.book}-${node.paragraph}`;
+                const target = e.ctrlKey || e.metaKey ? "_blank" : "self";
+                onArticleChange(newType, newArticle, target);
+              }
+            }}
+          />
+          <Divider />
+          {extra}
+          <Divider />
+        </>
+      )}
     </div>
   );
 };

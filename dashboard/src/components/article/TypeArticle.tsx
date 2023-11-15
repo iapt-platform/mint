@@ -9,6 +9,8 @@ import PaliText from "../template/Wbw/PaliText";
 import { ITocPathNode } from "../corpus/TocPath";
 import { ArticleMode, ArticleType } from "./Article";
 import "./article.css";
+import ArticleSkeleton from "./ArticleSkeleton";
+import ErrorResult from "../general/ErrorResult";
 
 interface IWidget {
   type?: ArticleType;
@@ -20,8 +22,6 @@ interface IWidget {
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
-  onLoading?: Function;
-  onError?: Function;
   onAnthologySelect?: Function;
 }
 const TypeArticleWidget = ({
@@ -35,12 +35,12 @@ const TypeArticleWidget = ({
   onFinal,
   onLoad,
   onAnthologySelect,
-  onLoading,
-  onError,
 }: IWidget) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [articleHtml, setArticleHtml] = useState<string[]>(["<span />"]);
   const [extra, setExtra] = useState(<></>);
+  const [loading, setLoading] = useState(false);
+  const [errorCode, setErrorCode] = useState<number>();
 
   const channels = channelId?.split("_");
 
@@ -59,12 +59,8 @@ const TypeArticleWidget = ({
     url += channelId ? `&channel=${channelId}` : "";
     url += anthologyId ? `&anthology=${anthologyId}` : "";
     console.log("url", url);
-    if (typeof onLoading !== "undefined") {
-      onLoading(true);
-    }
-
+    setLoading(true);
     console.log("url", url);
-
     get<IArticleResponse>(url)
       .then((json) => {
         console.log("article", json);
@@ -111,19 +107,16 @@ const TypeArticleWidget = ({
             onLoad(json.data);
           }
         } else {
-          if (typeof onError !== "undefined") {
-            onError(json.data, json.message);
-          }
+          console.error("json", json);
           message.error(json.message);
         }
       })
       .finally(() => {
-        if (typeof onLoading !== "undefined") {
-          onLoading(false);
-        }
+        setLoading(false);
       })
       .catch((e) => {
         console.error(e);
+        setErrorCode(e);
       });
   }, [active, type, articleId, srcDataMode, channelId, anthologyId]);
 
@@ -138,47 +131,60 @@ const TypeArticleWidget = ({
 
   return (
     <div>
-      <ArticleView
-        id={articleData?.uid}
-        title={
-          articleData?.title_text ? articleData?.title_text : articleData?.title
-        }
-        subTitle={articleData?.subtitle}
-        summary={articleData?.summary}
-        content={articleData ? articleData.content : ""}
-        html={articleHtml}
-        path={articleData?.path}
-        created_at={articleData?.created_at}
-        updated_at={articleData?.updated_at}
-        channels={channels}
-        type={type}
-        articleId={articleId}
-        anthology={anthology}
-        onPathChange={(
-          node: ITocPathNode,
-          e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
-        ) => {
-          let newType = type;
-          if (node.level === 0) {
-            newType = "anthology";
-          } else {
-            newType = "article";
-          }
-          if (typeof onArticleChange !== "undefined") {
-            const newArticleId = node.key;
-            const target = e.ctrlKey || e.metaKey ? "_blank" : "self";
-            onArticleChange(newType, newArticleId, target);
-          }
-        }}
-        onAnthologySelect={(id: string) => {
-          if (typeof onAnthologySelect !== "undefined") {
-            onAnthologySelect(id);
-          }
-        }}
-      />
-      <Divider />
-      {extra}
-      <Divider />
+      {loading ? (
+        <ArticleSkeleton />
+      ) : errorCode ? (
+        <ErrorResult code={errorCode} />
+      ) : (
+        <>
+          <ArticleView
+            id={articleData?.uid}
+            title={
+              articleData?.title_text
+                ? articleData?.title_text
+                : articleData?.title
+            }
+            subTitle={articleData?.subtitle}
+            summary={articleData?.summary}
+            content={articleData ? articleData.content : ""}
+            html={articleHtml}
+            path={articleData?.path}
+            created_at={articleData?.created_at}
+            updated_at={articleData?.updated_at}
+            channels={channels}
+            type={type}
+            articleId={articleId}
+            anthology={anthology}
+            onPathChange={(
+              node: ITocPathNode,
+              e: React.MouseEvent<
+                HTMLSpanElement | HTMLAnchorElement,
+                MouseEvent
+              >
+            ) => {
+              let newType = type;
+              if (node.level === 0) {
+                newType = "anthology";
+              } else {
+                newType = "article";
+              }
+              if (typeof onArticleChange !== "undefined") {
+                const newArticleId = node.key;
+                const target = e.ctrlKey || e.metaKey ? "_blank" : "self";
+                onArticleChange(newType, newArticleId, target);
+              }
+            }}
+            onAnthologySelect={(id: string) => {
+              if (typeof onAnthologySelect !== "undefined") {
+                onAnthologySelect(id);
+              }
+            }}
+          />
+          <Divider />
+          {extra}
+          <Divider />
+        </>
+      )}
     </div>
   );
 };

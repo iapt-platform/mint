@@ -4,41 +4,34 @@ import { get } from "../../request";
 import { IArticleDataResponse } from "../api/Article";
 import ArticleView from "./ArticleView";
 import { ITermResponse } from "../api/Term";
-import { ArticleMode, ArticleType } from "./Article";
+import { ArticleMode } from "./Article";
 import "./article.css";
 import { message } from "antd";
+import ArticleSkeleton from "./ArticleSkeleton";
+import ErrorResult from "../general/ErrorResult";
 
 interface IWidget {
-  type?: ArticleType;
   articleId?: string;
   mode?: ArticleMode | null;
   channelId?: string | null;
-  active?: boolean;
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
-  onLoading?: Function;
-  onError?: Function;
 }
 const TypeTermWidget = ({
-  type,
   channelId,
   articleId,
   mode = "read",
-  active = false,
   onArticleChange,
-  onLoading,
-  onError,
 }: IWidget) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [articleHtml, setArticleHtml] = useState<string[]>(["<span />"]);
+  const [loading, setLoading] = useState(false);
+  const [errorCode, setErrorCode] = useState<number>();
 
   const channels = channelId?.split("_");
 
   useEffect(() => {
-    if (!active) {
-      return;
-    }
     if (typeof articleId === "undefined") {
       return;
     }
@@ -48,10 +41,7 @@ const TypeTermWidget = ({
     url += channelId ? `&channel=${channelId}` : "";
 
     console.log("article url", url);
-
-    if (typeof onLoading !== "undefined") {
-      onLoading(true);
-    }
+    setLoading(true);
     console.log("url", url);
     get<ITermResponse>(url)
       .then((json) => {
@@ -76,37 +66,44 @@ const TypeTermWidget = ({
             setArticleHtml([json.data.note]);
           }
         } else {
-          if (typeof onError !== "undefined") {
-            onError(json.data, json.message);
-          }
           message.error(json.message);
         }
       })
       .finally(() => {
-        if (typeof onLoading !== "undefined") {
-          onLoading(false);
-        }
+        setLoading(false);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((e) => {
+        console.error(e);
+        setErrorCode(e);
       });
-  }, [active, type, articleId, channelId, mode]);
+  }, [articleId, channelId, mode]);
 
   return (
-    <ArticleView
-      id={articleData?.uid}
-      title={articleData?.title}
-      subTitle={articleData?.subtitle}
-      summary={articleData?.summary}
-      content={articleData ? articleData.content : ""}
-      html={articleHtml}
-      path={articleData?.path}
-      created_at={articleData?.created_at}
-      updated_at={articleData?.updated_at}
-      channels={channels}
-      type={type}
-      articleId={articleId}
-    />
+    <div>
+      {loading ? (
+        <ArticleSkeleton />
+      ) : errorCode ? (
+        <ErrorResult code={errorCode} />
+      ) : (
+        <>
+          {" "}
+          <ArticleView
+            id={articleData?.uid}
+            title={articleData?.title}
+            subTitle={articleData?.subtitle}
+            summary={articleData?.summary}
+            content={articleData ? articleData.content : ""}
+            html={articleHtml}
+            path={articleData?.path}
+            created_at={articleData?.created_at}
+            updated_at={articleData?.updated_at}
+            channels={channels}
+            type={"term"}
+            articleId={articleId}
+          />
+        </>
+      )}
+    </div>
   );
 };
 
