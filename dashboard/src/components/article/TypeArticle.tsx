@@ -11,6 +11,7 @@ import { ArticleMode, ArticleType } from "./Article";
 import "./article.css";
 import ArticleSkeleton from "./ArticleSkeleton";
 import ErrorResult from "../general/ErrorResult";
+import AnthologiesAtArticle from "./AnthologiesAtArticle";
 
 interface IWidget {
   type?: ArticleType;
@@ -41,6 +42,7 @@ const TypeArticleWidget = ({
   const [extra, setExtra] = useState(<></>);
   const [loading, setLoading] = useState(false);
   const [errorCode, setErrorCode] = useState<number>();
+  const [currPath, setCurrPath] = useState<ITocPathNode[]>();
 
   const channels = channelId?.split("_");
 
@@ -66,6 +68,7 @@ const TypeArticleWidget = ({
         console.log("article", json);
         if (json.ok) {
           setArticleData(json.data);
+          setCurrPath(json.data.path);
           if (json.data.html) {
             setArticleHtml([json.data.html]);
           } else if (json.data.content) {
@@ -137,6 +140,18 @@ const TypeArticleWidget = ({
         <ErrorResult code={errorCode} />
       ) : (
         <>
+          <AnthologiesAtArticle
+            articleId={articleId}
+            anthologyId={anthologyId}
+            onClick={(
+              id: string,
+              e: React.MouseEvent<HTMLElement, MouseEvent>
+            ) => {
+              if (typeof onAnthologySelect !== "undefined") {
+                onAnthologySelect(id, e);
+              }
+            }}
+          />
           <ArticleView
             id={articleData?.uid}
             title={
@@ -148,7 +163,7 @@ const TypeArticleWidget = ({
             summary={articleData?.summary}
             content={articleData ? articleData.content : ""}
             html={articleHtml}
-            path={articleData?.path}
+            path={currPath}
             created_at={articleData?.created_at}
             updated_at={articleData?.updated_at}
             channels={channels}
