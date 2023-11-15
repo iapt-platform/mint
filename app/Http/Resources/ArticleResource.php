@@ -44,12 +44,6 @@ class ArticleResource extends JsonResource
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
         ];
-        $channels = [];
-        if($request->has('channel')){
-            $channels = explode('_',$request->get('channel')) ;
-        }
-        $mdRender = new MdRender(['format'=>'simple']);
-        $data['title_text'] = $mdRender->convert($this->title,$channels);
 
         $user = AuthApi::current($request);
         if($user){
@@ -66,12 +60,22 @@ class ArticleResource extends JsonResource
             $collection = ArticleCollection::where('article_id',$this->uid)->first();
             $data['anthology_first'] = Collection::find($collection->collect_id);
         }
+        if($request->has('anthology') && Str::isUuid($request->get('anthology'))){
+            $anthology = Collection::where('uid',$request->get('anthology'))->first();
+        }
+        //渲染简化版标题
+        $channels = [];
+        if($request->has('channel')){
+            $channels = explode('_',$request->get('channel')) ;
+        }else if($anthology && !empty($anthology->default_channel)){
+            //使用文集channel
+            $channels[] = $anthology->default_channel;
+        }
+        $mdRender = new MdRender(['format'=>'simple']);
+
         //path
         if($request->has('anthology') && Str::isUuid($request->get('anthology'))){
             $data['path'] = array();
-
-            //anthology title
-            $anthology = Collection::where('uid',$request->get('anthology'))->first();
             if($anthology){
                 $data['path'][] = ['key'=>$anthology->uid,
                             'title'=>$anthology->title,
@@ -88,7 +92,7 @@ class ArticleResource extends JsonResource
                 ($currLevel >= 0 && $article->level < $currLevel)){
                     $currLevel = $article->level;
                     $path[] = ['key'=>$article->article_id,
-                                'title'=>$article->title,
+                                'title'=>$mdRender->convert($article->title,$channels),
                                 'level'=>$article->level];
                 }
             }
@@ -105,7 +109,7 @@ class ArticleResource extends JsonResource
                     if($article->level>$level){
                         $subToc[] =[
                             "key"=>$article->article_id,
-                            "title"=>$article->title,
+                            "title"=>$mdRender->convert($article->title,$channels),
                             "level"=>$article->level
                         ];
                     }else{
@@ -118,6 +122,9 @@ class ArticleResource extends JsonResource
             }
             $data['toc'] = $subToc;
         }
+
+
+        $data['title_text'] = $mdRender->convert($this->title,$channels);
 
         //render html
         $channels = array();
