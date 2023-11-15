@@ -17,6 +17,7 @@ const { Title, Text, Paragraph } = Typography;
 interface IWidgetAnthologyDetail {
   aid?: string;
   channels?: string[];
+  visible?: boolean;
   onArticleSelect?: Function;
   onLoad?: Function;
   onTitle?: Function;
@@ -26,6 +27,7 @@ interface IWidgetAnthologyDetail {
 const AnthologyDetailWidget = ({
   aid,
   channels,
+  visible = true,
   onArticleSelect,
   onLoading,
   onTitle,
@@ -76,10 +78,13 @@ const AnthologyDetailWidget = ({
       })
       .catch((error) => {
         console.error(error);
+        if (typeof onError !== "undefined") {
+          onError(error, "");
+        }
       });
   }
   return (
-    <div style={{ padding: 12 }}>
+    <div style={{ padding: 12, visibility: visible ? "visible" : "hidden" }}>
       <Title level={4}>{tableData?.title}</Title>
       <div>
         <Text type="secondary">{tableData?.subTitle}</Text>
