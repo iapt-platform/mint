@@ -1,14 +1,9 @@
-import { useState } from "react";
-import { Result } from "antd";
-
 import { IArticleDataResponse } from "../api/Article";
-
-import "./article.css";
-
-import ArticleSkeleton from "./ArticleSkeleton";
-
 import TypeArticle from "./TypeArticle";
 import TypeAnthology from "./TypeAnthology";
+import TypeTerm from "./TypeTerm";
+import TypePali from "./TypePali";
+import "./article.css";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -76,23 +71,8 @@ const ArticleWidget = ({
   onLoad,
   onAnthologySelect,
 }: IWidget) => {
-  const [showSkeleton, setShowSkeleton] = useState(true);
-  const [unauthorized, setUnauthorized] = useState(false);
-
   return (
     <div>
-      {showSkeleton ? (
-        <ArticleSkeleton />
-      ) : unauthorized ? (
-        <Result
-          status="403"
-          title="无权访问"
-          subTitle="您无权访问该内容。您可能没有登录，或者内容的所有者没有给您所需的权限。"
-          extra={<></>}
-        />
-      ) : (
-        <></>
-      )}
       {type === "article" ? (
         <TypeArticle
           type={type}
@@ -111,8 +91,6 @@ const ArticleWidget = ({
               onLoad(data);
             }
           }}
-          onLoading={(loading: boolean) => setShowSkeleton(loading)}
-          onError={(code: number, message: string) => {}}
           onAnthologySelect={(id: string) => {
             if (typeof onAnthologySelect !== "undefined") {
               onAnthologySelect(id);
@@ -129,8 +107,31 @@ const ArticleWidget = ({
               onArticleChange(type, id);
             }
           }}
-          onLoading={(loading: boolean) => setShowSkeleton(loading)}
-          onError={(code: number, message: string) => {}}
+        />
+      ) : type === "term" ? (
+        <TypeTerm
+          articleId={articleId}
+          channelId={channelId}
+          mode={mode}
+          onArticleChange={(type: ArticleType, id: string) => {
+            if (typeof onArticleChange !== "undefined") {
+              onArticleChange(type, id);
+            }
+          }}
+        />
+      ) : type === "chapter" || type === "para" ? (
+        <TypePali
+          type={type}
+          articleId={articleId}
+          channelId={channelId}
+          mode={mode}
+          book={book}
+          para={para}
+          onArticleChange={(type: ArticleType, id: string) => {
+            if (typeof onArticleChange !== "undefined") {
+              onArticleChange(type, id);
+            }
+          }}
         />
       ) : (
         <></>
