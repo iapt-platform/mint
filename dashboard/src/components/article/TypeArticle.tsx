@@ -189,11 +189,6 @@ const TypeArticleWidget = ({
                 onArticleChange(newType, newArticleId, target);
               }
             }}
-            onAnthologySelect={(id: string) => {
-              if (typeof onAnthologySelect !== "undefined") {
-                onAnthologySelect(id);
-              }
-            }}
           />
           <Divider />
           {extra}

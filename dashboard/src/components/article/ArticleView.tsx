@@ -31,7 +31,6 @@ export interface IWidgetArticleData {
   anthology?: IFirstAnthology;
   onEnd?: Function;
   onPathChange?: Function;
-  onAnthologySelect?: Function;
 }
 
 const ArticleViewWidget = ({
@@ -51,7 +50,6 @@ const ArticleViewWidget = ({
   onEnd,
   remains,
   onPathChange,
-  onAnthologySelect,
 }: IWidgetArticleData) => {
   const [currPath, setCurrPath] = useState(path);
 
