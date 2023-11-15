@@ -172,20 +172,6 @@ const Widget = () => {
                 >
                   Edit
                 </Button>
-                <Button
-                  disabled={user ? false : true}
-                  ghost
-                  onClick={(event) => {
-                    const url = `/studio/${user?.nickName}/article/create?parent=${loadedArticleData.uid}`;
-                    if (event.ctrlKey || event.metaKey) {
-                      window.open(fullUrl(url), "_blank");
-                    } else {
-                      navigate(url);
-                    }
-                  }}
-                >
-                  Fork
-                </Button>
               </>
             ) : undefined}
             <ShareButton
