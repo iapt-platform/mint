@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, message, Modal, Popover, Skeleton, Typography } from "antd";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, ReloadOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
 import { get as getLang } from "../../locales";
@@ -8,6 +8,8 @@ import { get as getLang } from "../../locales";
 import NissayaCardTable, { INissayaRelation } from "./NissayaCardTable";
 import { ITerm } from "../term/TermEdit";
 import { Link } from "react-router-dom";
+import TermModal from "../term/TermModal";
+import { ITermDataResponse } from "../api/Term";
 
 const { Paragraph, Title } = Typography;
 
@@ -78,10 +80,13 @@ const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
   const [term, setTerm] = useState<ITerm>();
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  useEffect(() => load(), [cache, text]);
+
+  const load = () => {
     const uiLang = getLang();
+    const key = `nissaya-ending/${uiLang}/${text}`;
     if (cache) {
-      const value = sessionStorage.getItem(`nissaya-ending/${uiLang}/${text}`);
+      const value = sessionStorage.getItem(key);
       if (value !== null) {
         const valueJson: INissayaCardData = JSON.parse(value);
         setCardData(valueJson.row);
@@ -111,8 +116,14 @@ const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
       })
       .finally(() => setLoading(false))
       .catch((e: INissayaCardResponse) => message.error(e.message));
-  }, [cache, text]);
+  };
 
+  const reload = () => {
+    const uiLang = getLang();
+    const key = `nissaya-ending/${uiLang}/${text}`;
+    sessionStorage.removeItem(key);
+    load();
+  };
   return loading ? (
     <Skeleton title={{ width: 200 }} paragraph={{ rows: 4 }} active />
   ) : (
@@ -120,9 +131,25 @@ const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Title level={4}>
           {term?.word}
-          <Button type="link" icon={<EditOutlined />} />
+          <TermModal
+            id={term?.id}
+            onUpdate={(value: ITermDataResponse) => {
+              //onModalClose();
+            }}
+            onClose={() => {
+              //onModalClose();
+            }}
+            trigger={<Button type="link" icon={<EditOutlined />} />}
+          />
         </Title>
-        <Link to={`/nissaya/ending/${term?.word}`}>在新窗口打开</Link>
+        <div>
+          <Link to={`/nissaya/ending/${term?.word}`}>在新窗口打开</Link>
+          <Button
+            type="link"
+            icon={<ReloadOutlined />}
+            onClick={() => reload()}
+          />
+        </div>
       </div>
       <Paragraph>{term?.meaning}</Paragraph>
       <Paragraph>{term?.note}</Paragraph>
