@@ -1,6 +1,6 @@
 import { Col, Row } from "antd";
 import { useParams } from "react-router-dom";
-import NissayaCardWidget from "../../../components/general/NissayaCard";
+import NissayaCard from "../../../components/general/NissayaCard";
 
 const Widget = () => {
   const { ending } = useParams(); //url 参数
@@ -8,7 +8,7 @@ const Widget = () => {
     <Row>
       <Col flex={"auto"}></Col>
       <Col flex={"960px"}>
-        <NissayaCardWidget text={ending} cache={false} />
+        <NissayaCard text={ending} cache={false} />
       </Col>
       <Col flex={"auto"}></Col>
     </Row>
