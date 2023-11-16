@@ -6,6 +6,7 @@ import TocPath, { ITocPathNode } from "../corpus/TocPath";
 import PaliChapterChannelList from "../corpus/PaliChapterChannelList";
 import { ArticleType } from "./Article";
 import VisibleObserver from "../general/VisibleObserver";
+import { useEffect, useState } from "react";
 
 const { Paragraph, Title, Text } = Typography;
 export interface IFirstAnthology {
@@ -30,7 +31,6 @@ export interface IWidgetArticleData {
   anthology?: IFirstAnthology;
   onEnd?: Function;
   onPathChange?: Function;
-  onAnthologySelect?: Function;
 }
 
 const ArticleViewWidget = ({
@@ -50,8 +50,11 @@ const ArticleViewWidget = ({
   onEnd,
   remains,
   onPathChange,
-  onAnthologySelect,
 }: IWidgetArticleData) => {
+  const [currPath, setCurrPath] = useState(path);
+
+  useEffect(() => setCurrPath(path), [path]);
+
   let currChannelList = <></>;
   switch (type) {
     case "chapter":
@@ -86,25 +89,8 @@ const ArticleViewWidget = ({
       </div>
 
       <Space direction="vertical">
-        <Text>
-          {path.length === 0 && anthology ? (
-            <>
-              <Text>{"文集:"}</Text>
-              <Button
-                type="link"
-                onClick={() => {
-                  if (typeof onAnthologySelect !== "undefined") {
-                    onAnthologySelect(anthology.id);
-                  }
-                }}
-              >
-                {anthology.title}
-              </Button>
-            </>
-          ) : undefined}
-        </Text>
         <TocPath
-          data={path}
+          data={currPath}
           channel={channels}
           onChange={(
             node: ITocPathNode,

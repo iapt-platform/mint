@@ -306,7 +306,7 @@ const ArticleListWidget = ({
                         key: "addToAnthology",
                         label: (
                           <AddToAnthology
-                            trigger="加入文集"
+                            trigger={<Button type="link">加入文集</Button>}
                             studioName={studioName}
                             articleIds={[row.id]}
                           />
@@ -407,6 +407,7 @@ const ArticleListWidget = ({
               </Button>
               <AddToAnthology
                 studioName={studioName}
+                trigger={<Button type="link">加入文集</Button>}
                 articleIds={selectedRowKeys.map((item) => item.toString())}
                 onFinally={() => {
                   onCleanSelected();

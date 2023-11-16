@@ -5,7 +5,12 @@ require dirname(__FILE__) . '/logger.php';
 require dirname(__FILE__) . '/pdo.php';
 
 logger('debug','download full test search content start');
+$param = getopt('b:');
 
+if(isset($param['b'])){
+    $bookId = (int)$param['b'];
+    logger('debug','update book='.$bookId);
+}
 $PDO = new PdoHelper;
 
 $PDO->connectDb();
@@ -14,16 +19,23 @@ logger('debug','connect database finished');
 $client = new GuzzleHttp\Client();
 
 $pageSize = 1000;
+
     $urlBase = Config['api_server'] . '/v2/pali-search-data';
     logger('debug','url='.$urlBase);
-
-    for ($book=1; $book < 218; $book++) { 
+    if(isset($bookId)){
+        $from = $bookId;
+        $to = $bookId;
+    }else{
+        $from = 1;
+        $to = 217; 
+    }
+    for ($book=$from; $book <= $to; $book++) { 
         $currPage = 1;
-        $url = $urlBase . "?book={$book}";
+        $urlBook = $urlBase . "?book={$book}";
         logger('debug','fetch book='.$book);
         do {
             $goNext = false;
-            $url = $url . "&start={$currPage}&page_size={$pageSize}";
+            $url = $urlBook . "&start={$currPage}&page_size={$pageSize}";
             logger('debug','url='.$url);
             $res = $client->request('GET', $url);
             $status = $res->getStatusCode();

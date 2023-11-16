@@ -1,30 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "antd";
 import AnthologyList from "./AnthologyList";
 
 interface IWidget {
   studioName?: string;
   trigger?: React.ReactNode;
+  open?: boolean;
+  onClose?: Function;
   onSelect?: Function;
   onCancel?: Function;
 }
 const AnthologyModalWidget = ({
   studioName,
   trigger,
+  open = false,
+  onClose,
   onSelect,
   onCancel,
 }: IWidget) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(open);
 
+  useEffect(() => setIsModalOpen(open), [open]);
   const showModal = () => {
     setIsModalOpen(true);
   };
 
   const handleOk = () => {
+    if (typeof onClose !== "undefined") {
+      onClose(false);
+    }
     setIsModalOpen(false);
   };
 
   const handleCancel = () => {
+    if (typeof onClose !== "undefined") {
+      onClose(false);
+    }
     setIsModalOpen(false);
   };
 

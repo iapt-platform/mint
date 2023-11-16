@@ -36,7 +36,7 @@ import { paraParam } from "../../../reducers/para-change";
 import { get } from "../../../request";
 import store from "../../../store";
 import { IRecent } from "../../../components/recent/RecentList";
-import { convertToPlain, fullUrl } from "../../../utils";
+import { fullUrl } from "../../../utils";
 import ThemeSelect from "../../../components/general/ThemeSelect";
 import {
   IShowDiscussion,
@@ -172,20 +172,6 @@ const Widget = () => {
                 >
                   Edit
                 </Button>
-                <Button
-                  disabled={user ? false : true}
-                  ghost
-                  onClick={(event) => {
-                    const url = `/studio/${user?.nickName}/article/create?parent=${loadedArticleData.uid}`;
-                    if (event.ctrlKey || event.metaKey) {
-                      window.open(fullUrl(url), "_blank");
-                    } else {
-                      navigate(url);
-                    }
-                  }}
-                >
-                  Fork
-                </Button>
               </>
             ) : undefined}
             <ShareButton
@@ -300,6 +286,7 @@ const Widget = () => {
                 <ToolButtonToc
                   type={type as ArticleType}
                   articleId={id}
+                  channels={searchParams.get("channel")?.split("_")}
                   anthologyId={searchParams.get("anthology")}
                   onSelect={(key: Key) => {
                     console.log("toc click", key);
@@ -347,13 +334,14 @@ const Widget = () => {
               articleId={id}
               anthologyId={searchParams.get("anthology")}
               mode={searchParams.get("mode") as ArticleMode}
-              onArticleChange={(article: string, target?: string) => {
-                console.log("article change", article, target);
-                let mType = type;
-                if (article.split("-").length === 2) {
-                  mType = "chapter";
-                }
-                let url = `/article/${mType}/${article}?mode=${currMode}`;
+              onArticleChange={(
+                newType: ArticleType,
+                article: string,
+                target?: string
+              ) => {
+                console.log("article change", newType, article, target);
+
+                let url = `/article/${newType}/${article}?mode=${currMode}`;
                 searchParams.forEach((value, key) => {
                   console.log(value, key);
                   if (key !== "mode") {
@@ -368,7 +356,10 @@ const Widget = () => {
               }}
               onLoad={(article: IArticleDataResponse) => {
                 setLoadedArticleData(article);
-                document.title = convertToPlain(article.title).slice(0, 128);
+                const windowTitle = article.title_text
+                  ? article.title_text
+                  : article.title;
+                document.title = windowTitle.slice(0, 128);
                 const paramTopic = searchParams.get("topic");
                 const paramComment = searchParams.get("comment");
                 const paramType = searchParams.get("dis_type");

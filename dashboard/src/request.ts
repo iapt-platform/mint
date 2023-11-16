@@ -54,6 +54,9 @@ export const options = (method: string): RequestInit => {
 
 export const get = async <R>(path: string): Promise<R> => {
   const response = await fetch(backend(path), options("GET"));
+  if (!response.ok) {
+    throw response.status;
+  }
   const res: R = await response.json();
   return res;
 };

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Space, Typography } from "antd";
+import { Space, Typography, message } from "antd";
 
 import { get } from "../../request";
 import type {
@@ -17,49 +17,74 @@ const { Title, Text, Paragraph } = Typography;
 interface IWidgetAnthologyDetail {
   aid?: string;
   channels?: string[];
+  visible?: boolean;
   onArticleSelect?: Function;
+  onLoad?: Function;
+  onTitle?: Function;
+  onLoading?: Function;
+  onError?: Function;
 }
 const AnthologyDetailWidget = ({
   aid,
   channels,
+  visible = true,
   onArticleSelect,
+  onLoading,
+  onTitle,
+  onError,
 }: IWidgetAnthologyDetail) => {
   const [tableData, setTableData] = useState<IAnthologyData>();
 
   useEffect(() => {
-    console.log("useEffect");
     fetchData(aid);
   }, [aid]);
 
   function fetchData(id?: string) {
-    get<IAnthologyResponse>(`/v2/anthology/${id}`)
+    const url = `/v2/anthology/${id}`;
+    console.log("url", url);
+    if (typeof onLoading !== "undefined") {
+      onLoading(true);
+    }
+    get<IAnthologyResponse>(url)
       .then((response) => {
-        const item: IAnthologyDataResponse = response.data;
-        let newTree: IAnthologyData = {
-          id: item.uid,
-          title: item.title,
-          subTitle: item.subtitle,
-          summary: item.summary,
-          articles: item.article_list.map((al) => {
-            return {
-              key: al.article,
-              title: al.title,
-              level: parseInt(al.level),
-            };
-          }),
-          studio: item.studio,
-          created_at: item.created_at,
-          updated_at: item.updated_at,
-        };
-        setTableData(newTree);
-        console.log("toc", newTree.articles);
+        if (response.ok) {
+          const item: IAnthologyDataResponse = response.data;
+          let newTree: IAnthologyData = {
+            id: item.uid,
+            title: item.title,
+            subTitle: item.subtitle,
+            summary: item.summary,
+            articles: [],
+            studio: item.studio,
+            created_at: item.created_at,
+            updated_at: item.updated_at,
+          };
+          setTableData(newTree);
+          if (typeof onTitle !== "undefined") {
+            onTitle(item.title);
+          }
+          console.log("toc", newTree.articles);
+        } else {
+          if (typeof onError !== "undefined") {
+            onError(response.data, response.message);
+          }
+          message.error(response.message);
+        }
+      })
+      .finally(() => {
+        if (typeof onLoading !== "undefined") {
+          onLoading(false);
+        }
       })
       .catch((error) => {
         console.error(error);
+        if (typeof onError !== "undefined") {
+          onError(error, "");
+        }
       });
   }
   return (
-    <div style={{ padding: 12 }}>
+    <div style={{ padding: 12, visibility: visible ? "visible" : "hidden" }}>
       <Title level={4}>{tableData?.title}</Title>
       <div>
         <Text type="secondary">{tableData?.subTitle}</Text>
@@ -76,6 +101,7 @@ const AnthologyDetailWidget = ({
       <Title level={5}>目录</Title>
       <AnthologyTocTree
         anthologyId={aid}
+        channels={channels}
         onArticleSelect={(anthologyId: string, keys: string[]) => {
           if (typeof onArticleSelect !== "undefined") {
             onArticleSelect(anthologyId, keys);

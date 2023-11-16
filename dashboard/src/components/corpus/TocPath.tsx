@@ -1,8 +1,8 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Breadcrumb, Popover, Tag, Typography } from "antd";
+import { Breadcrumb, MenuProps, Popover, Tag, Typography } from "antd";
 
 import PaliText from "../template/Wbw/PaliText";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { fullUrl } from "../../utils";
 
 export interface ITocPathNode {
@@ -12,6 +12,7 @@ export interface ITocPathNode {
   title: string;
   paliTitle?: string;
   level: number;
+  menu?: MenuProps["items"];
 }
 
 export declare type ELinkType = "none" | "blank" | "self";
@@ -23,6 +24,7 @@ interface IWidgetTocPath {
   channel?: string[];
   style?: React.CSSProperties;
   onChange?: Function;
+  onMenuClick?: Function;
 }
 const TocPathWidget = ({
   data = [],
@@ -31,16 +33,33 @@ const TocPathWidget = ({
   channel,
   style,
   onChange,
+  onMenuClick,
 }: IWidgetTocPath): JSX.Element => {
+  const [currData, setCurrData] = useState(data);
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+
+  console.log("data", data);
+  useEffect(() => setCurrData(data), [data]);
   const fullPath = (
     <Breadcrumb
       style={{ whiteSpace: "nowrap", width: "100%", fontSize: style?.fontSize }}
     >
-      {data.map((item, id) => {
+      {currData.map((item, id) => {
         return (
           <Breadcrumb.Item
+            menu={
+              item.menu
+                ? {
+                    items: item.menu,
+                    onClick: (e) => {
+                      if (typeof onMenuClick !== "undefined") {
+                        onMenuClick(e.key);
+                      }
+                    },
+                  }
+                : undefined
+            }
             onClick={(
               e: React.MouseEvent<
                 HTMLSpanElement | HTMLAnchorElement,
@@ -73,7 +92,19 @@ const TocPathWidget = ({
           >
             <Typography.Link>
               {item.level < 99 ? (
-                <PaliText text={item.title} />
+                <span
+                  style={
+                    item.level === 0
+                      ? {
+                          padding: 4,
+                          backgroundColor: "#92880052",
+                          borderRadius: 4,
+                        }
+                      : undefined
+                  }
+                >
+                  <PaliText text={item.title} />
+                </span>
               ) : (
                 <Tag>{item.title}</Tag>
               )}
