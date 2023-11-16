@@ -67,7 +67,7 @@ class ArticleResource extends JsonResource
         $channels = [];
         if($request->has('channel')){
             $channels = explode('_',$request->get('channel')) ;
-        }else if($anthology && !empty($anthology->default_channel)){
+        }else if(isset($anthology) && $anthology && !empty($anthology->default_channel)){
             //使用文集channel
             $channels[] = $anthology->default_channel;
         }
@@ -76,7 +76,7 @@ class ArticleResource extends JsonResource
         //path
         if($request->has('anthology') && Str::isUuid($request->get('anthology'))){
             $data['path'] = array();
-            if($anthology){
+            if(isset($anthology) && $anthology){
                 $data['path'][] = ['key'=>$anthology->uid,
                             'title'=>$anthology->title,
                             'level'=>0];
