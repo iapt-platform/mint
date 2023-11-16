@@ -68,6 +68,7 @@ const TermModalWidget = ({
     <>
       <span onClick={showModal}>{trigger}</span>
       <Modal
+        style={{ top: 20 }}
         width={760}
         title={
           <Space>
