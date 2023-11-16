@@ -19,7 +19,7 @@ class UpgradeDictSysRegular extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan upgrade:regular
+     * php artisan upgrade:regular jāta
      * @var string
      */
     protected $signature = 'upgrade:regular {word?} {--debug}';
@@ -127,6 +127,16 @@ class UpgradeDictSysRegular extends Command
 			$bar->advance();
 		}
 		$bar->finish();
+        if(!empty($this->argument('word'))){
+			$declensions = UserDict::where('dict_id',$dict_id)
+                            ->where('parent',$this->argument('word'))
+                            ->select('word')
+                            ->groupBy('word')
+                            ->get();
+            foreach ($declensions as $key => $word) {
+                Log::debug($word->word);
+            }
+		}
 		//删除旧数据
 		$table = UserDict::where('dict_id',$dict_id);
 		if(!empty($this->argument('word'))){
