@@ -37,6 +37,7 @@ interface IFtsItem {
   paliTitle?: string;
   content?: string;
   path?: ITocPathNode[];
+  rank?: number;
 }
 
 export type ISearchView = "pali" | "title" | "page";
@@ -98,6 +99,7 @@ const FullTxtSearchResultWidget = ({
     get<IFtsResponse>(url)
       .then((json) => {
         if (json.ok) {
+          console.log("data", json.data);
           const result: IFtsItem[] = json.data.rows.map((item) => {
             return {
               book: item.book,
@@ -108,6 +110,7 @@ const FullTxtSearchResultWidget = ({
                 ? item.highlight.replaceAll("** ti ", "**ti ")
                 : item.content,
               path: item.path,
+              rank: item.rank,
             };
           });
           setFtsData(result);

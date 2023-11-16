@@ -18,7 +18,7 @@ message SearchRequest {
 
 message SearchResponse {
   message Item {
-    int32 rank = 1;
+    float rank = 1;
     string highlight = 2;
     int32 book = 3;
     int32 paragraph = 4;

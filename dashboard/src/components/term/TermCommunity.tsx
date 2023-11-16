@@ -13,8 +13,9 @@ import { useIntl } from "react-intl";
 import { get } from "../../request";
 import { IUser } from "../auth/User";
 import { ITermListResponse } from "../api/Term";
+import { Link } from "react-router-dom";
 
-const { Title, Link, Text } = Typography;
+const { Title, Text } = Typography;
 
 interface IItem<R> {
   value: R;
@@ -148,23 +149,27 @@ const TermCommunityWidget = ({ word }: IWidget) => {
   const more = wordData ? (
     wordData.editor.length > mainCollaboratorNum ? (
       <Dropdown menu={{ items }}>
-        <Link>
+        <Typography.Link>
           <Space>
             {intl.formatMessage({
               id: `buttons.more`,
             })}
             <DownOutlined />
           </Space>
-        </Link>
+        </Typography.Link>
       </Dropdown>
     ) : undefined
   ) : undefined;
 
   return show ? (
     <Card>
-      <Title level={5} id={`community`}>
-        {"社区术语"}
-      </Title>
+      <Space>
+        <Title level={5} id={`community`}>
+          {"社区术语"}
+        </Title>{" "}
+        <Link to={`/term/list/${word}`}>详情</Link>
+      </Space>
+
       <div key="meaning">
         <Space style={{ flexWrap: "wrap" }}>
           <Text strong>{"意思："}</Text>
@@ -180,14 +185,14 @@ const TermCommunityWidget = ({ word }: IWidget) => {
             })}
           {meaningLow && meaningLow.length > 0 ? (
             <Popover content={<Space>{meaningExtra}</Space>} placement="bottom">
-              <Link>
+              <Typography.Link>
                 <Space>
                   {intl.formatMessage({
                     id: `buttons.more`,
                   })}
                   <DownOutlined />
                 </Space>
-              </Link>
+              </Typography.Link>
             </Popover>
           ) : undefined}
         </Space>
