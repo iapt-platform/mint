@@ -14,7 +14,7 @@ class UpgradeDict extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan upgrade:dict
      * @var string
      */
     protected $signature = 'upgrade:dict {uuid?} {--part}';
