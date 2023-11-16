@@ -52,9 +52,11 @@ class NissayaCardController extends Controller
             return $this->error('no term channel');
         }
         $termTable = DhammaTerm::where('channal',$localTerm);
+
         $cardData['ending']['word'] = $nissayaEnding;
         $endingTerm = $termTable->where('word',$nissayaEnding)->first();
         if($endingTerm){
+            $cardData['ending']['id'] = $endingTerm->guid;
             $cardData['ending']['tag'] = $endingTerm->tag;
             $cardData['ending']['meaning'] = $endingTerm->meaning;
             $cardData['ending']['note'] = $endingTerm->note;
