@@ -58,6 +58,8 @@ class CopyUserBook extends Command
         }
 
         $this->info('给CustomBook 添加channel');
+        $newChannel = 0;
+
         foreach (CustomBook::get() as $key => $customBook) {
             $this->info('doing book='.$customBook->book_id);
             if(empty($customBook->channel_id)){
@@ -82,28 +84,34 @@ class CopyUserBook extends Command
                     $channel->type = 'original';
                     $channel->lang = $bookLang;
                     $channel->editor_id = 0;
+                    $channel->is_system = true;
                     $channel->create_time = time()*1000;
                     $channel->modify_time = time()*1000;
                     $channel->status = $customBook->status;
                     if(!$this->option('test')){
                         $saveOk = $channel->save();
                         if($saveOk){
+                            $newChannel++;
                             Log::debug('copy user book : create channel success name='.$channelName);
                         }else{
-                            Log::error('copy user book : create channel fail.',['channel'=>$channelName,'book'=>$book->book]);
+                            Log::error('copy user book : create channel fail.',['channel'=>$channelName,'book'=>$customBook->book_id]);
                             $this->error('copy user book : create channel fail.  name='.$channelName);
                             continue;
                         }
                     }
                 }
                 if(!Str::isUuid($channel->uid)){
-                    Log::error('copy user book : channel id error.',['channel'=>$channelName,'book'=>$book->book]);
+                    Log::error('copy user book : channel id error.',['channel'=>$channelName,'book'=>$customBook->book_id]);
                     $this->error('copy user book : channel id error.  name='.$channelName);
                     continue;
                 }
                 $customBook->channel_id = $channel->uid;
                 if(!$this->option('test')){
-                    $customBook->save();
+                    $ok = $customBook->save();
+                    if(!$ok){
+                        Log::error('copy user book : create channel fail.',['book'=>$customBook->book_id]);
+                        continue;
+                    }
                 }
             }
         }
@@ -111,7 +119,9 @@ class CopyUserBook extends Command
 
         $userBooks = CustomBook::get();
         $this->info('book '. count($userBooks));
+        $copySent = 0;
         foreach ($userBooks as $key => $book) {
+
             $queryBook = $this->option('book');
             if(!empty($queryBook)){
                 if($book->book_id != $queryBook){
@@ -152,13 +162,19 @@ class CopyUserBook extends Command
                     Log::error('channel uuid is null ',['sentence'=>$sentence->book]);
                 }else{
                     if(!$this->option('test')){
-                        $newRow->save();
+                        $ok = $newRow->save();
+                        if(!$ok){
+                            Log::error('copy fail ',['sentence'=>$sentence->id]);
+                        }
+                        $copySent++;
                     }
                 }
             }
             $this->info("book {$book->book} finished");
         }
-        $this->info('all done');
+        $this->info('all done ');
+        $this->info('channel create '.$newChannel);
+        $this->info('sentence copy '.$copySent);
         return 0;
     }
 }

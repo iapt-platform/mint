@@ -92,6 +92,7 @@ class ChannelApi{
         $channel->type = 'original';
         $channel->lang = $bookLang;
         $channel->editor_id = 0;
+        $channel->is_system = true;
         $channel->create_time = time()*1000;
         $channel->modify_time = time()*1000;
         $channel->status = $customBook->status;
