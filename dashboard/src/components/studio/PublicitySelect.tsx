@@ -2,8 +2,9 @@ import { ProFormSelect } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 interface IWidget {
   width?: number | "md" | "sm" | "xl" | "xs" | "lg";
+  readonly?: boolean;
 }
-const PublicitySelectWidget = ({ width }: IWidget) => {
+const PublicitySelectWidget = ({ width, readonly }: IWidget) => {
   const intl = useIntl();
 
   const options = [
@@ -29,6 +30,7 @@ const PublicitySelectWidget = ({ width }: IWidget) => {
   return (
     <ProFormSelect
       options={options}
+      readonly={readonly}
       width={width}
       name="status"
       allowClear={false}

@@ -1,7 +1,11 @@
 import { useIntl } from "react-intl";
 import { ProFormSelect } from "@ant-design/pro-components";
 
-const ChannelTypeSelectWidget = () => {
+interface IWidget {
+  readonly?: boolean;
+}
+
+const ChannelTypeSelectWidget = ({ readonly }: IWidget) => {
   const intl = useIntl();
 
   const channelTypeOptions = [
@@ -32,6 +36,7 @@ const ChannelTypeSelectWidget = () => {
       initialValue="translation"
       width="xs"
       name="type"
+      readonly={readonly}
       allowClear={false}
       label={intl.formatMessage({ id: "channel.type" })}
       rules={[

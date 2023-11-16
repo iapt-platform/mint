@@ -1,5 +1,6 @@
-import { CSSProperties, useEffect, useState } from "react";
-import { message, Modal, Popover, Skeleton, Typography } from "antd";
+import { useEffect, useState } from "react";
+import { Button, message, Modal, Popover, Skeleton, Typography } from "antd";
+import { EditOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
 import { get as getLang } from "../../locales";
@@ -117,7 +118,10 @@ const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
   ) : (
     <div style={{ maxWidth: 750 }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Title level={4}>{term?.word}</Title>
+        <Title level={4}>
+          {term?.word}
+          <Button type="link" icon={<EditOutlined />} />
+        </Title>
         <Link to={`/nissaya/ending/${term?.word}`}>在新窗口打开</Link>
       </div>
       <Paragraph>{term?.meaning}</Paragraph>
