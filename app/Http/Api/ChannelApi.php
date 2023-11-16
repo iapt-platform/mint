@@ -76,7 +76,7 @@ class ChannelApi{
      * 获取某个studio 的某个语言的自定义书的channel
      * 如果没有，建立
      */
-    public static function userBookGetOrCreate($studioId,$lang){
+    public static function userBookGetOrCreate($studioId,$lang,$status){
         $channelName = '_user_book_'.$lang;
         $channel = Channel::where('owner_uid',$studioId)
                         ->where('name',$channelName)->first();
@@ -87,21 +87,21 @@ class ChannelApi{
         $channel = new Channel;
         $channel->id = app('snowflake')->id();
         $channel->uid = $channelUuid;
-        $channel->owner_uid = $customBook->owner;
+        $channel->owner_uid = $studioId;
         $channel->name = $channelName;
         $channel->type = 'original';
-        $channel->lang = $bookLang;
+        $channel->lang = $lang;
         $channel->editor_id = 0;
         $channel->is_system = true;
         $channel->create_time = time()*1000;
         $channel->modify_time = time()*1000;
-        $channel->status = $customBook->status;
+        $channel->status = $status;
         $saveOk = $channel->save();
         if($saveOk){
             Log::debug('copy user book : create channel success name='.$channelName);
             return $channel->uid;
         }else{
-            Log::error('copy user book : create channel fail.',['channel'=>$channelName,'book'=>$book->book]);
+            Log::error('copy user book : create channel fail.',['channel'=>$channelName,'studioId'=>$studioId]);
             return false;
         }
     }
