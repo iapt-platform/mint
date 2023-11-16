@@ -29,6 +29,7 @@ interface IWidget {
   disabled?: boolean;
   required?: boolean;
   name?: string;
+  readonly?: boolean;
 }
 const LangSelectWidget = ({
   width,
@@ -36,6 +37,7 @@ const LangSelectWidget = ({
   disabled = false,
   required = true,
   name = "lang",
+  readonly,
 }: IWidget) => {
   const intl = useIntl();
 
@@ -62,6 +64,7 @@ const LangSelectWidget = ({
       options={langOptions}
       width={width}
       name={name}
+      readonly={readonly}
       showSearch
       debounceTime={300}
       allowClear={false}
