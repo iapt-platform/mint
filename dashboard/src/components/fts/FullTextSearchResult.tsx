@@ -69,6 +69,11 @@ const FullTxtSearchResultWidget = ({
   const [loading, setLoading] = useState(false);
   const [currPage, setCurrPage] = useState<number>(1);
 
+  useEffect(
+    () => setCurrPage(1),
+    [view, keyWord, tags, bookId, match, pageType]
+  );
+
   useEffect(() => {
     let url = `/v2/search?view=${view}&key=${keyWord}`;
     if (typeof tags !== "undefined") {
