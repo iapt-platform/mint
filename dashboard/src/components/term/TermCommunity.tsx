@@ -134,7 +134,12 @@ const TermCommunityWidget = ({ word }: IWidget) => {
     return (
       <Space key={id}>
         {name}
-        <Badge color="geekblue" size="small" count={score} />
+        <Badge
+          style={{ display: "none" }}
+          color="geekblue"
+          size="small"
+          count={score}
+        />
       </Space>
     );
   };
@@ -166,7 +171,7 @@ const TermCommunityWidget = ({ word }: IWidget) => {
       <Space>
         <Title level={5} id={`community`}>
           {"社区术语"}
-        </Title>{" "}
+        </Title>
         <Link to={`/term/list/${word}`}>详情</Link>
       </Space>
 
@@ -179,7 +184,12 @@ const TermCommunityWidget = ({ word }: IWidget) => {
               return (
                 <Space key={id}>
                   {item.value}
-                  <Badge color="geekblue" size="small" count={item.score} />
+                  <Badge
+                    style={{ display: "none" }}
+                    color="geekblue"
+                    size="small"
+                    count={item.score}
+                  />
                 </Space>
               );
             })}
