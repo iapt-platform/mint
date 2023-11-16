@@ -511,7 +511,7 @@ class ArticleController extends Controller
             $newBook->lang = $anthology->lang;
             $newBook->status = $anthology->status;
             //查询anthology所在的studio有没有符合要求的channel 没有的话，建立
-            $channelId = ChannelApi::userBookGetOrCreate($anthology->owner,$anthology->lang,true);
+            $channelId = ChannelApi::userBookGetOrCreate($anthology->owner,$anthology->lang,$anthology->status);
             if($channelId === false){
                 throw new \Exception('user book get fail studio='.$anthology->owner.' language='.$anthology->lang);
             }
