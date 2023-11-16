@@ -36,7 +36,7 @@ class ChannelController extends Controller
 		$result=false;
 		$indexCol = ['uid','name','summary',
                     'type','owner_uid','lang',
-                    'status','updated_at','created_at'];
+                    'status','is_system','updated_at','created_at'];
 		switch ($request->get('view')) {
             case 'public':
                 $table = Channel::select($indexCol)
@@ -510,7 +510,7 @@ class ChannelController extends Controller
     public function show($id)
     {
         //
-        $indexCol = ['uid','name','summary','type','owner_uid','lang','status','updated_at','created_at'];
+        $indexCol = ['uid','name','summary','type','owner_uid','lang','is_system','status','updated_at','created_at'];
 		$channel = Channel::where("uid",$id)->select($indexCol)->first();
         $studio = StudioApi::getById($channel->owner_uid);
         $channel->studio = $studio;
@@ -530,13 +530,16 @@ class ChannelController extends Controller
         //鉴权
         $user = AuthApi::current($request);
         if(!$user){
-            return $this->error(__('auth.failed'),[],401);
+            return $this->error(__('auth.failed'),401,401);
+        }
+        if($channel->is_system){
+            return $this->error('system channel',403,403);
         }
         if($channel->owner_uid !== $user["user_uid"]){
             //判断是否为协作
             $power = ShareApi::getResPower($user["user_uid"],$request->get('id'));
             if($power < 30){
-                return $this->error(__('auth.failed'),[],403);
+                return $this->error(__('auth.failed'),403,403);
             }
         }
         $channel->name = $request->get('name');
@@ -560,6 +563,9 @@ class ChannelController extends Controller
         $user = AuthApi::current($request);
         if(!$user){
             return $this->error(__('auth.failed'),[],401);
+        }
+        if($channel->is_system){
+            return $this->error('system channel',403,403);
         }
         if($channel->owner_uid !== $user["user_uid"]){
             //判断是否为协作
