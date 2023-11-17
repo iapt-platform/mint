@@ -39,7 +39,7 @@ class TermResource extends JsonResource
         ];
 
 
-        if($request->has('channel')){
+        if($request->has('channel') && !empty($request->get('channel'))){
             $channels = explode('_',$request->get('channel')) ;
         }else{
             if(!empty($this->channal)){
@@ -54,11 +54,17 @@ class TermResource extends JsonResource
             if(!empty($channelId)){
                 $channels = [$channelId];
             }else{
-               $channels = [];
+                $channels = [];
             }
         }
         if(!empty($this->note)){
-            $data["html"] = MdRender::render($this->note,$channels,null,$request->get('mode','read'));
+            $mdRender = new MdRender(
+                [
+                    'mode'=>$request->get('mode','read'),
+                    'format'=>'react',
+                    'studioId'=>$this->owner,
+                ]);
+            $data["html"]  = $mdRender->convert($this->note,$channels,null);
         }
         $user = AuthApi::current($request);
         if(!$user){
