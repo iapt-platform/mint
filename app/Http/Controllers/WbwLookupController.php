@@ -308,7 +308,7 @@ class WbwLookupController extends Controller
                     $wbwFactorMeaning = [];
                     if(!empty($data['factors']['value'])){
                         foreach (explode("+",$data['factors']['value']) as  $factor) {
-                            $preference = $this->wbwPreference($$factor,'meaning',$user['user_id']);
+                            $preference = $this->wbwPreference($factor,'meaning',$user['user_id']);
                             if($preference!==false){
                                 $wbwFactorMeaning[] = $preference['value'];
                             }else{
