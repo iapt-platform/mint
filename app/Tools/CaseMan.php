@@ -68,13 +68,23 @@ class CaseMan
                         if($count){
                             $hasSandhi = true;
                             $newWord[] = ['word'=>$sandhiWord,
-                            'ending'=>$ending[1],
-                            'type'=>'.un.',
-                            'grammar'=>'',
-                            'factors'=>"{$word}+{$sandhi[2]}",
-                            'count'=>$count->count,
-                            'bold'=>$count->bold
-                            ];
+                                'ending'=>$ending[1],
+                                'type'=>'.un.',
+                                'grammar'=>'',
+                                'factors'=>"{$word}+{$sandhi[2]}",
+                                'count'=>$count->count,
+                                'bold'=>$count->bold
+                                ];
+                                //添加一个去掉ti的数据
+                            if($sandhi[2] === 'iti'){
+                                $newWord[] = ['word'=>mb_substr($sandhiWord,0,-2,'UTF-8'),
+                                    'ending'=>$ending[1],
+                                    'grammar'=>$ending[3],
+                                    'factors'=>"{$base}+[{$ending[1]}]",
+                                    'count'=>$count->count,
+                                    'bold'=>$count->bold
+                                ];
+                            }
                         }
                     }
                 }
