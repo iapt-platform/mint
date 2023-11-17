@@ -20,12 +20,14 @@ class MdRender{
      * read 阅读模式
      * edit 编辑模式
      */
-    protected $options = ['mode' => 'read',
-                'channelType'=>'translation',
-                'contentType'=>"markdown",
-                'format'=>'react',
-                'debug'=>[],
-                ];
+    protected $options = [
+        'mode' => 'read',
+        'channelType'=>'translation',
+        'contentType'=>"markdown",
+        'format'=>'react',
+        'debug'=>[],
+        'studioId'=>null,
+        ];
 
     public function __construct($options=[])
     {
@@ -262,7 +264,12 @@ class MdRender{
              */
             //TODO 判断$channelId里面的是否都是uuid
             $channelInfo = Channel::whereIn('uid',$channelId)->get();
-            $tplRender = new TemplateRender($props,$channelInfo,$this->options['mode'],$this->options['format'],$this->options['debug']);
+            $tplRender = new TemplateRender($props,
+                                        $channelInfo,
+                                        $this->options['mode'],
+                                        $this->options['format'],
+                                        $this->options['studioId'],
+                                        $this->options['debug']);
             $tplProps = $tplRender->render($tpl_name);
             if($this->options['format']==='react' && $tplProps){
                 $props = $doc->createAttribute("props");
@@ -525,8 +532,21 @@ class MdRender{
     public static function init(){
         $GLOBALS["MdRenderStack"] = 0;
     }
-
     public function convert($markdown,$channelId=[],$queryId=null){
+        if(isset($GLOBALS["MdRenderStack"]) && is_numeric($GLOBALS["MdRenderStack"])){
+            $GLOBALS["MdRenderStack"]++;
+        }else{
+            $GLOBALS["MdRenderStack"] = 1;
+        }
+        if($GLOBALS["MdRenderStack"]<3){
+            $output  =  $this->_convert($markdown,$channelId,$queryId);
+        }else{
+            $output  = $markdown;
+        }
+        $GLOBALS["MdRenderStack"]--;
+        return $output;
+    }
+    private function _convert($markdown,$channelId=[],$queryId=null){
         if(empty($markdown)){
             switch ($this->options['format']) {
                 case 'react':
@@ -584,12 +604,7 @@ class MdRender{
      * string[] $channelId
      */
     public static function render($markdown,$channelId,$queryId=null,$mode='read',$channelType='translation',$contentType="markdown",$format='react'){
-        if(isset($GLOBALS["MdRenderStack"]) && is_numeric($GLOBALS["MdRenderStack"])){
-            $GLOBALS["MdRenderStack"]++;
-        }else{
-            $GLOBALS["MdRenderStack"] = 1;
-        }
-        if($GLOBALS["MdRenderStack"]<3){
+
             $mdRender = new MdRender(
                             [
                                 'mode'=>$mode,
@@ -599,10 +614,7 @@ class MdRender{
                             ]);
 
             $output  = $mdRender->convert($markdown,$channelId,$queryId);
-        }else{
-            $output  = $markdown;
-        }
-        $GLOBALS["MdRenderStack"]--;
+
         return $output;
     }
 
