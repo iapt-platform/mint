@@ -10,6 +10,7 @@ use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\Log;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
+use Illuminate\Support\Str;
 
 class TemplateRender{
     protected $param = [];
@@ -17,6 +18,7 @@ class TemplateRender{
     protected $channel_id = [];
     protected $debug = [];
     protected $format = 'react';
+    protected $studioId = null;
 
 
     /**
@@ -25,7 +27,7 @@ class TemplateRender{
      * string $format  'react' | 'text' | 'tex' | 'unity'
      * @return void
      */
-    public function __construct($param, $channelInfo, $mode,$format='react',$debug=[])
+    public function __construct($param, $channelInfo, $mode,$format='react',$studioId,$debug=[])
     {
         $this->param = $param;
         foreach ($channelInfo as $value) {
@@ -34,6 +36,7 @@ class TemplateRender{
         $this->channelInfo = $channelInfo;
         $this->mode = $mode;
         $this->format = $format;
+        $this->studioId = $studioId;
         $this->debug = $debug;
     }
     private function info($message,$debug){
@@ -87,55 +90,67 @@ class TemplateRender{
     }
 
     public function getTermProps($word,$channelId,$channelInfo){
-        $lang = Channel::where('uid',$channelId)->value('lang');
-        if(!empty($lang)){
-            $langFamily = explode('-',$lang)[0];
+        if(Str::isUuid($channelId)){
+            $lang = Channel::where('uid',$channelId)->value('lang');
+            if(!empty($lang)){
+                $langFamily = explode('-',$lang)[0];
+            }else{
+                $langFamily = 'zh';
+            }
+            $this->info("term:{$word} 先查属于这个channel 的",'term');
+            $this->info('channel id'.$channelId,'term');
+            $tplParam = DhammaTerm::where("word",$word)
+                                ->where('channal',$channelId)
+                                ->orderBy('updated_at','desc')
+                                ->first();
+            $studioId = $channelInfo->owner_uid;
         }else{
-            $langFamily = 'zh';
+            $tplParam = false;
+            $lang = '';
+            $langFamily = '';
+            $studioId = $this->studioId;
         }
-        $this->info("term:{$word} 先查属于这个channel 的",'term');
-        $this->info('channel id'.$channelId,'term');
-        $tplParam = DhammaTerm::where("word",$word)
-                              ->where('channal',$channelId)
-                              ->orderBy('updated_at','desc')
-                              ->first();
+
         if(!$tplParam){
+            if(Str::isUuid($studioId)){
             /**
              * 没有，再查这个studio的
              * 按照语言过滤
              * 完全匹配的优先
              * 语族匹配也行
              */
-            $this->info("没有-再查这个studio的",'term');
-            $termsInStudio = DhammaTerm::where("word",$word)
-                                  ->where('owner',$channelInfo->owner_uid)
-                                  ->orderBy('updated_at','desc')
-                                  ->get();
-            if(count($termsInStudio)>0){
-                $list = array();
-                foreach ($termsInStudio as $key=>$term) {
-                    if(empty($term->channal)){
-                        if($term->language===$lang){
-                            $list[$term->guid]=2;
-                        }else if(strpos($term->language,$langFamily)!==false){
-                            $list[$term->guid]=1;
-                        }
-                    }
-                }
-                if(count($list)>0){
-                    arsort($list);
-                    foreach ($list as $key => $one) {
-                        foreach ($termsInStudio as $term) {
-                            if($term->guid===$key){
-                                $tplParam = $term;
-                                break;
+                $this->info("没有-再查这个studio的",'term');
+                $termsInStudio = DhammaTerm::where("word",$word)
+                                    ->where('owner',$channelInfo->owner_uid)
+                                    ->orderBy('updated_at','desc')
+                                    ->get();
+                if(count($termsInStudio)>0){
+                    $list = array();
+                    foreach ($termsInStudio as $key=>$term) {
+                        if(empty($term->channal)){
+                            if($term->language===$lang){
+                                $list[$term->guid]=2;
+                            }else if(strpos($term->language,$langFamily) !== false){
+                                $list[$term->guid]=1;
                             }
                         }
-                        break;
+                    }
+                    if(count($list)>0){
+                        arsort($list);
+                        foreach ($list as $key => $one) {
+                            foreach ($termsInStudio as $term) {
+                                if($term->guid===$key){
+                                    $tplParam = $term;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
                     }
                 }
             }
         }
+
         if(!$tplParam){
             $this->info("没有，再查社区",'term');
             $community_channel = ChannelApi::getSysChannel("_community_term_zh-hans_");
@@ -165,23 +180,6 @@ class TemplateRender{
             if(!empty($tplParam->other_meaning)){
                 $output["meaning2"] = $tplParam->other_meaning;
             }
-            /*
-            if($tplParam->note){
-                $output["summary"] = $tplParam->note;
-            }else{
-                //本人没有解释内容的。用社区数据。
-                //TODO 由作者（读者）设置是否使用社区数据
-                //获取channel 语言
-                //使用社区note
-                $community_channel = ChannelApi::getSysChannel("_community_term_zh-hans_");
-                //查找社区解释
-                $community_note = DhammaTerm::where("word",$word)
-                                            ->where('channal',$community_channel)
-                                            ->value('note');
-                $output["summary"] = $tplParam->note;
-                $output["community"] = true;
-            }
-            */
         }
         $output['innerHtml'] = $innerString;
         return $output;
@@ -189,7 +187,12 @@ class TemplateRender{
 
     private function render_term(){
         $word = $this->get_param($this->param,"word",1);
-        $channelId = $this->channel_id[0];
+        if(count($this->channel_id)>0){
+            $channelId = $this->channel_id[0];
+        }else{
+            $channelId = null;
+        }
+
         $channelInfo = $this->channelInfo[0];
         $key = "/term/{$channelId}/{$word}";
         $props = $this->getTermProps($word,$channelId,$channelInfo);
