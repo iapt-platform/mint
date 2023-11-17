@@ -96,8 +96,8 @@ const TocPathWidget = ({
                   style={
                     item.level === 0
                       ? {
-                          padding: 4,
-                          backgroundColor: "#92880052",
+                          padding: "0 4px",
+                          backgroundColor: "rgba(128, 128, 128, 0.2)",
                           borderRadius: 4,
                         }
                       : undefined
