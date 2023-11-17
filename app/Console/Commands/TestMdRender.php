@@ -123,7 +123,7 @@ class TestMdRender extends Command
 
         $format = $this->option('format');
         if(empty($format)){
-            $formats = ['react','unity','text','tex','html'];
+            $formats = ['react','unity','text','tex','html','simple'];
         }else{
             $formats = [$format];
         }
