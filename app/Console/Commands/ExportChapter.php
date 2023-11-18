@@ -66,9 +66,12 @@ class ExportChapter extends Command
         $percent = (int)($progress * 100);
         $this->info("[{$percent}%]".$message);
     }
+
+
     public function getStatus($filename){
         return RedisClusters::get($this->exportStatusKey.'/'.$filename);
     }
+
     /**
      * Execute the console command.
      *
@@ -86,7 +89,8 @@ class ExportChapter extends Command
                                         'escape'=>function ($value){
                                             return $value;
                                         }));
-        $tplParagraph = file_get_contents(resource_path("mustache/".$this->option('format')."/paragraph.".$this->option('format')));
+        $tplFile = resource_path("mustache/".$this->option('format')."/paragraph.".$this->option('format'));
+        $tplParagraph = file_get_contents($tplFile);
 
         MdRender::init();
 
