@@ -64,7 +64,7 @@ class CopyUserBook extends Command
             $this->info('doing book='.$customBook->book_id);
             if(empty($customBook->channel_id)){
                 $bookLang = $customBook->lang;
-                if(empty($bookLang) || $bookLang === 'false' || $bookLang === 'null'){
+                if(empty($bookLang) || $bookLang === 'false' || $bookLang === 'null'  || $bookLang === 'none'){
                     $this->info('language can not be empty change to pa, book='.$customBook->book_id);
                     Log::warning('copy:user.book language can not be empty ,change to pa, book='.$customBook->book_id);
                     $bookLang = 'pa';
