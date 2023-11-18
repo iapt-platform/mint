@@ -22,7 +22,7 @@ const EditableTreeNodeWidget = ({
 
   const title = node.deletedAt ? (
     <Text delete disabled>
-      {node.title}
+      {node.title_text ? node.title_text : node.title}
     </Text>
   ) : (
     <Text
@@ -32,7 +32,7 @@ const EditableTreeNodeWidget = ({
         }
       }}
     >
-      {node.title}
+      {node.title_text ? node.title_text : node.title}
     </Text>
   );
   const menu = (
