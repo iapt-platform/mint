@@ -15,6 +15,7 @@ export interface TreeNodeData {
   key: string;
   id: string;
   title: string | React.ReactNode;
+  title_text?: string | React.ReactNode;
   icon?: React.ReactNode;
   children: TreeNodeData[];
   deletedAt?: string | null;
@@ -23,6 +24,7 @@ export interface TreeNodeData {
 export type ListNodeData = {
   key: string;
   title: string | React.ReactNode;
+  title_text?: string | React.ReactNode;
   level: number;
   children?: number;
   deletedAt?: string | null;
@@ -38,6 +40,7 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
     key: randomString(),
     id: "0",
     title: "root",
+    title_text: "root",
     level: 0,
     children: [],
   };
@@ -53,6 +56,7 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
       key: randomString(),
       id: element.key,
       title: element.title,
+      title_text: element.title_text,
       children: [],
       icon: keys.includes(element.key) ? <LinkOutlined /> : undefined,
       level: element.level,
@@ -113,6 +117,7 @@ function treeToList(treeNode: TreeNodeData[]): ListNodeData[] {
     arrTocTree.push({
       key: node.id,
       title: node.title,
+      title_text: node.title_text,
       level: iTocTreeCurrLevel,
       children: children,
       deletedAt: node.deletedAt,
