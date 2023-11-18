@@ -592,7 +592,6 @@ class MdRender{
                 $output = htmlspecialchars_decode($html,ENT_QUOTES);
                 break;
             case 'html':
-                $html = str_replace(['<p>','</p>'],['',''],$html);
                 $output = htmlspecialchars_decode($html,ENT_QUOTES);
                 break;
         }
