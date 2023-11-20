@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Http\Api\Mq;
 use Illuminate\Support\Facades\Log;
-use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
-use App\Console\Commands\ExportChapter;
+
+use App\Http\Api\AuthApi;
+use App\Http\Api\Mq;
+use App\Tools\RedisClusters;
+use App\Tools\ExportDownload;
 
 class ExportController extends Controller
 {
@@ -20,22 +22,46 @@ class ExportController extends Controller
      */
     public function index(Request $request)
     {
-        //
-        $filename = $request->get('book').'-'.
-                    $request->get('par').'-'.
-                    Str::uuid().'.'.$request->get('format');
+        $queryId = Str::uuid();
+        $token = AuthApi::getToken($request);
+        switch ($request->get('type','chapter')) {
+            case 'chapter':
+                $data = [
+                    'book'=>$request->get('book'),
+                    'para'=>$request->get('par'),
+                    'channel'=>$request->get('channel'),
+                    'format'=>$request->get('format'),
+                    'origin'=>$request->get('origin'),
+                    'translation'=>$request->get('translation'),
+                    'queryId'=>$queryId,
+                ];
+                if($token){
+                    $data['token'] = $token;
+                }
+                Mq::publish('export_pali_chapter',$data);
+                break;
+            case 'article':
+                $data = [
+                    'id'=>$request->get('id'),
+                    'channel'=>$request->get('channel'),
+                    'format'=>$request->get('format'),
+                    'origin'=>$request->get('origin'),
+                    'translation'=>$request->get('translation'),
+                    'queryId'=>$queryId,
+                    'anthology'=>$request->get('anthology'),
+                    'channel'=>$request->get('channel'),
+                ];
+                if($token){
+                    $data['token'] = $token;
+                }
+                Mq::publish('export_article',$data);
+                break;
+            default:
+                return $this->error('unknown type '.$request->get('type'),400,400);
+                break;
+        }
 
-
-        Mq::publish('export',[
-            'book'=>$request->get('book'),
-            'para'=>$request->get('par'),
-            'channel'=>$request->get('channel'),
-            'format'=>$request->get('format'),
-            'origin'=>$request->get('origin'),
-            'translation'=>$request->get('translation'),
-            'filename'=>$filename,
-        ]);
-        return $this->ok($filename);
+        return $this->ok($queryId);
     }
 
     /**
@@ -58,8 +84,8 @@ class ExportController extends Controller
     public function show($filename)
     {
         //
-        $exportChapter = new ExportChapter();
-        $exportStatus = $exportChapter->getStatus($filename);
+        $exportChapter = new ExportDownload(['queryId'=>$filename]);
+        $exportStatus = $exportChapter->getStatus();
         if(empty($exportStatus)){
             return $this->error('no file',200,200);
         };
@@ -67,21 +93,7 @@ class ExportController extends Controller
         $output = array();
         $output['status'] = $exportStatus;
         if($exportStatus['progress']===1){
-            $realFilename = $exportStatus['filename'];
-            $bucket = config('mint.attachments.bucket_name.temporary');
-            $tmpFile =  $bucket.'/'. $realFilename ;
-            Log::debug('export download filename='.$tmpFile);
-            if (App::environment('local')) {
-                $s3Link = Storage::url($tmpFile);
-            }else{
-                try{
-                    $s3Link = Storage::temporaryUrl($tmpFile, now()->addDays(7));
-                }catch(\Exception $e){
-                    Log::error('export {Exception}',['exception'=>$e]);
-                    return $this->error('temporaryUrl fail',404,404);
-                }
-            }
-            $output['url'] = $s3Link;
+            $output['url'] = $exportStatus['url'];
         }
         return $this->ok($output);
 
