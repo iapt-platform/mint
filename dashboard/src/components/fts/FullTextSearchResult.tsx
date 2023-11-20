@@ -43,6 +43,8 @@ interface IFtsItem {
 export type ISearchView = "pali" | "title" | "page";
 interface IWidget {
   keyWord?: string;
+  keyWords?: string[];
+  engin?: "wbw" | "tulip";
   tags?: string[];
   bookId?: string | null;
   book?: number;
@@ -55,6 +57,8 @@ interface IWidget {
 }
 const FullTxtSearchResultWidget = ({
   keyWord,
+  keyWords,
+  engin = "wbw",
   tags,
   bookId,
   book,
@@ -72,11 +76,25 @@ const FullTxtSearchResultWidget = ({
 
   useEffect(
     () => setCurrPage(1),
-    [view, keyWord, tags, bookId, match, pageType]
+    [view, keyWord, keyWords, tags, bookId, match, pageType]
   );
 
   useEffect(() => {
-    let url = `/v2/search?view=${view}&key=${keyWord}`;
+    let words;
+    let api = "";
+    switch (engin) {
+      case "wbw":
+        api = "search-pali-wbw";
+        words = keyWords?.join();
+        break;
+      case "tulip":
+        api = "search";
+        words = keyWord;
+        break;
+      default:
+        break;
+    }
+    let url = `/v2/${api}?view=${view}&key=${words}`;
     if (typeof tags !== "undefined") {
       url += `&tags=${tags}`;
     }
@@ -120,7 +138,17 @@ const FullTxtSearchResultWidget = ({
         }
       })
       .finally(() => setLoading(false));
-  }, [bookId, currPage, keyWord, match, orderBy, pageType, tags, view]);
+  }, [
+    bookId,
+    currPage,
+    keyWord,
+    keyWords,
+    match,
+    orderBy,
+    pageType,
+    tags,
+    view,
+  ]);
   return (
     <List
       style={{ width: "100%" }}
