@@ -333,7 +333,7 @@ class SearchController extends Controller
         return (['query'=>$queryWhere,'param'=>$param]);
     }
 
-    private function getBookIdByTags($tags){
+    public function getBookIdByTags($tags){
         $searchBookId = [];
         if(empty($tags)){
             return $searchBookId;
