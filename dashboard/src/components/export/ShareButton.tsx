@@ -58,6 +58,7 @@ const ShareButtonWidget = ({
               label: "添加到文集",
               key: "add_to_anthology",
               icon: <InboxOutlined />,
+              disabled: type === "article" ? false : true,
             },
             {
               label: "创建副本",
