@@ -185,7 +185,7 @@ class CaseMan
                 //尝试sandhi
                 //TODO 加两个sandhi
                 foreach ($case->union as $sandhi) {
-                    $sandhiLen = strlen($sandhi[0]);
+                    $sandhiLen = mb_strlen($sandhi[0],'UTF-8');
                     $sandhiEnd = mb_substr($word, 0 - $sandhiLen, null, "UTF-8");
                     if ($sandhiEnd === $sandhi[0]) {
                         $sandhiWord = mb_substr($word, 0, mb_strlen($word, "UTF-8") - $sandhiLen, "UTF-8") . $sandhi[1];
