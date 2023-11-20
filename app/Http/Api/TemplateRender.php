@@ -580,6 +580,14 @@ class TemplateRender{
                     }
                 }
                 break;
+            case 'html':
+                $output = '';
+                if(isset($props['translation']) && is_array($props['translation'])){
+                    foreach ($props['translation'] as $key => $value) {
+                        $output .= '<span class="sentence">'.$value['html'].'</span>';
+                    }
+                }
+                break;
             case 'tex':
                 $output = '';
                 if(isset($props['translation']) && is_array($props['translation'])){
