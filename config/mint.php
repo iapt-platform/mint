@@ -32,7 +32,10 @@ return [
                 'port' => env('TULIP_GRPC_PORT', 9990),
             ],
         ],
-
+        'api' => [
+            'default' => env('APP_API', "http://localhost:8000/api"),
+            'bamboo' => env('BAMBOO_API_HOST', "http://localhost:8000/api"),
+        ],
         'assets' => env('ASSETS_SERVER', "localhost:9999"),
 
         'dashboard_base_path' => env('DASHBOARD_BASE_PATH', "http://127.0.0.1:3000/my"),
