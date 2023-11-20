@@ -73,6 +73,8 @@ const TypeArticleWidget = ({
             setArticleHtml([json.data.html]);
           } else if (json.data.content) {
             setArticleHtml([json.data.content]);
+          } else {
+            setArticleHtml([""]);
           }
           setExtra(
             <TocTree
