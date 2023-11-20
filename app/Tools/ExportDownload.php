@@ -4,26 +4,33 @@ namespace App\Tools;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\App;
 
 use App\Tools\RedisClusters;
 use App\Tools\Export;
 
 class ExportDownload
 {
-    protected $exportStatusKey = 'export/status';
-    protected $exportStatusExpiry = 3600;
-    protected $currExportStatusKey = '';
-    protected $realFilename = 'filename';
+    protected $statusKey = 'export/status';
+    protected $statusExpiry = 3600;
+    protected $currStatusKey = '';
+
+    protected $queryId = 'id';
+    protected $realFilename = 'index';//压缩包里的文件名
+    protected $zipFilename = 'file.zip';
+    protected $downloadUrl = null;
+
     protected $format = 'tex';
     protected $debug = false;
-    protected $zipFilename = 'file';
 
-        /**
+    protected $logs = [];
+
+    /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct($options)
+    public function __construct($options=[])
     {
         if(isset($options['format'])){
             $this->format = $options['format'];
@@ -32,13 +39,12 @@ class ExportDownload
             $this->debug = $options['debug'];
         }
         if(isset($options['filename'])){
-            $this->zipFilename = $options['filename'];
+            $this->realFilename = $options['filename'];
         }
-        if(isset($options['real_filename'])){
-            $this->realFilename = $options['real_filename'];
-        }
+        $this->queryId = $options['queryId'];
+        $this->zipFilename = $this->queryId.'.zip';
 
-        $this->currExportStatusKey = $this->exportStatusKey . '/' . $this->zipFilename;
+        $this->currStatusKey = $this->statusKey . '/' . $this->queryId;
     }
 
     /**
@@ -46,24 +52,26 @@ class ExportDownload
      * message: string
      */
     public function setStatus($progress,$message=''){
+        $this->logs[] = $message;
         $data = [
                     'progress'=>$progress,
                     'message'=>$message,
+                    'log'=>$this->logs,
                     'content-type'=>'application/zip',
                 ];
-        if($this->realFilename){
-            $data['filename'] = $this->realFilename;
+        if($this->downloadUrl){
+            $data['url'] = $this->downloadUrl;
         }
-        RedisClusters::put($this->currExportStatusKey,
-                            $data,
-                            $this->exportStatusExpiry);
+        RedisClusters::put($this->currStatusKey,
+                           $data,
+                           $this->statusExpiry);
         $percent = (int)($progress * 100);
         return "[{$percent}%]".$message;
     }
 
 
-    public function getStatus($filename){
-        return RedisClusters::get($this->exportStatusKey.'/'.$filename);
+    public function getStatus(){
+        return RedisClusters::get($this->currStatusKey);
     }
 
     public function upload(string $type,$sections,$bookMeta){
@@ -143,6 +151,7 @@ class ExportDownload
                 return 1;
             }
         }
+
         $zipFile = $zipDir.'/'.Str::uuid().'.zip';
 
         Log::debug('export chapter start zip  file='.$zipFile);
@@ -165,9 +174,20 @@ class ExportDownload
         $this->setStatus(0.97,'upload start ');
         $zipData = file_get_contents($zipFile);
         Storage::put($tmpFile, $zipData);
+
+        if (App::environment('local')) {
+            $s3Link = Storage::url($tmpFile);
+        }else{
+            try{
+                $s3Link = Storage::temporaryUrl($tmpFile, now()->addDays(7));
+            }catch(\Exception $e){
+                Log::error('export {Exception}',['exception'=>$e]);
+                return false;
+            }
+        }
+        $this->downloadUrl = $s3Link;
         $this->setStatus(1,'export chapter done');
         Log::debug('export chapter done, upload filename='.$tmpFile);
-
         unlink($zipFile);
         return true;
     }
