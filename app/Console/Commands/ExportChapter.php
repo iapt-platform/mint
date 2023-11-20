@@ -4,23 +4,23 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
 use App\Models\ProgressChapter;
 use App\Models\Channel;
 use App\Models\PaliText;
 use App\Models\Sentence;
+
 use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
 use App\Tools\Export;
-use Illuminate\Support\Facades\Log;
 use App\Tools\RedisClusters;
-use Illuminate\Support\Str;
+use App\Tools\ExportDownload;
+
 
 class ExportChapter extends Command
 {
-    protected $exportStatusKey = 'export/status';
-    protected $exportStatusExpiry = 3600;
-    protected $currExportStatusKey = '';
-    protected $realFilename = null;
     /**
      * The name and signature of the console command.
      * php artisan export:chapter 213 3 a19eaf75-c63f-4b84-8125-1bce18311e23 213-3.html --format=html --origin=true
@@ -28,7 +28,7 @@ class ExportChapter extends Command
      * php artisan export:chapter 168 915 19f53a65-81db-4b7d-8144-ac33f1217d34 168-915.html --format=html --origin=true
      * @var string
      */
-    protected $signature = 'export:chapter {book} {para} {channel} {filename} {--origin=false} {--translation=true} {--debug} {--format=tex} ';
+    protected $signature = 'export:chapter {book} {para} {channel} {query_id} {--token=} {--origin=false} {--translation=true} {--debug} {--format=tex} ';
 
     /**
      * The console command description.
@@ -48,31 +48,6 @@ class ExportChapter extends Command
     }
 
     /**
-     * progress: 0-1, error -1
-     * message: string
-     */
-    protected function setStatus($progress,$message=''){
-        $data = [
-                    'progress'=>$progress,
-                    'message'=>$message,
-                    'content-type'=>'application/zip',
-                ];
-        if($this->realFilename){
-            $data['filename'] = $this->realFilename;
-        }
-        RedisClusters::put($this->currExportStatusKey,
-                            $data,
-                            $this->exportStatusExpiry);
-        $percent = (int)($progress * 100);
-        $this->info("[{$percent}%]".$message);
-    }
-
-
-    public function getStatus($filename){
-        return RedisClusters::get($this->exportStatusKey.'/'.$filename);
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int
@@ -84,18 +59,26 @@ class ExportChapter extends Command
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
+        $book = $this->argument('book');
+        $para = $this->argument('para');
+
+        $upload = new ExportDownload([
+            'queryId'=>$this->argument('query_id'),
+            'format'=>$this->option('format'),
+            'debug'=>$this->option('debug'),
+            'filename'=>$book.'-'.$para,
+        ]);
+
         $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES,
                                         'delimiters' => '[[ ]]',
                                         'escape'=>function ($value){
                                             return $value;
                                         }));
-        $tplFile = resource_path("mustache/".$this->option('format')."/paragraph.".$this->option('format'));
+        $tplFile = resource_path("mustache/chapter/".$this->option('format')."/paragraph.".$this->option('format'));
         $tplParagraph = file_get_contents($tplFile);
 
         MdRender::init();
 
-        $this->currExportStatusKey = $this->exportStatusKey . '/' . $this->argument('filename');
-        $this->realFilename = $this->argument('filename').'.zip';
 
         switch ($this->option('format')) {
             case 'md':
@@ -108,10 +91,7 @@ class ExportChapter extends Command
                 $renderFormat=$this->option('format');
                 break;
         }
-        $book = $this->argument('book');
-        $para = $this->argument('para');
-        //zip压缩包里面的文件名
-        $realFileName = "{$book}-{$para}.".$this->option('format');
+
         //获取原文channel
         $orgChannelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
 
@@ -139,7 +119,7 @@ class ExportChapter extends Command
         }
 
         $currProgress = 0;
-        $this->setStatus($currProgress,'start');
+        $this->info($upload->setStatus($currProgress,'start'));
 
 
         if(empty($chapter->toc)){
@@ -231,7 +211,7 @@ class ExportChapter extends Command
 
             foreach ($chapterBody as $body) {
                 $currProgress += $step;
-                $this->setStatus($currProgress,'export chapter '.$body->paragraph);
+                $this->info($upload->setStatus($currProgress,'export chapter '.$body->paragraph));
                 $paraData = array();
                 $paraData['translations'] = array();
                 foreach ($outputChannelsId as $key => $channelId) {
@@ -300,101 +280,13 @@ class ExportChapter extends Command
                 ];
         }
 
-        $this->setStatus(0.9,'export content done');
+        $this->info($upload->setStatus(0.9,'export content done'));
+
         Log::debug('导出结束');
 
-        $tex = array();
+        $upload->upload('chapter',$sections,$bookMeta);
+        $this->info($upload->setStatus(1,'export chapter done'));
 
-        $tpl = file_get_contents(resource_path("mustache/".$this->option('format')."/main.".$this->option('format')));
-        $texContent = $m->render($tpl,$bookMeta);
-        $tex[] = ['name'=>'main.'.$this->option('format'),
-                  'content'=>$texContent
-                 ];
-        foreach ($sections as $key => $section) {
-            $tpl = file_get_contents(resource_path("mustache/".$this->option('format')."/section.".$this->option('format')));
-            $texContent = $m->render($tpl,$section['body']);
-            $tex[] = ['name'=>$section['name'],
-                  'content'=>$texContent
-                 ];
-        }
-
-        Log::debug('footnote start');
-        //footnote
-        $tplFile = resource_path("mustache/".$this->option('format')."/footnote.".$this->option('format'));
-        if(isset($GLOBALS['note']) &&
-            is_array($GLOBALS['note']) &&
-            count($GLOBALS['note'])>0 &&
-            file_exists($tplFile)){
-            $tpl = file_get_contents($tplFile);
-            $texContent = $m->render($tpl,['footnote'=>$GLOBALS['note']]);
-            $tex[] = ['name'=>'footnote.'.$this->option('format'),
-                        'content'=>$texContent
-                        ];
-        }
-        if($this->option('debug')){
-            $dir = "export/".$this->option('format')."/{$book}-{$para}-{$channelId}/";
-            foreach ($tex as $key => $section) {
-                Storage::disk('local')->put($dir.$section['name'], $section['content']);
-            }
-        }
-
-        Log::debug('footnote finished');
-        $this->setStatus(0.95,'export content done.');
-
-        //upload
-        $fileDate = '';
-        switch ($this->option('format')) {
-            case 'tex':
-                $data = Export::ToPdf($tex);
-                if($data['ok']){
-                    $this->info($data['content-type']);
-                    $fileDate = $data['data'];
-                }else{
-                    $this->error($data['code'].'-'.$data['message']);
-                }
-                break;
-            case 'html':
-                $file = array();
-                foreach ($tex as $key => $section) {
-                    $file[] = $section['content'];
-                }
-                $fileDate = implode('',$file);
-                break;
-        }
-
-
-        $zipDir = storage_path('app/export/zip');
-        if(!is_dir($zipDir)){
-            $res = mkdir($zipDir,0755,true);
-            if(!$res){
-                Log::error('mkdir fail path='.$zipDir);
-                return 1;
-            }
-        }
-        $zipFile = $zipDir.'/'.Str::uuid().'.zip';
-
-        Log::debug('export chapter start zip  file='.$zipFile);
-
-        $zipOk = \App\Tools\Tools::zip($zipFile,[$realFileName=>$fileDate]);
-        if(!$zipOk){
-            Log::error('export chapter zip fail zip file='.$zipFile);
-            $this->setStatus(0.99,'export chapter zip fail');
-            $this->error('export chapter zip fail zip file='.$zipFile);
-            //TODO 给客户端返回错误状态
-            return 1;
-        }
-        $this->setStatus(0.96,'export chapter zip success');
-
-        $bucket = config('mint.attachments.bucket_name.temporary');
-        $tmpFile =  $bucket.'/'. $this->realFilename ;
-        Log::debug('upload start filename='.$tmpFile);
-        $this->setStatus(0.97,'upload start ');
-        $zipData = file_get_contents($zipFile);
-        Storage::put($tmpFile, $zipData);
-        $this->setStatus(1,'export chapter done');
-        Log::debug('export chapter done, upload filename='.$tmpFile);
-
-        unlink($zipFile);
         return 0;
     }
 }
