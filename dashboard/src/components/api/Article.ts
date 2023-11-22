@@ -1,5 +1,6 @@
 import { IStudio } from "../auth/StudioName";
 import { IUser } from "../auth/User";
+import { IChannel } from "../channel/Channel";
 import { ITocPathNode } from "../corpus/TocPath";
 import type { IStudioApiResponse, TRole } from "./Auth";
 
@@ -16,6 +17,7 @@ export interface IAnthologyDataRequest {
   article_list?: IArticleListApiResponse[];
   lang: string;
   status: number;
+  default_channel?: string | null;
 }
 export interface IAnthologyDataResponse {
   uid: string;
@@ -24,6 +26,7 @@ export interface IAnthologyDataResponse {
   summary: string;
   article_list: IArticleListApiResponse[];
   studio: IStudioApiResponse;
+  default_channel?: IChannel;
   lang: string;
   status: number;
   childrenNumber: number;
@@ -66,6 +69,8 @@ export interface IArticleDataRequest {
   content_type?: string;
   status: number;
   lang: string;
+  to_tpl?: boolean;
+  anthology_id?: string;
 }
 export interface IChapterToc {
   key?: string;
@@ -79,6 +84,7 @@ export interface IChapterToc {
 export interface IArticleDataResponse {
   uid: string;
   title: string;
+  title_text?: string;
   subtitle: string;
   summary: string | null;
   _summary?: string;
@@ -134,9 +140,11 @@ export interface IAnthologyCreateRequest {
 export interface IArticleMapRequest {
   id?: string;
   collect_id?: string;
+  collection?: { id: string; title: string };
   article_id?: string;
   level: number;
   title: string;
+  title_text?: string;
   editor?: IUser;
   children?: number;
   deleted_at?: string | null;

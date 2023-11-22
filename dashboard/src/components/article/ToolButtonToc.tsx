@@ -10,14 +10,17 @@ interface IWidget {
   type?: ArticleType;
   articleId?: string;
   anthologyId?: string | null;
+  channels?: string[];
   onSelect?: Function;
 }
 const ToolButtonTocWidget = ({
   type,
   articleId,
   anthologyId,
+  channels,
   onSelect,
 }: IWidget) => {
+  //TODO 都放return里面
   let tocWidget = <></>;
   if (type === "chapter" || type === "para") {
     if (articleId) {
@@ -41,6 +44,7 @@ const ToolButtonTocWidget = ({
       tocWidget = (
         <AnthologyTocTree
           anthologyId={anthologyId}
+          channels={channels}
           onArticleSelect={(anthologyId: string, keys: string[]) => {
             if (typeof onSelect !== "undefined" && keys.length > 0) {
               onSelect(keys[0]);

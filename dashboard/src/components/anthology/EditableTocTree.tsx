@@ -74,7 +74,7 @@ const EditableTocTreeWidget = ({
           message.error(json.message);
         }
       })
-      .catch((e) => console.error(e));
+      .catch((e) => message.error(e));
   };
 
   useEffect(() => {
@@ -86,6 +86,7 @@ const EditableTocTreeWidget = ({
           return {
             key: item.article_id ? item.article_id : item.title,
             title: item.title,
+            title_text: item.title_text ? item.title_text : item.title,
             level: item.level,
             deletedAt: item.deleted_at,
           };
@@ -111,6 +112,7 @@ const EditableTocTreeWidget = ({
                 key: randomString(),
                 id: id,
                 title: title,
+                title_text: title,
                 children: [],
                 level: 1,
               };
@@ -148,6 +150,7 @@ const EditableTocTreeWidget = ({
               key: randomString(),
               id: res.data.uid,
               title: res.data.title,
+              title_text: res.data.title,
               children: [],
               level: node.level + 1,
             };
@@ -172,6 +175,7 @@ const EditableTocTreeWidget = ({
         }}
       />
       <ArticleEditDrawer
+        anthologyId={anthologyId}
         articleId={articleId}
         open={openEditor}
         onClose={() => setOpenEditor(false)}
@@ -181,6 +185,7 @@ const EditableTocTreeWidget = ({
             key: randomString(),
             id: data.uid,
             title: data.title,
+            title_text: data.title_text ? data.title_text : data.title,
             level: 0,
             children: [],
           });

@@ -1,0 +1,25 @@
+- name: upload lily config.toml
+  template:
+    src: v2/lily/config.toml.j2
+    dest: "{{ app_deploy_root }}/agile/rpc/lily/config.toml"
+    mode: "0644"
+
+- name: upload lily rpc server service
+  become: true
+  template:
+    src: v2/lily/services/server.service.j2
+    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-lily.service
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: upload lily rpc worker({{ queue }}) service
+  become: true
+  template:
+    src: v2/lily/services/worker.service.j2
+    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-worker-{{ queue }}.service
+    owner: root
+    group: root
+    mode: "0644"
+  vars:
+    queue: "palm.lily.tex-to-pdf"

@@ -1,6 +1,6 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Row, Col, Breadcrumb, Space, Tabs } from "antd";
+import { Row, Col, Breadcrumb, Space, Tabs, Select } from "antd";
 import FullSearchInput from "../../../components/fts/FullSearchInput";
 import BookTree from "../../../components/corpus/BookTree";
 import FullTextSearchResult, {
@@ -18,6 +18,7 @@ const Widget = () => {
   const navigate = useNavigate();
   const [pageType, setPageType] = useState("P");
   const [view, setView] = useState<ISearchView | undefined>("pali");
+  const [caseWord, setCaseWord] = useState<string[]>();
 
   useEffect(() => {
     const v = searchParams.get("view");
@@ -100,6 +101,16 @@ const Widget = () => {
                     setSearchParams(searchParams);
                   }}
                   size="small"
+                  tabBarExtraContent={
+                    <Select
+                      defaultValue="wbw"
+                      bordered={false}
+                      options={[
+                        { value: "wbw", label: "wbw" },
+                        { value: "tulip", label: "tulip(beta)" },
+                      ]}
+                    />
+                  }
                   items={[
                     {
                       label: `巴利原文`,
@@ -122,6 +133,7 @@ const Widget = () => {
                   view={view as ISearchView}
                   pageType={pageType}
                   keyWord={key}
+                  keyWords={caseWord}
                   tags={searchParams.get("tags")?.split(",")}
                   bookId={searchParams.get("book")}
                   orderBy={searchParams.get("orderby")}
@@ -130,12 +142,18 @@ const Widget = () => {
               </Space>
             </Col>
             <Col xs={0} sm={0} md={5}>
-              <CaseList word={key} lines={5} />
+              <CaseList
+                word={key}
+                lines={5}
+                onChange={(value: string[]) => setCaseWord(value)}
+              />
               <FtsBookList
                 view={view}
                 keyWord={key}
+                keyWords={caseWord}
                 tags={searchParams.get("tags")?.split(",")}
                 match={searchParams.get("match")}
+                bookId={searchParams.get("book")}
                 onSelect={(bookId: number) => {
                   if (bookId !== 0) {
                     searchParams.set("book", bookId.toString());

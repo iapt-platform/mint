@@ -9,8 +9,7 @@
       "GPBMetadata\\": [
         "GPBMetadata/"
       ],
-      "Mint\\": "Mint/",
-      "Palm\\": "Palm/"
+      "Mint\\": "Mint/"
     }
   }
 }

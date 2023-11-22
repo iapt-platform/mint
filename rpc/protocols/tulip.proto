@@ -1,0 +1,85 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.github.iapt_platform.mint.plugins.tulip.v1";
+package mint.tulip.v1;
+
+// ----------------------------------------------------------------------------
+message SearchRequest {
+  repeated string keywords = 1;
+  repeated int32 books = 2;
+  string match_mode = 3;
+
+  message Page {
+    int32 index = 1;
+    int32 size = 2;
+  }
+  optional Page page = 99;
+}
+
+message SearchResponse {
+  message Item {
+    float rank = 1;
+    string highlight = 2;
+    int32 book = 3;
+    int32 paragraph = 4;
+    string content = 5;
+  }
+  repeated Item items = 1;
+
+  SearchRequest.Page page = 98;
+  int32 total = 99;
+}
+
+message BookListResponse {
+  message Item {
+    int32 book = 1;
+    int32 count = 2;
+  }
+  repeated Item items = 1;
+}
+
+message UpdateRequest {
+  int32 book = 1;
+  int32 paragraph = 2;
+  int32 level = 3;
+  string bold1 = 4;
+  string bold2 = 5;
+  string bold3 = 6;
+  string content = 7;
+  int32 pcd_book_id = 8;
+}
+message UpdateResponse{
+  int32 count = 1;
+}
+
+message UpdateIndexRequest{
+  int32 book = 1;
+  optional int32 paragraph = 2;
+}
+
+message UpdateIndexResponse{
+  int32 error = 1;
+}
+
+message UploadDictionaryRequest{
+  string data = 1;
+}
+
+message UploadDictionaryResponse{
+  int32 error = 1;
+}
+
+service Search {
+  rpc Pali(SearchRequest) returns (SearchResponse) {}
+
+  rpc BookList(SearchRequest) returns (BookListResponse) {}
+
+  rpc Update(UpdateRequest) returns (UpdateResponse) {}
+
+  rpc UpdateIndex(UpdateIndexRequest) returns (UpdateIndexResponse) {}
+
+  rpc UploadDictionary(UploadDictionaryRequest) returns (UploadDictionaryResponse) {}
+
+}
+
+// ----------------------------------------------------------------------------

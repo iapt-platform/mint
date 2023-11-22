@@ -5,6 +5,12 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt update
 RUN apt -y upgrade
+
+RUN apt install -y software-properties-common
+ENV PYTHON_VERSION "3.12"
+# https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa
+RUN add-apt-repository -y ppa:deadsnakes/ppa
+RUN apt update
 RUN apt -y install build-essential \
     imagemagick ffmpeg fonts-dejavu-extra texlive-full pandoc \
     fonts-arphic-ukai fonts-arphic-uming \
@@ -14,20 +20,13 @@ RUN apt -y install build-essential \
     fonts-cns11643-kai fonts-cns11643-sung \
     fonts-moe-standard-kai fonts-moe-standard-song \
     fonts-ipafont-nonfree-jisx0208 \
-    python3-full python3-dev 
+    python${PYTHON_VERSION}-full python${PYTHON_VERSION}-dev \
+    libpq5
+RUN apt -y clean
 
-# https://getcomposer.org/download/
-RUN wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php -- --quiet --install-dir=/usr/local/bin --filename=composer
-
-RUN useradd -s /bin/bash -m deploy
-RUN passwd -l deploy
-RUN echo 'deploy ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/101-deploy
 RUN mkdir /opt/lily
-RUN chown deploy:deploy /opt/lily
-USER deploy
-
 # https://pip.pypa.io/en/stable/installation/
-RUN bash -c "python3 -m venv $HOME/python3 \
+RUN bash -c "python${PYTHON_VERSION} -m venv $HOME/python3 \
     && . $HOME/python3/bin/activate \
     && pip install --upgrade pip \
     && pip install cmake \
@@ -38,9 +37,10 @@ RUN bash -c "python3 -m venv $HOME/python3 \
 RUN echo 'source $HOME/python3/bin/activate' >> $HOME/.bashrc
 
 COPY lily /opt/lily/
+COPY config.toml /etc/lily.toml
 
-RUN echo "$(date -u +%4Y%m%d%H%M%S)" | sudo tee /VERSION
+RUN echo "$(date -u +%4Y%m%d%H%M%S)" | tee /VERSION
 
-WORKDIR /opt/morus
+WORKDIR /opt/lily
 
-CMD ["/bin/bash"]
+CMD ["/bin/bash", "-l"]

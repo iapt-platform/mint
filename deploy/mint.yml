@@ -1,6 +1,5 @@
 - name: "local compile"
-  hosts: localhost
-  connection: local
+  hosts: building
   tasks:
     - name: "install dashboard dependencies"
       ansible.builtin.shell:
@@ -18,13 +17,54 @@
         REACT_APP_ENABLE_LOCAL_TOKEN: "true"
         REACT_APP_TOKEN_KEY: "token.20230919"
         REACT_APP_DOCUMENTS_SERVER: "{{ app_documents_server }}"
-        REACT_APP_RPC_SERVER: "{{ app_rpc_server }}"
+        REACT_APP_RPC_SERVER: "{{ app_grpc_web_server }}"
         REACT_APP_ASSETS_SERVER: "{{ app_assets_server }}"
         REACT_APP_API_SERVER: "https://{{ app_domain }}"
         REACT_APP_ICP_CODE: "{{ app_icp_code }}"
         REACT_APP_QUESTIONNAIRE_LINK: "{{ app_questionnaire_link }}"
 
-- hosts:
+- name: deploy php-fpm servers
+  hosts:
     - php_fpm
   roles:
     - mint-v2
+
+- name: run db migration
+  hosts:
+    - dbm
+  tasks:
+    - name: run db-migrate
+      become: true
+      ansible.builtin.shell:
+        cmd: su www-data -pc "php artisan migrate"
+        chdir: "{{ app_deploy_root }}/htdocs"
+
+- name: setup tulip
+  hosts:
+    - tulip
+  tasks:
+    - name: upload pali.stop
+      become: true
+      ansible.builtin.copy:
+        dest: "/usr/share/postgresql/{{ app_postgresql_version }}/tsearch_data/"
+        src: "{{ playbook_dir }}/../rpc/tulip/tulip/dictionary/pali.stop"
+        owner: root
+        group: root
+        mode: "0644"
+    - name: upload pali.syn
+      become: true
+      ansible.builtin.copy:
+        dest: "/usr/share/postgresql/{{ app_postgresql_version }}/tsearch_data/"
+        src: "{{ playbook_dir }}/../rpc/tulip/tulip/dictionary/pali.syn"
+        owner: root
+        group: root
+        mode: "0644"
+    - name: restrat postgresql server
+      become: true
+      ansible.builtin.systemd:
+        state: restarted
+        name: postgresql
+    - name: run db migrate
+      ansible.builtin.shell:
+        cmd: dbmate up
+        chdir: "{{ app_deploy_root }}/agile/rpc/tulip/tulip/db"

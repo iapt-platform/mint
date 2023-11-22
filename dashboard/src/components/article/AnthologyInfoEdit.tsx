@@ -1,12 +1,20 @@
 import { Form, message } from "antd";
 import { useIntl } from "react-intl";
-import { ProForm, ProFormText } from "@ant-design/pro-components";
+import {
+  ProForm,
+  ProFormSelect,
+  ProFormText,
+  RequestOptionsType,
+} from "@ant-design/pro-components";
 import MDEditor from "@uiw/react-md-editor";
 
 import { get, put } from "../../request";
 import { IAnthologyDataRequest, IAnthologyResponse } from "../api/Article";
 import LangSelect from "../general/LangSelect";
 import PublicitySelect from "../studio/PublicitySelect";
+import { useState } from "react";
+import { DefaultOptionType } from "antd/lib/select";
+import { IApiResponseChannelList } from "../api/Channel";
 
 interface IFormData {
   title: string;
@@ -14,29 +22,37 @@ interface IFormData {
   summary?: string;
   lang: string;
   status: number;
+  defaultChannel?: string;
 }
 
 interface IWidget {
   anthologyId?: string;
+  studioName?: string;
   onLoad?: Function;
 }
-const AnthologyInfoEditWidget = ({ anthologyId, onLoad }: IWidget) => {
+const AnthologyInfoEditWidget = ({
+  studioName,
+  anthologyId,
+  onLoad,
+}: IWidget) => {
   const intl = useIntl();
+  const [channelOption, setChannelOption] = useState<DefaultOptionType[]>([]);
+  const [currChannel, setCurrChannel] = useState<RequestOptionsType>();
 
   return anthologyId ? (
     <ProForm<IFormData>
       onFinish={async (values: IFormData) => {
-        console.log(values);
-        const res = await put<IAnthologyDataRequest, IAnthologyResponse>(
-          `/v2/anthology/${anthologyId}`,
-          {
-            title: values.title,
-            subtitle: values.subtitle,
-            summary: values.summary,
-            status: values.status,
-            lang: values.lang,
-          }
-        );
+        const url = `/v2/anthology/${anthologyId}`;
+        console.log("url", url);
+        console.log("values", values);
+        const res = await put<IAnthologyDataRequest, IAnthologyResponse>(url, {
+          title: values.title,
+          subtitle: values.subtitle,
+          summary: values.summary,
+          status: values.status,
+          lang: values.lang,
+          default_channel: values.defaultChannel,
+        });
         console.log(res);
         if (res.ok) {
           if (typeof onLoad !== "undefined") {
@@ -60,6 +76,14 @@ const AnthologyInfoEditWidget = ({ anthologyId, onLoad }: IWidget) => {
           if (typeof onLoad !== "undefined") {
             onLoad(res.data);
           }
+          if (res.data.default_channel) {
+            const channel = {
+              value: res.data.default_channel.id,
+              label: res.data.default_channel.name,
+            };
+            setCurrChannel(channel);
+            setChannelOption([channel]);
+          }
 
           return {
             title: res.data.title,
@@ -67,6 +91,7 @@ const AnthologyInfoEditWidget = ({ anthologyId, onLoad }: IWidget) => {
             summary: res.data.summary ? res.data.summary : undefined,
             lang: res.data.lang,
             status: res.data.status,
+            defaultChannel: res.data.default_channel?.id,
           };
         } else {
           return {
@@ -75,6 +100,7 @@ const AnthologyInfoEditWidget = ({ anthologyId, onLoad }: IWidget) => {
             summary: "",
             lang: "",
             status: 0,
+            defaultChannel: "",
           };
         }
       }}
@@ -108,6 +134,33 @@ const AnthologyInfoEditWidget = ({ anthologyId, onLoad }: IWidget) => {
       <ProForm.Group>
         <LangSelect width="md" />
         <PublicitySelect width="md" />
+      </ProForm.Group>
+      <ProForm.Group>
+        <ProFormSelect
+          options={channelOption}
+          width="md"
+          name="defaultChannel"
+          label={"默认版本"}
+          showSearch
+          debounceTime={300}
+          request={async ({ keyWords }) => {
+            console.log("keyWord", keyWords);
+            if (typeof keyWords === "undefined") {
+              return currChannel ? [currChannel] : [];
+            }
+            const url = `/v2/channel?view=studio&name=${studioName}`;
+            console.log("url", url);
+            const json = await get<IApiResponseChannelList>(url);
+            const textbookList = json.data.rows.map((item) => {
+              return {
+                value: item.uid,
+                label: `${item.studio.nickName}/${item.name}`,
+              };
+            });
+            console.log("json", textbookList);
+            return textbookList;
+          }}
+        />
       </ProForm.Group>
       <ProForm.Group>
         <Form.Item

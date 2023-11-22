@@ -22,7 +22,11 @@ const ArticleEditToolsWidget = ({
   return (
     <Space>
       {articleId ? (
-        <AddToAnthology studioName={studioName} articleIds={[articleId]} />
+        <AddToAnthology
+          trigger={<Button type="link">加入文集</Button>}
+          studioName={studioName}
+          articleIds={[articleId]}
+        />
       ) : undefined}
       {articleId ? (
         <ShareModal

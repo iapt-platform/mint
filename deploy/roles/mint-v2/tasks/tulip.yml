@@ -1,0 +1,25 @@
+- name: auto-loader optimization for tulip
+  ansible.builtin.shell:
+    cmd: composer update --optimize-autoloader --no-dev
+    chdir: "{{ app_deploy_root }}/agile/rpc/tulip/tulip"
+
+- name: upload tulip db/.env
+  template:
+    src: v2/tulip/db/env.j2
+    dest: "{{ app_deploy_root }}/agile/rpc/tulip/tulip/db/.env"
+    mode: "0644"
+
+- name: upload tulip config.php
+  template:
+    src: v2/tulip/config.php.j2
+    dest: "{{ app_deploy_root }}/agile/rpc/tulip/tulip/config.php"
+    mode: "0644"
+
+- name: upload tulip rpc service
+  become: true
+  template:
+    src: v2/tulip/service.conf.j2
+    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-tulip.service
+    owner: root
+    group: root
+    mode: "0644"

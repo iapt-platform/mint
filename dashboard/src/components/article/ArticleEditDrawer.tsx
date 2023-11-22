@@ -8,6 +8,7 @@ import ArticleEditTools from "./ArticleEditTools";
 interface IWidget {
   trigger?: React.ReactNode;
   articleId?: string;
+  anthologyId?: string;
   open?: boolean;
   onClose?: Function;
   onChange?: Function;
@@ -16,6 +17,7 @@ interface IWidget {
 const ArticleEditDrawerWidget = ({
   trigger,
   articleId,
+  anthologyId,
   open,
   onClose,
   onChange,
@@ -39,16 +41,6 @@ const ArticleEditDrawerWidget = ({
       onClose();
     }
   };
-  /*
-  const getUrl = (openMode?: string): string => {
-    let url = `/article/${type}/${articleId}?mode=`;
-    url += openMode ? openMode : mode ? mode : "read";
-    url += channelId ? `&channel=${channelId}` : "";
-    url += book ? `&book=${book}` : "";
-    url += para ? `&par=${para}` : "";
-    return url;
-  };
-*/
 
   return (
     <>
@@ -69,6 +61,7 @@ const ArticleEditDrawerWidget = ({
         }
       >
         <ArticleEdit
+          anthologyId={anthologyId}
           articleId={articleId}
           onReady={(title: string, readonly: boolean, studio?: string) => {
             setTitle(title);

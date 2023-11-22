@@ -31,6 +31,7 @@ export interface IApiResponseChannelData {
   studio: IStudio;
   lang: string;
   status: number;
+  is_system: boolean;
   created_at: string;
   updated_at: string;
   role?: TRole;

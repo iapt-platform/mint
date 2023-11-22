@@ -1,0 +1,13 @@
+<?php
+
+define("Config", [
+    'port' => {{ app_tulip_listen_port }},
+    "database" => [
+        "driver" => "pgsql",
+        "host" => "{{ app_tulip_db_host }}",
+        "port" => {{ app_tulip_db_port }},
+        "name" => "{{ app_tulip_db_name }}",
+        "user" => "{{ app_tulip_db_user }}",
+        "password" => "{{ app_tulip_db_password }}",
+    ],
+]);
