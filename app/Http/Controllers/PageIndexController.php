@@ -80,6 +80,7 @@ class PageIndexController extends Controller
             'nav'=>$nav,
             'title' => '巴 利 圣 典 文 库',
             'subtitle' => '巴利圣典翻译计划欢迎您的参与',
+            'description' => '巴利语学习与翻译工具',
             'gallery' => $Gallery,
         ]);
     }
