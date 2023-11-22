@@ -717,18 +717,7 @@ Awesomazing
 </div>
 <div class="relative flex flex-col md:flex-row justify-between mt-0 md:mt-6 text-gray-600 dark:text-gray-500 md:items-center">
 <div class="text-center md:text-left mb-6 md:mb-0">
-<p><a href="https://getgrav.org" class="hover:text-primary font-bold">Grav</a> was
-<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-code inline-block text-gray-700 dark:text-gray-400 w-4 h-4" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-<polyline points="7 8 3 12 7 16" />
-<polyline points="17 8 21 12 17 16" />
-<line x1="14" y1="4" x2="10" y2="20" />
-</svg> with
-<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart inline-block text-red-700 w-4 h-4 animate-pulse" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-<path d="M19.5 13.572l-7.5 7.428l-7.5 -7.428m0 0a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
-</svg> by
-<a href="https://trilby.media" class="hover:text-primary font-bold">Trilby Media, LLC</a></p>
+<p>本页面模版基于<a href="https://getgrav.org/premium/typhoon/docs">Grav Typhoon</a>制作</p>
 </div>
 <div class="max-w-64 mx-auto md:mx-0">
 <div class="theme-chooser flex items-center rounded-md border border-gray-300 dark:border-gray-600 pl-2 pr-0">
