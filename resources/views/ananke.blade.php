@@ -73,7 +73,7 @@
                 <li class="list f5 f4-ns fw4 dib pr3">
                   <a
                     class="hover-white no-underline white-90"
-                    href="/my/{{ $item['link'] }}"
+                    href="/pcd/{{ $item['link'] }}"
                     title="{{ $item['title'] }}"
                   >
                     {{ $item['title'] }}
