@@ -599,17 +599,21 @@ On Github
 </div>
 </div>
 
-<div class="flex duration-300 hover:scale-105"  style="display:none;">
+<div class="flex duration-300 hover:scale-105" >
 <div class="flex flex-col w-full rounded-md group hover:bg-gray-100 dark:hover:bg-gray-800">
 <div class="text-gray-500 group-hover:text-primary rounded-md p-3 text-center">
-<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-terminal inline-block w-16 h-16 stroke-current stroke-3/2 mx-auto" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-<path d="M5 7l5 5l-5 5" />
-<line x1="12" y1="19" x2="19" y2="19" />
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-terminal inline-block w-16 h-16 stroke-current stroke-3/2 mx-auto" width="24" height="24" viewBox="0 0 1024 1024" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<path
+        d="M523.4 936h-22.8l-4.5-1.8c-3.4-1.4-84.8-34.7-167.4-88.4C212.8 770.5 154 694.5 154 620V197.5c0-20.3 16.4-37 37.2-38.7L495.3 88h20.5l316.8 70.8c20.9 1.6 37.3 18.3 37.3 38.7V620c0 74.6-58.8 150.6-174.6 225.8-82.7 53.7-164 87-167.4 88.4l-4.5 1.8z m-12.9-50h3c17.8-7.6 87.1-38.2 155.2-82.6C737.7 758.5 820 690.3 820 620V207.2L510.3 138H501l-297 69.2V620c0 70.3 82.3 138.6 151.3 183.5 68.1 44.3 137.4 74.9 155.2 82.5z"
+        fill="currentColor" p-id="4788"></path>
+    <path
+        d="M693.5 394.1c-14.4-16.6-39.8-18.5-56.4-4.1L455.5 547 392 467.6c-13.7-17.2-39-20-56.2-6.3-17.2 13.7-20 39-6.3 56.2l88.9 111.2c12.7 15.9 35.2 19.5 52.1 9.1 3-1.5 5.9-3.3 8.5-5.6l210.3-181.8c16.7-14.3 18.6-39.7 4.2-56.3z"
+        fill="currentColor" p-id="4789"></path>
 </svg>
+
 </div>
 <h3 class="mb-2 text-base md:text-lg group-hover:text-primary text-center">
-CLI Power
+安全
 </h3>
 <div class="prose text-center">
 </div>
