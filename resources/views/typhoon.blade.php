@@ -758,18 +758,12 @@ Awesomazing
 <div :class="{ 'invisible': !show_mobile_nav, 'opacity-100': show_mobile_nav }" class="mobile-nav invisible z-20 overflow-hidden transition duration-500 h-screen w-screen absolute top-0 flex flex-col items-center justify-around absolute opacity-0 bg-gray-800 transition duration-500">
 <div class="overflow-y-auto w-full py-12 pl-2 pr-12 sm:p-12">
 <ul class="flex flex-col text-gray-300 text-left w-full">
+@foreach ($nav as $item)
 <li x-data="{ selected: true }" class="text-lg pl-2 border-t border-gray-700 py-2 active ">
 <div class="flex w-full h-full">
-<a class="w-full transition duration-300 hover:text-primary" href="/typhoon/onepage/">Modular</a>
+<a class="w-full transition duration-300 hover:text-primary" href="{{ $item['link'] }}">{{ $item['title'] }}</a>
 </div> </li>
-<li x-data="{ selected: false }" class="text-lg pl-2 border-t border-gray-700 py-2  ">
-<div class="flex w-full h-full">
-<a class="w-full transition duration-300 hover:text-primary" href="/typhoon/onepage/typography">Typography</a>
-</div> </li>
-<li x-data="{ selected: false }" class="text-lg pl-2 border-t border-gray-700 py-2  ">
-<div class="flex w-full h-full">
-<a class="w-full transition duration-300 hover:text-primary" href="/typhoon/onepage/start-here">Start Here</a>
-</div> </li>
+@endforeach
 </ul>
 </div>
 <div class="absolute top-2 right-2">
