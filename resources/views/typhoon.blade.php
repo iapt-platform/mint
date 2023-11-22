@@ -6,10 +6,9 @@
 <title>wikipali-{{ $title }}</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="generator" content="GravCMS" />
-<meta name="description" content="Grav is an easy to use, yet powerful, open source flat-file CMS" />
+<meta name="description" content="{{ $description }}" />
 <link rel="icon" href="/assets/images/favicon.ico" />
-<link rel="canonical" href="https://demo.getgrav.org/typhoon/onepage/" />
+<link rel="canonical" href="https://www.wikipali.org/" />
 <link href="/assets/typhoon/css/notices.css" type="text/css" rel="stylesheet">
 <link href="/assets/typhoon/css/glightbox.min.css" type="text/css" rel="stylesheet">
 <link href="/assets/typhoon/css/site.css" type="text/css" rel="stylesheet">
