@@ -20,7 +20,7 @@ Route::redirect('/', '/pcd/community/list');
 Route::redirect('/app', '/app/pcdl/index.php');
 Route::redirect('/app/pcdl', '/app/pcdl/index.php');
 
-//Route::get('/', [PageIndexController::class,'index']);
+Route::get('/', [PageIndexController::class,'index']);
 
 Route::get('/api/sentence/progress/image', [SentenceInfoController::class,'showprogress']);
 Route::get('/api/sentence/progress/daily/image', [SentenceInfoController::class,'showprogressdaily']);

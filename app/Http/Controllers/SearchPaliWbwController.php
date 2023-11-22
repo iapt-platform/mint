@@ -22,7 +22,9 @@ class SearchPaliWbwController extends Controller
         $bookId = [];
         $search = new SearchController;
         if($request->has('book')){
-            $bookId = [(int)$request->get('book')];
+            foreach (explode(',',$request->get('book')) as $key => $id) {
+                $bookId[] = (int)$id;
+            }
         }else if($request->has('tags')){
             //查询搜索范围
             //查询搜索范围
@@ -34,21 +36,10 @@ class SearchPaliWbwController extends Controller
         }
 
         $keyWords = explode(',',$request->get('key'));
-        switch ($request->get('view')) {
-            case 'pali':
-                $table = WbwTemplate::whereIn('real',$keyWords)
-                                        ->groupBy(['book','paragraph'])
-                                        ->selectRaw('book,paragraph,sum(weight) as rank');
-                break;
-            case 'para':
-                $table = WbwTemplate::whereIn('word',$keyWords)
-                                    ->groupBy(['book','paragraph'])
-                                    ->selectRaw('book,paragraph');
-                break;
-            default:
-                return $this->error('unknown param view='.$request->get('view'),500,500);
-                break;
-        }
+        $table = WbwTemplate::whereIn('real',$keyWords)
+                            ->groupBy(['book','paragraph'])
+                            ->selectRaw('book,paragraph,sum(weight) as rank');
+
         $placeholderWord = implode(",",array_fill(0, count($keyWords), '?')) ;
         $whereWord = "real in ({$placeholderWord})";
         $whereBookId = '';
@@ -85,17 +76,8 @@ class SearchPaliWbwController extends Controller
             }
         }
         $keyWords = explode(',',$request->get('key'));
-        switch ($request->get('view')) {
-            case 'pali':
-                $table = WbwTemplate::whereIn('real',$keyWords);
-                break;
-            case 'para':
-                $table = WbwTemplate::whereIn('word',$keyWords);
-                break;
-            default:
-                return $this->error('unknown param view='.$request->get('view'),500,500);
-                break;
-        }
+        $table = WbwTemplate::whereIn('real',$keyWords);
+
         if(count($bookId)>0){
             $table = $table->whereIn('pcd_book_id',$bookId);
         }
@@ -112,7 +94,7 @@ class SearchPaliWbwController extends Controller
      */
     public function store(Request $request)
     {
-
+        return $this->index($request);
     }
 
     /**

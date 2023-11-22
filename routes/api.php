@@ -75,6 +75,7 @@ use App\Http\Controllers\DictInfoController;
 use App\Http\Controllers\PgPaliDictDownloadController;
 use App\Http\Controllers\SearchPaliDataController;
 use App\Http\Controllers\SearchPaliWbwController;
+use App\Http\Controllers\SearchPageNumberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -203,6 +204,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('pali-search-data',SearchPaliDataController::class);
     Route::apiResource('search-pali-wbw',SearchPaliWbwController::class);
     Route::get('search-pali-wbw-books',[SearchPaliWbwController::class,'book_list']);
+    Route::apiResource('search-page-number',SearchPageNumberController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
