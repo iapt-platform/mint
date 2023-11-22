@@ -61,18 +61,18 @@ class PageIndexController extends Controller
                 'image'=>'/assets/gallery/03.jpg',
                 'title'=>'云台翻译中心',
                 'id'=>'desc_03',
-                'description'=>'',
+                'description'=>'外景',
             ],
             [
                 'image'=>'/assets/gallery/04.jpg',
                 'title'=>'云台翻译中心',
                 'id'=>'desc_04',
-                'description'=>'',
+                'description'=>'外景',
             ],
             [
                 'image'=>'/assets/gallery/05.jpg',
-                'title'=>'翻译者的健康',
-                'id'=>'desc_04',
+                'title'=>'办公环境',
+                'id'=>'desc_05',
                 'description'=>'27寸竖屏保证翻译的效率和质量，站坐交替的升降台，保证翻译者的健康。',
             ],
         ];
