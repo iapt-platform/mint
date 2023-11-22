@@ -3,7 +3,7 @@
 <html lang="en" data-appearance="{&quot;appearance&quot;:&quot;system&quot;,&quot;store&quot;:1}" x-data="{ show_mobile_nav: false, theme: typhoonRetrieve().theme, appearance: typhoonRetrieve().appearance }" :class="[ show_mobile_nav ? 'overflow-hidden' : '', theme ]" class="overflow-x-hidden">
 <head>
 <meta charset="utf-8" />
-<title>Modular Page | Grav</title>
+<title>wikipali-{{ $title }}</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="generator" content="GravCMS" />
