@@ -66,6 +66,7 @@
     "react-sparklines": "^1.7.0",
     "react-syntax-highlighter": "^15.5.0",
     "timezones-list": "^3.0.1",
+    "tslog": "^4.9.2",
     "typescript": "^4.4.2",
     "video.js": "^7.20.3",
     "web-vitals": "^2.1.0"
