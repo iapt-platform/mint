@@ -9,6 +9,8 @@ import FullTextSearchResult, {
 import FtsBookList from "../../../components/fts/FtsBookList";
 import FtsSetting from "../../../components/fts/FtsSetting";
 import CaseList from "../../../components/dict/CaseList";
+import PageNumberList from "../../../components/fts/PageNumberList";
+import { Key } from "antd/es/table/interface";
 
 const Widget = () => {
   const { key } = useParams();
@@ -142,11 +144,35 @@ const Widget = () => {
               </Space>
             </Col>
             <Col xs={0} sm={0} md={5}>
-              <CaseList
-                word={key}
-                lines={5}
-                onChange={(value: string[]) => setCaseWord(value)}
-              />
+              {key && parseInt(key) ? (
+                <PageNumberList
+                  keyWord={key}
+                  onSelect={(selectedKeys: Key[]) => {
+                    console.log("selectedKeys", selectedKeys);
+                    if (selectedKeys.length > 0) {
+                      if (typeof selectedKeys[0] === "string") {
+                        const queryString = selectedKeys[0].split("-");
+                        if (queryString.length === 3) {
+                          setCaseWord(queryString[1].split(","));
+                          if (parseInt(queryString[2]) === 0) {
+                            searchParams.delete("book");
+                          } else {
+                            searchParams.set("book", queryString[2]);
+                          }
+                          setSearchParams(searchParams);
+                        }
+                      }
+                    }
+                  }}
+                />
+              ) : (
+                <CaseList
+                  word={key}
+                  lines={5}
+                  onChange={(value: string[]) => setCaseWord(value)}
+                />
+              )}
+
               <FtsBookList
                 view={view}
                 keyWord={key}
