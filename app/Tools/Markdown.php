@@ -16,19 +16,20 @@ class Markdown
                 return Markdown::morus($text);
             }
         }else{
-            return Markdown::morus($text);
+            return Markdown::strdown($text);
         }
     }
 
     public static function morus($text){
+
         if(isset($GLOBALS['morus_client'])){
             $client = $GLOBALS['morus_client'];
         }else{
             $host = config('mint.server.rpc.morus.host') . ':'. config('mint.server.rpc.morus.port');
             Log::debug('morus host='.$host);
             $client = new \Mint\Morus\V1\MarkdownClient($host, [
-                'credentials' => \Grpc\ChannelCredentials::createInsecure(),
-            ]);
+                    'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+                ]);
             $GLOBALS['morus_client'] = $client;
         }
 
