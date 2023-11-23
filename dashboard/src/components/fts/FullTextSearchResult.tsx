@@ -40,7 +40,7 @@ interface IFtsItem {
   rank?: number;
 }
 
-export type ISearchView = "pali" | "title" | "page";
+export type ISearchView = "pali" | "title" | "page" | "number";
 interface IWidget {
   keyWord?: string;
   keyWords?: string[];
