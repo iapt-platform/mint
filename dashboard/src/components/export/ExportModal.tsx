@@ -1,4 +1,12 @@
-import { Modal, Progress, Select, Switch, Typography, message } from "antd";
+import {
+  Collapse,
+  Modal,
+  Progress,
+  Select,
+  Switch,
+  Typography,
+  message,
+} from "antd";
 import { useEffect, useRef, useState } from "react";
 import { get } from "../../request";
 import { ArticleType } from "../article/Article";
@@ -15,6 +23,7 @@ interface IExportResponse {
 interface IStatus {
   progress: number;
   message: string;
+  log?: string[];
 }
 interface IExportStatusResponse {
   ok: boolean;
@@ -67,17 +76,20 @@ const ExportModalWidget = ({
     }
     const url = `/v2/export/${filenameRef.current}`;
     console.log("url", url);
-    get<IExportStatusResponse>(url).then((json) => {
-      if (json.ok) {
-        console.log("filename", json);
-        setExportStatus(json.data.status);
-        if (json.data.status.progress === 1) {
-          setFilename(undefined);
-          setUrl(json.data.url);
+    get<IExportStatusResponse>(url)
+      .then((json) => {
+        if (json.ok) {
+          console.log("filename", json);
+          setExportStatus(json.data.status);
+          if (json.data.status.progress === 1) {
+            setFilename(undefined);
+            setUrl(json.data.url);
+          }
+        } else {
+          console.error(json.message);
         }
-      } else {
-      }
-    });
+      })
+      .catch((e) => console.error(e));
   };
 
   useEffect(() => {
@@ -85,26 +97,52 @@ const ExportModalWidget = ({
     return () => clearInterval(interval);
   }, []);
 
-  const exportChapter = (
-    book: number,
-    para: number,
-    channel: string,
-    format: string
-  ): void => {
-    let url = `/v2/export?book=${book}&par=${para}&channel=${channel}&format=${format}`;
+  const getUrl = (): string => {
+    if (!articleId) {
+      throw new Error("id error");
+    }
+    let url = `/v2/export?type=${type}&id=${articleId}&format=${format}`;
+    url += channelId ? `&channel=${channelId}` : "";
     url += "&origin=" + (hasOrigin ? "true" : "false");
     url += "&translation=" + (hasTranslation ? "true" : "false");
+    switch (type) {
+      case "chapter":
+        const para = articleId?.split("-").map((item) => parseInt(item));
+        if (para?.length === 2) {
+          url += `&book=${para[0]}&par=${para[1]}`;
+        } else {
+          throw new Error("段落编号错误");
+        }
+        if (!channelId) {
+          throw new Error("请选择版本");
+        }
+        break;
+      case "article":
+        url += `&id=${articleId}`;
+        url += anthologyId ? `&anthology=${anthologyId}` : "";
+        break;
+      default:
+        throw new Error("此类型暂时无法导出" + type);
+        break;
+    }
+    return url;
+  };
+  const exportRun = (): void => {
+    const url = getUrl();
     console.log("url", url);
     setExportStart(true);
-    get<IExportResponse>(url).then((json) => {
-      if (json.ok) {
-        const filename = json.data;
-        console.log("filename", filename);
-        setFilename(filename);
-      } else {
-      }
-    });
+    get<IExportResponse>(url)
+      .then((json) => {
+        if (json.ok) {
+          const filename = json.data;
+          console.log("filename", filename);
+          setFilename(filename);
+        } else {
+        }
+      })
+      .catch((e) => {});
   };
+
   const closeModal = () => {
     if (typeof onClose !== "undefined") {
       onClose();
@@ -119,18 +157,11 @@ const ExportModalWidget = ({
       open={isModalOpen}
       onOk={() => {
         console.log("type", type);
-        if (type === "chapter") {
-          if (articleId && channelId) {
-            const para = articleId.split("-").map((item) => parseInt(item));
-            const channels = channelId.split("_");
-            if (para.length === 2) {
-              exportChapter(para[0], para[1], channels[0], "html");
-            } else {
-              console.error("段落编号错误", articleId);
-            }
-          }
-        } else {
-          message.error("目前只支持章节导出");
+        try {
+          exportRun();
+        } catch (error) {
+          message.error((error as Error).message);
+          console.error(error);
         }
       }}
       onCancel={closeModal}
@@ -212,7 +243,6 @@ const ExportModalWidget = ({
       />
 
       <div style={{ display: exportStart ? "block" : "none" }}>
-        <Text>{exportStatus ? exportStatus.message : "正在生成……"}</Text>
         <Progress
           percent={exportStatus ? Math.round(exportStatus?.progress * 100) : 0}
           status={
@@ -223,13 +253,31 @@ const ExportModalWidget = ({
               : "normal"
           }
         />
-        {url ? (
-          <a href={url} target="_blank" rel="noreferrer">
-            {"下载"}
-          </a>
-        ) : (
-          <></>
-        )}
+        <Collapse collapsible="icon" ghost>
+          <Collapse.Panel
+            header={
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Text>
+                  {exportStatus ? exportStatus.message : "正在生成……"}
+                </Text>
+                {url ? (
+                  <a href={url} target="_blank" rel="noreferrer">
+                    {"下载"}
+                  </a>
+                ) : (
+                  <></>
+                )}
+              </div>
+            }
+            key="1"
+          >
+            <div style={{ height: 200, overflowY: "auto" }}>
+              {exportStatus?.log?.map((item, id) => {
+                return <div key={id}>{item}</div>;
+              })}
+            </div>
+          </Collapse.Panel>
+        </Collapse>
       </div>
     </Modal>
   );

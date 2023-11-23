@@ -29,8 +29,10 @@ interface IFtsItem {
 }
 interface IWidget {
   keyWord?: string;
+  keyWords?: string[];
+  engin?: "wbw" | "tulip";
   tags?: string[];
-  bookId?: number;
+  bookId?: string | null;
   book?: number;
   para?: number;
   match?: string | null;
@@ -41,6 +43,8 @@ interface IWidget {
 
 const FtsBookListWidget = ({
   keyWord,
+  keyWords,
+  engin = "wbw",
   tags,
   bookId,
   book,
@@ -53,8 +57,24 @@ const FtsBookListWidget = ({
   const [ftsData, setFtsData] = useState<IFtsItem[]>();
   const [total, setTotal] = useState<number>();
 
+  const focusBooks = bookId?.split(",");
+  console.log("focusBooks", focusBooks);
   useEffect(() => {
-    let url = `/v2/search-book-list?view=${view}&key=${keyWord}`;
+    let words;
+    let api = "";
+    switch (engin) {
+      case "wbw":
+        api = "search-pali-wbw-books";
+        words = keyWords?.join();
+        break;
+      case "tulip":
+        api = "search-book-list";
+        words = keyWord;
+        break;
+      default:
+        break;
+    }
+    let url = `/v2/${api}?view=${view}&key=${words}`;
     if (typeof tags !== "undefined") {
       url += `&tags=${tags}`;
     }
@@ -64,6 +84,7 @@ const FtsBookListWidget = ({
     console.log("url", url);
     get<IFtsResponse>(url).then((json) => {
       if (json.ok) {
+        console.log("data", json.data.rows);
         let totalResult = 0;
         for (const iterator of json.data.rows) {
           totalResult += iterator.count;
@@ -95,9 +116,14 @@ const FtsBookListWidget = ({
         <List.Item>
           <div
             style={{
+              padding: 4,
+              borderRadius: 4,
               display: "flex",
               justifyContent: "space-between",
               cursor: "pointer",
+              backgroundColor: focusBooks?.includes(item.pcdBookId.toString())
+                ? "lightblue"
+                : "unset",
             }}
             onClick={() => {
               if (typeof onSelect !== "undefined") {

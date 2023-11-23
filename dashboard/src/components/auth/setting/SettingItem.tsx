@@ -24,10 +24,12 @@ const { Text } = Typography;
 interface IWidgetSettingItem {
   data?: ISetting;
   autoSave?: boolean;
+  bordered?: boolean;
   onChange?: Function;
 }
 const SettingItemWidget = ({
   data,
+  bordered = true,
   onChange,
   autoSave = true,
 }: IWidgetSettingItem) => {
@@ -146,6 +148,7 @@ const SettingItemWidget = ({
                   <Select
                     defaultValue={data.defaultValue}
                     style={{ width: 120 }}
+                    bordered={bordered}
                     onChange={(value: string) => {
                       console.log(`selected ${value}`);
                       if (autoSave) {

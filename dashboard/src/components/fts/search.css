@@ -13,3 +13,14 @@
   color: #177ddc;
   font-style: unset;
 }
+
+.bld {
+  font-weight: 700;
+}
+
+.hl {
+  background-color: yellow;
+}
+.note {
+  color: #177ddc;
+}
