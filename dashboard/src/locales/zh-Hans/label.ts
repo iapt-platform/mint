@@ -19,6 +19,12 @@ const items = {
   "labels.recent-scan": "最近打开",
   "labels.icp": "ICP:",
   "labels.no.login": "尚未登录",
+  "labels.page.number.type.M": "缅文版",
+  "labels.page.number.type.T": "泰文版",
+  "labels.page.number.type.P": "PTS版",
+  "labels.page.number.type.V": "印度内观中心版",
+  "labels.page.number.type.O": "其他",
+  "labels.page.number.type.para": "缅文段落",
 };
 
 export default items;

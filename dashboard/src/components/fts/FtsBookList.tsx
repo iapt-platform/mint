@@ -62,18 +62,14 @@ const FtsBookListWidget = ({
   useEffect(() => {
     let words;
     let api = "";
-    switch (engin) {
-      case "wbw":
-        api = "search-pali-wbw-books";
-        words = keyWords?.join();
-        break;
-      case "tulip":
-        api = "search-book-list";
-        words = keyWord;
-        break;
-      default:
-        break;
+    if (keyWord?.trim().includes(" ")) {
+      api = "search-book-list";
+      words = keyWord;
+    } else {
+      api = "search-pali-wbw-books";
+      words = keyWords?.join();
     }
+
     let url = `/v2/${api}?view=${view}&key=${words}`;
     if (typeof tags !== "undefined") {
       url += `&tags=${tags}`;
@@ -105,7 +101,7 @@ const FtsBookListWidget = ({
         setTotal(json.data.count);
       }
     });
-  }, [keyWord, match, tags]);
+  }, [keyWord, keyWords, match, tags, view]);
   return (
     <List
       header={`总计：` + total}

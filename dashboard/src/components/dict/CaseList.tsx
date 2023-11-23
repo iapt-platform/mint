@@ -48,7 +48,16 @@ const CaseListWidget = ({ word, lines, onChange }: IWidget) => {
   }, [caseData]);
 
   useEffect(() => {
+    /**
+     * 搜索变格
+     * 如果 keyWord 包涵空格 不搜索
+     */
     if (typeof word === "undefined") {
+      return;
+    }
+    if (word?.trim().includes(" ")) {
+      setWords([]);
+      setCurrWord(undefined);
       return;
     }
     get<ICaseListResponse>(`/v2/case/${word}`).then((json) => {
@@ -86,82 +95,88 @@ const CaseListWidget = ({ word, lines, onChange }: IWidget) => {
   const showWords = showAll ? caseData : caseData?.slice(0, lines);
   return (
     <div style={{ padding: 4 }}>
-      <Card
-        size="small"
-        extra={
-          lines ? (
-            <Button type="link" onClick={() => setShowAll(!showAll)}>
-              {showAll ? (
-                <Space>
-                  {"折叠"}
-                  <UpOutlined />
-                </Space>
-              ) : (
-                <Space>
-                  {"展开"}
-                  <DownOutlined />
-                </Space>
-              )}
-            </Button>
-          ) : (
-            <></>
-          )
-        }
-        title={
-          <Select
-            value={currWord}
-            bordered={false}
-            onChange={(value: string) => {
-              setCurrWord(value);
-            }}
-            options={words?.map((item, id) => {
+      {currWord ? (
+        <Card
+          size="small"
+          extra={
+            lines ? (
+              <Button type="link" onClick={() => setShowAll(!showAll)}>
+                {showAll ? (
+                  <Space>
+                    {"折叠"}
+                    <UpOutlined />
+                  </Space>
+                ) : (
+                  <Space>
+                    {"展开"}
+                    <DownOutlined />
+                  </Space>
+                )}
+              </Button>
+            ) : (
+              <></>
+            )
+          }
+          title={
+            <Select
+              value={currWord}
+              bordered={false}
+              onChange={(value: string) => {
+                setCurrWord(value);
+              }}
+              options={words?.map((item, id) => {
+                return {
+                  label: (
+                    <Space>
+                      {item.word}
+                      <Badge
+                        count={item.count}
+                        color={"lime"}
+                        status="default"
+                        size="small"
+                      />
+                    </Space>
+                  ),
+                  value: item.word,
+                };
+              })}
+            />
+          }
+        >
+          <Checkbox
+            indeterminate={indeterminate}
+            onChange={onCheckAllChange}
+            checked={checkAll}
+          >
+            Check all
+          </Checkbox>
+          <Checkbox.Group
+            style={{ display: "grid" }}
+            options={showWords?.map((item, id) => {
               return {
                 label: (
                   <Space>
-                    {item.word}
+                    <Text strong={item.bold > 0 ? true : false}>
+                      {item.word}
+                    </Text>
                     <Badge
-                      count={item.count}
-                      color={"lime"}
-                      status="default"
                       size="small"
+                      count={item.count}
+                      overflowCount={9999}
+                      status="default"
                     />
                   </Space>
                 ),
                 value: item.word,
               };
             })}
+            value={checkedList}
+            onChange={onWordChange}
           />
-        }
-      >
-        <Checkbox
-          indeterminate={indeterminate}
-          onChange={onCheckAllChange}
-          checked={checkAll}
-        >
-          Check all
-        </Checkbox>
-        <Checkbox.Group
-          style={{ display: "grid" }}
-          options={showWords?.map((item, id) => {
-            return {
-              label: (
-                <Space>
-                  <Text strong={item.bold > 0 ? true : false}>{item.word}</Text>
-                  <Badge
-                    size="small"
-                    count={item.count}
-                    overflowCount={9999}
-                    status="default"
-                  />
-                </Space>
-              ),
-              value: item.word,
-            };
-          })}
-          value={checkedList}
-          onChange={onWordChange}
-        />
-      </Card>
+        </Card>
+      ) : (
+        <Text>多词搜索没有变格词表</Text>
+      )}
     </div>
   );
 };

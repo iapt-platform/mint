@@ -39,7 +39,6 @@ const TocPathWidget = ({
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  console.log("data", data);
   useEffect(() => setCurrData(data), [data]);
   const fullPath = (
     <Breadcrumb
