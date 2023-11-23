@@ -104,14 +104,33 @@ const Widget = () => {
                   }}
                   size="small"
                   tabBarExtraContent={
-                    <Select
-                      defaultValue="wbw"
-                      bordered={false}
-                      options={[
-                        { value: "wbw", label: "wbw" },
-                        { value: "tulip", label: "tulip(beta)" },
-                      ]}
-                    />
+                    <Space>
+                      <Select
+                        defaultValue="case"
+                        bordered={false}
+                        options={[
+                          { value: "case", label: "变格查询" },
+                          { value: "complete", label: "精确匹配" },
+                          { value: "unaccented", label: "无变音符号查询" },
+                        ]}
+                        onSelect={(value: string) => {
+                          searchParams.set("match", value);
+                          setSearchParams(searchParams);
+                        }}
+                      />
+                      <Select
+                        defaultValue="rank"
+                        bordered={false}
+                        options={[
+                          { value: "rank", label: "相关度降序" },
+                          { value: "paragraph", label: "段落编号升序" },
+                        ]}
+                        onSelect={(value: string) => {
+                          searchParams.set("orderby", value);
+                          setSearchParams(searchParams);
+                        }}
+                      />
+                    </Space>
                   }
                   items={[
                     {
