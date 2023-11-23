@@ -663,7 +663,7 @@ class CorpusController extends Controller
                             // 传过来的数据一定有一个原文channel
                             //
                             if($mode !== "read"){
-                                if($info->content_type==='json'){
+                                if($row->content_type==='json'){
                                     $newSent['channel']['type'] = "wbw";
                                     if(isset($this->wbwChannels[0])){
                                         $newSent['channel']['name'] = $indexChannel[$this->wbwChannels[0]]->name;
