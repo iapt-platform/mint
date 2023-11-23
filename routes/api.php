@@ -76,6 +76,7 @@ use App\Http\Controllers\PgPaliDictDownloadController;
 use App\Http\Controllers\SearchPaliDataController;
 use App\Http\Controllers\SearchPaliWbwController;
 use App\Http\Controllers\SearchPageNumberController;
+use App\Http\Controllers\NavPageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -205,6 +206,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('search-pali-wbw',SearchPaliWbwController::class);
     Route::get('search-pali-wbw-books',[SearchPaliWbwController::class,'book_list']);
     Route::apiResource('search-page-number',SearchPageNumberController::class);
+    Route::apiResource('nav-page',NavPageController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
