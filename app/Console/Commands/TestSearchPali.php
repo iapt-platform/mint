@@ -43,14 +43,14 @@ class TestSearchPali extends Command
         if($result){
             $this->info("word={$word} total=".$result['total']);
         }else{
-            $this->error('word={$word} search fail');
+            $this->error("word={$word} search fail");
         }
 
         $result = PaliSearch::search([$word],[267],'case',0,3);
         if($result){
             $this->info("word={$word} book=267 total=".$result['total']);
         }else{
-            $this->error('word={$word} book=267 search fail');
+            $this->error("word={$word} book=267 search fail");
         }
 
         return 0;
