@@ -16,7 +16,7 @@ class Markdown
                 return Markdown::morus($text);
             }
         }else{
-            return Markdown::strdown($text);
+            return Markdown::morus($text);
         }
     }
 
