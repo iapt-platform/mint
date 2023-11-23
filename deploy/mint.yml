@@ -29,15 +29,15 @@
   roles:
     - mint-v2
 
-- name: run db migration
-  hosts:
-    - dbm
-  tasks:
-    - name: run db-migrate
-      become: true
-      ansible.builtin.shell:
-        cmd: su www-data -pc "php artisan migrate"
-        chdir: "{{ app_deploy_root }}/htdocs"
+# - name: run db migration
+#   hosts:
+#     - dbm
+#   tasks:
+#     - name: run db-migrate
+#       become: true
+#       ansible.builtin.shell:
+#         cmd: su www-data -pc "php artisan migrate"
+#         chdir: "{{ app_deploy_root }}/htdocs"
 
 - name: setup tulip
   hosts:
