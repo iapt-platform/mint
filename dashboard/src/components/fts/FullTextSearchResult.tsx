@@ -80,20 +80,21 @@ const FullTxtSearchResultWidget = ({
   );
 
   useEffect(() => {
+    /**
+     * 搜索引擎选择逻辑
+     * 如果 keyWord 包涵空格 使用 tulip
+     * 如果 keyWord 不包涵空格 使用 wbw
+     */
     let words;
     let api = "";
-    switch (engin) {
-      case "wbw":
-        api = "search-pali-wbw";
-        words = keyWords?.join();
-        break;
-      case "tulip":
-        api = "search";
-        words = keyWord;
-        break;
-      default:
-        break;
+    if (keyWord?.trim().includes(" ")) {
+      api = "search";
+      words = keyWord;
+    } else {
+      api = "search-pali-wbw";
+      words = keyWords?.join();
     }
+
     let url = `/v2/${api}?view=${view}&key=${words}`;
     if (typeof tags !== "undefined") {
       url += `&tags=${tags}`;
