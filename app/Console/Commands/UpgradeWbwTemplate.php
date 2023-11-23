@@ -13,7 +13,7 @@ class UpgradeWbwTemplate extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan upgrade:wbw.template 107
      * @var string
      */
     protected $signature = 'upgrade:wbw.template {book?} {para?}';
