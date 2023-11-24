@@ -4,12 +4,13 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-function myLog(){
-    $dir = __DIR__ . '/logs';
-    if(!is_dir($dir)){
-        $res = mkdir($dir,0700,true);
-        if(!$res){
-            echo "error: mkdir fail path=".$dir;
+function myLog()
+{
+    $dir = __DIR__ . '/tmp/logs';
+    if (!is_dir($dir)) {
+        $res = mkdir($dir, 0700, true);
+        if (!$res) {
+            echo "error: mkdir fail path=" . $dir;
             return 0;
         }
     }
