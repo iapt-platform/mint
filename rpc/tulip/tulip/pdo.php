@@ -1,7 +1,19 @@
 <?php
+require dirname(__FILE__) . '/vendor/autoload.php';
+use Monolog\Level;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class PdoHelper {
     private $_pdo = null;
+    private $log = null;
+
+    public function __construct()
+    {
+        // create a log channel
+        $this->log = new Logger('tulip');
+        $this->log->pushHandler(new StreamHandler(__DIR__.'/logs/tulip-'.date("Y-m-d").'.log'));
+    }
     public function connectDb(){
         /**
          * 连接数据库
@@ -12,15 +24,18 @@ class PdoHelper {
         $db .= ";dbname=".Config['database']['name'];
         $db .= ";user=".Config['database']['user'];
         $db .= ";password=".Config['database']['password'].";";
+        
         echo 'connect to db host='.Config['database']['host'] . ' name='.Config['database']['name'].PHP_EOL;
         try {
             $PDO = new PDO($db,
                         Config['database']['user'],
                         Config['database']['password'],
                         array(PDO::ATTR_PERSISTENT=>true));
+            $this->log->info('connect to db success');
         }catch(PDOException $e) {
             echo 'connect to db fail'.PHP_EOL;
             print $e->getMessage();
+            $this->log->error('connect to db fail');
             return false;
         }
         $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
