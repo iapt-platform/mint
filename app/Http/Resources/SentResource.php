@@ -58,7 +58,9 @@ class SentResource extends JsonResource
                                              null,
                                              $mode,
                                              $channel['type'],
-                                             $this->content_type);
+                                             $this->content_type,
+                                             $request->get('format','react')
+                                            );
         }
         if($request->get('mode') === "edit" || $request->get('mode') === "wbw"){
             $data['suggestionCount'] = SuggestionApi::getCountBySent($this->book_id,
