@@ -61,7 +61,7 @@ const Widget = () => {
                 }}
               />
             </Col>
-            <Col xs={24} sm={18} md={14}>
+            <Col xs={24} sm={18} md={13}>
               <Space direction="vertical" style={{ padding: 10 }}>
                 <Space>
                   <FullSearchInput
@@ -162,7 +162,7 @@ const Widget = () => {
                 />
               </Space>
             </Col>
-            <Col xs={0} sm={0} md={5}>
+            <Col xs={0} sm={0} md={6}>
               {key && parseInt(key) ? (
                 <PageNumberList
                   keyWord={key}
