@@ -1,20 +1,12 @@
 <?php
-require dirname(__FILE__) . '/vendor/autoload.php';
+require_once dirname(__FILE__) . '/vendor/autoload.php';
+require_once dirname(__FILE__) . '/log.php';
 
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 
 class PdoHelper
 {
     private $_pdo = null;
-    private $log = null;
 
-    public function __construct()
-    {
-        // create a log channel
-        $this->log = new Logger('tulip');
-        $this->log->pushHandler(new StreamHandler(__DIR__ . '/logs/tulip-' . date("Y-m-d") . '.log'));
-    }
     public function connectDb()
     {
         /**
@@ -35,11 +27,11 @@ class PdoHelper
                 Config['database']['password'],
                 array(PDO::ATTR_PERSISTENT => true)
             );
-            $this->log->info('connect to db success');
+            myLog()->info('connect to db success');
         } catch (PDOException $e) {
             echo 'connect to db fail' . PHP_EOL;
             print $e->getMessage();
-            $this->log->error('connect to db fail');
+            myLog()->error('connect to db fail');
             return false;
         }
         $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
