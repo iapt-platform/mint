@@ -1,11 +1,11 @@
 <?php
 
-function logger($level,$message){
+function console($level,$message){
     $output = "[\033[32m".date("Y/m/d h:i:sa") ."\033[0m] ";
     if($level === 'error'){
-        $output .= "\033[41m" . $level . "\033[0m ";
+        $output .= "\033[41m" . strtoupper($level) . "\033[0m ";
     }else{
-        $output .= $level;
+        $output .= strtoupper($level);
     }
     
     $output .= ' ' . $message.PHP_EOL;
