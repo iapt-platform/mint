@@ -3,9 +3,9 @@
 require dirname(__FILE__) . '/vendor/autoload.php';
 require dirname(__FILE__) . '/config.php';
 require dirname(__FILE__) . '/pdo.php';
-require dirname(__FILE__) . '/logger.php';
+require dirname(__FILE__) . '/console.php';
 
-logger('debug','content update start');
+console('debug','content update start');
 
 $PDO = new PdoHelper;
 
@@ -20,9 +20,9 @@ WHERE book = ?;";
 for ($i=1; $i < 218; $i++) { 
     $ok = $PDO->execute($query,[$i]);
     if($ok){
-        logger('debug','book: '.$i. ' updated.');
+        console('debug','book: '.$i. ' updated.');
     }else{
-        logger('error','error book: '.$i. ' update fail.'.$PDO->errorInfo());
+        console('error','error book: '.$i. ' update fail.'.$PDO->errorInfo());
     }
 }
-logger('debug','all done');
+console('debug','all done');

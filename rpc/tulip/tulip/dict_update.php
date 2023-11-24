@@ -3,9 +3,9 @@
 require dirname(__FILE__) . '/vendor/autoload.php';
 require dirname(__FILE__) . '/config.php';
 require dirname(__FILE__) . '/pdo.php';
-require dirname(__FILE__) . '/logger.php';
+require dirname(__FILE__) . '/console.php';
 
-logger('debug','dict update start');
+console('debug','dict update start');
 
 $PDO = new PdoHelper;
 
@@ -17,9 +17,9 @@ $query = "ALTER TEXT SEARCH DICTIONARY pali_stem (
 
 $ok = $PDO->execute($query);
 if($ok){
-    logger('debug','dictionary updated');
+    console('debug','dictionary updated');
 }else{
-    logger('error','dictionary update fail.'.$PDO->errorInfo());
+    console('error','dictionary update fail.'.$PDO->errorInfo());
 }
 
-logger('debug','all done');
+console('debug','all done');

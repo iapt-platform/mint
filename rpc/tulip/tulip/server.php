@@ -2,21 +2,15 @@
 
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 require_once dirname(__FILE__) . '/config.php';
-require_once dirname(__FILE__) . '/logger.php';
+require_once dirname(__FILE__) . '/console.php';
 require_once dirname(__FILE__) . '/pdo.php';
+require_once dirname(__FILE__) . '/log.php';
 
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+
 
 class Greeter extends \Mint\Tulip\V1\SearchStub
 {
-    private $log = null;
-    public function __construct()
-    {
-        // create a log channel
-        $this->log = new Logger('tulip');
-        $this->log->pushHandler(new StreamHandler(__DIR__ . '/logs/tulip-' . date("Y-m-d") . '.log'));
-    }
+
     public function Pali(
         \Mint\Tulip\V1\SearchRequest $request,
         \Grpc\ServerContext $context
@@ -26,8 +20,8 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             $keyWords[] = $word;
         }
         $msg = "[" . date("Y/m/d h:i:sa") . "] pali search: request words = " . implode(',', $keyWords);
-        echo  $msg . PHP_EOL;
-        $this->log->info($msg);
+        console('debug',$msg);
+        myLog()->info($msg);
 
         $pdo = new PdoHelper;
         $pdo->connectDb();
@@ -45,11 +39,11 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             $queryBookId = '';
         }
         $msg = 'query books = ' . implode(',', $bookId);
-        echo  $msg . PHP_EOL;
-        $this->log->info($msg);
+        console('debug',$msg);
+        myLog()->info($msg);
 
         $matchMode = $request->getMatchMode();
-        echo 'query mode = ' . $matchMode . PHP_EOL;
+        console('debug','query mode = ' . $matchMode);
         $param = [];
         switch ($matchMode) {
             case 'complete':
@@ -109,8 +103,8 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         ) {
             $total = $resultCount[0]['co'];
         } else {
-            logger('warning', 'result must be of type array' . $pdo->errorInfo());
-            $this->log->error('result must be of type array' . $pdo->errorInfo());
+            console('debug','warning', 'result must be of type array' . $pdo->errorInfo());
+            myLog()->error('result must be of type array' . $pdo->errorInfo());
             $total = 0;
         }
 
@@ -163,8 +157,8 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             }
         }
 
-        echo "total={$total}" . PHP_EOL;
-        $this->log->info("total={$total}");
+        console('debug',"total={$total}");
+        myLog()->info("total={$total}");
         $response->setTotal($total);
         return $response;
     }
@@ -183,7 +177,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         foreach ($request->getKeywords()->getIterator() as $word) {
             $keyWords[] = $word;
         }
-        echo "book list: request words = " . implode(',', $keyWords) . PHP_EOL;
+        console('debug',"book list: request words = " . implode(',', $keyWords));
         /**
          * 查询业务逻辑
          */
@@ -199,10 +193,10 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         } else {
             $queryBookId = '';
         }
-        echo 'query books = ' . implode(',', $bookId) . PHP_EOL;
+        console('debug','query books = ' . implode(',', $bookId));
 
         $matchMode = $request->getMatchMode();
-        echo 'query mode = ' . $matchMode . PHP_EOL;
+        console('debug','query mode = ' . $matchMode);
         $queryWhere = $this->makeQueryWhere($keyWords, $matchMode);
         $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
         $result = $pdo->dbSelect($query, $queryWhere['param']);
@@ -218,7 +212,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             }
         }
 
-        echo "total=" . count($output) . PHP_EOL;
+        console('debug',"total=" . count($output));
         return $response;
     }
 
@@ -264,11 +258,11 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
 $port = Config['port'];
 
 if (!isset($port)) {
-    echo 'parameter port is required. ';
+    console('debug','parameter port is required. ');
     return;
 }
 $server = new \Grpc\RpcServer();
 $server->addHttp2Port('0.0.0.0:' . $port);
 $server->handle(new Greeter());
-echo 'Listening on port :' . $port . PHP_EOL;
+console('debug','Listening on port :' . $port);
 $server->run();
