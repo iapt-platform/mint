@@ -1,27 +1,27 @@
 <?php
 require dirname(__FILE__) . '/vendor/autoload.php';
 require dirname(__FILE__) . '/config.php';
-require dirname(__FILE__) . '/logger.php';
+require dirname(__FILE__) . '/console.php';
 require dirname(__FILE__) . '/pdo.php';
 
-logger('debug', 'download full test search content start');
+console('debug', 'download full test search content start');
 $param = getopt('b:');
 
 if (isset($param['b'])) {
     $bookId = (int)$param['b'];
-    logger('debug', 'update book=' . $bookId);
+    console('debug', 'update book=' . $bookId);
 }
 $PDO = new PdoHelper;
 
 $PDO->connectDb();
-logger('debug', 'connect database finished');
+console('debug', 'connect database finished');
 
 $client = new GuzzleHttp\Client();
 
 $pageSize = 1000;
 
 $urlBase = Config['api_server'] . '/v2/pali-search-data';
-logger('debug', 'url=' . $urlBase);
+console('debug', 'url=' . $urlBase);
 if (isset($bookId)) {
     $from = $bookId;
     $to = $bookId;
@@ -32,11 +32,11 @@ if (isset($bookId)) {
 for ($book = $from; $book <= $to; $book++) {
     $currPage = 1;
     $urlBook = $urlBase . "?book={$book}";
-    logger('debug', 'fetch book=' . $book);
+    console('debug', 'fetch book=' . $book);
     do {
         $goNext = false;
         $url = $urlBook . "&start={$currPage}&page_size={$pageSize}";
-        logger('debug', 'url=' . $url);
+        console('debug', 'url=' . $url);
         $res = $client->request('GET', $url);
         $status = $res->getStatusCode();
         if ($status === 200) {
@@ -46,7 +46,7 @@ for ($book = $from; $book <= $to; $book++) {
                 foreach ($json->data->rows as $row) {
                     $book = $row->book;
                     $paragraph = $row->paragraph;
-                    logger('debug', "update start book={$book} para={$paragraph} ");
+                    console('debug', "update start book={$book} para={$paragraph} ");
                     $now = date("Y-m-d H:i:s");
                     //查询是否存在
                     $query = 'SELECT id from fts_texts where book=? and paragraph = ?';
@@ -98,23 +98,23 @@ for ($book = $from; $book <= $to; $book++) {
                         );
                     }
                 }
-                logger('debug', "update done book={$book} para={$paragraph} ");
+                console('debug', "update done book={$book} para={$paragraph} ");
                 $maxPage = $json->data->count;
-                logger('debug', 'max page =' . $maxPage);
+                console('debug', 'max page =' . $maxPage);
                 if ($currPage + $pageSize < $maxPage) {
                     $goNext = true;
                 } else {
-                    logger('debug', "book {$book} is done");
+                    console('debug', "book {$book} is done");
                     $goNext = false;
                 }
             } else {
-                logger('error', '');
+                console('error', '');
             }
         } else {
-            logger('error', 'status=' . $status);
+            console('error', 'status=' . $status);
         }
         $currPage += $pageSize;
     } while ($goNext);
 }
 
-logger('debug', 'all done');
+console('debug', 'all done');
