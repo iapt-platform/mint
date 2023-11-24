@@ -1,12 +1,22 @@
 <?php
 
-require dirname(__FILE__) . '/vendor/autoload.php';
-require dirname(__FILE__) . '/config.php';
-require dirname(__FILE__) . '/logger.php';
-require dirname(__FILE__) . '/pdo.php';
+require_once dirname(__FILE__) . '/vendor/autoload.php';
+require_once dirname(__FILE__) . '/config.php';
+require_once dirname(__FILE__) . '/logger.php';
+require_once dirname(__FILE__) . '/pdo.php';
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class Greeter extends \Mint\Tulip\V1\SearchStub
 {
+    private $log = null;
+    public function __construct()
+    {
+        // create a log channel
+        $this->log = new Logger('tulip');
+        $this->log->pushHandler(new StreamHandler(__DIR__ . '/logs/tulip-' . date("Y-m-d") . '.log'));
+    }
     public function Pali(
         \Mint\Tulip\V1\SearchRequest $request,
         \Grpc\ServerContext $context
@@ -15,7 +25,9 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         foreach ($request->getKeywords()->getIterator() as $word) {
             $keyWords[] = $word;
         }
-        echo "[".date("Y/m/d h:i:sa") ."] pali search: request words = ".implode(',',$keyWords) .PHP_EOL;
+        $msg = "[" . date("Y/m/d h:i:sa") . "] pali search: request words = " . implode(',', $keyWords);
+        echo  $msg . PHP_EOL;
+        $this->log->info($msg);
 
         $pdo = new PdoHelper;
         $pdo->connectDb();
@@ -23,24 +35,22 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
          * 查询业务逻辑
          */
 
-        $searchChapters = [];
-        $searchBooks = [];
-        $searchBookId = [];
         $bookId = [];
-        if($request->getBooks()->count()>0){
+        if ($request->getBooks()->count() > 0) {
             foreach ($request->getBooks()->getIterator() as $book) {
                 $bookId[] = $book;
             }
-            $queryBookId = ' AND pcd_book_id in ('.implode(',',$bookId).') ';
-        }else{
+            $queryBookId = ' AND pcd_book_id in (' . implode(',', $bookId) . ') ';
+        } else {
             $queryBookId = '';
         }
-        echo 'query books = '.implode(',',$bookId).PHP_EOL;
+        $msg = 'query books = ' . implode(',', $bookId);
+        echo  $msg . PHP_EOL;
+        $this->log->info($msg);
 
         $matchMode = $request->getMatchMode();
-        echo 'query mode = '.$matchMode.PHP_EOL;
+        echo 'query mode = ' . $matchMode . PHP_EOL;
         $param = [];
-        $countParam = [];
         switch ($matchMode) {
             case 'complete':
             case 'case':
@@ -48,18 +58,23 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
                 $querySelect_rank_base = " ts_rank('{0.1, 1, 0.3, 0.2}',
                                                 full_text_search_weighted,
                                                 websearch_to_tsquery('pali', ?)) ";
-                $querySelect_rank_head = implode('+', 
-                                            array_fill(0, count($keyWords), 
-                                            $querySelect_rank_base));
+                $querySelect_rank_head = implode(
+                    '+',
+                    array_fill(
+                        0,
+                        count($keyWords),
+                        $querySelect_rank_base
+                    )
+                );
 
-                $param = array_merge($param,$keyWords);
+                $param = array_merge($param, $keyWords);
                 $querySelect_rank = " {$querySelect_rank_head} AS rank, ";
                 $querySelect_highlight = " ts_headline('pali', content,
                                             websearch_to_tsquery('pali', ?),
                                             'StartSel = ~~, StopSel = ~~,MaxWords=3500, 
                                             MinWords=3500,HighlightAll=TRUE')
                                             AS highlight,";
-                array_push($param,implode(' ',$keyWords));
+                array_push($param, implode(' ', $keyWords));
                 break;
             case 'similar':
                 # 形似，去掉变音符号
@@ -69,7 +84,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
                         full_text_search_weighted_unaccent,
                         websearch_to_tsquery('pali_unaccent', ?))
                     AS rank, ";
-                    $param[] = $key;
+                $param[] = $key;
                 $querySelect_highlight = " ts_headline('pali_unaccent', content,
                         websearch_to_tsquery('pali_unaccent', ?),
                         'StartSel = ~~, StopSel = ~~,
@@ -79,27 +94,30 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
                 $param[] = $key;
                 break;
         }
-        $_queryWhere = $this->makeQueryWhere($keyWords,$matchMode);
+        $_queryWhere = $this->makeQueryWhere($keyWords, $matchMode);
         $queryWhere = $_queryWhere['query'];
-        $param = array_merge($param,$_queryWhere['param']);
+        $param = array_merge($param, $_queryWhere['param']);
 
         $querySelect_2 = "  book,paragraph,content ";
 
         $queryCount = "SELECT count(*) as co FROM fts_texts WHERE {$queryWhere} {$queryBookId};";
         $resultCount = $pdo->dbSelect($queryCount, $_queryWhere['param']);
-        if(is_array($resultCount) && 
-                count($resultCount)>0 && 
-                isset($resultCount[0]['co'])){
+        if (
+            is_array($resultCount) &&
+            count($resultCount) > 0 &&
+            isset($resultCount[0]['co'])
+        ) {
             $total = $resultCount[0]['co'];
-        }else{
-            logger('warning','result must be of type array'.$pdo->errorInfo());
+        } else {
+            logger('warning', 'result must be of type array' . $pdo->errorInfo());
+            $this->log->error('result must be of type array' . $pdo->errorInfo());
             $total = 0;
         }
-        
-        if($request->hasPage()){
+
+        if ($request->hasPage()) {
             $limit = $request->getPage()->getSize();
             $offset = $request->getPage()->getIndex();
-        }else{
+        } else {
             $limit = 10;
             $offset = 0;
         }
@@ -129,11 +147,11 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         $param[] = $offset;
 
         $result = $pdo->dbSelect($query, $param);
-         //返回数据
+        //返回数据
         $response = new \Mint\Tulip\V1\SearchResponse();
-        $output = $response->getItems();      
+        $output = $response->getItems();
 
-        if($result){
+        if ($result) {
             foreach ($result as $row) {
                 $item = new \Mint\Tulip\V1\SearchResponse\Item;
                 $item->setRank($row['rank']);
@@ -145,7 +163,8 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             }
         }
 
-        echo "total={$total}".PHP_EOL;
+        echo "total={$total}" . PHP_EOL;
+        $this->log->info("total={$total}");
         $response->setTotal($total);
         return $response;
     }
@@ -164,50 +183,48 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         foreach ($request->getKeywords()->getIterator() as $word) {
             $keyWords[] = $word;
         }
-        echo "book list: request words = ".implode(',',$keyWords) .PHP_EOL;
+        echo "book list: request words = " . implode(',', $keyWords) . PHP_EOL;
         /**
          * 查询业务逻辑
          */
         $pdo = new PdoHelper;
         $pdo->connectDb();
 
-         $searchChapters = [];
-         $searchBooks = [];
-         $searchBookId = [];
-         $bookId = [];
-         if($request->getBooks()->count()>0){
-             foreach ($request->getBooks()->getIterator() as $book) {
-                 $bookId[] = $book;
-             }
-             $queryBookId = ' AND pcd_book_id in ('.implode(',',$bookId).') ';
-         }else{
-             $queryBookId = '';
-         }
-         echo 'query books = '.implode(',',$bookId).PHP_EOL;
- 
-         $matchMode = $request->getMatchMode();
-         echo 'query mode = '.$matchMode.PHP_EOL;
-         $queryWhere = $this->makeQueryWhere($keyWords,$matchMode);
-         $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
-         $result = $pdo->dbSelect($query, $queryWhere['param']);
-         //返回数据
-         $response = new \Mint\Tulip\V1\BookListResponse();
-         $output = $response->getItems();
-         if($result){
+        $bookId = [];
+        if ($request->getBooks()->count() > 0) {
+            foreach ($request->getBooks()->getIterator() as $book) {
+                $bookId[] = $book;
+            }
+            $queryBookId = ' AND pcd_book_id in (' . implode(',', $bookId) . ') ';
+        } else {
+            $queryBookId = '';
+        }
+        echo 'query books = ' . implode(',', $bookId) . PHP_EOL;
+
+        $matchMode = $request->getMatchMode();
+        echo 'query mode = ' . $matchMode . PHP_EOL;
+        $queryWhere = $this->makeQueryWhere($keyWords, $matchMode);
+        $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
+        $result = $pdo->dbSelect($query, $queryWhere['param']);
+        //返回数据
+        $response = new \Mint\Tulip\V1\BookListResponse();
+        $output = $response->getItems();
+        if ($result) {
             foreach ($result as $row) {
                 $item = new \Mint\Tulip\V1\BookListResponse\Item;
                 $item->setBook($row['pcd_book_id']);
                 $item->setCount($row['co']);
                 $output[] = $item;
-            }            
-         }
+            }
+        }
 
-         echo "total=".count($output).PHP_EOL;
-         return $response;
+        echo "total=" . count($output) . PHP_EOL;
+        return $response;
     }
 
 
-    private function makeQueryWhere($key,$match){
+    private function makeQueryWhere($key, $match)
+    {
         $param = [];
         $queryWhere = '';
         switch ($match) {
@@ -215,10 +232,13 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             case 'case':
                 # code...
                 $queryWhereBase = " full_text_search_weighted @@ websearch_to_tsquery('pali', ?) ";
-                $queryWhereBody = implode(' or ', array_fill(0, count($key), 
-                                    $queryWhereBase));
+                $queryWhereBody = implode(' or ', array_fill(
+                    0,
+                    count($key),
+                    $queryWhereBase
+                ));
                 $queryWhere = " ({$queryWhereBody}) ";
-                $param = array_merge($param,$key);
+                $param = array_merge($param, $key);
                 break;
             case 'similar':
                 # 形似，去掉变音符号
@@ -227,13 +247,16 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
                 $param = [$key];
                 break;
         };
-        return (['query'=>$queryWhere,'param'=>$param]);
+        return (['query' => $queryWhere, 'param' => $param]);
     }
 
     private function getWordEn($strIn)
     {
-        $out = str_replace(["ā","ī","ū","ṅ","ñ","ṭ","ḍ","ṇ","ḷ","ṃ"],
-                        ["a","i","u","n","n","t","d","n","l","m"], $strIn);
+        $out = str_replace(
+            ["ā", "ī", "ū", "ṅ", "ñ", "ṭ", "ḍ", "ṇ", "ḷ", "ṃ"],
+            ["a", "i", "u", "n", "n", "t", "d", "n", "l", "m"],
+            $strIn
+        );
         return ($out);
     }
 }
