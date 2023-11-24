@@ -1,10 +1,11 @@
 <?php
 require dirname(__FILE__) . '/vendor/autoload.php';
-use Monolog\Level;
+
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-class PdoHelper {
+class PdoHelper
+{
     private $_pdo = null;
     private $log = null;
 
@@ -12,28 +13,31 @@ class PdoHelper {
     {
         // create a log channel
         $this->log = new Logger('tulip');
-        $this->log->pushHandler(new StreamHandler(__DIR__.'/logs/tulip-'.date("Y-m-d").'.log'));
+        $this->log->pushHandler(new StreamHandler(__DIR__ . '/logs/tulip-' . date("Y-m-d") . '.log'));
     }
-    public function connectDb(){
+    public function connectDb()
+    {
         /**
          * 连接数据库
          */
         $db = Config['database']['driver'];
-        $db .= ":host=".Config['database']['host'];
-        $db .= ";port=".Config['database']['port'];
-        $db .= ";dbname=".Config['database']['name'];
-        $db .= ";user=".Config['database']['user'];
-        $db .= ";password=".Config['database']['password'].";";
-        
-        echo 'connect to db host='.Config['database']['host'] . ' name='.Config['database']['name'].PHP_EOL;
+        $db .= ":host=" . Config['database']['host'];
+        $db .= ";port=" . Config['database']['port'];
+        $db .= ";dbname=" . Config['database']['name'];
+        $db .= ";user=" . Config['database']['user'];
+        $db .= ";password=" . Config['database']['password'] . ";";
+
+        echo 'connect to db host=' . Config['database']['host'] . ' name=' . Config['database']['name'] . PHP_EOL;
         try {
-            $PDO = new PDO($db,
-                        Config['database']['user'],
-                        Config['database']['password'],
-                        array(PDO::ATTR_PERSISTENT=>true));
+            $PDO = new PDO(
+                $db,
+                Config['database']['user'],
+                Config['database']['password'],
+                array(PDO::ATTR_PERSISTENT => true)
+            );
             $this->log->info('connect to db success');
-        }catch(PDOException $e) {
-            echo 'connect to db fail'.PHP_EOL;
+        } catch (PDOException $e) {
+            echo 'connect to db fail' . PHP_EOL;
             print $e->getMessage();
             $this->log->error('connect to db fail');
             return false;
@@ -41,9 +45,9 @@ class PdoHelper {
         $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->_pdo = $PDO;
     }
-    public function dbSelect($query, $params=null)
+    public function dbSelect($query, $params = null)
     {
-        if($this->_pdo === null){
+        if ($this->_pdo === null) {
             return false;
         }
         if (isset($params)) {
@@ -54,7 +58,7 @@ class PdoHelper {
         }
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function execute($query, $params=null)
+    public function execute($query, $params = null)
     {
         if (isset($params)) {
             $stmt = $this->_pdo->prepare($query);
