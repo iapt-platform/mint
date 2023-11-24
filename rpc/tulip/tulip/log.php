@@ -1,11 +1,20 @@
 <?php
-require_once dirname(__FILE__) . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 function myLog(){
+    $dir = __DIR__ . '/logs';
+    if(!is_dir($dir)){
+        $res = mkdir($dir,0700,true);
+        if(!$res){
+            echo "error: mkdir fail path=".$dir;
+            return 0;
+        }
+    }
+
     $log = new Logger('tulip');
-    $log->pushHandler(new StreamHandler(__DIR__ . '/logs/tulip-' . date("Y-m-d") . '.log'));
+    $log->pushHandler(new StreamHandler($dir . '/tulip-' . date("Y-m-d") . '.log'));
     return $log;
 }
