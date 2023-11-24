@@ -12,7 +12,7 @@ class TestSearchPali extends Command
      *
      * @var string
      */
-    protected $signature = 'test:search.pali';
+    protected $signature = 'test:search.pali {word?}';
 
     /**
      * The console command description.
@@ -38,7 +38,10 @@ class TestSearchPali extends Command
      */
     public function handle()
     {
-        $word = 'citta';
+        $word = $this->argument('word');
+        if(empty($word)){
+            $word = 'citta';
+        }
         $result = PaliSearch::search([$word],[],'case',0,3);
         if($result){
             $this->info("word={$word} total=".$result['total']);
