@@ -20,7 +20,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             $keyWords[] = $word;
         }
         $msg = "[" . date("Y/m/d h:i:sa") . "] pali search: request words = " . implode(',', $keyWords);
-        console('debug',$msg);
+        console('debug', $msg);
         myLog()->info($msg);
 
         $pdo = new PdoHelper;
@@ -39,11 +39,11 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             $queryBookId = '';
         }
         $msg = 'query books = ' . implode(',', $bookId);
-        console('debug',$msg);
+        console('debug', $msg);
         myLog()->info($msg);
 
         $matchMode = $request->getMatchMode();
-        console('debug','query mode = ' . $matchMode);
+        console('debug', 'query mode = ' . $matchMode);
         $param = [];
         switch ($matchMode) {
             case 'complete':
@@ -103,7 +103,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         ) {
             $total = $resultCount[0]['co'];
         } else {
-            console('debug','warning', 'result must be of type array' . $pdo->errorInfo());
+            console('debug', 'warning', 'result must be of type array' . $pdo->errorInfo());
             myLog()->error('result must be of type array' . $pdo->errorInfo());
             $total = 0;
         }
@@ -157,7 +157,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             }
         }
 
-        console('debug',"total={$total}");
+        console('debug', "total={$total}");
         myLog()->info("total={$total}");
         $response->setTotal($total);
         return $response;
@@ -177,7 +177,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         foreach ($request->getKeywords()->getIterator() as $word) {
             $keyWords[] = $word;
         }
-        console('debug',"book list: request words = " . implode(',', $keyWords));
+        console('debug', "book list: request words = " . implode(',', $keyWords));
         /**
          * 查询业务逻辑
          */
@@ -193,10 +193,10 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         } else {
             $queryBookId = '';
         }
-        console('debug','query books = ' . implode(',', $bookId));
+        console('debug', 'query books = ' . implode(',', $bookId));
 
         $matchMode = $request->getMatchMode();
-        console('debug','query mode = ' . $matchMode);
+        console('debug', 'query mode = ' . $matchMode);
         $queryWhere = $this->makeQueryWhere($keyWords, $matchMode);
         $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
         $result = $pdo->dbSelect($query, $queryWhere['param']);
@@ -212,7 +212,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             }
         }
 
-        console('debug',"total=" . count($output));
+        console('debug', "total=" . count($output));
         return $response;
     }
 
@@ -258,11 +258,12 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
 $port = Config['port'];
 
 if (!isset($port)) {
-    console('debug','parameter port is required. ');
+    console('debug', 'parameter port is required. ');
     return;
 }
 $server = new \Grpc\RpcServer();
 $server->addHttp2Port('0.0.0.0:' . $port);
 $server->handle(new Greeter());
-console('debug','Listening on port :' . $port);
+console('debug', 'Listening on port :' . $port);
+myLog()->debug('Listening on port :' . $port);
 $server->run();
