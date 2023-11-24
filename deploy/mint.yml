@@ -43,6 +43,13 @@
   hosts:
     - tulip
   tasks:
+    - name: setup tmp folder
+      become: true
+      ansible.builtin.file:
+        path: "{{ app_deploy_root }}/agile/rpc/tulip/tulip/tmp"
+        state: directory
+        owner: "www-data"
+        group: "www-data"
     - name: upload pali.stop
       become: true
       ansible.builtin.copy:
