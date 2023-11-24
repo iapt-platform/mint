@@ -51,12 +51,12 @@ class UpgradePcdBookId extends Command
             if($table === 'all' || $table ==='fts'){
                 FtsText::where('book',$value->book)
                     ->where('paragraph','>=',$value->paragraph)
-                    ->update(['pcd_book_id'=>$value->id]);
+                    ->update(['pcd_book_id'=>$value->sn]);
             }
             if($table === 'all' || $table ==='wbw'){
                 WbwTemplate::where('book',$value->book)
                     ->where('paragraph','>=',$value->paragraph)
-                    ->update(['pcd_book_id'=>$value->id]);
+                    ->update(['pcd_book_id'=>$value->sn]);
             }
             $bar->advance();
         }
