@@ -77,6 +77,7 @@ use App\Http\Controllers\SearchPaliDataController;
 use App\Http\Controllers\SearchPaliWbwController;
 use App\Http\Controllers\SearchPageNumberController;
 use App\Http\Controllers\NavPageController;
+use App\Http\Controllers\BookTitleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -207,6 +208,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::get('search-pali-wbw-books',[SearchPaliWbwController::class,'book_list']);
     Route::apiResource('search-page-number',SearchPageNumberController::class);
     Route::apiResource('nav-page',NavPageController::class);
+    Route::apiResource('book-title',BookTitleController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");

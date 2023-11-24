@@ -37,23 +37,24 @@ class NavPageController extends Controller
      */
     public function show(string $pageNumber)
     {
-        //1-M-1-37
+        //M-99_100_101-1-37
         $id = explode('-',$pageNumber);
         if(count($id) !== 4){
             return $this->error('参数错误。参数应为4 实际得到'.count($id),400,400);
         }
-        $pageCurr = PageNumber::where('book',$id[0])
-                            ->where('type',$id[1])
+        $books = explode('_',$id[1]);
+        $pageCurr = PageNumber::whereIn('pcd_book_id',$books)
+                            ->where('type',$id[0])
                             ->where('volume',$id[2])
                             ->where('page',$id[3])
                             ->first();
-        $pagePrev = PageNumber::where('book',$id[0])
-                            ->where('type',$id[1])
+        $pagePrev = PageNumber::whereIn('pcd_book_id',$books)
+                            ->where('type',$id[0])
                             ->where('volume',$id[2])
                             ->where('page',(int)$id[3]-1)
                             ->first();
-        $pageNext = PageNumber::where('book',$id[0])
-                            ->where('type',$id[1])
+        $pageNext = PageNumber::whereIn('pcd_book_id',$books)
+                            ->where('type',$id[0])
                             ->where('volume',$id[2])
                             ->where('page',(int)$id[3]+1)
                             ->first();
