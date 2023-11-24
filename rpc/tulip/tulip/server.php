@@ -2,64 +2,12 @@
 
 require dirname(__FILE__) . '/vendor/autoload.php';
 require dirname(__FILE__) . '/config.php';
-
-
+require dirname(__FILE__) . '/logger.php';
+require dirname(__FILE__) . '/pdo.php';
 
 class Greeter extends \Mint\Tulip\V1\SearchStub
 {
-    private $_pdo = null;
-    private function log($level,$message){
-        $output = "[\033[32m".date("Y/m/d h:i:sa") ."\033[0m] ";
-        if($level === 'error'){
-            $output .= "\033[41m" . $level . "\033[0m ";
-        }else{
-            $output .= $level;
-        }
-        
-        $output .= ' ' . $message.PHP_EOL;
-        if($level === 'error'){
-            fwrite(STDERR,$output);
-        }else{
-            fwrite(STDOUT,$output);
-        }
-    }
-    private function connectDb(){
-        /**
-         * 连接数据库
-         */
-        $db = Config['database']['driver'];
-        $db .= ":host=".Config['database']['host'];
-        $db .= ";port=".Config['database']['port'];
-        $db .= ";dbname=".Config['database']['name'];
-        $db .= ";user=".Config['database']['user'];
-        $db .= ";password=".Config['database']['password'].";";
-        echo 'connect to db host='.Config['database']['host'] . ' name='.Config['database']['name'].PHP_EOL;
-        try {
-            $PDO = new PDO($db,
-                        Config['database']['user'],
-                        Config['database']['password'],
-                        array(PDO::ATTR_PERSISTENT=>true));
-        }catch(PDOException $e) {
-            echo 'connect to db fail'.PHP_EOL;
-            print $e->getMessage();
-            return false;
-        }
-        $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->_pdo = $PDO;
-    }
-    private function dbSelect($query, $params=null)
-    {
-        if($this->_pdo === null){
-            return false;
-        }
-        if (isset($params)) {
-            $stmt = $this->_pdo->prepare($query);
-            $stmt->execute($params);
-        } else {
-            $stmt = $this->_pdo->query($query);
-        }
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    private $pdo = null;
 
         /**
      * Create a new instance.
@@ -68,7 +16,8 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
      */
     public function __construct()
     {
-        $this->connectDb();
+        $this->pdo = new PdoHelper;
+        $this->pdo->connectDb();
     }
 
     public function Pali(
@@ -148,9 +97,19 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         $querySelect_2 = "  book,paragraph,content ";
 
         $queryCount = "SELECT count(*) as co FROM fts_texts WHERE {$queryWhere} {$queryBookId};";
-        $resultCount = $this->dbSelect($queryCount, $_queryWhere['param']);
-        $total = $resultCount[0]['co'];
-
+        $resultCount = $this->pdo->dbSelect($queryCount, $_queryWhere['param']);
+        if(!$resultCount){
+            logger('error','select fail.'.$this->pdo->errorInfo());
+            $total = 0;
+        }else if(is_array($resultCount) && 
+                count($resultCount)>0 && 
+                isset($resultCount[0]['co'])){
+            $total = $resultCount[0]['co'];
+        }else{
+            logger('warning','result must be of type array'.$this->pdo->errorInfo());
+            $total = 0;
+        }
+        
         if($request->hasPage()){
             $limit = $request->getPage()->getSize();
             $offset = $request->getPage()->getIndex();
@@ -183,20 +142,23 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         $param[] = $limit;
         $param[] = $offset;
 
-        $result = $this->dbSelect($query, $param);
-
+        $result = $this->pdo->dbSelect($query, $param);
          //返回数据
         $response = new \Mint\Tulip\V1\SearchResponse();
-        $output = $response->getItems();
-        foreach ($result as $row) {
-            $item = new \Mint\Tulip\V1\SearchResponse\Item;
-            $item->setRank($row['rank']);
-            $item->setHighlight($row['highlight']);
-            $item->setBook($row['book']);
-            $item->setParagraph($row['paragraph']);
-            $item->setContent($row['content']);
-            $output[] = $item;
+        $output = $response->getItems();      
+
+        if($result){
+            foreach ($result as $row) {
+                $item = new \Mint\Tulip\V1\SearchResponse\Item;
+                $item->setRank($row['rank']);
+                $item->setHighlight($row['highlight']);
+                $item->setBook($row['book']);
+                $item->setParagraph($row['paragraph']);
+                $item->setContent($row['content']);
+                $output[] = $item;
+            }
         }
+
         echo "total={$total}".PHP_EOL;
         $response->setTotal($total);
         return $response;
@@ -239,16 +201,19 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
          echo 'query mode = '.$matchMode.PHP_EOL;
          $queryWhere = $this->makeQueryWhere($keyWords,$matchMode);
          $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
-         $result = $this->dbSelect($query, $queryWhere['param']);
+         $result = $this->pdo->dbSelect($query, $queryWhere['param']);
          //返回数据
          $response = new \Mint\Tulip\V1\BookListResponse();
          $output = $response->getItems();
-         foreach ($result as $row) {
-             $item = new \Mint\Tulip\V1\BookListResponse\Item;
-             $item->setBook($row['pcd_book_id']);
-             $item->setCount($row['co']);
-             $output[] = $item;
+         if($result){
+            foreach ($result as $row) {
+                $item = new \Mint\Tulip\V1\BookListResponse\Item;
+                $item->setBook($row['pcd_book_id']);
+                $item->setCount($row['co']);
+                $output[] = $item;
+            }            
          }
+
          echo "total=".count($output).PHP_EOL;
          return $response;
     }
@@ -264,12 +229,12 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
     ): ?\Mint\Tulip\V1\UploadDictionaryResponse {
         $response = new \Mint\Tulip\V1\UploadDictionaryResponse();
         $data = $request->getData();
-        $this->log('debug',"received data size=".strlen($data));
+        logger('debug',"received data size=".strlen($data));
         $dir = dirname(__FILE__) . '/storage';
         if(!is_dir($dir)){
             $res = mkdir($dir,0700,true);
             if(!$res){
-                $this->log('error',"mkdir fail path=".$dir);
+                logger('error',"mkdir fail path=".$dir);
                 $response->setError(1);
                 return $response;
             }
@@ -278,11 +243,11 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         $size = file_put_contents($filename,$data);
 
         if($size === false){
-            $this->log('error',"file write fail ");
+            logger('error',"file write fail ");
             $response->setError(1);
             return $response;
         }
-        $this->log('debug',"save file size={$size} ");
+        logger('debug',"save file size={$size} ");
         $response->setError(0);
         return $response;
     }
@@ -294,11 +259,11 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         $response = new \Mint\Tulip\V1\UpdateResponse();
         $book = $request->getBook();
         $paragraph = $request->getParagraph();
-        $this->log('debug',"update start book={$book} para={$paragraph} ");
+        logger('debug',"update start book={$book} para={$paragraph} ");
         $now = date("Y-m-d H:i:s");
         //查询是否存在
         $query = 'SELECT id from fts_texts where book=? and paragraph = ?';
-        $result = $this->dbSelect($query, [$book,$paragraph]);
+        $result = $this->pdo->dbSelect($query, [$book,$paragraph]);
         if(count($result) >0 ){
             //存在 update
             $query = 'UPDATE fts_texts set 
@@ -308,7 +273,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
                                 "content"=?,
                                 "pcd_book_id"=?,
                                 "updated_at"=?  where id=? ';
-            $update = $this->dbSelect($query, [
+            $update = $this->pdo->dbSelect($query, [
                                 $request->getBold1(),
                                 $request->getBold2(),
                                 $request->getBold3(),
@@ -330,7 +295,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
                         updated_at,
                         pcd_book_id) VALUES
             (?,?,?,?,?,?,?,?,? )";
-            $insert = $this->dbSelect($query, [
+            $insert = $this->pdo->dbSelect($query, [
                             $request->getBook(),
                             $request->getParagraph(),
                             $request->getBold1(),
@@ -353,7 +318,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         bold_double = bold_double,
         bold_multiple = bold_multiple
         WHERE book = ? AND paragraph = ?';
-        $update = $this->dbSelect($query, [$book,$para]);
+        $update = $this->pdo->dbSelect($query, [$book,$para]);
     }
     
     private function _updateIndexAll(){
@@ -361,7 +326,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         bold_single = bold_single,
         bold_double = bold_double,
         bold_multiple = bold_multiple';
-        $update = $this->dbSelect($query);
+        $update = $this->pdo->dbSelect($query);
     }
 
     private function makeQueryWhere($key,$match){
