@@ -86,7 +86,6 @@ const TypeTermWidget = ({
         <ErrorResult code={errorCode} />
       ) : (
         <>
-          {" "}
           <ArticleView
             id={articleData?.uid}
             title={articleData?.title}

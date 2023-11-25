@@ -340,7 +340,7 @@ const Widget = () => {
                 target?: string
               ) => {
                 console.log("article change", newType, article, target);
-
+                scrollToTop();
                 let url = `/article/${newType}/${article}?mode=${currMode}`;
                 searchParams.forEach((value, key) => {
                   console.log(value, key);

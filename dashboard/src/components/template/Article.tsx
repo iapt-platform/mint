@@ -3,6 +3,9 @@ import { Typography } from "antd";
 import { useState } from "react";
 import Article, { ArticleType } from "../article/Article";
 import { Link } from "react-router-dom";
+import { fullUrl } from "../../utils";
+
+const { Text } = Typography;
 
 export type TDisplayStyle = "modal" | "card" | "toggle" | "link";
 interface IWidgetChapterCtl {
@@ -43,15 +46,43 @@ export const ArticleCtl = ({
     />
   );
   let output = <></>;
+  let articleLink = `/article/${type}/${id}?mode=read`;
+  articleLink += channel ? `&channel=${channel}` : "";
+
   switch (style) {
     case "modal":
       output = (
         <>
-          <Typography.Link onClick={showModal}>{aTitle}</Typography.Link>
+          <Typography.Link
+            onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+              if (event.ctrlKey || event.metaKey) {
+                let link = `/article/${type}/${id}?mode=read`;
+                link += channel ? `&channel=${channel}` : "";
+                window.open(fullUrl(link), "_blank");
+              } else {
+                showModal();
+              }
+            }}
+          >
+            {aTitle}
+          </Typography.Link>
           <Modal
             width={"80%"}
             style={{ maxWidth: 1000 }}
-            title={aTitle}
+            title={
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginRight: 30,
+                }}
+              >
+                <Text>{aTitle}</Text>
+                <Link to={articleLink} target="_blank">
+                  {"新窗口打开"}
+                </Link>
+              </div>
+            }
             open={isModalOpen}
             onOk={handleOk}
             onCancel={handleCancel}

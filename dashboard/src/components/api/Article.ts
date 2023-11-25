@@ -178,3 +178,28 @@ export interface IDeleteResponse {
   message: string;
   data: number;
 }
+
+export interface IPageNavResponse {
+  ok: boolean;
+  data: IPageNavData;
+  message: string;
+}
+
+export interface IPageNavData {
+  curr: IPageNavItem;
+  prev: IPageNavItem;
+  next: IPageNavItem;
+}
+
+export interface IPageNavItem {
+  id: number;
+  type: string;
+  volume: number;
+  page: number;
+  book: number;
+  paragraph: number;
+  wid: number;
+  pcd_book_id: number;
+  created_at: string;
+  updated_at: string;
+}
