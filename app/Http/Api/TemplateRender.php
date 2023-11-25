@@ -64,6 +64,9 @@ class TemplateRender{
             case 'quote':
                 $result = $this->render_quote();
                 break;
+            case 'ql':
+                $result = $this->render_quote_link();
+                break;
             case 'exercise':
                 $result = $this->render_exercise();
                 break;
@@ -530,6 +533,44 @@ class TemplateRender{
             }
             return $output;
     }
+
+    private  function render_quote_link(){
+        $type = $this->get_param($this->param,"type",1);
+        $bookName = $this->get_param($this->param,"bookname",2);
+        $volume = $this->get_param($this->param,"volume",3);
+        $page = $this->get_param($this->param,"page",4);
+        $style = $this->get_param($this->param,"style",5,'modal');
+
+        $props = [
+            'type' => $type,
+            'bookName' => $bookName,
+            'volume' => $volume,
+            'page' => $page,
+            'style' => $style,
+        ];
+        $text = "{$bookName}. {$volume}. {$page}";
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'html'=>'',
+                    'tag'=>'span',
+                    'tpl'=>'quote-link',
+                    ];
+                break;
+            case 'unity':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'tpl'=>'quote_link',
+                    ];
+                break;
+            default:
+                $output = $text;
+                break;
+        }
+        return $output;
+    }
+
     private  function render_sent(){
 
         $sid = $this->get_param($this->param,"sid",1);
