@@ -37,6 +37,18 @@ get:
       description: 是否由服务器渲染content 默认false
       schema:
         type: boolean
+    - name: format
+      in: query
+      description: 服务器渲染content的格式。默认react
+      schema:
+        type: string
+        enum:
+          - react
+          - unity
+          - html
+          - text
+          - tex
+          - simple
     - name: limit
       in: query
       description: 每次提取记录数
