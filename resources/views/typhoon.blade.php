@@ -232,10 +232,37 @@ Read the documentation
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
 
+
+<div id="columns"></div>
+<div class="bg-gray-100 dark:bg-gray-800 py-8 md:py-24">
+<div class="xl:container xl:mx-auto md:px-6 px-4">
+<div class>
+<div class="w-5/6 md:w-3/4 lg:w-2/3 xl:w-1/2 text-center mx-auto mb-16">
+<div class="text-xs md:text-sm opacity-75 font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+千年译经路
+</div>
+<h2 class="mt-1 tracking-tight leading-tighter text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-gray-100">
+巴利三藏翻译工程
+</h2>
+</div>
+<div class="mt-3 prose col-count-1 sm:col-count-2 sm:gap-x-6 lg:col-count-3 lg:gap-x-10 xl:col-count-4 xl:gap-x-12">
+<p>上座部佛教相信，佛陀讲经说法时所使用的语言是当时中印度马嘎塔国(Magadha,摩揭陀国)一带的民众方言——马嘎塔口语。这种语言在西元前3世纪的阿首咖王(Asoka,阿育王)时代即随着到斯里兰卡传播佛教的马兴德阿拉汉而传到斯里兰卡，并一直流传到今天。</p>
+<p>由于新哈勒人原先就有了自己的语言，当以马嘎塔语为媒介语的上座部佛教传播到斯里兰卡之后，这种语言就只是作为传诵三藏圣典之用，因此马嘎塔语又被称为「巴利语」。</p>
+<p>义注起源于佛陀在世时弟子们对佛陀教导的解释，如收录于《中部》的《法嗣经》《谛分别经》《应习不应习经》等，即是沙利补答尊者详细解释佛陀简短开示的经典。佛陀入灭后，诸圣者、大长老们继续对三藏圣典进行注解诠释，这些注释文献即是上座部佛教的「义注」，它们是上座部佛教历代长老大德们传承佛陀教法的禅修精要和智慧结晶，也是对巴利语三藏圣典最为权威的解释。</p>
+<p>之后的古代的大长老们又用巴利语撰写了解释义注和根本的再注释书——复注。这些古代文献已经有上千年的历史。</p>
+<p>根据上座部佛教传统，巴利语三藏包含了根本，义注，复注在内的100多本书。共计800万单词。长期以来，这些文献以巴利语刻写在棕榈叶上在东南亚国家流传。</p>
+<p>将这些古代文献翻译为汉语，是众多佛教徒的心愿。</p>
+<p><a href="/pcd/community/list" class="font-bold">已经翻译的经文</a></p>
 </div>
 </div>
 </div>
+</div>
+
+
 <div id="callout"></div>
 <div class="bg-white dark:bg-gray-900 py-8 md:py-24">
 <div class="xl:container xl:mx-auto md:px-6 px-4">
@@ -264,30 +291,8 @@ wikipali（云台）翻译中心
 </div>
 </div>
 </div>
-<div id="columns"></div>
-<div class="bg-gray-100 dark:bg-gray-800 py-8 md:py-24">
-<div class="xl:container xl:mx-auto md:px-6 px-4">
-<div class>
-<div class="w-5/6 md:w-3/4 lg:w-2/3 xl:w-1/2 text-center mx-auto mb-16">
-<div class="text-xs md:text-sm opacity-75 font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
-千年译经路
-</div>
-<h2 class="mt-1 tracking-tight leading-tighter text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-gray-100">
-巴利三藏翻译工程
-</h2>
-</div>
-<div class="mt-3 prose col-count-1 sm:col-count-2 sm:gap-x-6 lg:col-count-3 lg:gap-x-10 xl:col-count-4 xl:gap-x-12">
-<p>上座部佛教相信，佛陀讲经说法时所使用的语言是当时中印度马嘎塔国(Magadha,摩揭陀国)一带的民众方言——马嘎塔口语。这种语言在西元前3世纪的阿首咖王(Asoka,阿育王)时代即随着到斯里兰卡传播佛教的马兴德阿拉汉而传到斯里兰卡，并一直流传到今天。</p>
-<p>由于新哈勒人原先就有了自己的语言，当以马嘎塔语为媒介语的上座部佛教传播到斯里兰卡之后，这种语言就只是作为传诵三藏圣典之用，因此马嘎塔语又被称为「巴利语」。</p>
-<p>义注起源于佛陀在世时弟子们对佛陀教导的解释，如收录于《中部》的《法嗣经》《谛分别经》《应习不应习经》等，即是沙利补答尊者详细解释佛陀简短开示的经典。佛陀入灭后，诸圣者、大长老们继续对三藏圣典进行注解诠释，这些注释文献即是上座部佛教的「义注」，它们是上座部佛教历代长老大德们传承佛陀教法的禅修精要和智慧结晶，也是对巴利语三藏圣典最为权威的解释。</p>
-<p>之后的古代的大长老们又用巴利语撰写了解释义注和根本的再注释书——复注。这些古代文献已经有上千年的历史。</p>
-<p>根据上座部佛教传统，巴利语三藏包含了根本，义注，复注在内的100多本书。共计800万单词。长期以来，这些文献以巴利语刻写在棕榈叶上在东南亚国家流传。</p>
-<p>将这些古代文献翻译为汉语，是众多佛教徒的心愿。</p>
-<p><a href="/pcd/community/list" class="font-bold">已经翻译的经文</a></p>
-</div>
-</div>
-</div>
-</div>
+
+
 <div id="gallery"></div>
 <div class="bg-white dark:bg-gray-900 py-8 md:py-24">
 <div class="xl:container xl:mx-auto md:px-6 px-4">
