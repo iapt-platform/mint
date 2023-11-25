@@ -114,6 +114,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('palitext',PaliTextController::class);
     Route::apiResource('channel',ChannelController::class);
     Route::patch('channel', [ChannelController::class,"patch"]);
+    Route::get('channel-name/{name}', [ChannelController::class,"showByName"]);
     Route::get('channel-my-number', [ChannelController::class, 'showMyNumber']);
     Route::post('channel-progress',[ChannelController::class,"progress"]);
     Route::delete('userdict', [UserDictController::class, 'delete']);
