@@ -82,7 +82,8 @@ class SearchPaliWbwController extends Controller
             $table = $table->whereIn('pcd_book_id',$bookId);
         }
         $table = $table->groupBy('pcd_book_id')
-                       ->selectRaw('pcd_book_id,count(*) as co');
+                       ->selectRaw('pcd_book_id,count(*) as co')
+                       ->orderBy('co','desc');
         $result = $table->get();
         return $this->ok(["rows"=>SearchBookResource::collection($result),"count"=>count($result)]);
     }
