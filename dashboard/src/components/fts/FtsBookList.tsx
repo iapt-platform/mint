@@ -166,7 +166,12 @@ const FtsBookListWidget = ({
         title={
           <Space>
             {"总计"}
-            <Badge size="small" count={total} color="lime" />
+            <Badge
+              size="small"
+              count={total}
+              overflowCount={999}
+              color="lime"
+            />
             {"本书"}
           </Space>
         }
