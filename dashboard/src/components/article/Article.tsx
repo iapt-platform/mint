@@ -4,6 +4,7 @@ import TypeAnthology from "./TypeAnthology";
 import TypeTerm from "./TypeTerm";
 import TypePali from "./TypePali";
 import "./article.css";
+import TypePage from "./TypePage";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -127,6 +128,17 @@ const ArticleWidget = ({
           mode={mode}
           book={book}
           para={para}
+          onArticleChange={(type: ArticleType, id: string) => {
+            if (typeof onArticleChange !== "undefined") {
+              onArticleChange(type, id);
+            }
+          }}
+        />
+      ) : type === "page" ? (
+        <TypePage
+          articleId={articleId}
+          channelId={channelId}
+          mode={mode}
           onArticleChange={(type: ArticleType, id: string) => {
             if (typeof onArticleChange !== "undefined") {
               onArticleChange(type, id);
