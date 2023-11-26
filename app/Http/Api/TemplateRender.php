@@ -1,16 +1,20 @@
 <?php
 namespace App\Http\Api;
 
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
+
 use App\Models\DhammaTerm;
 use App\Models\PaliText;
 use App\Models\Channel;
 use App\Http\Controllers\CorpusController;
-use Illuminate\Support\Facades\Cache;
+
 use App\Tools\RedisClusters;
-use Illuminate\Support\Facades\Log;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
-use Illuminate\Support\Str;
+
 
 class TemplateRender{
     protected $param = [];
@@ -548,7 +552,24 @@ class TemplateRender{
             'page' => $page,
             'style' => $style,
         ];
-        $text = "{$bookName}. {$volume}. {$page}";
+        //获取原文channel
+        if(isset($this->channelInfo[0])){
+            $lang = $this->channelInfo[0]->lang;
+        }else{
+            $lang = 'en';
+        }
+        if($lang==='zh'){
+            $lang = 'zh-hans';
+        }
+        $termChannel = ChannelApi::getSysChannel("_System_Grammar_Term_{$lang}_");
+        $bookNameLocal = DhammaTerm::where('channal',$termChannel)
+                ->where('tag',':abbr:')
+                ->where('word',$bookName)
+                ->value('meaning');
+        if($bookNameLocal){
+            $props['bookNameLocal'] = $bookNameLocal;
+        }
+        $text = "{$bookNameLocal}. {$volume}. {$page}";
         switch ($this->format) {
             case 'react':
                 $output = [
