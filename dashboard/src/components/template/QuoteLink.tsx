@@ -8,6 +8,8 @@ interface IWidgetQuoteLinkCtl {
   volume: string;
   page: string;
   style: TDisplayStyle;
+  book: number;
+  para: number;
 }
 const QuoteLinkCtl = ({
   type,
@@ -16,6 +18,8 @@ const QuoteLinkCtl = ({
   volume,
   page,
   style,
+  book,
+  para,
 }: IWidgetQuoteLinkCtl) => {
   const abbr = bookNameLocal
     ? bookNameLocal
