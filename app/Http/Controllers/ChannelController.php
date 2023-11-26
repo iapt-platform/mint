@@ -529,7 +529,11 @@ class ChannelController extends Controller
         //
         $indexCol = ['uid','name','summary','type','owner_uid','lang','is_system','status','updated_at','created_at'];
 		$channel = Channel::where("name",$name)->select($indexCol)->first();
-		return $this->ok(new ChannelResource($channel));
+        if($channel){
+            return $this->ok(new ChannelResource($channel));
+        }else{
+            return $this->error('no channel');
+        }
     }
 
     /**
