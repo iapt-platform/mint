@@ -78,6 +78,7 @@ use App\Http\Controllers\SearchPaliWbwController;
 use App\Http\Controllers\SearchPageNumberController;
 use App\Http\Controllers\NavPageController;
 use App\Http\Controllers\BookTitleController;
+use App\Http\Controllers\SystemTermController;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,6 +100,8 @@ Route::group(['prefix' => 'v2'],function(){
 	Route::apiResource('terms',DhammaTermController::class);
 	Route::get('terms-export',[DhammaTermController::class,"export"]);
     Route::get('terms-import',[DhammaTermController::class,"import"]);
+    Route::get('system-term/{lang}/{word}',[SystemTermController::class,"show"]);
+
 	Route::apiResource('sentence',SentenceController::class);
 	Route::apiResource('sent-in-channel',SentInChannelController::class);
 	Route::apiResource('sentpr',SentPrController::class);
