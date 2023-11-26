@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\DhammaTerm;
 use App\Models\PaliText;
 use App\Models\Channel;
+use App\Models\PageNumber;
 use App\Http\Controllers\CorpusController;
 
 use App\Tools\RedisClusters;
@@ -540,11 +541,52 @@ class TemplateRender{
 
     private  function render_quote_link(){
         $type = $this->get_param($this->param,"type",1);
-        $bookName = $this->get_param($this->param,"bookname",2);
-        $volume = $this->get_param($this->param,"volume",3);
-        $page = $this->get_param($this->param,"page",4);
+        $bookName = $this->get_param($this->param,"bookname",2,false);
+        $volume = $this->get_param($this->param,"volume",3,false);
+        $page = $this->get_param($this->param,"page",4,false);
         $style = $this->get_param($this->param,"style",5,'modal');
+        $book = $this->get_param($this->param,"book",6,false);
+        $para = $this->get_param($this->param,"para",7,false);
 
+        if(!$bookName || !$volume || !$page){
+            /**
+             * 没有指定书名，根据book para 查询
+             */
+            if($book && $para){
+                $pageInfo = PageNumber::where('type',strtoupper($type))
+                                ->where('book',$book)
+                                ->where('paragraph','<=',$para)
+                                ->orderBy('paragraph','desc')
+                                ->first();
+                if(!$bookName){
+                    foreach (BookTitle::get() as $value) {
+                        if($value['id']===$pageInfo->pcd_book_id){
+                            switch (strtoupper($type)) {
+                                case 'M':
+                                    $key = 'm_title';
+                                    break;
+                                case 'P':
+                                    $key = 'p_title';
+                                    break;
+                                case 'V':
+                                    $key = 'v_title';
+                                    break;
+                                default:
+                                    $key = 'term';
+                                    break;
+                            }
+                            $bookName = $value[$key];
+                        }
+                    }
+                }
+                if(!$volume){
+                    $volume = $pageInfo->volume;
+                }
+                if(!$page){
+                    $page = $pageInfo->page;
+                }
+            }
+        }
         $props = [
             'type' => $type,
             'bookName' => $bookName,
@@ -552,6 +594,10 @@ class TemplateRender{
             'page' => $page,
             'style' => $style,
         ];
+        if($book && $para){
+            $props['book'] = $book;
+            $props['para'] = $para;
+        }
         //获取原文channel
         if(isset($this->channelInfo[0])){
             $lang = $this->channelInfo[0]->lang;
