@@ -2,23 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DhammaTerm;
-use App\Models\Channel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
+
+use App\Models\DhammaTerm;
+use App\Models\Channel;
+use App\Http\Resources\TermResource;
+
 use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\ShareApi;
 use App\Tools\Tools;
-use App\Http\Resources\TermResource;
-use Illuminate\Support\Facades\App;
+use App\Tools\RedisClusters;
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use Illuminate\Support\Facades\Log;
+
 
 class DhammaTermController extends Controller
 {
