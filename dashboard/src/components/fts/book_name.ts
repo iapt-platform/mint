@@ -4,6 +4,8 @@ export const bookName = [
     book: 1,
     name: "Namakkārapāḷi",
     term: "namakkārapāḷi",
+    m_title: "namakkārapāḷi",
+    p_title: "namakkārapāḷi",
     abbr: "namakkārapāḷi",
   },
   {
@@ -11,6 +13,8 @@ export const bookName = [
     book: 1,
     name: "namakkāraṭīkā",
     term: "namakkāraṭīkā",
+    m_title: "namakkāraṭīkā",
+    p_title: "namakkāraṭīkā",
     abbr: "namakkāraṭīkā",
   },
   {
@@ -18,6 +22,8 @@ export const bookName = [
     book: 2,
     name: "Mahāpaṇāmapāṭha(Buddhavandanā)",
     term: "mahāpaṇāmapāṭha",
+    m_title: "mahāpaṇāmapāṭha",
+    p_title: "mahāpaṇāmapāṭha",
     abbr: "mahāpaṇāmapāṭha",
   },
   {
@@ -25,6 +31,8 @@ export const bookName = [
     book: 2,
     name: "tigumbacetiya thomanā",
     term: "tigumbacetiya thomanā",
+    m_title: "tigumbacetiya thomanā",
+    p_title: "tigumbacetiya thomanā",
     abbr: "tigumbacetiya thomanā",
   },
   {
@@ -32,6 +40,8 @@ export const bookName = [
     book: 2,
     name: "vāsamālinīkya",
     term: "vāsamālinīkya",
+    m_title: "vāsamālinīkya",
+    p_title: "vāsamālinīkya",
     abbr: "vāsamālinīkya",
   },
   {
@@ -39,6 +49,8 @@ export const bookName = [
     book: 3,
     name: "Lakkhaṇāto",
     term: "lakkhaṇāto",
+    m_title: "lakkhaṇāto",
+    p_title: "lakkhaṇāto",
     abbr: "lakkhaṇāto",
   },
   {
@@ -46,6 +58,8 @@ export const bookName = [
     book: 4,
     name: "Suttavandanā",
     term: "suttavandanā",
+    m_title: "suttavandanā",
+    p_title: "suttavandanā",
     abbr: "suttavandanā",
   },
   {
@@ -53,6 +67,8 @@ export const bookName = [
     book: 5,
     name: "Jinālaṅkāra",
     term: "jinālaṅkāra",
+    m_title: "jinālaṅkāra",
+    p_title: "jinālaṅkāra",
     abbr: "jinālaṅkāra",
   },
   {
@@ -60,6 +76,8 @@ export const bookName = [
     book: 6,
     name: "Kamalāñjali",
     term: "kamalāñjali",
+    m_title: "kamalāñjali",
+    p_title: "kamalāñjali",
     abbr: "kamalāñjali",
   },
   {
@@ -67,6 +85,8 @@ export const bookName = [
     book: 7,
     name: "Pajjamadhu",
     term: "pajjamadhu",
+    m_title: "pajjamadhu",
+    p_title: "pajjamadhu",
     abbr: "pajjamadhu",
   },
   {
@@ -74,6 +94,8 @@ export const bookName = [
     book: 8,
     name: "Buddhaguṇagāthāvalī",
     term: "buddhaguṇagāthāvalī",
+    m_title: "buddhaguṇagāthāvalī",
+    p_title: "buddhaguṇagāthāvalī",
     abbr: "buddhaguṇagāthāvalī",
   },
   {
@@ -81,6 +103,8 @@ export const bookName = [
     book: 9,
     name: "Abhidhānappadīpikāṭīkā",
     term: "abhidhānappadīpikāṭīkā",
+    m_title: "abhidhānappadīpikāṭīkā",
+    p_title: "abhidhānappadīpikāṭīkā",
     abbr: "abhidhānappadīpikāṭīkā",
   },
   {
@@ -88,6 +112,8 @@ export const bookName = [
     book: 10,
     name: "Subodhālaṅkāro",
     term: "subodhālaṅkāro",
+    m_title: "subodhālaṅkāro",
+    p_title: "subodhālaṅkāro",
     abbr: "subodhālaṅkāro",
   },
   {
@@ -95,6 +121,8 @@ export const bookName = [
     book: 11,
     name: "Subodhālaṅkāraṭīkā",
     term: "subodhālaṅkāraṭīkā",
+    m_title: "subodhālaṅkāraṭīkā",
+    p_title: "subodhālaṅkāraṭīkā",
     abbr: "subodhālaṅkāraṭīkā",
   },
   {
@@ -102,6 +130,8 @@ export const bookName = [
     book: 12,
     name: "Bālāvatāra",
     term: "bālāvatāra",
+    m_title: "bālāvatāra",
+    p_title: "bālāvatāra",
     abbr: "bālāvatāra",
   },
   {
@@ -109,6 +139,8 @@ export const bookName = [
     book: 13,
     name: "Moggallānasuttapāṭho",
     term: "moggallānasuttapāṭho",
+    m_title: "moggallānasuttapāṭho",
+    p_title: "moggallānasuttapāṭho",
     abbr: "moggallānasuttapāṭho",
   },
   {
@@ -116,6 +148,8 @@ export const bookName = [
     book: 13,
     name: "moggallānabyākaraṇaṃ",
     term: "moggallānabyākaraṇaṃ",
+    m_title: "moggallānabyākaraṇaṃ",
+    p_title: "moggallānabyākaraṇaṃ",
     abbr: "moggallānabyākaraṇaṃ",
   },
   {
@@ -123,6 +157,8 @@ export const bookName = [
     book: 14,
     name: "Kaccāyanabyākaraṇaṃ",
     term: "kaccāyanabyākaraṇaṃ",
+    m_title: "kaccāyanabyākaraṇaṃ",
+    p_title: "kaccāyanabyākaraṇaṃ",
     abbr: "kaccāyanabyākaraṇaṃ",
   },
   {
@@ -130,6 +166,8 @@ export const bookName = [
     book: 14,
     name: "mahākaccāyanasaddāpāṭha",
     term: "mahākaccāyanasaddāpāṭha",
+    m_title: "mahākaccāyanasaddāpāṭha",
+    p_title: "mahākaccāyanasaddāpāṭha",
     abbr: "mahākaccāyanasaddāpāṭha",
   },
   {
@@ -137,6 +175,8 @@ export const bookName = [
     book: 15,
     name: "Saddanītippakaraṇaṃ (padamālā)",
     term: "saddanītippakaraṇaṃ (padamālā)",
+    m_title: "saddanītippakaraṇaṃ (padamālā)",
+    p_title: "saddanītippakaraṇaṃ (padamālā)",
     abbr: "saddanītippakaraṇaṃ (padamālā)",
   },
   {
@@ -144,6 +184,8 @@ export const bookName = [
     book: 16,
     name: "Saddanītippakaraṇaṃ",
     term: "saddanītippakaraṇaṃ (dhātumālā)",
+    m_title: "saddanītippakaraṇaṃ (dhātumālā)",
+    p_title: "saddanītippakaraṇaṃ (dhātumālā)",
     abbr: "saddanītippakaraṇaṃ (dhātumālā)",
   },
   {
@@ -151,6 +193,8 @@ export const bookName = [
     book: 17,
     name: "Padarūpasiddhi",
     term: "padarūpasiddhi",
+    m_title: "padarūpasiddhi",
+    p_title: "padarūpasiddhi",
     abbr: "padarūpasiddhi",
   },
   {
@@ -158,6 +202,8 @@ export const bookName = [
     book: 18,
     name: "Moggallāna pañcikā ṭīkā",
     term: "moggallāna pañcikā ṭīkā",
+    m_title: "moggallāna pañcikā ṭīkā",
+    p_title: "moggallāna pañcikā ṭīkā",
     abbr: "moggallāna pañcikā ṭīkā",
   },
   {
@@ -165,6 +211,8 @@ export const bookName = [
     book: 19,
     name: "Payogasiddhipāḷi",
     term: "payogasiddhipāḷi",
+    m_title: "payogasiddhipāḷi",
+    p_title: "payogasiddhipāḷi",
     abbr: "payogasiddhipāḷi",
   },
   {
@@ -172,6 +220,8 @@ export const bookName = [
     book: 20,
     name: "Vuttodayaṃ",
     term: "vuttodayaṃ",
+    m_title: "vuttodayaṃ",
+    p_title: "vuttodayaṃ",
     abbr: "vuttodayaṃ",
   },
   {
@@ -179,6 +229,8 @@ export const bookName = [
     book: 21,
     name: "Abhidhānappadīpikā",
     term: "abhidhānappadīpikā",
+    m_title: "abhidhānappadīpikā",
+    p_title: "abhidhānappadīpikā",
     abbr: "abhidhānappadīpikā",
   },
   {
@@ -186,6 +238,8 @@ export const bookName = [
     book: 22,
     name: "Niruttidīpanīpāṭha",
     term: "niruttidīpanīpāṭha",
+    m_title: "niruttidīpanīpāṭha",
+    p_title: "niruttidīpanīpāṭha",
     abbr: "niruttidīpanīpāṭha",
   },
   {
@@ -193,6 +247,8 @@ export const bookName = [
     book: 23,
     name: "Paramatthadīpanī",
     term: "paramatthadīpanī",
+    m_title: "paramatthadīpanī",
+    p_title: "paramatthadīpanī",
     abbr: "paramatthadīpanī",
   },
   {
@@ -200,6 +256,8 @@ export const bookName = [
     book: 24,
     name: "Anudīpanīpāṭha",
     term: "anudīpanīpāṭha",
+    m_title: "anudīpanīpāṭha",
+    p_title: "anudīpanīpāṭha",
     abbr: "anudīpanīpāṭha",
   },
   {
@@ -207,6 +265,8 @@ export const bookName = [
     book: 25,
     name: "Paṭṭhānuddesa dīpanīpāṭha",
     term: "paṭṭhānuddesa dīpanīpāṭha",
+    m_title: "paṭṭhānuddesa dīpanīpāṭha",
+    p_title: "paṭṭhānuddesa dīpanīpāṭha",
     abbr: "paṭṭhānuddesa dīpanīpāṭha",
   },
   {
@@ -214,6 +274,8 @@ export const bookName = [
     book: 26,
     name: "Caturārakkhadīpanī",
     term: "caturārakkhadīpanī",
+    m_title: "caturārakkhadīpanī",
+    p_title: "caturārakkhadīpanī",
     abbr: "caturārakkhadīpanī",
   },
   {
@@ -221,6 +283,8 @@ export const bookName = [
     book: 27,
     name: "Kavidappaṇanīti",
     term: "kavidappaṇanīti",
+    m_title: "kavidappaṇanīti",
+    p_title: "kavidappaṇanīti",
     abbr: "kavidappaṇanīti",
   },
   {
@@ -228,6 +292,8 @@ export const bookName = [
     book: 28,
     name: "Nītimañjarī",
     term: "nītimañjarī",
+    m_title: "nītimañjarī",
+    p_title: "nītimañjarī",
     abbr: "nītimañjarī",
   },
   {
@@ -235,6 +301,8 @@ export const bookName = [
     book: 29,
     name: "Dhammanīti",
     term: "dhammanīti",
+    m_title: "dhammanīti",
+    p_title: "dhammanīti",
     abbr: "dhammanīti",
   },
   {
@@ -242,6 +310,8 @@ export const bookName = [
     book: 30,
     name: "Mahārahanīti",
     term: "mahārahanīti",
+    m_title: "mahārahanīti",
+    p_title: "mahārahanīti",
     abbr: "mahārahanīti",
   },
   {
@@ -249,6 +319,8 @@ export const bookName = [
     book: 31,
     name: "Lokanīti",
     term: "lokanīti",
+    m_title: "lokanīti",
+    p_title: "lokanīti",
     abbr: "lokanīti",
   },
   {
@@ -256,6 +328,8 @@ export const bookName = [
     book: 32,
     name: "Suttantanīti",
     term: "suttantanīti",
+    m_title: "suttantanīti",
+    p_title: "suttantanīti",
     abbr: "suttantanīti",
   },
   {
@@ -263,6 +337,8 @@ export const bookName = [
     book: 32,
     name: "vasalasutta",
     term: "vasalasutta",
+    m_title: "vasalasutta",
+    p_title: "vasalasutta",
     abbr: "vasalasutta",
   },
   {
@@ -270,6 +346,8 @@ export const bookName = [
     book: 33,
     name: "Sūrassatīnīti",
     term: "sūrassatīnīti",
+    m_title: "sūrassatīnīti",
+    p_title: "sūrassatīnīti",
     abbr: "sūrassatīnīti",
   },
   {
@@ -277,6 +355,8 @@ export const bookName = [
     book: 34,
     name: "Cāṇakyanītipāḷi",
     term: "cāṇakyanītipāḷi",
+    m_title: "cāṇakyanītipāḷi",
+    p_title: "cāṇakyanītipāḷi",
     abbr: "cāṇakyanītipāḷi",
   },
   {
@@ -284,6 +364,8 @@ export const bookName = [
     book: 35,
     name: "Naradakkhadīpanī",
     term: "naradakkhadīpanī",
+    m_title: "naradakkhadīpanī",
+    p_title: "naradakkhadīpanī",
     abbr: "naradakkhadīpanī",
   },
   {
@@ -291,6 +373,8 @@ export const bookName = [
     book: 36,
     name: "Rasavāhinī",
     term: "rasavāhinī",
+    m_title: "rasavāhinī",
+    p_title: "rasavāhinī",
     abbr: "rasavāhinī",
   },
   {
@@ -298,6 +382,8 @@ export const bookName = [
     book: 37,
     name: "Sīmavisodhanī",
     term: "sīmavisodhanī",
+    m_title: "sīmavisodhanī",
+    p_title: "sīmavisodhanī",
     abbr: "sīmavisodhanī",
   },
   {
@@ -305,55 +391,71 @@ export const bookName = [
     book: 38,
     name: "Vessantarāgīti",
     term: "vessantarāgīti",
+    m_title: "vessantarāgīti",
+    p_title: "vessantarāgīti",
     abbr: "vessantarāgīti",
   },
   {
     id: 45,
     book: 39,
     name: "Dīghanikāye",
-    term: "(saṅgayana-puccha vissajjanā) dīghanikāye",
+    term: "saṅgayana-puccha vissajjanā dīghanikāye",
+    m_title: "saṅgayana-puccha vissajjanā dīghanikāye",
+    p_title: "saṅgayana-puccha vissajjanā dīghanikāye",
     abbr: "(saṅgayana-puccha vissajjanā) dīghanikāye",
   },
   {
     id: 46,
     book: 40,
     name: "Majjhimanikāya",
-    term: "(saṅgayana-puccha vissajjanā) majjhimanikāya",
+    term: "saṅgayana-puccha vissajjanā majjhimanikāya",
+    m_title: "saṅgayana-puccha vissajjanā majjhimanikāya",
+    p_title: "saṅgayana-puccha vissajjanā majjhimanikāya",
     abbr: "(saṅgayana-puccha vissajjanā) majjhimanikāya",
   },
   {
     id: 47,
     book: 41,
     name: "Saṃyuttanikāye",
-    term: "(saṅgayana-puccha vissajjanā) saṃyuttanikāye",
+    term: "saṅgayana-puccha vissajjanā saṃyuttanikāye",
+    m_title: "saṅgayana-puccha vissajjanā saṃyuttanikāye",
+    p_title: "saṅgayana-puccha vissajjanā saṃyuttanikāye",
     abbr: "(saṅgayana-puccha vissajjanā) saṃyuttanikāye",
   },
   {
     id: 48,
     book: 42,
     name: "Aṅguttaranikāye",
-    term: "(saṅgayana-puccha vissajjanā) aṅguttaranikāye",
+    term: "saṅgayana-puccha vissajjanā aṅguttaranikāye",
+    m_title: "saṅgayana-puccha vissajjanā aṅguttaranikāye",
+    p_title: "saṅgayana-puccha vissajjanā aṅguttaranikāye",
     abbr: "(saṅgayana-puccha vissajjanā) aṅguttaranikāye",
   },
   {
     id: 49,
     book: 43,
     name: "Vinayapiṭaka",
-    term: "(saṅgayana-puccha vissajjanā) vinayapiṭaka",
+    term: "saṅgayana-puccha vissajjanā vinayapiṭaka",
+    m_title: "saṅgayana-puccha vissajjanā vinayapiṭaka",
+    p_title: "saṅgayana-puccha vissajjanā vinayapiṭaka",
     abbr: "(saṅgayana-puccha vissajjanā) vinayapiṭaka",
   },
   {
     id: 50,
     book: 44,
     name: "Abhidhammapiṭaka",
-    term: "(saṅgayana-puccha vissajjanā) abhidhammapiṭaka",
+    term: "saṅgayana-puccha vissajjanā abhidhammapiṭaka",
+    m_title: "saṅgayana-puccha vissajjanā abhidhammapiṭaka",
+    p_title: "saṅgayana-puccha vissajjanā abhidhammapiṭaka",
     abbr: "(saṅgayana-puccha vissajjanā) abhidhammapiṭaka",
   },
   {
     id: 51,
     book: 45,
     name: "Aṭṭhakathā",
-    term: "(saṅgayana-puccha vissajjanā) aṭṭhakathā",
+    term: "saṅgayana-puccha vissajjanā aṭṭhakathā",
+    m_title: "saṅgayana-puccha vissajjanā aṭṭhakathā",
+    p_title: "saṅgayana-puccha vissajjanā aṭṭhakathā",
     abbr: "(saṅgayana-puccha vissajjanā) aṭṭhakathā",
   },
   {
@@ -361,6 +463,8 @@ export const bookName = [
     book: 46,
     name: "Milidaṭīkā",
     term: "milidaṭīkā",
+    m_title: "milidaṭīkā",
+    p_title: "milidaṭīkā",
     abbr: "milidaṭīkā",
   },
   {
@@ -368,6 +472,8 @@ export const bookName = [
     book: 47,
     name: "Padamañjarī",
     term: "padamañjarī",
+    m_title: "padamañjarī",
+    p_title: "padamañjarī",
     abbr: "padamañjarī",
   },
   {
@@ -375,6 +481,8 @@ export const bookName = [
     book: 48,
     name: "Padasādhanaṃ",
     term: "padasādhanaṃ",
+    m_title: "padasādhanaṃ",
+    p_title: "padasādhanaṃ",
     abbr: "padasādhanaṃ",
   },
   {
@@ -382,6 +490,8 @@ export const bookName = [
     book: 49,
     name: "Saddabindu pakaraṇaṃ",
     term: "saddabindu pakaraṇaṃ",
+    m_title: "saddabindu pakaraṇaṃ",
+    p_title: "saddabindu pakaraṇaṃ",
     abbr: "saddabindu pakaraṇaṃ",
   },
   {
@@ -389,6 +499,8 @@ export const bookName = [
     book: 50,
     name: "Kaccāyana dhātu mañjūsā",
     term: "kaccāyana  dhātu mañjūsā",
+    m_title: "kaccāyana  dhātu mañjūsā",
+    p_title: "kaccāyana  dhātu mañjūsā",
     abbr: "kaccāyana  dhātu mañjūsā",
   },
   {
@@ -396,6 +508,8 @@ export const bookName = [
     book: 51,
     name: "Samantakūṭavaṇṇanā",
     term: "samantakūṭavaṇṇanā",
+    m_title: "samantakūṭavaṇṇanā",
+    p_title: "samantakūṭavaṇṇanā",
     abbr: "samantakūṭavaṇṇanā",
   },
   {
@@ -403,6 +517,8 @@ export const bookName = [
     book: 52,
     name: "Vuttisametā",
     term: "moggallāna vuttivivaraṇapañcikā.",
+    m_title: "moggallāna vuttivivaraṇapañcikā.",
+    p_title: "moggallāna vuttivivaraṇapañcikā.",
     abbr: "moggallāna vuttivivaraṇapañcikā.",
   },
   {
@@ -410,6 +526,8 @@ export const bookName = [
     book: 53,
     name: "Thupavaṃso",
     term: "thupavaṃso",
+    m_title: "thupavaṃso",
+    p_title: "thupavaṃso",
     abbr: "thupavaṃso",
   },
   {
@@ -417,6 +535,8 @@ export const bookName = [
     book: 54,
     name: "Dāṭhāvaṃso",
     term: "dāṭhāvaṃso",
+    m_title: "dāṭhāvaṃso",
+    p_title: "dāṭhāvaṃso",
     abbr: "dāṭhāvaṃso",
   },
   {
@@ -424,6 +544,8 @@ export const bookName = [
     book: 55,
     name: "Dhātupāṭha vilāsiniyā",
     term: "dhātupāṭha  vilāsiniyā",
+    m_title: "dhātupāṭha  vilāsiniyā",
+    p_title: "dhātupāṭha  vilāsiniyā",
     abbr: "dhātupāṭha  vilāsiniyā",
   },
   {
@@ -431,6 +553,8 @@ export const bookName = [
     book: 56,
     name: "Dhātuvaṃso",
     term: "dhātuvaṃso",
+    m_title: "dhātuvaṃso",
+    p_title: "dhātuvaṃso",
     abbr: "dhātuvaṃso",
   },
   {
@@ -438,6 +562,8 @@ export const bookName = [
     book: 57,
     name: "Hatthavanagallavihāra vaṃso",
     term: "hatthavanagallavihāra  vaṃso",
+    m_title: "hatthavanagallavihāra  vaṃso",
+    p_title: "hatthavanagallavihāra  vaṃso",
     abbr: "hatthavanagallavihāra  vaṃso",
   },
   {
@@ -445,6 +571,8 @@ export const bookName = [
     book: 58,
     name: "Jinacaritaya",
     term: "jinacaritaya",
+    m_title: "jinacaritaya",
+    p_title: "jinacaritaya",
     abbr: "jinacaritaya",
   },
   {
@@ -452,6 +580,8 @@ export const bookName = [
     book: 59,
     name: "Jinavaṃsadīpaṃ",
     term: "jinavaṃsadīpaṃ",
+    m_title: "jinavaṃsadīpaṃ",
+    p_title: "jinavaṃsadīpaṃ",
     abbr: "jinavaṃsadīpaṃ",
   },
   {
@@ -459,6 +589,8 @@ export const bookName = [
     book: 60,
     name: "Telakaṭāhagāthā",
     term: "telakaṭāhagāthā",
+    m_title: "telakaṭāhagāthā",
+    p_title: "telakaṭāhagāthā",
     abbr: "telakaṭāhagāthā",
   },
   {
@@ -466,6 +598,8 @@ export const bookName = [
     book: 61,
     name: "Cūḷaganthavaṃsapāḷi",
     term: "cūḷaganthavaṃsapāḷi",
+    m_title: "cūḷaganthavaṃsapāḷi",
+    p_title: "cūḷaganthavaṃsapāḷi",
     abbr: "cūḷaganthavaṃsapāḷi",
   },
   {
@@ -473,6 +607,8 @@ export const bookName = [
     book: 62,
     name: "Sāsanavaṃsappadīpikā",
     term: "sāsanavaṃsappadīpikā",
+    m_title: "sāsanavaṃsappadīpikā",
+    p_title: "sāsanavaṃsappadīpikā",
     abbr: "sāsanavaṃsappadīpikā",
   },
   {
@@ -480,6 +616,8 @@ export const bookName = [
     book: 63,
     name: "Mahāvaṃsapāḷi",
     term: "mahāvaṃsapāḷi",
+    m_title: "mahāvaṃsapāḷi",
+    p_title: "mahāvaṃsapāḷi",
     abbr: "mahāvaṃsapāḷi",
   },
   {
@@ -487,6 +625,8 @@ export const bookName = [
     book: 64,
     name: "Visuddhimaggo(Paṭhamo bhāgo)",
     term: "visuddhimagga",
+    m_title: "visuddhimagga",
+    p_title: "visuddhimagga",
     abbr: "visuddhi.",
   },
   {
@@ -494,6 +634,8 @@ export const bookName = [
     book: 65,
     name: "Visuddhimaggo(Dutiyo bhāgo)",
     term: "visuddhimagga",
+    m_title: "visuddhimagga",
+    p_title: "visuddhimagga",
     abbr: "visuddhi.",
   },
   {
@@ -501,6 +643,8 @@ export const bookName = [
     book: 66,
     name: "Visuddhimagga-mahāṭīkā(Paṭhamo bhāgo)",
     term: "Visuddhimagga-mahāṭīkā",
+    m_title: "Visuddhimagga-mahāṭīkā",
+    p_title: "Visuddhimagga-mahāṭīkā",
     abbr: "visuddhi. ṭī.",
   },
   {
@@ -508,6 +652,8 @@ export const bookName = [
     book: 67,
     name: "Visuddhimagga-mahāṭīkā(Dutiyo bhāgo)",
     term: "Visuddhimagga-mahāṭīkā",
+    m_title: "Visuddhimagga-mahāṭīkā",
+    p_title: "Visuddhimagga-mahāṭīkā",
     abbr: "visuddhi. ṭī.",
   },
   {
@@ -515,6 +661,8 @@ export const bookName = [
     book: 68,
     name: "Visuddhimagga nidānakathā",
     term: "visuddhimagga-nidānakathā",
+    m_title: "visuddhimagga-nidānakathā",
+    p_title: "visuddhimagga-nidānakathā",
     abbr: "visuddhimagga-nidānakathā",
   },
   {
@@ -522,6 +670,8 @@ export const bookName = [
     book: 69,
     name: "Paṭṭhānapāḷi(Dutiyo bhāgo)",
     term: "paṭṭhānapāḷi",
+    m_title: "paṭṭhānapāḷi",
+    p_title: "paṭṭhānapāḷi",
     abbr: "paṭṭhāna.",
   },
   {
@@ -529,6 +679,8 @@ export const bookName = [
     book: 70,
     name: "Paṭṭhānapāḷi(Tatiyo bhāgo)",
     term: "paṭṭhānapāḷi",
+    m_title: "paṭṭhānapāḷi",
+    p_title: "paṭṭhānapāḷi",
     abbr: "paṭṭhāna.",
   },
   {
@@ -536,6 +688,8 @@ export const bookName = [
     book: 71,
     name: "Paṭṭhānapāḷi(Catuttho bhāgo)",
     term: "paṭṭhānapāḷi",
+    m_title: "paṭṭhānapāḷi",
+    p_title: "paṭṭhānapāḷi",
     abbr: "paṭṭhāna.",
   },
   {
@@ -543,6 +697,8 @@ export const bookName = [
     book: 72,
     name: "Paṭṭhānapāḷi(Pañcamo bhāgo)",
     term: "paṭṭhānapāḷi",
+    m_title: "paṭṭhānapāḷi",
+    p_title: "paṭṭhānapāḷi",
     abbr: "paṭṭhāna.",
   },
   {
@@ -550,6 +706,8 @@ export const bookName = [
     book: 73,
     name: "Dhammasaṅgaṇīpāḷi",
     term: "dhammasaṅgaṇīpāḷi",
+    m_title: "dhammasaṅgaṇīpāḷi",
+    p_title: "dhammasaṅgaṇīpāḷi",
     abbr: "abhi. dha.",
   },
   {
@@ -557,6 +715,8 @@ export const bookName = [
     book: 74,
     name: "Vibhaṅgapāḷi",
     term: "vibhaṅgapāḷi",
+    m_title: "vibhaṅgapāḷi",
+    p_title: "vibhaṅgapāḷi",
     abbr: "abhi. vi.",
   },
   {
@@ -564,6 +724,8 @@ export const bookName = [
     book: 75,
     name: "Dhātukathāpāḷi",
     term: "dhātukathāpāḷi",
+    m_title: "dhātukathāpāḷi",
+    p_title: "dhātukathāpāḷi",
     abbr: "abhi. dhā.",
   },
   {
@@ -571,6 +733,8 @@ export const bookName = [
     book: 76,
     name: "Puggalapaññattipāḷi",
     term: "puggalapaññattipāḷi",
+    m_title: "puggalapaññattipāḷi",
+    p_title: "puggalapaññattipāḷi",
     abbr: "abhi. pu.",
   },
   {
@@ -578,6 +742,8 @@ export const bookName = [
     book: 77,
     name: "Kathāvatthupāḷi",
     term: "kathāvatthupāḷi",
+    m_title: "kathāvatthupāḷi",
+    p_title: "kathāvatthupāḷi",
     abbr: "abhi. ka.",
   },
   {
@@ -585,6 +751,8 @@ export const bookName = [
     book: 78,
     name: "Yamakapāḷi (paṭhamo bhāgo)",
     term: "yamakapāḷi",
+    m_title: "yamakapāḷi",
+    p_title: "yamakapāḷi",
     abbr: "yamaka.",
   },
   {
@@ -592,6 +760,8 @@ export const bookName = [
     book: 79,
     name: "Yamakapāḷi (dutiyo bhāgo)",
     term: "yamakapāḷi",
+    m_title: "yamakapāḷi",
+    p_title: "yamakapāḷi",
     abbr: "yamaka.",
   },
   {
@@ -599,6 +769,8 @@ export const bookName = [
     book: 80,
     name: "Yamakapāḷi (tatiyo bhāgo)",
     term: "yamakapāḷi",
+    m_title: "yamakapāḷi",
+    p_title: "yamakapāḷi",
     abbr: "yamaka.",
   },
   {
@@ -606,6 +778,8 @@ export const bookName = [
     book: 81,
     name: "Paṭṭhānapāḷi(Paṭhamo bhāgo)",
     term: "paṭṭhānapāḷi",
+    m_title: "paṭṭhānapāḷi",
+    p_title: "paṭṭhānapāḷi",
     abbr: "paṭṭhāna.",
   },
   {
@@ -613,6 +787,8 @@ export const bookName = [
     book: 82,
     name: "Dasakanipātapāḷi",
     term: "aṅguttaranikāya",
+    m_title: "aṅguttaranikāya",
+    p_title: "aṅguttaranikāya",
     abbr: "aṃ.",
   },
   {
@@ -620,6 +796,8 @@ export const bookName = [
     book: 83,
     name: "Ekādasakanipātapāḷi",
     term: "aṅguttaranikāya",
+    m_title: "aṅguttaranikāya",
+    p_title: "aṅguttaranikāya",
     abbr: "aṃ.",
   },
   {
@@ -627,6 +805,8 @@ export const bookName = [
     book: 84,
     name: "Ekakanipātapāḷi",
     term: "aṅguttaranikāya",
+    m_title: "aṅguttaranikāya",
+    p_title: "aṅguttaranikāya",
     abbr: "aṃ.",
   },
   {
@@ -634,6 +814,8 @@ export const bookName = [
     book: 85,
     name: "Dukanipātapāḷi",
     term: "aṅguttaranikāya",
+    m_title: "aṅguttaranikāya",
+    p_title: "aṅguttaranikāya",
     abbr: "aṃ.",
   },
   {
@@ -641,6 +823,8 @@ export const bookName = [
     book: 86,
     name: "Tikanipātapāḷi",
     term: "aṅguttaranikāya",
+    m_title: "aṅguttaranikāya",
+    p_title: "aṅguttaranikāya",
     abbr: "aṃ.",
   },
   {
@@ -648,6 +832,8 @@ export const bookName = [
     book: 87,
     name: "Catukkanipātapāḷi",
     term: "aṅguttaranikāya",
+    m_title: "aṅguttaranikāya",
+    p_title: "aṅguttaranikāya",
     abbr: "aṃ.",
   },
   {
@@ -655,6 +841,8 @@ export const bookName = [
     book: 88,
     name: "Pañcakanipātapāḷi",
     term: "aṅguttaranikāya",
+    m_title: "aṅguttaranikāya",
+    p_title: "aṅguttaranikāya",
     abbr: "aṃ.",
   },
   {
@@ -662,6 +850,8 @@ export const bookName = [
     book: 89,
     name: "Chakkanipātapāḷi",
     term: "aṅguttaranikāya",
+    m_title: "aṅguttaranikāya",
+    p_title: "aṅguttaranikāya",
     abbr: "aṃ.",
   },
   {
@@ -669,6 +859,8 @@ export const bookName = [
     book: 90,
     name: "Sattakanipātapāḷi",
     term: "aṅguttaranikāya",
+    m_title: "aṅguttaranikāya",
+    p_title: "aṅguttaranikāya",
     abbr: "aṃ.",
   },
   {
@@ -676,6 +868,8 @@ export const bookName = [
     book: 91,
     name: "Aṭṭhakanipātapāḷi",
     term: "aṅguttaranikāya",
+    m_title: "aṅguttaranikāya",
+    p_title: "aṅguttaranikāya",
     abbr: "aṃ.",
   },
   {
@@ -683,6 +877,8 @@ export const bookName = [
     book: 92,
     name: "Navakanipātapāḷi",
     term: "aṅguttaranikāya",
+    m_title: "aṅguttaranikāya",
+    p_title: "aṅguttaranikāya",
     abbr: "aṃ.",
   },
   {
@@ -690,6 +886,8 @@ export const bookName = [
     book: 93,
     name: "Sīlakkhandhavaggapāḷi",
     term: "dīghanikāya",
+    m_title: "dīghanikāya",
+    p_title: "dīghanikāya",
     abbr: "dī.",
   },
   {
@@ -697,6 +895,8 @@ export const bookName = [
     book: 94,
     name: "Mahāvaggapāḷi",
     term: "dīghanikāya",
+    m_title: "dīghanikāya",
+    p_title: "dīghanikāya",
     abbr: "dī.",
   },
   {
@@ -704,62 +904,80 @@ export const bookName = [
     book: 95,
     name: "Pāthikavaggapāḷi",
     term: "dīghanikāya",
+    m_title: "dīghanikāya",
+    p_title: "dīghanikāya",
     abbr: "dī.",
   },
   {
     id: 102,
     book: 96,
     name: "Dhammasaṅgaṇī-aṭṭhakathā",
-    term: "abhidhamma-aṭṭhakathā",
-    abbr: "abhi. ṭṭha.",
+    term: "dhammasaṅgaṇī-aṭṭhakathā",
+    m_title: "dhammasaṅgaṇī-aṭṭhakathā",
+    p_title: "dhammasaṅgaṇī-aṭṭhakathā",
+    abbr: "abhi. ṭṭha. 1",
   },
   {
     id: 103,
     book: 97,
     name: "Vibhaṅga-aṭṭhakathā",
-    term: "abhidhamma-aṭṭhakathā",
-    abbr: "abhi. ṭṭha.",
+    term: "vibhaṅga-aṭṭhakathā",
+    m_title: "vibhaṅga-aṭṭhakathā",
+    p_title: "vibhaṅga-aṭṭhakathā",
+    abbr: "abhi. ṭṭha. 2",
   },
   {
     id: 104,
     book: 98,
     name: "Pañcapakaraṇa-aṭṭhakathā",
-    term: "abhidhamma-aṭṭhakathā",
-    abbr: "abhi. ṭṭha.",
+    term: "pañcapakaraṇa-aṭṭhakathā",
+    m_title: "pañcapakaraṇa-aṭṭhakathā",
+    p_title: "pañcapakaraṇa-aṭṭhakathā",
+    abbr: "abhi. ṭṭha. 3",
   },
   {
     id: 105,
     book: 98,
     name: "puggalapaññatti-aṭṭhakathā",
-    term: "abhidhamma-aṭṭhakathā",
-    abbr: "abhi. ṭṭha.",
+    term: "pañcapakaraṇa-aṭṭhakathā",
+    m_title: "pañcapakaraṇa-aṭṭhakathā",
+    p_title: "pañcapakaraṇa-aṭṭhakathā",
+    abbr: "abhi. ṭṭha. 3",
   },
   {
     id: 106,
     book: 98,
     name: "kathāvatthu-aṭṭhakathā",
-    term: "abhidhamma-aṭṭhakathā",
-    abbr: "abhi. ṭṭha.",
+    term: "pañcapakaraṇa-aṭṭhakathā",
+    m_title: "pañcapakaraṇa-aṭṭhakathā",
+    p_title: "pañcapakaraṇa-aṭṭhakathā",
+    abbr: "abhi. ṭṭha. 3",
   },
   {
     id: 107,
     book: 98,
     name: "yamakappakaraṇa-aṭṭhakathā",
-    term: "abhidhamma-aṭṭhakathā",
-    abbr: "abhi. ṭṭha.",
+    term: "pañcapakaraṇa-aṭṭhakathā",
+    m_title: "pañcapakaraṇa-aṭṭhakathā",
+    p_title: "pañcapakaraṇa-aṭṭhakathā",
+    abbr: "abhi. ṭṭha. 3",
   },
   {
     id: 108,
     book: 98,
     name: "paṭṭhānappakaraṇa-aṭṭhakathā",
-    term: "abhidhamma-aṭṭhakathā",
-    abbr: "abhi. ṭṭha.",
+    term: "pañcapakaraṇa-aṭṭhakathā",
+    m_title: "pañcapakaraṇa-aṭṭhakathā",
+    p_title: "pañcapakaraṇa-aṭṭhakathā",
+    abbr: "abhi. ṭṭha. 3",
   },
   {
     id: 109,
     book: 99,
     name: "Ekakanipāta-aṭṭhakathā",
     term: "aṅguttaranikāya-aṭṭhakathā",
+    m_title: "aṅguttaranikāya-aṭṭhakathā",
+    p_title: "aṅguttaranikāya-aṭṭhakathā",
     abbr: "aṃ. ṭṭha.",
   },
   {
@@ -767,6 +985,8 @@ export const bookName = [
     book: 100,
     name: "Dukanipāta-aṭṭhakathā",
     term: "aṅguttaranikāya-aṭṭhakathā",
+    m_title: "aṅguttaranikāya-aṭṭhakathā",
+    p_title: "aṅguttaranikāya-aṭṭhakathā",
     abbr: "aṃ. ṭṭha.",
   },
   {
@@ -774,6 +994,8 @@ export const bookName = [
     book: 100,
     name: "manorathapūraṇī",
     term: "aṅguttaranikāya-aṭṭhakathā",
+    m_title: "aṅguttaranikāya-aṭṭhakathā",
+    p_title: "aṅguttaranikāya-aṭṭhakathā",
     abbr: "aṃ. ṭṭha.",
   },
   {
@@ -781,6 +1003,8 @@ export const bookName = [
     book: 100,
     name: "manorathapūraṇī",
     term: "aṅguttaranikāya-aṭṭhakathā",
+    m_title: "aṅguttaranikāya-aṭṭhakathā",
+    p_title: "aṅguttaranikāya-aṭṭhakathā",
     abbr: "aṃ. ṭṭha.",
   },
   {
@@ -788,6 +1012,8 @@ export const bookName = [
     book: 101,
     name: "Pañcakanipāta-aṭṭhakathā",
     term: "aṅguttaranikāya-aṭṭhakathā",
+    m_title: "aṅguttaranikāya-aṭṭhakathā",
+    p_title: "aṅguttaranikāya-aṭṭhakathā",
     abbr: "aṃ. ṭṭha.",
   },
   {
@@ -795,6 +1021,8 @@ export const bookName = [
     book: 101,
     name: "manorathapūraṇī",
     term: "aṅguttaranikāya-aṭṭhakathā",
+    m_title: "aṅguttaranikāya-aṭṭhakathā",
+    p_title: "aṅguttaranikāya-aṭṭhakathā",
     abbr: "aṃ. ṭṭha.",
   },
   {
@@ -802,6 +1030,8 @@ export const bookName = [
     book: 101,
     name: "manorathapūraṇī",
     term: "aṅguttaranikāya-aṭṭhakathā",
+    m_title: "aṅguttaranikāya-aṭṭhakathā",
+    p_title: "aṅguttaranikāya-aṭṭhakathā",
     abbr: "aṃ. ṭṭha.",
   },
   {
@@ -809,6 +1039,8 @@ export const bookName = [
     book: 102,
     name: "Aṭṭhakanipāta-aṭṭhakathā",
     term: "aṅguttaranikāya-aṭṭhakathā",
+    m_title: "aṅguttaranikāya-aṭṭhakathā",
+    p_title: "aṅguttaranikāya-aṭṭhakathā",
     abbr: "aṃ. ṭṭha.",
   },
   {
@@ -816,6 +1048,8 @@ export const bookName = [
     book: 102,
     name: "manorathapūraṇī",
     term: "aṅguttaranikāya-aṭṭhakathā",
+    m_title: "aṅguttaranikāya-aṭṭhakathā",
+    p_title: "aṅguttaranikāya-aṭṭhakathā",
     abbr: "aṃ. ṭṭha.",
   },
   {
@@ -823,6 +1057,8 @@ export const bookName = [
     book: 102,
     name: "manorathapūraṇī",
     term: "aṅguttaranikāya-aṭṭhakathā",
+    m_title: "aṅguttaranikāya-aṭṭhakathā",
+    p_title: "aṅguttaranikāya-aṭṭhakathā",
     abbr: "aṃ. ṭṭha.",
   },
   {
@@ -830,6 +1066,8 @@ export const bookName = [
     book: 102,
     name: "manorathapūraṇī",
     term: "aṅguttaranikāya-aṭṭhakathā",
+    m_title: "aṅguttaranikāya-aṭṭhakathā",
+    p_title: "aṅguttaranikāya-aṭṭhakathā",
     abbr: "aṃ. ṭṭha.",
   },
   {
@@ -837,6 +1075,8 @@ export const bookName = [
     book: 103,
     name: "Sīlakkhandhavaggaṭṭhakathā",
     term: "dīghanikāya-aṭṭhakathā",
+    m_title: "dīghanikāya-aṭṭhakathā",
+    p_title: "dīghanikāya-aṭṭhakathā",
     abbr: "dī. ṭṭha.",
   },
   {
@@ -844,6 +1084,8 @@ export const bookName = [
     book: 104,
     name: "Mahāvaggaṭṭhakathā",
     term: "dīghanikāya-aṭṭhakathā",
+    m_title: "dīghanikāya-aṭṭhakathā",
+    p_title: "dīghanikāya-aṭṭhakathā",
     abbr: "dī. ṭṭha.",
   },
   {
@@ -851,6 +1093,8 @@ export const bookName = [
     book: 105,
     name: "Pāthikavaggaṭṭhakathā",
     term: "dīghanikāya-aṭṭhakathā",
+    m_title: "dīghanikāya-aṭṭhakathā",
+    p_title: "dīghanikāya-aṭṭhakathā",
     abbr: "dī. ṭṭha.",
   },
   {
@@ -858,6 +1102,8 @@ export const bookName = [
     book: 106,
     name: "Therīgāthā-aṭṭhakathā",
     term: "therīgāthā-aṭṭhakathā",
+    m_title: "therīgāthā-aṭṭhakathā",
+    p_title: "therīgāthā-aṭṭhakathā",
     abbr: "therī. ṭṭha.",
   },
   {
@@ -865,6 +1111,8 @@ export const bookName = [
     book: 107,
     name: "Apadāna-aṭṭhakathā",
     term: "apadāna-aṭṭhakathā",
+    m_title: "apadāna-aṭṭhakathā",
+    p_title: "apadāna-aṭṭhakathā",
     abbr: "apa. ṭṭha.",
   },
   {
@@ -872,6 +1120,8 @@ export const bookName = [
     book: 108,
     name: "Buddhavaṃsa-aṭṭhakathā",
     term: "buddhavaṃsa-aṭṭhakathā",
+    m_title: "buddhavaṃsa-aṭṭhakathā",
+    p_title: "buddhavaṃsa-aṭṭhakathā",
     abbr: "buddhavaṃ. ṭṭha.",
   },
   {
@@ -879,6 +1129,8 @@ export const bookName = [
     book: 109,
     name: "Cariyāpiṭaka-aṭṭhakathā",
     term: "cariyāpiṭaka-aṭṭhakathā",
+    m_title: "cariyāpiṭaka-aṭṭhakathā",
+    p_title: "cariyāpiṭaka-aṭṭhakathā",
     abbr: "cariyā. ṭṭha.",
   },
   {
@@ -886,6 +1138,8 @@ export const bookName = [
     book: 110,
     name: "Jātaka-aṭṭhakathā(Paṭhamo bhāgo)",
     term: "jātaka-aṭṭhakathā",
+    m_title: "jātaka-aṭṭhakathā",
+    p_title: "jātaka-aṭṭhakathā",
     abbr: "jā. ṭṭha.",
   },
   {
@@ -893,6 +1147,8 @@ export const bookName = [
     book: 111,
     name: "Jātaka-aṭṭhakathā(Dutiyo bhāgo)",
     term: "jātaka-aṭṭhakathā",
+    m_title: "jātaka-aṭṭhakathā",
+    p_title: "jātaka-aṭṭhakathā",
     abbr: "jā. ṭṭha.",
   },
   {
@@ -900,6 +1156,8 @@ export const bookName = [
     book: 112,
     name: "Jātaka-aṭṭhakathā(Tatiyo bhāgo)",
     term: "jātaka-aṭṭhakathā",
+    m_title: "jātaka-aṭṭhakathā",
+    p_title: "jātaka-aṭṭhakathā",
     abbr: "jā. ṭṭha.",
   },
   {
@@ -907,6 +1165,8 @@ export const bookName = [
     book: 113,
     name: "Jātaka-aṭṭhakathā(Catuttho bhāgo)",
     term: "jātaka-aṭṭhakathā",
+    m_title: "jātaka-aṭṭhakathā",
+    p_title: "jātaka-aṭṭhakathā",
     abbr: "jā. ṭṭha.",
   },
   {
@@ -914,6 +1174,8 @@ export const bookName = [
     book: 113,
     name: "jātaka-aṭṭhakathā",
     term: "jātaka-aṭṭhakathā",
+    m_title: "jātaka-aṭṭhakathā",
+    p_title: "jātaka-aṭṭhakathā",
     abbr: "jā. ṭṭha.",
   },
   {
@@ -921,6 +1183,8 @@ export const bookName = [
     book: 114,
     name: "Jātaka-aṭṭhakathā(Pañcamo bhāgo)",
     term: "jātaka-aṭṭhakathā",
+    m_title: "jātaka-aṭṭhakathā",
+    p_title: "jātaka-aṭṭhakathā",
     abbr: "jā. ṭṭha.",
   },
   {
@@ -928,6 +1192,8 @@ export const bookName = [
     book: 115,
     name: "Jātaka-aṭṭhakathā(Chaṭṭho bhāgo)",
     term: "jātaka-aṭṭhakathā",
+    m_title: "jātaka-aṭṭhakathā",
+    p_title: "jātaka-aṭṭhakathā",
     abbr: "jā. ṭṭha.",
   },
   {
@@ -935,6 +1201,8 @@ export const bookName = [
     book: 116,
     name: "Khuddakapāṭha-aṭṭhakathā",
     term: "khuddakapāṭha-aṭṭhakathā",
+    m_title: "khuddakapāṭha-aṭṭhakathā",
+    p_title: "khuddakapāṭha-aṭṭhakathā",
     abbr: "khuddaka. ṭṭha.",
   },
   {
@@ -942,6 +1210,8 @@ export const bookName = [
     book: 117,
     name: "Jātaka-aṭṭhakathā(Sattamo bhāgo)",
     term: "jātaka-aṭṭhakathā",
+    m_title: "jātaka-aṭṭhakathā",
+    p_title: "jātaka-aṭṭhakathā",
     abbr: "jā. ṭṭha.",
   },
   {
@@ -949,6 +1219,8 @@ export const bookName = [
     book: 118,
     name: "Mahāniddesa-aṭṭhakathā",
     term: "mahāniddesa-aṭṭhakathā",
+    m_title: "mahāniddesa-aṭṭhakathā",
+    p_title: "mahāniddesa-aṭṭhakathā",
     abbr: "mahāni. ṭṭha.",
   },
   {
@@ -956,6 +1228,8 @@ export const bookName = [
     book: 119,
     name: "Cūḷaniddesa-aṭṭhakathā",
     term: "cūḷaniddesa-aṭṭhakathā",
+    m_title: "cūḷaniddesa-aṭṭhakathā",
+    p_title: "cūḷaniddesa-aṭṭhakathā",
     abbr: "cūḷani. ṭṭha.",
   },
   {
@@ -963,6 +1237,8 @@ export const bookName = [
     book: 120,
     name: "Paṭisambhidāmagga-aṭṭhakathā",
     term: "paṭisambhidāmagga-aṭṭhakathā",
+    m_title: "paṭisambhidāmagga-aṭṭhakathā",
+    p_title: "paṭisambhidāmagga-aṭṭhakathā",
     abbr: "paṭisaṃ. ṭṭha.",
   },
   {
@@ -970,6 +1246,8 @@ export const bookName = [
     book: 121,
     name: "Nettippakaraṇa-aṭṭhakathā",
     term: "nettippakaraṇa-aṭṭhakathā",
+    m_title: "nettippakaraṇa-aṭṭhakathā",
+    p_title: "nettippakaraṇa-aṭṭhakathā",
     abbr: "netti. ṭṭha.",
   },
   {
@@ -977,6 +1255,8 @@ export const bookName = [
     book: 122,
     name: "Dhammapada-aṭṭhakathā",
     term: "dhammapada-aṭṭhakathā",
+    m_title: "dhammapada-aṭṭhakathā",
+    p_title: "dhammapada-aṭṭhakathā",
     abbr: "dhamma. ṭṭha.",
   },
   {
@@ -984,6 +1264,8 @@ export const bookName = [
     book: 123,
     name: "Udāna-aṭṭhakathā",
     term: "udāna-aṭṭhakathā",
+    m_title: "udāna-aṭṭhakathā",
+    p_title: "udāna-aṭṭhakathā",
     abbr: "udāna. ṭṭha.",
   },
   {
@@ -991,6 +1273,8 @@ export const bookName = [
     book: 124,
     name: "Itivuttaka-aṭṭhakathā",
     term: "itivuttaka-aṭṭhakathā",
+    m_title: "itivuttaka-aṭṭhakathā",
+    p_title: "itivuttaka-aṭṭhakathā",
     abbr: "itivutta. ṭṭha.",
   },
   {
@@ -998,6 +1282,8 @@ export const bookName = [
     book: 125,
     name: "Suttanipāta-aṭṭhakathā",
     term: "suttanipāta-aṭṭhakathā",
+    m_title: "suttanipāta-aṭṭhakathā",
+    p_title: "suttanipāta-aṭṭhakathā",
     abbr: "suttani. ṭṭha.",
   },
   {
@@ -1005,6 +1291,8 @@ export const bookName = [
     book: 126,
     name: "Vimānavatthu-aṭṭhakathā",
     term: "vimānavatthu-aṭṭhakathā",
+    m_title: "vimānavatthu-aṭṭhakathā",
+    p_title: "vimānavatthu-aṭṭhakathā",
     abbr: "vimāna. ṭṭha.",
   },
   {
@@ -1012,6 +1300,8 @@ export const bookName = [
     book: 127,
     name: "Petavatthu-aṭṭhakathā",
     term: "petavatthu-aṭṭhakathā",
+    m_title: "petavatthu-aṭṭhakathā",
+    p_title: "petavatthu-aṭṭhakathā",
     abbr: "peta. ṭṭha.",
   },
   {
@@ -1019,6 +1309,8 @@ export const bookName = [
     book: 128,
     name: "Theragāthā-aṭṭhakathā(Paṭhamo bhāgo)",
     term: "Theragāthā-aṭṭhakathā",
+    m_title: "Theragāthā-aṭṭhakathā",
+    p_title: "Theragāthā-aṭṭhakathā",
     abbr: "thera. ṭṭha.",
   },
   {
@@ -1026,6 +1318,8 @@ export const bookName = [
     book: 129,
     name: "Theragāthā-aṭṭhakathā(Dutiyo bhāgo)",
     term: "Theragāthā-aṭṭhakathā",
+    m_title: "Theragāthā-aṭṭhakathā",
+    p_title: "Theragāthā-aṭṭhakathā",
     abbr: "thera. ṭṭha.",
   },
   {
@@ -1033,6 +1327,8 @@ export const bookName = [
     book: 130,
     name: "Mūlapaṇṇāsa-aṭṭhakathā",
     term: "majimanikaya-aṭṭhakathā",
+    m_title: "majimanikaya-aṭṭhakathā",
+    p_title: "majimanikaya-aṭṭhakathā",
     abbr: "ma. ṭṭha.",
   },
   {
@@ -1040,6 +1336,8 @@ export const bookName = [
     book: 131,
     name: "Majjhimapaṇṇāsa-aṭṭhakathā",
     term: "majimanikaya-aṭṭhakathā",
+    m_title: "majimanikaya-aṭṭhakathā",
+    p_title: "majimanikaya-aṭṭhakathā",
     abbr: "ma. ṭṭha.",
   },
   {
@@ -1047,6 +1345,8 @@ export const bookName = [
     book: 132,
     name: "Uparipaṇṇāsa-aṭṭhakathā",
     term: "majimanikaya-aṭṭhakathā",
+    m_title: "majimanikaya-aṭṭhakathā",
+    p_title: "majimanikaya-aṭṭhakathā",
     abbr: "ma. ṭṭha.",
   },
   {
@@ -1054,6 +1354,8 @@ export const bookName = [
     book: 133,
     name: "Sagāthāvagga-aṭṭhakathā",
     term: "saṃyuttanikāya-aṭṭhakathā",
+    m_title: "saṃyuttanikāya-aṭṭhakathā",
+    p_title: "saṃyuttanikāya-aṭṭhakathā",
     abbr: "saṃ. ṭṭha.",
   },
   {
@@ -1061,6 +1363,8 @@ export const bookName = [
     book: 134,
     name: "Nidānavagga-aṭṭhakathā",
     term: "saṃyuttanikāya-aṭṭhakathā",
+    m_title: "saṃyuttanikāya-aṭṭhakathā",
+    p_title: "saṃyuttanikāya-aṭṭhakathā",
     abbr: "saṃ. ṭṭha.",
   },
   {
@@ -1068,6 +1372,8 @@ export const bookName = [
     book: 135,
     name: "Khandhavagga-aṭṭhakathā",
     term: "saṃyuttanikāya-aṭṭhakathā",
+    m_title: "saṃyuttanikāya-aṭṭhakathā",
+    p_title: "saṃyuttanikāya-aṭṭhakathā",
     abbr: "saṃ. ṭṭha.",
   },
   {
@@ -1075,6 +1381,8 @@ export const bookName = [
     book: 136,
     name: "Saḷāyatanavagga-aṭṭhakathā",
     term: "saṃyuttanikāya-aṭṭhakathā",
+    m_title: "saṃyuttanikāya-aṭṭhakathā",
+    p_title: "saṃyuttanikāya-aṭṭhakathā",
     abbr: "saṃ. ṭṭha.",
   },
   {
@@ -1082,6 +1390,8 @@ export const bookName = [
     book: 137,
     name: "Mahāvagga-aṭṭhakathā",
     term: "saṃyuttanikāya-aṭṭhakathā",
+    m_title: "saṃyuttanikāya-aṭṭhakathā",
+    p_title: "saṃyuttanikāya-aṭṭhakathā",
     abbr: "saṃ. ṭṭha.",
   },
   {
@@ -1089,13 +1399,17 @@ export const bookName = [
     book: 138,
     name: "Pārājikakaṇḍa-aṭṭhakathā",
     term: "vinaya-aṭṭhakathā",
+    m_title: "vinaya-aṭṭhakathā",
+    p_title: "vinaya-aṭṭhakathā",
     abbr: "vi. ṭṭha.",
   },
   {
     id: 157,
     book: 139,
     name: "Pācittiya-aṭṭhakathā",
-    term: "pācittiya-aṭṭhakathā",
+    term: "vinaya-aṭṭhakathā",
+    m_title: "vinaya-aṭṭhakathā",
+    p_title: "vinaya-aṭṭhakathā",
     abbr: "vi. ṭṭha.",
   },
   {
@@ -1103,6 +1417,8 @@ export const bookName = [
     book: 140,
     name: "Mahāvagga-aṭṭhakathā",
     term: "vinaya-aṭṭhakathā",
+    m_title: "vinaya-aṭṭhakathā",
+    p_title: "vinaya-aṭṭhakathā",
     abbr: "vi. ṭṭha.",
   },
   {
@@ -1110,6 +1426,8 @@ export const bookName = [
     book: 141,
     name: "Cūḷavagga-aṭṭhakathā",
     term: "vinaya-aṭṭhakathā",
+    m_title: "vinaya-aṭṭhakathā",
+    p_title: "vinaya-aṭṭhakathā",
     abbr: "vi. ṭṭha.",
   },
   {
@@ -1117,6 +1435,8 @@ export const bookName = [
     book: 142,
     name: "Parivāra-aṭṭhakathā",
     term: "vinaya-aṭṭhakathā",
+    m_title: "vinaya-aṭṭhakathā",
+    p_title: "vinaya-aṭṭhakathā",
     abbr: "vi. ṭṭha.",
   },
   {
@@ -1124,6 +1444,8 @@ export const bookName = [
     book: 143,
     name: "Therāpadānapāḷi(Paṭhamo bhāgo)",
     term: "therāpadānapāḷi",
+    m_title: "therāpadānapāḷi",
+    p_title: "therāpadānapāḷi",
     abbr: "apa.",
   },
   {
@@ -1131,6 +1453,8 @@ export const bookName = [
     book: 144,
     name: "Therāpadānapāḷi(Dutiyo bhāgo)",
     term: "therāpadānapāḷi",
+    m_title: "therāpadānapāḷi",
+    p_title: "therāpadānapāḷi",
     abbr: "apa.",
   },
   {
@@ -1138,6 +1462,8 @@ export const bookName = [
     book: 144,
     name: "therīapadānapāḷi",
     term: "therīapadānapāḷi",
+    m_title: "therīapadānapāḷi",
+    p_title: "therīapadānapāḷi",
     abbr: "therīapadānapāḷi",
   },
   {
@@ -1145,6 +1471,8 @@ export const bookName = [
     book: 145,
     name: "Buddhavaṃsapāḷi",
     term: "buddhavaṃsapāḷi",
+    m_title: "buddhavaṃsapāḷi",
+    p_title: "buddhavaṃsapāḷi",
     abbr: "buddhavaṃ.",
   },
   {
@@ -1152,6 +1480,8 @@ export const bookName = [
     book: 146,
     name: "Cariyāpiṭakapāḷi",
     term: "cariyāpiṭakapāḷi",
+    m_title: "cariyāpiṭakapāḷi",
+    p_title: "cariyāpiṭakapāḷi",
     abbr: "cariyā.",
   },
   {
@@ -1159,6 +1489,8 @@ export const bookName = [
     book: 147,
     name: "Jātakapāḷi(Dutiyo bhāgo)",
     term: "jātakapāḷi",
+    m_title: "jātakapāḷi",
+    p_title: "jātakapāḷi",
     abbr: "jā.",
   },
   {
@@ -1166,6 +1498,8 @@ export const bookName = [
     book: 148,
     name: "Jātakapāḷi(Paṭhamo bhāgo)",
     term: "jātakapāḷi",
+    m_title: "jātakapāḷi",
+    p_title: "jātakapāḷi",
     abbr: "jā.",
   },
   {
@@ -1173,6 +1507,8 @@ export const bookName = [
     book: 149,
     name: "Mahāniddesapāḷi",
     term: "mahāniddesapāḷi",
+    m_title: "mahāniddesapāḷi",
+    p_title: "mahāniddesapāḷi",
     abbr: "mahāni.",
   },
   {
@@ -1180,6 +1516,8 @@ export const bookName = [
     book: 150,
     name: "Cūḷaniddesapāḷi",
     term: "cūḷaniddesapāḷi",
+    m_title: "cūḷaniddesapāḷi",
+    p_title: "cūḷaniddesapāḷi",
     abbr: "cūḷani.",
   },
   {
@@ -1187,6 +1525,8 @@ export const bookName = [
     book: 151,
     name: "Paṭisambhidāmaggapāḷi",
     term: "paṭisambhidāmaggapāḷi",
+    m_title: "paṭisambhidāmaggapāḷi",
+    p_title: "paṭisambhidāmaggapāḷi",
     abbr: "paṭisaṃ.",
   },
   {
@@ -1194,6 +1534,8 @@ export const bookName = [
     book: 152,
     name: "Milindapañhapāḷi",
     term: "milindapañhapāḷi",
+    m_title: "milindapañhapāḷi",
+    p_title: "milindapañhapāḷi",
     abbr: "milinda.",
   },
   {
@@ -1201,6 +1543,8 @@ export const bookName = [
     book: 153,
     name: "Nettippakaraṇapāḷi",
     term: "nettippakaraṇapāḷi",
+    m_title: "nettippakaraṇapāḷi",
+    p_title: "nettippakaraṇapāḷi",
     abbr: "netti.",
   },
   {
@@ -1208,6 +1552,8 @@ export const bookName = [
     book: 154,
     name: "Khuddakapāṭhapāḷi",
     term: "khuddakapāṭhapāḷi",
+    m_title: "khuddakapāṭhapāḷi",
+    p_title: "khuddakapāṭhapāḷi",
     abbr: "khuddaka.",
   },
   {
@@ -1215,6 +1561,8 @@ export const bookName = [
     book: 155,
     name: "Peṭakopadesapāḷi",
     term: "peṭakopadesapāḷi",
+    m_title: "peṭakopadesapāḷi",
+    p_title: "peṭakopadesapāḷi",
     abbr: "peṭako.",
   },
   {
@@ -1222,6 +1570,8 @@ export const bookName = [
     book: 156,
     name: "Dhammapadapāḷi",
     term: "dhammapadapāḷi",
+    m_title: "dhammapadapāḷi",
+    p_title: "dhammapadapāḷi",
     abbr: "dhamma.",
   },
   {
@@ -1229,6 +1579,8 @@ export const bookName = [
     book: 157,
     name: "Udānapāḷi",
     term: "udānapāḷi",
+    m_title: "udānapāḷi",
+    p_title: "udānapāḷi",
     abbr: "udāna.",
   },
   {
@@ -1236,6 +1588,8 @@ export const bookName = [
     book: 158,
     name: "Itivuttakapāḷi",
     term: "itivuttakapāḷi",
+    m_title: "itivuttakapāḷi",
+    p_title: "itivuttakapāḷi",
     abbr: "itivutta.",
   },
   {
@@ -1243,6 +1597,8 @@ export const bookName = [
     book: 159,
     name: "Suttanipātapāḷi",
     term: "suttanipātapāḷi",
+    m_title: "suttanipātapāḷi",
+    p_title: "suttanipātapāḷi",
     abbr: "suttani.",
   },
   {
@@ -1250,6 +1606,8 @@ export const bookName = [
     book: 160,
     name: "Vimānavatthupāḷi",
     term: "vimānavatthupāḷi",
+    m_title: "vimānavatthupāḷi",
+    p_title: "vimānavatthupāḷi",
     abbr: "vimāna.",
   },
   {
@@ -1257,6 +1615,8 @@ export const bookName = [
     book: 161,
     name: "Petavatthupāḷi",
     term: "petavatthupāḷi",
+    m_title: "petavatthupāḷi",
+    p_title: "petavatthupāḷi",
     abbr: "peta.",
   },
   {
@@ -1264,6 +1624,8 @@ export const bookName = [
     book: 162,
     name: "Theragāthāpāḷi",
     term: "theragāthāpāḷi",
+    m_title: "theragāthāpāḷi",
+    p_title: "theragāthāpāḷi",
     abbr: "theragāthā.",
   },
   {
@@ -1271,6 +1633,8 @@ export const bookName = [
     book: 163,
     name: "Therīgāthāpāḷi",
     term: "therīgāthāpāḷi",
+    m_title: "therīgāthāpāḷi",
+    p_title: "therīgāthāpāḷi",
     abbr: "therī.",
   },
   {
@@ -1278,6 +1642,8 @@ export const bookName = [
     book: 164,
     name: "Mūlapaṇṇāsapāḷi",
     term: "majimanikaya",
+    m_title: "majimanikaya",
+    p_title: "majimanikaya",
     abbr: "ma.",
   },
   {
@@ -1285,6 +1651,8 @@ export const bookName = [
     book: 165,
     name: "Majjhimapaṇṇāsapāḷi",
     term: "majimanikaya",
+    m_title: "majimanikaya",
+    p_title: "majimanikaya",
     abbr: "ma.",
   },
   {
@@ -1292,6 +1660,8 @@ export const bookName = [
     book: 166,
     name: "Uparipaṇṇāsapāḷi",
     term: "majimanikaya",
+    m_title: "majimanikaya",
+    p_title: "majimanikaya",
     abbr: "ma.",
   },
   {
@@ -1299,6 +1669,8 @@ export const bookName = [
     book: 167,
     name: "Sagāthāvaggo",
     term: "saṃyuttanikāya",
+    m_title: "saṃyuttanikāya",
+    p_title: "saṃyuttanikāya",
     abbr: "saṃ.",
   },
   {
@@ -1306,6 +1678,8 @@ export const bookName = [
     book: 168,
     name: "Nidānavaggo",
     term: "saṃyuttanikāya",
+    m_title: "saṃyuttanikāya",
+    p_title: "saṃyuttanikāya",
     abbr: "saṃ.",
   },
   {
@@ -1313,6 +1687,8 @@ export const bookName = [
     book: 169,
     name: "Khandhavaggo",
     term: "saṃyuttanikāya",
+    m_title: "saṃyuttanikāya",
+    p_title: "saṃyuttanikāya",
     abbr: "saṃ.",
   },
   {
@@ -1320,6 +1696,8 @@ export const bookName = [
     book: 170,
     name: "Saḷāyatanavaggo",
     term: "saṃyuttanikāya",
+    m_title: "saṃyuttanikāya",
+    p_title: "saṃyuttanikāya",
     abbr: "saṃ.",
   },
   {
@@ -1327,111 +1705,143 @@ export const bookName = [
     book: 171,
     name: "Mahāvaggo",
     term: "saṃyuttanikāya",
+    m_title: "saṃyuttanikāya",
+    p_title: "saṃyuttanikāya",
     abbr: "saṃ.",
   },
   {
     id: 191,
     book: 172,
-    name: "Dhammasaṅgaṇī-mūlaṭīkā",
-    term: "mūlaṭīkā",
-    abbr: "mūlaṭī.",
+    name: "dhammasaṅgaṇī-mūlaṭīkā",
+    term: "dhammasaṅgaṇī-mūlaṭīkā",
+    m_title: "dhammasaṅgaṇī-mūlaṭīkā",
+    p_title: "dhammasaṅgaṇī-mūlaṭīkā",
+    abbr: "mūlaṭī. 1",
   },
   {
     id: 192,
     book: 173,
-    name: "Vibhaṅga-mūlaṭīkā",
-    term: "mūlaṭīkā",
-    abbr: "mūlaṭī.",
+    name: "vibhaṅga-mūlaṭīkā",
+    term: "vibhaṅga-mūlaṭīkā",
+    m_title: "vibhaṅga-mūlaṭīkā",
+    p_title: "vibhaṅga-mūlaṭīkā",
+    abbr: "mūlaṭī. 2",
   },
   {
     id: 193,
     book: 173,
     name: "Vibhaṅga-anuṭīkā",
     term: "anuṭīkā",
-    abbr: "anuṭī.",
+    m_title: "anuṭīkā",
+    p_title: "anuṭīkā",
+    abbr: "anuṭī. 2",
   },
   {
     id: 194,
     book: 174,
-    name: "Pañcapakaraṇa-mūlaṭīkā",
-    term: "mūlaṭīkā",
-    abbr: "mūlaṭī.",
+    name: "pañcapakaraṇa-mūlaṭīkā",
+    term: "pañcapakaraṇa-mūlaṭīkā",
+    m_title: "pañcapakaraṇa-mūlaṭīkā",
+    p_title: "pañcapakaraṇa-mūlaṭīkā",
+    abbr: "mūlaṭī. 3",
   },
   {
     id: 195,
     book: 174,
     name: "mūlaṭīkā",
-    term: "mūlaṭīkā",
-    abbr: "mūlaṭīkā",
+    term: "pañcapakaraṇa-mūlaṭīkā",
+    m_title: "pañcapakaraṇa-mūlaṭīkā",
+    p_title: "pañcapakaraṇa-mūlaṭīkā",
+    abbr: "mūlaṭī. 3",
   },
   {
     id: 196,
     book: 174,
     name: "mūlaṭīkā",
-    term: "mūlaṭīkā",
-    abbr: "mūlaṭīkā",
+    term: "pañcapakaraṇa-mūlaṭīkā",
+    m_title: "pañcapakaraṇa-mūlaṭīkā",
+    p_title: "pañcapakaraṇa-mūlaṭīkā",
+    abbr: "mūlaṭī. 3",
   },
   {
     id: 197,
     book: 174,
     name: "mūlaṭīkā",
-    term: "mūlaṭīkā",
-    abbr: "mūlaṭīkā",
+    term: "pañcapakaraṇa-mūlaṭīkā",
+    m_title: "pañcapakaraṇa-mūlaṭīkā",
+    p_title: "pañcapakaraṇa-mūlaṭīkā",
+    abbr: "mūlaṭī. 3",
   },
   {
     id: 198,
     book: 174,
     name: "mūlaṭīkā",
-    term: "mūlaṭīkā",
-    abbr: "mūlaṭīkā",
+    term: "pañcapakaraṇa-mūlaṭīkā",
+    m_title: "pañcapakaraṇa-mūlaṭīkā",
+    p_title: "pañcapakaraṇa-mūlaṭīkā",
+    abbr: "mūlaṭī. 3",
   },
   {
     id: 199,
     book: 175,
-    name: "Dhammasaṅgaṇī-anuṭīkā",
-    term: "anuṭīkā",
+    name: "dhammasaṅgaṇī-anuṭīkā",
+    term: "dhammasaṅgaṇī-anuṭīkā",
+    m_title: "dhammasaṅgaṇī-anuṭīkā",
+    p_title: "dhammasaṅgaṇī-anuṭīkā",
     abbr: "anuṭī. 1",
   },
   {
     id: 200,
     book: 176,
-    name: "Pañcapakaraṇa-anuṭīkā",
-    term: "anuṭīkā",
+    name: "dhātukathāpakaraṇa-anuṭīkā",
+    term: "pañcapakaraṇa-anuṭīkā",
+    m_title: "pañcapakaraṇa-anuṭīkā",
+    p_title: "pañcapakaraṇa-anuṭīkā",
     abbr: "anuṭī. 3",
   },
   {
     id: 201,
     book: 176,
-    name: "anuṭīkā",
-    term: "anuṭīkā",
-    abbr: "anuṭīkā",
+    name: "puggalapaññattipakaraṇa-anuṭīkā",
+    term: "pañcapakaraṇa-anuṭīkā",
+    m_title: "pañcapakaraṇa-anuṭīkā",
+    p_title: "pañcapakaraṇa-anuṭīkā",
+    abbr: "anuṭī. 3",
   },
   {
     id: 202,
     book: 176,
-    name: "anuṭīkā",
-    term: "anuṭīkā",
-    abbr: "anuṭīkā",
+    name: "kathāvatthupakaraṇa-anuṭīkā",
+    term: "pañcapakaraṇa-anuṭīkā",
+    m_title: "pañcapakaraṇa-anuṭīkā",
+    p_title: "pañcapakaraṇa-anuṭīkā",
+    abbr: "anuṭī. 3",
   },
   {
     id: 203,
     book: 176,
     name: "anuṭīkā",
-    term: "anuṭīkā",
-    abbr: "anuṭīkā",
+    term: "pañcapakaraṇa-anuṭīkā",
+    m_title: "pañcapakaraṇa-anuṭīkā",
+    p_title: "pañcapakaraṇa-anuṭīkā",
+    abbr: "anuṭī. 3",
   },
   {
     id: 204,
     book: 176,
     name: "anuṭīkā",
-    term: "anuṭīkā",
-    abbr: "anuṭīkā",
+    term: "pañcapakaraṇa-anuṭīkā",
+    m_title: "pañcapakaraṇa-anuṭīkā",
+    p_title: "pañcapakaraṇa-anuṭīkā",
+    abbr: "anuṭī. 3",
   },
   {
     id: 205,
     book: 177,
     name: "Ganthārambhakathā",
     term: "abhidhammāvatāro",
+    m_title: "abhidhammāvatāro",
+    p_title: "abhidhammāvatāro",
     abbr: "abhidhammāvatāro",
   },
   {
@@ -1439,6 +1849,8 @@ export const bookName = [
     book: 177,
     name: "nāmarūpaparicchedo",
     term: "nāmarūpaparicchedo",
+    m_title: "nāmarūpaparicchedo",
+    p_title: "nāmarūpaparicchedo",
     abbr: "nāmarūpaparicchedo",
   },
   {
@@ -1446,6 +1858,8 @@ export const bookName = [
     book: 177,
     name: "paramatthavinicchayo",
     term: "paramatthavinicchayo",
+    m_title: "paramatthavinicchayo",
+    p_title: "paramatthavinicchayo",
     abbr: "paramatthavinicchayo",
   },
   {
@@ -1453,6 +1867,8 @@ export const bookName = [
     book: 177,
     name: "saccasaṅkhepo",
     term: "saccasaṅkhepo",
+    m_title: "saccasaṅkhepo",
+    p_title: "saccasaṅkhepo",
     abbr: "saccasaṅkhepo",
   },
   {
@@ -1460,6 +1876,8 @@ export const bookName = [
     book: 178,
     name: "Abhidhammatthasaṅgaho",
     term: "abhidhammatthasaṅgaho",
+    m_title: "abhidhammatthasaṅgaho",
+    p_title: "abhidhammatthasaṅgaho",
     abbr: "abhidhammatthasaṅgaho",
   },
   {
@@ -1467,6 +1885,8 @@ export const bookName = [
     book: 178,
     name: "abhidhammatthavibhāvinīṭīkā",
     term: "abhidhammatthavibhāvinīṭīkā",
+    m_title: "abhidhammatthavibhāvinīṭīkā",
+    p_title: "abhidhammatthavibhāvinīṭīkā",
     abbr: "abhidhammatthavibhāvinīṭīkā",
   },
   {
@@ -1474,6 +1894,8 @@ export const bookName = [
     book: 179,
     name: "Paṭhamo paricchedo",
     term: "abhidhammāvatāra-purāṇaṭīkā",
+    m_title: "abhidhammāvatāra-purāṇaṭīkā",
+    p_title: "abhidhammāvatāra-purāṇaṭīkā",
     abbr: "abhidhammāvatāra-purāṇaṭīkā",
   },
   {
@@ -1481,6 +1903,8 @@ export const bookName = [
     book: 179,
     name: "abhidhammāvatāra-abhinavaṭīkā",
     term: "abhidhammāvatāra-abhinavaṭīkā",
+    m_title: "abhidhammāvatāra-abhinavaṭīkā",
+    p_title: "abhidhammāvatāra-abhinavaṭīkā",
     abbr: "abhidhammāvatāra-abhinavaṭīkā",
   },
   {
@@ -1488,6 +1912,8 @@ export const bookName = [
     book: 180,
     name: "Abhidhammamātikāpāḷi",
     term: "abhidhammamātikāpāḷi",
+    m_title: "abhidhammamātikāpāḷi",
+    p_title: "abhidhammamātikāpāḷi",
     abbr: "abhidhammamātikāpāḷi",
   },
   {
@@ -1495,6 +1921,8 @@ export const bookName = [
     book: 180,
     name: "mohavicchedanī",
     term: "mohavicchedanī",
+    m_title: "mohavicchedanī",
+    p_title: "mohavicchedanī",
     abbr: "mohavicchedanī",
   },
   {
@@ -1502,6 +1930,8 @@ export const bookName = [
     book: 181,
     name: "Ekakanipāta-ṭīkā",
     term: "aṅguttaranikāya-ṭīkā",
+    m_title: "aṅguttaranikāya-ṭīkā",
+    p_title: "aṅguttaranikāya-ṭīkā",
     abbr: "aṃ. ṭī.",
   },
   {
@@ -1509,6 +1939,8 @@ export const bookName = [
     book: 182,
     name: "Dukanipāta-ṭīkā",
     term: "aṅguttaranikāya-ṭīkā",
+    m_title: "aṅguttaranikāya-ṭīkā",
+    p_title: "aṅguttaranikāya-ṭīkā",
     abbr: "aṃ. ṭī.",
   },
   {
@@ -1516,6 +1948,8 @@ export const bookName = [
     book: 182,
     name: "tikanipāta-ṭīkā",
     term: "tikanipāta-ṭīkā",
+    m_title: "tikanipāta-ṭīkā",
+    p_title: "tikanipāta-ṭīkā",
     abbr: "aṃ. ṭī.",
   },
   {
@@ -1523,6 +1957,8 @@ export const bookName = [
     book: 182,
     name: "catukkanipāta-ṭīkā",
     term: "catukkanipāta-ṭīkā",
+    m_title: "catukkanipāta-ṭīkā",
+    p_title: "catukkanipāta-ṭīkā",
     abbr: "aṃ. ṭī.",
   },
   {
@@ -1530,6 +1966,8 @@ export const bookName = [
     book: 183,
     name: "Pañcakanipāta-ṭīkā",
     term: "aṅguttaranikāya-ṭīkā",
+    m_title: "aṅguttaranikāya-ṭīkā",
+    p_title: "aṅguttaranikāya-ṭīkā",
     abbr: "aṃ. ṭī.",
   },
   {
@@ -1537,6 +1975,8 @@ export const bookName = [
     book: 183,
     name: "chakkanipāta-ṭīkā",
     term: "chakkanipāta-ṭīkā",
+    m_title: "chakkanipāta-ṭīkā",
+    p_title: "chakkanipāta-ṭīkā",
     abbr: "aṃ. ṭī.",
   },
   {
@@ -1544,6 +1984,8 @@ export const bookName = [
     book: 183,
     name: "sattakanipāta-ṭīkā",
     term: "sattakanipāta-ṭīkā",
+    m_title: "sattakanipāta-ṭīkā",
+    p_title: "sattakanipāta-ṭīkā",
     abbr: "aṃ. ṭī.",
   },
   {
@@ -1551,6 +1993,8 @@ export const bookName = [
     book: 184,
     name: "Aṭṭhakanipāta-ṭīkā",
     term: "aṅguttaranikāya-ṭīkā",
+    m_title: "aṅguttaranikāya-ṭīkā",
+    p_title: "aṅguttaranikāya-ṭīkā",
     abbr: "aṃ. ṭī.",
   },
   {
@@ -1558,6 +2002,8 @@ export const bookName = [
     book: 184,
     name: "navakanipāta-ṭīkā",
     term: "navakanipāta-ṭīkā",
+    m_title: "navakanipāta-ṭīkā",
+    p_title: "navakanipāta-ṭīkā",
     abbr: "aṃ. ṭī.",
   },
   {
@@ -1565,6 +2011,8 @@ export const bookName = [
     book: 184,
     name: "dasakanipāta-ṭīkā",
     term: "dasakanipāta-ṭīkā",
+    m_title: "dasakanipāta-ṭīkā",
+    p_title: "dasakanipāta-ṭīkā",
     abbr: "aṃ. ṭī.",
   },
   {
@@ -1572,6 +2020,8 @@ export const bookName = [
     book: 184,
     name: "ekādasakanipāta-ṭīkā",
     term: "ekādasakanipāta-ṭīkā",
+    m_title: "ekādasakanipāta-ṭīkā",
+    p_title: "ekādasakanipāta-ṭīkā",
     abbr: "aṃ. ṭī.",
   },
   {
@@ -1579,6 +2029,8 @@ export const bookName = [
     book: 185,
     name: "Sīlakkhandhavaggaṭīkā",
     term: "dīghanikāya-ṭīkā",
+    m_title: "dīghanikāya-ṭīkā",
+    p_title: "dīghanikāya-ṭīkā",
     abbr: "dī. ṭī.",
   },
   {
@@ -1586,6 +2038,8 @@ export const bookName = [
     book: 186,
     name: "Mahāvaggaṭīkā",
     term: "dīghanikāya-ṭīkā",
+    m_title: "dīghanikāya-ṭīkā",
+    p_title: "dīghanikāya-ṭīkā",
     abbr: "dī. ṭī.",
   },
   {
@@ -1593,6 +2047,8 @@ export const bookName = [
     book: 187,
     name: "Pāthikavaggaṭīkā",
     term: "dīghanikāya-ṭīkā",
+    m_title: "dīghanikāya-ṭīkā",
+    p_title: "dīghanikāya-ṭīkā",
     abbr: "dī. ṭī.",
   },
   {
@@ -1600,6 +2056,8 @@ export const bookName = [
     book: 188,
     name: "Sīlakkhandhavaggaabhinavaṭīkā",
     term: "dīghanikāya-abhinavaṭīkā",
+    m_title: "dīghanikāya-abhinavaṭīkā",
+    p_title: "dīghanikāya-abhinavaṭīkā",
     abbr: "dī. abhi. ṭī.",
   },
   {
@@ -1607,6 +2065,8 @@ export const bookName = [
     book: 189,
     name: "Sīlakkhandhavaggaabhinavaṭīkā",
     term: "dīghanikāya-abhinavaṭīkā",
+    m_title: "dīghanikāya-abhinavaṭīkā",
+    p_title: "dīghanikāya-abhinavaṭīkā",
     abbr: "dī. abhi. ṭī.",
   },
   {
@@ -1614,6 +2074,8 @@ export const bookName = [
     book: 190,
     name: "Nettippakaraṇa-ṭīkā",
     term: "nettippakaraṇa-ṭīkā",
+    m_title: "nettippakaraṇa-ṭīkā",
+    p_title: "nettippakaraṇa-ṭīkā",
     abbr: "netti. ṭī.",
   },
   {
@@ -1621,6 +2083,8 @@ export const bookName = [
     book: 191,
     name: "Nettivibhāvinī",
     term: "nettivibhāvinī",
+    m_title: "nettivibhāvinī",
+    p_title: "nettivibhāvinī",
     abbr: "netti. vibhā.",
   },
   {
@@ -1628,6 +2092,8 @@ export const bookName = [
     book: 192,
     name: "Mūlapaṇṇāsa-ṭīkā",
     term: "majjhimanikaya-ṭīkā",
+    m_title: "majjhimanikaya-ṭīkā",
+    p_title: "majjhimanikaya-ṭīkā",
     abbr: "ma. ṭī.",
   },
   {
@@ -1635,6 +2101,8 @@ export const bookName = [
     book: 193,
     name: "Majjhimapaṇṇāsaṭīkā",
     term: "majjhimanikaya-ṭīkā",
+    m_title: "majjhimanikaya-ṭīkā",
+    p_title: "majjhimanikaya-ṭīkā",
     abbr: "ma. ṭī.",
   },
   {
@@ -1642,6 +2110,8 @@ export const bookName = [
     book: 194,
     name: "Uparipaṇṇāsa-ṭīkā",
     term: "majjhimanikaya-ṭīkā",
+    m_title: "majjhimanikaya-ṭīkā",
+    p_title: "majjhimanikaya-ṭīkā",
     abbr: "ma. ṭī.",
   },
   {
@@ -1649,6 +2119,8 @@ export const bookName = [
     book: 195,
     name: "Sagāthāvaggaṭīkā",
     term: "saṃyuttanikāya-ṭīkā",
+    m_title: "saṃyuttanikāya-ṭīkā",
+    p_title: "saṃyuttanikāya-ṭīkā",
     abbr: "saṃ. ṭī.",
   },
   {
@@ -1656,6 +2128,8 @@ export const bookName = [
     book: 196,
     name: "Nidānavaggaṭīkā",
     term: "saṃyuttanikāya-ṭīkā",
+    m_title: "saṃyuttanikāya-ṭīkā",
+    p_title: "saṃyuttanikāya-ṭīkā",
     abbr: "saṃ. ṭī.",
   },
   {
@@ -1663,6 +2137,8 @@ export const bookName = [
     book: 197,
     name: "Khandhavaggaṭīkā",
     term: "saṃyuttanikāya-ṭīkā",
+    m_title: "saṃyuttanikāya-ṭīkā",
+    p_title: "saṃyuttanikāya-ṭīkā",
     abbr: "saṃ. ṭī.",
   },
   {
@@ -1670,6 +2146,8 @@ export const bookName = [
     book: 198,
     name: "Saḷāyatanavaggaṭīkā",
     term: "saṃyuttanikāya-ṭīkā",
+    m_title: "saṃyuttanikāya-ṭīkā",
+    p_title: "saṃyuttanikāya-ṭīkā",
     abbr: "saṃ. ṭī.",
   },
   {
@@ -1677,6 +2155,8 @@ export const bookName = [
     book: 199,
     name: "Mahāvaggaṭīkā",
     term: "saṃyuttanikāya-ṭīkā",
+    m_title: "saṃyuttanikāya-ṭīkā",
+    p_title: "saṃyuttanikāya-ṭīkā",
     abbr: "saṃ. ṭī.",
   },
   {
@@ -1684,6 +2164,8 @@ export const bookName = [
     book: 200,
     name: "Vinayavinicchayo",
     term: "vinayavinicchayo",
+    m_title: "vinayavinicchayo",
+    p_title: "vinayavinicchayo",
     abbr: "vinayavinicchayo",
   },
   {
@@ -1691,6 +2173,8 @@ export const bookName = [
     book: 200,
     name: "uttaravinicchayo",
     term: "uttaravinicchayo",
+    m_title: "uttaravinicchayo",
+    p_title: "uttaravinicchayo",
     abbr: "uttaravinicchayo",
   },
   {
@@ -1698,6 +2182,8 @@ export const bookName = [
     book: 201,
     name: "Vinayavinicchayaṭīkā(Paṭhamo bhāgo)",
     term: "vinayavinicchaya-ṭīkā",
+    m_title: "vinayavinicchaya-ṭīkā",
+    p_title: "vinayavinicchaya-ṭīkā",
     abbr: "vinayavinicchaya-ṭīkā",
   },
   {
@@ -1705,6 +2191,8 @@ export const bookName = [
     book: 201,
     name: "uttaravinicchaya-ṭīkā",
     term: "uttaravinicchaya-ṭīkā",
+    m_title: "uttaravinicchaya-ṭīkā",
+    p_title: "uttaravinicchaya-ṭīkā",
     abbr: "uttaravinicchaya-ṭīkā",
   },
   {
@@ -1712,6 +2200,8 @@ export const bookName = [
     book: 202,
     name: "Pācityādiyojanā",
     term: "pācityādiyojanā",
+    m_title: "pācityādiyojanā",
+    p_title: "pācityādiyojanā",
     abbr: "pācityādiyojanā",
   },
   {
@@ -1719,6 +2209,8 @@ export const bookName = [
     book: 203,
     name: "Khuddasikkhā-mūlasikkhā",
     term: "khuddasikkhā",
+    m_title: "khuddasikkhā",
+    p_title: "khuddasikkhā",
     abbr: "khuddasikkhā",
   },
   {
@@ -1726,6 +2218,8 @@ export const bookName = [
     book: 203,
     name: "khuddasikkhā",
     term: "khuddasikkhā",
+    m_title: "khuddasikkhā",
+    p_title: "khuddasikkhā",
     abbr: "khuddasikkhā",
   },
   {
@@ -1733,6 +2227,8 @@ export const bookName = [
     book: 203,
     name: "khuddasikkhā",
     term: "khuddasikkhā",
+    m_title: "khuddasikkhā",
+    p_title: "khuddasikkhā",
     abbr: "khuddasikkhā",
   },
   {
@@ -1740,6 +2236,8 @@ export const bookName = [
     book: 203,
     name: "mūlasikkhā",
     term: "mūlasikkhā",
+    m_title: "mūlasikkhā",
+    p_title: "mūlasikkhā",
     abbr: "mūlasikkhā",
   },
   {
@@ -1747,6 +2245,8 @@ export const bookName = [
     book: 203,
     name: "mūlasikkhā",
     term: "mūlasikkhā",
+    m_title: "mūlasikkhā",
+    p_title: "mūlasikkhā",
     abbr: "mūlasikkhā",
   },
   {
@@ -1754,6 +2254,8 @@ export const bookName = [
     book: 204,
     name: "Sāratthadīpanī-ṭīkā (paṭhamo bhāgo)",
     term: "Sāratthadīpanī-ṭīkā",
+    m_title: "Sāratthadīpanī-ṭīkā",
+    p_title: "Sāratthadīpanī-ṭīkā",
     abbr: "sārattha. ṭī.",
   },
   {
@@ -1761,6 +2263,8 @@ export const bookName = [
     book: 205,
     name: "Sāratthadīpanī-ṭīkā (dutiyo bhāgo)",
     term: "Sāratthadīpanī-ṭīkā",
+    m_title: "Sāratthadīpanī-ṭīkā",
+    p_title: "Sāratthadīpanī-ṭīkā",
     abbr: "sārattha. ṭī.",
   },
   {
@@ -1768,6 +2272,8 @@ export const bookName = [
     book: 206,
     name: "Sāratthadīpanī-ṭīkā (tatiyo bhāgo)",
     term: "Sāratthadīpanī-ṭīkā",
+    m_title: "Sāratthadīpanī-ṭīkā",
+    p_title: "Sāratthadīpanī-ṭīkā",
     abbr: "sārattha. ṭī.",
   },
   {
@@ -1775,6 +2281,8 @@ export const bookName = [
     book: 206,
     name: "sāratthadīpanī-ṭīkā",
     term: "sāratthadīpanī-ṭīkā",
+    m_title: "sāratthadīpanī-ṭīkā",
+    p_title: "sāratthadīpanī-ṭīkā",
     abbr: "sārattha. ṭī.",
   },
   {
@@ -1782,6 +2290,8 @@ export const bookName = [
     book: 206,
     name: "sāratthadīpanī-ṭīkā",
     term: "sāratthadīpanī-ṭīkā",
+    m_title: "sāratthadīpanī-ṭīkā",
+    p_title: "sāratthadīpanī-ṭīkā",
     abbr: "sārattha. ṭī.",
   },
   {
@@ -1789,6 +2299,8 @@ export const bookName = [
     book: 206,
     name: "sāratthadīpanī-ṭīkā",
     term: "sāratthadīpanī-ṭīkā",
+    m_title: "sāratthadīpanī-ṭīkā",
+    p_title: "sāratthadīpanī-ṭīkā",
     abbr: "sārattha. ṭī.",
   },
   {
@@ -1796,6 +2308,8 @@ export const bookName = [
     book: 207,
     name: "Bhikkhupātimokkhapāḷi",
     term: "pātimokkhapāḷi",
+    m_title: "pātimokkhapāḷi",
+    p_title: "pātimokkhapāḷi",
     abbr: "pātimokkha",
   },
   {
@@ -1803,6 +2317,8 @@ export const bookName = [
     book: 207,
     name: "pātimokkhapāḷi",
     term: "pātimokkhapāḷi",
+    m_title: "pātimokkhapāḷi",
+    p_title: "pātimokkhapāḷi",
     abbr: "pātimokkha",
   },
   {
@@ -1810,6 +2326,8 @@ export const bookName = [
     book: 207,
     name: "kaṅkhāvitaraṇī",
     term: "kaṅkhāvitaraṇī",
+    m_title: "kaṅkhāvitaraṇī",
+    p_title: "kaṅkhāvitaraṇī",
     abbr: "kaṅkhā.",
   },
   {
@@ -1817,6 +2335,8 @@ export const bookName = [
     book: 208,
     name: "Vinayasaṅgaha-aṭṭhakathā",
     term: "vinayasaṅgaha-aṭṭhakathā",
+    m_title: "vinayasaṅgaha-aṭṭhakathā",
+    p_title: "vinayasaṅgaha-aṭṭhakathā",
     abbr: "vinayasaṅgaha-aṭṭhakathā",
   },
   {
@@ -1824,6 +2344,8 @@ export const bookName = [
     book: 209,
     name: "Vajirabuddhi-ṭīkā",
     term: "vajirabuddhi-ṭīkā",
+    m_title: "vajirabuddhi-ṭīkā",
+    p_title: "vajirabuddhi-ṭīkā",
     abbr: "vajīra. ṭī.",
   },
   {
@@ -1831,6 +2353,8 @@ export const bookName = [
     book: 209,
     name: "vajirabuddhi-ṭīkā",
     term: "vajirabuddhi-ṭīkā",
+    m_title: "vajirabuddhi-ṭīkā",
+    p_title: "vajirabuddhi-ṭīkā",
     abbr: "vajīra. ṭī.",
   },
   {
@@ -1838,6 +2362,8 @@ export const bookName = [
     book: 209,
     name: "vajirabuddhi-ṭīkā",
     term: "vajirabuddhi-ṭīkā",
+    m_title: "vajirabuddhi-ṭīkā",
+    p_title: "vajirabuddhi-ṭīkā",
     abbr: "vajīra. ṭī.",
   },
   {
@@ -1845,6 +2371,8 @@ export const bookName = [
     book: 209,
     name: "vajirabuddhi-ṭīkā",
     term: "vajirabuddhi-ṭīkā",
+    m_title: "vajirabuddhi-ṭīkā",
+    p_title: "vajirabuddhi-ṭīkā",
     abbr: "vajīra. ṭī.",
   },
   {
@@ -1852,6 +2380,8 @@ export const bookName = [
     book: 209,
     name: "vajirabuddhi-ṭīkā",
     term: "vajirabuddhi-ṭīkā",
+    m_title: "vajirabuddhi-ṭīkā",
+    p_title: "vajirabuddhi-ṭīkā",
     abbr: "vajīra. ṭī.",
   },
   {
@@ -1859,6 +2389,8 @@ export const bookName = [
     book: 209,
     name: "vajirabuddhi-ṭīkā",
     term: "vajirabuddhi-ṭīkā",
+    m_title: "vajirabuddhi-ṭīkā",
+    p_title: "vajirabuddhi-ṭīkā",
     abbr: "vajīra. ṭī.",
   },
   {
@@ -1866,6 +2398,8 @@ export const bookName = [
     book: 210,
     name: "Vimativinodanī-ṭīkā",
     term: "vimativinodanī-ṭīkā",
+    m_title: "vimativinodanī-ṭīkā",
+    p_title: "vimativinodanī-ṭīkā",
     abbr: "vimati. ṭī.",
   },
   {
@@ -1873,6 +2407,8 @@ export const bookName = [
     book: 210,
     name: "Vimativinodanī-ṭīkā",
     term: "Vimativinodanī-ṭīkā",
+    m_title: "Vimativinodanī-ṭīkā",
+    p_title: "Vimativinodanī-ṭīkā",
     abbr: "vimati. ṭī.",
   },
   {
@@ -1880,6 +2416,8 @@ export const bookName = [
     book: 210,
     name: "Vimativinodanī-ṭīkā",
     term: "Vimativinodanī-ṭīkā",
+    m_title: "Vimativinodanī-ṭīkā",
+    p_title: "Vimativinodanī-ṭīkā",
     abbr: "vimati. ṭī.",
   },
   {
@@ -1887,6 +2425,8 @@ export const bookName = [
     book: 210,
     name: "Vimativinodanī-ṭīkā",
     term: "Vimativinodanī-ṭīkā",
+    m_title: "Vimativinodanī-ṭīkā",
+    p_title: "Vimativinodanī-ṭīkā",
     abbr: "vimati. ṭī.",
   },
   {
@@ -1894,6 +2434,8 @@ export const bookName = [
     book: 210,
     name: "Vimativinodanī-ṭīkā",
     term: "Vimativinodanī-ṭīkā",
+    m_title: "Vimativinodanī-ṭīkā",
+    p_title: "Vimativinodanī-ṭīkā",
     abbr: "vimati. ṭī.",
   },
   {
@@ -1901,20 +2443,26 @@ export const bookName = [
     book: 211,
     name: "Vinayālaṅkāra-ṭīkā",
     term: "vinayālaṅkāra-ṭīkā",
+    m_title: "vinayālaṅkāra-ṭīkā",
+    p_title: "vinayālaṅkāra-ṭīkā",
     abbr: "ālaṅkāra. ṭī.",
   },
   {
     id: 273,
     book: 212,
     name: "Kaṅkhāvitaraṇīpurāṇa-ṭīkā",
-    term: "kaṅkhāvitaraṇī",
+    term: "kaṅkhāvitaraṇīpurāṇa-ṭīkā",
+    m_title: "kaṅkhāvitaraṇīpurāṇa-ṭīkā",
+    p_title: "kaṅkhāvitaraṇīpurāṇa-ṭīkā",
     abbr: "kaṅkhā. ṭī.",
   },
   {
     id: 274,
     book: 212,
     name: "Kaṅkhāvitaraṇī-abhinavaṭīkā",
-    term: "kaṅkhāvitaraṇī",
+    term: "kaṅkhāvitaraṇī-abhinavaṭīkā",
+    m_title: "kaṅkhāvitaraṇī-abhinavaṭīkā",
+    p_title: "kaṅkhāvitaraṇī-abhinavaṭīkā",
     abbr: "kaṅkhā.",
   },
   {
@@ -1922,6 +2470,8 @@ export const bookName = [
     book: 213,
     name: "Pārājikapāḷi",
     term: "vinayapitaka",
+    m_title: "pārājikapāḷi",
+    p_title: "vinayapitaka",
     abbr: "vi.",
   },
   {
@@ -1929,6 +2479,8 @@ export const bookName = [
     book: 214,
     name: "Pācittiyapāḷi",
     term: "vinayapitaka",
+    m_title: "pācittiyapāḷi",
+    p_title: "vinayapitaka",
     abbr: "vi.",
   },
   {
@@ -1936,6 +2488,8 @@ export const bookName = [
     book: 215,
     name: "Mahāvaggapāḷi",
     term: "vinayapitaka",
+    m_title: "mahāvaggapāḷi",
+    p_title: "vinayapitaka",
     abbr: "vi.",
   },
   {
@@ -1943,6 +2497,8 @@ export const bookName = [
     book: 216,
     name: "Cūḷavaggapāḷi",
     term: "vinayapitaka",
+    m_title: "cūḷavaggapāḷi",
+    p_title: "vinayapitaka",
     abbr: "vi.",
   },
   {
@@ -1950,20 +2506,26 @@ export const bookName = [
     book: 217,
     name: "Parivārapāḷi",
     term: "vinayapitaka",
+    m_title: "parivārapāḷi",
+    p_title: "vinayapitaka",
     abbr: "vi.",
   },
   {
     id: 280,
     book: 139,
     name: "samantapāsādikā",
-    term: "samantapāsādikā",
-    abbr: "samantapāsādikā",
+    term: "vinaya-aṭṭhakathā",
+    m_title: "vinaya-aṭṭhakathā",
+    p_title: "vinaya-aṭṭhakathā",
+    abbr: "vi. ṭṭha.",
   },
   {
     id: 281,
     book: 214,
     name: "(VN)Bhikkhunīvibhaṅgo",
-    term: "(VN)Bhikkhunīvibhaṅgo",
-    abbr: "vi.\n",
+    term: "vinayapitaka",
+    m_title: "pācittiyapāḷi",
+    p_title: "vinayapitaka",
+    abbr: "vi.",
   },
 ];
