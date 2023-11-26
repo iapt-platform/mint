@@ -68,7 +68,7 @@ export const ArticleCtl = ({
           </Typography.Link>
           <Modal
             width={"80%"}
-            style={{ maxWidth: 1000 }}
+            style={{ maxWidth: 1000, top: 20 }}
             title={
               <div
                 style={{
