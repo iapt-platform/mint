@@ -15,6 +15,7 @@ use App\Models\PaliSentence;
 use App\Models\CustomBook;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Resources\ChannelResource;
 
 use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
@@ -474,31 +475,30 @@ class ChannelController extends Controller
         //
         $user = AuthApi::current($request);
         if($user){
-            //判断当前用户是否有指定的studio的权限
-            if($user['user_uid'] === StudioApi::getIdByName($request->get('studio'))){
-                //查询是否重复
-                if(Channel::where('name',$request->get('name'))->where('owner_uid',$user['user_uid'])->exists()){
-                    return $this->error(__('validation.exists',['name']));
-                }else{
-
-                    $channel = new Channel;
-                    $channel->id = app('snowflake')->id();
-                    $channel->name = $request->get('name');
-                    $channel->owner_uid = $user['user_uid'];
-                    $channel->type = $request->get('type');
-                    $channel->lang = $request->get('lang');
-                    $channel->editor_id = $user['user_id'];
-                    $channel->create_time = time()*1000;
-                    $channel->modify_time = time()*1000;
-                    $channel->save();
-                    return $this->ok($channel);
-                }
-            }else{
-                return $this->error(__('auth.failed'));
-            }
-        }else{
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),401,401);
         }
+        //判断当前用户是否有指定的studio的权限
+        if($user['user_uid'] === StudioApi::getIdByName($request->get('studio'))){
+            return $this->error(__('auth.failed'),403,403);
+        }
+        //查询是否重复
+        if(Channel::where('name',$request->get('name'))
+                  ->where('owner_uid',$user['user_uid'])
+                  ->exists()){
+            return $this->error(__('validation.exists',['name']),200,200);
+        }
+
+        $channel = new Channel;
+        $channel->id = app('snowflake')->id();
+        $channel->name = $request->get('name');
+        $channel->owner_uid = $user['user_uid'];
+        $channel->type = $request->get('type');
+        $channel->lang = $request->get('lang');
+        $channel->editor_id = $user['user_id'];
+        $channel->create_time = time()*1000;
+        $channel->modify_time = time()*1000;
+        $channel->save();
+        return $this->ok($channel);
     }
 
     /**
@@ -516,6 +516,24 @@ class ChannelController extends Controller
         $channel->studio = $studio;
         $channel->owner_info = ['nickname'=>$studio['nickName'],'username'=>$studio['realName']];
 		return $this->ok($channel);
+    }
+
+        /**
+     * Display the specified resource.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Http\Response
+     */
+    public function showByName(string $name)
+    {
+        //
+        $indexCol = ['uid','name','summary','type','owner_uid','lang','is_system','status','updated_at','created_at'];
+		$channel = Channel::where("name",$name)->select($indexCol)->first();
+        if($channel){
+            return $this->ok(new ChannelResource($channel));
+        }else{
+            return $this->error('no channel');
+        }
     }
 
     /**

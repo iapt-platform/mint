@@ -48,6 +48,11 @@ class InitSystemChannel extends Command
             'lang'=>'en',
         ],
         [
+            "name"=>'_System_Grammar_Term_my_',
+            'type'=>'translation',
+            'lang'=>'my',
+        ],
+        [
             "name"=>'_community_term_zh-hans_',
             'type'=>'translation',
             'lang'=>'zh-Hans',
@@ -120,6 +125,7 @@ class InitSystemChannel extends Command
             $channel->owner_uid = config("mint.admin.root_uuid");
             $channel->create_time = time()*1000;
             $channel->modify_time = time()*1000;
+            $channel->is_system = true;
             $channel->save();
             $this->info("created". $value['name']);
         }
