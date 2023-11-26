@@ -1,29 +1,30 @@
-import { Button, Popover } from "antd";
-import { Typography } from "antd";
-import { SearchOutlined, CopyOutlined } from "@ant-design/icons";
-import { ProCard } from "@ant-design/pro-components";
 import { bookName as _bookName } from "../fts/book_name";
 import { ArticleCtl, TDisplayStyle } from "./Article";
-import { ArticleType } from "../article/Article";
-
-const { Text, Link } = Typography;
 
 interface IWidgetQuoteLinkCtl {
   type: string;
   bookName: string;
+  bookNameLocal?: string;
   volume: string;
   page: string;
   style: TDisplayStyle;
+  book: number;
+  para: number;
 }
 const QuoteLinkCtl = ({
   type,
   bookName,
+  bookNameLocal,
   volume,
   page,
   style,
+  book,
+  para,
 }: IWidgetQuoteLinkCtl) => {
-  const abbr = _bookName.find((value) => value.term === bookName)?.abbr;
-  let textShow = `${abbr} ${volume}. ${page}`;
+  const abbr = bookNameLocal
+    ? bookNameLocal
+    : _bookName.find((value) => value.term === bookName)?.abbr;
+  let textShow = `${abbr} ${volume}.${page}`;
 
   return (
     <>

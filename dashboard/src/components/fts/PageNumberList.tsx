@@ -34,6 +34,44 @@ const CaseListWidget = ({ keyWord, onSelect }: IWidget) => {
   const [types, setTypes] = useState<IType[]>();
   const [treeData, setTreeData] = useState<DataNode[]>();
 
+  const booksTitle = (type: string): [string[], Map<string, number[]>] => {
+    let bookNameMap = new Map<string, number[]>();
+    bookName.forEach((value) => {
+      let name: string;
+      switch (type) {
+        case "M":
+          name = value.m_title;
+          break;
+        case "P":
+          name = value.p_title;
+          break;
+        case "V":
+          name = value.v_title;
+          break;
+        default:
+          name = value.term;
+          break;
+      }
+
+      if (bookNameMap.has(name)) {
+        const id = bookNameMap.get(name);
+        if (id) {
+          id.push(value.id);
+          bookNameMap.set(name, id);
+        } else {
+          bookNameMap.set(name, [value.id]);
+        }
+      } else {
+        bookNameMap.set(name, [value.id]);
+      }
+    });
+    let bookNameList: string[] = [];
+    bookNameMap.forEach((value, key) => {
+      bookNameList.push(key);
+    });
+    return [bookNameList, bookNameMap];
+  };
+
   useEffect(() => {
     if (typeof keyWord === "undefined") {
       return;
@@ -57,28 +95,9 @@ const CaseListWidget = ({ keyWord, onSelect }: IWidget) => {
             mType.push({ key: key, value: value });
           });
           setTypes(mType);
-          let bookNameMap = new Map<string, number[]>();
-          bookName.forEach((value) => {
-            const name = value.abbr ? value.abbr : value.name;
-            if (bookNameMap.has(name)) {
-              const id = bookNameMap.get(name);
-              if (id) {
-                id.push(value.id);
-                bookNameMap.set(name, id);
-              } else {
-                bookNameMap.set(name, [value.id]);
-              }
-            } else {
-              bookNameMap.set(name, [value.id]);
-            }
-          });
-          let bookNameList: string[] = [];
-          bookNameMap.forEach((value, key) => {
-            bookNameList.push(key);
-          });
+
           const tData = mType.map((item, id1) => {
             let volumes: number[] = [];
-
             json.data
               .filter((value) => value.type === item.key)
               .forEach((value) => {
@@ -95,7 +114,7 @@ const CaseListWidget = ({ keyWord, onSelect }: IWidget) => {
                 }
               })
               .join();
-
+            const [bookNameList, bookNameMap] = booksTitle(item.key);
             return {
               title: (
                 <Space>

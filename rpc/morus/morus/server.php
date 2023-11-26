@@ -9,7 +9,7 @@ class Greeter extends \Mint\Morus\V1\MarkdownStub
         \Grpc\ServerContext $context
     ): ?\Mint\Morus\V1\MarkdownToHtmlResponse {
         $text = $request->getPayload();
-        echo 'Received request: ' . $text . PHP_EOL;
+        //echo 'Received request: ' . $text . PHP_EOL;
         $response = new \Mint\Morus\V1\MarkdownToHtmlResponse();
         $Parsedown = new Parsedown();
         $response->setPayload($Parsedown->text($text));
