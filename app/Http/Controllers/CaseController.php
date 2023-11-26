@@ -39,11 +39,11 @@ class CaseController extends Controller
         //
         $output = array();
         $case  = new CaseMan();
-        $result = $case->BaseToWord($word);
+        $result = $case->BaseToWord($word,0.2);
         $output[] = ['word'=>$word, 'case'=>$result,'count'=>count($result)];
         $parent = $case->WordToBase($word,1,false);
         foreach ($parent as $key => $base) {
-            $result = $case->BaseToWord($key);
+            $result = $case->BaseToWord($key,0.2);
             if(count($result)>0){
                 $output[] = ['word'=>$key, 'case'=>$result,'count'=>count($result)];
             }
