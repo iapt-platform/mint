@@ -1,5 +1,6 @@
 import { Typography } from "antd";
 import { TCodeConvertor, XmlToReact } from "./utilities";
+import { gfwClear } from "../../gfwlist";
 const { Paragraph, Text } = Typography;
 
 interface IWidget {
@@ -18,17 +19,13 @@ const Widget = ({
   convertor,
   style,
 }: IWidget) => {
-  const jsx =
-    html && html.trim() !== "" ? (
-      XmlToReact(html, wordWidget, convertor)
-    ) : (
-      <Text type="secondary">{placeholder}</Text>
+  if (html && html.trim() !== "") {
+    return (
+      <Paragraph>{XmlToReact(gfwClear(html), wordWidget, convertor)}</Paragraph>
     );
-  return (
-    <Paragraph style={style} className={className}>
-      {jsx}
-    </Paragraph>
-  );
+  } else {
+    return <Text type="secondary">{placeholder}</Text>;
+  }
 };
 
 export default Widget;
