@@ -84,7 +84,6 @@ const TermEditWidget = ({
   const [isSaveAs, setIsSaveAs] = useState(false);
   const [currChannel, setCurrChannel] = useState<ValueType[]>([]);
   const user = useAppSelector(_currentUser);
-
   //console.log("word", id, word, channelId, studioName);
 
   const [form] = Form.useForm<ITerm>();
@@ -383,7 +382,7 @@ const TermEditWidget = ({
                 disabled: user?.id !== parentStudioId,
               },
               {
-                value: parentChannelId,
+                value: parentChannelId ? parentChannelId : channelId,
                 label: "仅用于此版本",
                 disabled: !community && readonly,
               },
