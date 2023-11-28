@@ -25,6 +25,7 @@ import netStatusReducer from "./reducers/net-status";
 import discussionReducer from "./reducers/discussion";
 import wbwReducer from "./reducers/wbw";
 import termOrderReducer from "./reducers/term-order";
+import focusReducer from "./reducers/focus";
 
 const store = configureStore({
   reducer: {
@@ -53,6 +54,7 @@ const store = configureStore({
     discussion: discussionReducer,
     wbw: wbwReducer,
     termOrder: termOrderReducer,
+    focus: focusReducer,
   },
 });
 

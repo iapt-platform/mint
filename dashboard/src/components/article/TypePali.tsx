@@ -12,6 +12,8 @@ import { ArticleMode, ArticleType } from "./Article";
 import "./article.css";
 import ArticleSkeleton from "./ArticleSkeleton";
 import ErrorResult from "../general/ErrorResult";
+import store from "../../store";
+import { refresh } from "../../reducers/focus";
 
 interface IWidget {
   type?: ArticleType;
@@ -21,6 +23,7 @@ interface IWidget {
   book?: string | null;
   para?: string | null;
   active?: boolean;
+  focus?: string | null;
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
@@ -33,6 +36,7 @@ const TypePaliWidget = ({
   articleId,
   mode = "read",
   active = true,
+  focus,
   onArticleChange,
   onFinal,
   onLoad,
@@ -48,6 +52,11 @@ const TypePaliWidget = ({
   const channels = channelId?.split("_");
 
   const srcDataMode = mode === "edit" || mode === "wbw" ? "edit" : "read";
+
+  useEffect(() => {
+    store.dispatch(refresh({ type: "para", id: focus }));
+  }, [focus]);
+
   useEffect(() => {
     console.log("srcDataMode", srcDataMode);
     if (!active) {

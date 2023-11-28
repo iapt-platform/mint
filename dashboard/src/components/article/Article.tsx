@@ -50,6 +50,7 @@ interface IWidget {
   exerciseId?: string;
   userName?: string;
   active?: boolean;
+  focus?: string | null;
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
@@ -67,6 +68,7 @@ const ArticleWidget = ({
   userName,
   mode = "read",
   active = false,
+  focus,
   onArticleChange,
   onFinal,
   onLoad,
@@ -128,6 +130,7 @@ const ArticleWidget = ({
           mode={mode}
           book={book}
           para={para}
+          focus={focus}
           onArticleChange={(type: ArticleType, id: string) => {
             if (typeof onArticleChange !== "undefined") {
               onArticleChange(type, id);
