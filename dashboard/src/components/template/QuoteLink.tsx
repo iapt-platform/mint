@@ -8,8 +8,8 @@ interface IWidgetQuoteLinkCtl {
   volume: string;
   page: string;
   style: TDisplayStyle;
-  book: number;
-  para: number;
+  book?: number;
+  para?: number;
 }
 const QuoteLinkCtl = ({
   type,
@@ -31,6 +31,7 @@ const QuoteLinkCtl = ({
       <ArticleCtl
         title={textShow}
         type={"page"}
+        focus={book && para ? `${book}-${para}` : undefined}
         id={`${type}_${bookName}_${volume}_${page}`}
         style={style}
       />

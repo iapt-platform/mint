@@ -13,6 +13,7 @@ interface IWidgetChapterCtl {
   id?: string;
   channel?: string;
   title?: string;
+  focus?: string | null;
   style?: TDisplayStyle;
 }
 
@@ -21,6 +22,7 @@ export const ArticleCtl = ({
   id,
   channel,
   title,
+  focus,
   style = "modal",
 }: IWidgetChapterCtl) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,6 +44,7 @@ export const ArticleCtl = ({
       type={type}
       articleId={id}
       channelId={channel}
+      focus={focus}
       mode="read"
     />
   );

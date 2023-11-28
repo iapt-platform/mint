@@ -5,6 +5,7 @@ import Mermaid from "./Mermaid";
 import Nissaya from "./Nissaya";
 import Note from "./Note";
 import ParaHandle from "./ParaHandle";
+import ParaShell from "./ParaShell";
 import Quote from "./Quote";
 import QuoteLink from "./QuoteLink";
 import SentEdit from "./SentEdit";
@@ -51,6 +52,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <GrammarPopShell props={props ? props : ""} />;
     case "quote-link":
       return <QuoteLink props={props ? props : ""} />;
+    case "para-shell":
+      return <ParaShell props={props ? props : ""}>{children}</ParaShell>;
     default:
       return <>未定义模版({tpl})</>;
   }

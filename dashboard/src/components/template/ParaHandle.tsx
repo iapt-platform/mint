@@ -1,4 +1,4 @@
-import { Button, Divider, Dropdown, MenuProps, message } from "antd";
+import { Button, Dropdown, MenuProps, message } from "antd";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { fullUrl } from "../../utils";
 import { useIntl } from "react-intl";
@@ -10,7 +10,7 @@ interface IWidgetParaHandleCtl {
   channels?: string[];
   sentences: string[];
 }
-const ParaHandleCtl = ({
+export const ParaHandleCtl = ({
   book,
   para,
   mode = "read",
@@ -111,15 +111,17 @@ const ParaHandleCtl = ({
     }
   };
   return (
-    <Divider orientation="left">
+    <div>
       <Dropdown
         menu={{ items, onClick }}
         placement="bottomLeft"
         trigger={["click"]}
       >
-        <Button type="text">{para}</Button>
+        <Button size="small" type="text">
+          {para}
+        </Button>
       </Dropdown>
-    </Divider>
+    </div>
   );
 };
 
