@@ -22,6 +22,7 @@ interface IWidget {
   articleId?: string;
   mode?: ArticleMode | null;
   channelId?: string | null;
+  focus?: string | null;
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
@@ -29,6 +30,7 @@ interface IWidget {
 const TypeTermWidget = ({
   channelId,
   articleId,
+  focus,
   mode = "read",
   onArticleChange,
 }: IWidget) => {
@@ -101,6 +103,7 @@ const TypeTermWidget = ({
           <TypePali
             type={"para"}
             {...paramPali}
+            focus={focus}
             onArticleChange={(type: ArticleType, id: string) => {
               if (typeof onArticleChange !== "undefined") {
                 onArticleChange(type, id);

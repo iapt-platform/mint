@@ -141,6 +141,7 @@ const ArticleWidget = ({
         <TypePage
           articleId={articleId}
           channelId={channelId}
+          focus={focus}
           mode={mode}
           onArticleChange={(type: ArticleType, id: string) => {
             if (typeof onArticleChange !== "undefined") {
