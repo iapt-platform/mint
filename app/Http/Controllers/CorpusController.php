@@ -488,7 +488,7 @@ class CorpusController extends Controller
 
         $pFrom = $request->get('from',$paraFrom);
         $pTo = $request->get('to',$paraTo);
-        //根据句子的长度找到这次应该加载的句子
+        //根据句子的长度找到这次应该加载的段落
         $maxLen = 3000;
         $paliText = PaliText::select(['paragraph','lenght'])
                             ->where('book',$sentId[0])
@@ -584,6 +584,7 @@ class CorpusController extends Controller
             if($currPara !== $para){
                 $currPara = $para;
                 //输出段落标记
+
                 if($paraMark){
                     $sentInPara = array();
                     foreach ($sentList as $sentId => $sentParam) {
@@ -592,16 +593,20 @@ class CorpusController extends Controller
                             $sentInPara[] = $sentId;
                         }
                     }
-                    $mark = [
-                        'book'=>$arrSentId[0],
-                        'para'=>$arrSentId[1],
-                        'channels'=>$channelsId,
-                        'sentences'=>$sentInPara,
-                    ];
-                    $markProps = base64_encode(\json_encode($mark)) ;
-                    $paraWidget = "<MdTpl tpl='para' props='{$markProps}' ></MdTpl>";
-                    $content[] = $paraWidget;
+
+                    //输出段落起始
+                    if(!empty($currPara)){
+                        $content[] = '</MdTpl>';
+                    }
+                    $markProps = base64_encode(\json_encode([
+                            'book'=>$arrSentId[0],
+                            'para'=>$arrSentId[1],
+                            'channels'=>$channelsId,
+                            'sentences'=>$sentInPara,
+                        ])) ;
+                    $content[] = "<MdTpl tpl='para-shell' props='{$markProps}' >";
                 }
+
             }
             $sent = $this->newSent($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3]);
             foreach ($indexChannel as $channelId => $info) {
@@ -741,7 +746,9 @@ class CorpusController extends Controller
             }
             $content = $this->pushSent($content,$sent,0,$mode);
         }
-
+        if($paraMark){
+            $content[] = '</MdTpl>';
+        }
         $output = \implode("",$content);
         return "<div>{$output}</div>";
     }
