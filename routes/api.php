@@ -79,6 +79,7 @@ use App\Http\Controllers\SearchPageNumberController;
 use App\Http\Controllers\NavPageController;
 use App\Http\Controllers\BookTitleController;
 use App\Http\Controllers\SystemTermController;
+use App\Http\Controllers\TermExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,9 +98,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v2'],function(){
 	Route::apiResource('wbw_templates',WbwTemplateController::class);
+
 	Route::apiResource('terms',DhammaTermController::class);
-	Route::get('terms-export',[DhammaTermController::class,"export"]);
-    Route::get('terms-import',[DhammaTermController::class,"import"]);
+	Route::apiResource('terms-export',TermExportController::class);
+	Route::get('terms-import',[TermExportController::class,'import']);
     Route::get('system-term/{lang}/{word}',[SystemTermController::class,"show"]);
 
 	Route::apiResource('sentence',SentenceController::class);
