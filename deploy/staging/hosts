@@ -74,6 +74,7 @@ app_aws_region="us-east-1"
 app_aws_endpoint_domain="change-me.org"
 
 app_icp_code=""
+app_mps_code=""
 app_cors_allowed_origins=https://www.change-me.org
 app_questionnaire_link="https://wj.qq.com/change-me/"
 

@@ -21,6 +21,7 @@
         REACT_APP_ASSETS_SERVER: "{{ app_assets_server }}"
         REACT_APP_API_SERVER: "https://{{ app_domain }}"
         REACT_APP_ICP_CODE: "{{ app_icp_code }}"
+        REACT_APP_MPS_CODE: "{{ app_mps_code }}"
         REACT_APP_QUESTIONNAIRE_LINK: "{{ app_questionnaire_link }}"
 
 - name: deploy php-fpm servers
