@@ -555,8 +555,9 @@ class TemplateRender{
         $volume = $this->get_param($this->param,"volume",3,false);
         $page = $this->get_param($this->param,"page",4,false);
         $style = $this->get_param($this->param,"style",5,'modal');
-        $book = $this->get_param($this->param,"book",6,false);
-        $para = $this->get_param($this->param,"para",7,false);
+        $title = $this->get_param($this->param,"title",6,false);
+        $book = $this->get_param($this->param,"book",7,false);
+        $para = $this->get_param($this->param,"para",8,false);
 
         if(!$bookName || !$volume || !$page){
             /**
@@ -568,32 +569,34 @@ class TemplateRender{
                                 ->where('paragraph','<=',$para)
                                 ->orderBy('paragraph','desc')
                                 ->first();
-                if(!$bookName){
-                    foreach (BookTitle::get() as $value) {
-                        if($value['id']===$pageInfo->pcd_book_id){
-                            switch (strtoupper($type)) {
-                                case 'M':
-                                    $key = 'm_title';
-                                    break;
-                                case 'P':
-                                    $key = 'p_title';
-                                    break;
-                                case 'V':
-                                    $key = 'v_title';
-                                    break;
-                                default:
-                                    $key = 'term';
-                                    break;
+                if($pageInfo){
+                    if(!$bookName){
+                        foreach (BookTitle::get() as $value) {
+                            if($value['id']===$pageInfo->pcd_book_id){
+                                switch (strtoupper($type)) {
+                                    case 'M':
+                                        $key = 'm_title';
+                                        break;
+                                    case 'P':
+                                        $key = 'p_title';
+                                        break;
+                                    case 'V':
+                                        $key = 'v_title';
+                                        break;
+                                    default:
+                                        $key = 'term';
+                                        break;
+                                }
+                                $bookName = $value[$key];
                             }
-                            $bookName = $value[$key];
                         }
                     }
-                }
-                if(!$volume){
-                    $volume = $pageInfo->volume;
-                }
-                if(!$page){
-                    $page = $pageInfo->page;
+                    if(!$volume){
+                        $volume = $pageInfo->volume;
+                    }
+                    if(!$page){
+                        $page = $pageInfo->page;
+                    }
                 }
             }
         }
@@ -608,7 +611,9 @@ class TemplateRender{
             $props['book'] = $book;
             $props['para'] = $para;
         }
-
+        if($title){
+            $props['title'] = $title;
+        }
         $term = $this->getTermProps($bookName,':quote:');
         $props['term'] = $term;
         if(isset($term['id'])){
