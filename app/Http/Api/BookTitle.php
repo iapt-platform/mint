@@ -75,46 +75,6 @@ class BookTitle{
     "abbr" => "suttavandanā"
   ],
   [
-    "id" => 8,
-    "book" => 5,
-    "name" => "Jinālaṅkāra",
-    "term" => "jinālaṅkāra",
-    "v_title" => "jinālaṅkāra",
-    "m_title" => "jinālaṅkāra",
-    "p_title" => "jinālaṅkāra",
-    "abbr" => "jinālaṅkāra"
-  ],
-  [
-    "id" => 9,
-    "book" => 6,
-    "name" => "Kamalāñjali",
-    "term" => "kamalāñjali",
-    "v_title" => "kamalāñjali",
-    "m_title" => "kamalāñjali",
-    "p_title" => "kamalāñjali",
-    "abbr" => "kamalāñjali"
-  ],
-  [
-    "id" => 10,
-    "book" => 7,
-    "name" => "Pajjamadhu",
-    "term" => "pajjamadhu",
-    "v_title" => "pajjamadhu",
-    "m_title" => "pajjamadhu",
-    "p_title" => "pajjamadhu",
-    "abbr" => "pajjamadhu"
-  ],
-  [
-    "id" => 11,
-    "book" => 8,
-    "name" => "Buddhaguṇagāthāvalī",
-    "term" => "buddhaguṇagāthāvalī",
-    "v_title" => "buddhaguṇagāthāvalī",
-    "m_title" => "buddhaguṇagāthāvalī",
-    "p_title" => "buddhaguṇagāthāvalī",
-    "abbr" => "buddhaguṇagāthāvalī"
-  ],
-  [
     "id" => 12,
     "book" => 9,
     "name" => "Abhidhānappadīpikāṭīkā",
@@ -587,22 +547,22 @@ class BookTitle{
   [
     "id" => 59,
     "book" => 53,
-    "name" => "Thupavaṃso",
-    "term" => "thupavaṃso",
-    "v_title" => "thupavaṃso",
-    "m_title" => "thupavaṃso",
-    "p_title" => "thupavaṃso",
-    "abbr" => "thupavaṃso"
+    "name" => "Thupavaṃsa",
+    "term" => "thupavaṃsa",
+    "v_title" => "thupavaṃsa",
+    "m_title" => "thupavaṃsa",
+    "p_title" => "thupavaṃsa",
+    "abbr" => "thupavaṃsa"
   ],
   [
     "id" => 60,
     "book" => 54,
-    "name" => "Dāṭhāvaṃso",
-    "term" => "dāṭhāvaṃso",
-    "v_title" => "dāṭhāvaṃso",
-    "m_title" => "dāṭhāvaṃso",
-    "p_title" => "dāṭhāvaṃso",
-    "abbr" => "dāṭhāvaṃso"
+    "name" => "Dāṭhāvaṃsa",
+    "term" => "dāṭhāvaṃsa",
+    "v_title" => "dāṭhāvaṃsa",
+    "m_title" => "dāṭhāvaṃsa",
+    "p_title" => "dāṭhāvaṃsa",
+    "abbr" => "dāṭhāvaṃsa"
   ],
   [
     "id" => 61,
@@ -617,12 +577,12 @@ class BookTitle{
   [
     "id" => 62,
     "book" => 56,
-    "name" => "Dhātuvaṃso",
-    "term" => "dhātuvaṃso",
-    "v_title" => "dhātuvaṃso",
-    "m_title" => "dhātuvaṃso",
-    "p_title" => "dhātuvaṃso",
-    "abbr" => "dhātuvaṃso"
+    "name" => "Dhātuvaṃsa",
+    "term" => "dhātuvaṃsa",
+    "v_title" => "dhātuvaṃsa",
+    "m_title" => "dhātuvaṃsa",
+    "p_title" => "dhātuvaṃsa",
+    "abbr" => "dhātuvaṃsa"
   ],
   [
     "id" => 63,
@@ -2507,31 +2467,31 @@ class BookTitle{
   [
     "id" => 251,
     "book" => 204,
-    "name" => "Sāratthadīpanī-ṭīkā (paṭhamo bhāgo)",
-    "term" => "Sāratthadīpanī-ṭīkā",
-    "v_title" => "Sāratthadīpanī-ṭīkā",
-    "m_title" => "Sāratthadīpanī-ṭīkā",
-    "p_title" => "Sāratthadīpanī-ṭīkā",
+    "name" => "sāratthadīpanī-ṭīkā (paṭhamo bhāgo)",
+    "term" => "sāratthadīpanī-ṭīkā",
+    "v_title" => "sāratthadīpanī-ṭīkā",
+    "m_title" => "sāratthadīpanī-ṭīkā",
+    "p_title" => "sāratthadīpanī-ṭīkā",
     "abbr" => "sārattha. ṭī."
   ],
   [
     "id" => 252,
     "book" => 205,
-    "name" => "Sāratthadīpanī-ṭīkā (dutiyo bhāgo)",
-    "term" => "Sāratthadīpanī-ṭīkā",
-    "v_title" => "Sāratthadīpanī-ṭīkā",
-    "m_title" => "Sāratthadīpanī-ṭīkā",
-    "p_title" => "Sāratthadīpanī-ṭīkā",
+    "name" => "sāratthadīpanī-ṭīkā (dutiyo bhāgo)",
+    "term" => "sāratthadīpanī-ṭīkā",
+    "v_title" => "sāratthadīpanī-ṭīkā",
+    "m_title" => "sāratthadīpanī-ṭīkā",
+    "p_title" => "sāratthadīpanī-ṭīkā",
     "abbr" => "sārattha. ṭī."
   ],
   [
     "id" => 253,
     "book" => 206,
-    "name" => "Sāratthadīpanī-ṭīkā (tatiyo bhāgo)",
-    "term" => "Sāratthadīpanī-ṭīkā",
-    "v_title" => "Sāratthadīpanī-ṭīkā",
-    "m_title" => "Sāratthadīpanī-ṭīkā",
-    "p_title" => "Sāratthadīpanī-ṭīkā",
+    "name" => "sāratthadīpanī-ṭīkā (tatiyo bhāgo)",
+    "term" => "sāratthadīpanī-ṭīkā",
+    "v_title" => "sāratthadīpanī-ṭīkā",
+    "m_title" => "sāratthadīpanī-ṭīkā",
+    "p_title" => "sāratthadīpanī-ṭīkā",
     "abbr" => "sārattha. ṭī."
   ],
   [
@@ -2751,7 +2711,7 @@ class BookTitle{
     "term" => "pārājikapāḷi",
     "v_title" => "pārājikapāḷi",
     "m_title" => "pārājikapāḷi",
-    "p_title" => "vinayapitaka",
+    "p_title" => "vinayapiṭaka",
     "abbr" => "vi."
   ],
   [
@@ -2761,7 +2721,7 @@ class BookTitle{
     "term" => "pācittiyapāḷi",
     "v_title" => "pācittiyapāḷi",
     "m_title" => "pācittiyapāḷi",
-    "p_title" => "vinayapitaka",
+    "p_title" => "vinayapiṭaka",
     "abbr" => "vi."
   ],
   [
@@ -2771,7 +2731,7 @@ class BookTitle{
     "term" => "mahāvaggapāḷi",
     "v_title" => "mahāvaggapāḷi",
     "m_title" => "mahāvaggapāḷi",
-    "p_title" => "vinayapitaka",
+    "p_title" => "vinayapiṭaka",
     "abbr" => "vi."
   ],
   [
@@ -2781,7 +2741,7 @@ class BookTitle{
     "term" => "cūḷavaggapāḷi",
     "v_title" => "cūḷavaggapāḷi",
     "m_title" => "cūḷavaggapāḷi",
-    "p_title" => "vinayapitaka",
+    "p_title" => "vinayapiṭaka",
     "abbr" => "vi."
   ],
   [
@@ -2791,7 +2751,7 @@ class BookTitle{
     "term" => "parivārapāḷi",
     "v_title" => "parivārapāḷi",
     "m_title" => "parivārapāḷi",
-    "p_title" => "vinayapitaka",
+    "p_title" => "vinayapiṭaka",
     "abbr" => "vi."
   ],
   [
@@ -2811,10 +2771,10 @@ class BookTitle{
     "term" => "pācittiyapāḷi",
     "v_title" => "pācittiyapāḷi",
     "m_title" => "pācittiyapāḷi",
-    "p_title" => "vinayapitaka",
+    "p_title" => "vinayapiṭaka",
     "abbr" => "vi."
   ]
-  ];
+];
 
     }
 }
