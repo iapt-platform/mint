@@ -44,9 +44,8 @@ const ParaShellCtl = ({
   return (
     <div
       style={{
-        borderTop: isFocus ? undefined : "1px solid #80808080",
-        border: isFocus ? "1px solid #006bff" : undefined,
-        borderRadius: isFocus ? 6 : undefined,
+        border: isFocus ? "2px solid #e35f00bd " : "1px solid #006bffc7",
+        borderRadius: 6,
         marginTop: 20,
         paddingTop: 16,
       }}
