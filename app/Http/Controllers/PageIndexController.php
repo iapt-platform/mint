@@ -65,9 +65,9 @@ class PageIndexController extends Controller
             ],
             [
                 'image'=>'/assets/gallery/04.jpg',
-                'title'=>'云台翻译中心',
+                'title'=>'翻译中心接待室',
                 'id'=>'desc_04',
-                'description'=>'外景',
+                'description'=>'人工湖畔的接待室，访客活动中心',
             ],
             [
                 'image'=>'/assets/gallery/05.jpg',
