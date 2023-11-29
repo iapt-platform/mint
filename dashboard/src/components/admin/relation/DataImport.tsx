@@ -48,7 +48,7 @@ const DataImportWidget = ({
       }}
       submitTimeout={2000}
       onFinish={async (values) => {
-        console.log(values);
+        console.log("values", values);
         let _filename: string = "";
 
         if (
@@ -59,7 +59,7 @@ const DataImportWidget = ({
         } else if (typeof values.filename[0].response === "undefined") {
           _filename = values.filename[0].uid;
         } else {
-          _filename = values.filename[0].response.data.url;
+          _filename = values.filename[0].response.data.filename;
         }
 
         const queryUrl = `${url}?filename=${_filename}&${urlExtra}`;
@@ -91,7 +91,7 @@ const DataImportWidget = ({
         fieldProps={{
           name: "file",
         }}
-        action={`${API_HOST}/api/v2/attachments`}
+        action={`${API_HOST}/api/v2/attachments?is_tmp=true`}
       />
     </ModalForm>
   );

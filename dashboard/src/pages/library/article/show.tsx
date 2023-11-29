@@ -48,7 +48,6 @@ import { TResType } from "../../../components/discussion/DiscussionListCard";
 import { modeChange } from "../../../reducers/article-mode";
 import SearchButton from "../../../components/general/SearchButton";
 import ToStudio from "../../../components/auth/ToStudio";
-import { currentUser as _currentUser } from "../../../reducers/current-user";
 import LoginAlertModal from "../../../components/auth/LoginAlertModal";
 import ShareButton from "../../../components/export/ShareButton";
 
@@ -76,7 +75,6 @@ const Widget = () => {
     useState<IArticleDataResponse>();
 
   const paraChange = useAppSelector(paraParam);
-  const user = useAppSelector(_currentUser);
 
   useEffect(() => {
     if (typeof paraChange === "undefined") {
@@ -331,6 +329,7 @@ const Widget = () => {
               book={searchParams.get("book")}
               para={searchParams.get("par")}
               channelId={searchParams.get("channel")}
+              focus={searchParams.get("focus")}
               articleId={id}
               anthologyId={searchParams.get("anthology")}
               mode={searchParams.get("mode") as ArticleMode}
@@ -340,7 +339,7 @@ const Widget = () => {
                 target?: string
               ) => {
                 console.log("article change", newType, article, target);
-
+                scrollToTop();
                 let url = `/article/${newType}/${article}?mode=${currMode}`;
                 searchParams.forEach((value, key) => {
                   console.log(value, key);

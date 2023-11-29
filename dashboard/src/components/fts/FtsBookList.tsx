@@ -1,8 +1,10 @@
-import { Badge, List } from "antd";
+import { Badge, Card, Space, Tree, Typography } from "antd";
 import { useEffect, useState } from "react";
 
 import { get } from "../../request";
-
+import { Key } from "antd/es/table/interface";
+import { DataNode } from "antd/es/tree";
+const { Text } = Typography;
 interface IFtsData {
   book: number;
   paragraph: number;
@@ -54,11 +56,31 @@ const FtsBookListWidget = ({
   view = "pali",
   onSelect,
 }: IWidget) => {
-  const [ftsData, setFtsData] = useState<IFtsItem[]>();
+  const [treeData, setTreeData] = useState<DataNode[]>();
   const [total, setTotal] = useState<number>();
+  const [checkedKeys, setCheckedKeys] = useState<
+    | {
+        checked: Key[];
+        halfChecked: Key[];
+      }
+    | Key[]
+  >([0]);
+  const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
+  const [expandedKeys, setExpandedKeys] = useState<React.Key[]>(["all"]);
 
   const focusBooks = bookId?.split(",");
   console.log("focusBooks", focusBooks);
+
+  useEffect(() => {
+    const currBooks = bookId?.split(",").map((item) => parseInt(item));
+    if (currBooks) {
+      console.log("currBooks", currBooks);
+      setCheckedKeys(currBooks);
+      setSelectedKeys(currBooks);
+      setExpandedKeys(["all"]);
+    }
+  }, [bookId, treeData]);
+
   useEffect(() => {
     let words;
     let api = "";
@@ -85,56 +107,101 @@ const FtsBookListWidget = ({
         for (const iterator of json.data.rows) {
           totalResult += iterator.count;
         }
-        const result: IFtsItem[] = json.data.rows.map((item) => {
-          return item;
-        });
-        setFtsData([
+
+        setTreeData([
           {
-            book: 0,
-            paragraph: 0,
-            title: "全部",
-            pcdBookId: 0,
-            count: totalResult,
+            key: "all",
+            title: "all " + totalResult + "个单词",
+            children: json.data.rows.map((item, id) => {
+              const title = item.title ? item.title : item.paliTitle;
+              return {
+                key: item.pcdBookId,
+                title: (
+                  <Space>
+                    <Text
+                      style={{ whiteSpace: "nowrap", width: 200 }}
+                      ellipsis={{ tooltip: { title } }}
+                    >
+                      {id + 1}.{title}
+                    </Text>
+                    <Badge size="small" color="geekblue" count={item.count} />
+                  </Space>
+                ),
+              };
+            }),
           },
-          ...result,
         ]);
+
         setTotal(json.data.count);
       }
     });
   }, [keyWord, keyWords, match, tags, view]);
+
+  const onExpand = (expandedKeysValue: React.Key[]) => {
+    console.log("onExpand", expandedKeysValue);
+    // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+    // or, you can remove all expanded children keys.
+    setExpandedKeys(expandedKeysValue);
+  };
+
+  const onCheck = (
+    checked:
+      | {
+          checked: Key[];
+          halfChecked: Key[];
+        }
+      | Key[]
+  ) => {
+    console.log("onCheck", checked);
+    setCheckedKeys(checked);
+    if (typeof onSelect !== "undefined") {
+      onSelect(checked.toString());
+    }
+  };
+
   return (
-    <List
-      header={`总计：` + total}
-      itemLayout="vertical"
-      size="small"
-      dataSource={ftsData}
-      renderItem={(item, id) => (
-        <List.Item>
-          <div
-            style={{
-              padding: 4,
-              borderRadius: 4,
-              display: "flex",
-              justifyContent: "space-between",
-              cursor: "pointer",
-              backgroundColor: focusBooks?.includes(item.pcdBookId.toString())
-                ? "lightblue"
-                : "unset",
-            }}
-            onClick={() => {
-              if (typeof onSelect !== "undefined") {
-                onSelect(item.pcdBookId);
+    <div style={{ padding: 4 }}>
+      <Card
+        size="small"
+        title={
+          <Space>
+            {"总计"}
+            <Badge
+              size="small"
+              count={total}
+              overflowCount={999}
+              color="lime"
+            />
+            {"本书"}
+          </Space>
+        }
+      >
+        <Tree
+          checkable
+          defaultExpandAll
+          onExpand={onExpand}
+          onCheck={onCheck}
+          checkedKeys={checkedKeys}
+          expandedKeys={expandedKeys}
+          onSelect={(selectedKeysValue: React.Key[], info: any) => {
+            console.log("onSelect", selectedKeysValue);
+            setSelectedKeys(selectedKeysValue);
+            setCheckedKeys(selectedKeysValue);
+            if (typeof onSelect !== "undefined") {
+              if (selectedKeysValue.length > 0) {
+                if (selectedKeysValue[0] === "all") {
+                  onSelect(0);
+                } else {
+                  onSelect(selectedKeysValue[0]);
+                }
               }
-            }}
-          >
-            <span>
-              {id + 1}.{item.title ? item.title : item.paliTitle}
-            </span>
-            <Badge color="geekblue" count={item.count} />
-          </div>
-        </List.Item>
-      )}
-    />
+            }
+          }}
+          selectedKeys={selectedKeys}
+          treeData={treeData}
+        />
+      </Card>
+    </div>
   );
 };
 

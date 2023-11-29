@@ -37,7 +37,7 @@ interface ITermSummary {
   data: string;
 }
 
-interface IWidgetTermCtl {
+export interface IWidgetTermCtl {
   id?: string;
   word?: string;
   meaning?: string;
@@ -47,8 +47,9 @@ interface IWidgetTermCtl {
   parentStudioId?: string /**该术语所在译文的studio_id */;
   summary?: string;
   isCommunity?: boolean;
+  compact?: boolean;
 }
-const TermCtl = ({
+export const TermCtl = ({
   id,
   word,
   meaning,
@@ -58,6 +59,7 @@ const TermCtl = ({
   parentStudioId,
   summary,
   isCommunity,
+  compact = false,
 }: IWidgetTermCtl) => {
   const [openPopover, setOpenPopover] = useState(false);
   const [termData, setTermData] = useState<ITerm>({
@@ -75,7 +77,6 @@ const TermCtl = ({
   const [uid, setUid] = useState<string>(
     lodash.times(20, () => lodash.random(35).toString(36)).join("")
   );
-
   const termOrder = useAppSelector(order);
 
   useEffect(() => {
@@ -167,8 +168,9 @@ const TermCtl = ({
                   }}
                   trigger={
                     <Button
-                      onClick={() => {
+                      onClick={(event: React.MouseEvent<any, MouseEvent>) => {
                         setOpenPopover(false);
+                        //event.stopPropagation();
                       }}
                       type="link"
                       size="small"
@@ -237,7 +239,7 @@ const TermCtl = ({
               : "unknown"}
           </Typography.Link>
         </Popover>
-        {isFirst ? (
+        {isFirst && !compact ? (
           <TermExtra pali={word} meaning2={termData?.meaning2} />
         ) : undefined}
       </>

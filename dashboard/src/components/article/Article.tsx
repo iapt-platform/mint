@@ -4,6 +4,7 @@ import TypeAnthology from "./TypeAnthology";
 import TypeTerm from "./TypeTerm";
 import TypePali from "./TypePali";
 import "./article.css";
+import TypePage from "./TypePage";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -49,6 +50,7 @@ interface IWidget {
   exerciseId?: string;
   userName?: string;
   active?: boolean;
+  focus?: string | null;
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
@@ -66,6 +68,7 @@ const ArticleWidget = ({
   userName,
   mode = "read",
   active = false,
+  focus,
   onArticleChange,
   onFinal,
   onLoad,
@@ -127,6 +130,19 @@ const ArticleWidget = ({
           mode={mode}
           book={book}
           para={para}
+          focus={focus}
+          onArticleChange={(type: ArticleType, id: string) => {
+            if (typeof onArticleChange !== "undefined") {
+              onArticleChange(type, id);
+            }
+          }}
+        />
+      ) : type === "page" ? (
+        <TypePage
+          articleId={articleId}
+          channelId={channelId}
+          focus={focus}
+          mode={mode}
           onArticleChange={(type: ArticleType, id: string) => {
             if (typeof onArticleChange !== "undefined") {
               onArticleChange(type, id);
