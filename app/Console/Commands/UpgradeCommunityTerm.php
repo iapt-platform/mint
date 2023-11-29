@@ -18,7 +18,7 @@ class UpgradeCommunityTerm extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:community.term {lang}';
+    protected $signature = 'upgrade:community.term {lang} {word?}';
 
     /**
      * The console command description.
@@ -49,22 +49,23 @@ class UpgradeCommunityTerm extends Command
         }
         $lang = strtolower($this->argument('lang'));
         $langFamily = explode('-',$lang)[0];
-        $localTerm = ChannelApi::getSysChannel(
-            "_community_term_{$lang}_"
-        );
+        $localTerm = ChannelApi::getSysChannel("_community_term_{$lang}_");
         if(!$localTerm){
             return 1;
         }
+
         $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
         if($channelId === false){
             $this->error('no channel');
             return 1;
         }
-        $table = DhammaTerm::select('word')
+        $table = DhammaTerm::select(['word','tag'])
                             ->whereIn('language',[$this->argument('lang'),$lang,$langFamily])
-                            ->groupBy('word');
+                            ->groupBy(['word','tag']);
 
-
+        if($this->argument('word')){
+            $table = $table->where('word',$this->argument('word'));
+        }
         $words = $table->get();
         $bar = $this->output->createProgressBar(count($words));
         foreach ($words as $key => $word) {
@@ -75,6 +76,7 @@ class UpgradeCommunityTerm extends Command
              */
             $bestNote = "" ;
             $allTerm = DhammaTerm::where('word',$word->word)
+                                ->where('tag',$word->tag)
                                 ->whereIn('language',[$this->argument('lang'),$lang,$langFamily])
                                 ->get();
             $score = [];
@@ -142,6 +144,7 @@ class UpgradeCommunityTerm extends Command
                 $term = DhammaTerm::where('channal',$localTerm)->firstOrNew(
                         [
                             "word" => $word->word,
+                            "tag" => $word->tag,
                             "channal" => $localTerm,
                         ],
                         [
@@ -155,6 +158,7 @@ class UpgradeCommunityTerm extends Command
                             'create_time' => time()*1000,
                         ]
                     );
+                    $term->tag = $word->tag;
                     $term->meaning = $hotMeaning->meaning;
                     $term->note = $bestNote;
                     $term->modify_time = time()*1000;
