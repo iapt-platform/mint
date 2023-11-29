@@ -164,6 +164,7 @@ const HeadBarWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
           />
         </div>
         <Space>
+          <a href="/">返回首页</a>
           <Link to="/download/download">下载</Link>
           <SearchButton />
           <ToStudio />
