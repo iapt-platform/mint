@@ -97,7 +97,14 @@ class TemplateRender{
         return $result;
     }
 
-    public function getTermProps($word,$channelId,$channelInfo){
+    public function getTermProps($word,$tag){
+        if(count($this->channel_id)>0){
+            $channelId = $this->channel_id[0];
+        }else{
+            $channelId = null;
+        }
+
+        $channelInfo = $this->channelInfo[0];
         if(Str::isUuid($channelId)){
             $lang = Channel::where('uid',$channelId)->value('lang');
             if(!empty($lang)){
@@ -107,9 +114,12 @@ class TemplateRender{
             }
             $this->info("term:{$word} 先查属于这个channel 的",'term');
             $this->info('channel id'.$channelId,'term');
-            $tplParam = DhammaTerm::where("word",$word)
-                                ->where('channal',$channelId)
-                                ->orderBy('updated_at','desc')
+            $table = DhammaTerm::where("word",$word)
+                                ->where('channal',$channelId);
+            if(!empty($tag)){
+                $table = $table->where('tag',$tag);
+            }
+            $tplParam = $table->orderBy('updated_at','desc')
                                 ->first();
             $studioId = $channelInfo->owner_uid;
         }else{
@@ -128,8 +138,11 @@ class TemplateRender{
              * 语族匹配也行
              */
                 $this->info("没有-再查这个studio的",'term');
-                $termsInStudio = DhammaTerm::where("word",$word)
-                                    ->where('owner',$channelInfo->owner_uid)
+                $table = DhammaTerm::where("word",$word);
+                if(!empty($tag)){
+                    $table = $table->where('tag',$tag);
+                }
+                $termsInStudio = $table->where('owner',$channelInfo->owner_uid)
                                     ->orderBy('updated_at','desc')
                                     ->get();
                 if(count($termsInStudio)>0){
@@ -162,8 +175,11 @@ class TemplateRender{
         if(!$tplParam){
             $this->info("没有，再查社区",'term');
             $community_channel = ChannelApi::getSysChannel("_community_term_zh-hans_");
-            $tplParam = DhammaTerm::where("word",$word)
-                                  ->where('channal',$community_channel)
+            $table = DhammaTerm::where("word",$word);
+            if(!empty($tag)){
+                $table = $table->where('tag',$tag);
+            }
+            $tplParam = $table->where('channal',$community_channel)
                                   ->first();
             if($tplParam){
                 $isCommunity = true;
@@ -195,16 +211,10 @@ class TemplateRender{
 
     private function render_term(){
         $word = $this->get_param($this->param,"word",1);
-        if(count($this->channel_id)>0){
-            $channelId = $this->channel_id[0];
-        }else{
-            $channelId = null;
-        }
 
-        $channelInfo = $this->channelInfo[0];
-        $key = "/term/{$channelId}/{$word}";
-        $props = $this->getTermProps($word,$channelId,$channelInfo);
+        $props = $this->getTermProps($word,'');
 
+        //$key = "/term/{$channelId}/{$word}";
         $output = $props['word'];
         switch ($this->format) {
             case 'react':
@@ -598,24 +608,17 @@ class TemplateRender{
             $props['book'] = $book;
             $props['para'] = $para;
         }
-        //获取原文channel
-        if(isset($this->channelInfo[0])){
-            $lang = $this->channelInfo[0]->lang;
+
+        $term = $this->getTermProps($bookName,':quote:');
+        $props['term'] = $term;
+        if(isset($term['id'])){
+            $props['bookNameLocal'] = $term['meaning'];
+            $text = $term['meaning'];
         }else{
-            $lang = 'en';
+            $text = $bookName;
         }
-        if($lang==='zh'){
-            $lang = 'zh-hans';
-        }
-        $termChannel = ChannelApi::getSysChannel("_System_Grammar_Term_{$lang}_");
-        $bookNameLocal = DhammaTerm::where('channal',$termChannel)
-                ->where('tag',':abbr:')
-                ->where('word',$bookName)
-                ->value('meaning');
-        if($bookNameLocal){
-            $props['bookNameLocal'] = $bookNameLocal;
-        }
-        $text = "{$bookNameLocal}. {$volume}. {$page}";
+        $text .= " {$volume}.{$page}";
+
         switch ($this->format) {
             case 'react':
                 $output = [
