@@ -20,6 +20,14 @@ const onClick: MenuProps["onClick"] = (e) => {
 export const mainMenuItems: MenuProps["items"] = [
   {
     label: (
+      <a href="/" rel="noreferrer">
+        首页
+      </a>
+    ),
+    key: "home",
+  },
+  {
+    label: (
       <Link to="/community/list">
         <FormattedMessage id="columns.library.community.title" />
       </Link>
@@ -164,7 +172,6 @@ const HeadBarWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
           />
         </div>
         <Space>
-          <a href="/">返回首页</a>
           <Link to="/download/download">下载</Link>
           <SearchButton />
           <ToStudio />
