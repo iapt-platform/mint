@@ -12,7 +12,7 @@ interface IWidgetChapterCtl {
   type?: ArticleType;
   id?: string;
   channel?: string;
-  title?: string;
+  title?: React.ReactNode;
   focus?: string | null;
   style?: TDisplayStyle;
 }
