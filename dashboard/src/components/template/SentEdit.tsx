@@ -129,9 +129,9 @@ export const SentEditInner = ({
     <Card
       bodyStyle={{ paddingBottom: 0, paddingLeft: 0, paddingRight: 0 }}
       style={{
-        border: "solid 2px #dfdfdf",
+        border: "2px solid rgb(128 128 128 / 30%)",
         marginTop: 4,
-        borderRadius: 5,
+        borderRadius: 6,
       }}
       size="small"
     >
