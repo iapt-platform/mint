@@ -59,7 +59,9 @@ const ParaShellCtl = ({
           position: "absolute",
           marginTop: "-2em",
           marginLeft: "1em",
-          backgroundColor: "#d9e9ff",
+          border: isFocus
+            ? "2px solid #e35f00bd "
+            : "2px solid rgba(0, 107, 255, 0.3)",
           borderRadius: "4px",
         }}
       >
