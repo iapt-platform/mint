@@ -706,8 +706,18 @@ Awesomazing
 <footer class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 text-sm">
 <div class="xl:container xl:mx-auto md:px-6 px-4 py-8">
 <div class="relative flex flex-col md:flex-row justify-between min-h-16 text-gray-600 dark:text-gray-500">
-    <div style="text-align: center;">
-        <span>ICP:<a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">滇ICP备2023006988号-1</a></span>
+    <div style="display:flex;">
+    @if(!empty(config('mint.app.icp_code')))
+    <span>ICP:<a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">{{ config('mint.app.icp_code') }}</a></span>
+    <span style="display:flex;">
+        <img alt="code" src="{{ URL::asset('assets/images/logo_mps.png') }}" style="width: 20px; height: 20px;margin:0 12px;"/>
+        @if(empty(config('mint.app.mps_code')))
+        <span>滇公网安备[审批中]号</span>
+        @else
+        <span>{{ config('mint.app.mps_code') }}</span>
+        @endif
+    </span>
+    @endif
     </div>
 </div>
 <div style="display:none;" class="relative flex flex-col md:flex-row justify-between min-h-16 text-gray-600 dark:text-gray-500">

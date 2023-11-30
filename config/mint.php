@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'app'=>[
+        'icp_code'=>env('APP_ICP_CODE', ''),
+        'mps_code'=>env('APP_MPS_CODE', ''),
+    ],
 
     'snowflake'=>[
         'data_center_id' => env('SNOWFLAKE_DATA_CENTER_ID', 1),
