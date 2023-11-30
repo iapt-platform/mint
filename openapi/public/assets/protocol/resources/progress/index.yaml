@@ -1,5 +1,5 @@
 get:
-  summary: Returns a list of discussions.
+  summary: 返回已有译文的章节信息
   tags:
     - progress
   description: 返回多行数据。支持关键字搜索，分页，排序
@@ -15,13 +15,13 @@ get:
     - name: tags
       in: query
       required: false
-      description: 便签过滤
+      description: 标签过滤。空为全部标签。
       schema:
         type: string
     - name: studio
       in: query
       required: false
-      description: studio过滤
+      description: studio选择。默认选择全部studio
       schema:
         type: string
     - name: progress
@@ -57,14 +57,14 @@ get:
           - commentary
     - name: limit
       in: query
-      description: 每次提取记录数
+      description: 每次提取记录数,默认20
       schema:
         type: number
         minimum: 1
         maximum: 1000
     - name: offset
       in: query
-      description: 从第几条记录开始提取
+      description: 从第几条记录开始提取，默认值0
       schema:
         type: number
   responses:
@@ -79,4 +79,6 @@ get:
                 type: boolean
               message:
                 type: string
+              data:
+                type: object
                 $ref: "./data.yaml"
