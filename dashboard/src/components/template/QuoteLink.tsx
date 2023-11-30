@@ -12,6 +12,7 @@ interface IWidgetQuoteLinkCtl {
   book?: number;
   para?: number;
   term?: IWidgetTermCtl;
+  title?: string;
 }
 const QuoteLinkCtl = ({
   type,
@@ -23,20 +24,22 @@ const QuoteLinkCtl = ({
   book,
   para,
   term,
+  title,
 }: IWidgetQuoteLinkCtl) => {
-  const abbr = bookNameLocal
-    ? bookNameLocal
-    : _bookName.find((value) => value.term === bookName)?.abbr;
   let textShow = ` ${volume}.${page}`;
 
   return (
     <>
       <ArticleCtl
         title={
-          <>
-            <TermCtl {...term} compact={true} />
-            {textShow}
-          </>
+          title ? (
+            title
+          ) : (
+            <>
+              <TermCtl {...term} compact={true} />
+              {textShow}
+            </>
+          )
         }
         type={"page"}
         focus={book && para ? `${book}-${para}` : undefined}

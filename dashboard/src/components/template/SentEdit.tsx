@@ -132,7 +132,7 @@ export const SentEditInner = ({
         border: "2px solid rgb(128 128 128 / 30%)",
         marginTop: 4,
         borderRadius: 6,
-        backgroundColor: "rgb(245 245 245)",
+        backgroundColor: "rgb(255 255 255 / 8%)",
       }}
       size="small"
     >
