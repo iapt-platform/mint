@@ -300,14 +300,75 @@ class ArticleController extends Controller
             $newArticle->save();
             OpsLog::debug($user['user_uid'],$newArticle);
 
-            if(Str::isUuid($request->get('anthologyId'))){
-                $articleMap = new ArticleCollection();
-                $articleMap->id = app('snowflake')->id();
-                $articleMap->article_id = $newArticle->uid;
-                $articleMap->collect_id = $request->get('anthologyId');
-                $articleMap->title = Article::find($newArticle->uid)->title;
-                $articleMap->level = 1;
-                $articleMap->save();
+            $anthologyId = $request->get('anthologyId');
+            if(Str::isUuid($anthologyId)){
+                $parentNode = $request->get('parentNode');
+                if(Str::isUuid($parentNode)){
+                    $map = ArticleCollection::where('collect_id',$anthologyId)
+                                        ->orderBy('id')->get();
+                    $newMap = array();
+                    $parentNodeLevel = -1;
+                    $appended = false;
+                    foreach ($map as $key => $row) {
+                        $orgNode = $row;
+                        if(!$appended){
+                            if($parentNodeLevel>0){
+                                if($row->level <= $parentNodeLevel ){
+                                    //parent node 末尾
+                                    $newNode = $row;
+                                    $newNode['article_id'] = $newArticle->uid;
+                                    $newNode['level'] = $parentNodeLevel+1;
+                                    $newNode['title'] = Article::find($newArticle->uid)->title;
+                                    $newMap[] = $newNode;
+                                    $appended = true;
+                                }
+                            }else{
+                                if($row->article_id === $parentNode){
+                                    $parentNodeLevel = $row->level;
+                                    $orgNode['children'] = $orgNode['children']+1;
+                                }
+                            }
+                        }
+                        $newMap[] = $orgNode;
+                    }
+                    if($parentNodeLevel>0 && $appended===false){
+                        //没挂上
+                        $newNode = array();
+                        $newNode['collect_id'] = $anthologyId;
+                        $newNode['article_id'] = $newArticle->uid;
+                        $newNode['level'] = $parentNodeLevel+1;
+                        $newNode['title'] = Article::find($newArticle->uid)->title;
+                        $newNode['children'] = 0;
+                        $newMap[] = $newNode;
+                    }
+                    $delete = ArticleCollection::where('collect_id',$anthologyId)->delete();
+                    $count=0;
+                    foreach ($newMap as $key => $row) {
+                        $new = new ArticleCollection;
+                        $new->id = app('snowflake')->id();
+                        $new->article_id = $row["article_id"];
+                        $new->collect_id = $row["collect_id"];
+                        $new->title = $row["title"];
+                        $new->level = $row["level"];
+                        $new->children = $row["children"];
+                        $new->editor_id = $user["user_id"];
+                        if(isset($row["deleted_at"])){
+                            $new->deleted_at = $row["deleted_at"];
+                        }
+                        $new->save();
+                        $count++;
+                    }
+                    ArticleMapController::updateCollection($anthologyId);
+                }else{
+                    $articleMap = new ArticleCollection();
+                    $articleMap->id = app('snowflake')->id();
+                    $articleMap->article_id = $newArticle->uid;
+                    $articleMap->collect_id = $request->get('anthologyId');
+                    $articleMap->title = Article::find($newArticle->uid)->title;
+                    $articleMap->level = 1;
+                    $articleMap->save();
+                }
+
             }
         });
         if(Str::isUuid($newArticle->uid)){
