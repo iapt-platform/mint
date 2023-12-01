@@ -679,8 +679,8 @@ class BookTitle{
     "book" => 66,
     "name" => "Visuddhimagga-mahāṭīkā(Paṭhamo bhāgo)",
     "term" => "Visuddhimagga-mahāṭīkā",
-    "v_title" => "Visuddhimagga-mahāṭīkā",
-    "m_title" => "Visuddhimagga-mahāṭīkā",
+    "v_title" => "visuddhimagga-mahāṭīkā",
+    "m_title" => "visuddhimagga-mahāṭīkā",
     "p_title" => "Visuddhimagga-mahāṭīkā",
     "abbr" => "visuddhi. ṭī."
   ],
@@ -689,8 +689,8 @@ class BookTitle{
     "book" => 67,
     "name" => "Visuddhimagga-mahāṭīkā(Dutiyo bhāgo)",
     "term" => "Visuddhimagga-mahāṭīkā",
-    "v_title" => "Visuddhimagga-mahāṭīkā",
-    "m_title" => "Visuddhimagga-mahāṭīkā",
+    "v_title" => "visuddhimagga-mahāṭīkā",
+    "m_title" => "visuddhimagga-mahāṭīkā",
     "p_title" => "Visuddhimagga-mahāṭīkā",
     "abbr" => "visuddhi. ṭī."
   ],
@@ -1420,7 +1420,7 @@ class BookTitle{
     "name" => "Theragāthā-aṭṭhakathā(Paṭhamo bhāgo)",
     "term" => "Theragāthā-aṭṭhakathā",
     "v_title" => "Theragāthā-aṭṭhakathā",
-    "m_title" => "Theragāthā-aṭṭhakathā",
+    "m_title" => "theragāthā-aṭṭhakathā",
     "p_title" => "Theragāthā-aṭṭhakathā",
     "abbr" => "thera. ṭṭha."
   ],
@@ -1430,7 +1430,7 @@ class BookTitle{
     "name" => "Theragāthā-aṭṭhakathā(Dutiyo bhāgo)",
     "term" => "Theragāthā-aṭṭhakathā",
     "v_title" => "Theragāthā-aṭṭhakathā",
-    "m_title" => "Theragāthā-aṭṭhakathā",
+    "m_title" => "theragāthā-aṭṭhakathā",
     "p_title" => "Theragāthā-aṭṭhakathā",
     "abbr" => "thera. ṭṭha."
   ],
@@ -1540,7 +1540,7 @@ class BookTitle{
     "name" => "Mahāvagga-aṭṭhakathā",
     "term" => "vinaya-aṭṭhakathā",
     "v_title" => "vinaya-aṭṭhakathā",
-    "m_title" => "mahāvagga-aṭṭhakathā",
+    "m_title" => "pācittiyādi-aṭṭhakathā",
     "p_title" => "vinaya-aṭṭhakathā",
     "abbr" => "vi. ṭṭha."
   ],
@@ -1560,7 +1560,7 @@ class BookTitle{
     "name" => "Parivāra-aṭṭhakathā",
     "term" => "vinaya-aṭṭhakathā",
     "v_title" => "vinaya-aṭṭhakathā",
-    "m_title" => "parivāra-aṭṭhakathā",
+    "m_title" => "cūḷavaggādi-aṭṭhakathā",
     "p_title" => "vinaya-aṭṭhakathā",
     "abbr" => "vi. ṭṭha."
   ],
@@ -2130,7 +2130,7 @@ class BookTitle{
     "name" => "tikanipāta-ṭīkā",
     "term" => "tikanipāta-ṭīkā",
     "v_title" => "tikanipāta-ṭīkā",
-    "m_title" => "tikanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "tikanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2140,7 +2140,7 @@ class BookTitle{
     "name" => "catukkanipāta-ṭīkā",
     "term" => "catukkanipāta-ṭīkā",
     "v_title" => "catukkanipāta-ṭīkā",
-    "m_title" => "catukkanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "catukkanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2160,7 +2160,7 @@ class BookTitle{
     "name" => "chakkanipāta-ṭīkā",
     "term" => "chakkanipāta-ṭīkā",
     "v_title" => "chakkanipāta-ṭīkā",
-    "m_title" => "chakkanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "chakkanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2170,7 +2170,7 @@ class BookTitle{
     "name" => "sattakanipāta-ṭīkā",
     "term" => "sattakanipāta-ṭīkā",
     "v_title" => "sattakanipāta-ṭīkā",
-    "m_title" => "sattakanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "sattakanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2190,7 +2190,7 @@ class BookTitle{
     "name" => "navakanipāta-ṭīkā",
     "term" => "navakanipāta-ṭīkā",
     "v_title" => "navakanipāta-ṭīkā",
-    "m_title" => "navakanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "navakanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2200,7 +2200,7 @@ class BookTitle{
     "name" => "dasakanipāta-ṭīkā",
     "term" => "dasakanipāta-ṭīkā",
     "v_title" => "dasakanipāta-ṭīkā",
-    "m_title" => "dasakanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "dasakanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2210,7 +2210,7 @@ class BookTitle{
     "name" => "ekādasakanipāta-ṭīkā",
     "term" => "ekādasakanipāta-ṭīkā",
     "v_title" => "ekādasakanipāta-ṭīkā",
-    "m_title" => "ekādasakanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "ekādasakanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2639,8 +2639,8 @@ class BookTitle{
     "book" => 210,
     "name" => "Vimativinodanī-ṭīkā",
     "term" => "Vimativinodanī-ṭīkā",
-    "v_title" => "Vimativinodanī-ṭīkā",
-    "m_title" => "Vimativinodanī-ṭīkā",
+    "v_title" => "vimativinodanī-ṭīkā",
+    "m_title" => "vimativinodanī-ṭīkā",
     "p_title" => "Vimativinodanī-ṭīkā",
     "abbr" => "vimati. ṭī."
   ],
@@ -2649,8 +2649,8 @@ class BookTitle{
     "book" => 210,
     "name" => "Vimativinodanī-ṭīkā",
     "term" => "Vimativinodanī-ṭīkā",
-    "v_title" => "Vimativinodanī-ṭīkā",
-    "m_title" => "Vimativinodanī-ṭīkā",
+    "v_title" => "vimativinodanī-ṭīkā",
+    "m_title" => "vimativinodanī-ṭīkā",
     "p_title" => "Vimativinodanī-ṭīkā",
     "abbr" => "vimati. ṭī."
   ],
@@ -2659,8 +2659,8 @@ class BookTitle{
     "book" => 210,
     "name" => "Vimativinodanī-ṭīkā",
     "term" => "Vimativinodanī-ṭīkā",
-    "v_title" => "Vimativinodanī-ṭīkā",
-    "m_title" => "Vimativinodanī-ṭīkā",
+    "v_title" => "vimativinodanī-ṭīkā",
+    "m_title" => "vimativinodanī-ṭīkā",
     "p_title" => "Vimativinodanī-ṭīkā",
     "abbr" => "vimati. ṭī."
   ],
@@ -2669,8 +2669,8 @@ class BookTitle{
     "book" => 210,
     "name" => "Vimativinodanī-ṭīkā",
     "term" => "Vimativinodanī-ṭīkā",
-    "v_title" => "Vimativinodanī-ṭīkā",
-    "m_title" => "Vimativinodanī-ṭīkā",
+    "v_title" => "vimativinodanī-ṭīkā",
+    "m_title" => "vimativinodanī-ṭīkā",
     "p_title" => "Vimativinodanī-ṭīkā",
     "abbr" => "vimati. ṭī."
   ],
@@ -2772,9 +2772,10 @@ class BookTitle{
     "v_title" => "pācittiyapāḷi",
     "m_title" => "pācittiyapāḷi",
     "p_title" => "vinayapiṭaka",
-    "abbr" => "vi."
+    "abbr" => "vi.\n"
   ]
-];
+  ];
+
 
     }
 }
