@@ -130,6 +130,9 @@ const EditableTocTreeWidget = ({
         onAppend={async (
           node: TreeNodeData
         ): Promise<TreeNodeData | undefined> => {
+          /**
+           * 在某节点下append新的节点
+           */
           if (typeof studioName === "undefined") {
             console.log("studio", studioName);
             return;
