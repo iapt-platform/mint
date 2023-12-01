@@ -66,8 +66,8 @@ id,book,name,term,v_title,m_title,p_title,abbr
 69,63,Mahāvaṃsapāḷi,mahāvaṃsapāḷi,mahāvaṃsapāḷi,mahāvaṃsapāḷi,mahāvaṃsapāḷi,mahāvaṃsapāḷi
 70,64,Visuddhimaggo(Paṭhamo bhāgo),visuddhimagga,visuddhimagga,visuddhimagga,visuddhimagga,visuddhi.
 71,65,Visuddhimaggo(Dutiyo bhāgo),visuddhimagga,visuddhimagga,visuddhimagga,visuddhimagga,visuddhi.
-72,66,Visuddhimagga-mahāṭīkā(Paṭhamo bhāgo),Visuddhimagga-mahāṭīkā,Visuddhimagga-mahāṭīkā,Visuddhimagga-mahāṭīkā,Visuddhimagga-mahāṭīkā,visuddhi. ṭī.
-73,67,Visuddhimagga-mahāṭīkā(Dutiyo bhāgo),Visuddhimagga-mahāṭīkā,Visuddhimagga-mahāṭīkā,Visuddhimagga-mahāṭīkā,Visuddhimagga-mahāṭīkā,visuddhi. ṭī.
+72,66,Visuddhimagga-mahāṭīkā(Paṭhamo bhāgo),Visuddhimagga-mahāṭīkā,visuddhimagga-mahāṭīkā,visuddhimagga-mahāṭīkā,Visuddhimagga-mahāṭīkā,visuddhi. ṭī.
+73,67,Visuddhimagga-mahāṭīkā(Dutiyo bhāgo),Visuddhimagga-mahāṭīkā,visuddhimagga-mahāṭīkā,visuddhimagga-mahāṭīkā,Visuddhimagga-mahāṭīkā,visuddhi. ṭī.
 74,68,Visuddhimagga nidānakathā,visuddhimagga-nidānakathā,visuddhimagga-nidānakathā,visuddhimagga-nidānakathā,visuddhimagga-nidānakathā,visuddhimagga-nidānakathā
 75,69,Paṭṭhānapāḷi(Dutiyo bhāgo),paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhāna.
 76,70,Paṭṭhānapāḷi(Tatiyo bhāgo),paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhāna.
@@ -140,8 +140,8 @@ id,book,name,term,v_title,m_title,p_title,abbr
 143,125,Suttanipāta-aṭṭhakathā,suttanipāta-aṭṭhakathā,suttanipāta-aṭṭhakathā,suttanipāta-aṭṭhakathā,suttanipāta-aṭṭhakathā,suttani. ṭṭha.
 144,126,Vimānavatthu-aṭṭhakathā,vimānavatthu-aṭṭhakathā,vimānavatthu-aṭṭhakathā,vimānavatthu-aṭṭhakathā,vimānavatthu-aṭṭhakathā,vimāna. ṭṭha.
 145,127,Petavatthu-aṭṭhakathā,petavatthu-aṭṭhakathā,petavatthu-aṭṭhakathā,petavatthu-aṭṭhakathā,petavatthu-aṭṭhakathā,peta. ṭṭha.
-146,128,Theragāthā-aṭṭhakathā(Paṭhamo bhāgo),Theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,thera. ṭṭha.
-147,129,Theragāthā-aṭṭhakathā(Dutiyo bhāgo),Theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,thera. ṭṭha.
+146,128,Theragāthā-aṭṭhakathā(Paṭhamo bhāgo),Theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,thera. ṭṭha.
+147,129,Theragāthā-aṭṭhakathā(Dutiyo bhāgo),Theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,thera. ṭṭha.
 148,130,Mūlapaṇṇāsa-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,ma. ṭṭha.
 149,131,Majjhimapaṇṇāsa-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,ma. ṭṭha.
 150,132,Uparipaṇṇāsa-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,ma. ṭṭha.
@@ -152,9 +152,9 @@ id,book,name,term,v_title,m_title,p_title,abbr
 155,137,Mahāvagga-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃ. ṭṭha.
 156,138,Pārājikakaṇḍa-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,pārājikakaṇḍa-aṭṭhakathā,vinaya-aṭṭhakathā,vi. ṭṭha.
 157,139,Pācittiya-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,pācittiyādi-aṭṭhakathā,vinaya-aṭṭhakathā,vi. ṭṭha.
-158,140,Mahāvagga-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,mahāvagga-aṭṭhakathā,vinaya-aṭṭhakathā,vi. ṭṭha.
+158,140,Mahāvagga-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,pācittiyādi-aṭṭhakathā,vinaya-aṭṭhakathā,vi. ṭṭha.
 159,141,Cūḷavagga-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,cūḷavaggādi-aṭṭhakathā,vinaya-aṭṭhakathā,vi. ṭṭha.
-160,142,Parivāra-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,parivāra-aṭṭhakathā,vinaya-aṭṭhakathā,vi. ṭṭha.
+160,142,Parivāra-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,cūḷavaggādi-aṭṭhakathā,vinaya-aṭṭhakathā,vi. ṭṭha.
 161,143,Therāpadānapāḷi(Paṭhamo bhāgo),therāpadānapāḷi,therāpadānapāḷi,therāpadānapāḷi,therāpadānapāḷi,apa.
 162,144,Therāpadānapāḷi(Dutiyo bhāgo),therāpadānapāḷi,therāpadānapāḷi,therāpadānapāḷi,therāpadānapāḷi,apa.
 163,144,therīapadānapāḷi,therīapadānapāḷi,therīapadānapāḷi,therīapadānapāḷi,therīapadānapāḷi,therīapadānapāḷi
@@ -211,15 +211,15 @@ id,book,name,term,v_title,m_title,p_title,abbr
 214,180,mohavicchedanī,mohavicchedanī,mohavicchedanī,mohavicchedanī,mohavicchedanī,mohavicchedanī
 215,181,Ekakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṃ. ṭī.
 216,182,Dukanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṃ. ṭī.
-217,182,tikanipāta-ṭīkā,tikanipāta-ṭīkā,tikanipāta-ṭīkā,tikanipāta-ṭīkā,tikanipāta-ṭīkā,aṃ. ṭī.
-218,182,catukkanipāta-ṭīkā,catukkanipāta-ṭīkā,catukkanipāta-ṭīkā,catukkanipāta-ṭīkā,catukkanipāta-ṭīkā,aṃ. ṭī.
+217,182,tikanipāta-ṭīkā,tikanipāta-ṭīkā,tikanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,tikanipāta-ṭīkā,aṃ. ṭī.
+218,182,catukkanipāta-ṭīkā,catukkanipāta-ṭīkā,catukkanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,catukkanipāta-ṭīkā,aṃ. ṭī.
 219,183,Pañcakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṃ. ṭī.
-220,183,chakkanipāta-ṭīkā,chakkanipāta-ṭīkā,chakkanipāta-ṭīkā,chakkanipāta-ṭīkā,chakkanipāta-ṭīkā,aṃ. ṭī.
-221,183,sattakanipāta-ṭīkā,sattakanipāta-ṭīkā,sattakanipāta-ṭīkā,sattakanipāta-ṭīkā,sattakanipāta-ṭīkā,aṃ. ṭī.
+220,183,chakkanipāta-ṭīkā,chakkanipāta-ṭīkā,chakkanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,chakkanipāta-ṭīkā,aṃ. ṭī.
+221,183,sattakanipāta-ṭīkā,sattakanipāta-ṭīkā,sattakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,sattakanipāta-ṭīkā,aṃ. ṭī.
 222,184,Aṭṭhakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṃ. ṭī.
-223,184,navakanipāta-ṭīkā,navakanipāta-ṭīkā,navakanipāta-ṭīkā,navakanipāta-ṭīkā,navakanipāta-ṭīkā,aṃ. ṭī.
-224,184,dasakanipāta-ṭīkā,dasakanipāta-ṭīkā,dasakanipāta-ṭīkā,dasakanipāta-ṭīkā,dasakanipāta-ṭīkā,aṃ. ṭī.
-225,184,ekādasakanipāta-ṭīkā,ekādasakanipāta-ṭīkā,ekādasakanipāta-ṭīkā,ekādasakanipāta-ṭīkā,ekādasakanipāta-ṭīkā,aṃ. ṭī.
+223,184,navakanipāta-ṭīkā,navakanipāta-ṭīkā,navakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,navakanipāta-ṭīkā,aṃ. ṭī.
+224,184,dasakanipāta-ṭīkā,dasakanipāta-ṭīkā,dasakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,dasakanipāta-ṭīkā,aṃ. ṭī.
+225,184,ekādasakanipāta-ṭīkā,ekādasakanipāta-ṭīkā,ekādasakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,ekādasakanipāta-ṭīkā,aṃ. ṭī.
 226,185,Sīlakkhandhavaggaṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dī. ṭī.
 227,186,Mahāvaggaṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dī. ṭī.
 228,187,Pāthikavaggaṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dī. ṭī.
@@ -262,10 +262,10 @@ id,book,name,term,v_title,m_title,p_title,abbr
 265,209,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajīra. ṭī.
 266,209,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajīra. ṭī.
 267,210,Vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimati. ṭī.
-268,210,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimati. ṭī.
-269,210,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimati. ṭī.
-270,210,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimati. ṭī.
-271,210,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimati. ṭī.
+268,210,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimati. ṭī.
+269,210,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimati. ṭī.
+270,210,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimati. ṭī.
+271,210,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimati. ṭī.
 272,211,Vinayālaṅkāra-ṭīkā,vinayālaṅkāra-ṭīkā,vinayālaṅkāra-ṭīkā,vinayālaṅkāra-ṭīkā,vinayālaṅkāra-ṭīkā,ālaṅkāra. ṭī.
 273,212,Kaṅkhāvitaraṇīpurāṇa-ṭīkā,kaṅkhāvitaraṇīpurāṇa-ṭīkā,kaṅkhāvitaraṇīpurāṇa-ṭīkā,kaṅkhāvitaraṇīpurāṇa-ṭīkā,kaṅkhāvitaraṇīpurāṇa-ṭīkā,kaṅkhā. ṭī.
 274,212,Kaṅkhāvitaraṇī-abhinavaṭīkā,kaṅkhāvitaraṇī-abhinavaṭīkā,kaṅkhāvitaraṇī-abhinavaṭīkā,kaṅkhāvitaraṇī-abhinavaṭīkā,kaṅkhāvitaraṇī-abhinavaṭīkā,kaṅkhā.
