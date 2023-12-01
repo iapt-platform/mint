@@ -154,6 +154,12 @@ class SentenceController extends Controller
                                     ->whereBetween('paragraph',$chapter)
                                     ->whereIn('channel_uid',explode(',',$request->get('channels')));
                 break;
+            case 'paragraph':
+                $table = Sentence::where('book_id',$request->get('book'))
+                                    ->whereIn('paragraph',explode(',',$request->get('para')))
+                                    ->whereIn('channel_uid',explode(',',$request->get('channels')))
+                                    ->orderBy('book_id')->orderBy('paragraph')->orderBy('word_start');
+                break;
 			default:
 				# code...
 				break;
@@ -162,7 +168,11 @@ class SentenceController extends Controller
         if($request->get('strlen',false)){
             $totalStrLen = $table->sum('strlen');
         }
-        $table = $table->orderBy($request->get('order','updated_at'),$request->get('dir','desc'));
+        if($request->get('view') !== 'paragraph'){
+            $table = $table->orderBy($request->get('order','updated_at'),
+                                    $request->get('dir','desc'));
+        }
+
         $table = $table->skip($request->get("offset",0))
                        ->take($request->get('limit',1000));
         $result = $table->get();
@@ -170,7 +180,8 @@ class SentenceController extends Controller
 		if($result){
             $output = ["count"=>$count];
             if($request->get('view') === 'sent-can-read' ||
-                $request->get('view') === 'chapter'){
+                $request->get('view') === 'chapter' ||
+                $request->get('view') === 'paragraph'){
                 $output["rows"] = SentResource::collection($result);
             }else{
                 $output["rows"] = $result;
