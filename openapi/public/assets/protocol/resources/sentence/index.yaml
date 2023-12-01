@@ -7,15 +7,16 @@ get:
     - name: view
       in: query
       required: true
-      description: 查询的内容
+      description: 查询的内容的类型
       schema:
         type: string
         enum:
           - chapter
+          - paragraph
     - name: book
       in: query
       required: true
-      description: 书号
+      description: 书号1~217
       schema:
         type: number
         minimum: 1
@@ -23,9 +24,9 @@ get:
     - name: para
       in: query
       required: true
-      description: 段落号
+      description: 段落号 章节模式只能一个 段落模式可以多个段落，以逗号分隔
       schema:
-        type: number
+        type: string
     - name: channels
       in: query
       required: true
