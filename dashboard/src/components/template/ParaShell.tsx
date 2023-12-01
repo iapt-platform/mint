@@ -46,23 +46,22 @@ const ParaShellCtl = ({
       style={{
         border: isFocus
           ? "2px solid #e35f00bd "
-          : "2px solid rgba(0, 107, 255, 0.3)",
+          : "2px solid rgba(0, 107, 255, 0.2)",
         borderRadius: 6,
         marginTop: 20,
-        paddingTop: 16,
-        paddingLeft: 4,
-        paddingRight: 4,
+        marginBottom: 28,
+        padding: 4,
       }}
     >
       <div
         style={{
           position: "absolute",
-          marginTop: "-2em",
-          marginLeft: "1em",
+          marginTop: -31,
+          marginLeft: -6,
           border: isFocus
             ? "2px solid #e35f00bd "
-            : "2px solid rgba(0, 107, 255, 0.3)",
-          borderRadius: "4px",
+            : "2px solid rgba(0, 107, 255, 0.2)",
+          borderRadius: "6px",
         }}
       >
         <ParaHandleCtl
