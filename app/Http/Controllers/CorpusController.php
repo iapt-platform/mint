@@ -667,26 +667,27 @@ class CorpusController extends Controller
                             // 阅读模式直接显示html原文
                             // 传过来的数据一定有一个原文channel
                             //
-                            if($mode !== "read"){
-                                if($row->content_type==='json'){
-                                    $newSent['channel']['type'] = "wbw";
-                                    if(isset($this->wbwChannels[0])){
-                                        $newSent['channel']['name'] = $indexChannel[$this->wbwChannels[0]]->name;
-                                        $newSent['channel']['id'] = $this->wbwChannels[0];
-                                        //存在一个translation channel
-                                        //尝试查找逐词解析数据。找到，替换现有数据
-                                        $wbwData = $this->getWbw($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],
-                                                                $this->wbwChannels[0]);
-                                        if($wbwData){
-                                            $newSent['content'] = $wbwData;
-                                            $newSent['contentType'] = 'json';
-                                            $newSent['html'] = "";
-                                        }
+                            if($mode !== "read" && $row->content_type==='json'){
+                                $newSent['channel']['type'] = "wbw";
+                                if(isset($this->wbwChannels[0])){
+                                    $newSent['channel']['name'] = $indexChannel[$this->wbwChannels[0]]->name;
+                                    $newSent['channel']['id'] = $this->wbwChannels[0];
+                                    //存在一个translation channel
+                                    //尝试查找逐词解析数据。找到，替换现有数据
+                                    $wbwData = $this->getWbw($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],
+                                                            $this->wbwChannels[0]);
+                                    if($wbwData){
+                                        $newSent['content'] = $wbwData;
+                                        $newSent['contentType'] = 'json';
+                                        $newSent['html'] = "";
                                     }
                                 }
                             }else{
                                 $newSent['content'] = "";
-                                $newSent['html'] = $row->content;
+                                //$newSent['html'] = $row->content;
+                                $newSent['html'] = MdRender::render($row->content,[$row->channel_uid],
+                                                                            null,$mode,"translation",
+                                                                            $row->content_type,$format);
                             }
 
                             break;
