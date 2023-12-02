@@ -34,7 +34,9 @@ class ImportArticle extends Command
 
     /**
      * Execute the console command.
-     *
+     * 分两个步骤导入
+     * 1. 导入文章到文集
+     * 2. 重新生成目录结构
      * @return int
      */
     public function handle()
@@ -47,23 +49,6 @@ class ImportArticle extends Command
         $anthologyId = $this->option('anthology');
 
         //先获取文章列表，建立全部目录
-        $url = config('app.url').'/api/v2/article-map';
-        $response = Http::get($url,[
-            'view'=>'anthology',
-            'id'=>$anthologyId,
-        ]);
-        if($response->failed()){
-            $this->error('获取文章列表 fail');
-            return 0;
-        }else{
-            $this->info('获取文章列表 ok');
-        }
-        if(!$response->json('ok')){
-            $this->error('http request error'.$response->json('message'));
-            return 0;
-        }
-        $articles = $response->json('data.rows');
-        $this->info('打开csv文件并读取数据');
         $head = array();
         $strFileName = __DIR__."/tipitaka-sarupa.csv";
         if(!file_exists($strFileName)){
@@ -72,55 +57,16 @@ class ImportArticle extends Command
         }
 
         if (($fp = fopen($strFileName, "r")) === false) {
-            $this->error("can not open csv $strFileName");
+            $this->error("can not open csv {$strFileName}");
             return 0;
         }
-        $inputRow = 0;
-        while (($data = fgetcsv($fp, 0, ',')) !== false) {
-            if($inputRow>0){
-                if(!isset($head[$data[1]])){
-                    $head[$data[1]] = 1;
-                }
-            }
-            $inputRow++;
-        }
+        $this->info('打开csv文件成功');
 
-        $this->info("csv head=" .count($head));
-
-        $titles = array();
-        $allTitles = array();
-        foreach ($articles as $key => $article) {
-            $allTitles[$article['title']] = $article['article_id'];
-            if($article['level']===1 && isset($head[$article['title']])){
-                $titles[$article['title']] = $article['article_id'];
-                $this->info('已有='.$article['title']);
-            }
+        $studioId = App\Http\Api\StudioApi::getIdByName($studioName);
+        if(!$studioId){
+            $this->error("can not found studio name {$studioName}");
+            return 0;
         }
-        $this->info("article map head=" .count($titles));
-        //新建目录
-        foreach ($head as $key => $value) {
-            if(!isset($titles[$key])){
-                $this->info('没有key'.$key.'新建');
-                $url = config('app.url').'/api/v2/article';
-                $response = Http::withToken($token)->post($url,
-                                [
-                                    'title'=> $key,
-                                    'lang'=> 'my',
-                                    'studio'=> $studioName,
-                                    'anthologyId'=> $anthologyId,
-                                ]);
-                if($response->ok()){
-                    $this->info('append ok title='.$key);
-                    $articleId = $response->json('data')['uid'];
-                    $titles[$key] = $articleId;
-                }else{
-                    $this->error('append fail');
-                    Log::error('append fail');
-                }
-            }
-        }
-        print_r($titles);
-
         //导入文章
         $url = config('app.url').'/api/v2/article';
         $inputRow = 0;
@@ -136,51 +82,51 @@ class ImportArticle extends Command
                 $reference = str_replace(['(',')'],['({{ql|title=','}})'],$data[5]);
                 $contentCombine = "{$title}\n\n{$content}\n\n{$reference}";
                 $percent = (int)($inputRow*100/7000);
-                $this->info("[{$percent}%] do ".$title);
+                $this->info("[{$percent}%] doing ".$realTitle);
                 //先查是否有
-                if(!isset($allTitles[$realTitle])){
-                    $count++;
-                    $this->info('没有，新建 title='.$realTitle);
-                    $response = Http::withToken($token)->post($url,
+                $hasArticle = Article::where('owner',$studioId)
+                              ->where('title',$realTitle)
+                              ->exists();
+                if($hasArticle){
+                    $this->error('文章已经存在 title='.$realTitle);
+                    continue;
+                }
+                $count++;
+                $this->info('新建 title='.$realTitle);
+                $response = Http::withToken($token)->post($url,
+                                [
+                                    'title'=> $realTitle,
+                                    'lang'=> 'my',
+                                    'studio'=> $studioName,
+                                    'anthologyId'=> $anthologyId,
+                                ]);
+                sleep(1);
+                if($response->ok()){
+                    $this->info('create ok');
+                    $articleId = $response->json('data')['uid'];
+                }else{
+                    $this->error('create article fail.'.$realTitle);
+                    Log::error('create article fail title='.$realTitle);
+                    continue;
+                }
+
+                $this->info('修改 id='.$articleId);
+                $response = Http::withToken($token)->put($url.'/'.$articleId,
                                     [
                                         'title'=> $realTitle,
+                                        'subtitle'=> $realTitle,
                                         'lang'=> 'my',
-                                        'studio'=> $studioName,
-                                        'anthologyId'=> $anthologyId,
-                                        'parentNode'=>$titles[$dir],
+                                        'content'=> $contentCombine,
+                                        'anthology_id'=>$anthologyId,
+                                        'to_tpl'=>true,
+                                        'status'=>30,
                                     ]);
-                    sleep(1);
-                    if($response->ok()){
-                        $this->info('create ok');
-                        $articleId = $response->json('data')['uid'];
-                    }else{
-                        $this->error('create fail');
-                        Log::error('create fail title='.$title);
-                        continue;
-                    }
 
-                    $this->info('修改 id='.$articleId);
-                    $response = Http::withToken($token)->put($url.'/'.$articleId,
-                                        [
-                                            'title'=> $realTitle,
-                                            'subtitle'=> $realTitle,
-                                            'lang'=> 'my',
-                                            'content'=> $contentCombine,
-                                            'anthology_id'=>$anthologyId,
-                                            'to_tpl'=>true,
-                                            'status'=>30,
-                                        ]);
-
-                    if($response->ok()){
-                        $this->info('edit ok');
-                    }else{
-                        $this->error('edit fail');
-                        Log::error('edit fail id='.$articleId);
-                        continue;
-                    }
+                if($response->ok()){
+                    $this->info('edit ok');
                 }else{
-                    $this->error('已经存在 title='.$realTitle);
-                    $articleId = $allTitles[$realTitle];
+                    $this->error('edit article fail');
+                    Log::error('edit article fail ',['id'=>$articleId,'title'=>$realTitle]);
                 }
             }
             $inputRow++;
