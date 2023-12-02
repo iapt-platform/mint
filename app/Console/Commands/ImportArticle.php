@@ -83,7 +83,7 @@ class ImportArticle extends Command
                 $title = $data[2];
                 $realTitle = "[{$id}]{$title}";
                 $content = str_replace('\n',"\n",$data[4]) ;
-                $reference = str_replace(['(',')'],['({{ql|title=','}})'],$data[5]);
+                $reference = str_replace(['(',')'],['({{ql|type=m|title=','}})'],$data[5]);
                 $contentCombine = "{$title}\n\n{$content}\n\n{$reference}";
                 $percent = (int)($inputRow*100/7000);
                 $this->info("[{$percent}%] doing ".$realTitle);
