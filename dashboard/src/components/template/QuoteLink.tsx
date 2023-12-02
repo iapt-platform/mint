@@ -1,13 +1,16 @@
-import { bookName as _bookName } from "../fts/book_name";
+import { Typography } from "antd";
+
 import { ArticleCtl, TDisplayStyle } from "./Article";
 import { IWidgetTermCtl, TermCtl } from "./Term";
+import { useEffect, useState } from "react";
+
+const { Text } = Typography;
 
 interface IWidgetQuoteLinkCtl {
   type: string;
-  bookName: string;
-  bookNameLocal?: string;
-  volume: string;
-  page: string;
+  bookName?: string;
+  volume?: number;
+  page?: number;
   style: TDisplayStyle;
   book?: number;
   para?: number;
@@ -17,7 +20,6 @@ interface IWidgetQuoteLinkCtl {
 const QuoteLinkCtl = ({
   type,
   bookName,
-  bookNameLocal,
   volume,
   page,
   style,
@@ -26,26 +28,51 @@ const QuoteLinkCtl = ({
   term,
   title,
 }: IWidgetQuoteLinkCtl) => {
+  const [validPage, setValidPage] = useState(false);
+  const [tpl, setTpl] = useState<string>();
   let textShow = ` ${volume}.${page}`;
+
+  useEffect(() => {
+    if (
+      typeof type !== "undefined" &&
+      typeof bookName !== "undefined" &&
+      typeof volume !== "undefined" &&
+      typeof page !== "undefined"
+    ) {
+      setValidPage(true);
+      setTpl(
+        `{{ql|type=${type}|bookname=${bookName}|volume=${volume}|page=${page}}}`
+      );
+    }
+  }, [bookName, page, type, volume]);
 
   return (
     <>
-      <ArticleCtl
-        title={
-          title ? (
-            title
-          ) : (
-            <>
-              <TermCtl {...term} compact={true} />
-              {textShow}
-            </>
-          )
-        }
-        type={"page"}
-        focus={book && para ? `${book}-${para}` : undefined}
-        id={`${type}_${bookName}_${volume}_${page}`}
-        style={style}
-      />
+      {validPage ? (
+        <ArticleCtl
+          title={
+            title ? (
+              title
+            ) : (
+              <>
+                <TermCtl {...term} compact={true} />
+                {textShow}
+              </>
+            )
+          }
+          type={"page"}
+          focus={book && para ? `${book}-${para}` : undefined}
+          id={`${type}_${bookName}_${volume}_${page}`}
+          style={style}
+          modalExtra={
+            <Text style={{ marginRight: 8 }} copyable={{ text: tpl }}>
+              复制模版
+            </Text>
+          }
+        />
+      ) : (
+        <Text>{title}</Text>
+      )}
     </>
   );
 };

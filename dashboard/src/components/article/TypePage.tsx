@@ -5,11 +5,14 @@ import { IPageNavData, IPageNavResponse } from "../api/Article";
 
 import { ArticleMode, ArticleType } from "./Article";
 import "./article.css";
-import { message } from "antd";
+import { Alert, message } from "antd";
 
 import { bookName } from "../fts/book_name";
 import TypePali from "./TypePali";
 import NavigateButton from "./NavigateButton";
+import ArticleSkeleton from "./ArticleSkeleton";
+import ErrorResult from "../general/ErrorResult";
+import { useIntl } from "react-intl";
 
 interface IParam {
   articleId?: string;
@@ -48,6 +51,10 @@ const TypeTermWidget = ({
 
   const [paramPali, setParamPali] = useState<IParam>();
   const [nav, setNav] = useState<IPageNavData>();
+  const [errorCode, setErrorCode] = useState<number>();
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const [pageInfo, setPageInfo] = useState<string>();
+  const intl = useIntl();
 
   useEffect(() => {
     if (typeof articleId === "undefined") {
@@ -66,7 +73,13 @@ const TypeTermWidget = ({
     const url = `/v2/nav-page/${pageParam[0].toUpperCase()}-${booksId}-${
       pageParam[2]
     }-${pageParam[3]}`;
-
+    setPageInfo(
+      `版本：` +
+        intl.formatMessage({
+          id: `labels.page.number.type.` + pageParam[0].toUpperCase(),
+        }) +
+        ` 书名：${pageParam[1]} 卷号：${pageParam[2]} 页码：${pageParam[3]}`
+    );
     console.log("url", url);
     get<IPageNavResponse>(url)
       .then((json) => {
@@ -93,11 +106,16 @@ const TypeTermWidget = ({
       .finally(() => {})
       .catch((e) => {
         console.error(e);
+        setErrorCode(e);
+        if (e === 404) {
+          setErrorMessage(`该页面不存在。页面信息：${pageInfo}`);
+        }
       });
-  }, [articleId, channelId, mode]);
+  }, [articleId, channelId, intl, mode, pageInfo]);
 
   return (
     <div>
+      {pageInfo ? <Alert message={pageInfo} type="info" closable /> : undefined}
       {paramPali ? (
         <>
           <TypePali
@@ -145,8 +163,10 @@ const TypeTermWidget = ({
             }}
           />
         </>
+      ) : errorCode ? (
+        <ErrorResult code={errorCode} message={errorMessage} />
       ) : (
-        <>loading</>
+        <ArticleSkeleton />
       )}
     </div>
   );

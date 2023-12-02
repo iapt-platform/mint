@@ -35,7 +35,7 @@ const ErrorResultWidget = ({ code, message }: IWidget) => {
     <Result
       status={strStatus}
       title={strTitle}
-      subTitle="Sorry, something went wrong."
+      subTitle={message ? message : "Sorry, something went wrong."}
     />
   );
 };

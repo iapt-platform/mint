@@ -15,6 +15,7 @@ interface IWidgetChapterCtl {
   title?: React.ReactNode;
   focus?: string | null;
   style?: TDisplayStyle;
+  modalExtra?: React.ReactNode;
 }
 
 export const ArticleCtl = ({
@@ -24,6 +25,7 @@ export const ArticleCtl = ({
   title,
   focus,
   style = "modal",
+  modalExtra,
 }: IWidgetChapterCtl) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -81,9 +83,12 @@ export const ArticleCtl = ({
                 }}
               >
                 <Text>{aTitle}</Text>
-                <Link to={articleLink} target="_blank">
-                  {"新窗口打开"}
-                </Link>
+                <Text>
+                  {modalExtra}
+                  <Link to={articleLink} target="_blank">
+                    {"新窗口打开"}
+                  </Link>
+                </Text>
               </div>
             }
             open={isModalOpen}
