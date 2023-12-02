@@ -20,7 +20,8 @@ class NavPageController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
+     * 页码导航
+     * 支持缅文版，PTS,等当前页，前一页，后一页，页面信息的获取
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
@@ -58,11 +59,16 @@ class NavPageController extends Controller
                             ->where('volume',$id[2])
                             ->where('page',(int)$id[3]+1)
                             ->first();
-        return $this->ok([
-            'curr'=>$pageCurr? new NavPageResource($pageCurr):null,
-            'prev'=>$pagePrev? new NavPageResource($pagePrev):null,
-            'next'=>$pageNext? new NavPageResource($pageNext):null,
-        ]);
+        if($pageCurr){
+            return $this->ok([
+                'curr'=>$pageCurr? new NavPageResource($pageCurr):null,
+                'prev'=>$pagePrev? new NavPageResource($pagePrev):null,
+                'next'=>$pageNext? new NavPageResource($pageNext):null,
+            ]);
+        }else{
+            return $this->error('page not found');
+        }
+
     }
 
     /**
