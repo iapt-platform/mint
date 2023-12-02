@@ -2772,7 +2772,7 @@ class BookTitle{
     "v_title" => "pācittiyapāḷi",
     "m_title" => "pācittiyapāḷi",
     "p_title" => "vinayapiṭaka",
-    "abbr" => "vi.\n"
+    "abbr" => "vi."
   ]
   ];
 
