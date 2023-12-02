@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Divider, message, Result, Space, Tag } from "antd";
+import { Divider, message, Space, Tag } from "antd";
 
 import { get, post } from "../../request";
 import { IArticleDataResponse, IArticleResponse } from "../api/Article";
@@ -128,7 +128,7 @@ const TypePaliWidget = ({
               onSelect={(keys: string[]) => {
                 console.log(keys);
                 if (typeof onArticleChange !== "undefined" && keys.length > 0) {
-                  onArticleChange(keys[0]);
+                  onArticleChange("chapter", keys[0]);
                 }
               }}
             />
