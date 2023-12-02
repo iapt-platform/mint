@@ -29,7 +29,7 @@ class ArticleMapController extends Controller
                 $table = ArticleCollection::where('article_id',$request->get('id'));
                 break;
         }
-        $result = $table->select(['id','collect_id','article_id','level','title','children','deleted_at'])
+        $result = $table->select(['id','collect_id','article_id','level','title','children','editor_id','deleted_at'])
                         ->orderBy('id')->get();
         return $this->ok(["rows"=>ArticleMapResource::collection($result),"count"=>count($result)]);
     }
@@ -97,9 +97,19 @@ class ArticleMapController extends Controller
      * @param  \App\Models\ArticleCollection  $articleCollection
      * @return \Illuminate\Http\Response
      */
-    public function show(ArticleCollection $articleCollection)
+    public function show(string $articleCollection)
     {
         //
+        $id = explode('_',$articleCollection);
+        $result = ArticleCollection::where('article_id',$id[0])
+                    ->where('collect_id',$id[1])
+                    ->first();
+        if($result){
+            return $this->ok(new ArticleMapResource($result));
+        }else{
+            return $this->error('no');
+        }
+
     }
 
     /**

@@ -2,6 +2,739 @@
 namespace App\Http\Api;
 
 class BookTitle{
+    //缅文书名缩写映射表
+    public static function my(){
+        return [
+  [
+    "title1" => "abhi，dha",
+    "title2" => "အဘိ၊ဓ",
+    "bookname" => "dhammasaṅgaṇīpāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "abhi，ka",
+    "title2" => "အဘိ၊က",
+    "bookname" => "kathāvatthupāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "abhi，pu",
+    "title2" => "အဘိ၊ပု",
+    "bookname" => "puggalapaññattipāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "abhi，ṭṭha，1",
+    "title2" => "အဘိ၊ဋ္ဌ၊၁",
+    "bookname" => "dhammasaṅgaṇī-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "abhi，ṭṭha，2",
+    "title2" => "အဘိ၊ဋ္ဌ၊၂",
+    "bookname" => "vibhaṅga-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "abhi，ṭṭha，3",
+    "title2" => "အဘိ၊ဋ္ဌ၊၃",
+    "bookname" => "pañcapakaraṇa-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "abhi，vi",
+    "title2" => "အဘိ၊ဝိ",
+    "bookname" => "vibhaṅgapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "aṃ，1",
+    "title2" => "အံ၊၁",
+    "bookname" => "aṅguttaranikāya",
+    "volume" => 1
+  ],
+  [
+    "title1" => "aṃ，2",
+    "title2" => "အံ၊၂",
+    "bookname" => "aṅguttaranikāya",
+    "volume" => 2
+  ],
+  [
+    "title1" => "aṃ，3",
+    "title2" => "အံ၊၃",
+    "bookname" => "aṅguttaranikāya",
+    "volume" => 3
+  ],
+  [
+    "title1" => "aṃ，ṭī，1",
+    "title2" => "အံ၊ဋီ၊၁",
+    "bookname" => "aṅguttaranikāya-ṭīkā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "aṃ，ṭī，2",
+    "title2" => "အံ၊ဋီ၊၂",
+    "bookname" => "aṅguttaranikāya-ṭīkā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "aṃ，ṭī，3",
+    "title2" => "အံ၊ဋီ၊၃",
+    "bookname" => "aṅguttaranikāya-ṭīkā",
+    "volume" => 3
+  ],
+  [
+    "title1" => "aṃ，ṭṭha，1",
+    "title2" => "အံ၊ဋ္ဌ၊၁",
+    "bookname" => "aṅguttaranikāya-aṭṭhakathā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "aṃ，ṭṭha，2",
+    "title2" => "အံ၊ဋ္ဌ၊၂",
+    "bookname" => "aṅguttaranikāya-aṭṭhakathā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "aṃ，ṭṭha，3",
+    "title2" => "အံ၊ဋ္ဌ၊၃",
+    "bookname" => "aṅguttaranikāya-aṭṭhakathā",
+    "volume" => 3
+  ],
+  [
+    "title1" => "anuṭī，2",
+    "title2" => "အနုဋီ၊၂",
+    "bookname" => "vibhaṅga-anuṭīkā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "anuṭī，3",
+    "title2" => "အနုဋီ၊၃",
+    "bookname" => "pañcapakaraṇa-anuṭīkā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "apa，1",
+    "title2" => "အပ၊၁",
+    "bookname" => "therāpadānapāḷi",
+    "volume" => 1
+  ],
+  [
+    "title1" => "apa，2",
+    "title2" => "အပ၊၂",
+    "bookname" => "therāpadānapāḷi",
+    "volume" => 2
+  ],
+  [
+    "title1" => "apa，ṭṭha，1",
+    "title2" => "အပ၊ဋ္ဌ၊၁",
+    "bookname" => "apadāna-aṭṭhakathā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "apa，ṭṭha，2",
+    "title2" => "အပ၊ဋ္ဌ၊၂",
+    "bookname" => "apadāna-aṭṭhakathā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "buddhavaṃ，ṭṭha",
+    "title2" => "ဗုဒ္ဓဝံ၊ဋ္ဌ",
+    "bookname" => "buddhavaṃsa-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "cariyā，ṭṭha",
+    "title2" => "စရိယာ၊ဋ္ဌ",
+    "bookname" => "cariyāpiṭaka-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "cūḷani",
+    "title2" => "စူဠနိ",
+    "bookname" => "cūḷaniddesapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "cūḷani，ṭṭha",
+    "title2" => "စူဠနိ၊ဋ္ဌ",
+    "bookname" => "cūḷaniddesa-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "dhamma",
+    "title2" => "ဓမ္မ",
+    "bookname" => "dhammapadapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "dhamma，ṭṭha，1",
+    "title2" => "ဓမ္မ၊ဋ္ဌ၊၁",
+    "bookname" => "dhammapada-aṭṭhakathā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "dhamma，ṭṭha，2",
+    "title2" => "ဓမ္မ၊ဋ္ဌ၊၂",
+    "bookname" => "dhammapada-aṭṭhakathā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "dī，1",
+    "title2" => "ဒီ၊၁",
+    "bookname" => "dīghanikāya",
+    "volume" => 1
+  ],
+  [
+    "title1" => "dī，2",
+    "title2" => "ဒီ၊၂",
+    "bookname" => "dīghanikāya",
+    "volume" => 2
+  ],
+  [
+    "title1" => "dī，3",
+    "title2" => "ဒီ၊၃",
+    "bookname" => "dīghanikāya",
+    "volume" => 3
+  ],
+  [
+    "title1" => "dī，ṭī，1",
+    "title2" => "ဒီ၊ဋီ၊၁",
+    "bookname" => "dīghanikāya-ṭīkā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "dī，ṭī，2",
+    "title2" => "ဒီ၊ဋီ၊၂",
+    "bookname" => "dīghanikāya-ṭīkā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "dī，ṭī，3",
+    "title2" => "ဒီ၊ဋီ၊၃",
+    "bookname" => "dīghanikāya-ṭīkā",
+    "volume" => 3
+  ],
+  [
+    "title1" => "dī，ṭṭha，1",
+    "title2" => "ဒီ၊ဋ္ဌ၊၁",
+    "bookname" => "dīghanikāya-aṭṭhakathā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "dī，ṭṭha，2",
+    "title2" => "ဒီ၊ဋ္ဌ၊၂",
+    "bookname" => "dīghanikāya-aṭṭhakathā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "dī，ṭṭha，3",
+    "title2" => "ဒီ၊ဋ္ဌ၊၃",
+    "bookname" => "dīghanikāya-aṭṭhakathā",
+    "volume" => 3
+  ],
+  [
+    "title1" => "itivuta，ṭṭha",
+    "title2" => "ဣတိဝုတ၊ဋ္ဌ",
+    "bookname" => "itivuttaka-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "jā，1",
+    "title2" => "ဇာ၊၁",
+    "bookname" => "jātakapāḷi",
+    "volume" => 1
+  ],
+  [
+    "title1" => "jā，2",
+    "title2" => "ဇာ၊၂",
+    "bookname" => "jātakapāḷi",
+    "volume" => 2
+  ],
+  [
+    "title1" => "jā，ṭṭha，1",
+    "title2" => "ဇာ၊ဋ္ဌ၊၁",
+    "bookname" => "jātaka-aṭṭhakathā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "jā，ṭṭha，2",
+    "title2" => "ဇာ၊ဋ္ဌ၊၂",
+    "bookname" => "jātaka-aṭṭhakathā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "jā，ṭṭha，3",
+    "title2" => "ဇာ၊ဋ္ဌ၊၃",
+    "bookname" => "jātaka-aṭṭhakathā",
+    "volume" => 3
+  ],
+  [
+    "title1" => "jā，ṭṭha，4",
+    "title2" => "ဇာ၊ဋ္ဌ၊၄",
+    "bookname" => "jātaka-aṭṭhakathā",
+    "volume" => 4
+  ],
+  [
+    "title1" => "jā，ṭṭha，5",
+    "title2" => "ဇာ၊ဋ္ဌ၊၅",
+    "bookname" => "jātaka-aṭṭhakathā",
+    "volume" => 5
+  ],
+  [
+    "title1" => "jā，ṭṭha，6",
+    "title2" => "ဇာ၊ဋ္ဌ၊၆",
+    "bookname" => "jātaka-aṭṭhakathā",
+    "volume" => 6
+  ],
+  [
+    "title1" => "jā，ṭṭha，7",
+    "title2" => "ဇာ၊ဋ္ဌ၊၇",
+    "bookname" => "jātaka-aṭṭhakathā",
+    "volume" => 7
+  ],
+  [
+    "title1" => "jātaka，1",
+    "title2" => "ဇာတက၊၁",
+    "bookname" => "jātakapāḷi",
+    "volume" => 1
+  ],
+  [
+    "title1" => "jātaka，2",
+    "title2" => "ဇာတက၊၂",
+    "bookname" => "jātakapāḷi",
+    "volume" => 2
+  ],
+  [
+    "title1" => "khuddaka",
+    "title2" => "ခုဒ္ဒက",
+    "bookname" => "khuddakapāṭhapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "khuddaka，ṭṭha",
+    "title2" => "ခုဒ္ဒက၊ဋ္ဌ",
+    "bookname" => "khuddakapāṭha-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "ma，1",
+    "title2" => "မ၊၁",
+    "bookname" => "majjhimanikaya",
+    "volume" => 1
+  ],
+  [
+    "title1" => "ma，2",
+    "title2" => "မ၊၂",
+    "bookname" => "majjhimanikaya",
+    "volume" => 2
+  ],
+  [
+    "title1" => "ma，3",
+    "title2" => "မ၊၃",
+    "bookname" => "majjhimanikaya",
+    "volume" => 3
+  ],
+  [
+    "title1" => "ma，ṭī，1",
+    "title2" => "မ၊ဋီ၊၁",
+    "bookname" => "majjhimanikaya-ṭīkā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "ma，ṭī，2",
+    "title2" => "မ၊ဋီ၊၂",
+    "bookname" => "majjhimanikaya-ṭīkā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "ma，ṭī，3",
+    "title2" => "မ၊ဋီ၊၃",
+    "bookname" => "majjhimanikaya-ṭīkā",
+    "volume" => 3
+  ],
+  [
+    "title1" => "ma，ṭṭha，1",
+    "title2" => "မ၊ဋ္ဌ၊၁",
+    "bookname" => "majimanikaya-aṭṭhakathā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "ma，ṭṭha，2",
+    "title2" => "မ၊ဋ္ဌ၊၂",
+    "bookname" => "majimanikaya-aṭṭhakathā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "ma，ṭṭha，3",
+    "title2" => "မ၊ဋ္ဌ၊၃",
+    "bookname" => "majimanikaya-aṭṭhakathā",
+    "volume" => 3
+  ],
+  [
+    "title1" => "ma，ṭṭha，4",
+    "title2" => "မ၊ဋ္ဌ၊၄",
+    "bookname" => "majimanikaya-aṭṭhakathā",
+    "volume" => 4
+  ],
+  [
+    "title1" => "mahāni",
+    "title2" => "မဟာနိ",
+    "bookname" => "mahāniddesapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "mahāni，ṭṭha",
+    "title2" => "မဟာနိ၊ဋ္ဌ",
+    "bookname" => "mahāniddesa-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "milinda",
+    "title2" => "မိလိန္ဒ",
+    "bookname" => "milindapañhapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "mūlaṭī，1",
+    "title2" => "မူလဋီ၊၁",
+    "bookname" => "dhammasaṅgaṇī-mūlaṭīkā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "mūlaṭī，2",
+    "title2" => "မူလဋီ၊၂",
+    "bookname" => "vibhaṅga-mūlaṭīkā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "netti",
+    "title2" => "နေတ္တိ",
+    "bookname" => "nettippakaraṇapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "netti，ṭṭha",
+    "title2" => "နေတ္တိ၊ဋ္ဌ",
+    "bookname" => "nettippakaraṇa-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "netti，vibhā",
+    "title2" => "နေတ္တိ၊ဝိဘာ",
+    "bookname" => "nettivibhāvinī",
+    "volume" => 0
+  ],
+  [
+    "title1" => "paṭisaṃ",
+    "title2" => "ပဋိသံ",
+    "bookname" => "paṭisambhidāmaggapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "paṭisaṃ，ṭṭha，1",
+    "title2" => "ပဋိသံ၊ဋ္ဌ၊၁",
+    "bookname" => "paṭisambhidāmagga-aṭṭhakathā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "paṭisaṃ，ṭṭha，2",
+    "title2" => "ပဋိသံ၊ဋ္ဌ၊၂",
+    "bookname" => "paṭisambhidāmagga-aṭṭhakathā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "paṭisambhidāmaga，pāḷi",
+    "title2" => "ပဋိသမ္ဘိဒါမဂ်၊ပါဠိ",
+    "bookname" => "paṭisambhidāmaggapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "paṭṭhāna，1",
+    "title2" => "ပဋ္ဌာန၊၁",
+    "bookname" => "paṭṭhānapāḷi",
+    "volume" => 1
+  ],
+  [
+    "title1" => "paṭṭhāna，2",
+    "title2" => "ပဋ္ဌာန၊၂",
+    "bookname" => "paṭṭhānapāḷi",
+    "volume" => 2
+  ],
+  [
+    "title1" => "paṭṭhāna，3",
+    "title2" => "ပဋ္ဌာန၊၃",
+    "bookname" => "paṭṭhānapāḷi",
+    "volume" => 3
+  ],
+  [
+    "title1" => "paṭṭhāna，4",
+    "title2" => "ပဋ္ဌာန၊၄",
+    "bookname" => "paṭṭhānapāḷi",
+    "volume" => 4
+  ],
+  [
+    "title1" => "peta，ṭṭha",
+    "title2" => "ပေတ၊ဋ္ဌ",
+    "bookname" => "petavatthupāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "peṭako",
+    "title2" => "ပေဋကော",
+    "bookname" => "peṭakopadesapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "saṃ，1",
+    "title2" => "သံ၊၁",
+    "bookname" => "saṃyuttanikāya",
+    "volume" => 1
+  ],
+  [
+    "title1" => "saṃ，2",
+    "title2" => "သံ၊၂",
+    "bookname" => "saṃyuttanikāya",
+    "volume" => 2
+  ],
+  [
+    "title1" => "saṃ，3",
+    "title2" => "သံ၊၃",
+    "bookname" => "saṃyuttanikāya",
+    "volume" => 3
+  ],
+  [
+    "title1" => "saṃ，ṭī，1",
+    "title2" => "သံ၊ဋီ၊၁",
+    "bookname" => "saṃyuttanikāya-ṭīkā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "saṃ，ṭī，2",
+    "title2" => "သံ၊ဋီ၊၂",
+    "bookname" => "saṃyuttanikāya-ṭīkā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "saṃ，ṭṭha，1",
+    "title2" => "သံ၊ဋ္ဌ၊၁",
+    "bookname" => "saṃyuttanikāya-aṭṭhakathā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "saṃ，ṭṭha，2",
+    "title2" => "သံ၊ဋ္ဌ၊၂",
+    "bookname" => "saṃyuttanikāya-aṭṭhakathā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "saṃ，ṭṭha，3",
+    "title2" => "သံ၊ဋ္ဌ၊၃",
+    "bookname" => "saṃyuttanikāya-aṭṭhakathā",
+    "volume" => 3
+  ],
+  [
+    "title1" => "sārattha，ṭī，1",
+    "title2" => "သာရတ္ထ၊ဋီ၊၁",
+    "bookname" => "sāratthadīpanī-ṭīkā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "sārattha，ṭī，2",
+    "title2" => "သာရတ္ထ၊ဋီ၊၂",
+    "bookname" => "sāratthadīpanī-ṭīkā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "sārattha，ṭī，3",
+    "title2" => "သာရတ္ထ၊ဋီ၊၃",
+    "bookname" => "sāratthadīpanī-ṭīkā",
+    "volume" => 3
+  ],
+  [
+    "title1" => "suttani，ṭṭha，1",
+    "title2" => "သုတ္တနိ၊ဋ္ဌ၊၁",
+    "bookname" => "suttanipāta-aṭṭhakathā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "suttani，ṭṭha，2",
+    "title2" => "သုတ္တနိ၊ဋ္ဌ၊၂",
+    "bookname" => "suttanipāta-aṭṭhakathā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "suttaniṭṭha，2",
+    "title2" => "သုတ္တနိဋ္ဌ၊၂",
+    "bookname" => "suttanipāta-aṭṭhakathā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "thera，ṭṭha，1",
+    "title2" => "ထေရ၊ဋ္ဌ၊၁",
+    "bookname" => "theragāthā-aṭṭhakathā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "thera，ṭṭha，2",
+    "title2" => "ထေရ၊ဋ္ဌ၊၂",
+    "bookname" => "theragāthā-aṭṭhakathā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "theragāthā",
+    "title2" => "ထေရဂါထာ",
+    "bookname" => "theragāthāpāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "therī",
+    "title2" => "ထေရီ",
+    "bookname" => "therīgāthāpāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "therī，ṭṭha",
+    "title2" => "ထေရီ၊ဋ္ဌ",
+    "bookname" => "therīgāthā-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [ "title1" => "udāna", "title2" => "ဥဒါန", "bookname" => "udānapāḷi", "volume" => 0 ],
+  [
+    "title1" => "udāna，ṭṭha",
+    "title2" => "ဥဒါန၊ဋ္ဌ",
+    "bookname" => "udāna-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "vajira",
+    "title2" => "ဝဇိရ",
+    "bookname" => "vajirabuddhi-ṭīkā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "vajira，ṭī",
+    "title2" => "ဝဇိရ၊ဋီ",
+    "bookname" => "vajirabuddhi-ṭīkā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "vi，1",
+    "title2" => "ဝိ၊၁",
+    "bookname" => "pārājikapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "vi，2",
+    "title2" => "ဝိ၊၂",
+    "bookname" => "pācittiyapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "vi，3",
+    "title2" => "ဝိ၊၃",
+    "bookname" => "mahāvaggapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "vi，4",
+    "title2" => "ဝိ၊၄",
+    "bookname" => "cūḷavaggapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "vi，5",
+    "title2" => "ဝိ၊၅",
+    "bookname" => "parivārapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "vi，ṭṭha，1",
+    "title2" => "ဝိ၊ဋ္ဌ၊၁",
+    "bookname" => "pārājikakaṇḍa-aṭṭhakathā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "vi，ṭṭha，2",
+    "title2" => "ဝိ၊ဋ္ဌ၊၂",
+    "bookname" => "pārājikakaṇḍa-aṭṭhakathā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "vi，ṭṭha，3",
+    "title2" => "ဝိ၊ဋ္ဌ၊၃",
+    "bookname" => "pācittiyādi-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "vi，ṭṭha，4",
+    "title2" => "ဝိ၊ဋ္ဌ၊၄",
+    "bookname" => "cūḷavaggādi-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "vimāna，ṭṭha",
+    "title2" => "ဝိမာန၊ဋ္ဌ",
+    "bookname" => "vimānavatthu-aṭṭhakathā",
+    "volume" => 0
+  ],
+  [
+    "title1" => "vimati，1",
+    "title2" => "ဝိမတိ၊၁",
+    "bookname" => "vimativinodanī-ṭīkā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "vimati，2",
+    "title2" => "ဝိမတိ၊၂",
+    "bookname" => "vimativinodanī-ṭīkā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "visuddhi，1",
+    "title2" => "ဝိသုဒ္ဓိ၊၁",
+    "bookname" => "visuddhimagga",
+    "volume" => 1
+  ],
+  [
+    "title1" => "visuddhi，2",
+    "title2" => "ဝိသုဒ္ဓိ၊၂",
+    "bookname" => "visuddhimagga",
+    "volume" => 2
+  ],
+  [
+    "title1" => "visuddhi，ṭī，1",
+    "title2" => "ဝိသုဒ္ဓိ၊ဋီ၊၁",
+    "bookname" => "visuddhimagga-mahāṭīkā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "visuddhi，ṭī，2",
+    "title2" => "ဝိသုဒ္ဓိ၊ဋီ၊၂",
+    "bookname" => "visuddhimagga-mahāṭīkā",
+    "volume" => 2
+  ],
+  [
+    "title1" => "yamaka，1",
+    "title2" => "ယမက၊၁",
+    "bookname" => "yamakapāḷi",
+    "volume" => 1
+  ],
+  [
+    "title1" => "yamaka，2",
+    "title2" => "ယမက၊၂",
+    "bookname" => "yamakapāḷi",
+    "volume" => 2
+  ],
+  [
+    "title1" => "yamaka，3",
+    "title2" => "ယမက၊၃",
+    "bookname" => "yamakapāḷi",
+    "volume" => 3
+  ]
+  ];
+
+    }
     public static function get(){
         return [
   [
@@ -679,8 +1412,8 @@ class BookTitle{
     "book" => 66,
     "name" => "Visuddhimagga-mahāṭīkā(Paṭhamo bhāgo)",
     "term" => "Visuddhimagga-mahāṭīkā",
-    "v_title" => "Visuddhimagga-mahāṭīkā",
-    "m_title" => "Visuddhimagga-mahāṭīkā",
+    "v_title" => "visuddhimagga-mahāṭīkā",
+    "m_title" => "visuddhimagga-mahāṭīkā",
     "p_title" => "Visuddhimagga-mahāṭīkā",
     "abbr" => "visuddhi. ṭī."
   ],
@@ -689,8 +1422,8 @@ class BookTitle{
     "book" => 67,
     "name" => "Visuddhimagga-mahāṭīkā(Dutiyo bhāgo)",
     "term" => "Visuddhimagga-mahāṭīkā",
-    "v_title" => "Visuddhimagga-mahāṭīkā",
-    "m_title" => "Visuddhimagga-mahāṭīkā",
+    "v_title" => "visuddhimagga-mahāṭīkā",
+    "m_title" => "visuddhimagga-mahāṭīkā",
     "p_title" => "Visuddhimagga-mahāṭīkā",
     "abbr" => "visuddhi. ṭī."
   ],
@@ -1420,7 +2153,7 @@ class BookTitle{
     "name" => "Theragāthā-aṭṭhakathā(Paṭhamo bhāgo)",
     "term" => "Theragāthā-aṭṭhakathā",
     "v_title" => "Theragāthā-aṭṭhakathā",
-    "m_title" => "Theragāthā-aṭṭhakathā",
+    "m_title" => "theragāthā-aṭṭhakathā",
     "p_title" => "Theragāthā-aṭṭhakathā",
     "abbr" => "thera. ṭṭha."
   ],
@@ -1430,7 +2163,7 @@ class BookTitle{
     "name" => "Theragāthā-aṭṭhakathā(Dutiyo bhāgo)",
     "term" => "Theragāthā-aṭṭhakathā",
     "v_title" => "Theragāthā-aṭṭhakathā",
-    "m_title" => "Theragāthā-aṭṭhakathā",
+    "m_title" => "theragāthā-aṭṭhakathā",
     "p_title" => "Theragāthā-aṭṭhakathā",
     "abbr" => "thera. ṭṭha."
   ],
@@ -1540,7 +2273,7 @@ class BookTitle{
     "name" => "Mahāvagga-aṭṭhakathā",
     "term" => "vinaya-aṭṭhakathā",
     "v_title" => "vinaya-aṭṭhakathā",
-    "m_title" => "mahāvagga-aṭṭhakathā",
+    "m_title" => "pācittiyādi-aṭṭhakathā",
     "p_title" => "vinaya-aṭṭhakathā",
     "abbr" => "vi. ṭṭha."
   ],
@@ -1560,7 +2293,7 @@ class BookTitle{
     "name" => "Parivāra-aṭṭhakathā",
     "term" => "vinaya-aṭṭhakathā",
     "v_title" => "vinaya-aṭṭhakathā",
-    "m_title" => "parivāra-aṭṭhakathā",
+    "m_title" => "cūḷavaggādi-aṭṭhakathā",
     "p_title" => "vinaya-aṭṭhakathā",
     "abbr" => "vi. ṭṭha."
   ],
@@ -2130,7 +2863,7 @@ class BookTitle{
     "name" => "tikanipāta-ṭīkā",
     "term" => "tikanipāta-ṭīkā",
     "v_title" => "tikanipāta-ṭīkā",
-    "m_title" => "tikanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "tikanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2140,7 +2873,7 @@ class BookTitle{
     "name" => "catukkanipāta-ṭīkā",
     "term" => "catukkanipāta-ṭīkā",
     "v_title" => "catukkanipāta-ṭīkā",
-    "m_title" => "catukkanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "catukkanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2160,7 +2893,7 @@ class BookTitle{
     "name" => "chakkanipāta-ṭīkā",
     "term" => "chakkanipāta-ṭīkā",
     "v_title" => "chakkanipāta-ṭīkā",
-    "m_title" => "chakkanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "chakkanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2170,7 +2903,7 @@ class BookTitle{
     "name" => "sattakanipāta-ṭīkā",
     "term" => "sattakanipāta-ṭīkā",
     "v_title" => "sattakanipāta-ṭīkā",
-    "m_title" => "sattakanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "sattakanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2190,7 +2923,7 @@ class BookTitle{
     "name" => "navakanipāta-ṭīkā",
     "term" => "navakanipāta-ṭīkā",
     "v_title" => "navakanipāta-ṭīkā",
-    "m_title" => "navakanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "navakanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2200,7 +2933,7 @@ class BookTitle{
     "name" => "dasakanipāta-ṭīkā",
     "term" => "dasakanipāta-ṭīkā",
     "v_title" => "dasakanipāta-ṭīkā",
-    "m_title" => "dasakanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "dasakanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2210,7 +2943,7 @@ class BookTitle{
     "name" => "ekādasakanipāta-ṭīkā",
     "term" => "ekādasakanipāta-ṭīkā",
     "v_title" => "ekādasakanipāta-ṭīkā",
-    "m_title" => "ekādasakanipāta-ṭīkā",
+    "m_title" => "aṅguttaranikāya-ṭīkā",
     "p_title" => "ekādasakanipāta-ṭīkā",
     "abbr" => "aṃ. ṭī."
   ],
@@ -2639,8 +3372,8 @@ class BookTitle{
     "book" => 210,
     "name" => "Vimativinodanī-ṭīkā",
     "term" => "Vimativinodanī-ṭīkā",
-    "v_title" => "Vimativinodanī-ṭīkā",
-    "m_title" => "Vimativinodanī-ṭīkā",
+    "v_title" => "vimativinodanī-ṭīkā",
+    "m_title" => "vimativinodanī-ṭīkā",
     "p_title" => "Vimativinodanī-ṭīkā",
     "abbr" => "vimati. ṭī."
   ],
@@ -2649,8 +3382,8 @@ class BookTitle{
     "book" => 210,
     "name" => "Vimativinodanī-ṭīkā",
     "term" => "Vimativinodanī-ṭīkā",
-    "v_title" => "Vimativinodanī-ṭīkā",
-    "m_title" => "Vimativinodanī-ṭīkā",
+    "v_title" => "vimativinodanī-ṭīkā",
+    "m_title" => "vimativinodanī-ṭīkā",
     "p_title" => "Vimativinodanī-ṭīkā",
     "abbr" => "vimati. ṭī."
   ],
@@ -2659,8 +3392,8 @@ class BookTitle{
     "book" => 210,
     "name" => "Vimativinodanī-ṭīkā",
     "term" => "Vimativinodanī-ṭīkā",
-    "v_title" => "Vimativinodanī-ṭīkā",
-    "m_title" => "Vimativinodanī-ṭīkā",
+    "v_title" => "vimativinodanī-ṭīkā",
+    "m_title" => "vimativinodanī-ṭīkā",
     "p_title" => "Vimativinodanī-ṭīkā",
     "abbr" => "vimati. ṭī."
   ],
@@ -2669,8 +3402,8 @@ class BookTitle{
     "book" => 210,
     "name" => "Vimativinodanī-ṭīkā",
     "term" => "Vimativinodanī-ṭīkā",
-    "v_title" => "Vimativinodanī-ṭīkā",
-    "m_title" => "Vimativinodanī-ṭīkā",
+    "v_title" => "vimativinodanī-ṭīkā",
+    "m_title" => "vimativinodanī-ṭīkā",
     "p_title" => "Vimativinodanī-ṭīkā",
     "abbr" => "vimati. ṭī."
   ],
@@ -2774,7 +3507,8 @@ class BookTitle{
     "p_title" => "vinayapiṭaka",
     "abbr" => "vi."
   ]
-];
+  ];
+
 
     }
 }

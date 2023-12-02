@@ -551,15 +551,15 @@ class TemplateRender{
 
     private  function render_quote_link(){
         $type = $this->get_param($this->param,"type",1);
-        $bookName = $this->get_param($this->param,"bookname",2,false);
+        $title = $this->get_param($this->param,"title",6,'');
+        $bookName = $this->get_param($this->param,"bookname",2,'');
         $volume = $this->get_param($this->param,"volume",3,false);
-        $page = $this->get_param($this->param,"page",4,false);
+        $page = $this->get_param($this->param,"page",4,'');
         $style = $this->get_param($this->param,"style",5,'modal');
-        $title = $this->get_param($this->param,"title",6,false);
         $book = $this->get_param($this->param,"book",7,false);
         $para = $this->get_param($this->param,"para",8,false);
 
-        if(!$bookName || !$volume || !$page){
+        if(empty($bookName) || !$volume || empty($page)){
             /**
              * 没有指定书名，根据book para 查询
              */
@@ -598,15 +598,37 @@ class TemplateRender{
                         $page = $pageInfo->page;
                     }
                 }
+            }else{
+                //没有书号用title查询
+                if($title){
+                    $tmpTitle = explode('။',$title);
+                    if(count($tmpTitle)>1){
+                        $tmpBookTitle = $tmpTitle[0];
+                        $tmpBookPage = $tmpTitle[1];
+                        $tmpBookPage = (int)str_replace(
+                                        ['၁','၂','၃','၄','၅','၆','၇','၈','၉','၀'],
+                                        ['1','2','3','4','5','6','7','8','9','0'],
+                                        $tmpBookPage);
+                        $found_key = array_search($tmpBookTitle, array_column(BookTitle::my(), 'title2'));
+                        if($found_key !== false){
+                            $bookName = BookTitle::my()[$found_key]['bookname'];
+                            $volume = BookTitle::my()[$found_key]['volume'];
+                            $page = $tmpBookPage;
+                        }
+                    }
+                }
             }
         }
+
         $props = [
             'type' => $type,
-            'bookName' => $bookName,
-            'volume' => $volume,
-            'page' => $page,
             'style' => $style,
         ];
+        if(!empty($bookName) && $volume!==false && !empty($page)){
+            $props['bookName'] = $bookName;
+            $props['volume'] = $volume;
+            $props['page'] = $page;
+        }
         if($book && $para){
             $props['book'] = $book;
             $props['para'] = $para;

@@ -283,13 +283,15 @@ class ArticleController extends Controller
         if(Article::where('title',$request->get('title'))->where('owner',$studioUuid)->exists()){
             return $this->error(__('validation.exists'));
         }*/
+        Log::debug('开始新建'.$request->get('title'));
+
         $newArticle = new Article;
         DB::transaction(function() use($user,$request,$newArticle){
             $studioUuid = StudioApi::getIdByName($request->get('studio'));
             //新建文章，加入文集必须都成功。否则回滚
             $newArticle->id = app('snowflake')->id();
             $newArticle->uid = Str::uuid();
-            $newArticle->title = $request->get('title');
+            $newArticle->title = mb_substr($request->get('title'),0,128,'UTF-8');
             $newArticle->lang = $request->get('lang');
             $newArticle->owner = $studioUuid;
             $newArticle->owner_id = $user['user_id'];
@@ -300,12 +302,15 @@ class ArticleController extends Controller
             $newArticle->save();
             OpsLog::debug($user['user_uid'],$newArticle);
 
+            Log::debug('开始挂接 id='.$newArticle->uid);
             $anthologyId = $request->get('anthologyId');
             if(Str::isUuid($anthologyId)){
                 $parentNode = $request->get('parentNode');
                 if(Str::isUuid($parentNode)){
+                    Log::debug('有挂接点'.$parentNode);
                     $map = ArticleCollection::where('collect_id',$anthologyId)
                                         ->orderBy('id')->get();
+                    Log::debug('查询到原map数据'.count($map));
                     $newMap = array();
                     $parentNodeLevel = -1;
                     $appended = false;
@@ -315,11 +320,14 @@ class ArticleController extends Controller
                             if($parentNodeLevel>0){
                                 if($row->level <= $parentNodeLevel ){
                                     //parent node 末尾
-                                    $newNode = $row;
+                                    $newNode = array();
+                                    $newNode['collect_id'] = $anthologyId;
                                     $newNode['article_id'] = $newArticle->uid;
                                     $newNode['level'] = $parentNodeLevel+1;
-                                    $newNode['title'] = Article::find($newArticle->uid)->title;
+                                    $newNode['title'] = $newArticle->title;
+                                    $newNode['children'] = 0;
                                     $newMap[] = $newNode;
+                                    Log::debug('新增节点',['node'=>$newNode]);
                                     $appended = true;
                                 }
                             }else{
@@ -331,17 +339,25 @@ class ArticleController extends Controller
                         }
                         $newMap[] = $orgNode;
                     }
-                    if($parentNodeLevel>0 && $appended===false){
-                        //没挂上
-                        $newNode = array();
-                        $newNode['collect_id'] = $anthologyId;
-                        $newNode['article_id'] = $newArticle->uid;
-                        $newNode['level'] = $parentNodeLevel+1;
-                        $newNode['title'] = Article::find($newArticle->uid)->title;
-                        $newNode['children'] = 0;
-                        $newMap[] = $newNode;
+                    if($parentNodeLevel>0){
+                        if($appended===false){
+                        //
+                            Log::debug('没挂上 挂到结尾');
+                            $newNode = array();
+                            $newNode['collect_id'] = $anthologyId;
+                            $newNode['article_id'] = $newArticle->uid;
+                            $newNode['level'] = $parentNodeLevel+1;
+                            $newNode['title'] = $newArticle->title;
+                            $newNode['children'] = 0;
+                            $newMap[] = $newNode;
+                        }
+                    }else{
+                        Log::error('没找到挂接点'.$parentNode);
                     }
+                    Log::debug('新map数据'.count($newMap));
+
                     $delete = ArticleCollection::where('collect_id',$anthologyId)->delete();
+                    Log::debug('删除旧map数据'.$delete);
                     $count=0;
                     foreach ($newMap as $key => $row) {
                         $new = new ArticleCollection;
@@ -358,6 +374,7 @@ class ArticleController extends Controller
                         $new->save();
                         $count++;
                     }
+                    Log::debug('新map数据'.$count);
                     ArticleMapController::updateCollection($anthologyId);
                 }else{
                     $articleMap = new ArticleCollection();
@@ -485,9 +502,9 @@ class ArticleController extends Controller
             $content = $tplContent;
         }
 
-        $article->title = $request->get('title');
-        $article->subtitle = $request->get('subtitle');
-        $article->summary = $request->get('summary');
+        $article->title = mb_substr($request->get('title'),0,128,'UTF-8') ;
+        $article->subtitle = mb_substr($request->get('subtitle'),0,128,'UTF-8') ;
+        $article->summary = mb_substr($request->get('summary'),0,1024,'UTF-8') ;
         $article->content = $content;
         $article->lang = $request->get('lang');
         $article->status = $request->get('status',10);
