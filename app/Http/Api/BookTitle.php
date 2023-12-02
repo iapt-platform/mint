@@ -2,6 +2,7 @@
 namespace App\Http\Api;
 
 class BookTitle{
+    //缅文书名缩写映射表
     public static function my(){
         return [
   [
