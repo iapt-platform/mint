@@ -8,9 +8,9 @@ const { Text } = Typography;
 
 interface IWidgetQuoteLinkCtl {
   type: string;
-  bookName: string;
-  volume: string;
-  page: string;
+  bookName?: string;
+  volume?: string;
+  page?: string;
   style: TDisplayStyle;
   book?: number;
   para?: number;
