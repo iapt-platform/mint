@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Http\Api\StudioApi;
+use App\Models\Article;
 
 class ImportArticle extends Command
 {
@@ -62,7 +64,7 @@ class ImportArticle extends Command
         }
         $this->info('打开csv文件成功');
 
-        $studioId = App\Http\Api\StudioApi::getIdByName($studioName);
+        $studioId = StudioApi::getIdByName($studioName);
         if(!$studioId){
             $this->error("can not found studio name {$studioName}");
             return 0;
@@ -72,6 +74,8 @@ class ImportArticle extends Command
         $inputRow = 0;
         fseek($fp, 0);
         $count = 0;
+        $success = 0;
+        $fail = 0;
         while (($data = fgetcsv($fp, 0, ',')) !== false) {
             if($inputRow>0){
                 $id = $data[0];
@@ -93,6 +97,7 @@ class ImportArticle extends Command
                 }
                 $count++;
                 $this->info('新建 title='.$realTitle);
+                sleep(2);
                 $response = Http::withToken($token)->post($url,
                                 [
                                     'title'=> $realTitle,
@@ -100,16 +105,16 @@ class ImportArticle extends Command
                                     'studio'=> $studioName,
                                     'anthologyId'=> $anthologyId,
                                 ]);
-                sleep(1);
                 if($response->ok()){
                     $this->info('create ok');
                     $articleId = $response->json('data')['uid'];
                 }else{
                     $this->error('create article fail.'.$realTitle);
                     Log::error('create article fail title='.$realTitle);
+                    $fail++;
                     continue;
                 }
-
+                sleep(2);
                 $this->info('修改 id='.$articleId);
                 $response = Http::withToken($token)->put($url.'/'.$articleId,
                                     [
@@ -124,15 +129,19 @@ class ImportArticle extends Command
 
                 if($response->ok()){
                     $this->info('edit ok');
+                    $success++;
                 }else{
                     $this->error('edit article fail');
                     Log::error('edit article fail ',['id'=>$articleId,'title'=>$realTitle]);
+                    $fail++;
                 }
             }
             $inputRow++;
         }
 
         fclose($fp);
+
+        $this->info('成功='.$success.' 失败='.$fail);
         return 0;
     }
 }
