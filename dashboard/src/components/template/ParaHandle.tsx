@@ -43,7 +43,7 @@ export const ParaHandleCtl = ({
     {
       key: "quote-link-tpl",
       label: intl.formatMessage({
-        id: "labels.curr.paragraph.quote.link.tpl",
+        id: "labels.curr.paragraph.copy.quote.link.tpl",
       }),
       children: [
         {
