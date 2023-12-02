@@ -9,8 +9,8 @@ const { Text } = Typography;
 interface IWidgetQuoteLinkCtl {
   type: string;
   bookName?: string;
-  volume?: string;
-  page?: string;
+  volume?: number;
+  page?: number;
   style: TDisplayStyle;
   book?: number;
   para?: number;
@@ -33,7 +33,12 @@ const QuoteLinkCtl = ({
   let textShow = ` ${volume}.${page}`;
 
   useEffect(() => {
-    if (type && bookName && volume && page) {
+    if (
+      typeof type !== "undefined" &&
+      typeof bookName !== "undefined" &&
+      typeof volume !== "undefined" &&
+      typeof page !== "undefined"
+    ) {
       setValidPage(true);
       setTpl(
         `{{ql|type=${type}|bookname=${bookName}|volume=${volume}|page=${page}}}`
