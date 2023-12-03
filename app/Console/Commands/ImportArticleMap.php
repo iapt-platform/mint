@@ -95,7 +95,12 @@ class ImportArticleMap extends Command
                 $dir = $data[1];
                 $title = $data[2];
                 $realTitle = "[{$id}]{$title}";
+                $realTitle = mb_substr($realTitle,0,128,'UTF-8');
                 $reference = $data[5];
+
+                $percent = (int)($inputRow*100/6984);
+                $this->info("[{$percent}%] doing ".$realTitle);
+
                 if($this->option('size')){
                     $currDir = 'tipitaka-sarupa-'.$currBlock;
                     if($currSize > $this->option('size')){
