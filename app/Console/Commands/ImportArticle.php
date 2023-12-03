@@ -119,7 +119,7 @@ class ImportArticle extends Command
                 $response = Http::withToken($token)->put($url.'/'.$articleId,
                                     [
                                         'title'=> $realTitle,
-                                        'subtitle'=> $realTitle,
+                                        'summary'=> $title.'#'.$id,
                                         'lang'=> 'my',
                                         'content'=> $contentCombine,
                                         'anthology_id'=>$anthologyId,
