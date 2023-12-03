@@ -131,7 +131,7 @@ const TypeTermWidget = ({
           <NavigateButton
             prevTitle={nav?.prev.page.toString()}
             nextTitle={nav?.next.page.toString()}
-            onNext={() => {
+            onNext={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
               if (typeof onArticleChange !== "undefined") {
                 if (typeof articleId === "undefined") {
                   return;
@@ -143,10 +143,14 @@ const TypeTermWidget = ({
                 const id = `${pageParam[0]}-${pageParam[1]}-${pageParam[2]}-${
                   parseInt(pageParam[3]) + 1
                 }`;
-                onArticleChange("page", id);
+                let target = "_self";
+                if (event.ctrlKey || event.metaKey) {
+                  target = "_blank";
+                }
+                onArticleChange("page", id, target);
               }
             }}
-            onPrev={() => {
+            onPrev={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
               if (typeof onArticleChange !== "undefined") {
                 if (typeof articleId === "undefined") {
                   return;
@@ -158,7 +162,11 @@ const TypeTermWidget = ({
                 const id = `${pageParam[0]}-${pageParam[1]}-${pageParam[2]}-${
                   parseInt(pageParam[3]) - 1
                 }`;
-                onArticleChange("page", id);
+                let target = "_self";
+                if (event.ctrlKey || event.metaKey) {
+                  target = "_blank";
+                }
+                onArticleChange("page", id, target);
               }
             }}
           />
