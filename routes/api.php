@@ -80,6 +80,7 @@ use App\Http\Controllers\NavPageController;
 use App\Http\Controllers\BookTitleController;
 use App\Http\Controllers\SystemTermController;
 use App\Http\Controllers\TermExportController;
+use App\Http\Controllers\NavArticleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -214,6 +215,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::get('search-pali-wbw-books',[SearchPaliWbwController::class,'book_list']);
     Route::apiResource('search-page-number',SearchPageNumberController::class);
     Route::apiResource('nav-page',NavPageController::class);
+    Route::apiResource('nav-article',NavArticleController::class);
     Route::apiResource('book-title',BookTitleController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
