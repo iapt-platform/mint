@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { Divider, message, Space, Tag } from "antd";
 
 import { get } from "../../request";
-import { IArticleDataResponse, IArticleResponse } from "../api/Article";
+import {
+  IArticleDataResponse,
+  IArticleNavData,
+  IArticleNavResponse,
+  IArticleResponse,
+} from "../api/Article";
 import ArticleView, { IFirstAnthology } from "./ArticleView";
 import TocTree from "./TocTree";
 import PaliText from "../template/Wbw/PaliText";
@@ -12,6 +17,7 @@ import "./article.css";
 import ArticleSkeleton from "./ArticleSkeleton";
 import ErrorResult from "../general/ErrorResult";
 import AnthologiesAtArticle from "./AnthologiesAtArticle";
+import NavigateButton from "./NavigateButton";
 
 interface IWidget {
   type?: ArticleType;
@@ -43,6 +49,7 @@ const TypeArticleWidget = ({
   const [loading, setLoading] = useState(false);
   const [errorCode, setErrorCode] = useState<number>();
   const [currPath, setCurrPath] = useState<ITocPathNode[]>();
+  const [nav, setNav] = useState<IArticleNavData>();
 
   const channels = channelId?.split("_");
 
@@ -125,6 +132,18 @@ const TypeArticleWidget = ({
       });
   }, [active, type, articleId, srcDataMode, channelId, anthologyId]);
 
+  useEffect(() => {
+    const url = `/v2/nav-article/${articleId}_${anthologyId}`;
+    get<IArticleNavResponse>(url)
+      .then((json) => {
+        if (json.ok) {
+          setNav(json.data);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }, [anthologyId, articleId]);
   let anthology: IFirstAnthology | undefined;
   if (articleData?.anthology_count && articleData.anthology_first) {
     anthology = {
@@ -195,6 +214,20 @@ const TypeArticleWidget = ({
           <Divider />
           {extra}
           <Divider />
+          <NavigateButton
+            prevTitle={nav?.prev?.title}
+            nextTitle={nav?.next?.title}
+            onNext={() => {
+              if (typeof onArticleChange !== "undefined") {
+                onArticleChange("article", nav?.next?.article_id);
+              }
+            }}
+            onPrev={() => {
+              if (typeof onArticleChange !== "undefined") {
+                onArticleChange("article", nav?.prev?.article_id);
+              }
+            }}
+          />
         </>
       )}
     </div>
