@@ -178,6 +178,17 @@ export interface IDeleteResponse {
   message: string;
   data: number;
 }
+export interface IArticleNavResponse {
+  ok: boolean;
+  data: IArticleNavData;
+  message: string;
+}
+
+export interface IArticleNavData {
+  curr?: IArticleMapRequest;
+  prev?: IArticleMapRequest;
+  next?: IArticleMapRequest;
+}
 
 export interface IPageNavResponse {
   ok: boolean;

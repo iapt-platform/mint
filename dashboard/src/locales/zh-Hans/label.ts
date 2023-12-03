@@ -27,8 +27,9 @@ const items = {
   "labels.page.number.type.para": "缅文段落",
   "labels.curr.paragraph.only": "仅显示此段",
   "labels.curr.paragraph.open": "在新标签页打开",
-  "labels.curr.paragraph.copy.tpl": "复制句子模版",
+  "labels.curr.paragraph.copy.tpl": "复制句子编号",
   "labels.curr.paragraph.quote.link.tpl": "引用链接模版",
+  "labels.curr.paragraph.copy.quote.link.tpl": "复制引用模版",
 };
 
 export default items;
