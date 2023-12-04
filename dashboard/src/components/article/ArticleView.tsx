@@ -54,6 +54,7 @@ const ArticleViewWidget = ({
   const [currPath, setCurrPath] = useState(path);
 
   useEffect(() => setCurrPath(path), [path]);
+  console.log("ArticleViewWidget render");
 
   let currChannelList = <></>;
   switch (type) {
