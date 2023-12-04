@@ -2521,30 +2521,30 @@ class BookTitle{
     "id" => 183,
     "book" => 164,
     "name" => "Mūlapaṇṇāsapāḷi",
-    "term" => "majimanikaya",
-    "v_title" => "majimanikaya",
-    "m_title" => "majimanikaya",
-    "p_title" => "majimanikaya",
+    "term" => "majjhimanikaya",
+    "v_title" => "majjhimanikaya",
+    "m_title" => "majjhimanikaya",
+    "p_title" => "majjhimanikaya",
     "abbr" => "ma."
   ],
   [
     "id" => 184,
     "book" => 165,
     "name" => "Majjhimapaṇṇāsapāḷi",
-    "term" => "majimanikaya",
-    "v_title" => "majimanikaya",
-    "m_title" => "majimanikaya",
-    "p_title" => "majimanikaya",
+    "term" => "majjhimanikaya",
+    "v_title" => "majjhimanikaya",
+    "m_title" => "majjhimanikaya",
+    "p_title" => "majjhimanikaya",
     "abbr" => "ma."
   ],
   [
     "id" => 185,
     "book" => 166,
     "name" => "Uparipaṇṇāsapāḷi",
-    "term" => "majimanikaya",
-    "v_title" => "majimanikaya",
-    "m_title" => "majimanikaya",
-    "p_title" => "majimanikaya",
+    "term" => "majjhimanikaya",
+    "v_title" => "majjhimanikaya",
+    "m_title" => "majjhimanikaya",
+    "p_title" => "majjhimanikaya",
     "abbr" => "ma."
   ],
   [
@@ -3508,6 +3508,7 @@ class BookTitle{
     "abbr" => "vi."
   ]
   ];
+
 
 
     }
