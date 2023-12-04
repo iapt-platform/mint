@@ -51,9 +51,6 @@ const ArticleViewWidget = ({
   remains,
   onPathChange,
 }: IWidgetArticleData) => {
-  const [currPath, setCurrPath] = useState(path);
-
-  useEffect(() => setCurrPath(path), [path]);
   console.log("ArticleViewWidget render");
 
   let currChannelList = <></>;
@@ -91,7 +88,7 @@ const ArticleViewWidget = ({
 
       <Space direction="vertical">
         <TocPath
-          data={currPath}
+          data={path}
           channel={channels}
           onChange={(
             node: ITocPathNode,
