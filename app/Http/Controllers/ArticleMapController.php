@@ -29,9 +29,36 @@ class ArticleMapController extends Controller
                 $table = ArticleCollection::where('article_id',$request->get('id'));
                 break;
         }
-        $result = $table->select(['id','collect_id','article_id','level','title','children','editor_id','deleted_at'])
+        $count = $table->count();
+        $result = [];
+        if(!empty($request->get('parent'))){
+            //输出某节点的子节点
+            $node = $table->where('article_id',$request->get('parent'))->first();
+            if($node){
+                $nodeList = ArticleCollection::where('collect_id',$request->get('id'))
+                                            ->where('id','>',(int)$node->id)->orderBy('id')->get();
+                foreach ($nodeList as $key => $curr) {
+                    if($curr->level <= $node->level){
+                        break;
+                    }
+                    if($request->has('lazy')){
+                        if($curr->level === $node->level+1){
+                            $result[] = $curr;
+                        }
+                    }else{
+                        $result[] = $curr;
+                    }
+                }
+            }
+        }else{
+            if($request->has('lazy') && $count > 300){
+                $table = $table->where('level',1);
+            }
+            $result = $table->select(['id','collect_id','article_id','level','title','children','editor_id','deleted_at'])
                         ->orderBy('id')->get();
-        return $this->ok(["rows"=>ArticleMapResource::collection($result),"count"=>count($result)]);
+        }
+
+        return $this->ok(["rows"=>ArticleMapResource::collection($result),"count"=>$count]);
     }
 
     /**
