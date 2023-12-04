@@ -194,6 +194,7 @@ const TocTreeWidget = ({
         resolve();
         return;
       }
+
       setTimeout(() => {
         setTree((origin) => {
           if (!origin) {
