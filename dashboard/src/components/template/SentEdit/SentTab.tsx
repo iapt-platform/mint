@@ -72,6 +72,8 @@ const SentTabWidget = ({
   const [currNissayaNum, setCurrNissayaNum] = useState(nissayaNum);
   const [currCommNum, setCurrCommNum] = useState(commNum);
 
+  console.log("SentTabWidget render");
+
   useEffect(() => setIsCompact(compact), [compact]);
   const mPath = path
     ? [
