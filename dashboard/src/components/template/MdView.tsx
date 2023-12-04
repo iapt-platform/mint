@@ -11,7 +11,7 @@ interface IWidget {
   convertor?: TCodeConvertor;
   style?: React.CSSProperties;
 }
-const Widget = ({
+const MdViewWidget = ({
   html,
   className,
   wordWidget = false,
@@ -28,4 +28,4 @@ const Widget = ({
   }
 };
 
-export default Widget;
+export default MdViewWidget;
