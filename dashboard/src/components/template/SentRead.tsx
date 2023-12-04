@@ -98,19 +98,19 @@ const SentReadFrame = ({
       <div style={{ flex: "5", color: "#9f3a01" }} ref={boxOrg}>
         {origin?.map((item, id) => {
           return (
-            <MdView
-              key={id}
-              style={{ color: "brown" }}
-              html={item.html}
-              wordWidget={true}
-              convertor={paliCode1}
-            />
+            <Text key={id}>
+              <MdView
+                style={{ color: "brown" }}
+                html={item.html}
+                wordWidget={true}
+                convertor={paliCode1}
+              />
+            </Text>
           );
         })}
       </div>
       <div style={{ flex: "5" }}>
         {translation?.map((item, id) => {
-          if (item.html.indexOf("<hr>") >= 0) console.log(item.html);
           return (
             <Text key={id}>
               <MdView html={item.html} />
@@ -122,10 +122,10 @@ const SentReadFrame = ({
   );
 };
 
-interface IWidgetTerm {
+interface IWidget {
   props: string;
 }
-const Widget = ({ props }: IWidgetTerm) => {
+const Widget = ({ props }: IWidget) => {
   const prop = JSON.parse(atob(props)) as IWidgetSentReadFrame;
   return (
     <>
