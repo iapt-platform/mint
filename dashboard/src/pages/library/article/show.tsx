@@ -17,7 +17,6 @@ import Article, {
 
 import MainMenu from "../../../components/article/MainMenu";
 import ModeSwitch from "../../../components/article/ModeSwitch";
-import Navigate from "../../../components/article/Navigate";
 import RightPanel, { TPanelName } from "../../../components/article/RightPanel";
 import ToolButtonDiscussion from "../../../components/article/ToolButtonDiscussion";
 import ToolButtonNav from "../../../components/article/ToolButtonNav";
@@ -399,30 +398,6 @@ const Widget = () => {
                   }
                 });
                 setSearchParams(output);
-              }}
-            />
-            <Navigate
-              type={type as ArticleType}
-              articleId={id}
-              onChange={(
-                event: React.MouseEvent<HTMLElement, MouseEvent>,
-                newId: string
-              ) => {
-                let url = `/article/${type}/${newId}?mode=${currMode}`;
-                searchParams.forEach((value, key) => {
-                  if (key !== "mode" && key !== "par") {
-                    url += `&${key}=${value}`;
-                  }
-                });
-                if (type === "para") {
-                  url += "&par=" + newId.split("-")[1];
-                }
-                if (event.ctrlKey || event.metaKey) {
-                  window.open(fullUrl(url), "_blank");
-                } else {
-                  navigate(url);
-                  scrollToTop();
-                }
               }}
             />
           </div>

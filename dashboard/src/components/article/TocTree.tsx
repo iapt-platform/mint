@@ -16,6 +16,7 @@ export interface TreeNodeData {
   key: string;
   id: string;
   title: string | React.ReactNode;
+  isLeaf?: boolean;
   children?: TreeNodeData[];
   level: number;
   deletedAt?: string | null;
@@ -45,6 +46,7 @@ function tocGetTreeData(
     let newNode: TreeNodeData = {
       key: randomString(),
       id: element.key,
+      isLeaf: element.children === 0,
       title: element.title,
       level: element.level,
       deletedAt: element.deletedAt,
@@ -99,6 +101,31 @@ function tocGetTreeData(
 
   return [treeData[0].children, idMap];
 }
+
+// It's just a lazy load simple demo. You can use tree map to optimize update perf.
+const updateTreeData = (
+  list: TreeNodeData[],
+  key: React.Key,
+  children: TreeNodeData[]
+): TreeNodeData[] => {
+  console.log("key", key);
+  return list.map((node) => {
+    if (node.key === key) {
+      console.log("found", node);
+      node.children = children;
+      return node;
+    }
+    /*
+    if (node.children) {
+      return {
+        ...node,
+        children: updateTreeData(node.children, key, children),
+      };
+    }
+    */
+    return node;
+  });
+};
 
 interface IWidgetTocTree {
   treeData?: ListNodeData[];
@@ -161,7 +188,38 @@ const TocTreeWidget = ({
     setExpanded(realKey);
   }, [expandedKeys, keyIdMap]);
 
-  console.log("selected", selected);
+  const onLoadData = ({ key, children }: any) =>
+    new Promise<void>((resolve) => {
+      if (children) {
+        resolve();
+        return;
+      }
+
+      setTimeout(() => {
+        setTree((origin) => {
+          if (!origin) {
+            return origin;
+          }
+          updateTreeData(origin, key, [
+            {
+              title: "Child Node",
+              key: randomString(),
+              id: `${key}-0`,
+              level: 2,
+            },
+            {
+              title: "Child Node",
+              key: randomString(),
+              id: `${key}-1`,
+              level: 2,
+            },
+          ]);
+        });
+
+        resolve();
+      }, 1000);
+    });
+
   return (
     <Tree
       treeData={tree}

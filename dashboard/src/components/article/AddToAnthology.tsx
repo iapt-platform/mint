@@ -32,14 +32,13 @@ const AddToAnthologyWidget = ({
       onClose={(isOpen: boolean) => setIsModalOpen(isOpen)}
       onSelect={(id: string) => {
         if (typeof articleIds !== "undefined") {
-          post<IArticleMapAddRequest, IArticleMapAddResponse>(
-            "/v2/article-map",
-            {
-              anthology_id: id,
-              article_id: articleIds,
-              operation: "add",
-            }
-          )
+          const url = "/v2/article-map";
+          console.log("url", url);
+          post<IArticleMapAddRequest, IArticleMapAddResponse>(url, {
+            anthology_id: id,
+            article_id: articleIds,
+            operation: "add",
+          })
             .finally(() => {
               if (typeof onFinally !== "undefined") {
                 onFinally();

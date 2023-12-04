@@ -14,6 +14,7 @@ import ArticleSkeleton from "./ArticleSkeleton";
 import ErrorResult from "../general/ErrorResult";
 import store from "../../store";
 import { refresh } from "../../reducers/focus";
+import Navigate from "./Navigate";
 
 interface IWidget {
   type?: ArticleType;
@@ -269,6 +270,22 @@ const TypePaliWidget = ({
           <Divider />
           {extra}
           <Divider />
+          <Navigate
+            type={type as ArticleType}
+            articleId={articleId}
+            onChange={(
+              event: React.MouseEvent<HTMLElement, MouseEvent>,
+              newId: string
+            ) => {
+              let target: string = "_self";
+              if (event.ctrlKey || event.metaKey) {
+                target = "_blank";
+              }
+              if (typeof onArticleChange !== "undefined") {
+                onArticleChange(type, newId, target);
+              }
+            }}
+          />
         </>
       )}
     </div>

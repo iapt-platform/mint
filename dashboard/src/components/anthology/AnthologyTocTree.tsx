@@ -24,7 +24,7 @@ const AnthologyTocTreeWidget = ({
     if (typeof anthologyId === "undefined") {
       return;
     }
-    let url = `/v2/article-map?view=anthology&id=${anthologyId}`;
+    let url = `/v2/article-map?view=anthology&id=${anthologyId}&lazy=1`;
     url += channels && channels.length > 0 ? "&channel=" + channels[0] : "";
     console.log("url", url);
     get<IArticleMapListResponse>(url).then((json) => {
@@ -34,18 +34,23 @@ const AnthologyTocTreeWidget = ({
             key: item.article_id ? item.article_id : item.title,
             title: item.title_text ? item.title_text : item.title,
             level: item.level,
+            children: item.children,
             deletedAt: item.deleted_at,
           };
         });
         setTocData(toc);
-        setExpandedKeys(
-          json.data.rows
-            .filter((value) => value.level === 1)
-            .map((item) => (item.article_id ? item.article_id : item.title))
-        );
+        if (json.data.rows.length === json.data.count) {
+          setExpandedKeys(
+            json.data.rows
+              .filter((value) => value.level === 1)
+              .map((item) => (item.article_id ? item.article_id : item.title))
+          );
+        } else {
+          setExpandedKeys(undefined);
+        }
       }
     });
-  }, [anthologyId]);
+  }, [anthologyId, channels]);
   return (
     <TocTree
       treeData={tocData}
