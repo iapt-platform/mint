@@ -12,9 +12,6 @@ use App\Http\Api\ShareApi;
 use App\Http\Resources\CollectionResource;
 use Illuminate\Support\Facades\DB;
 
-require_once __DIR__.'/../../../public/app/ucenter/function.php';
-
-
 class CollectionController extends Controller
 {
     /**
@@ -24,9 +21,7 @@ class CollectionController extends Controller
      */
     public function index(Request $request)
     {
-        //
-                //
-        $userinfo = new \UserInfo();
+
 		$result=false;
 		$indexCol = ['uid','title','subtitle','summary',
                       'article_list','owner','status',
