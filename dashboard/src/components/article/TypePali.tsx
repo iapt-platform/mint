@@ -25,6 +25,7 @@ interface IWidget {
   para?: string | null;
   active?: boolean;
   focus?: string | null;
+  hideNav?: boolean;
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
@@ -37,6 +38,7 @@ const TypePaliWidget = ({
   articleId,
   mode = "read",
   active = true,
+  hideNav = false,
   focus,
   onArticleChange,
   onFinal,
@@ -270,22 +272,26 @@ const TypePaliWidget = ({
           <Divider />
           {extra}
           <Divider />
-          <Navigate
-            type={type as ArticleType}
-            articleId={articleId}
-            onChange={(
-              event: React.MouseEvent<HTMLElement, MouseEvent>,
-              newId: string
-            ) => {
-              let target: string = "_self";
-              if (event.ctrlKey || event.metaKey) {
-                target = "_blank";
-              }
-              if (typeof onArticleChange !== "undefined") {
-                onArticleChange(type, newId, target);
-              }
-            }}
-          />
+          {hideNav ? (
+            <></>
+          ) : (
+            <Navigate
+              type={type as ArticleType}
+              articleId={articleId}
+              onChange={(
+                event: React.MouseEvent<HTMLElement, MouseEvent>,
+                newId: string
+              ) => {
+                let target: string = "_self";
+                if (event.ctrlKey || event.metaKey) {
+                  target = "_blank";
+                }
+                if (typeof onArticleChange !== "undefined") {
+                  onArticleChange(type, newId, target);
+                }
+              }}
+            />
+          )}
         </>
       )}
     </div>
