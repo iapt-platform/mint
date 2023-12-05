@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
+import { Alert, message } from "antd";
+import { useIntl } from "react-intl";
 
 import { get } from "../../request";
 import { IPageNavData, IPageNavResponse } from "../api/Article";
-
 import { ArticleMode, ArticleType } from "./Article";
-import "./article.css";
-import { Alert, message } from "antd";
-
 import { bookName } from "../fts/book_name";
 import TypePali from "./TypePali";
 import NavigateButton from "./NavigateButton";
 import ArticleSkeleton from "./ArticleSkeleton";
 import ErrorResult from "../general/ErrorResult";
-import { useIntl } from "react-intl";
+import "./article.css";
 
 interface IParam {
   articleId?: string;
@@ -30,7 +28,7 @@ interface IWidget {
   onFinal?: Function;
   onLoad?: Function;
 }
-const TypeTermWidget = ({
+const TypePageWidget = ({
   channelId,
   articleId,
   focus,
@@ -120,6 +118,7 @@ const TypeTermWidget = ({
         <>
           <TypePali
             type={"para"}
+            hideNav
             {...paramPali}
             focus={focus}
             onArticleChange={(type: ArticleType, id: string) => {
@@ -180,4 +179,4 @@ const TypeTermWidget = ({
   );
 };
 
-export default TypeTermWidget;
+export default TypePageWidget;
