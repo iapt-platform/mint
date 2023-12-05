@@ -5,6 +5,7 @@ import TypeTerm from "./TypeTerm";
 import TypePali from "./TypePali";
 import "./article.css";
 import TypePage from "./TypePage";
+import TypeCSPara from "./TypeCSPara";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -142,6 +143,17 @@ const ArticleWidget = ({
           articleId={articleId}
           channelId={channelId}
           focus={focus}
+          mode={mode}
+          onArticleChange={(type: ArticleType, id: string) => {
+            if (typeof onArticleChange !== "undefined") {
+              onArticleChange(type, id);
+            }
+          }}
+        />
+      ) : type === "cs-para" ? (
+        <TypeCSPara
+          articleId={articleId}
+          channelId={channelId}
           mode={mode}
           onArticleChange={(type: ArticleType, id: string) => {
             if (typeof onArticleChange !== "undefined") {
