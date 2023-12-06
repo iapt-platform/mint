@@ -92,12 +92,15 @@ class UpgradeWbwParaNum extends Command
                             $bookName = mb_substr($bookCode,0,$dot+1,'UTF-8');
                             $paraNum = mb_substr($bookCode,$dot+1,null,'UTF-8').$row->word;
                         }
+                        $bookName = mb_strtolower(mb_substr($bookName,0,64,'UTF-8'),'UTF-8');
                         $bookCodeStack[$bookName] = 1;
-                        WbwTemplate::where('id',$row->id)->update([
-                            'type'=>':cs.para:',
-                            'gramma'=>mb_strtolower(mb_substr($bookName,0,64,'UTF-8'),'UTF-8'),
-                            'part'=>$paraNum,
-                        ]);
+                        if(!empty($bookName)){
+                            WbwTemplate::where('id',$row->id)->update([
+                                'type'=>':cs.para:',
+                                'gramma'=>$bookName,
+                                'part'=>$paraNum,
+                            ]);
+                        }
                         $count++;
                     }else if($row->word===';'){
                         $bookCode = '';
