@@ -3,9 +3,8 @@ import { Alert, message } from "antd";
 import { useIntl } from "react-intl";
 
 import { get } from "../../request";
-import { IPageNavData, IPageNavResponse } from "../api/Article";
+import { ICSParaNavData, ICSParaNavResponse } from "../api/Article";
 import { ArticleMode, ArticleType } from "./Article";
-import { bookName } from "../fts/book_name";
 import TypePali from "./TypePali";
 import NavigateButton from "./NavigateButton";
 import ArticleSkeleton from "./ArticleSkeleton";
@@ -23,15 +22,13 @@ interface IWidget {
   articleId?: string;
   mode?: ArticleMode | null;
   channelId?: string | null;
-  focus?: string | null;
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
 }
-const TypePageWidget = ({
+const TypeCSParaWidget = ({
   channelId,
   articleId,
-  focus,
   mode = "read",
   onArticleChange,
 }: IWidget) => {
@@ -48,7 +45,7 @@ const TypePageWidget = ({
    */
 
   const [paramPali, setParamPali] = useState<IParam>();
-  const [nav, setNav] = useState<IPageNavData>();
+  const [nav, setNav] = useState<ICSParaNavData>();
   const [errorCode, setErrorCode] = useState<number>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [pageInfo, setPageInfo] = useState<string>();
@@ -56,42 +53,32 @@ const TypePageWidget = ({
 
   useEffect(() => {
     if (typeof articleId === "undefined") {
+      console.error("articleId 不能为空");
       return;
     }
 
     const pageParam = articleId.split("_");
-    if (pageParam.length < 4) {
+    if (pageParam.length !== 3) {
+      console.error("pageParam 必须为三个");
       return;
     }
-    //查询书号
-    const booksId = bookName
-      .filter((value) => value.term === pageParam[1])
-      .map((item) => item.id)
-      .join("_");
-    const url = `/v2/nav-page/${pageParam[0].toUpperCase()}-${booksId}-${
-      pageParam[2]
-    }-${pageParam[3]}`;
-    setPageInfo(
-      `版本：` +
-        intl.formatMessage({
-          id: `labels.page.number.type.` + pageParam[0].toUpperCase(),
-        }) +
-        ` 书名：${pageParam[1]} 卷号：${pageParam[2]} 页码：${pageParam[3]}`
-    );
+
+    const url = `/v2/nav-cs-para/${articleId}`;
+    setPageInfo("");
     console.log("url", url);
-    get<IPageNavResponse>(url)
+    get<ICSParaNavResponse>(url)
       .then((json) => {
         if (json.ok) {
           const data = json.data;
           setNav(data);
-          const begin = data.curr.paragraph;
-          const end = data.next.paragraph;
+          const begin = data.curr.start;
+          const end = data.end;
           let para: number[] = [];
           for (let index = begin; index <= end; index++) {
             para.push(index);
           }
           setParamPali({
-            articleId: `${data.curr.book}-${data.curr.paragraph}`,
+            articleId: `${data.curr.book}-${data.curr.start}`,
             book: data.curr.book.toString(),
             para: para.join(),
             mode: mode,
@@ -109,7 +96,7 @@ const TypePageWidget = ({
           setErrorMessage(`该页面不存在。页面信息：${pageInfo}`);
         }
       });
-  }, [articleId, channelId, intl, mode, pageInfo]);
+  }, [articleId, channelId, mode, pageInfo]);
 
   return (
     <div>
@@ -120,7 +107,6 @@ const TypePageWidget = ({
             type={"para"}
             hideNav
             {...paramPali}
-            focus={focus}
             onArticleChange={(type: ArticleType, id: string) => {
               if (typeof onArticleChange !== "undefined") {
                 onArticleChange(type, id);
@@ -128,25 +114,25 @@ const TypePageWidget = ({
             }}
           />
           <NavigateButton
-            prevTitle={nav?.prev.page.toString()}
-            nextTitle={nav?.next.page.toString()}
+            prevTitle={nav?.prev?.content.slice(0, 10)}
+            nextTitle={nav?.next?.content.slice(0, 10)}
             onNext={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
               if (typeof onArticleChange !== "undefined") {
                 if (typeof articleId === "undefined") {
                   return;
                 }
                 const pageParam = articleId.split("_");
-                if (pageParam.length < 4) {
+                if (pageParam.length !== 3) {
                   return;
                 }
-                const id = `${pageParam[0]}-${pageParam[1]}-${pageParam[2]}-${
-                  parseInt(pageParam[3]) + 1
+                const id = `${pageParam[0]}-${pageParam[1]}-${
+                  parseInt(pageParam[2]) + 1
                 }`;
                 let target = "_self";
                 if (event.ctrlKey || event.metaKey) {
                   target = "_blank";
                 }
-                onArticleChange("page", id, target);
+                onArticleChange("cs-para", id, target);
               }
             }}
             onPrev={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -155,17 +141,17 @@ const TypePageWidget = ({
                   return;
                 }
                 const pageParam = articleId.split("_");
-                if (pageParam.length < 4) {
+                if (pageParam.length < 3) {
                   return;
                 }
-                const id = `${pageParam[0]}-${pageParam[1]}-${pageParam[2]}-${
-                  parseInt(pageParam[3]) - 1
+                const id = `${pageParam[0]}-${pageParam[1]}-${
+                  parseInt(pageParam[2]) - 1
                 }`;
                 let target = "_self";
                 if (event.ctrlKey || event.metaKey) {
                   target = "_blank";
                 }
-                onArticleChange("page", id, target);
+                onArticleChange("cs-para", id, target);
               }
             }}
           />
@@ -179,4 +165,4 @@ const TypePageWidget = ({
   );
 };
 
-export default TypePageWidget;
+export default TypeCSParaWidget;

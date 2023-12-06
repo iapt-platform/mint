@@ -214,3 +214,22 @@ export interface IPageNavItem {
   created_at: string;
   updated_at: string;
 }
+
+export interface ICSParaNavResponse {
+  ok: boolean;
+  data: ICSParaNavData;
+  message: string;
+}
+
+export interface ICSParaNavData {
+  curr: ICSParaNavItem;
+  prev?: ICSParaNavItem;
+  next?: ICSParaNavItem;
+  end: number;
+}
+
+export interface ICSParaNavItem {
+  book: number;
+  start: number;
+  content: string;
+}
