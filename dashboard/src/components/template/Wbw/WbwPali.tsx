@@ -349,7 +349,7 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
           <ParaLinkCtl
             title={data.word.value}
             bookName={data.grammar?.value}
-            paragraphs={data.factors?.value}
+            paragraphs={data.word?.value}
           />
         ) : (
           paliWord
