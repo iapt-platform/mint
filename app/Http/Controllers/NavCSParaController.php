@@ -39,7 +39,7 @@ class NavCSParaController extends Controller
      */
     public function show(string $paraNumber)
     {
-        //99-5-37
+        //99_5_37-38
         $id = explode('_',$paraNumber);
         if(count($id) !== 3){
             return $this->error('参数错误。参数应为3 实际得到'.count($id),400,400);
@@ -51,21 +51,30 @@ class NavCSParaController extends Controller
         if(!$para){
             return $this->error('没有找到段落起始'.$id,404,404);
         }
+        //cs 段落号列表
+        $csPara = explode('-',$id[2]);
+        $csList = [];
+        for ($i=(int)$csPara[0]; $i <=(int)end($csPara) ; $i++) {
+            $csList[] = $i;
+        }
+        //段落区间
         $begin = $id[1];
         $end = (int)$id[1] + $para->chapter_len;
         $curr = WbwTemplate::where('book',$id[0])
                                 ->where('style','paranum')
-                                ->where('word',$id[2])
+                                ->whereIn('word',$csList)
                                 ->whereBetween('paragraph',[$begin,$end])
-                                ->select('book','paragraph')->first();
+                                ->orderBy('paragraph')
+                                ->select('book','paragraph')->get();
         if(!$curr){
             return $this->error('没有找到段落'.$id,404,404);
         }
+
         $data = [];
-        $data['curr'] = new NavCSParaResource($curr);
+        $data['curr'] = new NavCSParaResource($curr[0]);
         $next = WbwTemplate::where('book',$id[0])
                 ->where('style','paranum')
-                ->where('word',(int)$id[2]+1)
+                ->where('word',(int)end($csPara)+1)
                 ->whereBetween('paragraph',[$begin,$end])
                 ->select('book','paragraph')->first();
         if($next){
@@ -76,7 +85,7 @@ class NavCSParaController extends Controller
         }
         $prev = WbwTemplate::where('book',$id[0])
                             ->where('style','paranum')
-                            ->where('word',$id[2]-1)
+                            ->where('word',(int)$csPara[0]-1)
                             ->whereBetween('paragraph',[$begin,$end])
                             ->select('book','paragraph')->first();
         if($prev){
