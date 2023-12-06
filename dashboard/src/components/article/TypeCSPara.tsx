@@ -57,7 +57,7 @@ const TypeCSParaWidget = ({
       return;
     }
 
-    const pageParam = articleId.split("-");
+    const pageParam = articleId.split("_");
     if (pageParam.length !== 3) {
       console.error("pageParam 必须为三个");
       return;
@@ -121,7 +121,7 @@ const TypeCSParaWidget = ({
                 if (typeof articleId === "undefined") {
                   return;
                 }
-                const pageParam = articleId.split("-");
+                const pageParam = articleId.split("_");
                 if (pageParam.length !== 3) {
                   return;
                 }
@@ -140,7 +140,7 @@ const TypeCSParaWidget = ({
                 if (typeof articleId === "undefined") {
                   return;
                 }
-                const pageParam = articleId.split("-");
+                const pageParam = articleId.split("_");
                 if (pageParam.length < 3) {
                   return;
                 }
