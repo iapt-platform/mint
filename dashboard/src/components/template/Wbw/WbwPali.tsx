@@ -21,6 +21,7 @@ import { add, relationAddParam } from "../../../reducers/relation-add";
 import { ArticleMode } from "../../article/Article";
 import { anchor, showWbw } from "../../../reducers/wbw";
 import { CommentOutlinedIcon } from "../../../assets/icon";
+import { ParaLinkCtl } from "../ParaLink";
 
 const { Paragraph } = Typography;
 interface IWidget {
@@ -344,7 +345,15 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
     //标点符号
     return (
       <div className="pali_shell" style={{ cursor: "unset" }}>
-        {paliWord}
+        {data.type?.value === ":cs.para:" ? (
+          <ParaLinkCtl
+            title={data.word.value}
+            bookName={data.grammar?.value}
+            paragraphs={data.factors?.value}
+          />
+        ) : (
+          paliWord
+        )}
       </div>
     );
   }
