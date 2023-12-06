@@ -40,7 +40,7 @@ class NavCSParaController extends Controller
     public function show(string $paraNumber)
     {
         //99-5-37
-        $id = explode('-',$paraNumber);
+        $id = explode('_',$paraNumber);
         if(count($id) !== 3){
             return $this->error('参数错误。参数应为3 实际得到'.count($id),400,400);
         }
