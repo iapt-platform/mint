@@ -248,16 +248,9 @@ const TypePaliWidget = ({
             ) => {
               let newType = type;
               if (node.level === 0) {
-                switch (type) {
-                  case "article":
-                    newType = "anthology";
-                    break;
-                  case "chapter":
-                    newType = "series";
-                    break;
-                  default:
-                    break;
-                }
+                newType = "series";
+              } else {
+                newType = "chapter";
               }
 
               if (typeof onArticleChange !== "undefined") {
