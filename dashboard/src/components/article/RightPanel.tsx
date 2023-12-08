@@ -14,6 +14,7 @@ import DiscussionBox from "../discussion/DiscussionBox";
 import { show } from "../../reducers/discussion";
 import { useIntl } from "react-intl";
 import SuggestionBox from "../template/SentEdit/SuggestionBox";
+import ChannelMy from "../channel/ChannelMy";
 
 export type TPanelName =
   | "dict"

@@ -21,7 +21,9 @@ const MdViewWidget = ({
 }: IWidget) => {
   if (html && html.trim() !== "") {
     return (
-      <Paragraph>{XmlToReact(gfwClear(html), wordWidget, convertor)}</Paragraph>
+      <Paragraph className={className}>
+        {XmlToReact(gfwClear(html), wordWidget, convertor)}
+      </Paragraph>
     );
   } else {
     return <Text type="secondary">{placeholder}</Text>;

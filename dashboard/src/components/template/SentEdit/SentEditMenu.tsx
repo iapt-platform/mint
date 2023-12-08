@@ -138,7 +138,7 @@ const SentEditMenuWidget = ({
       />
       <div
         style={{
-          marginTop: 0,
+          marginTop: -25,
           right: 30,
           position: "absolute",
           display: isHover ? "block" : "none",

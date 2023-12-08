@@ -26,7 +26,7 @@ interface IParams {
   owner?: string;
 }
 
-interface IProgressRequest {
+export interface IProgressRequest {
   sentence: string[];
   owner?: string;
 }

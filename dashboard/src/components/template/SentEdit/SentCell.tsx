@@ -7,7 +7,7 @@ import { ISentence } from "../SentEdit";
 import SentEditMenu from "./SentEditMenu";
 import SentCellEditable from "./SentCellEditable";
 import MdView from "../MdView";
-import EditInfo from "./EditInfo";
+import EditInfo, { Details } from "./EditInfo";
 import SuggestionToolbar from "./SuggestionToolbar";
 import { useAppSelector } from "../../../hooks";
 import { sentence } from "../../../reducers/accept-pr";
@@ -21,6 +21,9 @@ import TextDiff from "../../general/TextDiff";
 import { sentSave as _sentSave } from "./SentCellEditable";
 import { IDeleteResponse } from "../../api/Article";
 import { delete_ } from "../../../request";
+
+import "./style.css";
+import StudioName from "../../auth/StudioName";
 
 interface IWidget {
   initValue?: ISentence;
@@ -252,73 +255,99 @@ const SentCellWidget = ({
         }}
       >
         {sentData ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: compact ? "row" : "column",
-              alignItems: "flex-start",
-            }}
-          >
-            <EditInfo data={sentData} compact={compact} />
-            {isEditMode ? (
-              sentData?.contentType === "json" ? (
-                <SentWbwEdit
-                  data={sentData}
-                  onClose={() => {
-                    setIsEditMode(false);
-                  }}
-                  onSave={(data: ISentence) => {
-                    setSentData(data);
-                  }}
+          <div style={{ display: "flex" }}>
+            <div style={{ marginRight: 8 }}>
+              <StudioName
+                data={sentData.studio}
+                showName={false}
+                popOver={
+                  compact ? <Details data={sentData} isPr={isPr} /> : undefined
+                }
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: compact ? "row" : "column",
+                alignItems: "flex-start",
+                width: "100%",
+              }}
+            >
+              {isEditMode ? (
+                sentData?.contentType === "json" ? (
+                  <SentWbwEdit
+                    data={sentData}
+                    onClose={() => {
+                      setIsEditMode(false);
+                    }}
+                    onSave={(data: ISentence) => {
+                      setSentData(data);
+                    }}
+                  />
+                ) : (
+                  <SentCellEditable
+                    data={sentData}
+                    isPr={isPr}
+                    onClose={() => {
+                      setIsEditMode(false);
+                    }}
+                    onSave={(data: ISentence) => {
+                      setIsEditMode(false);
+                      setSentData(data);
+                      if (typeof onChange !== "undefined") {
+                        onChange(data);
+                      }
+                    }}
+                  />
+                )
+              ) : showDiff ? (
+                <TextDiff
+                  showToolTip={false}
+                  content={sentData.content}
+                  oldContent={diffText}
                 />
               ) : (
-                <SentCellEditable
+                <MdView
+                  className="sentence"
+                  style={{
+                    width: "100%",
+                    paddingLeft: compact ? 0 : "2em",
+                    marginBottom: 0,
+                  }}
+                  placeholder="请输入"
+                  html={sentData.html ? sentData.html : sentData.content}
+                  wordWidget={wordWidget}
+                />
+              )}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: compact ? undefined : "100%",
+                  paddingRight: 20,
+                  flexWrap: "wrap",
+                }}
+              >
+                <EditInfo data={sentData} compact={compact} />
+                <SuggestionToolbar
+                  style={{
+                    marginBottom: 0,
+                    justifyContent: "flex-end",
+                    marginLeft: "auto",
+                  }}
+                  compact={compact}
                   data={sentData}
                   isPr={isPr}
-                  onClose={() => {
-                    setIsEditMode(false);
-                  }}
-                  onSave={(data: ISentence) => {
-                    setIsEditMode(false);
-                    setSentData(data);
-                    if (typeof onChange !== "undefined") {
-                      onChange(data);
+                  prOpen={prOpen}
+                  onPrClose={() => setPrOpen(false)}
+                  onDelete={() => {
+                    if (isPr && sentData.id) {
+                      deletePr(sentData.id);
                     }
                   }}
                 />
-              )
-            ) : showDiff ? (
-              <TextDiff
-                showToolTip={false}
-                content={sentData.content}
-                oldContent={diffText}
-              />
-            ) : (
-              <MdView
-                style={{
-                  width: "100%",
-                  paddingLeft: compact ? 0 : "2em",
-                  marginBottom: 0,
-                }}
-                placeholder="请输入"
-                html={sentData.html ? sentData.html : sentData.content}
-                wordWidget={wordWidget}
-              />
-            )}
-
-            <SuggestionToolbar
-              style={{ marginLeft: "2em" }}
-              compact={compact}
-              data={sentData}
-              isPr={isPr}
-              prOpen={prOpen}
-              onPrClose={() => setPrOpen(false)}
-              onDelete={() => {
-                if (isPr && sentData.id) {
-                  deletePr(sentData.id);
-                }
-              }}
-            />
+              </div>
+            </div>
           </div>
         ) : undefined}
       </SentEditMenu>
