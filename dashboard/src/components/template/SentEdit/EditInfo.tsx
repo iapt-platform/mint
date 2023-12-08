@@ -13,7 +13,7 @@ interface IDetailsWidget {
   data: ISentence;
   isPr?: boolean;
 }
-const Details = ({ data, isPr }: IDetailsWidget) => (
+export const Details = ({ data, isPr }: IDetailsWidget) => (
   <Space>
     <Channel {...data.channel} />
     <User {...data.editor} showAvatar={isPr ? true : false} />
@@ -49,15 +49,6 @@ const EditInfoWidget = ({ data, isPr = false, compact = false }: IWidget) => {
     <div style={{ fontSize: "80%" }}>
       <Text type="secondary">
         <Space>
-          {isPr ? undefined : (
-            <StudioName
-              data={data.studio}
-              showName={false}
-              popOver={
-                compact ? <Details data={data} isPr={isPr} /> : undefined
-              }
-            />
-          )}
           {compact ? undefined : <Details data={data} isPr={isPr} />}
         </Space>
       </Text>
