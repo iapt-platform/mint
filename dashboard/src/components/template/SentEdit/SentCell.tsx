@@ -325,11 +325,16 @@ const SentCellWidget = ({
                   justifyContent: "space-between",
                   width: compact ? undefined : "100%",
                   paddingRight: 20,
+                  flexWrap: "wrap",
                 }}
               >
                 <EditInfo data={sentData} compact={compact} />
                 <SuggestionToolbar
-                  style={{ marginLeft: "2em", marginBottom: 0 }}
+                  style={{
+                    marginBottom: 0,
+                    justifyContent: "flex-end",
+                    marginLeft: "auto",
+                  }}
                   compact={compact}
                   data={sentData}
                   isPr={isPr}
