@@ -14,6 +14,7 @@ import DiscussionBox from "../discussion/DiscussionBox";
 import { show } from "../../reducers/discussion";
 import { useIntl } from "react-intl";
 import SuggestionBox from "../template/SentEdit/SuggestionBox";
+import ChannelMy from "../channel/ChannelMy";
 
 export type TPanelName =
   | "dict"
@@ -168,6 +169,15 @@ const RightPanelWidget = ({
               key: "channel",
               children: (
                 <div style={tabInnerStyle}>
+                  <ChannelMy
+                    selectedKeys={selectedChannelsId}
+                    onSelect={(e: IChannel[]) => {
+                      console.log(e);
+                      if (typeof onChannelSelect !== "undefined") {
+                        onChannelSelect(e);
+                      }
+                    }}
+                  />
                   <ChannelPickerTable
                     type={type}
                     articleId={articleId}
