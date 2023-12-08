@@ -169,16 +169,6 @@ const RightPanelWidget = ({
               key: "channel",
               children: (
                 <div style={tabInnerStyle}>
-                  <ChannelMy
-                    style={{ display: "none" }}
-                    selectedKeys={selectedChannelsId}
-                    onSelect={(e: IChannel[]) => {
-                      console.log(e);
-                      if (typeof onChannelSelect !== "undefined") {
-                        onChannelSelect(e);
-                      }
-                    }}
-                  />
                   <ChannelPickerTable
                     type={type}
                     articleId={articleId}
