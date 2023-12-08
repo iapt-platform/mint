@@ -170,6 +170,7 @@ const RightPanelWidget = ({
               children: (
                 <div style={tabInnerStyle}>
                   <ChannelMy
+                    style={{ display: "none" }}
                     selectedKeys={selectedChannelsId}
                     onSelect={(e: IChannel[]) => {
                       console.log(e);
