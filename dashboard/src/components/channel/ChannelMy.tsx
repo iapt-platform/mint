@@ -23,9 +23,10 @@ interface ChannelTreeNode {
 
 interface IWidget {
   selectedKeys?: string[];
+  style?: React.CSSProperties;
   onSelect?: Function;
 }
-const ChannelMy = ({ selectedKeys = [], onSelect }: IWidget) => {
+const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
   const [selectedRowKeys, setSelectedRowKeys] =
     useState<React.Key[]>(selectedKeys);
   const [treeData, setTreeData] = useState<ChannelTreeNode[]>();
@@ -110,117 +111,127 @@ const ChannelMy = ({ selectedKeys = [], onSelect }: IWidget) => {
     });
   };
   return (
-    <Card
-      size="small"
-      title={`已经选择${selectedKeys.length}`}
-      extra={
-        <Space>
-          <Button
-            type="primary"
-            disabled={!dirty}
-            onClick={() => {
-              if (typeof onSelect !== "undefined") {
-                setDirty(false);
-                onSelect(
-                  selectedRowKeys.map((item) => {
-                    return {
-                      id: item,
-                      name: treeData?.find(
-                        (value) => value.channel.uid === item
-                      )?.channel.title,
-                    };
-                  })
+    <div style={style}>
+      <Card
+        size="small"
+        title={`已经选择${selectedKeys.length}`}
+        extra={
+          <Space>
+            <Button
+              type="primary"
+              disabled={!dirty}
+              onClick={() => {
+                if (typeof onSelect !== "undefined") {
+                  setDirty(false);
+                  onSelect(
+                    selectedRowKeys.map((item) => {
+                      return {
+                        id: item,
+                        name: treeData?.find(
+                          (value) => value.channel.uid === item
+                        )?.channel.title,
+                      };
+                    })
+                  );
+                }
+              }}
+            >
+              确定
+            </Button>
+            <Button type="link" icon={<ReloadOutlined />} />
+          </Space>
+        }
+      >
+        <Tree
+          selectedKeys={selectedRowKeys}
+          checkedKeys={selectedRowKeys}
+          checkable
+          treeData={treeData}
+          blockNode
+          onCheck={(
+            checked: Key[] | { checked: Key[]; halfChecked: Key[] }
+          ) => {
+            setDirty(true);
+            if (Array.isArray(checked)) {
+              if (checked.length > selectedRowKeys.length) {
+                const add = checked.filter(
+                  (value) => !selectedRowKeys.includes(value.toString())
+                );
+                if (add.length > 0) {
+                  setSelectedRowKeys([...selectedRowKeys, add[0]]);
+                }
+              } else {
+                setSelectedRowKeys(
+                  selectedRowKeys.filter((value) => checked.includes(value))
                 );
               }
-            }}
-          >
-            确定
-          </Button>
-          <Button type="link" icon={<ReloadOutlined />} />
-        </Space>
-      }
-    >
-      <Tree
-        selectedKeys={selectedRowKeys}
-        checkedKeys={selectedRowKeys}
-        checkable
-        treeData={treeData}
-        blockNode
-        onCheck={(checked: Key[] | { checked: Key[]; halfChecked: Key[] }) => {
-          setDirty(true);
-          if (Array.isArray(checked)) {
-            if (checked.length > selectedRowKeys.length) {
-              const add = checked.filter(
-                (value) => !selectedRowKeys.includes(value.toString())
-              );
-              if (add.length > 0) {
-                setSelectedRowKeys([...selectedRowKeys, add[0]]);
-              }
-            } else {
-              setSelectedRowKeys(
-                selectedRowKeys.filter((value) => checked.includes(value))
+            }
+          }}
+          onSelect={(keys: Key[]) => {
+            if (typeof onSelect !== "undefined") {
+              onSelect(
+                keys.map((item) => {
+                  return {
+                    id: item,
+                    name: treeData?.find((value) => value.channel.uid === item)
+                      ?.channel.title,
+                  };
+                })
               );
             }
-          }
-        }}
-        onSelect={(keys: Key[]) => {
-          if (typeof onSelect !== "undefined") {
-            onSelect(
-              keys.map((item) => {
-                return {
-                  id: item,
-                  name: treeData?.find((value) => value.channel.uid === item)
-                    ?.channel.title,
-                };
-              })
+          }}
+          titleRender={(node: ChannelTreeNode) => {
+            let pIcon = <></>;
+            switch (node.channel.publicity) {
+              case 10:
+                pIcon = <LockIcon />;
+                break;
+              case 30:
+                pIcon = <GlobalOutlined />;
+                break;
+            }
+            const badge = selectedRowKeys.findIndex(
+              (value) => value === node.channel.uid
             );
-          }
-        }}
-        titleRender={(node: ChannelTreeNode) => {
-          let pIcon = <></>;
-          switch (node.channel.publicity) {
-            case 10:
-              pIcon = <LockIcon />;
-              break;
-            case 30:
-              pIcon = <GlobalOutlined />;
-              break;
-          }
-          const badge = selectedRowKeys.findIndex(
-            (value) => value === node.channel.uid
-          );
-          return (
-            <Badge count={badge + 1}>
-              <div
-                style={{
-                  width: "100%",
-                  borderRadius: 5,
-                  padding: "0 5px",
-                }}
-              >
-                <div key="info" style={{ overflowX: "clip", display: "flex" }}>
-                  <Space>
-                    {pIcon}
-                    {node.channel.role !== "member" ? (
-                      <EditOutlined />
-                    ) : undefined}
-                  </Space>
-                  <Button type="link">
+            return (
+              <Badge count={badge + 1}>
+                <div
+                  style={{
+                    width: "100%",
+                    borderRadius: 5,
+                    padding: "0 5px",
+                  }}
+                >
+                  <div
+                    key="info"
+                    style={{ overflowX: "clip", display: "flex" }}
+                  >
                     <Space>
-                      <StudioName data={node.channel.studio} showName={false} />
-                      {node.channel.title}
+                      {pIcon}
+                      {node.channel.role !== "member" ? (
+                        <EditOutlined />
+                      ) : undefined}
                     </Space>
-                  </Button>
+                    <Button type="link">
+                      <Space>
+                        <StudioName
+                          data={node.channel.studio}
+                          showName={false}
+                        />
+                        {node.channel.title}
+                      </Space>
+                    </Button>
+                  </div>
+                  <div key="progress">
+                    <ProgressSvg data={node.channel.final} width={200} />
+                  </div>
                 </div>
-                <div key="progress">
-                  <ProgressSvg data={node.channel.final} width={200} />
-                </div>
-              </div>
-            </Badge>
-          );
-        }}
-      />
-    </Card>
+              </Badge>
+            );
+          }}
+        />
+      </Card>
+    </div>
   );
 };
 export default ChannelMy;
