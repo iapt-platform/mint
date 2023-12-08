@@ -22,6 +22,8 @@ import { sentSave as _sentSave } from "./SentCellEditable";
 import { IDeleteResponse } from "../../api/Article";
 import { delete_ } from "../../../request";
 
+import "./style.css";
+
 interface IWidget {
   initValue?: ISentence;
   value?: ISentence;
@@ -257,9 +259,9 @@ const SentCellWidget = ({
               display: "flex",
               flexDirection: compact ? "row" : "column",
               alignItems: "flex-start",
+              width: "100%",
             }}
           >
-            <EditInfo data={sentData} compact={compact} />
             {isEditMode ? (
               sentData?.contentType === "json" ? (
                 <SentWbwEdit
@@ -295,6 +297,7 @@ const SentCellWidget = ({
               />
             ) : (
               <MdView
+                className="sentence"
                 style={{
                   width: "100%",
                   paddingLeft: compact ? 0 : "2em",
@@ -305,20 +308,29 @@ const SentCellWidget = ({
                 wordWidget={wordWidget}
               />
             )}
-
-            <SuggestionToolbar
-              style={{ marginLeft: "2em" }}
-              compact={compact}
-              data={sentData}
-              isPr={isPr}
-              prOpen={prOpen}
-              onPrClose={() => setPrOpen(false)}
-              onDelete={() => {
-                if (isPr && sentData.id) {
-                  deletePr(sentData.id);
-                }
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+                paddingRight: 20,
               }}
-            />
+            >
+              <EditInfo data={sentData} compact={compact} />
+              <SuggestionToolbar
+                style={{ marginLeft: "2em", marginBottom: 0 }}
+                compact={compact}
+                data={sentData}
+                isPr={isPr}
+                prOpen={prOpen}
+                onPrClose={() => setPrOpen(false)}
+                onDelete={() => {
+                  if (isPr && sentData.id) {
+                    deletePr(sentData.id);
+                  }
+                }}
+              />
+            </div>
           </div>
         ) : undefined}
       </SentEditMenu>
