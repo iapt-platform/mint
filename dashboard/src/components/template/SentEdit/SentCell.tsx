@@ -311,7 +311,6 @@ const SentCellWidget = ({
                   className="sentence"
                   style={{
                     width: "100%",
-                    paddingLeft: compact ? 0 : "2em",
                     marginBottom: 0,
                   }}
                   placeholder="请输入"

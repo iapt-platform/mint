@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
-import { post } from "../../request";
-import { IApiResponseChannelList } from "../api/Channel";
-import { IItem, IProgressRequest } from "./ChannelPickerTable";
-import { Badge, Button, Card, Space, Tree } from "antd";
+import { useIntl } from "react-intl";
+import { Key } from "antd/es/table/interface";
+import { Badge, Button, Card, Select, Space, Tree } from "antd";
 import {
   GlobalOutlined,
   EditOutlined,
   ReloadOutlined,
 } from "@ant-design/icons";
+
+import { post } from "../../request";
+import { IApiResponseChannelList } from "../api/Channel";
+import { IItem, IProgressRequest } from "./ChannelPickerTable";
 import { LockIcon } from "../../assets/icon";
 import StudioName from "../auth/StudioName";
 import ProgressSvg from "./ProgressSvg";
-import { Key } from "antd/es/table/interface";
+import { DataNode, EventDataNode } from "antd/es/tree";
 
 interface ChannelTreeNode {
   key: string;
@@ -27,13 +30,54 @@ interface IWidget {
   onSelect?: Function;
 }
 const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
+  const intl = useIntl();
   const [selectedRowKeys, setSelectedRowKeys] =
     useState<React.Key[]>(selectedKeys);
   const [treeData, setTreeData] = useState<ChannelTreeNode[]>();
   const [dirty, setDirty] = useState(false);
+  const [channels, setChannels] = useState<IItem[]>([]);
 
   useEffect(() => load("all"), []);
 
+  useEffect(() => {
+    setSelectedRowKeys(selectedKeys);
+  }, [selectedKeys]);
+
+  useEffect(() => {
+    sortChannels(channels);
+  }, [channels, selectedRowKeys]);
+
+  const sortChannels = (channelList: IItem[]) => {
+    //当前被选择的
+    const currChannel = channelList.filter((value) =>
+      selectedRowKeys.includes(value.uid)
+    );
+    let show = selectedRowKeys;
+    //有进度的
+    const progressing = channelList.filter(
+      (value) => value.progress > 0 && !show.includes(value.uid)
+    );
+    show = [...show, ...progressing.map((item) => item.uid)];
+    //我自己的
+    const myChannel = channelList.filter(
+      (value) => value.role === "owner" && !show.includes(value.uid)
+    );
+    show = [...show, ...myChannel.map((item) => item.uid)];
+    //其他的
+    const others = channelList.filter(
+      (value) => !show.includes(value.uid) && value.role !== "member"
+    );
+    const channelData = [
+      ...currChannel,
+      ...progressing,
+      ...myChannel,
+      ...others,
+    ];
+    const data = channelData.map((item, index) => {
+      return { key: item.uid, title: item.title, channel: item };
+    });
+    setTreeData(data);
+  };
   const load = (owner: string) => {
     const sentElement = document.querySelectorAll(".pcd_sent");
     let sentList: string[] = [];
@@ -78,43 +122,43 @@ const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
             progress: progress,
           };
         });
-      //当前被选择的
-      const currChannel = items.filter((value) =>
-        selectedRowKeys.includes(value.uid)
-      );
-      let show = selectedRowKeys;
-      //有进度的
-      const progressing = items.filter(
-        (value) => value.progress > 0 && !show.includes(value.uid)
-      );
-      show = [...show, ...progressing.map((item) => item.uid)];
-      //我自己的
-      const myChannel = items.filter(
-        (value) => value.role === "owner" && !show.includes(value.uid)
-      );
-      show = [...show, ...myChannel.map((item) => item.uid)];
-      //其他的
-      const others = items.filter(
-        (value) => !show.includes(value.uid) && value.role !== "member"
-      );
-      const channelData = [
-        ...currChannel,
-        ...progressing,
-        ...myChannel,
-        ...others,
-      ];
 
-      const data = channelData.map((item, index) => {
-        return { key: item.uid, title: item.title, channel: item };
-      });
-      setTreeData(data);
+      setChannels(items);
     });
   };
   return (
     <div style={style}>
       <Card
         size="small"
-        title={`已经选择${selectedKeys.length}`}
+        title={
+          <Select
+            defaultValue="all"
+            style={{ width: 120 }}
+            bordered={false}
+            options={[
+              {
+                value: "all",
+                label: intl.formatMessage({ id: "buttons.channel.all" }),
+              },
+              {
+                value: "my",
+                label: intl.formatMessage({ id: "buttons.channel.my" }),
+              },
+              {
+                value: "collaborator",
+                label: intl.formatMessage({
+                  id: "buttons.channel.collaborator",
+                }),
+              },
+              {
+                value: "public",
+                label: intl.formatMessage({
+                  id: "buttons.channel.public",
+                }),
+              },
+            ]}
+          />
+        }
         extra={
           <Space>
             <Button
@@ -144,10 +188,29 @@ const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
       >
         <Tree
           selectedKeys={selectedRowKeys}
+          multiple
           checkedKeys={selectedRowKeys}
           checkable
           treeData={treeData}
           blockNode
+          onClick={(
+            e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+            node: EventDataNode<DataNode>
+          ) => {
+            console.log(node);
+            if (channels) {
+              sortChannels(channels);
+            }
+            setDirty(false);
+            if (typeof onSelect !== "undefined") {
+              onSelect([
+                {
+                  id: node.key,
+                  name: node.title,
+                },
+              ]);
+            }
+          }}
           onCheck={(
             checked: Key[] | { checked: Key[]; halfChecked: Key[] }
           ) => {
@@ -167,19 +230,7 @@ const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
               }
             }
           }}
-          onSelect={(keys: Key[]) => {
-            if (typeof onSelect !== "undefined") {
-              onSelect(
-                keys.map((item) => {
-                  return {
-                    id: item,
-                    name: treeData?.find((value) => value.channel.uid === item)
-                      ?.channel.title,
-                  };
-                })
-              );
-            }
-          }}
+          onSelect={(keys: Key[]) => {}}
           titleRender={(node: ChannelTreeNode) => {
             let pIcon = <></>;
             switch (node.channel.publicity) {
@@ -194,7 +245,7 @@ const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
               (value) => value === node.channel.uid
             );
             return (
-              <Badge count={badge + 1}>
+              <Badge count={dirty ? badge + 1 : 0}>
                 <div
                   style={{
                     width: "100%",

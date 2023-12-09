@@ -21,7 +21,7 @@ const MdViewWidget = ({
 }: IWidget) => {
   if (html && html.trim() !== "") {
     return (
-      <Text className={className}>
+      <Text className={className} style={style}>
         {XmlToReact(gfwClear(html), wordWidget, convertor)}
       </Text>
     );
