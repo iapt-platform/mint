@@ -1,3 +1,6 @@
 .sentence p {
   margin: 0;
 }
+.sentence.ant-typography p {
+  margin: 0;
+}
