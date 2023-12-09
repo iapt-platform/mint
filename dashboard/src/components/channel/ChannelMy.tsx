@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { Key } from "antd/es/table/interface";
-import { Badge, Button, Card, Select, Space, Tree } from "antd";
+import {
+  Badge,
+  Button,
+  Card,
+  Dropdown,
+  Select,
+  Skeleton,
+  Space,
+  Tree,
+} from "antd";
 import {
   GlobalOutlined,
   EditOutlined,
   ReloadOutlined,
+  MoreOutlined,
+  CopyOutlined,
 } from "@ant-design/icons";
 
 import { post } from "../../request";
@@ -15,6 +26,8 @@ import { LockIcon } from "../../assets/icon";
 import StudioName from "../auth/StudioName";
 import ProgressSvg from "./ProgressSvg";
 import { DataNode, EventDataNode } from "antd/es/tree";
+import { IChannel } from "./Channel";
+import CopyToModal from "./CopyToModal";
 
 interface ChannelTreeNode {
   key: string;
@@ -37,8 +50,11 @@ const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
   const [dirty, setDirty] = useState(false);
   const [channels, setChannels] = useState<IItem[]>([]);
   const [owner, setOwner] = useState("all");
+  const [loading, setLoading] = useState(true);
+  const [copyChannel, setCopyChannel] = useState<IChannel>();
+  const [copyOpen, setCopyOpen] = useState<boolean>(false);
 
-  useEffect(() => load("all"), []);
+  useEffect(() => load(), []);
 
   useEffect(() => {
     setSelectedRowKeys(selectedKeys);
@@ -88,7 +104,7 @@ const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
       setTreeData(data);
     }
   };
-  const load = (owner: string) => {
+  const load = () => {
     const sentElement = document.querySelectorAll(".pcd_sent");
     let sentList: string[] = [];
     for (let index = 0; index < sentElement.length; index++) {
@@ -96,45 +112,48 @@ const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
       const id = element.id.split("_")[1];
       sentList.push(id);
     }
-    const currOwner = owner ? owner : "all";
-    if (owner) {
-      //setOwnerChanged(true);
-    }
+    const currOwner = "all";
+
     console.log("owner", currOwner);
+    setLoading(true);
     post<IProgressRequest, IApiResponseChannelList>(`/v2/channel-progress`, {
       sentence: sentList,
       owner: currOwner,
-    }).then((res) => {
-      console.log("progress data", res.data.rows);
-      const items: IItem[] = res.data.rows
-        .filter((value) => value.name.substring(0, 4) !== "_Sys")
-        .map((item, id) => {
-          const date = new Date(item.created_at);
-          let all: number = 0;
-          let finished: number = 0;
-          item.final?.forEach((value) => {
-            all += value[0];
-            finished += value[1] ? value[0] : 0;
+    })
+      .then((res) => {
+        console.log("progress data", res.data.rows);
+        const items: IItem[] = res.data.rows
+          .filter((value) => value.name.substring(0, 4) !== "_Sys")
+          .map((item, id) => {
+            const date = new Date(item.created_at);
+            let all: number = 0;
+            let finished: number = 0;
+            item.final?.forEach((value) => {
+              all += value[0];
+              finished += value[1] ? value[0] : 0;
+            });
+            const progress = finished / all;
+            return {
+              id: id,
+              uid: item.uid,
+              title: item.name,
+              summary: item.summary,
+              studio: item.studio,
+              shareType: "my",
+              role: item.role,
+              type: item.type,
+              publicity: item.status,
+              createdAt: date.getTime(),
+              final: item.final,
+              progress: progress,
+            };
           });
-          const progress = finished / all;
-          return {
-            id: id,
-            uid: item.uid,
-            title: item.name,
-            summary: item.summary,
-            studio: item.studio,
-            shareType: "my",
-            role: item.role,
-            type: item.type,
-            publicity: item.status,
-            createdAt: date.getTime(),
-            final: item.final,
-            progress: progress,
-          };
-        });
 
-      setChannels(items);
-    });
+        setChannels(items);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
   return (
     <div style={style}>
@@ -183,106 +202,166 @@ const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
             >
               确定
             </Button>
-            <Button type="link" icon={<ReloadOutlined />} />
+            <Button
+              type="link"
+              icon={<ReloadOutlined />}
+              onClick={() => {
+                load();
+              }}
+            />
           </Space>
         }
       >
-        <Tree
-          selectedKeys={selectedRowKeys}
-          multiple
-          checkedKeys={selectedRowKeys}
-          checkable
-          treeData={treeData}
-          blockNode
-          onClick={(
-            e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-            node: EventDataNode<DataNode>
-          ) => {
-            console.log(node);
-            if (channels) {
-              sortChannels(channels);
-            }
-            setDirty(false);
-            if (typeof onSelect !== "undefined") {
-              onSelect([
-                {
-                  id: node.key,
-                  name: node.title,
-                },
-              ]);
-            }
-          }}
-          onCheck={(
-            checked: Key[] | { checked: Key[]; halfChecked: Key[] }
-          ) => {
-            setDirty(true);
-            if (Array.isArray(checked)) {
-              if (checked.length > selectedRowKeys.length) {
-                const add = checked.filter(
-                  (value) => !selectedRowKeys.includes(value.toString())
-                );
-                if (add.length > 0) {
-                  setSelectedRowKeys([...selectedRowKeys, add[0]]);
+        {loading ? (
+          <Skeleton active />
+        ) : (
+          <Tree
+            selectedKeys={selectedRowKeys}
+            multiple
+            checkedKeys={selectedRowKeys}
+            checkable
+            treeData={treeData}
+            blockNode
+            onCheck={(
+              checked: Key[] | { checked: Key[]; halfChecked: Key[] }
+            ) => {
+              setDirty(true);
+              if (Array.isArray(checked)) {
+                if (checked.length > selectedRowKeys.length) {
+                  const add = checked.filter(
+                    (value) => !selectedRowKeys.includes(value.toString())
+                  );
+                  if (add.length > 0) {
+                    setSelectedRowKeys([...selectedRowKeys, add[0]]);
+                  }
+                } else {
+                  setSelectedRowKeys(
+                    selectedRowKeys.filter((value) => checked.includes(value))
+                  );
                 }
-              } else {
-                setSelectedRowKeys(
-                  selectedRowKeys.filter((value) => checked.includes(value))
-                );
               }
-            }
-          }}
-          onSelect={(keys: Key[]) => {}}
-          titleRender={(node: ChannelTreeNode) => {
-            let pIcon = <></>;
-            switch (node.channel.publicity) {
-              case 10:
-                pIcon = <LockIcon />;
-                break;
-              case 30:
-                pIcon = <GlobalOutlined />;
-                break;
-            }
-            const badge = selectedRowKeys.findIndex(
-              (value) => value === node.channel.uid
-            );
-            return (
-              <Badge count={dirty ? badge + 1 : 0}>
+            }}
+            onSelect={(keys: Key[]) => {}}
+            titleRender={(node: ChannelTreeNode) => {
+              let pIcon = <></>;
+              switch (node.channel.publicity) {
+                case 10:
+                  pIcon = <LockIcon />;
+                  break;
+                case 30:
+                  pIcon = <GlobalOutlined />;
+                  break;
+              }
+              const badge = selectedRowKeys.findIndex(
+                (value) => value === node.channel.uid
+              );
+              return (
                 <div
                   style={{
+                    display: "flex",
+                    justifyContent: "space-between",
                     width: "100%",
-                    borderRadius: 5,
-                    padding: "0 5px",
                   }}
                 >
                   <div
-                    key="info"
-                    style={{ overflowX: "clip", display: "flex" }}
+                    style={{
+                      width: "100%",
+                      borderRadius: 5,
+                      padding: "0 5px",
+                    }}
+                    onClick={(
+                      e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+                    ) => {
+                      console.log(node);
+                      if (channels) {
+                        sortChannels(channels);
+                      }
+                      setDirty(false);
+                      if (typeof onSelect !== "undefined") {
+                        onSelect([
+                          {
+                            id: node.key,
+                            name: node.title,
+                          },
+                        ]);
+                      }
+                    }}
                   >
-                    <Space>
-                      {pIcon}
-                      {node.channel.role !== "member" ? (
-                        <EditOutlined />
-                      ) : undefined}
-                    </Space>
-                    <Button type="link">
+                    <div
+                      key="info"
+                      style={{ overflowX: "clip", display: "flex" }}
+                    >
                       <Space>
-                        <StudioName
-                          data={node.channel.studio}
-                          showName={false}
-                        />
-                        {node.channel.title}
+                        {pIcon}
+                        {node.channel.role !== "member" ? (
+                          <EditOutlined />
+                        ) : undefined}
                       </Space>
-                    </Button>
+                      <Button type="link">
+                        <Space>
+                          <StudioName
+                            data={node.channel.studio}
+                            showName={false}
+                          />
+                          {node.channel.title}
+                        </Space>
+                      </Button>
+                    </div>
+                    <div key="progress">
+                      <ProgressSvg data={node.channel.final} width={200} />
+                    </div>
                   </div>
-                  <div key="progress">
-                    <ProgressSvg data={node.channel.final} width={200} />
-                  </div>
+                  <Badge count={dirty ? badge + 1 : 0}>
+                    <div>
+                      <Dropdown
+                        trigger={["click"]}
+                        menu={{
+                          items: [
+                            {
+                              key: "copy-to",
+                              label: intl.formatMessage({
+                                id: "buttons.copy.to",
+                              }),
+                              icon: <CopyOutlined />,
+                            },
+                          ],
+                          onClick: (e) => {
+                            switch (e.key) {
+                              case "copy-to":
+                                setCopyChannel({
+                                  id: node.channel.uid,
+                                  name: node.channel.title,
+                                  type: node.channel.type,
+                                });
+                                setCopyOpen(true);
+                                break;
+
+                              default:
+                                break;
+                            }
+                          },
+                        }}
+                        placement="bottomRight"
+                      >
+                        <Button
+                          type="link"
+                          size="small"
+                          icon={<MoreOutlined />}
+                        ></Button>
+                      </Dropdown>
+                    </div>
+                  </Badge>
                 </div>
-              </Badge>
-            );
-          }}
-        />
+              );
+            }}
+          />
+        )}
       </Card>
+      <CopyToModal
+        channel={copyChannel}
+        open={copyOpen}
+        onClose={() => setCopyOpen(false)}
+      />
     </div>
   );
 };
