@@ -169,7 +169,7 @@ const RightPanelWidget = ({
               key: "channel",
               children: (
                 <div style={tabInnerStyle}>
-                  <ChannelPickerTable
+                  <ChannelMy
                     type={type}
                     articleId={articleId}
                     selectedKeys={selectedChannelsId}
