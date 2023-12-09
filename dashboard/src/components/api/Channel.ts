@@ -36,6 +36,8 @@ export interface IApiResponseChannelData {
   updated_at: string;
   role?: TRole;
   final?: IFinal[];
+  content_created_at: string;
+  content_updated_at: string;
 }
 export interface IApiResponseChannel {
   ok: boolean;

@@ -17,6 +17,7 @@ import {
   ReloadOutlined,
   MoreOutlined,
   CopyOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
 
 import { post } from "../../request";
@@ -29,6 +30,7 @@ import ProgressSvg from "./ProgressSvg";
 import { IChannel } from "./Channel";
 import CopyToModal from "./CopyToModal";
 import { ArticleType } from "../article/Article";
+import { ChannelInfoModal } from "./ChannelInfo";
 
 interface ChannelTreeNode {
   key: string;
@@ -62,7 +64,8 @@ const ChannelMy = ({
   const [loading, setLoading] = useState(true);
   const [copyChannel, setCopyChannel] = useState<IChannel>();
   const [copyOpen, setCopyOpen] = useState<boolean>(false);
-
+  const [infoOpen, setInfoOpen] = useState<boolean>(false);
+  const [statistic, setStatistic] = useState<IItem>();
   useEffect(() => load(), []);
 
   useEffect(() => {
@@ -155,6 +158,8 @@ const ChannelMy = ({
               createdAt: date.getTime(),
               final: item.final,
               progress: progress,
+              content_created_at: item.content_created_at,
+              content_updated_at: item.content_updated_at,
             };
           });
 
@@ -350,6 +355,13 @@ const ChannelMy = ({
                               }),
                               icon: <CopyOutlined />,
                             },
+                            {
+                              key: "statistic",
+                              label: intl.formatMessage({
+                                id: "buttons.statistic",
+                              }),
+                              icon: <InfoCircleOutlined />,
+                            },
                           ],
                           onClick: (e) => {
                             switch (e.key) {
@@ -361,7 +373,10 @@ const ChannelMy = ({
                                 });
                                 setCopyOpen(true);
                                 break;
-
+                              case "statistic":
+                                setInfoOpen(true);
+                                setStatistic(node.channel);
+                                break;
                               default:
                                 break;
                             }
@@ -387,6 +402,11 @@ const ChannelMy = ({
         channel={copyChannel}
         open={copyOpen}
         onClose={() => setCopyOpen(false)}
+      />
+      <ChannelInfoModal
+        channel={statistic}
+        open={infoOpen}
+        onClose={() => setInfoOpen(false)}
       />
     </div>
   );

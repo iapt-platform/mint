@@ -43,6 +43,8 @@ export interface IItem {
   final?: IFinal[];
   progress: number;
   createdAt: number;
+  content_created_at?: string;
+  content_updated_at?: string;
 }
 interface IWidget {
   type?: ArticleType | "editable";
