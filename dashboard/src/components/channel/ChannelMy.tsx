@@ -28,6 +28,7 @@ import ProgressSvg from "./ProgressSvg";
 
 import { IChannel } from "./Channel";
 import CopyToModal from "./CopyToModal";
+import { ArticleType } from "../article/Article";
 
 interface ChannelTreeNode {
   key: string;
@@ -38,11 +39,19 @@ interface ChannelTreeNode {
 }
 
 interface IWidget {
+  type?: ArticleType | "editable";
+  articleId?: string;
   selectedKeys?: string[];
   style?: React.CSSProperties;
   onSelect?: Function;
 }
-const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
+const ChannelMy = ({
+  type,
+  articleId,
+  selectedKeys = [],
+  style,
+  onSelect,
+}: IWidget) => {
   const intl = useIntl();
   const [selectedRowKeys, setSelectedRowKeys] =
     useState<React.Key[]>(selectedKeys);
