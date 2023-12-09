@@ -25,7 +25,7 @@ import { IItem, IProgressRequest } from "./ChannelPickerTable";
 import { LockIcon } from "../../assets/icon";
 import StudioName from "../auth/StudioName";
 import ProgressSvg from "./ProgressSvg";
-import { DataNode, EventDataNode } from "antd/es/tree";
+
 import { IChannel } from "./Channel";
 import CopyToModal from "./CopyToModal";
 
@@ -180,9 +180,10 @@ const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
           />
         }
         extra={
-          <Space>
+          <Space size={"small"}>
             <Button
-              type="primary"
+              size="small"
+              type="link"
               disabled={!dirty}
               onClick={() => {
                 if (typeof onSelect !== "undefined") {
@@ -200,10 +201,26 @@ const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
                 }
               }}
             >
-              确定
+              {intl.formatMessage({
+                id: "buttons.ok",
+              })}
+            </Button>
+            <Button
+              size="small"
+              type="link"
+              disabled={!dirty}
+              onClick={() => {
+                setSelectedRowKeys(selectedKeys);
+                setDirty(false);
+              }}
+            >
+              {intl.formatMessage({
+                id: "buttons.cancel",
+              })}
             </Button>
             <Button
               type="link"
+              size="small"
               icon={<ReloadOutlined />}
               onClick={() => {
                 load();
