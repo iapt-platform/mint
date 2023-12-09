@@ -1,7 +1,7 @@
 import { Typography } from "antd";
 import { TCodeConvertor, XmlToReact } from "./utilities";
 import { gfwClear } from "../../gfwlist";
-const { Paragraph, Text } = Typography;
+const { Text } = Typography;
 
 interface IWidget {
   html?: string | null;
@@ -21,9 +21,9 @@ const MdViewWidget = ({
 }: IWidget) => {
   if (html && html.trim() !== "") {
     return (
-      <Paragraph className={className}>
+      <Text className={className}>
         {XmlToReact(gfwClear(html), wordWidget, convertor)}
-      </Paragraph>
+      </Text>
     );
   } else {
     return <Text type="secondary">{placeholder}</Text>;
