@@ -36,6 +36,7 @@ const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
   const [treeData, setTreeData] = useState<ChannelTreeNode[]>();
   const [dirty, setDirty] = useState(false);
   const [channels, setChannels] = useState<IItem[]>([]);
+  const [owner, setOwner] = useState("all");
 
   useEffect(() => load("all"), []);
 
@@ -45,38 +46,47 @@ const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
 
   useEffect(() => {
     sortChannels(channels);
-  }, [channels, selectedRowKeys]);
+  }, [channels, selectedRowKeys, owner]);
 
   const sortChannels = (channelList: IItem[]) => {
-    //当前被选择的
-    const currChannel = channelList.filter((value) =>
-      selectedRowKeys.includes(value.uid)
-    );
-    let show = selectedRowKeys;
-    //有进度的
-    const progressing = channelList.filter(
-      (value) => value.progress > 0 && !show.includes(value.uid)
-    );
-    show = [...show, ...progressing.map((item) => item.uid)];
-    //我自己的
-    const myChannel = channelList.filter(
-      (value) => value.role === "owner" && !show.includes(value.uid)
-    );
-    show = [...show, ...myChannel.map((item) => item.uid)];
-    //其他的
-    const others = channelList.filter(
-      (value) => !show.includes(value.uid) && value.role !== "member"
-    );
-    const channelData = [
-      ...currChannel,
-      ...progressing,
-      ...myChannel,
-      ...others,
-    ];
-    const data = channelData.map((item, index) => {
-      return { key: item.uid, title: item.title, channel: item };
-    });
-    setTreeData(data);
+    if (owner === "my") {
+      //我自己的
+      const myChannel = channelList.filter((value) => value.role === "owner");
+      const data = myChannel.map((item, index) => {
+        return { key: item.uid, title: item.title, channel: item };
+      });
+      setTreeData(data);
+    } else {
+      //当前被选择的
+      const currChannel = channelList.filter((value) =>
+        selectedRowKeys.includes(value.uid)
+      );
+      let show = selectedRowKeys;
+      //有进度的
+      const progressing = channelList.filter(
+        (value) => value.progress > 0 && !show.includes(value.uid)
+      );
+      show = [...show, ...progressing.map((item) => item.uid)];
+      //我自己的
+      const myChannel = channelList.filter(
+        (value) => value.role === "owner" && !show.includes(value.uid)
+      );
+      show = [...show, ...myChannel.map((item) => item.uid)];
+      //其他的
+      const others = channelList.filter(
+        (value) => !show.includes(value.uid) && value.role !== "member"
+      );
+      const channelData = [
+        ...currChannel,
+        ...progressing,
+        ...myChannel,
+        ...others,
+      ];
+      const data = channelData.map((item, index) => {
+        return { key: item.uid, title: item.title, channel: item };
+      });
+      setTreeData(data);
+    }
   };
   const load = (owner: string) => {
     const sentElement = document.querySelectorAll(".pcd_sent");
@@ -144,19 +154,10 @@ const ChannelMy = ({ selectedKeys = [], style, onSelect }: IWidget) => {
                 value: "my",
                 label: intl.formatMessage({ id: "buttons.channel.my" }),
               },
-              {
-                value: "collaborator",
-                label: intl.formatMessage({
-                  id: "buttons.channel.collaborator",
-                }),
-              },
-              {
-                value: "public",
-                label: intl.formatMessage({
-                  id: "buttons.channel.public",
-                }),
-              },
             ]}
+            onSelect={(value: string) => {
+              setOwner(value);
+            }}
           />
         }
         extra={
