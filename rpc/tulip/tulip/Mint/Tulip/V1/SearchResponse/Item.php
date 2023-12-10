@@ -14,9 +14,9 @@ use Google\Protobuf\Internal\GPBUtil;
 class Item extends \Google\Protobuf\Internal\Message
 {
     /**
-     * Generated from protobuf field <code>int32 rank = 1;</code>
+     * Generated from protobuf field <code>double rank = 1;</code>
      */
-    protected $rank = 0;
+    protected $rank = 0.0;
     /**
      * Generated from protobuf field <code>string highlight = 2;</code>
      */
@@ -40,7 +40,7 @@ class Item extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *     Optional. Data for populating the Message object.
      *
-     *     @type int $rank
+     *     @type float $rank
      *     @type string $highlight
      *     @type int $book
      *     @type int $paragraph
@@ -53,8 +53,8 @@ class Item extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>int32 rank = 1;</code>
-     * @return int
+     * Generated from protobuf field <code>double rank = 1;</code>
+     * @return float
      */
     public function getRank()
     {
@@ -62,13 +62,13 @@ class Item extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>int32 rank = 1;</code>
-     * @param int $var
+     * Generated from protobuf field <code>double rank = 1;</code>
+     * @param float $var
      * @return $this
      */
     public function setRank($var)
     {
-        GPBUtil::checkInt32($var);
+        GPBUtil::checkDouble($var);
         $this->rank = $var;
 
         return $this;
