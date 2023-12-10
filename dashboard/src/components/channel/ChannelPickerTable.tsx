@@ -99,6 +99,18 @@ const ChannelPickerTableWidget = ({
           }
           type="success"
           closable
+          action={
+            <Button
+              type="link"
+              onClick={() => {
+                if (typeof onSelect !== "undefined") {
+                  onSelect([]);
+                }
+              }}
+            >
+              不选择
+            </Button>
+          }
         />
       ) : undefined}
       <ProList<IItem, IParams>

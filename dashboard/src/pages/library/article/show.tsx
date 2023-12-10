@@ -204,8 +204,10 @@ const Widget = () => {
               onChannelChange={(channels: IChannel[], mode: ArticleMode) => {
                 let output: any = {
                   mode: mode,
-                  channel: channels.map((item) => item.id).join("_"),
                 };
+                if (channels.length > 0) {
+                  output["channel"] = channels.map((item) => item.id).join("_");
+                }
                 searchParams.forEach((value, key) => {
                   console.log(value, key);
                   if (key !== "mode" && key !== "channel") {
