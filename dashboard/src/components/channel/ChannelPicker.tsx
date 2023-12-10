@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 
 import ChannelPickerTable from "./ChannelPickerTable";
 import { IChannel } from "./Channel";
