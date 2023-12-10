@@ -42,14 +42,23 @@ class TestSearchPali extends Command
         if(empty($word)){
             $word = 'citta';
         }
-        $result = PaliSearch::search([$word],[],'case',0,3);
+        $words = explode(',',$word);
+        $this->info("searching word={$word} limit=10,offset=0");
+        $result = PaliSearch::search($words,[],'case',0,10);
         if($result){
             $this->info("word={$word} total=".$result['total']);
         }else{
             $this->error("word={$word} search fail");
         }
-
-        $result = PaliSearch::search([$word],[267],'case',0,3);
+        $this->info("searching word={$word} limit=10,offset=10");
+        $result = PaliSearch::search($words,[],'case',10,10);
+        if($result){
+            $this->info("word={$word} total=".$result['total']);
+        }else{
+            $this->error("word={$word} search fail");
+        }
+        $this->info("searching word={$word} book=267");
+        $result = PaliSearch::search($words,[267],'case',0,3);
         if($result){
             $this->info("word={$word} book=267 total=".$result['total']);
         }else{
