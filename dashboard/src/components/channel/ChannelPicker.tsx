@@ -53,6 +53,7 @@ const ChannelPickerWidget = ({
       <span onClick={showModal}>{trigger}</span>
       <Modal
         width={"80%"}
+        style={{ maxWidth: 600 }}
         title="选择版本风格"
         footer={false}
         open={isModalOpen}
