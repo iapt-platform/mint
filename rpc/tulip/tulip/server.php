@@ -103,10 +103,12 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         ) {
             $total = $resultCount[0]['co'];
         } else {
-            console('debug', 'warning', 'result must be of type array' . $pdo->errorInfo());
+            console('error', 'result must be of type array' . $pdo->errorInfo());
             myLog()->error('result must be of type array' . $pdo->errorInfo());
             $total = 0;
         }
+        console('debug', "total={$total}");
+        myLog()->info("total={$total}");
 
         if ($request->hasPage()) {
             $limit = $request->getPage()->getSize();
@@ -115,6 +117,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
             $limit = 10;
             $offset = 0;
         }
+        console('debug', "size={$limit} index={$offset}");
         $_orderBy = 'rank';
         switch ($_orderBy) {
             case 'rank':
@@ -140,12 +143,13 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         $param[] = $limit;
         $param[] = $offset;
 
+
         $result = $pdo->dbSelect($query, $param);
         //返回数据
         $response = new \Mint\Tulip\V1\SearchResponse();
         $output = $response->getItems();
 
-        if ($result) {
+        if ($result !== false) {
             foreach ($result as $row) {
                 $item = new \Mint\Tulip\V1\SearchResponse\Item;
                 $item->setRank($row['rank']);
@@ -155,10 +159,11 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
                 $item->setContent($row['content']);
                 $output[] = $item;
             }
+        } else {
+            console('error', "result is false");
         }
 
-        console('debug', "total={$total}");
-        myLog()->info("total={$total}");
+
         $response->setTotal($total);
         $page = new \Mint\Tulip\V1\SearchRequest\Page;
         $page->setIndex($offset);
