@@ -190,13 +190,6 @@ class SearchController extends Controller
         $offset = $request->get('offset',0);
         $matchMode = $request->get('match','case');
         $result = PaliSearch::search($key,$bookId,$matchMode,$offset,$limit);
-        Log::debug('search tulip total='.$result['total'],[
-            'key'=>$request->get('key'),
-            'bookId'=>$bookId,
-            'matchMode'=>$matchMode,
-            'offset'=>$offset,
-            'limit'=>$limit,
-        ]);
         return $this->ok(["rows"=>SearchResource::collection(collect($result['rows'])),"count"=>$result['total']]);
     }
 
