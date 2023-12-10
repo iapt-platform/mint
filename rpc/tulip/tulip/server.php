@@ -160,6 +160,10 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         console('debug', "total={$total}");
         myLog()->info("total={$total}");
         $response->setTotal($total);
+        $page = new \Mint\Tulip\V1\SearchRequest\Page;
+        $page->setIndex($offset);
+        $page->setSize($limit);
+        $response->setPage($page);
         return $response;
     }
 
