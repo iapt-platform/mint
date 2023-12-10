@@ -43,7 +43,7 @@ class TestSearchPali extends Command
             $word = 'citta';
         }
         $words = str_replace('_',' ',$word);
-        $words = explode(',',$word);
+        $words = explode(',',$words);
         $this->info("searching word={$word} limit=10,offset=0");
         $result = PaliSearch::search($words,[],'case',0,10);
         if($result){
