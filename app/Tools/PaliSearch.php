@@ -32,6 +32,7 @@ class PaliSearch
         }
         $output = [];
         $output['total'] = $response->getTotal();
+        $output['page'] = $response->getPage();
         $output['rows'] = [];
         foreach ($response->getItems() as $key => $value) {
             $output['rows'][] = (object)[
