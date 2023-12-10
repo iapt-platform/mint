@@ -14,8 +14,14 @@ class PaliSearch
         return $client;
     }
     public static function search($words,$books,$matchMode='case',$index=0,$size=10){
+        Log::debug('tulip search',[
+            'words'=>$words,
+            'books'=>$books,
+            'matchMode'=>$matchMode,
+            'index'=>$index,
+            'size'=>$size,
+        ]);
         $client = PaliSearch::connect();
-
         $request = new \Mint\Tulip\V1\SearchRequest();
         $request->setKeywords($words);
         $request->setBooks($books);
