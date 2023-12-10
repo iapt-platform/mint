@@ -14,7 +14,7 @@ use Google\Protobuf\Internal\GPBUtil;
 class Item extends \Google\Protobuf\Internal\Message
 {
     /**
-     * Generated from protobuf field <code>double rank = 1;</code>
+     * Generated from protobuf field <code>float rank = 1;</code>
      */
     protected $rank = 0.0;
     /**
@@ -53,7 +53,7 @@ class Item extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>double rank = 1;</code>
+     * Generated from protobuf field <code>float rank = 1;</code>
      * @return float
      */
     public function getRank()
@@ -62,13 +62,13 @@ class Item extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>double rank = 1;</code>
+     * Generated from protobuf field <code>float rank = 1;</code>
      * @param float $var
      * @return $this
      */
     public function setRank($var)
     {
-        GPBUtil::checkDouble($var);
+        GPBUtil::checkFloat($var);
         $this->rank = $var;
 
         return $this;
