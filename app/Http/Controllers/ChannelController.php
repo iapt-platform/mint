@@ -440,11 +440,21 @@ class ChannelController extends Controller
                     $finalTable = Sentence::whereIns(['book_id','paragraph','word_start','word_end'],$query)
                                             ->where('channel_uid',$currChannelId)
                                             ->where('strlen','>',0)
-                                            ->select(['strlen','book_id','paragraph','word_start','word_end']);
+                                            ->select(['strlen','book_id','paragraph','word_start','word_end','created_at','updated_at']);
+                    $created_at = time();
+                    $edit_at = 0;
                     if($finalTable->count()>0){
                         $finished = $finalTable->get();
                         $currChannel = [];
                         foreach ($finished as $rowFinish) {
+                            $createTime = strtotime($rowFinish->created_at);
+                            $updateTime = strtotime($rowFinish->updated_at);
+                            if($createTime < $created_at){
+                                $created_at = $createTime;
+                            }
+                            if($updateTime > $edit_at){
+                                $edit_at = $updateTime;
+                            }
                             $currChannel["{$rowFinish->book_id}-{$rowFinish->paragraph}-{$rowFinish->word_start}-{$rowFinish->word_end}"] = 1;
                         }
                         $final=[];
@@ -457,6 +467,8 @@ class ChannelController extends Controller
                             }
                         }
                         $result[$key]['final'] = $final;
+                        $result[$key]['content_created_at'] = date('Y-m-d H:i:s',$created_at);
+                        $result[$key]['content_updated_at'] = date('Y-m-d H:i:s',$edit_at);
                     }
                 }
             }
