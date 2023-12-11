@@ -19,15 +19,18 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         foreach ($request->getKeywords()->getIterator() as $word) {
             $keyWords[] = $word;
         }
-        $msg = "[" . date("Y/m/d h:i:sa") . "] pali search: request words = " . implode(',', $keyWords);
-        console('debug', $msg);
-        myLog()->info($msg);
 
-        $pdo = new PdoHelper;
-        $pdo->connectDb();
-        /**
-         * 查询业务逻辑
-         */
+        if ($request->hasPage()) {
+            $limit = $request->getPage()->getSize();
+            $offset = $request->getPage()->getIndex();
+        } else {
+            $limit = 10;
+            $offset = 0;
+        }
+
+        $matchMode = $request->getMatchMode();
+
+
 
         $bookId = [];
         if ($request->getBooks()->count() > 0) {
@@ -38,12 +41,20 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         } else {
             $queryBookId = '';
         }
-        $msg = 'query books = ' . implode(',', $bookId);
-        console('debug', $msg);
-        myLog()->info($msg);
 
-        $matchMode = $request->getMatchMode();
-        console('debug', 'query mode = ' . $matchMode);
+        myLog()->info('request',[
+            'keyWords'=>$keyWords,
+            'limit'=>$limit,
+            'offset'=>$offset,
+            'mode'=>$matchMode,
+            'books'=>implode(',', $bookId),
+        ]);
+        
+        $pdo = new PdoHelper;
+        $pdo->connectDb();
+        /**
+         * 查询业务逻辑
+         */
         $param = [];
         switch ($matchMode) {
             case 'complete':
@@ -95,6 +106,9 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         $querySelect_2 = "  book,paragraph,content ";
 
         $queryCount = "SELECT count(*) as co FROM fts_texts WHERE {$queryWhere} {$queryBookId};";
+
+        myLog()->debug('pali queryCount',['sql'=>$queryCount,'param'=>$_queryWhere['param']]);
+
         $resultCount = $pdo->dbSelect($queryCount, $_queryWhere['param']);
         if (
             is_array($resultCount) &&
@@ -103,21 +117,12 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         ) {
             $total = $resultCount[0]['co'];
         } else {
-            console('error', 'result must be of type array' . $pdo->errorInfo());
             myLog()->error('result must be of type array' . $pdo->errorInfo());
             $total = 0;
         }
-        console('debug', "total={$total}");
-        myLog()->info("total={$total}");
 
-        if ($request->hasPage()) {
-            $limit = $request->getPage()->getSize();
-            $offset = $request->getPage()->getIndex();
-        } else {
-            $limit = 10;
-            $offset = 0;
-        }
-        console('debug', "size={$limit} index={$offset}");
+        myLog()->info("pali result total={$total}");
+
         $_orderBy = 'rank';
         switch ($_orderBy) {
             case 'rank':
@@ -150,6 +155,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         $output = $response->getItems();
 
         if ($result !== false) {
+            myLog()->debug('query result count='.count($result));
             foreach ($result as $row) {
                 $item = new \Mint\Tulip\V1\SearchResponse\Item;
                 $item->setRank($row['rank']);
@@ -160,9 +166,8 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
                 $output[] = $item;
             }
         } else {
-            console('error', "result is false");
+            myLog()->error("result is false");
         }
-
 
         $response->setTotal($total);
         $page = new \Mint\Tulip\V1\SearchRequest\Page;
@@ -186,12 +191,14 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         foreach ($request->getKeywords()->getIterator() as $word) {
             $keyWords[] = $word;
         }
-        console('debug', "book list: request words = " . implode(',', $keyWords));
+        
         /**
          * 查询业务逻辑
          */
         $pdo = new PdoHelper;
         $pdo->connectDb();
+
+        myLog()->debug('db connected');
 
         $bookId = [];
         if ($request->getBooks()->count() > 0) {
@@ -202,12 +209,16 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
         } else {
             $queryBookId = '';
         }
-        console('debug', 'query books = ' . implode(',', $bookId));
+        myLog()->info("book list: request ",[
+            'words'=>implode(',', $keyWords),
+            'books'=>implode(',', $bookId),
+            ] );
 
         $matchMode = $request->getMatchMode();
-        console('debug', 'query mode = ' . $matchMode);
+        myLog()->debug('query mode = ' . $matchMode);
         $queryWhere = $this->makeQueryWhere($keyWords, $matchMode);
         $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
+        myLog()->debug('book list queryCount',['sql'=>$query,'param'=>$queryWhere['param']]);
         $result = $pdo->dbSelect($query, $queryWhere['param']);
         //返回数据
         $response = new \Mint\Tulip\V1\BookListResponse();
@@ -220,8 +231,7 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
                 $output[] = $item;
             }
         }
-
-        console('debug', "total=" . count($output));
+        myLog()->debug("book list total=" . count($output));
         return $response;
     }
 
@@ -264,15 +274,19 @@ class Greeter extends \Mint\Tulip\V1\SearchStub
     }
 }
 
-$port = Config['port'];
+$param = getopt('d::');
+if(isset($param['d'])){
+    echo 'debug mode'.PHP_EOL;
+    $GLOBALS['debug'] = true;
+}
 
-if (!isset($port)) {
-    console('debug', 'parameter port is required. ');
+if (!isset(Config['port'])) {
+    myLog()->error('parameter port is required.');
     return;
 }
+
 $server = new \Grpc\RpcServer();
-$server->addHttp2Port('0.0.0.0:' . $port);
+$server->addHttp2Port('0.0.0.0:' . Config['port']);
 $server->handle(new Greeter());
-console('debug', 'Listening on port :' . $port);
-myLog()->debug('Listening on port :' . $port);
+myLog()->info('Listening on port :' . Config['port']);
 $server->run();
