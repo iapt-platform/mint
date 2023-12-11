@@ -9,7 +9,7 @@ class TestSearchPali extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan test:search.pali
      * @var string
      */
     protected $signature = 'test:search.pali {word?}';
@@ -51,6 +51,12 @@ class TestSearchPali extends Command
         }else{
             $this->error("word={$word} search fail");
         }
+
+        $rpc_result = PaliSearch::book_list($words,
+                                            [],
+                                            'case');
+        $this->info('book list count='.count($rpc_result['rows']));
+
         $this->info("searching word={$word} limit=10,offset=10");
         $result = PaliSearch::search($words,[],'case',10,10);
         if($result){
