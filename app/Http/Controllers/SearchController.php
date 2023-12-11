@@ -268,15 +268,16 @@ class SearchController extends Controller
                     $result = DB::select($query, [$key]);
 
                 }else{
-                    if (App::environment(['local', 'staging'])) {
-                        $rpc_result = PaliSearch::book_list(explode(';',$key) ,$bookId,
+
+                    $rpc_result = PaliSearch::book_list(explode(';',$key),
+                                                        $bookId,
                                                         $request->get('match','case'));
-                        $result = collect($rpc_result['rows']);
-                    }else{
+                    $result = collect($rpc_result['rows']);
+                    /*
                         $queryWhere = $this->getQueryWhere($key,$request->get('match','case'));
                         $query = "SELECT pcd_book_id, count(*) as co FROM fts_texts WHERE {$queryWhere['query']} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
                         $result = DB::select($query, $queryWhere['param']);
-                    }
+                    */
                 }
                 break;
             case 'page':
