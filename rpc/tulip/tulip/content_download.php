@@ -5,12 +5,13 @@ require dirname(__FILE__) . '/console.php';
 require dirname(__FILE__) . '/pdo.php';
 
 console('debug', 'download full test search content start');
-$param = getopt('b:');
+$param = getopt('b:f:t:');
 
 if (isset($param['b'])) {
     $bookId = (int)$param['b'];
     console('debug', 'update book=' . $bookId);
 }
+
 $PDO = new PdoHelper;
 
 $PDO->connectDb();
@@ -28,6 +29,12 @@ if (isset($bookId)) {
 } else {
     $from = 1;
     $to = 217;
+}
+if(isset($param['f'])){
+    $from = $param['f'];
+}
+if(isset($param['t'])){
+    $to = $param['t'];
 }
 for ($book = $from; $book <= $to; $book++) {
     $currPage = 1;
