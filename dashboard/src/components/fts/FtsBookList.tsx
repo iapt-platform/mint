@@ -111,7 +111,7 @@ const FtsBookListWidget = ({
         setTreeData([
           {
             key: "all",
-            title: "all " + totalResult + "个单词",
+            title: "all " + totalResult + "个结果",
             children: json.data.rows.map((item, id) => {
               const title = item.title ? item.title : item.paliTitle;
               return {

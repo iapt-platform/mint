@@ -19,7 +19,7 @@ class PdoHelper
         $db .= ";user=" . Config['database']['user'];
         $db .= ";password=" . Config['database']['password'] . ";";
 
-        echo 'connect to db host=' . Config['database']['host'] . ' name=' . Config['database']['name'] . PHP_EOL;
+        myLog()->debug('connect to db host=' . Config['database']['host'] . ' name=' . Config['database']['name']);
         try {
             $PDO = new PDO(
                 $db,
@@ -27,11 +27,9 @@ class PdoHelper
                 Config['database']['password'],
                 array(PDO::ATTR_PERSISTENT => true)
             );
-            myLog()->info('connect to db success');
+            myLog()->debug('connect to db success');
         } catch (PDOException $e) {
-            echo 'connect to db fail' . PHP_EOL;
-            print $e->getMessage();
-            myLog()->error('connect to db fail');
+            myLog()->error('connect to db fail',['message'=>$e->getMessage()]);
             return false;
         }
         $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

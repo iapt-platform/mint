@@ -1,21 +1,19 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
+require_once dirname(__FILE__) . '/config.php';
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 function myLog()
 {
-    $dir = __DIR__ . '/tmp/logs';
-    if (!is_dir($dir)) {
-        $res = mkdir($dir, 0700, true);
-        if (!$res) {
-            echo "error: mkdir fail path=" . $dir;
-            return 0;
-        }
-    }
 
     $log = new Logger('tulip');
-    $log->pushHandler(new StreamHandler($dir . '/tulip-' . date("Y-m-d") . '.log'));
+    if(isset($GLOBALS['debug']) && $GLOBALS['debug']===true){
+        $level = Logger::DEBUG;
+    }else{
+        $level = Logger::INFO;
+    }
+    $log->pushHandler(new StreamHandler('php://stdout', $level));
     return $log;
 }
