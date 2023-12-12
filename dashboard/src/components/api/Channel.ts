@@ -52,3 +52,21 @@ export interface IApiResponseChannelList {
     count: number;
   };
 }
+
+export interface ISentInChapterListResponse {
+  ok: boolean;
+  data: ISentInChapterListData;
+  message: string;
+}
+
+export interface ISentInChapterListData {
+  rows: ISentInChapterListDataRow[];
+  count: number;
+}
+
+export interface ISentInChapterListDataRow {
+  book: number;
+  paragraph: number;
+  word_begin: number;
+  word_end: number;
+}
