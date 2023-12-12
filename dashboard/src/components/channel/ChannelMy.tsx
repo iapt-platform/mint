@@ -70,9 +70,13 @@ const ChannelMy = ({
   const [infoOpen, setInfoOpen] = useState<boolean>(false);
   const [statistic, setStatistic] = useState<IItem>();
   const [sentenceCount, setSentenceCount] = useState<number>(0);
+  const [sentencesId, setSentencesId] = useState<string[]>();
+
+  console.debug("ChannelMy render", type, articleId);
+
   useEffect(() => {
     load();
-  }, []);
+  }, [type, articleId]);
 
   useEffect(() => {
     if (selectedRowKeys.join() !== selectedKeys.join()) {
@@ -130,15 +134,15 @@ const ChannelMy = ({
       const id = articleId?.split("-");
       if (id?.length === 2) {
         const url = `/v2/sentences-in-chapter?book=${id[0]}&para=${id[1]}`;
-        console.info("url", url);
+        console.info("ChannelMy url", url);
         get<ISentInChapterListResponse>(url)
           .then((res) => {
-            console.debug("ISentInChapterListResponse", res);
+            console.debug("ChannelMy ISentInChapterListResponse", res);
             if (res && res.ok) {
               sentList = res.data.rows.map((item) => {
                 return `${item.book}-${item.paragraph}-${item.word_begin}-${item.word_end}`;
               });
-
+              setSentencesId(sentList);
               loadChannel(sentList);
             } else {
               console.error("res", res);
@@ -155,6 +159,7 @@ const ChannelMy = ({
         const id = element.id.split("_")[1];
         sentList.push(id);
       }
+      setSentencesId(sentList);
       loadChannel(sentList);
     }
   };
@@ -171,7 +176,7 @@ const ChannelMy = ({
       owner: currOwner,
     })
       .then((res) => {
-        console.log("progress data", res.data.rows);
+        console.debug("progress data", res.data.rows);
         const items: IItem[] = res.data.rows
           .filter((value) => value.name.substring(0, 4) !== "_Sys")
           .map((item, id) => {
@@ -437,6 +442,7 @@ const ChannelMy = ({
         )}
       </Card>
       <CopyToModal
+        sentencesId={sentencesId}
         channel={copyChannel}
         open={copyOpen}
         onClose={() => setCopyOpen(false)}

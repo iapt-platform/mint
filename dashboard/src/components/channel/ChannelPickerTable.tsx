@@ -205,7 +205,7 @@ const ChannelPickerTableWidget = ({
               owner: currOwner,
             }
           );
-          console.log("progress data", res.data.rows);
+          console.debug("progress data", res.data.rows);
           const items: IItem[] = res.data.rows
             .filter((value) => value.name.substring(0, 4) !== "_Sys")
             .map((item, id) => {
