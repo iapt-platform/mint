@@ -559,6 +559,12 @@ class TemplateRender{
         $book = $this->get_param($this->param,"book",7,false);
         $para = $this->get_param($this->param,"para",8,false);
 
+        $props = [
+            'type' => $type,
+            'style' => $style,
+            'found' => true,
+        ];
+
         if(empty($bookName) || !$volume || empty($page)){
             /**
              * 没有指定书名，根据book para 查询
@@ -597,6 +603,8 @@ class TemplateRender{
                     if(!$page){
                         $page = $pageInfo->page;
                     }
+                }else{
+                    $props['found'] = false;
                 }
             }else{
                 //没有书号用title查询
@@ -614,19 +622,29 @@ class TemplateRender{
                             $bookName = BookTitle::my()[$found_key]['bookname'];
                             $volume = BookTitle::my()[$found_key]['volume'];
                             $page = $tmpBookPage;
+                        }else{
+                            //没找到，返回术语和页码
+                            $props['found'] = false;
+                            $bookName = $tmpBookTitle;
+                            $page = $tmpBookPage;
+                            $volume = 0;
                         }
                     }
+                }else{
+                    $props['found'] = false;
                 }
             }
         }
 
-        $props = [
-            'type' => $type,
-            'style' => $style,
-        ];
-        if(!empty($bookName) && $volume!==false && !empty($page)){
+        if(!empty($bookName)){
+            $found_title = array_search($bookName, array_column(BookTitle::my(), 'bookname'));
+            if($found_title === false){
+                $props['found'] = false;
+            }
+        }
+        if(!empty($bookName) && $volume !== false && !empty($page)){
             $props['bookName'] = $bookName;
-            $props['volume'] = $volume;
+            $props['volume'] = (int)$volume;
             $props['page'] = $page;
         }
         if($book && $para){
