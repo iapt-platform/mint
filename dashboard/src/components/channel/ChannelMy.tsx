@@ -20,8 +20,11 @@ import {
   InfoCircleOutlined,
 } from "@ant-design/icons";
 
-import { post } from "../../request";
-import { IApiResponseChannelList } from "../api/Channel";
+import { get, post } from "../../request";
+import {
+  IApiResponseChannelList,
+  ISentInChapterListResponse,
+} from "../api/Channel";
 import { IItem, IProgressRequest } from "./ChannelPickerTable";
 import { LockIcon } from "../../assets/icon";
 import StudioName from "../auth/StudioName";
@@ -66,10 +69,15 @@ const ChannelMy = ({
   const [copyOpen, setCopyOpen] = useState<boolean>(false);
   const [infoOpen, setInfoOpen] = useState<boolean>(false);
   const [statistic, setStatistic] = useState<IItem>();
-  useEffect(() => load(), []);
+  const [sentenceCount, setSentenceCount] = useState<number>(0);
+  useEffect(() => {
+    load();
+  }, []);
 
   useEffect(() => {
-    setSelectedRowKeys(selectedKeys);
+    if (selectedRowKeys.join() !== selectedKeys.join()) {
+      setSelectedRowKeys(selectedKeys);
+    }
   }, [selectedKeys]);
 
   useEffect(() => {
@@ -117,19 +125,49 @@ const ChannelMy = ({
     }
   };
   const load = () => {
-    const sentElement = document.querySelectorAll(".pcd_sent");
     let sentList: string[] = [];
-    for (let index = 0; index < sentElement.length; index++) {
-      const element = sentElement[index];
-      const id = element.id.split("_")[1];
-      sentList.push(id);
+    if (type === "chapter") {
+      const id = articleId?.split("-");
+      if (id?.length === 2) {
+        const url = `/v2/sentences-in-chapter?book=${id[0]}&para=${id[1]}`;
+        console.info("url", url);
+        get<ISentInChapterListResponse>(url)
+          .then((res) => {
+            console.debug("ISentInChapterListResponse", res);
+            if (res && res.ok) {
+              sentList = res.data.rows.map((item) => {
+                return `${item.book}-${item.paragraph}-${item.word_begin}-${item.word_end}`;
+              });
+
+              loadChannel(sentList);
+            } else {
+              console.error("res", res);
+            }
+          })
+          .catch((reason: any) => {
+            console.error(reason);
+          });
+      }
+    } else {
+      const sentElement = document.querySelectorAll(".pcd_sent");
+      for (let index = 0; index < sentElement.length; index++) {
+        const element = sentElement[index];
+        const id = element.id.split("_")[1];
+        sentList.push(id);
+      }
+      loadChannel(sentList);
     }
+  };
+
+  function loadChannel(sentences: string[]) {
+    setSentenceCount(sentences.length);
+    console.debug("sentences", sentences);
     const currOwner = "all";
 
     console.log("owner", currOwner);
     setLoading(true);
     post<IProgressRequest, IApiResponseChannelList>(`/v2/channel-progress`, {
-      sentence: sentList,
+      sentence: sentences,
       owner: currOwner,
     })
       .then((res) => {
@@ -168,7 +206,7 @@ const ChannelMy = ({
       .finally(() => {
         setLoading(false);
       });
-  };
+  }
   return (
     <div style={style}>
       <Card
@@ -404,6 +442,7 @@ const ChannelMy = ({
         onClose={() => setCopyOpen(false)}
       />
       <ChannelInfoModal
+        sentenceCount={sentenceCount}
         channel={statistic}
         open={infoOpen}
         onClose={() => setInfoOpen(false)}
