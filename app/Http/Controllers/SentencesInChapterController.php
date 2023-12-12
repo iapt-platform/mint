@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 输出某章节的句子列表。算法跟随章节显示功能
+ */
 namespace App\Http\Controllers;
 
 use App\Models\PaliText;
