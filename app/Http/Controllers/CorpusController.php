@@ -395,6 +395,9 @@ class CorpusController extends Controller
         if(!$chapter){
             return $this->error("no data");
         }
+        $paraFrom = $sentId[1];
+        $paraTo = $sentId[1]+$chapter->chapter_len-1;
+
         if(empty($chapter->toc)){
             $this->result['title'] = "unknown";
         }else{
@@ -403,8 +406,6 @@ class CorpusController extends Controller
             $this->result['path'] = json_decode($chapter->path);
         }
 
-        $paraFrom = $sentId[1];
-        $paraTo = $sentId[1]+$chapter->chapter_len-1;
         //获取标题
         $heading = PaliText::select(["book","paragraph","level"])
                             ->where('book',$sentId[0])
@@ -460,7 +461,7 @@ class CorpusController extends Controller
                                 ->orderBy('paragraph')
                                 ->value('paragraph');
         $between = $nextChapter - $sentId[1];
-        //输出子目录
+        //查找子目录
         $chapterLen = $chapter->chapter_len;
         $toc = PaliText::where('book',$sentId[0])
                         ->whereBetween('paragraph',[$paraFrom+1,$paraFrom+$chapterLen-1])
@@ -481,7 +482,7 @@ class CorpusController extends Controller
                     //没有子目录 全部输出
                 }
             }else{
-                //章节小。全部输出 不输出章节
+                //章节小。全部输出 不输出子目录
                 $toc = [];
             }
         }
