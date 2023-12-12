@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { IItem } from "./ChannelPickerTable";
 
 interface IChannelInfoModal {
+  sentenceCount: number;
   open?: boolean;
   channel?: IItem;
   onClose?: Function;
 }
 
 export const ChannelInfoModal = ({
+  sentenceCount,
   open,
   channel,
   onClose,
@@ -30,25 +32,15 @@ export const ChannelInfoModal = ({
       }}
       footer={<></>}
     >
-      <ChannelInfoWidget channel={channel} />
+      <ChannelInfoWidget sentenceCount={sentenceCount} channel={channel} />
     </Modal>
   );
 };
 interface IWidget {
+  sentenceCount: number;
   channel?: IItem;
 }
-const ChannelInfoWidget = ({ channel }: IWidget) => {
-  const [count, setCount] = useState<number>();
-  useEffect(() => {
-    const sentElement = document.querySelectorAll(".pcd_sent");
-    let sentList: string[] = [];
-    for (let index = 0; index < sentElement.length; index++) {
-      const element = sentElement[index];
-      const id = element.id.split("_")[1];
-      sentList.push(id);
-    }
-    setCount(sentList.length);
-  }, []);
+const ChannelInfoWidget = ({ sentenceCount, channel }: IWidget) => {
   let totalStrLen = 0;
   let finalStrLen = 0;
   let finalSent = 0;
@@ -65,7 +57,7 @@ const ChannelInfoWidget = ({ channel }: IWidget) => {
       <StatisticCard
         title={"版本：" + channel?.title}
         statistic={{
-          value: count,
+          value: sentenceCount,
           suffix: "句",
           description: (
             <Statistic title="完成度" value={Math.round(final) + "%"} />
