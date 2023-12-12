@@ -70,6 +70,8 @@ const ChannelMy = ({
   const [infoOpen, setInfoOpen] = useState<boolean>(false);
   const [statistic, setStatistic] = useState<IItem>();
   const [sentenceCount, setSentenceCount] = useState<number>(0);
+  const [sentencesId, setSentencesId] = useState<string[]>();
+
   useEffect(() => {
     load();
   }, []);
@@ -138,7 +140,7 @@ const ChannelMy = ({
               sentList = res.data.rows.map((item) => {
                 return `${item.book}-${item.paragraph}-${item.word_begin}-${item.word_end}`;
               });
-
+              setSentencesId(sentList);
               loadChannel(sentList);
             } else {
               console.error("res", res);
@@ -155,6 +157,7 @@ const ChannelMy = ({
         const id = element.id.split("_")[1];
         sentList.push(id);
       }
+      setSentencesId(sentList);
       loadChannel(sentList);
     }
   };
@@ -171,7 +174,7 @@ const ChannelMy = ({
       owner: currOwner,
     })
       .then((res) => {
-        console.log("progress data", res.data.rows);
+        console.debug("progress data", res.data.rows);
         const items: IItem[] = res.data.rows
           .filter((value) => value.name.substring(0, 4) !== "_Sys")
           .map((item, id) => {
@@ -437,6 +440,7 @@ const ChannelMy = ({
         )}
       </Card>
       <CopyToModal
+        sentencesId={sentencesId}
         channel={copyChannel}
         open={copyOpen}
         onClose={() => setCopyOpen(false)}

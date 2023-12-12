@@ -236,6 +236,17 @@ const ChannelSentDiffWidget = ({
               title: "pali",
               width: "33%",
               dataIndex: "pali",
+              render: (value, record, index) => {
+                return (
+                  <Text>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: record.pali ? record.pali : "",
+                      }}
+                    />
+                  </Text>
+                );
+              },
             },
             {
               title: (

@@ -12,7 +12,7 @@ interface IWidget {
   channel?: IChannel;
   type?: ArticleType;
   articleId?: string;
-  sentence?: string[];
+  sentencesId?: string[];
   stepChange?: Function;
   onClose?: Function;
 }
@@ -21,7 +21,7 @@ const CopyToStepWidget = ({
   channel,
   type,
   articleId,
-  sentence,
+  sentencesId,
   stepChange,
   onClose,
 }: IWidget) => {
@@ -29,13 +29,6 @@ const CopyToStepWidget = ({
   const [destChannel, setDestChannel] = useState<IChannel>();
   const [copyPercent, setCopyPercent] = useState<number>();
 
-  let sentList: string[] = [];
-  const sentElement = document.querySelectorAll(".pcd_sent");
-  for (let index = 0; index < sentElement.length; index++) {
-    const element = sentElement[index];
-    const id = element.id.split("_")[1];
-    sentList.push(id);
-  }
   useEffect(() => {
     setCurrent(initStep);
   }, [initStep]);
@@ -83,7 +76,7 @@ const CopyToStepWidget = ({
         <ChannelSentDiff
           srcChannel={channel}
           destChannel={destChannel}
-          sentences={sentList}
+          sentences={sentencesId}
           goPrev={() => {
             prev();
           }}

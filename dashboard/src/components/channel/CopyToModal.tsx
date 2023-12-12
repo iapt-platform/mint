@@ -7,10 +7,17 @@ import { IChannel } from "./Channel";
 interface IWidget {
   trigger?: JSX.Element | string;
   channel?: IChannel;
+  sentencesId?: string[];
   open?: boolean;
   onClose?: Function;
 }
-const CopyToModalWidget = ({ trigger, channel, open, onClose }: IWidget) => {
+const CopyToModalWidget = ({
+  trigger,
+  channel,
+  sentencesId,
+  open,
+  onClose,
+}: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(open);
   const [initStep, setInitStep] = useState(0);
 
@@ -51,6 +58,7 @@ const CopyToModalWidget = ({ trigger, channel, open, onClose }: IWidget) => {
         <CopyToStep
           initStep={initStep}
           channel={channel}
+          sentencesId={sentencesId}
           onClose={() => {
             setIsModalOpen(false);
             Modal.destroyAll();
