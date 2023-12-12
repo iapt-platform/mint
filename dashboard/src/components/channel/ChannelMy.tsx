@@ -72,9 +72,11 @@ const ChannelMy = ({
   const [sentenceCount, setSentenceCount] = useState<number>(0);
   const [sentencesId, setSentencesId] = useState<string[]>();
 
+  console.debug("ChannelMy render", type, articleId);
+
   useEffect(() => {
     load();
-  }, []);
+  }, [type, articleId]);
 
   useEffect(() => {
     if (selectedRowKeys.join() !== selectedKeys.join()) {
@@ -132,10 +134,10 @@ const ChannelMy = ({
       const id = articleId?.split("-");
       if (id?.length === 2) {
         const url = `/v2/sentences-in-chapter?book=${id[0]}&para=${id[1]}`;
-        console.info("url", url);
+        console.info("ChannelMy url", url);
         get<ISentInChapterListResponse>(url)
           .then((res) => {
-            console.debug("ISentInChapterListResponse", res);
+            console.debug("ChannelMy ISentInChapterListResponse", res);
             if (res && res.ok) {
               sentList = res.data.rows.map((item) => {
                 return `${item.book}-${item.paragraph}-${item.word_begin}-${item.word_end}`;
