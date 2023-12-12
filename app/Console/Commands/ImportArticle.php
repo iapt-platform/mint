@@ -12,10 +12,10 @@ class ImportArticle extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan import:article --token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2OTc3Mjg2ODUsImV4cCI6MTcyOTI2NDY4NSwidWlkIjoiYmE1NDYzZjMtNzJkMS00NDEwLTg1OGUtZWFkZDEwODg0NzEzIiwiaWQiOjR9.fiXhnY2LczZ9kKVHV0FfD3AJPZt-uqM5wrDe4EhToVexdd007ebPFYssZefmchfL0mx9nF0rgHSqjNhx4P0yDA --studio=visuddhinanda --anthology=eb9e3f7f-b942-4ca4-bd6f-b7876b59a523
+     * php artisan import:article --studio=visuddhinanda --anthology=eb9e3f7f-b942-4ca4-bd6f-b7876b59a523 --token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2OTc3Mjg2ODUsImV4cCI6MTcyOTI2NDY4NSwidWlkIjoiYmE1NDYzZjMtNzJkMS00NDEwLTg1OGUtZWFkZDEwODg0NzEzIiwiaWQiOjR9.fiXhnY2LczZ9kKVHV0FfD3AJPZt-uqM5wrDe4EhToVexdd007ebPFYssZefmchfL0mx9nF0rgHSqjNhx4P0yDA
      * @var string
      */
-    protected $signature = 'import:article {--token=} {--studio=} {--anthology=}';
+    protected $signature = 'import:article {--studio=} {--anthology=} {--token=}';
 
     /**
      * The console command description.
