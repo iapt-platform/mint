@@ -1,4 +1,4 @@
-import { Typography } from "antd";
+import { Popover, Typography } from "antd";
 
 import { ArticleCtl, TDisplayStyle } from "./Article";
 import { IWidgetTermCtl, TermCtl } from "./Term";
@@ -16,6 +16,7 @@ interface IWidgetQuoteLinkCtl {
   para?: number;
   term?: IWidgetTermCtl;
   title?: string;
+  found: boolean;
 }
 const QuoteLinkCtl = ({
   type,
@@ -27,11 +28,12 @@ const QuoteLinkCtl = ({
   para,
   term,
   title,
+  found,
 }: IWidgetQuoteLinkCtl) => {
   const [validPage, setValidPage] = useState(false);
   const [tpl, setTpl] = useState<string>();
-  let textShow = ` ${volume}.${page}`;
-
+  let textShow = volume === 0 ? page : ` ${volume}.${page}`;
+  console.debug("found", found);
   useEffect(() => {
     if (
       typeof type !== "undefined" &&
@@ -39,12 +41,12 @@ const QuoteLinkCtl = ({
       typeof volume !== "undefined" &&
       typeof page !== "undefined"
     ) {
-      setValidPage(true);
+      setValidPage(found);
       setTpl(
         `{{ql|type=${type}|bookname=${bookName}|volume=${volume}|page=${page}}}`
       );
     }
-  }, [bookName, page, type, volume]);
+  }, [bookName, found, page, type, volume]);
 
   return (
     <>
@@ -71,7 +73,27 @@ const QuoteLinkCtl = ({
           }
         />
       ) : (
-        <Text>{title}</Text>
+        <Popover
+          placement="top"
+          arrowPointAtCenter
+          content={
+            <>
+              <TermCtl {...term} compact={true} />{" "}
+              <Text copyable={{ text: tpl }}>{page}</Text>
+            </>
+          }
+          trigger="hover"
+        >
+          <Text>
+            {title ? (
+              title
+            ) : (
+              <>
+                <TermCtl {...term} compact={true} /> {textShow}
+              </>
+            )}
+          </Text>
+        </Popover>
       )}
     </>
   );
@@ -82,7 +104,7 @@ interface IWidget {
 }
 const Widget = ({ props }: IWidget) => {
   const prop = JSON.parse(atob(props)) as IWidgetQuoteLinkCtl;
-  console.log(prop);
+  console.debug("QuoteLink", prop);
   return (
     <>
       <QuoteLinkCtl {...prop} />
