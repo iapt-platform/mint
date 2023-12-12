@@ -82,6 +82,7 @@ use App\Http\Controllers\SystemTermController;
 use App\Http\Controllers\TermExportController;
 use App\Http\Controllers\NavArticleController;
 use App\Http\Controllers\NavCSParaController;
+use App\Http\Controllers\SentencesInChapterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -219,6 +220,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('nav-article',NavArticleController::class);
     Route::apiResource('nav-cs-para',NavCSParaController::class);
     Route::apiResource('book-title',BookTitleController::class);
+    Route::apiResource('sentences-in-chapter',SentencesInChapterController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
