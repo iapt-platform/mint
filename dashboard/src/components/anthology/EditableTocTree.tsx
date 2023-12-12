@@ -42,11 +42,13 @@ const EditableTocTreeWidget = ({
   const [viewArticleId, setViewArticleId] = useState<string>();
 
   const save = (data?: ListNodeData[]) => {
-    console.log("onSave", data);
+    console.debug("onSave", data);
     if (typeof data === "undefined") {
+      console.warn("data === undefined");
       return;
     }
     const url = `/v2/article-map/${anthologyId}`;
+    console.info("url", url);
     const newData: IArticleMapRequest[] = data.map((item) => {
       let title = "";
       if (typeof item.title === "string") {
