@@ -198,7 +198,7 @@ class UpgradeCompound extends Command
             $url = $url.'/v2/compound';
         }
         $this->info('url = '.$url);
-        $this->info('uploading size=s'.strlen(json_encode($words,JSON_UNESCAPED_UNICODE)));
+        $this->info('uploading size='.strlen(json_encode($words,JSON_UNESCAPED_UNICODE)));
         $response = Http::post($url,
                                 [
                                     'index'=> $index,
