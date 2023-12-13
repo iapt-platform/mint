@@ -10,15 +10,16 @@ use App\Tools\TurboSplit;
 use App\Http\Api\DictApi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class UpgradeCompound extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan upgrade:compound
      * @var string
      */
-    protected $signature = 'upgrade:compound {word?} {--book=} {--debug} {--test} {--continue}';
+    protected $signature = 'upgrade:compound {word?} {--book=} {--debug} {--test} {--continue} {--api=} {--from=} {--to=}';
 
     /**
      * The console command description.
@@ -101,7 +102,7 @@ class UpgradeCompound extends Command
 		$_word = $this->argument('word');
 		if(!empty($_word)){
             $words = array((object)array('real'=>$_word));
-            $count[] = (object)array('count'=>1);
+            $count = 1;
 		}else if($this->option('book')){
             $words = WbwTemplate::select('real')
                             ->where('book',$this->option('book'))
@@ -109,93 +110,101 @@ class UpgradeCompound extends Command
                             ->where('real','<>','')
                             ->orderBy('real')
                             ->groupBy('real')->cursor();
-            $count = DB::select('SELECT count(*) from (
+            $query = DB::select('SELECT count(*) from (
                                     SELECT "real" from wbw_templates where book = ? and type <> ? and real <> ? group by real) T',
                                     [$this->option('book'),'.ctl.','']);
+            $count = $query[0]->count;
         }else{
-            $words = WbwTemplate::select('real')
-                            ->where('type','<>','.ctl.')
-                            ->where('real','<>','')
-                            ->orderBy('real')
-                            ->groupBy('real')->cursor();
-            $count = DB::select('SELECT count(*) from (
-                SELECT "real" from wbw_templates where type <> ? and real <> ? group by real) T',
-                ['.ctl.','']);
+            $min = WordIndex::min('id');
+            $max = WordIndex::max('id');
+            if($this->option('from')){
+                $min = $min + $this->option('from');
+            }
+            $words = WordIndex::whereBetween('id',[$min,$max])
+                            ->where('len','>',7)
+                            ->orderBy('id')
+                            ->selectRaw('word as real')
+                            ->cursor();
+            $count = $max - $min + 1;
         }
 
-		$bar = $this->output->createProgressBar($count[0]->count);
+		$sn = 0;
+        $wordIndex = array();
+        $result = array();
 		foreach ($words as $key => $word) {
             if(\App\Tools\Tools::isStop()){
                 return 0;
             }
-            $bar->advance();
-			if($this->option('continue')){
-                //先看目前字典里有没有已经拆过的这个词
-                $isExists = UserDict::where('word',$word->real)
-                                    ->where('dict_id',$dict_id)
-                                    ->where('flag',1)
-                                    ->exists();
-                if($isExists){
-                   continue;
-                }
-			}
-            //删除该词旧数据
-            UserDict::where('word',$word->real)
-                    ->where('dict_id',$dict_id)
-                    ->delete();
+            $startAt = microtime(true);
 
 			$ts = new TurboSplit();
             if($this->option('debug')){
                 $ts->debug(true);
             }
+            $wordIndex[] = $word->real;
             $parts = $ts->splitA($word->real);
-            if(!empty($_word)){
-                Storage::disk('local')->put("tmp/compound1.csv", "word,type,grammar,parent,factors");
-            }
+            $time = round(microtime(true) - $startAt,2);
+            $percent = (int)($sn * 100 / $count);
+            $this->info("[{$percent}%] {$word->real}  {$time}s");
 
-            $count = 0;
+            $resultCount = 0;
             foreach ($parts as $part) {
                 if(isset($part['type']) && $part['type'] === ".v."){
                     continue;
                 }
-                $count++;
-                $new = new UserDict;
-                $new->id = app('snowflake')->id();
-                $new->word = $part['word'];
-                $new->factors = $part['factors'];
-                $new->dict_id = $dict_id;
-                $new->source = '_ROBOT_';
-                $new->create_time = (int)(microtime(true)*1000);
-
+                $resultCount++;
+                $new = array();
+                $new['word'] = $part['word'];
+                $new['factors'] = $part['factors'];
                 if(isset($part['type'])){
-                    $new->type = $part['type'];
+                    $new['type'] = $part['type'];
                 }else{
-                    $new->type = ".cp.";
+                    $new['type'] = ".cp.";
                 }
                 if(isset($part['grammar'])){
-                    $new->grammar = $part['grammar'];
+                    $new['grammar'] = $part['grammar'];
+                }else{
+                    $new['grammar'] = null;
                 }
                 if(isset($part['parent'])){
-                    $new->parent = $part['parent'];
+                    $new['parent'] = $part['parent'];
+                }else{
+                    $new['parent'] = null;
                 }
-                $new->confidence = 50*$part['confidence'];
-                $new->note = $part['confidence'];
-                $new->language = 'cm';
-                $new->creator_id = 1;
-                $new->flag = 1;//标记为维护状态
-                $new->save();
+                $new['confidence'] = 50*$part['confidence'];
+                $result[] = $new;
 
                 if(!empty($_word)){
-                    $output = "{$part['word']},{$part['type']},{$part['grammar']},{$part['parent']},{$part['factors']},{$part['confidence']}";
-                    $this->info($count);
+                    $output = "[{$resultCount}],{$part['word']},{$part['type']},{$part['grammar']},{$part['parent']},{$part['factors']},{$part['confidence']}";
                     $this->info($output);
-                    Storage::disk('local')->append("tmp/compound1.csv", $output);
                 }
             }
+
+            if(count($wordIndex) % 100 ===0){
+                $this->upload($wordIndex,$result,$this->option('api'));
+                $wordIndex = array();
+                $result = array();
+            }
 		}
-		//维护状态数据改为正常状态
-		UserDict::where('dict_id',$dict_id)->where('flag',1)->update(['flag'=>0]);
-        $bar->finish();
+        $this->upload($wordIndex,$result,$this->option('api'));
         return 0;
+    }
+
+    private function upload($index,$words,$url=null){
+        $this->info('uploading '.count($index));
+        if(!$url){
+            $url = config('app.url').'/api/v2/compound';
+        }
+
+        $response = Http::post($url,
+                                [
+                                    'index'=> $index,
+                                    'words'=> $words,
+                                ]);
+        if($response->ok()){
+            $this->info('upload ok');
+        }else{
+            $this->error('upload fail.');
+        }
     }
 }
