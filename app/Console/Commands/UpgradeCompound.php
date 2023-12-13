@@ -16,7 +16,7 @@ class UpgradeCompound extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan upgrade:compound
+     * php artisan upgrade:compound --api=https://staging.wikipali.org/api
      * @var string
      */
     protected $signature = 'upgrade:compound {word?} {--book=} {--debug} {--test} {--continue} {--api=} {--from=} {--to=}';
@@ -191,11 +191,14 @@ class UpgradeCompound extends Command
     }
 
     private function upload($index,$words,$url=null){
-        $this->info('uploading '.count($index));
+
         if(!$url){
             $url = config('app.url').'/api/v2/compound';
+        }else{
+            $url = $url.'/v2/compound';
         }
-
+        $this->info('url = '.$url);
+        $this->info('uploading size=s'.strlen(json_encode($words,JSON_UNESCAPED_UNICODE)));
         $response = Http::post($url,
                                 [
                                     'index'=> $index,
