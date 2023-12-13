@@ -77,7 +77,12 @@ class ImportArticleMap extends Command
             return 0;
         }
         //查询文集语言
-        $lang = Collection::where('uid',$anthologyId)->value('lang');
+        $srcAnthology = Collection::where('uid',$anthologyId)->first();
+        if(!$srcAnthology){
+            $this->error("文集不存在 anthologyId=".$anthologyId);
+            return 0;
+        }
+        $lang = $srcAnthology->lang;
         if(empty($lang)){
             $this->error("文集语言不能为空 anthologyId=".$anthologyId);
             return 0;
@@ -102,7 +107,7 @@ class ImportArticleMap extends Command
                 $this->info("[{$percent}%] doing ".$realTitle);
 
                 if($this->option('size')){
-                    $currDir = 'tipitaka-sarupa-'.$currBlock;
+                    $currDir = $srcAnthology->title . '-' . $currBlock;
                     if($currSize > $this->option('size')){
                         $currBlock++;
                         $currSize=0;
