@@ -12,12 +12,13 @@ use App\Models\PaliText;
 use App\Models\Tag;
 use App\Models\TagMap;
 use App\Models\Channel;
+use App\Http\Api\MdRender;
 
 class UpgradeProgressChapter extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan upgrade:progress.chapter --book=168 --para=915 --channel=19f53a65-81db-4b7d-8144-ac33f1217d34
      * @var string
      */
     protected $signature = 'upgrade:progress.chapter  {--book=} {--para=} {--channel=}';
@@ -121,19 +122,25 @@ class UpgradeProgressChapter extends Command
                                 ->orderBy('paragraph')
                                 ->orderBy('word_start')
                                 ->get();
-                    $summaryText = "";
-                    foreach ($transTexts as $text) {
-                        # code...
-                        $summaryText .= str_replace("\n","",$text->content);
-                        if(mb_strlen($summaryText,"UTF-8")>255){
-                            break;
-                        }
-                    }
+
+                    $mdRender = new MdRender(['format'=>'simple']);
+
                     #查询标题
                     $title = Sentence::where('book_id',$book->book_id)
                           ->where('paragraph',$chapter->paragraph)
                           ->where('channel_uid',$final->channel_id)
                           ->value('content');
+                    $title = $mdRender->convert($title,[$final->channel_id]);
+
+                    $summaryText = "";
+                    foreach ($transTexts as $text) {
+                        # code...
+                        $textContent = $mdRender->convert($text->content,[$final->channel_id]);
+                        $summaryText .= str_replace("\n","",$textContent);
+                        if(mb_strlen($summaryText,"UTF-8")>255){
+                            break;
+                        }
+                    }
 
                     //查询语言
                     $channelLang = Channel::where('uid',$final->channel_id)->value('lang');
