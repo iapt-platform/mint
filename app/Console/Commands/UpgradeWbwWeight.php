@@ -59,6 +59,7 @@ class UpgradeWbwWeight extends Command
                                     ->get();
                 $start = -1;
                 $bold = 0;
+                $katama = false;
                 for ($iWord=0; $iWord < count($words); $iWord++) {
                     WbwTemplate::where('id',$words[$iWord]->id)->update(['weight'=>1]);
                     if($words[$iWord]->style === 'bld'){
@@ -70,11 +71,10 @@ class UpgradeWbwWeight extends Command
                         }
                     }else{
                         if($start>=0){
-                            $weight = 10 / pow($bold,2);
+                            $weight = 1 +  100 / pow($bold,2);
                             for ($i=$start; $i < $iWord ; $i++) {
-                                $wordWeight = 1 + $weight;
                                 $result = WbwTemplate::where('id',$words[$i]->id)
-                                                    ->update(['weight'=>(int)$wordWeight]);
+                                                    ->update(['weight'=>(int)$weight]);
                             }
                             $start = -1;
                             $bold = 0;
