@@ -565,7 +565,7 @@ class TemplateRender{
             'found' => true,
         ];
 
-        if(empty($bookName) || !$volume || empty($page)){
+        if(empty($bookName) || $volume===false || empty($page)){
             /**
              * 没有指定书名，根据book para 查询
              */
@@ -597,7 +597,7 @@ class TemplateRender{
                             }
                         }
                     }
-                    if(!$volume){
+                    if($volume===false){
                         $volume = $pageInfo->volume;
                     }
                     if(!$page){
