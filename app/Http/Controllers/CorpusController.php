@@ -469,12 +469,12 @@ class CorpusController extends Controller
                         ->orderBy('paragraph')
                         ->select(['book','paragraph','level','toc'])
                         ->get();
-
+        $maxLen = 3000;
         if($between > 1){
             //有间隔
             $paraTo = $nextChapter - 1;
         }else{
-            if($chapter->chapter_strlen>2000){
+            if($chapter->chapter_strlen > $maxLen){
                 if(count($toc)>0){
                     //有子目录只输出标题和目录
                     $paraTo = $paraFrom;
@@ -490,10 +490,11 @@ class CorpusController extends Controller
         $pFrom = $request->get('from',$paraFrom);
         $pTo = $request->get('to',$paraTo);
         //根据句子的长度找到这次应该加载的段落
-        $maxLen = 3000;
+
         $paliText = PaliText::select(['paragraph','lenght'])
                             ->where('book',$sentId[0])
                             ->whereBetween('paragraph',[$pFrom,$pTo])
+                            ->orderBy('paragraph')
                             ->get();
         $sumLen = 0;
         $currTo = $pTo;
