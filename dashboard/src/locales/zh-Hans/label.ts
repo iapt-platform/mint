@@ -30,6 +30,7 @@ const items = {
   "labels.curr.paragraph.copy.tpl": "复制句子编号",
   "labels.curr.paragraph.quote.link.tpl": "引用链接模版",
   "labels.curr.paragraph.copy.quote.link.tpl": "复制引用模版",
+  "labels.input": "请输入",
 };
 
 export default items;

@@ -202,7 +202,9 @@ const SentCellEditableWidget = ({
         onChange={(value: string) => {
           setValue(value);
         }}
-        placeholder="请输入"
+        placeholder={intl.formatMessage({
+          id: "labels.input",
+        })}
         onClose={() => {
           if (typeof onClose !== "undefined") {
             onClose();

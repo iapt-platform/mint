@@ -194,7 +194,9 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
                   }}
                 >
                   <TermModal
-                    trigger={"编辑"}
+                    trigger={intl.formatMessage({
+                      id: "buttons.edit",
+                    })}
                     id={row.id}
                     studioName={studioName}
                     channelId={channelId}

@@ -144,7 +144,11 @@ const SentEditMenuWidget = ({
           display: isHover ? "block" : "none",
         }}
       >
-        <Tooltip title="编辑">
+        <Tooltip
+          title={intl.formatMessage({
+            id: "buttons.edit",
+          })}
+        >
           <Button
             icon={<EditOutlined />}
             size="small"
@@ -155,7 +159,11 @@ const SentEditMenuWidget = ({
             }}
           />
         </Tooltip>
-        <Tooltip title="复制">
+        <Tooltip
+          title={intl.formatMessage({
+            id: "buttons.copy",
+          })}
+        >
           <Button
             icon={<CopyOutlined />}
             size="small"
@@ -170,7 +178,11 @@ const SentEditMenuWidget = ({
             }}
           />
         </Tooltip>
-        <Tooltip title="粘贴">
+        <Tooltip
+          title={intl.formatMessage({
+            id: "buttons.paste",
+          })}
+        >
           <Button
             icon={<PasteOutLinedIcon />}
             size="small"

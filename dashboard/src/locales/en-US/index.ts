@@ -1,5 +1,20 @@
+import forms from "./forms";
+import buttons from "./buttons";
+import tables from "./tables";
+import nut from "./nut";
+import channel from "./channel";
+import dict from "./dict";
+import term from "./term";
+import group from "./group";
+import article from "./article";
+import utilities from "./utilities";
+import blog from "./blog";
+import setting from "./setting";
+import auth from "./auth";
+import course from "./course";
+import message from "./message";
+import label from "./label";
 const items = {
-  "flashes.success": "success",
   "columns.library.title": "Library",
   "columns.library.community.title": "Community",
   "columns.library.palicanon.title": "Palicanon",
@@ -28,7 +43,26 @@ const items = {
   "columns.studio.collaboration.title": "Collaboration",
   "columns.studio.basic.title": "Basic",
   "columns.studio.advance.title": "Advance",
-  "columns.exp.title": "exp",
+  "columns.studio.setting.title": "Setting",
+  "columns.exp.title": "Exp",
+  "columns.studio.invite.title": "Invite",
+  "columns.studio.transfer.title": "Transfer",
+  ...buttons,
+  ...forms,
+  ...tables,
+  ...nut,
+  ...channel,
+  ...dict,
+  ...term,
+  ...group,
+  ...article,
+  ...utilities,
+  ...blog,
+  ...setting,
+  ...auth,
+  ...course,
+  ...message,
+  ...label,
 };
 
 export default items;
