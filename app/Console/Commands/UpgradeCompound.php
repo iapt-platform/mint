@@ -16,7 +16,7 @@ class UpgradeCompound extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan upgrade:compound --api=https://staging.wikipali.org/api
+     * php -d memory_limit=1024M artisan upgrade:compound  --api=https://staging.wikipali.org/api --from=20481 --to=30000
      * @var string
      */
     protected $signature = 'upgrade:compound {word?} {--book=} {--debug} {--test} {--continue} {--api=} {--from=} {--to=}';
@@ -118,14 +118,22 @@ class UpgradeCompound extends Command
             $min = WordIndex::min('id');
             $max = WordIndex::max('id');
             if($this->option('from')){
-                $min = $min + $this->option('from');
+                $from = $min + $this->option('from');
+            }else{
+                $from = $min;
             }
-            $words = WordIndex::whereBetween('id',[$min,$max])
+            if($this->option('to')){
+                $to = $min + $this->option('to');
+            }else{
+                $to = $max;
+            }
+            $words = WordIndex::whereBetween('id',[$from,$to])
                             ->where('len','>',7)
+                            ->where('len','<',51)
                             ->orderBy('id')
                             ->selectRaw('word as real')
                             ->cursor();
-            $count = $max - $min + 1;
+            $count = $to - $from + 1;
         }
 
 		$sn = 0;
@@ -135,6 +143,7 @@ class UpgradeCompound extends Command
             if(\App\Tools\Tools::isStop()){
                 return 0;
             }
+            $sn++;
             $startAt = microtime(true);
 
 			$ts = new TurboSplit();
@@ -145,7 +154,8 @@ class UpgradeCompound extends Command
             $parts = $ts->splitA($word->real);
             $time = round(microtime(true) - $startAt,2);
             $percent = (int)($sn * 100 / $count);
-            $this->info("[{$percent}%] {$word->real}  {$time}s");
+
+            $this->info("[{$percent}%][{$sn}] {$word->real}  {$time}s");
 
             $resultCount = 0;
             foreach ($parts as $part) {
