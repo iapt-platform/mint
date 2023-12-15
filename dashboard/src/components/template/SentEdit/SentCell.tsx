@@ -313,7 +313,9 @@ const SentCellWidget = ({
                     width: "100%",
                     marginBottom: 0,
                   }}
-                  placeholder="请输入"
+                  placeholder={intl.formatMessage({
+                    id: "labels.input",
+                  })}
                   html={sentData.html ? sentData.html : sentData.content}
                   wordWidget={wordWidget}
                 />

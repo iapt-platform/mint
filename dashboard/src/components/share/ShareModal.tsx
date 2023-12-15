@@ -31,7 +31,7 @@ const ShareModalWidget = ({ resId, resType, trigger }: IWidget) => {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        footer={false}
+        footer={undefined}
       >
         <Share resId={resId} resType={resType} />
       </Modal>
