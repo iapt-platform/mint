@@ -85,9 +85,9 @@ const ArticleWidget = ({
           mode={mode}
           anthologyId={anthologyId}
           active={active}
-          onArticleChange={(type: ArticleType, id: string) => {
+          onArticleChange={(type: ArticleType, id: string, target: string) => {
             if (typeof onArticleChange !== "undefined") {
-              onArticleChange(type, id);
+              onArticleChange(type, id, target);
             }
           }}
           onLoad={(data: IArticleDataResponse) => {
@@ -106,9 +106,9 @@ const ArticleWidget = ({
           articleId={articleId}
           channelId={channelId}
           mode={mode}
-          onArticleChange={(type: ArticleType, id: string) => {
+          onArticleChange={(type: ArticleType, id: string, target: string) => {
             if (typeof onArticleChange !== "undefined") {
-              onArticleChange(type, id);
+              onArticleChange(type, id, target);
             }
           }}
         />
@@ -117,9 +117,9 @@ const ArticleWidget = ({
           articleId={articleId}
           channelId={channelId}
           mode={mode}
-          onArticleChange={(type: ArticleType, id: string) => {
+          onArticleChange={(type: ArticleType, id: string, target: string) => {
             if (typeof onArticleChange !== "undefined") {
-              onArticleChange(type, id);
+              onArticleChange(type, id, target);
             }
           }}
         />
@@ -132,9 +132,9 @@ const ArticleWidget = ({
           book={book}
           para={para}
           focus={focus}
-          onArticleChange={(type: ArticleType, id: string) => {
+          onArticleChange={(type: ArticleType, id: string, target: string) => {
             if (typeof onArticleChange !== "undefined") {
-              onArticleChange(type, id);
+              onArticleChange(type, id, target);
             }
           }}
         />
@@ -144,9 +144,9 @@ const ArticleWidget = ({
           channelId={channelId}
           focus={focus}
           mode={mode}
-          onArticleChange={(type: ArticleType, id: string) => {
+          onArticleChange={(type: ArticleType, id: string, target: string) => {
             if (typeof onArticleChange !== "undefined") {
-              onArticleChange(type, id);
+              onArticleChange(type, id, target);
             }
           }}
         />
@@ -155,9 +155,9 @@ const ArticleWidget = ({
           articleId={articleId}
           channelId={channelId}
           mode={mode}
-          onArticleChange={(type: ArticleType, id: string) => {
+          onArticleChange={(type: ArticleType, id: string, target: string) => {
             if (typeof onArticleChange !== "undefined") {
-              onArticleChange(type, id);
+              onArticleChange(type, id, target);
             }
           }}
         />

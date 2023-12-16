@@ -6,7 +6,7 @@ import TocPath, { ITocPathNode } from "../corpus/TocPath";
 import PaliChapterChannelList from "../corpus/PaliChapterChannelList";
 import { ArticleType } from "./Article";
 import VisibleObserver from "../general/VisibleObserver";
-import { useEffect, useState } from "react";
+import { IStudio } from "../auth/StudioName";
 
 const { Paragraph, Title, Text } = Typography;
 export interface IFirstAnthology {
@@ -24,6 +24,7 @@ export interface IWidgetArticleData {
   path?: ITocPathNode[];
   created_at?: string;
   updated_at?: string;
+  owner?: IStudio;
   channels?: string[];
   type?: ArticleType;
   articleId?: string;
@@ -43,6 +44,7 @@ const ArticleViewWidget = ({
   path = [],
   created_at,
   updated_at,
+  owner,
   channels,
   type,
   articleId,
