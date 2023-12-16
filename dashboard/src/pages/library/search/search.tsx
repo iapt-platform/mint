@@ -130,6 +130,19 @@ const Widget = () => {
                           setSearchParams(searchParams);
                         }}
                       />
+                      <Select
+                        defaultValue="default"
+                        bordered={false}
+                        options={[
+                          { value: "default", label: "全部单词" },
+                          { value: "on", label: "黑体" },
+                          { value: "off", label: "非黑体" },
+                        ]}
+                        onSelect={(value: string) => {
+                          searchParams.set("bold", value);
+                          setSearchParams(searchParams);
+                        }}
+                      />
                     </Space>
                   }
                   items={[
@@ -159,6 +172,7 @@ const Widget = () => {
                   bookId={searchParams.get("book")}
                   orderBy={searchParams.get("orderby")}
                   match={searchParams.get("match")}
+                  bold={searchParams.get("bold")}
                 />
               </Space>
             </Col>
