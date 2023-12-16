@@ -19,6 +19,7 @@ interface IWidgetAnthologyDetail {
   channels?: string[];
   visible?: boolean;
   onArticleSelect?: Function;
+  onArticleClick?: Function;
   onLoad?: Function;
   onTitle?: Function;
   onLoading?: Function;
@@ -29,6 +30,7 @@ const AnthologyDetailWidget = ({
   channels,
   visible = true,
   onArticleSelect,
+  onArticleClick,
   onLoading,
   onTitle,
   onError,
@@ -102,9 +104,9 @@ const AnthologyDetailWidget = ({
       <AnthologyTocTree
         anthologyId={aid}
         channels={channels}
-        onArticleSelect={(anthologyId: string, keys: string[]) => {
-          if (typeof onArticleSelect !== "undefined") {
-            onArticleSelect(anthologyId, keys);
+        onClick={(anthologyId: string, id: string, target: string) => {
+          if (typeof onArticleClick !== "undefined") {
+            onArticleClick(anthologyId, id, target);
           }
         }}
       />

@@ -36,9 +36,13 @@ const TypeAnthologyWidget = ({
       )}
       <AnthologyDetail
         visible={!loading}
-        onArticleSelect={(anthologyId: string, keys: string[]) => {
-          if (typeof onArticleChange !== "undefined" && keys.length > 0) {
-            onArticleChange("article", keys[0], {
+        onArticleClick={(
+          anthologyId: string,
+          articleId: string,
+          target: string
+        ) => {
+          if (typeof onArticleChange !== "undefined" && articleId) {
+            onArticleChange("article", articleId, target, {
               anthologyId: anthologyId,
             });
           }

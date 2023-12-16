@@ -9,12 +9,14 @@ interface IWidget {
   anthologyId?: string;
   channels?: string[];
   onSelect?: Function;
+  onClick?: Function;
   onArticleSelect?: Function;
 }
 const AnthologyTocTreeWidget = ({
   anthologyId,
   channels,
   onSelect,
+  onClick,
   onArticleSelect,
 }: IWidget) => {
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
@@ -61,6 +63,18 @@ const AnthologyTocTreeWidget = ({
           typeof anthologyId !== "undefined"
         ) {
           onArticleSelect(anthologyId, keys);
+        }
+      }}
+      onClick={(
+        id: string,
+        e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+      ) => {
+        const target = e.ctrlKey || e.metaKey ? "_blank" : "self";
+        if (
+          typeof onClick !== "undefined" &&
+          typeof anthologyId !== "undefined"
+        ) {
+          onClick(anthologyId, id, target);
         }
       }}
     />
