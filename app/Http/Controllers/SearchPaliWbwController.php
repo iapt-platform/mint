@@ -44,7 +44,7 @@ class SearchPaliWbwController extends Controller
             $table = $table->where('style','bld');
             $whereBold = " and style='bld'";
         }else if($request->get('bold')==='off'){
-            $table = $table->whereNot('style','bld');
+            $table = $table->where('style','<>','bld');
             $whereBold = " and style <> 'bld'";
         }
         $placeholderWord = implode(",",array_fill(0, count($keyWords), '?')) ;
