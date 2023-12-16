@@ -1,6 +1,6 @@
 const items = {
-	"article.lable": "文章",
-	"article.fields.article.count.label": "文章数量",
+  "article.lable": "article",
+  "article.fields.article.count.label": "article count",
 };
 
 export default items;
