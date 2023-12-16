@@ -51,6 +51,10 @@ import LoginAlertModal from "../../../components/auth/LoginAlertModal";
 import ShareButton from "../../../components/export/ShareButton";
 import ChannelAlert from "../../../components/channel/ChannelAlert";
 
+export interface ISearchParams {
+  key: string;
+  value: string;
+}
 /**
  * type:
  *   sent 句子
@@ -353,7 +357,8 @@ const Widget = () => {
               onArticleChange={(
                 newType: ArticleType,
                 article: string,
-                target?: string
+                target: string,
+                param?: ISearchParams[]
               ) => {
                 console.log("article change", newType, article, target);
                 scrollToTop();
@@ -361,7 +366,14 @@ const Widget = () => {
                 searchParams.forEach((value, key) => {
                   console.log(value, key);
                   if (key !== "mode") {
-                    url += `&${key}=${value}`;
+                    const paramValue = param?.find(
+                      (value) => value.key === key
+                    );
+                    if (paramValue) {
+                      url += `&${key}=${paramValue.value}`;
+                    } else {
+                      url += `&${key}=${value}`;
+                    }
                   }
                 });
                 if (target === "_blank") {
