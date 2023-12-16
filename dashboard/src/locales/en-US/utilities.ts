@@ -1,13 +1,13 @@
 const items = {
-  "utilities.time.now": "现在",
-  "utilities.time.secs_ago": "秒之前",
-  "utilities.time.mins_ago": "分钟之前",
-  "utilities.time.hs_ago": "小时之前",
-  "utilities.time.days_ago": "天之前",
-  "utilities.time.weeks_ago": "周之前",
-  "utilities.time.months_ago": "月之前",
-  "utilities.time.year_ago": "年之前",
-  "utilities.time.years_ago": "年之前",
+  "utilities.time.now": "now",
+  "utilities.time.secs_ago": "secs ago",
+  "utilities.time.mins_ago": "mins ago",
+  "utilities.time.hs_ago": "hs ago",
+  "utilities.time.days_ago": "days ago",
+  "utilities.time.weeks_ago": "weeks ago",
+  "utilities.time.months_ago": "months ago",
+  "utilities.time.year_ago": "year ago",
+  "utilities.time.years_ago": "years ago",
 };
 
 export default items;

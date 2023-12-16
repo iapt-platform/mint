@@ -1,6 +1,6 @@
 const items = {
-	"blog.overview": "概览",
-	"blog.palicanon": "译文",
+  "blog.overview": "overview",
+  "blog.palicanon": "palicanon",
 };
 
 export default items;

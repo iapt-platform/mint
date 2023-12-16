@@ -49,6 +49,7 @@ interface IWidget {
   bookId?: string | null;
   book?: number;
   para?: number;
+  bold?: string | null;
   orderBy?: string | null;
   match?: string | null;
   keyWord2?: string;
@@ -65,6 +66,7 @@ const FullTxtSearchResultWidget = ({
   para,
   orderBy,
   match,
+  bold,
   keyWord2,
   view = "pali",
   pageType,
@@ -76,7 +78,7 @@ const FullTxtSearchResultWidget = ({
 
   useEffect(
     () => setCurrPage(1),
-    [view, keyWord, keyWords, tags, bookId, match, pageType]
+    [view, keyWord, keyWords, tags, bookId, match, pageType, bold]
   );
 
   useEffect(() => {
@@ -110,6 +112,9 @@ const FullTxtSearchResultWidget = ({
     }
     if (pageType) {
       url += `&type=${pageType}`;
+    }
+    if (bold) {
+      url += `&bold=${bold}`;
     }
     const offset = (currPage - 1) * 10;
     url += `&limit=10&offset=${offset}`;
@@ -149,6 +154,7 @@ const FullTxtSearchResultWidget = ({
     pageType,
     tags,
     view,
+    bold,
   ]);
   return (
     <List
