@@ -106,10 +106,13 @@ const TypeArticleWidget = ({
                   level: item.level,
                 };
               })}
-              onSelect={(keys: string[]) => {
-                console.log(keys);
-                if (typeof onArticleChange !== "undefined" && keys.length > 0) {
-                  onArticleChange("article", keys[0]);
+              onClick={(
+                id: string,
+                e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+              ) => {
+                const target = e.ctrlKey || e.metaKey ? "_blank" : "self";
+                if (typeof onArticleChange !== "undefined") {
+                  onArticleChange("article", id, target);
                 }
               }}
             />

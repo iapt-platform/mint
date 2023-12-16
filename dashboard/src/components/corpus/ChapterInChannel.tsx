@@ -7,10 +7,11 @@ import { IChannelApiData } from "../api/Channel";
 import ChannelListItem from "../channel/ChannelListItem";
 import TimeShow from "../general/TimeShow";
 import { useIntl } from "react-intl";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { IStudio } from "../auth/StudioName";
 import { useState } from "react";
 import { ProgressOutlinedIcon } from "../../assets/icon";
+import { ArticleMode } from "../article/Article";
 
 const { Text } = Typography;
 
@@ -38,6 +39,7 @@ const ChapterInChannelWidget = ({
   openTarget = "_blank",
 }: IWidgetChapterInChannel) => {
   const intl = useIntl(); //i18n
+  const [searchParams, setSearchParams] = useSearchParams();
   const [open, setOpen] = useState(false);
   const ChannelList = (channels: IChapterChannelData[]): JSX.Element => {
     return channels.length ? (
@@ -61,15 +63,15 @@ const ChapterInChannelWidget = ({
               }
         }
         renderItem={(item, id) => {
-          const channel = item.channel.id ? `?channel=${item.channel.id}` : "";
+          let url = `/article/chapter/${book}-${para}`;
+          const currMode = searchParams.get("mode");
+          url += currMode ? `?mode=${currMode}` : "?mode=read";
+          url += item.channel.id ? `&channel=${item.channel.id}` : "";
           return (
             <List.Item key={id}>
               <Row>
                 <Col span={12}>
-                  <Link
-                    to={`/article/chapter/${book}-${para}${channel}`}
-                    target={openTarget}
-                  >
+                  <Link to={url}>
                     <ChannelListItem
                       channel={item.channel}
                       studio={item.studio}

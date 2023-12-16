@@ -5,6 +5,7 @@ import type { ListNodeData } from "./EditableTree";
 import PaliText from "../template/Wbw/PaliText";
 import { Key } from "antd/lib/table/interface";
 import { randomString } from "../../utils";
+import { DataNode, EventDataNode } from "antd/es/tree";
 
 const { Text } = Typography;
 
@@ -132,6 +133,7 @@ interface IWidgetTocTree {
   expandedKeys?: Key[];
   selectedKeys?: Key[];
   onSelect?: Function;
+  onClick?: Function;
 }
 
 const TocTreeWidget = ({
@@ -139,6 +141,7 @@ const TocTreeWidget = ({
   expandedKeys,
   selectedKeys,
   onSelect,
+  onClick,
 }: IWidgetTocTree) => {
   const [tree, setTree] = useState<TreeNodeData[]>();
   const [expanded, setExpanded] = useState<Key[]>();
@@ -228,6 +231,19 @@ const TocTreeWidget = ({
       autoExpandParent
       onExpand={(expandedKeys: Key[]) => {
         setExpanded(expandedKeys);
+      }}
+      onClick={(
+        e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+        node: EventDataNode<DataNode>
+      ) => {
+        if (typeof onClick !== "undefined") {
+          const selectedId = keyIdMap?.find(
+            (value) => node.key === value.key
+          )?.id;
+          if (selectedId) {
+            onClick(selectedId, e);
+          }
+        }
       }}
       onSelect={(selectedKeys: Key[]) => {
         setSelected(selectedKeys);
