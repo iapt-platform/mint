@@ -6,6 +6,7 @@ import TypePali from "./TypePali";
 import "./article.css";
 import TypePage from "./TypePage";
 import TypeCSPara from "./TypeCSPara";
+import { ISearchParams } from "../../pages/library/article/show";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -132,9 +133,14 @@ const ArticleWidget = ({
           book={book}
           para={para}
           focus={focus}
-          onArticleChange={(type: ArticleType, id: string, target: string) => {
+          onArticleChange={(
+            type: ArticleType,
+            id: string,
+            target: string,
+            param: ISearchParams[]
+          ) => {
             if (typeof onArticleChange !== "undefined") {
-              onArticleChange(type, id, target);
+              onArticleChange(type, id, target, param);
             }
           }}
         />
