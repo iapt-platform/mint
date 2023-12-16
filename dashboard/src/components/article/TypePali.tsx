@@ -15,6 +15,7 @@ import ErrorResult from "../general/ErrorResult";
 import store from "../../store";
 import { refresh } from "../../reducers/focus";
 import Navigate from "./Navigate";
+import { ISearchParams } from "../../pages/library/article/show";
 
 interface IWidget {
   type?: ArticleType;
@@ -279,8 +280,14 @@ const TypePaliWidget = ({
                 if (event.ctrlKey || event.metaKey) {
                   target = "_blank";
                 }
+                let param: ISearchParams[] = [];
+                if (type === "para" && newId) {
+                  if (newId.split("-").length > 1) {
+                    param = [{ key: "par", value: newId.split("-")[1] }];
+                  }
+                }
                 if (typeof onArticleChange !== "undefined") {
-                  onArticleChange(type, newId, target);
+                  onArticleChange(type, newId, target, param);
                 }
               }}
             />
