@@ -98,9 +98,13 @@ const ChannelMy = ({
       setTreeData(data);
     } else {
       //当前被选择的
-      const currChannel = channelList.filter((value) =>
-        selectedRowKeys.includes(value.uid)
-      );
+      let selectedChannel: IItem[] = [];
+      selectedRowKeys.forEach((channelId) => {
+        const channel = channelList.find((value) => value.uid === channelId);
+        if (channel) {
+          selectedChannel.push(channel);
+        }
+      });
       let show = selectedRowKeys;
       //有进度的
       const progressing = channelList.filter(
@@ -117,7 +121,7 @@ const ChannelMy = ({
         (value) => !show.includes(value.uid) && value.role !== "member"
       );
       const channelData = [
-        ...currChannel,
+        ...selectedChannel,
         ...progressing,
         ...myChannel,
         ...others,

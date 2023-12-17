@@ -78,7 +78,10 @@ const SettingItemWidget = ({
                       title: intl.formatMessage({ id: item.label }),
                     };
                   })}
-                  titles={["备选", "我的选择"]}
+                  titles={[
+                    "备选",
+                    intl.formatMessage({ id: "labels.selected" }),
+                  ]}
                   targetKeys={targetKeys}
                   onChange={(
                     newTargetKeys: string[],
@@ -203,11 +206,21 @@ const SettingItemWidget = ({
 
     return (
       <div style={{ marginBottom: 10 }}>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <Text>{intl.formatMessage({ id: data.label })}</Text>
-          {content}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+          }}
+        >
+          <div>
+            <div>
+              <Text>{intl.formatMessage({ id: data.label })}</Text>
+            </div>
+            <Text type="secondary">{description}</Text>
+          </div>
+          <div style={{ marginLeft: "auto" }}>{content}</div>
         </div>
-        <Text type="secondary">{description}</Text>
       </div>
     );
   }
