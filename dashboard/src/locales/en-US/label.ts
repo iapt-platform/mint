@@ -31,6 +31,7 @@ const items = {
   "labels.curr.paragraph.quote.link.tpl": "引用链接模版",
   "labels.curr.paragraph.copy.quote.link.tpl": "复制引用模版",
   "labels.input": "input",
+  "labels.selected": "Selected",
 };
 
 export default items;
