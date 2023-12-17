@@ -536,16 +536,18 @@ class CorpusController extends Controller
         $channelInfo = Channel::whereIn("uid",$channels)
                         ->select(['uid','type','name','owner_uid'])->get();
         $indexChannel = [];
-        foreach ($channelInfo as $key => $value) {
-            # code...
-            if($type !== null && $value->type !== $type){
+        foreach ($channels as $key => $channelId) {
+            $channelInfo = Channel::where("uid",$channelId)
+                        ->select(['uid','type','name','owner_uid'])->first();
+            if(!$channelInfo){
+                Log::error('no channel id'.$channelId);
                 continue;
             }
-            $indexChannel[$value->uid] = $value;
-        }
-        foreach ($indexChannel as $uid => $value) {
-            # 查询studio
-            $indexChannel[$uid]->studio = StudioApi::getById($value->owner_uid);
+            if($type !== null && $channelInfo->type !== $type){
+                continue;
+            }
+            $indexChannel[$channelId] = $channelInfo;
+            $indexChannel[$channelId]->studio = StudioApi::getById($channelInfo->owner_uid);
         }
         return $indexChannel;
     }
