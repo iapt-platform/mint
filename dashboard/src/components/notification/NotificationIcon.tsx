@@ -22,6 +22,9 @@ const NotificationIconWidget = () => {
                 Notification.requestPermission(function (status) {
                   const notification = new Notification("通知标题", {
                     body: json.data.rows[0].content,
+                    icon:
+                      process.env.REACT_APP_API_HOST +
+                      "/assets/images/wikipali_logo.png",
                   });
                   notification.onclick = (event) => {
                     event.preventDefault(); // 阻止浏览器聚焦于 Notification 的标签页
