@@ -28,6 +28,7 @@ class SentPrResource extends JsonResource
         $mode = $request->get("mode",'read');
         return [
             "id"=>$this->id,
+            "uid"=>$this->uid,
             "book"=> $this->book_id,
             "paragraph"=> $this->paragraph,
             "word_start"=> $this->word_start,

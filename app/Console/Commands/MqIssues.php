@@ -9,7 +9,7 @@ class MqIssues extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan mq:issues
      * @var string
      */
     protected $signature = 'mq:issues';

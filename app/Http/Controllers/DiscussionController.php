@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use App\Models\Discussion;
 use App\Models\Wbw;
 use App\Models\WbwBlock;
 use App\Models\PaliSentence;
 use App\Models\Sentence;
-use Illuminate\Http\Request;
 use App\Http\Resources\DiscussionResource;
 use App\Http\Api\MdRender;
 use App\Http\Api\AuthApi;
 use App\Http\Api\Mq;
-use Illuminate\Support\Facades\Log;
 
 class DiscussionController extends Controller
 {
@@ -77,15 +77,12 @@ class DiscussionController extends Controller
 
         $result = $table->get();
 
-        if($result){
-			return $this->ok(["rows"=>DiscussionResource::collection($result),
-                              "count"=>$count,
-                              'active'=>$activeNumber,
-                              'close'=>$closeNumber,
-                            ]);
-		}else{
-			return $this->error("没有查询到数据");
-		}
+        return $this->ok(["rows"=>DiscussionResource::collection($result),
+                            "count"=>$count,
+                            'active'=>$activeNumber,
+                            'close'=>$closeNumber,
+                        ]);
+
     }
 
     public function discussion_tree(Request $request){
