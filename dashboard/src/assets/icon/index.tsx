@@ -574,6 +574,22 @@ const DocOutLined = () => (
   </svg>
 );
 
+const NotificationOutlined = () => (
+  <svg
+    viewBox="0 0 1024 1024"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    p-id="5268"
+    width="1em"
+    height="1em"
+  >
+    <path
+      d="M861.575529 783.058824a30.117647 30.117647 0 0 1-30.117647-30.117648V378.096941C831.457882 202.541176 689.152 60.235294 513.626353 60.235294 338.070588 60.235294 195.764706 202.541176 195.764706 378.096941V752.941176a30.117647 30.117647 0 0 1-30.117647 30.117648H105.411765v60.235294h813.17647v-60.235294h-57.012706zM918.588235 722.823529a60.235294 60.235294 0 0 1 60.235294 60.235295v60.235294a60.235294 60.235294 0 0 1-60.235294 60.235294H105.411765a60.235294 60.235294 0 0 1-60.235294-60.235294v-60.235294a60.235294 60.235294 0 0 1 60.235294-60.235295h30.117647V378.096941C135.529412 169.261176 304.790588 0 513.626353 0c208.805647 0 378.066824 169.261176 378.066823 378.096941V722.823529H918.588235z m-481.882353 210.82353h180.705883a90.352941 90.352941 0 0 1-180.705883 0z"
+      fill="currentColor"
+      p-id="5269"
+    ></path>
+  </svg>
+);
 export const DictIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DictSvg} {...props} />
 );
@@ -682,4 +698,8 @@ export const HtmlIcon = (props: Partial<CustomIconComponentProps>) => (
 
 export const DocIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DocOutLined} {...props} />
+);
+
+export const NotificationIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={NotificationOutlined} {...props} />
 );

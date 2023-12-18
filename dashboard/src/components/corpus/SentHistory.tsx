@@ -53,10 +53,10 @@ const SentHistoryWidget = ({ sentId }: IWidget) => {
         if (typeof params.keyword !== "undefined") {
           url += "&search=" + (params.keyword ? params.keyword : "");
         }
+        console.info("url", url);
         const res = await get<ISentHistoryListResponse>(url);
         if (res.ok) {
-          console.log(res.data);
-
+          console.debug(res.data);
           const items: ISentHistory[] = res.data.rows.map((item, id) => {
             return {
               content: item.content,
@@ -64,7 +64,7 @@ const SentHistoryWidget = ({ sentId }: IWidget) => {
               createdAt: item.created_at,
             };
           });
-          console.log(items);
+          console.debug(items);
           return {
             total: res.data.count,
             succcess: true,

@@ -11,6 +11,7 @@ import ToStudio from "../auth/ToStudio";
 import ThemeSelect from "../general/ThemeSelect";
 import SearchButton from "../general/SearchButton";
 import { dashboardBasePath } from "../../utils";
+import NotificationIcon from "../notification/NotificationIcon";
 
 const { Header } = Layout;
 
@@ -176,6 +177,7 @@ const HeadBarWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
           <SearchButton />
           <ToStudio />
           <SignInAvatar />
+          <NotificationIcon />
           <UiLangSelect />
           <ThemeSelect />
         </Space>
