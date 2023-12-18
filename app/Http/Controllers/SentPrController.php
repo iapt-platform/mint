@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Http\Api\AuthApi;
 use App\Models\SentPr;
 use App\Models\Channel;
@@ -118,6 +119,7 @@ class SentPrController extends Controller
         #不存在，新建
         $new = new SentPr();
         $new->id = app('snowflake')->id();
+        $new->uid = Str::uuid();
         $new->book_id = $data['book'];
         $new->paragraph = $data['para'];
         $new->word_start = $data['begin'];
@@ -131,7 +133,8 @@ class SentPrController extends Controller
         $new->create_time = time()*1000;
         $new->modify_time = time()*1000;
         $new->save();
-        Mq::publish('suggestion',new SentPrResource($new));
+        Mq::publish('suggestion',['data'=>new SentPrResource($new),
+                                  'token'=>AuthApi::getToken($request)]);
 
 		$robotMessageOk=false;
 		$webHookMessage="";
