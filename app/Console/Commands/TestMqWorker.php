@@ -10,7 +10,7 @@ class TestMqWorker extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan test:mq.worker
      * @var string
      */
     protected $signature = 'test:mq.worker';
