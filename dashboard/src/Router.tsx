@@ -75,6 +75,9 @@ import LibrarySearchKey from "./pages/library/search/search";
 import LibraryDownload from "./pages/library/download";
 import LibraryDownloadPage from "./pages/library/download/Download";
 
+import LibraryNotifications from "./pages/library/notifications";
+import LibraryNotificationsList from "./pages/library/notifications/list";
+
 import Studio from "./pages/studio";
 import StudioHome from "./pages/studio/home";
 
@@ -186,7 +189,9 @@ const Widget = () => {
         <Route path="community" element={<LibraryCommunity />}>
           <Route path="list" element={<LibraryCommunityList />} />
         </Route>
-
+        <Route path="notifications" element={<LibraryNotifications />}>
+          <Route path="list" element={<LibraryNotificationsList />} />
+        </Route>
         <Route path="palicanon" element={<LibraryPalicanon />}>
           <Route path="list" element={<LibraryPalicanonByPath />} />
           <Route path="list/:root" element={<LibraryPalicanonByPath />} />
