@@ -2,6 +2,7 @@
 namespace App\Tools;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class Markdown
 {
@@ -9,14 +10,25 @@ class Markdown
         $GLOBALS['markdown.driver'] = $driver;
     }
     public static function render($text){
-        if(isset($GLOBALS['markdown.driver'])){
-            if($GLOBALS['markdown.driver'] === 'str'){
-                return Markdown::strdown($text);
-            }else{
-                return Markdown::morus($text);
-            }
+        if(isset($GLOBALS['markdown.driver']) &&
+            $GLOBALS['markdown.driver'] === 'str'){
+            return Markdown::strdown($text);
         }else{
             return Markdown::morus($text);
+        }
+    }
+    public static function morus_restful($text){
+        $host = config('mint.server.rpc.morus.host');
+        Log::debug('morus host='.$host);
+
+        $response = Http::post($host, [
+            'text'=>$text
+        ]);
+        if($response->successful()){
+            return $response->json('data');
+        }else{
+            Log::error('morus_restful fail markdown='.$text);
+            return Str::markdown($text);
         }
     }
 
@@ -45,6 +57,7 @@ class Markdown
     }
 
     public static function strdown($text){
+        $text = str_replace("** ","**\r\n ",$text);
         return Str::markdown($text);
     }
 }
