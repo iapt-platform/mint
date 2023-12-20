@@ -10,6 +10,7 @@ import { count, show } from "../../../reducers/discussion";
 import { useAppSelector } from "../../../hooks";
 import { openPanel } from "../../../reducers/right-panel";
 import { useIntl } from "react-intl";
+import SuggestionPopover from "./SuggestionPopover";
 
 const { Text, Paragraph } = Typography;
 
@@ -109,6 +110,13 @@ const SuggestionToolbarWidget = ({
             <Tooltip title="修改建议">
               <HandOutlinedIcon />
             </Tooltip>
+            <SuggestionPopover
+              book={data.book}
+              para={data.para}
+              start={data.wordStart}
+              end={data.wordEnd}
+              channelId={data.channel.id}
+            />
             {prNumber}
           </Space>
           {compact ? undefined : <Divider type="vertical" />}
