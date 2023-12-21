@@ -19,6 +19,8 @@ interface INotification {
   from: IUser;
   to: IUser;
   url?: string;
+  title?: string;
+  book_title?: string;
   content?: string;
   content_type: string;
   res_type: string;
@@ -103,6 +105,8 @@ const NotificationListWidget = ({ onChange }: IWidget) => {
               from: item.from,
               to: item.to,
               url: item.url,
+              title: item.title,
+              book_title: item.book_title,
               content: item.content,
               content_type: item.content_type,
               res_type: item.res_type,
@@ -154,15 +158,19 @@ const NotificationListWidget = ({ onChange }: IWidget) => {
           render: (_, row) => {
             return (
               <Text
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  opacity: row.status === "unread" ? 1 : 0.7,
+                }}
                 onClick={() => {
                   window.open(row.url, "_blank");
                 }}
               >
-                <Marked
-                  style={{ opacity: row.status === "unread" ? 1 : 0.7 }}
-                  text={row.content}
-                />
+                <div>
+                  <Text type="secondary">{row.book_title}</Text>
+                </div>
+                <Text style={{ fontWeight: 700 }}>{row.title}</Text>
+                <Marked style={{}} text={row.content} />
               </Text>
             );
           },
@@ -216,6 +224,9 @@ const NotificationListWidget = ({ onChange }: IWidget) => {
           onChange(key) {
             setActiveKey(key);
             ref.current?.reload();
+            if (ref.current?.setPageInfo) {
+              ref.current?.setPageInfo({ current: 1 });
+            }
           },
         },
       }}

@@ -59,12 +59,13 @@ const SuggestionPopoverWidget = ({
   return (
     <Popover
       placement="bottomRight"
+      arrowPointAtCenter
       content={
         <div>
           <SentCell value={sentData} key={1} isPr={true} showDiff={false} />
         </div>
       }
-      title={`${sentData?.editor.nickName}`}
+      title={`${sentData?.editor.nickName}提交的修改建议`}
       trigger="click"
       open={open}
       onOpenChange={handleOpenChange}
