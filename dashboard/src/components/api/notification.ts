@@ -25,6 +25,8 @@ interface INotificationData {
   from: IUser;
   to: IUser;
   url?: string;
+  title?: string;
+  book_title?: string;
   content: string;
   content_type: string;
   res_type: string;
