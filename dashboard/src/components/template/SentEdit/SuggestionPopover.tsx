@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import SentCell from "./SentCell";
 import { ISentence } from "../SentEdit";
 import { useAppSelector } from "../../../hooks";
-import { prInfo } from "../../../reducers/pr-load";
+import { prInfo, refresh } from "../../../reducers/pr-load";
+import store from "../../../store";
 
 interface IWidget {
   book: number;
@@ -51,6 +52,9 @@ const SuggestionPopoverWidget = ({
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
+    if (newOpen === false) {
+      store.dispatch(refresh(null));
+    }
   };
   return (
     <Popover
