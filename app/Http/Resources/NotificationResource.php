@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\UserApi;
+use App\Models\SentPr;
 
 class NotificationResource extends JsonResource
 {
@@ -28,6 +29,23 @@ class NotificationResource extends JsonResource
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];
+
+        switch ($this->res_type) {
+            case 'suggestion':
+                $prData = SentPr::where('uid',$this->res_id)->first();
+                if($prData){
+                    $link = config('app.url')."/pcd/article/para/{$prData->book_id}-{$prData->paragraph}";
+                    $link .= "?book={$prData->book_id}&par={$prData->paragraph}&channel={$prData->channel_uid}";
+                    $link .= "&mode=edit&pr=".$this->res_id;
+                    $data['url'] = $link;
+                }
+
+                break;
+
+            default:
+                # code...
+                break;
+        }
         return $data;
     }
 }
