@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../../hooks";
 import { prInfo } from "../../../reducers/pr-load";
 
@@ -20,6 +20,8 @@ const SuggestionFocusWidget = ({
 }: IWidget) => {
   const pr = useAppSelector(prInfo);
   const [highlight, setHighlight] = useState(false);
+  const divRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (pr) {
       if (
@@ -30,6 +32,11 @@ const SuggestionFocusWidget = ({
         channelId === pr.channel.id
       ) {
         setHighlight(true);
+        divRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "nearest",
+        });
       } else {
         setHighlight(false);
       }
@@ -38,14 +45,15 @@ const SuggestionFocusWidget = ({
     }
   }, [book, channelId, end, para, pr, start]);
   return (
-    <span
+    <div
+      ref={divRef}
       style={{
         backgroundColor: highlight ? "rgb(255 255 0 / 20%)" : undefined,
         width: "100%",
       }}
     >
       {children}
-    </span>
+    </div>
   );
 };
 
