@@ -242,9 +242,14 @@ class SentPrController extends Controller
      * @param  \App\Models\SentPr  $sentPr
      * @return \Illuminate\Http\Response
      */
-    public function show(SentPr $sentPr)
+    public function show(string $uid)
     {
         //
+        $pr = SentPr::where('uid',$uid)->first();
+        if(!$pr){
+            return $this->error('no data',404,404);
+        }
+        return $this->ok(new SentPrResource($pr));
     }
 
     /**
