@@ -62,11 +62,11 @@ class ExportOffline extends Command
         $this->call('export:create.db');
 
         //term
-        $this->info('term');
+        $this->info('export term');
         $this->call('export:term');
 
         //导出channel
-        $this->info('channel');
+        $this->info('export channel');
         $this->call('export:channel');
 
         if(!$this->option('shortcut')){
