@@ -8,6 +8,7 @@ import { GetUserSetting } from "../../auth/setting/default";
 import { mode as _mode } from "../../../reducers/article-mode";
 import { IWbw } from "../Wbw/WbwWord";
 import { ArticleMode } from "../../article/Article";
+import SuggestionFocus from "./SuggestionFocus";
 
 interface ILayoutFlex {
   left: number;
@@ -152,7 +153,17 @@ const SentContentWidget = ({
       </div>
       <div style={{ flex: layoutFlex.right }}>
         {translation?.map((item, id) => {
-          return <SentCell key={id} initValue={item} compact={compact} />;
+          return (
+            <SuggestionFocus
+              book={item.book}
+              para={item.para}
+              start={item.wordStart}
+              end={item.wordEnd}
+              channelId={item.channel.id}
+            >
+              <SentCell key={id} initValue={item} compact={compact} />
+            </SuggestionFocus>
+          );
         })}
       </div>
     </div>
