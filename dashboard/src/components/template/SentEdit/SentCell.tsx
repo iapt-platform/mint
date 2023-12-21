@@ -24,6 +24,7 @@ import { delete_ } from "../../../request";
 
 import "./style.css";
 import StudioName from "../../auth/StudioName";
+import SuggestionFocus from "./SuggestionFocus";
 
 interface IWidget {
   initValue?: ISentence;
@@ -307,18 +308,26 @@ const SentCellWidget = ({
                   oldContent={diffText}
                 />
               ) : (
-                <MdView
-                  className="sentence"
-                  style={{
-                    width: "100%",
-                    marginBottom: 0,
-                  }}
-                  placeholder={intl.formatMessage({
-                    id: "labels.input",
-                  })}
-                  html={sentData.html ? sentData.html : sentData.content}
-                  wordWidget={wordWidget}
-                />
+                <SuggestionFocus
+                  book={sentData.book}
+                  para={sentData.para}
+                  start={sentData.wordStart}
+                  end={sentData.wordEnd}
+                  channelId={sentData.channel.id}
+                >
+                  <MdView
+                    className="sentence"
+                    style={{
+                      width: "100%",
+                      marginBottom: 0,
+                    }}
+                    placeholder={intl.formatMessage({
+                      id: "labels.input",
+                    })}
+                    html={sentData.html ? sentData.html : sentData.content}
+                    wordWidget={wordWidget}
+                  />
+                </SuggestionFocus>
               )}
               <div
                 style={{
