@@ -39,7 +39,14 @@ class SearchPaliWbwController extends Controller
         $table = WbwTemplate::whereIn('real',$keyWords)
                             ->groupBy(['book','paragraph'])
                             ->selectRaw('book,paragraph,sum(weight) as rank');
-
+        $whereBold = '';
+        if($request->get('bold')==='on'){
+            $table = $table->where('style','bld');
+            $whereBold = " and style='bld'";
+        }else if($request->get('bold')==='off'){
+            $table = $table->where('style','<>','bld');
+            $whereBold = " and style <> 'bld'";
+        }
         $placeholderWord = implode(",",array_fill(0, count($keyWords), '?')) ;
         $whereWord = "real in ({$placeholderWord})";
         $whereBookId = '';
@@ -48,7 +55,7 @@ class SearchPaliWbwController extends Controller
             $placeholderBookId = implode(",",array_fill(0, count($bookId), '?')) ;
             $whereBookId = " and pcd_book_id in ({$placeholderBookId}) ";
         }
-        $queryCount = "SELECT count(*) FROM ( SELECT book,paragraph FROM wbw_templates WHERE $whereWord $whereBookId  GROUP BY book,paragraph) T;";
+        $queryCount = "SELECT count(*) FROM ( SELECT book,paragraph FROM wbw_templates WHERE $whereWord $whereBookId $whereBold  GROUP BY book,paragraph) T;";
         $count = DB::select($queryCount,array_merge($keyWords,$bookId));
 
         $table =  $table->orderBy('rank','desc');

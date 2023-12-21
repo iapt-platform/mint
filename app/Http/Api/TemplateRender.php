@@ -104,6 +104,15 @@ class TemplateRender{
             $channelId = null;
         }
 
+
+        if(count($this->channelInfo)===0){
+            Log::error('channel is null');
+            $output = [
+                "word" => $word,
+                'innerHtml' => '',
+            ];
+            return $output;
+        }
         $channelInfo = $this->channelInfo[0];
         if(Str::isUuid($channelId)){
             $lang = Channel::where('uid',$channelId)->value('lang');

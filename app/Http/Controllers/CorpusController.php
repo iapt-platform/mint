@@ -469,12 +469,12 @@ class CorpusController extends Controller
                         ->orderBy('paragraph')
                         ->select(['book','paragraph','level','toc'])
                         ->get();
-
+        $maxLen = 3000;
         if($between > 1){
             //有间隔
             $paraTo = $nextChapter - 1;
         }else{
-            if($chapter->chapter_strlen>2000){
+            if($chapter->chapter_strlen > $maxLen){
                 if(count($toc)>0){
                     //有子目录只输出标题和目录
                     $paraTo = $paraFrom;
@@ -490,10 +490,11 @@ class CorpusController extends Controller
         $pFrom = $request->get('from',$paraFrom);
         $pTo = $request->get('to',$paraTo);
         //根据句子的长度找到这次应该加载的段落
-        $maxLen = 3000;
+
         $paliText = PaliText::select(['paragraph','lenght'])
                             ->where('book',$sentId[0])
                             ->whereBetween('paragraph',[$pFrom,$pTo])
+                            ->orderBy('paragraph')
                             ->get();
         $sumLen = 0;
         $currTo = $pTo;
@@ -535,16 +536,18 @@ class CorpusController extends Controller
         $channelInfo = Channel::whereIn("uid",$channels)
                         ->select(['uid','type','name','owner_uid'])->get();
         $indexChannel = [];
-        foreach ($channelInfo as $key => $value) {
-            # code...
-            if($type !== null && $value->type !== $type){
+        foreach ($channels as $key => $channelId) {
+            $channelInfo = Channel::where("uid",$channelId)
+                        ->select(['uid','type','name','owner_uid'])->first();
+            if(!$channelInfo){
+                Log::error('no channel id'.$channelId);
                 continue;
             }
-            $indexChannel[$value->uid] = $value;
-        }
-        foreach ($indexChannel as $uid => $value) {
-            # 查询studio
-            $indexChannel[$uid]->studio = StudioApi::getById($value->owner_uid);
+            if($type !== null && $channelInfo->type !== $type){
+                continue;
+            }
+            $indexChannel[$channelId] = $channelInfo;
+            $indexChannel[$channelId]->studio = StudioApi::getById($channelInfo->owner_uid);
         }
         return $indexChannel;
     }

@@ -40,7 +40,8 @@ class ExportTerm extends Command
      */
     public function handle()
     {
-        Log::debug('task export offline term-table start');
+        Log::info('task export offline term-table start');
+        $startAt = time();
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
@@ -92,7 +93,8 @@ class ExportTerm extends Command
         }
         $dbh->commit();
         $bar->finish();
-        Log::debug('task export offline term-table finished');
+        $this->info(' time='.(time()-$startAt).'s');
+        Log::info('task export offline term-table finished');
         return 0;
     }
 }

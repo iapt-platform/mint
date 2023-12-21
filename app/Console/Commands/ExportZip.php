@@ -68,11 +68,12 @@ class ExportZip extends Command
             $this->error('export offline: no db file {filename}'.$exportFullFileName);
             return 1;
         }
+
         $zipFullFileName = storage_path($exportPath.'/'.$zipFile);
-
-        unlink($zipFullFileName);
-
-        Log::debug('export offline: delete old file:'.$zipFullFileName);
+        if(file_exists($zipFullFileName)){
+            Log::debug('export offline: delete old zip file:'.$zipFullFileName);
+            unlink($zipFullFileName);
+        }
 
         shell_exec("cd ".storage_path($exportPath));
         if($this->argument('format')==='7z'){
