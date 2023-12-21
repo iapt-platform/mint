@@ -67,7 +67,7 @@ const SentCellWidget = ({
     ) {
       setBgColor("#1890ff33");
     } else {
-      setBgColor("unset");
+      setBgColor(undefined);
     }
   }, [discussionMessage, initValue?.id]);
 

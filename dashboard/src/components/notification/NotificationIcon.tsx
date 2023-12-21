@@ -10,6 +10,7 @@ const NotificationIconWidget = () => {
   useEffect(() => {
     let timer = setInterval(() => {
       const url = `/v2/notification?view=to&status=unread&limit=1`;
+      console.info("url", url);
       get<INotificationListResponse>(url).then((json) => {
         if (json.ok) {
           setCount(json.data.count);
@@ -25,6 +26,7 @@ const NotificationIconWidget = () => {
                     icon:
                       process.env.REACT_APP_API_HOST +
                       "/assets/images/wikipali_logo.png",
+                    tag: json.data.rows[0].id,
                   });
                   notification.onclick = (event) => {
                     event.preventDefault(); // 阻止浏览器聚焦于 Notification 的标签页

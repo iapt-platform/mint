@@ -50,6 +50,7 @@ import ToStudio from "../../../components/auth/ToStudio";
 import LoginAlertModal from "../../../components/auth/LoginAlertModal";
 import ShareButton from "../../../components/export/ShareButton";
 import ChannelAlert from "../../../components/channel/ChannelAlert";
+import PrPull from "../../../components/corpus/PrPull";
 
 export interface ISearchParams {
   key: string;
@@ -451,6 +452,7 @@ const Widget = () => {
           </div>
         </div>
       </div>
+      <PrPull uid={searchParams.get("pr")} />
     </div>
   );
 };
