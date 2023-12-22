@@ -13,6 +13,7 @@ use Illuminate\Console\Command;
 use App\Models\UserDict;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Tools\RedisClusters;
 
 class UpgradeDictDefaultMeaning extends Command
 {
@@ -110,7 +111,7 @@ class UpgradeDictDefaultMeaning extends Command
                                 ->select('word','note')
                                 ->cursor() as $word) {
                 if(!empty($word['note'])){
-                    Cache::put("dict_first_mean/{$thisLang}/{$word['word']}", mb_substr($word['note'],0,50,"UTF-8") ,30*24*3600);
+                    RedisClusters::put("dict_first_mean/{$thisLang}/{$word['word']}", mb_substr($word['note'],0,50,"UTF-8") ,30*24*3600);
                 }
                 $bar->advance();
             }
@@ -129,7 +130,7 @@ class UpgradeDictDefaultMeaning extends Command
                             if(!empty($_word) && $word['word'] === $_word ){
                                 Log::info($cacheKey.':'.$cacheValue);
                             }
-                            Cache::put($cacheKey, $cacheValue ,30*24*3600);
+                            RedisClusters::put($cacheKey, $cacheValue ,30*24*3600);
                         }
 
                         if($count % 1000 === 0){

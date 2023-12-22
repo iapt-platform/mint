@@ -3,10 +3,8 @@ namespace App\Tools;
 require_once __DIR__.'/../../public/app/public/casesuf.inc';
 
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 use App\Models\WordPart;
 use App\Models\UserDict;
-use Illuminate\Support\Arr;
 use App\Tools\RedisClusters;
 
 class TurboSplit
@@ -244,7 +242,13 @@ class TurboSplit
                         });
 		$arrWordPart = explode(',',$wordPart);
 		$word_count = $arrWordPart[0];
-		$case_len = $arrWordPart[1];
+        if(isset($arrWordPart[1])){
+            $case_len = $arrWordPart[1];
+        }else{
+            $case_len = 0;
+            Log::error('wordPart error value='.$wordPart);
+        }
+
 		if ($word_count > 0) {
 			$this->log("查到：{$word}:{$word_count}个");
 			$isFound = true;
