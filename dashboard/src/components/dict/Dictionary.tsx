@@ -26,11 +26,16 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
 
   const dictSearch = (value: string, isFactor?: boolean) => {
     console.log("onSearch", value);
-    const word = value.toLowerCase();
-    setWordSearch(word);
+    const currWord = value.toLowerCase();
     document.getElementById("pcd_dict_top")?.scrollIntoView();
     if (typeof onSearch !== "undefined") {
-      onSearch(value, isFactor);
+      if (!isFactor) {
+        onSearch(currWord);
+      } else {
+        setWordSearch(currWord);
+      }
+    } else {
+      setWordSearch(currWord);
     }
   };
   return (
@@ -63,7 +68,7 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
         <Row>
           {compact ? <></> : <Col flex="auto"></Col>}
           <Col flex="1260px">
-            <Compound word={wordSearch} add={split} onSearch={dictSearch} />
+            <Compound word={word} add={split} onSearch={dictSearch} />
             <DictSearch word={wordSearch} compact={compact} />
           </Col>
           {compact ? <></> : <Col flex="auto"></Col>}
