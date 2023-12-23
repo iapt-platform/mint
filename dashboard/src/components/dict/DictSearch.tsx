@@ -4,6 +4,7 @@ import type { IDictContentData, IApiDictContentData } from "./DictContent";
 import { get } from "../../request";
 
 import DictContent from "./DictContent";
+import { Skeleton } from "antd";
 
 interface IWidget {
   word: string | undefined;
@@ -11,6 +12,7 @@ interface IWidget {
 }
 
 const DictSearchWidget = ({ word, compact = false }: IWidget) => {
+  const [loading, setLoading] = useState(false);
   const defaultData: IDictContentData = {
     dictlist: [],
     words: [],
@@ -23,10 +25,13 @@ const DictSearchWidget = ({ word, compact = false }: IWidget) => {
       return;
     }
     const url = `/v2/dict?word=${word}`;
+    console.info("url", url);
+    setLoading(true);
     get<IApiDictContentData>(url)
       .then((json) => {
         setTableData(json.data);
       })
+      .finally(() => setLoading(false))
       .catch((error) => {
         console.error(error);
       });
@@ -34,7 +39,14 @@ const DictSearchWidget = ({ word, compact = false }: IWidget) => {
 
   return (
     <>
-      <DictContent word={word} data={tableData} compact={compact} />
+      {loading ? (
+        <div>
+          <div>searching {word}</div>
+          <Skeleton active />
+        </div>
+      ) : (
+        <DictContent word={word} data={tableData} compact={compact} />
+      )}
     </>
   );
 };

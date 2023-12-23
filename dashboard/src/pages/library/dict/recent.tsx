@@ -10,10 +10,8 @@ const Widget = () => {
   return (
     <div>
       <Dictionary
-        onSearch={(value: string, isFactor?: boolean) => {
-          if (!isFactor) {
-            navigate("/dict/" + value);
-          }
+        onSearch={(value: string) => {
+          navigate("/dict/" + value);
         }}
       />
       <Content>
