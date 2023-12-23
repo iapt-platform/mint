@@ -51,6 +51,7 @@ import LoginAlertModal from "../../../components/auth/LoginAlertModal";
 import ShareButton from "../../../components/export/ShareButton";
 import ChannelAlert from "../../../components/channel/ChannelAlert";
 import PrPull from "../../../components/corpus/PrPull";
+import NotificationIcon from "../../../components/notification/NotificationIcon";
 
 export interface ISearchParams {
   key: string;
@@ -146,107 +147,117 @@ const Widget = () => {
     <div id="article-root">
       <Affix offsetTop={0}>
         <Header
+          className="header"
           style={{
             height: 44,
             lineHeight: 44,
-            display: "flex",
-            justifyContent: "space-between",
-            padding: "5px",
+            paddingLeft: 10,
+            paddingRight: 10,
           }}
         >
-          <div style={{ display: "flex" }} key="left">
-            <MainMenu />
-            <NetStatus style={{ color: "white" }} />
-          </div>
-          <div style={{ display: "flex" }} key="middle"></div>
-          <div style={{ display: "flex" }} key="right">
-            {type === "article" && loadedArticleData ? (
-              <>
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ display: "flex" }} key="left">
+              <MainMenu />
+              <NetStatus style={{ color: "white" }} />
+            </div>
+            <div style={{ display: "flex" }} key="middle"></div>
+            <div
+              style={{ display: "flex", height: 44, alignItems: "center" }}
+              key="right"
+            >
+              {type === "article" && loadedArticleData ? (
+                <>
+                  <Button
+                    ghost
+                    onClick={(event) => {
+                      const url = `/studio/${loadedArticleData.studio?.realName}/article/edit/${loadedArticleData.uid}`;
+                      if (event.ctrlKey || event.metaKey) {
+                        window.open(fullUrl(url), "_blank");
+                      } else {
+                        navigate(url);
+                      }
+                    }}
+                  >
+                    Edit
+                  </Button>
+                </>
+              ) : undefined}
+              <ShareButton
+                type={type as ArticleType}
+                book={searchParams.get("book")}
+                para={searchParams.get("par")}
+                channelId={searchParams.get("channel")}
+                articleId={id}
+                anthologyId={searchParams.get("anthology")}
+              />
+              <SearchButton />
+              <ToStudio />
+              <Avatar placement="bottom" />
+              <NotificationIcon />
+              <ThemeSelect />
+              <ModeSwitch
+                channel={searchParams.get("channel")}
+                currMode={currMode}
+                onModeChange={(e: ArticleMode) => {
+                  let output: any = { mode: e };
+                  searchParams.forEach((value, key) => {
+                    console.log(value, key);
+                    if (key !== "mode") {
+                      output[key] = value;
+                    }
+                  });
+                  setSearchParams(output);
+                }}
+                onChannelChange={(channels: IChannel[], mode: ArticleMode) => {
+                  let output: any = {
+                    mode: mode,
+                  };
+                  if (channels.length > 0) {
+                    output["channel"] = channels
+                      .map((item) => item.id)
+                      .join("_");
+                  }
+                  searchParams.forEach((value, key) => {
+                    console.log(value, key);
+                    if (key !== "mode" && key !== "channel") {
+                      output[key] = value;
+                    }
+                  });
+                  setSearchParams(output);
+                }}
+              />
+              <Tooltip title="文章目录" placement="bottomLeft">
                 <Button
-                  ghost
-                  onClick={(event) => {
-                    const url = `/studio/${loadedArticleData.studio?.realName}/article/edit/${loadedArticleData.uid}`;
-                    if (event.ctrlKey || event.metaKey) {
-                      window.open(fullUrl(url), "_blank");
-                    } else {
-                      navigate(url);
-                    }
-                  }}
-                >
-                  Edit
-                </Button>
-              </>
-            ) : undefined}
-            <ShareButton
-              type={type as ArticleType}
-              book={searchParams.get("book")}
-              para={searchParams.get("par")}
-              channelId={searchParams.get("channel")}
-              articleId={id}
-              anthologyId={searchParams.get("anthology")}
-            />
-            <SearchButton />
-            <Divider type="vertical" />
-            <ToStudio />
-            <Divider type="vertical" />
-            <Avatar placement="bottom" />
-            <Divider type="vertical" />
-            <ThemeSelect />
-            <Divider type="vertical" />
-            <ModeSwitch
-              channel={searchParams.get("channel")}
-              currMode={currMode}
-              onModeChange={(e: ArticleMode) => {
-                let output: any = { mode: e };
-                searchParams.forEach((value, key) => {
-                  console.log(value, key);
-                  if (key !== "mode") {
-                    output[key] = value;
+                  style={{ display: "block", color: "white" }}
+                  icon={<UnorderedListOutlined />}
+                  type="text"
+                  onClick={() => setAnchorNavOpen((value) => !value)}
+                />
+              </Tooltip>
+              <Tooltip title="侧边栏" placement="bottomLeft">
+                <Button
+                  style={{ display: "block", color: "white" }}
+                  icon={<ColumnOutlinedIcon />}
+                  type="text"
+                  onClick={() =>
+                    setRightPanel((value) => {
+                      if (value === "close") {
+                        setAnchorNavShow(false);
+                      } else {
+                        setAnchorNavShow(true);
+                      }
+                      return value === "close" ? "open" : "close";
+                    })
                   }
-                });
-                setSearchParams(output);
-              }}
-              onChannelChange={(channels: IChannel[], mode: ArticleMode) => {
-                let output: any = {
-                  mode: mode,
-                };
-                if (channels.length > 0) {
-                  output["channel"] = channels.map((item) => item.id).join("_");
-                }
-                searchParams.forEach((value, key) => {
-                  console.log(value, key);
-                  if (key !== "mode" && key !== "channel") {
-                    output[key] = value;
-                  }
-                });
-                setSearchParams(output);
-              }}
-            />
-            <Tooltip title="文章目录" placement="bottomLeft">
-              <Button
-                style={{ display: "block", color: "white" }}
-                icon={<UnorderedListOutlined />}
-                type="text"
-                onClick={() => setAnchorNavOpen((value) => !value)}
-              />
-            </Tooltip>
-            <Tooltip title="侧边栏" placement="bottomLeft">
-              <Button
-                style={{ display: "block", color: "white" }}
-                icon={<ColumnOutlinedIcon />}
-                type="text"
-                onClick={() =>
-                  setRightPanel((value) => {
-                    if (value === "close") {
-                      setAnchorNavShow(false);
-                    } else {
-                      setAnchorNavShow(true);
-                    }
-                    return value === "close" ? "open" : "close";
-                  })
-                }
-              />
-            </Tooltip>
+                />
+              </Tooltip>
+            </div>
           </div>
         </Header>
       </Affix>
