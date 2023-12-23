@@ -107,6 +107,7 @@ class MqPr extends Command
                                 'url'=>$link,
                                 'res_type'=> 'suggestion',
                                 'res_id'=> $prData->uid,
+                                'channel'=>$prData->channel->id,
                             ]);
             if($response->failed()){
                 Log::error('send notification failed');

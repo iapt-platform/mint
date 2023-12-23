@@ -8,6 +8,7 @@ use App\Http\Api\UserApi;
 use App\Models\SentPr;
 use App\Models\Sentence;
 use App\Http\Api\PaliTextApi;
+use App\Http\Api\ChannelApi;
 
 class NotificationResource extends JsonResource
 {
@@ -35,6 +36,7 @@ class NotificationResource extends JsonResource
 
         switch ($this->res_type) {
             case 'suggestion':
+                $data['channel'] = ChannelApi::getById($this->channel);
                 $prData = SentPr::where('uid',$this->res_id)->first();
                 if($prData){
                     $link = config('mint.server.dashboard_base_path')."/article/para/{$prData->book_id}-{$prData->paragraph}";
@@ -62,10 +64,7 @@ class NotificationResource extends JsonResource
                         $data['content'] = $content;
                     }
                 }
-
-
                 break;
-
             default:
                 # code...
                 break;
