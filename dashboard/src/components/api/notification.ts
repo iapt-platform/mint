@@ -1,4 +1,5 @@
 import { IUser } from "../auth/User";
+import { IChannel } from "../channel/Channel";
 
 export interface INotificationPutResponse {
   ok: boolean;
@@ -24,6 +25,7 @@ interface INotificationData {
   id: string;
   from: IUser;
   to: IUser;
+  channel: IChannel;
   url?: string;
   title?: string;
   book_title?: string;
