@@ -31,8 +31,9 @@ const SearchVocabularyWidget = ({
   const intervalRef = useRef<number | null>(null); //防抖计时器句柄
 
   useEffect(() => {
-    setInput(value);
     console.log("dict input", value);
+    setInput(value);
+    factorChange(value);
   }, [value]);
 
   const renderItem = (title: string, count: number, meaning?: string) => ({
@@ -70,6 +71,24 @@ const SearchVocabularyWidget = ({
     }
   };
 
+  const factorChange = (word?: string) => {
+    if (typeof word === "undefined") {
+      setFactors([]);
+      return;
+    }
+    const strFactors = word.replaceAll("+", "-");
+    if (strFactors.indexOf("-") >= 0) {
+      setFactors(strFactors.split("-"));
+      if (typeof onSplit !== "undefined") {
+        onSplit(strFactors.replaceAll("-", "+"));
+      }
+    } else {
+      setFactors([]);
+      if (typeof onSplit !== "undefined") {
+        onSplit();
+      }
+    }
+  };
   const search = (value: string) => {
     console.log("search", value);
     stopLookup();
@@ -103,22 +122,10 @@ const SearchVocabularyWidget = ({
         popupClassName="certain-category-search-dropdown"
         dropdownMatchSelectWidth={400}
         options={options}
-        onChange={(value: string, option: ValueType | ValueType[]) => {
+        onChange={(value: string) => {
           console.log("input", value);
           setInput(value);
-
-          const strFactors = value.replaceAll("+", "-");
-          if (strFactors.indexOf("-") >= 0) {
-            setFactors(strFactors.split("-"));
-            if (typeof onSplit !== "undefined") {
-              onSplit(strFactors.replaceAll("-", "+"));
-            }
-          } else {
-            setFactors([]);
-            if (typeof onSplit !== "undefined") {
-              onSplit();
-            }
-          }
+          factorChange(value);
         }}
         onSearch={(value: string) => {
           console.log("auto complete on search", value);
