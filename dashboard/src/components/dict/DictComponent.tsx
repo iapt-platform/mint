@@ -19,15 +19,7 @@ const DictComponentWidget = ({ word }: IWidgetDict) => {
     }
   }, [searchWord]);
 
-  return (
-    <Dictionary
-      word={wordSearch}
-      compact={true}
-      onSearch={(value: string, isFactor?: boolean) => {
-        store.dispatch(lookup(value));
-      }}
-    />
-  );
+  return <Dictionary word={wordSearch} compact={true} />;
 };
 
 export default DictComponentWidget;
