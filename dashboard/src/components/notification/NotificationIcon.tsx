@@ -4,11 +4,18 @@ import { Badge, Popover } from "antd";
 import { get } from "../../request";
 import { INotificationListResponse } from "../api/notification";
 import NotificationList from "./NotificationList";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
 
 const NotificationIconWidget = () => {
   const [count, setCount] = useState<number>();
+  const user = useAppSelector(currentUser);
+
   useEffect(() => {
     let timer = setInterval(() => {
+      if (!user) {
+        return;
+      }
       const now = new Date();
       const notificationUpdatedAt = localStorage.getItem(
         "notification/updatedAt"
@@ -69,23 +76,29 @@ const NotificationIconWidget = () => {
 
   return (
     <>
-      <Popover
-        placement="bottomLeft"
-        arrowPointAtCenter
-        destroyTooltipOnHide
-        content={
-          <div style={{ width: 600 }}>
-            <NotificationList onChange={(unread: number) => setCount(unread)} />
-          </div>
-        }
-        trigger="click"
-      >
-        <Badge count={count} size="small">
-          <span style={{ color: "white", cursor: "pointer" }}>
-            <NotificationIcon />
-          </span>
-        </Badge>{" "}
-      </Popover>
+      {user ? (
+        <Popover
+          placement="bottomLeft"
+          arrowPointAtCenter
+          destroyTooltipOnHide
+          content={
+            <div style={{ width: 600 }}>
+              <NotificationList
+                onChange={(unread: number) => setCount(unread)}
+              />
+            </div>
+          }
+          trigger="click"
+        >
+          <Badge count={count} size="small">
+            <span style={{ color: "white", cursor: "pointer" }}>
+              <NotificationIcon />
+            </span>
+          </Badge>
+        </Popover>
+      ) : (
+        <></>
+      )}
     </>
   );
 };
