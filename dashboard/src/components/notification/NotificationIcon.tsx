@@ -9,10 +9,33 @@ const NotificationIconWidget = () => {
   const [count, setCount] = useState<number>();
   useEffect(() => {
     let timer = setInterval(() => {
+      const now = new Date();
+      const notificationUpdatedAt = localStorage.getItem(
+        "notification/updatedAt"
+      );
+      if (notificationUpdatedAt) {
+        if (now.getTime() - parseInt(notificationUpdatedAt) < 59000) {
+          const notificationCount = localStorage.getItem("notification/count");
+          if (notificationCount !== null) {
+            setCount(parseInt(notificationCount));
+            console.debug("has notification count");
+            return;
+          }
+        }
+      }
+
       const url = `/v2/notification?view=to&status=unread&limit=1`;
       console.info("url", url);
       get<INotificationListResponse>(url).then((json) => {
         if (json.ok) {
+          localStorage.setItem(
+            "notification/updatedAt",
+            now.getTime().toString()
+          );
+          localStorage.setItem(
+            "notification/count",
+            json.data.count.toString()
+          );
           setCount(json.data.count);
           if (json.data.count > 0) {
             const newMessageTime = json.data.rows[0].created_at;
