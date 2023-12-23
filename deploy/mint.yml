@@ -30,11 +30,11 @@
   roles:
     - mint-v2
 
-# - name: run db migration
+# - name: run db migrations
 #   hosts:
 #     - dbm
 #   tasks:
-#     - name: run db-migrate
+#     - name: run laravel db -migrate
 #       become: true
 #       ansible.builtin.shell:
 #         cmd: su www-data -pc "php artisan migrate"
@@ -72,7 +72,7 @@
       ansible.builtin.systemd:
         state: restarted
         name: postgresql
-    - name: run db migrate
+    - name: run tulip db migrate
       ansible.builtin.shell:
         cmd: dbmate up
         chdir: "{{ app_deploy_root }}/agile/rpc/tulip/tulip/db"
