@@ -79,6 +79,22 @@ class NotificationController extends Controller
         return $this->ok(new NotificationResource($new));
     }
 
+    public static function insert($from,$to,$res_type,$res_id,$channel){
+        foreach ($to as $key => $one) {
+            $new = new Notification;
+            $new->id = Str::uuid();
+            $new->from = $from;
+            $new->to = $one;
+            $new->url = '';
+            $new->content = '';
+            $new->res_type = $res_type;
+            $new->res_id = $res_id;
+            $new->channel = $channel;
+            $new->save();
+        }
+        return count($to);
+    }
+
     /**
      * Display the specified resource.
      *
@@ -101,12 +117,20 @@ class NotificationController extends Controller
     public function update(Request $request, Notification $notification)
     {
         //
-        $notification->status = $request->get('status','read');
-        $notification->save();
-        $unread = Notification::where('to',$notification->to)
-                            ->where('status','unread')
-                            ->count();
-        return $this->ok(['unread'=>$unread]);
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'),401,401);
+        }
+        if($notification->to===$user['user_uid']){
+            $notification->status = $request->get('status','read');
+            $notification->save();
+            $unread = Notification::where('to',$notification->to)
+                                ->where('status','unread')
+                                ->count();
+            return $this->ok(['unread'=>$unread]);
+        }else{
+            return $this->error(__('auth.failed'),403,403);
+        }
     }
 
     /**
