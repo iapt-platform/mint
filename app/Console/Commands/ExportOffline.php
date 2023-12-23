@@ -62,26 +62,26 @@ class ExportOffline extends Command
         $this->call('export:create.db');
 
         //term
-        $this->info('export term');
+        $this->info('export term start');
         $this->call('export:term');
 
         //导出channel
-        $this->info('export channel');
+        $this->info('export channel start');
         $this->call('export:channel');
 
         if(!$this->option('shortcut')){
             //tag
-            $this->info('tag');
+            $this->info('export tag start');
             $this->call('export:tag');
             $this->call('export:tag.map');
             //
-            $this->info('pali text');
+            $this->info('export pali text start');
             $this->call('export:pali.text');
             //导出章节索引
-            $this->info('chapter');
+            $this->info('export chapter start');
             $this->call('export:chapter.index');
             //导出译文
-            $this->info('sentence');
+            $this->info('export sentence start');
             $this->call('export:sentence',['--type'=>'translation']);
             $this->call('export:sentence',['--type'=>'nissaya']);
             //导出原文
@@ -89,7 +89,7 @@ class ExportOffline extends Command
         }
 
         $this->info('zip');
-        Log::debug('export offline: db写入完毕');
+        Log::info('export offline: db写入完毕 开始压缩');
 
         sleep(5);
         $this->call('export:zip',['format'=>$this->argument('format')]);
