@@ -11,6 +11,7 @@ import { IUser } from "../auth/User";
 import TimeShow from "../general/TimeShow";
 import { useRef, useState } from "react";
 import Marked from "../general/Marked";
+import { IChannel } from "../channel/Channel";
 
 const { Text } = Typography;
 
@@ -18,6 +19,7 @@ interface INotification {
   id: string;
   from: IUser;
   to: IUser;
+  channel: IChannel;
   url?: string;
   title?: string;
   book_title?: string;
@@ -104,6 +106,7 @@ const NotificationListWidget = ({ onChange }: IWidget) => {
               id: item.id,
               from: item.from,
               to: item.to,
+              channel: item.channel,
               url: item.url,
               title: item.title,
               book_title: item.book_title,
@@ -181,6 +184,7 @@ const NotificationListWidget = ({ onChange }: IWidget) => {
             return (
               <Space>
                 <TimeShow createdAt={row.created_at} />
+                <Tag color="#87d068">{row.channel.name}</Tag>
                 <Tag color="blue">{row.res_type}</Tag>
               </Space>
             );
