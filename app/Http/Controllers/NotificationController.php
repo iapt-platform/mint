@@ -73,6 +73,7 @@ class NotificationController extends Controller
         $new->content = $request->get('content');
         $new->res_type = $request->get('res_type');
         $new->res_id = $request->get('res_id');
+        $new->channel = $request->get('channel');
         $new->save();
 
         return $this->ok(new NotificationResource($new));
