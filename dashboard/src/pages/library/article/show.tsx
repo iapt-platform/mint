@@ -196,9 +196,9 @@ const Widget = () => {
                 articleId={id}
                 anthologyId={searchParams.get("anthology")}
               />
-              <SearchButton />
-              <ToStudio />
-              <Avatar placement="bottom" />
+              <SearchButton style={{ marginRight: 8 }} />
+              <ToStudio style={{ marginRight: 8 }} />
+              <Avatar placement="bottom" style={{ marginRight: 8 }} />
               <NotificationIcon />
               <ThemeSelect />
               <ModeSwitch
