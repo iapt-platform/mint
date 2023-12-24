@@ -13,6 +13,7 @@ use App\Models\PaliSentence;
 use App\Tools\WebHook as WebHookSend;
 use App\Http\Api\MdRender;
 use App\Http\Api\PaliTextApi;
+use App\Http\Controllers\NotificationController;
 
 class MqPr extends Command
 {
@@ -23,6 +24,7 @@ class MqPr extends Command
      */
     protected $signature = 'mq:pr';
 
+    protected $ver = '2023-12-24';
     /**
      * The console command description.
      *
@@ -52,15 +54,15 @@ class MqPr extends Command
         }
         $exchange = 'router';
         $queue = 'suggestion';
-        $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
-        Log::debug("mq:pr start.");
+        $this->info(" [*] Waiting for {$queue}. Ver. ".$this->ver);
+        Log::debug("mq:pr start. ver=".$this->ver);
         Mq::worker($exchange,$queue,function ($message){
             /**生成消息内容 */
 
             $msgTitle = '修改建议';
             $prData = $message->data;
             $sent_num = "{$prData->book}-{$prData->paragraph}-{$prData->word_start}-{$prData->word_end}";
-            $this->info('request'.$sent_num);
+            $this->info('ver='.$this->ver.' request'.$sent_num);
 
             $username = $prData->editor->nickName;
             $palitext = PaliSentence::where('book',$prData->book)
@@ -73,7 +75,7 @@ class MqPr extends Command
                                 ->where('word_start',$prData->word_start)
                                 ->where('word_end',$prData->word_end)
                                 ->where('channel_uid',$prData->channel->id)
-                                ->value('content');
+                                ->first();
             $prtext = mb_substr($prData->content,0,140,"UTF-8");
 
             $link = config('app.url')."/pcd/article/para/{$prData->book}-{$prData->paragraph}";
@@ -84,35 +86,30 @@ class MqPr extends Command
             $msgContent .= ">句子编号：<font color=\"info\">{$sent_num}</font>\n";
             $msgContent .= "欢迎大家[点击链接]({$link})查看并讨论。";
 
-            //标题
-            if($prData->book<1000){
-                $path = json_decode(PaliTextApi::getChapterPath($prData->book,$prData->paragraph)) ;
-                $title = $path[0]->title;
-            }else{
-                $title = '';
-            }
 
-            $notificationContent = "**{$title}**\n\n";
-            $notificationContent .= ">{$orgText}\n\n";
-            $notificationContent .= "{$prtext}";
             $result=0;
             //发送站内信
-            $url = config('app.url').'/api/v2/notification';
-            $response = Http::withToken($message->token)
-                            ->post($url,
-                            [
-                                'to'=> $prData->channel->studio_id,
-                                'title'=> $msgTitle,
-                                'content'=> $notificationContent,
-                                'url'=>$link,
-                                'res_type'=> 'suggestion',
-                                'res_id'=> $prData->uid,
-                                'channel'=>$prData->channel->id,
-                            ]);
-            if($response->failed()){
-                Log::error('send notification failed');
-            }else{
-                $this->info("send notification");
+            try{
+                $sendTo = array();
+                $sendTo[] = $prData->channel->studio_id;
+                if($orgText){
+                    //原文作者
+                    if(!in_array($orgText->editor_uid,$sendTo)){
+                        $sendTo[] = $orgText->editor_uid;
+                    }
+                    //原文采纳者
+                    if(!empty($orgText->acceptor_uid) && !in_array($orgText->acceptor_uid,$sendTo)){
+                        $sendTo[] = $orgText->acceptor_uid;
+                    }
+                }
+                $sendCount = NotificationController::insert($prData->editor->id,
+                                                $sendTo,
+                                                'suggestion',
+                                                $prData->uid,
+                                                $prData->channel->id);
+                $this->info("send notification success to [".$sendCount.'] users');
+            }catch(\Exception $e){
+                Log::error('send notification failed',['exception'=>$e]);
             }
 
             //发送webhook
