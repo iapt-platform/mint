@@ -1,4 +1,4 @@
-import { Affix, Button, Divider, Space, Tooltip } from "antd";
+import { Affix, Button, Space, Tooltip } from "antd";
 import { Header } from "antd/lib/layout/layout";
 import { Key } from "antd/lib/table/interface";
 import { useEffect, useState } from "react";
@@ -150,7 +150,7 @@ const Widget = () => {
           className="header"
           style={{
             height: 44,
-            lineHeight: 44,
+            lineHeight: "44px",
             paddingLeft: 10,
             paddingRight: 10,
           }}
