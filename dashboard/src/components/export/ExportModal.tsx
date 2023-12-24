@@ -70,16 +70,16 @@ const ExportModalWidget = ({
     filenameRef.current = filename;
   });
   const queryStatus = () => {
-    console.log("timer", filenameRef.current);
+    console.debug("timer", filenameRef.current);
     if (typeof filenameRef.current === "undefined") {
       return;
     }
     const url = `/v2/export/${filenameRef.current}`;
-    console.log("url", url);
+    console.info("export url", url);
     get<IExportStatusResponse>(url)
       .then((json) => {
         if (json.ok) {
-          console.log("filename", json);
+          console.info("filename", json);
           setExportStatus(json.data.status);
           if (json.data.status.progress === 1) {
             setFilename(undefined);
