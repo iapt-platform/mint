@@ -24,6 +24,7 @@ class MqPr extends Command
      */
     protected $signature = 'mq:pr';
 
+    protected $ver = '2023-12-24';
     /**
      * The console command description.
      *
@@ -53,15 +54,15 @@ class MqPr extends Command
         }
         $exchange = 'router';
         $queue = 'suggestion';
-        $this->info(" [*] Waiting for {$queue}. Ver. 2023-12-24");
-        Log::debug("mq:pr start.");
+        $this->info(" [*] Waiting for {$queue}. Ver. ".$this->ver);
+        Log::debug("mq:pr start. ver=".$this->ver);
         Mq::worker($exchange,$queue,function ($message){
             /**生成消息内容 */
 
             $msgTitle = '修改建议';
             $prData = $message->data;
             $sent_num = "{$prData->book}-{$prData->paragraph}-{$prData->word_start}-{$prData->word_end}";
-            $this->info('request'.$sent_num);
+            $this->info('ver='.$this->ver.' request'.$sent_num);
 
             $username = $prData->editor->nickName;
             $palitext = PaliSentence::where('book',$prData->book)
