@@ -14,6 +14,7 @@ const NotificationIconWidget = () => {
   useEffect(() => {
     let timer = setInterval(() => {
       if (!user) {
+        console.debug("未登录 不查询 notification");
         return;
       }
       const now = new Date();
@@ -32,7 +33,7 @@ const NotificationIconWidget = () => {
       }
 
       const url = `/v2/notification?view=to&status=unread&limit=1`;
-      console.info("url", url);
+      console.info("notification url", url);
       get<INotificationListResponse>(url).then((json) => {
         if (json.ok) {
           localStorage.setItem(
