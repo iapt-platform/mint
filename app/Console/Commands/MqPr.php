@@ -53,7 +53,7 @@ class MqPr extends Command
         }
         $exchange = 'router';
         $queue = 'suggestion';
-        $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
+        $this->info(" [*] Waiting for {$queue}. Ver. 2023-12-24");
         Log::debug("mq:pr start.");
         Mq::worker($exchange,$queue,function ($message){
             /**生成消息内容 */
@@ -106,7 +106,7 @@ class MqPr extends Command
                                                 'suggestion',
                                                 $prData->uid,
                                                 $prData->channel->id);
-                $this->info("send notification success count=".$sendCount);
+                $this->info("send notification success to [".$sendCount.'] users');
             }catch(\Exception $e){
                 Log::error('send notification failed',['exception'=>$e]);
             }
