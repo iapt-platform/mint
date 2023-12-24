@@ -6,6 +6,7 @@ import UiLangSelect from "../general/UiLangSelect";
 import SignInAvatar from "../auth/SignInAvatar";
 import ToLibrary from "../auth/ToLibrary";
 import ThemeSelect from "../general/ThemeSelect";
+import NotificationIcon from "../notification/NotificationIcon";
 
 const { Search } = Input;
 const { Header } = Layout;
@@ -47,6 +48,7 @@ const HeadBarWidget = () => {
           <Space>
             <ToLibrary />
             <SignInAvatar />
+            <NotificationIcon />
             <UiLangSelect />
             <ThemeSelect />
           </Space>

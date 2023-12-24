@@ -20,8 +20,9 @@ const { Title } = Typography;
 
 interface IWidget {
   placement?: TooltipPlacement;
+  style?: React.CSSProperties;
 }
-const AvatarWidget = ({ placement = "bottomRight" }: IWidget) => {
+const AvatarWidget = ({ style, placement = "bottomRight" }: IWidget) => {
   const intl = useIntl();
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>();
@@ -82,13 +83,15 @@ const AvatarWidget = ({ placement = "bottomRight" }: IWidget) => {
   return (
     <>
       <Popover content={user ? userCard : login} placement={placement}>
-        <Avatar
-          style={{ backgroundColor: user ? "#87d068" : "gray" }}
-          icon={<UserOutlined />}
-          size="small"
-        >
-          {user ? nickName?.slice(0, 1) : undefined}
-        </Avatar>
+        <span style={style}>
+          <Avatar
+            style={{ backgroundColor: user ? "#87d068" : "gray" }}
+            icon={<UserOutlined />}
+            size="small"
+          >
+            {user ? nickName?.slice(0, 1) : undefined}
+          </Avatar>
+        </span>
       </Popover>
     </>
   );
