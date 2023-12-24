@@ -12,7 +12,7 @@ import TimeShow from "../general/TimeShow";
 import TermModal from "./TermModal";
 import { useState } from "react";
 import StudioName from "../auth/StudioName";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 
@@ -29,7 +29,9 @@ const TermItemWidget = ({ data }: IWidget) => {
         title={
           <Space direction="vertical" size={3}>
             <Space>
-              <Text strong>{data?.meaning}</Text>
+              <Link to={`/term/show/${data?.guid}`}>
+                <Text strong>{data?.meaning}</Text>
+              </Link>
               <Text type="secondary">{data?.other_meaning}</Text>
             </Space>
             <Space style={{ fontSize: "80%" }}>
