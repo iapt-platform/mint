@@ -6,12 +6,13 @@ import { INotificationListResponse } from "../api/notification";
 import NotificationList from "./NotificationList";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
+import { IUser } from "../auth/User";
 
 const NotificationIconWidget = () => {
   const [count, setCount] = useState<number>();
-  const user = useAppSelector(currentUser);
+  const currUser = useAppSelector(currentUser);
 
-  const queryNotification = () => {
+  const queryNotification = (user?: IUser) => {
     if (!user) {
       console.debug("未登录 不查询 notification");
       return;
@@ -67,15 +68,15 @@ const NotificationIconWidget = () => {
     });
   };
   useEffect(() => {
-    let timer = setInterval(() => queryNotification(), 1000 * 60);
+    let timer = setInterval(queryNotification, 1000 * 60, currUser);
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [currUser]);
 
   return (
     <>
-      {user ? (
+      {currUser ? (
         <Popover
           placement="bottomLeft"
           arrowPointAtCenter
