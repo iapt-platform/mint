@@ -10,18 +10,31 @@ import MdView from "../template/MdView";
 import UserName from "../auth/UserName";
 import TimeShow from "../general/TimeShow";
 import TermModal from "./TermModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StudioName from "../auth/StudioName";
 import { Link, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../hooks";
+import { clickedTerm } from "../../reducers/term-click";
 
 const { Text } = Typography;
 
 interface IWidget {
   data?: ITermDataResponse;
+  onTermClick?: Function;
 }
-const TermItemWidget = ({ data }: IWidget) => {
+const TermItemWidget = ({ data, onTermClick }: IWidget) => {
   const [openTermModal, setOpenTermModal] = useState(false);
   const navigate = useNavigate();
+  const termClicked = useAppSelector(clickedTerm);
+
+  useEffect(() => {
+    console.debug("on redux", termClicked, data);
+    if (termClicked?.channelId === data?.channel?.id) {
+      if (typeof onTermClick !== "undefined") {
+        onTermClick(termClicked);
+      }
+    }
+  }, [data?.channel?.id, termClicked]);
 
   return (
     <>
