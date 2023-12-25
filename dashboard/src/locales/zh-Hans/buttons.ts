@@ -78,6 +78,7 @@ const items = {
   "buttons.use.as.guest": "以访客身份继续使用",
   "buttons.got.it": "知道了",
   "buttons.statistic": "统计",
+  "buttons.relate": "关联",
 };
 
 export default items;

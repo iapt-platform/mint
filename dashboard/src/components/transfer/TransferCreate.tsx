@@ -1,15 +1,11 @@
 import { ModalForm, ProForm } from "@ant-design/pro-components";
 import { Alert, Form, message, notification } from "antd";
-import { TResType } from "./TransferList";
 import { post } from "../../request";
-import {
-  ITransferCreateResponse,
-  ITransferRequest,
-  ITransferResponse,
-} from "../api/Transfer";
+import { ITransferCreateResponse, ITransferRequest } from "../api/Transfer";
 import { useIntl } from "react-intl";
 import UserSelect from "../template/UserSelect";
 import { useEffect, useState } from "react";
+import { TResType } from "../discussion/DiscussionListCard";
 
 interface IWidget {
   studioName?: string;

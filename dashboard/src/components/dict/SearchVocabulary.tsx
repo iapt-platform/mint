@@ -30,8 +30,9 @@ const SearchVocabularyWidget = ({
   const [factors, setFactors] = useState<string[]>([]);
   const intervalRef = useRef<number | null>(null); //防抖计时器句柄
 
+  console.debug("value", value);
   useEffect(() => {
-    console.log("dict input", value);
+    console.debug("dict input", value);
     setInput(value);
     factorChange(value);
   }, [value]);
@@ -72,7 +73,7 @@ const SearchVocabularyWidget = ({
   };
 
   const factorChange = (word?: string) => {
-    if (typeof word === "undefined") {
+    if (typeof word === "undefined" || word.includes(":")) {
       setFactors([]);
       return;
     }

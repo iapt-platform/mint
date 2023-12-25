@@ -16,7 +16,13 @@ import { currentUser as _currentUser } from "../../reducers/current-user";
 import { CommentOutlinedIcon, TemplateOutlinedIcon } from "../../assets/icon";
 import { ISentenceResponse } from "../api/Corpus";
 
-export type TResType = "article" | "channel" | "chapter" | "sentence" | "wbw";
+export type TResType =
+  | "article"
+  | "channel"
+  | "chapter"
+  | "sentence"
+  | "wbw"
+  | "term";
 
 interface IWidget {
   resId?: string;

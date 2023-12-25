@@ -14,6 +14,8 @@ import WbwDetailFm from "./WbwDetailFm";
 import WbwDetailParent2 from "./WbwDetailParent2";
 import WbwDetailRelation from "./WbwDetailRelation";
 import WbwDetailFactor from "./WbwDetailFactor";
+import store from "../../../store";
+import { lookup } from "../../../reducers/command";
 
 const { Panel } = Collapse;
 
@@ -256,10 +258,28 @@ const WbwDetailBasicWidget = ({
           </Panel>
           <Panel
             header={
-              <Space>
-                {"关联"}
-                <Badge color="geekblue" count={relationCount} />
-              </Space>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Space>
+                  {intl.formatMessage({ id: "buttons.relate" })}
+                  <Badge color="geekblue" count={relationCount} />
+                </Space>
+                <Button
+                  type="link"
+                  onClick={() => {
+                    if (data.case && data.case?.value) {
+                      const caseParts = data.case?.value
+                        .split("$")
+                        .map((item) => item.replaceAll(".", ""));
+                      const endCase = caseParts[caseParts.length - 1];
+                      store.dispatch(
+                        lookup(`type:term word:${endCase}.relations`)
+                      );
+                    }
+                  }}
+                >
+                  {"语法手册"}
+                </Button>
+              </div>
             }
             key="relation"
             style={{ display: showRelation ? "block" : "none" }}

@@ -78,6 +78,7 @@ const items = {
   "buttons.use.as.guest": "use as guest",
   "buttons.got.it": "I got it",
   "buttons.statistic": "statistic",
+  "buttons.relate": "relate",
 };
 
 export default items;

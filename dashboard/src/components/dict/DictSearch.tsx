@@ -13,6 +13,7 @@ interface IWidget {
 
 const DictSearchWidget = ({ word, compact = false }: IWidget) => {
   const [loading, setLoading] = useState(false);
+
   const defaultData: IDictContentData = {
     dictlist: [],
     words: [],
@@ -20,10 +21,7 @@ const DictSearchWidget = ({ word, compact = false }: IWidget) => {
   };
   const [tableData, setTableData] = useState<IDictContentData>(defaultData);
 
-  useEffect(() => {
-    if (typeof word === "undefined") {
-      return;
-    }
+  const fetchDict = (word: string) => {
     const url = `/v2/dict?word=${word}`;
     console.info("url", url);
     setLoading(true);
@@ -35,6 +33,12 @@ const DictSearchWidget = ({ word, compact = false }: IWidget) => {
       .catch((error) => {
         console.error(error);
       });
+  };
+  useEffect(() => {
+    if (typeof word === "undefined") {
+      return;
+    }
+    fetchDict(word);
   }, [word, setTableData]);
 
   return (

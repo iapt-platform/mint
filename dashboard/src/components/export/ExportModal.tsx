@@ -70,7 +70,6 @@ const ExportModalWidget = ({
     filenameRef.current = filename;
   });
   const queryStatus = () => {
-    console.debug("timer", filenameRef.current);
     if (typeof filenameRef.current === "undefined") {
       return;
     }
