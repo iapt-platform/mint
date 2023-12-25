@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
+
 use App\Http\Api\ChannelApi;
 use App\Http\Api\StudioApi;
 use App\Http\Api\UserApi;
@@ -42,7 +44,7 @@ class TermResource extends JsonResource
         if($request->has('channel') && !empty($request->get('channel'))){
             $channels = explode('_',$request->get('channel')) ;
         }else{
-            if(!empty($this->channal)){
+            if(!empty($this->channal) && Str::isUuid($this->channal)){
                 $channelId = $this->channal;
                 $data["channel"] = ChannelApi::getById($this->channal);
             }else{
