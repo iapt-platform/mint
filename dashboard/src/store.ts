@@ -27,6 +27,7 @@ import wbwReducer from "./reducers/wbw";
 import termOrderReducer from "./reducers/term-order";
 import focusReducer from "./reducers/focus";
 import prLoadReducer from "./reducers/pr-load";
+import termClickReducer from "./reducers/term-click";
 
 const store = configureStore({
   reducer: {
@@ -57,6 +58,7 @@ const store = configureStore({
     termOrder: termOrderReducer,
     focus: focusReducer,
     prLoad: prLoadReducer,
+    termClick: termClickReducer,
   },
 });
 

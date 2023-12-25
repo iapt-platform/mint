@@ -8,16 +8,34 @@ import {
   ITermResponse,
 } from "../api/Term";
 import TermItem from "./TermItem";
+import { ITerm } from "./TermEdit";
 const { Title } = Typography;
 
 interface IWidget {
   word?: string;
   wordId?: string;
   compact?: boolean;
+  onIdChange?: Function;
 }
-const TermSearchWidget = ({ word, wordId, compact = false }: IWidget) => {
+const TermSearchWidget = ({
+  word,
+  wordId,
+  compact = false,
+  onIdChange,
+}: IWidget) => {
   const [tableData, setTableData] = useState<ITermDataResponse[]>();
 
+  const loadById = (id: string) => {
+    const url = `/v2/terms/${id}`;
+    console.info("term url", url);
+    get<ITermResponse>(url)
+      .then((json) => {
+        setTableData([json.data]);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   useEffect(() => {
     if (typeof word === "undefined" && typeof wordId === "undefined") {
       return;
@@ -32,14 +50,7 @@ const TermSearchWidget = ({ word, wordId, compact = false }: IWidget) => {
           console.error(error);
         });
     } else if (wordId) {
-      const url = `/v2/terms/${wordId}`;
-      get<ITermResponse>(url)
-        .then((json) => {
-          setTableData([json.data]);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      loadById(wordId);
     }
   }, [word, wordId]);
 
@@ -55,7 +66,19 @@ const TermSearchWidget = ({ word, wordId, compact = false }: IWidget) => {
             dataSource={tableData}
             renderItem={(item) => (
               <List.Item>
-                <TermItem data={item} />
+                <TermItem
+                  data={item}
+                  onTermClick={(value: ITerm) => {
+                    console.debug("on term click", value);
+                    if (typeof onIdChange === "undefined") {
+                      if (value.id) {
+                        loadById(value.id);
+                      }
+                    } else {
+                      onIdChange(value.id);
+                    }
+                  }}
+                />
               </List.Item>
             )}
           />

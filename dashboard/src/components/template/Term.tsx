@@ -14,6 +14,7 @@ import { get } from "../../request";
 import { fullUrl } from "../../utils";
 import lodash from "lodash";
 import { order, push } from "../../reducers/term-order";
+import { click } from "../../reducers/term-click";
 
 const { Text, Title } = Typography;
 
@@ -231,7 +232,13 @@ export const TermCtl = ({
           }
           placement="bottom"
         >
-          <Typography.Link style={{ color: community ? "green" : undefined }}>
+          <Typography.Link
+            style={{ color: community ? "green" : undefined }}
+            onClick={() => {
+              console.debug("term send redux");
+              store.dispatch(click(termData));
+            }}
+          >
             {termData?.meaning
               ? termData?.meaning
               : termData?.word
