@@ -46,7 +46,7 @@ const ParaShellCtl = ({
       style={{
         border: isFocus
           ? "2px solid #e35f00bd "
-          : "2px solid rgba(0, 107, 255, 0.2)",
+          : "2px solid rgba(128, 128, 128, 0.3)",
         borderRadius: 6,
         marginTop: 20,
         marginBottom: 28,
@@ -60,7 +60,7 @@ const ParaShellCtl = ({
           marginLeft: -6,
           border: isFocus
             ? "2px solid #e35f00bd "
-            : "2px solid rgba(0, 107, 255, 0.2)",
+            : "2px solid rgba(128, 128, 128, 0.3)",
           borderRadius: "6px",
         }}
       >
