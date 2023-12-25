@@ -32,7 +32,7 @@ const NotificationIconWidget = () => {
       }
     }
 
-    const url = `/v2/notification?view=to&status=unread&limit=1`;
+    const url = `/v2/notification?view=to&limit=1`;
     console.info("notification url", url);
     get<INotificationListResponse>(url).then((json) => {
       if (json.ok) {
@@ -40,8 +40,8 @@ const NotificationIconWidget = () => {
           "notification/updatedAt",
           now.getTime().toString()
         );
-        localStorage.setItem("notification/count", json.data.count.toString());
-        setCount(json.data.count);
+        localStorage.setItem("notification/count", json.data.unread.toString());
+        setCount(json.data.unread);
         if (json.data.count > 0) {
           const newMessageTime = json.data.rows[0].created_at;
           const lastTime = localStorage.getItem("notification/new");
