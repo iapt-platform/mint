@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Col, List, Row, Typography } from "antd";
+import { Col, List, Row, Skeleton, Typography } from "antd";
 
 import { get } from "../../request";
 import {
@@ -24,14 +24,17 @@ const TermSearchWidget = ({
   onIdChange,
 }: IWidget) => {
   const [tableData, setTableData] = useState<ITermDataResponse[]>();
+  const [loading, setLoading] = useState(false);
 
   const loadById = (id: string) => {
     const url = `/v2/terms/${id}`;
     console.info("term url", url);
+    setLoading(true);
     get<ITermResponse>(url)
       .then((json) => {
         setTableData([json.data]);
       })
+      .finally(() => setLoading(false))
       .catch((error) => {
         console.error(error);
       });
@@ -40,16 +43,19 @@ const TermSearchWidget = ({
     if (typeof word === "undefined" && typeof wordId === "undefined") {
       return;
     }
-    if (word) {
+    if (word && word.length > 0) {
       const url = `/v2/terms?view=word&word=${word}`;
+      console.info("term url", url);
+      setLoading(true);
       get<ITermListResponse>(url)
         .then((json) => {
           setTableData(json.data.rows);
         })
+        .finally(() => setLoading(false))
         .catch((error) => {
           console.error(error);
         });
-    } else if (wordId) {
+    } else if (wordId && wordId.length > 0) {
       loadById(wordId);
     }
   }, [word, wordId]);
@@ -59,29 +65,30 @@ const TermSearchWidget = ({
       <Row>
         <Col flex="200px">{compact ? <></> : <></>}</Col>
         <Col flex="760px">
-          <Title>{word}</Title>
-          <List
-            itemLayout="vertical"
-            size="large"
-            dataSource={tableData}
-            renderItem={(item) => (
-              <List.Item>
-                <TermItem
-                  data={item}
-                  onTermClick={(value: ITerm) => {
-                    console.debug("on term click", value);
-                    if (typeof onIdChange === "undefined") {
-                      if (value.id) {
-                        loadById(value.id);
+          <Title level={4}>{word}</Title>
+          {loading ? (
+            <Skeleton active />
+          ) : (
+            <div>
+              {tableData?.map((item, id) => {
+                return (
+                  <TermItem
+                    data={item}
+                    onTermClick={(value: ITerm) => {
+                      console.debug("on term click", value);
+                      if (typeof onIdChange === "undefined") {
+                        if (value.id) {
+                          loadById(value.id);
+                        }
+                      } else {
+                        onIdChange(value.id);
                       }
-                    } else {
-                      onIdChange(value.id);
-                    }
-                  }}
-                />
-              </List.Item>
-            )}
-          />
+                    }}
+                  />
+                );
+              })}
+            </div>
+          )}
         </Col>
         <Col flex="200px"></Col>
       </Row>

@@ -10,13 +10,17 @@ interface IWidget {
   word?: string;
   wordId?: string;
   compact?: boolean;
+  hideInput?: boolean;
   onSearch?: Function;
+  onIdChange?: Function;
 }
 const TermShowWidget = ({
   word,
   wordId,
   compact = false,
+  hideInput = false,
   onSearch,
+  onIdChange,
 }: IWidget) => {
   const [split, setSplit] = useState<string>();
   const [wordSearch, setWordSearch] = useState<string>();
@@ -35,34 +39,49 @@ const TermShowWidget = ({
   };
   return (
     <div ref={setContainer}>
-      <Affix offsetTop={0} target={compact ? () => container : undefined}>
-        <div
-          style={{
-            backgroundColor: "rgba(100,100,100,0.3)",
-            backdropFilter: "blur(5px)",
-          }}
-        >
-          <Row style={{ paddingTop: "0.5em", paddingBottom: "0.5em" }}>
-            {compact ? <></> : <Col flex="auto"></Col>}
-            <Col flex="560px">
-              <SearchVocabulary
-                value={word}
-                onSearch={dictSearch}
-                onSplit={(word: string | undefined) => {
-                  console.log("onSplit", word);
-                  setSplit(word);
-                }}
-              />
-            </Col>
-            {compact ? <></> : <Col flex="auto"></Col>}
-          </Row>
-        </div>
-      </Affix>
+      {hideInput ? (
+        <></>
+      ) : (
+        <Affix offsetTop={0} target={compact ? () => container : undefined}>
+          <div
+            style={{
+              backgroundColor: "rgba(100,100,100,0.3)",
+              backdropFilter: "blur(5px)",
+            }}
+          >
+            <Row style={{ paddingTop: "0.5em", paddingBottom: "0.5em" }}>
+              {compact ? <></> : <Col flex="auto"></Col>}
+              <Col flex="560px">
+                <SearchVocabulary
+                  value={word}
+                  onSearch={dictSearch}
+                  onSplit={(word: string | undefined) => {
+                    console.log("onSplit", word);
+                    setSplit(word);
+                  }}
+                />
+              </Col>
+              {compact ? <></> : <Col flex="auto"></Col>}
+            </Row>
+          </div>
+        </Affix>
+      )}
+
       <Content style={{ minHeight: 700 }}>
         <Row>
           {compact ? <></> : <Col flex="auto"></Col>}
           <Col flex="1260px">
-            <TermSearch word={wordSearch} wordId={wordId} compact={compact} />
+            <TermSearch
+              word={wordSearch}
+              wordId={wordId}
+              compact={compact}
+              onIdChange={(value: string) => {
+                console.debug("term onIdChange", value);
+                if (typeof onIdChange !== "undefined") {
+                  onIdChange(value);
+                }
+              }}
+            />
           </Col>
           {compact ? <></> : <Col flex="auto"></Col>}
         </Row>

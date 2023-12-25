@@ -14,7 +14,10 @@ import { useEffect, useState } from "react";
 import StudioName from "../auth/StudioName";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
-import { clickedTerm } from "../../reducers/term-click";
+import { click, clickedTerm } from "../../reducers/term-click";
+import store from "../../store";
+import "../article/article.css";
+import Discussion from "../discussion/Discussion";
 
 const { Text } = Typography;
 
@@ -24,21 +27,27 @@ interface IWidget {
 }
 const TermItemWidget = ({ data, onTermClick }: IWidget) => {
   const [openTermModal, setOpenTermModal] = useState(false);
+  const [showDiscussion, setShowDiscussion] = useState(false);
   const navigate = useNavigate();
   const termClicked = useAppSelector(clickedTerm);
 
   useEffect(() => {
     console.debug("on redux", termClicked, data);
+    if (typeof termClicked === "undefined") {
+      return;
+    }
     if (termClicked?.channelId === data?.channel?.id) {
+      store.dispatch(click(null));
       if (typeof onTermClick !== "undefined") {
         onTermClick(termClicked);
       }
     }
-  }, [data?.channel?.id, termClicked]);
+  }, [data, termClicked]);
 
   return (
     <>
       <Card
+        bodyStyle={{ padding: 8 }}
         title={
           <Space direction="vertical" size={3}>
             <Space>
@@ -98,7 +107,18 @@ const TermItemWidget = ({ data, onTermClick }: IWidget) => {
           </Dropdown>
         }
       >
-        <MdView html={data?.html} />
+        <div className="pcd_article">
+          <MdView html={data?.html} />
+        </div>
+        {showDiscussion ? (
+          <Discussion resType="term" resId={data?.guid} />
+        ) : (
+          <div style={{ textAlign: "right" }}>
+            <Button type="link" onClick={() => setShowDiscussion(true)}>
+              纠错
+            </Button>
+          </div>
+        )}
       </Card>
       <TermModal
         id={data?.guid}
