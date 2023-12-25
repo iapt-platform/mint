@@ -17,10 +17,9 @@ import {
 } from "../api/Transfer";
 import { useIntl } from "react-intl";
 import { BaseType } from "antd/lib/typography/Base";
+import { TResType } from "../discussion/DiscussionListCard";
 
 const { Text } = Typography;
-
-export type TResType = "article" | "channel" | "chapter" | "sentence" | "wbw";
 
 interface ITransfer {
   id: string;
