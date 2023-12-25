@@ -32,7 +32,7 @@ const NotificationIconWidget = () => {
       }
     }
 
-    const url = `/v2/notification?view=to&status=unread&limit=1`;
+    const url = `/v2/notification?view=to&limit=1`;
     console.info("notification url", url);
     get<INotificationListResponse>(url).then((json) => {
       if (json.ok) {
