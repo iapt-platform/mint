@@ -4,6 +4,7 @@ import { Layout, Affix, Col, Row } from "antd";
 import DictSearch from "./DictSearch";
 import SearchVocabulary from "./SearchVocabulary";
 import Compound from "./Compound";
+import TermShow from "../term/TermShow";
 
 const { Content } = Layout;
 
@@ -16,24 +17,59 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
   const [split, setSplit] = useState<string>();
   const [wordSearch, setWordSearch] = useState<string>();
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  const [dictType, setDictType] = useState("dict");
+  const [wordInput, setWordInput] = useState(word);
+  const [wordId, setWordId] = useState<string>();
 
   useEffect(() => {
-    if (word !== wordSearch) {
-      setWordSearch(word?.toLowerCase());
-      document.getElementById("pcd_dict_top")?.scrollIntoView();
-    }
+    console.debug("param word change", word);
+    setWordInput(word);
   }, [word]);
 
-  const dictSearch = (value: string, isFactor?: boolean) => {
-    console.log("onSearch", value);
-    const currWord = value.toLowerCase();
+  const wordChange = (value?: string) => {
+    console.debug("has ':'", value, value?.includes(":"));
+    let currWord: string | undefined = "";
+    if (value?.includes(":")) {
+      const param = value.split(" ");
+      param.forEach((value) => {
+        const kv = value.split(":");
+        if (kv.length === 2) {
+          switch (kv[0]) {
+            case "type":
+              setDictType(kv[1]);
+              break;
+            case "word":
+              currWord = kv[1];
+              break;
+            case "id":
+              setWordId(kv[1]);
+              break;
+            default:
+              break;
+          }
+        }
+      });
+    } else {
+      setDictType("dict");
+      currWord = value?.toLowerCase();
+    }
     document.getElementById("pcd_dict_top")?.scrollIntoView();
-    if (typeof onSearch !== "undefined") {
-      if (!isFactor) {
-        onSearch(currWord);
-      } else {
-        setWordSearch(currWord);
-      }
+    return currWord;
+  };
+
+  useEffect(() => {
+    console.debug("wordInput change", wordInput);
+    if (wordInput !== wordSearch) {
+      const currWord = wordChange(wordInput);
+      setWordSearch(currWord);
+    }
+  }, [wordInput]);
+
+  const dictSearch = (value: string, isFactor?: boolean) => {
+    console.info("onSearch", value);
+    const currWord = wordChange(value);
+    if (typeof onSearch !== "undefined" && !isFactor) {
+      onSearch(currWord);
     } else {
       setWordSearch(currWord);
     }
@@ -52,7 +88,7 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
             {compact ? <></> : <Col flex="auto"></Col>}
             <Col flex="560px">
               <SearchVocabulary
-                value={word}
+                value={wordInput?.toLowerCase()}
                 onSearch={dictSearch}
                 onSplit={(word: string | undefined) => {
                   console.log("onSplit", word);
@@ -68,8 +104,23 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
         <Row>
           {compact ? <></> : <Col flex="auto"></Col>}
           <Col flex="1260px">
-            <Compound word={word} add={split} onSearch={dictSearch} />
-            <DictSearch word={wordSearch} compact={compact} />
+            {dictType === "dict" ? (
+              <div>
+                <Compound word={word} add={split} onSearch={dictSearch} />
+                <DictSearch word={wordSearch} compact={compact} />
+              </div>
+            ) : (
+              <TermShow
+                word={wordSearch}
+                wordId={wordId}
+                hideInput
+                onIdChange={(value: string) => {
+                  const newInput = `type:term id:${value}`;
+                  console.debug("term onIdChange setWordInput", newInput);
+                  setWordInput(newInput);
+                }}
+              />
+            )}
           </Col>
           {compact ? <></> : <Col flex="auto"></Col>}
         </Row>
