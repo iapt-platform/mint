@@ -19,7 +19,16 @@ const DictComponentWidget = ({ word }: IWidgetDict) => {
     }
   }, [searchWord]);
 
-  return <Dictionary word={wordSearch} compact={true} />;
+  return (
+    <Dictionary
+      word={wordSearch}
+      compact={true}
+      onSearch={(value: string) => {
+        console.debug("onSearch", value);
+        store.dispatch(lookup(value));
+      }}
+    />
+  );
 };
 
 export default DictComponentWidget;
