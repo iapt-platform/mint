@@ -125,7 +125,7 @@ const SentTabWidget = ({
             trigger={path ? path.length > 0 ? path[0].title : <></> : <></>}
           />
           <Text>{sentId[0]}</Text>
-          <SentTabCopy text={`{{${sentId[0]}}}`} />
+          <SentTabCopy wbwData={wbwData} text={`{{${sentId[0]}}}`} />
           <SentMenu
             book={book}
             para={para}
