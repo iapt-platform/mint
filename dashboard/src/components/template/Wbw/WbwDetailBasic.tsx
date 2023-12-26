@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Form, Input, AutoComplete, Button, Popover, Space, Badge } from "antd";
+import {
+  Form,
+  Input,
+  AutoComplete,
+  Button,
+  Popover,
+  Space,
+  Badge,
+  Tooltip,
+} from "antd";
 import { Collapse } from "antd";
-import { MoreOutlined } from "@ant-design/icons";
+import { MoreOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 
 import SelectCase from "../../dict/SelectCase";
 import { IWbw, IWbwField } from "./WbwWord";
@@ -263,22 +272,28 @@ const WbwDetailBasicWidget = ({
                   {intl.formatMessage({ id: "buttons.relate" })}
                   <Badge color="geekblue" count={relationCount} />
                 </Space>
-                <Button
-                  type="link"
-                  onClick={() => {
-                    if (data.case && data.case?.value) {
-                      const caseParts = data.case?.value
-                        .split("$")
-                        .map((item) => item.replaceAll(".", ""));
-                      const endCase = caseParts[caseParts.length - 1];
-                      store.dispatch(
-                        lookup(`type:term word:${endCase}.relations`)
-                      );
-                    }
-                  }}
+                <Tooltip
+                  title={intl.formatMessage({
+                    id: "columns.library.palihandbook.title",
+                  })}
                 >
-                  {"语法手册"}
-                </Button>
+                  <Button
+                    disabled
+                    type="link"
+                    onClick={() => {
+                      if (data.case && data.case?.value) {
+                        const caseParts = data.case?.value
+                          .split("$")
+                          .map((item) => item.replaceAll(".", ""));
+                        const endCase = caseParts[caseParts.length - 1];
+                        store.dispatch(
+                          lookup(`type:term word:${endCase}.relations`)
+                        );
+                      }
+                    }}
+                    icon={<QuestionCircleOutlined />}
+                  />
+                </Tooltip>
               </div>
             }
             key="relation"

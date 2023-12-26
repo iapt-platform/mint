@@ -16,6 +16,7 @@ import RelaGraphic from "../Wbw/RelaGraphic";
 import SentMenu from "./SentMenu";
 import { ArticleMode } from "../../article/Article";
 import { IResNumber } from "../SentEdit";
+import SentTabCopy from "./SentTabCopy";
 
 const { Text } = Typography;
 
@@ -123,7 +124,8 @@ const SentTabWidget = ({
             data={mPath}
             trigger={path ? path.length > 0 ? path[0].title : <></> : <></>}
           />
-          <Text copyable={{ text: `{{${sentId[0]}}}` }}>{sentId[0]}</Text>
+          <Text>{sentId[0]}</Text>
+          <SentTabCopy wbwData={wbwData} text={`{{${sentId[0]}}}`} />
           <SentMenu
             book={book}
             para={para}

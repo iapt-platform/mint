@@ -14,7 +14,7 @@ interface IDetailsWidget {
   isPr?: boolean;
 }
 export const Details = ({ data, isPr }: IDetailsWidget) => (
-  <Space>
+  <Space wrap>
     <Channel {...data.channel} />
     <User {...data.editor} showAvatar={isPr ? true : false} />
     {data.prEditAt ? (
