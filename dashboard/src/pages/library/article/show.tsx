@@ -52,6 +52,7 @@ import ShareButton from "../../../components/export/ShareButton";
 import ChannelAlert from "../../../components/channel/ChannelAlert";
 import PrPull from "../../../components/corpus/PrPull";
 import NotificationIcon from "../../../components/notification/NotificationIcon";
+import SentCart from "../../../components/template/SentEdit/SentCart";
 
 export interface ISearchParams {
   key: string;
@@ -168,6 +169,7 @@ const Widget = () => {
             </div>
             <div style={{ display: "flex" }} key="middle"></div>
             <div
+              className="toolbar_center"
               style={{ display: "flex", height: 44, alignItems: "center" }}
               key="right"
             >
@@ -196,6 +198,7 @@ const Widget = () => {
                 articleId={id}
                 anthologyId={searchParams.get("anthology")}
               />
+              <SentCart />
               <SearchButton style={{ marginRight: 8 }} />
               <ToStudio style={{ marginRight: 8 }} />
               <Avatar placement="bottom" style={{ marginRight: 8 }} />
