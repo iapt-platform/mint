@@ -117,7 +117,11 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
                 onIdChange={(value: string) => {
                   const newInput = `type:term id:${value}`;
                   console.debug("term onIdChange setWordInput", newInput);
-                  setWordInput(newInput);
+                  if (typeof onSearch !== "undefined") {
+                    onSearch(newInput);
+                  } else {
+                    setWordInput(newInput);
+                  }
                 }}
               />
             )}
