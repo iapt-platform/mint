@@ -4,8 +4,12 @@ import {
   ShoppingCartOutlined,
   CheckOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IWbw } from "../Wbw/WbwWord";
+import store from "../../../store";
+import { modeChange } from "../../../reducers/cart-mode";
+import { useAppSelector } from "../../../hooks";
+import { mode as _mode } from "../../../reducers/cart-mode";
 
 export interface ISentCart {
   id: string;
@@ -18,6 +22,25 @@ interface IWidget {
 const SentTabCopyWidget = ({ text, wbwData }: IWidget) => {
   const [mode, setMode] = useState("copy");
   const [success, setSuccess] = useState(false);
+  const currMode = useAppSelector(_mode);
+
+  useEffect(() => {
+    const modeSetting = localStorage.getItem("cart/mode");
+    if (modeSetting === "cart") {
+      setMode("cart");
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("cart/mode", mode);
+  }, [mode]);
+
+  useEffect(() => {
+    if (currMode) {
+      setMode(currMode);
+    }
+  }, [currMode]);
+
   const copy = (mode: string) => {
     if (text) {
       if (mode === "copy") {
@@ -61,6 +84,7 @@ const SentTabCopyWidget = ({ text, wbwData }: IWidget) => {
         ],
         onClick: (e) => {
           setMode(e.key);
+          store.dispatch(modeChange(e.key));
           copy(e.key);
         },
       }}
