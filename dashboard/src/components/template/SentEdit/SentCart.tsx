@@ -16,7 +16,7 @@ const SentCartWidget = () => {
       const sent: ISentCart[] = JSON.parse(cartText);
       setSentences(sent);
     } else {
-      setSentences(undefined);
+      setSentences([]);
     }
   };
 
@@ -24,13 +24,11 @@ const SentCartWidget = () => {
     if (sentences) {
       setCount(sentences.length);
       localStorage.setItem("cart/text", JSON.stringify(sentences));
-    } else {
-      setCount(0);
-      localStorage.removeItem("cart/text");
     }
   }, [sentences]);
 
   useEffect(() => {
+    query();
     let timer = setInterval(query, 1000 * 2);
     return () => {
       clearInterval(timer);
@@ -64,7 +62,7 @@ const SentCartWidget = () => {
                     danger
                     icon={<DeleteOutlined />}
                     onClick={() => {
-                      setSentences(undefined);
+                      setSentences([]);
                     }}
                   />
                 </Tooltip>
