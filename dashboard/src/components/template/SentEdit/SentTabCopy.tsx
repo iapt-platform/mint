@@ -5,11 +5,17 @@ import {
   CheckOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
+import { IWbw } from "../Wbw/WbwWord";
 
+export interface ISentCart {
+  id: string;
+  text: string;
+}
 interface IWidget {
   text?: string;
+  wbwData?: IWbw[];
 }
-const SentTabCopyWidget = ({ text }: IWidget) => {
+const SentTabCopyWidget = ({ text, wbwData }: IWidget) => {
   const [mode, setMode] = useState("copy");
   const [success, setSuccess] = useState(false);
   const copy = (mode: string) => {
@@ -21,11 +27,15 @@ const SentTabCopyWidget = ({ text }: IWidget) => {
         });
       } else {
         const oldText = localStorage.getItem("cart/text");
-        let cartText: string[] = [];
+        let cartText: ISentCart[] = [];
         if (oldText) {
           cartText = JSON.parse(oldText);
         }
-        cartText.push(text);
+        const paliText = wbwData
+          ?.filter((value) => value.type?.value !== ".ctl.")
+          .map((item) => item.word.value)
+          .join(" ");
+        cartText.push({ id: text, text: paliText ? paliText : "" });
         localStorage.setItem("cart/text", JSON.stringify(cartText));
         setSuccess(true);
         setTimeout(() => setSuccess(false), 3000);
