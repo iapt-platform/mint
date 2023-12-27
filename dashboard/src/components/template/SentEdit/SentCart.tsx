@@ -47,7 +47,7 @@ const SentCartWidget = () => {
         content={
           <div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <div></div>
+              <div>{"复制句子编号"}</div>
               <div>
                 <Text
                   disabled={!sentences || sentences.length === 0}
@@ -74,7 +74,7 @@ const SentCartWidget = () => {
                 dataSource={sentences}
                 renderItem={(item, index) => (
                   <List.Item key={index} className="cart_item">
-                    <List.Item.Meta title={item.text} description={item.id} />
+                    <List.Item.Meta title={item.id} description={item.text} />
                     <Button
                       className="cart_delete"
                       type="link"
