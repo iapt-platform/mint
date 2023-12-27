@@ -3,6 +3,7 @@ import {
   CopyOutlined,
   ShoppingCartOutlined,
   CheckOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { IWbw } from "../Wbw/WbwWord";
@@ -69,6 +70,7 @@ const SentTabCopyWidget = ({ text, wbwData }: IWidget) => {
     <Dropdown.Button
       size="small"
       type="link"
+      icon={<DownOutlined />}
       menu={{
         items: [
           {
