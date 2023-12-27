@@ -14,12 +14,14 @@ interface ValueType {
 interface IWidget {
   value?: string;
   api?: string;
+  compact?: boolean;
   onSearch?: Function;
   onSplit?: Function;
 }
 const SearchVocabularyWidget = ({
   value,
   api = "vocabulary",
+  compact = false,
   onSplit,
   onSearch,
 }: IWidget) => {
@@ -140,7 +142,8 @@ const SearchVocabularyWidget = ({
         }}
       >
         <Input.Search
-          size="large"
+          style={{ width: "100%" }}
+          size={compact ? undefined : "large"}
           placeholder="search here"
           onSearch={(value: string) => {
             console.log("on search", value);
