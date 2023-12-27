@@ -9,7 +9,7 @@ import {
 } from "../api/notification";
 import { IUser } from "../auth/User";
 import TimeShow from "../general/TimeShow";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Marked from "../general/Marked";
 import { IChannel } from "../channel/Channel";
 
@@ -39,7 +39,16 @@ interface IWidget {
 const NotificationListWidget = ({ onChange }: IWidget) => {
   const ref = useRef<ActionType>();
   const [activeKey, setActiveKey] = useState<React.Key | undefined>("inbox");
+  const [mute, setMute] = useState(false);
 
+  useEffect(() => {
+    const mute = localStorage.getItem("notification/mute");
+    if (mute && mute === "true") {
+      setMute(true);
+    } else {
+      setMute(false);
+    }
+  }, []);
   const putStatus = (id: string, status: string) => {
     const url = `/v2/notification/${id}`;
     put<INotificationRequest, INotificationPutResponse>(url, {
@@ -72,7 +81,18 @@ const NotificationListWidget = ({ onChange }: IWidget) => {
         return [
           <>
             {"免打扰"}
-            <Switch size="small" />
+            <Switch
+              size="small"
+              checked={mute}
+              onChange={(checked: boolean) => {
+                setMute(checked);
+                if (checked) {
+                  localStorage.setItem("notification/mute", "true");
+                } else {
+                  localStorage.setItem("notification/mute", "false");
+                }
+              }}
+            />
           </>,
           <Button
             key="4"
