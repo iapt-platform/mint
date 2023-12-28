@@ -88,6 +88,7 @@ export interface IWbw {
   confidence: number;
   attachments?: IWbwAttachment[];
   hasComment?: boolean;
+  grammarId?: string;
 }
 export interface IWbwFields {
   real?: boolean;
