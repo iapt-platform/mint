@@ -6,12 +6,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
 export interface ITerm {
+  guid?: string;
   word: string;
+  tag?: string;
   meaning: string;
 }
 
 interface IState {
   term?: ITerm[];
+  grammar?: ITerm[];
 }
 
 const initialState: IState = {};
@@ -22,6 +25,9 @@ export const slice = createSlice({
   reducers: {
     update: (state, action: PayloadAction<ITerm[]>) => {
       state.term = action.payload;
+    },
+    grammar: (state, action: PayloadAction<ITerm[]>) => {
+      state.grammar = action.payload;
     },
     push: (state, action: PayloadAction<ITerm>) => {
       if (state.term) {
@@ -38,9 +44,10 @@ export const slice = createSlice({
   },
 });
 
-export const { update, push } = slice.actions;
+export const { update, grammar, push } = slice.actions;
 
 export const getTerm = (state: RootState): ITerm[] | undefined =>
   state.termVocabulary.term;
-
+export const getGrammar = (state: RootState): ITerm[] | undefined =>
+  state.termVocabulary.grammar;
 export default slice.reducer;
