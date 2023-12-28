@@ -10,7 +10,7 @@ import { get, IErrorResponse } from "./request";
 import { get as getLang } from "./locales";
 
 import store from "./store";
-import { ITerm, update } from "./reducers/term-vocabulary";
+import { grammar, ITerm, update } from "./reducers/term-vocabulary";
 import { push as nissayaEndingPush } from "./reducers/nissaya-ending-vocabulary";
 import { IRelation, IRelationListResponse } from "./pages/admin/relation/list";
 import { pushRelation } from "./reducers/relation";
@@ -97,15 +97,16 @@ const init = () => {
     const json: ISettingItem[] = JSON.parse(setting);
     store.dispatch(refreshSetting(json));
   }
-  //获取术语表
+  //获取语法术语表
   get<ITermResponse>(`/v2/term-vocabulary?view=grammar&lang=` + getLang()).then(
     (json) => {
       if (json.ok) {
-        store.dispatch(update(json.data.rows));
+        console.debug("grammar dispatch", json.data.rows);
+        store.dispatch(grammar(json.data.rows));
       }
     }
   );
-
+  //获取术语表
   get<ITermResponse>(
     `/v2/term-vocabulary?view=community&lang=` + getLang()
   ).then((json) => {
