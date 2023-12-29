@@ -16,7 +16,7 @@ import WbwVideoButton from "./WbwVideoButton";
 import CommentBox from "../../discussion/DiscussionDrawer";
 import PaliText from "./PaliText";
 import store from "../../../store";
-import { lookup } from "../../../reducers/command";
+import { grammarId, lookup } from "../../../reducers/command";
 import { useAppSelector } from "../../../hooks";
 import { add, relationAddParam } from "../../../reducers/relation-add";
 import { ArticleMode } from "../../article/Article";
@@ -308,7 +308,7 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
           {data.grammarId ? (
             <span
               onClick={() => {
-                store.dispatch(lookup(`type:term id:${data.grammarId}`));
+                store.dispatch(grammarId(data.grammarId));
               }}
             >
               <QuestionCircleOutlined
