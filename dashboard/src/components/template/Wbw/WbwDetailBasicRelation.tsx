@@ -2,7 +2,7 @@ import { Badge, Button, Collapse, Space, Tooltip } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import WbwDetailRelation from "./WbwDetailRelation";
 import store from "../../../store";
-import { lookup } from "../../../reducers/command";
+import { grammar } from "../../../reducers/command";
 import { IWbw, IWbwField } from "./WbwWord";
 import { useIntl } from "react-intl";
 import { useState } from "react";
@@ -26,7 +26,7 @@ const WbwDetailBasicRelationWidget = ({
     ? JSON.parse(data.relation.value).length
     : 0;
   return (
-    <Collapse bordered={false}>
+    <Collapse bordered={false} collapsible={"icon"}>
       <Collapse.Panel
         header={
           <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -43,12 +43,11 @@ const WbwDetailBasicRelationWidget = ({
                 type="link"
                 onClick={() => {
                   if (fromList) {
-                    console.debug("from", fromList);
                     const endCase = fromList
                       .map((item) => item + ".relations")
                       .join(",");
-
-                    store.dispatch(lookup(`type:term word:${endCase}`));
+                    console.debug("from", fromList, endCase);
+                    store.dispatch(grammar(endCase));
                   }
                 }}
                 icon={<QuestionCircleOutlined />}
