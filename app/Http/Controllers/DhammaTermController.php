@@ -135,7 +135,12 @@ class DhammaTermController extends Controller
 				break;
 			case 'word':
 				$table = DhammaTerm::select($indexCol)
-									->where('word', $request->get("word"));
+									->whereIn('word', explode(',',$request->get("word")) )
+									->orWhereIn('meaning', explode(',',$request->get("word")) );
+				break;
+            case 'tag':
+				$table = DhammaTerm::select($indexCol)
+									->whereIn('tag', explode(',',$request->get("tag")) );
 				break;
             case 'hot-meaning':
                 $key='term/hot_meaning';
