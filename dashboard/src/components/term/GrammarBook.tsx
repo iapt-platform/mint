@@ -1,5 +1,11 @@
-import { Input, List } from "antd";
+import { Button, Dropdown, Input, List } from "antd";
 import { useEffect, useState } from "react";
+import {
+  ArrowLeftOutlined,
+  FieldTimeOutlined,
+  MoreOutlined,
+} from "@ant-design/icons";
+
 import { ITerm, getGrammar } from "../../reducers/term-vocabulary";
 import { useAppSelector } from "../../hooks";
 import TermSearch from "./TermSearch";
@@ -10,7 +16,11 @@ import {
   grammarWordId,
 } from "../../reducers/command";
 import store from "../../store";
-import GrammarRecent, { IGrammarRecent, pushRecent } from "./GrammarRecent";
+import GrammarRecent, {
+  IGrammarRecent,
+  popRecent,
+  pushRecent,
+} from "./GrammarRecent";
 
 const { Search } = Input;
 
@@ -58,52 +68,88 @@ const GrammarBookWidget = () => {
   }, [searchWordId]);
   return (
     <div>
-      <Search
-        placeholder="input search text"
-        onSearch={(value: string) => {}}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          console.debug("on change", event.target.value);
-          setTermId(undefined);
-          setTermSearch(undefined);
-          const keyWord = event.target.value;
-          if (keyWord.trim().length === 0) {
-            setShowRecent(true);
-          } else {
-            setShowRecent(false);
-          }
-          /**
-           * 权重算法
-           * 约靠近头，分数约高
-           * 剩余尾巴约短，分数越高
-           */
-          const search = sysGrammar
-            ?.map((item) => {
-              let weight = 0;
-              const wordBegin = item.word.toLocaleLowerCase().indexOf(keyWord);
-              if (wordBegin >= 0) {
-                weight += (1 / (wordBegin + 1)) * 1000;
-                const wordRemain =
-                  item.word.length - keyWord.length - wordBegin;
-                weight += (1 / (wordRemain + 1)) * 100;
-              }
-              const meaningBegin = item.meaning
-                .toLocaleLowerCase()
-                .indexOf(keyWord);
-              if (meaningBegin >= 0) {
-                weight += (1 / (meaningBegin + 1)) * 1000;
-                const meaningRemain =
-                  item.meaning.length - keyWord.length - wordBegin;
-                weight += (1 / (meaningRemain + 1)) * 100;
-              }
-              return { term: item, weight: weight };
-            })
-            .filter((value) => value.weight > 0)
-            .sort((a, b) => b.weight - a.weight);
+      <div style={{ display: "flex" }}>
+        <Button
+          icon={<ArrowLeftOutlined />}
+          type="text"
+          onClick={() => {
+            const top = popRecent();
+            if (top) {
+              setTermId(top.wordId);
+              setTermSearch(top.word);
+            }
+          }}
+        />
+        <Search
+          placeholder="input search text"
+          onSearch={(value: string) => {}}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            console.debug("on change", event.target.value);
+            setTermId(undefined);
+            setTermSearch(undefined);
+            const keyWord = event.target.value;
+            if (keyWord.trim().length === 0) {
+              setShowRecent(true);
+            } else {
+              setShowRecent(false);
+            }
+            /**
+             * 权重算法
+             * 约靠近头，分数约高
+             * 剩余尾巴约短，分数越高
+             */
+            const search = sysGrammar
+              ?.map((item) => {
+                let weight = 0;
+                const wordBegin = item.word
+                  .toLocaleLowerCase()
+                  .indexOf(keyWord);
+                if (wordBegin >= 0) {
+                  weight += (1 / (wordBegin + 1)) * 1000;
+                  const wordRemain =
+                    item.word.length - keyWord.length - wordBegin;
+                  weight += (1 / (wordRemain + 1)) * 100;
+                }
+                const meaningBegin = item.meaning
+                  .toLocaleLowerCase()
+                  .indexOf(keyWord);
+                if (meaningBegin >= 0) {
+                  weight += (1 / (meaningBegin + 1)) * 1000;
+                  const meaningRemain =
+                    item.meaning.length - keyWord.length - wordBegin;
+                  weight += (1 / (meaningRemain + 1)) * 100;
+                }
+                return { term: item, weight: weight };
+              })
+              .filter((value) => value.weight > 0)
+              .sort((a, b) => b.weight - a.weight);
 
-          setResult(search);
-        }}
-        style={{ width: "100%" }}
-      />
+            setResult(search);
+          }}
+          style={{ width: "100%" }}
+        />
+        <Dropdown
+          trigger={["click"]}
+          menu={{
+            items: [
+              {
+                key: "recent",
+                label: "最近查询",
+                icon: <FieldTimeOutlined />,
+              },
+            ],
+            onClick: (e) => {
+              switch (e.key) {
+                case "recent":
+                  setShowRecent(true);
+                  break;
+              }
+            },
+          }}
+        >
+          <Button type="text" icon={<MoreOutlined />} />
+        </Dropdown>
+      </div>
       <div>
         {showRecent ? (
           <GrammarRecent

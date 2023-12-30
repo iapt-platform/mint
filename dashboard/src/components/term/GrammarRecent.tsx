@@ -9,6 +9,18 @@ export interface IGrammarRecent {
   wordId?: string;
 }
 
+export const popRecent = (): IGrammarRecent | null => {
+  const old = localStorage.getItem(storeKey);
+  if (old) {
+    const recentList = JSON.parse(old);
+    const top = recentList.shift();
+    localStorage.setItem(storeKey, JSON.stringify(recentList));
+    return top;
+  } else {
+    return null;
+  }
+};
+
 export const pushRecent = (value: IGrammarRecent) => {
   const old = localStorage.getItem(storeKey);
   if (old) {
