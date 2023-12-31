@@ -11,7 +11,7 @@ class UpgradeDictVocabulary extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan upgrade:dict.vocabulary
      * @var string
      */
     protected $signature = 'upgrade:dict.vocabulary';
