@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Space, Typography } from "antd";
-import { CommentOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
 import { ICommentListResponse } from "../api/Comment";
@@ -15,6 +14,7 @@ import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 import { CommentOutlinedIcon, TemplateOutlinedIcon } from "../../assets/icon";
 import { ISentenceResponse } from "../api/Corpus";
+import { TDiscussionType } from "./Discussion";
 
 export type TResType =
   | "article"
@@ -29,6 +29,7 @@ interface IWidget {
   resType?: TResType;
   topicId?: string;
   changedAnswerCount?: IAnswerCount;
+  type?: TDiscussionType;
   onSelect?: Function;
   onItemCountChange?: Function;
   onReply?: Function;
@@ -40,6 +41,7 @@ const DiscussionListCardWidget = ({
   topicId,
   onSelect,
   changedAnswerCount,
+  type = "discussion",
   onItemCountChange,
   onReply,
   onReady,
@@ -49,6 +51,8 @@ const DiscussionListCardWidget = ({
   const [activeNumber, setActiveNumber] = useState<number>(0);
   const [closeNumber, setCloseNumber] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
+  const [canCreate, setCanCreate] = useState(false);
+
   const user = useAppSelector(_currentUser);
 
   useEffect(() => {
@@ -126,7 +130,7 @@ const DiscussionListCardWidget = ({
           },
         }}
         request={async (params = {}, sorter, filter) => {
-          let url: string = "/v2/discussion?";
+          let url: string = `/v2/discussion?type=${type}&res_type=${resType}&`;
           if (typeof topicId !== "undefined") {
             url += `view=question-by-topic&id=${topicId}`;
           } else if (typeof resId !== "undefined") {
@@ -146,11 +150,13 @@ const DiscussionListCardWidget = ({
           console.log("url", url);
           const res = await get<ICommentListResponse>(url);
           setCount(res.data.active);
+          setCanCreate(res.data.can_create);
           const items: IComment[] = res.data.rows.map((item, id) => {
             return {
               id: item.id,
               resId: item.res_id,
               resType: item.res_type,
+              type: item.type,
               user: item.editor,
               title: item.title,
               parent: item.parent,
@@ -190,6 +196,7 @@ const DiscussionListCardWidget = ({
                     tplId: item.uid,
                     resId: resId,
                     resType: resType,
+                    type: "discussion",
                     user: item.editor
                       ? item.editor
                       : { id: "", userName: "", nickName: "" },
@@ -260,11 +267,12 @@ const DiscussionListCardWidget = ({
         }}
       />
 
-      {resId && resType ? (
+      {canCreate && resId && resType ? (
         <DiscussionCreate
           contentType="markdown"
           resId={resId}
           resType={resType}
+          type={type}
           onCreated={(e: IComment) => {
             if (typeof onItemCountChange !== "undefined") {
               onItemCountChange(count + 1);
