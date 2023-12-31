@@ -18,6 +18,7 @@ import ArticleSkeleton from "./ArticleSkeleton";
 import ErrorResult from "../general/ErrorResult";
 import AnthologiesAtArticle from "./AnthologiesAtArticle";
 import NavigateButton from "./NavigateButton";
+import InteractiveArea from "../discussion/InteractiveArea";
 
 interface IWidget {
   type?: ArticleType;
@@ -231,6 +232,8 @@ const TypeArticleWidget = ({
               }
             }}
           />
+
+          <InteractiveArea resType={"article"} resId={articleId} />
         </>
       )}
     </div>
