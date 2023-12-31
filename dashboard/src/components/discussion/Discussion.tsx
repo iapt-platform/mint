@@ -4,36 +4,53 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import DiscussionTopic from "./DiscussionTopic";
 import DiscussionListCard, { TResType } from "./DiscussionListCard";
 import { IComment } from "./DiscussionItem";
-import { useAppSelector } from "../../hooks";
-import {
-  countChange,
-  IShowDiscussion,
-  message,
-  show,
-  showAnchor,
-} from "../../reducers/discussion";
-import { Button } from "antd";
+
+import { countChange } from "../../reducers/discussion";
+import { Button, Space, Typography } from "antd";
 import store from "../../store";
+
+const { Text } = Typography;
 
 export interface IAnswerCount {
   id: string;
   count: number;
 }
+export type TDiscussionType = "qa" | "discussion" | "help" | "comment";
 
 interface IWidget {
   resId?: string;
-  resType: TResType;
+  resType?: TResType;
+  showTopicId?: string;
   focus?: string;
+  type?: TDiscussionType;
+  onTopicReady?: Function;
 }
 
-const DiscussionWidget = ({ resId, resType, focus }: IWidget) => {
+const DiscussionWidget = ({
+  resId,
+  resType,
+  showTopicId,
+  focus,
+  type = "discussion",
+  onTopicReady,
+}: IWidget) => {
   const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [topicId, setTopicId] = useState<string>();
   const [topic, setTopic] = useState<IComment>();
   const [answerCount, setAnswerCount] = useState<IAnswerCount>();
-  const [currTopic, setCurrTopic] = useState<IComment>();
+  const [topicTitle, setTopicTitle] = useState<string>();
+
+  useEffect(() => {
+    if (showTopicId) {
+      setChildrenDrawer(true);
+      setTopicId(showTopicId);
+    } else {
+      setChildrenDrawer(false);
+    }
+  }, [showTopicId]);
 
   const showChildrenDrawer = (comment: IComment) => {
+    console.debug("discussion comment", comment);
     setChildrenDrawer(true);
     if (comment.id) {
       setTopicId(comment.id);
@@ -48,23 +65,35 @@ const DiscussionWidget = ({ resId, resType, focus }: IWidget) => {
     <>
       {childrenDrawer ? (
         <div>
-          <Button
-            shape="circle"
-            icon={<ArrowLeftOutlined />}
-            onClick={() => setChildrenDrawer(false)}
-          />
+          <Space>
+            <Button
+              shape="circle"
+              icon={<ArrowLeftOutlined />}
+              onClick={() => setChildrenDrawer(false)}
+            />
+            <Text strong style={{ fontSize: 16 }}>
+              {topic ? topic.title : topicTitle}
+            </Text>
+          </Space>
           <DiscussionTopic
             resType={resType}
             topicId={topicId}
             topic={topic}
             focus={focus}
+            hideTitle
             onItemCountChange={(count: number, parent: string) => {
               setAnswerCount({ id: parent, count: count });
             }}
             onTopicReady={(value: IComment) => {
-              setCurrTopic(value);
+              setTopicTitle(value.title);
+              if (typeof onTopicReady !== "undefined") {
+                onTopicReady(value);
+              }
             }}
             onTopicDelete={() => {
+              setChildrenDrawer(false);
+            }}
+            onConvert={(value: TDiscussionType) => {
               setChildrenDrawer(false);
             }}
           />
@@ -73,6 +102,7 @@ const DiscussionWidget = ({ resId, resType, focus }: IWidget) => {
         <DiscussionListCard
           resId={resId}
           resType={resType}
+          type={type}
           onSelect={(
             e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
             comment: IComment
