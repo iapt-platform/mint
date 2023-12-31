@@ -68,7 +68,14 @@ class ArticleController extends Controller
         }
         return false;
     }
-
+    public static function userCanEditId($user_uid,$articleId){
+        $article = Article::find($articleId);
+        if($article){
+            return ArticleController::userCanEdit($user_uid,$article);
+        }else{
+            return false;
+        }
+    }
     public static function userCanEdit($user_uid,$article){
         if(empty($user_uid)){
             return false;
