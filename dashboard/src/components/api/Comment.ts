@@ -1,4 +1,5 @@
 import { IUser } from "../auth/User";
+import { TDiscussionType } from "../discussion/Discussion";
 import { TContentType } from "../discussion/DiscussionCreate";
 import { TResType } from "../discussion/DiscussionListCard";
 
@@ -6,6 +7,7 @@ export interface ICommentRequest {
   id?: string;
   res_id?: string;
   res_type?: string;
+  type?: TDiscussionType;
   title?: string;
   content?: string;
   content_type?: TContentType;
@@ -21,6 +23,7 @@ export interface ICommentApiData {
   id: string;
   res_id: string;
   res_type: TResType;
+  type: TDiscussionType;
   title?: string;
   content?: string;
   content_type?: TContentType;
@@ -49,6 +52,8 @@ export interface ICommentListResponse {
     count: number;
     active: number;
     close: number;
+    can_create: boolean;
+    can_reply: boolean;
   };
 }
 export interface ICommentAnchorResponse {
