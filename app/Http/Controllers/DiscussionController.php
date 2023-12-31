@@ -13,6 +13,7 @@ use App\Http\Resources\DiscussionResource;
 use App\Http\Api\MdRender;
 use App\Http\Api\AuthApi;
 use App\Http\Api\Mq;
+use App\Http\Controllers\ArticleController;
 
 class DiscussionController extends Controller
 {
@@ -28,7 +29,7 @@ class DiscussionController extends Controller
             case 'question-by-topic':
                 $topic = Discussion::where('id',$request->get('id'));
                 $topic->where('status',$request->get('status','active'))
-                    ->select('res_id')->first();
+                      ->select('res_id')->first();
                 if(!$topic){
 			        return $this->error("无效的id");
                 }
@@ -41,15 +42,18 @@ class DiscussionController extends Controller
                                     ->where('parent',null);
                 break;
             case 'question':
-                $table = Discussion::where('res_id',$request->get('id'));
+                $table = Discussion::where('res_id',$request->get('id'))
+                                    ->where('type', $request->get('type','discussion'))
+                                    ->where('status',$request->get('status','active'))
+                                    ->where('parent',null);
                 $activeNumber = Discussion::where('res_id',$request->get('id'))
                                             ->where('parent',null)
+                                            ->where('type', $request->get('type','discussion'))
                                             ->where('status','active')->count();
                 $closeNumber = Discussion::where('res_id',$request->get('id'))
                                             ->where('parent',null)
+                                            ->where('type', $request->get('type','discussion'))
                                             ->where('status','close')->count();
-                $table->where('status',$request->get('status','active'))
-                                    ->where('parent',null);
                 break;
             case 'answer':
                 $table = Discussion::where('parent',$request->get('id'));
@@ -68,20 +72,59 @@ class DiscussionController extends Controller
                 break;
         }
         if(!empty($search)){
-            $table->where('title', 'like', $search."%");
+            $table = $table->where('title', 'like', $search."%");
         }
-        $table->orderBy($request->get('order','created_at'),$request->get('dir','desc'));
         $count = $table->count();
-        $table->skip($request->get("offset",0))
+
+        $table = $table->orderBy($request->get('order','created_at'),$request->get('dir','desc'));
+        $table = $table->skip($request->get("offset",0))
               ->take($request->get('limit',1000));
 
         $result = $table->get();
 
-        return $this->ok(["rows"=>DiscussionResource::collection($result),
-                            "count"=>$count,
-                            'active'=>$activeNumber,
-                            'close'=>$closeNumber,
-                        ]);
+        $can_create = false;
+        $can_reply = false;
+        $user = AuthApi::current($request);
+
+        switch ($request->get('type','discussion')) {
+            case 'qa':
+                switch ($request->get('res_type')) {
+                    case 'article':
+                        if($user && ArticleController::userCanEditId($user['user_uid'],$request->get('id'))){
+                            $can_create = true;
+                            $can_reply = true;
+                        }
+                        break;
+                }
+                break;
+            case 'help':
+                switch ($request->get('res_type')) {
+                    case 'article':
+                        if($user){
+                            $can_reply = true;
+                            if(ArticleController::userCanEditId($user['user_uid'],$request->get('id'))){
+                                $can_create = true;
+                            }
+                        }
+                        break;
+                }
+                break;
+            case 'discussion':
+                if($user){
+                    $can_create = true;
+                    $can_reply = true;
+                }
+                break;
+        }
+
+        return $this->ok([
+            "rows" => DiscussionResource::collection($result),
+            "count" => $count,
+            'active' => $activeNumber,
+            'close' => $closeNumber,
+            'can_create' => $can_create,
+            'can_reply' => $can_reply,
+            ]);
 
     }
 
@@ -255,6 +298,9 @@ class DiscussionController extends Controller
         $discussion->title = $request->get('title',null);
         $discussion->content = $request->get('content',null);
         $discussion->status = $request->get('status','active');
+        if($request->has('type')){
+            $discussion->type = $request->get('type');
+        }
         $discussion->editor_uid = $user['user_uid'];
         $discussion->save();
         return $this->ok(new DiscussionResource($discussion));
