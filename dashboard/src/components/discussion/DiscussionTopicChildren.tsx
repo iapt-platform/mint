@@ -159,6 +159,7 @@ const DiscussionTopicChildrenWidget = ({
               id: item.id,
               resId: item.res_id,
               resType: item.res_type,
+              type: item.type,
               user: item.editor,
               parent: item.parent,
               title: item.title,

@@ -5,6 +5,7 @@ import {
   Dropdown,
   message,
   Modal,
+  notification,
   Space,
   Tag,
   Typography,
@@ -18,6 +19,7 @@ import {
   MessageOutlined,
   ExclamationCircleOutlined,
   CloseOutlined,
+  SyncOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 
@@ -30,24 +32,29 @@ import { fullUrl } from "../../utils";
 import { ICommentRequest, ICommentResponse } from "../api/Comment";
 import { useState } from "react";
 import MdView from "../template/MdView";
+import { TDiscussionType } from "./Discussion";
 
 const { Text } = Typography;
 
 interface IWidget {
   data: IComment;
+  hideTitle?: boolean;
   onEdit?: Function;
   onSelect?: Function;
   onDelete?: Function;
   onReply?: Function;
   onClose?: Function;
+  onConvert?: Function;
 }
 const DiscussionShowWidget = ({
   data,
+  hideTitle = false,
   onEdit,
   onSelect,
   onDelete,
   onReply,
   onClose,
+  onConvert,
 }: IWidget) => {
   const intl = useIntl();
   const [closed, setClosed] = useState(data.status);
@@ -104,6 +111,23 @@ const DiscussionShowWidget = ({
     });
   };
 
+  const convert = (newType: TDiscussionType) => {
+    put<ICommentRequest, ICommentResponse>(`/v2/discussion/${data.id}`, {
+      title: data.title,
+      content: data.content,
+      status: data.status,
+      type: newType,
+    }).then((json) => {
+      console.log(json);
+      if (json.ok) {
+        notification.info({ message: "转换成功" });
+        if (typeof onConvert !== "undefined") {
+          onConvert(newType);
+        }
+      }
+    });
+  };
+
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     switch (e.key) {
@@ -130,12 +154,18 @@ const DiscussionShowWidget = ({
         break;
       case "close":
         close(true);
-
         break;
-
       case "reopen":
         close(false);
-
+        break;
+      case "convert_qa":
+        convert("qa");
+        break;
+      case "convert_help":
+        convert("help");
+        break;
+      case "convert_discussion":
+        convert("discussion");
         break;
       case "delete":
         if (data.id) {
@@ -182,6 +212,28 @@ const DiscussionShowWidget = ({
       disabled: closed === "active",
     },
     {
+      type: "divider",
+    },
+    {
+      key: "convert",
+      label: intl.formatMessage({
+        id: "buttons.convert",
+      }),
+      icon: <SyncOutlined />,
+      children: [
+        { key: "convert_qa", label: "qa", disabled: data.type === "qa" },
+        { key: "convert_help", label: "help", disabled: data.type === "help" },
+        {
+          key: "convert_discussion",
+          label: "discussion",
+          disabled: data.type === "discussion",
+        },
+      ],
+    },
+    {
+      type: "divider",
+    },
+    {
       key: "delete",
       label: intl.formatMessage({
         id: "buttons.delete",
@@ -196,7 +248,7 @@ const DiscussionShowWidget = ({
       size="small"
       title={
         <Space direction="vertical" size={"small"}>
-          {data.title ? (
+          {data.title && !hideTitle ? (
             <Text
               style={{ fontSize: 16 }}
               strong

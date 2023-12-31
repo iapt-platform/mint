@@ -4,24 +4,29 @@ import { useEffect, useState } from "react";
 import { get } from "../../request";
 import { ICommentResponse } from "../api/Comment";
 import DiscussionItem, { IComment } from "./DiscussionItem";
+import { TDiscussionType } from "./Discussion";
 
 interface IWidget {
   topicId?: string;
   topic?: IComment;
   childrenCount?: number;
+  hideTitle?: boolean;
   onDelete?: Function;
   onReply?: Function;
   onClose?: Function;
   onReady?: Function;
+  onConvert?: Function;
 }
 const DiscussionTopicInfoWidget = ({
   topicId,
   topic,
   childrenCount,
+  hideTitle = false,
   onReady,
   onDelete,
   onReply,
   onClose,
+  onConvert,
 }: IWidget) => {
   const [data, setData] = useState<IComment | undefined>(topic);
   useEffect(() => {
@@ -41,7 +46,7 @@ const DiscussionTopicInfoWidget = ({
       return;
     }
     const url = `/v2/discussion/${topicId}`;
-    console.log("url", url);
+    console.log("discussion url", url);
     get<ICommentResponse>(url)
       .then((json) => {
         if (json.ok) {
@@ -51,6 +56,7 @@ const DiscussionTopicInfoWidget = ({
             id: item.id,
             resId: item.res_id,
             resType: item.res_type,
+            type: item.type,
             parent: item.parent,
             user: item.editor,
             title: item.title,
@@ -63,7 +69,7 @@ const DiscussionTopicInfoWidget = ({
           };
           setData(discussion);
           if (typeof onReady !== "undefined") {
-            console.log("on ready");
+            console.log("discussion on ready");
             onReady(discussion);
           }
         } else {
@@ -80,6 +86,7 @@ const DiscussionTopicInfoWidget = ({
       {data ? (
         <DiscussionItem
           data={data}
+          hideTitle={hideTitle}
           onDelete={() => {
             if (typeof onDelete !== "undefined") {
               onDelete(data.id);
@@ -93,6 +100,11 @@ const DiscussionTopicInfoWidget = ({
           onClose={() => {
             if (typeof onClose !== "undefined") {
               onClose(data);
+            }
+          }}
+          onConvert={(value: TDiscussionType) => {
+            if (typeof onConvert !== "undefined") {
+              onConvert(value);
             }
           }}
         />
