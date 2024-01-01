@@ -12,6 +12,7 @@ export interface ICommentRequest {
   content?: string;
   content_type?: TContentType;
   parent?: string;
+  topicId?: string;
   tpl_id?: string;
   status?: "active" | "close";
   editor?: IUser;
