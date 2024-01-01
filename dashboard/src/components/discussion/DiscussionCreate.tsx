@@ -43,6 +43,7 @@ interface IWidget {
   resId?: string;
   resType?: string;
   parent?: string;
+  topicId?: string;
   type?: TDiscussionType;
   topic?: IComment;
   contentType?: TContentType;
@@ -54,6 +55,7 @@ const DiscussionCreateWidget = ({
   resType,
   contentType = "html",
   parent,
+  topicId,
   topic,
   type = "discussion",
   onCreated,
@@ -89,7 +91,7 @@ const DiscussionCreateWidget = ({
                     tpl_id: topic.tplId,
                     content: topic.content,
                     content_type: "markdown",
-                    type: type,
+                    type: topic.type,
                   };
                   console.log("create topic", topicData);
                   const newTopic = await post<
@@ -109,14 +111,16 @@ const DiscussionCreateWidget = ({
                 }
               }
               console.log("parent", currParent);
+
               post<ICommentRequest, ICommentResponse>(`/v2/discussion`, {
                 res_id: resId,
                 res_type: resType,
                 parent: newParent ? newParent : currParent,
+                topicId: topicId,
                 title: values.title,
                 content: values.content,
                 content_type: contentType,
-                type: type,
+                type: topic ? topic.type : type,
               })
                 .then((json) => {
                   console.log("new discussion", json);
