@@ -45,9 +45,6 @@ const DiscussionTopicChildrenWidget = ({
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<ISentHistoryData[]>([]);
   const [items, setItems] = useState<IItem[]>();
-  const [currTopic, setCurrTopic] = useState(topic);
-
-  useEffect(() => setCurrTopic(topic), [topic]);
 
   useEffect(() => {
     if (loading === false) {
@@ -70,7 +67,7 @@ const DiscussionTopicChildrenWidget = ({
       };
     });
     const topicTime = new Date(
-      currTopic?.createdAt ? currTopic?.createdAt : ""
+      topic?.createdAt ? topic?.createdAt : ""
     ).getTime();
     let firstHis = history.findIndex(
       (value) =>
@@ -129,7 +126,7 @@ const DiscussionTopicChildrenWidget = ({
       });
     }
     setItems(newMixItems);
-  }, [data, history, currTopic?.createdAt]);
+  }, [data, history, topic?.createdAt]);
 
   useEffect(() => {
     if (resType === "sentence" && resId) {
@@ -189,6 +186,7 @@ const DiscussionTopicChildrenWidget = ({
       ) : (
         <List
           pagination={false}
+          size="small"
           itemLayout="horizontal"
           dataSource={items}
           renderItem={(item) => {
@@ -230,7 +228,8 @@ const DiscussionTopicChildrenWidget = ({
         resType={resType}
         contentType="markdown"
         parent={topicId}
-        topic={currTopic}
+        topicId={topicId}
+        topic={topic}
         onCreated={(value: IComment) => {
           const newData = JSON.parse(JSON.stringify(value));
           setData([...data, newData]);
