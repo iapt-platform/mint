@@ -220,6 +220,7 @@ const DiscussionShowWidget = ({
         id: "buttons.convert",
       }),
       icon: <SyncOutlined />,
+      disabled: data.parent ? true : false,
       children: [
         { key: "convert_qa", label: "qa", disabled: data.type === "qa" },
         { key: "convert_help", label: "help", disabled: data.type === "help" },
@@ -243,76 +244,97 @@ const DiscussionShowWidget = ({
       disabled: data.childrenCount && data.childrenCount > 0 ? true : false,
     },
   ];
-  return (
-    <Card
-      size="small"
-      title={
-        <Space direction="vertical" size={"small"}>
-          {data.title && !hideTitle ? (
-            <Text
-              style={{ fontSize: 16 }}
-              strong
-              onClick={(e) => {
-                if (typeof onSelect !== "undefined") {
-                  onSelect(e);
-                }
-              }}
-            >
-              {data.title}
-            </Text>
-          ) : undefined}
-          <Text type="secondary" style={{ fontSize: "80%" }}>
-            <Space>
-              {closed === "close" ? (
-                <Tag style={{ backgroundColor: "#8250df", color: "white" }}>
-                  {"closed"}
-                </Tag>
-              ) : undefined}
-              {data.user.nickName}
-              <TimeShow
-                type="secondary"
-                updatedAt={data.updatedAt}
-                createdAt={data.createdAt}
-              />
-            </Space>
-          </Text>
-        </Space>
-      }
-      extra={
-        <Space>
-          <span
-            style={{
-              display: data.childrenCount === 0 ? "none" : "inline",
-              cursor: "pointer",
-            }}
+
+  const editInfo = () => {
+    return (
+      <Space direction="vertical" size={"small"}>
+        {data.title && !hideTitle ? (
+          <Text
+            style={{ fontSize: 16 }}
+            strong
             onClick={(e) => {
               if (typeof onSelect !== "undefined") {
-                onSelect(e, data);
+                onSelect(e);
               }
             }}
           >
-            {data.childrenCount ? (
-              <>
-                <MessageOutlined /> {data.childrenCount}
-              </>
+            {data.title}
+          </Text>
+        ) : undefined}
+        <Text type="secondary" style={{ fontSize: "80%" }}>
+          <Space>
+            {!data.parent && closed === "close" ? (
+              <Tag style={{ backgroundColor: "#8250df", color: "white" }}>
+                {"closed"}
+              </Tag>
             ) : undefined}
-          </span>
-          <Dropdown
-            menu={{ items, onClick }}
-            placement="bottomRight"
-            trigger={["click"]}
-          >
-            <Button
-              shape="circle"
-              size="small"
-              icon={<MoreOutlined />}
-            ></Button>
-          </Dropdown>
-        </Space>
-      }
+            {data.user.nickName}
+            <TimeShow
+              type="secondary"
+              updatedAt={data.updatedAt}
+              createdAt={data.createdAt}
+            />
+          </Space>
+        </Text>
+      </Space>
+    );
+  };
+
+  const editMenu = () => {
+    return (
+      <Space>
+        <span
+          style={{
+            display: data.childrenCount === 0 ? "none" : "inline",
+            cursor: "pointer",
+          }}
+          onClick={(e) => {
+            if (typeof onSelect !== "undefined") {
+              onSelect(e, data);
+            }
+          }}
+        >
+          {data.childrenCount ? (
+            <>
+              <MessageOutlined /> {data.childrenCount}
+            </>
+          ) : undefined}
+        </span>
+        <Dropdown
+          menu={{ items, onClick }}
+          placement="bottomRight"
+          trigger={["click"]}
+        >
+          <Button shape="circle" size="small" icon={<MoreOutlined />}></Button>
+        </Dropdown>
+      </Space>
+    );
+  };
+  return (
+    <Card
+      size="small"
+      title={data.type === "qa" && data.parent ? undefined : editInfo()}
+      extra={data.type === "qa" && data.parent ? undefined : editMenu()}
       style={{ width: "100%" }}
     >
-      {data.html ? <MdView html={data.html} /> : <Marked text={data.content} />}
+      <div>
+        {data.html ? (
+          <MdView html={data.html} />
+        ) : (
+          <Marked text={data.content} />
+        )}
+      </div>
+      {data.type === "qa" && data.parent ? (
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div></div>
+          <div>
+            {editInfo()}
+            {editMenu()}
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
     </Card>
   );
 };
