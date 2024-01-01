@@ -115,7 +115,9 @@ const ArticleEditWidget = ({
             });
         }}
         request={async () => {
-          const res = await get<IArticleResponse>(`/v2/article/${articleId}`);
+          const url = `/v2/article/${articleId}`;
+          console.info("url", url);
+          const res = await get<IArticleResponse>(url);
           console.log("article", res);
           let mTitle: string,
             mReadonly = false;
