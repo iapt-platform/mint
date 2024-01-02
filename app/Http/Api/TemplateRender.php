@@ -15,7 +15,7 @@ use App\Http\Controllers\CorpusController;
 use App\Tools\RedisClusters;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
-
+use App\Http\Api\PaliTextApi;
 
 class TemplateRender{
     protected $param = [];
@@ -579,41 +579,29 @@ class TemplateRender{
              * 没有指定书名，根据book para 查询
              */
             if($book && $para){
-                $pageInfo = PageNumber::where('type',strtoupper($type))
-                                ->where('book',$book)
-                                ->where('paragraph','<=',$para)
-                                ->orderBy('paragraph','desc')
-                                ->first();
-                if($pageInfo){
-                    if(!$bookName){
-                        foreach (BookTitle::get() as $value) {
-                            if($value['id']===$pageInfo->pcd_book_id){
-                                switch (strtoupper($type)) {
-                                    case 'M':
-                                        $key = 'm_title';
-                                        break;
-                                    case 'P':
-                                        $key = 'p_title';
-                                        break;
-                                    case 'V':
-                                        $key = 'v_title';
-                                        break;
-                                    default:
-                                        $key = 'term';
-                                        break;
-                                }
-                                $bookName = $value[$key];
-                            }
-                        }
+                if($type==='c'){
+                    //按照章节名称显示
+                    $path = PaliTextApi::getChapterPath($book,$para);
+                    if($path){
+                        $path = json_decode($path,true);
                     }
-                    if( $volume === '' ){
-                        $volume = $pageInfo->volume;
-                    }
-                    if(!$page){
-                        $page = $pageInfo->page;
+                    if($path && is_array($path) && count($path)>2){
+                        $props['bookName'] = strtolower($path[0]['title']) ;
+                        $props['chapter'] = strtolower(end($path)['title']);
+                        $props['found'] = true;
+                    }else{
+                        $props['found'] = false;
                     }
                 }else{
-                    $props['found'] = false;
+                    $pageInfo = $this->pageInfoByPara($type,$book,$para);
+                    if($pageInfo['found']){
+                        $props['bookName'] = $pageInfo['bookName'];
+                        $props['volume'] = $pageInfo['volume'];
+                        $props['page'] = $pageInfo['page'];
+                        $props['found'] = true;
+                    }else{
+                        $props['found'] = false;
+                    }
                 }
             }else{
                 //没有书号用title查询
@@ -664,8 +652,11 @@ class TemplateRender{
         if($title){
             $props['title'] = $title;
         }
-        $term = $this->getTermProps($bookName,':quote:');
-        $props['term'] = $term;
+        if(isset($props['bookName'])){
+            $term = $this->getTermProps($props['bookName'],':quote:');
+            $props['term'] = $term;
+        }
+
         if(isset($term['id'])){
             $props['bookNameLocal'] = $term['meaning'];
             $text = $term['meaning'];
@@ -696,6 +687,42 @@ class TemplateRender{
         return $output;
     }
 
+    private function pageInfoByPara($type,$book,$para){
+        $output = array();
+        $pageInfo = PageNumber::where('type',strtoupper($type))
+                ->where('book',$book)
+                ->where('paragraph','<=',$para)
+                ->orderBy('paragraph','desc')
+                ->first();
+        if($pageInfo){
+            foreach (BookTitle::get() as $value) {
+                if($value['id']===$pageInfo->pcd_book_id){
+                    switch (strtoupper($type)) {
+                        case 'M':
+                            $key = 'm_title';
+                            break;
+                        case 'P':
+                            $key = 'p_title';
+                            break;
+                        case 'V':
+                            $key = 'v_title';
+                            break;
+                        default:
+                            $key = 'term';
+                            break;
+                    }
+                    $output['bookName'] = $value[$key];
+                    break;
+                }
+            }
+            $output['volume'] = $pageInfo->volume;
+            $output['page'] = $pageInfo->page;
+            $output['found'] = true;
+        }else{
+            $output['found'] = false;
+        }
+        return $output;
+    }
     private  function render_sent(){
 
         $sid = $this->get_param($this->param,"sid",1);
