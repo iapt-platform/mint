@@ -32,6 +32,7 @@ const items = {
   "labels.curr.paragraph.copy.quote.link.tpl": "复制引用模版",
   "labels.input": "请输入",
   "labels.selected": "已经选择",
+  "labels.page.number.type.c": "章节名称",
 };
 
 export default items;
