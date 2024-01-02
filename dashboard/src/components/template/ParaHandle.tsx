@@ -47,6 +47,12 @@ export const ParaHandleCtl = ({
       }),
       children: [
         {
+          key: "quote-link-tpl-c",
+          label: intl.formatMessage({
+            id: "labels.page.number.type.c",
+          }),
+        },
+        {
           key: "quote-link-tpl-m",
           label: intl.formatMessage({
             id: "labels.page.number.type.M",
@@ -96,6 +102,9 @@ export const ParaHandleCtl = ({
         break;
       case "copy-sent":
         copyToClipboard(sentences.map((item) => `{{${item}}}`).join(""));
+        break;
+      case "quote-link-tpl-c":
+        copyToClipboard(`{{ql|type=c|book=${book}|para=${para}}}`);
         break;
       case "quote-link-tpl-m":
         copyToClipboard(`{{ql|type=m|book=${book}|para=${para}}}`);
