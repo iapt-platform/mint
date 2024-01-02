@@ -11,6 +11,8 @@ export type TDisplayStyle = "modal" | "card" | "toggle" | "link";
 interface IWidgetChapterCtl {
   type?: ArticleType;
   id?: string;
+  book?: string;
+  paragraphs?: string;
   channel?: string;
   title?: React.ReactNode;
   focus?: string | null;
@@ -24,6 +26,8 @@ export const ArticleCtl = ({
   channel,
   title,
   focus,
+  book,
+  paragraphs,
   style = "modal",
   modalExtra,
 }: IWidgetChapterCtl) => {
@@ -45,6 +49,8 @@ export const ArticleCtl = ({
       active={true}
       type={type}
       articleId={id}
+      book={book}
+      para={paragraphs}
       channelId={channel}
       focus={focus}
       mode="read"
