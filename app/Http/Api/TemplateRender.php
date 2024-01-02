@@ -562,7 +562,7 @@ class TemplateRender{
         $type = $this->get_param($this->param,"type",1);
         $title = $this->get_param($this->param,"title",6,'');
         $bookName = $this->get_param($this->param,"bookname",2,'');
-        $volume = $this->get_param($this->param,"volume",3,false);
+        $volume = $this->get_param($this->param,"volume",3);
         $page = $this->get_param($this->param,"page",4,'');
         $style = $this->get_param($this->param,"style",5,'modal');
         $book = $this->get_param($this->param,"book",7,false);
@@ -574,7 +574,7 @@ class TemplateRender{
             'found' => true,
         ];
 
-        if(empty($bookName) || $volume===false || empty($page)){
+        if(empty($bookName) || $volume==='' || empty($page)){
             /**
              * 没有指定书名，根据book para 查询
              */
@@ -606,7 +606,7 @@ class TemplateRender{
                             }
                         }
                     }
-                    if($volume===false || $volume === '' ){
+                    if( $volume === '' ){
                         $volume = $pageInfo->volume;
                     }
                     if(!$page){
@@ -651,10 +651,11 @@ class TemplateRender{
                 $props['found'] = false;
             }
         }
-        if(!empty($bookName) && $volume !== false && !empty($page)){
+        if(!empty($bookName) && $volume !== '' && !empty($page)){
             $props['bookName'] = $bookName;
             $props['volume'] = (int)$volume;
             $props['page'] = $page;
+            $props['found'] = true;
         }
         if($book && $para){
             $props['book'] = $book;
