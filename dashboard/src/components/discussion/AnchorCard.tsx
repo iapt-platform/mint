@@ -7,10 +7,15 @@ import { modeChange } from "../../reducers/article-mode";
 import { ArticleMode } from "../article/Article";
 
 interface IWidgetArticleCard {
+  title?: React.ReactNode;
   children?: React.ReactNode;
   onModeChange?: Function;
 }
-const AnchorCardWidget = ({ children, onModeChange }: IWidgetArticleCard) => {
+const AnchorCardWidget = ({
+  title,
+  children,
+  onModeChange,
+}: IWidgetArticleCard) => {
   const intl = useIntl();
   const [mode, setMode] = useState<string>("read");
 
@@ -43,11 +48,7 @@ const AnchorCardWidget = ({ children, onModeChange }: IWidgetArticleCard) => {
   );
 
   return (
-    <Card
-      size="small"
-      title={<Space>{"title"}</Space>}
-      extra={<Space>{modeSwitch}</Space>}
-    >
+    <Card size="small" title={title} extra={<Space>{modeSwitch}</Space>}>
       {children}
     </Card>
   );

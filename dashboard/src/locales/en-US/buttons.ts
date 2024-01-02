@@ -79,6 +79,7 @@ const items = {
   "buttons.got.it": "I got it",
   "buttons.statistic": "statistic",
   "buttons.relate": "relate",
+  "buttons.convert": "convert",
 };
 
 export default items;

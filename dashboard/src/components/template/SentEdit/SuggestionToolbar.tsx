@@ -150,11 +150,6 @@ const SuggestionToolbarWidget = ({
               setCommentCount(count);
             }}
           />
-
-          {compact ? undefined : <Divider type="vertical" />}
-          {compact ? undefined : (
-            <Text copyable={{ text: data.content ? data.content : "" }}></Text>
-          )}
         </Space>
       )}
     </Paragraph>

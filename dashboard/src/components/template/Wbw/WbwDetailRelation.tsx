@@ -32,8 +32,14 @@ interface IWidget {
   data: IWbw;
   onChange?: Function;
   onAdd?: Function;
+  onFromList?: Function;
 }
-const WbwDetailRelationWidget = ({ data, onChange, onAdd }: IWidget) => {
+const WbwDetailRelationWidget = ({
+  data,
+  onChange,
+  onAdd,
+  onFromList,
+}: IWidget) => {
   const getSourId = () => `${data.book}-${data.para}-` + data.sn.join("-");
 
   const intl = useIntl();
@@ -41,6 +47,7 @@ const WbwDetailRelationWidget = ({ data, onChange, onAdd }: IWidget) => {
   const [currRelation, setCurrRelation] = useState<IRelation[]>();
   const [relationOptions, setRelationOptions] = useState<IRelation[]>();
   const [newRelationName, setNewRelationName] = useState<string>();
+  const [fromList, setFromList] = useState<string[]>();
 
   const [options, setOptions] = useState<IOptions[]>();
   const terms = useAppSelector(getTerm);
@@ -56,6 +63,12 @@ const WbwDetailRelationWidget = ({ data, onChange, onAdd }: IWidget) => {
     relation: undefined,
     is_new: true,
   };
+
+  useEffect(() => {
+    if (typeof onFromList !== "undefined") {
+      onFromList(fromList);
+    }
+  }, [fromList]);
   useEffect(() => {
     if (
       addParam?.command === "apply" &&
@@ -100,17 +113,18 @@ const WbwDetailRelationWidget = ({ data, onChange, onAdd }: IWidget) => {
       .split("$");
     if (data.grammar2?.value) {
       if (grammar) {
-        grammar = [data.grammar2?.value, ...grammar];
+        grammar = [data.grammar2?.value.replaceAll(".", ""), ...grammar];
       } else {
-        grammar = [data.grammar2?.value];
+        grammar = [data.grammar2?.value.replaceAll(".", "")];
       }
     }
-    console.log("grammar", grammar);
+    console.log("relation match grammar", grammar);
     if (typeof grammar === "undefined") {
       return;
     }
 
     //找出符合条件的relation
+
     const filteredRelation = relations?.filter((value) => {
       let caseMatch = true;
       let spellMatch = true;
@@ -140,9 +154,21 @@ const WbwDetailRelationWidget = ({ data, onChange, onAdd }: IWidget) => {
     setCurrRelation(filteredRelation);
     setRelationOptions(filteredRelation);
     let relationName = new Map<string, string>();
+    let relationFrom: string[] = [];
     filteredRelation?.forEach((value) => {
       relationName.set(value.name, value.name);
+      let from: string[] = [];
+      if (value.from?.spell) {
+        from.push(value.from.spell);
+      }
+      if (value.from?.case) {
+        from = [...from, ...value.from.case];
+      }
+      if (!relationFrom.includes(from.join("."))) {
+        relationFrom.push(from.join("."));
+      }
     });
+
     const mRelation = Array.from(relationName.keys()).map((item) => {
       const localName = terms?.find((term) => term.word === item)?.meaning;
       return {
@@ -156,6 +182,11 @@ const WbwDetailRelationWidget = ({ data, onChange, onAdd }: IWidget) => {
       };
     });
     setOptions(mRelation);
+
+    if (typeof onFromList !== "undefined") {
+      console.debug("relationFrom", relationFrom);
+      onFromList(relationFrom);
+    }
   }, [
     data.case?.value,
     data.grammar2?.value,

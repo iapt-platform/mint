@@ -21,10 +21,8 @@ import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 import { IApiResponseDictData } from "../../api/Dict";
 import WbwDetailFm from "./WbwDetailFm";
 import WbwDetailParent2 from "./WbwDetailParent2";
-import WbwDetailRelation from "./WbwDetailRelation";
 import WbwDetailFactor from "./WbwDetailFactor";
-import store from "../../../store";
-import { lookup } from "../../../reducers/command";
+import WbwDetailBasicRelation from "./WbwDetailBasicRelation";
 
 const { Panel } = Collapse;
 
@@ -113,10 +111,6 @@ const WbwDetailBasicWidget = ({
     });
     setParentOptions(parentOptions);
   }, [inlineDict, data]);
-
-  const relationCount = data.relation?.value
-    ? JSON.parse(data.relation.value).length
-    : 0;
 
   return (
     <>
@@ -265,55 +259,21 @@ const WbwDetailBasicWidget = ({
               }}
             />
           </Panel>
-          <Panel
-            header={
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Space>
-                  {intl.formatMessage({ id: "buttons.relate" })}
-                  <Badge color="geekblue" count={relationCount} />
-                </Space>
-                <Tooltip
-                  title={intl.formatMessage({
-                    id: "columns.library.palihandbook.title",
-                  })}
-                >
-                  <Button
-                    disabled
-                    type="link"
-                    onClick={() => {
-                      if (data.case && data.case?.value) {
-                        const caseParts = data.case?.value
-                          .split("$")
-                          .map((item) => item.replaceAll(".", ""));
-                        const endCase = caseParts[caseParts.length - 1];
-                        store.dispatch(
-                          lookup(`type:term word:${endCase}.relations`)
-                        );
-                      }
-                    }}
-                    icon={<QuestionCircleOutlined />}
-                  />
-                </Tooltip>
-              </div>
-            }
-            key="relation"
-            style={{ display: showRelation ? "block" : "none" }}
-          >
-            <WbwDetailRelation
-              data={data}
-              onChange={(e: IWbwField) => {
-                if (typeof onChange !== "undefined") {
-                  onChange(e);
-                }
-              }}
-              onAdd={() => {
-                if (typeof onRelationAdd !== "undefined") {
-                  onRelationAdd();
-                }
-              }}
-            />
-          </Panel>
         </Collapse>
+        <WbwDetailBasicRelation
+          data={data}
+          showRelation={showRelation}
+          onChange={(e: IWbwField) => {
+            if (typeof onChange !== "undefined") {
+              onChange(e);
+            }
+          }}
+          onRelationAdd={() => {
+            if (typeof onRelationAdd !== "undefined") {
+              onRelationAdd();
+            }
+          }}
+        />
       </Form>
     </>
   );

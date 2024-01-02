@@ -5,6 +5,7 @@ import {
   InfoCircleOutlined,
   ApartmentOutlined,
   EditOutlined,
+  QuestionCircleOutlined,
 } from "@ant-design/icons";
 
 import "./wbw.css";
@@ -15,12 +16,12 @@ import WbwVideoButton from "./WbwVideoButton";
 import CommentBox from "../../discussion/DiscussionDrawer";
 import PaliText from "./PaliText";
 import store from "../../../store";
-import { lookup } from "../../../reducers/command";
+import { grammarId, lookup } from "../../../reducers/command";
 import { useAppSelector } from "../../../hooks";
 import { add, relationAddParam } from "../../../reducers/relation-add";
 import { ArticleMode } from "../../article/Article";
 import { anchor, showWbw } from "../../../reducers/wbw";
-import { CommentOutlinedIcon } from "../../../assets/icon";
+import { CommentOutlinedIcon, HandBookIcon } from "../../../assets/icon";
 import { ParaLinkCtl } from "../ParaLink";
 
 const { Paragraph } = Typography;
@@ -304,6 +305,19 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
     return (
       <div className="pali_shell" ref={divShell}>
         <span className="pali_shell_spell">
+          {data.grammarId ? (
+            <span
+              onClick={() => {
+                store.dispatch(grammarId(data.grammarId));
+              }}
+            >
+              <QuestionCircleOutlined
+                style={{ color: "blue", cursor: "pointer" }}
+              />
+            </span>
+          ) : (
+            <></>
+          )}
           {mode === "edit" ? paliWord : ""}
           <Popover
             content={wbwDetail}

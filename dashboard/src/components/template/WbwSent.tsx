@@ -20,6 +20,7 @@ import { add } from "../../reducers/sent-word";
 import store from "../../store";
 import { settingInfo } from "../../reducers/setting";
 import { GetUserSetting } from "../auth/setting/default";
+import { getGrammar } from "../../reducers/term-vocabulary";
 
 interface IMagicDictRequest {
   book: number;
@@ -113,6 +114,9 @@ export const WbwSentCtl = ({
   const [magic, setMagic] = useState<string>();
   const [loading, setLoading] = useState(false);
   const settings = useAppSelector(settingInfo);
+  const sysGrammar = useAppSelector(getGrammar)?.filter(
+    (value) => value.tag === ":collocation:"
+  );
 
   useEffect(() => {
     setMagic(magicDict);
@@ -571,9 +575,24 @@ export const WbwSentCtl = ({
         />
       </Dropdown>
       {layoutDirection === "h" ? (
-        wordData.map((item, id) => {
-          return wbwRender(item, id);
-        })
+        wordData
+          .map((item, index) => {
+            let newItem = item;
+            const spell = item.real.value;
+            if (spell) {
+              const matched = sysGrammar?.find((value) =>
+                value.word.split("...").includes(spell)
+              );
+              if (matched) {
+                console.debug("wbw sent grammar matched", matched);
+                newItem.grammarId = matched.guid;
+              }
+            }
+            return newItem;
+          })
+          .map((item, id) => {
+            return wbwRender(item, id);
+          })
       ) : (
         <Tree
           selectable={true}

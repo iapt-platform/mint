@@ -15,6 +15,7 @@ import { show } from "../../reducers/discussion";
 import { useIntl } from "react-intl";
 import SuggestionBox from "../template/SentEdit/SuggestionBox";
 import ChannelMy from "../channel/ChannelMy";
+import GrammarBook from "../term/GrammarBook";
 
 export type TPanelName =
   | "dict"
@@ -202,6 +203,17 @@ const RightPanelWidget = ({
               children: (
                 <div style={tabInnerStyle}>
                   <SuggestionBox />
+                </div>
+              ),
+            },
+            {
+              label: intl.formatMessage({
+                id: "columns.library.palihandbook.title",
+              }),
+              key: "grammar",
+              children: (
+                <div style={tabInnerStyle}>
+                  <GrammarBook />
                 </div>
               ),
             },

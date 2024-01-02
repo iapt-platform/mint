@@ -20,6 +20,7 @@ import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 import { useEffect, useRef, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
+import { TDiscussionType } from "./Discussion";
 
 export type TContentType = "text" | "markdown" | "html" | "json";
 
@@ -28,6 +29,7 @@ export const toIComment = (value: ICommentApiData): IComment => {
     id: value.id,
     resId: value.res_id,
     resType: value.res_type,
+    type: value.type,
     user: value.editor,
     title: value.title,
     parent: value.parent,
@@ -41,6 +43,8 @@ interface IWidget {
   resId?: string;
   resType?: string;
   parent?: string;
+  topicId?: string;
+  type?: TDiscussionType;
   topic?: IComment;
   contentType?: TContentType;
   onCreated?: Function;
@@ -51,7 +55,9 @@ const DiscussionCreateWidget = ({
   resType,
   contentType = "html",
   parent,
+  topicId,
   topic,
+  type = "discussion",
   onCreated,
   onTopicCreated,
 }: IWidget) => {
@@ -85,6 +91,7 @@ const DiscussionCreateWidget = ({
                     tpl_id: topic.tplId,
                     content: topic.content,
                     content_type: "markdown",
+                    type: topic.type,
                   };
                   console.log("create topic", topicData);
                   const newTopic = await post<
@@ -104,13 +111,16 @@ const DiscussionCreateWidget = ({
                 }
               }
               console.log("parent", currParent);
+
               post<ICommentRequest, ICommentResponse>(`/v2/discussion`, {
                 res_id: resId,
                 res_type: resType,
                 parent: newParent ? newParent : currParent,
+                topicId: topicId,
                 title: values.title,
                 content: values.content,
                 content_type: contentType,
+                type: topic ? topic.type : type,
               })
                 .then((json) => {
                   console.log("new discussion", json);

@@ -87,14 +87,17 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
           <Row style={{ paddingTop: "0.5em", paddingBottom: "0.5em" }}>
             {compact ? <></> : <Col flex="auto"></Col>}
             <Col flex="560px">
-              <SearchVocabulary
-                value={wordInput?.toLowerCase()}
-                onSearch={dictSearch}
-                onSplit={(word: string | undefined) => {
-                  console.log("onSplit", word);
-                  setSplit(word);
-                }}
-              />
+              <div style={{ display: "flex" }}>
+                <SearchVocabulary
+                  compact={compact}
+                  value={wordInput?.toLowerCase()}
+                  onSearch={dictSearch}
+                  onSplit={(word: string | undefined) => {
+                    console.log("onSplit", word);
+                    setSplit(word);
+                  }}
+                />
+              </div>
             </Col>
             {compact ? <></> : <Col flex="auto"></Col>}
           </Row>

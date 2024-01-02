@@ -590,6 +590,23 @@ const NotificationOutlined = () => (
     ></path>
   </svg>
 );
+
+const HandBookOutlined = () => (
+  <svg
+    viewBox="0 0 1024 1024"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    p-id="4305"
+    width="1em"
+    height="1em"
+  >
+    <path
+      d="M704 192v384H257.6c-24 0-46.4 6.4-65.6 17.6V256.8c0-36 28.8-64.8 64.8-64.8H704m64-64H256.8C185.6 128 128 185.6 128 256.8v510.4c0 71.2 57.6 128.8 128.8 128.8H896V192h-64v640H257.6c-36 0-65.6-29.6-65.6-65.6v-60.8c0-36 29.6-65.6 65.6-65.6H768V128z m0 576H256v64h512v-64z"
+      fill="currentColor"
+      p-id="4306"
+    ></path>
+  </svg>
+);
 export const DictIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DictSvg} {...props} />
 );
@@ -702,4 +719,8 @@ export const DocIcon = (props: Partial<CustomIconComponentProps>) => (
 
 export const NotificationIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={NotificationOutlined} {...props} />
+);
+
+export const HandBookIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={HandBookOutlined} {...props} />
 );

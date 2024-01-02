@@ -42,6 +42,7 @@ const Widget = () => {
         const topicInfo: IComment = {
           resId: resId,
           resType: resType as TResType,
+          type: "discussion",
           user: value.editor,
           title: value.title,
           tplId: id,

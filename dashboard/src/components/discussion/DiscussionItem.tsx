@@ -4,11 +4,13 @@ import { IUser } from "../auth/User";
 import DiscussionShow from "./DiscussionShow";
 import DiscussionEdit from "./DiscussionEdit";
 import { TResType } from "./DiscussionListCard";
+import { TDiscussionType } from "./Discussion";
 
 export interface IComment {
   id?: string; //id未提供为新建
   resId?: string;
   resType?: TResType;
+  type: TDiscussionType;
   tplId?: string;
   user: IUser;
   parent?: string | null;
@@ -26,20 +28,24 @@ export interface IComment {
 interface IWidget {
   data: IComment;
   isFocus?: boolean;
+  hideTitle?: boolean;
   onSelect?: Function;
   onCreated?: Function;
   onDelete?: Function;
   onReply?: Function;
   onClose?: Function;
+  onConvert?: Function;
 }
 const DiscussionItemWidget = ({
   data,
   isFocus = false,
+  hideTitle = false,
   onSelect,
   onCreated,
   onDelete,
   onReply,
   onClose,
+  onConvert,
 }: IWidget) => {
   const [edit, setEdit] = useState(false);
   const [currData, setCurrData] = useState<IComment>(data);
@@ -78,6 +84,7 @@ const DiscussionItemWidget = ({
         ) : (
           <DiscussionShow
             data={currData}
+            hideTitle={hideTitle}
             onEdit={() => {
               setEdit(true);
             }}
@@ -99,6 +106,11 @@ const DiscussionItemWidget = ({
             onClose={(value: boolean) => {
               if (typeof onClose !== "undefined") {
                 onClose(value);
+              }
+            }}
+            onConvert={(value: TDiscussionType) => {
+              if (typeof onConvert !== "undefined") {
+                onConvert(value);
               }
             }}
           />

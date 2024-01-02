@@ -7,6 +7,7 @@ import { ISentenceData, ISentenceResponse } from "../api/Corpus";
 import MdView from "../template/MdView";
 import AnchorCard from "./AnchorCard";
 import { TResType } from "./DiscussionListCard";
+import { Link } from "react-router-dom";
 
 export interface IAnchor {
   type: TResType;
@@ -25,8 +26,10 @@ const DiscussionAnchorWidget = ({
   topicId,
   onLoad,
 }: IWidget) => {
+  const [title, setTitle] = useState<React.ReactNode>();
   const [content, setContent] = useState<string>();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (typeof topicId === "string") {
       get<ICommentAnchorResponse>(`/v2/discussion-anchor/${topicId}`).then(
@@ -41,10 +44,12 @@ const DiscussionAnchorWidget = ({
   }, [topicId]);
 
   useEffect(() => {
+    let url: string;
     switch (resType) {
       case "sentence":
-        const url = `/v2/sentence/${resId}`;
+        url = `/v2/sentence/${resId}`;
         console.log("url", url);
+        setLoading(true);
         get<ISentenceResponse>(url)
           .then((json) => {
             if (json.ok) {
@@ -64,16 +69,35 @@ const DiscussionAnchorWidget = ({
           })
           .finally(() => setLoading(false));
         break;
+      case "article":
+        url = `/v2/article/${resId}`;
+        console.info("url", url);
+        setLoading(true);
+
+        get<IArticleResponse>(url)
+          .then((json) => {
+            if (json.ok) {
+              setTitle(
+                <Link to={`/article/article/${resId}`}>{json.data.title}</Link>
+              );
+              setContent(json.data.content?.substring(0, 200));
+            }
+          })
+          .finally(() => setLoading(false));
+        break;
       default:
         break;
     }
   }, [resId, resType]);
+
   return (
-    <AnchorCard>
+    <AnchorCard title={title}>
       {loading ? (
         <Skeleton title={{ width: 200 }} paragraph={{ rows: 4 }} active />
       ) : (
-        <MdView html={content} />
+        <div>
+          <MdView html={content} />
+        </div>
       )}
     </AnchorCard>
   );

@@ -11,11 +11,18 @@ import { IUser } from "../auth/User";
 const NotificationIconWidget = () => {
   const [count, setCount] = useState<number>();
   const currUser = useAppSelector(currentUser);
+  const [mute, setMute] = useState(false);
 
   const queryNotification = (user?: IUser) => {
     if (!user) {
       console.debug("未登录 不查询 notification");
       return;
+    }
+    const isMute = localStorage.getItem("notification/mute");
+    if (isMute && isMute === "true") {
+      setMute(true);
+    } else {
+      setMute(false);
     }
     const now = new Date();
     const notificationUpdatedAt = localStorage.getItem(
@@ -36,6 +43,7 @@ const NotificationIconWidget = () => {
     console.info("notification url", url);
     get<INotificationListResponse>(url).then((json) => {
       if (json.ok) {
+        console.debug("notification fetch ok ", json.data.unread);
         localStorage.setItem(
           "notification/updatedAt",
           now.getTime().toString()
@@ -47,26 +55,36 @@ const NotificationIconWidget = () => {
           const lastTime = localStorage.getItem("notification/new");
           if (lastTime === null || lastTime !== newMessageTime) {
             localStorage.setItem("notification/new", newMessageTime);
-            if (window.Notification && Notification.permission !== "denied") {
-              Notification.requestPermission(function (status) {
-                const notification = new Notification(
-                  json.data.rows[0].res_type,
-                  {
-                    body: json.data.rows[0].content,
+
+            const title = json.data.rows[0].res_type;
+            const content = json.data.rows[0].content;
+            localStorage.setItem(
+              "notification/message",
+              JSON.stringify({ title: title, content: content })
+            );
+            //发送通知
+            console.debug("notification isMute", isMute, mute);
+            if (!isMute || isMute !== "true") {
+              if (window.Notification && Notification.permission !== "denied") {
+                Notification.requestPermission(function (status) {
+                  const notification = new Notification(title, {
+                    body: content,
                     icon:
                       process.env.REACT_APP_API_HOST +
                       "/assets/images/wikipali_logo.png",
                     tag: json.data.rows[0].id,
-                  }
-                );
-                notification.onclick = (event) => {
-                  event.preventDefault(); // 阻止浏览器聚焦于 Notification 的标签页
-                  window.open(json.data.rows[0].url, "_blank");
-                };
-              });
+                  });
+                  notification.onclick = (event) => {
+                    event.preventDefault(); // 阻止浏览器聚焦于 Notification 的标签页
+                    window.open(json.data.rows[0].url, "_blank");
+                  };
+                });
+              }
             }
           }
         }
+      } else {
+        console.error(json.message);
       }
     });
   };
@@ -93,7 +111,7 @@ const NotificationIconWidget = () => {
           }
           trigger="click"
         >
-          <Badge count={count} size="small">
+          <Badge count={count} size="small" dot={mute}>
             <span style={{ color: "white", cursor: "pointer" }}>
               <NotificationIcon />
             </span>
