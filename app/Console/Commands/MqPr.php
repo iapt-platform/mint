@@ -24,7 +24,7 @@ class MqPr extends Command
      */
     protected $signature = 'mq:pr';
 
-    protected $ver = '2023-12-24';
+    protected $ver = '2024-1-2';
     /**
      * The console command description.
      *
@@ -91,24 +91,33 @@ class MqPr extends Command
             //发送站内信
             try{
                 $sendTo = array();
-                $sendTo[] = $prData->channel->studio_id;
+                if($prData->editor->id !== $prData->channel->studio_id){
+                    $sendTo[] = $prData->channel->studio_id;
+                }
                 if($orgText){
                     //原文作者
-                    if(!in_array($orgText->editor_uid,$sendTo)){
+                    if(!in_array($orgText->editor_uid,$sendTo) &&
+                        $orgText->editor_uid !== $prData->editor->id){
                         $sendTo[] = $orgText->editor_uid;
                     }
                     //原文采纳者
-                    if(!empty($orgText->acceptor_uid) && !in_array($orgText->acceptor_uid,$sendTo)){
+                    if(!empty($orgText->acceptor_uid) &&
+                       !in_array($orgText->acceptor_uid,$sendTo) &&
+                       $orgText->acceptor_uid !== $prData->editor->id){
                         $sendTo[] = $orgText->acceptor_uid;
                     }
                 }
-                $sendCount = NotificationController::insert($prData->editor->id,
-                                                $sendTo,
-                                                'suggestion',
-                                                $prData->uid,
-                                                $prData->channel->id);
-                $this->info("send notification success to [".$sendCount.'] users');
+                if(count($sendTo) > 0){
+                    $sendCount = NotificationController::insert($prData->editor->id,
+                                                    $sendTo,
+                                                    'suggestion',
+                                                    $prData->uid,
+                                                    $prData->channel->id);
+                }
+
+                $this->info("send notification success to [".count($sendTo).'] users');
             }catch(\Exception $e){
+                $this->error('send notification failed');
                 Log::error('send notification failed',['exception'=>$e]);
             }
 
