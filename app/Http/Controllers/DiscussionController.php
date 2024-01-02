@@ -61,7 +61,29 @@ class DiscussionController extends Controller
                                         ->where('status','active')->count();
                 $closeNumber = Discussion::where('parent',$request->get('id'))
                                         ->where('status','close')->count();
-                $table->where('status',$request->get('status','active'));
+                break;
+            case 'res_id':
+                /**
+                 * 先获取顶级节点
+                 *
+                 */
+                $roots = Discussion::where('res_id',$request->get('id'))
+                                    ->where('type', $request->get('type','discussion'))
+                                    ->where('status',$request->get('status','active'))
+                                    ->where('parent',null)
+                                    ->select('id')
+                                    ->get();
+
+                $table = Discussion::where(function ($query) use ($roots) {
+                                        $query->whereIn('id'  , $roots)
+                                            ->orWhereIn('parent', $roots);
+                                        });
+                $activeNumber = Discussion::where('res_id',$request->get('id'))
+                                            ->where('type', $request->get('type','discussion'))
+                                            ->where('status','active')->count();
+                $closeNumber = Discussion::where('res_id',$request->get('id'))
+                                            ->where('type', $request->get('type','discussion'))
+                                            ->where('status','close')->count();
                 break;
             case 'all':
                 $table = Discussion::where('parent',null);
@@ -205,6 +227,7 @@ class DiscussionController extends Controller
             $discussion->res_id = $request->get('res_id');
             $discussion->res_type = $request->get('res_type');
         }
+        $discussion->type = $request->get('type','discussion');
         $discussion->tpl_id = $request->get('tpl_id');
         $discussion->title = $request->get('title',null);
         $discussion->content = $request->get('content',null);

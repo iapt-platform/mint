@@ -85,6 +85,7 @@ use App\Http\Controllers\NavCSParaController;
 use App\Http\Controllers\SentencesInChapterController;
 use App\Http\Controllers\CompoundController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\InteractiveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -225,6 +226,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('sentences-in-chapter',SentencesInChapterController::class);
     Route::apiResource('compound',CompoundController::class);
     Route::apiResource('notification',NotificationController::class);
+    Route::apiResource('interactive',InteractiveController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");

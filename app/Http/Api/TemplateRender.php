@@ -606,7 +606,7 @@ class TemplateRender{
                             }
                         }
                     }
-                    if($volume===false){
+                    if($volume===false || $volume === '' ){
                         $volume = $pageInfo->volume;
                     }
                     if(!$page){
