@@ -459,6 +459,8 @@ class TemplateRender{
         $title = $this->get_param($this->param,"title",3);
         $channel = $this->get_param($this->param,"channel",4,$this->channel_id[0]);
         $style = $this->get_param($this->param,"style",5);
+        $book = $this->get_param($this->param,"book",6);
+        $paragraphs = $this->get_param($this->param,"paragraphs",7);
         $props = [
                     "type" => $type,
                     "id" => $id,
@@ -467,6 +469,12 @@ class TemplateRender{
                 ];
         if(!empty($title)){
             $props['title'] = $title;
+        }
+        if(!empty($book)){
+            $props['book'] = $book;
+        }
+        if(!empty($paragraphs)){
+            $props['paragraphs'] = $paragraphs;
         }
         switch ($this->format) {
             case 'react':
