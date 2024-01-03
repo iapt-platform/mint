@@ -16,6 +16,7 @@ interface IWidgetQuoteLinkCtl {
   para?: number;
   term?: IWidgetTermCtl;
   title?: string;
+  chapter?: string;
   found: boolean;
 }
 const QuoteLinkCtl = ({
@@ -28,12 +29,21 @@ const QuoteLinkCtl = ({
   para,
   term,
   title,
+  chapter,
   found,
 }: IWidgetQuoteLinkCtl) => {
-  const [validPage, setValidPage] = useState(false);
   const [tpl, setTpl] = useState<string>();
   let textShow = volume === 0 ? page : ` ${volume}.${page}`;
+  if (type === "c") {
+    textShow = ` ${chapter}`;
+  }
   console.debug("found", found);
+  useEffect(() => {
+    if (type === "c") {
+      setTpl(`{{ql|type=${type}|book=${book}|para=${para}}}`);
+    }
+  }, [book, para, type]);
+
   useEffect(() => {
     if (
       typeof type !== "undefined" &&
@@ -41,7 +51,6 @@ const QuoteLinkCtl = ({
       typeof volume !== "undefined" &&
       typeof page !== "undefined"
     ) {
-      setValidPage(found);
       setTpl(
         `{{ql|type=${type}|bookname=${bookName}|volume=${volume}|page=${page}}}`
       );
@@ -50,8 +59,10 @@ const QuoteLinkCtl = ({
 
   return (
     <>
-      {validPage ? (
+      {found ? (
         <ArticleCtl
+          book={book?.toString()}
+          paragraphs={para?.toString()}
           title={
             title ? (
               title
@@ -62,9 +73,13 @@ const QuoteLinkCtl = ({
               </>
             )
           }
-          type={"page"}
+          type={type === "c" ? "para" : "page"}
           focus={book && para ? `${book}-${para}` : undefined}
-          id={`${type}_${bookName}_${volume}_${page}`}
+          id={
+            type === "c"
+              ? `${book}-${para}`
+              : `${type}_${bookName}_${volume}_${page}`
+          }
           style={style}
           modalExtra={
             <Text style={{ marginRight: 8 }} copyable={{ text: tpl }}>

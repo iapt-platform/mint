@@ -77,6 +77,7 @@ const DiscussionCreateWidget = ({
         <div>
           <ProForm<IComment>
             formRef={formRef}
+            autoFocusFirstInput={false}
             onFinish={async (values) => {
               //新建
               console.log("create", resId, resType, currParent, topic);

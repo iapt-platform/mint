@@ -32,6 +32,7 @@ const items = {
   "labels.curr.paragraph.copy.quote.link.tpl": "复制引用模版",
   "labels.input": "input",
   "labels.selected": "Selected",
+  "labels.page.number.type.c": "Chapter Title",
 };
 
 export default items;
