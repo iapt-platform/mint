@@ -573,78 +573,6 @@ class TemplateRender{
             'style' => $style,
             'found' => true,
         ];
-
-        if(empty($bookName) || $volume==='' || empty($page)){
-            /**
-             * 没有指定书名，根据book para 查询
-             */
-            if($book && $para){
-                if($type==='c'){
-                    //按照章节名称显示
-                    $path = PaliTextApi::getChapterPath($book,$para);
-                    if($path){
-                        $path = json_decode($path,true);
-                    }
-                    if($path && is_array($path) && count($path)>2){
-                        $props['bookName'] = strtolower($path[0]['title']) ;
-                        $props['chapter'] = strtolower(end($path)['title']);
-                        $props['found'] = true;
-                    }else{
-                        $props['found'] = false;
-                    }
-                }else{
-                    $pageInfo = $this->pageInfoByPara($type,$book,$para);
-                    if($pageInfo['found']){
-                        $props['bookName'] = $pageInfo['bookName'];
-                        $props['volume'] = $pageInfo['volume'];
-                        $props['page'] = $pageInfo['page'];
-                        $props['found'] = true;
-                    }else{
-                        $props['found'] = false;
-                    }
-                }
-            }else{
-                //没有书号用title查询
-                if($title){
-                    $tmpTitle = explode('။',$title);
-                    if(count($tmpTitle)>1){
-                        $tmpBookTitle = $tmpTitle[0];
-                        $tmpBookPage = $tmpTitle[1];
-                        $tmpBookPage = (int)str_replace(
-                                        ['၁','၂','၃','၄','၅','၆','၇','၈','၉','၀'],
-                                        ['1','2','3','4','5','6','7','8','9','0'],
-                                        $tmpBookPage);
-                        $found_key = array_search($tmpBookTitle, array_column(BookTitle::my(), 'title2'));
-                        if($found_key !== false){
-                            $bookName = BookTitle::my()[$found_key]['bookname'];
-                            $volume = BookTitle::my()[$found_key]['volume'];
-                            $page = $tmpBookPage;
-                        }else{
-                            //没找到，返回术语和页码
-                            $props['found'] = false;
-                            $bookName = $tmpBookTitle;
-                            $page = $tmpBookPage;
-                            $volume = 0;
-                        }
-                    }
-                }else{
-                    $props['found'] = false;
-                }
-            }
-        }
-
-        if(!empty($bookName)){
-            $found_title = array_search($bookName, array_column(BookTitle::my(), 'bookname'));
-            if($found_title === false){
-                $props['found'] = false;
-            }
-        }
-        if(!empty($bookName) && $volume !== '' && !empty($page)){
-            $props['bookName'] = $bookName;
-            $props['volume'] = (int)$volume;
-            $props['page'] = $page;
-            $props['found'] = true;
-        }
         if($book && $para){
             $props['book'] = $book;
             $props['para'] = $para;
@@ -652,18 +580,88 @@ class TemplateRender{
         if($title){
             $props['title'] = $title;
         }
+        if(!empty($bookName) && $volume !== '' && !empty($page)){
+            $props['bookName'] = $bookName;
+            $props['volume'] = (int)$volume;
+            $props['page'] = $page;
+            $props['found'] = true;
+        }else if($book && $para){
+             /**
+             * 没有指定书名，根据book para 查询
+             */
+            if($type==='c'){
+                //按照章节名称显示
+                $path = PaliTextApi::getChapterPath($book,$para);
+                if($path){
+                    $path = json_decode($path,true);
+                }
+                if($path && is_array($path) && count($path)>2){
+                    $props['bookName'] = strtolower($path[0]['title']) ;
+                    $props['chapter'] = strtolower(end($path)['title']);
+                    $props['found'] = true;
+                }else{
+                    $props['found'] = false;
+                }
+            }else{
+                $pageInfo = $this->pageInfoByPara($type,$book,$para);
+                if($pageInfo['found']){
+                    $props['bookName'] = $pageInfo['bookName'];
+                    $props['volume'] = $pageInfo['volume'];
+                    $props['page'] = $pageInfo['page'];
+                    $props['found'] = true;
+                }else{
+                    $props['found'] = false;
+                }
+            }
+        }else if($title){
+            //没有书号用title查询
+            $tmpTitle = explode('။',$title);
+            if(count($tmpTitle)>1){
+                $tmpBookTitle = $tmpTitle[0];
+                $tmpBookPage = $tmpTitle[1];
+                $tmpBookPage = (int)str_replace(
+                                ['၁','၂','၃','၄','၅','၆','၇','၈','၉','၀'],
+                                ['1','2','3','4','5','6','7','8','9','0'],
+                                $tmpBookPage);
+                $found_key = array_search($tmpBookTitle, array_column(BookTitle::my(), 'title2'));
+                if($found_key !== false){
+                    $bookName = BookTitle::my()[$found_key]['bookname'];
+                    $volume = BookTitle::my()[$found_key]['volume'];
+                    $page = $tmpBookPage;
+                    if(!empty($bookName)){
+                        $found_title = array_search($bookName, array_column(BookTitle::my(), 'bookname'));
+                        if($found_title === false){
+                            $props['found'] = false;
+                        }
+                    }
+                }else{
+                    //没找到，返回术语和页码
+                    $props['found'] = false;
+                    $bookName = $tmpBookTitle;
+                    $page = $tmpBookPage;
+                    $volume = 0;
+                }
+            }
+        }else{
+            $props['found'] = false;
+        }
+
+        $text = '';
         if(isset($props['bookName'])){
             $term = $this->getTermProps($props['bookName'],':quote:');
             $props['term'] = $term;
+            if(isset($term['id'])){
+                $props['bookNameLocal'] = $term['meaning'];
+                $text .= $term['meaning'];
+            }else{
+                $text .= $bookName;
+            }
         }
 
-        if(isset($term['id'])){
-            $props['bookNameLocal'] = $term['meaning'];
-            $text = $term['meaning'];
-        }else{
-            $text = $bookName;
+        if(isset($props['volume']) && isset($props['page'])){
+            $text .= " {$volume}.{$page}";
         }
-        $text .= " {$volume}.{$page}";
+
 
         switch ($this->format) {
             case 'react':
