@@ -573,13 +573,7 @@ class TemplateRender{
             'style' => $style,
             'found' => true,
         ];
-        if($book && $para){
-            $props['book'] = $book;
-            $props['para'] = $para;
-        }
-        if($title){
-            $props['title'] = $title;
-        }
+
         if(!empty($bookName) && $volume !== '' && !empty($page)){
             $props['bookName'] = $bookName;
             $props['volume'] = (int)$volume;
@@ -625,11 +619,11 @@ class TemplateRender{
                                 $tmpBookPage);
                 $found_key = array_search($tmpBookTitle, array_column(BookTitle::my(), 'title2'));
                 if($found_key !== false){
-                    $bookName = BookTitle::my()[$found_key]['bookname'];
-                    $volume = BookTitle::my()[$found_key]['volume'];
-                    $page = $tmpBookPage;
-                    if(!empty($bookName)){
-                        $found_title = array_search($bookName, array_column(BookTitle::my(), 'bookname'));
+                    $props['bookName'] = BookTitle::my()[$found_key]['bookname'];
+                    $props['volume'] = BookTitle::my()[$found_key]['volume'];
+                    $props['page'] = $tmpBookPage;
+                    if(!empty($props['bookName'])){
+                        $found_title = array_search($props['bookName'], array_column(BookTitle::my(), 'bookname'));
                         if($found_title === false){
                             $props['found'] = false;
                         }
@@ -637,13 +631,21 @@ class TemplateRender{
                 }else{
                     //没找到，返回术语和页码
                     $props['found'] = false;
-                    $bookName = $tmpBookTitle;
-                    $page = $tmpBookPage;
-                    $volume = 0;
+                    $props['bookName'] = $tmpBookTitle;
+                    $props['page'] = $tmpBookPage;
+                    $props['volume'] = 0;
                 }
             }
         }else{
             $props['found'] = false;
+        }
+
+        if($book && $para){
+            $props['book'] = $book;
+            $props['para'] = $para;
+        }
+        if($title){
+            $props['title'] = $title;
         }
 
         $text = '';
