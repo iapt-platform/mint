@@ -12,6 +12,7 @@ interface IWidget {
   topic?: IComment;
   focus?: string;
   hideTitle?: boolean;
+  hideReply?: boolean;
   onItemCountChange?: Function;
   onTopicReady?: Function;
   onTopicDelete?: Function;
@@ -23,6 +24,7 @@ const DiscussionTopicWidget = ({
   topic,
   focus,
   hideTitle = false,
+  hideReply = false,
   onTopicReady,
   onItemCountChange,
   onTopicDelete,
@@ -68,6 +70,7 @@ const DiscussionTopicWidget = ({
         resType={resType}
         focus={focus}
         topicId={topicId}
+        hideReply={hideReply}
         onItemCountChange={(count: number, e: string) => {
           //把新建回答的消息传出去。
           setCount(count);
