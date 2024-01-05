@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
 import { Tabs } from "antd";
+
 import { TResType } from "./DiscussionListCard";
 import Discussion from "./Discussion";
-import { useEffect, useState } from "react";
 import { get } from "../../request";
-import QaList from "./QaList";
+import QaBox from "./QaBox";
 
 interface IInteractive {
   ok: boolean;
@@ -78,11 +79,7 @@ const InteractiveAreaWidget = ({ resId, resType }: IWidget) => {
         {
           label: `问答`,
           key: "qa",
-          children: qaCanEdit ? (
-            <Discussion resId={resId} resType={resType} type="qa" />
-          ) : (
-            <QaList resId={resId} resType={resType} />
-          ),
+          children: <QaBox resId={resId} resType={resType} />,
         },
         {
           label: `求助`,
