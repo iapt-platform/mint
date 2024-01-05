@@ -80,6 +80,7 @@ const items = {
   "buttons.statistic": "统计",
   "buttons.relate": "关联",
   "buttons.convert": "转换",
+  "buttons.copy.tpl": "复制模版",
 };
 
 export default items;

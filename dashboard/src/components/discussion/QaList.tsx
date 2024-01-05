@@ -7,8 +7,10 @@ import DiscussionItem, { IComment } from "./DiscussionItem";
 interface IWidget {
   resId?: string;
   resType?: TResType;
+  onSelect?: Function;
+  onReply?: Function;
 }
-const QaListWidget = ({ resId, resType }: IWidget) => {
+const QaListWidget = ({ resId, resType, onSelect, onReply }: IWidget) => {
   const [data, setData] = useState<IComment[]>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ const QaListWidget = ({ resId, resType }: IWidget) => {
       return;
     }
     let url: string = `/v2/discussion?res_type=${resType}&view=res_id&id=${resId}`;
-    url += "&dir=asc&type=qa&status=close";
+    url += "&dir=asc&type=qa&status=active,close";
     console.log("url", url);
     get<ICommentListResponse>(url).then((json) => {
       if (json.ok) {
@@ -51,7 +53,18 @@ const QaListWidget = ({ resId, resType }: IWidget) => {
         .map((question, index) => {
           return (
             <div key={`div_${index}`}>
-              <DiscussionItem key={index} data={question} />
+              <DiscussionItem
+                key={index}
+                data={question}
+                onSelect={(
+                  e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+                  value: IComment
+                ) => {
+                  if (typeof onSelect !== "undefined") {
+                    onSelect(e, value);
+                  }
+                }}
+              />
               <div
                 style={{
                   marginLeft: 16,

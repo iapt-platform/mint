@@ -28,6 +28,7 @@ interface IWidget {
   resType?: TResType;
   topicId?: string;
   focus?: string;
+  hideReply?: boolean;
   onItemCountChange?: Function;
   onTopicCreate?: Function;
 }
@@ -37,6 +38,7 @@ const DiscussionTopicChildrenWidget = ({
   resType,
   topicId,
   focus,
+  hideReply = false,
   onItemCountChange,
   onTopicCreate,
 }: IWidget) => {
@@ -223,26 +225,30 @@ const DiscussionTopicChildrenWidget = ({
           }}
         />
       )}
-      <DiscussionCreate
-        resId={resId}
-        resType={resType}
-        contentType="markdown"
-        parent={topicId}
-        topicId={topicId}
-        topic={topic}
-        onCreated={(value: IComment) => {
-          const newData = JSON.parse(JSON.stringify(value));
-          setData([...data, newData]);
-          if (typeof onItemCountChange !== "undefined") {
-            onItemCountChange(data.length + 1, value.parent);
-          }
-        }}
-        onTopicCreated={(value: IconType) => {
-          if (typeof onTopicCreate !== "undefined") {
-            onTopicCreate(value);
-          }
-        }}
-      />
+      {hideReply ? (
+        <></>
+      ) : (
+        <DiscussionCreate
+          resId={resId}
+          resType={resType}
+          contentType="markdown"
+          parent={topicId}
+          topicId={topicId}
+          topic={topic}
+          onCreated={(value: IComment) => {
+            const newData = JSON.parse(JSON.stringify(value));
+            setData([...data, newData]);
+            if (typeof onItemCountChange !== "undefined") {
+              onItemCountChange(data.length + 1, value.parent);
+            }
+          }}
+          onTopicCreated={(value: IconType) => {
+            if (typeof onTopicCreate !== "undefined") {
+              onTopicCreate(value);
+            }
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -80,6 +80,7 @@ const items = {
   "buttons.statistic": "statistic",
   "buttons.relate": "relate",
   "buttons.convert": "convert",
+  "buttons.copy.tpl": "copy template",
 };
 
 export default items;

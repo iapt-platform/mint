@@ -147,6 +147,12 @@ const DiscussionShowWidget = ({
           message.success("链接地址已经拷贝到剪贴板");
         });
         break;
+      case "copy-tpl":
+        const tpl = `{{qa|id=${data.id}|style=collapse}}`;
+        navigator.clipboard.writeText(tpl).then(() => {
+          notification.success({ message: "链接地址已经拷贝到剪贴板" });
+        });
+        break;
       case "edit":
         if (typeof onEdit !== "undefined") {
           onEdit();
@@ -184,6 +190,14 @@ const DiscussionShowWidget = ({
         id: "buttons.copy.link",
       }),
       icon: <LinkOutlined />,
+    },
+    {
+      key: "copy-tpl",
+      label: intl.formatMessage({
+        id: "buttons.copy.tpl",
+      }),
+      icon: <LinkOutlined />,
+      disabled: data.type !== "qa",
     },
     {
       type: "divider",
