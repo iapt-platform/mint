@@ -10,6 +10,8 @@ use App\Models\DhammaTerm;
 use App\Models\PaliText;
 use App\Models\Channel;
 use App\Models\PageNumber;
+use App\Models\Discussion;
+
 use App\Http\Controllers\CorpusController;
 
 use App\Tools\RedisClusters;
@@ -83,6 +85,9 @@ class TemplateRender{
                 break;
             case 'mermaid':
                 $result = $this->render_mermaid();
+                break;
+            case 'qa':
+                $result = $this->render_qa();
                 break;
             default:
                 # code...
@@ -863,6 +868,46 @@ class TemplateRender{
         return $output;
     }
 
+    private  function render_qa(){
+
+        $id = $this->get_param($this->param,"id",2);
+        $style = $this->get_param($this->param,"style",5);
+
+        $props = [
+                    "type" => 'qa',
+                    "id" => $id,
+                    'title' => '',
+                    'style' => $style,
+                ];
+        $qa = Discussion::where('id',$id)->first();
+        if($qa){
+            $props['title'] = $qa->title;
+            $props['resId'] = $qa->res_id;
+            $props['resType'] = $qa->res_type;
+        }
+
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'html'=>"",
+                    'text'=>$props['title'],
+                    'tag'=>'div',
+                    'tpl'=>'qa',
+                    ];
+                break;
+            case 'unity':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'tpl'=>'qa',
+                    ];
+                break;
+            default:
+                $output = $props['title'];
+                break;
+        }
+        return $output;
+    }
     private  function get_param(array $param,string $name,int $id,string $default=''){
         if(isset($param[$name])){
             return trim($param[$name]);
