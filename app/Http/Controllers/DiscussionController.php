@@ -69,7 +69,7 @@ class DiscussionController extends Controller
                  */
                 $roots = Discussion::where('res_id',$request->get('id'))
                                     ->where('type', $request->get('type','discussion'))
-                                    ->where('status',$request->get('status','active'))
+                                    ->whereIn('status',explode(',',$request->get('status','active')) )
                                     ->where('parent',null)
                                     ->select('id')
                                     ->get();
