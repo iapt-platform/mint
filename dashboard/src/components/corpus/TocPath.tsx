@@ -21,7 +21,7 @@ interface IWidgetTocPath {
   data?: ITocPathNode[];
   trigger?: React.ReactNode;
   link?: ELinkType;
-  channel?: string[];
+  channels?: string[];
   style?: React.CSSProperties;
   onChange?: Function;
   onMenuClick?: Function;
@@ -30,7 +30,7 @@ const TocPathWidget = ({
   data = [],
   trigger,
   link = "self",
-  channel,
+  channels,
   style,
   onChange,
   onMenuClick,
@@ -74,7 +74,9 @@ const TocPathWidget = ({
                     type === "para"
                       ? `&book=${item.book}&par=${item.paragraph}`
                       : "";
-                  const channel = searchParams.get("channel");
+                  const channel = channels
+                    ? channels.join("_")
+                    : searchParams.get("channel");
                   const mode = searchParams.get("mode");
                   const urlMode = mode ? mode : "read";
                   let url = `/article/${type}/${item.book}-${item.paragraph}?mode=${urlMode}${param}`;
