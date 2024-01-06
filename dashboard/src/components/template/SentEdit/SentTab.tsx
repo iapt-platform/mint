@@ -122,6 +122,7 @@ const SentTabWidget = ({
           <TocPath
             link="none"
             data={mPath}
+            channels={channelsId}
             trigger={path ? path.length > 0 ? path[0].title : <></> : <></>}
           />
           <Text>{sentId[0]}</Text>
