@@ -91,7 +91,7 @@ const ArticleViewWidget = ({
       <Space direction="vertical">
         <TocPath
           data={path}
-          channel={channels}
+          channels={channels}
           onChange={(
             node: ITocPathNode,
             e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
