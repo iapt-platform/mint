@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { Divider, message, Space, Tag } from "antd";
 
 import { get, post } from "../../request";
-import { IArticleDataResponse, IArticleResponse } from "../api/Article";
+import {
+  IArticleDataResponse,
+  IArticleResponse,
+  IChapterToc,
+} from "../api/Article";
 import ArticleView from "./ArticleView";
 import TocTree from "./TocTree";
 import PaliText from "../template/Wbw/PaliText";
@@ -47,7 +51,7 @@ const TypePaliWidget = ({
 }: IWidget) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [articleHtml, setArticleHtml] = useState<string[]>(["<span />"]);
-  const [extra, setExtra] = useState(<></>);
+  const [toc, setToc] = useState<IChapterToc[]>();
   const [loading, setLoading] = useState(false);
   const [errorCode, setErrorCode] = useState<number>();
 
@@ -106,38 +110,8 @@ const TypePaliWidget = ({
           if (json.data.from) {
             setRemains(true);
           }
-          setExtra(
-            <TocTree
-              treeData={json.data.toc?.map((item) => {
-                const strTitle = item.title ? item.title : item.pali_title;
-                const key = item.key
-                  ? item.key
-                  : `${item.book}-${item.paragraph}`;
-                const progress = item.progress?.map((item, id) => (
-                  <Tag key={id}>{Math.round(item * 100) + "%"}</Tag>
-                ));
-                return {
-                  key: key,
-                  title: (
-                    <Space>
-                      <PaliText
-                        text={strTitle === "" ? "[unnamed]" : strTitle}
-                      />
-                      {progress}
-                    </Space>
-                  ),
-                  level: item.level,
-                };
-              })}
-              onSelect={(keys: string[]) => {
-                console.log(keys);
-                if (typeof onArticleChange !== "undefined" && keys.length > 0) {
-                  onArticleChange("chapter", keys[0]);
-                }
-              }}
-            />
-          );
 
+          setToc(json.data.toc);
           switch (type) {
             case "chapter":
               if (typeof articleId === "string" && channelId) {
@@ -202,8 +176,6 @@ const TypePaliWidget = ({
             return [...origin, content];
           });
         }
-
-        //getNextPara(json.data);
       }
     });
     return;
@@ -264,7 +236,39 @@ const TypePaliWidget = ({
             }}
           />
           <Divider />
-          {extra}
+          <TocTree
+            treeData={toc?.map((item) => {
+              const strTitle = item.title ? item.title : item.pali_title;
+              const key = item.key
+                ? item.key
+                : `${item.book}-${item.paragraph}`;
+              const progress = item.progress?.map((item, id) => (
+                <Tag key={id}>{Math.round(item * 100) + "%"}</Tag>
+              ));
+              return {
+                key: key,
+                title: (
+                  <Space>
+                    <PaliText text={strTitle === "" ? "[unnamed]" : strTitle} />
+                    {progress}
+                  </Space>
+                ),
+                level: item.level,
+              };
+            })}
+            onClick={(
+              id: string,
+              e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+            ) => {
+              if (typeof onArticleChange !== "undefined") {
+                if (e.ctrlKey || e.metaKey) {
+                  onArticleChange("chapter", id, "_blank");
+                } else {
+                  onArticleChange("chapter", id, "_self");
+                }
+              }
+            }}
+          />
           <Divider />
           {hideNav ? (
             <></>
