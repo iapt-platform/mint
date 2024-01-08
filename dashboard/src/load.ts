@@ -51,6 +51,18 @@ interface INissayaEndingResponse {
     count: number;
   };
 }
+
+export const grammarTermFetch = () => {
+  //获取语法术语表
+  get<ITermResponse>(`/v2/term-vocabulary?view=grammar&lang=` + getLang()).then(
+    (json) => {
+      if (json.ok) {
+        console.debug("grammar dispatch", json.data.rows);
+        store.dispatch(grammar(json.data.rows));
+      }
+    }
+  );
+};
 const init = () => {
   get<ISiteInfoResponse | IErrorResponse>("/v2/siteinfo/en").then(
     (response) => {
@@ -97,15 +109,10 @@ const init = () => {
     const json: ISettingItem[] = JSON.parse(setting);
     store.dispatch(refreshSetting(json));
   }
+
   //获取语法术语表
-  get<ITermResponse>(`/v2/term-vocabulary?view=grammar&lang=` + getLang()).then(
-    (json) => {
-      if (json.ok) {
-        console.debug("grammar dispatch", json.data.rows);
-        store.dispatch(grammar(json.data.rows));
-      }
-    }
-  );
+  grammarTermFetch();
+
   //获取术语表
   get<ITermResponse>(
     `/v2/term-vocabulary?view=community&lang=` + getLang()
