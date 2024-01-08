@@ -162,6 +162,10 @@ class ChannelController extends Controller
                         ->whereIn('uid', $channelId)
                         ->orWhere('owner_uid',$user['user_uid']);
                 break;
+            case 'system':
+                $table = Channel::select($indexCol)
+                            ->where('owner_uid',config("mint.admin.root_uuid"));
+                break;
         }
         //处理搜索
         if($request->has("search")){
