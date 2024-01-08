@@ -162,6 +162,10 @@ class ChannelController extends Controller
                         ->whereIn('uid', $channelId)
                         ->orWhere('owner_uid',$user['user_uid']);
                 break;
+            case 'system':
+                $table = Channel::select($indexCol)
+                            ->where('owner_uid',config("mint.admin.root_uuid"));
+                break;
         }
         //处理搜索
         if($request->has("search")){
@@ -486,11 +490,11 @@ class ChannelController extends Controller
     {
         //
         $user = AuthApi::current($request);
-        if($user){
+        if(!$user){
             return $this->error(__('auth.failed'),401,401);
         }
         //判断当前用户是否有指定的studio的权限
-        if($user['user_uid'] === StudioApi::getIdByName($request->get('studio'))){
+        if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))){
             return $this->error(__('auth.failed'),403,403);
         }
         //查询是否重复
