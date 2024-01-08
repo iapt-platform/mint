@@ -61,6 +61,7 @@ export interface ITerm {
 interface IWidget {
   id?: string;
   word?: string;
+  tags?: string[];
   studioName?: string;
   channelId?: string;
   parentChannelId?: string;
@@ -71,6 +72,7 @@ interface IWidget {
 const TermEditWidget = ({
   id,
   word,
+  tags,
   channelId,
   studioName,
   parentChannelId,
@@ -210,7 +212,7 @@ const TermEditWidget = ({
           let url: string;
           let data: ITerm = {
             word: word ? word : "",
-            tag: "",
+            tag: tags?.join(),
             meaning: "",
             meaning2: [],
             note: "",
@@ -276,7 +278,7 @@ const TermEditWidget = ({
             console.log(res);
             data = {
               word: word ? word : "",
-              tag: "",
+              tag: tags?.join(),
               meaning: "",
               meaning2: [],
               note: "",

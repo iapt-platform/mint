@@ -9,6 +9,7 @@ interface IWidget {
   open?: boolean;
   id?: string;
   word?: string;
+  tags?: string[];
   studioName?: string;
   channelId?: string;
   parentChannelId?: string;
@@ -22,6 +23,7 @@ const TermModalWidget = ({
   open = false,
   id,
   word,
+  tags,
   studioName,
   channelId,
   parentChannelId,
@@ -91,6 +93,7 @@ const TermModalWidget = ({
         <TermEdit
           id={id}
           word={word}
+          tags={tags}
           studioName={studioName}
           channelId={channelId}
           parentChannelId={parentChannelId}
