@@ -58,28 +58,30 @@ const ChannelTableModalWidget = ({
     <>
       <span onClick={showModal}>{trigger}</span>
       <Modal
-        width={"80%"}
+        width={"90%"}
         title="选择版本风格"
         footer={false}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <ChannelTable
-          studioName={user?.realName}
-          type={type}
-          channelType={channelType}
-          disableChannels={disableChannels}
-          onSelect={(channel: IChannel) => {
-            handleCancel();
-            if (typeof onClose !== "undefined") {
-              onClose();
-            }
-            if (typeof onSelect !== "undefined") {
-              onSelect(channel);
-            }
-          }}
-        />
+        <div style={{ overflowX: "scroll" }}>
+          <ChannelTable
+            studioName={user?.realName}
+            type={type}
+            channelType={channelType}
+            disableChannels={disableChannels}
+            onSelect={(channel: IChannel) => {
+              handleCancel();
+              if (typeof onClose !== "undefined") {
+                onClose();
+              }
+              if (typeof onSelect !== "undefined") {
+                onSelect(channel);
+              }
+            }}
+          />
+        </div>
       </Modal>
     </>
   );
