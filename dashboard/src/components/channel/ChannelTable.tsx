@@ -174,6 +174,7 @@ const ChannelTableWidget = ({
               id: "forms.fields.title.label",
             }),
             dataIndex: "title",
+            width: 250,
             key: "title",
             tip: "过长会自动收缩",
             ellipsis: true,
@@ -225,7 +226,7 @@ const ChannelTableWidget = ({
             }),
             dataIndex: "role",
             key: "role",
-            width: 100,
+            width: 80,
             search: false,
             filters: true,
             onFilter: true,
@@ -264,7 +265,7 @@ const ChannelTableWidget = ({
             }),
             dataIndex: "type",
             key: "type",
-            width: 100,
+            width: 80,
             search: false,
             filters: true,
             onFilter: true,
@@ -313,7 +314,7 @@ const ChannelTableWidget = ({
             }),
             dataIndex: "publicity",
             key: "publicity",
-            width: 100,
+            width: 80,
             search: false,
             filters: true,
             onFilter: true,
@@ -333,7 +334,7 @@ const ChannelTableWidget = ({
           {
             title: intl.formatMessage({ id: "buttons.option" }),
             key: "option",
-            width: 120,
+            width: 100,
             valueType: "option",
             render: (text, row, index, action) => {
               return [
