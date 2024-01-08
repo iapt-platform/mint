@@ -4,6 +4,7 @@ import {
   ArrowLeftOutlined,
   FieldTimeOutlined,
   MoreOutlined,
+  FileAddOutlined,
 } from "@ant-design/icons";
 
 import { ITerm, getGrammar } from "../../reducers/term-vocabulary";
@@ -21,6 +22,14 @@ import GrammarRecent, {
   popRecent,
   pushRecent,
 } from "./GrammarRecent";
+import { useIntl } from "react-intl";
+import TermModal from "./TermModal";
+import { get } from "../../request";
+import {
+  IApiResponseChannelData,
+  IApiResponseChannelList,
+} from "../api/Channel";
+import { grammarTermFetch } from "../../load";
 
 const { Search } = Input;
 
@@ -29,14 +38,30 @@ interface IGrammarList {
   weight: number;
 }
 const GrammarBookWidget = () => {
+  const intl = useIntl();
+
   const [result, setResult] = useState<IGrammarList[]>();
   const [termId, setTermId] = useState<string>();
   const [termSearch, setTermSearch] = useState<string>();
   const [showRecent, setShowRecent] = useState(false);
+  const [create, setCreate] = useState(false);
+  const [grammarChannel, setGrammarChannel] =
+    useState<IApiResponseChannelData>();
   const sysGrammar = useAppSelector(getGrammar);
   const searchWord = useAppSelector(grammarWord);
   const searchWordId = useAppSelector(grammarWordId);
 
+  useEffect(() => {
+    const url = `/v2/channel?view=system`;
+    get<IApiResponseChannelList>(url).then((json) => {
+      if (json.ok) {
+        const channel = json.data.rows.find(
+          (value) => value.name === "_System_Grammar_Term_zh-hans_"
+        );
+        setGrammarChannel(channel);
+      }
+    });
+  }, []);
   useEffect(() => {
     console.debug("grammar book", searchWord);
     if (searchWord && searchWord.length > 0) {
@@ -137,11 +162,25 @@ const GrammarBookWidget = () => {
                 label: "最近查询",
                 icon: <FieldTimeOutlined />,
               },
+              {
+                key: "create",
+                label: intl.formatMessage({ id: "buttons.create" }),
+                icon: <FileAddOutlined />,
+                children: [
+                  {
+                    key: "create_collection",
+                    label: "固定搭配",
+                  },
+                ],
+              },
             ],
             onClick: (e) => {
               switch (e.key) {
                 case "recent":
                   setShowRecent(true);
+                  break;
+                case "create_collection":
+                  setCreate(true);
                   break;
               }
             },
@@ -197,6 +236,16 @@ const GrammarBookWidget = () => {
           />
         )}
       </div>
+      <TermModal
+        parentChannelId={grammarChannel?.uid}
+        tags={[":collection:"]}
+        open={create}
+        onClose={() => setCreate(false)}
+        onUpdate={() => {
+          //获取语法术语表
+          grammarTermFetch();
+        }}
+      />
     </div>
   );
 };
