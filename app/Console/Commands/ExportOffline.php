@@ -103,13 +103,10 @@ class ExportOffline extends Command
             'format'=>$this->argument('format'),
         ]);
 
-        //删除全部的旧文件
-        $fullPath = storage_path($exportPath);
+        //删除全部的临时文件
         foreach (scandir($exportDir) as $key => $file) {
             if(is_file($exportDir.'/'.$file)){
-                if($file !== '.stop'){
-                    unlink($exportDir.'/'.$file);
-                }
+                unlink($exportDir.'/'.$file);
             }
         }
         return 0;
