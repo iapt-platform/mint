@@ -18,7 +18,7 @@ class ExportSentence extends Command
      *
      * @var string
      */
-    protected $signature = 'export:sentence {--channel=} {--type=translation}';
+    protected $signature = 'export:sentence {--channel=} {--type=translation} {--driver=morus}';
 
     /**
      * The console command description.
@@ -48,6 +48,7 @@ class ExportSentence extends Command
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
+        \App\Tools\Markdown::driver($this->option('driver'));
         $channels = [];
         $channel_id = $this->option('channel');
         if($channel_id){
