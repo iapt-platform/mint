@@ -15,7 +15,7 @@ class ExportZip extends Command
      *
      * @var string
      */
-    protected $signature = 'export:zip {format?  : zip file format 7z,lzma,gz }';
+    protected $signature = 'export:zip {db : db filename} {format?  : zip file format 7z,lzma,gz }';
 
     /**
      * The console command description.
@@ -44,7 +44,8 @@ class ExportZip extends Command
         Log::debug('export offline: 开始压缩');
         $this->info('export offline: 开始压缩');
         $exportPath = 'app/public/export/offline';
-        $exportFile = 'wikipali-offline-'.date("Y-m-d").'.db3';
+        $exportFile = $this->argument('db').'-'.date("Y-m-d").'.db3';
+
         Log::debug('export offline: zip file {filename} {format}',
                     [
                         'filename'=>$exportFile,
@@ -141,7 +142,7 @@ class ExportZip extends Command
                    'filesize'=>filesize($zipFullFileName),
                    'min_app_ver'=>'1.3',
                     ];
-        RedisClusters::put('/offline/index',$info);
+        RedisClusters::put('/offline/index/'.$this->argument('db'),$info);
         unlink($exportFullFileName);
         return 0;
     }

@@ -21,7 +21,7 @@ class UpgradeProgressChapter extends Command
      * php artisan upgrade:progress.chapter --book=168 --para=915 --channel=19f53a65-81db-4b7d-8144-ac33f1217d34
      * @var string
      */
-    protected $signature = 'upgrade:progress.chapter  {--book=} {--para=} {--channel=}';
+    protected $signature = 'upgrade:progress.chapter  {--book=} {--para=} {--channel=} {--driver=morus}';
 
     /**
      * The console command description.
@@ -55,6 +55,8 @@ class UpgradeProgressChapter extends Command
         $book = $this->option('book');
         $para = $this->option('para');
         $channelId = $this->option('channel');
+
+        \App\Tools\Markdown::driver($this->option('driver'));
 
         $tagCount=0;
         #第一步 查询有多少书有译文

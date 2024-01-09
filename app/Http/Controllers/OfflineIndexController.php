@@ -17,11 +17,16 @@ class OfflineIndexController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        if(RedisClusters::has('/offline/index')){
-            $fileInfo = RedisClusters::get('/offline/index');
+        $key = '/offline/index/wikipali-offline';
+        if($request->has('file')){
+            $key .= '-'.$request->get('file');
+        }
+
+        if(RedisClusters::has()){
+            $fileInfo = RedisClusters::get($key);
             foreach ($fileInfo as $key => $file) {
                 $zipFile = $file['filename'];
                 $bucket = config('mint.attachments.bucket_name.temporary');

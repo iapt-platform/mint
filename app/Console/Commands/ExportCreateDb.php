@@ -43,9 +43,16 @@ class ExportCreateDb extends Command
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
-        $sqlPath = database_path('export/sentence.sql');
+        $this->create('sentence.sql','wikipali-offline');
+        $this->create('sentence.sql','wikipali-offline-index');
+
+        return 0;
+    }
+
+    private function create($sqlFile,$dbFile){
+        $sqlPath = database_path('export/'.$sqlFile);
         $exportDir = storage_path('app/public/export/offline');
-        $exportFile = $exportDir.'/wikipali-offline-'.date("Y-m-d").'.db3';
+        $exportFile = $exportDir.'/'.$dbFile.'-'.date("Y-m-d").'.db3';
         $file = fopen($exportFile,'w');
         fclose($file);
         $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
@@ -58,6 +65,5 @@ class ExportCreateDb extends Command
             $dbh->query($_value . ';');
         }
         Log::debug('task export offline create-db finished');
-        return 0;
     }
 }

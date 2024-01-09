@@ -17,7 +17,7 @@ class ExportChapterIndex extends Command
      *
      * @var string
      */
-    protected $signature = 'export:chapter.index';
+    protected $signature = 'export:chapter.index {db : db file name wikipali-offline or wikipali-offline-index}';
 
     /**
      * The console command description.
@@ -47,7 +47,8 @@ class ExportChapterIndex extends Command
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
-        $exportFile = storage_path('app/public/export/offline/wikipali-offline-'.date("Y-m-d").'.db3');
+
+        $exportFile = storage_path('app/public/export/offline/'.$this->argument('db').'-'.date("Y-m-d").'.db3');
         $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();

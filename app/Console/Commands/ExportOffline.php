@@ -16,7 +16,7 @@ class ExportOffline extends Command
      * php artisan export:offline lzma
      * @var string
      */
-    protected $signature = 'export:offline {format?  : zip file format 7z,lzma,gz } {--shortcut}';
+    protected $signature = 'export:offline {format?  : zip file format 7z,lzma,gz } {--shortcut}  {--driver=morus}';
 
     /**
      * The console command description.
@@ -67,7 +67,8 @@ class ExportOffline extends Command
 
         //导出channel
         $this->info('export channel start');
-        $this->call('export:channel');
+        $this->call('export:channel',['db'=>'wikipali-offline']);
+        $this->call('export:channel',['db'=>'wikipali-offline-index']);
 
         if(!$this->option('shortcut')){
             //tag
@@ -79,23 +80,38 @@ class ExportOffline extends Command
             $this->call('export:pali.text');
             //导出章节索引
             $this->info('export chapter start');
-            $this->call('export:chapter.index');
+            $this->call('export:chapter.index',['db'=>'wikipali-offline']);
+            $this->call('export:chapter.index',['db'=>'wikipali-offline-index']);
             //导出译文
             $this->info('export sentence start');
-            $this->call('export:sentence',['--type'=>'translation']);
-            $this->call('export:sentence',['--type'=>'nissaya']);
+            $this->call('export:sentence',['--type'=>'translation','--driver'=>$this->option('driver')]);
+            $this->call('export:sentence',['--type'=>'nissaya','--driver'=>$this->option('driver')]);
             //导出原文
-            $this->call('export:sentence',['--type'=>'original']);
+            $this->call('export:sentence',['--type'=>'original','--driver'=>$this->option('driver')]);
         }
 
         $this->info('zip');
         Log::info('export offline: db写入完毕 开始压缩');
 
         sleep(5);
-        $this->call('export:zip',['format'=>$this->argument('format')]);
+        $this->call('export:zip',[
+            'db'=>'wikipali-offline-index',
+            'format'=>$this->argument('format'),
+        ]);
+        $this->call('export:zip',[
+            'db'=>'wikipali-offline',
+            'format'=>$this->argument('format'),
+        ]);
 
-        unlink($exportStop);
-
+        //删除全部的旧文件
+        $fullPath = storage_path($exportPath);
+        foreach (scandir($exportDir) as $key => $file) {
+            if(is_file($exportDir.'/'.$file)){
+                if($file !== '.stop'){
+                    unlink($exportDir.'/'.$file);
+                }
+            }
+        }
         return 0;
     }
 }
