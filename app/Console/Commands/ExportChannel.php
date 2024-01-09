@@ -16,7 +16,7 @@ class ExportChannel extends Command
      *
      * @var string
      */
-    protected $signature = 'export:channel';
+    protected $signature = 'export:channel {db}';
 
     /**
      * The console command description.
@@ -46,7 +46,7 @@ class ExportChannel extends Command
             return 0;
         }
         Log::debug('task export offline channel-table start');
-        $exportFile = storage_path('app/public/export/offline/wikipali-offline-'.date("Y-m-d").'.db3');
+        $exportFile = storage_path('app/public/export/offline/'.$this->argument('db').'-'.date("Y-m-d").'.db3');
         $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
