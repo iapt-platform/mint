@@ -4,7 +4,6 @@ import { Form, Input, Button, Popover } from "antd";
 import { Collapse } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 
-import SelectCase from "../../dict/SelectCase";
 import { IWbw, IWbwField } from "./WbwWord";
 import WbwMeaningSelect from "./WbwMeaningSelect";
 
@@ -13,6 +12,7 @@ import WbwDetailParent2 from "./WbwDetailParent2";
 import WbwDetailFactor from "./WbwDetailFactor";
 import WbwDetailBasicRelation from "./WbwDetailBasicRelation";
 import WbwDetailParent from "./WbwDetailParent";
+import WbwDetailCase from "./WbwDetailCase";
 
 const { Panel } = Collapse;
 
@@ -162,8 +162,9 @@ const WbwDetailBasicWidget = ({
           tooltip={intl.formatMessage({ id: "forms.fields.case.tooltip" })}
           name="case"
         >
-          <SelectCase
-            onCaseChange={(value: string) => {
+          <WbwDetailCase
+            data={data}
+            onChange={(value: string) => {
               if (typeof onChange !== "undefined") {
                 onChange({ field: "case", value: value });
               }
