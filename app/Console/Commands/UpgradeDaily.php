@@ -73,12 +73,12 @@ class UpgradeDaily extends Command
         Log::info('社区术语表完毕 {app.env}',['app.env'=>$env]);
 
         # 导出离线数据
-        /*
-        $this->call('export:offline',['format'=>'lzma']);
+
+        $this->call('export:offline',['format'=>'lzma','--driver'=>'str']);
         $time = time()-$currTime;
         $message .= "export:offline:{$time}; ";
         Log::info('导出离线数据完毕{app.env}',['app.env'=>$env]);
-        */
+
         $time = time()-$start;
         $message .= "总时间:{$time}; ";
 
