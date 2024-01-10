@@ -53,6 +53,14 @@ class ExportOffline extends Command
                 return 1;
             }
         }
+
+        //删除全部的旧文件
+        foreach (scandir($exportDir) as $key => $file) {
+            if(is_file($exportDir.'/'.$file)){
+                unlink($exportDir.'/'.$file);
+            }
+        }
+        //添加 .stop
         $exportStop = $exportDir.'/.stop';
         $file = fopen($exportStop,'w');
         fclose($file);
@@ -103,15 +111,7 @@ class ExportOffline extends Command
             'format'=>$this->argument('format'),
         ]);
 
-        //删除全部的旧文件
-        $fullPath = storage_path($exportPath);
-        foreach (scandir($exportDir) as $key => $file) {
-            if(is_file($exportDir.'/'.$file)){
-                if($file !== '.stop'){
-                    unlink($exportDir.'/'.$file);
-                }
-            }
-        }
+        unlink($exportStop);
         return 0;
     }
 }
