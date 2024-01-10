@@ -21,7 +21,7 @@ import { useAppSelector } from "../../../hooks";
 import { add, relationAddParam } from "../../../reducers/relation-add";
 import { ArticleMode } from "../../article/Article";
 import { anchor, showWbw } from "../../../reducers/wbw";
-import { CommentOutlinedIcon, HandBookIcon } from "../../../assets/icon";
+import { CommentOutlinedIcon } from "../../../assets/icon";
 import { ParaLinkCtl } from "../ParaLink";
 
 const { Paragraph } = Typography;
@@ -207,16 +207,15 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
         <TagTwoTone twoToneColor={color} />
       </Popover>
     ) : undefined;
-  let classPali: string;
+  let classPali: string = "pali";
   switch (data.style?.value) {
     case "note":
       classPali = "wbw_note";
       break;
     case "bld":
-      classPali = "pali wbw_bold";
-      break;
-    default:
-      classPali = "pali";
+      if (!data.word.value.includes("{")) {
+        classPali = "pali wbw_bold";
+      }
       break;
   }
   let padding: string;
