@@ -25,7 +25,7 @@ class OfflineIndexController extends Controller
             $key .= '-'.$request->get('file');
         }
 
-        if(RedisClusters::has()){
+        if(RedisClusters::has($key)){
             $fileInfo = RedisClusters::get($key);
             foreach ($fileInfo as $key => $file) {
                 $zipFile = $file['filename'];
