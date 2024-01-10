@@ -108,11 +108,13 @@ const SentTabWidget = ({
               width: "100%",
               marginRight: 10,
               backgroundColor:
-                hover || currKey !== "close" ? "#80808030" : "unset",
+                hover || currKey !== "close"
+                  ? "rgba(128, 128, 128, 0.1)"
+                  : "unset",
             }
           : {
               padding: "0 8px",
-              backgroundColor: "#80808030",
+              backgroundColor: "rgba(128, 128, 128, 0.1)",
             }
       }
       tabBarStyle={{ marginBottom: 0 }}
