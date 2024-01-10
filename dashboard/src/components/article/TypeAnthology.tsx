@@ -13,6 +13,7 @@ interface IWidget {
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
+  onTitle?: Function;
 }
 const TypeAnthologyWidget = ({
   type,
@@ -20,6 +21,7 @@ const TypeAnthologyWidget = ({
   articleId,
   mode = "read",
   onArticleChange,
+  onTitle,
 }: IWidget) => {
   const [loading, setLoading] = useState(false);
   const [errorCode, setErrorCode] = useState<number>();
@@ -36,6 +38,8 @@ const TypeAnthologyWidget = ({
       )}
       <AnthologyDetail
         visible={!loading}
+        channels={channels}
+        aid={articleId}
         onArticleClick={(
           anthologyId: string,
           articleId: string,
@@ -53,8 +57,11 @@ const TypeAnthologyWidget = ({
         onError={(code: number, message: string) => {
           setErrorCode(code);
         }}
-        channels={channels}
-        aid={articleId}
+        onTitle={(value: string) => {
+          if (typeof onTitle !== "undefined") {
+            onTitle(value);
+          }
+        }}
       />
     </div>
   );

@@ -34,6 +34,7 @@ interface IWidget {
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
+  onTitle?: Function;
 }
 const TypePaliWidget = ({
   type,
@@ -48,6 +49,7 @@ const TypePaliWidget = ({
   onArticleChange,
   onFinal,
   onLoad,
+  onTitle,
 }: IWidget) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [articleHtml, setArticleHtml] = useState<string[]>(["<span />"]);
@@ -62,7 +64,12 @@ const TypePaliWidget = ({
   const srcDataMode = mode === "edit" || mode === "wbw" ? "edit" : "read";
 
   useEffect(() => {
-    store.dispatch(refresh({ type: "para", id: focus }));
+    const parts = focus?.split("-");
+    if (parts?.length === 2) {
+      store.dispatch(refresh({ type: "para", id: focus }));
+    } else if (parts?.length === 4) {
+      store.dispatch(refresh({ type: "sentence", id: focus }));
+    }
   }, [focus]);
 
   useEffect(() => {
@@ -133,6 +140,10 @@ const TypePaliWidget = ({
 
           if (typeof onLoad !== "undefined") {
             onLoad(json.data);
+          }
+          if (typeof onTitle !== "undefined") {
+            const bookTitle = json.data.path ? json.data.path[0].title : "";
+            onTitle(`${bookTitle}-${json.data.title}`);
           }
         } else {
           message.error(json.message);

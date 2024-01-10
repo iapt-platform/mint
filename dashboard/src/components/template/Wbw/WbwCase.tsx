@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useIntl } from "react-intl";
+import { IntlShape, useIntl } from "react-intl";
 import { Typography, Button, Space } from "antd";
 import { SwapOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
@@ -11,8 +11,55 @@ import "./wbw.css";
 import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 import WbwParent2 from "./WbwParent2";
+import { IApiResponseDictData } from "../../api/Dict";
+
+export interface ValueType {
+  key: string;
+  label: string;
+}
 
 const { Text } = Typography;
+
+export const caseInDict = (
+  wordIn: string,
+  wordIndex: string[],
+  wordList: IApiResponseDictData[],
+  intl: IntlShape
+): MenuProps["items"] => {
+  if (!wordIn) {
+    return [];
+  }
+  if (wordIndex.includes(wordIn)) {
+    const result = wordList.filter((word) => word.word === wordIn);
+    //查重
+    //TODO 加入信心指数并排序
+    let myMap = new Map<string, number>();
+    let factors: string[] = [];
+    for (const iterator of result) {
+      myMap.set(iterator.type + "#" + iterator.grammar, 1);
+    }
+    myMap.forEach((value, key, map) => {
+      factors.push(key);
+    });
+
+    const menu = factors.map((item) => {
+      const arrItem: string[] = item
+        .replaceAll(".", "")
+        .replaceAll("#", "$")
+        .split("$");
+      let noNull = arrItem.filter((item) => item !== "");
+      noNull.forEach((item, index, arr) => {
+        arr[index] = intl.formatMessage({
+          id: `dict.fields.type.${item}.short.label`,
+        });
+      });
+      return { key: item, label: noNull.join(" ") };
+    });
+    return menu;
+  } else {
+    return [];
+  }
+};
 
 interface IWidget {
   data: IWbw;
@@ -40,36 +87,14 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
     if (!data.real.value) {
       return;
     }
-    if (inlineDict.wordIndex.includes(data.real.value)) {
-      const result = inlineDict.wordList.filter(
-        (word) => word.word === data.real.value
-      );
-      //查重
-      //TODO 加入信心指数并排序
-      let myMap = new Map<string, number>();
-      let factors: string[] = [];
-      for (const iterator of result) {
-        myMap.set(iterator.type + "#" + iterator.grammar, 1);
-      }
-      myMap.forEach((value, key, map) => {
-        factors.push(key);
-      });
-
-      const menu = factors.map((item) => {
-        const arrItem: string[] = item
-          .replaceAll(".", "")
-          .replaceAll("#", "$")
-          .split("$");
-        let noNull = arrItem.filter((item) => item !== "");
-        noNull.forEach((item, index, arr) => {
-          arr[index] = intl.formatMessage({
-            id: `dict.fields.type.${item}.short.label`,
-          });
-        });
-        return { key: item, label: noNull.join(" ") };
-      });
-      setItems(menu);
-    }
+    setItems(
+      caseInDict(
+        data.real.value,
+        inlineDict.wordIndex,
+        inlineDict.wordList,
+        intl
+      )
+    );
   }, [data.real.value, inlineDict, intl]);
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);

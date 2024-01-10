@@ -1,36 +1,20 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import {
-  Form,
-  Input,
-  AutoComplete,
-  Button,
-  Popover,
-  Space,
-  Badge,
-  Tooltip,
-} from "antd";
+import { Form, Input, Button, Popover } from "antd";
 import { Collapse } from "antd";
-import { MoreOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { MoreOutlined } from "@ant-design/icons";
 
-import SelectCase from "../../dict/SelectCase";
 import { IWbw, IWbwField } from "./WbwWord";
 import WbwMeaningSelect from "./WbwMeaningSelect";
-import { useAppSelector } from "../../../hooks";
-import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
-import { IApiResponseDictData } from "../../api/Dict";
+
 import WbwDetailFm from "./WbwDetailFm";
 import WbwDetailParent2 from "./WbwDetailParent2";
 import WbwDetailFactor from "./WbwDetailFactor";
 import WbwDetailBasicRelation from "./WbwDetailBasicRelation";
+import WbwDetailParent from "./WbwDetailParent";
+import WbwDetailCase from "./WbwDetailCase";
 
 const { Panel } = Collapse;
-
-interface ValueType {
-  key?: string;
-  label: React.ReactNode;
-  value: string | number;
-}
 
 export interface IWordBasic {
   meaning?: string[];
@@ -39,30 +23,6 @@ export interface IWordBasic {
   factorMeaning?: string;
   parent?: string;
 }
-export const getParentInDict = (
-  wordIn: string,
-  wordIndex: string[],
-  wordList: IApiResponseDictData[]
-): string[] => {
-  if (wordIndex.includes(wordIn)) {
-    const result = wordList.filter((word) => word.word === wordIn);
-    //查重
-    //TODO 加入信心指数并排序
-    let myMap = new Map<string, number>();
-    let parent: string[] = [];
-    for (const iterator of result) {
-      if (iterator.parent) {
-        myMap.set(iterator.parent, 1);
-      }
-    }
-    myMap.forEach((value, key, map) => {
-      parent.push(key);
-    });
-    return parent;
-  } else {
-    return [];
-  }
-};
 
 interface IWidget {
   data: IWbw;
@@ -78,8 +38,6 @@ const WbwDetailBasicWidget = ({
 }: IWidget) => {
   const [form] = Form.useForm();
   const intl = useIntl();
-  const inlineDict = useAppSelector(_inlineDict);
-  const [parentOptions, setParentOptions] = useState<ValueType[]>([]);
   const [factors, setFactors] = useState<string[] | undefined>(
     data.factors?.value?.split("+")
   );
@@ -96,21 +54,6 @@ const WbwDetailBasicWidget = ({
       onChange({ field: "meaning", value: value });
     }
   };
-
-  useEffect(() => {
-    const parent = getParentInDict(
-      data.word.value,
-      inlineDict.wordIndex,
-      inlineDict.wordList
-    );
-    const parentOptions = parent.map((item) => {
-      return {
-        label: item,
-        value: item,
-      };
-    });
-    setParentOptions(parentOptions);
-  }, [inlineDict, data]);
 
   return (
     <>
@@ -219,8 +162,9 @@ const WbwDetailBasicWidget = ({
           tooltip={intl.formatMessage({ id: "forms.fields.case.tooltip" })}
           name="case"
         >
-          <SelectCase
-            onCaseChange={(value: string) => {
+          <WbwDetailCase
+            data={data}
+            onChange={(value: string) => {
               if (typeof onChange !== "undefined") {
                 onChange({ field: "case", value: value });
               }
@@ -237,16 +181,14 @@ const WbwDetailBasicWidget = ({
             id: "forms.fields.parent.tooltip",
           })}
         >
-          <AutoComplete
-            options={parentOptions}
-            onChange={(value: any, option: ValueType | ValueType[]) => {
+          <WbwDetailParent
+            data={data}
+            onChange={(value: string) => {
               if (typeof onChange !== "undefined") {
                 onChange({ field: "parent", value: value });
               }
             }}
-          >
-            <Input allowClear />
-          </AutoComplete>
+          />
         </Form.Item>
         <Collapse bordered={false}>
           <Panel header="词源" key="parent2">

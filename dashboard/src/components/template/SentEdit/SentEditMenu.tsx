@@ -19,6 +19,7 @@ import {
   PasteOutLinedIcon,
 } from "../../../assets/icon";
 import { useIntl } from "react-intl";
+import { fullUrl } from "../../../utils";
 
 interface IWidget {
   data?: ISentence;
@@ -57,6 +58,18 @@ const SentEditMenuWidget = ({
         break;
       case "timeline":
         setTimelineOpen(true);
+        break;
+      case "copy-link":
+        if (data) {
+          let link = `/article/para/${data.book}-${data.para}?mode=edit`;
+          link += `&book=${data.book}&par=${data.para}`;
+          link += `&channel=${data.channel.id}`;
+
+          link += `&focus=${data.book}-${data.para}-${data.wordStart}-${data.wordEnd}`;
+          navigator.clipboard.writeText(fullUrl(link)).then(() => {
+            message.success("链接地址已经拷贝到剪贴板");
+          });
+        }
         break;
       default:
         break;
@@ -99,7 +112,11 @@ const SentEditMenuWidget = ({
       key: "json",
       label: "To Json",
       icon: <JsonOutlinedIcon />,
-      disabled: !data || data.contentType === "json" || isPr,
+      disabled:
+        !data ||
+        data.channel.type !== "nissaya" ||
+        data.contentType === "json" ||
+        isPr,
     },
     {
       type: "divider",
