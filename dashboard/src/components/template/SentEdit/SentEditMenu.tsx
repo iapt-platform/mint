@@ -112,7 +112,11 @@ const SentEditMenuWidget = ({
       key: "json",
       label: "To Json",
       icon: <JsonOutlinedIcon />,
-      disabled: !data || data.contentType === "json" || isPr,
+      disabled:
+        !data ||
+        data.channel.type !== "nissaya" ||
+        data.contentType === "json" ||
+        isPr,
     },
     {
       type: "divider",
