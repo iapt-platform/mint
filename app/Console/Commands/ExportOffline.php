@@ -110,7 +110,7 @@ class ExportOffline extends Command
             'format'=>$this->argument('format'),
         ]);
 
-
+        unlink($exportStop);
         return 0;
     }
 }
