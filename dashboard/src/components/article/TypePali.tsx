@@ -62,7 +62,12 @@ const TypePaliWidget = ({
   const srcDataMode = mode === "edit" || mode === "wbw" ? "edit" : "read";
 
   useEffect(() => {
-    store.dispatch(refresh({ type: "para", id: focus }));
+    const parts = focus?.split("-");
+    if (parts?.length === 2) {
+      store.dispatch(refresh({ type: "para", id: focus }));
+    } else if (parts?.length === 4) {
+      store.dispatch(refresh({ type: "sentence", id: focus }));
+    }
   }, [focus]);
 
   useEffect(() => {
