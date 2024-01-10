@@ -174,6 +174,12 @@ class ChannelController extends Controller
         if($request->has("type")){
             $table = $table->where('type', $request->get("type"));
         }
+        if($request->has("updated_at")){
+            $table = $table->where('updated_at','>', $request->get("updated_at"));
+        }
+        if($request->has("created_at")){
+            $table = $table->where('created_at','>', $request->get("created_at"));
+        }
         //获取记录总条数
         $count = $table->count();
         //处理排序
