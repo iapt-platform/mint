@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Badge, Space, Tabs, Typography } from "antd";
+import { Badge, Space, Tabs, Typography, message } from "antd";
 import {
   TranslationOutlined,
   CloseOutlined,
@@ -17,6 +17,7 @@ import SentMenu from "./SentMenu";
 import { ArticleMode } from "../../article/Article";
 import { IResNumber } from "../SentEdit";
 import SentTabCopy from "./SentTabCopy";
+import { fullUrl } from "../../../utils";
 
 const { Text } = Typography;
 
@@ -160,6 +161,23 @@ const SentTabWidget = ({
                   if (typeof onModeChange !== "undefined") {
                     onModeChange("wbw");
                   }
+                  break;
+                case "copy-id":
+                  const id = `{{${book}-${para}-${wordStart}-${wordEnd}}}`;
+                  navigator.clipboard.writeText(id).then(() => {
+                    message.success("编号已经拷贝到剪贴板");
+                  });
+                  break;
+                case "copy-link":
+                  let link = `/article/para/${book}-${para}?mode=edit`;
+                  link += `&book=${book}&par=${para}`;
+                  if (channelsId) {
+                    link += `&channel=` + channelsId?.join("_");
+                  }
+                  link += `&focus=${book}-${para}-${wordStart}-${wordEnd}`;
+                  navigator.clipboard.writeText(fullUrl(link)).then(() => {
+                    message.success("链接地址已经拷贝到剪贴板");
+                  });
                   break;
                 default:
                   break;
