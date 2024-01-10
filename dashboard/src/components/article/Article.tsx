@@ -57,6 +57,7 @@ interface IWidget {
   onFinal?: Function;
   onLoad?: Function;
   onAnthologySelect?: Function;
+  onTitle?: Function;
 }
 const ArticleWidget = ({
   type,
@@ -75,6 +76,7 @@ const ArticleWidget = ({
   onFinal,
   onLoad,
   onAnthologySelect,
+  onTitle,
 }: IWidget) => {
   return (
     <div>
@@ -141,6 +143,16 @@ const ArticleWidget = ({
           ) => {
             if (typeof onArticleChange !== "undefined") {
               onArticleChange(type, id, target, param);
+            }
+          }}
+          onLoad={(data: IArticleDataResponse) => {
+            if (typeof onLoad !== "undefined") {
+              onLoad(data);
+            }
+          }}
+          onTitle={(value: string) => {
+            if (typeof onTitle !== "undefined") {
+              onTitle(value);
             }
           }}
         />

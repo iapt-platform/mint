@@ -397,12 +397,11 @@ const Widget = () => {
                   navigate(url);
                 }
               }}
+              onTitle={(value: string) => {
+                document.title = value.slice(0, 128);
+              }}
               onLoad={(article: IArticleDataResponse) => {
                 setLoadedArticleData(article);
-                const windowTitle = article.title_text
-                  ? article.title_text
-                  : article.title;
-                document.title = windowTitle.slice(0, 128);
                 const paramTopic = searchParams.get("topic");
                 const paramComment = searchParams.get("comment");
                 const paramType = searchParams.get("dis_type");
