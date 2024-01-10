@@ -69,6 +69,7 @@ const WbwDetailParentWidget = ({ data, onChange }: IWidget) => {
   return (
     <AutoComplete
       options={parentOptions}
+      value={data.parent?.value}
       onChange={(value: any, option: ValueType | ValueType[]) => {
         if (typeof onChange !== "undefined") {
           onChange({ field: "parent", value: value });
