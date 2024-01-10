@@ -97,6 +97,9 @@ const ArticleWidget = ({
             if (typeof onLoad !== "undefined") {
               onLoad(data);
             }
+            if (typeof onTitle !== "undefined") {
+              onTitle(data.title);
+            }
           }}
           onAnthologySelect={(id: string) => {
             if (typeof onAnthologySelect !== "undefined") {
@@ -112,6 +115,11 @@ const ArticleWidget = ({
           onArticleChange={(type: ArticleType, id: string, target: string) => {
             if (typeof onArticleChange !== "undefined") {
               onArticleChange(type, id, target);
+            }
+          }}
+          onTitle={(value: string) => {
+            if (typeof onTitle !== "undefined") {
+              onTitle(value);
             }
           }}
         />
