@@ -1,5 +1,5 @@
 import { Card } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IStudio } from "../auth/StudioName";
 
 import type { IUser } from "../auth/User";
@@ -11,6 +11,8 @@ import SentTab from "./SentEdit/SentTab";
 import { IWbw } from "./Wbw/WbwWord";
 import { ArticleMode } from "../article/Article";
 import { TChannelType } from "../api/Channel";
+import { useAppSelector } from "../../hooks";
+import { currFocus } from "../../reducers/focus";
 
 export interface IResNumber {
   translation?: number;
@@ -94,6 +96,28 @@ export const SentEditInner = ({
   const [isCompact, setIsCompact] = useState(compact);
   const [articleMode, setArticleMode] = useState<ArticleMode | undefined>(mode);
   const [loadedRes, setLoadedRes] = useState<IResNumber>();
+  const [isFocus, setIsFocus] = useState(false);
+  const focus = useAppSelector(currFocus);
+  const divRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (focus) {
+      if (focus.focus?.type === "sentence") {
+        if (focus.focus.id === id) {
+          setIsFocus(true);
+          divRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "nearest",
+          });
+        } else {
+          setIsFocus(false);
+        }
+      }
+    } else {
+      setIsFocus(false);
+    }
+  }, [focus, id]);
 
   useEffect(() => {
     const validRes = (value: ISentence, type: TChannelType) =>
@@ -127,9 +151,12 @@ export const SentEditInner = ({
 
   return (
     <Card
+      ref={divRef}
       bodyStyle={{ paddingBottom: 0, paddingLeft: 0, paddingRight: 0 }}
       style={{
-        border: "1px solid rgb(128 128 128 / 10%)",
+        border: isFocus
+          ? "2px solid rgb(0 0 200 / 50%)"
+          : "1px solid rgb(128 128 128 / 10%)",
         marginTop: 4,
         borderRadius: 6,
         backgroundColor: "rgb(255 255 255 / 8%)",
