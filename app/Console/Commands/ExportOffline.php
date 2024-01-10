@@ -60,6 +60,7 @@ class ExportOffline extends Command
                 unlink($exportDir.'/'.$file);
             }
         }
+        //添加 .stop
         $exportStop = $exportDir.'/.stop';
         $file = fopen($exportStop,'w');
         fclose($file);
