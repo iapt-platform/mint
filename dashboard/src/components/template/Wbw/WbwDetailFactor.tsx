@@ -69,7 +69,10 @@ const WbwDetailFactorWidget = ({ data, onChange }: IWidget) => {
         value: item,
       };
     });
-    setFactorOptions(options);
+    setFactorOptions([
+      ...options,
+      { label: data.real.value, value: data.real.value },
+    ]);
   }, [data.real.value, inlineDict.wordIndex, inlineDict.wordList]);
 
   return (
