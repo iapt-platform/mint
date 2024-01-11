@@ -142,7 +142,10 @@ const TypePaliWidget = ({
             onLoad(json.data);
           }
           if (typeof onTitle !== "undefined") {
-            const bookTitle = json.data.path ? json.data.path[0].title : "";
+            const bookTitle =
+              json.data.path && json.data.path.length > 0
+                ? json.data.path[0].title
+                : "";
             onTitle(`${bookTitle}-${json.data.title}`);
           }
         } else {
