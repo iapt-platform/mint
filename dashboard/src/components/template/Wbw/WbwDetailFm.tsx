@@ -1,5 +1,5 @@
 import { useIntl } from "react-intl";
-import { Button, Dropdown, Input, MenuProps, Space } from "antd";
+import { Button, Dropdown, Input, Space, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import {
   MoreOutlined,
@@ -15,6 +15,7 @@ import store from "../../../store";
 import { lookup } from "../../../reducers/command";
 import { openPanel } from "../../../reducers/right-panel";
 import { ItemType } from "antd/lib/menu/hooks/useItems";
+import { MergeIcon } from "../../../assets/icon";
 
 interface IWFMI {
   pali: string;
@@ -251,28 +252,32 @@ const WbwDetailFmWidget = ({
                   <PlusOutlined key={`icon-${index}`} />
                 ) : (
                   <>
-                    <Button
-                      key="EditOutlined"
-                      size="small"
-                      type="text"
-                      icon={<EditOutlined />}
-                      onClick={() => setFactorInputEnable(true)}
-                    />
-                    <Button
-                      key="CheckOutlined"
-                      size="small"
-                      type="text"
-                      icon={<CheckOutlined />}
-                      onClick={() => {
-                        if (typeof onJoin !== "undefined") {
-                          onJoin(
-                            factorMeaning
-                              .filter((value) => !value.includes("["))
-                              .join(" ")
-                          );
-                        }
-                      }}
-                    />
+                    <Tooltip title="在文本框中编辑">
+                      <Button
+                        key="EditOutlined"
+                        size="small"
+                        type="text"
+                        icon={<EditOutlined />}
+                        onClick={() => setFactorInputEnable(true)}
+                      />
+                    </Tooltip>
+                    <Tooltip title="合并后替换含义">
+                      <Button
+                        key="CheckOutlined"
+                        size="small"
+                        type="text"
+                        icon={<MergeIcon />}
+                        onClick={() => {
+                          if (typeof onJoin !== "undefined") {
+                            onJoin(
+                              factorMeaning
+                                .filter((value) => !value.includes("["))
+                                .join(" ")
+                            );
+                          }
+                        }}
+                      />
+                    </Tooltip>
                   </>
                 )}
               </span>
