@@ -33,6 +33,7 @@ const items = {
   "labels.input": "请输入",
   "labels.selected": "已经选择",
   "labels.page.number.type.c": "章节名称",
+  "labels.loading": "载入中",
 };
 
 export default items;

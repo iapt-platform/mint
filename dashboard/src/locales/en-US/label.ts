@@ -33,6 +33,7 @@ const items = {
   "labels.input": "input",
   "labels.selected": "Selected",
   "labels.page.number.type.c": "Chapter Title",
+  "labels.loading": "loading",
 };
 
 export default items;

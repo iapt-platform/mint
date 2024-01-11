@@ -57,7 +57,19 @@ export const caseInDict = (
     });
     return menu;
   } else {
-    return [];
+    return [
+      {
+        key: "",
+        label: (
+          <>
+            <LoadingOutlined />{" "}
+            {intl.formatMessage({
+              id: "labels.loading",
+            })}
+          </>
+        ),
+      },
+    ];
   }
 };
 
