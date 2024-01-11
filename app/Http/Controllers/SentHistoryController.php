@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-require_once __DIR__.'/../../../public/app/ucenter/function.php';
-
 use App\Models\SentHistory;
 use Illuminate\Http\Request;
 use App\Http\Resources\SentHistoryResource;
+use App\Http\Api\UserApi;
 
 class SentHistoryController extends Controller
 {
@@ -52,10 +51,13 @@ class SentHistoryController extends Controller
                             ->take(10)
                             ->get();
 
-        $userinfo = new \UserInfo();
+
         foreach ($result as $key => $user) {
-            # code...
-            $user->username = $userinfo->getName($user->user_uid);
+            $userInfo = UserApi::getByUuid($user->user_uid);
+            $user->username = [
+                'nickname'=>$userInfo['nickName'],
+                'username'=>$userInfo['userName'],
+            ];
         }
         return $this->ok($result);
     }
