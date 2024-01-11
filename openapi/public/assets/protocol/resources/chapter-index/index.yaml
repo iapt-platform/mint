@@ -1,0 +1,68 @@
+get:
+  summary: 章节信息列表
+  tags:
+    - chapter-index
+  description: 返回多行数据。支持分页。
+  parameters:
+    - name: view
+      in: query
+      required: true
+      description: 查询的内容的类型 public(公开的版本风格）
+      schema:
+        type: string
+        enum:
+          - public
+    - name: updated_at
+      in: query
+      description: 返回在这个时间之后更新(含新建)的channel列表。app知道目前手机离线包里面的channel表的最新一条记录的更新时间。把这个时间传进去就行。例子 2023-09-18T05:39:51.000000Z
+      schema:
+        type: string
+        format: date-time
+    - name: order
+      in: query
+      description: 排序字段
+      schema:
+        type: string
+    - name: dir
+      in: query
+      description: 排序方向
+      schema:
+        type: string
+        enum:
+          - desc
+          - asc
+    - name: limit
+      in: query
+      description: 每次提取记录数
+      schema:
+        type: number
+        minimum: 1
+        maximum: 1000
+    - name: offset
+      in: query
+      description: 从第几条记录开始提取
+      schema:
+        type: number
+  responses:
+    "200": # status code
+      description: A JSON array of user names
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      $ref: "./data.yaml"
+                  count:
+                    type: number
+                    description: 符合要求的记录总数
