@@ -37,3 +37,5 @@ paths:
     $ref: "./resources/sentence/index.yaml"
   /corpus:
     $ref: "./resources/corpus/corpus/index.yaml"
+  /chapter-index:
+    $ref: "./resources/chapter-index/index.yaml"
