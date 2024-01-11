@@ -4,7 +4,7 @@ import { Typography, Button, Space } from "antd";
 import { SwapOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Dropdown } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined, FileExclamationOutlined } from "@ant-design/icons";
 
 import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import "./wbw.css";
@@ -55,11 +55,29 @@ export const caseInDict = (
       });
       return { key: item, label: noNull.join(" ") };
     });
-    return menu;
+    if (menu.length > 0) {
+      return menu;
+    } else {
+      return [
+        {
+          key: "",
+          disabled: true,
+          label: (
+            <>
+              <FileExclamationOutlined />{" "}
+              {intl.formatMessage({
+                id: "labels.empty",
+              })}
+            </>
+          ),
+        },
+      ];
+    }
   } else {
     return [
       {
         key: "",
+        disabled: true,
         label: (
           <>
             <LoadingOutlined />{" "}
