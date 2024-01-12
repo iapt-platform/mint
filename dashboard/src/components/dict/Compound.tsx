@@ -24,8 +24,10 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
   const [factors, setFactors] = useState<IOptions[]>([]);
   const [meaningData, setMeaningData] = useState<IFirstMeaning[]>();
   const [currValue, setCurrValue] = useState<string>();
+
   const onSelectChange = (value?: string) => {
     console.log("selected", value);
+    setCurrValue(value);
     if (typeof value === "undefined") {
       setMeaningData(undefined);
     } else {
@@ -38,9 +40,7 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
       });
     }
   };
-  useEffect(() => {
-    console.log("compound changed", add);
-  }, [add]);
+
   useEffect(() => {
     console.log("compound changed", add, compound);
     if (typeof add === "undefined") {
@@ -54,6 +54,7 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
       onSelectChange(add);
     }
   }, [add, compound]);
+
   useEffect(() => {
     if (typeof word === "undefined") {
       return;
@@ -76,6 +77,7 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
   }, [word]);
   return (
     <div
+      className="dict_compound_div"
       style={{
         width: "100%",
         maxWidth: 560,
@@ -84,6 +86,9 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
       }}
     >
       <Select
+        getPopupContainer={(node: HTMLElement) =>
+          document.getElementsByClassName("dict_compound_div")[0] as HTMLElement
+        }
         value={currValue}
         style={{ width: "100%" }}
         onChange={onSelectChange}
