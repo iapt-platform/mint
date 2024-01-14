@@ -87,6 +87,7 @@ use App\Http\Controllers\CompoundController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\InteractiveController;
 use App\Http\Controllers\ChapterIndexController;
+use App\Http\Controllers\WbwSentenceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -229,6 +230,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('notification',NotificationController::class);
     Route::apiResource('interactive',InteractiveController::class);
     Route::apiResource('chapter-index',ChapterIndexController::class);
+    Route::apiResource('wbw-sentence',WbwSentenceController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
