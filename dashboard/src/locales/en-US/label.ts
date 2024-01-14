@@ -35,6 +35,7 @@ const items = {
   "labels.page.number.type.c": "Chapter Title",
   "labels.loading": "loading",
   "labels.empty": "empty",
+  "labels.curr.paragraph.cart.tpl": "Add to Cart",
 };
 
 export default items;

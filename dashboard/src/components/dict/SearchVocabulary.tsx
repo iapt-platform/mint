@@ -117,9 +117,13 @@ const SearchVocabularyWidget = ({
     console.log("开始计时");
     intervalRef.current = window.setInterval(search, 500, value);
   };
+
   return (
     <div style={{ width: "100%" }}>
       <AutoComplete
+        getPopupContainer={(node: HTMLElement) =>
+          document.getElementsByClassName("dict_search_div")[0] as HTMLElement
+        }
         value={input}
         style={{ width: "100%" }}
         popupClassName="certain-category-search-dropdown"
@@ -153,7 +157,7 @@ const SearchVocabularyWidget = ({
           }}
         />
       </AutoComplete>
-      <Space>
+      <Space style={{ display: "none" }}>
         {factors.map((item, id) => {
           return (
             <Link

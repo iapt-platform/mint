@@ -1,7 +1,8 @@
-import { Button, Dropdown, MenuProps, message } from "antd";
+import { Button, Dropdown, MenuProps, message, notification } from "antd";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { fullUrl } from "../../utils";
 import { useIntl } from "react-intl";
+import { addToCart } from "./SentEdit/SentCart";
 
 interface IWidgetParaHandleCtl {
   book: number;
@@ -35,9 +36,18 @@ export const ParaHandleCtl = ({
       }),
     },
     {
+      type: "divider",
+    },
+    {
       key: "copy-sent",
       label: intl.formatMessage({
         id: "labels.curr.paragraph.copy.tpl",
+      }),
+    },
+    {
+      key: "cart-sent",
+      label: intl.formatMessage({
+        id: "labels.curr.paragraph.cart.tpl",
       }),
     },
     {
@@ -102,6 +112,15 @@ export const ParaHandleCtl = ({
         break;
       case "copy-sent":
         copyToClipboard(sentences.map((item) => `{{${item}}}`).join(""));
+        break;
+      case "cart-sent":
+        const cartData = sentences.map((item) => {
+          return { id: `{{${item}}}`, text: `{{${item}}}` };
+        });
+        addToCart(cartData);
+        notification.success({
+          message: cartData.length + "个句子已经添加到Cart",
+        });
         break;
       case "quote-link-tpl-c":
         copyToClipboard(`{{ql|type=c|book=${book}|para=${para}}}`);

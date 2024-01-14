@@ -77,7 +77,11 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
   return (
     <div ref={setContainer}>
       <div id="pcd_dict_top"></div>
-      <Affix offsetTop={0} target={compact ? () => container : undefined}>
+      <Affix
+        offsetTop={0}
+        target={compact ? () => container : undefined}
+        className="dict_search_div"
+      >
         <div
           style={{
             backgroundColor: "rgba(100,100,100,0.3)",
