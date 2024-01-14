@@ -1,4 +1,4 @@
-import { Dropdown, Tooltip } from "antd";
+import { Dropdown, Tooltip, notification } from "antd";
 import {
   CopyOutlined,
   ShoppingCartOutlined,
@@ -11,11 +11,8 @@ import store from "../../../store";
 import { modeChange } from "../../../reducers/cart-mode";
 import { useAppSelector } from "../../../hooks";
 import { mode as _mode } from "../../../reducers/cart-mode";
+import { addToCart } from "./SentCart";
 
-export interface ISentCart {
-  id: string;
-  text: string;
-}
 interface IWidget {
   text?: string;
   wbwData?: IWbw[];
@@ -50,17 +47,15 @@ const SentTabCopyWidget = ({ text, wbwData }: IWidget) => {
           setTimeout(() => setSuccess(false), 3000);
         });
       } else {
-        const oldText = localStorage.getItem("cart/text");
-        let cartText: ISentCart[] = [];
-        if (oldText) {
-          cartText = JSON.parse(oldText);
-        }
         const paliText = wbwData
           ?.filter((value) => value.type?.value !== ".ctl.")
           .map((item) => item.word.value)
           .join(" ");
-        cartText.push({ id: text, text: paliText ? paliText : "" });
-        localStorage.setItem("cart/text", JSON.stringify(cartText));
+
+        addToCart([{ id: text, text: paliText ? paliText : "" }]);
+        notification.success({
+          message: "句子已经添加到Cart",
+        });
         setSuccess(true);
         setTimeout(() => setSuccess(false), 3000);
       }
