@@ -282,3 +282,9 @@ export interface ISentenceSimListResponse {
   message: string;
   data: { rows: ISimSent[]; count: number };
 }
+
+export interface ISentenceWbwListResponse {
+  ok: boolean;
+  message: string;
+  data: { rows: IWidgetSentEditInner[]; count: number };
+}
