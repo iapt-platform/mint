@@ -35,6 +35,7 @@ const items = {
   "labels.page.number.type.c": "章节名称",
   "labels.loading": "载入中",
   "labels.empty": "无内容",
+  "labels.curr.paragraph.cart.tpl": "Add to Cart",
 };
 
 export default items;
