@@ -18,6 +18,7 @@ import { ArticleMode } from "../../article/Article";
 import { IResNumber } from "../SentEdit";
 import SentTabCopy from "./SentTabCopy";
 import { fullUrl } from "../../../utils";
+import SentWbw from "./SentWbw";
 
 const { Text } = Typography;
 
@@ -338,6 +339,27 @@ const SentTabWidget = ({
               wordEnd={parseInt(sId[3])}
               channelsId={channelsId}
               limit={5}
+            />
+          ),
+        },
+        {
+          label: (
+            <span style={tabButtonStyle}>
+              <span style={{ marginRight: 12 }}>
+                {intl.formatMessage({
+                  id: "buttons.wbw",
+                })}
+              </span>
+            </span>
+          ),
+          key: "wbw",
+          children: (
+            <SentWbw
+              book={parseInt(sId[0])}
+              para={parseInt(sId[1])}
+              wordStart={parseInt(sId[2])}
+              wordEnd={parseInt(sId[3])}
+              channelsId={channelsId}
             />
           ),
         },
