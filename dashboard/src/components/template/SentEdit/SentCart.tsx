@@ -1,10 +1,26 @@
 import { Badge, Button, List, Popover, Tooltip, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { ShoppingCartOutlined, DeleteOutlined } from "@ant-design/icons";
-import { ISentCart } from "./SentTabCopy";
+
 import "./style.css";
 
 const { Text } = Typography;
+
+export interface ISentCart {
+  id: string;
+  text: string;
+}
+
+export const addToCart = (add: ISentCart[]): number => {
+  const oldText = localStorage.getItem("cart/text");
+  let cartText: ISentCart[] = [];
+  if (oldText) {
+    cartText = JSON.parse(oldText);
+  }
+  cartText = [...cartText, ...add];
+  localStorage.setItem("cart/text", JSON.stringify(cartText));
+  return cartText.length;
+};
 
 const SentCartWidget = () => {
   const [count, setCount] = useState<number>();
