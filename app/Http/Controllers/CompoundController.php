@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\UserDict;
 use Illuminate\Http\Request;
 use App\Http\Api\DictApi;
+use App\Tools\TurboSplit;
 
 class CompoundController extends Controller
 {
@@ -60,13 +61,14 @@ class CompoundController extends Controller
 
     /**
      * Display the specified resource.
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\DhammaTerm  $dhammaTerm
      * @return \Illuminate\Http\Response
      */
-    public function show(string $word)
+    public function show(Request $request,string $word)
     {
         //
+        $start = microtime(true);
         $dict_id = DictApi::getSysDict('robot_compound');
         if(!$dict_id){
             return $this->error('没有找到 robot_compound 字典');
@@ -75,7 +77,17 @@ class CompoundController extends Controller
                     ->where('word',$word)
                     ->orderBy('confidence','desc')
                     ->get();
-        return $this->ok(['rows'=>$result,'count'=>count($result)]);
+        if(count($result)>0){
+            return $this->ok(['rows'=>$result,'count'=>count($result),'mode'=>'dict']);
+        }else if(mb_strlen($word,'UTF-8')<60){
+            $ts = new TurboSplit();
+            $parts = $ts->splitA($word);
+            $time = microtime(true) - $start;
+            return $this->ok(['rows'=>$parts,'count'=>count($parts),'mode'=>'realtime','time'=>$time]);
+        }else{
+            return $this->ok(['rows'=>[],'count'=>0]);
+        }
+
     }
 
     /**
