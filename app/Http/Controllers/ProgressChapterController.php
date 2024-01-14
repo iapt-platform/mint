@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-require_once __DIR__.'/../../../public/app/ucenter/function.php';
-
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\ProgressChapter;
