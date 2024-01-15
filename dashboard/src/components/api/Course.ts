@@ -25,6 +25,7 @@ export interface ICourseDataRequest {
   join: string;
   request_exp: string;
 }
+export type TCourseRole = "teacher" | "assistant" | "student";
 export type TCourseJoinMode = "invite" | "manual" | "open";
 export type TCourseExpRequest = "none" | "begin-end" | "daily";
 export interface ICourseDataResponse {
@@ -130,13 +131,14 @@ export interface ICourseMemberDeleteResponse {
   data: boolean;
 }
 
+export interface ICourseUser {
+  role: TCourseRole;
+  channel_id?: string | null;
+}
 export interface ICourseCurrUserResponse {
   ok: boolean;
   message: string;
-  data: {
-    role: string;
-    channel_id: string;
-  };
+  data: ICourseUser;
 }
 
 export interface IExerciseListData {
