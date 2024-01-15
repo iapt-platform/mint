@@ -11,7 +11,7 @@ import { LockIcon } from "../../assets/icon";
 import { ICourseMemberData, ICourseMemberResponse } from "../api/Course";
 import { useNavigate, useParams } from "react-router-dom";
 interface IWidget {
-  courseId?: string;
+  courseId?: string | null;
   exerciseId?: string;
   channel?: string;
   onSelected?: Function;
@@ -29,7 +29,7 @@ const SelectChannelWidget = ({
   const user = useAppSelector(_currentUser);
   const { id } = useParams(); //url 参数
   const navigate = useNavigate();
-  //TODO 从哪里拿到courseId?
+
   return (
     <ModalForm<{
       channel: string;
@@ -45,24 +45,23 @@ const SelectChannelWidget = ({
       onFinish={async (values) => {
         console.log(values.channel);
         console.log("id", id);
-        const mCourseId = id?.split("_")[0];
-        if (typeof user !== "undefined" && typeof mCourseId !== "undefined") {
+
+        if (user && courseId) {
+          const url = `/v2/course-member_set-channel`;
+          const data = {
+            user_id: user.id,
+            course_id: courseId,
+            channel_id: values.channel,
+          };
+          console.debug("course select channel", url, data);
           const json = await put<ICourseMemberData, ICourseMemberResponse>(
-            `/v2/course-member_set-channel`,
-            {
-              user_id: user.id,
-              course_id: mCourseId,
-              channel_id: values.channel,
-            }
+            url,
+            data
           );
           if (json.ok) {
-            if (json.data.channel_id === courseId) {
-              message.success("提交成功");
-              navigate(
-                `/article/exercise/${id}_${exerciseId}_${user.realName}/wbw`
-              );
-            } else {
-              message.error(json.data.channel_id);
+            message.success("提交成功");
+            if (typeof onSelected !== "undefined") {
+              onSelected();
             }
           } else {
             message.error(json.message);
@@ -73,9 +72,14 @@ const SelectChannelWidget = ({
 
         return true;
       }}
+      onOpenChange={(visible: boolean) => {
+        if (typeof onOpenChange !== "undefined") {
+          onOpenChange(visible);
+        }
+      }}
     >
       <div>
-        您还没有选择版本。您将用一个版本保存自己的作业。这个版本将会被老师，助理老师看到。
+        您还没有选择版本。您将用一个版本保存自己的作业。这个版本里面的内容将会被老师，助理老师看到。
       </div>
       <ProForm.Group>
         <ProFormSelect
