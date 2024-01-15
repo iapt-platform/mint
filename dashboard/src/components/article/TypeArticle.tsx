@@ -68,9 +68,8 @@ const TypeArticleWidget = ({
     let url = `/v2/article/${articleId}?mode=${srcDataMode}`;
     url += channelId ? `&channel=${channelId}` : "";
     url += anthologyId ? `&anthology=${anthologyId}` : "";
-    console.log("url", url);
+    console.info("article url", url);
     setLoading(true);
-    console.log("url", url);
     get<IArticleResponse>(url)
       .then((json) => {
         console.log("article", json);
@@ -148,6 +147,7 @@ const TypeArticleWidget = ({
         console.error(e);
       });
   }, [anthologyId, articleId]);
+
   let anthology: IFirstAnthology | undefined;
   if (articleData?.anthology_count && articleData.anthology_first) {
     anthology = {
