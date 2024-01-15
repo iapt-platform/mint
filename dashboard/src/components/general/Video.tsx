@@ -25,7 +25,7 @@ export const VideoWidget = ({ src, type }: IWidget) => {
   return (
     <VideoPlayer
       options={{
-        autoplay: true,
+        autoplay: false,
         controls: true,
         responsive: true,
         fluid: true,
