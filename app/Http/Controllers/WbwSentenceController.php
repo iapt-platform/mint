@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Wbw;
 use App\Models\WbwBlock;
 use App\Models\Channel;
+use App\Models\CourseMember;
+
 use Illuminate\Http\Request;
 use App\Http\Api\AuthApi;
 use App\Http\Api\ShareApi;
@@ -32,7 +34,20 @@ class WbwSentenceController extends Controller
                           $request->get('para').'-'.
                           $request->get('wordStart').'-'.
                           $request->get('wordEnd');
-                $channels = ChannelApi::getCanReadByUser($user_uid);
+                $channels = [];
+                if($request->has('course')){
+                    $studentsChannel = CourseMember::where('course_id',$request->get('course'))
+                                                    ->whereNotNull('channel_id')
+                                                    ->select('channel_id')
+                                                    ->orderBy('created_at')
+                                                    ->get();
+                    foreach ($studentsChannel as $key => $channel) {
+                        $channels[] = $channel->channel_id;
+                    }
+                }else{
+                    $channels = ChannelApi::getCanReadByUser($user_uid);
+                }
+
                 $channelsId = [];
                 if($request->has('exclude')){
                     //移除无需查询的channel
@@ -41,9 +56,9 @@ class WbwSentenceController extends Controller
                             $channelsId[] = $id;
                         }
                     }
-                }else if($request->has('channel')){
+                }else if($request->has('channels')){
                     //仅列出指定的channel
-                    $include = explode(',', $request->get('channel'));
+                    $include = explode(',', $request->get('channels'));
                     foreach ($channels as $key => $id) {
                         if(in_array($id, $include)){
                             $channelsId[] = $id;
