@@ -20,7 +20,7 @@ class CourseMemberController extends Controller
     {
         //
         $result=false;
-		$indexCol = ['id','user_id','course_id','role','updated_at','created_at'];
+		$indexCol = ['id','user_id','course_id','channel_id','role','updated_at','created_at'];
 		switch ($request->get('view')) {
             case 'course':
 	            # 获取 course 内所有 成员
