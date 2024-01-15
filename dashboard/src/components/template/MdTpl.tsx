@@ -13,6 +13,7 @@ import SentEdit from "./SentEdit";
 import SentRead from "./SentRead";
 import Term from "./Term";
 import Toggle from "./Toggle";
+import Video from "./Video";
 import WbwSent from "./WbwSent";
 import Wd from "./Wd";
 
@@ -57,6 +58,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <ParaShell props={props ? props : ""}>{children}</ParaShell>;
     case "qa":
       return <Qa props={props ? props : ""} />;
+    case "video":
+      return <Video props={props ? props : ""} />;
     default:
       return <>未定义模版({tpl})</>;
   }
