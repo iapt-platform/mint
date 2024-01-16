@@ -14,7 +14,7 @@ class Markdown
             $GLOBALS['markdown.driver'] === 'str'){
             return Markdown::strdown($text);
         }else{
-            return Markdown::morus($text);
+            return Markdown::strdown($text);
         }
     }
     public static function morus_restful($text){

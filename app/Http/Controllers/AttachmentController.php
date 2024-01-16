@@ -73,11 +73,11 @@ class AttachmentController extends Controller
         $file = $request->file('file');
 
        //Move Uploaded File
-        $bucket = date("Y-m");
+        $bucket = config('mint.attachments.bucket_name.permanent');
         $fileId = Str::uuid();
         $ext = $file->getClientOriginalExtension();
         $name = $fileId.'.'.$ext;
-        $filename = $file->storeAs($bucket,$name,'public');
+        $filename = $file->storeAs($bucket,$name);
         $attachment = new Attachment;
         $attachment->id = $fileId;
         $attachment->user_uid = $user['user_uid'];
@@ -92,12 +92,14 @@ class AttachmentController extends Controller
         $type = explode('/',$file->getMimeType());
         switch ($type[0]) {
             case 'image':
+                /*
                 $resize = Image::make($file)->fit(128);
                 Storage::disk('public')->put($bucket.'/'.$fileId.'_s.jpg',$resize->stream());
                 $resize = Image::make($file)->fit(256);
                 Storage::disk('public')->put($bucket.'/'.$fileId.'_m.jpg',$resize->stream());
                 $resize = Image::make($file)->fit(512);
                 Storage::disk('public')->put($bucket.'/'.$fileId.'_l.jpg',$resize->stream());
+                */
                 break;
             case 'video':
                 //$path = public_path($filename);
@@ -114,7 +116,7 @@ class AttachmentController extends Controller
             'name' => $filename,
             'size' => $file->getSize(),
             'type' => $file->getMimeType(),
-            'url' => Storage::disk('public')->url($filename),
+            'url' => Storage::url($bucket.'/'.$name),
             'uid' => $attachment->id,
             );
         return $this->ok(new AttachmentResource($attachment));

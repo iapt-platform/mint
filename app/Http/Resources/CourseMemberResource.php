@@ -22,6 +22,7 @@ class CourseMemberResource extends JsonResource
             "role"=> $this->role,
             "user"=> UserApi::getByUuid($this->user_id),
             "status"=> $this->status,
+            'channel_id'=> $this->channel_id,
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];

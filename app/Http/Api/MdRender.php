@@ -263,7 +263,10 @@ class MdRender{
              *
              */
             //TODO 判断$channelId里面的是否都是uuid
-            $channelInfo = Channel::whereIn('uid',$channelId)->get();
+            $channelInfo = [];
+            foreach ($channelId as $key => $id) {
+                $channelInfo[] = Channel::where('uid',$id)->first();
+            }
             $tplRender = new TemplateRender($props,
                                         $channelInfo,
                                         $this->options['mode'],

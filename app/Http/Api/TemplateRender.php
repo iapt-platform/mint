@@ -89,6 +89,9 @@ class TemplateRender{
             case 'qa':
                 $result = $this->render_qa();
                 break;
+            case 'v':
+                $result = $this->render_video();
+                break;
             default:
                 # code...
                 $result = [
@@ -870,8 +873,8 @@ class TemplateRender{
 
     private  function render_qa(){
 
-        $id = $this->get_param($this->param,"id",2);
-        $style = $this->get_param($this->param,"style",5);
+        $id = $this->get_param($this->param,"id",1);
+        $style = $this->get_param($this->param,"style",2);
 
         $props = [
                     "type" => 'qa',
@@ -908,6 +911,42 @@ class TemplateRender{
         }
         return $output;
     }
+
+    private  function render_video(){
+
+        $url = $this->get_param($this->param,"url",1);
+        $style = $this->get_param($this->param,"style",2,'modal');
+        $title = $this->get_param($this->param,"title",3);
+
+        $props = [
+                    "url" => $url,
+                    'title' => $title,
+                    'style' => $style,
+                ];
+
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'html'=>"",
+                    'text'=>$props['title'],
+                    'tag'=>'span',
+                    'tpl'=>'video',
+                    ];
+                break;
+            case 'unity':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'tpl'=>'video',
+                    ];
+                break;
+            default:
+                $output = $props['title'];
+                break;
+        }
+        return $output;
+    }
+
     private  function get_param(array $param,string $name,int $id,string $default=''){
         if(isset($param[$name])){
             return trim($param[$name]);

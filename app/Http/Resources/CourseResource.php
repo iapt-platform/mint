@@ -37,6 +37,7 @@ class CourseResource extends JsonResource
             "content"=> $this->content,
             "content_type"=> $this->content_type,
             "cover"=> $this->cover,
+            "cover_url"=> [Storage::url($this->cover)],
             "channel_id"=>$this->channel_id,
             "join"=> $this->join,
             "request_exp"=> $this->request_exp,
