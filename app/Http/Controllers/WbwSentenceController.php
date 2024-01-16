@@ -6,6 +6,7 @@ use App\Models\Wbw;
 use App\Models\WbwBlock;
 use App\Models\Channel;
 use App\Models\CourseMember;
+use App\Models\Course;
 
 use Illuminate\Http\Request;
 use App\Http\Api\AuthApi;
@@ -44,6 +45,8 @@ class WbwSentenceController extends Controller
                     foreach ($studentsChannel as $key => $channel) {
                         $channels[] = $channel->channel_id;
                     }
+                    $channels[] = Course::where('id',$request->get('course'))
+                                    ->value('channel_id');
                 }else{
                     $channels = ChannelApi::getCanReadByUser($user_uid);
                 }
