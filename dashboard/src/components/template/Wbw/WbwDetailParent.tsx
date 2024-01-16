@@ -60,10 +60,17 @@ const WbwDetailParentWidget = ({ data, onChange }: IWidget) => {
         value: item,
       };
     });
-    setParentOptions([
-      ...parentOptions,
-      { label: data.real.value, value: data.real.value },
-    ]);
+    const findParent = parentOptions.find(
+      (value) => value.value === data.real.value
+    );
+    if (findParent) {
+      setParentOptions(parentOptions);
+    } else {
+      setParentOptions([
+        ...parentOptions,
+        { label: data.real.value, value: data.real.value },
+      ]);
+    }
   }, [inlineDict, data]);
 
   return (
@@ -71,8 +78,9 @@ const WbwDetailParentWidget = ({ data, onChange }: IWidget) => {
       options={parentOptions}
       value={data.parent?.value}
       onChange={(value: any, option: ValueType | ValueType[]) => {
+        console.debug("wbw parent onChange", value);
         if (typeof onChange !== "undefined") {
-          onChange({ field: "parent", value: value });
+          onChange(value);
         }
       }}
     >
