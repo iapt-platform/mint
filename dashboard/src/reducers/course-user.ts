@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
+import { TCourseRole } from "../components/api/Course";
 
 export const ROLE_ROOT = "root";
 export const ROLE_ASSISTANT = "assistant";
@@ -23,8 +24,8 @@ const remove = () => {
 };
 
 export interface ICourseUser {
-  channelId: string;
-  role: string;
+  channelId?: string | null;
+  role: TCourseRole;
 }
 
 interface IState {

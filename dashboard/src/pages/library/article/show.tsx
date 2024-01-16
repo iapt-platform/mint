@@ -366,6 +366,7 @@ const Widget = () => {
               para={searchParams.get("par")}
               channelId={searchParams.get("channel")}
               focus={searchParams.get("focus")}
+              courseId={searchParams.get("course")}
               articleId={id}
               anthologyId={searchParams.get("anthology")}
               mode={searchParams.get("mode") as ArticleMode}

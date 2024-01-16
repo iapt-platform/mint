@@ -1,6 +1,7 @@
 import { Col, Row } from "antd";
 import { useNavigate } from "react-router-dom";
 import AnthologyDetail from "../article/AnthologyDetail";
+import { fullUrl } from "../../utils";
 
 interface IWidget {
   anthologyId?: string;
@@ -17,8 +18,17 @@ const TextBookWidget = ({ anthologyId, courseId }: IWidget) => {
         <Col flex="960px">
           <AnthologyDetail
             aid={anthologyId}
-            onArticleSelect={(anthologyId: string, keys: string[]) => {
-              navigate(`/article/textbook/${courseId}_${keys[0]}?mode=read`);
+            onArticleClick={(
+              anthologyId: string,
+              articleId: string,
+              target: string
+            ) => {
+              const url = `/article/textbook/${articleId}?mode=read&course=${courseId}`;
+              if (target === "_blank") {
+                window.open(fullUrl(url), "_blank");
+              } else {
+                navigate(url);
+              }
             }}
           />
         </Col>

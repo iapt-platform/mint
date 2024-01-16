@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { get } from "../../../request";
 import { ISentenceWbwListResponse } from "../../api/Corpus";
 import { IWidgetSentEditInner, SentEditInner } from "../SentEdit";
+import { useAppSelector } from "../../../hooks";
+import { courseInfo, memberInfo } from "../../../reducers/current-course";
+import { courseUser } from "../../../reducers/course-user";
 
 interface IWidget {
   book: number;
@@ -24,16 +27,35 @@ const SentWbwWidget = ({
   onReload,
 }: IWidget) => {
   const [initLoading, setInitLoading] = useState(true);
-
   const [sentData, setSentData] = useState<IWidgetSentEditInner[]>([]);
+  const course = useAppSelector(courseInfo);
+  const courseMember = useAppSelector(memberInfo);
+
+  const myCourse = useAppSelector(courseUser);
 
   const load = () => {
-    let url = `/v2/wbw-sentence?view=sent-can-read&book=${book}&para=${para}&wordStart=${wordStart}&wordEnd=${wordEnd}`;
-    if (channelsId && channelsId.length > 0) {
-      url += `&exclude=${channelsId[0]}`;
+    let url = `/v2/wbw-sentence?view=sent-can-read`;
+    url += `&book=${book}&para=${para}&wordStart=${wordStart}&wordEnd=${wordEnd}`;
+
+    console.debug("wbw sentence load", myCourse, course);
+    if (myCourse && course) {
+      url += `&course=${course.courseId}`;
+      if (myCourse.role === "student") {
+        url += `&channels=${course.channelId}`;
+      } else if (courseMember) {
+        console.debug("course member", courseMember);
+        const channels = courseMember
+          .filter((value) => typeof value.channel_id === "string")
+          .map((item) => item.channel_id);
+        url += `&channels=${channels.join(",")}`;
+      }
+    } else {
+      if (channelsId && channelsId.length > 0) {
+        url += `&exclude=${channelsId[0]}`;
+      }
     }
 
-    console.log("url", url);
+    console.log("wbw sentence url", url);
     get<ISentenceWbwListResponse>(url)
       .then((json) => {
         if (json.ok) {

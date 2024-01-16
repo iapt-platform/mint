@@ -1,4 +1,4 @@
-import { Button, Dropdown, message, Tree } from "antd";
+import { Button, Dropdown, message, Progress, Tree } from "antd";
 import { useEffect, useState } from "react";
 import { MoreOutlined } from "@ant-design/icons";
 
@@ -113,10 +113,45 @@ export const WbwSentCtl = ({
   const [displayMode, setDisplayMode] = useState<ArticleMode>();
   const [magic, setMagic] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showProgress, setShowProgress] = useState(false);
+
   const settings = useAppSelector(settingInfo);
   const sysGrammar = useAppSelector(getGrammar)?.filter(
     (value) => value.tag === ":collocation:"
   );
+
+  useEffect(() => {
+    //计算完成度
+    const allWord = wordData.filter(
+      (value) =>
+        value.real.value &&
+        value.real.value?.length > 0 &&
+        value.type?.value !== ".ctl."
+    );
+    const final = allWord.filter(
+      (value) =>
+        value.meaning?.value &&
+        value.factors?.value &&
+        value.factorMeaning?.value &&
+        value.case?.value
+    );
+    console.debug("wbw progress", allWord, final);
+    let finalLen: number = 0;
+    final.forEach((value) => {
+      if (value.real.value) {
+        finalLen += value.real.value?.length;
+      }
+    });
+    let allLen: number = 0;
+    allWord.forEach((value) => {
+      if (value.real.value) {
+        allLen += value.real.value?.length;
+      }
+    });
+    const progress = Math.round((finalLen * 100) / allLen);
+    setProgress(progress);
+  }, [wordData]);
 
   useEffect(() => {
     setMagic(magicDict);
@@ -125,6 +160,7 @@ export const WbwSentCtl = ({
   const newMode = useAppSelector(_mode);
 
   const update = (data: IWbw[]) => {
+    console.debug("wbw update");
     setWordData(data);
     if (typeof onChange !== "undefined") {
       onChange(data);
@@ -519,123 +555,138 @@ export const WbwSentCtl = ({
   };
 
   return (
-    <div className={`layout-${layoutDirection}`}>
-      <Dropdown
-        menu={{
-          items: [
-            {
-              key: "magic-dict-current",
-              label: "神奇字典",
-            },
-            {
-              key: "wbw-dict-publish-all",
-              label: "发布全部单词",
-            },
-            {
-              type: "divider",
-            },
-            {
-              key: "copy-text",
-              label: intl.formatMessage({
-                id: "buttons.copy.pali.text",
-              }),
-            },
-          ],
-          onClick: ({ key }) => {
-            console.log(`Click on item ${key}`);
-            switch (key) {
-              case "magic-dict-current":
-                setLoading(true);
-                setMagic("curr");
-                break;
-              case "wbw-dict-publish-all":
-                wbwPublish(wordData);
-                break;
-              case "copy-text":
-                const paliText = wordData
-                  .filter((value) => value.type?.value !== ".ctl.")
-                  .map((item) => item.word.value)
-                  .join(" ");
-                navigator.clipboard.writeText(paliText).then(() => {
-                  message.success("已经拷贝到剪贴板");
-                });
-                break;
-            }
-          },
-        }}
-        placement="bottomLeft"
+    <div>
+      <div
+        className="progress"
+        style={{ display: showProgress ? "block" : "none" }}
       >
-        <Button
-          loading={loading}
-          onClick={(e) => e.preventDefault()}
-          icon={<MoreOutlined />}
-          size="small"
-          type="text"
-          style={{ backgroundColor: "lightblue", opacity: 0.3 }}
-        />
-      </Dropdown>
-      {layoutDirection === "h" ? (
-        wordData
-          .map((item, index) => {
-            let newItem = item;
-            const spell = item.real.value;
-            if (spell) {
-              const matched = sysGrammar?.find((value) =>
-                value.word.split("...").includes(spell)
-              );
-              if (matched) {
-                console.debug("wbw sent grammar matched", matched);
-                newItem.grammarId = matched.guid;
+        <Progress percent={progress} size="small" />
+      </div>
+      <div className={`layout-${layoutDirection}`}>
+        <Dropdown
+          menu={{
+            items: [
+              {
+                key: "magic-dict-current",
+                label: "神奇字典",
+              },
+              {
+                key: "progress",
+                label: "显示/隐藏进度条",
+              },
+              {
+                key: "wbw-dict-publish-all",
+                label: "发布全部单词",
+              },
+              {
+                type: "divider",
+              },
+              {
+                key: "copy-text",
+                label: intl.formatMessage({
+                  id: "buttons.copy.pali.text",
+                }),
+              },
+            ],
+            onClick: ({ key }) => {
+              console.log(`Click on item ${key}`);
+              switch (key) {
+                case "magic-dict-current":
+                  setLoading(true);
+                  setMagic("curr");
+                  break;
+                case "wbw-dict-publish-all":
+                  wbwPublish(wordData);
+                  break;
+                case "copy-text":
+                  const paliText = wordData
+                    .filter((value) => value.type?.value !== ".ctl.")
+                    .map((item) => item.word.value)
+                    .join(" ");
+                  navigator.clipboard.writeText(paliText).then(() => {
+                    message.success("已经拷贝到剪贴板");
+                  });
+                  break;
+                case "progress":
+                  setShowProgress((origin) => !origin);
+                  break;
               }
-            }
-            return newItem;
-          })
-          .map((item, id) => {
-            return wbwRender(item, id);
-          })
-      ) : (
-        <Tree
-          selectable={true}
-          blockNode
-          treeData={wordData
-            .filter((value) => value.sn.length === 1)
-            .map((item, id) => {
-              const children = wordData.filter(
-                (value) =>
-                  value.sn.length === 2 &&
-                  value.sn.slice(0, 1).join() === wordData[id].sn.join()
-              );
-
-              return {
-                title: wbwRender(item, id),
-                key: item.sn.join(),
-                isLeaf: !item.factors?.value?.includes("+"),
-                children:
-                  children.length > 0
-                    ? children.map((item, id) => {
-                        return {
-                          title: wbwRender(item, id),
-                          key: item.sn.join(),
-                          isLeaf: true,
-                        };
-                      })
-                    : undefined,
-              };
-            })}
-          loadData={({ key, children }: any) =>
-            new Promise<void>((resolve) => {
-              console.log("key", key, children);
-              if (children) {
-                resolve();
-                return;
+            },
+          }}
+          placement="bottomLeft"
+        >
+          <Button
+            loading={loading}
+            onClick={(e) => e.preventDefault()}
+            icon={<MoreOutlined />}
+            size="small"
+            type="text"
+            style={{ backgroundColor: "lightblue", opacity: 0.3 }}
+          />
+        </Dropdown>
+        {layoutDirection === "h" ? (
+          wordData
+            .map((item, index) => {
+              let newItem = item;
+              const spell = item.real.value;
+              if (spell) {
+                const matched = sysGrammar?.find((value) =>
+                  value.word.split("...").includes(spell)
+                );
+                if (matched) {
+                  console.debug("wbw sent grammar matched", matched);
+                  newItem.grammarId = matched.guid;
+                }
               }
-
-              wordSplit(key, "");
-              resolve();
+              return newItem;
             })
-          }
-        />
-      )}
+            .map((item, id) => {
+              return wbwRender(item, id);
+            })
+        ) : (
+          <Tree
+            selectable={true}
+            blockNode
+            treeData={wordData
+              .filter((value) => value.sn.length === 1)
+              .map((item, id) => {
+                const children = wordData.filter(
+                  (value) =>
+                    value.sn.length === 2 &&
+                    value.sn.slice(0, 1).join() === wordData[id].sn.join()
+                );
+
+                return {
+                  title: wbwRender(item, id),
+                  key: item.sn.join(),
+                  isLeaf: !item.factors?.value?.includes("+"),
+                  children:
+                    children.length > 0
+                      ? children.map((item, id) => {
+                          return {
+                            title: wbwRender(item, id),
+                            key: item.sn.join(),
+                            isLeaf: true,
+                          };
+                        })
+                      : undefined,
+                };
+              })}
+            loadData={({ key, children }: any) =>
+              new Promise<void>((resolve) => {
+                console.log("key", key, children);
+                if (children) {
+                  resolve();
+                  return;
+                }
+
+                wordSplit(key, "");
+                resolve();
+              })
+            }
+          />
+        )}
+      </div>
     </div>
   );
 };

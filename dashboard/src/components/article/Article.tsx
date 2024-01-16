@@ -7,6 +7,7 @@ import "./article.css";
 import TypePage from "./TypePage";
 import TypeCSPara from "./TypeCSPara";
 import { ISearchParams } from "../../pages/library/article/show";
+import TypeCourse from "./TypeCourse";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -48,7 +49,7 @@ interface IWidget {
   book?: string | null;
   para?: string | null;
   anthologyId?: string | null;
-  courseId?: string;
+  courseId?: string | null;
   exerciseId?: string;
   userName?: string;
   active?: boolean;
@@ -180,6 +181,19 @@ const ArticleWidget = ({
         <TypeCSPara
           articleId={articleId}
           channelId={channelId}
+          mode={mode}
+          onArticleChange={(type: ArticleType, id: string, target: string) => {
+            if (typeof onArticleChange !== "undefined") {
+              onArticleChange(type, id, target);
+            }
+          }}
+        />
+      ) : type === "textbook" ? (
+        <TypeCourse
+          type={type}
+          articleId={articleId}
+          channelId={channelId}
+          courseId={courseId}
           mode={mode}
           onArticleChange={(type: ArticleType, id: string, target: string) => {
             if (typeof onArticleChange !== "undefined") {

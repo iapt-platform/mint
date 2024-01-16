@@ -1,20 +1,29 @@
 import { useEffect, useState } from "react";
-import { Divider, message, Result, Space, Tag } from "antd";
 
 import { get } from "../../request";
 import store from "../../store";
-import { IArticleDataResponse, IArticleResponse } from "../api/Article";
-import ArticleView from "./ArticleView";
-import { ICourseCurrUserResponse } from "../api/Course";
-import { ICourseUser, signIn } from "../../reducers/course-user";
-import { ITextbook, refresh } from "../../reducers/current-course";
-import ExerciseList from "./ExerciseList";
-import ExerciseAnswer from "../course/ExerciseAnswer";
+import { IArticleDataResponse } from "../api/Article";
+import {
+  ICourseCurrUserResponse,
+  ICourseDataResponse,
+  ICourseMemberListResponse,
+  ICourseResponse,
+  ICourseUser,
+} from "../api/Course";
+import { signIn } from "../../reducers/course-user";
+import {
+  ITextbook,
+  memberRefresh,
+  refresh,
+} from "../../reducers/current-course";
+
 import "./article.css";
-import TocTree from "./TocTree";
-import PaliText from "../template/Wbw/PaliText";
-import { ITocPathNode } from "../corpus/TocPath";
+
 import { ArticleMode, ArticleType } from "./Article";
+import TypeArticle from "./TypeArticle";
+import { useSearchParams } from "react-router-dom";
+
+import SelectChannel from "../course/SelectChannel";
 
 /**
  * 每种article type 对应的路由参数
@@ -36,7 +45,7 @@ interface IWidget {
   channelId?: string | null;
   book?: string | null;
   para?: string | null;
-  courseId?: string;
+  courseId?: string | null;
   exerciseId?: string;
   userName?: string;
   active?: boolean;
@@ -63,9 +72,11 @@ const TypeCourseWidget = ({
   onLoading,
   onError,
 }: IWidget) => {
-  const [articleData, setArticleData] = useState<IArticleDataResponse>();
-  const [articleHtml, setArticleHtml] = useState<string[]>(["<span />"]);
-  const [extra, setExtra] = useState(<></>);
+  const [anthologyId, setAnthologyId] = useState<string>();
+  const [course, setCourse] = useState<ICourseDataResponse>();
+  const [currUser, setCurrUser] = useState<ICourseUser>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [channelPickerOpen, setChannelPickerOpen] = useState(false);
 
   const channels = channelId?.split("_");
 
@@ -73,37 +84,140 @@ const TypeCourseWidget = ({
     /**
      * 由课本进入查询当前用户的权限和channel
      */
-    if (
-      type === "textbook" ||
-      type === "exercise" ||
-      type === "exercise-list"
-    ) {
-      if (typeof articleId !== "undefined") {
-        const id = articleId.split("_");
-        get<ICourseCurrUserResponse>(`/v2/course-curr?course_id=${id[0]}`).then(
-          (response) => {
-            console.log("course user", response);
-            if (response.ok) {
-              const it: ICourseUser = {
+    console.debug(
+      "course 由课本进入查询当前用户的权限和channel",
+      type,
+      courseId
+    );
+    if (type === "textbook") {
+      if (typeof courseId !== "undefined") {
+        const url = `/v2/course-curr?course_id=${courseId}`;
+        console.debug("course url", url);
+        get<ICourseCurrUserResponse>(url).then((response) => {
+          console.log("course user", response);
+          if (response.ok) {
+            setCurrUser(response.data);
+            if (!response.data.channel_id) {
+              setChannelPickerOpen(true);
+            }
+            //我的角色
+            store.dispatch(
+              signIn({
                 channelId: response.data.channel_id,
                 role: response.data.role,
-              };
-              store.dispatch(signIn(it));
-              /**
-               * redux发布课程信息
-               */
-              const ic: ITextbook = {
-                courseId: id[0],
-                articleId: id[1],
-              };
-              store.dispatch(refresh(ic));
+              })
+            );
+
+            //如果是老师查询学生列表
+            if (response.data.role) {
+              if (response.data.role !== "student") {
+                const url = `/v2/course-member?view=course&id=${courseId}`;
+                console.debug("course member url", url);
+                get<ICourseMemberListResponse>(url)
+                  .then((json) => {
+                    console.debug("course member data", json);
+                    if (json.ok) {
+                      store.dispatch(memberRefresh(json.data.rows));
+                    }
+                  })
+                  .catch((e) => console.error(e));
+              }
             }
+          } else {
+            console.error(response.message);
           }
-        );
+        });
       }
     }
-  }, [articleId, type]);
+  }, [courseId, type]);
 
+  useEffect(() => {
+    let output: any = { mode: mode };
+    searchParams.forEach((value, key) => {
+      console.log(value, key);
+      if (key !== "mode" && key !== "channel") {
+        output[key] = value;
+      }
+    });
+    if (currUser?.role === "student") {
+      if (typeof currUser.channel_id === "string") {
+        output["channel"] = currUser.channel_id;
+      }
+    } else {
+      output["channel"] = course?.channel_id;
+    }
+
+    setSearchParams(output);
+  }, [currUser, course, mode]);
+
+  useEffect(() => {
+    const url = `/v2/course/${courseId}`;
+    console.debug("course url", url);
+    get<ICourseResponse>(url).then((json) => {
+      console.debug("course data", json.data);
+      if (json.ok) {
+        setAnthologyId(json.data.anthology_id);
+        setCourse(json.data);
+        /**
+         * redux发布课程信息
+         */
+        if (courseId && articleId) {
+          const ic: ITextbook = {
+            courseId: courseId,
+            articleId: articleId,
+            channelId: json.data.channel_id,
+          };
+          store.dispatch(refresh(ic));
+        }
+      }
+    });
+  }, [articleId, courseId]);
+
+  let channelsId = "";
+  if (currUser && course) {
+    if (currUser.role === "student") {
+      if (currUser.channel_id) {
+        channelsId = currUser.channel_id + "_" + course?.channel_id;
+      } else {
+        channelsId = course?.channel_id;
+      }
+    } else {
+      channelsId = course?.channel_id;
+    }
+  }
+
+  return anthologyId && currUser ? (
+    <>
+      {!currUser.channel_id ? (
+        <SelectChannel
+          courseId={courseId}
+          open={channelPickerOpen}
+          onOpenChange={(visible: boolean) => {
+            setChannelPickerOpen(visible);
+          }}
+          onSelected={() => {
+            window.location.reload();
+          }}
+        />
+      ) : (
+        <></>
+      )}
+      <TypeArticle
+        type={"article"}
+        articleId={articleId}
+        channelId={channelsId}
+        mode={mode}
+        anthologyId={anthologyId}
+        active={true}
+        onArticleChange={(type: ArticleType, id: string, target: string) => {}}
+        onLoad={(data: IArticleDataResponse) => {}}
+        onAnthologySelect={(id: string) => {}}
+      />
+    </>
+  ) : (
+    <>loading</>
+  );
+  /*
   const srcDataMode = mode === "edit" || mode === "wbw" ? "edit" : "read";
   useEffect(() => {
     console.log("srcDataMode", srcDataMode);
@@ -119,6 +233,7 @@ const TypeCourseWidget = ({
             url = `/v2/article/${articleId}?view=textbook&course=${courseId}&mode=${srcDataMode}`;
           }
           break;
+
         case "exercise":
           if (typeof articleId !== "undefined") {
             url = `/v2/article/${articleId}?mode=${srcDataMode}&course=${courseId}&exercise=${exerciseId}&user=${userName}`;
@@ -144,6 +259,7 @@ const TypeCourseWidget = ({
             );
           }
           break;
+
       }
 
       console.log("url", url);
@@ -227,7 +343,8 @@ const TypeCourseWidget = ({
     exerciseId,
     userName,
   ]);
-
+*/
+  /*
   return (
     <div>
       <ArticleView
@@ -264,6 +381,7 @@ const TypeCourseWidget = ({
       <Divider />
     </div>
   );
+  */
 };
 
 export default TypeCourseWidget;

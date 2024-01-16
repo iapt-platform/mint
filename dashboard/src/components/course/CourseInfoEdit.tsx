@@ -94,7 +94,8 @@ const CourseInfoEditWidget = ({
           } else if (typeof values.cover[0].response === "undefined") {
             _cover = values.cover[0].uid;
           } else {
-            _cover = values.cover[0].response.data.id;
+            console.debug("upload ", values.cover[0].response);
+            _cover = values.cover[0].response.data.name;
           }
 
           const res = await put<ICourseDataRequest, ICourseResponse>(

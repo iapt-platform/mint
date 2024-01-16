@@ -148,6 +148,7 @@ const Widget = () => {
             key: "title",
             tip: "过长会自动收缩",
             ellipsis: true,
+            width: 300,
             render: (text, row, index, action) => {
               return (
                 <Space key={index}>
@@ -210,7 +211,7 @@ const Widget = () => {
             }),
             dataIndex: "type",
             key: "type",
-            width: 100,
+            width: 80,
             search: false,
             filters: true,
             onFilter: true,
@@ -350,7 +351,7 @@ const Widget = () => {
           console.log("url", url);
 
           const res = await get<ICourseListResponse>(url);
-          console.log("api data", res);
+          console.debug("course data", res);
           const items: DataItem[] = res.data.rows.map((item, id) => {
             return {
               sn: id + offset + 1,
