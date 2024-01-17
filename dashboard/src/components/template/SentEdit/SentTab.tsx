@@ -19,6 +19,7 @@ import { IResNumber } from "../SentEdit";
 import SentTabCopy from "./SentTabCopy";
 import { fullUrl } from "../../../utils";
 import SentWbw from "./SentWbw";
+import SentTabButtonWbw from "./SentTabButtonWbw";
 
 const { Text } = Typography;
 
@@ -74,6 +75,7 @@ const SentTabWidget = ({
   const [currTranNum, setCurrTranNum] = useState(tranNum);
   const [currNissayaNum, setCurrNissayaNum] = useState(nissayaNum);
   const [currCommNum, setCurrCommNum] = useState(commNum);
+  const [showWbwProgress, setShowWbwProgress] = useState(false);
 
   console.log("SentTabWidget render");
 
@@ -344,13 +346,18 @@ const SentTabWidget = ({
         },
         {
           label: (
-            <span style={tabButtonStyle}>
-              <span style={{ marginRight: 12 }}>
-                {intl.formatMessage({
-                  id: "buttons.wbw",
-                })}
-              </span>
-            </span>
+            <SentTabButtonWbw
+              style={tabButtonStyle}
+              sentId={id}
+              count={0}
+              onMenuClick={(keyPath: string[]) => {
+                switch (keyPath.join("-")) {
+                  case "show-progress":
+                    setShowWbwProgress((origin) => !origin);
+                    break;
+                }
+              }}
+            />
           ),
           key: "wbw",
           children: (
@@ -360,6 +367,7 @@ const SentTabWidget = ({
               wordStart={parseInt(sId[2])}
               wordEnd={parseInt(sId[3])}
               channelsId={channelsId}
+              wbwProgress={showWbwProgress}
             />
           ),
         },
