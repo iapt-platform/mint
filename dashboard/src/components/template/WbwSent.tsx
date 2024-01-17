@@ -86,6 +86,7 @@ interface IWidget {
   magicDict?: string;
   refreshable?: boolean;
   mode?: ArticleMode;
+  wbwProgress?: boolean;
   onMagicDictDone?: Function;
   onChange?: Function;
 }
@@ -103,6 +104,7 @@ export const WbwSentCtl = ({
   mode,
   magicDict,
   refreshable = false,
+  wbwProgress = false,
   onChange,
   onMagicDictDone,
 }: IWidget) => {
@@ -115,6 +117,8 @@ export const WbwSentCtl = ({
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showProgress, setShowProgress] = useState(false);
+
+  useEffect(() => setShowProgress(wbwProgress), [wbwProgress]);
 
   const settings = useAppSelector(settingInfo);
   const sysGrammar = useAppSelector(getGrammar)?.filter(

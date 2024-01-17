@@ -27,6 +27,7 @@ interface IWidgetSentContent {
   magicDict?: string;
   compact?: boolean;
   mode?: ArticleMode;
+  wbwProgress?: boolean;
   onWbwChange?: Function;
   onMagicDictDone?: Function;
 }
@@ -42,6 +43,7 @@ const SentContentWidget = ({
   compact = false,
   mode,
   magicDict,
+  wbwProgress = false,
   onWbwChange,
   onMagicDictDone,
 }: IWidgetSentContent) => {
@@ -134,6 +136,7 @@ const SentContentWidget = ({
                 channelId={item.channel.id}
                 data={JSON.parse(item.content ? item.content : "")}
                 mode={mode}
+                wbwProgress={wbwProgress}
                 onChange={(data: IWbw[]) => {
                   if (typeof onWbwChange !== "undefined") {
                     onWbwChange(data);
