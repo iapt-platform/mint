@@ -11,6 +11,7 @@ import NavigateButton from "./NavigateButton";
 import ArticleSkeleton from "./ArticleSkeleton";
 import ErrorResult from "../general/ErrorResult";
 import "./article.css";
+import { fullUrl } from "../../utils";
 
 interface IParam {
   articleId?: string;
@@ -52,14 +53,18 @@ const TypePageWidget = ({
   const [errorCode, setErrorCode] = useState<number>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [pageInfo, setPageInfo] = useState<string>();
+  const [currId, setCurrId] = useState(articleId);
+
   const intl = useIntl();
 
+  useEffect(() => setCurrId(articleId), [articleId]);
+
   useEffect(() => {
-    if (typeof articleId === "undefined") {
+    if (typeof currId === "undefined") {
       return;
     }
 
-    const pageParam = articleId.split("_");
+    const pageParam = currId.split("_");
     if (pageParam.length < 4) {
       return;
     }
@@ -109,7 +114,40 @@ const TypePageWidget = ({
           setErrorMessage(`该页面不存在。页面信息：${pageInfo}`);
         }
       });
-  }, [articleId, channelId, intl, mode, pageInfo]);
+  }, [currId, channelId, intl, mode, pageInfo]);
+
+  const seek = (
+    event: React.MouseEvent<HTMLElement, MouseEvent>,
+    page: number
+  ) => {
+    if (typeof currId === "undefined") {
+      return;
+    }
+    const pageParam = currId.split("_");
+    if (pageParam.length < 4) {
+      return;
+    }
+    const id = `${pageParam[0]}_${pageParam[1]}_${pageParam[2]}_${
+      parseInt(pageParam[3]) + page
+    }`;
+    let target = "_self";
+    if (event.ctrlKey || event.metaKey) {
+      target = "_blank";
+    }
+    if (typeof onArticleChange !== "undefined") {
+      onArticleChange("page", id, target);
+    } else {
+      if (target === "_blank") {
+        let url = `/article/page/${id}?mode=${mode}`;
+        if (channelId) {
+          url += `&channel=${channelId}`;
+        }
+        window.open(fullUrl(url), "_blank");
+      } else {
+        setCurrId(id);
+      }
+    }
+  };
 
   return (
     <div>
@@ -131,42 +169,10 @@ const TypePageWidget = ({
             prevTitle={nav?.prev.page.toString()}
             nextTitle={nav?.next.page.toString()}
             onNext={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-              if (typeof onArticleChange !== "undefined") {
-                if (typeof articleId === "undefined") {
-                  return;
-                }
-                const pageParam = articleId.split("_");
-                if (pageParam.length < 4) {
-                  return;
-                }
-                const id = `${pageParam[0]}-${pageParam[1]}-${pageParam[2]}-${
-                  parseInt(pageParam[3]) + 1
-                }`;
-                let target = "_self";
-                if (event.ctrlKey || event.metaKey) {
-                  target = "_blank";
-                }
-                onArticleChange("page", id, target);
-              }
+              seek(event, 1);
             }}
             onPrev={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-              if (typeof onArticleChange !== "undefined") {
-                if (typeof articleId === "undefined") {
-                  return;
-                }
-                const pageParam = articleId.split("_");
-                if (pageParam.length < 4) {
-                  return;
-                }
-                const id = `${pageParam[0]}-${pageParam[1]}-${pageParam[2]}-${
-                  parseInt(pageParam[3]) - 1
-                }`;
-                let target = "_self";
-                if (event.ctrlKey || event.metaKey) {
-                  target = "_blank";
-                }
-                onArticleChange("page", id, target);
-              }
+              seek(event, -1);
             }}
           />
         </>
