@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { TDisplayStyle } from "./Article";
 import Video from "../general/Video";
 import { VideoIcon } from "../../assets/icon";
+import { useIntl } from "react-intl";
 
 const { Text } = Typography;
 
@@ -16,6 +17,7 @@ interface IVideoCtl {
 }
 
 export const VideoCtl = ({ url, title, style = "modal" }: IVideoCtl) => {
+  const intl = useIntl();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -65,7 +67,9 @@ export const VideoCtl = ({ url, title, style = "modal" }: IVideoCtl) => {
                 <Text>{title}</Text>
                 <Text>
                   <Link to={articleLink} target="_blank">
-                    {"新窗口打开"}
+                    {intl.formatMessage({
+                      id: "buttons.open.in.new.tab",
+                    })}
                   </Link>
                 </Text>
               </div>

@@ -8,6 +8,8 @@ import TypePage from "./TypePage";
 import TypeCSPara from "./TypeCSPara";
 import { ISearchParams } from "../../pages/library/article/show";
 import TypeCourse from "./TypeCourse";
+import { useEffect, useState } from "react";
+import { fullUrl } from "../../utils";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -79,12 +81,15 @@ const ArticleWidget = ({
   onAnthologySelect,
   onTitle,
 }: IWidget) => {
+  const [currId, setCurrId] = useState(articleId);
+  useEffect(() => setCurrId(articleId), [articleId]);
+
   return (
     <div>
       {type === "article" ? (
         <TypeArticle
           type={type}
-          articleId={articleId}
+          articleId={currId}
           channelId={channelId}
           mode={mode}
           anthologyId={anthologyId}
@@ -110,7 +115,7 @@ const ArticleWidget = ({
         />
       ) : type === "anthology" ? (
         <TypeAnthology
-          articleId={articleId}
+          articleId={currId}
           channelId={channelId}
           mode={mode}
           onArticleChange={(type: ArticleType, id: string, target: string) => {
@@ -126,7 +131,7 @@ const ArticleWidget = ({
         />
       ) : type === "term" ? (
         <TypeTerm
-          articleId={articleId}
+          articleId={currId}
           channelId={channelId}
           mode={mode}
           onArticleChange={(type: ArticleType, id: string, target: string) => {
@@ -138,7 +143,7 @@ const ArticleWidget = ({
       ) : type === "chapter" || type === "para" ? (
         <TypePali
           type={type}
-          articleId={articleId}
+          articleId={currId}
           channelId={channelId}
           mode={mode}
           book={book}
@@ -167,19 +172,29 @@ const ArticleWidget = ({
         />
       ) : type === "page" ? (
         <TypePage
-          articleId={articleId}
+          articleId={currId}
           channelId={channelId}
           focus={focus}
           mode={mode}
           onArticleChange={(type: ArticleType, id: string, target: string) => {
             if (typeof onArticleChange !== "undefined") {
               onArticleChange(type, id, target);
+            } else {
+              if (target === "_blank") {
+                let url = `/article/page/${id}?mode=${mode}`;
+                if (channelId) {
+                  url += `&channel=${channelId}`;
+                }
+                window.open(fullUrl(url), "_blank");
+              } else {
+                setCurrId(id);
+              }
             }
           }}
         />
       ) : type === "cs-para" ? (
         <TypeCSPara
-          articleId={articleId}
+          articleId={currId}
           channelId={channelId}
           mode={mode}
           onArticleChange={(type: ArticleType, id: string, target: string) => {
@@ -191,7 +206,7 @@ const ArticleWidget = ({
       ) : type === "textbook" ? (
         <TypeCourse
           type={type}
-          articleId={articleId}
+          articleId={currId}
           channelId={channelId}
           courseId={courseId}
           mode={mode}

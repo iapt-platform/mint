@@ -1,9 +1,10 @@
-import { Card, Collapse, Modal } from "antd";
+import { Card, Collapse, Modal, Space } from "antd";
 import { Typography } from "antd";
 import { useState } from "react";
 import Article, { ArticleType } from "../article/Article";
 import { Link } from "react-router-dom";
 import { fullUrl } from "../../utils";
+import { useIntl } from "react-intl";
 
 const { Text } = Typography;
 
@@ -31,6 +32,7 @@ export const ArticleCtl = ({
   style = "modal",
   modalExtra,
 }: IWidgetChapterCtl) => {
+  const intl = useIntl();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -89,12 +91,14 @@ export const ArticleCtl = ({
                 }}
               >
                 <Text>{aTitle}</Text>
-                <Text>
-                  {modalExtra}
+                <Space>
                   <Link to={articleLink} target="_blank">
-                    {"新窗口打开"}
+                    {intl.formatMessage({
+                      id: "buttons.open.in.new.tab",
+                    })}
                   </Link>
-                </Text>
+                  {modalExtra}
+                </Space>
               </div>
             }
             open={isModalOpen}

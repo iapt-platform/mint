@@ -15,6 +15,7 @@ interface IWidget {
   wordEnd: number;
   channelsId?: string[];
   reload?: boolean;
+  wbwProgress?: boolean;
   onReload?: Function;
 }
 const SentWbwWidget = ({
@@ -24,6 +25,7 @@ const SentWbwWidget = ({
   wordEnd,
   channelsId,
   reload = false,
+  wbwProgress = false,
   onReload,
 }: IWidget) => {
   const [initLoading, setInitLoading] = useState(true);
@@ -85,7 +87,7 @@ const SentWbwWidget = ({
         dataSource={sentData}
         renderItem={(item, index) => (
           <List.Item key={index}>
-            <SentEditInner {...item} />
+            <SentEditInner {...item} wbwProgress={wbwProgress} />
           </List.Item>
         )}
       />

@@ -81,6 +81,7 @@ const items = {
   "buttons.relate": "关联",
   "buttons.convert": "转换",
   "buttons.copy.tpl": "复制模版",
+  "buttons.open.in.new.tab": "在新标签页中打开",
 };
 
 export default items;

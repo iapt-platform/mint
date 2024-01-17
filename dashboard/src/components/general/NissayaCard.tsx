@@ -10,6 +10,7 @@ import { ITerm } from "../term/TermEdit";
 import { Link } from "react-router-dom";
 import TermModal from "../term/TermModal";
 import { ITermDataResponse } from "../api/Term";
+import { useIntl } from "react-intl";
 
 const { Paragraph, Title } = Typography;
 
@@ -76,6 +77,7 @@ interface IWidget {
   cache?: boolean;
 }
 const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
+  const intl = useIntl();
   const [cardData, setCardData] = useState<INissayaRelation[]>();
   const [term, setTerm] = useState<ITerm>();
   const [loading, setLoading] = useState(false);
@@ -143,7 +145,11 @@ const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
           />
         </Title>
         <div>
-          <Link to={`/nissaya/ending/${term?.word}`}>在新窗口打开</Link>
+          <Link to={`/nissaya/ending/${term?.word}`}>
+            {intl.formatMessage({
+              id: "buttons.open.in.new.tab",
+            })}
+          </Link>
           <Button
             type="link"
             icon={<ReloadOutlined />}

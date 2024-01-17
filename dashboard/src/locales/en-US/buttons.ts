@@ -81,6 +81,7 @@ const items = {
   "buttons.relate": "relate",
   "buttons.convert": "convert",
   "buttons.copy.tpl": "copy template",
+  "buttons.open.in.new.tab": "Open in New Tab",
 };
 
 export default items;
