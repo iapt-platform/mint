@@ -2,6 +2,7 @@ import { Button, Popover } from "antd";
 import { Typography } from "antd";
 import { SearchOutlined, CopyOutlined } from "@ant-design/icons";
 import { ProCard } from "@ant-design/pro-components";
+import { useIntl } from "react-intl";
 
 const { Text, Link } = Typography;
 
@@ -21,6 +22,7 @@ const QuoteCtl = ({
   error,
   message,
 }: IWidgetQuoteCtl) => {
+  const intl = useIntl();
   const show = pali ? pali : paraId;
   let textShow = <></>;
 
@@ -39,7 +41,9 @@ const QuoteCtl = ({
             分栏打开
           </Button>,
           <Button type="link" size="small" icon={<SearchOutlined />}>
-            新窗口打开
+            {intl.formatMessage({
+              id: "buttons.open.in.new.tab",
+            })}
           </Button>,
           <Button type="link" size="small" icon={<CopyOutlined />}>
             复制引用

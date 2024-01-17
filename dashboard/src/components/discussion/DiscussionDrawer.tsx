@@ -7,6 +7,7 @@ import DiscussionListCard, { TResType } from "./DiscussionListCard";
 import { IComment } from "./DiscussionItem";
 import DiscussionAnchor from "./DiscussionAnchor";
 import { Link } from "react-router-dom";
+import { useIntl } from "react-intl";
 
 export interface IAnswerCount {
   id: string;
@@ -24,6 +25,7 @@ const DiscussionDrawerWidget = ({
   resType,
   onCommentCountChange,
 }: IWidget) => {
+  const intl = useIntl();
   const [open, setOpen] = useState(false);
   const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [topicComment, setTopicComment] = useState<IComment>();
@@ -52,7 +54,9 @@ const DiscussionDrawerWidget = ({
         extra={
           <Space>
             <Link to={`/discussion/show/${resType}/${resId}`} target="_blank">
-              在新窗口打开
+              {intl.formatMessage({
+                id: "buttons.open.in.new.tab",
+              })}
             </Link>
             {drawerWidth === drawerMinWidth ? (
               <Button
