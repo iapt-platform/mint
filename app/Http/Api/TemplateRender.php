@@ -666,6 +666,20 @@ class TemplateRender{
 
         $text = '';
         if(isset($props['bookName'])){
+            $searchField = '';
+            switch ($type) {
+                case 'm':
+                    $searchField = 'm_title';
+                    break;
+                case 'p':
+                    $searchField = 'p_title';
+                    break;
+            }
+            $found_title = array_search($props['bookName'], array_column(BookTitle::get(), $searchField));
+            if($found_title === false){
+                $props['found'] = false;
+            }
+
             $term = $this->getTermProps($props['bookName'],':quote:');
             $props['term'] = $term;
             if(isset($term['id'])){
