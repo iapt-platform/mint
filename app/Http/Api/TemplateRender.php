@@ -26,7 +26,8 @@ class TemplateRender{
     protected $debug = [];
     protected $format = 'react';
     protected $studioId = null;
-
+    protected $lang = 'en';
+    protected $langFamily = 'en';
 
     /**
      * Create a new command instance.
@@ -103,6 +104,9 @@ class TemplateRender{
             case 'v':
                 $result = $this->render_video();
                 break;
+            case 'g':
+                $result = $this->render_grammar_lookup();
+                break;
             default:
                 # code...
                 $result = [
@@ -116,13 +120,16 @@ class TemplateRender{
         return $result;
     }
 
-    public function getTermProps($word,$tag){
-        if(count($this->channel_id)>0){
-            $channelId = $this->channel_id[0];
+    public function getTermProps($word,$tag=null,$channel=null){
+        if($channel && !empty($channel)){
+            $channelId = $channel;
         }else{
-            $channelId = null;
+            if(count($this->channel_id)>0){
+                $channelId = $this->channel_id[0];
+            }else{
+                $channelId = null;
+            }
         }
-
 
         if(count($this->channelInfo)===0){
             Log::error('channel is null');
@@ -144,7 +151,7 @@ class TemplateRender{
             $this->info('channel id'.$channelId,'term');
             $table = DhammaTerm::where("word",$word)
                                 ->where('channal',$channelId);
-            if(!empty($tag)){
+            if($tag && !empty($tag)){
                 $table = $table->where('tag',$tag);
             }
             $tplParam = $table->orderBy('updated_at','desc')
@@ -932,6 +939,39 @@ class TemplateRender{
                 break;
             default:
                 $output = $props['title'];
+                break;
+        }
+        return $output;
+    }
+
+    private function render_grammar_lookup(){
+        $word = $this->get_param($this->param,"word",1);
+        $props = ['word' => $word];
+
+        $localTermChannel = ChannelApi::getSysChannel(
+            "_System_Grammar_Term_".strtolower($this->lang)."_",
+            "_System_Grammar_Term_en_"
+        );
+        $term = $this->getTermProps($word,null,$localTermChannel);
+        $props['term'] = $term;
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'html'=>"",
+                    'text'=>$props['word'],
+                    'tag'=>'span',
+                    'tpl'=>'grammar',
+                    ];
+                break;
+            case 'unity':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'tpl'=>'grammar',
+                    ];
+                break;
+            default:
+                $output = $props['word'];
                 break;
         }
         return $output;
