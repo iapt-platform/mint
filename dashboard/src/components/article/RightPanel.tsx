@@ -22,6 +22,7 @@ export type TPanelName =
   | "channel"
   | "discussion"
   | "suggestion"
+  | "grammar"
   | "close"
   | "open";
 
@@ -86,6 +87,10 @@ const RightPanelWidget = ({
         setActiveTab(curr);
         break;
       case "suggestion":
+        setOpen(true);
+        setActiveTab(curr);
+        break;
+      case "grammar":
         setOpen(true);
         setActiveTab(curr);
         break;
