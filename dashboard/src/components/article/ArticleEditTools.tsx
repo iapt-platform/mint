@@ -7,6 +7,7 @@ import { ArticleTplModal } from "../template/Builder/ArticleTpl";
 import ShareModal from "../../components/share/ShareModal";
 import { EResType } from "../../components/share/Share";
 import AddToAnthology from "../../components/article/AddToAnthology";
+import Builder from "../template/Builder/Builder";
 
 interface IWidget {
   studioName?: string;
@@ -21,6 +22,7 @@ const ArticleEditToolsWidget = ({
   const intl = useIntl();
   return (
     <Space>
+      <Builder trigger={<Button type="link">{"<t>"}</Button>} />
       {articleId ? (
         <AddToAnthology
           trigger={<Button type="link">加入文集</Button>}
@@ -31,7 +33,7 @@ const ArticleEditToolsWidget = ({
       {articleId ? (
         <ShareModal
           trigger={
-            <Button icon={<TeamOutlined />}>
+            <Button type="link" icon={<TeamOutlined />}>
               {intl.formatMessage({
                 id: "buttons.share",
               })}
@@ -48,7 +50,7 @@ const ArticleEditToolsWidget = ({
         title={title}
         type="article"
         id={articleId}
-        trigger={<Button>获取模版</Button>}
+        trigger={<Button type="link">获取模版</Button>}
       />
     </Space>
   );

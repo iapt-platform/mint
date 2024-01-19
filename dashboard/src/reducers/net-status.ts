@@ -1,5 +1,5 @@
 /**
- * 查字典，添加术语命令
+ *
  */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ENetStatus } from "../components/general/NetStatus";
