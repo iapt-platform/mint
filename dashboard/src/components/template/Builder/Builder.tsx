@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Col, Modal, Row, Tree } from "antd";
 import { Key } from "antd/lib/table/interface";
 import ArticleTpl from "./ArticleTpl";
+import VideoTpl from "./VideoTpl";
 
 interface DataNode {
   title: React.ReactNode;
@@ -15,6 +16,13 @@ interface tplListNode {
   component?: React.ReactNode;
 }
 
+const tplList: tplListNode[] = [
+  { name: "article", component: <ArticleTpl /> },
+  { name: "video", component: <VideoTpl /> },
+  { name: "note" },
+  { name: "term" },
+];
+
 interface IWidget {
   trigger?: React.ReactNode;
 }
@@ -23,11 +31,6 @@ const TplBuilderWidget = ({ trigger }: IWidget) => {
   const [template, setTemplate] =
     useState<React.ReactNode>("在左侧列表选择一个模版");
 
-  const tplList: tplListNode[] = [
-    { name: "article", component: <ArticleTpl /> },
-    { name: "note" },
-    { name: "term" },
-  ];
   const treeData: DataNode[] = tplList.map((item) => {
     return { title: item.name, key: item.name };
   });
@@ -44,14 +47,15 @@ const TplBuilderWidget = ({ trigger }: IWidget) => {
     <>
       <span onClick={showModal}>{trigger}</span>
       <Modal
-        width={700}
+        style={{ top: 20 }}
+        width={900}
         footer={false}
         title="template builder"
         open={isModalOpen}
         onCancel={handleCancel}
       >
         <Row>
-          <Col span={8}>
+          <Col span={6}>
             <Tree
               treeData={treeData}
               onSelect={(selectedKeys: Key[]) => {
@@ -64,7 +68,7 @@ const TplBuilderWidget = ({ trigger }: IWidget) => {
               }}
             />
           </Col>
-          <Col span={16}>{template}</Col>
+          <Col span={18}>{template}</Col>
         </Row>
       </Modal>
     </>
