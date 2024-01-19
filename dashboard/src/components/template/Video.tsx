@@ -88,9 +88,16 @@ export const VideoCtl = ({ url, title, style = "modal" }: IVideoCtl) => {
       break;
     case "card":
       output = (
-        <Card title={title}>
+        <Card title={title} bodyStyle={{ width: 550, height: 400 }}>
           <Video src={url} />
         </Card>
+      );
+      break;
+    case "window":
+      output = (
+        <div style={{ width: 550, height: 320 }}>
+          <Video src={url} />
+        </div>
       );
       break;
     case "toggle":
