@@ -71,3 +71,7 @@ h6 {
 .pcd_article video {
   max-width: 90%;
 }
+
+.video-js video {
+  max-width: 100%;
+}
