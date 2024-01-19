@@ -47,7 +47,11 @@ const VideoPlayerWidget = ({ options, onReady }: IProps) => {
 
   return (
     <div data-vjs-player>
-      <div ref={videoRef} className="video-js" />
+      <div
+        ref={videoRef}
+        className="video-js"
+        style={{ width: "unset", height: "unset" }}
+      />
     </div>
   );
 };
