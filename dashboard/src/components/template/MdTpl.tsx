@@ -1,6 +1,7 @@
 import { GrammarPopShell } from "../dict/GrammarPop";
 import Article from "./Article";
 import Exercise from "./Exercise";
+import GrammarTermLookup from "./GrammarTermLookup";
 import Mermaid from "./Mermaid";
 import Nissaya from "./Nissaya";
 import Note from "./Note";
@@ -60,6 +61,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Qa props={props ? props : ""} />;
     case "video":
       return <Video props={props ? props : ""} />;
+    case "grammar":
+      return <GrammarTermLookup props={props ? props : ""} />;
     default:
       return <>未定义模版({tpl})</>;
   }
