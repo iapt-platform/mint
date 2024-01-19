@@ -1,5 +1,5 @@
 /**
- * 查字典，添加术语命令
+ *
  */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IRelation } from "../pages/admin/relation/list";
