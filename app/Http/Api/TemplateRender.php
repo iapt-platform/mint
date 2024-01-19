@@ -45,6 +45,17 @@ class TemplateRender{
         $this->format = $format;
         $this->studioId = $studioId;
         $this->debug = $debug;
+
+        if(count($this->channel_id)>0){
+            $channelId = $this->channel_id[0];
+            if(Str::isUuid($channelId)){
+                $lang = Channel::where('uid',$channelId)->value('lang');
+                if(!empty($lang)){
+                    $this->lang = $lang;
+                    $this->langFamily = explode('-',$lang)[0];
+                }
+            }
+        }
     }
     private function info($message,$debug){
         if(in_array($debug,$this->debug)){
