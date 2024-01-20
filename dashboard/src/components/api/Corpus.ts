@@ -187,6 +187,7 @@ export interface ISentenceNewRequest {
   sentences: ISentenceDiffData[];
   channel?: string;
   copy?: boolean;
+  fork_from?: string;
 }
 export interface ISentenceNewMultiResponse {
   ok: boolean;
