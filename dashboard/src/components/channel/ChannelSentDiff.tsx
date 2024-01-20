@@ -182,14 +182,15 @@ const ChannelSentDiffWidget = ({
             if (typeof submitData === "undefined") {
               return;
             }
-            post<ISentenceNewRequest, ISentenceNewMultiResponse>(
-              `/v2/sentence`,
-              {
-                sentences: submitData,
-                channel: destChannel?.id,
-                copy: true,
-              }
-            )
+            const url = `/v2/sentence`;
+            const postData = {
+              sentences: submitData,
+              channel: destChannel?.id,
+              copy: true,
+              fork_from: srcChannel.id,
+            };
+            console.debug("fork post", url, postData);
+            post<ISentenceNewRequest, ISentenceNewMultiResponse>(url, postData)
               .then((json) => {
                 if (json.ok) {
                   if (typeof onSubmit !== "undefined") {
@@ -201,6 +202,7 @@ const ChannelSentDiffWidget = ({
               })
               .catch((e) => {
                 console.log(e);
+                message.error("error");
               })
               .finally(() => {
                 setLoading(false);
