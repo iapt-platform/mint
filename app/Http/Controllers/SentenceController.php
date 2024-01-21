@@ -419,7 +419,7 @@ class SentenceController extends Controller
         $currSentId = "{$param[0]}-{$param[1]}-{$param[2]}-{$param[3]}";
         RedisClusters::forget("/sent/{$channelId}/{$currSentId}");
         //保存历史记录
-        $this->saveHistory($sent->uid,$user["user_uid"],$request->get('content'));
+        $this->saveHistory($sent->uid,$user["user_uid"],$request->get('content'),$user["user_uid"]);
         Mq::publish('progress',['book'=>$param[0],
                             'para'=>$param[1],
                             'channel'=>$channelId,
