@@ -278,6 +278,11 @@ class SentenceController extends Controller
                 $row->editor_uid = $sent["editor_uid"];
                 $row->acceptor_uid = $user["user_uid"];
                 $row->pr_edit_at = $sent["updated_at"];
+                $forks = SentHistory::where('sent_uid',$row->uid)
+                                    ->select('fork_from')
+                                    ->groupBy('fork_from')
+                                    ->get();
+                $row->fork = count($forks);
             }else{
                 $row->editor_uid = $user["user_uid"];
                 $row->acceptor_uid = null;
@@ -289,9 +294,14 @@ class SentenceController extends Controller
 
             //保存历史记录
             if($request->has('copy')){
-                $this->saveHistory($row->uid,$sent["editor_uid"],$sent['content']);
+                $fork_from = $request->get('fork_from',null);
+                $this->saveHistory($row->uid,
+                                $sent["editor_uid"],
+                                $sent['content'],
+                                $user["user_uid"],
+                                $fork_from);
             }else{
-                $this->saveHistory($row->uid,$user["user_uid"],$sent['content']);
+                $this->saveHistory($row->uid,$user["user_uid"],$sent['content'],$user["user_uid"]);
             }
             //清除缓存
             $sentId = "{$sent['book_id']}-{$sent['paragraph']}-{$sent['word_start']}-{$sent['word_end']}";
@@ -307,7 +317,7 @@ class SentenceController extends Controller
         return $this->ok(count($request->get('sentences')));
     }
 
-    private function saveHistory($uid,$editor,$content){
+    private function saveHistory($uid,$editor,$content,$user_uid,$fork_from=null,$pr_from=null){
         $newHis = new SentHistory();
         $newHis->id = app('snowflake')->id();
         $newHis->sent_uid = $uid;
@@ -317,7 +327,10 @@ class SentenceController extends Controller
         }else{
             $newHis->content = $content;
         }
-
+        if($fork_from){
+            $newHis->fork_from = $fork_from;
+            $newHis->accepter_uid = $user_uid;
+        }
         $newHis->create_time = time()*1000;
         $newHis->save();
     }
