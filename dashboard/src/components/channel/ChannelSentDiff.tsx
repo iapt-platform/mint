@@ -26,6 +26,7 @@ interface IWidget {
   srcChannel?: IChannel;
   destChannel?: IChannel;
   sentences?: string[];
+  important?: boolean;
   goPrev?: Function;
   onSubmit?: Function;
 }
@@ -33,6 +34,7 @@ const ChannelSentDiffWidget = ({
   srcChannel,
   destChannel,
   sentences,
+  important = false,
   goPrev,
   onSubmit,
 }: IWidget) => {
@@ -105,7 +107,11 @@ const ChannelSentDiffWidget = ({
           });
           setDiffData(diffList);
           setNewRowKeys(newRows);
-          setSelectedRowKeys(newRows);
+          if (important) {
+            setSelectedRowKeys(sentences);
+          } else {
+            setSelectedRowKeys(newRows);
+          }
           setEmptyRowKeys(emptyRows);
         }
       });
@@ -127,6 +133,7 @@ const ChannelSentDiffWidget = ({
         <Select
           defaultValue={"new"}
           style={{ width: 180 }}
+          disabled={important}
           onChange={(value: string) => {
             switch (value) {
               case "new":

@@ -13,6 +13,7 @@ interface IWidget {
   type?: ArticleType;
   articleId?: string;
   sentencesId?: string[];
+  important?: boolean;
   stepChange?: Function;
   onClose?: Function;
 }
@@ -22,6 +23,7 @@ const CopyToStepWidget = ({
   type,
   articleId,
   sentencesId,
+  important = false,
   stepChange,
   onClose,
 }: IWidget) => {
@@ -77,6 +79,7 @@ const CopyToStepWidget = ({
           srcChannel={channel}
           destChannel={destChannel}
           sentences={sentencesId}
+          important={important}
           goPrev={() => {
             prev();
           }}
