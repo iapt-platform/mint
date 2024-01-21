@@ -131,7 +131,7 @@ const ChannelSentDiffWidget = ({
           上一步
         </Button>
         <Select
-          defaultValue={"new"}
+          defaultValue={important ? "all" : "new"}
           style={{ width: 180 }}
           disabled={important}
           onChange={(value: string) => {
