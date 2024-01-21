@@ -43,6 +43,7 @@ const SentHistoryModalWidget = ({
     <>
       <span onClick={showModal}>{trigger}</span>
       <Modal
+        style={{ top: 20 }}
         width={"80%"}
         title={intl.formatMessage({
           id: "buttons.timeline",
