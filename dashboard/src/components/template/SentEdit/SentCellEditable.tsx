@@ -25,7 +25,6 @@ export const sentSave = (
 ) => {
   let url = `/v2/sentence/${data.book}_${data.para}_${data.wordStart}_${data.wordEnd}_${data.channel.id}`;
   url += "?mode=edit&html=true";
-  console.log("save url", url);
   const body = {
     book: data.book,
     para: data.para,
@@ -35,9 +34,11 @@ export const sentSave = (
     content: data.content,
     channels: data.translationChannels?.join(),
   };
+  console.log("save url", url, body);
   put<ISentenceRequest, ISentenceResponse>(url, body)
     .then((json) => {
       if (json.ok) {
+        console.debug("sent save ok", json.data);
         const newData: ISentence = {
           id: json.data.id,
           content: json.data.content,
@@ -47,6 +48,7 @@ export const sentSave = (
           wordStart: json.data.word_start,
           wordEnd: json.data.word_end,
           editor: json.data.editor,
+          studio: json.data.studio,
           channel: json.data.channel,
           updateAt: json.data.updated_at,
         };
