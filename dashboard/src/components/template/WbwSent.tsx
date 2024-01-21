@@ -22,6 +22,63 @@ import { settingInfo } from "../../reducers/setting";
 import { GetUserSetting } from "../auth/setting/default";
 import { getGrammar } from "../../reducers/term-vocabulary";
 
+export const paraMark = (wbwData: IWbw[]): IWbw[] => {
+  let start = false;
+  let bookCode = "";
+  let count = 0;
+  let currPara = 0;
+  let bookCodeStack: string[] = [];
+  wbwData.forEach((value: IWbw, index: number, array: IWbw[]) => {
+    if (value.word.value === "(") {
+      start = true;
+      bookCode = "";
+      bookCodeStack = [];
+      return;
+    }
+    if (start) {
+      if (!isNaN(Number(value.word.value.replaceAll("-", "")))) {
+        console.debug("para mark", "number", value.word.value);
+
+        if (bookCode === "" && bookCodeStack.length > 0) {
+          //继承之前的
+          let bookCodeList = bookCodeStack;
+          bookCode = bookCodeList[0];
+        }
+        const dot = bookCode.lastIndexOf(".");
+        let bookName = "";
+        let paraNum = "";
+        if (dot === -1) {
+          bookName = bookCode;
+          paraNum = value.word.value;
+        } else {
+          bookName = bookCode.substring(0, dot + 1);
+          paraNum = bookCode.substring(dot + 1) + value.word.value;
+        }
+        bookName = bookName.substring(0, 64).toLowerCase();
+        if (!bookCodeStack.includes(bookName)) {
+          bookCodeStack.push(bookName);
+        }
+        if (bookName !== "") {
+          array[index].bookName = bookName;
+          count++;
+        }
+      } else if (value.word.value === ";") {
+        bookCode = "";
+        return;
+      } else if (value.word.value === ")") {
+        start = false;
+        return;
+      }
+      bookCode += value.word.value;
+    }
+  });
+
+  if (count > 0) {
+    console.debug("para mark", count, wbwData);
+  }
+  return wbwData;
+};
+
 interface IMagicDictRequest {
   book: number;
   para: number;
@@ -109,7 +166,7 @@ export const WbwSentCtl = ({
   onMagicDictDone,
 }: IWidget) => {
   const intl = useIntl();
-  const [wordData, setWordData] = useState<IWbw[]>(data);
+  const [wordData, setWordData] = useState<IWbw[]>(paraMark(data));
   const [wbwMode, setWbwMode] = useState(display);
   const [fieldDisplay, setFieldDisplay] = useState(fields);
   const [displayMode, setDisplayMode] = useState<ArticleMode>();
@@ -165,14 +222,15 @@ export const WbwSentCtl = ({
 
   const update = (data: IWbw[]) => {
     console.debug("wbw update");
-    setWordData(data);
+    setWordData(paraMark(data));
     if (typeof onChange !== "undefined") {
       onChange(data);
     }
   };
+
   useEffect(() => {
     if (refreshable) {
-      setWordData(data);
+      setWordData(paraMark(data));
     }
   }, [data, refreshable]);
 
