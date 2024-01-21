@@ -5,6 +5,8 @@ import { get } from "../../request";
 import User from "../auth/User";
 import { IUser } from "../auth/UserName";
 import TimeShow from "../general/TimeShow";
+import { IChannel } from "../channel/Channel";
+import { MergeIcon2 } from "../../assets/icon";
 
 const { Paragraph } = Typography;
 
@@ -14,6 +16,9 @@ export interface ISentHistoryData {
   content: string;
   editor: IUser;
   landmark: string;
+  fork_from?: IChannel;
+  pr_from?: string | null;
+  accepter?: IUser;
   created_at: string;
 }
 
@@ -26,6 +31,9 @@ export interface ISentHistoryListResponse {
 interface ISentHistory {
   content: string;
   editor: IUser;
+  fork_from?: IChannel;
+  pr_from?: string | null;
+  accepter?: IUser;
   createdAt: string;
 }
 interface IWidget {
@@ -61,6 +69,9 @@ const SentHistoryWidget = ({ sentId }: IWidget) => {
             return {
               content: item.content,
               editor: item.editor,
+              fork_from: item.fork_from,
+              pr_from: item.pr_from,
+              accepter: item.accepter,
               createdAt: item.created_at,
             };
           });
@@ -96,12 +107,28 @@ const SentHistoryWidget = ({ sentId }: IWidget) => {
         avatar: {
           dataIndex: "image",
           editable: false,
+          render: (text, row, index, action) => {
+            return <User {...row.editor} showName={false} />;
+          },
         },
         description: {
           render: (text, row, index, action) => {
             return (
               <Space style={{ fontSize: "80%" }}>
-                <User {...row.editor} />
+                {row.accepter ? (
+                  <User {...row.accepter} showAvatar={false} />
+                ) : (
+                  <User {...row.editor} showAvatar={false} />
+                )}
+
+                {row.fork_from ? (
+                  <>
+                    <MergeIcon2 />
+                    {row.fork_from.name}
+                  </>
+                ) : (
+                  <></>
+                )}
                 <TimeShow type="secondary" createdAt={row.createdAt} />
               </Space>
             );
