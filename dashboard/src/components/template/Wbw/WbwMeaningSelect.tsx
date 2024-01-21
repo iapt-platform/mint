@@ -110,6 +110,7 @@ const WbwMeaningSelectWidget = ({ data, onSelect }: IWidget) => {
               name: wordType,
               local: intl.formatMessage({
                 id: `dict.fields.type.${wordType}.short.label`,
+                defaultMessage: wordType,
               }),
               meaning: [],
             });

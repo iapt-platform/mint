@@ -7,6 +7,7 @@ interface IWidget {
 }
 const WbwParent2Widget = ({ data }: IWidget) => {
   const intl = useIntl();
+
   return data.grammar2?.value ? (
     data.grammar2.value.trim() !== "" ? (
       <Tooltip title={data.parent2?.value}>
@@ -16,6 +17,7 @@ const WbwParent2Widget = ({ data }: IWidget) => {
               "dict.fields.type." +
               data.grammar2.value?.replaceAll(".", "") +
               ".short.label",
+            defaultMessage: data.grammar2.value?.replaceAll(".", ""),
           })}
         </Tag>
       </Tooltip>

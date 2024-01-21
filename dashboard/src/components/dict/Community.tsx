@@ -227,6 +227,7 @@ const CommunityWidget = ({ word }: IWidget) => {
                     gid={strCase}
                     text={intl.formatMessage({
                       id: `dict.fields.type.${strCase}.label`,
+                      defaultMessage: strCase,
                     })}
                   />
                 ) : undefined;

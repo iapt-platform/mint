@@ -67,6 +67,7 @@ const GrammarSelectWidget = ({
       value: item,
       label: intl.formatMessage({
         id: `dict.fields.type.${item}.label`,
+        defaultMessage: item,
       }),
     };
   });

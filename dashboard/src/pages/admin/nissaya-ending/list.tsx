@@ -191,6 +191,7 @@ const Widget = () => {
                 <Tag key={id}>
                   {intl.formatMessage({
                     id: `dict.fields.type.${item}.label`,
+                    defaultMessage: item,
                   })}
                 </Tag>
               ));
