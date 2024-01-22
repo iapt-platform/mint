@@ -278,11 +278,9 @@ class SentenceController extends Controller
                 $row->editor_uid = $sent["editor_uid"];
                 $row->acceptor_uid = $user["user_uid"];
                 $row->pr_edit_at = $sent["updated_at"];
-                $forks = SentHistory::where('sent_uid',$row->uid)
-                                    ->select('fork_from')
-                                    ->groupBy('fork_from')
-                                    ->get();
-                $row->fork = count($forks);
+                if($request->has('fork_from')){
+                    $row->fork_at = now();
+                }
             }else{
                 $row->editor_uid = $user["user_uid"];
                 $row->acceptor_uid = null;
