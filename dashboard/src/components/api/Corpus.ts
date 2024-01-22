@@ -170,6 +170,7 @@ export interface ISentenceData {
   updated_at: string;
   acceptor?: IUser;
   pr_edit_at?: string;
+  fork_at?: string;
   suggestionCount?: ISuggestionCount;
 }
 
