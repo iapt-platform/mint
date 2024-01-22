@@ -66,6 +66,7 @@ const SentCanReadWidget = ({
               channel: item.channel,
               suggestionCount: item.suggestionCount,
               translationChannels: channelsId,
+              forkAt: item.fork_at,
               updateAt: item.updated_at,
             };
           });
