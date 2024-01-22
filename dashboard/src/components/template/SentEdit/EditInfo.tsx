@@ -1,18 +1,40 @@
 import { Typography } from "antd";
 import { Space } from "antd";
 
-import StudioName from "../../auth/StudioName";
 import User from "../../auth/User";
 import Channel from "../../channel/Channel";
 import TimeShow from "../../general/TimeShow";
 import { ISentence } from "../SentEdit";
+import { MergeIcon2 } from "../../../assets/icon";
 
 const { Text } = Typography;
+
+interface IMergeButton {
+  data: ISentence;
+}
+const MergeButton = ({ data }: IMergeButton) => {
+  if (data.forkAt) {
+    const fork = new Date(data.forkAt);
+    const updated = new Date(data.updateAt);
+    if (fork.getTime() === updated.getTime()) {
+      return (
+        <span style={{ color: "#1890ff" }}>
+          <MergeIcon2 />
+        </span>
+      );
+    } else {
+      return <MergeIcon2 />;
+    }
+  } else {
+    return <></>;
+  }
+};
 
 interface IDetailsWidget {
   data: ISentence;
   isPr?: boolean;
 }
+
 export const Details = ({ data, isPr }: IDetailsWidget) => (
   <Space wrap>
     <Channel {...data.channel} />
@@ -30,6 +52,7 @@ export const Details = ({ data, isPr }: IDetailsWidget) => (
         createdAt={data.createdAt}
       />
     )}
+    <MergeButton data={data} />
     {data.acceptor ? <User {...data.acceptor} showAvatar={false} /> : undefined}
     {data.acceptor ? "accept at" : undefined}
     {data.prEditAt ? (
@@ -44,13 +67,11 @@ interface IWidget {
   compact?: boolean;
 }
 const EditInfoWidget = ({ data, isPr = false, compact = false }: IWidget) => {
-  //console.log("data.createdAt", data.createdAt, data.updateAt);
+  console.debug("EditInfo", data);
   return (
     <div style={{ fontSize: "80%" }}>
       <Text type="secondary">
-        <Space>
-          {compact ? undefined : <Details data={data} isPr={isPr} />}
-        </Space>
+        {compact ? undefined : <Details data={data} isPr={isPr} />}
       </Text>
     </div>
   );
