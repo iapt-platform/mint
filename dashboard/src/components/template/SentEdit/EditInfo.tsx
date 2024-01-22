@@ -1,4 +1,4 @@
-import { Typography } from "antd";
+import { List, Popover, Typography, notification } from "antd";
 import { Space } from "antd";
 
 import User from "../../auth/User";
@@ -6,24 +6,81 @@ import Channel from "../../channel/Channel";
 import TimeShow from "../../general/TimeShow";
 import { ISentence } from "../SentEdit";
 import { MergeIcon2 } from "../../../assets/icon";
+import { useEffect, useState } from "react";
+import { get } from "../../../request";
+import {
+  ISentHistoryData,
+  ISentHistoryListResponse,
+} from "../../corpus/SentHistory";
+import moment from "moment";
 
 const { Text } = Typography;
+
+interface IFork {
+  sentId?: string;
+  highlight?: boolean;
+}
+const Fork = ({ sentId, highlight = false }: IFork) => {
+  const [data, setData] = useState<ISentHistoryData[]>();
+  useEffect(() => {
+    if (sentId) {
+      const url = `/v2/sent_history?view=sentence&id=${sentId}&fork=1`;
+      get<ISentHistoryListResponse>(url).then((json) => {
+        if (json.ok) {
+          setData(json.data.rows);
+        } else {
+          notification.error({ message: json.message });
+        }
+      });
+    }
+  }, [sentId]);
+  return (
+    <Popover
+      placement="bottom"
+      content={
+        <List
+          size="small"
+          header={false}
+          footer={false}
+          dataSource={data}
+          renderItem={(item) => (
+            <List.Item>
+              <Text>
+                {item.fork_studio?.nickName}-{item.fork_from?.name}
+              </Text>
+              <Text type="secondary" style={{ fontSize: "85%" }}>
+                <Space>
+                  <User {...item.accepter} showAvatar={false} />
+                  <TimeShow
+                    type="secondary"
+                    title="复制"
+                    createdAt={item.created_at}
+                  />
+                </Space>
+              </Text>
+            </List.Item>
+          )}
+        />
+      }
+    >
+      <span style={{ color: highlight ? "#1890ff" : "unset" }}>
+        <MergeIcon2 />
+      </span>
+    </Popover>
+  );
+};
 
 interface IMergeButton {
   data: ISentence;
 }
 const MergeButton = ({ data }: IMergeButton) => {
   if (data.forkAt) {
-    const fork = new Date(data.forkAt);
-    const updated = new Date(data.updateAt);
-    if (fork.getTime() === updated.getTime()) {
-      return (
-        <span style={{ color: "#1890ff" }}>
-          <MergeIcon2 />
-        </span>
-      );
+    const fork = moment.utc(data.forkAt, true);
+    const updated = moment(data.updateAt, true);
+    if (fork.isSame(updated)) {
+      return <Fork sentId={data.id} highlight />;
     } else {
-      return <MergeIcon2 />;
+      return <Fork sentId={data.id} />;
     }
   } else {
     return <></>;
@@ -53,11 +110,19 @@ export const Details = ({ data, isPr }: IDetailsWidget) => (
       />
     )}
     <MergeButton data={data} />
-    {data.acceptor ? <User {...data.acceptor} showAvatar={false} /> : undefined}
-    {data.acceptor ? "accept at" : undefined}
-    {data.prEditAt ? (
-      <TimeShow type="secondary" updatedAt={data.updateAt} showLabel={false} />
-    ) : undefined}
+    <span style={{ display: "none" }}>
+      {data.acceptor ? (
+        <User {...data.acceptor} showAvatar={false} />
+      ) : undefined}
+      {data.acceptor ? "accept at" : undefined}
+      {data.prEditAt ? (
+        <TimeShow
+          type="secondary"
+          updatedAt={data.updateAt}
+          showLabel={false}
+        />
+      ) : undefined}
+    </span>
   </Space>
 );
 
