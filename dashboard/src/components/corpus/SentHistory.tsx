@@ -7,6 +7,7 @@ import { IUser } from "../auth/UserName";
 import TimeShow from "../general/TimeShow";
 import { IChannel } from "../channel/Channel";
 import { MergeIcon2 } from "../../assets/icon";
+import { IStudio } from "../auth/StudioName";
 
 const { Paragraph } = Typography;
 
@@ -17,6 +18,7 @@ export interface ISentHistoryData {
   editor: IUser;
   landmark: string;
   fork_from?: IChannel;
+  fork_studio?: IStudio;
   pr_from?: string | null;
   accepter?: IUser;
   created_at: string;
