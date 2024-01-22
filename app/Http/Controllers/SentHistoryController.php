@@ -25,11 +25,14 @@ class SentHistoryController extends Controller
                 return $this->error('known view');
                 break;
         }
+        if($request->has('fork')){
+            $table = $table->whereNotNull('fork_from');
+        }
         $count = $table->count();
         $table->orderBy($request->get('order','created_at'),
                         $request->get('dir','desc'));
         $table->skip($request->get("offset",0))
-              ->take($request->get('limit',1000));
+              ->take($request->get('limit',100));
 
         $result = $table->get();
 		return $this->ok(["rows"=>SentHistoryResource::collection($result),"count"=>$count]);
