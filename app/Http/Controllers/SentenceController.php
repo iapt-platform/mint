@@ -31,7 +31,7 @@ class SentenceController extends Controller
         $result=false;
 		$indexCol = ['id','uid','book_id','paragraph',
                     'word_start','word_end','content','content_type',
-                    'channel_uid','editor_uid','acceptor_uid','pr_edit_at','updated_at'];
+                    'channel_uid','editor_uid','fork_at','acceptor_uid','pr_edit_at','updated_at'];
 
 		switch ($request->get('view')) {
             case 'public':
