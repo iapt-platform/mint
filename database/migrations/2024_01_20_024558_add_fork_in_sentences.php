@@ -15,7 +15,7 @@ class AddForkInSentences extends Migration
     {
         Schema::table('sentences', function (Blueprint $table) {
             //
-            $table->integer('fork')->index()->default(0);
+            $table->dateTime('fork_at')->nullable()->index();
             $table->integer('collaborator')->index()->default(0);
         });
     }
@@ -29,7 +29,7 @@ class AddForkInSentences extends Migration
     {
         Schema::table('sentences', function (Blueprint $table) {
             //
-            $table->dropColumn('fork');
+            $table->dropColumn('fork_at');
             $table->dropColumn('collaborator');
         });
     }
