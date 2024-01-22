@@ -22,6 +22,7 @@ interface IFork {
 }
 const Fork = ({ sentId, highlight = false }: IFork) => {
   const [data, setData] = useState<ISentHistoryData[]>();
+
   useEffect(() => {
     if (sentId) {
       const url = `/v2/sent_history?view=sentence&id=${sentId}&fork=1`;
@@ -40,7 +41,7 @@ const Fork = ({ sentId, highlight = false }: IFork) => {
       content={
         <List
           size="small"
-          header={false}
+          header={highlight ? false : "已被修改"}
           footer={false}
           dataSource={data}
           renderItem={(item) => (
@@ -75,8 +76,8 @@ interface IMergeButton {
 }
 const MergeButton = ({ data }: IMergeButton) => {
   if (data.forkAt) {
-    const fork = moment.utc(data.forkAt, true);
-    const updated = moment(data.updateAt, true);
+    const fork = moment.utc(data.forkAt);
+    const updated = moment.utc(data.updateAt);
     if (fork.isSame(updated)) {
       return <Fork sentId={data.id} highlight />;
     } else {
