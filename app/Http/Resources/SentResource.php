@@ -38,6 +38,7 @@ class SentResource extends JsonResource
                 "editor"=> UserApi::getByUuid($this->editor_uid),
                 "channel"=> $channel,
                 "studio" => StudioApi::getById($channel["studio_id"]),
+                'fork_at' => $this->fork_at,
                 "updated_at"=> $this->updated_at,
             ];
         if($request->has('channels')){
