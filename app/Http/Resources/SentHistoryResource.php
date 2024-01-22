@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\UserApi;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\StudioApi;
 
 class SentHistoryResource extends JsonResource
 {
@@ -29,6 +30,8 @@ class SentHistoryResource extends JsonResource
             $fork_from = ChannelApi::getById($this->fork_from);
             if($fork_from){
                 $data['fork_from'] = $fork_from;
+                $data['fork_studio'] = StudioApi::getById($fork_from['studio_id']);
+
             }
         }
         if($this->accepter_uid){
