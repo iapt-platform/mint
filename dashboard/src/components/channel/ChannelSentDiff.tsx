@@ -7,19 +7,22 @@ import {
   ISentenceDiffData,
   ISentenceDiffRequest,
   ISentenceDiffResponse,
-  ISentenceNewMultiResponse,
+  ISentenceListResponse,
   ISentenceNewRequest,
 } from "../api/Corpus";
 import { IChannel } from "./Channel";
+import { ISentence, toISentence } from "../template/SentEdit";
+import store from "../../store";
+import { accept } from "../../reducers/accept-pr";
 
 const { Text } = Typography;
 
 interface IDataType {
   key: React.Key;
   sentId: string;
-  pali?: string;
-  srcContent?: string;
-  destContent?: string;
+  pali?: string | null;
+  srcContent?: string | null;
+  destContent?: string | null;
 }
 
 interface IWidget {
@@ -84,7 +87,7 @@ const ChannelSentDiffWidget = ({
             }
             if (
               typeof destContent === "undefined" ||
-              destContent.content.trim().length === 0
+              destContent.content?.trim().length === 0
             ) {
               emptyRows.push(item);
             }
@@ -197,9 +200,14 @@ const ChannelSentDiffWidget = ({
               fork_from: srcChannel.id,
             };
             console.debug("fork post", url, postData);
-            post<ISentenceNewRequest, ISentenceNewMultiResponse>(url, postData)
+            post<ISentenceNewRequest, ISentenceListResponse>(url, postData)
               .then((json) => {
                 if (json.ok) {
+                  //发布数据
+                  const newData: ISentence[] = json.data.rows.map((item) =>
+                    toISentence(item)
+                  );
+                  store.dispatch(accept(newData));
                   if (typeof onSubmit !== "undefined") {
                     onSubmit();
                   }
@@ -237,7 +245,7 @@ const ChannelSentDiffWidget = ({
               setSelectedRowKeys(selectedRowKeys);
             },
             getCheckboxProps: (record: IDataType) => ({
-              name: record.pali,
+              name: record.pali ? record.pali : undefined,
             }),
           }}
           columns={[

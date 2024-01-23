@@ -10,7 +10,7 @@ import MdView from "../MdView";
 import EditInfo, { Details } from "./EditInfo";
 import SuggestionToolbar from "./SuggestionToolbar";
 import { useAppSelector } from "../../../hooks";
-import { sentence } from "../../../reducers/accept-pr";
+import { dirtySent, remove, sentence } from "../../../reducers/accept-pr";
 import { IWbw } from "../Wbw/WbwWord";
 import { my_to_roman } from "../../code/my";
 import SentWbwEdit, { sentSave } from "./SentWbwEdit";
@@ -25,6 +25,7 @@ import { delete_ } from "../../../request";
 import "./style.css";
 import StudioName from "../../auth/StudioName";
 import CopyToModal from "../../channel/CopyToModal";
+import store from "../../../store";
 
 interface IWidget {
   initValue?: ISentence;
@@ -56,6 +57,8 @@ const SentCellWidget = ({
   const [bgColor, setBgColor] = useState<string>();
   const endings = useAppSelector(getEnding);
   const acceptPr = useAppSelector(sentence);
+  const removed = useAppSelector(dirtySent);
+
   const [prOpen, setPrOpen] = useState(false);
   const discussionMessage = useAppSelector(message);
   const anchorInfo = useAppSelector(anchor);
@@ -95,17 +98,24 @@ const SentCellWidget = ({
   }, [value]);
 
   useEffect(() => {
-    if (typeof acceptPr !== "undefined" && !isPr && sentData) {
-      if (
-        acceptPr.book === sentData.book &&
-        acceptPr.para === sentData.para &&
-        acceptPr.wordStart === sentData.wordStart &&
-        acceptPr.wordEnd === sentData.wordEnd &&
-        acceptPr.channel.id === sentData.channel.id
-      )
-        setSentData(acceptPr);
+    if (removed?.includes(sid)) {
+      return;
     }
-  }, [acceptPr, sentData, isPr]);
+    if (typeof acceptPr !== "undefined" && !isPr && sentData) {
+      const found = acceptPr.findIndex(
+        (value) =>
+          value.book === sentData.book &&
+          value.para === sentData.para &&
+          value.wordStart === sentData.wordStart &&
+          value.wordEnd === sentData.wordEnd &&
+          value.channel.id === sentData.channel.id
+      );
+      if (found !== -1) {
+        setSentData(acceptPr[found]);
+        store.dispatch(remove(sid));
+      }
+    }
+  }, [acceptPr, sentData, isPr, removed, sid]);
 
   const deletePr = (id: string) => {
     delete_<IDeleteResponse>(`/v2/sentpr/${id}`)
@@ -288,6 +298,7 @@ const SentCellWidget = ({
                       setIsEditMode(false);
                     }}
                     onSave={(data: ISentence) => {
+                      console.debug("sent cell onSave", data);
                       setSentData(data);
                     }}
                   />
@@ -299,6 +310,7 @@ const SentCellWidget = ({
                       setIsEditMode(false);
                     }}
                     onSave={(data: ISentence) => {
+                      console.debug("sent cell onSave", data);
                       setIsEditMode(false);
                       setSentData(data);
                       if (typeof onChange !== "undefined") {
