@@ -77,7 +77,11 @@ interface IMergeButton {
 const MergeButton = ({ data }: IMergeButton) => {
   if (data.forkAt) {
     const fork = moment.utc(data.forkAt);
-    const updated = moment.utc(data.updateAt);
+    const fork_iso8610 = moment(data.forkAt, moment.ISO_8601);
+    const updated = moment(data.updateAt);
+    const diff = updated.diff(fork_iso8610, "seconds");
+    const diff1 = updated.diff(fork, "seconds");
+    console.debug("edit info time diff fork_iso8610 vs utc", diff, diff1);
     if (fork.isSame(updated)) {
       return <Fork sentId={data.id} highlight />;
     } else {
