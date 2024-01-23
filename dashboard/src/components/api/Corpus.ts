@@ -131,7 +131,7 @@ export interface ISentenceDiffData {
   word_start: number;
   word_end: number;
   channel_uid: string;
-  content: string;
+  content: string | null;
   editor_uid: string;
   updated_at: string;
 }
@@ -190,11 +190,7 @@ export interface ISentenceNewRequest {
   copy?: boolean;
   fork_from?: string;
 }
-export interface ISentenceNewMultiResponse {
-  ok: boolean;
-  message: string;
-  data: number;
-}
+
 export interface IPaliToc {
   book: number;
   paragraph: number;

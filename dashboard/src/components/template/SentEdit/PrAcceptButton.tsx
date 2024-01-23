@@ -5,7 +5,7 @@ import { CheckOutlined } from "@ant-design/icons";
 
 import { put } from "../../../request";
 import { ISentenceRequest, ISentenceResponse } from "../../api/Corpus";
-import { ISentence } from "../SentEdit";
+import { ISentence, toISentence } from "../SentEdit";
 import store from "../../../store";
 import { accept } from "../../../reducers/accept-pr";
 
@@ -41,22 +41,9 @@ const PrAcceptButtonWidget = ({ data, onAccept }: IWidget) => {
         if (json.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
 
-          const newData: ISentence = {
-            id: json.data.id,
-            content: json.data.content,
-            html: json.data.html,
-            book: json.data.book,
-            para: json.data.paragraph,
-            wordStart: json.data.word_start,
-            wordEnd: json.data.word_end,
-            editor: json.data.editor,
-            channel: json.data.channel,
-            updateAt: json.data.updated_at,
-            acceptor: json.data.acceptor,
-            prEditAt: json.data.pr_edit_at,
-            suggestionCount: json.data.suggestionCount,
-          };
-          store.dispatch(accept(newData));
+          const newData: ISentence = toISentence(json.data);
+
+          store.dispatch(accept([newData]));
           if (typeof onAccept !== "undefined") {
             onAccept(newData);
           }
