@@ -254,6 +254,7 @@ class SentenceController extends Controller
             }
         }
         $sentFirst=null;
+        $changedSent = [];
         foreach ($request->get('sentences') as $key => $sent) {
             # code...
             if($sentFirst === null){
@@ -290,6 +291,8 @@ class SentenceController extends Controller
             $row->modify_time = time()*1000;
             $row->save();
 
+            $changedSent[] = $row->uid;
+
             //保存历史记录
             if($request->has('copy')){
                 $fork_from = $request->get('fork_from',null);
@@ -312,7 +315,12 @@ class SentenceController extends Controller
                                 'channel'=>$channel->uid,
                                 ]);
         }
-        return $this->ok(count($request->get('sentences')));
+
+        $result = Sentence::whereIn('uid', $changedSent)->get();
+        return $this->ok([
+            'rows'=>SentResource::collection($result),
+            'count'=>count($result)
+        ]);
     }
 
     private function saveHistory($uid,$editor,$content,$user_uid,$fork_from=null,$pr_from=null){

@@ -17,4 +17,10 @@ class Sentence extends Model
         'uid' => 'string'
     ];
 
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'fork_at'
+    ];
+
 }
