@@ -307,7 +307,8 @@ class CorpusController extends Controller
 
 		#获取channel索引表
         $tranChannels = [];
-		$channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','name'])->get();
+		$channelInfo = Channel::whereIn("uid",$channels)
+                        ->select(['uid','type','name'])->get();
 		foreach ($channelInfo as $key => $value) {
 			# code...
             if($value->type==="translation" ){
@@ -320,7 +321,8 @@ class CorpusController extends Controller
         //目前默认的 wbw channel 是第一个translation channel
         foreach ($channels as $key => $value) {
             # code...
-            if($indexChannel[$value]->type==='translation'){
+            if(isset($indexChannel[$value]) &&
+                 $indexChannel[$value]->type==='translation'){
                 $this->wbwChannels[] = $value;
                 break;
             }
@@ -432,9 +434,11 @@ class CorpusController extends Controller
         $indexChannel = $this->getChannelIndex($channels);
         //获取wbw channel
         //目前默认的 wbw channel 是第一个translation channel
+        //TODO 处理不存在的channel id
         foreach ($channels as $key => $value) {
             # code...
-            if($indexChannel[$value]->type==='translation'){
+            if(isset($indexChannel[$value]) &&
+                $indexChannel[$value]->type==='translation'){
                 $this->wbwChannels[] = $value;
                 break;
             }
