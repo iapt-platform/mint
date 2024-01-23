@@ -61,6 +61,7 @@ class CorpusController extends Controller
         'editor_uid',
         'acceptor_uid',
         'pr_edit_at',
+        'fork_at',
         'create_time',
         'modify_time',
         'created_at',
@@ -651,6 +652,7 @@ class CorpusController extends Controller
                      * TODO 刷库改数据
                      * 旧版api没有更新updated_at所以造成旧版的数据updated_at数据比modify_time 要晚
                      */
+                    $newSent['forkAt'] =  $row->fork_at; //
                     $newSent['updateAt'] =  $row->updated_at; //
                     $newSent['updateAt'] = date("Y-m-d H:i:s.",$row->modify_time/1000).($row->modify_time%1000)." UTC";
 

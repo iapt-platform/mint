@@ -31,7 +31,7 @@ class SentenceController extends Controller
         $result=false;
 		$indexCol = ['id','uid','book_id','paragraph',
                     'word_start','word_end','content','content_type',
-                    'channel_uid','editor_uid','acceptor_uid','pr_edit_at','updated_at'];
+                    'channel_uid','editor_uid','fork_at','acceptor_uid','pr_edit_at','updated_at'];
 
 		switch ($request->get('view')) {
             case 'public':
@@ -278,6 +278,9 @@ class SentenceController extends Controller
                 $row->editor_uid = $sent["editor_uid"];
                 $row->acceptor_uid = $user["user_uid"];
                 $row->pr_edit_at = $sent["updated_at"];
+                if($request->has('fork_from')){
+                    $row->fork_at = now();
+                }
             }else{
                 $row->editor_uid = $user["user_uid"];
                 $row->acceptor_uid = null;
@@ -289,9 +292,14 @@ class SentenceController extends Controller
 
             //保存历史记录
             if($request->has('copy')){
-                $this->saveHistory($row->uid,$sent["editor_uid"],$sent['content']);
+                $fork_from = $request->get('fork_from',null);
+                $this->saveHistory($row->uid,
+                                $sent["editor_uid"],
+                                $sent['content'],
+                                $user["user_uid"],
+                                $fork_from);
             }else{
-                $this->saveHistory($row->uid,$user["user_uid"],$sent['content']);
+                $this->saveHistory($row->uid,$user["user_uid"],$sent['content'],$user["user_uid"]);
             }
             //清除缓存
             $sentId = "{$sent['book_id']}-{$sent['paragraph']}-{$sent['word_start']}-{$sent['word_end']}";
@@ -307,7 +315,7 @@ class SentenceController extends Controller
         return $this->ok(count($request->get('sentences')));
     }
 
-    private function saveHistory($uid,$editor,$content){
+    private function saveHistory($uid,$editor,$content,$user_uid,$fork_from=null,$pr_from=null){
         $newHis = new SentHistory();
         $newHis->id = app('snowflake')->id();
         $newHis->sent_uid = $uid;
@@ -317,7 +325,10 @@ class SentenceController extends Controller
         }else{
             $newHis->content = $content;
         }
-
+        if($fork_from){
+            $newHis->fork_from = $fork_from;
+            $newHis->accepter_uid = $user_uid;
+        }
         $newHis->create_time = time()*1000;
         $newHis->save();
     }
@@ -406,7 +417,7 @@ class SentenceController extends Controller
         $currSentId = "{$param[0]}-{$param[1]}-{$param[2]}-{$param[3]}";
         RedisClusters::forget("/sent/{$channelId}/{$currSentId}");
         //保存历史记录
-        $this->saveHistory($sent->uid,$user["user_uid"],$request->get('content'));
+        $this->saveHistory($sent->uid,$user["user_uid"],$request->get('content'),$user["user_uid"]);
         Mq::publish('progress',['book'=>$param[0],
                             'para'=>$param[1],
                             'channel'=>$channelId,
