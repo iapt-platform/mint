@@ -51,6 +51,7 @@ export const caseInDict = (
       noNull.forEach((item, index, arr) => {
         arr[index] = intl.formatMessage({
           id: `dict.fields.type.${item}.short.label`,
+          defaultMessage: item,
         });
       });
       return { key: item, label: noNull.join(" ") };
@@ -150,6 +151,7 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
               <span key={id} className="case">
                 {intl.formatMessage({
                   id: `dict.fields.type.${strCase}.short.label`,
+                  defaultMessage: strCase,
                 })}
               </span>
             );

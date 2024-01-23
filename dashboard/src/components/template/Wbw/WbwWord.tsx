@@ -89,6 +89,7 @@ export interface IWbw {
   attachments?: IWbwAttachment[];
   hasComment?: boolean;
   grammarId?: string;
+  bookName?: string;
 }
 export interface IWbwFields {
   real?: boolean;

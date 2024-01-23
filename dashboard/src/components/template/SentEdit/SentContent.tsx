@@ -158,6 +158,7 @@ const SentContentWidget = ({
         {translation?.map((item, id) => {
           return (
             <SuggestionFocus
+              key={id}
               book={item.book}
               para={item.para}
               start={item.wordStart}

@@ -40,6 +40,7 @@ export interface ISentence {
   prEditAt?: string;
   channel: IChannel;
   studio?: IStudio;
+  forkAt?: string | null;
   updateAt: string;
   createdAt?: string;
   suggestionCount?: ISuggestionCount;

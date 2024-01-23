@@ -23,7 +23,7 @@ export const csParaMap = [
   { name: "sārattha.ṭī.2.", book: 205, para: 3 },
   { name: "sārattha.ṭī.3.", book: 206, para: 3 },
 
-  { name: "dī.ni..1.", book: 93, para: 3 },
+  { name: "dī.ni.1.", book: 93, para: 3 },
   { name: "dī.ni.2.", book: 94, para: 3 },
   { name: "dī.ni.3.", book: 95, para: 3 },
   { name: "dī.ni.aṭṭha.1.", book: 103, para: 3 },

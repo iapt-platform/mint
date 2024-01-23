@@ -26,6 +26,7 @@ interface IWidget {
   srcChannel?: IChannel;
   destChannel?: IChannel;
   sentences?: string[];
+  important?: boolean;
   goPrev?: Function;
   onSubmit?: Function;
 }
@@ -33,6 +34,7 @@ const ChannelSentDiffWidget = ({
   srcChannel,
   destChannel,
   sentences,
+  important = false,
   goPrev,
   onSubmit,
 }: IWidget) => {
@@ -105,7 +107,11 @@ const ChannelSentDiffWidget = ({
           });
           setDiffData(diffList);
           setNewRowKeys(newRows);
-          setSelectedRowKeys(newRows);
+          if (important) {
+            setSelectedRowKeys(sentences);
+          } else {
+            setSelectedRowKeys(newRows);
+          }
           setEmptyRowKeys(emptyRows);
         }
       });
@@ -125,8 +131,9 @@ const ChannelSentDiffWidget = ({
           上一步
         </Button>
         <Select
-          defaultValue={"new"}
+          defaultValue={important ? "all" : "new"}
           style={{ width: 180 }}
+          disabled={important}
           onChange={(value: string) => {
             switch (value) {
               case "new":
@@ -182,14 +189,15 @@ const ChannelSentDiffWidget = ({
             if (typeof submitData === "undefined") {
               return;
             }
-            post<ISentenceNewRequest, ISentenceNewMultiResponse>(
-              `/v2/sentence`,
-              {
-                sentences: submitData,
-                channel: destChannel?.id,
-                copy: true,
-              }
-            )
+            const url = `/v2/sentence`;
+            const postData = {
+              sentences: submitData,
+              channel: destChannel?.id,
+              copy: true,
+              fork_from: srcChannel.id,
+            };
+            console.debug("fork post", url, postData);
+            post<ISentenceNewRequest, ISentenceNewMultiResponse>(url, postData)
               .then((json) => {
                 if (json.ok) {
                   if (typeof onSubmit !== "undefined") {
@@ -201,6 +209,7 @@ const ChannelSentDiffWidget = ({
               })
               .catch((e) => {
                 console.log(e);
+                message.error("error");
               })
               .finally(() => {
                 setLoading(false);

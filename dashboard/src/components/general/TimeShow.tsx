@@ -30,34 +30,33 @@ const TimeShowWidget = ({
 
   let mTitle: string | undefined;
   let showTime: string | undefined;
-  if (typeof title === "undefined") {
-    if (updatedAt && createdAt) {
-      if (updatedAt === createdAt) {
-        mTitle = intl.formatMessage({
-          id: "labels.created-at",
-        });
-        showTime = createdAt;
-      } else {
-        mTitle = intl.formatMessage({
-          id: "labels.updated-at",
-        });
-        showTime = updatedAt;
-      }
-    } else if (createdAt) {
+  if (updatedAt && createdAt) {
+    if (updatedAt === createdAt) {
       mTitle = intl.formatMessage({
         id: "labels.created-at",
       });
       showTime = createdAt;
-    } else if (updatedAt) {
+    } else {
       mTitle = intl.formatMessage({
         id: "labels.updated-at",
       });
       showTime = updatedAt;
-    } else {
-      mTitle = undefined;
-      showTime = "";
     }
+  } else if (createdAt) {
+    mTitle = intl.formatMessage({
+      id: "labels.created-at",
+    });
+    showTime = createdAt;
+  } else if (updatedAt) {
+    mTitle = intl.formatMessage({
+      id: "labels.updated-at",
+    });
+    showTime = updatedAt;
   } else {
+    mTitle = undefined;
+    showTime = "";
+  }
+  if (typeof title !== "undefined") {
     mTitle = title;
   }
 

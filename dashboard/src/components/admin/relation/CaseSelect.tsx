@@ -24,6 +24,7 @@ const CaseSelectWidget = ({ name = "case", width = "md" }: IWidget) => {
       value: item,
       label: intl.formatMessage({
         id: `dict.fields.type.${item}.label`,
+        defaultMessage: item,
       }),
     };
   });

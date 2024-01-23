@@ -16,6 +16,7 @@ import {
   CommentOutlinedIcon,
   HandOutlinedIcon,
   JsonOutlinedIcon,
+  MergeIcon2,
   PasteOutLinedIcon,
 } from "../../../assets/icon";
 import { useIntl } from "react-intl";
@@ -82,6 +83,14 @@ const SentEditMenuWidget = ({
         id: "buttons.timeline",
       }),
       icon: <FieldTimeOutlined />,
+      disabled: isPr,
+    },
+    {
+      key: "copy-to",
+      label: intl.formatMessage({
+        id: "buttons.copy.to",
+      }),
+      icon: <MergeIcon2 />,
       disabled: isPr,
     },
     {

@@ -9,6 +9,7 @@ interface IWidget {
   channel?: IChannel;
   sentencesId?: string[];
   open?: boolean;
+  important?: boolean;
   onClose?: Function;
 }
 const CopyToModalWidget = ({
@@ -16,6 +17,7 @@ const CopyToModalWidget = ({
   channel,
   sentencesId,
   open,
+  important = false,
   onClose,
 }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(open);
@@ -59,6 +61,7 @@ const CopyToModalWidget = ({
           initStep={initStep}
           channel={channel}
           sentencesId={sentencesId}
+          important={important}
           onClose={() => {
             setIsModalOpen(false);
             Modal.destroyAll();

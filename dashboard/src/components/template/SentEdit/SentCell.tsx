@@ -24,6 +24,7 @@ import { delete_ } from "../../../request";
 
 import "./style.css";
 import StudioName from "../../auth/StudioName";
+import CopyToModal from "../../channel/CopyToModal";
 
 interface IWidget {
   initValue?: ISentence;
@@ -58,6 +59,9 @@ const SentCellWidget = ({
   const [prOpen, setPrOpen] = useState(false);
   const discussionMessage = useAppSelector(message);
   const anchorInfo = useAppSelector(anchor);
+  const [copyOpen, setCopyOpen] = useState<boolean>(false);
+
+  const sentId = `${sentData?.book}-${sentData?.para}-${sentData?.wordStart}-${sentData?.wordEnd}`;
   const sid = `${sentData?.book}_${sentData?.para}_${sentData?.wordStart}_${sentData?.wordEnd}_${sentData?.channel.id}`;
   useEffect(() => {
     if (
@@ -137,6 +141,9 @@ const SentCellWidget = ({
         }}
         onMenuClick={(key: string) => {
           switch (key) {
+            case "copy-to":
+              setCopyOpen(true);
+              break;
             case "suggestion":
               setPrOpen(true);
               break;
@@ -353,6 +360,13 @@ const SentCellWidget = ({
         ) : undefined}
       </SentEditMenu>
       {compact ? undefined : <Divider style={{ margin: "10px 0" }} />}
+      <CopyToModal
+        important
+        sentencesId={[sentId]}
+        channel={sentData?.channel}
+        open={copyOpen}
+        onClose={() => setCopyOpen(false)}
+      />
     </div>
   );
 };

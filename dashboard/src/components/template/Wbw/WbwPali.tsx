@@ -143,7 +143,7 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
     setPopOpen(open);
   };
 
-  const wbwDetail = (
+  const wbwDetail = () => (
     <WbwDetail
       data={data}
       onClose={() => {
@@ -167,13 +167,15 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
     />
   );
 
-  const noteIcon = data.note?.value ? (
-    data.note.value.trim() !== "" ? (
-      <Popover content={data.note?.value} placement="bottom">
-        <InfoCircleOutlined style={{ color: "blue" }} />
-      </Popover>
-    ) : undefined
-  ) : undefined;
+  const noteIcon = () =>
+    data.note?.value ? (
+      data.note.value.trim() !== "" ? (
+        <Popover content={data.note?.value} placement="bottom">
+          <InfoCircleOutlined style={{ color: "blue" }} />
+        </Popover>
+      ) : undefined
+    ) : undefined;
+
   const color = data.bookMarkColor?.value
     ? bookMarkColor[data.bookMarkColor.value]
     : "white";
@@ -182,23 +184,25 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
   const videoList = data.attachments?.filter((item) =>
     item.content_type?.includes("video")
   );
-  const videoIcon = videoList ? (
-    <WbwVideoButton
-      video={videoList?.map((item) => {
-        return {
-          videoId: item.id,
-          type: item.content_type,
-          title: item.title,
-        };
-      })}
-    />
-  ) : undefined;
+  const videoIcon = () =>
+    videoList ? (
+      <WbwVideoButton
+        video={videoList?.map((item) => {
+          return {
+            videoId: item.id,
+            type: item.content_type,
+            title: item.title,
+          };
+        })}
+      />
+    ) : (
+      <></>
+    );
 
-  const relationIcon = data.relation ? (
-    <ApartmentOutlined style={{ color: "blue" }} />
-  ) : undefined;
+  const relationIcon = () =>
+    data.relation ? <ApartmentOutlined style={{ color: "blue" }} /> : undefined;
 
-  const bookMarkIcon =
+  const bookMarkIcon = () =>
     data.bookMarkText?.value && data.bookMarkText.value.trim() !== "" ? (
       <Popover
         content={<Paragraph copyable>{data.bookMarkText.value}</Paragraph>}
@@ -207,6 +211,7 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
         <TagTwoTone twoToneColor={color} />
       </Popover>
     ) : undefined;
+
   let classPali: string = "pali";
   switch (data.style?.value) {
     case "note":
@@ -273,24 +278,27 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
     display: "inline-block",
   };
 
-  const discussionIcon = hasComment ? (
-    <div style={commentShellStyle}>
-      <CommentBox
-        resId={data.uid}
-        resType="wbw"
-        trigger={
-          <Button icon={<CommentOutlinedIcon />} type="text" title="讨论" />
-        }
-        onCommentCountChange={(count: number) => {
-          if (count > 0) {
-            setHasComment(true);
-          } else {
-            setHasComment(false);
+  const discussionIcon = () =>
+    hasComment ? (
+      <div style={commentShellStyle}>
+        <CommentBox
+          resId={data.uid}
+          resType="wbw"
+          trigger={
+            <Button icon={<CommentOutlinedIcon />} type="text" title="讨论" />
           }
-        }}
-      />
-    </div>
-  ) : undefined;
+          onCommentCountChange={(count: number) => {
+            if (count > 0) {
+              setHasComment(true);
+            } else {
+              setHasComment(false);
+            }
+          }}
+        />
+      </div>
+    ) : (
+      <></>
+    );
 
   if (typeof data.real !== "undefined" && data.real.value !== "") {
     //非标点符号
@@ -346,11 +354,11 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
           </Popover>
         </span>
         <Space>
-          {videoIcon}
-          {noteIcon}
-          {bookMarkIcon}
-          {relationIcon}
-          {discussionIcon}
+          {videoIcon()}
+          {noteIcon()}
+          {bookMarkIcon()}
+          {relationIcon()}
+          {discussionIcon()}
         </Space>
       </div>
     );
@@ -358,10 +366,10 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
     //标点符号
     return (
       <div className="pali_shell" style={{ cursor: "unset" }}>
-        {data.type?.value === ":cs.para:" ? (
+        {data.bookName ? (
           <ParaLinkCtl
             title={data.word.value}
-            bookName={data.grammar?.value}
+            bookName={data.bookName}
             paragraphs={data.word?.value}
           />
         ) : (

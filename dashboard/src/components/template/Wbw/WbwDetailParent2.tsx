@@ -68,7 +68,10 @@ const WbwParent2Widget = ({ data, onChange }: IWidget) => {
   const options = grammar.map((item) => {
     return {
       value: `.${item}.`,
-      label: intl.formatMessage({ id: `dict.fields.type.${item}.label` }),
+      label: intl.formatMessage({
+        id: `dict.fields.type.${item}.label`,
+        defaultMessage: item,
+      }),
     };
   });
   return (

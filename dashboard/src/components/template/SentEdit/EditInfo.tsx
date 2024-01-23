@@ -1,18 +1,102 @@
-import { Typography } from "antd";
+import { List, Popover, Typography, notification } from "antd";
 import { Space } from "antd";
 
-import StudioName from "../../auth/StudioName";
 import User from "../../auth/User";
 import Channel from "../../channel/Channel";
 import TimeShow from "../../general/TimeShow";
 import { ISentence } from "../SentEdit";
+import { MergeIcon2 } from "../../../assets/icon";
+import { useEffect, useState } from "react";
+import { get } from "../../../request";
+import {
+  ISentHistoryData,
+  ISentHistoryListResponse,
+} from "../../corpus/SentHistory";
+import moment from "moment";
 
 const { Text } = Typography;
+
+interface IFork {
+  sentId?: string;
+  highlight?: boolean;
+}
+const Fork = ({ sentId, highlight = false }: IFork) => {
+  const [data, setData] = useState<ISentHistoryData[]>();
+
+  useEffect(() => {
+    if (sentId) {
+      const url = `/v2/sent_history?view=sentence&id=${sentId}&fork=1`;
+      get<ISentHistoryListResponse>(url).then((json) => {
+        if (json.ok) {
+          setData(json.data.rows);
+        } else {
+          notification.error({ message: json.message });
+        }
+      });
+    }
+  }, [sentId]);
+  return (
+    <Popover
+      placement="bottom"
+      content={
+        <List
+          size="small"
+          header={highlight ? false : "已被修改"}
+          footer={false}
+          dataSource={data}
+          renderItem={(item) => (
+            <List.Item>
+              <Text>
+                {item.fork_studio?.nickName}-{item.fork_from?.name}
+              </Text>
+              <Text type="secondary" style={{ fontSize: "85%" }}>
+                <Space>
+                  <User {...item.accepter} showAvatar={false} />
+                  <TimeShow
+                    type="secondary"
+                    title="复制"
+                    createdAt={item.created_at}
+                  />
+                </Space>
+              </Text>
+            </List.Item>
+          )}
+        />
+      }
+    >
+      <span style={{ color: highlight ? "#1890ff" : "unset" }}>
+        <MergeIcon2 />
+      </span>
+    </Popover>
+  );
+};
+
+interface IMergeButton {
+  data: ISentence;
+}
+const MergeButton = ({ data }: IMergeButton) => {
+  if (data.forkAt) {
+    const fork = moment.utc(data.forkAt);
+    const fork_iso8610 = moment(data.forkAt, moment.ISO_8601);
+    const updated = moment(data.updateAt);
+    const diff = updated.diff(fork_iso8610, "seconds");
+    const diff1 = updated.diff(fork, "seconds");
+    console.debug("edit info time diff fork_iso8610 vs utc", diff, diff1);
+    if (fork.isSame(updated)) {
+      return <Fork sentId={data.id} highlight />;
+    } else {
+      return <Fork sentId={data.id} />;
+    }
+  } else {
+    return <></>;
+  }
+};
 
 interface IDetailsWidget {
   data: ISentence;
   isPr?: boolean;
 }
+
 export const Details = ({ data, isPr }: IDetailsWidget) => (
   <Space wrap>
     <Channel {...data.channel} />
@@ -30,11 +114,20 @@ export const Details = ({ data, isPr }: IDetailsWidget) => (
         createdAt={data.createdAt}
       />
     )}
-    {data.acceptor ? <User {...data.acceptor} showAvatar={false} /> : undefined}
-    {data.acceptor ? "accept at" : undefined}
-    {data.prEditAt ? (
-      <TimeShow type="secondary" updatedAt={data.updateAt} showLabel={false} />
-    ) : undefined}
+    <MergeButton data={data} />
+    <span style={{ display: "none" }}>
+      {data.acceptor ? (
+        <User {...data.acceptor} showAvatar={false} />
+      ) : undefined}
+      {data.acceptor ? "accept at" : undefined}
+      {data.prEditAt ? (
+        <TimeShow
+          type="secondary"
+          updatedAt={data.updateAt}
+          showLabel={false}
+        />
+      ) : undefined}
+    </span>
   </Space>
 );
 
@@ -44,13 +137,11 @@ interface IWidget {
   compact?: boolean;
 }
 const EditInfoWidget = ({ data, isPr = false, compact = false }: IWidget) => {
-  //console.log("data.createdAt", data.createdAt, data.updateAt);
+  console.debug("EditInfo", data);
   return (
     <div style={{ fontSize: "80%" }}>
       <Text type="secondary">
-        <Space>
-          {compact ? undefined : <Details data={data} isPr={isPr} />}
-        </Space>
+        {compact ? undefined : <Details data={data} isPr={isPr} />}
       </Text>
     </div>
   );

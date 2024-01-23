@@ -170,6 +170,7 @@ export interface ISentenceData {
   updated_at: string;
   acceptor?: IUser;
   pr_edit_at?: string;
+  fork_at?: string;
   suggestionCount?: ISuggestionCount;
 }
 
@@ -187,6 +188,7 @@ export interface ISentenceNewRequest {
   sentences: ISentenceDiffData[];
   channel?: string;
   copy?: boolean;
+  fork_from?: string;
 }
 export interface ISentenceNewMultiResponse {
   ok: boolean;
