@@ -13,6 +13,7 @@ import { ArticleMode } from "../article/Article";
 import { TChannelType } from "../api/Channel";
 import { useAppSelector } from "../../hooks";
 import { currFocus } from "../../reducers/focus";
+import { ISentenceData } from "../api/Corpus";
 
 export interface IResNumber {
   translation?: number;
@@ -53,6 +54,23 @@ export interface ISentenceId {
   wordStart: number;
   wordEnd: number;
 }
+
+export const toISentence = (apiData: ISentenceData): ISentence => ({
+  id: apiData.id,
+  content: apiData.content,
+  html: apiData.html,
+  book: apiData.book,
+  para: apiData.paragraph,
+  wordStart: apiData.word_start,
+  wordEnd: apiData.word_end,
+  editor: apiData.editor,
+  channel: apiData.channel,
+  updateAt: apiData.updated_at,
+  acceptor: apiData.acceptor,
+  prEditAt: apiData.pr_edit_at,
+  forkAt: apiData.fork_at,
+  suggestionCount: apiData.suggestionCount,
+});
 export interface IWidgetSentEditInner {
   id: string;
   book: number;
