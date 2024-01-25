@@ -10,7 +10,7 @@ import {
   ISentenceRequest,
   ISentenceResponse,
 } from "../../api/Corpus";
-import { ISentence } from "../SentEdit";
+import { ISentence, toISentence } from "../SentEdit";
 import TermTextArea from "../../general/TermTextArea";
 import { useAppSelector } from "../../../hooks";
 import { wordList } from "../../../reducers/sent-word";
@@ -39,20 +39,7 @@ export const sentSave = (
     .then((json) => {
       if (json.ok) {
         console.debug("sent save ok", json.data);
-        const newData: ISentence = {
-          id: json.data.id,
-          content: json.data.content,
-          html: json.data.html,
-          book: json.data.book,
-          para: json.data.paragraph,
-          wordStart: json.data.word_start,
-          wordEnd: json.data.word_end,
-          editor: json.data.editor,
-          studio: json.data.studio,
-          channel: json.data.channel,
-          forkAt: json.data.fork_at,
-          updateAt: json.data.updated_at,
-        };
+        const newData: ISentence = toISentence(json.data);
         ok(newData);
       } else {
         message.error(json.message);
@@ -170,20 +157,7 @@ const SentCellEditableWidget = ({
         if (json.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
           if (typeof onSave !== "undefined") {
-            const newData: ISentence = {
-              id: json.data.id,
-              content: json.data.content,
-              html: json.data.html,
-              book: json.data.book,
-              para: json.data.paragraph,
-              wordStart: json.data.word_start,
-              wordEnd: json.data.word_end,
-              editor: json.data.editor,
-              studio: json.data.studio,
-              channel: json.data.channel,
-              forkAt: json.data.fork_at,
-              updateAt: json.data.updated_at,
-            };
+            const newData: ISentence = toISentence(json.data);
             onSave(newData);
           }
         } else {
