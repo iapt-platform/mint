@@ -101,7 +101,7 @@ const SentCellWidget = ({
   }, [value]);
 
   useEffect(() => {
-    console.debug("sent cell acceptPr", acceptPr, sentData);
+    console.debug("sent cell acceptPr", acceptPr, uuid);
     if (isPr) {
       console.debug("sent cell is pr");
       return;
@@ -115,7 +115,7 @@ const SentCellWidget = ({
       return;
     }
     if (changedSent?.includes(uuid)) {
-      console.debug("sent cell already apply", sid);
+      console.debug("sent cell already apply", uuid);
       return;
     }
 
@@ -124,7 +124,7 @@ const SentCellWidget = ({
       return vId === sid;
     });
     if (found !== -1) {
-      console.debug("sent cell sentence changed", found, acceptPr[found]);
+      console.debug("sent cell sentence apply", uuid, found, acceptPr[found]);
       setSentData(acceptPr[found]);
       store.dispatch(done(uuid));
     }
