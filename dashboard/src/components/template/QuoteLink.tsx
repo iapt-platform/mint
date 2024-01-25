@@ -33,7 +33,7 @@ const QuoteLinkCtl = ({
   found,
 }: IWidgetQuoteLinkCtl) => {
   const [tpl, setTpl] = useState<string>();
-  let textShow = volume === 0 ? page : ` ${volume}.${page}`;
+  let textShow = volume === 0 ? ` ${page}` : ` ${volume}.${page}`;
   if (type === "c") {
     textShow = ` ${chapter}`;
   }
@@ -68,8 +68,7 @@ const QuoteLinkCtl = ({
               title
             ) : (
               <>
-                <TermCtl {...term} compact={true} />
-                {textShow}
+                <TermCtl {...term} compact={true} /> {textShow}
               </>
             )
           }

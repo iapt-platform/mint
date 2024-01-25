@@ -8,10 +8,10 @@ import type { RootState } from "../store";
 
 interface IState {
   sentences?: ISentence[];
-  dirty: string[];
+  done: string[];
 }
 
-const initialState: IState = { dirty: [] };
+const initialState: IState = { done: [] };
 
 export const slice = createSlice({
   name: "accept-pr",
@@ -19,23 +19,23 @@ export const slice = createSlice({
   reducers: {
     accept: (state, action: PayloadAction<ISentence[]>) => {
       state.sentences = action.payload;
-      state.dirty = [];
+      state.done = [];
     },
 
-    remove: (state, action: PayloadAction<string>) => {
-      if (!state.dirty.includes(action.payload)) {
-        state.dirty.push(action.payload);
+    done: (state, action: PayloadAction<string>) => {
+      if (!state.done.includes(action.payload)) {
+        state.done.push(action.payload);
       }
     },
   },
 });
 
-export const { accept, remove } = slice.actions;
+export const { accept, done } = slice.actions;
 
 export const sentence = (state: RootState): ISentence[] | undefined =>
   state.acceptPr.sentences;
 
-export const dirtySent = (state: RootState): string[] | undefined =>
-  state.acceptPr.dirty;
+export const doneSent = (state: RootState): string[] | undefined =>
+  state.acceptPr.done;
 
 export default slice.reducer;
