@@ -47,6 +47,7 @@ const SuggestionListWidget = ({
           const newData: ISentence[] = json.data.rows.map((item) => {
             return {
               id: item.id,
+              uid: item.uid,
               content: item.content,
               html: item.html,
               book: item.book,
