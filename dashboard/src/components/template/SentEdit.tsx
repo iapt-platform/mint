@@ -29,6 +29,7 @@ export interface ISuggestionCount {
 }
 export interface ISentence {
   id?: string;
+  uid?: string;
   content: string | null;
   contentType?: TContentType;
   html: string;
