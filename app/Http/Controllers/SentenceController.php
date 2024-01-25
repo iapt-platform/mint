@@ -323,7 +323,7 @@ class SentenceController extends Controller
         ]);
     }
 
-    private function saveHistory($uid,$editor,$content,$user_uid,$fork_from=null,$pr_from=null){
+    private function saveHistory($uid,$editor,$content,$user_uid=null,$fork_from=null,$pr_from=null){
         $newHis = new SentHistory();
         $newHis->id = app('snowflake')->id();
         $newHis->sent_uid = $uid;
@@ -335,6 +335,10 @@ class SentenceController extends Controller
         }
         if($fork_from){
             $newHis->fork_from = $fork_from;
+            $newHis->accepter_uid = $user_uid;
+        }
+        if($pr_from){
+            $newHis->pr_from = $pr_from;
             $newHis->accepter_uid = $user_uid;
         }
         $newHis->create_time = time()*1000;
@@ -403,16 +407,17 @@ class SentenceController extends Controller
         $sent->strlen = mb_strlen($request->get('content'),"UTF-8");
         $sent->modify_time = time()*1000;
         if($request->has('prEditor')){
-            $sent->editor_uid = $request->get('prEditor');
+            $realEditor = $request->get('prEditor');
             $sent->acceptor_uid = $user["user_uid"];
             $sent->pr_edit_at = $request->get('prEditAt');
             $sent->pr_id = $request->get('prId');
         }else{
-            $sent->editor_uid = $user["user_uid"];
+            $realEditor = $user["user_uid"];
             $sent->acceptor_uid = null;
             $sent->pr_edit_at = null;
             $sent->pr_id = null;
         }
+        $sent->editor_uid = $realEditor;
         $sent->save();
         //清除缓存
         $sentId = "{$sent['book_id']}-{$sent['paragraph']}-{$sent['word_start']}-{$sent['word_end']}";
@@ -425,7 +430,18 @@ class SentenceController extends Controller
         $currSentId = "{$param[0]}-{$param[1]}-{$param[2]}-{$param[3]}";
         RedisClusters::forget("/sent/{$channelId}/{$currSentId}");
         //保存历史记录
-        $this->saveHistory($sent->uid,$user["user_uid"],$request->get('content'),$user["user_uid"]);
+        if($request->has('prEditor')){
+            $this->saveHistory($sent->uid,
+                            $realEditor,
+                            $request->get('content'),
+                            $user["user_uid"],
+                            null,
+                            $request->get('prUuid'),
+                        );
+        }else{
+            $this->saveHistory($sent->uid,$realEditor,$request->get('content'));
+        }
+
         Mq::publish('progress',['book'=>$param[0],
                             'para'=>$param[1],
                             'channel'=>$channelId,
