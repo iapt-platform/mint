@@ -10,7 +10,7 @@ import MdView from "../MdView";
 import EditInfo, { Details } from "./EditInfo";
 import SuggestionToolbar from "./SuggestionToolbar";
 import { useAppSelector } from "../../../hooks";
-import { dirtySent, remove, sentence } from "../../../reducers/accept-pr";
+import { accept, doneSent, done, sentence } from "../../../reducers/accept-pr";
 import { IWbw } from "../Wbw/WbwWord";
 import { my_to_roman } from "../../code/my";
 import SentWbwEdit, { sentSave } from "./SentWbwEdit";
@@ -26,6 +26,7 @@ import "./style.css";
 import StudioName from "../../auth/StudioName";
 import CopyToModal from "../../channel/CopyToModal";
 import store from "../../../store";
+import { randomString } from "../../../utils";
 
 interface IWidget {
   initValue?: ISentence;
@@ -55,9 +56,10 @@ const SentCellWidget = ({
   const [isEditMode, setIsEditMode] = useState(editMode);
   const [sentData, setSentData] = useState<ISentence | undefined>(initValue);
   const [bgColor, setBgColor] = useState<string>();
+  const [uuid] = useState(randomString());
   const endings = useAppSelector(getEnding);
   const acceptPr = useAppSelector(sentence);
-  const removed = useAppSelector(dirtySent);
+  const changedSent = useAppSelector(doneSent);
 
   const [prOpen, setPrOpen] = useState(false);
   const discussionMessage = useAppSelector(message);
@@ -66,6 +68,7 @@ const SentCellWidget = ({
 
   const sentId = `${sentData?.book}-${sentData?.para}-${sentData?.wordStart}-${sentData?.wordEnd}`;
   const sid = `${sentData?.book}_${sentData?.para}_${sentData?.wordStart}_${sentData?.wordEnd}_${sentData?.channel.id}`;
+
   useEffect(() => {
     if (
       discussionMessage &&
@@ -98,24 +101,34 @@ const SentCellWidget = ({
   }, [value]);
 
   useEffect(() => {
-    if (removed?.includes(sid)) {
+    console.debug("sent cell acceptPr", acceptPr, sentData);
+    if (isPr) {
+      console.debug("sent cell is pr");
       return;
     }
-    if (typeof acceptPr !== "undefined" && !isPr && sentData) {
-      const found = acceptPr.findIndex(
-        (value) =>
-          value.book === sentData.book &&
-          value.para === sentData.para &&
-          value.wordStart === sentData.wordStart &&
-          value.wordEnd === sentData.wordEnd &&
-          value.channel.id === sentData.channel.id
-      );
-      if (found !== -1) {
-        setSentData(acceptPr[found]);
-        store.dispatch(remove(sid));
-      }
+    if (typeof acceptPr === "undefined" || acceptPr.length === 0) {
+      console.debug("sent cell acceptPr is empty");
+      return;
     }
-  }, [acceptPr, sentData, isPr, removed, sid]);
+    if (!sentData) {
+      console.debug("sent cell sentData is empty");
+      return;
+    }
+    if (changedSent?.includes(uuid)) {
+      console.debug("sent cell already apply", sid);
+      return;
+    }
+
+    const found = acceptPr.findIndex((value) => {
+      const vId = `${value.book}_${value.para}_${value.wordStart}_${value.wordEnd}_${value.channel.id}`;
+      return vId === sid;
+    });
+    if (found !== -1) {
+      console.debug("sent cell sentence changed", found, acceptPr[found]);
+      setSentData(acceptPr[found]);
+      store.dispatch(done(uuid));
+    }
+  }, [acceptPr, sentData, isPr, uuid, changedSent, sid]);
 
   const deletePr = (id: string) => {
     delete_<IDeleteResponse>(`/v2/sentpr/${id}`)
@@ -163,8 +176,10 @@ const SentCellWidget = ({
                   sentData.content = value;
                   _sentSave(
                     sentData,
-                    (res) => {
-                      setSentData(res);
+                    (res: ISentence) => {
+                      //setSentData(res);
+                      //发布句子的改变，让同样的句子更新
+                      store.dispatch(accept([res]));
                       if (typeof onChange !== "undefined") {
                         onChange(res);
                       }
@@ -311,8 +326,9 @@ const SentCellWidget = ({
                     }}
                     onSave={(data: ISentence) => {
                       console.debug("sent cell onSave", data);
+                      //setSentData(data);
+                      store.dispatch(accept([data]));
                       setIsEditMode(false);
-                      setSentData(data);
                       if (typeof onChange !== "undefined") {
                         onChange(data);
                       }
