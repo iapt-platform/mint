@@ -64,6 +64,7 @@ export const toISentence = (apiData: ISentenceData): ISentence => ({
   wordStart: apiData.word_start,
   wordEnd: apiData.word_end,
   editor: apiData.editor,
+  studio: apiData.studio,
   channel: apiData.channel,
   updateAt: apiData.updated_at,
   acceptor: apiData.acceptor,
