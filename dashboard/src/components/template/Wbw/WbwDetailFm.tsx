@@ -205,7 +205,7 @@ const WbwDetailFmWidget = ({
 
   return (
     <div>
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", width: "100%" }}>
         <Input
           key="input"
           allowClear

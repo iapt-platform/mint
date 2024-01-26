@@ -20,7 +20,7 @@ const WbwDetailCaseWidget = ({ data, onChange }: IWidget) => {
   const intl = useIntl();
 
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", width: "100%" }}>
       <SelectCase
         value={data.case?.value}
         onCaseChange={(value: string) => {
