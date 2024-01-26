@@ -224,4 +224,12 @@ export const defaultSetting: ISetting[] = [
     ],
     widget: "radio-button",
   },
+  {
+    /**
+     * 是否显示逐词解析输入顺序提示
+     */
+    key: "setting.wbw.order",
+    label: "setting.wbw.order.label",
+    defaultValue: false,
+  },
 ];
