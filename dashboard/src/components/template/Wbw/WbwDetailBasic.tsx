@@ -13,6 +13,7 @@ import WbwDetailFactor from "./WbwDetailFactor";
 import WbwDetailBasicRelation from "./WbwDetailBasicRelation";
 import WbwDetailParent from "./WbwDetailParent";
 import WbwDetailCase from "./WbwDetailCase";
+import WbwDetailOrder from "./WbwDetailOrder";
 
 const { Panel } = Collapse;
 
@@ -43,6 +44,8 @@ const WbwDetailBasicWidget = ({
   );
   const [openCreate, setOpenCreate] = useState(false);
   const [_meaning, setMeaning] = useState<string | undefined>();
+  const [currTip, setCurrTip] = useState(1);
+
   useEffect(() => {
     if (typeof data.meaning?.value === "string") {
       setMeaning(data.meaning?.value);
@@ -80,39 +83,50 @@ const WbwDetailBasicWidget = ({
           tooltip={intl.formatMessage({ id: "forms.fields.meaning.tooltip" })}
         >
           <div style={{ display: "flex" }}>
-            <Input
-              value={_meaning}
-              allowClear
-              onChange={(e) => {
-                console.log("meaning input", e.target.value);
-                setMeaning(e.target.value);
-                onMeaningChange(e.target.value);
-              }}
-            />
-            <Popover
-              content={
-                <WbwMeaningSelect
-                  data={data}
-                  onSelect={(meaning: string) => {
-                    console.log(meaning);
-                    setMeaning(meaning);
-                    form.setFieldsValue({
-                      meaning: meaning,
-                    });
-                    onMeaningChange(meaning);
-                  }}
+            <div style={{ display: "flex", width: "100%" }}>
+              <Input
+                value={_meaning}
+                allowClear
+                onChange={(e) => {
+                  console.log("meaning input", e.target.value);
+                  setMeaning(e.target.value);
+                  onMeaningChange(e.target.value);
+                }}
+              />
+              <Popover
+                content={
+                  <WbwMeaningSelect
+                    data={data}
+                    onSelect={(meaning: string) => {
+                      console.log(meaning);
+                      setMeaning(meaning);
+                      form.setFieldsValue({
+                        meaning: meaning,
+                      });
+                      onMeaningChange(meaning);
+                    }}
+                  />
+                }
+                overlayStyle={{ width: 500 }}
+                placement="bottom"
+                trigger="click"
+                open={openCreate}
+                onOpenChange={(open: boolean) => {
+                  setOpenCreate(open);
+                }}
+              >
+                <Button
+                  type="text"
+                  icon={<MoreOutlined />}
+                  onClick={() => {}}
                 />
-              }
-              overlayStyle={{ width: 500 }}
-              placement="bottom"
-              trigger="click"
-              open={openCreate}
-              onOpenChange={(open: boolean) => {
-                setOpenCreate(open);
-              }}
-            >
-              <Button type="text" icon={<MoreOutlined />} onClick={() => {}} />
-            </Popover>
+              </Popover>
+            </div>
+            <WbwDetailOrder
+              sn={3}
+              curr={currTip}
+              onChange={() => setCurrTip(currTip + 1)}
+            />
           </div>
         </Form.Item>
         <Form.Item
@@ -121,15 +135,22 @@ const WbwDetailBasicWidget = ({
           label={intl.formatMessage({ id: "forms.fields.factors.label" })}
           tooltip={intl.formatMessage({ id: "forms.fields.factors.tooltip" })}
         >
-          <WbwDetailFactor
-            data={data}
-            onChange={(value: string) => {
-              setFactors(value.split("+"));
-              if (typeof onChange !== "undefined") {
-                onChange({ field: "factors", value: value });
-              }
-            }}
-          />
+          <div style={{ display: "flex" }}>
+            <WbwDetailFactor
+              data={data}
+              onChange={(value: string) => {
+                setFactors(value.split("+"));
+                if (typeof onChange !== "undefined") {
+                  onChange({ field: "factors", value: value });
+                }
+              }}
+            />
+            <WbwDetailOrder
+              sn={4}
+              curr={currTip}
+              onChange={() => setCurrTip(currTip + 1)}
+            />
+          </div>
         </Form.Item>
         <Form.Item
           style={{ marginBottom: 6 }}
@@ -141,20 +162,27 @@ const WbwDetailBasicWidget = ({
             id: "forms.fields.factor.meaning.tooltip",
           })}
         >
-          <WbwDetailFm
-            factors={factors}
-            initValue={data.factorMeaning?.value?.split("+")}
-            onChange={(value: string[]) => {
-              console.log("fm change", value);
-              if (typeof onChange !== "undefined") {
-                onChange({ field: "factorMeaning", value: value.join("+") });
-              }
-            }}
-            onJoin={(value: string) => {
-              setMeaning(value);
-              onMeaningChange(value);
-            }}
-          />
+          <div style={{ display: "flex" }}>
+            <WbwDetailFm
+              factors={factors}
+              initValue={data.factorMeaning?.value?.split("+")}
+              onChange={(value: string[]) => {
+                console.log("fm change", value);
+                if (typeof onChange !== "undefined") {
+                  onChange({ field: "factorMeaning", value: value.join("+") });
+                }
+              }}
+              onJoin={(value: string) => {
+                setMeaning(value);
+                onMeaningChange(value);
+              }}
+            />
+            <WbwDetailOrder
+              sn={5}
+              curr={currTip}
+              onChange={() => setCurrTip(currTip + 1)}
+            />
+          </div>
         </Form.Item>
         <Form.Item
           style={{ marginBottom: 6 }}
@@ -162,14 +190,21 @@ const WbwDetailBasicWidget = ({
           tooltip={intl.formatMessage({ id: "forms.fields.case.tooltip" })}
           name="case"
         >
-          <WbwDetailCase
-            data={data}
-            onChange={(value: string) => {
-              if (typeof onChange !== "undefined") {
-                onChange({ field: "case", value: value });
-              }
-            }}
-          />
+          <div style={{ display: "flex" }}>
+            <WbwDetailCase
+              data={data}
+              onChange={(value: string) => {
+                if (typeof onChange !== "undefined") {
+                  onChange({ field: "case", value: value });
+                }
+              }}
+            />
+            <WbwDetailOrder
+              sn={2}
+              curr={currTip}
+              onChange={() => setCurrTip(currTip + 1)}
+            />
+          </div>
         </Form.Item>
         <Form.Item
           style={{ marginBottom: 6 }}
@@ -181,14 +216,21 @@ const WbwDetailBasicWidget = ({
             id: "forms.fields.parent.tooltip",
           })}
         >
-          <WbwDetailParent
-            data={data}
-            onChange={(value: string) => {
-              if (typeof onChange !== "undefined") {
-                onChange({ field: "parent", value: value });
-              }
-            }}
-          />
+          <div style={{ display: "flex" }}>
+            <WbwDetailParent
+              data={data}
+              onChange={(value: string) => {
+                if (typeof onChange !== "undefined") {
+                  onChange({ field: "parent", value: value });
+                }
+              }}
+            />
+            <WbwDetailOrder
+              sn={1}
+              curr={currTip}
+              onChange={() => setCurrTip(currTip + 1)}
+            />
+          </div>
         </Form.Item>
         <Collapse bordered={false}>
           <Panel header="词源" key="parent2">
