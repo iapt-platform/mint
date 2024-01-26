@@ -32,6 +32,7 @@ const items = {
   "setting.nissaya.layout.edit.label": "layout(edit)",
   "setting.nissaya.layout.inline.label": "inline",
   "setting.nissaya.layout.list.label": "list",
+  "setting.wbw.order.label": "wbw input order",
 };
 
 export default items;
