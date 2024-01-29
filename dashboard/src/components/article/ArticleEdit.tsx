@@ -9,7 +9,7 @@ import {
   ProFormTextArea,
 } from "@ant-design/pro-components";
 
-import { Alert, Button, Form, message, Result, Space } from "antd";
+import { Alert, Button, Form, message, Result } from "antd";
 
 import { get, put } from "../../request";
 import {
