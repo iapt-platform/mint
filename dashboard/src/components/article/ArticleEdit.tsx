@@ -189,32 +189,33 @@ const ArticleEditWidget = ({
             })}
           />
         </ProForm.Group>
-        <ProForm.Group>
-          <Form.Item
-            name="content"
+
+        <Form.Item
+          name="content"
+          style={{ width: "100%" }}
+          label={
+            <>
+              {intl.formatMessage({
+                id: "forms.fields.content.label",
+              })}
+              {articleId ? (
+                <ArticlePrevDrawer
+                  trigger={<Button>预览</Button>}
+                  articleId={articleId}
+                  content={content}
+                />
+              ) : undefined}
+            </>
+          }
+        >
+          <MDEditor
+            onChange={(value) => setContent(value)}
+            height={450}
+            minHeight={200}
             style={{ width: "100%" }}
-            label={
-              <Space>
-                {intl.formatMessage({
-                  id: "forms.fields.content.label",
-                })}
-                {articleId ? (
-                  <ArticlePrevDrawer
-                    trigger={<Button>预览</Button>}
-                    articleId={articleId}
-                    content={content}
-                  />
-                ) : undefined}
-              </Space>
-            }
-          >
-            <MDEditor
-              onChange={(value) => setContent(value)}
-              height={550}
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-        </ProForm.Group>
+          />
+        </Form.Item>
+
         <ProForm.Group>
           <ProFormSwitch
             name="to_tpl"
