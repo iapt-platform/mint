@@ -16,9 +16,9 @@ import { ArticleMode, ArticleType } from "./Article";
 import "./article.css";
 import ArticleSkeleton from "./ArticleSkeleton";
 import ErrorResult from "../general/ErrorResult";
-import AnthologiesAtArticle from "./AnthologiesAtArticle";
 import NavigateButton from "./NavigateButton";
 import InteractiveArea from "../discussion/InteractiveArea";
+import TypeArticleReaderToolbar from "./TypeArticleReaderToolbar";
 
 interface IWidget {
   type?: ArticleType;
@@ -159,6 +159,10 @@ const TypeArticleReaderWidget = ({
     };
   }
 
+  const title = articleData?.title_text
+    ? articleData?.title_text
+    : articleData?.title;
+
   return (
     <div>
       {loading ? (
@@ -167,10 +171,17 @@ const TypeArticleReaderWidget = ({
         <ErrorResult code={errorCode} />
       ) : (
         <>
-          <AnthologiesAtArticle
+          <TypeArticleReaderToolbar
+            title={title}
             articleId={articleId}
             anthologyId={anthologyId}
-            onClick={(
+            role={articleData?.role}
+            onEdit={() => {
+              if (typeof onEdit !== "undefined") {
+                onEdit();
+              }
+            }}
+            onAnthologySelect={(
               id: string,
               e: React.MouseEvent<HTMLElement, MouseEvent>
             ) => {
@@ -181,11 +192,7 @@ const TypeArticleReaderWidget = ({
           />
           <ArticleView
             id={articleData?.uid}
-            title={
-              articleData?.title_text
-                ? articleData?.title_text
-                : articleData?.title
-            }
+            title={title}
             subTitle={articleData?.subtitle}
             summary={articleData?.summary}
             content={articleData ? articleData.content : ""}
@@ -214,11 +221,6 @@ const TypeArticleReaderWidget = ({
                 const newArticleId = node.key;
                 const target = e.ctrlKey || e.metaKey ? "_blank" : "self";
                 onArticleChange(newType, newArticleId, target);
-              }
-            }}
-            onEdit={() => {
-              if (typeof onEdit !== "undefined") {
-                onEdit();
               }
             }}
           />
