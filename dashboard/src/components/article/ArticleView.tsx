@@ -1,5 +1,4 @@
-import { Typography, Divider, Button, Skeleton, Space } from "antd";
-import { ReloadOutlined } from "@ant-design/icons";
+import { Typography, Divider, Skeleton, Space } from "antd";
 
 import MdView from "../template/MdView";
 import TocPath, { ITocPathNode } from "../corpus/TocPath";
@@ -79,15 +78,6 @@ const ArticleViewWidget = ({
   }
   return (
     <>
-      <div style={{ textAlign: "right" }}>
-        <Button
-          type="link"
-          shape="round"
-          size="small"
-          icon={<ReloadOutlined />}
-        />
-      </div>
-
       <Space direction="vertical">
         <TocPath
           data={path}

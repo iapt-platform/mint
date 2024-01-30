@@ -200,20 +200,26 @@ const ArticleTplWidget = ({
 };
 
 interface IModalWidget {
+  open?: boolean;
   type?: ArticleType;
   id?: string;
   title?: string;
   style?: TDisplayStyle;
   trigger?: JSX.Element;
+  onOpenChange?: Function;
 }
 export const ArticleTplModal = ({
+  open = false,
   type,
   id,
   title,
   style = "modal",
   trigger,
+  onOpenChange,
 }: IModalWidget) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(open);
+
+  useEffect(() => setIsModalOpen(open), [open]);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -225,6 +231,9 @@ export const ArticleTplModal = ({
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    if (typeof onOpenChange !== "undefined") {
+      onOpenChange(false);
+    }
   };
 
   return (
@@ -236,6 +245,7 @@ export const ArticleTplModal = ({
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
+        destroyOnClose
       >
         <ArticleTplWidget type={type} id={id} title={title} style={style} />
       </Modal>

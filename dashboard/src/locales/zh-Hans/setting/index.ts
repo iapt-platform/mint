@@ -32,6 +32,7 @@ const items = {
   "setting.nissaya.layout.edit.label": "阅读排版方式",
   "setting.nissaya.layout.inline.label": "连续",
   "setting.nissaya.layout.list.label": "列表",
+  "setting.wbw.order.label": "显示输入顺序提示",
 };
 
 export default items;

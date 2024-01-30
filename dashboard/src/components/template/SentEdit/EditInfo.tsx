@@ -46,15 +46,18 @@ const Fork = ({ sentId, highlight = false }: IFork) => {
           dataSource={data}
           renderItem={(item) => (
             <List.Item>
-              <Text>
-                {item.fork_studio?.nickName}-{item.fork_from?.name}
-              </Text>
               <Text type="secondary" style={{ fontSize: "85%" }}>
                 <Space>
                   <User {...item.accepter} showAvatar={false} />
+                  {"fork from"}
+                  <Text>
+                    {item.fork_studio?.nickName}-{item.fork_from?.name}
+                  </Text>
+                  {"on"}
                   <TimeShow
                     type="secondary"
                     title="复制"
+                    showLabel={false}
                     createdAt={item.created_at}
                   />
                 </Space>

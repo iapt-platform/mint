@@ -36,6 +36,7 @@ const SettingArticleWidget = () => {
           id: `buttons.wbw`,
         })}
       </Divider>
+      <SettingItem data={SettingFind("setting.wbw.order", settings)} />
       <Divider>Nissaya</Divider>
       <SettingItem
         data={SettingFind("setting.nissaya.layout.read", settings)}

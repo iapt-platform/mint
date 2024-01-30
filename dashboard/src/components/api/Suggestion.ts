@@ -3,6 +3,7 @@ import { IChannelApiData } from "./Channel";
 
 export interface ISuggestionData {
   id: string;
+  uid: string;
   book: number;
   paragraph: number;
   word_start: number;

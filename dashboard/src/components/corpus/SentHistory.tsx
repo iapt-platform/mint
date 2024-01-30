@@ -100,7 +100,7 @@ const SentHistoryWidget = ({ sentId }: IWidget) => {
         title: {
           render: (text, row, index, action) => {
             return (
-              <Paragraph copyable={{ text: row.content }}>
+              <Paragraph style={{ margin: 0 }} copyable={{ text: row.content }}>
                 {row.content}
               </Paragraph>
             );
@@ -117,10 +117,15 @@ const SentHistoryWidget = ({ sentId }: IWidget) => {
           render: (text, row, index, action) => {
             return (
               <Space style={{ fontSize: "80%" }}>
+                <User {...row.editor} showAvatar={false} />
+                <>{"edited"}</>
+
                 {row.accepter ? (
-                  <User {...row.accepter} showAvatar={false} />
+                  <>
+                    <User {...row.accepter} showAvatar={false} /> {"accept"}
+                  </>
                 ) : (
-                  <User {...row.editor} showAvatar={false} />
+                  <></>
                 )}
 
                 {row.fork_from ? (
@@ -131,7 +136,11 @@ const SentHistoryWidget = ({ sentId }: IWidget) => {
                 ) : (
                   <></>
                 )}
-                <TimeShow type="secondary" createdAt={row.createdAt} />
+                <TimeShow
+                  type="secondary"
+                  createdAt={row.createdAt}
+                  showLabel={false}
+                />
               </Space>
             );
           },

@@ -20,20 +20,21 @@ const PrAcceptButtonWidget = ({ data, onAccept }: IWidget) => {
 
   const save = () => {
     setSaving(true);
-    put<ISentenceRequest, ISentenceResponse>(
-      `/v2/sentence/${data.book}_${data.para}_${data.wordStart}_${data.wordEnd}_${data.channel.id}`,
-      {
-        book: data.book,
-        para: data.para,
-        wordStart: data.wordStart,
-        wordEnd: data.wordEnd,
-        channel: data.channel.id,
-        content: data.content,
-        prEditor: data.editor.id,
-        prId: data.id,
-        prEditAt: data.updateAt,
-      }
-    )
+    const url = `/v2/sentence/${data.book}_${data.para}_${data.wordStart}_${data.wordEnd}_${data.channel.id}`;
+    const prData = {
+      book: data.book,
+      para: data.para,
+      wordStart: data.wordStart,
+      wordEnd: data.wordEnd,
+      channel: data.channel.id,
+      content: data.content,
+      prEditor: data.editor.id,
+      prId: data.id,
+      prUuid: data.uid,
+      prEditAt: data.updateAt,
+    };
+    console.debug("pr accept url", url, prData);
+    put<ISentenceRequest, ISentenceResponse>(url, prData)
       .then((json) => {
         console.log(json);
         setSaving(false);

@@ -151,6 +151,7 @@ export interface ISentenceRequest {
   contentType?: TContentType;
   prEditor?: string;
   prId?: string;
+  prUuid?: string;
   prEditAt?: string;
   channels?: string;
 }
