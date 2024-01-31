@@ -63,10 +63,10 @@ const SentHistoryWidget = ({ sentId }: IWidget) => {
         if (typeof params.keyword !== "undefined") {
           url += "&search=" + (params.keyword ? params.keyword : "");
         }
-        console.info("url", url);
+        console.debug("sentence history list", url);
         const res = await get<ISentHistoryListResponse>(url);
         if (res.ok) {
-          console.debug(res.data);
+          console.debug("sentence history list", res.data);
           const items: ISentHistory[] = res.data.rows.map((item, id) => {
             return {
               content: item.content,
