@@ -97,26 +97,28 @@ const CourseInfoEditWidget = ({
             console.debug("upload ", values.cover[0].response);
             _cover = values.cover[0].response.data.name;
           }
-
+          const url = `/v2/course/${courseId}`;
+          const postData = {
+            title: values.title, //标题
+            subtitle: values.subtitle, //副标题
+            summary: values.summary,
+            content: values.content, //简介
+            cover: _cover, //封面图片文件名
+            teacher_id: values.teacherId, //UserID
+            publicity: values.status, //类型-公开/内部
+            anthology_id: values.anthologyId, //文集ID
+            channel_id: values.channelId,
+            start_at: startAt, //课程开始时间
+            end_at: endAt, //课程结束时间
+            join: values.join,
+            request_exp: values.exp,
+          };
+          console.debug("course info edit put", url, postData);
           const res = await put<ICourseDataRequest, ICourseResponse>(
-            `/v2/course/${courseId}`,
-            {
-              title: values.title, //标题
-              subtitle: values.subtitle, //副标题
-              summary: values.summary,
-              content: values.content, //简介
-              cover: _cover, //封面图片文件名
-              teacher_id: values.teacherId, //UserID
-              publicity: values.status, //类型-公开/内部
-              anthology_id: values.anthologyId, //文集ID
-              channel_id: values.channelId,
-              start_at: startAt, //课程开始时间
-              end_at: endAt, //课程结束时间
-              join: values.join,
-              request_exp: values.exp,
-            }
+            url,
+            postData
           );
-          console.log(res);
+          console.debug("course info edit put", res);
           if (res.ok) {
             message.success(intl.formatMessage({ id: "flashes.success" }));
           } else {
