@@ -1,4 +1,4 @@
-import { IUserApiResponse } from "./Auth";
+import { IUser } from "../auth/User";
 import { IChannelApiData } from "./Channel";
 
 export interface ISuggestionData {
@@ -11,7 +11,7 @@ export interface ISuggestionData {
   channel: IChannelApiData;
   content: string;
   html: string;
-  editor: IUserApiResponse;
+  editor: IUser;
   created_at: string;
   updated_at: string;
 }
