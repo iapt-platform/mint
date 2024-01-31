@@ -83,7 +83,7 @@ const init = () => {
   const token = getToken();
   if (token) {
     get<ITokenRefreshResponse>("/v2/auth/current").then((response) => {
-      console.log(response);
+      console.log("auth", response);
       if (response.ok) {
         const it: IUser = {
           id: response.data.id,
