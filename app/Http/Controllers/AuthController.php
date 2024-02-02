@@ -8,6 +8,8 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Http\Api\AuthApi;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\App;
 
 class AuthController extends Controller
 {
@@ -105,6 +107,10 @@ class AuthController extends Controller
                 "roles"=> [],
                 "token"=>\substr($request->header('Authorization'),7) ,
             ];
+            if($userInfo->avatar){
+                $img = str_replace('.jpg','_s.jpg',$userInfo->avatar);
+                $user['avatar'] = Storage::url($img);
+            }
             return $this->ok($user);
         }else{
             return $this->error('invalid token',[401],401);
