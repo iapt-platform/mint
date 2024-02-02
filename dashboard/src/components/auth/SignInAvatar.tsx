@@ -23,72 +23,73 @@ const SignInAvatarWidget = () => {
   const [userName, setUserName] = useState<string>();
   const [nickName, setNickName] = useState<string>();
   const user = useAppSelector(_currentUser);
+
   useEffect(() => {
     setUserName(user?.realName);
     setNickName(user?.nickName);
   }, [user]);
-
-  const userCard = (
-    <>
-      <ProCard
-        style={{ maxWidth: 500, minWidth: 300 }}
-        actions={[
-          <Tooltip
-            title={intl.formatMessage({
-              id: "buttons.setting",
-            })}
-          >
-            <SettingOutlined key="setting" />
-          </Tooltip>,
-          <Tooltip
-            title={intl.formatMessage({
-              id: "columns.library.blog.label",
-            })}
-          >
-            <Link to={`/blog/${userName}/overview`}>
-              <HomeOutlined key="home" />
-            </Link>
-          </Tooltip>,
-          <Tooltip
-            title={intl.formatMessage({
-              id: "buttons.sign-out",
-            })}
-          >
-            <LogoutOutlined
-              key="logout"
-              onClick={() => {
-                sessionStorage.removeItem("token");
-                localStorage.removeItem("token");
-                navigate("/anonymous/users/sign-in");
-              }}
-            />
-          </Tooltip>,
-        ]}
-      >
-        <Paragraph>
-          <Title level={3}>{nickName}</Title>
-          <Paragraph style={{ textAlign: "right" }}>
-            {intl.formatMessage({
-              id: "buttons.welcome",
-            })}
-          </Paragraph>
-        </Paragraph>
-      </ProCard>
-    </>
-  );
 
   if (typeof user === "undefined") {
     return <Link to="/anonymous/users/sign-in">登录</Link>;
   } else {
     return (
       <>
-        <Popover content={userCard} placement="bottomRight">
+        <Popover
+          content={
+            <ProCard
+              style={{ maxWidth: 500, minWidth: 300 }}
+              actions={[
+                <Tooltip
+                  title={intl.formatMessage({
+                    id: "buttons.setting",
+                  })}
+                >
+                  <SettingOutlined key="setting" />
+                </Tooltip>,
+                <Tooltip
+                  title={intl.formatMessage({
+                    id: "columns.library.blog.label",
+                  })}
+                >
+                  <Link to={`/blog/${userName}/overview`}>
+                    <HomeOutlined key="home" />
+                  </Link>
+                </Tooltip>,
+                <Tooltip
+                  title={intl.formatMessage({
+                    id: "buttons.sign-out",
+                  })}
+                >
+                  <LogoutOutlined
+                    key="logout"
+                    onClick={() => {
+                      sessionStorage.removeItem("token");
+                      localStorage.removeItem("token");
+                      navigate("/anonymous/users/sign-in");
+                    }}
+                  />
+                </Tooltip>,
+              ]}
+            >
+              <Paragraph>
+                <Title level={3}>{nickName}</Title>
+                <Paragraph style={{ textAlign: "right" }}>
+                  {intl.formatMessage({
+                    id: "buttons.welcome",
+                  })}
+                </Paragraph>
+              </Paragraph>
+            </ProCard>
+          }
+          placement="bottomRight"
+        >
           <Avatar
             style={{ backgroundColor: "#87d068" }}
             icon={<UserOutlined />}
+            src={user?.avatar}
             size="small"
           >
-            {nickName?.slice(0, 1)}
+            {nickName?.slice(0, 2)}
           </Avatar>
         </Popover>
       </>
