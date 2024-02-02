@@ -14,6 +14,7 @@ export interface IUserRequest {
   id?: string;
   userName?: string;
   nickName?: string;
+  email?: string;
   avatar?: string;
 }
 
@@ -26,11 +27,19 @@ export interface IUserListResponse {
   };
 }
 
-export interface IUserApiResponse {
+export interface IUserResponse {
+  ok: boolean;
+  message: string;
+  data: IUserApiData;
+}
+
+export interface IUserApiData {
   id: string;
   userName: string;
   nickName: string;
-  avatar: string;
+  email: string;
+  avatar?: string;
+  avatarName?: string;
 }
 
 export interface IStudioApiResponse {
@@ -39,5 +48,5 @@ export interface IStudioApiResponse {
   studioName?: string;
   realName: string;
   avatar?: string;
-  owner: IUserApiResponse;
+  owner: IUser;
 }
