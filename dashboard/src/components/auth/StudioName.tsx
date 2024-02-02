@@ -23,7 +23,7 @@ const StudioNameWidget = ({
   popOver,
   onClick,
 }: IWidget) => {
-  const avatar = <Avatar size="small">{data?.nickName?.slice(0, 1)}</Avatar>;
+  console.debug("studio", data);
   return (
     <StudioCard popOver={popOver} studio={data}>
       <Space
@@ -33,7 +33,13 @@ const StudioNameWidget = ({
           }
         }}
       >
-        {showAvatar ? avatar : ""}
+        {showAvatar ? (
+          <Avatar size="small" src={data?.avatar}>
+            {data?.nickName?.slice(0, 2)}
+          </Avatar>
+        ) : (
+          <></>
+        )}
         {showName ? data?.nickName : ""}
       </Space>
     </StudioCard>
