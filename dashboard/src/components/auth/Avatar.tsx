@@ -15,6 +15,7 @@ import {
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 import { TooltipPlacement } from "antd/lib/tooltip";
+import SettingModal from "./setting/SettingModal";
 
 const { Title } = Typography;
 
@@ -33,7 +34,7 @@ const AvatarWidget = ({ style, placement = "bottomRight" }: IWidget) => {
     setNickName(user?.nickName);
   }, [user]);
 
-  const userCard = (
+  const UserCard = () => (
     <ProCard
       style={{ maxWidth: 500, minWidth: 300 }}
       actions={[
@@ -42,7 +43,7 @@ const AvatarWidget = ({ style, placement = "bottomRight" }: IWidget) => {
             id: "buttons.setting",
           })}
         >
-          <SettingOutlined key="setting" />
+          <SettingModal trigger={<SettingOutlined key="setting" />} />
         </Tooltip>,
         <Tooltip
           title={intl.formatMessage({
@@ -79,14 +80,15 @@ const AvatarWidget = ({ style, placement = "bottomRight" }: IWidget) => {
       </div>
     </ProCard>
   );
-  const login = <Link to="/anonymous/users/sign-in">登录</Link>;
+  const Login = () => <Link to="/anonymous/users/sign-in">登录</Link>;
   return (
     <>
-      <Popover content={user ? userCard : login} placement={placement}>
+      <Popover content={user ? <UserCard /> : <Login />} placement={placement}>
         <span style={style}>
           <Avatar
             style={{ backgroundColor: user ? "#87d068" : "gray" }}
-            icon={<UserOutlined />}
+            icon={user?.avatar ? undefined : <UserOutlined />}
+            src={user?.avatar}
             size="small"
           >
             {user ? nickName?.slice(0, 1) : undefined}
