@@ -70,23 +70,46 @@ class AttachmentController extends Controller
         $request->validate([
             'file' => 'required',
         ]);
-        $file = $request->file('file');
 
-       //Move Uploaded File
+        $file = $request->file('file');
         $bucket = config('mint.attachments.bucket_name.permanent');
         $fileId = Str::uuid();
         $ext = $file->getClientOriginalExtension();
-        $name = $fileId.'.'.$ext;
-        $filename = $file->storeAs($bucket,$name);
+
+
+        if($request->get('type') === 'avatar'){
+            $resize = Image::make($file)->fit(512);
+            Storage::put($bucket.'/'.$fileId.'.jpg',$resize->stream());
+            $resize = Image::make($file)->fit(256);
+            Storage::put($bucket.'/'.$fileId.'_m.jpg',$resize->stream());
+            $resize = Image::make($file)->fit(128);
+            Storage::put($bucket.'/'.$fileId.'_s.jpg',$resize->stream());
+            $name = $fileId.'.jpg';
+        }else{
+            //Move Uploaded File
+            $name = $fileId.'.'.$ext;
+            $filename = $file->storeAs($bucket,$name);
+        }
+
         $attachment = new Attachment;
         $attachment->id = $fileId;
         $attachment->user_uid = $user['user_uid'];
         $attachment->bucket = $bucket;
         $attachment->name = $name;
-        $attachment->title = $file->getClientOriginalName();
+        $attachment->filename = $file->getClientOriginalName();
+        $path_parts = pathinfo($file->getClientOriginalName());
+        $attachment->title = $path_parts['filename'];
         $attachment->size = $file->getSize();
         $attachment->content_type = $file->getMimeType();
         $attachment->status = 'public';
+        if($request->has('studio')){
+            $owner_uid = StudioApi::getIdByName($request->get('studio'));
+        }else{
+            $owner_uid = $user['user_uid'];
+        }
+        if($owner_uid){
+            $attachment->owner_uid = $owner_uid;
+        }
         $attachment->save();
 
         $type = explode('/',$file->getMimeType());
@@ -112,13 +135,14 @@ class AttachmentController extends Controller
                 # code...
                 break;
         }
+        /*
         $json = array(
             'name' => $filename,
             'size' => $file->getSize(),
             'type' => $file->getMimeType(),
             'url' => Storage::url($bucket.'/'.$name),
             'uid' => $attachment->id,
-            );
+            );*/
         return $this->ok(new AttachmentResource($attachment));
 
     }
@@ -150,11 +174,44 @@ class AttachmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Attachment  $attachment
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Attachment $attachment)
+    public function destroy(Request $request,string $id)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'),401,401);
+        }
+        if(Str::isUuid($id)){
+            $res = Attachment::where('id',$id)->first();
+        }else{
+            /**
+             * 从文件名获取bucket和name
+             */
+            $pos = mb_strrpos($request->get('name'),'/',0,"UTF-8");
+            if($pos === false){
+                return $this->error('无效的文件名',500,500);
+            }
+            $bucket = mb_substr($request->get('name'),0,$pos,'UTF-8');
+            $name = mb_substr($request->get('name'),$pos+1,NULL,'UTF-8');
+            $res = Attachment::where('bucket',$bucket)
+                            ->where('name',$name)
+                            ->first();
+        }
+        if(!$res){
+            return $this->error('no res');
+        }
+        if($user['user_uid']!==$res->user_uid){
+            return $this->error(__('auth.failed'),403,403);
+        }
+        $del = $res->delete();
+        //删除文件
+        $path_parts = pathinfo($request->get('name'));
+        Storage::delete($request->get('name'));
+        Storage::delete($path_parts['dirname'].'/'.$path_parts['filename'].'_m.jpg');
+        Storage::delete($path_parts['dirname'].'/'.$path_parts['filename'].'_s.jpg');
+        return $this->ok($del);
     }
 }

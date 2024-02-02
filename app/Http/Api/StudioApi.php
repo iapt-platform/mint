@@ -2,6 +2,8 @@
 namespace App\Http\Api;
 
 use App\Models\UserInfo;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\App;
 
 class StudioApi{
     public static function getIdByName($name){
@@ -29,13 +31,17 @@ class StudioApi{
         if(!$userInfo){
             return false;
         }
-        return [
+        $data = [
             'id'=>$id,
-            'nickName'=>$userInfo['nickname'],
-            'realName'=>$userInfo['username'],
-            'studioName'=>$userInfo['username'],
-            'avatar'=>'',
+            'nickName'=>$userInfo->nickname,
+            'realName'=>$userInfo->username,
+            'studioName'=>$userInfo->username,
         ];
+        if($userInfo->avatar){
+            $img = str_replace('.jpg','_s.jpg',$userInfo->avatar);
+            $data['avatar'] = Storage::url($img);
+        }
+        return $data;
     }
 
     public static function getByIntId($id){

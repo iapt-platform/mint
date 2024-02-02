@@ -28,11 +28,8 @@ class UserController extends Controller
         $table = $table->skip($request->get("offset",0))
                        ->take($request->get('limit',20));
         $result = $table->get();
-        if($result){
-            return $this->ok(['rows'=>UserResource::collection($result),'count'=>$count]);
-        }else{
-            return $this->error();
-        }
+        return $this->ok(['rows'=>UserResource::collection($result),'count'=>$count]);
+
     }
 
     /**
@@ -55,18 +52,26 @@ class UserController extends Controller
     public function show($id)
     {
         //
+        $user = UserInfo::where('userid',$id)->first();
+        return $this->ok(new UserResource($user));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         //
+        $user = UserInfo::where('userid',$id)->first();
+        $user->nickname = $request->get('nickName');
+        $user->avatar = $request->get('avatar');
+        $user->email = $request->get('email');
+        $user->save();
+        return $this->ok(new UserResource($user));
     }
 
     /**

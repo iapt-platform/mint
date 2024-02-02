@@ -1,7 +1,10 @@
 <?php
 namespace App\Http\Api;
+
 use App\Models\UserInfo;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\App;
 
 class UserApi{
     public static function getIdByName($name){
@@ -39,13 +42,17 @@ class UserApi{
     public static function getByUuid($id){
         $user = UserInfo::where('userid',$id)->first();
         if($user){
-            return [
+            $data = [
                 'id'=>$id,
                 'nickName'=>$user['nickname'],
                 'userName'=>$user['username'],
                 'realName'=>$user['username'],
-                'avatar'=>'',
             ];
+            if($user->avatar){
+                $img = str_replace('.jpg','_s.jpg',$user->avatar);
+                $data['avatar'] = Storage::url($img);
+            }
+            return $data;
         }else{
             Log::error('$user=null;$id='.$id);
             return [
