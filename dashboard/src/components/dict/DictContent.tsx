@@ -8,11 +8,14 @@ import WordCard from "./WordCard";
 import CaseList from "./CaseList";
 import DictList from "./DictList";
 import MyCreate from "./MyCreate";
+import { useIntl } from "react-intl";
 
 export interface IDictContentData {
   dictlist: IAnchorData[];
   words: IWidgetWordCardData[];
   caselist: ICaseListData[];
+  time?: number;
+  count?: number;
 }
 export interface IApiDictContentData {
   ok: boolean;
@@ -27,6 +30,7 @@ interface IWidget {
 }
 
 const DictContentWidget = ({ word, data, compact }: IWidget) => {
+  const intl = useIntl();
   return (
     <>
       <Row>
@@ -42,9 +46,27 @@ const DictContentWidget = ({ word, data, compact }: IWidget) => {
                 key: "result",
                 children: (
                   <div>
-                    {data.words.map((it, id) => {
-                      return <WordCard key={id} data={it} />;
-                    })}
+                    <div>
+                      {intl.formatMessage(
+                        {
+                          id: "message.result",
+                        },
+                        { count: data.count }
+                      )}
+                      {" ("}
+                      {intl.formatMessage(
+                        {
+                          id: "message.time",
+                        },
+                        { time: data.time?.toFixed(3) }
+                      )}
+                      {")"}
+                    </div>
+                    <div>
+                      {data.words.map((it, id) => {
+                        return <WordCard key={id} data={it} />;
+                      })}
+                    </div>
                   </div>
                 ),
               },
