@@ -27,7 +27,7 @@ import {
 } from "../api/Channel";
 import { IItem, IProgressRequest } from "./ChannelPickerTable";
 import { LockIcon } from "../../assets/icon";
-import StudioName from "../auth/StudioName";
+import StudioName from "../auth/Studio";
 import ProgressSvg from "./ProgressSvg";
 
 import { IChannel } from "./Channel";

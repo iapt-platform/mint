@@ -23,7 +23,7 @@ import { IDeleteResponse } from "../../api/Article";
 import { delete_ } from "../../../request";
 
 import "./style.css";
-import StudioName from "../../auth/StudioName";
+import StudioName from "../../auth/Studio";
 import CopyToModal from "../../channel/CopyToModal";
 import store from "../../../store";
 import { randomString } from "../../../utils";

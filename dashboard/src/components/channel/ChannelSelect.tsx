@@ -5,7 +5,7 @@ import { currentUser } from "../../reducers/current-user";
 
 import { get } from "../../request";
 import { IApiResponseChannelList } from "../api/Channel";
-import { IStudio } from "../auth/StudioName";
+import { IStudio } from "../auth/Studio";
 
 interface IOption {
   value: string;

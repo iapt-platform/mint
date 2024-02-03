@@ -1,6 +1,6 @@
 import { useIntl } from "react-intl";
 import { Popover, Avatar } from "antd";
-import { IStudio } from "./StudioName";
+import { IStudio } from "./Studio";
 import { Link } from "react-router-dom";
 import React from "react";
 

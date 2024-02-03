@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { List, Space, Card } from "antd";
 
-import StudioName from "../auth/StudioName";
+import StudioName from "../auth/Studio";
 import type { IAnthologyStudioListApiResponse } from "../api/Article";
 import type { IStudioApiResponse } from "../api/Auth";
 import { get } from "../../request";

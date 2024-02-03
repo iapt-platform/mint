@@ -7,7 +7,7 @@ import type {
   IAnthologyResponse,
 } from "../api/Article";
 import type { IAnthologyData } from "./AnthologyCard";
-import StudioName from "../auth/StudioName";
+import StudioName from "../auth/Studio";
 import TimeShow from "../general/TimeShow";
 import Marked from "../general/Marked";
 import AnthologyTocTree from "../anthology/AnthologyTocTree";

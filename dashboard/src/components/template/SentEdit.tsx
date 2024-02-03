@@ -1,6 +1,6 @@
 import { Card } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { IStudio } from "../auth/StudioName";
+import { IStudio } from "../auth/Studio";
 
 import type { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";

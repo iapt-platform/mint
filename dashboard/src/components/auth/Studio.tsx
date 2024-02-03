@@ -16,7 +16,7 @@ interface IWidget {
   popOver?: React.ReactNode;
   onClick?: Function;
 }
-const StudioNameWidget = ({
+const StudioWidget = ({
   data,
   showAvatar = true,
   showName = true,
@@ -46,4 +46,4 @@ const StudioNameWidget = ({
   );
 };
 
-export default StudioNameWidget;
+export default StudioWidget;

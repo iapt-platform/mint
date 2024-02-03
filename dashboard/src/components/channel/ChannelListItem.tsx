@@ -2,7 +2,7 @@ import { Space } from "antd";
 import { Avatar } from "antd";
 
 import type { IChannelApiData } from "../api/Channel";
-import { IStudio } from "../auth/StudioName";
+import { IStudio } from "../auth/Studio";
 
 interface IWidget {
   channel: IChannelApiData;

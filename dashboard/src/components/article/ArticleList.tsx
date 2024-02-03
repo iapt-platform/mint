@@ -33,7 +33,7 @@ import { ArticleTplModal } from "../template/Builder/ArticleTpl";
 import Share, { EResType } from "../../components/share/Share";
 import AddToAnthology from "../../components/article/AddToAnthology";
 import AnthologySelect from "../../components/anthology/AnthologySelect";
-import StudioName, { IStudio } from "../../components/auth/StudioName";
+import StudioName, { IStudio } from "../auth/Studio";
 import { IUser } from "../../components/auth/User";
 import { getSorterUrl } from "../../utils";
 import TransferCreate from "../transfer/TransferCreate";

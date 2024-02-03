@@ -3,8 +3,8 @@ import { Row, Col } from "antd";
 import { Card } from "antd";
 import { Typography } from "antd";
 
-import StudioName from "../auth/StudioName";
-import type { IStudio } from "../auth/StudioName";
+import StudioName from "../auth/Studio";
+import type { IStudio } from "../auth/Studio";
 import type { ListNodeData } from "./EditableTree";
 
 const { Title, Text } = Typography;

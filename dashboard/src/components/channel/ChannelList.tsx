@@ -6,7 +6,7 @@ import type { IChannelApiData } from "../api/Channel";
 import { IApiResponseChannelList } from "../api/Corpus";
 import { get } from "../../request";
 import ChannelListItem from "./ChannelListItem";
-import { IStudio } from "../auth/StudioName";
+import { IStudio } from "../auth/Studio";
 
 export interface ChannelFilterProps {
   chapterProgress: number;

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { get } from "../../request";
 import { IChapterData, IChapterListResponse } from "../api/Corpus";
-import StudioName from "../auth/StudioName";
+import StudioName from "../auth/Studio";
 import { ChapterData } from "../corpus/ChapterCard";
 const { Title, Text, Paragraph } = Typography;
 

@@ -6,7 +6,7 @@ import { ActionType, ProList } from "@ant-design/pro-components";
 import { renderBadge } from "../channel/ChannelTable";
 import User, { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
-import { IStudio } from "../auth/StudioName";
+import { IStudio } from "../auth/Studio";
 import UserName from "../auth/UserName";
 import TimeShow from "../general/TimeShow";
 import {
