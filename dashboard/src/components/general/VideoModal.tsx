@@ -26,14 +26,18 @@ export const VideoModalWidget = ({ src, type, trigger }: IWidget) => {
     <>
       <span onClick={showModal}>{trigger}</span>
       <Modal
+        style={{ top: 20 }}
         title="Basic Modal"
+        footer={false}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        width={1000}
+        width={800}
         destroyOnClose
+        maskClosable={false}
+        mask={false}
       >
-        <div style={{ height: 600 }}>
+        <div>
           <Video src={src} type={type} />
         </div>
       </Modal>

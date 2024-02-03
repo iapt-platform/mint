@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { get } from "../../../request";
 import { IAttachmentResponse } from "../../api/Attachments";
 import VideoModal from "../../general/VideoModal";
+import { VideoIcon } from "../../../assets/icon";
 
 export interface IVideo {
   videoId: string;
@@ -18,22 +19,18 @@ const WbwVideoButtonWidget = ({ video }: IWidget) => {
   const [curr, setCurr] = useState(0);
 
   useEffect(() => {
-    get<IAttachmentResponse>(`/v2/attachment/${video[curr].videoId}`).then(
-      (json) => {
-        console.log(json);
-        if (json.ok) {
-          setUrl(json.data.url);
-        }
+    const url = `/v2/attachment/${video[curr].videoId}`;
+    console.info("url", url);
+    get<IAttachmentResponse>(url).then((json) => {
+      console.log(json);
+      if (json.ok) {
+        setUrl(json.data.url);
       }
-    );
+    });
   }, [curr, video]);
 
   return video ? (
-    <VideoModal
-      src={url}
-      type={video[0].type}
-      trigger={<VideoCameraOutlined />}
-    />
+    <VideoModal src={url} type={video[0].type} trigger={<VideoIcon />} />
   ) : (
     <></>
   );
