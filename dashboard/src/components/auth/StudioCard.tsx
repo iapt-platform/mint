@@ -21,8 +21,12 @@ const StudioCardWidget = ({ studio, children, popOver }: IWidget) => {
           <>
             <div style={{ display: "flex" }}>
               <div style={{ paddingRight: 8 }}>
-                <Avatar style={{ backgroundColor: "#87d068" }} size="small">
-                  {studio?.nickName?.slice(0, 1)}
+                <Avatar
+                  style={{ backgroundColor: "#87d068" }}
+                  size="large"
+                  src={studio?.avatar}
+                >
+                  {studio?.nickName?.slice(0, 2)}
                 </Avatar>
               </div>
               <div>
