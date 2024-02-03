@@ -22,7 +22,7 @@ import { useEffect, useRef, useState } from "react";
 import { TRole } from "../../components/api/Auth";
 import ShareModal from "../../components/share/ShareModal";
 import { EResType } from "../../components/share/Share";
-import StudioName, { IStudio } from "../../components/auth/StudioName";
+import StudioName, { IStudio } from "../auth/Studio";
 import StudioSelect from "../../components/channel/StudioSelect";
 import { IChannel } from "./Channel";
 import { getSorterUrl } from "../../utils";

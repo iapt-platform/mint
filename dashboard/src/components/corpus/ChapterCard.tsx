@@ -7,7 +7,7 @@ import TocPath from "../corpus/TocPath";
 import TagArea from "../tag/TagArea";
 import type { IChannelApiData } from "../api/Channel";
 import ChannelListItem from "../channel/ChannelListItem";
-import { IStudio } from "../auth/StudioName";
+import { IStudio } from "../auth/Studio";
 import { ITagData } from "./ChapterTag";
 
 const { Title, Paragraph, Text } = Typography;

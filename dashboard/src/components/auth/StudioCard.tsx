@@ -1,6 +1,6 @@
 import { useIntl } from "react-intl";
 import { Popover, Avatar } from "antd";
-import { IStudio } from "./StudioName";
+import { IStudio } from "./Studio";
 import { Link } from "react-router-dom";
 import React from "react";
 
@@ -21,8 +21,12 @@ const StudioCardWidget = ({ studio, children, popOver }: IWidget) => {
           <>
             <div style={{ display: "flex" }}>
               <div style={{ paddingRight: 8 }}>
-                <Avatar style={{ backgroundColor: "#87d068" }} size="small">
-                  {studio?.nickName?.slice(0, 1)}
+                <Avatar
+                  style={{ backgroundColor: "#87d068" }}
+                  size="large"
+                  src={studio?.avatar}
+                >
+                  {studio?.nickName?.slice(0, 2)}
                 </Avatar>
               </div>
               <div>
@@ -43,6 +47,7 @@ const StudioCardWidget = ({ studio, children, popOver }: IWidget) => {
         )
       }
       placement="bottomRight"
+      arrowPointAtCenter
     >
       {children}
     </Popover>

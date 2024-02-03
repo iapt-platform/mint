@@ -15,7 +15,7 @@ import { RoleValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
 import { useEffect, useRef, useState } from "react";
 
-import StudioName, { IStudio } from "../../../components/auth/StudioName";
+import StudioName, { IStudio } from "../../../components/auth/Studio";
 import { renderBadge } from "../../../components/channel/ChannelTable";
 import { getSorterUrl } from "../../../utils";
 

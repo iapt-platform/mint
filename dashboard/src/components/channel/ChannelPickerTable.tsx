@@ -14,7 +14,7 @@ import {
 import { IApiResponseChannelList, IFinal, TChannelType } from "../api/Channel";
 import { post } from "../../request";
 import { LockIcon } from "../../assets/icon";
-import StudioName, { IStudio } from "../auth/StudioName";
+import StudioName, { IStudio } from "../auth/Studio";
 import ProgressSvg from "./ProgressSvg";
 import { IChannel } from "./Channel";
 import { ArticleType } from "../article/Article";
@@ -336,7 +336,7 @@ const ChannelPickerTableWidget = ({
                       }}
                     >
                       <Space>
-                        <StudioName data={entity.studio} showName={false} />
+                        <StudioName data={entity.studio} hideName />
                         {entity.title}
                       </Space>
                     </Button>

@@ -1,4 +1,4 @@
-import { IStudio } from "../auth/StudioName";
+import { IStudio } from "../auth/Studio";
 import { TRole } from "./Auth";
 export type TChannelType =
   | "translation"

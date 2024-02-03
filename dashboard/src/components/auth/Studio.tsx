@@ -2,6 +2,7 @@ import { Avatar, Space } from "antd";
 
 import StudioCard from "./StudioCard";
 
+const avatarColor = ["indianred", "blueviolet", "#87d068", "#108ee9"];
 export interface IStudio {
   id: string;
   nickName?: string;
@@ -11,19 +12,23 @@ export interface IStudio {
 }
 interface IWidget {
   data?: IStudio;
-  showAvatar?: boolean;
-  showName?: boolean;
+  hideAvatar?: boolean;
+  hideName?: boolean;
   popOver?: React.ReactNode;
   onClick?: Function;
 }
-const StudioNameWidget = ({
+const StudioWidget = ({
   data,
-  showAvatar = true,
-  showName = true,
+  hideAvatar = false,
+  hideName = false,
   popOver,
   onClick,
 }: IWidget) => {
-  console.debug("studio", data);
+  let colorIndex = 0;
+  if (data?.nickName) {
+    colorIndex = data?.nickName?.charCodeAt(0) % avatarColor.length;
+  }
+
   return (
     <StudioCard popOver={popOver} studio={data}>
       <Space
@@ -33,17 +38,21 @@ const StudioNameWidget = ({
           }
         }}
       >
-        {showAvatar ? (
-          <Avatar size="small" src={data?.avatar}>
+        {hideAvatar ? (
+          <></>
+        ) : (
+          <Avatar
+            size="small"
+            src={data?.avatar}
+            style={{ backgroundColor: avatarColor[colorIndex] }}
+          >
             {data?.nickName?.slice(0, 2)}
           </Avatar>
-        ) : (
-          <></>
         )}
-        {showName ? data?.nickName : ""}
+        {hideName ? "" : data?.nickName}
       </Space>
     </StudioCard>
   );
 };
 
-export default StudioNameWidget;
+export default StudioWidget;

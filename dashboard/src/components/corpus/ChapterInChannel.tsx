@@ -8,7 +8,7 @@ import ChannelListItem from "../channel/ChannelListItem";
 import TimeShow from "../general/TimeShow";
 import { useIntl } from "react-intl";
 import { Link, useSearchParams } from "react-router-dom";
-import { IStudio } from "../auth/StudioName";
+import { IStudio } from "../auth/Studio";
 import { useState } from "react";
 import { ProgressOutlinedIcon } from "../../assets/icon";
 import { ArticleMode } from "../article/Article";

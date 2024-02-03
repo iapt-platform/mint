@@ -6,7 +6,7 @@ import { ActionType, ProList } from "@ant-design/pro-components";
 import { get } from "../../request";
 import { IArticleListResponse } from "../api/Article";
 
-import { IStudio } from "../auth/StudioName";
+import { IStudio } from "../auth/Studio";
 import { IUser } from "../auth/User";
 import TimeShow from "../general/TimeShow";
 

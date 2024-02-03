@@ -1,4 +1,4 @@
-import { IStudio } from "../auth/StudioName";
+import { IStudio } from "../auth/Studio";
 import { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
 import { TRole } from "./Auth";

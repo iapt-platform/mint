@@ -7,7 +7,7 @@ import { IUser } from "../auth/UserName";
 import TimeShow from "../general/TimeShow";
 import { IChannel } from "../channel/Channel";
 import { MergeIcon2 } from "../../assets/icon";
-import { IStudio } from "../auth/StudioName";
+import { IStudio } from "../auth/Studio";
 
 const { Paragraph } = Typography;
 

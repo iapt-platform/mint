@@ -5,7 +5,7 @@ import TocPath, { ITocPathNode } from "../corpus/TocPath";
 import PaliChapterChannelList from "../corpus/PaliChapterChannelList";
 import { ArticleType } from "./Article";
 import VisibleObserver from "../general/VisibleObserver";
-import { IStudio } from "../auth/StudioName";
+import { IStudio } from "../auth/Studio";
 
 const { Paragraph, Title, Text } = Typography;
 export interface IFirstAnthology {

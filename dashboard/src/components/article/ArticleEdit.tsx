@@ -21,7 +21,7 @@ import PublicitySelect from "../../components/studio/PublicitySelect";
 
 import MDEditor from "@uiw/react-md-editor";
 import ArticlePrevDrawer from "../../components/article/ArticlePrevDrawer";
-import { IStudio } from "../auth/StudioName";
+import { IStudio } from "../auth/Studio";
 
 interface IFormData {
   uid: string;

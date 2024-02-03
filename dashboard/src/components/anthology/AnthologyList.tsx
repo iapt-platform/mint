@@ -21,7 +21,7 @@ import { PublicityValueEnum } from "../../components/studio/table";
 import { useEffect, useRef, useState } from "react";
 import Share, { EResType } from "../share/Share";
 
-import StudioName, { IStudio } from "../auth/StudioName";
+import StudioName, { IStudio } from "../auth/Studio";
 import { IResNumberResponse, renderBadge } from "../channel/ChannelTable";
 import { fullUrl, getSorterUrl } from "../../utils";
 

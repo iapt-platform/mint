@@ -11,7 +11,7 @@ import UserName from "../auth/UserName";
 import TimeShow from "../general/TimeShow";
 import TermModal from "./TermModal";
 import { useEffect, useState } from "react";
-import StudioName from "../auth/StudioName";
+import StudioName from "../auth/Studio";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
 import { click, clickedTerm } from "../../reducers/term-click";

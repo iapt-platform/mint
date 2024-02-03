@@ -27,7 +27,7 @@ import {
 } from "../api/Channel";
 import { IItem, IProgressRequest } from "./ChannelPickerTable";
 import { LockIcon } from "../../assets/icon";
-import StudioName from "../auth/StudioName";
+import StudioName from "../auth/Studio";
 import ProgressSvg from "./ProgressSvg";
 
 import { IChannel } from "./Channel";
@@ -377,10 +377,7 @@ const ChannelMy = ({
                       </Space>
                       <Button type="link">
                         <Space>
-                          <StudioName
-                            data={node.channel.studio}
-                            showName={false}
-                          />
+                          <StudioName data={node.channel.studio} hideName />
                           {node.channel.title}
                         </Space>
                       </Button>
