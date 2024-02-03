@@ -2,6 +2,7 @@ import { Avatar, Space } from "antd";
 
 import StudioCard from "./StudioCard";
 
+const avatarColor = ["indianred", "blueviolet", "#87d068", "#108ee9"];
 export interface IStudio {
   id: string;
   nickName?: string;
@@ -23,6 +24,11 @@ const StudioWidget = ({
   popOver,
   onClick,
 }: IWidget) => {
+  let colorIndex = 0;
+  if (data?.nickName) {
+    colorIndex = data?.nickName?.charCodeAt(0) % avatarColor.length;
+  }
+
   return (
     <StudioCard popOver={popOver} studio={data}>
       <Space
@@ -35,7 +41,11 @@ const StudioWidget = ({
         {hideAvatar ? (
           <></>
         ) : (
-          <Avatar size="small" src={data?.avatar}>
+          <Avatar
+            size="small"
+            src={data?.avatar}
+            style={{ backgroundColor: avatarColor[colorIndex] }}
+          >
             {data?.nickName?.slice(0, 2)}
           </Avatar>
         )}
