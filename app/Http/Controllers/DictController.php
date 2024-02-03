@@ -182,7 +182,7 @@ class DictController extends Controller
             $table = UserDict::select($indexCol)
                                 ->where('note','like','%'.$word.'%')
                                 ->where('language','<>','my')
-                                ->take(10)
+                                ->take(5)
                                 ->get();
             $resultCount += count($table);
             $wordData=[
