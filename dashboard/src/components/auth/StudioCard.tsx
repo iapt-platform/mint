@@ -47,6 +47,7 @@ const StudioCardWidget = ({ studio, children, popOver }: IWidget) => {
         )
       }
       placement="bottomRight"
+      arrowPointAtCenter
     >
       {children}
     </Popover>
