@@ -112,7 +112,7 @@ class AuthController extends Controller
                 if (App::environment('local')) {
                     $user['avatar'] = Storage::url($img);
                 }else{
-                    $user['avatar'] = Storage::temporaryUrl($img, now()->addDays(10));
+                    $user['avatar'] = Storage::temporaryUrl($img, now()->addDays(6));
                 }
             }
             return $this->ok($user);

@@ -42,7 +42,7 @@ class StudioApi{
             if (App::environment('local')) {
                 $data['avatar'] = Storage::url($img);
             }else{
-                $data['avatar'] = Storage::temporaryUrl($img, now()->addDays(10));
+                $data['avatar'] = Storage::temporaryUrl($img, now()->addDays(6));
             }
         }
         return $data;
