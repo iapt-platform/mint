@@ -23,7 +23,6 @@ const StudioWidget = ({
   popOver,
   onClick,
 }: IWidget) => {
-  console.debug("studio", data);
   return (
     <StudioCard popOver={popOver} studio={data}>
       <Space
