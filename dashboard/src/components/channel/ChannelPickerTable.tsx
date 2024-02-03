@@ -336,7 +336,7 @@ const ChannelPickerTableWidget = ({
                       }}
                     >
                       <Space>
-                        <StudioName data={entity.studio} showName={false} />
+                        <StudioName data={entity.studio} hideName />
                         {entity.title}
                       </Space>
                     </Button>

@@ -377,10 +377,7 @@ const ChannelMy = ({
                       </Space>
                       <Button type="link">
                         <Space>
-                          <StudioName
-                            data={node.channel.studio}
-                            showName={false}
-                          />
+                          <StudioName data={node.channel.studio} hideName />
                           {node.channel.title}
                         </Space>
                       </Button>

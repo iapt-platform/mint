@@ -11,15 +11,15 @@ export interface IStudio {
 }
 interface IWidget {
   data?: IStudio;
-  showAvatar?: boolean;
-  showName?: boolean;
+  hideAvatar?: boolean;
+  hideName?: boolean;
   popOver?: React.ReactNode;
   onClick?: Function;
 }
 const StudioWidget = ({
   data,
-  showAvatar = true,
-  showName = true,
+  hideAvatar = false,
+  hideName = false,
   popOver,
   onClick,
 }: IWidget) => {
@@ -33,14 +33,14 @@ const StudioWidget = ({
           }
         }}
       >
-        {showAvatar ? (
+        {hideAvatar ? (
+          <></>
+        ) : (
           <Avatar size="small" src={data?.avatar}>
             {data?.nickName?.slice(0, 2)}
           </Avatar>
-        ) : (
-          <></>
         )}
-        {showName ? data?.nickName : ""}
+        {hideName ? "" : data?.nickName}
       </Space>
     </StudioCard>
   );

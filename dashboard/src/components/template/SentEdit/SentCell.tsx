@@ -291,7 +291,7 @@ const SentCellWidget = ({
             <div style={{ marginRight: 8 }}>
               <StudioName
                 data={sentData.studio}
-                showName={false}
+                hideName
                 popOver={
                   compact ? <Details data={sentData} isPr={isPr} /> : undefined
                 }
