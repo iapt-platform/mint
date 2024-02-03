@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 use FFMpeg\FFMpeg;
 
+
 class AttachmentController extends Controller
 {
     /**
@@ -64,7 +65,7 @@ class AttachmentController extends Controller
     {
         $user = AuthApi::current($request);
         if(!$user){
-            return $this->error(__('auth.failed'),[],401);
+            return $this->error(__('auth.failed'),401,401);
         }
 
         $request->validate([
