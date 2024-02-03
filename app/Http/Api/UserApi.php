@@ -50,7 +50,11 @@ class UserApi{
             ];
             if($user->avatar){
                 $img = str_replace('.jpg','_s.jpg',$user->avatar);
-                $data['avatar'] = Storage::url($img);
+                if (App::environment('local')) {
+                    $data['avatar'] = Storage::url($img);
+                }else{
+                    $data['avatar'] = Storage::temporaryUrl($img, now()->addDays(10));
+                }
             }
             return $data;
         }else{
