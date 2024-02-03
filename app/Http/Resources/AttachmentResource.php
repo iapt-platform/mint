@@ -32,7 +32,7 @@ class AttachmentResource extends JsonResource
         if (App::environment('local')) {
             $data['url'] = Storage::url($filename);
         }else{
-            $data['url'] = Storage::temporaryUrl($filename, now()->addDays(10));
+            $data['url'] = Storage::temporaryUrl($filename, now()->addDays(6));
         }
         return $data;
     }
