@@ -5,6 +5,8 @@ const items = {
   "message.auth.guest.alert":
     "您尚未登录，只能查看公开数据，其他功能无法使用。",
   "message.channel.empty.alert": "没有版本风格被选择,仅显示原文。",
+  "message.time": "用时 {time} 秒",
+  "message.result": "{count} 条结果",
 };
 
 export default items;
