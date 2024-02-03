@@ -25,7 +25,11 @@ class UserResource extends JsonResource
         if($this->avatar){
             $data['avatarName'] = $this->avatar;
             $img = str_replace('.jpg','_s.jpg',$this->avatar);
-            $data['avatar'] = Storage::url($img);
+            if (App::environment('local')) {
+                $data['avatar'] = Storage::url($img);
+            }else{
+                $data['avatar'] = Storage::temporaryUrl($img, now()->addDays(10));
+            }
         }
         return $data;
     }

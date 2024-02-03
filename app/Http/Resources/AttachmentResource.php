@@ -15,19 +15,25 @@ class AttachmentResource extends JsonResource
      */
     public function toArray($request)
     {
+        $filename = $this->bucket.'/'.$this->name;
         $data = [
             "id" => $this->id,
             "user_uid" => $this->user_uid,
-            "name" => $this->bucket.'/'.$this->name,
-            "filename" => $this->bucket.'/'.$this->name,
+            "name" => $filename,
+            "filename" => $filename,
             "title" => $this->title,
             "size" => $this->size,
             "content_type" => $this->content_type,
-            "url" => Storage::url($this->bucket.'/'.$this->name),
             "status" => $this->status,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
         ];
+
+        if (App::environment('local')) {
+            $data['url'] = Storage::url($filename);
+        }else{
+            $data['url'] = Storage::temporaryUrl($filename, now()->addDays(10));
+        }
         return $data;
     }
 }

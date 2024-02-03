@@ -25,6 +25,8 @@ class DictController extends Controller
     public function index(Request $request)
     {
         //
+        $startAt = microtime(true);
+
         $output = [];
         $wordDataOutput = [];
         $dictListOutput = [];
@@ -179,8 +181,10 @@ class DictController extends Controller
             //查询内文
             $table = UserDict::select($indexCol)
                                 ->where('note','like','%'.$word.'%')
+                                ->where('language','<>','my')
+                                ->take(5)
                                 ->get();
-
+            $resultCount += count($table);
             $wordData=[
                 'word'=> $word,
                 'factors'=> "",
@@ -214,8 +218,8 @@ class DictController extends Controller
         $output['dictlist'] = $dictListOutput;
         $output['caselist'] = $caseListOutput;
 
-        //$result = UserDict::select('word')->where('word','like',"{$word}%")->groupBy('word')->get();
-        //$output['like'] = $result;
+        $output['time'] = microtime(true) - $startAt;
+        $output['count'] = $resultCount;
 
         return $this->ok($output);
     }

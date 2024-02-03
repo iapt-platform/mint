@@ -109,7 +109,11 @@ class AuthController extends Controller
             ];
             if($userInfo->avatar){
                 $img = str_replace('.jpg','_s.jpg',$userInfo->avatar);
-                $user['avatar'] = Storage::url($img);
+                if (App::environment('local')) {
+                    $user['avatar'] = Storage::url($img);
+                }else{
+                    $user['avatar'] = Storage::temporaryUrl($img, now()->addDays(10));
+                }
             }
             return $this->ok($user);
         }else{
