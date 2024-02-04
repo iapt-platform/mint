@@ -11,24 +11,25 @@ const { Title } = Typography;
 export interface IWordByDict {
   dictname: string;
   description?: string;
-  word: string;
-  note: string;
+  word?: string;
+  note?: string;
   anchor: string;
 }
 interface IWidgetWordCardByDict {
   data: IWordByDict;
+  children?: React.ReactNode;
 }
-const WordCardByDictWidget = (prop: IWidgetWordCardByDict) => {
+const WordCardByDictWidget = ({ data, children }: IWidgetWordCardByDict) => {
   return (
     <Card>
       <Space>
-        <Title level={5} id={prop.data.anchor}>
-          {prop.data.dictname}
+        <Title level={5} id={data.anchor}>
+          {data.dictname}
         </Title>
-        {prop.data.description ? (
+        {data.description ? (
           <Popover
             overlayStyle={{ maxWidth: 600 }}
-            content={<Marked text={prop.data.description} />}
+            content={<Marked text={data.description} />}
             placement="bottom"
           >
             <Button type="link" icon={<InfoCircleOutlined />} />
@@ -36,8 +37,9 @@ const WordCardByDictWidget = (prop: IWidgetWordCardByDict) => {
         ) : undefined}
       </Space>
       <div className="dict_content">
-        <MdView html={prop.data.note} />
+        <MdView html={data.note} />
       </div>
+      {children}
     </Card>
   );
 };
