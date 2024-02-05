@@ -14,6 +14,7 @@ interface IWidget {
   anthologyId?: string | null;
   active?: boolean;
   onArticleChange?: Function;
+  onArticleEdit?: Function;
   onFinal?: Function;
   onLoad?: Function;
   onAnthologySelect?: Function;
@@ -29,6 +30,7 @@ const TypeArticleWidget = ({
   onFinal,
   onLoad,
   onAnthologySelect,
+  onArticleEdit,
 }: IWidget) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [edit, setEdit] = useState(false);
@@ -49,6 +51,11 @@ const TypeArticleWidget = ({
         <ArticleEdit
           anthologyId={anthologyId ? anthologyId : undefined}
           articleId={articleId}
+          onChange={(value: IArticleDataResponse) => {
+            if (typeof onArticleEdit !== "undefined") {
+              onArticleEdit(value);
+            }
+          }}
         />
       ) : (
         <TypeArticleReader
