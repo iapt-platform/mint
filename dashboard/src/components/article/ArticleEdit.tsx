@@ -96,10 +96,10 @@ const ArticleEditWidget = ({
             anthology_id: anthologyId,
           };
           const url = `/v2/article/${articleId}`;
-          console.log("save", url, request);
+          console.info("save url", url, request);
           put<IArticleDataRequest, IArticleResponse>(url, request)
             .then((res) => {
-              console.log("save response", res);
+              console.debug("save response", res);
               if (res.ok) {
                 if (typeof onChange !== "undefined") {
                   onChange(res.data);
