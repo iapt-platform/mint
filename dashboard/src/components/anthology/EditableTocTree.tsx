@@ -39,7 +39,7 @@ const EditableTocTreeWidget = ({
   const [openEditor, setOpenEditor] = useState(false);
   const [updatedArticle, setUpdatedArticle] = useState<TreeNodeData>();
   const [openViewer, setOpenViewer] = useState(false);
-  const [viewArticleId, setViewArticleId] = useState<string>();
+  const [viewArticle, setViewArticle] = useState<TreeNodeData>();
 
   const save = (data?: ListNodeData[]) => {
     console.debug("onSave", data);
@@ -174,7 +174,7 @@ const EditableTocTreeWidget = ({
           if (e.ctrlKey || e.metaKey) {
             window.open(fullUrl(`/article/article/${node.id}`), "_blank");
           } else {
-            setViewArticleId(node.id);
+            setViewArticle(node);
             setOpenViewer(true);
           }
         }}
@@ -197,10 +197,33 @@ const EditableTocTreeWidget = ({
         }}
       />
       <ArticleDrawer
-        articleId={viewArticleId}
+        articleId={viewArticle?.id}
         type="article"
         open={openViewer}
+        title={viewArticle?.title_text}
         onClose={() => setOpenViewer(false)}
+        onArticleEdit={(value: IArticleDataResponse) => {
+          setUpdatedArticle({
+            key: randomString(),
+            id: value.uid,
+            title: value.title,
+            title_text: value.title_text,
+            level: 0,
+            children: [],
+          });
+        }}
+        onTitleChange={(value: string) => {
+          if (viewArticle?.id) {
+            setUpdatedArticle({
+              key: randomString(),
+              id: viewArticle?.id,
+              title: value,
+              title_text: value,
+              level: 0,
+              children: [],
+            });
+          }
+        }}
       />
     </div>
   );
