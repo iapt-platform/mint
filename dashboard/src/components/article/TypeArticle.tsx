@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "antd";
+import { Alert, Button } from "antd";
 
 import { IArticleDataResponse } from "../api/Article";
 import { ArticleMode, ArticleType } from "./Article";
@@ -36,7 +36,11 @@ const TypeArticleWidget = ({
     <div>
       <div>
         {articleData?.role && articleData?.role !== "reader" && edit ? (
-          <Button onClick={() => setEdit(!edit)}>{"完成"}</Button>
+          <Alert
+            message={"请在提交修改后点完成按钮"}
+            type="info"
+            action={<Button onClick={() => setEdit(!edit)}>{"完成"}</Button>}
+          />
         ) : (
           <></>
         )}
