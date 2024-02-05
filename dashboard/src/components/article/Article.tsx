@@ -61,6 +61,7 @@ interface IWidget {
   onLoad?: Function;
   onAnthologySelect?: Function;
   onTitle?: Function;
+  onArticleEdit?: Function;
 }
 const ArticleWidget = ({
   type,
@@ -80,6 +81,7 @@ const ArticleWidget = ({
   onLoad,
   onAnthologySelect,
   onTitle,
+  onArticleEdit,
 }: IWidget) => {
   const [currId, setCurrId] = useState(articleId);
   useEffect(() => setCurrId(articleId), [articleId]);
@@ -94,6 +96,11 @@ const ArticleWidget = ({
           mode={mode}
           anthologyId={anthologyId}
           active={active}
+          onArticleEdit={(value: IArticleDataResponse) => {
+            if (typeof onArticleEdit !== "undefined") {
+              onArticleEdit(value);
+            }
+          }}
           onArticleChange={(type: ArticleType, id: string, target: string) => {
             if (typeof onArticleChange !== "undefined") {
               onArticleChange(type, id, target);
