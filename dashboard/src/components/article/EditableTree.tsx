@@ -143,7 +143,7 @@ interface IWidget {
   onSave?: Function;
   onAddFile?: Function;
   onAppend?: Function;
-  onNodeEdit?: Function;
+
   onTitleClick?: Function;
 }
 const EditableTreeWidget = ({
@@ -156,7 +156,6 @@ const EditableTreeWidget = ({
   onSave,
   onAddFile,
   onAppend,
-  onNodeEdit,
   onTitleClick,
 }: IWidget) => {
   const intl = useIntl();
@@ -406,11 +405,6 @@ const EditableTreeWidget = ({
           return (
             <EditableTreeNode
               node={node}
-              onEdit={() => {
-                if (typeof onNodeEdit !== "undefined") {
-                  onNodeEdit(node.id);
-                }
-              }}
               onAdd={async () => {
                 if (typeof onAppend !== "undefined") {
                   const newNode = await onAppend(node);
