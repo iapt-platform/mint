@@ -82,6 +82,8 @@ const items = {
   "buttons.convert": "转换",
   "buttons.copy.tpl": "复制模版",
   "buttons.open.in.new.tab": "在新标签页中打开",
+  "buttons.add_to_anthology": "添加到文集",
+  "buttons.open.in.studio": "在Studio中打开",
 };
 
 export default items;
