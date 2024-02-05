@@ -1,8 +1,10 @@
-import { Button, Drawer, Space } from "antd";
+import { Button, Drawer, Space, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import Article, { ArticleMode, ArticleType } from "./Article";
+import { IArticleDataResponse } from "../api/Article";
+const { Text } = Typography;
 
 interface IWidget {
   trigger?: React.ReactNode;
@@ -16,6 +18,8 @@ interface IWidget {
   mode?: ArticleMode;
   open?: boolean;
   onClose?: Function;
+  onTitleChange?: Function;
+  onArticleEdit?: Function;
 }
 
 const ArticleDrawerWidget = ({
@@ -30,9 +34,13 @@ const ArticleDrawerWidget = ({
   mode,
   open,
   onClose,
+  onTitleChange,
+  onArticleEdit,
 }: IWidget) => {
   const [openDrawer, setOpenDrawer] = useState(open);
+  const [drawerTitle, setDrawerTitle] = useState(title);
   useEffect(() => setOpenDrawer(open), [open]);
+  useEffect(() => setDrawerTitle(title), [title]);
   const showDrawer = () => {
     setOpenDrawer(true);
   };
@@ -60,7 +68,20 @@ const ArticleDrawerWidget = ({
     <>
       <span onClick={() => showDrawer()}>{trigger}</span>
       <Drawer
-        title={title}
+        title={
+          <Text
+            editable={{
+              onChange: (value: string) => {
+                setDrawerTitle(value);
+                if (typeof onTitleChange !== "undefined") {
+                  onTitleChange(value);
+                }
+              },
+            }}
+          >
+            {drawerTitle}
+          </Text>
+        }
         width={1000}
         placement="right"
         onClose={onDrawerClose}
@@ -85,6 +106,12 @@ const ArticleDrawerWidget = ({
           channelId={channelId}
           articleId={articleId}
           mode={mode}
+          onArticleEdit={(value: IArticleDataResponse) => {
+            setDrawerTitle(value.title_text);
+            if (typeof onArticleEdit !== "undefined") {
+              onArticleEdit(value);
+            }
+          }}
         />
       </Drawer>
     </>
