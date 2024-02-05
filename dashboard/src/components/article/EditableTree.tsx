@@ -15,7 +15,7 @@ export interface TreeNodeData {
   key: string;
   id: string;
   title: string | React.ReactNode;
-  title_text?: string | React.ReactNode;
+  title_text?: string;
   icon?: React.ReactNode;
   children: TreeNodeData[];
   deletedAt?: string | null;
@@ -24,7 +24,7 @@ export interface TreeNodeData {
 export type ListNodeData = {
   key: string;
   title: string | React.ReactNode;
-  title_text?: string | React.ReactNode;
+  title_text?: string;
   level: number;
   children?: number;
   deletedAt?: string | null;
@@ -180,6 +180,7 @@ const EditableTreeWidget = ({
       _node.forEach((value, index, array) => {
         if (value.id === updatedNode.id) {
           array[index].title = updatedNode.title;
+          array[index].title_text = updatedNode.title_text;
           console.log("key found");
           return;
         } else {
@@ -387,6 +388,7 @@ const EditableTreeWidget = ({
         rootClassName="draggable-tree"
         draggable
         blockNode
+        selectable={false}
         onDragEnter={onDragEnter}
         onDrop={onDrop}
         onSelect={(selectedKeys: Key[]) => {
