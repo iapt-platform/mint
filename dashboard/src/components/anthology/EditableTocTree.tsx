@@ -19,7 +19,6 @@ import EditableTree, {
   ListNodeData,
   TreeNodeData,
 } from "../article/EditableTree";
-import ArticleEditDrawer from "../article/ArticleEditDrawer";
 import ArticleDrawer from "../article/ArticleDrawer";
 import { fullUrl, randomString } from "../../utils";
 
@@ -35,8 +34,6 @@ const EditableTocTreeWidget = ({
 }: IWidget) => {
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
   const [addArticle, setAddArticle] = useState<TreeNodeData>();
-  const [articleId, setArticleId] = useState<string>();
-  const [openEditor, setOpenEditor] = useState(false);
   const [updatedArticle, setUpdatedArticle] = useState<TreeNodeData>();
   const [openViewer, setOpenViewer] = useState(false);
   const [viewArticle, setViewArticle] = useState<TreeNodeData>();
@@ -163,10 +160,6 @@ const EditableTocTreeWidget = ({
             return;
           }
         }}
-        onNodeEdit={(key: string) => {
-          setArticleId(key);
-          setOpenEditor(true);
-        }}
         onTitleClick={(
           e: React.MouseEvent<HTMLElement, MouseEvent>,
           node: TreeNodeData
@@ -177,23 +170,6 @@ const EditableTocTreeWidget = ({
             setViewArticle(node);
             setOpenViewer(true);
           }
-        }}
-      />
-      <ArticleEditDrawer
-        anthologyId={anthologyId}
-        articleId={articleId}
-        open={openEditor}
-        onClose={() => setOpenEditor(false)}
-        onChange={(data: IArticleDataResponse) => {
-          console.log("new title", data.title);
-          setUpdatedArticle({
-            key: randomString(),
-            id: data.uid,
-            title: data.title,
-            title_text: data.title_text ? data.title_text : data.title,
-            level: 0,
-            children: [],
-          });
         }}
       />
       <ArticleDrawer
