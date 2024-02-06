@@ -118,6 +118,9 @@ import StudioAnthology from "./pages/studio/anthology";
 import StudioAnthologyList from "./pages/studio/anthology/list";
 import StudioAnthologyEdit from "./pages/studio/anthology/edit";
 
+import StudioAttachment from "./pages/studio/attachment";
+import StudioAttachmentList from "./pages/studio/attachment/list";
+
 import StudioSetting from "./pages/studio/setting";
 
 import StudioAnalysis from "./pages/studio/analysis";
@@ -305,6 +308,10 @@ const Widget = () => {
 
           <Route path="term" element={<StudioTerm />}>
             <Route path="list" element={<StudioTermList />} />
+          </Route>
+
+          <Route path="attachment" element={<StudioAttachment />}>
+            <Route path="list" element={<StudioAttachmentList />} />
           </Route>
 
           <Route path="article" element={<StudioArticle />}>
