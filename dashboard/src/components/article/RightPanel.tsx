@@ -163,7 +163,7 @@ const RightPanelWidget = ({
               }),
               key: "dict",
               children: (
-                <div style={tabInnerStyle}>
+                <div className="dict_component" style={tabInnerStyle}>
                   <DictComponent />
                 </div>
               ),

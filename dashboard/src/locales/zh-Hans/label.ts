@@ -35,7 +35,12 @@ const items = {
   "labels.page.number.type.c": "章节名称",
   "labels.loading": "载入中",
   "labels.empty": "无内容",
-  "labels.curr.paragraph.cart.tpl": "Add to Cart",
+  "labels.curr.paragraph.cart.tpl": "添加到手推车",
+  "labels.dict.pass.0": "内文查询",
+  "labels.dict.pass.1": "直接查",
+  "labels.dict.pass.2": "查词干",
+  "labels.dict.pass.3": "查衍生",
+  "labels.dict.pass.4": "查二次衍生",
 };
 
 export default items;

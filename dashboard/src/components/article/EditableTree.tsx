@@ -15,7 +15,7 @@ export interface TreeNodeData {
   key: string;
   id: string;
   title: string | React.ReactNode;
-  title_text?: string | React.ReactNode;
+  title_text?: string;
   icon?: React.ReactNode;
   children: TreeNodeData[];
   deletedAt?: string | null;
@@ -24,7 +24,7 @@ export interface TreeNodeData {
 export type ListNodeData = {
   key: string;
   title: string | React.ReactNode;
-  title_text?: string | React.ReactNode;
+  title_text?: string;
   level: number;
   children?: number;
   deletedAt?: string | null;
@@ -143,7 +143,7 @@ interface IWidget {
   onSave?: Function;
   onAddFile?: Function;
   onAppend?: Function;
-  onNodeEdit?: Function;
+
   onTitleClick?: Function;
 }
 const EditableTreeWidget = ({
@@ -156,7 +156,6 @@ const EditableTreeWidget = ({
   onSave,
   onAddFile,
   onAppend,
-  onNodeEdit,
   onTitleClick,
 }: IWidget) => {
   const intl = useIntl();
@@ -180,6 +179,7 @@ const EditableTreeWidget = ({
       _node.forEach((value, index, array) => {
         if (value.id === updatedNode.id) {
           array[index].title = updatedNode.title;
+          array[index].title_text = updatedNode.title_text;
           console.log("key found");
           return;
         } else {
@@ -387,6 +387,7 @@ const EditableTreeWidget = ({
         rootClassName="draggable-tree"
         draggable
         blockNode
+        selectable={false}
         onDragEnter={onDragEnter}
         onDrop={onDrop}
         onSelect={(selectedKeys: Key[]) => {
@@ -404,11 +405,6 @@ const EditableTreeWidget = ({
           return (
             <EditableTreeNode
               node={node}
-              onEdit={() => {
-                if (typeof onNodeEdit !== "undefined") {
-                  onNodeEdit(node.id);
-                }
-              }}
               onAdd={async () => {
                 if (typeof onAppend !== "undefined") {
                   const newNode = await onAppend(node);

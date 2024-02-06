@@ -23,14 +23,12 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   //Library head bar
   const intl = useIntl(); //i18n
   const { studioname } = useParams();
-  const linkPalicanon = "/studio/" + studioname + "/palicanon";
   const linkRecent = "/studio/" + studioname + "/recent/list";
   const linkChannel = "/studio/" + studioname + "/channel/list";
   const linkGroup = "/studio/" + studioname + "/group/list";
   const linkUserdict = "/studio/" + studioname + "/dict/list";
   const linkTerm = "/studio/" + studioname + "/term/list";
   const linkArticle = "/studio/" + studioname + "/article/list";
-  const linkAnthology = "/studio/" + studioname + "/anthology/list";
   const linkAnalysis = "/studio/" + studioname + "/exp/list";
   const linkCourse = "/studio/" + studioname + "/course/list";
   const linkSetting = "/studio/" + studioname + "/setting";
@@ -43,7 +41,7 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
       children: [
         {
           label: (
-            <Link to={linkPalicanon}>
+            <Link to={`/studio/${studioname}/palicanon`}>
               {intl.formatMessage({
                 id: "columns.studio.palicanon.title",
               })}
@@ -131,13 +129,23 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
         },
         {
           label: (
-            <Link to={linkAnthology}>
+            <Link to={`/studio/${studioname}/anthology/list`}>
               {intl.formatMessage({
                 id: "columns.studio.anthology.title",
               })}
             </Link>
           ),
           key: "anthology",
+        },
+        {
+          label: (
+            <Link to={`/studio/${studioname}/attachment/list`}>
+              {intl.formatMessage({
+                id: "columns.studio.attachment.title",
+              })}
+            </Link>
+          ),
+          key: "attachment",
         },
         {
           label: (
@@ -148,16 +156,6 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
             </Link>
           ),
           key: "setting",
-          children: [
-            {
-              label: "账户",
-              key: "account",
-            },
-            {
-              label: "显示",
-              key: "display",
-            },
-          ],
         },
       ],
     },

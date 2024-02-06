@@ -47,41 +47,54 @@ const WordCardWidget = ({ data }: IWidgetWordCard) => {
       <Title level={4} id={data.anchor}>
         {data.word}
       </Title>
-
-      <div>
-        <Text>{data.grammar.length > 0 ? data.grammar[0].factors : ""}</Text>
-      </div>
-      <div>
-        <Text>{data.parents}</Text>
-      </div>
-      <div>
-        {data.grammar
-          .filter((item) => item.confidence > 0.5)
-          .map((it, id) => {
-            const grammar = it.grammar.split("$");
-            const grammarGuide = grammar.map((item, id) => {
-              const strCase = item.replaceAll(".", "");
-              return (
-                <GrammarPop
-                  key={id}
-                  gid={strCase}
-                  text={intl.formatMessage({
-                    id: `dict.fields.type.${strCase}.label`,
-                    defaultMessage: strCase,
-                  })}
-                />
-              );
-            });
-            return (
-              <div key={id}>
-                <Space>{grammarGuide}</Space>
-              </div>
-            );
-          })}
-      </div>
-      <div>
-        <Text>{caseList}</Text>
-      </div>
+      {data.grammar.length > 0 ? (
+        <WordCardByDict
+          data={{
+            dictname: "语法信息",
+            description: "列出可能的语法信息供参考",
+            anchor: "anchor",
+          }}
+        >
+          <div>
+            <Text>
+              {data.grammar.length > 0 ? data.grammar[0].factors : ""}
+            </Text>
+          </div>
+          <div>
+            <Text>{data.parents}</Text>
+          </div>
+          <div>
+            {data.grammar
+              .filter((item) => item.confidence > 0.5)
+              .map((it, id) => {
+                const grammar = it.grammar.split("$");
+                const grammarGuide = grammar.map((item, id) => {
+                  const strCase = item.replaceAll(".", "");
+                  return (
+                    <GrammarPop
+                      key={id}
+                      gid={strCase}
+                      text={intl.formatMessage({
+                        id: `dict.fields.type.${strCase}.label`,
+                        defaultMessage: strCase,
+                      })}
+                    />
+                  );
+                });
+                return (
+                  <div key={id}>
+                    <Space>{grammarGuide}</Space>
+                  </div>
+                );
+              })}
+          </div>
+          <div>
+            <Text>{caseList}</Text>
+          </div>
+        </WordCardByDict>
+      ) : (
+        <></>
+      )}
       <Community word={data.word} />
       <TermCommunity word={data.word} />
       <div>

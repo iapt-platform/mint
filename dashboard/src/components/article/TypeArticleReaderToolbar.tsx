@@ -1,4 +1,4 @@
-import { Button, Dropdown } from "antd";
+import { Button, Dropdown, Tooltip } from "antd";
 import {
   ReloadOutlined,
   MoreOutlined,
@@ -16,6 +16,7 @@ import { fullUrl } from "../../utils";
 import { ArticleTplModal } from "../template/Builder/ArticleTpl";
 import AnthologiesAtArticle from "./AnthologiesAtArticle";
 import { TRole } from "../api/Auth";
+import { useIntl } from "react-intl";
 
 interface IWidget {
   articleId?: string;
@@ -33,6 +34,7 @@ const TypeArticleReaderToolbarWidget = ({
   onEdit,
   onAnthologySelect,
 }: IWidget) => {
+  const intl = useIntl();
   const user = useAppSelector(currentUser);
   const [addToAnthologyOpen, setAddToAnthologyOpen] = useState(false);
   const [tplOpen, setTplOpen] = useState(false);
@@ -59,29 +61,46 @@ const TypeArticleReaderToolbarWidget = ({
           />
         </div>
         <div>
-          <Button
-            type="link"
-            shape="round"
-            size="small"
-            icon={<ReloadOutlined />}
-          />
+          <Tooltip
+            title={intl.formatMessage({
+              id: "buttons.edit",
+            })}
+          >
+            <Button
+              type="link"
+              size="small"
+              icon={<EditOutlined />}
+              onClick={() => {
+                if (typeof onEdit !== "undefined") {
+                  onEdit();
+                }
+              }}
+            />
+          </Tooltip>
+          <Button type="link" size="small" icon={<ReloadOutlined />} />
           <Dropdown
             menu={{
               items: [
                 {
-                  label: "添加到文集",
+                  label: intl.formatMessage({
+                    id: "buttons.add_to_anthology",
+                  }),
                   key: "add_to_anthology",
                   icon: <InboxOutlined />,
                   disabled: user ? false : true,
                 },
                 {
-                  label: "编辑",
+                  label: intl.formatMessage({
+                    id: "buttons.edit",
+                  }),
                   key: "edit",
                   icon: <EditOutlined />,
                   disabled: !editable,
                 },
                 {
-                  label: "在Studio中打开",
+                  label: intl.formatMessage({
+                    id: "buttons.open.in.studio",
+                  }),
                   key: "open-studio",
                   icon: <EditOutlined />,
                   disabled: user ? false : true,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "antd";
+import { Alert, Button } from "antd";
 
 import { IArticleDataResponse } from "../api/Article";
 import { ArticleMode, ArticleType } from "./Article";
@@ -14,6 +14,7 @@ interface IWidget {
   anthologyId?: string | null;
   active?: boolean;
   onArticleChange?: Function;
+  onArticleEdit?: Function;
   onFinal?: Function;
   onLoad?: Function;
   onAnthologySelect?: Function;
@@ -29,6 +30,7 @@ const TypeArticleWidget = ({
   onFinal,
   onLoad,
   onAnthologySelect,
+  onArticleEdit,
 }: IWidget) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [edit, setEdit] = useState(false);
@@ -36,7 +38,11 @@ const TypeArticleWidget = ({
     <div>
       <div>
         {articleData?.role && articleData?.role !== "reader" && edit ? (
-          <Button onClick={() => setEdit(!edit)}>{"完成"}</Button>
+          <Alert
+            message={"请在提交修改后点完成按钮"}
+            type="info"
+            action={<Button onClick={() => setEdit(!edit)}>{"完成"}</Button>}
+          />
         ) : (
           <></>
         )}
@@ -45,6 +51,11 @@ const TypeArticleWidget = ({
         <ArticleEdit
           anthologyId={anthologyId ? anthologyId : undefined}
           articleId={articleId}
+          onChange={(value: IArticleDataResponse) => {
+            if (typeof onArticleEdit !== "undefined") {
+              onArticleEdit(value);
+            }
+          }}
         />
       ) : (
         <TypeArticleReader

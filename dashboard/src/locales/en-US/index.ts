@@ -47,6 +47,7 @@ const items = {
   "columns.exp.title": "Exp",
   "columns.studio.invite.title": "Invite",
   "columns.studio.transfer.title": "Transfer",
+  "columns.studio.attachment.title": "Attachment",
   ...buttons,
   ...forms,
   ...tables,

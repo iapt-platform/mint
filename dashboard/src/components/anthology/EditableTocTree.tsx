@@ -19,7 +19,6 @@ import EditableTree, {
   ListNodeData,
   TreeNodeData,
 } from "../article/EditableTree";
-import ArticleEditDrawer from "../article/ArticleEditDrawer";
 import ArticleDrawer from "../article/ArticleDrawer";
 import { fullUrl, randomString } from "../../utils";
 
@@ -35,11 +34,9 @@ const EditableTocTreeWidget = ({
 }: IWidget) => {
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
   const [addArticle, setAddArticle] = useState<TreeNodeData>();
-  const [articleId, setArticleId] = useState<string>();
-  const [openEditor, setOpenEditor] = useState(false);
   const [updatedArticle, setUpdatedArticle] = useState<TreeNodeData>();
   const [openViewer, setOpenViewer] = useState(false);
-  const [viewArticleId, setViewArticleId] = useState<string>();
+  const [viewArticle, setViewArticle] = useState<TreeNodeData>();
 
   const save = (data?: ListNodeData[]) => {
     console.debug("onSave", data);
@@ -163,10 +160,6 @@ const EditableTocTreeWidget = ({
             return;
           }
         }}
-        onNodeEdit={(key: string) => {
-          setArticleId(key);
-          setOpenEditor(true);
-        }}
         onTitleClick={(
           e: React.MouseEvent<HTMLElement, MouseEvent>,
           node: TreeNodeData
@@ -174,33 +167,39 @@ const EditableTocTreeWidget = ({
           if (e.ctrlKey || e.metaKey) {
             window.open(fullUrl(`/article/article/${node.id}`), "_blank");
           } else {
-            setViewArticleId(node.id);
+            setViewArticle(node);
             setOpenViewer(true);
           }
         }}
       />
-      <ArticleEditDrawer
-        anthologyId={anthologyId}
-        articleId={articleId}
-        open={openEditor}
-        onClose={() => setOpenEditor(false)}
-        onChange={(data: IArticleDataResponse) => {
-          console.log("new title", data.title);
+      <ArticleDrawer
+        articleId={viewArticle?.id}
+        type="article"
+        open={openViewer}
+        title={viewArticle?.title_text}
+        onClose={() => setOpenViewer(false)}
+        onArticleEdit={(value: IArticleDataResponse) => {
           setUpdatedArticle({
             key: randomString(),
-            id: data.uid,
-            title: data.title,
-            title_text: data.title_text ? data.title_text : data.title,
+            id: value.uid,
+            title: value.title,
+            title_text: value.title_text,
             level: 0,
             children: [],
           });
         }}
-      />
-      <ArticleDrawer
-        articleId={viewArticleId}
-        type="article"
-        open={openViewer}
-        onClose={() => setOpenViewer(false)}
+        onTitleChange={(value: string) => {
+          if (viewArticle?.id) {
+            setUpdatedArticle({
+              key: randomString(),
+              id: viewArticle?.id,
+              title: value,
+              title_text: value,
+              level: 0,
+              children: [],
+            });
+          }
+        }}
       />
     </div>
   );
