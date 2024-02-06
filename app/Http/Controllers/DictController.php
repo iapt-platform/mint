@@ -31,6 +31,7 @@ class DictController extends Controller
         $wordDataOutput = [];
         $dictListOutput = [];
         $caseListOutput = [];
+        $wordDataPass = [];
 		$indexCol = ['word','note','dict_id'];
         $words = [];
         $word_base = [];
@@ -57,6 +58,7 @@ class DictController extends Controller
         for ($i=0; $i < 2; $i++) {
             # code...
             $word_base = [];
+            $wordDataOutput = [];
             foreach ($words as $word => $case) {
                 # code...
                 $searched[] = $word;
@@ -170,15 +172,20 @@ class DictController extends Controller
                     }
                 }
             }
+
+            $wordDataPass[] = ['pass'=>$i+1,'words'=>$wordDataOutput];
+
             if(count($word_base)===0){
                 break;
             }else{
                 $words = $word_base;
             }
+
         }
 
-        if($resultCount<3){
+        if($resultCount<2){
             //查询内文
+            $wordDataOutput = [];
             $table = UserDict::select($indexCol)
                                 ->where('note','like','%'.$word.'%')
                                 ->where('language','<>','my')
@@ -210,11 +217,12 @@ class DictController extends Controller
                 ];
                 $wordData['dict'][] = $currData;
             }
-            $wordDataOutput[]=$wordData;
+            $wordDataOutput[] = $wordData;
+            $wordDataPass[] = ['pass'=>0,'words'=>$wordDataOutput];
         }
 
 
-        $output['words'] = $wordDataOutput;
+        $output['words'] = $wordDataPass;
         $output['dictlist'] = $dictListOutput;
         $output['caselist'] = $caseListOutput;
 

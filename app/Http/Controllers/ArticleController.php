@@ -396,7 +396,7 @@ class ArticleController extends Controller
             }
         });
         if(Str::isUuid($newArticle->uid)){
-            return $this->ok($newArticle);
+            return $this->ok(new ArticleResource($newArticle));
         }else{
             return $this->error('fail');
         }
@@ -520,7 +520,7 @@ class ArticleController extends Controller
         $article->save();
 
         OpsLog::debug($user_uid,$article);
-        return $this->ok($article);
+        return $this->ok(new ArticleResource($article));
     }
 
     /**
