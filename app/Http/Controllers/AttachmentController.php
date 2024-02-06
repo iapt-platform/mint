@@ -21,7 +21,7 @@ class AttachmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
 		switch ($request->get('view')) {
@@ -34,7 +34,7 @@ class AttachmentController extends Controller
                 if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))){
                     return $this->error(__('auth.failed'));
                 }
-                $table = Attachment::where('studio_id', $user["user_uid"]);
+                $table = Attachment::where('owner_uid', $user["user_uid"]);
                 break;
             default:
                 return $this->error("error view",[],200);
@@ -42,6 +42,9 @@ class AttachmentController extends Controller
         }
         if($request->has('search')){
             $table = $table->where('title', 'like', $request->get('search')."%");
+        }
+        if($request->has('content_type')){
+            $table = $table->where('content_type', 'like', $request->get('content_type')."%");
         }
         $count = $table->count();
         $table = $table->orderBy($request->get('order','updated_at'),
@@ -170,6 +173,14 @@ class AttachmentController extends Controller
     public function update(Request $request, Attachment $attachment)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'),401,401);
+        }
+
+        $attachment->title = $request->get('title');
+        $attachment->save();
+        return $this->ok(new AttachmentResource($attachment));
     }
 
     /**
@@ -204,15 +215,18 @@ class AttachmentController extends Controller
         if(!$res){
             return $this->error('no res');
         }
-        if($user['user_uid']!==$res->user_uid){
+        if($user['user_uid'] !== $res->user_uid){
             return $this->error(__('auth.failed'),403,403);
         }
-        $del = $res->delete();
+
         //删除文件
-        $path_parts = pathinfo($request->get('name'));
-        Storage::delete($request->get('name'));
-        Storage::delete($path_parts['dirname'].'/'.$path_parts['filename'].'_m.jpg');
-        Storage::delete($path_parts['dirname'].'/'.$path_parts['filename'].'_s.jpg');
+        $filename = $res->bucket . '/' . $res->name;
+        $path_parts = pathinfo($res->name);
+        Storage::delete($filename);
+        Storage::delete($res->bucket.'/'.$path_parts['filename'].'_m.jpg');
+        Storage::delete($res->bucket.'/'.$path_parts['filename'].'_s.jpg');
+
+        $del = $res->delete();
         return $this->ok($del);
     }
 }
