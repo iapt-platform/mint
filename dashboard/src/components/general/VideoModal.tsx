@@ -1,25 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "antd";
 import Video from "./Video";
 
 interface IWidget {
   src?: string;
   type?: string;
+  open?: boolean;
   trigger?: JSX.Element;
+  onOpenChange?: Function;
 }
-export const VideoModalWidget = ({ src, type, trigger }: IWidget) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+export const VideoModalWidget = ({
+  src,
+  type,
+  open = false,
+  trigger,
+  onOpenChange,
+}: IWidget) => {
+  //TODO 跟video ctl 合并
+  const [isModalOpen, setIsModalOpen] = useState(open);
+
+  useEffect(() => setIsModalOpen(open), [open]);
 
   const showModal = () => {
     setIsModalOpen(true);
+    if (typeof onOpenChange !== "undefined") {
+      onOpenChange(true);
+    }
   };
 
-  const handleOk = () => {
+  const handleClose = () => {
     setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
+    if (typeof onOpenChange !== "undefined") {
+      onOpenChange(false);
+    }
   };
 
   return (
@@ -30,8 +43,8 @@ export const VideoModalWidget = ({ src, type, trigger }: IWidget) => {
         title="Basic Modal"
         footer={false}
         open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        onOk={handleClose}
+        onCancel={handleClose}
         width={800}
         destroyOnClose
         maskClosable={false}
