@@ -8,6 +8,7 @@ import {
   Modal,
   Typography,
   Image,
+  Segmented,
 } from "antd";
 import {
   PlusOutlined,
@@ -16,6 +17,8 @@ import {
   AudioOutlined,
   FileImageOutlined,
   MoreOutlined,
+  BarsOutlined,
+  AppstoreOutlined,
 } from "@ant-design/icons";
 
 import { ActionType, ProList } from "@ant-design/pro-components";
@@ -61,6 +64,7 @@ const AttachmentWidget = ({ studioName, view = "studio" }: IWidget) => {
   const [importOpen, setImportOpen] = useState(false);
   const [imgVisible, setImgVisible] = useState(false);
   const [imgPrev, setImgPrev] = useState<string>();
+  const [list, setList] = useState("list");
 
   const [videoVisible, setVideoVisible] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string>();
@@ -168,6 +172,13 @@ const AttachmentWidget = ({ studioName, view = "studio" }: IWidget) => {
             },
             editable: false,
             search: false,
+          },
+          content: {
+            editable: false,
+            search: false,
+            render: (dom, entity, index, action, schema) => {
+              return list === "list" ? <></> : <Image src={entity.url} />;
+            },
           },
           avatar: {
             editable: false,
@@ -351,8 +362,23 @@ const AttachmentWidget = ({ studioName, view = "studio" }: IWidget) => {
         options={{
           search: true,
         }}
+        grid={list === "list" ? undefined : { gutter: 16, column: 3 }}
         headerTitle=""
         toolBarRender={() => [
+          <Segmented
+            options={[
+              { label: "List", value: "list", icon: <BarsOutlined /> },
+              {
+                label: "Thumbnail",
+                value: "thumbnail",
+                icon: <AppstoreOutlined />,
+              },
+            ]}
+            onChange={(value) => {
+              console.log(value); // string
+              setList(value.toString());
+            }}
+          />,
           <Button
             key="button"
             icon={<PlusOutlined />}
