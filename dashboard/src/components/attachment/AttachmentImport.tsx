@@ -1,11 +1,12 @@
 import { Modal, Upload, UploadProps, message } from "antd";
 import { useEffect, useState } from "react";
-import { InboxOutlined } from "@ant-design/icons";
+import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { API_HOST, delete_ } from "../../request";
 
 import { get as getToken } from "../../reducers/current-user";
 import { UploadFile } from "antd/es/upload/interface";
 import { IDeleteResponse } from "../api/Group";
+import modal from "antd/lib/modal";
 
 const { Dragger } = Upload;
 
@@ -70,10 +71,19 @@ const AttachmentImportWidget = ({
   };
 
   const handleCancel = () => {
-    setIsOpen(false);
-    if (typeof onOpenChange !== "undefined") {
-      onOpenChange(false);
-    }
+    modal.confirm({
+      title: "关闭上传窗口",
+      icon: <ExclamationCircleOutlined />,
+      content: "所有正在上传文件将取消上传。",
+      okText: "确认",
+      cancelText: "取消",
+      onOk: () => {
+        setIsOpen(false);
+        if (typeof onOpenChange !== "undefined") {
+          onOpenChange(false);
+        }
+      },
+    });
   };
 
   return (
@@ -82,6 +92,7 @@ const AttachmentImportWidget = ({
       width={700}
       title="Upload"
       footer={false}
+      maskClosable={false}
       open={isOpen}
       onOk={handleOk}
       onCancel={handleCancel}
