@@ -1,13 +1,28 @@
 import { Modal, Upload, UploadProps, message } from "antd";
 import { useEffect, useState } from "react";
-import { InboxOutlined } from "@ant-design/icons";
+import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { API_HOST, delete_ } from "../../request";
 
 import { get as getToken } from "../../reducers/current-user";
 import { UploadFile } from "antd/es/upload/interface";
 import { IDeleteResponse } from "../api/Group";
+import modal from "antd/lib/modal";
 
 const { Dragger } = Upload;
+
+export const deleteRes = (id: string) => {
+  const url = `/v2/attachment/${id}`;
+  console.info("attachment delete url", url);
+  delete_<IDeleteResponse>(url)
+    .then((json) => {
+      if (json.ok) {
+        message.success("删除成功");
+      } else {
+        message.error(json.message);
+      }
+    })
+    .catch((e) => console.log("Oops errors!", e));
+};
 
 interface IWidget {
   replaceId?: string;
@@ -27,7 +42,7 @@ const AttachmentImportWidget = ({
     name: "file",
     listType: "picture",
     multiple: replaceId ? false : true,
-    action: `${API_HOST}/api/v2/attachment`,
+    action: `${API_HOST}/api/v2/attachment?id=${replaceId}`,
     headers: {
       Authorization: `Bearer ${getToken()}`,
     },
@@ -47,17 +62,7 @@ const AttachmentImportWidget = ({
     },
     onRemove: (file: UploadFile<any>): boolean => {
       console.log("remove", file);
-      const url = `/v2/attachment/${file.response.data.id}`;
-      console.info("avatar delete url", url);
-      delete_<IDeleteResponse>(url)
-        .then((json) => {
-          if (json.ok) {
-            message.success("删除成功");
-          } else {
-            message.error(json.message);
-          }
-        })
-        .catch((e) => console.log("Oops errors!", e));
+      deleteRes(file.response.data.id);
       return true;
     },
   };
@@ -70,10 +75,19 @@ const AttachmentImportWidget = ({
   };
 
   const handleCancel = () => {
-    setIsOpen(false);
-    if (typeof onOpenChange !== "undefined") {
-      onOpenChange(false);
-    }
+    modal.confirm({
+      title: "关闭上传窗口",
+      icon: <ExclamationCircleOutlined />,
+      content: "所有正在上传文件将取消上传。",
+      okText: "确认",
+      cancelText: "取消",
+      onOk: () => {
+        setIsOpen(false);
+        if (typeof onOpenChange !== "undefined") {
+          onOpenChange(false);
+        }
+      },
+    });
   };
 
   return (
@@ -82,6 +96,7 @@ const AttachmentImportWidget = ({
       width={700}
       title="Upload"
       footer={false}
+      maskClosable={false}
       open={isOpen}
       onOk={handleOk}
       onCancel={handleCancel}

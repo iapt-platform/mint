@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, Popover, Space, Typography } from "antd";
+import { Popover, Space, Tooltip, Typography } from "antd";
 import {
   TagTwoTone,
   InfoCircleOutlined,
@@ -164,28 +164,36 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
           setHasComment(false);
         }
       }}
+      onAttachmentSelectOpen={(open: boolean) => {
+        setPopOpen(!open);
+      }}
     />
   );
 
-  const noteIcon = () =>
-    data.note?.value ? (
+  const NoteIcon = () => {
+    return data.note?.value ? (
       data.note.value.trim() !== "" ? (
         <Popover content={data.note?.value} placement="bottom">
           <InfoCircleOutlined style={{ color: "blue" }} />
         </Popover>
-      ) : undefined
-    ) : undefined;
+      ) : (
+        <></>
+      )
+    ) : (
+      <></>
+    );
+  };
 
   const color = data.bookMarkColor?.value
     ? bookMarkColor[data.bookMarkColor.value]
     : "white";
 
   //生成视频播放按钮
-  const videoList = data.attachments?.filter((item) =>
-    item.content_type?.includes("video")
-  );
-  const videoIcon = () =>
-    videoList ? (
+  const VideoIcon = () => {
+    const videoList = data.attachments?.filter((item) =>
+      item.content_type?.includes("video")
+    );
+    return videoList ? (
       <WbwVideoButton
         video={videoList?.map((item) => {
           return {
@@ -198,19 +206,28 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
     ) : (
       <></>
     );
+  };
 
-  const relationIcon = () =>
-    data.relation ? <ApartmentOutlined style={{ color: "blue" }} /> : undefined;
+  const RelationIcon = () => {
+    return data.relation ? (
+      <ApartmentOutlined style={{ color: "blue" }} />
+    ) : (
+      <></>
+    );
+  };
 
-  const bookMarkIcon = () =>
-    data.bookMarkText?.value && data.bookMarkText.value.trim() !== "" ? (
+  const BookMarkIcon = () => {
+    return data.bookMarkText?.value && data.bookMarkText.value.trim() !== "" ? (
       <Popover
         content={<Paragraph copyable>{data.bookMarkText.value}</Paragraph>}
         placement="bottom"
       >
         <TagTwoTone twoToneColor={color} />
       </Popover>
-    ) : undefined;
+    ) : (
+      <></>
+    );
+  };
 
   let classPali: string = "pali";
   switch (data.style?.value) {
@@ -278,14 +295,16 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
     display: "inline-block",
   };
 
-  const discussionIcon = () =>
-    hasComment ? (
+  const DiscussionIcon = () => {
+    return hasComment ? (
       <div style={commentShellStyle}>
         <CommentBox
           resId={data.uid}
           resType="wbw"
           trigger={
-            <Button icon={<CommentOutlinedIcon />} type="text" title="讨论" />
+            <Tooltip title="讨论">
+              <CommentOutlinedIcon style={{ cursor: "pointer" }} />
+            </Tooltip>
           }
           onCommentCountChange={(count: number) => {
             if (count > 0) {
@@ -299,6 +318,7 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
     ) : (
       <></>
     );
+  };
 
   if (typeof data.real !== "undefined" && data.real.value !== "") {
     //非标点符号
@@ -354,11 +374,11 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
           </Popover>
         </span>
         <Space>
-          {videoIcon()}
-          {noteIcon()}
-          {bookMarkIcon()}
-          {relationIcon()}
-          {discussionIcon()}
+          <VideoIcon />
+          <NoteIcon />
+          <BookMarkIcon />
+          <RelationIcon />
+          <DiscussionIcon />
         </Space>
       </div>
     );

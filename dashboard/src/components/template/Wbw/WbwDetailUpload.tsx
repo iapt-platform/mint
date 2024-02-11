@@ -1,18 +1,31 @@
 import { useIntl } from "react-intl";
-import { UploadOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
-import { Button, message, Upload } from "antd";
+import { Button, List, message, Upload } from "antd";
 
 import { API_HOST } from "../../../request";
-import { get as getToken } from "../../../reducers/current-user";
-import { IWbw } from "./WbwWord";
+import { currentUser, get as getToken } from "../../../reducers/current-user";
+import { IWbw, IWbwAttachment } from "./WbwWord";
+import AttachmentDialog from "../../attachment/AttachmentDialog";
+import { useAppSelector } from "../../../hooks";
+import { useState } from "react";
+import { IAttachmentRequest } from "../../api/Attachments";
 
 interface IWidget {
   data: IWbw;
   onUpload?: Function;
+  onChange?: Function;
+  onDialogOpen?: Function;
 }
-const WbwDetailUploadWidget = ({ data, onUpload }: IWidget) => {
+const WbwDetailUploadWidget = ({
+  data,
+  onUpload,
+  onChange,
+  onDialogOpen,
+}: IWidget) => {
   const intl = useIntl();
+  const user = useAppSelector(currentUser);
+  const attachments = data.attachments;
 
   const props: UploadProps = {
     name: "file",
@@ -46,12 +59,61 @@ const WbwDetailUploadWidget = ({ data, onUpload }: IWidget) => {
     },
   };
 
+  /**
+   *       <Upload {...props}>
+        <Button icon={<UploadOutlined />}>
+          {intl.formatMessage({ id: "buttons.click.upload" })}
+        </Button>
+      </Upload>
+   */
   return (
-    <Upload {...props}>
-      <Button icon={<UploadOutlined />}>
-        {intl.formatMessage({ id: "buttons.click.upload" })}
-      </Button>
-    </Upload>
+    <>
+      <List
+        itemLayout="vertical"
+        size="small"
+        header={
+          <AttachmentDialog
+            trigger={<Button>上传</Button>}
+            studioName={user?.realName}
+            onOpenChange={(open: boolean) => {
+              if (typeof onDialogOpen !== "undefined") {
+                onDialogOpen(open);
+              }
+            }}
+            onSelect={(value: IAttachmentRequest) => {
+              if (typeof onUpload !== "undefined") {
+                onUpload([value]);
+              }
+            }}
+          />
+        }
+        dataSource={attachments}
+        renderItem={(item, id) => (
+          <List.Item>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div style={{ maxWidth: 400, overflowX: "hidden" }}>
+                {item.title}
+              </div>
+              <div style={{ marginLeft: 20 }}>
+                <Button
+                  type="link"
+                  size="small"
+                  icon={<DeleteOutlined />}
+                  onClick={() => {
+                    const output = data.attachments?.filter(
+                      (value: IWbwAttachment, index: number) => index !== id
+                    );
+                    if (typeof onChange !== "undefined") {
+                      onChange(output);
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          </List.Item>
+        )}
+      />
+    </>
   );
 };
 
