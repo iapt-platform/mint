@@ -4,7 +4,6 @@ import { CloseOutlined } from "@ant-design/icons";
 import { FullscreenOutlined, FullscreenExitOutlined } from "@ant-design/icons";
 
 import { IChannel } from "../channel/Channel";
-import ChannelPickerTable from "../channel/ChannelPickerTable";
 import DictComponent from "../dict/DictComponent";
 import { ArticleType } from "./Article";
 import { useAppSelector } from "../../hooks";
