@@ -33,7 +33,25 @@ class AttachmentResource extends JsonResource
         if (App::environment('local')) {
             $data['url'] = Storage::url($filename);
         }else{
-            $data['url'] = Storage::temporaryUrl($filename, now()->addDays(6));
+            $data['url'] = Storage::temporaryUrl($filename, now()->addDays(2));
+        }
+
+        $type = explode('/',$this->content_type);
+        if($type[0] === 'image' || $type[0] === 'video') {
+            $path_parts = pathinfo($this->name);
+            $small = $this->bucket.'/'.$path_parts['filename'] . '_s.jpg';
+            $middle = $this->bucket.'/'.$path_parts['filename'] . '_m.jpg';
+            if (App::environment('local')) {
+                $data['thumbnail'] = [
+                    'small'=>Storage::url($small),
+                    'middle'=>Storage::url($middle),
+                ];
+            }else{
+                $data['thumbnail'] = [
+                    'small' => Storage::temporaryUrl($small, now()->addDays(2)),
+                    'middle' => Storage::temporaryUrl($middle, now()->addDays(2)),
+                ];
+            }
         }
         return $data;
     }
