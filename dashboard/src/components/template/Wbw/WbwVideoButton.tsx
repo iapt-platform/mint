@@ -19,6 +19,9 @@ const WbwVideoButtonWidget = ({ video }: IWidget) => {
   const [curr, setCurr] = useState(0);
 
   useEffect(() => {
+    if (!video || video.length === 0) {
+      return;
+    }
     const url = `/v2/attachment/${video[curr].videoId}`;
     console.info("url", url);
     get<IAttachmentResponse>(url).then((json) => {
@@ -29,7 +32,7 @@ const WbwVideoButtonWidget = ({ video }: IWidget) => {
     });
   }, [curr, video]);
 
-  return video ? (
+  return video && video.length > 0 ? (
     <VideoModal src={url} type={video[0].type} trigger={<VideoIcon />} />
   ) : (
     <></>
