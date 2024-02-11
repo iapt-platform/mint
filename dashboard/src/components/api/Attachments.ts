@@ -6,6 +6,7 @@ export interface IAttachmentRequest {
   size: number;
   content_type: string;
   url: string;
+  thumbnail?: { small: string; middle: string };
   created_at?: string;
   updated_at?: string;
 }
