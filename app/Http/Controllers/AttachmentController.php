@@ -75,11 +75,22 @@ class AttachmentController extends Controller
             'file' => 'required',
         ]);
 
+        $isCreate = true;
+        if(Str::isUuid($request->get('id'))){
+            $attachment = Attachment::find($request->get('id'));
+            if(!$attachment){
+                return $this->error('no res');
+            }
+            $fileId = $attachment->id;
+            $isCreate = false;
+        }else{
+            $fileId = Str::uuid();
+        }
+
         $file = $request->file('file');
         $bucket = config('mint.attachments.bucket_name.permanent');
-        $fileId = Str::uuid();
-        $ext = $file->getClientOriginalExtension();
 
+        $ext = $file->getClientOriginalExtension();
 
         if($request->get('type') === 'avatar'){
             $resize = Image::make($file)->fit(512);
@@ -92,61 +103,71 @@ class AttachmentController extends Controller
         }else{
             //Move Uploaded File
             $name = $fileId.'.'.$ext;
+            if(!$isCreate){
+                //替换模式，先删除旧文件
+                Storage::delete($bucket.'/'.$name);
+            }
             $filename = $file->storeAs($bucket,$name);
         }
 
-        $attachment = new Attachment;
-        $attachment->id = $fileId;
+        if($isCreate){
+            $attachment = new Attachment;
+            $attachment->id = $fileId;
+            $attachment->bucket = $bucket;
+            if($request->has('studio')){
+                $owner_uid = StudioApi::getIdByName($request->get('studio'));
+            }else{
+                $owner_uid = $user['user_uid'];
+            }
+            if($owner_uid){
+                $attachment->owner_uid = $owner_uid;
+            }
+            $attachment->status = 'public';
+            $path_parts = pathinfo($file->getClientOriginalName());
+            $attachment->title = $path_parts['filename'];
+        }
+
         $attachment->user_uid = $user['user_uid'];
-        $attachment->bucket = $bucket;
         $attachment->name = $name;
         $attachment->filename = $file->getClientOriginalName();
-        $path_parts = pathinfo($file->getClientOriginalName());
-        $attachment->title = $path_parts['filename'];
         $attachment->size = $file->getSize();
         $attachment->content_type = $file->getMimeType();
-        $attachment->status = 'public';
-        if($request->has('studio')){
-            $owner_uid = StudioApi::getIdByName($request->get('studio'));
-        }else{
-            $owner_uid = $user['user_uid'];
-        }
-        if($owner_uid){
-            $attachment->owner_uid = $owner_uid;
-        }
         $attachment->save();
 
         $type = explode('/',$file->getMimeType());
         switch ($type[0]) {
             case 'image':
-                /*
-                $resize = Image::make($file)->fit(128);
-                Storage::disk('public')->put($bucket.'/'.$fileId.'_s.jpg',$resize->stream());
-                $resize = Image::make($file)->fit(256);
-                Storage::disk('public')->put($bucket.'/'.$fileId.'_m.jpg',$resize->stream());
-                $resize = Image::make($file)->fit(512);
-                Storage::disk('public')->put($bucket.'/'.$fileId.'_l.jpg',$resize->stream());
-                */
+                $thumbnail = Image::make($file);
                 break;
             case 'video':
-                //$path = public_path($filename);
-                //$ffmpeg = FFMpeg::create();
-                //$video = $ffmpeg->open(public_path($filename));
-                //$frame = $video->frame(FFMpeg\Coordinate\TimeCode::fromSeconds(1));
-                //$frame->save('image.jpg');
+                $tmpFile = $file->storeAs($bucket,$name,'local');
+                $path = storage_path('app/'.$tmpFile);
+                $ffmpeg = FFMpeg::create();
+                $video = $ffmpeg->open($path);
+                $frame = $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(1));
+                $screenShot = storage_path("app/tmp/{$fileId}.jpg");
+                $frame->save($screenShot);
+                $thumbnail = Image::make($screenShot);
                 break;
             default:
                 # code...
                 break;
         }
-        /*
-        $json = array(
-            'name' => $filename,
-            'size' => $file->getSize(),
-            'type' => $file->getMimeType(),
-            'url' => Storage::url($bucket.'/'.$name),
-            'uid' => $attachment->id,
-            );*/
+        if(isset($thumbnail)){
+            //生成缩略图
+            $thumbnail->resize(256, 256, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            Storage::put($bucket.'/'.$fileId.'_m.jpg',$thumbnail->stream());
+            $thumbnail->resize(128, 128, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            Storage::put($bucket.'/'.$fileId.'_s.jpg',$thumbnail->stream());
+            //销毁图片资源
+            $thumbnail->destroy();
+        }
+
+
         return $this->ok(new AttachmentResource($attachment));
 
     }
