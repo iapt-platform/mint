@@ -8,7 +8,13 @@ import { useIntl } from "react-intl";
 
 const { Text } = Typography;
 
-export type TDisplayStyle = "modal" | "card" | "toggle" | "link" | "window";
+export type TDisplayStyle =
+  | "modal"
+  | "card"
+  | "toggle"
+  | "link"
+  | "window"
+  | "popover";
 interface IWidgetChapterCtl {
   type?: ArticleType;
   id?: string;
