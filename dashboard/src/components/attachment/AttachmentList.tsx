@@ -36,9 +36,10 @@ import {
   IAttachmentUpdate,
 } from "../api/Attachments";
 import { VideoIcon } from "../../assets/icon";
-import AttachmentImport from "./AttachmentImport";
+import AttachmentImport, { deleteRes } from "./AttachmentImport";
 import VideoModal from "../general/VideoModal";
 import FileSize from "../general/FileSize";
+import modal from "antd/lib/modal";
 
 const { Text } = Typography;
 
@@ -57,8 +58,15 @@ interface IParams {
 interface IWidget {
   studioName?: string;
   view?: "studio" | "all";
+  multiSelect?: boolean;
+  onClick?: Function;
 }
-const AttachmentWidget = ({ studioName, view = "studio" }: IWidget) => {
+const AttachmentWidget = ({
+  studioName,
+  view = "studio",
+  multiSelect = false,
+  onClick,
+}: IWidget) => {
   const intl = useIntl();
   const [replaceId, setReplaceId] = useState<string>();
   const [importOpen, setImportOpen] = useState(false);
@@ -125,6 +133,17 @@ const AttachmentWidget = ({ studioName, view = "studio" }: IWidget) => {
             return res.ok;
           },
         }}
+        ghost={list === "list" ? false : true}
+        onItem={(record: IAttachmentRequest, index: number) => {
+          return {
+            onClick: (event) => {
+              // 点击行
+              if (typeof onClick !== "undefined") {
+                onClick(record);
+              }
+            },
+          };
+        }}
         metas={{
           title: {
             dataIndex: "title",
@@ -173,13 +192,27 @@ const AttachmentWidget = ({ studioName, view = "studio" }: IWidget) => {
             editable: false,
             search: false,
           },
-          content: {
-            editable: false,
-            search: false,
-            render: (dom, entity, index, action, schema) => {
-              return list === "list" ? <></> : <Image src={entity.url} />;
-            },
-          },
+          content:
+            list === "list"
+              ? undefined
+              : {
+                  editable: false,
+                  search: false,
+                  render: (dom, entity, index, action, schema) => {
+                    const thumbnail = entity.thumbnail
+                      ? entity.thumbnail.middle
+                      : entity.url;
+
+                    return (
+                      <Image
+                        src={thumbnail}
+                        preview={{
+                          src: entity.url,
+                        }}
+                      />
+                    );
+                  },
+                },
           avatar: {
             editable: false,
             search: false,
@@ -218,6 +251,7 @@ const AttachmentWidget = ({ studioName, view = "studio" }: IWidget) => {
                     items: [
                       { label: "替换", key: "replace" },
                       { label: "引用模版", key: "tpl" },
+                      { label: "删除", key: "delete", danger: true },
                     ],
                     onClick: (e) => {
                       console.log("click ", e.key);
@@ -226,7 +260,24 @@ const AttachmentWidget = ({ studioName, view = "studio" }: IWidget) => {
                           setReplaceId(row.id);
                           setImportOpen(true);
                           break;
-
+                        case "delete":
+                          modal.confirm({
+                            title: intl.formatMessage({
+                              id: "message.delete.confirm",
+                            }),
+                            icon: <ExclamationCircleOutlined />,
+                            content: intl.formatMessage({
+                              id: "message.irrevocable",
+                            }),
+                            okText: "确认",
+                            cancelText: "取消",
+                            okType: "danger",
+                            onOk: () => {
+                              deleteRes(row.id);
+                              ref.current?.reload();
+                            },
+                          });
+                          break;
                         default:
                           break;
                       }
@@ -268,11 +319,13 @@ const AttachmentWidget = ({ studioName, view = "studio" }: IWidget) => {
         rowSelection={
           view === "all"
             ? undefined
-            : {
+            : multiSelect
+            ? {
                 // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
                 // 注释该行则默认不显示下拉选项
                 selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
               }
+            : undefined
         }
         tableAlertRender={
           view === "all"
