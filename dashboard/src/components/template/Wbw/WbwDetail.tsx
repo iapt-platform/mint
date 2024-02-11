@@ -3,7 +3,7 @@ import { useIntl } from "react-intl";
 import { Dropdown, Tabs, Divider, Button, Switch, Rate } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
 
-import { IWbw, IWbwField, TFieldName } from "./WbwWord";
+import { IWbw, IWbwAttachment, IWbwField, TFieldName } from "./WbwWord";
 import WbwDetailBasic from "./WbwDetailBasic";
 import WbwDetailBookMark from "./WbwDetailBookMark";
 import WbwDetailNote from "./WbwDetailNote";
@@ -14,7 +14,7 @@ import {
   UnLockIcon,
 } from "../../../assets/icon";
 import { UploadFile } from "antd/es/upload/interface";
-import { IAttachmentResponse } from "../../api/Attachments";
+import { IAttachmentRequest, IAttachmentResponse } from "../../api/Attachments";
 import WbwDetailAttachment from "./WbwDetailAttachment";
 import CommentBox from "../../discussion/DiscussionDrawer";
 
@@ -23,12 +23,14 @@ interface IWidget {
   onClose?: Function;
   onSave?: Function;
   onCommentCountChange?: Function;
+  onAttachmentSelectOpen?: Function;
 }
 const WbwDetailWidget = ({
   data,
   onClose,
   onSave,
   onCommentCountChange,
+  onAttachmentSelectOpen,
 }: IWidget) => {
   const intl = useIntl();
   const [currWbwData, setCurrWbwData] = useState<IWbw>(
@@ -193,22 +195,28 @@ const WbwDetailWidget = ({
               <div style={{ minHeight: 270 }}>
                 <WbwDetailAttachment
                   data={currWbwData}
-                  onChange={(e: IWbwField) => {
-                    fieldChanged(e.field, e.value);
-                  }}
-                  onUpload={(fileList: UploadFile<IAttachmentResponse>[]) => {
+                  onUpload={(fileList: IAttachmentRequest[]) => {
                     let mData = JSON.parse(JSON.stringify(currWbwData));
                     mData.attachments = fileList.map((item) => {
                       return {
-                        id: item.response ? item.response?.data.id : item.uid,
-                        title: item.name,
+                        id: item.id,
+                        title: item.title,
                         size: item.size ? item.size : 0,
-                        content_type: item.response
-                          ? item.response?.data.content_type
-                          : "",
+                        content_type: item.content_type,
                       };
                     });
                     setCurrWbwData(mData);
+                  }}
+                  onDialogOpen={(open: boolean) => {
+                    if (typeof onAttachmentSelectOpen !== "undefined") {
+                      onAttachmentSelectOpen(open);
+                    }
+                  }}
+                  onChange={(value: IWbwAttachment[]) => {
+                    let mData = JSON.parse(JSON.stringify(currWbwData));
+                    mData.attachments = value;
+                    setCurrWbwData(mData);
+                    //fieldChanged(e.field, e.value);
                   }}
                 />
               </div>
