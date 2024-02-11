@@ -46,7 +46,7 @@ export const VideoModalWidget = ({
         onOk={handleClose}
         onCancel={handleClose}
         width={800}
-        destroyOnClose
+        destroyOnClose={false}
         maskClosable={false}
         mask={false}
       >
