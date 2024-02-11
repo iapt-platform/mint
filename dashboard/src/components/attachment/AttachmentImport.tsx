@@ -10,6 +10,20 @@ import modal from "antd/lib/modal";
 
 const { Dragger } = Upload;
 
+export const deleteRes = (id: string) => {
+  const url = `/v2/attachment/${id}`;
+  console.info("attachment delete url", url);
+  delete_<IDeleteResponse>(url)
+    .then((json) => {
+      if (json.ok) {
+        message.success("删除成功");
+      } else {
+        message.error(json.message);
+      }
+    })
+    .catch((e) => console.log("Oops errors!", e));
+};
+
 interface IWidget {
   replaceId?: string;
   open?: boolean;
@@ -28,7 +42,7 @@ const AttachmentImportWidget = ({
     name: "file",
     listType: "picture",
     multiple: replaceId ? false : true,
-    action: `${API_HOST}/api/v2/attachment`,
+    action: `${API_HOST}/api/v2/attachment?id=${replaceId}`,
     headers: {
       Authorization: `Bearer ${getToken()}`,
     },
@@ -48,17 +62,7 @@ const AttachmentImportWidget = ({
     },
     onRemove: (file: UploadFile<any>): boolean => {
       console.log("remove", file);
-      const url = `/v2/attachment/${file.response.data.id}`;
-      console.info("avatar delete url", url);
-      delete_<IDeleteResponse>(url)
-        .then((json) => {
-          if (json.ok) {
-            message.success("删除成功");
-          } else {
-            message.error(json.message);
-          }
-        })
-        .catch((e) => console.log("Oops errors!", e));
+      deleteRes(file.response.data.id);
       return true;
     },
   };
