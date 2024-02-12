@@ -96,29 +96,31 @@ class AuthController extends Controller
     }
     public function getUserInfoByToken(Request $request){
         $curr = AuthApi::current($request);
-        if($curr){
-            $userInfo = UserInfo::where('userid',$curr['user_uid'])
-                            ->first();
-            $user = [
-                "id"=>$curr['user_uid'],
-                "nickName"=> $userInfo->nickname,
-                "realName"=> $userInfo->username,
-                "avatar"=> "",
-                "roles"=> [],
-                "token"=>\substr($request->header('Authorization'),7) ,
-            ];
-            if($userInfo->avatar){
-                $img = str_replace('.jpg','_s.jpg',$userInfo->avatar);
-                if (App::environment('local')) {
-                    $user['avatar'] = Storage::url($img);
-                }else{
-                    $user['avatar'] = Storage::temporaryUrl($img, now()->addDays(6));
-                }
-            }
-            return $this->ok($user);
-        }else{
-            return $this->error('invalid token',[401],401);
+        if(!$curr){
+            return $this->error('invalid token',401,401);
         }
+        $userInfo = UserInfo::where('userid',$curr['user_uid'])
+                        ->first();
+        $user = [
+            "id"=>$curr['user_uid'],
+            "nickName"=> $userInfo->nickname,
+            "realName"=> $userInfo->username,
+            "avatar"=> "",
+            "roles"=> json_decode($userInfo->role),
+            "token"=>\substr($request->header('Authorization'),7) ,
+        ];
+        if($curr['user_uid'] === config('mint.admin.root_uuid')){
+            $user['roles'] = ['root'];
+        }
+        if($userInfo->avatar){
+            $img = str_replace('.jpg','_s.jpg',$userInfo->avatar);
+            if (App::environment('local')) {
+                $user['avatar'] = Storage::url($img);
+            }else{
+                $user['avatar'] = Storage::temporaryUrl($img, now()->addDays(6));
+            }
+        }
+        return $this->ok($user);
     }
 
 }

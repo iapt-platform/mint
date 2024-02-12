@@ -58,6 +58,13 @@ class TemplateRender{
             }
         }
     }
+    /**
+     * TODO 设置默认语言。在渲染某些内容的时候需要语言信息
+     */
+    public function setLang($lang){
+        $this->lang = $lang;
+        $this->langFamily = explode('-',$lang)[0];
+    }
     private function info($message,$debug){
         if(in_array($debug,$this->debug)){
             Log::info($message);

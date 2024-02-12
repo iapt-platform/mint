@@ -17,10 +17,13 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         $data = [
-            "id"=>$this->userid,
-            "userName"=> $this->username,
-            "nickName"=> $this->nickname,
-            "email"=> $this->email,
+            "id" => $this->userid,
+            "userName" => $this->username,
+            "nickName" => $this->nickname,
+            "email" => $this->email,
+            "role" => json_decode($this->role),
+            "created_at" => $this->created_at,
+            "updated_at" => $this->updated_at,
         ];
         if($this->avatar){
             $data['avatarName'] = $this->avatar;

@@ -22,9 +22,17 @@ class UserController extends Controller
                                 ->orWhere('nickname','like','%'.$request->get("key").'%');
 
                 break;
+
+            case 'all':
+                $table = UserInfo::where('id','>',0);
+                break;
+        }
+        if($request->has("search")){
+            $table->where('nickname', 'like', $request->get("search")."%");
         }
         $count = $table->count();
-        $table = $table->orderBy($request->get('order','username'),$request->get('dir','desc'));
+        $table = $table->orderBy($request->get('order','username'),
+                                 $request->get('dir','desc'));
         $table = $table->skip($request->get("offset",0))
                        ->take($request->get('limit',20));
         $result = $table->get();
@@ -67,9 +75,13 @@ class UserController extends Controller
     {
         //
         $user = UserInfo::where('userid',$id)->first();
-        $user->nickname = $request->get('nickName');
-        $user->avatar = $request->get('avatar');
-        $user->email = $request->get('email');
+        if($request->has('roles')){
+            $user->role = json_encode($request->get('roles'));
+        }else{
+            $user->nickname = $request->get('nickName');
+            $user->avatar = $request->get('avatar');
+            $user->email = $request->get('email');
+        }
         $user->save();
         return $this->ok(new UserResource($user));
     }
