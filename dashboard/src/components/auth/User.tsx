@@ -24,7 +24,9 @@ const UserWidget = ({
   return (
     <Space>
       {showAvatar ? (
-        <Avatar size="small">{nickName?.slice(0, 1)}</Avatar>
+        <Avatar size="small" src={avatar}>
+          {nickName?.slice(0, 2)}
+        </Avatar>
       ) : undefined}
       {showName ? nickName : undefined}
     </Space>
