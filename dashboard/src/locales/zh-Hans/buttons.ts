@@ -84,6 +84,7 @@ const items = {
   "buttons.open.in.new.tab": "在新标签页中打开",
   "buttons.add_to_anthology": "添加到文集",
   "buttons.open.in.studio": "在Studio中打开",
+  "buttons.admin": "后台管理",
 };
 
 export default items;

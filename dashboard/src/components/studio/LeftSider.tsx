@@ -9,6 +9,8 @@ import {
   HomeOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
 
 const { Sider } = Layout;
 
@@ -21,6 +23,8 @@ type IWidgetHeadBar = {
 };
 const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
   //Library head bar
+  const user = useAppSelector(currentUser);
+
   const intl = useIntl(); //i18n
   const { studioname } = useParams();
   const linkRecent = "/studio/" + studioname + "/recent/list";
@@ -146,6 +150,7 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
             </Link>
           ),
           key: "attachment",
+          disabled: user?.roles?.includes("uploader") ? false : true,
         },
         {
           label: (

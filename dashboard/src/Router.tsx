@@ -27,6 +27,10 @@ import AdminDictionaryList from "./pages/admin/dictionary/list";
 import AdminApi from "./pages/admin/api";
 import AdminApiDashboard from "./pages/admin/api/dashboard";
 
+import AdminUsers from "./pages/admin/users";
+import AdminUsersList from "./pages/admin/users/list";
+import AdminUsersShow from "./pages/admin/users/show";
+
 import LibraryHome from "./pages/library";
 
 import LibraryCommunity from "./pages/library/community";
@@ -151,6 +155,10 @@ const Widget = () => {
           </Route>
           <Route path="dictionary" element={<AdminDictionary />}>
             <Route path="list" element={<AdminDictionaryList />} />
+          </Route>
+          <Route path="users" element={<AdminUsers />}>
+            <Route path="list" element={<AdminUsersList />} />
+            <Route path="show/:id" element={<AdminUsersShow />} />
           </Route>
         </Route>
         <Route path="anonymous" element={<Anonymous />}>

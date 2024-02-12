@@ -16,6 +16,7 @@ export interface IUserRequest {
   nickName?: string;
   email?: string;
   avatar?: string;
+  roles?: string[];
 }
 
 export interface IUserListResponse {
@@ -26,7 +27,14 @@ export interface IUserListResponse {
     count: number;
   };
 }
-
+export interface IUserListResponse2 {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: IUserApiData[];
+    count: number;
+  };
+}
 export interface IUserResponse {
   ok: boolean;
   message: string;
@@ -40,6 +48,9 @@ export interface IUserApiData {
   email: string;
   avatar?: string;
   avatarName?: string;
+  role: string[];
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface IStudioApiResponse {

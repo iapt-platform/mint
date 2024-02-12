@@ -34,52 +34,54 @@ const AvatarWidget = ({ style, placement = "bottomRight" }: IWidget) => {
     setNickName(user?.nickName);
   }, [user]);
 
-  const UserCard = () => (
-    <ProCard
-      style={{ maxWidth: 500, minWidth: 300 }}
-      actions={[
-        <Tooltip
-          title={intl.formatMessage({
-            id: "buttons.setting",
-          })}
-        >
-          <SettingModal trigger={<SettingOutlined key="setting" />} />
-        </Tooltip>,
-        <Tooltip
-          title={intl.formatMessage({
-            id: "columns.library.blog.label",
-          })}
-        >
-          <Link to={`/blog/${userName}/overview`}>
-            <HomeOutlined key="home" />
-          </Link>
-        </Tooltip>,
-        <Tooltip
-          title={intl.formatMessage({
-            id: "buttons.sign-out",
-          })}
-        >
-          <LogoutOutlined
-            key="logout"
-            onClick={() => {
-              sessionStorage.removeItem("token");
-              localStorage.removeItem("token");
-              navigate("/anonymous/users/sign-in");
-            }}
-          />
-        </Tooltip>,
-      ]}
-    >
-      <div>
-        <Title level={4}>{nickName}</Title>
-        <div style={{ textAlign: "right" }}>
-          {intl.formatMessage({
-            id: "buttons.welcome",
-          })}
+  const UserCard = () => {
+    return (
+      <ProCard
+        style={{ maxWidth: 500, minWidth: 300 }}
+        actions={[
+          <Tooltip
+            title={intl.formatMessage({
+              id: "buttons.setting",
+            })}
+          >
+            <SettingModal trigger={<SettingOutlined key="setting" />} />
+          </Tooltip>,
+          <Tooltip
+            title={intl.formatMessage({
+              id: "columns.library.blog.label",
+            })}
+          >
+            <Link to={`/blog/${userName}/overview`}>
+              <HomeOutlined key="home" />
+            </Link>
+          </Tooltip>,
+          <Tooltip
+            title={intl.formatMessage({
+              id: "buttons.sign-out",
+            })}
+          >
+            <LogoutOutlined
+              key="logout"
+              onClick={() => {
+                sessionStorage.removeItem("token");
+                localStorage.removeItem("token");
+                navigate("/anonymous/users/sign-in");
+              }}
+            />
+          </Tooltip>,
+        ]}
+      >
+        <div>
+          <Title level={4}>{nickName}</Title>
+          <div style={{ textAlign: "right" }}>
+            {intl.formatMessage({
+              id: "buttons.welcome",
+            })}
+          </div>
         </div>
-      </div>
-    </ProCard>
-  );
+      </ProCard>
+    );
+  };
   const Login = () => <Link to="/anonymous/users/sign-in">登录</Link>;
   return (
     <>

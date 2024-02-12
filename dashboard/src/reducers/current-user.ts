@@ -39,7 +39,7 @@ export interface IUser {
   nickName: string;
   realName: string;
   avatar: string;
-  roles: string[];
+  roles: string[] | null;
 }
 
 interface IState {
@@ -70,9 +70,9 @@ export const slice = createSlice({
 export const { signIn, signOut, guest } = slice.actions;
 
 export const isRoot = (state: RootState): boolean =>
-  state.currentUser.payload?.roles.includes(ROLE_ROOT) || false;
+  state.currentUser.payload?.roles?.includes(ROLE_ROOT) || false;
 export const isAdministrator = (state: RootState): boolean =>
-  state.currentUser.payload?.roles.includes(ROLE_ADMINISTRATOR) || false;
+  state.currentUser.payload?.roles?.includes(ROLE_ADMINISTRATOR) || false;
 export const currentUser = (state: RootState): IUser | undefined =>
   state.currentUser.payload;
 export const isGuest = (state: RootState): boolean | undefined =>
