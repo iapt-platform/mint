@@ -14,16 +14,25 @@ import {
 
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
+import { TooltipPlacement } from "antd/lib/tooltip";
+import SettingModal from "./setting/SettingModal";
+import { AdminIcon } from "../../assets/icon";
 
 const { Title, Paragraph } = Typography;
 
-const SignInAvatarWidget = () => {
+interface IWidget {
+  placement?: TooltipPlacement;
+  style?: React.CSSProperties;
+}
+
+const SignInAvatarWidget = ({ style, placement = "bottomRight" }: IWidget) => {
   const intl = useIntl();
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>();
   const [nickName, setNickName] = useState<string>();
   const user = useAppSelector(_currentUser);
 
+  console.debug("user", user);
   useEffect(() => {
     setUserName(user?.realName);
     setNickName(user?.nickName);
@@ -44,8 +53,22 @@ const SignInAvatarWidget = () => {
                     id: "buttons.setting",
                   })}
                 >
-                  <SettingOutlined key="setting" />
+                  <SettingModal trigger={<SettingOutlined key="setting" />} />
                 </Tooltip>,
+                user.roles?.includes("root") ||
+                user.roles?.includes("administrator") ? (
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: "buttons.admin",
+                    })}
+                  >
+                    <Link to={`/admin`}>
+                      <AdminIcon />
+                    </Link>
+                  </Tooltip>
+                ) : (
+                  <></>
+                ),
                 <Tooltip
                   title={intl.formatMessage({
                     id: "columns.library.blog.label",
@@ -81,16 +104,18 @@ const SignInAvatarWidget = () => {
               </Paragraph>
             </ProCard>
           }
-          placement="bottomRight"
+          placement={placement}
         >
-          <Avatar
-            style={{ backgroundColor: "#87d068" }}
-            icon={<UserOutlined />}
-            src={user?.avatar}
-            size="small"
-          >
-            {nickName?.slice(0, 2)}
-          </Avatar>
+          <span style={style}>
+            <Avatar
+              style={{ backgroundColor: "#87d068" }}
+              icon={<UserOutlined />}
+              src={user?.avatar}
+              size="small"
+            >
+              {nickName?.slice(0, 2)}
+            </Avatar>
+          </span>
         </Popover>
       </>
     );
