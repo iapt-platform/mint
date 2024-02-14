@@ -44,7 +44,7 @@ const ArticleEditToolsWidget = ({
         />
       ) : undefined}
       <Link to={`/article/article/${articleId}`} target="_blank">
-        {intl.formatMessage({ id: "buttons.open.in.library" })}
+        {intl.formatMessage({ id: "buttons.open.in.tab" })}
       </Link>
       <ArticleTplModal
         title={title}
