@@ -307,7 +307,7 @@ const Widget = () => {
                   articleId={id}
                   channels={searchParams.get("channel")?.split("_")}
                   anthologyId={searchParams.get("anthology")}
-                  onSelect={(key: Key) => {
+                  onSelect={(key: Key, target?: string) => {
                     console.log("toc click", key);
                     const newType = type === "para" ? "chapter" : type;
                     let url = `/article/${newType}/${key}?`;
@@ -321,8 +321,12 @@ const Widget = () => {
                         }
                       }
                     });
-                    navigate(url + param.join("&"));
-                    scrollToTop();
+                    if (target === "_blank") {
+                      window.open(fullUrl(url + param.join("&")), target);
+                    } else {
+                      navigate(url + param.join("&"));
+                      scrollToTop();
+                    }
                   }}
                 />
                 <ToolButtonNav type={type} articleId={id} />
