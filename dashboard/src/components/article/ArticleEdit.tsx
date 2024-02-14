@@ -22,6 +22,7 @@ import PublicitySelect from "../../components/studio/PublicitySelect";
 import MDEditor from "@uiw/react-md-editor";
 import ArticlePrevDrawer from "../../components/article/ArticlePrevDrawer";
 import { IStudio } from "../auth/Studio";
+import ArticleEditTools from "./ArticleEditTools";
 
 interface IFormData {
   uid: string;
@@ -58,6 +59,7 @@ const ArticleEditWidget = ({
   const [content, setContent] = useState<string>();
   const [owner, setOwner] = useState<IStudio>();
   const formRef = useRef<ProFormInstance>();
+  const [title, setTitle] = useState<string>();
 
   return unauthorized ? (
     <Result
@@ -80,6 +82,14 @@ const ArticleEditWidget = ({
           }
         />
       ) : undefined}
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <span></span>
+        <ArticleEditTools
+          studioName={studioName}
+          articleId={articleId}
+          title={title}
+        />
+      </div>
       <ProForm<IFormData>
         formRef={formRef}
         onFinish={async (values: IFormData) => {
@@ -127,6 +137,7 @@ const ArticleEditWidget = ({
             setReadonly(mReadonly);
             mTitle = res.data.title;
             setContent(res.data.content);
+            setTitle(res.data.title);
           } else {
             setUnauthorized(true);
             mTitle = "无权访问";
