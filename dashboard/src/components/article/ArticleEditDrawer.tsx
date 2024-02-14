@@ -52,13 +52,6 @@ const ArticleEditDrawerWidget = ({
         onClose={onDrawerClose}
         open={openDrawer}
         destroyOnClose={true}
-        extra={
-          <ArticleEditTools
-            studioName={studioName}
-            articleId={articleId}
-            title={title}
-          />
-        }
       >
         <ArticleEdit
           anthologyId={anthologyId}
