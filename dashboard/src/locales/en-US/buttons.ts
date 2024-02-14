@@ -85,6 +85,7 @@ const items = {
   "buttons.add_to_anthology": "Add to Anthology",
   "buttons.open.in.studio": "Open in Studio",
   "buttons.admin": "admin",
+  "buttons.open.in.tab": "Open in New Tab",
 };
 
 export default items;
