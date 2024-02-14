@@ -45,9 +45,9 @@ const ToolButtonTocWidget = ({
         <AnthologyTocTree
           anthologyId={anthologyId}
           channels={channels}
-          onArticleSelect={(anthologyId: string, keys: string[]) => {
-            if (typeof onSelect !== "undefined" && keys.length > 0) {
-              onSelect(keys[0]);
+          onClick={(anthology: string, article: string, target: string) => {
+            if (typeof onSelect !== "undefined") {
+              onSelect(article, target);
             }
           }}
         />
