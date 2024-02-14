@@ -26,7 +26,11 @@ const StudioWidget = ({
 }: IWidget) => {
   let colorIndex = 0;
   if (data?.nickName) {
-    colorIndex = data?.nickName?.charCodeAt(0) % avatarColor.length;
+    let char = 0;
+    if (data.nickName.length > 1) {
+      char = data.nickName.length - 1;
+    }
+    colorIndex = data.nickName.charCodeAt(char) % avatarColor.length;
   }
 
   return (
