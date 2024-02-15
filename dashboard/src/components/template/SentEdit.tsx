@@ -183,6 +183,7 @@ export const SentEditInner = ({
         marginTop: 4,
         borderRadius: 6,
         backgroundColor: "rgb(255 255 255 / 8%)",
+        width: "100%",
       }}
       size="small"
     >
