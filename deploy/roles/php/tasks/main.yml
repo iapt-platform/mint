@@ -37,6 +37,18 @@
     dest: "{{ ansible_env.HOME }}/.local/bin/composer"
     mode: 0755
 
+- name: Maximum allowed size for uploaded files
+  ansible.builtin.lineinfile:
+    path: "/etc/php/{{ app_php_version }}/fpm"
+    line: "upload_max_filesize = 256M"
+    regexp: "^upload_max_filesize ="
+
+- name: Maximum size of POST data that will be accept
+  ansible.builtin.lineinfile:
+    path: "/etc/php/{{ app_php_version }}/fpm"
+    line: "post_max_size = 256M"
+    regexp: "^post_max_size ="
+
 - name: Restart php-fpm
   become: true
   ansible.builtin.systemd:
