@@ -4,14 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Attachment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\App;
+
 use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\AttachmentResource;
-use Illuminate\Support\Str;
+use App\Models\Attachment;
+
 use Intervention\Image\ImageManagerStatic as Image;
 use FFMpeg\FFMpeg;
+
 
 
 class AttachmentController extends Controller
@@ -142,7 +146,17 @@ class AttachmentController extends Controller
             case 'video':
                 $tmpFile = $file->storeAs($bucket,$name,'local');
                 $path = storage_path('app/'.$tmpFile);
-                $ffmpeg = FFMpeg::create();
+                if (App::environment('local')) {
+                    $ffmpeg = FFMpeg::create();
+                }else{
+                    $ffmpeg = FFMpeg::create(array(
+                        'ffmpeg.binaries' => '/usr/bin/ffmpeg',
+                        'ffprobe.binaries' => '/usr/bin/ffprobe',
+                        'timeout' => 3600,
+                        'ffmpeg.threads' => 1,
+                    ));
+                }
+
                 $video = $ffmpeg->open($path);
                 $frame = $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(1));
                 $screenShot = storage_path("app/tmp/{$fileId}.jpg");
