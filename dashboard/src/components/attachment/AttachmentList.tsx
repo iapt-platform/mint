@@ -40,6 +40,8 @@ import AttachmentImport, { deleteRes } from "./AttachmentImport";
 import VideoModal from "../general/VideoModal";
 import FileSize from "../general/FileSize";
 import modal from "antd/lib/modal";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
 
 const { Text } = Typography;
 
@@ -76,6 +78,10 @@ const AttachmentWidget = ({
 
   const [videoVisible, setVideoVisible] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string>();
+
+  const user = useAppSelector(currentUser);
+
+  const currStudio = studioName ? studioName : user?.realName;
 
   const showDeleteConfirm = (id: string[], title: string) => {
     Modal.confirm({
@@ -249,6 +255,7 @@ const AttachmentWidget = ({
                 <Dropdown
                   menu={{
                     items: [
+                      { label: "链接", key: "link" },
                       { label: "替换", key: "replace" },
                       { label: "引用模版", key: "tpl" },
                       { label: "删除", key: "delete", danger: true },
@@ -256,6 +263,12 @@ const AttachmentWidget = ({
                     onClick: (e) => {
                       console.log("click ", e.key);
                       switch (e.key) {
+                        case "link":
+                          const link = `/attachments/${row.filename}`;
+                          navigator.clipboard.writeText(link).then(() => {
+                            message.success("已经拷贝到剪贴板");
+                          });
+                          break;
                         case "replace":
                           setReplaceId(row.id);
                           setImportOpen(true);
@@ -378,7 +391,7 @@ const AttachmentWidget = ({
           let url = "/v2/attachment?";
           switch (view) {
             case "studio":
-              url += `view=studio&studio=${studioName}`;
+              url += `view=studio&studio=${currStudio}`;
               break;
             case "all":
               url += `view=all`;
