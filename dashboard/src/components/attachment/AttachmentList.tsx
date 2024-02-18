@@ -256,6 +256,13 @@ const AttachmentWidget = ({
                   menu={{
                     items: [
                       { label: "链接", key: "link" },
+                      {
+                        label: "Markdown",
+                        key: "markdown",
+                        disabled: row.content_type.includes("image")
+                          ? false
+                          : true,
+                      },
                       { label: "替换", key: "replace" },
                       { label: "引用模版", key: "tpl" },
                       { label: "删除", key: "delete", danger: true },
@@ -266,6 +273,12 @@ const AttachmentWidget = ({
                         case "link":
                           const link = `/attachments/${row.filename}`;
                           navigator.clipboard.writeText(link).then(() => {
+                            message.success("已经拷贝到剪贴板");
+                          });
+                          break;
+                        case "markdown":
+                          const markdown = `![${row.title}](/attachments/${row.filename})`;
+                          navigator.clipboard.writeText(markdown).then(() => {
                             message.success("已经拷贝到剪贴板");
                           });
                           break;
