@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SentenceInfoController;
 use App\Http\Controllers\WbwAnalysisController;
 use App\Http\Controllers\PageIndexController;
-
+use App\Http\Controllers\AssetsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +24,8 @@ Route::get('/', [PageIndexController::class,'index']);
 Route::get('/api/sentence/progress/image', [SentenceInfoController::class,'showprogress']);
 Route::get('/api/sentence/progress/daily/image', [SentenceInfoController::class,'showprogressdaily']);
 Route::get('/wbwanalyses', [WbwAnalysisController::class,'index']);
+Route::get('/attachments/{bucket}/{name}',[AssetsController::class,'show']);
+
 Route::get('/export/wbw', function (){
     return view('export_wbw',['sentences' => []]);
 });
