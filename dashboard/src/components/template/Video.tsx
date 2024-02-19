@@ -114,7 +114,7 @@ export const VideoCtl = ({
 
   const VideoCard = () => {
     return (
-      <Card title={title} bodyStyle={{ width: 550, height: 400 }}>
+      <Card title={title} bodyStyle={{ width: 550, height: 420 }}>
         <Video src={url} />
       </Card>
     );
@@ -122,7 +122,7 @@ export const VideoCtl = ({
 
   const VideoWindow = () => {
     return (
-      <div style={{ width: 550, height: 320 }}>
+      <div style={{ width: 550, height: 420 }}>
         <Video src={url} />
       </div>
     );
