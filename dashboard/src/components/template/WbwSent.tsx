@@ -1,6 +1,6 @@
 import { Button, Dropdown, message, Progress, Tree } from "antd";
 import { useEffect, useState } from "react";
-import { MoreOutlined } from "@ant-design/icons";
+import { MoreOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 
 import { useAppSelector } from "../../hooks";
 import { mode as _mode } from "../../reducers/article-mode";
@@ -21,8 +21,10 @@ import store from "../../store";
 import { settingInfo } from "../../reducers/setting";
 import { GetUserSetting } from "../auth/setting/default";
 import { getGrammar } from "../../reducers/term-vocabulary";
+import modal from "antd/lib/modal";
 
 export const paraMark = (wbwData: IWbw[]): IWbw[] => {
+  //处理段落标记，支持点击段落引用弹窗
   let start = false;
   let bookCode = "";
   let count = 0;
@@ -616,6 +618,45 @@ export const WbwSentCtl = ({
     );
   };
 
+  const resetWbw = () => {
+    const newData: IWbw[] = [];
+    let count = 0;
+    wordData.forEach((value: IWbw) => {
+      if (
+        value.type?.value !== null &&
+        value.type?.value !== ".ctl." &&
+        value.real.value &&
+        value.real.value.length > 0
+      ) {
+        count++;
+        newData.push({
+          uid: value.uid,
+          book: value.book,
+          para: value.para,
+          sn: value.sn,
+          word: value.word,
+          real: value.real,
+          style: value.style,
+          meaning: { value: "", status: 7 },
+          type: { value: "", status: 7 },
+          grammar: { value: "", status: 7 },
+          grammar2: { value: "", status: 7 },
+          parent: { value: "", status: 7 },
+          parent2: { value: "", status: 7 },
+          case: { value: "", status: 7 },
+          factors: { value: "", status: 7 },
+          factorMeaning: { value: "", status: 7 },
+          confidence: value.confidence,
+        });
+      } else {
+        newData.push(value);
+      }
+    });
+    message.info(`已经重置${count}个`);
+    update(newData);
+    updateWbwAll(newData);
+  };
+
   return (
     <div>
       <div
@@ -649,6 +690,13 @@ export const WbwSentCtl = ({
                   id: "buttons.copy.pali.text",
                 }),
               },
+              {
+                key: "reset",
+                label: intl.formatMessage({
+                  id: "buttons.reset.wbw",
+                }),
+                danger: true,
+              },
             ],
             onClick: ({ key }) => {
               console.log(`Click on item ${key}`);
@@ -671,6 +719,19 @@ export const WbwSentCtl = ({
                   break;
                 case "progress":
                   setShowProgress((origin) => !origin);
+                  break;
+                case "reset":
+                  modal.confirm({
+                    title: "清除逐词解析数据",
+                    icon: <ExclamationCircleOutlined />,
+                    content: "清除这个句子的逐词解析数据，此操作不可恢复",
+                    okText: "确认",
+                    cancelText: "取消",
+                    onOk: () => {
+                      resetWbw();
+                    },
+                  });
+
                   break;
               }
             },
