@@ -86,6 +86,7 @@ const items = {
   "buttons.open.in.studio": "Open in Studio",
   "buttons.admin": "admin",
   "buttons.open.in.tab": "Open in New Tab",
+  "buttons.reset.wbw": "reset wbw",
 };
 
 export default items;

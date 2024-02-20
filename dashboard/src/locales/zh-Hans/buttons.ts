@@ -86,6 +86,7 @@ const items = {
   "buttons.open.in.studio": "在Studio中打开",
   "buttons.admin": "后台管理",
   "buttons.open.in.tab": "在新标签页中打开",
+  "buttons.reset.wbw": "重置逐词解析",
 };
 
 export default items;
