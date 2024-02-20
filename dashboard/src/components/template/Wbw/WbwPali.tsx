@@ -143,9 +143,10 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
     setPopOpen(open);
   };
 
-  const wbwDetail = () => (
+  const wbwDialog = () => (
     <WbwDetail
       data={data}
+      visible={popOpen}
       onClose={() => {
         setPaliColor("unset");
         setPopOpen(false);
@@ -347,7 +348,7 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
           )}
           {mode === "edit" ? paliWord : ""}
           <Popover
-            content={wbwDetail}
+            content={wbwDialog}
             placement={toDivRight > 200 ? "bottom" : "bottomRight"}
             trigger="click"
             open={popOpen}

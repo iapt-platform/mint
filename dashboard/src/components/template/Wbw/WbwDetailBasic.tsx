@@ -27,12 +27,14 @@ export interface IWordBasic {
 
 interface IWidget {
   data: IWbw;
+  visible?: boolean;
   showRelation?: boolean;
   onChange?: Function;
   onRelationAdd?: Function;
 }
 const WbwDetailBasicWidget = ({
   data,
+  visible,
   showRelation = true,
   onChange,
   onRelationAdd,
@@ -123,7 +125,8 @@ const WbwDetailBasicWidget = ({
               </Popover>
             </div>
             <WbwDetailOrder
-              sn={3}
+              sn={5}
+              visible={visible}
               curr={currTip}
               onChange={() => setCurrTip(currTip + 1)}
             />
@@ -146,7 +149,8 @@ const WbwDetailBasicWidget = ({
               }}
             />
             <WbwDetailOrder
-              sn={4}
+              sn={2}
+              visible={visible}
               curr={currTip}
               onChange={() => setCurrTip(currTip + 1)}
             />
@@ -178,7 +182,8 @@ const WbwDetailBasicWidget = ({
               }}
             />
             <WbwDetailOrder
-              sn={5}
+              sn={4}
+              visible={visible}
               curr={currTip}
               onChange={() => setCurrTip(currTip + 1)}
             />
@@ -200,7 +205,8 @@ const WbwDetailBasicWidget = ({
               }}
             />
             <WbwDetailOrder
-              sn={2}
+              sn={3}
+              visible={visible}
               curr={currTip}
               onChange={() => setCurrTip(currTip + 1)}
             />
@@ -227,6 +233,7 @@ const WbwDetailBasicWidget = ({
             />
             <WbwDetailOrder
               sn={1}
+              visible={visible}
               curr={currTip}
               onChange={() => setCurrTip(currTip + 1)}
             />
