@@ -13,13 +13,13 @@ import {
   LockIcon,
   UnLockIcon,
 } from "../../../assets/icon";
-import { UploadFile } from "antd/es/upload/interface";
-import { IAttachmentRequest, IAttachmentResponse } from "../../api/Attachments";
+import { IAttachmentRequest } from "../../api/Attachments";
 import WbwDetailAttachment from "./WbwDetailAttachment";
 import CommentBox from "../../discussion/DiscussionDrawer";
 
 interface IWidget {
   data: IWbw;
+  visible?: boolean;
   onClose?: Function;
   onSave?: Function;
   onCommentCountChange?: Function;
@@ -27,6 +27,7 @@ interface IWidget {
 }
 const WbwDetailWidget = ({
   data,
+  visible = true,
   onClose,
   onSave,
   onCommentCountChange,
@@ -36,6 +37,8 @@ const WbwDetailWidget = ({
   const [currWbwData, setCurrWbwData] = useState<IWbw>(
     JSON.parse(JSON.stringify(data))
   );
+  const [tabKey, setTabKey] = useState<string>("basic");
+
   useEffect(() => {
     setCurrWbwData(JSON.parse(JSON.stringify(data)));
   }, [data]);
@@ -125,25 +128,27 @@ const WbwDetailWidget = ({
             />
           ) : undefined
         }
+        onChange={(activeKey: string) => {
+          setTabKey(activeKey);
+        }}
         items={[
           {
             label: intl.formatMessage({ id: "buttons.basic" }),
             key: "basic",
             children: (
-              <div>
-                <WbwDetailBasic
-                  data={currWbwData}
-                  onChange={(e: IWbwField) => {
-                    console.log("WbwDetailBasic onchange", e);
-                    fieldChanged(e.field, e.value);
-                  }}
-                  onRelationAdd={() => {
-                    if (typeof onClose !== "undefined") {
-                      onClose();
-                    }
-                  }}
-                />
-              </div>
+              <WbwDetailBasic
+                visible={visible && tabKey === "basic"}
+                data={currWbwData}
+                onChange={(e: IWbwField) => {
+                  console.log("WbwDetailBasic onchange", e);
+                  fieldChanged(e.field, e.value);
+                }}
+                onRelationAdd={() => {
+                  if (typeof onClose !== "undefined") {
+                    onClose();
+                  }
+                }}
+              />
             ),
           },
           {
