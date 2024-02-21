@@ -307,8 +307,9 @@ const Widget = () => {
                   articleId={id}
                   channels={searchParams.get("channel")?.split("_")}
                   anthologyId={searchParams.get("anthology")}
+                  courseId={searchParams.get("course")}
                   onSelect={(key: Key, target?: string) => {
-                    console.log("toc click", key);
+                    console.debug("toc click", key);
                     const newType = type === "para" ? "chapter" : type;
                     let url = `/article/${newType}/${key}?`;
                     let param: string[] = [];
