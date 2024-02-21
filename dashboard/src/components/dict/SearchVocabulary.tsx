@@ -101,9 +101,24 @@ const SearchVocabularyWidget = ({
 
     get<IVocabularyListResponse>(`/v2/${api}?view=key&key=${value}`)
       .then((json) => {
-        const words: ValueType[] = json.data.rows.map((item) => {
-          return renderItem(item.word, item.count, item.meaning);
-        });
+        const words: ValueType[] = json.data.rows
+          .map((item) => {
+            let weight = item.count / item.strlen;
+            if (item.word.length === value.length) {
+              weight = 100;
+            }
+            return {
+              word: item.word,
+              count: item.count,
+              meaning: item.meaning,
+              weight: weight,
+            };
+          })
+          .sort((a, b) => b.weight - a.weight)
+          .map((item) => {
+            return renderItem(item.word, item.count, item.meaning);
+          });
+
         setOptions(words);
       })
       .finally(() => {
