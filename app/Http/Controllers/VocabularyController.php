@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Vocabulary;
 use Illuminate\Http\Request;
-use App\Http\Resources\VocabularyResource;
 use Illuminate\Support\Facades\Cache;
-use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Models\Vocabulary;
+use App\Http\Resources\VocabularyResource;
+use App\Tools\RedisClusters;
 
 class VocabularyController extends Controller
 {
@@ -25,11 +26,12 @@ class VocabularyController extends Controller
                 $result = RedisClusters::remember("/dict_vocabulary/{$key}",
                         config('mint.cache.expire'),
                         function() use($key){
-                            return Vocabulary::where('word', 'like',$key."%")
-                                    ->whereOr('word_en','like',$key."%")
-                                    ->orderBy('strlen')
-                                    ->orderBy('word')
-                                    ->take(50)->get();
+                            $query = Vocabulary::where('word', 'like',$key."%")
+                                            ->orWhere('word_en','like',$key."%")
+                                            ->orderBy('strlen')
+                                            ->orderBy('word')
+                                            ->take(50);
+                            return $query->get();
                 });
                 return $this->ok(['rows'=>VocabularyResource::collection($result),'count'=>count($result)]);
                 break;
