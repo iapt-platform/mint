@@ -209,7 +209,11 @@ const TypeCourseWidget = ({
         mode={mode}
         anthologyId={anthologyId}
         active={true}
-        onArticleChange={(type: ArticleType, id: string, target: string) => {}}
+        onArticleChange={(type: ArticleType, id: string, target: string) => {
+          if (typeof onArticleChange !== "undefined") {
+            onArticleChange(type, id, target);
+          }
+        }}
         onLoad={(data: IArticleDataResponse) => {}}
         onAnthologySelect={(id: string) => {}}
       />
