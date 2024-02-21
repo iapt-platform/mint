@@ -25,11 +25,11 @@ class VocabularyController extends Controller
                 $result = RedisClusters::remember("/dict_vocabulary/{$key}",
                         config('mint.cache.expire'),
                         function() use($key){
-                        return Vocabulary::whereRaw('word like ? or word_en like ?',[$key."%",$key."%"])
+                            return Vocabulary::where('word', 'like',$key."%")
                                     ->whereOr('word_en','like',$key."%")
                                     ->orderBy('strlen')
                                     ->orderBy('word')
-                                    ->take(10)->get();
+                                    ->take(50)->get();
                 });
                 return $this->ok(['rows'=>VocabularyResource::collection($result),'count'=>count($result)]);
                 break;
