@@ -40,69 +40,70 @@ const WbwDetailWidget = ({
   const [tabKey, setTabKey] = useState<string>("basic");
 
   useEffect(() => {
+    console.debug("input data", data);
     setCurrWbwData(JSON.parse(JSON.stringify(data)));
   }, [data]);
 
   function fieldChanged(field: TFieldName, value: string) {
     console.log("field", field, "value", value);
-    setCurrWbwData((origin) => {
-      switch (field) {
-        case "note":
-          origin.note = { value: value, status: 7 };
-          break;
-        case "bookMarkColor":
-          origin.bookMarkColor = { value: parseInt(value), status: 7 };
-          break;
-        case "bookMarkText":
-          origin.bookMarkText = { value: value, status: 7 };
-          break;
-        case "word":
-          origin.word = { value: value, status: 7 };
-          break;
-        case "real":
-          origin.real = { value: value, status: 7 };
-          break;
-        case "meaning":
-          origin.meaning = { value: value, status: 7 };
-          break;
-        case "factors":
-          origin.factors = { value: value, status: 7 };
-          break;
-        case "factorMeaning":
-          origin.factorMeaning = { value: value, status: 7 };
-          break;
-        case "parent":
-          origin.parent = { value: value, status: 7 };
-          break;
-        case "parent2":
-          origin.parent2 = { value: value, status: 7 };
-          break;
-        case "grammar2":
-          origin.grammar2 = { value: value, status: 7 };
-          break;
-        case "case":
-          const arrCase = value.split("#");
-          origin.case = { value: value, status: 7 };
-          origin.type = { value: arrCase[0] ? arrCase[0] : "", status: 7 };
-          origin.grammar = { value: arrCase[1] ? arrCase[1] : "", status: 7 };
-          break;
-        case "relation":
-          origin.relation = { value: value, status: 7 };
-          break;
-        case "confidence":
-          origin.confidence = parseFloat(value);
-          break;
-        case "locked":
-          origin.locked = JSON.parse(value);
-          break;
-        case "attachments":
-          //mData.attachments = value;
-          break;
-        default:
-          break;
-      }
-      return origin;
-    });
+    let origin = JSON.parse(JSON.stringify(currWbwData));
+    switch (field) {
+      case "note":
+        origin.note = { value: value, status: 7 };
+        break;
+      case "bookMarkColor":
+        origin.bookMarkColor = { value: parseInt(value), status: 7 };
+        break;
+      case "bookMarkText":
+        origin.bookMarkText = { value: value, status: 7 };
+        break;
+      case "word":
+        origin.word = { value: value, status: 7 };
+        break;
+      case "real":
+        origin.real = { value: value, status: 7 };
+        break;
+      case "meaning":
+        origin.meaning = { value: value, status: 7 };
+        break;
+      case "factors":
+        origin.factors = { value: value, status: 7 };
+        break;
+      case "factorMeaning":
+        origin.factorMeaning = { value: value, status: 7 };
+        break;
+      case "parent":
+        origin.parent = { value: value, status: 7 };
+        break;
+      case "parent2":
+        origin.parent2 = { value: value, status: 7 };
+        break;
+      case "grammar2":
+        origin.grammar2 = { value: value, status: 7 };
+        break;
+      case "case":
+        const arrCase = value.split("#");
+        origin.case = { value: value, status: 7 };
+        origin.type = { value: arrCase[0] ? arrCase[0] : "", status: 7 };
+        origin.grammar = { value: arrCase[1] ? arrCase[1] : "", status: 7 };
+        break;
+      case "relation":
+        origin.relation = { value: value, status: 7 };
+        break;
+      case "confidence":
+        origin.confidence = parseFloat(value);
+        break;
+      case "locked":
+        origin.locked = JSON.parse(value);
+        break;
+      case "attachments":
+        //mData.attachments = value;
+        break;
+      default:
+        break;
+    }
+    console.debug("origin", origin);
+    setCurrWbwData(origin);
   }
 
   return (
@@ -140,7 +141,7 @@ const WbwDetailWidget = ({
                 visible={visible && tabKey === "basic"}
                 data={currWbwData}
                 onChange={(e: IWbwField) => {
-                  console.log("WbwDetailBasic onchange", e);
+                  console.debug("WbwDetailBasic onchange", e);
                   fieldChanged(e.field, e.value);
                 }}
                 onRelationAdd={() => {
