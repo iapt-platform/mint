@@ -76,6 +76,7 @@ export interface IVocabularyData {
   word: string;
   count: number;
   meaning?: string;
+  strlen: number;
 }
 export interface IVocabularyListResponse {
   ok: boolean;
