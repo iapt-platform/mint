@@ -217,7 +217,11 @@ const ArticleWidget = ({
           channelId={channelId}
           courseId={courseId}
           mode={mode}
-          onArticleChange={(type: ArticleType, id: string, target: string) => {
+          onArticleChange={(
+            newType: ArticleType,
+            id: string,
+            target: string
+          ) => {
             if (typeof onArticleChange !== "undefined") {
               onArticleChange(type, id, target);
             }
