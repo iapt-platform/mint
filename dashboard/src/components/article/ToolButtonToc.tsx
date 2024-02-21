@@ -5,11 +5,13 @@ import { ArticleType } from "./Article";
 
 import PaliTextToc from "./PaliTextToc";
 import ToolButton from "./ToolButton";
+import TextBookToc from "../anthology/TextBookToc";
 
 interface IWidget {
   type?: ArticleType;
   articleId?: string;
   anthologyId?: string | null;
+  courseId?: string | null;
   channels?: string[];
   onSelect?: Function;
 }
@@ -17,6 +19,7 @@ const ToolButtonTocWidget = ({
   type,
   articleId,
   anthologyId,
+  courseId,
   channels,
   onSelect,
 }: IWidget) => {
@@ -53,6 +56,19 @@ const ToolButtonTocWidget = ({
         />
       );
     }
+  } else if (type === "textbook") {
+    tocWidget = (
+      <TextBookToc
+        courseId={courseId}
+        channels={channels}
+        onClick={(article: string, target: string) => {
+          console.debug("TextBookToc onClick", article);
+          if (typeof onSelect !== "undefined") {
+            onSelect(article, target);
+          }
+        }}
+      />
+    );
   }
 
   return (
