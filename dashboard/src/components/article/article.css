@@ -36,6 +36,10 @@ h6 {
   color: gray;
 }
 
+.pcd_article img {
+  max-width: 100%;
+}
+
 .pcd_article table {
   border-spacing: 0;
   border-collapse: collapse;
