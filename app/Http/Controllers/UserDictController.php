@@ -61,7 +61,10 @@ class UserDictController extends Controller
             case 'community':
                 $table = UserDict::select($indexCol)
                                 ->where('word', $request->get("word"))
-                                ->where('source', "_USER_WBW_");;
+                                ->where(function($query) {
+                                    $query->where('source', "_USER_WBW_")
+                                            ->orWhere('source','_USER_DICT_');
+                                });
                 break;
             case 'compound':
                 $dict_id = DictApi::getSysDict('robot_compound');
