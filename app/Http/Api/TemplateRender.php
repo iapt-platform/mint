@@ -35,7 +35,7 @@ class TemplateRender{
      * string $format  'react' | 'text' | 'tex' | 'unity'
      * @return void
      */
-    public function __construct($param, $channelInfo, $mode,$format='react',$studioId,$debug=[])
+    public function __construct($param, $channelInfo, $mode,$format='react',$studioId,$debug=[],$lang='zh-Hans')
     {
         $this->param = $param;
         foreach ($channelInfo as $value) {
@@ -51,11 +51,11 @@ class TemplateRender{
             $channelId = $this->channel_id[0];
             if(Str::isUuid($channelId)){
                 $lang = Channel::where('uid',$channelId)->value('lang');
-                if(!empty($lang)){
-                    $this->lang = $lang;
-                    $this->langFamily = explode('-',$lang)[0];
-                }
             }
+        }
+        if(!empty($lang)){
+            $this->lang = $lang;
+            $this->langFamily = explode('-',$lang)[0];
         }
     }
     /**
@@ -139,14 +139,24 @@ class TemplateRender{
         }
 
         if(count($this->channelInfo)===0){
-            Log::error('channel is null');
-            $output = [
-                "word" => $word,
-                'innerHtml' => '',
-            ];
-            return $output;
+            if(!empty($channel)){
+                $channelInfo = Channel::where('uid',$channel)->first();
+                if(!$channelInfo){
+                    unset($channelInfo);
+                }
+            }
+            if(!isset($channelInfo)){
+                Log::error('channel is null');
+                $output = [
+                    "word" => $word,
+                    'innerHtml' => '',
+                ];
+                return $output;
+            }
+        }else{
+            $channelInfo = $this->channelInfo[0];
         }
-        $channelInfo = $this->channelInfo[0];
+
         if(Str::isUuid($channelId)){
             $lang = Channel::where('uid',$channelId)->value('lang');
             if(!empty($lang)){
