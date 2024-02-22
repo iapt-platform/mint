@@ -14,6 +14,8 @@ import { get } from "../../request";
 import { IApiResponseDictList } from "../api/Dict";
 import { IUser } from "../auth/User";
 import GrammarPop from "./GrammarPop";
+import Marked from "../general/Marked";
+import MdView from "../template/MdView";
 
 const { Title, Link, Text } = Typography;
 
@@ -24,6 +26,7 @@ interface IItem<R> {
 interface IWord {
   grammar: IItem<string>[];
   parent: IItem<string>[];
+  note: IItem<string>[];
   meaning: IItem<string>[];
   factors: IItem<string>[];
   editor: IItem<IUser>[];
@@ -43,16 +46,18 @@ const CommunityWidget = ({ word }: IWidget) => {
       return;
     }
     const url = `/v2/userdict?view=community&word=${word}`;
+    console.info("dict community url", url);
     get<IApiResponseDictList>(url)
       .then((json) => {
         if (json.ok === false) {
           console.log("dict community", json.message);
           return;
         }
-
+        console.debug("dict community", json.data);
         let meaning = new Map<string, number>();
         let grammar = new Map<string, number>();
         let parent = new Map<string, number>();
+        let note = new Map<string, number>();
         let editorId = new Map<string, number>();
         let editor = new Map<string, IUser>();
         for (const it of json.data.rows) {
@@ -77,6 +82,11 @@ const CommunityWidget = ({ word }: IWidget) => {
               parent.set(it.parent, score ? score + currScore : currScore);
             }
 
+            if (it.note) {
+              score = note.get(it.note);
+              note.set(it.note, score ? score + currScore : currScore);
+            }
+
             if (it.editor) {
               score = editorId.get(it.editor.id);
               editorId.set(it.editor.id, score ? score + currScore : currScore);
@@ -87,6 +97,7 @@ const CommunityWidget = ({ word }: IWidget) => {
         let _data: IWord = {
           grammar: [],
           parent: [],
+          note: [],
           meaning: [],
           factors: [],
           editor: [],
@@ -110,6 +121,13 @@ const CommunityWidget = ({ word }: IWidget) => {
           }
         });
         _data.parent.sort((a, b) => b.score - a.score);
+
+        note.forEach((value, key, map) => {
+          if (key && key.length > 0) {
+            _data.note.push({ value: key, score: value });
+          }
+        });
+        _data.note.sort((a, b) => b.score - a.score);
 
         editorId.forEach((value, key, map) => {
           const currEditor = editor.get(key);
@@ -275,6 +293,18 @@ const CommunityWidget = ({ word }: IWidget) => {
             })}
           {more}
         </Space>
+      </div>
+
+      <div key="note">
+        <Text strong>{"注释："}</Text>
+        <div>
+          {wordData?.note
+            .filter((value) => value.score >= minScore)
+            .slice(0, 1)
+            .map((item, id) => {
+              return <MdView html={item.value} key={id} />;
+            })}
+        </div>
       </div>
     </Card>
   ) : (
