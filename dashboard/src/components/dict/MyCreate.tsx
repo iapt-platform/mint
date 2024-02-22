@@ -15,6 +15,7 @@ import {
 import { useAppSelector } from "../../hooks";
 import { add, updateIndex, wordIndex } from "../../reducers/inline-dict";
 import store from "../../store";
+import { get as getUiLang } from "../../locales";
 
 interface IWidget {
   word?: string;
@@ -161,6 +162,7 @@ const MyCreateWidget = ({ word }: IWidget) => {
                 note: editWord.note?.value,
                 factors: editWord.factors?.value,
                 factormean: editWord.factorMeaning?.value,
+                language: getUiLang(),
                 confidence: editWord.confidence,
               },
             ];
