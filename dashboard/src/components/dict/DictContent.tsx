@@ -74,11 +74,11 @@ const DictContentWidget = ({ word, data, compact }: IWidget) => {
                           <div>
                             <DictGroupTitle
                               title={
-                                <Button style={{ width: 120 }}>
+                                <Divider orientation="left">
                                   {intl.formatMessage({
                                     id: `labels.dict.pass.${it.pass}`,
                                   })}
-                                </Button>
+                                </Divider>
                               }
                               path={[
                                 intl.formatMessage({
