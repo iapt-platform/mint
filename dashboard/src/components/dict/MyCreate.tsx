@@ -63,6 +63,9 @@ const MyCreateWidget = ({ word }: IWidget) => {
       case "word":
         mData.word = { value: value, status: 7 };
         break;
+      case "real":
+        mData.real = { value: value, status: 7 };
+        break;
       case "meaning":
         mData.meaning = { value: value, status: 7 };
         break;
@@ -90,6 +93,7 @@ const MyCreateWidget = ({ word }: IWidget) => {
       default:
         break;
     }
+    console.debug("field changed", mData);
     setEditWord(mData);
   }
   return (
@@ -114,9 +118,9 @@ const MyCreateWidget = ({ word }: IWidget) => {
             value={wordSpell}
             placeholder="Basic usage"
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              console.debug("spell onChange", event.target.value);
               setWordSpell(event.target.value);
               fieldChanged("word", event.target.value);
-              fieldChanged("real", event.target.value);
             }}
           />
         </Col>
