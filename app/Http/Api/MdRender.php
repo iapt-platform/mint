@@ -27,7 +27,7 @@ class MdRender{
         'format'=>'react',
         'debug'=>[],
         'studioId'=>null,
-        'lang'=>'en',
+        'lang'=>'zh-Hans',
         ];
 
     public function __construct($options=[])
@@ -273,7 +273,9 @@ class MdRender{
                                         $this->options['mode'],
                                         $this->options['format'],
                                         $this->options['studioId'],
-                                        $this->options['debug']);
+                                        $this->options['debug'],
+                                        $this->options['lang'],
+                                    );
 
             $tplProps = $tplRender->render($tpl_name);
             if($this->options['format']==='react' && $tplProps){
