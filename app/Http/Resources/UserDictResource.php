@@ -6,6 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\UserApi;
 use App\Models\UserOperationDaily;
 use App\Models\DictInfo;
+use App\Http\Api\MdRender;
 
 class UserDictResource extends JsonResource
 {
@@ -30,6 +31,10 @@ class UserDictResource extends JsonResource
          'updated_at'=>$this->updated_at,
          'creator_id'=>$this->creator_id,
         ];
+        if(!empty($this->note)){
+            $mdRender = new MdRender(['format'=>'react','lang'=>'zh-Hans']);
+            $data['note'] = $mdRender->convert($this->note);
+        }
         if($request->get('view')==='community'){
             $data['editor'] = UserApi::getById($this->creator_id);
             //毫秒计算的经验值
