@@ -341,6 +341,9 @@ const SelectCaseWidget = ({ value, onCaseChange }: IWidget) => {
       onChange={(value?: (string | number)[]) => {
         console.log("case changed", value);
         if (typeof value === "undefined") {
+          if (typeof onCaseChange !== "undefined") {
+            onCaseChange("");
+          }
           return;
         }
         let newValue: (string | number)[];
