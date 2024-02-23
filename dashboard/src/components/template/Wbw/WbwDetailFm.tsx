@@ -204,7 +204,7 @@ const WbwDetailFmWidget = ({
   }, [factors]);
 
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <div style={{ display: "flex", width: "100%" }}>
         <Input
           key="input"
