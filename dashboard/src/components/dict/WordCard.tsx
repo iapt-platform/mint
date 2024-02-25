@@ -22,7 +22,7 @@ export interface IWidgetWordCardData {
   word: string;
   factors: string;
   parents: string;
-  case: string[];
+  case?: string[];
   grammar: IWordGrammar[];
   anchor: string;
   dict: IWordByDict[];
@@ -32,7 +32,7 @@ interface IWidgetWordCard {
 }
 const WordCardWidget = ({ data }: IWidgetWordCard) => {
   const intl = useIntl();
-  const caseList = data.case.map((element) => {
+  const caseList = data.case?.map((element) => {
     return element.split("|").map((it, id) => {
       if (it.slice(0, 1) === "@") {
         const [showText, keyText] = it.slice(1).split("-");
