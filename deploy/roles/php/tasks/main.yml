@@ -39,13 +39,13 @@
 
 - name: Maximum allowed size for uploaded files
   ansible.builtin.lineinfile:
-    path: "/etc/php/{{ app_php_version }}/fpm"
+    path: "/etc/php/{{ app_php_version }}/fpm/php.ini"
     line: "upload_max_filesize = 256M"
     regexp: "^upload_max_filesize ="
 
 - name: Maximum size of POST data that will be accept
   ansible.builtin.lineinfile:
-    path: "/etc/php/{{ app_php_version }}/fpm"
+    path: "/etc/php/{{ app_php_version }}/fpm/php.ini"
     line: "post_max_size = 256M"
     regexp: "^post_max_size ="
 
