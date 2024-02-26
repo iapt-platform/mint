@@ -28,6 +28,8 @@
   hosts:
     - php_fpm
   roles:
+    # FIXME: conflict with php daemon
+    # - php
     - mint-v2
 
 # - name: run db migrations
