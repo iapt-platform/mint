@@ -64,9 +64,11 @@ const CommunityWidget = ({ word }: IWidget) => {
           let score: number | undefined;
           if (it.exp) {
             //分数计算
-            const currScore = Math.floor(
-              (it.exp / 3600) * (it.confidence / 100)
-            );
+            let conf = it.confidence / 100;
+            if (it.confidence <= 1) {
+              conf = 1;
+            }
+            const currScore = Math.floor((it.exp / 3600) * conf);
             if (it.mean) {
               score = meaning.get(it.mean);
               meaning.set(it.mean, score ? score + currScore : currScore);
