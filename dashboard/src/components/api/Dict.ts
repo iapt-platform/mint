@@ -9,6 +9,7 @@ export interface IDictRequest {
   grammar?: string | null;
   mean?: string | null;
   parent?: string | null;
+  parent2?: string | null;
   note?: string | null;
   factors?: string | null;
   factormean?: string | null;
