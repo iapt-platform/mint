@@ -105,7 +105,7 @@ const WbwFactorsWidget = ({ data, display, onChange }: IWidget) => {
       ) {
         const shortString = data.factors.value.slice(
           0,
-          data.real.value.length * 1.3 + 3
+          data.real.value.length + 6 + data.real.value.length / 3
         );
         if (shortString === data.factors.value) {
           factors = <span>{shortString}</span>;
