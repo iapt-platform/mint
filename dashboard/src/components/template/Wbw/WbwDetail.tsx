@@ -236,13 +236,15 @@ const WbwDetailWidget = ({
           checkedChildren={<LockIcon />}
           unCheckedChildren={<UnLockIcon />}
         />
-        <Rate
-          allowHalf
-          defaultValue={data.confidence * 5}
-          onChange={(value: number) => {
-            fieldChanged("confidence", (value / 5).toString());
-          }}
-        />
+        <div>
+          {"信心指数"}
+          <Rate
+            defaultValue={data.confidence * 5}
+            onChange={(value: number) => {
+              fieldChanged("confidence", (value / 5).toString());
+            }}
+          />
+        </div>
       </div>
       <Divider style={{ margin: "4px 0" }}></Divider>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
