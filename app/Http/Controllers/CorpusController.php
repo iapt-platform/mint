@@ -216,7 +216,7 @@ class CorpusController extends Controller
             # code...
             $channels[] = $value->channel_uid;
         }
-		$channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','name'])->get();
+		$channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','lang','name'])->get();
 		$indexChannel = [];
         $channels = [];
 		foreach ($channelInfo as $key => $value) {
@@ -308,7 +308,7 @@ class CorpusController extends Controller
 		#获取channel索引表
         $tranChannels = [];
 		$channelInfo = Channel::whereIn("uid",$channels)
-                        ->select(['uid','type','name'])->get();
+                        ->select(['uid','type','lang','name'])->get();
 		foreach ($channelInfo as $key => $value) {
 			# code...
             if($value->type==="translation" ){
@@ -423,10 +423,10 @@ class CorpusController extends Controller
         }
 		#获取channel索引表
         $tranChannels = [];
-		$channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','name'])->get();
+		$channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','lang','name'])->get();
 		foreach ($channelInfo as $key => $value) {
 			# code...
-            if($value->type==="translation" ){
+            if($value->type === "translation" ){
                 $tranChannels[] = $value->uid;
             }
 		}
@@ -539,11 +539,12 @@ class CorpusController extends Controller
     private function getChannelIndex($channels,$type=null){
         #获取channel索引表
         $channelInfo = Channel::whereIn("uid",$channels)
-                        ->select(['uid','type','name','owner_uid'])->get();
+                        ->select(['uid','type','name','lang','owner_uid'])
+                        ->get();
         $indexChannel = [];
         foreach ($channels as $key => $channelId) {
             $channelInfo = Channel::where("uid",$channelId)
-                        ->select(['uid','type','name','owner_uid'])->first();
+                        ->select(['uid','type','name','lang','owner_uid'])->first();
             if(!$channelInfo){
                 Log::error('no channel id'.$channelId);
                 continue;
@@ -637,6 +638,7 @@ class CorpusController extends Controller
                         "name"=>$info->name,
                         "type"=>$info->type,
                         "id"=> $info->uid,
+                        'lang' => $info->lang,
                     ],
                     "studio" => $studioInfo,
                     "updateAt"=> "",
@@ -687,6 +689,7 @@ class CorpusController extends Controller
                                     $newSent['channel']['type'] = "wbw";
                                     if(isset($this->wbwChannels[0])){
                                         $newSent['channel']['name'] = $indexChannel[$this->wbwChannels[0]]->name;
+                                        $newSent['channel']['lang'] = $indexChannel[$this->wbwChannels[0]]->lang;
                                         $newSent['channel']['id'] = $this->wbwChannels[0];
                                         //存在一个translation channel
                                         //尝试查找逐词解析数据。找到，替换现有数据
