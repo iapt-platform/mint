@@ -14,7 +14,7 @@ import WbwWord, {
   WbwStatus,
 } from "./Wbw/WbwWord";
 import { TChannelType } from "../api/Channel";
-import { IDictRequest, IDictResponse, IUserDictCreate } from "../api/Dict";
+import { IDictRequest } from "../api/Dict";
 import { useIntl } from "react-intl";
 import { add } from "../../reducers/sent-word";
 import store from "../../store";
@@ -22,6 +22,7 @@ import { settingInfo } from "../../reducers/setting";
 import { GetUserSetting } from "../auth/setting/default";
 import { getGrammar } from "../../reducers/term-vocabulary";
 import modal from "antd/lib/modal";
+import { UserWbwPost } from "../dict/MyCreate";
 
 export const paraMark = (wbwData: IWbw[]): IWbw[] => {
   //处理段落标记，支持点击段落引用弹窗
@@ -139,6 +140,7 @@ interface IWidget {
   wordEnd: number;
   channelId: string;
   channelType?: TChannelType;
+  channelLang?: string;
   display?: TWbwDisplayMode;
   fields?: IWbwFields;
   layoutDirection?: "h" | "v";
@@ -153,6 +155,7 @@ export const WbwSentCtl = ({
   data,
   channelId,
   channelType,
+  channelLang,
   book,
   para,
   wordStart,
@@ -176,6 +179,8 @@ export const WbwSentCtl = ({
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showProgress, setShowProgress] = useState(false);
+
+  console.debug("wbw sent lang", channelLang);
 
   useEffect(() => setShowProgress(wbwProgress), [wbwProgress]);
 
@@ -481,7 +486,10 @@ export const WbwSentCtl = ({
       const [wordType, wordGrammar] = data.case?.value
         ? data.case?.value?.split("#")
         : ["", ""];
-
+      let conf = data.confidence * 100;
+      if (data.confidence.toString() === "0.5") {
+        conf = 100;
+      }
       wordData.push({
         word: data.real.value ? data.real.value : "",
         type: wordType,
@@ -490,28 +498,12 @@ export const WbwSentCtl = ({
         parent: data.parent?.value,
         factors: data.factors?.value,
         factormean: data.factorMeaning?.value,
-        confidence: data.confidence,
+        confidence: conf,
+        language: channelLang,
       });
-      if (data.parent?.value && wordType !== "") {
-        if (!wordType.includes("base") && wordType !== ".ind.") {
-          wordData.push({
-            word: data.parent.value,
-            type: "." + wordType.replaceAll(".", "") + ":base.",
-            grammar: wordGrammar,
-            mean: data.meaning?.value,
-            parent: data.parent2?.value ? data.parent2?.value : undefined,
-            factors: data.factors?.value,
-            factormean: data.factorMeaning?.value,
-            confidence: data.confidence,
-          });
-        }
-      }
     });
 
-    post<IUserDictCreate, IDictResponse>("/v2/userdict", {
-      view: "wbw",
-      data: JSON.stringify(wordData),
-    })
+    UserWbwPost(wordData, "wbw")
       .finally(() => {
         setLoading(false);
       })
