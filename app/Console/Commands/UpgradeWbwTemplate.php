@@ -91,7 +91,7 @@ class UpgradeWbwTemplate extends Command
                     'style'=> ['value'=>$wbw_word->style,'status'=>0],
                     'factors'=> ['value'=>$part,'status'=>0],
                     'factorMeaning'=> ['value'=>'','status'=>0],
-                    'confidence'=> 0.5
+                    'confidence'=> 1.0
                 ];
 
             }

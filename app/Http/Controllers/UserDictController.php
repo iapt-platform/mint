@@ -352,6 +352,7 @@ class UserDictController extends Controller
 					'mean'=>$data["mean"],
 					'factors'=>$data["factors"],
 					'factormean'=>$data["factormean"],
+					'language'=>$data["language"],
 					'source'=>"_SYS_USER_WBW_",
                     'creator_id' => $data["creator_id"],
 					'ref_counter' => 1,
