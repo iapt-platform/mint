@@ -136,7 +136,6 @@ interface IWidget {
   compact?: boolean;
 }
 const EditInfoWidget = ({ data, isPr = false, compact = false }: IWidget) => {
-  console.debug("EditInfo", data);
   return (
     <div style={{ fontSize: "80%" }}>
       <Text type="secondary">

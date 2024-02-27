@@ -92,6 +92,7 @@ const SentWbwEditWidget = ({ data, onSave, onClose }: IWidget) => {
         }}
         channelId={data.channel.id}
         channelType={data.channel.type}
+        channelLang={data.channel.lang}
         onChange={(wbwData: IWbw[]) => {
           let newSent = data;
           newSent.content = JSON.stringify(wbwData);

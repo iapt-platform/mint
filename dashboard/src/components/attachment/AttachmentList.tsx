@@ -180,6 +180,8 @@ const AttachmentWidget = ({
             },
           },
           description: {
+            editable: false,
+            search: false,
             render: (dom, entity, index, action, schema) => {
               return (
                 <Text type="secondary">
@@ -195,12 +197,10 @@ const AttachmentWidget = ({
                 </Text>
               );
             },
-            editable: false,
-            search: false,
           },
           content:
             list === "list"
-              ? undefined
+              ? { editable: false, search: false }
               : {
                   editable: false,
                   search: false,
@@ -323,6 +323,7 @@ const AttachmentWidget = ({
           },
           content_type: {
             // 自己扩展的字段，主要用于筛选，不在列表中显示
+            editable: false,
             title: "类型",
             valueType: "select",
             valueEnum: {

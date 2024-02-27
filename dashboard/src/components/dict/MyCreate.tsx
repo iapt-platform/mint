@@ -9,6 +9,7 @@ import { IWbw, IWbwField, TFieldName } from "../template/Wbw/WbwWord";
 import { get, post } from "../../request";
 import {
   IApiResponseDictList,
+  IDictRequest,
   IDictResponse,
   IUserDictCreate,
 } from "../api/Dict";
@@ -16,6 +17,65 @@ import { useAppSelector } from "../../hooks";
 import { add, updateIndex, wordIndex } from "../../reducers/inline-dict";
 import store from "../../store";
 import { get as getUiLang } from "../../locales";
+
+export const UserWbwPost = (data: IDictRequest[], view: string) => {
+  let wordData: IDictRequest[] = data;
+  data.forEach((value: IDictRequest) => {
+    if (value.parent && value.type !== "") {
+      if (!value.type?.includes("base") && value.type !== ".ind.") {
+        let pFactors = "";
+        let pFm;
+        const orgFactors = value.factors?.split("+");
+        if (
+          orgFactors &&
+          orgFactors.length > 0 &&
+          orgFactors[orgFactors.length - 1].includes("[")
+        ) {
+          pFactors = orgFactors.slice(0, -1).join("+");
+          pFm = value.factormean
+            ?.split("+")
+            .slice(0, orgFactors.length - 1)
+            .join("+");
+        }
+        let grammar = value.grammar?.split("$").slice(0, 1).join("");
+        if (value.type?.includes(".v")) {
+          grammar = "";
+        }
+        wordData.push({
+          word: value.parent,
+          type: "." + value.type?.replaceAll(".", "") + ":base.",
+          grammar: grammar,
+          mean: value.mean,
+          parent: value.parent2 ?? undefined,
+          factors: pFactors,
+          factormean: pFm,
+          confidence: value.confidence,
+          language: value.language,
+        });
+      }
+    }
+    if (value.factors && value.factors.split("+").length > 0) {
+      const fm = value.factormean?.split("+");
+      const factors: IDictRequest[] = value.factors
+        .split("+")
+        .map((item, id) => {
+          return {
+            word: item,
+            type: ".part.",
+            grammar: "",
+            mean: fm ? fm[id] ?? "" : "",
+            confidence: value.confidence,
+            language: value.language,
+          };
+        });
+      wordData = [...wordData, ...factors];
+    }
+  });
+  return post<IUserDictCreate, IDictResponse>("/v2/userdict", {
+    view: view,
+    data: JSON.stringify(wordData),
+  });
+};
 
 interface IWidget {
   word?: string;
@@ -152,7 +212,7 @@ const MyCreateWidget = ({ word }: IWidget) => {
           icon={<SaveOutlined />}
           onClick={() => {
             setLoading(true);
-            const data = [
+            const data: IDictRequest[] = [
               {
                 word: editWord.word.value,
                 type: editWord.type?.value,
@@ -163,13 +223,10 @@ const MyCreateWidget = ({ word }: IWidget) => {
                 factors: editWord.factors?.value,
                 factormean: editWord.factorMeaning?.value,
                 language: getUiLang(),
-                confidence: editWord.confidence,
+                confidence: 100,
               },
             ];
-            post<IUserDictCreate, IDictResponse>("/v2/userdict", {
-              view: "dict",
-              data: JSON.stringify(data),
-            })
+            UserWbwPost(data, "dict")
               .finally(() => {
                 setLoading(false);
               })
