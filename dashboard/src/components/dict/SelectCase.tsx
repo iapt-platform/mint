@@ -265,6 +265,10 @@ const SelectCaseWidget = ({ value, onCaseChange }: IWidget) => {
       value: "part",
       label: intl.formatMessage({ id: "dict.fields.type.part.label" }),
     },
+    {
+      value: "note",
+      label: intl.formatMessage({ id: "dict.fields.type.note.label" }),
+    },
   ];
   const caseVerb1 = [
     {
