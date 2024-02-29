@@ -31,9 +31,10 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
     if (typeof value === "undefined") {
       setMeaningData(undefined);
     } else {
-      get<IDictFirstMeaningResponse>(
-        `/v2/dict-meaning?lang=zh-Hans&word=` + value.replaceAll("+", "-")
-      ).then((json) => {
+      const url =
+        `/v2/dict-meaning?lang=zh-Hans&word=` + value.replaceAll("+", "-");
+      console.info("dict compound url", url);
+      get<IDictFirstMeaningResponse>(url).then((json) => {
         if (json.ok) {
           setMeaningData(json.data);
         }
@@ -42,7 +43,7 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
   };
 
   useEffect(() => {
-    console.log("compound changed", add, compound);
+    console.debug("compound changed", add, compound);
     if (typeof add === "undefined") {
       setFactors(compound);
       const value = compound.length > 0 ? compound[0].value : undefined;
@@ -60,6 +61,7 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
       return;
     }
     const url = `/v2/userdict?view=compound&word=${word}&order=confidence`;
+    console.info("dict compound url", url);
     get<IApiResponseDictList>(url).then((json) => {
       if (json.ok) {
         const data = json.data.rows
