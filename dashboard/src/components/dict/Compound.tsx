@@ -94,7 +94,7 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
         factors.forEach((value, key, map) => {
           arrFactors.push(value);
         });
-        arrFactors.sort((a, b) => a.confidence - b.confidence);
+        arrFactors.sort((a, b) => b.confidence - a.confidence);
         setCompound(
           arrFactors.map((item, id) => {
             return {
