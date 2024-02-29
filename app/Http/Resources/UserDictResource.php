@@ -27,6 +27,7 @@ class UserDictResource extends JsonResource
          'parent'=>$this->parent,
          'note'=>$this->note,
          'factors'=>$this->factors,
+         'source'=>$this->source,
          'confidence'=>$this->confidence,
          'updated_at'=>$this->updated_at,
          'creator_id'=>$this->creator_id,

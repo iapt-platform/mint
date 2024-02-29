@@ -27,7 +27,7 @@ class UserDictController extends Controller
 		$indexCol = ['id','word','type','grammar',
                      'mean','parent','note',
                      'factors','confidence','dict_id',
-                     'updated_at','creator_id'];
+                     'source','updated_at','creator_id'];
 		switch ($request->get('view')) {
             case 'all':
             # 获取studio内所有channel
