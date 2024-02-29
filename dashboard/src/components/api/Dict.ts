@@ -46,6 +46,7 @@ export interface IApiResponseDictData {
   note?: string | null;
   factors?: string | null;
   factormean?: string | null;
+  source: string | null;
   language: string;
   dict?: IDictInfo;
   dict_id: string;
