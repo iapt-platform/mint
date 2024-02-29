@@ -1,5 +1,7 @@
 import { List, Select, Typography } from "antd";
 import { useEffect, useState } from "react";
+import { TeamOutlined, RobotOutlined } from "@ant-design/icons";
+
 import { get } from "../../request";
 import {
   IApiResponseDictList,
@@ -9,9 +11,14 @@ import {
 
 const { Text, Link } = Typography;
 
+interface IFactorInfo {
+  factors: string;
+  type: string;
+  confidence: number;
+}
 interface IOptions {
   value: string;
-  label: string;
+  label: React.ReactNode;
 }
 interface IWidget {
   word?: string;
@@ -60,20 +67,58 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
     if (typeof word === "undefined") {
       return;
     }
-    const url = `/v2/userdict?view=compound&word=${word}&order=confidence`;
+    const url = `/v2/userdict?view=word&word=${word}`;
     console.info("dict compound url", url);
     get<IApiResponseDictList>(url).then((json) => {
       if (json.ok) {
-        const data = json.data.rows
+        let factors = new Map<string, IFactorInfo>();
+        json.data.rows
           .filter((value) => typeof value.factors === "string")
-          .map((item) => {
-            if (item.factors) {
-              return { value: item.factors, label: item.factors };
-            } else {
-              return { value: "", label: "" };
+          .forEach((value) => {
+            let type = "";
+            if (value.source?.includes("_USER")) {
+              type = "user";
+            }
+            if (value.type === ".cp.") {
+              type = "robot";
+            }
+            if (value.factors) {
+              factors.set(value.factors, {
+                factors: value.factors,
+                type: type,
+                confidence: value.confidence,
+              });
             }
           });
-        setCompound(data);
+        let arrFactors: IFactorInfo[] = [];
+        factors.forEach((value, key, map) => {
+          arrFactors.push(value);
+        });
+        arrFactors.sort((a, b) => a.confidence - b.confidence);
+        setCompound(
+          arrFactors.map((item, id) => {
+            return {
+              value: item.factors,
+              label: (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {item.factors}
+                  {item.type === "user" ? (
+                    <TeamOutlined />
+                  ) : item.type === "robot" ? (
+                    <RobotOutlined />
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              ),
+            };
+          })
+        );
       }
     });
   }, [word]);
