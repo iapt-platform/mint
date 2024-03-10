@@ -98,8 +98,8 @@ interface IDetailsWidget {
 
 export const Details = ({ data, isPr }: IDetailsWidget) => (
   <Space wrap>
-    <Channel {...data.channel} />
-    <User {...data.editor} showAvatar={isPr ? true : false} />
+    {isPr ? <></> : <Channel {...data.channel} />}
+    <User {...data.editor} showAvatar={false} />
     {data.prEditAt ? (
       <TimeShow
         type="secondary"
