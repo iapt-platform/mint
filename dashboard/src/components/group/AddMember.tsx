@@ -4,7 +4,7 @@ import { Button, message, Popover } from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
 import { get, post } from "../../request";
 import { IUserListResponse } from "../api/Auth";
-import { IGroupMemberData, IGroupMemberResponse } from "../api/Group";
+import { IGroupMemberRequest, IGroupMemberResponse } from "../api/Group";
 import { useState } from "react";
 
 interface IFormData {
@@ -24,7 +24,7 @@ const AddMemberWidget = ({ groupId, onCreated }: IWidget) => {
       onFinish={async (values: IFormData) => {
         console.log(values);
         if (typeof groupId !== "undefined") {
-          post<IGroupMemberData, IGroupMemberResponse>("/v2/group-member", {
+          post<IGroupMemberRequest, IGroupMemberResponse>("/v2/group-member", {
             user_id: values.userId,
             group_id: groupId,
           }).then((json) => {
