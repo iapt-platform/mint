@@ -1,5 +1,6 @@
 import { IStudio } from "../auth/Studio";
-import { IUserRequest, TRole } from "./Auth";
+import { IUser } from "../auth/User";
+import { TRole } from "./Auth";
 
 export interface IGroupRequest {
   id?: string;
@@ -31,7 +32,14 @@ export interface IGroupListResponse {
     count: number;
   };
 }
-
+export interface IGroupMemberRequest {
+  id?: number;
+  user_id: string;
+  group_id: string;
+  power?: number;
+  level?: number;
+  status?: number;
+}
 export interface IGroupMemberData {
   id?: number;
   user_id: string;
@@ -39,7 +47,7 @@ export interface IGroupMemberData {
   power?: number;
   level?: number;
   status?: number;
-  user?: IUserRequest;
+  user: IUser;
   created_at?: string;
   updated_at?: string;
 }
