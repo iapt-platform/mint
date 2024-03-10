@@ -44,7 +44,7 @@ class GroupMemberController extends Controller
         if(isset($_GET["order"]) && isset($_GET["dir"])){
             $table = $table->orderBy($_GET["order"],$_GET["dir"]);
         }else{
-            $table = $table->orderBy('updated_at','desc');
+            $table = $table->orderBy('created_at');
         }
 
         $table->skip($request->get('offset',0))
