@@ -9,6 +9,7 @@ import {
   IGroupMemberDeleteResponse,
   IGroupMemberListResponse,
 } from "../api/Group";
+import User, { IUser } from "../auth/User";
 
 const { Content } = Layout;
 
@@ -20,6 +21,7 @@ interface DataItem {
   id: number;
   userId: string;
   name?: string;
+  user: IUser;
   tag: IRoleTag[];
   image: string;
 }
@@ -83,6 +85,7 @@ const GroupMemberWidget = ({ groupId }: IWidgetGroupFile) => {
                 id: item.id ? item.id : 0,
                 userId: item.user_id,
                 name: item.user?.nickName,
+                user: item.user,
                 tag: [],
                 image: "",
               };
@@ -123,6 +126,9 @@ const GroupMemberWidget = ({ groupId }: IWidgetGroupFile) => {
           avatar: {
             dataIndex: "image",
             editable: false,
+            render(dom, entity, index, action, schema) {
+              return <User {...entity.user} showName={false} />;
+            },
           },
           subTitle: {
             render: (text, row, index, action) => {
