@@ -52,31 +52,30 @@ class GroupMemberController extends Controller
 
         $result = $table->get();
 
-        foreach ($result as $key => $value) {
-            # 找到当前用户
-            if($user["user_uid"]===$value->user_id){
-                switch ($value->power) {
-                    case 0:
-                        $role = "owner";
-                        break;
-                    case 1:
-                        $role = "manager";
-                        break;
-                    case 2:
-                        $role = "member";
-                        break;
-                    default:
-                        $role="unknown";
-                        break;
-                }
-            }
+        //当前用户角色
+        $power = GroupMember::where('group_id', $request->get('id'))
+                            ->where('user_id',$user['user_uid'])
+                            ->value('power');
+        switch ($power) {
+            case 0:
+                $role = "owner";
+                break;
+            case 1:
+                $role = "manager";
+                break;
+            case 2:
+                $role = "member";
+                break;
+            default:
+                $role="unknown";
+                break;
         }
 
-		if($result){
-			return $this->ok(["rows"=>GroupMemberResource::collection($result),"count"=>$count,'role'=>$role]);
-		}else{
-			return $this->error("没有查询到数据",[],200);
-		}
+        return $this->ok([
+            "rows"=>GroupMemberResource::collection($result),
+            "count"=>$count,
+            'role'=>$role
+        ]);
     }
 
     /**
