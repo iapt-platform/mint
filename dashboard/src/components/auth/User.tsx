@@ -1,4 +1,5 @@
 import { Avatar, Space } from "antd";
+import { getAvatarColor } from "./Studio";
 
 export interface IUser {
   id: string;
@@ -24,7 +25,11 @@ const UserWidget = ({
   return (
     <Space>
       {showAvatar ? (
-        <Avatar size="small" src={avatar}>
+        <Avatar
+          size="small"
+          src={avatar}
+          style={{ backgroundColor: getAvatarColor(nickName) }}
+        >
           {nickName?.slice(0, 2)}
         </Avatar>
       ) : undefined}
