@@ -170,6 +170,16 @@ class UserDictController extends Controller
                 $updateOk = $this->update_sys_wbw($word);
                 $this->update_redis($word);
                 $iOk++;
+            }else{
+                //存在，修改数据
+                $origin = $table->first();
+                if(isset($word["note"])){
+                    $origin->note = $word["note"];
+                }
+                if(isset($word["confidence"])){
+                    $origin->confidence = $word["confidence"];
+                }
+                $origin->save();
             }
         }
 
