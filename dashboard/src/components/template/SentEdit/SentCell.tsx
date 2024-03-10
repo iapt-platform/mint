@@ -27,6 +27,7 @@ import StudioName from "../../auth/Studio";
 import CopyToModal from "../../channel/CopyToModal";
 import store from "../../../store";
 import { randomString } from "../../../utils";
+import User from "../../auth/User";
 
 interface IWidget {
   initValue?: ISentence;
@@ -289,13 +290,19 @@ const SentCellWidget = ({
         {sentData ? (
           <div style={{ display: "flex" }}>
             <div style={{ marginRight: 8 }}>
-              <StudioName
-                data={sentData.studio}
-                hideName
-                popOver={
-                  compact ? <Details data={sentData} isPr={isPr} /> : undefined
-                }
-              />
+              {isPr ? (
+                <User {...sentData.editor} showName={false} />
+              ) : (
+                <StudioName
+                  data={sentData.studio}
+                  hideName
+                  popOver={
+                    compact ? (
+                      <Details data={sentData} isPr={isPr} />
+                    ) : undefined
+                  }
+                />
+              )}
             </div>
             <div
               style={{
@@ -364,7 +371,7 @@ const SentCellWidget = ({
                   flexWrap: "wrap",
                 }}
               >
-                <EditInfo data={sentData} compact={compact} />
+                <EditInfo data={sentData} isPr={isPr} compact={compact} />
                 <SuggestionToolbar
                   style={{
                     marginBottom: 0,
