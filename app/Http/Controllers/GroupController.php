@@ -158,17 +158,22 @@ class GroupController extends Controller
 		if(!$result){
             return $this->error("没有查询到数据");
 		}
-        if($result->status<30){
+        if($result->status < 30){
             //私有，判断权限
             $user = AuthApi::current($request);
             if(!$user){
                 return $this->error(__('auth.failed'));
             }
-            //判断当前用户是否有指定的studio的权限
+            //判断当前用户是否有指定的group的权限
             if($user['user_uid'] !== $result->owner){
                 //非所有者
-                //TODO 判断是否协作
-                return $this->error(__('auth.failed'));
+                //判断是否协作
+                $power = GroupMember::where('group_id', $id)
+                            ->where('user_id',$user['user_uid'])
+                            ->value('power');
+                if($power === null){
+                   return $this->error(__('auth.failed'));
+                }
             }
         }
         return $this->ok(new GroupResource($result));
