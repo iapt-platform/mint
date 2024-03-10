@@ -2,7 +2,18 @@ import { Avatar, Space } from "antd";
 
 import StudioCard from "./StudioCard";
 
-const avatarColor = ["indianred", "blueviolet", "#87d068", "#108ee9"];
+export const getAvatarColor = (name?: string) => {
+  const avatarColor = ["indianred", "blueviolet", "#87d068", "#108ee9"];
+  if (!name) {
+    return undefined;
+  }
+  let char = 0;
+  if (name.length > 1) {
+    char = name.length - 1;
+  }
+  const colorIndex = name.charCodeAt(char) % avatarColor.length;
+  return avatarColor[colorIndex];
+};
 export interface IStudio {
   id: string;
   nickName?: string;
@@ -24,15 +35,6 @@ const StudioWidget = ({
   popOver,
   onClick,
 }: IWidget) => {
-  let colorIndex = 0;
-  if (data?.nickName) {
-    let char = 0;
-    if (data.nickName.length > 1) {
-      char = data.nickName.length - 1;
-    }
-    colorIndex = data.nickName.charCodeAt(char) % avatarColor.length;
-  }
-
   return (
     <StudioCard popOver={popOver} studio={data}>
       <Space
@@ -48,7 +50,7 @@ const StudioWidget = ({
           <Avatar
             size="small"
             src={data?.avatar}
-            style={{ backgroundColor: avatarColor[colorIndex] }}
+            style={{ backgroundColor: getAvatarColor(data?.nickName) }}
           >
             {data?.nickName?.slice(0, 2)}
           </Avatar>
