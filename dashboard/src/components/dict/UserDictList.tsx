@@ -8,13 +8,16 @@ import {
   message,
   Modal,
   Typography,
+  Tag,
+  Popover,
 } from "antd";
 import {
   PlusOutlined,
   ExclamationCircleOutlined,
   DeleteOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
-import { ActionType, ProTable } from "@ant-design/pro-components";
+import { ActionType, ProList } from "@ant-design/pro-components";
 
 import DictCreate from "../../components/dict/DictCreate";
 import {
@@ -28,6 +31,7 @@ import DictEdit from "../../components/dict/DictEdit";
 import { IDeleteResponse } from "../../components/api/Article";
 import TimeShow from "../general/TimeShow";
 import { getSorterUrl } from "../../utils";
+import MdView from "../template/MdView";
 
 const { Link } = Typography;
 
@@ -54,11 +58,15 @@ interface IWidget {
   studioName?: string;
   view?: "studio" | "all";
   dictName?: string;
+  word?: string;
+  compact?: boolean;
 }
 const UserDictListWidget = ({
   studioName,
   view = "studio",
   dictName,
+  word,
+  compact = false,
 }: IWidget) => {
   const intl = useIntl();
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -110,8 +118,116 @@ const UserDictListWidget = ({
 
   return (
     <>
-      <ProTable<IWord, IParams>
+      <ProList<IWord, IParams>
         actionRef={ref}
+        metas={{
+          title: {
+            dataIndex: "word",
+            title: "拼写",
+            search: word ? false : undefined,
+            render: (text, entity, index, action) => {
+              return (
+                <Space>
+                  <span
+                    onClick={() => {
+                      setWordId(entity.wordId);
+                      setDrawerTitle(entity.word);
+                      setIsEditOpen(true);
+                    }}
+                  >
+                    {entity.word}
+                  </span>
+                  {entity.note ? (
+                    <Popover
+                      placement="bottom"
+                      content={<MdView html={entity.note} />}
+                    >
+                      <InfoCircleOutlined color="blue" />
+                    </Popover>
+                  ) : (
+                    <></>
+                  )}
+                </Space>
+              );
+            },
+          },
+          subTitle: {
+            search: false,
+            render: (text, row, index, action) => {
+              return (
+                <Space>
+                  {row.type ? (
+                    <Tag key="type" color="blue">
+                      {intl.formatMessage({
+                        id: `dict.fields.type.${row.type?.replaceAll(
+                          ".",
+                          ""
+                        )}.label`,
+                        defaultMessage: row.type,
+                      })}
+                    </Tag>
+                  ) : (
+                    <></>
+                  )}
+                  {row.grammar ? (
+                    <Tag key="grammar" color="#5BD8A6">
+                      {row.grammar
+                        ?.replaceAll(".", "")
+                        .split("$")
+                        .map((item) =>
+                          intl.formatMessage({
+                            id: `dict.fields.type.${item}.label`,
+                            defaultMessage: item,
+                          })
+                        )
+                        .join(".")}
+                    </Tag>
+                  ) : (
+                    <></>
+                  )}
+                </Space>
+              );
+            },
+          },
+          description: {
+            dataIndex: "meaning",
+            title: "整体意思",
+            search: word ? false : undefined,
+            render(dom, entity, index, action, schema) {
+              return (
+                <div>
+                  <Space>
+                    {entity.meaning}
+
+                    <TimeShow
+                      updatedAt={entity.updated_at}
+                      createdAt={entity.updated_at}
+                      type="secondary"
+                    />
+                  </Space>
+                  {compact ? (
+                    <div>
+                      <div>{entity.factors}</div>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              );
+            },
+          },
+          content: compact
+            ? undefined
+            : {
+                render(dom, entity, index, action, schema) {
+                  return (
+                    <div>
+                      <div>{entity.factors}</div>
+                    </div>
+                  );
+                },
+              },
+        }}
         columns={[
           {
             title: intl.formatMessage({
@@ -346,7 +462,11 @@ const UserDictListWidget = ({
 
           url += params.keyword ? "&search=" + params.keyword : "";
 
-          url += params.word ? `&word=${params.word}` : "";
+          url += params.word
+            ? `&word=${params.word}`
+            : word
+            ? `&word=${word}`
+            : "";
           url += params.parent ? `&parent=${params.parent}` : "";
           url += params.dict ? `&dict=${params.dict}` : "";
           url += dictName
@@ -388,11 +508,15 @@ const UserDictListWidget = ({
           showQuickJumper: true,
           showSizeChanger: true,
         }}
-        search={{
-          filterType: "light",
-        }}
+        search={
+          word
+            ? undefined
+            : {
+                filterType: "light",
+              }
+        }
         options={{
-          search: true,
+          search: word ? false : true,
         }}
         headerTitle=""
         toolBarRender={
