@@ -118,7 +118,7 @@ const WbwFactorsWidget = ({ data, display, onChange }: IWidget) => {
         //空白的意思在逐词解析模式显示占位字符串
         factors = (
           <Text type="secondary">
-            {intl.formatMessage({ id: "dict.fields.factors.label" })}
+            {intl.formatMessage({ id: "forms.fields.factors.label" })}
           </Text>
         );
       }

@@ -7,6 +7,7 @@ import {
   EditOutlined,
   CheckOutlined,
   SearchOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import { useAppSelector } from "../../../hooks";
 
@@ -22,8 +23,9 @@ interface IWFMI {
   meaning?: string;
   onChange?: Function;
 }
-const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
+const WbwFactorMeaningItem = ({ pali, meaning = "", onChange }: IWFMI) => {
   const intl = useIntl();
+  console.debug("meaning", meaning);
   const defaultMenu: ItemType[] = [
     {
       key: "_lookup",
@@ -88,18 +90,29 @@ const WbwFactorMeaningItem = ({ pali, meaning, onChange }: IWFMI) => {
     }
   };
 
+  const inputCancel = () => {
+    setEditable(false);
+    setInput(meaning);
+  };
+
   const meaningInner = editable ? (
     <Input
       defaultValue={meaning}
       size="small"
       addonAfter={
-        <CheckOutlined
-          style={{ cursor: "pointer" }}
-          onClick={() => inputOk()}
-        />
+        <>
+          <CheckOutlined
+            style={{ cursor: "pointer", marginRight: 4 }}
+            onClick={() => inputOk()}
+          />
+          <CloseOutlined
+            style={{ cursor: "pointer" }}
+            onClick={() => inputCancel()}
+          />
+        </>
       }
       placeholder="Basic usage"
-      style={{ width: 100 }}
+      style={{ width: 160 }}
       onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(event.target.value);
       }}

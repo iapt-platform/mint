@@ -80,14 +80,14 @@ const WbwFactorMeaningWidget = ({
   if (display === "block") {
     if (
       typeof data.factorMeaning?.value === "string" &&
-      data.factorMeaning.value.trim().length > 0
+      data.factorMeaning.value.replaceAll("+", "").trim().length > 0
     ) {
       factorMeaning = <span>{data.factorMeaning?.value}</span>;
     } else {
       //空白的意思在逐词解析模式显示占位字符串
       factorMeaning = (
         <Text type="secondary">
-          {intl.formatMessage({ id: "dict.fields.factormeaning.label" })}
+          {intl.formatMessage({ id: "forms.fields.factor.meaning.label" })}
         </Text>
       );
     }

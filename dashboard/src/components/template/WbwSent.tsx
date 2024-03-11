@@ -498,6 +498,7 @@ export const WbwSentCtl = ({
         parent: data.parent?.value,
         factors: data.factors?.value,
         factormean: data.factorMeaning?.value,
+        note: data.note?.value,
         confidence: conf,
         language: channelLang,
       });

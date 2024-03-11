@@ -10,6 +10,9 @@ import DictList from "./DictList";
 import MyCreate from "./MyCreate";
 import { useIntl } from "react-intl";
 import DictGroupTitle from "./DictGroupTitle";
+import UserDictList from "./UserDictList";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
 
 export interface IDictWords {
   pass: string;
@@ -37,6 +40,8 @@ interface IWidget {
 
 const DictContentWidget = ({ word, data, compact }: IWidget) => {
   const intl = useIntl();
+  const user = useAppSelector(currentUser);
+
   return (
     <>
       <Row>
@@ -103,6 +108,12 @@ const DictContentWidget = ({ word, data, compact }: IWidget) => {
                 key: "my",
                 children: (
                   <div>
+                    <UserDictList
+                      studioName={user?.realName}
+                      word={word}
+                      compact={true}
+                    />
+                    <Divider>新建</Divider>
                     <MyCreate word={word} />
                   </div>
                 ),
