@@ -1,6 +1,6 @@
 import { ProCard, StatisticCard } from "@ant-design/pro-components";
 import { useEffect, useState } from "react";
-import UserDictList from "../../../components/dict/UserDictList";
+import UserDictList from "../../../components/dict/UserDictTable";
 import { get } from "../../../request";
 
 const { Statistic } = StatisticCard;
