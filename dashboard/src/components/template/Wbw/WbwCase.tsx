@@ -162,7 +162,7 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
     } else {
       //空白的语法信息在逐词解析模式显示占位字符串
       caseElement = (
-        <span>{intl.formatMessage({ id: "dict.fields.case.label" })}</span>
+        <span>{intl.formatMessage({ id: "forms.fields.case.label" })}</span>
       );
     }
   }

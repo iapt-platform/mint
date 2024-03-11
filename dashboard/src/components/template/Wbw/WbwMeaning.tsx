@@ -60,7 +60,7 @@ const WbwMeaningWidget = ({
     //空白的意思在逐词解析模式显示占位字符串
     meaning = (
       <Text type="secondary">
-        {intl.formatMessage({ id: "dict.fields.meaning.label" })}
+        {intl.formatMessage({ id: "forms.fields.meaning.label" })}
       </Text>
     );
   }
