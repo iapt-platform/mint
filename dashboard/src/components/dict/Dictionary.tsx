@@ -23,7 +23,7 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
 
   useEffect(() => {
     console.debug("param word change", word);
-    setWordInput(word);
+    wordInputChange(word);
   }, [word]);
 
   const wordChange = (value?: string) => {
@@ -57,22 +57,22 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
     return currWord;
   };
 
-  useEffect(() => {
-    console.debug("wordInput change", wordInput);
-    if (wordInput !== wordSearch) {
-      const currWord = wordChange(wordInput);
+  const wordInputChange = (value: string | undefined) => {
+    setWordInput(value);
+    console.debug("wordInput change", value);
+    if (value !== wordSearch) {
+      const currWord = wordChange(value);
       setWordSearch(currWord);
     }
-  }, [wordInput]);
+  };
 
   const dictSearch = (value: string, isFactor?: boolean) => {
     console.info("onSearch", value);
     const currWord = wordChange(value);
     if (typeof onSearch !== "undefined" && !isFactor) {
       onSearch(currWord);
-    } else {
-      setWordSearch(currWord);
     }
+    setWordSearch(currWord);
   };
   return (
     <div ref={setContainer}>
@@ -127,7 +127,7 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
                   if (typeof onSearch !== "undefined") {
                     onSearch(newInput);
                   } else {
-                    setWordInput(newInput);
+                    wordInputChange(newInput);
                   }
                 }}
               />
