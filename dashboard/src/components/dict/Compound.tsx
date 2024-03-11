@@ -64,6 +64,8 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
   }, [add, compound]);
 
   useEffect(() => {
+    setMeaningData([]);
+    setFactors([]);
     if (typeof word === "undefined") {
       return;
     }
@@ -141,7 +143,7 @@ const CompoundWidget = ({ word, add, split, onSearch }: IWidget) => {
         onChange={onSelectChange}
         options={factors}
       />
-      {meaningData ? (
+      {meaningData && meaningData.length > 0 ? (
         <List
           size="small"
           dataSource={meaningData}
