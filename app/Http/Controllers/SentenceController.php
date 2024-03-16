@@ -5,19 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\Sentence;
 use App\Models\Channel;
 use App\Models\SentHistory;
+use App\Models\WbwAnalysis;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
+
 use App\Http\Resources\SentResource;
 use App\Http\Api\AuthApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\PaliTextApi;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
-use App\Tools\RedisClusters;
 use App\Http\Api\Mq;
+
+use App\Tools\RedisClusters;
 use App\Tools\OpsLog;
-use Illuminate\Support\Facades\Redis;
+
 
 class SentenceController extends Controller
 {
@@ -373,7 +378,7 @@ class SentenceController extends Controller
         $user = AuthApi::current($request);
         if(!$user){
             //未登录鉴权失败
-            return $this->error(__('auth.failed'),[],403);
+            return $this->error(__('auth.failed'),403,403);
         }
         $channel = Channel::where('uid',$param[4])->first();
         if(!$channel){
@@ -383,7 +388,7 @@ class SentenceController extends Controller
             // 判断是否为协作
             $power = ShareApi::getResPower($user["user_uid"],$channel->uid,2);
             if($power < 20){
-                return $this->error(__('auth.failed'),[],403);
+                return $this->error(__('auth.failed'),403,403);
             }
         }
 
@@ -419,6 +424,7 @@ class SentenceController extends Controller
         }
         $sent->editor_uid = $realEditor;
         $sent->save();
+        $sent = $sent->refresh();
         //清除缓存
         $sentId = "{$sent['book_id']}-{$sent['paragraph']}-{$sent['word_start']}-{$sent['word_end']}";
         $hKey = "/sentence/res-count/{$sentId}/";
@@ -447,6 +453,11 @@ class SentenceController extends Controller
                             'channel'=>$channelId,
                             ]);
         Mq::publish('content',new SentResource($sent));
+
+        if($channel->type === 'nissaya' && $sent->content_type === 'json'){
+            $this->updateWbwAnalyses($sent->content,$channel->lang,$user["user_id"]);
+        }
+
         return $this->ok(new SentResource($sent));
     }
 
@@ -459,5 +470,52 @@ class SentenceController extends Controller
     public function destroy(Sentence $sentence)
     {
         //
+    }
+
+    private function updateWbwAnalyses($data,$lang,$editorId){
+        $wbwData = json_decode($data);
+        $currWbwId = 0;
+        $prefix = 'wbw-preference';
+        foreach ($wbwData as $key => $word) {
+            # code...
+            if(count($word->sn) === 1 ){
+                $currWbwId = $word->uid;
+                WbwAnalysis::where('wbw_id',$word->uid)->delete();
+            }
+            $newData = [
+                'wbw_id' => $currWbwId,
+                'wbw_word' => $word->real->value,
+                'book_id' => $word->book,
+                'paragraph' => $word->para,
+                'wid' => $word->sn[0],
+                'type' => 0,
+                'data' => '',
+                'confidence' => 100,
+                'lang' => $lang,
+                'editor_id'=>$editorId,
+                'created_at'=>now(),
+                'updated_at'=>now()
+            ];
+            $newData['type'] = 3;
+            if(!empty($word->meaning->value)){
+                $newData['data'] = $word->meaning->value;
+                WbwAnalysis::insert($newData);
+                RedisClusters::put("{$prefix}/{$word->real->value}/3/{$editorId}",$word->meaning->value);
+            }
+            if(isset($word->factors) && isset($word->factorMeaning)){
+                $factors = explode('+',str_replace('-','+',$word->factors->value));
+                $factorMeaning = explode('+',str_replace('-','+',$word->factorMeaning->value));
+                foreach ($factors as $key => $factor) {
+                    if(isset($factorMeaning[$key])){
+                        if(!empty($factorMeaning[$key])){
+                            $newData['wbw_word'] = $factor;
+                            $newData['data'] = $factorMeaning[$key];
+                            WbwAnalysis::insert($newData);
+                            RedisClusters::put("{$prefix}/{$factor}/3/{$editorId}",$factorMeaning[$key]);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
