@@ -88,6 +88,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\InteractiveController;
 use App\Http\Controllers\ChapterIndexController;
 use App\Http\Controllers\WbwSentenceController;
+use App\Http\Controllers\SnowFlakeIdController;
 
 /*
 |--------------------------------------------------------------------------
@@ -231,6 +232,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('interactive',InteractiveController::class);
     Route::apiResource('chapter-index',ChapterIndexController::class);
     Route::apiResource('wbw-sentence',WbwSentenceController::class);
+    Route::apiResource('snowflake',SnowFlakeIdController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
