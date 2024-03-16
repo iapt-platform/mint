@@ -59,15 +59,18 @@ export const UserWbwPost = (data: IDictRequest[], view: string) => {
       const factors: IDictRequest[] = value.factors
         .split("+")
         .map((item, id) => {
+          const currWord = item.replaceAll("-", "");
+          console.debug("currWord", currWord);
           return {
-            word: item,
+            word: currWord,
             type: ".part.",
             grammar: "",
-            mean: fm ? fm[id] ?? "" : "",
+            mean: fm ? fm[id].replaceAll("-", "") ?? "" : "",
             confidence: value.confidence,
             language: value.language,
           };
-        });
+        })
+        .filter((value) => value.mean !== "");
       wordData = [...wordData, ...factors];
     }
   });
