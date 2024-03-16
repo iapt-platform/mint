@@ -15,7 +15,7 @@
   display: flex;
 }
 .layout-v .wbw_body {
-  display: flex;
+  display: unset;
 }
 .wbw_word {
   margin: 0 0 0.2em 0;
@@ -83,6 +83,7 @@
 }
 .layout-v .wbw_word_item {
   margin-right: 8px;
+  flex: 5;
 }
 .case {
   padding: 0 2px;
