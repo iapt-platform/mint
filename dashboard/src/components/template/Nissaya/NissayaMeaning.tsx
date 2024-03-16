@@ -10,7 +10,7 @@ export interface IMeaning {
 }
 
 export const nissayaBase = (item: string, endings: string[]): IMeaning => {
-  let word = item.replaceAll("။", "");
+  let word = item.trim().replaceAll("။", "");
   let end: string[] = [];
   for (let loop = 0; loop < 3; loop++) {
     for (let i = 0; i < word.length; i++) {

@@ -64,6 +64,7 @@ const SentCanReadWidget = ({
               editor: item.editor,
               studio: item.studio,
               channel: item.channel,
+              contentType: item.content_type,
               suggestionCount: item.suggestionCount,
               translationChannels: channelsId,
               forkAt: item.fork_at,
@@ -157,7 +158,7 @@ const SentCanReadWidget = ({
             isPr={false}
             editMode={item.openInEditMode}
             onChange={(value: ISentence) => {
-              console.log("onChange", value);
+              console.debug("onChange", value);
               setSentData((origin) => {
                 origin.forEach((value1, index, array) => {
                   if (value1.id === value.id) {

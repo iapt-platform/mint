@@ -59,6 +59,7 @@ export interface ISentenceId {
 export const toISentence = (apiData: ISentenceData): ISentence => ({
   id: apiData.id,
   content: apiData.content,
+  contentType: apiData.content_type,
   html: apiData.html,
   book: apiData.book,
   para: apiData.paragraph,

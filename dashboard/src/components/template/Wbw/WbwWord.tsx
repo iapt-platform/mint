@@ -227,7 +227,10 @@ const WbwWordWidget = ({
               wordData.factors?.value !== "" &&
               wordData.factors?.value !== null
             ) {
-              words = [...words, ...wordData.factors.value.split("+")];
+              words = [
+                ...words,
+                ...wordData.factors.value.replaceAll("-", "+").split("+"),
+              ];
             }
             intervalRef.current = window.setInterval(lookup, 300, words);
           }
@@ -327,8 +330,8 @@ const WbwWordWidget = ({
           ) : undefined}
           {fieldDisplay?.factorMeaning2 ? (
             <WbwDetailFm
-              factors={data.factors?.value?.split("+")}
-              initValue={data.factorMeaning?.value?.split("+")}
+              factors={wordData.factors?.value?.split("+")}
+              value={wordData.factorMeaning?.value?.split("+")}
               onChange={(value: string[]) => {
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
                 newData.factorMeaning = {

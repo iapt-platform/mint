@@ -20,7 +20,7 @@ import { anchor, message } from "../../../reducers/discussion";
 import TextDiff from "../../general/TextDiff";
 import { sentSave as _sentSave } from "./SentCellEditable";
 import { IDeleteResponse } from "../../api/Article";
-import { delete_ } from "../../../request";
+import { delete_, get } from "../../../request";
 
 import "./style.css";
 import StudioName from "../../auth/Studio";
@@ -28,6 +28,15 @@ import CopyToModal from "../../channel/CopyToModal";
 import store from "../../../store";
 import { randomString } from "../../../utils";
 import User from "../../auth/User";
+
+interface ISnowFlakeResponse {
+  ok: boolean;
+  message?: string;
+  data: {
+    rows: string;
+    count: number;
+  };
+}
 
 interface IWidget {
   initValue?: ISentence;
@@ -53,6 +62,7 @@ const SentCellWidget = ({
   onChange,
   onDelete,
 }: IWidget) => {
+  console.debug("SentCell render", value);
   const intl = useIntl();
   const [isEditMode, setIsEditMode] = useState(editMode);
   const [sentData, setSentData] = useState<ISentence | undefined>(initValue);
@@ -216,49 +226,81 @@ const SentCellWidget = ({
               break;
           }
         }}
-        onConvert={(format: string) => {
+        onConvert={async (format: string) => {
           switch (format) {
             case "json":
               const wbw: IWbw[] = sentData?.content
-                ? sentData.content.split("\n").map((item, id) => {
-                    const parts = item.split("=");
-                    const word = my_to_roman(parts[0]);
-                    const meaning: string =
-                      parts.length > 1 ? parts[1].trim() : "";
-                    let parent: string = "";
-                    let factors: string = "";
-                    if (!meaning.includes(" ") && endings) {
-                      const base = nissayaBase(meaning, endings);
-                      parent = base.base;
-                      const end = base.ending ? base.ending : [];
-                      factors = [base.base, ...end].join("+");
-                    } else {
-                      factors = meaning.replaceAll(" ", "+");
-                    }
-                    return {
-                      book: sentData.book,
-                      para: sentData.para,
-                      sn: [id],
-                      word: { value: word ? word : parts[0], status: 0 },
-                      real: { value: meaning, status: 0 },
-                      meaning: { value: "", status: 0 },
-                      parent: { value: parent, status: 0 },
-                      factors: {
-                        value: factors,
-                        status: 0,
-                      },
-                      confidence: 0.5,
-                    };
-                  })
+                ? sentData.content
+                    .split("\n")
+                    .filter((value) => value.trim().length > 0)
+                    .map((item, id) => {
+                      const parts = item.split("=");
+                      const word = my_to_roman(parts[0]);
+                      const meaning: string =
+                        parts.length > 1
+                          ? parts[1]
+                              .trim()
+                              .replaceAll("။", "")
+                              .replaceAll("(", " ( ")
+                              .replaceAll(")", " ) ")
+                          : "";
+                      const translation: string =
+                        parts.length > 2 ? parts[2].trim() : "";
+                      let parent: string = "";
+                      let factors: string = "";
+                      const factor1 = meaning
+                        .split(" ")
+                        .filter((value) => value !== "");
+                      factors = factor1
+                        .map((item) => {
+                          if (endings) {
+                            const base = nissayaBase(item, endings);
+                            if (factor1.length === 1) {
+                              parent = base.base;
+                            }
+                            const end = base.ending ? base.ending : [];
+                            return [base.base, ...end]
+                              .filter((value) => value !== "")
+                              .join("-");
+                          } else {
+                            return item;
+                          }
+                        })
+                        .join("+");
+                      return {
+                        uid: "0",
+                        book: sentData.book,
+                        para: sentData.para,
+                        sn: [id],
+                        word: { value: word ? word : parts[0], status: 0 },
+                        real: { value: meaning, status: 0 },
+                        meaning: { value: translation, status: 0 },
+                        parent: { value: parent, status: 0 },
+                        factors: {
+                          value: factors,
+                          status: 0,
+                        },
+                        confidence: 0.5,
+                      };
+                    })
                 : [];
-              setSentData((origin) => {
-                if (origin) {
-                  origin.contentType = "json";
-                  origin.content = JSON.stringify(wbw);
-                  sentSave(origin, intl);
-                  return origin;
-                }
-              });
+              if (wbw.length > 0) {
+                const snowflake = await get<ISnowFlakeResponse>(
+                  `/v2/snowflake?count=${wbw.length}`
+                );
+                wbw.forEach((value: IWbw, index: number, array: IWbw[]) => {
+                  array[index].uid = snowflake.data.rows[index];
+                });
+              }
+
+              if (sentData) {
+                const newData = JSON.parse(JSON.stringify(sentData));
+                newData.contentType = "json";
+                newData.content = JSON.stringify(wbw);
+                setSentData(newData);
+                sentSave(newData, intl);
+              }
+
               setIsEditMode(true);
               break;
             case "markdown":

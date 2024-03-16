@@ -29,7 +29,7 @@ const items = {
   "setting.dict.lang.label": "字典语言",
   "setting.dict.lang.description": "字典查询结果的语言排序",
   "setting.nissaya.layout.read.label": "阅读排版方式",
-  "setting.nissaya.layout.edit.label": "阅读排版方式",
+  "setting.nissaya.layout.edit.label": "编辑排版方式",
   "setting.nissaya.layout.inline.label": "连续",
   "setting.nissaya.layout.list.label": "列表",
   "setting.wbw.order.label": "显示输入顺序提示",

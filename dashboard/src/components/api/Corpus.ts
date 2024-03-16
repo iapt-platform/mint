@@ -154,6 +154,7 @@ export interface ISentenceRequest {
   prUuid?: string;
   prEditAt?: string;
   channels?: string;
+  html?: boolean;
 }
 
 export interface ISentenceData {

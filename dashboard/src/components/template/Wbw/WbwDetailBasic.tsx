@@ -169,7 +169,7 @@ const WbwDetailBasicWidget = ({
           <div style={{ display: "flex" }}>
             <WbwDetailFm
               factors={factors}
-              initValue={data.factorMeaning?.value?.split("+")}
+              value={data.factorMeaning?.value?.split("+")}
               onChange={(value: string[]) => {
                 console.log("fm change", value);
                 if (typeof onChange !== "undefined") {
