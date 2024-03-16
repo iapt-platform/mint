@@ -1,3 +1,6 @@
+import { useAppSelector } from "../../hooks";
+import { settingInfo } from "../../reducers/setting";
+import { GetUserSetting } from "../auth/setting/default";
 import NissayaMeaning from "./Nissaya/NissayaMeaning";
 import PaliText from "./Wbw/PaliText";
 
@@ -7,8 +10,16 @@ interface IWidgetNissayaCtl {
   children?: React.ReactNode;
 }
 const NissayaCtl = ({ pali, meaning, children }: IWidgetNissayaCtl) => {
+  const settings = useAppSelector(settingInfo);
+  const layout = GetUserSetting("setting.nissaya.layout.read", settings);
+  console.debug("NissayaCtl layout", layout);
   return (
-    <span style={{ marginRight: 10 }}>
+    <span
+      style={{
+        display: layout === "inline" ? "inline-block" : "block",
+        marginRight: 10,
+      }}
+    >
       <PaliText
         lookup={true}
         text={pali}
