@@ -144,7 +144,6 @@ interface IWidget {
   display?: TWbwDisplayMode;
   fields?: IWbwFields;
   layoutDirection?: "h" | "v";
-  magicDict?: string;
   refreshable?: boolean;
   mode?: ArticleMode;
   wbwProgress?: boolean;
@@ -164,7 +163,6 @@ export const WbwSentCtl = ({
   fields,
   layoutDirection = "h",
   mode,
-  magicDict,
   refreshable = false,
   wbwProgress = false,
   onChange,
@@ -175,7 +173,6 @@ export const WbwSentCtl = ({
   const [wbwMode, setWbwMode] = useState(display);
   const [fieldDisplay, setFieldDisplay] = useState(fields);
   const [displayMode, setDisplayMode] = useState<ArticleMode>();
-  const [magic, setMagic] = useState<string>();
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showProgress, setShowProgress] = useState(false);
@@ -220,10 +217,6 @@ export const WbwSentCtl = ({
     const progress = Math.round((finalLen * 100) / allLen);
     setProgress(progress);
   }, [wordData]);
-
-  useEffect(() => {
-    setMagic(magicDict);
-  }, [magicDict]);
 
   const newMode = useAppSelector(_mode);
 
@@ -308,10 +301,7 @@ export const WbwSentCtl = ({
     }
   }, [newMode, mode]);
 
-  useEffect(() => {
-    if (typeof magic === "undefined") {
-      return;
-    }
+  const magicDictLookup = () => {
     let _lang = GetUserSetting("setting.dict.lang", settings);
     const url = `/v2/wbwlookup`;
     console.log("magic dict url", url);
@@ -330,19 +320,20 @@ export const WbwSentCtl = ({
         if (json.ok) {
           console.log("magic dict result", json.data);
           update(json.data);
-          updateWbwAll(json.data);
+          if (channelType !== "nissaya") {
+            saveWbwAll(json.data);
+          }
         } else {
           console.error(json.message);
         }
       })
       .finally(() => {
-        setMagic(undefined);
         setLoading(false);
         if (typeof onMagicDictDone !== "undefined") {
           onMagicDictDone();
         }
       });
-  }, [magic]);
+  };
 
   const wbwToXml = (item: IWbw) => {
     return {
@@ -373,7 +364,7 @@ export const WbwSentCtl = ({
     };
   };
 
-  const updateWbwAll = (wbwData: IWbw[]) => {
+  const saveWbwAll = (wbwData: IWbw[]) => {
     let arrSn: number[] = [];
     wbwData.forEach((value) => {
       if (!arrSn.includes(value.sn[0])) {
@@ -483,25 +474,30 @@ export const WbwSentCtl = ({
     let wordData: IDictRequest[] = [];
 
     wbwData.forEach((data) => {
-      const [wordType, wordGrammar] = data.case?.value
-        ? data.case?.value?.split("#")
-        : ["", ""];
-      let conf = data.confidence * 100;
-      if (data.confidence.toString() === "0.5") {
-        conf = 100;
+      if (
+        typeof data.meaning?.value === "string" &&
+        data.meaning?.value.trim().length > 0
+      ) {
+        const [wordType, wordGrammar] = data.case?.value
+          ? data.case?.value?.split("#")
+          : ["", ""];
+        let conf = data.confidence * 100;
+        if (data.confidence.toString() === "0.5") {
+          conf = 100;
+        }
+        wordData.push({
+          word: data.real.value ? data.real.value : "",
+          type: wordType,
+          grammar: wordGrammar,
+          mean: data.meaning?.value,
+          parent: data.parent?.value,
+          factors: data.factors?.value,
+          factormean: data.factorMeaning?.value,
+          note: data.note?.value,
+          confidence: conf,
+          language: channelLang,
+        });
       }
-      wordData.push({
-        word: data.real.value ? data.real.value : "",
-        type: wordType,
-        grammar: wordGrammar,
-        mean: data.meaning?.value,
-        parent: data.parent?.value,
-        factors: data.factors?.value,
-        factormean: data.factorMeaning?.value,
-        note: data.note?.value,
-        confidence: conf,
-        language: channelLang,
-      });
     });
 
     UserWbwPost(wordData, "wbw")
@@ -647,11 +643,11 @@ export const WbwSentCtl = ({
     });
     message.info(`已经重置${count}个`);
     update(newData);
-    updateWbwAll(newData);
+    saveWbwAll(newData);
   };
 
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <div
         className="progress"
         style={{ display: showProgress ? "block" : "none" }}
@@ -664,7 +660,9 @@ export const WbwSentCtl = ({
             items: [
               {
                 key: "magic-dict-current",
-                label: "神奇字典",
+                label: intl.formatMessage({
+                  id: "buttons.magic-dict",
+                }),
               },
               {
                 key: "progress",
@@ -696,7 +694,7 @@ export const WbwSentCtl = ({
               switch (key) {
                 case "magic-dict-current":
                   setLoading(true);
-                  setMagic("curr");
+                  magicDictLookup();
                   break;
                 case "wbw-dict-publish-all":
                   wbwPublish(wordData);
