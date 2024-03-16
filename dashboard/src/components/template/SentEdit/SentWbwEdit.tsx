@@ -4,56 +4,50 @@ import { Button, message } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 
 import { put } from "../../../request";
-import { ISentenceRequest, ISentenceResponse } from "../../api/Corpus";
+import {
+  ISentenceData,
+  ISentenceRequest,
+  ISentenceResponse,
+} from "../../api/Corpus";
 import { ISentence } from "../SentEdit";
 import { WbwSentCtl } from "../WbwSent";
 import { IWbw } from "../Wbw/WbwWord";
 import store from "../../../store";
 import { statusChange } from "../../../reducers/net-status";
 
-export const sentSave = (sent: ISentence, intl: IntlShape) => {
+export const sentSave = async (
+  sent: ISentence,
+  intl: IntlShape
+): Promise<ISentenceData> => {
   store.dispatch(statusChange({ status: "loading" }));
-  put<ISentenceRequest, ISentenceResponse>(
-    `/v2/sentence/${sent.book}_${sent.para}_${sent.wordStart}_${sent.wordEnd}_${sent.channel.id}`,
-    {
-      book: sent.book,
-      para: sent.para,
-      wordStart: sent.wordStart,
-      wordEnd: sent.wordEnd,
-      channel: sent.channel.id,
-      content: sent.content,
-      contentType: sent.contentType,
-    }
-  )
-    .then((json) => {
-      console.log(json);
-      if (json.ok) {
-        store.dispatch(
-          statusChange({
-            status: "success",
-            message: intl.formatMessage({ id: "flashes.success" }),
-          })
-        );
-      } else {
-        message.error(json.message);
-        store.dispatch(
-          statusChange({
-            status: "fail",
-            message: json.message,
-          })
-        );
-      }
-    })
-    .catch((e) => {
-      console.error("catch", e);
-      message.error(e.message);
-      store.dispatch(
-        statusChange({
-          status: "fail",
-          message: e.message,
-        })
-      );
-    });
+  const url = `/v2/sentence/${sent.book}_${sent.para}_${sent.wordStart}_${sent.wordEnd}_${sent.channel.id}`;
+  console.info("SentWbwEdit url", url);
+  const res = await put<ISentenceRequest, ISentenceResponse>(url, {
+    book: sent.book,
+    para: sent.para,
+    wordStart: sent.wordStart,
+    wordEnd: sent.wordEnd,
+    channel: sent.channel.id,
+    content: sent.content,
+    contentType: sent.contentType,
+  });
+  if (res.ok) {
+    store.dispatch(
+      statusChange({
+        status: "success",
+        message: intl.formatMessage({ id: "flashes.success" }),
+      })
+    );
+  } else {
+    message.error(res.message);
+    store.dispatch(
+      statusChange({
+        status: "fail",
+        message: res.message,
+      })
+    );
+  }
+  return res.data;
 };
 
 interface IWidget {
@@ -72,7 +66,7 @@ const SentWbwEditWidget = ({ data, onSave, onClose }: IWidget) => {
   }, [data.content, data.contentType]);
 
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <WbwSentCtl
         book={data.book}
         para={data.para}
@@ -93,10 +87,11 @@ const SentWbwEditWidget = ({ data, onSave, onClose }: IWidget) => {
         channelId={data.channel.id}
         channelType={data.channel.type}
         channelLang={data.channel.lang}
-        onChange={(wbwData: IWbw[]) => {
+        onChange={async (wbwData: IWbw[]) => {
           let newSent = data;
           newSent.content = JSON.stringify(wbwData);
-          sentSave(newSent, intl);
+          const newData = await sentSave(newSent, intl);
+          newSent.html = newData.html;
           if (typeof onSave !== "undefined") {
             onSave(newSent);
           }
