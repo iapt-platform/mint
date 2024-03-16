@@ -25,7 +25,7 @@ interface IWFMI {
 }
 const WbwFactorMeaningItem = ({ pali, meaning = "", onChange }: IWFMI) => {
   const intl = useIntl();
-  console.debug("meaning", meaning);
+  console.debug("WbwFactorMeaningItem meaning", meaning);
   const defaultMenu: ItemType[] = [
     {
       key: "_lookup",
@@ -177,57 +177,44 @@ const WbwFactorMeaningItem = ({ pali, meaning = "", onChange }: IWFMI) => {
     </Dropdown>
   );
 };
-
+const resizeArray = (input: string[], factors: string[]) => {
+  const newFm = factors.map((item, index) => {
+    if (index < input.length) {
+      return input[index];
+    } else {
+      return "";
+    }
+  });
+  return newFm;
+};
 interface IWidget {
   factors?: string[];
-  initValue?: string[];
+  value?: string[];
   onChange?: Function;
   onJoin?: Function;
 }
 const WbwDetailFmWidget = ({
   factors = [],
-  initValue = [],
+  value = [],
   onChange,
   onJoin,
 }: IWidget) => {
+  console.debug("WbwDetailFmWidget render");
   const [factorInputEnable, setFactorInputEnable] = useState(false);
-  const [factorMeaning, setFactorMeaning] = useState<string[]>(initValue);
 
-  const resizeArray = (input: string[]) => {
-    const newFm = factors.map((item, index) => {
-      if (index < input.length) {
-        return input[index];
-      } else {
-        return "";
-      }
-    });
-    return newFm;
-  };
-
-  useEffect(() => {
-    console.log("value", initValue);
-    setFactorMeaning(resizeArray(initValue));
-  }, []);
-
-  useEffect(() => {
-    if (factors.length === factorMeaning.length) {
-      return;
-    }
-    setFactorMeaning(resizeArray(factorMeaning));
-  }, [factors]);
+  const currValue = resizeArray(value, factors);
 
   return (
-    <div style={{ width: "100%" }}>
+    <div className="wbw_word_item" style={{ width: "100%" }}>
       <div style={{ display: "flex", width: "100%" }}>
         <Input
           key="input"
           allowClear
           hidden={!factorInputEnable}
-          value={factorMeaning.join("+")}
+          value={currValue.join("+")}
           onChange={(e) => {
             console.log(e.target.value);
-            const newData = resizeArray(e.target.value.split("+"));
-            setFactorMeaning(newData);
+            const newData = resizeArray(e.target.value.split("+"), factors);
             if (typeof onChange !== "undefined") {
               onChange(newData);
             }
@@ -244,24 +231,37 @@ const WbwDetailFmWidget = ({
       </div>
       {!factorInputEnable ? (
         <Space size={0} key="space">
-          {factorMeaning.map((item, index) => {
+          {currValue.map((item, index) => {
+            const fm = item.split("-");
             return (
               <span key={index} style={{ display: "flex" }}>
-                <WbwFactorMeaningItem
-                  key={index}
-                  pali={factors[index]}
-                  meaning={item}
-                  onChange={(value: string) => {
-                    const newData = [...factorMeaning];
-                    newData[index] = value;
-                    setFactorMeaning(newData);
-                    if (typeof onChange !== "undefined") {
-                      onChange(newData);
-                    }
-                  }}
-                />
+                {factors[index]?.split("-").map((item1, index1) => {
+                  return (
+                    <WbwFactorMeaningItem
+                      key={index1}
+                      pali={item1}
+                      meaning={fm[index1]}
+                      onChange={(value: string) => {
+                        const newData = [...currValue];
+                        let currFm = currValue[index].split("-");
+                        currFm.length = factors[index].split("-").length;
+                        currFm.forEach(
+                          (value3: string, index3: number, array: string[]) => {
+                            if (index3 === index1) {
+                              array[index3] = value;
+                            }
+                          }
+                        );
+                        newData[index] = currFm.join("-");
+                        if (typeof onChange !== "undefined") {
+                          onChange(newData);
+                        }
+                      }}
+                    />
+                  );
+                })}
 
-                {index < factorMeaning.length - 1 ? (
+                {index < currValue.length - 1 ? (
                   <PlusOutlined key={`icon-${index}`} />
                 ) : (
                   <>
@@ -283,9 +283,10 @@ const WbwDetailFmWidget = ({
                         onClick={() => {
                           if (typeof onJoin !== "undefined") {
                             onJoin(
-                              factorMeaning
+                              currValue
                                 .filter((value) => !value.includes("["))
-                                .join(" ")
+                                .map((item) => item.replaceAll("-", ""))
+                                .join("")
                             );
                           }
                         }}
