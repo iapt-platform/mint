@@ -51,7 +51,7 @@ const WbwDetailFactorWidget = ({ data, onChange }: IWidget) => {
     ) {
       return;
     }
-    lookup(data.factors?.value.split("+"));
+    lookup(data.factors?.value.replaceAll("-", "+").split("+"));
   }, [data.factors]);
 
   useEffect(() => {
