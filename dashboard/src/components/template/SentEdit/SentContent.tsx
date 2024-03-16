@@ -132,7 +132,6 @@ const SentContentWidget = ({
                 para={para}
                 wordStart={wordStart}
                 wordEnd={wordEnd}
-                magicDict={magicDict}
                 channelId={item.channel.id}
                 channelType={item.channel.type}
                 channelLang={item.channel.lang}
