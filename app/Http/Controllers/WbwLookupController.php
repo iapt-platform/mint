@@ -168,15 +168,16 @@ class WbwLookupController extends Controller
         $fieldId = $fieldMap[$field];
         $myPreference = RedisClusters::get("{$prefix}/{$word}/{$fieldId}/{$userId}");
         if(!empty($myPreference)){
-            Log::info($word.'命中我的wbw-'.$field);
+            Log::debug($word.'命中我的wbw-'.$field,['data'=>$myPreference]);
             return ['value'=>$myPreference,'status'=>5];
         }else{
             $myPreference = RedisClusters::get("{$prefix}/{$word}/3/0");
             if(!empty($myPreference)){
-                Log::info($word.'命中社区wbw-'.$field);
+                Log::debug($word.'命中社区wbw-'.$field,['data'=>$myPreference]);
                 return ['value'=>$myPreference,'status'=>5];
             }
         }
+        //Log::debug($word.'未命中'.$field);
         return false;
     }
     /**
@@ -191,7 +192,7 @@ class WbwLookupController extends Controller
         $user = AuthApi::current($request);
         if(!$user ){
             //未登录用户
-            return $this->error(__('auth.failed'),[],401);
+            return $this->error(__('auth.failed'),401,401);
         }
 
         $startAt = microtime(true)*1000;
@@ -265,19 +266,19 @@ class WbwLookupController extends Controller
                     if($value->type !== '.cp.'){
                         $parent = $this->insertValue([$value->parent],$parent,$increment);
                     }
-                    if($data['case']['status']<5){
+                    if(isset($data['case']) && $data['case']['status']<5){
                         if(!empty($value->type) && $value->type !== ".cp."){
                             $case = $this->insertValue([$value->type."#".$value->grammar],$case,$increment);
                         }
                     }
-                    if($data['factors']['status']<5){
+                    if($data['factors']['status'] < 50){
                         $factors = $this->insertValue([$value->factors],$factors,$increment);
                     }
-                    if($data['factorMeaning']['status']<5){
+                    if(isset($data['factorMeaning']) && $data['factorMeaning']['status'] < 50){
                         $factorMeaning = $this->insertValue([$value->factormean],$factorMeaning,$increment);
                     }
 
-                    if($data['meaning']['status']<5){
+                    if($data['meaning']['status'] < 50){
                         if($this->langCheck($lang,$value->language)){
                             $meaning = $this->insertValue(explode('$',$value->mean),$meaning,$increment,false);
                         }
@@ -293,18 +294,57 @@ class WbwLookupController extends Controller
                     $first = array_keys($parent)[0];
                     $data['parent'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
                 }
-                if(count($factors)>0){
+                if(count($factors)>0 && empty($data['factors']['value'])){
                     arsort($factors);
                     $first = array_keys($factors)[0];
                     $data['factors'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
                 }
+
+                if(isset($data['factorMeaning']['value'])){
+                    $inputFM = str_replace(['-','+'],['',''],$data['factorMeaning']['value']);
+                }else{
+                    $inputFM = '';
+                }
+
+                if(count($factorMeaning)>0 && empty($inputFM)){
+                    $first = array_keys($factorMeaning)[0];
+                    if($first==="_null"){
+                        $factorMeaning = [];
+                    }
+                }
                 //拆分意思
+                if(count($factorMeaning) === 0){
+                    $autoMeaning = '';
+                    //生成自动的拆分意思
+                    $currFactors = explode('+',$data['factors']['value']) ;
+                    $autoFM = [];
+                    foreach ($currFactors as $factor) {
+                        $subFactors = explode('-',$factor) ;
+                        $autoSubFM = [];
+                        foreach ($subFactors as $subFactor) {
+                            $preference = $this->wbwPreference($subFactor,'meaning',$user['user_id']);
+                            if($preference !== false){
+                                $autoSubFM[] = $preference['value'];
+                            }else{
+                                $autoSubFM[] = '';
+                            }
+                        }
+                        $autoFM[] = implode('-',$autoSubFM);
+                        $autoMeaning .= implode('',$autoSubFM);
+                    }
+                    $autoMeaning .= implode('',$autoFM);
+                    $factorMeaning = [implode('+',$autoFM)=>1];
+                    if(empty($data['meaning']['value']) && !empty($autoMeaning)){
+                        $data['meaning'] = ['value'=>$autoMeaning,'status'=>5];
+                    }
+                }
+
                 if(count($factorMeaning)>0){
                     arsort($factorMeaning);
                     $first = array_keys($factorMeaning)[0];
-                    $data['factorMeaning'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
+                    $data['factorMeaning'] = ['value'=>$first==="_null"?"":$first,'status'=>5];
                 }
-                if($data['factorMeaning']['status']<5){
+                if(isset($data['factorMeaning']) && $data['factorMeaning']['status']<5){
                     $wbwFactorMeaning = [];
                     if(!empty($data['factors']['value'])){
                         foreach (explode("+",$data['factors']['value']) as  $factor) {
