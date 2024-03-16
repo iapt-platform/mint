@@ -243,8 +243,10 @@ const WbwDetailFmWidget = ({
                       meaning={fm[index1]}
                       onChange={(value: string) => {
                         const newData = [...currValue];
-                        let currFm = currValue[index].split("-");
-                        currFm.length = factors[index].split("-").length;
+                        let currFm = resizeArray(
+                          currValue[index].split("-"),
+                          factors[index].split("-")
+                        );
                         currFm.forEach(
                           (value3: string, index3: number, array: string[]) => {
                             if (index3 === index1) {
