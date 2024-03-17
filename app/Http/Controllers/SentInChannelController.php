@@ -52,7 +52,7 @@ class SentInChannelController extends Controller
         }
 
         $table = Sentence::select(['id','book_id','paragraph',
-                                   'word_start','word_end','content',
+                                   'word_start','word_end','content','content_type',
                                    'editor_uid','channel_uid','updated_at'])
                         ->whereIn('channel_uid', $channelsQuery)
                         ->whereIns(['book_id','paragraph','word_start','word_end'],$query);
