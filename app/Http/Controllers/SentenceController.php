@@ -276,6 +276,9 @@ class SentenceController extends Controller
                 "uid"=>Str::uuid(),
             ]);
             $row->content = $sent['content'];
+            if(isset($sent['content_type']) && !empty($sent['content_type'])){
+                $row->content_type = $sent['content_type'];
+            }
             $row->strlen = mb_strlen($sent['content'],"UTF-8");
             $row->language = $channel->lang;
             $row->status = $channel->status;
