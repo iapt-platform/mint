@@ -513,8 +513,9 @@ class SentenceController extends Controller
                         if(!empty($factorMeaning[$key])){
                             $newData['wbw_word'] = $factor;
                             $newData['data'] = $factorMeaning[$key];
+                            $newData['type'] = 5;
                             WbwAnalysis::insert($newData);
-                            RedisClusters::put("{$prefix}/{$factor}/3/{$editorId}",$factorMeaning[$key]);
+                            RedisClusters::put("{$prefix}/{$factor}/5/{$editorId}",$factorMeaning[$key]);
                         }
                     }
                 }
