@@ -132,6 +132,7 @@ export interface ISentenceDiffData {
   word_end: number;
   channel_uid: string;
   content: string | null;
+  content_type: string;
   editor_uid: string;
   updated_at: string;
 }
