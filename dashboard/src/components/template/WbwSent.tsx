@@ -475,8 +475,10 @@ export const WbwSentCtl = ({
 
     wbwData.forEach((data) => {
       if (
-        typeof data.meaning?.value === "string" &&
-        data.meaning?.value.trim().length > 0
+        (typeof data.meaning?.value === "string" &&
+          data.meaning?.value.trim().length > 0) ||
+        (typeof data.factorMeaning?.value === "string" &&
+          data.factorMeaning.value.trim().length > 0)
       ) {
         const [wordType, wordGrammar] = data.case?.value
           ? data.case?.value?.split("#")

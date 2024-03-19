@@ -54,23 +54,39 @@ export const UserWbwPost = (data: IDictRequest[], view: string) => {
         });
       }
     }
+
     if (value.factors && value.factors.split("+").length > 0) {
       const fm = value.factormean?.split("+");
-      const factors: IDictRequest[] = value.factors
-        .split("+")
-        .map((item, id) => {
-          const currWord = item.replaceAll("-", "");
-          console.debug("currWord", currWord);
-          return {
+      const factors: IDictRequest[] = [];
+      value.factors.split("+").forEach((factor: string, index: number) => {
+        const currWord = factor.replaceAll("-", "");
+        console.debug("currWord", currWord);
+        const meaning = fm ? fm[index].replaceAll("-", "") ?? null : null;
+        if (meaning) {
+          factors.push({
             word: currWord,
             type: ".part.",
             grammar: "",
-            mean: fm ? fm[id].replaceAll("-", "") ?? "" : "",
+            mean: meaning,
             confidence: value.confidence,
             language: value.language,
-          };
-        })
-        .filter((value) => value.mean !== "");
+          });
+        }
+
+        const subFactorsMeaning: string[] = fm ? fm[index].split("-") : [];
+        factor.split("-").forEach((subFactor, index1) => {
+          if (subFactorsMeaning[index1] && subFactorsMeaning[index1] !== "") {
+            factors.push({
+              word: subFactor,
+              type: ".part.",
+              grammar: "",
+              mean: subFactorsMeaning[index1],
+              confidence: value.confidence,
+              language: value.language,
+            });
+          }
+        });
+      });
       wordData = [...wordData, ...factors];
     }
   });
