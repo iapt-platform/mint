@@ -1,4 +1,4 @@
-import { Card } from "antd";
+import { Card, Divider } from "antd";
 import NonSignInSharedLinks from "../../../components/nut/users/NonSignInSharedLinks";
 import { useParams } from "react-router-dom";
 import ResetPassword from "../../../components/nut/users/ResetPassword";
@@ -15,6 +15,7 @@ const Widget = () => {
       })}
     >
       <ResetPassword token={token} />
+      <Divider />
       <NonSignInSharedLinks />
     </Card>
   );

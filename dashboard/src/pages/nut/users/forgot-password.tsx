@@ -1,4 +1,4 @@
-import { Card } from "antd";
+import { Card, Divider } from "antd";
 import ForgotPassword from "../../../components/nut/users/ForgotPassword";
 import NonSignInSharedLinks from "../../../components/nut/users/NonSignInSharedLinks";
 import { useIntl } from "react-intl";
@@ -12,6 +12,7 @@ const Widget = () => {
       })}
     >
       <ForgotPassword />
+      <Divider />
       <NonSignInSharedLinks />
     </Card>
   );
