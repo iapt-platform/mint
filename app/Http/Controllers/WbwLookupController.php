@@ -71,6 +71,7 @@ class WbwLookupController extends Controller
                           "time"=>(int)($endAt-$startAt)]);
     }
 
+    //查用户字典获取全部结果
     public function lookup($words,$bases,$deep){
 		$wordPool = array();
 		$output  = array();
@@ -275,7 +276,7 @@ class WbwLookupController extends Controller
                         $factors = $this->insertValue([$value->factors],$factors,$increment);
                     }
                     if(isset($data['factorMeaning']) && $data['factorMeaning']['status'] < 50){
-                        $factorMeaning = $this->insertValue([$value->factormean],$factorMeaning,$increment);
+                        $factorMeaning = $this->insertValue([$value->factormean],$factorMeaning,$increment,false);
                     }
 
                     if($data['meaning']['status'] < 50){
@@ -314,19 +315,25 @@ class WbwLookupController extends Controller
                 }
                 //拆分意思
                 if(count($factorMeaning) === 0){
-                    $autoMeaning = '';
                     //生成自动的拆分意思
+                    $autoMeaning = '';
                     $currFactors = explode('+',$data['factors']['value']) ;
                     $autoFM = [];
                     foreach ($currFactors as $factor) {
                         $subFactors = explode('-',$factor) ;
                         $autoSubFM = [];
                         foreach ($subFactors as $subFactor) {
-                            $preference = $this->wbwPreference($subFactor,'meaning',$user['user_id']);
+                            $preference = $this->wbwPreference($subFactor,'factorMeaning',$user['user_id']);
                             if($preference !== false){
                                 $autoSubFM[] = $preference['value'];
                             }else{
-                                $autoSubFM[] = '';
+                                $preference = $this->wbwPreference($subFactor,'meaning',$user['user_id']);
+                                if($preference !== false){
+                                    $autoSubFM[] = $preference['value'];
+                                }else{
+                                    $autoSubFM[] = '';
+                                }
+
                             }
                         }
                         $autoFM[] = implode('-',$autoSubFM);
@@ -526,6 +533,9 @@ class WbwLookupController extends Controller
         return $indexed;
     }
 
+    /**
+     * $empty：是否允许空值
+     */
     private function insertValue($value,$container,$increment,$empty=true){
         foreach ($value as $one) {
             if($empty === false){
