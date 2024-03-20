@@ -89,6 +89,8 @@ use App\Http\Controllers\InteractiveController;
 use App\Http\Controllers\ChapterIndexController;
 use App\Http\Controllers\WbwSentenceController;
 use App\Http\Controllers\SnowFlakeIdController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -146,6 +148,8 @@ Route::group(['prefix' => 'v2'],function(){
 
     Route::get('auth/current',[AuthController::class,'getUserInfoByToken']);
     Route::post('sign-in',[AuthController::class,'signIn']);
+    Route::apiResource('auth/forgot-password',ForgotPasswordController::class);
+    Route::apiResource('auth/reset-password',ResetPasswordController::class);
 
     Route::apiResource('corpus',CorpusController::class);
     Route::get('corpus-sent/{id}',[CorpusController::class,'showSent']);
