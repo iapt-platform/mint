@@ -87,6 +87,8 @@ const items = {
   "buttons.admin": "admin",
   "buttons.open.in.tab": "Open in New Tab",
   "buttons.reset.wbw": "reset wbw",
+  "buttons.reset.password": "reset password",
+  "buttons.forgot.password": "forgot password",
 };
 
 export default items;

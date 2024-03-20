@@ -87,6 +87,8 @@ const items = {
   "buttons.admin": "后台管理",
   "buttons.open.in.tab": "在新标签页中打开",
   "buttons.reset.wbw": "重置逐词解析",
+  "buttons.reset.password": "重置密码",
+  "buttons.forgot.password": "忘记密码",
 };
 
 export default items;
