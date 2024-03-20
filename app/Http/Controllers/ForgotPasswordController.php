@@ -41,7 +41,7 @@ class ForgotPasswordController extends Controller
         }
 
         Mail::to($request->get('email'))
-            ->send(new ForgotPassword($resetToken,$request->get('lang')));
+            ->send(new ForgotPassword($resetToken,$request->get('lang'),$request->get('dashboard')));
         if(Mail::failures()){
             return $this->error('send email fail',[],200);
         }
