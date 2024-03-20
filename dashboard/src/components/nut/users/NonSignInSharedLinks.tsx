@@ -14,7 +14,7 @@ const Widget = () => {
       </Link>
       <Divider type="vertical" />
       <Link to="/anonymous/users/forgot-password">
-        <FormattedMessage id="nut.users.forgot-password.title" />
+        <FormattedMessage id="buttons.forgot.password" />
       </Link>
     </Space>
   );
