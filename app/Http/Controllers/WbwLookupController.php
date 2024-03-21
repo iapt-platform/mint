@@ -301,51 +301,6 @@ class WbwLookupController extends Controller
                     $data['factors'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
                 }
 
-                if(isset($data['factorMeaning']['value'])){
-                    $inputFM = str_replace(['-','+'],['',''],$data['factorMeaning']['value']);
-                }else{
-                    $inputFM = '';
-                }
-
-                if(count($factorMeaning)>0 && empty($inputFM)){
-                    $first = array_keys($factorMeaning)[0];
-                    if($first==="_null"){
-                        $factorMeaning = [];
-                    }
-                }
-                //拆分意思
-                if(count($factorMeaning) === 0){
-                    //生成自动的拆分意思
-                    $autoMeaning = '';
-                    $currFactors = explode('+',$data['factors']['value']) ;
-                    $autoFM = [];
-                    foreach ($currFactors as $factor) {
-                        $subFactors = explode('-',$factor) ;
-                        $autoSubFM = [];
-                        foreach ($subFactors as $subFactor) {
-                            $preference = $this->wbwPreference($subFactor,'factorMeaning',$user['user_id']);
-                            if($preference !== false){
-                                $autoSubFM[] = $preference['value'];
-                            }else{
-                                $preference = $this->wbwPreference($subFactor,'meaning',$user['user_id']);
-                                if($preference !== false){
-                                    $autoSubFM[] = $preference['value'];
-                                }else{
-                                    $autoSubFM[] = '';
-                                }
-
-                            }
-                        }
-                        $autoFM[] = implode('-',$autoSubFM);
-                        $autoMeaning .= implode('',$autoSubFM);
-                    }
-                    $autoMeaning .= implode('',$autoFM);
-                    $factorMeaning = [implode('+',$autoFM)=>1];
-                    if(empty($data['meaning']['value']) && !empty($autoMeaning)){
-                        $data['meaning'] = ['value'=>$autoMeaning,'status'=>5];
-                    }
-                }
-
                 if(count($factorMeaning)>0){
                     arsort($factorMeaning);
                     $first = array_keys($factorMeaning)[0];
@@ -394,6 +349,43 @@ class WbwLookupController extends Controller
                     $data['grammar2'] = ['value'=>$first[0],'status'=>3];
                 }
             }
+
+            if(!isset($data['factorMeaning']['value']) ||
+                $this->fmEmpty($data['factorMeaning']['value'])){
+                $factorMeaning = [];
+                //生成自动的拆分意思
+                $autoMeaning = '';
+                $currFactors = explode('+',$data['factors']['value']) ;
+                $autoFM = [];
+                foreach ($currFactors as $factor) {
+                    $subFactors = explode('-',$factor) ;
+                    $autoSubFM = [];
+                    foreach ($subFactors as $subFactor) {
+                        $preference = $this->wbwPreference($subFactor,'factorMeaning',$user['user_id']);
+                        if($preference !== false){
+                            $autoSubFM[] = $preference['value'];
+                        }else{
+                            $preference = $this->wbwPreference($subFactor,'meaning',$user['user_id']);
+                            if($preference !== false){
+                                $autoSubFM[] = $preference['value'];
+                            }else{
+                                $autoSubFM[] = '';
+                            }
+
+                        }
+                    }
+                    $autoFM[] = implode('-',$autoSubFM);
+                    $autoMeaning .= implode('',$autoSubFM);
+                }
+                $autoMeaning .= implode('',$autoFM);
+                $data['factorMeaning'] = ['value'=>implode('+',$autoFM),'status'=>3];
+                if(empty($data['meaning']['value']) && !empty($autoMeaning)){
+                    $data['meaning'] = ['value'=>$autoMeaning,'status'=>3];
+                }
+
+            }
+
+
             $orgData[$key] = $data;
         }
         return $this->ok($orgData);
