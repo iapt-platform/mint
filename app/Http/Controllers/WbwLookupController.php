@@ -378,11 +378,12 @@ class WbwLookupController extends Controller
                     $autoMeaning .= implode('',$autoSubFM);
                 }
                 $autoMeaning .= implode('',$autoFM);
-                $data['factorMeaning'] = ['value'=>implode('+',$autoFM),'status'=>3];
-                if(empty($data['meaning']['value']) && !empty($autoMeaning)){
-                    $data['meaning'] = ['value'=>$autoMeaning,'status'=>3];
+                if(count($autoFM) > 0){
+                    $data['factorMeaning'] = ['value'=>implode('+',$autoFM),'status'=>3];
+                    if(empty($data['meaning']['value']) && !empty($autoMeaning)){
+                        $data['meaning'] = ['value'=>$autoMeaning,'status'=>3];
+                    }
                 }
-
             }
 
 
