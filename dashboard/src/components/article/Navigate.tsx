@@ -1,4 +1,4 @@
-import { Button, Space, Typography } from "antd";
+import { Affix, Button, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { DoubleRightOutlined, DoubleLeftOutlined } from "@ant-design/icons";
 
@@ -57,40 +57,50 @@ const NavigateWidget = ({ type, articleId, onChange }: IWidget) => {
     }
   }, [articleId, type]);
   return (
-    <Paragraph style={{ display: "flex", justifyContent: "space-between" }}>
-      <Button
-        disabled={typeof prev === "undefined"}
-        size="large"
-        onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-          if (typeof onChange !== "undefined" && prev) {
-            onChange(event, prev.id);
-          }
+    <Affix offsetBottom={0}>
+      <Paragraph
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          backdropFilter: "blur(5px)",
+          backgroundColor: "rgba(200,200,200,0.2)",
+          padding: 4,
         }}
       >
-        <Space>
-          <DoubleLeftOutlined />
-          <EllipsisMiddle maxWidth={300} suffixCount={7}>
-            {prev?.title}
-          </EllipsisMiddle>
-        </Space>
-      </Button>
-      <Button
-        size="large"
-        disabled={typeof next === "undefined"}
-        onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-          if (typeof onChange !== "undefined" && next) {
-            onChange(event, next.id);
-          }
-        }}
-      >
-        <Space>
-          <EllipsisMiddle maxWidth={300} suffixCount={7}>
-            {next?.title}
-          </EllipsisMiddle>
-          <DoubleRightOutlined />
-        </Space>
-      </Button>
-    </Paragraph>
+        <Button
+          disabled={typeof prev === "undefined"}
+          size="middle"
+          onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+            if (typeof onChange !== "undefined" && prev) {
+              onChange(event, prev.id);
+            }
+          }}
+        >
+          <Space>
+            <DoubleLeftOutlined />
+            <EllipsisMiddle maxWidth={300} suffixCount={7}>
+              {prev?.title}
+            </EllipsisMiddle>
+          </Space>
+        </Button>
+        <Button
+          size="middle"
+          disabled={typeof next === "undefined"}
+          onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+            if (typeof onChange !== "undefined" && next) {
+              onChange(event, next.id);
+            }
+          }}
+        >
+          <Space>
+            <EllipsisMiddle maxWidth={300} suffixCount={7}>
+              {next?.title}
+            </EllipsisMiddle>
+            <DoubleRightOutlined />
+          </Space>
+        </Button>
+      </Paragraph>
+    </Affix>
   );
 };
 
