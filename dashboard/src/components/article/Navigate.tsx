@@ -63,7 +63,7 @@ const NavigateWidget = ({ type, articleId, onChange }: IWidget) => {
           display: "flex",
           justifyContent: "space-between",
           backdropFilter: "blur(5px)",
-          backgroundColor: "rgba(50,50,50,0.2)",
+          backgroundColor: "rgba(200,200,200,0.2)",
           padding: 4,
         }}
       >
