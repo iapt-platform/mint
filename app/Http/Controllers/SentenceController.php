@@ -504,6 +504,7 @@ class SentenceController extends Controller
                 $newData['data'] = $word->meaning->value;
                 WbwAnalysis::insert($newData);
                 RedisClusters::put("{$prefix}/{$word->real->value}/3/{$editorId}",$word->meaning->value);
+                RedisClusters::put("{$prefix}/{$word->real->value}/3/0",$word->meaning->value);
             }
             if(isset($word->factors) && isset($word->factorMeaning)){
                 $factors = explode('+',str_replace('-','+',$word->factors->value));
@@ -516,6 +517,7 @@ class SentenceController extends Controller
                             $newData['type'] = 5;
                             WbwAnalysis::insert($newData);
                             RedisClusters::put("{$prefix}/{$factor}/5/{$editorId}",$factorMeaning[$key]);
+                            RedisClusters::put("{$prefix}/{$factor}/5/0",$factorMeaning[$key]);
                         }
                     }
                 }
