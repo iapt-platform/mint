@@ -399,6 +399,13 @@ class WbwLookupController extends Controller
         return $this->ok($orgData);
     }
 
+    private function fmEmpty($value){
+        if(str_replace(['+','-',' '],'',$value) === ''){
+            return true;
+        }else{
+            return false;
+        }
+    }
     /**
      * 自动查词
      *
@@ -539,7 +546,7 @@ class WbwLookupController extends Controller
     private function insertValue($value,$container,$increment,$empty=true){
         foreach ($value as $one) {
             if($empty === false){
-                if(empty($one)){
+                if($this->fmEmpty($one)){
                     break;
                 }
             }
