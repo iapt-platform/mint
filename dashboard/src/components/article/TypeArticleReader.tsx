@@ -230,6 +230,7 @@ const TypeArticleReaderWidget = ({
           <NavigateButton
             prevTitle={nav?.prev?.title}
             nextTitle={nav?.next?.title}
+            path={currPath}
             onNext={() => {
               if (typeof onArticleChange !== "undefined") {
                 onArticleChange("article", nav?.next?.article_id);
@@ -238,6 +239,20 @@ const TypeArticleReaderWidget = ({
             onPrev={() => {
               if (typeof onArticleChange !== "undefined") {
                 onArticleChange("article", nav?.prev?.article_id);
+              }
+            }}
+            onPathChange={(key: string) => {
+              if (typeof onArticleChange !== "undefined") {
+                const node = currPath?.find((value) => value.key === key);
+                if (node) {
+                  let newType = type;
+                  if (node.level === 0) {
+                    newType = "anthology";
+                  } else {
+                    newType = "article";
+                  }
+                  onArticleChange(newType, node.key, "_self");
+                }
               }
             }}
           />
