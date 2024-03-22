@@ -367,17 +367,22 @@ const Widget = () => {
                 console.log("article change", newType, article, target);
                 scrollToTop();
                 let url = `/article/${newType}/${article}?mode=${currMode}`;
+                if (type === "anthology" && newType === "article") {
+                  url += `&anthology=${id}`;
+                }
                 searchParams.forEach((value, key) => {
                   console.log(value, key);
-                  if (key !== "mode") {
-                    const paramValue = param?.find(
-                      (value) => value.key === key
-                    );
-                    if (paramValue) {
-                      url += `&${key}=${paramValue.value}`;
-                    } else {
-                      url += `&${key}=${value}`;
-                    }
+                  if (key === "mode") {
+                    return;
+                  }
+                  if (newType === "anthology" && key === "anthology") {
+                    return;
+                  }
+                  const paramValue = param?.find((value) => value.key === key);
+                  if (paramValue) {
+                    url += `&${key}=${paramValue.value}`;
+                  } else {
+                    url += `&${key}=${value}`;
                   }
                 });
                 if (target === "_blank") {
