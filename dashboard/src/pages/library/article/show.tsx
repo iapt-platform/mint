@@ -173,23 +173,6 @@ const Widget = () => {
               style={{ display: "flex", height: 44, alignItems: "center" }}
               key="right"
             >
-              {type === "article" && loadedArticleData ? (
-                <>
-                  <Button
-                    ghost
-                    onClick={(event) => {
-                      const url = `/studio/${loadedArticleData.studio?.realName}/article/edit/${loadedArticleData.uid}`;
-                      if (event.ctrlKey || event.metaKey) {
-                        window.open(fullUrl(url), "_blank");
-                      } else {
-                        navigate(url);
-                      }
-                    }}
-                  >
-                    Edit
-                  </Button>
-                </>
-              ) : undefined}
               <ShareButton
                 type={type as ArticleType}
                 book={searchParams.get("book")}
