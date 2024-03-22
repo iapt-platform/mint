@@ -1,15 +1,16 @@
-import { Button, Space, Typography } from "antd";
+import { Button, Dropdown, Popover, Space, Typography } from "antd";
 import { DoubleRightOutlined, DoubleLeftOutlined } from "@ant-design/icons";
+import { ITocPathNode } from "../corpus/TocPath";
 
 const { Paragraph, Text } = Typography;
 
 const EllipsisMiddle: React.FC<{
   suffixCount: number;
   maxWidth: number;
-  children?: string;
-}> = ({ suffixCount, maxWidth = 500, children = "" }) => {
-  const start = children.slice(0, children.length - suffixCount).trim();
-  const suffix = children.slice(-suffixCount).trim();
+  text?: string;
+}> = ({ suffixCount, maxWidth = 500, text = "" }) => {
+  const start = text.slice(0, text.length - suffixCount).trim();
+  const suffix = text.slice(-suffixCount).trim();
   return (
     <Text style={{ maxWidth: maxWidth }} ellipsis={{ suffix }}>
       {start}
@@ -18,19 +19,22 @@ const EllipsisMiddle: React.FC<{
 };
 
 interface IWidget {
-  title?: string;
   prevTitle?: string;
   nextTitle?: string;
+  path?: ITocPathNode[];
   onPrev?: Function;
   onNext?: Function;
+  onPathChange?: Function;
 }
 const NavigateButtonWidget = ({
-  title,
   prevTitle,
   nextTitle,
+  path,
   onPrev,
   onNext,
+  onPathChange,
 }: IWidget) => {
+  const currTitle = path && path.length > 0 ? path[path.length - 1].title : "";
   return (
     <Paragraph style={{ display: "flex", justifyContent: "space-between" }}>
       <Button
@@ -43,13 +47,29 @@ const NavigateButtonWidget = ({
         }}
       >
         <Space>
-          <DoubleLeftOutlined />
-          <EllipsisMiddle maxWidth={300} suffixCount={7}>
-            {prevTitle}
-          </EllipsisMiddle>
+          <DoubleLeftOutlined key="icon" />
+          <EllipsisMiddle maxWidth={300} suffixCount={7} text={prevTitle} />
         </Space>
       </Button>
-      <Text>{title}</Text>
+      <div>
+        <Dropdown
+          placement="top"
+          trigger={["hover"]}
+          menu={{
+            items: path?.map((item, id) => {
+              return { label: item.title, key: item.key ?? item.title };
+            }),
+            onClick: (e) => {
+              console.debug("onPathChange", e.key);
+              if (typeof onPathChange !== "undefined") {
+                onPathChange(e.key);
+              }
+            },
+          }}
+        >
+          <span>{currTitle}</span>
+        </Dropdown>
+      </div>
       <Button
         size="large"
         disabled={typeof nextTitle === "undefined"}
@@ -60,10 +80,13 @@ const NavigateButtonWidget = ({
         }}
       >
         <Space>
-          <EllipsisMiddle maxWidth={300} suffixCount={7}>
-            {nextTitle}
-          </EllipsisMiddle>
-          <DoubleRightOutlined />
+          <EllipsisMiddle
+            key="title"
+            maxWidth={300}
+            suffixCount={7}
+            text={nextTitle}
+          />
+          <DoubleRightOutlined key="icon" />
         </Space>
       </Button>
     </Paragraph>
