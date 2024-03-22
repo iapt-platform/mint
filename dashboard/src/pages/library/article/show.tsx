@@ -173,23 +173,6 @@ const Widget = () => {
               style={{ display: "flex", height: 44, alignItems: "center" }}
               key="right"
             >
-              {type === "article" && loadedArticleData ? (
-                <>
-                  <Button
-                    ghost
-                    onClick={(event) => {
-                      const url = `/studio/${loadedArticleData.studio?.realName}/article/edit/${loadedArticleData.uid}`;
-                      if (event.ctrlKey || event.metaKey) {
-                        window.open(fullUrl(url), "_blank");
-                      } else {
-                        navigate(url);
-                      }
-                    }}
-                  >
-                    Edit
-                  </Button>
-                </>
-              ) : undefined}
               <ShareButton
                 type={type as ArticleType}
                 book={searchParams.get("book")}
@@ -384,17 +367,22 @@ const Widget = () => {
                 console.log("article change", newType, article, target);
                 scrollToTop();
                 let url = `/article/${newType}/${article}?mode=${currMode}`;
+                if (type === "anthology" && newType === "article") {
+                  url += `&anthology=${id}`;
+                }
                 searchParams.forEach((value, key) => {
                   console.log(value, key);
-                  if (key !== "mode") {
-                    const paramValue = param?.find(
-                      (value) => value.key === key
-                    );
-                    if (paramValue) {
-                      url += `&${key}=${paramValue.value}`;
-                    } else {
-                      url += `&${key}=${value}`;
-                    }
+                  if (key === "mode") {
+                    return;
+                  }
+                  if (newType === "anthology" && key === "anthology") {
+                    return;
+                  }
+                  const paramValue = param?.find((value) => value.key === key);
+                  if (paramValue) {
+                    url += `&${key}=${paramValue.value}`;
+                  } else {
+                    url += `&${key}=${value}`;
                   }
                 });
                 if (target === "_blank") {

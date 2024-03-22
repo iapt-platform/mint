@@ -91,7 +91,7 @@ const ArticleWidget = ({
       {type === "article" ? (
         <TypeArticle
           type={type}
-          articleId={currId}
+          articleId={onArticleChange ? articleId : currId}
           channelId={channelId}
           mode={mode}
           anthologyId={anthologyId}
@@ -122,7 +122,8 @@ const ArticleWidget = ({
         />
       ) : type === "anthology" ? (
         <TypeAnthology
-          articleId={currId}
+          type={type}
+          articleId={onArticleChange ? articleId : currId}
           channelId={channelId}
           mode={mode}
           onArticleChange={(type: ArticleType, id: string, target: string) => {
@@ -138,7 +139,7 @@ const ArticleWidget = ({
         />
       ) : type === "term" ? (
         <TypeTerm
-          articleId={currId}
+          articleId={onArticleChange ? articleId : currId}
           channelId={channelId}
           mode={mode}
           onArticleChange={(type: ArticleType, id: string, target: string) => {
@@ -150,7 +151,7 @@ const ArticleWidget = ({
       ) : type === "chapter" || type === "para" ? (
         <TypePali
           type={type}
-          articleId={currId}
+          articleId={onArticleChange ? articleId : currId}
           channelId={channelId}
           mode={mode}
           book={book}
@@ -179,7 +180,7 @@ const ArticleWidget = ({
         />
       ) : type === "page" ? (
         <TypePage
-          articleId={currId}
+          articleId={onArticleChange ? articleId : currId}
           channelId={channelId}
           focus={focus}
           mode={mode}
@@ -201,7 +202,7 @@ const ArticleWidget = ({
         />
       ) : type === "cs-para" ? (
         <TypeCSPara
-          articleId={currId}
+          articleId={onArticleChange ? articleId : currId}
           channelId={channelId}
           mode={mode}
           onArticleChange={(type: ArticleType, id: string, target: string) => {
@@ -213,7 +214,7 @@ const ArticleWidget = ({
       ) : type === "textbook" ? (
         <TypeCourse
           type={type}
-          articleId={currId}
+          articleId={onArticleChange ? articleId : currId}
           channelId={channelId}
           courseId={courseId}
           mode={mode}

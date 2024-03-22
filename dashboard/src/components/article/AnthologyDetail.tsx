@@ -43,7 +43,7 @@ const AnthologyDetailWidget = ({
 
   function fetchData(id?: string) {
     const url = `/v2/anthology/${id}`;
-    console.log("url", url);
+    console.info("url", url);
     if (typeof onLoading !== "undefined") {
       onLoading(true);
     }
