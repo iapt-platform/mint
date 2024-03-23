@@ -56,6 +56,8 @@ interface IWidget {
   userName?: string;
   active?: boolean;
   focus?: string | null;
+  hideInteractive?: boolean;
+  hideTitle?: boolean;
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
@@ -76,6 +78,8 @@ const ArticleWidget = ({
   mode = "read",
   active = false,
   focus,
+  hideInteractive = false,
+  hideTitle = false,
   onArticleChange,
   onFinal,
   onLoad,
@@ -96,6 +100,8 @@ const ArticleWidget = ({
           mode={mode}
           anthologyId={anthologyId}
           active={active}
+          hideInteractive={hideInteractive}
+          hideTitle={hideTitle}
           onArticleEdit={(value: IArticleDataResponse) => {
             if (typeof onArticleEdit !== "undefined") {
               onArticleEdit(value);

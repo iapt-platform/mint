@@ -27,6 +27,8 @@ interface IWidget {
   channelId?: string | null;
   anthologyId?: string | null;
   active?: boolean;
+  hideInteractive?: boolean;
+  hideTitle?: boolean;
   onArticleChange?: Function;
   onFinal?: Function;
   onLoad?: Function;
@@ -40,6 +42,8 @@ const TypeArticleReaderWidget = ({
   anthologyId,
   mode = "read",
   active = false,
+  hideInteractive = false,
+  hideTitle = false,
   onArticleChange,
   onFinal,
   onLoad,
@@ -204,6 +208,7 @@ const TypeArticleReaderWidget = ({
             type={type}
             articleId={articleId}
             anthology={anthology}
+            hideTitle={hideTitle}
             onPathChange={(
               node: ITocPathNode,
               e: React.MouseEvent<
@@ -256,8 +261,11 @@ const TypeArticleReaderWidget = ({
               }
             }}
           />
-
-          <InteractiveArea resType={"article"} resId={articleId} />
+          {hideInteractive ? (
+            <></>
+          ) : (
+            <InteractiveArea resType={"article"} resId={articleId} />
+          )}
         </>
       )}
     </div>
