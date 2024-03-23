@@ -1,6 +1,7 @@
-import { Button, Dropdown, Popover, Space, Typography } from "antd";
+import { Affix, Button, Dropdown, Space, Typography } from "antd";
 import { DoubleRightOutlined, DoubleLeftOutlined } from "@ant-design/icons";
 import { ITocPathNode } from "../corpus/TocPath";
+import { useRef } from "react";
 
 const { Paragraph, Text } = Typography;
 
@@ -35,61 +36,75 @@ const NavigateButtonWidget = ({
   onPathChange,
 }: IWidget) => {
   const currTitle = path && path.length > 0 ? path[path.length - 1].title : "";
+
+  const affixRef = useRef<any>();
+  affixRef?.current?.updatePosition();
+
   return (
-    <Paragraph style={{ display: "flex", justifyContent: "space-between" }}>
-      <Button
-        disabled={typeof prevTitle === "undefined"}
-        size="large"
-        onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-          if (typeof onPrev !== "undefined") {
-            onPrev(event);
-          }
+    <Affix ref={affixRef} offsetBottom={0}>
+      <Paragraph
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          backdropFilter: "blur(5px)",
+          backgroundColor: "rgba(200,200,200,0.2)",
+          padding: 4,
         }}
       >
-        <Space>
-          <DoubleLeftOutlined key="icon" />
-          <EllipsisMiddle maxWidth={300} suffixCount={7} text={prevTitle} />
-        </Space>
-      </Button>
-      <div>
-        <Dropdown
-          placement="top"
-          trigger={["hover"]}
-          menu={{
-            items: path?.map((item, id) => {
-              return { label: item.title, key: item.key ?? item.title };
-            }),
-            onClick: (e) => {
-              console.debug("onPathChange", e.key);
-              if (typeof onPathChange !== "undefined") {
-                onPathChange(e.key);
-              }
-            },
+        <Button
+          size="middle"
+          disabled={typeof prevTitle === "undefined"}
+          onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+            if (typeof onPrev !== "undefined") {
+              onPrev(event);
+            }
           }}
         >
-          <span>{currTitle}</span>
-        </Dropdown>
-      </div>
-      <Button
-        size="large"
-        disabled={typeof nextTitle === "undefined"}
-        onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-          if (typeof onNext !== "undefined") {
-            onNext(event);
-          }
-        }}
-      >
-        <Space>
-          <EllipsisMiddle
-            key="title"
-            maxWidth={300}
-            suffixCount={7}
-            text={nextTitle}
-          />
-          <DoubleRightOutlined key="icon" />
-        </Space>
-      </Button>
-    </Paragraph>
+          <Space>
+            <DoubleLeftOutlined key="icon" />
+            <EllipsisMiddle maxWidth={250} suffixCount={7} text={prevTitle} />
+          </Space>
+        </Button>
+        <div>
+          <Dropdown
+            placement="top"
+            trigger={["hover"]}
+            menu={{
+              items: path?.map((item, id) => {
+                return { label: item.title, key: item.key ?? item.title };
+              }),
+              onClick: (e) => {
+                console.debug("onPathChange", e.key);
+                if (typeof onPathChange !== "undefined") {
+                  onPathChange(e.key);
+                }
+              },
+            }}
+          >
+            <span>{currTitle}</span>
+          </Dropdown>
+        </div>
+        <Button
+          size="middle"
+          disabled={typeof nextTitle === "undefined"}
+          onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+            if (typeof onNext !== "undefined") {
+              onNext(event);
+            }
+          }}
+        >
+          <Space>
+            <EllipsisMiddle
+              key="title"
+              maxWidth={250}
+              suffixCount={7}
+              text={nextTitle}
+            />
+            <DoubleRightOutlined key="icon" />
+          </Space>
+        </Button>
+      </Paragraph>
+    </Affix>
   );
 };
 
