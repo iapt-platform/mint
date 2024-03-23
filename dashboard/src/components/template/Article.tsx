@@ -62,6 +62,8 @@ export const ArticleCtl = ({
       channelId={channel}
       focus={focus}
       mode="read"
+      hideInteractive={true}
+      hideTitle={true}
     />
   );
   let output = <></>;
