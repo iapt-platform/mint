@@ -89,6 +89,7 @@ const WbwDetailBasicWidget = ({
               <Input
                 value={_meaning}
                 allowClear
+                placeholder="请输入"
                 onChange={(e) => {
                   console.log("meaning input", e.target.value);
                   setMeaning(e.target.value);

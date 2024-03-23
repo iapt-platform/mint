@@ -84,7 +84,7 @@ const WbwDetailParentWidget = ({ data, onChange }: IWidget) => {
         }
       }}
     >
-      <Input allowClear />
+      <Input allowClear placeholder="请输入" />
     </AutoComplete>
   );
 };
