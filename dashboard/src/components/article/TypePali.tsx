@@ -290,6 +290,26 @@ const TypePaliWidget = ({
             <Navigate
               type={type as ArticleType}
               articleId={articleId}
+              path={articleData?.path}
+              onPathChange={(key: string) => {
+                const node = articleData?.path?.find(
+                  (value) => value.title === key
+                );
+                if (node) {
+                  let newType = type;
+                  if (node.level === 0) {
+                    newType = "series";
+                  } else {
+                    newType = "chapter";
+                  }
+                  if (typeof onArticleChange !== "undefined") {
+                    const newArticle = node.key
+                      ? node.key
+                      : `${node.book}-${node.paragraph}`;
+                    onArticleChange(newType, newArticle, "self");
+                  }
+                }
+              }}
               onChange={(
                 event: React.MouseEvent<HTMLElement, MouseEvent>,
                 newId: string
