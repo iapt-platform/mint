@@ -212,6 +212,7 @@ const WbwDetailFmWidget = ({
           allowClear
           hidden={!factorInputEnable}
           value={currValue.join("+")}
+          placeholder="请输入"
           onChange={(e) => {
             console.log(e.target.value);
             const newData = resizeArray(e.target.value.split("+"), factors);

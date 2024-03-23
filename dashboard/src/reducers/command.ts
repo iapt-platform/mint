@@ -19,6 +19,7 @@ interface IState {
   lookup?: string;
   grammar?: string;
   grammarId?: string;
+  myDictDirty?: boolean;
 }
 
 const initialState: IState = {};
@@ -34,6 +35,9 @@ export const slice = createSlice({
     lookup: (state, action: PayloadAction<string | undefined>) => {
       state.lookup = action.payload;
     },
+    myDictDirty: (state, action: PayloadAction<boolean | undefined>) => {
+      state.myDictDirty = action.payload;
+    },
     grammar: (state, action: PayloadAction<string | undefined>) => {
       state.grammar = action.payload;
     },
@@ -45,6 +49,7 @@ export const slice = createSlice({
 
 export const { command } = slice.actions;
 export const { lookup } = slice.actions;
+export const { myDictDirty } = slice.actions;
 export const { grammar } = slice.actions;
 export const { grammarId } = slice.actions;
 
@@ -58,5 +63,7 @@ export const grammarWord = (state: RootState): string | undefined =>
   state.command.grammar;
 export const grammarWordId = (state: RootState): string | undefined =>
   state.command.grammarId;
+export const myDictIsDirty = (state: RootState): boolean | undefined =>
+  state.command.myDictDirty;
 
 export default slice.reducer;
