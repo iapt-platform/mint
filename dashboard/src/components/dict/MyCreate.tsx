@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Input, message, Row } from "antd";
+import { Button, Col, Divider, Input, message, notification, Row } from "antd";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { SaveOutlined } from "@ant-design/icons";
@@ -17,6 +17,7 @@ import { useAppSelector } from "../../hooks";
 import { add, updateIndex, wordIndex } from "../../reducers/inline-dict";
 import store from "../../store";
 import { get as getUiLang } from "../../locales";
+import { myDictDirty } from "../../reducers/command";
 
 export const UserWbwPost = (data: IDictRequest[], view: string) => {
   let wordData: IDictRequest[] = data;
@@ -98,9 +99,11 @@ export const UserWbwPost = (data: IDictRequest[], view: string) => {
 
 interface IWidget {
   word?: string;
+  onSave?: Function;
 }
-const MyCreateWidget = ({ word }: IWidget) => {
+const MyCreateWidget = ({ word, onSave }: IWidget) => {
   const intl = useIntl();
+  const [dirty, setDirty] = useState(false);
   const [wordSpell, setWordSpell] = useState(word);
   const [editWord, setEditWord] = useState<IWbw>({
     word: { value: word ? word : "", status: 7 },
@@ -133,6 +136,11 @@ const MyCreateWidget = ({ word }: IWidget) => {
       }
     );
   }, [inlineWordIndex, wordSpell]);
+
+  const setDataDirty = (dirty: boolean) => {
+    store.dispatch(myDictDirty(dirty));
+    setDirty(dirty);
+  };
 
   function fieldChanged(field: TFieldName, value: string) {
     let mData: IWbw = JSON.parse(JSON.stringify(editWord));
@@ -175,7 +183,17 @@ const MyCreateWidget = ({ word }: IWidget) => {
     }
     console.debug("field changed", mData);
     setEditWord(mData);
+    setDataDirty(true);
   }
+
+  const reset = () => {
+    fieldChanged("meaning", "");
+    fieldChanged("note", "");
+    fieldChanged("type", "");
+    fieldChanged("grammar", "");
+    fieldChanged("factors", "");
+    fieldChanged("factorMeaning", "");
+  };
   return (
     <div style={{ padding: "0 5px" }}>
       <Row>
@@ -225,10 +243,18 @@ const MyCreateWidget = ({ word }: IWidget) => {
       <div
         style={{ display: "flex", justifyContent: "space-between", padding: 5 }}
       >
-        <Button>重置</Button>
+        <Button
+          onClick={() => {
+            reset();
+            setDataDirty(false);
+          }}
+        >
+          重置
+        </Button>
         <Button
           loading={loading}
           icon={<SaveOutlined />}
+          disabled={!dirty}
           onClick={() => {
             setLoading(true);
             const data: IDictRequest[] = [
@@ -251,9 +277,15 @@ const MyCreateWidget = ({ word }: IWidget) => {
               })
               .then((json) => {
                 if (json.ok) {
-                  message.success(
-                    intl.formatMessage({ id: "flashes.success" })
-                  );
+                  setDataDirty(false);
+                  reset();
+                  notification.info({
+                    message: intl.formatMessage({ id: "flashes.success" }),
+                  });
+
+                  if (typeof onSave !== "undefined") {
+                    onSave();
+                  }
                 } else {
                   message.error(json.message);
                 }
