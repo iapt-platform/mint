@@ -13,6 +13,7 @@ import DictGroupTitle from "./DictGroupTitle";
 import UserDictList from "./UserDictList";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
+import { useState } from "react";
 
 export interface IDictWords {
   pass: string;
@@ -41,6 +42,50 @@ interface IWidget {
 const DictContentWidget = ({ word, data, compact }: IWidget) => {
   const intl = useIntl();
   const user = useAppSelector(currentUser);
+  const [myRefresh, setMyRefresh] = useState(false);
+
+  const MyDict = () => {
+    const [myTab, setMyTab] = useState<string>("list");
+    return (
+      <div>
+        <Tabs
+          size="small"
+          type="card"
+          style={{ backgroundColor: "white" }}
+          activeKey={myTab}
+          onChange={(activeKey: string) => setMyTab(activeKey)}
+          items={[
+            {
+              label: "列表",
+              key: "list",
+              children: (
+                <UserDictList
+                  studioName={user?.realName}
+                  word={word}
+                  compact={true}
+                  refresh={myRefresh}
+                  onRefresh={(value: boolean) => setMyRefresh(value)}
+                />
+              ),
+            },
+            {
+              label: "新建",
+              key: "new",
+              children: (
+                <MyCreate
+                  word={word}
+                  onSave={() => {
+                    setMyRefresh(true);
+                    setMyTab("list");
+                  }}
+                />
+              ),
+            },
+          ]}
+        />
+      </div>
+    );
+  };
 
   return (
     <>
@@ -106,17 +151,7 @@ const DictContentWidget = ({ word, data, compact }: IWidget) => {
               {
                 label: `单词本`,
                 key: "my",
-                children: (
-                  <div>
-                    <UserDictList
-                      studioName={user?.realName}
-                      word={word}
-                      compact={true}
-                    />
-                    <Divider>新建</Divider>
-                    <MyCreate word={word} />
-                  </div>
-                ),
+                children: <MyDict />,
               },
             ]}
           />
