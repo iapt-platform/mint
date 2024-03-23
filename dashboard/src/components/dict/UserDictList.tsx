@@ -26,7 +26,7 @@ import {
   IUserDictDeleteRequest,
 } from "../../components/api/Dict";
 import { delete_2, get } from "../../request";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DictEdit from "../../components/dict/DictEdit";
 import { IDeleteResponse } from "../../components/api/Article";
 import TimeShow from "../general/TimeShow";
@@ -60,6 +60,8 @@ interface IWidget {
   dictName?: string;
   word?: string;
   compact?: boolean;
+  refresh?: boolean;
+  onRefresh?: Function;
 }
 const UserDictListWidget = ({
   studioName,
@@ -67,6 +69,8 @@ const UserDictListWidget = ({
   dictName,
   word,
   compact = false,
+  refresh = false,
+  onRefresh,
 }: IWidget) => {
   const intl = useIntl();
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -113,6 +117,15 @@ const UserDictListWidget = ({
       },
     });
   };
+
+  useEffect(() => {
+    if (refresh === true) {
+      ref.current?.reload();
+      if (typeof onRefresh !== "undefined") {
+        onRefresh(false);
+      }
+    }
+  }, [onRefresh, refresh]);
 
   const ref = useRef<ActionType>();
 

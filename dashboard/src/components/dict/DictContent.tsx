@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Row, Tabs } from "antd";
+import { Col, Divider, Row, Tabs } from "antd";
 
 import type { IAnchorData } from "./DictList";
 import type { IWidgetWordCardData } from "./WordCard";
@@ -33,6 +33,54 @@ export interface IApiDictContentData {
   data: IDictContentData;
 }
 
+interface IMyDict {
+  word?: string;
+}
+const MyDict = ({ word }: IMyDict) => {
+  const user = useAppSelector(currentUser);
+  const [myTab, setMyTab] = useState<string>("list");
+  const [myRefresh, setMyRefresh] = useState(false);
+  return (
+    <div>
+      <Tabs
+        size="small"
+        type="card"
+        style={{ backgroundColor: "white" }}
+        activeKey={myTab}
+        onChange={(activeKey: string) => setMyTab(activeKey)}
+        items={[
+          {
+            label: "列表",
+            key: "list",
+            children: (
+              <UserDictList
+                studioName={user?.realName}
+                word={word}
+                compact={true}
+                refresh={myRefresh}
+                onRefresh={(value: boolean) => setMyRefresh(value)}
+              />
+            ),
+          },
+          {
+            label: "新建",
+            key: "new",
+            children: (
+              <MyCreate
+                word={word}
+                onSave={() => {
+                  setMyRefresh(true);
+                  setMyTab("list");
+                }}
+              />
+            ),
+          },
+        ]}
+      />
+    </div>
+  );
+};
+
 interface IWidget {
   word?: string;
   data: IDictContentData;
@@ -41,51 +89,6 @@ interface IWidget {
 
 const DictContentWidget = ({ word, data, compact }: IWidget) => {
   const intl = useIntl();
-  const user = useAppSelector(currentUser);
-  const [myRefresh, setMyRefresh] = useState(false);
-
-  const MyDict = () => {
-    const [myTab, setMyTab] = useState<string>("list");
-    return (
-      <div>
-        <Tabs
-          size="small"
-          type="card"
-          style={{ backgroundColor: "white" }}
-          activeKey={myTab}
-          onChange={(activeKey: string) => setMyTab(activeKey)}
-          items={[
-            {
-              label: "列表",
-              key: "list",
-              children: (
-                <UserDictList
-                  studioName={user?.realName}
-                  word={word}
-                  compact={true}
-                  refresh={myRefresh}
-                  onRefresh={(value: boolean) => setMyRefresh(value)}
-                />
-              ),
-            },
-            {
-              label: "新建",
-              key: "new",
-              children: (
-                <MyCreate
-                  word={word}
-                  onSave={() => {
-                    setMyRefresh(true);
-                    setMyTab("list");
-                  }}
-                />
-              ),
-            },
-          ]}
-        />
-      </div>
-    );
-  };
 
   return (
     <>
@@ -151,7 +154,7 @@ const DictContentWidget = ({ word, data, compact }: IWidget) => {
               {
                 label: `单词本`,
                 key: "my",
-                children: <MyDict />,
+                children: <MyDict word={word} />,
               },
             ]}
           />
