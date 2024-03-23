@@ -13,6 +13,8 @@ interface IWidget {
   channelId?: string | null;
   anthologyId?: string | null;
   active?: boolean;
+  hideInteractive?: boolean;
+  hideTitle?: boolean;
   onArticleChange?: Function;
   onArticleEdit?: Function;
   onFinal?: Function;
@@ -26,6 +28,8 @@ const TypeArticleWidget = ({
   anthologyId,
   mode = "read",
   active = false,
+  hideInteractive = false,
+  hideTitle = false,
   onArticleChange,
   onFinal,
   onLoad,
@@ -65,6 +69,8 @@ const TypeArticleWidget = ({
           anthologyId={anthologyId}
           mode={mode}
           active={active}
+          hideInteractive={hideInteractive}
+          hideTitle={hideTitle}
           onArticleChange={(type: string, id: string, target: string) => {
             if (typeof onArticleChange !== "undefined") {
               onArticleChange(type, id, target);

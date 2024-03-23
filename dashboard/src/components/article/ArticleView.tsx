@@ -29,6 +29,7 @@ export interface IWidgetArticleData {
   articleId?: string;
   remains?: boolean;
   anthology?: IFirstAnthology;
+  hideTitle?: boolean;
   onEnd?: Function;
   onPathChange?: Function;
 }
@@ -48,6 +49,7 @@ const ArticleViewWidget = ({
   type,
   articleId,
   anthology,
+  hideTitle,
   onEnd,
   remains,
   onPathChange,
@@ -79,26 +81,37 @@ const ArticleViewWidget = ({
   return (
     <>
       <Space direction="vertical">
-        <TocPath
-          data={path}
-          channels={channels}
-          onChange={(
-            node: ITocPathNode,
-            e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
-          ) => {
-            if (typeof onPathChange !== "undefined") {
-              onPathChange(node, e);
-            }
-          }}
-        />
-
-        <Title level={4}>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: title ? title : "",
+        {hideTitle ? (
+          <></>
+        ) : (
+          <TocPath
+            data={path}
+            channels={channels}
+            onChange={(
+              node: ITocPathNode,
+              e: React.MouseEvent<
+                HTMLSpanElement | HTMLAnchorElement,
+                MouseEvent
+              >
+            ) => {
+              if (typeof onPathChange !== "undefined") {
+                onPathChange(node, e);
+              }
             }}
           />
-        </Title>
+        )}
+        {hideTitle ? (
+          <></>
+        ) : (
+          <Title level={4}>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: title ? title : "",
+              }}
+            />
+          </Title>
+        )}
+
         <Text type="secondary">{subTitle}</Text>
         {currChannelList}
         <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: "more" }}>
