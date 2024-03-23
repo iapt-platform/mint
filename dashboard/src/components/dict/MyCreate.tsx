@@ -187,12 +187,14 @@ const MyCreateWidget = ({ word, onSave }: IWidget) => {
   }
 
   const reset = () => {
-    fieldChanged("meaning", "");
-    fieldChanged("note", "");
-    fieldChanged("type", "");
-    fieldChanged("grammar", "");
-    fieldChanged("factors", "");
-    fieldChanged("factorMeaning", "");
+    let mData: IWbw = JSON.parse(JSON.stringify(editWord));
+    mData.note = { value: "", status: 7 };
+    mData.meaning = { value: "", status: 7 };
+    mData.type = { value: "", status: 7 };
+    mData.grammar = { value: "", status: 7 };
+    mData.factors = { value: "", status: 7 };
+    mData.factorMeaning = { value: "", status: 7 };
+    setEditWord(mData);
   };
   return (
     <div style={{ padding: "0 5px" }}>
