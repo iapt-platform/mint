@@ -148,6 +148,8 @@ const SentEditMenuWidget = ({
     },
   ];
 
+  const buttonStyle = { backgroundColor: "rgba(1,1,1,0)", marginRight: 2 };
+
   return (
     <div
       onMouseEnter={() => {
@@ -166,6 +168,10 @@ const SentEditMenuWidget = ({
         style={{
           marginTop: -22,
           right: 30,
+          padding: 4,
+          border: "1px solid black",
+          borderRadius: 4,
+          backgroundColor: "rgb(239 239 206)",
           position: "absolute",
           display: isHover ? "block" : "none",
         }}
@@ -178,6 +184,7 @@ const SentEditMenuWidget = ({
           <Button
             icon={<EditOutlined />}
             size="small"
+            style={buttonStyle}
             onClick={() => {
               if (typeof onModeChange !== "undefined") {
                 onModeChange("edit");
@@ -192,6 +199,7 @@ const SentEditMenuWidget = ({
         >
           <Button
             icon={<CopyOutlined />}
+            style={buttonStyle}
             size="small"
             onClick={() => {
               if (data?.content) {
@@ -212,6 +220,7 @@ const SentEditMenuWidget = ({
           <Button
             icon={<PasteOutLinedIcon />}
             size="small"
+            style={buttonStyle}
             onClick={() => {
               if (typeof onMenuClick !== "undefined") {
                 onMenuClick("paste");
@@ -224,10 +233,17 @@ const SentEditMenuWidget = ({
           menu={{ items, onClick }}
           placement="bottomRight"
         >
-          <Button icon={<MoreOutlined />} size="small" />
+          <Button icon={<MoreOutlined />} size="small" style={buttonStyle} />
         </Dropdown>
       </div>
-      {children}
+      <div
+        style={{
+          border: isHover ? "1px solid black" : "1px solid  rgba(1,1,1,0)",
+          borderRadius: 4,
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 };
