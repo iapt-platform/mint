@@ -137,7 +137,7 @@ class SentenceController extends Controller
                     ];
                 }
                 $channels = [];
-                $excludeChannels = explode(',',$request->get('channels')) ;
+                $excludeChannels = explode(',',$request->get('excludes')) ;
 
                 foreach ($channelCanRead as $key => $value) {
                     # code...
