@@ -7,12 +7,15 @@ import PaliText from "./Wbw/PaliText";
 interface IWidgetNissayaCtl {
   pali?: string;
   meaning?: string;
-  children?: React.ReactNode;
+  lang?: string;
+  children?: React.ReactNode | React.ReactNode[];
 }
-const NissayaCtl = ({ pali, meaning, children }: IWidgetNissayaCtl) => {
+const NissayaCtl = ({ pali, meaning, lang, children }: IWidgetNissayaCtl) => {
   const settings = useAppSelector(settingInfo);
   const layout = GetUserSetting("setting.nissaya.layout.read", settings);
   console.debug("NissayaCtl layout", layout);
+  const isArray = Array.isArray(children);
+  const meaning2 = isArray ? children[1] : "";
   return (
     <span
       style={{
@@ -27,18 +30,18 @@ const NissayaCtl = ({ pali, meaning, children }: IWidgetNissayaCtl) => {
         termToLocal={false}
         style={{ fontWeight: 700 }}
       />{" "}
-      <NissayaMeaning text={meaning} />
+      {lang === "my" ? <NissayaMeaning text={meaning} /> : <>{meaning2}</>}
     </span>
   );
 };
 
 interface IWidget {
   props: string;
-  children?: React.ReactNode;
+  children?: React.ReactNode | React.ReactNode[];
 }
 const Widget = ({ props, children }: IWidget) => {
   const prop = JSON.parse(atob(props)) as IWidgetNissayaCtl;
-  return <NissayaCtl {...prop} />;
+  return <NissayaCtl {...prop}>{children}</NissayaCtl>;
 };
 
 export default Widget;
