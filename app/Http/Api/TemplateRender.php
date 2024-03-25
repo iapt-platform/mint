@@ -425,6 +425,7 @@ class TemplateRender{
         $props = [
             "pali" => $pali,
             "meaning" => $meaning,
+            "lang" => $this->lang,
         ];
         switch ($this->format) {
             case 'react':
