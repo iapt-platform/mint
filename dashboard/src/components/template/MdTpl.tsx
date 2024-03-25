@@ -21,7 +21,7 @@ import Wd from "./Wd";
 interface IWidgetMdTpl {
   tpl?: string;
   props?: string;
-  children?: React.ReactNode;
+  children?: React.ReactNode | React.ReactNode[];
 }
 const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
   switch (tpl) {
@@ -44,7 +44,7 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
     case "article":
       return <Article props={props ? props : ""} />;
     case "nissaya":
-      return <Nissaya props={props ? props : ""} />;
+      return <Nissaya props={props ? props : ""}>{children}</Nissaya>;
     case "toggle":
       return <Toggle props={props ? props : undefined}>{children}</Toggle>;
     case "para":
