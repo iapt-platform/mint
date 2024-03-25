@@ -1,9 +1,21 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Divider, Input, Modal, Select, Space, Tabs, Typography } from "antd";
+import {
+  Button,
+  Divider,
+  Input,
+  Modal,
+  Select,
+  Space,
+  Tabs,
+  Typography,
+} from "antd";
+import { FolderOpenOutlined } from "@ant-design/icons";
 
 import { TDisplayStyle } from "../Article";
 import { VideoCtl } from "../Video";
+import AttachmentDialog from "../../attachment/AttachmentDialog";
+import { IAttachmentRequest } from "../../api/Attachments";
 
 const { TextArea } = Input;
 const { Paragraph } = Typography;
@@ -40,6 +52,14 @@ const VideoTplWidget = ({ url, title, style = "modal" }: IWidget) => {
   return (
     <>
       <Space direction="vertical" style={{ width: 500 }}>
+        <AttachmentDialog
+          trigger={<Button icon={<FolderOpenOutlined />}>网盘</Button>}
+          onSelect={(value: IAttachmentRequest) => {
+            console.debug("VideoTpl onSelect", value);
+            setCurrTitle(value.title);
+            setUrlText(value.url);
+          }}
+        />
         <Space style={{ width: 500 }}>
           {"标题："}
           <Input

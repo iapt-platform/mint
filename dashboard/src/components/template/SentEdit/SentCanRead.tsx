@@ -42,7 +42,7 @@ const SentCanReadWidget = ({
   const load = () => {
     const sentId = `${book}-${para}-${wordStart}-${wordEnd}`;
     let url = `/v2/sentence?view=sent-can-read&sentence=${sentId}&type=${type}&mode=edit&html=true`;
-    url += channelsId ? `&channels=${channelsId.join()}` : "";
+    url += channelsId ? `&excludes=${channelsId.join()}` : "";
     console.log("url", url);
     get<ISentenceListResponse>(url)
       .then((json) => {

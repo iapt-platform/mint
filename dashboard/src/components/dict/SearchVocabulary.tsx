@@ -103,7 +103,7 @@ const SearchVocabularyWidget = ({
       .then((json) => {
         const words: ValueType[] = json.data.rows
           .map((item) => {
-            let weight = item.count / item.strlen;
+            let weight = item.count / (item.strlen - value.length + 0.1);
             if (item.word.length === value.length) {
               weight = 100;
             }
@@ -115,6 +115,7 @@ const SearchVocabularyWidget = ({
             };
           })
           .sort((a, b) => b.weight - a.weight)
+          .slice(0, 7)
           .map((item) => {
             return renderItem(item.word, item.count, item.meaning);
           });
