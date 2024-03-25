@@ -119,19 +119,22 @@ const TypePaliWidget = ({
           }
 
           setToc(json.data.toc);
+
           switch (type) {
             case "chapter":
-              if (typeof articleId === "string" && channelId) {
-                const [book, para] = articleId?.split("-");
-                post<IViewRequest, IViewStoreResponse>("/v2/view", {
-                  target_type: type,
-                  book: parseInt(book),
-                  para: parseInt(para),
-                  channel: channelId,
-                  mode: srcDataMode,
-                }).then((json) => {
-                  console.log("view", json.data);
-                });
+              if (typeof articleId === "string") {
+                const [book, para] = articleId.split("-");
+                if (channelId) {
+                  post<IViewRequest, IViewStoreResponse>("/v2/view", {
+                    target_type: type,
+                    book: parseInt(book),
+                    para: parseInt(para),
+                    channel: channelId,
+                    mode: srcDataMode,
+                  }).then((json) => {
+                    console.log("view", json.data);
+                  });
+                }
               }
               break;
             default:
@@ -195,6 +198,24 @@ const TypePaliWidget = ({
     return;
   };
 
+  const title = articleData?.title_text
+    ? articleData?.title_text
+    : articleData?.title;
+
+  let fullPath: ITocPathNode[] = [];
+  if (articleData && articleData.path && articleData.path.length > 0) {
+    if (typeof articleId === "string") {
+      const [book, para] = articleId.split("-");
+      const currNode: ITocPathNode = {
+        book: parseInt(book),
+        paragraph: parseInt(para),
+        title: title ?? "",
+        level: articleData.path[articleData.path.length - 1].level + 1,
+      };
+      fullPath = [...articleData.path, currNode];
+    }
+  }
+
   return (
     <div>
       {loading ? (
@@ -205,16 +226,12 @@ const TypePaliWidget = ({
         <>
           <ArticleView
             id={articleData?.uid}
-            title={
-              articleData?.title_text
-                ? articleData?.title_text
-                : articleData?.title
-            }
+            title={title}
             subTitle={articleData?.subtitle}
             summary={articleData?.summary}
             content={articleData ? articleData.content : ""}
             html={articleHtml}
-            path={articleData?.path}
+            path={fullPath}
             created_at={articleData?.created_at}
             updated_at={articleData?.updated_at}
             channels={channels}
@@ -234,16 +251,18 @@ const TypePaliWidget = ({
               >
             ) => {
               let newType = type;
+              let newArticle = "";
               if (node.level === 0) {
                 newType = "series";
+                newArticle = node.title;
               } else {
                 newType = "chapter";
+                newArticle = node.key
+                  ? node.key
+                  : `${node.book}-${node.paragraph}`;
               }
 
               if (typeof onArticleChange !== "undefined") {
-                const newArticle = node.key
-                  ? node.key
-                  : `${node.book}-${node.paragraph}`;
                 const target = e.ctrlKey || e.metaKey ? "_blank" : "self";
                 onArticleChange(newType, newArticle, target);
               }
@@ -290,7 +309,7 @@ const TypePaliWidget = ({
             <Navigate
               type={type as ArticleType}
               articleId={articleId}
-              path={articleData?.path}
+              path={fullPath}
               onPathChange={(key: string) => {
                 const node = articleData?.path?.find(
                   (value) => value.title === key
