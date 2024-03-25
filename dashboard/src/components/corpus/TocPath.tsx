@@ -2,7 +2,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Breadcrumb, MenuProps, Popover, Tag, Typography } from "antd";
 
 import PaliText from "../template/Wbw/PaliText";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { fullUrl } from "../../utils";
 
 export interface ITocPathNode {
@@ -35,16 +35,15 @@ const TocPathWidget = ({
   onChange,
   onMenuClick,
 }: IWidgetTocPath): JSX.Element => {
-  const [currData, setCurrData] = useState(data);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   console.debug("TocPathWidget render");
-  useEffect(() => setCurrData(data), [data]);
+
   const fullPath = (
     <Breadcrumb
       style={{ whiteSpace: "nowrap", width: "100%", fontSize: style?.fontSize }}
     >
-      {currData.map((item, id) => {
+      {data.map((item, id) => {
         return (
           <Breadcrumb.Item
             menu={
@@ -91,7 +90,11 @@ const TocPathWidget = ({
             }}
             key={id}
           >
-            <Typography.Link>
+            <Typography.Text
+              style={{
+                cursor: id < data.length - 1 ? "pointer" : "unset",
+              }}
+            >
               {item.level < 99 ? (
                 <span
                   style={
@@ -104,17 +107,21 @@ const TocPathWidget = ({
                       : undefined
                   }
                 >
-                  <PaliText text={item.title} />
+                  <PaliText
+                    text={item.title}
+                    style={{ opacity: id < data.length - 1 ? 0.5 : 1 }}
+                  />
                 </span>
               ) : (
                 <Tag>{item.title}</Tag>
               )}
-            </Typography.Link>
+            </Typography.Text>
           </Breadcrumb.Item>
         );
       })}
     </Breadcrumb>
   );
+
   if (typeof trigger === "undefined") {
     return fullPath;
   } else {
