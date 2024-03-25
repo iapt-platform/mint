@@ -10,6 +10,7 @@ import { ISearchParams } from "../../pages/library/article/show";
 import TypeCourse from "./TypeCourse";
 import { useEffect, useState } from "react";
 import { fullUrl } from "../../utils";
+import TypeSeries from "./TypeSeries";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -181,6 +182,21 @@ const ArticleWidget = ({
           onTitle={(value: string) => {
             if (typeof onTitle !== "undefined") {
               onTitle(value);
+            }
+          }}
+        />
+      ) : type === "series" ? (
+        <TypeSeries
+          articleId={onArticleChange ? articleId : currId}
+          channelId={channelId}
+          onArticleChange={(
+            type: ArticleType,
+            id: string,
+            target: string,
+            param: ISearchParams[]
+          ) => {
+            if (typeof onArticleChange !== "undefined") {
+              onArticleChange(type, id, target, param);
             }
           }}
         />
