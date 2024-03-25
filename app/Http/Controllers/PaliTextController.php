@@ -156,30 +156,43 @@ class PaliTextController extends Controller
                  * 4. 获取全部书的目录
                  */
 
-                $path = PaliText::where('book',$request->get('book'))
-                                ->where('paragraph',$request->get('para'))
-                                ->select('path')->first();
-                if(!$path){
-                    return $this->error("no data");
-                }
-                $json = \json_decode($path->path);
-                $root = null;
-                foreach ($json as $key => $value) {
-                    # code...
-                    if( $value->level == 1 ){
-                        $root = $value;
-                        break;
+                if($request->has('series')){
+                    $book_title = $request->get('series');
+                    //获取丛书书目列表
+                    $books = BookTitle::where('title',$request->get('series'))->get();
+                }else{
+                    //查询这个目录的顶级目录
+                    $path = PaliText::where('book',$request->get('book'))
+                                    ->where('paragraph',$request->get('para'))
+                                    ->select('path')->first();
+                    if(!$path){
+                        return $this->error("no data");
                     }
+                    $json = \json_decode($path->path);
+                    $root = null;
+                    foreach ($json as $key => $value) {
+                        # code...
+                        if( $value->level == 1 ){
+                            $root = $value;
+                            break;
+                        }
+                    }
+                    if($root===null){
+                        return $this->error("no data");
+                    }
+                    //查询书起始段落
+                    $rootPara = PaliText::where('book',$root->book)
+                                    ->where('paragraph',$root->paragraph)
+                                    ->first();
+                    //获取丛书书名
+                    $book_title = BookTitle::where('book',$rootPara->book)
+                                            ->where('paragraph',$rootPara->paragraph)
+                                            ->value('title');
+                    //获取丛书书目列表
+                    $books = BookTitle::where('title',$book_title)->get();
                 }
-                if($root===null){
-                    return $this->error("no data");
-                }
-                //查询书起始段落
-                $rootPara = PaliText::where('book',$root->book)
-                                ->where('paragraph',$root->paragraph)
-                                ->first();
-                $book_title = BookTitle::where('book',$rootPara->book)->where('paragraph',$rootPara->paragraph)->value('title');
-                $books = BookTitle::where('title',$book_title)->get();
+
+
                 $chapters = [];
                 $chapters[] = ['book'=>0,'paragraph'=>0,'toc'=>$book_title,'level'=>1];
                 foreach ($books as  $book) {

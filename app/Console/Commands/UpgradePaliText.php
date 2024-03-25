@@ -15,7 +15,7 @@ class UpgradePaliText extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan upgrade:palitext 168
      * @var string
      */
     protected $signature = 'upgrade:palitext {from?} {to?}';
@@ -205,19 +205,26 @@ class UpgradePaliText extends Command
                     $currParent = $title_data[$currParent-1]["parent"];
                     $iLoop++;
                 }
+
+                //插入书名
                 if(count($path)>0){
-                    //插入书名
-                    $pcd_book = BookTitle::where('book',$book)
-                                        ->where('paragraph',end($path)['paragraph'])
-                                        ->first();
+                    $bookPara = end($path)['paragraph'];
+                }else{
+                    $bookPara = $paragraph;
+                }
+
+                $pcd_book = BookTitle::where('book',$book)
+                                    ->where('paragraph',$bookPara)
+                                    ->first();
+                if($pcd_book){
                     if(empty($pcd_book)){
-                        Log::error('no pcd book:'.$book.'-'.end($path)['paragraph']);
+                        Log::error('no pcd book:'.$book.'-'.$bookPara);
                     }
-                    $path[] = ["book"=>0,"paragraph"=>0,"title"=>$pcd_book->title,"level"=>0];
                     $book_id = $pcd_book->sn;
                     if(!empty($book_id)){
                         $newData['pcd_book_id'] = $book_id;
                     }
+                    $path[] = ["book"=>$book_id,"paragraph"=>$book_id,"title"=>$pcd_book->title,"level"=>0];
                 }
 
                 # 将路径反向
