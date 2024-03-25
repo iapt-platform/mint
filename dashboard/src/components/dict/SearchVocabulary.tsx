@@ -115,6 +115,7 @@ const SearchVocabularyWidget = ({
             };
           })
           .sort((a, b) => b.weight - a.weight)
+          .slice(0, 7)
           .map((item) => {
             return renderItem(item.word, item.count, item.meaning);
           });
