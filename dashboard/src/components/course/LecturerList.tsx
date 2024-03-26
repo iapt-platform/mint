@@ -6,35 +6,45 @@ import { Card, List, message, Typography, Image } from "antd";
 import { ICourse } from "../../pages/library/course/course";
 import { ICourseListResponse } from "../api/Course";
 import { API_HOST, get } from "../../request";
+import CourseNewLoading from "./CourseNewLoading";
 
 const { Meta } = Card;
 const { Paragraph } = Typography;
 
 const LecturerListWidget = () => {
   const [data, setData] = useState<ICourse[]>();
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    get<ICourseListResponse>(`/v2/course?view=new&limit=4`).then((json) => {
-      if (json.ok) {
-        console.log(json.data);
-        const course: ICourse[] = json.data.rows.map((item) => {
-          return {
-            id: item.id,
-            title: item.title,
-            subtitle: item.subtitle,
-            teacher: item.teacher,
-            intro: item.content,
-            coverUrl: item.cover_url,
-          };
-        });
-        setData(course);
-      } else {
-        message.error(json.message);
-      }
-    });
+    const url = `/v2/course?view=new&limit=4`;
+    console.info("course url", url);
+    setLoading(true);
+    get<ICourseListResponse>(url)
+      .then((json) => {
+        if (json.ok) {
+          console.log(json.data);
+          const course: ICourse[] = json.data.rows.map((item) => {
+            return {
+              id: item.id,
+              title: item.title,
+              subtitle: item.subtitle,
+              teacher: item.teacher,
+              intro: item.content,
+              coverUrl: item.cover_url,
+            };
+          });
+          setData(course);
+        } else {
+          message.error(json.message);
+        }
+      })
+      .finally(() => setLoading(false));
   }, []);
-  return (
+  return loading ? (
+    <CourseNewLoading />
+  ) : (
     <List
       grid={{ gutter: 16, column: 4 }}
       dataSource={data}
