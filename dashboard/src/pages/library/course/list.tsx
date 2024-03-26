@@ -1,9 +1,10 @@
 //课程主页
-import { Layout, Col, Row, Divider } from "antd";
+import { Layout, Col, Row, Divider, Typography } from "antd";
 
 import LecturerList from "../../../components/course/LecturerList";
 import CourseList from "../../../components/course/CourseList";
 const { Content, Header } = Layout;
+const { Title } = Typography;
 
 const Widget = () => {
   // TODO i18n
@@ -23,21 +24,21 @@ const Widget = () => {
           <Col flex="auto"></Col>
           <Col flex="960px">
             <Row>
-              <h1>最新</h1>
+              <Title level={4}>最新</Title>
             </Row>
             <Row>
               <LecturerList />
             </Row>
             <Divider />
             <Row>
-              <h1>开放报名</h1>
+              <Title level={4}>开放报名</Title>
             </Row>
             <Row>
               <CourseList type="open" />
             </Row>
             <Divider />
             <Row>
-              <h1>历史课程</h1>
+              <Title level={4}>历史课程</Title>
             </Row>
             <Row>
               <CourseList type="close" />
