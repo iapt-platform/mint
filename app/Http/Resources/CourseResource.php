@@ -12,6 +12,7 @@ use App\Http\Api\AuthApi;
 use App\Models\Attachment;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\App;
 
 class CourseResource extends JsonResource
 {
@@ -37,13 +38,23 @@ class CourseResource extends JsonResource
             "content"=> $this->content,
             "content_type"=> $this->content_type,
             "cover"=> $this->cover,
-            "cover_url"=> [Storage::url($this->cover)],
             "channel_id"=>$this->channel_id,
             "join"=> $this->join,
             "request_exp"=> $this->request_exp,
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];
+        if($this->cover){
+            $thumb = str_replace('.jpg','_m.jpg',$this->cover);
+            if (App::environment('local')) {
+                $data['cover_url'] = [Storage::url($this->cover),Storage::url($thumb)];
+            }else{
+                $data['cover_url'] = [
+                    Storage::temporaryUrl($this->cover, now()->addDays(6)),
+                    Storage::temporaryUrl($thumb, now()->addDays(6)),
+                ];
+            }
+        }
         if(Str::isUuid($this->cover)){
             $coverId = Attachment::find($this->cover);
             $cover_url = [];
