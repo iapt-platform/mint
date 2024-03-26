@@ -21,7 +21,7 @@ import "./article.css";
 
 import { ArticleMode, ArticleType } from "./Article";
 import TypeArticle from "./TypeArticle";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import SelectChannel from "../course/SelectChannel";
 
@@ -77,6 +77,7 @@ const TypeCourseWidget = ({
   const [currUser, setCurrUser] = useState<ICourseUser>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [channelPickerOpen, setChannelPickerOpen] = useState(false);
+  const navigate = useNavigate();
 
   const channels = channelId?.split("_");
 
@@ -92,7 +93,7 @@ const TypeCourseWidget = ({
     if (type === "textbook") {
       if (typeof courseId !== "undefined") {
         const url = `/v2/course-curr?course_id=${courseId}`;
-        console.debug("course url", url);
+        console.info("course url", url);
         get<ICourseCurrUserResponse>(url).then((response) => {
           console.log("course user", response);
           if (response.ok) {
@@ -210,8 +211,12 @@ const TypeCourseWidget = ({
         anthologyId={anthologyId}
         active={true}
         onArticleChange={(type: ArticleType, id: string, target: string) => {
-          if (typeof onArticleChange !== "undefined") {
-            onArticleChange(type, id, target);
+          if (type === "article") {
+            if (typeof onArticleChange !== "undefined") {
+              onArticleChange(type, id, target);
+            }
+          } else {
+            navigate(`/course/show/${courseId}`);
           }
         }}
         onLoad={(data: IArticleDataResponse) => {}}
@@ -221,171 +226,6 @@ const TypeCourseWidget = ({
   ) : (
     <>loading</>
   );
-  /*
-  const srcDataMode = mode === "edit" || mode === "wbw" ? "edit" : "read";
-  useEffect(() => {
-    console.log("srcDataMode", srcDataMode);
-    if (!active) {
-      return;
-    }
-
-    if (typeof type !== "undefined") {
-      let url = "";
-      switch (type) {
-        case "textbook":
-          if (typeof articleId !== "undefined") {
-            url = `/v2/article/${articleId}?view=textbook&course=${courseId}&mode=${srcDataMode}`;
-          }
-          break;
-
-        case "exercise":
-          if (typeof articleId !== "undefined") {
-            url = `/v2/article/${articleId}?mode=${srcDataMode}&course=${courseId}&exercise=${exerciseId}&user=${userName}`;
-            setExtra(
-              <ExerciseAnswer
-                courseId={courseId}
-                articleId={articleId}
-                exerciseId={exerciseId}
-              />
-            );
-          }
-          break;
-        case "exercise-list":
-          if (typeof articleId !== "undefined") {
-            url = `/v2/article/${articleId}?mode=${srcDataMode}&course=${courseId}&exercise=${exerciseId}`;
-
-            setExtra(
-              <ExerciseList
-                courseId={courseId}
-                articleId={articleId}
-                exerciseId={exerciseId}
-              />
-            );
-          }
-          break;
-
-      }
-
-      console.log("url", url);
-      if (typeof onLoading !== "undefined") {
-        onLoading(true);
-      }
-
-      console.log("url", url);
-
-      get<IArticleResponse>(url)
-        .then((json) => {
-          console.log("article", json);
-          if (json.ok) {
-            setArticleData(json.data);
-            if (json.data.html) {
-              setArticleHtml([json.data.html]);
-            } else if (json.data.content) {
-              setArticleHtml([json.data.content]);
-            }
-            setExtra(
-              <TocTree
-                treeData={json.data.toc?.map((item) => {
-                  const strTitle = item.title ? item.title : item.pali_title;
-                  const key = item.key
-                    ? item.key
-                    : `${item.book}-${item.paragraph}`;
-                  const progress = item.progress?.map((item, id) => (
-                    <Tag key={id}>{Math.round(item * 100) + "%"}</Tag>
-                  ));
-                  return {
-                    key: key,
-                    title: (
-                      <Space>
-                        <PaliText
-                          text={strTitle === "" ? "[unnamed]" : strTitle}
-                        />
-                        {progress}
-                      </Space>
-                    ),
-                    level: item.level,
-                  };
-                })}
-                onSelect={(keys: string[]) => {
-                  console.log(keys);
-                  if (
-                    typeof onArticleChange !== "undefined" &&
-                    keys.length > 0
-                  ) {
-                    onArticleChange(keys[0]);
-                  }
-                }}
-              />
-            );
-
-            if (typeof onLoad !== "undefined") {
-              onLoad(json.data);
-            }
-          } else {
-            if (typeof onError !== "undefined") {
-              onError(json.data, json.message);
-            }
-            message.error(json.message);
-          }
-        })
-        .finally(() => {
-          if (typeof onLoading !== "undefined") {
-            onLoading(false);
-          }
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-    }
-  }, [
-    active,
-    type,
-    articleId,
-    srcDataMode,
-    channelId,
-    courseId,
-    exerciseId,
-    userName,
-  ]);
-*/
-  /*
-  return (
-    <div>
-      <ArticleView
-        id={articleData?.uid}
-        title={
-          articleData?.title_text ? articleData?.title_text : articleData?.title
-        }
-        subTitle={articleData?.subtitle}
-        summary={articleData?.summary}
-        content={articleData ? articleData.content : ""}
-        html={articleHtml}
-        path={articleData?.path}
-        created_at={articleData?.created_at}
-        updated_at={articleData?.updated_at}
-        channels={channels}
-        type={type}
-        articleId={articleId}
-        onPathChange={(
-          node: ITocPathNode,
-          e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
-        ) => {
-          let newType = type;
-          if (typeof onArticleChange !== "undefined") {
-            const newArticleId = node.key
-              ? node.key
-              : `${node.book}-${node.paragraph}`;
-            const target = e.ctrlKey || e.metaKey ? "_blank" : "self";
-            onArticleChange(newType, newArticleId, target);
-          }
-        }}
-      />
-      <Divider />
-      {extra}
-      <Divider />
-    </div>
-  );
-  */
 };
 
 export default TypeCourseWidget;
