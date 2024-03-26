@@ -204,6 +204,24 @@ const WbwDetailFmWidget = ({
 
   const currValue = resizeArray(value, factors);
 
+  const combine = (input: string): string => {
+    let meaning = "";
+    input
+      .split("-")
+      .forEach((value: string, index: number, array: string[]) => {
+        if (index === 0) {
+          meaning += value;
+        } else {
+          if (value.includes("~")) {
+            meaning = value.replace("~", meaning);
+          } else {
+            meaning += value;
+          }
+        }
+      });
+    console.debug("combine", meaning);
+    return meaning;
+  };
   return (
     <div className="wbw_word_item" style={{ width: "100%" }}>
       <div style={{ display: "flex", width: "100%" }}>
@@ -285,12 +303,23 @@ const WbwDetailFmWidget = ({
                         icon={<MergeIcon />}
                         onClick={() => {
                           if (typeof onJoin !== "undefined") {
-                            onJoin(
-                              currValue
-                                .filter((value) => !value.includes("["))
-                                .map((item) => item.replaceAll("-", ""))
-                                .join("")
-                            );
+                            const newMeaning = currValue
+                              .map((item) => {
+                                return item
+                                  .replaceAll("[[", "/*")
+                                  .replaceAll("]]", "*/");
+                              })
+                              .filter((value) => !value.includes("["))
+                              .map((item) => {
+                                return item
+                                  .replaceAll("/*", "[[")
+                                  .replaceAll("*/", "]]");
+                              })
+                              .map((item) => {
+                                return combine(item);
+                              })
+                              .join("");
+                            onJoin(newMeaning);
                           }
                         }}
                       />
