@@ -21,6 +21,7 @@ const items = {
   "forms.fields.publicity.label": "publicity",
   "forms.fields.publicity.disable.label": "disable",
   "forms.fields.publicity.private.label": "private",
+  "forms.fields.publicity.public_no_list.label": "public no list",
   "forms.fields.publicity.public.label": "public",
   "forms.fields.teacher.label": "teacher",
   "forms.fields.studentsassistant.label": "students / assistant",
