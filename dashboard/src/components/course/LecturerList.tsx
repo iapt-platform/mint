@@ -52,7 +52,7 @@ const LecturerListWidget = () => {
         <List.Item>
           <Card
             hoverable
-            style={{ width: "100%", height: 300 }}
+            style={{ width: "100%", height: 350 }}
             cover={
               <Image
                 alt="example"

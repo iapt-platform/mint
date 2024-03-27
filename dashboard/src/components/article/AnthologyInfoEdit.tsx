@@ -133,7 +133,7 @@ const AnthologyInfoEditWidget = ({
 
       <ProForm.Group>
         <LangSelect width="md" />
-        <PublicitySelect width="md" />
+        <PublicitySelect width="md" disable={["public_no_list"]} />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormSelect

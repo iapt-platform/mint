@@ -21,6 +21,7 @@ const items = {
   "forms.fields.publicity.label": "公开性",
   "forms.fields.publicity.disable.label": "禁用",
   "forms.fields.publicity.private.label": "私有",
+  "forms.fields.publicity.public_no_list.label": "公开不列出",
   "forms.fields.publicity.public.label": "公开",
   "forms.fields.teacher.label": "主讲人",
   "forms.fields.studentsassistant.label": "学生与助教",

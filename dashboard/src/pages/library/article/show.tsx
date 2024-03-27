@@ -332,21 +332,26 @@ const Widget = () => {
             style={{ marginLeft: "auto", marginRight: "auto", width: 1100 }}
           >
             <LoginAlertModal mode={currMode} />
-            <ChannelAlert
-              channels={searchParams.get("channel")}
-              onChannelChange={(channels: IChannel[]) => {
-                let output: any = {
-                  channel: channels.map((item) => item.id).join("_"),
-                };
-                searchParams.forEach((value, key) => {
-                  console.log(value, key);
-                  if (key !== "channel") {
-                    output[key] = value;
-                  }
-                });
-                setSearchParams(output);
-              }}
-            />
+            {type !== "textbook" ? (
+              <ChannelAlert
+                channels={searchParams.get("channel")}
+                onChannelChange={(channels: IChannel[]) => {
+                  let output: any = {
+                    channel: channels.map((item) => item.id).join("_"),
+                  };
+                  searchParams.forEach((value, key) => {
+                    console.log(value, key);
+                    if (key !== "channel") {
+                      output[key] = value;
+                    }
+                  });
+                  setSearchParams(output);
+                }}
+              />
+            ) : (
+              <></>
+            )}
+
             <Article
               active={true}
               type={type as ArticleType}

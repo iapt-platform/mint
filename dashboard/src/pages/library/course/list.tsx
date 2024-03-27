@@ -23,26 +23,14 @@ const Widget = () => {
         <Row>
           <Col flex="auto"></Col>
           <Col flex="960px">
-            <Row>
-              <Title level={4}>最新</Title>
-            </Row>
-            <Row>
-              <LecturerList />
-            </Row>
+            <Title level={4}>最新</Title>
+            <LecturerList />
             <Divider />
-            <Row>
-              <Title level={4}>开放报名</Title>
-            </Row>
-            <Row>
-              <CourseList type="open" />
-            </Row>
+            <Title level={4}>开放报名</Title>
+            <CourseList type="open" />
             <Divider />
-            <Row>
-              <Title level={4}>历史课程</Title>
-            </Row>
-            <Row>
-              <CourseList type="close" />
-            </Row>
+            <Title level={4}>历史课程</Title>
+            <CourseList type="close" />
           </Col>
           <Col flex="auto"></Col>
         </Row>

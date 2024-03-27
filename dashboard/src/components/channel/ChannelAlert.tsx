@@ -23,7 +23,13 @@ const ChannelAlertWidget = ({ channels, onChannelChange }: IWidget) => {
       closable
       action={
         <ChannelPicker
-          trigger={<Button type="primary">选择版本</Button>}
+          trigger={
+            <Button type="primary">
+              {intl.formatMessage({
+                id: "buttons.select.channel",
+              })}
+            </Button>
+          }
           defaultOwner="my"
           onSelect={(channels: IChannel[]) => {
             if (typeof onChannelChange !== "undefined") {
