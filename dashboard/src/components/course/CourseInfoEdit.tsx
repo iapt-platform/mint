@@ -398,6 +398,7 @@ const CourseInfoEditWidget = ({
               }
               return (
                 <ProFormSelect
+                  hidden
                   tooltip="要求查看经验值，需要学生同意才会生效。"
                   options={option}
                   width="md"
