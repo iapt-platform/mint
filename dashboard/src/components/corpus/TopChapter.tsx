@@ -61,15 +61,14 @@ const TopChapterWidget = ({ studioName }: IWidget) => {
       showActions="hover"
       grid={{ gutter: 16, column: 2, md: 1 }}
       request={async (params = {}, sorter, filter) => {
-        console.log(params, sorter, filter);
-        const offset = (params.current || 1 - 1) * (params.pageSize || 20);
+        console.info(params, sorter, filter);
         const res = await get<IChapterListResponse>(
           `/v2/progress?view=chapter&studio=${studioName}&progress=0.9&limit=4`
         );
-        console.log(res.data.rows);
+        console.debug("result", res.data.rows);
         const items: IItem[] = res.data.rows.map((item, id) => {
           return {
-            sn: id + offset + 1,
+            sn: id + 1,
             book: item.book,
             paragraph: item.para,
             view: item.view,
