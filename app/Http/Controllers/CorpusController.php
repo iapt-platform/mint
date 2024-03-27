@@ -450,6 +450,8 @@ class CorpusController extends Controller
                     ->first();
         if($title){
             $this->result['title'] = MdRender::render($title->content,[$title->channel_uid]);
+            $mdRender = new MdRender(['format'=>'simple']);
+            $this->result['title_text'] = $mdRender->convert($title->content,[$title->channel_uid]);
         }
 
         /**
