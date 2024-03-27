@@ -169,7 +169,7 @@ const ChapterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
       request={async (params = {}, sorter, filter) => {
         // TODO 加排序
         console.log(params, sorter, filter);
-        const offset = (params.current || 1 - 1) * (params.pageSize || 20);
+        const offset = ((params.current || 1) - 1) * (params.pageSize || 20);
         const res = await get<IChapterListResponse>(
           `/v2/progress?view=chapter&channel=${channelId}&progress=0.01&offset=${offset}`
         );
