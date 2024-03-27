@@ -197,7 +197,9 @@ class CourseController extends Controller
             return $this->error(__('auth.failed'));
         }
         //查询标题是否重复
-        if(Course::where('title',$request->get('title'))->where('studio_id',$user['user_uid'])->exists()){
+        if(Course::where('title',$request->get('title'))
+                ->where('studio_id',$user['user_uid'])
+                ->exists()){
             if($course->title !== $request->get('title')){
                 return $this->error(__('validation.exists',['name']));
             }
@@ -214,7 +216,6 @@ class CourseController extends Controller
         $course->start_at = $request->get('start_at');
         $course->end_at = $request->get('end_at');
         $course->join = $request->get('join');
-        $course->request_exp = $request->get('request_exp');
         $course->save();
         return $this->ok($course);
     }
