@@ -7,6 +7,7 @@ import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 import { IChannel } from "./Channel";
 import { TChannelType } from "../api/Channel";
+import { useIntl } from "react-intl";
 
 interface IWidget {
   trigger?: React.ReactNode;
@@ -31,6 +32,7 @@ const ChannelTableModalWidget = ({
   onSelect,
 }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(open);
+  const intl = useIntl();
   const user = useAppSelector(_currentUser);
 
   useEffect(() => {
@@ -59,7 +61,9 @@ const ChannelTableModalWidget = ({
       <span onClick={showModal}>{trigger}</span>
       <Modal
         width={"90%"}
-        title="选择版本风格"
+        title={intl.formatMessage({
+          id: "buttons.select.channel",
+        })}
         footer={false}
         open={isModalOpen}
         onOk={handleOk}

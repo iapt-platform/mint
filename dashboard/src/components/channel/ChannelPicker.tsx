@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Modal } from "antd";
+import { Modal } from "antd";
 
 import ChannelPickerTable from "./ChannelPickerTable";
 import { IChannel } from "./Channel";
 import { ArticleType } from "../article/Article";
+import { useIntl } from "react-intl";
 
 interface IWidget {
   trigger?: React.ReactNode;
@@ -26,6 +27,7 @@ const ChannelPickerWidget = ({
   onSelect,
 }: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(open);
+  const intl = useIntl();
 
   useEffect(() => {
     setIsModalOpen(open);
@@ -54,7 +56,9 @@ const ChannelPickerWidget = ({
       <Modal
         width={"80%"}
         style={{ maxWidth: 600 }}
-        title="选择版本风格"
+        title={intl.formatMessage({
+          id: "buttons.select.channel",
+        })}
         footer={false}
         open={isModalOpen}
         onOk={handleOk}
