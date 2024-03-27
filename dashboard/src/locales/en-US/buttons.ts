@@ -89,6 +89,7 @@ const items = {
   "buttons.reset.wbw": "reset wbw",
   "buttons.reset.password": "reset password",
   "buttons.forgot.password": "forgot password",
+  "buttons.select.channel": "Select Channel",
 };
 
 export default items;

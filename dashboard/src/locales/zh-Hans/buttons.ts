@@ -89,6 +89,7 @@ const items = {
   "buttons.reset.wbw": "重置逐词解析",
   "buttons.reset.password": "重置密码",
   "buttons.forgot.password": "忘记密码",
+  "buttons.select.channel": "选择版本风格",
 };
 
 export default items;
