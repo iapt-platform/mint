@@ -103,10 +103,10 @@ const TypePaliWidget = ({
     }
 
     setLoading(true);
-    console.log("url", url);
+    console.info("TypePali api request", url);
     get<IArticleResponse>(url)
       .then((json) => {
-        console.log("article", json);
+        console.debug("TypePali api response ", json);
         if (json.ok) {
           setArticleData(json.data);
           if (json.data.html) {
@@ -198,9 +198,17 @@ const TypePaliWidget = ({
     return;
   };
 
-  const title = articleData?.title_text
-    ? articleData?.title_text
-    : articleData?.title;
+  let title = "";
+  if (articleData) {
+    if (type === "chapter") {
+      title = articleData.title_text
+        ? articleData.title_text
+        : articleData.title;
+    } else {
+      const id = articleId?.split("-");
+      title = id ? (id.length > 1 ? id[1] : "unknown") : "unknown";
+    }
+  }
 
   let fullPath: ITocPathNode[] = [];
   if (articleData && articleData.path && articleData.path.length > 0) {
