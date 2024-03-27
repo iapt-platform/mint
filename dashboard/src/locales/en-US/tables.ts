@@ -2,7 +2,7 @@ const items = {
   "tables.publicity.all": "all",
   "tables.publicity.disable": "disable",
   "tables.publicity.private": "private",
-  "tables.publicity.public.bylink": "链接公开",
+  "tables.publicity.public.bylink": "public in link",
   "tables.publicity.public": "public",
   "tables.publicity.public.edit": "public editable",
   "tables.role.all": "all",
