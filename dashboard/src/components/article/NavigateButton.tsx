@@ -98,7 +98,7 @@ const NavigateButtonWidget = ({
               key="title"
               maxWidth={250}
               suffixCount={7}
-              text={nextTitle}
+              text={nextTitle?.substring(0, 20)}
             />
             <DoubleRightOutlined key="icon" />
           </Space>
