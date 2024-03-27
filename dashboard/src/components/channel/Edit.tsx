@@ -88,7 +88,10 @@ const EditWidget = ({ studioName, channelId, onLoad }: IWidget) => {
           <LangSelect readonly={isSystem ? true : false} />
         </ProForm.Group>
         <ProForm.Group>
-          <PublicitySelect readonly={isSystem ? true : false} />
+          <PublicitySelect
+            readonly={isSystem ? true : false}
+            disable={["public_no_list"]}
+          />
         </ProForm.Group>
 
         <ProForm.Group>
