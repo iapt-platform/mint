@@ -243,6 +243,7 @@ const Widget = () => {
                   mainButton = (
                     <Link
                       to={`/studio/${studioname}/course/${row.id}/edit`}
+                      target="_blank"
                       key={index}
                     >
                       {intl.formatMessage({
