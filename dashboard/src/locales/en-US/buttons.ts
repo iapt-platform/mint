@@ -90,6 +90,7 @@ const items = {
   "buttons.reset.password": "reset password",
   "buttons.forgot.password": "forgot password",
   "buttons.select.channel": "Select Channel",
+  "buttons.set.display.mode": "Display Mode",
 };
 
 export default items;

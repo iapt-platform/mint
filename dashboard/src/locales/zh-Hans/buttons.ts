@@ -90,6 +90,7 @@ const items = {
   "buttons.reset.password": "重置密码",
   "buttons.forgot.password": "忘记密码",
   "buttons.select.channel": "选择版本风格",
+  "buttons.set.display.mode": "显示模式",
 };
 
 export default items;
