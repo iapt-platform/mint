@@ -17,11 +17,14 @@ const DictComponentWidget = ({ word }: IWidgetDict) => {
 
   useEffect(() => {
     console.log("get command", searchWord);
-    if (myDictDirty) {
-      notification.warning({ message: "用户词典有未保存内容，请保存后再查词" });
-      return;
-    }
+
     if (typeof searchWord === "string" && searchWord !== wordSearch) {
+      if (myDictDirty) {
+        notification.warning({
+          message: "用户词典有未保存内容，请保存后再查词",
+        });
+        return;
+      }
       setWordSearch(searchWord);
     }
   }, [searchWord, myDictDirty, wordSearch]);

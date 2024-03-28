@@ -54,6 +54,10 @@ import PrPull from "../../../components/corpus/PrPull";
 import NotificationIcon from "../../../components/notification/NotificationIcon";
 import SentCart from "../../../components/template/SentEdit/SentCart";
 
+export const scrollToTop = () => {
+  document.getElementById("article-root")?.scrollIntoView();
+};
+
 export interface ISearchParams {
   key: string;
   value: string;
@@ -137,13 +141,11 @@ const Widget = () => {
   useEffect(() => {
     //发布mode变更
     console.log("发布mode变更", currMode);
-    store.dispatch(modeChange(currMode as ArticleMode));
+    store.dispatch(modeChange({ mode: currMode as ArticleMode }));
   }, [currMode]);
 
   console.log(anchorNavOpen, anchorNavShow);
-  const scrollToTop = () => {
-    document.getElementById("article-root")?.scrollIntoView();
-  };
+
   return (
     <div id="article-root">
       <Affix offsetTop={0}>
