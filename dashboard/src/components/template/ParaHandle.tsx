@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { fullUrl } from "../../utils";
 import { useIntl } from "react-intl";
 import { addToCart } from "./SentEdit/SentCart";
+import { scrollToTop } from "../../pages/library/article/show";
 
 interface IWidgetParaHandleCtl {
   book: number;
@@ -106,6 +107,7 @@ export const ParaHandleCtl = ({
     switch (e.key) {
       case "solo":
         navigate(url);
+        scrollToTop();
         break;
       case "solo-in-tab":
         window.open(fullUrl(url), "_blank");
