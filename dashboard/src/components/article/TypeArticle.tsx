@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Alert, Button } from "antd";
-
+import { Alert, Button, Modal } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { IArticleDataResponse } from "../api/Article";
 import { ArticleMode, ArticleType } from "./Article";
 import TypeArticleReader from "./TypeArticleReader";
@@ -36,29 +36,29 @@ const TypeArticleWidget = ({
   onAnthologySelect,
   onArticleEdit,
 }: IWidget) => {
-  const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [edit, setEdit] = useState(false);
   return (
     <div>
-      <div>
-        {articleData?.role && articleData?.role !== "reader" && edit ? (
-          <Alert
-            message={"请在提交修改后点完成按钮"}
-            type="info"
-            action={<Button onClick={() => setEdit(!edit)}>{"完成"}</Button>}
-          />
-        ) : (
-          <></>
-        )}
-      </div>
       {edit ? (
         <ArticleEdit
           anthologyId={anthologyId ? anthologyId : undefined}
           articleId={articleId}
-          onChange={(value: IArticleDataResponse) => {
+          resetButton="cancel"
+          onSubmit={(value: IArticleDataResponse) => {
             if (typeof onArticleEdit !== "undefined") {
               onArticleEdit(value);
             }
+            setEdit(false);
+          }}
+          onCancel={() => {
+            Modal.confirm({
+              icon: <ExclamationCircleOutlined />,
+              content: "放弃修改吗？",
+              okType: "danger",
+              onOk() {
+                setEdit(false);
+              },
+            });
           }}
         />
       ) : (
@@ -77,7 +77,6 @@ const TypeArticleWidget = ({
             }
           }}
           onLoad={(data: IArticleDataResponse) => {
-            setArticleData(data);
             if (typeof onLoad !== "undefined") {
               onLoad(data);
             }
