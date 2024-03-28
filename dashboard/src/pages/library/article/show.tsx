@@ -54,6 +54,10 @@ import PrPull from "../../../components/corpus/PrPull";
 import NotificationIcon from "../../../components/notification/NotificationIcon";
 import SentCart from "../../../components/template/SentEdit/SentCart";
 
+export const scrollToTop = () => {
+  document.getElementById("article-root")?.scrollIntoView();
+};
+
 export interface ISearchParams {
   key: string;
   value: string;
@@ -141,9 +145,7 @@ const Widget = () => {
   }, [currMode]);
 
   console.log(anchorNavOpen, anchorNavShow);
-  const scrollToTop = () => {
-    document.getElementById("article-root")?.scrollIntoView();
-  };
+
   return (
     <div id="article-root">
       <Affix offsetTop={0}>
