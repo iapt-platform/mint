@@ -10,7 +10,7 @@ import {
 
 import "./wbw.css";
 import WbwDetail from "./WbwDetail";
-import { IWbw, TWbwDisplayMode } from "./WbwWord";
+import { IWbw, IWbwAttachment, TWbwDisplayMode } from "./WbwWord";
 import { bookMarkColor } from "./WbwDetailBookMark";
 import WbwVideoButton from "./WbwVideoButton";
 import CommentBox from "../../discussion/DiscussionDrawer";
@@ -23,6 +23,29 @@ import { ArticleMode } from "../../article/Article";
 import { anchor, showWbw } from "../../../reducers/wbw";
 import { CommentOutlinedIcon } from "../../../assets/icon";
 import { ParaLinkCtl } from "../ParaLink";
+
+//生成视频播放按钮
+interface IVideoIcon {
+  attachments?: IWbwAttachment[];
+}
+const VideoIcon = ({ attachments }: IVideoIcon) => {
+  const videoList = attachments?.filter((item) =>
+    item.content_type?.includes("video")
+  );
+  return videoList ? (
+    <WbwVideoButton
+      video={videoList?.map((item) => {
+        return {
+          videoId: item.id,
+          type: item.content_type,
+          title: item.title,
+        };
+      })}
+    />
+  ) : (
+    <></>
+  );
+};
 
 const { Paragraph } = Typography;
 interface IWidget {
@@ -188,26 +211,6 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
   const color = data.bookMarkColor?.value
     ? bookMarkColor[data.bookMarkColor.value]
     : "white";
-
-  //生成视频播放按钮
-  const VideoIcon = () => {
-    const videoList = data.attachments?.filter((item) =>
-      item.content_type?.includes("video")
-    );
-    return videoList ? (
-      <WbwVideoButton
-        video={videoList?.map((item) => {
-          return {
-            videoId: item.id,
-            type: item.content_type,
-            title: item.title,
-          };
-        })}
-      />
-    ) : (
-      <></>
-    );
-  };
 
   const RelationIcon = () => {
     return data.relation ? (
@@ -375,7 +378,7 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
           </Popover>
         </span>
         <Space>
-          <VideoIcon />
+          <VideoIcon attachments={data.attachments} />
           <NoteIcon />
           <BookMarkIcon />
           <RelationIcon />
