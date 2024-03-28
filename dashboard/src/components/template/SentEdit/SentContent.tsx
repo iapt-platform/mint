@@ -75,11 +75,20 @@ const SentContentWidget = ({
   const newMode = useAppSelector(_mode);
 
   useEffect(() => {
-    let currMode: ArticleMode;
+    let currMode: ArticleMode | undefined;
     if (typeof mode !== "undefined") {
       currMode = mode;
     } else if (typeof newMode !== "undefined") {
-      currMode = newMode;
+      if (typeof newMode.id === "undefined") {
+        currMode = newMode.mode;
+      } else {
+        const sentId = newMode.id.split("-");
+        if (sentId.length === 2) {
+          if (book === parseInt(sentId[0]) && para === parseInt(sentId[1])) {
+            currMode = newMode.mode;
+          }
+        }
+      }
     } else {
       return;
     }
@@ -97,7 +106,7 @@ const SentContentWidget = ({
         });
         break;
     }
-  }, [mode, newMode]);
+  }, [book, mode, newMode, para]);
 
   useLayoutEffect(() => {
     const width = divShell.current?.offsetWidth;

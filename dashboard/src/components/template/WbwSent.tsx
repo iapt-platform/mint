@@ -264,7 +264,16 @@ export const WbwSentCtl = ({
     if (typeof mode !== "undefined") {
       currMode = mode;
     } else if (typeof newMode !== "undefined") {
-      currMode = newMode;
+      if (typeof newMode.id === "undefined") {
+        currMode = newMode.mode;
+      } else {
+        const sentId = newMode.id.split("-");
+        if (sentId.length === 2) {
+          if (book === parseInt(sentId[0]) && para === parseInt(sentId[1])) {
+            currMode = newMode.mode;
+          }
+        }
+      }
     } else {
       currMode = undefined;
     }
@@ -299,7 +308,7 @@ export const WbwSentCtl = ({
         }
         break;
     }
-  }, [newMode, mode]);
+  }, [newMode, mode, book, para, display, fields]);
 
   const magicDictLookup = () => {
     let _lang = GetUserSetting("setting.dict.lang", settings);

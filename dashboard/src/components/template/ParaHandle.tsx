@@ -4,6 +4,8 @@ import { fullUrl } from "../../utils";
 import { useIntl } from "react-intl";
 import { addToCart } from "./SentEdit/SentCart";
 import { scrollToTop } from "../../pages/library/article/show";
+import store from "../../store";
+import { modeChange } from "../../reducers/article-mode";
 
 interface IWidgetParaHandleCtl {
   book: number;
@@ -35,6 +37,29 @@ export const ParaHandleCtl = ({
       label: intl.formatMessage({
         id: "labels.curr.paragraph.open",
       }),
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "mode",
+      label: intl.formatMessage({
+        id: "buttons.set.display.mode",
+      }),
+      children: [
+        {
+          key: "mode-translate",
+          label: intl.formatMessage({
+            id: "buttons.translate",
+          }),
+        },
+        {
+          key: "mode-wbw",
+          label: intl.formatMessage({
+            id: "buttons.wbw",
+          }),
+        },
+      ],
     },
     {
       type: "divider",
@@ -112,6 +137,12 @@ export const ParaHandleCtl = ({
       case "solo-in-tab":
         window.open(fullUrl(url), "_blank");
         break;
+      case "mode-translate":
+        store.dispatch(modeChange({ mode: "edit", id: `${book}-${para}` }));
+        break;
+      case "mode-wbw":
+        store.dispatch(modeChange({ mode: "wbw", id: `${book}-${para}` }));
+        break;
       case "copy-sent":
         copyToClipboard(sentences.map((item) => `{{${item}}}`).join(""));
         break;
@@ -136,6 +167,7 @@ export const ParaHandleCtl = ({
       case "quote-link-tpl-t":
         copyToClipboard(`{{ql|type=t|book=${book}|para=${para}}}`);
         break;
+
       default:
         break;
     }
