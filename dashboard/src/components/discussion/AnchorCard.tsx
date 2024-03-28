@@ -42,7 +42,7 @@ const AnchorCardWidget = ({
         }
         setMode(newMode);
         //发布mode变更
-        store.dispatch(modeChange(newMode as ArticleMode));
+        store.dispatch(modeChange({ mode: newMode as ArticleMode }));
       }}
     />
   );
