@@ -40,18 +40,24 @@ interface IWidget {
   studioName?: string;
   articleId?: string;
   anthologyId?: string;
+  resetButton?: "reset" | "cancel";
   onReady?: Function;
   onLoad?: Function;
   onChange?: Function;
+  onCancel?: Function;
+  onSubmit?: Function;
 }
 
 const ArticleEditWidget = ({
   studioName,
   articleId,
   anthologyId,
+  resetButton = "reset",
   onReady,
   onLoad,
   onChange,
+  onCancel,
+  onSubmit,
 }: IWidget) => {
   const intl = useIntl();
   const [unauthorized, setUnauthorized] = useState(false);
@@ -92,6 +98,35 @@ const ArticleEditWidget = ({
       </div>
       <ProForm<IFormData>
         formRef={formRef}
+        submitter={{
+          // 完全自定义整个区域
+          render: (props, doms) => {
+            console.log(props);
+            return [
+              <Button
+                key="rest"
+                onClick={() => {
+                  if (resetButton === "reset") {
+                    props.form?.resetFields();
+                  } else {
+                    if (typeof onCancel !== "undefined") {
+                      onCancel();
+                    }
+                  }
+                }}
+              >
+                {resetButton === "reset" ? "重置" : "取消"}
+              </Button>,
+              <Button
+                type="primary"
+                key="submit"
+                onClick={() => props.form?.submit?.()}
+              >
+                提交
+              </Button>,
+            ];
+          },
+        }}
         onFinish={async (values: IFormData) => {
           const request: IArticleDataRequest = {
             uid: articleId ? articleId : "",
@@ -113,6 +148,9 @@ const ArticleEditWidget = ({
               if (res.ok) {
                 if (typeof onChange !== "undefined") {
                   onChange(res.data);
+                }
+                if (typeof onSubmit !== "undefined") {
+                  onSubmit(res.data);
                 }
                 formRef.current?.setFieldValue("content", res.data.content);
                 message.success(intl.formatMessage({ id: "flashes.success" }));

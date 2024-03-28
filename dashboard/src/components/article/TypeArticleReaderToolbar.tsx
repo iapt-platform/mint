@@ -17,6 +17,7 @@ import { ArticleTplModal } from "../template/Builder/ArticleTpl";
 import AnthologiesAtArticle from "./AnthologiesAtArticle";
 import { TRole } from "../api/Auth";
 import { useIntl } from "react-intl";
+import { TabIcon } from "../../assets/icon";
 
 interface IWidget {
   articleId?: string;
@@ -69,6 +70,7 @@ const TypeArticleReaderToolbarWidget = ({
             <Button
               type="link"
               size="small"
+              disabled={!editable}
               icon={<EditOutlined />}
               onClick={() => {
                 if (typeof onEdit !== "undefined") {
@@ -81,6 +83,13 @@ const TypeArticleReaderToolbarWidget = ({
           <Dropdown
             menu={{
               items: [
+                {
+                  label: intl.formatMessage({
+                    id: "buttons.open.in.new.tab",
+                  }),
+                  key: "open_in_tab",
+                  icon: <TabIcon />,
+                },
                 {
                   label: intl.formatMessage({
                     id: "buttons.add_to_anthology",
@@ -120,6 +129,12 @@ const TypeArticleReaderToolbarWidget = ({
               onClick: ({ key }) => {
                 console.log(`Click on item ${key}`);
                 switch (key) {
+                  case "open_in_tab":
+                    window.open(
+                      fullUrl(`/article/article/${articleId}`),
+                      "_blank"
+                    );
+                    break;
                   case "add_to_anthology":
                     setAddToAnthologyOpen(true);
                     break;

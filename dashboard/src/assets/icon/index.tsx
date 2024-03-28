@@ -690,6 +690,23 @@ const AdminSvg = () => (
     ></path>
   </svg>
 );
+
+const TabSvg = () => (
+  <svg
+    viewBox="0 0 1024 1024"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    p-id="4260"
+    width="1em"
+    height="1em"
+  >
+    <path
+      d="M810.666667 810.666667 213.333333 810.666667 213.333333 213.333333 512 213.333333 512 384 810.666667 384M810.666667 128 213.333333 128C166.4 128 128 166.4 128 213.333333L128 810.666667C128 857.6 166.4 896 213.333333 896L810.666667 896C857.6 896 896 857.6 896 810.666667L896 213.333333C896 165.973333 857.6 128 810.666667 128Z"
+      fill="currentColor"
+      p-id="4261"
+    ></path>
+  </svg>
+);
 export const DictIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DictSvg} {...props} />
 );
@@ -821,4 +838,8 @@ export const MergeIcon2 = (props: Partial<CustomIconComponentProps>) => (
 
 export const AdminIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={AdminSvg} {...props} />
+);
+
+export const TabIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={TabSvg} {...props} />
 );
