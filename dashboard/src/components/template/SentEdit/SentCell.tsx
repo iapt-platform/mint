@@ -304,27 +304,35 @@ const SentCellWidget = ({
               setIsEditMode(true);
               break;
             case "markdown":
-              setSentData((origin) => {
-                if (origin) {
-                  const wbwData: IWbw[] = origin.content
-                    ? JSON.parse(origin.content)
-                    : [];
-                  const newContent = wbwData
-                    .map((item) => {
-                      return [
-                        item.word.value,
-                        item.real.value,
-                        item.meaning?.value,
-                      ].join("=");
-                    })
-                    .join("\n");
-                  origin.content = newContent;
-                  origin.contentType = "markdown";
-                  sentSave(origin, intl);
-                  return origin;
-                }
+              Modal.confirm({
+                title: "格式转换",
+                content:
+                  "转换为markdown格式后，拆分意思数据会丢失。确定要转换吗？",
+                onOk() {
+                  if (sentData) {
+                    let newData = JSON.parse(JSON.stringify(sentData));
+                    const wbwData: IWbw[] = newData.content
+                      ? JSON.parse(newData.content)
+                      : [];
+                    const newContent = wbwData
+                      .filter((value) => value.sn.length === 1)
+                      .map((item) => {
+                        return [
+                          item.word.value,
+                          item.real.value,
+                          item.meaning?.value,
+                        ].join("=");
+                      })
+                      .join("\n");
+                    newData.content = newContent;
+                    newData["contentType"] = "markdown";
+                    sentSave(newData, intl);
+                    setSentData(newData);
+                  }
+                  setIsEditMode(true);
+                },
               });
-              setIsEditMode(true);
+
               break;
           }
         }}
