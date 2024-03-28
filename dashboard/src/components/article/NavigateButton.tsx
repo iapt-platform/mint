@@ -1,7 +1,7 @@
 import { Affix, Button, Dropdown, Space, Typography } from "antd";
 import { DoubleRightOutlined, DoubleLeftOutlined } from "@ant-design/icons";
 import { ITocPathNode } from "../corpus/TocPath";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const { Paragraph, Text } = Typography;
 
@@ -36,9 +36,6 @@ const NavigateButtonWidget = ({
   onPathChange,
 }: IWidget) => {
   const currTitle = path && path.length > 0 ? path[path.length - 1].title : "";
-
-  const affixRef = useRef<any>();
-  affixRef?.current?.updatePosition();
 
   return (
     <Paragraph
