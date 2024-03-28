@@ -10,7 +10,7 @@ class MqProgress extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan mq:progress
      * @var string
      */
     protected $signature = 'mq:progress';
