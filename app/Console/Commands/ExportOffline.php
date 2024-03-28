@@ -82,9 +82,7 @@ class ExportOffline extends Command
             //tag
             $this->info('export tag start');
             $this->call('export:tag',['db'=>'wikipali-offline']);
-            $this->call('export:tag',['db'=>'wikipali-offline-index']);
             $this->call('export:tag.map',['db'=>'wikipali-offline']);
-            $this->call('export:tag.map',['db'=>'wikipali-offline-index']);
             //
             $this->info('export pali text start');
             $this->call('export:pali.text');
