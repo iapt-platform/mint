@@ -21,7 +21,10 @@ class CourseController extends Controller
     {
         //
 		$result=false;
-		$indexCol = ['id','title','subtitle','cover','content','content_type','teacher','start_at','end_at','publicity','updated_at','created_at'];
+		$indexCol = ['id','title','subtitle',
+                     'cover','content','content_type',
+                     'teacher','start_at','end_at','join',
+                     'publicity','updated_at','created_at'];
 		switch ($request->get('view')) {
             case 'new':
                 //最新公开课程列表

@@ -359,21 +359,26 @@ class MdRender{
             if($this->options['contentType'] === "json"){
                 $json = json_decode($markdown);
                 $nissayaWord = [];
-                foreach ($json as $word) {
-                    if(count($word->sn) === 1){
-                        //只输出第一层级
-                        $str = "{{nissaya|";
-                        if(isset($word->word->value)){
-                            $str .= $word->word->value;
+                if(is_array($json)){
+                    foreach ($json as $word) {
+                        if(count($word->sn) === 1){
+                            //只输出第一层级
+                            $str = "{{nissaya|";
+                            if(isset($word->word->value)){
+                                $str .= $word->word->value;
+                            }
+                            $str .= "|";
+                            if(isset($word->meaning->value)){
+                                $str .= $word->meaning->value;
+                            }
+                            $str .= "}}";
+                            $nissayaWord[] = $str;
                         }
-                        $str .= "|";
-                        if(isset($word->meaning->value)){
-                            $str .= $word->meaning->value;
-                        }
-                        $str .= "}}";
-                        $nissayaWord[] = $str;
                     }
+                }else{
+                    Log::error('json data is not array',['data'=>$markdown]);
                 }
+
                 $markdown = implode('',$nissayaWord);
             }else if($this->options['contentType'] === "markdown"){
                 $lines = explode("\n",$markdown);
