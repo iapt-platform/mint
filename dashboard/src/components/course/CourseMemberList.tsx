@@ -3,7 +3,6 @@ import { Dropdown, Tag, message } from "antd";
 import { ActionType, ProList } from "@ant-design/pro-components";
 
 import { get } from "../../request";
-import { ICourseMember } from "./CourseMember";
 import AddMember from "./AddMember";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -12,12 +11,36 @@ import {
   ICourseMemberListResponse,
   ICourseResponse,
   TCourseMemberAction,
+  TCourseMemberStatus,
   actionMap,
 } from "../api/Course";
 import { ItemType } from "antd/lib/menu/hooks/useItems";
-import User from "../auth/User";
+import User, { IUser } from "../auth/User";
 import { getStatusColor, managerCanDo } from "./RolePower";
 import { ISetStatus, setStatus } from "./UserAction";
+import { IChannel } from "../channel/Channel";
+
+interface IRoleTag {
+  title: string;
+  color: string;
+}
+
+export interface ICourseMember {
+  sn?: number;
+  id?: string;
+  userId: string;
+  user?: IUser;
+  name?: string;
+  tag?: IRoleTag[];
+  image: string;
+  role?: string;
+  channel?: IChannel;
+  startExp?: number;
+  endExp?: number;
+  currentExp?: number;
+  expByDay?: number;
+  status?: TCourseMemberStatus;
+}
 
 interface IWidget {
   courseId?: string;
