@@ -3,156 +3,159 @@
  * 已经报名显示报名状态
  * 未报名显示报名按钮以及必要的提示
  */
-import { Space, Typography } from "antd";
+import { Modal, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
+import { ExclamationCircleFilled } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
-import { get } from "../../request";
+import { get, put } from "../../request";
 import {
   ICourseMemberData,
-  ICourseMemberListResponse,
-  TCourseExpRequest,
+  ICourseMemberResponse,
   TCourseJoinMode,
+  TCourseMemberStatus,
 } from "../api/Course";
-import AcceptCourse from "./AcceptCourse";
-import AcceptNotCourse from "./AcceptNotCourse";
-import LeaveCourse from "./LeaveCourse";
-import SignUp from "./SignUp";
+
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
+import UserAction from "./UserAction";
+import { getStudentActionsByStatus } from "./RolePower";
 
 const { Paragraph } = Typography;
 
+export interface ISetStatus {
+  courseMemberId: string;
+  message?: string;
+  status: TCourseMemberStatus;
+  onSuccess?: Function;
+  onError?: Function;
+}
+export const setStatus = ({
+  status,
+  courseMemberId,
+  message,
+  onSuccess,
+  onError,
+}: ISetStatus) => {
+  Modal.confirm({
+    icon: <ExclamationCircleFilled />,
+    content: message,
+    onOk() {
+      const url = "/v2/course-member/" + courseMemberId;
+      const data: ICourseMemberData = {
+        user_id: "",
+        course_id: "",
+        status: status,
+      };
+      console.info("api request", url, data);
+      return put<ICourseMemberData, ICourseMemberResponse>(url, data)
+        .then((json) => {
+          console.debug("AcceptCourse api response", json);
+          if (json.ok) {
+            console.debug("accepted", json.data);
+            if (typeof onSuccess !== "undefined") {
+              onSuccess(json.data);
+            }
+          } else {
+            if (typeof onError !== "undefined") {
+              onError(json.message);
+            }
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          if (typeof onError !== "undefined") {
+            onError(error);
+          }
+        });
+    },
+  });
+};
+
 interface IWidget {
   courseId: string;
+  courseName?: string;
   startAt?: string;
+  endAt?: string;
   joinMode?: TCourseJoinMode;
-  expRequest?: TCourseExpRequest;
 }
-const StatusWidget = ({ courseId, joinMode, startAt, expRequest }: IWidget) => {
+const StatusWidget = ({
+  courseId,
+  courseName,
+  joinMode,
+  startAt,
+  endAt,
+}: IWidget) => {
   const intl = useIntl();
   const [currMember, setCurrMember] = useState<ICourseMemberData>();
-
-  const today = new Date();
-  const courseStart = new Date(startAt ? startAt : "3000-01-01");
+  const user = useAppSelector(currentUser);
 
   useEffect(() => {
     /**
      * 获取该课程我的报名状态
      */
-    const url = `/v2/course-member?view=user&course=${courseId}`;
-    console.log(url);
-    get<ICourseMemberListResponse>(url).then((json) => {
-      console.log("course member", json);
+    const url = `/v2/course-member/${courseId}`;
+    console.info("api request", url);
+    get<ICourseMemberResponse>(url).then((json) => {
+      console.debug("course member", json);
       if (json.ok) {
-        let role: string[] = [];
-        for (const iterator of json.data.rows) {
-          if (typeof iterator.role !== "undefined") {
-            role.push(iterator.role);
-            setCurrMember(iterator);
-          }
-        }
+        setCurrMember(json.data);
       }
     });
   }, [courseId]);
 
   let labelStatus = "";
+
   let operation: React.ReactNode | undefined;
-  if (currMember?.role === "student" || currMember?.role === "assistant") {
-    labelStatus = intl.formatMessage({
-      id: `course.member.status.${currMember.status}.label`,
-    });
-    switch (currMember.status) {
-      case "normal":
-        operation = (
-          <Space>
-            <LeaveCourse
-              joinMode={joinMode}
-              currUser={currMember}
-              onStatusChanged={(status: ICourseMemberData | undefined) => {
-                setCurrMember(status);
-              }}
-            />
-          </Space>
-        );
-        break;
-      case "sign_up":
-        operation = (
-          <Space>
-            <LeaveCourse
-              joinMode={joinMode}
-              currUser={currMember}
-              onStatusChanged={(status: ICourseMemberData | undefined) => {
-                setCurrMember(status);
-              }}
-            />
-          </Space>
-        );
-        break;
-      case "invited":
-        operation = (
-          <Space>
-            <AcceptCourse
-              joinMode={joinMode}
-              currUser={currMember}
-              onStatusChanged={(status: ICourseMemberData | undefined) => {
-                setCurrMember(status);
-              }}
-            />
-            <AcceptNotCourse
-              joinMode={joinMode}
-              currUser={currMember}
-              onStatusChanged={(status: ICourseMemberData | undefined) => {
-                setCurrMember(status);
-              }}
-            />
-          </Space>
-        );
-        break;
-      case "accepted":
-        operation = (
-          <Space>
-            <LeaveCourse
-              joinMode={joinMode}
-              currUser={currMember}
-              onStatusChanged={(status: ICourseMemberData | undefined) => {
-                setCurrMember(status);
-              }}
-            />
-          </Space>
-        );
-        break;
-      case "rejected":
-        break;
-      case "blocked":
-        break;
-      case "left":
-        break;
-    }
-  } else {
-    if (courseStart < today) {
-      labelStatus = "已经过期";
-    } else {
-      if (joinMode === "manual" || joinMode === "open") {
-        labelStatus = "可报名";
-        operation = (
-          <Space>
-            <SignUp
-              courseId={courseId}
-              joinMode={joinMode}
-              expRequest={expRequest}
-              onStatusChanged={(status: ICourseMemberData | undefined) => {
-                setCurrMember(status);
-              }}
-            />
-          </Space>
-        );
-      }
-    }
+
+  let currStatus: TCourseMemberStatus = "none";
+  if (currMember?.status) {
+    currStatus = currMember.status;
   }
+  const actions = getStudentActionsByStatus(
+    currStatus,
+    joinMode,
+    startAt,
+    endAt
+  );
+  console.debug("getStudentActionsByStatus", currStatus, actions);
+  if (user) {
+    labelStatus = intl.formatMessage({
+      id: `course.member.status.${currStatus}.label`,
+    });
+    operation = (
+      <Space>
+        {actions?.map((item, id) => {
+          return (
+            <UserAction
+              key={id}
+              action={item}
+              currUser={currMember}
+              courseName={courseName}
+              onStatusChanged={(status: ICourseMemberData | undefined) => {
+                setCurrMember(status);
+              }}
+            />
+          );
+        })}
+      </Space>
+    );
+  } else {
+    //未登录
+    labelStatus = "未登录";
+    operation = (
+      <Link to="/anonymous/users/sign-in" target="_blank">
+        {"登录"}
+      </Link>
+    );
+  }
+
   return (
-    <div>
-      <Paragraph>{labelStatus}</Paragraph>
+    <Paragraph>
+      <div>{labelStatus}</div>
       {operation}
-    </div>
+    </Paragraph>
   );
 };
 
