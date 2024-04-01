@@ -1,49 +1,27 @@
 import { useIntl } from "react-intl";
-import { Dropdown, Modal, Tag } from "antd";
+import { Dropdown, Modal, Tag, message } from "antd";
 import { ActionType, ProList } from "@ant-design/pro-components";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 
-import { delete_, get, put } from "../../request";
+import { get, put } from "../../request";
 import { ICourseMember } from "./CourseMember";
 import AddMember from "./AddMember";
 import { useEffect, useRef, useState } from "react";
 import {
   ICourseDataResponse,
   ICourseMemberData,
-  ICourseMemberDeleteResponse,
   ICourseMemberListResponse,
   ICourseMemberResponse,
   ICourseResponse,
   TCourseMemberAction,
   TCourseMemberStatus,
+  actionMap,
 } from "../api/Course";
 import { ItemType } from "antd/lib/menu/hooks/useItems";
 import User from "../auth/User";
-import { managerCanDo } from "./RolePower";
+import { getStatusColor, managerCanDo } from "./RolePower";
+import { ISetStatus, setStatus } from "./UserAction";
 const { confirm } = Modal;
-
-interface IStatusColor {
-  status: TCourseMemberStatus;
-  color: string;
-}
-export const getStatusColor = (status?: TCourseMemberStatus): string => {
-  let color = "unset";
-  const setting: IStatusColor[] = [
-    { status: "applied", color: "blue" },
-    { status: "invited", color: "blue" },
-    { status: "accepted", color: "green" },
-    { status: "rejected", color: "orange" },
-    { status: "disagreed", color: "red" },
-    { status: "left", color: "red" },
-    { status: "blocked", color: "orange" },
-  ];
-  const CourseStatusColor = setting.find((value) => value.status === status);
-
-  if (CourseStatusColor) {
-    color = CourseStatusColor.color;
-  }
-  return color;
-};
 
 interface IWidget {
   courseId?: string;
@@ -52,7 +30,7 @@ interface IWidget {
 
 const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
   const intl = useIntl(); //i18n
-  const [canDelete, setCanDelete] = useState(false);
+  const [canManage, setCanManage] = useState(false);
   const [course, setCourse] = useState<ICourseDataResponse>();
   const ref = useRef<ActionType>();
 
@@ -71,42 +49,6 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
     }
   }, [courseId]);
 
-  const ChangeStatus = (
-    id: string,
-    name: string,
-    status: TCourseMemberStatus
-  ) => {
-    confirm({
-      title: (
-        <div>
-          <div>
-            {intl.formatMessage({
-              id: `course.member.status.${status}.message`,
-            })}
-          </div>
-          <div>{name}</div>
-        </div>
-      ),
-      icon: <ExclamationCircleFilled />,
-      onOk() {
-        return put<ICourseMemberData, ICourseMemberResponse>(
-          "/v2/course-member/" + id,
-          {
-            course_id: "",
-            user_id: "",
-            status: status,
-          }
-        )
-          .then((json) => {
-            if (json.ok) {
-              console.log("delete ok");
-              ref.current?.reload();
-            }
-          })
-          .catch(() => console.log("Oops errors!"));
-      },
-    });
-  };
   return (
     <>
       <ProList<ICourseMember>
@@ -158,7 +100,6 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
           actions: {
             search: false,
             render: (text, row, index, action) => {
-              let canUndo = false;
               const statusColor = getStatusColor(row.status);
               const actions: TCourseMemberAction[] = [
                 "invite",
@@ -167,11 +108,14 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
                 "reject",
                 "block",
               ];
+              /*
+
               const undo = {
                 key: "undo",
                 label: "撤销上次操作",
                 disabled: !canUndo,
               };
+              */
               const items: ItemType[] = actions.map((item) => {
                 return {
                   key: item,
@@ -194,49 +138,36 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
                     id: `course.member.status.${row.status}.label`,
                   })}
                 </span>,
-                canDelete ? (
+                canManage ? (
                   <Dropdown.Button
                     key={index}
                     type="link"
                     menu={{
                       items,
                       onClick: (e) => {
-                        console.log("click", e);
-                        switch (e.key) {
-                          case "exp":
-                            break;
-                          case "delete":
-                            confirm({
-                              title: `删除此成员吗?`,
-                              icon: <ExclamationCircleFilled />,
-                              content: "此操作不能恢复",
-                              okType: "danger",
-                              onOk() {
-                                return delete_<ICourseMemberDeleteResponse>(
-                                  "/v2/course-member/" + row.id
-                                )
-                                  .then((json) => {
-                                    if (json.ok) {
-                                      console.log("delete ok");
-                                      ref.current?.reload();
-                                    }
-                                  })
-                                  .catch(() => console.log("Oops errors!"));
+                        console.debug("click", e);
+                        const currAction = e.key as TCourseMemberAction;
+                        if (actions.includes(currAction)) {
+                          const newStatus = actionMap(currAction);
+                          if (newStatus) {
+                            const actionParam: ISetStatus = {
+                              courseMemberId: row.id,
+                              message: intl.formatMessage(
+                                {
+                                  id: `course.member.status.${currAction}.message`,
+                                },
+                                { user: row.user?.nickName }
+                              ),
+                              status: newStatus,
+                              onSuccess: (data: ICourseMemberData) => {
+                                message.success(
+                                  intl.formatMessage({ id: "flashes.success" })
+                                );
+                                ref.current?.reload();
                               },
-                            });
-                            break;
-                          case "accept":
-                            if (row.id && row.name) {
-                              ChangeStatus(row.id, row.name, "accepted");
-                            }
-                            break;
-                          case "reject":
-                            if (row.id && row.name) {
-                              ChangeStatus(row.id, row.name, "rejected");
-                            }
-                            break;
-                          default:
-                            break;
+                            };
+                            setStatus(actionParam);
+                          }
                         }
                       },
                     }}
@@ -291,7 +222,7 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
           if (res.ok) {
             console.debug("api response", res.data);
             if (res.data.role === "owner" || res.data.role === "manager") {
-              setCanDelete(true);
+              setCanManage(true);
             }
             const items: ICourseMember[] = res.data.rows.map((item, id) => {
               let member: ICourseMember = {
