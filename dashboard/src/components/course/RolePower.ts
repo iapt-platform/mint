@@ -19,7 +19,8 @@ export const getStudentActionsByStatus = (
   startAt?: string,
   endAt?: string
 ): TCourseMemberAction[] | undefined => {
-  return getActionsByStatus(studentData, status, mode, startAt, endAt);
+  const output = getActionsByStatus(studentData, status, mode, startAt, endAt);
+  return output;
 };
 const getActionsByStatus = (
   data: IAction[],
@@ -47,7 +48,7 @@ const getActionsByStatus = (
         }
       }
     }
-    return false;
+    return undefined;
   });
 
   if (actions) {
@@ -117,6 +118,30 @@ export const studentCanDo = (
   return test(studentData, action, startAt, endAt, mode, status);
 };
 
+interface IStatusColor {
+  status: TCourseMemberStatus;
+  color: string;
+}
+export const getStatusColor = (status?: TCourseMemberStatus): string => {
+  let color = "unset";
+  const setting: IStatusColor[] = [
+    { status: "applied", color: "blue" },
+    { status: "invited", color: "blue" },
+    { status: "accepted", color: "green" },
+    { status: "agreed", color: "green" },
+    { status: "rejected", color: "orange" },
+    { status: "disagreed", color: "red" },
+    { status: "left", color: "red" },
+    { status: "blocked", color: "orange" },
+  ];
+  const CourseStatusColor = setting.find((value) => value.status === status);
+
+  if (CourseStatusColor) {
+    color = CourseStatusColor.color;
+  }
+  return color;
+};
+
 const studentData: IAction[] = [
   {
     mode: ["open"],
@@ -128,7 +153,14 @@ const studentData: IAction[] = [
   {
     mode: ["open"],
     status: "applied",
-    before: [],
+    before: ["leave"],
+    duration: ["leave"],
+    after: [],
+  },
+  {
+    mode: ["open"],
+    status: "joined",
+    before: ["leave"],
     duration: ["leave"],
     after: [],
   },
