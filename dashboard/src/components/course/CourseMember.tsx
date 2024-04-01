@@ -11,6 +11,7 @@ import {
   ICourseMemberListResponse,
   TCourseMemberStatus,
 } from "../api/Course";
+import { IUser } from "../auth/User";
 
 const { Content } = Layout;
 
@@ -23,8 +24,9 @@ export interface ICourseMember {
   sn?: number;
   id?: string;
   userId: string;
+  user?: IUser;
   name?: string;
-  tag: IRoleTag[];
+  tag?: IRoleTag[];
   image: string;
   role?: string;
   startExp?: number;
@@ -82,29 +84,18 @@ const CourseMemberWidget = ({ courseId }: IWidget) => {
           if (res.ok) {
             console.log(res.data);
             setMemberCount(res.data.count);
-            switch (res.data.role) {
-              case "owner":
-                setCanDelete(true);
-                break;
-              case "manager":
-                setCanDelete(true);
-                break;
+            if (res.data.role === "owner" || res.data.role === "manager") {
+              setCanDelete(true);
             }
             const items: ICourseMember[] = res.data.rows.map((item, id) => {
               let member: ICourseMember = {
                 id: item.id ? item.id : "",
                 userId: item.user_id,
+                user: item.user,
                 name: item.user?.nickName,
                 tag: [],
                 image: "",
               };
-              member.tag.push({
-                title: intl.formatMessage({
-                  id: "forms.fields." + item.role + ".label",
-                }),
-                color: "default",
-              });
-
               return member;
             });
             console.log(items);
@@ -136,14 +127,7 @@ const CourseMemberWidget = ({ courseId }: IWidget) => {
           },
           subTitle: {
             render: (text, row, index, action) => {
-              const showtag = row.tag.map((item, id) => {
-                return (
-                  <Tag color={item.color} key={id}>
-                    {item.title}
-                  </Tag>
-                );
-              });
-              return <Space size={0}>{showtag}</Space>;
+              return <Tag>{row.role}</Tag>;
             },
           },
           actions: {
