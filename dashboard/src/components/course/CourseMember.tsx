@@ -12,6 +12,7 @@ import {
   TCourseMemberStatus,
 } from "../api/Course";
 import { IUser } from "../auth/User";
+import { IChannel } from "../channel/Channel";
 
 const { Content } = Layout;
 
@@ -29,6 +30,7 @@ export interface ICourseMember {
   tag?: IRoleTag[];
   image: string;
   role?: string;
+  channel?: IChannel;
   startExp?: number;
   endExp?: number;
   currentExp?: number;
