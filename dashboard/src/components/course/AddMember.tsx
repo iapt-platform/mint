@@ -32,7 +32,7 @@ const AddMemeberWidget = ({ courseId, onCreated }: IWidget) => {
             user_id: values.userId,
             role: values.role,
             course_id: courseId,
-            operating: "invite",
+            status: "invited",
           };
           console.info("api request", url, data);
           post<ICourseMemberData, ICourseMemberResponse>(url, data).then(
