@@ -14,4 +14,11 @@ class Course extends Model
     ];
     public  $incrementing = false;
 
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'start_at',
+        'end_at'
+    ];
+
 }

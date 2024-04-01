@@ -19,73 +19,61 @@ class CourseMemberController extends Controller
     public function index(Request $request)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed',[403],403));
+        }
+        //判断当前用户是否有指定的 course 的权限
+        $role = CourseMember::where('course_id', $request->get('id',$request->get('course')))
+                            ->where('user_id',$user['user_uid'])
+                            ->value('role');
+        if(empty($role)){
+            return $this->error(__('auth.failed',[403],403));
+        }
+
         $result=false;
-		$indexCol = ['id','user_id','course_id','channel_id','role','updated_at','created_at'];
+		$indexCol = ['id','user_id','course_id',
+                    'channel_id','role','editor_uid',
+                    'updated_at','created_at'];
 		switch ($request->get('view')) {
             case 'course':
 	            # 获取 course 内所有 成员
-                $user = AuthApi::current($request);
-                if(!$user){
-                    return $this->error(__('auth.failed'));
-                }
-                //TODO 判断当前用户是否有指定的 course 的权限
-                $table = CourseMember::where('course_id', $request->get('id'));
+                $table = CourseMember::where('course_id', $request->get('id'))
+                                    ->where('is_current',true);
 				break;
-            case 'user':
-                //获取某个用户的角色
-                $user = AuthApi::current($request);
-                if(!$user){
-                    return $this->error(__('auth.failed'));
-                }
-                //TODO 判断当前用户是否有指定的 course 的权限
+            case 'timeline':
+                /**
+                 * 编辑时间线
+                 */
                 $table = CourseMember::where('course_id', $request->get('course'))
-                                    ->where('user_id', $user['user_uid']);
+                                    ->where('user_id',$request->get('userId'));
                 break;
+            default:
+                return $this->error('无法识别的参数view',400,400);
+            break;
         }
-        if(isset($_GET["search"])){
-            $table = $table->where('title', 'like', $_GET["search"]."%");
+        if(!empty($request->get("search"))){
+            $table = $table->where('name', 'like', $request->get("search")."%");
         }
 
         $count = $table->count();
 
-        if(isset($_GET["order"]) && isset($_GET["dir"])){
-            $table = $table->orderBy($_GET["order"],$_GET["dir"]);
-        }else{
-            $table = $table->orderBy('updated_at','desc');
-        }
+        $table = $table->orderBy($request->get('order','created_at'),
+                                $request->get('dir','asc'));
 
-        $table->skip($request->get('offset',0))
+        $table = $table->skip($request->get('offset',0))
               ->take($request->get('limit',1000));
 
         $result = $table->get();
 
         //获取当前用户角色
-        $isOwner = Course::where('id',$request->get('id'))->where('studio_id',$user["user_uid"])->exists();
-        $role = 'unknown';
-        if($isOwner){
-            $role = 'owner';
-        }else{
-            foreach ($result as $key => $value) {
-            # 找到当前用户
-            if($user["user_uid"]===$value->user_id){
-                switch ($value->role) {
-                    case 'assistant':
-                        $role = 'manager';
-                        break;
-                    default:
-                        # code...
-                        break;
-                }
-                break;
-            }
-        }
-        }
+        $role = CourseMember::where('course_id', $request->get('id'))
+                            ->where('user_id', $user['user_uid'])
+                            ->where('is_current',true)
+                            ->value('role');
 
-		if($result){
-			return $this->ok(["rows"=>CourseMemberResource::collection($result),'role'=>$role,"count"=>$count]);
-		}else{
-			return $this->error("没有查询到数据");
-		}
+		return $this->ok(["rows"=>CourseMemberResource::collection($result),'role'=>$role,"count"=>$count]);
+
     }
 
     /**
@@ -97,62 +85,60 @@ class CourseMemberController extends Controller
     public function store(Request $request)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed',[403],403));
+        }
         $validated = $request->validate([
             'user_id' => 'required',
             'course_id' => 'required',
             'role' => 'required',
-            'operating' => 'required',
+            'status' => 'required',
         ]);
-        //查找重复的项目
+        //查找重复的
         if(CourseMember::where('course_id', $validated['course_id'])
                       ->where('user_id',$validated['user_id'])
                       ->exists()){
-            return $this->error('member exists');
+            return $this->error('member exists',[200],200);
         }
         $newMember = new CourseMember();
-        $newMember->user_id = $validated['user_id'];
         $newMember->course_id = $validated['course_id'];
         $newMember->role = $validated['role'];
+        $newMember->editor_uid = $user['user_uid'];
+        $newMember->status = $validated['status'];
+        if($validated['status'] === 'invited'){
+            $newMember->user_id = $validated['user_id'];
+        }else{
+            $newMember->user_id = $user['user_uid'];
+        }
+
         /**
          * 查找course 信息，根据加入方式设置状态
          * open : accepted
          * manual: progressing
          */
         $course  = Course::find($validated['course_id']);
-        if($course){
-            switch ($course->join) {
-                case 'open': //开放学习课程
-                    switch ($validated['operating']) {
-                        case 'invite':
-                            $newMember->status = 'invited';
-                            break;
-                        case 'sign_up':
-                            $newMember->status = 'normal';
-                            break;
-                    }
-                    break;
-                case 'manual': //人工审核课程
-                    switch ($validated['operating']) {
-                        case 'invite':
-                            $newMember->status = 'invited';
-                            break;
-                        case 'sign_up':
-                            $newMember->status = 'sign_up';
-                            break;
-                    }
-                    break;
-                case 'invite': //仅限邀请
-                    $newMember->status = 'invited';
-                    break;
-
-                default:
-                    # code...
-                    break;
-            }
-        }else{
+        if(!$course){
             return $this->error('invalid course');
         }
+        switch ($course->join) {
+            case 'open': //开放学习课程
+                if($validated['status']!=='joined' &&
+                    $validated['status']!=='invited'
+                    ){
+                    return $this->error('invalid course',[200],200);
+                    }
+                break;
+            case 'manual': //人工审核课程
+                if($validated['status']!=='applied' &&
+                    $validated['status']!=='invited'
+                    ){
+                    return $this->error('invalid course',[200],200);
+                    }
+                break;
+        }
         $newMember->save();
+
         return $this->ok(new CourseMemberResource($newMember));
 
     }
@@ -160,12 +146,27 @@ class CourseMemberController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\CourseMember  $courseMember
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $courseId
      * @return \Illuminate\Http\Response
      */
-    public function show(CourseMember $courseMember)
+    public function show(Request $request,string $courseId)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        $member = CourseMember::where('course_id',$courseId)
+                                ->where('user_id',$user['user_uid'])
+                                ->where('is_current',true)
+                                ->first();
+        if($member){
+            return $this->ok(new CourseMemberResource($member));
+        }else{
+            return $this->error('no result');
+        }
+
     }
 
     /**
@@ -177,23 +178,38 @@ class CourseMemberController extends Controller
      */
     public function update(Request $request, CourseMember $courseMember)
     {
-        //
+        /**
+         * 保留原有记录
+         * 增加一条新纪录
+         * 原有记录变为历史记录
+         */
         $user = AuthApi::current($request);
         if(!$user){
             return $this->error(__('auth.failed'));
         }
 
+        $newMember = new CourseMember();
+        $newMember->user_id = $courseMember->user_id;
+        $newMember->course_id = $courseMember->course_id;
+        $newMember->role = $courseMember->role;
+        $newMember->status = $courseMember->status;
+        $newMember->channel_id = $courseMember->channel_id;
+        $newMember->editor_uid = $user['user_uid'];
+
+        $courseMember->is_current = false;
+        $courseMember->save();
+
         if($request->has('channel_id')) {
-            if($courseMember->user_id !== $user['user_uid']){
+            if($newMember->user_id !== $user['user_uid']){
                 return $this->error(__('auth.failed'));
             }
-            $courseMember->channel_id = $request->get('channel_id');
+            $newMember->channel_id = $request->get('channel_id');
         }
         if($request->has('status')) {
-            $courseMember->status = $request->get('status');
+            $newMember->status = $request->get('status');
         }
-        $courseMember->save();
-        return $this->ok(new CourseMemberResource($courseMember));
+        $newMember->save();
+        return $this->ok(new CourseMemberResource($newMember));
 
     }
     public function set_channel(Request $request)

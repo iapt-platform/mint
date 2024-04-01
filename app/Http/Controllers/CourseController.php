@@ -9,6 +9,7 @@ use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\CourseResource;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CourseController extends Controller
 {
@@ -71,6 +72,7 @@ class CourseController extends Controller
                 //我学习的课程
                 $course = CourseMember::where('user_id',$user["user_uid"])
                                       ->where('role','student')
+                                      ->where('is_current',true)
                                       ->select('course_id')
                                       ->get();
                 $courseId = [];
@@ -87,9 +89,10 @@ class CourseController extends Controller
                     return $this->error(__('auth.failed'));
                 }
                 $course = CourseMember::where('user_id',$user["user_uid"])
-                ->where('role','assistant')
-                ->select('course_id')
-                ->get();
+                                    ->whereIn('role',['assistant','manager','teacher'])
+                                      ->where('is_current',true)
+                                      ->select('course_id')
+                                    ->get();
                 $courseId = [];
                 foreach ($course as $key => $value) {
                     # code...
@@ -130,12 +133,14 @@ class CourseController extends Controller
         $create = Course::where('studio_id', $user["user_uid"])->count();
         //我学习的课程
         $study = CourseMember::where('user_id',$user["user_uid"])
-        ->where('role','student')
-        ->count();
+                            ->where('role','student')
+                            ->where('is_current',true)
+                            ->count();
         //我任教的课程
         $teach = CourseMember::where('user_id',$user["user_uid"])
-        ->where('role','assistant')
-        ->count();
+                            ->where('is_current',true)
+                            ->whereIn('role',['assistant','manager','teacher'])
+                            ->count();
         return $this->ok(['create'=>$create,'teach'=>$teach,'study'=>$study]);
     }
     /**
@@ -161,10 +166,29 @@ class CourseController extends Controller
             return $this->error(__('validation.exists',['name']));
         }
 
-        $course = new Course;
-        $course->title = $request->get('title');
-        $course->studio_id = $studio_id;
-        $course->save();
+        try {
+            $course = new Course;
+            DB::transaction(function () use($course,$request,$studio_id,$user) {
+                $saveCourse = false;
+                $saveCourseMember = false;
+
+                $course->id = Str::uuid();
+                $course->title = $request->get('title');
+                $course->studio_id = $studio_id;
+                $saveCourse = $course->save();
+
+                //添加owner
+                $newMember = new CourseMember();
+                $newMember->user_id = $user['user_uid'];
+                $newMember->course_id = $course->id;
+                $newMember->role = 'owner';
+                $saveCourseMember = $newMember->save();
+            });
+
+        } catch(\Exception $e) {
+            return $this->error('course create fail',500,500);
+        }
+
         return $this->ok(new CourseResource($course));
     }
 
