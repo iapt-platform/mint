@@ -81,17 +81,18 @@ class CourseResource extends JsonResource
             }
         }
 
-        if($request->get('view')==="study"){
+        if($request->get('view') !== "create"){
             $user = AuthApi::current($request);
-                if(!$user){
-                    return $this->error(__('auth.failed'));
-                }
+            if(!$user){
+                return $this->error(__('auth.failed'));
+            }
             $course_member = CourseMember::where('user_id',$user["user_uid"])
                                   ->where('course_id',$this->id)
-                                  ->select('status')
+                                  ->where('is_current',true)
                                   ->first();
             if($course_member){
                 $data['my_status'] = $course_member->status;
+                $data['my_status_id'] = $course_member->id;
             }
         }else{
             //计算待审核
