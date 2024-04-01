@@ -1,9 +1,8 @@
 import { useIntl } from "react-intl";
-import { Dropdown, Modal, Tag, message } from "antd";
+import { Dropdown, Tag, message } from "antd";
 import { ActionType, ProList } from "@ant-design/pro-components";
-import { ExclamationCircleFilled } from "@ant-design/icons";
 
-import { get, put } from "../../request";
+import { get } from "../../request";
 import { ICourseMember } from "./CourseMember";
 import AddMember from "./AddMember";
 import { useEffect, useRef, useState } from "react";
@@ -11,17 +10,14 @@ import {
   ICourseDataResponse,
   ICourseMemberData,
   ICourseMemberListResponse,
-  ICourseMemberResponse,
   ICourseResponse,
   TCourseMemberAction,
-  TCourseMemberStatus,
   actionMap,
 } from "../api/Course";
 import { ItemType } from "antd/lib/menu/hooks/useItems";
 import User from "../auth/User";
 import { getStatusColor, managerCanDo } from "./RolePower";
 import { ISetStatus, setStatus } from "./UserAction";
-const { confirm } = Modal;
 
 interface IWidget {
   courseId?: string;
@@ -94,6 +90,16 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
                     id: `auth.role.${entity.role}`,
                   })}
                 </Tag>
+              );
+            },
+          },
+          content: {
+            render(dom, entity, index, action, schema) {
+              return (
+                <div>
+                  {"channel:"}
+                  {entity.channel?.name ?? "未绑定"}
+                </div>
               );
             },
           },
@@ -233,6 +239,7 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
                 name: item.user?.nickName,
                 role: item.role,
                 status: item.status,
+                channel: item.channel,
                 tag: [],
                 image: "",
               };
