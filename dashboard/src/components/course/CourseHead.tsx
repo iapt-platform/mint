@@ -14,6 +14,18 @@ import moment from "moment";
 
 const { Title, Text } = Typography;
 
+const courseDuration = (startAt?: string, endAt?: string) => {
+  let labelDuration = "";
+  if (moment().isBefore(startAt)) {
+    labelDuration = "未开始";
+  } else if (moment().isBefore(endAt)) {
+    labelDuration = "进行中";
+  } else {
+    labelDuration = "已经结束";
+  }
+  return labelDuration;
+};
+
 interface IWidget {
   id?: string;
   title?: string;
@@ -35,7 +47,7 @@ const CourseHeadWidget = ({
   join,
 }: IWidget) => {
   const intl = useIntl();
-
+  const duration = courseDuration(startAt, endAt);
   return (
     <>
       <Row>
@@ -72,13 +84,7 @@ const CourseHeadWidget = ({
                   {moment(startAt).format("YYYY-MM-DD")}——
                   {moment(endAt).format("YYYY-MM-DD")}
                 </Text>
-                <Text>
-                  {moment().isBefore(startAt)
-                    ? "尚未开始"
-                    : moment().isBefore(endAt)
-                    ? "进行中"
-                    : "已经结束"}
-                </Text>
+                <Text>{duration}</Text>
                 <Text>
                   {join
                     ? intl.formatMessage({
