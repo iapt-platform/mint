@@ -451,7 +451,12 @@ const Widget = () => {
               setOpenCreate(newOpen);
             }}
           >
-            <Button key="button" icon={<PlusOutlined />} type="primary">
+            <Button
+              disabled={activeKey !== "create"}
+              key="button"
+              icon={<PlusOutlined />}
+              type="primary"
+            >
               {intl.formatMessage({ id: "buttons.create" })}
             </Button>
           </Popover>,
