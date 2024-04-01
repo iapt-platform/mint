@@ -3,13 +3,12 @@
  * 已经报名显示报名状态
  * 未报名显示报名按钮以及必要的提示
  */
-import { Modal, Space, Typography } from "antd";
+import { Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { ExclamationCircleFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
-import { get, put } from "../../request";
+import { get } from "../../request";
 import {
   ICourseMemberData,
   ICourseMemberResponse,
@@ -20,58 +19,9 @@ import {
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 import UserAction from "./UserAction";
-import { getStudentActionsByStatus } from "./RolePower";
+import { getStatusColor, getStudentActionsByStatus } from "./RolePower";
 
 const { Paragraph } = Typography;
-
-export interface ISetStatus {
-  courseMemberId: string;
-  message?: string;
-  status: TCourseMemberStatus;
-  onSuccess?: Function;
-  onError?: Function;
-}
-export const setStatus = ({
-  status,
-  courseMemberId,
-  message,
-  onSuccess,
-  onError,
-}: ISetStatus) => {
-  Modal.confirm({
-    icon: <ExclamationCircleFilled />,
-    content: message,
-    onOk() {
-      const url = "/v2/course-member/" + courseMemberId;
-      const data: ICourseMemberData = {
-        user_id: "",
-        course_id: "",
-        status: status,
-      };
-      console.info("api request", url, data);
-      return put<ICourseMemberData, ICourseMemberResponse>(url, data)
-        .then((json) => {
-          console.debug("AcceptCourse api response", json);
-          if (json.ok) {
-            console.debug("accepted", json.data);
-            if (typeof onSuccess !== "undefined") {
-              onSuccess(json.data);
-            }
-          } else {
-            if (typeof onError !== "undefined") {
-              onError(json.message);
-            }
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          if (typeof onError !== "undefined") {
-            onError(error);
-          }
-        });
-    },
-  });
-};
 
 interface IWidget {
   courseId: string;
@@ -132,7 +82,13 @@ const StatusWidget = ({
               key={id}
               action={item}
               currUser={currMember}
+              courseId={courseId}
               courseName={courseName}
+              user={{
+                id: user.id,
+                nickName: user.nickName,
+                userName: user.realName,
+              }}
               onStatusChanged={(status: ICourseMemberData | undefined) => {
                 setCurrMember(status);
               }}
@@ -153,7 +109,7 @@ const StatusWidget = ({
 
   return (
     <Paragraph>
-      <div>{labelStatus}</div>
+      <div style={{ color: getStatusColor(currStatus) }}>{labelStatus}</div>
       {operation}
     </Paragraph>
   );
