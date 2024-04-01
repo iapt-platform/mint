@@ -54,9 +54,6 @@ const SelectChannelWidget = ({
           }}
           submitTimeout={2000}
           onFinish={async (values) => {
-            console.log(values.channel);
-            console.log("id", id);
-
             if (user && courseId) {
               const url = `/v2/course-member_set-channel`;
               const data = {
