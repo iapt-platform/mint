@@ -59,7 +59,7 @@ interface DataItem {
   coverId: string;
   coverUrl?: string[]; //封面图片文件名
   myStatus?: TCourseMemberStatus;
-  myStatusId: string;
+  myStatusId?: string;
   countProgressing?: number;
 }
 

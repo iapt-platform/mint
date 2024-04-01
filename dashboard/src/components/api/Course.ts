@@ -50,8 +50,8 @@ export interface ICourseDataResponse {
   member_count: number;
   join: TCourseJoinMode; //报名方式
   request_exp: TCourseExpRequest;
-  my_status: TCourseMemberStatus;
-  my_status_id: string;
+  my_status?: TCourseMemberStatus;
+  my_status_id?: string;
   count_progressing?: number;
   created_at: string; //创建时间
   updated_at: string; //修改时间
