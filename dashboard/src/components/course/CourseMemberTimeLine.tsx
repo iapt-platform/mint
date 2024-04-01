@@ -7,7 +7,7 @@ import { get } from "../../request";
 import { ICourseMemberData, ICourseMemberListResponse } from "../api/Course";
 import User from "../auth/User";
 import TimeShow from "../general/TimeShow";
-import { getStatusColor } from "./CourseMemberList";
+import { getStatusColor } from "./RolePower";
 
 interface IWidget {
   courseId?: string;
