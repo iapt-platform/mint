@@ -7,7 +7,7 @@ import GoBack from "../../../components/studio/GoBack";
 import CourseInfoEdit from "../../../components/course/CourseInfoEdit";
 import CourseMemberList from "../../../components/course/CourseMemberList";
 import CourseMemberTimeLine from "../../../components/course/CourseMemberTimeLine";
-import { ICourseMember } from "../../../components/course/CourseMember";
+import { ICourseMember } from "../../../components/course/CourseMemberList";
 
 const Widget = () => {
   const intl = useIntl();
