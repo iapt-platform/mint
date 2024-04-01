@@ -7,11 +7,24 @@ import { HomeOutlined } from "@ant-design/icons";
 import { IUser } from "../auth/User";
 import { API_HOST } from "../../request";
 import UserName from "../auth/UserName";
-import { TCourseExpRequest, TCourseJoinMode } from "../api/Course";
+import { TCourseJoinMode } from "../api/Course";
 import { useIntl } from "react-intl";
 import Status from "./Status";
+import moment from "moment";
 
 const { Title, Text } = Typography;
+
+const courseDuration = (startAt?: string, endAt?: string) => {
+  let labelDuration = "";
+  if (moment().isBefore(startAt)) {
+    labelDuration = "未开始";
+  } else if (moment().isBefore(endAt)) {
+    labelDuration = "进行中";
+  } else {
+    labelDuration = "已经结束";
+  }
+  return labelDuration;
+};
 
 interface IWidget {
   id?: string;
@@ -22,7 +35,6 @@ interface IWidget {
   endAt?: string;
   teacher?: IUser;
   join?: TCourseJoinMode;
-  exp?: TCourseExpRequest;
 }
 const CourseHeadWidget = ({
   id,
@@ -33,10 +45,9 @@ const CourseHeadWidget = ({
   startAt,
   endAt,
   join,
-  exp,
 }: IWidget) => {
   const intl = useIntl();
-
+  const duration = courseDuration(startAt, endAt);
   return (
     <>
       <Row>
@@ -70,8 +81,10 @@ const CourseHeadWidget = ({
                 <Title level={5}>{subtitle}</Title>
 
                 <Text>
-                  {startAt}——{endAt}
+                  {moment(startAt).format("YYYY-MM-DD")}——
+                  {moment(endAt).format("YYYY-MM-DD")}
                 </Text>
+                <Text>{duration}</Text>
                 <Text>
                   {join
                     ? intl.formatMessage({
@@ -79,12 +92,15 @@ const CourseHeadWidget = ({
                       })
                     : undefined}
                 </Text>
-                <Status
-                  courseId={id ? id : ""}
-                  expRequest={exp}
-                  joinMode={join}
-                  startAt={startAt}
-                />
+                {id ? (
+                  <Status
+                    courseId={id}
+                    courseName={title}
+                    joinMode={join}
+                    startAt={startAt}
+                    endAt={endAt}
+                  />
+                ) : undefined}
               </Space>
             </Space>
 

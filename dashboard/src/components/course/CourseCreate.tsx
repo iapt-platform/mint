@@ -31,11 +31,13 @@ const CourseCreateWidget = ({ studio = "", onCreate }: IWidgetCourseCreate) => {
       onFinish={async (values: IFormData) => {
         console.log(values);
         values.studio = studio;
+        const url = `/v2/course`;
+        console.info("CourseCreateWidget api request", url, values);
         const res = await post<ICourseCreateRequest, ICourseResponse>(
-          `/v2/course`,
+          url,
           values
         );
-        console.log(res);
+        console.debug("CourseCreateWidget api response", res);
         if (res.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
           formRef.current?.resetFields(["title"]);

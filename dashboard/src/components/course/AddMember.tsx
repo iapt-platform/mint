@@ -26,21 +26,27 @@ const AddMemeberWidget = ({ courseId, onCreated }: IWidget) => {
       onFinish={async (values: IFormData) => {
         console.log(values);
         if (typeof courseId !== "undefined") {
-          post<ICourseMemberData, ICourseMemberResponse>("/v2/course-member", {
+          const url = "/v2/course-member";
+
+          const data: ICourseMemberData = {
             user_id: values.userId,
             role: values.role,
             course_id: courseId,
-            operating: "invite",
-          }).then((json) => {
-            console.log("add member", json);
-            if (json.ok) {
-              message.success(intl.formatMessage({ id: "flashes.success" }));
-              setOpen(false);
-              if (typeof onCreated !== "undefined") {
-                onCreated();
+            status: "invited",
+          };
+          console.info("api request", url, data);
+          post<ICourseMemberData, ICourseMemberResponse>(url, data).then(
+            (json) => {
+              console.log("add member", json);
+              if (json.ok) {
+                message.success(intl.formatMessage({ id: "flashes.success" }));
+                setOpen(false);
+                if (typeof onCreated !== "undefined") {
+                  onCreated();
+                }
               }
             }
-          });
+          );
         }
       }}
     >
@@ -87,6 +93,9 @@ const AddMemeberWidget = ({ courseId, onCreated }: IWidget) => {
             student: intl.formatMessage({ id: "forms.fields.student.label" }),
             assistant: intl.formatMessage({
               id: "forms.fields.assistant.label",
+            }),
+            manager: intl.formatMessage({
+              id: "auth.role.manager",
             }),
           }}
         />

@@ -1,104 +1,189 @@
 import { useIntl } from "react-intl";
+import { Dropdown, Modal, Tag, message } from "antd";
+import { ActionType, ProList } from "@ant-design/pro-components";
+import { ExclamationCircleFilled } from "@ant-design/icons";
 
-import { Space, Button, Dropdown, Table, Modal } from "antd";
-import { ActionType, ProTable } from "@ant-design/pro-components";
-import {
-  DeleteOutlined,
-  BarChartOutlined,
-  ExclamationCircleFilled,
-} from "@ant-design/icons";
-
-import { delete_, get, put } from "../../request";
+import { get, put } from "../../request";
 import { ICourseMember } from "./CourseMember";
 import AddMember from "./AddMember";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
+  ICourseDataResponse,
   ICourseMemberData,
-  ICourseMemberDeleteResponse,
   ICourseMemberListResponse,
   ICourseMemberResponse,
+  ICourseResponse,
+  TCourseMemberAction,
   TCourseMemberStatus,
+  actionMap,
 } from "../api/Course";
 import { ItemType } from "antd/lib/menu/hooks/useItems";
+import User from "../auth/User";
+import { getStatusColor, managerCanDo } from "./RolePower";
+import { ISetStatus, setStatus } from "./UserAction";
 const { confirm } = Modal;
 
 interface IWidget {
-  studioName?: string;
   courseId?: string;
+  onSelect?: Function;
 }
 
-const CourseMemberListWidget = ({ studioName, courseId }: IWidget) => {
+const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
   const intl = useIntl(); //i18n
-  const [canDelete, setCanDelete] = useState(false);
+  const [canManage, setCanManage] = useState(false);
+  const [course, setCourse] = useState<ICourseDataResponse>();
   const ref = useRef<ActionType>();
 
-  const ChangeStatus = (
-    id: string,
-    name: string,
-    status: TCourseMemberStatus
-  ) => {
-    confirm({
-      title: (
-        <div>
-          <div>
-            {intl.formatMessage({
-              id: `course.member.status.${status}.message`,
-            })}
-          </div>
-          <div>{name}</div>
-        </div>
-      ),
-      icon: <ExclamationCircleFilled />,
-      onOk() {
-        return put<ICourseMemberData, ICourseMemberResponse>(
-          "/v2/course-member/" + id,
-          {
-            course_id: "",
-            user_id: "",
-            status: status,
+  useEffect(() => {
+    if (courseId) {
+      const url = `/v2/course/${courseId}`;
+      console.debug("course url", url);
+      get<ICourseResponse>(url)
+        .then((json) => {
+          console.debug("course data", json.data);
+          if (json.ok) {
+            setCourse(json.data);
           }
-        )
-          .then((json) => {
-            if (json.ok) {
-              console.log("delete ok");
-              ref.current?.reload();
-            }
-          })
-          .catch(() => console.log("Oops errors!"));
-      },
-    });
-  };
+        })
+        .catch((e) => console.error(e));
+    }
+  }, [courseId]);
+
   return (
     <>
-      <ProTable<ICourseMember>
+      <ProList<ICourseMember>
         actionRef={ref}
-        columns={[
-          {
-            title: intl.formatMessage({
-              id: "dict.fields.sn.label",
-            }),
-            dataIndex: "sn",
-            key: "sn",
-            width: 50,
-            search: false,
-          },
-          {
-            title: intl.formatMessage({
-              id: "forms.fields.name.label",
-            }),
+        search={{
+          filterType: "light",
+        }}
+        onItem={(record: ICourseMember, index: number) => {
+          return {
+            onClick: (event) => {
+              // 点击行
+              if (typeof onSelect !== "undefined") {
+                onSelect(record);
+              }
+            },
+          };
+        }}
+        metas={{
+          title: {
             dataIndex: "name",
-            key: "name",
-          },
-          {
-            title: intl.formatMessage({
-              id: "forms.fields.role.label",
-            }),
-            dataIndex: "role",
-            key: "role",
-            width: 100,
             search: false,
-            filters: true,
-            onFilter: true,
+          },
+          avatar: {
+            render(dom, entity, index, action, schema) {
+              return <User {...entity.user} showName={false} />;
+            },
+            editable: false,
+          },
+          description: {
+            dataIndex: "desc",
+            search: false,
+          },
+          subTitle: {
+            search: false,
+            render: (
+              dom: React.ReactNode,
+              entity: ICourseMember,
+              index: number
+            ) => {
+              return (
+                <Tag>
+                  {intl.formatMessage({
+                    id: `auth.role.${entity.role}`,
+                  })}
+                </Tag>
+              );
+            },
+          },
+          actions: {
+            search: false,
+            render: (text, row, index, action) => {
+              const statusColor = getStatusColor(row.status);
+              const actions: TCourseMemberAction[] = [
+                "invite",
+                "revoke",
+                "accept",
+                "reject",
+                "block",
+              ];
+              /*
+
+              const undo = {
+                key: "undo",
+                label: "撤销上次操作",
+                disabled: !canUndo,
+              };
+              */
+              const items: ItemType[] = actions.map((item) => {
+                return {
+                  key: item,
+                  label: intl.formatMessage({
+                    id: `course.member.status.${item}.button`,
+                  }),
+                  disabled: !managerCanDo(
+                    item,
+                    course?.start_at,
+                    course?.end_at,
+                    course?.join,
+                    row.status
+                  ),
+                };
+              });
+
+              return [
+                <span style={{ color: statusColor }}>
+                  {intl.formatMessage({
+                    id: `course.member.status.${row.status}.label`,
+                  })}
+                </span>,
+                canManage ? (
+                  <Dropdown.Button
+                    key={index}
+                    type="link"
+                    menu={{
+                      items,
+                      onClick: (e) => {
+                        console.debug("click", e);
+                        const currAction = e.key as TCourseMemberAction;
+                        if (actions.includes(currAction)) {
+                          const newStatus = actionMap(currAction);
+                          if (newStatus) {
+                            const actionParam: ISetStatus = {
+                              courseMemberId: row.id,
+                              message: intl.formatMessage(
+                                {
+                                  id: `course.member.status.${currAction}.message`,
+                                },
+                                { user: row.user?.nickName }
+                              ),
+                              status: newStatus,
+                              onSuccess: (data: ICourseMemberData) => {
+                                message.success(
+                                  intl.formatMessage({ id: "flashes.success" })
+                                );
+                                ref.current?.reload();
+                              },
+                            };
+                            setStatus(actionParam);
+                          }
+                        }
+                      },
+                    }}
+                  >
+                    <></>
+                  </Dropdown.Button>
+                ) : (
+                  <></>
+                ),
+              ];
+            },
+          },
+          role: {
+            // 自己扩展的字段，主要用于筛选，不在列表中显示
+            title: "角色",
+            valueType: "select",
             valueEnum: {
               all: {
                 text: intl.formatMessage({
@@ -120,256 +205,6 @@ const CourseMemberListWidget = ({ studioName, courseId }: IWidget) => {
               },
             },
           },
-          {
-            title: intl.formatMessage({
-              id: "forms.fields.status.label",
-            }),
-            dataIndex: "status",
-            key: "status",
-            width: 100,
-            search: false,
-            filters: true,
-            onFilter: true,
-            valueEnum: {
-              /**"success","processing","error","default","warning" */
-              all: {
-                text: intl.formatMessage({
-                  id: "tables.publicity.all",
-                }),
-                status: "default",
-              },
-              normal: {
-                text: intl.formatMessage({
-                  id: "course.member.status.normal.label",
-                }),
-                status: "success",
-              },
-              sign_up: {
-                text: intl.formatMessage({
-                  id: "course.member.status.sign_up.label",
-                }),
-                status: "Processing",
-              },
-              invited: {
-                text: intl.formatMessage({
-                  id: "course.member.status.invited.label",
-                }),
-                status: "default",
-              },
-              accepted: {
-                text: intl.formatMessage({
-                  id: "course.member.status.accepted.label",
-                }),
-                status: "success",
-              },
-              rejected: {
-                text: intl.formatMessage({
-                  id: "course.member.status.rejected.label",
-                }),
-                status: "warning",
-              },
-              left: {
-                text: intl.formatMessage({
-                  id: "course.member.status.left.label",
-                }),
-                status: "error",
-              },
-              blocked: {
-                text: intl.formatMessage({
-                  id: "course.member.status.blocked.label",
-                }),
-                status: "error",
-              },
-            },
-          },
-          {
-            title: intl.formatMessage({
-              id: "course.exp.start.label",
-            }),
-            dataIndex: "startExp",
-            key: "startExp",
-          },
-          {
-            title: intl.formatMessage({
-              id: "course.exp.current.label",
-            }),
-            dataIndex: "currentExp",
-            key: "currentExp",
-          },
-          {
-            title: intl.formatMessage({
-              id: "course.exp.end.label",
-            }),
-            dataIndex: "endExp",
-            key: "endExp",
-          },
-          {
-            title: intl.formatMessage({ id: "buttons.option" }),
-            key: "option",
-            width: 120,
-            valueType: "option",
-            render: (text, row, index, action) => {
-              let items: ItemType[] = [];
-              switch (row.status) {
-                case "accepted":
-                  items = [
-                    {
-                      key: "exp",
-                      label: "查看经验值",
-                      icon: <BarChartOutlined />,
-                    },
-                    {
-                      key: "block",
-                      label: "屏蔽",
-                      icon: <DeleteOutlined />,
-                      danger: true,
-                    },
-                  ];
-                  break;
-                case "sign_up":
-                  items = [
-                    {
-                      key: "accept",
-                      label: "接受",
-                      icon: <BarChartOutlined />,
-                    },
-                    {
-                      key: "reject",
-                      label: "拒绝",
-                      icon: <DeleteOutlined />,
-                      danger: true,
-                    },
-                  ];
-                  break;
-                case "invited":
-                  items = [
-                    {
-                      key: "delete",
-                      label: "删除",
-                      icon: <DeleteOutlined />,
-                      danger: true,
-                    },
-                  ];
-                  break;
-                case "normal":
-                  items = [
-                    {
-                      key: "exp",
-                      label: "查看经验值",
-                      icon: <BarChartOutlined />,
-                    },
-                    {
-                      key: "block",
-                      label: "屏蔽",
-                      icon: <DeleteOutlined />,
-                      danger: true,
-                    },
-                  ];
-                  break;
-                default:
-                  items = [
-                    {
-                      key: "none",
-                      label: "无操作",
-                      disabled: true,
-                    },
-                  ];
-                  break;
-              }
-
-              return [
-                canDelete ? (
-                  <Dropdown.Button
-                    key={index}
-                    type="link"
-                    menu={{
-                      items,
-                      onClick: (e) => {
-                        console.log("click", e);
-                        switch (e.key) {
-                          case "exp":
-                            break;
-                          case "delete":
-                            confirm({
-                              title: `删除此成员吗?`,
-                              icon: <ExclamationCircleFilled />,
-                              content: "此操作不能恢复",
-                              okType: "danger",
-                              onOk() {
-                                return delete_<ICourseMemberDeleteResponse>(
-                                  "/v2/course-member/" + row.id
-                                )
-                                  .then((json) => {
-                                    if (json.ok) {
-                                      console.log("delete ok");
-                                      ref.current?.reload();
-                                    }
-                                  })
-                                  .catch(() => console.log("Oops errors!"));
-                              },
-                            });
-                            break;
-                          case "accept":
-                            if (row.id && row.name) {
-                              ChangeStatus(row.id, row.name, "accepted");
-                            }
-                            break;
-                          case "reject":
-                            if (row.id && row.name) {
-                              ChangeStatus(row.id, row.name, "rejected");
-                            }
-                            break;
-                          default:
-                            break;
-                        }
-                      },
-                    }}
-                  >
-                    <></>
-                  </Dropdown.Button>
-                ) : (
-                  <></>
-                ),
-              ];
-            },
-          },
-        ]}
-        rowSelection={{
-          // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
-          // 注释该行则默认不显示下拉选项
-          selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-        }}
-        tableAlertRender={({
-          selectedRowKeys,
-          selectedRows,
-          onCleanSelected,
-        }) => (
-          <Space size={24}>
-            <span>
-              {intl.formatMessage({ id: "buttons.selected" })}
-              {selectedRowKeys.length}
-              <Button
-                type="link"
-                style={{ marginInlineStart: 8 }}
-                onClick={onCleanSelected}
-              >
-                {intl.formatMessage({
-                  id: "buttons.unselect",
-                })}
-              </Button>
-            </span>
-          </Space>
-        )}
-        tableAlertOptionRender={() => {
-          return (
-            <Space size={16}>
-              <Button type="link">
-                {intl.formatMessage({
-                  id: "buttons.delete.all",
-                })}
-              </Button>
-            </Space>
-          );
         }}
         request={async (params = {}, sorter, filter) => {
           console.log(params, sorter, filter);
@@ -382,33 +217,25 @@ const CourseMemberListWidget = ({ studioName, courseId }: IWidget) => {
           if (typeof params.keyword !== "undefined") {
             url += "&search=" + (params.keyword ? params.keyword : "");
           }
+          console.info("api request", url);
           const res = await get<ICourseMemberListResponse>(url);
           if (res.ok) {
-            console.log(res.data);
-            switch (res.data.role) {
-              case "owner":
-              case "manager":
-              case "assistant":
-                setCanDelete(true);
-                break;
+            console.debug("api response", res.data);
+            if (res.data.role === "owner" || res.data.role === "manager") {
+              setCanManage(true);
             }
             const items: ICourseMember[] = res.data.rows.map((item, id) => {
               let member: ICourseMember = {
                 sn: id + 1,
                 id: item.id,
                 userId: item.user_id,
+                user: item.user,
                 name: item.user?.nickName,
                 role: item.role,
                 status: item.status,
                 tag: [],
                 image: "",
               };
-              member.tag.push({
-                title: intl.formatMessage({
-                  id: "forms.fields." + item.role + ".label",
-                }),
-                color: "default",
-              });
 
               return member;
             });
@@ -433,7 +260,6 @@ const CourseMemberListWidget = ({ studioName, courseId }: IWidget) => {
           showQuickJumper: true,
           showSizeChanger: true,
         }}
-        search={false}
         options={{
           search: true,
         }}
