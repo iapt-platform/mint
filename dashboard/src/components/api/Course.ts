@@ -1,6 +1,6 @@
 import { IStudio } from "../auth/Studio";
 import { IUser } from "../auth/User";
-import { IUserRequest, TRole } from "./Auth";
+import { TRole } from "./Auth";
 
 export interface ICourseListApiResponse {
   article: string;
@@ -48,9 +48,10 @@ export interface ICourseDataResponse {
   cover: string; //封面图片文件名
   cover_url?: string[]; //封面图片文件名
   member_count: number;
-  join: TCourseJoinMode;
+  join: TCourseJoinMode; //报名方式
   request_exp: TCourseExpRequest;
   my_status: TCourseMemberStatus;
+  my_status_id: string;
   count_progressing?: number;
   created_at: string; //创建时间
   updated_at: string; //修改时间
@@ -91,13 +92,56 @@ export interface ICourseNumberResponse {
 }
 
 export type TCourseMemberStatus =
+  | "none" /*无*/
   | "normal" /*开放课程直接加入*/
-  | "invited" /**管理员已经邀请学生加入 */
-  | "sign_up" /**学生已经报名 管理员尚未审核 */
-  | "accepted" /**已经接受 */
-  | "rejected" /**已经拒绝 */
+  | "joined" /*开放课程已经加入*/
+  | "applied" /**学生已经报名 管理员尚未审核 */
+  | "canceled" /**学生取消报名 */
+  | "agreed" /**学生/助教已经接受邀请 */
+  | "disagreed" /**学生/助教已经拒绝邀请 */
   | "left" /**学生自己退出 */
-  | "blocked"; /**学生被管理员屏蔽 */
+  | "invited" /**管理员已经邀请学生加入 */
+  | "revoked" /**管理员撤销邀请 */
+  | "accepted" /**已经被管理员录取 */
+  | "rejected" /**报名已经被管理员拒绝 */
+  | "blocked"; /**被管理员清退 */
+
+export type TCourseMemberAction =
+  | "join" /*加入自学课程*/
+  | "apply" /**学生报名 */
+  | "cancel" /**学生取消报名 */
+  | "agree" /**学生/助教接受邀请 */
+  | "disagree" /**学生/助教拒绝邀请 */
+  | "leave" /**学生/助教自己退出 */
+  | "invite" /**管理员邀请学生加入 */
+  | "revoke" /**管理员撤销邀请 */
+  | "accept" /**管理员录取 */
+  | "reject" /**管理员拒绝 */
+  | "block"; /**管理员清退 */
+
+interface IActionMap {
+  action: TCourseMemberAction;
+  status: TCourseMemberStatus;
+}
+export const actionMap = (action: TCourseMemberAction) => {
+  const data: IActionMap[] = [
+    { action: "join", status: "joined" },
+    { action: "apply", status: "applied" },
+    { action: "cancel", status: "canceled" },
+    { action: "agree", status: "agreed" },
+    { action: "disagree", status: "disagreed" },
+    { action: "leave", status: "left" },
+    { action: "invite", status: "invited" },
+    { action: "revoke", status: "revoked" },
+    { action: "accept", status: "accepted" },
+    { action: "reject", status: "rejected" },
+    { action: "block", status: "blocked" },
+  ];
+
+  const current = data.find((value) => value.action === action);
+  return current?.status;
+};
+
 export interface ICourseMemberData {
   id?: string;
   user_id: string;
@@ -105,7 +149,8 @@ export interface ICourseMemberData {
   channel_id?: string;
   role?: string;
   operating?: "invite" | "sign_up";
-  user?: IUserRequest;
+  user?: IUser;
+  editor?: IUser;
   status?: TCourseMemberStatus;
   created_at?: string;
   updated_at?: string;
