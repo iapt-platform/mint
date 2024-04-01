@@ -1,5 +1,6 @@
 import { IStudio } from "../auth/Studio";
 import { IUser } from "../auth/User";
+import { IChannel } from "../channel/Channel";
 import { TRole } from "./Auth";
 
 export interface ICourseListApiResponse {
@@ -147,6 +148,7 @@ export interface ICourseMemberData {
   user_id: string;
   course_id: string;
   channel_id?: string;
+  channel?: IChannel;
   role?: string;
   operating?: "invite" | "sign_up";
   user?: IUser;
