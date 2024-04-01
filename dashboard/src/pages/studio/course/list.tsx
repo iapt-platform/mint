@@ -33,10 +33,12 @@ import {
 import { PublicityValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
 import { getSorterUrl } from "../../../utils";
-import { getStatusColor } from "../../../components/course/CourseMemberList";
 import { ItemType } from "antd/lib/menu/hooks/useItems";
-import { studentCanDo } from "../../../components/course/RolePower";
-import { ISetStatus, setStatus } from "../../../components/course/Status";
+import {
+  getStatusColor,
+  studentCanDo,
+} from "../../../components/course/RolePower";
+import { ISetStatus, setStatus } from "../../../components/course/UserAction";
 
 interface DataItem {
   sn: number;
@@ -297,6 +299,7 @@ const Widget = () => {
               }
               let userItems: ItemType[] = [];
               const actions: TCourseMemberAction[] = [
+                "join",
                 "apply",
                 "cancel",
                 "agree",
