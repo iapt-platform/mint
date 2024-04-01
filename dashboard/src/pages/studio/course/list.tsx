@@ -7,10 +7,10 @@ import {
   Button,
   Popover,
   Dropdown,
-  Table,
   Image,
   message,
   Modal,
+  Tag,
 } from "antd";
 import { ProTable, ActionType } from "@ant-design/pro-components";
 import {
@@ -23,12 +23,20 @@ import CourseCreate from "../../../components/course/CourseCreate";
 import { API_HOST, delete_, get } from "../../../request";
 import {
   ICourseListResponse,
+  ICourseMemberData,
   ICourseNumberResponse,
+  TCourseJoinMode,
+  TCourseMemberAction,
   TCourseMemberStatus,
+  actionMap,
 } from "../../../components/api/Course";
 import { PublicityValueEnum } from "../../../components/studio/table";
 import { IDeleteResponse } from "../../../components/api/Article";
 import { getSorterUrl } from "../../../utils";
+import { getStatusColor } from "../../../components/course/CourseMemberList";
+import { ItemType } from "antd/lib/menu/hooks/useItems";
+import { studentCanDo } from "../../../components/course/RolePower";
+import { ISetStatus, setStatus } from "../../../components/course/Status";
 
 interface DataItem {
   sn: number;
@@ -39,15 +47,17 @@ interface DataItem {
   course_count?: number; //课程数
   member_count: number; //成员数量
   type: number; //类型-公开/内部
+  join: TCourseJoinMode; //报名方式
   created_at: string; //创建时间
   updated_at?: string; //修改时间
   article_id?: string; //文集ID
-  course_start_at?: string; //课程开始时间
-  course_end_at?: string; //课程结束时间
+  start_at?: string; //课程开始时间
+  end_at?: string; //课程结束时间
   intro_markdown?: string; //简介
   coverId: string;
   coverUrl?: string[]; //封面图片文件名
   myStatus?: TCourseMemberStatus;
+  myStatusId: string;
   countProgressing?: number;
 }
 
@@ -172,6 +182,11 @@ const Widget = () => {
                       <Link to={`/course/show/${row.id}`} target="_blank">
                         {row.title}
                       </Link>
+                      <Tag>
+                        {intl.formatMessage({
+                          id: `course.join.mode.${row.join}.label`,
+                        })}
+                      </Tag>
                     </div>
                     <div>{row.subtitle}</div>
                   </div>
@@ -255,7 +270,10 @@ const Widget = () => {
                   break;
                 case "study":
                   mainButton = (
-                    <span key={index}>
+                    <span
+                      key={index}
+                      style={{ color: getStatusColor(row.myStatus) }}
+                    >
                       {intl.formatMessage({
                         id: `course.member.status.${row.myStatus}.label`,
                       })}
@@ -263,32 +281,90 @@ const Widget = () => {
                   );
                   break;
                 case "teach":
+                  mainButton = (
+                    <span
+                      key={index}
+                      style={{ color: getStatusColor(row.myStatus) }}
+                    >
+                      {intl.formatMessage({
+                        id: `course.member.status.${row.myStatus}.label`,
+                      })}
+                    </span>
+                  );
                   break;
                 default:
                   break;
               }
+              let userItems: ItemType[] = [];
+              const actions: TCourseMemberAction[] = [
+                "apply",
+                "cancel",
+                "agree",
+                "disagree",
+                "leave",
+              ];
+              if (activeKey !== "create") {
+                userItems = actions.map((item) => {
+                  return {
+                    key: item,
+                    label: intl.formatMessage({
+                      id: `course.member.status.${item}.button`,
+                    }),
+                    disabled: !studentCanDo(
+                      item,
+                      row.start_at,
+                      row.end_at,
+                      row.join,
+                      row.myStatus
+                    ),
+                  };
+                });
+              }
+
               return [
                 <Dropdown.Button
                   key={index}
                   type="link"
                   menu={{
-                    items: [
-                      {
-                        key: "remove",
-                        label: intl.formatMessage({
-                          id: "buttons.delete",
-                        }),
-                        icon: <DeleteOutlined />,
-                        danger: true,
-                      },
-                    ],
+                    items:
+                      activeKey === "create"
+                        ? [
+                            {
+                              key: "remove",
+                              label: intl.formatMessage({
+                                id: "buttons.delete",
+                              }),
+                              icon: <DeleteOutlined />,
+                              danger: true,
+                            },
+                          ]
+                        : userItems,
                     onClick: (e) => {
-                      switch (e.key) {
-                        case "remove":
-                          showDeleteConfirm(row.id, row.title);
-                          break;
-                        default:
-                          break;
+                      if (e.key === "remove") {
+                        showDeleteConfirm(row.id, row.title);
+                      }
+                      const currAction = e.key as TCourseMemberAction;
+                      if (actions.includes(currAction)) {
+                        const newStatus = actionMap(currAction);
+                        if (newStatus) {
+                          const actionParam: ISetStatus = {
+                            courseMemberId: row.myStatusId,
+                            message: intl.formatMessage(
+                              {
+                                id: `course.member.status.${currAction}.message`,
+                              },
+                              { course: row.title }
+                            ),
+                            status: newStatus,
+                            onSuccess: (data: ICourseMemberData) => {
+                              message.success(
+                                intl.formatMessage({ id: "flashes.success" })
+                              );
+                              ref.current?.reload();
+                            },
+                          };
+                          setStatus(actionParam);
+                        }
                       }
                     },
                   }}
@@ -301,8 +377,8 @@ const Widget = () => {
         ]}
         //从服务端获取数据
         request={async (params = {}, sorter, filter) => {
-          console.log(params, sorter, filter);
-          console.log(activeKey);
+          console.debug(params, sorter, filter);
+          console.info(activeKey);
           let url = `/v2/course?view=${activeKey}&studio=${studioname}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
@@ -312,7 +388,7 @@ const Widget = () => {
             url += "&search=" + (params.keyword ? params.keyword : "");
           }
           url += getSorterUrl(sorter);
-          console.log("url", url);
+          console.info("api request", url);
 
           const res = await get<ICourseListResponse>(url);
           console.debug("course data", res);
@@ -326,13 +402,17 @@ const Widget = () => {
               coverId: item.cover,
               coverUrl: item.cover_url,
               type: item.publicity,
+              join: item.join,
               member_count: item.member_count,
               myStatus: item.my_status,
+              myStatusId: item.my_status_id,
               countProgressing: item.count_progressing,
               created_at: item.created_at,
+              start_at: item.start_at,
+              end_at: item.end_at,
             };
           });
-          console.log(items);
+          console.debug("data covert", items);
           return {
             total: res.data.count,
             succcess: true,
