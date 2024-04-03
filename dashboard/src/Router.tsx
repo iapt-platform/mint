@@ -34,6 +34,9 @@ import AdminUsers from "./pages/admin/users";
 import AdminUsersList from "./pages/admin/users/list";
 import AdminUsersShow from "./pages/admin/users/show";
 
+import AdminInvite from "./pages/admin/invite";
+import AdminInviteList from "./pages/admin/invite/list";
+
 import LibraryHome from "./pages/library";
 
 import LibraryCommunity from "./pages/library/community";
@@ -162,6 +165,9 @@ const Widget = () => {
           <Route path="users" element={<AdminUsers />}>
             <Route path="list" element={<AdminUsersList />} />
             <Route path="show/:id" element={<AdminUsersShow />} />
+          </Route>
+          <Route path="invite" element={<AdminInvite />}>
+            <Route path="list" element={<AdminInviteList />} />
           </Route>
         </Route>
 
