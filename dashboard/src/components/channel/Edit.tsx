@@ -6,12 +6,17 @@ import {
 } from "@ant-design/pro-components";
 import { Alert, message } from "antd";
 
-import { IApiResponseChannel } from "../../components/api/Channel";
+import {
+  IApiResponseChannel,
+  IApiResponseChannelData,
+} from "../../components/api/Channel";
 import { get, put } from "../../request";
 import ChannelTypeSelect from "../../components/channel/ChannelTypeSelect";
 import LangSelect from "../../components/general/LangSelect";
 import PublicitySelect from "../../components/studio/PublicitySelect";
 import { useState } from "react";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
 
 interface IFormData {
   name: string;
@@ -30,6 +35,9 @@ interface IWidget {
 const EditWidget = ({ studioName, channelId, onLoad }: IWidget) => {
   const intl = useIntl();
   const [isSystem, setIsSystem] = useState<Boolean>();
+  const [data, setData] = useState<IApiResponseChannelData>();
+
+  const user = useAppSelector(currentUser);
   return (
     <>
       {isSystem ? (
@@ -53,6 +61,18 @@ const EditWidget = ({ studioName, channelId, onLoad }: IWidget) => {
           const res = await get<IApiResponseChannel>(
             `/v2/channel/${channelId}`
           );
+          if (res.ok === false) {
+            return {
+              name: "",
+              type: "",
+              lang: "",
+              summary: "",
+              status: 0,
+              studio: "",
+              isSystem: true,
+            };
+          }
+          setData(res.data);
           if (typeof onLoad !== "undefined") {
             onLoad(res.data);
           }
@@ -89,7 +109,11 @@ const EditWidget = ({ studioName, channelId, onLoad }: IWidget) => {
         </ProForm.Group>
         <ProForm.Group>
           <PublicitySelect
-            readonly={isSystem ? true : false}
+            readonly={
+              isSystem || user?.roles?.includes("basic") || data?.status === 5
+                ? true
+                : false
+            }
             disable={["public_no_list"]}
           />
         </ProForm.Group>
