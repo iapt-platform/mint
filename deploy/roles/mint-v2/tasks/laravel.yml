@@ -43,22 +43,13 @@
     group: www-data
     mode: "0444"
 
-- name: setup bootstrap folder
+- name: setup bootstrap folder for {{ ansible_user }}
   become: true
   ansible.builtin.file:
     path: "{{ app_deploy_root }}/htdocs/bootstrap/cache"
     state: directory
-    owner: www-data
-    group: www-data
-    recurse: yes
-
-- name: setup storage folder for v2
-  become: true
-  ansible.builtin.file:
-    path: "{{ app_deploy_root }}/htdocs/storage"
-    state: directory
-    owner: www-data
-    group: www-data
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     recurse: yes
 
 - name: auto-loader optimization for v2
@@ -70,6 +61,24 @@
   ansible.builtin.shell:
     cmd: composer update --optimize-autoloader --no-dev
     chdir: "{{ app_deploy_root }}/htdocs/public"
+
+- name: setup bootstrap folder for php-fpm
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_root }}/htdocs/bootstrap/cache"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+- name: setup storage folder for v2 for php-fpm
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_root }}/htdocs/storage"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
 
 - name: caching configuration
   become: true
