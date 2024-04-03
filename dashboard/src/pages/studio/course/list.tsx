@@ -39,6 +39,8 @@ import {
   studentCanDo,
 } from "../../../components/course/RolePower";
 import { ISetStatus, setStatus } from "../../../components/course/UserAction";
+import { useAppSelector } from "../../../hooks";
+import { currentUser } from "../../../reducers/current-user";
 
 interface DataItem {
   sn: number;
@@ -86,6 +88,7 @@ const Widget = () => {
   const [studyNumber, setStudyNumber] = useState<number>(0);
   const ref = useRef<ActionType>();
   const [openCreate, setOpenCreate] = useState(false);
+  const user = useAppSelector(currentUser);
 
   useEffect(() => {
     /**
@@ -455,7 +458,9 @@ const Widget = () => {
             }}
           >
             <Button
-              disabled={activeKey !== "create"}
+              disabled={
+                activeKey !== "create" || user?.roles?.includes("basic")
+              }
               key="button"
               icon={<PlusOutlined />}
               type="primary"
