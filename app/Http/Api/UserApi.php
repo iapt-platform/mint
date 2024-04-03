@@ -48,6 +48,9 @@ class UserApi{
                 'userName'=>$user['username'],
                 'realName'=>$user['username'],
             ];
+            if(!empty($user->role)){
+                $data['roles'] = json_decode($user->role);
+            }
             if($user->avatar){
                 $img = str_replace('.jpg','_s.jpg',$user->avatar);
                 if (App::environment('local')) {

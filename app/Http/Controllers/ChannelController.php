@@ -500,9 +500,11 @@ class ChannelController extends Controller
             return $this->error(__('auth.failed'),401,401);
         }
         //判断当前用户是否有指定的studio的权限
-        if($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))){
+        $studioId = StudioApi::getIdByName($request->get('studio'));
+        if($user['user_uid'] !== $studioId){
             return $this->error(__('auth.failed'),403,403);
         }
+        $studio = StudioApi::getById($studioId);
         //查询是否重复
         if(Channel::where('name',$request->get('name'))
                   ->where('owner_uid',$user['user_uid'])
@@ -517,6 +519,11 @@ class ChannelController extends Controller
         $channel->type = $request->get('type');
         $channel->lang = $request->get('lang');
         $channel->editor_id = $user['user_id'];
+        if(isset($studio['roles'])){
+            if(in_array('basic',$studio['roles'])){
+                $channel->status = 5;
+            }
+        }
         $channel->create_time = time()*1000;
         $channel->modify_time = time()*1000;
         $channel->save();

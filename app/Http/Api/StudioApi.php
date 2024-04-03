@@ -37,6 +37,9 @@ class StudioApi{
             'realName'=>$userInfo->username,
             'studioName'=>$userInfo->username,
         ];
+        if(!empty($userInfo->role)){
+            $data['roles'] = json_decode($userInfo->role);
+        }
         if($userInfo->avatar){
             $img = str_replace('.jpg','_s.jpg',$userInfo->avatar);
             if (App::environment('local')) {

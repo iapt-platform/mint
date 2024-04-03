@@ -28,6 +28,10 @@ class PageIndexController extends Controller
                     'title'=>'文集',
                     'link'=>config('mint.server.dashboard_base_path').'/anthology/list',
                 ],
+                [
+                    'title'=>'注册/登录',
+                    'link'=>config('mint.server.dashboard_base_path').'/anonymous/users/sign-in',
+                ],
             ];
         $wish = [
             [
