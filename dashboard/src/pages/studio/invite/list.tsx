@@ -10,28 +10,7 @@ import { RoleValueEnum } from "../../../components/studio/table";
 import { useRef, useState } from "react";
 import InviteCreate from "../../../components/invite/InviteCreate";
 import { getSorterUrl } from "../../../utils";
-
-export interface IInviteData {
-  id: string;
-  user_uid: string;
-  email: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-}
-interface IInviteListResponse {
-  ok: boolean;
-  message: string;
-  data: {
-    rows: IInviteData[];
-    count: number;
-  };
-}
-export interface IInviteResponse {
-  ok: boolean;
-  message: string;
-  data: IInviteData;
-}
+import { IInviteListResponse } from "../../../components/api/Auth";
 
 interface DataItem {
   sn: number;
