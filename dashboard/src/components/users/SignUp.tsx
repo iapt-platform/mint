@@ -93,7 +93,7 @@ const SingUpWidget = () => {
             disabled
           />
           <CheckCard
-            title="基础版"
+            title={intl.formatMessage({ id: "labels.software.edition.basic" })}
             description={
               <div>
                 <div>✅逐词解析</div>
@@ -109,7 +109,7 @@ const SingUpWidget = () => {
           />
 
           <CheckCard
-            title="团队版"
+            title={intl.formatMessage({ id: "labels.software.edition.pro" })}
             disabled
             description={
               <div>
