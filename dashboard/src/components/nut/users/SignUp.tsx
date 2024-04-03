@@ -10,9 +10,14 @@ import { useNavigate } from "react-router-dom";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 import { get, post } from "../../../request";
-import { IInviteResponse } from "../../../pages/studio/invite/list";
+
 import LangSelect from "../../general/LangSelect";
 import { useRef, useState } from "react";
+import {
+  IInviteResponse,
+  ISignInResponse,
+  ISignUpRequest,
+} from "../../api/Auth";
 
 interface IFormData {
   email: string;
@@ -20,20 +25,6 @@ interface IFormData {
   nickname: string;
   password: string;
   password2: string;
-  lang: string;
-}
-interface ISignInResponse {
-  ok: boolean;
-  message: string;
-  data: string;
-}
-
-interface ISignUpRequest {
-  token: string;
-  username: string;
-  nickname: string;
-  email: string;
-  password: string;
   lang: string;
 }
 
@@ -89,8 +80,10 @@ const SignUpWidget = ({ token }: IWidget) => {
         }
       }}
       request={async () => {
-        const res = await get<IInviteResponse>(`/v2/invite/${token}`);
-        console.log(res.data);
+        const url = `/v2/invite/${token}`;
+        console.info("api request", url);
+        const res = await get<IInviteResponse>(url);
+        console.debug("api response", res.data);
         return {
           id: res.data.id,
           username: "",
@@ -193,6 +186,7 @@ const SignUpWidget = ({ token }: IWidget) => {
           }}
         </ProFormDependency>
       </ProForm.Group>
+
       <ProForm.Group>
         <LangSelect label="常用的译文语言" />
       </ProForm.Group>
