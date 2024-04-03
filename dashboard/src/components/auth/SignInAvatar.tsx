@@ -39,7 +39,7 @@ const SignInAvatarWidget = ({ style, placement = "bottomRight" }: IWidget) => {
   }, [user]);
 
   if (typeof user === "undefined") {
-    return <Link to="/anonymous/users/sign-in">登录</Link>;
+    return <Link to="/anonymous/users/sign-in">登录/注册</Link>;
   } else {
     return (
       <>
