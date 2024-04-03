@@ -7,6 +7,7 @@ import SignInAvatar from "../auth/SignInAvatar";
 import ToLibrary from "../auth/ToLibrary";
 import ThemeSelect from "../general/ThemeSelect";
 import NotificationIcon from "../notification/NotificationIcon";
+import SoftwareEdition from "../auth/SoftwareEdition";
 
 const { Search } = Input;
 const { Header } = Layout;
@@ -28,13 +29,15 @@ const HeadBarWidget = () => {
         style={{
           display: "flex",
           width: "100%",
+          height: "100%",
           justifyContent: "space-between",
         }}
       >
-        <div style={{ width: 80 }}>
+        <div style={{ display: "flex" }}>
           <Link to="/">
             <img alt="code" style={{ height: 36 }} src={img_banner} />
           </Link>
+          <SoftwareEdition style={{ color: "white" }} />
         </div>
         <div style={{ width: 500, lineHeight: 44 }}>
           <Search
