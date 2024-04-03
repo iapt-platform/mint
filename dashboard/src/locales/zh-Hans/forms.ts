@@ -20,6 +20,7 @@ const items = {
   "forms.fields.type.label": "类型",
   "forms.fields.publicity.label": "公开性",
   "forms.fields.publicity.disable.label": "禁用",
+  "forms.fields.publicity.blocked.label": "锁定",
   "forms.fields.publicity.private.label": "私有",
   "forms.fields.publicity.public_no_list.label": "公开不列出",
   "forms.fields.publicity.public.label": "公开",
