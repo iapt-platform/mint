@@ -15,6 +15,12 @@ export const PublicityValueEnum = () => {
       }),
       status: "Default",
     },
+    5: {
+      text: intl.formatMessage({
+        id: "tables.publicity.blocked",
+      }),
+      status: "Default",
+    },
     10: {
       text: intl.formatMessage({
         id: "tables.publicity.private",
