@@ -82,10 +82,7 @@ notification
         d="M1.532,37.339A1.531,1.531,0,0,1,0,35.808V1.532a1.532,1.532,0,0,1,3.064,0V35.809A1.533,1.533,0,0,1,1.532,37.339Z"
         fill="#f1ca23" />
     </g>
-    <text id="studio" transform="translate(542 353.2)" fill="#fff" font-size="24"
-      font-family="NotoSans-ExtraLight, Noto Sans" font-weight="200">
-      <tspan x="0" y="0">Library</tspan>
-    </text>
+
   </g>
 </svg>
 
@@ -102,10 +99,13 @@ notification
 </div>
 </li>
 @endforeach
+
 <li class="flex ml-4 text-sm relative inline-flex items-center pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out  border-transparent text-gray-400 hover:text-primary hover:border-primary focus:outline-none focus:text-primary focus:border-gray-300  ">
 <div class="flex w-full h-full">
 <a class="w-full flex items-center h-full px-3" href="#contact">联络我们</a>
-</div> </li>
+</div>
+
+</li>
 </ul>
 </div>
 </nav>
