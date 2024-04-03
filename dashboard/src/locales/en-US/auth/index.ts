@@ -1,5 +1,6 @@
 const items = {
   "auth.role.label": "role",
+  "auth.role.all": "all",
   "auth.role.owner": "owner",
   "auth.role.manager": "manager",
   "auth.role.editor": "editor",

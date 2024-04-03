@@ -20,6 +20,13 @@ const PublicitySelectWidget = ({ width, disable = [], readonly }: IWidget) => {
       disable: disable.includes("disable"),
     },
     {
+      value: 5,
+      label: intl.formatMessage({
+        id: "forms.fields.publicity.blocked.label",
+      }),
+      disable: true,
+    },
+    {
       value: 10,
       label: intl.formatMessage({
         id: "forms.fields.publicity.private.label",

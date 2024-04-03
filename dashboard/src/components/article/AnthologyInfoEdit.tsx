@@ -9,12 +9,18 @@ import {
 import MDEditor from "@uiw/react-md-editor";
 
 import { get, put } from "../../request";
-import { IAnthologyDataRequest, IAnthologyResponse } from "../api/Article";
+import {
+  IAnthologyDataRequest,
+  IAnthologyDataResponse,
+  IAnthologyResponse,
+} from "../api/Article";
 import LangSelect from "../general/LangSelect";
 import PublicitySelect from "../studio/PublicitySelect";
 import { useState } from "react";
 import { DefaultOptionType } from "antd/lib/select";
 import { IApiResponseChannelList } from "../api/Channel";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
 
 interface IFormData {
   title: string;
@@ -38,6 +44,9 @@ const AnthologyInfoEditWidget = ({
   const intl = useIntl();
   const [channelOption, setChannelOption] = useState<DefaultOptionType[]>([]);
   const [currChannel, setCurrChannel] = useState<RequestOptionsType>();
+  const [data, setData] = useState<IAnthologyDataResponse>();
+
+  const user = useAppSelector(currentUser);
 
   return anthologyId ? (
     <ProForm<IFormData>
@@ -73,6 +82,7 @@ const AnthologyInfoEditWidget = ({
         const res = await get<IAnthologyResponse>(url);
         console.log("文集get", res);
         if (res.ok) {
+          setData(res.data);
           if (typeof onLoad !== "undefined") {
             onLoad(res.data);
           }
@@ -133,7 +143,16 @@ const AnthologyInfoEditWidget = ({
 
       <ProForm.Group>
         <LangSelect width="md" />
-        <PublicitySelect width="md" disable={["public_no_list"]} />
+        <PublicitySelect
+          width="md"
+          disable={["public_no_list"]}
+          readonly={
+            user?.roles?.includes("basic") ||
+            data?.studio.roles?.includes("basic")
+              ? true
+              : false
+          }
+        />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormSelect

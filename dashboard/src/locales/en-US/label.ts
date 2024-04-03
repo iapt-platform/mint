@@ -36,6 +36,8 @@ const items = {
   "labels.loading": "loading",
   "labels.empty": "empty",
   "labels.curr.paragraph.cart.tpl": "Add to Cart",
+  "labels.software.edition.basic": "basic",
+  "labels.software.edition.pro": "pro",
 };
 
 export default items;

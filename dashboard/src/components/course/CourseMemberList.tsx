@@ -216,7 +216,7 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
             valueEnum: {
               all: {
                 text: intl.formatMessage({
-                  id: "tables.publicity.all",
+                  id: "forms.fields.publicity.all.label",
                 }),
                 status: "Default",
               },

@@ -25,7 +25,7 @@ export interface IAnthologyDataResponse {
   subtitle: string;
   summary: string;
   article_list: IArticleListApiResponse[];
-  studio: IStudioApiResponse;
+  studio: IStudio;
   default_channel?: IChannel;
   lang: string;
   status: number;

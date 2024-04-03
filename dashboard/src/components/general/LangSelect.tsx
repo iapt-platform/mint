@@ -6,7 +6,7 @@ export const LangValueEnum = () => {
   return {
     all: {
       text: intl.formatMessage({
-        id: "tables.publicity.all",
+        id: "forms.fields.publicity.all.label",
       }),
       status: "Default",
     },

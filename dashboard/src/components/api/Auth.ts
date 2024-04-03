@@ -10,6 +10,24 @@ export type TRole =
   | "assistant"
   | "unknown";
 
+export interface ISignUpRequest {
+  token: string;
+  username: string;
+  nickname: string;
+  email: string;
+  password: string;
+  lang: string;
+}
+export interface ISignUpVerifyResponse {
+  ok: boolean;
+  message: string | { email: boolean; username: boolean };
+  data: string;
+}
+export interface ISignInResponse {
+  ok: boolean;
+  message: string;
+  data: string;
+}
 export interface IUserRequest {
   id?: string;
   userName?: string;
@@ -61,3 +79,39 @@ export interface IStudioApiResponse {
   avatar?: string;
   owner: IUser;
 }
+
+export interface IInviteRequest {
+  email: string;
+  lang: string;
+  studio: string;
+  dashboard?: string;
+}
+export interface IInviteResponse {
+  ok: boolean;
+  message: string;
+  data: IInviteData;
+}
+
+export interface IInviteData {
+  id: string;
+  user_uid: string;
+  email: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+export interface IInviteListResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: IInviteData[];
+    count: number;
+  };
+}
+export interface IInviteResponse {
+  ok: boolean;
+  message: string;
+  data: IInviteData;
+}
+
+export type TSoftwareEdition = "basic" | "pro";

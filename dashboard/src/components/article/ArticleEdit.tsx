@@ -23,6 +23,8 @@ import MDEditor from "@uiw/react-md-editor";
 import ArticlePrevDrawer from "../../components/article/ArticlePrevDrawer";
 import { IStudio } from "../auth/Studio";
 import ArticleEditTools from "./ArticleEditTools";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
 
 interface IFormData {
   uid: string;
@@ -66,6 +68,7 @@ const ArticleEditWidget = ({
   const [owner, setOwner] = useState<IStudio>();
   const formRef = useRef<ProFormInstance>();
   const [title, setTitle] = useState<string>();
+  const user = useAppSelector(currentUser);
 
   return unauthorized ? (
     <Result
@@ -197,6 +200,7 @@ const ArticleEditWidget = ({
             content_type: res.data.content_type,
             lang: res.data.lang,
             status: res.data.status,
+            studio: res.data.studio,
           };
         }}
       >
@@ -227,7 +231,15 @@ const ArticleEditWidget = ({
         </ProForm.Group>
         <ProForm.Group>
           <LangSelect width="md" />
-          <PublicitySelect width="md" disable={["public_no_list"]} />
+          <PublicitySelect
+            width="md"
+            disable={["public_no_list"]}
+            readonly={
+              user?.roles?.includes("basic") || owner?.roles?.includes("basic")
+                ? true
+                : false
+            }
+          />
         </ProForm.Group>
         <ProForm.Group>
           <ProFormTextArea

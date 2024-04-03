@@ -1,6 +1,5 @@
 import forms from "./forms";
 import buttons from "./buttons";
-import tables from "./tables";
 import nut from "./nut";
 import channel from "./channel";
 import dict from "./dict";
@@ -14,6 +13,8 @@ import auth from "./auth";
 import course from "./course";
 import message from "./message";
 import label from "./label";
+import error from "./error";
+
 const items = {
   "columns.library.title": "藏经阁",
   "columns.library.community.title": "社区",
@@ -50,7 +51,6 @@ const items = {
   "columns.studio.attachment.title": "网盘",
   ...buttons,
   ...forms,
-  ...tables,
   ...nut,
   ...channel,
   ...dict,
@@ -64,6 +64,7 @@ const items = {
   ...course,
   ...message,
   ...label,
+  ...error,
 };
 
 export default items;

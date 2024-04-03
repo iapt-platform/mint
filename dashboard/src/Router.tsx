@@ -3,6 +3,9 @@ import { Route, Routes } from "react-router-dom";
 import Anonymous from "./layouts/anonymous";
 import Dashboard from "./layouts/dashboard";
 
+import Users from "./pages/users";
+import UsersSignUp from "./pages/users/sign-up";
+
 import NutUsersSignIn from "./pages/nut/users/sign-in";
 import NutUsersSignUp from "./pages/nut/users/sign-up";
 import NutUsersUnlockNew from "./pages/nut/users/unlock/new";
@@ -30,6 +33,9 @@ import AdminApiDashboard from "./pages/admin/api/dashboard";
 import AdminUsers from "./pages/admin/users";
 import AdminUsersList from "./pages/admin/users/list";
 import AdminUsersShow from "./pages/admin/users/show";
+
+import AdminInvite from "./pages/admin/invite";
+import AdminInviteList from "./pages/admin/invite/list";
 
 import LibraryHome from "./pages/library";
 
@@ -160,6 +166,13 @@ const Widget = () => {
             <Route path="list" element={<AdminUsersList />} />
             <Route path="show/:id" element={<AdminUsersShow />} />
           </Route>
+          <Route path="invite" element={<AdminInvite />}>
+            <Route path="list" element={<AdminInviteList />} />
+          </Route>
+        </Route>
+
+        <Route path="users" element={<Users />}>
+          <Route path="sign-up" element={<UsersSignUp />} />
         </Route>
         <Route path="anonymous" element={<Anonymous />}>
           <Route path="users">

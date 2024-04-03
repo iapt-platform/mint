@@ -47,6 +47,10 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
           label: <Link to="/admin/users/list">users</Link>,
           key: "users",
         },
+        {
+          label: <Link to="/admin/invite/list">invite</Link>,
+          key: "invite",
+        },
       ],
     },
     {

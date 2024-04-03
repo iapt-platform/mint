@@ -20,6 +20,7 @@ export interface IStudio {
   studioName?: string;
   realName?: string;
   avatar?: string;
+  roles?: string[];
 }
 interface IWidget {
   data?: IStudio;

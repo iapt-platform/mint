@@ -1,6 +1,5 @@
 import forms from "./forms";
 import buttons from "./buttons";
-import tables from "./tables";
 import nut from "./nut";
 import channel from "./channel";
 import dict from "./dict";
@@ -50,7 +49,6 @@ const items = {
   "columns.studio.attachment.title": "Attachment",
   ...buttons,
   ...forms,
-  ...tables,
   ...nut,
   ...channel,
   ...dict,
