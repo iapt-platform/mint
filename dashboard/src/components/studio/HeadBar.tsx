@@ -34,9 +34,7 @@ const HeadBarWidget = () => {
         }}
       >
         <div style={{ display: "flex" }}>
-          <Link to="/">
-            <img alt="code" style={{ height: 36 }} src={img_banner} />
-          </Link>
+          <img alt="code" style={{ height: 36 }} src={img_banner} />
           <SoftwareEdition style={{ color: "white" }} />
         </div>
         <div style={{ width: 500, lineHeight: 44 }}>
