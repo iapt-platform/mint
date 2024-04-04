@@ -20,6 +20,7 @@ export interface IDictRequest {
   creator_id?: number;
   editor?: IUser;
   studio?: IStudio;
+  status?: number;
   updated_at?: string;
 }
 export interface IUserDictCreate {
