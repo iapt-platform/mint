@@ -44,7 +44,6 @@ const TypeArticleReaderWidget = ({
   active = false,
   hideInteractive = false,
   hideTitle = false,
-  onArticleChange,
   onFinal,
   onLoad,
   onAnthologySelect,
