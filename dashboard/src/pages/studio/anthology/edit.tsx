@@ -66,6 +66,7 @@ const Widget = () => {
                 <EditableTocTree
                   studioName={anthologyInfo?.studio.realName}
                   anthologyId={anthology_id}
+                  anthology={anthologyInfo}
                 />
               ),
             },
