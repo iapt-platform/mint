@@ -178,6 +178,7 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
             </Link>
           ),
           key: "group",
+          disabled: user?.roles?.includes("basic"),
         },
         {
           label: (
@@ -188,6 +189,7 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
             </Link>
           ),
           key: "invite",
+          disabled: user?.roles?.includes("basic"),
         },
         {
           label: (
