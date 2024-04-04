@@ -174,6 +174,7 @@ const EditableTocTreeWidget = ({
       />
       <ArticleDrawer
         articleId={viewArticle?.id}
+        anthologyId={anthologyId}
         type="article"
         open={openViewer}
         title={viewArticle?.title_text}

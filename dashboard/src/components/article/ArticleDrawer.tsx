@@ -105,6 +105,7 @@ const ArticleDrawerWidget = ({
           para={para}
           channelId={channelId}
           articleId={articleId}
+          anthologyId={anthologyId}
           mode={mode}
           onArticleEdit={(value: IArticleDataResponse) => {
             setDrawerTitle(value.title_text);
