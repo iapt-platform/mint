@@ -174,9 +174,9 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
         setPaliColor("unset");
         setPopOpen(false);
       }}
-      onSave={(e: IWbw, isPublish: boolean) => {
+      onSave={(e: IWbw, isPublish: boolean, isPublic: boolean) => {
         if (typeof onSave !== "undefined") {
-          onSave(e, isPublish);
+          onSave(e, isPublish, isPublic);
           setPopOpen(false);
           setPaliColor("unset");
         }

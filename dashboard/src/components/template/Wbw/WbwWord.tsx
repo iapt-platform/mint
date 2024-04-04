@@ -249,11 +249,11 @@ const WbwWordWidget = ({
           channelId={channelId}
           mode={mode}
           display={display}
-          onSave={(e: IWbw, isPublish: boolean) => {
+          onSave={(e: IWbw, isPublish: boolean, isPublic: boolean) => {
             const newData: IWbw = JSON.parse(JSON.stringify(e));
             setWordData(newData);
             if (typeof onChange !== "undefined") {
-              onChange(e, isPublish);
+              onChange(e, isPublish, isPublic);
             }
           }}
         />
