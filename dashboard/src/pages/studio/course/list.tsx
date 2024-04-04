@@ -140,6 +140,8 @@ const Widget = () => {
     });
   };
 
+  const canCreate = !(activeKey !== "create" || user?.roles?.includes("basic"));
+
   return (
     <>
       <ProTable<DataItem>
@@ -436,38 +438,35 @@ const Widget = () => {
           search: true,
         }}
         toolBarRender={() => [
-          <Popover
-            content={
-              <CourseCreate
-                studio={studioname}
-                onCreate={() => {
-                  //新建课程成功后刷新
-                  setActiveKey("create");
-                  setCreateNumber(createNumber + 1);
-                  ref.current?.reload();
-                  setOpenCreate(false);
-                }}
-              />
-            }
-            title="Create"
-            placement="bottomRight"
-            trigger="click"
-            open={openCreate}
-            onOpenChange={(newOpen: boolean) => {
-              setOpenCreate(newOpen);
-            }}
-          >
-            <Button
-              disabled={
-                activeKey !== "create" || user?.roles?.includes("basic")
+          canCreate ? (
+            <Popover
+              content={
+                <CourseCreate
+                  studio={studioname}
+                  onCreate={() => {
+                    //新建课程成功后刷新
+                    setActiveKey("create");
+                    setCreateNumber(createNumber + 1);
+                    ref.current?.reload();
+                    setOpenCreate(false);
+                  }}
+                />
               }
-              key="button"
-              icon={<PlusOutlined />}
-              type="primary"
+              title="Create"
+              placement="bottomRight"
+              trigger="click"
+              open={openCreate}
+              onOpenChange={(newOpen: boolean) => {
+                setOpenCreate(newOpen);
+              }}
             >
-              {intl.formatMessage({ id: "buttons.create" })}
-            </Button>
-          </Popover>,
+              <Button key="button" icon={<PlusOutlined />} type="primary">
+                {intl.formatMessage({ id: "buttons.create" })}
+              </Button>
+            </Popover>
+          ) : (
+            <></>
+          ),
         ]}
         toolbar={{
           menu: {
