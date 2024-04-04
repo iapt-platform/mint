@@ -59,6 +59,7 @@ export interface IApiResponseDictData {
   updated_at: string;
   exp?: number;
   editor?: IUser;
+  status?: number;
 }
 export interface IApiResponseDict {
   ok: boolean;
