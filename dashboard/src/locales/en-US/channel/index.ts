@@ -8,7 +8,6 @@ const items = {
   "channel.type.nissaya.label": "Nissaya",
   "channel.type.commentary.label": "commentary",
   "channel.type.original.label": "original",
-  "channel.type.general.label": "general",
   "channel.type.message.required": "请输入版本类型",
   "channel.lang": "language",
   "channel.fields.lang.label": "语言",
