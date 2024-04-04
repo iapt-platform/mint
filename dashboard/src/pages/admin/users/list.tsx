@@ -16,7 +16,7 @@ import User from "../../../components/auth/User";
 const { Text } = Typography;
 
 interface IParams {
-  content_type?: string;
+  role?: string;
 }
 
 const UsersWidget = () => {
@@ -39,6 +39,8 @@ const UsersWidget = () => {
             },
           },
           description: {
+            editable: false,
+            search: false,
             render: (dom, entity, index, action, schema) => {
               return (
                 <Text type="secondary">
@@ -53,10 +55,9 @@ const UsersWidget = () => {
                 </Text>
               );
             },
-            editable: false,
-            search: false,
           },
           subTitle: {
+            search: false,
             render: (dom, entity, index, action, schema) => {
               return entity.role ? (
                 <Space>
@@ -88,11 +89,7 @@ const UsersWidget = () => {
               return [
                 <Dropdown
                   menu={{
-                    items: [
-                      { label: "替换", key: "replace" },
-                      { label: "引用模版", key: "tpl" },
-                      { label: "删除", key: "delete", danger: true },
-                    ],
+                    items: [],
                     onClick: (e) => {
                       console.log("click ", e.key);
                     },
@@ -109,13 +106,12 @@ const UsersWidget = () => {
               ];
             },
           },
-          content_type: {
+          role: {
             // 自己扩展的字段，主要用于筛选，不在列表中显示
             title: "类型",
             valueType: "select",
             valueEnum: {
-              all: { text: "全部", status: "Default" },
-              admin: {
+              administrator: {
                 text: "管理员",
                 status: "Error",
               },
@@ -127,8 +123,8 @@ const UsersWidget = () => {
                 text: "会员",
                 status: "Processing",
               },
-              user: {
-                text: "用户",
+              basic: {
+                text: "基础版",
                 status: "Processing",
               },
             },
@@ -140,14 +136,15 @@ const UsersWidget = () => {
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
 
-          let url = "/v2/user?view=all";
+          let url = "/v2/user?view=all&order=created_at&dir=desc";
           url += `&limit=${params.pageSize}&offset=${offset}`;
 
           url += params.keyword ? "&search=" + params.keyword : "";
+          url += params.role ? "&role=" + params.role : "";
 
           url += getSorterUrl(sorter);
 
-          console.log(url);
+          console.info("api request", url);
           const res = await get<IUserListResponse2>(url);
           return {
             total: res.data.count,

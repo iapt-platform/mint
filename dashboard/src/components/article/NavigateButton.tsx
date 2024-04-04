@@ -1,7 +1,8 @@
-import { Affix, Button, Dropdown, Space, Typography } from "antd";
+import { Button, Dropdown, Modal, Space, Typography } from "antd";
 import { DoubleRightOutlined, DoubleLeftOutlined } from "@ant-design/icons";
+import { FolderOutlined } from "@ant-design/icons";
+
 import { ITocPathNode } from "../corpus/TocPath";
-import { useEffect, useRef } from "react";
 
 const { Paragraph, Text } = Typography;
 
@@ -23,6 +24,8 @@ interface IWidget {
   prevTitle?: string;
   nextTitle?: string;
   path?: ITocPathNode[];
+  topOfChapter?: boolean;
+  endOfChapter?: boolean;
   onPrev?: Function;
   onNext?: Function;
   onPathChange?: Function;
@@ -30,6 +33,8 @@ interface IWidget {
 const NavigateButtonWidget = ({
   prevTitle,
   nextTitle,
+  topOfChapter = false,
+  endOfChapter = false,
   path,
   onPrev,
   onNext,
@@ -49,10 +54,22 @@ const NavigateButtonWidget = ({
     >
       <Button
         size="middle"
+        icon={topOfChapter ? <FolderOutlined /> : undefined}
         disabled={typeof prevTitle === "undefined"}
         onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
           if (typeof onPrev !== "undefined") {
-            onPrev(event);
+            if (topOfChapter) {
+              Modal.confirm({
+                content: "已经到达章节开头，去上一个章节吗？",
+                okText: "确认",
+                cancelText: "取消",
+                onOk: () => {
+                  onPrev(event);
+                },
+              });
+            } else {
+              onPrev(event);
+            }
           }
         }}
       >
@@ -81,11 +98,23 @@ const NavigateButtonWidget = ({
         </Dropdown>
       </div>
       <Button
+        icon={endOfChapter ? <FolderOutlined /> : undefined}
         size="middle"
         disabled={typeof nextTitle === "undefined"}
         onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
           if (typeof onNext !== "undefined") {
-            onNext(event);
+            if (endOfChapter) {
+              Modal.confirm({
+                content: "已经到达章节末尾，去下一个章节吗？",
+                okText: "确认",
+                cancelText: "取消",
+                onOk: () => {
+                  onNext(event);
+                },
+              });
+            } else {
+              onNext(event);
+            }
           }
         }}
       >
