@@ -6,6 +6,7 @@ import { get as getUiLang } from "../../locales";
 
 import { get, post, put } from "../../request";
 import {
+  IAnthologyDataResponse,
   IArticleCreateRequest,
   IArticleDataResponse,
   IArticleMapAddResponse,
@@ -25,10 +26,12 @@ import { fullUrl, randomString } from "../../utils";
 interface IWidget {
   anthologyId?: string;
   studioName?: string;
+  anthology?: IAnthologyDataResponse;
   onSelect?: Function;
 }
 const EditableTocTreeWidget = ({
   anthologyId,
+  anthology,
   studioName,
   onSelect,
 }: IWidget) => {
@@ -140,9 +143,10 @@ const EditableTocTreeWidget = ({
             `/v2/article`,
             {
               title: "new article",
-              lang: getUiLang(),
+              lang: anthology?.lang ?? getUiLang(),
               studio: studioName,
               anthologyId: anthologyId,
+              status: anthology?.status ?? undefined,
             }
           );
 
