@@ -28,7 +28,10 @@ class UserController extends Controller
                 break;
         }
         if($request->has("search")){
-            $table->where('nickname', 'like', $request->get("search")."%");
+            $table = $table->where('nickname', 'like', "%".$request->get("search")."%");
+        }
+        if($request->has("role")){
+            $table = $table->whereJsonContains('role',$request->get('role'));
         }
         $count = $table->count();
         $table = $table->orderBy($request->get('order','username'),

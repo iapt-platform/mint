@@ -51,16 +51,18 @@ class NavArticleController extends Controller
         }
         $data = array();
         $data['curr'] = new ArticleMapResource($curr);
-        $prev = ArticleCollection::where('id','<',$curr->id)
+        $prev = ArticleCollection::where('collect_id',$id[1])
+                                ->where('id','<',$curr->id)
                                 ->orderBy('id','desc')
                                 ->first();
-        if($prev && $prev->level === $curr->level){
+        if($prev){
             $data['prev'] = new ArticleMapResource($prev);
         }
-        $next = ArticleCollection::where('id','>',$curr->id)
-                ->orderBy('id')
-                ->first();
-        if($next && $next->level === $curr->level){
+        $next = ArticleCollection::where('collect_id',$id[1])
+                                ->where('id','>',$curr->id)
+                                ->orderBy('id')
+                                ->first();
+        if($next){
             $data['next'] = new ArticleMapResource($next);
         }
         return $this->ok($data);
