@@ -14,6 +14,7 @@ const items = {
   "buttons.option": "operation",
   "buttons.save": "save",
   "buttons.save.publish": "save & publish",
+  "buttons.save.my.dict": "save & my dict",
   "buttons.cancel": "cancel",
   "buttons.setting": "setting",
   "buttons.sign-in": "sign in",
