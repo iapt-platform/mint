@@ -22,7 +22,7 @@ export const mainMenuItems: MenuProps["items"] = [
   {
     label: (
       <a href="/" rel="noreferrer">
-        首页
+        <FormattedMessage id="columns.library.home.title" />
       </a>
     ),
     key: "home",

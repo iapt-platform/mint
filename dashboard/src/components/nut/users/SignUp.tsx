@@ -46,7 +46,9 @@ const SignUpWidget = ({ token }: IWidget) => {
           type="primary"
           onClick={() => navigate("/anonymous/users/sign-in")}
         >
-          登录
+          {intl.formatMessage({
+            id: "nut.users.sign-up.title",
+          })}
         </Button>
       }
     />
