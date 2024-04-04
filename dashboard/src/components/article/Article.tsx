@@ -53,14 +53,11 @@ interface IWidget {
   para?: string | null;
   anthologyId?: string | null;
   courseId?: string | null;
-  exerciseId?: string;
-  userName?: string;
   active?: boolean;
   focus?: string | null;
   hideInteractive?: boolean;
   hideTitle?: boolean;
   onArticleChange?: Function;
-  onFinal?: Function;
   onLoad?: Function;
   onAnthologySelect?: Function;
   onTitle?: Function;
@@ -74,15 +71,12 @@ const ArticleWidget = ({
   articleId,
   anthologyId,
   courseId,
-  exerciseId,
-  userName,
   mode = "read",
   active = false,
   focus,
   hideInteractive = false,
   hideTitle = false,
   onArticleChange,
-  onFinal,
   onLoad,
   onAnthologySelect,
   onTitle,
