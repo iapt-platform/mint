@@ -15,6 +15,7 @@ import message from "./message";
 import label from "./label";
 const items = {
   "columns.library.title": "Library",
+  "columns.library.home.title": "Home",
   "columns.library.community.title": "Community",
   "columns.library.palicanon.title": "Palicanon",
   "columns.library.course.title": "Course",

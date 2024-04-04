@@ -17,6 +17,7 @@ import error from "./error";
 
 const items = {
   "columns.library.title": "藏经阁",
+  "columns.library.home.title": "首页",
   "columns.library.community.title": "社区",
   "columns.library.palicanon.title": "圣典",
   "columns.library.course.title": "课程",
