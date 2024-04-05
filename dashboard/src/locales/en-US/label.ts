@@ -37,6 +37,7 @@ const items = {
   "labels.loading": "loading",
   "labels.empty": "empty",
   "labels.curr.paragraph.cart.tpl": "Add to Cart",
+  "labels.software.edition.guest": "guest",
   "labels.software.edition.basic": "basic",
   "labels.software.edition.pro": "pro",
   "labels.table-of-content": "table of content",

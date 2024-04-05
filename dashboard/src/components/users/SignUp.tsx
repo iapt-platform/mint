@@ -58,7 +58,7 @@ const SingUpWidget = () => {
         name: string;
       }>
         name="welcome"
-        title="注册"
+        title={intl.formatMessage({ id: "labels.sign-in" })}
         stepProps={{
           description: "注册wikipali基础版",
         }}
@@ -79,7 +79,7 @@ const SingUpWidget = () => {
           size="small"
         >
           <CheckCard
-            title="未注册"
+            title={intl.formatMessage({ id: "labels.software.edition.guest" })}
             description={
               <div>
                 <div>✅经文阅读</div>
