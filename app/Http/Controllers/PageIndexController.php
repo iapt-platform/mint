@@ -22,7 +22,7 @@ class PageIndexController extends Controller
                 ],
                 [
                     'title'=>'字典',
-                    'link'=>config('mint.server.dashboard_base_path').'/dict/list',
+                    'link'=>config('mint.server.dashboard_base_path').'/dict/recent',
                 ],
                 [
                     'title'=>'文集',
