@@ -2,13 +2,14 @@ import { Link } from "react-router-dom";
 import { Layout, Row, Col, Typography } from "antd";
 import BeiAn from "../general/BeiAn";
 import Feedback from "../general/Feedback";
+import { useIntl } from "react-intl";
 
 const { Footer } = Layout;
 const { Paragraph } = Typography;
 
 const FooterBarWidget = () => {
-  //Library foot bar
-  // TODO 补充项目信息
+  const intl = useIntl();
+
   return (
     <Footer>
       <Row>
@@ -24,7 +25,11 @@ const FooterBarWidget = () => {
           </ul>
         </Col>
         <Col span={16}>
-          <Paragraph strong>问题反馈</Paragraph>
+          <Paragraph strong>
+            {intl.formatMessage({
+              id: "labels.feedback",
+            })}
+          </Paragraph>
           <Feedback />
         </Col>
       </Row>

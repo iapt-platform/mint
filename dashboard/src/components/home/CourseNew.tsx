@@ -2,8 +2,10 @@ import { Col, Row } from "antd";
 import { Link } from "react-router-dom";
 import img_book from "../../assets/library/images/teachers.svg";
 import CourseNewList from "./CourseNewList";
+import { useIntl } from "react-intl";
 
 const CourseNewWidget = () => {
+  const intl = useIntl(); //i18n
   return (
     <Row
       style={{
@@ -29,7 +31,9 @@ const CourseNewWidget = () => {
             课程
           </span>
           <span style={{ position: "absolute", right: 30, bottom: 0 }}>
-            <Link to="course/list">更多</Link>
+            <Link to="course/list">
+              {intl.formatMessage({ id: "buttons.more" })}
+            </Link>
           </span>
         </div>
       </Col>

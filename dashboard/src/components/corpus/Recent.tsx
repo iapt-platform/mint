@@ -56,7 +56,7 @@ const RecentWidget = () => {
           );
         }}
       />
-      <Button type="link">更多</Button>
+      <Button type="link">{intl.formatMessage({ id: "buttons.more" })}</Button>
     </div>
   );
 };

@@ -42,10 +42,12 @@ const items = {
   "labels.dict.pass.2": "查词干",
   "labels.dict.pass.3": "查衍生",
   "labels.dict.pass.4": "查二次衍生",
+  "labels.software.edition.guest": "未注册",
   "labels.software.edition.basic": "基础版",
   "labels.software.edition.pro": "增强版",
   "labels.table-of-content": "目录",
   "labels.this-studio": "此工作室",
+  "labels.feedback": "问题反馈",
 };
 
 export default items;
