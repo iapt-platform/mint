@@ -1,8 +1,11 @@
 import { Card } from "antd";
 
 import SignUp from "../../components/users/SignUp";
+import { useIntl } from "react-intl";
 
 const Widget = () => {
+  const intl = useIntl();
+
   return (
     <div
       style={{
@@ -12,7 +15,7 @@ const Widget = () => {
         marginRight: "auto",
       }}
     >
-      <Card title="注册">
+      <Card title={intl.formatMessage({ id: "labels.sign-in" })}>
         <SignUp />
       </Card>
     </div>
