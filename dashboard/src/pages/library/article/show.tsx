@@ -53,6 +53,7 @@ import ChannelAlert from "../../../components/channel/ChannelAlert";
 import PrPull from "../../../components/corpus/PrPull";
 import NotificationIcon from "../../../components/notification/NotificationIcon";
 import SentCart from "../../../components/template/SentEdit/SentCart";
+import { useIntl } from "react-intl";
 
 export const scrollToTop = () => {
   document.getElementById("article-root")?.scrollIntoView();
@@ -84,6 +85,7 @@ const Widget = () => {
   const [recentModalOpen, setRecentModalOpen] = useState(false);
   const [loadedArticleData, setLoadedArticleData] =
     useState<IArticleDataResponse>();
+  const intl = useIntl();
 
   const paraChange = useAppSelector(paraParam);
 
@@ -220,7 +222,12 @@ const Widget = () => {
                   setSearchParams(output);
                 }}
               />
-              <Tooltip title="文章目录" placement="bottomLeft">
+              <Tooltip
+                title={intl.formatMessage({
+                  id: "labels.table-of-content",
+                })}
+                placement="bottomLeft"
+              >
                 <Button
                   style={{ display: "block", color: "white" }}
                   icon={<UnorderedListOutlined />}

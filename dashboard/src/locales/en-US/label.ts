@@ -38,6 +38,7 @@ const items = {
   "labels.curr.paragraph.cart.tpl": "Add to Cart",
   "labels.software.edition.basic": "basic",
   "labels.software.edition.pro": "pro",
+  "labels.table-of-content": "table of content",
 };
 
 export default items;
