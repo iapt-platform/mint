@@ -11,6 +11,7 @@ import StudioName from "../auth/Studio";
 import TimeShow from "../general/TimeShow";
 import Marked from "../general/Marked";
 import AnthologyTocTree from "../anthology/AnthologyTocTree";
+import { useIntl } from "react-intl";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -36,6 +37,7 @@ const AnthologyDetailWidget = ({
   onError,
 }: IWidgetAnthologyDetail) => {
   const [tableData, setTableData] = useState<IAnthologyData>();
+  const intl = useIntl();
 
   useEffect(() => {
     fetchData(aid);
@@ -100,7 +102,11 @@ const AnthologyDetailWidget = ({
       <Paragraph>
         <Marked text={tableData?.summary} />
       </Paragraph>
-      <Title level={5}>目录</Title>
+      <Title level={5}>
+        {intl.formatMessage({
+          id: "labels.table-of-content",
+        })}
+      </Title>
       <AnthologyTocTree
         anthologyId={aid}
         channels={channels}

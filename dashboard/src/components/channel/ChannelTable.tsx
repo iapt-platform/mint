@@ -513,7 +513,7 @@ const ChannelTableWidget = ({
                 key: "my",
                 label: (
                   <span>
-                    此工作室的
+                    {intl.formatMessage({ id: "labels.this-studio" })}
                     {renderBadge(myNumber, activeKey === "my")}
                   </span>
                 ),
@@ -522,7 +522,7 @@ const ChannelTableWidget = ({
                 key: "collaboration",
                 label: (
                   <span>
-                    协作
+                    {intl.formatMessage({ id: "labels.collaboration" })}
                     {renderBadge(
                       collaborationNumber,
                       activeKey === "collaboration"

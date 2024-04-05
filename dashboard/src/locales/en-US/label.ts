@@ -7,6 +7,7 @@ const items = {
   "labels.week.5": "Fri",
   "labels.week.6": "Sat",
   "labels.collaborators": "collaborators",
+  "labels.collaboration": "collaboration",
   "labels.link": "link",
   "labels.upload": "upload",
   "labels.first-term": "first term",
@@ -38,6 +39,8 @@ const items = {
   "labels.curr.paragraph.cart.tpl": "Add to Cart",
   "labels.software.edition.basic": "basic",
   "labels.software.edition.pro": "pro",
+  "labels.table-of-content": "table of content",
+  "labels.this-studio": "this studio",
 };
 
 export default items;

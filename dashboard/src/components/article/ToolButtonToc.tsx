@@ -6,6 +6,7 @@ import { ArticleType } from "./Article";
 import PaliTextToc from "./PaliTextToc";
 import ToolButton from "./ToolButton";
 import TextBookToc from "../anthology/TextBookToc";
+import { useIntl } from "react-intl";
 
 interface IWidget {
   type?: ArticleType;
@@ -23,6 +24,7 @@ const ToolButtonTocWidget = ({
   channels,
   onSelect,
 }: IWidget) => {
+  const intl = useIntl();
   //TODO 都放return里面
   let tocWidget = <></>;
   if (type === "chapter" || type === "para") {
@@ -72,7 +74,13 @@ const ToolButtonTocWidget = ({
   }
 
   return (
-    <ToolButton title="目录" icon={<MenuOutlined />} content={tocWidget} />
+    <ToolButton
+      title={intl.formatMessage({
+        id: "labels.table-of-content",
+      })}
+      icon={<MenuOutlined />}
+      content={tocWidget}
+    />
   );
 };
 

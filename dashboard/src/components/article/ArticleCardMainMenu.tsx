@@ -4,12 +4,14 @@ import { MenuOutlined, PushpinOutlined } from "@ant-design/icons";
 import PaliTextToc from "./PaliTextToc";
 import Find from "./Find";
 import Nav from "./Nav";
+import { useIntl } from "react-intl";
 
 interface IWidget {
   type?: string;
   articleId?: string;
 }
 const ArticleCardMainMenuWidget = ({ type, articleId }: IWidget) => {
+  const intl = useIntl();
   const id = articleId?.split("_");
   let tocWidget = <></>;
   if (id && id.length > 0) {
@@ -34,7 +36,9 @@ const ArticleCardMainMenuWidget = ({ type, articleId }: IWidget) => {
       }}
       items={[
         {
-          label: `目录`,
+          label: intl.formatMessage({
+            id: "labels.table-of-content",
+          }),
           key: "1",
           children: <div style={styleTabBody}>{tocWidget}</div>,
         },

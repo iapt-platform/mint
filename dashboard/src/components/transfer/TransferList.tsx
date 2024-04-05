@@ -59,8 +59,8 @@ const TransferListWidget = ({ studioName }: IWidget) => {
     const data: ITransferRequest = {
       status: status,
     };
-    put<ITransferRequest, ITransferResponse>(`/v2/transfer/${id}`, data).then(
-      (json) => {
+    put<ITransferRequest, ITransferResponse>(`/v2/transfer/${id}`, data)
+      .then((json) => {
         if (json.ok) {
           ref.current?.reload();
           openNotification(
@@ -69,8 +69,10 @@ const TransferListWidget = ({ studioName }: IWidget) => {
         } else {
           message.error(json.message);
         }
-      }
-    );
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   };
   return (
     <>
@@ -106,9 +108,9 @@ const TransferListWidget = ({ studioName }: IWidget) => {
             render(dom, entity, index, action, schema) {
               return (
                 <Space>
-                  <UserName {...entity.transferor} />
-                  {"transfer at"}
-                  <TimeShow createdAt={entity.created_at} />
+                  <UserName key={"user"} {...entity.transferor} />
+                  <span key="text">{"transfer at"}</span>
+                  <TimeShow key={"time"} createdAt={entity.created_at} />
                 </Space>
               );
             },

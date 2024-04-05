@@ -165,7 +165,7 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
       ],
     },
     {
-      label: "协作",
+      label: intl.formatMessage({ id: "labels.collaboration" }),
       key: "collaboration",
       icon: <TeamOutlined />,
       children: [
