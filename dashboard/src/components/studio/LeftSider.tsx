@@ -162,7 +162,7 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
           ),
           key: "setting",
         },
-      ],
+      ].filter((value) => value.disabled !== true),
     },
     {
       label: intl.formatMessage({ id: "labels.collaboration" }),
