@@ -300,12 +300,6 @@ const ChannelTableWidget = ({
                 }),
                 status: "Default",
               },
-              general: {
-                text: intl.formatMessage({
-                  id: "channel.type.general.label",
-                }),
-                status: "Default",
-              },
             },
           },
           {

@@ -23,6 +23,7 @@ import { GetUserSetting } from "../auth/setting/default";
 import { getGrammar } from "../../reducers/term-vocabulary";
 import modal from "antd/lib/modal";
 import { UserWbwPost } from "../dict/MyCreate";
+import { currentUser } from "../../reducers/current-user";
 
 export const paraMark = (wbwData: IWbw[]): IWbw[] => {
   //处理段落标记，支持点击段落引用弹窗
@@ -176,6 +177,7 @@ export const WbwSentCtl = ({
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showProgress, setShowProgress] = useState(false);
+  const user = useAppSelector(currentUser);
 
   console.debug("wbw sent lang", channelLang);
 
@@ -479,7 +481,7 @@ export const WbwSentCtl = ({
     }
   };
 
-  const wbwPublish = (wbwData: IWbw[]) => {
+  const wbwPublish = (wbwData: IWbw[], isPublic: boolean) => {
     let wordData: IDictRequest[] = [];
 
     wbwData.forEach((data) => {
@@ -507,6 +509,7 @@ export const WbwSentCtl = ({
           note: data.note?.value,
           confidence: conf,
           language: channelLang,
+          status: isPublic ? 30 : 5,
         });
       }
     });
@@ -534,7 +537,7 @@ export const WbwSentCtl = ({
         mode={displayMode}
         display={wbwMode}
         fields={fieldDisplay}
-        onChange={(e: IWbw, isPublish?: boolean) => {
+        onChange={(e: IWbw, isPublish: boolean, isPublic: boolean) => {
           let newData = [...wordData];
           newData.forEach((value, index, array) => {
             //把新的数据更新到数组
@@ -582,8 +585,8 @@ export const WbwSentCtl = ({
           }
           update(newData);
           saveWord(newData, e.sn[0]);
-          if (isPublish) {
-            wbwPublish([e]);
+          if (isPublish === true) {
+            wbwPublish([e], isPublic);
           }
         }}
         onSplit={() => {
@@ -708,7 +711,10 @@ export const WbwSentCtl = ({
                   magicDictLookup();
                   break;
                 case "wbw-dict-publish-all":
-                  wbwPublish(wordData);
+                  wbwPublish(
+                    wordData,
+                    user?.roles?.includes("basic") ? false : true
+                  );
                   break;
                 case "copy-text":
                   const paliText = wordData

@@ -20,6 +20,8 @@ import TermExport from "./TermExport";
 import DataImport from "../admin/relation/DataImport";
 import TermModal from "./TermModal";
 import { getSorterUrl } from "../../utils";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
 
 interface IItem {
   sn: number;
@@ -39,6 +41,7 @@ interface IWidget {
 }
 const TermListWidget = ({ studioName, channelId }: IWidget) => {
   const intl = useIntl();
+  const currUser = useAppSelector(currentUser);
 
   const showDeleteConfirm = (id: string[], title: string) => {
     Modal.confirm({
@@ -319,7 +322,12 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
           <TermExport channelId={channelId} studioName={studioName} />,
           <TermModal
             trigger={
-              <Button key="button" icon={<PlusOutlined />} type="primary">
+              <Button
+                key="button"
+                icon={<PlusOutlined />}
+                type="primary"
+                disabled={currUser?.roles?.includes("basic")}
+              >
                 {intl.formatMessage({ id: "buttons.create" })}
               </Button>
             }

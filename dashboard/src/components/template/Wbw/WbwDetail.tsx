@@ -16,6 +16,8 @@ import {
 import { IAttachmentRequest } from "../../api/Attachments";
 import WbwDetailAttachment from "./WbwDetailAttachment";
 import CommentBox from "../../discussion/DiscussionDrawer";
+import { useAppSelector } from "../../../hooks";
+import { currentUser } from "../../../reducers/current-user";
 
 interface IWidget {
   data: IWbw;
@@ -38,6 +40,7 @@ const WbwDetailWidget = ({
     JSON.parse(JSON.stringify(data))
   );
   const [tabKey, setTabKey] = useState<string>("basic");
+  const currUser = useAppSelector(currentUser);
 
   useEffect(() => {
     console.debug("input data", data);
@@ -266,14 +269,23 @@ const WbwDetailWidget = ({
           menu={{
             items: [
               {
-                key: "user-dict",
+                key: "user-dict-public",
                 label: intl.formatMessage({ id: "buttons.save.publish" }),
+                disabled: currUser?.roles?.includes("basic"),
+              },
+              {
+                key: "user-dict-private",
+                label: intl.formatMessage({ id: "buttons.save.my.dict" }),
               },
             ],
             onClick: (e) => {
               if (typeof onSave !== "undefined") {
                 //保存并发布
-                onSave(currWbwData, true);
+                if (e.key === "user-dict-public") {
+                  onSave(currWbwData, true, true);
+                } else {
+                  onSave(currWbwData, true, false);
+                }
               }
             },
           }}

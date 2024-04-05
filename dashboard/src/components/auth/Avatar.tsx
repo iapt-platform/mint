@@ -82,7 +82,13 @@ const AvatarWidget = ({ style, placement = "bottomRight" }: IWidget) => {
       </ProCard>
     );
   };
-  const Login = () => <Link to="/anonymous/users/sign-in">登录/注册</Link>;
+  const Login = () => (
+    <Link to="/anonymous/users/sign-in">
+      {intl.formatMessage({
+        id: "nut.users.sign-in-up.title",
+      })}
+    </Link>
+  );
   return (
     <>
       <Popover content={user ? <UserCard /> : <Login />} placement={placement}>

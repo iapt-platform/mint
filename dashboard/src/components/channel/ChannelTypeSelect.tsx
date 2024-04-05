@@ -25,10 +25,6 @@ const ChannelTypeSelectWidget = ({ readonly }: IWidget) => {
       value: "original",
       label: intl.formatMessage({ id: "channel.type.original.label" }),
     },
-    {
-      value: "general",
-      label: intl.formatMessage({ id: "channel.type.general.label" }),
-    },
   ];
   return (
     <ProFormSelect
