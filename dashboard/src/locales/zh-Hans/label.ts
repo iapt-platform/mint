@@ -46,6 +46,7 @@ const items = {
   "labels.software.edition.pro": "增强版",
   "labels.table-of-content": "目录",
   "labels.this-studio": "此工作室",
+  "labels.feedback": "问题反馈",
 };
 
 export default items;

@@ -41,6 +41,7 @@ const items = {
   "labels.software.edition.pro": "pro",
   "labels.table-of-content": "table of content",
   "labels.this-studio": "this studio",
+  "labels.feedback": "feedback",
 };
 
 export default items;
