@@ -60,7 +60,7 @@ const SingUpWidget = () => {
         name="welcome"
         title="注册"
         stepProps={{
-          description: "注册wikipali教育版",
+          description: "注册wikipali基础版",
         }}
         onFinish={async () => {
           return true;
@@ -128,10 +128,10 @@ const SingUpWidget = () => {
         <ProFormCheckbox.Group
           name="checkbox"
           layout="horizontal"
-          options={["我已经了解教育版的功能限制"]}
+          options={["我已经了解基础版的功能限制"]}
           fieldProps={{
             onChange(checkedValue) {
-              if (checkedValue.includes("我已经了解教育版的功能限制")) {
+              if (checkedValue.length > 0) {
                 setAgree(true);
               } else {
                 setAgree(false);
