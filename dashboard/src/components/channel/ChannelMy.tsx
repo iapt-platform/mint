@@ -9,6 +9,7 @@ import {
   Select,
   Skeleton,
   Space,
+  Tooltip,
   Tree,
 } from "antd";
 import {
@@ -26,7 +27,7 @@ import {
   ISentInChapterListResponse,
 } from "../api/Channel";
 import { IItem, IProgressRequest } from "./ChannelPickerTable";
-import { LockIcon } from "../../assets/icon";
+import { LockFillIcon, LockIcon } from "../../assets/icon";
 import StudioName from "../auth/Studio";
 import ProgressSvg from "./ProgressSvg";
 
@@ -323,11 +324,26 @@ const ChannelMy = ({
             titleRender={(node: ChannelTreeNode) => {
               let pIcon = <></>;
               switch (node.channel.publicity) {
+                case 5:
+                  pIcon = (
+                    <Tooltip title={"私有不可公开"}>
+                      <LockFillIcon />
+                    </Tooltip>
+                  );
+                  break;
                 case 10:
-                  pIcon = <LockIcon />;
+                  pIcon = (
+                    <Tooltip title={"私有"}>
+                      <LockIcon />
+                    </Tooltip>
+                  );
                   break;
                 case 30:
-                  pIcon = <GlobalOutlined />;
+                  pIcon = (
+                    <Tooltip title={"公开"}>
+                      <GlobalOutlined />
+                    </Tooltip>
+                  );
                   break;
               }
               const badge = selectedRowKeys.findIndex(
