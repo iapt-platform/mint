@@ -39,7 +39,9 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
 
   const items: MenuProps["items"] = [
     {
-      label: "常用",
+      label: intl.formatMessage({
+        id: "columns.studio.basic.title",
+      }),
       key: "basic",
       icon: <HomeOutlined />,
       children: [
@@ -87,7 +89,9 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
       ],
     },
     {
-      label: "高级",
+      label: intl.formatMessage({
+        id: "columns.studio.advance.title",
+      }),
       key: "advance",
       icon: <AppstoreOutlined />,
       children: [
