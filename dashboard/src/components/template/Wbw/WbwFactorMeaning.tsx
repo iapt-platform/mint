@@ -103,7 +103,7 @@ const WbwFactorMeaningWidget = ({
                 ...items.filter((value, index) => index <= 5),
                 {
                   key: "more",
-                  label: "更多",
+                  label: intl.formatMessage({ id: "buttons.more" }),
                   children: items.filter((value, index) => index > 5),
                 },
               ],
