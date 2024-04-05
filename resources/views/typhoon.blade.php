@@ -19,6 +19,9 @@
   --color-primary__lighter: #ffaca7;
   --color-primary__darker: #da0d00;
 }
+#sign_in {
+    display:none;
+}
 </style>
 <script src="/assets/typhoon/js/alpine.js" defer></script>
 </head>
@@ -35,7 +38,7 @@ notification
 <div class="flex items-center">
 <div class="flex items-center justify-between w-full md:w-auto">
 <a href="/pcd/community/list" aria-label="Logo" class="text-gray-200">
-<div class="site-logo h-8">
+<div class="site-logo h-8" style="display:flex;">
 
 <svg id="wikipali_banner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 221 54.417">
   <g id="Group_12" data-name="Group 12" transform="translate(-396 -320)">
@@ -86,6 +89,7 @@ notification
   </g>
 </svg>
 
+<span  id='nickname'></span>
 </div>
 </a>
 </div>
@@ -93,7 +97,7 @@ notification
 <div class="hidden h-full md:flex md:flex-grow justify-end">
 <ul class="flex h-16 mr-8">
 @foreach ($nav as $item)
-<li class="flex ml-4 text-sm relative inline-flex items-center pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out  border-transparent text-gray-400 hover:text-primary hover:border-primary focus:outline-none focus:text-primary focus:border-gray-300  ">
+<li id="{{ $item['id'] }}" class="flex ml-4 text-sm relative inline-flex items-center pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out  border-transparent text-gray-400 hover:text-primary hover:border-primary focus:outline-none focus:text-primary focus:border-gray-300  ">
 <div class="flex w-full h-full">
 <a class="w-full flex items-center h-full px-3" href="{{ $item['link'] }}">{{ $item['title'] }}</a>
 </div>
@@ -104,8 +108,13 @@ notification
 <div class="flex w-full h-full">
 <a class="w-full flex items-center h-full px-3" href="#contact">联络我们</a>
 </div>
-
 </li>
+<li class="flex ml-4 text-sm relative inline-flex items-center pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out  border-transparent text-gray-400 hover:text-primary hover:border-primary focus:outline-none focus:text-primary focus:border-gray-300  ">
+<div class="flex w-full h-full">
+<span class="w-full flex items-center h-full px-3" id='nickname'> </span>
+</div>
+</li>
+
 </ul>
 </div>
 </nav>
@@ -813,5 +822,39 @@ window.GravForm = window.GravForm || {};
 <script>
 const lightbox = GLightbox({"selector":"[rel=\"lightbox\"], .glightbox","width":"90vw","height":"auto"});
 </script>
+
+<script>
+    let api = "{{ $api }}/auth/current";
+    const key = "token";
+    let token = sessionStorage.getItem(key);
+    if(token){
+        console.log('api',api);
+        const response = fetch(
+            api,
+            {
+                credentials: "include",
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                    "Content-Type": "application/json; charset=utf-8",
+                    },
+                mode: "cors",
+                method: 'GET',
+            }
+        ).then((response) => response.json())
+        .then((json) => {
+            if(json.ok){
+                document.getElementById('nickname').innerHTML = 'Hi! ' + json.data.nickName;
+            }else{
+                document.getElementById("sign_in").style.display = "block";
+            }
+            console.log('user',json);
+        });
+    }else{
+        console.error('no token');
+        document.getElementById("sign_in").style.display = "block";
+
+    }
+</script>
+
 </body>
 </html>

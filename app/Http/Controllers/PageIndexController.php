@@ -10,26 +10,32 @@ class PageIndexController extends Controller
         $nav = [
                 [
                     'title'=>'最新',
+                    'id'=>'new',
                     'link'=>config('mint.server.dashboard_base_path').'/community/list',
                 ],
                 [
                     'title'=>'圣典',
+                    'id'=>'pali',
                     'link'=>config('mint.server.dashboard_base_path').'/palicanon/list',
                 ],
                 [
                     'title'=>'课程',
+                    'id'=>'course',
                     'link'=>config('mint.server.dashboard_base_path').'/course/list',
                 ],
                 [
                     'title'=>'字典',
-                    'link'=>config('mint.server.dashboard_base_path').'/dict/list',
+                    'id'=>'dict',
+                    'link'=>config('mint.server.dashboard_base_path').'/dict/recent',
                 ],
                 [
                     'title'=>'文集',
+                    'id'=>'anthology',
                     'link'=>config('mint.server.dashboard_base_path').'/anthology/list',
                 ],
                 [
                     'title'=>'注册/登录',
+                    'id'=>'sign_in',
                     'link'=>config('mint.server.dashboard_base_path').'/anonymous/users/sign-in',
                 ],
             ];
@@ -86,6 +92,7 @@ class PageIndexController extends Controller
             'subtitle' => '巴利圣典翻译计划欢迎您的参与',
             'description' => '巴利语学习与翻译工具',
             'gallery' => $Gallery,
+            'api' => config('app.url').'/api/v2',
         ]);
     }
 

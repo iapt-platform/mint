@@ -300,6 +300,9 @@ class ArticleController extends Controller
             $newArticle->uid = Str::uuid();
             $newArticle->title = mb_substr($request->get('title'),0,128,'UTF-8');
             $newArticle->lang = $request->get('lang');
+            if(!empty($request->get('status'))){
+                $newArticle->status = $request->get('status');
+            }
             $newArticle->owner = $studioUuid;
             $newArticle->owner_id = $user['user_id'];
             $newArticle->editor_id = $user['user_id'];

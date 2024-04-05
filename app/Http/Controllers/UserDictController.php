@@ -25,7 +25,7 @@ class UserDictController extends Controller
         //
 		$result=false;
 		$indexCol = ['id','word','type','grammar',
-                     'mean','parent','note',
+                     'mean','parent','note','status',
                      'factors','confidence','dict_id',
                      'source','updated_at','creator_id'];
 		switch ($request->get('view')) {
@@ -64,6 +64,7 @@ class UserDictController extends Controller
             case 'community':
                 $table = UserDict::select($indexCol)
                                 ->where('word', $request->get("word"))
+                                ->where('status', '>',5)
                                 ->where(function($query) {
                                     $query->where('source', "_USER_WBW_")
                                             ->orWhere('source','_USER_DICT_');
@@ -167,7 +168,11 @@ class UserDictController extends Controller
                 $word["create_time"] = time()*1000;
                 $word["creator_id"]=$user["user_id"];
                 $id = UserDict::insert($word);
-                $updateOk = $this->update_sys_wbw($word);
+                if(isset($word["status"]) && $word["status"] > 5){
+                    $updateOk = $this->update_sys_wbw($word);
+                }else{
+                    $updateOk = true;
+                }
                 $this->update_redis($word);
                 $iOk++;
             }else{
