@@ -10,6 +10,8 @@ use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
 use App\Http\Api\UserApi;
 use App\Http\Resources\TransferResource;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TransferController extends Controller
 {
@@ -183,24 +185,47 @@ class TransferController extends Controller
                 return $this->error(__('auth.failed'),[404],404);
                 break;
         }
-        $transfer->editor_id = $user['user_uid'];
-        $transfer->save();
-        if($request->get('status')==='accept'){
-            switch ($transfer->res_type) {
-                case 'channel':
-                    Channel::where('uid',$transfer->res_id)
-                            ->update(['owner_uid'=>$transfer->new_owner]);
-                    break;
-                case 'article':
-                    $userId = UserApi::getIdByUuid($transfer->new_owner);
-                    Article::where('uid',$transfer->res_id)
-                            ->update(['owner'=>$transfer->new_owner,'owner_id'=>$userId]);
-                    break;
-                default:
-                    # code...
-                    break;
-            }
+
+        try{
+            DB::transaction(function () use ($transfer,$request,$user) {
+                $transfer->editor_id = $user['user_uid'];
+                $transfer->save();
+
+                if($request->get('status')==='accept'){
+                    $newOwner = UserApi::getByUuid($transfer->new_owner);
+                    $isBasic = false;
+                    if(isset($newOwner['roles']) && is_array($newOwner['roles'])){
+                        $isBasic = in_array('basic',$newOwner['roles']);
+                    }
+                    switch ($transfer->res_type) {
+                        case 'channel':
+                            $newData = ['owner_uid'=>$transfer->new_owner];
+                            if($isBasic){
+                                $newData['status'] = 5;
+                            }
+                            Channel::where('uid',$transfer->res_id)
+                                    ->update($newData);
+                            break;
+                        case 'article':
+                            $userId = UserApi::getIdByUuid($transfer->new_owner);
+                            $newData = ['owner'=>$transfer->new_owner,'owner_id'=>$userId] ;
+                            if($isBasic){
+                                $newData['status'] = 10;
+                            }
+                            Article::where('uid',$transfer->res_id)
+                                    ->update($newData);
+                            break;
+                        default:
+                            # code...
+                            break;
+                    }
+                }
+            });
+        }catch(\Exception $e){
+            Log::error('update.fail',['error'=>$e]);
+            return $this->error('update.fail',['message'=>$e],500);
         }
+
         return $this->ok(new TransferResource($transfer));
 
     }
