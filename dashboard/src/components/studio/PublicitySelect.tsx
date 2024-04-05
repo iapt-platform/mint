@@ -48,9 +48,11 @@ const PublicitySelectWidget = ({ width, disable = [], readonly }: IWidget) => {
       disable: disable.includes("public"),
     },
   ];
+
+  console.debug("disable", disable, options);
   return (
     <ProFormSelect
-      options={options}
+      options={options.filter((value) => value.disable === false)}
       readonly={readonly}
       width={width}
       name="status"
