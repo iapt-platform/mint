@@ -7,6 +7,7 @@ const items = {
   "labels.week.5": "星期五",
   "labels.week.6": "星期六",
   "labels.collaborators": "协作者",
+  "labels.collaboration": "协作",
   "labels.link": "链接",
   "labels.upload": "上传",
   "labels.first-term": "第一个术语",
@@ -44,6 +45,7 @@ const items = {
   "labels.software.edition.basic": "基本版",
   "labels.software.edition.pro": "增强版",
   "labels.table-of-content": "目录",
+  "labels.this-studio": "此工作室",
 };
 
 export default items;

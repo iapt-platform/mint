@@ -293,7 +293,7 @@ const Widget = () => {
                 key: "my",
                 label: (
                   <span>
-                    此工作室的
+                    {intl.formatMessage({ id: "labels.this-studio" })}
                     {renderBadge(myNumber, activeKey === "my")}
                   </span>
                 ),
@@ -302,7 +302,7 @@ const Widget = () => {
                 key: "collaboration",
                 label: (
                   <span>
-                    我加入的
+                    {intl.formatMessage({ id: "labels.collaboration" })}
                     {renderBadge(
                       collaborationNumber,
                       activeKey === "collaboration"
