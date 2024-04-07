@@ -1,11 +1,12 @@
-import { useParams } from "react-router-dom";
-import { Layout } from "antd";
+import { Link, useParams } from "react-router-dom";
+import { Layout, Space } from "antd";
 
 import LeftSider from "../../../components/studio/LeftSider";
 import { styleStudioContent } from "../style";
 import { ProCard } from "@ant-design/pro-components";
 import { useState } from "react";
 import DiscussionListCard from "../../../components/discussion/DiscussionListCard";
+import ExpTime from "../../../components/exp/ExpTime";
 
 const { Content } = Layout;
 
@@ -18,7 +19,13 @@ const Widget = () => {
       <Content style={styleStudioContent}>
         <ProCard
           title={studioname}
-          extra="2019年9月28日"
+          extra={
+            <Space>
+              {"经验"}
+              <ExpTime userName={studioname} />
+              <Link to={`/studio/${studioname}/exp/list`}>{"详情"}</Link>
+            </Space>
+          }
           split={responsive ? "horizontal" : "vertical"}
           bordered
           headerBordered
