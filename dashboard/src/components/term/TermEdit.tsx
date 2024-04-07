@@ -49,6 +49,7 @@ export interface ITerm {
   meaning2?: string[];
   note?: string;
   summary?: string;
+  summary_is_community?: boolean;
   channelId?: string;
   studioId?: string;
   lang?: string;
@@ -86,13 +87,13 @@ const TermEditWidget = ({
   const [isSaveAs, setIsSaveAs] = useState(false);
   const [currChannel, setCurrChannel] = useState<ValueType[]>([]);
   const user = useAppSelector(_currentUser);
-  //console.log("word", id, word, channelId, studioName);
 
   const [form] = Form.useForm<ITerm>();
   const formRef = useRef<ProFormInstance>();
   useEffect(() => {
     if (word) {
       const url = `/v2/terms?view=word&word=${word}`;
+      console.info("api request", url);
       get<ITermListResponse>(url).then((json) => {
         const meaning = json.data.rows.map((item) => item.meaning);
         let meaningMap = new Map<string, number>();
@@ -123,6 +124,17 @@ const TermEditWidget = ({
       });
     }
   }, [word]);
+
+  let channelDisable = false;
+  if (community) {
+    channelDisable = true;
+  }
+  if (readonly) {
+    channelDisable = true;
+  }
+  if (id) {
+    channelDisable = true;
+  }
 
   return (
     <>
@@ -161,11 +173,10 @@ const TermEditWidget = ({
           ) {
             return;
           }
-          const copy_channel = values.copy_channel
-            ? values.copy_channel[values.copy_channel.length - 1]
-              ? values.copy_channel[values.copy_channel.length - 1]
-              : ""
-            : "";
+          let copy_channel = "";
+          if (values.copy_channel && values.copy_channel.length > 0) {
+            copy_channel = values.copy_channel[values.copy_channel.length - 1];
+          }
           const newValue = {
             id: values.id,
             word: values.word,
@@ -183,16 +194,15 @@ const TermEditWidget = ({
           console.log("value", newValue);
           let res: ITermResponse;
           if (typeof values.id === "undefined" || community || values.save_as) {
-            res = await post<ITermDataRequest, ITermResponse>(
-              `/v2/terms`,
-              newValue
-            );
+            const url = `/v2/terms?community_summary=1`;
+            console.info("api request", url, newValue);
+            res = await post<ITermDataRequest, ITermResponse>(url, newValue);
           } else {
-            res = await put<ITermDataRequest, ITermResponse>(
-              `/v2/terms/${values.id}`,
-              newValue
-            );
+            const url = `/v2/terms/${values.id}?community_summary=1`;
+            console.info("api request", url, newValue);
+            res = await put<ITermDataRequest, ITermResponse>(url, newValue);
           }
+          console.debug("api response", res);
 
           if (res.ok) {
             message.success("提交成功");
@@ -222,8 +232,9 @@ const TermEditWidget = ({
           if (typeof id !== "undefined") {
             // 如果是编辑，就从服务器拉取数据。
             url = "/v2/terms/" + id;
-            console.log("有id", url);
+            console.info("TermEdit is edit api request", url);
             const res = await get<ITermResponse>(url);
+            console.debug("TermEdit is edit api response", res);
             if (res.ok) {
               let meaning2: string[] = [];
               if (res.data.other_meaning) {
@@ -252,6 +263,14 @@ const TermEditWidget = ({
                   ]);
                 }
               }
+              let copyToChannel: string[] = [];
+              if (parentChannelId) {
+                if (user?.roles?.includes("basic")) {
+                  copyToChannel = [parentChannelId];
+                } else {
+                  copyToChannel = [""];
+                }
+              }
 
               data = {
                 id: res.data.guid,
@@ -262,20 +281,31 @@ const TermEditWidget = ({
                 note: res.data.note ? res.data.note : "",
                 lang: res.data.language,
                 channelId: realChannelId,
-                copy_channel: res.data.channel
-                  ? [res.data.studio.id, res.data.channel?.id]
-                  : undefined,
+                copy_channel: copyToChannel,
               };
               if (res.data.role === "reader" || res.data.role === "unknown") {
                 setReadonly(true);
               }
             }
           } else if (typeof parentChannelId !== "undefined") {
-            //在channel新建
+            /**
+             * 在channel新建
+             * basic:仅保存在这个版本
+             * pro: 默认studio通用
+             */
             url = `/v2/terms?view=create-by-channel&channel=${parentChannelId}&word=${word}`;
-            console.log("在channel新建", url);
+            console.info("api request 在channel新建", url);
             const res = await get<ITermCreateResponse>(url);
-            console.log(res);
+            console.debug("api response", res);
+            let channelId = "";
+            let copyToChannel: string[] = [];
+            if (user?.roles?.includes("basic")) {
+              channelId = parentChannelId;
+              copyToChannel = [parentChannelId];
+            } else {
+              channelId = user?.id === parentStudioId ? "" : parentChannelId;
+              copyToChannel = [res.data.studio.id, parentChannelId];
+            }
             data = {
               word: word ? word : "",
               tag: tags?.join(),
@@ -283,13 +313,14 @@ const TermEditWidget = ({
               meaning2: [],
               note: "",
               lang: res.data.language,
-              channelId: user?.id === parentStudioId ? "" : parentChannelId,
-              copy_channel: [res.data.studio.id, parentChannelId],
+              channelId: channelId,
+              copy_channel: copyToChannel,
             };
           } else if (typeof studioName !== "undefined") {
             //在studio新建
+
             url = `/v2/terms?view=create-by-studio&studio=${studioName}&word=${word}`;
-            console.log("在 studio 新建", url);
+            console.debug("在 studio 新建", url);
           }
 
           return data;
@@ -372,19 +403,17 @@ const TermEditWidget = ({
             allowClear
             label="版本(已经建立的术语，版本不可修改。可以选择另存为复制到另一个版本。)"
             width="md"
-            placeholder="通用于此Studio"
-            disabled={
-              (!community && readonly) ||
-              (!community && typeof id !== "undefined")
-            }
+            placeholder="通用于我的Studio"
+            disabled={channelDisable}
             options={[
               {
                 value: "",
                 label: "通用于我的Studio",
-                disabled: user?.id !== parentStudioId,
+                disabled:
+                  user?.id !== parentStudioId || user?.roles?.includes("basic"),
               },
               {
-                value: parentChannelId ? parentChannelId : channelId,
+                value: parentChannelId ?? channelId,
                 label: "仅用于此版本",
                 disabled: !community && readonly,
               },
@@ -400,7 +429,10 @@ const TermEditWidget = ({
                   : true
                 : false;
               return (
-                <LangSelect disabled={hasChannel} required={!hasChannel} />
+                <LangSelect
+                  disabled={hasChannel || channelDisable}
+                  required={!hasChannel}
+                />
               );
             }}
           </ProFormDependency>
@@ -435,7 +467,8 @@ const TermEditWidget = ({
             parentStudioId={parentStudioId}
             width="md"
             name="copy_channel"
-            placeholder="通用于此Studio"
+            placeholder="通用于我的Studio"
+            allowClear={user?.roles?.includes("basic") ? false : true}
             tooltip={intl.formatMessage({
               id: "term.fields.channel.tooltip",
             })}
@@ -461,7 +494,9 @@ const TermEditWidget = ({
           </ProFormDependency>
         </ProForm.Group>
         <ProForm.Group style={{ display: isSaveAs ? "block" : "none" }}>
-          <ProFormCheckbox name="pr">同时提交修改建议</ProFormCheckbox>
+          <ProFormCheckbox disabled name="pr">
+            同时提交修改建议
+          </ProFormCheckbox>
         </ProForm.Group>
       </ProForm>
     </>
