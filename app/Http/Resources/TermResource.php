@@ -12,6 +12,7 @@ use App\Http\Api\MdRender;
 use App\Http\Api\ShareApi;
 use App\Http\Api\AuthApi;
 use App\Models\UserOperationDaily;
+use App\Models\DhammaTerm;
 
 class TermResource extends JsonResource
 {
@@ -59,6 +60,8 @@ class TermResource extends JsonResource
                 $channels = [];
             }
         }
+
+
         if(!empty($this->note)){
             $mdRender = new MdRender(
                 [
@@ -67,7 +70,37 @@ class TermResource extends JsonResource
                     'studioId'=>$this->owner,
                 ]);
             $data["html"]  = $mdRender->convert($this->note,$channels,null);
+            $summaryContent = $this->note;
+        }else if($request->has('community_summary')){
+            $lang = strtolower($this->language);
+            if($lang==='zh'){
+                $lang='zh-hans';
+            }
+            $community_channel = ChannelApi::getSysChannel("_community_term_{$lang}_");
+            if(empty($community_channel)){
+                $community_channel = ChannelApi::getSysChannel('_community_term_zh-hans_');
+            }
+            if(Str::isUuid($community_channel)){
+                            //查找社区解释
+                $community_note = DhammaTerm::where("word",$this->word)
+                                            ->where('channal',$community_channel)
+                                            ->value('note');
+                if(!empty($community_note)){
+                    $summaryContent = $community_note;
+                    $data["summary_is_community"] = true;
+                }
+            }
         }
+        if(isset($summaryContent)){
+            $mdRender = new MdRender(
+                [
+                    'mode'=>$request->get('mode','read'),
+                    'format'=>'text',
+                    'studioId'=>$this->owner,
+                ]);
+            $data["summary"]  = $mdRender->convert($summaryContent,$channels,null);
+        }
+
         $user = AuthApi::current($request);
         if(!$user){
             $data["role"] = 'reader';
