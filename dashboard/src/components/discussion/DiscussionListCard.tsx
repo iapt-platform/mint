@@ -28,8 +28,10 @@ interface IWidget {
   resId?: string;
   resType?: TResType;
   topicId?: string;
+  userId?: string;
   changedAnswerCount?: IAnswerCount;
   type?: TDiscussionType;
+  pageSize?: number;
   onSelect?: Function;
   onItemCountChange?: Function;
   onReply?: Function;
@@ -39,9 +41,11 @@ const DiscussionListCardWidget = ({
   resId,
   resType,
   topicId,
+  userId,
   onSelect,
   changedAnswerCount,
   type = "discussion",
+  pageSize = 10,
   onItemCountChange,
   onReply,
   onReady,
@@ -64,7 +68,11 @@ const DiscussionListCardWidget = ({
     ref.current?.reload();
   }, [changedAnswerCount]);
 
-  if (typeof resId === "undefined" && typeof topicId === "undefined") {
+  if (
+    typeof resId === "undefined" &&
+    typeof topicId === "undefined" &&
+    typeof userId === "undefined"
+  ) {
     return (
       <Typography.Paragraph>
         该资源尚未创建，不能发表讨论。
@@ -133,6 +141,8 @@ const DiscussionListCardWidget = ({
             url += `view=question-by-topic&id=${topicId}`;
           } else if (typeof resId !== "undefined") {
             url += `view=question&id=${resId}`;
+          } else if (typeof userId !== "undefined") {
+            url += `view=topic-by-user`;
           } else {
             return {
               total: 0,
@@ -141,7 +151,7 @@ const DiscussionListCardWidget = ({
           }
           const offset =
             ((params.current ? params.current : 1) - 1) *
-            (params.pageSize ? params.pageSize : 20);
+            (params.pageSize ? params.pageSize : pageSize);
           url += `&limit=${params.pageSize}&offset=${offset}`;
           url += params.keyword ? "&search=" + params.keyword : "";
           url += activeKey ? "&status=" + activeKey : "";
@@ -232,7 +242,7 @@ const DiscussionListCardWidget = ({
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          pageSize: 20,
+          pageSize: pageSize,
         }}
         search={false}
         options={{
