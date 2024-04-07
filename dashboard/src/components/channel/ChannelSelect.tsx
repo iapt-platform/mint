@@ -20,6 +20,7 @@ interface IWidget {
   name?: string;
   tooltip?: string;
   label?: string;
+  allowClear?: boolean;
   parentChannelId?: string;
   parentStudioId?: string;
   placeholder?: string;
@@ -34,6 +35,7 @@ const ChannelSelectWidget = ({
   parentChannelId,
   parentStudioId,
   placeholder,
+  allowClear = true,
   onSelect,
 }: IWidget) => {
   const user = useAppSelector(currentUser);
@@ -43,12 +45,14 @@ const ChannelSelectWidget = ({
       name={name}
       tooltip={tooltip}
       label={label}
+      allowClear={allowClear}
       placeholder={placeholder}
       request={async ({ keyWords }) => {
-        console.log("keyWord", keyWords);
-        const json = await get<IApiResponseChannelList>(
-          `/v2/channel?view=user-edit&key=${keyWords}`
-        );
+        console.debug("keyWord", keyWords);
+        const url = `/v2/channel?view=user-edit&key=${keyWords}`;
+        console.info("ChannelSelect api request", url);
+        const json = await get<IApiResponseChannelList>(url);
+        console.debug("ChannelSelect api response", json);
         if (json.ok) {
           //获取studio list
           let studio = new Map<string, string>();
@@ -61,7 +65,9 @@ const ChannelSelectWidget = ({
           let channels: IOption[] = [];
 
           if (user && user.id === parentStudioId) {
-            channels.push({ value: "", label: "通用于此Studio" });
+            if (!user.roles?.includes("basic")) {
+              channels.push({ value: "", label: "通用于我的Studio" });
+            }
           }
 
           if (typeof parentChannelId === "string") {
@@ -107,16 +113,9 @@ const ChannelSelectWidget = ({
               };
               return node;
             });
-          channels = [
-            {
-              value: "",
-              label: "通用于此Studio",
-            },
-            ...channels,
-            ...others,
-          ];
+          channels = [...channels, ...others];
 
-          console.log("json", channels);
+          console.debug("ChannelSelect json", channels);
           return channels;
         } else {
           message.error(json.message);
