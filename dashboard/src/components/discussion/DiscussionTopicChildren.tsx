@@ -150,8 +150,11 @@ const DiscussionTopicChildrenWidget = ({
       return;
     }
     setLoading(true);
-    get<ICommentListResponse>(`/v2/discussion?view=answer&id=${topicId}`)
+    const url = `/v2/discussion?view=answer&id=${topicId}`;
+    console.info("api request", url);
+    get<ICommentListResponse>(url)
       .then((json) => {
+        console.debug("api response", json);
         if (json.ok) {
           const discussions: IComment[] = json.data.rows.map((item) => {
             return {

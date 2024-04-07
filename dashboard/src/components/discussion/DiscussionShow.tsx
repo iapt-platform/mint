@@ -78,9 +78,11 @@ const DiscussionShowWidget = ({
         id: "buttons.no",
       }),
       onOk() {
-        console.log("delete", id);
-        return delete_<IDeleteResponse>(`/v2/discussion/${id}`)
+        const url = `/v2/discussion/${id}`;
+        console.info("Discussion delete api request", url);
+        return delete_<IDeleteResponse>(url)
           .then((json) => {
+            console.debug("api response", json);
             if (json.ok) {
               message.success("删除成功");
               if (typeof onDelete !== "undefined") {
@@ -96,11 +98,14 @@ const DiscussionShowWidget = ({
   };
 
   const close = (value: boolean) => {
-    put<ICommentRequest, ICommentResponse>(`/v2/discussion/${data.id}`, {
+    const url = `/v2/discussion/${data.id}`;
+    const newData: ICommentRequest = {
       title: data.title,
       content: data.content,
       status: value ? "close" : "active",
-    }).then((json) => {
+    };
+    console.info("api request", url, newData);
+    put<ICommentRequest, ICommentResponse>(url, newData).then((json) => {
       console.log(json);
       if (json.ok) {
         setClosed(json.data.status);
@@ -112,13 +117,16 @@ const DiscussionShowWidget = ({
   };
 
   const convert = (newType: TDiscussionType) => {
-    put<ICommentRequest, ICommentResponse>(`/v2/discussion/${data.id}`, {
+    const url = `/v2/discussion/${data.id}`;
+    const newData: ICommentRequest = {
       title: data.title,
       content: data.content,
       status: data.status,
       type: newType,
-    }).then((json) => {
-      console.log(json);
+    };
+    console.debug("api response", url, newData);
+    put<ICommentRequest, ICommentResponse>(url, newData).then((json) => {
+      console.debug("api response", json);
       if (json.ok) {
         notification.info({ message: "转换成功" });
         if (typeof onConvert !== "undefined") {

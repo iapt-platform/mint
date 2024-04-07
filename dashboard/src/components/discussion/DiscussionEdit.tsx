@@ -54,12 +54,15 @@ const DiscussionEditWidget = ({
           },
         }}
         onFinish={async (values) => {
-          put<ICommentRequest, ICommentResponse>(`/v2/discussion/${data.id}`, {
+          const url = `/v2/discussion/${data.id}`;
+          const newData: ICommentRequest = {
             title: values.title,
             content: values.content,
-          })
+          };
+          console.info("DiscussionEdit api request", url, newData);
+          put<ICommentRequest, ICommentResponse>(url, newData)
             .then((json) => {
-              console.log(json);
+              console.debug("DiscussionEdit api response", json);
               if (json.ok) {
                 console.log(intl.formatMessage({ id: "flashes.success" }));
                 if (typeof onUpdated !== "undefined") {

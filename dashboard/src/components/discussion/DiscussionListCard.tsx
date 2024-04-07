@@ -110,9 +110,7 @@ const DiscussionListCardWidget = ({
             search: false,
             render(dom, entity, index, action, schema) {
               return (
-                <span key={index}>
-                  {entity.summary ? entity.summary : entity.content}
-                </span>
+                <span key={index}>{entity.summary ?? entity.content}</span>
               );
             },
           },
@@ -147,8 +145,9 @@ const DiscussionListCardWidget = ({
           url += `&limit=${params.pageSize}&offset=${offset}`;
           url += params.keyword ? "&search=" + params.keyword : "";
           url += activeKey ? "&status=" + activeKey : "";
-          console.log("url", url);
+          console.log("DiscussionListCard api request", url);
           const res = await get<ICommentListResponse>(url);
+          console.debug("DiscussionListCard api response", res);
           setCount(res.data.active);
           setCanCreate(res.data.can_create);
           const items: IComment[] = res.data.rows.map((item, id) => {

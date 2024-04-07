@@ -94,11 +94,12 @@ const DiscussionCreateWidget = ({
                     content_type: "markdown",
                     type: topic.type,
                   };
-                  console.log("create topic", topicData);
+                  const url = `/v2/discussion`;
+                  console.log("create topic api request", url, topicData);
                   const newTopic = await post<
                     ICommentRequest,
                     ICommentResponse
-                  >(`/v2/discussion`, topicData);
+                  >(url, topicData);
                   if (newTopic.ok) {
                     setCurrParent(newTopic.data.id);
                     newParent = newTopic.data.id;
@@ -111,9 +112,8 @@ const DiscussionCreateWidget = ({
                   }
                 }
               }
-              console.log("parent", currParent);
-
-              post<ICommentRequest, ICommentResponse>(`/v2/discussion`, {
+              const url = `/v2/discussion`;
+              const data: ICommentRequest = {
                 res_id: resId,
                 res_type: resType,
                 parent: newParent ? newParent : currParent,
@@ -122,9 +122,11 @@ const DiscussionCreateWidget = ({
                 content: values.content,
                 content_type: contentType,
                 type: topic ? topic.type : type,
-              })
+              };
+              console.info("api request", url, data);
+              post<ICommentRequest, ICommentResponse>(url, data)
                 .then((json) => {
-                  console.log("new discussion", json);
+                  console.debug("new discussion api response", json);
                   if (json.ok) {
                     formRef.current?.resetFields();
                     if (typeof onCreated !== "undefined") {

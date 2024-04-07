@@ -32,14 +32,14 @@ const DiscussionAnchorWidget = ({
 
   useEffect(() => {
     if (typeof topicId === "string") {
-      get<ICommentAnchorResponse>(`/v2/discussion-anchor/${topicId}`).then(
-        (json) => {
-          console.log(json);
-          if (json.ok) {
-            setContent(json.data);
-          }
+      const url = `/v2/discussion-anchor/${topicId}`;
+      console.info("api request", url);
+      get<ICommentAnchorResponse>(url).then((json) => {
+        console.debug("api response", json);
+        if (json.ok) {
+          setContent(json.data);
         }
-      );
+      });
     }
   }, [topicId]);
 

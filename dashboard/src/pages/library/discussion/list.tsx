@@ -28,7 +28,9 @@ const Widget = () => {
       request={async (params = {}, sorter, filter) => {
         console.log(params, sorter, filter);
         const url = `/v2/discussion?view=all`;
+        console.info("api request", url);
         const json = await get<ICommentListResponse>(url);
+        console.debug("api response", json);
         if (!json.ok) {
           message.error(json.message);
         }

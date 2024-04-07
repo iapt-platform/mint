@@ -46,11 +46,11 @@ const DiscussionTopicInfoWidget = ({
       return;
     }
     const url = `/v2/discussion/${topicId}`;
-    console.log("discussion url", url);
+    console.info("discussion api request", url);
     get<ICommentResponse>(url)
       .then((json) => {
+        console.debug("api response", json);
         if (json.ok) {
-          console.log("flashes.success");
           const item = json.data;
           const discussion: IComment = {
             id: item.id,
