@@ -170,7 +170,10 @@ const DiscussionListCardWidget = ({
           });
 
           let topicTpl: IComment[] = [];
-          if (activeKey !== "close") {
+          if (
+            activeKey !== "close" &&
+            user?.roles?.includes("basic") === false
+          ) {
             //获取channel模版
             let studioName: string | undefined;
             switch (resType) {
