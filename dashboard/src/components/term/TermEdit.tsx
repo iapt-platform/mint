@@ -403,12 +403,16 @@ const TermEditWidget = ({
             allowClear
             label="版本(已经建立的术语，版本不可修改。可以选择另存为复制到另一个版本。)"
             width="md"
-            placeholder="通用于我的Studio"
+            placeholder={intl.formatMessage({
+              id: "term.general-in-studio",
+            })}
             disabled={channelDisable}
             options={[
               {
                 value: "",
-                label: "通用于我的Studio",
+                label: intl.formatMessage({
+                  id: "term.general-in-studio",
+                }),
                 disabled:
                   user?.id !== parentStudioId || user?.roles?.includes("basic"),
               },
@@ -467,7 +471,9 @@ const TermEditWidget = ({
             parentStudioId={parentStudioId}
             width="md"
             name="copy_channel"
-            placeholder="通用于我的Studio"
+            placeholder={intl.formatMessage({
+              id: "term.general-in-studio",
+            })}
             allowClear={user?.roles?.includes("basic") ? false : true}
             tooltip={intl.formatMessage({
               id: "term.fields.channel.tooltip",

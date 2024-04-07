@@ -18,6 +18,7 @@ import { click, clickedTerm } from "../../reducers/term-click";
 import store from "../../store";
 import "../article/article.css";
 import Discussion from "../discussion/Discussion";
+import { useIntl } from "react-intl";
 
 const { Text } = Typography;
 
@@ -30,6 +31,7 @@ const TermItemWidget = ({ data, onTermClick }: IWidget) => {
   const [showDiscussion, setShowDiscussion] = useState(false);
   const navigate = useNavigate();
   const termClicked = useAppSelector(clickedTerm);
+  const intl = useIntl();
 
   useEffect(() => {
     console.debug("on redux", termClicked, data);
@@ -58,7 +60,11 @@ const TermItemWidget = ({ data, onTermClick }: IWidget) => {
             </Space>
             <Space style={{ fontSize: "80%" }}>
               <StudioName data={data?.studio} />
-              {data?.channel ? data.channel.name : "通用于此studio"}
+              {data?.channel
+                ? data.channel.name
+                : intl.formatMessage({
+                    id: "term.general-in-studio",
+                  })}
               <Text type="secondary">
                 <UserName {...data?.editor} />
               </Text>

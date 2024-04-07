@@ -6,6 +6,7 @@ import { currentUser } from "../../reducers/current-user";
 import { get } from "../../request";
 import { IApiResponseChannelList } from "../api/Channel";
 import { IStudio } from "../auth/Studio";
+import { useIntl } from "react-intl";
 
 interface IOption {
   value: string;
@@ -39,6 +40,7 @@ const ChannelSelectWidget = ({
   onSelect,
 }: IWidget) => {
   const user = useAppSelector(currentUser);
+  const intl = useIntl();
   return (
     <ProFormCascader
       width={width}
@@ -66,7 +68,12 @@ const ChannelSelectWidget = ({
 
           if (user && user.id === parentStudioId) {
             if (!user.roles?.includes("basic")) {
-              channels.push({ value: "", label: "通用于我的Studio" });
+              channels.push({
+                value: "",
+                label: intl.formatMessage({
+                  id: "term.general-in-studio",
+                }),
+              });
             }
           }
 
