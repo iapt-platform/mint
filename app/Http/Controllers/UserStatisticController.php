@@ -70,59 +70,67 @@ class UserStatisticController extends Controller
         $myDictCount = 0;
         //总经验值
         if(!$request->has('view') || $request->get('view') === 'exp-sum'){
-            $expSum = RedisClusters::remember("user/{$userName}/exp/sum",$cacheExpiry,function() use($queryUserId){
-                return UserOperationDaily::where('user_id',$queryUserId)
-                                        ->sum('duration');
+            $expSum = RedisClusters::remember("user/{$userName}/exp/sum",$cacheExpiry,
+                    function() use($queryUserId){
+                        return UserOperationDaily::where('user_id',$queryUserId)
+                                ->sum('duration');
             });
         }
 
         //逐词解析
         if(!$request->has('view') || $request->get('view') === 'wbw-count'){
-        $wbwCount = RedisClusters::remember("user/{$userName}/wbw/count",$cacheExpiry,function() use($queryUserId){
-                    return Wbw::where('editor_id',$queryUserId)
-                        ->count();
-                        });
+            $wbwCount = RedisClusters::remember("user/{$userName}/wbw/count",$cacheExpiry,
+                        function() use($queryUserId){
+                            return Wbw::where('editor_id',$queryUserId)
+                                ->count();
+                            });
         }
 
         //查字典次数
         if(!$request->has('view') || $request->get('view') === 'lookup-count'){
-        $lookupCount = RedisClusters::remember("user/{$userName}/lookup/count",$cacheExpiry,function() use($queryUserId){
-                            return UserOperationLog::where('user_id',$queryUserId)
-                                                    ->where('op_type','dict_lookup')
-                                                    ->count();
-                                });
+            $lookupCount = RedisClusters::remember("user/{$userName}/lookup/count",$cacheExpiry,
+                            function() use($queryUserId){
+                                return UserOperationLog::where('user_id',$queryUserId)
+                                                        ->where('op_type','dict_lookup')
+                                                        ->count();
+                                    });
         }
         //译文
         //TODO 判断是否是译文channel
         if(!$request->has('view') || $request->get('view') === 'translation-count'){
-        $translationCount = RedisClusters::remember("user/{$userName}/translation/count",$cacheExpiry,function() use($queryUserUuid){
-                            return Sentence::where('editor_uid',$queryUserUuid)
-                                           ->count();
-                            });
-        $translationCountPub = RedisClusters::remember("user/{$userName}/translation/count-pub",$cacheExpiry,function() use($queryUserUuid){
-                                    return Sentence::where('editor_uid',$queryUserUuid)
-                                    ->where('status',30)
-                                    ->count();
+            $translationCount = RedisClusters::remember("user/{$userName}/translation/count",$cacheExpiry,
+                                function() use($queryUserUuid){
+                                return Sentence::where('editor_uid',$queryUserUuid)
+                                            ->count();
                                 });
+            $translationCountPub = RedisClusters::remember("user/{$userName}/translation/count-pub",$cacheExpiry,
+                                    function() use($queryUserUuid){
+                                        return Sentence::where('editor_uid',$queryUserUuid)
+                                        ->where('status',30)
+                                        ->count();
+                                    });
         }
         //术语
         if(!$request->has('view') || $request->get('view') === 'term-count'){
-        $termCount = RedisClusters::remember("user/{$userName}/term/count",$cacheExpiry,function() use($queryUserId){
-                        return DhammaTerm::where('editor_id',$queryUserId)
-                                    ->count();
-                    });
-        $termCountWithNote = RedisClusters::remember("user/{$userName}/term/count-note",$cacheExpiry,function() use($queryUserId){
-                                return DhammaTerm::where('editor_id',$queryUserId)
-                                                    ->where('note',"<>","")
-                                                    ->count();
-                                });
+            $termCount = RedisClusters::remember("user/{$userName}/term/count",$cacheExpiry,
+                        function() use($queryUserId){
+                            return DhammaTerm::where('editor_id',$queryUserId)
+                                        ->count();
+                        });
+            $termCountWithNote = RedisClusters::remember("user/{$userName}/term/count-note",$cacheExpiry,
+                                function() use($queryUserId){
+                                    return DhammaTerm::where('editor_id',$queryUserId)
+                                                        ->where('note',"<>","")
+                                                        ->count();
+                                    });
         }
         //单词本
         if(!$request->has('view') || $request->get('view') === 'my-dict-count'){
-        $myDictCount = RedisClusters::remember("user/{$userName}/dict/count",$cacheExpiry,function() use($queryUserId){
-                            return UserDict::where('creator_id',$queryUserId)
-                                        ->count();
-                        });
+            $myDictCount = RedisClusters::remember("user/{$userName}/dict/count",$cacheExpiry,
+                            function() use($queryUserId){
+                                return UserDict::where('creator_id',$queryUserId)
+                                            ->count();
+                            });
         }
         return $this->ok([
             "exp" => ["sum"=>(int)$expSum],
