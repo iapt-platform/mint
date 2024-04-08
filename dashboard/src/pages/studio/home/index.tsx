@@ -7,6 +7,7 @@ import { ProCard } from "@ant-design/pro-components";
 import { useState } from "react";
 import DiscussionListCard from "../../../components/discussion/DiscussionListCard";
 import ExpTime from "../../../components/exp/ExpTime";
+import SentMyEditList from "../../../components/corpus/SentMyEditList";
 
 const { Content } = Layout;
 
@@ -31,16 +32,31 @@ const Widget = () => {
           headerBordered
         >
           <ProCard split="horizontal" colSpan="50%">
-            <ProCard title="最近编辑"></ProCard>
+            <ProCard title="最近打开"></ProCard>
             <ProCard title="新手入门"></ProCard>
           </ProCard>
-          <ProCard split="horizontal" colSpan="50%">
-            <ProCard title="讨论">
-              <div style={{ minHeight: 360 }}>
-                <DiscussionListCard userId="ddd" />
-              </div>
-            </ProCard>
-          </ProCard>
+          <ProCard
+            split="horizontal"
+            colSpan="50%"
+            tabs={{
+              items: [
+                {
+                  label: `讨论`,
+                  key: "discussion",
+                  children: (
+                    <div style={{ minHeight: 360 }}>
+                      <DiscussionListCard userId="ddd" />
+                    </div>
+                  ),
+                },
+                {
+                  label: `最近翻译`,
+                  key: "sentence",
+                  children: <SentMyEditList />,
+                },
+              ],
+            }}
+          />
         </ProCard>
       </Content>
     </Layout>
