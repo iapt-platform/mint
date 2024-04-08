@@ -33,6 +33,7 @@ class SentenceController extends Controller
      */
     public function index(Request $request)
     {
+        $user = AuthApi::current($request);
         $result=false;
 		$indexCol = ['id','uid','book_id','paragraph',
                     'word_start','word_end','content','content_type',
@@ -148,6 +149,7 @@ class SentenceController extends Controller
                 $sent = explode('-',$request->get('sentence')) ;
                 $table = Sentence::select($indexCol)
                                 ->whereIn('channel_uid', $channels)
+                                ->where('ver','>',1)
                                 ->where('book_id',$sent[0])
                                 ->where('paragraph',$sent[1])
                                 ->where('word_start',$sent[2])
@@ -155,12 +157,14 @@ class SentenceController extends Controller
                 break;
             case 'chapter':
                 $chapter =  PaliTextApi::getChapterStartEnd($request->get('book'),$request->get('para'));
-                $table = Sentence::where('book_id',$request->get('book'))
+                $table = Sentence::where('ver','>',1)
+                                    ->where('book_id',$request->get('book'))
                                     ->whereBetween('paragraph',$chapter)
                                     ->whereIn('channel_uid',explode(',',$request->get('channels')));
                 break;
             case 'paragraph':
-                $table = Sentence::where('book_id',$request->get('book'))
+                $table = Sentence::where('ver','>',1)
+                                    ->where('book_id',$request->get('book'))
                                     ->whereIn('paragraph',explode(',',$request->get('para')))
                                     ->whereIn('channel_uid',explode(',',$request->get('channels')))
                                     ->orderBy('book_id')->orderBy('paragraph')->orderBy('word_start');
@@ -194,7 +198,9 @@ class SentenceController extends Controller
             $output = ["count"=>$count];
             if($request->get('view') === 'sent-can-read' ||
                 $request->get('view') === 'chapter' ||
-                $request->get('view') === 'paragraph'){
+                $request->get('view') === 'paragraph' ||
+                $request->get('view') === 'my-edit'
+                ){
                 $output["rows"] = SentResource::collection($result);
             }else{
                 $output["rows"] = $result;
