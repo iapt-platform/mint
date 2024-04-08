@@ -9,6 +9,7 @@ use App\Http\Api\UserApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\SuggestionApi;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class SentResource extends JsonResource
 {
@@ -21,6 +22,9 @@ class SentResource extends JsonResource
     public function toArray($request)
     {
         $channel = ChannelApi::getById($this->channel_uid);
+        if(!$channel){
+            Log::error('channel left',['data'=>$this->channel_uid,'uid'=>$this->uid]);
+        }
         if($request->get('mode','read')==="read"){
             $mode = 'read';
         }else{
@@ -36,11 +40,14 @@ class SentResource extends JsonResource
                 "word_start"=> $this->word_start,
                 "word_end"=> $this->word_end,
                 "editor"=> UserApi::getByUuid($this->editor_uid),
-                "channel"=> $channel,
-                "studio" => StudioApi::getById($channel["studio_id"]),
                 'fork_at' => $this->fork_at,
                 "updated_at"=> $this->updated_at,
             ];
+
+        if($channel){
+            $data['channel'] = $channel;
+            $data['studio'] = StudioApi::getById($channel["studio_id"]);
+        }
         if($request->has('channels')){
             $channels = explode(',',$request->get('channels'));
         }else{
