@@ -165,6 +165,14 @@ class SentenceController extends Controller
                                     ->whereIn('channel_uid',explode(',',$request->get('channels')))
                                     ->orderBy('book_id')->orderBy('paragraph')->orderBy('word_start');
                 break;
+            case 'my-edit':
+                //我编辑的
+                if(!$user){
+                    return $this->error(__('auth.failed'),401,401);
+                }
+                $table = Sentence::where('editor_uid',$user['user_uid'])
+                                ->where('ver','>',1);
+                break;
 			default:
 				# code...
 				break;
