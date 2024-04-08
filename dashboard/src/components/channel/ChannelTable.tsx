@@ -1,5 +1,5 @@
 import { ActionType, ProTable } from "@ant-design/pro-components";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { Alert, Badge, message, Modal, Typography } from "antd";
 import { Button, Dropdown, Popover } from "antd";
@@ -30,6 +30,29 @@ import TransferCreate from "../transfer/TransferCreate";
 import { TransferOutLinedIcon } from "../../assets/icon";
 
 const { Text } = Typography;
+
+export const channelTypeFilter = {
+  all: {
+    text: <FormattedMessage id="channel.type.all.title" />,
+    status: "Default",
+  },
+  translation: {
+    text: <FormattedMessage id="channel.type.translation.label" />,
+    status: "Success",
+  },
+  nissaya: {
+    text: <FormattedMessage id="channel.type.nissaya.label" />,
+    status: "Processing",
+  },
+  commentary: {
+    text: <FormattedMessage id="channel.type.commentary.label" />,
+    status: "Default",
+  },
+  original: {
+    text: <FormattedMessage id="channel.type.original.label" />,
+    status: "Default",
+  },
+};
 
 export interface IResNumberResponse {
   ok: boolean;
@@ -269,38 +292,7 @@ const ChannelTableWidget = ({
             search: false,
             filters: true,
             onFilter: true,
-            valueEnum: {
-              all: {
-                text: intl.formatMessage({
-                  id: "channel.type.all.title",
-                }),
-                status: "Default",
-              },
-              translation: {
-                text: intl.formatMessage({
-                  id: "channel.type.translation.label",
-                }),
-                status: "Success",
-              },
-              nissaya: {
-                text: intl.formatMessage({
-                  id: "channel.type.nissaya.label",
-                }),
-                status: "Processing",
-              },
-              commentary: {
-                text: intl.formatMessage({
-                  id: "channel.type.commentary.label",
-                }),
-                status: "Default",
-              },
-              original: {
-                text: intl.formatMessage({
-                  id: "channel.type.original.label",
-                }),
-                status: "Default",
-              },
-            },
+            valueEnum: channelTypeFilter,
           },
           {
             title: intl.formatMessage({
