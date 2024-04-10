@@ -130,10 +130,12 @@ const SentCellWidget = ({
       return;
     }
 
-    const found = acceptPr.findIndex((value) => {
-      const vId = `${value.book}_${value.para}_${value.wordStart}_${value.wordEnd}_${value.channel.id}`;
-      return vId === sid;
-    });
+    const found = acceptPr
+      .filter((value) => typeof value !== "undefined")
+      .findIndex((value) => {
+        const vId = `${value.book}_${value.para}_${value.wordStart}_${value.wordEnd}_${value.channel.id}`;
+        return vId === sid;
+      });
     if (found !== -1) {
       console.debug("sent cell sentence apply", uuid, found, acceptPr[found]);
       setSentData(acceptPr[found]);
