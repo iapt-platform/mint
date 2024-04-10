@@ -132,13 +132,13 @@ const SentCellWidget = ({
 
     const found = acceptPr
       .filter((value) => typeof value !== "undefined")
-      .findIndex((value) => {
+      .find((value) => {
         const vId = `${value.book}_${value.para}_${value.wordStart}_${value.wordEnd}_${value.channel.id}`;
         return vId === sid;
       });
-    if (found !== -1) {
-      console.debug("sent cell sentence apply", uuid, found, acceptPr[found]);
-      setSentData(acceptPr[found]);
+    if (typeof found !== "undefined") {
+      console.debug("sent cell sentence apply", uuid, found, found);
+      setSentData(found);
       store.dispatch(done(uuid));
     }
   }, [acceptPr, sentData, isPr, uuid, changedSent, sid]);
