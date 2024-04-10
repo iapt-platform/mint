@@ -194,8 +194,8 @@ const SingUpWidget = () => {
       <StepsForm.StepForm name="finish" title="完成注册">
         <Result
           status="success"
-          title="验证码已经成功发送"
-          subTitle="验证邮件已经发送到您的邮箱。请查收邮件，根据提示完成注册。"
+          title="注册邮件已经成功发送"
+          subTitle="请查收邮件，根据提示完成注册。"
         />
       </StepsForm.StepForm>
     </StepsForm>
