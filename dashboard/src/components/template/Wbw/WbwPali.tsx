@@ -13,7 +13,6 @@ import WbwDetail from "./WbwDetail";
 import { IWbw, IWbwAttachment, TWbwDisplayMode } from "./WbwWord";
 import { bookMarkColor } from "./WbwDetailBookMark";
 import WbwVideoButton from "./WbwVideoButton";
-import CommentBox from "../../discussion/DiscussionDrawer";
 import PaliText from "./PaliText";
 import store from "../../../store";
 import { grammarId, lookup } from "../../../reducers/command";
@@ -21,8 +20,8 @@ import { useAppSelector } from "../../../hooks";
 import { add, relationAddParam } from "../../../reducers/relation-add";
 import { ArticleMode } from "../../article/Article";
 import { anchor, showWbw } from "../../../reducers/wbw";
-import { CommentOutlinedIcon } from "../../../assets/icon";
 import { ParaLinkCtl } from "../ParaLink";
+import DiscussionButton from "../../discussion/DiscussionButton";
 
 //生成视频播放按钮
 interface IVideoIcon {
@@ -295,34 +294,15 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
     </span>
   );
 
-  let commentShellStyle: React.CSSProperties = {
-    display: "inline-block",
-  };
-
-  const DiscussionIcon = () => {
-    return hasComment ? (
-      <div style={commentShellStyle}>
-        <CommentBox
-          resId={data.uid}
-          resType="wbw"
-          trigger={
-            <Tooltip title="讨论">
-              <CommentOutlinedIcon style={{ cursor: "pointer" }} />
-            </Tooltip>
-          }
-          onCommentCountChange={(count: number) => {
-            if (count > 0) {
-              setHasComment(true);
-            } else {
-              setHasComment(false);
-            }
-          }}
-        />
-      </div>
-    ) : (
-      <></>
-    );
-  };
+  const DiscussionIcon = () => (
+    <DiscussionButton
+      initCount={data.hasComment ? 1 : 0}
+      hideCount
+      hideInZero
+      resId={data.uid}
+      resType="wbw"
+    />
+  );
 
   if (typeof data.real !== "undefined" && data.real.value !== "") {
     //非标点符号
