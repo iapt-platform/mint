@@ -376,6 +376,28 @@ const CommentOutLined = () => (
   </svg>
 );
 
+const CommentFill = () => (
+  <svg
+    viewBox="0 0 1024 1024"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    p-id="1598"
+    width="1em"
+    height="1em"
+  >
+    <path
+      d="M812.8 149.333333h-597.333333c-59.733333 0-106.666667 46.933333-106.666667 106.666667v469.333333c0 59.733333 46.933333 106.666667 106.666667 106.666667h185.6l98.133333 100.266667c4.266667 4.266667 8.533333 6.4 14.933333 6.4 6.4 0 10.666667-2.133333 14.933334-6.4l100.266666-100.266667h183.466667c57.6 0 106.666667-46.933333 106.666667-106.666667V256c0-57.6-49.066667-106.666667-106.666667-106.666667z"
+      fill="currentColor"
+      p-id="1599"
+    ></path>
+    <path
+      d="M309.333333 533.333333c-29.866667 0-53.333333-23.466667-53.333333-53.333333s23.466667-53.333333 53.333333-53.333333 53.333333 23.466667 53.333334 53.333333-23.466667 53.333333-53.333334 53.333333zM514.133333 533.333333c-29.866667 0-53.333333-23.466667-53.333333-53.333333s23.466667-53.333333 53.333333-53.333333 53.333333 23.466667 53.333334 53.333333-23.466667 53.333333-53.333334 53.333333zM714.666667 533.333333c-29.866667 0-53.333333-23.466667-53.333334-53.333333s23.466667-53.333333 53.333334-53.333333 53.333333 23.466667 53.333333 53.333333-23.466667 53.333333-53.333333 53.333333z"
+      fill="#FFFFFF"
+      p-id="1600"
+    ></path>
+  </svg>
+);
+
 const TranslationOutLined = () => (
   <svg
     viewBox="0 0 1024 1024"
@@ -820,6 +842,10 @@ export const TemplateOutlinedIcon = (
 export const CommentOutlinedIcon = (
   props: Partial<CustomIconComponentProps>
 ) => <Icon component={CommentOutLined} {...props} />;
+
+export const CommentFillIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={CommentFill} {...props} />
+);
 
 export const TranslationOutLinedIcon = (
   props: Partial<CustomIconComponentProps>
