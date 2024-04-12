@@ -162,7 +162,9 @@ class CourseController extends Controller
             return $this->error(__('auth.failed'));
         }
         //查询是否重复
-        if(Course::where('title',$request->get('title'))->where('studio_id',$user['user_uid'])->exists()){
+        if(Course::where('title',$request->get('title'))
+                ->where('studio_id',$user['user_uid'])
+                ->exists()){
             return $this->error(__('validation.exists',['name']));
         }
 
