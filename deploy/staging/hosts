@@ -80,3 +80,5 @@ app_questionnaire_link="https://wj.qq.com/change-me/"
 
 app_cdn_urls=https://www.change-me.org/downloads
 app_attachments_bucket_name=attachments-staging
+
+app_ftp_host="change-me.org"
