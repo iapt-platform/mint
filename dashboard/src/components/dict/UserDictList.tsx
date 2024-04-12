@@ -46,6 +46,7 @@ export interface IWord {
   note?: string | null;
   factors?: string | null;
   dict?: IDictInfo;
+  status?: number;
   updated_at?: string;
   created_at?: string;
 }
@@ -204,19 +205,21 @@ const UserDictListWidget = ({
           },
           description: {
             dataIndex: "meaning",
-            title: "整体意思",
-            search: word ? false : undefined,
+            title: "description",
+            search: false,
             render(dom, entity, index, action, schema) {
               return (
                 <div>
                   <Space>
                     {entity.meaning}
-
+                    {"|"}
                     <TimeShow
                       updatedAt={entity.updated_at}
                       createdAt={entity.updated_at}
                       type="secondary"
                     />
+                    {"|"}
+                    {entity.status === 5 ? "私有" : "公开"}
                   </Space>
                   {compact ? (
                     <div>
@@ -232,6 +235,7 @@ const UserDictListWidget = ({
           content: compact
             ? undefined
             : {
+                search: false,
                 render(dom, entity, index, action, schema) {
                   return (
                     <div>
@@ -506,6 +510,7 @@ const UserDictListWidget = ({
               note: item.note,
               factors: item.factors,
               dict: item.dict,
+              status: item.status,
               updated_at: item.updated_at,
             };
           });
@@ -568,6 +573,7 @@ const UserDictListWidget = ({
       </Drawer>
       <Drawer
         title={drawerTitle}
+        width={500}
         placement="right"
         open={isEditOpen}
         onClose={() => {

@@ -33,12 +33,13 @@ const AnthologyCreateWidget = ({ studio, onSuccess }: IWidget) => {
           return;
         }
         values.studio = studio;
-        console.log(values);
+        const url = `/v2/anthology`;
+        console.info("api request", url, values);
         const res = await post<IAnthologyCreateRequest, IAnthologyResponse>(
-          `/v2/anthology`,
+          url,
           values
         );
-        console.log(res);
+        console.debug("api response", res);
         if (res.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
           if (typeof onSuccess !== "undefined") {

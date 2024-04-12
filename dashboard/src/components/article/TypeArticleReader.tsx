@@ -30,7 +30,6 @@ interface IWidget {
   hideInteractive?: boolean;
   hideTitle?: boolean;
   onArticleChange?: Function;
-  onFinal?: Function;
   onLoad?: Function;
   onAnthologySelect?: Function;
   onEdit?: Function;
@@ -45,7 +44,6 @@ const TypeArticleReaderWidget = ({
   hideInteractive = false,
   hideTitle = false,
   onArticleChange,
-  onFinal,
   onLoad,
   onAnthologySelect,
   onEdit,
@@ -143,8 +141,10 @@ const TypeArticleReaderWidget = ({
 
   useEffect(() => {
     const url = `/v2/nav-article/${articleId}_${anthologyId}`;
+    console.info("api request", url);
     get<IArticleNavResponse>(url)
       .then((json) => {
+        console.debug("api response", json);
         if (json.ok) {
           setNav(json.data);
         }
@@ -163,9 +163,21 @@ const TypeArticleReaderWidget = ({
     };
   }
 
-  const title = articleData?.title_text
-    ? articleData?.title_text
-    : articleData?.title;
+  const title = articleData?.title_text ?? articleData?.title;
+
+  let endOfChapter = false;
+  if (nav?.curr && nav?.next) {
+    if (nav?.curr?.level > nav?.next?.level) {
+      endOfChapter = true;
+    }
+  }
+
+  let topOfChapter = false;
+  if (nav?.curr && nav?.prev) {
+    if (nav?.curr?.level > nav?.prev?.level) {
+      topOfChapter = true;
+    }
+  }
 
   return (
     <div>
@@ -235,6 +247,8 @@ const TypeArticleReaderWidget = ({
           <NavigateButton
             prevTitle={nav?.prev?.title}
             nextTitle={nav?.next?.title}
+            topOfChapter={topOfChapter}
+            endOfChapter={endOfChapter}
             path={currPath}
             onNext={() => {
               if (typeof onArticleChange !== "undefined") {

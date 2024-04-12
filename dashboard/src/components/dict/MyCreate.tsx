@@ -18,6 +18,7 @@ import { add, updateIndex, wordIndex } from "../../reducers/inline-dict";
 import store from "../../store";
 import { get as getUiLang } from "../../locales";
 import { myDictDirty } from "../../reducers/command";
+import { currentUser } from "../../reducers/current-user";
 
 export const UserWbwPost = (data: IDictRequest[], view: string) => {
   let wordData: IDictRequest[] = data;
@@ -52,6 +53,7 @@ export const UserWbwPost = (data: IDictRequest[], view: string) => {
           factormean: pFm,
           confidence: value.confidence,
           language: value.language,
+          status: value.status,
         });
       }
     }
@@ -71,6 +73,7 @@ export const UserWbwPost = (data: IDictRequest[], view: string) => {
             mean: meaning,
             confidence: value.confidence,
             language: value.language,
+            status: value.status,
           });
         }
 
@@ -84,6 +87,7 @@ export const UserWbwPost = (data: IDictRequest[], view: string) => {
               mean: subFactorsMeaning[index1],
               confidence: value.confidence,
               language: value.language,
+              status: value.status,
             });
           }
         });
@@ -115,6 +119,7 @@ const MyCreateWidget = ({ word, onSave }: IWidget) => {
   });
   const [loading, setLoading] = useState(false);
   const inlineWordIndex = useAppSelector(wordIndex);
+  const user = useAppSelector(currentUser);
 
   useEffect(() => setWordSpell(word), [word]);
 
@@ -270,6 +275,7 @@ const MyCreateWidget = ({ word, onSave }: IWidget) => {
                 factors: editWord.factors?.value,
                 factormean: editWord.factorMeaning?.value,
                 language: getUiLang(),
+                status: user?.roles?.includes("basic") ? 5 : 30,
                 confidence: 100,
               },
             ];

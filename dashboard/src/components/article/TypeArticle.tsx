@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Button, Modal } from "antd";
+import { Modal } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { IArticleDataResponse } from "../api/Article";
 import { ArticleMode, ArticleType } from "./Article";
@@ -17,7 +17,6 @@ interface IWidget {
   hideTitle?: boolean;
   onArticleChange?: Function;
   onArticleEdit?: Function;
-  onFinal?: Function;
   onLoad?: Function;
   onAnthologySelect?: Function;
 }
@@ -31,7 +30,6 @@ const TypeArticleWidget = ({
   hideInteractive = false,
   hideTitle = false,
   onArticleChange,
-  onFinal,
   onLoad,
   onAnthologySelect,
   onArticleEdit,

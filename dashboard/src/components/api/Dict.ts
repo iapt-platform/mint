@@ -20,6 +20,7 @@ export interface IDictRequest {
   creator_id?: number;
   editor?: IUser;
   studio?: IStudio;
+  status?: number;
   updated_at?: string;
 }
 export interface IUserDictCreate {
@@ -58,6 +59,7 @@ export interface IApiResponseDictData {
   updated_at: string;
   exp?: number;
   editor?: IUser;
+  status?: number;
 }
 export interface IApiResponseDict {
   ok: boolean;

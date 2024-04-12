@@ -61,11 +61,14 @@ const Widget = () => {
             },
             {
               key: "toc",
-              label: `目录`,
+              label: intl.formatMessage({
+                id: "labels.table-of-content",
+              }),
               children: (
                 <EditableTocTree
                   studioName={anthologyInfo?.studio.realName}
                   anthologyId={anthology_id}
+                  anthology={anthologyInfo}
                 />
               ),
             },

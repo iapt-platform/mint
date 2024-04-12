@@ -129,6 +129,7 @@ export interface IArticleCreateRequest {
   studio: string;
   anthologyId?: string;
   parentId?: string;
+  status?: number;
 }
 
 export interface IAnthologyCreateRequest {

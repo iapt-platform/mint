@@ -131,7 +131,7 @@ const ChapterInChannelWidget = ({
               setOpen(true);
             }}
           >
-            更多
+            {intl.formatMessage({ id: "buttons.more" })}
           </Button>
         </div>
         <Modal

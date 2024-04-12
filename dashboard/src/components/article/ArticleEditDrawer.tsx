@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { IArticleDataResponse } from "../api/Article";
 
 import ArticleEdit from "./ArticleEdit";
-import ArticleEditTools from "./ArticleEditTools";
 
 interface IWidget {
   trigger?: React.ReactNode;

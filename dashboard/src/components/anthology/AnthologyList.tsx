@@ -353,7 +353,7 @@ const AnthologyListWidget = ({
                 key: "my",
                 label: (
                   <span>
-                    此工作室的
+                    {intl.formatMessage({ id: "labels.this-studio" })}
                     {renderBadge(myNumber, activeKey === "my")}
                   </span>
                 ),
@@ -362,7 +362,7 @@ const AnthologyListWidget = ({
                 key: "collaboration",
                 label: (
                   <span>
-                    协作
+                    {intl.formatMessage({ id: "labels.collaboration" })}
                     {renderBadge(
                       collaborationNumber,
                       activeKey === "collaboration"
@@ -383,7 +383,7 @@ const AnthologyListWidget = ({
       <Modal
         destroyOnClose={true}
         width={700}
-        title="协作"
+        title={intl.formatMessage({ id: "labels.collaboration" })}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}

@@ -7,6 +7,7 @@ const items = {
   "labels.week.5": "星期五",
   "labels.week.6": "星期六",
   "labels.collaborators": "协作者",
+  "labels.collaboration": "协作",
   "labels.link": "链接",
   "labels.upload": "上传",
   "labels.first-term": "第一个术语",
@@ -41,8 +42,12 @@ const items = {
   "labels.dict.pass.2": "查词干",
   "labels.dict.pass.3": "查衍生",
   "labels.dict.pass.4": "查二次衍生",
-  "labels.software.edition.basic": "基本版",
+  "labels.software.edition.guest": "未注册",
+  "labels.software.edition.basic": "基础版",
   "labels.software.edition.pro": "增强版",
+  "labels.table-of-content": "目录",
+  "labels.this-studio": "此工作室",
+  "labels.feedback": "问题反馈",
 };
 
 export default items;

@@ -148,7 +148,7 @@ const WbwFactorMeaningItem = ({ pali, meaning = "", onChange }: IWFMI) => {
           ...items.filter((value, index) => index <= 5),
           {
             key: "more",
-            label: "更多",
+            label: intl.formatMessage({ id: "buttons.more" }),
             disabled: items.length <= 5,
             children: items.filter((value, index) => index > 5),
           },
