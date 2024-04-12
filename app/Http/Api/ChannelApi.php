@@ -51,6 +51,39 @@ class ChannelApi{
         }
         return $output;
     }
+
+    public static function userCanEdit($userUid,$channelUid){
+        $channels = ChannelApi::getCanEditByUser($userUid);
+        return in_array($channelUid,$channels);
+    }
+    public static function getCanEditByUser($userUuid=null){
+        #获取 user 在某章节 所有有权限的 channel 列表
+        $channelId = [];
+        //我自己的
+
+        if($userUuid){
+            $my = Channel::select('uid')->where('owner_uid', $userUuid)->get();
+            foreach ($my as $key => $value) {
+                $channelId[$value->uid] = $value->uid;
+            }
+
+            //获取共享channel
+
+            $allSharedChannels = ShareApi::getResList($userUuid,2);
+            foreach ($allSharedChannels as $key => $value) {
+                if($value['power'] >= 20){
+                   $channelId[$value['res_id']] = $value['res_id'];
+                }
+            }
+        }
+
+        $output = array();
+        foreach ($channelId as $key => $value) {
+            $output[] = $key;
+        }
+        return $output;
+    }
+
     public static function getSysChannel($channel_name,$fallback=""){
         $channel = Channel::where('name',$channel_name)
                     ->where('owner_uid',config("mint.admin.root_uuid"))
