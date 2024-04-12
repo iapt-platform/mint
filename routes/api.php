@@ -91,6 +91,7 @@ use App\Http\Controllers\WbwSentenceController;
 use App\Http\Controllers\SnowFlakeIdController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\DiscussionCountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -237,6 +238,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('chapter-index',ChapterIndexController::class);
     Route::apiResource('wbw-sentence',WbwSentenceController::class);
     Route::apiResource('snowflake',SnowFlakeIdController::class);
+    Route::apiResource('discussion-count',DiscussionCountController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
