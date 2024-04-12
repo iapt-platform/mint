@@ -9,12 +9,14 @@ use App\Models\Wbw;
 use App\Models\WbwBlock;
 use App\Models\PaliSentence;
 use App\Models\Sentence;
+use App\Models\Channel;
 use App\Http\Resources\DiscussionResource;
 use App\Http\Api\MdRender;
 use App\Http\Api\AuthApi;
 use App\Http\Api\Mq;
 use App\Http\Controllers\ArticleController;
 use App\Http\Api\UserApi;
+use App\Http\Api\ChannelApi;
 
 class DiscussionController extends Controller
 {
@@ -50,7 +52,8 @@ class DiscussionController extends Controller
                 /**
                  * 禁止：
                  * 未注册用户看到任何人发表的discussion
-                 * basic用户看到别人发表的discussion
+                 * basic用户看到别人在别人channel发表的discussion
+                 *
                  */
                 if(!$user && $request->get('type')==='discussion'){
                     return $this->ok([
@@ -62,13 +65,41 @@ class DiscussionController extends Controller
                         'can_reply' => false,
                         ]);
                 }
+
+                if($user){
+                    $res_type = Discussion::where('res_id',$request->get('id'))->value('res_type');
+                    switch ($res_type) {
+                        case 'sentence':
+                            # code...
+                            break;
+                        case 'wbw':
+                            $block_uid = Wbw::where('uid',$request->get('id'))->value('block_uid');
+                            if($block_uid){
+                                $channelId = WbwBlock::where('uid',$block_uid)->value('channel_uid');
+                                if($channelId){
+                                    $canEdit = ChannelApi::userCanEdit($user['user_uid'],$channelId);
+                                }
+                            }
+                            break;
+                        default:
+                            # code...
+                            break;
+                    }
+                }
+
                 $table = Discussion::where('res_id',$request->get('id'))
                                     ->where('type', $request->get('type','discussion'))
                                     ->where('status',$request->get('status','active'))
                                     ->where('parent',null);
                 if($request->get('type')==='discussion'){
-                    if(isset($userInfo) && in_array('basic',$userInfo['roles'])){
-                        $table = $table->where('editor_uid',$userInfo['id']);
+                    if(isset($userInfo) &&
+                        isset($userInfo['roles']) &&
+                        in_array('basic',$userInfo['roles'])){
+                            if(isset($canEdit) && $canEdit===true){
+
+                            }else{
+                               $table = $table->where('editor_uid',$userInfo['id']);
+                            }
                     }
                 }
                 $activeNumber = Discussion::where('res_id',$request->get('id'))
@@ -361,16 +392,46 @@ class DiscussionController extends Controller
             return $this->error(__('auth.failed'),[403],403);
         }
         //
-        if($discussion->editor_uid !== $user['user_uid']){
+        $isManager = false;
+        $isResManager = false;
+        if($discussion->editor_uid === $user['user_uid']){
+            $isManager = true;
+        }else{
+            //查看是否是资源拥有者
+            if($discussion->res_type === 'sentence'){
+                $res = Sentence::find($discussion->res_id);
+                if($res){
+                    $channelId = $res->channel_uid;
+                }
+            }else if($discussion->res_type === 'wbw'){
+                $res = Wbw::where('uid',$discussion->res_id)->first();
+                if($res){
+                    $block = WbwBlock::where('uid',$res->block_uid)->first();
+                    if($block){
+                        $channelId = $block->channel_uid;
+                    }
+                }
+            }
+            if(isset($channelId)){
+                $channel = Channel::find($channelId);
+                if($channel){
+                    if($channel->owner_uid===$user['user_uid']){
+                        $isResManager = true;
+                    }
+                }
+            }
+        }
+        if(!$isManager && !$isResManager){
             return $this->error(__('auth.failed'),[403],403);
         }
+
         $discussion->title = $request->get('title',null);
         $discussion->content = $request->get('content',null);
         $discussion->status = $request->get('status','active');
         if($request->has('type')){
             $discussion->type = $request->get('type');
         }
-        $discussion->editor_uid = $user['user_uid'];
+        //$discussion->editor_uid = $user['user_uid'];
         $discussion->save();
         return $this->ok(new DiscussionResource($discussion));
 
