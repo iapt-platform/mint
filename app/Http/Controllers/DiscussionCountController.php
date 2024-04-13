@@ -63,50 +63,58 @@ class DiscussionCountController extends Controller
         if(!$user){
             return $this->error('auth.failed',401,401);
         }
-        //判断我的角色
-        $my = CourseMember::where('user_id',$user["user_uid"])
-                            ->where('is_current',true)
-                            ->where('course_id',$request->get('course_id'))
-                            ->first();
-        if(!$my){
-            return $this->error('auth.failed',403,403);
-        }
-        //获取全部成员列表
-        $allMembers = CourseMember::where('is_current',true)
-                            ->where('course_id',$request->get('course_id'))
-                            ->select('user_id')
-                            ->get();
-        //获取答案channel
-        $answerChannel = Course::where('id',$request->get('course_id'))
-                        ->value('channel_id');
-        $exerciseChannels = CourseMember::where('is_current',true)
+        if($request->has('course_id')){
+            //判断我的角色
+            $my = CourseMember::where('user_id',$user["user_uid"])
+                                ->where('is_current',true)
                                 ->where('course_id',$request->get('course_id'))
-                                ->select('channel_id')
-                                ->get();
-        $channels = array();
-        if($answerChannel){
-            array_push($channels,$answerChannel);
-        }
-        $users = array();
-        if($my->role === 'student'){
-            //自己的channel + 答案
-            if($my->channel_id){
-                array_push($channels,$my->channel_id);
+                                ->first();
+            if(!$my){
+                return $this->error('auth.failed',403,403);
             }
-        }else{
-            //找到全部学员channel + 答案
-            foreach ($exerciseChannels as $key => $value) {
-                array_push($channels,$value->channel_id);
+            //获取全部成员列表
+            $allMembers = CourseMember::where('is_current',true)
+                                ->where('course_id',$request->get('course_id'))
+                                ->select('user_id')
+                                ->get();
+            Log::debug('allMembers',['members'=>$allMembers]);
+            //找到全部相关channel
+            $channels = array();
+            //获取答案channel
+            $answerChannel = Course::where('id',$request->get('course_id'))
+                            ->value('channel_id');
+            $exerciseChannels = CourseMember::where('is_current',true)
+                                    ->where('course_id',$request->get('course_id'))
+                                    ->select('channel_id')
+                                    ->get();
+            if($answerChannel){
+                array_push($channels,$answerChannel);
+            }
+            $users = array();
+            if($my->role === 'student'){
+                //自己的channel + 答案
+                if($my->channel_id){
+                    array_push($channels,$my->channel_id);
+                }
+            }else{
+                //找到全部学员channel + 答案
+                foreach ($exerciseChannels as $key => $value) {
+                    array_push($channels,$value->channel_id);
+                }
             }
         }
 
-        //获取全部学员对应的资源列表
-        $querySentId = $request->get('sentences');
+        //获取全部资源列表
         $resId = array();
+        $querySentId = $request->get('sentences');
         //译文
-        $sentUid = Sentence::whereIns(['book_id','paragraph','word_start','word_end'],$querySentId)
-                        ->whereIn('channel_uid',$channels)
-                        ->select('uid')->get();
+        $table = Sentence::select('uid')
+                        ->whereIns(['book_id','paragraph','word_start','word_end'],$querySentId);
+        if(isset($channels)){
+            $table = $table->whereIn('channel_uid',$channels);
+        }
+        $sentUid = $table->get();
+
         foreach ($sentUid as $key => $value) {
             $resId[] = $value->uid;
         }
@@ -115,10 +123,12 @@ class DiscussionCountController extends Controller
         foreach ($querySentId as $key => $value) {
             $wbwBlockParagraphs[] = [$value[0],$value[1]];
         }
-        $wbwBlock = WbwBlock::whereIn('channel_uid',$channels)
-                            ->whereIns(['book_id','paragraph'],$wbwBlockParagraphs)
-                            ->select('uid')
-                            ->get();
+        $table = WbwBlock::select('uid')
+                          ->whereIns(['book_id','paragraph'],$wbwBlockParagraphs);
+        if(isset($channels)){
+            $table = $table->whereIn('channel_uid',$channels);
+        }
+        $wbwBlock = $table->get();
         if($wbwBlock){
             //找到逐词解析数据
             foreach ($querySentId as $key => $value) {
@@ -131,14 +141,17 @@ class DiscussionCountController extends Controller
                 }
             }
         }
-        Log::debug('res id',['res'=>$resId,'members'=>$allMembers]);
+        Log::debug('res id',['res'=>$resId]);
         //全部资源id获取完毕
-        $allDiscussions = Discussion::where('status','active')
+        $table = Discussion::select(['id','res_id','type','editor_uid'])
+                            ->where('status','active')
                             ->whereNull('parent')
-                            ->whereIn('res_id',$resId)
-                            ->whereIn('editor_uid',$allMembers)
-                            ->select(['id','res_id','type','editor_uid'])
-                            ->get();
+                            ->whereIn('res_id',$resId);
+        if(isset($allMembers)){
+            $table = $table->whereIn('editor_uid',$allMembers);
+        }
+
+        $allDiscussions = $table->get();
         $result = DiscussionCountResource::collection($allDiscussions);
         Log::debug('response',['data'=>$result]);
         return $this->ok($result);
@@ -147,12 +160,20 @@ class DiscussionCountController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Discussion  $discussion
+     * @param  string  $resId
      * @return \Illuminate\Http\Response
      */
-    public function show(Discussion $discussion)
+    public function show(string  $resId)
     {
         //
+        $allDiscussions = Discussion::where('status','active')
+                                    ->whereNull('parent')
+                                    ->where('res_id',$resId)
+                                    ->select(['id','res_id','type','editor_uid'])
+                                    ->get();
+        $result = DiscussionCountResource::collection($allDiscussions);
+        Log::debug('response',['data'=>$result]);
+        return $this->ok($result);
     }
 
     /**
