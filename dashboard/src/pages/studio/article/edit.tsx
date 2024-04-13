@@ -26,20 +26,13 @@ const Widget = () => {
           </Space>
         }
         extra={
-          <Space>
-            <ArticleEditTools
-              studioName={studioname}
-              articleId={articleId}
-              title={title}
-            />
-            <Button
-              onClick={() => setShowParent((origin) => !origin)}
-              style={{ display: parent ? "inline-block" : "none" }}
-            >
-              源文件
-              {showParent ? <DoubleRightOutlined /> : <DoubleLeftOutlined />}
-            </Button>
-          </Space>
+          <Button
+            onClick={() => setShowParent((origin) => !origin)}
+            style={{ display: parent ? "inline-block" : "none" }}
+          >
+            源文件
+            {showParent ? <DoubleRightOutlined /> : <DoubleLeftOutlined />}
+          </Button>
         }
       >
         <ArticleEdit
