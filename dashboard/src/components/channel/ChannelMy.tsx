@@ -36,6 +36,17 @@ import CopyToModal from "./CopyToModal";
 import { ArticleType } from "../article/Article";
 import { ChannelInfoModal } from "./ChannelInfo";
 
+export const getSentIdInArticle = () => {
+  let sentList: string[] = [];
+  const sentElement = document.querySelectorAll(".pcd_sent");
+  for (let index = 0; index < sentElement.length; index++) {
+    const element = sentElement[index];
+    const id = element.id.split("_")[1];
+    sentList.push(id);
+  }
+  return sentList;
+};
+
 interface ChannelTreeNode {
   key: string;
   title: string | React.ReactNode;
@@ -158,13 +169,7 @@ const ChannelMy = ({
           });
       }
     } else {
-      const sentElement = document.querySelectorAll(".pcd_sent");
-      for (let index = 0; index < sentElement.length; index++) {
-        const element = sentElement[index];
-        const id = element.id.split("_")[1];
-        sentList.push(id);
-      }
-      setSentencesId(sentList);
+      setSentencesId(getSentIdInArticle());
       loadChannel(sentList);
     }
   };
