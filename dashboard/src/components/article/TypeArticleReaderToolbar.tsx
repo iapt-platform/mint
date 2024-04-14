@@ -139,7 +139,7 @@ const TypeArticleReaderToolbarWidget = ({
                     setAddToAnthologyOpen(true);
                     break;
                   case "fork":
-                    const url = `/studio/${user?.nickName}/article/create?parent=${articleId}`;
+                    const url = `/studio/${user?.realName}/article/create?parent=${articleId}`;
                     window.open(fullUrl(url), "_blank");
                     break;
                   case "tpl":
