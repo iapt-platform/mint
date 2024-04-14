@@ -19,6 +19,7 @@ import WbwRelationAdd from "./WbwRelationAdd";
 import { ArticleMode } from "../../article/Article";
 import WbwReal from "./WbwReal";
 import WbwDetailFm from "./WbwDetailFm";
+import { IStudio } from "../../auth/Studio";
 
 export type TFieldName =
   | "word"
@@ -108,6 +109,7 @@ interface IWidget {
   fields?: IWbwFields;
   mode?: ArticleMode;
   wordDark?: boolean;
+  studio?: IStudio;
   onChange?: Function;
   onSplit?: Function;
 }
@@ -125,6 +127,7 @@ const WbwWordWidget = ({
     case: true,
   },
   wordDark = false,
+  studio,
   onChange,
   onSplit,
 }: IWidget) => {
@@ -249,6 +252,7 @@ const WbwWordWidget = ({
           channelId={channelId}
           mode={mode}
           display={display}
+          studio={studio}
           onSave={(e: IWbw, isPublish: boolean, isPublic: boolean) => {
             const newData: IWbw = JSON.parse(JSON.stringify(e));
             setWordData(newData);
