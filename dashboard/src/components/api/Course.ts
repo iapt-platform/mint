@@ -26,7 +26,7 @@ export interface ICourseDataRequest {
   join: string;
   request_exp: string;
 }
-export type TCourseRole = "teacher" | "assistant" | "student";
+export type TCourseRole = "teacher" | "manager" | "assistant" | "student";
 export type TCourseJoinMode = "invite" | "manual" | "open";
 export type TCourseExpRequest = "none" | "begin-end" | "daily";
 export interface ICourseDataResponse {
