@@ -386,7 +386,6 @@ const CommentFill = () => (
     width="1em"
     height="1em"
     viewBox="0 0 12 12"
-    enable-background="new 0 0 12 12"
   >
     <path
       d="M10.26,0.543H1.74c-0.852,0-1.521,0.669-1.521,1.521v6.694c0,0.853,0.669,1.521,1.521,1.521h2.647l1.399,1.43
