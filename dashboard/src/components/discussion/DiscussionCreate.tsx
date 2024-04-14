@@ -21,6 +21,7 @@ import { currentUser as _currentUser } from "../../reducers/current-user";
 import { useEffect, useRef, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import { TDiscussionType } from "./Discussion";
+import { discussionCountUpgrade } from "./DiscussionCount";
 
 export type TContentType = "text" | "markdown" | "html" | "json";
 
@@ -85,6 +86,10 @@ const DiscussionCreateWidget = ({
               let newParent: string | undefined;
               if (typeof currParent === "undefined") {
                 if (typeof topic !== "undefined" && topic.tplId) {
+                  /**
+                   * 在模版下跟帖
+                   * 先建立模版topic,再建立跟帖
+                   */
                   const topicData: ICommentRequest = {
                     res_id: resId,
                     res_type: resType,
@@ -101,6 +106,7 @@ const DiscussionCreateWidget = ({
                     ICommentResponse
                   >(url, topicData);
                   if (newTopic.ok) {
+                    discussionCountUpgrade(resId);
                     setCurrParent(newTopic.data.id);
                     newParent = newTopic.data.id;
                     if (typeof onTopicCreated !== "undefined") {
@@ -129,6 +135,7 @@ const DiscussionCreateWidget = ({
                   console.debug("new discussion api response", json);
                   if (json.ok) {
                     formRef.current?.resetFields();
+                    discussionCountUpgrade(resId);
                     if (typeof onCreated !== "undefined") {
                       onCreated(toIComment(json.data));
                     }

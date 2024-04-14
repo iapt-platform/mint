@@ -33,6 +33,7 @@ import { ICommentRequest, ICommentResponse } from "../api/Comment";
 import { useState } from "react";
 import MdView from "../template/MdView";
 import { TDiscussionType } from "./Discussion";
+import { discussionCountUpgrade } from "./DiscussionCount";
 
 const { Text } = Typography;
 
@@ -58,7 +59,7 @@ const DiscussionShowWidget = ({
 }: IWidget) => {
   const intl = useIntl();
   const [closed, setClosed] = useState(data.status);
-  const showDeleteConfirm = (id: string, title: string) => {
+  const showDeleteConfirm = (id: string, resId: string, title: string) => {
     Modal.confirm({
       icon: <ExclamationCircleOutlined />,
       title:
@@ -85,6 +86,7 @@ const DiscussionShowWidget = ({
             console.debug("api response", json);
             if (json.ok) {
               message.success("删除成功");
+              discussionCountUpgrade(resId);
               if (typeof onDelete !== "undefined") {
                 onDelete(id);
               }
@@ -109,9 +111,12 @@ const DiscussionShowWidget = ({
       console.log(json);
       if (json.ok) {
         setClosed(json.data.status);
+        discussionCountUpgrade(data.resId);
         if (typeof onClose !== "undefined") {
           onClose(value);
         }
+      } else {
+        message.error(json.message);
       }
     });
   };
@@ -182,8 +187,8 @@ const DiscussionShowWidget = ({
         convert("discussion");
         break;
       case "delete":
-        if (data.id) {
-          showDeleteConfirm(data.id, data.title ? data.title : "");
+        if (data.id && data.resId) {
+          showDeleteConfirm(data.id, data.resId, data.title ?? "");
         }
         break;
       default:
