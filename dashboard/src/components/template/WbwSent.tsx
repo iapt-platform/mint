@@ -24,6 +24,7 @@ import { getGrammar } from "../../reducers/term-vocabulary";
 import modal from "antd/lib/modal";
 import { UserWbwPost } from "../dict/MyCreate";
 import { currentUser } from "../../reducers/current-user";
+import { IStudio } from "../auth/Studio";
 
 export const paraMark = (wbwData: IWbw[]): IWbw[] => {
   //处理段落标记，支持点击段落引用弹窗
@@ -148,6 +149,7 @@ interface IWidget {
   refreshable?: boolean;
   mode?: ArticleMode;
   wbwProgress?: boolean;
+  studio?: IStudio;
   onMagicDictDone?: Function;
   onChange?: Function;
 }
@@ -166,6 +168,7 @@ export const WbwSentCtl = ({
   mode,
   refreshable = false,
   wbwProgress = false,
+  studio,
   onChange,
   onMagicDictDone,
 }: IWidget) => {
@@ -528,7 +531,7 @@ export const WbwSentCtl = ({
         }
       });
   };
-  const wbwRender = (item: IWbw, id: number) => {
+  const wbwRender = (item: IWbw, id: number, studio?: IStudio) => {
     return (
       <WbwWord
         data={item}
@@ -537,6 +540,7 @@ export const WbwSentCtl = ({
         mode={displayMode}
         display={wbwMode}
         fields={fieldDisplay}
+        studio={studio}
         onChange={(e: IWbw, isPublish: boolean, isPublic: boolean) => {
           let newData = [...wordData];
           newData.forEach((value, index, array) => {
@@ -772,7 +776,7 @@ export const WbwSentCtl = ({
               return newItem;
             })
             .map((item, id) => {
-              return wbwRender(item, id);
+              return wbwRender(item, id, studio);
             })
         ) : (
           <Tree
