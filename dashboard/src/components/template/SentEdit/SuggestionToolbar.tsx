@@ -2,17 +2,17 @@ import { Divider, Popconfirm, Space, Tooltip, Typography } from "antd";
 import { LikeOutlined, DeleteOutlined } from "@ant-design/icons";
 import { ISentence } from "../SentEdit";
 import { useEffect, useState } from "react";
-import CommentBox from "../../discussion/DiscussionDrawer";
 import PrAcceptButton from "./PrAcceptButton";
-import { CommentOutlinedIcon, HandOutlinedIcon } from "../../../assets/icon";
+import { HandOutlinedIcon } from "../../../assets/icon";
 import store from "../../../store";
 import { count, show } from "../../../reducers/discussion";
 import { useAppSelector } from "../../../hooks";
 import { openPanel } from "../../../reducers/right-panel";
 import { useIntl } from "react-intl";
 import SuggestionPopover from "./SuggestionPopover";
+import DiscussionButton from "../../discussion/DiscussionButton";
 
-const { Text, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 interface IWidget {
   data: ISentence;
@@ -120,36 +120,7 @@ const SuggestionToolbarWidget = ({
             {prNumber}
           </Space>
           {compact ? undefined : <Divider type="vertical" />}
-          <Tooltip title="讨论">
-            <Space
-              size={"small"}
-              style={{
-                cursor: "pointer",
-                color: CommentCount && CommentCount > 0 ? "#1890ff" : "unset",
-              }}
-              onClick={(event) => {
-                store.dispatch(
-                  show({
-                    type: "discussion",
-                    resId: data.id,
-                    resType: "sentence",
-                  })
-                );
-                store.dispatch(openPanel("discussion"));
-              }}
-            >
-              <CommentOutlinedIcon />
-              {CommentCount}
-            </Space>
-          </Tooltip>
-          <CommentBox
-            resId={data.id}
-            resType="sentence"
-            trigger={<></>}
-            onCommentCountChange={(count: number) => {
-              setCommentCount(count);
-            }}
-          />
+          <DiscussionButton initCount={CommentCount} resId={data.id} />
         </Space>
       )}
     </Paragraph>
