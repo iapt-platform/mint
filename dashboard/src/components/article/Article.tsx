@@ -11,6 +11,7 @@ import TypeCourse from "./TypeCourse";
 import { useEffect, useState } from "react";
 import { fullUrl } from "../../utils";
 import TypeSeries from "./TypeSeries";
+import DiscussionCount from "../discussion/DiscussionCount";
 
 export type ArticleMode = "read" | "edit" | "wbw";
 export type ArticleType =
@@ -87,6 +88,7 @@ const ArticleWidget = ({
 
   return (
     <div>
+      <DiscussionCount courseId={type === "textbook" ? courseId : undefined} />
       {type === "article" ? (
         <TypeArticle
           type={type}
