@@ -79,8 +79,6 @@ const TypeCourseWidget = ({
   const [channelPickerOpen, setChannelPickerOpen] = useState(false);
   const navigate = useNavigate();
 
-  const channels = channelId?.split("_");
-
   useEffect(() => {
     /**
      * 由课本进入查询当前用户的权限和channel
