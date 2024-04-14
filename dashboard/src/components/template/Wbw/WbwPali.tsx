@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Popover, Space, Tooltip, Typography } from "antd";
+import { Popover, Space, Typography } from "antd";
 import {
   TagTwoTone,
   InfoCircleOutlined,
@@ -21,7 +21,8 @@ import { add, relationAddParam } from "../../../reducers/relation-add";
 import { ArticleMode } from "../../article/Article";
 import { anchor, showWbw } from "../../../reducers/wbw";
 import { ParaLinkCtl } from "../ParaLink";
-import DiscussionButton from "../../discussion/DiscussionButton";
+import { IStudio } from "../../auth/Studio";
+import WbwPaliDiscussionIcon from "./WbwPaliDiscussionIcon";
 
 //生成视频播放按钮
 interface IVideoIcon {
@@ -49,15 +50,22 @@ const VideoIcon = ({ attachments }: IVideoIcon) => {
 const { Paragraph } = Typography;
 interface IWidget {
   data: IWbw;
+  studio?: IStudio;
   channelId: string;
   display?: TWbwDisplayMode;
   mode?: ArticleMode;
   onSave?: Function;
 }
-const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
+const WbwPaliWidget = ({
+  data,
+  channelId,
+  mode,
+  display,
+  studio,
+  onSave,
+}: IWidget) => {
   const [popOpen, setPopOpen] = useState(false);
   const [paliColor, setPaliColor] = useState("unset");
-  const [hasComment, setHasComment] = useState(data.hasComment);
   const divShell = useRef<HTMLDivElement>(null);
   const wbwAnchor = useAppSelector(anchor);
   const addParam = useAppSelector(relationAddParam);
@@ -180,13 +188,6 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
           setPaliColor("unset");
         }
       }}
-      onCommentCountChange={(count: number) => {
-        if (count > 0) {
-          setHasComment(true);
-        } else {
-          setHasComment(false);
-        }
-      }}
       onAttachmentSelectOpen={(open: boolean) => {
         setPopOpen(!open);
       }}
@@ -294,16 +295,6 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
     </span>
   );
 
-  const DiscussionIcon = () => (
-    <DiscussionButton
-      initCount={data.hasComment ? 1 : 0}
-      hideCount
-      hideInZero
-      resId={data.uid}
-      resType="wbw"
-    />
-  );
-
   if (typeof data.real !== "undefined" && data.real.value !== "") {
     //非标点符号
     //单词在右侧时，为了不遮挡字典，Popover向左移动
@@ -362,7 +353,7 @@ const WbwPaliWidget = ({ data, channelId, mode, display, onSave }: IWidget) => {
           <NoteIcon />
           <BookMarkIcon />
           <RelationIcon />
-          <DiscussionIcon />
+          <WbwPaliDiscussionIcon data={data} studio={studio} />
         </Space>
       </div>
     );
