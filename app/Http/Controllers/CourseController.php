@@ -24,8 +24,10 @@ class CourseController extends Controller
 		$result=false;
 		$indexCol = ['id','title','subtitle',
                      'cover','content','content_type',
-                     'teacher','start_at','end_at','join',
-                     'publicity','updated_at','created_at'];
+                     'teacher','start_at','end_at',
+                     'sign_up_start_at','sign_up_end_at',
+                     'join','publicity',
+                     'updated_at','created_at'];
 		switch ($request->get('view')) {
             case 'new':
                 //最新公开课程列表
@@ -244,6 +246,8 @@ class CourseController extends Controller
         if($request->has('publicity')) {$course->publicity = $request->get('publicity');}
         $course->start_at = $request->get('start_at');
         $course->end_at = $request->get('end_at');
+        $course->sign_up_start_at = $request->get('sign_up_start_at');
+        $course->sign_up_end_at = $request->get('sign_up_end_at');
         $course->join = $request->get('join');
         $course->save();
         return $this->ok($course);
