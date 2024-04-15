@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Card, List, message, Typography, Image } from "antd";
 
-import { ICourse } from "../../pages/library/course/course";
-import { ICourseListResponse } from "../api/Course";
+import { ICourseDataResponse, ICourseListResponse } from "../api/Course";
 import { API_HOST, get } from "../../request";
 import CourseNewLoading from "./CourseNewLoading";
 
@@ -12,7 +11,7 @@ const { Meta } = Card;
 const { Paragraph } = Typography;
 
 const LecturerListWidget = () => {
-  const [data, setData] = useState<ICourse[]>();
+  const [data, setData] = useState<ICourseDataResponse[]>();
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -25,17 +24,7 @@ const LecturerListWidget = () => {
       .then((json) => {
         if (json.ok) {
           console.log(json.data);
-          const course: ICourse[] = json.data.rows.map((item) => {
-            return {
-              id: item.id,
-              title: item.title,
-              subtitle: item.subtitle,
-              teacher: item.teacher,
-              intro: item.content,
-              coverUrl: item.cover_url,
-            };
-          });
-          setData(course);
+          setData(json.data.rows);
         } else {
           message.error(json.message);
         }
@@ -57,14 +46,14 @@ const LecturerListWidget = () => {
               <Image
                 alt="example"
                 src={
-                  item.coverUrl && item.coverUrl.length > 1
-                    ? item.coverUrl[1]
+                  item.cover_url && item.cover_url.length > 1
+                    ? item.cover_url[1]
                     : undefined
                 }
                 preview={{
                   src:
-                    item.coverUrl && item.coverUrl.length > 0
-                      ? item.coverUrl[0]
+                    item.cover_url && item.cover_url.length > 0
+                      ? item.cover_url[0]
                       : undefined,
                 }}
                 width="240"
@@ -80,7 +69,7 @@ const LecturerListWidget = () => {
               title={item.title}
               description={
                 <Paragraph ellipsis={{ rows: 2, expandable: false }}>
-                  {item.intro}
+                  {item.summary}
                 </Paragraph>
               }
             />

@@ -8,6 +8,7 @@ import {
   ProFormUploadButton,
   RequestOptionsType,
   ProFormDependency,
+  ProFormDigit,
 } from "@ant-design/pro-components";
 
 import { message, Form } from "antd";
@@ -44,6 +45,7 @@ interface IFormData {
   status: number;
   join: string;
   exp: string;
+  number: number;
 }
 
 interface IWidget {
@@ -104,6 +106,7 @@ const CourseInfoEditWidget = ({
             sign_up_end_at: signUpEndAt,
             join: values.join,
             request_exp: values.exp,
+            number: values.number,
           };
           console.debug("course info edit put", url, postData);
           const res = await put<ICourseDataRequest, ICourseResponse>(
@@ -175,6 +178,7 @@ const CourseInfoEditWidget = ({
             status: res.data.publicity,
             join: res.data.join,
             exp: res.data.request_exp,
+            number: res.data.number,
           };
         }}
       >
@@ -252,6 +256,7 @@ const CourseInfoEditWidget = ({
               id: "forms.fields.teacher.label",
             })}
           />
+          <ProFormDigit label="招生数量" name="number" min={0} />
         </ProForm.Group>
         <ProForm.Group>
           <ProFormDateRangePicker width="md" name="signUp" label="报名时间" />

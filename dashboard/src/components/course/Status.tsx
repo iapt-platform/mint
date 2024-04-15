@@ -10,9 +10,9 @@ import { Link } from "react-router-dom";
 
 import { get } from "../../request";
 import {
+  ICourseDataResponse,
   ICourseMemberData,
   ICourseMemberResponse,
-  TCourseJoinMode,
   TCourseMemberStatus,
 } from "../api/Course";
 
@@ -21,39 +21,30 @@ import { currentUser } from "../../reducers/current-user";
 import UserAction from "./UserAction";
 import { getStatusColor, getStudentActionsByStatus } from "./RolePower";
 
-const { Paragraph } = Typography;
+const { Paragraph, Text } = Typography;
 
 interface IWidget {
-  courseId?: string;
-  courseName?: string;
-  startAt?: string;
-  endAt?: string;
-  signUpStartAt?: string;
-  signUpEndAt?: string;
-  joinMode?: TCourseJoinMode;
+  data?: ICourseDataResponse;
 }
-const StatusWidget = ({
-  courseId,
-  courseName,
-  startAt,
-  endAt,
-  signUpStartAt,
-  signUpEndAt,
-  joinMode,
-}: IWidget) => {
+const StatusWidget = ({ data }: IWidget) => {
   const intl = useIntl();
   const [currMember, setCurrMember] = useState<ICourseMemberData>();
   const user = useAppSelector(currentUser);
 
-  console.debug("course status", signUpStartAt, signUpEndAt);
+  const numberOfStudent = data?.members?.filter(
+    (value) =>
+      value.role === "student" &&
+      (value.status === "accepted" || value.status === "applied")
+  ).length;
+
   useEffect(() => {
     /**
      * 获取该课程我的报名状态
      */
-    if (typeof courseId === "undefined") {
+    if (typeof data?.id === "undefined") {
       return;
     }
-    const url = `/v2/course-member/${courseId}`;
+    const url = `/v2/course-member/${data?.id}`;
     console.info("api request", url);
     get<ICourseMemberResponse>(url).then((json) => {
       console.debug("course member", json);
@@ -61,7 +52,7 @@ const StatusWidget = ({
         setCurrMember(json.data);
       }
     });
-  }, [courseId]);
+  }, [data?.id]);
 
   let labelStatus = "";
 
@@ -73,13 +64,13 @@ const StatusWidget = ({
   }
   const actions = getStudentActionsByStatus(
     currStatus,
-    joinMode,
-    startAt,
-    endAt,
-    signUpStartAt,
-    signUpEndAt
+    data?.join,
+    data?.start_at,
+    data?.end_at,
+    data?.sign_up_start_at,
+    data?.sign_up_end_at
   );
-  console.debug("getStudentActionsByStatus", currStatus, joinMode, actions);
+  console.debug("getStudentActionsByStatus", currStatus, data?.join, actions);
   if (user) {
     labelStatus = intl.formatMessage({
       id: `course.member.status.${currStatus}.label`,
@@ -87,13 +78,22 @@ const StatusWidget = ({
     operation = (
       <Space>
         {actions?.map((item, id) => {
+          if (item === "apply") {
+            if (
+              numberOfStudent &&
+              data?.number &&
+              numberOfStudent >= data?.number
+            ) {
+              return <Text type="danger">{"名额已满"}</Text>;
+            }
+          }
           return (
             <UserAction
               key={id}
               action={item}
               currUser={currMember}
-              courseId={courseId}
-              courseName={courseName}
+              courseId={data?.id}
+              courseName={data?.title}
               user={{
                 id: user.id,
                 nickName: user.nickName,
@@ -117,7 +117,7 @@ const StatusWidget = ({
     );
   }
 
-  return courseId ? (
+  return data?.id ? (
     <Paragraph>
       <div style={{ color: getStatusColor(currStatus) }}>{labelStatus}</div>
       {operation}

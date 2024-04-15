@@ -320,7 +320,7 @@ const WbwPaliWidget = ({
           ) : (
             <></>
           )}
-          {mode === "edit" ? paliWord : ""}
+
           <Popover
             content={wbwDialog}
             placement={toDivRight > 200 ? "bottom" : "bottomRight"}
@@ -347,6 +347,7 @@ const WbwPaliWidget = ({
               )}
             </span>
           </Popover>
+          {mode === "edit" ? paliWord : ""}
         </span>
         <Space>
           <VideoIcon attachments={data.attachments} />
