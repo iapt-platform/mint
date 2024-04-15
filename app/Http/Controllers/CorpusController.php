@@ -701,6 +701,7 @@ class CorpusController extends Controller
                                             $newSent['content'] = $wbwData;
                                             $newSent['contentType'] = 'json';
                                             $newSent['html'] = "";
+                                            $newSent['studio'] = $indexChannel[$this->wbwChannels[0]]->studio;
                                         }
                                     }
                                 }else{

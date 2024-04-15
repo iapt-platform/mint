@@ -47,7 +47,8 @@ class MqProgress extends Command
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
         Log::debug("mq:progress start.");
         Mq::worker($exchange,$queue,function ($message){
-            $data = ['--book'=>$message->book,
+            $data = [
+                        '--book'=>$message->book,
                         '--para'=>$message->para,
                         '--channel'=>$message->channel,
                     ];

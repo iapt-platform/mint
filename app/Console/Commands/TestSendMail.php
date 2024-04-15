@@ -45,7 +45,7 @@ class TestSendMail extends Command
         }
         $uuid = Str::uuid();
         Mail::to("visuddhinanda@gmail.com")
-            ->send(new InviteMail($uuid,'en'));
+            ->send(new InviteMail($uuid));
         if(Mail::failures()){
             $this->error('send email fail');
         }

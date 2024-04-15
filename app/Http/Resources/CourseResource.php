@@ -35,6 +35,8 @@ class CourseResource extends JsonResource
             "publicity"=> $this->publicity,
             "start_at"=> $this->start_at,
             "end_at"=> $this->end_at,
+            "sign_up_start_at"=> $this->sign_up_start_at,
+            "sign_up_end_at"=> $this->sign_up_end_at,
             "content"=> $this->content,
             "content_type"=> $this->content_type,
             "cover"=> $this->cover,

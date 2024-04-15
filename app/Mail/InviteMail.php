@@ -20,11 +20,12 @@ class InviteMail extends Mailable
      *
      * @return void
      */
-    public function __construct(string $uuid,string $lang='en-US',string $dashboard=null)
+    public function __construct(string $uuid,string $subject='wikipali invite email',string $lang='en-US',string $dashboard=null)
     {
         //
         $this->uuid = $uuid;
         $this->lang = $lang;
+        $this->subject($subject);
         if($dashboard && !empty($dashboard)){
             $this->dashboard_url = $dashboard;
         }else{
