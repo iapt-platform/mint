@@ -1,7 +1,12 @@
 import { ProFormSelect } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 
-export type TPublicity = "disable" | "private" | "public_no_list" | "public";
+export type TPublicity =
+  | "disable"
+  | "blocked"
+  | "private"
+  | "public_no_list"
+  | "public";
 
 interface IWidget {
   width?: number | "md" | "sm" | "xl" | "xs" | "lg";
