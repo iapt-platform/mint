@@ -19,7 +19,6 @@ import {
   ICourseDataRequest,
   ICourseDataResponse,
   ICourseResponse,
-  IMember,
 } from "../../components/api/Course";
 import PublicitySelect from "../../components/studio/PublicitySelect";
 
