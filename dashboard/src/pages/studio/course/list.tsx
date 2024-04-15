@@ -22,12 +22,11 @@ import {
 import CourseCreate from "../../../components/course/CourseCreate";
 import { API_HOST, delete_, get } from "../../../request";
 import {
+  ICourseDataResponse,
   ICourseListResponse,
   ICourseMemberData,
   ICourseNumberResponse,
-  TCourseJoinMode,
   TCourseMemberAction,
-  TCourseMemberStatus,
   actionMap,
 } from "../../../components/api/Course";
 import { PublicityValueEnum } from "../../../components/studio/table";
@@ -41,29 +40,6 @@ import {
 import { ISetStatus, setStatus } from "../../../components/course/UserAction";
 import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
-
-interface DataItem {
-  sn: number;
-  id: string; //课程ID
-  title: string; //标题
-  subtitle: string; //副标题
-  teacher?: string; //UserID
-  course_count?: number; //课程数
-  member_count: number; //成员数量
-  type: number; //类型-公开/内部
-  join: TCourseJoinMode; //报名方式
-  created_at: string; //创建时间
-  updated_at?: string; //修改时间
-  article_id?: string; //文集ID
-  start_at?: string; //课程开始时间
-  end_at?: string; //课程结束时间
-  intro_markdown?: string; //简介
-  coverId: string;
-  coverUrl?: string[]; //封面图片文件名
-  myStatus?: TCourseMemberStatus;
-  myStatusId?: string;
-  countProgressing?: number;
-}
 
 const renderBadge = (count: number, active = false) => {
   return (
@@ -144,7 +120,7 @@ const Widget = () => {
 
   return (
     <>
-      <ProTable<DataItem>
+      <ProTable<ICourseDataResponse>
         actionRef={ref}
         columns={[
           {
@@ -171,14 +147,14 @@ const Widget = () => {
                 <Space key={index}>
                   <Image
                     src={
-                      row.coverUrl && row.coverUrl.length > 1
-                        ? row.coverUrl[1]
+                      row.cover_url && row.cover_url.length > 1
+                        ? row.cover_url[1]
                         : ""
                     }
                     preview={{
                       src:
-                        row.coverUrl && row.coverUrl.length > 0
-                          ? row.coverUrl[0]
+                        row.cover_url && row.cover_url.length > 0
+                          ? row.cover_url[0]
                           : "",
                     }}
                     width={64}
@@ -279,10 +255,10 @@ const Widget = () => {
                   mainButton = (
                     <span
                       key={index}
-                      style={{ color: getStatusColor(row.myStatus) }}
+                      style={{ color: getStatusColor(row.my_status) }}
                     >
                       {intl.formatMessage({
-                        id: `course.member.status.${row.myStatus}.label`,
+                        id: `course.member.status.${row.my_status}.label`,
                       })}
                     </span>
                   );
@@ -291,10 +267,10 @@ const Widget = () => {
                   mainButton = (
                     <span
                       key={index}
-                      style={{ color: getStatusColor(row.myStatus) }}
+                      style={{ color: getStatusColor(row.my_status) }}
                     >
                       {intl.formatMessage({
-                        id: `course.member.status.${row.myStatus}.label`,
+                        id: `course.member.status.${row.my_status}.label`,
                       })}
                     </span>
                   );
@@ -323,7 +299,9 @@ const Widget = () => {
                       row.start_at,
                       row.end_at,
                       row.join,
-                      row.myStatus
+                      row.my_status,
+                      row.sign_up_start_at,
+                      row.sign_up_end_at
                     ),
                   };
                 });
@@ -356,7 +334,7 @@ const Widget = () => {
                         const newStatus = actionMap(currAction);
                         if (newStatus) {
                           const actionParam: ISetStatus = {
-                            courseMemberId: row.myStatusId,
+                            courseMemberId: row.my_status_id,
                             message: intl.formatMessage(
                               {
                                 id: `course.member.status.${currAction}.message`,
@@ -397,34 +375,12 @@ const Widget = () => {
           }
           url += getSorterUrl(sorter);
           console.info("api request", url);
-
           const res = await get<ICourseListResponse>(url);
-          console.debug("course data", res);
-          const items: DataItem[] = res.data.rows.map((item, id) => {
-            return {
-              sn: id + offset + 1,
-              id: item.id,
-              title: item.title,
-              subtitle: item.subtitle,
-              teacher: item.teacher?.nickName,
-              coverId: item.cover,
-              coverUrl: item.cover_url,
-              type: item.publicity,
-              join: item.join,
-              member_count: item.member_count,
-              myStatus: item.my_status,
-              myStatusId: item.my_status_id,
-              countProgressing: item.count_progressing,
-              created_at: item.created_at,
-              start_at: item.start_at,
-              end_at: item.end_at,
-            };
-          });
-          console.debug("data covert", items);
+          console.debug("api response", res);
           return {
             total: res.data.count,
             succcess: true,
-            data: items,
+            data: res.data.rows,
           };
         }}
         rowKey="id"
