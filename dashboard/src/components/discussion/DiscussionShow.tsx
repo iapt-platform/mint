@@ -33,6 +33,7 @@ import { ICommentRequest, ICommentResponse } from "../api/Comment";
 import { useState } from "react";
 import MdView from "../template/MdView";
 import { TDiscussionType } from "./Discussion";
+import { discussionCountUpgrade } from "./DiscussionCount";
 
 const { Text } = Typography;
 
@@ -58,7 +59,7 @@ const DiscussionShowWidget = ({
 }: IWidget) => {
   const intl = useIntl();
   const [closed, setClosed] = useState(data.status);
-  const showDeleteConfirm = (id: string, title: string) => {
+  const showDeleteConfirm = (id: string, resId: string, title: string) => {
     Modal.confirm({
       icon: <ExclamationCircleOutlined />,
       title:
@@ -78,11 +79,14 @@ const DiscussionShowWidget = ({
         id: "buttons.no",
       }),
       onOk() {
-        console.log("delete", id);
-        return delete_<IDeleteResponse>(`/v2/discussion/${id}`)
+        const url = `/v2/discussion/${id}`;
+        console.info("Discussion delete api request", url);
+        return delete_<IDeleteResponse>(url)
           .then((json) => {
+            console.debug("api response", json);
             if (json.ok) {
               message.success("删除成功");
+              discussionCountUpgrade(resId);
               if (typeof onDelete !== "undefined") {
                 onDelete(id);
               }
@@ -96,29 +100,38 @@ const DiscussionShowWidget = ({
   };
 
   const close = (value: boolean) => {
-    put<ICommentRequest, ICommentResponse>(`/v2/discussion/${data.id}`, {
+    const url = `/v2/discussion/${data.id}`;
+    const newData: ICommentRequest = {
       title: data.title,
       content: data.content,
       status: value ? "close" : "active",
-    }).then((json) => {
+    };
+    console.info("api request", url, newData);
+    put<ICommentRequest, ICommentResponse>(url, newData).then((json) => {
       console.log(json);
       if (json.ok) {
         setClosed(json.data.status);
+        discussionCountUpgrade(data.resId);
         if (typeof onClose !== "undefined") {
           onClose(value);
         }
+      } else {
+        message.error(json.message);
       }
     });
   };
 
   const convert = (newType: TDiscussionType) => {
-    put<ICommentRequest, ICommentResponse>(`/v2/discussion/${data.id}`, {
+    const url = `/v2/discussion/${data.id}`;
+    const newData: ICommentRequest = {
       title: data.title,
       content: data.content,
       status: data.status,
       type: newType,
-    }).then((json) => {
-      console.log(json);
+    };
+    console.debug("api response", url, newData);
+    put<ICommentRequest, ICommentResponse>(url, newData).then((json) => {
+      console.debug("api response", json);
       if (json.ok) {
         notification.info({ message: "转换成功" });
         if (typeof onConvert !== "undefined") {
@@ -174,8 +187,8 @@ const DiscussionShowWidget = ({
         convert("discussion");
         break;
       case "delete":
-        if (data.id) {
-          showDeleteConfirm(data.id, data.title ? data.title : "");
+        if (data.id && data.resId) {
+          showDeleteConfirm(data.id, data.resId, data.title ?? "");
         }
         break;
       default:

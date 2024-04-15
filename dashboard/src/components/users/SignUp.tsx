@@ -58,7 +58,7 @@ const SingUpWidget = () => {
         name: string;
       }>
         name="welcome"
-        title={intl.formatMessage({ id: "labels.sign-in" })}
+        title={intl.formatMessage({ id: "labels.sign-up" })}
         stepProps={{
           description: "注册wikipali基础版",
         }}
@@ -145,9 +145,9 @@ const SingUpWidget = () => {
         checkbox: string;
       }>
         name="checkbox"
-        title="邮箱验证"
+        title={intl.formatMessage({ id: "auth.sign-up.email-certification" })}
         stepProps={{
-          description: "填入您的注册邮箱",
+          description: " ",
         }}
         onFinish={async () => {
           const values = formRef.current?.getFieldsValue();
@@ -155,6 +155,7 @@ const SingUpWidget = () => {
           const data: IInviteRequest = {
             email: values.email,
             lang: getUiLang(),
+            subject: intl.formatMessage({ id: "labels.email.sign-up.subject" }),
             studio: "",
             dashboard: dashboardBasePath(),
           };
@@ -191,11 +192,14 @@ const SingUpWidget = () => {
         </ProForm.Group>
       </StepsForm.StepForm>
 
-      <StepsForm.StepForm name="finish" title="完成注册">
+      <StepsForm.StepForm
+        name="finish"
+        title={intl.formatMessage({ id: "labels.done" })}
+      >
         <Result
           status="success"
-          title="验证码已经成功发送"
-          subTitle="验证邮件已经发送到您的邮箱。请查收邮件，根据提示完成注册。"
+          title="注册邮件已经成功发送"
+          subTitle="请查收邮件，根据提示完成注册。"
         />
       </StepsForm.StepForm>
     </StepsForm>

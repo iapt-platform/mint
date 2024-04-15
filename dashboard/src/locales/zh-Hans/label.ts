@@ -11,7 +11,7 @@ const items = {
   "labels.link": "链接",
   "labels.upload": "上传",
   "labels.first-term": "第一个术语",
-  "labels.sign-in": "注册",
+  "labels.sign-in": "登录",
   "labels.first-wbw": "第一个逐词解析",
   "labels.first-translation": "第一个译文",
   "labels.first-course": "第一个课程",
@@ -48,6 +48,9 @@ const items = {
   "labels.table-of-content": "目录",
   "labels.this-studio": "此工作室",
   "labels.feedback": "问题反馈",
+  "labels.email.sign-up.subject": "欢迎注册wikipali",
+  "labels.sign-up": "注册",
+  "labels.done": "完成",
 };
 
 export default items;

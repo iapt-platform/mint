@@ -9,6 +9,8 @@ import { mode as _mode } from "../../../reducers/article-mode";
 import { IWbw } from "../Wbw/WbwWord";
 import { ArticleMode } from "../../article/Article";
 import SuggestionFocus from "./SuggestionFocus";
+import store from "../../../store";
+import { push } from "../../../reducers/sentence";
 
 interface ILayoutFlex {
   left: number;
@@ -55,6 +57,16 @@ const SentContentWidget = ({
   const divShell = useRef<HTMLDivElement>(null);
   const settings = useAppSelector(settingInfo);
   const [divShellWidth, setDivShellWidth] = useState<number>();
+
+  useEffect(() => {
+    store.dispatch(
+      push({
+        id: `${book}-${para}-${wordStart}-${wordEnd}`,
+        origin: origin?.map((item) => item.html),
+        translation: translation?.map((item) => item.html),
+      })
+    );
+  }, [book, origin, para, translation, wordEnd, wordStart]);
 
   useEffect(() => {
     const width = divShell.current?.offsetWidth;
@@ -141,6 +153,7 @@ const SentContentWidget = ({
                 para={para}
                 wordStart={wordStart}
                 wordEnd={wordEnd}
+                studio={item.studio}
                 channelId={item.channel.id}
                 channelType={item.channel.type}
                 channelLang={item.channel.lang}

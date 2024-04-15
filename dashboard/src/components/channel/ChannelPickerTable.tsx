@@ -14,7 +14,7 @@ import {
 import { IApiResponseChannelList, IFinal, TChannelType } from "../api/Channel";
 import { post } from "../../request";
 import { LockIcon } from "../../assets/icon";
-import StudioName, { IStudio } from "../auth/Studio";
+import Studio, { IStudio } from "../auth/Studio";
 import ProgressSvg from "./ProgressSvg";
 import { IChannel } from "./Channel";
 import { ArticleType } from "../article/Article";
@@ -293,6 +293,9 @@ const ChannelPickerTableWidget = ({
             render(dom, entity, index, action, schema) {
               let pIcon = <></>;
               switch (entity.publicity) {
+                case 5:
+                  pIcon = <LockIcon />;
+                  break;
                 case 10:
                   pIcon = <LockIcon />;
                   break;
@@ -336,7 +339,7 @@ const ChannelPickerTableWidget = ({
                       }}
                     >
                       <Space>
-                        <StudioName data={entity.studio} hideName />
+                        <Studio data={entity.studio} hideName />
                         {entity.title}
                       </Space>
                     </Button>

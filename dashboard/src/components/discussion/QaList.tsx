@@ -19,10 +19,10 @@ const QaListWidget = ({ resId, resType, onSelect, onReply }: IWidget) => {
     }
     let url: string = `/v2/discussion?res_type=${resType}&view=res_id&id=${resId}`;
     url += "&dir=asc&type=qa&status=active,close";
-    console.log("url", url);
+    console.info("api request", url);
     get<ICommentListResponse>(url).then((json) => {
       if (json.ok) {
-        console.debug("discussion fetch qa", json);
+        console.debug("discussion api response", json);
         const items: IComment[] = json.data.rows.map((item, id) => {
           return {
             id: item.id,

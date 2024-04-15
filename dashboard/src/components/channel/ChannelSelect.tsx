@@ -6,6 +6,7 @@ import { currentUser } from "../../reducers/current-user";
 import { get } from "../../request";
 import { IApiResponseChannelList } from "../api/Channel";
 import { IStudio } from "../auth/Studio";
+import { useIntl } from "react-intl";
 
 interface IOption {
   value: string;
@@ -20,6 +21,7 @@ interface IWidget {
   name?: string;
   tooltip?: string;
   label?: string;
+  allowClear?: boolean;
   parentChannelId?: string;
   parentStudioId?: string;
   placeholder?: string;
@@ -34,21 +36,25 @@ const ChannelSelectWidget = ({
   parentChannelId,
   parentStudioId,
   placeholder,
+  allowClear = true,
   onSelect,
 }: IWidget) => {
   const user = useAppSelector(currentUser);
+  const intl = useIntl();
   return (
     <ProFormCascader
       width={width}
       name={name}
       tooltip={tooltip}
       label={label}
+      allowClear={allowClear}
       placeholder={placeholder}
       request={async ({ keyWords }) => {
-        console.log("keyWord", keyWords);
-        const json = await get<IApiResponseChannelList>(
-          `/v2/channel?view=user-edit&key=${keyWords}`
-        );
+        console.debug("keyWord", keyWords);
+        const url = `/v2/channel?view=user-edit&key=${keyWords}`;
+        console.info("ChannelSelect api request", url);
+        const json = await get<IApiResponseChannelList>(url);
+        console.debug("ChannelSelect api response", json);
         if (json.ok) {
           //获取studio list
           let studio = new Map<string, string>();
@@ -61,7 +67,14 @@ const ChannelSelectWidget = ({
           let channels: IOption[] = [];
 
           if (user && user.id === parentStudioId) {
-            channels.push({ value: "", label: "通用于此Studio" });
+            if (!user.roles?.includes("basic")) {
+              channels.push({
+                value: "",
+                label: intl.formatMessage({
+                  id: "term.general-in-studio",
+                }),
+              });
+            }
           }
 
           if (typeof parentChannelId === "string") {
@@ -107,16 +120,9 @@ const ChannelSelectWidget = ({
               };
               return node;
             });
-          channels = [
-            {
-              value: "",
-              label: "通用于此Studio",
-            },
-            ...channels,
-            ...others,
-          ];
+          channels = [...channels, ...others];
 
-          console.log("json", channels);
+          console.debug("ChannelSelect json", channels);
           return channels;
         } else {
           message.error(json.message);

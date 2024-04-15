@@ -16,6 +16,20 @@ const NetStatusWidget = ({ style }: IWidget) => {
   const _netStatus = useAppSelector(netStatus);
 
   useEffect(() => {
+    // 监听网络连接状态变化
+    const onOnline = () => console.info("网络连接已恢复");
+    const onOffline = () => console.info("网络连接已中断");
+
+    window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
+
+    return () => {
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
+    };
+  }, []);
+
+  useEffect(() => {
     console.log("net status", _netStatus);
     switch (_netStatus?.status) {
       case "loading":
@@ -34,6 +48,7 @@ const NetStatusWidget = ({ style }: IWidget) => {
       setLabel(_netStatus?.message);
     }
   }, [_netStatus]);
+
   return (
     <>
       <Button

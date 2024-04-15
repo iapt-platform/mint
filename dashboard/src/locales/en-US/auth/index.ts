@@ -12,6 +12,7 @@ const items = {
   "auth.role.reader": "reader",
   "auth.type.user": "user",
   "auth.type.group": "group",
+  "auth.sign-up.email-certification": "E-Mail certification",
 };
 
 export default items;

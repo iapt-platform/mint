@@ -84,6 +84,7 @@ export interface IInviteRequest {
   email: string;
   lang: string;
   studio: string;
+  subject?: string;
   dashboard?: string;
 }
 export interface IInviteResponse {

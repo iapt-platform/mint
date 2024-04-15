@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Popover, Skeleton, Space } from "antd";
+import { Button, Popover, Skeleton, Space, Tag } from "antd";
 import { Typography } from "antd";
 import { SearchOutlined, EditOutlined } from "@ant-design/icons";
 
 import store from "../../store";
 import TermModal from "../term/TermModal";
 import { ITerm } from "../term/TermEdit";
-import { ITermDataResponse } from "../api/Term";
-import { changedTerm, refresh } from "../../reducers/term-change";
+import { ITermDataResponse, ITermResponse } from "../api/Term";
+import {
+  changedTerm,
+  refresh,
+  termCache,
+  upgrade,
+} from "../../reducers/term-change";
 import { useAppSelector } from "../../hooks";
 import { get } from "../../request";
 import { fullUrl } from "../../utils";
@@ -17,6 +22,19 @@ import { order, push } from "../../reducers/term-order";
 import { click } from "../../reducers/term-click";
 
 const { Text, Title } = Typography;
+
+const dataMap = (input?: ITermDataResponse): ITerm => {
+  return {
+    id: input?.guid,
+    word: input?.word,
+    meaning: input?.meaning,
+    meaning2: input?.other_meaning?.split(","),
+    summary: input?.summary ?? "",
+    channelId: input?.channal,
+    studioId: input?.studio.id,
+    summary_is_community: input?.summary_is_community,
+  };
+};
 
 interface ITermExtra {
   pali?: string;
@@ -31,12 +49,6 @@ const TermExtra = ({ pali, meaning2 }: ITermExtra) => (
     {")"}
   </>
 );
-
-interface ITermSummary {
-  ok: boolean;
-  message: string;
-  data: string;
-}
 
 export interface IWidgetTermCtl {
   id?: string;
@@ -71,11 +83,14 @@ export const TermCtl = ({
     summary: summary,
     channelId: channel,
   });
-  const [content, setContent] = useState<string>();
+  const [isInit, setIsInit] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [community, setCommunity] = useState(isCommunity);
   const newTerm: ITermDataResponse | undefined = useAppSelector(changedTerm);
+  const cache = useAppSelector(termCache);
+
   const [isFirst, setIsFirst] = useState(true);
-  const [uid, setUid] = useState<string>(
+  const [uid] = useState<string>(
     lodash.times(20, () => lodash.random(35).toString(36)).join("")
   );
   const termOrder = useAppSelector(order);
@@ -89,7 +104,7 @@ export const TermCtl = ({
       };
       store.dispatch(push(currTerm));
     }
-  }, []);
+  }, [parentChannelId, uid, word]);
 
   useEffect(() => {
     const index = termOrder?.findIndex(
@@ -108,37 +123,56 @@ export const TermCtl = ({
 
   useEffect(() => {
     if (newTerm?.word === word && parentStudioId === newTerm?.studio.id) {
-      console.log("studio 匹配");
-      const newData = {
-        id: newTerm?.guid,
-        word: newTerm?.word,
-        meaning: newTerm?.meaning,
-        meaning2: newTerm?.other_meaning?.split(","),
-        summary: newTerm?.note ? newTerm?.note : "",
-        channelId: newTerm?.channal,
-        studioId: newTerm?.studio.id,
-      };
+      console.debug("Term studio 匹配", newTerm);
+      const newData = dataMap(newTerm);
       if (
         termData.channelId &&
         termData.channelId !== "" &&
         newTerm?.channal === termData.channelId
       ) {
-        console.log("channel 匹配");
+        console.debug("Term channel 匹配");
         setTermData(newData);
+        setIsInit(false);
         setCommunity(false);
       } else {
-        console.log("channel 不 匹配");
+        console.debug("Term channel 不 匹配");
         setTermData(newData);
+        setIsInit(false);
         setCommunity(false);
       }
     }
-  }, [newTerm, parentStudioId, word]);
+  }, [newTerm, parentStudioId, termData.channelId, word]);
 
   const onModalClose = () => {
     if (document.getElementsByTagName("body")[0].hasAttribute("style")) {
       document.getElementsByTagName("body")[0].removeAttribute("style");
     }
   };
+  const onPopoverOpen = (visible: boolean) => {
+    setOpenPopover(visible);
+    if (visible && isInit && typeof id !== "undefined") {
+      const term = cache?.find((value) => value.guid === id);
+      if (term) {
+        setTermData(dataMap(term));
+        setIsInit(false);
+        return;
+      } else {
+        const url = `/v2/terms/${id}?community_summary=1`;
+        console.info("api request", url);
+        setLoading(true);
+        get<ITermResponse>(url)
+          .then((json) => {
+            if (json.ok) {
+              setTermData(dataMap(json.data));
+              setIsInit(false);
+              store.dispatch(upgrade(json.data));
+            }
+          })
+          .finally(() => setLoading(false));
+      }
+    }
+  };
+
   if (typeof termData?.id === "string") {
     return (
       <>
@@ -146,7 +180,10 @@ export const TermCtl = ({
         <Popover
           title={
             <Space style={{ justifyContent: "space-between", width: "100%" }}>
-              <Text strong>{termData.meaning}</Text>
+              <span>
+                <Text strong>{termData.meaning}</Text>{" "}
+                {community ? <Tag>{"社区"}</Tag> : undefined}
+              </span>
               <Space>
                 <Button
                   onClick={() => {
@@ -162,6 +199,7 @@ export const TermCtl = ({
                 <TermModal
                   onUpdate={(value: ITermDataResponse) => {
                     onModalClose();
+                    sessionStorage.removeItem(`term/summary/${value.guid}`);
                     store.dispatch(refresh(value));
                   }}
                   onClose={() => {
@@ -189,29 +227,7 @@ export const TermCtl = ({
             </Space>
           }
           open={openPopover}
-          onOpenChange={(visible) => {
-            setOpenPopover(visible);
-            if (
-              visible &&
-              typeof content === "undefined" &&
-              typeof id !== "undefined"
-            ) {
-              const value = sessionStorage.getItem(`term/summary/${id}`);
-              if (value !== null) {
-                setContent(value);
-                return;
-              } else {
-                const url = `/v2/term-summary/${id}`;
-                console.log("url", url);
-                get<ITermSummary>(url).then((json) => {
-                  if (json.ok) {
-                    setContent(json.data !== "" ? json.data : " ");
-                    sessionStorage.setItem(`term/summary/${id}`, json.data);
-                  }
-                });
-              }
-            }
-          }}
+          onOpenChange={onPopoverOpen}
           content={
             <div style={{ maxWidth: 500, minWidth: 300 }}>
               <Title level={5}>
@@ -219,14 +235,19 @@ export const TermCtl = ({
                   {word}
                 </Link>
               </Title>
-              {content ? (
-                content
-              ) : (
+              {loading ? (
                 <Skeleton
                   title={{ width: 200 }}
                   paragraph={{ rows: 4 }}
                   active
                 />
+              ) : (
+                <>
+                  <div>{termData.summary}</div>
+                  <div style={{ textAlign: "right" }}>
+                    {termData.summary_is_community ? "社区解释" : ""}
+                  </div>
+                </>
               )}
             </div>
           }
@@ -239,11 +260,7 @@ export const TermCtl = ({
               store.dispatch(click(termData));
             }}
           >
-            {termData?.meaning
-              ? termData?.meaning
-              : termData?.word
-              ? termData?.word
-              : "unknown"}
+            {termData?.meaning ?? termData?.word ?? "unknown"}
           </Typography.Link>
         </Popover>
         {isFirst && !compact ? (

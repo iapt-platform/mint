@@ -8,23 +8,19 @@ import WbwDetailBasic from "./WbwDetailBasic";
 import WbwDetailBookMark from "./WbwDetailBookMark";
 import WbwDetailNote from "./WbwDetailNote";
 import WbwDetailAdvance from "./WbwDetailAdvance";
-import {
-  CommentOutlinedIcon,
-  LockIcon,
-  UnLockIcon,
-} from "../../../assets/icon";
+import { LockIcon, UnLockIcon } from "../../../assets/icon";
 import { IAttachmentRequest } from "../../api/Attachments";
 import WbwDetailAttachment from "./WbwDetailAttachment";
-import CommentBox from "../../discussion/DiscussionDrawer";
 import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
+import DiscussionButton from "../../discussion/DiscussionButton";
+import { courseUser } from "../../../reducers/course-user";
 
 interface IWidget {
   data: IWbw;
   visible?: boolean;
   onClose?: Function;
   onSave?: Function;
-  onCommentCountChange?: Function;
   onAttachmentSelectOpen?: Function;
 }
 const WbwDetailWidget = ({
@@ -32,7 +28,6 @@ const WbwDetailWidget = ({
   visible = true,
   onClose,
   onSave,
-  onCommentCountChange,
   onAttachmentSelectOpen,
 }: IWidget) => {
   const intl = useIntl();
@@ -108,7 +103,9 @@ const WbwDetailWidget = ({
     console.debug("origin", origin);
     setCurrWbwData(origin);
   }
-
+  const userInCourse = useAppSelector(courseUser);
+  if (userInCourse && userInCourse.role === "student") {
+  }
   return (
     <div
       style={{
@@ -119,18 +116,12 @@ const WbwDetailWidget = ({
         size="small"
         type="card"
         tabBarExtraContent={
-          data.uid ? (
-            <CommentBox
-              resId={data.uid}
-              resType="wbw"
-              trigger={<Button icon={<CommentOutlinedIcon />} type="text" />}
-              onCommentCountChange={(count: number) => {
-                if (typeof onCommentCountChange !== "undefined") {
-                  onCommentCountChange(count);
-                }
-              }}
-            />
-          ) : undefined
+          <DiscussionButton
+            initCount={data.hasComment ? 1 : 0}
+            hideCount
+            resId={data.uid}
+            resType="wbw"
+          />
         }
         onChange={(activeKey: string) => {
           setTabKey(activeKey);

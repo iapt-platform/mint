@@ -29,6 +29,8 @@ export interface ICourse {
   channelId?: string;
   startAt?: string; //课程开始时间
   endAt?: string; //课程结束时间
+  signUpStartAt?: string; //报名开始时间
+  signUpEndAt?: string; //报名结束时间
   intro?: string; //简介
   coverUrl?: string[]; //封面图片文件名
   join?: TCourseJoinMode;
@@ -47,7 +49,7 @@ const Widget = () => {
     get<ICourseResponse>(url)
       .then((json) => {
         if (json.ok) {
-          console.log(json.data);
+          console.log("api response", json.data);
           const course: ICourse = {
             id: json.data.id,
             title: json.data.title,
@@ -60,6 +62,8 @@ const Widget = () => {
             channelId: json.data.channel_id,
             startAt: json.data.start_at,
             endAt: json.data.end_at,
+            signUpStartAt: json.data.sign_up_start_at,
+            signUpEndAt: json.data.sign_up_end_at,
             intro: json.data.content,
             coverUrl: json.data.cover_url,
             join: json.data.join,

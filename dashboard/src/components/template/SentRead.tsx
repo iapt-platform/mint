@@ -43,6 +43,7 @@ const SentReadFrame = ({
   const settings = useAppSelector(settingInfo);
   const boxOrg = useRef<HTMLDivElement>(null);
   const boxSent = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     store.dispatch(
       push({
@@ -51,7 +52,7 @@ const SentReadFrame = ({
         translation: translation?.map((item) => item.html),
       })
     );
-  }, []);
+  }, [book, origin, para, translation, wordEnd, wordStart]);
 
   useEffect(() => {
     const displayOriginal = GetUserSetting(

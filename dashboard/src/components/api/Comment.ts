@@ -62,3 +62,19 @@ export interface ICommentAnchorResponse {
   message: string;
   data: string;
 }
+
+export interface IDiscussionCountRequest {
+  course_id?: string | null;
+  sentences: string[][];
+}
+export interface IDiscussionCountData {
+  id: string;
+  res_id: string;
+  type: string;
+  editor_uid: string;
+}
+export interface IDiscussionCountResponse {
+  ok: boolean;
+  message: string;
+  data: IDiscussionCountData[];
+}

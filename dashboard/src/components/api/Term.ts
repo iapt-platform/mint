@@ -37,6 +37,8 @@ export interface ITermDataResponse {
   exp?: number;
   language: string;
   community?: boolean;
+  summary?: string;
+  summary_is_community?: boolean;
   created_at: string;
   updated_at: string;
 }

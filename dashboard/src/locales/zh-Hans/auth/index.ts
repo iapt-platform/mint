@@ -12,6 +12,7 @@ const items = {
   "auth.role.reader": "阅读者",
   "auth.type.user": "用户",
   "auth.type.group": "群组",
+  "auth.sign-up.email-certification": "邮箱验证",
 };
 
 export default items;

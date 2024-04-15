@@ -3,7 +3,7 @@ const items = {
   "course.exp.start.label": "起始经验",
   "course.exp.end.label": "结束经验",
   "course.exp.current.label": "当前经验",
-  "course.member.status.none.label": "",
+  "course.member.status.none.label": " ",
   "course.member.status.normal.label": "报名成功",
   "course.member.status.joined.label": "已经参加了",
   "course.member.status.join.button": "参加",

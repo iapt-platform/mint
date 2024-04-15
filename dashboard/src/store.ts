@@ -29,6 +29,7 @@ import focusReducer from "./reducers/focus";
 import prLoadReducer from "./reducers/pr-load";
 import termClickReducer from "./reducers/term-click";
 import cartModeReducer from "./reducers/cart-mode";
+import discussionCountReducer from "./reducers/discussion-count";
 
 const store = configureStore({
   reducer: {
@@ -61,6 +62,7 @@ const store = configureStore({
     prLoad: prLoadReducer,
     termClick: termClickReducer,
     cartMode: cartModeReducer,
+    discussionCount: discussionCountReducer,
   },
 });
 

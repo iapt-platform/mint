@@ -8,6 +8,7 @@ import {
 export interface IAction {
   mode: TCourseJoinMode[];
   status: TCourseMemberStatus;
+  signUp?: TCourseMemberAction[];
   before: TCourseMemberAction[];
   duration: TCourseMemberAction[];
   after: TCourseMemberAction[];
@@ -17,9 +18,20 @@ export const getStudentActionsByStatus = (
   status?: TCourseMemberStatus,
   mode?: TCourseJoinMode,
   startAt?: string,
-  endAt?: string
+  endAt?: string,
+  signUpStartAt?: string,
+  signUpEndAt?: string
 ): TCourseMemberAction[] | undefined => {
-  const output = getActionsByStatus(studentData, status, mode, startAt, endAt);
+  const output = getActionsByStatus(
+    studentData,
+    status,
+    mode,
+    startAt,
+    endAt,
+    signUpStartAt,
+    signUpEndAt
+  );
+  console.log("getStudentActionsByStatus", output);
   return output;
 };
 const getActionsByStatus = (
@@ -27,32 +39,54 @@ const getActionsByStatus = (
   status?: TCourseMemberStatus,
   mode?: TCourseJoinMode,
   startAt?: string,
-  endAt?: string
+  endAt?: string,
+  signUpStartAt?: string,
+  signUpEndAt?: string
 ): TCourseMemberAction[] | undefined => {
+  console.debug("getActionsByStatus start");
   if (!startAt || !endAt || !mode || !status) {
     return undefined;
   }
+  const inSignUp = moment().isBetween(
+    moment(signUpStartAt),
+    moment(signUpEndAt)
+  );
   const actions = data.find((value) => {
     if (value.mode.includes(mode) && value.status === status) {
+      console.debug(
+        "getActionsByStatus value",
+        value,
+        signUpStartAt,
+        signUpEndAt,
+        inSignUp
+      );
+      if (inSignUp) {
+        if (value.signUp && value.signUp.length > 0) {
+          console.debug("getActionsByStatus got it", value.signUp);
+          return true;
+        }
+      }
       if (moment().isBefore(moment(startAt))) {
         if (value.before && value.before.length > 0) {
           return true;
         }
-      } else if (moment().isBefore(moment(endAt))) {
+      }
+      if (moment().isBefore(moment(endAt))) {
         if (value.duration && value.duration.length > 0) {
           return true;
         }
-      } else {
-        if (value.after && value.after.length > 0) {
-          return true;
-        }
+      }
+      if (value.after && value.after.length > 0) {
+        return true;
       }
     }
-    return undefined;
+    return false;
   });
 
   if (actions) {
-    if (moment().isBefore(moment(startAt))) {
+    if (inSignUp && actions.signUp && actions.signUp.length > 0) {
+      return actions.signUp;
+    } else if (moment().isBefore(moment(startAt))) {
       return actions.before;
     } else if (moment().isBefore(moment(endAt))) {
       return actions.duration;
@@ -70,7 +104,9 @@ export const test = (
   startAt?: string,
   endAt?: string,
   mode?: TCourseJoinMode,
-  status?: TCourseMemberStatus
+  status?: TCourseMemberStatus,
+  signUpStartAt?: string,
+  signUpEndAt?: string
 ): boolean => {
   if (!startAt || !endAt || !mode || !status) {
     return false;
@@ -80,7 +116,9 @@ export const test = (
     status,
     mode,
     startAt,
-    endAt
+    endAt,
+    signUpStartAt,
+    signUpEndAt
   )?.includes(action);
 
   if (canDo) {
@@ -95,13 +133,24 @@ export const managerCanDo = (
   startAt?: string,
   endAt?: string,
   mode?: TCourseJoinMode,
-  status?: TCourseMemberStatus
+  status?: TCourseMemberStatus,
+  signUpStartAt?: string,
+  signUpEndAt?: string
 ): boolean => {
   if (!startAt || !endAt || !mode || !status) {
     return false;
   }
 
-  return test(managerData, action, startAt, endAt, mode, status);
+  return test(
+    managerData,
+    action,
+    startAt,
+    endAt,
+    mode,
+    status,
+    signUpStartAt,
+    signUpEndAt
+  );
 };
 
 export const studentCanDo = (
@@ -109,13 +158,24 @@ export const studentCanDo = (
   startAt?: string,
   endAt?: string,
   mode?: TCourseJoinMode,
-  status?: TCourseMemberStatus
+  status?: TCourseMemberStatus,
+  signUpStartAt?: string,
+  signUpEndAt?: string
 ): boolean => {
   if (!startAt || !endAt || !mode || !status) {
     return false;
   }
 
-  return test(studentData, action, startAt, endAt, mode, status);
+  return test(
+    studentData,
+    action,
+    startAt,
+    endAt,
+    mode,
+    status,
+    signUpStartAt,
+    signUpEndAt
+  );
 };
 
 interface IStatusColor {
@@ -146,8 +206,9 @@ const studentData: IAction[] = [
   {
     mode: ["open"],
     status: "none",
+    signUp: ["join"],
     before: [],
-    duration: ["join"],
+    duration: [],
     after: [],
   },
   {
@@ -167,6 +228,7 @@ const studentData: IAction[] = [
   {
     mode: ["open"],
     status: "left",
+    signUp: ["join"],
     before: [],
     duration: ["join"],
     after: [],
@@ -174,13 +236,15 @@ const studentData: IAction[] = [
   {
     mode: ["manual", "invite"],
     status: "none",
-    before: ["apply"],
+    signUp: ["apply"],
+    before: [],
     duration: [],
     after: [],
   },
   {
     mode: ["manual", "invite"],
     status: "invited",
+    signUp: ["agree", "disagree"],
     before: ["agree", "disagree"],
     duration: [],
     after: [],
@@ -188,7 +252,8 @@ const studentData: IAction[] = [
   {
     mode: ["manual", "invite"],
     status: "revoked",
-    before: ["apply"],
+    signUp: ["apply"],
+    before: [],
     duration: [],
     after: [],
   },
@@ -223,7 +288,8 @@ const studentData: IAction[] = [
   {
     mode: ["manual", "invite"],
     status: "canceled",
-    before: ["apply"],
+    signUp: ["apply"],
+    before: [],
     duration: [],
     after: [],
   },

@@ -43,6 +43,7 @@ const SentWbwWidget = ({
     if (myCourse && course) {
       url += `&course=${course.courseId}`;
       if (myCourse.role === "student") {
+        //学生，仅列出答案channel
         url += `&channels=${course.channelId}`;
       } else if (courseMember) {
         console.debug("course member", courseMember);
@@ -57,7 +58,7 @@ const SentWbwWidget = ({
       }
     }
 
-    console.log("wbw sentence url", url);
+    console.log("wbw sentence api request", url);
     get<ISentenceWbwListResponse>(url)
       .then((json) => {
         if (json.ok) {
