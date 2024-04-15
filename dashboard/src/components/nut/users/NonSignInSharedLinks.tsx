@@ -9,7 +9,7 @@ const Widget = () => {
         <FormattedMessage id="nut.users.sign-in.title" />
       </Link>
       <Divider type="vertical" />
-      <Link hidden to="/users/sign-up">
+      <Link to="/users/sign-up">
         <FormattedMessage id="nut.users.sign-up.title" />
       </Link>
       <Divider type="vertical" />
