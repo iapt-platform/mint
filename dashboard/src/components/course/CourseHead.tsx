@@ -4,10 +4,9 @@ import { Image, Space, Col, Row, Breadcrumb, Tag } from "antd";
 import { Typography } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 
-import { IUser } from "../auth/User";
 import { API_HOST } from "../../request";
 import UserName from "../auth/UserName";
-import { ICourseDataResponse, TCourseJoinMode } from "../api/Course";
+import { ICourseDataResponse } from "../api/Course";
 import { useIntl } from "react-intl";
 import Status from "./Status";
 import moment from "moment";
@@ -106,15 +105,7 @@ const CourseHeadWidget = ({ data }: IWidget) => {
                     : undefined}
                 </Text>
 
-                <Status
-                  courseId={data?.id}
-                  courseName={data?.title}
-                  joinMode={data?.join}
-                  startAt={data?.start_at}
-                  endAt={data?.end_at}
-                  signUpStartAt={data?.sign_up_start_at}
-                  signUpEndAt={data?.sign_up_end_at}
-                />
+                <Status data={data} />
               </Space>
             </Space>
 
