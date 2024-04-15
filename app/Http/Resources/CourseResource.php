@@ -42,10 +42,15 @@ class CourseResource extends JsonResource
             "cover"=> $this->cover,
             "channel_id"=>$this->channel_id,
             "join"=> $this->join,
+            "number"=> $this->number,
             "request_exp"=> $this->request_exp,
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];
+        $data['members'] = CourseMember::where('course_id',$this->id)
+                                        ->where('is_current',true)
+                                        ->select(['role','status'])
+                                        ->get();
         if($this->cover){
             $thumb = str_replace('.jpg','_m.jpg',$this->cover);
             if (App::environment('local')) {

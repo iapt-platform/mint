@@ -26,7 +26,7 @@ class CourseController extends Controller
                      'cover','content','content_type',
                      'teacher','start_at','end_at',
                      'sign_up_start_at','sign_up_end_at',
-                     'join','publicity',
+                     'join','publicity','number',
                      'updated_at','created_at'];
 		switch ($request->get('view')) {
             case 'new':
@@ -238,6 +238,7 @@ class CourseController extends Controller
         $course->title = $request->get('title');
         $course->subtitle = $request->get('subtitle');
         $course->summary = $request->get('summary');
+        $course->number = $request->get('number',0);
         if($request->has('cover')) {$course->cover = $request->get('cover');}
         $course->content = $request->get('content');
         if($request->has('teacher_id')) {$course->teacher = $request->get('teacher_id');}
