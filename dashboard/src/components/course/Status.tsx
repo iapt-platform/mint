@@ -24,27 +24,35 @@ import { getStatusColor, getStudentActionsByStatus } from "./RolePower";
 const { Paragraph } = Typography;
 
 interface IWidget {
-  courseId: string;
+  courseId?: string;
   courseName?: string;
   startAt?: string;
   endAt?: string;
+  signUpStartAt?: string;
+  signUpEndAt?: string;
   joinMode?: TCourseJoinMode;
 }
 const StatusWidget = ({
   courseId,
   courseName,
-  joinMode,
   startAt,
   endAt,
+  signUpStartAt,
+  signUpEndAt,
+  joinMode,
 }: IWidget) => {
   const intl = useIntl();
   const [currMember, setCurrMember] = useState<ICourseMemberData>();
   const user = useAppSelector(currentUser);
 
+  console.debug("course status", signUpStartAt, signUpEndAt);
   useEffect(() => {
     /**
      * 获取该课程我的报名状态
      */
+    if (typeof courseId === "undefined") {
+      return;
+    }
     const url = `/v2/course-member/${courseId}`;
     console.info("api request", url);
     get<ICourseMemberResponse>(url).then((json) => {
@@ -67,9 +75,11 @@ const StatusWidget = ({
     currStatus,
     joinMode,
     startAt,
-    endAt
+    endAt,
+    signUpStartAt,
+    signUpEndAt
   );
-  console.debug("getStudentActionsByStatus", currStatus, actions);
+  console.debug("getStudentActionsByStatus", currStatus, joinMode, actions);
   if (user) {
     labelStatus = intl.formatMessage({
       id: `course.member.status.${currStatus}.label`,
@@ -107,11 +117,13 @@ const StatusWidget = ({
     );
   }
 
-  return (
+  return courseId ? (
     <Paragraph>
       <div style={{ color: getStatusColor(currStatus) }}>{labelStatus}</div>
       {operation}
     </Paragraph>
+  ) : (
+    <></>
   );
 };
 

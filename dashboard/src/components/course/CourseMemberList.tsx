@@ -156,7 +156,9 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
                     course?.start_at,
                     course?.end_at,
                     course?.join,
-                    row.status
+                    row.status,
+                    course?.sign_up_start_at,
+                    course?.sign_up_end_at
                   ),
                 };
               });
