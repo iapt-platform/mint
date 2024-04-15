@@ -15,7 +15,7 @@ const Widget = () => {
         marginRight: "auto",
       }}
     >
-      <Card title={intl.formatMessage({ id: "labels.sign-in" })}>
+      <Card title={intl.formatMessage({ id: "labels.sign-up" })}>
         <SignUp />
       </Card>
     </div>
