@@ -3,31 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Card, List, message, Typography } from "antd";
 
-import { ICourse } from "../../pages/library/course/course";
-import { ICourseListResponse } from "../api/Course";
+import { ICourseDataResponse, ICourseListResponse } from "../api/Course";
 import { API_HOST, get } from "../../request";
 
 const { Paragraph } = Typography;
 
 const CourseNewListWidget = () => {
-  const [data, setData] = useState<ICourse[]>();
+  const [data, setData] = useState<ICourseDataResponse[]>();
   const navigate = useNavigate();
 
   useEffect(() => {
     get<ICourseListResponse>(`/v2/course?view=new&limit=4`).then((json) => {
       if (json.ok) {
         console.log(json.data);
-        const course: ICourse[] = json.data.rows.map((item) => {
-          return {
-            id: item.id,
-            title: item.title,
-            subtitle: item.subtitle,
-            teacher: item.teacher,
-            intro: item.content,
-            coverUrl: item.cover_url,
-          };
-        });
-        setData(course);
+        setData(json.data.rows);
       } else {
         message.error(json.message);
       }
@@ -51,7 +40,7 @@ const CourseNewListWidget = () => {
               <div style={{ flex: 3 }}>
                 <img
                   alt="example"
-                  src={API_HOST + "/" + item.coverUrl}
+                  src={API_HOST + "/" + item.cover_url}
                   width="150"
                   height="150"
                 />
@@ -59,7 +48,7 @@ const CourseNewListWidget = () => {
               <div style={{ flex: 7 }}>
                 <h3>{item.title}</h3>
                 <Paragraph ellipsis={{ rows: 2, expandable: false }}>
-                  {item.intro}
+                  {item.summary}
                 </Paragraph>
               </div>
             </div>

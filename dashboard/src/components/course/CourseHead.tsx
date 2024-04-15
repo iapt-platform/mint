@@ -7,7 +7,7 @@ import { HomeOutlined } from "@ant-design/icons";
 import { IUser } from "../auth/User";
 import { API_HOST } from "../../request";
 import UserName from "../auth/UserName";
-import { TCourseJoinMode } from "../api/Course";
+import { ICourseDataResponse, TCourseJoinMode } from "../api/Course";
 import { useIntl } from "react-intl";
 import Status from "./Status";
 import moment from "moment";
@@ -27,37 +27,22 @@ const courseDuration = (startAt?: string, endAt?: string) => {
 };
 
 interface IWidget {
-  id?: string;
-  title?: string;
-  subtitle?: string;
-  coverUrl?: string[];
-  startAt?: string;
-  endAt?: string;
-  signUpStartAt?: string;
-  signUpEndAt?: string;
-  teacher?: IUser;
-  join?: TCourseJoinMode;
+  data?: ICourseDataResponse;
 }
-const CourseHeadWidget = ({
-  id,
-  title,
-  subtitle,
-  coverUrl,
-  teacher,
-  startAt,
-  endAt,
-  signUpStartAt,
-  signUpEndAt,
-  join,
-}: IWidget) => {
+const CourseHeadWidget = ({ data }: IWidget) => {
   const intl = useIntl();
-  const duration = courseDuration(startAt, endAt);
+  const duration = courseDuration(data?.start_at, data?.end_at);
   let signUp = "";
-  if (moment().isBefore(moment(signUpStartAt))) {
+  if (moment().isBefore(moment(data?.sign_up_start_at))) {
     signUp = "未开始";
-  } else if (moment().isBetween(moment(signUpStartAt), moment(signUpEndAt))) {
+  } else if (
+    moment().isBetween(
+      moment(data?.sign_up_start_at),
+      moment(data?.sign_up_end_at)
+    )
+  ) {
     signUp = "可报名";
-  } else if (moment().isAfter(moment(signUpEndAt))) {
+  } else if (moment().isAfter(moment(data?.sign_up_end_at))) {
     signUp = "已结束";
   }
   return (
@@ -75,54 +60,60 @@ const CourseHeadWidget = ({
                   <Text>课程</Text>
                 </Link>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>{title}</Breadcrumb.Item>
+              <Breadcrumb.Item>{data?.title}</Breadcrumb.Item>
             </Breadcrumb>
             <Space>
               <Image
                 width={200}
                 style={{ borderRadius: 12 }}
-                src={coverUrl && coverUrl.length > 1 ? coverUrl[1] : undefined}
+                src={
+                  data?.cover_url && data?.cover_url.length > 1
+                    ? data?.cover_url[1]
+                    : undefined
+                }
                 preview={{
                   src:
-                    coverUrl && coverUrl.length > 0 ? coverUrl[0] : undefined,
+                    data?.cover_url && data?.cover_url.length > 0
+                      ? data?.cover_url[0]
+                      : undefined,
                 }}
                 fallback={`${API_HOST}/app/course/img/default.jpg`}
               />
               <Space direction="vertical">
-                <Title level={3}>{title}</Title>
-                <Title level={5}>{subtitle}</Title>
+                <Title level={3}>{data?.title}</Title>
+                <Title level={5}>{data?.subtitle}</Title>
                 <Text>
                   <Space>
                     {"报名时间:"}
-                    {moment(signUpStartAt).format("YYYY-MM-DD")}——
-                    {moment(signUpEndAt).format("YYYY-MM-DD")}
+                    {moment(data?.sign_up_start_at).format("YYYY-MM-DD")}——
+                    {moment(data?.sign_up_end_at).format("YYYY-MM-DD")}
                     <Tag>{signUp}</Tag>
                   </Space>
                 </Text>
                 <Text>
                   <Space>
                     {"课程时间:"}
-                    {moment(startAt).format("YYYY-MM-DD")}——
-                    {moment(endAt).format("YYYY-MM-DD")}
+                    {moment(data?.start_at).format("YYYY-MM-DD")}——
+                    {moment(data?.end_at).format("YYYY-MM-DD")}
                     {duration}
                   </Space>
                 </Text>
                 <Text>
-                  {join
+                  {data?.join
                     ? intl.formatMessage({
-                        id: `course.join.mode.${join}.message`,
+                        id: `course.join.mode.${data.join}.message`,
                       })
                     : undefined}
                 </Text>
 
                 <Status
-                  courseId={id}
-                  courseName={title}
-                  joinMode={join}
-                  startAt={startAt}
-                  endAt={endAt}
-                  signUpStartAt={signUpStartAt}
-                  signUpEndAt={signUpEndAt}
+                  courseId={data?.id}
+                  courseName={data?.title}
+                  joinMode={data?.join}
+                  startAt={data?.start_at}
+                  endAt={data?.end_at}
+                  signUpStartAt={data?.sign_up_start_at}
+                  signUpEndAt={data?.sign_up_end_at}
                 />
               </Space>
             </Space>
@@ -130,7 +121,7 @@ const CourseHeadWidget = ({
             <Space>
               <Text>主讲人：</Text>{" "}
               <Text>
-                <UserName {...teacher} />
+                <UserName {...data?.teacher} />
               </Text>
             </Space>
           </Space>
