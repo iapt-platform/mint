@@ -1,6 +1,6 @@
 //课程详情图片标题按钮主讲人组合
 import { Link } from "react-router-dom";
-import { Image, Space, Col, Row, Breadcrumb } from "antd";
+import { Image, Space, Col, Row, Breadcrumb, Tag } from "antd";
 import { Typography } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 
@@ -23,7 +23,7 @@ const courseDuration = (startAt?: string, endAt?: string) => {
   } else {
     labelDuration = "已经结束";
   }
-  return labelDuration;
+  return <Tag>{labelDuration}</Tag>;
 };
 
 interface IWidget {
@@ -33,6 +33,8 @@ interface IWidget {
   coverUrl?: string[];
   startAt?: string;
   endAt?: string;
+  signUpStartAt?: string;
+  signUpEndAt?: string;
   teacher?: IUser;
   join?: TCourseJoinMode;
 }
@@ -44,10 +46,20 @@ const CourseHeadWidget = ({
   teacher,
   startAt,
   endAt,
+  signUpStartAt,
+  signUpEndAt,
   join,
 }: IWidget) => {
   const intl = useIntl();
   const duration = courseDuration(startAt, endAt);
+  let signUp = "";
+  if (moment().isBefore(moment(signUpStartAt))) {
+    signUp = "未开始";
+  } else if (moment().isBetween(moment(signUpStartAt), moment(signUpEndAt))) {
+    signUp = "可报名";
+  } else if (moment().isAfter(moment(signUpEndAt))) {
+    signUp = "已结束";
+  }
   return (
     <>
       <Row>
@@ -79,12 +91,22 @@ const CourseHeadWidget = ({
               <Space direction="vertical">
                 <Title level={3}>{title}</Title>
                 <Title level={5}>{subtitle}</Title>
-
                 <Text>
-                  {moment(startAt).format("YYYY-MM-DD")}——
-                  {moment(endAt).format("YYYY-MM-DD")}
+                  <Space>
+                    {"报名时间:"}
+                    {moment(signUpStartAt).format("YYYY-MM-DD")}——
+                    {moment(signUpEndAt).format("YYYY-MM-DD")}
+                    <Tag>{signUp}</Tag>
+                  </Space>
                 </Text>
-                <Text>{duration}</Text>
+                <Text>
+                  <Space>
+                    {"课程时间:"}
+                    {moment(startAt).format("YYYY-MM-DD")}——
+                    {moment(endAt).format("YYYY-MM-DD")}
+                    {duration}
+                  </Space>
+                </Text>
                 <Text>
                   {join
                     ? intl.formatMessage({
@@ -92,15 +114,16 @@ const CourseHeadWidget = ({
                       })
                     : undefined}
                 </Text>
-                {id ? (
-                  <Status
-                    courseId={id}
-                    courseName={title}
-                    joinMode={join}
-                    startAt={startAt}
-                    endAt={endAt}
-                  />
-                ) : undefined}
+
+                <Status
+                  courseId={id}
+                  courseName={title}
+                  joinMode={join}
+                  startAt={startAt}
+                  endAt={endAt}
+                  signUpStartAt={signUpStartAt}
+                  signUpEndAt={signUpEndAt}
+                />
               </Space>
             </Space>
 
