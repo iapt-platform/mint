@@ -43,6 +43,9 @@ const items = {
   "labels.table-of-content": "table of content",
   "labels.this-studio": "this studio",
   "labels.feedback": "feedback",
+  "labels.email.sign-up.subject": "welcome join wikipali",
+  "labels.sign-up": "Sign Up",
+  "labels.done": "Done",
 };
 
 export default items;
