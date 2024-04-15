@@ -15,7 +15,7 @@ export interface ICourseDataRequest {
   title: string; //标题
   subtitle?: string; //副标题
   summary?: string; //副标题
-  content?: string;
+  content?: string | null;
   cover?: string; //封面图片文件名
   teacher_id?: string; //UserID
   publicity: number; //类型-公开/内部
@@ -23,6 +23,8 @@ export interface ICourseDataRequest {
   channel_id?: string; //标准答案channel
   start_at?: string; //课程开始时间
   end_at?: string; //课程结束时间
+  sign_up_start_at: string | null; //报名开始时间
+  sign_up_end_at: string | null; //报名结束时间
   join: string;
   request_exp: string;
 }
@@ -45,6 +47,8 @@ export interface ICourseDataResponse {
   channel_owner?: IStudio; //文集拥有者
   start_at: string; //课程开始时间
   end_at: string; //课程结束时间
+  sign_up_start_at: string; //报名开始时间
+  sign_up_end_at: string; //报名结束时间
   content: string; //简介
   cover: string; //封面图片文件名
   cover_url?: string[]; //封面图片文件名
