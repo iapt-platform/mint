@@ -70,7 +70,7 @@ export interface ICourseDataResponse {
   my_status_id?: string;
   count_progressing?: number;
   number: number;
-  members?: IMember;
+  members?: IMember[];
   created_at: string; //创建时间
   updated_at: string; //修改时间
 }
