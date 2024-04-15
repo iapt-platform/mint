@@ -34,12 +34,13 @@ interface IFormData {
   title: string;
   subtitle: string;
   summary?: string;
-  content?: string;
+  content?: string | null;
   cover?: UploadFile<IAttachmentResponse>[];
   teacherId?: string;
   anthologyId?: string;
   channelId?: string;
-  dateRange?: Date[];
+  dateRange?: string[];
+  signUp?: string[];
   status: number;
   join: string;
   exp: string;
@@ -69,23 +70,12 @@ const CourseInfoEditWidget = ({
       <ProForm<IFormData>
         formKey="course_edit"
         onFinish={async (values: IFormData) => {
-          console.log("all data", values);
-          let startAt: string, endAt: string;
+          console.log("course put all data", values);
           let _cover: string = "";
-          if (typeof values.dateRange === "undefined") {
-            startAt = "";
-            endAt = "";
-          } else if (
-            typeof values.dateRange[0] === "string" &&
-            typeof values.dateRange[1] === "string"
-          ) {
-            startAt = values.dateRange[0];
-            endAt = values.dateRange[1];
-          } else {
-            startAt = courseData ? courseData.start_at : "";
-            endAt = courseData ? courseData.end_at : "";
-          }
-
+          const startAt = values.dateRange ? values.dateRange[0] : "";
+          const endAt = values.dateRange ? values.dateRange[1] : "";
+          const signUpStartAt = values.signUp ? values.signUp[0] : null;
+          const signUpEndAt = values.signUp ? values.signUp[1] : null;
           if (
             typeof values.cover === "undefined" ||
             values.cover.length === 0
@@ -98,7 +88,7 @@ const CourseInfoEditWidget = ({
             _cover = values.cover[0].response.data.name;
           }
           const url = `/v2/course/${courseId}`;
-          const postData = {
+          const postData: ICourseDataRequest = {
             title: values.title, //标题
             subtitle: values.subtitle, //副标题
             summary: values.summary,
@@ -110,6 +100,8 @@ const CourseInfoEditWidget = ({
             channel_id: values.channelId,
             start_at: startAt, //课程开始时间
             end_at: endAt, //课程结束时间
+            sign_up_start_at: signUpStartAt,
+            sign_up_end_at: signUpEndAt,
             join: values.join,
             request_exp: values.exp,
           };
@@ -162,7 +154,7 @@ const CourseInfoEditWidget = ({
             title: res.data.title,
             subtitle: res.data.subtitle,
             summary: res.data.summary,
-            content: res.data.content,
+            content: res.data.content ?? "",
             cover: res.data.cover
               ? [
                   {
@@ -178,10 +170,8 @@ const CourseInfoEditWidget = ({
             teacherId: res.data.teacher?.id,
             anthologyId: res.data.anthology_id,
             channelId: res.data.channel_id,
-            dateRange:
-              res.data.start_at && res.data.end_at
-                ? [new Date(res.data.start_at), new Date(res.data.end_at)]
-                : undefined,
+            dateRange: [res.data.start_at, res.data.end_at],
+            signUp: [res.data.sign_up_start_at, res.data.sign_up_end_at],
             status: res.data.publicity,
             join: res.data.join,
             exp: res.data.request_exp,
@@ -262,13 +252,15 @@ const CourseInfoEditWidget = ({
               id: "forms.fields.teacher.label",
             })}
           />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormDateRangePicker width="md" name="signUp" label="报名时间" />
           <ProFormDateRangePicker
             width="md"
             name="dateRange"
-            label="课程区间"
+            label="课程时间"
           />
         </ProForm.Group>
-
         <ProForm.Group>
           <ProFormSelect
             options={textbookOption}
@@ -322,7 +314,7 @@ const CourseInfoEditWidget = ({
           />
         </ProForm.Group>
         <ProForm.Group>
-          <PublicitySelect width="md" />
+          <PublicitySelect width="md" disable={["blocked"]} />
           <ProFormDependency name={["status"]}>
             {({ status }) => {
               const option = [
