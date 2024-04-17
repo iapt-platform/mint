@@ -34,7 +34,9 @@ const StatusWidget = ({ data }: IWidget) => {
   const numberOfStudent = data?.members?.filter(
     (value) =>
       value.role === "student" &&
-      (value.status === "accepted" || value.status === "applied")
+      (value.status === "accepted" ||
+        value.status === "applied" ||
+        value.status === "joined")
   ).length;
 
   useEffect(() => {
@@ -78,7 +80,7 @@ const StatusWidget = ({ data }: IWidget) => {
     operation = (
       <Space>
         {actions?.map((item, id) => {
-          if (item === "apply") {
+          if (item === "apply" && data?.number !== 0) {
             if (
               numberOfStudent &&
               data?.number &&
