@@ -31,6 +31,9 @@ const WbwDetailOrderWidget = ({
     <Tooltip
       open={show}
       placement="right"
+      getTooltipContainer={(node: HTMLElement) =>
+        document.getElementsByClassName("wbw_detail")[0] as HTMLElement
+      }
       title={
         <Button
           type="link"
