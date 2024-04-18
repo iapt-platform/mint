@@ -28,6 +28,9 @@ import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
 import DiscussionButton from "../../discussion/DiscussionButton";
 import { courseUser } from "../../../reducers/course-user";
+import { tempSet } from "../../../reducers/setting";
+import { PopPlacement } from "./WbwPali";
+import store from "../../../store";
 
 interface IWidget {
   data: IWbw;
@@ -151,8 +154,14 @@ const WbwDetailWidget = ({
                   )
                 }
                 onClick={() => {
+                  store.dispatch(
+                    tempSet({
+                      key: PopPlacement,
+                      value: !popIsTop,
+                    })
+                  );
                   if (typeof onPopTopChange !== "undefined") {
-                    onPopTopChange(popIsTop);
+                    //onPopTopChange(popIsTop);
                   }
                 }}
               />

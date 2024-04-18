@@ -24,6 +24,9 @@ import { ParaLinkCtl } from "../ParaLink";
 import { IStudio } from "../../auth/Studio";
 import WbwPaliDiscussionIcon from "./WbwPaliDiscussionIcon";
 import { TooltipPlacement } from "antd/lib/tooltip";
+import { temp } from "../../../reducers/setting";
+
+export const PopPlacement = "setting.wbw.pop.placement";
 
 //生成视频播放按钮
 interface IVideoIcon {
@@ -73,6 +76,19 @@ const WbwPaliWidget = ({
   const wbwAnchor = useAppSelector(anchor);
   const addParam = useAppSelector(relationAddParam);
   const wordSn = `${data.book}-${data.para}-${data.sn.join("-")}`;
+  const tempSettings = useAppSelector(temp);
+
+  useEffect(() => {
+    const popSetting = tempSettings?.find(
+      (value) => value.key === PopPlacement
+    );
+    console.debug("PopPlacement change", popSetting);
+    if (popSetting?.value === true) {
+      setPopOnTop(true);
+    } else {
+      setPopOnTop(false);
+    }
+  }, [tempSettings]);
 
   useEffect(() => {
     if (wbwAnchor) {
@@ -196,7 +212,18 @@ const WbwPaliWidget = ({
       onAttachmentSelectOpen={(open: boolean) => {
         setPopOpen(!open);
       }}
-      onPopTopChange={(value: boolean) => setPopOnTop(!value)}
+      onPopTopChange={(value: boolean) => {
+        console.debug(PopPlacement, value);
+        //setPopOnTop(!value);
+        /*
+        store.dispatch(
+          tempSet({
+            key: PopPlacement,
+            value: !value,
+          })
+        );
+        */
+      }}
     />
   );
 
@@ -316,6 +343,7 @@ const WbwPaliWidget = ({
     } else {
       popPlacement = toDivRight > 200 ? "bottom" : "bottomRight";
     }
+    //console.debug(PopPlacement, popPlacement);
     return (
       <div className="pali_shell" ref={divShell}>
         <span className="pali_shell_spell">

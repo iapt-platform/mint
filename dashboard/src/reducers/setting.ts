@@ -9,6 +9,7 @@ export interface ISettingItem {
 
 interface IState {
   settings?: ISettingItem[];
+  temp?: ISettingItem[];
   key?: string;
   value?: string | string[] | number | boolean;
 }
@@ -46,15 +47,33 @@ export const slice = createSlice({
       }
       set(state.settings);
     },
+    tempSet: (state, action: PayloadAction<ISettingItem>) => {
+      //将新的改变放入 settings
+      if (typeof state.temp !== "undefined") {
+        const index = state.temp.findIndex(
+          (element) => element.key === action.payload.key
+        );
+        if (index >= 0) {
+          state.temp[index].value = action.payload.value;
+        } else {
+          state.temp.push(action.payload);
+        }
+      } else {
+        state.temp = [action.payload];
+      }
+    },
   },
 });
 
-export const { refresh, onChange } = slice.actions;
+export const { refresh, onChange, tempSet } = slice.actions;
 
 export const setting = (state: RootState): IState => state.setting;
 
 export const settingInfo = (state: RootState): ISettingItem[] | undefined =>
   state.setting.settings;
+
+export const temp = (state: RootState): ISettingItem[] | undefined =>
+  state.setting.temp;
 
 export const onChangeKey = (state: RootState): string | undefined =>
   state.setting.key;
