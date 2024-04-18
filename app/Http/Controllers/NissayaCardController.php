@@ -6,6 +6,7 @@ use App\Models\NissayaEnding;
 use Illuminate\Http\Request;
 use mustache\mustache;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\MdRender;
 use Illuminate\Support\Facades\App;
 use App\Models\DhammaTerm;
 use App\Models\Relation;
@@ -60,6 +61,17 @@ class NissayaCardController extends Controller
             $cardData['ending']['tag'] = $endingTerm->tag;
             $cardData['ending']['meaning'] = $endingTerm->meaning;
             $cardData['ending']['note'] = $endingTerm->note;
+            if(!empty($endingTerm->note)){
+                $mdRender = new MdRender(
+                    [
+                        'mode'=>'read',
+                        'format'=>'react',
+                        'lang'=>$endingTerm->lang,
+                    ]);
+                    $cardData['ending']['html']  = $mdRender->convert($endingTerm->note,[],null);
+            }
+
+
         }
 
         $myEnding = NissayaEnding::where('ending',$nissayaEnding)
