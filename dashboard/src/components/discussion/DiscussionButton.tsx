@@ -27,8 +27,6 @@ const DiscussionButton = ({
   const user = useAppSelector(currentUser);
   const discussions = useAppSelector(discussionList);
 
-  console.debug("discussions", discussions);
-
   const all = discussions?.filter((value) => value.res_id === resId);
   const my = all?.filter((value) => value.editor_uid === user?.id);
   let currCount = initCount;
