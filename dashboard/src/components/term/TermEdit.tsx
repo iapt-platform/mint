@@ -48,6 +48,7 @@ export interface ITerm {
   meaning?: string;
   meaning2?: string[];
   note?: string;
+  html?: string;
   summary?: string;
   summary_is_community?: boolean;
   channelId?: string;

@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import TermModal from "../term/TermModal";
 import { ITermDataResponse } from "../api/Term";
 import { useIntl } from "react-intl";
+import MdView from "../template/MdView";
 
 const { Paragraph, Title } = Typography;
 
@@ -22,7 +23,7 @@ export const NissayaCardPop = ({ text, trigger }: INissayaCardModal) => {
   return (
     <Popover
       style={{ width: 600 }}
-      content={<NissayaCardWidget text={text} cache={true} />}
+      content={<NissayaCardWidget text={text} cache={true} hideEditButton />}
       placement="bottom"
     >
       <Typography.Link>{trigger}</Typography.Link>
@@ -75,8 +76,13 @@ interface INissayaCardResponse {
 interface IWidget {
   text?: string;
   cache?: boolean;
+  hideEditButton?: boolean;
 }
-const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
+const NissayaCardWidget = ({
+  text,
+  cache = false,
+  hideEditButton = false,
+}: IWidget) => {
   const intl = useIntl();
   const [cardData, setCardData] = useState<INissayaRelation[]>();
   const [term, setTerm] = useState<ITerm>();
@@ -133,19 +139,23 @@ const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Title level={4}>
           {term?.word}
-          <TermModal
-            id={term?.id}
-            onUpdate={(value: ITermDataResponse) => {
-              //onModalClose();
-            }}
-            onClose={() => {
-              //onModalClose();
-            }}
-            trigger={<Button type="link" icon={<EditOutlined />} />}
-          />
+          {hideEditButton ? (
+            <></>
+          ) : (
+            <TermModal
+              id={term?.id}
+              onUpdate={(value: ITermDataResponse) => {
+                //onModalClose();
+              }}
+              onClose={() => {
+                //onModalClose();
+              }}
+              trigger={<Button type="link" icon={<EditOutlined />} />}
+            />
+          )}
         </Title>
         <div>
-          <Link to={`/nissaya/ending/${term?.word}`}>
+          <Link to={`/nissaya/ending/${term?.word}`} target="_blank">
             {intl.formatMessage({
               id: "buttons.open.in.new.tab",
             })}
@@ -158,7 +168,7 @@ const NissayaCardWidget = ({ text, cache = false }: IWidget) => {
         </div>
       </div>
       <Paragraph>{term?.meaning}</Paragraph>
-      <Paragraph>{term?.note}</Paragraph>
+      <MdView html={term?.html} />
       {cardData ? <NissayaCardTable data={cardData} /> : undefined}
     </div>
   );
