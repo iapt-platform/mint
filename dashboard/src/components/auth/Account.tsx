@@ -53,12 +53,14 @@ const AccountWidget = ({ userId, onLoad }: IWidget) => {
       <ProFormText width="md" readonly name="nickName" label="Nick Name" />
       <ProFormText width="md" readonly name="email" label="Email" />
       <ProFormSelect
-        options={["administrator", "member", "uploader"].map((item) => {
-          return {
-            value: item,
-            label: item,
-          };
-        })}
+        options={["administrator", "member", "uploader", "basic"].map(
+          (item) => {
+            return {
+              value: item,
+              label: item,
+            };
+          }
+        )}
         fieldProps={{
           mode: "tags",
         }}
