@@ -49,7 +49,7 @@ const Widget = () => {
         <div>
           <CourseHead data={courseInfo} />
           <Divider />
-          <CourseIntro intro={courseInfo?.summary} />
+          <CourseIntro intro={courseInfo?.content} />
           <Divider />
           <TextBook
             anthologyId={courseInfo?.anthology_id}
