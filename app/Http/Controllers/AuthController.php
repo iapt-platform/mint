@@ -118,7 +118,6 @@ class AuthController extends Controller
             }
         }
 
-        $user['roles'] = ['root'];
         if($curr['user_uid'] === config('mint.admin.root_uuid')){
             $user['roles'] = ['root'];
         }
