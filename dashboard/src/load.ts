@@ -80,6 +80,7 @@ const init = () => {
       }
     }
   );
+  //获取用户登录信息
   const token = getToken();
   if (token) {
     get<ITokenRefreshResponse>("/v2/auth/current").then((response) => {
