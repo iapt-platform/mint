@@ -106,9 +106,19 @@ class AuthController extends Controller
             "nickName"=> $userInfo->nickname,
             "realName"=> $userInfo->username,
             "avatar"=> "",
-            "roles"=> json_decode($userInfo->role),
             "token"=>\substr($request->header('Authorization'),7) ,
         ];
+
+        //role为空 返回[]
+        $user['roles'] = [];
+        if(!empty($userInfo->role)){
+            $roles = json_decode($userInfo->role);
+            if(is_array($roles)){
+                $user['roles'] = $roles;
+            }
+        }
+
+        $user['roles'] = ['root'];
         if($curr['user_uid'] === config('mint.admin.root_uuid')){
             $user['roles'] = ['root'];
         }
