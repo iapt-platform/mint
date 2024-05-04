@@ -305,9 +305,13 @@ const CourseInfoEditWidget = ({
                 return currChannel ? [currChannel] : [];
               }
               const json = await get<IApiResponseChannelList>(
-                `/v2/channel?view=studio&name=${studioName}`
+                `/v2/channel?view=studio-all&name=${studioName}`
               );
-              const textbookList = json.data.rows.map((item) => {
+              const jsonPublic = await get<IApiResponseChannelList>(
+                `/v2/channel?view=public`
+              );
+              const channels = [...json.data.rows, ...jsonPublic.data.rows];
+              const textbookList = channels.map((item) => {
                 return {
                   value: item.uid,
                   label: `${item.studio.nickName}/${item.name}`,
