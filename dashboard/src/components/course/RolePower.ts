@@ -234,6 +234,14 @@ const studentData: IAction[] = [
     after: [],
   },
   {
+    mode: ["open"],
+    status: "invited",
+    signUp: ["agree", "disagree"],
+    before: ["agree", "disagree"],
+    duration: [],
+    after: [],
+  },
+  {
     mode: ["manual", "invite"],
     status: "none",
     signUp: ["apply"],
