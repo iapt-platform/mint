@@ -99,6 +99,14 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
           description: {
             dataIndex: "desc",
             search: false,
+            render(dom, entity, index, action, schema) {
+              return (
+                <div>
+                  {"channel:"}
+                  {entity.channel?.name ?? "未绑定"}
+                </div>
+              );
+            },
           },
           subTitle: {
             search: false,
@@ -113,16 +121,6 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
                     id: `auth.role.${entity.role}`,
                   })}
                 </Tag>
-              );
-            },
-          },
-          content: {
-            render(dom, entity, index, action, schema) {
-              return (
-                <div>
-                  {"channel:"}
-                  {entity.channel?.name ?? "未绑定"}
-                </div>
               );
             },
           },
