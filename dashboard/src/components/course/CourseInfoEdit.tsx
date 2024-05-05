@@ -29,7 +29,10 @@ import { UploadChangeParam, UploadFile } from "antd/es/upload/interface";
 import { IAttachmentResponse } from "../../components/api/Attachments";
 
 import { IAnthologyListResponse } from "../../components/api/Article";
-import { IApiResponseChannelList } from "../../components/api/Channel";
+import {
+  IApiResponseChannelData,
+  IApiResponseChannelList,
+} from "../../components/api/Channel";
 
 interface IFormData {
   title: string;
@@ -301,24 +304,45 @@ const CourseInfoEditWidget = ({
             debounceTime={300}
             request={async ({ keyWords }) => {
               console.log("keyWord", keyWords);
-              if (typeof keyWords === "undefined") {
+              if (typeof keyWords === "undefined" || keyWords === " ") {
                 return currChannel ? [currChannel] : [];
               }
-              const json = await get<IApiResponseChannelList>(
-                `/v2/channel?view=studio-all&name=${studioName}`
-              );
-              const jsonPublic = await get<IApiResponseChannelList>(
-                `/v2/channel?view=public`
-              );
+              let urlMy = `/v2/channel?view=studio-all&name=${studioName}`;
+              if (typeof keyWords !== "undefined" && keyWords !== "") {
+                urlMy += "&search=" + keyWords;
+              }
+              console.info("api request", urlMy);
+              const json = await get<IApiResponseChannelList>(urlMy);
+              console.info("api response", json);
+
+              let urlPublic = `/v2/channel?view=public`;
+              if (typeof keyWords !== "undefined" && keyWords !== "") {
+                urlPublic += "&search=" + keyWords;
+              }
+              console.info("api request", urlPublic);
+              const jsonPublic = await get<IApiResponseChannelList>(urlPublic);
+              console.info("api response", jsonPublic);
+
+              //查重
+              let channels1: IApiResponseChannelData[] = [];
               const channels = [...json.data.rows, ...jsonPublic.data.rows];
-              const textbookList = channels.map((item) => {
+              channels.forEach((value) => {
+                const has = channels1.findIndex(
+                  (value1) => value1.uid === value.uid
+                );
+                if (has === -1) {
+                  channels1.push(value);
+                }
+              });
+
+              const channelList = channels1.map((item) => {
                 return {
                   value: item.uid,
                   label: `${item.studio.nickName}/${item.name}`,
                 };
               });
-              console.log("json", textbookList);
-              return textbookList;
+              console.debug("channelList", channelList);
+              return channelList;
             }}
           />
         </ProForm.Group>
