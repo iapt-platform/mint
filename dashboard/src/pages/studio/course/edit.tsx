@@ -43,7 +43,7 @@ const Widget = () => {
               label: `成员`,
               children: (
                 <div style={{ display: "flex" }}>
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 3 }}>
                     <CourseMemberList
                       courseId={courseId}
                       onSelect={(value: ICourseMember) => {
@@ -51,7 +51,7 @@ const Widget = () => {
                       }}
                     />
                   </div>
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 2 }}>
                     <Tabs
                       items={[
                         {
