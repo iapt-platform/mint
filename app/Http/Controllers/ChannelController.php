@@ -168,7 +168,7 @@ class ChannelController extends Controller
                 break;
         }
         //处理搜索
-        if($request->has("search")){
+        if(!empty($request->get("search"))){
             $table = $table->where('name', 'like', "%".$request->get("search")."%");
         }
         if($request->has("type")){

@@ -53,7 +53,7 @@ class CourseMemberController extends Controller
             break;
         }
         if(!empty($request->get("search"))){
-            $table = $table->where('name', 'like', $request->get("search")."%");
+            $table = $table->where('name', 'like', '%'.$request->get("search")."%");
         }
 
         $count = $table->count();
