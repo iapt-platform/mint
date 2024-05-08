@@ -105,7 +105,7 @@ class CourseResource extends JsonResource
         }else{
             //计算待审核
             $data['count_progressing'] = CourseMember::where('course_id',$this->id)
-                                                ->where('status',"progressing")
+                                                ->where('status',"invited")
                                                 ->where('is_current',true)
                                                 ->count();
         }
