@@ -84,7 +84,8 @@ const SentWbwWidget = ({
   //没交作业的人
 
   let nonWbwUser: IUser[] = [];
-  if (myCourse && course && myCourse.role !== "student" && courseMember) {
+  const isCourseAnswer = myCourse && course && myCourse.role !== "student";
+  if (isCourseAnswer && courseMember) {
     const hasWbwUsers = sentData.map((item) =>
       item.translation ? item.translation[0].studio : undefined
     );
@@ -112,12 +113,14 @@ const SentWbwWidget = ({
         )}
       />
       <div>
-        {nonWbwUser.length > 0 ? (
+        {isCourseAnswer ? (
           <Space>
             {"没交作业："}
-            {nonWbwUser.map((item, id) => {
-              return <User {...item} />;
-            })}
+            {nonWbwUser.length > 0
+              ? nonWbwUser.map((item, id) => {
+                  return <User {...item} />;
+                })
+              : "无"}
           </Space>
         ) : undefined}
       </div>
