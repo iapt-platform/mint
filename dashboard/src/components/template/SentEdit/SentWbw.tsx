@@ -1,4 +1,4 @@
-import { List, message } from "antd";
+import { List, Space, message } from "antd";
 import { useEffect, useState } from "react";
 
 import { get } from "../../../request";
@@ -7,6 +7,7 @@ import { IWidgetSentEditInner, SentEditInner } from "../SentEdit";
 import { useAppSelector } from "../../../hooks";
 import { courseInfo, memberInfo } from "../../../reducers/current-course";
 import { courseUser } from "../../../reducers/course-user";
+import User, { IUser } from "../../auth/User";
 
 interface IWidget {
   book: number;
@@ -75,10 +76,28 @@ const SentWbwWidget = ({
         }
       });
   };
+
   useEffect(() => {
     load();
   }, []);
 
+  //没交作业的人
+
+  let nonWbwUser: IUser[] = [];
+  if (myCourse && course && myCourse.role !== "student" && courseMember) {
+    const hasWbwUsers = sentData.map((item) =>
+      item.translation ? item.translation[0].studio : undefined
+    );
+    courseMember
+      .filter((value) => value.role === "student")
+      .forEach((value) => {
+        const curr = hasWbwUsers.find((value1) => value1?.id === value.user_id);
+        if (!curr && value.user) {
+          nonWbwUser.push(value.user);
+        }
+      });
+  }
+  console.debug("没交作业", courseMember, sentData, nonWbwUser);
   return (
     <>
       <List
@@ -92,6 +111,16 @@ const SentWbwWidget = ({
           </List.Item>
         )}
       />
+      <div>
+        {nonWbwUser.length > 0 ? (
+          <Space>
+            {"没交作业："}
+            {nonWbwUser.map((item, id) => {
+              return <User {...item} />;
+            })}
+          </Space>
+        ) : undefined}
+      </div>
     </>
   );
 };
