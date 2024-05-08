@@ -40,6 +40,7 @@ import {
 import { ISetStatus, setStatus } from "../../../components/course/UserAction";
 import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
+import User from "../../../components/auth/User";
 
 const renderBadge = (count: number, active = false) => {
   return (
@@ -172,18 +173,18 @@ const Widget = () => {
                       </Tag>
                     </div>
                     <div>{row.subtitle}</div>
+                    <div>
+                      <Space>
+                        {intl.formatMessage({
+                          id: "forms.fields.teacher.label",
+                        })}
+                        <User {...row.teacher} />
+                      </Space>
+                    </div>
                   </div>
                 </Space>
               );
             },
-          },
-          {
-            //主讲人
-            title: intl.formatMessage({
-              id: "forms.fields.teacher.label",
-            }),
-            dataIndex: "teacher",
-            key: "teacher",
           },
           {
             title: intl.formatMessage({
@@ -197,8 +198,8 @@ const Widget = () => {
             title: intl.formatMessage({
               id: "course.table.count.progressing.title",
             }),
-            dataIndex: "countProgressing",
-            key: "countProgressing",
+            dataIndex: "count_progressing",
+            key: "count_progressing",
             width: 80,
             hideInTable: activeKey === "study" ? true : false,
           },
