@@ -8,7 +8,7 @@ const items = {
   "dict.fields.parent.label": "base",
   "dict.fields.meaning.label": "meaning",
   "dict.fields.factors.label": "factors",
-  "dict.fields.factormeaning.label": "组份意思",
+  "dict.fields.factormeaning.label": "factor-meaning",
   "dict.fields.note.label": "note",
   "dict.fields.confidence.label": "confidence",
   "dict.fields.dictname.label": "name",

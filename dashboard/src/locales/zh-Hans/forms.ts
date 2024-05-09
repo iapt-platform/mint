@@ -66,7 +66,7 @@ const items = {
   "forms.fields.to.label": "连接到",
   "forms.fields.count.label": "计数",
   "forms.fields.owner.label": "拥有者",
-  "forms.message.res.remove": "将此此资源从群中移除吗？",
+  "forms.message.res.remove": "将此资源从群中移除吗？",
   "forms.fields.parent2.label": "衍生原型",
   "forms.fields.parent2.tooltip": "最长为 256个字符",
   "forms.fields.username.label": "用户名(登录名)",
