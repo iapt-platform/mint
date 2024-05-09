@@ -31,7 +31,6 @@ class CourseResource extends JsonResource
             "summary"=> $this->summary,
             "teacher"=> UserApi::getByUuid($this->teacher),
             "course_count"=>10,
-            "member_count"=>CourseMember::where('course_id',$this->id)->count(),
             "publicity"=> $this->publicity,
             "start_at"=> $this->start_at,
             "end_at"=> $this->end_at,
@@ -47,6 +46,9 @@ class CourseResource extends JsonResource
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];
+        $data['member_count'] = CourseMember::where('course_id',$this->id)
+                                            ->where('is_current',true)->count();
+
         $data['members'] = CourseMember::where('course_id',$this->id)
                                         ->where('is_current',true)
                                         ->select(['role','status'])
@@ -103,7 +105,8 @@ class CourseResource extends JsonResource
         }else{
             //计算待审核
             $data['count_progressing'] = CourseMember::where('course_id',$this->id)
-                                                ->where('status',"progressing")
+                                                ->where('status',"invited")
+                                                ->where('is_current',true)
                                                 ->count();
         }
 
