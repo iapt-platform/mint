@@ -27,6 +27,7 @@ import {
   ICourseMemberData,
   ICourseNumberResponse,
   TCourseMemberAction,
+  TCourseRole,
   actionMap,
 } from "../../../components/api/Course";
 import { PublicityValueEnum } from "../../../components/studio/table";
@@ -119,6 +120,26 @@ const Widget = () => {
 
   const canCreate = !(activeKey !== "create" || user?.roles?.includes("basic"));
 
+  const buttonEdit = (course: ICourseDataResponse, key: string | number) => {
+    const canManage: TCourseRole[] = ["owner", "teacher", "manager"];
+    if (course.my_role && canManage.includes(course.my_role)) {
+      return (
+        <Link
+          to={`/studio/${studioname}/course/${course.id}/edit`}
+          target="_blank"
+          key={key}
+        >
+          {intl.formatMessage({
+            //编辑
+            id: "buttons.edit",
+          })}
+        </Link>
+      );
+    } else {
+      return <></>;
+    }
+  };
+
   return (
     <>
       <ProTable<ICourseDataResponse>
@@ -169,6 +190,11 @@ const Widget = () => {
                       <Tag>
                         {intl.formatMessage({
                           id: `course.join.mode.${row.join}.label`,
+                        })}
+                      </Tag>
+                      <Tag>
+                        {intl.formatMessage({
+                          id: `auth.role.${row.my_role}`,
                         })}
                       </Tag>
                     </div>
@@ -239,18 +265,7 @@ const Widget = () => {
               let mainButton = <></>;
               switch (activeKey) {
                 case "create":
-                  mainButton = (
-                    <Link
-                      to={`/studio/${studioname}/course/${row.id}/edit`}
-                      target="_blank"
-                      key={index}
-                    >
-                      {intl.formatMessage({
-                        //编辑
-                        id: "buttons.edit",
-                      })}
-                    </Link>
-                  );
+                  mainButton = buttonEdit(row, index);
                   break;
                 case "study":
                   mainButton = (
@@ -266,14 +281,17 @@ const Widget = () => {
                   break;
                 case "teach":
                   mainButton = (
-                    <span
-                      key={index}
-                      style={{ color: getStatusColor(row.my_status) }}
-                    >
-                      {intl.formatMessage({
-                        id: `course.member.status.${row.my_status}.label`,
-                      })}
-                    </span>
+                    <Space>
+                      {buttonEdit(row, index)}
+                      <span
+                        key={index}
+                        style={{ color: getStatusColor(row.my_status) }}
+                      >
+                        {intl.formatMessage({
+                          id: `course.member.status.${row.my_status}.label`,
+                        })}
+                      </span>
+                    </Space>
                   );
                   break;
                 default:
