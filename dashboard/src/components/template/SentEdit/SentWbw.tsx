@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { get } from "../../../request";
 import { ISentenceWbwListResponse } from "../../api/Corpus";
-import { IWidgetSentEditInner, SentEditInner } from "../SentEdit";
+import { ISentence, IWidgetSentEditInner, SentEditInner } from "../SentEdit";
 import { useAppSelector } from "../../../hooks";
 import { courseInfo, memberInfo } from "../../../reducers/current-course";
 import { courseUser } from "../../../reducers/course-user";
@@ -31,6 +31,7 @@ const SentWbwWidget = ({
 }: IWidget) => {
   const [initLoading, setInitLoading] = useState(true);
   const [sentData, setSentData] = useState<IWidgetSentEditInner[]>([]);
+  const [answer, setAnswer] = useState<ISentence>();
   const course = useAppSelector(courseInfo);
   const courseMember = useAppSelector(memberInfo);
 
@@ -47,11 +48,14 @@ const SentWbwWidget = ({
         //学生，仅列出答案channel
         url += `&channels=${course.channelId}`;
       } else if (courseMember) {
+        //管理者，助教，列出学生作业
         console.debug("course member", courseMember);
+        /*
         const channels = courseMember
           .filter((value) => typeof value.channel_id === "string")
           .map((item) => item.channel_id);
         url += `&channels=${channels.join(",")}`;
+        */
       }
     } else {
       if (channelsId && channelsId.length > 0) {
@@ -65,6 +69,17 @@ const SentWbwWidget = ({
         if (json.ok) {
           console.log("sim load", json.data.count);
           setSentData(json.data.rows);
+          if (myCourse && course) {
+            const answerData = json.data.rows.find((value) =>
+              value.origin
+                ? value.origin[0].channel.id === course?.channelId
+                : false
+            );
+            if (answerData?.origin) {
+              setAnswer(answerData.origin[0]);
+              console.debug("answer", answerData.origin[0]);
+            }
+          }
         } else {
           message.error(json.message);
         }
@@ -108,14 +123,18 @@ const SentWbwWidget = ({
         dataSource={sentData}
         renderItem={(item, index) => (
           <List.Item key={index}>
-            <SentEditInner {...item} wbwProgress={wbwProgress} />
+            <SentEditInner
+              {...item}
+              answer={answer}
+              wbwProgress={wbwProgress}
+            />
           </List.Item>
         )}
       />
       <div>
         {isCourseAnswer ? (
           <Space>
-            {"没交作业："}
+            {"无作业："}
             {nonWbwUser.length > 0
               ? nonWbwUser.map((item, id) => {
                   return <User {...item} />;
