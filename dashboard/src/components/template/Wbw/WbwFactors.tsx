@@ -8,6 +8,7 @@ import { IWbw, TWbwDisplayMode } from "./WbwWord";
 import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 import { IApiResponseDictData } from "../../api/Dict";
+import { errorClass } from "./WbwMeaning";
 
 const { Text } = Typography;
 
@@ -38,11 +39,12 @@ export const getFactorsInDict = (
 
 interface IWidget {
   data: IWbw;
+  answer?: IWbw;
   display?: TWbwDisplayMode;
   onChange?: Function;
 }
 
-const WbwFactorsWidget = ({ data, display, onChange }: IWidget) => {
+const WbwFactorsWidget = ({ data, answer, display, onChange }: IWidget) => {
   const intl = useIntl();
   const defaultMenu: MenuProps["items"] = [
     {
@@ -124,7 +126,12 @@ const WbwFactorsWidget = ({ data, display, onChange }: IWidget) => {
       }
     }
     return (
-      <div>
+      <div
+        className={
+          "wbw_word_item" +
+          errorClass(data.factors?.value, answer?.factors?.value)
+        }
+      >
         <Text type="secondary">
           <Dropdown menu={{ items, onClick }} placement="bottomLeft">
             {factors}

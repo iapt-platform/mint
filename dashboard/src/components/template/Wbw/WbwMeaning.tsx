@@ -10,14 +10,29 @@ import EditableLabel from "../../general/EditableLabel";
 
 const { Text } = Typography;
 
+export const errorClass = (
+  data?: string | null,
+  answer?: string | null
+): string => {
+  let classError = "";
+  if (data && answer) {
+    if (answer !== data) {
+      classError = " wbw_error";
+    }
+  }
+  return classError;
+};
+
 interface IWidget {
   data: IWbw;
+  answer?: IWbw;
   display?: TWbwDisplayMode;
   mode?: ArticleMode;
   onChange?: Function;
 }
 const WbwMeaningWidget = ({
   data,
+  answer,
   display = "block",
   mode = "edit",
   onChange,
@@ -145,8 +160,14 @@ const WbwMeaningWidget = ({
     data.real.value.trim().length > 0
   ) {
     //非标点符号
+
     return (
-      <div className="wbw_word_item">
+      <div
+        className={
+          "wbw_word_item" +
+          errorClass(data.meaning?.value, answer?.meaning?.value)
+        }
+      >
         {editable || display === "list" ? (
           meaningInner
         ) : (
