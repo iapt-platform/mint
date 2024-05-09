@@ -25,6 +25,7 @@ interface IWidgetSentContent {
   wordEnd: number;
   origin?: ISentence[];
   translation?: ISentence[];
+  answer?: ISentence;
   layout?: TDirection;
   magicDict?: string;
   compact?: boolean;
@@ -41,6 +42,7 @@ const SentContentWidget = ({
   wordEnd,
   origin,
   translation,
+  answer,
   layout = "column",
   compact = false,
   mode,
@@ -157,7 +159,8 @@ const SentContentWidget = ({
                 channelId={item.channel.id}
                 channelType={item.channel.type}
                 channelLang={item.channel.lang}
-                data={JSON.parse(item.content ? item.content : "")}
+                data={JSON.parse(item.content ?? "")}
+                answer={answer ? JSON.parse(answer.content ?? "") : undefined}
                 mode={mode}
                 wbwProgress={wbwProgress}
                 onChange={(data: IWbw[]) => {

@@ -104,6 +104,7 @@ export interface IWbwFields {
 export type TWbwDisplayMode = "block" | "inline" | "list";
 interface IWidget {
   data: IWbw;
+  answer?: IWbw;
   channelId: string;
   display?: TWbwDisplayMode;
   fields?: IWbwFields;
@@ -115,6 +116,7 @@ interface IWidget {
 }
 const WbwWordWidget = ({
   data,
+  answer,
   channelId,
   display,
   mode = "edit",
@@ -288,6 +290,7 @@ const WbwWordWidget = ({
               key="meaning"
               mode={mode}
               data={wordData}
+              answer={answer}
               display={display}
               onChange={(e: string) => {
                 const newData: IWbw = JSON.parse(JSON.stringify(wordData));
@@ -303,6 +306,7 @@ const WbwWordWidget = ({
             <WbwFactors
               key="factors"
               data={wordData}
+              answer={answer}
               display={display}
               onChange={(e: string) => {
                 console.log("factor change", e);
@@ -320,6 +324,7 @@ const WbwWordWidget = ({
             <WbwFactorMeaning
               key="fm"
               data={wordData}
+              answer={answer}
               display={display}
               factors={newFactors}
               onChange={(e: string) => {
@@ -361,6 +366,7 @@ const WbwWordWidget = ({
             <WbwCase
               key="case"
               data={wordData}
+              answer={answer}
               display={display}
               onSplit={(e: boolean) => {
                 console.log("onSplit", wordData.factors?.value);
