@@ -27,10 +27,21 @@ export interface ICourseDataRequest {
   sign_up_end_at: string | null; //报名结束时间
   join: string;
   request_exp: string;
+  number: number;
 }
-export type TCourseRole = "teacher" | "manager" | "assistant" | "student";
+export type TCourseRole =
+  | "owner"
+  | "teacher"
+  | "manager"
+  | "assistant"
+  | "student";
 export type TCourseJoinMode = "invite" | "manual" | "open";
 export type TCourseExpRequest = "none" | "begin-end" | "daily";
+
+export interface IMember {
+  role: TCourseRole;
+  status: TCourseMemberStatus;
+}
 export interface ICourseDataResponse {
   id: string; //课程ID
   title: string; //标题
@@ -58,6 +69,8 @@ export interface ICourseDataResponse {
   my_status?: TCourseMemberStatus;
   my_status_id?: string;
   count_progressing?: number;
+  number: number;
+  members?: IMember[];
   created_at: string; //创建时间
   updated_at: string; //修改时间
 }
@@ -153,7 +166,7 @@ export interface ICourseMemberData {
   course_id: string;
   channel_id?: string;
   channel?: IChannel;
-  role?: string;
+  role?: TCourseRole;
   operating?: "invite" | "sign_up";
   user?: IUser;
   editor?: IUser;
@@ -171,7 +184,7 @@ export interface ICourseMemberListResponse {
   message: string;
   data: {
     rows: ICourseMemberData[];
-    role: TRole;
+    role: TCourseRole;
     count: number;
   };
 }

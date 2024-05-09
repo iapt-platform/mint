@@ -100,6 +100,7 @@
   position: absolute;
   border: 1px solid gray;
   background-color: wheat;
+  margin-top: -1.2em;
 }
 .pali_shell:hover .edit_icon {
   display: inline-block;

@@ -23,6 +23,10 @@ import { anchor, showWbw } from "../../../reducers/wbw";
 import { ParaLinkCtl } from "../ParaLink";
 import { IStudio } from "../../auth/Studio";
 import WbwPaliDiscussionIcon from "./WbwPaliDiscussionIcon";
+import { TooltipPlacement } from "antd/lib/tooltip";
+import { temp } from "../../../reducers/setting";
+
+export const PopPlacement = "setting.wbw.pop.placement";
 
 //生成视频播放按钮
 interface IVideoIcon {
@@ -65,11 +69,27 @@ const WbwPaliWidget = ({
   onSave,
 }: IWidget) => {
   const [popOpen, setPopOpen] = useState(false);
+  const [popOnTop, setPopOnTop] = useState(false);
+
   const [paliColor, setPaliColor] = useState("unset");
   const divShell = useRef<HTMLDivElement>(null);
   const wbwAnchor = useAppSelector(anchor);
   const addParam = useAppSelector(relationAddParam);
   const wordSn = `${data.book}-${data.para}-${data.sn.join("-")}`;
+  const tempSettings = useAppSelector(temp);
+
+  useEffect(() => {
+    const popSetting = tempSettings?.find(
+      (value) => value.key === PopPlacement
+    );
+    console.debug("PopPlacement change", popSetting);
+    if (popSetting?.value === true) {
+      setPopOnTop(true);
+    } else {
+      setPopOnTop(false);
+    }
+  }, [tempSettings]);
+
   useEffect(() => {
     if (wbwAnchor) {
       if (wbwAnchor.id !== wordSn || wbwAnchor.channel !== channelId) {
@@ -177,6 +197,7 @@ const WbwPaliWidget = ({
     <WbwDetail
       data={data}
       visible={popOpen}
+      popIsTop={popOnTop}
       onClose={() => {
         setPaliColor("unset");
         setPopOpen(false);
@@ -190,6 +211,18 @@ const WbwPaliWidget = ({
       }}
       onAttachmentSelectOpen={(open: boolean) => {
         setPopOpen(!open);
+      }}
+      onPopTopChange={(value: boolean) => {
+        console.debug(PopPlacement, value);
+        //setPopOnTop(!value);
+        /*
+        store.dispatch(
+          tempSet({
+            key: PopPlacement,
+            value: !value,
+          })
+        );
+        */
       }}
     />
   );
@@ -304,6 +337,13 @@ const WbwPaliWidget = ({
     const divRight = divShell.current?.getBoundingClientRect().right;
     const toDivRight = divRight ? containerWidth - divRight : 0;
 
+    let popPlacement: TooltipPlacement;
+    if (popOnTop) {
+      popPlacement = toDivRight > 200 ? "top" : "topRight";
+    } else {
+      popPlacement = toDivRight > 200 ? "bottom" : "bottomRight";
+    }
+    //console.debug(PopPlacement, popPlacement);
     return (
       <div className="pali_shell" ref={divShell}>
         <span className="pali_shell_spell">
@@ -320,10 +360,10 @@ const WbwPaliWidget = ({
           ) : (
             <></>
           )}
-          {mode === "edit" ? paliWord : ""}
+
           <Popover
             content={wbwDialog}
-            placement={toDivRight > 200 ? "bottom" : "bottomRight"}
+            placement={popPlacement}
             trigger="click"
             open={popOpen}
           >
@@ -347,6 +387,7 @@ const WbwPaliWidget = ({
               )}
             </span>
           </Popover>
+          {mode === "edit" ? paliWord : ""}
         </span>
         <Space>
           <VideoIcon attachments={data.attachments} />

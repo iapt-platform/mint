@@ -6,11 +6,15 @@ import { UserAddOutlined } from "@ant-design/icons";
 import { get, post } from "../../request";
 import { IUserListResponse } from "../api/Auth";
 import { useState } from "react";
-import { ICourseMemberData, ICourseMemberResponse } from "../api/Course";
+import {
+  ICourseMemberData,
+  ICourseMemberResponse,
+  TCourseRole,
+} from "../api/Course";
 
 interface IFormData {
   userId: string;
-  role: string;
+  role: TCourseRole;
 }
 
 interface IWidget {

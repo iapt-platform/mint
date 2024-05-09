@@ -1,10 +1,9 @@
 //课程列表
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-
 import { Avatar, List, message, Typography, Image } from "antd";
-import { ICourse } from "../../pages/library/course/course";
-import { ICourseListResponse } from "../api/Course";
+
+import { ICourseDataResponse, ICourseListResponse } from "../api/Course";
 import { API_HOST, get } from "../../request";
 
 const { Paragraph } = Typography;
@@ -13,23 +12,13 @@ interface IWidget {
   type: "open" | "close";
 }
 const CourseListWidget = ({ type }: IWidget) => {
-  const [data, setData] = useState<ICourse[]>();
+  const [data, setData] = useState<ICourseDataResponse[]>();
 
   useEffect(() => {
     get<ICourseListResponse>(`/v2/course?view=${type}`).then((json) => {
       if (json.ok) {
         console.log(json.data);
-        const course: ICourse[] = json.data.rows.map((item) => {
-          return {
-            id: item.id,
-            title: item.title,
-            subtitle: item.subtitle,
-            teacher: item.teacher,
-            intro: item.content,
-            coverUrl: item.cover_url,
-          };
-        });
-        setData(course);
+        setData(json.data.rows);
       } else {
         message.error(json.message);
       }
@@ -55,14 +44,14 @@ const CourseListWidget = ({ type }: IWidget) => {
               width={128}
               style={{ borderRadius: 12 }}
               src={
-                item.coverUrl && item.coverUrl.length > 1
-                  ? item.coverUrl[1]
+                item.cover_url && item.cover_url.length > 1
+                  ? item.cover_url[1]
                   : undefined
               }
               preview={{
                 src:
-                  item.coverUrl && item.coverUrl.length > 0
-                    ? item.coverUrl[0]
+                  item.cover_url && item.cover_url.length > 0
+                    ? item.cover_url[0]
                     : undefined,
               }}
               fallback={`${API_HOST}/app/course/img/default.jpg`}
@@ -75,7 +64,7 @@ const CourseListWidget = ({ type }: IWidget) => {
             description={<div>主讲：{item.teacher?.nickName}</div>}
           />
           <Paragraph ellipsis={{ rows: 2, expandable: false }}>
-            {item.intro}
+            {item.summary}
           </Paragraph>
         </List.Item>
       )}

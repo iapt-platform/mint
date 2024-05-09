@@ -1,7 +1,20 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Dropdown, Tabs, Divider, Button, Switch, Rate } from "antd";
-import { SaveOutlined } from "@ant-design/icons";
+import {
+  Dropdown,
+  Tabs,
+  Divider,
+  Button,
+  Switch,
+  Rate,
+  Space,
+  Tooltip,
+} from "antd";
+import {
+  SaveOutlined,
+  VerticalAlignBottomOutlined,
+  VerticalAlignTopOutlined,
+} from "@ant-design/icons";
 
 import { IWbw, IWbwAttachment, IWbwField, TFieldName } from "./WbwWord";
 import WbwDetailBasic from "./WbwDetailBasic";
@@ -15,20 +28,27 @@ import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
 import DiscussionButton from "../../discussion/DiscussionButton";
 import { courseUser } from "../../../reducers/course-user";
+import { tempSet } from "../../../reducers/setting";
+import { PopPlacement } from "./WbwPali";
+import store from "../../../store";
 
 interface IWidget {
   data: IWbw;
   visible?: boolean;
+  popIsTop?: boolean;
   onClose?: Function;
   onSave?: Function;
   onAttachmentSelectOpen?: Function;
+  onPopTopChange?: Function;
 }
 const WbwDetailWidget = ({
   data,
   visible = true,
+  popIsTop = false,
   onClose,
   onSave,
   onAttachmentSelectOpen,
+  onPopTopChange,
 }: IWidget) => {
   const intl = useIntl();
   const [currWbwData, setCurrWbwData] = useState<IWbw>(
@@ -108,6 +128,7 @@ const WbwDetailWidget = ({
   }
   return (
     <div
+      className="wbw_detail"
       style={{
         minWidth: 450,
       }}
@@ -116,12 +137,42 @@ const WbwDetailWidget = ({
         size="small"
         type="card"
         tabBarExtraContent={
-          <DiscussionButton
-            initCount={data.hasComment ? 1 : 0}
-            hideCount
-            resId={data.uid}
-            resType="wbw"
-          />
+          <Space>
+            <Tooltip
+              title={popIsTop ? "底端弹窗" : "顶端弹窗"}
+              getTooltipContainer={(node: HTMLElement) =>
+                document.getElementsByClassName("wbw_detail")[0] as HTMLElement
+              }
+            >
+              <Button
+                type="text"
+                icon={
+                  popIsTop ? (
+                    <VerticalAlignBottomOutlined />
+                  ) : (
+                    <VerticalAlignTopOutlined />
+                  )
+                }
+                onClick={() => {
+                  store.dispatch(
+                    tempSet({
+                      key: PopPlacement,
+                      value: !popIsTop,
+                    })
+                  );
+                  if (typeof onPopTopChange !== "undefined") {
+                    //onPopTopChange(popIsTop);
+                  }
+                }}
+              />
+            </Tooltip>
+            <DiscussionButton
+              initCount={data.hasComment ? 1 : 0}
+              hideCount
+              resId={data.uid}
+              resType="wbw"
+            />
+          </Space>
         }
         onChange={(activeKey: string) => {
           setTabKey(activeKey);

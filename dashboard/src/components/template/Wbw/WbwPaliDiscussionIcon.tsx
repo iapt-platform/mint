@@ -25,7 +25,7 @@ const WbwPaliDiscussionIcon = ({ data, studio }: IWidget) => {
       }
     }
   }
-  console.debug("WbwPaliDiscussionIcon render", studio, data, onlyMe);
+
   return (
     <DiscussionButton
       initCount={data.hasComment ? 1 : 0}

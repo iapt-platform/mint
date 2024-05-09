@@ -8,6 +8,7 @@ import {
   ProFormUploadButton,
   RequestOptionsType,
   ProFormDependency,
+  ProFormDigit,
 } from "@ant-design/pro-components";
 
 import { message, Form } from "antd";
@@ -28,7 +29,10 @@ import { UploadChangeParam, UploadFile } from "antd/es/upload/interface";
 import { IAttachmentResponse } from "../../components/api/Attachments";
 
 import { IAnthologyListResponse } from "../../components/api/Article";
-import { IApiResponseChannelList } from "../../components/api/Channel";
+import {
+  IApiResponseChannelData,
+  IApiResponseChannelList,
+} from "../../components/api/Channel";
 
 interface IFormData {
   title: string;
@@ -44,6 +48,7 @@ interface IFormData {
   status: number;
   join: string;
   exp: string;
+  number: number;
 }
 
 interface IWidget {
@@ -104,6 +109,7 @@ const CourseInfoEditWidget = ({
             sign_up_end_at: signUpEndAt,
             join: values.join,
             request_exp: values.exp,
+            number: values.number,
           };
           console.debug("course info edit put", url, postData);
           const res = await put<ICourseDataRequest, ICourseResponse>(
@@ -175,6 +181,7 @@ const CourseInfoEditWidget = ({
             status: res.data.publicity,
             join: res.data.join,
             exp: res.data.request_exp,
+            number: res.data.number,
           };
         }}
       >
@@ -252,6 +259,7 @@ const CourseInfoEditWidget = ({
               id: "forms.fields.teacher.label",
             })}
           />
+          <ProFormDigit label="招生数量" name="number" min={0} />
         </ProForm.Group>
         <ProForm.Group>
           <ProFormDateRangePicker width="md" name="signUp" label="报名时间" />
@@ -296,20 +304,45 @@ const CourseInfoEditWidget = ({
             debounceTime={300}
             request={async ({ keyWords }) => {
               console.log("keyWord", keyWords);
-              if (typeof keyWords === "undefined") {
+              if (typeof keyWords === "undefined" || keyWords === " ") {
                 return currChannel ? [currChannel] : [];
               }
-              const json = await get<IApiResponseChannelList>(
-                `/v2/channel?view=studio&name=${studioName}`
-              );
-              const textbookList = json.data.rows.map((item) => {
+              let urlMy = `/v2/channel?view=studio-all&name=${studioName}`;
+              if (typeof keyWords !== "undefined" && keyWords !== "") {
+                urlMy += "&search=" + keyWords;
+              }
+              console.info("api request", urlMy);
+              const json = await get<IApiResponseChannelList>(urlMy);
+              console.info("api response", json);
+
+              let urlPublic = `/v2/channel?view=public`;
+              if (typeof keyWords !== "undefined" && keyWords !== "") {
+                urlPublic += "&search=" + keyWords;
+              }
+              console.info("api request", urlPublic);
+              const jsonPublic = await get<IApiResponseChannelList>(urlPublic);
+              console.info("api response", jsonPublic);
+
+              //查重
+              let channels1: IApiResponseChannelData[] = [];
+              const channels = [...json.data.rows, ...jsonPublic.data.rows];
+              channels.forEach((value) => {
+                const has = channels1.findIndex(
+                  (value1) => value1.uid === value.uid
+                );
+                if (has === -1) {
+                  channels1.push(value);
+                }
+              });
+
+              const channelList = channels1.map((item) => {
                 return {
                   value: item.uid,
                   label: `${item.studio.nickName}/${item.name}`,
                 };
               });
-              console.log("json", textbookList);
-              return textbookList;
+              console.debug("channelList", channelList);
+              return channelList;
             }}
           />
         </ProForm.Group>

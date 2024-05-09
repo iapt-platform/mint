@@ -99,6 +99,14 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
           description: {
             dataIndex: "desc",
             search: false,
+            render(dom, entity, index, action, schema) {
+              return (
+                <div>
+                  {"channel:"}
+                  {entity.channel?.name ?? "未绑定"}
+                </div>
+              );
+            },
           },
           subTitle: {
             search: false,
@@ -113,16 +121,6 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
                     id: `auth.role.${entity.role}`,
                   })}
                 </Tag>
-              );
-            },
-          },
-          content: {
-            render(dom, entity, index, action, schema) {
-              return (
-                <div>
-                  {"channel:"}
-                  {entity.channel?.name ?? "未绑定"}
-                </div>
               );
             },
           },
@@ -245,8 +243,11 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
           url += `&limit=${params.pageSize}&offset=${offset}`;
-          if (typeof params.keyword !== "undefined") {
-            url += "&search=" + (params.keyword ? params.keyword : "");
+          if (
+            typeof params.keyword !== "undefined" &&
+            params.keyword.trim() !== ""
+          ) {
+            url += "&search=" + params.keyword;
           }
           console.info("api request", url);
           const res = await get<ICourseMemberListResponse>(url);
@@ -256,7 +257,7 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
               setCanManage(true);
             }
             const items: ICourseMember[] = res.data.rows.map((item, id) => {
-              let member: ICourseMember = {
+              const member: ICourseMember = {
                 sn: id + 1,
                 id: item.id,
                 userId: item.user_id,
