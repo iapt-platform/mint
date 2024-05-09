@@ -136,6 +136,7 @@ interface IWbwRequest {
 }
 interface IWidget {
   data: IWbw[];
+  answer?: IWbw[];
   book: number;
   para: number;
   wordStart: number;
@@ -155,6 +156,7 @@ interface IWidget {
 }
 export const WbwSentCtl = ({
   data,
+  answer,
   channelId,
   channelType,
   channelLang,
@@ -531,10 +533,16 @@ export const WbwSentCtl = ({
         }
       });
   };
-  const wbwRender = (item: IWbw, id: number, studio?: IStudio) => {
+
+  interface wbwOptions {
+    studio?: IStudio;
+    answer?: IWbw;
+  }
+  const wbwRender = (item: IWbw, id: number, options?: wbwOptions) => {
     return (
       <WbwWord
         data={item}
+        answer={options?.answer}
         channelId={channelId}
         key={id}
         mode={displayMode}
@@ -776,7 +784,13 @@ export const WbwSentCtl = ({
               return newItem;
             })
             .map((item, id) => {
-              return wbwRender(item, id, studio);
+              const currAnswer = answer?.find(
+                (value) => value.sn.join() === item.sn.join()
+              );
+              return wbwRender(item, id, {
+                studio: studio,
+                answer: currAnswer,
+              });
             })
         ) : (
           <Tree

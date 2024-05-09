@@ -81,6 +81,12 @@
   padding: 0;
   cursor: pointer;
 }
+.wbw_error {
+  text-decoration: underline wavy;
+  text-decoration-color: red;
+  text-underline-offset: 2px;
+}
+
 .layout-v .wbw_word_item {
   margin-right: 8px;
   flex: 5;

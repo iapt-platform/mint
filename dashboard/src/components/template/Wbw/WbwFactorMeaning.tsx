@@ -9,17 +9,20 @@ import { PaliReal } from "../../../utils";
 import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 import { ItemType } from "antd/lib/menu/hooks/useItems";
+import { errorClass } from "./WbwMeaning";
 
 const { Text } = Typography;
 
 interface IWidget {
   data: IWbw;
+  answer?: IWbw;
   factors?: string;
   display?: TWbwDisplayMode;
   onChange?: Function;
 }
 const WbwFactorMeaningWidget = ({
   data,
+  answer,
   display,
   onChange,
   factors,
@@ -95,7 +98,12 @@ const WbwFactorMeaningWidget = ({
 
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
     return (
-      <div>
+      <div
+        className={
+          "wbw_word_item" +
+          errorClass(data.factorMeaning?.value, answer?.factorMeaning?.value)
+        }
+      >
         <Text type="secondary">
           <Dropdown
             menu={{

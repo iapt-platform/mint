@@ -12,6 +12,7 @@ import { useAppSelector } from "../../../hooks";
 import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 import WbwParent2 from "./WbwParent2";
 import { IApiResponseDictData } from "../../api/Dict";
+import { errorClass } from "./WbwMeaning";
 
 export interface ValueType {
   key: string;
@@ -94,11 +95,18 @@ export const caseInDict = (
 
 interface IWidget {
   data: IWbw;
+  answer?: IWbw;
   display?: TWbwDisplayMode;
   onSplit?: Function;
   onChange?: Function;
 }
-const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
+const WbwCaseWidget = ({
+  data,
+  answer,
+  display,
+  onSplit,
+  onChange,
+}: IWidget) => {
   const intl = useIntl();
   const defaultMenu: MenuProps["items"] = [
     {
@@ -173,7 +181,12 @@ const WbwCaseWidget = ({ data, display, onSplit, onChange }: IWidget) => {
   ) {
     //非标点符号
     return (
-      <div className="wbw_word_item" style={{ display: "flex" }}>
+      <div
+        className={
+          "wbw_word_item" + errorClass(data.case?.value, answer?.case?.value)
+        }
+        style={{ display: "flex" }}
+      >
         <Text type="secondary">
           <div>
             <Dropdown

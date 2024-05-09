@@ -83,6 +83,7 @@ export interface IWidgetSentEditInner {
   channels?: string[];
   origin?: ISentence[];
   translation?: ISentence[];
+  answer?: ISentence;
   path?: ITocPathNode[];
   layout?: "row" | "column";
   tranNum?: number;
@@ -103,6 +104,7 @@ export const SentEditInner = ({
   channels,
   origin,
   translation,
+  answer,
   path,
   layout = "column",
   tranNum,
@@ -196,6 +198,7 @@ export const SentEditInner = ({
         wordEnd={wordEnd}
         origin={origin}
         translation={translation}
+        answer={answer}
         layout={layout}
         magicDict={magicDict}
         compact={isCompact}
