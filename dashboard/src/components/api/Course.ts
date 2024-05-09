@@ -71,6 +71,7 @@ export interface ICourseDataResponse {
   count_progressing?: number;
   number: number;
   members?: IMember[];
+  my_role?: TCourseRole;
   created_at: string; //创建时间
   updated_at: string; //修改时间
 }
