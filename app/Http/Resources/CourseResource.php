@@ -53,6 +53,14 @@ class CourseResource extends JsonResource
                                         ->where('is_current',true)
                                         ->select(['role','status'])
                                         ->get();
+        $user = AuthApi::current($request);
+        if($user){
+            $data['my_role'] = CourseMember::where('course_id',$this->id)
+                                            ->where('is_current',true)
+                                            ->where('user_id',$user['user_uid'])
+                                            ->value('role');
+        }
+
         if($this->cover){
             $thumb = str_replace('.jpg','_m.jpg',$this->cover);
             if (App::environment('local')) {

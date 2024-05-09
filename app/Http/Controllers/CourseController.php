@@ -209,6 +209,19 @@ class CourseController extends Controller
 
     }
 
+    private function userCanManage($courseId,$userUid){
+                    //判断是否是manager
+        $role = CourseMember::where('course_id',$courseId)
+                    ->where('is_current',true)
+                    ->where('user_id',$userUid)
+                    ->value('role');
+        $manager = ['owner','teacher','manager'];
+        if(in_array($role,$manager)){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -224,9 +237,11 @@ class CourseController extends Controller
             return $this->error(__('auth.failed'));
         }
         //判断当前用户是否有指定的studio的权限
-        if($user['user_uid'] !== $course->studio_id){
-            return $this->error(__('auth.failed'));
+        $canManage = $this->userCanManage($course->id,$user['user_uid']);
+        if(!$canManage){
+            return $this->error(__('auth.failed'),403,403);
         }
+
         //查询标题是否重复
         if(Course::where('title',$request->get('title'))
                 ->where('studio_id',$user['user_uid'])
