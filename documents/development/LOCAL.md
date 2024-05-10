@@ -12,8 +12,8 @@
 ## 镜像准备
 
 ```bash
-# 解压镜像
-cat palm-jammy.tar.xz.?? | tar jx
+# 合并镜像分卷
+cat palm-jammy-TIMESTAMP.tar.?? > palm-jammy-TIMESTAMP.tar
 # 导入镜像
 podman load -i palm-jammy-TIMESTAMP.tar
 # 启动容器
