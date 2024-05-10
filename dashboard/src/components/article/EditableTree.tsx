@@ -159,7 +159,7 @@ const EditableTreeWidget = ({
   onTitleClick,
 }: IWidget) => {
   const intl = useIntl();
-
+  const [checkKeys, setCheckKeys] = useState<string[]>([]);
   const [gData, setGData] = useState<TreeNodeData[]>([]);
   const [listTreeData, setListTreeData] = useState<ListNodeData[]>();
   const [keys, setKeys] = useState<Key>("");
@@ -233,6 +233,11 @@ const EditableTreeWidget = ({
     console.log("tree data", data);
     setGData(data);
   }, [treeData]);
+
+  const onCheck: TreeProps["onCheck"] = (checkedKeys, info) => {
+    console.log("onCheck", checkedKeys, info);
+    setCheckKeys(checkedKeys as string[]);
+  };
 
   const onDragEnter: TreeProps["onDragEnter"] = (info) => {
     console.log(info);
@@ -343,10 +348,11 @@ const EditableTreeWidget = ({
         <Button
           icon={<DeleteOutlined />}
           danger
+          disabled={checkKeys.length === 0}
           onClick={() => {
             const delTree = (node: TreeNodeData[]): boolean => {
               for (let index = 0; index < node.length; index++) {
-                if (node[index].key === keys) {
+                if (checkKeys.includes(node[index].key)) {
                   node.splice(index, 1);
                   return true;
                 } else {
@@ -384,12 +390,14 @@ const EditableTreeWidget = ({
       <Divider></Divider>
       <Tree
         showIcon
+        checkable
         rootClassName="draggable-tree"
         draggable
         blockNode
         selectable={false}
         onDragEnter={onDragEnter}
         onDrop={onDrop}
+        onCheck={onCheck}
         onSelect={(selectedKeys: Key[]) => {
           if (selectedKeys.length > 0) {
             setKeys(selectedKeys[0]);
