@@ -389,6 +389,7 @@ const EditableTreeWidget = ({
       </Space>
       <Divider></Divider>
       <Tree
+        showLine
         showIcon
         checkable
         rootClassName="draggable-tree"
