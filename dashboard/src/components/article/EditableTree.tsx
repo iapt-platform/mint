@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { message, Tree } from "antd";
+import { message, Modal, Tree } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
 import { Key } from "antd/lib/table/interface";
 import { DeleteOutlined, SaveOutlined } from "@ant-design/icons";
@@ -159,7 +159,8 @@ const EditableTreeWidget = ({
   onTitleClick,
 }: IWidget) => {
   const intl = useIntl();
-
+  const [checkKeys, setCheckKeys] = useState<string[]>([]);
+  const [checkNodes, setCheckNodes] = useState<TreeNodeData[]>([]);
   const [gData, setGData] = useState<TreeNodeData[]>([]);
   const [listTreeData, setListTreeData] = useState<ListNodeData[]>();
   const [keys, setKeys] = useState<Key>("");
@@ -233,6 +234,12 @@ const EditableTreeWidget = ({
     console.log("tree data", data);
     setGData(data);
   }, [treeData]);
+
+  const onCheck: TreeProps["onCheck"] = (checkedKeys, info) => {
+    console.log("onCheck", checkedKeys, info);
+    setCheckKeys(checkedKeys as string[]);
+    setCheckNodes(info.checkedNodes as TreeNodeData[]);
+  };
 
   const onDragEnter: TreeProps["onDragEnter"] = (info) => {
     console.log(info);
@@ -343,10 +350,11 @@ const EditableTreeWidget = ({
         <Button
           icon={<DeleteOutlined />}
           danger
+          disabled={checkKeys.length === 0}
           onClick={() => {
             const delTree = (node: TreeNodeData[]): boolean => {
               for (let index = 0; index < node.length; index++) {
-                if (node[index].key === keys) {
+                if (checkKeys.includes(node[index].key)) {
                   node.splice(index, 1);
                   return true;
                 } else {
@@ -358,13 +366,28 @@ const EditableTreeWidget = ({
               }
               return false;
             };
-            const tmp = [...gData];
-            const find = delTree(tmp);
 
-            console.log("delete", keys, find, tmp);
-            setGData(tmp);
-            const list = treeToList(tmp);
-            setListTreeData(list);
+            Modal.confirm({
+              title: "从文集移除下列文章吗？(文章不会被删除)",
+              content: (
+                <>
+                  {checkNodes.map((item, id) => (
+                    <div key={id}>
+                      {id + 1} {item.title}
+                    </div>
+                  ))}
+                </>
+              ),
+              onOk() {
+                const tmp = [...gData];
+                const find = delTree(tmp);
+
+                console.log("delete", keys, find, tmp);
+                setGData(tmp);
+                const list = treeToList(tmp);
+                setListTreeData(list);
+              },
+            });
           }}
         >
           {intl.formatMessage({ id: "buttons.remove" })}
@@ -383,13 +406,16 @@ const EditableTreeWidget = ({
       </Space>
       <Divider></Divider>
       <Tree
+        showLine
         showIcon
+        checkable
         rootClassName="draggable-tree"
         draggable
         blockNode
         selectable={false}
         onDragEnter={onDragEnter}
         onDrop={onDrop}
+        onCheck={onCheck}
         onSelect={(selectedKeys: Key[]) => {
           if (selectedKeys.length > 0) {
             setKeys(selectedKeys[0]);
