@@ -26,6 +26,7 @@ import { fullUrl, randomString } from "../../utils";
 interface IWidget {
   anthologyId?: string;
   studioName?: string;
+  myStudioName?: string;
   anthology?: IAnthologyDataResponse;
   onSelect?: Function;
 }
@@ -33,6 +34,7 @@ const EditableTocTreeWidget = ({
   anthologyId,
   anthology,
   studioName,
+  myStudioName,
   onSelect,
 }: IWidget) => {
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
@@ -105,7 +107,7 @@ const EditableTocTreeWidget = ({
         addOnArticle={addArticle}
         addFileButton={
           <ArticleListModal
-            studioName={studioName}
+            studioName={myStudioName}
             trigger={<Button icon={<FolderOpenOutlined />}>添加</Button>}
             multiple={false}
             onSelect={(id: string, title: string) => {
