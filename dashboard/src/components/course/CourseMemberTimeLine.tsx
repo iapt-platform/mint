@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useIntl } from "react-intl";
-import { Space, Tag } from "antd";
+import { Space, Tag, Typography } from "antd";
 import { ActionType, ProList } from "@ant-design/pro-components";
 
 import { get } from "../../request";
@@ -9,6 +9,11 @@ import User from "../auth/User";
 import TimeShow from "../general/TimeShow";
 import { getStatusColor } from "./RolePower";
 
+const { Text } = Typography;
+
+interface IParams {
+  timeline?: string;
+}
 interface IWidget {
   courseId?: string;
   userId?: string;
@@ -25,24 +30,28 @@ const CourseMemberTimeLineWidget = ({ courseId, userId }: IWidget) => {
 
   return (
     <>
-      <ProList<ICourseMemberData>
+      <ProList<ICourseMemberData, IParams>
         actionRef={ref}
         search={{
           filterType: "light",
         }}
         metas={{
-          title: {
-            dataIndex: "name",
-            search: false,
-            render(dom, entity, index, action, schema) {
-              return entity.user?.nickName;
-            },
-          },
           avatar: {
             render(dom, entity, index, action, schema) {
               return <User {...entity.user} showName={false} />;
             },
             editable: false,
+          },
+          title: {
+            dataIndex: "name",
+            search: false,
+            render(dom, entity, index, action, schema) {
+              return entity.course ? (
+                <Text strong>{entity.course.title}</Text>
+              ) : (
+                entity.user?.nickName
+              );
+            },
           },
           description: {
             dataIndex: "desc",
@@ -85,9 +94,20 @@ const CourseMemberTimeLineWidget = ({ courseId, userId }: IWidget) => {
               ];
             },
           },
+          timeline: {
+            // 自己扩展的字段，主要用于筛选，不在列表中显示
+            title: "筛 选",
+            valueType: "select",
+            valueEnum: {
+              all: { text: intl.formatMessage({ id: "course.timeline.all" }) },
+              current: {
+                text: intl.formatMessage({ id: "course.timeline.current" }),
+              },
+            },
+          },
         }}
         request={async (params = {}, sorter, filter) => {
-          console.log(params, sorter, filter);
+          console.info("filter", params, sorter, filter);
 
           let url = `/v2/course-member?view=timeline&course=${courseId}&userId=${userId}`;
           const offset =
@@ -96,6 +116,9 @@ const CourseMemberTimeLineWidget = ({ courseId, userId }: IWidget) => {
           url += `&limit=${params.pageSize}&offset=${offset}`;
           if (typeof params.keyword !== "undefined") {
             url += "&search=" + (params.keyword ? params.keyword : "");
+          }
+          if (params.timeline) {
+            url += `&timeline=${params.timeline}&request_course=1`;
           }
           console.info("api request", url);
           const res = await get<ICourseMemberListResponse>(url);

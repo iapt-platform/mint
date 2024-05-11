@@ -60,6 +60,8 @@ const items = {
     "课程组织者需要查看您在课程期间的每日学习时长。报名意味着您同意。",
   "course.table.count.member.title": "成员数",
   "course.table.count.progressing.title": "待审核",
+  "course.timeline.all": "全部参课记录",
+  "course.timeline.current": "当前课程",
 };
 
 export default items;
