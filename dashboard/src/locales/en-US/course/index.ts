@@ -6,11 +6,11 @@ const items = {
   "course.member.status.none.label": " ",
   "course.member.status.normal.label": "报名成功",
   "course.member.status.joined.label": "已经参加了",
-  "course.member.status.join.button": "参加",
+  "course.member.status.join.button": "attend",
   "course.member.status.join.message":
-    "参加{course}吗？本课程为自学课程。加入后可以立即开始学习。",
-  "course.member.status.applied.label": "已经报名",
-  "course.member.status.apply.button": "报名",
+    "This is a self-study course。You can start your study immediately after attend without admission, Do you really want to attend this {course}? ",
+  "course.member.status.applied.label": "applied",
+  "course.member.status.apply.button": "apply",
   "course.member.status.apply.message":
     "要报名{course}吗？本课程为需审核课程。报名后请等待组织者审核录取。",
   "course.member.status.canceled.label": "已经取消",
