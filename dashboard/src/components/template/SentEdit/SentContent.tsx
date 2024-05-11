@@ -31,6 +31,7 @@ interface IWidgetSentContent {
   compact?: boolean;
   mode?: ArticleMode;
   wbwProgress?: boolean;
+  readonly?: boolean;
   onWbwChange?: Function;
   onMagicDictDone?: Function;
 }
@@ -48,6 +49,7 @@ const SentContentWidget = ({
   mode,
   magicDict,
   wbwProgress = false,
+  readonly = false,
   onWbwChange,
   onMagicDictDone,
 }: IWidgetSentContent) => {
@@ -163,6 +165,7 @@ const SentContentWidget = ({
                 answer={answer ? JSON.parse(answer.content ?? "") : undefined}
                 mode={mode}
                 wbwProgress={wbwProgress}
+                readonly={readonly}
                 onChange={(data: IWbw[]) => {
                   if (typeof onWbwChange !== "undefined") {
                     onWbwChange(data);

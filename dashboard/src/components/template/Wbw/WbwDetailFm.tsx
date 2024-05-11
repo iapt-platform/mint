@@ -21,9 +21,15 @@ import { MergeIcon } from "../../../assets/icon";
 interface IWFMI {
   pali: string;
   meaning?: string;
+  readonly?: boolean;
   onChange?: Function;
 }
-const WbwFactorMeaningItem = ({ pali, meaning = "", onChange }: IWFMI) => {
+const WbwFactorMeaningItem = ({
+  pali,
+  readonly = false,
+  meaning = "",
+  onChange,
+}: IWFMI) => {
   const intl = useIntl();
   console.debug("WbwFactorMeaningItem meaning", meaning);
   const defaultMenu: ItemType[] = [
@@ -190,12 +196,14 @@ const resizeArray = (input: string[], factors: string[]) => {
 interface IWidget {
   factors?: string[];
   value?: string[];
+  readonly?: boolean;
   onChange?: Function;
   onJoin?: Function;
 }
 const WbwDetailFmWidget = ({
   factors = [],
   value = [],
+  readonly = false,
   onChange,
   onJoin,
 }: IWidget) => {

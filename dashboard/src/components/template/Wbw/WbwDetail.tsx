@@ -36,6 +36,7 @@ interface IWidget {
   data: IWbw;
   visible?: boolean;
   popIsTop?: boolean;
+  readonly?: boolean;
   onClose?: Function;
   onSave?: Function;
   onAttachmentSelectOpen?: Function;
@@ -45,6 +46,7 @@ const WbwDetailWidget = ({
   data,
   visible = true,
   popIsTop = false,
+  readonly = false,
   onClose,
   onSave,
   onAttachmentSelectOpen,
@@ -185,6 +187,7 @@ const WbwDetailWidget = ({
               <WbwDetailBasic
                 visible={visible && tabKey === "basic"}
                 data={currWbwData}
+                readonly={readonly}
                 onChange={(e: IWbwField) => {
                   console.debug("WbwDetailBasic onchange", e);
                   fieldChanged(e.field, e.value);
@@ -306,6 +309,7 @@ const WbwDetailWidget = ({
           </Button>
         </div>
         <Dropdown.Button
+          disabled={readonly}
           style={{ width: "unset" }}
           type="primary"
           menu={{

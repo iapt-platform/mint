@@ -37,7 +37,10 @@ const SentWbwWidget = ({
 
   const myCourse = useAppSelector(courseUser);
 
-  const isCourse = myCourse && course;
+  let isCourse: boolean = false;
+  if (myCourse && course) {
+    isCourse = true;
+  }
 
   const load = () => {
     let url = `/v2/wbw-sentence?view=sent-can-read`;
@@ -139,6 +142,7 @@ const SentWbwWidget = ({
           <List.Item key={index}>
             <SentEditInner
               {...item}
+              readonly={isCourse}
               answer={answer}
               wbwProgress={wbwProgress}
             />

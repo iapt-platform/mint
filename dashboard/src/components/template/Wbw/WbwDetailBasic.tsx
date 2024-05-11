@@ -29,6 +29,7 @@ interface IWidget {
   data: IWbw;
   visible?: boolean;
   showRelation?: boolean;
+  readonly?: boolean;
   onChange?: Function;
   onRelationAdd?: Function;
 }
@@ -36,6 +37,7 @@ const WbwDetailBasicWidget = ({
   data,
   visible,
   showRelation = true,
+  readonly = false,
   onChange,
   onRelationAdd,
 }: IWidget) => {
@@ -87,6 +89,7 @@ const WbwDetailBasicWidget = ({
           <div style={{ display: "flex" }}>
             <div style={{ display: "flex", width: "100%" }}>
               <Input
+                disabled={readonly}
                 value={_meaning}
                 allowClear
                 placeholder="请输入"
@@ -110,18 +113,18 @@ const WbwDetailBasicWidget = ({
                     }}
                   />
                 }
+                trigger={readonly ? "" : "click"}
                 overlayStyle={{ width: 500 }}
                 placement="bottom"
-                trigger="click"
                 open={openCreate}
                 onOpenChange={(open: boolean) => {
                   setOpenCreate(open);
                 }}
               >
                 <Button
+                  disabled={readonly}
                   type="text"
                   icon={<MoreOutlined />}
-                  onClick={() => {}}
                 />
               </Popover>
             </div>
@@ -141,6 +144,7 @@ const WbwDetailBasicWidget = ({
         >
           <div style={{ display: "flex" }}>
             <WbwDetailFactor
+              readonly={readonly}
               data={data}
               onChange={(value: string) => {
                 setFactors(value.split("+"));
@@ -170,6 +174,7 @@ const WbwDetailBasicWidget = ({
           <div style={{ display: "flex" }}>
             <WbwDetailFm
               factors={factors}
+              readonly={readonly}
               value={data.factorMeaning?.value?.split("+")}
               onChange={(value: string[]) => {
                 console.log("fm change", value);
@@ -198,6 +203,7 @@ const WbwDetailBasicWidget = ({
         >
           <div style={{ display: "flex" }}>
             <WbwDetailCase
+              readonly={readonly}
               data={data}
               onChange={(value: string) => {
                 if (typeof onChange !== "undefined") {
@@ -225,6 +231,7 @@ const WbwDetailBasicWidget = ({
         >
           <div style={{ display: "flex" }}>
             <WbwDetailParent
+              readonly={readonly}
               data={data}
               onChange={(value: string) => {
                 if (typeof onChange !== "undefined") {

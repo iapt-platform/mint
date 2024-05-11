@@ -111,6 +111,7 @@ interface IWidget {
   mode?: ArticleMode;
   wordDark?: boolean;
   studio?: IStudio;
+  readonly?: boolean;
   onChange?: Function;
   onSplit?: Function;
 }
@@ -129,6 +130,7 @@ const WbwWordWidget = ({
     case: true,
   },
   wordDark = false,
+  readonly = false,
   studio,
   onChange,
   onSplit,
@@ -255,6 +257,7 @@ const WbwWordWidget = ({
           mode={mode}
           display={display}
           studio={studio}
+          readonly={readonly}
           onSave={(e: IWbw, isPublish: boolean, isPublic: boolean) => {
             const newData: IWbw = JSON.parse(JSON.stringify(e));
             setWordData(newData);
