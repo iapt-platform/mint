@@ -51,9 +51,11 @@ const NotificationListWidget = ({ onChange }: IWidget) => {
   }, []);
   const putStatus = (id: string, status: string) => {
     const url = `/v2/notification/${id}`;
+    console.info("api request", url);
     put<INotificationRequest, INotificationPutResponse>(url, {
       status: status,
     }).then((json) => {
+      console.info("api response", json);
       if (json.ok) {
         ref.current?.reload();
         if (typeof onChange !== "undefined") {
@@ -118,7 +120,9 @@ const NotificationListWidget = ({ onChange }: IWidget) => {
           ((params.current ? params.current : 1) - 1) *
           (params.pageSize ? params.pageSize : 5);
         url += `&limit=${params.pageSize}&offset=${offset}`;
+        console.info("api request", url);
         const res = await get<INotificationListResponse>(url);
+        console.info("api response", res);
         let items: INotification[] = [];
         if (res.ok) {
           items = res.data.rows.map((item, id) => {
@@ -204,7 +208,7 @@ const NotificationListWidget = ({ onChange }: IWidget) => {
             return (
               <Space>
                 <TimeShow createdAt={row.created_at} />
-                <Tag color="#87d068">{row.channel.name}</Tag>
+                <Tag color="#87d068">{row.channel?.name}</Tag>
                 <Tag color="blue">{row.res_type}</Tag>
               </Space>
             );
