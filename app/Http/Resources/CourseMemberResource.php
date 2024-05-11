@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\UserApi;
 use App\Http\Api\ChannelApi;
+use App\Models\Course;
 
 class CourseMemberResource extends JsonResource
 {
@@ -33,6 +34,10 @@ class CourseMemberResource extends JsonResource
             if($channel){
                $data['channel'] =  $channel;
             }
+        }
+        if(!empty($request->get('request_course'))){
+            $course = Course::find($this->course_id);
+            $data['course'] =  $course;
         }
         return $data;
     }

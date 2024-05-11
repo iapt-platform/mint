@@ -45,8 +45,11 @@ class CourseMemberController extends Controller
                 /**
                  * 编辑时间线
                  */
-                $table = CourseMember::where('course_id', $request->get('course'))
-                                    ->where('user_id',$request->get('userId'));
+                $table = CourseMember::where('user_id',$request->get('userId'));
+                if($request->get('timeline','current')==='current'){
+                    $table = $table->where('course_id', $request->get('course'));
+                }
+
                 break;
             default:
                 return $this->error('无法识别的参数view',400,400);
