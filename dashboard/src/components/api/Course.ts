@@ -165,6 +165,7 @@ export interface ICourseMemberData {
   id?: string;
   user_id: string;
   course_id: string;
+  course?: ICourseDataResponse;
   channel_id?: string;
   channel?: IChannel;
   role?: TCourseRole;
