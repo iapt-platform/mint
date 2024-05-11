@@ -40,7 +40,7 @@ const NotificationIconWidget = () => {
     }
 
     const url = `/v2/notification?view=to&limit=1`;
-    console.info("notification url", url);
+    console.info("notification api request", url);
     get<INotificationListResponse>(url).then((json) => {
       if (json.ok) {
         console.debug("notification fetch ok ", json.data.unread);
