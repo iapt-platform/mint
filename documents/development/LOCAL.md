@@ -12,13 +12,13 @@
 ## 镜像准备
 
 ```bash
-# 解压镜像
-cat palm-jammy.tar.xz.?? | tar jx
+# 合并镜像分卷
+cat palm-spring-TIMESTAMP.tar.?? > palm-spring-TIMESTAMP.tar
 # 导入镜像
-podman load -i palm-jammy-TIMESTAMP.tar
+podman load -i palm-spring-TIMESTAMP.tar
 # 启动容器
 cd ~/workspace
-./YOUR_PROJECT/docker/jammy/start.sh
+./YOUR_PROJECT/docker/spring/start.sh
 ```
 
 ## 容器准备
@@ -27,7 +27,7 @@ cd ~/workspace
 
   ```bash
   $ cd ~/workspace
-  $ ./mint/docker/jammy/start.sh
+  $ ./mint/docker/spring/start.sh
   > supervisord -c /etc/supervisor/supervisord.conf # 启动服务
   > /etc/redis/clusters-init.sh # 初始化redis集群
   ```
