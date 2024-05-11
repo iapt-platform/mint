@@ -39,9 +39,14 @@ interface ValueType {
 }
 interface IWidget {
   data: IWbw;
+  readonly?: boolean;
   onChange?: Function;
 }
-const WbwDetailParentWidget = ({ data, onChange }: IWidget) => {
+const WbwDetailParentWidget = ({
+  data,
+  readonly = false,
+  onChange,
+}: IWidget) => {
   const [parentOptions, setParentOptions] = useState<ValueType[]>([]);
   const inlineDict = useAppSelector(_inlineDict);
 
@@ -75,6 +80,7 @@ const WbwDetailParentWidget = ({ data, onChange }: IWidget) => {
 
   return (
     <AutoComplete
+      disabled={readonly}
       options={parentOptions}
       value={data.parent?.value}
       onChange={(value: any, option: ValueType | ValueType[]) => {
@@ -84,7 +90,7 @@ const WbwDetailParentWidget = ({ data, onChange }: IWidget) => {
         }
       }}
     >
-      <Input allowClear placeholder="请输入" />
+      <Input disabled={readonly} allowClear placeholder="请输入" />
     </AutoComplete>
   );
 };

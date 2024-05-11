@@ -20,9 +20,14 @@ interface ValueType {
 }
 interface IWidget {
   data: IWbw;
+  readonly?: boolean;
   onChange?: Function;
 }
-const WbwDetailFactorWidget = ({ data, onChange }: IWidget) => {
+const WbwDetailFactorWidget = ({
+  data,
+  readonly = false,
+  onChange,
+}: IWidget) => {
   const [factorOptions, setFactorOptions] = useState<ValueType[]>([]);
   const inlineDict = useAppSelector(_inlineDict);
   const inlineWordIndex = useAppSelector(wordIndex);
@@ -77,6 +82,7 @@ const WbwDetailFactorWidget = ({ data, onChange }: IWidget) => {
 
   return (
     <AutoComplete
+      disabled={readonly}
       options={factorOptions}
       value={data.factors?.value}
       onChange={(value: string) => {
@@ -85,7 +91,7 @@ const WbwDetailFactorWidget = ({ data, onChange }: IWidget) => {
         }
       }}
     >
-      <Input placeholder="请输入" allowClear />
+      <Input disabled={readonly} placeholder="请输入" allowClear />
     </AutoComplete>
   );
 };

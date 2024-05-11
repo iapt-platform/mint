@@ -9,9 +9,14 @@ interface CascaderOption {
 }
 interface IWidget {
   value?: string | null;
+  readonly?: boolean;
   onCaseChange?: Function;
 }
-const SelectCaseWidget = ({ value, onCaseChange }: IWidget) => {
+const SelectCaseWidget = ({
+  value,
+  readonly = false,
+  onCaseChange,
+}: IWidget) => {
   const intl = useIntl();
   const [currValue, setCurrValue] = useState<(string | number)[]>();
 
@@ -339,6 +344,7 @@ const SelectCaseWidget = ({ value, onCaseChange }: IWidget) => {
   ];
   return (
     <Cascader
+      disabled={readonly}
       value={currValue}
       options={options}
       placeholder="Please select case"

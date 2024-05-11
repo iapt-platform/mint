@@ -151,6 +151,7 @@ interface IWidget {
   mode?: ArticleMode;
   wbwProgress?: boolean;
   studio?: IStudio;
+  readonly?: boolean;
   onMagicDictDone?: Function;
   onChange?: Function;
 }
@@ -170,6 +171,7 @@ export const WbwSentCtl = ({
   mode,
   refreshable = false,
   wbwProgress = false,
+  readonly = false,
   studio,
   onChange,
   onMagicDictDone,
@@ -549,6 +551,7 @@ export const WbwSentCtl = ({
         display={wbwMode}
         fields={fieldDisplay}
         studio={studio}
+        readonly={readonly}
         onChange={(e: IWbw, isPublish: boolean, isPublic: boolean) => {
           let newData = [...wordData];
           newData.forEach((value, index, array) => {

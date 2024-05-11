@@ -13,15 +13,17 @@ import { useIntl } from "react-intl";
 
 interface IWidget {
   data: IWbw;
+  readonly?: boolean;
   onChange?: Function;
 }
-const WbwDetailCaseWidget = ({ data, onChange }: IWidget) => {
+const WbwDetailCaseWidget = ({ data, readonly = false, onChange }: IWidget) => {
   const inlineDict = useAppSelector(_inlineDict);
   const intl = useIntl();
 
   return (
     <div style={{ display: "flex", width: "100%" }}>
       <SelectCase
+        readonly={readonly}
         value={data.case?.value}
         onCaseChange={(value: string) => {
           if (typeof onChange !== "undefined") {

@@ -94,6 +94,7 @@ export interface IWidgetSentEditInner {
   compact?: boolean;
   mode?: ArticleMode;
   wbwProgress?: boolean;
+  readonly?: boolean;
 }
 export const SentEditInner = ({
   id,
@@ -115,6 +116,7 @@ export const SentEditInner = ({
   compact = false,
   mode,
   wbwProgress = false,
+  readonly = false,
 }: IWidgetSentEditInner) => {
   const [wbwData, setWbwData] = useState<IWbw[]>();
   const [magicDict, setMagicDict] = useState<string>();
@@ -204,6 +206,7 @@ export const SentEditInner = ({
         compact={isCompact}
         mode={articleMode}
         wbwProgress={wbwProgress}
+        readonly={readonly}
         onWbwChange={(data: IWbw[]) => {
           setWbwData(data);
         }}

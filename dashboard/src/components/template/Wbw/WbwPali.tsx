@@ -58,6 +58,7 @@ interface IWidget {
   channelId: string;
   display?: TWbwDisplayMode;
   mode?: ArticleMode;
+  readonly?: boolean;
   onSave?: Function;
 }
 const WbwPaliWidget = ({
@@ -66,6 +67,7 @@ const WbwPaliWidget = ({
   mode,
   display,
   studio,
+  readonly = false,
   onSave,
 }: IWidget) => {
   const [popOpen, setPopOpen] = useState(false);
@@ -198,6 +200,7 @@ const WbwPaliWidget = ({
       data={data}
       visible={popOpen}
       popIsTop={popOnTop}
+      readonly={readonly}
       onClose={() => {
         setPaliColor("unset");
         setPopOpen(false);
