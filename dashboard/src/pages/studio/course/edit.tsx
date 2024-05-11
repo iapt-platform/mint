@@ -56,7 +56,7 @@ const Widget = () => {
                       items={[
                         {
                           key: "timeline",
-                          label: "timeline",
+                          label: "录取记录",
                           children:
                             courseId && selected ? (
                               <CourseMemberTimeLine
