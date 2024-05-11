@@ -37,6 +37,8 @@ const SentWbwWidget = ({
 
   const myCourse = useAppSelector(courseUser);
 
+  const isCourse = myCourse && course;
+
   const load = () => {
     let url = `/v2/wbw-sentence?view=sent-can-read`;
     url += `&book=${book}&para=${para}&wordStart=${wordStart}&wordEnd=${wordEnd}`;
@@ -63,12 +65,24 @@ const SentWbwWidget = ({
       }
     }
 
-    console.log("wbw sentence api request", url);
+    console.info("wbw sentence api request", url);
     get<ISentenceWbwListResponse>(url)
       .then((json) => {
+        console.info("wbw sentence api response", json);
         if (json.ok) {
-          console.log("sim load", json.data.count);
-          setSentData(json.data.rows);
+          console.debug("wbw sentence course", course);
+          if (course && myCourse && myCourse.role !== "student") {
+            setSentData(
+              json.data.rows.filter((value) =>
+                value.translation
+                  ? value.translation[0].channel.id !== course.channelId
+                  : true
+              )
+            );
+          } else {
+            setSentData(json.data.rows);
+          }
+
           if (myCourse && course) {
             const answerData = json.data.rows.find((value) =>
               value.origin
