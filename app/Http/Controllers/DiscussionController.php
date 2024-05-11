@@ -415,9 +415,7 @@ class DiscussionController extends Controller
             if(isset($channelId)){
                 $channel = Channel::find($channelId);
                 if($channel){
-                    if($channel->owner_uid===$user['user_uid']){
-                        $isResManager = true;
-                    }
+                    $isResManager = ChannelApi::userCanEdit($user['user_uid'],$channelId);
                 }
             }
         }
