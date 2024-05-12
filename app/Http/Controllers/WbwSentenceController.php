@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Api\AuthApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\CourseApi;
 
 class WbwSentenceController extends Controller
 {
@@ -37,14 +38,7 @@ class WbwSentenceController extends Controller
                           $request->get('wordEnd');
                 $channels = [];
                 if($request->has('course')){
-                    $studentsChannel = CourseMember::where('course_id',$request->get('course'))
-                                                    ->whereNotNull('channel_id')
-                                                    ->select('channel_id')
-                                                    ->orderBy('created_at')
-                                                    ->get();
-                    foreach ($studentsChannel as $key => $channel) {
-                        $channels[] = $channel->channel_id;
-                    }
+                    $channels = CourseApi::getStudentChannels($request->get('course'));
                     $channels[] = Course::where('id',$request->get('course'))
                                     ->value('channel_id');
                 }else{
@@ -70,21 +64,15 @@ class WbwSentenceController extends Controller
                 }else{
                     $channelsId = $channels;
                 }
-                $wbwBlocksId = WbwBlock::where('book_id',$request->get('book'))
-                                    ->where('paragraph',$request->get('para'))
-                                    ->whereIn('channel_uid',$channelsId)
-                                    ->select('uid')
-                                    ->get();
-                $validBlocks = Wbw::whereIn('block_uid',$wbwBlocksId)
-                            ->where('book_id',$request->get('book'))
-                            ->where('paragraph',$request->get('para'))
-                            ->where('wid',$request->get('wordStart'))
-                            ->select('block_uid')
-                            ->groupBy('block_uid')
-                            ->get();
 
-                foreach ($validBlocks as $key => $block) {
-                    $channel = WbwBlock::where('uid',$block->block_uid)->first();
+                $validBlocks = WbwSentenceController::getBlocksByChannels($channelsId,
+                                    $request->get('book'),
+                                    $request->get('para'),
+                                    $request->get('wordStart')
+                                );
+
+                foreach ($validBlocks as $key => $blockId) {
+                    $channel = WbwBlock::where('uid',$blockId)->first();
                     $corpus = new CorpusController;
                     $props = $corpus->getSentTpl($sentId,[$channel->channel_uid],
                                                'edit',true,
@@ -96,6 +84,40 @@ class WbwSentenceController extends Controller
         }
     }
 
+    public static function getBlocksByChannels($channelsId,$book,$para,$wordId){
+        $wbwBlocksId = WbwBlock::where('book_id',$book)
+                            ->where('paragraph',$para)
+                            ->whereIn('channel_uid',$channelsId)
+                            ->select('uid')
+                            ->get();
+        $validBlocks = Wbw::whereIn('block_uid',$wbwBlocksId)
+                        ->where('book_id',$book)
+                        ->where('paragraph',$para)
+                        ->where('wid',$wordId)
+                        ->select('block_uid')
+                        ->groupBy('block_uid')
+                        ->get();
+        $blocksId = [];
+        foreach ($validBlocks as $key => $block) {
+            $blocksId[] = $block->block_uid;
+        }
+        return $blocksId;
+    }
+
+    public static function getWbwIdByChannels($channelsId,$book,$para,$wordId){
+        $validBlocks = WbwSentenceController::getBlocksByChannels($channelsId,$book,$para,$wordId);
+        $wbwId = Wbw::whereIn('block_uid',$validBlocks)
+                        ->where('book_id',$book)
+                        ->where('paragraph',$para)
+                        ->where('wid',$wordId)
+                        ->select('uid')
+                        ->get();
+        $id = [];
+        foreach ($wbwId as $key => $value) {
+            $id[] = $value->uid;
+        }
+        return $id;
+    }
     /**
      * Store a newly created resource in storage.
      *
