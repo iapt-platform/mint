@@ -4,19 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+
 use App\Models\Discussion;
 use App\Models\Wbw;
 use App\Models\WbwBlock;
 use App\Models\PaliSentence;
 use App\Models\Sentence;
 use App\Models\Channel;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\WbwSentenceController;
 use App\Http\Resources\DiscussionResource;
 use App\Http\Api\MdRender;
 use App\Http\Api\AuthApi;
 use App\Http\Api\Mq;
-use App\Http\Controllers\ArticleController;
 use App\Http\Api\UserApi;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\CourseApi;
 
 class DiscussionController extends Controller
 {
@@ -65,10 +68,10 @@ class DiscussionController extends Controller
                         'can_reply' => false,
                         ]);
                 }
-
+                $resType = Discussion::where('res_id',$request->get('id'))
+                                        ->value('res_type');
                 if($user){
-                    $res_type = Discussion::where('res_id',$request->get('id'))->value('res_type');
-                    switch ($res_type) {
+                    switch ($resType) {
                         case 'sentence':
                             # code...
                             break;
@@ -87,7 +90,30 @@ class DiscussionController extends Controller
                     }
                 }
 
-                $table = Discussion::where('res_id',$request->get('id'))
+
+                $resId = [$request->get('id')];
+                if(!empty($request->get('course'))){
+                    //获取学员提问
+                    //获取学员channel
+                    $channelsId = CourseApi::getStudentChannels($request->get('course'));
+                    switch ($resType) {
+                        case 'wbw':
+                            //获取答案单词编号
+                            $wbwWord = Wbw::where('uid',$request->get('id'))
+                                        ->first();
+                            $wbwId = WbwSentenceController::getWbwIdByChannels(
+                                            $channelsId,
+                                            $wbwWord->book_id,
+                                            $wbwWord->paragraph,
+                                            $wbwWord->wid);
+                            $resId = array_merge($resId,$wbwId);
+                            break;
+                        case 'sentence':
+                            break;
+                    }
+
+                }
+                $table = Discussion::whereIn('res_id',$resId)
                                     ->where('type', $request->get('type','discussion'))
                                     ->where('status',$request->get('status','active'))
                                     ->where('parent',null);
