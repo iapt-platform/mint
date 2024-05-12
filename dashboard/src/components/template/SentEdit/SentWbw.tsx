@@ -1,5 +1,6 @@
-import { List, Space, message } from "antd";
+import { Button, List, Space, message } from "antd";
 import { useEffect, useState } from "react";
+import { ReloadOutlined } from "@ant-design/icons";
 
 import { get } from "../../../request";
 import { ISentenceWbwListResponse } from "../../api/Corpus";
@@ -29,9 +30,9 @@ const SentWbwWidget = ({
   wbwProgress = false,
   onReload,
 }: IWidget) => {
-  const [initLoading, setInitLoading] = useState(true);
   const [sentData, setSentData] = useState<IWidgetSentEditInner[]>([]);
   const [answer, setAnswer] = useState<ISentence>();
+  const [loading, setLoading] = useState<boolean>(false);
   const course = useAppSelector(courseInfo);
   const courseMember = useAppSelector(memberInfo);
 
@@ -68,6 +69,7 @@ const SentWbwWidget = ({
       }
     }
 
+    setLoading(true);
     console.info("wbw sentence api request", url);
     get<ISentenceWbwListResponse>(url)
       .then((json) => {
@@ -102,7 +104,7 @@ const SentWbwWidget = ({
         }
       })
       .finally(() => {
-        setInitLoading(false);
+        setLoading(false);
         if (reload && typeof onReload !== "undefined") {
           onReload();
         }
@@ -134,7 +136,20 @@ const SentWbwWidget = ({
   return (
     <>
       <List
-        loading={initLoading}
+        loading={loading}
+        header={
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span></span>
+            <Space>
+              <Button
+                type="link"
+                shape="round"
+                icon={<ReloadOutlined />}
+                onClick={() => load()}
+              />
+            </Space>
+          </div>
+        }
         itemLayout="horizontal"
         split={false}
         dataSource={sentData}

@@ -133,6 +133,7 @@ const WbwFactorMeaningItem = ({
     />
   ) : (
     <Button
+      disabled={readonly}
       key={1}
       size="small"
       type="text"
@@ -145,7 +146,7 @@ const WbwFactorMeaningItem = ({
     </Button>
   );
 
-  return editable ? (
+  return editable || readonly ? (
     meaningInner
   ) : (
     <Dropdown
@@ -265,6 +266,7 @@ const WbwDetailFmWidget = ({
                 {factors[index]?.split("-").map((item1, index1) => {
                   return (
                     <WbwFactorMeaningItem
+                      readonly={readonly}
                       key={index1}
                       pali={item1}
                       meaning={fm[index1]}
@@ -291,11 +293,12 @@ const WbwDetailFmWidget = ({
                 })}
 
                 {index < currValue.length - 1 ? (
-                  <PlusOutlined key={`icon-${index}`} />
+                  <PlusOutlined disabled={readonly} key={`icon-${index}`} />
                 ) : (
                   <>
                     <Tooltip title="在文本框中编辑">
                       <Button
+                        disabled={readonly}
                         key="EditOutlined"
                         size="small"
                         type="text"
@@ -305,6 +308,7 @@ const WbwDetailFmWidget = ({
                     </Tooltip>
                     <Tooltip title="合并后替换含义">
                       <Button
+                        disabled={readonly}
                         key="CheckOutlined"
                         size="small"
                         type="text"

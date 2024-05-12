@@ -19,7 +19,7 @@ interface IWidget {
 const WbwDetailCaseWidget = ({ data, readonly = false, onChange }: IWidget) => {
   const inlineDict = useAppSelector(_inlineDict);
   const intl = useIntl();
-
+  console.debug("readonly", readonly);
   return (
     <div style={{ display: "flex", width: "100%" }}>
       <SelectCase
@@ -32,6 +32,7 @@ const WbwDetailCaseWidget = ({ data, readonly = false, onChange }: IWidget) => {
         }}
       />
       <Dropdown
+        trigger={readonly ? [] : ["click"]}
         menu={{
           items: data.real.value
             ? caseInDict(
@@ -50,7 +51,7 @@ const WbwDetailCaseWidget = ({ data, readonly = false, onChange }: IWidget) => {
         }}
         placement="bottomRight"
       >
-        <Button type="text" icon={<MoreOutlined />} />
+        <Button disabled={readonly} type="text" icon={<MoreOutlined />} />
       </Dropdown>
     </div>
   );

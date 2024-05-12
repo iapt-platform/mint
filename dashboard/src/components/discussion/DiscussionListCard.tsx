@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Space, Typography } from "antd";
+import { LinkOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
 import { ICommentListResponse } from "../api/Comment";
@@ -15,6 +16,8 @@ import { currentUser as _currentUser } from "../../reducers/current-user";
 import { CommentOutlinedIcon, TemplateOutlinedIcon } from "../../assets/icon";
 import { ISentenceResponse } from "../api/Corpus";
 import { TDiscussionType } from "./Discussion";
+import { courseInfo, memberInfo } from "../../reducers/current-course";
+import { courseUser } from "../../reducers/course-user";
 
 export type TResType =
   | "article"
@@ -57,6 +60,10 @@ const DiscussionListCardWidget = ({
   const [count, setCount] = useState<number>(0);
   const [canCreate, setCanCreate] = useState(false);
 
+  const course = useAppSelector(courseInfo);
+  const courseMember = useAppSelector(memberInfo);
+  const myCourse = useAppSelector(courseUser);
+
   const user = useAppSelector(_currentUser);
 
   useEffect(() => {
@@ -97,19 +104,22 @@ const DiscussionListCardWidget = ({
           title: {
             render(dom, entity, index, action, schema) {
               return (
-                <Button
-                  key={index}
-                  size="small"
-                  type="link"
-                  icon={entity.newTpl ? <TemplateOutlinedIcon /> : undefined}
-                  onClick={(event) => {
-                    if (typeof onSelect !== "undefined") {
-                      onSelect(event, entity);
-                    }
-                  }}
-                >
-                  {entity.title}
-                </Button>
+                <>
+                  {entity.resId !== resId ? <LinkOutlined /> : <></>}
+                  <Button
+                    key={index}
+                    size="small"
+                    type="link"
+                    icon={entity.newTpl ? <TemplateOutlinedIcon /> : undefined}
+                    onClick={(event) => {
+                      if (typeof onSelect !== "undefined") {
+                        onSelect(event, entity);
+                      }
+                    }}
+                  >
+                    {entity.title}
+                  </Button>
+                </>
               );
             },
           },
@@ -155,9 +165,16 @@ const DiscussionListCardWidget = ({
           url += `&limit=${params.pageSize}&offset=${offset}`;
           url += params.keyword ? "&search=" + params.keyword : "";
           url += activeKey ? "&status=" + activeKey : "";
-          console.log("DiscussionListCard api request", url);
+
+          if (myCourse && course) {
+            if (myCourse.role !== "student") {
+              url += `&course=${course.courseId}`;
+            }
+          }
+
+          console.info("DiscussionListCard api request", url);
           const res = await get<ICommentListResponse>(url);
-          console.debug("DiscussionListCard api response", res);
+          console.info("DiscussionListCard api response", res);
           setCount(res.data.active);
           setCanCreate(res.data.can_create);
           const items: IComment[] = res.data.rows.map((item, id) => {
