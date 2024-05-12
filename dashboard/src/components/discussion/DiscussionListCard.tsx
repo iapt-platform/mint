@@ -15,6 +15,8 @@ import { currentUser as _currentUser } from "../../reducers/current-user";
 import { CommentOutlinedIcon, TemplateOutlinedIcon } from "../../assets/icon";
 import { ISentenceResponse } from "../api/Corpus";
 import { TDiscussionType } from "./Discussion";
+import { courseInfo, memberInfo } from "../../reducers/current-course";
+import { courseUser } from "../../reducers/course-user";
 
 export type TResType =
   | "article"
@@ -56,6 +58,10 @@ const DiscussionListCardWidget = ({
   const [closeNumber, setCloseNumber] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
   const [canCreate, setCanCreate] = useState(false);
+
+  const course = useAppSelector(courseInfo);
+  const courseMember = useAppSelector(memberInfo);
+  const myCourse = useAppSelector(courseUser);
 
   const user = useAppSelector(_currentUser);
 
@@ -155,9 +161,16 @@ const DiscussionListCardWidget = ({
           url += `&limit=${params.pageSize}&offset=${offset}`;
           url += params.keyword ? "&search=" + params.keyword : "";
           url += activeKey ? "&status=" + activeKey : "";
-          console.log("DiscussionListCard api request", url);
+
+          if (myCourse && course) {
+            if (myCourse.role !== "student") {
+              url += `&course=${course.courseId}`;
+            }
+          }
+
+          console.info("DiscussionListCard api request", url);
           const res = await get<ICommentListResponse>(url);
-          console.debug("DiscussionListCard api response", res);
+          console.info("DiscussionListCard api response", res);
           setCount(res.data.active);
           setCanCreate(res.data.can_create);
           const items: IComment[] = res.data.rows.map((item, id) => {
