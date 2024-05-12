@@ -777,6 +777,27 @@ const LockFillSvg = () => (
     ></path>
   </svg>
 );
+
+const ShortcutSvg = () => (
+  <svg
+    viewBox="0 0 1024 1024"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    p-id="4427"
+    width="1em"
+    height="1em"
+    fill="currentColor"
+  >
+    <path
+      d="M474.325333 180.992a32 32 0 0 1 3.072 64H324.992a80 80 0 0 0-79.872 75.733333v377.6a80 80 0 0 0 75.605333 80h377.6a80 80 0 0 0 80-75.733333v-153.6a32 32 0 0 1 64-3.072v152.405333a144 144 0 0 1-138.965333 143.914667H324.992a144 144 0 0 1-144-138.88V324.992a144 144 0 0 1 138.965333-144h5.034667z"
+      p-id="4428"
+    ></path>
+    <path
+      d="M748.16 215.509333l2.474667 2.176 54.272 52.522667 2.048 2.176a32 32 0 0 1-15.658667 57.813333H724.949333a181.333333 181.333333 0 0 0-181.248 175.872v16.128a32 32 0 0 1-64 3.072v-13.738666a245.376 245.376 0 0 1 229.76-244.864l-3.285333-3.114667a32 32 0 0 1 42.026667-48.170667z"
+      p-id="4429"
+    ></path>
+  </svg>
+);
 export const DictIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DictSvg} {...props} />
 );
@@ -924,4 +945,8 @@ export const LockFillIcon = (props: Partial<CustomIconComponentProps>) => (
 
 export const UnLockFillIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={UnLockFillSvg} {...props} />
+);
+
+export const ShortcutIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ShortcutSvg} {...props} />
 );
