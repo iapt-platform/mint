@@ -129,9 +129,9 @@ const DiscussionShowWidget = ({
       status: data.status,
       type: newType,
     };
-    console.debug("api response", url, newData);
+    console.info("api response", url, newData);
     put<ICommentRequest, ICommentResponse>(url, newData).then((json) => {
-      console.debug("api response", json);
+      console.info("api response", json);
       if (json.ok) {
         notification.info({ message: "转换成功" });
         if (typeof onConvert !== "undefined") {
