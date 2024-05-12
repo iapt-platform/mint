@@ -128,11 +128,11 @@ class DiscussionController extends Controller
                             }
                     }
                 }
-                $activeNumber = Discussion::where('res_id',$request->get('id'))
+                $activeNumber = Discussion::whereIn('res_id',$resId)
                                             ->where('parent',null)
                                             ->where('type', $request->get('type','discussion'))
                                             ->where('status','active')->count();
-                $closeNumber = Discussion::where('res_id',$request->get('id'))
+                $closeNumber = Discussion::whereIn('res_id',$resId)
                                             ->where('parent',null)
                                             ->where('type', $request->get('type','discussion'))
                                             ->where('status','close')->count();
