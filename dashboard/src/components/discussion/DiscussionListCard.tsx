@@ -12,7 +12,11 @@ import User from "../auth/User";
 import { IArticleListResponse } from "../api/Article";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
-import { CommentOutlinedIcon, TemplateOutlinedIcon } from "../../assets/icon";
+import {
+  CommentOutlinedIcon,
+  ShortcutIcon,
+  TemplateOutlinedIcon,
+} from "../../assets/icon";
 import { ISentenceResponse } from "../api/Corpus";
 import { TDiscussionType } from "./Discussion";
 import { courseInfo, memberInfo } from "../../reducers/current-course";
@@ -103,19 +107,22 @@ const DiscussionListCardWidget = ({
           title: {
             render(dom, entity, index, action, schema) {
               return (
-                <Button
-                  key={index}
-                  size="small"
-                  type="link"
-                  icon={entity.newTpl ? <TemplateOutlinedIcon /> : undefined}
-                  onClick={(event) => {
-                    if (typeof onSelect !== "undefined") {
-                      onSelect(event, entity);
-                    }
-                  }}
-                >
-                  {entity.title}
-                </Button>
+                <>
+                  {entity.resId !== resId ? <ShortcutIcon /> : <></>}
+                  <Button
+                    key={index}
+                    size="small"
+                    type="link"
+                    icon={entity.newTpl ? <TemplateOutlinedIcon /> : undefined}
+                    onClick={(event) => {
+                      if (typeof onSelect !== "undefined") {
+                        onSelect(event, entity);
+                      }
+                    }}
+                  >
+                    {entity.title}
+                  </Button>
+                </>
               );
             },
           },
