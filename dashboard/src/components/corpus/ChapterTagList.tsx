@@ -43,7 +43,7 @@ const ChapterTagListWidget = ({
 
   useEffect(() => {
     const strTags = tags.length > 0 ? "&tags=" + tags.join() : "";
-    const url = `/v2/tag?view=chapter${strTags}&progress=${progress}&lang=${lang}&channel_type=${type}`;
+    const url = `/v2/tags-in-chapter?view=chapter${strTags}&progress=${progress}&lang=${lang}&channel_type=${type}`;
     console.log("tag list ajax", url);
     setLoad(true);
     get<IChapterTagResponse>(url)
