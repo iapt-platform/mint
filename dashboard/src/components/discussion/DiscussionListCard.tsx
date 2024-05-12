@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Space, Typography } from "antd";
+import { LinkOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
 import { ICommentListResponse } from "../api/Comment";
@@ -12,11 +13,7 @@ import User from "../auth/User";
 import { IArticleListResponse } from "../api/Article";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
-import {
-  CommentOutlinedIcon,
-  ShortcutIcon,
-  TemplateOutlinedIcon,
-} from "../../assets/icon";
+import { CommentOutlinedIcon, TemplateOutlinedIcon } from "../../assets/icon";
 import { ISentenceResponse } from "../api/Corpus";
 import { TDiscussionType } from "./Discussion";
 import { courseInfo, memberInfo } from "../../reducers/current-course";
@@ -108,7 +105,7 @@ const DiscussionListCardWidget = ({
             render(dom, entity, index, action, schema) {
               return (
                 <>
-                  {entity.resId !== resId ? <ShortcutIcon /> : <></>}
+                  {entity.resId !== resId ? <LinkOutlined /> : <></>}
                   <Button
                     key={index}
                     size="small"
