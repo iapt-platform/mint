@@ -88,6 +88,7 @@ const items = {
   "forms.status.accept.label": "accepted",
   "forms.status.refuse.label": "refused",
   "forms.status.cancel.label": "canceled",
+  "forms.fields.sign-up-message.label": "sign up message",
 };
 
 export default items;

@@ -50,6 +50,7 @@ const items = {
   "columns.studio.invite.title": "注册邀请",
   "columns.studio.transfer.title": "转让",
   "columns.studio.attachment.title": "网盘",
+  "columns.studio.tag.title": "标签",
   ...buttons,
   ...forms,
   ...nut,

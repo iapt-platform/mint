@@ -88,6 +88,7 @@ const items = {
   "forms.status.accept.label": "已经接受",
   "forms.status.refuse.label": "已经拒绝",
   "forms.status.cancel.label": "已经撤回",
+  "forms.fields.sign-up-message.label": "报名消息",
 };
 
 export default items;
