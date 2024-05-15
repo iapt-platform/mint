@@ -15,6 +15,7 @@ import {
 
 import { IUser } from "../auth/User";
 import { post, put } from "../../request";
+import Marked from "../general/Marked";
 
 export interface ISetStatus {
   courseMemberId?: string;
@@ -68,7 +69,7 @@ export const setStatus = ({
 }: ISetStatus) => {
   Modal.confirm({
     icon: <ExclamationCircleFilled />,
-    content: message,
+    content: <Marked text={message} />,
     onOk() {
       const query: ISetStatus = {
         status: status,
@@ -105,6 +106,7 @@ interface IWidget {
   currUser?: ICourseMemberData;
   courseId?: string;
   courseName?: string;
+  signUpMessage?: string | null;
   user?: IUser;
   onStatusChanged?: Function;
 }
@@ -113,6 +115,7 @@ const UserActionWidget = ({
   currUser,
   courseId,
   courseName,
+  signUpMessage,
   user,
   onStatusChanged,
 }: IWidget) => {
@@ -129,6 +132,18 @@ const UserActionWidget = ({
     buttonDisable = true;
   } else {
     buttonDisable = false;
+  }
+
+  let courseMessage = intl.formatMessage(
+    {
+      id: `course.member.status.${action}.message`,
+    },
+    { course: courseName }
+  );
+  if (action === "apply" || action === "join") {
+    if (signUpMessage) {
+      courseMessage = signUpMessage;
+    }
   }
   return (
     <>
@@ -147,12 +162,7 @@ const UserActionWidget = ({
               courseMemberId: currUser?.id,
               courseId: courseId,
               user: user,
-              message: intl.formatMessage(
-                {
-                  id: `course.member.status.${action}.message`,
-                },
-                { course: courseName }
-              ),
+              message: courseMessage,
               status: status,
               onSuccess: (data: ICourseMemberData) => {
                 statusChange(data);
