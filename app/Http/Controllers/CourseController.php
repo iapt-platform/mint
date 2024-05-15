@@ -256,6 +256,7 @@ class CourseController extends Controller
         $course->number = $request->get('number',0);
         if($request->has('cover')) {$course->cover = $request->get('cover');}
         $course->content = $request->get('content');
+        $course->sign_up_message = $request->get('sign_up_message');
         if($request->has('teacher_id')) {$course->teacher = $request->get('teacher_id');}
         if($request->has('anthology_id')) {$course->anthology_id = $request->get('anthology_id');}
         $course->channel_id = $request->get('channel_id');

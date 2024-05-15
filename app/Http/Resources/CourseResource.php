@@ -29,6 +29,7 @@ class CourseResource extends JsonResource
             "title"=> $this->title,
             "subtitle"=> $this->subtitle,
             "summary"=> $this->summary,
+            "sign_up_message"=> $this->sign_up_message,
             "teacher"=> UserApi::getByUuid($this->teacher),
             "course_count"=>10,
             "publicity"=> $this->publicity,
@@ -43,6 +44,7 @@ class CourseResource extends JsonResource
             "join"=> $this->join,
             "number"=> $this->number,
             "request_exp"=> $this->request_exp,
+            "studio" => StudioApi::getById($this->studio_id),
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at,
         ];
