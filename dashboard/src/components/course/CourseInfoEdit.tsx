@@ -43,6 +43,7 @@ interface IFormData {
   teacherId?: string;
   anthologyId?: string;
   channelId?: string;
+  signUpMessage?: string | null;
   dateRange?: string[];
   signUp?: string[];
   status: number;
@@ -98,6 +99,7 @@ const CourseInfoEditWidget = ({
             subtitle: values.subtitle, //副标题
             summary: values.summary,
             content: values.content, //简介
+            sign_up_message: values.signUpMessage,
             cover: _cover, //封面图片文件名
             teacher_id: values.teacherId, //UserID
             publicity: values.status, //类型-公开/内部
@@ -161,6 +163,7 @@ const CourseInfoEditWidget = ({
             subtitle: res.data.subtitle,
             summary: res.data.summary,
             content: res.data.content ?? "",
+            signUpMessage: res.data.sign_up_message,
             cover: res.data.cover
               ? [
                   {
@@ -434,6 +437,16 @@ const CourseInfoEditWidget = ({
               );
             }}
           </ProFormDependency>
+        </ProForm.Group>
+        <ProForm.Group>
+          <Form.Item
+            name="signUpMessage"
+            label={intl.formatMessage({
+              id: "forms.fields.sign-up-message.label",
+            })}
+          >
+            <MDEditor />
+          </Form.Item>
         </ProForm.Group>
         <ProForm.Group>
           <Form.Item
