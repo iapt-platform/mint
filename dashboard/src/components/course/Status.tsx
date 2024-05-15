@@ -96,6 +96,7 @@ const StatusWidget = ({ data }: IWidget) => {
               currUser={currMember}
               courseId={data?.id}
               courseName={data?.title}
+              signUpMessage={data?.sign_up_message}
               user={{
                 id: user.id,
                 nickName: user.nickName,
