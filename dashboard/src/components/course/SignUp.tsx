@@ -17,6 +17,7 @@ import {
   TCourseExpRequest,
   TCourseJoinMode,
 } from "../api/Course";
+import Marked from "../general/Marked";
 
 const { confirm } = Modal;
 const { Text } = Typography;
@@ -24,12 +25,14 @@ const { Text } = Typography;
 interface IWidget {
   courseId: string;
   startAt?: string;
+  signUpMessage?: string | null;
   joinMode?: TCourseJoinMode;
   expRequest?: TCourseExpRequest;
   onStatusChanged?: Function;
 }
 const SignUpWidget = ({
   courseId,
+  signUpMessage,
   joinMode,
   startAt,
   expRequest,
@@ -48,9 +51,13 @@ const SignUpWidget = ({
           content: (
             <div>
               <div>
-                {intl.formatMessage({
-                  id: `course.join.mode.${joinMode}.message`,
-                })}
+                {signUpMessage ? (
+                  <Marked text={signUpMessage} />
+                ) : (
+                  intl.formatMessage({
+                    id: `course.join.mode.${joinMode}.message`,
+                  })
+                )}
               </div>
               <Text type="danger">
                 {intl.formatMessage({
