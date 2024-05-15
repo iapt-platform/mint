@@ -48,6 +48,7 @@ const items = {
   "columns.studio.invite.title": "Invite",
   "columns.studio.transfer.title": "Transfer",
   "columns.studio.attachment.title": "Attachment",
+  "columns.studio.tag.title": "Tag",
   ...buttons,
   ...forms,
   ...nut,
