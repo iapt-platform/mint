@@ -7,7 +7,6 @@ import { renderBadge } from "../channel/ChannelTable";
 import User, { IUser } from "../auth/User";
 import { IChannel } from "../channel/Channel";
 import { IStudio } from "../auth/Studio";
-import UserName from "../auth/UserName";
 import TimeShow from "../general/TimeShow";
 import {
   ITransferRequest,
@@ -108,7 +107,11 @@ const TransferListWidget = ({ studioName }: IWidget) => {
             render(dom, entity, index, action, schema) {
               return (
                 <Space>
-                  <UserName key={"user"} {...entity.transferor} />
+                  <User
+                    key={"user"}
+                    {...entity.transferor}
+                    showAvatar={false}
+                  />
                   <span key="text">{"transfer at"}</span>
                   <TimeShow key={"time"} createdAt={entity.created_at} />
                 </Space>

@@ -7,7 +7,6 @@ import {
 
 import { ITermDataResponse } from "../api/Term";
 import MdView from "../template/MdView";
-import UserName from "../auth/UserName";
 import TimeShow from "../general/TimeShow";
 import TermModal from "./TermModal";
 import { useEffect, useState } from "react";
@@ -19,6 +18,7 @@ import store from "../../store";
 import "../article/article.css";
 import Discussion from "../discussion/Discussion";
 import { useIntl } from "react-intl";
+import User from "../auth/User";
 
 const { Text } = Typography;
 
@@ -66,7 +66,7 @@ const TermItemWidget = ({ data, onTermClick }: IWidget) => {
                     id: "term.general-in-studio",
                   })}
               <Text type="secondary">
-                <UserName {...data?.editor} />
+                <User {...data?.editor} showAvatar={false} />
               </Text>
               <TimeShow type="secondary" updatedAt={data?.updated_at} />
             </Space>

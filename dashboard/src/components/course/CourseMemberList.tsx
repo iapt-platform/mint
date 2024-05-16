@@ -1,9 +1,9 @@
 import { useIntl } from "react-intl";
-import { Dropdown, Tag, message } from "antd";
+import { Button, Dropdown, Tag, message } from "antd";
 import { ActionType, ProList } from "@ant-design/pro-components";
+import { ExportOutlined } from "@ant-design/icons";
 
-import { get } from "../../request";
-import AddMember from "./AddMember";
+import { API_HOST, get } from "../../request";
 import { useEffect, useRef, useState } from "react";
 import {
   ICourseDataResponse,
@@ -298,6 +298,14 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
           search: true,
         }}
         toolBarRender={() => [
+          <a
+            href={`${API_HOST}/api/v2/course-member-export?course_id=${courseId}`}
+            target="_blank"
+            key="export"
+            rel="noreferrer"
+          >
+            <ExportOutlined />
+          </a>,
           <CourseInvite
             courseId={courseId}
             onCreated={() => {
