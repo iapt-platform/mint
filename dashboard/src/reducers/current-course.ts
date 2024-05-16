@@ -1,9 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
-import { ICourseMemberData } from "../components/api/Course";
+import {
+  ICourseDataResponse,
+  ICourseMemberData,
+} from "../components/api/Course";
 
 export interface ITextbook {
+  course?: ICourseDataResponse;
   courseId: string;
   articleId: string;
   channelId: string;
