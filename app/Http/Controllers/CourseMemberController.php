@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use App\Http\Resources\CourseMemberResource;
 use App\Http\Api\AuthApi;
 use Illuminate\Support\Facades\Log;
+use App\Http\Api\UserApi;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class CourseMemberController extends Controller
 {
@@ -307,5 +310,35 @@ class CourseMemberController extends Controller
         }else{
             return $this->error("not member");
         }
+    }
+
+    public function export(Request $request){
+
+        $courseUser = CourseMember::where('course_id',$request->get("course_id"))
+                                    ->where('is_current',true)
+                                    ->get();
+
+        $spreadsheet = new Spreadsheet();
+        $activeWorksheet = $spreadsheet->getActiveSheet();
+        $activeWorksheet->setCellValue('A1', 'nickname');
+        $activeWorksheet->setCellValue('B1', 'username');
+        $activeWorksheet->setCellValue('C1', 'role');
+        $activeWorksheet->setCellValue('D1', 'status');
+        $activeWorksheet->setCellValue('E1', 'created_at');
+
+        $currLine = 2;
+        foreach ($courseUser as $key => $row) {
+            $user = UserApi::getByUuid($row->user_id);
+            $activeWorksheet->setCellValue("A{$currLine}", $user['nickName']);
+            $activeWorksheet->setCellValue("B{$currLine}", $user['userName']);
+            $activeWorksheet->setCellValue("C{$currLine}", $row->role);
+            $activeWorksheet->setCellValue("D{$currLine}", $row->status);
+            $activeWorksheet->setCellValue("E{$currLine}", $row->created_at);
+            $currLine++;
+        }
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename="course_member.xlsx"');
+        $writer->save("php://output");
     }
 }

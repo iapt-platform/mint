@@ -174,6 +174,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::put('course-member_set-channel',[CourseMemberController::class,'set_channel']);
     Route::get('course-my-course', [CourseController::class, 'showMyCourseNumber']);
     Route::get('course-curr', [CourseMemberController::class, 'curr']);
+    Route::get('course-member-export',[CourseMemberController::class,"export"]);
 
     Route::apiResource('exercise',ExerciseController::class);
     Route::apiResource('article-map',ArticleMapController::class);
