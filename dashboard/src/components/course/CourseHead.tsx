@@ -5,11 +5,11 @@ import { Typography } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 
 import { API_HOST } from "../../request";
-import UserName from "../auth/UserName";
 import { ICourseDataResponse } from "../api/Course";
 import { useIntl } from "react-intl";
 import Status from "./Status";
 import moment from "moment";
+import User from "../auth/User";
 
 const { Title, Text } = Typography;
 
@@ -112,7 +112,7 @@ const CourseHeadWidget = ({ data }: IWidget) => {
             <Space>
               <Text>主讲人：</Text>{" "}
               <Text>
-                <UserName {...data?.teacher} />
+                <User {...data?.teacher} showAvatar={false} />
               </Text>
             </Space>
           </Space>

@@ -12,11 +12,10 @@ import {
   IShareResponse,
   IShareUpdateRequest,
 } from "../api/Share";
-import { IUser } from "../auth/User";
+import User, { IUser } from "../auth/User";
 import { TRole } from "../api/Auth";
 
 import Group, { IGroup } from "../group/Group";
-import UserName from "../auth/UserName";
 
 interface ICollaborator {
   sn?: number;
@@ -120,7 +119,7 @@ const CollaboratorWidget = ({ resId, load = false, onReload }: IWidget) => {
         title: {
           render: (text, row, index, action) => {
             return row.user ? (
-              <UserName {...row.user} key={index} />
+              <User {...row.user} showAvatar={false} key={index} />
             ) : (
               <Group group={row.group} key={index} />
             );

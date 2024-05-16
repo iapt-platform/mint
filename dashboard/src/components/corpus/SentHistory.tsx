@@ -2,8 +2,7 @@ import { ProList } from "@ant-design/pro-components";
 import { Space, Typography } from "antd";
 
 import { get } from "../../request";
-import User from "../auth/User";
-import { IUser } from "../auth/UserName";
+import User, { IUser } from "../auth/User";
 import TimeShow from "../general/TimeShow";
 import { IChannel } from "../channel/Channel";
 import { MergeIcon2 } from "../../assets/icon";
