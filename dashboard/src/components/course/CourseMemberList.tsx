@@ -19,6 +19,7 @@ import User, { IUser } from "../auth/User";
 import { getStatusColor, managerCanDo } from "./RolePower";
 import { ISetStatus, setStatus } from "./UserAction";
 import { IChannel } from "../channel/Channel";
+import CourseInvite from "./CourseInvite";
 
 interface IRoleTag {
   title: string;
@@ -297,7 +298,7 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
           search: true,
         }}
         toolBarRender={() => [
-          <AddMember
+          <CourseInvite
             courseId={courseId}
             onCreated={() => {
               ref.current?.reload();
