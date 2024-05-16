@@ -1,5 +1,5 @@
 import { useIntl } from "react-intl";
-import { Button, Dropdown, Tag, message } from "antd";
+import { Dropdown, Tag, Tooltip, message } from "antd";
 import { ActionType, ProList } from "@ant-design/pro-components";
 import { ExportOutlined } from "@ant-design/icons";
 
@@ -298,20 +298,22 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
           search: true,
         }}
         toolBarRender={() => [
-          <a
-            href={`${API_HOST}/api/v2/course-member-export?course_id=${courseId}`}
-            target="_blank"
-            key="export"
-            rel="noreferrer"
-          >
-            <ExportOutlined />
-          </a>,
           <CourseInvite
             courseId={courseId}
             onCreated={() => {
               ref.current?.reload();
             }}
           />,
+          <Tooltip title="导出成员列表">
+            <a
+              href={`${API_HOST}/api/v2/course-member-export?course_id=${courseId}`}
+              target="_blank"
+              key="export"
+              rel="noreferrer"
+            >
+              <ExportOutlined />
+            </a>
+          </Tooltip>,
         ]}
       />
     </>
