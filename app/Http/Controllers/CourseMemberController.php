@@ -99,21 +99,30 @@ class CourseMemberController extends Controller
             'status' => 'required',
         ]);
         //查找重复的
-        if(CourseMember::where('course_id', $validated['course_id'])
-                      ->where('user_id',$validated['user_id'])
-                      ->exists()){
-            return $this->error('member exists',[200],200);
+        if($validated['status'] !== 'invited'){
+            if(CourseMember::where('course_id', $validated['course_id'])
+                        ->where('user_id',$validated['user_id'])
+                        ->exists()){
+                return $this->error('member exists',[200],200);
+            }
         }
+
+        if($validated['status'] === 'invited'){
+            $userId = $validated['user_id'];
+        }else{
+            $userId = $user['user_uid'];
+        }
+
+        CourseMember::where('course_id',$validated['course_id'])
+            ->where('user_id',$userId)
+            ->update(['is_current'=>false]);
+
         $newMember = new CourseMember();
         $newMember->course_id = $validated['course_id'];
         $newMember->role = $validated['role'];
         $newMember->editor_uid = $user['user_uid'];
         $newMember->status = $validated['status'];
-        if($validated['status'] === 'invited'){
-            $newMember->user_id = $validated['user_id'];
-        }else{
-            $newMember->user_id = $user['user_uid'];
-        }
+        $newMember->user_id = $userId;
 
         /**
          * 查找course 信息，根据加入方式设置状态
@@ -160,16 +169,19 @@ class CourseMemberController extends Controller
         if(!$user){
             return $this->error(__('auth.failed'));
         }
+        $userId = $user['user_uid'];
+        if(!empty($request->get('user_uid'))){
+            $userId = $request->get('user_uid');
+        }
         $member = CourseMember::where('course_id',$courseId)
-                                ->where('user_id',$user['user_uid'])
+                                ->where('user_id',$userId)
                                 ->where('is_current',true)
                                 ->first();
         if($member){
             return $this->ok(new CourseMemberResource($member));
         }else{
-            return $this->error('no result');
+            return $this->error('no result',200,200);
         }
-
     }
 
     /**

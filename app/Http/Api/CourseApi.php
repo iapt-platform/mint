@@ -17,4 +17,11 @@ class CourseApi{
         }
         return $channels;
     }
+
+    public static function role($courseId,$userUid){
+        $role = CourseMember::where('course_id',$courseId)
+                            ->where('user_id')
+                            ->value('role');
+        return $role;
+    }
 }

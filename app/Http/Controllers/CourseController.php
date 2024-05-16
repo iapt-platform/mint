@@ -115,11 +115,9 @@ class CourseController extends Controller
                        ->take($request->get('limit',1000));
 
         $result = $table->get();
-		if($result){
-			return $this->ok(["rows"=>CourseResource::collection($result),"count"=>$count]);
-		}else{
-			return $this->error("没有查询到数据");
-		}
+
+		return $this->ok(["rows"=>CourseResource::collection($result),"count"=>$count]);
+
     }
     /**
      * Display a listing of the resource.
