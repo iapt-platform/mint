@@ -62,6 +62,7 @@ const items = {
   "course.table.count.progressing.title": "待审核",
   "course.timeline.all": "全部参课记录",
   "course.timeline.current": "当前课程",
+  "course.channel.unbound": "未绑定",
 };
 
 export default items;
