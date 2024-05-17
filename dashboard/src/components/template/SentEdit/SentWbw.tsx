@@ -166,7 +166,7 @@ const SentWbwWidget = ({
       />
       <div>
         {isCourseAnswer ? (
-          <Space>
+          <Space style={{ flexWrap: "wrap" }}>
             {"无作业："}
             {nonWbwUser.length > 0
               ? nonWbwUser.map((item, id) => {
