@@ -181,6 +181,10 @@ class SentenceController extends Controller
 				# code...
 				break;
 		}
+        if(!empty($request->get("key"))){
+            $table = $table->where('content','like', '%'.$request->get("key").'%');
+        }
+
         $count = $table->count();
         if($request->get('strlen',false)){
             $totalStrLen = $table->sum('strlen');
