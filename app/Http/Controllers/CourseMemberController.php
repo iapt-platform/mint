@@ -303,8 +303,9 @@ class CourseMemberController extends Controller
             return $this->error(__('auth.failed'));
         }
         $courseUser = CourseMember::where('course_id',$request->get("course_id"))
-                ->where('user_id',$user["user_uid"])
-                ->select(['role','channel_id'])->first();
+                                ->where('user_id',$user["user_uid"])
+                                ->where('is_current',true)
+                                ->select(['role','channel_id'])->first();
         if($courseUser){
             return $this->ok($courseUser);
         }else{
