@@ -1,5 +1,5 @@
 import { useIntl } from "react-intl";
-import { Dropdown, Tag, Tooltip, message } from "antd";
+import { Dropdown, Tag, Tooltip, Typography, message } from "antd";
 import { ActionType, ProList } from "@ant-design/pro-components";
 import { ExportOutlined } from "@ant-design/icons";
 
@@ -12,6 +12,7 @@ import {
   ICourseResponse,
   TCourseMemberAction,
   TCourseMemberStatus,
+  TCourseRole,
   actionMap,
 } from "../api/Course";
 import { ItemType } from "antd/lib/menu/hooks/useItems";
@@ -34,7 +35,7 @@ export interface ICourseMember {
   name?: string;
   tag?: IRoleTag[];
   image: string;
-  role?: string;
+  role?: TCourseRole;
   channel?: IChannel;
   startExp?: number;
   endExp?: number;
@@ -53,6 +54,7 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
   const [canManage, setCanManage] = useState(false);
   const [course, setCourse] = useState<ICourseDataResponse>();
   const ref = useRef<ActionType>();
+  const { Text } = Typography;
 
   useEffect(() => {
     if (courseId) {
@@ -103,8 +105,20 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
             render(dom, entity, index, action, schema) {
               return (
                 <div>
-                  {"channel:"}
-                  {entity.channel?.name ?? "未绑定"}
+                  {entity.role === "student" ? (
+                    <>
+                      {"channel:"}
+                      {entity.channel?.name ?? (
+                        <Text type="danger">
+                          {intl.formatMessage({
+                            id: `course.channel.unbound`,
+                          })}
+                        </Text>
+                      )}
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               );
             },
