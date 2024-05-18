@@ -61,7 +61,7 @@ const items = {
   "course.timeline.all": "全部参课记录",
   "course.timeline.current": "当前课程",
   "course.channel.unbound": "未绑定",
-  "course.member.timeline": "录取记录",
+  "course.member.timeline": "参课记录",
 };
 
 export default items;
