@@ -3,7 +3,7 @@ const items = {
   "message.irrevocable": "此操作不可撤销",
   "message.delete.confirm": "确定删除吗？",
   "message.auth.guest.alert":
-    "您尚未登录，只能查看公开数据，其他功能无法使用。",
+    "服务器未返回登录信息，目前只能查看公开数据，其他功能无法使用；请刷新页面或重新登录。",
   "message.channel.empty.alert": "没有版本风格被选择,仅显示原文。",
   "message.time": "用时 {time} 秒",
   "message.result": "{count} 条结果",
