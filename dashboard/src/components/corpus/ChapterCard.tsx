@@ -4,7 +4,7 @@ import { Typography } from "antd";
 
 import TimeShow from "../general/TimeShow";
 import TocPath from "../corpus/TocPath";
-import TagArea from "../tag/TagArea";
+import TagArea from "../tag/TagAreaInChapter";
 import type { IChannelApiData } from "../api/Channel";
 import ChannelListItem from "../channel/ChannelListItem";
 import { IStudio } from "../auth/Studio";

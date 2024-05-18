@@ -25,6 +25,8 @@ import { IStudio } from "../../auth/Studio";
 import WbwPaliDiscussionIcon from "./WbwPaliDiscussionIcon";
 import { TooltipPlacement } from "antd/lib/tooltip";
 import { temp } from "../../../reducers/setting";
+import TagsArea from "../../tag/TagsArea";
+import { ITagData } from "../../api/Tag";
 
 export const PopPlacement = "setting.wbw.pop.placement";
 
@@ -72,6 +74,7 @@ const WbwPaliWidget = ({
 }: IWidget) => {
   const [popOpen, setPopOpen] = useState(false);
   const [popOnTop, setPopOnTop] = useState(false);
+  const [tags, setTags] = useState<ITagData[]>();
 
   const [paliColor, setPaliColor] = useState("unset");
   const divShell = useRef<HTMLDivElement>(null);
@@ -227,6 +230,9 @@ const WbwPaliWidget = ({
         );
         */
       }}
+      onTagCreate={(tags: ITagData[]) => {
+        setTags(tags);
+      }}
     />
   );
 
@@ -349,6 +355,9 @@ const WbwPaliWidget = ({
     //console.debug(PopPlacement, popPlacement);
     return (
       <div className="pali_shell" ref={divShell}>
+        <div style={{ position: "absolute", marginTop: -24 }}>
+          <TagsArea data={tags} max={1} />
+        </div>
         <span className="pali_shell_spell">
           {data.grammarId ? (
             <span

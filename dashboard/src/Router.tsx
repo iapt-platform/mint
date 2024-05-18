@@ -139,6 +139,10 @@ import StudioAnalysisList from "./pages/studio/analysis/list";
 import StudioInvite from "./pages/studio/invite";
 import StudioInviteList from "./pages/studio/invite/list";
 
+import StudioTag from "./pages/studio/tags";
+import StudioTagList from "./pages/studio/tags/list";
+import StudioTagShow from "./pages/studio/tags/show";
+
 import { ConfigProvider } from "antd";
 import { useAppSelector } from "./hooks";
 import { currTheme } from "./reducers/theme";
@@ -356,6 +360,12 @@ const Widget = () => {
           <Route path="invite" element={<StudioInvite />}>
             <Route path="list" element={<StudioInviteList />} />
           </Route>
+
+          <Route path="tags" element={<StudioTag />}>
+            <Route path="list" element={<StudioTagList />} />
+            <Route path=":id/list" element={<StudioTagShow />} />
+          </Route>
+
           <Route path="transfer" element={<StudioTransfer />}>
             <Route path="list" element={<StudioTransferList />} />
           </Route>

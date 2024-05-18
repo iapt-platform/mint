@@ -162,6 +162,7 @@ const TypeCourseWidget = ({
          */
         if (courseId && articleId) {
           const ic: ITextbook = {
+            course: json.data,
             courseId: courseId,
             articleId: articleId,
             channelId: json.data.channel_id,
