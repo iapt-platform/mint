@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use App\Models\Tag;
 use App\Models\TagMap;
-use App\Models\ProgressChapter;
+use App\Models\Tag;
 use Illuminate\Http\Request;
+use App\Http\Resources\TagMapResource;
 use App\Http\Resources\TagResource;
 use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
+use Illuminate\Support\Str;
 
-class TagController extends Controller
+class TagMapController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,16 +21,10 @@ class TagController extends Controller
     public function index(Request $request)
     {
         //
-
         switch ($request->get('view')) {
-            case 'studio':
-                $studioId = StudioApi::getIdByName($request->get('name'));
-                $table = Tag::where('owner_id',$studioId);
+            case 'items':
+                $table = TagMap::where('tag_id',$request->get('tag_id'));
                 break;
-        }
-
-        if($request->has("search")){
-            $table = $table->where('name', 'like', "%".$request->get("search")."%");
         }
 
         $count = $table->count();
@@ -45,7 +38,7 @@ class TagController extends Controller
 
         return $this->ok(
             [
-            "rows"=>TagResource::collection($result),
+            "rows"=>TagMapResource::collection($result),
             "count"=>$count,
             ]);
     }
@@ -58,7 +51,6 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $user = AuthApi::current($request);
         if(!$user){
             return $this->error(__('auth.failed'),401,401);
@@ -66,43 +58,65 @@ class TagController extends Controller
         //判断当前用户是否有指定的studio的权限
         $studioId = StudioApi::getIdByName($request->get('studio'));
         if($user['user_uid'] !== $studioId){
-            return $this->error(__('auth.failed'),403,403);
+            if(!empty($request->get('course'))){
+                $role = CourseApi::role($request->get('course'),$user['user_uid']);
+                if(empty($role) && $role === 'student'){
+                    return $this->error(__('auth.failed'),403,403);
+                }
+            }else{
+                return $this->error(__('auth.failed'),403,403);
+            }
         }
         //查询是否重复
-        if(Tag::where('name',$request->get('name'))
-                  ->where('owner_id',$user['user_uid'])
+        if(TagMap::where('anchor_id',$request->get('anchor_id'))
+                  ->where('tag_id',$request->get('tag_id'))
+                  ->where('owner_uid',$studioId)
                   ->exists()){
             return $this->error(__('validation.exists',['name']),200,200);
         }
-        $tag = new Tag;
-        $tag->name = $request->get("name");
-        $tag->description = $request->get("description");
-        $tag->owner_id = $studioId;
+        $tag = new TagMap;
+        $tag->id = Str::uuid();
+        $tag->table_name = $request->get("table_name");
+        $tag->anchor_id = $request->get("anchor_id");
+        $tag->tag_id = $request->get("tag_id");
+        $tag->editor_uid = $user['user_uid'];
+        $tag->owner_uid = $studioId;
         $tag->save();
-        return $this->ok(new TagResource($tag));
+
+        $tagsId = TagMap::where('anchor_id',$request->get("anchor_id"))
+                    ->where('owner_uid',$studioId)
+                    ->select('tag_id')
+                    ->get();
+        $tags = Tag::whereIn('id',$tagsId)
+                    ->get();
+        return $this->ok(
+            [
+            "rows"=>TagResource::collection($tags),
+            "count"=>count($tags),
+            ]
+        );
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Tag  $tag
+     * @param  \App\Models\TagMap  $tagMap
      * @return \Illuminate\Http\Response
      */
-    public function show(Tag $tag)
+    public function show(TagMap $tagMap)
     {
         //
-        return $this->ok(new TagResource($tag));
-
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tag  $tag
+     * @param  \App\Models\TagMap  $tagMap
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tag $tag)
+    public function update(Request $request, TagMap $tagMap)
     {
         //
     }
@@ -110,10 +124,10 @@ class TagController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Tag  $tag
+     * @param  \App\Models\TagMap  $tagMap
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tag $tag)
+    public function destroy(TagMap $tagMap)
     {
         //
     }

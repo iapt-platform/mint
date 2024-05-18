@@ -93,6 +93,7 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\DiscussionCountController;
 use App\Http\Controllers\TagsInChapterCountController;
+use App\Http\Controllers\TagMapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -242,6 +243,7 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('snowflake',SnowFlakeIdController::class);
     Route::apiResource('discussion-count',DiscussionCountController::class);
     Route::apiResource('tags-in-chapter',TagsInChapterCountController::class);
+    Route::apiResource('tag-map',TagMapController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
