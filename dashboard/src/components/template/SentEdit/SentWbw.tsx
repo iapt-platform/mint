@@ -159,7 +159,7 @@ const SentWbwWidget = ({
               {...item}
               readonly={isCourse}
               answer={answer}
-              wbwProgress={wbwProgress}
+              wbwProgress={isCourse ?? wbwProgress}
             />
           </List.Item>
         )}
