@@ -121,7 +121,12 @@ const Widget = () => {
   const canCreate = !(activeKey !== "create" || user?.roles?.includes("basic"));
 
   const buttonEdit = (course: ICourseDataResponse, key: string | number) => {
-    const canManage: TCourseRole[] = ["owner", "teacher", "manager"];
+    const canManage: TCourseRole[] = [
+      "owner",
+      "teacher",
+      "manager",
+      "assistant",
+    ];
     if (course.my_role && canManage.includes(course.my_role)) {
       return (
         <Link

@@ -1,4 +1,4 @@
-import { Button, Dropdown, message, Progress, Tree } from "antd";
+import { Button, Dropdown, message, Progress, Space, Tree } from "antd";
 import { useEffect, useState } from "react";
 import { MoreOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 
@@ -24,7 +24,10 @@ import { getGrammar } from "../../reducers/term-vocabulary";
 import modal from "antd/lib/modal";
 import { UserWbwPost } from "../dict/MyCreate";
 import { currentUser } from "../../reducers/current-user";
-import { IStudio } from "../auth/Studio";
+import Studio, { IStudio } from "../auth/Studio";
+import { IChannel } from "../channel/Channel";
+import TimeShow from "../general/TimeShow";
+import moment from "moment";
 
 export const paraMark = (wbwData: IWbw[]): IWbw[] => {
   //处理段落标记，支持点击段落引用弹窗
@@ -141,6 +144,7 @@ interface IWidget {
   para: number;
   wordStart: number;
   wordEnd: number;
+  channel?: IChannel;
   channelId: string;
   channelType?: TChannelType;
   channelLang?: string;
@@ -158,6 +162,7 @@ interface IWidget {
 export const WbwSentCtl = ({
   data,
   answer,
+  channel,
   channelId,
   channelType,
   channelLang,
@@ -675,13 +680,23 @@ export const WbwSentCtl = ({
     saveWbwAll(newData);
   };
 
+  let updatedAt = moment("1970-1-1");
+  data.forEach((value) => {
+    if (moment(value.updated_at).isAfter(updatedAt)) {
+      updatedAt = moment(value.updated_at);
+    }
+  });
+
   return (
     <div style={{ width: "100%" }}>
-      <div
-        className="progress"
-        style={{ display: showProgress ? "block" : "none" }}
-      >
-        <Progress percent={progress} size="small" />
+      <div style={{ display: showProgress ? "flex" : "none" }}>
+        <div className="progress" style={{ width: 400 }}>
+          <Progress percent={progress} size="small" />
+        </div>
+        <Space>
+          <Studio data={studio} hideAvatar />
+          {<TimeShow updatedAt={updatedAt.toString()} />}
+        </Space>
       </div>
       <div className={`layout-${layoutDirection}`}>
         <Dropdown
@@ -754,7 +769,6 @@ export const WbwSentCtl = ({
                       resetWbw();
                     },
                   });
-
                   break;
               }
             },
