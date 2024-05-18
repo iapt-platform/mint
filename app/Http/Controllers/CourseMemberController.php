@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\CourseMember;
 use App\Models\Course;
+use App\Models\UserInfo;
+
 use Illuminate\Http\Request;
 use App\Http\Resources\CourseMemberResource;
 use App\Http\Api\AuthApi;
@@ -59,7 +61,10 @@ class CourseMemberController extends Controller
             break;
         }
         if(!empty($request->get("search"))){
-            $table = $table->where('name', 'like', '%'.$request->get("search")."%");
+            $usersId = UserInfo::where('nickname','like', '%'.$request->get("search")."%")
+                            ->select('userid')
+                            ->get();
+            $table = $table->whereIn('user_id', $usersId);
         }
 
         $count = $table->count();
