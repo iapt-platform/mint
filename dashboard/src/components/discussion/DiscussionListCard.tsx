@@ -18,6 +18,7 @@ import { ISentenceResponse } from "../api/Corpus";
 import { TDiscussionType } from "./Discussion";
 import { courseInfo, memberInfo } from "../../reducers/current-course";
 import { courseUser } from "../../reducers/course-user";
+import TimeShow from "../general/TimeShow";
 
 export type TResType =
   | "article"
@@ -128,7 +129,17 @@ const DiscussionListCardWidget = ({
             search: false,
             render(dom, entity, index, action, schema) {
               return (
-                <span key={index}>{entity.summary ?? entity.content}</span>
+                <div>
+                  <div key={index}>{entity.summary ?? entity.content}</div>
+                  <Space>
+                    {entity.user.nickName}
+                    <TimeShow
+                      type="secondary"
+                      createdAt={entity.createdAt}
+                      updatedAt={entity.updatedAt}
+                    />
+                  </Space>
+                </div>
               );
             },
           },
