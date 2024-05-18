@@ -13,7 +13,7 @@ class UpgradeProgress extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan upgrade:progress --book=122 --para=244 --channel=5310999c-0b0c-4bb0-9bb9-9cdd176e9ef0
      * @var string
      */
     protected $signature = 'upgrade:progress {--book=} {--para=} {--channel=}';
