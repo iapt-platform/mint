@@ -793,7 +793,7 @@ class CorpusController extends Controller
         //找到逐词解析数据
         $wbwData = Wbw::where('block_uid',$wbwBlock->uid)
                       ->whereBetween('wid',[$start,$end])
-                      ->select(['book_id','paragraph','wid','data','uid'])
+                      ->select(['book_id','paragraph','wid','data','uid','editor_id','created_at','updated_at'])
                       ->orderBy('wid')
                       ->get();
         $wbwContent = [];
@@ -831,6 +831,8 @@ class CorpusController extends Controller
                     'factors'=> ['value'=>$word->org->__toString(),'status'=>0],
                     'factorMeaning'=> ['value'=>$word->om->__toString(),'status'=>0],
                     'confidence'=> $word->cf->__toString(),
+                    'created_at'=> $wbwrow->created_at,
+                    'updated_at'=> $wbwrow->updated_at,
                     'hasComment'=>Discussion::where('res_id',$wbwrow->uid)->exists(),
                 ];
                 if(isset($word->parent2)){
