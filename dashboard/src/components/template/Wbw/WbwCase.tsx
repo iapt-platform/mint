@@ -183,7 +183,8 @@ const WbwCaseWidget = ({
     return (
       <div
         className={
-          "wbw_word_item" + errorClass(data.case?.value, answer?.case?.value)
+          "wbw_word_item" +
+          errorClass("case", data.case?.value, answer?.case?.value)
         }
         style={{ display: "flex" }}
       >

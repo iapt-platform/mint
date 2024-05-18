@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useIntl } from "react-intl";
 import { Input, Popover, Typography } from "antd";
 
-import { IWbw, TWbwDisplayMode } from "./WbwWord";
+import { IWbw, TFieldName, TWbwDisplayMode } from "./WbwWord";
 import WbwMeaningSelect from "./WbwMeaningSelect";
 import { ArticleMode } from "../../article/Article";
 import CaseFormula from "./CaseFormula";
@@ -11,13 +11,28 @@ import EditableLabel from "../../general/EditableLabel";
 const { Text } = Typography;
 
 export const errorClass = (
+  field: TFieldName,
   data?: string | null,
   answer?: string | null
 ): string => {
   let classError = "";
   if (data && answer) {
     if (answer !== data) {
-      classError = " wbw_error";
+      classError = " wbw_check";
+      switch (field) {
+        case "case":
+          classError += " wbw_error";
+          break;
+        case "factors":
+          classError += " wbw_warning";
+          break;
+        case "factorMeaning":
+          classError += " wbw_info";
+          break;
+        case "meaning":
+          classError += " wbw_info";
+          break;
+      }
     }
   }
   return classError;
@@ -165,7 +180,7 @@ const WbwMeaningWidget = ({
       <div
         className={
           "wbw_word_item" +
-          errorClass(data.meaning?.value, answer?.meaning?.value)
+          errorClass("meaning", data.meaning?.value, answer?.meaning?.value)
         }
       >
         {editable || display === "list" ? (
