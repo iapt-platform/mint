@@ -47,7 +47,7 @@ const items = {
   "labels.software.edition.pro": "增强版",
   "labels.table-of-content": "目录",
   "labels.this-studio": "此工作室",
-  "labels.feedback": "问题反馈",
+  "labels.feedback": "网站功能报错与建议",
   "labels.email.sign-up.subject": "欢迎注册wikipāli",
   "labels.sign-up": "注册",
   "labels.done": "完成",
