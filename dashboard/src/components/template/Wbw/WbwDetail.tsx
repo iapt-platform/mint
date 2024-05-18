@@ -31,6 +31,8 @@ import { courseUser } from "../../../reducers/course-user";
 import { tempSet } from "../../../reducers/setting";
 import { PopPlacement } from "./WbwPali";
 import store from "../../../store";
+import TagSelectButton from "../../tag/TagSelectButton";
+import { ITagData, ITagMapData } from "../../api/Tag";
 
 interface IWidget {
   data: IWbw;
@@ -41,6 +43,7 @@ interface IWidget {
   onSave?: Function;
   onAttachmentSelectOpen?: Function;
   onPopTopChange?: Function;
+  onTagCreate?: Function;
 }
 const WbwDetailWidget = ({
   data,
@@ -51,6 +54,7 @@ const WbwDetailWidget = ({
   onSave,
   onAttachmentSelectOpen,
   onPopTopChange,
+  onTagCreate,
 }: IWidget) => {
   const intl = useIntl();
   const [currWbwData, setCurrWbwData] = useState<IWbw>(
@@ -168,6 +172,16 @@ const WbwDetailWidget = ({
                 }}
               />
             </Tooltip>
+            <TagSelectButton
+              resType="wbw"
+              resId={data.uid}
+              disabled={true}
+              onCreate={(tags: ITagData[]) => {
+                if (typeof onTagCreate !== "undefined") {
+                  onTagCreate(tags);
+                }
+              }}
+            />
             <DiscussionButton
               initCount={data.hasComment ? 1 : 0}
               hideCount

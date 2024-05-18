@@ -158,6 +158,16 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
         },
         {
           label: (
+            <Link to={`/studio/${studioname}/tags/list`}>
+              {intl.formatMessage({
+                id: "columns.studio.tag.title",
+              })}
+            </Link>
+          ),
+          key: "tag",
+        },
+        {
+          label: (
             <Link to={linkSetting}>
               {intl.formatMessage({
                 id: "columns.studio.setting.title",

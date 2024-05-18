@@ -40,7 +40,9 @@ const Widget = () => {
             },
             {
               key: "member",
-              label: `成员`,
+              label: intl.formatMessage({
+                id: "auth.role.member",
+              }),
               children: (
                 <div style={{ display: "flex" }}>
                   <div style={{ flex: 3 }}>
@@ -56,7 +58,9 @@ const Widget = () => {
                       items={[
                         {
                           key: "timeline",
-                          label: "录取记录",
+                          label: intl.formatMessage({
+                            id: "course.member.timeline",
+                          }),
                           children:
                             courseId && selected ? (
                               <CourseMemberTimeLine

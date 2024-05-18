@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { get } from "../../request";
 import type { ChannelFilterProps } from "../channel/ChannelList";
 import { ITagData } from "./ChapterTag";
-import TagArea from "../tag/TagArea";
+import TagArea from "../tag/TagAreaInChapter";
 import { Skeleton } from "antd";
 
 interface IAppendTagData {

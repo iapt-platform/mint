@@ -63,6 +63,7 @@ const items = {
   "course.timeline.all": "全部参课记录",
   "course.timeline.current": "当前课程",
   "course.channel.unbound": "Unbound",
+  "course.member.timeline": "timeline",
 };
 
 export default items;
