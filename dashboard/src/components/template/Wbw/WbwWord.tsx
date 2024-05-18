@@ -20,6 +20,7 @@ import { ArticleMode } from "../../article/Article";
 import WbwReal from "./WbwReal";
 import WbwDetailFm from "./WbwDetailFm";
 import { IStudio } from "../../auth/Studio";
+import { IUser } from "../../auth/User";
 
 export type TFieldName =
   | "word"
@@ -91,6 +92,9 @@ export interface IWbw {
   hasComment?: boolean;
   grammarId?: string;
   bookName?: string;
+  editor?: IUser;
+  created_at?: string;
+  updated_at?: string;
 }
 export interface IWbwFields {
   real?: boolean;
