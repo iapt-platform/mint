@@ -406,7 +406,11 @@ const WbwPaliWidget = ({
           <NoteIcon />
           <BookMarkIcon />
           <RelationIcon />
-          <WbwPaliDiscussionIcon data={data} studio={studio} />
+          <WbwPaliDiscussionIcon
+            data={data}
+            studio={studio}
+            channelId={channelId}
+          />
         </Space>
       </div>
     );
