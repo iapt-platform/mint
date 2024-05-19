@@ -21,7 +21,7 @@ class UpgradeProgressChapter extends Command
      * php artisan upgrade:progress.chapter --book=168 --para=915 --channel=19f53a65-81db-4b7d-8144-ac33f1217d34
      * @var string
      */
-    protected $signature = 'upgrade:progress.chapter  {--book=} {--para=} {--channel=} {--driver=morus}';
+    protected $signature = 'upgrade:progress.chapter  {--book=} {--para=} {--channel=} {--driver=str}';
 
     /**
      * The console command description.
