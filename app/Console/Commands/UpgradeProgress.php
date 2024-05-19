@@ -8,12 +8,13 @@ use App\Models\PaliSentence;
 use App\Models\Progress;
 use App\Models\ProgressChapter;
 use App\Models\PaliText;
+use Illuminate\Support\Facades\Log;
 
 class UpgradeProgress extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan upgrade:progress --book=122 --para=244 --channel=5310999c-0b0c-4bb0-9bb9-9cdd176e9ef0
+     * php artisan upgrade:progress --book=168 --para=916 --channel=19f53a65-81db-4b7d-8144-ac33f1217d34
      * @var string
      */
     protected $signature = 'upgrade:progress {--book=} {--para=} {--channel=}';
@@ -56,20 +57,19 @@ class UpgradeProgress extends Command
                           ->where('paragraph',$para)
                           ->where('channel_uid',$channelId)
                           ->groupby('book_id','paragraph','channel_uid')
-                          ->select('book_id','paragraph','channel_uid')
-                          ->cursor();
+                          ->select('book_id','paragraph','channel_uid');
         }else{
             $sentences = Sentence::where('strlen','>',0)
                           ->where('book_id','<',1000)
                           ->where('channel_uid','<>','')
                           ->groupby('book_id','paragraph','channel_uid')
-                          ->select('book_id','paragraph','channel_uid')
-                          ->cursor();
+                          ->select('book_id','paragraph','channel_uid');
         }
-
-        $this->info('sentences:',count($sentences));
+        $count = $sentences->count();
+        $sentences = $sentences->cursor();
+        $this->info('sentences:'.$count);
         #第二步 更新段落表
-        $bar = $this->output->createProgressBar(count($sentences));
+        $bar = $this->output->createProgressBar($count);
         foreach ($sentences as $sentence) {
             # 第二步 生成para progress 1,2,15,zh-tw
             # 计算此段落完成时间
@@ -101,9 +101,9 @@ class UpgradeProgress extends Command
                                 ->value('length');
                 }
                 $paraInfo = [
-                        'book'=>$channel->book_id,
-                        'para'=>$channel->paragraph,
-                        'channel_id'=>$channel->channel_uid
+                        'book'=>$sentence->book_id,
+                        'para'=>$sentence->paragraph,
+                        'channel_id'=>$sentence->channel_uid
                 ];
                 $paraData = [
                         'lang'=>'en',
