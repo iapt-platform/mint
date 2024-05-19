@@ -60,6 +60,12 @@ class CourseMemberController extends Controller
                 return $this->error('无法识别的参数view',400,400);
             break;
         }
+        if(!empty($request->get("role")) && $request->get("role") !=='all'){
+            $table = $table->where('role', $request->get("role"));
+        }
+        if(!empty($request->get("status"))){
+            $table = $table->whereIn('status', explode(',',$request->get("status")) );
+        }
         if(!empty($request->get("search"))){
             $usersId = UserInfo::where('nickname','like', '%'.$request->get("search")."%")
                             ->select('userid')
