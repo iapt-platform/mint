@@ -22,6 +22,11 @@ import { ISetStatus, setStatus } from "./UserAction";
 import { IChannel } from "../channel/Channel";
 import CourseInvite from "./CourseInvite";
 
+interface IParam {
+  role?: string;
+  status?: string[];
+}
+
 interface IRoleTag {
   title: string;
   color: string;
@@ -73,7 +78,7 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
 
   return (
     <>
-      <ProList<ICourseMember>
+      <ProList<ICourseMember, IParam>
         actionRef={ref}
         search={{
           filterType: "light",
@@ -94,6 +99,7 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
             search: false,
           },
           avatar: {
+            search: false,
             render(dom, entity, index, action, schema) {
               return <User {...entity.user} showName={false} />;
             },
@@ -150,14 +156,7 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
                 "reject",
                 "block",
               ];
-              /*
 
-              const undo = {
-                key: "undo",
-                label: "撤销上次操作",
-                disabled: !canUndo,
-              };
-              */
               const items: ItemType[] = actions.map((item) => {
                 return {
                   key: item,
@@ -224,22 +223,95 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
               ];
             },
           },
+          status: {
+            // 自己扩展的字段，主要用于筛选，不在列表中显示
+            title: "状态",
+            valueType: "checkbox",
+            valueEnum: {
+              joined: {
+                text: intl.formatMessage({
+                  id: "course.member.status.joined.label",
+                }),
+                status: "Default",
+              },
+              applied: {
+                text: intl.formatMessage({
+                  id: "course.member.status.applied.label",
+                }),
+                status: "Success",
+              },
+              invited: {
+                text: intl.formatMessage({
+                  id: "course.member.status.invited.label",
+                }),
+                status: "Success",
+              },
+              canceled: {
+                text: intl.formatMessage({
+                  id: "course.member.status.canceled.label",
+                }),
+                status: "Success",
+              },
+              revoked: {
+                text: intl.formatMessage({
+                  id: "course.member.status.revoked.label",
+                }),
+                status: "Success",
+              },
+              agreed: {
+                text: intl.formatMessage({
+                  id: "course.member.status.agreed.label",
+                }),
+                status: "Success",
+              },
+              accepted: {
+                text: intl.formatMessage({
+                  id: "course.member.status.accepted.label",
+                }),
+                status: "Success",
+              },
+              disagreed: {
+                text: intl.formatMessage({
+                  id: "course.member.status.disagreed.label",
+                }),
+                status: "Success",
+              },
+              rejected: {
+                text: intl.formatMessage({
+                  id: "course.member.status.rejected.label",
+                }),
+                status: "Success",
+              },
+              left: {
+                text: intl.formatMessage({
+                  id: "course.member.status.left.label",
+                }),
+                status: "Success",
+              },
+              blocked: {
+                text: intl.formatMessage({
+                  id: "course.member.status.blocked.label",
+                }),
+                status: "Success",
+              },
+            },
+          },
           role: {
             // 自己扩展的字段，主要用于筛选，不在列表中显示
             title: "角色",
             valueType: "select",
             valueEnum: {
-              all: {
-                text: intl.formatMessage({
-                  id: "forms.fields.publicity.all.label",
-                }),
-                status: "Default",
-              },
               student: {
                 text: intl.formatMessage({
                   id: "auth.role.student",
                 }),
                 status: "Default",
+              },
+              manager: {
+                text: intl.formatMessage({
+                  id: "auth.role.manager",
+                }),
+                status: "Success",
               },
               assistant: {
                 text: intl.formatMessage({
@@ -263,6 +335,12 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
             params.keyword.trim() !== ""
           ) {
             url += "&search=" + params.keyword;
+          }
+          if (params.role) {
+            url += `&role=${params.role}`;
+          }
+          if (params.status) {
+            url += `&status=${params.status}`;
           }
           console.info("api request", url);
           const res = await get<ICourseMemberListResponse>(url);
