@@ -53,13 +53,6 @@ const getActionsByStatus = (
   );
   const actions = data.find((value) => {
     if (value.mode.includes(mode) && value.status === status) {
-      console.debug(
-        "getActionsByStatus value",
-        value,
-        signUpStartAt,
-        signUpEndAt,
-        inSignUp
-      );
       if (inSignUp) {
         if (value.signUp && value.signUp.length > 0) {
           console.debug("getActionsByStatus got it", value.signUp);

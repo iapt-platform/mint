@@ -129,7 +129,7 @@ const WbwFactorsWidget = ({ data, answer, display, onChange }: IWidget) => {
       <div
         className={
           "wbw_word_item" +
-          errorClass(data.factors?.value, answer?.factors?.value)
+          errorClass("factors", data.factors?.value, answer?.factors?.value)
         }
       >
         <Text type="secondary">
