@@ -143,7 +143,7 @@ class DiscussionCountController extends Controller
         }
         Log::debug('res id',['res'=>$resId]);
         //全部资源id获取完毕
-        $table = Discussion::select(['id','res_id','type','editor_uid'])
+        $table = Discussion::select(['id','res_id','res_type','type','editor_uid'])
                             ->where('status','active')
                             ->whereNull('parent')
                             ->whereIn('res_id',$resId);
@@ -169,7 +169,7 @@ class DiscussionCountController extends Controller
         $allDiscussions = Discussion::where('status','active')
                                     ->whereNull('parent')
                                     ->where('res_id',$resId)
-                                    ->select(['id','res_id','type','editor_uid'])
+                                    ->select(['id','res_id','res_type','type','editor_uid'])
                                     ->get();
         $result = DiscussionCountResource::collection($allDiscussions);
         Log::debug('response',['data'=>$result]);

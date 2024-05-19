@@ -68,8 +68,7 @@ class DiscussionController extends Controller
                         'can_reply' => false,
                         ]);
                 }
-                $resType = Discussion::where('res_id',$request->get('id'))
-                                        ->value('res_type');
+                $resType = $request->get('res_type');
                 if($user){
                     switch ($resType) {
                         case 'sentence':
