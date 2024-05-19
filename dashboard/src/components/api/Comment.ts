@@ -67,11 +67,18 @@ export interface IDiscussionCountRequest {
   course_id?: string | null;
   sentences: string[][];
 }
+
+export interface IDiscussionCountWbw {
+  book_id: number;
+  paragraph: number;
+  wid: number;
+}
 export interface IDiscussionCountData {
   id: string;
   res_id: string;
   type: string;
   editor_uid: string;
+  wbw?: IDiscussionCountWbw;
 }
 export interface IDiscussionCountResponse {
   ok: boolean;
