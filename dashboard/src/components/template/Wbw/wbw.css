@@ -81,10 +81,21 @@
   padding: 0;
   cursor: pointer;
 }
-.wbw_error {
+
+.wbw_check {
   text-decoration: underline wavy;
-  text-decoration-color: red;
   text-underline-offset: 2px;
+}
+.wbw_error {
+  text-decoration-color: red;
+}
+
+.wbw_warning {
+  text-decoration-color: orange;
+}
+
+.wbw_info {
+  text-decoration-color: blue;
 }
 
 .layout-v .wbw_word_item {

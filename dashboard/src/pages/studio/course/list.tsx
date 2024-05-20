@@ -136,7 +136,7 @@ const Widget = () => {
         >
           {intl.formatMessage({
             //编辑
-            id: "buttons.edit",
+            id: "buttons.manage",
           })}
         </Link>
       );

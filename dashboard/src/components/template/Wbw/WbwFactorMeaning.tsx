@@ -101,7 +101,11 @@ const WbwFactorMeaningWidget = ({
       <div
         className={
           "wbw_word_item" +
-          errorClass(data.factorMeaning?.value, answer?.factorMeaning?.value)
+          errorClass(
+            "factorMeaning",
+            data.factorMeaning?.value,
+            answer?.factorMeaning?.value
+          )
         }
       >
         <Text type="secondary">
