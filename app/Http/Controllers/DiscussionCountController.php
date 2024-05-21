@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Api\AuthApi;
+use App\Http\Api\ChannelApi;
+use App\Http\Resources\DiscussionCountResource;
+use App\Http\Resources\TagMapResource;
 use Illuminate\Support\Facades\Log;
 use App\Models\Discussion;
 use App\Models\CourseMember;
@@ -10,8 +14,8 @@ use App\Models\Course;
 use App\Models\Sentence;
 use App\Models\WbwBlock;
 use App\Models\Wbw;
-use App\Http\Api\AuthApi;
-use App\Http\Resources\DiscussionCountResource;
+use App\Models\TagMap;
+
 
 
 class DiscussionCountController extends Controller
@@ -63,6 +67,7 @@ class DiscussionCountController extends Controller
         if(!$user){
             return $this->error('auth.failed',401,401);
         }
+        $studioIdForTag = $user["user_uid"];
         if($request->has('course_id')){
             //判断我的角色
             $my = CourseMember::where('user_id',$user["user_uid"])
@@ -80,7 +85,7 @@ class DiscussionCountController extends Controller
             Log::debug('allMembers',['members'=>$allMembers]);
             //找到全部相关channel
             $channels = array();
-            //获取答案channel
+            //获取答案 channel
             $answerChannel = Course::where('id',$request->get('course_id'))
                             ->value('channel_id');
             $exerciseChannels = CourseMember::where('is_current',true)
@@ -98,9 +103,17 @@ class DiscussionCountController extends Controller
                 }
             }else{
                 //找到全部学员channel + 答案
+
                 foreach ($exerciseChannels as $key => $value) {
                     array_push($channels,$value->channel_id);
                 }
+                //找到
+                $courseStudioId = Course::where('id',$request->get('course_id'))
+                            ->value('studio_id');
+                if($courseStudioId){
+                    $studioIdForTag = $courseStudioId;
+                }
+
             }
         }
 
@@ -143,6 +156,7 @@ class DiscussionCountController extends Controller
         }
         Log::debug('res id',['res'=>$resId]);
         //全部资源id获取完毕
+        //获取discussion
         $table = Discussion::select(['id','res_id','res_type','type','editor_uid'])
                             ->where('status','active')
                             ->whereNull('parent')
@@ -152,9 +166,19 @@ class DiscussionCountController extends Controller
         }
 
         $allDiscussions = $table->get();
-        $result = DiscussionCountResource::collection($allDiscussions);
-        Log::debug('response',['data'=>$result]);
-        return $this->ok($result);
+        $discussions = DiscussionCountResource::collection($allDiscussions);
+
+        //获取 tag
+        $tags = TagMap::select(['tag_maps.id','anchor_id','table_name','tag_id','editor_uid','tags.name','tags.color'])
+                            ->whereIn('anchor_id',$resId)
+                            ->where('owner_uid',$studioIdForTag)
+                            ->leftJoin('tags','tags.id', '=', 'tag_maps.tag_id')
+                            ->get();
+        Log::debug('response',['data'=>$discussions]);
+        return $this->ok([
+            'discussions'=>$discussions,
+            'tags' => $tags,
+        ]);
     }
 
     /**
@@ -171,9 +195,19 @@ class DiscussionCountController extends Controller
                                     ->where('res_id',$resId)
                                     ->select(['id','res_id','res_type','type','editor_uid'])
                                     ->get();
-        $result = DiscussionCountResource::collection($allDiscussions);
-        Log::debug('response',['data'=>$result]);
-        return $this->ok($result);
+        $discussions = DiscussionCountResource::collection($allDiscussions);
+
+        //获取 tag
+        $table = TagMap::select(['id','anchor_id','table_name','tag_id','editor_uid'])
+                       ->where('anchor_id',$resId);
+
+        $allTags = $table->get();
+        $tags = TagMapResource::collection($allTags);
+        Log::debug('response',['discussions'=>$discussions]);
+        return $this->ok([
+            'discussions'=>$discussions,
+            'tags' => $tags,
+        ]);
     }
 
     /**
