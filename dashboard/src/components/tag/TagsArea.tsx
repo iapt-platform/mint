@@ -34,12 +34,7 @@ const TagsAreaWidget = ({
 
   const currTags = tags?.map((item, id) => {
     return id < max ? (
-      <Tag
-        key={id}
-        color={"#" + numToHex(item.color ?? 13684944)}
-        closable
-        onClose={() => {}}
-      >
+      <Tag key={id} color={"#" + numToHex(item.color ?? 13684944)}>
         {item.name}
       </Tag>
     ) : undefined;
