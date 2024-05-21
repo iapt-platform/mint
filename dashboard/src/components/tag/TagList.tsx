@@ -8,13 +8,35 @@ import { get } from "../../request";
 import { useRef, useState } from "react";
 import TagCreate from "./TagCreate";
 import { useIntl } from "react-intl";
+import { Link } from "react-router-dom";
+
+/**
+ * 10进制数字转为16进制字符串
+ * @param {number} arg
+ * @returns
+ */
+/*
+作者：sq800
+链接：https://juejin.cn/post/7250029395024281656
+来源：稀土掘金
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+*/
+export const numToHex = (arg: number) => {
+  try {
+    let a = arg.toString(16).toUpperCase();
+    return a.length % 2 === 1 ? "0" + a : a;
+  } catch (e) {
+    console.warn("数字转16进制出错:", e);
+  }
+};
 
 interface IWidget {
   studioName?: string;
+  readonly?: boolean;
   onSelect?: Function;
 }
 
-const TagsList = ({ studioName, onSelect }: IWidget) => {
+const TagsList = ({ studioName, readonly = false, onSelect }: IWidget) => {
   const intl = useIntl(); //i18n
   const ref = useRef<ActionType>();
   const [openCreate, setOpenCreate] = useState(false);
@@ -22,32 +44,38 @@ const TagsList = ({ studioName, onSelect }: IWidget) => {
     <ProList<ITagData>
       actionRef={ref}
       toolBarRender={() => {
-        return [
-          <Popover
-            content={
-              <TagCreate
-                studio={studioName}
-                onCreate={() => {
-                  //新建课程成功后刷新
+        return readonly
+          ? [
+              <Link to={`/studio/${studioName}/tags/list`} target="_blank">
+                {intl.formatMessage({ id: "buttons.manage" })}
+              </Link>,
+            ]
+          : [
+              <Popover
+                content={
+                  <TagCreate
+                    studio={studioName}
+                    onCreate={() => {
+                      //新建课程成功后刷新
 
-                  ref.current?.reload();
-                  setOpenCreate(false);
+                      ref.current?.reload();
+                      setOpenCreate(false);
+                    }}
+                  />
+                }
+                title="Create"
+                placement="bottomRight"
+                trigger="click"
+                open={openCreate}
+                onOpenChange={(newOpen: boolean) => {
+                  setOpenCreate(newOpen);
                 }}
-              />
-            }
-            title="Create"
-            placement="bottomRight"
-            trigger="click"
-            open={openCreate}
-            onOpenChange={(newOpen: boolean) => {
-              setOpenCreate(newOpen);
-            }}
-          >
-            <Button key="button" icon={<PlusOutlined />} type="primary">
-              {intl.formatMessage({ id: "buttons.create" })}
-            </Button>
-          </Popover>,
-        ];
+              >
+                <Button key="button" icon={<PlusOutlined />} type="primary">
+                  {intl.formatMessage({ id: "buttons.create" })}
+                </Button>
+              </Popover>,
+            ];
       }}
       search={{
         filterType: "light",
@@ -87,7 +115,7 @@ const TagsList = ({ studioName, onSelect }: IWidget) => {
           render(dom, entity, index, action, schema) {
             return (
               <Tag
-                color={"#" + entity.color.toString(16)}
+                color={"#" + numToHex(entity.color ?? 13684944)}
                 onClick={() => {
                   if (typeof onSelect !== "undefined") {
                     onSelect(entity);
@@ -103,13 +131,17 @@ const TagsList = ({ studioName, onSelect }: IWidget) => {
           dataIndex: "description",
           search: false,
         },
-        actions: {
-          render: (text, row) => [
-            <Button>{"edit"}</Button>,
-            <Button danger>{"delete"}</Button>,
-          ],
-          search: false,
-        },
+        actions: readonly
+          ? undefined
+          : {
+              render: (dom, entity, index, action, schema) => [
+                <Link to={`/studio/${studioName}/tags/${entity.id}/edit`}>
+                  {"edit"}
+                </Link>,
+                <Button danger>{"delete"}</Button>,
+              ],
+              search: false,
+            },
         status: {
           // 自己扩展的字段，主要用于筛选，不在列表中显示
           title: "排序",
