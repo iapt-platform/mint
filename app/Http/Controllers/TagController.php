@@ -77,6 +77,7 @@ class TagController extends Controller
         $tag = new Tag;
         $tag->name = $request->get("name");
         $tag->description = $request->get("description");
+        $tag->color = $request->get("color");
         $tag->owner_id = $studioId;
         $tag->save();
         return $this->ok(new TagResource($tag));
@@ -105,6 +106,29 @@ class TagController extends Controller
     public function update(Request $request, Tag $tag)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'),401,401);
+        }
+        //判断当前用户是否有指定的studio的权限
+        $studioId = StudioApi::getIdByName($request->get('studio'));
+        if($user['user_uid'] !== $studioId){
+            return $this->error(__('auth.failed'),403,403);
+        }
+        //查询是否重复
+        if(Tag::where('name',$request->get('name'))
+                  ->where('owner_id',$user['user_uid'])
+                  ->where('id','<>',$tag->id)
+                  ->exists()){
+            return $this->error(__('validation.exists',['name']),200,200);
+        }
+
+        $tag->name = $request->get("name");
+        $tag->description = $request->get("description");
+        $tag->color = $request->get("color");
+        $tag->owner_id = $studioId;
+        $tag->save();
+        return $this->ok(new TagResource($tag));
     }
 
     /**
