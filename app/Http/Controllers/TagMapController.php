@@ -9,6 +9,7 @@ use App\Http\Resources\TagMapResource;
 use App\Http\Resources\TagResource;
 use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
+use App\Http\Api\CourseApi;
 use Illuminate\Support\Str;
 
 class TagMapController extends Controller
@@ -83,16 +84,15 @@ class TagMapController extends Controller
         $tag->owner_uid = $studioId;
         $tag->save();
 
-        $tagsId = TagMap::where('anchor_id',$request->get("anchor_id"))
+        $tagsMap = TagMap::where('anchor_id',$request->get("anchor_id"))
                     ->where('owner_uid',$studioId)
                     ->select('tag_id')
                     ->get();
-        $tags = Tag::whereIn('id',$tagsId)
-                    ->get();
+
         return $this->ok(
             [
-            "rows"=>TagResource::collection($tags),
-            "count"=>count($tags),
+            "rows"=>TagMapResource::collection($tagsMap),
+            "count"=>count($tagsMap),
             ]
         );
 
