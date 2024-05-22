@@ -43,6 +43,8 @@ const items = {
   "course.join.mode.invite.label": "仅限邀请",
   "course.join.mode.invite.message": "本课程仅限内部邀请。",
   "course.join.mode.manual.label": "人工审核",
+  "course.join.mode.manual.message":
+    "本课程为报名后人工审核课程。报名后请等待组织者审核。",
   "course.join.mode.manual.user-accept.message": "您确定要接受课程邀请吗？",
   "course.join.mode.open.label": "开放自学",
   "course.join.mode.open.message": "本课程为开放课程。加入后可以立即开始学习。",
