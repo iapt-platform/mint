@@ -7,7 +7,7 @@ import { TResType } from "./DiscussionListCard";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 import { discussionList } from "../../reducers/discussion-count";
-import { IDiscussionCountWbw } from "../api/Comment";
+import { IDiscussionCountData, IDiscussionCountWbw } from "../api/Comment";
 
 interface IWidget {
   initCount?: number;
@@ -32,12 +32,16 @@ const DiscussionButton = ({
 
   const all = discussions?.filter((value) => value.res_id === resId);
   const my = all?.filter((value) => value.editor_uid === user?.id);
-  const withStudent = discussions?.filter(
-    (value) =>
-      value.wbw?.book_id === wbw?.book_id &&
-      value.wbw?.paragraph === wbw?.paragraph &&
-      value.wbw?.wid.toString() === wbw?.wid.toString()
-  );
+
+  let withStudent: IDiscussionCountData[] | undefined;
+  if (wbw) {
+    withStudent = discussions?.filter(
+      (value) =>
+        value.wbw?.book_id === wbw?.book_id &&
+        value.wbw?.paragraph === wbw?.paragraph &&
+        value.wbw?.wid.toString() === wbw?.wid.toString()
+    );
+  }
 
   console.debug("DiscussionButton", discussions, wbw, withStudent);
 
