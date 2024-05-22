@@ -252,6 +252,7 @@ class CourseMemberController extends Controller
         if($request->has('channel_id')) {
             $courseMember = CourseMember::where('course_id',$request->get('course_id'))
                                         ->where('user_id',$user['user_uid'])
+                                        ->where('is_current',true)
                                         ->first();
             if($courseMember){
                 $courseMember->channel_id = $request->get('channel_id');
@@ -260,6 +261,8 @@ class CourseMemberController extends Controller
             }else{
                 return $this->error(__('auth.failed'));
             }
+        }else{
+            return $this->error(__('auth.failed'));
         }
 
 
