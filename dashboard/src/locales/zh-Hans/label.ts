@@ -51,6 +51,7 @@ const items = {
   "labels.email.sign-up.subject": "欢迎注册wikipāli",
   "labels.sign-up": "注册",
   "labels.done": "完成",
+  "labels.tag.list": "标签列表",
 };
 
 export default items;

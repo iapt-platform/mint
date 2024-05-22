@@ -373,7 +373,7 @@ const managerData: IAction[] = [
     mode: ["manual", "invite"],
     status: "applied",
     before: ["accept", "reject"],
-    duration: [],
+    duration: ["accept", "reject"],
     after: [],
   },
   {

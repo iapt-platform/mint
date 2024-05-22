@@ -32,7 +32,7 @@ import { tempSet } from "../../../reducers/setting";
 import { PopPlacement } from "./WbwPali";
 import store from "../../../store";
 import TagSelectButton from "../../tag/TagSelectButton";
-import { ITagData, ITagMapData } from "../../api/Tag";
+import { ITagMapData } from "../../api/Tag";
 
 interface IWidget {
   data: IWbw;
@@ -175,8 +175,12 @@ const WbwDetailWidget = ({
             <TagSelectButton
               resType="wbw"
               resId={data.uid}
-              disabled={true}
-              onCreate={(tags: ITagData[]) => {
+              onOpen={() => {
+                if (typeof onClose !== "undefined") {
+                  onClose();
+                }
+              }}
+              onCreate={(tags: ITagMapData[]) => {
                 if (typeof onTagCreate !== "undefined") {
                   onTagCreate(tags);
                 }

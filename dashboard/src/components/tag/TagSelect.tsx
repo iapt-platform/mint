@@ -34,6 +34,7 @@ const TagSelectWidget = ({ studioName, trigger, onSelect }: IWidget) => {
         onCancel={handleCancel}
       >
         <TagList
+          readonly
           studioName={studioName}
           onSelect={(tag: ITagData) => {
             if (typeof onSelect !== "undefined") {

@@ -22,7 +22,7 @@ export interface ITagData {
   name: string;
   description?: string | null;
   color: number;
-  owner: IStudio;
+  owner?: IStudio;
   created_at: string;
   updated_at: string;
 }
@@ -53,11 +53,13 @@ export interface ITagMapData {
   table_name: string;
   anchor_id: string;
   tag_id: string;
+  name?: string;
+  color?: number;
   title?: string;
-  editor: IUser;
-  owner: IStudio;
-  created_at: string;
-  updated_at: string;
+  editor?: IUser;
+  owner?: IStudio;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface ITagMapResponse {

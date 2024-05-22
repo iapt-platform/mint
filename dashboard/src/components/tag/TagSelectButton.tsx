@@ -2,7 +2,7 @@ import { Button, message } from "antd";
 import { TagOutlined } from "@ant-design/icons";
 
 import TagSelect from "./TagSelect";
-import { ITagData, ITagMapRequest, ITagResponseList } from "../api/Tag";
+import { ITagData, ITagMapRequest, ITagMapResponseList } from "../api/Tag";
 import { useAppSelector } from "../../hooks";
 import { courseInfo } from "../../reducers/current-course";
 import { currentUser } from "../../reducers/current-user";
@@ -15,6 +15,7 @@ interface IWidget {
   disabled?: boolean;
   onSelect?: Function;
   onCreate?: Function;
+  onOpen?: Function;
 }
 
 const TagSelectButtonWidget = ({
@@ -23,6 +24,7 @@ const TagSelectButtonWidget = ({
   disabled = false,
   onSelect,
   onCreate,
+  onOpen,
 }: IWidget) => {
   const intl = useIntl();
   const course = useAppSelector(courseInfo);
@@ -35,7 +37,19 @@ const TagSelectButtonWidget = ({
     <TagSelect
       studioName={studioName}
       trigger={
-        <Button disabled={disabled} type="text" icon={<TagOutlined />} />
+        <Button
+          disabled={disabled}
+          type="text"
+          icon={
+            <TagOutlined
+              onClick={() => {
+                if (typeof onOpen !== "undefined") {
+                  onOpen();
+                }
+              }}
+            />
+          }
+        />
       }
       onSelect={(tag: ITagData) => {
         if (typeof onSelect !== "undefined") {
@@ -52,7 +66,7 @@ const TagSelectButtonWidget = ({
 
             const url = `/v2/tag-map`;
             console.info("tag-map  api request", url, data);
-            post<ITagMapRequest, ITagResponseList>(url, data)
+            post<ITagMapRequest, ITagMapResponseList>(url, data)
               .then((json) => {
                 console.info("tag-map api response", json);
                 if (json.ok) {

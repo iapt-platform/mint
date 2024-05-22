@@ -46,6 +46,7 @@ const items = {
   "labels.email.sign-up.subject": "welcome join wikipali",
   "labels.sign-up": "Sign Up",
   "labels.done": "Done",
+  "labels.tag.list": "tag list",
 };
 
 export default items;

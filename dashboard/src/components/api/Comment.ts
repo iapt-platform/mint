@@ -2,6 +2,7 @@ import { IUser } from "../auth/User";
 import { TDiscussionType } from "../discussion/Discussion";
 import { TContentType } from "../discussion/DiscussionCreate";
 import { TResType } from "../discussion/DiscussionListCard";
+import { ITagMapData } from "./Tag";
 
 export interface ICommentRequest {
   id?: string;
@@ -83,5 +84,5 @@ export interface IDiscussionCountData {
 export interface IDiscussionCountResponse {
   ok: boolean;
   message: string;
-  data: IDiscussionCountData[];
+  data: { discussions: IDiscussionCountData[]; tags: ITagMapData[] };
 }

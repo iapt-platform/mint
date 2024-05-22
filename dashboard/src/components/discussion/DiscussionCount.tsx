@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppSelector } from "../../hooks";
-import { publish, upgrade } from "../../reducers/discussion-count";
+import { discussions, tags, upgrade } from "../../reducers/discussion-count";
 import { sentenceList } from "../../reducers/sentence";
 import {
   IDiscussionCountRequest,
@@ -18,7 +18,7 @@ export const discussionCountUpgrade = (resId?: string) => {
   get<IDiscussionCountResponse>(url).then((json) => {
     console.debug("discussion-count api response", json);
     if (json.ok) {
-      store.dispatch(upgrade({ resId: resId, data: json.data }));
+      store.dispatch(upgrade({ resId: resId, data: json.data.discussions }));
     } else {
       console.error(json.message);
     }
@@ -51,7 +51,8 @@ const DiscussionCount = ({ courseId }: IWidget) => {
       (json) => {
         console.debug("discussion-count api response", json);
         if (json.ok) {
-          store.dispatch(publish(json.data));
+          store.dispatch(discussions(json.data.discussions));
+          store.dispatch(tags(json.data.tags));
         }
       }
     );
