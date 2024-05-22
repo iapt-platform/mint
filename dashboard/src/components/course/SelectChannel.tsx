@@ -52,7 +52,7 @@ const SelectChannelWidget = ({
             destroyOnClose: true,
             onCancel: () => console.log("run"),
           }}
-          submitTimeout={2000}
+          submitTimeout={20000}
           onFinish={async (values) => {
             if (user && courseId) {
               const url = `/v2/course-member_set-channel`;
@@ -61,11 +61,12 @@ const SelectChannelWidget = ({
                 course_id: courseId,
                 channel_id: values.channel,
               };
-              console.debug("course select channel", url, data);
+              console.info("course select channel api request", url, data);
               const json = await put<ICourseMemberData, ICourseMemberResponse>(
                 url,
                 data
               );
+              console.info("course select channel api response", json);
               if (json.ok) {
                 message.success("提交成功");
                 if (typeof onSelected !== "undefined") {
@@ -73,9 +74,11 @@ const SelectChannelWidget = ({
                 }
               } else {
                 message.error(json.message);
+                return false;
               }
             } else {
               console.log("select channel error:", user, courseId);
+              return false;
             }
 
             return true;
