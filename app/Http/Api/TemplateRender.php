@@ -46,6 +46,7 @@ class TemplateRender{
         $this->format = $format;
         $this->studioId = $studioId;
         $this->debug = $debug;
+        $this->glossaryKey = 'glossary';
 
         if(count($this->channel_id)>0){
             $channelId = $this->channel_id[0];
@@ -57,6 +58,9 @@ class TemplateRender{
             $this->lang = $lang;
             $this->langFamily = explode('-',$lang)[0];
         }
+    }
+    public function glossaryKey(){
+        return $this->glossaryKey;
     }
     /**
      * TODO 设置默认语言。在渲染某些内容的时候需要语言信息
@@ -285,8 +289,11 @@ class TemplateRender{
                 break;
             case 'html':
                 if(isset($props["meaning"])){
+                    $GLOBALS[$this->glossaryKey][$props["word"]] = $props['meaning'];
+
                     $key = 'term-'.$props["word"];
                     $termHead = "<a href='#'>".$props['meaning']."</a>";
+
                     if(isset($GLOBALS[$key])){
                         $output = $termHead;
                     }else{
