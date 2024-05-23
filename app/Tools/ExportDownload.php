@@ -86,16 +86,18 @@ class ExportDownload
         $tplFile = resource_path("mustache/".$type.'/'.$this->format."/main.".$this->format);
         $tpl = file_get_contents($tplFile);
         $texContent = $m->render($tpl,$bookMeta);
-        $tex[] = ['name'=>'main.'.$this->format,
-                  'content'=>$texContent
-                 ];
+        $tex[] = [
+            'name' => 'main.'.$this->format,
+            'content' => $texContent
+            ];
         foreach ($sections as $key => $section) {
             $tplFile = resource_path("mustache/".$type.'/'.$this->format."/section.".$this->format);
             $tpl = file_get_contents($tplFile);
             $texContent = $m->render($tpl,$section['body']);
-            $tex[] = ['name'=>$section['name'],
-                  'content'=>$texContent
-                 ];
+            $tex[] = [
+                'name'=>$section['name'],
+                'content'=>$texContent
+                ];
         }
 
         Log::debug('footnote start');
@@ -107,14 +109,17 @@ class ExportDownload
             file_exists($tplFile)){
             $tpl = file_get_contents($tplFile);
             $texContent = $m->render($tpl,['footnote'=>$GLOBALS['note']]);
-            $tex[] = ['name'=>'footnote.'.$this->format,
-                        'content'=>$texContent
-                        ];
+            $tex[] = [
+                'name'=>'footnote.'.$this->format,
+                'content'=>$texContent
+                ];
         }
         if($this->debug){
             $dir = "export/{$type}/".$this->format."/".$this->zipFilename."/";
+            $filename = $dir.$section['name'];
+            Log::debug('save',['filename'=>$filename]);
             foreach ($tex as $key => $section) {
-                Storage::disk('local')->put($dir.$section['name'], $section['content']);
+                Storage::disk('local')->put($filename, $section['content']);
             }
         }
 
