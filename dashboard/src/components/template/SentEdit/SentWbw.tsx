@@ -124,7 +124,13 @@ const SentWbwWidget = ({
       item.translation ? item.translation[0].studio : undefined
     );
     courseMember
-      .filter((value) => value.role === "student")
+      .filter(
+        (value) =>
+          value.role === "student" &&
+          (value.status === "joined" ||
+            value.status === "accepted" ||
+            value.status === "agreed")
+      )
       .forEach((value) => {
         const curr = hasWbwUsers.find((value1) => value1?.id === value.user_id);
         if (!curr && value.user) {
