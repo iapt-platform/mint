@@ -75,6 +75,8 @@ class ExportDownload
     }
 
     public function upload(string $type,$sections,$bookMeta){
+        $outputFilename = Str::uuid();
+
         $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES,
                     'delimiters' => '[[ ]]',
                     'escape'=>function ($value){
@@ -114,16 +116,18 @@ class ExportDownload
                 'content'=>$texContent
                 ];
         }
+        Log::debug('footnote finished');
+
         if($this->debug){
             $dir = "export/{$type}/".$this->format."/".$this->zipFilename."/";
-            $filename = $dir.$section['name'];
+            $filename = $dir.$outputFilename.'.html';
             Log::debug('save',['filename'=>$filename]);
             foreach ($tex as $key => $section) {
-                Storage::disk('local')->put($filename, $section['content']);
+                Storage::disk('local')->append($filename, $section['content']);
             }
         }
 
-        Log::debug('footnote finished');
+
         $this->setStatus(0.95,'export content done.');
 
         //upload
@@ -157,7 +161,7 @@ class ExportDownload
             }
         }
 
-        $zipFile = $zipDir.'/'.Str::uuid().'.zip';
+        $zipFile = $zipDir.'/'. $outputFilename .'.zip';
 
         Log::debug('export chapter start zip  file='.$zipFile);
         //zip压缩包里面的文件名
