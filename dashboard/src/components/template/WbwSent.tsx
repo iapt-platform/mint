@@ -124,7 +124,7 @@ interface IWbwXml {
 interface IWbwUpdateResponse {
   ok: boolean;
   message: string;
-  data: { rows?: IWbwXml[]; count: number };
+  data: { rows: IWbw[]; count: number };
 }
 interface IWbwWord {
   words: IWbwXml[];
@@ -408,15 +408,21 @@ export const WbwSentCtl = ({
       }),
     };
 
-    post<IWbwRequest, IWbwUpdateResponse>(`/v2/wbw`, postParam).then((json) => {
+    postWord(postParam);
+  };
+  const postWord = (postParam: IWbwRequest) => {
+    const url = `/v2/wbw`;
+    console.info("wbw api request", url, postParam);
+    post<IWbwRequest, IWbwUpdateResponse>(url, postParam).then((json) => {
+      console.info("wbw api response", json);
       if (json.ok) {
         message.info(json.data.count + " updated");
+        setWordData(paraMark(json.data.rows));
       } else {
         message.error(json.message);
       }
     });
   };
-
   const saveWord = (wbwData: IWbw[], sn: number) => {
     if (channelType === "nissaya") {
     } else {
@@ -435,15 +441,7 @@ export const WbwSentCtl = ({
         ],
       };
 
-      post<IWbwRequest, IWbwUpdateResponse>(`/v2/wbw`, postParam).then(
-        (json) => {
-          if (json.ok) {
-            message.info(json.data.count + " updated");
-          } else {
-            message.error(json.message);
-          }
-        }
-      );
+      postWord(postParam);
     }
   };
 
