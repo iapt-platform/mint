@@ -77,16 +77,17 @@ class WbwController extends Controller
             $wbwBlock->save();
         }
         $wbw = Wbw::where('block_uid',$wbwBlockId)
-                        ->where('wid',$request->get('sn'))
-                        ->first();
+                  ->where('wid',$request->get('sn'))
+                  ->first();
+        $sent = PaliSentence::where('book',$request->get('book'))
+                                ->where('paragraph',$request->get('para'))
+                                ->where('word_begin',"<=",$request->get('sn'))
+                                ->where('word_end',">=",$request->get('sn'))
+                                ->first();
         if(!$wbw){
             //建立一个句子的逐词解析数据
             //找到句子
-            $sent = PaliSentence::where('book',$request->get('book'))
-                                 ->where('paragraph',$request->get('para'))
-                                 ->where('word_begin',"<=",$request->get('sn'))
-                                 ->where('word_end',">=",$request->get('sn'))
-                                 ->first();
+
             $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
             $wbwContent = Sentence::where('book_id',$sent->book)
 							->where('paragraph',$sent->paragraph)
@@ -152,11 +153,25 @@ class WbwController extends Controller
                 $count++;
             }
         }
+        //获取整个句子数据
+        $corpus = new CorpusController;
+        $wbwString = $corpus->getWbw($request->get('book'),
+                            $request->get('para'),
+                            $sent->word_begin,
+                            $sent->word_end,
+                            $request->get('channel_id'));
+        if($wbwString){
+            $wbwSentence = json_decode($wbwString);
+        }else{
+            $wbwSentence = [];
+        }
+
+
         if(count($wbwId)>0){
             Mq::publish('wbw-analyses',$wbwId);
         }
 
-        return $this->ok(['rows'=>[],"count"=>$count]);
+        return $this->ok(['rows'=>$wbwSentence,"count"=>$count]);
     }
 
     /**
