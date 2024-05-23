@@ -24,8 +24,8 @@ class ExportChapter extends Command
     /**
      * The name and signature of the console command.
      * php artisan export:chapter 213 3 a19eaf75-c63f-4b84-8125-1bce18311e23 213-3.html --format=html --origin=true
-     * php artisan export:chapter 168 915 19f53a65-81db-4b7d-8144-ac33f1217d34 168-915.html --format=html
-     * php artisan export:chapter 168 915 19f53a65-81db-4b7d-8144-ac33f1217d34 168-915.html --format=html --origin=true
+     * php artisan export:chapter 168 915 7fea264d-7a26-40f8-bef7-bc95102760fb 168-915.html --format=html --debug
+     * php artisan export:chapter 168 915 7fea264d-7a26-40f8-bef7-bc95102760fb 168-915.html --format=html --origin=true
      * @var string
      */
     protected $signature = 'export:chapter {book} {para} {channel} {query_id} {--token=} {--origin=false} {--translation=true} {--debug} {--format=tex} ';
@@ -280,9 +280,47 @@ class ExportChapter extends Command
                 ];
         }
 
+        //导出术语表
+        $keyPali = array();
+        $keyMeaning = array();
+        if(isset($GLOBALS['glossary'])){
+            $glossary = $GLOBALS['glossary'];
+            foreach ($glossary as $word => $meaning) {
+                $keyMeaning[$meaning] = $word;
+                $keyPali[$word] = $meaning;
+            }
+        }
+
+        ksort($keyPali);
+        krsort($keyMeaning);
+        $glossaryData = [];
+        $glossaryData['pali'] = [];
+        $glossaryData['meaning'] = [];
+        foreach ($keyPali as $word => $meaning) {
+            $glossaryData['pali'][] = ['pali'=>$word,'meaning'=>$meaning];
+        }
+        foreach ($keyMeaning as $meaning => $word) {
+            $glossaryData['meaning'][] = ['pali' => $word,'meaning'=>$meaning];
+        }
+
+        Log::debug('glossary',['data' => $glossaryData]);
+
+        $tplFile = resource_path("mustache/chapter/".$this->option('format')."/glossary.".$this->option('format'));
+        $tplGlossary = file_get_contents($tplFile);
+
+        $glossaryContent = $m->render($tplGlossary,$glossaryData);
+
+        $sections[] = [
+            'name'=>'glossary.'.$this->option('format'),
+            'body'=>[
+                'title' => 'glossary',
+                'content' => $glossaryContent
+            ]
+        ];
+
         $this->info($upload->setStatus(0.9,'export content done'));
 
-        Log::debug('导出结束');
+        Log::debug('导出结束',['sections'=>count($sections)]);
 
         $upload->upload('chapter',$sections,$bookMeta);
         $this->info($upload->setStatus(1,'export chapter done'));
