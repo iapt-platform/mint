@@ -118,14 +118,7 @@ class ExportDownload
         }
         Log::debug('footnote finished');
 
-        if($this->debug){
-            $dir = "export/{$type}/".$this->format."/".$this->zipFilename."/";
-            $filename = $dir.$outputFilename.'.html';
-            Log::debug('save',['filename'=>$filename]);
-            foreach ($tex as $key => $section) {
-                Storage::disk('local')->append($filename, $section['content']);
-            }
-        }
+
 
 
         $this->setStatus(0.95,'export content done. tex count='.count($tex));
@@ -152,6 +145,12 @@ class ExportDownload
                 break;
         }
 
+        if($this->debug){
+            $dir = "export/{$type}/".$this->format."/".$this->zipFilename."/";
+            $filename = $dir.$outputFilename.'.html';
+            Log::debug('save',['filename'=>$filename]);
+            Storage::disk('local')->put($filename, $fileDate);
+        }
 
         $zipDir = storage_path('app/export/zip');
         if(!is_dir($zipDir)){
