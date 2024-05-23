@@ -202,18 +202,21 @@ export const WbwSentCtl = ({
 
   useEffect(() => {
     //计算完成度
+    //祛除标点符号
     const allWord = wordData.filter(
       (value) =>
         value.real.value &&
         value.real.value?.length > 0 &&
         value.type?.value !== ".ctl."
     );
+
     const final = allWord.filter(
       (value) =>
         value.meaning?.value &&
         value.factors?.value &&
         value.factorMeaning?.value &&
-        value.case?.value
+        value.case?.value &&
+        value.parent?.value
     );
     console.debug("wbw progress", allWord, final);
     let finalLen: number = 0;
