@@ -129,6 +129,7 @@ class ExportDownload
 
 
         $this->setStatus(0.95,'export content done. tex count='.count($tex));
+        Log::debug('export content done.',['tex_count'=>count($tex)]);
 
         //upload
         $fileDate = '';
