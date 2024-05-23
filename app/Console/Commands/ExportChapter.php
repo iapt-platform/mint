@@ -317,8 +317,9 @@ class ExportChapter extends Command
                 'content' => $glossaryContent
             ]
         ];
+        $this->info($upload->setStatus($currProgress,'export glossary '. count($keyPali)));
 
-        $this->info($upload->setStatus(0.9,'export content done'));
+        $this->info($upload->setStatus(0.9,'export content done sections='.count($sections)));
 
         Log::debug('导出结束',['sections'=>count($sections)]);
 
