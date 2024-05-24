@@ -3,15 +3,13 @@ import { Link } from "react-router-dom";
 import { Alert } from "antd";
 
 import { useAppSelector } from "../../hooks";
-import { currentUser as _currentUser } from "../../reducers/current-user";
+import { isGuest } from "../../reducers/current-user";
 
 const LoginAlertWidget = () => {
   const intl = useIntl();
+  const guest = useAppSelector(isGuest);
 
-  const user = useAppSelector(_currentUser);
-  return user ? (
-    <></>
-  ) : (
+  return guest === true ? (
     <Alert
       message={intl.formatMessage({
         id: "message.auth.guest.alert",
@@ -26,6 +24,8 @@ const LoginAlertWidget = () => {
         </Link>
       }
     />
+  ) : (
+    <></>
   );
 };
 

@@ -56,9 +56,11 @@ export const slice = createSlice({
     signIn: (state, action: PayloadAction<[IUser, string]>) => {
       state.payload = action.payload[0];
       set(action.payload[1]);
+      state.guest = false;
     },
     signOut: (state) => {
       state.payload = undefined;
+      state.guest = undefined;
       remove();
     },
     guest: (state, action: PayloadAction<boolean>) => {

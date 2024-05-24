@@ -29,6 +29,7 @@ interface IWidget {
   active?: boolean;
   hideInteractive?: boolean;
   hideTitle?: boolean;
+  isSubWindow?: boolean;
   onArticleChange?: Function;
   onLoad?: Function;
   onAnthologySelect?: Function;
@@ -43,6 +44,7 @@ const TypeArticleReaderWidget = ({
   active = false,
   hideInteractive = false,
   hideTitle = false,
+  isSubWindow = false,
   onArticleChange,
   onLoad,
   onAnthologySelect,
@@ -192,6 +194,7 @@ const TypeArticleReaderWidget = ({
             articleId={articleId}
             anthologyId={anthologyId}
             role={articleData?.role}
+            isSubWindow={isSubWindow}
             onEdit={() => {
               if (typeof onEdit !== "undefined") {
                 onEdit();

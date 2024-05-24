@@ -15,6 +15,7 @@ interface IWidget {
   active?: boolean;
   hideInteractive?: boolean;
   hideTitle?: boolean;
+  isSubWindow?: boolean;
   onArticleChange?: Function;
   onArticleEdit?: Function;
   onLoad?: Function;
@@ -29,6 +30,7 @@ const TypeArticleWidget = ({
   active = false,
   hideInteractive = false,
   hideTitle = false,
+  isSubWindow = false,
   onArticleChange,
   onLoad,
   onAnthologySelect,
@@ -61,6 +63,7 @@ const TypeArticleWidget = ({
         />
       ) : (
         <TypeArticleReader
+          isSubWindow={isSubWindow}
           type={type}
           channelId={channelId}
           articleId={articleId}
