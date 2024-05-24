@@ -221,9 +221,7 @@ export const SentEditInner = ({
     >
       {affix ? (
         <Affix offsetTop={44}>
-          <div style={{ backgroundColor: affix ? "white" : "unset" }}>
-            {content}
-          </div>
+          <div style={{ backgroundColor: "white" }}>{content}</div>
         </Affix>
       ) : (
         content
