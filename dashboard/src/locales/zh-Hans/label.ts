@@ -52,6 +52,11 @@ const items = {
   "labels.sign-up": "注册",
   "labels.done": "完成",
   "labels.tag.list": "标签列表",
+  "labels.error.401": "未登录",
+  "labels.error.403": "没有权限",
+  "labels.error.404": "没有找到指定的资源",
+  "labels.error.429": "请求过于频繁",
+  "labels.error.500": "服务器内部错误",
 };
 
 export default items;
