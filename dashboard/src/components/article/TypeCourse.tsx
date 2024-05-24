@@ -21,9 +21,13 @@ import "./article.css";
 
 import { ArticleMode, ArticleType } from "./Article";
 import TypeArticle from "./TypeArticle";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import SelectChannel from "../course/SelectChannel";
+import { Space, Tag, Typography } from "antd";
+import { useIntl } from "react-intl";
+
+const { Text } = Typography;
 
 /**
  * 每种article type 对应的路由参数
@@ -72,6 +76,7 @@ const TypeCourseWidget = ({
   onLoading,
   onError,
 }: IWidget) => {
+  const intl = useIntl();
   const [anthologyId, setAnthologyId] = useState<string>();
   const [course, setCourse] = useState<ICourseDataResponse>();
   const [currUser, setCurrUser] = useState<ICourseUser>();
@@ -188,7 +193,7 @@ const TypeCourseWidget = ({
 
   return anthologyId && currUser ? (
     <>
-      {!currUser.channel_id ? (
+      {!currUser.channel_id && currUser.role === "student" ? (
         <SelectChannel
           courseId={courseId}
           open={channelPickerOpen}
@@ -202,6 +207,15 @@ const TypeCourseWidget = ({
       ) : (
         <></>
       )}
+      <Space>
+        <Text>
+          {"课程："}
+          <Link to={`/course/show/${course?.id}`} target="_blank">
+            {course?.title}
+          </Link>
+        </Text>
+        <Tag>{intl.formatMessage({ id: `auth.role.${currUser.role}` })}</Tag>
+      </Space>
       <TypeArticle
         type={"article"}
         articleId={articleId}
