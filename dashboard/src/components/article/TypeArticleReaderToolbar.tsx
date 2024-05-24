@@ -24,6 +24,7 @@ interface IWidget {
   anthologyId?: string | null;
   title?: string;
   role?: TRole;
+  isSubWindow?: boolean;
   onEdit?: Function;
   onAnthologySelect?: Function;
 }
@@ -32,6 +33,7 @@ const TypeArticleReaderToolbarWidget = ({
   anthologyId,
   title,
   role = "reader",
+  isSubWindow = false,
   onEdit,
   onAnthologySelect,
 }: IWidget) => {
@@ -48,18 +50,22 @@ const TypeArticleReaderToolbarWidget = ({
         style={{ padding: 4, display: "flex", justifyContent: "space-between" }}
       >
         <div>
-          <AnthologiesAtArticle
-            articleId={articleId}
-            anthologyId={anthologyId}
-            onClick={(
-              id: string,
-              e: React.MouseEvent<HTMLElement, MouseEvent>
-            ) => {
-              if (typeof onAnthologySelect !== "undefined") {
-                onAnthologySelect(id, e);
-              }
-            }}
-          />
+          {isSubWindow ? (
+            <></>
+          ) : (
+            <AnthologiesAtArticle
+              articleId={articleId}
+              anthologyId={anthologyId}
+              onClick={(
+                id: string,
+                e: React.MouseEvent<HTMLElement, MouseEvent>
+              ) => {
+                if (typeof onAnthologySelect !== "undefined") {
+                  onAnthologySelect(id, e);
+                }
+              }}
+            />
+          )}
         </div>
         <div>
           <Tooltip
