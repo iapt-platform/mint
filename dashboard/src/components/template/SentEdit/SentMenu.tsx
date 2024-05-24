@@ -44,6 +44,10 @@ const SentMenuWidget = ({
       label: intl.formatMessage({ id: "buttons.copy.link" }),
     },
     {
+      key: "affix",
+      label: "总在最顶端开/关",
+    },
+    {
       type: "divider",
     },
     {

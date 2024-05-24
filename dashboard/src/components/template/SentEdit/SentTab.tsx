@@ -45,6 +45,7 @@ interface IWidget {
   onMagicDict?: Function;
   onCompact?: Function;
   onModeChange?: Function;
+  onAffix?: Function;
 }
 const SentTabWidget = ({
   id,
@@ -67,6 +68,7 @@ const SentTabWidget = ({
   onMagicDict,
   onCompact,
   onModeChange,
+  onAffix,
 }: IWidget) => {
   const intl = useIntl();
   const [isCompact, setIsCompact] = useState(compact);
@@ -183,6 +185,11 @@ const SentTabWidget = ({
                   navigator.clipboard.writeText(fullUrl(link)).then(() => {
                     message.success("链接地址已经拷贝到剪贴板");
                   });
+                  break;
+                case "affix":
+                  if (typeof onAffix !== "undefined") {
+                    onAffix();
+                  }
                   break;
                 default:
                   break;

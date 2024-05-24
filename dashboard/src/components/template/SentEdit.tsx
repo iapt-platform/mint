@@ -1,4 +1,4 @@
-import { Card } from "antd";
+import { Affix, Card } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { IStudio } from "../auth/Studio";
 
@@ -127,6 +127,7 @@ export const SentEditInner = ({
   const [isFocus, setIsFocus] = useState(false);
   const focus = useAppSelector(currFocus);
   const divRef = useRef<HTMLDivElement>(null);
+  const [affix, setAffix] = useState<boolean>(false);
 
   useEffect(() => {
     if (focus) {
@@ -177,6 +178,32 @@ export const SentEditInner = ({
 
   const channelsId = translation?.map((item) => item.channel.id);
 
+  const content = (
+    <SentContent
+      sid={id}
+      book={book}
+      para={para}
+      wordStart={wordStart}
+      wordEnd={wordEnd}
+      origin={origin}
+      translation={translation}
+      answer={answer}
+      layout={layout}
+      magicDict={magicDict}
+      compact={isCompact}
+      mode={articleMode}
+      wbwProgress={wbwProgress}
+      readonly={readonly}
+      onWbwChange={(data: IWbw[]) => {
+        setWbwData(data);
+      }}
+      onMagicDictDone={() => {
+        setMagicDictLoading(false);
+        setMagicDict(undefined);
+      }}
+    />
+  );
+
   return (
     <Card
       ref={divRef}
@@ -192,29 +219,15 @@ export const SentEditInner = ({
       }}
       size="small"
     >
-      <SentContent
-        sid={id}
-        book={book}
-        para={para}
-        wordStart={wordStart}
-        wordEnd={wordEnd}
-        origin={origin}
-        translation={translation}
-        answer={answer}
-        layout={layout}
-        magicDict={magicDict}
-        compact={isCompact}
-        mode={articleMode}
-        wbwProgress={wbwProgress}
-        readonly={readonly}
-        onWbwChange={(data: IWbw[]) => {
-          setWbwData(data);
-        }}
-        onMagicDictDone={() => {
-          setMagicDictLoading(false);
-          setMagicDict(undefined);
-        }}
-      />
+      {affix ? (
+        <Affix offsetTop={44}>
+          <div style={{ backgroundColor: affix ? "white" : "unset" }}>
+            {content}
+          </div>
+        </Affix>
+      ) : (
+        content
+      )}
       <SentTab
         id={id}
         book={book}
@@ -239,6 +252,7 @@ export const SentEditInner = ({
         }}
         onCompact={(value: boolean) => setIsCompact(value)}
         onModeChange={(value: ArticleMode | undefined) => setArticleMode(value)}
+        onAffix={() => setAffix(!affix)}
       />
     </Card>
   );
