@@ -64,6 +64,7 @@ export const ArticleCtl = ({
       mode="read"
       hideInteractive={true}
       hideTitle={true}
+      isSubWindow
     />
   );
   let output = <></>;

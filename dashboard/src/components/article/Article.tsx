@@ -58,6 +58,7 @@ interface IWidget {
   focus?: string | null;
   hideInteractive?: boolean;
   hideTitle?: boolean;
+  isSubWindow?: boolean;
   onArticleChange?: Function;
   onLoad?: Function;
   onAnthologySelect?: Function;
@@ -77,6 +78,7 @@ const ArticleWidget = ({
   focus,
   hideInteractive = false,
   hideTitle = false,
+  isSubWindow = false,
   onArticleChange,
   onLoad,
   onAnthologySelect,
@@ -91,6 +93,7 @@ const ArticleWidget = ({
       <DiscussionCount courseId={type === "textbook" ? courseId : undefined} />
       {type === "article" ? (
         <TypeArticle
+          isSubWindow={isSubWindow}
           type={type}
           articleId={onArticleChange ? articleId : currId}
           channelId={channelId}
