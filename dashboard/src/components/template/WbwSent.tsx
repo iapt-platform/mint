@@ -29,12 +29,46 @@ import { IChannel } from "../channel/Channel";
 import TimeShow from "../general/TimeShow";
 import moment from "moment";
 
+export const getWbwProgress = (data: IWbw[]) => {
+  //计算完成度
+  //祛除标点符号
+  const allWord = data.filter(
+    (value) =>
+      value.real.value &&
+      value.real.value?.length > 0 &&
+      value.type?.value !== ".ctl."
+  );
+
+  const final = allWord.filter(
+    (value) =>
+      value.meaning?.value &&
+      value.factors?.value &&
+      value.factorMeaning?.value &&
+      value.case?.value &&
+      value.parent?.value
+  );
+  console.debug("wbw progress", allWord, final);
+  let finalLen: number = 0;
+  final.forEach((value) => {
+    if (value.real.value) {
+      finalLen += value.real.value?.length;
+    }
+  });
+  let allLen: number = 0;
+  allWord.forEach((value) => {
+    if (value.real.value) {
+      allLen += value.real.value?.length;
+    }
+  });
+  const progress = Math.round((finalLen * 100) / allLen);
+  return progress;
+};
+
 export const paraMark = (wbwData: IWbw[]): IWbw[] => {
   //处理段落标记，支持点击段落引用弹窗
   let start = false;
   let bookCode = "";
   let count = 0;
-  let currPara = 0;
   let bookCodeStack: string[] = [];
   wbwData.forEach((value: IWbw, index: number, array: IWbw[]) => {
     if (value.word.value === "(") {
@@ -187,7 +221,7 @@ export const WbwSentCtl = ({
   const [fieldDisplay, setFieldDisplay] = useState(fields);
   const [displayMode, setDisplayMode] = useState<ArticleMode>();
   const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
+
   const [showProgress, setShowProgress] = useState(false);
   const user = useAppSelector(currentUser);
 
@@ -200,40 +234,8 @@ export const WbwSentCtl = ({
     (value) => value.tag === ":collocation:"
   );
 
-  useEffect(() => {
-    //计算完成度
-    //祛除标点符号
-    const allWord = wordData.filter(
-      (value) =>
-        value.real.value &&
-        value.real.value?.length > 0 &&
-        value.type?.value !== ".ctl."
-    );
-
-    const final = allWord.filter(
-      (value) =>
-        value.meaning?.value &&
-        value.factors?.value &&
-        value.factorMeaning?.value &&
-        value.case?.value &&
-        value.parent?.value
-    );
-    console.debug("wbw progress", allWord, final);
-    let finalLen: number = 0;
-    final.forEach((value) => {
-      if (value.real.value) {
-        finalLen += value.real.value?.length;
-      }
-    });
-    let allLen: number = 0;
-    allWord.forEach((value) => {
-      if (value.real.value) {
-        allLen += value.real.value?.length;
-      }
-    });
-    const progress = Math.round((finalLen * 100) / allLen);
-    setProgress(progress);
-  }, [wordData]);
+  //计算完成度
+  const progress = getWbwProgress(wordData);
 
   const newMode = useAppSelector(_mode);
 
