@@ -53,8 +53,9 @@ export interface ITagMapData {
   table_name: string;
   anchor_id: string;
   tag_id: string;
-  name?: string;
-  color?: number;
+  name?: string | null;
+  color?: number | null;
+  description?: string | null;
   title?: string;
   editor?: IUser;
   owner?: IStudio;
