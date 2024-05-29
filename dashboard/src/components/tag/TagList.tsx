@@ -163,6 +163,16 @@ const TagsList = ({ studioName, readonly = false, onSelect }: IWidget) => {
           },
         },
       }}
+      onItem={(record: ITagData, index: number) => {
+        return {
+          onClick: (event) => {
+            // 点击行
+            if (typeof onSelect !== "undefined") {
+              onSelect(record);
+            }
+          },
+        };
+      }}
     />
   );
 };
