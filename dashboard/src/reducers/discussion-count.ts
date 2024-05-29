@@ -9,7 +9,7 @@ import { ITagMapData } from "../components/api/Tag";
 
 export interface IUpgrade {
   resId: string;
-  data: IDiscussionCountData[];
+  data?: IDiscussionCountData[];
   tags?: ITagMapData[];
 }
 
@@ -37,12 +37,36 @@ export const slice = createSlice({
       const old = state.list.filter(
         (value) => value.res_id !== action.payload.resId
       );
-      state.list = [...old, ...action.payload.data];
+
+      if (old) {
+        if (action.payload.data) {
+          state.list = [...old, ...action.payload.data];
+        }
+      } else {
+        if (action.payload.data) {
+          state.list = [...action.payload.data];
+        }
+      }
+    },
+    tagsUpgrade: (state, action: PayloadAction<IUpgrade>) => {
+      console.debug("discussion-count publish", action.payload);
+      const old = state.tags?.filter(
+        (value) => value.anchor_id !== action.payload.resId
+      );
+      if (old) {
+        if (action.payload.tags) {
+          state.tags = [...old, ...action.payload.tags];
+        }
+      } else {
+        if (action.payload.tags) {
+          state.tags = [...action.payload.tags];
+        }
+      }
     },
   },
 });
 
-export const { discussions, tags, upgrade } = slice.actions;
+export const { discussions, tags, upgrade, tagsUpgrade } = slice.actions;
 
 export const discussionList = (
   state: RootState

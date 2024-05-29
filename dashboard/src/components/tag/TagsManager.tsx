@@ -1,14 +1,22 @@
 import { useState } from "react";
 import { Modal } from "antd";
-import TagList from "./TagList";
-import { ITagData } from "../api/Tag";
+
+import TagsOnItem from "./TagsOnItem";
 
 interface IWidget {
   studioName?: string;
+  resId?: string;
+  resType?: string;
   trigger?: React.ReactNode;
   onSelect?: Function;
 }
-const TagSelectWidget = ({ studioName, trigger, onSelect }: IWidget) => {
+const TagsManagerWidget = ({
+  studioName,
+  resId,
+  resType,
+  trigger,
+  onSelect,
+}: IWidget) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -28,23 +36,17 @@ const TagSelectWidget = ({ studioName, trigger, onSelect }: IWidget) => {
       <span onClick={showModal}>{trigger}</span>
       <Modal
         width={500}
-        title="标签列表"
+        title={`${studioName}标签列表`}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
+        destroyOnClose
+        footer={false}
       >
-        <TagList
-          readonly
-          studioName={studioName}
-          onSelect={(tag: ITagData) => {
-            if (typeof onSelect !== "undefined") {
-              onSelect(tag);
-            }
-          }}
-        />
+        <TagsOnItem studioName={studioName} resId={resId} resType={resType} />
       </Modal>
     </>
   );
 };
 
-export default TagSelectWidget;
+export default TagsManagerWidget;

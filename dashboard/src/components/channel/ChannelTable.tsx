@@ -154,9 +154,11 @@ const ChannelTableWidget = ({
         id: "buttons.no",
       }),
       onOk() {
-        console.log("delete", id);
-        return delete_<IDeleteResponse>(`/v2/channel/${id}`)
+        const url = `/v2/channel/${id}`;
+        console.log("delete api request", url);
+        return delete_<IDeleteResponse>(url)
           .then((json) => {
+            console.info("api response", json);
             if (json.ok) {
               message.success("删除成功");
               ref.current?.reload();

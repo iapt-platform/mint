@@ -1,4 +1,4 @@
-import { Button, List, Space, message } from "antd";
+import { Button, List, Select, Space, message } from "antd";
 import { useEffect, useState } from "react";
 import { ReloadOutlined } from "@ant-design/icons";
 
@@ -9,6 +9,9 @@ import { useAppSelector } from "../../../hooks";
 import { courseInfo, memberInfo } from "../../../reducers/current-course";
 import { courseUser } from "../../../reducers/course-user";
 import User, { IUser } from "../../auth/User";
+import { IWbw } from "../Wbw/WbwWord";
+import { getWbwProgress } from "../WbwSent";
+import moment from "moment";
 
 interface IWidget {
   book: number;
@@ -33,6 +36,7 @@ const SentWbwWidget = ({
   const [sentData, setSentData] = useState<IWidgetSentEditInner[]>([]);
   const [answer, setAnswer] = useState<ISentence>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [order, setOrder] = useState("progress");
   const course = useAppSelector(courseInfo);
   const courseMember = useAppSelector(memberInfo);
 
@@ -76,18 +80,33 @@ const SentWbwWidget = ({
         console.info("wbw sentence api response", json);
         if (json.ok) {
           console.debug("wbw sentence course", course);
+          let response: IWidgetSentEditInner[] = json.data.rows;
           if (course && myCourse && myCourse.role !== "student") {
-            setSentData(
-              json.data.rows.filter((value) =>
-                value.translation
-                  ? value.translation[0].channel.id !== course.channelId
-                  : true
-              )
+            response = json.data.rows.filter((value) =>
+              value.translation
+                ? value.translation[0].channel.id !== course.channelId
+                : true
             );
-          } else {
-            setSentData(json.data.rows);
           }
-
+          response.forEach(
+            (
+              value: IWidgetSentEditInner,
+              index: number,
+              array: IWidgetSentEditInner[]
+            ) => {
+              if (value.origin) {
+                if (value.origin.length > 0) {
+                  if (value.origin[0].content) {
+                    const json: IWbw[] = JSON.parse(value.origin[0].content);
+                    const progress = getWbwProgress(json);
+                    array[index].wbwProgress = progress;
+                  }
+                }
+              }
+            }
+          );
+          console.debug("response with progress", response);
+          setSentData(response);
           if (myCourse && course) {
             const answerData = json.data.rows.find((value) =>
               value.origin
@@ -139,6 +158,41 @@ const SentWbwWidget = ({
       });
   }
   console.debug("没交作业", courseMember, sentData, nonWbwUser);
+
+  let aaa = [...sentData].sort(
+    (a: IWidgetSentEditInner, b: IWidgetSentEditInner) => {
+      switch (order) {
+        case "progress":
+          if (a.wbwProgress && b.wbwProgress) {
+            return b.wbwProgress - a.wbwProgress;
+          } else {
+            return 0;
+          }
+          break;
+        case "updated":
+          if (a.origin && b.origin) {
+            if (
+              moment(b.origin[0].updateAt).isBefore(
+                moment(a.origin[0].updateAt)
+              )
+            ) {
+              return 1;
+            } else {
+              return -1;
+            }
+          } else {
+            return 0;
+          }
+          break;
+      }
+      if (a.wbwProgress && b.wbwProgress) {
+        return b.wbwProgress - a.wbwProgress;
+      } else {
+        return 0;
+      }
+    }
+  );
+
   return (
     <>
       <List
@@ -147,6 +201,15 @@ const SentWbwWidget = ({
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span></span>
             <Space>
+              <Select
+                disabled
+                defaultValue={"progress"}
+                options={[
+                  { value: "progress", label: "完成度" },
+                  { value: "updated", label: "更新时间" },
+                ]}
+                onChange={(value: string) => setOrder(value)}
+              />
               <Button
                 type="link"
                 shape="round"
@@ -158,14 +221,14 @@ const SentWbwWidget = ({
         }
         itemLayout="horizontal"
         split={false}
-        dataSource={sentData}
+        dataSource={aaa}
         renderItem={(item, index) => (
           <List.Item key={index}>
             <SentEditInner
               {...item}
               readonly={isCourse}
               answer={answer}
-              wbwProgress={isCourse ?? wbwProgress}
+              showWbwProgress={isCourse ?? wbwProgress}
             />
           </List.Item>
         )}
