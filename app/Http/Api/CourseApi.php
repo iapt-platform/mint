@@ -9,6 +9,8 @@ class CourseApi{
         $channels = [];
         $studentsChannel = CourseMember::where('course_id',$courseId)
                 ->whereNotNull('channel_id')
+                ->where('role','student')
+                ->whereIn('status',['joined','accepted','agreed'])
                 ->select('channel_id')
                 ->orderBy('created_at')
                 ->get();
