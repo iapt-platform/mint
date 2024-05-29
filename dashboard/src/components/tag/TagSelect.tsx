@@ -27,7 +27,7 @@ const TagSelectWidget = ({ studioName, trigger, onSelect }: IWidget) => {
     <>
       <span onClick={showModal}>{trigger}</span>
       <Modal
-        width={"70%"}
+        width={500}
         title="标签列表"
         open={isModalOpen}
         onOk={handleOk}
