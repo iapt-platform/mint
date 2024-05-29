@@ -356,7 +356,13 @@ const WbwPaliWidget = ({
     return (
       <div className="pali_shell" ref={divShell}>
         <div style={{ position: "absolute", marginTop: -24 }}>
-          <TagsArea resId={data.uid} resType="wbw" data={tags} max={1} />
+          <TagsArea
+            resId={data.uid}
+            resType="wbw"
+            selectorTitle={data.word.value}
+            data={tags}
+            max={1}
+          />
         </div>
         <span className="pali_shell_spell">
           {data.grammarId ? (
