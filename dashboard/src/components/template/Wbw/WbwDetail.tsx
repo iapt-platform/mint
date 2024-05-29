@@ -173,6 +173,7 @@ const WbwDetailWidget = ({
               />
             </Tooltip>
             <TagSelectButton
+              selectorTitle={data.word.value}
               resType="wbw"
               resId={data.uid}
               onOpen={() => {

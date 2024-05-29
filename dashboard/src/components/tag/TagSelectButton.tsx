@@ -10,6 +10,7 @@ interface IWidget {
   resId?: string;
   resType?: string;
   disabled?: boolean;
+  selectorTitle?: React.ReactNode;
   trigger?: React.ReactNode;
   onSelect?: Function;
   onCreate?: Function;
@@ -20,6 +21,7 @@ const TagSelectButtonWidget = ({
   resId,
   resType,
   disabled = false,
+  selectorTitle,
   trigger,
   onSelect,
   onCreate,
@@ -35,6 +37,7 @@ const TagSelectButtonWidget = ({
 
   return (
     <TagsManager
+      title={selectorTitle}
       studioName={studioName}
       resId={resId}
       resType={resType}

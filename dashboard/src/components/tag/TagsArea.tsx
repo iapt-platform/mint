@@ -11,6 +11,7 @@ interface IWidget {
   max?: number;
   resId?: string;
   resType?: string;
+  selectorTitle?: React.ReactNode;
   onTagClose?: Function;
   onTagClick?: Function;
 }
@@ -19,6 +20,7 @@ const TagsAreaWidget = ({
   max = 5,
   resId,
   resType,
+  selectorTitle,
   onTagClose,
   onTagClick,
 }: IWidget) => {
@@ -27,12 +29,8 @@ const TagsAreaWidget = ({
   const tagMapList = useAppSelector(tagList);
 
   useEffect(() => {
-    if (tagMapList) {
-      const currTags = tagMapList.filter((value) => value.anchor_id === resId);
-      if (currTags) {
-        setTags(currTags);
-      }
-    }
+    const currTags = tagMapList?.filter((value) => value.anchor_id === resId);
+    setTags(currTags);
   }, [resId, tagMapList]);
 
   const currTags = tags?.map((item, id) => {
@@ -61,6 +59,7 @@ const TagsAreaWidget = ({
   return (
     <div style={{ width: "100%", lineHeight: "2em" }}>
       <TagSelectButton
+        selectorTitle={selectorTitle}
         resId={resId}
         resType={resType}
         trigger={<span style={{ cursor: "pointer" }}>{currTags}</span>}
