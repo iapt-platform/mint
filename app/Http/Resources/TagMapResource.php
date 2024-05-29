@@ -23,11 +23,15 @@ class TagMapResource extends JsonResource
             'table_name' => $this->table_name,
             'anchor_id' => $this->anchor_id,
             'tag_id' => $this->tag_id,
+            'name' => $this->name,
+            'color' => $this->color,
+            'description' => $this->description,
             "editor"=> UserApi::getByUuid($this->editor_uid),
             "owner" => StudioApi::getById($this->owner_uid),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
+
         switch ($this->table_name) {
             case 'sentence':
                 # code...
