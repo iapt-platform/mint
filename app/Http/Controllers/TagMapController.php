@@ -26,6 +26,15 @@ class TagMapController extends Controller
             case 'items':
                 $table = TagMap::where('tag_id',$request->get('tag_id'));
                 break;
+            case 'item':
+                $studioId = StudioApi::getIdByName($request->get('studio'));
+                $table = TagMap::where('owner_uid',$studioId)
+                               ->where('anchor_id',$request->get('res_id'))
+                               ->leftJoin('tags','tag_maps.tag_id', '=', 'tags.id')
+                               ->select(['tag_maps.id','table_name','anchor_id',
+                                        'tag_id','tags.name','tags.color','tags.description',
+                                    'owner_uid','editor_uid','tag_maps.created_at','tag_maps.updated_at']);
+                break;
         }
 
         $count = $table->count();
@@ -44,6 +53,19 @@ class TagMapController extends Controller
             ]);
     }
 
+    public function userCanManage($userId,$ownerId,$courseId=null){
+        if($userId === $ownerId){
+            return true;
+        }
+        if(!empty($courseId)){
+            $role = CourseApi::role($request->get('course'),$userId);
+            if(!empty($role) && $role !== 'student'){
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -58,16 +80,12 @@ class TagMapController extends Controller
         }
         //判断当前用户是否有指定的studio的权限
         $studioId = StudioApi::getIdByName($request->get('studio'));
-        if($user['user_uid'] !== $studioId){
-            if(!empty($request->get('course'))){
-                $role = CourseApi::role($request->get('course'),$user['user_uid']);
-                if(empty($role) && $role === 'student'){
-                    return $this->error(__('auth.failed'),403,403);
-                }
-            }else{
-                return $this->error(__('auth.failed'),403,403);
-            }
+        if($this->userCanManage($user['user_uid'],
+                                $studioId,
+                                $request->get('course')) ===false){
+            return $this->error(__('auth.failed'),403,403);
         }
+
         //查询是否重复
         if(TagMap::where('anchor_id',$request->get('anchor_id'))
                   ->where('tag_id',$request->get('tag_id'))
@@ -127,8 +145,20 @@ class TagMapController extends Controller
      * @param  \App\Models\TagMap  $tagMap
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TagMap $tagMap)
+    public function destroy(Request $request, TagMap $tagMap)
     {
-        //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        //判断当前用户是否有指定的studio的权限
+        if($this->userCanManage($user['user_uid'],
+                                $tagMap->owner_uid,
+                                $request->get('course')) ===false){
+            return $this->error(__('auth.failed'),403,403);
+        }
+        $delete = $tagMap->delete();
+
+        return $this->ok($delete);
     }
 }
