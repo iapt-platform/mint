@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal } from "antd";
+import { Alert, Modal } from "antd";
 
 import TagsOnItem from "./TagsOnItem";
 
@@ -7,6 +7,7 @@ interface IWidget {
   studioName?: string;
   resId?: string;
   resType?: string;
+  title?: React.ReactNode;
   trigger?: React.ReactNode;
   onSelect?: Function;
 }
@@ -14,6 +15,7 @@ const TagsManagerWidget = ({
   studioName,
   resId,
   resType,
+  title,
   trigger,
   onSelect,
 }: IWidget) => {
@@ -43,6 +45,7 @@ const TagsManagerWidget = ({
         destroyOnClose
         footer={false}
       >
+        {title ? <Alert message={title} /> : undefined}
         <TagsOnItem studioName={studioName} resId={resId} resType={resType} />
       </Modal>
     </>
