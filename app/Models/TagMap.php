@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class TagMap extends Model
 {
+    protected $primaryKey = 'id';
     protected $keyType = 'string';
+    protected $casts = [
+        'id' => 'string'
+    ];
 	protected $fillable = ['table_name' , 'anchor_id', 'tag_id'];
     use HasFactory;
 
