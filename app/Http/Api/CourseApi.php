@@ -22,7 +22,8 @@ class CourseApi{
 
     public static function role($courseId,$userUid){
         $role = CourseMember::where('course_id',$courseId)
-                            ->where('user_id')
+                            ->where('user_id',$userUid)
+                            ->where('is_current',true)
                             ->value('role');
         return $role;
     }
