@@ -13,6 +13,7 @@ import { inlineDict as _inlineDict } from "../../../reducers/inline-dict";
 import WbwParent2 from "./WbwParent2";
 import { IApiResponseDictData } from "../../api/Dict";
 import { errorClass } from "./WbwMeaning";
+import WbwParentIcon from "./WbwParentIcon";
 
 export interface ValueType {
   key: string;
@@ -197,6 +198,7 @@ const WbwCaseWidget = ({
             >
               <span>{caseElement}</span>
             </Dropdown>
+            <WbwParentIcon data={data} />
             <WbwParent2 data={data} />
             {showSplit ? (
               <Button
