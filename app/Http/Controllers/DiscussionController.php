@@ -92,25 +92,31 @@ class DiscussionController extends Controller
 
                 $resId = [$request->get('id')];
                 if(!empty($request->get('course'))){
+                    //
+                    /**
+                     * 如果res id 是答案，获取学员提问
+                     * 如果是学员
+                     */
                     //获取学员提问
                     //获取学员channel
-                    $channelsId = CourseApi::getStudentChannels($request->get('course'));
-                    switch ($resType) {
-                        case 'wbw':
-                            //获取答案单词编号
-                            $wbwWord = Wbw::where('uid',$request->get('id'))
-                                        ->first();
-                            $wbwId = WbwSentenceController::getWbwIdByChannels(
-                                            $channelsId,
-                                            $wbwWord->book_id,
-                                            $wbwWord->paragraph,
-                                            $wbwWord->wid);
-                            $resId = array_merge($resId,$wbwId);
-                            break;
-                        case 'sentence':
-                            break;
+                    if($request->get('show_student') === 'true'){
+                        $channelsId = CourseApi::getStudentChannels($request->get('course'));
+                        switch ($resType) {
+                            case 'wbw':
+                                //获取答案单词编号
+                                $wbwWord = Wbw::where('uid',$request->get('id'))
+                                            ->first();
+                                $wbwId = WbwSentenceController::getWbwIdByChannels(
+                                                $channelsId,
+                                                $wbwWord->book_id,
+                                                $wbwWord->paragraph,
+                                                $wbwWord->wid);
+                                $resId = array_merge($resId,$wbwId);
+                                break;
+                            case 'sentence':
+                                break;
+                        }
                     }
-
                 }
                 $table = Discussion::whereIn('res_id',$resId)
                                     ->where('type', $request->get('type','discussion'))
