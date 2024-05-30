@@ -5,6 +5,7 @@ import TagsOnItem from "./TagsOnItem";
 
 interface IWidget {
   studioName?: string;
+  courseId?: string;
   resId?: string;
   resType?: string;
   title?: React.ReactNode;
@@ -13,6 +14,7 @@ interface IWidget {
 }
 const TagsManagerWidget = ({
   studioName,
+  courseId,
   resId,
   resType,
   title,
@@ -46,7 +48,12 @@ const TagsManagerWidget = ({
         footer={false}
       >
         {title ? <Alert message={title} /> : undefined}
-        <TagsOnItem studioName={studioName} resId={resId} resType={resType} />
+        <TagsOnItem
+          studioName={studioName}
+          courseId={courseId}
+          resId={resId}
+          resType={resType}
+        />
       </Modal>
     </>
   );
