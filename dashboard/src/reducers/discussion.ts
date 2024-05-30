@@ -17,6 +17,7 @@ export interface IShowDiscussion {
   topic?: string;
   comment?: string;
   sent?: ISentence;
+  withStudent?: boolean;
 }
 export interface ICount {
   count: number;

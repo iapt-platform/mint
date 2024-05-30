@@ -58,6 +58,7 @@ const DiscussionBoxWidget = ({ onTopicChange }: IWidget) => {
         resId={discussionMessage?.resId}
         resType={discussionMessage?.resType}
         focus={discussionMessage?.comment}
+        showStudent={discussionMessage?.withStudent}
         showTopicId={topicId}
         onTopicReady={(value: IComment) => {
           setCurrTopic(value);

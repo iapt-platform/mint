@@ -23,6 +23,7 @@ interface IWidget {
   showTopicId?: string;
   focus?: string;
   type?: TDiscussionType;
+  showStudent?: boolean;
   onTopicReady?: Function;
 }
 
@@ -30,6 +31,7 @@ const DiscussionWidget = ({
   resId,
   resType,
   showTopicId,
+  showStudent = false,
   focus,
   type = "discussion",
   onTopicReady,
@@ -103,6 +105,7 @@ const DiscussionWidget = ({
           resId={resId}
           resType={resType}
           type={type}
+          showStudent={showStudent}
           onSelect={(
             e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
             comment: IComment

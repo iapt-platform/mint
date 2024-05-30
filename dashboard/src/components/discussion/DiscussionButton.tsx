@@ -83,6 +83,7 @@ const DiscussionButton = ({
             type: "discussion",
             resId: resId,
             resType: resType,
+            withStudent: wbw ? true : false,
           };
           console.debug("discussion show", data);
           store.dispatch(show(data));
