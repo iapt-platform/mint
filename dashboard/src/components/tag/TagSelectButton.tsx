@@ -39,6 +39,7 @@ const TagSelectButtonWidget = ({
     <TagsManager
       title={selectorTitle}
       studioName={studioName}
+      courseId={course?.courseId}
       resId={resId}
       resType={resType}
       trigger={
