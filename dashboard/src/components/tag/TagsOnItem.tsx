@@ -70,14 +70,17 @@ const TagsOnItem = ({
                     studio: studioName,
                     course: courseId,
                   };
+                  console.info("tag create api request", url, data);
                   const json = await post<ITagMapRequest, ITagMapResponse>(
                     url,
                     data
                   );
+                  console.info("tag create api response", json);
                   if (json.ok) {
                     //新建课程成功后刷新
                     ref.current?.reload();
                   } else {
+                    message.error(json.message);
                     console.error(json.message);
                   }
                   setOpenCreate(false);
