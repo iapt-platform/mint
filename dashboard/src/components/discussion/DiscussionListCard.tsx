@@ -36,6 +36,7 @@ interface IWidget {
   changedAnswerCount?: IAnswerCount;
   type?: TDiscussionType;
   pageSize?: number;
+  showStudent?: boolean; //在课程中是否显示学生discussions
   onSelect?: Function;
   onItemCountChange?: Function;
   onReply?: Function;
@@ -46,6 +47,7 @@ const DiscussionListCardWidget = ({
   resType,
   topicId,
   userId,
+  showStudent = false,
   onSelect,
   changedAnswerCount,
   type = "discussion",
@@ -182,7 +184,9 @@ const DiscussionListCardWidget = ({
               url += `&course=${course.courseId}`;
             }
           }
-
+          if (showStudent) {
+            url += `&show_student=true`;
+          }
           console.info("DiscussionListCard api request", url);
           const res = await get<ICommentListResponse>(url);
           console.info("DiscussionListCard api response", res);
