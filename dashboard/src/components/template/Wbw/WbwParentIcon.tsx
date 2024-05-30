@@ -1,6 +1,6 @@
 import { Tooltip } from "antd";
 import { IWbw } from "./WbwWord";
-import { Dict2SvgIcon, DictIcon } from "../../../assets/icon";
+import { Dict2SvgIcon } from "../../../assets/icon";
 
 interface IWidget {
   data: IWbw;
