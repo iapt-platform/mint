@@ -798,6 +798,28 @@ const ShortcutSvg = () => (
     ></path>
   </svg>
 );
+
+const Dict2Svg = () => (
+  <svg
+    viewBox="0 0 1024 1024"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    p-id="4092"
+    width="1em"
+    height="1em"
+  >
+    <path
+      d="M490.02496 267.89888h-72.0896v300.89216h72.06912c52.51072 0 90.97216-12.288 115.13856-36.31104q35.40992-36.864 35.40992-114.11456c0-52.736-11.81696-91.29984-35.40992-114.81088-24.1664-23.94112-62.62784-35.6352-115.13856-35.6352z m0 0"
+      fill="currentColor"
+      p-id="4093"
+    ></path>
+    <path
+      d="M747.7248 111.59552H276.2752a96.03072 96.03072 0 0 0-95.80544 95.80544v609.19808a96.01024 96.01024 0 0 0 95.80544 95.80544h471.4496a96.13312 96.13312 0 0 0 86.016-53.73952H282.624a35.96288 35.96288 0 0 1-35.86048-35.86048v-45.32224A35.96288 35.96288 0 0 1 282.624 741.60128h431.14496a130.08896 130.08896 0 0 0 129.76128-129.76128V207.40096a96.09216 96.09216 0 0 0-95.80544-95.80544z m-89.3952 459.55072c-35.40992 37.43744-86.79424 56.2176-155.27936 56.2176h-154.15296V209.32608h154.15296c68.48512 0 119.84896 18.78016 155.27936 56.2176 33.62816 35.08224 50.83136 86.016 50.83136 152.80128 0 66.23232-17.2032 117.16608-50.81088 152.80128z m0 0"
+      fill="currentColor"
+      p-id="4094"
+    ></path>
+  </svg>
+);
 export const DictIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DictSvg} {...props} />
 );
@@ -949,4 +971,8 @@ export const UnLockFillIcon = (props: Partial<CustomIconComponentProps>) => (
 
 export const ShortcutIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={ShortcutSvg} {...props} />
+);
+
+export const Dict2SvgIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={Dict2Svg} {...props} />
 );
