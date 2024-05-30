@@ -58,7 +58,7 @@ class TagMapController extends Controller
             return true;
         }
         if(!empty($courseId)){
-            $role = CourseApi::role($request->get('course'),$userId);
+            $role = CourseApi::role($courseId,$userId);
             if(!empty($role) && $role !== 'student'){
                 return true;
             }
