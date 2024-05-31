@@ -742,7 +742,12 @@ export const WbwSentCtl = ({
 
   return (
     <div style={{ width: "100%" }}>
-      <div style={{ display: showProgress ? "flex" : "none" }}>
+      <div
+        style={{
+          display: showProgress ? "flex" : "none",
+          justifyContent: "space-between",
+        }}
+      >
         <div className="progress" style={{ width: 400 }}>
           <Progress percent={progress} size="small" />
         </div>
