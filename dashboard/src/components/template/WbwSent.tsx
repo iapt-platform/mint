@@ -29,7 +29,7 @@ import { IChannel } from "../channel/Channel";
 import TimeShow from "../general/TimeShow";
 import moment from "moment";
 
-export const getWbwProgress = (data: IWbw[]) => {
+export const getWbwProgress = (data: IWbw[], answer?: IWbw[]) => {
   //计算完成度
   //祛除标点符号
   const allWord = data.filter(
@@ -38,15 +38,65 @@ export const getWbwProgress = (data: IWbw[]) => {
       value.real.value?.length > 0 &&
       value.type?.value !== ".ctl."
   );
+  let final: IWbw[];
+  if (answer) {
+    final = allWord.filter((value: IWbw, index: number, array: IWbw[]) => {
+      const sn = value.sn.join();
+      const currAnswer = answer.find((value1) => value1.sn.join() === sn);
+      if (currAnswer) {
+        if (currAnswer.meaning?.value) {
+          if (!value.meaning?.value) {
+            return false;
+          }
+          if (value.meaning?.value?.trim().length === 0) {
+            return false;
+          }
+        }
+        if (currAnswer.factors?.value) {
+          if (!value.factors?.value) {
+            return false;
+          }
+          if (value.factors?.value?.trim().length === 0) {
+            return false;
+          }
+        }
+        if (currAnswer.factorMeaning?.value) {
+          if (!value.factorMeaning?.value) {
+            return false;
+          }
+          if (value.factorMeaning?.value?.trim().length === 0) {
+            return false;
+          }
+        }
+        if (currAnswer.case?.value) {
+          if (!value.case?.value) {
+            return false;
+          }
+          if (value.case?.value?.trim().length === 0) {
+            return false;
+          }
+        }
+        if (currAnswer.parent?.value) {
+          if (!value.parent?.value) {
+            return false;
+          }
+          if (value.parent?.value?.trim().length === 0) {
+            return false;
+          }
+        }
+        return true;
+      }
+    });
+  } else {
+    final = allWord.filter(
+      (value) =>
+        value.meaning?.value &&
+        value.factors?.value &&
+        value.factorMeaning?.value &&
+        value.case?.value
+    );
+  }
 
-  const final = allWord.filter(
-    (value) =>
-      value.meaning?.value &&
-      value.factors?.value &&
-      value.factorMeaning?.value &&
-      value.case?.value &&
-      value.parent?.value
-  );
   console.debug("wbw progress", allWord, final);
   let finalLen: number = 0;
   final.forEach((value) => {
@@ -235,7 +285,7 @@ export const WbwSentCtl = ({
   );
 
   //计算完成度
-  const progress = getWbwProgress(wordData);
+  const progress = getWbwProgress(wordData, answer);
 
   const newMode = useAppSelector(_mode);
 
