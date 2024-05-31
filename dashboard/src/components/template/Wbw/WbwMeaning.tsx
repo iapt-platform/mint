@@ -20,6 +20,9 @@ export const errorClass = (
     if (answer !== data) {
       classError = " wbw_check";
       switch (field) {
+        case "parent":
+          classError += " wbw_error";
+          break;
         case "case":
           classError += " wbw_error";
           break;
