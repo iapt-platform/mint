@@ -89,7 +89,9 @@
 .wbw_error {
   text-decoration-color: red;
 }
-
+.wbw_error .icon {
+  color: red;
+}
 .wbw_warning {
   text-decoration-color: orange;
 }
