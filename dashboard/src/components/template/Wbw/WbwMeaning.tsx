@@ -16,28 +16,28 @@ export const errorClass = (
   answer?: string | null
 ): string => {
   let classError = "";
-  if (data && answer) {
-    if (answer !== data) {
-      classError = " wbw_check";
-      switch (field) {
-        case "parent":
-          classError += " wbw_error";
-          break;
-        case "case":
-          classError += " wbw_error";
-          break;
-        case "factors":
-          classError += " wbw_warning";
-          break;
-        case "factorMeaning":
-          classError += " wbw_info";
-          break;
-        case "meaning":
-          classError += " wbw_info";
-          break;
-      }
+
+  if (answer !== data) {
+    classError = " wbw_check";
+    switch (field) {
+      case "parent":
+        classError += " wbw_error";
+        break;
+      case "case":
+        classError += " wbw_error";
+        break;
+      case "factors":
+        classError += " wbw_warning";
+        break;
+      case "factorMeaning":
+        classError += " wbw_info";
+        break;
+      case "meaning":
+        classError += " wbw_info";
+        break;
     }
   }
+
   return classError;
 };
 
