@@ -125,13 +125,11 @@ const WbwFactorsWidget = ({ data, answer, display, onChange }: IWidget) => {
         );
       }
     }
+    const checkClass = answer
+      ? errorClass("factors", data.factors?.value, answer?.factors?.value)
+      : "";
     return (
-      <div
-        className={
-          "wbw_word_item" +
-          errorClass("factors", data.factors?.value, answer?.factors?.value)
-        }
-      >
+      <div className={"wbw_word_item" + checkClass}>
         <Text type="secondary">
           <Dropdown menu={{ items, onClick }} placement="bottomLeft">
             {factors}

@@ -97,17 +97,15 @@ const WbwFactorMeaningWidget = ({
   }
 
   if (typeof data.real !== "undefined" && PaliReal(data.real.value) !== "") {
+    const checkClass = answer
+      ? errorClass(
+          "factorMeaning",
+          data.factorMeaning?.value,
+          answer?.factorMeaning?.value
+        )
+      : "";
     return (
-      <div
-        className={
-          "wbw_word_item" +
-          errorClass(
-            "factorMeaning",
-            data.factorMeaning?.value,
-            answer?.factorMeaning?.value
-          )
-        }
-      >
+      <div className={"wbw_word_item" + checkClass}>
         <Text type="secondary">
           <Dropdown
             menu={{

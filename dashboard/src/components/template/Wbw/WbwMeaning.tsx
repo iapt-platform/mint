@@ -178,14 +178,11 @@ const WbwMeaningWidget = ({
     data.real.value.trim().length > 0
   ) {
     //非标点符号
-
+    const checkClass = answer
+      ? errorClass("meaning", data.meaning?.value, answer?.meaning?.value)
+      : "";
     return (
-      <div
-        className={
-          "wbw_word_item" +
-          errorClass("meaning", data.meaning?.value, answer?.meaning?.value)
-        }
-      >
+      <div className={"wbw_word_item" + checkClass}>
         {editable || display === "list" ? (
           meaningInner
         ) : (
