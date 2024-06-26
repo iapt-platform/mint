@@ -24,18 +24,25 @@ class WbwSentenceController extends Controller
     public function index(Request $request)
     {
         //
+        $channelsId = [];
+        $result = [];
+        $user = AuthApi::current($request);
+        $user_uid = null;
+        if($user){
+            $user_uid = $user['user_uid'];
+        }
+        $sentId = $request->get('book').'-'.
+                    $request->get('para').'-'.
+                    $request->get('wordStart').'-'.
+                    $request->get('wordEnd');
         switch ($request->get('view')) {
-            case 'sent-can-read':
-                $result = [];
-                $user = AuthApi::current($request);
-                $user_uid = null;
-                if($user){
-                    $user_uid = $user['user_uid'];
+            case 'course-answer':
+                if($request->has('course')){
+                    $channelsId[] = Course::where('id',$request->get('course'))
+                                    ->value('channel_id');
                 }
-                $sentId = $request->get('book').'-'.
-                          $request->get('para').'-'.
-                          $request->get('wordStart').'-'.
-                          $request->get('wordEnd');
+                break;
+            case 'sent-can-read':
                 $channels = [];
                 if($request->has('course')){
                     $channels = CourseApi::getStudentChannels($request->get('course'));
@@ -45,7 +52,7 @@ class WbwSentenceController extends Controller
                     $channels = ChannelApi::getCanReadByUser($user_uid);
                 }
 
-                $channelsId = [];
+
                 if($request->has('exclude')){
                     //移除无需查询的channel
                     foreach ($channels as $key => $id) {
@@ -64,24 +71,27 @@ class WbwSentenceController extends Controller
                 }else{
                     $channelsId = $channels;
                 }
-
-                $validBlocks = WbwSentenceController::getBlocksByChannels($channelsId,
-                                    $request->get('book'),
-                                    $request->get('para'),
-                                    $request->get('wordStart')
-                                );
-
-                foreach ($validBlocks as $key => $blockId) {
-                    $channel = WbwBlock::where('uid',$blockId)->first();
-                    $corpus = new CorpusController;
-                    $props = $corpus->getSentTpl($sentId,[$channel->channel_uid],
-                                               'edit',true,
-                                               'react');
-                    $result[] = $props;
-                }
-                return $this->ok(['rows'=>$result,'count'=>count($result)]);
                 break;
         }
+
+        $validBlocks = WbwSentenceController::getBlocksByChannels(
+                $channelsId,
+                $request->get('book'),
+                $request->get('para'),
+                $request->get('wordStart')
+            );
+
+        foreach ($validBlocks as $key => $blockId) {
+        $channel = WbwBlock::where('uid',$blockId)->first();
+        $corpus = new CorpusController;
+        $props = $corpus->getSentTpl($sentId,[$channel->channel_uid],
+                        'edit',true,
+                        'react');
+        $result[] = $props;
+        }
+        return $this->ok(['rows'=>$result,'count'=>count($result)]);
+
+
     }
 
     public static function getBlocksByChannels($channelsId,$book,$para,$wordId){
