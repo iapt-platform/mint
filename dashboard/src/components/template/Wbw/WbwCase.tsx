@@ -181,24 +181,23 @@ const WbwCaseWidget = ({
     data.real.value.trim().length > 0
   ) {
     //非标点符号
+    const checkClass = answer
+      ? errorClass("case", data.case?.value, answer?.case?.value)
+      : "";
     return (
-      <div
-        className={
-          "wbw_word_item" +
-          errorClass("case", data.case?.value, answer?.case?.value)
-        }
-        style={{ display: "flex" }}
-      >
+      <div className={"wbw_word_item"} style={{ display: "flex" }}>
         <Text type="secondary">
           <div>
-            <Dropdown
-              key="dropdown"
-              menu={{ items, onClick }}
-              placement="bottomLeft"
-            >
-              <span>{caseElement}</span>
-            </Dropdown>
-            <WbwParentIcon data={data} />
+            <span className={checkClass}>
+              <Dropdown
+                key="dropdown"
+                menu={{ items, onClick }}
+                placement="bottomLeft"
+              >
+                <span>{caseElement}</span>
+              </Dropdown>
+            </span>
+            <WbwParentIcon data={data} answer={answer} />
             <WbwParent2 data={data} />
             {showSplit ? (
               <Button
