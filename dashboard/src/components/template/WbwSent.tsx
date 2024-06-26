@@ -4,7 +4,7 @@ import { MoreOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 
 import { useAppSelector } from "../../hooks";
 import { mode as _mode } from "../../reducers/article-mode";
-import { post } from "../../request";
+import { get, post } from "../../request";
 import { ArticleMode } from "../article/Article";
 import WbwWord, {
   IWbw,
@@ -28,6 +28,8 @@ import Studio, { IStudio } from "../auth/Studio";
 import { IChannel } from "../channel/Channel";
 import TimeShow from "../general/TimeShow";
 import moment from "moment";
+import { courseInfo } from "../../reducers/current-course";
+import { ISentenceWbwListResponse } from "../api/Corpus";
 
 export const getWbwProgress = (data: IWbw[], answer?: IWbw[]) => {
   //计算完成度
@@ -271,11 +273,43 @@ export const WbwSentCtl = ({
   const [fieldDisplay, setFieldDisplay] = useState(fields);
   const [displayMode, setDisplayMode] = useState<ArticleMode>();
   const [loading, setLoading] = useState(false);
-
   const [showProgress, setShowProgress] = useState(false);
+  const [check, setCheck] = useState(answer ? true : false);
+  const [courseAnswer, setCourseAnswer] = useState<IWbw[]>();
+
   const user = useAppSelector(currentUser);
+  const course = useAppSelector(courseInfo);
 
   console.debug("wbw sent lang", channelLang);
+
+  const loadAnswer = () => {
+    if (courseAnswer) {
+      return;
+    }
+    let url = `/v2/wbw-sentence?view=course-answer`;
+    url += `&book=${book}&para=${para}&wordStart=${wordStart}&wordEnd=${wordEnd}`;
+    if (course) {
+      url += `&course=${course.courseId}`;
+      setLoading(true);
+      console.info("wbw sentence api request", url);
+      get<ISentenceWbwListResponse>(url)
+        .then((json) => {
+          console.info("wbw sentence api response", json);
+          if (json.ok) {
+            console.debug("wbw sentence course", course);
+            if (json.data.rows.length > 0 && json.data.rows[0].origin) {
+              let response = json.data.rows[0].origin[0];
+              setCourseAnswer(
+                response ? JSON.parse(response.content ?? "") : undefined
+              );
+            }
+          }
+        })
+        .finally(() => setLoading(false));
+    } else {
+      console.debug("并非课程");
+    }
+  };
 
   useEffect(() => setShowProgress(wbwProgress), [wbwProgress]);
 
@@ -771,6 +805,10 @@ export const WbwSentCtl = ({
                 label: "显示/隐藏进度条",
               },
               {
+                key: "check",
+                label: "显示/隐藏错误提示",
+              },
+              {
                 key: "wbw-dict-publish-all",
                 label: "发布全部单词",
               },
@@ -816,6 +854,10 @@ export const WbwSentCtl = ({
                 case "progress":
                   setShowProgress((origin) => !origin);
                   break;
+                case "check":
+                  loadAnswer();
+                  setCheck(!check);
+                  break;
                 case "reset":
                   modal.confirm({
                     title: "清除逐词解析数据",
@@ -859,12 +901,13 @@ export const WbwSentCtl = ({
               return newItem;
             })
             .map((item, id) => {
-              const currAnswer = answer?.find(
+              const aa = courseAnswer ?? answer;
+              const currAnswer = aa?.find(
                 (value) => value.sn.join() === item.sn.join()
               );
               return wbwRender(item, id, {
                 studio: studio,
-                answer: currAnswer,
+                answer: check ? currAnswer : undefined,
               });
             })
         ) : (
