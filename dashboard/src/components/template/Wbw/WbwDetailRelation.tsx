@@ -14,6 +14,7 @@ import { useIntl } from "react-intl";
 import store from "../../../store";
 import { add, relationAddParam } from "../../../reducers/relation-add";
 import { IRelation } from "../../../pages/admin/relation/list";
+import { grammar } from "../../../reducers/command";
 
 interface IOptions {
   value: string;
@@ -69,6 +70,7 @@ const WbwDetailRelationWidget = ({
       onFromList(fromList);
     }
   }, [fromList]);
+
   useEffect(() => {
     if (
       addParam?.command === "apply" &&
@@ -270,7 +272,13 @@ const WbwDetailRelationWidget = ({
               }}
               options={options}
             />
-            <Button type="link" icon={<InfoCircleOutlined />} />
+            <Button
+              type="link"
+              icon={<InfoCircleOutlined />}
+              onClick={() => {
+                store.dispatch(grammar(relation[index].relation));
+              }}
+            />
             {item.dest_spell ? item.dest_spell : addButton}
           </Space>
         </List.Item>
