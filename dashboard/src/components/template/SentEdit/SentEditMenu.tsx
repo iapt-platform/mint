@@ -8,6 +8,7 @@ import {
   LinkOutlined,
   FileMarkdownOutlined,
   DeleteOutlined,
+  ReloadOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { ISentence } from "../SentEdit";
@@ -60,6 +61,8 @@ const SentEditMenuWidget = ({
       case "timeline":
         setTimelineOpen(true);
         break;
+      case "refresh":
+        break;
       case "copy-link":
         if (data) {
           let link = `/article/para/${data.book}-${data.para}?mode=edit`;
@@ -77,6 +80,13 @@ const SentEditMenuWidget = ({
     }
   };
   const items: MenuProps["items"] = [
+    {
+      key: "refresh",
+      label: intl.formatMessage({
+        id: "buttons.refresh",
+      }),
+      icon: <ReloadOutlined />,
+    },
     {
       key: "timeline",
       label: intl.formatMessage({
