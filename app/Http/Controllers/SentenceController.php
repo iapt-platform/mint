@@ -201,6 +201,7 @@ class SentenceController extends Controller
 		if($result){
             $output = ["count"=>$count];
             if($request->get('view') === 'sent-can-read' ||
+                $request->get('view') === 'channel' ||
                 $request->get('view') === 'chapter' ||
                 $request->get('view') === 'paragraph' ||
                 $request->get('view') === 'my-edit'
