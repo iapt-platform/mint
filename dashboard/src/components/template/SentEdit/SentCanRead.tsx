@@ -4,7 +4,7 @@ import { ReloadOutlined } from "@ant-design/icons";
 
 import { get } from "../../../request";
 import { TChannelType } from "../../api/Channel";
-import { ISentenceListResponse } from "../../api/Corpus";
+import { ISentenceData, ISentenceListResponse } from "../../api/Corpus";
 
 import { ISentence } from "../SentEdit";
 import SentCell from "./SentCell";
@@ -12,6 +12,26 @@ import SentAdd from "./SentAdd";
 import { useAppSelector } from "../../../hooks";
 import { currentUser as _currentUser } from "../../../reducers/current-user";
 import { IChannel } from "../../channel/Channel";
+
+export const toISentence = (item: ISentenceData, channelsId?: string[]) => {
+  return {
+    id: item.id,
+    content: item.content,
+    html: item.html,
+    book: item.book,
+    para: item.paragraph,
+    wordStart: item.word_start,
+    wordEnd: item.word_end,
+    editor: item.editor,
+    studio: item.studio,
+    channel: item.channel,
+    contentType: item.content_type,
+    suggestionCount: item.suggestionCount,
+    translationChannels: channelsId,
+    forkAt: item.fork_at,
+    updateAt: item.updated_at,
+  };
+};
 
 interface IWidget {
   book: number;
@@ -56,23 +76,7 @@ const SentCanReadWidget = ({
           );
           setChannels(channels);
           const newData: ISentence[] = json.data.rows.map((item) => {
-            return {
-              id: item.id,
-              content: item.content,
-              html: item.html,
-              book: item.book,
-              para: item.paragraph,
-              wordStart: item.word_start,
-              wordEnd: item.word_end,
-              editor: item.editor,
-              studio: item.studio,
-              channel: item.channel,
-              contentType: item.content_type,
-              suggestionCount: item.suggestionCount,
-              translationChannels: channelsId,
-              forkAt: item.fork_at,
-              updateAt: item.updated_at,
-            };
+            return toISentence(item, channelsId);
           });
           console.log("new data", newData);
           setSentData(newData);
