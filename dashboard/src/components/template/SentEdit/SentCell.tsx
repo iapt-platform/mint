@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { Divider, message as AntdMessage, Modal } from "antd";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { ExclamationCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 
 import { ISentence } from "../SentEdit";
 import SentEditMenu from "./SentEditMenu";
@@ -28,6 +28,8 @@ import CopyToModal from "../../channel/CopyToModal";
 import store from "../../../store";
 import { randomString } from "../../../utils";
 import User from "../../auth/User";
+import { ISentenceListResponse } from "../../api/Corpus";
+import { toISentence } from "./SentCanRead";
 
 interface ISnowFlakeResponse {
   ok: boolean;
@@ -67,6 +69,7 @@ const SentCellWidget = ({
   const [isEditMode, setIsEditMode] = useState(editMode);
   const [sentData, setSentData] = useState<ISentence | undefined>(initValue);
   const [bgColor, setBgColor] = useState<string>();
+  const [loading, setLoading] = useState(false);
   const [uuid] = useState(randomString());
   const endings = useAppSelector(getEnding);
   const acceptPr = useAppSelector(sentence);
@@ -78,7 +81,7 @@ const SentCellWidget = ({
   const [copyOpen, setCopyOpen] = useState<boolean>(false);
 
   const sentId = `${sentData?.book}-${sentData?.para}-${sentData?.wordStart}-${sentData?.wordEnd}`;
-  const sid = `${sentData?.book}_${sentData?.para}_${sentData?.wordStart}_${sentData?.wordEnd}_${sentData?.channel.id}`;
+  const sid = `${sentData?.book}_${sentData?.para}_${sentData?.wordStart}_${sentData?.wordEnd}_${sentData?.channel?.id}`;
 
   useEffect(() => {
     if (
@@ -158,8 +161,31 @@ const SentCellWidget = ({
       .catch((e) => console.log("Oops errors!", e));
   };
 
+  const refresh = () => {
+    if (typeof sentData === "undefined") {
+      return;
+    }
+    let url = `/v2/sentence?view=channel&sentence=${sentId}&html=true`;
+    url += `&channel=${sentData.channel.id}`;
+    console.debug("api request", url);
+    setLoading(true);
+    get<ISentenceListResponse>(url)
+      .then((json) => {
+        console.debug("api response", json);
+
+        if (json.ok && json.data.count > 0) {
+          const newData: ISentence[] = json.data.rows.map((item) => {
+            return toISentence(item, [sentData.channel.id]);
+          });
+          setSentData(newData[0]);
+        }
+      })
+      .finally(() => setLoading(false));
+  };
+
   return (
     <div style={{ marginBottom: "8px", backgroundColor: bgColor }}>
+      {loading ? <LoadingOutlined /> : <></>}
       {isPr ? undefined : (
         <div
           dangerouslySetInnerHTML={{
@@ -177,6 +203,9 @@ const SentCellWidget = ({
         }}
         onMenuClick={(key: string) => {
           switch (key) {
+            case "refresh":
+              refresh();
+              break;
             case "copy-to":
               setCopyOpen(true);
               break;
