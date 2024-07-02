@@ -24,10 +24,6 @@ const SentMenuWidget = ({
   const intl = useIntl();
   const items: MenuProps["items"] = [
     {
-      key: "magic-dict-current",
-      label: intl.formatMessage({ id: "buttons.magic-dict" }),
-    },
-    {
       key: "show-commentary",
       label: <RelatedPara book={book} para={para} />,
     },
