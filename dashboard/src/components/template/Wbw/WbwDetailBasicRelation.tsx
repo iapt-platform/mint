@@ -6,6 +6,7 @@ import { grammar } from "../../../reducers/command";
 import { IWbw, IWbwField } from "./WbwWord";
 import { useIntl } from "react-intl";
 import { useState } from "react";
+import { openPanel } from "../../../reducers/right-panel";
 
 interface IWidget {
   data: IWbw;
@@ -48,6 +49,7 @@ const WbwDetailBasicRelationWidget = ({
                       .join(",");
                     console.debug("from", fromList, endCase);
                     store.dispatch(grammar(endCase));
+                    store.dispatch(openPanel("grammar"));
                   }
                 }}
                 icon={<QuestionCircleOutlined />}

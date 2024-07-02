@@ -1,8 +1,12 @@
+import { Button, Tooltip, Typography } from "antd";
+import { CopyOutlined } from "@ant-design/icons";
+
 import Mermaid from "../../general/Mermaid";
 import { useAppSelector } from "../../../hooks";
 import { getTerm } from "../../../reducers/term-vocabulary";
 import { IWbwRelation } from "./WbwDetailRelation";
 import { IWbw } from "./WbwWord";
+const { Text } = Typography;
 
 interface IWidget {
   wbwData?: IWbw[];
@@ -41,10 +45,18 @@ const RelaGraphicWidget = ({ wbwData }: IWidget) => {
     console.log("mermaid", mermaid);
     return mermaid;
   }
-
+  const mermaidText = sent_show_rel_map(wbwData);
   return (
     <div>
-      <Mermaid text={sent_show_rel_map(wbwData)} />
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div>
+          <Text copyable={{ text: mermaidText, tooltips: "复制mermaid代码" }} />
+        </div>
+        <div></div>
+      </div>
+      <div>
+        <Mermaid text={mermaidText} />
+      </div>
     </div>
   );
 };
