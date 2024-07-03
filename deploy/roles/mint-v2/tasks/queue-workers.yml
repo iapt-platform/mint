@@ -52,3 +52,14 @@
     mode: "0644"
   vars:
     action: "export.pali.chapter"
+
+- name: upload {{ action }} worker service
+  become: true
+  template:
+    src: v2/queue-worker.service.j2
+    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-{{ action }}-worker.service
+    owner: root
+    group: root
+    mode: "0644"
+  vars:
+    action: "export.article"
