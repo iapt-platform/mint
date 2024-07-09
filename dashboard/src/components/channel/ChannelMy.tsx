@@ -6,6 +6,7 @@ import {
   Button,
   Card,
   Dropdown,
+  Input,
   Select,
   Skeleton,
   Space,
@@ -35,6 +36,8 @@ import { IChannel } from "./Channel";
 import CopyToModal from "./CopyToModal";
 import { ArticleType } from "../article/Article";
 import { ChannelInfoModal } from "./ChannelInfo";
+
+const { Search } = Input;
 
 export const getSentIdInArticle = () => {
   let sentList: string[] = [];
@@ -76,6 +79,7 @@ const ChannelMy = ({
   const [dirty, setDirty] = useState(false);
   const [channels, setChannels] = useState<IItem[]>([]);
   const [owner, setOwner] = useState("all");
+  const [search, setSearch] = useState<string>();
   const [loading, setLoading] = useState(true);
   const [copyChannel, setCopyChannel] = useState<IChannel>();
   const [copyOpen, setCopyOpen] = useState<boolean>(false);
@@ -85,6 +89,8 @@ const ChannelMy = ({
   const [sentencesId, setSentencesId] = useState<string[]>();
 
   console.debug("ChannelMy render", type, articleId);
+
+  //TODO remove useEffect
 
   useEffect(() => {
     load();
@@ -100,8 +106,15 @@ const ChannelMy = ({
     sortChannels(channels);
   }, [channels, selectedRowKeys, owner]);
 
-  const sortChannels = (channelList: IItem[]) => {
-    if (owner === "my") {
+  interface IChannelFilter {
+    key?: string;
+    owner?: string;
+    selectedRowKeys?: React.Key[];
+  }
+
+  const sortChannels = (channelList: IItem[], filter?: IChannelFilter) => {
+    const mOwner = filter?.owner ?? owner;
+    if (mOwner === "my") {
       //我自己的
       const myChannel = channelList.filter((value) => value.role === "owner");
       const data = myChannel.map((item, index) => {
@@ -111,13 +124,14 @@ const ChannelMy = ({
     } else {
       //当前被选择的
       let selectedChannel: IItem[] = [];
-      selectedRowKeys.forEach((channelId) => {
+      let mSelectedRowKeys = filter?.selectedRowKeys ?? selectedRowKeys;
+      mSelectedRowKeys.forEach((channelId) => {
         const channel = channelList.find((value) => value.uid === channelId);
         if (channel) {
           selectedChannel.push(channel);
         }
       });
-      let show = selectedRowKeys;
+      let show = mSelectedRowKeys;
       //有进度的
       const progressing = channelList.filter(
         (value) => value.progress > 0 && !show.includes(value.uid)
@@ -132,12 +146,18 @@ const ChannelMy = ({
       const others = channelList.filter(
         (value) => !show.includes(value.uid) && value.role !== "member"
       );
-      const channelData = [
+      let channelData = [
         ...selectedChannel,
         ...progressing,
         ...myChannel,
         ...others,
       ];
+
+      const key = filter?.key ?? search;
+      if (key) {
+        channelData = channelData.filter((value) => value.title.includes(key));
+      }
+
       const data = channelData.map((item, index) => {
         return { key: item.uid, title: item.title, channel: item };
       });
@@ -222,29 +242,41 @@ const ChannelMy = ({
         setLoading(false);
       });
   }
+
   return (
     <div style={style}>
       <Card
         size="small"
         title={
-          <Select
-            defaultValue="all"
-            style={{ width: 120 }}
-            bordered={false}
-            options={[
-              {
-                value: "all",
-                label: intl.formatMessage({ id: "buttons.channel.all" }),
-              },
-              {
-                value: "my",
-                label: intl.formatMessage({ id: "buttons.channel.my" }),
-              },
-            ]}
-            onSelect={(value: string) => {
-              setOwner(value);
-            }}
-          />
+          <Space>
+            <Search
+              placeholder="版本名称"
+              onSearch={(value) => {
+                console.debug(value);
+                setSearch(value);
+                sortChannels(channels, { key: value });
+              }}
+              style={{ width: 120 }}
+            />
+            <Select
+              defaultValue="all"
+              style={{ width: 80 }}
+              bordered={false}
+              options={[
+                {
+                  value: "all",
+                  label: intl.formatMessage({ id: "buttons.channel.all" }),
+                },
+                {
+                  value: "my",
+                  label: intl.formatMessage({ id: "buttons.channel.my" }),
+                },
+              ]}
+              onSelect={(value: string) => {
+                setOwner(value);
+              }}
+            />
+          </Space>
         }
         extra={
           <Space size={"small"}>
