@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserDict;
+use App\Models\DictInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
@@ -10,6 +11,7 @@ use App\Http\Api;
 use App\Http\Api\AuthApi;
 use App\Http\Api\DictApi;
 use App\Http\Resources\UserDictResource;
+use Illuminate\Support\Str;
 
 class UserDictController extends Controller
 {
@@ -22,8 +24,19 @@ class UserDictController extends Controller
     {
         //
 		$result=false;
-		$indexCol = ['id','word','type','grammar','mean','parent','note','factors','confidence','updated_at','creator_id'];
+		$indexCol = ['id','word','type','grammar',
+                     'mean','parent','note','status',
+                     'factors','confidence','dict_id',
+                     'source','updated_at','creator_id'];
 		switch ($request->get('view')) {
+            case 'all':
+            # 获取studio内所有channel
+                $user = AuthApi::current($request);
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
+                $table = UserDict::select($indexCol);
+                break;
             case 'studio':
 				# 获取studio内所有channel
                 $user = AuthApi::current($request);
@@ -51,7 +64,11 @@ class UserDictController extends Controller
             case 'community':
                 $table = UserDict::select($indexCol)
                                 ->where('word', $request->get("word"))
-                                ->where('source', "_USER_WBW_");;
+                                ->where('status', '>',5)
+                                ->where(function($query) {
+                                    $query->where('source', "_USER_WBW_")
+                                            ->orWhere('source','_USER_DICT_');
+                                });
                 break;
             case 'compound':
                 $dict_id = DictApi::getSysDict('robot_compound');
@@ -60,36 +77,48 @@ class UserDictController extends Controller
                 }
                 $table = UserDict::where("dict_id",$dict_id)->where("word",$request->get('word'));
                 break;
+            case 'dict':
+                $dict_id = false;
+                if($request->has('name')){
+                   $dict_id = DictApi::getSysDict($request->get('name'));
+                }else if($request->has('id')){
+                    $dict_id = $request->get('id');
+                }
+
+                if($dict_id===false){
+                    $this->error('no dict',[],404);
+                }
+                $table = UserDict::select($indexCol)
+                                 ->where("dict_id",$dict_id);
 			default:
 				# code...
 				break;
 		}
-        if(isset($_GET["search"])){
-            $table->where('word', 'like', $_GET["search"]."%");
+        if($request->has("search")){
+            $table->where('word', 'like', $request->get("search")."%");
         }
-        if(isset($_GET["order"]) && isset($_GET["dir"])){
-            $table->orderBy($_GET["order"],$_GET["dir"]);
-        }else{
-            if($request->get('view') === "compound"){
-                $table->orderBy('confidence','desc');
-            }else{
-                $table->orderBy('updated_at','desc');
+        if(($request->has('word'))){
+            $table = $table->where('word',$request->get('word'));
+        }
+        if(($request->has('parent'))){
+            $table = $table->where('parent',$request->get('parent'));
+        }
+        if(($request->has('dict'))){
+            $dictId = DictInfo::where('shortname',$request->get('dict'))->value('id');
+            if(Str::isUuid($dictId)){
+                $table = $table->where('dict_id',$dictId);
             }
         }
         $count = $table->count();
-        if(isset($_GET["limit"])){
-            $offset = 0;
-            if(isset($_GET["offset"])){
-                $offset = $_GET["offset"];
-            }
-            $table->skip($offset)->take($_GET["limit"]);
-        }
+
+        $table->orderBy($request->get('order','updated_at'),
+                        $request->get('dir','desc'));
+
+        $table->skip($request->get('offset',0))
+              ->take($request->get('limit',200));
+
         $result = $table->get();
-		if($result){
-			return $this->ok(["rows"=>UserDictResource::collection($result),"count"=>$count]);
-		}else{
-			return $this->error("没有查询到数据");
-		}
+        return $this->ok(["rows"=>UserDictResource::collection($result),"count"=>$count]);
     }
 
     /**
@@ -139,9 +168,23 @@ class UserDictController extends Controller
                 $word["create_time"] = time()*1000;
                 $word["creator_id"]=$user["user_id"];
                 $id = UserDict::insert($word);
-                $updateOk = $this->update_sys_wbw($word);
+                if(isset($word["status"]) && $word["status"] > 5){
+                    $updateOk = $this->update_sys_wbw($word);
+                }else{
+                    $updateOk = true;
+                }
                 $this->update_redis($word);
                 $iOk++;
+            }else{
+                //存在，修改数据
+                $origin = $table->first();
+                if(isset($word["note"])){
+                    $origin->note = $word["note"];
+                }
+                if(isset($word["confidence"])){
+                    $origin->confidence = $word["confidence"];
+                }
+                $origin->save();
             }
         }
 
@@ -324,6 +367,7 @@ class UserDictController extends Controller
 					'mean'=>$data["mean"],
 					'factors'=>$data["factors"],
 					'factormean'=>$data["factormean"],
+					'language'=>$data["language"],
 					'source'=>"_SYS_USER_WBW_",
                     'creator_id' => $data["creator_id"],
 					'ref_counter' => 1,

@@ -3,18 +3,22 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
-use PhpAmqpLib\Message\AMQPMessage;
+use Illuminate\Support\Str;
 
+use App\Http\Api\Mq;
+use App\Models\Discussion;
+use App\Http\Resources\DiscussionResource;
+use App\Models\SentPr;
+use App\Http\Resources\SentPrResource;
 
 class TestMq extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan test:mq
      * @var string
      */
-    protected $signature = 'test:mq ';
+    protected $signature = 'test:mq {--discussion=} {--pr=}';
 
     /**
      * The console command description.
@@ -40,23 +44,19 @@ class TestMq extends Command
      */
     public function handle()
     {
-        //一对一
-		$connection = new AMQPStreamConnection(MQ_HOST, MQ_PORT, MQ_USERNAME, MQ_PASSWORD);
-		$channel = $connection->channel();
-		$channel->queue_declare('hello', false, true, false, false);
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
+		Mq::publish('hello',['hello world']);
+        $discussion = $this->option('discussion');
+        if($discussion && Str::isUuid($discussion)){
+            Mq::publish('discussion',new DiscussionResource(Discussion::find($discussion)));
+        }
 
-		$msg = new AMQPMessage('Hello World!');
-		$channel->basic_publish($msg, '', 'hello');
-
-		echo " [x] Sent 'Hello World!'\n";
-		$channel->close();
-		$connection->close();
-
-        //一对多
-        $connection = new AMQPStreamConnection(MQ_HOST, MQ_PORT, MQ_USERNAME, MQ_PASSWORD);
-        $channel->exchange_declare('hello_exchange','fanout',false,true);
-        $channel->queue_declare('hello', false, true, false, false);
-        $channel->exchange_bind('hello','exchange',"");
+        $pr = $this->option('pr');
+        if($pr && Str::isUuid($pr)){
+            Mq::publish('suggestion',new SentPrResource(SentPr::where('uid',$pr)->first()));
+        }
 
         return 0;
     }

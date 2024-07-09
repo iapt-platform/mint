@@ -5,15 +5,17 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Http\Api\MdRender;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use App\Tools\Markdown;
 
 class TestMdRender extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan test:md.render term unity --driver=str
      * @var string
      */
-    protected $signature = 'test:md.render';
+    protected $signature = 'test:md.render {item?} {--format=} {--driver=morus}';
 
     /**
      * The console command description.
@@ -39,51 +41,105 @@ class TestMdRender extends Command
      */
     public function handle()
     {
-        $markdown = "";
-        //$markdown .= "[[isipatana]] `bla` [[dhammacakka]]\n\n";
-        //$markdown .= "前面的\n";
-        //$markdown .= "{{note|\n";
-        //$markdown .= "多**行注**释\n\n";
-        //$markdown .= "多行注释\n";
-        //$markdown .= "}}\n\n";
-        $markdown .= "## heading \n\n";
-        $markdown .= "ddd \n\n";
-        $markdown .= "- title \n";
-        $markdown .= "  \n";
-        $markdown .= "  content-1\n";
-        $markdown .= "- title-2 \n";
-        $markdown .= "  \n";
-        $markdown .= "  content-2\n";
-        $markdown .= "  \n";
-        $markdown .= "\n";
-        $markdown .= "\n";
-        $markdown .= "aaa bbb\n";
-        /*
-        $markdown .= "```\n";
-        $markdown .= "content **content**\n";
-        $markdown .= "content **content**\n";
-        $markdown .= "```\n\n";
-        */
-        /*
-        $markdown .= "{{168-916-10-37}}";
-        $markdown .= "{{exercise|1|((168-916-10-37))}}";
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
+        Log::info('md render start item='.$this->argument('item'));
+        $data = array();
+        $data['bold'] = <<<md
+        **三十位** 经在[中间]六处为**[licchavi]**，在极果为**慧解脱**
+        md;
 
-        $markdown2 = "# heading [[isipatana]] \n\n";
-        $markdown2 .= "{{exercise\n|id=1\n|content={{168-916-10-37}}}}";
-        $markdown2 .= "{{exercise\n|id=2\n|content=# ddd}}";
+        $data['sentence'] = <<<md
+        {{168-916-2-9}}
+        md;
 
-        $markdown2 .= "{{note|trigger=kacayana|text={{99-556-8-12}}}}";
-        $markdown2 = "aaa=bbb\n";
-        $markdown2 .= "ccc=ddd\n";
-*/
-        //echo MdRender::render($markdown,'00ae2c48-c204-4082-ae79-79ba2740d506');
-        //$wiki = MdRender::markdown2wiki($markdown2);
-        //$xml = MdRender::wiki2xml($wiki);
-        //$html = MdRender::xmlQueryId($xml, "1");
-        //$sent = MdRender::take_sentence($html);
-        //print_r($sent);
-        echo Str::markdown($markdown);
-        echo MdRender::render2($markdown,'00ae2c48-c204-4082-ae79-79ba2740d506',null,'read','nissaya');
+        $data['link'] = <<<md
+        aa `[link](wikipali.org/aa.php?view=b&c=d)` bb
+        md;
+
+        $data['term'] = <<<md
+        ## term
+        [[bhagavantu]]
+        md;
+        $data['noteMulti'] = <<<md
+        ## heading
+
+        [点击](http://127.0.0.1:3000/my/article/para/168-876?mode=edit&channel=00ae2c48-c204-4082-ae79-79ba2740d506&book=168&par=876)
+
+        ----
+
+        dfef
+
+        ```
+        bla **content**
+        {{99-556-8-12}}
+        bla **content**
+        ```
+        md;
+
+        $data['note'] = '`bla **bold** _em_ bla`';
+        $data['noteTpl'] = <<<md
+        {{note|trigger=kacayana|text=bla **bold** _em_ bla}}
+        md;
+
+        $data['noteTpl2'] = <<<md
+        {{note|trigger=kacayana|text={{99-556-8-12}}}}
+        md;
+
+        $data['trigger'] = <<<md
+        ## heading
+        ddd
+        - title
+          content-1
+        - title-2
+
+          content-2
+
+        aaa bbb
+        md;
+        $data['exercise'] = <<<md
+        {{168-916-10-37}}
+        {{exercise|1|((168-916-10-37))}}
+        {{exercise|
+        id=1|
+        content={{168-916-10-37}}
+        }}
+        {{exercise|
+        id=2|
+        content=# ddd}}
+        md;
+
+        $data['article'] = <<<md
+        {{article|
+        type=article|
+        id=27ade9ad-2d0c-4f66-b857-e9335252cc08|
+        title=第一章 戒律概说（Vinaya）|
+        style=modal}}
+        md;
+        $data['empty'] = '';
+
+        Markdown::driver($this->option('driver'));
+
+        $format = $this->option('format');
+        if(empty($format)){
+            $formats = ['react','unity','text','tex','html','simple'];
+        }else{
+            $formats = [$format];
+        }
+        foreach ($formats as $format) {
+            $this->info("format:{$format}");
+            foreach ($data as $key => $value) {
+                $_item = $this->argument('item');
+                if(!empty($_item) && $key !==$_item){
+                    continue;
+                }
+                echo MdRender::render($value,
+                                    ['00ae2c48-c204-4082-ae79-79ba2740d506'],
+                                    null,'read','translation',
+                                    $contentType="markdown",$format);
+            }
+        }
         return 0;
     }
 }

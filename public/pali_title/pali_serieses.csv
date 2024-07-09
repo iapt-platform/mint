@@ -1,4 +1,4 @@
-"id","book","paragraph","title"
+id,book,paragraph,title
 1,1,2,namakkārapāḷi
 2,1,159,namakkāraṭīkā
 3,2,2,mahāpaṇāmapāṭha
@@ -21,7 +21,7 @@
 20,15,2,saddanītippakaraṇaṃ (padamālā)
 21,16,2,saddanītippakaraṇaṃ (dhātumālā)
 22,17,2,padarūpasiddhi
-23,18,2,moggallāna pañcikā ṭīkā
+23,18,2,moggallāna-pañcikā-ṭīkā
 24,19,2,payogasiddhipāḷi
 25,20,2,vuttodayaṃ
 26,21,2,abhidhānappadīpikā
@@ -51,25 +51,25 @@
 50,44,2,(saṅgayana-puccha vissajjanā) abhidhammapiṭaka
 51,45,2,(saṅgayana-puccha vissajjanā) aṭṭhakathā
 52,46,1,milidaṭīkā
-53,47,1,padamañjarī 
-54,48,1,padasādhanaṃ 
+53,47,1,padamañjarī
+54,48,1,padasādhanaṃ
 55,49,1,saddabindu pakaraṇaṃ
 56,50,1,kaccāyana  dhātu mañjūsā
-57,51,1,samantakūṭavaṇṇanā 
-58,52,1,moggallāna vuttivivaraṇapañcikā. 
-59,53,1,thupavaṃso 
-60,54,1,dāṭhāvaṃso 
+57,51,1,samantakūṭavaṇṇanā
+58,52,1,moggallāna vuttivivaraṇapañcikā.
+59,53,1,thupavaṃsa
+60,54,1,dāṭhāvaṃsa
 61,55,1,dhātupāṭha  vilāsiniyā
-62,56,1,dhātuvaṃso 
+62,56,1,dhātuvaṃsa
 63,57,1,hatthavanagallavihāra  vaṃso
-64,58,1,jinacaritaya 
-65,59,1,jinavaṃsadīpaṃ 
-66,60,1,telakaṭāhagāthā 
+64,58,1,jinacaritaya
+65,59,1,jinavaṃsadīpaṃ
+66,60,1,telakaṭāhagāthā
 67,61,2,cūḷaganthavaṃsapāḷi
 68,62,2,sāsanavaṃsappadīpikā
 69,63,2,mahāvaṃsapāḷi
-70,64,2,visuddhimaggo
-71,65,2,visuddhimaggo
+70,64,2,visuddhimagga
+71,65,2,visuddhimagga
 72,66,2,visuddhimagga-mahāṭīkā
 73,67,2,visuddhimagga-mahāṭīkā
 74,68,2,visuddhimagga nidānakathā
@@ -86,17 +86,17 @@
 85,79,3,yamakapāḷi
 86,80,3,yamakapāḷi
 87,81,3,paṭṭhānapāḷi
-88,82,3,dasakanipātapāḷi
-89,83,3,ekādasakanipātapāḷi
-90,84,3,ekakanipātapāḷi
-91,85,3,dukanipātapāḷi
-92,86,3,tikanipātapāḷi
-93,87,3,catukkanipātapāḷi
-94,88,3,pañcakanipātapāḷi
-95,89,3,chakkanipātapāḷi
-96,90,3,sattakanipātapāḷi
-97,91,3,aṭṭhakanipātapāḷi
-98,92,3,navakanipātapāḷi
+88,82,3,aṅguttaranikāyapāḷi
+89,83,3,aṅguttaranikāyapāḷi
+90,84,3,aṅguttaranikāyapāḷi
+91,85,3,aṅguttaranikāyapāḷi
+92,86,3,aṅguttaranikāyapāḷi
+93,87,3,aṅguttaranikāyapāḷi
+94,88,3,aṅguttaranikāyapāḷi
+95,89,3,aṅguttaranikāyapāḷi
+96,90,3,aṅguttaranikāyapāḷi
+97,91,3,aṅguttaranikāyapāḷi
+98,92,3,aṅguttaranikāyapāḷi
 99,93,3,dīghanikāyapāḷi
 100,94,3,dīghanikāyapāḷi
 101,95,3,dīghanikāyapāḷi
@@ -189,20 +189,20 @@
 188,169,3,saṃyuttanikāyapāḷi
 189,170,3,saṃyuttanikāyapāḷi
 190,171,3,saṃyuttanikāyapāḷi
-191,172,3,dhammasaṅgaṇī-mūlaṭīkā
-192,173,3,vibhaṅga-mūlaṭīkā
-193,173,1155,vibhaṅga-anuṭīkā
-194,174,4,dhātukathāpakaraṇa-mūlaṭīkā
-195,174,100,puggalapaññattipakaraṇa-mūlaṭīkā
-196,174,201,kathāvatthupakaraṇa-mūlaṭīkā
-197,174,865,yamakapakaraṇa-mūlaṭīkā
-198,174,1059,paṭṭhānapakaraṇa-mūlaṭīkā
-199,175,3,dhammasaṅgaṇī-anuṭīkā
-200,176,4,dhātukathāpakaraṇa-anuṭīkā
-201,176,117,puggalapaññattipakaraṇa-anuṭīkā
-202,176,213,kathāvatthupakaraṇa-anuṭīkā
-203,176,917,yamakapakaraṇa-anuṭīkā
-204,176,1139,paṭṭhānapakaraṇa-anuṭīkā
+191,172,3,mūlaṭīkā
+192,173,3,mūlaṭīkā
+193,173,1155,anuṭīkā
+194,174,4,mūlaṭīkā
+195,174,100,mūlaṭīkā
+196,174,201,mūlaṭīkā
+197,174,865,mūlaṭīkā
+198,174,1059,mūlaṭīkā
+199,175,3,anuṭīkā
+200,176,4,anuṭīkā
+201,176,117,anuṭīkā
+202,176,213,anuṭīkā
+203,176,917,anuṭīkā
+204,176,1139,anuṭīkā
 205,177,2,abhidhammāvatāro
 206,177,4805,nāmarūpaparicchedo
 207,177,10627,paramatthavinicchayo
@@ -255,9 +255,9 @@
 254,206,717,sāratthadīpanī-ṭīkā
 255,206,1753,sāratthadīpanī-ṭīkā
 256,206,2154,sāratthadīpanī-ṭīkā
-257,207,3,bhikkhupātimokkhapāḷi
-258,207,524,bhikkhunīpātimokkhapāḷi
-259,207,1215,kaṅkhāvitaraṇī-aṭṭhakathā
+257,207,3,pātimokkhapāḷi
+258,207,524,pātimokkhapāḷi
+259,207,1215,kaṅkhāvitaraṇī
 260,208,3,vinayasaṅgaha-aṭṭhakathā
 261,209,3,vajirabuddhi-ṭīkā
 262,209,166,vajirabuddhi-ṭīkā
@@ -265,16 +265,18 @@
 264,209,1708,vajirabuddhi-ṭīkā
 265,209,2217,vajirabuddhi-ṭīkā
 266,209,2428,vajirabuddhi-ṭīkā
-267,210,3,Vimativinodanī-ṭīkā
-268,210,1658,Vimativinodanī-ṭīkā
-269,210,1779,Vimativinodanī-ṭīkā
-270,210,2431,Vimativinodanī-ṭīkā
-271,210,2792,Vimativinodanī-ṭīkā
+267,210,3,vimativinodanī-ṭīkā
+268,210,1658,vimativinodanī-ṭīkā
+269,210,1779,vimativinodanī-ṭīkā
+270,210,2431,vimativinodanī-ṭīkā
+271,210,2792,vimativinodanī-ṭīkā
 272,211,3,vinayālaṅkāra-ṭīkā
 273,212,2,kaṅkhāvitaraṇī
 274,212,671,kaṅkhāvitaraṇī
-275,213,3,(vn)pārājikapāḷi
-276,214,3,(vn)pācittiyapāḷi
-277,215,3,(vn)mahāvaggapāḷi
-278,216,3,(vn)cūḷavaggapāḷi
-279,217,3,(vn)parivārapāḷi
+275,213,3,vinayapitaka
+276,214,3,vinayapitaka
+277,215,3,vinayapitaka
+278,216,3,vinayapitaka
+279,217,3,vinayapitaka
+280,139,925,samantapāsādikā
+281,214,2162,(VN)Bhikkhunīvibhaṅgo

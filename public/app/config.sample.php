@@ -7,7 +7,9 @@ define("RPC_SERVER","https://rpc.wikipali.org");
 define("ASSETS_SERVER","https://assets-hk.wikipali.org");
 define("HELP_SERVER","https://help-hk.wikipali.org");
 define("GRAMMAR_SERVER","https://grammar-hk.wikipali.org");
+define("DOCUMENTS_SERVER","https://help.wikipali.org");
 define('APP_KEY','base64:QHiqLcUthgo1V7Hj4UyoFxpCr1UmKJQu4cUr55z5zGc=');
+define('APP_ENV','local');
 /*
 电子邮件设置
 PHPMailer

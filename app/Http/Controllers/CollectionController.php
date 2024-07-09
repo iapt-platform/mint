@@ -12,9 +12,6 @@ use App\Http\Api\ShareApi;
 use App\Http\Resources\CollectionResource;
 use Illuminate\Support\Facades\DB;
 
-require_once __DIR__.'/../../../public/app/ucenter/function.php';
-
-
 class CollectionController extends Controller
 {
     /**
@@ -24,20 +21,22 @@ class CollectionController extends Controller
      */
     public function index(Request $request)
     {
-        //
-                //
-        $userinfo = new \UserInfo();
+
 		$result=false;
-		$indexCol = ['uid','title','subtitle','summary','article_list','owner','status','lang','updated_at','created_at'];
+		$indexCol = ['uid','title','subtitle','summary',
+                      'article_list','owner','status',
+                      'default_channel','lang',
+                      'updated_at','created_at'];
 		switch ($request->get('view')) {
             case 'studio_list':
 		        $indexCol = ['owner'];
-                $table = Collection::select($indexCol)->selectRaw('count(*) as count')->where('status', 30)->groupBy('owner');
+                //TODO ?
+                $table = Collection::select($indexCol)
+                                    ->selectRaw('count(*) as count')
+                                    ->where('status', 30)
+                                    ->groupBy('owner');
                 break;
 			case 'studio':
-				# code...
-				//$table = Collection::select($indexCol)->where('owner', $_COOKIE["user_uid"]);
-                # 获取studio内所有channel
                 $user = AuthApi::current($request);
                 if(!$user){
                     return $this->error(__('auth.failed'));
@@ -59,7 +58,6 @@ class CollectionController extends Controller
                     }
                     $table = $table->whereIn('uid', $resId)->where('owner','<>', $studioId);
                 }
-
 				break;
 			case 'public':
                 //全网公开
@@ -71,7 +69,7 @@ class CollectionController extends Controller
 				break;
 			default:
 				# code...
-			    return $this->error("没有查询到数据");
+			    return $this->error("无法识别的view参数",200,200);
 				break;
 		}
         if($request->has("search") && !empty($request->has("search"))){
@@ -87,10 +85,10 @@ class CollectionController extends Controller
                 $table = $table->orderBy('updated_at','desc');
             }
         }
-        if($request->has("limit")){
-            $table = $table->skip($request->get("offset",0))
-                           ->take($request->get("limit"));
-        }
+
+        $table = $table->skip($request->get("offset",0))
+                       ->take($request->get("limit",1000));
+
         $result = $table->get();
 		return $this->ok(["rows"=>CollectionResource::collection($result),"count"=>$count]);
     }
@@ -123,6 +121,28 @@ class CollectionController extends Controller
         return $this->ok(['my'=>$my,'collaboration'=>$collaboration]);
     }
 
+    public static function UserCanEdit($user_uid,$collection){
+        if($collection->owner === $user_uid){
+            return true;
+        }
+        //查协作
+        $currPower = ShareApi::getResPower($user_uid,$collection->uid);
+        if($currPower >= 20){
+            return true;
+        }
+        return false;
+    }
+    public static function UserCanRead($user_uid,$collection){
+        if($collection->owner === $user_uid){
+            return true;
+        }
+        //查协作
+        $currPower = ShareApi::getResPower($user_uid,$collection->uid);
+        if($currPower >= 10){
+            return true;
+        }
+        return false;
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -132,34 +152,31 @@ class CollectionController extends Controller
     public function store(Request $request)
     {
         $user = \App\Http\Api\AuthApi::current($request);
-        if($user){
-            //判断当前用户是否有指定的studio的权限
-            if($user['user_uid'] === \App\Http\Api\StudioApi::getIdByName($request->get('studio'))){
-                //查询是否重复
-                if(Collection::where('title',$request->get('title'))->where('owner',$user['user_uid'])->exists()){
-                    return $this->error(__('validation.exists'));
-                }else{
-                    $newOne = new Collection;
-                    $newOne->id = app('snowflake')->id();
-                    $newOne->uid = Str::uuid();
-                    $newOne->title = $request->get('title');
-                    $newOne->lang = $request->get('lang');
-                    $newOne->article_list = "[]";
-                    $newOne->owner = $user['user_uid'];
-                    $newOne->owner_id = $user['user_id'];
-                    $newOne->editor_id = $user['user_id'];
-                    $newOne->create_time = time()*1000;
-                    $newOne->modify_time = time()*1000;
-                    $newOne->save();
-                    return $this->ok($newOne);
-                }
-            }else{
-                return $this->error(__('auth.failed'));
-            }
-        }else{
-            return $this->error(__('auth.failed'));
+        if(!$user){
+            return $this->error(__('auth.failed'),401,401);
         }
-
+        //判断当前用户是否有指定的studio的权限
+        if($user['user_uid'] !== \App\Http\Api\StudioApi::getIdByName($request->get('studio'))){
+            return $this->error(__('auth.failed'),403,403);
+        }
+        //查询是否重复
+        if(Collection::where('title',$request->get('title'))->where('owner',$user['user_uid'])->exists()){
+            return $this->error(__('validation.exists'),200,200);
+        }else{
+            $newOne = new Collection;
+            $newOne->id = app('snowflake')->id();
+            $newOne->uid = Str::uuid();
+            $newOne->title = $request->get('title');
+            $newOne->lang = $request->get('lang');
+            $newOne->article_list = "[]";
+            $newOne->owner = $user['user_uid'];
+            $newOne->owner_id = $user['user_id'];
+            $newOne->editor_id = $user['user_id'];
+            $newOne->create_time = time()*1000;
+            $newOne->modify_time = time()*1000;
+            $newOne->save();
+            return $this->ok(new CollectionResource($newOne));
+        }
     }
 
     /**
@@ -170,32 +187,31 @@ class CollectionController extends Controller
      */
     public function show(Request  $request,$id)
     {
-        //
-		$indexCol = ['uid','title','subtitle','summary','article_list','status','owner','lang','updated_at','created_at'];
-
-		$result  = Collection::select($indexCol)->where('uid', $id)->first();
-		if($result){
-            if($result->status<30){
-                //私有文章，判断权限
-                $user = \App\Http\Api\AuthApi::current($request);
-                if($user){
-                    //判断当前用户是否有指定的studio的权限
-                    if($user['user_uid'] !== $result->owner){
-                        //非所有者
-                        //TODO 判断是否协作
-                        return $this->error(__('auth.failed'));
-                    }
-                }else{
-                    return $this->error(__('auth.failed'));
+		$result  = Collection::where('uid', $id)->first();
+		if(!$result){
+            return $this->error("没有查询到数据");
+        }
+        if($result->status<30){
+            //私有文章，判断权限
+            Log::error('私有文章，判断权限'.$id);
+            $user = \App\Http\Api\AuthApi::current($request);
+            if(!$user){
+                Log::error('未登录');
+                return $this->error(__('auth.failed'),401,401);
+            }
+            //判断当前用户是否有指定的studio的权限
+            if($user['user_uid'] !== $result->owner){
+                Log::error($user["user_uid"].'私有文章，判断权限'.$id);
+                //非所有者
+                if(CollectionController::UserCanRead($user['user_uid'],$result)===false){
+                    Log::error($user["user_uid"].'没有读取权限');
+                    return $this->error(__('auth.failed'),403,403);
                 }
             }
-			if(!empty($result->article_list)){
-				$result->article_list = \json_decode($result->article_list);
-			}
-			return $this->ok($result);
-		}else{
-			return $this->error("没有查询到数据");
-		}
+        }
+        $result->fullArticleList = true;
+        return $this->ok(new CollectionResource($result));
+
     }
 
     /**
@@ -209,31 +225,29 @@ class CollectionController extends Controller
     {
         //
         $collection  = Collection::find($id);
-        if($collection){
-            //鉴权
-            $user = \App\Http\Api\AuthApi::current($request);
-            if($user && $collection->owner === $user["user_uid"]){
-                $collection->title = $request->get('title');
-                $collection->subtitle = $request->get('subtitle');
-                $collection->summary = $request->get('summary');
-                if($request->has('aritcle_list')){
-                    $collection->article_list = \json_encode($request->get('aritcle_list'));
-                } ;
-                $collection->lang = $request->get('lang');
-                $collection->status = $request->get('status');
-                $collection->modify_time = time()*1000;
-                $collection->save();
-                return $this->ok($collection);
-            }else{
-                //鉴权失败
-
-                //TODO 判断是否为协作
-                return $this->error(__('auth.failed'));
-            }
-
-        }else{
+        if(!$collection){
             return $this->error("no recorder");
         }
+        //鉴权
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'),401,401);
+        }
+        if(!CollectionController::UserCanEdit($user["user_uid"],$collection)){
+            return $this->error(__('auth.failed'),403,403);
+        }
+        $collection->title = $request->get('title');
+        $collection->subtitle = $request->get('subtitle');
+        $collection->summary = $request->get('summary');
+        if($request->has('aritcle_list')){
+            $collection->article_list = \json_encode($request->get('aritcle_list'));
+        }
+        $collection->lang = $request->get('lang');
+        $collection->status = $request->get('status');
+        $collection->default_channel = $request->get('default_channel');
+        $collection->modify_time = time()*1000;
+        $collection->save();
+        return $this->ok(new CollectionResource($collection));
     }
 
     /**

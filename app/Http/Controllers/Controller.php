@@ -17,13 +17,19 @@ class Controller extends BaseController
 			'data'=>$result,
 			'message'=> $message,
 		];
-		return response()->json($response,200,['Content-Type' => 'application/json;charset=UTF-8',
-	'Charset' => 'utf-8'],JSON_UNESCAPED_UNICODE);
+		return response()->json($response,
+                            200,
+                            [
+                                'Content-Type' => 'application/json;charset=UTF-8',
+	                            'Charset' => 'utf-8'
+                            ],
+                            JSON_UNESCAPED_UNICODE
+                        );
 	}
     public function ok($result,$message=""){
         return $this->sendResponse($result,$message);
     }
-	public function sendError($error, $errorMessages = [], $code = 404){
+	public function sendError($error, $errorMessages = '', $code = 404){
 		$response = [
 			'ok' => false,
 			'data'=>$errorMessages,
@@ -32,7 +38,7 @@ class Controller extends BaseController
 		return response()->json($response,$code);
 	}
 
-    public function error($error, $errorMessages=[], $code=404){
+    public function error($error, $errorMessages='', $code=404){
         return $this->sendError($error, $errorMessages, $code);
     }
 }

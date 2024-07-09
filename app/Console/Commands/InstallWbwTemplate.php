@@ -40,6 +40,9 @@ class InstallWbwTemplate extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$this->info("instert wbw template");
 
 
@@ -61,22 +64,22 @@ class InstallWbwTemplate extends Command
 		}
 		$bar = $this->output->createProgressBar($_to-$_from+1);
 
-		for ($from=$_from; $from <=$_to ; $from++) { 
+		for ($from=$_from; $from <=$_to ; $from++) {
 			# code...
-			
+
 			$fileSn = $from-1;
 			$outputFileNameHead = $filelist[$fileSn][1];
-	
+
 			$dirXmlBase = public_path('/tmp/palicsv') . "/";
 			$dirXml = $outputFileNameHead . "/";
-		
-		
+
+
 			#删除目标数据库中数据
 			WbwTemplate::where('book', $from)->delete();
 
 
 			// 打开文件并读取数据
-			
+
 			if (($GLOBALS["fp"] = fopen($dirXmlBase . $dirXml . $outputFileNameHead . ".csv", "r")) !== false) {
 				$GLOBALS["row"]=0;
 				DB::transaction(function () {
@@ -95,7 +98,7 @@ class InstallWbwTemplate extends Command
 							'type'=>$data[6],
 							'gramma'=>$data[7],
 							'part'=>$data[10],
-							'style'=>$data[15]	
+							'style'=>$data[15]
 						];
 						WbwTemplate::insert($params);
 					}
@@ -105,11 +108,11 @@ class InstallWbwTemplate extends Command
 				$this->error("can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv".PHP_EOL) ;
 				Log::error("can not open csv file. filename=" . $dirXmlBase . $dirXml . $outputFileNameHead . ".csv".PHP_EOL) ;
 			}
-			
+
 			$bar->advance();
 		}
 		$bar->finish();
         return 0;
-    
+
 	}
 }

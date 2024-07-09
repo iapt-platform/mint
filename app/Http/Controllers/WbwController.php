@@ -14,6 +14,7 @@ use App\Tools\Tools;
 use App\Http\Api\AuthApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\Mq;
 
 class WbwController extends Controller
 {
@@ -50,8 +51,8 @@ class WbwController extends Controller
         if($channel->owner_uid !== $user["user_uid"]){
             //判断是否为协作
             $power = ShareApi::getResPower($user["user_uid"],$channel->uid);
-            if($power<30){
-                return $this->error(__('auth.failed'));
+            if($power < 20){
+                return $this->error(__('auth.failed'),[],403);
             }
         }
         //查看WbwBlock是否已经建立
@@ -76,16 +77,17 @@ class WbwController extends Controller
             $wbwBlock->save();
         }
         $wbw = Wbw::where('block_uid',$wbwBlockId)
-                        ->where('wid',$request->get('sn'))
-                        ->first();
+                  ->where('wid',$request->get('sn'))
+                  ->first();
+        $sent = PaliSentence::where('book',$request->get('book'))
+                                ->where('paragraph',$request->get('para'))
+                                ->where('word_begin',"<=",$request->get('sn'))
+                                ->where('word_end',">=",$request->get('sn'))
+                                ->first();
         if(!$wbw){
             //建立一个句子的逐词解析数据
             //找到句子
-            $sent = PaliSentence::where('book',$request->get('book'))
-                                 ->where('paragraph',$request->get('para'))
-                                 ->where('word_begin',"<=",$request->get('sn'))
-                                 ->where('word_end',">=",$request->get('sn'))
-                                 ->first();
+
             $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
             $wbwContent = Sentence::where('book_id',$sent->book)
 							->where('paragraph',$sent->paragraph)
@@ -132,6 +134,7 @@ class WbwController extends Controller
         }
 
         $count=0;
+        $wbwId = array();
         foreach ($request->get('data') as $row) {
             $wbw = Wbw::where('block_uid',$wbwBlockId)
                         ->where('wid',$row['sn'])
@@ -146,11 +149,29 @@ class WbwController extends Controller
                 $wbw->data = $wbwData;
                 $wbw->status = 5;
                 $wbw->save();
+                $wbwId[] = $wbw->id;
                 $count++;
             }
         }
+        //获取整个句子数据
+        $corpus = new CorpusController;
+        $wbwString = $corpus->getWbw($request->get('book'),
+                            $request->get('para'),
+                            $sent->word_begin,
+                            $sent->word_end,
+                            $request->get('channel_id'));
+        if($wbwString){
+            $wbwSentence = json_decode($wbwString);
+        }else{
+            $wbwSentence = [];
+        }
 
-        return $this->ok(['rows'=>[],"count"=>$count]);
+
+        if(count($wbwId)>0){
+            Mq::publish('wbw-analyses',$wbwId);
+        }
+
+        return $this->ok(['rows'=>$wbwSentence,"count"=>$count]);
     }
 
     /**

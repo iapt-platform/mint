@@ -41,6 +41,9 @@ class UpgradePaliToc extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$this->info("upgrade pali text");
 		$startTime = time();
 
@@ -62,7 +65,7 @@ class UpgradePaliToc extends Command
 		$bar = $this->output->createProgressBar($_to-$_from+1);
 		for ($from=$_from; $from <= $_to; $from++) {
 			// 打开csv文件并读取数据
-			$strFileName = config("app.path.pali_title") . "/{$from}_{$_lang}.csv";
+			$strFileName = config("mint.path.pali_title") . "/{$from}_{$_lang}.csv";
 			if(!file_exists($strFileName)){
 				continue;
 			}
@@ -81,7 +84,7 @@ class UpgradePaliToc extends Command
 								$author = "cscd4";
 							}
 							$data[6] = mb_substr($data[6],0,1024);
-							
+
 							$newData = [
 								'book'=>$from,
 								'paragraph'=>$data[2],
@@ -91,7 +94,7 @@ class UpgradePaliToc extends Command
 								'type'=>$type,
 								'language'=>$_lang,
 								'author'=>$author,
-								'share'=>1,				
+								'share'=>1,
 								'create_time'=>time()*1000,
 								'update_time'=>time()*1000,
 							];

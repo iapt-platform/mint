@@ -6,6 +6,7 @@ use App\Models\WordIndex;
 use Illuminate\Http\Request;
 use App\Http\Resources\WordIndexResource;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +24,7 @@ class WordIndexController extends Controller
             case 'key':
                 $key = $request->get("key");
                 /*
-                $result = Cache::remember("/word_index/{$key}",10,function() use($key){
+                $result = RedisClusters::remember("/word_index/{$key}",10,function() use($key){
                     return WordIndex::where('word','like',$key."%")
                                     ->whereOr('word_en','like',$key."%")
                                     ->orderBy('word_en')

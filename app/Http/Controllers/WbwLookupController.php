@@ -6,12 +6,13 @@ use App\Models\UserDict;
 use App\Models\DictInfo;
 use App\Models\WbwTemplate;
 use App\Models\Channel;
-use App\Models\WbwAnalysis;
 use Illuminate\Http\Request;
 use App\Tools\CaseMan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use App\Http\Api\DictApi;
+use App\Http\Api\AuthApi;
 
 
 
@@ -70,6 +71,7 @@ class WbwLookupController extends Controller
                           "time"=>(int)($endAt-$startAt)]);
     }
 
+    //查用户字典获取全部结果
     public function lookup($words,$bases,$deep){
 		$wordPool = array();
 		$output  = array();
@@ -131,12 +133,53 @@ class WbwLookupController extends Controller
 
         return $output;
     }
+
+    /**
+     *
+     */
     private function langCheck($query,$lang){
         if($query===[]){
             return true;
         }else{
-            return in_array($lang,$query);
+            if(in_array(strtolower($lang),$query)){
+                return true;
+            }else{
+                $langFamily = explode('-',$lang)[0];
+                foreach ($query as $value) {
+                    if(strpos($value,$langFamily) !== false){
+                        return true;
+                    }
+                }
+            }
         }
+        return false;
+    }
+    private function wbwPreference($word,$field,$userId){
+        $prefix = 'wbw-preference';
+        $fieldMap = [
+                    'type'=>1,
+                    'grammar'=>2,
+                    'meaning'=>3,
+                    'factors'=>4,
+                    'factorMeaning'=>5,
+                    'parent'=>6,
+                    'part'=>7,
+                    'case'=>8,
+                ];
+        $fieldId = $fieldMap[$field];
+        $myPreference = RedisClusters::get("{$prefix}/{$word}/{$fieldId}/{$userId}");
+        if(!empty($myPreference)){
+            Log::debug($word.'命中我的wbw-'.$field,['data'=>$myPreference]);
+            return ['value'=>$myPreference,'status'=>5];
+        }else{
+            $myPreference = RedisClusters::get("{$prefix}/{$word}/3/0");
+            if(!empty($myPreference)){
+                Log::debug($word.'命中社区wbw-'.$field,['data'=>$myPreference]);
+                return ['value'=>$myPreference,'status'=>5];
+            }
+        }
+        //Log::debug($word.'未命中'.$field);
+        return false;
     }
     /**
      * 自动查词
@@ -147,6 +190,12 @@ class WbwLookupController extends Controller
     public function store(Request $request)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user ){
+            //未登录用户
+            return $this->error(__('auth.failed'),401,401);
+        }
+
         $startAt = microtime(true)*1000;
 
         // system regular
@@ -154,7 +203,10 @@ class WbwLookupController extends Controller
 
         $channel = Channel::find($request->get('channel_id'));
         $orgData = $request->get('data');
-        $lang = $request->get('lang',[]);
+        $lang = [];
+        foreach ($request->get('lang',[]) as $value) {
+            $lang[] = strtolower($value);
+        }
         //句子中的单词
         $words = [];
         foreach ($orgData as  $word) {
@@ -177,109 +229,176 @@ class WbwLookupController extends Controller
             if(empty($word['real']['value'])){
                 continue;
             }
-            {
-                $data = $word;
-                if(isset($indexed[$word['real']['value']])){
-                    //parent
-                    $case = [];
-                    $parent = [];
-                    $factors = [];
-                    $factorMeaning = [];
-                    $meaning = [];
-                    $parent2 = [];
-                    $case2 = [];
-                    foreach ($indexed[$word['real']['value']] as $value) {
-                        //非base优先
-                        if(strstr($value->type,'base') === FALSE){
-                            $increment = 10;
-                        }else{
-                            $increment = 1;
-                        }
-                        //将全部结果加上得分放入数组
+            $data = $word;
+
+            $preference = $this->wbwPreference($word['real']['value'],'meaning',$user['user_id']);
+            if($preference!==false){
+                $data['meaning'] = $preference;
+            }
+            $preference = $this->wbwPreference($word['real']['value'],'factors',$user['user_id']);
+            if($preference!==false){
+                $data['factors'] = $preference;
+            }
+            $preference = $this->wbwPreference($word['real']['value'],'factorMeaning',$user['user_id']);
+            if($preference!==false){
+                $data['factorMeaning'] = $preference;
+            }
+            $preference = $this->wbwPreference($word['real']['value'],'case',$user['user_id']);
+            if($preference!==false){
+                $data['case'] = $preference;
+            }
+            if(isset($indexed[$word['real']['value']])){
+                //parent
+                $case = [];
+                $parent = [];
+                $factors = [];
+                $factorMeaning = [];
+                $meaning = [];
+                $parent2 = [];
+                $case2 = [];
+                foreach ($indexed[$word['real']['value']] as $value) {
+                    //非base优先
+                    if(strstr($value->type,'base') === FALSE){
+                        $increment = 10;
+                    }else{
+                        $increment = 1;
+                    }
+                    //将全部结果加上得分放入数组
+                    if($value->type !== '.cp.'){
                         $parent = $this->insertValue([$value->parent],$parent,$increment);
+                    }
+                    if(isset($data['case']) && $data['case']['status']<5){
                         if(!empty($value->type) && $value->type !== ".cp."){
                             $case = $this->insertValue([$value->type."#".$value->grammar],$case,$increment);
                         }
+                    }
+                    if($data['factors']['status'] < 50){
                         $factors = $this->insertValue([$value->factors],$factors,$increment);
-                        $factorMeaning = $this->insertValue([$value->factormean],$factorMeaning,$increment);
+                    }
+                    if(isset($data['factorMeaning']) && $data['factorMeaning']['status'] < 50){
+                        $factorMeaning = $this->insertValue([$value->factormean],$factorMeaning,$increment,false);
+                    }
+
+                    if($data['meaning']['status'] < 50){
                         if($this->langCheck($lang,$value->language)){
                             $meaning = $this->insertValue(explode('$',$value->mean),$meaning,$increment,false);
                         }
                     }
-                    if(count($case)>0){
-                        arsort($case);
-                        $first = array_keys($case)[0];
-                        $data['case'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
-                    }
-                    if(count($parent)>0){
-                        arsort($parent);
-                        $first = array_keys($parent)[0];
-                        $data['parent'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
-                    }
-                    if(count($factors)>0){
-                        arsort($factors);
-                        $first = array_keys($factors)[0];
-                        $data['factors'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
-                    }
-                    //拆分意思
-                    if(count($factorMeaning)>0){
-                        arsort($factorMeaning);
-                        $first = array_keys($factorMeaning)[0];
-                        $data['factorMeaning'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
-                    }
+                }
+                if(count($case)>0){
+                    arsort($case);
+                    $first = array_keys($case)[0];
+                    $data['case'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
+                }
+                if(count($parent)>0){
+                    arsort($parent);
+                    $first = array_keys($parent)[0];
+                    $data['parent'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
+                }
+                if(count($factors)>0 && empty($data['factors']['value'])){
+                    arsort($factors);
+                    $first = array_keys($factors)[0];
+                    $data['factors'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
+                }
+
+                if(count($factorMeaning)>0){
+                    arsort($factorMeaning);
+                    $first = array_keys($factorMeaning)[0];
+                    $data['factorMeaning'] = ['value'=>$first==="_null"?"":$first,'status'=>5];
+                }
+                if(isset($data['factorMeaning']) && $data['factorMeaning']['status']<5){
                     $wbwFactorMeaning = [];
                     if(!empty($data['factors']['value'])){
                         foreach (explode("+",$data['factors']['value']) as  $factor) {
-                            # code...
-                            $wbwAnalyses = WbwAnalysis::where('wbw_word',$factor)
-                                                      ->where('type',7)
-                                                      ->selectRaw('data,count(*)')
-                                                      ->groupBy("data")
-                                                      ->orderBy("count", "desc")
-                                                      ->first();
-                            if($wbwAnalyses){
-                                $wbwFactorMeaning[]=$wbwAnalyses->data;
+                            $preference = $this->wbwPreference($factor,'meaning',$user['user_id']);
+                            if($preference!==false){
+                                $wbwFactorMeaning[] = $preference['value'];
                             }else{
-                                $wbwFactorMeaning[]="";
+                                $wbwFactorMeaning[] = $factor;
                             }
                         }
                     }
                     $data['factorMeaning'] = ['value'=>implode('+',$wbwFactorMeaning),'status'=>3];
+                }
 
-                    if(!empty($data['parent'])){
-                        if(isset($indexed[$data['parent']['value']])){
-                            foreach ($indexed[$data['parent']['value']] as $value) {
-                                //根据base 查找词意
-                                //非base优先
-                                $increment = 10;
-                                if($this->langCheck($lang,$value->language)){
-                                    $meaning = $this->insertValue(explode('$',$value->mean),$meaning,$increment,false);
-                                }
-                                //查找词源
-                                if(!empty($value->parent) && $value->parent !== $value->word && strstr($value->type,"base") !== FALSE ){
-                                    $parent2 = $this->insertValue([$value->grammar."$".$value->parent],$parent2,1,false);
-                                }
+                if(empty($data['meaning']['value']) && !empty($data['parent']['value'])){
+                    if(isset($indexed[$data['parent']['value']])){
+                        foreach ($indexed[$data['parent']['value']] as $value) {
+                            //根据base 查找词意
+                            //非base优先
+                            $increment = 10;
+                            if($this->langCheck($lang,$value->language)){
+                                $meaning = $this->insertValue(explode('$',$value->mean),$meaning,$increment,false);
+                            }
+                            //查找词源
+                            if(!empty($value->parent) && $value->parent !== $value->word && strstr($value->type,"base") !== FALSE ){
+                                $parent2 = $this->insertValue([$value->grammar."$".$value->parent],$parent2,1,false);
                             }
                         }
                     }
-                    if(count($meaning)>0){
-                        arsort($meaning);
-                        $first = array_keys($meaning)[0];
-                        $data['meaning'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
+                }
+                if(count($meaning)>0){
+                    arsort($meaning);
+                    $first = array_keys($meaning)[0];
+                    $data['meaning'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
+                }
+                if(count($parent2)>0){
+                    arsort($parent2);
+                    $first = explode("$",array_keys($parent2)[0]);
+                    $data['parent2'] = ['value'=>$first[1],'status'=>3];
+                    $data['grammar2'] = ['value'=>$first[0],'status'=>3];
+                }
+            }
+
+            if(!isset($data['factorMeaning']['value']) ||
+                $this->fmEmpty($data['factorMeaning']['value'])){
+                $factorMeaning = [];
+                //生成自动的拆分意思
+                $autoMeaning = '';
+                $currFactors = explode('+',$data['factors']['value']) ;
+                $autoFM = [];
+                foreach ($currFactors as $factor) {
+                    $subFactors = explode('-',$factor) ;
+                    $autoSubFM = [];
+                    foreach ($subFactors as $subFactor) {
+                        $preference = $this->wbwPreference($subFactor,'factorMeaning',$user['user_id']);
+                        if($preference !== false){
+                            $autoSubFM[] = $preference['value'];
+                        }else{
+                            $preference = $this->wbwPreference($subFactor,'meaning',$user['user_id']);
+                            if($preference !== false){
+                                $autoSubFM[] = $preference['value'];
+                            }else{
+                                $autoSubFM[] = '';
+                            }
+
+                        }
                     }
-                    if(count($parent2)>0){
-                        arsort($parent2);
-                        $first = explode("$",array_keys($parent2)[0]);
-                        $data['parent2'] = ['value'=>$first[1],'status'=>3];
-                        $data['grammar2'] = ['value'=>$first[0],'status'=>3];
+                    $autoFM[] = implode('-',$autoSubFM);
+                    $autoMeaning .= implode('',$autoSubFM);
+                }
+                $autoMeaning .= implode('',$autoFM);
+                if(count($autoFM) > 0){
+                    $data['factorMeaning'] = ['value'=>implode('+',$autoFM),'status'=>3];
+                    if(empty($data['meaning']['value']) && !empty($autoMeaning)){
+                        $data['meaning'] = ['value'=>$autoMeaning,'status'=>3];
                     }
                 }
-                $orgData[$key] = $data;
             }
+
+
+            $orgData[$key] = $data;
         }
         return $this->ok($orgData);
     }
 
+    private function fmEmpty($value){
+        if(str_replace(['+','-',' '],'',$value) === ''){
+            return true;
+        }else{
+            return false;
+        }
+    }
     /**
      * 自动查词
      *
@@ -380,24 +499,20 @@ class WbwLookupController extends Controller
                     //根据base 查找词意
                     if(!empty($data['parent'])){
                         if(isset($indexed[$data['parent']['value']])){
-                            Log::info($data['parent']['value']."=".count($indexed[$data['parent']['value']]));
                             foreach ($indexed[$data['parent']['value']] as $value) {
                                 //非base优先
                                 $increment = 10;
                                 $meaning = $this->insertValue(explode('$',$value->mean),$meaning,$increment,false);
                             }
                         }else{
-                            Log::error("no set parent".$data['parent']['value']);
+                            //Log::error("no set parent".$data['parent']['value']);
                         }
                     }
                     if(count($meaning)>0){
                         arsort($meaning);
-                        Log::info('meanings=');
-                        Log::info(array_keys($meaning));
                         $first = array_keys($meaning)[0];
                         $data['meaning'] = ['value'=>$first==="_null"?"":$first,'status'=>3];
                     }
-
                 }
             }
             $wbwContent[]  = $data;
@@ -418,10 +533,13 @@ class WbwLookupController extends Controller
         return $indexed;
     }
 
+    /**
+     * $empty：是否允许空值
+     */
     private function insertValue($value,$container,$increment,$empty=true){
         foreach ($value as $one) {
             if($empty === false){
-                if(empty($one)){
+                if($this->fmEmpty($one)){
                     break;
                 }
             }

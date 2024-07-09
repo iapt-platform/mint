@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\UserDict;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 
 class DictMeaningController extends Controller
 {
@@ -49,7 +50,7 @@ class DictMeaningController extends Controller
             foreach ($this->langOrder[$lang] as $key => $value) {
                 # 遍历每种语言。找到返回
                 $cacheKey = "dict_first_mean/{$value}/{$word}";
-                $meaning = Cache::get($cacheKey);
+                $meaning = RedisClusters::get($cacheKey);
                 if(!empty($meaning)){
                     $currMeaning = $meaning;
                     break;

@@ -76,7 +76,7 @@ require_once "../pcdl/html_head.php";
 		echo "_end=".$_GET["end"].";";
 	}
 
-	
+
 	if(isset($_GET["mode"]) && $_GET["mode"]=="edit" && isset($_COOKIE["userid"])){
 		#登录状态下 编辑模式
 		$_mode = "edit";
@@ -91,11 +91,11 @@ require_once "../pcdl/html_head.php";
 	if(isset($_GET["display"])){
 		if($_mode == "edit"){
 			$_display = "sent";
-			echo "_display='sent';";	
+			echo "_display='sent';";
 		}
 		else{
 			$_display = $_GET["display"];
-			echo "_display='".$_GET["display"]."';";	
+			echo "_display='".$_GET["display"]."';";
 		}
 	}
 	else{
@@ -105,10 +105,10 @@ require_once "../pcdl/html_head.php";
 		}
 		else{
 			$_display = "sent";
-			echo "_display='sent';";			
+			echo "_display='sent';";
 		}
 
-	}	
+	}
 	if(isset($_GET["direction"])){
 		$_direction = $_GET["direction"];
 		echo "_direction='".$_GET["direction"]."';";
@@ -137,7 +137,7 @@ require_once "../pcdl/html_head.php";
 		$contentClass .= ' sent_mode ';
 	}
 	$contentClass .= " $_mode ";
-	
+
 	?>
 	</script>
 
@@ -216,11 +216,11 @@ span.fancytree-node{
 }
 .channel_select_button{
 	color: var(--link-color);
-	
+
 }
 .channel_select_button:hover{
 	text-decoration-line: underline;
-	
+
 }
 .sent_tran_div a{
 	white-space: normal;
@@ -292,9 +292,32 @@ function set_toc_visible(isVisible){
 
 	<div style="margin: auto 0;">
 		<span id="head_span">
-
 		<?php
-		
+        $link = '/pcd/article/'.$_GET["view"].'/';
+        if(isset($_GET["channel"])){
+            $channel = str_replace(',','_',$_GET["channel"]);
+        }else if(isset($_GET["channal"])){
+            $channel = str_replace(',','_',$_GET["channal"]);
+        }
+        switch ($_GET["view"]) {
+            case 'chapter':
+            case 'para':
+                $link .= $_GET["book"].'-'.$_GET["par"].'?book='.$_GET["book"].'&par='.$_GET["par"];
+                break;
+            case 'article':
+                $link .= $_GET["id"];
+                if(isset($_GET['collection'])){
+                    $link .= '?anthology='.$_GET["collection"];
+                }
+                break;
+            default:
+                # code...
+                break;
+        }
+        if(isset($channel)){
+            $link .='&channel='.$channel;
+        }
+        echo "<a href='{$link}' target='_blank'>在新版中打开</a>";
 		if(isset($_GET["view"]) && $_GET["view"]=="article"){
 			echo "<button class='icon_btn show_pc'  title='{$_local->gui->modify} {$_local->gui->composition_structure}'>";
 			echo "<a href='../article/my_article_edit.php?id=".$_GET["id"];
@@ -302,7 +325,8 @@ function set_toc_visible(isVisible){
 		}
 		if($_GET["view"]!=="article" && $_GET["view"]!=="collection"){
 ?>
-	<span id="convert_article" class="icon_btn_div show_pc">				
+	<span id="convert_article" class="icon_btn_div show_pc">
+
 		<button id="file_add" type="button" class="icon_btn" onclick="to_article()" title=" ">
 			<svg class="icon">
 				<use xlink:href="../studio/svg/icon.svg#ic_add_circle"></use>
@@ -310,7 +334,7 @@ function set_toc_visible(isVisible){
 			转换为文章
 		</button>
 		<div id='article_add_div' class="float_dlg"></div>
-	</span>	
+	</span>
 <?php
 		}
 			echo "<button class='icon_btn show_pc'  title='{$_local->gui->add}{$_local->gui->subfield}'>";
@@ -339,9 +363,9 @@ function set_toc_visible(isVisible){
 			if(isset($_GET["end"])){
 				echo "&end=".$_GET["end"];
 			}
-			echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";	
-				
-		
+			echo "'>{$_local->gui->add}{$_local->gui->subfield}</a></button>";
+
+
 
 		?>
 		<button id="btn_show_channel" class="icon_btn show_pc" onclick='show_channel_detail_pannal()'>
@@ -363,7 +387,7 @@ function set_toc_visible(isVisible){
 
 <div id="main_view" class="main_view <?php echo $classMode;?>">
 	<div id="article_head" style="border-bottom: 1px solid gray;">
-		<div id="head_nav" >	
+		<div id="head_nav" >
 			<div id="head_nav_left" >
 				<div id="article_path" class=""></div>
 				<div id="article_path_title"></div>
@@ -412,15 +436,15 @@ function set_toc_visible(isVisible){
 					<span id="contents_nav_left_inner" ></span>
 					</div>
 					<div id="contents_nav_right"  class="nav_bnt nav_right" onclick="goto_next()">
-					<span id="contents_nav_right_inner" ></span>		
+					<span id="contents_nav_right_inner" ></span>
 					<svg class='icon' style='fill: var(--box-bg-color1)'>
 						<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#chevron-right'>
 					</svg>
-							
+
 					</div>
 				</div>
 				<div id="contents_dicuse">
-				
+
 				</div>
 			</div>
 		</div>
@@ -452,14 +476,14 @@ function set_toc_visible(isVisible){
 				set_toc_visible(false);
 			}else{
 				set_toc_visible(true);
-			}			
+			}
 		}else{
 			set_toc_visible(false);
 		}
 
-		
+
 		article_add_dlg_init("article_add_div");
-	ntf_init();				
+	ntf_init();
 	click_dropdown_init();
 	note_create();
 	historay_init();
@@ -505,32 +529,32 @@ function set_toc_visible(isVisible){
 	});
 
 	 window.addEventListener('scroll',winScroll);
-	function winScroll(e){ 
+	function winScroll(e){
 		if(GetPageScroll().y>220){
 
 		}
 		else{
 
 		}
-		
+
 	}
  //滚动条位置
-function GetPageScroll() 
-{ 
+function GetPageScroll()
+{
 	var pos=new Object();
-	var x, y; 
-	if(window.pageYOffset) 
-	{	// all except IE	
-		y = window.pageYOffset;	
-		x = window.pageXOffset; 
-	} else if(document.documentElement && document.documentElement.scrollTop) 
-	{	// IE 6 Strict	
-		y = document.documentElement.scrollTop;	
-		x = document.documentElement.scrollLeft; 
-	} else if(document.body) {	// all other IE	
-		y = document.body.scrollTop;	
-		x = document.body.scrollLeft;   
-	} 
+	var x, y;
+	if(window.pageYOffset)
+	{	// all except IE
+		y = window.pageYOffset;
+		x = window.pageXOffset;
+	} else if(document.documentElement && document.documentElement.scrollTop)
+	{	// IE 6 Strict
+		y = document.documentElement.scrollTop;
+		x = document.documentElement.scrollLeft;
+	} else if(document.body) {	// all other IE
+		y = document.body.scrollTop;
+		x = document.body.scrollLeft;
+	}
 	pos.x=x;
 	pos.y=y;
 	return(pos);

@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Api\AuthApi;
 use App\Http\Api\UserApi;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 
 class UserStatisticController extends Controller
 {
@@ -52,56 +53,85 @@ class UserStatisticController extends Controller
      * @param  \App\Models\UserOperationDaily  $userOperationDaily
      * @return \Illuminate\Http\Response
      */
-    public function show(string $userName)
+    public function show(Request $request,string $userName)
     {
         //
         $queryUserId = UserApi::getIntIdByName($userName);
         $queryUserUuid = UserApi::getIdByName($userName);
-        $cacheExpiry = 600;
+        $cacheExpiry = config('mint.cache.expire');
+
+        $expSum = 0;
+        $wbwCount = 0;
+        $lookupCount = 0;
+        $translationCount = 0;
+        $translationCountPub = 0;
+        $termCount = 0;
+        $termCountWithNote = 0;
+        $myDictCount = 0;
         //总经验值
-        $expSum = Cache::remember("user/{$userName}/exp/sum",$cacheExpiry,function() use($queryUserId){
-			return UserOperationDaily::where('user_id',$queryUserId)
-                                     ->sum('duration');
-		});
+        if(!$request->has('view') || $request->get('view') === 'exp-sum'){
+            $expSum = RedisClusters::remember("user/{$userName}/exp/sum",$cacheExpiry,
+                    function() use($queryUserId){
+                        return UserOperationDaily::where('user_id',$queryUserId)
+                                ->sum('duration');
+            });
+        }
 
         //逐词解析
-        $wbwCount = Cache::remember("user/{$userName}/wbw/count",$cacheExpiry,function() use($queryUserId){
-                    return Wbw::where('editor_id',$queryUserId)
-                        ->count();
-                        });
+        if(!$request->has('view') || $request->get('view') === 'wbw-count'){
+            $wbwCount = RedisClusters::remember("user/{$userName}/wbw/count",$cacheExpiry,
+                        function() use($queryUserId){
+                            return Wbw::where('editor_id',$queryUserId)
+                                ->count();
+                            });
+        }
+
         //查字典次数
-        $lookupCount = Cache::remember("user/{$userName}/lookup/count",$cacheExpiry,function() use($queryUserId){
-                            return UserOperationLog::where('user_id',$queryUserId)
-                                                    ->where('op_type','dict_lookup')
-                                                    ->count();
-                                });
+        if(!$request->has('view') || $request->get('view') === 'lookup-count'){
+            $lookupCount = RedisClusters::remember("user/{$userName}/lookup/count",$cacheExpiry,
+                            function() use($queryUserId){
+                                return UserOperationLog::where('user_id',$queryUserId)
+                                                        ->where('op_type','dict_lookup')
+                                                        ->count();
+                                    });
+        }
         //译文
         //TODO 判断是否是译文channel
-        $translationCount = Cache::remember("user/{$userName}/translation/count",$cacheExpiry,function() use($queryUserUuid){
-                            return Sentence::where('editor_uid',$queryUserUuid)
-                                           ->count();
-                            });
-        $translationCountPub = Cache::remember("user/{$userName}/translation/count-pub",$cacheExpiry,function() use($queryUserUuid){
-                                    return Sentence::where('editor_uid',$queryUserUuid)
-                                    ->where('status',30)
-                                    ->count();
+        if(!$request->has('view') || $request->get('view') === 'translation-count'){
+            $translationCount = RedisClusters::remember("user/{$userName}/translation/count",$cacheExpiry,
+                                function() use($queryUserUuid){
+                                return Sentence::where('editor_uid',$queryUserUuid)
+                                            ->count();
                                 });
+            $translationCountPub = RedisClusters::remember("user/{$userName}/translation/count-pub",$cacheExpiry,
+                                    function() use($queryUserUuid){
+                                        return Sentence::where('editor_uid',$queryUserUuid)
+                                        ->where('status',30)
+                                        ->count();
+                                    });
+        }
         //术语
-        $termCount = Cache::remember("user/{$userName}/term/count",$cacheExpiry,function() use($queryUserId){
-                        return DhammaTerm::where('editor_id',$queryUserId)
-                                    ->count();
-                    });
-        $termCountWithNote = Cache::remember("user/{$userName}/term/count-note",$cacheExpiry,function() use($queryUserId){
-                                return DhammaTerm::where('editor_id',$queryUserId)
-                                                    ->where('note',"<>","")
-                                                    ->count();
-                                });
-        //单词本
-        $myDictCount = Cache::remember("user/{$userName}/dict/count",$cacheExpiry,function() use($queryUserId){
-                            return UserDict::where('creator_id',$queryUserId)
+        if(!$request->has('view') || $request->get('view') === 'term-count'){
+            $termCount = RedisClusters::remember("user/{$userName}/term/count",$cacheExpiry,
+                        function() use($queryUserId){
+                            return DhammaTerm::where('editor_id',$queryUserId)
                                         ->count();
                         });
-
+            $termCountWithNote = RedisClusters::remember("user/{$userName}/term/count-note",$cacheExpiry,
+                                function() use($queryUserId){
+                                    return DhammaTerm::where('editor_id',$queryUserId)
+                                                        ->where('note',"<>","")
+                                                        ->count();
+                                    });
+        }
+        //单词本
+        if(!$request->has('view') || $request->get('view') === 'my-dict-count'){
+            $myDictCount = RedisClusters::remember("user/{$userName}/dict/count",$cacheExpiry,
+                            function() use($queryUserId){
+                                return UserDict::where('creator_id',$queryUserId)
+                                            ->count();
+                            });
+        }
         return $this->ok([
             "exp" => ["sum"=>(int)$expSum],
             "wbw" => ["count"=>(int)$wbwCount],

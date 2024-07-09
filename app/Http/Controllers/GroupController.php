@@ -51,31 +51,24 @@ class GroupController extends Controller
                     $table = $table->where('owner','<>', $studioId);
                 }
 				break;
-            case 'key':
-                $table = GroupInfo::select($indexCol)->where('name','like', $request->get('key')."%");
+            case 'all':
+                $table = GroupInfo::select($indexCol);
                 break;
         }
         if($request->has("search")){
             $table = $table->where('name', 'like', "%" . $request->get("search")."%");
         }
         $count = $table->count();
-        if(isset($_GET["order"]) && isset($_GET["dir"])){
-            $table = $table->orderBy($_GET["order"],$_GET["dir"]);
-        }else{
-            if($request->get('view') === 'studio_list'){
-                $table = $table->orderBy('count','desc');
-            }else{
-                $table = $table->orderBy('updated_at','desc');
-            }
-        }
 
-        if(isset($_GET["limit"])){
-            $offset = 0;
-            if(isset($_GET["offset"])){
-                $offset = $_GET["offset"];
-            }
-            $table = $table->skip($offset)->take($_GET["limit"]);
+        if($request->get('view') === 'studio_list'){
+            $table = $table->orderBy('count','desc');
+        }else{
+            $table = $table->orderBy($request->get('order','updated_at'),
+                                        $request->get('dir','desc'));
         }
+        $table->skip($request->get('offset',0))
+              ->take($request->get('limit',1000));
+
         $result = $table->get();
 		if($result){
 			return $this->ok(["rows"=>GroupResource::collection($result),"count"=>$count]);
@@ -165,17 +158,22 @@ class GroupController extends Controller
 		if(!$result){
             return $this->error("没有查询到数据");
 		}
-        if($result->status<30){
+        if($result->status < 30){
             //私有，判断权限
             $user = AuthApi::current($request);
             if(!$user){
                 return $this->error(__('auth.failed'));
             }
-            //判断当前用户是否有指定的studio的权限
+            //判断当前用户是否有指定的group的权限
             if($user['user_uid'] !== $result->owner){
                 //非所有者
-                //TODO 判断是否协作
-                return $this->error(__('auth.failed'));
+                //判断是否协作
+                $power = GroupMember::where('group_id', $id)
+                            ->where('user_id',$user['user_uid'])
+                            ->value('power');
+                if($power === null){
+                   return $this->error(__('auth.failed'));
+                }
             }
         }
         return $this->ok(new GroupResource($result));

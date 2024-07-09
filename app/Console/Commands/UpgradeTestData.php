@@ -39,6 +39,9 @@ class UpgradeTestData extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $this->call('init:cs6sentence',[$this->argument('book')]);
         $this->call('upgrade:wbw.template',[$this->argument('book')]);
         $this->call('upgrade:chapter.dynamic.weekly',["--book"=>$this->argument('book'),"--offset"=>300]);

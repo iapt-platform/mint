@@ -4,12 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Sentence;
 use App\Models\Channel;
+use App\Models\SentHistory;
+use App\Models\WbwAnalysis;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
+
 use App\Http\Resources\SentResource;
 use App\Http\Api\AuthApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\PaliTextApi;
+use App\Http\Api\Mq;
+
+use App\Tools\RedisClusters;
+use App\Tools\OpsLog;
+
 
 class SentenceController extends Controller
 {
@@ -20,8 +33,11 @@ class SentenceController extends Controller
      */
     public function index(Request $request)
     {
+        $user = AuthApi::current($request);
         $result=false;
-		$indexCol = ['id','book_id','paragraph','word_start','word_end','content','content_type','channel_uid','editor_uid','acceptor_uid','pr_edit_at','updated_at'];
+		$indexCol = ['id','uid','book_id','paragraph',
+                    'word_start','word_end','content','content_type',
+                    'channel_uid','editor_uid','fork_at','acceptor_uid','pr_edit_at','updated_at'];
 
 		switch ($request->get('view')) {
             case 'public':
@@ -61,6 +77,7 @@ class SentenceController extends Controller
 
                 break;
             case 'channel':
+                //句子编号列表在某个channel下的全部内容
                 $sent = explode(',',$request->get('sentence')) ;
                 $query = [];
                 foreach ($sent as $value) {
@@ -83,9 +100,13 @@ class SentenceController extends Controller
                 $channelPub = $channelTable->where('status',30)->get();
 
                 $user = AuthApi::current($request);
+                $channelShare=array();
+                $channelMy=array();
                 if($user){
                     //自己的
-                    $channelMy = $channelTable->where('owner_uid',$user['user_uid'])->get();
+                    $channelMy = Channel::where('owner_uid',$user['user_uid'])
+                                        ->where('type',$type)
+                                        ->get();
                     //协作
                     $channelShare = ShareApi::getResList($user['user_uid'],2);
                 }
@@ -117,35 +138,77 @@ class SentenceController extends Controller
                     ];
                 }
                 $channels = [];
+                $excludeChannels = explode(',',$request->get('excludes')) ;
+
                 foreach ($channelCanRead as $key => $value) {
                     # code...
-                    $channels[] = $key;
+                    if(!in_array($key,$excludeChannels)){
+                        $channels[] = $key;
+                    }
                 }
                 $sent = explode('-',$request->get('sentence')) ;
                 $table = Sentence::select($indexCol)
                                 ->whereIn('channel_uid', $channels)
+                                ->where('ver','>',1)
                                 ->where('book_id',$sent[0])
                                 ->where('paragraph',$sent[1])
                                 ->where('word_start',$sent[2])
                                 ->where('word_end',$sent[3]);
+                break;
+            case 'chapter':
+                $chapter =  PaliTextApi::getChapterStartEnd($request->get('book'),$request->get('para'));
+                $table = Sentence::where('ver','>',1)
+                                    ->where('book_id',$request->get('book'))
+                                    ->whereBetween('paragraph',$chapter)
+                                    ->whereIn('channel_uid',explode(',',$request->get('channels')));
+                break;
+            case 'paragraph':
+                $table = Sentence::where('ver','>',1)
+                                    ->where('book_id',$request->get('book'))
+                                    ->whereIn('paragraph',explode(',',$request->get('para')))
+                                    ->whereIn('channel_uid',explode(',',$request->get('channels')))
+                                    ->orderBy('book_id')->orderBy('paragraph')->orderBy('word_start');
+                break;
+            case 'my-edit':
+                //我编辑的
+                if(!$user){
+                    return $this->error(__('auth.failed'),401,401);
+                }
+                $table = Sentence::where('editor_uid',$user['user_uid'])
+                                ->where('ver','>',1);
+                break;
 			default:
 				# code...
 				break;
 		}
+        if(!empty($request->get("key"))){
+            $table = $table->where('content','like', '%'.$request->get("key").'%');
+        }
+
         $count = $table->count();
         if($request->get('strlen',false)){
             $totalStrLen = $table->sum('strlen');
         }
-        $table = $table->orderBy($request->get('order','updated_at'),$request->get('dir','desc'));
+        if($request->get('view') !== 'paragraph'){
+            $table = $table->orderBy($request->get('order','updated_at'),
+                                    $request->get('dir','desc'));
+        }
+
         $table = $table->skip($request->get("offset",0))
                        ->take($request->get('limit',1000));
         $result = $table->get();
 
 		if($result){
-            if($request->get('view') === 'sent-can-read'){
-                $output = ["rows"=>SentResource::collection($result),"count"=>$count];
+            $output = ["count"=>$count];
+            if($request->get('view') === 'sent-can-read' ||
+                $request->get('view') === 'channel' ||
+                $request->get('view') === 'chapter' ||
+                $request->get('view') === 'paragraph' ||
+                $request->get('view') === 'my-edit'
+                ){
+                $output["rows"] = SentResource::collection($result);
             }else{
-                $output = ["rows"=>$result,"count"=>$count];
+                $output["rows"] = $result;
             }
             if(isset($totalStrLen)){
                 $output['total_strlen'] = $totalStrLen;
@@ -201,21 +264,26 @@ class SentenceController extends Controller
         $user = AuthApi::current($request);
         if(!$user ){
             //未登录用户
-            return $this->error(__('auth.failed'),[],401);
+            return $this->error(__('auth.failed'),401,401);
         }
         $channel = Channel::where('uid',$request->get('channel'))->first();
         if(!$channel){
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),403,403);
         }
         if($channel->owner_uid !== $user["user_uid"]){
             //判断是否为协作
-            $power = ShareApi::getResPower($user["user_uid"],$channel->uid);
-            if($power<30){
-                return $this->error(__('auth.failed'));
+            $power = ShareApi::getResPower($user["user_uid"],$channel->uid,2);
+            if($power < 20){
+                return $this->error(__('auth.failed'),403,403);
             }
         }
+        $sentFirst=null;
+        $changedSent = [];
         foreach ($request->get('sentences') as $key => $sent) {
             # code...
+            if($sentFirst === null){
+                $sentFirst = $sent;
+            }
             $row = Sentence::firstOrNew([
                 "book_id"=>$sent['book_id'],
                 "paragraph"=>$sent['paragraph'],
@@ -224,20 +292,85 @@ class SentenceController extends Controller
                 "channel_uid"=>$channel->uid,
             ],[
                 "id"=>app('snowflake')->id(),
-                "uid"=>Str::orderedUuid(),
+                "uid"=>Str::uuid(),
             ]);
             $row->content = $sent['content'];
+            if(isset($sent['content_type']) && !empty($sent['content_type'])){
+                $row->content_type = $sent['content_type'];
+            }
             $row->strlen = mb_strlen($sent['content'],"UTF-8");
             $row->language = $channel->lang;
             $row->status = $channel->status;
-            $row->editor_uid = $user["user_uid"];
+            if($request->has('copy')){
+                //复制句子，保留原作者信息
+                $row->editor_uid = $sent["editor_uid"];
+                $row->acceptor_uid = $user["user_uid"];
+                $row->pr_edit_at = $sent["updated_at"];
+                if($request->has('fork_from')){
+                    $row->fork_at = now();
+                }
+            }else{
+                $row->editor_uid = $user["user_uid"];
+                $row->acceptor_uid = null;
+                $row->pr_edit_at = null;
+            }
             $row->create_time = time()*1000;
             $row->modify_time = time()*1000;
             $row->save();
+
+            $changedSent[] = $row->uid;
+
+            //保存历史记录
+            if($request->has('copy')){
+                $fork_from = $request->get('fork_from',null);
+                $this->saveHistory($row->uid,
+                                $sent["editor_uid"],
+                                $sent['content'],
+                                $user["user_uid"],
+                                $fork_from);
+            }else{
+                $this->saveHistory($row->uid,$user["user_uid"],$sent['content'],$user["user_uid"]);
+            }
+            //清除缓存
+            $sentId = "{$sent['book_id']}-{$sent['paragraph']}-{$sent['word_start']}-{$sent['word_end']}";
+            $hKey = "/sentence/res-count/{$sentId}/";
+            Redis::del($hKey);
         }
-        return $this->ok(count($request->get('sentences')));
+        if($sentFirst !== null){
+            Mq::publish('progress',['book'=>$sentFirst['book_id'],
+                                'para'=>$sentFirst['paragraph'],
+                                'channel'=>$channel->uid,
+                                ]);
+        }
+
+        $result = Sentence::whereIn('uid', $changedSent)->get();
+        return $this->ok([
+            'rows'=>SentResource::collection($result),
+            'count'=>count($result)
+        ]);
     }
 
+    private function saveHistory($uid,$editor,$content,$user_uid=null,$fork_from=null,$pr_from=null){
+        $newHis = new SentHistory();
+        $newHis->id = app('snowflake')->id();
+        $newHis->sent_uid = $uid;
+        $newHis->user_uid = $editor;
+        if(empty($content)){
+            $newHis->content = "";
+        }else{
+            $newHis->content = $content;
+        }
+        if($fork_from){
+            $newHis->fork_from = $fork_from;
+            $newHis->accepter_uid = $user_uid;
+        }
+        if($pr_from){
+            $newHis->pr_from = $pr_from;
+            $newHis->accepter_uid = $user_uid;
+        }
+        $newHis->create_time = time()*1000;
+        $newHis->save();
+    }
     /**
      * Display the specified resource.
      *
@@ -247,6 +380,7 @@ class SentenceController extends Controller
     public function show(Sentence $sentence)
     {
         //
+        return $this->ok(new SentResource($sentence));
     }
 
 
@@ -266,15 +400,18 @@ class SentenceController extends Controller
         $user = AuthApi::current($request);
         if(!$user){
             //未登录鉴权失败
-            return $this->error(__('auth.failed'),[],403);
+            return $this->error(__('auth.failed'),403,403);
         }
         $channel = Channel::where('uid',$param[4])->first();
         if(!$channel){
             return $this->error("not found channel");
         }
         if($channel->owner_uid !== $user["user_uid"]){
-            //TODO 判断是否为协作
-            return $this->error(__('auth.failed'),[],403);
+            // 判断是否为协作
+            $power = ShareApi::getResPower($user["user_uid"],$channel->uid,2);
+            if($power < 20){
+                return $this->error(__('auth.failed'),403,403);
+            }
         }
 
         $sent = Sentence::firstOrNew([
@@ -294,16 +431,55 @@ class SentenceController extends Controller
         }
         $sent->language = $channel->lang;
         $sent->status = $channel->status;
-        $sent->editor_uid = $user["user_uid"];
         $sent->strlen = mb_strlen($request->get('content'),"UTF-8");
         $sent->modify_time = time()*1000;
         if($request->has('prEditor')){
+            $realEditor = $request->get('prEditor');
             $sent->acceptor_uid = $user["user_uid"];
             $sent->pr_edit_at = $request->get('prEditAt');
-            $sent->editor_uid = $request->get('prEditor');
             $sent->pr_id = $request->get('prId');
+        }else{
+            $realEditor = $user["user_uid"];
+            $sent->acceptor_uid = null;
+            $sent->pr_edit_at = null;
+            $sent->pr_id = null;
         }
+        $sent->editor_uid = $realEditor;
         $sent->save();
+        $sent = $sent->refresh();
+        //清除缓存
+        $sentId = "{$sent['book_id']}-{$sent['paragraph']}-{$sent['word_start']}-{$sent['word_end']}";
+        $hKey = "/sentence/res-count/{$sentId}/";
+        Redis::del($hKey);
+        OpsLog::debug($user["user_uid"],$sent);
+
+        //清除cache
+        $channelId = $param[4];
+        $currSentId = "{$param[0]}-{$param[1]}-{$param[2]}-{$param[3]}";
+        RedisClusters::forget("/sent/{$channelId}/{$currSentId}");
+        //保存历史记录
+        if($request->has('prEditor')){
+            $this->saveHistory($sent->uid,
+                            $realEditor,
+                            $request->get('content'),
+                            $user["user_uid"],
+                            null,
+                            $request->get('prUuid'),
+                        );
+        }else{
+            $this->saveHistory($sent->uid,$realEditor,$request->get('content'));
+        }
+
+        Mq::publish('progress',['book'=>$param[0],
+                            'para'=>$param[1],
+                            'channel'=>$channelId,
+                            ]);
+        Mq::publish('content',new SentResource($sent));
+
+        if($channel->type === 'nissaya' && $sent->content_type === 'json'){
+            $this->updateWbwAnalyses($sent->content,$channel->lang,$user["user_id"]);
+        }
+
         return $this->ok(new SentResource($sent));
     }
 
@@ -316,5 +492,55 @@ class SentenceController extends Controller
     public function destroy(Sentence $sentence)
     {
         //
+    }
+
+    private function updateWbwAnalyses($data,$lang,$editorId){
+        $wbwData = json_decode($data);
+        $currWbwId = 0;
+        $prefix = 'wbw-preference';
+        foreach ($wbwData as $key => $word) {
+            # code...
+            if(count($word->sn) === 1 ){
+                $currWbwId = $word->uid;
+                WbwAnalysis::where('wbw_id',$word->uid)->delete();
+            }
+            $newData = [
+                'wbw_id' => $currWbwId,
+                'wbw_word' => $word->real->value,
+                'book_id' => $word->book,
+                'paragraph' => $word->para,
+                'wid' => $word->sn[0],
+                'type' => 0,
+                'data' => '',
+                'confidence' => 100,
+                'lang' => $lang,
+                'editor_id'=>$editorId,
+                'created_at'=>now(),
+                'updated_at'=>now()
+            ];
+            $newData['type'] = 3;
+            if(!empty($word->meaning->value)){
+                $newData['data'] = $word->meaning->value;
+                WbwAnalysis::insert($newData);
+                RedisClusters::put("{$prefix}/{$word->real->value}/3/{$editorId}",$word->meaning->value);
+                RedisClusters::put("{$prefix}/{$word->real->value}/3/0",$word->meaning->value);
+            }
+            if(isset($word->factors) && isset($word->factorMeaning)){
+                $factors = explode('+',str_replace('-','+',$word->factors->value));
+                $factorMeaning = explode('+',str_replace('-','+',$word->factorMeaning->value));
+                foreach ($factors as $key => $factor) {
+                    if(isset($factorMeaning[$key])){
+                        if(!empty($factorMeaning[$key])){
+                            $newData['wbw_word'] = $factor;
+                            $newData['data'] = $factorMeaning[$key];
+                            $newData['type'] = 5;
+                            WbwAnalysis::insert($newData);
+                            RedisClusters::put("{$prefix}/{$factor}/5/{$editorId}",$factorMeaning[$key]);
+                            RedisClusters::put("{$prefix}/{$factor}/5/0",$factorMeaning[$key]);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

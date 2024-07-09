@@ -19,7 +19,7 @@ class RelatedParagraphResource extends JsonResource
      */
     public function toArray($request)
     {
-        $bookTitle = BookTitle::where('id',$this["book_id"])->first();
+        $bookTitle = BookTitle::where('sn',$this["book_id"])->first();
         $data = [
             "book"=>$this['book'],
             "para"=> $this['para'],

@@ -1,7 +1,29 @@
 <?php
 namespace App\Tools;
+use Illuminate\Support\Facades\Log;
 
 class Tools{
+    public static function zip($zipFile,$files){
+        $zip = new \ZipArchive;
+        $res = $zip->open($zipFile, \ZipArchive::CREATE);
+        if ($res === TRUE) {
+            foreach ($files as $key => $value) {
+                $zip->addFromString($key, $value);
+            }
+            $zip->close();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static function isStop(){
+        if(file_exists(base_path('.stop'))){
+            Log::debug('.stop exists');
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     public static function getWordEn($strIn)
         {

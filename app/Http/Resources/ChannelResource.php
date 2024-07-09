@@ -22,6 +22,7 @@ class ChannelResource extends JsonResource
             "type" => $this->type,
             "studio" => StudioApi::getById($this->owner_uid),
             "lang" => $this->lang,
+            "is_system" => $this->is_system,
             "status" => $this->status,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,

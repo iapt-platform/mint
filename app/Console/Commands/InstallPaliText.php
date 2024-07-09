@@ -40,6 +40,9 @@ class InstallPaliText extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$this->info("instert pali text");
 		$startTime = time();
 
@@ -51,7 +54,7 @@ class InstallPaliText extends Command
 		}else if(empty($_to)){
 			$_to = $_from;
 		}
-		$fileListFileName = config("app.path.palitext_filelist");
+		$fileListFileName = config("mint.path.palitext_filelist");
 
 		$filelist = array();
 
@@ -61,18 +64,18 @@ class InstallPaliText extends Command
 		}
 		$bar = $this->output->createProgressBar($_to-$_from+1);
 
-		for ($from=$_from; $from <=$_to ; $from++) { 
+		for ($from=$_from; $from <=$_to ; $from++) {
 			# code...
-			
+
 			$fileSn = $from-1;
 			$FileName = $filelist[$fileSn][1];
-	
-			$dirXmlBase = config("app.path.palicsv") . "/";
+
+			$dirXmlBase = config("mint.path.palicsv") . "/";
 			$GLOBALS['data'] = array();
-    
+
 			// 打开vri html文件并读取数据
 			$pali_text_array = array();
-			$htmlFile = config("app.path.palitext") .'/'. $FileName.'.htm';
+			$htmlFile = config("mint.path.palitext") .'/'. $FileName.'.htm';
 			if (($fpPaliText = fopen($htmlFile, "r")) !== false) {
 				while (($data = fgets($fpPaliText)) !== false) {
 					if (substr($data, 0, 2) === "<p") {
@@ -85,9 +88,9 @@ class InstallPaliText extends Command
 				$this->error( "can not pali text file. filename=" . $htmlFile . PHP_EOL) ;
 				Log::error( "can not pali text file. filename=" . $htmlFile . PHP_EOL) ;
 			}
-			
+
 			$inputRow = 0;
-			$csvFile = config("app.path.palicsv") .'/'. $FileName .'/'. $FileName.'_pali.csv';
+			$csvFile = config("mint.path.palicsv") .'/'. $FileName .'/'. $FileName.'_pali.csv';
 			if (($fp = fopen($csvFile, "r")) !== false) {
 				while (($data = fgetcsv($fp, 0, ',')) !== false) {
 					if ($inputRow > 0) {
@@ -106,19 +109,19 @@ class InstallPaliText extends Command
 				Log::error( "can not open csv file. filename=" . $csvFile. PHP_EOL) ;
 				continue;
 			}
-			
+
 			if (($inputRow - 1) != count($pali_text_array)) {
 				$this->error( "line count error $FileName ".PHP_EOL);
 				Log::error( "line count error $FileName ".PHP_EOL);
 			}
-							 
-		
+
+
 			#删除目标数据库中数据
 			PaliText::where('book', $from)->delete();
 
 
 			// 打开文件并读取数据
-			
+
 
 			DB::transaction(function () {
 				foreach ($GLOBALS['data'] as $oneParam) {
@@ -139,9 +142,9 @@ class InstallPaliText extends Command
 					];
 					PaliText::create($params);
 				}
-				
+
 			});
-			
+
 			$bar->advance();
 		}
 		$bar->finish();

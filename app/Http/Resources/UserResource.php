@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\App;
 
 class UserResource extends JsonResource
 {
@@ -14,10 +16,24 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            "id"=>$this['userid'],
-            "userName"=> $this['username'],
-            "nickName"=> $this['nickname'],
+        $data = [
+            "id" => $this->userid,
+            "userName" => $this->username,
+            "nickName" => $this->nickname,
+            "email" => $this->email,
+            "role" => json_decode($this->role),
+            "created_at" => $this->created_at,
+            "updated_at" => $this->updated_at,
         ];
+        if($this->avatar){
+            $data['avatarName'] = $this->avatar;
+            $img = str_replace('.jpg','_s.jpg',$this->avatar);
+            if (App::environment('local')) {
+                $data['avatar'] = Storage::url($img);
+            }else{
+                $data['avatar'] = Storage::temporaryUrl($img, now()->addDays(6));
+            }
+        }
+        return $data;
     }
 }

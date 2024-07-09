@@ -43,12 +43,16 @@ class InitCs6sentence extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$start = time();
         $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
         if($channelId === false){
             $this->error('no channel');
             return 1;
         }
+        $this->info($channelId);
 		$pali = new PaliSentence;
 		if(!empty($this->argument('book'))){
 			$pali = $pali->where('book',$this->argument('book'));
@@ -58,7 +62,7 @@ class InitCs6sentence extends Command
 		}
 		$bar = $this->output->createProgressBar($pali->count());
 		$pali = $pali->select('book','paragraph','word_begin','word_end')->cursor();
-
+        $pageHead = ['M','P','T','V','O'];
 		foreach ($pali as $value) {
 			# code...
 			$words = WbwTemplate::where("book",$value->book)
@@ -74,8 +78,7 @@ class InitCs6sentence extends Command
 			foreach ($words as $word) {
 				# code...
 				//if($word->style != "note" && $word->type != '.ctl.')
-				if( $word->type != '.ctl.')
-                {
+				if( $word->type != '.ctl.'){
                     if($lastWord !== null){
                         if($word->real !== "ti" ){
 
@@ -86,7 +89,7 @@ class InitCs6sentence extends Command
                         }
                     }
 
-					if(strpos($word->word,'{') >=0 ){
+					if(strpos($word->word,'{') !== false ){
                         //一个单词里面含有黑体字的
 						$paliWord = \str_replace("{","<strong>",$word->word) ;
 						$paliWord = \str_replace("}","</strong>",$paliWord) ;
@@ -99,7 +102,16 @@ class InitCs6sentence extends Command
                         }
 					}
 
-				}
+				}else{
+                    $type = substr($word->word,0,1);
+                    if(in_array($type,$pageHead)){
+                        $arrPage = explode('.',$word->word);
+                        if(count($arrPage)===2){
+                            $pageNumber = $arrPage[0].'.'.(int)$arrPage[1];
+                           $sent .= "<code>{$pageNumber}</code>";
+                        }
+                    }
+                }
                 $lastWord = $word;
 			}
 
@@ -125,7 +137,7 @@ class InitCs6sentence extends Command
                     'create_time' => time()*1000,
 				]
 				);
-            $newRow->editor_uid = config("app.admin.root_uuid");
+            $newRow->editor_uid = config("mint.admin.root_uuid");
             $newRow->content = "<span>{$sent}</span>";
             $newRow->strlen = mb_strlen($sent,"UTF-8");
             $newRow->status = 10;

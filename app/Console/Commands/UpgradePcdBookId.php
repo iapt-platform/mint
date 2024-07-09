@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use App\Models\FtsText;
 use App\Models\WbwTemplate;
 use App\Models\BookTitle;
+use App\Models\PaliText;
+use App\Models\PageNumber;
 
 class UpgradePcdBookId extends Command
 {
@@ -40,20 +42,33 @@ class UpgradePcdBookId extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $table = $this->option('table');
-        $bookTitles = BookTitle::orderBy('id')->get();
+        $bookTitles = BookTitle::orderBy('sn')->get();
         $bar = $this->output->createProgressBar(count($bookTitles));
         foreach ($bookTitles as $key => $value) {
             # code...
             if($table === 'all' || $table ==='fts'){
                 FtsText::where('book',$value->book)
                     ->where('paragraph','>=',$value->paragraph)
-                    ->update(['pcd_book_id'=>$value->id]);
+                    ->update(['pcd_book_id'=>$value->sn]);
             }
             if($table === 'all' || $table ==='wbw'){
                 WbwTemplate::where('book',$value->book)
                     ->where('paragraph','>=',$value->paragraph)
-                    ->update(['pcd_book_id'=>$value->id]);
+                    ->update(['pcd_book_id'=>$value->sn]);
+            }
+            if($table === 'all' || $table ==='pali_text'){
+                PaliText::where('book',$value->book)
+                    ->where('paragraph','>=',$value->paragraph)
+                    ->update(['pcd_book_id'=>$value->sn]);
+            }
+            if($table === 'all' || $table ==='page_number'){
+                PageNumber::where('book',$value->book)
+                    ->where('paragraph','>=',$value->paragraph)
+                    ->update(['pcd_book_id'=>$value->sn]);
             }
             $bar->advance();
         }

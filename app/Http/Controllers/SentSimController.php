@@ -28,18 +28,13 @@ class SentSimController extends Controller
                     return $this->error("no sent");
                 }
                 $table = SentSim::where('sent1',$sentId)
-                                ->where('sim',">",0.7)
                                 ->orderBy('sim','desc');
                 break;
         }
+        $table->where('sim','>=',$request->get('sim',0));
         $count = $table->count();
-        if(!empty($request->get('limit'))){
-            $offset = 0;
-            if(!empty($request->get("offset"))){
-                $offset = $request->get("offset");
-            }
-            $table->skip($offset)->take($request->get('limit'));
-        }
+        $table->skip($request->get("offset",0))
+              ->take($request->get('limit',20));
         $result = $table->get();
         if($result){
             return $this->ok(["rows"=>SentSimResource::collection($result),"count"=>$count]);

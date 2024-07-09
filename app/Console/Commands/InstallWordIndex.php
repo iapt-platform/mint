@@ -40,6 +40,9 @@ class InstallWordIndex extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$startTime = time();
 
 		$info = "instert word in palibook ";
@@ -47,13 +50,13 @@ class InstallWordIndex extends Command
 		Log::info($info);
 
 		#删除目标数据库中数据
-		WordIndex::where('id', '>',-1)->delete();	
+		WordIndex::where('id', '>',-1)->delete();
 
-		$scan = scandir(config("app.path.paliword_index"));
+		$scan = scandir(config("mint.path.paliword_index"));
 		$bar = $this->output->createProgressBar(count($scan));
 		foreach($scan as $filename) {
 			$bar->advance();
-			$filename = config("app.path.paliword_index")."/".$filename;
+			$filename = config("mint.path.paliword_index")."/".$filename;
 			if (is_file($filename)) {
 				Log::info("doing ".$filename);
 				DB::transaction(function ()use($filename) {
@@ -69,12 +72,12 @@ class InstallWordIndex extends Command
 								'is_base'=>$data[5],
 								'len'=>$data[6],
 							];
-							WordIndex::create($newData);	
+							WordIndex::create($newData);
 							$count++;
 						}
 						Log::info("insert ".$count);
 					}
-				});				
+				});
 			}
 		}
 		$bar->finish();

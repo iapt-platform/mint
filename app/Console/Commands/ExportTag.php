@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Log;
 
 class ExportTag extends Command
 {
@@ -13,7 +14,7 @@ class ExportTag extends Command
      *
      * @var string
      */
-    protected $signature = 'export:tag';
+    protected $signature = 'export:tag {db}';
 
     /**
      * The console command description.
@@ -39,23 +40,41 @@ class ExportTag extends Command
      */
     public function handle()
     {
-        $filename = "public/export/offline/tag.csv";
-        Storage::disk('local')->put($filename, "");
-        $file = fopen(storage_path("app/{$filename}"),"w");
-        fputcsv($file,['id','name','description','color','owner_id']);
+        Log::debug('task: export offline data tag-table start');
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
+        $exportFile = storage_path('app/public/export/offline/'.$this->argument('db').'-'.date("Y-m-d").'.db3');
+        $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
+        $dbh->beginTransaction();
+
+        $query = "INSERT INTO tag ( id , name ,
+                                    description , color , owner_id  )
+                                    VALUES ( ? , ? , ? , ? , ?  )";
+        try{
+            $stmt = $dbh->prepare($query);
+        }catch(PDOException $e){
+            Log::info($e);
+            return 1;
+        }
+
         $bar = $this->output->createProgressBar(Tag::count());
-        foreach (Tag::select(['id','name','description','color','owner_id'])->cursor() as $chapter) {
-            fputcsv($file,[
-                            $chapter->id,
-                            $chapter->name,
-                            $chapter->description,
-                            $chapter->color,
-                            $chapter->owner_id,
-                            ]);
+        foreach (Tag::select(['id','name','description','color','owner_id'])->cursor() as $row) {
+            $currData = array(
+                $row->id,
+                $row->name,
+                $row->description,
+                $row->color,
+                $row->owner_id,
+            );
+            $stmt->execute($currData);
             $bar->advance();
         }
-        fclose($file);
+        $dbh->commit();
         $bar->finish();
+        Log::debug('task: export offline data tag-table start');
+
         return 0;
     }
 }

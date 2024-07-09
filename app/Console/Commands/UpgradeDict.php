@@ -14,7 +14,7 @@ class UpgradeDict extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan upgrade:dict
      * @var string
      */
     protected $signature = 'upgrade:dict {uuid?} {--part}';
@@ -67,17 +67,24 @@ class UpgradeDict extends Command
 									$this->error("not uuid");
 									continue;
 								}
+                                //读取 description
+                                $desFile = $dir."/description.md";
+                                if(file_exists($desFile)){
+                                    $description = file_get_contents($desFile);
+                                }else{
+                                    $description = $this->dictInfo['meta']['description'];
+                                }
 								$tableDict = DictInfo::firstOrNew([
 									"id" => $this->dictInfo['meta']['uuid']
 								]);
 								$tableDict->id = $this->dictInfo['meta']['uuid'];
 								$tableDict->name = $this->dictInfo['meta']['dictname'];
 								$tableDict->shortname = $this->dictInfo['meta']['shortname'];
-								$tableDict->description = $this->dictInfo['meta']['description'];
+								$tableDict->description = $description;
 								$tableDict->src_lang = $this->dictInfo['meta']['src_lang'];
 								$tableDict->dest_lang = $this->dictInfo['meta']['dest_lang'];
 								$tableDict->rows = $this->dictInfo['meta']['rows'];
-								$tableDict->owner_id = config("app.admin.root_uuid");
+								$tableDict->owner_id = config("mint.admin.root_uuid");
 								$tableDict->meta = json_encode($this->dictInfo['meta']);
 								$tableDict->save();
 
@@ -122,7 +129,7 @@ class UpgradeDict extends Command
 														if(isset($newPart[$part])){
 															$newPart[$part][0]++;
 														}else{
-															$partExists = Cache::remember('dict/part/'.$part,1000,function() use($part){
+															$partExists = Cache::remember('dict/part/'.$part,config('cache.expire',1000),function() use($part){
 																return UserDict::where('word',$part)->exists();
 															});
 															if(!$partExists){
@@ -208,8 +215,11 @@ class UpgradeDict extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$this->info("upgrade dict start");
-		$this->scandict(config("app.path.dict_text"));
+		$this->scandict(config("mint.path.dict_text"));
 		$this->info("upgrade dict done");
 
         return 0;

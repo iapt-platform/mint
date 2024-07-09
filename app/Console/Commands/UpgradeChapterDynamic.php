@@ -16,7 +16,7 @@ class UpgradeChapterDynamic extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:chapterdynamic {--test}';
+    protected $signature = 'upgrade:chapter.dynamic {--test}';
 
     /**
      * The console command description.
@@ -42,6 +42,9 @@ class UpgradeChapterDynamic extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$this->info('upgrade:chapterdynamic start.');
 
         $startAt = time();
@@ -51,7 +54,7 @@ class UpgradeChapterDynamic extends Command
         $min = 30;
         $linewidth = 2;
 
-        
+
 //更新总动态
 		$this->info("更新总动态");
         $chapters = ProgressChapter::select('book','para')
@@ -65,11 +68,11 @@ class UpgradeChapterDynamic extends Command
             #章节长度
             $paraEnd = PaliText::where('book',$chapter->book)
                             ->where('paragraph',$chapter->para)
-                            ->value('chapter_len')+$chapter->para-1;            
+                            ->value('chapter_len')+$chapter->para-1;
 
             $svg = "<svg xmlns='http://www.w3.org/2000/svg'  fill='currentColor' viewBox='0 0 $img_width $img_height'>";
             $svg .= "<polyline points='";
-            for ($i=$days; $i >0 ; $i--) { 
+            for ($i=$days; $i >0 ; $i--) {
                 # code...
 
                 #这一天有多少次更新
@@ -136,7 +139,7 @@ class UpgradeChapterDynamic extends Command
 
             $svg = "<svg xmlns='http://www.w3.org/2000/svg'  fill='currentColor' viewBox='0 0 $img_width $img_height'>";
             $svg .= "<polyline points='";
-            for ($i=$days; $i >0 ; $i--) { 
+            for ($i=$days; $i >0 ; $i--) {
                 # code...
 
                 #这一天有多少次更新

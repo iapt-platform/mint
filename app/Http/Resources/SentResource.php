@@ -8,6 +8,8 @@ use App\Http\Api\StudioApi;
 use App\Http\Api\UserApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\SuggestionApi;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class SentResource extends JsonResource
 {
@@ -20,6 +22,9 @@ class SentResource extends JsonResource
     public function toArray($request)
     {
         $channel = ChannelApi::getById($this->channel_uid);
+        if(!$channel){
+            Log::error('channel left',['data'=>$this->channel_uid,'uid'=>$this->uid]);
+        }
         if($request->get('mode','read')==="read"){
             $mode = 'read';
         }else{
@@ -34,20 +39,38 @@ class SentResource extends JsonResource
                 "paragraph"=> $this->paragraph,
                 "word_start"=> $this->word_start,
                 "word_end"=> $this->word_end,
-                "editor"=> UserApi::getById($this->editor_uid),
-                "channel"=> $channel,
-                "studio" => StudioApi::getById($channel["studio_id"]),
+                "editor"=> UserApi::getByUuid($this->editor_uid),
+                'fork_at' => $this->fork_at,
                 "updated_at"=> $this->updated_at,
             ];
+
+        if($channel){
+            $data['channel'] = $channel;
+            $data['studio'] = StudioApi::getById($channel["studio_id"]);
+        }
+        if($request->has('channels')){
+            $channels = explode(',',$request->get('channels'));
+        }else{
+            $channels = [$this->channel_uid];
+        }
+        //TODO 找出channel id = '' 的原因
+        $mChannels=array();
+        foreach ($channels as $key => $value) {
+            if(Str::isUuid($value)){
+                $mChannels[] = $value;
+            }
+        }
         if($request->get('html',true)){
             $data['html'] = MdRender::render($this->content,
-                                             $this->channel_uid,
+                                             $mChannels,
                                              null,
                                              $mode,
                                              $channel['type'],
-                                             $this->content_type);
+                                             $this->content_type,
+                                             $request->get('format','react')
+                                            );
         }
-        if($request->get('mode')==="edit" || $request->get('mode')==="wbw"){
+        if($request->get('mode') === "edit" || $request->get('mode') === "wbw"){
             $data['suggestionCount'] = SuggestionApi::getCountBySent($this->book_id,
                                                                    $this->paragraph,
                                                                    $this->word_start,
@@ -56,7 +79,7 @@ class SentResource extends JsonResource
                                                                 );
         }
         if(isset($this->acceptor_uid) && !empty($this->acceptor_uid)){
-            $data["acceptor"]=UserApi::getById($this->acceptor_uid);
+            $data["acceptor"]=UserApi::getByUuid($this->acceptor_uid);
             $data["pr_edit_at"]=$this->pr_edit_at;
         }
         return $data;

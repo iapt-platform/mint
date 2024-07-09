@@ -79,7 +79,7 @@ else{
 
 	<script type="text/javascript">
 	<?php require_once '../public/load_lang_js.php';//加载js语言包?>
-		
+
 		var g_device = "computer";
 		var strSertch = location.search;
 		if(strSertch.length>0){
@@ -105,7 +105,7 @@ else{
 			setCookie('language',g_language,365);
 			window.location.assign("index.php?language="+g_language);
 		}
-	
+
 	var gCurrPage="index";
 	</script>
 	<style>
@@ -120,7 +120,7 @@ else{
 	<script>
 		document.getElementById("id_language").value="<?php echo($currLanguage); ?>";
 	</script>
-		
+
         <style>
             #login_body{
                 display: flex;
@@ -173,7 +173,7 @@ else{
             .login_form input[type="submit"]{
                 margin-top:2em;
                 padding:0.1em 0.5em;
-            } 
+            }
 
             .form_error{
                 color:var(--error-text);
@@ -307,11 +307,6 @@ else{
 		<ul style="list-style-type: none;">
 		<li ><a href="<?php echo URL_HELP.'/zh-Hans' ?>" target="_blank"><?php echo $_local->gui->help; ?></a></li>
 			<li><?php echo $_local->gui->function_introduce;?>&nbsp;&nbsp;&nbsp;
-				<a href="https://www.youtube.com/playlist?list=PL_1iJBQvNPFFNLOaZh2u3VwDYUyJuK_xa" target="_block">
-					<svg class="icon">
-						<use xlink:href="../studio/svg/icon.svg#youtube_logo"></use>
-					</svg>
-				</a>&nbsp;
 				<a href="" target="_block" style="display: none;">
 					<svg class="icon">
 						<use xlink:href="../studio/svg/icon.svg#youku_logo"></use>
@@ -324,11 +319,7 @@ else{
 				</a>
 			</li>
 			<li><?php echo $_local->gui->project_introduce;?>&nbsp;&nbsp;&nbsp;
-				<a href="https://www.youtube.com/playlist?list=PL_1iJBQvNPFHT6UisME_cOSts5fFecK14" target="_block">
-					<svg class="icon">
-						<use xlink:href="../studio/svg/icon.svg#youtube_logo"></use>
-					</svg>
-				</a>&nbsp;
+
 				<a href="" target="_block" style="display: none;">
 					<svg class="icon">
 						<use xlink:href="../studio/svg/icon.svg#youku_logo"></use>
@@ -340,12 +331,8 @@ else{
 					</svg>
 				</a>
 			</li>
-			<li><?php echo $_local->gui->project_introduce_inbrief;?>&nbsp;&nbsp;&nbsp;
-				<a href="https://www.youtube.com/playlist?list=PLgavmc8e-GuWR-FKOr-7RfnUSWX82ED0q" target="_block">
-					<svg class="icon">
-						<use xlink:href="../studio/svg/icon.svg#youtube_logo"></use>
-					</svg>
-				</a>&nbsp;
+			<li><?php echo $_local->gui->project_introduce_inbrief;?>
+                &nbsp;&nbsp;&nbsp;
 				<a href="" target="_block" style="display: none;">
 					<svg class="icon">
 						<use xlink:href="../studio/svg/icon.svg#youku_logo"></use>
@@ -390,7 +377,7 @@ else{
 			</li>
 		</ul>
 	</div>
-</div>	
+</div>
 
 <div id="login_right">
 
@@ -416,7 +403,7 @@ else{
 				</div>
 			</div>
 		</div>
-	</div>       
+	</div>
 
 	<script src="../public/js/highcharts/highcharts.js"></script>
 	<script src="../public/js/highcharts/modules/exporting.js"></script>
@@ -462,9 +449,9 @@ else{
 
 		</div>
 	</div>
-		
 
-</div>	
+
+</div>
 </div>
 
 <script>
@@ -472,10 +459,10 @@ else{
                 let username=getCookie("username");
                 if(username==""){
                     $("#file_list").html("登陆后显示文件列表");
-                    return; 
+                    return;
                 }
                 var d=new Date();
-               
+
                 $.get("../studio/getfilelist.php",
                 {
                     t:d.getTime(),
@@ -491,7 +478,7 @@ else{
                     try{
                         let file_list = JSON.parse(data);
                         let html="";
-                        
+
                         if(file_list.length<count){
                             count=file_list.length;
                         }
@@ -511,16 +498,16 @@ else{
                         $("#file_list").html(strFilelist);
                     }
                     catch(e){
-                        
+
                     }
-                    
-                    
-                    
+
+
+
                 });
             }
 file_list();
 </script>
-		
+
 <script>
 /*
 		$.get('../uwbw/update_analytics.php', function (csvStr) {
@@ -634,7 +621,7 @@ file_list();
 		*/
         </script>
 	</div>
-	
+
 	<div class="foot_div">
 		<?php echo $_local->gui->poweredby;?>
 	</div>

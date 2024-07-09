@@ -70,7 +70,7 @@ class DictApi{
     }
     public static function getSysDict($name){
         $dict_info=  DictInfo::where('name',$name)
-                    ->where('owner_id',config("app.admin.root_uuid"))
+                    ->where('owner_id',config("mint.admin.root_uuid"))
                     ->first();
         if(!$dict_info){
             return false;

@@ -8,6 +8,9 @@ use App\Models\Tag;
 use App\Models\TagMap;
 use App\Models\ProgressChapter;
 use Illuminate\Http\Request;
+use App\Http\Resources\TagResource;
+use App\Http\Api\AuthApi;
+use App\Http\Api\StudioApi;
 
 class TagController extends Controller
 {
@@ -19,95 +22,32 @@ class TagController extends Controller
     public function index(Request $request)
     {
         //
+
         switch ($request->get('view')) {
-            case "chapter":
-                $progress = $request->get('progress',0.8);
-                $lang = $request->get('lang');
-                $channelType = $request->get('type','translation');
-
-                $tm = (new TagMap)->getTable();
-                $pc =(new ProgressChapter)->getTable();
-                $tg = (new Tag)->getTable();
-
-                //标签过滤
-                if($request->get('tags') && $request->get('tags')!==''){
-                    $tags = explode(',',$request->get('tags'));
-                    foreach ($tags as $tag) {
-                        # code...
-                        if(!empty($tag)){
-                            $tagNames[] = $tag;
-                        }
-                    }
-                }
-                if(isset($tagNames)){
-                    $where1 = " where co = ".count($tagNames);
-                    $a = implode(",",array_fill(0, count($tagNames), '?')) ;
-                    $in1 = "and t.name in ({$a})";
-                    $param = $tagNames;
-                }else{
-                    $where1 = " ";
-                    $in1 = " ";
-                }
-                if(Str::isUuid($request->get('channel'))){
-                    $channel = "and channel_id = '".$request->get('channel')."' ";
-                }else{
-                    $channel = "";
-                }
-                //完成度过滤
-                $param[] = $progress;
-
-                //语言过滤
-                if(!empty($request->get('lang'))){
-                    $whereLang = " and pc.lang = ? ";
-                    $param[] = $request->get('lang');
-                }else{
-                    $whereLang = "   ";
-                }
-                //channel type过滤
-				if($request->has('channel_type') && !empty($request->get('channel_type'))){
-					$channel_type = "and ch.type = ? ";
-					$param[] = $request->get('channel_type');
-				}else{
-					$channel_type = "";
-				}
-
-                $param_count = $param;
-
-                $query = "
-                select TID.tag_id as id,name, TID.count from(
-                    select tm2.tag_id, count(*)      from(
-						select pcd.uid as pc_uid
-							from (
-								select uid, book,para,lang,progress,channel_id,title,summary ,created_at ,updated_at
-									from (
-										select anchor_id as cid
-											from (
-												select tm.anchor_id , count(*) as co
-													from $tm as  tm
-													left join $tg as t on tm.tag_id = t.id
-													where tm.table_name  = 'progress_chapters'
-													$in1
-													group by tm.anchor_id
-											) T
-											$where1
-									) CID
-								left join $pc as pc on CID.cid = pc.uid
-								where pc.progress > ?
-								$channel  $whereLang
-							) pcd
-						left join channels as ch on pcd.channel_id = ch.uid
-						where ch.status >= 30 $channel_type
-                    ) CUID
-                    left join tag_maps tm2 on CUID.pc_uid = tm2.anchor_id
-				group by tm2.tag_id
-				) TID
-				left join tags t2 on t2.id = TID.tag_id
-				order by count desc";
-                $result = DB::select($query,$param);
-                return $this->ok(['rows'=>$result,'count'=>count($result)]);
+            case 'studio':
+                $studioId = StudioApi::getIdByName($request->get('name'));
+                $table = Tag::where('owner_id',$studioId);
                 break;
         }
 
+        if($request->has("search")){
+            $table = $table->where('name', 'like', "%".$request->get("search")."%");
+        }
+
+        $count = $table->count();
+
+        $table = $table->orderBy($request->get('order','created_at'),$request->get('dir','desc'));
+
+        $table = $table->skip($request->get("offset",0))
+                    ->take($request->get('limit',10));
+
+        $result = $table->get();
+
+        return $this->ok(
+            [
+            "rows"=>TagResource::collection($result),
+            "count"=>$count,
+            ]);
     }
 
     /**
@@ -119,11 +59,28 @@ class TagController extends Controller
     public function store(Request $request)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'),401,401);
+        }
+        //判断当前用户是否有指定的studio的权限
+        $studioId = StudioApi::getIdByName($request->get('studio'));
+        if($user['user_uid'] !== $studioId){
+            return $this->error(__('auth.failed'),403,403);
+        }
+        //查询是否重复
+        if(Tag::where('name',$request->get('name'))
+                  ->where('owner_id',$user['user_uid'])
+                  ->exists()){
+            return $this->error(__('validation.exists',['name']),200,200);
+        }
         $tag = new Tag;
         $tag->name = $request->get("name");
-        $tag->owner_id = $request->get("owner_id");
+        $tag->description = $request->get("description");
+        $tag->color = $request->get("color");
+        $tag->owner_id = $studioId;
         $tag->save();
-        return $this->ok($tag->id);
+        return $this->ok(new TagResource($tag));
     }
 
     /**
@@ -135,6 +92,8 @@ class TagController extends Controller
     public function show(Tag $tag)
     {
         //
+        return $this->ok(new TagResource($tag));
+
     }
 
     /**
@@ -147,6 +106,29 @@ class TagController extends Controller
     public function update(Request $request, Tag $tag)
     {
         //
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'),401,401);
+        }
+        //判断当前用户是否有指定的studio的权限
+        $studioId = StudioApi::getIdByName($request->get('studio'));
+        if($user['user_uid'] !== $studioId){
+            return $this->error(__('auth.failed'),403,403);
+        }
+        //查询是否重复
+        if(Tag::where('name',$request->get('name'))
+                  ->where('owner_id',$user['user_uid'])
+                  ->where('id','<>',$tag->id)
+                  ->exists()){
+            return $this->error(__('validation.exists',['name']),200,200);
+        }
+
+        $tag->name = $request->get("name");
+        $tag->description = $request->get("description");
+        $tag->color = $request->get("color");
+        $tag->owner_id = $studioId;
+        $tag->save();
+        return $this->ok(new TagResource($tag));
     }
 
     /**

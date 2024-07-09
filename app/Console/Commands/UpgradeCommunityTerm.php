@@ -18,7 +18,7 @@ class UpgradeCommunityTerm extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:community.term {lang}';
+    protected $signature = 'upgrade:community.term {lang} {word?}';
 
     /**
      * The console command description.
@@ -44,23 +44,28 @@ class UpgradeCommunityTerm extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $lang = strtolower($this->argument('lang'));
         $langFamily = explode('-',$lang)[0];
-        $localTerm = ChannelApi::getSysChannel(
-            "_community_term_{$lang}_"
-        );
+        $localTerm = ChannelApi::getSysChannel("_community_term_{$lang}_");
         if(!$localTerm){
             return 1;
         }
+
         $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
         if($channelId === false){
             $this->error('no channel');
             return 1;
         }
-        $table = DhammaTerm::select('word')->whereIn('language',[$this->argument('lang'),$lang,$langFamily])
-                            ->groupBy('word');
+        $table = DhammaTerm::select(['word','tag'])
+                            ->whereIn('language',[$this->argument('lang'),$lang,$langFamily])
+                            ->groupBy(['word','tag']);
 
-
+        if($this->argument('word')){
+            $table = $table->where('word',$this->argument('word'));
+        }
         $words = $table->get();
         $bar = $this->output->createProgressBar(count($words));
         foreach ($words as $key => $word) {
@@ -71,6 +76,7 @@ class UpgradeCommunityTerm extends Command
              */
             $bestNote = "" ;
             $allTerm = DhammaTerm::where('word',$word->word)
+                                ->where('tag',$word->tag)
                                 ->whereIn('language',[$this->argument('lang'),$lang,$langFamily])
                                 ->get();
             $score = [];
@@ -80,12 +86,13 @@ class UpgradeCommunityTerm extends Command
                                         ->where('date_int','<=',date_timestamp_get(date_create($term->updated_at))*1000)
                                         ->sum('duration');
                 $iExp = (int)($exp/1000);
-                $noteStrLen = mb_strlen($term->note);
+                $noteStrLen = $term->note? mb_strlen($term->note,'UTF-8'):0;
                 $paliStrLen = 0;
                 $tranStrLen = 0;
                 $noteWithoutPali = "";
-                if(!empty(trim($term->note))){
-                    #查找句子模版
+                if($term->note && !empty(trim($term->note))){
+                    //计算note得分
+                    //查找句子模版
                     $pattern = "/\{\{[0-9].+?\}\}/";
                     //获取去掉句子模版的剩余部分
                     $noteWithoutPali = preg_replace($pattern,"",$term->note);
@@ -116,7 +123,6 @@ class UpgradeCommunityTerm extends Command
                             }
                         }
                     }
-
                 }
                 //计算该术语总得分
                 $score["{$key}"] = $iExp*$noteStrLen;
@@ -138,6 +144,7 @@ class UpgradeCommunityTerm extends Command
                 $term = DhammaTerm::where('channal',$localTerm)->firstOrNew(
                         [
                             "word" => $word->word,
+                            "tag" => $word->tag,
                             "channal" => $localTerm,
                         ],
                         [
@@ -146,11 +153,12 @@ class UpgradeCommunityTerm extends Command
                             'word_en' =>Tools::getWordEn($word->word),
                             'meaning' => '',
                             'language' => $this->argument('lang'),
-                            'owner' => config("app.admin.root_uuid"),
+                            'owner' => config("mint.admin.root_uuid"),
                             'editor_id' => 0,
                             'create_time' => time()*1000,
                         ]
                     );
+                    $term->tag = $word->tag;
                     $term->meaning = $hotMeaning->meaning;
                     $term->note = $bestNote;
                     $term->modify_time = time()*1000;

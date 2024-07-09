@@ -11,7 +11,7 @@ class UpgradeDictVocabulary extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan upgrade:dict.vocabulary
      * @var string
      */
     protected $signature = 'upgrade:dict.vocabulary';
@@ -40,6 +40,9 @@ class UpgradeDictVocabulary extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $words = UserDict::where('source','_PAPER_')->selectRaw('word,count(*)')->groupBy('word')->cursor();
 
 		$bar = $this->output->createProgressBar(230000);

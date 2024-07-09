@@ -14,8 +14,10 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+/.VSCodeCounter
 /package-lock.json
 /yarn.lock
 /composer.lock
 *.swp
 *.log
+/.stop

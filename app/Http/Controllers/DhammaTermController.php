@@ -2,22 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DhammaTerm;
-use App\Models\Channel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
+
+use App\Models\DhammaTerm;
+use App\Models\Channel;
+use App\Http\Resources\TermResource;
+
 use App\Http\Api\AuthApi;
 use App\Http\Api\StudioApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\ShareApi;
 use App\Tools\Tools;
-use App\Http\Resources\TermResource;
-use Illuminate\Support\Facades\App;
+use App\Tools\RedisClusters;
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use Illuminate\Support\Facades\Log;
+
 
 class DhammaTermController extends Controller
 {
@@ -29,7 +34,10 @@ class DhammaTermController extends Controller
     public function index(Request $request)
     {
         $result=false;
-		$indexCol = ['id','guid','word','meaning','other_meaning','note','tag','language','channal','owner','editor_id','created_at','updated_at'];
+		$indexCol = ['id','guid','word','meaning',
+                    'other_meaning','note','tag','language',
+                    'channal','owner','editor_id',
+                    'created_at','updated_at'];
 
 		switch ($request->get('view')) {
             case 'create-by-channel':
@@ -116,18 +124,27 @@ class DhammaTermController extends Controller
                 break;
 			case 'user':
 				# code...
-                $userUid = $_COOKIE['user_uid'];
+                $user = AuthApi::current($request);
+                if(!$user){
+                    return $this->error(__('auth.failed'));
+                }
+                $userUid = $user['user_uid'];
                 $search = $request->get('search');
 				$table = DhammaTerm::select($indexCol)
 									->where('owner', $userUid);
 				break;
 			case 'word':
 				$table = DhammaTerm::select($indexCol)
-									->where('word', $request->get("word"));
+									->whereIn('word', explode(',',$request->get("word")) )
+									->orWhereIn('meaning', explode(',',$request->get("word")) );
+				break;
+            case 'tag':
+				$table = DhammaTerm::select($indexCol)
+									->whereIn('tag', explode(',',$request->get("tag")) );
 				break;
             case 'hot-meaning':
                 $key='term/hot_meaning';
-                $value = Cache::get($key, function()use($request) {
+                $value = RedisClusters::get($key, function()use($request) {
                     $hotMeaning=[];
                     $words = DhammaTerm::select('word')
                                 ->where('language',$request->get("language"))
@@ -151,9 +168,9 @@ class DhammaTermController extends Controller
                             ];
                         }
                     }
-                    Cache::put($key, $hotMeaning, 3600);
+                    RedisClusters::put($key, $hotMeaning, 3600);
                     return $hotMeaning;
-                });
+                }, config('mint.cache.expire'));
                 return $this->ok(["rows"=>$value,"count"=>count($value)]);
                 break;
 			default:
@@ -175,11 +192,7 @@ class DhammaTermController extends Controller
                        ->take($request->get('limit',1000));
         $result = $table->get();
 
-		if($result){
-			return $this->ok(["rows"=>TermResource::collection($result),"count"=>$count]);
-		}else{
-			return $this->error("没有查询到数据");
-		}
+        return $this->ok(["rows"=>TermResource::collection($result),"count"=>$count]);
     }
 
     /**
@@ -197,26 +210,26 @@ class DhammaTermController extends Controller
         $validated = $request->validate([
             'word' => 'required',
             'meaning' => 'required',
-            'language' => 'required'
         ]);
-        #查询重复的
-        /*
-        重复判定：
-        一个channel下面word+tag+language 唯一
-        */
+
+
+        /**
+         * 查询重复的
+         * 一个channel下面word+tag+language 唯一
+         */
         $table = DhammaTerm::where('owner', $user["user_uid"])
                 ->where('word',$request->get("word"))
                 ->where('tag',$request->get("tag"));
-        if($request->get("channel")){
-            $isDoesntExist = $table->where('channel',$request->get("channel"))
+        if(!empty($request->get("channel"))){
+            $isDoesntExist = $table->where('channal',$request->get("channel"))
                     ->doesntExist();
         }else{
-            $isDoesntExist = $table->where('language',$request->get("language"))
+            $isDoesntExist = $table->whereNull('channal')->where('language',$request->get("language"))
                 ->doesntExist();
         }
 
         if($isDoesntExist){
-            #不存在插入数据
+            #没有重复的 插入数据
             $term = new DhammaTerm;
             $term->id = app('snowflake')->id();
             $term->guid = Str::uuid();
@@ -226,27 +239,55 @@ class DhammaTermController extends Controller
             $term->other_meaning = $request->get("other_meaning");
             $term->note = $request->get("note");
             $term->tag = $request->get("tag");
-            $term->channal = $request->get("channal");
+            $term->channal = $request->get("channel");
             $term->language = $request->get("language");
-            if($request->has("channal")){
-                $channelInfo = ChannelApi::getById($request->get("channal"));
+            if(!empty($request->get("channel"))){
+                $channelInfo = ChannelApi::getById($request->get("channel"));
                 if(!$channelInfo){
                     return $this->error("channel id failed");
                 }else{
+                    //查看有没有channel权限
+                    $power = ShareApi::getResPower($user["user_uid"],$request->get("channel"),2);
+                    if($power < 20){
+                        return $this->error(__('auth.failed'));
+                    }
                     $term->owner = $channelInfo['studio_id'];
+                    $term->language = $channelInfo['lang'];
                 }
             }else{
-                $term->owner = StudioApi::getIdByName($request->get("studioName"));
+                if($request->has("studioId")){
+                    $studioId = $request->get("studioId");
+                }else if($request->has("studioName")){
+                    $studioId = StudioApi::getIdByName($request->get("studioName"));
+                }
+                if(Str::isUuid($studioId)){
+                    $term->owner = $studioId;
+                }else{
+                    return $this->error('not valid studioId');
+                }
             }
             $term->editor_id = $user["user_id"];
             $term->create_time = time()*1000;
             $term->modify_time = time()*1000;
             $term->save();
-            return $this->ok($term);
+            //删除cache
+            $this->deleteCache($term);
+            return $this->ok(new TermResource($term));
         }else{
             return $this->error("word existed",[],200);
         }
+    }
 
+    private function deleteCache($term){
+        if(empty($term->channal)){
+            //通用 查询studio所有channel
+            $channels = Channel::where('owner_uid',$term->owner)->select('uid')->get();
+            foreach ($channels as $channel) {
+                RedisClusters::forget("/term/{$channel}/{$term->word}");
+            }
+        }else{
+            RedisClusters::forget("/term/{$term->channal}/{$term->word}");
+        }
     }
 
     /**
@@ -279,38 +320,40 @@ class DhammaTermController extends Controller
         //
         $user = AuthApi::current($request);
         if(!$user){
-            return $this->error(__('auth.failed'));
+            return $this->error(__('auth.failed'),[],401);
         }
         $dhammaTerm = DhammaTerm::find($id);
+        if(!$dhammaTerm){
+            return $this->error('404');
+        }
+
+        if(empty($dhammaTerm->channal)){
+            //查看有没有studio权限
+            if($user['user_uid'] !== $dhammaTerm->owner){
+                return $this->error(__('auth.failed'),[],403);
+            }
+        }else{
+            //查看有没有channel权限
+            $power = ShareApi::getResPower($user["user_uid"],$dhammaTerm->channal,2);
+            if($power < 20){
+                return $this->error(__('auth.failed'),[],403);
+            }
+        }
+
         $dhammaTerm->word = $request->get("word");
         $dhammaTerm->word_en = Tools::getWordEn($request->get("word"));
         $dhammaTerm->meaning = $request->get("meaning");
         $dhammaTerm->other_meaning = $request->get("other_meaning");
         $dhammaTerm->note = $request->get("note");
         $dhammaTerm->tag = $request->get("tag");
-        $dhammaTerm->channal = $request->get("channal");
         $dhammaTerm->language = $request->get("language");
-        if($request->has("channal") && Str::isUuid($request->has("channal"))){
-            $channelInfo = ChannelApi::getById($request->get("channal"));
-            if(!$channelInfo){
-                return $this->error("channel id failed");
-            }else{
-                $dhammaTerm->owner = $channelInfo['studio_id'];
-            }
-        }
-        if($request->has("studioName")){
-            $dhammaTerm->owner = StudioApi::getIdByName($request->get("studioName"));
-        }else if($request->has("studioId")){
-            $dhammaTerm->owner = $request->get("studioId");
-        }else{
-            $dhammaTerm->owner = null;
-        }
-
         $dhammaTerm->editor_id = $user["user_id"];
         $dhammaTerm->create_time = time()*1000;
         $dhammaTerm->modify_time = time()*1000;
         $dhammaTerm->save();
-		return $this->ok($dhammaTerm);
+        //删除cache
+        $this->deleteCache($dhammaTerm);
+		return $this->ok(new TermResource($dhammaTerm));
 
     }
 
@@ -346,14 +389,17 @@ class DhammaTermController extends Controller
                     }
                 }
                 $count += $term->delete();
+                //删除cache
+                $this->deleteCache($term);
             }
         }else{
             $arrId = json_decode($request->get("id"),true) ;
             foreach ($arrId as $key => $id) {
                 # code...
-                $result = DhammaTerm::where('id', $id)
-                                ->where('owner', $user['user_uid'])
-                                ->delete();
+                $term = DhammaTerm::where('id', $id)
+                                ->where('owner', $user['user_uid']);
+                $term->delete();
+                $this->deleteCache($term);
                 if($result){
                     $count++;
                 }
@@ -363,218 +409,4 @@ class DhammaTermController extends Controller
 		return $this->ok($count);
     }
 
-    public function export(Request $request){
-        $user = AuthApi::current($request);
-        if(!$user){
-            return $this->error(__('auth.failed'));
-        }
-//TODO 判断是否有导出权限
-        switch ($request->get("view")) {
-            case 'channel':
-                # code...
-                $rows = DhammaTerm::where('channal',$request->get("id"))->cursor();
-                break;
-            case 'studio':
-                # code...
-                $studioId = StudioApi::getIdByName($request->get("name"));
-                $rows = DhammaTerm::where('owner',$studioId)->cursor();
-                break;
-            default:
-                $this->error('no view');
-                break;
-        }
-
-        $spreadsheet = new Spreadsheet();
-        $activeWorksheet = $spreadsheet->getActiveSheet();
-        $activeWorksheet->setCellValue('A1', 'id');
-        $activeWorksheet->setCellValue('B1', 'word');
-        $activeWorksheet->setCellValue('C1', 'meaning');
-        $activeWorksheet->setCellValue('D1', 'other_meaning');
-        $activeWorksheet->setCellValue('E1', 'note');
-        $activeWorksheet->setCellValue('F1', 'tag');
-        $activeWorksheet->setCellValue('G1', 'language');
-        $activeWorksheet->setCellValue('H1', 'channel_id');
-
-        $currLine = 2;
-        foreach ($rows as $key => $row) {
-            # code...
-            $activeWorksheet->setCellValue("A{$currLine}", $row->guid);
-            $activeWorksheet->setCellValue("B{$currLine}", $row->word);
-            $activeWorksheet->setCellValue("C{$currLine}", $row->meaning);
-            $activeWorksheet->setCellValue("D{$currLine}", $row->other_meaning);
-            $activeWorksheet->setCellValue("E{$currLine}", $row->note);
-            $activeWorksheet->setCellValue("F{$currLine}", $row->tag);
-            $activeWorksheet->setCellValue("G{$currLine}", $row->language);
-            $activeWorksheet->setCellValue("H{$currLine}", $row->channal);
-            $currLine++;
-        }
-        $writer = new Xlsx($spreadsheet);
-        $fId = Str::uuid();
-        $filename = storage_path("app/tmp/{$fId}");
-        $writer->save($filename);
-        Cache::put("download/tmp/{$fId}",file_get_contents($filename),300);
-        unlink($filename);
-        return $this->ok(['uuid'=>$fId,'filename'=>"term.xlsx",'type'=>"application/vnd.ms-excel"]);
-    }
-
-    public function import(Request $request){
-        $user = AuthApi::current($request);
-        if(!$user){
-            return $this->error(__('auth.failed'));
-        }
-        /**
-         * 判断是否有权限
-         */
-        switch ($request->get('view')) {
-            case 'channel':
-                # 向channel里面导入，忽略源数据的channel id 和 owner 都设置为这个channel 的
-                $channel = ChannelApi::getById($request->get('id'));
-                $owner_id = $channel['studio_id'];
-                if($owner_id !== $user["user_uid"]){
-                    //判断是否为协作
-                    $power = ShareApi::getResPower($user["user_uid"],$request->get('id'));
-                    if($power<30){
-                        return $this->error(__('auth.failed'),[],403);
-                    }
-                }
-                $language = $channel['lang'];
-                break;
-            case 'studio':
-                # 向 studio 里面导入，忽略源数据的 owner 但是要检测 channel id 是否有权限
-                $owner_id = StudioApi::getIdByName($request->get('name'));
-                if(!$owner_id){
-                    return $this->error('no studio name',[],403);
-                }
-
-                break;
-        }
-
-        $message = "";
-        $filename = $request->get('filename');
-        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-        $reader->setReadDataOnly(true);
-        $spreadsheet = $reader->load($filename);
-        $activeWorksheet = $spreadsheet->getActiveSheet();
-        $currLine = 2;
-        $countFail = 0;
-
-        do {
-            # code...
-            $id = $activeWorksheet->getCell("A{$currLine}")->getValue();
-            $word = $activeWorksheet->getCell("B{$currLine}")->getValue();
-            $meaning = $activeWorksheet->getCell("C{$currLine}")->getValue();
-            $other_meaning = $activeWorksheet->getCell("D{$currLine}")->getValue();
-            $note = $activeWorksheet->getCell("E{$currLine}")->getValue();
-            $tag = $activeWorksheet->getCell("F{$currLine}")->getValue();
-            $language = $activeWorksheet->getCell("G{$currLine}")->getValue();
-            $channel_id = $activeWorksheet->getCell("H{$currLine}")->getValue();
-            $query = ['word'=>$word,'tag'=>$tag];
-            $channelId = null;
-            switch ($request->get('view')) {
-                case 'channel':
-                    # 向channel里面导入，忽略源数据的channel id 和 owner 都设置为这个channel 的
-                    $query['channal'] = $request->get('id');
-                    $channelId = $request->get('id');
-                    break;
-                case 'studio':
-                    # 向 studio 里面导入，忽略源数据的owner 但是要检测 channel id 是否有权限
-                    $query['owner'] = $owner_id;
-                    if(!empty($channel_id)){
-
-                        //有channel 数据，查看是否在studio中
-                        $channel = ChannelApi::getById($channel_id);
-                        if($channel === false){
-                            $message .= "没有查到版本信息：{$channel_id} - {$word}\n";
-                            $currLine++;
-                            $countFail++;
-                            continue 2;
-                        }
-                        if($owner_id != $channel['studio_id']){
-                            $message .= "版本不在studio中：{$channel_id} - {$word}\n";
-                            $currLine++;
-                            $countFail++;
-                            continue 2;
-                        }
-                        $query['channal'] = $channel_id;
-                        $channelId = $channel_id;
-                    }
-                    # code...
-                    break;
-            }
-
-            if(empty($id) && empty($word)){
-                break;
-            }
-
-            //查询此id是否有旧数据
-            if(!empty($id)){
-                $oldRow = DhammaTerm::find($id);
-                //TODO 有 id 无 word 删除数据
-                if(empty($word)){
-                    //查看权限
-                    if($oldRow->owner !== $user['user_uid']){
-                        if(!empty($oldRow->channal)){
-                            //看是否为协作
-                            $power = ShareApi::getResPower($user['user_uid'],$oldRow->channal);
-                            if($power < 20){
-                                $message .= "无删除权限：{$id} - {$word}\n";
-                                $currLine++;
-                                $countFail++;
-                                continue;
-                            }
-                        }else{
-                            $message .= "无删除权限：{$id} - {$word}\n";
-                            $currLine++;
-                            $countFail++;
-                            continue;
-                        }
-                    }
-                    //删除
-                    $oldRow->delete();
-                    $currLine++;
-                    continue;
-                }
-            }else{
-                $oldRow = null;
-            }
-            //查询是否跟已有数据重复
-            $row = DhammaTerm::where($query)->first();
-            if(!$row){
-                //不重复
-                if(isset($oldRow) && $oldRow){
-                    //找到旧的记录-修改旧数据
-                    $row = $oldRow;
-                }else{
-                    //没找到旧的记录-新建
-                    $row = new DhammaTerm();
-                    $row->id = app('snowflake')->id();
-                    $row->guid = Str::uuid();
-                    $row->word = $word;
-                    $row->create_time = time()*1000;
-                }
-            }else{
-                //重复-如果与旧的id不同,报错
-                if(isset($oldRow) && $oldRow && $row->guid !== $id){
-                    $message .= "重复的数据：{$id} - {$word}\n";
-                    $currLine++;
-                    $countFail++;
-                    continue;
-                }
-            }
-            $row->word_en = Tools::getWordEn($word);
-            $row->meaning = $meaning;
-            $row->other_meaning = $other_meaning;
-            $row->note = $note;
-            $row->tag = $tag;
-            $row->language = $language;
-            $row->channal = $channelId;
-            $row->editor_id = $user['user_id'];
-            $row->owner = $owner_id;
-            $row->modify_time = time()*1000;
-            $row->save();
-
-            $currLine++;
-        } while (true);
-        return $this->ok(["success"=>$currLine-2-$countFail,'fail'=>($countFail)],$message);
-    }
 }

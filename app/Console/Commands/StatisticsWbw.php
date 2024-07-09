@@ -40,6 +40,9 @@ class StatisticsWbw extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $file = "public/statistics/wbw-monthly.csv";
         Storage::disk('local')->put($file, "");
         #按月获取数据

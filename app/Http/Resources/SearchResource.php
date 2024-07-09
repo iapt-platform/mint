@@ -4,6 +4,11 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\PaliText;
+use App\Models\Sentence;
+use App\Http\Api\ChannelApi;
+use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
+
 
 class SearchResource extends JsonResource
 {
@@ -30,7 +35,21 @@ class SearchResource extends JsonResource
         }else if(isset($this->content)){
             $data["content"] = $this->content;
         }else{
-            $data["content"] = $paliText->html;
+            $channelId = RedisClusters::remember('_System_Pali_VRI_',config('mint.cache.expire'),function(){
+                return ChannelApi::getSysChannel('_System_Pali_VRI_');
+            });
+
+            $paraContent = Sentence::where('book_id',$this->book)
+                ->where('paragraph',$this->paragraph)
+                ->where('channel_uid',$channelId)
+                ->orderBy('word_start')
+                ->select('content')
+                ->get();
+            $html = '';
+            foreach ($paraContent as $key => $value) {
+                $html .= $value->content;
+            }
+            $data["content"] = $html;
         }
 
         if($paliText){

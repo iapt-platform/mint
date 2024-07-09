@@ -2,12 +2,10 @@
 namespace App\Tools;
 require_once __DIR__.'/../../public/app/public/casesuf.inc';
 
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 use App\Models\WordPart;
 use App\Models\UserDict;
-use Illuminate\Support\Arr;
+use App\Tools\RedisClusters;
 
 class TurboSplit
 {
@@ -17,7 +15,7 @@ class TurboSplit
         "w_threshhold" => 0.8,
         "forward" => true,
         "sandhi_advance" => false,
-        "lookup_express" => true,/**快速查字典-不去尾 */
+        "lookup_declension" => true,/**快速查字典-不去尾 */
     ];
     protected $node = [];
 	protected $path = array();
@@ -29,7 +27,7 @@ class TurboSplit
 	//过程中最大结果数量
 	protected $MAX_RESULT = 100;
 	//返回值最大结果数量
-	protected $MAX_RESULT2 = 5;
+	protected $MAX_RESULT2 = 8;
 	//最大递归深度
 	protected $MAX_DEEP = 16;
 	//连音规则表
@@ -135,12 +133,14 @@ class TurboSplit
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($options=[])
     {
 		for($i=0;$i<$this->MAX_DEEP;$i++ ){
 			array_push($this->path, array("", 0));
 		}
-
+        foreach ($options as $key => $value) {
+            $this->options[$key] = $value;
+        }
         return;
     }
 
@@ -176,14 +176,17 @@ class TurboSplit
         $search = $word;
 
 		//获取单词权重
-		$row = Cache::remember('palicanon/wordpart/weight/'.$search, 10 , function() use($search) {
-			return WordPart::where('word',$search)->value('weight');
-		});
+		$row = RedisClusters::remember('palicanon/wordpart/weight/'.$search,
+                config('mint.cache.expire') ,
+                function() use($search) {
+                    return WordPart::where('word',$search)->value('weight');
+                });
 		if ($row) {
 			//找到
+            $this->log($search.'='.$row);
 			return array($row,0);
 		} else {
-            if($this->options["lookup_express"]){
+            if($this->options["lookup_declension"]){
                 return array(0,0);
             }
 			//去除尾查
@@ -202,9 +205,11 @@ class TurboSplit
 			$base_weight = 0;
 			$len = 0;
 			foreach ($newWord as $x => $x_value) {
-				$row = Cache::remember('palicanon/wordpart/weight/'.$search, 10 , function() use($x) {
-					return WordPart::where('word',$x)->value('weight');
-				});
+				$row = RedisClusters::remember('palicanon/wordpart/weight/'.$search,
+                        config('mint.cache.expire') ,
+                        function() use($x) {
+                            return WordPart::where('word',$x)->value('weight');
+                        });
 				if ($row) {
 					if ($row > $base_weight) {
 						$base_weight = $row;
@@ -230,12 +235,20 @@ class TurboSplit
 
 		$isFound = false;
 		$count = 0;
-		$wordPart  = Cache::remember("turbosplit/part/{$word}",10,function() use($word){
-			return implode(',',$this->dict_lookup($word));
-		});
+		$wordPart  = RedisClusters::remember("turbosplit/part/{$word}",
+                        config('mint.cache.expire'),
+                        function() use($word){
+                            return implode(',',$this->dict_lookup($word));
+                        });
 		$arrWordPart = explode(',',$wordPart);
 		$word_count = $arrWordPart[0];
-		$case_len = $arrWordPart[1];
+        if(isset($arrWordPart[1])){
+            $case_len = $arrWordPart[1];
+        }else{
+            $case_len = 0;
+            Log::error('wordPart error value='.$wordPart);
+        }
+
 		if ($word_count > 0) {
 			$this->log("查到：{$word}:{$word_count}个");
 			$isFound = true;
@@ -244,13 +257,15 @@ class TurboSplit
 
 		//fomular of confidence value 信心值计算公式
 		if ($isFound) {
-			$cf  = Cache::remember("turbosplit/confidence/".$word,1000,function() use($word,$count,$case_len){
-				$len = mb_strlen($word, "UTF-8") - $case_len;
-				$len_correct = 1.2;
-				$count2 = 1.1 + pow($count, 1.18);
-				$conf_num = pow(1 / $count2, pow(($len - 0.5), $len_correct));
-				return round(1 / (1 + 640 * $conf_num), 9);
-			});
+			$cf  = RedisClusters::remember("turbosplit/confidence/".$word,
+                    config('mint.cache.expire'),
+                    function() use($word,$count,$case_len){
+                        $len = mb_strlen($word, "UTF-8") - $case_len;
+                        $len_correct = 1.2;
+                        $count2 = 1.1 + pow($count, 1.18);
+                        $conf_num = pow(1 / $count2, pow(($len - 0.5), $len_correct));
+                        return round(1 / (1 + 640 * $conf_num), 9);
+                    });
 			return ($cf);
 		} else {
 			return (-1);
@@ -288,31 +303,6 @@ class TurboSplit
 		//达到最大搜索深度，返回
 		if ($deep >= $this->MAX_DEEP) {
             return ;
-            /*
-			$word = "";
-			$cf = 1.0;
-			for ($i = 0; $i < $deep; $i++) {
-				if (!empty($this->path[$i][0])) {
-					$word .= $this->path[$i][0] ;
-					if($this->isDebug) {
-						$word .= "(" . $this->path[$i][1] . ")";
-					}
-					$word .= "+";
-					$cf = $cf * $this->path[$i][1];
-				}
-			}
-			$len = pow(mb_strlen($strWord, "UTF-8"), 3);
-			$cf += (0 - $len) / ($len + 150);
-			$word .= "{$strWord}";
-			if ($forward == true) {
-				$this->result[$word] = $cf;
-				return 0;
-			} else {
-				$reverseWord = $this->word_reverse($word);
-				$this->result[$reverseWord] = $cf;
-				return 0;
-			}
-*/
 		}
 		//直接找到
 
@@ -447,104 +437,6 @@ class TurboSplit
                 $this->split($node['children'][$key], ($deep + 1), $express, $adj_len, $c_threshhold, $w_threshhold, $forward, $sandhi_advance);
             }
         }
-        /*
-		if (count($output) > 0) {
-			foreach ($output as $part) {
-				$checked = $part[0];
-				$remainder = $part[1];
-				$this->log("剩余部分：{$remainder}");
-				$this->path[$deep][0] = $checked;
-				$this->path[$deep][1] = $part[2];
-
-				if (empty($remainder)) {
-					#全切完了
-					$this->log("全切完了");
-					$word = "";
-					$cf = 1.0;
-					for ($i = 0; $i < $deep; $i++) {
-						$word .= $this->path[$i][0];
-						if ($this->isDebug) {
-							$word .= "(" . $this->path[$i][1] . ")";
-						}
-						$word .= "+";
-						$cf = $cf * $this->path[$i][1];
-					}
-
-					if ($this->isDebug) {
-						$word .= $checked . "({$part[2]})";
-					} else {
-						$word .= $checked;
-					}
-					$cf = $cf * $part[2];
-					if ($cf > $w_threshhold) {
-						if ($forward == true) {
-							$this->result[$word] = $cf;
-							return 0;
-						} else {
-							$reverseWord = $this->word_reverse($word);
-							$this->result[$reverseWord] = $cf;
-							return 0;
-						}
-					}
-				} else {
-                    //还有剩余部分
-					#计算当前信心指数
-					$cf = 1.0;
-					for ($i = 0; $i < $deep; $i++) {
-						$cf = $cf * $this->path[$i][1];
-					}
-					$this->log("计算当前信心指数:{$cf}");
-					if($cf<$w_threshhold){
-						$this->log("信心指数过低，提前返回 {$cf}");
-						return 0;
-					}else{
-						#接着切
-						$this->log("接着切:{$remainder}");
-						$this->split($remainder, ($deep + 1), $express, $adj_len, $c_threshhold, $w_threshhold, $forward, $sandhi_advance);
-					}
-				}
-			}
-		}else {
-			#尾巴查不到了
-			$this->log("尾巴查不到了");
-			$word = "";
-			$cf = 1.0;
-			for ($i = 0; $i < $deep; $i++) {
-				$word .= $this->path[$i][0];
-				if ($this->isDebug) {
-					$word .= "(" . $this->path[$i][1] . ")";
-				}
-				$word .= "+";
-				$cf = $cf * $this->path[$i][1];
-			}
-
-			$len = pow(mb_strlen($strWord, "UTF-8"), 3);
-
-			if ($forward) {
-				$cf =(1-$cf) * $len / ($len + 150);
-			} else {
-				$cf =(1-$cf) * $len / ($len + 5);
-			}
-
-			if ($this->isDebug) {
-				$word = $word.$strWord . "(0)";
-			} else {
-				$word = $word .$strWord;
-			}
-
-			if ($cf > $w_threshhold) {
-				if ($forward == true) {
-					$this->result[$word] = $cf;
-					return 0;
-				}
-				else {
-					$reverseWord = $this->word_reverse($word);
-					$this->result[$reverseWord] = $cf;
-					return 0;
-				}
-			}
-		}
-*/
 	}
 
     /**
@@ -679,6 +571,7 @@ class TurboSplit
 	}
 
 	public function splitA($word){
+        $caseman = new CaseMan();
 		$output = array();
 		//预处理连音词
 		$word1 = $this->splitSandhi($word);
@@ -690,6 +583,9 @@ class TurboSplit
 		}
 
 		foreach ($arrword as $oneword) {
+            if(mb_strlen($oneword)<5){
+                continue;
+            }
 			$this->result = array(); //清空递归程序的输出容器
             $node = ['word'=>"",'remain'=>$oneword,'children'=>[]];
 			if(mb_strlen($oneword)>35){
@@ -747,7 +643,7 @@ class TurboSplit
                             }
                         }
 						$this->log("结尾词：".$endOfFactor);
-						$caseman = new CaseMan();
+
 						//猜测单词的base
 						$parents = $caseman->WordToBase($oneword,1,false);
 						//找到结尾单词的base
@@ -811,7 +707,22 @@ class TurboSplit
 					}
 				}
 			} else {
-				Log::error("{$oneword} 切分失败");
+                $this->log("{$oneword} 切分失败");
+                $this->log("猜测可能的格位");
+                //猜测单词的base
+				$wordWithType = ['word'=>$oneword,'type'=>'','grammar'=>'','parent'=>'','factors'=>'','confidence'=>0];
+                $parents = $caseman->WordToBase($oneword,1,false);
+                foreach ($parents as $base=>$case) {
+                    foreach ($case as $value) {
+                        $wordWithType['type'] = $value['type'];
+                        $wordWithType['grammar'] = $value['grammar'];
+                        $wordWithType['factors'] = $value['factors'];
+                        $wordWithType['parent'] = $base;
+                        $wordWithType['confidence'] = $value['confidence'];
+                        $this->log("word:{$wordWithType['word']} ; type:{$wordWithType['type']}; grammar:{$wordWithType['grammar']};parent:{$wordWithType['parent']}");
+                        array_push($output,$wordWithType);
+                    }
+                }
 			}
 		}
 		return $output;

@@ -38,8 +38,11 @@ class WebHookArticleNew extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		# 获取最新文章数据
-		$url = env('APP_URL',"http://127.0.0.1:8000")."/api/v2/progress?view=chapter&channel_type=translation";
+		$url = config('app.url')."/api/v2/progress?view=chapter&channel_type=translation";
 
 		$response = Http::get($url);
 		if($response->successful()){
@@ -47,7 +50,7 @@ class WebHookArticleNew extends Command
 			$data = $response['data']['rows'];
 			$title = "2022-7-3更新";
 			$message = "# wikipali:最新更新\n\n";
-			for ($i=0; $i < 4; $i++) { 
+			for ($i=0; $i < 4; $i++) {
 				# code...
 				$row = $data[$i];
 				$book = $row['book'];
@@ -58,11 +61,11 @@ class WebHookArticleNew extends Command
 				}else{
 					$title = $row['toc'];
 				}
-                
-				$link = env('APP_URL',"http://127.0.0.1:8000")."/app/article/index.php?view=chapter&book={$book}&par={$para}&channel={$channel_id}";
-				$message .= "1. [{$title}]({$link})\n";				
+
+				$link = config('app.url')."/app/article/index.php?view=chapter&book={$book}&par={$para}&channel={$channel_id}";
+				$message .= "1. [{$title}]({$link})\n";
 			}
-			$link = env('APP_URL',"http://127.0.0.1:8000")."/app/palicanon";
+			$link = config('app.url')."/app/palicanon";
 			$message .= "\n [更多]({$link})";
 			$this->info($message);
 			$url = $this->argument('host');
@@ -70,9 +73,9 @@ class WebHookArticleNew extends Command
 				case "dingtalk":
 					$param = [
 						"markdown"=> [
-							"title"=> $title, 
-							"text"=> $message, 
-						], 
+							"title"=> $title,
+							"text"=> $message,
+						],
 						"msgtype"=>"markdown"
 						];
 					break;
@@ -80,8 +83,8 @@ class WebHookArticleNew extends Command
 					$param = [
 						"msgtype"=>"markdown",
 						"markdown"=> [
-							"content"=> $message, 
-						], 
+							"content"=> $message,
+						],
 						];
 					break;
 			}

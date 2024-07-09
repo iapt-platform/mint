@@ -7,6 +7,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Channel;
+use Illuminate\Support\Facades\Log;
 
 class ExportChannel extends Command
 {
@@ -15,7 +16,7 @@ class ExportChannel extends Command
      *
      * @var string
      */
-    protected $signature = 'export:channel';
+    protected $signature = 'export:channel {db}';
 
     /**
      * The console command description.
@@ -41,26 +42,46 @@ class ExportChannel extends Command
      */
     public function handle()
     {
-        $filename = "public/export/offline/channel.csv";
-        Storage::disk('local')->put($filename, "");
-        $file = fopen(storage_path("app/{$filename}"),"w");
-        fputcsv($file,['id','name','type','language','summary','owner_id','setting','created_at']);
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
+        Log::debug('task export offline channel-table start');
+        $exportFile = storage_path('app/public/export/offline/'.$this->argument('db').'-'.date("Y-m-d").'.db3');
+        $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
+        $dbh->beginTransaction();
+
+        $query = "INSERT INTO channel ( id , name , type , language ,
+                                    summary , owner_id , setting,created_at )
+                                    VALUES ( ? , ? , ? , ? , ? , ? , ? , ?  )";
+        try{
+            $stmt = $dbh->prepare($query);
+        }catch(PDOException $e){
+            Log::info($e);
+            return 1;
+        }
+
         $bar = $this->output->createProgressBar(Channel::where('status',30)->count());
-        foreach (Channel::where('status',30)->select(['uid','name','type','lang','summary','owner_uid','setting','created_at'])->cursor() as $chapter) {
-            fputcsv($file,[
-                            $chapter->uid,
-                            $chapter->name,
-                            $chapter->type,
-                            $chapter->lang,
-                            $chapter->summary,
-                            $chapter->owner_uid,
-                            $chapter->setting,
-                            $chapter->created_at,
-                            ]);
+        foreach (Channel::where('status',30)
+                ->select(['uid','name','type','lang',
+                          'summary','owner_uid','setting','created_at'])
+                          ->cursor() as $row) {
+                $currData = array(
+                            $row->uid,
+                            $row->name,
+                            $row->type,
+                            $row->lang,
+                            $row->summary,
+                            $row->owner_uid,
+                            $row->setting,
+                            $row->created_at,
+                            );
+            $stmt->execute($currData);
             $bar->advance();
         }
-        fclose($file);
+        $dbh->commit();
         $bar->finish();
+        Log::debug('task export offline channel-table finished');
         return 0;
     }
 }

@@ -37,11 +37,28 @@ class UpgradeWeekly extends Command
      */
     public function handle()
     {
-        # 段落更新图
-        $this->call('upgrade:chapterdynamic');
-        $this->call('upgrade:chapter.dynamic.weekly');
-        $this->call('export:offline');
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
+        #译文进度
+        $this->call('upgrade:progress');
+        $time = time()-$currTime;
+        $message .= "progress:{$time}; ";
+        $currTime = time();
 
+        $this->call('upgrade:progress.chapter');
+        $time = time()-$currTime;
+        $message .= "progress.chapter:{$time}; ";
+        $currTime = time();
+
+        # 逐词译数据库分析
+        $this->call('upgrade:wbw.analyses');
+        $time = time()-$currTime;
+        $message .= "wbw.analyses:{$time}; ";
+
+        # 段落更新图
+        $this->call('upgrade:chapter.dynamic');
+        $this->call('upgrade:chapter.dynamic.weekly');
         return 0;
     }
 }

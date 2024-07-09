@@ -3,8 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Models\WordPart;
+use App\Models\UserDict;
+
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class UpgradeWordPart extends Command
 {
@@ -13,7 +16,7 @@ class UpgradeWordPart extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:wordpart';
+    protected $signature = 'upgrade:word.part';
 
     /**
      * The console command description.
@@ -39,8 +42,28 @@ class UpgradeWordPart extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
+        $delete = WordPart::where('id','>',0)->delete();
+        #载入纸质词典数据
+        $paper = UserDict::selectRaw('word,count(*)')->where("source",'_PAPER_')->groupBy('word')->cursor();
+        $sql = "select
+                      count(*) from (
+                        select word, count(*) from user_dicts ud where source = '_PAPER_' group by word) as T";
+        $count = DB::select($sql);
+        $bar = $this->output->createProgressBar($count[0]->count);
+        foreach ($paper as $key => $word) {
+            $newWord = new WordPart;
+            $newWord->word = $word->word;
+            $newWord->weight = $word->count;
+            $newWord->save();
+            $bar->advance();
+        }
+        $bar->finish();
+
 		#载入csv数据
-		$csvFile = config("app.path.dict_text") .'/system/part.csv';
+		$csvFile = config("mint.path.dict_text") .'/system/part2.csv';
 		if (($fp = fopen($csvFile, "r")) !== false) {
 			Log::info("csv load：" . $csvFile);
 			while (($data = fgetcsv($fp, 0, ',')) !== false) {

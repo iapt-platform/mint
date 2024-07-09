@@ -41,11 +41,14 @@ class UpgradePaliTextTag extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $this->info("upgrade pali text tag");
         $startTime = time();
 
         #载入csv数据
-        $csvFile = config("app.path.pali_title") .'/pali_text_tag.csv';
+        $csvFile = config("mint.path.pali_title") .'/pali_text_tag.csv';
         if (($fp = fopen($csvFile, "r")) === false) {
             $this->error( "can not open csv file. filename=" . $csvFile. PHP_EOL) ;
             Log::error( "can not open csv file. filename=" . $csvFile) ;
@@ -58,7 +61,7 @@ class UpgradePaliTextTag extends Command
             if($inputRow%100==0){
                 $this->info($inputRow);
             }
-            
+
             //略过第一行标题行
             if ($inputRow == 1){
                 continue;
@@ -85,7 +88,7 @@ class UpgradePaliTextTag extends Command
                 foreach ($tags as $key => $tag) {
                     # code...
                     if(!empty($tag)){
-                        $tagRow = Tag::firstOrCreate(['name'=>$tag],['owner_id'=>config("app.admin.root_uuid")]);
+                        $tagRow = Tag::firstOrCreate(['name'=>$tag],['owner_id'=>config("mint.admin.root_uuid")]);
                         $tagmap = TagMap::firstOrCreate([
                                     'table_name' => 'pali_texts',
                                     'anchor_id' => $paliTextUuid,
@@ -99,7 +102,7 @@ class UpgradePaliTextTag extends Command
             }else{
                     $this->error("no palitext uuid book=$book para=$para ");
             }
-            
+
         }
         fclose($fp);
         $this->info(" $inputRow para $tagCount tags  finished. in ". time()-$startTime . "s");

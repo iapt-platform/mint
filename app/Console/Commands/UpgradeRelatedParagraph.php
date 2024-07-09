@@ -43,12 +43,15 @@ class UpgradeRelatedParagraph extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $this->info("upgrade related.paragraph");
 		$startTime = time();
         #删除目标数据库中数据
         RelatedParagraph::where('book','>',0)->delete();
 		// 打开csv文件并读取数据
-        $strFileName = config("app.path.pali_title") . "/cs6_para.csv";
+        $strFileName = config("mint.path.pali_title") . "/cs6_para.csv";
         if(!file_exists($strFileName)){
             return 1;
         }
@@ -58,7 +61,7 @@ class UpgradeRelatedParagraph extends Command
             $this->error("can not open csv $strFileName");
             Log::error("can not open csv $strFileName");
         }
-        $bookTitles = BookTitle::orderBy('id','desc')->get();
+        $bookTitles = BookTitle::orderBy('sn','desc')->get();
 
         while (($data = fgetcsv($fp, 0, ',')) !== false) {
             if($inputRow>0){

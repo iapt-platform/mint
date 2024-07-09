@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+
 use App\Models\Sentence;
 use App\Models\Channel;
 use App\Models\PaliText;
@@ -11,18 +13,23 @@ use App\Models\Wbw;
 use App\Models\Discussion;
 use App\Models\PaliSentence;
 use App\Models\SentSimIndex;
-use Illuminate\Support\Str;
+use App\Models\CustomBookSentence;
+use App\Models\CustomBook;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use App\Http\Api\MdRender;
 use App\Http\Api\SuggestionApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\UserApi;
 use App\Http\Api\StudioApi;
+use App\Http\Api\AuthApi;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
 use App\Http\Resources\TocResource;
+use Illuminate\Support\Facades\Redis;
 
 class CorpusController extends Controller
 {
@@ -54,8 +61,17 @@ class CorpusController extends Controller
         'editor_uid',
         'acceptor_uid',
         'pr_edit_at',
-        'updated_at'
+        'fork_at',
+        'create_time',
+        'modify_time',
+        'created_at',
+        'updated_at',
     ];
+
+    protected $userUuid=null;
+
+    protected $debug=[];
+
     public function __construct()
     {
 
@@ -100,30 +116,42 @@ class CorpusController extends Controller
     {
         //
     }
-    public function getSentTpl($id,$channels,$mode='edit',$onlyProps=false){
+    public function getSentTpl($id,$channels,$mode='edit',$onlyProps=false,$format='react'){
         $sent = [];
         $sentId = \explode('-',$id);
         if(count($sentId) !== 4){
             return false;
         }
-        if($mode==='read'){
-            $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+        $bookId = (int)$sentId[0];
+        if( $bookId < 1000){
+            if($mode==='read'){
+                $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+            }else{
+                $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+            }
         }else{
-            $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+            $channelId = CustomBook::where('book_id',$bookId)->value('channel_id');
         }
 
-        if($channelId !== false){
+
+        if(isset($channelId) && $channelId){
             array_push($channels,$channelId);
         }
         $record = Sentence::select($this->selectCol)
-        ->where('book_id',$sentId[0])
-        ->where('paragraph',$sentId[1])
-        ->where('word_start',(int)$sentId[2])
-        ->where('word_end',(int)$sentId[3])
-        ->whereIn('channel_uid',$channels)
-        ->get();
+                        ->where('book_id',$sentId[0])
+                        ->where('paragraph',$sentId[1])
+                        ->where('word_start',(int)$sentId[2])
+                        ->where('word_end',(int)$sentId[3])
+                        ->whereIn('channel_uid',$channels)
+                        ->get();
 
         $channelIndex = $this->getChannelIndex($channels);
+
+        if(isset($toSentFormat)){
+            foreach ($toSentFormat as $key => $org) {
+                $record[] = $org;
+            }
+        }
 
         //获取wbw channel
         //目前默认的 wbw channel 是第一个translation channel
@@ -134,28 +162,45 @@ class CorpusController extends Controller
                 break;
             }
         }
-        return $this->makeContent($record,$mode,$channelIndex,[],$onlyProps);
+        return $this->makeContent($record,$mode,$channelIndex,[],$onlyProps,false,$format);
     }
     /**
      * Display the specified resource.
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function showSent($id)
+    public function showSent(Request  $request, string $id)
     {
-        //
-        $param = \explode('_',$id);
-        if(count($param)>1){
-            $channels = array_slice($param,1);
-        }else{
-            $channels = [];
+        $user = AuthApi::current($request);
+        if($user){
+            $this->userUuid = $user['user_uid'];
         }
-        $this->result['content'] = getSentTpl($param[0],$channels);
+        $channels = \explode('_',$request->get('channels'));
+
+        $this->result['uid'] = "";
+        $this->result['title'] = "";
+        $this->result['subtitle'] = "";
+        $this->result['summary'] = "";
+        $this->result['lang'] = "";
+        $this->result['status'] = 30;
+        $this->result['content'] = $this->getSentTpl($id,$channels,$request->get('mode','edit'));
         return $this->ok($this->result);
     }
+    /**
+     * 获取某句子的全部译文
 
-    public function showSentences($type,$id,$mode='read'){
+     * @param  \Illuminate\Http\Request  $request
+     * @param string $type
+     * @param string $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showSentences(Request $request, string $type, string $id){
+        $user = AuthApi::current($request);
+        if($user){
+            $this->userUuid = $user['user_uid'];
+        }
+
         $param = \explode('_',$id);
         $sentId = \explode('-',$param[0]);
         $channels = [];
@@ -171,7 +216,7 @@ class CorpusController extends Controller
             # code...
             $channels[] = $value->channel_uid;
         }
-		$channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','name'])->get();
+		$channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','lang','name'])->get();
 		$indexChannel = [];
         $channels = [];
 		foreach ($channelInfo as $key => $value) {
@@ -195,6 +240,12 @@ class CorpusController extends Controller
             return $this->error("no data");
         }
 
+        $this->result['uid'] = "";
+        $this->result['title'] = "";
+        $this->result['subtitle'] = "";
+        $this->result['summary'] = "";
+        $this->result['lang'] = "";
+        $this->result['status'] = 30;
         $this->result['content'] = $this->makeContent($record,$mode,$indexChannel);
         return $this->ok($this->result);
     }
@@ -208,6 +259,13 @@ class CorpusController extends Controller
      */
     public function showPara(Request $request)
     {
+        if($request->has('debug')){
+            $this->debug = explode(',',$request->get('debug'));
+        }
+        $user = AuthApi::current($request);
+        if($user){
+            $this->userUuid = $user['user_uid'];
+        }
         //
         $channels = [];
         if($request->get('mode') === 'edit'){
@@ -219,7 +277,11 @@ class CorpusController extends Controller
         }
 
         if($request->has('channels')){
-            $getChannel = explode(",",$request->get('channels'));
+            if(strpos($request->get('channels'),',') === FALSE){
+                $getChannel = explode('_',$request->get('channels'));
+            }else{
+                $getChannel = explode(',',$request->get('channels'));
+            }
             $channels = array_merge($channels,$getChannel );
         }
         $para = explode(",",$request->get('par'));
@@ -235,10 +297,9 @@ class CorpusController extends Controller
             }else{
                 $this->result['title'] = $chapter->toc;
                 $this->result['sub_title'] = $chapter->toc;
-                $this->result['path'] = json_decode($chapter->path);
+                $this->result['path'] = json_decode($parent->path);
             }
         }
-
         $paraFrom = $para[0];
         $paraTo = end($para);
 
@@ -246,7 +307,8 @@ class CorpusController extends Controller
 
 		#获取channel索引表
         $tranChannels = [];
-		$channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','name'])->get();
+		$channelInfo = Channel::whereIn("uid",$channels)
+                        ->select(['uid','type','lang','name'])->get();
 		foreach ($channelInfo as $key => $value) {
 			# code...
             if($value->type==="translation" ){
@@ -259,7 +321,8 @@ class CorpusController extends Controller
         //目前默认的 wbw channel 是第一个translation channel
         foreach ($channels as $key => $value) {
             # code...
-            if($indexChannel[$value]->type==='translation'){
+            if(isset($indexChannel[$value]) &&
+                 $indexChannel[$value]->type==='translation'){
                 $this->wbwChannels[] = $value;
                 break;
             }
@@ -267,11 +330,11 @@ class CorpusController extends Controller
         //章节译文标题
         $title = Sentence::select($this->selectCol)
                     ->where('book_id',$parent->book)
-                    ->where('paragraph',$parent->paragraph)
+                    ->where('paragraph',$parent->parent)
                     ->whereIn('channel_uid',$tranChannels)
                     ->first();
         if($title){
-            $this->result['title'] = MdRender::render($title->content,$title->channel_uid);
+            $this->result['title'] = MdRender::render($title->content,[$title->channel_uid]);
         }
 
         /**
@@ -287,7 +350,7 @@ class CorpusController extends Controller
         if(count($record) ===0){
             $this->result['content'] = "<span>No Data</span>";
         }else{
-            $this->result['content'] = $this->makeContent($record,$request->get('mode','read'),$indexChannel,$indexedHeading);
+            $this->result['content'] = $this->makeContent($record,$request->get('mode','read'),$indexChannel,$indexedHeading,false,true);
         }
 
         return $this->ok($this->result);
@@ -301,11 +364,22 @@ class CorpusController extends Controller
      */
     public function showChapter(Request $request, string $id)
     {
+        if($request->has('debug')){
+            $this->debug = explode(',',$request->get('debug'));
+        }
+        $user = AuthApi::current($request);
+        if($user){
+            $this->userUuid = $user['user_uid'];
+        }
         //
         $sentId = \explode('-',$id);
         $channels = [];
         if($request->has('channels')){
-            $channels = explode('_',$request->get('channels'));
+            if(strpos($request->get('channels'),',') === FALSE){
+                $channels = explode('_',$request->get('channels'));
+            }else{
+                $channels = explode(',',$request->get('channels'));
+            }
         }
         $mode = $request->get('mode','read');
         if($mode === 'read'){
@@ -324,6 +398,9 @@ class CorpusController extends Controller
         if(!$chapter){
             return $this->error("no data");
         }
+        $paraFrom = $sentId[1];
+        $paraTo = $sentId[1]+$chapter->chapter_len-1;
+
         if(empty($chapter->toc)){
             $this->result['title'] = "unknown";
         }else{
@@ -332,8 +409,6 @@ class CorpusController extends Controller
             $this->result['path'] = json_decode($chapter->path);
         }
 
-        $paraFrom = $sentId[1];
-        $paraTo = $sentId[1]+$chapter->chapter_len-1;
         //获取标题
         $heading = PaliText::select(["book","paragraph","level"])
                             ->where('book',$sentId[0])
@@ -348,10 +423,10 @@ class CorpusController extends Controller
         }
 		#获取channel索引表
         $tranChannels = [];
-		$channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','name'])->get();
+		$channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','lang','name'])->get();
 		foreach ($channelInfo as $key => $value) {
 			# code...
-            if($value->type==="translation" ){
+            if($value->type === "translation" ){
                 $tranChannels[] = $value->uid;
             }
 		}
@@ -359,9 +434,11 @@ class CorpusController extends Controller
         $indexChannel = $this->getChannelIndex($channels);
         //获取wbw channel
         //目前默认的 wbw channel 是第一个translation channel
+        //TODO 处理不存在的channel id
         foreach ($channels as $key => $value) {
             # code...
-            if($indexChannel[$value]->type==='translation'){
+            if(isset($indexChannel[$value]) &&
+                $indexChannel[$value]->type==='translation'){
                 $this->wbwChannels[] = $value;
                 break;
             }
@@ -372,7 +449,9 @@ class CorpusController extends Controller
                     ->whereIn('channel_uid',$tranChannels)
                     ->first();
         if($title){
-            $this->result['title'] = MdRender::render($title->content,$title->channel_uid);
+            $this->result['title'] = MdRender::render($title->content,[$title->channel_uid]);
+            $mdRender = new MdRender(['format'=>'simple']);
+            $this->result['title_text'] = $mdRender->convert($title->content,[$title->channel_uid]);
         }
 
         /**
@@ -389,7 +468,7 @@ class CorpusController extends Controller
                                 ->orderBy('paragraph')
                                 ->value('paragraph');
         $between = $nextChapter - $sentId[1];
-        //输出子目录
+        //查找子目录
         $chapterLen = $chapter->chapter_len;
         $toc = PaliText::where('book',$sentId[0])
                         ->whereBetween('paragraph',[$paraFrom+1,$paraFrom+$chapterLen-1])
@@ -397,12 +476,12 @@ class CorpusController extends Controller
                         ->orderBy('paragraph')
                         ->select(['book','paragraph','level','toc'])
                         ->get();
-
+        $maxLen = 3000;
         if($between > 1){
             //有间隔
             $paraTo = $nextChapter - 1;
         }else{
-            if($chapter->chapter_strlen>2000){
+            if($chapter->chapter_strlen > $maxLen){
                 if(count($toc)>0){
                     //有子目录只输出标题和目录
                     $paraTo = $paraFrom;
@@ -410,40 +489,73 @@ class CorpusController extends Controller
                     //没有子目录 全部输出
                 }
             }else{
-                //章节小。全部输出 不输出章节
+                //章节小。全部输出 不输出子目录
                 $toc = [];
             }
         }
+
+        $pFrom = $request->get('from',$paraFrom);
+        $pTo = $request->get('to',$paraTo);
+        //根据句子的长度找到这次应该加载的段落
+
+        $paliText = PaliText::select(['paragraph','lenght'])
+                            ->where('book',$sentId[0])
+                            ->whereBetween('paragraph',[$pFrom,$pTo])
+                            ->orderBy('paragraph')
+                            ->get();
+        $sumLen = 0;
+        $currTo = $pTo;
+        foreach ($paliText as $para) {
+            $sumLen += $para->lenght;
+            if($sumLen > $maxLen){
+                $currTo = $para->paragraph;
+                break;
+            }
+        }
         $record = Sentence::select($this->selectCol)
-                    ->where('book_id',$sentId[0])
-                    ->whereBetween('paragraph',[$paraFrom,$paraTo])
-                    ->whereIn('channel_uid',$channels)
-                    ->orderBy('paragraph')
-                    ->orderBy('word_start')
-                    ->get();
+                          ->where('book_id',$sentId[0])
+                          ->whereBetween('paragraph',[$pFrom,$currTo])
+                          ->whereIn('channel_uid',$channels)
+                          ->orderBy('paragraph')
+                          ->orderBy('word_start')
+                          ->get();
         if(count($record) ===0){
             return $this->error("no data");
         }
-        $this->result['content'] = $this->makeContent($record,$mode,$indexChannel,$indexedHeading);
-        $this->result['toc'] = TocResource::collection($toc);
-        Log::info("show chapter");
+        $this->result['content'] = $this->makeContent($record,$mode,$indexChannel,$indexedHeading,false,true);
+        if(!$request->has('from')){
+            //第一次才显示toc
+            $this->result['toc'] = TocResource::collection($toc);
+        }
+        if($currTo < $pTo){
+            $this->result['from'] = $currTo+1;
+            $this->result['to'] = $pTo;
+            $this->result['paraId'] = $id;
+            $this->result['channels'] = $request->get('channels');
+            $this->result['mode'] = $request->get('mode');
+        }
+
         return $this->ok($this->result);
     }
 
     private function getChannelIndex($channels,$type=null){
         #获取channel索引表
-        $channelInfo = Channel::whereIn("uid",$channels)->select(['uid','type','name','owner_uid'])->get();
+        $channelInfo = Channel::whereIn("uid",$channels)
+                        ->select(['uid','type','name','lang','owner_uid'])
+                        ->get();
         $indexChannel = [];
-        foreach ($channelInfo as $key => $value) {
-            # code...
-            if($type !== null && $value->type !== $type){
+        foreach ($channels as $key => $channelId) {
+            $channelInfo = Channel::where("uid",$channelId)
+                        ->select(['uid','type','name','lang','owner_uid'])->first();
+            if(!$channelInfo){
+                Log::error('no channel id'.$channelId);
                 continue;
             }
-            $indexChannel[$value->uid] = $value;
-        }
-        foreach ($indexChannel as $uid => $value) {
-            # 查询studio
-            $indexChannel[$uid]['studio'] = StudioApi::getById($value->owner_uid);
+            if($type !== null && $channelInfo->type !== $type){
+                continue;
+            }
+            $indexChannel[$channelId] = $channelInfo;
+            $indexChannel[$channelId]->studio = StudioApi::getById($channelInfo->owner_uid);
         }
         return $indexChannel;
     }
@@ -454,7 +566,7 @@ class CorpusController extends Controller
      * $indexChannel channel索引
      * $indexedHeading 标题索引 用于给段落加标题标签 <h1> ect.
      */
-    private function makeContent($record,$mode,$indexChannel,$indexedHeading=[],$onlyProps=false,$paraMark=false){
+    private function makeContent($record,$mode,$indexChannel,$indexedHeading=[],$onlyProps=false,$paraMark=false,$format='react'){
         $content = [];
 		$lastSent = "0-0";
 		$sentCount = 0;
@@ -467,18 +579,56 @@ class CorpusController extends Controller
         foreach ($record as $key => $value) {
             $currSentId = "{$value->book_id}-{$value->paragraph}-{$value->word_start}-{$value->word_end}";
             $sentList[$currSentId]=[$value->book_id ,$value->paragraph,$value->word_start,$value->word_end];
-            $value['sid'] = "{$currSentId}_{$value->channel_uid}";
+            $value->sid = "{$currSentId}_{$value->channel_uid}";
+        }
+        $channelsId = array();
+        $count = 0;
+        foreach ($indexChannel as $channelId => $info){
+            if($count>0){
+                $channelsId[] = $channelId;
+            }
+            $count++;
         }
         //遍历列表查找每个句子的所有channel的数据，并填充
         $currPara = "";
         foreach ($sentList as $currSentId => $arrSentId) {
-            if($currPara === ""){
-                $currPara = $arrSentId[0]."-".$arrSentId[1];
+            $para = $arrSentId[0]."-".$arrSentId[1];
+            if($currPara !== $para){
+                $currPara = $para;
+                //输出段落标记
+
+                if($paraMark){
+                    $sentInPara = array();
+                    foreach ($sentList as $sentId => $sentParam) {
+                        if($sentParam[0]===$arrSentId[0] &&
+                           $sentParam[1]===$arrSentId[1]){
+                            $sentInPara[] = $sentId;
+                        }
+                    }
+
+                    //输出段落起始
+                    if(!empty($currPara)){
+                        $content[] = '</MdTpl>';
+                    }
+                    $markProps = base64_encode(\json_encode([
+                            'book'=>$arrSentId[0],
+                            'para'=>$arrSentId[1],
+                            'channels'=>$channelsId,
+                            'sentences'=>$sentInPara,
+                        ])) ;
+                    $content[] = "<MdTpl tpl='para-shell' props='{$markProps}' >";
+                }
+
             }
             $sent = $this->newSent($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3]);
             foreach ($indexChannel as $channelId => $info) {
                 # code...
                 $sid = "{$currSentId}_{$channelId}";
+                if(isset($info->studio)){
+                    $studioInfo = $info->studio;
+                }else{
+                    $studioInfo = null;
+                }
                 $newSent = [
                     "content"=>"",
                     "html"=> "",
@@ -490,25 +640,34 @@ class CorpusController extends Controller
                         "name"=>$info->name,
                         "type"=>$info->type,
                         "id"=> $info->uid,
+                        'lang' => $info->lang,
                     ],
-                    "studio" => $info['studio'],
+                    "studio" => $studioInfo,
                     "updateAt"=> "",
                     "suggestionCount" => SuggestionApi::getCountBySent($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],$channelId),
                 ];
 
                 $row = Arr::first($record,function($value,$key) use($sid){
-                    return $value['sid']===$sid;
+                    return $value->sid===$sid;
                 });
                 if($row){
                     $newSent['id'] = $row->uid;
                     $newSent['content'] = $row->content;
                     $newSent['contentType'] = $row->content_type;
-                    $newSent['html'] = "";
-                    $newSent["editor"]=UserApi::getById($row->editor_uid);
-                    $newSent['updateAt'] = $row->updated_at;
+                    $newSent['html'] = '';
+                    $newSent["editor"]=UserApi::getByUuid($row->editor_uid);
+                    /**
+                     * TODO 刷库改数据
+                     * 旧版api没有更新updated_at所以造成旧版的数据updated_at数据比modify_time 要晚
+                     */
+                    $newSent['forkAt'] =  $row->fork_at; //
+                    $newSent['updateAt'] =  $row->updated_at; //
+                    $newSent['updateAt'] = date("Y-m-d H:i:s.",$row->modify_time/1000).($row->modify_time%1000)." UTC";
+
+                    $newSent['createdAt'] = $row->created_at;
                     if($mode !== "read"){
                         if(isset($row->acceptor_uid) && !empty($row->acceptor_uid)){
-                            $newSent["acceptor"]=UserApi::getById($row->acceptor_uid);
+                            $newSent["acceptor"]=UserApi::getByUuid($row->acceptor_uid);
                             $newSent["prEditAt"]=$row->pr_edit_at;
                         }
                     }
@@ -516,45 +675,82 @@ class CorpusController extends Controller
                         case 'wbw':
                         case 'original':
                             //
-                                // 在编辑模式下。
-                                // 如果是原文，查看是否有逐词解析数据，
-                                // 有的话优先显示。
-                                // 阅读模式直接显示html原文
-                                // 传过来的数据一定有一个原文channel
-                                //
-                            if($mode !== "read"){
-
-                                $newSent['channel']['type'] = "wbw";
-
-                                if(isset($this->wbwChannels[0])){
-                                    $newSent['channel']['name'] = $indexChannel[$this->wbwChannels[0]]->name;
-                                    $newSent['channel']['id'] = $this->wbwChannels[0];
-                                    //存在一个translation channel
-                                    //尝试查找逐词解析数据。找到，替换现有数据
-                                    $wbwData = $this->getWbw($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],$this->wbwChannels[0]);
-                                    if($wbwData){
-                                        $newSent['content'] = $wbwData;
-                                        $newSent['html'] = "";
-                                    }
-                                }
-                            }else{
+                            // 在编辑模式下。
+                            // 如果是原文，查看是否有逐词解析数据，
+                            // 有的话优先显示。
+                            // 阅读模式直接显示html原文
+                            // 传过来的数据一定有一个原文channel
+                            //
+                            if($mode === "read"){
                                 $newSent['content'] = "";
-                                $newSent['html'] = $row->content;
+                                $newSent['html'] = MdRender::render($row->content,[$row->channel_uid],
+                                                                            null,$mode,"translation",
+                                                                            $row->content_type,$format);
+                            }else{
+                                if($row->content_type==='json'){
+                                    $newSent['channel']['type'] = "wbw";
+                                    if(isset($this->wbwChannels[0])){
+                                        $newSent['channel']['name'] = $indexChannel[$this->wbwChannels[0]]->name;
+                                        $newSent['channel']['lang'] = $indexChannel[$this->wbwChannels[0]]->lang;
+                                        $newSent['channel']['id'] = $this->wbwChannels[0];
+                                        //存在一个translation channel
+                                        //尝试查找逐词解析数据。找到，替换现有数据
+                                        $wbwData = $this->getWbw($arrSentId[0],$arrSentId[1],$arrSentId[2],$arrSentId[3],
+                                                                $this->wbwChannels[0]);
+                                        if($wbwData){
+                                            $newSent['content'] = $wbwData;
+                                            $newSent['contentType'] = 'json';
+                                            $newSent['html'] = "";
+                                            $newSent['studio'] = $indexChannel[$this->wbwChannels[0]]->studio;
+                                        }
+                                    }
+                                }else{
+                                    $newSent['content'] = $row->content;
+                                    $newSent['html'] = MdRender::render($row->content,[$row->channel_uid],
+                                                                                null,$mode,"translation",
+                                                                                $row->content_type,$format);
+                                }
                             }
 
                             break;
                         case 'nissaya':
-                            $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",10,
-                            function() use($row,$mode){
-                                return MdRender::render($row->content,$row->channel_uid,null,$mode,"nissaya",$row->content_type);
-                            });
+                            $newSent['html'] = RedisClusters::remember("/sent/{$channelId}/{$currSentId}/{$format}",
+                                                config('mint.cache.expire'),
+                                                function() use($row,$mode,$format){
+                                                    return MdRender::render($row->content,[$row->channel_uid],
+                                                                            null,$mode,"nissaya",
+                                                                            $row->content_type,$format);
+                                                });
                             break;
                         default:
-                            //译文需要markdown渲染
-                            $newSent['html'] = Cache::remember("/sent/{$channelId}/{$currSentId}",10,
-                                                function() use($row){
-                                                    return MdRender::render($row->content,$row->channel_uid);
+                        /**
+                         * 译文需要markdown渲染
+                         * 包涵术语的不用cache
+                         */
+                            if(strpos($row->content,'[[')===false){
+                                $newSent['html'] = MdRender::render($row->content,[$row->channel_uid],
+                                                            null,$mode,'translation',
+                                                            $row->content_type,$format);
+                                /*
+                                RedisClusters::remember("/sent/{$channelId}/{$currSentId}/{$format}",
+                                                    config('mint.cache.expire'),
+                                                function() use($row,$mode,$format){
+                                                    return MdRender::render($row->content,[$row->channel_uid],
+                                                                            null,$mode,'translation',
+                                                                            $row->content_type,$format);
                                                 });
+                                            */
+                            }else{
+                                $mdRender = new MdRender(
+                                    [
+                                        'debug'=>$this->debug,
+                                        'format'=>$format,
+                                        'mode'=>$mode,
+                                        'channelType'=>'translation',
+                                        'contentType'=>$row->content_type,
+                                    ]);
+                                $newSent['html'] = $mdRender->convert($row->content,[$row->channel_uid]);
+                            }
                             break;
                     }
                 }
@@ -573,7 +769,9 @@ class CorpusController extends Controller
             }
             $content = $this->pushSent($content,$sent,0,$mode);
         }
-
+        if($paraMark){
+            $content[] = '</MdTpl>';
+        }
         $output = \implode("",$content);
         return "<div>{$output}</div>";
     }
@@ -595,7 +793,7 @@ class CorpusController extends Controller
         //找到逐词解析数据
         $wbwData = Wbw::where('block_uid',$wbwBlock->uid)
                       ->whereBetween('wid',[$start,$end])
-                      ->select(['book_id','paragraph','wid','data','uid'])
+                      ->select(['book_id','paragraph','wid','data','uid','editor_id','created_at','updated_at'])
                       ->orderBy('wid')
                       ->get();
         $wbwContent = [];
@@ -633,6 +831,8 @@ class CorpusController extends Controller
                     'factors'=> ['value'=>$word->org->__toString(),'status'=>0],
                     'factorMeaning'=> ['value'=>$word->om->__toString(),'status'=>0],
                     'confidence'=> $word->cf->__toString(),
+                    'created_at'=> $wbwrow->created_at,
+                    'updated_at'=> $wbwrow->updated_at,
                     'hasComment'=>Discussion::where('res_id',$wbwrow->uid)->exists(),
                 ];
                 if(isset($word->parent2)){
@@ -686,6 +886,9 @@ class CorpusController extends Controller
                 if(isset($word->cf)){
                     $wbwData['confidence'] = (float)$word->cf->__toString();
                 }
+                if(isset($word->attachments)){
+                    $wbwData['attachments'] = json_decode($word->attachments->__toString());
+                }
                 if(isset($word->pali['status'])){
                     $wbwData['word']['status'] = (int)$word->pali['status'];
                 }
@@ -730,9 +933,9 @@ class CorpusController extends Controller
 
 		$sentProps = base64_encode(\json_encode($sent)) ;
         if($mode === 'read'){
-            $sentWidget = "<MdTpl tpl='sentread' props='{$sentProps}' />";
+            $sentWidget = "<MdTpl tpl='sentread' props='{$sentProps}' ></MdTpl>";
         }else{
-            $sentWidget = "<MdTpl tpl='sentedit' props='{$sentProps}' />";
+            $sentWidget = "<MdTpl tpl='sentedit' props='{$sentProps}' ></MdTpl>";
         }
 		//增加标题的html标记
 		if($level>0){
@@ -752,84 +955,110 @@ class CorpusController extends Controller
 			"translation"=>[],
 		];
 
-		#生成channel 数量列表
-		$sentId = "{$book}-{$para}-{$word_start}-{$word_end}";
-        $channelCount = CorpusController::sentResCount($book,$para,$word_start,$word_end);
-        $path = json_decode(PaliText::where('book',$book)->where('paragraph',$para)->value("path"),true);
-        $sent["path"] = [];
-        foreach ($path as $key => $value) {
-            # code...
-            $value['paliTitle'] = $value['title'];
-            $sent["path"][] = $value;
+        if($book<1000){
+            #生成channel 数量列表
+            $sentId = "{$book}-{$para}-{$word_start}-{$word_end}";
+            $channelCount = CorpusController::_sentCanReadCount($book,$para,$word_start,$word_end,$this->userUuid);
+            $path = json_decode(PaliText::where('book',$book)->where('paragraph',$para)->value("path"),true);
+            $sent["path"] = [];
+            foreach ($path as $key => $value) {
+                # code...
+                $value['paliTitle'] = $value['title'];
+                $sent["path"][] = $value;
+            }
+            $sent["tranNum"] = $channelCount['tranNum'];
+            $sent["nissayaNum"] = $channelCount['nissayaNum'];
+            $sent["commNum"] = $channelCount['commNum'];
+            $sent["originNum"] = $channelCount['originNum'];
+            $sent["simNum"] = $channelCount['simNum'];
         }
-		$sent["tranNum"] = $channelCount['tranNum'];
-		$sent["nissayaNum"] = $channelCount['nissayaNum'];
-		$sent["commNum"] = $channelCount['commNum'];
-		$sent["originNum"] = $channelCount['originNum'];
-		$sent["simNum"] = $channelCount['simNum'];
+
 		return $sent;
 	}
 
+    public static function _sentCanReadCount($book,$para,$start,$end,$userUuid=null){
+        $keyCanRead="/channel/can-read/";
+        if($userUuid){
+            $keyCanRead .= $userUuid;
+        }else{
+            $keyCanRead .= 'guest';
+        }
+        $channelCanRead = RedisClusters::remember($keyCanRead,
+                            config('mint.cache.expire'),
+                            function() use($userUuid){
+                                return ChannelApi::getCanReadByUser($userUuid);
+                            });
+        $channels =  Sentence::where('book_id',$book)
+            ->where('paragraph',$para)
+            ->where('word_start',$start)
+            ->where('word_end',$end)
+            ->where('strlen','<>',0)
+            ->whereIn('channel_uid',$channelCanRead)
+            ->select('channel_uid')
+            ->groupBy('channel_uid')
+            ->get();
+        $channelList = [];
+        foreach ($channels as $key => $value) {
+            # code...
+            if(Str::isUuid($value->channel_uid)){
+                $channelList[] = $value->channel_uid;
+            }
+        }
+        $simId = PaliSentence::where('book',$book)
+                            ->where('paragraph',$para)
+                            ->where('word_begin',$start)
+                            ->where('word_end',$end)
+                            ->value('id');
+        if($simId){
+            $output["simNum"]=SentSimIndex::where('sent_id',$simId)->value('count');
+        }else{
+            $output["simNum"]=0;
+        }
+        $channelInfo = Channel::whereIn("uid",$channelList)->select('type')->get();
+        $output["tranNum"]=0;
+        $output["nissayaNum"]=0;
+        $output["commNum"]=0;
+        $output["originNum"]=0;
+
+        foreach ($channelInfo as $key => $value) {
+            # code...
+            switch($value->type){
+                case "translation":
+                    $output["tranNum"]++;
+                    break;
+                case "nissaya":
+                    $output["nissayaNum"]++;
+                    break;
+                case "commentary":
+                    $output["commNum"]++;
+                    break;
+                case "original":
+                    $output["originNum"]++;
+                    break;
+            }
+        }
+        return $output;
+    }
     /**
      * 获取某个句子的相关资源的句子数量
      */
-    public static function sentResCount($book,$para,$start,$end){
+    public static function sentCanReadCount($book,$para,$start,$end,$userUuid=null){
 		$sentId = "{$book}-{$para}-{$start}-{$end}";
-		$channelCount = Cache::remember("/sentence/{$sentId}/channels/count",
-                          60,
-                          function() use($book,$para,$start,$end){
-			$channels =  Sentence::where('book_id',$book)
-							->where('paragraph',$para)
-							->where('word_start',$start)
-							->where('word_end',$end)
-							->select('channel_uid')
-                            ->groupBy('channel_uid')
-							->get();
-            $channelList = [];
-            foreach ($channels as $key => $value) {
-                # code...
-                if(Str::isUuid($value->channel_uid)){
-                    $channelList[] = $value->channel_uid;
-                }
-            }
-            $simId = PaliSentence::where('book',$book)
-                                 ->where('paragraph',$para)
-                                 ->where('word_begin',$start)
-                                 ->where('word_end',$end)
-                                 ->value('id');
-            if($simId){
-                $output["simNum"]=SentSimIndex::where('sent_id',$simId)->value('count');
-            }else{
-                $output["simNum"]=0;
-            }
-            $channelInfo = Channel::whereIn("uid",$channelList)->select('type')->get();
-            $output["tranNum"]=0;
-            $output["nissayaNum"]=0;
-            $output["commNum"]=0;
-            $output["originNum"]=0;
-
-            foreach ($channelInfo as $key => $value) {
-                # code...
-                switch($value->type){
-                    case "translation":
-                        $output["tranNum"]++;
-                        break;
-                    case "nissaya":
-                        $output["nissayaNum"]++;
-                        break;
-                    case "commentary":
-                        $output["commNum"]++;
-                        break;
-                    case "original":
-                        $output["originNum"]++;
-                        break;
-                }
-            }
-			return $output;
-
-		});
-        return $channelCount;
+        $hKey = "/sentence/res-count/{$sentId}/";
+        if($userUuid){
+            $key = $userUuid;
+        }else{
+            $key = 'guest';
+        }
+        if(Redis::hExists($hKey,$key)){
+            return json_decode(Redis::hGet($hKey,$key),true);
+        }else{
+            $channelCount = CorpusController::_sentCanReadCount($book,$para,$start,$end,$userUuid);
+            Redis::hSet($hKey,$key,json_encode($channelCount));
+            return $channelCount;
+        }
     }
+
     private function markdownRender($input){
 
     }

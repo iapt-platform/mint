@@ -33,13 +33,20 @@ class UploadController extends Controller
         $file = $request->file('file');
 
        //Move Uploaded File
-        $filename = $file->store('public/upload');
+       if($request->get('is_tmp',false) == false){
+        $bucket = config('mint.attachments.bucket_name.permanent');
+       }else{
+        $bucket = config('mint.attachments.bucket_name.temporary');
+       }
+
+       $uploadFilename = Str::uuid().'.'.$file->extension();
+        $filename = $file->storeAs($bucket,$uploadFilename);
 
         $json = array(
-            'name' => $filename,
+            'filename' => $bucket.'/'.$uploadFilename,
             'size' => $file->getSize(),
             'type' => $file->getMimeType(),
-            'url' => str_replace('public','storage',$filename),
+            'url' => storage_path('app/'.$filename),
             'uid' => Str::uuid(),
             );
         return $this->ok($json);

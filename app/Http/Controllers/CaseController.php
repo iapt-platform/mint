@@ -37,9 +37,18 @@ class CaseController extends Controller
     public function show($word)
     {
         //
+        $output = array();
         $case  = new CaseMan();
-        $result = $case->BaseToWord($word);
-        return $this->ok(['rows'=>$result,'count'=>count($result)]);
+        $result = $case->BaseToWord($word,0.2);
+        $output[] = ['word'=>$word, 'case'=>$result,'count'=>count($result)];
+        $parent = $case->WordToBase($word,1,false);
+        foreach ($parent as $key => $base) {
+            $result = $case->BaseToWord($key,0.2);
+            if(count($result)>0){
+                $output[] = ['word'=>$key, 'case'=>$result,'count'=>count($result)];
+            }
+        }
+        return $this->ok(['rows'=>$output,'count'=>count($output)]);
     }
 
     /**

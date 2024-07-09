@@ -9,14 +9,14 @@ class WbwAnalysisController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *select d1, data ,count(*) as ct from wbw_analyses where type = 7  group by d1,data order by d1,ct desc 
+     *select d1, data ,count(*) as ct from wbw_analyses where type = 7  group by d1,data order by d1,ct desc
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
         //
         $result = WbwAnalysis::selectRaw('d1, data ,count(*) as ct')
-                             ->where('type',7)
+                             ->where('type',9)
                              ->groupby('d1')
                              ->groupby('data')
                              ->orderbyRaw('d1,ct desc')

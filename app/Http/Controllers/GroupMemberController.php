@@ -44,42 +44,38 @@ class GroupMemberController extends Controller
         if(isset($_GET["order"]) && isset($_GET["dir"])){
             $table = $table->orderBy($_GET["order"],$_GET["dir"]);
         }else{
-            $table = $table->orderBy('updated_at','desc');
+            $table = $table->orderBy('created_at');
         }
 
-        if(isset($_GET["limit"])){
-            $offset = 0;
-            if(isset($_GET["offset"])){
-                $offset = $_GET["offset"];
-            }
-            $table = $table->skip($offset)->take($_GET["limit"]);
-        }
+        $table->skip($request->get('offset',0))
+              ->take($request->get('limit',1000));
+
         $result = $table->get();
-        foreach ($result as $key => $value) {
-            # 找到当前用户
-            if($user["user_uid"]===$value->user_id){
-                switch ($value->power) {
-                    case 0:
-                        $role = "owner";
-                        break;
-                    case 1:
-                        $role = "manager";
-                        break;
-                    case 2:
-                        $role = "member";
-                        break;
-                    default:
-                        $role="unknown";
-                        break;
-                }
-            }
+
+        //当前用户角色
+        $power = GroupMember::where('group_id', $request->get('id'))
+                            ->where('user_id',$user['user_uid'])
+                            ->value('power');
+        switch ($power) {
+            case 0:
+                $role = "owner";
+                break;
+            case 1:
+                $role = "manager";
+                break;
+            case 2:
+                $role = "member";
+                break;
+            default:
+                $role="unknown";
+                break;
         }
 
-		if($result){
-			return $this->ok(["rows"=>GroupMemberResource::collection($result),"count"=>$count,'role'=>$role]);
-		}else{
-			return $this->error("没有查询到数据",[],200);
-		}
+        return $this->ok([
+            "rows"=>GroupMemberResource::collection($result),
+            "count"=>$count,
+            'role'=>$role
+        ]);
     }
 
     /**

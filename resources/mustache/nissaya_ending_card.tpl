@@ -4,8 +4,8 @@
 
 {{ending_note}}
 
-|{{title_case}}|{{title_content}}|{{title_local_ending}}|{{title_local_relation}}|{{title_relation}}|
+|{{title_case}}|{{title_relation}}|{{title_local_link_to}}|{{title_content}}|{{title_local_ending}}|
 |-|-|-|-|-|
 {{#row}}
-|**{{case}}**|{{summary}}|{{local_ending}}|{{local_relation}}|`{{relation}}`|
+|{{spell}}{{#case}}<a href='{{link}}' target='_blank'>{{label}}</a> {{/case}}|<a href='{{relation_link}}' target='_blank'>`{{relation}}`</a><br />{{local_relation}}|{{#to}}<a href='{{link}}' target='_blank'>`{{label}}`</a> {{/to}}|{{category_note}}|{{local_ending}}||
 {{/row}}

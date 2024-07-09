@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -17,12 +18,12 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('upgrade:daily')
                  ->dailyAt('00:00')
-                 ->emailOutputTo(config("app.email.ScheduleEmailOutputTo"))
-				 ->emailOutputOnFailure(config("app.email.ScheduleEmailOutputOnFailure"));
+                 ->emailOutputTo(config("mint.email.ScheduleEmailOutputTo"))
+				 ->emailOutputOnFailure(config("mint.email.ScheduleEmailOutputOnFailure"));
 
         $schedule->command('upgrade:weekly')
                  ->weekly()
-                 ->emailOutputOnFailure(config("app.email.ScheduleEmailOutputOnFailure"));
+                 ->emailOutputOnFailure(config("mint.email.ScheduleEmailOutputOnFailure"));
     }
 
     /**

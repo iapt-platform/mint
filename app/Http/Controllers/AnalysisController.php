@@ -16,7 +16,7 @@ class AnalysisController extends Controller
     {
         //
         $result = WbwAnalysis::selectRaw('d1, data ,count(*) as ct')
-                             ->where('type',7)
+                             ->where('type',9)
                              ->groupby('d1')
                              ->groupby('data')
                              ->orderbyRaw('d1,ct desc')

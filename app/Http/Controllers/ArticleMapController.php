@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\ArticleCollection;
 use App\Models\Article;
 use App\Models\Collection;
-
+use App\Http\Api\ShareApi;
+use App\Http\Api\AuthApi;
 use Illuminate\Http\Request;
 use App\Http\Resources\ArticleMapResource;
+use Illuminate\Support\Facades\Log;
 
 class ArticleMapController extends Controller
 {
@@ -27,9 +29,36 @@ class ArticleMapController extends Controller
                 $table = ArticleCollection::where('article_id',$request->get('id'));
                 break;
         }
-        $result = $table->select(['id','collect_id','article_id','level','title','children','deleted_at'])
+        $count = $table->count();
+        $result = [];
+        if(!empty($request->get('parent'))){
+            //输出某节点的子节点
+            $node = $table->where('article_id',$request->get('parent'))->first();
+            if($node){
+                $nodeList = ArticleCollection::where('collect_id',$request->get('id'))
+                                            ->where('id','>',(int)$node->id)->orderBy('id')->get();
+                foreach ($nodeList as $key => $curr) {
+                    if($curr->level <= $node->level){
+                        break;
+                    }
+                    if($request->has('lazy')){
+                        if($curr->level === $node->level+1){
+                            $result[] = $curr;
+                        }
+                    }else{
+                        $result[] = $curr;
+                    }
+                }
+            }
+        }else{
+            if($request->has('lazy') && $count > 300){
+                $table = $table->where('level',1);
+            }
+            $result = $table->select(['id','collect_id','article_id','level','title','children','editor_id','deleted_at'])
                         ->orderBy('id')->get();
-        return $this->ok(["rows"=>ArticleMapResource::collection($result),"count"=>count($result)]);
+        }
+
+        return $this->ok(["rows"=>ArticleMapResource::collection($result),"count"=>$count]);
     }
 
     /**
@@ -41,10 +70,24 @@ class ArticleMapController extends Controller
     public function store(Request $request)
     {
         //
+
         $validated = $request->validate([
                 'anthology_id' => 'required',
                 'operation' => 'required'
             ]);
+        $collection  = Collection::find($request->get('anthology_id'));
+        if(!$collection){
+            return $this->error("no recorder");
+        }
+        //鉴权
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        if(!CollectionController::UserCanEdit($user["user_uid"],$collection)){
+            Log::error($user["user_uid"].'无文集编辑权限'.$collection->uid);
+            return $this->error(__('auth.failed'));
+        }
         switch ($validated['operation']) {
             case 'add':
                 # 添加多个文章到文集
@@ -62,6 +105,7 @@ class ArticleMapController extends Controller
                         $new->collect_id = $request->get('anthology_id');
                         $new->title = Article::find($article)->title;
                         $new->level = 1;
+                        $new->editor_id = $user["user_id"];
                         $new->save();
                         $count++;
                     }
@@ -80,9 +124,19 @@ class ArticleMapController extends Controller
      * @param  \App\Models\ArticleCollection  $articleCollection
      * @return \Illuminate\Http\Response
      */
-    public function show(ArticleCollection $articleCollection)
+    public function show(string $articleCollection)
     {
         //
+        $id = explode('_',$articleCollection);
+        $result = ArticleCollection::where('article_id',$id[0])
+                    ->where('collect_id',$id[1])
+                    ->first();
+        if($result){
+            return $this->ok(new ArticleMapResource($result));
+        }else{
+            return $this->error('no');
+        }
+
     }
 
     /**
@@ -98,6 +152,20 @@ class ArticleMapController extends Controller
         $validated = $request->validate([
             'operation' => 'required'
         ]);
+
+        $collection  = Collection::find($id);
+        if(!$collection){
+            return $this->error("no recorder");
+        }
+        //鉴权
+        $user = AuthApi::current($request);
+        if(!$user){
+            return $this->error(__('auth.failed'));
+        }
+        if(!CollectionController::UserCanEdit($user["user_uid"],$collection)){
+            return $this->error(__('auth.failed'));
+        }
+
         switch ($validated['operation']) {
             case 'anthology':
                 $delete = ArticleCollection::where('collect_id',$id)->delete();
@@ -111,6 +179,10 @@ class ArticleMapController extends Controller
                     $new->title = $row["title"];
                     $new->level = $row["level"];
                     $new->children = $row["children"];
+                    $new->editor_id = $user["user_id"];
+                    if(isset($row["deleted_at"])){
+                        $new->deleted_at = $row["deleted_at"];
+                    }
                     $new->save();
                     $count++;
                 }

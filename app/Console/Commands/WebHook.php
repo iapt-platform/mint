@@ -42,21 +42,23 @@ class WebHook extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		switch ($this->argument('listener')) {
 			case 'weixin':
-				# code...
 				break;
 			case 'dingtalk':
 				# code...
 				$url = $this->url[$this->argument('url')];
 				$param = [
 				"markdown"=> [
-					"title"=> $this->argument('title'), 
-					"text"=> $this->argument('message'), 
-				], 
+					"title"=> $this->argument('title'),
+					"text"=> $this->argument('message'),
+				],
 				"msgtype"=>"markdown"
 				];
-				break;				
+				break;
 			default:
 				# code...
 				break;

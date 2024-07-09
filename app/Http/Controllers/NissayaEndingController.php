@@ -24,7 +24,9 @@ class NissayaEndingController extends Controller
     public function index(Request $request)
     {
         //
-        $table = NissayaEnding::select(['id','ending','lang','relation','case','count','editor_id','updated_at']);
+        $table = NissayaEnding::select(['id','ending','lang','relation',
+                                        'case','from','count','editor_id',
+                                        'created_at','updated_at']);
 
         if(($request->has('case'))){
             $table->whereIn('case', explode(",",$request->get('case')) );
@@ -37,30 +39,24 @@ class NissayaEndingController extends Controller
         if(($request->has('relation'))){
             $table->where('relation', $request->get('relation'));
         }
+        if(($request->has('case'))){
+            $table->where('case', $request->get('case'));
+        }
 
         if(($request->has('search'))){
-            $table->where('ending', 'like', $request->get('search')."%");
+            $table->where('ending', 'like', "%".$request->get('search')."%");
         }
-        if(!empty($request->get('order')) && !empty($request->get('dir'))){
-            $table->orderBy($request->get('order'),$request->get('dir'));
-        }else{
-            $table->orderBy('updated_at','desc');
-        }
+
         $count = $table->count();
-        if(!empty($request->get('limit'))){
-            $offset = 0;
-            if(!empty($request->get("offset"))){
-                $offset = $request->get("offset");
-            }
-            $table->skip($offset)->take($request->get('limit'));
-        }
+
+        $table->orderBy($request->get('order','updated_at'),
+                        $request->get('dir','desc'));
+
+        $table->skip($request->get("offset",0))
+              ->take($request->get('limit',1000));
         $result = $table->get();
 
-		if($result){
-			return $this->ok(["rows"=>NissayaEndingResource::collection($result),"count"=>$count]);
-		}else{
-			return $this->error("没有查询到数据");
-		}
+        return $this->ok(["rows"=>NissayaEndingResource::collection($result),"count"=>$count]);
     }
 
     public function vocabulary(Request $request){
@@ -94,6 +90,11 @@ class NissayaEndingController extends Controller
         $new->lang = $validated['lang'];
         $new->relation = $request->get('relation');
         $new->case = $request->get('case');
+        if($request->has('from')){
+            $new->from = json_encode($request->get('from'),JSON_UNESCAPED_UNICODE);
+        }else{
+            $new->from = null;
+        }
         $new->editor_id = $user['user_uid'];
         $new->save();
         return $this->ok(new NissayaEndingResource($new));
@@ -144,48 +145,81 @@ class NissayaEndingController extends Controller
 
         $relations = Relation::whereIn('name',$myEnding)->get();
         if(count($relations) > 0){
-            $cardData['title_case'] = "格位";
+            $cardData['title_case'] = "本词";
+            $cardData['title_relation'] = "关系";
+            $cardData['title_local_relation'] = "关系";
+            $cardData['title_local_link_to'] = "目标词特征";
             $cardData['title_content'] = "含义";
             $cardData['title_local_ending'] = "翻译建议";
-            $cardData['title_local_relation'] = "关系";
-            $cardData['title_relation'] = "关系";
+
             foreach ($relations as $key => $relation) {
-                $relationInTerm = DhammaTerm::where('channal',$localTerm)->where('word',$relation['name'])->first();
-                if(empty($relation->case)){
+                $relationInTerm = DhammaTerm::where('channal',$localTerm)
+                                            ->where('word',$relation['name'])
+                                            ->first();
+                if(empty($relation->from)){
                     $cardData['row'][] = ["relation"=>$relation->name];
                     continue;
                 }
-                $case = $relation->case;
-                # 格位
-                $newLine['case'] = __("grammar.".$case);
-                //含义
-                if($relationInTerm){
-                    $newLine['other_meaning'] = $relationInTerm->other_meaning;
-                    $newLine['note'] = $relationInTerm->note;
-                    if(!empty($relationInTerm->note)){
-                        $newLine['summary'] = explode("\n",$relationInTerm->note)[0];
+                $from = json_decode($relation->from);
+                if(isset($from->case)){
+                    $cases = $from->case;
+                    $localCase  =[];
+                    foreach ($cases as $case) {
+                        $localCase[] = ['label'=>__("grammar.".$case),
+                                        'link'=>config('mint.server.dashboard_base_path').'/term/list/'.$case
+                                        ];
+                    }
+                    # 格位
+                    $newLine['case'] = $localCase;
+                }
+                if(isset($from->spell)){
+                    $newLine['spell'] = $from->spell;
+                }
+                //连接到
+                $linkTos = json_decode($relation->to);
+                if(count($linkTos)>0){
+                    $localTo  =[];
+                    foreach ($linkTos as $to) {
+                        $localTo[] = ['label'=>__("grammar.".$to),
+                                        'link'=>config('mint.server.dashboard_base_path').'/term/list/'.$case
+                                        ];
+                    }
+                    # 格位
+                    $newLine['to'] = $localTo;
+                }
+                //含义 用分类字段的term 数据
+                if(isset($relation['category']) && !empty($relation['category'])){
+                    $localCategory = DhammaTerm::where('channal',$localTerm)
+                                                ->where('word',$relation['category'])
+                                                ->first();
+                    if($localCategory){
+                        $newLine['category_note'] = $localCategory->note;
                     }
                 }
-                //翻译建议
-                $localEnding = '';
-                $localEndingRecord = NissayaEnding::where('relation',$relation['name'])
-                                                ->where('lang',$request->get('lang'));
-                if(!empty($case)){
-                    $localEndingRecord = $localEndingRecord->where('case',$case);
+
+                /**
+                 * 翻译建议
+                 * relation 和 from 都匹配成功
+                 * from 为空 只匹配 relation
+                 */
+                $arrLocalEnding = array();
+                $localEndings = NissayaEnding::where('relation',$relation['name'])
+                                                  ->where('lang',$request->get('lang'))
+                                                  ->get();
+                foreach ($localEndings as $localEnding) {
+                    if(empty($localEnding->from) || $localEnding->from===$relation->from){
+                        $arrLocalEnding[]=$localEnding->ending;
+                    }
                 }
-                $localLangs = $localEndingRecord->get();
-                foreach ($localLangs as $localLang) {
-                    # code...
-                    $localEnding .= $localLang->ending.",";
-                }
-                $newLine['local_ending'] = $localEnding;
+                $newLine['local_ending'] = implode(';',$arrLocalEnding);
 
                 //本地语言 关系名称
                 if($relationInTerm){
                     $newLine['local_relation'] =  $relationInTerm->meaning;
                 }
                 //关系名称
-                $newLine['relation'] =  strtoupper($relation['name']);
+                $newLine['relation'] =  $relation['name'];
+                $newLine['relation_link'] =  config('mint.server.dashboard_base_path').'/term/list/'.$relation['name'];
                 $cardData['row'][] = $newLine;
             }
         }
@@ -212,18 +246,30 @@ class NissayaEndingController extends Controller
             return $this->error(__('auth.failed'));
         }
         //查询是否重复
-        if(NissayaEnding::where('ending',$request->get('ending'))
+        /*
+        $table = NissayaEnding::where('ending',$request->get('ending'))
                  ->where('lang',$request->get('lang'))
-                 ->where('relation',$request->get('relation'))
-                 ->where('case',$request->get('case'))
-                 ->exists()){
+                 ->where('relation',$request->get('relation'));
+        $from = json_encode($request->get('from'),JSON_UNESCAPED_UNICODE);
+        if(empty($from)){
+            $table = $table->whereNull('from');
+        }else{
+            $json = $request->get('from');
+            $table = $table->whereJsonContains('from',['case'=>$json['case']]);
+        }
+        if($table->exists()){
             return $this->error(__('validation.exists',['name']));
         }
+*/
         $nissayaEnding->ending = $request->get('ending');
         $nissayaEnding->strlen = mb_strlen($request->get('ending'),"UTF-8") ;
         $nissayaEnding->lang = $request->get('lang');
         $nissayaEnding->relation = $request->get('relation');
-        $nissayaEnding->case = $request->get('case');
+        if($request->has('from') && !empty($request->get('from'))){
+            $nissayaEnding->from = json_encode($request->get('from'),JSON_UNESCAPED_UNICODE);
+        }else{
+            $nissayaEnding->from = null;
+        }
         $nissayaEnding->editor_id = $user['user_uid'];
         $nissayaEnding->save();
         return $this->ok(new NissayaEndingResource($nissayaEnding));

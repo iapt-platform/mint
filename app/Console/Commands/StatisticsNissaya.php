@@ -41,6 +41,9 @@ class StatisticsNissaya extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $nissaya_channel = Channel::where('type','nissaya')->select('uid')->get();
         $this->info('channel:'.count($nissaya_channel));
         $maxDay = 360;

@@ -133,6 +133,36 @@ class UserOperation
                             "content"=>$request->get('channel'),
                         ];
                         break;
+                    /*
+                    case 'GET':
+                        if($request->get('view')==='sent-can-read' && $request->has('type')){
+                            $newLog = [
+                                "op_type"=>"res_read",
+                                "content"=>$request->get('sentence'),
+                            ];
+                            switch ($request->get('type')) {
+                                case 'translation':
+                                    $newLog["op_type_id"] = 101;
+                                    break;
+                                case 'nissaya':
+                                    $newLog["op_type_id"] = 102;
+                                    break;
+                                case 'original':
+                                    $newLog["op_type_id"] = 103;
+                                    break;
+                                case 'wbw':
+                                    $newLog["op_type_id"] = 104;
+                                    break;
+                                case 'commentary':
+                                    $newLog["op_type_id"] = 105;
+                                    break;
+                                default:
+                                    unset($newLog);
+                                    break;
+                            }
+                        }
+                        break;
+                        */
                 }
                 break;
             case 'anthology':
@@ -153,6 +183,28 @@ class UserOperation
                         break;
                 }
                 break;
+            /*
+            case 'article-map':
+                switch ($method) {
+                    case 'POST':
+                        $newLog = [
+                            "op_type_id"=>111,
+                            "op_type"=>"article_map_create",
+                            "content"=>$request->get('anthology_id'),
+                        ];
+                        break;
+                    case 'PUT':
+                        $newLog = [
+                            "op_type_id"=>110,
+                            "op_type"=>"article_map_update",
+                        ];
+                        if(isset($api[3])){
+                            $newLog['content'] = $api[3];
+                        }
+                        break;
+                }
+                break;
+                */
             case 'wbw':
                 switch ($method) {
                     case 'POST':

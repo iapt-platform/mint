@@ -7,6 +7,19 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 class AuthApi{
+    public static function getToken(Request $request){
+        $token = false;
+        if($request->hasHeader('Authorization')){
+            $token = $request->header('Authorization');
+            if(\substr($token,0,6) === 'Bearer'){
+                $token = trim(substr($token,6));
+                if($token === "null"){
+                    return false;
+                }
+            }
+        }
+        return $token;
+    }
     public static function current(Request $request){
         if($request->hasHeader('Authorization')){
             $token = $request->header('Authorization');
@@ -15,8 +28,13 @@ class AuthApi{
                 if($token === "null"){
                     return false;
                 }
-                $jwt = JWT::decode($token,new Key(env('APP_KEY'),'HS512'));
+                try{
+                    $jwt = JWT::decode($token,new Key(config('app.key'),'HS512'));
+                }catch(\Exception $e){
+                    return false;
+                }
                 if($jwt->exp < time()){
+                    //过期
                     return false;
                 }else{
                     //有效的token

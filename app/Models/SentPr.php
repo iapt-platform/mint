@@ -11,4 +11,6 @@ class SentPr extends Model
 	protected $casts = [
 		'id' => 'string'
 	];
+    protected $primaryKey = 'id';
+
 }

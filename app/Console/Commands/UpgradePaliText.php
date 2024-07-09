@@ -15,7 +15,7 @@ class UpgradePaliText extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan upgrade:palitext 168
      * @var string
      */
     protected $signature = 'upgrade:palitext {from?} {to?}';
@@ -44,6 +44,9 @@ class UpgradePaliText extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$this->info("upgrade pali text");
 		$startTime = time();
 
@@ -56,7 +59,7 @@ class UpgradePaliText extends Command
 			$_to = $_from;
 		}
 #载入文件列表
-		$fileListFileName = config("app.path.palitext_filelist");
+		$fileListFileName = config("mint.path.palitext_filelist");
 
 		$filelist = array();
 
@@ -72,7 +75,7 @@ class UpgradePaliText extends Command
 			$arrInserString = array();
 			#载入csv数据
 			$FileName = $filelist[$from-1][1];
-			$csvFile = config("app.path.pali_title") .'/'. $from.'_pali.csv';
+			$csvFile = config("mint.path.pali_title") .'/'. $from.'_pali.csv';
 			if (($fp = fopen($csvFile, "r")) !== false) {
                 Log::info("csv load：" . $csvFile);
 				while (($data = fgetcsv($fp, 0, ',')) !== false) {
@@ -177,6 +180,10 @@ class UpgradePaliText extends Command
                     'parent' => $parent,
                     'chapter_strlen'=> $iChapter_strlen,
                 ];
+                if((int)$arrInserString[$iPar][3] < 8){
+                    $newData['title'] = strtolower($arrInserString[$iPar][6]);
+                    $newData['title_en'] = \App\Tools\Tools::getWordEn($newData['title']);
+                }
 
                 $path = [];
 
@@ -198,12 +205,26 @@ class UpgradePaliText extends Command
                     $currParent = $title_data[$currParent-1]["parent"];
                     $iLoop++;
                 }
+
+                //插入书名
                 if(count($path)>0){
-                    //插入书名
-                    $bookTitle = BookTitle::where('book',$book)
-                                        ->where('paragraph',end($path)['paragraph'])
-                                        ->value('title');
-                    $path[] = ["book"=>0,"paragraph"=>0,"title"=>$bookTitle,"level"=>0];
+                    $bookPara = end($path)['paragraph'];
+                }else{
+                    $bookPara = $paragraph;
+                }
+
+                $pcd_book = BookTitle::where('book',$book)
+                                    ->where('paragraph',$bookPara)
+                                    ->first();
+                if($pcd_book){
+                    if(empty($pcd_book)){
+                        Log::error('no pcd book:'.$book.'-'.$bookPara);
+                    }
+                    $book_id = $pcd_book->sn;
+                    if(!empty($book_id)){
+                        $newData['pcd_book_id'] = $book_id;
+                    }
+                    $path[] = ["book"=>$book_id,"paragraph"=>$book_id,"title"=>$pcd_book->title,"level"=>0];
                 }
 
                 # 将路径反向

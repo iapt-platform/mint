@@ -40,6 +40,9 @@ class UpgradeVocabulary extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$words = UserDict::select('word')->groupBy('word')->cursor();
 		$count=0;
 		foreach ($words as $word) {

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-require_once __DIR__.'/../../../public/app/ucenter/function.php';
-
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\ProgressChapter;
@@ -16,6 +14,7 @@ use App\Models\Like;
 use Illuminate\Http\Request;
 use App\Http\Api\StudioApi;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 
 class ProgressChapterController extends Controller
 {
@@ -53,18 +52,16 @@ class ProgressChapterController extends Controller
 			case 'studio':
                 #查询该studio的channel
 				$name = $request->get('name');
-				$userinfo = new \UserInfo();
-				$studio = $userinfo->getUserByName($name);
-				if($studio == false){
+                $studioId = StudioApi::getIdByName($request->get('name'));
+				if($studioId === false){
 					return $this->error('no user');
 				}
-                $channels = Channel::where('owner_uid',$studio['userid'])->select('uid')->get();
-                $aChannel = [];
-                foreach ($channels as $channel) {
-                    # code...
-                    $aChannel[] = $channel->uid;
+                $table = Channel::where('owner_uid',$studioId);
+                if($request->get('public')==="true"){
+                    $table = $table->where('status',30);
                 }
-                $chapters = ProgressChapter::whereIn('progress_chapters.channel_id', $aChannel)
+                $channels = $table->select('uid')->get();
+                $chapters = ProgressChapter::whereIn('progress_chapters.channel_id', $channels)
                                         ->leftJoin('pali_texts', function($join)
                                                 {
                                                     $join->on('progress_chapters.book', '=', 'pali_texts.book');
@@ -72,8 +69,10 @@ class ProgressChapterController extends Controller
                                                 })
                                         ->where('progress','>',0.85)
                                         ->orderby('progress_chapters.created_at','desc')
+                                        ->skip($request->get("offset",0))
+                                        ->take($request->get("limit",1000))
                                         ->get();
-				$all_count = ProgressChapter::whereIn('progress_chapters.channel_id', $aChannel)
+				$all_count = ProgressChapter::whereIn('progress_chapters.channel_id', $channels)
 									->where('progress','>',0.85)->count();
                 break;
             case 'tag':
@@ -196,10 +195,11 @@ class ProgressChapterController extends Controller
              * 某个章节 有多少channel
              */
 
-                $chapters = ProgressChapter::select('book','para','progress_chapters.uid','progress_chapters.channel_id','progress','updated_at')
-                                            ->with(['channel' => function($query) {
-                                                return $query->select('*');
-                                            }])
+                $chapters = ProgressChapter::select('book','para','progress_chapters.uid',
+                                                    'progress_chapters.channel_id','progress',
+                                                    'channels.name','channels.type','channels.owner_uid',
+                                                    'progress_chapters.updated_at')
+                                            ->leftJoin('channels','progress_chapters.channel_id', '=', 'channels.uid')
                                             ->where("book",$request->get('book'))
                                             ->where("para",$request->get('par'))
                                             ->orderBy('progress','desc')
@@ -225,9 +225,10 @@ class ProgressChapterController extends Controller
                         }
                     }
                     $chapters[$key]->likes = $likes;
-                    $chapters[$key]->studio = StudioApi::getById($value->channel->owner_uid);
+                    $chapters[$key]->studio = StudioApi::getById($value->owner_uid);
+                    $chapters[$key]->channel = ['uid'=>$value->channel_id,'name'=>$value->name,'type'=>$value->type];
                     $progress_key="/chapter_dynamic/{$value->book}/{$value->para}/ch_{$value->channel_id}";
-                    $chapters[$key]->progress_line = Cache::get($progress_key);
+                    $chapters[$key]->progress_line = RedisClusters::get($progress_key);
                 }
 
                 $all_count = count($chapters);
@@ -239,7 +240,7 @@ class ProgressChapterController extends Controller
                 $pt = (new PaliText)->getTable();
 
                 //标签过滤
-                if($request->get('tags') && $request->get('tags')!==''){
+                if($request->has('tags') && !empty($request->get('tags'))){
                     $tags = explode(',',$request->get('tags'));
                     foreach ($tags as $tag) {
                         # code...
@@ -257,11 +258,29 @@ class ProgressChapterController extends Controller
                     $where1 = " ";
                     $in1 = " ";
                 }
-                if(Str::isUuid($channel_id)){
-                    $channel = "and channel_id = '{$channel_id}' ";
+                if($request->has('studio')){
+                    $studioId = StudioApi::getIdByName($request->get('studio'));
+                    $table = Channel::where('owner_uid',$studioId);
+                    if($request->get('public')==="true"){
+                        $table = $table->where('status',30);
+                    }
+                    $channels = $table->select('uid')->get();
+                    $arrChannel = [];
+                    foreach ($channels as $oneChannel) {
+                        # code...
+                        if(Str::isUuid($oneChannel->uid)){
+                            $arrChannel[] = "'{$oneChannel->uid}'";
+                        }
+                    }
+                    $channel = "and channel_id in (".implode(',',$arrChannel).") ";
                 }else{
-                    $channel = "";
+                    if(Str::isUuid($channel_id)){
+                        $channel = "and channel_id = '{$channel_id}' ";
+                    }else{
+                        $channel = "";
+                    }
                 }
+
                 //完成度过滤
                 $param[] = $minProgress;
 
@@ -354,7 +373,7 @@ class ProgressChapterController extends Controller
                 $all_count = $count[0]->count;
                 break;
             case 'top':
-            break;
+                break;
             case 'search':
                 $key = $request->get('key');
                 $table = ProgressChapter::where('title','like',"%{$key}%");
@@ -406,6 +425,8 @@ class ProgressChapterController extends Controller
                                                 ->select(['tags.id','tags.name','tags.description'])
                                                 ->get();
                 }
+                break;
+            case 'public':
                 break;
         }
 

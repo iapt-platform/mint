@@ -31,8 +31,12 @@ class TocResource extends JsonResource
             $data['title'] = $title;
         }
         if($request->has('channels')){
-            $channels = explode(',',$request->get('channels'));
-            $title= ProgressChapter::where('book',$this->book)
+            if(strpos($request->get('channels'),',') ===FALSE){
+                $channels = explode('_',$request->get('channels'));
+            }else{
+                $channels = explode(',',$request->get('channels'));
+            }
+            $title = ProgressChapter::where('book',$this->book)
                                 ->where('para',$this->paragraph)
                                 ->where('channel_id',$channels[0])
                                 ->whereNotNull('title')
@@ -42,7 +46,7 @@ class TocResource extends JsonResource
             }
             //查询完成度
             foreach ($channels as $key => $channel) {
-                $progress= ProgressChapter::where('book',$this->book)
+                $progress = ProgressChapter::where('book',$this->book)
                                 ->where('para',$this->paragraph)
                                 ->where('channel_id',$channel)
                                 ->value('progress');

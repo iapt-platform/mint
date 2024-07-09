@@ -15130,7 +15130,7 @@ id,word,type,grammar,parent,mean,note,factors,factormean,status,confidence,strle
 357,sarasa,.adj:base.,,,有鉴赏力的$雅致的,(with its essential properties(see rasa) nd1 43$sarasabhāva a method of exposition dhsa.7),(sa3+rasa),,1,100,6,_PEPER_RICH_,zh-hans
 9925,sarasī,.n:base.,.f.,,大池塘$a large pond,,,,1,100,6,_PEPER_RICH_,zh-hans
 16241,sarasīruha,.n:base.,.nt.,,睡莲,,sarasī,,1,100,10,_PEPER_RICH_,zh-hans
-12339,sarati,,,,压碎$to crush,,,,1,100,6,_PEPER_RICH_,zh-hans
+12339,sarati,.v:base.,,,压碎$记得$向前移动,,,,1,100,6,_PEPER_RICH_,zh-hans
 16242,saratira,.n:base.,.nt.,,湖滩,,sara,,1,100,8,_PEPER_RICH_,zh-hans
 16243,saratuṇḍa,.n:base.,.nt.,,箭头,,sara,,1,100,9,_PEPER_RICH_,zh-hans
 368,saravant,.adj:base.,,,有声的,(having or making a sound$well~sounding vin.i$182$a.iii,(sara5+vant,,1,100,8,_PEPER_RICH_,zh-hans
@@ -20028,6 +20028,9 @@ id,word,type,grammar,parent,mean,note,factors,factormean,status,confidence,strle
 21337,vokkanta,.adj:base.,.pp.,vokkamati,,,,,1,100,8,_PEPER_RICH_,zh-hans
 10095,vokkanti,.n:base.,.f.,,进入$形成$出现,,,,1,100,8,_PEPER_RICH_,zh-hans
 9286,vokāra,.n:base.,.m.,,$存在的成份$#= vokārabhava,,,,1,100,6,_PEPER_RICH_,zh-hans
+928601,pañcavokārabhava,.n:base.,.m.,,五蕴有,,,,1,100,6,_PEPER_RICH_,zh-hans
+928602,catuvokārabhava,.n:base.,.m.,,四蕴有（即无色界天的众生）,,,,1,100,6,_PEPER_RICH_,zh-hans
+928603,ekavokārabhava,.n:base.,.m.,,一蕴有（无想天，只有色蕴）,,,,1,100,6,_PEPER_RICH_,zh-hans
 5409,voloketi,.v:base.,,,调查$仔细检查,,(vi+ava下+lok见+e),,1,100,8,_PEPER_RICH_,zh-hans
 2387,vomissaka,.adj:base.,,,各种的$混合的,,,,1,100,9,_PEPER_RICH_,zh-hans
 7742,voropana,.n:base.,.nt.,,剥夺,,,,1,100,8,_PEPER_RICH_,zh-hans

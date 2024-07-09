@@ -72,7 +72,7 @@ class ShareResource extends JsonResource
         switch ($this->cooperator_type) {
             case 0:
                 # user
-                $data['user'] = UserApi::getById($this->cooperator_id);
+                $data['user'] = UserApi::getByUuid($this->cooperator_id);
                 break;
             case 1:
                 # code...

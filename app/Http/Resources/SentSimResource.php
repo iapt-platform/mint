@@ -4,10 +4,11 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\PaliSentence;
-use App\Http\Api\StudioApi;
+use App\Models\PaliText;
 use App\Http\Api\UserApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Controllers\CorpusController;
+use App\Http\Api\AuthApi;
 
 class SentSimResource extends JsonResource
 {
@@ -21,32 +22,13 @@ class SentSimResource extends JsonResource
     {
         //获取实际句子信息
         $sent = PaliSentence::find($this->sent2);
-        $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
-        $sentOrg = [
-            "id"=>$sent->id,
-            "book"=> $sent->book,
-            "para"=> $sent->paragraph,
-            "wordStart"=> $sent->word_begin,
-            "wordEnd"=> $sent->word_end,
-            "editor"=> StudioApi::getById(config("app.admin.root_uuid")),
-            "channel"=> ChannelApi::getById($channelId),
-            "content"=>$sent->text,
-            "html"=> "<span>{$sent->html}</span>",
-            "role"=>"member",
-            "created_at"=> $sent->created_at,
-            "updated_at"=> $sent->updated_at,
-        ];
-        $resCount = CorpusController::sentResCount($sent->book,$sent->paragraph,$sent->word_begin,$sent->word_end);
-        return [
-            "id" => "{$sent->book}-{$sent->paragraph}-{$sent->word_begin}-{$sent->word_end}",
-            "origin" =>  [$sentOrg],
-            "translation" =>  [],
-            "layout" =>   "column",
-            "tranNum" =>  $resCount['tranNum'],
-            "nissayaNum" =>  $resCount['nissayaNum'],
-            "commNum" =>  $resCount['commNum'],
-            "originNum" =>  $resCount['originNum'],
-            "simNum" =>  $resCount['simNum'],
-        ];
+        $channels = explode(',',$request->get('channels'));
+        $mode = explode(',',$request->get('mode','read'));
+        $sentId = $sent->book.'-'.$sent->paragraph.'-'.$sent->word_begin.'-'.$sent->word_end;
+        $Sent = new CorpusController();
+        $tpl =
+        $data['sent'] = $Sent->getSentTpl($sentId,$channels,$mode);
+        $data['sim'] = $this->sim;
+        return $data;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 
 class UpgradeDaily extends Command
@@ -39,41 +40,54 @@ class UpgradeDaily extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
+        $env = config('app.env');
+        Log::info('daily task start ',['app.env'=>$env]);
         $start = time();
 		if(app()->isLocal()==false){
+
 			$this->call('message:webhook',[
 				'listener' => 'dingtalk',
 				'url' => 'dingtalk1',
 				'title' => "后台任务",
-				'message' => " wikipali: 每日统计后台任务开始执行。",
+				'message' => " wikipali: 每日统计后台任务开始执行。app.env=".$env,
 			]);
 		}
-
-        //巴利原文段落库目录结构改变时运行
-        //$this->call('upgrade:palitext');
-        #巴利段落标签
-        //$this->call('upgrade:palitexttag');
+        Log::info('wikipali: 每日统计后台任务开始执行{app.env}',['app.env'=>$env]);
+        $message = "wikipali: 每日统计后台任务执行完毕。".$env;
 
         //更新单词首选意思
         $this->call('upgrade:dict.default.meaning');
+        $time = time()-$start;
+        $message .= "dict.default.meaning:{$time}; ";
+        $currTime = time();
+        Log::info('更新单词首选意思完毕'.$env);
 
-        #译文进度
-        $this->call('upgrade:progress');
-        $this->call('upgrade:progresschapter');
         //社区术语表
-        $this->call('upgrade:community.term',['zh-Hans']);
+        $this->call('upgrade:community.term',['lang'=>'zh-Hans']);
+        $time = time()-$currTime;
+        $message .= "community.term:{$time}; ";
+        $currTime = time();
+        Log::info('社区术语表完毕 {app.env}',['app.env'=>$env]);
 
-        # 逐词译数据库分析
-        $this->call('upgrade:wbwanalyses');
+        # 导出离线数据
+
+        $this->call('export:offline',['format'=>'lzma','--driver'=>'str']);
+        $time = time()-$currTime;
+        $message .= "export:offline:{$time}; ";
+        Log::info('导出离线数据完毕{app.env}',['app.env'=>$env]);
 
         $time = time()-$start;
+        $message .= "总时间:{$time}; ";
 
 		if(app()->isLocal()==false){
 			$this->call('message:webhook',[
 				'listener' => 'dingtalk',
 				'url' => 'dingtalk1',
 				'title' => "后台任务",
-				'message' => "wikipali: 每日统计后台任务执行完毕。用时{$time}",
+				'message' => $message.' app.env='.$env,
 			]);
 			//发送dingding消息
 			$this->call('message:webhookarticlenew',[
@@ -86,7 +100,6 @@ class UpgradeDaily extends Command
 				'type' => 'wechat',
 			]);
 		}
-
 
         return 0;
     }

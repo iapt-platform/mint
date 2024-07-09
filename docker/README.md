@@ -1,20 +1,12 @@
-# Usage for Ubuntu 20.10 and newer
+# Usage for Ubuntu 22.04(jammy) and newer
 
-- Install podman: `sudo apt -y install podman runc buildah skopeo`.
-- Setup `/etc/containers/registries.conf`.
-
-  ```text
-  [registries.search]
-  registries = ['quay.io', 'docker.io']
-  ```
+- Install podman: `sudo apt install crun podman buildah fuse-overlayfs`.
 
 - Work with podman image
 
   ```bash
   # clear outdated images
   podman rmi -a -f
-  # uncompress image files
-  cat palm-spring.tar.xz.a* | tar xj
   # import new podman image
   podman load -q -i palm-spring-TIMESTAMP.tar  
   ```

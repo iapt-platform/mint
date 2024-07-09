@@ -8,6 +8,7 @@ use App\Models\PaliText;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\DB;
 
 class SentenceInfoController extends Controller
@@ -56,10 +57,10 @@ class SentenceInfoController extends Controller
 
 
         #默认完成度显示字符数
-        # strlen 
+        # strlen
         # palistrlen 巴利语等效字符数
         # page
-        # percent 
+        # percent
         $view = 'strlen';
         if($request->has('view')){
             $view =$request->get('view');
@@ -122,18 +123,20 @@ class SentenceInfoController extends Controller
             $allStrLen = PaliSentence::where('book',$request->get('book'))
                             ->where('paragraph','>=',$request->get('from'))
                             ->where('paragraph','<=',$to)
-                            ->sum('length');            
+                            ->sum('length');
             $para_strlen = 0;
-            
+
             foreach ($sentFinished as $sent) {
                 # code...
 				$key_sent_id = $sent->book_id.'-'.$sent->paragraph.'-'.$sent->word_start.'-'.$sent->word_end;
-				$para_strlen += Cache::remember('pali-sent/strlen/'.$key_sent_id, 6000000 , function() use($sent) {
-					return PaliSentence::where('book',$sent->book_id)
-							->where('paragraph',$sent->paragraph)
-							->where('word_begin',$sent->word_start)
-							->where('word_end',$sent->word_end)
-							->value('length');
+				$para_strlen += RedisClusters::remember('pali-sent/strlen/'.$key_sent_id,
+                                    config('mint.cache.expire') ,
+                                    function() use($sent) {
+                                        return PaliSentence::where('book',$sent->book_id)
+                                                ->where('paragraph',$sent->paragraph)
+                                                ->where('word_begin',$sent->word_start)
+                                                ->where('word_end',$sent->word_end)
+                                                ->value('length');
 				});
             }
 
@@ -215,9 +218,9 @@ class SentenceInfoController extends Controller
         $yMin = 20; //y轴满刻度数值 最小
 
         #默认完成度显示字符数
-        # strlen 
+        # strlen
         # page
-        # percent 
+        # percent
         $view = 'strlen';
         if($request->has('view')){
             $view =$request->get('view');
@@ -226,7 +229,7 @@ class SentenceInfoController extends Controller
             $view =$request->get('type');
         }
 
-        
+
 
         $pagePix = ($imgHeight-$xAxisOffset)/$maxPage;
         $dayPix = ($imgWidth-$yAxisOffset)/$maxDay;
@@ -266,12 +269,12 @@ class SentenceInfoController extends Controller
                 $max = $current;
             }
         }
-        /* 
+        /*
         * 计算Y 轴满刻度值
         * 算法 不足 20 按 20 算 小于100 满刻度是是50的整倍数
         * 小于1000 满刻度是是500的整倍数
         */
-        
+
         if($max < $yMin){
             $yMax = $yMin;
         }else{
@@ -286,14 +289,14 @@ class SentenceInfoController extends Controller
         $rate = $yPix / $yMax;
 
         $svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"currentColor\" class=\"bi bi-alarm-fill\" viewBox=\"0 0 $imgWidth $imgHeight\">";
-        
+
         //绘制坐标轴
         imageline($img,0,$imgHeight-$xAxisOffset,$imgWidth,$imgHeight-$xAxisOffset,$color);
         imageline($img,$yAxisOffset,$imgHeight,$yAxisOffset,0,$color);
-        // x 轴 
+        // x 轴
         $y=$imgHeight-$xAxisOffset+1;
         $svg .= "<line x1='$yAxisOffset'  y1='$y' x2='$imgWidth'   y2='$y' style='stroke:#666666;'></line>";
-        // y 轴 
+        // y 轴
         $x = $yAxisOffset - 1;
         $svg .= "<line x1='$x'  y1='0' x2='$x'   y2='".($imgHeight-$xAxisOffset)."' style='stroke:#666666;'></line>";
         //绘制x轴刻度线
@@ -311,11 +314,11 @@ class SentenceInfoController extends Controller
             $svg .= "<line x1='$x'  y1='$y' x2='$x'   y2='".($y+$height)."' style='stroke:#666666;'></line>";
             $svg .= "<text x='".($x-5)."' y='".($y+12)."' style='font-size:8px;'>$day</text>";
         }
-        
-        
+
+
         //绘制y轴刻度线 将y轴五等分
         $step = $yMax / 5 * $rate;
-        for ($i=1; $i < 5; $i++) { 
+        for ($i=1; $i < 5; $i++) {
             # code...
             $yValue = $yMax / 5 * $i;
             if($yValue>=1000000){

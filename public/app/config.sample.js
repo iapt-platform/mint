@@ -12,3 +12,4 @@ var RPC_SERVER = "https://rpc.wikipali.org";
 */
 
 var ASSETS_SERVER = "https://assets-hk.wikipali.org"
+var DOCUMENTS_SERVER = "https://help.wikipali.org";

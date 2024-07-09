@@ -87,7 +87,7 @@ ALTER TEXT SEARCH DICTIONARY pali_stem (
 
 ```sql
 -- dummy update
-UPDATE fts SET content = content,
+UPDATE fts_texts SET content = content,
                bold_single = bold_single,
                bold_double = bold_double,
                bold_multiple = bold_multiple
@@ -100,7 +100,7 @@ UPDATE fts SET content = content,
 
 ```sql
 -- dummy update
-UPDATE fts SET content = content,
+UPDATE fts_texts SET content = content,
                bold_single = bold_single,
                bold_double = bold_double,
                bold_multiple = bold_multiple;

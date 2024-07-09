@@ -40,6 +40,9 @@ class InstallWordAll extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$startTime = time();
 
 		$this->info("instert word in palibook ");
@@ -56,14 +59,14 @@ class InstallWordAll extends Command
 
 		$bar = $this->output->createProgressBar($_to-$_from+1);
 
-		for ($book=$_from; $book <= $_to; $book++) { 
+		for ($book=$_from; $book <= $_to; $book++) {
 			Log::info("doing ".($book));
 			DB::transaction(function ()use($book) {
 				$fileSn = $book-1;
-				if (($fpoutput = fopen(config("app.path.paliword_book") . "/{$fileSn}_words.csv", "r")) !== false){
+				if (($fpoutput = fopen(config("mint.path.paliword_book") . "/{$fileSn}_words.csv", "r")) !== false){
 					#删除目标数据库中数据
-					WordList::where('book', $book)->delete();			
-					while (($data = fgetcsv($fpoutput, 0, ',')) !== false)  
+					WordList::where('book', $book)->delete();
+					while (($data = fgetcsv($fpoutput, 0, ',')) !== false)
 					{
 						$newData = [
 							'sn'=>$data[0],
@@ -72,9 +75,9 @@ class InstallWordAll extends Command
 							'wordindex'=>$data[3],
 							'bold'=>$data[4],
 						];
-						WordList::create($newData);				
+						WordList::create($newData);
 					}
-					return 0;			
+					return 0;
 				}else{
 					Log::error("open csv fail");
 					return 1;

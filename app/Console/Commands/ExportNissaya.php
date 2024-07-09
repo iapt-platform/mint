@@ -42,6 +42,9 @@ class ExportNissaya extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $nissaya_channel = Channel::where('type','nissaya')->select('uid')->get();
         $channels = [];
         foreach ($nissaya_channel as $key => $value) {

@@ -40,6 +40,9 @@ class InstallWordStatistics extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
 		$startTime = time();
 
 		$info = "instert wordstatistics ";
@@ -47,13 +50,13 @@ class InstallWordStatistics extends Command
 		Log::info($info);
 
 		#删除目标数据库中数据
-		WordStatistic::where('id', '>',-1)->delete();	
+		WordStatistic::where('id', '>',-1)->delete();
 
-		$scan = scandir(config("app.path.word_statistics"));
+		$scan = scandir(config("mint.path.word_statistics"));
 		$bar = $this->output->createProgressBar(count($scan));
 		foreach($scan as $filename) {
 			$bar->advance();
-			$filename = config("app.path.word_statistics")."/".$filename;
+			$filename = config("mint.path.word_statistics")."/".$filename;
 			if (is_file($filename)) {
 				Log::info("doing ".$filename);
 				DB::transaction(function ()use($filename) {
@@ -70,12 +73,12 @@ class InstallWordStatistics extends Command
 								'type'=>$data[6],
 								'length'=>$data[7],
 							];
-							WordStatistic::create($newData);	
+							WordStatistic::create($newData);
 							$count++;
 						}
 						Log::info("insert ".$count);
 					}
-				});				
+				});
 			}
 		}
 		$bar->finish();

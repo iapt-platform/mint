@@ -13,7 +13,7 @@ class UpgradeWbwTemplate extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan upgrade:wbw.template 107
      * @var string
      */
     protected $signature = 'upgrade:wbw.template {book?} {para?}';
@@ -42,6 +42,9 @@ class UpgradeWbwTemplate extends Command
      */
     public function handle()
     {
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
         $start = time();
 		$pali = new PaliSentence;
 		if(!empty($this->argument('book'))){
@@ -88,7 +91,7 @@ class UpgradeWbwTemplate extends Command
                     'style'=> ['value'=>$wbw_word->style,'status'=>0],
                     'factors'=> ['value'=>$part,'status'=>0],
                     'factorMeaning'=> ['value'=>'','status'=>0],
-                    'confidence'=> 0.5
+                    'confidence'=> 1.0
                 ];
 
             }
@@ -107,7 +110,7 @@ class UpgradeWbwTemplate extends Command
 					'uid' =>Str::uuid(),
 				]
 				);
-            $newRow->editor_uid = config("app.admin.root_uuid");
+            $newRow->editor_uid = config("mint.admin.root_uuid");
             $newRow->content = trim($sent);
             $newRow->content_type = "json";
             $newRow->strlen = mb_strlen($sent,"UTF-8");

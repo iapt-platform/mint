@@ -40,10 +40,17 @@ class TestCaseMan extends Command
      */
     public function handle()
     {
-		$caseman = new CaseMan();
-		$parents = $caseman->WordToBase($this->argument('word'),1);
+        if(\App\Tools\Tools::isStop()){
+            return 0;
+        }
+		$caseMan = new CaseMan();
+        $case = $caseMan->Declension($this->argument('word'),'.n:base.','.nt.',0.5);
+        print_r($case);
+        return 0;
+
+		$parents = $caseMan->WordToBase($this->argument('word'),1);
 			# code...
-			
+
 		foreach ($parents as $base => $rows) {
 			# code...
 			if(count($rows)==0){
@@ -51,7 +58,7 @@ class TestCaseMan extends Command
 			}else{
 				$this->warn("base={$base}-(".count($rows).")");
 			}
-			
+
 			foreach ($rows as $value) {
 				# code...
 				$this->info($value['word'].'-'.$value['type'].'-'.$value['grammar'].'-'.$base);

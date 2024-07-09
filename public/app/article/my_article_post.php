@@ -15,7 +15,7 @@ $respond=array("status"=>0,"message"=>"");
 
 # 检查是否有修改权限
 $redis = redis_connect();
-$article = new Article($redis); 
+$article = new Article($redis);
 $power = $article->getPower($_POST["id"]);
 if($power<20){
 	$respond["status"]=1;
@@ -26,7 +26,7 @@ if($power<20){
 
 $_content = $_POST["content"];
 
-
+/*
 if(isset($_POST["import"]) && $_POST["import"]=='on'){
 	#导入自定义书
 	$custom_book = new CustomBook($redis);
@@ -53,7 +53,7 @@ if(isset($_POST["import"]) && $_POST["import"]=='on'){
 		exit;
 	}
 }
-
+*/
 
 PDO_Connect(_FILE_DB_USER_ARTICLE_,_DB_USERNAME_,_DB_PASSWORD_);
 
@@ -71,7 +71,7 @@ else{
 		$redis->del("article://".$_POST["id"]);
 		$redis->del("power://article/".$_POST["id"]);
 	}
-	
+
 }
 echo json_encode($respond, JSON_UNESCAPED_UNICODE);
 ?>

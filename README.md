@@ -28,15 +28,13 @@
 - v1 旧版数据迁移任务脚本
 - deploy 运维代码 
 
-## 安装
+## 开发环境
 
 >请注意。此安装方法**只针对开发人员**。生产线请参考[deploy/README.md](deploy/README.md)
 
-### 开发环境
+使用 **Linux** 的开发者请参阅 [<项目文件夹>/docker/readme.md](docker/readme.md) 容器中包含了全部开发环境。请忽略下面关于开发环境的安装。
 
-使用 Linux 的开发者请参阅 [<项目文件夹>/docker/readme.md](docker/readme.md) 容器中包含了全部开发环境。请忽略下面关于开发环境的安装。
-
-#### PostgreSQL
+### PostgreSQL
 
 最小版本v12。下载链接
 https://www.postgresql.org/download/
@@ -54,7 +52,7 @@ create database iapt
 
 `\q` 退出psql
 
-#### PHP 8
+### PHP 8
 编辑 php.ini 文件，打开pgsql和sqlite的PDO扩展，以及fileinfo
 ```
 extension=pdo_pgsql
@@ -62,26 +60,31 @@ extension=pdo_sqlite
 extension=fileinfo
 ```
 
-#### Redis
+### Redis
 最新版的Redis不支持Windows平台，可以安装第三方修改的[Windows版Redis5.0](https://github.com/tporadowski/redis)
 
-#### composer
+### composer
 
-#### npm
+### npm
+
+### Rabbitmq
+
+[Downloading and Installing RabbitMQ](https://www.rabbitmq.com/download.html)
 
 
-### Fork
+
+## Fork
 
 Fork https://github.com/iapt-platform/mint 到你自己的仓库
 
-### Clone
+## Clone
 
 ```
 git clone https://github.com/<your>/mint.git
 
 ```
 
-### 安装依赖
+## 安装依赖
 
 项目根目录下运行
 
@@ -98,9 +101,9 @@ npm install
 ```
 
 
-### 修改配置文件
+## 修改配置文件
 
-#### .env
+### .env
 
 复制 `<项目目录>/.env.example` 的一个副本。改文件名为 `.env`
 
@@ -126,7 +129,7 @@ ASSETS_SERVER ：网站资源文件，非用户的图片，音频，视频
 - 或直接引用离您最近的assets server
 
 
-#### public/app/config.php
+### public/app/config.php
 
 复制 `<项目目录>/public/app/config.example.php` 改文件名为`config.php`
 
@@ -212,7 +215,7 @@ var HELP_SERVER = "https://help-hk.wikipali.org";
 var GRAMMAR_SERVER = "https://grammar-hk.wikipali.org";
 ```
 
-### 复制巴利语全文搜索单词表
+## 复制巴利语全文搜索单词表
 
 获取pg share dir
 在命令行窗口运行
@@ -237,14 +240,14 @@ sudo cp ./public/app/fts/pali.syn /usr/share/postgresql/14/tsearch_data/
 到你的 shardir/tsearch_data 目录下
 
 
-### application encryption key
+## application encryption key
 
 在<工程目录>下运行
 ```dash
 php artisan key:generate
 ```
 
-### 数据库迁移
+## 数据库迁移
 
 在根目录下运行
 
@@ -252,23 +255,23 @@ php artisan key:generate
 php artisan migrate
 ```
 
-### Redis数据库填充
+## Redis数据库填充
 
 在命令行运行<项目目录>下面的命令
 
 **Liunx**
 ```dash
 cd ./v1/scripts
-sh ./redis_upgrade.sh
+sh ./upgrade_redis.sh
 ```
 
 **Window**
 ```dash
 cd ./v1/scripts
-./redis_upgrade.bat
+./upgrade_redis.bat
 ```
 
-### 语料数据库填充
+## 语料数据库填充
 
 **Liunx**
 ```dash
@@ -283,12 +286,18 @@ cd ./v1/scripts
 ```
 运行时间较长。本地开发环境大约4小时。
 
-
-运行时间较长。本地开发环境大约4小时。
-
 如果不想等待，可以导入其他人已经部署好的postgresql数据库
 
-### 运行dev server
+## 启动消息队列works
+
+```dash
+php artisan mq:discussion
+php artisan mq:pr
+php artisan mq:progress
+php artisan mq:wbw.analyses
+```
+
+## 运行dev server
 
 ```dash
 php artisan serve
