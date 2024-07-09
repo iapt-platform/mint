@@ -74,11 +74,11 @@ const ExportModalWidget = ({
       return;
     }
     const url = `/v2/export/${filenameRef.current}`;
-    console.info("export url", url);
+    console.info("api request export", url);
     get<IExportStatusResponse>(url)
       .then((json) => {
+        console.info("api response export", json);
         if (json.ok) {
-          console.info("filename", json);
           setExportStatus(json.data.status);
           if (json.data.status.progress === 1) {
             setFilename(undefined);
@@ -128,10 +128,11 @@ const ExportModalWidget = ({
   };
   const exportRun = (): void => {
     const url = getUrl();
-    console.log("url", url);
+    console.info("api request", url);
     setExportStart(true);
     get<IExportResponse>(url)
       .then((json) => {
+        console.info("api response", json);
         if (json.ok) {
           const filename = json.data;
           console.log("filename", filename);
