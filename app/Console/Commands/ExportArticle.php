@@ -66,7 +66,6 @@ class ExportArticle extends Command
                                             return $value;
                                         }));
 
-
         $sections = array();
         $articles = array();
 
