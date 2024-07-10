@@ -127,7 +127,7 @@ const WbwDetailRelationWidget = ({
     }
 
     //找出符合条件的relation
-
+    console.debug("relation match data=", data);
     const filteredRelation = relations?.filter((value) => {
       let caseMatch = true;
       let spellMatch = true;
@@ -152,8 +152,13 @@ const WbwDetailRelationWidget = ({
           spellMatch = false;
         }
       }
+
+      console.debug("relation match", value, caseMatch, spellMatch);
+
       return caseMatch && spellMatch;
     });
+    console.debug("relation match filteredRelation=", filteredRelation);
+
     setCurrRelation(filteredRelation);
     setRelationOptions(filteredRelation);
     let relationName = new Map<string, string>();
