@@ -134,22 +134,23 @@ const init = () => {
   );
 
   //获取 relation 表
-  get<IRelationListResponse>(`/v2/relation?vocabulary=true&limit=1000`).then(
-    (json) => {
-      if (json.ok) {
-        const items: IRelation[] = json.data.rows.map((item, id) => {
-          return {
-            id: item.id,
-            name: item.name,
-            case: item.case,
-            from: item.from,
-            to: item.to,
-          };
-        });
-        store.dispatch(pushRelation(items));
-      }
+  const urlRelation = `/v2/relation?vocabulary=true&limit=1000`;
+  console.debug("relations api request", urlRelation);
+  get<IRelationListResponse>(urlRelation).then((json) => {
+    console.debug("relations api response", json);
+    if (json.ok) {
+      const items: IRelation[] = json.data.rows.map((item, id) => {
+        return {
+          id: item.id,
+          name: item.name,
+          case: item.case,
+          from: item.from,
+          to: item.to,
+        };
+      });
+      store.dispatch(pushRelation(items));
     }
-  );
+  });
 
   //获取用户选择的主题
   const theme = localStorage.getItem("theme");

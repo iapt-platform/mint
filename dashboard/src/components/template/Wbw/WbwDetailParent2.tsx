@@ -64,7 +64,7 @@ const WbwParent2Widget = ({ data, onChange }: IWidget) => {
     setParentOptions(parentOptions);
   }, [inlineDict, data]);
 
-  const grammar = ["prp", "pp", "fpp", "pass", "caus"];
+  const grammar = ["prp", "pp", "fpp", "pass", "caus", "vdn"];
   const options = grammar.map((item) => {
     return {
       value: `.${item}.`,
