@@ -147,10 +147,15 @@ const WbwDetailRelationWidget = ({
           caseMatch = false;
         }
       }
-      if (value.from?.spell) {
-        if (data.real.value !== value.from?.spell) {
-          spellMatch = false;
-        }
+      if (value.from?.spell && data.real.value) {
+        // 假设你有一个字符串表示的正则表达式
+        const regexString = value.from?.spell.replaceAll("*", "\\w");
+
+        // 创建正则表达式对象
+        const regex = new RegExp(regexString);
+
+        // 使用正则表达式
+        spellMatch = regex.test(data.real.value);
       }
 
       console.debug("relation match", value, caseMatch, spellMatch);
