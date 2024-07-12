@@ -66,7 +66,6 @@ class ExportArticle extends Command
                                             return $value;
                                         }));
 
-
         $sections = array();
         $articles = array();
 
@@ -126,7 +125,7 @@ class ExportArticle extends Command
     }
 
     private function fetch($articleId){
-        $api = config('mint.server.api.bamboo');
+        $api = config('app.url') . '/api';
         $basicUrl = $api . '/v2/article/';
         $url =  $basicUrl . $articleId;;
         $this->info('http request url='.$url);
