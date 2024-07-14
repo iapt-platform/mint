@@ -45,12 +45,13 @@ const AnthologyDetailWidget = ({
 
   function fetchData(id?: string) {
     const url = `/v2/anthology/${id}`;
-    console.info("url", url);
+    console.info("api request", url);
     if (typeof onLoading !== "undefined") {
       onLoading(true);
     }
     get<IAnthologyResponse>(url)
       .then((response) => {
+        console.info("api response", response);
         if (response.ok) {
           const item: IAnthologyDataResponse = response.data;
           let newTree: IAnthologyData = {
