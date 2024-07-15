@@ -20,7 +20,7 @@ const items = {
   "dict.fields.type.v.short.label": "v.",
   "dict.fields.type.v:ind.label": "动不变",
   "dict.fields.type.v:ind.short.label": "v. ind.",
-  "dict.fields.type.ind.label": "不变",
+  "dict.fields.type.ind.label": "不变词",
   "dict.fields.type.ind.short.label": "不",
   "dict.fields.type.m.label": "m.",
   "dict.fields.type.m.short.label": "m.",
@@ -161,6 +161,8 @@ const items = {
   "dict.fields.type.vdn.short.label": "动名",
   "dict.fields.type.comp.label": "comp.",
   "dict.fields.type.comp.short.label": "comp.",
+  "dict.fields.type.others.label": "others",
+  "dict.fields.type.others.short.label": "others",
 };
 
 export default items;
