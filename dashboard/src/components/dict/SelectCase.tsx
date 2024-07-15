@@ -247,13 +247,11 @@ const SelectCaseWidget = ({
       label: intl.formatMessage({ id: "dict.fields.type.conj.label" }),
     },
     {
-      value: "prep",
-      label: intl.formatMessage({ id: "dict.fields.type.prep.label" }),
-    },
-    {
       value: "interj",
       label: intl.formatMessage({ id: "dict.fields.type.interj.label" }),
     },
+  ];
+  const caseOthers = [
     {
       value: "pre",
       label: intl.formatMessage({ id: "dict.fields.type.pre.label" }),
@@ -323,6 +321,16 @@ const SelectCaseWidget = ({
       children: caseInd,
     },
     {
+      value: "pron",
+      label: intl.formatMessage({ id: "dict.fields.type.pron.label" }),
+      children: case3_pron,
+    },
+    {
+      value: "num",
+      label: intl.formatMessage({ id: "dict.fields.type.num.label" }),
+      children: case3_num,
+    },
+    {
       value: "un",
       label: intl.formatMessage({ id: "dict.fields.type.un.label" }),
     },
@@ -332,14 +340,9 @@ const SelectCaseWidget = ({
       children: case3_ti,
     },
     {
-      value: "pron",
-      label: intl.formatMessage({ id: "dict.fields.type.pron.label" }),
-      children: case3_pron,
-    },
-    {
-      value: "num",
-      label: intl.formatMessage({ id: "dict.fields.type.num.label" }),
-      children: case3_num,
+      value: "others",
+      label: intl.formatMessage({ id: "dict.fields.type.others.label" }),
+      children: caseOthers,
     },
   ];
   return (
