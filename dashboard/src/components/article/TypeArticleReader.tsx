@@ -3,6 +3,7 @@ import { Divider, message, Space, Tag } from "antd";
 
 import { get } from "../../request";
 import {
+  IAnthologyResponse,
   IArticleDataResponse,
   IArticleNavData,
   IArticleNavResponse,
@@ -19,12 +20,14 @@ import ErrorResult from "../general/ErrorResult";
 import NavigateButton from "./NavigateButton";
 import InteractiveArea from "../discussion/InteractiveArea";
 import TypeArticleReaderToolbar from "./TypeArticleReaderToolbar";
+import { IChannel } from "../channel/Channel";
 
 interface IWidget {
   type?: ArticleType;
   articleId?: string;
   mode?: ArticleMode | null;
   channelId?: string | null;
+  parentChannels?: string[];
   anthologyId?: string | null;
   active?: boolean;
   hideInteractive?: boolean;
@@ -38,6 +41,7 @@ interface IWidget {
 const TypeArticleReaderWidget = ({
   type,
   channelId,
+  parentChannels,
   articleId,
   anthologyId,
   mode = "read",
@@ -57,10 +61,40 @@ const TypeArticleReaderWidget = ({
   const [errorCode, setErrorCode] = useState<number>();
   const [currPath, setCurrPath] = useState<ITocPathNode[]>();
   const [nav, setNav] = useState<IArticleNavData>();
+  const [defaultChannel, setDefaultChannel] = useState<IChannel | null>();
 
   const channels = channelId?.split("_");
 
   const srcDataMode = mode === "edit" || mode === "wbw" ? "edit" : "read";
+
+  //创建时获取文集channel
+  useEffect(() => {
+    if (!anthologyId) {
+      return;
+    }
+    if (channelId) {
+      return;
+    }
+    const url = `/v2/anthology/${anthologyId}`;
+    console.info("api request", url);
+
+    get<IAnthologyResponse>(url).then((json) => {
+      if (json.ok) {
+        if (json.data.default_channel) {
+          if (typeof onArticleChange === "undefined") {
+            //自控
+            setDefaultChannel(json.data.default_channel);
+          } else {
+            //外控
+            onArticleChange("article", articleId, null);
+          }
+        } else {
+          setDefaultChannel(null);
+        }
+      }
+    });
+  }, []);
+
   useEffect(() => {
     console.log("srcDataMode", srcDataMode);
     if (!active) {
@@ -71,14 +105,23 @@ const TypeArticleReaderWidget = ({
       return;
     }
 
+    let mChannels: string[] = [];
+    if (channelId) {
+      mChannels.push(channelId);
+    }
+    if (parentChannels) {
+      mChannels = [...parentChannels, ...mChannels];
+    }
     let url = `/v2/article/${articleId}?mode=${srcDataMode}`;
-    url += channelId ? `&channel=${channelId}` : "";
+    if (mChannels.length > 0) {
+      url += `&channel=${mChannels.join("_")}`;
+    }
     url += anthologyId ? `&anthology=${anthologyId}` : "";
-    console.info("article url", url);
+    console.info("article api request", url);
     setLoading(true);
     get<IArticleResponse>(url)
       .then((json) => {
-        console.log("article", json);
+        console.info("article api response", json);
         if (json.ok) {
           setArticleData(json.data);
           setCurrPath(json.data.path);
