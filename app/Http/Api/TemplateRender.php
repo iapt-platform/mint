@@ -508,16 +508,19 @@ class TemplateRender{
         $type = $this->get_param($this->param,"type",1);
         $id = $this->get_param($this->param,"id",2);
         $title = $this->get_param($this->param,"title",3);
-        $channel = $this->get_param($this->param,"channel",4,$this->channel_id[0]);
+        $channel = $this->get_param($this->param,"channel",4);
         $style = $this->get_param($this->param,"style",5);
         $book = $this->get_param($this->param,"book",6);
         $paragraphs = $this->get_param($this->param,"paragraphs",7);
+        $anthology = $this->get_param($this->param,"anthology",8);
         $props = [
                     "type" => $type,
                     "id" => $id,
-                    "channel" => $channel,
                     'style' => $style,
                 ];
+        if(!empty($channel)){
+            $props['channel'] = $channel;
+        }
         if(!empty($title)){
             $props['title'] = $title;
         }
@@ -526,6 +529,12 @@ class TemplateRender{
         }
         if(!empty($paragraphs)){
             $props['paragraphs'] = $paragraphs;
+        }
+        if(!empty($anthology)){
+            $props['anthology'] = $anthology;
+        }
+        if(is_array($this->channel_id)){
+            $props['parentChannels'] = $this->channel_id;
         }
         switch ($this->format) {
             case 'react':
