@@ -188,7 +188,7 @@ const ArticleListWidget = ({
             }),
             dataIndex: "title",
             key: "title",
-            tooltooltip: "过长会自动收缩",
+            tooltip: "过长会自动收缩",
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
@@ -243,7 +243,7 @@ const ArticleListWidget = ({
             }),
             dataIndex: "summary",
             key: "summary",
-            tooltooltip: "过长会自动收缩",
+            tooltip: "过长会自动收缩",
             ellipsis: true,
           },
           {
