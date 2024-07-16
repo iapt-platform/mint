@@ -106,7 +106,7 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
             }),
             dataIndex: "word",
             key: "word",
-            tip: "单词过长会自动收缩",
+            tooltip: "单词过长会自动收缩",
             ellipsis: true,
           },
           {
@@ -140,7 +140,7 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
             }),
             dataIndex: "meaning2",
             key: "meaning2",
-            tip: "意思过长会自动收缩",
+            tooltip: "意思过长会自动收缩",
             ellipsis: true,
           },
           {
@@ -150,7 +150,7 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
             dataIndex: "note",
             key: "note",
             search: false,
-            tip: "注释过长会自动收缩",
+            tooltip: "注释过长会自动收缩",
             ellipsis: true,
           },
           {

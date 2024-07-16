@@ -228,13 +228,15 @@ const DiscussionCreateWidget = ({
                   }
                 >
                   <MDEditor
-                    placeholder={
-                      "问题的详细描述" +
-                      (typeof currParent !== "undefined" &&
-                      typeof topic?.tplId !== "undefined"
-                        ? ""
-                        : "（选填）")
-                    }
+                    textareaProps={{
+                      placeholder:
+                        "问题的详细描述" +
+                        (typeof currParent !== "undefined" &&
+                        typeof topic?.tplId !== "undefined"
+                          ? ""
+                          : "（选填）"),
+                      maxLength: 10000,
+                    }}
                   />
                 </Form.Item>
               ) : (

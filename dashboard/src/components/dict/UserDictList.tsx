@@ -261,7 +261,7 @@ const UserDictListWidget = ({
             }),
             dataIndex: "word",
             key: "word",
-            tip: "单词过长会自动收缩",
+            tooltip: "单词过长会自动收缩",
             ellipsis: true,
           },
           {
@@ -302,7 +302,7 @@ const UserDictListWidget = ({
             }),
             dataIndex: "meaning",
             key: "meaning",
-            tip: "意思过长会自动收缩",
+            tooltip: "意思过长会自动收缩",
             ellipsis: true,
             search: false,
           },
@@ -313,7 +313,7 @@ const UserDictListWidget = ({
             dataIndex: "note",
             key: "note",
             search: false,
-            tip: "注释过长会自动收缩",
+            tooltip: "注释过长会自动收缩",
             ellipsis: true,
           },
           {
