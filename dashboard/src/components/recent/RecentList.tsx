@@ -89,7 +89,7 @@ const RecentWidget = ({ onSelect }: IWidget) => {
             }),
             dataIndex: "title",
             key: "title",
-            tip: "过长会自动收缩",
+            tooltip: "过长会自动收缩",
             ellipsis: true,
             render: (text, row, index, action) => {
               let icon = <></>;

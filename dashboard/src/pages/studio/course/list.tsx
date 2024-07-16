@@ -166,7 +166,7 @@ const Widget = () => {
             }),
             dataIndex: "title",
             key: "title",
-            tip: "过长会自动收缩",
+            tooltip: "过长会自动收缩",
             ellipsis: true,
             width: 300,
             render: (text, row, index, action) => {

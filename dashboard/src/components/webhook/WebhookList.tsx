@@ -76,7 +76,7 @@ const WebhookListWidget = ({ channelId, studioName }: IWidget) => {
             }),
             dataIndex: "url",
             key: "url",
-            tip: "过长会自动收缩",
+            tooltip: "过长会自动收缩",
             ellipsis: true,
             render: (text, row, index, action) => {
               const url = row.url.split("?")[0];

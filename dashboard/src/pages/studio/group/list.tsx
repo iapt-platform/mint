@@ -119,7 +119,7 @@ const Widget = () => {
             }),
             dataIndex: "name",
             key: "name",
-            tip: "过长会自动收缩",
+            tooltip: "过长会自动收缩",
             ellipsis: true,
             render: (text, row, index, action) => {
               return (
@@ -151,7 +151,7 @@ const Widget = () => {
             dataIndex: "description",
             key: "description",
             search: false,
-            tip: "过长会自动收缩",
+            tooltip: "过长会自动收缩",
             ellipsis: true,
           },
           {

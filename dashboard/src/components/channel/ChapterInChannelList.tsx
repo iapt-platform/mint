@@ -50,7 +50,7 @@ const ChapterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
           }),
           dataIndex: "title",
           key: "title",
-          tip: "过长会自动收缩",
+          tooltip: "过长会自动收缩",
           ellipsis: true,
           render: (text, row, index, action) => {
             return (
@@ -86,7 +86,7 @@ const ChapterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
           }),
           dataIndex: "summary",
           key: "summary",
-          tip: "过长会自动收缩",
+          tooltip: "过长会自动收缩",
           ellipsis: true,
         },
         {
