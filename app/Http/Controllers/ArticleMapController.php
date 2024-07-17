@@ -23,10 +23,12 @@ class ArticleMapController extends Controller
         //
         switch ($request->get('view')) {
             case 'anthology':
-                $table = ArticleCollection::where('collect_id',$request->get('id'));
+                $table = ArticleCollection::where('collect_id',$request->get('id'))
+                            ->leftJoin('articles','articles.uid','=','article_collections.article_id');
                 break;
             case 'article':
-                $table = ArticleCollection::where('article_id',$request->get('id'));
+                $table = ArticleCollection::where('article_id',$request->get('id'))
+                            ->leftJoin('articles','articles.uid','=','article_collections.article_id');
                 break;
         }
         $count = $table->count();
@@ -54,8 +56,16 @@ class ArticleMapController extends Controller
             if($request->has('lazy') && $count > 300){
                 $table = $table->where('level',1);
             }
-            $result = $table->select(['id','collect_id','article_id','level','title','children','editor_id','deleted_at'])
-                        ->orderBy('id')->get();
+            $result = $table->select([
+                'article_collections.id',
+                'collect_id','article_id',
+                'level',
+                'article_collections.title',
+                'children',
+                'article_collections.editor_id',
+                'article_collections.deleted_at',
+                'articles.status'
+                ])->orderBy('id')->get();
         }
 
         return $this->ok(["rows"=>ArticleMapResource::collection($result),"count"=>$count]);

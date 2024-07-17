@@ -25,6 +25,7 @@ class ArticleMapResource extends JsonResource
             "title" => $this->title,
             "editor"=> UserApi::getById($this->editor_id),
             "children" => $this->children,
+            'status' => $this->status,
             "deleted_at" => $this->deleted_at,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
