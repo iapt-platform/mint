@@ -133,7 +133,7 @@ export const ArticleCtl = ({
     case "toggle":
       output = (
         <Collapse bordered={false}>
-          <Collapse.Panel header={`${aTitle} ${anthology}`} key="parent2">
+          <Collapse.Panel header={`${aTitle}`} key="parent2">
             {article}
           </Collapse.Panel>
         </Collapse>
