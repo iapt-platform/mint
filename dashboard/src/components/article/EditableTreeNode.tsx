@@ -14,7 +14,11 @@ const EditableTreeNodeWidget = ({ node, onAdd, onTitleClick }: IWidget) => {
   const [showNodeMenu, setShowNodeMenu] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const title = node.title_text ? node.title_text : node.title;
+  const title = (
+    <Text type={node.status === 10 ? "secondary" : undefined}>
+      {node.title_text ? node.title_text : node.title}
+    </Text>
+  );
 
   const TitleText = () =>
     node.deletedAt ? (
