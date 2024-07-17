@@ -196,7 +196,7 @@ class ExportDownload
         }
         $this->downloadUrl = $s3Link;
         $this->setStatus(1,'export chapter done');
-        Log::debug('export chapter done, upload filename='.$tmpFile);
+        Log::debug('export chapter done, upload',['filename'=>$tmpFile,'url'=>$s3Link] );
         unlink($zipFile);
         return true;
     }
