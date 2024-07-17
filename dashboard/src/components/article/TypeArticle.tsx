@@ -11,6 +11,7 @@ interface IWidget {
   articleId?: string;
   mode?: ArticleMode | null;
   channelId?: string | null;
+  parentChannels?: string[];
   anthologyId?: string | null;
   active?: boolean;
   hideInteractive?: boolean;
@@ -24,6 +25,7 @@ interface IWidget {
 const TypeArticleWidget = ({
   type,
   channelId,
+  parentChannels,
   articleId,
   anthologyId,
   mode = "read",
@@ -66,17 +68,14 @@ const TypeArticleWidget = ({
           isSubWindow={isSubWindow}
           type={type}
           channelId={channelId}
+          parentChannels={parentChannels}
           articleId={articleId}
           anthologyId={anthologyId}
           mode={mode}
           active={active}
           hideInteractive={hideInteractive}
           hideTitle={hideTitle}
-          onArticleChange={(type: string, id: string, target: string) => {
-            if (typeof onArticleChange !== "undefined") {
-              onArticleChange(type, id, target);
-            }
-          }}
+          onArticleChange={onArticleChange}
           onLoad={(data: IArticleDataResponse) => {
             if (typeof onLoad !== "undefined") {
               onLoad(data);

@@ -62,6 +62,7 @@ const EditableTocTreeWidget = ({
         level: item.level,
         title: title,
         children: item.children,
+        status: item.status,
         deleted_at: item.deletedAt,
       };
     });
@@ -92,6 +93,7 @@ const EditableTocTreeWidget = ({
             title: item.title,
             title_text: item.title_text ? item.title_text : item.title,
             level: item.level,
+            status: item.status,
             deletedAt: item.deleted_at,
           };
         });

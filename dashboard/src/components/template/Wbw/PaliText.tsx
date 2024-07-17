@@ -13,6 +13,7 @@ import { roman_to_thai } from "../../code/thai";
 import { roman_to_taitham } from "../../code/tai-tham";
 import store from "../../../store";
 import { lookup as _lookup } from "../../../reducers/command";
+import { BaseType } from "antd/lib/typography/Base";
 
 const { Text } = Typography;
 
@@ -23,6 +24,7 @@ interface IWidget {
   primary?: boolean;
   termToLocal?: boolean;
   lookup?: boolean;
+  textType?: BaseType;
 }
 const PaliTextWidget = ({
   text,
@@ -31,6 +33,7 @@ const PaliTextWidget = ({
   primary = true,
   termToLocal = true,
   lookup = false,
+  textType,
 }: IWidget) => {
   const [paliText, setPaliText] = useState<string>();
   const settings = useAppSelector(settingInfo);
@@ -90,11 +93,19 @@ const PaliTextWidget = ({
     }
   }, [text, settings, code]);
 
-  const nodePali = text ? <Text style={style}>{paliText}</Text> : <></>;
+  const nodePali = text ? (
+    <Text type={textType} style={style}>
+      {paliText}
+    </Text>
+  ) : (
+    <></>
+  );
+
   if (lookup) {
     return (
       <Typography.Text
         style={{ cursor: "pointer" }}
+        type={textType}
         onClick={() => {
           //发送点词查询消息
           if (typeof romanText === "string") {

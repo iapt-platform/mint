@@ -20,6 +20,7 @@ export interface TreeNodeData {
   isLeaf?: boolean;
   children?: TreeNodeData[];
   level: number;
+  status?: number;
   deletedAt?: string | null;
 }
 
@@ -50,6 +51,7 @@ function tocGetTreeData(
       isLeaf: element.children === 0,
       title: element.title,
       level: element.level,
+      status: element.status,
       deletedAt: element.deletedAt,
     };
     idMap.push({
@@ -109,21 +111,20 @@ const updateTreeData = (
   key: React.Key,
   children: TreeNodeData[]
 ): TreeNodeData[] => {
-  console.log("key", key);
   return list.map((node) => {
     if (node.key === key) {
-      console.log("found", node);
+      console.debug("updateTreeData found", key, node);
       node.children = children;
       return node;
     }
-    /*
+
     if (node.children) {
       return {
         ...node,
         children: updateTreeData(node.children, key, children),
       };
     }
-    */
+
     return node;
   });
 };
@@ -134,6 +135,7 @@ interface IWidgetTocTree {
   selectedKeys?: Key[];
   onSelect?: Function;
   onClick?: Function;
+  onLoad?: (key: string) => string;
 }
 
 const TocTreeWidget = ({
@@ -142,6 +144,7 @@ const TocTreeWidget = ({
   selectedKeys,
   onSelect,
   onClick,
+  onLoad,
 }: IWidgetTocTree) => {
   const [tree, setTree] = useState<TreeNodeData[]>();
   const [expanded, setExpanded] = useState<Key[]>();
@@ -197,13 +200,18 @@ const TocTreeWidget = ({
         resolve();
         return;
       }
+      if (typeof onLoad === "undefined") {
+        resolve();
+        return;
+      }
+      const url = onLoad(key);
 
       setTimeout(() => {
         setTree((origin) => {
           if (!origin) {
             return origin;
           }
-          updateTreeData(origin, key, [
+          return updateTreeData(origin, key, [
             {
               title: "Child Node",
               key: randomString(),
@@ -229,6 +237,7 @@ const TocTreeWidget = ({
       selectedKeys={selected}
       expandedKeys={expanded}
       autoExpandParent
+      loadData={onLoadData}
       onExpand={(expandedKeys: Key[]) => {
         setExpanded(expandedKeys);
       }}
@@ -261,17 +270,23 @@ const TocTreeWidget = ({
             node.title === "" ? (
               "[unnamed]"
             ) : (
-              <PaliText text={node.title} />
+              <PaliText
+                textType={node.status === 10 ? "secondary" : undefined}
+                text={node.title}
+              />
             )
           ) : (
-            <>{node.title}</>
+            node.title
           );
-        return node.deletedAt ? (
-          <Text delete disabled>
+
+        return (
+          <Text
+            delete={node.deletedAt ? true : false}
+            disabled={node.deletedAt ? true : false}
+            type={node.status === 10 ? "secondary" : undefined}
+          >
             {currNode}
           </Text>
-        ) : (
-          <>{currNode}</>
         );
       }}
     />
