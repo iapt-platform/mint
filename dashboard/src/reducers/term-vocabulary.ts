@@ -10,6 +10,7 @@ export interface ITerm {
   word: string;
   tag?: string;
   meaning: string;
+  other_meaning?: string;
 }
 
 interface IState {
