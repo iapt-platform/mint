@@ -37,6 +37,7 @@ const AnthologyTocTreeWidget = ({
             title: item.title_text ? item.title_text : item.title,
             level: item.level,
             children: item.children,
+            status: item.status,
             deletedAt: item.deleted_at,
           };
         });
