@@ -63,6 +63,7 @@ export const grammarTermFetch = () => {
     }
   );
 };
+
 const init = () => {
   get<ISiteInfoResponse | IErrorResponse>("/v2/siteinfo/en").then(
     (response) => {
