@@ -44,8 +44,8 @@ h6 {
   border-spacing: 0;
   border-collapse: collapse;
   display: block;
-  width: -webkit-max-content;
-  width: max-content;
+  /*width: -webkit-max-content;*/
+  /*width: max-content;*/
   max-width: 100%;
 }
 .pcd_article td,
