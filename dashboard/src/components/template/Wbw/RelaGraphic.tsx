@@ -38,7 +38,7 @@ const RelaGraphicWidget = ({ wbwData }: IWidget) => {
       defaultMessage: mType,
     });
     let strGrammar: string[] = [];
-    if (g.length > 1) {
+    if (g.length > 1 && g[1].length > 0) {
       strGrammar = g[1].split("$").map((item, id) => {
         const mCase = item.replaceAll(".", "");
         return intl.formatMessage({
@@ -47,7 +47,12 @@ const RelaGraphicWidget = ({ wbwData }: IWidget) => {
         });
       });
     }
-    return `${type}|${strGrammar.join("·")}`;
+
+    let output = type;
+    if (strGrammar.length > 0) {
+      output += `|${strGrammar.join("·")}`;
+    }
+    return output;
   };
 
   //根据relation 绘制关系图
