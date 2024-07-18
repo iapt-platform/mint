@@ -1,13 +1,13 @@
-import { Button, Tooltip, Typography } from "antd";
-import { CopyOutlined } from "@ant-design/icons";
+import { Typography } from "antd";
 
 import Mermaid from "../../general/Mermaid";
 import { useAppSelector } from "../../../hooks";
-import { getTerm } from "../../../reducers/term-vocabulary";
+import { getGrammar } from "../../../reducers/term-vocabulary";
 import { IWbwRelation } from "./WbwDetailRelation";
 import { IWbw } from "./WbwWord";
 import { relationWordId } from "./WbwRelationAdd";
 import { useIntl } from "react-intl";
+
 const { Text } = Typography;
 
 const pureMeaning = (input: string | null | undefined) => {
@@ -24,7 +24,7 @@ interface IWidget {
   wbwData?: IWbw[];
 }
 const RelaGraphicWidget = ({ wbwData }: IWidget) => {
-  const terms = useAppSelector(getTerm);
+  const terms = useAppSelector(getGrammar);
   const intl = useIntl();
 
   const grammarStr = (input?: string | null) => {
