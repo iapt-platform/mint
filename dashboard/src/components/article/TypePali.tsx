@@ -31,7 +31,12 @@ interface IWidget {
   active?: boolean;
   focus?: string | null;
   hideNav?: boolean;
-  onArticleChange?: Function;
+  onArticleChange?: (
+    type: ArticleType,
+    id: string,
+    target: string,
+    param?: ISearchParams[]
+  ) => void;
   onFinal?: Function;
   onLoad?: Function;
   onTitle?: Function;
@@ -352,7 +357,7 @@ const TypePaliWidget = ({
                   }
                 }
                 if (typeof onArticleChange !== "undefined") {
-                  onArticleChange(type, newId, target, param);
+                  onArticleChange(type as ArticleType, newId, target, param);
                 }
               }}
             />

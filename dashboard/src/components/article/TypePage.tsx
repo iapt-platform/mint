@@ -12,6 +12,7 @@ import ArticleSkeleton from "./ArticleSkeleton";
 import ErrorResult from "../general/ErrorResult";
 import "./article.css";
 import { fullUrl } from "../../utils";
+import { ISearchParams } from "../../pages/library/article/show";
 
 interface IParam {
   articleId?: string;
@@ -25,7 +26,12 @@ interface IWidget {
   mode?: ArticleMode | null;
   channelId?: string | null;
   focus?: string | null;
-  onArticleChange?: Function;
+  onArticleChange?: (
+    type: ArticleType,
+    id: string,
+    target: string,
+    param?: ISearchParams[]
+  ) => void;
   onFinal?: Function;
   onLoad?: Function;
 }
@@ -159,9 +165,13 @@ const TypePageWidget = ({
             hideNav
             {...paramPali}
             focus={focus}
-            onArticleChange={(type: ArticleType, id: string) => {
+            onArticleChange={(
+              type: ArticleType,
+              id: string,
+              target: string
+            ) => {
               if (typeof onArticleChange !== "undefined") {
-                onArticleChange(type, id);
+                onArticleChange(type, id, target);
               }
             }}
           />
