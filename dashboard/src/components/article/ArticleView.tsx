@@ -3,7 +3,7 @@ import { Typography, Divider, Skeleton, Space } from "antd";
 import MdView from "../template/MdView";
 import TocPath, { ITocPathNode } from "../corpus/TocPath";
 import PaliChapterChannelList from "../corpus/PaliChapterChannelList";
-import { ArticleType } from "./Article";
+import { ArticleMode, ArticleType } from "./Article";
 import VisibleObserver from "../general/VisibleObserver";
 import { IStudio } from "../auth/Studio";
 
@@ -21,6 +21,7 @@ export interface IWidgetArticleData {
   content?: string;
   html?: string[];
   path?: ITocPathNode[];
+  mode?: ArticleMode | null;
   created_at?: string;
   updated_at?: string;
   owner?: IStudio;
@@ -50,6 +51,7 @@ const ArticleViewWidget = ({
   articleId,
   anthology,
   hideTitle,
+  mode = "read",
   onEnd,
   remains,
   onPathChange,
