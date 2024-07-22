@@ -337,8 +337,14 @@ const Widget = () => {
           style={{ width: `calc(100% - ${rightBarWidth})`, display: "flex" }}
         >
           <div
+            className="article_shell"
             key="Article"
-            style={{ marginLeft: "auto", marginRight: "auto", width: 1100 }}
+            style={{
+              marginLeft: "auto",
+              marginRight: "auto",
+              width: 1100,
+              maxWidth: currMode === "read" ? 750 : "unset",
+            }}
           >
             <LoginAlertModal mode={currMode} />
             {type !== "textbook" ? (
