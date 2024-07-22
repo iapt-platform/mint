@@ -10,6 +10,7 @@ import NavigateButton from "./NavigateButton";
 import ArticleSkeleton from "./ArticleSkeleton";
 import ErrorResult from "../general/ErrorResult";
 import "./article.css";
+import { ISearchParams } from "../../pages/library/article/show";
 
 interface IParam {
   articleId?: string;
@@ -22,7 +23,12 @@ interface IWidget {
   articleId?: string;
   mode?: ArticleMode | null;
   channelId?: string | null;
-  onArticleChange?: Function;
+  onArticleChange?: (
+    type: ArticleType,
+    id: string,
+    target: string,
+    param?: ISearchParams[]
+  ) => void;
   onFinal?: Function;
   onLoad?: Function;
 }
@@ -107,9 +113,14 @@ const TypeCSParaWidget = ({
             type={"para"}
             hideNav
             {...paramPali}
-            onArticleChange={(type: ArticleType, id: string) => {
+            onArticleChange={(
+              type: ArticleType,
+              id: string,
+              target: string,
+              param?: ISearchParams[] | undefined
+            ) => {
               if (typeof onArticleChange !== "undefined") {
-                onArticleChange(type, id);
+                onArticleChange(type, id, target, param);
               }
             }}
           />
