@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Typography } from "antd";
+import { Button, Dropdown, MenuProps, Typography } from "antd";
+import { LoadingOutlined, CloseOutlined } from "@ant-design/icons";
 
 import { useAppSelector } from "../../hooks";
 import {
@@ -9,11 +10,37 @@ import {
 } from "../../reducers/setting";
 import { GetUserSetting } from "../auth/setting/default";
 import { TCodeConvertor } from "./utilities";
-import { ISentence } from "./SentEdit";
+import { ISentence, IWidgetSentEditInner, SentEditInner } from "./SentEdit";
 import MdView from "./MdView";
 import store from "../../store";
 import { push } from "../../reducers/sentence";
+import "./style.css";
+import InteractiveButton from "./SentEdit/InteractiveButton";
+import { prOpen } from "./SentEdit/SuggestionButton";
+import { openDiscussion } from "../discussion/DiscussionButton";
+import { IEditableSentence } from "../api/Corpus";
+import { get } from "../../request";
+
 const { Text } = Typography;
+
+const items: MenuProps["items"] = [
+  {
+    label: "编辑",
+    key: "edit",
+  },
+  {
+    label: "讨论",
+    key: "discussion",
+  },
+  {
+    label: "修改建议",
+    key: "pr",
+  },
+  {
+    label: "标签",
+    key: "tag",
+  },
+];
 
 interface IWidgetSentReadFrame {
   origin?: ISentence[];
@@ -38,6 +65,14 @@ const SentReadFrame = ({
   error,
 }: IWidgetSentReadFrame) => {
   const [paliCode1, setPaliCode1] = useState<TCodeConvertor>("roman");
+  const [active, setActive] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [sentData, setSentData] = useState<IWidgetSentEditInner>();
+  const [showEdit, SetShowEdit] = useState(false);
+  const [translationData, setTranslationData] = useState<
+    ISentence[] | undefined
+  >(translation);
+
   const key = useAppSelector(onChangeKey);
   const value = useAppSelector(onChangeValue);
   const settings = useAppSelector(settingInfo);
@@ -83,20 +118,18 @@ const SentReadFrame = ({
       setPaliCode1(_paliCode1.toString() as TCodeConvertor);
     }
   }, [key, value, settings]);
+
   return (
-    <div
-      style={{ display: "flex", flexDirection: layout, marginBottom: 10 }}
-      ref={boxSent}
-    >
+    <span ref={boxSent} className="sent_read_shell">
       <Text type="danger" mark>
         {error}
       </Text>
-      <div
+      <span
         dangerouslySetInnerHTML={{
-          __html: `<div class="pcd_sent" id="sent_${book}-${para}-${wordStart}-${wordEnd}"></div>`,
+          __html: `<span class="pcd_sent" id="sent_${book}-${para}-${wordStart}-${wordEnd}"></span>`,
         }}
       />
-      <div style={{ flex: "5", color: "#9f3a01" }} ref={boxOrg}>
+      <span style={{ flex: "5", color: "#9f3a01" }} ref={boxOrg}>
         {origin?.map((item, id) => {
           return (
             <Text key={id}>
@@ -109,17 +142,112 @@ const SentReadFrame = ({
             </Text>
           );
         })}
-      </div>
-      <div style={{ flex: "5" }}>
-        {translation?.map((item, id) => {
+      </span>
+      <span className="sent_read" style={{ flex: "5" }}>
+        {translationData?.map((item, id) => {
           return (
-            <Text key={id}>
-              <MdView html={item.html} />
-            </Text>
+            <span key={id}>
+              {loading ? <LoadingOutlined /> : <></>}
+              <Dropdown
+                menu={{
+                  items,
+                  onClick: (e) => {
+                    console.log("click ", e);
+                    switch (e.key) {
+                      case "edit":
+                        const url = `/v2/editable-sentence/${item.id}`;
+                        console.info("api request", url);
+                        setLoading(true);
+                        get<IEditableSentence>(url)
+                          .then((json) => {
+                            console.info("api response", json);
+                            if (json.ok) {
+                              setSentData(json.data);
+                              SetShowEdit(true);
+                            }
+                          })
+                          .finally(() => setLoading(false));
+                        break;
+                      case "discussion":
+                        if (item.id) {
+                          openDiscussion(item.id, false);
+                        }
+                        break;
+                      case "pr":
+                        prOpen(item);
+                        break;
+                      default:
+                        break;
+                    }
+                  },
+                }}
+                trigger={["contextMenu"]}
+              >
+                <Text
+                  key={id}
+                  className="sent_read_translation"
+                  style={{ display: showEdit ? "none" : "inline" }}
+                >
+                  <MdView
+                    html={item.html}
+                    style={{ backgroundColor: active ? "beige" : "unset" }}
+                  />
+                </Text>
+              </Dropdown>
+              <div style={{ display: showEdit ? "block" : "none" }}>
+                <div style={{ textAlign: "right" }}>
+                  <Button
+                    size="small"
+                    icon={<CloseOutlined />}
+                    onClick={() => {
+                      SetShowEdit(false);
+                    }}
+                  >
+                    返回审阅模式
+                  </Button>
+                </div>
+
+                {sentData ? (
+                  <SentEditInner
+                    mode="edit"
+                    {...sentData}
+                    onTranslationChange={(data: ISentence) => {
+                      console.log("onTranslationChange", data);
+                      if (translationData) {
+                        let newData = [...translationData];
+                        newData.forEach(
+                          (
+                            value: ISentence,
+                            index: number,
+                            array: ISentence[]
+                          ) => {
+                            if (index === id) {
+                              array[index] = data;
+                            }
+                          }
+                        );
+                        setTranslationData(newData);
+                      }
+                    }}
+                  />
+                ) : (
+                  "无数据"
+                )}
+              </div>
+              <InteractiveButton
+                data={item}
+                compact={true}
+                float={true}
+                hideCount
+                hideInZero
+                onMouseEnter={() => setActive(true)}
+                onMouseLeave={() => setActive(false)}
+              />
+            </span>
           );
         })}
-      </div>
-    </div>
+      </span>
+    </span>
   );
 };
 

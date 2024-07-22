@@ -48,10 +48,11 @@ const DiscussionAnchorWidget = ({
     switch (resType) {
       case "sentence":
         url = `/v2/sentence/${resId}`;
-        console.log("url", url);
+        console.info("api request", url);
         setLoading(true);
         get<ISentenceResponse>(url)
           .then((json) => {
+            console.info("api response", json);
             if (json.ok) {
               const id = `${json.data.book}-${json.data.paragraph}-${json.data.word_start}-${json.data.word_end}`;
               const channel = json.data.channel.id;

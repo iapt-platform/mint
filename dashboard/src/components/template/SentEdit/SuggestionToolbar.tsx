@@ -1,5 +1,6 @@
 import { Divider, Popconfirm, Space, Tooltip, Typography } from "antd";
 import { LikeOutlined, DeleteOutlined } from "@ant-design/icons";
+
 import { ISentence } from "../SentEdit";
 import { useEffect, useState } from "react";
 import PrAcceptButton from "./PrAcceptButton";
@@ -11,6 +12,8 @@ import { openPanel } from "../../../reducers/right-panel";
 import { useIntl } from "react-intl";
 import SuggestionPopover from "./SuggestionPopover";
 import DiscussionButton from "../../discussion/DiscussionButton";
+import SuggestionButton from "./SuggestionButton";
+import InteractiveButton from "./InteractiveButton";
 
 const { Paragraph } = Typography;
 
@@ -34,21 +37,8 @@ const SuggestionToolbarWidget = ({
   onPrClose,
   onDelete,
 }: IWidget) => {
-  const [CommentCount, setCommentCount] = useState<number | undefined>(
-    data.suggestionCount?.discussion
-  );
-  const discussionCount = useAppSelector(count);
   const intl = useIntl();
 
-  useEffect(() => {
-    if (
-      discussionCount?.resType === "sentence" &&
-      discussionCount.resId === data.id
-    ) {
-      setCommentCount(discussionCount.count);
-    }
-  }, [data.id, discussionCount]);
-  const prNumber = data.suggestionCount?.suggestion;
   return (
     <Paragraph type="secondary" style={style}>
       {isPr ? (
@@ -91,37 +81,7 @@ const SuggestionToolbarWidget = ({
           </Popconfirm>
         </Space>
       ) : (
-        <Space size={"small"}>
-          <Space
-            style={{
-              cursor: "pointer",
-              color: prNumber && prNumber > 0 ? "#1890ff" : "unset",
-            }}
-            onClick={(event) => {
-              store.dispatch(
-                show({
-                  type: "pr",
-                  sent: data,
-                })
-              );
-              store.dispatch(openPanel("suggestion"));
-            }}
-          >
-            <Tooltip title="修改建议">
-              <HandOutlinedIcon />
-            </Tooltip>
-            <SuggestionPopover
-              book={data.book}
-              para={data.para}
-              start={data.wordStart}
-              end={data.wordEnd}
-              channelId={data.channel.id}
-            />
-            {prNumber}
-          </Space>
-          {compact ? undefined : <Divider type="vertical" />}
-          <DiscussionButton initCount={CommentCount} resId={data.id} />
-        </Space>
+        <InteractiveButton data={data} compact={compact} />
       )}
     </Paragraph>
   );

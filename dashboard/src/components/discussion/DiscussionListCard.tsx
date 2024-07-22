@@ -221,8 +221,9 @@ const DiscussionListCardWidget = ({
             switch (resType) {
               case "sentence":
                 const url = `/v2/sentence/${resId}`;
-                console.log("url", url);
+                console.info("api request", url);
                 const sentInfo = await get<ISentenceResponse>(url);
+                console.info("api response", sentInfo);
                 studioName = sentInfo.data.studio.realName;
                 break;
             }
