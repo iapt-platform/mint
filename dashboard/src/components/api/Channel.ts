@@ -5,7 +5,8 @@ export type TChannelType =
   | "nissaya"
   | "original"
   | "wbw"
-  | "commentary";
+  | "commentary"
+  | "similar";
 export interface IChannelApiData {
   id: string;
   name: string;
