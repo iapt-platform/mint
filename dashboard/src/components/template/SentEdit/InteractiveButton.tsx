@@ -29,7 +29,9 @@ const InteractiveButton = ({
   useEffect(() => {
     // 获取目标元素
     const targetNode = document.getElementsByClassName("article_shell")[0];
-
+    if (!targetNode) {
+      return;
+    }
     const rect = targetNode.getBoundingClientRect();
     setLeft(rect.left);
     setWidth(rect.width);
@@ -54,7 +56,9 @@ const InteractiveButton = ({
 
       // 假设你有一个div元素，它的id是"myDiv"
       const myDiv = document.getElementsByClassName("article_shell")[0];
-
+      if (!myDiv) {
+        return;
+      }
       // 使用getBoundingClientRect()方法获取元素的位置和大小
       const rect = myDiv.getBoundingClientRect();
 
@@ -63,7 +67,7 @@ const InteractiveButton = ({
 
       // 输出left位置
       //console.log(`div的left位置是：${leftPosition}px`);
-      setLeft((origin) => leftPosition);
+      setLeft(leftPosition);
 
       // 在这里，你可以根据窗口宽度来调整页面布局或样式
     }
