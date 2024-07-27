@@ -67,11 +67,7 @@ const WbwDetailBasicRelationWidget = ({
               onChange(e);
             }
           }}
-          onAdd={() => {
-            if (typeof onRelationAdd !== "undefined") {
-              onRelationAdd();
-            }
-          }}
+          onAdd={onRelationAdd}
           onFromList={(value: string[]) => setFromList(value)}
         />
       </Collapse.Panel>

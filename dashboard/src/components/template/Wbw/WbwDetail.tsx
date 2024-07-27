@@ -211,11 +211,7 @@ const WbwDetailWidget = ({
                   console.debug("WbwDetailBasic onchange", e);
                   fieldChanged(e.field, e.value);
                 }}
-                onRelationAdd={() => {
-                  if (typeof onClose !== "undefined") {
-                    onClose();
-                  }
-                }}
+                onRelationAdd={onClose}
               />
             ),
           },

@@ -267,11 +267,7 @@ const WbwDetailBasicWidget = ({
               onChange(e);
             }
           }}
-          onRelationAdd={() => {
-            if (typeof onRelationAdd !== "undefined") {
-              onRelationAdd();
-            }
-          }}
+          onRelationAdd={onRelationAdd}
         />
       </Form>
     </>
