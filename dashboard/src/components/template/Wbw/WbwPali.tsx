@@ -108,8 +108,11 @@ const WbwPaliWidget = ({
    * 高亮可能的单词
    */
   useEffect(() => {
+    console.debug("relation match data=", data);
+
     let grammar = data.case?.value
       ?.replace("#", "$")
+      .replace(":", "$")
       .replaceAll(".", "")
       .split("$");
     if (data.grammar2?.value) {
@@ -141,11 +144,13 @@ const WbwPaliWidget = ({
           caseMatch = false;
         }
       }
-      if (value.from?.spell) {
-        if (data.real.value !== value.from?.spell) {
+      if (value.to?.spell) {
+        if (data.real.value !== value.to?.spell) {
           spellMatch = false;
         }
       }
+      console.debug("relation match", value, caseMatch, spellMatch);
+
       return caseMatch && spellMatch;
     });
     if (match && match.length > 0) {
