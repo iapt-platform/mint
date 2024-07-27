@@ -112,6 +112,7 @@ const WbwDetailRelationWidget = ({
   useEffect(() => {
     let grammar = data.case?.value
       ?.replace("#", "$")
+      .replace(":", "$")
       .replaceAll(".", "")
       .split("$");
     if (data.grammar2?.value) {
@@ -268,6 +269,7 @@ const WbwDetailRelationWidget = ({
                 const currSelect = relationOptions?.filter(
                   (rl) => rl.name === value
                 );
+                console.log("filteredRelation", currSelect);
                 setCurrRelation(currSelect);
                 console.log(`selected ${value}`);
                 setRelation((origin) => {
