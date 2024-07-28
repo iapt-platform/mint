@@ -677,10 +677,23 @@ class TemplateRender{
             }
         }else if($title){
             //没有书号用title查询
-            $tmpTitle = explode('။',$title);
-            if(count($tmpTitle)>1){
-                $tmpBookTitle = $tmpTitle[0];
-                $tmpBookPage = $tmpTitle[1];
+            //$tmpTitle = explode('။',$title);
+            for ($i=mb_strlen($title,'UTF-8'); $i > 0 ; $i--) {
+                $mTitle = mb_substr($title,0,$i);
+                $has = array_search($mTitle, array_column(BookTitle::my(), 'title2'));
+                Log::debug('run',['title'=>$mTitle,'has'=>$has]);
+                if($has !== false){
+                    $tmpBookTitle = $mTitle;
+                    $tmpBookPage = mb_substr($title,$i);
+                    $tmpBookPage = $this->mb_trim($tmpBookPage,'၊။');
+                    break;
+                }
+            }
+
+            if(isset($tmpBookTitle)){
+                Log::debug('book title found',['title'=>$tmpBookTitle,'page'=>$tmpBookPage]);
+                //$tmpBookTitle = $tmpTitle[0];
+                //$tmpBookPage = $tmpTitle[1];
                 $tmpBookPage = (int)str_replace(
                                 ['၁','၂','၃','၄','၅','၆','၇','၈','၉','၀'],
                                 ['1','2','3','4','5','6','7','8','9','0'],
@@ -705,6 +718,7 @@ class TemplateRender{
                 }
             }
         }else{
+            Log::debug('book title not found');
             $props['found'] = false;
         }
 
@@ -1054,5 +1068,20 @@ class TemplateRender{
         }else{
             return $default;
         }
+    }
+
+    private function mb_trim($str,string $character_mask = ' ', $charset = "UTF-8") {
+        $start = 0;
+        $end = mb_strlen($str, $charset) - 1;
+        $chars = preg_split('//u', $character_mask, -1, PREG_SPLIT_NO_EMPTY);
+        while ($start <= $end && in_array(mb_substr($str, $start, 1, $charset),$chars)) {
+            $start++;
+        }
+
+        while ($end >= $start && in_array(mb_substr($str, $end, 1, $charset),$chars) ) {
+            $end--;
+        }
+
+        return mb_substr($str, $start, $end - $start + 1, $charset);
     }
 }
