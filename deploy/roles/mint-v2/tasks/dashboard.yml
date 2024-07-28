@@ -1,3 +1,8 @@
+- name: remove current dashboard folder
+  ansible.builtin.file:
+    path: "{{ app_deploy_root }}/dashboard/"
+    state: absent
+
 - name: upload dashboard
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/../dashboard/build/"
