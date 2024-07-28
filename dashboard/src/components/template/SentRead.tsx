@@ -96,10 +96,14 @@ const SentReadFrame = ({
     );
     if (typeof displayOriginal === "boolean") {
       if (boxOrg.current) {
-        if (displayOriginal === true) {
-          boxOrg.current.style.display = "block";
-        } else {
+        if (
+          displayOriginal === false &&
+          translation &&
+          translation.length > 0
+        ) {
           boxOrg.current.style.display = "none";
+        } else {
+          boxOrg.current.style.display = "block";
         }
       }
     }
