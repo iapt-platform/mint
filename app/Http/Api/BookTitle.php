@@ -715,6 +715,18 @@ class BookTitle{
     "volume" => 2
   ],
   [
+    "title1" => "visuddhi，ṭī，1",
+    "title2" => "မဟာဋီ၊၁",
+    "bookname" => "visuddhimagga-mahāṭīkā",
+    "volume" => 1
+  ],
+  [
+    "title1" => "visuddhi，ṭī，2",
+    "title2" => "မဟာဋီ၊၂",
+    "bookname" => "visuddhimagga-mahāṭīkā",
+    "volume" => 2
+  ],
+  [
     "title1" => "yamaka，1",
     "title2" => "ယမက၊၁",
     "bookname" => "yamakapāḷi",
