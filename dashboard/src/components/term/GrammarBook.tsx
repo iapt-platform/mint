@@ -62,6 +62,7 @@ const GrammarBookWidget = () => {
       }
     });
   }, []);
+
   useEffect(() => {
     console.debug("grammar book", searchWord);
     if (searchWord && searchWord.length > 0) {
@@ -135,7 +136,7 @@ const GrammarBookWidget = () => {
                     item.word.length - keyWord.length - wordBegin;
                   weight += (1 / (wordRemain + 1)) * 100;
                 }
-                const meaningBegin = item.meaning
+                const meaningBegin = (item.meaning + item.other_meaning)
                   .toLocaleLowerCase()
                   .indexOf(keyWord);
                 if (meaningBegin >= 0) {
@@ -213,26 +214,32 @@ const GrammarBookWidget = () => {
           <List
             size="small"
             dataSource={result}
-            renderItem={(item) => (
-              <List.Item
-                key={item.term.guid}
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setTermId(item.term.guid);
-                  setTermSearch(undefined);
-                  pushRecent({
-                    title: item.term.word,
-                    description: item.term.meaning,
-                    wordId: item.term.guid,
-                  });
-                }}
-              >
-                <List.Item.Meta
-                  title={item.term.word}
-                  description={item.term.meaning}
-                />
-              </List.Item>
-            )}
+            renderItem={(item) => {
+              const description =
+                item.term.meaning +
+                (item.term.other_meaning ? "，" + item.term.other_meaning : "");
+
+              return (
+                <List.Item
+                  key={item.term.guid}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setTermId(item.term.guid);
+                    setTermSearch(undefined);
+                    pushRecent({
+                      title: item.term.word,
+                      description: description,
+                      wordId: item.term.guid,
+                    });
+                  }}
+                >
+                  <List.Item.Meta
+                    title={item.term.word}
+                    description={description}
+                  />
+                </List.Item>
+              );
+            }}
           />
         )}
       </div>

@@ -18,6 +18,7 @@ export interface TreeNodeData {
   title_text?: string;
   icon?: React.ReactNode;
   children: TreeNodeData[];
+  status?: number;
   deletedAt?: string | null;
   level: number;
 }
@@ -26,6 +27,7 @@ export type ListNodeData = {
   title: string | React.ReactNode;
   title_text?: string;
   level: number;
+  status?: number;
   children?: number;
   deletedAt?: string | null;
 };
@@ -59,6 +61,7 @@ function tocGetTreeData(articles: ListNodeData[], active = "") {
       title_text: element.title_text,
       children: [],
       icon: keys.includes(element.key) ? <LinkOutlined /> : undefined,
+      status: element.status,
       level: element.level,
       deletedAt: element.deletedAt,
     };

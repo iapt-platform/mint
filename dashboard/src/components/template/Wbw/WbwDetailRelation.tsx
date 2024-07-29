@@ -8,7 +8,7 @@ import {
 
 import { useAppSelector } from "../../../hooks";
 import { getRelation } from "../../../reducers/relation";
-import { getTerm } from "../../../reducers/term-vocabulary";
+import { getGrammar } from "../../../reducers/term-vocabulary";
 import { IWbw } from "./WbwWord";
 import { useIntl } from "react-intl";
 import store from "../../../store";
@@ -52,7 +52,7 @@ const WbwDetailRelationWidget = ({
   const [fromList, setFromList] = useState<string[]>();
 
   const [options, setOptions] = useState<IOptions[]>();
-  const terms = useAppSelector(getTerm);
+  const terms = useAppSelector(getGrammar);
   const relations = useAppSelector(getRelation);
 
   const addParam = useAppSelector(relationAddParam);

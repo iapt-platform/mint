@@ -18,9 +18,11 @@ export type TDisplayStyle =
 interface IWidgetChapterCtl {
   type?: ArticleType;
   id?: string;
+  anthology?: string;
   book?: string;
   paragraphs?: string;
   channel?: string;
+  parentChannels?: string[];
   title?: React.ReactNode;
   focus?: string | null;
   style?: TDisplayStyle;
@@ -30,7 +32,9 @@ interface IWidgetChapterCtl {
 export const ArticleCtl = ({
   type,
   id,
+  anthology,
   channel,
+  parentChannels,
   title,
   focus,
   book,
@@ -52,14 +56,17 @@ export const ArticleCtl = ({
     setIsModalOpen(false);
   };
   const aTitle = title ? title : "chapter" + id;
+  console.log("anthology", anthology, channel);
   const article = (
     <Article
       active={true}
       type={type}
       articleId={id}
+      anthologyId={anthology}
       book={book}
       para={paragraphs}
       channelId={channel}
+      parentChannels={parentChannels}
       focus={focus}
       mode="read"
       hideInteractive={true}
@@ -126,7 +133,7 @@ export const ArticleCtl = ({
     case "toggle":
       output = (
         <Collapse bordered={false}>
-          <Collapse.Panel header={aTitle} key="parent2">
+          <Collapse.Panel header={`${aTitle}`} key="parent2">
             {article}
           </Collapse.Panel>
         </Collapse>

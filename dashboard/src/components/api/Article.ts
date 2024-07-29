@@ -148,6 +148,7 @@ export interface IArticleMapRequest {
   title_text?: string;
   editor?: IUser;
   children?: number;
+  status?: number;
   deleted_at?: string | null;
   created_at?: string;
   updated_at?: string;

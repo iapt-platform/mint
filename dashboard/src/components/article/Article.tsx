@@ -50,6 +50,7 @@ interface IWidget {
   articleId?: string;
   mode?: ArticleMode | null;
   channelId?: string | null;
+  parentChannels?: string[];
   book?: string | null;
   para?: string | null;
   anthologyId?: string | null;
@@ -70,6 +71,7 @@ const ArticleWidget = ({
   book,
   para,
   channelId,
+  parentChannels,
   articleId,
   anthologyId,
   courseId,
@@ -97,6 +99,7 @@ const ArticleWidget = ({
           type={type}
           articleId={onArticleChange ? articleId : currId}
           channelId={channelId}
+          parentChannels={parentChannels}
           mode={mode}
           anthologyId={anthologyId}
           active={active}
@@ -107,11 +110,7 @@ const ArticleWidget = ({
               onArticleEdit(value);
             }
           }}
-          onArticleChange={(type: ArticleType, id: string, target: string) => {
-            if (typeof onArticleChange !== "undefined") {
-              onArticleChange(type, id, target);
-            }
-          }}
+          onArticleChange={onArticleChange}
           onLoad={(data: IArticleDataResponse) => {
             if (typeof onLoad !== "undefined") {
               onLoad(data);
@@ -239,15 +238,7 @@ const ArticleWidget = ({
           channelId={channelId}
           courseId={courseId}
           mode={mode}
-          onArticleChange={(
-            newType: ArticleType,
-            id: string,
-            target: string
-          ) => {
-            if (typeof onArticleChange !== "undefined") {
-              onArticleChange(type, id, target);
-            }
-          }}
+          onArticleChange={onArticleChange}
         />
       ) : (
         <></>
