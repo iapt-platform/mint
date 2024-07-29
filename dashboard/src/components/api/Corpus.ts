@@ -289,3 +289,9 @@ export interface ISentenceWbwListResponse {
   message: string;
   data: { rows: IWidgetSentEditInner[]; count: number };
 }
+
+export interface IEditableSentence {
+  ok: boolean;
+  message: string;
+  data: IWidgetSentEditInner;
+}

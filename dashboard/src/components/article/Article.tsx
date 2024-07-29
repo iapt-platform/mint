@@ -60,7 +60,12 @@ interface IWidget {
   hideInteractive?: boolean;
   hideTitle?: boolean;
   isSubWindow?: boolean;
-  onArticleChange?: Function;
+  onArticleChange?: (
+    type: ArticleType,
+    id: string,
+    target: string,
+    param?: ISearchParams[]
+  ) => void;
   onLoad?: Function;
   onAnthologySelect?: Function;
   onTitle?: Function;
@@ -166,7 +171,7 @@ const ArticleWidget = ({
             type: ArticleType,
             id: string,
             target: string,
-            param: ISearchParams[]
+            param?: ISearchParams[]
           ) => {
             if (typeof onArticleChange !== "undefined") {
               onArticleChange(type, id, target, param);

@@ -1,6 +1,6 @@
 import { Space, Tooltip } from "antd";
 import store from "../../store";
-import { IShowDiscussion, show } from "../../reducers/discussion";
+import { IShowDiscussion, count, show } from "../../reducers/discussion";
 import { openPanel } from "../../reducers/right-panel";
 import { CommentFillIcon, CommentOutlinedIcon } from "../../assets/icon";
 import { TResType } from "./DiscussionListCard";
@@ -8,6 +8,19 @@ import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 import { discussionList } from "../../reducers/discussion-count";
 import { IDiscussionCountData, IDiscussionCountWbw } from "../api/Comment";
+import { useEffect, useState } from "react";
+
+export const openDiscussion = (resId: string, withStudent: boolean) => {
+  const data: IShowDiscussion = {
+    type: "discussion",
+    resId: resId,
+    resType: "sentence",
+    withStudent: withStudent,
+  };
+  console.debug("discussion show", data);
+  store.dispatch(show(data));
+  store.dispatch(openPanel("discussion"));
+};
 
 interface IWidget {
   initCount?: number;
@@ -27,8 +40,22 @@ const DiscussionButton = ({
   onlyMe = false,
   wbw,
 }: IWidget) => {
+  const [CommentCount, setCommentCount] = useState<number | undefined>(
+    initCount
+  );
+
   const user = useAppSelector(currentUser);
   const discussions = useAppSelector(discussionList);
+  const discussionCount = useAppSelector(count);
+
+  useEffect(() => {
+    if (
+      discussionCount?.resType === "sentence" &&
+      discussionCount.resId === resId
+    ) {
+      setCommentCount(discussionCount.count);
+    }
+  }, [resId, discussionCount]);
 
   const all = discussions?.filter((value) => value.res_id === resId);
   const my = all?.filter((value) => value.editor_uid === user?.id);
@@ -45,7 +72,7 @@ const DiscussionButton = ({
 
   console.debug("DiscussionButton", discussions, wbw, withStudent);
 
-  let currCount = initCount;
+  let currCount = CommentCount;
   if (onlyMe) {
     if (my) {
       currCount = my.length;
@@ -79,15 +106,9 @@ const DiscussionButton = ({
           color: currCount && currCount > 0 ? "#1890ff" : "unset",
         }}
         onClick={(event) => {
-          const data: IShowDiscussion = {
-            type: "discussion",
-            resId: resId,
-            resType: resType,
-            withStudent: wbw ? true : false,
-          };
-          console.debug("discussion show", data);
-          store.dispatch(show(data));
-          store.dispatch(openPanel("discussion"));
+          if (resId) {
+            openDiscussion(resId, wbw ? true : false);
+          }
         }}
       >
         {myCount ? <CommentFillIcon /> : <CommentOutlinedIcon />}

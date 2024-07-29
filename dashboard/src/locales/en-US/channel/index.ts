@@ -13,6 +13,7 @@ const items = {
   "channel.fields.lang.label": "语言",
   "channel.fields.type.label": "类型",
   "channel.fields.name.label": "名称",
+  "channel.type.similar.label": "Similar",
 };
 
 export default items;

@@ -97,6 +97,7 @@ export interface IWidgetSentEditInner {
   readonly?: boolean;
   wbwProgress?: number;
   wbwScore?: number;
+  onTranslationChange?: (data: ISentence) => void;
 }
 export const SentEditInner = ({
   id,
@@ -119,6 +120,7 @@ export const SentEditInner = ({
   mode,
   showWbwProgress = false,
   readonly = false,
+  onTranslationChange,
 }: IWidgetSentEditInner) => {
   const [wbwData, setWbwData] = useState<IWbw[]>();
   const [magicDict, setMagicDict] = useState<string>();
@@ -203,6 +205,7 @@ export const SentEditInner = ({
         setMagicDictLoading(false);
         setMagicDict(undefined);
       }}
+      onTranslationChange={onTranslationChange}
     />
   );
 

@@ -5,6 +5,7 @@ import { ReloadOutlined } from "@ant-design/icons";
 import { get } from "../../../request";
 import { ISentenceSimListResponse, ISimSent } from "../../api/Corpus";
 import MdView from "../MdView";
+import SentCanRead from "./SentCanRead";
 
 interface IWidget {
   book: number;
@@ -15,6 +16,7 @@ interface IWidget {
   limit?: number;
   reload?: boolean;
   onReload?: Function;
+  onCreate?: Function;
 }
 const SentSimWidget = ({
   book,
@@ -25,6 +27,7 @@ const SentSimWidget = ({
   channelsId,
   reload = false,
   onReload,
+  onCreate,
 }: IWidget) => {
   const [initLoading, setInitLoading] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -66,6 +69,15 @@ const SentSimWidget = ({
 
   return (
     <>
+      <SentCanRead
+        book={book}
+        para={para}
+        wordStart={wordStart}
+        wordEnd={wordEnd}
+        type="similar"
+        channelsId={channelsId}
+        onCreate={onCreate}
+      />
       <List
         loading={initLoading}
         header={

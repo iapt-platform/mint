@@ -33,6 +33,7 @@ interface IWidgetSentContent {
   wbwProgress?: boolean;
   readonly?: boolean;
   onWbwChange?: Function;
+  onTranslationChange?: (data: ISentence) => void;
   onMagicDictDone?: Function;
 }
 const SentContentWidget = ({
@@ -51,6 +52,7 @@ const SentContentWidget = ({
   wbwProgress = false,
   readonly = false,
   onWbwChange,
+  onTranslationChange,
   onMagicDictDone,
 }: IWidgetSentContent) => {
   const [layoutDirection, setLayoutDirection] = useState<TDirection>(layout);
@@ -194,7 +196,12 @@ const SentContentWidget = ({
               end={item.wordEnd}
               channelId={item.channel.id}
             >
-              <SentCell key={id} initValue={item} compact={compact} />
+              <SentCell
+                key={id}
+                initValue={item}
+                compact={compact}
+                onChange={onTranslationChange}
+              />
             </SuggestionFocus>
           );
         })}

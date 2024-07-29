@@ -41,12 +41,15 @@ const ParaShellCtl = ({
       setIsFocus(false);
     }
   }, [book, focus, para]);
+
+  const borderColor = isFocus ? "#e35f00bd " : "rgba(128, 128, 128, 0.3)";
+
+  const border = mode === "read" ? "" : "2px solid " + borderColor;
+
   return (
     <div
       style={{
-        border: isFocus
-          ? "2px solid #e35f00bd "
-          : "2px solid rgba(128, 128, 128, 0.3)",
+        border: border,
         borderRadius: 6,
         marginTop: 20,
         marginBottom: 28,
@@ -58,9 +61,7 @@ const ParaShellCtl = ({
           position: "absolute",
           marginTop: -31,
           marginLeft: -6,
-          border: isFocus
-            ? "2px solid #e35f00bd "
-            : "2px solid rgba(128, 128, 128, 0.3)",
+          border: border,
           borderRadius: "6px",
         }}
       >

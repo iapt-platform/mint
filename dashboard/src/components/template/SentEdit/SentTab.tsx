@@ -77,6 +77,7 @@ const SentTabWidget = ({
   const [currTranNum, setCurrTranNum] = useState(tranNum);
   const [currNissayaNum, setCurrNissayaNum] = useState(nissayaNum);
   const [currCommNum, setCurrCommNum] = useState(commNum);
+  const [currSimilarNum, setCurrSimilarNum] = useState(simNum);
   const [showWbwProgress, setShowWbwProgress] = useState(false);
 
   console.log("SentTabWidget render");
@@ -333,7 +334,7 @@ const SentTabWidget = ({
               icon={<BlockOutlined />}
               type="original"
               sentId={id}
-              count={simNum}
+              count={currSimilarNum}
               title={intl.formatMessage({
                 id: "buttons.sim",
               })}
@@ -348,6 +349,7 @@ const SentTabWidget = ({
               wordEnd={parseInt(sId[3])}
               channelsId={channelsId}
               limit={5}
+              onCreate={() => setCurrSimilarNum((origin) => origin + 1)}
             />
           ),
         },

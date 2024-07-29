@@ -49,7 +49,7 @@ interface IWidget {
   compact?: boolean;
   showDiff?: boolean;
   diffText?: string | null;
-  onChange?: Function;
+  onChange?: (data: ISentence) => void;
   onDelete?: Function;
 }
 const SentCellWidget = ({

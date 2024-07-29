@@ -26,6 +26,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import SelectChannel from "../course/SelectChannel";
 import { Space, Tag, Typography } from "antd";
 import { useIntl } from "react-intl";
+import { ISearchParams } from "../../pages/library/article/show";
 
 const { Text } = Typography;
 
@@ -53,7 +54,12 @@ interface IWidget {
   exerciseId?: string;
   userName?: string;
   active?: boolean;
-  onArticleChange?: Function;
+  onArticleChange?: (
+    type: ArticleType,
+    id: string,
+    target: string,
+    param?: ISearchParams[]
+  ) => void;
   onFinal?: Function;
   onLoad?: Function;
   onLoading?: Function;
@@ -224,9 +230,14 @@ const TypeCourseWidget = ({
         anthologyId={anthologyId}
         active={true}
         onArticleChange={(type: ArticleType, id: string, target: string) => {
-          if (type === "article") {
+          if (type === "article" && courseId && channelId) {
             if (typeof onArticleChange !== "undefined") {
-              onArticleChange(type, id, target);
+              let param: ISearchParams[] = [
+                { key: "course", value: courseId },
+                { key: "channel", value: channelId },
+              ];
+
+              onArticleChange("textbook", id, target, param);
             }
           } else {
             navigate(`/course/show/${courseId}`);
