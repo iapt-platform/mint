@@ -10,11 +10,15 @@ import { discussionList } from "../../reducers/discussion-count";
 import { IDiscussionCountData, IDiscussionCountWbw } from "../api/Comment";
 import { useEffect, useState } from "react";
 
-export const openDiscussion = (resId: string, withStudent: boolean) => {
+export const openDiscussion = (
+  resId: string,
+  resType: TResType,
+  withStudent: boolean
+) => {
   const data: IShowDiscussion = {
     type: "discussion",
     resId: resId,
-    resType: "sentence",
+    resType: resType,
     withStudent: withStudent,
   };
   console.debug("discussion show", data);
@@ -107,7 +111,7 @@ const DiscussionButton = ({
         }}
         onClick={(event) => {
           if (resId) {
-            openDiscussion(resId, wbw ? true : false);
+            openDiscussion(resId, resType, wbw ? true : false);
           }
         }}
       >
