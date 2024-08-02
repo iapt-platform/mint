@@ -93,6 +93,7 @@ const items = {
   "buttons.select.channel": "Select Channel",
   "buttons.set.display.mode": "Display Mode",
   "buttons.manage": "Manage",
+  "buttons.delete.wbw.sentence": "Delete Wbw",
 };
 
 export default items;
