@@ -13,6 +13,7 @@ use App\Http\Api\AuthApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\CourseApi;
+use App\Models\Sentence;
 
 class WbwSentenceController extends Controller
 {
@@ -168,8 +169,27 @@ class WbwSentenceController extends Controller
      * @param  \App\Models\Wbw  $wbw
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Wbw $wbw)
+    public function destroy(Request $request,string $sentId)
     {
         //
+        //鉴权
+        $user = AuthApi::current($request);
+        if(!$user ){
+            //未登录用户
+            return $this->error(__('auth.failed'),401,401);
+        }
+        $channelId = $request->get('channel');
+        if(!ChannelApi::canManageByUser($channelId,$user['user_uid'])){
+            return $this->error(__('auth.failed'),403,403);
+        }
+        $sent = explode('-',$sentId);
+        $wbwBlockId = WbwBlock::where('book_id',$sent[0])
+                        ->where('paragraph',$sent[1])
+                        ->where('channel_uid',$channelId)
+                        ->value('uid');
+        $delete = Wbw::where('block_uid',$wbwBlockId)
+                    ->whereBetween('wid',[$sent[2],$sent[3]])
+                    ->delete();
+        return $this->ok($delete);
     }
 }

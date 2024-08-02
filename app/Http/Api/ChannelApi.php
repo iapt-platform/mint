@@ -83,7 +83,11 @@ class ChannelApi{
         }
         return $output;
     }
-
+    public static function canManageByUser($channelId,$userUuid){
+        $isOwner = Channel::where('owner_uid', $userUuid)
+                    ->where('uid', $channelId)->exists();
+        return $isOwner;
+    }
     public static function getSysChannel($channel_name,$fallback=""){
         $channel = Channel::where('name',$channel_name)
                     ->where('owner_uid',config("mint.admin.root_uuid"))
