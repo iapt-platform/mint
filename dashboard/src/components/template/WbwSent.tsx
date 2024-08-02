@@ -860,6 +860,7 @@ export const WbwSentCtl = ({
                   id: "buttons.delete.wbw.sentence",
                 }),
                 danger: true,
+                disabled: true,
               },
             ],
             onClick: ({ key }) => {
