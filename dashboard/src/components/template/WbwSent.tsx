@@ -4,7 +4,7 @@ import { MoreOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 
 import { useAppSelector } from "../../hooks";
 import { mode as _mode } from "../../reducers/article-mode";
-import { get, post } from "../../request";
+import { delete_, get, post } from "../../request";
 import { ArticleMode } from "../article/Article";
 import WbwWord, {
   IWbw,
@@ -30,6 +30,7 @@ import TimeShow from "../general/TimeShow";
 import moment from "moment";
 import { courseInfo } from "../../reducers/current-course";
 import { ISentenceWbwListResponse } from "../api/Corpus";
+import { IDeleteResponse } from "../api/Article";
 
 export const getWbwProgress = (data: IWbw[], answer?: IWbw[]) => {
   //计算完成度
@@ -774,6 +775,28 @@ export const WbwSentCtl = ({
     }
   });
 
+  const deleteWbw = () => {
+    const url = `/v2/wbw-sentence/${book}-${para}-${wordStart}-${wordEnd}?channel=${channelId}`;
+    console.info("api request", url);
+    setLoading(true);
+    delete_<IDeleteResponse>(url)
+      .then((json) => {
+        console.debug("api response", json);
+        if (json.ok) {
+          message.success(
+            intl.formatMessage(
+              { id: "message.delete.success" },
+              { count: json.data }
+            )
+          );
+        } else {
+          message.error(json.message);
+        }
+      })
+      .finally(() => setLoading(false))
+      .catch((e) => console.log("Oops errors!", e));
+  };
+
   return (
     <div style={{ width: "100%" }}>
       <div
@@ -828,6 +851,16 @@ export const WbwSentCtl = ({
                 }),
                 danger: true,
               },
+              {
+                type: "divider",
+              },
+              {
+                key: "delete",
+                label: intl.formatMessage({
+                  id: "buttons.delete.wbw.sentence",
+                }),
+                danger: true,
+              },
             ],
             onClick: ({ key }) => {
               console.log(`Click on item ${key}`);
@@ -867,6 +900,18 @@ export const WbwSentCtl = ({
                     cancelText: "取消",
                     onOk: () => {
                       resetWbw();
+                    },
+                  });
+                  break;
+                case "delete":
+                  modal.confirm({
+                    title: "清除逐词解析数据",
+                    icon: <ExclamationCircleOutlined />,
+                    content: "删除整句的逐词解析数据，此操作不可恢复",
+                    okText: "确认",
+                    cancelText: "取消",
+                    onOk: () => {
+                      deleteWbw();
                     },
                   });
                   break;
