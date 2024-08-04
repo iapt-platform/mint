@@ -14,6 +14,7 @@ const items = {
   "message.password.reset": "please set new password",
   "message.get.token.fail": "get token fail",
   "message.confirm-password.validate.fail": "password validate fail",
+  "message.delete.success": "delete record {count}",
 };
 
 export default items;

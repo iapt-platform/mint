@@ -93,6 +93,7 @@ const items = {
   "buttons.select.channel": "选择版本风格",
   "buttons.set.display.mode": "显示模式",
   "buttons.manage": "管理",
+  "buttons.delete.wbw.sentence": "删除整句逐词解析",
 };
 
 export default items;

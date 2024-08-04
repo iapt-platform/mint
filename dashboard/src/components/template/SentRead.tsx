@@ -174,7 +174,7 @@ const SentReadFrame = ({
                         break;
                       case "discussion":
                         if (item.id) {
-                          openDiscussion(item.id, false);
+                          openDiscussion(item.id, "sentence", false);
                         }
                         break;
                       case "pr":

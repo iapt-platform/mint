@@ -129,7 +129,7 @@ const GrammarBookWidget = () => {
                 let weight = 0;
                 const wordBegin = item.word
                   .toLocaleLowerCase()
-                  .indexOf(keyWord);
+                  .indexOf(keyWord.toLocaleLowerCase());
                 if (wordBegin >= 0) {
                   weight += (1 / (wordBegin + 1)) * 1000;
                   const wordRemain =

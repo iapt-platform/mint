@@ -111,7 +111,8 @@ const WbwDetailRelationWidget = ({
 
   useEffect(() => {
     let grammar = data.case?.value
-      ?.replace("#", "$")
+      ?.replace("v:ind", "v")
+      .replace("#", "$")
       .replace(":", "$")
       .replaceAll(".", "")
       .split("$");

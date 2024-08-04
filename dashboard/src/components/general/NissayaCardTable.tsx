@@ -1,8 +1,11 @@
-import { Button, Space, Table, Tag } from "antd";
+import { Button, Space, Table, Tag, Typography } from "antd";
 import lodash from "lodash";
 import { useEffect, useState } from "react";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import Marked from "./Marked";
+import GrammarLookup from "../dict/GrammarLookup";
+
+const { Link } = Typography;
 
 const randomString = () =>
   lodash.times(20, () => lodash.random(35).toString(36)).join("");
@@ -111,7 +114,7 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           title: "本词特征",
           dataIndex: "from",
           key: "from",
-          width: 40,
+          width: "10%",
           render: (value, record, index) => {
             return (
               <Space>
@@ -136,12 +139,14 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           title: "关系",
           dataIndex: "relation",
           key: "relation",
-          width: "22%",
+          width: "30%",
           render: (value, record, index) => {
             return (
-              <Space>
-                {record.relation}
-                {record.localRelation}
+              <Space direction="vertical">
+                <GrammarLookup word={record.relation}>
+                  <Link>{record.relation}</Link>
+                </GrammarLookup>
+                <div>{record.localRelation}</div>
               </Space>
             );
           },
@@ -150,6 +155,7 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           title: "目标词特征",
           dataIndex: "to",
           key: "to",
+          width: "20%",
           render: (value, record, index) => {
             if (record.isChildren) {
               return (
@@ -183,21 +189,20 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
         {
           title: "含义",
           dataIndex: "address",
-          width: "30%",
+          width: "40%",
           key: "address",
           render: (value, record, index) => {
             if (record.isChildren) {
               return undefined;
             } else {
-              return <Marked text={record.category?.note} />;
+              return (
+                <div>
+                  <Marked text={record.category?.note} />
+                  <div>{record.translation}</div>
+                </div>
+              );
             }
           },
-        },
-        {
-          title: "翻译建议",
-          dataIndex: "translation",
-          width: "20%",
-          key: "translation",
         },
       ]}
       dataSource={tableData}
