@@ -12,6 +12,7 @@ const randomString = () =>
 
 interface ICaseItem {
   label: string;
+  case: string;
   link: string;
 }
 interface IRelationNode {
@@ -42,12 +43,11 @@ interface IWidget {
   data?: INissayaRelation[];
 }
 const NissayaCardTableWidget = ({ data }: IWidget) => {
-  const [tableData, setTableData] = useState<DataType[]>();
-  useEffect(() => {
-    if (typeof data === "undefined") {
-      setTableData(undefined);
-      return;
-    }
+  let tableData: DataType[] = [];
+
+  if (typeof data === "undefined") {
+    tableData = [];
+  } else {
     console.log("data", data);
     let category: string[] = [];
     let newData: DataType[] = [];
@@ -104,8 +104,9 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
       }
     });
     console.log("newData", newData);
-    setTableData(newData);
-  }, [data]);
+    tableData = newData;
+  }
+
   return (
     <Table
       size="small"
@@ -120,14 +121,11 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
               <Space>
                 {record.from?.case?.map((item, id) => {
                   return (
-                    <Button
-                      key={id}
-                      type="link"
-                      size="small"
-                      onClick={() => window.open(item.link, "_blank")}
-                    >
-                      <Tag>{item.label}</Tag>
-                    </Button>
+                    <GrammarLookup key={id} word={item.case}>
+                      <Link>
+                        <Tag>{item.label}</Tag>
+                      </Link>
+                    </GrammarLookup>
                   );
                 })}
                 {record.from?.spell}
