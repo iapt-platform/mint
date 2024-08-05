@@ -1,4 +1,5 @@
 import { Typography } from "antd";
+import { useIntl } from "react-intl";
 
 import Mermaid from "../../general/Mermaid";
 import { useAppSelector } from "../../../hooks";
@@ -6,7 +7,10 @@ import { getGrammar } from "../../../reducers/term-vocabulary";
 import { IWbwRelation } from "./WbwDetailRelation";
 import { IWbw } from "./WbwWord";
 import { relationWordId } from "./WbwRelationAdd";
-import { useIntl } from "react-intl";
+import store from "../../../store";
+import { openPanel } from "../../../reducers/right-panel";
+import { grammar } from "../../../reducers/command";
+import { fullUrl } from "../../../utils";
 
 const { Text } = Typography;
 
@@ -26,6 +30,32 @@ interface IWidget {
 const RelaGraphicWidget = ({ wbwData }: IWidget) => {
   const terms = useAppSelector(getGrammar);
   const intl = useIntl();
+
+  const onLoad = () => {
+    const links = document.getElementsByTagName("a");
+    alert(links.length + "links");
+    // 为每个链接添加点击事件监听器
+    for (let i = 0; i < links.length; i++) {
+      (function (index) {
+        links[index].addEventListener("click", function (e) {
+          // 阻止链接的默认点击行为
+          e.preventDefault();
+          // 在这里执行你想在点击链接时执行的代码
+          console.log("链接被点击: ", this.href);
+          alert("链接被点击" + this.href);
+          const iPos = this.href.lastIndexOf("grammar/");
+          if (iPos >= 0) {
+            const word = this.href.substring(iPos + 8);
+            console.debug("relation graphic", word);
+            store.dispatch(grammar(word));
+            store.dispatch(openPanel("grammar"));
+          } else {
+            window.location.href = this.href;
+          }
+        });
+      })(i);
+    }
+  };
 
   const grammarStr = (input?: string | null) => {
     if (!input) {
@@ -75,9 +105,12 @@ const RelaGraphicWidget = ({ wbwData }: IWidget) => {
               (value: IWbw) => relationWordId(value) === relation.dest_id
             );
             const toMeaning = pureMeaning(toWord?.meaning?.value);
+            const url = fullUrl("/term/list/" + relation.relation);
             const toGrammar = grammarStr(toWord?.case?.value);
-
-            return `${relation.sour_id}("${relation.sour_spell}<br />${fromMeaning}<br />${fromGrammar}") --"${relation.relation}<br />${localName}"--> ${relation.dest_id}("${relation.dest_spell}<br />${toMeaning}<br />${toGrammar}")\n`;
+            const strFrom = `${relation.sour_id}("${relation.sour_spell}<br />${fromMeaning}<br />${fromGrammar}")`;
+            const strRelation = `"<a href='${url}' target='_blank'>${relation.relation}</a><br />${localName}"`;
+            const strTo = `${relation.dest_id}("${relation.dest_spell}<br />${toMeaning}<br />${toGrammar}")`;
+            return `${strFrom} --${strRelation}--> ${strTo}\n`;
           });
           return graphic.join("");
         } else {
