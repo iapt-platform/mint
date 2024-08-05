@@ -70,8 +70,6 @@ class NissayaCardController extends Controller
                     ]);
                     $cardData['ending']['html']  = $mdRender->convert($endingTerm->note,[],null);
             }
-
-
         }
 
         $myEnding = NissayaEnding::where('ending',$nissayaEnding)
@@ -107,6 +105,7 @@ class NissayaCardController extends Controller
                     $localCase  =[];
                     foreach ($cases as $case) {
                         $localCase[] = ['label'=>__("grammar.".$case),
+                                        'case'=>$case,
                                         'link'=>config('mint.server.dashboard_base_path').'/term/list/'.$case
                                         ];
                     }
@@ -121,9 +120,11 @@ class NissayaCardController extends Controller
                 if(isset($linkTos->case) && is_array($linkTos->case) && count($linkTos->case)>0){
                     $localTo  =[];
                     foreach ($linkTos->case as $to) {
-                        $localTo[] = ['label'=>__("grammar.".$to),
-                                        'link'=>config('mint.server.dashboard_base_path').'/term/list/'.$to
-                                        ];
+                        $localTo[] = [
+                            'label'=>__("grammar.".$to),
+                            'case'=>$to,
+                            'link'=>config('mint.server.dashboard_base_path').'/term/list/'.$to
+                            ];
                     }
 
                     # 格位
