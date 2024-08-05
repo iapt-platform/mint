@@ -33,8 +33,6 @@ const TagSelectButtonWidget = ({
   const studioName =
     course?.course?.studio?.realName ?? user?.nickName ?? undefined;
 
-  console.debug("TagSelectButton studioName", studioName);
-
   return (
     <TagsManager
       title={selectorTitle}
