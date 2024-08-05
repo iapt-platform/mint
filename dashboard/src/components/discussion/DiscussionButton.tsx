@@ -74,7 +74,7 @@ const DiscussionButton = ({
     );
   }
 
-  console.debug("DiscussionButton", discussions, wbw, withStudent);
+  //console.debug("DiscussionButton", discussions, wbw, withStudent);
 
   let currCount = CommentCount;
   if (onlyMe) {
