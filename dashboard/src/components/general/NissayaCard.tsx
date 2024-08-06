@@ -22,7 +22,7 @@ interface INissayaCardModal {
 export const NissayaCardPop = ({ text, trigger }: INissayaCardModal) => {
   return (
     <Popover
-      style={{ width: 600 }}
+      style={{ width: 700 }}
       content={<NissayaCardWidget text={text} cache={true} hideEditButton />}
       placement="bottom"
     >
