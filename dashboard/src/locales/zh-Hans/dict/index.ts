@@ -163,6 +163,10 @@ const items = {
   "dict.fields.type.comp.short.label": "合",
   "dict.fields.type.others.label": "其他",
   "dict.fields.type.others.short.label": "其他",
+  "dict.case.category.verb": "动词",
+  "dict.case.category.derivative": "衍生词",
+  "dict.case.category.passive-verb": "被动动词",
+  "dict.case.category.participle": "分词",
 };
 
 export default items;

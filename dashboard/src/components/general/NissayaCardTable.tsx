@@ -4,8 +4,47 @@ import { useEffect, useState } from "react";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import Marked from "./Marked";
 import GrammarLookup from "../dict/GrammarLookup";
+import { useIntl } from "react-intl";
 
 const { Link } = Typography;
+
+const caseTags = [
+  { case: "fpp", tags: ["verb", "derivative", "passive-verb"] },
+  { case: "ger", tags: ["verb"] },
+  { case: "inf", tags: ["verb"] },
+  { case: "grd", tags: ["verb"] },
+  { case: "pp", tags: ["verb", "participle"] },
+  { case: "prp", tags: ["verb", "participle"] },
+  { case: "v", tags: ["verb"] },
+  { case: "v:ind", tags: ["verb"] },
+  { case: "vdn", tags: ["verb", "participle"] },
+];
+interface ITags {
+  tag: string;
+  count: number;
+}
+const getCaseTags = (input: string[]): ITags[] => {
+  let tagsMap = new Map<string, number>();
+  input.forEach((value: string) => {
+    const found = caseTags.find((value1) => value1.case === value);
+    if (found !== undefined) {
+      found.tags.forEach((value3) => {
+        const count = tagsMap.get(value3);
+        if (typeof count === "undefined") {
+          tagsMap.set(value3, 1);
+        } else {
+          tagsMap.set(value3, count + 1);
+        }
+      });
+    }
+  });
+  let tags: ITags[] = [];
+  tagsMap.forEach((value, key, map) => {
+    tags.push({ tag: key, count: value });
+  });
+  tags.sort((a, b) => b.count - a.count);
+  return tags;
+};
 
 const randomString = () =>
   lodash.times(20, () => lodash.random(35).toString(36)).join("");
@@ -23,6 +62,7 @@ interface DataType {
   key: string;
   relation: string;
   localRelation?: string;
+  tags?: ITags[];
   to?: IRelationNode;
   from?: IRelationNode;
   category?: { name: string; note: string; meaning: string };
@@ -43,6 +83,7 @@ interface IWidget {
   data?: INissayaRelation[];
 }
 const NissayaCardTableWidget = ({ data }: IWidget) => {
+  const intl = useIntl();
   let tableData: DataType[] = [];
 
   if (typeof data === "undefined") {
@@ -80,12 +121,20 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
               };
             });
           console.log("children", children);
+          let caseList: string[] = [];
+          children.forEach((value) => {
+            value.to?.case?.forEach((value1) => {
+              caseList.push(value1.case);
+            });
+          });
+          const tags = getCaseTags(caseList);
           newData.push({
             key: randomString(),
             relation: item.relation,
             localRelation: item.local_relation,
             from: item.from,
             to: item.to,
+            tags: tags,
             category: item.category,
             translation: item.local_ending,
             children: children.length > 1 ? [...children] : undefined,
@@ -178,9 +227,28 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
               return (
                 <Space>
                   <ArrowRightOutlined />
-                  {record.category?.meaning}
+                  {record.tags?.map((item, id) => {
+                    return (
+                      <Tag key={id}>
+                        {intl.formatMessage({
+                          id: `dict.case.category.${item.tag}`,
+                        })}
+                      </Tag>
+                    );
+                  })}
                 </Space>
               );
+            }
+          },
+        },
+        {
+          title: "语法点",
+          dataIndex: "to",
+          key: "grammar",
+          width: "20%",
+          render: (value, record, index) => {
+            if (!record.isChildren) {
+              return record.category?.meaning;
             }
           },
         },
