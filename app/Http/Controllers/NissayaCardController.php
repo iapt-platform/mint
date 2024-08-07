@@ -141,7 +141,13 @@ class NissayaCardController extends Controller
                                                 ->first();
 
                     if($localCategory){
-                        $newLine['category']['note'] = $localCategory->note;
+                        $mdRender = new MdRender(
+                            [
+                                'mode'=>'read',
+                                'format'=>'text',
+                                'lang'=>$endingTerm->lang,
+                            ]);
+                        $newLine['category']['note'] = $mdRender->convert($localCategory->note,[],null);
                         $newLine['category']['meaning'] =$localCategory->meaning;
                     }else{
                         $newLine['category']['note'] = $relation['category'];
