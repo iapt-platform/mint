@@ -248,7 +248,11 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           width: "20%",
           render: (value, record, index) => {
             if (!record.isChildren) {
-              return record.category?.meaning;
+              return (
+                <GrammarLookup word={record.category?.name}>
+                  <Link>{record.category?.meaning}</Link>
+                </GrammarLookup>
+              );
             }
           },
         },
