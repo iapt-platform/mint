@@ -47,7 +47,7 @@ class StatisticsNissaya extends Command
         $nissaya_channels = Channel::where('type','nissaya')->select('uid')->get();
         $this->info('channel:'.count($nissaya_channels));
         $file = "public/statistics/nissaya-monthly.csv";
-        $this->info('path='.$file);
+
         Storage::disk('local')->put($file, "");
         #按月获取数据
         $firstDay = Sentence::whereIn('channel_uid',$nissaya_channels)
@@ -59,26 +59,30 @@ class StatisticsNissaya extends Command
         $now = Carbon::now();
         $current = $firstMonth;
         $sumStrlen = 0;
+        $sumCount = 0;
         while ($current <= $now) {
             # code...
             $start = Carbon::create($current)->startOfMonth();
             $end = Carbon::create($current)->endOfMonth();
             $date = $current->format('Y-m');
-            $strlen = Sentence::whereIn('channel_uid',$nissaya_channels)
+            $table = Sentence::whereIn('channel_uid',$nissaya_channels)
                               ->whereDate('created_at','>=',$start)
-                              ->whereDate('created_at','<=',$end)
-                              ->sum('strlen');
+                              ->whereDate('created_at','<=',$end);
+            $strlen =  $table->sum('strlen');
             $sumStrlen += $strlen;
+            $count = $table->count();
+            $sumCount += $count;
             $editor = Sentence::whereIn('channel_uid',$nissaya_channels)
                               ->whereDate('created_at','>=',$start)
                               ->whereDate('created_at','<=',$end)
                               ->groupBy('editor_uid')
                               ->select('editor_uid')->get();
-            $info = $date.','.$strlen.','.$sumStrlen.','.count($editor);
+            $info = "{$date},{$strlen},{$sumStrlen},{$count},{$sumCount},".count($editor);
             $this->info($info);
             Storage::disk('local')->append($file, $info);
             $current->addMonth(1);
         }
+        $this->info('path='.$file);
         return 0;
     }
 }
