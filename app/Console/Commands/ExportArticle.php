@@ -135,7 +135,7 @@ class ExportArticle extends Command
                 'anthology'=> $this->option('anthology'),
                 'channel' => $this->option('channel'),
         ];
-
+        Log::debug('export article http request',['url'=>$url,'param'=>$urlParam]);
         if($this->option('token')){
             $response = Http::withToken($this->option('token'))->get($url,$urlParam);
         }else{
