@@ -95,6 +95,8 @@ use App\Http\Controllers\DiscussionCountController;
 use App\Http\Controllers\TagsInChapterCountController;
 use App\Http\Controllers\TagMapController;
 use App\Http\Controllers\EditableSentenceController;
+use App\Http\Controllers\ArticleFtsController;
+use App\Http\Controllers\NissayaCoverController;
 
 /*
 |--------------------------------------------------------------------------
@@ -246,6 +248,8 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('tags-in-chapter',TagsInChapterCountController::class);
     Route::apiResource('tag-map',TagMapController::class);
     Route::apiResource('editable-sentence',EditableSentenceController::class);
+    Route::apiResource('article-fts',ArticleFtsController::class);
+    Route::apiResource('nissaya-cover',NissayaCoverController::class);
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
