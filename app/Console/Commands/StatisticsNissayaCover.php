@@ -97,7 +97,9 @@ class StatisticsNissayaCover extends Command
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
-        $nissaya_channels = Channel::where('type','nissaya')->select('uid')->get();
+        $nissaya_channels = Channel::where('type','nissaya')
+                                ->where('lang','my')
+                                ->select('uid')->get();
         $this->info('channel:'.count($nissaya_channels));
         $output = [];
         foreach ($this->types as $type => $books) {
@@ -110,7 +112,9 @@ class StatisticsNissayaCover extends Command
                                 ->get();
             $sentences = [];
             $final = 0;
+            $this->info($type . count($nissayaSentences). " sentences");
             if(count($nissayaSentences)>0){
+                $count = 0;
                 foreach ($nissayaSentences as  $value) {
                     $sentences[] = [
                         $value->book_id,
@@ -118,9 +122,16 @@ class StatisticsNissayaCover extends Command
                         $value->word_start,
                         $value->word_end,
                     ];
-                }
-                $final = PaliSentence::whereIns(['book','paragraph','word_begin','word_end'],$sentences)
+                    if($count % 100 === 0 ){
+                        $final += PaliSentence::whereIns(['book','paragraph','word_begin','word_end'],$sentences)
                                         ->sum('length');
+                        $sentences = [];
+                        $percent = intval($count * 100 / count($nissayaSentences));
+                        $this->info("[{$percent}] {$final}");
+                    }
+                    $count++;
+                }
+
             }
 
             $this->info($type . '=' . $pali . '=' . $final);
