@@ -44,7 +44,9 @@ class StatisticsNissaya extends Command
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
-        $nissaya_channels = Channel::where('type','nissaya')->select('uid')->get();
+        $nissaya_channels = Channel::where('type','nissaya')
+                            ->where('lang','my')
+                            ->select('uid')->get();
         $this->info('channel:'.count($nissaya_channels));
         $file = "public/statistics/nissaya-monthly.csv";
 
