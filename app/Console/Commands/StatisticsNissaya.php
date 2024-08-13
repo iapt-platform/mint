@@ -44,13 +44,12 @@ class StatisticsNissaya extends Command
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
-        $nissaya_channel = Channel::where('type','nissaya')->select('uid')->get();
-        $this->info('channel:'.count($nissaya_channel));
-        $maxDay = 360;
+        $nissaya_channels = Channel::where('type','nissaya')->select('uid')->get();
+        $this->info('channel:'.count($nissaya_channels));
         $file = "public/statistics/nissaya-monthly.csv";
         Storage::disk('local')->put($file, "");
         #按月获取数据
-        $firstDay = Sentence::whereIn('channel_uid',$nissaya_channel)
+        $firstDay = Sentence::whereIn('channel_uid',$nissaya_channels)
                             ->orderBy('created_at')
                             ->select('created_at')
                             ->first();
@@ -64,12 +63,12 @@ class StatisticsNissaya extends Command
             $start = Carbon::create($current)->startOfMonth();
             $end = Carbon::create($current)->endOfMonth();
             $date = $current->format('Y-m');
-            $strlen = Sentence::whereIn('channel_uid',$nissaya_channel)
+            $strlen = Sentence::whereIn('channel_uid',$nissaya_channels)
                               ->whereDate('created_at','>=',$start)
                               ->whereDate('created_at','<=',$end)
                               ->sum('strlen');
             $sumStrlen += $strlen;
-            $editor = Sentence::whereIn('channel_uid',$nissaya_channel)
+            $editor = Sentence::whereIn('channel_uid',$nissaya_channels)
                               ->whereDate('created_at','>=',$start)
                               ->whereDate('created_at','<=',$end)
                               ->groupBy('editor_uid')
