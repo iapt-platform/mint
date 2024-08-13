@@ -12,7 +12,7 @@ class StatisticsNissaya extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * php artisan statistics:nissaya
      * @var string
      */
     protected $signature = 'statistics:nissaya';
@@ -47,6 +47,7 @@ class StatisticsNissaya extends Command
         $nissaya_channels = Channel::where('type','nissaya')->select('uid')->get();
         $this->info('channel:'.count($nissaya_channels));
         $file = "public/statistics/nissaya-monthly.csv";
+        $this->info('path='.$file);
         Storage::disk('local')->put($file, "");
         #按月获取数据
         $firstDay = Sentence::whereIn('channel_uid',$nissaya_channels)
