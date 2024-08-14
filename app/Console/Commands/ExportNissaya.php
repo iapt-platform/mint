@@ -154,15 +154,6 @@ class ExportNissaya extends Command
                 if(substr_count(trim($line),'=') === 1){
                     $nissaya_str = explode('=',$line);
                     $pali = $this->my2en($nissaya_str[0]);
-                    $mEnding1 = $this->matchEnding($nissaya_str[1],$endings,$maxLen);
-                    $mEnding2= ['',''];
-                    if(!empty($mEnding1[1])){
-                        $mEnding2 = $this->matchEnding($mEnding1[0],$endings,$maxLen);
-                    }
-                    $mEnding3= ['',''];
-                    if(!empty($mEnding2[1])){
-                        $mEnding3 = $this->matchEnding($mEnding2[0],$endings,$maxLen);
-                    }
                     $types = SuttaType::getTypeByBook($sent->book_id);
                     $strTypes = implode(",",$types);
                     //拆分
@@ -173,7 +164,30 @@ class ExportNissaya extends Command
                     }else{
                         $paliEnding = '';
                     }
-                    fputcsv($file,[$strTypes, $pali,$paliEnding,$nissaya_str[1],$mEnding1[1],$mEnding2[1],$mEnding3[1]]);
+                    $nissaya_my = trim($nissaya_str[1]);
+                    $mEnding1 = $this->matchEnding($nissaya_my,$endings,$maxLen);
+                    if(!empty($paliEnding) && !empty($mEnding1[1])){
+                        $mixed = $paliEnding.$mEnding1[1];
+                        fputcsv($file,[$strTypes, $pali,$paliEnding,$nissaya_my,$mEnding1[1],$mixed]);
+                    }
+                    $mEnding2= ['',''];
+                    if(!empty($mEnding1[1])){
+                        $mEnding2 = $this->matchEnding($mEnding1[0],$endings,$maxLen);
+                        if(!empty($paliEnding) && !empty($mEnding2[1])){
+                            $mixed = $paliEnding.$mEnding2[1];
+                            fputcsv($file,[$strTypes, $pali,$paliEnding,$nissaya_my,$mEnding2[1],$mixed]);
+                        }
+                    }
+                    $mEnding3= ['',''];
+                    if(!empty($mEnding2[1])){
+                        $mEnding3 = $this->matchEnding($mEnding2[0],$endings,$maxLen);
+                        if(!empty($paliEnding) && !empty($mEnding3[1])){
+                            $mixed = $paliEnding.$mEnding3[1];
+                            fputcsv($file,[$strTypes, $pali,$paliEnding,$nissaya_my,$mEnding3[1],$mixed]);
+                        }
+                    }
+
+                    //fputcsv($file,[$strTypes, $pali,$paliEnding,$nissaya_my,$mEnding1[1],$mEnding2[1],$mEnding3[1]]);
                 }
             }
             $bar->advance();
