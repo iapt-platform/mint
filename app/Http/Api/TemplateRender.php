@@ -35,7 +35,7 @@ class TemplateRender{
      * string $format  'react' | 'text' | 'tex' | 'unity'
      * @return void
      */
-    public function __construct($param, $channelInfo, $mode,$format='react',$studioId,$debug=[],$lang='zh-Hans')
+    public function __construct($param, $channelInfo, $mode,$format='react',$studioId='',$debug=[],$lang='zh-Hans')
     {
         $this->param = $param;
         foreach ($channelInfo as $value) {
@@ -337,6 +337,19 @@ class TemplateRender{
                     $output = $props["word"];
                 }
                 break;
+            case 'markdown':
+                if(isset($props["meaning"])){
+                    $key = 'term-'.$props["word"];
+                    if(isset($GLOBALS[$key])){
+                        $output = $props["meaning"];
+                    }else{
+                        $GLOBALS[$key] = 1;
+                        $output = $props["meaning"].'('.$props["word"].')';
+                    }
+                }else{
+                    $output = $props["word"];
+                }
+                break;
             default:
                 if(isset($props["meaning"])){
                     $output = $props["meaning"];
@@ -391,7 +404,7 @@ class TemplateRender{
                     $GLOBALS['note'] = array();
                 }
                 $GLOBALS['note'][] = [
-                        'sn' => 1,
+                        'sn' => $GLOBALS['note_sn'],
                         'trigger' => $trigger,
                         'content' => MdRender::render($props["note"],
                                         $this->channel_id,
@@ -418,6 +431,23 @@ class TemplateRender{
                 break;
             case 'simple':
                 $output = '';
+                break;
+            case 'markdown':
+                if(isset($GLOBALS['note_sn'])){
+                    $GLOBALS['note_sn']++;
+                }else{
+                    $GLOBALS['note_sn'] = 1;
+                }
+                $content = MdRender::render(
+                            $props["note"],
+                            $this->channel_id,
+                            null,
+                            'read',
+                            'translation',
+                            'markdown',
+                            'markdown'
+                        );
+                $output = '<footnote id="'.$GLOBALS['note_sn'].'">'.$content.'</footnote>';
                 break;
             default:
                 $output = '';
@@ -821,8 +851,10 @@ class TemplateRender{
     }
     private  function render_sent(){
 
-        $sid = $this->get_param($this->param,"sid",1);
+        $sid = $this->get_param($this->param,"id",1);
         $channel = $this->get_param($this->param,"channel",2);
+        $text = $this->get_param($this->param,"text",2,'both');
+
         if(!empty($channel)){
             $channels = explode(',',$channel);
         }else{
@@ -863,6 +895,11 @@ class TemplateRender{
                 break;
             case 'text':
                 $output = '';
+                if(isset($props['origin']) && is_array($props['origin'])){
+                    foreach ($props['origin'] as $key => $value) {
+                        $output .= $value['html'];
+                    }
+                }
                 if(isset($props['translation']) && is_array($props['translation'])){
                     foreach ($props['translation'] as $key => $value) {
                         $output .= $value['html'];
@@ -871,11 +908,23 @@ class TemplateRender{
                 break;
             case 'html':
                 $output = '';
-                if(isset($props['translation']) && is_array($props['translation'])){
-                    foreach ($props['translation'] as $key => $value) {
-                        $output .= '<span class="sentence">'.$value['html'].'</span>';
+                $output .= '<span class="sentence">';
+                if($text === 'both' || $text === 'origin'){
+                    if(isset($props['origin']) && is_array($props['origin'])){
+                        foreach ($props['origin'] as $key => $value) {
+                            $output .= '<span class="origin">'.$value['html'].'</span>';
+                        }
                     }
                 }
+                if($text === 'both' || $text === 'translation'){
+                    if(isset($props['translation']) && is_array($props['translation'])){
+                        foreach ($props['translation'] as $key => $value) {
+                            $output .= '<span class="translation">'.$value['html'].'</span>';
+                        }
+                    }
+                }
+
+                $output .= '</span>';
                 break;
             case 'tex':
                 $output = '';
@@ -887,23 +936,42 @@ class TemplateRender{
                 break;
             case 'simple':
                 $output = '';
-                if(isset($props['translation']) &&
-                   is_array($props['translation']) &&
-                   count($props['translation']) > 0
-                   ){
-                    $sentences = $props['translation'];
-                    foreach ($sentences as $key => $value) {
-                        $output .= $value['html'];
+                if($text === 'both' || $text === 'origin'){
+                    if(empty($output)){
+                        if(isset($props['origin']) &&
+                                is_array($props['origin']) &&
+                                count($props['origin']) > 0
+                                ){
+                            foreach ($props['origin'] as $key => $value) {
+                                $output .= $value['html'];
+                            }
+                        }
                     }
                 }
-                if(empty($output)){
-                    if(isset($props['origin']) &&
-                            is_array($props['origin']) &&
-                            count($props['origin']) > 0
-                            ){
-                        $sentences = $props['origin'];
-                        foreach ($sentences as $key => $value) {
+                if($text === 'both' || $text === 'translation'){
+                    if(isset($props['translation']) &&
+                    is_array($props['translation']) &&
+                    count($props['translation']) > 0
+                    ){
+                        foreach ($props['translation'] as $key => $value) {
                             $output .= $value['html'];
+                        }
+                    }
+                }
+                break;
+            case 'markdown':
+                $output = '';
+                if($text === 'both' || $text === 'origin'){
+                    if(isset($props['origin']) && is_array($props['origin'])){
+                        foreach ($props['origin'] as $key => $value) {
+                            $output .= "\n\n". $value['html'];
+                        }
+                    }
+                }
+                if($text === 'both' || $text === 'translation'){
+                    if(isset($props['translation']) && is_array($props['translation'])){
+                        foreach ($props['translation'] as $key => $value) {
+                            $output .= "\n\n". $value['html'];
                         }
                     }
                 }
