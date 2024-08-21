@@ -28,6 +28,8 @@ class MdRender{
         'debug'=>[],
         'studioId'=>null,
         'lang'=>'zh-Hans',
+        'footnote'=>false,
+        'paragraph'=>false,
         ];
 
     public function __construct($options=[])
@@ -124,7 +126,7 @@ class MdRender{
 
     private function wiki2xml(string $wiki,$channelId=[]):string{
         /**
-         * 把模版转换为xml
+         * 渲染markdown里面的模版
          */
         $remain = $wiki;
         $buffer = array();
@@ -241,9 +243,8 @@ class MdRender{
             Log::error($xml);
             return "<span>xml解析错误</span>";
         }
-         */
+        */
 
-        //$tpl_list = $dom->xpath('//MdTpl');
         $tpl_list = $doc->getElementsByTagName('dfn');
 
         foreach ($tpl_list as $key => $tpl) {
@@ -340,19 +341,6 @@ class MdRender{
                     return '';
                 }
                 break;
-            case 'text':
-            case 'simple':
-                if(isset($tplProps)){
-                    if(is_array($tplProps)){
-                        return '';
-                    }else{
-                        return $tplProps;
-                    }
-                }else{
-                    Log::error('tplProps undefine');
-                    return '';
-                }
-                break;
             case 'tex':
                 if(isset($tplProps)){
                     if(is_array($tplProps)){
@@ -365,13 +353,24 @@ class MdRender{
                     return '';
                 }
                 break;
-            default:
-                return '';
+            default: /**text simple markdown */
+                if(isset($tplProps)){
+                    if(is_array($tplProps)){
+                        return '';
+                    }else{
+                        return $tplProps;
+                    }
+                }else{
+                    Log::error('tplProps undefine');
+                    return '';
+                }
                 break;
         }
     }
 
-
+    /**
+     * 将markdown文件中的模版转换为标准的wiki模版
+     */
     private function markdown2wiki(string $markdown): string{
         //$markdown = mb_convert_encoding($markdown,'UTF-8','UTF-8');
         $markdown = iconv('UTF-8','UTF-8//IGNORE',$markdown);
@@ -472,7 +471,7 @@ class MdRender{
 
         #替换句子模版
         $pattern = "/\{\{([0-9].+?)\}\}/";
-        $replacement = '{{sent|$1}}';
+        $replacement = '{{sent|id=$1}}';
         $markdown = preg_replace($pattern,$replacement,$markdown);
 
         /**
@@ -595,11 +594,12 @@ class MdRender{
             }
         }
         $wiki = $this->markdown2wiki($markdown);
-        $html = $this->wiki2xml($wiki,$channelId);
+        $wiki = $this->preprocessingForParagraph($wiki);
+        $markdownWithTpl = $this->wiki2xml($wiki,$channelId);
         if(!is_null($queryId)){
-            $html = $this->xmlQueryId($html, $queryId);
+            $html = $this->xmlQueryId($markdownWithTpl, $queryId);
         }
-        $html = $this->markdownToHtml($html);
+        $html = $this->markdownToHtml($markdownWithTpl);
 
         //后期处理
         $output = '';
