@@ -28,6 +28,8 @@ class MdRender{
         'debug'=>[],
         'studioId'=>null,
         'lang'=>'zh-Hans',
+        'footnote'=>false,
+        'paragraph'=>false,
         ];
 
     public function __construct($options=[])
@@ -35,6 +37,31 @@ class MdRender{
         foreach ($options as $key => $value) {
             $this->options[$key] = $value;
         }
+    }
+
+    /**
+     * 将句子模版组成的段落复制一份，为了实现巴汉逐段对读
+     */
+    private function preprocessingForParagraph($input){
+        if(!$this->options['paragraph']){
+            return $input;
+        }
+        $paragraphs = explode("\n\n",$input);
+        $output = [];
+        foreach ($paragraphs as $key => $paragraph) {
+            # 判断是否是纯粹的句子模版
+            $pattern = "/\{\{sent\|id=([0-9].+?)\}\}/";
+            $replacement = '';
+            $space = preg_replace($pattern,$replacement,$paragraph);
+            if(empty(trim($space))){
+                $output[] = str_replace('}}','|text=origin}}',$paragraph);
+                $output[] = str_replace('}}','|text=translation}}',$paragraph);
+            }else{
+                $output[] = $paragraph;
+            }
+        }
+
+        return implode("\n\n",$output);
     }
 
     /**
@@ -99,7 +126,7 @@ class MdRender{
 
     private function wiki2xml(string $wiki,$channelId=[]):string{
         /**
-         * 把模版转换为xml
+         * 渲染markdown里面的模版
          */
         $remain = $wiki;
         $buffer = array();
@@ -216,9 +243,8 @@ class MdRender{
             Log::error($xml);
             return "<span>xml解析错误</span>";
         }
-         */
+        */
 
-        //$tpl_list = $dom->xpath('//MdTpl');
         $tpl_list = $doc->getElementsByTagName('dfn');
 
         foreach ($tpl_list as $key => $tpl) {
@@ -315,19 +341,6 @@ class MdRender{
                     return '';
                 }
                 break;
-            case 'text':
-            case 'simple':
-                if(isset($tplProps)){
-                    if(is_array($tplProps)){
-                        return '';
-                    }else{
-                        return $tplProps;
-                    }
-                }else{
-                    Log::error('tplProps undefine');
-                    return '';
-                }
-                break;
             case 'tex':
                 if(isset($tplProps)){
                     if(is_array($tplProps)){
@@ -340,13 +353,24 @@ class MdRender{
                     return '';
                 }
                 break;
-            default:
-                return '';
+            default: /**text simple markdown */
+                if(isset($tplProps)){
+                    if(is_array($tplProps)){
+                        return '';
+                    }else{
+                        return $tplProps;
+                    }
+                }else{
+                    Log::error('tplProps undefine');
+                    return '';
+                }
                 break;
         }
     }
 
-
+    /**
+     * 将markdown文件中的模版转换为标准的wiki模版
+     */
     private function markdown2wiki(string $markdown): string{
         //$markdown = mb_convert_encoding($markdown,'UTF-8','UTF-8');
         $markdown = iconv('UTF-8','UTF-8//IGNORE',$markdown);
@@ -447,7 +471,7 @@ class MdRender{
 
         #替换句子模版
         $pattern = "/\{\{([0-9].+?)\}\}/";
-        $replacement = '{{sent|$1}}';
+        $replacement = '{{sent|id=$1}}';
         $markdown = preg_replace($pattern,$replacement,$markdown);
 
         /**
@@ -570,11 +594,12 @@ class MdRender{
             }
         }
         $wiki = $this->markdown2wiki($markdown);
-        $html = $this->wiki2xml($wiki,$channelId);
+        $wiki = $this->preprocessingForParagraph($wiki);
+        $markdownWithTpl = $this->wiki2xml($wiki,$channelId);
         if(!is_null($queryId)){
-            $html = $this->xmlQueryId($html, $queryId);
+            $html = $this->xmlQueryId($markdownWithTpl, $queryId);
         }
-        $html = $this->markdownToHtml($html);
+        $html = $this->markdownToHtml($markdownWithTpl);
 
         //后期处理
         $output = '';
@@ -605,6 +630,20 @@ class MdRender{
                 break;
             case 'html':
                 $output = htmlspecialchars_decode($html,ENT_QUOTES);
+                //处理脚注
+                if($this->options['footnote'] && isset($GLOBALS['note']) && count($GLOBALS['note'])>0){
+                    $output .= '<div><h1>endnote</h1>';
+                    foreach ($GLOBALS['note'] as $footnote) {
+                        $output .= '<p><a name="footnote-'.$footnote['sn'].'">['.$footnote['sn'].']</a> '.$footnote['content'].'</p>';
+                    }
+                    $output .= '</div>';
+                    unset($GLOBALS['note']);
+                }
+                //处理图片链接
+                $output = str_replace('<img src="','<img src="'.config('app.url'),$output);
+                break;
+            case 'markdown':
+                $output = $markdownWithTpl;
                 break;
         }
         return $output;
