@@ -605,6 +605,20 @@ class MdRender{
                 break;
             case 'html':
                 $output = htmlspecialchars_decode($html,ENT_QUOTES);
+                //处理脚注
+                if($this->options['footnote'] && isset($GLOBALS['note']) && count($GLOBALS['note'])>0){
+                    $output .= '<div><h1>endnote</h1>';
+                    foreach ($GLOBALS['note'] as $footnote) {
+                        $output .= '<p><a name="footnote-'.$footnote['sn'].'">['.$footnote['sn'].']</a> '.$footnote['content'].'</p>';
+                    }
+                    $output .= '</div>';
+                    unset($GLOBALS['note']);
+                }
+                //处理图片链接
+                $output = str_replace('<img src="','<img src="'.config('app.url'),$output);
+                break;
+            case 'markdown':
+                $output = $markdownWithTpl;
                 break;
         }
         return $output;
