@@ -38,6 +38,31 @@ class MdRender{
     }
 
     /**
+     * 将句子模版组成的段落复制一份，为了实现巴汉逐段对读
+     */
+    private function preprocessingForParagraph($input){
+        if(!$this->options['paragraph']){
+            return $input;
+        }
+        $paragraphs = explode("\n\n",$input);
+        $output = [];
+        foreach ($paragraphs as $key => $paragraph) {
+            # 判断是否是纯粹的句子模版
+            $pattern = "/\{\{sent\|id=([0-9].+?)\}\}/";
+            $replacement = '';
+            $space = preg_replace($pattern,$replacement,$paragraph);
+            if(empty(trim($space))){
+                $output[] = str_replace('}}','|text=origin}}',$paragraph);
+                $output[] = str_replace('}}','|text=translation}}',$paragraph);
+            }else{
+                $output[] = $paragraph;
+            }
+        }
+
+        return implode("\n\n",$output);
+    }
+
+    /**
      * 按照{{}}把字符串切分成三个部分。模版之前的，模版，和模版之后的
      */
     private function tplSplit($tpl){
