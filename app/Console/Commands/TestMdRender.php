@@ -117,6 +117,31 @@ class TestMdRender extends Command
         title=第一章 戒律概说（Vinaya）|
         style=modal}}
         md;
+
+        $data['footnote'] = <<<md
+        # title
+        content `note content` `note2 content`
+        md;
+
+        $data['paragraph'] = <<<md
+        # title
+        content
+
+        {{168-916-10-37}}
+        {{168-916-10-37}}
+
+        the end
+        md;
+
+        $data['img'] = <<<md
+        # title
+        content
+
+        ![aaa](/images/aaa.jpg)
+
+        the end
+        md;
+
         $data['empty'] = '';
 
         Markdown::driver($this->option('driver'));
@@ -134,10 +159,13 @@ class TestMdRender extends Command
                 if(!empty($_item) && $key !==$_item){
                     continue;
                 }
-                echo MdRender::render($value,
-                                    ['00ae2c48-c204-4082-ae79-79ba2740d506'],
-                                    null,'read','translation',
-                                    $contentType="markdown",$format);
+                $mdRender = new MdRender([
+                    'format'=>$format,
+                    'footnote'=>true,
+                    'paragraph'=>true,
+                ]);
+                $output = $mdRender->convert($value,['00ae2c48-c204-4082-ae79-79ba2740d506']);
+                echo $output;
             }
         }
         return 0;
