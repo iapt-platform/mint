@@ -97,6 +97,7 @@ use App\Http\Controllers\TagMapController;
 use App\Http\Controllers\EditableSentenceController;
 use App\Http\Controllers\ArticleFtsController;
 use App\Http\Controllers\NissayaCoverController;
+use App\Http\Controllers\AiTranslateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -250,6 +251,8 @@ Route::group(['prefix' => 'v2'],function(){
     Route::apiResource('editable-sentence',EditableSentenceController::class);
     Route::apiResource('article-fts',ArticleFtsController::class);
     Route::apiResource('nissaya-cover',NissayaCoverController::class);
+    Route::apiResource('ai-translate',AiTranslateController::class);
+
 
     Route::get('download/{type1}/{type2}/{uuid}/{filename}', function ($type1,$type2,$uuid,$filename) {
         header("Content-Type: {$type1}/{$type1}");
