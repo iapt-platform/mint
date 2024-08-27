@@ -12,6 +12,12 @@ class BookTitle{
     "volume" => 0
   ],
   [
+    "title1" => "abhi，1",
+    "title2" => "အဘိ၊၁",
+    "bookname" => "dhammasaṅgaṇīpāḷi",
+    "volume" => 0
+  ],
+  [
     "title1" => "abhi，ka",
     "title2" => "အဘိ၊က",
     "bookname" => "kathāvatthupāḷi",
@@ -44,6 +50,12 @@ class BookTitle{
   [
     "title1" => "abhi，vi",
     "title2" => "အဘိ၊ဝိ",
+    "bookname" => "vibhaṅgapāḷi",
+    "volume" => 0
+  ],
+  [
+    "title1" => "abhi，vi",
+    "title2" => "အဘိ၊၂",
     "bookname" => "vibhaṅgapāḷi",
     "volume" => 0
   ],
