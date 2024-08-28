@@ -189,7 +189,8 @@ const ChannelMy = ({
           });
       }
     } else {
-      setSentencesId(getSentIdInArticle());
+      sentList = getSentIdInArticle();
+      setSentencesId(sentList);
       loadChannel(sentList);
     }
   };
