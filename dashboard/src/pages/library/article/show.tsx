@@ -326,7 +326,7 @@ const Widget = () => {
                 <ToolButtonTag type={type} articleId={id} />
                 <ToolButtonPr type={type} articleId={id} />
                 <ToolButtonDiscussion type={type} articleId={id} />
-                <ToolButtonSearch type={type} articleId={id} />
+                <ToolButtonSearch type={type as ArticleType} articleId={id} />
                 <ToolButtonSetting type={type} articleId={id} />
               </Space>
             </div>
