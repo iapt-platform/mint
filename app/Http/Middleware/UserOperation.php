@@ -265,12 +265,14 @@ class UserOperation
                 $newFrame->user_id = $user['user_id'];
                 $newFrame->op_start = $currTime - MIN_INTERVAL;
                 $newFrame->op_end = $currTime;
+
                 $newFrame->duration = MIN_INTERVAL;
                 $newFrame->hit = 1;
                 $newFrame->timezone = $client_timezone;
                 $newFrame->save();
                 $this_active_time = MIN_INTERVAL;
             } else {
+                $this_active_time = $currTime - $last->op_end;
                 #修改
                 $last->op_end = $currTime;
                 $last->duration = $currTime - $start_time;
