@@ -12,10 +12,10 @@ class TestMdRender extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan test:md.render term unity --driver=str
+     * php artisan test:md.render term --format=unity --driver=str
      * @var string
      */
-    protected $signature = 'test:md.render {item?} {--format=} {--driver=morus}';
+    protected $signature = 'test:md.render {item?} {--format=html} {--driver=morus}';
 
     /**
      * The console command description.
