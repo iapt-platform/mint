@@ -437,6 +437,7 @@ class TemplateRender{
                     $GLOBALS['note_sn']++;
                 }else{
                     $GLOBALS['note_sn'] = 1;
+                    $GLOBALS['note'] = array();
                 }
                 $content = MdRender::render(
                             $props["note"],
@@ -447,7 +448,13 @@ class TemplateRender{
                             'markdown',
                             'markdown'
                         );
-                $output = '<footnote id="'.$GLOBALS['note_sn'].'">'.$content.'</footnote>';
+                //$output = '<footnote id="'.$GLOBALS['note_sn'].'">'.$content.'</footnote>';
+                $output = '[^'.$GLOBALS['note_sn'].']';
+                $GLOBALS['note'][] = [
+                    'sn' => $GLOBALS['note_sn'],
+                    'trigger' => $trigger,
+                    'content' => $content,
+                    ];
                 break;
             default:
                 $output = '';
