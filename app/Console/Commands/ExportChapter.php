@@ -28,7 +28,7 @@ class ExportChapter extends Command
      * php artisan export:chapter 168 915 7fea264d-7a26-40f8-bef7-bc95102760fb 168-915.html --format=html --origin=true
      * @var string
      */
-    protected $signature = 'export:chapter {book} {para} {channel} {query_id} {--token=} {--origin=false} {--translation=true} {--debug} {--format=tex} ';
+    protected $signature = 'export:chapter {book} {para} {channel} {query_id} {--token=} {--origin=false} {--translation=true} {--debug} {--format=markdown} ';
 
     /**
      * The console command description.
@@ -74,23 +74,12 @@ class ExportChapter extends Command
                                         'escape'=>function ($value){
                                             return $value;
                                         }));
-        $tplFile = resource_path("mustache/chapter/".$this->option('format')."/paragraph.".$this->option('format'));
+        $tplFile = resource_path("mustache/chapter/md/paragraph.md");
         $tplParagraph = file_get_contents($tplFile);
 
         MdRender::init();
 
-
-        switch ($this->option('format')) {
-            case 'md':
-                $renderFormat='markdown';
-                break;
-            case 'html':
-                $renderFormat='html';
-                break;
-            default:
-                $renderFormat=$this->option('format');
-                break;
-        }
+        $renderFormat='markdown';
 
         //获取原文channel
         $orgChannelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
@@ -253,20 +242,11 @@ class ExportChapter extends Command
                     }else{
                         $subSessionTitle = $paraData['translations'][0]['content'];
                     }
-                    switch ($this->option('format')) {
-                        case 'tex':
-                            $subStr = array_fill(0,$currLevel,'sub');
-                            $content[] = '\\'. implode('',$subStr) . "section{".$subSessionTitle.'}';
-                            break;
-                        case 'md':
-                            $subStr = array_fill(0,$currLevel,'#');
-                            $content[] = implode('',$subStr) . " ".$subSessionTitle;
-                            break;
-                        case 'html':
-                            $level = $currLevel+2;
-                            $content[] = "<h{$currLevel}>".$subSessionTitle."</h{$currLevel}>";
-                            break;
-                    }
+
+                    //标题
+                    $subStr = array_fill(0,$currLevel,'#');
+                    $content[] = implode('',$subStr) . " ".$subSessionTitle;
+
                 }
                 $content[] = "\n\n";
             }

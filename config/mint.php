@@ -38,7 +38,7 @@ return [
         ],
         'api' => [
             'default' => env('APP_API', "http://localhost:8000/api"),
-            'bamboo' => env('BAMBOO_API_HOST', "http://localhost:8000/api"),
+            'bamboo' => env('BAMBOO_API_HOST', env('APP_URL').'/api'),
         ],
         'assets' => env('ASSETS_SERVER', "localhost:9999"),
 

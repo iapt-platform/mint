@@ -643,7 +643,17 @@ class MdRender{
                 $output = str_replace('<img src="','<img src="'.config('app.url'),$output);
                 break;
             case 'markdown':
-                $output = $markdownWithTpl;
+                //处理脚注
+                $footnotes = array();
+                if($this->options['footnote'] && isset($GLOBALS['note']) && count($GLOBALS['note'])>0){
+                    foreach ($GLOBALS['note'] as $footnote) {
+                        $footnotes[] = '[^'.$footnote['sn'].']: ' . $footnote['content'];
+                    }
+                    unset($GLOBALS['note']);
+                }
+                //处理图片链接
+                $output = str_replace('/attachments/',config('app.url')."/attachments/",$markdownWithTpl);
+                $output = $output . "\n\n" . implode("\n\n",$footnotes);
                 break;
         }
         return $output;

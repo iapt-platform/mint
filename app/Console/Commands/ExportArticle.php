@@ -18,7 +18,7 @@ class ExportArticle extends Command
     /**
      * The name and signature of the console command.
      * php artisan export:article 78c22ad3-58e2-4cf0-b979-67783ca3a375 123 --channel=7fea264d-7a26-40f8-bef7-bc95102760fb --format=html
-     * php artisan export:article 4732bcae-fb9d-4db4-b6b7-e8d0aa882f30 1234 --channel=7fea264d-7a26-40f8-bef7-bc95102760fb --anthology=eb9e3f7f-b942-4ca4-bd6f-b7876b59a523 --format=html --token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2OTc3Mjg2ODUsImV4cCI6MTcyOTI2NDY4NSwidWlkIjoiYmE1NDYzZjMtNzJkMS00NDEwLTg1OGUtZWFkZDEwODg0NzEzIiwiaWQiOjR9.fiXhnY2LczZ9kKVHV0FfD3AJPZt-uqM5wrDe4EhToVexdd007ebPFYssZefmchfL0mx9nF0rgHSqjNhx4P0yDA
+     * php artisan export:article df6c6609-6fc1-42d0-9ef1-535ef3e702c9 1234 --channel=7fea264d-7a26-40f8-bef7-bc95102760fb --anthology=697c9169-cb9d-4a60-8848-92745e467bab --token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2OTc3Mjg2ODUsImV4cCI6MTcyOTI2NDY4NSwidWlkIjoiYmE1NDYzZjMtNzJkMS00NDEwLTg1OGUtZWFkZDEwODg0NzEzIiwiaWQiOjR9.fiXhnY2LczZ9kKVHV0FfD3AJPZt-uqM5wrDe4EhToVexdd007ebPFYssZefmchfL0mx9nF0rgHSqjNhx4P0yDA --format=html
      * @var string
      */
     protected $signature = 'export:article {id} {query_id} {--token=} {--anthology=} {--channel=}  {--origin=false} {--translation=true} {--format=tex} {--debug}';
@@ -125,15 +125,16 @@ class ExportArticle extends Command
     }
 
     private function fetch($articleId){
-        $api = config('app.url') . '/api';
+        $api = config('mint.server.api.bamboo');
         $basicUrl = $api . '/v2/article/';
         $url =  $basicUrl . $articleId;;
         $this->info('http request url='.$url);
         $urlParam = [
                 'mode' => 'read',
-                'format' => 'html',
+                'format' => 'markdown',
                 'anthology'=> $this->option('anthology'),
                 'channel' => $this->option('channel'),
+                'origin' => $this->option('origin'),
         ];
         Log::debug('export article http request',['url'=>$url,'param'=>$urlParam]);
         if($this->option('token')){
@@ -144,7 +145,7 @@ class ExportArticle extends Command
 
         if($response->failed()){
             $this->error('http request error'.$response->json('message'));
-            Log::error('http request error'.$response->json('message'));
+            Log::error('http request error',['error'=>$response->json('message')]);
             return false;
         }
         if(!$response->json('ok')){

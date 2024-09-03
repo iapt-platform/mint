@@ -196,12 +196,14 @@ class ArticleResource extends JsonResource
             $mode = $request->get('mode','read');
             $format = $request->get('format','react');
 
-            $html = MdRender::render($this->content,
-                                     $channels,$query_id,$mode,
-                                     'translation','markdown',$format);
+            $htmlRender = new MdRender([
+                'mode' => $mode,
+                'format'=> $format,
+                'footnote' => true,
+                'origin' => $request->get('origin',true),
+            ]);
             //Log::debug('article render',['content'=>$this->content,'format'=>$format,'html'=>$html]);
-
-            $data["html"] = $html;
+            $data["html"] = $htmlRender->convert($this->content,$channels);
             if(empty($this->summary)){
                 $data["_summary"] = MdRender::render($this->content,
                                                     $channels,$query_id,$mode,

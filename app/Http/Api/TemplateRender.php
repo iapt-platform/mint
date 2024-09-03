@@ -29,6 +29,20 @@ class TemplateRender{
     protected $lang = 'en';
     protected $langFamily = 'en';
 
+    protected $options = [
+        'mode' => 'read',
+        'channelType'=>'translation',
+        'contentType'=>"markdown",
+        'format'=>'react',
+        'debug'=>[],
+        'studioId'=>null,
+        'lang'=>'zh-Hans',
+        'footnote'=>false,
+        'paragraph'=>false,
+        'origin'=>true,
+        'translation'=>true,
+        ];
+
     /**
      * Create a new command instance.
      * string $mode  'read' | 'edit'
@@ -57,6 +71,11 @@ class TemplateRender{
         if(!empty($lang)){
             $this->lang = $lang;
             $this->langFamily = explode('-',$lang)[0];
+        }
+    }
+    public function options($options=[]){
+        foreach ($options as $key => $value) {
+            $this->options[$key] = $value;
         }
     }
     public function glossaryKey(){
@@ -253,6 +272,10 @@ class TemplateRender{
             $output["id"] = $tplParam->guid;
             $output["meaning"] = $tplParam->meaning;
             $output["channel"] = $tplParam->channal;
+            if(!empty($tplParam->note)){
+                $mdRender = new MdRender(['format'=>$this->format]);
+                $output['note'] = $mdRender->convert($tplParam->note,$this->channel_id);
+            }
             if(isset($isCommunity)){
                 $output["isCommunity"] = true;
             }
@@ -349,6 +372,22 @@ class TemplateRender{
                 }else{
                     $output = $props["word"];
                 }
+                //如果有内容，显示为脚注
+                if(!empty($props["note"])){
+                    if(isset($GLOBALS['note_sn'])){
+                        $GLOBALS['note_sn']++;
+                    }else{
+                        $GLOBALS['note_sn'] = 1;
+                        $GLOBALS['note'] = array();
+                    }
+                    $content = $props["note"];
+                    $output .= '[^'.$GLOBALS['note_sn'].']';
+                    $GLOBALS['note'][] = [
+                        'sn' => $GLOBALS['note_sn'],
+                        'trigger' => '',
+                        'content' => $content,
+                        ];
+                }
                 break;
             default:
                 if(isset($props["meaning"])){
@@ -437,6 +476,7 @@ class TemplateRender{
                     $GLOBALS['note_sn']++;
                 }else{
                     $GLOBALS['note_sn'] = 1;
+                    $GLOBALS['note'] = array();
                 }
                 $content = MdRender::render(
                             $props["note"],
@@ -447,7 +487,13 @@ class TemplateRender{
                             'markdown',
                             'markdown'
                         );
-                $output = '<footnote id="'.$GLOBALS['note_sn'].'">'.$content.'</footnote>';
+                $output = '[^'.$GLOBALS['note_sn'].']';
+                $GLOBALS['note'][] = [
+                    'sn' => $GLOBALS['note_sn'],
+                    'trigger' => $trigger,
+                    'content' => $content,
+                    ];
+                //$output = '<footnote id="'.$GLOBALS['note_sn'].'">'.$content.'</footnote>';
                 break;
             default:
                 $output = '';
@@ -962,16 +1008,22 @@ class TemplateRender{
             case 'markdown':
                 $output = '';
                 if($text === 'both' || $text === 'origin'){
-                    if(isset($props['origin']) && is_array($props['origin'])){
-                        foreach ($props['origin'] as $key => $value) {
-                            $output .= "\n\n". $value['html'];
+                    if($this->options['origin'] === true ||
+                       $this->options['origin'] === 'true'){
+                        if(isset($props['origin']) && is_array($props['origin'])){
+                            foreach ($props['origin'] as $key => $value) {
+                                $output .= $value['html'];
+                            }
                         }
                     }
                 }
                 if($text === 'both' || $text === 'translation'){
-                    if(isset($props['translation']) && is_array($props['translation'])){
-                        foreach ($props['translation'] as $key => $value) {
-                            $output .= "\n\n". $value['html'];
+                    if($this->options['translation']  === true ||
+                       $this->options['translation']  === 'true'){
+                        if(isset($props['translation']) && is_array($props['translation'])){
+                            foreach ($props['translation'] as $key => $value) {
+                                $output .= $value['html'];
+                            }
                         }
                     }
                 }
@@ -980,7 +1032,7 @@ class TemplateRender{
                 $output = '';
                 break;
         }
-        return $output;
+        return trim($output);
     }
 
     private  function render_mermaid(){
