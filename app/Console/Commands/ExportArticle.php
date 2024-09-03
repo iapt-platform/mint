@@ -125,7 +125,7 @@ class ExportArticle extends Command
     }
 
     private function fetch($articleId){
-        $api = config('app.url') . '/api';
+        $api = config('mint.server.api.bamboo');
         $basicUrl = $api . '/v2/article/';
         $url =  $basicUrl . $articleId;;
         $this->info('http request url='.$url);
@@ -134,6 +134,7 @@ class ExportArticle extends Command
                 'format' => 'markdown',
                 'anthology'=> $this->option('anthology'),
                 'channel' => $this->option('channel'),
+                'origin' => $this->option('origin'),
         ];
         Log::debug('export article http request',['url'=>$url,'param'=>$urlParam]);
         if($this->option('token')){
@@ -144,7 +145,7 @@ class ExportArticle extends Command
 
         if($response->failed()){
             $this->error('http request error'.$response->json('message'));
-            Log::error('http request error'.$response->json('message'));
+            Log::error('http request error',['error'=>$response->json('message')]);
             return false;
         }
         if(!$response->json('ok')){
