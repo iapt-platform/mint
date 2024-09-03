@@ -29,6 +29,20 @@ class TemplateRender{
     protected $lang = 'en';
     protected $langFamily = 'en';
 
+    protected $options = [
+        'mode' => 'read',
+        'channelType'=>'translation',
+        'contentType'=>"markdown",
+        'format'=>'react',
+        'debug'=>[],
+        'studioId'=>null,
+        'lang'=>'zh-Hans',
+        'footnote'=>false,
+        'paragraph'=>false,
+        'origin'=>true,
+        'translation'=>true,
+        ];
+
     /**
      * Create a new command instance.
      * string $mode  'read' | 'edit'
@@ -57,6 +71,11 @@ class TemplateRender{
         if(!empty($lang)){
             $this->lang = $lang;
             $this->langFamily = explode('-',$lang)[0];
+        }
+    }
+    public function options($options=[]){
+        foreach ($options as $key => $value) {
+            $this->options[$key] = $value;
         }
     }
     public function glossaryKey(){
@@ -989,16 +1008,22 @@ class TemplateRender{
             case 'markdown':
                 $output = '';
                 if($text === 'both' || $text === 'origin'){
-                    if(isset($props['origin']) && is_array($props['origin'])){
-                        foreach ($props['origin'] as $key => $value) {
-                            $output .= "\n\n". $value['html'];
+                    if($this->options['origin'] === true ||
+                       $this->options['origin'] === 'true'){
+                        if(isset($props['origin']) && is_array($props['origin'])){
+                            foreach ($props['origin'] as $key => $value) {
+                                $output .= $value['html'];
+                            }
                         }
                     }
                 }
                 if($text === 'both' || $text === 'translation'){
-                    if(isset($props['translation']) && is_array($props['translation'])){
-                        foreach ($props['translation'] as $key => $value) {
-                            $output .= "\n\n". $value['html'];
+                    if($this->options['translation']  === true ||
+                       $this->options['translation']  === 'true'){
+                        if(isset($props['translation']) && is_array($props['translation'])){
+                            foreach ($props['translation'] as $key => $value) {
+                                $output .= $value['html'];
+                            }
                         }
                     }
                 }
@@ -1007,7 +1032,7 @@ class TemplateRender{
                 $output = '';
                 break;
         }
-        return $output;
+        return trim($output);
     }
 
     private  function render_mermaid(){
