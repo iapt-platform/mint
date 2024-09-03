@@ -1,0 +1,3 @@
+[[#footnote]]
+\[[[sn]]\]: [[content]]
+[[/footnote]]
