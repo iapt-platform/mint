@@ -253,6 +253,10 @@ class TemplateRender{
             $output["id"] = $tplParam->guid;
             $output["meaning"] = $tplParam->meaning;
             $output["channel"] = $tplParam->channal;
+            if(!empty($tplParam->note)){
+                $mdRender = new MdRender(['format'=>$this->format]);
+                $output['note'] = $mdRender->convert($tplParam->note,$this->channel_id);
+            }
             if(isset($isCommunity)){
                 $output["isCommunity"] = true;
             }
@@ -348,6 +352,22 @@ class TemplateRender{
                     }
                 }else{
                     $output = $props["word"];
+                }
+                //如果有内容，显示为脚注
+                if(!empty($props["note"])){
+                    if(isset($GLOBALS['note_sn'])){
+                        $GLOBALS['note_sn']++;
+                    }else{
+                        $GLOBALS['note_sn'] = 1;
+                        $GLOBALS['note'] = array();
+                    }
+                    $content = $props["note"];
+                    $output .= '[^'.$GLOBALS['note_sn'].']';
+                    $GLOBALS['note'][] = [
+                        'sn' => $GLOBALS['note_sn'],
+                        'trigger' => '',
+                        'content' => $content,
+                        ];
                 }
                 break;
             default:
@@ -448,13 +468,13 @@ class TemplateRender{
                             'markdown',
                             'markdown'
                         );
-                //$output = '<footnote id="'.$GLOBALS['note_sn'].'">'.$content.'</footnote>';
                 $output = '[^'.$GLOBALS['note_sn'].']';
                 $GLOBALS['note'][] = [
                     'sn' => $GLOBALS['note_sn'],
                     'trigger' => $trigger,
                     'content' => $content,
                     ];
+                //$output = '<footnote id="'.$GLOBALS['note_sn'].'">'.$content.'</footnote>';
                 break;
             default:
                 $output = '';
