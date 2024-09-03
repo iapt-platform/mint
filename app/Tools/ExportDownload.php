@@ -147,7 +147,7 @@ class ExportDownload
         }
 
 
-        $dir = "tmp/export/{$type}/".$this->format."/".$this->zipFilename."/";
+        $dir = "tmp/export/{$type}/".$this->format."/";
         $mdFilename = $dir.$outputFilename.'.md';
         Storage::disk('local')->put($mdFilename, $fileDate);
         Log::debug('markdown saved',['filename'=>$mdFilename]);
@@ -161,7 +161,12 @@ class ExportDownload
             $absoluteOutputPath = Storage::disk('local')->path($filename);
             //$command = "pandoc pandoc1.md --reference-doc tpl.docx -o pandoc1.docx";
             $command = ['pandoc', $absoluteMdPath, '-o', $absoluteOutputPath];
-            Log::debug('pandoc start',['command'=>$command]);
+            if($this->format === 'docx'){
+                 $tplFile = resource_path("template/docx/paper.docx");
+                 array_push($command,'--reference-doc');
+                 array_push($command,$tplFile);
+            }
+            Log::debug('pandoc start',['command'=>$command,'format'=>$this->format]);
             $process = new Process($command);
             $process->run();
 
@@ -172,7 +177,6 @@ class ExportDownload
             echo $process->getOutput();
             Log::debug('pandoc end',['command'=>$command]);
         }
-
 
         $zipDir = storage_path('app/export/zip');
         if(!is_dir($zipDir)){
