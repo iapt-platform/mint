@@ -651,7 +651,9 @@ class MdRender{
                     }
                     unset($GLOBALS['note']);
                 }
-                $output = $markdownWithTpl . "\n\n" . implode("\n\n",$footnotes);
+                //处理图片链接
+                $output = str_replace('/attachments/',config('app.url')."/attachments/",$markdownWithTpl);
+                $output = $output . "\n\n" . implode("\n\n",$footnotes);
                 break;
         }
         return $output;
