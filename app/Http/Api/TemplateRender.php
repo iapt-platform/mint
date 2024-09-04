@@ -989,7 +989,7 @@ class TemplateRender{
                                 count($props['origin']) > 0
                                 ){
                             foreach ($props['origin'] as $key => $value) {
-                                $output .= $value['html'];
+                                $output .= trim($value['html']);
                             }
                         }
                     }
@@ -1000,7 +1000,7 @@ class TemplateRender{
                     count($props['translation']) > 0
                     ){
                         foreach ($props['translation'] as $key => $value) {
-                            $output .= $value['html'];
+                            $output .= trim($value['html']);
                         }
                     }
                 }
@@ -1012,7 +1012,7 @@ class TemplateRender{
                        $this->options['origin'] === 'true'){
                         if(isset($props['origin']) && is_array($props['origin'])){
                             foreach ($props['origin'] as $key => $value) {
-                                $output .= $value['html'];
+                                $output .= trim($value['html']);
                             }
                         }
                     }
@@ -1022,7 +1022,7 @@ class TemplateRender{
                        $this->options['translation']  === 'true'){
                         if(isset($props['translation']) && is_array($props['translation'])){
                             foreach ($props['translation'] as $key => $value) {
-                                $output .= $value['html'];
+                                $output .= trim($value['html']);
                             }
                         }
                     }
@@ -1032,7 +1032,7 @@ class TemplateRender{
                 $output = '';
                 break;
         }
-        return trim($output);
+        return $output;
     }
 
     private  function render_mermaid(){
