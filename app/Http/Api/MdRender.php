@@ -302,7 +302,7 @@ class MdRender{
                                         $this->options['debug'],
                                         $this->options['lang'],
                                     );
-
+            $tplRender->options($this->options);
             $tplProps = $tplRender->render($tpl_name);
             if($this->options['format']==='react' && $tplProps){
                 $props = $doc->createAttribute("props");
