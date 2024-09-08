@@ -176,20 +176,36 @@ const ExportModalWidget = ({
             bordered={false}
             options={[
               {
-                value: "markdown",
-                label: "Markdown",
+                value: "docx",
+                label: "Word",
               },
               {
                 value: "pdf",
                 label: "PDF",
               },
               {
-                value: "docx",
-                label: "Word",
+                value: "epub",
+                label: "epub电子书",
+              },
+              {
+                value: "markdown",
+                label: "Markdown",
               },
               {
                 value: "html",
                 label: "Html",
+              },
+              {
+                value: "pptx",
+                label: "PPT幻灯片",
+              },
+              {
+                value: "txt",
+                label: "Text文本",
+              },
+              {
+                value: "tex",
+                label: "LaTex",
               },
             ]}
             onSelect={(value) => setFormat(value)}
