@@ -1,0 +1,28 @@
+\setmainfont{DejaVu Sans}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+
+\newcommand\ytl[2]{\parbox[b]{8em}{\hfill{\color{cyan}\bfseries\sffamily #1}~$\cdots\cdots$~}\makebox[0pt][c]{$\bullet$}\vrule\quad \parbox[c]{10cm}{\vspace{7pt}\color{red!40!black!80}\raggedright\sffamily #2.\\[7pt]}\\[-3pt]}
+
+\title{Tex2Pdf Testing \footnote{Not everybody could sail the ocean, but still we could share this dream.}}
+\author{通吃島主}
+\date{\today}
+
+\begin{document}
+    \maketitle
+
+    \include{foreword.tex}
+
+    \tableofcontents
+    \listoffigures
+    \listoftables
+
+    \mainmatter
+    \part{P1}
+        \chapter{C1}
+        \include{section-1.tex}
+        \include{section-2.tex}
+        
+    \include{postscript.tex}
+
+\end{document}

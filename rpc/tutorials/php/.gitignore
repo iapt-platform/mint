@@ -1,4 +1,6 @@
+/tmp/
+/morus-client.json
+/queue.json
+
 /composer.lock
 /vendor/
-/lib/
-/config.yml
