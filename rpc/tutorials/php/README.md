@@ -1,9 +1,9 @@
-# USAGE
-
-- install [php-pear](https://aur.archlinux.org/packages/php-pear)
+# Usage
 
 ```bash
-# add "extension=yaml" to php.ini
-sudo pecl install yaml
-composer update
+composer install
+
+php -d extension=grpc.so -d max_execution_time=300 morus-client.php morus.json
+php queue-producer.php queue.json texlive QUEUE
+php queue-producer.php queue.json pandoc QUEUE
 ```

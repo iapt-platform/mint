@@ -1,7 +1,19 @@
 {
+  "name": "grpc/grpc-demo",
+  "description": "gRPC example for PHP",
   "require": {
-    "php-amqplib/php-amqplib": "^3.2",
-    "apache/thrift": "0.20.0",
-    "monolog/monolog": "3.6.0"
+    "grpc/grpc": "^v1.39.0",
+    "google/protobuf": "^v3.12.2",
+    "monolog/monolog": "^3.7",
+    "ramsey/uuid": "^4.7",
+    "php-amqplib/php-amqplib": "^3.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "GPBMetadata\\": [
+        "GPBMetadata/"
+      ],
+      "Palm\\": "Palm/"
+    }
   }
 }
