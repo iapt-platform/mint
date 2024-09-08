@@ -170,10 +170,13 @@ const ChannelMy = ({
       const id = articleId?.split("-");
       if (id?.length === 2) {
         const url = `/v2/sentences-in-chapter?book=${id[0]}&para=${id[1]}`;
-        console.info("ChannelMy url", url);
+        console.info("ChannelMy url api request", url);
         get<ISentInChapterListResponse>(url)
           .then((res) => {
-            console.debug("ChannelMy ISentInChapterListResponse", res);
+            console.debug(
+              "ChannelMy ISentInChapterListResponse api response",
+              res
+            );
             if (res && res.ok) {
               sentList = res.data.rows.map((item) => {
                 return `${item.book}-${item.paragraph}-${item.word_begin}-${item.word_end}`;
@@ -189,7 +192,8 @@ const ChannelMy = ({
           });
       }
     } else {
-      setSentencesId(getSentIdInArticle());
+      sentList = getSentIdInArticle();
+      setSentencesId(sentList);
       loadChannel(sentList);
     }
   };
@@ -199,14 +203,15 @@ const ChannelMy = ({
     console.debug("sentences", sentences);
     const currOwner = "all";
 
-    console.log("owner", currOwner);
+    const url = `/v2/channel-progress`;
+    console.info("api request", url);
     setLoading(true);
-    post<IProgressRequest, IApiResponseChannelList>(`/v2/channel-progress`, {
+    post<IProgressRequest, IApiResponseChannelList>(url, {
       sentence: sentences,
       owner: currOwner,
     })
       .then((res) => {
-        console.debug("progress data", res.data.rows);
+        console.debug("progress data api response", res);
         const items: IItem[] = res.data.rows
           .filter((value) => value.name.substring(0, 4) !== "_Sys")
           .map((item, id) => {

@@ -1,14 +1,57 @@
-import { Button, Space, Table, Tag } from "antd";
+import { Button, Space, Table, Tag, Typography } from "antd";
 import lodash from "lodash";
 import { useEffect, useState } from "react";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import Marked from "./Marked";
+import GrammarLookup from "../dict/GrammarLookup";
+import { useIntl } from "react-intl";
+
+const { Link } = Typography;
+
+const caseTags = [
+  { case: "fpp", tags: ["verb", "derivative", "passive-verb"] },
+  { case: "ger", tags: ["verb"] },
+  { case: "inf", tags: ["verb"] },
+  { case: "grd", tags: ["verb"] },
+  { case: "pp", tags: ["verb", "participle"] },
+  { case: "prp", tags: ["verb", "participle"] },
+  { case: "v", tags: ["verb"] },
+  { case: "v:ind", tags: ["verb"] },
+  { case: "vdn", tags: ["verb", "participle"] },
+];
+interface ITags {
+  tag: string;
+  count: number;
+}
+const getCaseTags = (input: string[]): ITags[] => {
+  let tagsMap = new Map<string, number>();
+  input.forEach((value: string) => {
+    const found = caseTags.find((value1) => value1.case === value);
+    if (found !== undefined) {
+      found.tags.forEach((value3) => {
+        const count = tagsMap.get(value3);
+        if (typeof count === "undefined") {
+          tagsMap.set(value3, 1);
+        } else {
+          tagsMap.set(value3, count + 1);
+        }
+      });
+    }
+  });
+  let tags: ITags[] = [];
+  tagsMap.forEach((value, key, map) => {
+    tags.push({ tag: key, count: value });
+  });
+  tags.sort((a, b) => b.count - a.count);
+  return tags;
+};
 
 const randomString = () =>
   lodash.times(20, () => lodash.random(35).toString(36)).join("");
 
 interface ICaseItem {
   label: string;
+  case: string;
   link: string;
 }
 interface IRelationNode {
@@ -19,6 +62,7 @@ interface DataType {
   key: string;
   relation: string;
   localRelation?: string;
+  tags?: ITags[];
   to?: IRelationNode;
   from?: IRelationNode;
   category?: { name: string; note: string; meaning: string };
@@ -39,12 +83,12 @@ interface IWidget {
   data?: INissayaRelation[];
 }
 const NissayaCardTableWidget = ({ data }: IWidget) => {
-  const [tableData, setTableData] = useState<DataType[]>();
-  useEffect(() => {
-    if (typeof data === "undefined") {
-      setTableData(undefined);
-      return;
-    }
+  const intl = useIntl();
+  let tableData: DataType[] = [];
+
+  if (typeof data === "undefined") {
+    tableData = [];
+  } else {
     console.log("data", data);
     let category: string[] = [];
     let newData: DataType[] = [];
@@ -77,12 +121,20 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
               };
             });
           console.log("children", children);
+          let caseList: string[] = [];
+          children.forEach((value) => {
+            value.to?.case?.forEach((value1) => {
+              caseList.push(value1.case);
+            });
+          });
+          const tags = getCaseTags(caseList);
           newData.push({
             key: randomString(),
             relation: item.relation,
             localRelation: item.local_relation,
             from: item.from,
             to: item.to,
+            tags: tags,
             category: item.category,
             translation: item.local_ending,
             children: children.length > 1 ? [...children] : undefined,
@@ -101,8 +153,9 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
       }
     });
     console.log("newData", newData);
-    setTableData(newData);
-  }, [data]);
+    tableData = newData;
+  }
+
   return (
     <Table
       size="small"
@@ -111,20 +164,17 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           title: "本词特征",
           dataIndex: "from",
           key: "from",
-          width: 40,
+          width: "10%",
           render: (value, record, index) => {
             return (
               <Space>
                 {record.from?.case?.map((item, id) => {
                   return (
-                    <Button
-                      key={id}
-                      type="link"
-                      size="small"
-                      onClick={() => window.open(item.link, "_blank")}
-                    >
-                      <Tag>{item.label}</Tag>
-                    </Button>
+                    <GrammarLookup key={id} word={item.case}>
+                      <Link>
+                        <Tag>{item.label}</Tag>
+                      </Link>
+                    </GrammarLookup>
                   );
                 })}
                 {record.from?.spell}
@@ -136,12 +186,14 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           title: "关系",
           dataIndex: "relation",
           key: "relation",
-          width: "22%",
+          width: "30%",
           render: (value, record, index) => {
             return (
-              <Space>
-                {record.relation}
-                {record.localRelation}
+              <Space direction="vertical">
+                <GrammarLookup word={record.relation}>
+                  <Link>{record.relation}</Link>
+                </GrammarLookup>
+                <div>{record.localRelation}</div>
               </Space>
             );
           },
@@ -150,6 +202,7 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           title: "目标词特征",
           dataIndex: "to",
           key: "to",
+          width: "20%",
           render: (value, record, index) => {
             if (record.isChildren) {
               return (
@@ -174,8 +227,31 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
               return (
                 <Space>
                   <ArrowRightOutlined />
-                  {record.category?.meaning}
+                  {record.tags?.map((item, id) => {
+                    return (
+                      <Tag key={id}>
+                        {intl.formatMessage({
+                          id: `dict.case.category.${item.tag}`,
+                        })}
+                      </Tag>
+                    );
+                  })}
                 </Space>
+              );
+            }
+          },
+        },
+        {
+          title: "语法点",
+          dataIndex: "to",
+          key: "grammar",
+          width: "20%",
+          render: (value, record, index) => {
+            if (!record.isChildren) {
+              return (
+                <GrammarLookup word={record.category?.name}>
+                  <Link>{record.category?.meaning}</Link>
+                </GrammarLookup>
               );
             }
           },
@@ -183,21 +259,20 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
         {
           title: "含义",
           dataIndex: "address",
-          width: "30%",
+          width: "40%",
           key: "address",
           render: (value, record, index) => {
             if (record.isChildren) {
               return undefined;
             } else {
-              return <Marked text={record.category?.note} />;
+              return (
+                <div>
+                  <Marked text={record.category?.note} />
+                  <div>{record.translation}</div>
+                </div>
+              );
             }
           },
-        },
-        {
-          title: "翻译建议",
-          dataIndex: "translation",
-          width: "20%",
-          key: "translation",
         },
       ]}
       dataSource={tableData}

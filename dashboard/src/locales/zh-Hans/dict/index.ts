@@ -54,8 +54,8 @@ const items = {
   "dict.fields.type.imp.short.label": "命令",
   "dict.fields.type.cond.label": "条件",
   "dict.fields.type.cond.short.label": "条件",
-  "dict.fields.type.opt.label": "愿望",
-  "dict.fields.type.opt.short.label": "愿望",
+  "dict.fields.type.opt.label": "潜能",
+  "dict.fields.type.opt.short.label": "潜",
   "dict.fields.type.pres.label": "现",
   "dict.fields.type.pres.short.label": "现",
   "dict.fields.type.aor.label": "过",
@@ -163,6 +163,10 @@ const items = {
   "dict.fields.type.comp.short.label": "合",
   "dict.fields.type.others.label": "其他",
   "dict.fields.type.others.short.label": "其他",
+  "dict.case.category.verb": "动词",
+  "dict.case.category.derivative": "衍生词",
+  "dict.case.category.passive-verb": "被动动词",
+  "dict.case.category.participle": "分词",
 };
 
 export default items;

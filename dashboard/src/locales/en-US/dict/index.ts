@@ -163,6 +163,10 @@ const items = {
   "dict.fields.type.comp.short.label": "comp.",
   "dict.fields.type.others.label": "others",
   "dict.fields.type.others.short.label": "others",
+  "dict.case.category.verb": "verb",
+  "dict.case.category.derivative": "derivative",
+  "dict.case.category.passive-verb": "passive-verb",
+  "dict.case.category.participle": "participle",
 };
 
 export default items;

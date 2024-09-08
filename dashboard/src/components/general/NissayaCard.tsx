@@ -22,7 +22,7 @@ interface INissayaCardModal {
 export const NissayaCardPop = ({ text, trigger }: INissayaCardModal) => {
   return (
     <Popover
-      style={{ width: 600 }}
+      style={{ width: 700 }}
       content={<NissayaCardWidget text={text} cache={true} hideEditButton />}
       placement="bottom"
     >
@@ -105,10 +105,11 @@ const NissayaCardWidget = ({
     }
 
     const url = `/v2/nissaya-card/${text}?lang=${uiLang}&content_type=json`;
-    console.log("url", url);
+    console.debug("api request", url);
     setLoading(true);
     get<INissayaCardResponse>(url)
       .then((json) => {
+        console.debug("api response", json);
         if (json.ok) {
           setCardData(json.data.row);
           setTerm(json.data.ending);
@@ -169,7 +170,7 @@ const NissayaCardWidget = ({
       </div>
       <Paragraph>{term?.meaning}</Paragraph>
       <MdView html={term?.html} />
-      {cardData ? <NissayaCardTable data={cardData} /> : undefined}
+      {cardData ? <NissayaCardTable data={cardData} /> : <></>}
     </div>
   );
 };

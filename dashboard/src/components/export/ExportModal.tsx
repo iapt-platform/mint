@@ -57,7 +57,7 @@ const ExportModalWidget = ({
   const [isModalOpen, setIsModalOpen] = useState(open);
   const [filename, setFilename] = useState<string>();
   const [url, setUrl] = useState<string>();
-  const [format, setFormat] = useState<string>("html");
+  const [format, setFormat] = useState<string>("markdown");
   const [exportStatus, setExportStatus] = useState<IStatus>();
   const [exportStart, setExportStart] = useState(false);
   const [hasOrigin, setHasOrigin] = useState(false);
@@ -176,14 +176,16 @@ const ExportModalWidget = ({
             bordered={false}
             options={[
               {
-                value: "pdf",
-                label: "PDF",
-                disabled: true,
+                value: "markdown",
+                label: "Markdown",
               },
               {
-                value: "word",
+                value: "pdf",
+                label: "PDF",
+              },
+              {
+                value: "docx",
                 label: "Word",
-                disabled: true,
               },
               {
                 value: "html",

@@ -96,10 +96,14 @@ const SentReadFrame = ({
     );
     if (typeof displayOriginal === "boolean") {
       if (boxOrg.current) {
-        if (displayOriginal === true) {
-          boxOrg.current.style.display = "block";
-        } else {
+        if (
+          displayOriginal === false &&
+          translation &&
+          translation.length > 0
+        ) {
           boxOrg.current.style.display = "none";
+        } else {
+          boxOrg.current.style.display = "block";
         }
       }
     }
@@ -170,7 +174,7 @@ const SentReadFrame = ({
                         break;
                       case "discussion":
                         if (item.id) {
-                          openDiscussion(item.id, false);
+                          openDiscussion(item.id, "sentence", false);
                         }
                         break;
                       case "pr":

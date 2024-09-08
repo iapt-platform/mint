@@ -14,6 +14,7 @@ const items = {
   "message.password.reset": "请设置新的密码",
   "message.get.token.fail": "获取token失败",
   "message.confirm-password.validate.fail": "两次密码不一致",
+  "message.delete.success": "成功删除{count}条数据",
 };
 
 export default items;

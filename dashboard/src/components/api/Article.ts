@@ -235,3 +235,12 @@ export interface ICSParaNavItem {
   start: number;
   content: string;
 }
+
+export interface IArticleFtsListResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    rows: IArticleDataResponse[];
+    page: { size: number; current: number; total: number };
+  };
+}

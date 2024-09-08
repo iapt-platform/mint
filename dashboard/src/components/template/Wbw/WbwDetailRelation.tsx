@@ -111,7 +111,8 @@ const WbwDetailRelationWidget = ({
 
   useEffect(() => {
     let grammar = data.case?.value
-      ?.replace("#", "$")
+      ?.replace("v:ind", "v")
+      .replace("#", "$")
       .replace(":", "$")
       .replaceAll(".", "")
       .split("$");
@@ -122,13 +123,12 @@ const WbwDetailRelationWidget = ({
         grammar = [data.grammar2?.value.replaceAll(".", "")];
       }
     }
-    console.log("relation match grammar", grammar);
     if (typeof grammar === "undefined") {
       return;
     }
 
     //找出符合条件的relation
-    console.debug("relation match data=", data);
+
     const filteredRelation = relations?.filter((value) => {
       let caseMatch = true;
       let spellMatch = true;
@@ -158,12 +158,8 @@ const WbwDetailRelationWidget = ({
         // 使用正则表达式
         spellMatch = regex.test(data.real.value);
       }
-
-      console.debug("relation match", value, caseMatch, spellMatch);
-
       return caseMatch && spellMatch;
     });
-    console.debug("relation match filteredRelation=", filteredRelation);
 
     setCurrRelation(filteredRelation);
     setRelationOptions(filteredRelation);
