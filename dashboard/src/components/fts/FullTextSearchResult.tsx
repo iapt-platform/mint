@@ -1,4 +1,4 @@
-import { List, Skeleton, Space, Tag, Typography } from "antd";
+import { Button, List, Skeleton, Space, Tag, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -8,6 +8,7 @@ import { TContentType } from "../discussion/DiscussionCreate";
 import Marked from "../general/Marked";
 import PaliText from "../template/Wbw/PaliText";
 import "./search.css";
+import AiTranslate from "../ai/AiTranslate";
 
 const { Title, Text } = Typography;
 
@@ -235,6 +236,9 @@ const FullTxtSearchResultWidget = ({
 
                 <div>
                   <Marked className="search_content" text={item.content} />
+                </div>
+                <div>
+                  <AiTranslate origin={item.content} />
                 </div>
               </div>
             )}
