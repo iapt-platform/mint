@@ -10,6 +10,7 @@ import ParaShell from "./ParaShell";
 import Qa from "./Qa";
 import Quote from "./Quote";
 import QuoteLink from "./QuoteLink";
+import Reference from "./Reference";
 import SentEdit from "./SentEdit";
 import SentRead from "./SentRead";
 import Term from "./Term";
@@ -63,6 +64,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Video props={props ? props : ""} />;
     case "grammar":
       return <GrammarTermLookup props={props ? props : ""} />;
+    case "reference":
+      return <Reference props={props ? props : ""} />;
     default:
       return <>未定义模版({tpl})</>;
   }
