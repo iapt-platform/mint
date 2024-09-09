@@ -201,7 +201,7 @@ const ExportModalWidget = ({
               },
               {
                 value: "txt",
-                label: "Text文本",
+                label: "Text纯文本",
               },
               {
                 value: "tex",
