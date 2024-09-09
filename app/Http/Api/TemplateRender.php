@@ -11,6 +11,7 @@ use App\Models\PaliText;
 use App\Models\Channel;
 use App\Models\PageNumber;
 use App\Models\Discussion;
+use App\Models\BookTitle as BookSeries;
 
 use App\Http\Controllers\CorpusController;
 
@@ -136,6 +137,9 @@ class TemplateRender{
                 break;
             case 'g':
                 $result = $this->render_grammar_lookup();
+                break;
+            case 'ref':
+                $result = $this->render_ref();
                 break;
             default:
                 # code...
@@ -293,7 +297,6 @@ class TemplateRender{
 
         $props = $this->getTermProps($word,'');
 
-        //$key = "/term/{$channelId}/{$word}";
         $output = $props['word'];
         switch ($this->format) {
             case 'react':
@@ -410,14 +413,15 @@ class TemplateRender{
             $innerString = $props["trigger"];
         }
         if($this->format==='unity'){
-            $props["note"] = MdRender::render($props["note"],
-                                $this->channel_id,
-                                null,
-                                'read',
-                                'translation',
-                                'markdown',
-                                'unity'
-                                );
+            $props["note"] = MdRender::render(
+                $props["note"],
+                $this->channel_id,
+                null,
+                'read',
+                'translation',
+                'markdown',
+                'unity'
+                );
         }
         $output = $note;
         switch ($this->format) {
@@ -924,6 +928,14 @@ class TemplateRender{
             $tpl = "sentedit";
         }
 
+        //输出引用
+        $arrSid = explode('-',$sid);
+        $bookPara = array_slice($arrSid,0,2);
+        if(!isset($GLOBALS['ref_sent'])){
+            $GLOBALS['ref_sent'] = array();
+        }
+        $GLOBALS['ref_sent'][] = $bookPara;
+
         switch ($this->format) {
             case 'react':
                 $output = [
@@ -1020,9 +1032,20 @@ class TemplateRender{
                 if($text === 'both' || $text === 'translation'){
                     if($this->options['translation']  === true ||
                        $this->options['translation']  === 'true'){
-                        if(isset($props['translation']) && is_array($props['translation'])){
+                        if(isset($props['translation']) &&
+                            is_array($props['translation']) &&
+                            count($props['translation'])>0){
                             foreach ($props['translation'] as $key => $value) {
                                 $output .= trim($value['html']);
+                            }
+                        }else{
+                            if($text === 'translation'){
+                                //无译文用原文代替
+                                if(isset($props['origin']) && is_array($props['origin'])){
+                                    foreach ($props['origin'] as $key => $value) {
+                                        $output .= trim($value['html']);
+                                    }
+                                }
                             }
                         }
                     }
@@ -1175,6 +1198,81 @@ class TemplateRender{
                 break;
             default:
                 $output = $props['title'];
+                break;
+        }
+        return $output;
+    }
+
+    //论文后面的参考资料
+    private  function render_ref(){
+        $references = array();
+        $counter = 0;
+
+        if(isset($GLOBALS['ref_sent'])){
+            $hasBooks = array();
+            $book_titles = BookSeries::select(['book','paragraph','title','sn'])
+                                ->orderBy('sn','DESC')->get();
+            $bTitles = array();
+            foreach ($book_titles as $key => $book) {
+                $bTitles[] = [
+                    'book'=>$book->book,
+                    'paragraph'=>$book->paragraph,
+                    'title'=>$book->title
+                ];
+            }
+            foreach ($GLOBALS['ref_sent'] as $key => $ref) {
+                $books = array_filter($bTitles,function($value) use($ref){
+                    return $value['book'] === (int)$ref[0];
+                });
+                if(count($books)>0){
+                    foreach ($books as $key => $book) {
+                        if($book['paragraph'] < (int)$ref[1]){
+                            if(!isset($hasBooks[$book['title']])){
+                                $hasBooks[$book['title']] = 1;
+                                $counter++;
+                                $references[] = [
+                                    'sn'=>$counter,
+                                    'title'=>$book['title'],
+                                    'copyright'=>'CSCD V4 VRI 2008'
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $props = [
+                    "pali" => $references,
+                ];
+
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'html'=>'',
+                    'tag'=>'div',
+                    'tpl'=>'reference',
+                    ];
+                break;
+            case 'unity':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'tpl'=>'reference',
+                    ];
+                break;
+            case 'markdown':
+                $output = '';
+                foreach ($references as $key => $reference) {
+                    $output .= '[' . $reference['sn'] . '] **' . ucfirst($reference['title']) . '** ';
+                    $output .= $reference['copyright']. "\n\n";
+                }
+                break;
+            default:
+                $output = '';
+                foreach ($references as $key => $reference) {
+                    $output .= '[' . $reference['sn'] . '] ' . ucfirst($reference['title']) . ' ';
+                    $output .= $reference['copyright']. "\n";
+                }
                 break;
         }
         return $output;
