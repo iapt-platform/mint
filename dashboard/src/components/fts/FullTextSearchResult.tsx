@@ -238,7 +238,10 @@ const FullTxtSearchResultWidget = ({
                   <Marked className="search_content" text={item.content} />
                 </div>
                 <div>
-                  <AiTranslate origin={item.content} />
+                  <AiTranslate
+                    paragraph={`${item.book}-${item.paragraph}`}
+                    trigger
+                  />
                 </div>
               </div>
             )}

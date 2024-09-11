@@ -94,6 +94,7 @@ const items = {
   "buttons.set.display.mode": "显示模式",
   "buttons.manage": "管理",
   "buttons.delete.wbw.sentence": "删除整句逐词解析",
+  "buttons.ai.translate": "AI 翻译",
 };
 
 export default items;

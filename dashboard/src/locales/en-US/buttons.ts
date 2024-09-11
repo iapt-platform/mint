@@ -94,6 +94,7 @@ const items = {
   "buttons.set.display.mode": "Display Mode",
   "buttons.manage": "Manage",
   "buttons.delete.wbw.sentence": "Delete Wbw",
+  "buttons.ai.translate": "AI Translate",
 };
 
 export default items;
