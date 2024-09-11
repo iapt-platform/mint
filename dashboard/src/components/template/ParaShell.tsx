@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "../../hooks";
 import { currFocus } from "../../reducers/focus";
 import { ParaHandleCtl } from "./ParaHandle";
+import AiTranslate from "../ai/AiTranslate";
 
 interface IWidgetParaShellCtl {
   book: number;
@@ -21,6 +22,7 @@ const ParaShellCtl = ({
 }: IWidgetParaShellCtl) => {
   const focus = useAppSelector(currFocus);
   const [isFocus, setIsFocus] = useState(false);
+  const [aiTranslateParaId, setAiTranslateParaId] = useState<string>();
   useEffect(() => {
     if (focus) {
       if (focus.focus?.type === "para") {
@@ -71,7 +73,11 @@ const ParaShellCtl = ({
           mode={mode}
           channels={channels}
           sentences={sentences}
+          onTranslate={() => setAiTranslateParaId(`${book}-${para}`)}
         />
+      </div>
+      <div>
+        <AiTranslate autoLoad paragraph={aiTranslateParaId} />
       </div>
       {children}
     </div>

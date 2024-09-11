@@ -13,6 +13,7 @@ interface IWidgetParaHandleCtl {
   mode?: string;
   channels?: string[];
   sentences: string[];
+  onTranslate?: Function;
 }
 export const ParaHandleCtl = ({
   book,
@@ -20,6 +21,7 @@ export const ParaHandleCtl = ({
   mode = "read",
   channels,
   sentences,
+  onTranslate,
 }: IWidgetParaHandleCtl) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -36,6 +38,12 @@ export const ParaHandleCtl = ({
       key: "solo-in-tab",
       label: intl.formatMessage({
         id: "labels.curr.paragraph.open",
+      }),
+    },
+    {
+      key: "ai-translate",
+      label: intl.formatMessage({
+        id: "buttons.ai.translate",
       }),
     },
     {
@@ -139,6 +147,11 @@ export const ParaHandleCtl = ({
         break;
       case "mode-translate":
         store.dispatch(modeChange({ mode: "edit", id: `${book}-${para}` }));
+        break;
+      case "ai-translate":
+        if (typeof onTranslate !== "undefined") {
+          onTranslate();
+        }
         break;
       case "mode-wbw":
         store.dispatch(modeChange({ mode: "wbw", id: `${book}-${para}` }));
