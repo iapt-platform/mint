@@ -615,6 +615,7 @@ class CorpusController extends Controller
                             'para'=>$arrSentId[1],
                             'channels'=>$channelsId,
                             'sentences'=>$sentInPara,
+                            'mode'=>$mode,
                         ])) ;
                     $content[] = "<MdTpl tpl='para-shell' props='{$markProps}' >";
                 }

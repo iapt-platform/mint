@@ -11,6 +11,7 @@ use App\Models\PaliText;
 use App\Models\Channel;
 use App\Models\PageNumber;
 use App\Models\Discussion;
+use App\Models\BookTitle as BookSeries;
 
 use App\Http\Controllers\CorpusController;
 
@@ -29,13 +30,27 @@ class TemplateRender{
     protected $lang = 'en';
     protected $langFamily = 'en';
 
+    protected $options = [
+        'mode' => 'read',
+        'channelType'=>'translation',
+        'contentType'=>"markdown",
+        'format'=>'react',
+        'debug'=>[],
+        'studioId'=>null,
+        'lang'=>'zh-Hans',
+        'footnote'=>false,
+        'paragraph'=>false,
+        'origin'=>true,
+        'translation'=>true,
+        ];
+
     /**
      * Create a new command instance.
      * string $mode  'read' | 'edit'
      * string $format  'react' | 'text' | 'tex' | 'unity'
      * @return void
      */
-    public function __construct($param, $channelInfo, $mode,$format='react',$studioId,$debug=[],$lang='zh-Hans')
+    public function __construct($param, $channelInfo, $mode,$format='react',$studioId='',$debug=[],$lang='zh-Hans')
     {
         $this->param = $param;
         foreach ($channelInfo as $value) {
@@ -57,6 +72,11 @@ class TemplateRender{
         if(!empty($lang)){
             $this->lang = $lang;
             $this->langFamily = explode('-',$lang)[0];
+        }
+    }
+    public function options($options=[]){
+        foreach ($options as $key => $value) {
+            $this->options[$key] = $value;
         }
     }
     public function glossaryKey(){
@@ -117,6 +137,9 @@ class TemplateRender{
                 break;
             case 'g':
                 $result = $this->render_grammar_lookup();
+                break;
+            case 'ref':
+                $result = $this->render_ref();
                 break;
             default:
                 # code...
@@ -253,6 +276,10 @@ class TemplateRender{
             $output["id"] = $tplParam->guid;
             $output["meaning"] = $tplParam->meaning;
             $output["channel"] = $tplParam->channal;
+            if(!empty($tplParam->note)){
+                $mdRender = new MdRender(['format'=>$this->format]);
+                $output['note'] = $mdRender->convert($tplParam->note,$this->channel_id);
+            }
             if(isset($isCommunity)){
                 $output["isCommunity"] = true;
             }
@@ -270,7 +297,6 @@ class TemplateRender{
 
         $props = $this->getTermProps($word,'');
 
-        //$key = "/term/{$channelId}/{$word}";
         $output = $props['word'];
         switch ($this->format) {
             case 'react':
@@ -337,6 +363,35 @@ class TemplateRender{
                     $output = $props["word"];
                 }
                 break;
+            case 'markdown':
+                if(isset($props["meaning"])){
+                    $key = 'term-'.$props["word"];
+                    if(isset($GLOBALS[$key])){
+                        $output = $props["meaning"];
+                    }else{
+                        $GLOBALS[$key] = 1;
+                        $output = $props["meaning"].'('.$props["word"].')';
+                    }
+                }else{
+                    $output = $props["word"];
+                }
+                //如果有内容，显示为脚注
+                if(!empty($props["note"])){
+                    if(isset($GLOBALS['note_sn'])){
+                        $GLOBALS['note_sn']++;
+                    }else{
+                        $GLOBALS['note_sn'] = 1;
+                        $GLOBALS['note'] = array();
+                    }
+                    $content = $props["note"];
+                    $output .= '[^'.$GLOBALS['note_sn'].']';
+                    $GLOBALS['note'][] = [
+                        'sn' => $GLOBALS['note_sn'],
+                        'trigger' => '',
+                        'content' => $content,
+                        ];
+                }
+                break;
             default:
                 if(isset($props["meaning"])){
                     $output = $props["meaning"];
@@ -358,14 +413,15 @@ class TemplateRender{
             $innerString = $props["trigger"];
         }
         if($this->format==='unity'){
-            $props["note"] = MdRender::render($props["note"],
-                                $this->channel_id,
-                                null,
-                                'read',
-                                'translation',
-                                'markdown',
-                                'unity'
-                                );
+            $props["note"] = MdRender::render(
+                $props["note"],
+                $this->channel_id,
+                null,
+                'read',
+                'translation',
+                'markdown',
+                'unity'
+                );
         }
         $output = $note;
         switch ($this->format) {
@@ -391,7 +447,7 @@ class TemplateRender{
                     $GLOBALS['note'] = array();
                 }
                 $GLOBALS['note'][] = [
-                        'sn' => 1,
+                        'sn' => $GLOBALS['note_sn'],
                         'trigger' => $trigger,
                         'content' => MdRender::render($props["note"],
                                         $this->channel_id,
@@ -418,6 +474,30 @@ class TemplateRender{
                 break;
             case 'simple':
                 $output = '';
+                break;
+            case 'markdown':
+                if(isset($GLOBALS['note_sn'])){
+                    $GLOBALS['note_sn']++;
+                }else{
+                    $GLOBALS['note_sn'] = 1;
+                    $GLOBALS['note'] = array();
+                }
+                $content = MdRender::render(
+                            $props["note"],
+                            $this->channel_id,
+                            null,
+                            'read',
+                            'translation',
+                            'markdown',
+                            'markdown'
+                        );
+                $output = '[^'.$GLOBALS['note_sn'].']';
+                $GLOBALS['note'][] = [
+                    'sn' => $GLOBALS['note_sn'],
+                    'trigger' => $trigger,
+                    'content' => $content,
+                    ];
+                //$output = '<footnote id="'.$GLOBALS['note_sn'].'">'.$content.'</footnote>';
                 break;
             default:
                 $output = '';
@@ -508,16 +588,19 @@ class TemplateRender{
         $type = $this->get_param($this->param,"type",1);
         $id = $this->get_param($this->param,"id",2);
         $title = $this->get_param($this->param,"title",3);
-        $channel = $this->get_param($this->param,"channel",4,$this->channel_id[0]);
+        $channel = $this->get_param($this->param,"channel",4);
         $style = $this->get_param($this->param,"style",5);
         $book = $this->get_param($this->param,"book",6);
         $paragraphs = $this->get_param($this->param,"paragraphs",7);
+        $anthology = $this->get_param($this->param,"anthology",8);
         $props = [
                     "type" => $type,
                     "id" => $id,
-                    "channel" => $channel,
                     'style' => $style,
                 ];
+        if(!empty($channel)){
+            $props['channel'] = $channel;
+        }
         if(!empty($title)){
             $props['title'] = $title;
         }
@@ -526,6 +609,12 @@ class TemplateRender{
         }
         if(!empty($paragraphs)){
             $props['paragraphs'] = $paragraphs;
+        }
+        if(!empty($anthology)){
+            $props['anthology'] = $anthology;
+        }
+        if(is_array($this->channel_id)){
+            $props['parentChannels'] = $this->channel_id;
         }
         switch ($this->format) {
             case 'react':
@@ -668,10 +757,23 @@ class TemplateRender{
             }
         }else if($title){
             //没有书号用title查询
-            $tmpTitle = explode('။',$title);
-            if(count($tmpTitle)>1){
-                $tmpBookTitle = $tmpTitle[0];
-                $tmpBookPage = $tmpTitle[1];
+            //$tmpTitle = explode('။',$title);
+            for ($i=mb_strlen($title,'UTF-8'); $i > 0 ; $i--) {
+                $mTitle = mb_substr($title,0,$i);
+                $has = array_search($mTitle, array_column(BookTitle::my(), 'title2'));
+                Log::debug('run',['title'=>$mTitle,'has'=>$has]);
+                if($has !== false){
+                    $tmpBookTitle = $mTitle;
+                    $tmpBookPage = mb_substr($title,$i);
+                    $tmpBookPage = $this->mb_trim($tmpBookPage,'၊။');
+                    break;
+                }
+            }
+
+            if(isset($tmpBookTitle)){
+                Log::debug('book title found',['title'=>$tmpBookTitle,'page'=>$tmpBookPage]);
+                //$tmpBookTitle = $tmpTitle[0];
+                //$tmpBookPage = $tmpTitle[1];
                 $tmpBookPage = (int)str_replace(
                                 ['၁','၂','၃','၄','၅','၆','၇','၈','၉','၀'],
                                 ['1','2','3','4','5','6','7','8','9','0'],
@@ -696,6 +798,7 @@ class TemplateRender{
                 }
             }
         }else{
+            Log::debug('book title not found');
             $props['found'] = false;
         }
 
@@ -798,8 +901,10 @@ class TemplateRender{
     }
     private  function render_sent(){
 
-        $sid = $this->get_param($this->param,"sid",1);
+        $sid = $this->get_param($this->param,"id",1);
         $channel = $this->get_param($this->param,"channel",2);
+        $text = $this->get_param($this->param,"text",2,'both');
+
         if(!empty($channel)){
             $channels = explode(',',$channel);
         }else{
@@ -823,6 +928,14 @@ class TemplateRender{
             $tpl = "sentedit";
         }
 
+        //输出引用
+        $arrSid = explode('-',$sid);
+        $bookPara = array_slice($arrSid,0,2);
+        if(!isset($GLOBALS['ref_sent'])){
+            $GLOBALS['ref_sent'] = array();
+        }
+        $GLOBALS['ref_sent'][] = $bookPara;
+
         switch ($this->format) {
             case 'react':
                 $output = [
@@ -840,6 +953,11 @@ class TemplateRender{
                 break;
             case 'text':
                 $output = '';
+                if(isset($props['origin']) && is_array($props['origin'])){
+                    foreach ($props['origin'] as $key => $value) {
+                        $output .= $value['html'];
+                    }
+                }
                 if(isset($props['translation']) && is_array($props['translation'])){
                     foreach ($props['translation'] as $key => $value) {
                         $output .= $value['html'];
@@ -848,11 +966,23 @@ class TemplateRender{
                 break;
             case 'html':
                 $output = '';
-                if(isset($props['translation']) && is_array($props['translation'])){
-                    foreach ($props['translation'] as $key => $value) {
-                        $output .= '<span class="sentence">'.$value['html'].'</span>';
+                $output .= '<span class="sentence">';
+                if($text === 'both' || $text === 'origin'){
+                    if(isset($props['origin']) && is_array($props['origin'])){
+                        foreach ($props['origin'] as $key => $value) {
+                            $output .= '<span class="origin">'.$value['html'].'</span>';
+                        }
                     }
                 }
+                if($text === 'both' || $text === 'translation'){
+                    if(isset($props['translation']) && is_array($props['translation'])){
+                        foreach ($props['translation'] as $key => $value) {
+                            $output .= '<span class="translation">'.$value['html'].'</span>';
+                        }
+                    }
+                }
+
+                $output .= '</span>';
                 break;
             case 'tex':
                 $output = '';
@@ -864,23 +994,59 @@ class TemplateRender{
                 break;
             case 'simple':
                 $output = '';
-                if(isset($props['translation']) &&
-                   is_array($props['translation']) &&
-                   count($props['translation']) > 0
-                   ){
-                    $sentences = $props['translation'];
-                    foreach ($sentences as $key => $value) {
-                        $output .= $value['html'];
+                if($text === 'both' || $text === 'origin'){
+                    if(empty($output)){
+                        if(isset($props['origin']) &&
+                                is_array($props['origin']) &&
+                                count($props['origin']) > 0
+                                ){
+                            foreach ($props['origin'] as $key => $value) {
+                                $output .= trim($value['html']);
+                            }
+                        }
                     }
                 }
-                if(empty($output)){
-                    if(isset($props['origin']) &&
-                            is_array($props['origin']) &&
-                            count($props['origin']) > 0
-                            ){
-                        $sentences = $props['origin'];
-                        foreach ($sentences as $key => $value) {
-                            $output .= $value['html'];
+                if($text === 'both' || $text === 'translation'){
+                    if(isset($props['translation']) &&
+                    is_array($props['translation']) &&
+                    count($props['translation']) > 0
+                    ){
+                        foreach ($props['translation'] as $key => $value) {
+                            $output .= trim($value['html']);
+                        }
+                    }
+                }
+                break;
+            case 'markdown':
+                $output = '';
+                if($text === 'both' || $text === 'origin'){
+                    if($this->options['origin'] === true ||
+                       $this->options['origin'] === 'true'){
+                        if(isset($props['origin']) && is_array($props['origin'])){
+                            foreach ($props['origin'] as $key => $value) {
+                                $output .= trim($value['html']);
+                            }
+                        }
+                    }
+                }
+                if($text === 'both' || $text === 'translation'){
+                    if($this->options['translation']  === true ||
+                       $this->options['translation']  === 'true'){
+                        if(isset($props['translation']) &&
+                            is_array($props['translation']) &&
+                            count($props['translation'])>0){
+                            foreach ($props['translation'] as $key => $value) {
+                                $output .= trim($value['html']);
+                            }
+                        }else{
+                            if($text === 'translation'){
+                                //无译文用原文代替
+                                if(isset($props['origin']) && is_array($props['origin'])){
+                                    foreach ($props['origin'] as $key => $value) {
+                                        $output .= trim($value['html']);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -1037,6 +1203,81 @@ class TemplateRender{
         return $output;
     }
 
+    //论文后面的参考资料
+    private  function render_ref(){
+        $references = array();
+        $counter = 0;
+
+        if(isset($GLOBALS['ref_sent'])){
+            $hasBooks = array();
+            $book_titles = BookSeries::select(['book','paragraph','title','sn'])
+                                ->orderBy('sn','DESC')->get();
+            $bTitles = array();
+            foreach ($book_titles as $key => $book) {
+                $bTitles[] = [
+                    'book'=>$book->book,
+                    'paragraph'=>$book->paragraph,
+                    'title'=>$book->title
+                ];
+            }
+            foreach ($GLOBALS['ref_sent'] as $key => $ref) {
+                $books = array_filter($bTitles,function($value) use($ref){
+                    return $value['book'] === (int)$ref[0];
+                });
+                if(count($books)>0){
+                    foreach ($books as $key => $book) {
+                        if($book['paragraph'] < (int)$ref[1]){
+                            if(!isset($hasBooks[$book['title']])){
+                                $hasBooks[$book['title']] = 1;
+                                $counter++;
+                                $references[] = [
+                                    'sn'=>$counter,
+                                    'title'=>$book['title'],
+                                    'copyright'=>'CSCD V4 VRI 2008'
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $props = [
+                    "pali" => $references,
+                ];
+
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'html'=>'',
+                    'tag'=>'div',
+                    'tpl'=>'reference',
+                    ];
+                break;
+            case 'unity':
+                $output = [
+                    'props'=>base64_encode(\json_encode($props)),
+                    'tpl'=>'reference',
+                    ];
+                break;
+            case 'markdown':
+                $output = '';
+                foreach ($references as $key => $reference) {
+                    $output .= '[' . $reference['sn'] . '] **' . ucfirst($reference['title']) . '** ';
+                    $output .= $reference['copyright']. "\n\n";
+                }
+                break;
+            default:
+                $output = '';
+                foreach ($references as $key => $reference) {
+                    $output .= '[' . $reference['sn'] . '] ' . ucfirst($reference['title']) . ' ';
+                    $output .= $reference['copyright']. "\n";
+                }
+                break;
+        }
+        return $output;
+    }
+
     private  function get_param(array $param,string $name,int $id,string $default=''){
         if(isset($param[$name])){
             return trim($param[$name]);
@@ -1045,5 +1286,20 @@ class TemplateRender{
         }else{
             return $default;
         }
+    }
+
+    private function mb_trim($str,string $character_mask = ' ', $charset = "UTF-8") {
+        $start = 0;
+        $end = mb_strlen($str, $charset) - 1;
+        $chars = preg_split('//u', $character_mask, -1, PREG_SPLIT_NO_EMPTY);
+        while ($start <= $end && in_array(mb_substr($str, $start, 1, $charset),$chars)) {
+            $start++;
+        }
+
+        while ($end >= $start && in_array(mb_substr($str, $end, 1, $charset),$chars) ) {
+            $end--;
+        }
+
+        return mb_substr($str, $start, $end - $start + 1, $charset);
     }
 }

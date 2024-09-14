@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\App;
 
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+
 use App\Tools\RedisClusters;
 use App\Tools\Export;
 
@@ -85,15 +88,16 @@ class ExportDownload
 
         $tex = array();
 
-        $tplFile = resource_path("mustache/".$type.'/'.$this->format."/main.".$this->format);
+        $_format = 'md';
+        $tplFile = resource_path("mustache/".$type.'/'.$_format."/main.".$_format);
         $tpl = file_get_contents($tplFile);
         $texContent = $m->render($tpl,$bookMeta);
         $tex[] = [
-            'name' => 'main.'.$this->format,
+            'name' => 'main.'.$_format,
             'content' => $texContent
             ];
         foreach ($sections as $key => $section) {
-            $tplFile = resource_path("mustache/".$type.'/'.$this->format."/section.".$this->format);
+            $tplFile = resource_path("mustache/".$type.'/'.$_format."/section.".$_format);
             $tpl = file_get_contents($tplFile);
             $texContent = $m->render($tpl,$section['body']);
             $tex[] = [
@@ -104,7 +108,7 @@ class ExportDownload
 
         Log::debug('footnote start');
         //footnote
-        $tplFile = resource_path("mustache/".$this->format."/footnote.".$this->format);
+        $tplFile = resource_path("mustache/".$_format."/footnote.".$_format);
         if(isset($GLOBALS['note']) &&
             is_array($GLOBALS['note']) &&
             count($GLOBALS['note'])>0 &&
@@ -112,14 +116,11 @@ class ExportDownload
             $tpl = file_get_contents($tplFile);
             $texContent = $m->render($tpl,['footnote'=>$GLOBALS['note']]);
             $tex[] = [
-                'name'=>'footnote.'.$this->format,
+                'name'=>'footnote.'.$_format,
                 'content'=>$texContent
                 ];
         }
         Log::debug('footnote finished');
-
-
-
 
         $this->setStatus(0.95,'export content done. tex count='.count($tex));
         Log::debug('export content done.',['tex_count'=>count($tex)]);
@@ -136,7 +137,7 @@ class ExportDownload
                     $this->error($data['code'].'-'.$data['message']);
                 }
                 break;
-            case 'html':
+            default:
                 $file = array();
                 foreach ($tex as $key => $section) {
                     $file[] = $section['content'];
@@ -145,11 +146,36 @@ class ExportDownload
                 break;
         }
 
-        if($this->debug){
-            $dir = "export/{$type}/".$this->format."/".$this->zipFilename."/";
-            $filename = $dir.$outputFilename.'.html';
-            Log::debug('save',['filename'=>$filename]);
-            Storage::disk('local')->put($filename, $fileDate);
+
+        $dir = "tmp/export/{$type}/".$this->format."/";
+        $mdFilename = $dir.$outputFilename.'.md';
+        Storage::disk('local')->put($mdFilename, $fileDate);
+        Log::debug('markdown saved',['filename'=>$mdFilename]);
+        if($this->format === 'markdown'){
+            $filename = $mdFilename;
+        }else{
+            $filename = $dir.$outputFilename.'.'.$this->format;
+
+            Log::debug('tmp saved',['filename'=>$filename]);
+            $absoluteMdPath = Storage::disk('local')->path($mdFilename);
+            $absoluteOutputPath = Storage::disk('local')->path($filename);
+            //$command = "pandoc pandoc1.md --reference-doc tpl.docx -o pandoc1.docx";
+            $command = ['pandoc', $absoluteMdPath, '-o', $absoluteOutputPath];
+            if($this->format === 'docx'){
+                 $tplFile = resource_path("template/docx/paper.docx");
+                 array_push($command,'--reference-doc');
+                 array_push($command,$tplFile);
+            }
+            Log::debug('pandoc start',['command'=>$command,'format'=>$this->format]);
+            $process = new Process($command);
+            $process->run();
+
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
+
+            echo $process->getOutput();
+            Log::debug('pandoc end',['command'=>$command]);
         }
 
         $zipDir = storage_path('app/export/zip');
@@ -166,8 +192,8 @@ class ExportDownload
         Log::debug('export chapter start zip  file='.$zipFile);
         //zip压缩包里面的文件名
         $realFilename = $this->realFilename.".".$this->format;
-
-        $zipOk = \App\Tools\Tools::zip($zipFile,[$realFilename=>$fileDate]);
+        $fileContent = Storage::disk('local')->get($filename);
+        $zipOk = \App\Tools\Tools::zip($zipFile,[$realFilename=>$fileContent]);
         if(!$zipOk){
             Log::error('export chapter zip fail zip file='.$zipFile);
             $this->setStatus(0.99,'export chapter zip fail');
@@ -196,7 +222,7 @@ class ExportDownload
         }
         $this->downloadUrl = $s3Link;
         $this->setStatus(1,'export chapter done');
-        Log::debug('export chapter done, upload filename='.$tmpFile);
+        Log::debug('export chapter done, upload',['filename'=>$tmpFile,'url'=>$s3Link] );
         unlink($zipFile);
         return true;
     }

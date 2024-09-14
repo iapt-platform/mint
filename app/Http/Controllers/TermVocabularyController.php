@@ -17,7 +17,7 @@ class TermVocabularyController extends Controller
     public function index(Request $request)
     {
         //
-        $table = DhammaTerm::select(['guid','word','tag','meaning']);
+        $table = DhammaTerm::select(['guid','word','tag','meaning','other_meaning']);
         switch ($request->get('view')) {
             case "grammar":
                 $localTerm = ChannelApi::getSysChannel(

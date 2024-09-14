@@ -188,7 +188,8 @@ ON "sentence_translation" (
 -- ----------------------------
 CREATE UNIQUE INDEX "name"
 ON "tag" (
-  "name" ASC
+  "name",
+  "owner_id"
 );
 
 -- ----------------------------

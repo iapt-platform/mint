@@ -40,21 +40,25 @@ class UpgradeWeekly extends Command
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
+        $currTime = time();
         #译文进度
         $this->call('upgrade:progress');
         $time = time()-$currTime;
-        $message .= "progress:{$time}; ";
+        $message = "progress time:{$time}; ";
+        $this->info($message);
         $currTime = time();
 
         $this->call('upgrade:progress.chapter');
         $time = time()-$currTime;
-        $message .= "progress.chapter:{$time}; ";
+        $message = "progress.chapter time:{$time}; ";
+        $this->info($message);
         $currTime = time();
 
         # 逐词译数据库分析
         $this->call('upgrade:wbw.analyses');
         $time = time()-$currTime;
-        $message .= "wbw.analyses:{$time}; ";
+        $message = "wbw.analyses:{$time}; ";
+        $this->info($message);
 
         # 段落更新图
         $this->call('upgrade:chapter.dynamic');

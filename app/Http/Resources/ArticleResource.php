@@ -66,9 +66,10 @@ class ArticleResource extends JsonResource
         //渲染简化版标题
         $channels = [];
         if($request->has('channel')){
+            //有channel
             $channels = explode('_',$request->get('channel')) ;
         }else if(isset($anthology) && $anthology && !empty($anthology->default_channel)){
-            //使用文集channel
+            //没有channel,使用文集channel
             $channels[] = $anthology->default_channel;
         }
         $mdRender = new MdRender(['format'=>'simple']);
@@ -194,9 +195,15 @@ class ArticleResource extends JsonResource
 
             $mode = $request->get('mode','read');
             $format = $request->get('format','react');
-            $data["html"] = MdRender::render($this->content,
-                                            $channels,$query_id,$mode,
-                                            'translation','markdown',$format);
+
+            $htmlRender = new MdRender([
+                'mode' => $mode,
+                'format'=> $format,
+                'footnote' => true,
+                'origin' => $request->get('origin',true),
+            ]);
+            //Log::debug('article render',['content'=>$this->content,'format'=>$format,'html'=>$html]);
+            $data["html"] = $htmlRender->convert($this->content,$channels);
             if(empty($this->summary)){
                 $data["_summary"] = MdRender::render($this->content,
                                                     $channels,$query_id,$mode,

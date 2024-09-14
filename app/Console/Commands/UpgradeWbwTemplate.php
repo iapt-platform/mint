@@ -13,10 +13,10 @@ class UpgradeWbwTemplate extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan upgrade:wbw.template 107
+     * php artisan upgrade:wbw.template  129 509
      * @var string
      */
-    protected $signature = 'upgrade:wbw.template {book?} {para?}';
+    protected $signature = 'upgrade:wbw.template {book?} {para?} {--debug=false}';
 
     /**
      * The console command description.
@@ -59,6 +59,7 @@ class UpgradeWbwTemplate extends Command
             $this->error('no channel');
             return 1;
         }
+        $this->info('channel id='.$channelId);
 		$pali = $pali->select('book','paragraph','word_begin','word_end')->cursor();
 		foreach ($pali as $value) {
 			# code...
@@ -70,6 +71,10 @@ class UpgradeWbwTemplate extends Command
 								->orderBy('wid','asc')
 								->get();
 			$sent = '';
+            $sentId = $value->book.'-'.$value->paragraph.'-'.$value->word_begin.'-'.$value->word_end;
+            if(count($words)===0){
+                $this->error('no word data in'.$sentId);
+            }
 			foreach ($words as $wbw_word) {
                 # code...
                 $type = $wbw_word->type=='?'? '':$wbw_word->type;
@@ -96,7 +101,9 @@ class UpgradeWbwTemplate extends Command
 
             }
             $sent = \json_encode($wbwContent,JSON_UNESCAPED_UNICODE);
-
+            if($this->option('debug')==='true'){
+                $this->info($sentId.'='.$sent);
+            }
 			$newRow = Sentence::firstOrNew(
 				[
 					"book_id" => $value->book,
