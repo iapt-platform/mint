@@ -6,22 +6,97 @@ h5,
 h6 {
   font-weight: 700;
 }
+
+/*重置文章容器的计数器*/
+.pcd_article {
+  counter-reset: h1 h2 h3 h4;
+}
+
+/*重置文章导航容器的计数器*/
+.article_anchor {
+  counter-reset: h1 h2 h3 h4 !important;
+}
+
+/*统一文章导航容器的字体*/
+.article_anchor h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+.article_anchor a:has(> h1) {
+  counter-increment: h1;
+  counter-reset: h2;
+}
+
+.paper_zh h1::before {
+  content: counter(h1, trad-chinese-informal) "、";
+}
+.paper_en h1::before {
+  content: counter(h1) ".";
+}
+
+.article_anchor a:has(> h2) {
+  counter-increment: h2;
+  counter-reset: h3;
+}
+.paper_zh h2::before {
+  content: "（" counter(h2, trad-chinese-informal) "）";
+}
+.paper_en h2::before {
+  content: counter(h1) "." counter(h2);
+}
+
+.article_anchor a:has(> h3) {
+  counter-increment: h3;
+  counter-reset: h4;
+}
+.paper_zh h3::before {
+  content: counter(h3) ".";
+}
+.paper_en h3::before {
+  content: counter(h1) "." counter(h2) "." counter(h3);
+}
+
+.article_anchor a:has(> h4) {
+  counter-increment: h4;
+  /*counter-reset: h5;*/
+}
+.paper_zh h4::before {
+  content: "（" counter(h4) "）";
+}
+.paper_en h4::before {
+  content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4);
+}
+
 .pcd_article h1 {
   margin-top: 1em;
   font-size: 27px !important;
   border-bottom: 1px solid gray;
+  counter-increment: h1;
+  counter-reset: h2;
 }
 .pcd_article h2 {
   margin-top: 1em;
   font-size: 24px !important;
   border-bottom: 1px solid gray;
+  counter-increment: h2;
+  counter-reset: h3;
 }
 .pcd_article h3 {
   margin-top: 0.5em;
   font-size: 22px !important;
+  counter-increment: h3;
+  counter-reset: h4;
 }
 .pcd_article h4 {
   font-size: 20px !important;
+  counter-increment: h4;
+  counter-reset: h5;
 }
 .pcd_article h5 {
   font-size: 18px !important;

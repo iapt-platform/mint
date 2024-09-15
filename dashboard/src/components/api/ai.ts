@@ -16,6 +16,7 @@ export interface AiUsage {
 export interface AiChoice {
   index: number;
   message: AiMessage;
+  logprobs?: string | null; //volcengine
   finish_reason: string;
 }
 
