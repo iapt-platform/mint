@@ -125,7 +125,7 @@ const ArticleViewWidget = ({
         ? html.map((item, id) => {
             return (
               <div key={id}>
-                <MdView className="pcd_article" html={item} />
+                <MdView className="pcd_article paper paper_zh" html={item} />
               </div>
             );
           })
