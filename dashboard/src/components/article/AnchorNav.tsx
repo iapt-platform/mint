@@ -110,18 +110,47 @@ const AnchorNavWidget = ({ open = false, content }: IWidget) => {
     console.log("heading", headingAnchor);
   }, [open]);
 
-  const GetLink = (anchors: IHeadingAnchor[]) => {
+  const GetLink = (anchors: IHeadingAnchor[], level: number) => {
     return anchors.map((it, id) => {
+      let title = <></>;
+      switch (level) {
+        case 1:
+          title = <h1>{it.label}</h1>;
+          break;
+        case 2:
+          title = <h2>{it.label}</h2>;
+          break;
+        case 3:
+          title = <h3>{it.label}</h3>;
+          break;
+        case 3:
+          title = <h3>{it.label}</h3>;
+          break;
+        case 4:
+          title = <h4>{it.label}</h4>;
+          break;
+        case 5:
+          title = <h5>{it.label}</h5>;
+          break;
+        case 6:
+          title = <h6>{it.label}</h6>;
+          break;
+        default:
+          title = <>{it.label}</>;
+          break;
+      }
       return (
-        <Link key={id} href={it.key} title={it.label}>
-          {it.children ? GetLink(it.children) : undefined}
+        <Link key={id} href={it.key} title={title}>
+          {it.children ? GetLink(it.children, level + 1) : undefined}
         </Link>
       );
     });
   };
 
   return open && heading ? (
-    <Anchor offsetTop={50}>{GetLink(heading)}</Anchor>
+    <div className="article_anchor paper_zh">
+      <Anchor offsetTop={50}>{GetLink(heading, 1)}</Anchor>
+    </div>
   ) : (
     <></>
   );
