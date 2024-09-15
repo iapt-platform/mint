@@ -28,9 +28,9 @@ h6 {
   font-weight: 500 !important;
 }
 
-.article_anchor a:has(> h1) {
-  counter-increment: h1;
+.article_anchor div:has(> a > h1) {
   counter-reset: h2;
+  counter-increment: h1;
 }
 
 .paper_zh h1::before {
@@ -40,9 +40,9 @@ h6 {
   content: counter(h1) ".";
 }
 
-.article_anchor a:has(> h2) {
-  counter-increment: h2;
+.article_anchor div:has(> a > h2) {
   counter-reset: h3;
+  counter-increment: h2;
 }
 .paper_zh h2::before {
   content: "（" counter(h2, trad-chinese-informal) "）";
@@ -51,7 +51,7 @@ h6 {
   content: counter(h1) "." counter(h2);
 }
 
-.article_anchor a:has(> h3) {
+.article_anchor div:has(> a > h3) {
   counter-increment: h3;
   counter-reset: h4;
 }
@@ -62,7 +62,7 @@ h6 {
   content: counter(h1) "." counter(h2) "." counter(h3);
 }
 
-.article_anchor a:has(> h4) {
+.article_anchor div:has(> a > h4) {
   counter-increment: h4;
   /*counter-reset: h5;*/
 }
@@ -78,20 +78,28 @@ h6 {
   font-size: 27px !important;
   border-bottom: 1px solid gray;
   counter-increment: h1;
-  counter-reset: h2;
+}
+.pcd_article h1 + h2 {
+  counter-set: h2 1;
 }
 .pcd_article h2 {
   margin-top: 1em;
   font-size: 24px !important;
   border-bottom: 1px solid gray;
-  counter-increment: h2;
   counter-reset: h3;
+  counter-increment: h2;
+}
+.pcd_article h2 + h3 {
+  counter-set: h3 1;
 }
 .pcd_article h3 {
   margin-top: 0.5em;
   font-size: 22px !important;
   counter-increment: h3;
   counter-reset: h4;
+}
+.pcd_article h3 + h4 {
+  counter-set: h4 1;
 }
 .pcd_article h4 {
   font-size: 20px !important;
