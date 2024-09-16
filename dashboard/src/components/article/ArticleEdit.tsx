@@ -270,6 +270,7 @@ const ArticleEditWidget = ({
           }
         >
           <MDEditor
+            className="pcd_md_editor paper_zh"
             onChange={(value) => setContent(value)}
             height={450}
             minHeight={200}
