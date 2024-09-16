@@ -31,13 +31,21 @@ class AiTranslateController extends Controller
         return $this->fetch(strip_tags($request->get('origin')));
     }
 
-    private function fetch($origin){
-        $url = 'https://api.moonshot.cn/v1/chat/completions';
+    private function fetch($origin,$engin='kimi',$prompt_pre='',$prompt_suf='请翻译上述巴利文。'){
+        $api = config('mint.ai.accounts');
+        $selected = array_filter($api,function($value) use($engin){
+            return $value['name']===$engin;
+        });
+        if(!is_array($selected) || count($selected)===0){
+            return $this->error('no engin name',200,200);
+        }
+
+        $url = $selected[0]['api_url'];
         $param = [
-                "model" => "moonshot-v1-8k",
+                "model" => $selected[0]['model'],
                 "messages" => [
-                    ["role" => "system","content" => "你是 Kimi，由 Moonshot AI 提供的人工智能助手，你更擅长中文和英文的对话。你会为用户提供安全，有帮助，准确的回答。同时，你会拒绝一切涉及恐怖主义，种族歧视，黄色暴力等问题的回答。Moonshot AI 为专有名词，不可翻译成其他语言。"],
-                    ["role" => "user","content" => $origin."\n请翻译上述巴利文。"],
+                    ["role" => "system","content" => "你是翻译人工智能助手，bhikkhu 为专有名词，不可翻译成其他语言。"],
+                    ["role" => "user","content" => "{$prompt_pre}{$origin}\n{$prompt_suf}"],
                 ],
                 "temperature" => 0.3,
         ];
@@ -58,7 +66,7 @@ class AiTranslateController extends Controller
      * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
         //
         $para = explode('-',$id);
@@ -67,7 +75,7 @@ class AiTranslateController extends Controller
                         ->where('paragraph',$para[1])
                         ->value('text');
             if(!empty($content)){
-                return $this->fetch($content);
+                return $this->fetch($content,$request->get('engin',config('mint.ai.default')));
             }else{
                 return $this->error('no content',200,200);
             }
