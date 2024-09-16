@@ -11,7 +11,7 @@ const items = {
   "term.fields.meaning2.label": "其他意思",
   "term.fields.meaning2.tooltip": "其他意思将出现在后面的括号里",
   "term.fields.note.label": "注释",
-  "term.general-in-studio": "通用于我的Studio",
+  "term.general-in-studio": "通用于本Studio",
 };
 
 export default items;
