@@ -97,5 +97,25 @@ return [
 	'email' => [
 		'ScheduleEmailOutputTo' => env('SCHEDULE_EMAIL_OUTPUTTO', 'kosalla1987@126.com'),
 		'ScheduleEmailOutputOnFailure' => env('SCHEDULE_EMAIL_OUTPUTONFAILURE', 'kosalla1987@126.com'),
-	]
+    ],
+
+    'ai' => [
+        'default' => 'kimi',
+        'accounts' => [
+            [
+                'name' => 'kimi',
+                'summary' => 'Moonshot AI 月之暗面',
+                'api_url' => 'https://api.moonshot.cn/v1/chat/completions',
+                'model' => 'moonshot-v1-8k',
+                'token' => 'sk-kwjHIMh3PoWwUwQyKdT3KHvNe8Es19SUiujGrxtH09uDQCui',
+            ],
+            [
+                'name' => 'volcengine',
+                'summary' => '字节跳动AI引擎',
+                'api_url' => 'https://ark.cn-beijing.volces.com/api/v3/chat/completions',
+                'model' => ['Doubao-lite-4k','Doubao-pro-4k'],
+                'token' => '647a23fe-60cd-4c07-b2a4-b11b57109f79',
+            ],
+        ],
+    ]
 ];
