@@ -106,7 +106,7 @@ return [
                 'name' => 'kimi',
                 'summary' => 'Moonshot AI 月之暗面',
                 'api_url' => 'https://api.moonshot.cn/v1/chat/completions',
-                'model' => 'moonshot-v1-8k',
+                'model' => ['moonshot-v1-8k'],
                 'token' => 'sk-kwjHIMh3PoWwUwQyKdT3KHvNe8Es19SUiujGrxtH09uDQCui',
             ],
             [
