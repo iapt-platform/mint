@@ -1,0 +1,13 @@
+bind 0.0.0.0
+port {{ app_redis_port }}
+protected-mode no
+dir /var/lib/redis/node-{{ app_redis_port }}
+logfile /var/log/redis/node-{{ app_redis_port }}.log
+pidfile /run/node-{{ app_redis_port }}.pid
+
+cluster-enabled yes
+cluster-config-file /etc/redis/cluster-{{ app_redis_port }}.conf
+cluster-node-timeout 5000
+
+appendonly yes
+appendfsync everysec

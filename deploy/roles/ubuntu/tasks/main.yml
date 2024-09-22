@@ -1,39 +1,8 @@
-- import_tasks: init.yml
-
 - name: add PPA for Ubuntu Toolchain
   become: true
   ansible.builtin.apt_repository:
     repo: ppa:ubuntu-toolchain-r/test
   when: ansible_distribution == 'Ubuntu'
-
-# https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable
-- name: Add an yarn signing key
-  become: true
-  ansible.builtin.apt_key:
-    url: https://dl.yarnpkg.com/debian/pubkey.gpg
-    state: present
-  when: ansible_distribution == 'Ubuntu'
-
-- name: Add an yarn package repository
-  become: true
-  ansible.builtin.lineinfile:
-    path: /etc/apt/sources.list.d/yarn.list
-    line: "deb https://dl.yarnpkg.com/debian/ stable main"
-    create: true
-  when: ansible_distribution == 'Ubuntu'
-
-- name: Install nodejs
-  become: true
-  community.general.snap:
-    name: node
-    classic: true
-
-- name: Update system
-  become: true
-  apt:
-    upgrade: yes
-    update_cache: yes
-    cache_valid_time: 3600
 
 - name: Install dependicy packages
   become: true
@@ -42,8 +11,6 @@
       - apt-transport-https
       - software-properties-common
       - gnupg
-      - openssh-server
-      - openssh-client
       - sshpass
       - wpasupplicant
       - rsync
@@ -51,12 +18,14 @@
       - sysstat
       - libtool
       - ethtool
+      - nethogs
       - dnsutils
       - dnsmasq
       - uuid-runtime
       - lshw
       - tcpdump
       - lm-sensors
+      # - hddtemp NOT work on jammy
       - dmidecode
       - net-tools
       - iputils-arping
@@ -79,70 +48,75 @@
       - curl
       - zip
       - unzip
-      - nginx
-      - libnginx-mod-http-upstream-fair
-      - certbot
-      - python3-certbot-nginx
-      - openvpn
-      - snmpd
-      - mutt
       - systemd-cron
+      - systemd-timesyncd
+      - systemd-journal-remote
       - screen
       - tmux
       - hugo
-      - yarn
-      - python3
-      - python3-pip
-      - python3-distutils
+      - python3-full
       - python3-dev
+      - certbot
+      - python3-certbot-nginx
+      - build-essential
+      - pkg-config
+      - cmake
       - libssl-dev
       - libpq-dev
       - libmysqlclient-dev
-      - libevent-dev
+      - libsqlite3-dev
+      - libudev-dev
       - crun
       - podman
       - buildah
       - fuse-overlayfs
 
-- name: Install dependicy packages(>bionic)
-  become: true
-  apt:
-    pkg:
-      - systemd-timesyncd
-  # ansible_facts['distribution'] == "Ubuntu"
-  when: ansible_facts['distribution_major_version'] | int >= 20
-
-- import_tasks: locales.yml
+- include_tasks: locales.yml
 
 - name: Set default editor to vim
   become: true
   shell: update-alternatives --set editor /usr/bin/vim.basic
 
-- name: Set timezone
-  become: true
-  shell: timedatectl set-timezone UTC
-
 - name: Set git rebase mode
   become: true
   shell: git config --global pull.rebase false
 
-- import_tasks: zsh.yml
+- name: setup git to use http v1.1
+  shell: git config --global http.version HTTP/1.1
 
 # ---------------------------------------------------
 
-- name: enable nginx service
-  become: true
-  ansible.builtin.systemd:
-    name: nginx
-    enabled: yes
-    masked: no
+- name: check if friendlyelec
+  ansible.builtin.stat:
+    path: /etc/friendlyelec-release
+  register: app_os_friendlyelec
 
-- name: enable cron service
-  become: true
-  ansible.builtin.systemd:
-    name: cron
-    enabled: yes
-    masked: no
+- include_tasks: friendly-core.yml
+  when: app_os_friendlyelec.stat.islnk is defined and app_os_friendlyelec.stat.isreg
+
+- name: check if armbian
+  ansible.builtin.stat:
+    path: /etc/armbian-release
+  register: app_os_armbian
+
+- include_tasks: armbian.yml
+  when: app_os_armbian.stat.islnk is defined and app_os_armbian.stat.isreg
+
+- include_tasks: raspbian.yml
+  when: ansible_distribution == 'Raspbian'
+
+- include_tasks: pi.yml
+  when: ansible_distribution == 'Raspbian' or (app_os_armbian.stat.islnk is defined and app_os_armbian.stat.isreg) or (app_os_friendlyelec.stat.islnk is defined and app_os_friendlyelec.stat.isreg)
+
+# ---------------------------------------------------
+
+# FIXME failed on jammy
+# - name: enable cron service
+#   become: true
+#   ansible.builtin.systemd:
+#     name: cron
+#     enabled: yes
+#     masked: no
 
 - name: enable ssh service
   become: true
@@ -158,4 +132,4 @@
     enabled: yes
     masked: no
 
-- import_tasks: clean.yml
+- include_tasks: clean.yml

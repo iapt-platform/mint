@@ -1,10 +1,17 @@
+- name: Backup system.conf
+  become: true
+  ansible.builtin.copy:
+    src: /etc/systemd/system.conf
+    dest: "{{ ansible_env.HOME }}/backups/etc_systemd_system"
+    remote_src: yes
+    backup: yes
+
 - name: Setup nofile for system
   become: true
   ansible.builtin.lineinfile:
     path: /etc/systemd/system.conf
     regexp: "^DefaultLimitNOFILE="
     line: DefaultLimitNOFILE=2097152
-    backup: true
 
 - name: Setup nproc for system
   become: true
@@ -12,7 +19,14 @@
     path: /etc/systemd/system.conf
     regexp: "^DefaultLimitNPROC"
     line: DefaultLimitNPROC=524288
-    backup: true
+
+- name: Backup user.conf
+  become: true
+  ansible.builtin.copy:
+    src: /etc/systemd/user.conf
+    dest: "{{ ansible_env.HOME }}/backups/etc_systemd_user.conf"
+    remote_src: yes
+    backup: yes
 
 - name: Setup nofile for user
   become: true
@@ -20,7 +34,6 @@
     path: /etc/systemd/user.conf
     regexp: "^DefaultLimitNOFILE="
     line: DefaultLimitNOFILE=1048576
-    backup: true
 
 - name: Setup nproc for user
   become: true
@@ -28,35 +41,56 @@
     path: /etc/systemd/user.conf
     regexp: "^DefaultLimitNPROC"
     line: DefaultLimitNPROC=262144
-    backup: true
 
-- name: Set user level ppen file limits for root
+- name: Backup limits.conf
+  become: true
+  ansible.builtin.copy:
+    src: /etc/security/limits.conf
+    dest: "{{ ansible_env.HOME }}/backups/etc_security_limits.conf"
+    remote_src: yes
+    backup: yes
+
+- name: Set user level open file limits for root
   become: true
   ansible.builtin.lineinfile:
     path: /etc/security/limits.conf
     line: root        soft nofile 10240
-    backup: true
 
-- name: Set user level open file limits for {{ ansible_user }}
+- name: Set user level open file limits for {{ansible_user}}
   become: true
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/security/limits.conf
-    line: "{{ ansible_user }}        soft nofile 10240"
-    backup: true
+    line: "{{ansible_user}}        soft nofile 10240"
 
 # https://docs.oracle.com/en/database/oracle/oracle-database/12.2/ladbi/changing-kernel-parameter-values.html#GUID-FB0CC366-61C9-4AA2-9BE7-233EB6810A31
 - name: Setup file max
   become: true
-  lineinfile:
-    path: "/etc/sysctl.d/100-fs.conf"
+  ansible.builtin.lineinfile:
+    path: "/etc/sysctl.d/100-palm.conf"
     state: present
-    line: fs.file-max = 6815744
+    line: "fs.file-max = 6815744"
     create: true
 
 - name: Setup file max
   become: true
-  lineinfile:
-    path: "/etc/sysctl.d/100-fs.conf"
+  ansible.builtin.lineinfile:
+    path: "/etc/sysctl.d/100-palm.conf"
     state: present
-    line: fs.inotify.max_user_watches = 512000
+    line: "fs.inotify.max_user_watches = 512000"
+    create: true
+
+- name: Setup vm max map count
+  become: true
+  ansible.builtin.lineinfile:
+    path: "/etc/sysctl.d/100-palm.conf"
+    state: present
+    line: "vm.max_map_count = 262144"
+    create: true
+
+- name: Setup vm over commit memory
+  become: true
+  ansible.builtin.lineinfile:
+    path: "/etc/sysctl.d/100-palm.conf"
+    state: present
+    line: "vm.overcommit_memory = 1"
     create: true

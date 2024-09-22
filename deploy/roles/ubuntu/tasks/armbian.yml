@@ -1,0 +1,14 @@
+- name: backup /boot/armbianEnv.txt
+  become: true
+  copy:
+    src: /boot/armbianEnv.txt
+    dest: "{{ ansible_env.HOME }}/backups/boot_armbianEnv_txt"
+    remote_src: yes
+    backup: yes
+
+- name: enable uart for armbian
+  become: true
+  lineinfile:
+    path: /boot/armbianEnv.txt
+    regexp: "^overlays="
+    line: overlays=usbhost2 usbhost3 uart1 uart2 analog-codec

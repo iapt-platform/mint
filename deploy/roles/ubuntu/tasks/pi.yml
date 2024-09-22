@@ -1,0 +1,97 @@
+- name: Install dependicy packages
+  become: true
+  apt:
+    pkg:
+      - espeak-ng
+
+# --------------------------------------------
+
+- name: backup /etc/dhcp/dhclient.conf
+  become: true
+  ansible.builtin.copy:
+    src: /etc/dhcp/dhclient.conf
+    dest: "{{ ansible_env.HOME }}/backups/etc_dhcp_dhclient_conf"
+    remote_src: yes
+    backup: yes
+
+- name: enable option 72 for dhclient
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/dhcp/dhclient.conf
+    line: "also request www-server;"
+
+# --------------------------------------------
+
+- name: delete /etc/systemd/network
+  become: true
+  ansible.builtin.file:
+    path: /etc/systemd/network
+    state: absent
+
+- name: create /etc/systemd/network
+  become: true
+  ansible.builtin.file:
+    path: /etc/systemd/network
+    state: directory
+
+- name: Create a symbolic link
+  become: true
+  ansible.builtin.file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    state: link
+
+- name: disable dnsmasq service
+  become: true
+  ansible.builtin.systemd:
+    name: dnsmasq
+    enabled: no
+    masked: yes
+
+- name: disable NetworkManager service
+  become: true
+  ansible.builtin.systemd:
+    name: NetworkManager
+    enabled: no
+    masked: yes
+
+- name: enable systemd-networkd service
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-networkd
+    enabled: yes
+    masked: no
+
+- name: enable systemd-resolved service
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    enabled: yes
+    masked: no
+
+- name: enable wpa_supplicant@wlan0service
+  become: true
+  ansible.builtin.systemd:
+    name: wpa_supplicant@wlan0
+    enabled: yes
+    masked: no
+
+- name: enable openvpn@client service
+  become: true
+  ansible.builtin.systemd:
+    name: openvpn@client
+    enabled: yes
+    masked: no
+
+- name: Reboot
+  become: true
+  reboot:
+    reboot_timeout: 120
+
+- name: enable pulseaudio service
+  become: true
+  ansible.builtin.systemd:
+    name: pulseaudio
+    enabled: yes
+    masked: no
+    scope: user

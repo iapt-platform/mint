@@ -9,4 +9,4 @@
   roles:
     - os
     - ubuntu
-    - reset
+    - random-passwords

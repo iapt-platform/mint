@@ -1,0 +1,50 @@
+- name: Install dependency packages
+  become: true
+  apt:
+    pkg:
+      - redis
+
+- name: disable redis-server service
+  become: true
+  ansible.builtin.systemd:
+    name: redis-server
+    enabled: no
+    state: "stopped"
+
+- name: create /var/lib/redis
+  become: true
+  ansible.builtin.file:
+    path: "/var/lib/redis/node-{{ app_redis_port }}"
+    owner: redis
+    group: redis
+    mode: "0750"
+    state: directory
+
+- name: upload /etc/redis.conf
+  become: true
+  template:
+    src: redis.conf.j2
+    dest: "/etc/redis/node-{{ app_redis_port }}.conf"
+    owner: redis
+    group: redis
+    mode: "0640"
+
+- name: upload systemd redis-server.service
+  become: true
+  template:
+    src: server.service.j2
+    dest: "/usr/lib/systemd/system/redis-server-{{ app_redis_port }}.service"
+    mode: "0644"
+
+- name: Force systemd to reread configs
+  become: true
+  systemd:
+    daemon_reload: yes
+
+- name: enable redis-cluster-node service
+  become: true
+  ansible.builtin.systemd:
+    name: "redis-server-{{ app_redis_port }}"
+    enabled: yes
+    masked: no
+    state: "restarted"

@@ -1,0 +1,59 @@
+- name: backup serial-getty@ttyAMA0.service.d/autologin.conf
+  become: true
+  ansible.builtin.copy:
+    src: /etc/systemd/system/serial-getty@ttyAMA0.service.d/autologin.conf
+    dest: "{{ ansible_env.HOME }}/backups/ttyAMA0_autologin_conf"
+    remote_src: yes
+    backup: yes
+
+- name: disable autologin for ttyAMA0
+  become: true
+  ansible.builtin.replace:
+    path: /etc/systemd/system/serial-getty@ttyAMA0.service.d/autologin.conf
+    regexp: " --autologin pi "
+    replace: " "
+
+- name: backup getty@tty1.service.d/autologin.conf
+  become: true
+  ansible.builtin.copy:
+    src: /etc/systemd/system/getty@tty1.service.d/autologin.conf
+    dest: "{{ ansible_env.HOME }}/backups/tty1_autologin_conf"
+    remote_src: yes
+    backup: yes
+
+- name: disable autologin for tty1
+  become: true
+  ansible.builtin.replace:
+    path: /etc/systemd/system/getty@tty1.service.d/autologin.conf
+    regexp: " --autologin pi "
+    replace: " "
+
+- name: backup serial-getty@ttyS0.service.d/autologin.conf
+  become: true
+  ansible.builtin.copy:
+    src: /etc/systemd/system/serial-getty@ttyS0.service.d/autologin.conf
+    dest: "{{ ansible_env.HOME }}/backups/ttyS0_autologin_conf"
+    remote_src: yes
+    backup: yes
+
+- name: disable autologin for ttyS0
+  become: true
+  ansible.builtin.replace:
+    path: /etc/systemd/system/serial-getty@ttyS0.service.d/autologin.conf
+    regexp: " --autologin pi "
+    replace: " "
+
+- name: backup serial-getty@ttySAC0.service.d/autologin.conf
+  become: true
+  ansible.builtin.copy:
+    src: /etc/systemd/system/serial-getty@ttySAC0.service.d/autologin.conf
+    dest: "{{ ansible_env.HOME }}/backups/ttySAC0_autologin_conf"
+    remote_src: yes
+    backup: yes
+
+- name: disable autologin for ttySAC0
+  become: true
+  ansible.builtin.replace:
+    path: /etc/systemd/system/serial-getty@ttySAC0.service.d/autologin.conf
+    regexp: " --autologin pi "
+    replace: " "
