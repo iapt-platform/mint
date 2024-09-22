@@ -1,17 +1,10 @@
-- name: Backup system.conf
-  become: true
-  ansible.builtin.copy:
-    src: /etc/systemd/system.conf
-    dest: "{{ ansible_env.HOME }}/backups/etc_systemd_system"
-    remote_src: yes
-    backup: yes
-
 - name: Setup nofile for system
   become: true
   ansible.builtin.lineinfile:
     path: /etc/systemd/system.conf
     regexp: "^DefaultLimitNOFILE="
     line: DefaultLimitNOFILE=2097152
+    backup: true
 
 - name: Setup nproc for system
   become: true
@@ -19,14 +12,7 @@
     path: /etc/systemd/system.conf
     regexp: "^DefaultLimitNPROC"
     line: DefaultLimitNPROC=524288
-
-- name: Backup user.conf
-  become: true
-  ansible.builtin.copy:
-    src: /etc/systemd/user.conf
-    dest: "{{ ansible_env.HOME }}/backups/etc_systemd_user.conf"
-    remote_src: yes
-    backup: yes
+    backup: true
 
 - name: Setup nofile for user
   become: true
@@ -34,6 +20,7 @@
     path: /etc/systemd/user.conf
     regexp: "^DefaultLimitNOFILE="
     line: DefaultLimitNOFILE=1048576
+    backup: true
 
 - name: Setup nproc for user
   become: true
@@ -41,26 +28,21 @@
     path: /etc/systemd/user.conf
     regexp: "^DefaultLimitNPROC"
     line: DefaultLimitNPROC=262144
-
-- name: Backup limits.conf
-  become: true
-  ansible.builtin.copy:
-    src: /etc/security/limits.conf
-    dest: "{{ ansible_env.HOME }}/backups/etc_security_limits.conf"
-    remote_src: yes
-    backup: yes
+    backup: true
 
 - name: Set user level open file limits for root
   become: true
   ansible.builtin.lineinfile:
     path: /etc/security/limits.conf
     line: root        soft nofile 10240
+    backup: true
 
-- name: Set user level open file limits for {{ansible_user}}
+- name: Set user level open file limits for {{ ansible_user }}
   become: true
   ansible.builtin.lineinfile:
     path: /etc/security/limits.conf
-    line: "{{ansible_user}}        soft nofile 10240"
+    line: "{{ ansible_user }}        soft nofile 10240"
+    backup: true
 
 # https://docs.oracle.com/en/database/oracle/oracle-database/12.2/ladbi/changing-kernel-parameter-values.html#GUID-FB0CC366-61C9-4AA2-9BE7-233EB6810A31
 - name: Setup file max

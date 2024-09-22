@@ -3,6 +3,11 @@
   apt:
     autoclean: yes
 
+- name: Cleans the local repository of retrieved package files that can no longer be downloaded.
+  become: true
+  apt:
+    clean: yes
+
 - name: Remove dependencies that are no longer required
   become: true
   apt:

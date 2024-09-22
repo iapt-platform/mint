@@ -6,19 +6,12 @@
 
 # --------------------------------------------
 
-- name: backup /etc/dhcp/dhclient.conf
-  become: true
-  ansible.builtin.copy:
-    src: /etc/dhcp/dhclient.conf
-    dest: "{{ ansible_env.HOME }}/backups/etc_dhcp_dhclient_conf"
-    remote_src: yes
-    backup: yes
-
 - name: enable option 72 for dhclient
   become: true
   ansible.builtin.lineinfile:
     path: /etc/dhcp/dhclient.conf
     line: "also request www-server;"
+    backup: true
 
 # --------------------------------------------
 

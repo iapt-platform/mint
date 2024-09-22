@@ -1,17 +1,10 @@
-- name: Backup locale.gen
-  become: true
-  copy:
-    src: /etc/locale.gen
-    dest: "{{ ansible_env.HOME }}/backups/etc_locale.gen"
-    remote_src: yes
-    backup: yes
-
 - name: Enable en-US locale
   become: true
   lineinfile:
     path: /etc/locale.gen
     state: present
     line: en_US.UTF-8 UTF-8
+    backup: true
 
 - name: Enable zh-CN locale
   become: true
@@ -19,6 +12,7 @@
     path: /etc/locale.gen
     state: present
     line: zh_CN.UTF-8 UTF-8
+    backup: true
 
 - name: Enable zh-TW locale
   become: true
@@ -26,6 +20,7 @@
     path: /etc/locale.gen
     state: present
     line: zh_TW.UTF-8 UTF-8
+    backup: true
 
 - name: Generate locales
   become: true
