@@ -4,12 +4,12 @@
     pkg:
       - redis
 
-- name: disable redis-server service
+- name: enable redis-server service
   become: true
   ansible.builtin.systemd:
     name: redis-server
-    enabled: no
-    state: "stopped"
+    enabled: true
+    state: "restarted"
 
 - name: create /var/lib/redis
   become: true
@@ -39,12 +39,12 @@
 - name: Force systemd to reread configs
   become: true
   systemd:
-    daemon_reload: yes
+    daemon_reload: true
 
 - name: enable redis-cluster-node service
   become: true
   ansible.builtin.systemd:
     name: "redis-server-{{ app_redis_port }}"
-    enabled: yes
-    masked: no
+    enabled: true
+    masked: false
     state: "restarted"
