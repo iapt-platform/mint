@@ -1,0 +1,12 @@
+- name: Testing ssh connections
+  hosts:
+    - postgresql
+    - rabbitmq
+    - redis
+    - logging
+    - web
+    - task
+  roles:
+    - os
+    - ubuntu
+    - reset

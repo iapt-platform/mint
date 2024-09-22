@@ -1,0 +1,15 @@
+- name: Disable dns for sshd
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^UseDNS "
+    line: UseDNS no
+    backup: true
+
+- name: Disable GSS api auth for sshd
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^GSSAPIAuthentication "
+    line: GSSAPIAuthentication no
+    backup: true

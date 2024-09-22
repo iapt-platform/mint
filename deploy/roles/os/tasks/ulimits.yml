@@ -1,0 +1,62 @@
+- name: Setup nofile for system
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/system.conf
+    regexp: "^DefaultLimitNOFILE="
+    line: DefaultLimitNOFILE=2097152
+    backup: true
+
+- name: Setup nproc for system
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/system.conf
+    regexp: "^DefaultLimitNPROC"
+    line: DefaultLimitNPROC=524288
+    backup: true
+
+- name: Setup nofile for user
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/user.conf
+    regexp: "^DefaultLimitNOFILE="
+    line: DefaultLimitNOFILE=1048576
+    backup: true
+
+- name: Setup nproc for user
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/user.conf
+    regexp: "^DefaultLimitNPROC"
+    line: DefaultLimitNPROC=262144
+    backup: true
+
+- name: Set user level ppen file limits for root
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/security/limits.conf
+    line: root        soft nofile 10240
+    backup: true
+
+- name: Set user level open file limits for {{ ansible_user }}
+  become: true
+  lineinfile:
+    path: /etc/security/limits.conf
+    line: "{{ ansible_user }}        soft nofile 10240"
+    backup: true
+
+# https://docs.oracle.com/en/database/oracle/oracle-database/12.2/ladbi/changing-kernel-parameter-values.html#GUID-FB0CC366-61C9-4AA2-9BE7-233EB6810A31
+- name: Setup file max
+  become: true
+  lineinfile:
+    path: "/etc/sysctl.d/100-fs.conf"
+    state: present
+    line: fs.file-max = 6815744
+    create: true
+
+- name: Setup file max
+  become: true
+  lineinfile:
+    path: "/etc/sysctl.d/100-fs.conf"
+    state: present
+    line: fs.inotify.max_user_watches = 512000
+    create: true
