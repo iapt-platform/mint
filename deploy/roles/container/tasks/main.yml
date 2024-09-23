@@ -1,0 +1,25 @@
+- name: Create container data folder
+  become: true
+  ansible.builtin.file:
+    path: "/mnt/{{ ansible_user }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0700"
+
+- name: Create containers config folder
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config/containers"
+    state: directory
+
+- name: Copy registries.conf
+  ansible.builtin.copy:
+    src: registries.conf
+    dest: "{{ ansible_env.HOME }}/.config/containers/"
+    mode: "0644"
+
+- name: Copy storage.conf
+  ansible.builtin.template:
+    src: storage.conf
+    dest: "{{ ansible_env.HOME }}/.config/containers/"
+    mode: "0644"

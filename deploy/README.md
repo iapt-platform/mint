@@ -18,11 +18,11 @@ ssh-copy-id -i .ssh/id_ed25519 USER@HOST
 
 ```bash
 # test ssh connections
-peony -i clients/CLUSTER JOB.yml
-# run on all hosts
-peony -i clients/CLUSTER JOB.yml
-# run on only group
-peony -i clients/CLUSTER JOB.yml -l GROUP
+peony -i clients/CLUSTER ping.yml
+# setup base system
+peony -i clients/CLUSTER ec2.yml
+# setup redis cluster nodes
+peony -i clients/CLUSTER redis.yml -l redis
 ```
 
 ## System image

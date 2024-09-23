@@ -1,0 +1,17 @@
+[Unit]
+Description=OpenSearch is an open-source, enterprise-grade search and observability suite that brings order to unstructured data at scale
+After=network.target
+
+[Service]
+Type=notify
+WorkingDirectory=/opt/opensearch-{{ open_search_version }}
+ExecStart=/opt/opensearch-{{ open_search_version }}/bin/opensearch
+TimeoutStartSec=180
+TimeoutStopSec=120
+Restart=always
+User=www-data
+Group=www-data
+Environment="OPENSEARCH_JAVA_HOME=/opt/opensearch-{{ open_search_version }}"
+
+[Install]
+WantedBy=multi-user.target
