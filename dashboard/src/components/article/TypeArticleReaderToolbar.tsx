@@ -6,6 +6,7 @@ import {
   EditOutlined,
   FileOutlined,
   CopyOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
 
 import { useAppSelector } from "../../hooks";
@@ -18,6 +19,7 @@ import AnthologiesAtArticle from "./AnthologiesAtArticle";
 import { TRole } from "../api/Auth";
 import { useIntl } from "react-intl";
 import { TabIcon } from "../../assets/icon";
+import WordCount from "./WordCount";
 
 interface IWidget {
   articleId?: string;
@@ -41,6 +43,7 @@ const TypeArticleReaderToolbarWidget = ({
   const user = useAppSelector(currentUser);
   const [addToAnthologyOpen, setAddToAnthologyOpen] = useState(false);
   const [tplOpen, setTplOpen] = useState(false);
+  const [wordCountOpen, setWordCountOpen] = useState(false);
 
   const editable = role === "owner" || role === "manager" || role === "editor";
 
@@ -131,6 +134,11 @@ const TypeArticleReaderToolbarWidget = ({
                   icon: <CopyOutlined />,
                   disabled: user ? false : true,
                 },
+                {
+                  label: "字数统计",
+                  key: "word-count",
+                  icon: <InfoCircleOutlined />,
+                },
               ],
               onClick: ({ key }) => {
                 console.log(`Click on item ${key}`);
@@ -150,6 +158,9 @@ const TypeArticleReaderToolbarWidget = ({
                     break;
                   case "tpl":
                     setTplOpen(true);
+                    break;
+                  case "word-count":
+                    setWordCountOpen(true);
                     break;
                   case "edit":
                     if (typeof onEdit !== "undefined") {
@@ -184,6 +195,11 @@ const TypeArticleReaderToolbarWidget = ({
         id={articleId}
         open={tplOpen}
         onOpenChange={(visible: boolean) => setTplOpen(visible)}
+      />
+      <WordCount
+        open={wordCountOpen}
+        articleId={articleId}
+        onClose={() => setWordCountOpen(false)}
       />
     </div>
   );
