@@ -18,7 +18,7 @@ class ExportArticle extends Command
     /**
      * The name and signature of the console command.
      * php artisan export:article 78c22ad3-58e2-4cf0-b979-67783ca3a375 123 --channel=7fea264d-7a26-40f8-bef7-bc95102760fb --format=html
-     * php artisan export:article df6c6609-6fc1-42d0-9ef1-535ef3e702c9 1234 --channel=7fea264d-7a26-40f8-bef7-bc95102760fb --anthology=697c9169-cb9d-4a60-8848-92745e467bab --token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2OTc3Mjg2ODUsImV4cCI6MTcyOTI2NDY4NSwidWlkIjoiYmE1NDYzZjMtNzJkMS00NDEwLTg1OGUtZWFkZDEwODg0NzEzIiwiaWQiOjR9.fiXhnY2LczZ9kKVHV0FfD3AJPZt-uqM5wrDe4EhToVexdd007ebPFYssZefmchfL0mx9nF0rgHSqjNhx4P0yDA --format=html
+     * php artisan export:article df6c6609-6fc1-42d0-9ef1-535ef3e702c9 1234 --origin=true --channel=7fea264d-7a26-40f8-bef7-bc95102760fb  --format=docx --anthology=697c9169-cb9d-4a60-8848-92745e467bab --token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2OTc3Mjg2ODUsImV4cCI6MTcyOTI2NDY4NSwidWlkIjoiYmE1NDYzZjMtNzJkMS00NDEwLTg1OGUtZWFkZDEwODg0NzEzIiwiaWQiOjR9.fiXhnY2LczZ9kKVHV0FfD3AJPZt-uqM5wrDe4EhToVexdd007ebPFYssZefmchfL0mx9nF0rgHSqjNhx4P0yDA
      * @var string
      */
     protected $signature = 'export:article {id} {query_id} {--token=} {--anthology=} {--channel=}  {--origin=false} {--translation=true} {--format=tex} {--debug}';
@@ -135,6 +135,7 @@ class ExportArticle extends Command
                 'anthology'=> $this->option('anthology'),
                 'channel' => $this->option('channel'),
                 'origin' => $this->option('origin'),
+                'paragraph' => true,
         ];
         Log::debug('export article http request',['url'=>$url,'param'=>$urlParam]);
         if($this->option('token')){
