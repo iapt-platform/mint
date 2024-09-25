@@ -724,34 +724,16 @@ class CorpusController extends Controller
                                                 });
                             break;
                         default:
-                        /**
-                         * 译文需要markdown渲染
-                         * 包涵术语的不用cache
-                         */
-                            if(strpos($row->content,'[[')===false){
-                                $newSent['html'] = MdRender::render($row->content,[$row->channel_uid],
-                                                            null,$mode,'translation',
-                                                            $row->content_type,$format);
-                                /*
-                                RedisClusters::remember("/sent/{$channelId}/{$currSentId}/{$format}",
-                                                    config('mint.cache.expire'),
-                                                function() use($row,$mode,$format){
-                                                    return MdRender::render($row->content,[$row->channel_uid],
-                                                                            null,$mode,'translation',
-                                                                            $row->content_type,$format);
-                                                });
-                                            */
-                            }else{
-                                $mdRender = new MdRender(
-                                    [
-                                        'debug'=>$this->debug,
-                                        'format'=>$format,
-                                        'mode'=>$mode,
-                                        'channelType'=>'translation',
-                                        'contentType'=>$row->content_type,
-                                    ]);
-                                $newSent['html'] = $mdRender->convert($row->content,[$row->channel_uid]);
-                            }
+                            $options = [
+                                    'debug'=>$this->debug,
+                                    'format'=>$format,
+                                    'mode'=>$mode,
+                                    'channelType'=>'translation',
+                                    'contentType'=>$row->content_type,
+                            ];
+                            $mdRender = new MdRender($options);
+                            $newSent['html'] = $mdRender->convert($row->content,[$row->channel_uid]);
+                            Log::debug('md render',['content'=>$row->content,'options'=>$options,'render'=>$newSent['html']]);
                             break;
                     }
                 }
