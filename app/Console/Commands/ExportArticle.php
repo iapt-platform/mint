@@ -52,12 +52,13 @@ class ExportArticle extends Command
         if(\App\Tools\Tools::isStop()){
             return 0;
         }
-        $upload = new ExportDownload([
+        $options = [
             'queryId'=>$this->argument('query_id'),
             'format'=>$this->option('format'),
             'debug'=>$this->option('debug'),
             'filename'=>'article',
-        ]);
+        ];
+        $upload = new ExportDownload($options);
 
         MdRender::init();
         $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES,
@@ -129,14 +130,16 @@ class ExportArticle extends Command
         $basicUrl = $api . '/v2/article/';
         $url =  $basicUrl . $articleId;;
         $this->info('http request url='.$url);
+
         $urlParam = [
                 'mode' => 'read',
                 'format' => 'markdown',
                 'anthology'=> $this->option('anthology'),
                 'channel' => $this->option('channel'),
-                'origin' => $this->option('origin'),
+                'origin' => 'true' /*$this->option('origin')*/,
                 'paragraph' => true,
         ];
+
         Log::debug('export article http request',['url'=>$url,'param'=>$urlParam]);
         if($this->option('token')){
             $response = Http::withToken($this->option('token'))->get($url,$urlParam);
