@@ -53,6 +53,7 @@ class MdRender{
             $pattern = "/\{\{sent\|id=([0-9].+?)\}\}/";
             $replacement = '';
             $space = preg_replace($pattern,$replacement,$paragraph);
+            $space = str_replace('>','',$space);
             if(empty(trim($space))){
                 $output[] = str_replace('}}','|text=origin}}',$paragraph);
                 $output[] = str_replace('}}','|text=translation}}',$paragraph);
