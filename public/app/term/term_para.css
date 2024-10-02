@@ -1,0 +1,31 @@
+note {
+  display: inline;
+  background-color: unset;
+}
+.tran > p {
+  display: inline;
+}
+note {
+  padding: 2px;
+  margin-bottom: unset;
+}
+.bg_color_1 {
+  background-color: unset;
+  background: none;
+}
+.bg_color_2 {
+  background-color: unset;
+  background: none;
+}
+.bg_color_3 {
+  background: none;
+  background-color: unset;
+}
+.bg_color_4 {
+  background: none;
+  background-color: unset;
+}
+.bg_color_5 {
+  background: none;
+  background-color: unset;
+}

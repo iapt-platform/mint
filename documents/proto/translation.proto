@@ -1,0 +1,55 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.translation.v1;
+
+
+/*
+ * 译文
+ * 
+ *  
+ * 
+ */
+service Translation{
+	rpc GetTranslation (TranslationListRequest) returns (TranslationReply){}
+	rpc SetTranslation (TranslationListRequest) returns (TranslationReply){}
+	rpc AddTranslation (TranslationListRequest) returns (TranslationReply){}
+	rpc DelTranslation (TranslationListRequest) returns (TranslationReply){}
+
+	rpc GetPr (TranslationListRequest) returns (TranslationReply){}
+	rpc SetPr (TranslationListRequest) returns (TranslationReply){}
+	rpc AddPr (TranslationListRequest) returns (TranslationReply){}
+	rpc DelPr (TranslationListRequest) returns (TranslationReply){}
+}
+
+message TranslationRequest{
+	string Id                   = 1;
+	string Book                 = 2;
+	string Paragraph            = 3;
+	string Start                = 4;
+	string End                  = 5;
+	string Channel              = 7;
+	string Content              = 8;
+	EnumContentType ContentType = 9;
+	string Html                 = 10;
+
+	string Lang             = 51;
+	User   Editor           = 52;
+	EnumPublicity Publicity = 53;
+	int32 Version           = 54;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+message TranslationListRequest{
+	repeated TranslationRequest data = 1;
+}
+
+message TranslationReply{
+	bool Ok = 1;
+	string Message = 2;
+	message Data{
+		repeated TranslationRequest Rows = 1;
+	}
+}

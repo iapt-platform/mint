@@ -1,0 +1,8 @@
+<plugin>
+	<caption>Find++</caption>
+	<tooltip>Find++</tooltip>
+	<author>PCDS Group</author>
+	<class>edit</class>
+	<enable>true</enable>
+	<attach>left_top</attach>
+</plugin>

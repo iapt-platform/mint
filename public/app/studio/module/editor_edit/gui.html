@@ -1,0 +1,47 @@
+			<div class="menu" id="menu_layout">
+				<h1><?php echo $module_gui_str['editor_edit']['1001']; ?></h1>
+
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><span>-</span><?php echo $module_gui_str['editor_edit']['1002']; ?></p>
+					<div class="submenu_details">
+					<textarea id="id_layout_style" style="width:100%;height:20em;"></textarea>
+					<button type="button" onclick="editor_edit_applyNewStyle()"><?php echo $module_gui_str['editor_edit']['1003']; ?></button>
+					</div>
+				</div>
+				
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><span>-</span><?php echo $module_gui_str['editor_edit']['1004']; ?></p>
+					<div class="submenu_details">
+						<?php echo $module_gui_str['editor_edit']['1005']; ?>
+						<select name="menu" onchange="layoutWordHeadCode(0,this)">
+							<option value="org">Orginal</option>
+							<option value="si">සින්හල</option>
+							<option value="zh">简体中文</option>
+							<option value="tw">正體中文</option>
+						</select>
+						<br />
+						<?php echo $module_gui_str['editor_edit']['1006']; ?>
+						<select name="menu" onchange="layoutWordHeadCode(1,this)">
+							<option value="none">None</option>
+							<option value="si">සින්හල</option>
+							<option value="zh">简体中文</option>
+							<option value="tw">正體中文</option>
+						</select>
+						<div id="scriptinner">
+						</div>
+					</div>
+				</div>
+
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><span>-</span><?php echo $module_gui_str['editor_edit']['1007']; ?></p>
+					<div class="submenu_details">
+						<ul>
+							<li><input type="checkbox" checked id="id_layout_sandhi_begin" onclick="editSandhiDisplay('begin',this)" /><?php echo $module_gui_str['editor_edit']['1008']; ?></li>
+							<li><input type="checkbox" checked id="id_layout_sandhi_end" onclick="editSandhiDisplay('end',this)" /><?php echo $module_gui_str['editor_edit']['1009']; ?></li>
+							<li><input type="checkbox" checked id="id_layout_sandhi_word" onclick="editSandhiDisplay('word',this)" /><?php echo $module_gui_str['editor_edit']['1010']; ?></li>
+							<li><input type="checkbox" checked id="id_layout_sandhi_parent" onclick="editSandhiDisplay('parent',this)" /><?php echo $module_gui_str['editor_edit']['1011']; ?></li>
+							<li><input type="checkbox" id="id_layout_sandhi_combin" /><?php echo $module_gui_str['editor_edit']['1012']; ?></li>
+						</ul>
+					</div>
+				</div>				
+			</div>

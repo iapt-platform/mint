@@ -1,0 +1,2059 @@
+{
+	"gui": {
+		"50": "50+%",
+		"3rd_dictionary": "3rd Dictionary",
+		"accessed": "Accessed",
+		"add_to_edit_list": "Add to Edit List",
+		"adhivacana": "Adhivacana",
+		"all": "အားလုံး",
+		"all_data!": "All Data!",
+		"all_done": "Looking up accomplished",
+		"allsplit": "Words Splited Successfully ^-^",
+		"append": "Append",
+		"apply": "Apply",
+		"applyto": "လျှောက်သည်။တောင်းခံသည်။ကျင့်သုံးသည်။",
+		"asc": "ASC",
+		"audio": "Audio",
+		"author": "Author:",
+		"auto": "AUTO",
+		"auto_fill": "အလိုလျှောက်ဖြည့်ခြင်း",
+		"back": "back",
+		"base_on": "Base on:",
+		"BE": "သာသနာတော်နှစ်",
+		"bhumma": "ဘုမ္မ",
+		"book": "book",
+		"book_mark": "Book Mark",
+		"book_name": "book name",
+		"bookmark": "bookmark...",
+		"buddhist_calendar": "Buddhist Calendar",
+		"budha": "ဗုဓ",
+		"by": "By:",
+		"cancel": "ပယ်ဖျက်ပါ",
+		"canda": "စန္ဒ",
+		"caption": "Caption",
+		"CE": "CE",
+		"chars": "Chars",
+		"checking": "scanning",
+		"children": "ကလေးများ",
+		"chinese": "တရုတ်ဘာသာ",
+		"click_on": "Click On",
+		"click_word_to": "click word to ",
+		"code_convert": "Code Convert",
+		"color": "အရောင်",
+		"column_compare": "Up&nbsp;&&nbsp;Down",
+		"commentary": "Commentary",
+		"completely_delete": "completely delete",
+		"computer": "Computer",
+        "confirm": "Confirm",
+		"content": "Content",
+		"contents": "Contents",
+		"copy": "copy",
+		"copy_to_clipboard": "copy the sent No. to clipboard",
+		"creat_a_new_file_by_yourself": "Creat a new file by yourself",
+		"created": "Created",
+		"current": "လက်ရှိ",
+		"database_admin": "Database Admin",
+		"date": "ရက်စွဲ",
+		"day": "",
+		"day_1": "",
+		"days": " နေ့များ ",
+		"debug": "Debug",
+		"delete": "ဖျက်ပါ",
+		"desc": "DESC",
+		"detaile": "Detaile",
+		"dhamma_time": "ဗုဒ္ဓ သာသနာတော်နှစ် ၅၀၀၀",
+		"dict": "Dict",
+		"dict_match": "Match the Dictionary and Document",
+		"dict_terms": "Terms",
+		"dictionary": "အဘိဓာန်",
+		"dictionary_match_result": "Dictionary Match Result",
+		"dictsouce": "Dictionary Resouce",
+		"difficulty": "ခက်ခဲမှုအတိုင်းအတာ",
+		"done": "&nbsp;scanned",
+		"down": "အောက်",
+		"download": "[Download]",
+		"dwan": "အရုဏ်တက်ချိန်",
+		"eat": "စားသည်",
+		"edit": "တည်းဖြတ်ပါ",
+		"edit_now": "Edit Now",
+		"edit1": "Edited By ",
+		"edition": "Edition: ",
+		"editor": "Editor:",
+		"e-mail": "E-mail",
+		"empty": "Empty",
+		"empty_the_data_below": "Empty the Data Below",
+		"empty_the_recycle_bin": "Empty the Recycle Bin",
+		"empty1": "EMPTY",
+		"english": "အင်္ဂလိပ်ဘာသာ",
+		"export": "Export",
+		"export_csv": "Export CSV",
+		"export_html": "Export HTML",
+		"factor": "Factor",
+		"factors_input": "input factors by click",
+		"file_name": "File Name:",
+		"files": "&nbsp;files",
+		"find_replace": "Find & Replace",
+		"finish": "Finish",
+		"finished": "ပြီးပြီ",
+		"f-mean": "F-Mean",
+		"g_mean": "G-Mean",
+		"gama_entry": "ရွာအတွင်းသို့ဝင်သည်",
+		"gramma": "သဒ္ဒါ",
+		"gramma_case": "Gramma Case",
+		"guid_creator": "GUID Creator",
+		"guru": "ဂုရု",
+		"h": "(h)",
+		"half": "half",
+		"heading": "ခေါင်းစဉ်",
+		"heading_1": "Heading 1",
+		"heading_2": "Heading 2",
+		"heading_3": "Heading 3",
+		"heading_4": "Heading 4",
+		"heading_5": "Heading 5",
+		"heading_6": "Heading 6",
+		"heading_7": "Heading 7",
+		"heading_8": "Heading 8",
+		"heading_lv1": "Heading Lv1",
+		"heading_lv2": "Heading Lv2",
+		"heading_lv3": "Heading Lv3",
+		"heading_lv4": "Heading Lv4",
+		"heading_lv5": "Heading Lv5",
+		"heading_lv6": "Heading Lv6",
+		"heading_lv7": "Heading Lv7",
+		"heading_lv8": "Heading Lv8",
+		"hidden": "hidden",
+		"home": "Home",
+		"html_text_data": "HTML Text Data",
+		"import": "Import",
+		"import_csv": "Import CSV",
+		"import_export": "Import/Export",
+		"import_the_flie_from_cscd": "Import the flie From Cattha Sangayana data base",
+		"include": "include",
+		"info_panal": "Info Panal",
+		"infomation": "Infomation",
+		"inline_dictionary": "Inline Dictionary",
+		"innerdict": "Inline Dictionary",
+		"input": "input",
+		"kala": "ကာလ",
+		"keywords": "Keywords",
+		"language": "Language:",
+		"layout": "Layout",
+		"left": "Remains",
+		"lesson": "lesson",
+		"letters": "&nbsp;letters",
+		"level": "Lv",
+		"list": "List",
+		"load": "ထည့်သွင်း",
+		"load_from_database": "Load From Database",
+		"load_from_wbw_file": "Load From WBW File",
+		"loading": "အလုပ်လုပ်နေသည်",
+		"loading_dictionary_list...": "loading Dictionary List...",
+		"lock": "သော့ခတ်ပါ",
+		"login": "ဝင်မည်",
+		"logout": "ထွက်မည်",
+		"magic_dict": "Magic Dict",
+		"magic_gap": "Magic Gap",
+		"magic_split": "Magic Split",
+		"magic_terms": "Magic Terms",
+		"main_code": "Main&nbsp;Code",
+		"mark": "အမှတ်အသား",
+		"māsa": "မာသ",
+		"match_end": "Document update over，Degree of Perfection",
+		"matched": "Matched",
+		"max": "Max",
+		"meaning": "အဓိပ္ပာယ်",
+		"meaning_input": "input meanings by click",
+		"message": "message",
+		"min": "(min)",
+		"mobile": "Mobile",
+		"modified": "Modified",
+		"modify": "Modify",
+		"modifyok": "Modified ",
+		"month": "လ",
+		"month_1": "-",
+		"months": " လများနှင့် ",
+		"more": "more",
+		"my_book": "My Book",
+		"my_dictionary": "My Dictionary",
+		"my_document": "My Document",
+		"name": "အမည်",
+		"need_inform": "အခြားရဟန်းများအား အသိမပေးဘဲ ",
+		"new": "အသစ်",
+		"new_account": "အကောင့်အသစ်",
+		"new_project": "New Project",
+		"new_revision": "New Revision",
+		"new_technic_term": "New Technic Term",
+		"newheading": "Text Editor",
+		"newproject": "စနစ်သစ်",
+		"newword": "စကားလုံးအသစ်",
+		"night": "ည",
+		"no.": "No.",
+		"no_related_file": "No related file",
+		"no_string": "မလုပ်နိုင်ပါ ",
+		"nofilename": "No File Name",
+		"noon_time": "မဇ္ဈန္ဟိက",
+		"normal": "Normal",
+		"note": "မှတ်စု",
+		"now_time": "ပစ္စုပ္ပန္န",
+		"num_k": "K",
+		"num_m": "M",
+		"ok": "အိုကေ",
+		"order_by": "Order By",
+		"other": "Other",
+		"other_meaning": "other meaning",
+		"otherdict": "အခြားအဘိဓာန်",
+		"pa-auk_dictionary": "Pa-auk Dictionary",
+		"pacchā_māsa": "ပစ္ဆာ-မာသ",
+		"pakkha": "Lunar Phases",
+		"pāli": "Pāli",
+		"pali_canon": "ပါဠိတော်",
+		"pāli_code": "Pāli Code",
+		"para": " စာပိုဒ်များ",
+		"paragraph": "Paragraph",
+		"parent": "မိဘ",
+		"parent_input": "input parent by click",
+		"part": "တစ်စိတ်တစ်ပိုင်း",
+		"partmeaning": "Factor-Meaning",
+		"password": "စကားဝှက်",
+		"password_again": "Confirm Password",
+		"past": "Passed",
+		"pcd_studio": "PCD Studio&nbsp;",
+		"piṭaka": "Piṭaka",
+		"plugin": "Plugin",
+		"poweredby": "Powered by PCSD   build:27-Jul-2018",
+		"preview": "preview",
+		"print": "Print",
+		"print_preview": "Print Preview",
+		"product": "စကားလုံးများကို ဘာသာပြန်ခြင်း",
+		"project": "Project",
+		"protection": "Protection【en】",
+		"pubba_māsa": "ပုဗ္ဗ-မာသ",
+		"publish": "Publish",
+		"ravi": "ရဝိ",
+		"read": "ဖတ်မည်",
+		"read_only": "ဖတ်ရုံသာ",
+		"recent_scan": "Recent Scan",
+		"recycle_bin": "Recycle Bin",
+		"ref_dict": "အဘိဓာန်",
+		"refresh": "Refresh",
+		"remove": "Remove",
+		"remove//new": "Remove//new",
+		"removeword": "sandhi Factor Removed",
+		"render": "Render",
+		"repeat": "Repeat Quotiety: ",
+		"resource": "Resource",
+		"revision": "Revised By ",
+		"revision_mode": "Revision Mode",
+		"round_1": "အကြိမ် ",
+		"round_2": "&nbsp;dictionary",
+		"row_compare": "Left&nbsp;&&nbsp;Right",
+		"saṃvacchara": "သံဝစ္ဆရ",
+		"sandhi": "Sandhi",
+		"sandhi_begin": "Sandhi Begin",
+		"sandhi_combin_mode": "Sandhi Combin Mode",
+		"sandhi_end": "Sandhi End",
+		"sandhi_orginal_word": "Sandhi Orginal Word",
+		"sandhi_splited_word": "Sandhi Splited Word",
+		"save": "သိမ်းမည်",
+		"script": "Script",
+		"search": "Search",
+		"season": "ရာသီ",
+		"sec": "sec",
+		"sent_trans": "စာကြောင်းကို ဘာသာပြန်ပါ",
+		"sentence": "Sentence",
+		"sentence_by_sentence": "Sentence By Sentence",
+		"serach": "serach",
+		"setting": "Setting",
+		"share": "share",
+		"shared": "shared",
+		"show": "ပြပါ:",
+		"similar_words": "Similar Words",
+		"size": "size",
+		"smart_spell": "smart spell",
+		"sora": "သောရ",
+		"source": "Source",
+		"spell": "စာလုံးပေါင်းပါ:",
+		"statistical_data": "statistical data",
+		"style": "Style",
+		"sub_pcode": "Sub&nbsp;Code",
+		"subversion": "Subversion:",
+		"success": " Words Successfully",
+		"successful": "အောင်မြင်သော",
+		"sukka": "သုက္က",
+		"system_default": "System Default",
+		"system_dictionary": "System Dictionary",
+		"tag": "tag",
+		"templet": "Templet",
+		"thischapter": "ဤအခန်း",
+		"time": "time",
+		"title": "title&nbsp;",
+		"to_the_dhamma": "&nbsp;to the Dhamma&nbsp;",
+		"today": "ယနေ့ ",
+		"toDB": "To User Database",
+		"tools": "Tools",
+		"total": "Total&nbsp;",
+		"total_workload": "total workload",
+		"totally": "Totally ",
+		"tran_workload": "whole passage translate: ",
+		"translate": "ဘာသာပြန်သည်",
+		"translate_convert": "Translate Convert",
+		"translate1": "ဘာသာပြန်ပြီး",
+		"translation": "Translation",
+		"translation_templet": "Translation Templet",
+		"twilight_time": "အရုဏုဂ္ဂမန",
+		"undo_shared": "undo shared",
+		"unsplit": "sandhi Splited",
+		"up": "အထက်",
+		"up_and_down": "အထက်နှင့်အောက်",
+		"update_all_wbw_to_database": "Update All WBW to Database",
+		"user": "User",
+		"user_dictionary": "User Dictionary",
+		"user_id": "User ID",
+		"userdict": "User Dictionary",
+		"vannana": "vaṇṇanā",
+		"view": "မြင်ကွင်း",
+		"vikala": "ဝိကာလ",
+		"vocabulary": "ဝေါဟာရ: ",
+		"wbw": "တစ်လုံးချင်းစီအတွက်သုံးသပ်ချက်",
+		"week": "(ရက်သတ္တပတ်)",
+		"week_day": "နေ့",
+		"welcome": "Welcome&nbsp;",
+		"white": "အဖြူ",
+		"wiki_term": "Wiki Term",
+		"with_title": "With Title",
+		"wizard": "Wizard",
+		"wizard_my_book": "Wizard -> My Book",
+		"word_base": "Word base",
+		"word_by_word": "Word by Word",
+		"word_gramma_statistics": "Word & Gramma Statistics",
+		"word_length": "average word length",
+		"word_list": "Word List",
+		"word_note": "Word Note",
+		"word_selection_apply_to": "Word Selection Apply to:",
+		"wordmap": "Word Tree",
+		"wordnum": "Text Amount: ",
+		"words": "&nbsp;words",
+		"wordtype": "စကားလုံးအမျိုးအစား",
+		"workload": "workload",
+		"xml_data": "XML Data",
+		"year": "(နှစ်)",
+		"year_1": "-",
+		"years": " နှစ်များ ",
+		"yes_string": "လုပ်နိုင်သည် ",
+		"continue": "ဆက်လက်၍သွားသည်၊ သွားစေသည်။",
+		"account": "အကောင့်အမည် ",
+		"new_to_wikipali": "Wikipāḷi အတွက် အသစ်",
+		"create_account": "အကောင့်တစ်ခုဖန်တီးသည်",
+		"have_account": "ကျွနုပ်မှာအကောင့်ရှိတယ်။",
+		"join_wikipali": "wikipāḷi သို့ ဆက်သွယ်ပါ။",
+		"pali_literature_platform": "Pali စာပေကို တည်းဖြတ်ရန် ပလပ်ဖောင်း/နေရာ",
+		"nick_name": "အမည်ပြောင်",
+		"name_for_show": "တစ်ခြားသူတွေကိုပြရန် အမည်",
+		"email_address": " အီးမေး လိပ်စာ",
+		"account_demond": "အသုံးပြုသူအမည်တွင် အက္ခရာဂဏန်းအသေးစာလုံးများသာ ပါဝင်နိုင်ပြီး  ? : ! ; , - စသည်တို့အသုံးမပြုရန် ကြိုးစားပါ။",
+		"password_demond": "နံပါတ်များနှင့် စာလုံးများအပါအဝင် အနည်းဆုံး စာလုံး 5 လုံးရှိရန် သေချာပါစေ။",
+		"login_with_google": "Google ဖြင့် အကောင့်ဝင်ပါ။",
+		"login_with_facebook": "Facebook ဖြင့် အကောင့်ဝင်ပါ။",
+		"login_with_wechat": "WeChat ဖြင့် အကောင့်ဝင်ပါ။",
+		"loged_out": "အကောင့်ထွက်သွားပြီ",
+		"online_dict_db": "Pāḷi အတွက် အွန်လိုင်းရှာဖွေမှု",
+		"user_data_share": "Open Source အဖြစ် တည်းဖြတ်ခြင်းနှင့် မျှဝေခြင်း",
+		"cooperate_edit": "ဘာသာပြန်သူပေါင်းစုံ ပူးပေါင်းဆောင်ရွက်ခြင်း",
+		"cannot_empty": "&nbsp;ဗလာမဖြစ်ရပါ။",
+		"account_existed": "အသုံးပြုသူအမည်သည် ရှိနှင့်ပြီးဖြစ်သည်။",
+		"incorrect_ID_PASS": "အသုံးပြုသူအမည် သို့မဟုတ် စကားဝှက် မမှန်ကန်ပါ။",
+		"sync": "အချိန်ကိုက်။ တစ်ပြိုင်တည်း။ ",
+		"restore": "ပြန်လည်ရယူပါ။",
+		"group": "အဖွဲ့",
+		"add_folder": "ဖိုင်တွဲအသစ်",
+		"add_to_folder": "ဖိုဒါသို့ထည့်ပါ။",
+		"rename": "အမည်ပြောင်း",
+		"collaborate": "ပူးပေါင်းပါ။",
+		"help": "အကူအညီ",
+		"function_introduce": "Wikipāḷi ၏လုပ်ဆောင်ချက်များ",
+		"vedio_link": "ဗီဒီယိုလင့်ခ်",
+		"project_introduce": "ပါဠိ ဘာသာပြန်ပလပ်ဖောင်း၏ ဆွေးနွေးပွဲ",
+		"help_doc": "အကူအညီစာရွက်စာတမ်း",
+		"code_add": "ကုဒ်ကိုကြည့်ရှုပြီး ဒေါင်းလုဒ်လုပ်ပါ။",
+		"test_declare": "ဤဝဘ်ဆိုဒ်ဗားရှင်းသည် လုပ်ဆောင်ချက်စမ်းသပ်ရန်အတွက်သာဖြစ်ပြီး၊ ယခုအချိန်အထိ သုံးစွဲသူများ၏ ကိုယ်ရေးကိုယ်တာဒေတာအတွက် အာမခံချက်မရှိပါ။",
+		"project_introduce_inbrief": "ပါဠိကျမ်းဂန်ဘာသာပြန်ပရောဂျက်၏ ယေဘုယျအယူအဆ",
+		"start": "စလိုက်ရအောင်",
+		"wikipali_suite": "wikipali အစုံ/အစု",
+		"encyclopedia": "ပါဠိစွယ်စုံကျမ်း",
+		"txt_search": "စာသားရှာဖွေမှု",
+		"title_search": "ခေါင်းစဉ်ရှာဖွေမှု",
+		"dict_builder": "PCD Dict- တည်ထောင်သူ",
+		"classroom": "သင်တန်း",
+		"filter": "စစ်ထုတ်ခြင်း/စစ်ထုတ်ကိရိယာ",
+		"result": "ရလဒ်။ အကျိုး။",
+		"find_about": "အကြောင်း&nbsp;",
+		"presented_in": "တင်ပြခဲ့သည်&nbsp;in&nbsp;",
+		"books": "&nbsp;စာအုပ်များ",
+		"times": "&nbsp;အချိန်များ",
+		"not_login": "ယခုအကောင့်ဝင်ရောက်ပါ။",
+		"database": "ဒေတာအချက်အလက်",
+		"open_with": "ဖြင့်ဖွင့်ပါ။",
+		"reader": "wikipāli စာဖတ်သူ",
+		"folk": "လူထု။ လူတို့။",
+		"and": "&nbsp;and&nbsp;",
+		"digest": "အတိုချုပ်။အကျဉ်း။",
+		"composition": "ဖွဲ့စည်းမှု&nbsp;",
+		"corpus_statistics": "corpus ကိန်းဂဏန်းများ",
+		"studio": "စတူဒီယို",
+		"library": "စာကြည့်တိုက်",
+		"turbo_split": "Turbo ခွဲပါ။",
+		"full_text": "စာသားအပြည့်အစုံ",
+		"word_weight": "ဤစကားလုံး​၏လေးနက်မှု",
+		"characters": "အက္ခရာ။ စာလုံး။",
+		"real_declension": "ယုတ်မာခြင်း၏အဖြစ်မှန်",
+		"forms": "စာလုံးပေါင်းပုံစံများ",
+		"add_to": "ထည့်သည်",
+		"undone_function": "မပြီးဆုံးသေးသောလုပ်ဆောင်ချက်",
+		"click_to_chart": "ဇယားကို စစ်ဆေးရန် နှိပ်ပါ။",
+		"frequency": "အကြိမ်ရေ",
+		"declension_list": "Declension စာရင်း",
+		"distribution": "ဖြန့်ဝေဇယား",
+		"statistical": "ကိန်းဂဏန်း&nbsp;",
+		"chart": "ဇယား",
+		"in": "ပစ္စုပ္ပန်",
+		"present": "",
+		"sutta": "သုတ္တ",
+		"vinaya": "ဝိနယ",
+		"abhidhamma": "အဘိဓမ္မ",
+		"anna": "အည",
+		"mula": "မူလ",
+		"atthakatha": "အဋ္ဌကထာ",
+		"tika": "ဋီကာ",
+		"times2": "အချိန်များ",
+		"co_doc": "ပူးပေါင်းဆောင်ရွက်စာရွက်စာတမ်း",
+		"open": "ဖွင့်&nbsp;",
+		"general": "အထွေထွေ",
+		"username": "အကောင့်ဝင်ရန် ID",
+		"change_password": "စကားဝှက်ကိုပြောင်းပါ။",
+		"ignore": "လျစ်လျူရှု",
+		"oversize_to_load": "အရွယ်အစားကြီးခြင်းကြောင့် တင်၍မရပါ၊ ကျေးဇူးပြု၍ ဆောင်းပါးများ အပိုင်းအခြားကို လျှော့ချပါ။",
+		"page_end": "စာမျက်နှာ၏အဆုံး",
+		"academy": "အထူးပညာရပ်သင်ကျောင်း၊ တက္ကသိုလ်။ အနုပညာ၊ သိပ္ပံ စသည် (တော်ဝင်) အသင်းအဖွဲ့။",
+		"interface": "ကြားခံဆက်သွယ်ပေးသည့် နည်းစနစ်။",
+		"preference": "နှစ်သက် မှု။ လိုလားမှု။ စိတ်ဝင်စားမှု။ ဦးစားပေးမှု။ အကြိုက်ဆုံးအရာ။",
+		"appearance": "ရောက်လာခြင်း။ ရောက်ရှိလာခြင်း။ ပေါ်လာခြင်း။ပုံပန်း။",
+		"theme": "အဓိကဆိုလိုရင်း။ အာဘော်။",
+		"first_choice_word": "ပထမရွေးချယ်မှုသက်တမ်း",
+		"pali_word": "ပါဠိစကားလုံး",
+		"required": "လိုအပ်သည်။",
+		"optional": "ရွေးချယ်ခွင့်",
+		"comment": "မှတ်ချက်များ",
+		"my_term": "ကျွနုပ်အခေါ်အဝေါ်",
+		"scan_in_reader": "စာဖတ်သူတွင်စကင်န်ဖတ်ပါ။",
+		"selected": "မှတ်ပါ",
+		"to_be_selected": "ရွေးချယ်ခံရရန်",
+		"text_without_title": "ခေါင်းစဉ်မပါသောစာသား",
+		"end_of_text": "ကြိုတင်မရှိပါ။",
+		"begin_of_text": "နောက်ထပ်မရှိပါ။",
+		"chapter_select": "ဘယ်ဘက်ဘေးဘားရှိ အခန်းတစ်ခန်းကို ရွေးပါ။",
+		"kala_pakkha": "ကာဠပက္ခ",
+		"sukka_pakkha": "သုက္ကပက္ခ",
+		"com_dict": " လူထု အဘိဓာန်။ ",
+		"contributor": "ပံ့ပိုးကူညီသူ",
+		"interface_language": "ကြားခံဆက်သွယ်ပေးသည့်ဘာသာစကား။",
+		"translation_language": "ဘာသာပြန်ဘာသာစကားများ",
+		"magic_dict_language": "အဘိဓာန်ဘာသာစကားများ",
+		"priority": "ဦးစားပေး",
+		"no_need": "မလိုပါဘူး",
+		"not_started": "မစသေးပါ။",
+		"in_progress": "ဆောင်ရွက်ဆဲဖြစ်သည်",
+		"already_over": "ပြီးသွားပြီ",
+		"revise": "ပြန်လည်ပြင်ဆင်ပါ။",
+		"relational_map": "ဆက်စပ်မြေပုံ",
+		"pp": "အတိတ်အပိုင်း",
+		"prp": "လက်ရှိပါဝင်မှု",
+		"fpp": "အနာဂတ် Passive Participle",
+		"new_lesson": "သင်ခန်းစာအသစ်တစ်ခုထပ်ထည့်ပါ။",
+		"sub_title": "စာတန်းထိုး",
+		"introduction": "မိတ်ဆက်",
+		"speaker": "ဟောသူ။ ပြောသူ။ ",
+		"notice_live": "တိုက်ရိုက်ထုတ်လွှင့်မှု အသိပေးချက်",
+		"record_replay": "မှတ်တမ်းတင်ပြီး ပြန်ဖွင့်ပါ။",
+		"time_arrange": "အချိန်အစီအစဉ်",
+		"duration": "ကြာချိန်",
+		"attachment": "ဆက်နွှယ်ပတ်သက်မှု။ ဆက်စပ်မှု။",
+		"submit": "တင်ပြပါ။",
+		"create_course": "သင်တန်းဖန်တီးပါ။",
+		"created_time": "ဖန်တီးချိန်",
+		"modified_time": "ပြုပြင်ထားသောအချိန်",
+		"num_of_hit": "တိုက်သည်။ ထိသည်။ မှန်သည်။စသည့်အရေအတွက်",
+		"all_courses": "သင်တန်းများအားလုံး",
+		"num_of_played": "ဗီဒီယိုကြည့်ရှုမှုများ",
+		"recent_update": "လတ်တလော အပ်ဒိတ်/ လတ်တလော အခြေအနေ။ ",
+		"course_begin": "သင်တန်းစမည့်အချိန်",
+		"num_of_lesson": "သင်ခန်းစာကာလ အရေအတွက်",
+		"signed_up": "အကောင့်ဖွင့်ပါ။",
+		"sign_up": "အကောင့်ဖွင့်ပါ။",
+		"watch": "ကြည့်ရှုသည်",
+		"watched": "ကြည့်ရှုခဲ့သည်",
+		"send": "ပို့သည်",
+		"accept_copy": "လက်ခံသည် နှင့်  ကူးယူသည်",
+		"with_idea": "ကျွနုပ်မှအကြံတစ်ခုရှိတယ်...",
+		"text_num": "စာသားနံပါတ်",
+		"copied_to_clipboard": "ကလစ်ဘုတ်သို့ ကူးယူထားသည်။",
+		"I_know": "နားလည်ပြီ!",
+		"text": "စာသား&nbsp;",
+		"anthology": "ကဗျာစာအုပ်",
+		"channel": "ချန်နယ် & စတိုင်",
+		"channels": "ချန်နယ်များစာရင်း",
+		"like": "ကြိုက်သည်။",
+		"blank": "ဗလာ",
+		"vocabulary_list": "စကားလုံးများစာရင်း",
+		"private": "သီးသန့်",
+		"private_note": "အခြားသူများအတွက် URL မရှိပါ၊ စာရင်းသွင်းသူဖိဒ်တွင် မပြပါ၊ ရှာဖွေမှုနှင့် ဆက်စပ်မှု",
+		"unlisted": "စာရင်းမဝင်",
+		"unlisted_note": "URL၊ စာရင်းသွင်းသူဖိဒ်တွင် မပြဘဲ၊ ရှာဖွေမှုနှင့် ဆက်စပ်မှုကို မျှဝေနိုင်သည်။",
+		"public": "အများနှင့်သက်ဆိုင်သော",
+		"public_note": "URL မျှဝေနိုင်သည်၊ စာရင်းသွင်းသူဖိဒ်တွင်ပြသသည်၊ ရှာဖွေမှုနှင့်ဆက်စပ်သည်။",
+		"copy_link": "လင့်ခ်ကိုကူးယူပါ။",
+		"copy_share_link": "မျှဝေထားသောလင့်ခ်ကို ကူးယူပါ။",
+		"saved": "သိမ်းထားပြီး။",
+		"title_necessary": "ခေါင်းစဉ်လိုအပ်သည်။",
+		"example": "ဥပမာ",
+		"privacy": "ကိုယ်ရေးကိုယ်တာ",
+		"new_composition": "ဖွဲ့စည်းမှုအသစ်",
+		"add": "ထည့်ပါ&nbsp;",
+		"completed": "ပြီးပါပြီ။",
+		"ongoing": "လုပ်ဆောင်ဆဲ",
+		"popular": "နာမည်ကြီး",
+		"recommendation": "ထောက်ခံချက်",
+		"collection": "စုဆောင်းမှု",
+		"rates": "နှုန်းထားများ",
+		"updated": "မွမ်းမံထားသည်။/ နောက်ဆုံးအခြေအနေ",
+		"my_zone": "ကျွနုပ်ဇုန်/ကျွနုပ်နေရာ",
+		"share_to": "မျှဝေပါ။",
+		"EXP": "EXP",
+		"composition_structure": "ဖွဲ့စည်းမှုဖွဲ့စည်းပုံ",
+		"search_tools": "ရှာဖွေမှု&nbsp;ကိရိယာများ",
+		"timeline": "အချိန်ဇယား",
+		"extension": "တိုးချဲ့မှု",
+		"no_created": "&nbsp;မဖန်တီးရသေးပါ။",
+		"create_now": "ယခုဖန်တီးပါ။",
+		"only_this_para": "ဤစာပိုဒ်ကိုသာ ပြပါ။",
+		"no": "မရှိ&nbsp;",
+		"select": "ရွေးချယ်ပါ။",
+		"history": "သမိုင်း",
+		"top_search": "ထိပ်တန်းရှာဖွေမှု",
+		"similar_sentences": "အလားတူစာကြောင်းများ",
+		"close": "ပိတ်သည်။",
+		"timezone": "အချိန်ဇုန် ။တူညီသော ဒေသစံတော်ချိန်အကန့်။",
+		"subfield": "နယ်ပယ်ခွဲ",
+		"local": "ပြည်တွင်း ။ဒေသခံ။ နယ်ခံ။",
+		"form_sent": "ပေးထားသော စကားလုံးများဖြင့် ကလစ်ဘုတ်သို့ ကော်ပီကူးပါ။",
+		"hot_topic": "ရေပန်းစားသော အကြောင်းအရာ။ ခေါင်းစဉ်။",
+		"composition_intro": "Pāḷi ကို လွယ်လွယ်ကူကူ ဖတ်နိုင်စေရန်<br>Pali ဝေါဟာရဖြေရှင်းချက်<br>Pāḷiကို အုပ်စုတွင် ဘာသာပြန်ရန်အတွက်<br>Pāḷi တွင် အရင်းအမြစ်ကိုးကားချက်ကို ပြပါ",
+		"jump_to_this_sent": "ဒီစာကြောင်းကို ကျော်လိုက်ပါ။",
+		"show_nissaya": "nissaya ကိုပြပါ။",
+		"related_para": "ဆက်စပ်&nbsp;စာပိုဒ်",
+		"disable": "မဖေါ်ပြပါ။",
+		"disable_note": "ကျွနုပ်အပါအဝင်မည်သူမဆို မဖေါ်ပြပါ နှင့် မမြင်နိုင်။",
+		"not_found": "မတွေ့ပါ။",
+		"progress_curve": "တိုးတက်မှုမျဉ်းကွေး",
+		"day_EXP": "နေ့စဉ် EXP",
+		"Jan": "ဇန်နဝါရီလ",
+		"Feb": "ဖေဖေါ်ဝါရီလ",
+		"Mar": "မတ်လ",
+		"Apr": "ဧပရယ်လ",
+		"May": "မေလ",
+		"Jun": "ဇွန်လ",
+		"Jul": "ဇူလိုင်လ",
+		"Aug": "ဩဂုတ်လ",
+		"Sep": "စက်တင်ဘာလ",
+		"Oct": "အောက်တိုဘာလ",
+		"Nov": "နိုဝင်ဘာလ",
+		"Dec": "ဒီဇင်ဘာလ",
+		"EXP_in_total": "စုစုပေါင်း EXP",
+		"day_action": "နေ့စဉ်လုပ်ဆောင်ချက်များ",
+		"action": "လုပ်ဆောင်ချက်များ",
+		"cooperators": "ပူးပေါင်းဆောင်ရွက်သူများ",
+		"person": "လူ",
+		"write": "ရေးသည်",
+		"sub_group": "စီမံကိန်း။ စီမံချက်။",
+		"your": "သင့်အတွက်",
+		"status": "အခြေအနေ",
+		"in_recycle_bin": "&nbsp;အမှိုက်ပုံးတွင်",
+		"cover": "ဖုံးသည်။ အုပ်သည်။ ခြုံသည်။ လွှမ်းသည်။ ကာသည်။ ကွယ်သည်။",
+		"member": "အဖွဲ့ဝင်",
+		"new_group": "အဖွဲ့ ဖန်တီးပါ။",
+		"new_sub_group": "စီမံကိန်း ဖန်တီးပါ။",
+		"owner": "ပိုင်ရှင်။",
+		"manager": "အလုပ်ကိစ္စစီမံခန့်ခွဲသူ။ မန်နေဂျာ။",
+		"enter": "ဝင်သည်။ ဝင်လာသည်။",
+		"avatar": "ကိုယ်ပွား",
+		"display": "ပြသခြင်း။",
+		"none": "မရှိ",
+		"cooperate_group": "သမဝါယမအဖွဲ့",
+		"personal": "ကိုယ်ရေးကိုယ်တာ",
+		"empty_null_mark": "ဒီမှာ အရမ်းတိတ်ဆိတ်နေတယ်။",
+		"lesson_intro": "ပါဠိပညာရှင်များ conon ရှင်းပြပုံကို လေ့လာကြည့်ရအောင်",
+		"teaching_course": "သင်ကြားရေးသင်ခန်းစာ",
+		"watching_course": "ကြည့်ရှုရေးသင်ခန်းစာ",
+		"searching_instruction": "ရှာဖွေခြင်းလမ်းညွှန်",
+		"dict_searching_placehold": "သီးခြားရှာဖွေရန် စကားလုံးတစ်လုံးတွင် “+” ထည့်ပါ။",
+		"copy_to": "သို့ ကူးယူပါ။",
+		"add_tran": "ဘာသာပြန်ထည့်ပါ။",
+		"no_updated": "နောက်ဆုံးupdate အခြေအနေမရှိပါ။",
+		"secs_ago": "&nbsp;ပြီးခဲ့သော စက္ကန့်",
+		"mins_ago": "&nbsp;ပြီးခဲ့သော မိနစ်",
+		"hs_ago": "&nbsp;ပြီးခဲ့သော နာရီ",
+		"days_ago": "&nbsp;ပြီးခဲ့သော ရက်များ",
+		"weeks_ago": "&nbsp;ပြီးခဲ့သော အပတ်များ",
+		"months_ago": "&nbsp;ပြီးခဲ့သော လများ",
+		"year_ago": "&nbsp;ပြီးခဲ့သော နှစ်",
+		"years_ago": "&nbsp;ပြီးခဲ့သော နှစ်များ",
+		"similar": "ဆင်သော။ တူသော။ အလားတူသော။ ",
+		"suggest": "အကြံပြုသည်",
+		"next_line": "နောက်တစ်ကြောင်း",
+		"link": "လင့်ခ်",
+		"co_channel": "ပူးပေါင်းဆောင်ရွက်သော ချန်နယ်များ",
+		"permission": "ခွင့်ပြုချက်",
+		"first_page": "ပထမ စာမျက်နှာ",
+		"previous_page": "အရှေ့/အရင်စာမျက်နှာ",
+		"next_page": "နောက်ထပ် စာမျက်နှာ",
+		"last_page": "နောက်ဆုံး စာမျက်နှာ",
+		"citations": "ကိုးကားခြင်း",
+		"reference": "ကျမ်းကိုး။",
+		"original": "မူရင်း",
+		"page_num": "စာမျက်နှာ",
+		"palihandbook": "ပါဠိ လက်ကိုင်စာအုပ်",
+		"viewer": "ကြည့်ရှုသူ",
+		"invalid_email": "မမှန်ကန်သောအီးမေးလ်",
+		"invalid_token": "မမှန်ကန်သော တိုကင်",
+		"username_too_long": "အသုံးပြုသူအမည် ရှည်လွန်းသည်။",
+		"username_too_short": "အသုံးပြုသူအမည် တိုလွန်းသည်။",
+		"username_invaild_symbol": "အသုံးပြုသူ အမည် မမှန်ကန်သောသင်္ကေတ",
+		"password_invaild_symbol": "အသုံးပြုသူ စကားဝှက် မမှန်ကန်သောသင်္ကေတ",
+		"error_net_404": "မတွေ့ပါ",
+		"error_net_500": "အတွင်းဆာဗာမှားယွင်းမှု",
+		"error_net_timeout": "ခဏပွဲရပ်ခြင်း",
+		"error_net_abort": "ဖျက်သိမ်းသည်။",
+		"error_net_parsererror": "ရုပ်ထွက်မှားယွင်းသည်။",
+		"caus": "အကြောင်း",
+		"pass": "အောင်သည်။ ကျော်ဖျက်သည်။",
+		"space": "&nbsp;",
+		"channel_type": "ချန်နယ်အမျိုးအစား",
+		"community_new": "community new",
+		"pali_text": "pali text",
+		"my_read": "recent",
+		"master_copy": "ပါလိ",
+		"nissaya": "နိဿယ",
+		"show_this_para_only": "show this paragraph only",
+		"original_text":"original text",
+		"white_space": "&nbsp;",
+		"latest": "latest",
+		"dev_history": "development history",
+		"": ""
+	},
+	"grammastr": [
+		{
+			"id": "$",
+			"value": "·"
+		},
+		{
+			"id": "$",
+			"value": "·"
+		},
+		{
+			"id": "$",
+			"value": "·"
+		},
+		{
+			"id": ".nt.",
+			"value": "န"
+		},
+		{
+			"id": ".m.",
+			"value": "ပု"
+		},
+		{
+			"id": ".f.",
+			"value": "ထီ"
+		},
+		{
+			"id": ".sg.",
+			"value": "ဧက"
+		},
+		{
+			"id": ".pl.",
+			"value": "ဗဟု"
+		},
+		{
+			"id": ".nom.",
+			"value": "ပ"
+		},
+		{
+			"id": ".acc.",
+			"value": "ဒု"
+		},
+		{
+			"id": ".inst.",
+			"value": "တ"
+		},
+		{
+			"id": ".dat.",
+			"value": "စ"
+		},
+		{
+			"id": ".abl.",
+			"value": "မီ"
+		},
+		{
+			"id": ".gen.",
+			"value": "ဆ"
+		},
+		{
+			"id": ".loc.",
+			"value": "သ"
+		},
+		{
+			"id": ".voc.",
+			"value": "အာ"
+		},
+		{
+			"id": ".imp.",
+			"value": "အာဏတ္တိ"
+		},
+		{
+			"id": ".cond.",
+			"value": "ပရိကပ္ပ"
+		},
+		{
+			"id": ".opt.",
+			"value": "ပရိကပ္ပ"
+		},
+		{
+			"id": ".pres.",
+			"value": "ပစ္စုပ္ပန္န"
+		},
+		{
+			"id": ".aor.",
+			"value": "အတီတ"
+		},
+		{
+			"id": ".fut.",
+			"value": "အနာဂတ"
+		},
+		{
+			"id": ".med.",
+			"value": "အတ္တနော"
+		},
+		{
+			"id": ".1p.",
+			"value": "ဥတ္တရပုရိသ"
+		},
+		{
+			"id": ".2p.",
+			"value": "မဇ္ဈိမပုရိသ"
+		},
+		{
+			"id": ".3p.",
+			"value": "ပဌမပုရိသ"
+		},
+		{
+			"id": ".ger.",
+			"value": "တွာ"
+		},
+		{
+			"id": ".abs.",
+			"value": "တွာ"
+		},
+		{
+			"id": ".inf.",
+			"value": "တုံ"
+		},
+		{
+			"id": ".pf.",
+			"value": "pf."
+		},
+		{
+			"id": ".act.",
+			"value": "act."
+		},
+		{
+			"id": ".refl.",
+			"value": "refl."
+		},
+		{
+			"id": ".prp.",
+			"value": "မာနန္တ"
+		},
+		{
+			"id": ".prpa.",
+			"value": "prpa."
+		},
+		{
+			"id": ".prpp.",
+			"value": "prpp."
+		},
+		{
+			"id": ".pp.",
+			"value": "pp."
+		},
+		{
+			"id": ".ppa.",
+			"value": "ppa."
+		},
+		{
+			"id": ".ppp.",
+			"value": "ppp."
+		},
+		{
+			"id": ".futp.",
+			"value": "futp."
+		},
+		{
+			"id": ".fpa.",
+			"value": "fpa."
+		},
+		{
+			"id": ".fpp.",
+			"value": "ကိစ္စ"
+		},
+		{
+			"id": ".grd.",
+			"value": "Grd."
+		},
+		{
+			"id": ".pass.",
+			"value": "Pass."
+		},
+		{
+			"id": ".caus.",
+			"value": "Caus."
+		},
+		{
+			"id": ".desid.",
+			"value": "desid."
+		},
+		{
+			"id": ".intens.",
+			"value": "intens."
+		},
+		{
+			"id": ".denom.",
+			"value": "denom."
+		},
+		{
+			"id": ".n.",
+			"value": "နာမ"
+		},
+		{
+			"id": ".v.",
+			"value": "က္ရိယာ"
+		},
+		{
+			"id": ".ind.",
+			"value": "ဗ္ယ"
+		},
+		{
+			"id": ".v:ind.",
+			"value": "ကြိ၊ဝိ"
+		},
+		{
+			"id": ".adv.",
+			"value": "ကရဏတ္ထ"
+		},
+		{
+			"id": ".adj.",
+			"value": "တိ"
+		},
+		{
+			"id": ".ti.",
+			"value": "တိ"
+		},
+		{
+			"id": ".num.",
+			"value": "num."
+		},
+		{
+			"id": ".pron.",
+			"value": "pron."
+		},
+		{
+			"id": ".v:base.",
+			"value": "v:base."
+		},
+		{
+			"id": ".ti:base.",
+			"value": "n.a:base."
+		},
+		{
+			"id": ".adj:base.",
+			"value": "adj:base."
+		},
+		{
+			"id": ".n:base.",
+			"value": "n:base."
+		},
+		{
+			"id": ".pron:base.",
+			"value": "pron:base."
+		},
+		{
+			"id": ".pron.per.",
+			"value": "pron.per."
+		},
+		{
+			"id": ".pron.demon.",
+			"value": "pron.demon."
+		},
+		{
+			"id": ".pron.rel.",
+			"value": "pron.rel."
+		},
+		{
+			"id": ".pron.interr.",
+			"value": "pron.interr."
+		},
+		{
+			"id": ".pron.indef.",
+			"value": "pron.indef."
+		},
+		{
+			"id": ".conj.",
+			"value": "conj."
+		},
+		{
+			"id": ".prep.",
+			"value": "prep."
+		},
+		{
+			"id": ".interj.",
+			"value": "interj."
+		},
+		{
+			"id": ".comp.",
+			"value": "စကားပေါင်း"
+		},
+		{
+			"id": ".pre.",
+			"value": "prefix."
+		},
+		{
+			"id": ".root.",
+			"value": "ဓာတု"
+		},
+		{
+			"id": ".part.",
+			"value": "part"
+		},
+		{
+			"id": ".suf.",
+			"value": "suffix."
+		},
+		{
+			"id": ".end.",
+			"value": "ဝိဘတ္တိ"
+		},
+		{
+			"id": "_un_auto_factormean_",
+			"value": "—Auto—"
+		},
+		{
+			"id": "_un_auto_mean_",
+			"value": "&nbsp;× × ×&nbsp;"
+		},
+		{
+			"id": ".un.",
+			"value": "သန္ဓိ"
+		}
+	],
+	"type_str": [
+		{
+			"id": ".n.",
+			"value": "နာမ"
+		},
+		{
+			"id": ".v.",
+			"value": "ကြိ"
+		},
+		{
+			"id": ".ind.",
+			"value": "ဗျ"
+		},
+		{
+			"id": ".v:ind.",
+			"value": "ကြိ၊ဝိ"
+		},
+		{
+			"id": ".adj.",
+			"value": "တိ"
+		},
+		{
+			"id": ".ti.",
+			"value": "တိ"
+		},
+		{
+			"id": ".pron.",
+			"value": "သဗ္ဗနာမ"
+		},
+		{
+			"id": ".num.",
+			"value": "နာမ"
+		},
+		{
+			"id": ".un.",
+			"value": "သန္ဓိ"
+		},
+		{
+			"id": ".comp.",
+			"value": "သမာသ"
+		},
+		{
+			"id": ".pron:base.",
+			"value": "လိင်္ဂ"
+		},
+		{
+			"id": ".adj:base.",
+			"value": "လိင်္ဂ"
+		},
+		{
+			"id": ".n:base.",
+			"value": "လိင်္ဂ"
+		},
+		{
+			"id": ".ti:base.",
+			"value": "လိင်္ဂ"
+		},
+		{
+			"id": ".num:base.",
+			"value": "လိင်္ဂ"
+		},
+		{
+			"id": ".pre.",
+			"value": "ဥပသဂ္ဂ"
+		},
+		{
+			"id": ".root.",
+			"value": "ဓာတု"
+		},
+		{
+			"id": ".suf.",
+			"value": "ပစ္စယ"
+		},
+		{
+			"id": ".end.",
+			"value": "case end."
+		},
+		{
+			"id": ".v:base.",
+			"value": "ဝိဘတ္တိ"
+		}
+	],
+	"formula": [
+		{
+			"id": ".pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".imp.",
+			"value": ""
+		},
+		{
+			"id": ".cond.",
+			"value": ""
+		},
+		{
+			"id": ".opt.",
+			"value": ""
+		},
+		{
+			"id": ".pres.",
+			"value": ""
+		},
+		{
+			"id": ".aor.",
+			"value": ""
+		},
+		{
+			"id": ".pf.",
+			"value": ""
+		},
+		{
+			"id": ".fut.",
+			"value": ""
+		},
+		{
+			"id": ".prp.",
+			"value": ""
+		},
+		{
+			"id": ".prpa.",
+			"value": ""
+		},
+		{
+			"id": ".prpp.",
+			"value": ""
+		},
+		{
+			"id": ".pp.",
+			"value": ""
+		},
+		{
+			"id": ".ppa.",
+			"value": ""
+		},
+		{
+			"id": ".ppp.",
+			"value": ""
+		},
+		{
+			"id": ".futp.",
+			"value": ""
+		},
+		{
+			"id": ".fpa.",
+			"value": ""
+		},
+		{
+			"id": ".fpp.",
+			"value": ""
+		},
+		{
+			"id": ".grd.",
+			"value": ""
+		},
+		{
+			"id": ".pass.",
+			"value": ""
+		},
+		{
+			"id": ".caus.",
+			"value": ""
+		},
+		{
+			"id": ".desid.",
+			"value": ""
+		},
+		{
+			"id": ".intens.",
+			"value": ""
+		},
+		{
+			"id": ".ger.",
+			"value": ""
+		},
+		{
+			"id": ".abs.",
+			"value": ""
+		},
+		{
+			"id": ".inf.",
+			"value": ""
+		}
+	],
+	"parent_formula": [
+		{
+			"id": ".imp.",
+			"value": ""
+		},
+		{
+			"id": ".cond.",
+			"value": ""
+		},
+		{
+			"id": ".opt.",
+			"value": ""
+		},
+		{
+			"id": ".pres.",
+			"value": ""
+		},
+		{
+			"id": ".aor.",
+			"value": ""
+		},
+		{
+			"id": ".pf.",
+			"value": ""
+		},
+		{
+			"id": ".fut.",
+			"value": ""
+		},
+		{
+			"id": ".prp.",
+			"value": ""
+		},
+		{
+			"id": ".prpa.",
+			"value": ""
+		},
+		{
+			"id": ".prpp.",
+			"value": ""
+		},
+		{
+			"id": ".pp.",
+			"value": ""
+		},
+		{
+			"id": ".ppa.",
+			"value": ""
+		},
+		{
+			"id": ".ppp.",
+			"value": ""
+		},
+		{
+			"id": ".futp.",
+			"value": ""
+		},
+		{
+			"id": ".fpa.",
+			"value": ""
+		},
+		{
+			"id": ".fpp.",
+			"value": ""
+		},
+		{
+			"id": ".grd.",
+			"value": ""
+		},
+		{
+			"id": ".pass.",
+			"value": ""
+		},
+		{
+			"id": ".caus.",
+			"value": ""
+		},
+		{
+			"id": ".desid.",
+			"value": ""
+		},
+		{
+			"id": ".intens.",
+			"value": ""
+		},
+		{
+			"id": ".ger.",
+			"value": ""
+		},
+		{
+			"id": ".abs.",
+			"value": ""
+		},
+		{
+			"id": ".inf.",
+			"value": ""
+		}
+	],
+	"dictname": [
+		{
+			"id": "bh",
+			"value": "巴漢-明法尊者"
+		},
+		{
+			"id": "sy",
+			"value": "漢譯-水野弘元"
+		},
+		{
+			"id": "user",
+			"value": "User Dict"
+		},
+		{
+			"id": "co",
+			"value": "Concise"
+		},
+		{
+			"id": "unkow",
+			"value": "Unknown"
+		},
+		{
+			"id": "vn",
+			"value": "SYS_IR-V"
+		},
+		{
+			"id": "SCR",
+			"value": "Root-中"
+		},
+		{
+			"id": "ENR",
+			"value": "Root-EN"
+		},
+		{
+			"id": "parts",
+			"value": "Parts"
+		},
+		{
+			"id": "sys_ir",
+			"value": "SYS_IR-K"
+		},
+		{
+			"id": "PM",
+			"value": "Pāḷi-Myr"
+		},
+		{
+			"id": "",
+			"value": ""
+		},
+		{
+			"id": "",
+			"value": ""
+		},
+		{
+			"id": "",
+			"value": ""
+		}
+	],
+	"dictname_short": [
+		{
+			"id": "bh",
+			"value": "巴漢"
+		},
+		{
+			"id": "sy",
+			"value": "水漢"
+		},
+		{
+			"id": "user",
+			"value": "User"
+		},
+		{
+			"id": "co",
+			"value": "Con"
+		},
+		{
+			"id": "unkow",
+			"value": "Unknown"
+		},
+		{
+			"id": "vn",
+			"value": "SYS_IR-V"
+		},
+		{
+			"id": "SCR",
+			"value": "根中"
+		},
+		{
+			"id": "ENR",
+			"value": "Root"
+		},
+		{
+			"id": "parts",
+			"value": "Parts"
+		},
+		{
+			"id": "sys_ir",
+			"value": "IR"
+		},
+		{
+			"id": "PM",
+			"value": "Pāḷi-Myr"
+		},
+		{
+			"id": "",
+			"value": ""
+		},
+		{
+			"id": "",
+			"value": ""
+		},
+		{
+			"id": "",
+			"value": ""
+		}
+	],
+	"language": {
+		"en": "English",
+		"si": "သီဟဠ",
+		"my": "သုဝဏ္ဏဘူမိ",
+		"zh": "စီနဘာသ",
+		"zh_cn": "Simple စီနဘာသ",
+		"zh_tw": "Traditional စီနဘာသ",
+		"zh-hans": "Simple စီနဘာသ",
+		"zh-hant": "Traditional စီနဘာသ"
+	},
+	"LogType": {
+		"10": "edit channel",
+		"11": "new channel",
+		"20": "edit article",
+		"21": "new article",
+		"30": "lookup",
+		"40": "edit term",
+		"41": "lookup term",
+		"42": "_TERM_IN_SENT_",
+		"50": "search",
+		"60": "edit wbw",
+		"61": "realation map",
+		"62": "new wbw",
+		"70": "edit sentence",
+		"71": "new sentence",
+		"80": "edit collection",
+		"81": "new collection",
+		"90": "search nissaya",
+		"100": "open reader",
+		"101": "open studio"
+	}
+}

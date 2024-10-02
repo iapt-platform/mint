@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link type="text/css" rel="stylesheet" href="css/main.css"/>
+	<title>Maha Paritta</title>
+	<script language="javascript" src="js/common.js"></script>
+	<script language="javascript" src="js/xml.js"></script>
+	<script language="javascript" src="js/filenew.js"></script>
+	<script language="javascript">
+		var g_device="computer";
+		var strSertch = location.search;
+		if(strSertch.length>0){
+			strSertch = strSertch.substr(1);
+			var sertchList=strSertch.split('&');
+			for (x in sertchList){
+				var item = sertchList[x].split('=');
+				if(item[0]=="device"){
+					g_device=item[1];
+				}
+			}
+		}
+		g_is_mobile=false;
+
+	</script>
+	<style>
+	.bg0{
+		background-color:#FF9;
+	}
+	.bg1{
+		background-color:#AAA;
+	}
+#leftmenuinner1 {
+	/*position: absolute;*/
+	top:0;
+	left:0;
+	height:-moz-calc(100% - 90px); 
+	height:-webkit-calc(100% - 90px); 
+	height: calc(100% - 90px);
+	width: 50%;
+	float: left;
+	display: inline-block;
+}
+#leftmenuinnerinner1 {
+	height:100%;
+	width:100%;
+	overflow-y: auto;
+	overflow-x:hidden;
+	padding: 20px;
+}
+
+	</style>
+</head>
+<body class="mainbody" id="mbody" >
+		<!-- tool bar begin-->
+
+		<div id='toolbar'>
+
+			<!--
+			<script language="javascript">
+			if(!g_is_mobile){
+				document.write("<button id=\"B_Navi\" onclick=\"setNaviVisibility()\" type=\"button\">≡</button> ");
+			}
+			</script>
+			-->
+				<button id="menu_button_home" onclick="goHome()" type="button">Home</button> 
+				<button id="B_FontReduce" type="button" onclick="setPageFontSize(0.9)">A-</button> 
+				<button id="B_FontGain" type="button" onclick="setPageFontSize(1.1)">A+</button>
+				<button id="B_Day" type="button" onclick="setPageColor(0)">白色</button>
+				<button id="B_Sunset" type="button" onclick="setPageColor(1)">黄昏</button>
+				<button id="B_Night" type="button" onclick="setPageColor(2)">夜间</button>
+				<script language="javascript">
+				</script>
+				
+				<span class="editor">
+				<button id="B_Save" onclick="fileNewSave()" type="button">Save</button> 
+				</span>
+				<span id="debug"></span>
+
+		</div>	
+		<!--tool bar end -->
+
+	<div class="main">
+		<!--right side begin-->
+			<div id="leftmenuinner1">
+				<div id="leftmenuinnerinner1">
+					<div id="sutta_text">
+						preview
+					</div>
+				</div>
+			</div>
+			<div class="mainview" style="width:-moz-calc(50% - 80px); width:-webkit-calc(50% - 80px); width: calc(50% - 80px); right:0; ; overflow-x:hidden;" id="body_mainview">
+				<h2>Pāli</h2>
+				<div>
+					<button type="button" onclick="fileNewPreview()">Preview</button>
+					<!--
+					<select name="inputmode" onchange="inputMode(this)">
+						<option value="mix">All in One</option>
+						<option value="single">MutiInput</option>
+					</select>
+					-->
+					<input id="chk_title" type="checkbox" checked="true" />With Title
+					<!--
+					<span id="groupAllInOne">
+					Line:
+					<select id="linenum"  onchange="lineNum(this)">
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+					</select>
+					
+					</span>
+					-->
+				</div>
+				<!--
+				<div id="divlineinfo">
+			
+				<p>1st Line: Pali</p>
+
+				<div id="divline2">
+					2nd Line:
+					<select id="line2language" name="language" onchange="language(this)">
+						<option value="en">English</option>
+						<option value="cn">Chinese</option>
+					</select>
+					<input type="input" value="*"/>
+				</div>					
+
+				
+				<div id="divline3" style="display:none;">
+					3rd Line:
+					<select id="line3language" name="language" onchange="language(this)">
+						<option value="en">English</option>
+						<option value="cn">Chinese</option>
+					</select>
+					<input type="input" value="*"/>
+				</div>
+				
+				<div id="divline4" style="display:none;">
+					4th Line:
+					<select id="line4language" name="language" onchange="language(this)">
+						<option value="en">English</option>
+						<option value="cn">Chinese</option>
+					</select>
+					<input type="input" value="*"/>
+				</div>
+				</div>
+				-->
+				<p><textarea id="txtNewInput" rows="15" cols="100%"></textarea></p>
+				<br/>
+				<div id="inputTran"  >
+					<h2>Translation 1</h2>
+					<div id="tran1">				
+						<select id="tranlanguage1">
+							<option value="cn">Chinese</option>
+							<option value="en">English</option>
+						</select>
+						<input id="tranauthor1" type="input" value="author"/>
+						<p><textarea id="txtNewInputTran1" rows="15" cols="100%" ></textarea></p>
+					</div>
+					<br/>
+					<h2>Translation 2</h2>
+					<div id="tran2">
+						<select id="tranlanguage2">
+							<option value="cn">Chinese</option>
+							<option value="en">English</option>
+						</select>
+						<input id="tranauthor2" type="input" value="author"/>
+						<p><textarea id="txtNewInputTran2" rows="15" cols="100%" ></textarea></p>
+					</div>				
+				</div>
+				<button id="file_new" type="button"  style="display:none;" onclick="newTran()">+</button>
+			</div>
+
+			<div class="debugMsg" id="xmldata"><!--调试信息-->
+				<p>HTML 正文数据</p>
+				<textarea id="htmlstring" rows="10" cols="80"></textarea>
+				<p>XML 数据</p>
+				<textarea id="xmlout" rows="10" cols="80"></textarea>			
+			</div>
+		
+		<!--right side end-->
+	</div>
+
+<div id="modifywin">
+
+</div>
+
+</body>
+</html>
+

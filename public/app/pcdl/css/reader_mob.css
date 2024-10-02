@@ -1,0 +1,31 @@
+.viewswitch_on {
+  -webkit-transform: translateX(0em);
+  -moz-transform: translateX(0em);
+  transform: translateX(0em);
+  box-shadow: 5px 0 20px 5px var(--shadow-color);
+}
+.viewswitch_off {
+  -webkit-transform: translateX(-82em);
+  -moz-transform: translateX(-82em);
+  transform: translateX(-82em);
+}
+#right_panal_toc {
+  -webkit-transform: translateX(100%);
+  -moz-transform: translateX(100%);
+  transform: translateX(100%);
+}
+#main_text_view {
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 2.5em;
+  font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", Arial, Verdana;
+}
+
+#para_nav_prev,
+#para_nav_next {
+  display: none;
+}
+#para_nav_next_a,
+#para_nav_prev_a {
+  display: inline-block;
+}

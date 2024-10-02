@@ -1,0 +1,21 @@
+<html>
+       <body>
+           <div id="container" style="border: 1px solid #333" contentEditable="true" onMouseUp="checkMe()">Type text    here</div>
+
+       </body>
+       <script language="javascript">
+       function checkMe() {
+           var txt = "";
+
+           if (window.getSelection) {
+               txt = window.getSelection();
+           } else if (document.getSelection) {
+               txt = document.getSelection();
+           } else if (document.selection) {
+               txt = document.selection.createRange().text;
+           }
+
+           alert("Selected text is " + txt);
+       }
+       </script>
+</html>

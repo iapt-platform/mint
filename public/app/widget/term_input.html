@@ -1,0 +1,329 @@
+<!--键入[[显示术语下拉菜单-->
+<html>
+	<body>
+		<style>
+			.text_input>.textarea{
+				padding: 5px;
+				font-family: inherit;
+				width: 100%;
+				height: 100px;
+				resize: vertical;
+				font-size: 14px;
+				line-height: 1;
+				border: 1px solid #ddd;
+				white-space: pre-wrap;
+				word-break: break-all;
+				z-index: 1;
+				resize: vertical;
+			}
+			.text_input>.text_shadow{
+				position: absolute;
+				width: 100%;
+				visibility: hidden;
+			}
+			.text_input .cursor{
+				position: absolute;
+				border-left: 1px solid #000;
+			}
+			.text_input>.menu{
+				width: 200px;
+				height:300px;
+				background-color: aqua;
+				box-shadow: #000;
+				position:absolute;
+				display: none;
+				z-index: 100;
+			}
+			.text_input>.menu ul{
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+			}
+			.text_input>.menu ul li{
+				cursor: pointer;
+			}
+			.text_input>.menu ul li:hover{
+				background-color: wheat;
+			}
+			.text_input>.menu .focus{
+				color:red;
+			}
+			.term_at_menu_input{
+				height:1em;
+				border: 1px solid gray;
+			}
+			.text_input{
+				width:100%;
+				position: relative;
+			}
+		</style>
+
+<h2>术语输入测试</h2>
+<div id="kk" style="width:50%;"></div>
+
+<h2>术语输入测试</h2>
+<div id="mm" style="width:60%;"></div>
+
+
+<script>
+	var menuFocusIndex=0;
+	var term_data=["amanussa","anadhiṭṭhita","anantarāya","anissaṭṭha","aniyata","antaravāsaka"];
+	var term_input_text ;
+	var term_input="";
+	document.querySelector("#kk").innerHTML = term_render_text_input("test1 http://aa.org/?book=1&para=1");
+	document.querySelector("#mm").innerHTML =  term_render_text_input("test1 http://aa.org/?book=1&para=1");
+	function term_render_text_input(text){
+		let html ="";
+		html += '<div class="text_input" >';
+		html += '<div class="menu"></div>';
+		html += '<div class="textarea text_shadow"></div>';
+		html += '<textarea class="textarea tran_sent_textarea" onfocus="text_input_textarea_focuse(this)">';
+		html += text;
+		html += '</textarea> ';
+		html += '</div>';
+		return html;
+	}
+	function term_set_word_list_data(el){
+		term_data=["amanussa","anadhiṭṭhita","anantarāya","anissaṭṭha","aniyata","antaravāsaka"];
+	}
+	function text_input_textarea_focuse(el){
+		term_set_word_list_data(el);
+		term_input_text = el;
+		term_input_text.onresize = function(){
+			term_input_text.parentElement.querySelector(".text_shadow").style.height=term_input_text.style.height;
+		}
+		term_input_text.onkeydown = function (e) {
+		term_input_text.style.height = term_input_text.parentElement.querySelector(".text_shadow").scrollHeight
+		let menu = term_input_text.parentElement.querySelector('.menu');
+		switch (e.key) {
+			case "ArrowDown"://down arrow
+				if(menu.style.display=="block"){
+					menuFocusIndex++;
+					if(menuFocusIndex>5){
+						menuFocusIndex=5;
+					}
+					menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
+					return false;					
+				}
+				break;
+			case "ArrowUp"://up arrow
+				if(menu.style.display=="block"){
+					menuFocusIndex--;
+					if(menuFocusIndex<0){
+						menuFocusIndex=0;
+					}
+					menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
+					return false;					
+				}
+			break;
+			case "Enter":
+				if(menu.style.display=="block"){
+					term_insert(term_data[menuFocusIndex]);
+					return false;
+				}
+				/*
+				else{
+					if(!e.shiftKey){
+						return false;
+					}
+				}*/
+				
+				break;
+			case "Escape":
+				break;
+			case "ArrowLeft":
+				if(menu.style.display=="block"){
+					return false;
+				}
+				break;
+			case "ArrowRight":
+				if(menu.style.display=="block"){
+					return false;
+				}
+				break;
+			case "Backspace":
+				if(menu.style.display=="block"){
+					if(term_input.length>0){
+						term_input = term_input.slice(0,-1);
+						menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});						
+					}
+					return false;
+				}
+				break;
+			default:
+				if(menu.style.display=="block"){
+					term_input += e.key;
+					menu.innerHTML=TermAtRenderMenu({focus:menuFocusIndex});
+					return false;
+
+				}
+				break;
+		}
+	}
+		term_input_text.onkeyup = function (e) {
+			let value = term_input_text.value
+			let selectionStart = term_input_text.selectionStart
+			let str1 = value.slice(0, selectionStart)
+			let str2 = value.slice(selectionStart)
+			let textNode1 = document.createTextNode(str1)
+			let textNode2 = document.createTextNode(str2)
+			let cursor = document.createElement('span')
+			cursor.innerHTML = '&nbsp;'
+			cursor.setAttribute('class','cursor')
+			let mirror = term_input_text.parentElement.querySelector('.text_shadow')
+			mirror.innerHTML = ''
+			mirror.appendChild(textNode1)
+			mirror.appendChild(cursor)
+			mirror.appendChild(textNode2)
+			let menu = term_input_text.parentElement.querySelector('.menu');	
+			if(str1.slice(-2)=="[[" && menu.style.display!="block"){
+				menuFocusIndex=0;
+				menu.innerHTML=TermAtRenderMenu({focus:0});
+				menu.style.display="block";
+				menu.style.top=cursor.offsetTop+14;
+				menu.style.left=cursor.offsetLeft;
+			}
+
+			if(e.key=="Escape"){
+				term_at_menu_hide();
+			}
+			
+			console.log(e);
+			console.log(cursor.offsetLeft,cursor.offsetTop)
+	}
+	
+	}
+
+	function term_at_menu_hide(){
+		let menu = term_input_text.parentElement.querySelector('.menu');
+		menu.style.display="none";
+		term_input="";
+	}
+	function term_insert(strTerm){
+		let value = term_input_text.value;
+		let selectionStart = term_input_text.selectionStart;
+		let str1 = value.slice(0, selectionStart)
+		let str2 = value.slice(selectionStart);
+		//TODO 光标会跑到最下面
+		term_input_text.value = str1+strTerm+"]]"+str2;
+		term_at_menu_hide();
+	}
+	function TermAtRenderMenu(params) {
+		
+		let html="";
+		html +="<div class='term_at_menu_input'>"+term_input+"|</div>";
+		html +="<ul class='term_at_menu_ul'>";
+		let index=0;
+		let focusIndex = params.focus%term_data.length;
+		for (const it of term_data) {
+			if(term_input=="" || it.indexOf(term_input)!=-1){
+				html +="<li ";
+				if(focusIndex==index){
+					html +="class='focus' "
+				}
+				html += "onclick=\"term_insert('"+it+"')\" ";
+				index++;
+				html +=">"+index+ ". "+it+"<li>";
+			}
+
+		}
+		return html;
+	}
+	
+	/*
+	// element:  t.refs.textarea
+function getCaretPosition(element) {
+  let left;
+  let top;
+  if (document.selection) {
+    element.focus();
+    const range = document.selection.createRange();
+    left = range.boundingLeft + element.scrollLeft;
+    top = range.boundingTop + element.scrollTop;
+  } else {
+    const SHADOWEDITOR = '__shadow_editor__';
+    const SHADOWEDITORTEXT = '__shadow_editor_text__';
+    const SHADOWEDITORCARET = '__shadow_editor_caret__';
+    const shadowEditor = element[SHADOWEDITOR] || document.createElement('div');
+    const shadowEditorCaret = element[SHADOWEDITORCARET] || document.createElement('span');
+    const shadowEditorText = element[SHADOWEDITORTEXT] || document.createElement('span');
+    let focusOffset = { left: 0, top: 0 };
+    if (!element[SHADOWEDITOR]) {
+      // add shadpw element to element's cache
+      element[SHADOWEDITOR] = shadowEditor;
+      element[SHADOWEDITORCARET] = shadowEditorCaret;
+      element[SHADOWEDITORTEXT] = shadowEditorText;
+      // append shadow to document body
+      shadowEditor.appendChild(shadowEditorText);
+      shadowEditor.appendChild(shadowEditorCaret);
+      document.body.appendChild(shadowEditor);
+      // set shadow element's style
+      const style = shadowEditor.style;
+      const computed = window.getComputedStyle ? getComputedStyle(element) : element.currentStyle;  // currentStyle for IE < 9
+
+      if (element.nodeName != 'INPUT') {
+        // only for textarea
+        style.whiteSpace = 'pre-wrap';
+        style.wordWrap = 'break-word';
+      } else {
+        style.whiteSpace = 'nowrap';
+      }
+
+      style.position = 'absolute';
+      style.overflow = 'hidden';
+      style.visibility = 'hidden';
+      properties.forEach((prop) => {
+        style[prop] = computed[prop];
+      });
+
+      shadowEditorCaret.textContent = '|';
+      shadowEditorCaret.style.cssText = 'display:inline-block;width:0;overflow:hidden;word-wrap:break-word;word-break:break-all;';
+    }
+    const offset = getElementOffset(element);
+    shadowEditor.style.top = `${offset.top}px`;
+    shadowEditor.style.left = `${offset.left}px`;
+    const index = element.selectionEnd;
+    const SHADOWEDITORCONTENT = element.value.substring(0, index);
+    shadowEditorText.textContent = SHADOWEDITORCONTENT;
+
+    shadowEditorCaret.style.display = 'inline-block';
+    try { focusOffset = getElementOffset(shadowEditorCaret); } catch (e) { }
+    shadowEditorCaret.style.display = 'none';
+    left = focusOffset.left - element.scrollLeft;
+    top = focusOffset.top - element.scrollTop;
+    const winOffset = getScrollOffset();
+    left -= winOffset.x;
+    top -= winOffset.y;
+  }
+  return {
+    left,
+    top,
+  };
+}
+	*/
+
+	/*
+如果你只是想获得输入框中光标的 offset 的话, 你可以用从 At.js 剥离出来的 jQuery 插件: Caret.js
+
+可以是用AT-JS jquery插件来实现你需要的效果：
+
+下载地址：
+
+http://pan.baidu.com/share/link?shareid=495943&uk=386708086
+
+使用方法：
+
+$("input[name=message]").atWho("@",{
+tpl: "<li id='${uid}' data-value='${name}'>${name} <small>${spacenote}</small></li>",
+'data':friend_list
+});
+评论
+但是如果你想做，你题目描述的东西的话，还是建议用插件。 这里有一个不错的jquery插件： http://ichord.github.io/At.js/
+
+评论
+
+	*/
+</script>
+
+	</body>
+</html>

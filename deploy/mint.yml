@@ -1,0 +1,31 @@
+- hosts: all
+  roles:
+    - ubuntu
+    - os
+    - python3
+    - php
+
+- hosts: www
+  roles:
+    - mint-clone
+    - mint-www
+    - certbot-nginx
+
+- hosts: assets
+  roles:
+    - mint-assets
+    - certbot-nginx
+
+- hosts: db
+  roles:
+    - mint-db
+
+- hosts: zone
+  roles:
+    - mint-zone
+    - certbot-nginx
+
+- hosts: main
+  roles:
+    - mint-main
+    - certbot-nginx

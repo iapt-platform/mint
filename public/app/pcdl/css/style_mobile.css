@@ -1,0 +1,90 @@
+:root{
+    --bgDisplay:block;
+}
+
+body {
+
+}
+
+.left_nav_bar{
+	display:none;
+}
+.right_nav_bar_off{
+	position: fixed;
+    top: 0;
+	width:100%;
+	height:100%;
+	background-color:white;
+	-webkit-transform:translateX(100%);
+	-moz-transform:translateX(100%);
+	transform:translateX(100%);
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}
+
+.right_nav_bar_on{
+	position: fixed;
+    top: 0;
+	width:100%;
+	height:100%;
+	background-color:white;
+    -webkit-transform:translateX(0em);
+    -moz-transform:translateX:(0em);
+    transform:translateX:(0em);
+	-webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+	overflow-y: scroll;
+
+}
+
+#search_input{
+	display:none;
+}
+#tool_bar_right{
+	display:none;
+}
+#header_nav{
+	display:none;
+}
+#footer_nav{
+	display:flex;
+}
+#page_header_4{
+	display:flex;
+}
+.index_inner{
+	margin-top: 0; 
+}
+
+.book_block{
+    width: initial;
+    height: initial;
+    display: flex;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.book_block_cover{
+	width:4em;
+	height:5em;
+	border: 5px solid #ddb483;
+}
+.book_block_info{
+    margin: 5px;
+}
+.book_block_title{
+
+}
+.book_block_detail{
+
+}
+
+#tool_bar_right{display:none;}
+
+#para_res_list_shell{
+
+}
+#para_res_list_header{
+	display:block;
+	padding: 8px;
+}

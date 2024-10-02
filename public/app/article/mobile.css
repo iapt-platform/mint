@@ -1,0 +1,103 @@
+#right_pannal {
+	display: none;
+}
+.when_right_fixed {
+	padding-right: 0;
+}
+.index_toolbar {
+	position: unset;
+}
+#pali_pedia {
+	font-size: inherit;
+	margin-top: auto;
+	margin-bottom: auto;
+	padding-left: 0.5em;
+}
+.contents_div {
+	padding: 0;
+	width: calc(100vw - 2em);
+}
+.contents_div_narrow{
+	width: calc(100vw - 2em);
+}
+
+#main_view {
+	padding-top: 10em;
+	margin: 0;
+}
+.other_tran_div > .tool_bar {
+}
+.other_tran_div > .tool_bar > .tool_left {
+	width: calc(100vw - 2em - 12px);
+	max-width: 100%;
+}
+.other_tran_div > .tool_bar > .tool_right {
+	right: 6px;
+	max-width: 50vw;
+}
+#head_span {
+	width: 90vw;
+	justify-content: space-between;
+	margin-top: 5px;
+}
+note:hover .ref {
+}
+
+#left_pannal{
+	/*display:none;*/
+}
+
+.main_view {
+	margin-left: auto;
+}
+
+#head_nav {
+	flex-direction: column-reverse;
+}
+
+.show_pc{
+	display:none;
+}
+#left_pannal_inner{
+	width: 100%;
+}
+#toc_content{
+    width: 100%;
+    max-width: unset;
+    max-height: unset;
+    height: 100%;
+}
+#right_float_pannal {
+	position: fixed;
+	height: 70%;
+	top: 100%;
+	left: 0;
+	width:100%
+}
+.right_float_min #right_float_pannal {
+    position: fixed;
+    top: 60%;
+    left: 0;
+    width: 100%;
+    height: 40%;
+}
+#head_nav_right{
+	flex-direction: column;
+}
+
+#select_lang {
+    border: unset;
+    border-radius: unset;
+    border-bottom: 1px solid var(--border-line-color);
+}
+
+#contents_nav{
+	flex-direction: column-reverse;
+}
+.nav_bnt{
+	width: 100%;
+}
+
+#btn_show_channel{
+	display:none;
+}

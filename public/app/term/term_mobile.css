@@ -1,0 +1,9 @@
+/*段落模式 横向*/
+.horizontal .para_div {
+	flex-direction: column;
+}
+/*句子模式 横向*/
+
+.horizontal .note_shell > note > .note_body {
+	flex-direction: column;
+}

@@ -1,0 +1,82 @@
+<div class="menu" id="menu_dict">
+	<h1></h1>
+	<div class="submenu">
+		<p class="submenu_title" onclick="submenu_show_detail(this)">
+			<svg class="icon">
+				<use xlink:href="svg/icon.svg#ic_add"></use>
+			</svg>
+		</p>
+		<div class="submenu_details">
+			<div>
+				<a href="dictadmin/user/phpliteadmin.php" target="user_dict_admin"></a><br />
+				<a href="dictadmin/system/phpliteadmin.php" target="system_dict_admin"></a><br />
+				<a href="dictadmin/3rd/phpliteadmin.php" target="3rd_dict_admin"></a><br />
+				<button type="button" onclick="uploadAllWordData()"></button>
+			</div>
+		</div>
+	</div>
+
+	<div class="submenu">
+		<p class="submenu_title" onclick="submenu_show_detail(this)">
+			<svg class="icon">
+				<use xlink:href="svg/icon.svg#ic_add"></use>
+			</svg>
+		</p>
+		<div class="submenu_details">
+			<span id="id_load_dict_from_WBW_msg_inner"></span>
+		</div>
+	</div>
+
+	<div class="submenu">
+		<p class="submenu_title" onclick="submenu_show_detail(this)">
+			<svg class="icon">
+				<use xlink:href="svg/icon.svg#ic_add"></use>
+			</svg>
+		</p>
+		<div class="submenu_details">
+			<button type="button" onclick="menu_file_export_ild()">export</button>
+			<button type="button" onclick="menu_file_import_ild()">import</button>
+			<span id="id_ild_msg_inner"></span>
+		</div>
+	</div>
+
+	<div class="submenu">
+		<p class="submenu_title" onclick="submenu_show_detail(this)">
+			<?php echo $module_gui_str['editor_dictionary']['1005']; ?>
+			<svg class="icon">
+				<use xlink:href="svg/icon.svg#ic_add"></use>
+			</svg>
+		</p>
+		<div class="submenu_details">
+			<div id="basic_dict_list">
+				<?php echo $module_gui_str['editor_dictionary']['1019']; ?>
+			</div>
+			<div>
+				<button type="button" onclick="menu_dict_match()">
+					<?php echo $module_gui_str['editor_dictionary']['1006']; ?>
+				</button>
+				<div id="id_dict_match_inner"></div>
+				<p id="id_dict_msg"></p>
+			</div>
+		</div>
+	</div>
+
+	<div class="submenu">
+		<p class="submenu_title" onclick="submenu_show_detail(this)">
+			<?php echo $module_gui_str['editor_dictionary']['1014']; ?>
+			<svg class="icon">
+				<use xlink:href="svg/icon.svg#ic_add"></use>
+			</svg>
+		</p>
+		<div class="submenu_details">
+			<div>
+				<?php echo $module_gui_str['editor_dictionary']['1015']; ?>
+				<select id="id_dict_applay_to">
+					<option value="current"><?php echo $module_gui_str['editor_dictionary']['1016']; ?></option>
+					<option value="sys"><?php echo $module_gui_str['editor_dictionary']['1017']; ?></option>
+					<option value="all"><?php echo $_local->gui->all; ?></option>
+				</select>
+			</div>
+		</div>
+	</div>
+</div>

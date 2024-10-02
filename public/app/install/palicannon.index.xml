@@ -1,0 +1,17 @@
+﻿<index>
+	<node>
+		<nodetitle>Vinayapitaka</nodetitle>
+		<node>
+			<nodetitle>1.parajika</nodetitle>
+			<indexfile>vin1.index.xml</indexfile>
+		</node>
+		<node>
+			<nodetitle>2.pacitiya</nodetitle>
+			<indexfile>vin2.index.xml</indexfile>
+		</node>
+	</node>
+	<node>	
+		<nodetitle>parajika</nodetitle>
+		<filename>vin1_2.xml</filename>	
+	</node>
+</index>

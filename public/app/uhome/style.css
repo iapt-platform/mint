@@ -1,0 +1,24 @@
+.compact #course_info_head_face img {
+	width: 100px;
+	height: 100px;
+}
+
+.compact #course_info_head_1 {
+	grid-template-columns: 100px 1fr;
+}
+
+.compact #course_info_head_title {
+	padding: 0;
+}
+.user_home_category {
+	border-bottom: 1px solid var(--border-line-color);
+}
+
+.chapter_list {
+    border-bottom: 1px solid var(--border-line-color);
+    padding: 1em 1em;
+}
+.chapter_list>.title {
+    font-size: 1.8em;
+    padding: 10px 0;
+}

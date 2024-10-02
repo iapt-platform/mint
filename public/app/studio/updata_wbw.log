@@ -1,0 +1,496 @@
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:7 
+word:. 
+word:Pañcaupāsakavatthu 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3455',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:Yo 
+word:pāṇaṃ 
+word:ti 
+word:imaṃ 
+word:dhammadesanaṃ 
+word:satthā 
+word:jetavane 
+word:viharanto 
+word:pañca 
+word:upāsake 
+word:ārabbha 
+word:kathesi 
+word:. 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3456',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:Tesu 
+word:hi 
+word:eko 
+word:pāṇātipātāveramaṇisikkhāpadameva 
+word:[ 
+word:pāṇātipātā 
+word:veramaṇī 
+word:sikkhāpadaṃ 
+word:eva 
+word:] 
+word:rakkhati 
+word:, 
+word:itare 
+word:itarāni 
+word:. 
+word:Te 
+word:ekadivasaṃ 
+word:‘ 
+word:‘ 
+word:ahaṃ 
+word:dukkaraṃ 
+word:karomi 
+word:, 
+word:dukkaraṃ 
+word:rakkhāmī 
+word:’ 
+word:’ 
+word:ti 
+word:vivādāpannā 
+word:satthu 
+word:santikaṃ 
+word:gantvā 
+word:vanditvā 
+word:V2.0206 
+word:tamatthaṃ 
+word:[ 
+word:taṃ 
+word:atthaṃ 
+word:] 
+word:ārocesuṃ 
+word:. 
+word:Satthā 
+word:tesaṃ 
+word:kathaṃ 
+word:sutvā 
+word:ekasīlampi 
+word:[ 
+word:ekasīlaṃ 
+word:api 
+word:] 
+word:kaniṭṭhakaṃ 
+word:akatvā 
+word:‘ 
+word:‘ 
+word:sabbāneva 
+word:[ 
+word:sabbāni 
+word:eva 
+word:] 
+word:durakkhānī 
+word:’ 
+word:’ 
+word:ti 
+word:vatvā 
+word:imā 
+word:gāthā 
+word:abhāsi 
+word:– 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3457',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:para246 
+word:246 
+word:. 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3458',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:‘ 
+word:‘ 
+word:Yo 
+word:pāṇamatipāteti 
+word:[ 
+word:pāṇaṃ 
+word:atipāteti 
+word:] 
+word:, 
+word:musāvādañca 
+word:[ 
+word:musāvādaṃ 
+word:ca 
+word:] 
+word:bhāsati 
+word:; 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3459',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:Loke 
+word:adinnamādiyati 
+word:[ 
+word:adinnaṃ 
+word:ādiyati 
+word:] 
+word:, 
+word:paradārañca 
+word:[ 
+word:paradāraṃ 
+word:ca 
+word:] 
+word:gacchati 
+word:. 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3460',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:para247 
+word:247 
+word:. 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3461',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:‘ 
+word:‘ 
+word:Surāmerayapānañca 
+word:[ 
+word:surāmerayapānaṃ 
+word:ca 
+word:] 
+word:M2.0227 
+word:P3.0356 
+word:, 
+word:yo 
+word:naro 
+word:anuyuñjati 
+word:; 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3462',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:Idheva 
+word:[ 
+word:idha 
+word:eva 
+word:] 
+word:meso 
+word:lokasmiṃ 
+word:, 
+word:mūlaṃ 
+word:khaṇati 
+word:attano 
+word:. 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3463',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:para248 
+word:248 
+word:. 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3464',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:‘ 
+word:‘ 
+word:Evaṃ 
+word:bho 
+word:purisa 
+word:jānāhi 
+word:, 
+word:pāpadhammā 
+word:asaññatā 
+word:; 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3465',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:Mā 
+word:taṃ 
+word:lobho 
+word:adhammo 
+word:ca 
+word:, 
+word:ciraṃ 
+word:dukkhāya 
+word:randhayun 
+word:’ 
+word:’ 
+word:ti 
+word:. 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3466',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:Tattha 
+word:yo 
+word:{pāṇamatipātetī}ti 
+word:[ 
+word:pāṇaṃ 
+word:atipāteti 
+word:'ti 
+word:] 
+word:yo 
+word:sāhatthikādīsu 
+word:chasu 
+word:payogesu 
+word:ekapayogenāpi 
+word:[ 
+word:ekapayogena 
+word:api 
+word:] 
+word:parassa 
+word:jīvitindriyaṃ 
+word:upacchindati 
+word:. 
+word:Musāvādan 
+word:ti 
+word:paresaṃ 
+word:atthabhañjanakaṃ 
+word:musāvādañca 
+word:[ 
+word:musāvādaṃ 
+word:ca 
+word:] 
+word:bhāsati 
+word:. 
+word:Loke 
+word:{adinnamādiyatī}ti 
+word:[ 
+word:adinnaṃ 
+word:ādiyati 
+word:'ti 
+word:] 
+word:imasmiṃ 
+word:sattaloke 
+word:theyyāvahārādīsu 
+word:ekenapi 
+word:[ 
+word:ekena 
+word:api 
+word:] 
+word:avahārena 
+word:parapariggahitaṃ 
+word:ādiyati 
+word:. 
+word:Paradārañca 
+word:[ 
+word:paradāraṃ 
+word:ca 
+word:] 
+word:{gacchatī}ti 
+word:[ 
+word:gacchati 
+word:'ti 
+word:] 
+word:parassa 
+word:rakkhitagopitesu 
+word:bhaṇḍesu 
+word:aparajjhanto 
+word:uppathacāraṃ 
+word:carati 
+word:. 
+word:surāmerayapānaṃ 
+word:ti 
+word:yassa 
+word:kassaci 
+word:surāya 
+word:ceva 
+word:[ 
+word:ca 
+word:eva 
+word:] 
+word:merayassa 
+word:ca 
+word:pānaṃ 
+word:. 
+word:{Anuyuñjatī}ti 
+word:[ 
+word:Anuyuñjati 
+word:'ti 
+word:] 
+word:sevati 
+word:bahulīkaroti 
+word:. 
+word:Mūlaṃ 
+word:{khaṇatī}ti 
+word:[ 
+word:khaṇati 
+word:'ti 
+word:] 
+word:tiṭṭhatu 
+word:paraloko 
+word:, 
+word:so 
+word:pana 
+word:puggalo 
+word:idha 
+word:lokasmiṃyeva 
+word:[ 
+word:lokasmiṃ 
+word:eva 
+word:] 
+word:yena 
+word:khettavatthuādinā 
+word:mūlena 
+word:patiṭṭhapeyya 
+word:, 
+word:tampi 
+word:[ 
+word:taṃ 
+word:api 
+word:] 
+word:aṭṭhapetvā 
+word:vā 
+word:vissajjetvā 
+word:vā 
+word:suraṃ 
+word:pivanto 
+word:attano 
+word:mūlaṃ 
+word:khaṇati 
+word:, 
+word:anātho 
+word:kapaṇo 
+word:hutvā 
+word:vicarati 
+word:. 
+word:Evaṃ 
+word:, 
+word:{bho}ti 
+word:[ 
+word:bho 
+word:'ti 
+word:] 
+word:pañcadussīlyakammakārakaṃ 
+word:puggalaṃ 
+word:ālapati 
+word:. 
+word:{Pāpadhammā}ti 
+word:[ 
+word:Pāpadhammā 
+word:'ti 
+word:] 
+word:lāmakadhammā 
+word:. 
+word:{Asaññatā}ti 
+word:[ 
+word:Asaññatā 
+word:'ti 
+word:] 
+word:kāyasaññatādirahitā 
+word:. 
+word:Acetasātipi 
+word:[ 
+word:acetasā 
+word:'ti 
+word:api 
+word:] 
+word:pāṭho 
+word:, 
+word:acittakāti 
+word:[ 
+word:acittakā 
+word:'ti 
+word:] 
+word:attho 
+word:. 
+word:Lobho 
+word:adhammo 
+word:{cā}ti 
+word:[ 
+word:ca 
+word:'ti 
+word:] 
+word:lobho 
+word:ceva 
+word:[ 
+word:ca 
+word:eva 
+word:] 
+word:doso 
+word:ca 
+word:. 
+word:Ubhayampi 
+word:[ 
+word:Ubhayaṃ 
+word:api 
+word:] 
+word:hetaṃ 
+word:[ 
+word:hi 
+word:etaṃ 
+word:] 
+word:akusalameva 
+word:[ 
+word:akusalaṃ 
+word:eva 
+word:] 
+word:. 
+word:Ciraṃ 
+word:dukkhāya 
+word:randhayun 
+word:ti 
+word:cirakālaṃ 
+word:nirayadukkhādīnaṃ 
+word:atthāya 
+word:P3.0357 
+word:taṃ 
+word:ete 
+word:dhammā 
+word:mā 
+word:randhentu 
+word:mā 
+word:matthentūti 
+word:[ 
+word:matthentu 
+word:'ti 
+word:] 
+word:attho 
+word:. 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3467',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:Desanāvasāne 
+word:te 
+word:pañca 
+word:upāsakā 
+word:sotāpattiphale 
+word:patiṭṭhahiṃsu 
+word:, 
+word:sampattānampi 
+word:[ 
+word:sampattānaṃ 
+word:api 
+word:] 
+word:sātthikā 
+word:dhammadesanā 
+word:ahosīti 
+word:[ 
+word:ahosi 
+word:'ti 
+word:] 
+word:. 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3468',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 
+pdo open . ../appdata/palicanon/wbw/p122_wbw.db3 
+pdo delete ok . ../appdata/palicanon/wbw/p122_wbw.db3 
+word:Pañcaupāsakavatthu 
+word:sattamaṃ 
+word:. 
+query INSERT INTO main ('id','wid','book','paragraph','word','real','type','gramma','mean','note','part','partmean','bmc','bmt','un','style','language','author','editor','revision','edition','subver','vri','sya','si','ka','pi','pa','kam') VALUES (null,?,'p122','3469',?,?,?,?,?,?,?,?,?,?,?,?,'tw','Bhikkhu Kosalla','','',?,'0','1','0','0','0','0','0','0') 
+error - main.id may not be NULL 
+pdo close. 

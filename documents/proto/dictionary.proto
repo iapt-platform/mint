@@ -1,0 +1,187 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.dictionary.v1;
+
+
+/*
+ * dictionary 服务
+ * 
+ * 
+ * 
+ */
+service Dictionary{
+	//词典管理
+	rpc GetDictListForStudio (DictListRequest) returns (DictListReply){} //列出 studio 里面的全部字典
+	rpc GetDict (DictRequest) returns (DictReply){}
+	rpc SetDict (DictRequest) returns (DictReply){}
+	rpc AddDict (DictRequest) returns (DictReply){}
+	rpc DelDict (DictRequest) returns (DictReply){}
+
+	//单词管理
+	rpc GetWordListForStudio (WordListRequest) returns (WordListReply){}
+	rpc GetWordListForDict (WordListRequest) returns (WordListReply){}
+	rpc GetWord (WordRequest) returns (DictReply){}
+	rpc SetWord (WordRequest) returns (DictReply){}
+	rpc AddWord (WordRequest) returns (DictReply){}
+	rpc DelWord (WordRequest) returns (DictReply){}
+
+	//单词变格计算
+	rpc WordToBase(WordCaseRequest) returns (WordBaseReplay){}
+	rpc BaseToWord(WordCaseRequest) returns (WordListReply){}
+
+	//复合词自动拆词
+	rpc TurboSplit(TurboSplitRequest) returns (WordListReply){}
+}
+
+message DictListRequest{
+	string Id = 1;
+	string Search = 3;
+	EnumAllowingSearch SearchCol = 4;
+	int32  CurrentPage = 5;
+	int32  PerPage = 6;
+	EnumAllowingOrderby OrderBy = 7;
+	bool   Desc = 8;
+}
+
+enum EnumAllowingSearch{
+	EAS_WORD = 0;
+	EAS_NOTE = 1;
+}
+enum EnumAllowingOrderby{
+	EAO_CREATED_AT = 0;
+	EAO_UPDATED_AT = 0;
+	EAO_WORD       = 1;
+}
+
+message DictRequest{
+	string Id          = 1;
+	string Word        = 2;
+	string Tag         = 3;	
+	string Meaning     = 4;
+	string Meaning2    = 5;
+	string Note        = 6;
+	string Channel     = 7;
+	string Studio      = 8;
+
+	string Lang             = 51;
+	string EditorId         = 52;
+	EnumPublicity Publicity = 53;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message DictReply{
+	bool ok          = 1;
+	string message   = 2;
+	DictRequest data = 3;
+}
+
+message DictListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated DictRequest rows = 1;
+		int32    Count = 2;
+		int32    PageNo = 3;
+		int32    PageSize = 4;
+	}
+}
+
+
+
+message WordListRequest{
+	string Id       = 1;
+
+	EnumAllowingSearch SearchCol = 2;
+	string Search                = 3;
+	EnumAllowingOrderby OrderBy  = 4;
+	bool   Desc                  = 5;
+
+	int32  CurrentPage = 6;
+	int32  PerPage     = 7;
+}
+
+enum EnumWordAllowingSearch{
+	EWAS_ALL = 0;
+	EWAS_WORD = 1;
+	EWAS_NOTE = 2;
+}
+enum EnumWordAllowingOrderby{
+	EWAO_UPDATED_AT = 0;	
+	EWAO_CREATED_AT = 1;
+	EWAO_WORD       = 2;
+}
+
+message WordRequest{
+	string Id            = 1;
+	string Word          = 2;
+	string Type          = 3;	
+	string Grammar       = 4;
+	string Parent        = 5;
+	string Meaning       = 6;
+	string Note          = 7;
+	string Factors       = 8;
+	string FactorMeaning = 9;
+	string Confidence    = 10;
+	string Meta          = 11;
+	string Channel       = 12;
+	string Studio        = 13;
+
+	string Lang             = 51;
+	string Editor           = 52;
+	EnumPublicity Publicity = 53;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message WordReply{
+	bool ok          = 1;
+	string message   = 2;
+	WordRequest data = 3;
+}
+
+message WordListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated WordRequest rows = 1;
+		int32    Count = 2;
+		int32    PageNo = 3;
+		int32    PageSize = 4;
+	}
+}
+
+//自动变格查询参数
+message WordCaseRequest{
+	string Word   = 1;
+	int32  Deep   = 2;//查询最大深度
+	bool   Verify = 3; //是否需要验证结果的存在性
+}
+
+message WordBaseReplay{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated WordBaseList Rows = 1;
+		int32    Count             = 2;
+		int32    PageNo            = 3;
+		int32    PageSize          = 4;
+	}
+}
+
+message WordBaseList{
+	string Base =  1;
+	fixed32 Confidence = 2;
+	repeated WordRequest Rows = 3;
+}
+
+
+//复合词自动拆词参数
+message TurboSplitRequest{
+	string Word = 1;
+}

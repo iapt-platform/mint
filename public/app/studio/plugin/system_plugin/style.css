@@ -1,0 +1,22 @@
+/*
+此处为模块内部使用的style
+*/
+.plugin_head{
+	border-left: 5px solid #555;
+}
+.plugin_head:hover {
+border-left: 5px solid #585;
+cursor: pointer;
+}
+.plugin_head_1{
+border-bottom: 1px solid #555;
+padding:2px 4px;
+}
+.plugin_head_2{
+font-size:80%;
+padding:1px 4px;
+}
+
+.plugin_body{
+	display:none;
+}

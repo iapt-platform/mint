@@ -1,0 +1,82 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.like.v1;
+
+
+/*
+ * 点赞/收藏/订阅(关注)
+ * 
+ * 
+ */
+service Like{
+	rpc GetLikeList (LikeListRequest) returns (LikeListReply){}  //某资源的点赞人列表
+	rpc GetLikeCount (LikeRequest) returns (LikeCountReply){}    //某资源的点赞数量
+	rpc DelLike (LikeRequest) returns (LikeReply){}
+}
+
+message LikeListRequest{
+	string      ResId            = 1;
+	EnumResType ResType          = 2;
+	string Search                = 3;
+	EnumAllowingSearch SearchCol = 4;
+	int32  CurrentPage           = 5;
+	int32  PerPage               = 6;
+	EnumAllowingOrderby OrderBy  = 7;
+	bool   Desc                  = 8;
+}
+
+enum EnumAllowingSearch{
+	EAS_TITLE = 0;
+}
+enum EnumAllowingOrderby{
+	EAO_CREATE_AT =  0;
+	EAO_TITLE =  1;
+}
+enum EnumLikeType{
+	ELT_LIKE = 0;
+	ELT_FAVORITE = 1;
+	ELT_WATCH = 2;
+}
+enum EnumResType{
+	ERT_CHAPTER = 0;
+	ERT_ARTICLE = 1;
+	ERT_COURSE = 2;
+}
+
+message LikeRequest{
+	string Id           = 1;
+	EnumLikeType Type   = 2;
+	string ResId        = 3;
+	EnumResType ResType = 4;
+	string Context      = 5;
+
+	User   User         = 52;
+
+}
+
+message LikeCountReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		LikeRequest Like = 1;
+		int32 Count      = 2;
+		bool  Taken      = 3;
+	}
+}
+message LikeReply{
+	bool ok = 1;
+	string message = 2;
+	LikeRequest data = 3;
+}
+
+message LikeListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated LikeRequest rows = 1;
+		int32    Count = 2;
+		int32    PageNo = 3;
+		int32    PageSize = 4;
+	}
+}

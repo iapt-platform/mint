@@ -1,0 +1,598 @@
+id,book,par_num,level,class,title,text
+NULL,p4,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
+NULL,p4,2,1,chapter,Suttavandanā,Suttavandanā
+NULL,p4,3,8,hangnum,1.,1.
+NULL,p4,4,100,gatha1,," Dhammattha  desanā vedha,"
+NULL,p4,5,100,gatha2,,"Catugambhīra duddasaṃ;"
+NULL,p4,6,100,gatha3,,"Dhammaṃ lokassa desentaṃ,"
+NULL,p4,7,100,gathalast,,"Dhammarājaṃ namāmahaṃ;"
+NULL,p4,8,8,hangnum,2.,2.
+NULL,p4,9,100,gatha1,," Buddho  paccekabuddho ca,"
+NULL,p4,10,100,gatha2,,"Arahā cakkavattīti;"
+NULL,p4,11,100,gatha3,,"Thūpāthūpārahaṃ vande,"
+NULL,p4,12,100,gathalast,,"Catuthūpārahesu taṃ;"
+NULL,p4,13,8,hangnum,3.,3.
+NULL,p4,14,100,gatha1,," Petaseyyo  kāmabhogī,"
+NULL,p4,15,100,gatha2,,"Sīhaseyyo tathāgato;"
+NULL,p4,16,100,gatha3,,"Sayantaṃ catuseyyesu,"
+NULL,p4,17,100,gathalast,,"Catutthena name jinaṃ;"
+NULL,p4,18,8,hangnum,4.,4.
+NULL,p4,19,100,gatha1,," Aṇḍajā jalābujā ca;"
+NULL,p4,20,100,gatha2,,"Saṃsedajo papātikā;"
+NULL,p4,21,100,gatha3,,"Catuyoni pariccheda,"
+NULL,p4,22,100,gathalast,,"Ñāṇavantaṃ name jinaṃ;"
+NULL,p4,23,8,hangnum,5.,5.
+NULL,p4,24,100,gatha1,," Sutabuddhonubuddho  ca,"
+NULL,p4,25,100,gatha2,,"Pacceko jinabuddhoti;"
+NULL,p4,26,100,gatha3,,"Catutthaṃ catubuddhesu,"
+NULL,p4,27,100,gathalast,,"Vandāmi lokanāyakaṃ;"
+NULL,p4,28,8,hangnum,6.,6.
+NULL,p4,29,100,gatha1,," Rāhuggaṃ  attabhāgīnaṃ,"
+NULL,p4,30,100,gatha2,,"Mandhātā kāmabhogīnaṃ;"
+NULL,p4,31,100,gatha3,,"Māro adhipateyyānaṃ,"
+NULL,p4,32,100,gatha2,,"Buddho loke sadevake;"
+NULL,p4,33,100,gatha3,,"Catuagga paññattīnaṃ,"
+NULL,p4,34,100,gathalast,,"Aggapattaṃ name jinaṃ."
+NULL,p4,35,8,hangnum,7.,7.
+NULL,p4,36,100,gatha1,," Dānaṃ  piyakathā attha,"
+NULL,p4,37,100,gatha2,,"Cariyā sadisattatā;"
+NULL,p4,38,100,gatha3,,"Catusaṅgaha vatthūhi,"
+NULL,p4,39,100,gatha2,,"Asaṅkhiyesu jātisu;"
+NULL,p4,40,100,gatha3,,"Lokassa saṅgahetāraṃ,"
+NULL,p4,41,100,gathalast,,"Vandāmi lokanāyakaṃ;"
+NULL,p4,42,8,hangnum,8.,8.
+NULL,p4,43,100,gatha1,," Lobho doso ca mohoti,"
+NULL,p4,44,100,gatha2,,"Anto paccatthike tayo;"
+NULL,p4,45,100,gatha3,,"Dujjaye  sabbaverīhi,"
+NULL,p4,46,100,gathalast,,"Sañjitaṃpi sudhiṃ name;"
+NULL,p4,47,8,hangnum,9.,9.
+NULL,p4,48,100,gatha1,," Jāti puñña mahattāni,"
+NULL,p4,49,100,gatha2,,Guṇamahattamuttamaṃ;
+NULL,p4,50,100,gatha3,,"Timahatthehi sampannaṃ,"
+NULL,p4,51,100,gathalast,,"Vandāmi lokanāyakaṃ;"
+NULL,p4,52,8,hangnum,10.,10.
+NULL,p4,53,100,gatha1,," Hetu  phala sampadāyo,"
+NULL,p4,54,100,gatha2,,Sattupakārasampadā;
+NULL,p4,55,100,gatha3,,"Tisampadāhi sampannaṃ,"
+NULL,p4,56,100,gathalast,,"Vandāmi lokanāyakaṃ."
+NULL,p4,57,8,hangnum,11.,11.
+NULL,p4,58,100,gatha1,," Ñāṇappahānānubhāva,"
+NULL,p4,59,100,gatha2,,Surūpakārasampadā;
+NULL,p4,60,100,gatha3,,"Catuphala sampadāhi,"
+NULL,p4,61,100,gathalast,,"Taṃ sampannaṃ name jinaṃ."
+NULL,p4,62,8,hangnum,12.,12.
+NULL,p4,63,100,gatha1,," Āsayo  ca payogoti,"
+NULL,p4,64,100,gatha2,,"Sattupakāra sampadā;"
+NULL,p4,65,100,gatha3,,"Duvidhā yassa sampannā,"
+NULL,p4,66,100,gathalast,,"Sammā maṃ pātu so jino."
+NULL,p4,67,8,hangnum,13.,13.
+NULL,p4,68,100,gatha1,," Mahosadhe vessantare,"
+NULL,p4,69,100,gatha2,,"Pacchimabhavike tathā;"
+NULL,p4,70,100,gatha3,,"Tijātīsu name vācaṃ,"
+NULL,p4,71,100,gathalast,,"Bhāsentaṃ jāyanakkhaṇe."
+NULL,p4,72,8,hangnum,14.,14.
+NULL,p4,73,100,gatha1,," Nemimhi  sādhine ceva,"
+NULL,p4,74,100,gatha2,,"Mandhātari ca guttile;"
+NULL,p4,75,100,gatha3,,"Catūsu manujattena,"
+NULL,p4,76,100,gathalast,,"Devalokaṃ gataṃ name."
+NULL,p4,77,8,hangnum,15.,15.
+NULL,p4,78,100,gatha1,," Saṅkhāro rūpavikāro,"
+NULL,p4,79,100,gatha2,,"Lakkhaṇaṃ vānanissaṭaṃ;"
+NULL,p4,80,100,gatha3,,"Nibbānaṃ  paññatticeti,"
+NULL,p4,81,100,gathalast,,"Pañca ñeyyantaguṃ name."
+NULL,p4,82,8,hangnum,16.,16.
+NULL,p4,83,100,gatha1,," Putta dāra pariccāgā,"
+NULL,p4,84,100,gatha2,,"Rajjaṅgaṃ jīva cāgīti;"
+NULL,p4,85,100,gatha3,,"Pañca mahāpariccāge,"
+NULL,p4,86,100,gathalast,,"Karaṃ sudukkare name."
+NULL,p4,87,8,hangnum,17.,17.
+NULL,p4,88,100,gatha1,," Rūpañca  vedanā saññā,"
+NULL,p4,89,100,gatha2,,"Saṅkhārā viññāṇantime;"
+NULL,p4,90,100,gatha3,,"Pañcakkhandhe parijānaṃ,"
+NULL,p4,91,100,gathalast,,"Tipariññāhi taṃ name."
+NULL,p4,92,8,hangnum,18.,18.
+NULL,p4,93,100,gatha1,," Manussa deva gatiyo,"
+NULL,p4,94,100,gatha2,,"Peto ca nirayo tathā;"
+NULL,p4,95,100,gatha3,,"Tiracchānoti pañcetā,"
+NULL,p4,96,100,gathalast,,"Chindantaṃ gatiyo name;"
+NULL,p4,97,8,hangnum,19.,19.
+NULL,p4,98,100,gatha1,," Devaputto  kileso ca,"
+NULL,p4,99,100,gatha2,,"Abhisaṅkhāra mārako;"
+NULL,p4,100,100,gatha3,,"Khandho maccūti pañcete,"
+NULL,p4,101,100,gathalast,,"Māre vijitavaṃ name."
+NULL,p4,102,8,hangnum,20.,20.
+NULL,p4,103,100,gatha1,," Purebhattaṃ pacchābhattaṃ,"
+NULL,p4,104,100,gatha2,,"Purimañceva majjhimaṃ;"
+NULL,p4,105,100,gatha3,,"Pacchimanti sadā pañca,"
+NULL,p4,106,100,gathalast,,"Buddhakiccaṃ karaṃ name."
+NULL,p4,107,8,hangnum,21.,21.
+NULL,p4,108,100,gatha1,," Rūpā  saddā gandhā rasā,"
+NULL,p4,109,100,gatha2,,"Phoṭṭhabbā ca manoramā;"
+NULL,p4,110,100,gatha3,,"Pañca kāmaguṇe hitvā,"
+NULL,p4,111,100,gathalast,,"Kheḷaṃva niggataṃ name."
+NULL,p4,112,8,hangnum,22.,22.
+NULL,p4,113,100,gatha1,," Rāgasallaṃ  dosasallaṃ,"
+NULL,p4,114,100,gatha2,,"Mohā māno ca diṭṭhīti;"
+NULL,p4,115,100,gatha3,,"Vande vajjātivajjantaṃ,"
+NULL,p4,116,100,gathalast,,Pañcasallapanūdanaṃ.
+NULL,p4,117,8,hangnum,23.,23.
+NULL,p4,118,100,gatha1,," Dīgho majjhima saṃyuttā,"
+NULL,p4,119,100,gatha2,,"Aṅguttaro ca khuddako;"
+NULL,p4,120,100,gatha3,,"Iti pañca nikāyehi,"
+NULL,p4,121,100,gathalast,,"Suvinentaṃ pajaṃ name."
+NULL,p4,122,8,hangnum,24.,24.
+NULL,p4,123,100,gatha1,," Issariyaṃ  yaso dhammo,"
+NULL,p4,124,100,gatha2,,"Kāmo sirī payattīti;"
+NULL,p4,125,100,gatha3,,"Bhagyehi chahi sampannaṃ,"
+NULL,p4,126,100,gathalast,,"Vandāmi lokanāyakaṃ."
+NULL,p4,127,8,hangnum,25.,25.
+NULL,p4,128,100,gatha1,," Piyāpiyaṃ  bhūtābhūtaṃ,"
+NULL,p4,129,100,gatha2,,"Atthānatthaṃ yathārahaṃ;"
+NULL,p4,130,100,gatha3,,"Missā chasu suvācaṃva,"
+NULL,p4,131,100,gathalast,,"Bhāsantaṃ atthakaṃ name."
+NULL,p4,132,8,hangnum,26.,26.
+NULL,p4,133,100,gatha1,," Alaso ca pamādo ca,"
+NULL,p4,134,100,gatha2,,"Anuṭṭhānaṃ asaṃyamo;"
+NULL,p4,135,100,gatha3,,"Niddā tantīti chiddehi,"
+NULL,p4,136,100,gathalast,,"Chahi muttaṃ sadā name."
+NULL,p4,137,8,hangnum,27.,27.
+NULL,p4,138,100,gatha1,," Mahākaruṇāsamāpatti,"
+NULL,p4,139,100,gatha2,,Yamakappāṭihāriyaṃ;
+NULL,p4,140,100,gatha3,,"Āsayānusaye ñāṇaṃ,"
+NULL,p4,141,100,gatha2,,"Indriyāna paropare;"
+NULL,p4,142,100,gatha3,,"Sabbaññutā nāvaraṇaṃ,"
+NULL,p4,143,100,gathalast,,"Chā sādhāraṇikaṃ name."
+NULL,p4,144,8,hangnum,28.,28.
+NULL,p4,145,100,gatha1,," Kāmacchando  ca byāpādo,"
+NULL,p4,146,100,gatha2,,"Thinamiddhañca saṃsayo;"
+NULL,p4,147,100,gatha3,,"Avijjuddhacca kukkuccaṃ,"
+NULL,p4,148,100,gathalast,,"Chavinīvaraṇaṃ name."
+NULL,p4,149,8,hangnum,29.,29.
+NULL,p4,150,100,gatha1,," Iddhividhaṃ dibbasotaṃ,"
+NULL,p4,151,100,gatha2,,"Paracitta vijānanā;"
+NULL,p4,152,100,gatha3,,"Pubbenivāsānussati,"
+NULL,p4,153,100,gatha2,,Dibbacakkhāsavakkhayo;
+NULL,p4,154,100,gatha3,,"Chaḷabhiññāhi sampannaṃ,"
+NULL,p4,155,100,gathalast,,"Vandāmi purisuttamaṃ."
+NULL,p4,156,8,hangnum,30.,30.
+NULL,p4,157,100,gatha1,," Nīla pītā ca odātā,"
+NULL,p4,158,100,gatha2,,"Mañjiṭṭhā ca pabhassarā;"
+NULL,p4,159,100,gatha3,,"Lohitāti cha raṃsīhī,"
+NULL,p4,160,100,gathalast,,"Vijjotantaṃ sadā name."
+NULL,p4,161,8,hangnum,31.,31.
+NULL,p4,162,100,gatha1,," Assādādīnavo  ceva,"
+NULL,p4,163,100,gatha2,,"Nissaraṇaphalaṃ tathā;"
+NULL,p4,164,100,gatha3,,"Upāyāṇattīti chadhā,"
+NULL,p4,165,100,gathalast,,"Saddhammadesakaṃ name."
+NULL,p4,166,8,hangnum,32.,32.
+NULL,p4,167,100,gatha1,," Rāgo  doso ca moho ca,"
+NULL,p4,168,100,gatha2,,"Vitakkacariyā tathā;"
+NULL,p4,169,100,gatha3,,"Saddhā buddhīti bhājentaṃ,"
+NULL,p4,170,100,gathalast,,"Tā chaḷecariyā name."
+NULL,p4,171,8,hangnum,33.,33.
+NULL,p4,172,100,gatha1,," Rajataṃ kanakaṃ muttā,"
+NULL,p4,173,100,gatha2,,"Maṇi veḷuriyāni ca;"
+NULL,p4,174,100,gatha3,,"Vajirañca pavāḷanti,"
+NULL,p4,175,100,gathalast,,"Seṭṭhi sattadhano viya."
+NULL,p4,176,8,hangnum,34.,34.
+NULL,p4,177,100,gatha1,," Saddhāsīlaṃ sutaṃcāgo,"
+NULL,p4,178,100,gatha2,,"Hirī ottappiyaṃ dhanaṃ,"
+NULL,p4,179,100,gatha3,,"Paññādhananti sambuddhaṃ,"
+NULL,p4,180,100,gathalast,,"Vande sattamahādhanaṃ."
+NULL,p4,181,8,hangnum,35.,35.
+NULL,p4,182,100,gatha1,," Cakkaṃ  hatthi asso maṇi,"
+NULL,p4,183,100,gatha2,,"Gahapatitthiyo tathā;"
+NULL,p4,184,100,gatha3,,"Supariṇāyakocāti,"
+NULL,p4,185,100,gathalast,,"Sattaratano cakkavattīva."
+NULL,p4,186,8,hangnum,36.,36.
+NULL,p4,187,100,gatha1,," Sati dhammavicayo ca,"
+NULL,p4,188,100,gatha2,,"Tatheva vīriyaṃ pīti;"
+NULL,p4,189,100,gatha3,,"Passaddhi  samādhupekkhā,"
+NULL,p4,190,100,gatha2,,"Saddhamma cakkavattikaṃ;"
+NULL,p4,191,100,gatha3,,"Satta bojjhaṅgaratanaṃ,"
+NULL,p4,192,100,gathalast,,"Namāmi purisuttamaṃ."
+NULL,p4,193,8,hangnum,37.,37.
+NULL,p4,194,100,gatha1,," Yugandharo  īsadharo,"
+NULL,p4,195,100,gatha2,,"Karavīko sudassano;"
+NULL,p4,196,100,gatha3,,"Nemindharo vinatako,"
+NULL,p4,197,100,gatha2,,"Assakaṇṇo mahānage;"
+NULL,p4,198,100,gatha3,,"Sattete hattharūpaṃva,"
+NULL,p4,199,100,gathalast,,"Sampassantaṃ jinaṃ name."
+NULL,p4,200,8,hangnum,38.,38.
+NULL,p4,201,100,gatha1,," Kaṇṇamuṇḍo anotatto,"
+NULL,p4,202,100,gatha2,,"Kuṇālo rathakārako;"
+NULL,p4,203,100,gatha3,,"Sīhappapāta chaddantā,"
+NULL,p4,204,100,gatha2,,"Mandākinī mahāsare;"
+NULL,p4,205,100,gatha3,,"Sattete  sabbathā passaṃ,"
+NULL,p4,206,100,gathalast,,"Diṭṭheva pātikaṃ name."
+NULL,p4,207,8,hangnum,39.,39.
+NULL,p4,208,100,gatha1,," Manussattaṃ liṅgasampatti,"
+NULL,p4,209,100,gatha2,,"Hetu satthāradassanaṃ;"
+NULL,p4,210,100,gatha3,,"Pabbajjā guṇasampatti,"
+NULL,p4,211,100,gatha2,,"Adhikāro ca chandatā;"
+NULL,p4,212,100,gatha3,,"Aṭṭhadhamma samodhānā,"
+NULL,p4,213,100,gathalast,,"Bhinīhārantaguṃ name."
+NULL,p4,214,8,hangnum,40.,40.
+NULL,p4,215,100,gatha1,," Visaṭṭhaṃ  mañju viññeyyaṃ,"
+NULL,p4,216,100,gatha2,,Savanīyāvisāriṇā;
+NULL,p4,217,100,gatha3,,"Gambhīro binduninnādo,"
+NULL,p4,218,100,gathalast,,"Aṭṭhaṅgikasaraṃ name."
+NULL,p4,219,8,hangnum,41.,41.
+NULL,p4,220,100,gatha1,," Cattāri  rūpajhānāni,"
+NULL,p4,221,100,gatha2,,Tathevārūpajhānāni;
+NULL,p4,222,100,gatha3,,"Tā samāpattiyo aṭṭha,"
+NULL,p4,223,100,gathalast,,"Sevantaṃ ruciyā name."
+NULL,p4,224,8,hangnum,42.,42.
+NULL,p4,225,100,gatha1,," Aṇimā laṅghimā kammaṃ,"
+NULL,p4,226,100,gatha2,,"Mahimā pattimā tathā;"
+NULL,p4,227,100,gatha3,,"Īsitā  vasitā ceva,"
+NULL,p4,228,100,gatha2,,Yatthakāmāvasāyitā;
+NULL,p4,229,100,gatha3,,"Aṭṭhissariya puṇṇattā,"
+NULL,p4,230,100,gathalast,,"Issarātissaraṃ name."
+NULL,p4,231,8,hangnum,43.,43.
+NULL,p4,232,100,gatha1,," Manomayiddhiñāṇañca,"
+NULL,p4,233,100,gatha2,,"Chaḷabhiññā vipassanā;"
+NULL,p4,234,100,gatha3,,"Aṭṭhavijjāhi sampannaṃ,"
+NULL,p4,235,100,gathalast,,"Vande tilokaketukaṃ."
+NULL,p4,236,8,hangnum,44.,44.
+NULL,p4,237,100,gatha1,," Jāti jarā rujā kālo,"
+NULL,p4,238,100,gatha2,,Caturāpāyadukkhāti;
+NULL,p4,239,100,gatha3,,"Aṭṭha saṃvegavatthūni,"
+NULL,p4,240,100,gathalast,,"Bhāsantaṃ vividhaṃ name."
+NULL,p4,241,8,hangnum,45.,45.
+NULL,p4,242,100,gatha1,," Suttaṅgaṃ  veyyākaraṇaṃ,"
+NULL,p4,243,100,gatha2,,"Geyyaṃ gāthā ca jātakaṃ;"
+NULL,p4,244,100,gatha3,,"Abbhūtadhamma vedallā,"
+NULL,p4,245,100,gatha2,,"Udānamiti vuttakaṃ;"
+NULL,p4,246,100,gatha3,,"Navaṅgaṃ sabbalokassa,"
+NULL,p4,247,100,gathalast,,"Dadantaṃ sāsanaṃ name."
+NULL,p4,248,8,hangnum,46.,46.
+NULL,p4,249,100,gatha1,," Yā  samāpattiyo aṭṭha,"
+NULL,p4,250,100,gatha2,,"Nirodho cāti te nava,"
+NULL,p4,251,100,gatha3,,"Anupubbavihāre taṃ,"
+NULL,p4,252,100,gathalast,,"Sevantaṃ ruciyā name."
+NULL,p4,253,8,hangnum,47.,47.
+NULL,p4,254,100,gatha1,," Ekattañceva nānattaṃ,"
+NULL,p4,255,100,gatha2,,"Kāyasaññīhi yogato,"
+NULL,p4,256,100,gatha3,,"Cattāro tathāruppā ca,"
+NULL,p4,257,100,gatha2,,"Asaññīcāti te nava,"
+NULL,p4,258,100,gatha3,,"Sattavāse vibhajitvā,"
+NULL,p4,259,100,gathalast,,"Pakāsentaṃ name jinaṃ."
+NULL,p4,260,8,hangnum,48.,48.
+NULL,p4,261,100,gatha1,," Seyyassa  sadiso seyyo,"
+NULL,p4,262,100,gatha2,,"Hīnoti tividho vidho,"
+NULL,p4,263,100,gatha3,,"Tathā sadisahīnānaṃ,"
+NULL,p4,264,100,gathalast,,"Navavidhe nudaṃ name."
+NULL,p4,265,8,hangnum,49.,49.
+NULL,p4,266,100,gatha1,," Anatthaṃ  me carati ca,"
+NULL,p4,267,100,gatha2,,"Tathā cari carissati,"
+NULL,p4,268,100,gatha3,,"Mittassa arinotvatthaṃ,"
+NULL,p4,269,100,gathalast,,"Navāghāte jahaṃ name."
+NULL,p4,270,8,hangnum,50.,50.
+NULL,p4,271,100,gatha1,," Dānaṃ sīlañca nikkhamaṃ,"
+NULL,p4,272,100,gatha2,,"Paññā vīriyapañcamaṃ,"
+NULL,p4,273,100,gatha3,,"Khantī  saccamadhiṭṭhānaṃ,"
+NULL,p4,274,100,gatha2,,"Mettupekkhāti tādasa,"
+NULL,p4,275,100,gatha3,,"Pūretvā pāramī vande,"
+NULL,p4,276,100,gathalast,,Sammāsambodhimajjhavaṃ;
+NULL,p4,277,8,hangnum,51.,51.
+NULL,p4,278,100,gatha1,," Kāḷāvakañca gaṅgeyyaṃ,"
+NULL,p4,279,100,gatha2,,"Paṇḍaraṃ tamba piṅgalaṃ,"
+NULL,p4,280,100,gatha3,,"Gandha maṅgala hemañca,"
+NULL,p4,281,100,gathalast,,"Uposatha chaddantime."
+NULL,p4,282,8,hangnum,52.,52.
+NULL,p4,283,100,gatha1,," Dhāreti dasaposānaṃ,"
+NULL,p4,284,100,gatha2,,"Nāgo kāḷāvako balaṃ;"
+NULL,p4,285,100,gatha3,,Sahassakoṭiposānaṃ;
+NULL,p4,286,100,gathalast,,Chaddantovāranuttamo.
+NULL,p4,287,8,hangnum,53.,53.
+NULL,p4,288,100,gatha1,," Dasa sahassakoṭīnaṃ,"
+NULL,p4,289,100,gatha2,,"Posānaṃ baladhāraṇaṃ;"
+NULL,p4,290,100,gatha3,,"Chaddantānaṃ dasannañca,"
+NULL,p4,291,100,gathalast,,"Dasakāyabalaṃ name."
+NULL,p4,292,8,hangnum,54.,54.
+NULL,p4,293,100,gatha1,," Ṭhānāṭhāne  vipāke ca,"
+NULL,p4,294,100,gatha2,,"Magge sabbatthagāminaṃ;"
+NULL,p4,295,100,gatha3,,"Nānādhātūsu lokesu,"
+NULL,p4,296,100,gathalast,,"Adhimuttimhi pāṇinaṃ;"
+NULL,p4,297,8,hangnum,55.,55.
+NULL,p4,298,100,gatha1,," Paropariyatte ñāṇaṃ,"
+NULL,p4,299,100,gatha2,,"Indriyānañca pāṇinaṃ;"
+NULL,p4,300,100,gatha3,,"Jhānādīsu ñāṇaṃ pubbe,"
+NULL,p4,301,100,gatha2,,"Nivāse dibbacakkhu ca;"
+NULL,p4,302,100,gatha3,,"Āsavakkhayañāṇanti,"
+NULL,p4,303,100,gathalast,,"Dasabalañāṇaṃ name."
+NULL,p4,304,8,hangnum,56.,56.
+NULL,p4,305,100,gatha1,," Mūlagandho  sāro pheggu,"
+NULL,p4,306,100,gatha2,,"Taco papaṭiko raso;"
+NULL,p4,307,100,gatha3,,"Pattaṃ pupphaṃ phalañceva,"
+NULL,p4,308,100,gatha2,,"Gandhagandhoti saṃvaraṃ;"
+NULL,p4,309,100,gatha3,,"Sugandhaṃ dasagandhehi,"
+NULL,p4,310,100,gathalast,,"Vilimpantaṃ sadā name."
+NULL,p4,311,8,hangnum,57.,57.
+NULL,p4,312,100,gatha1,," Samādhi  ñāṇavipphārā,"
+NULL,p4,313,100,gatha2,,"Adhiṭṭhānaṃ vikubbanā;"
+NULL,p4,314,100,gatha3,,"Manomayāriyā iddhi,"
+NULL,p4,315,100,gathalast,,"Tathā kammavipākajā."
+NULL,p4,316,8,hangnum,58.,58.
+NULL,p4,317,100,gatha1,," Vijjāmayā puññavato;"
+NULL,p4,318,100,gatha2,,"Payoga paccayiddhiti;"
+NULL,p4,319,100,gatha3,,"Aggapatta dasiddhīnaṃ,"
+NULL,p4,320,100,gathalast,,"Pāṭiheraṃ karaṃ name."
+NULL,p4,321,8,hangnum,59.,59.
+NULL,p4,322,100,gatha1,," Muttā  maṇi veḷuriyaṃ,"
+NULL,p4,323,100,gatha2,,"Saṅkho sallo pavāḷakaṃ;"
+NULL,p4,324,100,gatha3,,"Suvaṇṇaṃ rajataṃ lohi,"
+NULL,p4,325,100,gatha2,,"Taṅko masāragallanti;"
+NULL,p4,326,100,gatha3,,"Dasadhā  ratanehiggaṃ,"
+NULL,p4,327,100,gathalast,,"Bhogiṃ paññāmaṇiṃ name."
+NULL,p4,328,8,hangnum,60.,60.
+NULL,p4,329,100,gatha1,," Sithilaṃ dhanitaṃ dīghaṃ,"
+NULL,p4,330,100,gatha2,,"Rassañca garukaṃ lahu;"
+NULL,p4,331,100,gatha3,,"Niggahitaṃ vimuttañca,"
+NULL,p4,332,100,gatha2,,"Sambandhañca vavatthitaṃ;"
+NULL,p4,333,100,gatha3,,"Vivarantaṃ name dhammaṃ,"
+NULL,p4,334,100,gathalast,,Dasabyañjanabheditaṃ.
+NULL,p4,335,8,hangnum,61.,61.
+NULL,p4,336,100,gatha1,," Pasādojo  madhuratā,"
+NULL,p4,337,100,gatha2,,"Samatā sukhumālatā;"
+NULL,p4,338,100,gatha3,,"Silesodāratā kanti,"
+NULL,p4,339,100,gatha2,,"Atthabyatti samādhayo;"
+NULL,p4,340,100,gatha3,,"Dasa saddaguṇopetaṃ,"
+NULL,p4,341,100,gathalast,,"Dhammaṃ pātu karaṃ name."
+NULL,p4,342,8,hangnum,62.,62.
+NULL,p4,343,100,gatha1,," Lobho  doso moho māno,"
+NULL,p4,344,100,gatha2,,"Uddhaccaṃ diṭṭhi saṃsayo;"
+NULL,p4,345,100,gatha3,,"Ahirikamanottappaṃ,"
+NULL,p4,346,100,gatha2,,"Thinanti sabba dāhake;"
+NULL,p4,347,100,gatha3,,"Kilese dasa te saddhiṃ,"
+NULL,p4,348,100,gathalast,,"Vāsanāya jahaṃ name."
+NULL,p4,349,8,hangnum,63.,63.
+NULL,p4,350,100,gatha1,," Saterā  daṇḍamaṇikā,"
+NULL,p4,351,100,gatha2,,Macchavilolagaggarā;
+NULL,p4,352,100,gatha3,,"Sukkhāsani kapisisā,"
+NULL,p4,353,100,gatha2,,"Vicakkā sañña kukkuṭā;"
+NULL,p4,354,100,gatha3,,"Navāsanīhi phālentaṃ,"
+NULL,p4,355,100,gathalast,,"Tibbaṃ paññāsaniṃ name."
+NULL,p4,356,8,hangnum,64.,64.
+NULL,p4,357,100,gatha1,," Rodanā  kodhāvudho ca,"
+NULL,p4,358,100,gatha2,,"Ujjhantissariyaṃ tathā;"
+NULL,p4,359,100,gatha3,,"Paṭisaṅkhānaṃ,"
+NULL,p4,360,100,gatha2,,"Khanti aṭṭhabalesu taṃ;"
+NULL,p4,361,100,gatha3,,"Pathavīsadisaṃ vande,"
+NULL,p4,362,100,gathalast,,"Aṭṭhamena vināyakaṃ."
+NULL,p4,363,8,hangnum,65.,65.
+NULL,p4,364,100,gatha1,," Kāmarogo  ca paṭigho,"
+NULL,p4,365,100,gatha2,,"Māno diṭṭhi ca saṃsayo;"
+NULL,p4,366,100,gatha3,,"Bhavarāgo avijjāti,"
+NULL,p4,367,100,gathalast,,"Sattānusayinaṃ name."
+NULL,p4,368,8,hangnum,66.,66.
+NULL,p4,369,100,gatha1,," Titthiyāpakatimahāsāvakā,"
+NULL,p4,370,100,gatha2,,"Aggasāvakā paccekabuddhasambuddhā;"
+NULL,p4,371,100,gatha3,,"Visiṭṭhaṃ  sabbathā chasu,"
+NULL,p4,372,100,gatha2,,"Pubbe nivāsa viññūsu;"
+NULL,p4,373,100,gathalast,,"Tilokamakuṭaṃ name."
+NULL,p4,374,8,hangnum,67.,67.
+NULL,p4,375,100,gatha1,," Buddhacakkhu samantā ca,"
+NULL,p4,376,100,gatha2,,"Ñāṇaṃ yaṃ dibbacakkhu ca;"
+NULL,p4,377,100,gatha3,,"Dhammoti pañca cakkhūhi,"
+NULL,p4,378,100,gathalast,,"Dassāviṃ mārajiṃ name."
+NULL,p4,379,8,hangnum,68.,68.
+NULL,p4,380,100,gatha1,," Khuddakā  khaṇikā okkantikā ca,"
+NULL,p4,381,100,gatha2,,"Pharaṇā tathā ubbegā;"
+NULL,p4,382,100,gatha3,,"Pañca pītīhi pinentaṃ,"
+NULL,p4,383,100,gathalast,,"Ruciyā ca namāmahaṃ."
+NULL,p4,384,8,hangnum,69.,69.
+NULL,p4,385,100,gatha1,," Dukkhaṃ samudayasaccaṃ,"
+NULL,p4,386,100,gatha2,,"Nirodho maggasaccakaṃ;"
+NULL,p4,387,100,gatha3,,"Catusaccamabhijānaṃ,"
+NULL,p4,388,100,gathalast,,"Catukiccehi taṃ name."
+NULL,p4,389,8,hangnum,70.,70.
+NULL,p4,390,100,gatha1,," Pīḷanā saṅkhatattho ca,"
+NULL,p4,391,100,gatha2,,"Tapo vipariṇāmanā;"
+NULL,p4,392,100,gatha3,,"Dukkhasaccaṃ catukkehi,"
+NULL,p4,393,100,gathalast,,"Vibhattāviṃ muniṃ name."
+NULL,p4,394,8,hangnum,71.,71.
+NULL,p4,395,100,gatha1,," Āyūhanaṃ  nidānañca,"
+NULL,p4,396,100,gatha2,,"Saṃyogo palibodhanaṃ;"
+NULL,p4,397,100,gatha3,,"Catukkehi samudayaṃ,"
+NULL,p4,398,100,gathalast,,"Vibhattāviṃ muniṃ name."
+NULL,p4,399,8,hangnum,72.,72.
+NULL,p4,400,100,gatha1,," Nissaraṇañca viveko,"
+NULL,p4,401,100,gatha2,,"Asaṅkhatāmataṃ tathā;"
+NULL,p4,402,100,gatha3,,"Nirodhañca catukkehi,"
+NULL,p4,403,100,gathalast,,"Vibhattāviṃ muniṃ name."
+NULL,p4,404,8,hangnum,73.,73.
+NULL,p4,405,100,gatha1,," Niyyāniko  ca hetvattho,"
+NULL,p4,406,100,gatha2,,Dassanādhipateyyakaṃ;
+NULL,p4,407,100,gatha3,,"Maggasaccaṃ catukkehi,"
+NULL,p4,408,100,gathalast,,"Vibhattāviṃ muniṃ name."
+NULL,p4,409,8,hangnum,74.,74.
+NULL,p4,410,100,gatha1,," Satthako  ca asammoho,"
+NULL,p4,411,100,gatha2,,"Sappāyo ceva gocaro;"
+NULL,p4,412,100,gatha3,,"Catusampajaññā vinā,"
+NULL,p4,413,100,gathalast,,"Bhāviṃ name tathāgataṃ."
+NULL,p4,414,8,hangnum,75.,75.
+NULL,p4,415,100,gatha1,," Pahinākhila dukkhāhaṃ,"
+NULL,p4,416,100,gatha2,,"Bhavasāgara pāraguṃ;"
+NULL,p4,417,100,gatha3,,"Vande sāraguṇopetaṃ,"
+NULL,p4,418,100,gathalast,,"Tenamhi bhavapārago."
+NULL,p4,419,8,hangnum,76.,76.
+NULL,p4,420,100,gatha1,," Rūpārūpavilāsagga,"
+NULL,p4,421,100,gatha2,,"Rūpācinteyya saṃyuttaṃ;"
+NULL,p4,422,100,gatha3,,"Vande sāraguṇopetaṃ,"
+NULL,p4,423,100,gathalast,,Tenamhātularūpavā.
+NULL,p4,424,8,hangnum,77.,77.
+NULL,p4,425,100,gatha1,," Iddhi  iddhi vilāsagga,"
+NULL,p4,426,100,gatha2,,"Iddhi cinteyya saṃyuttaṃ;"
+NULL,p4,427,100,gatha3,,"Vande sāraguṇepetaṃ,"
+NULL,p4,428,100,gathalast,,"Tenamhā tulaiddhimā."
+NULL,p4,429,8,hangnum,78.,78.
+NULL,p4,430,100,gatha1,," Vācā vācā vilāsagga,"
+NULL,p4,431,100,gatha2,,"Vācā cinteyya saṃyuttaṃ;"
+NULL,p4,432,100,gatha3,,"Vande sāraguṇopetaṃ,"
+NULL,p4,433,100,gathalast,,"Tenamhā tulavācako."
+NULL,p4,434,8,hangnum,79.,79.
+NULL,p4,435,100,gatha1,," Ñāṇa  ñāṇa vilāsagga,"
+NULL,p4,436,100,gatha2,,"Ñāṇācinteyya saṃyuttaṃ;"
+NULL,p4,437,100,gatha3,,"Vande sāraguṇopetaṃ,"
+NULL,p4,438,100,gathalast,,"Tenamhā tulañāṇavā."
+NULL,p4,439,8,hangnum,80.,80.
+NULL,p4,440,100,gatha1,," Sajjhaṃ hemañca ratanaṃ,"
+NULL,p4,441,100,gatha2,,"Gehaṃ vatthañca bhojanaṃ;"
+NULL,p4,442,100,gatha3,,"Tadaññepi  yathācittaṃ,"
+NULL,p4,443,100,gathalast,,"Māpeyyāhaṃ name jinaṃ."
+NULL,p4,444,8,hangnum,81.,81.
+NULL,p4,445,100,gatha1,," Sajjhaṃ hemañca ratanaṃ,"
+NULL,p4,446,100,gatha2,,"Gehaṃ vatthañca bhojanaṃ;"
+NULL,p4,447,100,gatha3,,"Tadaññepi yathācittaṃ,"
+NULL,p4,448,100,gathalast,,"Māpeyyaṃ kammajiddhiyā."
+NULL,p4,449,8,hangnum,82.,82.
+NULL,p4,450,100,gatha1,," Sattabojjhaṅga  ratano,"
+NULL,p4,451,100,gatha2,,"Saddhādiratano muni;"
+NULL,p4,452,100,gatha3,,"Satippabhutiratano,"
+NULL,p4,453,100,gathalast,,"Vande taṃ purisuttamaṃ."
+NULL,p4,454,8,hangnum,83.,83.
+NULL,p4,455,100,gatha1,," Cakkādisattaratanaṃ,"
+NULL,p4,456,100,gatha2,,"Muttādiratanaṃ subhaṃ;"
+NULL,p4,457,100,gatha3,,"Vatthappabhutiratanaṃ,"
+NULL,p4,458,100,gathalast,,"Chandakkhaṇe labhāmahaṃ."
+NULL,p4,459,8,hangnum,84.,84.
+NULL,p4,460,100,gatha1,," Sampuṇṇacittasaṅkappo,"
+NULL,p4,461,100,gatha2,,"Yathākaṅkhitamāpako,"
+NULL,p4,462,100,gatha3,,"Kenacinabhibhūto yo,"
+NULL,p4,463,100,gathalast,,"Sabbābhibhū name jinaṃ."
+NULL,p4,464,8,hangnum,85.,85.
+NULL,p4,465,100,gatha1,," Sampuṇṇacittasaṅkappo,"
+NULL,p4,466,100,gatha2,,"Yathākaṅkhitamāpako,"
+NULL,p4,467,100,gatha3,,"Kenacinabhibhūtamhi,"
+NULL,p4,468,100,gathalast,,"Sabbābhibhū bhave bhave."
+NULL,p4,469,8,hangnum,86.,86.
+NULL,p4,470,100,gatha1,," Dasa chaddantarājāva,"
+NULL,p4,471,100,gatha2,,"Dasa kāyabalo muni;"
+NULL,p4,472,100,gatha3,,"Dasa ñāṇabbalotulyo,"
+NULL,p4,473,100,gathalast,,"Vande taṃ samaṇuttamaṃ."
+NULL,p4,474,8,hangnum,87.,87.
+NULL,p4,475,100,gatha1,," Atikāyajavo  buddho,"
+NULL,p4,476,100,gatha2,,Raññājavanahaṃsato;
+NULL,p4,477,100,gatha3,,"Kā kathā ñāṇavegassa,"
+NULL,p4,478,100,gathalast,,"Vande taṃ samaṇuttamaṃ."
+NULL,p4,479,8,hangnum,88.,88.
+NULL,p4,480,100,gatha1,," Chaddantanāgarājāva,"
+NULL,p4,481,100,gatha2,,"Bhave bhave mahabbalo;"
+NULL,p4,482,100,gatha3,,"Rājājavanahaṃsova,"
+NULL,p4,483,100,gathalast,,"Paramaggajavo bhave."
+NULL,p4,484,8,hangnum,89.,89.
+NULL,p4,485,100,gatha1,," Udakā  kāsacārī ca,"
+NULL,p4,486,100,gatha2,,"Mahinimujjako jino;"
+NULL,p4,487,100,gatha3,,"Māpako ca yathā cittaṃ,"
+NULL,p4,488,100,gathalast,,"Vande taṃ ñeyyapāraguṃ."
+NULL,p4,489,8,hangnum,90.,90.
+NULL,p4,490,100,gatha1,," Udakā kāsacārī ca,"
+NULL,p4,491,100,gatha2,,"Mahinimujjako bhave;"
+NULL,p4,492,100,gatha3,,"Māpako ca yathācittaṃ,"
+NULL,p4,493,100,gathalast,,"Bhavaso kammajiddhiyā."
+NULL,p4,494,8,hangnum,91.,91.
+NULL,p4,495,100,gatha1,," Gāme  vane ca sabbattha,"
+NULL,p4,496,100,gatha2,,"Devehi manussehi ca;"
+NULL,p4,497,100,gatha3,,"Ābhatānantalābhassa,"
+NULL,p4,498,100,gatha2,,"Sadā yassa mahesino;"
+NULL,p4,499,100,gatha3,,"Pattalābhaggataṃ lokaṃ,"
+NULL,p4,500,100,gathalast,,"Taṃ vande munipuṅgavaṃ."
+NULL,p4,501,8,hangnum,92.,92.
+NULL,p4,502,100,gatha1,," Gāme  vane ca sabbattha,"
+NULL,p4,503,100,gatha2,,"Devehi manussehi ca;"
+NULL,p4,504,100,gatha3,,"Ābhatā nantalābho me,"
+NULL,p4,505,100,gathalast,,"Sadā hotu bhavābhave."
+NULL,p4,506,8,hangnum,93.,93.
+NULL,p4,507,100,gatha1,," Puññassimassa tejena,"
+NULL,p4,508,100,gatha2,,"Yathā cittaṃ samijjhatu;"
+NULL,p4,509,100,gatha3,,"Sabbicchā  sabbacintā ca,"
+NULL,p4,510,100,gathalast,,"Khippaṃ me jātijātiyaṃ."
+NULL,p4,511,8,hangnum,94.,94.
+NULL,p4,512,100,gatha1,," Natthīti vacanaṃ dukkhaṃ,"
+NULL,p4,513,100,gatha2,,"Dehīti vacanaṃ tathā;"
+NULL,p4,514,100,gatha3,,"Tasmā natthīti dehīti,"
+NULL,p4,515,100,gathalast,,"Mā me hotu bhavābhave."
+NULL,p4,516,8,hangnum,95.,95.
+NULL,p4,517,100,gatha1,," Sabbaṃ  paravasaṃ dukkhaṃ,"
+NULL,p4,518,100,gatha2,,"Sabbamissariyaṃ sukhaṃ;"
+NULL,p4,519,100,gatha3,,"Sabbaṃ paravasamatthu,"
+NULL,p4,520,100,gathalast,,"Sabbamissariyaṃ bhave."
+NULL,p4,521,8,hangnum,96.,96.
+NULL,p4,522,100,gatha1,," Vitakkento bhajjakāyo,"
+NULL,p4,523,100,gatha2,,"Sabbāvudha vāraṇo ca;"
+NULL,p4,524,100,gatha3,,"Chaddanta vāraṇabalo,"
+NULL,p4,525,100,gathalast,,"Bhaveyyaṃ jātijā tiyaṃ."
+NULL,p4,526,8,hangnum,97.,97.
+NULL,p4,527,100,gatha1,," Subhalakkhaṇasampanno,"
+NULL,p4,528,100,gatha2,,"Suvaṇṇavaṇṇavā bhave;"
+NULL,p4,529,100,gatha3,,"Brahmassaro karavika,"
+NULL,p4,530,100,gathalast,,"Bhāṇī ca jātijātiyaṃ."
+NULL,p4,531,8,hangnum,98.,98.
+NULL,p4,532,100,gatha1,," Bhūrimapañño sippānaṃ,"
+NULL,p4,533,100,gatha2,,"Sabbesaṃ kusalo bhave;"
+NULL,p4,534,100,gatha3,,"Visajjetuṃ samatthova,"
+NULL,p4,535,100,gathalast,,"Sabbapucchānaṃ ṭhānaso."
+NULL,p4,536,8,hangnum,99.,99.
+NULL,p4,537,100,gatha1,," Verādhaṃsīya  bhogā ca,"
+NULL,p4,538,100,gatha2,,"Anantākhīṇa bhogavā;"
+NULL,p4,539,100,gatha3,,"Anantābhajja pariso,"
+NULL,p4,540,100,gathalast,,"Bhavaso pāpuṇe sivaṃ."
+NULL,p4,541,8,hangnum,100.,100.
+NULL,p4,542,100,gatha1,," Mā  nasseyyaṃ pasayheyyaṃ,"
+NULL,p4,543,100,gatha2,,"Ussukkehi pyahaṃ saha;"
+NULL,p4,544,100,gatha3,,"Pañcaverehi koṭīhi,"
+NULL,p4,545,100,gathalast,,"Bhaṇḍaṃ vā akātukāmitaṃ."
+NULL,p4,546,8,hangnum,101.,101.
+NULL,p4,547,100,gatha1,," Meghaṃ vātañca ratanaṃ,"
+NULL,p4,548,100,gatha2,,"Dhaññaṃ vatthañca bhojanaṃ;"
+NULL,p4,549,100,gatha3,,"Sabbicchitaṃ tadaññampi,"
+NULL,p4,550,100,gathalast,,"Māpeyyaṃ kammajiddhiyā."
+NULL,p4,551,8,hangnum,102.,102.
+NULL,p4,552,100,gatha1,," Puññenetena  nibbānaṃ,"
+NULL,p4,553,100,gatha2,,"Santaṃ pappomi tāvatā;"
+NULL,p4,554,100,gatha3,,"Bhaveyyaṃ sabbajātīsu,"
+NULL,p4,555,100,gatha2,,"Catusampattiyā sadā;"
+NULL,p4,556,100,gatha3,,"Catucakkena sampanno,"
+NULL,p4,557,100,gathalast,,"Saddhammehi ca sattahi."
+NULL,p4,558,8,hangnum,103.,103.
+NULL,p4,559,100,gatha1,," Sammādiṭṭhi  vasupete,"
+NULL,p4,560,100,gatha2,,"Kulamhi seṭṭhasammate,"
+NULL,p4,561,100,gatha3,,"Sabbasakkata saṃsuddhe;"
+NULL,p4,562,100,gathalast,,"Bhave tihetusandhiko."
+NULL,p4,563,8,hangnum,104.,104.
+NULL,p4,564,100,gatha1,," Ghāsacchādanaṃ bhogañca,"
+NULL,p4,565,100,gatha2,,"Neva hatthena kātuna,"
+NULL,p4,566,100,gatha3,,"Bhuñjeyyamiddhiyātveva,"
+NULL,p4,567,100,gathalast,,"Māpetvā yāvadatthakaṃ."
+NULL,p4,568,8,hangnum,105.,105.
+NULL,p4,569,100,gatha1,," Manussānaṃ  atikkamma,"
+NULL,p4,570,100,gatha2,,"Devānaṃ viya bhojanaṃ,"
+NULL,p4,571,100,gatha3,,"Vatthaṃ bhogo ca me hontu,"
+NULL,p4,572,100,gathalast,,Parivārātisundarā.
+NULL,p4,573,8,hangnum,106.,106.
+NULL,p4,574,100,gatha1,," Dasāsuttaṃpi me bhogaṃ,"
+NULL,p4,575,100,gatha2,,"Pañcaverā bhave bhave;"
+NULL,p4,576,100,gatha3,,"Māgaṇheyyuñca nasseyyuṃ,"
+NULL,p4,577,100,gathalast,,"Asoko bhogahetume."
+NULL,p4,578,8,hangnum,107.,107.
+NULL,p4,579,100,gatha1,," Sabbaṅgasubha  sampanno,"
+NULL,p4,580,100,gatha2,,"Siṅgīnikkha savaṇṇa vā;"
+NULL,p4,581,100,gatha3,,"Bāttiṃsa lakkhaṇūpeto,"
+NULL,p4,582,100,gathalast,,"Atappana rūpa vā bhave."
+NULL,p4,583,8,hangnum,108.,108.
+NULL,p4,584,100,gatha1,," Kāyo candanagandho ca,"
+NULL,p4,585,100,gatha2,,"Mukhaṃ uppalagandhikaṃ;"
+NULL,p4,586,100,gatha3,,"Aṭṭhaṅgiko  karavika,"
+NULL,p4,587,100,gathalast,,"Mañjūghoso ca me hotu."
+NULL,p4,588,8,hangnum,109.,109.
+NULL,p4,589,100,gatha1,," Tikkha gambhīra pañño ca,"
+NULL,p4,590,100,gatha2,,"Hāsātijavapaññavā,"
+NULL,p4,591,100,gatha3,,"Bhūri nibbedha pañño ca;"
+NULL,p4,592,100,gathalast,,Sabbapañhavisajjano.
+NULL,p4,593,8,hangnum,111.,111.
+NULL,p4,594,100,gatha1,," Anto  soḷasavassassa,"
+NULL,p4,595,100,gatha2,,"Tipeṭakadharo bhave;"
+NULL,p4,596,100,gatha3,,"Sabbakammesu sippesu,"
+NULL,p4,597,100,gathalast,,"Vijjāṭhānesu pāragū."

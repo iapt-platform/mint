@@ -1,0 +1,75 @@
+<div class="menu" id="menu_project">
+	<h1><?php echo $module_gui_str['editor_project']['1001']; ?></h1>
+	<div id="project_resouce_manage" class="sub_li_menu">
+
+		<div id="project_tools" class="submenu">
+			<p class="submenu_title" onclick="submenu_show_detail(this)">
+				<?php echo $module_gui_str['editor_project']['1028'];?>
+				<svg class="icon">
+					<use xlink:href="svg/icon.svg#ic_add"></use>
+				</svg>
+			</p>
+			<div class="submenu_details">
+				<p class="menu_note"><?php echo $module_gui_str['editor_project']['1030'];?>：</p>
+				<button type="button" onclick="menu_file_tools_empty('all')"
+					style="background-color:red;"><?php echo $module_gui_str['editor_project']['1029'];?></button>
+				<button type="button" onclick="menu_file_tools_empty('mean')"
+					style="background-color:red;"><?php echo $module_gui_str['editor_project']['1041'];?></button>
+				<button type="button" onclick="menu_file_tools_empty('case')"
+					style="background-color:red;"><?php echo $module_gui_str['editor_project']['1038'];?></button>
+				<button type="button" onclick="menu_file_tools_empty('bookmark')"
+					style="background-color:red;"><?php echo $module_gui_str['editor_project']['1039'];?></button>
+				<button type="button" onclick="menu_file_tools_empty('note')"
+					style="background-color:red;"><?php echo $module_gui_str['editor_project']['1040'];?></button>
+			</div>
+		</div>
+
+		<div id="project_publish" class="submenu">
+			<p class="submenu_title" onclick="submenu_show_detail(this)">
+				<?php echo $module_gui_str['editor_project']['1022'];?>
+				<svg class="icon">
+					<use xlink:href="svg/icon.svg#ic_add"></use>
+				</svg>
+			</p>
+			<div class="submenu_details">
+				<button
+					onclick="editor_project_publish()"><?php echo $module_gui_str['editor_project']['1022'];?></button>
+			</div>
+		</div>
+
+
+		<div id="project_output" class="submenu">
+			<p class="submenu_title" onclick="submenu_show_detail(this)">
+				<?php echo $_local->gui->export;?>
+				<svg class="icon">
+					<use xlink:href="svg/icon.svg#ic_add"></use>
+				</svg>
+			</p>
+			<div class="submenu_details">
+				<div class="project_res_add_author">
+					<form action="export_html.php" method="post" onsubmit="return file_export_html_validate_form(this)"
+						target="_blank">
+						<div class="project_res_add_author" id="export_data">
+							<textarea id="toc_string" rows="3" cols="18" name="txt_toc"></textarea><br>
+							<textarea id="sutta_string" rows="3" cols="18" name="txt_sutta"></textarea><br>
+						</div>
+						<input type="submit" value="<?php echo $module_gui_str['editor_project']['1031'];?>" />
+					</form>
+					<button type="button"
+						onclick="menu_file_export_csv()"><?php echo $module_gui_str['editor_project']['1025'];?></button>
+				</div>
+				<hr />
+				<div class="project_res_add_author">
+					<span style="width: 10em;">CSV <?php echo $module_gui_str['editor_project']['1027'];?></span>
+					<input type="input" id="import_csv_filename" />
+				</div>
+				<button type="button"
+					onclick="menu_file_import_csv()"><?php echo $module_gui_str['editor_project']['1026'];?></button><br />
+				<span id="id_csv_msg_inner"></span>
+			</div>
+		</div>
+
+
+	</div>
+
+</div>

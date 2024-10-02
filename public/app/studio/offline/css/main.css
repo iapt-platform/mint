@@ -1,0 +1,498 @@
+﻿body {
+  font-family: Verdana, sans-serif;
+}
+
+.main{
+	margin-top:2px;
+	padding: 5px 5px;
+}
+.mainbody{
+	padding: 0;
+	margin: 0;
+	font-size: 100%;
+}
+.sutta{
+	font-size: 100%;
+}		
+
+.chapter1 h1{
+	width:Auto;			
+	float:left;	
+	color:#550;
+}
+.chapter1 a{
+	float:right;
+}
+.heading {
+  font-weight: bold;
+  font-size: 158%;
+  text-align: center;
+}
+
+h1 {		
+  font-size: 150%;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 125%;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: 100%;
+  font-weight: bold;
+}
+
+a:link ,a:visited{
+  color: #0067ab;
+  text-decoration: none;
+}
+
+a:focus {
+  outline:1px dotted;
+}
+
+a:hover, a:active {
+  color: #0067ab;
+  outline: none;
+  text-decoration: underline;
+}
+
+.toc {
+  border: 1px solid #BBB;
+  /*background-color: #F1F1F1;*/
+  color: #000;
+  margin: 0px 2px 10px 2px;
+  padding: 1px 1px;
+  /*width:220px;*/
+  /*float:left;*/
+}
+
+#leftmenuinner {
+	position:fixed;
+	top:0;
+	left:0;
+	padding-top:0;
+	padding-bottom:0;    
+	height:100%;
+	width:18em;
+}
+#leftmenuinnerinner {
+	height:100%;
+	width:100%;
+	overflow-y:scroll;
+	overflow-x:hidden;
+	padding-top:0;
+}
+#leftmenuinner_mobile {
+	padding:1em;
+}
+#leftmenuinnerinner_mobile {
+	padding-top:0;
+}
+
+.mainview{
+	margin-left:18em;
+	/*border-left:1px solid gray;*/
+}
+.mainview_mobile{
+	margin-left:2px;
+	/*border-left:1px solid gray;*/
+}
+.toc p {
+	font-size: 90%;
+	margin:4px 0 4px 0.5em;
+	line-height:1.2;
+}
+.toc ul {
+	font-size: 90%;
+  list-style-type: none;
+  padding-left: 0px;
+  line-height:1.2;
+  text-indent:1px;
+}
+.toc ul li{
+	text-indent:1px;
+	line-height:1.2;
+	margin:5px 0;
+}
+
+#content {
+  margin: 0px 5px 10px 5px;
+  padding: 1px 3px;		  
+  /*border: 1px solid #BBB;*/
+  /*background-color: #dda;*/
+  /*background: #EEE;*/
+  /*color: #000;*/
+  }
+ 
+#navi_bookmark{
+	display:none;
+}
+#navi_note{
+	display:none;
+}
+  
+.toolbar{
+	position:fixed;
+	top:0;
+	left:0;
+	border-bottom: 1px solid #BBB;
+	margin-left: 1px;
+	padding: 5px 5px 5px 20px;
+	background-color: #eee;
+	width:100%;
+}
+.toolbar_mobile{
+	border-bottom: 1px solid #BBB;
+	margin-left: 1px;
+	padding: 5px 5px 5px 20px;
+	background-color: #eee;
+}
+.index_toolbar{
+	top:0;
+	left:0;
+	border-bottom: 1px solid #BBB;
+	margin: 0;
+	padding: 5px 10px;
+	background-color: #555;
+	color:#FFF;
+}
+
+.debug{
+	display:none;
+}
+#word_table{
+	margin-top:20px;
+	display:none;
+}
+#sutta_text{
+	margin-top:30px;
+}
+
+.sutta_title{
+	border-left:15px solid #BBB;
+	margin:3px 2px 3px 1em;
+	padding: 1px 0.5em;
+}
+.sutta_title a {
+	float:right;
+}
+
+.tran_h1_cn, .tran_h1_en {
+	font-size: 100%;
+	font-weight: bold;
+	line-height:1.1;
+	margin: 0px 2px;
+}
+
+.sutta_paragraph{
+	margin: 0;
+	padding: 1em 0 0 0;
+}
+.pali_par{
+	width:50%;
+	float:left;
+	padding: 0pt 8pt;
+}
+.pali_par_gatha{
+	width:50%;
+	float:left;
+	padding: 0;
+	margin-left:2em;
+}
+.pali_par_mobile{
+	/*width:100%;*/
+	padding: 0pt 8pt;
+}
+.pali_par_gatha_mobile{
+	/*width:100%;*/
+	padding: 0;
+	margin-left:2em;
+}
+.tran_par
+{
+	padding: 0 5px;
+	margin: 0 0 0 50%-220px;
+}
+.tran_par_mobile
+{
+	padding: 0 5px;
+	margin: 0 ;
+}
+.tran_par_en
+{
+	font-size:80%;
+	text-indent:0;
+}
+.tran_par_cn
+{
+	font-size:90%;
+	text-indent:0;
+}
+
+.par_note{
+	font-size:75%;
+	border-left: 5px solid #CDC;
+	margin: 2px 5px 2px 1em;
+	padding:2px;
+	clear:left;
+}
+
+.word{		
+	font-family: Times;	
+	width:Auto;			
+	float:left;																
+	padding: 0 3pt;																
+}
+.word_hightlight{		
+	font-family: Times;	
+	width:Auto;			
+	float:left;																
+	padding: 0 3pt;	
+	background-color: #dda;
+}
+.word_punc{
+	font-family: Times;	
+	width:Auto;			
+	float:left;																
+	padding: 0 0;
+}
+
+.word_detail{
+}
+
+.pali{																															
+	font-size:110%;	
+	font-weight: bold;	
+	padding: 0pt;																
+	margin: 0pt;																
+}		
+
+.ID{																	
+	font-size:70%;															
+	line-height: 1.2;																
+	margin: 0;		
+	float:none;
+	clear:both;
+	display:none;
+}														
+.org{																															
+	font-size:90%;															
+	line-height: 1.2;																
+	margin: 0;	
+	float:none;
+	clear:both;	
+}																
+.mean{																															
+	font-size:80%;															
+	line-height: 1.2;																
+	margin: 0;	
+	float:none;
+	clear:both;	
+}																
+.case{																														
+	font-size:80%;															
+	line-height: 1.2;																
+	margin: 0;	
+	float:none;
+	clear:both;	
+}
+
+.case .cell{
+	margin:1px;
+	padding:1pt;
+	background-color:#050;
+	color:#FFF;
+}
+/*不确定的显示为红色*/
+.case .cell2 a{
+	margin:1px;
+	padding:1pt;
+	background-color:#F80;
+	color:#000;
+}
+
+
+.clr{
+	clear:left;
+}
+.enter{
+	clear:left;
+}
+
+.chanting_enter{
+	display:none;
+	clear:left;
+}
+
+.hidden{
+	display:none;
+}
+#modifywin{
+	width:170px;
+	background-color:#EEF;
+	margin: 0;
+	padding: 4pt;
+	position: absolute;
+	border: 1px solid #555;
+}
+#modifywin p {
+	margin: 0;
+	padding: 0;
+}
+#modifywin .modifybutton{
+	margin:5px 0 0 0;
+	padding: 0;
+	border-top:1px solid #AAB;
+}
+#modifywin .modifybutton .modify_left{
+	width:50%;
+	float:left;
+	border-right:1px solid #AAB;
+	}
+#modifywin a{
+	width:100%;
+}
+.bookmarkcolorblock{
+	padding:1px 5px;
+}
+.bookmarkcolor1{
+	background-color:#F99;
+}
+.bookmarkcolor2{
+	background-color:#FF9;
+}
+.bookmarkcolor3{
+	background-color:#9F9;
+}
+.bookmarkcolor4{
+	background-color:#9FF;
+}
+.bookmarkcolor5{
+	background-color:#99F;
+}
+/*?x?没找到*/
+.bookmarkcolorx{
+	background-color:#F9F;
+}
+/*?a?自动匹配*/
+.bookmarkcolora{
+	background-color:#EEF;
+}
+.bma{
+	display:none;
+}
+.bmx{
+}
+.bm1{
+}
+.bm2{
+}
+.bm3{
+}
+.bm4{
+}
+.bm5{
+}
+
+#navi_bookmark_inner h3{
+	font-size:100%;
+	font-weight: bold;
+}
+
+.indexbody{
+	margin:0;
+	padding: 0;
+}
+
+.editor{
+	display:inline;
+}
+
+.debugMsg{
+	display:none;
+}
+table {border-collapse: collapse;}
+td, th { border: 1px solid #000000; font-size: 75%; vertical-align: baseline;}
+.h {background-color: #9999cc; font-weight: bold; color: #000000;}
+
+.center {text-align: center;}
+.index_inner{ width:400px; margin-left: auto; margin-right: auto; text-align: left;}
+
+#device a:link ,#device a:visited{
+  color: #AAA;
+  text-decoration: none;
+}
+
+#device a:focus {
+  outline:1px dotted;
+}
+
+#device a:hover, #device a:active {
+  color: #FFF;
+  outline: none;
+  text-decoration: underline;
+}
+
+.select_mode a:link ,#device a:visited{
+  color: #AAA;
+  text-decoration: none;
+}
+
+.select_mode a:focus {
+  outline:1px dotted;
+}
+
+.select_mode a:hover, #device a:active {
+  color: #000;
+  outline: none;
+  text-decoration: underline;
+}
+
+button{
+    padding: 2px 6px;
+
+}
+
+/* 下拉按钮样式 */
+.dropbtn {
+    cursor: pointer;
+	display:block;
+}
+
+/* 容器 <div> - 需要定位下拉内容 */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* 下拉内容 (默认隐藏) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 3px 16px 0px rgba(0,0,0,0.2);
+}
+
+/* 下拉菜单的链接 */
+.dropdown-content a {
+    color: black;
+    padding: 6px 6px;
+    text-decoration: none;
+    display: block;
+}
+
+/* 鼠标移上去后修改下拉菜单链接颜色 */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* 在鼠标移上去后显示下拉菜单 */
+.dropdown:hover .dropdown-content {
+    /*display: block;*/
+}
+
+/* 当下拉内容显示后修改下拉按钮的背景颜色 */
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;

@@ -1,0 +1,38 @@
+- name: Backup locale.gen
+  become: true
+  copy:
+    src: /etc/locale.gen
+    dest: "{{ app_backup }}/etc_locale.gen"
+    remote_src: yes
+    backup: yes
+
+- name: Enable en-US locale
+  become: true
+  lineinfile:
+    path: /etc/locale.gen
+    state: present
+    line: en_US.UTF-8 UTF-8
+
+
+- name: Enable zh-CN locale
+  become: true
+  lineinfile:
+    path: /etc/locale.gen
+    state: present
+    line: zh_CN.UTF-8 UTF-8
+
+- name: Enable zh-TW locale
+  become: true
+  lineinfile:
+    path: /etc/locale.gen
+    state: present
+    line: zh_TW.UTF-8 UTF-8
+
+
+- name: Generate locales
+  become: true
+  shell: locale-gen
+
+- name: Use en_US as default locale
+  become: true
+  shell: update-locale LANG=en_US.UTF-8

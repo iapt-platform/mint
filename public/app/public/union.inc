@@ -1,0 +1,27 @@
+<?php
+$un = array(
+array("ena+iti","enāti",256),
+array("ā+iti","āti",256),
+array("a+iti","āti",256),
+array("e+iti","eti",256),
+array("ī+iti","īti",256),
+array("i+iti","īti",256),
+array("o+iti","oti",256),
+array("ū+iti","uti",256),
+array("u+iti","uti",256),
+array("ṃ+iti","nti",256),
+array("ṃ+ca","ñca",256),
+array("āni+eva","āneva",256),
+array("o+eva","ova",256),
+array("e+eva","eva",256),
+array("ā+api","āpi",256),
+array("a+api","āpi",256),
+array("e+api","epi",256),
+array("ī+api","īpi",256),
+array("i+api","īpi",256),
+array("o+api","opi",256),
+array("ū+api","upi",256),
+array("u+api","upi",256),
+array("ṃ+api","mpi",256)
+ );
+?>

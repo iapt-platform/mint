@@ -1,0 +1,79 @@
+[
+	{ "key": "ref_dict_idx", "type": "hash", "valid": true, "rebuild": "", "description": "参考字典索引" },
+	{ "key": "pali_sent_*", "type": "string", "valid": false, "description": "巴利句子列表" },
+	{
+		"key": "pali://sent/*",
+		"type": "hash",
+		"valid": true,
+		"rebuild": "../pali_sent/redis_upgrade_pali_sent.php",
+		"description": "巴利句子列表"
+	},
+	{
+		"key": "sent://*",
+		"type": "hash",
+		"valid": true,
+		"description": "译文句子列表 key: sent://channel/book-para-start-end "
+	},
+	{
+		"key": "article://*",
+		"type": "hash",
+		"valid": true,
+		"description": "article 主要信息 key: article://id  字段 title,owner,summary,tag,content,create_time,modify_time "
+	},
+	{
+		"key": "dict://comp",
+		"type": "hash",
+		"valid": true,
+		"rebuild": "../dict/redis_comp_part.php",
+		"description": "复合词数据库内容 feild value= json "
+	},
+	{
+		"key": "dict://term",
+		"type": "hash",
+		"valid": true,
+		"rebuild": "../dict/redis_import_term.php",
+		"description": "术语数据库内容 feild value= json "
+	},
+	{
+		"key": "dict://user",
+		"type": "hash",
+		"valid": true,
+		"rebuild": "../dict/redis_import_user.php",
+		"description": "用户字典内容 feild value= json "
+	},
+	{
+		"key": "pali://wordindex.set",
+		"type": "set",
+		"valid": true,
+		"rebuild": "../dict/redis_pali_word_list.php",
+		"description": "三藏单词列表 "
+	},
+	{
+		"key": "pali://wordindex.hash",
+		"type": "hash",
+		"valid": true,
+		"rebuild": "../dict/redis_pali_word_list.php",
+		"description": "三藏单词列表 "
+	},
+	{
+		"key": "dict://pm/part",
+		"type": "hash",
+		"valid": true,
+		"rebuild": "../dict/redis_pm_part.php",
+		"description": "巴缅拆分 "
+	},
+	{
+		"key": "dict://part.hash",
+		"type": "hash",
+		"valid": true,
+		"rebuild": "../dict/redis_split_part.php",
+		"description": "电脑自动拆分 "
+	},
+	{
+		"key": "dict://regular/part",
+		"type": "hash",
+		"valid": true,
+		"rebuild": "../dict/redis_sys_rgl_part.php",
+		"description": "系统规则变形表中的拆分部分 "
+	}
+]

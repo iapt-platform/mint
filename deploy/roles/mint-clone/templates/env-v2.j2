@@ -1,0 +1,62 @@
+BASE_DIR="{{ app_deploy_target }}/.env.global"
+CACHE_DIR="${BASE_DIR}/cache"
+TMP_DIR="${BASE_DIR}/tmp"
+
+APP_NAME=wikipali
+APP_ENV=production
+APP_KEY="{{ app_laravel_key }}"
+APP_DEBUG=false
+APP_URL="https://{{ inventory_hostname }}"
+
+LOG_CHANNEL=stack
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=info
+
+DB_CONNECTION=pgsql
+DB_HOST={{ app_postgresql_host }}
+DB_PORT={{ app_postgresql_port }}
+DB_DATABASE={{ app_postgresql_name }}
+DB_USERNAME={{ app_postgresql_user }}
+DB_PASSWORD="{{ app_postgresql_password }}"
+
+BROADCAST_DRIVER=log
+CACHE_DRIVER=redis
+FILESYSTEM_DRIVER=local
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+MEMCACHED_HOST=127.0.0.1
+
+REDIS_HOST={{ app_redis_host }}
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+REDIS_NAMESPACE="{{ app_redis_namespace }}"
+
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=465
+MAIL_USERNAME={{ app_smtp_username }}
+MAIL_PASSWORD="{{ app_smtp_password }}"
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS={{ app_smtp_username }}
+MAIL_FROM_NAME="webmaster"
+
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=
+AWS_USE_PATH_STYLE_ENDPOINT=false
+
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_APP_CLUSTER=mt1
+
+MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+
+ASSETS_SERVER="https://assets-{{ app_cluster_domain }}"
+RPC_SERVER="https://{{ app_rpc_host }}"
+SNOWFLAKE_DATA_CENTER_ID=1
+SNOWFLAKE_WORKER_ID=1

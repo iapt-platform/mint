@@ -1,0 +1,40 @@
+			<div class="menu" id="menu_pali_cannon">
+				<h1><?php echo $module_gui_str['editor_palicannon']['1001'] ?></h1>
+				<div id="pali_cannon_search">
+					<input type="text" /><button type="button"><?php echo $module_gui_str['editor_palicannon']['1002'] ?></button>
+				</div>
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_palicannon']['1003']; ?><svg class="icon">
+    							<use xlink:href="svg/icon.svg#ic_add"></use>
+						</svg></p>
+					<div class="submenu_details">
+					<select name="menu" id="editor_pali_cannon_book_page_select">
+						<option value="V">VRI</option>
+						<option value="P">PTS</option>
+						<option value="M">Myammar</option>
+						<option value="VP">Paragraph</option>
+					</select>
+					<input id="editor_palicanon_goto" type="text" size="5" value="1.12" /><button type="button" onclick="editor_palicanon_bookmark_goto()">Go</button>
+					<div id="editor_pali_cannon_book_page_list"></div>
+					</div>
+				</div>
+
+				<div class="submenu">
+					<p class="submenu_title" onclick="submenu_show_detail(this)"><?php echo $module_gui_str['editor_palicannon']['1004']; ?>
+						<svg class="icon">
+    							<use xlink:href="svg/icon.svg#ic_add"></use>
+						</svg>
+					</p>
+					<div class="submenu_details">
+						<div>
+						<a href="pc_admin/templet/phpliteadmin.php" target="pc_templet_admin"><?php echo $module_gui_str['editor_palicannon']['1005']; ?></a><br >
+						<a href="pc_admin/wbw/phpliteadmin.php" target="pc_wbw_admin"><?php echo $module_gui_str['editor_palicannon']['1006']; ?></a><br >
+						<a href="pc_admin/translate/phpliteadmin.php" target="pc_translate_admin"><?php echo $module_gui_str['editor_palicannon']['1007']; ?></a><br >
+						<a href="pc_admin/note/phpliteadmin.php" target="pc_note_admin"><?php echo $module_gui_str['editor_palicannon']['1008']; ?></a><br >
+						<a href="pc_admin/heading/phpliteadmin.php" target="pc_heading_admin"><?php echo $module_gui_str['editor_palicannon']['1009']; ?></a><br >
+
+						</div>
+					</div>
+				</div>
+				
+			</div>

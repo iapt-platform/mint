@@ -1,0 +1,14 @@
+- name: create downloads folder
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_downloads }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+
+- name: create backup folder
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_backup }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+

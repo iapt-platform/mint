@@ -1,0 +1,28 @@
+<html>
+<head>
+</head>
+<body>
+<video id = "video" style='width:100%'></video>
+<script>
+    function full(){
+
+    }
+// 想要获取一个最接近 1280x720 的相机分辨率
+var constraints = { audio: false, video: { width: 320, height: 240 } }; 
+
+navigator.mediaDevices.getUserMedia(constraints)
+.then(function(mediaStream) {
+  var video = document.querySelector('video');
+  video.srcObject = mediaStream;
+  video.onloadedmetadata = function(e) {
+    video.play();
+  };
+})
+.catch(function(err) { console.log(err.name + ": " + err.message); }); // 总是在最后检查错误
+</script>
+<h2>转法轮经详解</h2>
+<h3>第三讲</h3>
+<div>U Kuntadana Sayadow</div>
+<div>2020年12月3日</div>
+</body>
+</html>

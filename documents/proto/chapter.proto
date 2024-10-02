@@ -1,0 +1,94 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.chapter.v1;
+
+/*
+ * channel/版本 服务
+ */
+service Chapter{
+	rpc GetStudioList (ChapterListRequest) returns (ResListReply){}//查询符合要求的 studio 列表
+	rpc GetChannelList (ChapterListRequest) returns (ResListReply){}//查询符合要求的 channel 列表
+	rpc GetTagList (ChapterListRequest) returns (ResListReply){}//查询符合要求的 tag 列表
+	rpc GetLangList (ChapterListRequest) returns (ResListReply){}//查询符合要求的 language 列表
+	rpc GetChapterList (ChapterListRequest) returns (ChapterListReply){}//查询符合要求的 chapter 列表
+	rpc GetChapterTitle (ChapterRequest) returns (ChapterReply){} //获取章节标题
+	rpc GetChapter (ChapterRequest) returns (ChapterReply){}
+	rpc UpgradeChapter (ChapterRequest) returns (ChapterReply){} //这个不确定要不要，可能可以放到mq
+}
+
+message ChapterListRequest{
+	string Id = 1;
+	string Search = 3;
+	EnumAllowingSearch SearchCol = 4;
+	int32  CurrentPage = 5;
+	int32  PerPage = 6;
+	EnumAllowingOrderby OrderBy = 7;
+	bool   Desc = 8;
+}
+
+enum EnumAllowingSearch{
+	EAS_TITLE = 0;
+}
+enum EnumAllowingOrderby{
+	EAO_CREATE_AT =  0;
+	EAO_TITLE =  1;
+}
+
+enum EnumChannelType{
+	ECT_TRANSLATION = 0;
+	ECT_ORIGINAL = 1;
+	ECT_NISSAYA = 2;
+	ECT_COMMENTRAY = 3;
+	ECT_GENERAL = 4;
+}
+
+message ChapterRequest{
+	string Id        = 1;
+	int32  Book = 2;
+	int32  Paragraph = 3;
+	string Channel = 4;
+	EnumChannelType ChannelType = 4;
+	string PaliTitle = 5;
+	string Title     = 2;
+	string Summary   = 3;	
+	string StudioId     = 5;
+
+	string Lang = 51;
+	repeated User  Editors = 52;
+	EnumPublicity Publicity = 53;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message ChapterReply{
+	bool ok = 1;
+	string message = 2;
+	ChapterRequest data = 3;
+}
+
+message ResWithCount{
+	string Id = 1;
+	string Name = 2;
+	int32  Count = 3;
+}
+message ResListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated ResWithCount rows = 1;
+	}
+}
+
+message ChapterListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated ChapterRequest rows = 1;
+		int32    Count = 2;
+		int32    PageNo = 3;
+		int32    PageSize = 4;
+	}
+}

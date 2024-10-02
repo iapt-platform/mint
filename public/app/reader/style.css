@@ -1,0 +1,180 @@
+#search_result {
+	position: absolute;
+	background: wheat;
+	max-width: 95%;
+	width: 24em;
+}
+
+.icon {
+	width: 15px;
+	height: 15px;
+}
+.submenu_title {
+	font-size: 120%;
+	font-weight: 700;
+}
+
+#head_bar {
+	display: flex;
+	justify-content: space-between;
+	/*height: 5em;*/
+	background-color: var(--tool-bg-color1);
+	border-bottom: 1px solid var(--tool-line-color);
+	padding: 10px;
+	margin-top: 50px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 100;
+}
+
+.main_view {
+	padding: 0 1em;
+	padding-top: 7em;
+	max-width: 1280px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.fun_frame {
+	border-bottom: 1px solid gray;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+.fun_frame .title {
+	padding: 6px;
+	font-weight: 700;
+}
+.fun_frame > .content {
+	padding: 6px;
+	max-height: 6em;
+	overflow-y: scroll;
+}
+
+.fixed {
+	position: fixed;
+	right: 0;
+	top: 0;
+}
+.when_right_fixed {
+	padding-right: 20em;
+}
+
+#contents_view {
+	display: flex;
+}
+#contents_div {
+	flex: 7;
+	padding: 0 1em 0 30px;
+	width: 70vw;
+}
+#contents {
+}
+#contents li {
+	white-space: normal;
+}
+#right_pannal {
+	flex: 3;
+	max-width: 20em;
+}
+
+#contents_foot {
+	margin-bottom: 70vh;
+}
+
+#toc_content .level_2 {
+	padding-left: 0.5em;
+}
+#toc_content .level_3 {
+	padding-left: 1em;
+}
+#toc_content .level_4 {
+	padding-left: 1.5em;
+}
+#toc_content .level_5 {
+	padding-left: 2em;
+}
+.ui-dialog-titlebar {
+	display: flex;
+	justify-content: space-between;
+	background-color: var(--btn-bg-color);
+	padding: 5px;
+}
+.ui-widget-content {
+	background-color: var(--bg-color);
+}
+.ui-dialog {
+	box-shadow: 8px 8px 20px var(--border-shadow);
+}
+.active {
+	background-color: var(--btn-hover-bg-color);
+}
+
+.icon_btn a {
+	color: var(--main-color);
+}
+.icon_btn:hover a {
+	color: var(--btn-hover-color);
+}
+.active a {
+	color: var(--btn-hover-color);
+}
+note:hover chapter {
+	display: inline-block;
+}
+
+.language-para {
+	padding: 2px 2px;
+	position: absolute;
+	margin-top: 0;
+	margin-left: -60px;
+	font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Noto Sans Myanmar", Arial, Verdana;
+	color: var(--main-color1);
+	font-size: 80%;
+}
+
+.level_0 {
+	margin-left: 0;
+}
+.level_1 {
+	margin-left: 1em;
+}
+.level_2 {
+	margin-left: 2em;
+}
+.level_3 {
+	margin-left: 3em;
+}
+.level_4 {
+	margin-left: 4em;
+}
+.level_5 {
+	margin-left: 5em;
+}
+.level_6 {
+	margin-left: 6em;
+}
+.channal_list {
+	white-space: nowrap;
+	overflow-x: hidden;
+}
+.userinfo_channal {
+	display: none;
+}
+.userinfo_channal:hover {
+	display: block;
+}
+
+#para_path chapter {
+	color: var(--link-color);
+	font-size: 120%;
+}
+
+#para_path_next_level {
+	display: inline-block;
+}
+
+#path_div chapter {
+	display: inline-block;
+}

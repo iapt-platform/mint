@@ -1,0 +1,10 @@
+server {
+    listen 80;
+
+    gzip on;
+    server_name {{ inventory_hostname }};
+    root /var/www/{{ inventory_hostname }}/public;
+
+    access_log off;
+    error_log /var/log/nginx/{{ inventory_hostname }}.error.log warn;
+}

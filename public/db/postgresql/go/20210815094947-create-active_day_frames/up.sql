@@ -1,0 +1,14 @@
+-- Your SQL goes here
+
+CREATE TABLE active_day_frames (
+    id          SERIAL PRIMARY KEY,
+    user_id     INTEGER NOT NULL,
+    date        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    duration    INTEGER NOT NULL DEFAULT(1),
+    hit         INTEGER NOT NULL DEFAULT(1),
+
+    updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+

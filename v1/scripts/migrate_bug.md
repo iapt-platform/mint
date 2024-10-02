@@ -1,0 +1,8 @@
+# migrate bug
+
+[2022-1-20]
+wbw user id
+test28 = df0ad9bc-c0cd-4cd9-af05-e43d23ed57f0
+test6 = f81c7140-64b4-4025-b58c-45a3b386324a
+290fd808-2f46-4b8c-b300-0367badd67ed = f81c7140-64b4-4025-b58c-45a3b386324a
+BA837178-9ABD-4DD4-96A0-D2C21B756DC4 = ba5463f3-72d1-4410-858e-eadd10884713

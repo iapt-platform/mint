@@ -1,0 +1,16 @@
+{
+	"require": {
+		"elasticsearch/elasticsearch": "~7.0",
+		"guzzlehttp/guzzle": "^7.0",
+		"catfan/medoo": "^2.1",
+		"casbin/casbin": "^3.9",
+		"phpmailer/phpmailer": "^6.5",
+		"illuminate/database": "^8.59",
+		"lcobucci/jwt": "^4.1",
+		"casbin/medoo-adapter": "^1.7",
+		"phpoffice/phpword": "^0.18.2",
+		"godruoyi/php-snowflake": "^2.0",
+		"erusev/parsedown": "^1.7",
+		"firebase/php-jwt": "^6.2"
+	}
+}

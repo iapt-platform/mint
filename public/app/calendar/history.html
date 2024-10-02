@@ -1,0 +1,216 @@
+﻿<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/timeline.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<figure class="highcharts-figure">
+	<div id="container" style="height: 60rem;width: 100vw"></div>
+	<p class="highcharts-description">More stories need to be added, more history need to be create by you!</p>
+</figure>
+<script>
+	Highcharts.chart("container", {
+		chart: {
+			type: "timeline",
+            inverted: true
+		},
+		accessibility: {
+			screenReaderSection: {
+				beforeChartFormat:
+					"<h5>{chartTitle}</h5>" +
+					"<div>{typeDescription}</div>" +
+					"<div>{chartSubtitle}</div>" +
+					"<div>{chartLongdesc}</div>" +
+					"<div>{viewTableButton}</div>",
+			},
+			point: {
+				valueDescriptionFormat: "{index}. {point.label}. {point.description}.",
+			},
+		},
+		xAxis: {
+			visible: false,
+            //type: 'datetime'
+            //type: 'linear',
+		},
+		yAxis: {
+			visible: false,
+		},
+		title: {
+			text: "Our History 我们的历程",
+            style: {
+                    "fontSize": "x-large"
+                },
+		},
+		subtitle: {
+			text: "Simple development of wikipāli<br>wikipāli的发展历程",
+            style: {
+                    "fontSize": "x-large"
+                },
+		},
+		colors: ["#4185F3", "#427CDD", "#406AB2", "#3E5A8E", "#3B4A68", "#363C46"],
+		series: [
+			{
+                dataLabels: {
+                allowOverlap: false,
+                //format: '<span style="color:{point.color}">● </span><span style="font-weight: bold;" > ' +
+                //'{point.x:%b %Y}</span><br/>{point.label}'
+                width: 800,
+                distance: 200,
+                style: {
+                    "fontSize": "large"
+                },
+
+            },
+                marker: {
+                //symbol: 'circle'
+                },
+				data: [
+					{
+						//x: Date.UTC(2017, 6),
+                        y: 1000,
+                        name: "2017-7",
+						label: "Word by Word can Display<br>实现逐词译显示",
+						description:
+							"pāli Word by word translation display as static Web page, solve the working memory limitation on understanding the pāli text",
+					},
+					{
+						//x: Date.UTC(2018, 1, 15),
+                        name: "2018-2",
+						label: "Auto Look up Dictionary<br>自动查词的解析神器",
+						description: "look up dictionary in batch work, reduce the difficulty of translating work",
+					},
+					{
+						//x: Date.UTC(2018, 6, 27),
+						name: "2018-7",
+						label: "Establishment of Pāli Corpus<br>建立巴利语料库",
+						description: "convert the XML pāli text into database, realize the fragmentation",
+					},
+					{
+						//x: Date.UTC(2020, 1, 1),
+						name: "2020-2",
+						label: "Conference in Sri Lanka<br>在斯里兰卡召开讨论会",
+						description:
+							"Discuss the tipiṭaka translating project and the establishment of  wikipāli platform, supported by many kinds of conditions",
+					},
+					{
+						//x: Date.UTC(2020, 2, 5),
+						name: "2020-3",
+						label: "Pilot Class in Dawei Pa-auk<br>德威帕奥试验班开班",
+						description:
+							"Testing and figure out the possible way of learning and translating pāli, U Kuṇḍadhāna Sayadaw join as the pioneer teacher",
+					},
+					{
+						//x: Date.UTC(2020, 7, 27),
+						name: "2020-7",
+						label: "Wikipāli 1.0 on-line Beta<br>wikipāli1.0测试版 上线",
+						description:
+							"online class + online translation; word by word teaching get more and more acknowledge",
+					},
+					{
+						//x: Date.UTC(2021, 5, 1),
+						name: "2021-6",
+						label: "Recruited wikipāli students<br>招收wikipāli学员",
+						description:
+							" in Sipsongpanna, China",
+					},
+					{
+						//x: Date.UTC(2021, 7, 31),
+						name: "2021-8",
+						label: "Trans:nibbāna-gāminī-paṭipadā<br>启动：《趣向涅盘之道》翻译项目",
+						description:
+							"Burmese to Chinese, ānāpānasamādhi part(အာနာပါနဿတိသမာဓိပိုင်း",
+					},
+					{
+						//x: Date.UTC(2022, 0, 1),
+						name: "2022-1",
+						label: "set wikipāli class in three levels<br>逐步开设初中高三级巴利语培训",
+						description:
+							"Beginner, Intermediate & Advanced",
+					},
+					{
+						//x: Date.UTC(2022, 1, 31),
+						name: "2022-2",
+						label: "Digitization of Burmese Nissaya<br>启动：缅文nissaya电子化",
+						description:
+							"Beginner, Intermediate & Advanced",
+					},
+					{
+						//x: Date.UTC(2022, 7, 24),
+						name: "2022-4",
+						label: "Trans: visuddhimagga paññābhūminiddesa<br>启动：《清净之道》说慧地品 翻译项目",
+						description:
+							"Less bothering, More Concentration",
+					},
+					{
+						//x: Date.UTC(2022, 7, 24),
+						name: "2022-8",
+						label: "New Base in Yuntai Monastery<br>云台寺建立新的基地",
+						description:
+							"Less bothering, More Concentration",
+					},
+                    {
+                        x: Date.UTC(2022, 10, 1),
+						name: "wikipāli 2.0 开始重构",
+						label: "wikipāli 2.0 rebuild start",
+						description:
+							"Rebuild frontend and backend by popular framework.Further and user-friendly.",
+					},
+					{
+						//x: Date.UTC(2023, 4, 1),
+						name: "2023-5",
+						label: "translate Nissaya into Chinese<br>启动：翻译缅语依词释nissaya",
+						description:
+							"Reappear the Learning Experince of Myanmar Students",
+					},
+					{
+						//x: Date.UTC(2023, 5, 24),
+						name: "2023-6",
+						label: "Burmese Class for Beginners<br>开设缅语初级班",
+						description:
+							"For further studying",
+					},
+					{
+						//x: Date.UTC(2023, 6, 31),
+						name: "2023-7",
+						label: "Wikipāli 2.0 on-line Beta<br>Wikipāli 2.0 上线测试",
+						description:
+							"Coming Soon",
+					},
+				],
+			},
+		],
+	});
+</script>
+
+<h1>Idea of Theravada Tipitaka commentaries translation project(2019)</h1>
+<p>we make a plan to someone who are interested in pāli translation.
+</p>
+
+<video controls="controls" style="width: 80%;">
+    <source src="https://djt-res.fzcl.org.cn/jly/video/%E4%BA%91%E5%8F%B0/Idea%20of%20Theravada%20Tipitaka%20commentaries%20translation%20project%20%282019%29%20English%20subtitles.webm" type="video/webm" ></source>
+    Video not playing? <a href="https://djt-res.fzcl.org.cn/jly/video/%E4%BA%91%E5%8F%B0/Idea%20of%20Theravada%20Tipitaka%20commentaries%20translation%20project%20%282019%29%20English%20subtitles.webm">Download file</a> instead.
+</video>
+
+
+<h1>conference in Sri Lanka, 2020 Feb</h1>
+<p>we invite the pāli experts from Myanmar and Sri Lank,
+including tipiṭaka Sayadaw, dhammācariya, alaṅkāra Sayadaw, teachers in university.
+We introduce our project and discuss.
+</p>
+
+<h2>1. translating project of pali literature</h2>
+<video controls="controls" style="width: 80%;">
+    <source src="https://djt-res.fzcl.org.cn/jly/video/%E4%BA%91%E5%8F%B0/%E5%85%B0%E5%8D%A1%E4%BC%9A%E8%AE%AE/1%20translating%20project%20of%20pali%20literature.mp4" type="video/mp4" ></source>
+    Video not playing? <a href="https://djt-res.fzcl.org.cn/jly/video/%E4%BA%91%E5%8F%B0/%E5%85%B0%E5%8D%A1%E4%BC%9A%E8%AE%AE/1%20translating%20project%20of%20pali%20literature.mp4">Download file</a> instead.
+</video>
+
+<h2>2. How to Support the Pāḷi Education by Computer Software</h2>
+<video controls="controls" style="width: 80%;">
+    <source src="https://djt-res.fzcl.org.cn/jly/video/%E4%BA%91%E5%8F%B0/%E5%85%B0%E5%8D%A1%E4%BC%9A%E8%AE%AE/2%20How%20to%20Support%20the%20P%C4%81%E1%B8%B7i%20Education%20by%20Computer%20Software.mp4" type="video/mp4" ></source>
+    Video not playing? <a href="https://djt-res.fzcl.org.cn/jly/video/%E4%BA%91%E5%8F%B0/%E5%85%B0%E5%8D%A1%E4%BC%9A%E8%AE%AE/2%20How%20to%20Support%20the%20P%C4%81%E1%B8%B7i%20Education%20by%20Computer%20Software.mp4">Download file</a> instead.
+</video>
+
+<h2>3. pali education platform & ecological chain</h2>
+<video controls="controls" style="width: 80%;">
+    <source src="https://djt-res.fzcl.org.cn/jly/video/%E4%BA%91%E5%8F%B0/%E5%85%B0%E5%8D%A1%E4%BC%9A%E8%AE%AE/3%20pali%20education%20platform.mp4" type="video/mp4" ></source>
+    Video not playing? <a href="https://djt-res.fzcl.org.cn/jly/video/%E4%BA%91%E5%8F%B0/%E5%85%B0%E5%8D%A1%E4%BC%9A%E8%AE%AE/3%20pali%20education%20platform.mp4">Download file</a> instead.
+</video>

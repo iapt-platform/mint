@@ -1,0 +1,66 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.recent.v1;
+
+
+/*
+ * 栏目访问记录
+ * 比如阅读器访问记录。用于用户找到上次阅读的文章等。
+ * 
+ */
+service Recent{
+	rpc GetRecentListForUser (RecentListRequest) returns (RecentListReply){} //最近访问列表
+	rpc GetRecents (RecentRequest) returns (RecentReply){}
+}
+
+message RecentListRequest{
+	string Id                    = 1;
+	EnumResType ResType          = 2;
+	string Search                = 3;
+	EnumAllowingSearch SearchCol = 4;
+	int32  CurrentPage           = 5;
+	int32  PerPage               = 6;
+	EnumAllowingOrderby OrderBy  = 7;
+	bool   Asc                   = 8;
+}
+
+enum EnumAllowingSearch{
+	EAS_NAME = 0;
+}
+enum EnumAllowingOrderby{
+	EAO_CREATE_AT =  0;
+	EAO_NAME =  1;
+}
+
+enum EnumResType{
+	ERT_ALL = 0;
+	ERT_CHAPTER = 1;
+	ERT_ARTICLE = 2;
+	ERT_COURSE = 3;
+	ERT_WBW_EDITOR = 4;
+}
+
+message RecentRequest{
+	string Id           = 1;
+	EnumResType ResType = 2;
+	string Param         = 3; //json字符串 访问参数
+}
+
+
+message RecentReply{
+	bool ok = 1;
+	string message = 2;
+	RecentRequest data = 3;
+}
+
+message RecentListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated RecentRequest rows = 1;
+		int32    Count = 2;
+		int32    PageNo = 3;
+		int32    PageSize = 4;
+	}
+}

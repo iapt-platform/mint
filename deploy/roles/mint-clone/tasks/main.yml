@@ -1,0 +1,94 @@
+- name: Creates deploy directory
+  become: true
+  file:
+    path: "/var/www/{{ inventory_hostname }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+
+- name: Git checkout source code
+  ansible.builtin.git:
+    repo: 'https://github.com/iapt-platform/mint.git'
+    dest: "{{ app_deploy_target }}"
+    version: laravel
+
+- name: Setup storage folder
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_target }}/storage"
+    state: directory
+    recurse: true
+    owner: www-data
+    group: www-data
+
+
+- name: Install v2 php dependencies
+  ansible.builtin.shell: "php{{ app_php_version }} {{ ansible_env.HOME }}/.local/bin/composer install"
+  args:
+    chdir: "{{ app_deploy_target }}"
+
+- name: Install v2 nodejs dependencies
+  # ansible.builtin.file:
+  #   src: "/var/www/{{ inventory_hostname }}/node_modules/v2"
+  #   dest: "{{ app_deploy_target }}/node_modules"
+  #   state: link
+  ansible.builtin.shell: npm install
+  args:
+    chdir: "{{ app_deploy_target }}"
+
+# TODO will remove in future
+- name: Install v1 php dependencies
+  ansible.builtin.shell: "php{{ app_php_version }} {{ ansible_env.HOME }}/.local/bin/composer install"
+  args:
+    chdir: "{{ app_deploy_target }}/public"
+
+# TODO will remove in future
+- name: Install v1 nodejs dependencies
+  # ansible.builtin.file:
+  #   src: "/var/www/{{ inventory_hostname }}/node_modules/v1"
+  #   dest: "{{ app_deploy_target }}/public/node_modules"
+  #   state: link
+  ansible.builtin.shell: npm install
+  args:
+    chdir: "{{ app_deploy_target }}/public"
+
+# TODO will remove in future
+- name: Install v1 tmp
+  ansible.builtin.file:
+    src: "/var/www/{{ inventory_hostname }}/tmp"
+    dest: "{{ app_deploy_target }}/public/tmp"
+    state: link
+
+- name: .env(v2)
+  become: true
+  ansible.builtin.template:
+    src: env-v2.j2
+    dest: "{{ app_deploy_target }}/.env"
+    owner: www-data
+    group: www-data
+    mode: '0400'
+
+# TODO will remove in future
+- name: config.php(v1)
+  become: true
+  ansible.builtin.template:
+    src: config-v1.php.j2
+    dest: "{{ app_deploy_target }}/public/app/config.php"
+    owner: www-data
+    group: www-data
+    mode: '0400'
+
+# TODO will remove in future
+- name: config.js(v1)
+  become: true
+  ansible.builtin.template:
+    src: config-v1.js.j2
+    dest: "{{ app_deploy_target }}/public/app/config.js"
+    owner: www-data
+    group: www-data
+    mode: '0400'
+
+- name: Create a current link
+  ansible.builtin.file:
+    src: "{{ app_deploy_target }}"
+    dest: /var/www/{{ inventory_hostname }}/current
+    state: link

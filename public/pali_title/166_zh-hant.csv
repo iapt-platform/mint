@@ -1,0 +1,59 @@
+id,book,par_num,level,class,title,text,author
+NULL,166,3,1,title,(MN)Uparipaṇṇāsapāḷi,第三篇　後分五十經篇,system
+NULL,166,4,2,title,1. Devadahavaggo,初品　天臂品,system
+NULL,166,5,4,title,1. Devadahasuttaṃ,第一〇一　天臂經,system
+NULL,166,49,4,title,2. Pañcattayasuttaṃ [pañcāyatanasutta (ka.)],第一〇二　五三經,system
+NULL,166,66,4,title,3. Kintisuttaṃ,第一〇三　如何經,system
+NULL,166,83,4,title,4. Sāmagāmasuttaṃ,第一〇四　舍彌村經,system
+NULL,166,111,4,title,5. Sunakkhattasuttaṃ,第一〇五　善星經,system
+NULL,166,130,4,title,6. Āneñjasappāyasuttaṃ,第一〇六　不動利益經,system
+NULL,166,143,4,title,7. Gaṇakamoggallānasuttaṃ,第一〇七　算數家目犍連經,system
+NULL,166,163,4,title,8. Gopakamoggallānasuttaṃ,第一〇八　瞿默目犍連經,system
+NULL,166,191,4,title,9. Mahāpuṇṇamasuttaṃ,第一〇九　滿月大經,system
+NULL,166,208,4,title,10. Cūḷapuṇṇamasuttaṃ,第一一〇　滿月小經,system
+NULL,166,235,2,title,2. Anupadavaggo,第二品　不斷品,system
+NULL,166,236,4,title,1. Anupadasuttaṃ,第一一一　不斷經,system
+NULL,166,251,4,title,2. Chabbisodhanasuttaṃ,第一一二　六淨經,system
+NULL,166,269,4,title,3. Sappurisasuttaṃ,第一一三　善士經,system
+NULL,166,292,4,title,4. Sevitabbāsevitabbasuttaṃ,第一一四　應習不應習經,system
+NULL,166,340,4,title,5. Bahudhātukasuttaṃ,第一一五　多界經,system
+NULL,166,361,4,title,6. Isigilisuttaṃ,第一一六　仙吞經,system
+NULL,166,420,4,title,7. Mahācattārīsakasuttaṃ,第一一七　大四十經,system
+NULL,166,439,4,title,8. Ānāpānassatisuttaṃ,第一一八　入出息念經,system
+NULL,166,473,4,title,9. Kāyagatāsatisuttaṃ,第一一九　身行念經,system
+NULL,166,507,4,title,10. Saṅkhārupapattisuttaṃ,第一二〇　行生經,system
+NULL,166,530,2,title,3. Suññatavaggo,第三品　空　品,system
+NULL,166,531,4,title,1. Cūḷasuññatasuttaṃ,第一二一　空小經,system
+NULL,166,543,4,title,2. Mahāsuññatasuttaṃ,第一二二　空大經,system
+NULL,166,569,4,title,3. Acchariyaabbhutasuttaṃ,第一二三　希有未曾有法經,system
+NULL,166,595,4,title,4. Bākulasuttaṃ,第一二四　薄拘羅經,system
+NULL,166,611,4,title,5. Dantabhūmisuttaṃ,第一二五　調御地經,system
+NULL,166,638,4,title,6. Bhūmijasuttaṃ,第一二六　浮彌經,system
+NULL,166,653,4,title,7. Anuruddhasuttaṃ,第一二七　阿那律經,system
+NULL,166,675,4,title,8. Upakkilesasuttaṃ,第一二八　隨煩惱經,system
+NULL,166,730,4,title,9. Bālapaṇḍitasuttaṃ,第一二九　賢愚經,system
+NULL,166,778,4,title,10. Devadūtasuttaṃ,第一三〇　天使經,system
+NULL,166,833,2,title,4. Vibhaṅgavaggo,第四品　分別品,system
+NULL,166,834,4,title,1. Bhaddekarattasuttaṃ,第一三一　一夜賢者經,system
+NULL,166,861,4,title,2. Ānandabhaddekarattasuttaṃ,第一三二　阿難一夜賢者經,system
+NULL,166,896,4,title,3. Mahākaccānabhaddekarattasuttaṃ,第一三三　大迦旃延一夜賢者經,system
+NULL,166,960,4,title,4. Lomasakaṅgiyabhaddekarattasuttaṃ,第一三四　盧夷強耆一夜賢者經,system
+NULL,166,996,4,title,5. Cūḷakammavibhaṅgasuttaṃ [subhasuttantipi vuccati],第一三五　小業分別經,system
+NULL,166,1018,4,title,6. Mahākammavibhaṅgasuttaṃ,第一三六　大業分別經,system
+NULL,166,1044,4,title,7. Saḷāyatanavibhaṅgasuttaṃ,第一三七　六處分別經,system
+NULL,166,1072,4,title,8. Uddesavibhaṅgasuttaṃ,第一三八　總說分別經,system
+NULL,166,1100,4,title,9. Araṇavibhaṅgasuttaṃ,第一三九　無諍分別經,system
+NULL,166,1134,4,title,10. Dhātuvibhaṅgasuttaṃ,第一四〇　界分別經,system
+NULL,166,1172,4,title,11. Saccavibhaṅgasuttaṃ,第一四一　諦分別經,system
+NULL,166,1203,4,title,12. Dakkhiṇāvibhaṅgasuttaṃ,第一四二　施分別經,system
+NULL,166,1247,2,title,5. Saḷāyatanavaggo,第五品　六處品,system
+NULL,166,1248,4,title,1. Anāthapiṇḍikovādasuttaṃ,第一四三　教給孤獨經,system
+NULL,166,1287,4,title,2. Channovādasuttaṃ,第一四四　教闡陀經,system
+NULL,166,1301,4,title,3. Puṇṇovādasuttaṃ,第一四五　教富樓那經,system
+NULL,166,1318,4,title,4. Nandakovādasuttaṃ,第一四六　教難陀迦經,system
+NULL,166,1343,4,title,5. Cūḷarāhulovādasuttaṃ,第一四七　教羅睺羅小經,system
+NULL,166,1351,4,title,6. Chachakkasuttaṃ,第一四八　六六經,system
+NULL,166,1385,4,title,7. Mahāsaḷāyatanikasuttaṃ,第一四九　大六處經,system
+NULL,166,1411,4,title,8. Nagaravindeyyasuttaṃ,第一五〇　頻頭城經,system
+NULL,166,1419,4,title,9. Piṇḍapātapārisuddhisuttaṃ,第一五一　乞食清淨經,system
+NULL,166,1438,4,title,10. Indriyabhāvanāsuttaṃ,第一五二　根修習經,system

@@ -1,0 +1,23 @@
+/*
+此处为模块内部使用的style
+*/
+#id_editor_project_res_ok{
+	display:none;
+}
+
+#id_editor_project_res_list li{
+	margin-left:1em;
+}
+
+.res_list li{
+	
+}
+.res_list li a:hover {
+    cursor: pointer;
+}
+.res_list li a:hover,
+.res_list li a:active {
+    color: var(--link-color);
+    outline: none;
+    text-decoration: underline;
+}

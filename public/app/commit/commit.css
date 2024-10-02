@@ -1,0 +1,70 @@
+.commit_compare {
+	display: flex;
+	padding: 5px;
+	line-height: 1.8em;
+	border-bottom: 1px solid var(--border-line-color);
+}
+.commit_compare .pali {
+	flex: 3;
+}
+.commit_compare .src_text {
+	flex: 3;
+}
+.commit_compare .dest_text {
+	flex: 3;
+}
+
+del {
+	color: red;
+}
+ins {
+	background-color: greenyellow;
+	text-decoration: unset;
+}
+
+.commit_head {
+	display: flex;
+	justify-content: space-around;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid var(--border-line-color);
+}
+.commit_step {
+	text-align: center;
+}
+.commit_step .num {
+	font-size: 25px;
+	font-weight: 700;
+	color: var(--btn-color);
+	width: 50px;
+	line-height: 45px;
+	text-align: center;
+	border: 2px solid var(--link-color);
+	border-radius: 99px;
+}
+.step1 > .commit_step_1 > .num {
+	border-color: var(--link-hover-color);
+	color: var(--main-color);
+}
+.step2 > .commit_step_1 > .num,
+.step2 > .commit_step_2 > .num {
+	border-color: var(--link-hover-color);
+	color: var(--main-color);
+}
+.step3 > .commit_step_1 > .num,
+.step3 > .commit_step_2 > .num,
+.step3 > .commit_step_3 > .num {
+	border-color: var(--link-hover-color);
+	color: var(--main-color);
+}
+.commit_win_inner {
+	padding: 1em;
+}
+.commit_win_inner #step1 {
+	display: flex;
+	flex-direction: column;
+}
+.commit_win_inner .channel {
+	font-size: 110%;
+	padding: 5px, 5px, 5px, 20px;
+}

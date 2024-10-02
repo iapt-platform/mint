@@ -1,0 +1,23 @@
+[www]
+
+[db]
+
+[cache]
+
+[mq]
+
+[help]
+
+[grammar]
+
+[all:vars]
+app_vendor="iapt-platform.mint"
+; openssl rand -base64 32
+app_secret_key="4i3WKUvKtSGl59htK7XjUNsjalhkG5s7RJCmZruT2m4="
+; php artisan key:generate --show
+app_laravel_key="base64:IQD4vkmAN1oEsc8rVu1nRadQWPUX/LH/jaSbyFbmf/w="
+app_postgresql_host="db-hk-1.wikipali.org"
+app_postgresql_port=5433
+app_postgresql_password=change-me
+app_redis_host="ch-hk-1.wikipali.org"
+

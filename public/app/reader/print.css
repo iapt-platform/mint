@@ -1,0 +1,35 @@
+header {
+	display: none;
+}
+#head_bar {
+	display: none;
+}
+#right_pannal {
+	display: none;
+}
+.other_tran_div {
+	display: none;
+}
+
+.ref chapter {
+	display: none;
+}
+.ref > chapter:first-child {
+	display: none;
+}
+.ref > para {
+	display: none;
+}
+note {
+	padding: 0;
+}
+#contents_div {
+	padding: 0;
+}
+note > .tran {
+	color: #000000;
+}
+
+#contents_foot {
+	display: none;
+}

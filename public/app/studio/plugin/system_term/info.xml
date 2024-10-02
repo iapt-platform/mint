@@ -1,0 +1,10 @@
+<plugin>
+	<id>table_of_content</id>
+	<caption>Table Of Content</caption>
+	<tooltip>Table Of Content</tooltip>
+	<author>PCDS Group</author>
+	<class>navigation</class>
+	<enable>true</enable>
+	<attach>left_top</attach>
+	<icon>icon.svg#icon_toc</icon>
+</plugin>

@@ -1,0 +1,450 @@
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  /*display: none;*/
+}
+/*::-webkit-scrollbar-track {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(85, 85, 85, 0.1);
+}*/
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: rgba(85, 85, 85, 0);
+}
+:hover::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: rgba(85, 85, 85, 0.4);
+}
+.reader_body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  color: #252525;
+}
+
+.reader_toolbar {
+  height: 2.5em;
+  width: 100%;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0 10px;
+  position: fixed;
+  border-bottom: 1px solid #989797;
+  background-color: #eaeaea;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+  -webkit-justify-content: space-between;
+  -moz-justify-content: space-between;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+#main_text_view {
+  padding-left: 21em;
+  padding-right: 20em;
+  padding-top: 2.5em;
+  font-family: "Noto Sans", "Noto Sans SC", "Noto Sans TC","Noto Sans Tai Tham", "ATaiThamKHNewV3-Normal", Arial, Verdana;
+}
+
+button,
+input[type="button"],
+input[type="submit"] {
+  font-weight: 500;
+  font-size: 90%;
+  background-color: rgba(255, 0, 0, 0);
+  color: #757af7;
+  border: 1px solid #ff000000;
+  border-radius: 4px;
+  margin: 2px;
+  padding: 2px 12px;
+  -webkit-transition-duration: 0.2s;
+  -moz-transition-duration: 0.2s;
+  transition-duration: 0.2s;
+  cursor: pointer;
+  display: -webkit-inline-flex;
+  display: -moz-inline-flex;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+  -webkit-flex-wrap: nowrap;
+  -moz-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  justify-content: center;
+}
+
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover {
+  background-color: #ff000000;
+  color: white;
+}
+
+button:disabled,
+input[type="button"]:disabled,
+input[type="submit"]:disabled {
+  color: #878787;
+  border-color: #878787;
+}
+
+.par_div {
+  margin: 1em 5px 1em 15px;
+}
+
+.text_level_0 {
+}
+.text_level_1 {
+  font-size: 200%;
+  font-weight: 700;
+  text-align: center;
+}
+.text_level_2 {
+  text-align: center;
+  font-size: 140%;
+  font-weight: 700;
+}
+.text_level_3 {
+  text-align: center;
+  font-size: 120%;
+  font-weight: 700;
+}
+.text_level_4 {
+  font-size: 110%;
+  font-weight: 700;
+}
+.text_level_5 {
+  font-weight: 700;
+}
+.text_level_6 {
+  font-weight: 500;
+}
+.text_level_7 {
+  font-weight: 500;
+}
+.text_level_8 {
+  line-height: 130%;
+}
+
+.comments_text_div {
+  margin: 2px 1em;
+  background-color: #fff1d2;
+  padding: 4px;
+  border-left: 4px solid#eda710;
+
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+  -webkit-justify-content: space-between;
+  -moz-justify-content: space-between;
+  justify-content: space-between;
+}
+.comments_text {
+  font-size: 80%;
+}
+#new_comm_text {
+  width: 100%;
+  height: 5em;
+}
+
+/* 下拉按钮样式 */
+.case_dropbtn {
+}
+.case_dropdown .case_dropbtn {
+  display: flex;
+  cursor: pointer;
+  margin: 0px;
+}
+
+/* 容器 <div> - 需要定位下拉内容 */
+.case_dropdown {
+  padding: 0;
+  cursor: pointer;
+  min-width: 3em;
+  display: inline-block;
+}
+
+/* 下拉内容 (默认隐藏) */
+.case_dropdown-content {
+  margin: 0.3em;
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 8em;
+  max-width: 30em;
+  margin: -1px 0px;
+  box-shadow: 0px 3px 13px 0px black;
+  color: black;
+  z-index: 200;
+}
+.case_dropdown-title {
+  padding: 0.1em 0.1em;
+  display: block;
+  text-align: left;
+  background-color: #fdfdbf;
+  font-size: 80%;
+  cursor: default;
+  font-weight: 500;
+}
+
+/* 下拉菜单的链接 */
+.case_dropdown-content a {
+  /*padding: 0.3em 0.4em;*/
+  line-height: 160%;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  text-align: left;
+}
+
+/* 鼠标移上去后修改下拉菜单链接颜色 */
+.case_dropdown-content a:hover {
+  background-color: blue;
+  color: white;
+}
+/* 在鼠标移上去后显示下拉菜单 */
+.case_dropdown:hover .case_dropdown-content {
+  display: block;
+}
+
+/* 当下拉内容显示后修改下拉按钮的背景颜色 */
+.case_dropdown:hover .case_dropbtn {
+  opacity: 0.4;
+}
+/*下拉菜单结束*/
+
+#tool_bar_comments {
+  display: none;
+}
+#tool_bar_dighest {
+  display: none;
+}
+
+.full_screen_window {
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  background-color: white;
+}
+.full_screen_window .win_caption {
+  height: 2em;
+  border-bottom: 1px solid #989797;
+  background-color: #eaeaea;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+  -webkit-justify-content: space-between;
+  -moz-justify-content: space-between;
+  justify-content: space-between;
+}
+#dighest_edit_div {
+  display: none;
+}
+
+#leftmenuinner {
+  background-color: white;
+  position: fixed;
+  display: block;
+  top: 0;
+  left: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  max-width: 20em;
+  z-index: 15;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  border-right: 1px solid gray;
+}
+.viewswitch_on {
+  -webkit-transform: translateX(0em);
+  -moz-transform: translateX(0em);
+  transform: translateX(0em);
+  box-shadow: 5px 0 20px 5px var(--shadow-color);
+}
+.viewswitch_off {
+  -webkit-transform: translateX(0em);
+  -moz-transform: translateX(0em);
+  transform: translateX(0em);
+  box-shadow: 5px 0 20px 5px var(--shadow-color);
+}
+
+.common-tab {
+  text-align: center;
+  width: auto;
+  position: relative;
+  height: 100%;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  margin: 15px 15px 0 15px;
+  align-items: flex-end;
+  font-weight: 500;
+  z-index: 11;
+}
+
+.common-tab_li {
+  margin: 0;
+  padding: 8px 10px;
+  display: inline-block;
+  cursor: pointer;
+  border: 1px solid gray;
+  border-bottom: 0px;
+}
+
+.common-tab_li_act {
+  color: var(--tool-color);
+  margin: 0;
+  padding: 8px 10px;
+  display: inline-block;
+  cursor: pointer;
+  box-shadow: 0 1px 0 0 black;
+  background-color: gray;
+  border: 1px solid black;
+  border-bottom: 0px;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
+.blackscreen {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(25, 25, 25, 0.6);
+  display: none;
+  z-index: 14;
+}
+
+.toc_item {
+  padding: 0.3em 0.6em;
+  line-height: 1.4em;
+  border-radius: 2px;
+  -webkit-transition-duration: 0.2s;
+  transition-duration: 0.2s;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  word-break: keep-all;
+  overflow: hidden;
+  white-space: nowrap;
+  border-bottom: 1px solid #989797;
+}
+
+.level_2 {
+  padding-left: 10px;
+}
+.level_3 {
+  padding-left: 20px;
+}
+.level_4 {
+  padding-left: 30px;
+}
+.level_4 {
+  padding-left: 40px;
+}
+pb {
+  width: 1em;
+  height: 1em;
+  background-color: blue;
+  display: inline-block;
+}
+
+.tooltip {
+  background-color: yellow;
+  position: relative;
+  display: inline;
+  cursor: help;
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  position: absolute;
+  width: 100px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+.tooltip .tooltiptext {
+  width: 120px;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px; /* 使用一半宽度 (120/2 = 60) 来居中提示工具 */
+}
+
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;
+  /* 提示工具头部 */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent black transparent;
+}
+.tooltip:hover {
+  color: #757af7;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+#tool_bar_title {
+  font-family: "Noto Serif";
+  font-weight: bold;
+}
+
+#tool_bar_fix {
+  display: none;
+}
+
+#left_menu_hide {
+  display: none;
+}
+
+#toc_content > div {
+  padding: 4px 8px;
+}
+#toc_content > div > a {
+  width: 100%;
+  display: inline-block;
+  color: black;
+  text-decoration: none;
+}
+
+#toc_content > div:hover {
+  background-color: #f1f1f1;
+}
+
+#para_nav_next_a,
+#para_nav_prev_a {
+  display: none;
+}

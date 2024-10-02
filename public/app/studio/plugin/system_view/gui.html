@@ -1,0 +1,36 @@
+<script>
+	function note_visibility(obj)
+	{
+		var isVisible = obj.checked;
+		if(isVisible){
+			$(".wnotediv").show();
+		}
+		else{
+		$(".wnotediv").hide();
+		}
+		//getStyleClass('wnotediv').style.display = (isVisible ? 'block' : 'none');
+		
+	}
+	</script>
+	
+	<a id="WBW_All"><span><input onclick="set_WBW_ALL_Visibility(this)" type="checkbox" style="width: 14px; height: 14px" checked /><?php echo $_local->gui->all_select;//全選?></span></a>
+	<a id="B_Meaning"><span><input id="WBW_B_Meaning" onclick="setMeaningVisibility(this)" type="checkbox" style="width: 14px; height: 14px" checked /><?php echo $_local->gui->g_mean;//整體含義?></span></a>
+	<a id="B_Org"><span><input id="WBW_B_Org" onclick="setOrgVisibility(this)" type="checkbox" style="width: 14px; height: 14px" checked /><?php echo $_local->gui->factor;//拆分組成?></span></a>
+	<a id="B_OrgMeaning"><span><input id="WBW_B_OrgMeaning" onclick="setOrgMeaningVisibility(this)" type="checkbox" style="width: 14px; height: 14px" checked /><?php echo $_local->gui->f_mean;//組分含義?></span></a>
+	<a id="B_Gramma" style="border-bottom: 2px solid var(--btn-hover-bg-color)"><span><input id="WBW_B_Gramma" onclick="setGrammaVisibility(this)" type="checkbox" style="width: 14px; height: 14px" checked /><?php echo $_local->gui->gramma;?></span></a>
+	<a id="B_Note" ><span><input id="WBW_B_Note" onclick="note_visibility(this)" type="checkbox" style="width: 14px; height: 14px" checked /><?php echo $_local->gui->note;//注释?></span></a>
+	<a id="B_Relation" style="border-bottom: 2px solid var(--btn-hover-bg-color)"><span><input id="WBW_B_Relation" onclick="rela_visibility(this)" type="checkbox" style="width: 14px; height: 14px" checked /><?php echo $_local->gui->relation;?></span></a>
+	<!--
+	<a id="B_ParTranEn"><span><input onclick="setParTranEnVisibility(this)" type="checkbox" style="width: 14px; height: 14px" checked /><?php echo $module_gui_str['editor']['1014'];//English?></span></a>
+	<a id="B_ParTranCn"><span><input onclick="setParTranCnVisibility(this)" type="checkbox" style="width: 14px; height: 14px" checked /><?php echo $module_gui_str['editor']['1015'];//中文?></span></a>
+	-->
+	<ul id="layout_arrange" class="tab_b" >
+		<li id="layout_arrange_h" class="act" onclick="tab_click('','layout_arrange_h',setArrange,0)"><?php echo $_local->gui->row_compare;?></li>
+		<li id="layout_arrange_v" onclick="tab_click('','layout_arrange_v',setArrange,1)"><?php echo $_local->gui->column_compare;?></li>
+	</ul>
+	
+	<ul  class="tab_b" >
+		<li id="layout_pbp" class="act" onclick="tab_click('','layout_pbp',setSbs,0)"><?php echo $_local->gui->each_paragraph;?></li>
+		<li id="layout_sbs" onclick="tab_click('','layout_sbs',setSbs,1)"><?php echo $_local->gui->each_sentence;?></li>
+		
+	</ul>

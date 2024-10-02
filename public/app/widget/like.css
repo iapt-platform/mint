@@ -1,0 +1,23 @@
+.like_mine {
+    background-color: var(--btn-bg-color);
+}
+.like_inner {
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+    min-width: 40px;
+    border: 1px solid var(--border-line-color);		
+	padding: 2px 8px;
+}
+
+like{
+    display: inline-block;
+}
+
+span.number {
+    border: 1px solid gray;
+    padding: 0px 5px;
+    border-radius: 99px;
+    margin-left: 5px;
+    font-size: 90%;
+}

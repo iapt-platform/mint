@@ -1,0 +1,24 @@
+- name: Remove file nginx default host
+  become: true
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: add Let's Encrypt support
+  become: true
+  ansible.builtin.shell:
+    cmd: certbot --nginx --non-interactive --agree-tos -m {{ app_master_email }} --domains {{ inventory_hostname }} "{{ '--redirect' if app_nginx_force_https else '' }}"
+
+- name: restart nginx
+  become: true
+  ansible.builtin.systemd:
+    state: restarted
+    name: nginx
+
+- name: enable certbot sync
+  become: true
+  ansible.builtin.cron:
+    name: "renew certbot every month"
+    special_time: monthly
+    job: "/usr/bin/certbot renew --force-renewal"
+

@@ -1,0 +1,2269 @@
+{
+	"gui": {
+		"50": "50+%",
+		"3rd_dictionary": "3rd Dictionary",
+		"accessed": "Accessed",
+		"add_to_edit_list": "Add to Edit List",
+		"adhivacana": "Adhivacana",
+		"all": "All",
+		"all_select": "All",
+		"all_data!": "All Data!",
+		"all_done": "Looking up accomplished",
+		"allsplit": "Words Splited Successfully ^-^",
+		"and_another": "&nbsp;and ",
+		"append": "Append",
+		"apply": "Apply",
+		"applyto": "Apply to",
+		"arrival_in_detail": "arrival in detail",
+		"asc": "ASC",
+		"atitude": "Atitude",
+		"audio": "Audio",
+		"author": "Author",
+		"auto": "AUTO",
+		"auto_fill": "Automatic filling",
+		"back": "back",
+		"base_on": "Base on",
+		"BE": "Buddhist Era ",
+		"bhumma": "Tuesday",
+		"book": "book",
+		"book_mark": "Book Mark",
+		"book_name": "book name&nbsp;",
+		"bookmark": "bookmark...",
+		"buddhist_calendar": "Buddhist Calendar",
+		"budha": "Wednesday",
+		"by": "By",
+		"cancel": "Cancel",
+		"canda": "Monday",
+		"caption": "Caption",
+		"CE": "CE",
+		"change_position": "change position",
+		"chars": "Chars",
+		"checking": "scanning",
+		"children": "Children",
+		"chinese": "中文",
+		"click_on": "Click On",
+		"click_word_to": "click word to ",
+		"code_convert": "Code Convert",
+		"color": "Color",
+		"column_compare": "Up&nbsp;&&nbsp;Down",
+		"commentary": "Commentary",
+		"completely_delete": "completely delete",
+		"computer": "Computer",
+		"confirm": "Confirm",
+		"content": "Content",
+		"contents": "Table of Content",
+		"copy": "copy",
+		"copy_to_clipboard": "copy the sent No. to clipboard",
+		"creat_a_new_file_by_yourself": "Creat a new file by yourself",
+		"created": "Created",
+		"current": "Current",
+		"database_admin": "Database Admin",
+		"date": "Date",
+		"day": "&nbsp;",
+		"day_1": "&nbsp;",
+		"days": "&nbsp;day(s) ",
+		"debug": "Debug",
+		"delete": "delete",
+		"departure_in_detail": "departure in detail",
+		"desc": "DESC",
+		"detaile": "Detail",
+		"dhamma_time": "5000 Years of the Buddha’s Dispensation ",
+		"dict": "Dict",
+		"dict_match": "Match the Dictionary and Document",
+		"dict_terms": "Terms",
+		"dictionary": "Dictionary",
+		"dictionary_match_result": "Dictionary Match Result",
+		"dictsouce": "Source of Terms",
+		"difficulty": "difficulty level",
+		"done": "&nbsp;scanned",
+		"down": "Down",
+		"download": "[Download]",
+		"draft": "As Draft",
+		"dawn": "dawn",
+		"each_paragraph": "E&nbsp;paragraph",
+		"each_sentence": "E&nbsp;sentence",
+		"eat": "eat",
+		"edit": "Edit",
+		"edit_now": "Edit in Studio",
+		"edit1": "Edited By ",
+		"edition": "Edition",
+		"editor": "Editor",
+		"e_mail": "E-mail",
+		"empty": "Empty",
+		"empty_the_data_below": "Empty the Data Below",
+		"empty_the_recycle_bin": "Empty the Recycle Bin",
+		"empty1": "EMPTY",
+		"english": "English",
+		"export": "Export",
+		"export_csv": "Export CSV",
+		"export_html": "Export HTML",
+		"f_mean": "F-Mean",
+		"factor": "Factor",
+		"factors_input": "input factors by click",
+		"favorite": "favorite",
+		"file_name": "File Name",
+		"files": "&nbsp;files",
+		"find_replace": "Find & Replace",
+		"finish": "Finish",
+		"finished": "finished",
+		"g_mean": "G-Mean",
+		"gama_entry": "entry the village",
+		"gramma": "Grammar",
+		"gramma_case": "Grammar Case",
+		"guid_creator": "GUID Creator",
+		"guru": "Thursday",
+		"h": "(h)",
+		"half": "half",
+		"heading": "Heading",
+		"heading_1": "Heading 1",
+		"heading_2": "Heading 2",
+		"heading_3": "Heading 3",
+		"heading_4": "Heading 4",
+		"heading_5": "Heading 5",
+		"heading_6": "Heading 6",
+		"heading_7": "Heading 7",
+		"heading_8": "Heading 8",
+		"heading_lv1": "Heading Lv1",
+		"heading_lv2": "Heading Lv2",
+		"heading_lv3": "Heading Lv3",
+		"heading_lv4": "Heading Lv4",
+		"heading_lv5": "Heading Lv5",
+		"heading_lv6": "Heading Lv6",
+		"heading_lv7": "Heading Lv7",
+		"heading_lv8": "Heading Lv8",
+		"hidden": "hide",
+		"home": "Home",
+		"hori_ref_time": "horizontal refraction correct ",
+		"html_text_data": "HTML Text Data",
+		"import": "Import ",
+		"import_csv": "Import CSV",
+		"import_export": "Import/Export",
+		"import_the_flie_from_cscd": "Import the flie From Cattha Sangayana data base",
+		"include": "include",
+		"info_panal": "Info Panal",
+		"infomation": "Infomation",
+		"inline_dictionary": "Inline Dictionary",
+		"innerdict": "Inline Dictionary",
+		"input": "input",
+		"kala": "suitable time",
+		"keywords": "Keywords",
+		"language": "Language",
+		"language_select": "Language",
+		"layout": "Layout",
+		"left": "Remains ",
+		"lesson": "lesson",
+		"letters": "&nbsp;letters",
+		"level": "Lv",
+		"list": "List",
+		"load": "Load",
+		"load_from_database": "Load From Database",
+		"load_from_wbw_file": "Load From WBW File",
+		"loading": "loading…",
+		"loading_dictionary_list...": "loading Dictionary List...",
+		"lock": "Lock",
+		"login": "Login",
+		"logout": "Logout",
+		"longitude": "Longitude",
+		"magic_dict": "Magic Dict",
+		"magic_gap": "Magic Gap",
+		"magic_split": "Magic Split",
+		"magic_terms": "Magic Terms",
+		"main_code": "Main&nbsp;Code",
+		"mark": "Mark",
+		"māsa": "māsa",
+		"match_end": "Document update over，Degree of Perfection",
+		"matched": "Matched",
+		"max": "Max",
+		"meaning": "Meaning",
+		"meaning_input": "input meanings by click",
+		"message": "message",
+		"min": "min",
+		"mins": "(min)",
+		"mobile": "Mobile",
+		"modified": "Modified",
+		"modify": "Modify",
+		"modifyok": "Modified ",
+		"month": "Month ",
+		"month_1": "- ",
+		"months": "&nbsp;month(s) ",
+		"more": "more",
+		"my_book": "My Book",
+		"my_dictionary": "My Vocabulary",
+		"my_document": "My Document",
+		"my_loc": "my location",
+		"name": "Name",
+		"need_inform": "without informing other Bhikkhu ",
+		"new": "New",
+		"new_account": "New Account",
+		"new_project": "New Word by Word Analysis",
+		"new_revision": "New Revision",
+		"new_technic_term": "New Technic Term",
+		"newheading": "Text Editor",
+		"newproject": "New Project",
+		"newword": "New Word",
+		"night": "Night",
+		"no.": "No.",
+		"no_related_file": "No related file",
+		"no_string": "cannot ",
+		"nofilename": "No File Name",
+		"noon_time": "NOON",
+		"normal": "Normal",
+		"note": "Note",
+		"now_time": "NOW",
+		"num_k": "K",
+		"num_m": "M",
+		"ok": "OK",
+		"order_by": "Order By",
+		"other": "Other&nbsp;",
+		"other_meaning": "other meaning",
+		"otherdict": "Other Dictionary",
+		"pa_auk_dictionary": "Pa-auk Dictionary",
+		"pacchā_māsa": "pacchā-māsa",
+		"pakkha": "Lunar Phases ",
+		"pāli": "Pāli",
+		"pali_canon": "Pāḷi Canon",
+		"pāli_code": "Pāli Code",
+		"para": "&nbsp;Paragraphs",
+		"paragraph": "Paragraph",
+		"parent": "Parent",
+		"parent_input": "input parent by click",
+		"part": "Factors",
+		"partmeaning": "Factor-Meaning",
+		"password": "Password",
+		"password_again": "Confirm Password",
+		"past": "Passed ",
+		"pcd_studio": "PCD Studio&nbsp;",
+		"piṭaka": "Piṭaka",
+		"plugin": "Plugin",
+		"poweredby": "Powered by PCSD  build27-Jul-2018",
+		"preview": "preview",
+		"print": "Print",
+		"print_preview": "Print Preview",
+		"product": "translation words",
+		"project": "Project",
+		"protection": "Protection【en】",
+		"pubba_māsa": "pubba-māsa",
+		"publish": "Publish",
+		"ravi": "Sunday",
+		"read": "Read",
+		"read_only": "Read Only",
+		"recent_scan": "Recent Scan",
+		"recycle_bin": "Recycle Bin",
+		"ref_dict": "Dictionary",
+		"refresh": "Refresh",
+		"relation": "relation",
+		"remove": "Remove",
+		"removeword": "Slur Factor Removed",
+		"render": "Render",
+		"repeat": "Repeat Quotiety ",
+		"resource": "Resource",
+		"revision": "Revised By ",
+		"revision_mode": "Revision Mode",
+		"round_1": "Round ",
+		"round_2": "&nbsp;dictionary",
+		"row_compare": "Left&nbsp;&&nbsp;Right",
+		"same_word": "same words",
+		"saṃvacchara": "saṃvacchara",
+		"sandhi": "Sandhi",
+		"sandhi_begin": "Sandhi Begin",
+		"sandhi_combin_mode": "Sandhi Combin Mode",
+		"sandhi_end": "Sandhi End",
+		"sandhi_orginal_word": "Sandhi Orginal Word",
+		"sandhi_splited_word": "Sandhi Splited Word",
+		"save": "Save",
+		"script": "Script",
+		"search": "Search",
+		"season": "Season ",
+		"sec": "sec",
+		"sent_trans": "Translate of Sentence",
+		"sentence": "Sentence",
+		"sentence_by_sentence": "Sentence By Sentence",
+		"setting": "Setting",
+		"share": "share",
+		"shared": "shared",
+		"show": "Show",
+		"similar_words": "Similar Words",
+		"size": "size",
+		"smart_spell": "smart spell",
+		"sora": "Saturday",
+		"source": "Source",
+		"spell": "Spell",
+		"statistical_data": "statistical data",
+		"style": "Style",
+		"sub_pcode": "Sub&nbsp;Code",
+		"subversion": "Subversion",
+		"success": "&nbsp;Words Successfully",
+		"successful": "Successful",
+		"sukka": "Friday",
+		"sun_height_degree": "Max solar altitude ",
+		"system_default": "System Default",
+		"system_dictionary": "System Dictionary",
+		"tag": "tag",
+		"templet": "Templet",
+		"terms_system": "Terms System",
+		"thischapter": "This Chapter",
+		"time": "time",
+		"title": "title&nbsp;",
+		"to_the_dhamma": "Welcome to the Dhamma!",
+		"today": "Today ",
+		"toDB": "To User Database",
+		"tools": "Tools",
+		"total": "Total&nbsp;",
+		"total_workload": "total workload",
+		"totally": "Totally ",
+		"tran_workload": "whole passage translate ",
+		"translate": "Translate",
+		"translate_convert": "Translate Convert",
+		"translate1": "Translated By ",
+		"translation": "Translation",
+		"translation_templet": "Translation Templet",
+		"twilight_time": "dawn",
+		"undo_shared": "undo shared",
+		"unsplit": "Slur Splited",
+		"up": "Up",
+		"up_and_down": "Up And Down",
+		"update_all_wbw_to_database": "Update All WBW to Database",
+		"user": "User",
+		"to_user_dictionary": "Save & Add to My Vocabulary List",
+		"user_id": "User ID",
+		"userdict": "Vocabulary List",
+		"vannana": "vaṇṇanā",
+		"view": "View",
+		"vikala": "unsuitable time",
+		"vocabulary": "Vocabulary",
+		"wbw": "Word by Word Analysis",
+		"week": "(week)",
+		"week_day": "Day",
+		"welcome": "",
+		"white": "White",
+		"wiki_term": "Wiki Term",
+		"with_title": "With Title",
+		"wizard": "Wizard",
+		"wizard_my_book": "Wizard -> My Book",
+		"word_base": "Word base",
+		"word_by_word": "word by word",
+		"word_gramma_statistics": "Word & Grammar Statistics",
+		"word_length": "average word length",
+		"word_list": "Word List",
+		"word_note": "Word Note",
+		"word_selection_apply_to": "Word Selection Apply to",
+		"wordmap": "Word Tree",
+		"wordnum": "Text Amount ",
+		"words": "&nbsp;words",
+		"wordtype": "Word Type",
+		"workload": "workload",
+		"xml_data": "XML Data",
+		"year": "(year)",
+		"year_0": "year",
+		"year_1": "- ",
+		"years": "&nbsp;year(s) ",
+		"yes_string": "can ",
+		"continue": "continue",
+		"account": "Username",
+		"new_to_wikipali": "New to Wikipāḷi",
+		"create_account": "Create an account",
+		"have_account": "I have account",
+		"join_wikipali": "Join wikipāḷi",
+		"pali_literature_platform": "Platform for Editing Pāḷi Literature",
+		"nick_name": "nickname",
+		"name_for_show": "name showed for others",
+		"email_address": "E-mail address",
+		"account_demond": "Username may only contain alphanumeric lower case characters, and try to avoid using ? : ! ; , -  etc.",
+		"password_demond": "Make sure it's at least 5 characters including both numbers and letters",
+		"login_with_google": "Log in with Google",
+		"login_with_facebook": "Log in with Facebook",
+		"login_with_wechat": "Log in with WeChat",
+		"loged_out": "has loged out",
+		"online_dict_db": "Online Search for Pāḷi",
+		"user_data_share": "Editing & Sharing as Open Source",
+		"cooperate_edit": "Multi-translator Collaboration",
+		"cannot_empty": "&nbsp;cannot be empty",
+		"account_existed": "Username is already existed",
+		"incorrect_ID_PASS": "Incorrect Username or password.",
+		"sync": "synchron",
+		"restore": "restore",
+		"group": "group",
+		"add_folder": "new folder",
+		"add_to_folder": "add to folder",
+		"rename": "rename",
+		"collaborate": "collaborate",
+		"help": "help",
+		"function_introduce": "functions of Wikipāḷi",
+		"vedio_link": "vedio link",
+		"project_introduce": "conference of pāḷi-translating platform",
+		"help_doc": "Help document",
+		"code_add": "View and download code",
+		"test_declare": "This website version is only for function test, there's no garantee for the users’ personal data as so far.",
+		"project_introduce_inbrief": "The general idea of Pali Canon translation project",
+		"start": "Let’s start",
+		"wikipali_suite": "wikipali Suite",
+		"encyclopedia": "Pāḷipedia",
+		"txt_search": "Text Search",
+		"title_search": "Title Search",
+		"dict_builder": "PCD Dict-Builder",
+		"classroom": "Course",
+		"filter": "filter",
+		"result": "results",
+		"find_about": "about&nbsp;",
+		"presented_in": "presented&nbsp;in&nbsp;",
+		"books": "&nbsp;books",
+		"times": "&nbsp;times",
+		"not_login": "login now",
+		"database": "database",
+		"open_with": "open with",
+		"reader": "wikipāli reader",
+		"folk": "folk",
+		"and": "&nbsp;and&nbsp;",
+		"digest": "digest",
+		"composition": "composition&nbsp;",
+		"corpus_statistics": "corpus statistics",
+		"studio": "Studio",
+		"library": "Library",
+		"turbo_split": "Turbo Split",
+		"full_text": "full text",
+		"word_weight": "weightiness of this word",
+		"characters": "characters",
+		"real_declension": "occurrence of declensions",
+		"forms": "spelling forms",
+		"add_to": "add to",
+		"undone_function": "unfinished function",
+		"click_to_chart": "click to check the chart",
+		"frequency": "Frequency",
+		"declension_list": "Declension List",
+		"distribution": "Distribution Chart",
+		"statistical": "statistical&nbsp;",
+		"chart": "chart",
+		"in": "present in",
+		"present": "",
+		"sutta": "sutta",
+		"vinaya": "vinaya",
+		"abhidhamma": "abhidhamma",
+		"anna": "añña",
+		"mula": "mūla",
+		"atthakatha": "aṭṭhakathā",
+		"tika": "ṭīkā",
+		"times2": "times",
+		"co_doc": "Collaborative Document",
+		"open": "Open&nbsp;",
+		"general": "General",
+		"username": "Login ID",
+		"change_password": "change the password",
+		"ignore": "ignore",
+		"oversize_to_load": "unable to load due to oversize, please reduce the articles range",
+		"page_end": "The End of The Page",
+		"academy": "Academy",
+		"interface": "interface",
+		"preference": "preference",
+		"appearance": "appearance",
+		"theme": "theme",
+		"first_choice_word": "first-choice term",
+		"pali_word": "pali word",
+		"required": "required",
+		"optional": "optional",
+		"comment": "comments",
+		"my_term": "my term",
+		"scan_in_reader": "scan in reader",
+		"selected": "selected",
+		"to_be_selected": "to be selected",
+		"text_without_title": "text without title",
+		"end_of_text": "No Prev",
+		"begin_of_text": "No Next",
+		"chapter_select": "Please choose a chapter in the left sidebar",
+		"kala_pakkha": "waning",
+		"sukka_pakkha": "waxing",
+		"com_dict": "Community Dictionary",
+		"contributor": "contributor",
+		"interface_language": "interface language",
+		"translation_language": "languages of translation",
+		"magic_dict_language": "languages of dictionary",
+		"priority": "priority",
+		"no_need": "no need",
+		"not_started": "not yet start",
+		"in_progress": "in progress",
+		"already_over": "already over",
+		"revise": "revise",
+		"relational_map": "relational map",
+		"pp": "past participle",
+		"prp": "present participle",
+		"fpp": "Future Passive Participle",
+		"new_lesson": "Add a new lesson",
+		"sub_title": "subtitle",
+		"introduction": "introduction",
+		"speaker": "speaker",
+		"notice_live": "notice of live broadcast",
+		"record_replay": "record & replay",
+		"time_arrange": "time arrangement",
+		"duration": "duration",
+		"attachment": "attachment",
+		"submit": "submit",
+		"create_course": "create course",
+		"created_time": "created time",
+		"modified_time": "modified time",
+		"num_of_hit": "num of hits",
+		"all_courses": "all courses",
+		"num_of_played": "Video Views",
+		"recent_update": "recent update",
+		"course_begin": "course starting time",
+		"num_of_lesson": "num of lesson periods",
+		"signed_up": "signed up",
+		"sign_up": "sign up",
+		"watch": "watch",
+		"watched": "watched",
+		"send": "send",
+		"accept_copy": "accept & copy",
+		"with_idea": "I have an idea…",
+		"text_num": "No. of text",
+		"copied_to_clipboard": "has been copied to clipboard.",
+		"I_know": "Got it！",
+		"text": "text&nbsp;",
+		"anthology": "anthology ",
+		"channel": "channel & style",
+		"channels": "channels list",
+		"like": "like",
+		"blank": "blank",
+		"vocabulary_list": "words list",
+		"private": "private",
+		"private_note": "No URL for others，Unshown in Subscriber feed， search & related",
+		"unlisted": "unlisted",
+		"unlisted_note": "Can share URL，Unshown in Subscriber feed， search & related",
+		"public": "public",
+		"public_note": "Can share URL，Shows in Subscriber feed， search & related",
+		"copy_link": "copy the Link",
+		"copy_share_link": "copy share link",
+		"saved": "saved ",
+		"title_necessary": "title is necessary",
+		"example": "for example ",
+		"privacy": "privacy",
+		"new_composition": "new composition",
+		"add": "add&nbsp;",
+		"completed": "completed",
+		"ongoing": "ongoing",
+		"popular": "popular",
+		"recommendation": "recommendation",
+		"collection": "collection",
+		"rates": "rates",
+		"updated": "updated",
+		"my_zone": "my zone",
+		"share_to": "share&nbsp;to",
+		"EXP": "EXP",
+		"composition_structure": "composition structure",
+		"search_tools": "search&nbsp;tools",
+		"timeline": "timeline",
+		"extension": "extension",
+		"no_created": "&nbsp;is not created yet",
+		"create_now": "create now",
+		"only_this_para": "show this paragraph only",
+		"no": "No&nbsp;",
+		"select": "select",
+		"history": "history",
+		"top_search": "Top search",
+		"similar_sentences": "similar sentences",
+		"close": "close",
+		"timezone": "Timezone",
+		"subfield": "subfield",
+		"local": "Local",
+		"form_sent": "Form sentences with the words given & copy to clipboard",
+		"hot_topic": "hot topic",
+		"composition_intro": "Make the Pāḷi easy to read<br>solution of Pāḷi glossary<br>For translating Pāḷi in Group<br>Show the source reference in Pāḷi",
+		"jump_to_this_sent": "jump to this sentence",
+		"show_nissaya": "show nissaya",
+		"related_para": "related&nbsp;paragraph",
+		"disable": "disable",
+		"disable_note": "disable & invisible to anyone including myself",
+		"not_found": "not&nbsp;found",
+		"progress_curve": "progress curve",
+		"day_EXP": "Daily EXP",
+		"Jan": "Jan",
+		"Feb": "Feb",
+		"Mar": "Mar",
+		"Apr": "Apr",
+		"May": "May",
+		"Jun": "Jun",
+		"Jul": "Jul",
+		"Aug": "Aug",
+		"Sep": "Sep",
+		"Oct": "Oct",
+		"Nov": "Nov",
+		"Dec": "Dec",
+		"EXP_in_total": "EXP in total",
+		"day_action": "Daily Action",
+		"action": "Actions",
+		"cooperators": "Cooperators",
+		"person": "Person",
+		"write": "Write",
+		"sub_group": "Project",
+		"your": "Yours",
+		"status": "status",
+		"in_recycle_bin": "in&nbsp;recycle-bin",
+		"cover": "cover",
+		"member": "Member",
+		"new_group": "Create Group",
+		"new_sub_group": "Create Project",
+		"owner": "Owner",
+		"manager": "Manager",
+		"enter": "Enter",
+		"avatar": "Avatar",
+		"display": "display",
+		"none": "none",
+		"cooperate_group": "cooperative group",
+		"personal": "personal",
+		"empty_null_mark": "Here is so quiet",
+		"lesson_intro": "Let’s take the course to see how the pāḷi experts explain conon",
+		"teaching_course": "teaching course",
+		"watching_course": "watching course",
+		"searching_instruction": "searching instruction",
+		"dict_searching_placehold": "insert “+” into a word to search them separately",
+		"copy_to": "copy to",
+		"add_tran": "add translation",
+		"no_updated": "no update",
+		"secs_ago": "&nbsp;secs&nbsp;ago",
+		"mins_ago": "&nbsp;mins&nbsp;ago",
+		"hs_ago": "&nbsp;hs&nbsp;ago",
+		"days_ago": "&nbsp;days&nbsp;ago",
+		"weeks_ago": "&nbsp;weeks&nbsp;ago",
+		"months_ago": "&nbsp;months&nbsp;ago",
+		"year_ago": "&nbsp;year&nbsp;ago",
+		"years_ago": "&nbsp;years&nbsp;ago",
+		"similar": "similar",
+		"suggest": "suggest",
+		"next_line": "new line",
+		"link": "link",
+		"co_channel": "collaborative channels",
+		"permission": "permission",
+		"first_page": "first page",
+		"previous_page": "previous page",
+		"next_page": "next page",
+		"last_page": "last page",
+		"citations": "citations",
+		"reference": "reference",
+		"original": "original",
+		"page_num": "page",
+		"palihandbook": "巴利手册",
+		"viewer": "viewer",
+		"invalid_email": "invalid email",
+		"invalid_token": "invalid token",
+		"username_too_long": "username too long",
+		"username_too_short": "username too short",
+		"username_invaild_symbol": "username invaild symbol",
+		"password_invaild_symbol": "password invaild symbol",
+		"error_net_404": "Not Found",
+		"error_net_500": "Internal Server Error",
+		"error_net_timeout": "Timeout",
+		"error_net_abort": "abort",
+		"error_net_parsererror": "parser error",
+		"caus": "caus.",
+		"pass": "pass.",
+		"space": "&nbsp;",
+		"channel_type": "channel type",
+		"community_new": "community new",
+		"pali_text": "pali text",
+		"my_read": "recent",
+		"master_copy": "pāli",
+		"nissaya": "nissaya",
+		"show_this_para_only": "show this paragraph only",
+		"original_text":"original text",
+		"white_space": "&nbsp;",
+		"latest": "latest",
+		"dev_history": "development history",
+		"": ""
+	},
+	"grammastr": [
+		{
+			"id": "$",
+			"value": " "
+		},
+		{
+			"id": "$",
+			"value": " "
+		},
+		{
+			"id": "$",
+			"value": " "
+		},
+		{
+			"id": ".nt.",
+			"value": "nt."
+		},
+		{
+			"id": ".m.",
+			"value": "m."
+		},
+		{
+			"id": ".f.",
+			"value": "f."
+		},
+		{
+			"id": ".sg.",
+			"value": "sg."
+		},
+		{
+			"id": ".pl.",
+			"value": "pl."
+		},
+		{
+			"id": ".nom.",
+			"value": "nom."
+		},
+		{
+			"id": ".voc.",
+			"value": "voc."
+		},
+		{
+			"id": ".acc.",
+			"value": "acc."
+		},
+		{
+			"id": ".gen.",
+			"value": "gen."
+		},
+		{
+			"id": ".dat.",
+			"value": "dat."
+		},
+		{
+			"id": ".inst.",
+			"value": "inst."
+		},
+		{
+			"id": ".abl.",
+			"value": "abl."
+		},
+		{
+			"id": ".loc.",
+			"value": "loc."
+		},
+		{
+			"id": ".imp.",
+			"value": "imp."
+		},
+		{
+			"id": ".cond.",
+			"value": "cond."
+		},
+		{
+			"id": ".opt.",
+			"value": "opt."
+		},
+		{
+			"id": ".pres.",
+			"value": "pres."
+		},
+		{
+			"id": ".aor.",
+			"value": "aor."
+		},
+		{
+			"id": ".pf.",
+			"value": "pf."
+		},
+		{
+			"id": ".fut.",
+			"value": "fut."
+		},
+		{
+			"id": ".act.",
+			"value": "act."
+		},
+		{
+			"id": ".refl.",
+			"value": "refl."
+		},
+		{
+			"id": ".1p.",
+			"value": "1p."
+		},
+		{
+			"id": ".2p.",
+			"value": "2p."
+		},
+		{
+			"id": ".3p.",
+			"value": "3p."
+		},
+		{
+			"id": ".prp.",
+			"value": "prp."
+		},
+		{
+			"id": ".prpa.",
+			"value": "prpa."
+		},
+		{
+			"id": ".prpp.",
+			"value": "prpp."
+		},
+		{
+			"id": ".pp.",
+			"value": "pp."
+		},
+		{
+			"id": ".ppa.",
+			"value": "ppa."
+		},
+		{
+			"id": ".ppp.",
+			"value": "ppp."
+		},
+		{
+			"id": ".futp.",
+			"value": "futp."
+		},
+		{
+			"id": ".fpa.",
+			"value": "fpa."
+		},
+		{
+			"id": ".fpp.",
+			"value": "fpp."
+		},
+		{
+			"id": ".grd.",
+			"value": "Grd."
+		},
+		{
+			"id": ".pass.",
+			"value": "Pass."
+		},
+		{
+			"id": ".caus.",
+			"value": "Caus."
+		},
+		{
+			"id": ".desid.",
+			"value": "desid."
+		},
+		{
+			"id": ".intens.",
+			"value": "intens."
+		},
+		{
+			"id": ".denom.",
+			"value": "denom."
+		},
+		{
+			"id": ".ger.",
+			"value": "Ger."
+		},
+		{
+			"id": ".abs.",
+			"value": "Abs."
+		},
+		{
+			"id": ".inf.",
+			"value": "Inf."
+		},
+		{
+			"id": ".n.",
+			"value": "n."
+		},
+		{
+			"id": ".adj.",
+			"value": "adj."
+		},
+		{
+			"id": ".ti.",
+			"value": "n.a."
+		},
+		{
+			"id": ".num.",
+			"value": "num."
+		},
+		{
+			"id": ".pron.",
+			"value": "pron."
+		},
+		{
+			"id": ".v:base.",
+			"value": "v:base."
+		},
+		{
+			"id": ".ti:base.",
+			"value": "n.a:base."
+		},
+		{
+			"id": ".n:base.",
+			"value": "n:base."
+		},
+		{
+			"id": ".adj:base.",
+			"value": "adj:base."
+		},
+		{
+			"id": ".pron:base.",
+			"value": "pron:base."
+		},
+		{
+			"id": ".pron.per.",
+			"value": "pron.per."
+		},
+		{
+			"id": ".pron.demon.",
+			"value": "pron.demon."
+		},
+		{
+			"id": ".pron.rel.",
+			"value": "pron.rel."
+		},
+		{
+			"id": ".pron.interr.",
+			"value": "pron.interr."
+		},
+		{
+			"id": ".pron.indef.",
+			"value": "pron.indef."
+		},
+		{
+			"id": ".v.",
+			"value": "v."
+		},
+		{
+			"id": ".v:ind.",
+			"value": "v.ind."
+		},
+		{
+			"id": ".ind.",
+			"value": "ind."
+		},
+		{
+			"id": ".adv.",
+			"value": "adv."
+		},
+		{
+			"id": ".conj.",
+			"value": "conj."
+		},
+		{
+			"id": ".prep.",
+			"value": "prep."
+		},
+		{
+			"id": ".interj.",
+			"value": "interj."
+		},
+		{
+			"id": ".comp.",
+			"value": "comp."
+		},
+		{
+			"id": ".pre.",
+			"value": "prefix."
+		},
+		{
+			"id": ".part.",
+			"value": "part"
+		},
+		{
+			"id": ".root.",
+			"value": "root."
+		},
+		{
+			"id": ".suf.",
+			"value": "suffix."
+		},
+		{
+			"id": ".end.",
+			"value": "case end."
+		},
+		{
+			"id": "_un_auto_factormean_",
+			"value": "—Auto—"
+		},
+		{
+			"id": "_un_auto_mean_",
+			"value": "&nbsp;× × ×&nbsp;"
+		},
+		{
+			"id": ".un.",
+			"value": "slur."
+		}
+	],
+	"type_str": [
+		{
+			"id": ".n.",
+			"value": "n."
+		},
+		{
+			"id": ".v.",
+			"value": "v."
+		},
+		{
+			"id": ".ti.",
+			"value": "n.a."
+		},
+		{
+			"id": ".ind.",
+			"value": "ind."
+		},
+		{
+			"id": ".pron.",
+			"value": "pron."
+		},
+		{
+			"id": ".adj.",
+			"value": "adj."
+		},
+		{
+			"id": ".v:ind.",
+			"value": "v.ind."
+		},
+		{
+			"id": ".num.",
+			"value": "num."
+		},
+		{
+			"id": ".un.",
+			"value": "slur."
+		},
+		{
+			"id": ".comp.",
+			"value": "comp."
+		},
+		{
+			"id": ".pron:base.",
+			"value": "pron:base."
+		},
+		{
+			"id": ".adj:base.",
+			"value": "adj:base."
+		},
+		{
+			"id": ".n:base.",
+			"value": "n:base."
+		},
+		{
+			"id": ".ti:base.",
+			"value": "ti:base."
+		},
+		{
+			"id": ".num:base.",
+			"value": "num:base."
+		},
+		{
+			"id": ".pre.",
+			"value": "prefix."
+		},
+		{
+			"id": ".root.",
+			"value": "root."
+		},
+		{
+			"id": ".suf.",
+			"value": "suffix."
+		},
+		{
+			"id": ".end.",
+			"value": "case end."
+		},
+		{
+			"id": ".v:base.",
+			"value": "v:base."
+		}
+	],
+	"formula": [
+		{
+			"id": ".pl.$.abl.",
+			"value": "{from&nbsp;}~{s}${from&nbsp;}~{es}${from&nbsp;}~{}${because of&nbsp;}~{s}${because of&nbsp;}~{es}${because of&nbsp;}~{}${due to&nbsp;}~{s}${due to&nbsp;}~{es}${due to&nbsp;}~{}${than&nbsp;}~{s}${than&nbsp;}~{es}${than&nbsp;}~{}"
+		},
+		{
+			"id": "$.pl.$.abl.",
+			"value": "{from&nbsp;}~{s}${from&nbsp;}~{es}${from&nbsp;}~{}${because of&nbsp;}~{s}${because of&nbsp;}~{es}${because of&nbsp;}~{}${due to&nbsp;}~{s}${due to&nbsp;}~{es}${due to&nbsp;}~{}${than&nbsp;}~{s}${than&nbsp;}~{es}${than&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.abl.",
+			"value": "{from&nbsp;}~{s}${from&nbsp;}~{es}${from&nbsp;}~{}${because of&nbsp;}~{s}${because of&nbsp;}~{es}${because of&nbsp;}~{}${due to&nbsp;}~{s}${due to&nbsp;}~{es}${due to&nbsp;}~{}${than&nbsp;}~{s}${than&nbsp;}~{es}${than&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.abl.",
+			"value": "{from&nbsp;}~{s}${from&nbsp;}~{es}${from&nbsp;}~{}${because of&nbsp;}~{s}${because of&nbsp;}~{es}${because of&nbsp;}~{}${due to&nbsp;}~{s}${due to&nbsp;}~{es}${due to&nbsp;}~{}${than&nbsp;}~{s}${than&nbsp;}~{es}${than&nbsp;}~{}"
+		},
+		{
+			"id": ".m.$.pl.$.abl.",
+			"value": "{from&nbsp;}~{s}${from&nbsp;}~{es}${from&nbsp;}~{}${because of&nbsp;}~{s}${because of&nbsp;}~{es}${because of&nbsp;}~{}${due to&nbsp;}~{s}${due to&nbsp;}~{es}${due to&nbsp;}~{}${than&nbsp;}~{s}${than&nbsp;}~{es}${than&nbsp;}~{}"
+		},
+		{
+			"id": ".nt.$.pl.$.abl.",
+			"value": "{from&nbsp;}~{s}${from&nbsp;}~{es}${from&nbsp;}~{}${because of&nbsp;}~{s}${because of&nbsp;}~{es}${because of&nbsp;}~{}${due to&nbsp;}~{s}${due to&nbsp;}~{es}${due to&nbsp;}~{}${than&nbsp;}~{s}${than&nbsp;}~{es}${than&nbsp;}~{}"
+		},
+		{
+			"id": ".f.$.pl.$.abl.",
+			"value": "{from&nbsp;}~{s}${from&nbsp;}~{es}${from&nbsp;}~{}${because of&nbsp;}~{s}${because of&nbsp;}~{es}${because of&nbsp;}~{}${due to&nbsp;}~{s}${due to&nbsp;}~{es}${due to&nbsp;}~{}${than&nbsp;}~{s}${than&nbsp;}~{es}${than&nbsp;}~{}"
+		},
+		{
+			"id": ".pl.$.acc.",
+			"value": "{}~{s}${}~{es}${}~{}${to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}"
+		},
+		{
+			"id": "$.pl.$.acc.",
+			"value": "{}~{s}${}~{es}${}~{}${to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.acc.",
+			"value": "{}~{s}${}~{es}${}~{}${to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.acc.",
+			"value": "{}~{s}${}~{es}${}~{}${to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}"
+		},
+		{
+			"id": ".m.$.pl.$.acc.",
+			"value": "{}~{s}${}~{es}${}~{}${to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}"
+		},
+		{
+			"id": ".nt.$.pl.$.acc.",
+			"value": "{}~{s}${}~{es}${}~{}${to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}"
+		},
+		{
+			"id": ".f.$.pl.$.acc.",
+			"value": "{}~{s}${}~{es}${}~{}${to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}"
+		},
+		{
+			"id": ".pl.$.dat.",
+			"value": "{to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}${for&nbsp;}~{s}${for&nbsp;}~{es}${for&nbsp;}~{}"
+		},
+		{
+			"id": "$.pl.$.dat.",
+			"value": "{to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}${for&nbsp;}~{s}${for&nbsp;}~{es}${for&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.dat.",
+			"value": "{to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}${for&nbsp;}~{s}${for&nbsp;}~{es}${for&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.dat.",
+			"value": "{to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}${for&nbsp;}~{s}${for&nbsp;}~{es}${for&nbsp;}~{}"
+		},
+		{
+			"id": ".m.$.pl.$.dat.",
+			"value": "{to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}${for&nbsp;}~{s}${for&nbsp;}~{es}${for&nbsp;}~{}"
+		},
+		{
+			"id": ".nt.$.pl.$.dat.",
+			"value": "{to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}${for&nbsp;}~{s}${for&nbsp;}~{es}${for&nbsp;}~{}"
+		},
+		{
+			"id": ".f.$.pl.$.dat.",
+			"value": "{to&nbsp;}~{s}${to&nbsp;}~{es}${to&nbsp;}~{}${for&nbsp;}~{s}${for&nbsp;}~{es}${for&nbsp;}~{}"
+		},
+		{
+			"id": ".pl.$.gen.",
+			"value": "{of&nbsp;}~{s}${of&nbsp;}~{es}${of&nbsp;}~{}${}~{s’}${}~{es’}${}~{’s}"
+		},
+		{
+			"id": "$.pl.$.gen.",
+			"value": "{of&nbsp;}~{s}${of&nbsp;}~{es}${of&nbsp;}~{}${}~{s’}${}~{es’}${}~{’s}"
+		},
+		{
+			"id": ".1p.$.pl.$.gen.",
+			"value": "{of&nbsp;}~{s}${of&nbsp;}~{es}${of&nbsp;}~{}${}~{s’}${}~{es’}${}~{’s}"
+		},
+		{
+			"id": ".1p.$.pl.$.gen.",
+			"value": "{of&nbsp;}~{s}${of&nbsp;}~{es}${of&nbsp;}~{}${}~{s’}${}~{es’}${}~{’s}"
+		},
+		{
+			"id": ".m.$.pl.$.gen.",
+			"value": "{of&nbsp;}~{s}${of&nbsp;}~{es}${of&nbsp;}~{}${}~{s’}${}~{es’}${}~{’s}"
+		},
+		{
+			"id": ".nt.$.pl.$.gen.",
+			"value": "{of&nbsp;}~{s}${of&nbsp;}~{es}${of&nbsp;}~{}${}~{s’}${}~{es’}${}~{’s}"
+		},
+		{
+			"id": ".f.$.pl.$.gen.",
+			"value": "{of&nbsp;}~{s}${of&nbsp;}~{es}${of&nbsp;}~{}${}~{s’}${}~{es’}${}~{’s}"
+		},
+		{
+			"id": ".pl.$.inst.",
+			"value": "{by&nbsp;}~{s}${by&nbsp;}~{es}${by&nbsp;}~{}${through&nbsp;}~{s}${through&nbsp;}~{es}${through&nbsp;}~{}${with&nbsp;}~{s}${with&nbsp;}~{es}${with&nbsp;}~{}${according to&nbsp;}~{s}${according to&nbsp;}~{es}${according to&nbsp;}~{}"
+		},
+		{
+			"id": "$.pl.$.inst.",
+			"value": "{by&nbsp;}~{s}${by&nbsp;}~{es}${by&nbsp;}~{}${through&nbsp;}~{s}${through&nbsp;}~{es}${through&nbsp;}~{}${with&nbsp;}~{s}${with&nbsp;}~{es}${with&nbsp;}~{}${according to&nbsp;}~{s}${according to&nbsp;}~{es}${according to&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.inst.",
+			"value": "{by&nbsp;}~{s}${by&nbsp;}~{es}${by&nbsp;}~{}${through&nbsp;}~{s}${through&nbsp;}~{es}${through&nbsp;}~{}${with&nbsp;}~{s}${with&nbsp;}~{es}${with&nbsp;}~{}${according to&nbsp;}~{s}${according to&nbsp;}~{es}${according to&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.inst.",
+			"value": "{by&nbsp;}~{s}${by&nbsp;}~{es}${by&nbsp;}~{}${through&nbsp;}~{s}${through&nbsp;}~{es}${through&nbsp;}~{}${with&nbsp;}~{s}${with&nbsp;}~{es}${with&nbsp;}~{}${according to&nbsp;}~{s}${according to&nbsp;}~{es}${according to&nbsp;}~{}"
+		},
+		{
+			"id": ".m.$.pl.$.inst.",
+			"value": "{by&nbsp;}~{s}${by&nbsp;}~{es}${by&nbsp;}~{}${through&nbsp;}~{s}${through&nbsp;}~{es}${through&nbsp;}~{}${with&nbsp;}~{s}${with&nbsp;}~{es}${with&nbsp;}~{}${according to&nbsp;}~{s}${according to&nbsp;}~{es}${according to&nbsp;}~{}"
+		},
+		{
+			"id": ".nt.$.pl.$.inst.",
+			"value": "{by&nbsp;}~{s}${by&nbsp;}~{es}${by&nbsp;}~{}${through&nbsp;}~{s}${through&nbsp;}~{es}${through&nbsp;}~{}${with&nbsp;}~{s}${with&nbsp;}~{es}${with&nbsp;}~{}${according to&nbsp;}~{s}${according to&nbsp;}~{es}${according to&nbsp;}~{}"
+		},
+		{
+			"id": ".f.$.pl.$.inst.",
+			"value": "{by&nbsp;}~{s}${by&nbsp;}~{es}${by&nbsp;}~{}${through&nbsp;}~{s}${through&nbsp;}~{es}${through&nbsp;}~{}${with&nbsp;}~{s}${with&nbsp;}~{es}${with&nbsp;}~{}${according to&nbsp;}~{s}${according to&nbsp;}~{es}${according to&nbsp;}~{}"
+		},
+		{
+			"id": ".pl.$.loc.",
+			"value": "{at&nbsp;}~{s}${at&nbsp;}~{es}${at&nbsp;}~{}${at&nbsp;}~{s time}${at&nbsp;}~{es time}${at&nbsp;}~{ time}${in&nbsp;}~{s place}${in&nbsp;}~{es place}${in&nbsp;}~{ place}${in&nbsp;}~{s case}${in&nbsp;}~{es case}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": "$.pl.$.loc.",
+			"value": "{at&nbsp;}~{s}${at&nbsp;}~{es}${at&nbsp;}~{}${at&nbsp;}~{s time}${at&nbsp;}~{es time}${at&nbsp;}~{ time}${in&nbsp;}~{s place}${in&nbsp;}~{es place}${in&nbsp;}~{ place}${in&nbsp;}~{s case}${in&nbsp;}~{es case}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": ".1p.$.pl.$.loc.",
+			"value": "{at&nbsp;}~{s}${at&nbsp;}~{es}${at&nbsp;}~{}${at&nbsp;}~{s time}${at&nbsp;}~{es time}${at&nbsp;}~{ time}${in&nbsp;}~{s place}${in&nbsp;}~{es place}${in&nbsp;}~{ place}${in&nbsp;}~{s case}${in&nbsp;}~{es case}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": ".1p.$.pl.$.loc.",
+			"value": "{at&nbsp;}~{s}${at&nbsp;}~{es}${at&nbsp;}~{}${at&nbsp;}~{s time}${at&nbsp;}~{es time}${at&nbsp;}~{ time}${in&nbsp;}~{s place}${in&nbsp;}~{es place}${in&nbsp;}~{ place}${in&nbsp;}~{s case}${in&nbsp;}~{es case}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": ".m.$.pl.$.loc.",
+			"value": "{at&nbsp;}~{s}${at&nbsp;}~{es}${at&nbsp;}~{}${at&nbsp;}~{s time}${at&nbsp;}~{es time}${at&nbsp;}~{ time}${in&nbsp;}~{s place}${in&nbsp;}~{es place}${in&nbsp;}~{ place}${in&nbsp;}~{s case}${in&nbsp;}~{es case}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": ".nt.$.pl.$.loc.",
+			"value": "{at&nbsp;}~{s}${at&nbsp;}~{es}${at&nbsp;}~{}${at&nbsp;}~{s time}${at&nbsp;}~{es time}${at&nbsp;}~{ time}${in&nbsp;}~{s place}${in&nbsp;}~{es place}${in&nbsp;}~{ place}${in&nbsp;}~{s case}${in&nbsp;}~{es case}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": ".f.$.pl.$.loc.",
+			"value": "{at&nbsp;}~{s}${at&nbsp;}~{es}${at&nbsp;}~{}${at&nbsp;}~{s time}${at&nbsp;}~{es time}${at&nbsp;}~{ time}${in&nbsp;}~{s place}${in&nbsp;}~{es place}${in&nbsp;}~{ place}${in&nbsp;}~{s case}${in&nbsp;}~{es case}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": ".pl.$.nom.",
+			"value": "{}~{s}${}~{es}${}~{}"
+		},
+		{
+			"id": "$.pl.$.nom.",
+			"value": "{}~{s}${}~{es}${}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.nom.",
+			"value": "{}~{s}${}~{es}${}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.nom.",
+			"value": "{}~{s}${}~{es}${}~{}"
+		},
+		{
+			"id": ".m.$.pl.$.nom.",
+			"value": "{}~{s}${}~{es}${}~{}"
+		},
+		{
+			"id": ".nt.$.pl.$.nom.",
+			"value": "{}~{s}${}~{es}${}~{}"
+		},
+		{
+			"id": ".f.$.pl.$.nom.",
+			"value": "{}~{s}${}~{es}${}~{}"
+		},
+		{
+			"id": ".pl.$.voc.",
+			"value": "{}~{s！}${}~{es！}${}~{！}${Oh&nbsp;}~{s}${Oh&nbsp;}~{es}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": "$.pl.$.voc.",
+			"value": "{}~{s！}${}~{es！}${}~{！}${Oh&nbsp;}~{s}${Oh&nbsp;}~{es}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.voc.",
+			"value": "{}~{s！}${}~{es！}${}~{！}${Oh&nbsp;}~{s}${Oh&nbsp;}~{es}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.voc.",
+			"value": "{}~{s！}${}~{es！}${}~{！}${Oh&nbsp;}~{s}${Oh&nbsp;}~{es}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": ".m.$.pl.$.voc.",
+			"value": "{}~{s！}${}~{es！}${}~{！}${Oh&nbsp;}~{s}${Oh&nbsp;}~{es}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": ".nt.$.pl.$.voc.",
+			"value": "{}~{s！}${}~{es！}${}~{！}${Oh&nbsp;}~{s}${Oh&nbsp;}~{es}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": ".f.$.pl.$.voc.",
+			"value": "{}~{s！}${}~{es！}${}~{！}${Oh&nbsp;}~{s}${Oh&nbsp;}~{es}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": ".sg.$.abl.",
+			"value": "{from&nbsp;}~{}${because of&nbsp;}~{}${due to&nbsp;}~{}${than&nbsp;}~{}"
+		},
+		{
+			"id": "$.sg.$.abl.",
+			"value": "{from&nbsp;}~{}${because of&nbsp;}~{}${due to&nbsp;}~{}${than&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.abl.",
+			"value": "{from&nbsp;}~{}${because of&nbsp;}~{}${due to&nbsp;}~{}${than&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.abl.",
+			"value": "{from&nbsp;}~{}${because of&nbsp;}~{}${due to&nbsp;}~{}${than&nbsp;}~{}"
+		},
+		{
+			"id": ".m.$.sg.$.abl.",
+			"value": "{from&nbsp;}~{}${because of&nbsp;}~{}${due to&nbsp;}~{}${than&nbsp;}~{}"
+		},
+		{
+			"id": ".nt.$.sg.$.abl.",
+			"value": "{from&nbsp;}~{}${because of&nbsp;}~{}${due to&nbsp;}~{}${than&nbsp;}~{}"
+		},
+		{
+			"id": ".f.$.sg.$.abl.",
+			"value": "{from&nbsp;}~{}${because of&nbsp;}~{}${due to&nbsp;}~{}${than&nbsp;}~{}"
+		},
+		{
+			"id": ".sg.$.acc.",
+			"value": "{}~{}${to&nbsp;}~{}"
+		},
+		{
+			"id": "$.sg.$.acc.",
+			"value": "{}~{}${to&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.acc.",
+			"value": "{}~{}${to&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.acc.",
+			"value": "{}~{}${to&nbsp;}~{}"
+		},
+		{
+			"id": ".m.$.sg.$.acc.",
+			"value": "{}~{}${to&nbsp;}~{}"
+		},
+		{
+			"id": ".nt.$.sg.$.acc.",
+			"value": "{}~{}${to&nbsp;}~{}"
+		},
+		{
+			"id": ".f.$.sg.$.acc.",
+			"value": "{}~{}${to&nbsp;}~{}"
+		},
+		{
+			"id": ".sg.$.dat.",
+			"value": "{to&nbsp;}~{}${for&nbsp;}~{}"
+		},
+		{
+			"id": "$.sg.$.dat.",
+			"value": "{to&nbsp;}~{}${for&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.dat.",
+			"value": "{to&nbsp;}~{}${for&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.dat.",
+			"value": "{to&nbsp;}~{}${for&nbsp;}~{}"
+		},
+		{
+			"id": ".m.$.sg.$.dat.",
+			"value": "{to&nbsp;}~{}${for&nbsp;}~{}"
+		},
+		{
+			"id": ".nt.$.sg.$.dat.",
+			"value": "{to&nbsp;}~{}${for&nbsp;}~{}"
+		},
+		{
+			"id": ".f.$.sg.$.dat.",
+			"value": "{to&nbsp;}~{}${for&nbsp;}~{}"
+		},
+		{
+			"id": ".sg.$.gen.",
+			"value": "{of&nbsp;}~{}${}~{’s}"
+		},
+		{
+			"id": "$.sg.$.gen.",
+			"value": "{of&nbsp;}~{}${}~{’s}"
+		},
+		{
+			"id": ".1p.$.sg.$.gen.",
+			"value": "{of&nbsp;}~{}${}~{’s}"
+		},
+		{
+			"id": ".1p.$.sg.$.gen.",
+			"value": "{of&nbsp;}~{}${}~{’s}"
+		},
+		{
+			"id": ".m.$.sg.$.gen.",
+			"value": "{of&nbsp;}~{}${}~{’s}"
+		},
+		{
+			"id": ".nt.$.sg.$.gen.",
+			"value": "{of&nbsp;}~{}${}~{’s}"
+		},
+		{
+			"id": ".f.$.sg.$.gen.",
+			"value": "{of&nbsp;}~{}${}~{’s}"
+		},
+		{
+			"id": ".sg.$.inst.",
+			"value": "{by&nbsp;}~{}${through&nbsp;}~{}${with&nbsp;}~{}${according to&nbsp;}~{}"
+		},
+		{
+			"id": "$.sg.$.inst.",
+			"value": "{by&nbsp;}~{}${through&nbsp;}~{}${with&nbsp;}~{}${according to&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.inst.",
+			"value": "{by&nbsp;}~{}${through&nbsp;}~{}${with&nbsp;}~{}${according to&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.inst.",
+			"value": "{by&nbsp;}~{}${through&nbsp;}~{}${with&nbsp;}~{}${according to&nbsp;}~{}"
+		},
+		{
+			"id": ".m.$.sg.$.inst.",
+			"value": "{by&nbsp;}~{}${through&nbsp;}~{}${with&nbsp;}~{}${according to&nbsp;}~{}"
+		},
+		{
+			"id": ".nt.$.sg.$.inst.",
+			"value": "{by&nbsp;}~{}${through&nbsp;}~{}${with&nbsp;}~{}${according to&nbsp;}~{}"
+		},
+		{
+			"id": ".f.$.sg.$.inst.",
+			"value": "{by&nbsp;}~{}${through&nbsp;}~{}${with&nbsp;}~{}${according to&nbsp;}~{}"
+		},
+		{
+			"id": ".sg.$.loc.",
+			"value": "{at&nbsp;}~{}${at&nbsp;}~{ time}${in&nbsp;}~{ place}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": "$.sg.$.loc.",
+			"value": "{at&nbsp;}~{}${at&nbsp;}~{ time}${in&nbsp;}~{ place}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": ".1p.$.sg.$.loc.",
+			"value": "{at&nbsp;}~{}${at&nbsp;}~{ time}${in&nbsp;}~{ place}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": ".1p.$.sg.$.loc.",
+			"value": "{at&nbsp;}~{}${at&nbsp;}~{ time}${in&nbsp;}~{ place}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": ".m.$.sg.$.loc.",
+			"value": "{at&nbsp;}~{}${at&nbsp;}~{ time}${in&nbsp;}~{ place}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": ".nt.$.sg.$.loc.",
+			"value": "{at&nbsp;}~{}${at&nbsp;}~{ time}${in&nbsp;}~{ place}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": ".f.$.sg.$.loc.",
+			"value": "{at&nbsp;}~{}${at&nbsp;}~{ time}${in&nbsp;}~{ place}${in&nbsp;}~{ case}${in&nbsp;}~{ship}"
+		},
+		{
+			"id": ".sg.$.nom.",
+			"value": "{}~{}"
+		},
+		{
+			"id": "$.sg.$.nom.",
+			"value": "{}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.nom.",
+			"value": "{}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.nom.",
+			"value": "{}~{}"
+		},
+		{
+			"id": ".m.$.sg.$.nom.",
+			"value": "{}~{}"
+		},
+		{
+			"id": ".nt.$.sg.$.nom.",
+			"value": "{}~{}"
+		},
+		{
+			"id": ".f.$.sg.$.nom.",
+			"value": "{}~{}"
+		},
+		{
+			"id": ".sg.$.voc.",
+			"value": "{}~{！}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": "$.sg.$.voc.",
+			"value": "{}~{！}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.voc.",
+			"value": "{}~{！}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.voc.",
+			"value": "{}~{！}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": ".m.$.sg.$.voc.",
+			"value": "{}~{！}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": ".nt.$.sg.$.voc.",
+			"value": "{}~{！}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": ".f.$.sg.$.voc.",
+			"value": "{}~{！}${Oh&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.aor.",
+			"value": "{we&nbsp;}~{ed}${we&nbsp;}~{d}${we have&nbsp;}~{ed}${we have&nbsp;}~{d}${we were&nbsp;}~{ing}${we did&nbsp;}~{}${we had&nbsp;}~{ed}${we had&nbsp;}~{d}"
+		},
+		{
+			"id": ".1p.$.pl.$.cond.",
+			"value": "{if we&nbsp;}~{}${we&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.fut.",
+			"value": "{we will&nbsp;}~{}${we shall&nbsp;}~{}${we&nbsp;}~{}${we&nbsp;}~{}${we&nbsp;}~{}${we’re going to&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.imp.",
+			"value": "{let’s&nbsp;}~{}${let’s&nbsp;}~{,please}${please let’s&nbsp;}~{}${please let’s&nbsp;}~{}${we could&nbsp;}~{}${we would&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.opt.",
+			"value": "{we should&nbsp;}~{}${we’d like&nbsp;}~{}${we have to&nbsp;}~{}${we must&nbsp;}~{}${we might&nbsp;}~{}${we may&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.pl.$.pres.",
+			"value": "{we&nbsp;}~{}${we’re&nbsp;}~{ing}"
+		},
+		{
+			"id": ".1p.$.sg.$.aor.",
+			"value": "{I&nbsp;}~{ed}${I&nbsp;}~{d}${I have&nbsp;}~{ed}${I have&nbsp;}~{d}${I was&nbsp;}~{ing}${I did&nbsp;}~{}${I had&nbsp;}~{ed}${I had&nbsp;}~{d}"
+		},
+		{
+			"id": ".1p.$.sg.$.cond.",
+			"value": "{if I&nbsp;}~{}${I&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.fut.",
+			"value": "{I will&nbsp;}~{}${I shall&nbsp;}~{}${I&nbsp;}~{}${I&nbsp;}~{}${I&nbsp;}~{}${I’m going to&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.imp.",
+			"value": "{let me&nbsp;}~{}${let me&nbsp;}~{,please}${please let me&nbsp;}~{}${please let me&nbsp;}~{}${I could&nbsp;}~{}${I would&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.opt.",
+			"value": "{I should&nbsp;}~{}${I’d like&nbsp;}~{}${I have to&nbsp;}~{}${I must&nbsp;}~{}${I might&nbsp;}~{}${I may&nbsp;}~{}"
+		},
+		{
+			"id": ".1p.$.sg.$.pres.",
+			"value": "{I&nbsp;}~{}${I’m&nbsp;}~{ing}"
+		},
+		{
+			"id": ".2p.$.pl.$.aor.",
+			"value": "{you&nbsp;}~{ed}${your highness&nbsp;}~{ed}${you all&nbsp;}~{ed}${you&nbsp;}~{d}${your highness&nbsp;}~{d}${you all&nbsp;}~{d}${you have&nbsp;}~{ed}${your highness have&nbsp;}~{ed}${you all have&nbsp;}~{ed}${you have&nbsp;}~{d}${your highness have&nbsp;}~{d}${you all have&nbsp;}~{d}${you were&nbsp;}~{ing}${your highness were&nbsp;}~{ing}${you all were&nbsp;}~{ing}${you did&nbsp;}~{}${your highness did&nbsp;}~{}${you all did&nbsp;}~{}${you had&nbsp;}~{ed}${your highness had&nbsp;}~{ed}${you all had&nbsp;}~{ed}${you had&nbsp;}~{d}${your highness had&nbsp;}~{d}${you all had&nbsp;}~{d}"
+		},
+		{
+			"id": ".2p.$.pl.$.cond.",
+			"value": "{if you&nbsp;}~{}${if your highness&nbsp;}~{}${if you all&nbsp;}~{}${you&nbsp;}~{}${your highness&nbsp;}~{}${you all&nbsp;}~{}"
+		},
+		{
+			"id": ".2p.$.pl.$.fut.",
+			"value": "{you will&nbsp;}~{}${your highness will&nbsp;}~{}${you all will&nbsp;}~{}${you shall&nbsp;}~{}${your highness shall&nbsp;}~{}${you all shall&nbsp;}~{}${you&nbsp;}~{}${your highness&nbsp;}~{}${you all&nbsp;}~{}${you&nbsp;}~{}${your highness&nbsp;}~{}${you all&nbsp;}~{}${you&nbsp;}~{}${your highness&nbsp;}~{}${you all&nbsp;}~{}${you’re going to&nbsp;}~{}${your highness’re going to&nbsp;}~{}${you all’re going to&nbsp;}~{}"
+		},
+		{
+			"id": ".2p.$.pl.$.imp.",
+			"value": "{please&nbsp;}~{}${please&nbsp;}~{}${please&nbsp;}~{}${you&nbsp;}~{}${your highness&nbsp;}~{}${you all&nbsp;}~{}${you&nbsp;}~{,please}${your highness&nbsp;}~{,please}${you all&nbsp;}~{,please}${you&nbsp;}~{,please}${your highness&nbsp;}~{,please}${you all&nbsp;}~{,please}${you could&nbsp;}~{}${your highness could&nbsp;}~{}${you all could&nbsp;}~{}${would you please&nbsp;}~{}${would your highness please&nbsp;}~{}${would you all please&nbsp;}~{}${you would&nbsp;}~{}${your highness would&nbsp;}~{}${you all would&nbsp;}~{}"
+		},
+		{
+			"id": ".2p.$.pl.$.opt.",
+			"value": "{you should&nbsp;}~{}${your highness should&nbsp;}~{}${you all should&nbsp;}~{}${you’d like&nbsp;}~{}${your highness’d like&nbsp;}~{}${you all’d like&nbsp;}~{}${you have to&nbsp;}~{}${your highness have to&nbsp;}~{}${you all have to&nbsp;}~{}${you must&nbsp;}~{}${your highness must&nbsp;}~{}${you all must&nbsp;}~{}${you might&nbsp;}~{}${your highness might&nbsp;}~{}${you all might&nbsp;}~{}${you may&nbsp;}~{}${your highness may&nbsp;}~{}${you all may&nbsp;}~{}"
+		},
+		{
+			"id": ".2p.$.pl.$.pres.",
+			"value": "{you&nbsp;}~{}${your highness&nbsp;}~{}${you all&nbsp;}~{}${you’re&nbsp;}~{ing}${your highness’re&nbsp;}~{ing}${you all’re&nbsp;}~{ing}"
+		},
+		{
+			"id": ".2p.$.sg.$.aor.",
+			"value": "{you&nbsp;}~{ed}${you&nbsp;}~{d}${you have&nbsp;}~{ed}${you have&nbsp;}~{d}${you were&nbsp;}~{ing}${you did&nbsp;}~{}${you had&nbsp;}~{ed}${you had&nbsp;}~{d}"
+		},
+		{
+			"id": ".2p.$.sg.$.cond.",
+			"value": "{if you&nbsp;}~{}${you&nbsp;}~{}"
+		},
+		{
+			"id": ".2p.$.sg.$.fut.",
+			"value": "{you will&nbsp;}~{}${you shall&nbsp;}~{}${you&nbsp;}~{}${you&nbsp;}~{}${you&nbsp;}~{}${you’re going to&nbsp;}~{}"
+		},
+		{
+			"id": ".2p.$.sg.$.imp.",
+			"value": "{please&nbsp;}~{}${you&nbsp;}~{}${you&nbsp;}~{,please}${you&nbsp;}~{,please}${you could&nbsp;}~{}${would you please&nbsp;}~{}${you would&nbsp;}~{}"
+		},
+		{
+			"id": ".2p.$.sg.$.opt.",
+			"value": "{you should&nbsp;}~{}${you’d like&nbsp;}~{}${you have to&nbsp;}~{}${you must&nbsp;}~{}${you might&nbsp;}~{}${you may&nbsp;}~{}"
+		},
+		{
+			"id": ".2p.$.sg.$.pres.",
+			"value": "{you&nbsp;}~{}${you’re&nbsp;}~{ing}"
+		},
+		{
+			"id": ".3p.$.pl.$.aor.",
+			"value": "{they&nbsp;}~{ed}${they&nbsp;}~{d}${they have&nbsp;}~{ed}${they have&nbsp;}~{d}${they were&nbsp;}~{ing}${they did&nbsp;}~{}${they had&nbsp;}~{ed}${they had&nbsp;}~{d}"
+		},
+		{
+			"id": ".3p.$.pl.$.cond.",
+			"value": "{if they&nbsp;}~{}${they&nbsp;}~{}"
+		},
+		{
+			"id": ".3p.$.pl.$.fut.",
+			"value": "{they will&nbsp;}~{}${they shall&nbsp;}~{}${they&nbsp;}~{}${they&nbsp;}~{}${they&nbsp;}~{}${they’re going to&nbsp;}~{}"
+		},
+		{
+			"id": ".3p.$.pl.$.imp.",
+			"value": "{let them&nbsp;}~{}${let them&nbsp;}~{,please}${please let them&nbsp;}~{}${please let them&nbsp;}~{}${they could&nbsp;}~{}${they would&nbsp;}~{}"
+		},
+		{
+			"id": ".3p.$.pl.$.opt.",
+			"value": "{they should&nbsp;}~{}${they’d like&nbsp;}~{}${they have to&nbsp;}~{}${they must&nbsp;}~{}${they might&nbsp;}~{}${they may&nbsp;}~{}"
+		},
+		{
+			"id": ".3p.$.pl.$.pres.",
+			"value": "{they&nbsp;}~{}${they’re&nbsp;}~{ing}"
+		},
+		{
+			"id": ".3p.$.sg.$.aor.",
+			"value": "{he&nbsp;}~{ed}${she&nbsp;}~{ed}${it&nbsp;}~{ed}${he&nbsp;}~{d}${she&nbsp;}~{d}${it&nbsp;}~{d}${he has&nbsp;}~{ed}${she has&nbsp;}~{ed}${it has&nbsp;}~{ed}${he has&nbsp;}~{d}${she has&nbsp;}~{d}${it has&nbsp;}~{d}${he was&nbsp;}~{ing}${she was&nbsp;}~{ing}${it was&nbsp;}~{ing}${he did&nbsp;}~{}${she did&nbsp;}~{}${it did&nbsp;}~{}${he had&nbsp;}~{ed}${she had&nbsp;}~{ed}${it had&nbsp;}~{ed}${he had&nbsp;}~{d}${she had&nbsp;}~{d}${it had&nbsp;}~{d}"
+		},
+		{
+			"id": ".3p.$.sg.$.cond.",
+			"value": "{if he&nbsp;}~{}${if she&nbsp;}~{}${if it&nbsp;}~{}${he&nbsp;}~{}${she&nbsp;}~{}${it&nbsp;}~{}"
+		},
+		{
+			"id": ".3p.$.sg.$.fut.",
+			"value": "{he will&nbsp;}~{}${she will&nbsp;}~{}${it will&nbsp;}~{}${he shall&nbsp;}~{}${she shall&nbsp;}~{}${it shall&nbsp;}~{}${he&nbsp;}~{}${she&nbsp;}~{}${it&nbsp;}~{}${he&nbsp;}~{}${she&nbsp;}~{}${it&nbsp;}~{}${he&nbsp;}~{}${she&nbsp;}~{}${it&nbsp;}~{}${he’s going to&nbsp;}~{}${she’s going to&nbsp;}~{}${it’s going to&nbsp;}~{}"
+		},
+		{
+			"id": ".3p.$.sg.$.imp.",
+			"value": "{let him&nbsp;}~{}${let her&nbsp;}~{}${let it&nbsp;}~{}${let him&nbsp;}~{,please}${let her&nbsp;}~{,please}${let it&nbsp;}~{,please}${please let him&nbsp;}~{}${please let her&nbsp;}~{}${please let it&nbsp;}~{}${please let him&nbsp;}~{}${please let her&nbsp;}~{}${please let it&nbsp;}~{}${he could&nbsp;}~{}${she could&nbsp;}~{}${it could&nbsp;}~{}${he would&nbsp;}~{}${she would&nbsp;}~{}${it would&nbsp;}~{}"
+		},
+		{
+			"id": ".3p.$.sg.$.opt.",
+			"value": "{he should&nbsp;}~{}${she should&nbsp;}~{}${it should&nbsp;}~{}${he’d like&nbsp;}~{}${she’d like&nbsp;}~{}${it’d like&nbsp;}~{}${he has to&nbsp;}~{}${she has to&nbsp;}~{}${it has to&nbsp;}~{}${he must&nbsp;}~{}${she must&nbsp;}~{}${it must&nbsp;}~{}${he might&nbsp;}~{}${she might&nbsp;}~{}${it might&nbsp;}~{}${he may&nbsp;}~{}${she may&nbsp;}~{}${it may&nbsp;}~{}"
+		},
+		{
+			"id": ".3p.$.sg.$.pres.",
+			"value": "{he&nbsp;}~{s}${she&nbsp;}~{s}${it&nbsp;}~{s}${he&nbsp;}~{es}${she&nbsp;}~{es}${it&nbsp;}~{es}${he’s&nbsp;}~{ing}${she’s&nbsp;}~{ing}${it’s&nbsp;}~{ing}"
+		},
+		{
+			"id": ".nom.",
+			"value": "~"
+		},
+		{
+			"id": ".voc.",
+			"value": "~"
+		},
+		{
+			"id": ".acc.",
+			"value": "~"
+		},
+		{
+			"id": ".gen.",
+			"value": "{of&nbsp;}~"
+		},
+		{
+			"id": ".dat.",
+			"value": "{to&nbsp;}~"
+		},
+		{
+			"id": ".inst.",
+			"value": "{by&nbsp;}~"
+		},
+		{
+			"id": ".abl.",
+			"value": "{from&nbsp;}~"
+		},
+		{
+			"id": ".loc.",
+			"value": "{at&nbsp;}~"
+		},
+		{
+			"id": ".imp.",
+			"value": "{make to&nbsp;}~"
+		},
+		{
+			"id": ".cond.",
+			"value": "{if}"
+		},
+		{
+			"id": ".opt.",
+			"value": "{should&nbsp;}~"
+		},
+		{
+			"id": ".pres.",
+			"value": "~"
+		},
+		{
+			"id": ".aor.",
+			"value": "{did&nbsp;}~"
+		},
+		{
+			"id": ".pf.",
+			"value": "{have&nbsp;}~"
+		},
+		{
+			"id": ".fut.",
+			"value": "{will&nbsp;}~{(ed)}"
+		},
+		{
+			"id": ".prp.",
+			"value": "{be&nbsp;}~{ing}"
+		},
+		{
+			"id": ".prpa.",
+			"value": "~{ing}"
+		},
+		{
+			"id": ".prpp.",
+			"value": "{being&nbsp;}~{(ed)}"
+		},
+		{
+			"id": ".pp.",
+			"value": "~{(ed)}"
+		},
+		{
+			"id": ".ppa.",
+			"value": "~{(ed)}"
+		},
+		{
+			"id": ".ppp.",
+			"value": "{have been&nbsp;}~{(ed)}"
+		},
+		{
+			"id": ".futp.",
+			"value": "~{ing}"
+		},
+		{
+			"id": ".fpa.",
+			"value": "{should&nbsp;}~"
+		},
+		{
+			"id": ".fpp.",
+			"value": "{should be&nbsp;}~{(ed)}"
+		},
+		{
+			"id": ".grd.",
+			"value": "{should be&nbsp;}~{(ed)}"
+		},
+		{
+			"id": ".pass.",
+			"value": "{be&nbsp;}~{(ed)}"
+		},
+		{
+			"id": ".caus.",
+			"value": "{make&nbsp;}~"
+		},
+		{
+			"id": ".desid.",
+			"value": "{want&nbsp;}~"
+		},
+		{
+			"id": ".intens.",
+			"value": "{insist&nbsp;}~"
+		},
+		{
+			"id": ".ger.",
+			"value": "{after&nbsp;}~{ing}${after having&nbsp;}~{ed}${after&nbsp;}~{ed}"
+		},
+		{
+			"id": ".abs.",
+			"value": "{after&nbsp;}~{ing}${after having&nbsp;}~{ed}${after&nbsp;}~{ed}"
+		},
+		{
+			"id": ".inf.",
+			"value": "{to&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.sg.$.pass.",
+			"value": "{I’m&nbsp;}~{ed}"
+		},
+		{
+			"id": ".2p.$.sg.$.pass.",
+			"value": "{you’re&nbsp;}~{ed}"
+		},
+		{
+			"id": ".3p.$.sg.$.pass.",
+			"value": "{he’s&nbsp;}~{ed}"
+		},
+		{
+			"id": ".1p.$.pl.$.pass.",
+			"value": "{we’re&nbsp;}~{ed}"
+		},
+		{
+			"id": ".2p.$.pl.$.pass.",
+			"value": "{you all are&nbsp;}~{ed}"
+		},
+		{
+			"id": ".3p.$.pl.$.pass.",
+			"value": "{they’re&nbsp;}~{ed}"
+		},
+		{
+			"id": ".1p.$.sg.$.pass.",
+			"value": "{I’m&nbsp;}~{ed}"
+		},
+		{
+			"id": ".2p.$.sg.$.pass.",
+			"value": "{you’re&nbsp;}~{ed}"
+		},
+		{
+			"id": ".3p.$.sg.$.pass.",
+			"value": "{he’s&nbsp;}~{ed}"
+		},
+		{
+			"id": ".1p.$.pl.$.pass.",
+			"value": "{we’re&nbsp;}~{ed}"
+		},
+		{
+			"id": ".2p.$.pl.$.pass.",
+			"value": "{you all are&nbsp;}~{ed}"
+		},
+		{
+			"id": ".3p.$.pl.$.pass.",
+			"value": "{they’re&nbsp;}~{ed}"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.",
+			"value": "{I make to&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.",
+			"value": "{you make to&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.sg.$.caus.",
+			"value": "{he makes to&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.",
+			"value": "{we make to&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.",
+			"value": "{you all make to&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.",
+			"value": "{they make to&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.",
+			"value": "{I make to&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.",
+			"value": "{you make to&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.sg.$.caus.",
+			"value": "{he makes to&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.",
+			"value": "{we make to&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.",
+			"value": "{you all make to&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.",
+			"value": "{they make to&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.opt.",
+			"value": "{我应令&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.opt.",
+			"value": "{你应令&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.sg.$.caus.opt.",
+			"value": "{其应令&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.opt.",
+			"value": "{我们应令&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.opt.",
+			"value": "{你们应令&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.opt.",
+			"value": "{其等应令&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.opt.",
+			"value": "{我应令&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.opt.",
+			"value": "{你应令&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.sg.$.caus.opt.",
+			"value": "{其应令&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.opt.",
+			"value": "{我们应令&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.opt.",
+			"value": "{你们应令&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.opt.",
+			"value": "{其等应令&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.pass.",
+			"value": "{我被令&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.pass.",
+			"value": "{你被令&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.sg.$.caus.pass.",
+			"value": "{其被令&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.pass.",
+			"value": "{我们被令&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.pass.",
+			"value": "{你们被令&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.pass.",
+			"value": "{其等被令&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.pass.",
+			"value": "{我被令&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.pass.",
+			"value": "{你被令&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.sg.$.caus.pass.",
+			"value": "{其被令&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.pass.",
+			"value": "{我们被令&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.pass.",
+			"value": "{你们被令&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.pass.",
+			"value": "{其等被令&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.doub.",
+			"value": "{派我令&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.doub.",
+			"value": "{派你令&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.sg.$.caus.doub.",
+			"value": "{派其令&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.doub.",
+			"value": "{派我们令&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.doub.",
+			"value": "{派你们令&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.doub.",
+			"value": "{派其等令&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.doub.",
+			"value": "{派我令&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.doub.",
+			"value": "{派你令&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.sg.$.caus.doub.",
+			"value": "{派其令&nbsp;}~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.doub.",
+			"value": "{派我们令&nbsp;}~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.doub.",
+			"value": "{派你们令&nbsp;}~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.doub.",
+			"value": "{派其等令&nbsp;}~"
+		}
+	],
+	"parent_formula": [
+		{
+			"id": ".imp.",
+			"value": "令~"
+		},
+		{
+			"id": ".cond.",
+			"value": "若~"
+		},
+		{
+			"id": ".opt.",
+			"value": "想~"
+		},
+		{
+			"id": ".pres.",
+			"value": "正~"
+		},
+		{
+			"id": ".aor.",
+			"value": "曾~"
+		},
+		{
+			"id": ".pf.",
+			"value": "已~完"
+		},
+		{
+			"id": ".fut.",
+			"value": "将~"
+		},
+		{
+			"id": ".prp.",
+			"value": "正~的"
+		},
+		{
+			"id": ".prpa.",
+			"value": "正~的"
+		},
+		{
+			"id": ".prpp.",
+			"value": "正被~的"
+		},
+		{
+			"id": ".pp.",
+			"value": "已~的"
+		},
+		{
+			"id": ".ppa.",
+			"value": "已~的"
+		},
+		{
+			"id": ".ppp.",
+			"value": "已被~的"
+		},
+		{
+			"id": ".futp.",
+			"value": "将~的"
+		},
+		{
+			"id": ".fpa.",
+			"value": "将~的"
+		},
+		{
+			"id": ".fpp.",
+			"value": "应被~的"
+		},
+		{
+			"id": ".grd.",
+			"value": "应被~的"
+		},
+		{
+			"id": ".pass.",
+			"value": "被~"
+		},
+		{
+			"id": ".caus.",
+			"value": "使~"
+		},
+		{
+			"id": ".desid.",
+			"value": "要~"
+		},
+		{
+			"id": ".intens.",
+			"value": "执意~"
+		},
+		{
+			"id": ".ger.",
+			"value": "~完之后"
+		},
+		{
+			"id": ".abs.",
+			"value": "~完之后"
+		},
+		{
+			"id": ".inf.",
+			"value": "为了~"
+		}
+	],
+	"dictname": [
+		{
+			"id": "bh",
+			"value": "巴漢-明法尊者"
+		},
+		{
+			"id": "sy",
+			"value": "漢譯-水野弘元"
+		},
+		{
+			"id": "user",
+			"value": "User Dict"
+		},
+		{
+			"id": "co",
+			"value": "Concise"
+		},
+		{
+			"id": "unkow",
+			"value": "Unknown"
+		},
+		{
+			"id": "vn",
+			"value": "SYS_IR-V"
+		},
+		{
+			"id": "SCR",
+			"value": "Root-中"
+		},
+		{
+			"id": "ENR",
+			"value": "Root-EN"
+		},
+		{
+			"id": "parts",
+			"value": "Parts"
+		},
+		{
+			"id": "sys_ir",
+			"value": "SYS_IR-K"
+		},
+		{
+			"id": "PM",
+			"value": "Pāḷi-Myr"
+		},
+		{
+			"id": "",
+			"value": ""
+		},
+		{
+			"id": "",
+			"value": ""
+		},
+		{
+			"id": "",
+			"value": ""
+		}
+	],
+	"dictname_short": [
+		{
+			"id": "bh",
+			"value": "巴漢"
+		},
+		{
+			"id": "sy",
+			"value": "水漢"
+		},
+		{
+			"id": "user",
+			"value": "User"
+		},
+		{
+			"id": "co",
+			"value": "Con"
+		},
+		{
+			"id": "unkow",
+			"value": "Unknown"
+		},
+		{
+			"id": "vn",
+			"value": "SYS_IR-V"
+		},
+		{
+			"id": "SCR",
+			"value": "根中"
+		},
+		{
+			"id": "ENR",
+			"value": "Root"
+		},
+		{
+			"id": "parts",
+			"value": "Parts"
+		},
+		{
+			"id": "sys_ir",
+			"value": "IR"
+		},
+		{
+			"id": "PM",
+			"value": "Pāḷi-Myr"
+		},
+		{
+			"id": "",
+			"value": ""
+		},
+		{
+			"id": "",
+			"value": ""
+		},
+		{
+			"id": "",
+			"value": ""
+		}
+	],
+	"language": {
+		"en": "English",
+		"si": "Sinhalese",
+		"my": "Brumese",
+		"zh": "Chinese",
+		"zh_cn": "Simple Chinese",
+		"zh_tw": "Traditional Chinese",
+		"zh-hans": "Simple Chinese",
+		"zh-hant": "Traditional Chinese"
+	},
+	"LogType": {
+		"10": "edit channel",
+		"11": "new channel",
+		"20": "edit article",
+		"21": "new article",
+		"30": "lookup",
+		"40": "edit term",
+		"41": "lookup term",
+		"42": "_TERM_IN_SENT_",
+		"50": "search",
+		"60": "edit wbw",
+		"61": "realation map",
+		"62": "new wbw",
+		"70": "edit sentence",
+		"71": "new sentence",
+		"80": "edit collection",
+		"81": "new collection",
+		"90": "search nissaya",
+		"100": "open reader",
+		"101": "open studio"
+	}
+}

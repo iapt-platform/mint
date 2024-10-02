@@ -1,0 +1,23 @@
+ul.chapter_info_list>li{
+	display:flex;
+	white-space: nowrap;
+}
+ul.chapter_info_list>li .channel_name{
+	flex:3;
+}
+ul.chapter_info_list>li .progress_bar{
+	flex:3;
+}
+ul.chapter_info_list>li .views{
+	flex:1;
+}
+ul.chapter_info_list>li .likes{
+	flex:1;
+}
+ul.chapter_info_list>li>.updated_at{
+	flex:3;
+}
+
+.progress_bar>svg{
+	width:80px;
+}

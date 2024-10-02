@@ -1,0 +1,2 @@
+# masculine gender
+pāḷi：puma

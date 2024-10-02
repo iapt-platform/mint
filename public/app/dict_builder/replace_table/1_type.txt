@@ -1,0 +1,8 @@
+"【ppr】", ".ti:base.#.ppr."
+"【pp】", ".ti:base.#.pp."
+"【aor】", ".v.#.aor."
+"【caus】", ".v.#.caus."
+"【imper】", ".v.#.imper."
+"【opt】", ".v.#.opt."
+"【ger】", ".v:ind.#.abs."
+"【a】",".n:base.#.nt."

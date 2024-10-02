@@ -1,0 +1,62 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.wbw.v1;
+
+/*
+ * 逐词解析 服务
+ * 
+ *  
+ * 
+ */
+service Wbw{
+	rpc GetWbwForPara (WbwListRequest) returns (WbwReply){}     //获取一个段落的逐词译信息
+	rpc AddWbwForPara (WbwParaSaveRequest) returns (WbwReply){}	
+	rpc SetWbwForPara (WbwParaSaveRequest) returns (WbwReply){} //批量保存。用于调整词序的保存。
+
+	rpc GetWbw (WbwRequest) returns (WbwReply){}
+	rpc SetWbw (WbwRequest) returns (WbwReply){}
+	rpc DelWbw (WbwRequest) returns (WbwReply){}
+}
+
+message WbwListRequest{
+	int32 Book        = 2;
+	int32 Paragraph   = 3;	
+	string Channel     = 4;
+}
+
+message WbwRequest{
+	string Id         = 1;
+	int32 Book        = 2;
+	int32 Paragraph   = 3;	
+	int32 Sn          = 4;	
+	string Data       = 5;	
+	string Channel    = 6;
+	string Studio     = 7;
+
+	string Lang             = 51;
+	User   Editor           = 52;
+	EnumPublicity Publicity = 53;
+
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+message WbwParaSaveRequest{
+	WbwListRequest info = 1;
+	repeated WbwRequest data = 2;
+}
+
+message WbwReply{
+	bool ok          = 1;
+	string message   = 2;
+	WbwRequest data = 3;
+}
+
+message WbwParaReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated WbwRequest rows = 1;
+	}
+}

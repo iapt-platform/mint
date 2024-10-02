@@ -1,0 +1,43 @@
+# https://laravel.com/docs/8.x/deployment#nginx
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+
+    gzip on;
+    server_name {{ inventory_hostname }} {% for it in groups['zone'] %} {{ it }} {% endfor %};
+    root {{ app_deploy_target }}/public;
+    client_max_body_size 16M;
+    index index.php;
+    charset utf-8;
+
+    access_log /var/log/nginx/{{ inventory_hostname }}.access.log;
+    error_log /var/log/nginx/{{ inventory_hostname }}.error.log warn;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location = /favicon.ico {
+        log_not_found off;
+    }
+    location = /robots.txt  {
+        log_not_found off;
+    }
+
+    error_page 404 /index.php;
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php{{ app_php_version }}-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+}

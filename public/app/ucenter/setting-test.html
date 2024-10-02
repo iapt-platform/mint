@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script>
+var setting = [
+	{
+		"id":"edit",
+		"type":"parent",
+		"children":[
+			{
+				"id":"font",
+				"type":"parent",
+				"children":[
+					{
+						"id":"size",
+						"type":"number",
+						"defualt":14,
+						"max":100,
+						"min":9
+					},
+					{
+						"id":"family",
+						"type":"input",
+						"defualt":"mono"
+					},
+					{
+						"id":"weight",
+						"type":"select",
+						"options":[300,400,500],
+						"defualt":500
+					}
+				]
+			}
+		]
+	},
+	{
+		"id":"channel",
+		"type":"parent",
+		"children":[
+			{
+				"id":"showname",
+				"type":"checkbox",
+				"defualt":true
+			},
+			{
+				"id":"list",
+				"type":"channel.list",
+				"defualt":[1,2]
+			}
+		]
+	}
+]
+var user = {
+	"edit.font.size":15,
+	"edit.font.weight":400,
+	"channel.showname":false,
+}
+
+			function render_setting(param){
+				let _path=new Array();
+				let html ="";
+				for (const iterator of param.data) {
+					html += render_setting_node(iterator,param.userdata,_path);
+				}
+				param.div.innerHTML = html;
+			}
+			function render_setting_node(node,userdata,path){
+				let html = "";
+				path.push(node);
+				let fullpath = new Array();
+				for (const it of path) {
+					fullpath.push(it.id);
+				}
+				let srtFullPath = fullpath.join(".");
+				html += "<div class='setting_cell'>";
+				html += "<h3>";
+				html += node.id;
+				html += "</h3>";
+				html += "<div class='subtitle'>"+srtFullPath+"</div>";
+				html += "<div>";
+
+				let nodeValue = null;
+				if (userdata.hasOwnProperty.call(userdata, srtFullPath)) {
+					nodeValue = userdata[srtFullPath];
+				}else{
+					nodeValue = node.defualt;
+				}
+				
+				
+				switch(node.type){
+					case "input":
+						html += "<input type='input' value='"+nodeValue+"' />";
+						break;
+					case "number":
+						html += "<input type='input' value='"+nodeValue+"' />";
+						html += "默认值："+ node.defualt;
+						break;
+					case "checkbox":
+					html += "<div>";
+						let checked = "";
+						if(nodeValue){
+							checked = "checked"
+						}							
+						html += "<input type='checkbox' "+checked+" />";
+						break;
+					case "select":
+						html += "<select>";
+						for (const op of node.options) {
+							html += "<option value='"+op+"' ";
+							if(op==nodeValue){
+								html += " selected ";
+							}
+							html +=">";
+							html += op;
+							if(op==node.defualt){
+								html += "默认";
+							}
+							html += "</option>";							
+						}
+						html += "</select>";
+
+						break;
+					case "parent":
+						for (const iterator of node.children) {
+							html += render_setting_node(iterator,userdata,path);
+						}
+						break;
+				}
+				html += "</div>";
+				html += "</div>";				
+				path.pop();
+				return html;
+			}
+		</script>
+	</head>
+	<body>
+<div id="setting"></div>
+<script>
+	render_setting(
+		{
+		"div":document.querySelector("#setting"),
+		"data":setting,		
+		"userdata":user	
+		}
+	)
+</script>
+	</body>
+	</html>

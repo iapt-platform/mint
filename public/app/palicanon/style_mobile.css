@@ -1,0 +1,83 @@
+.chapter_list .list {
+	display: none;
+}
+.sutta_row {
+	grid-template-columns: 100px 1fr 1fr;
+}
+
+.sutta_tag {
+	grid-column: 1 / 4;
+}
+.chapter_head_tool_bar .chapter_back_button {
+	display: inline-block;
+}
+.chapter_head_tool_bar .chapter_close_button {
+	display: none;
+}
+#main_view{
+    display:flex;
+    flex-direction: column;
+}
+
+#left-bar {
+    flex: 2;
+    background-color: var(--box-bg-color2);
+    display: none;
+}
+
+.chapter_list .more_info {
+    display: flex;
+    font-size: 80%;
+    color: var(--main-color1);
+    flex-direction: column;
+}
+
+.chapter_list ul li .main {
+    display: flex;
+    flex-direction: column;
+}
+
+.left_items {
+    display: flex;
+    flex-direction: row;
+}
+
+#tag_list_inner {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#tag_list_tag_div {
+    padding: 6px;
+}
+
+#tag_list_setting_div {
+    padding: 6px;
+}
+#palicanon-category{
+    display:block;
+}
+
+#palicanon-category>.chapter_list {
+    flex-direction: column;
+}
+
+#palicanon-category li{
+    display: flex;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border-line-color);
+}
+
+#palicanon-category .chapter_list .title .title_1 {
+    width: unset;
+}
+#palicanon-category .chapter_list .title{
+    width: -webkit-fill-available;
+    padding-left: 12px;
+}
+#course_head_bar{
+	padding:0 10px 10px 15px;
+}
+.chapter_list .title .title_1 {
+    width: 100%;
+}

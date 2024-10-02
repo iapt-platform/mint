@@ -1,0 +1,757 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link type="text/css" rel="stylesheet" href="css/style.css" />
+		<link type="text/css" rel="stylesheet" href="css/color_day.css" id="colorchange" />
+		<link type="text/css" rel="stylesheet" href="css/style_mobile.css" media="screen and (max-width:800px)" />
+		<link type="text/css" rel="stylesheet" href="css/alertify.css" id="alertifyCSS" />
+		<title>Maha Paritta</title>
+		<script language="javascript" src="js/common.js"></script>
+		<script language="javascript" src="js/xml.js"></script>
+		<script language="javascript" src="js/filenew.js"></script>
+		<script language="javascript" src="charcode/sinhala.js"></script>
+		<script language="javascript">
+			function sangayana2unicode(inStr, inM, inM2) {
+				var output = inStr;
+				output = output.replace(/ñ/g, "ṭ");
+				output = output.replace(/à/g, "ā");
+				output = output.replace(/ã/g, "ī");
+				output = output.replace(/å/g, "ū");
+				output = output.replace(/ï/g, "ṅ");
+				output = output.replace(/¤/g, "ñ");
+				output = output.replace(/ó/g, "ḍ");
+				output = output.replace(/õ/g, "ṇ");
+				output = output.replace(/ë/g, "ḷ");
+				output = output.replace(/ü/g, inM);
+				output = output.replace(/§/g, inM);
+
+				output = output.replace(/â/g, "Ā");
+				output = output.replace(/ä/g, "Ī");
+				output = output.replace(/æ/g, "Ū");
+				output = output.replace(/ð/g, "Ṅ");
+				output = output.replace(/¥/g, "Ñ");
+				output = output.replace(/ò/g, "Ṭ");
+				output = output.replace(/ô/g, "Ḍ");
+				output = output.replace(/ö/g, "Ṇ");
+				output = output.replace(/ì/g, "Ḷ");
+				output = output.replace(/ý/g, inM2);
+				return output;
+			}
+
+			function s2u() {
+				mstr = document.getElementById("m_str").value;
+				mlower = mstr.split(",")[0];
+				mupper = mstr.split(",")[1];
+				txt = document.getElementById("txtInput").value;
+				document.getElementById("txtOutput").value = sangayana2unicode(txt, mlower, mupper);
+			}
+
+			function sinhala_old() {
+				txt = document.getElementById("txtInput").value;
+				output = "";
+				for (i = 0; i < char_si_a.length; i++) {
+					var src = char_si_a[i].id;
+					var dest = char_si_a[i].value;
+					var strReplace = "txt = txt.replace(/" + src + "/g, dest);";
+					eval("txt = txt.replace(/" + src + "/g, dest);");
+				}
+				txt = txt.replace(/ර/g, "ra");
+				txt = txt.replace(/ය/g, "ya");
+				document.getElementById("txtOutput").value = txt;
+			}
+
+			function sinhala() {
+				var txt = document.getElementById("txtInput").value;
+				output = "";
+				try {
+					//replace begin
+					txt = txt.replace(/ක‍්ක්‍ර/g, "kkra");
+					txt = txt.replace(/ක‍්ක්‍ය/g, "kkya");
+					txt = txt.replace(/ක‍්ඛ්‍ර/g, "kkhra");
+					txt = txt.replace(/ක‍්ඛ්‍ය/g, "kkhya");
+					txt = txt.replace(/ක්‍ව්‍ර/g, "kvra");
+					txt = txt.replace(/ක්‍ව්‍ය/g, "kvya");
+					txt = txt.replace(/ඛ්‍ය්‍ර/g, "khyra");
+					txt = txt.replace(/ඛ්‍ය්‍ය/g, "khyya");
+					txt = txt.replace(/ඛ‍්ව්‍ර/g, "khvra");
+					txt = txt.replace(/ඛ‍්ව්‍ය/g, "khvya");
+					txt = txt.replace(/ග‍්ග්‍ර/g, "ggra");
+					txt = txt.replace(/ග‍්ග්‍ය/g, "ggya");
+					txt = txt.replace(/ග‍්ඝ්‍ර/g, "gghra");
+					txt = txt.replace(/ග‍්ඝ්‍ය/g, "gghya");
+					txt = txt.replace(/ක්ක්‍ර/g, "kkuṃ");
+					txt = txt.replace(/ක්ක්‍ය/g, "kkra");
+					txt = txt.replace(/ක‍්කිං/g, "kkiṃ");
+					txt = txt.replace(/ක‍්කුං/g, "kkuṃ");
+					txt = txt.replace(/ක්ඛ්‍ර/g, "kkhra");
+					txt = txt.replace(/ක්ඛ්‍ය/g, "kkhya");
+					txt = txt.replace(/ක‍්ඛිං/g, "kkhiṃ");
+					txt = txt.replace(/ක‍්ඛුං/g, "kkhuṃ");
+					txt = txt.replace(/ක්‍යිං/g, "kyiṃ");
+					txt = txt.replace(/ක්‍යුං/g, "kyuṃ");
+					txt = txt.replace(/ක්‍යිං/g, "kyiṃ");
+					txt = txt.replace(/ක්‍යුං/g, "kyuṃ");
+					txt = txt.replace(/ක්‍රිං/g, "kriṃ");
+					txt = txt.replace(/ක්‍රුං/g, "kruṃ");
+					txt = txt.replace(/ක්‍රිං/g, "kriṃ");
+					txt = txt.replace(/ක්‍රුං/g, "kruṃ");
+					txt = txt.replace(/ක්ව්‍ර/g, "kvra");
+					txt = txt.replace(/ක්ව්‍ය/g, "kvya");
+					txt = txt.replace(/ක්‍විං/g, "kviṃ");
+					txt = txt.replace(/ක්‍වුං/g, "kvuṃ");
+					txt = txt.replace(/ඛ්‍යිං/g, "khyiṃ");
+					txt = txt.replace(/ඛ්‍යුං/g, "khyuṃ");
+					txt = txt.replace(/ඛ‍්විං/g, "khviṃ");
+					txt = txt.replace(/ඛ‍්වුං/g, "khvuṃ");
+					txt = txt.replace(/ග‍්ගිං/g, "ggiṃ");
+					txt = txt.replace(/ග‍්ගුං/g, "gguṃ");
+					txt = txt.replace(/ග‍්ඝිං/g, "gghiṃ");
+					txt = txt.replace(/ග‍්ඝුං/g, "gghuṃ");
+					txt = txt.replace(/‍ය්‍ය/g, "yya");
+					txt = txt.replace(/ක්කිං/g, "kkaṃ");
+					txt = txt.replace(/ක්කුං/g, "kkiṃ");
+					txt = txt.replace(/ක‍්කා/g, "kkā");
+					txt = txt.replace(/ක‍්කි/g, "kki");
+					txt = txt.replace(/ක‍්කී/g, "kkī");
+					txt = txt.replace(/ක‍්කු/g, "kku");
+					txt = txt.replace(/ක‍්කූ/g, "kkū");
+					txt = txt.replace(/ක‍්කෙ/g, "kke");
+					txt = txt.replace(/ක‍්කො/g, "kko");
+					txt = txt.replace(/ක‍්කං/g, "kkaṃ");
+					txt = txt.replace(/ක්ඛිං/g, "kkhiṃ");
+					txt = txt.replace(/ක්ඛුං/g, "kkhuṃ");
+					txt = txt.replace(/ක‍්ඛා/g, "kkhā");
+					txt = txt.replace(/ක‍්ඛි/g, "kkhi");
+					txt = txt.replace(/ක‍්ඛී/g, "kkhī");
+					txt = txt.replace(/ක‍්ඛු/g, "kkhu");
+					txt = txt.replace(/ක‍්ඛූ/g, "kkhū");
+					txt = txt.replace(/ක‍්ඛෙ/g, "kkhe");
+					txt = txt.replace(/ක‍්ඛො/g, "kkho");
+					txt = txt.replace(/ක‍්ඛං/g, "kkhaṃ");
+					txt = txt.replace(/ක්‍යා/g, "kyā");
+					txt = txt.replace(/ක්‍යි/g, "kyi");
+					txt = txt.replace(/ක්‍යී/g, "kyī");
+					txt = txt.replace(/ක්‍යු/g, "kyu");
+					txt = txt.replace(/ක්‍යූ/g, "kyū");
+					txt = txt.replace(/ක්‍යෙ/g, "kye");
+					txt = txt.replace(/ක්‍යො/g, "kyo");
+					txt = txt.replace(/ක්‍යං/g, "kyaṃ");
+					txt = txt.replace(/ක්‍යා/g, "kyā");
+					txt = txt.replace(/ක්‍යි/g, "kyi");
+					txt = txt.replace(/ක්‍යී/g, "kyī");
+					txt = txt.replace(/ක්‍යු/g, "kyu");
+					txt = txt.replace(/ක්‍යූ/g, "kyū");
+					txt = txt.replace(/ක්‍යෙ/g, "kye");
+					txt = txt.replace(/ක්‍යො/g, "kyo");
+					txt = txt.replace(/ක්‍යං/g, "kyaṃ");
+					txt = txt.replace(/ක්‍රා/g, "krā");
+					txt = txt.replace(/ක්‍රි/g, "kri");
+					txt = txt.replace(/ක්‍රී/g, "krī");
+					txt = txt.replace(/ක්‍රු/g, "kru");
+					txt = txt.replace(/ක්‍රූ/g, "krū");
+					txt = txt.replace(/ක්‍රෙ/g, "kre");
+					txt = txt.replace(/ක්‍රො/g, "kro");
+					txt = txt.replace(/ක්‍රං/g, "kraṃ");
+					txt = txt.replace(/ක්‍රා/g, "krā");
+					txt = txt.replace(/ක්‍රි/g, "kri");
+					txt = txt.replace(/ක්‍රී/g, "krī");
+					txt = txt.replace(/ක්‍රු/g, "kru");
+					txt = txt.replace(/ක්‍රූ/g, "krū");
+					txt = txt.replace(/ක්‍රෙ/g, "kre");
+					txt = txt.replace(/ක්‍රො/g, "kro");
+					txt = txt.replace(/ක්‍රං/g, "kraṃ");
+					txt = txt.replace(/ක්විං/g, "kviṃ");
+					txt = txt.replace(/ක්වුං/g, "kvuṃ");
+					txt = txt.replace(/ක්‍වා/g, "kvā");
+					txt = txt.replace(/ක්‍වි/g, "kvi");
+					txt = txt.replace(/ක්‍වී/g, "kvī");
+					txt = txt.replace(/ක්‍වු/g, "kvu");
+					txt = txt.replace(/ක්‍වූ/g, "kvū");
+					txt = txt.replace(/ක්‍වෙ/g, "kve");
+					txt = txt.replace(/ක්‍වො/g, "kvo");
+					txt = txt.replace(/ක්‍වං/g, "kvaṃ");
+					txt = txt.replace(/ඛ්‍යා/g, "khyā");
+					txt = txt.replace(/ඛ්‍යි/g, "khyi");
+					txt = txt.replace(/ඛ්‍යී/g, "khyī");
+					txt = txt.replace(/ඛ්‍යු/g, "khyu");
+					txt = txt.replace(/ඛ්‍යූ/g, "khyū");
+					txt = txt.replace(/ඛ්‍යෙ/g, "khye");
+					txt = txt.replace(/ඛ්‍යො/g, "khyo");
+					txt = txt.replace(/ඛ්‍යං/g, "khyaṃ");
+					txt = txt.replace(/ඛ‍්වා/g, "khvā");
+					txt = txt.replace(/ඛ‍්වි/g, "khvi");
+					txt = txt.replace(/ඛ‍්වී/g, "khvī");
+					txt = txt.replace(/ඛ‍්වු/g, "khvu");
+					txt = txt.replace(/ඛ‍්වූ/g, "khvū");
+					txt = txt.replace(/ඛ‍්වෙ/g, "khve");
+					txt = txt.replace(/ඛ‍්වො/g, "khvo");
+					txt = txt.replace(/ඛ‍්වං/g, "khvaṃ");
+					txt = txt.replace(/ග‍්ගා/g, "ggā");
+					txt = txt.replace(/ග‍්ගි/g, "ggi");
+					txt = txt.replace(/ග‍්ගී/g, "ggī");
+					txt = txt.replace(/ග‍්ගු/g, "ggu");
+					txt = txt.replace(/ග‍්ගූ/g, "ggū");
+					txt = txt.replace(/ග‍්ගෙ/g, "gge");
+					txt = txt.replace(/ග‍්ගො/g, "ggo");
+					txt = txt.replace(/ග‍්ගං/g, "ggaṃ");
+					txt = txt.replace(/ග‍්ඝා/g, "gghā");
+					txt = txt.replace(/ග‍්ඝි/g, "gghi");
+					txt = txt.replace(/ග‍්ඝී/g, "gghī");
+					txt = txt.replace(/ග‍්ඝු/g, "gghu");
+					txt = txt.replace(/ග‍්ඝූ/g, "gghū");
+					txt = txt.replace(/ග‍්ඝෙ/g, "gghe");
+					txt = txt.replace(/ග‍්ඝො/g, "ggho");
+					txt = txt.replace(/ග‍්ඝං/g, "gghaṃ");
+					txt = txt.replace(/ක්‍ර/g, "kra");
+					txt = txt.replace(/ක්‍ය/g, "kya");
+					txt = txt.replace(/ඛ්‍ර/g, "khra");
+					txt = txt.replace(/ඛ්‍ය/g, "khya");
+					txt = txt.replace(/ග්‍ර/g, "gra");
+					txt = txt.replace(/ග්‍ය/g, "gya");
+					txt = txt.replace(/ඝ්‍ර/g, "ghra");
+					txt = txt.replace(/ඝ්‍ය/g, "ghya");
+					txt = txt.replace(/ඞ්‍ර/g, "ṅra");
+					txt = txt.replace(/ඞ්‍ය/g, "ṅya");
+					txt = txt.replace(/ච්‍ර/g, "cra");
+					txt = txt.replace(/ච්‍ය/g, "cya");
+					txt = txt.replace(/ඡ්‍ර/g, "chra");
+					txt = txt.replace(/ඡ්‍ය/g, "chya");
+					txt = txt.replace(/ජ්‍ර/g, "jra");
+					txt = txt.replace(/ජ්‍ය/g, "jya");
+					txt = txt.replace(/ඣ්‍ර/g, "jhra");
+					txt = txt.replace(/ඣ්‍ය/g, "jhya");
+					txt = txt.replace(/ඤ්‍ර/g, "ñra");
+					txt = txt.replace(/ඤ්‍ය/g, "ñya");
+					txt = txt.replace(/ට්‍ර/g, "ṭra");
+					txt = txt.replace(/ට්‍ය/g, "ṭya");
+					txt = txt.replace(/ඨ්‍ර/g, "ṭhra");
+					txt = txt.replace(/ඨ්‍ය/g, "ṭhya");
+					txt = txt.replace(/ඩ්‍ර/g, "ḍra");
+					txt = txt.replace(/ඩ්‍ය/g, "ḍya");
+					txt = txt.replace(/ඪ්‍ර/g, "ḍhra");
+					txt = txt.replace(/ඪ්‍ය/g, "ḍhya");
+					txt = txt.replace(/ණ්‍ර/g, "ṇra");
+					txt = txt.replace(/ණ්‍ය/g, "ṇya");
+					txt = txt.replace(/ත්‍ර/g, "tra");
+					txt = txt.replace(/ත්‍ය/g, "tya");
+					txt = txt.replace(/ථ්‍ර/g, "thra");
+					txt = txt.replace(/ථ්‍ය/g, "thya");
+					txt = txt.replace(/ද්‍ර/g, "dra");
+					txt = txt.replace(/ද්‍ය/g, "dya");
+					txt = txt.replace(/ධ්‍ර/g, "dhra");
+					txt = txt.replace(/ධ්‍ය/g, "dhya");
+					txt = txt.replace(/න්‍ර/g, "nra");
+					txt = txt.replace(/න්‍ය/g, "nya");
+					txt = txt.replace(/ප්‍ර/g, "pra");
+					txt = txt.replace(/ප්‍ය/g, "pya");
+					txt = txt.replace(/ඵ්‍ර/g, "phra");
+					txt = txt.replace(/ඵ්‍ය/g, "phya");
+					txt = txt.replace(/බ්‍ර/g, "bra");
+					txt = txt.replace(/බ්‍ය/g, "bya");
+					txt = txt.replace(/භ්‍ර/g, "bhra");
+					txt = txt.replace(/භ්‍ය/g, "bhya");
+					txt = txt.replace(/ම්‍ර/g, "mra");
+					txt = txt.replace(/ම්‍ය/g, "mya");
+					txt = txt.replace(/‍යිං/g, "yiṃ");
+					txt = txt.replace(/‍යුං/g, "yuṃ");
+					txt = txt.replace(/‍රිං/g, "riṃ");
+					txt = txt.replace(/‍රුං/g, "ruṃ");
+					txt = txt.replace(/ල්‍ය/g, "lya");
+					txt = txt.replace(/ව්‍ර/g, "vra");
+					txt = txt.replace(/ව්‍ය/g, "vya");
+					txt = txt.replace(/ස්‍ර/g, "sra");
+					txt = txt.replace(/ස්‍ය/g, "sya");
+					txt = txt.replace(/හ්‍ර/g, "hra");
+					txt = txt.replace(/හ්‍ය/g, "hya");
+					txt = txt.replace(/ළ්‍ය/g, "ḷya");
+					txt = txt.replace(/ක්කා/g, "kka");
+					txt = txt.replace(/ක්කි/g, "kkā");
+					txt = txt.replace(/ක්කී/g, "kki");
+					txt = txt.replace(/ක්කු/g, "kkī");
+					txt = txt.replace(/ක්කූ/g, "kku");
+					txt = txt.replace(/ක්කෙ/g, "kkū");
+					txt = txt.replace(/ක්කො/g, "kke");
+					txt = txt.replace(/ක්කං/g, "kko");
+					txt = txt.replace(/ක‍්ක/g, "kka");
+					txt = txt.replace(/ක්ඛා/g, "kkhā");
+					txt = txt.replace(/ක්ඛි/g, "kkhi");
+					txt = txt.replace(/ක්ඛී/g, "kkhī");
+					txt = txt.replace(/ක්ඛු/g, "kkhu");
+					txt = txt.replace(/ක්ඛූ/g, "kkhū");
+					txt = txt.replace(/ක්ඛෙ/g, "kkhe");
+					txt = txt.replace(/ක්ඛො/g, "kkho");
+					txt = txt.replace(/ක්ඛං/g, "kkhaṃ");
+					txt = txt.replace(/ක‍්ඛ/g, "kkha");
+					txt = txt.replace(/ක්‍ය/g, "kya");
+					txt = txt.replace(/ක්‍ය/g, "kya");
+					txt = txt.replace(/ක්‍ර/g, "kra");
+					txt = txt.replace(/ක්‍ර/g, "kra");
+					txt = txt.replace(/ක්වා/g, "kvā");
+					txt = txt.replace(/ක්වි/g, "kvi");
+					txt = txt.replace(/ක්වී/g, "kvī");
+					txt = txt.replace(/ක්වු/g, "kvu");
+					txt = txt.replace(/ක්වූ/g, "kvū");
+					txt = txt.replace(/ක්වෙ/g, "kve");
+					txt = txt.replace(/ක්වො/g, "kvo");
+					txt = txt.replace(/ක්වං/g, "kvaṃ");
+					txt = txt.replace(/ක්‍ව/g, "kva");
+					txt = txt.replace(/ඛ්‍ය/g, "khya");
+					txt = txt.replace(/ඛ‍්ව/g, "khva");
+					txt = txt.replace(/ග‍්ග/g, "gga");
+					txt = txt.replace(/ග‍්ඝ/g, "ggha");
+					txt = txt.replace(/කිං/g, "kiṃ");
+					txt = txt.replace(/කුං/g, "kuṃ");
+					txt = txt.replace(/ඛිං/g, "khiṃ");
+					txt = txt.replace(/ඛුං/g, "khuṃ");
+					txt = txt.replace(/ගිං/g, "giṃ");
+					txt = txt.replace(/ගුං/g, "guṃ");
+					txt = txt.replace(/ඝිං/g, "ghiṃ");
+					txt = txt.replace(/ඝුං/g, "ghuṃ");
+					txt = txt.replace(/ඞිං/g, "ṅiṃ");
+					txt = txt.replace(/ඞුං/g, "ṅuṃ");
+					txt = txt.replace(/චිං/g, "ciṃ");
+					txt = txt.replace(/චුං/g, "cuṃ");
+					txt = txt.replace(/ඡිං/g, "chiṃ");
+					txt = txt.replace(/ඡුං/g, "chuṃ");
+					txt = txt.replace(/ජිං/g, "jiṃ");
+					txt = txt.replace(/ජුං/g, "juṃ");
+					txt = txt.replace(/ඣිං/g, "jhiṃ");
+					txt = txt.replace(/ඣුං/g, "jhuṃ");
+					txt = txt.replace(/ඤිං/g, "ñiṃ");
+					txt = txt.replace(/ඤුං/g, "ñuṃ");
+					txt = txt.replace(/ටිං/g, "ṭiṃ");
+					txt = txt.replace(/ටුං/g, "ṭuṃ");
+					txt = txt.replace(/ඨිං/g, "ṭhiṃ");
+					txt = txt.replace(/ඨුං/g, "ṭhuṃ");
+					txt = txt.replace(/ඩිං/g, "ḍiṃ");
+					txt = txt.replace(/ඩුං/g, "ḍuṃ");
+					txt = txt.replace(/ඪිං/g, "ḍhiṃ");
+					txt = txt.replace(/ඪුං/g, "ḍhuṃ");
+					txt = txt.replace(/ණිං/g, "ṇiṃ");
+					txt = txt.replace(/ණුං/g, "ṇuṃ");
+					txt = txt.replace(/තිං/g, "tiṃ");
+					txt = txt.replace(/තුං/g, "tuṃ");
+					txt = txt.replace(/ථිං/g, "thiṃ");
+					txt = txt.replace(/ථුං/g, "thuṃ");
+					txt = txt.replace(/දිං/g, "diṃ");
+					txt = txt.replace(/දුං/g, "duṃ");
+					txt = txt.replace(/ධිං/g, "dhiṃ");
+					txt = txt.replace(/ධුං/g, "dhuṃ");
+					txt = txt.replace(/නිං/g, "niṃ");
+					txt = txt.replace(/නුං/g, "nuṃ");
+					txt = txt.replace(/පිං/g, "piṃ");
+					txt = txt.replace(/පුං/g, "puṃ");
+					txt = txt.replace(/ඵිං/g, "phiṃ");
+					txt = txt.replace(/ඵුං/g, "phuṃ");
+					txt = txt.replace(/බිං/g, "biṃ");
+					txt = txt.replace(/බුං/g, "buṃ");
+					txt = txt.replace(/භිං/g, "bhiṃ");
+					txt = txt.replace(/භුං/g, "bhuṃ");
+					txt = txt.replace(/මිං/g, "miṃ");
+					txt = txt.replace(/මුං/g, "muṃ");
+					txt = txt.replace(/‍යා/g, "yā");
+					txt = txt.replace(/‍යි/g, "yi");
+					txt = txt.replace(/‍යී/g, "yī");
+					txt = txt.replace(/‍යු/g, "yu");
+					txt = txt.replace(/‍යූ/g, "yū");
+					txt = txt.replace(/‍යං/g, "yaṃ");
+					txt = txt.replace(/‍රා/g, "rā");
+					txt = txt.replace(/‍රි/g, "ri");
+					txt = txt.replace(/‍රී/g, "rī");
+					txt = txt.replace(/‍රු/g, "ru");
+					txt = txt.replace(/‍රූ/g, "rū");
+					txt = txt.replace(/‍රං/g, "raṃ");
+					txt = txt.replace(/ලිං/g, "liṃ");
+					txt = txt.replace(/ලුං/g, "luṃ");
+					txt = txt.replace(/විං/g, "viṃ");
+					txt = txt.replace(/වුං/g, "vuṃ");
+					txt = txt.replace(/සිං/g, "siṃ");
+					txt = txt.replace(/සුං/g, "suṃ");
+					txt = txt.replace(/හිං/g, "hiṃ");
+					txt = txt.replace(/හුං/g, "huṃ");
+					txt = txt.replace(/ළිං/g, "ḷiṃ");
+					txt = txt.replace(/ළුං/g, "ḷuṃ");
+					txt = txt.replace(/ක්ක/g, "kk");
+					txt = txt.replace(/ක්ඛ/g, "kkha");
+					txt = txt.replace(/ක්ව/g, "kva");
+					txt = txt.replace(/ක්/g, "k");
+					txt = txt.replace(/කා/g, "kā");
+					txt = txt.replace(/කි/g, "ki");
+					txt = txt.replace(/කී/g, "kī");
+					txt = txt.replace(/කු/g, "ku");
+					txt = txt.replace(/කූ/g, "kū");
+					txt = txt.replace(/කෙ/g, "ke");
+					txt = txt.replace(/කො/g, "ko");
+					txt = txt.replace(/කං/g, "kaṃ");
+					txt = txt.replace(/ඛ්/g, "kh");
+					txt = txt.replace(/ඛා/g, "khā");
+					txt = txt.replace(/ඛි/g, "khi");
+					txt = txt.replace(/ඛී/g, "khī");
+					txt = txt.replace(/ඛු/g, "khu");
+					txt = txt.replace(/ඛූ/g, "khū");
+					txt = txt.replace(/ඛෙ/g, "khe");
+					txt = txt.replace(/ඛො/g, "kho");
+					txt = txt.replace(/ඛං/g, "khaṃ");
+					txt = txt.replace(/ග්/g, "g");
+					txt = txt.replace(/ගා/g, "gā");
+					txt = txt.replace(/ගි/g, "gi");
+					txt = txt.replace(/ගී/g, "gī");
+					txt = txt.replace(/ගු/g, "gu");
+					txt = txt.replace(/ගූ/g, "gū");
+					txt = txt.replace(/ගෙ/g, "ge");
+					txt = txt.replace(/ගො/g, "go");
+					txt = txt.replace(/ගං/g, "gaṃ");
+					txt = txt.replace(/ඝ්/g, "gh");
+					txt = txt.replace(/ඝා/g, "ghā");
+					txt = txt.replace(/ඝි/g, "ghi");
+					txt = txt.replace(/ඝී/g, "ghī");
+					txt = txt.replace(/ඝු/g, "ghu");
+					txt = txt.replace(/ඝූ/g, "ghū");
+					txt = txt.replace(/ඝෙ/g, "ghe");
+					txt = txt.replace(/ඝො/g, "gho");
+					txt = txt.replace(/ඝං/g, "ghaṃ");
+					txt = txt.replace(/ඞ්/g, "ṅ");
+					txt = txt.replace(/ඞා/g, "ṅā");
+					txt = txt.replace(/ඞි/g, "ṅi");
+					txt = txt.replace(/ඞී/g, "ṅī");
+					txt = txt.replace(/ඞු/g, "ṅu");
+					txt = txt.replace(/ඞූ/g, "ṅū");
+					txt = txt.replace(/ඞෙ/g, "ṅe");
+					txt = txt.replace(/ඞො/g, "ṅo");
+					txt = txt.replace(/ඞං/g, "ṅaṃ");
+					txt = txt.replace(/ච්/g, "c");
+					txt = txt.replace(/චා/g, "cā");
+					txt = txt.replace(/චි/g, "ci");
+					txt = txt.replace(/චී/g, "cī");
+					txt = txt.replace(/චු/g, "cu");
+					txt = txt.replace(/චූ/g, "cū");
+					txt = txt.replace(/චෙ/g, "ce");
+					txt = txt.replace(/චො/g, "co");
+					txt = txt.replace(/චං/g, "caṃ");
+					txt = txt.replace(/ඡ්/g, "ch");
+					txt = txt.replace(/ඡා/g, "chā");
+					txt = txt.replace(/ඡි/g, "chi");
+					txt = txt.replace(/ඡී/g, "chī");
+					txt = txt.replace(/ඡු/g, "chu");
+					txt = txt.replace(/ඡූ/g, "chū");
+					txt = txt.replace(/ඡෙ/g, "che");
+					txt = txt.replace(/ඡො/g, "cho");
+					txt = txt.replace(/ඡං/g, "chaṃ");
+					txt = txt.replace(/ජ්/g, "j");
+					txt = txt.replace(/ජා/g, "jā");
+					txt = txt.replace(/ජි/g, "ji");
+					txt = txt.replace(/ජී/g, "jī");
+					txt = txt.replace(/ජු/g, "ju");
+					txt = txt.replace(/ජූ/g, "jū");
+					txt = txt.replace(/ජෙ/g, "je");
+					txt = txt.replace(/ජො/g, "jo");
+					txt = txt.replace(/ජං/g, "jaṃ");
+					txt = txt.replace(/ඣ්/g, "jh");
+					txt = txt.replace(/ඣා/g, "jhā");
+					txt = txt.replace(/ඣි/g, "jhi");
+					txt = txt.replace(/ඣී/g, "jhī");
+					txt = txt.replace(/ඣු/g, "jhu");
+					txt = txt.replace(/ඣූ/g, "jhū");
+					txt = txt.replace(/ඣෙ/g, "jhe");
+					txt = txt.replace(/ඣො/g, "jho");
+					txt = txt.replace(/ඣං/g, "jhaṃ");
+					txt = txt.replace(/ඤ්/g, "ñ");
+					txt = txt.replace(/ඤා/g, "ñā");
+					txt = txt.replace(/ඤි/g, "ñi");
+					txt = txt.replace(/ඤී/g, "ñī");
+					txt = txt.replace(/ඤු/g, "ñu");
+					txt = txt.replace(/ඤූ/g, "ñū");
+					txt = txt.replace(/ඤෙ/g, "ñe");
+					txt = txt.replace(/ඤො/g, "ño");
+					txt = txt.replace(/ඤං/g, "ñaṃ");
+					txt = txt.replace(/ට්/g, "ṭ");
+					txt = txt.replace(/ටා/g, "ṭā");
+					txt = txt.replace(/ටි/g, "ṭi");
+					txt = txt.replace(/ටී/g, "ṭī");
+					txt = txt.replace(/ටු/g, "ṭu");
+					txt = txt.replace(/ටූ/g, "ṭū");
+					txt = txt.replace(/ටෙ/g, "ṭe");
+					txt = txt.replace(/ටො/g, "ṭo");
+					txt = txt.replace(/ටං/g, "ṭaṃ");
+					txt = txt.replace(/ඨ්/g, "ṭh");
+					txt = txt.replace(/ඨා/g, "ṭhā");
+					txt = txt.replace(/ඨි/g, "ṭhi");
+					txt = txt.replace(/ඨී/g, "ṭhī");
+					txt = txt.replace(/ඨු/g, "ṭhu");
+					txt = txt.replace(/ඨූ/g, "ṭhū");
+					txt = txt.replace(/ඨෙ/g, "ṭhe");
+					txt = txt.replace(/ඨො/g, "ṭho");
+					txt = txt.replace(/ඨං/g, "ṭhaṃ");
+					txt = txt.replace(/ඩ්/g, "ḍ");
+					txt = txt.replace(/ඩා/g, "ḍā");
+					txt = txt.replace(/ඩි/g, "ḍi");
+					txt = txt.replace(/ඩී/g, "ḍī");
+					txt = txt.replace(/ඩු/g, "ḍu");
+					txt = txt.replace(/ඩූ/g, "ḍū");
+					txt = txt.replace(/ඩෙ/g, "ḍe");
+					txt = txt.replace(/ඩො/g, "ḍo");
+					txt = txt.replace(/ඩං/g, "ḍaṃ");
+					txt = txt.replace(/ඪ්/g, "ḍh");
+					txt = txt.replace(/ඪා/g, "ḍhā");
+					txt = txt.replace(/ඪි/g, "ḍhi");
+					txt = txt.replace(/ඪී/g, "ḍhī");
+					txt = txt.replace(/ඪු/g, "ḍhu");
+					txt = txt.replace(/ඪූ/g, "ḍhū");
+					txt = txt.replace(/ඪෙ/g, "ḍhe");
+					txt = txt.replace(/ඪො/g, "ḍho");
+					txt = txt.replace(/ඪං/g, "ḍhaṃ");
+					txt = txt.replace(/ණ්/g, "ṇ");
+					txt = txt.replace(/ණා/g, "ṇā");
+					txt = txt.replace(/ණි/g, "ṇi");
+					txt = txt.replace(/ණී/g, "ṇī");
+					txt = txt.replace(/ණු/g, "ṇu");
+					txt = txt.replace(/ණූ/g, "ṇū");
+					txt = txt.replace(/ණෙ/g, "ṇe");
+					txt = txt.replace(/ණො/g, "ṇo");
+					txt = txt.replace(/ණං/g, "ṇaṃ");
+					txt = txt.replace(/ත්/g, "t");
+					txt = txt.replace(/තා/g, "tā");
+					txt = txt.replace(/ති/g, "ti");
+					txt = txt.replace(/තී/g, "tī");
+					txt = txt.replace(/තු/g, "tu");
+					txt = txt.replace(/තූ/g, "tū");
+					txt = txt.replace(/තෙ/g, "te");
+					txt = txt.replace(/තො/g, "to");
+					txt = txt.replace(/තං/g, "taṃ");
+					txt = txt.replace(/ථ්/g, "th");
+					txt = txt.replace(/ථා/g, "thā");
+					txt = txt.replace(/ථි/g, "thi");
+					txt = txt.replace(/ථී/g, "thī");
+					txt = txt.replace(/ථු/g, "thu");
+					txt = txt.replace(/ථූ/g, "thū");
+					txt = txt.replace(/ථෙ/g, "the");
+					txt = txt.replace(/ථො/g, "tho");
+					txt = txt.replace(/ථං/g, "thaṃ");
+					txt = txt.replace(/ද්/g, "d");
+					txt = txt.replace(/දා/g, "dā");
+					txt = txt.replace(/දි/g, "di");
+					txt = txt.replace(/දී/g, "dī");
+					txt = txt.replace(/දු/g, "du");
+					txt = txt.replace(/දූ/g, "dū");
+					txt = txt.replace(/දෙ/g, "de");
+					txt = txt.replace(/දො/g, "do");
+					txt = txt.replace(/දං/g, "daṃ");
+					txt = txt.replace(/ධ්/g, "dh");
+					txt = txt.replace(/ධා/g, "dhā");
+					txt = txt.replace(/ධි/g, "dhi");
+					txt = txt.replace(/ධී/g, "dhī");
+					txt = txt.replace(/ධු/g, "dhu");
+					txt = txt.replace(/ධූ/g, "dhū");
+					txt = txt.replace(/ධෙ/g, "dhe");
+					txt = txt.replace(/ධො/g, "dho");
+					txt = txt.replace(/ධං/g, "dhaṃ");
+					txt = txt.replace(/න්/g, "n");
+					txt = txt.replace(/නා/g, "nā");
+					txt = txt.replace(/නි/g, "ni");
+					txt = txt.replace(/නී/g, "nī");
+					txt = txt.replace(/නු/g, "nu");
+					txt = txt.replace(/නූ/g, "nū");
+					txt = txt.replace(/නෙ/g, "ne");
+					txt = txt.replace(/නො/g, "no");
+					txt = txt.replace(/නං/g, "naṃ");
+					txt = txt.replace(/ප්/g, "p");
+					txt = txt.replace(/පා/g, "pā");
+					txt = txt.replace(/පි/g, "pi");
+					txt = txt.replace(/පී/g, "pī");
+					txt = txt.replace(/පු/g, "pu");
+					txt = txt.replace(/පූ/g, "pū");
+					txt = txt.replace(/පෙ/g, "pe");
+					txt = txt.replace(/පො/g, "po");
+					txt = txt.replace(/පං/g, "paṃ");
+					txt = txt.replace(/ඵ්/g, "ph");
+					txt = txt.replace(/ඵා/g, "phā");
+					txt = txt.replace(/ඵි/g, "phi");
+					txt = txt.replace(/ඵී/g, "phī");
+					txt = txt.replace(/ඵු/g, "phu");
+					txt = txt.replace(/ඵූ/g, "phū");
+					txt = txt.replace(/ඵෙ/g, "phe");
+					txt = txt.replace(/ඵො/g, "pho");
+					txt = txt.replace(/ඵං/g, "phaṃ");
+					txt = txt.replace(/බ්/g, "b");
+					txt = txt.replace(/බා/g, "bā");
+					txt = txt.replace(/බි/g, "bi");
+					txt = txt.replace(/බී/g, "bī");
+					txt = txt.replace(/බු/g, "bu");
+					txt = txt.replace(/බූ/g, "bū");
+					txt = txt.replace(/බෙ/g, "be");
+					txt = txt.replace(/බො/g, "bo");
+					txt = txt.replace(/බං/g, "baṃ");
+					txt = txt.replace(/භ්/g, "bh");
+					txt = txt.replace(/භා/g, "bhā");
+					txt = txt.replace(/භි/g, "bhi");
+					txt = txt.replace(/භී/g, "bhī");
+					txt = txt.replace(/භු/g, "bhu");
+					txt = txt.replace(/භූ/g, "bhū");
+					txt = txt.replace(/භෙ/g, "bhe");
+					txt = txt.replace(/භො/g, "bho");
+					txt = txt.replace(/භං/g, "bhaṃ");
+					txt = txt.replace(/ම්/g, "m");
+					txt = txt.replace(/මා/g, "mā");
+					txt = txt.replace(/මි/g, "mi");
+					txt = txt.replace(/මී/g, "mī");
+					txt = txt.replace(/මු/g, "mu");
+					txt = txt.replace(/මූ/g, "mū");
+					txt = txt.replace(/මෙ/g, "me");
+					txt = txt.replace(/මො/g, "mo");
+					txt = txt.replace(/මං/g, "maṃ");
+					txt = txt.replace(/ය්/g, "y");
+					txt = txt.replace(/‍ය/g, "ya");
+					txt = txt.replace(/යෙ/g, "ye");
+					txt = txt.replace(/යො/g, "yo");
+					txt = txt.replace(/ර්/g, "r");
+					txt = txt.replace(/‍ර/g, "ra");
+					txt = txt.replace(/රෙ/g, "re");
+					txt = txt.replace(/රො/g, "ro");
+					txt = txt.replace(/ල්/g, "l");
+					txt = txt.replace(/ලා/g, "lā");
+					txt = txt.replace(/ලි/g, "li");
+					txt = txt.replace(/ලී/g, "lī");
+					txt = txt.replace(/ලු/g, "lu");
+					txt = txt.replace(/ලූ/g, "lū");
+					txt = txt.replace(/ලෙ/g, "le");
+					txt = txt.replace(/ලො/g, "lo");
+					txt = txt.replace(/ලං/g, "laṃ");
+					txt = txt.replace(/ව්/g, "v");
+					txt = txt.replace(/වා/g, "vā");
+					txt = txt.replace(/වි/g, "vi");
+					txt = txt.replace(/වී/g, "vī");
+					txt = txt.replace(/වු/g, "vu");
+					txt = txt.replace(/වූ/g, "vū");
+					txt = txt.replace(/වෙ/g, "ve");
+					txt = txt.replace(/වො/g, "vo");
+					txt = txt.replace(/වං/g, "vaṃ");
+					txt = txt.replace(/ස්/g, "s");
+					txt = txt.replace(/සා/g, "sā");
+					txt = txt.replace(/සි/g, "si");
+					txt = txt.replace(/සී/g, "sī");
+					txt = txt.replace(/සු/g, "su");
+					txt = txt.replace(/සූ/g, "sū");
+					txt = txt.replace(/සෙ/g, "se");
+					txt = txt.replace(/සො/g, "so");
+					txt = txt.replace(/සං/g, "saṃ");
+					txt = txt.replace(/හ්/g, "h");
+					txt = txt.replace(/හා/g, "hā");
+					txt = txt.replace(/හි/g, "hi");
+					txt = txt.replace(/හී/g, "hī");
+					txt = txt.replace(/හු/g, "hu");
+					txt = txt.replace(/හූ/g, "hū");
+					txt = txt.replace(/හෙ/g, "he");
+					txt = txt.replace(/හො/g, "ho");
+					txt = txt.replace(/හං/g, "haṃ");
+					txt = txt.replace(/ළ්/g, "ḷ");
+					txt = txt.replace(/ළා/g, "ḷā");
+					txt = txt.replace(/ළි/g, "ḷi");
+					txt = txt.replace(/ළී/g, "ḷī");
+					txt = txt.replace(/ළු/g, "ḷu");
+					txt = txt.replace(/ළූ/g, "ḷū");
+					txt = txt.replace(/ළෙ/g, "ḷe");
+					txt = txt.replace(/ළො/g, "ḷo");
+					txt = txt.replace(/ළං/g, "ḷaṃ");
+					txt = txt.replace(/අ/g, "a");
+					txt = txt.replace(/ආ/g, "ā");
+					txt = txt.replace(/ඉ/g, "i");
+					txt = txt.replace(/ඊ/g, "ī");
+					txt = txt.replace(/උ/g, "u");
+					txt = txt.replace(/ඌ/g, "ū");
+					txt = txt.replace(/එ/g, "e");
+					txt = txt.replace(/ඔ/g, "o");
+					txt = txt.replace(/ක/g, "ka");
+					txt = txt.replace(/ඛ/g, "kha");
+					txt = txt.replace(/ග/g, "ga");
+					txt = txt.replace(/ඝ/g, "gha");
+					txt = txt.replace(/ඞ/g, "ṅa");
+					txt = txt.replace(/ච/g, "ca");
+					txt = txt.replace(/ඡ/g, "cha");
+					txt = txt.replace(/ජ/g, "ja");
+					txt = txt.replace(/ඣ/g, "jha");
+					txt = txt.replace(/ඤ/g, "ña");
+					txt = txt.replace(/ට/g, "ṭa");
+					txt = txt.replace(/ඨ/g, "ṭha");
+					txt = txt.replace(/ඩ/g, "ḍa");
+					txt = txt.replace(/ඪ/g, "ḍha");
+					txt = txt.replace(/ණ/g, "ṇa");
+					txt = txt.replace(/ත/g, "ta");
+					txt = txt.replace(/ථ/g, "tha");
+					txt = txt.replace(/ද/g, "da");
+					txt = txt.replace(/ධ/g, "dha");
+					txt = txt.replace(/න/g, "na");
+					txt = txt.replace(/ප/g, "pa");
+					txt = txt.replace(/ඵ/g, "pha");
+					txt = txt.replace(/බ/g, "ba");
+					txt = txt.replace(/භ/g, "bha");
+					txt = txt.replace(/ම/g, "ma");
+					txt = txt.replace(/ල/g, "la");
+					txt = txt.replace(/ව/g, "va");
+					txt = txt.replace(/ස/g, "sa");
+					txt = txt.replace(/හ/g, "ha");
+					txt = txt.replace(/ළ/g, "ḷa");
+
+					//replace end
+				} catch (err) {
+					//error
+					alert(err.message);
+				}
+				document.getElementById("txtOutput").value = txt;
+			}
+		</script>
+		<style>
+			.bg0 {
+				background-color: #ff9;
+			}
+
+			.bg1 {
+				background-color: #aaa;
+			}
+		</style>
+	</head>
+
+	<body class="mainbody" id="mbody">
+		<!-- tool bar begin-->
+
+		<div class="toolbar">
+			<script language="javascript">
+				if (!g_is_mobile) {
+					document.write('<button id="B_Navi" onclick="setNaviVisibility()" type="button">≡</button> ');
+				}
+			</script>
+			<button id="menu_button_home" onclick="goHome()" type="button">Home</button>
+			<button id="B_FontReduce" type="button" onclick="setPageFontSize(0.9)">A-</button>
+			<button id="B_FontGain" type="button" onclick="setPageFontSize(1.1)">A+</button>
+			<button id="B_Day" type="button" onclick="setPageColor(0)">白色</button>
+			<button id="B_Sunset" type="button" onclick="setPageColor(1)">黄昏</button>
+			<button id="B_Night" type="button" onclick="setPageColor(2)">夜间</button>
+			<script language="javascript"></script>
+			<span id="debug"></span>
+		</div>
+		<!--tool bar end -->
+
+		<div class="main">
+			<p><textarea id="txtInput" rows="30" cols="80"></textarea></p>
+			<button id="file_new" type="button" onclick="s2u()">Sangayana To Unicode</button>
+			<button id="file_new" type="button" onclick="u2s()">Unicode To Sangayana</button>
+			<select id="m_str">
+				<option value="ṃ,Ṃ">ṃ</option>
+				<option value="ṁ,Ṁ">ṁ</option>
+				<option value="ŋ,Ŋ">ŋ</option>
+			</select>
+
+			<button id="file_new" type="button" onclick="sinhala()">Sinhala To English</button>
+			<p><textarea id="txtOutput" rows="30" cols="80"></textarea></p>
+
+			<div class="debugMsg" id="xmldata">
+				<!--调试信息-->
+			</div>
+
+			<!--right side end-->
+		</div>
+
+		<div id="modifywin"></div>
+	</body>
+</html>

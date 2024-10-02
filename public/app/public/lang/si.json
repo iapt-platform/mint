@@ -1,0 +1,1970 @@
+{
+	"gui": {
+		"50": "50+%",
+		"3rd_dictionary": "3 වැනි ශබ්දකෝෂය",
+		"accessed": "ප්‍රවෙශවිය",
+		"add_to_edit_list": "එක් කරනවා සංස්කරණ ලැයිස්තුව",
+		"adhivacana": "අධිවචන",
+		"all": "සර්ව ",
+		"all_select": "සියල්ල",
+		"all_data!": "දත්ත සියල්ලම",
+		"all_done": "Looking up accomplished",
+		"allsplit": "Words Splited Successfully ^-^",
+		"and_another": "&nbsp;ච ",
+		"append": "Append",
+		"apply": "යොමු කරනවා",
+		"applyto": "ගානවා",
+		"arrival_in_detail": "arrival in detail",
+		"asc": "අනුලොම",
+		"atitude": "Atitude",
+		"audio": "ශ්‍රවණ",
+		"author": "කර්තෘ",
+		"auto": "AUTO",
+		"auto_fill": "Automatic filling",
+		"back": "back",
+		"base_on": "පදනම",
+		"BE": "බුද්ධ වර්ෂය ",
+		"bhumma": "භුම්ම",
+		"book": "පොත",
+		"book_mark": "පොත් යොමුව",
+		"book_name": "පොත් නම",
+		"bookmark": "පොත් යොමුව",
+		"buddhist_calendar": "Buddhist Calendar",
+		"budha": "බුධ",
+		"by": "විසින්",
+		"cancel": "අවලංගු කරනවා",
+		"canda": "චන්ද",
+		"caption": "මාතෘකාව",
+		"CE": "CE",
+		"change_position": "change position",
+		"chars": "Chars",
+		"checking": "scanning",
+		"children": "Children",
+		"chinese": "中文",
+		"click_on": "ටිකිය",
+		"click_word_to": "click word to ",
+		"code_convert": "කේතය පරිවර්තනය ",
+		"color": "වර්ණය",
+		"column_compare": "Up&nbsp;&&nbsp;Down",
+		"commentary": "Commentary",
+		"completely_delete": "completely delete",
+		"computer": "පරිගණකය",
+		"confirm": "Confirm",
+		"content": "පටුන",
+		"contents": "අන්තර්ගතය",
+		"copy": "copy",
+		"copy_to_clipboard": "copy the sent No. to clipboard",
+		"creat_a_new_file_by_yourself": "ඔබ කැමති පරදි නව ගොනුව සාදන්න",
+		"created": "සාදන ලදි",
+		"current": "අලුත්ම",
+		"database_admin": "පරිගණක දත්ත ගබඩාව පරිපාලනය කරනවා",
+		"date": "දිවස ",
+		"day": "&nbsp;",
+		"day_1": "&nbsp;",
+		"days": "&nbsp;දිවසා(නි) ",
+		"debug": "නිදොස්කරුව",
+		"delete": "මකා දමනවා",
+		"departure_in_detail": "departure in detail",
+		"desc": "පටිලොම",
+		"detaile": "සවිස්තර",
+		"dhamma_time": "සම්මා සම්බුද්ධස්ස සාසනං පට්ච-වස්ස-සහස්සානි පවත්තිස්සති ",
+		"dict": "ශබ්දකෝෂය",
+		"dict_match": "Match the Dictionary and Document",
+		"dict_terms": "Terms",
+		"dictionary": "ශබ්දකෝෂය",
+		"dictionary_match_result": "ශබ්දකෝෂය ගැළපීම ප්‍රතිඵල",
+		"dictsouce": "Source of Terms",
+		"difficulty": "difficulty level",
+		"done": "”&nbsp;has been scanned",
+		"down": "Down",
+		"download": "[Download]",
+		"draft": "As Draft",
+		"dawn": "අරුණ",
+		"each_paragraph": "E&nbsp;paragraph",
+		"each_sentence": "E&nbsp;sentence",
+		"eat": "eat",
+		"edit": "සංස්කරණය කිරීම",
+		"edit_now": "දැන් සංස්කරණය කිරීම",
+		"edit1": "Edited By ",
+		"edition": "සංශෝධනය",
+		"editor": "සංස්කාරක",
+		"e_mail": "E-mail",
+		"empty": "හිස්",
+		"empty_the_data_below": "හිස් සියල්ලම",
+		"empty_the_recycle_bin": "Empty the Recycle Bin",
+		"empty1": "EMPTY",
+		"english": "English",
+		"export": "නිර්ය්‍යාත",
+		"export_csv": "නිර්ය්‍යාත psv",
+		"export_html": "නිර්ය්‍යාත HTML",
+		"f_mean": "මූලාංකය තේරුම",
+		"factor": "සාධකය",
+		"factors_input": "input factors by click",
+		"favorite": "favorite",
+		"file_name": "ලිපිගොනුව නම ",
+		"files": "&nbspfiles",
+		"find_replace": "සොයන්න සහ ප්‍රතිස්ථාපනය කරන්න",
+		"finish": "අවසානය ",
+		"finished": "finished",
+		"g_mean": "සාමාන්‍ය⁣ තේරුම",
+		"gama_entry": "entry the village",
+		"gramma": "ව්‍යාකරණ ",
+		"gramma_case": "Gramma Case",
+		"guid_creator": "GUID Creator",
+		"guru": "ගු‍රු",
+		"h": "(h)",
+		"half": "අර්ධය",
+		"heading": "නම",
+		"heading1": "මාතෘකාව",
+		"heading_1": "මාතෘකාව 1",
+		"heading_2": "මාතෘකාව 2",
+		"heading_3": "මාතෘකාව 3",
+		"heading_4": "මාතෘකාව 4",
+		"heading_5": "මාතෘකාව 5",
+		"heading_6": "මාතෘකාව 6",
+		"heading_7": "මාතෘකාව 7",
+		"heading_8": "මාතෘකාව 8",
+		"heading_lv1": "මාතෘකාව 1",
+		"heading_lv2": "මාතෘකාව 2",
+		"heading_lv3": "මාතෘකාව 3",
+		"heading_lv4": "මාතෘකාව 4",
+		"heading_lv5": "මාතෘකාව 5",
+		"heading_lv6": "මාතෘකාව 6",
+		"heading_lv7": "මාතෘකාව 7",
+		"heading_lv8": "මාතෘකාව 8",
+		"hidden": "සැඟවුණු",
+		"home": "නිවස",
+		"hori_ref_time": "horizontal refraction correct ",
+		"html_text_data": "HTML සටහන් දත්ත",
+		"import": "ආනයන ",
+		"import_csv": "ආනයන csv",
+		"import_export": "ආනයන /අපනයන ",
+		"import_the_flie_from_cscd": "Import the flie From Cattha Sangayana data base",
+		"include": "include",
+		"info_panal": "තොරතුරු ලේඛනය ",
+		"infomation": "තොරතුරු",
+		"inline_dictionary": "එක්තල ශබ්දකෝෂය",
+		"innerdict": "Inline Dictionary",
+		"input": "input",
+		"kala": "කාල",
+		"keywords": "මූලපදය",
+		"language": "භාෂාව ",
+		"language_select": "භාෂාව",
+		"layout": "සැලැස්ම",
+		"left": "අවසිට්ඨ ",
+		"lesson": "lesson",
+		"letters": "letters",
+		"level": "Lv",
+		"list": "&nbsp;ඇලය",
+		"load": "ප්‍රවේශනය ",
+		"load_from_database": "දත්ත ගබඩාවේ සිට ප්‍රවේශනය ",
+		"load_from_wbw_file": "WBW ගොනුවේ සිට ප්‍රවේශනය ",
+		"loading": "ප්‍රවේශනය වෙනවා ",
+		"loading_dictionary_list...": "ශබ්දකෝෂය ලැයිස්තුවේ සිට ප්‍රවේශනය ",
+		"lock": "Lock",
+		"login": "Login",
+		"logout": "Logout",
+		"longitude": "Longitude",
+		"magic_dict": "විජ්ජා අකාරාදිය",
+		"magic_gap": "Magic Gap",
+		"magic_split": "Magic Split",
+		"magic_terms": "Magic Terms",
+		"main_code": "ප්‍රථම ",
+		"mark": "සළකුණ",
+		"māsa": "මාස",
+		"match_end": "Document update over，Degree of Perfection",
+		"matched": "සමාන",
+		"max": "උපරිම ",
+		"meaning": "Meaning",
+		"meaning_input": "input meanings by click",
+		"message": "message",
+		"min": "අවම",
+		"mins": "(min)",
+		"mobile": "දරනවා",
+		"modified": "සංස්කරණයක් ",
+		"modify": "සංස්කරණයෙහි ",
+		"modifyok": "Modified ",
+		"month": "මාස ",
+		"month_1": "- ",
+		"months": "&nbsp;මාසා(නි) ",
+		"more": "more",
+		"my_book": "&nbsp;මගේ පොත් ",
+		"my_book1": "අමතර පොත් ",
+		"my_dictionary": "මගේ ශබ්දකෝෂය",
+		"my_document": "මගේ ලිපිගොනු ",
+		"my_loc": "අත‍්තස‍්මිං",
+		"name": "Name",
+		"need_inform": "without informing other Bhikkhu ",
+		"new": "නව",
+		"new_account": "New Account",
+		"new_project": "නව ව්‍යාපෘතිය ",
+		"new_revision": "නව පුනරීක්ෂණය",
+		"new_technic_term": "New Technic Term",
+		"newheading": "Text Editor",
+		"newproject": "New Project",
+		"newword": "New Word",
+		"night": "රාත්‍රි ",
+		"no.": "&nbsp;No.",
+		"no_related_file": "No related file",
+		"no_string": "cannot ",
+		"nofilename": "No File Name",
+		"noon_time": "මජ්ඣන්හික",
+		"normal": "සාමන්‍යය",
+		"note": "නෝට්ටුව ",
+		"note1": "සටහන",
+		"now_time": "පච්චුප්පන්න",
+		"num_k": "K",
+		"num_m": "M",
+		"ok": "හරි ",
+		"order_by": "අනුපිළිවෙළ විසින්",
+		"other": "අමතර ",
+		"other_meaning": "other meaning",
+		"otherdict": "Other Dictionary",
+		"pa_auk_dictionary": "පාඅවුක් ශබ්දකෝෂය",
+		"pacchā_māsa": "පච්ඡා-මාස",
+		"pakkha": "පක්ඛ ",
+		"pāli": "පාලි",
+		"pali_canon": "පාලි කැනොන්",
+		"pāli_code": "Pāli Code",
+		"para": "&nbsp;Paragraphs",
+		"paragraph": "ඡේදය",
+		"parent": "මූල්‍ය",
+		"parent_input": "input parent by click",
+		"part": "Factors",
+		"partmeaning": "Factor-Meaning",
+		"password": "Password",
+		"password_again": "Confirm Password",
+		"past": "අතික්කන්ත ",
+		"pcd_studio": "පාලි කැනොන් දත්තගබඩාව කලාකුටිය",
+		"piṭaka": "පිටක",
+		"plugin": "කීලය",
+		"poweredby": "PcDS",
+		"preview": "පුර්වදර්ශනය",
+		"print": "පිටපත් කිරීම ",
+		"print_preview": "පිටපත් පුර්වදර්ශනය",
+		"product": "translation words",
+		"project": "ව්‍යාපෘතිය ",
+		"protection": "Protection【en】",
+		"pubba_māsa": "පුබ්බ-මාස",
+		"publish": "Publish",
+		"ravi": "රවි",
+		"read": "කියවනවා",
+		"read_only": "Read Only",
+		"recent_scan": "අලුත් මුද්‍රණය",
+		"recycle_bin": "Recycle Bin",
+		"ref_dict": "Dictionary",
+		"refresh": "සතප්පනවා",
+		"refresh1": "නැවත ප්‍රාණවත් කිරීම ",
+		"relation": "අත්‍ථ‍යොජනා",
+		"remove": "අයින්කරනවා",
+		"removeword": "Slur Factor Removed",
+		"render": "ගෙනහැර දක්වනවා ",
+		"repeat": "Repeat Quotiety ",
+		"resource": "සම්පත්",
+		"revision": "පුනරීක්ෂණය ",
+		"revision_mode": "පුනරීක්ෂණය ක්‍රමය",
+		"round_1": "Round ",
+		"round_2": "&nbsp;dictionary “",
+		"row_compare": "Left&nbsp;&&nbsp;Right",
+		"same_word": "same words",
+		"saṃvacchara": "සංවච්ඡ‍ර",
+		"sandhi": "සන්ධි ",
+		"sandhi_begin": "සන්ධි අරම්භ කරනවා ",
+		"sandhi_combin_mode": "සන්ධි සම්බන්ද කරනවා ",
+		"sandhi_end": "සන්ධි අවසන්",
+		"sandhi_orginal_word": "සන්ධි ප්‍රකෘති වචන ",
+		"sandhi_splited_word": "සන්ධි කොටස් වචන ",
+		"save": "සුරකින්න ",
+		"script": "අක්ෂර මාලාව ",
+		"search": "සොයන්න ",
+		"season": "උතු ",
+		"sec": "sec",
+		"sent_trans": "Translate of Sentence",
+		"sentence": "වාක්‍ය ",
+		"sentence_by_sentence": "Sentence By Sentence",
+		"setting": "බැම්ම",
+		"share": "share",
+		"shared": "shared",
+		"show": "පානවා",
+		"similar_words": "සමරූපී පදය",
+		"size": "size",
+		"smart_spell": "smart spell",
+		"sora": "සො‍ර",
+		"source": "මූලාශ්‍රය ",
+		"spell": "මතුරු",
+		"statistical_data": "statistical data",
+		"style": "රීතිය ",
+		"sub_pcode": "2nd",
+		"subversion": "අනු ප්‍රභවය",
+		"success": "&nbsp;Words Successfully",
+		"successful": "සඵල",
+		"sukka": "සුක්ක",
+		"sun_height_degree": "Max solar altitude ",
+		"system_default": "පද්ධතිය කලයුත්ත⁣ නොකලසිටිම",
+		"system_dictionary": "පද්ධතිය ශබ්දකෝෂය ",
+		"tag": "tag",
+		"templet": "සැකිල්ල ",
+		"terms_system": "Terms System",
+		"thischapter": "This Chapter",
+		"time": "time",
+		"title": "title&nbsp",
+		"to_the_dhamma": "&nbspස්වාමි වහන්සේ",
+		"today": "අජ්ජ ",
+		"toDB": "To User Database",
+		"tools": "උපකරණ ",
+		"total": "Total&nbsp",
+		"total_workload": "total workload",
+		"totally": "Totally ",
+		"tran_workload": "whole passage translate ",
+		"translate": "පෙරැළිය ",
+		"translate2": "පරිවර්තනය ",
+		"translate_convert": "පරිවර්තනය පෙරළිම",
+		"translate1": "Translated By ",
+		"translation": "පරිවර්තනය ",
+		"translation_templet": "Translation Templet",
+		"twilight_time": "අ‍රුණුග්ගමන",
+		"undo_shared": "undo shared",
+		"unsplit": "Slur Splited",
+		"up": "Up",
+		"up_and_down": "උඩ පහළ ",
+		"update_all_wbw_to_database": "යාවත්කාලීන සියල්ලම WBW සිට දත්තගබඩාවට",
+		"user": "User",
+		"to_user_dictionary": "පරිශීලකය ශබ්දකෝෂය ",
+		"user_id": "User ID",
+		"userdict": "User Dictionary",
+		"vannana": "වණ‍්ණනා",
+		"view": "දර්ශනය ",
+		"vikala": "විකාල",
+		"vocabulary": "වචනමලාව",
+		"wbw": "Word by Word Analysis",
+		"week": "(week)",
+		"week_day": "වා‍ර ",
+		"welcome": "තෙරුවන් සරණ&nbsp",
+		"white": "සුදු",
+		"wiki_term": "Wiki Term",
+		"with_title": "මාතෘකාව සමග",
+		"wizard": "මායාකාර",
+		"wizard_my_book": "Wizard -> My Book",
+		"word_base": "Word base",
+		"word_by_word": "වචනයෙන් වචන ",
+		"word_gramma_statistics": "Word & Gramma Statistics",
+		"word_length": "average word length",
+		"word_list": "වචන ලැයිස්තුව",
+		"word_note": "Word Note",
+		"word_selection_apply_to": "තොරාගත් වචන යොදාගෙන ",
+		"wordmap": "Word Tree",
+		"wordnum": "Text Amount ",
+		"words": "words",
+		"wordtype": "Word Type",
+		"workload": "workload",
+		"xml_data": "XML දත්ත ",
+		"year": "(year)",
+		"year_0": "සංවච්ඡ‍ර",
+		"year_1": "- ",
+		"years": "&nbsp;සංවච්ඡ‍රා(නි) ",
+		"yes_string": "can ",
+		"continue": "continue",
+		"account": "Username",
+		"new_to_wikipali": "New to Wikipāḷi",
+		"create_account": "Create an account",
+		"have_account": "I have account",
+		"join_wikipali": "Join wikipāḷi",
+		"pali_literature_platform": "Platform for Editing Pāḷi Literature",
+		"nick_name": "nickname",
+		"name_for_show": "name showed for others",
+		"email_address": "E-mail address",
+		"account_demond": "Username may only contain alphanumeric lower case characters, and try to avoid using ? : ! ; , -  etc.",
+		"password_demond": "Make sure it's at least 5 characters including both numbers and letters",
+		"login_with_google": "Log in with Google",
+		"login_with_facebook": "Log in with Facebook",
+		"login_with_wechat": "Log in with WeChat",
+		"loged_out": "has loged out",
+		"online_dict_db": "Online Search for Pāḷi",
+		"user_data_share": "Editing & Sharing as Open Source",
+		"cooperate_edit": "Multi-translator Collaboration",
+		"cannot_empty": "&nbsp;cannot be empty",
+		"account_existed": "Username is already existed",
+		"incorrect_ID_PASS": "Incorrect Username or password.",
+		"sync": "synchron",
+		"restore": "restore",
+		"group": "group",
+		"add_folder": "new folder",
+		"add_to_folder": "add to folder",
+		"rename": "rename",
+		"collaborate": "collaborate",
+		"help": "help",
+		"function_introduce": "functions of Wikipāḷi",
+		"vedio_link": "vedio link",
+		"project_introduce": "conference of pāḷi-translating platform",
+		"help_doc": "Help document",
+		"code_add": "View and download code",
+		"test_declare": "This website version is only for function test, there's no garantee for the users’ personal data as so far.",
+		"project_introduce_inbrief": "The general idea of Pali Canon translation project",
+		"start": "Let’s start",
+		"wikipali_suite": "wikipali Suite",
+		"encyclopedia": "Pāḷipedia",
+		"txt_search": "Text Search",
+		"title_search": "Title Search",
+		"dict_builder": "PCD Dict-Builder",
+		"classroom": "Course",
+		"filter": "filter",
+		"result": "results",
+		"find_about": "about&nbsp;",
+		"presented_in": "presented&nbsp;in&nbsp;",
+		"books": "&nbsp;books",
+		"times": "&nbsp;times",
+		"not_login": "login now",
+		"database": "database",
+		"open_with": "open with",
+		"reader": "wikipāli reader",
+		"folk": "folk",
+		"and": "&nbsp;and&nbsp;",
+		"digest": "digest",
+		"composition": "composition&nbsp;",
+		"corpus_statistics": "corpus statistics",
+		"studio": "Studio",
+		"library": "Library",
+		"turbo_split": "Turbo Split",
+		"full_text": "full text",
+		"word_weight": "weightiness of this word",
+		"characters": "characters",
+		"real_declension": "occurrence of declensions",
+		"forms": "spelling forms",
+		"add_to": "add to",
+		"undone_function": "unfinished function",
+		"click_to_chart": "click to check the chart",
+		"frequency": "Frequency",
+		"declension_list": "Declension List",
+		"distribution": "Distribution Chart",
+		"statistical": "statistical&nbsp;",
+		"chart": "chart",
+		"in": "present in",
+		"present": "",
+		"sutta": "සුත‍්ත",
+		"vinaya": "වින‍ය",
+		"abhidhamma": "අභිධම‍්ම",
+		"anna": "අඤ‍්ඤ",
+		"mula": "මූල",
+		"atthakatha": "අට‍්ඨකථා",
+		"tika": "ටීකා",
+		"times2": "times",
+		"co_doc": "Collaborative Document",
+		"open": "Open&nbsp;",
+		"general": "General",
+		"username": "Login ID",
+		"change_password": "change the password",
+		"ignore": "ignore",
+		"oversize_to_load": "unable to load due to oversize, please reduce the articles range",
+		"page_end": "The End of The Page",
+		"academy": "Academy",
+		"interface": "interface",
+		"preference": "preference",
+		"appearance": "appearance",
+		"theme": "theme",
+		"first_choice_word": "first-choice term",
+		"pali_word": "pali word",
+		"required": "required",
+		"optional": "optional",
+		"comment": "comments",
+		"my_term": "my term",
+		"scan_in_reader": "scan in reader",
+		"selected": "selected",
+		"to_be_selected": "to be selected",
+		"text_without_title": "text without title",
+		"end_of_text": "No Prev",
+		"begin_of_text": "No Next",
+		"chapter_select": "Please choose a chapter in the left sidebar",
+		"kala_pakkha": "කාළපක‍්ඛ",
+		"sukka_pakkha": "සුක‍්කපක‍්ඛ",
+		"com_dict": "Community Dictionary",
+		"contributor": "contributor",
+		"interface_language": "interface language",
+		"translation_language": "languages of translation",
+		"magic_dict_language": "languages of dictionary",
+		"priority": "priority",
+		"no_need": "no need",
+		"not_started": "not yet start",
+		"in_progress": "in progress",
+		"already_over": "already over",
+		"revise": "revise",
+		"relational_map": "relational map",
+		"pp": "past participle",
+		"prp": "present participle",
+		"fpp": "Future Passive Participle",
+		"new_lesson": "Add a new lesson",
+		"sub_title": "subtitle",
+		"introduction": "introduction",
+		"speaker": "speaker",
+		"notice_live": "notice of live broadcast",
+		"record_replay": "record & replay",
+		"time_arrange": "time arrangement",
+		"duration": "duration",
+		"attachment": "attachment",
+		"submit": "submit",
+		"create_course": "create course",
+		"created_time": "created time",
+		"modified_time": "modified time",
+		"num_of_hit": "num of hits",
+		"all_courses": "all courses",
+		"num_of_played": "Video Views",
+		"recent_update": "recent update",
+		"course_begin": "course starting time",
+		"num_of_lesson": "num of lesson periods",
+		"signed_up": "signed up",
+		"sign_up": "sign up",
+		"watch": "watch",
+		"watched": "watched",
+		"send": "send",
+		"accept_copy": "accept & copy",
+		"with_idea": "I have an idea…",
+		"text_num": "No. of text",
+		"copied_to_clipboard": "has been copied to clipboard.",
+		"I_know": "Got it！",
+		"text": "text&nbsp;",
+		"anthology": "anthology ",
+		"channel": "channel & style",
+		"channels": "channels list",
+		"like": "like",
+		"blank": "blank",
+		"vocabulary_list": "words list",
+		"private": "private",
+		"private_note": "No URL for others，Unshown in Subscriber feed， search & related",
+		"unlisted": "unlisted",
+		"unlisted_note": "Can share URL，Unshown in Subscriber feed， search & related",
+		"public": "public",
+		"public_note": "Can share URL，Shows in Subscriber feed， search & related",
+		"copy_link": "copy the Link",
+		"copy_share_link": "copy share link",
+		"saved": "saved ",
+		"title_necessary": "title is necessary",
+		"example": "for example ",
+		"privacy": "privacy",
+		"new_composition": "new composition",
+		"add": "add&nbsp;",
+		"completed": "completed",
+		"ongoing": "ongoing",
+		"popular": "popular",
+		"recommendation": "recommendation",
+		"collection": "collection",
+		"rates": "rates",
+		"updated": "updated",
+		"my_zone": "my zone",
+		"share_to": "share&nbsp;to",
+		"EXP": "EXP",
+		"composition_structure": "composition structure",
+		"search_tools": "search&nbsp;tools",
+		"timeline": "timeline",
+		"extension": "extension",
+		"no_created": "&nbsp;is not created yet",
+		"create_now": "create now",
+		"only_this_para": "show this paragraph only",
+		"no": "No&nbsp;",
+		"select": "select",
+		"history": "history",
+		"top_search": "Top search",
+		"similar_sentences": "similar sentences",
+		"close": "close",
+		"timezone": "Timezone",
+		"subfield": "subfield",
+		"local": "Local",
+		"form_sent": "Form sentences with the words given & copy to clipboard",
+		"hot_topic": "hot topic",
+		"composition_intro": "Make the Pāḷi easy to read<br>solution of Pāḷi glossary<br>For translating Pāḷi in Group<br>Show the source reference in Pāḷi",
+		"jump_to_this_sent": "jump to this sentence",
+		"show_nissaya": "show nissaya",
+		"related_para": "related&nbsp;paragraph",
+		"disable": "disable",
+		"disable_note": "disable & invisible to anyone including myself",
+		"not_found": "not&nbsp;found",
+		"progress_curve": "progress curve",
+		"day_EXP": "Daily EXP",
+		"Jan": "Jan",
+		"Feb": "Feb",
+		"Mar": "Mar",
+		"Apr": "Apr",
+		"May": "May",
+		"Jun": "Jun",
+		"Jul": "Jul",
+		"Aug": "Aug",
+		"Sep": "Sep",
+		"Oct": "Oct",
+		"Nov": "Nov",
+		"Dec": "Dec",
+		"EXP_in_total": "EXP in total",
+		"day_action": "Daily Action",
+		"action": "Actions",
+		"cooperators": "Cooperators",
+		"person": "Person",
+		"write": "Write",
+		"sub_group": "Project",
+		"your": "Yours",
+		"status": "status",
+		"in_recycle_bin": "in&nbsp;recycle-bin",
+		"cover": "cover",
+		"member": "Member",
+		"new_group": "Create Group",
+		"new_sub_group": "Create Project",
+		"owner": "Owner",
+		"manager": "Manager",
+		"enter": "Enter",
+		"avatar": "Avatar",
+		"display": "display",
+		"none": "none",
+		"cooperate_group": "cooperative group",
+		"personal": "personal",
+		"empty_null_mark": "Here is so quiet",
+		"lesson_intro": "Let’s take the course to see how the pāḷi experts explain conon",
+		"teaching_course": "teaching course",
+		"watching_course": "watching course",
+		"searching_instruction": "searching instruction",
+		"dict_searching_placehold": "insert “+” into a word to search them separately",
+		"copy_to": "copy to",
+		"add_tran": "add translation",
+		"no_updated": "no update",
+		"secs_ago": "&nbsp;secs ago",
+		"mins_ago": "&nbsp;mins ago",
+		"hs_ago": "&nbsp;hs ago",
+		"days_ago": "&nbsp;days ago",
+		"weeks_ago": "&nbsp;weeks ago",
+		"months_ago": "&nbsp;months ago",
+		"year_ago": "&nbsp;year ago",
+		"years_ago": "&nbsp;years ago",
+		"similar": "similar",
+		"suggest": "suggest",
+		"next_line": "new line",
+		"link": "link",
+		"co_channel": "collaborative channels",
+		"permission": "permission",
+		"first_page": "first page",
+		"previous_page": "previous page",
+		"next_page": "next page",
+		"last_page": "last page",
+		"citations": "citations",
+		"reference": "reference",
+		"original": "original",
+		"page_num": "page",
+		"viewer": "viewer",
+		"palihandbook": "pali handbook",
+		"invalid_email": "invalid email",
+		"invalid_token": "invalid token",
+		"username_too_long": "username too long",
+		"username_too_short": "username too short",
+		"username_invaild_symbol": "username invaild symbol",
+		"password_invaild_symbol": "password invaild symbol",
+		"error_net_404": "Not Found",
+		"error_net_500": "Internal Server Error",
+		"error_net_timeout": "Timeout",
+		"error_net_abort": "abort",
+		"error_net_parsererror": "parser error",
+		"caus": "caus.",
+		"pass": "pass.",
+		"space": "&nbsp;",
+		"channel_type": "channel type",
+		"community_new": "community new",
+		"pali_text": "pali text",
+		"my_read": "recent",
+		"master_copy": "පාලි",
+		"nissaya": "සන‍්න‍ය",
+		"show_this_para_only": "show this paragraph only",
+		"original_text":"original text",
+		"white_space": "&nbsp;",
+		"latest": "latest",
+		"dev_history": "development history",
+		"": ""
+	},
+	"grammastr": [
+		{
+			"id": "$",
+			"value": " "
+		},
+		{
+			"id": "$",
+			"value": " "
+		},
+		{
+			"id": "$",
+			"value": " "
+		},
+		{
+			"id": ".nt.",
+			"value": "න."
+		},
+		{
+			"id": ".m.",
+			"value": "පු."
+		},
+		{
+			"id": ".f.",
+			"value": "ඉ."
+		},
+		{
+			"id": ".sg.",
+			"value": "එක."
+		},
+		{
+			"id": ".pl.",
+			"value": "බහු."
+		},
+		{
+			"id": ".nom.",
+			"value": "පඨමා."
+		},
+		{
+			"id": ".voc.",
+			"value": "ආමන්‍තන."
+		},
+		{
+			"id": ".acc.",
+			"value": "දුති‍යා."
+		},
+		{
+			"id": ".gen.",
+			"value": "ඡට‍්ඨී."
+		},
+		{
+			"id": ".dat.",
+			"value": "චතුත්‍ථී."
+		},
+		{
+			"id": ".inst.",
+			"value": "තති‍යා."
+		},
+		{
+			"id": ".abl.",
+			"value": "පඤ‍්චමී."
+		},
+		{
+			"id": ".loc.",
+			"value": "සත‍්තමී."
+		},
+		{
+			"id": ".imp.",
+			"value": "Imp."
+		},
+		{
+			"id": ".cond.",
+			"value": "Cond."
+		},
+		{
+			"id": ".opt.",
+			"value": "Opt."
+		},
+		{
+			"id": ".pres.",
+			"value": "වත‍්තමානා."
+		},
+		{
+			"id": ".aor.",
+			"value": "අ."
+		},
+		{
+			"id": ".pf.",
+			"value": "Pf."
+		},
+		{
+			"id": ".fut.",
+			"value": "Fut."
+		},
+		{
+			"id": ".act.",
+			"value": "Act."
+		},
+		{
+			"id": ".refl.",
+			"value": "Refl."
+		},
+		{
+			"id": ".1p.",
+			"value": "1p."
+		},
+		{
+			"id": ".2p.",
+			"value": "2p."
+		},
+		{
+			"id": ".3p.",
+			"value": "3p."
+		},
+		{
+			"id": ".prp.",
+			"value": "prp."
+		},
+		{
+			"id": ".prpa.",
+			"value": "prpa."
+		},
+		{
+			"id": ".prpp.",
+			"value": "prpp."
+		},
+		{
+			"id": ".pp.",
+			"value": "pp."
+		},
+		{
+			"id": ".ppa.",
+			"value": "ppa."
+		},
+		{
+			"id": ".ppp.",
+			"value": "ppp."
+		},
+		{
+			"id": ".futp.",
+			"value": "futp."
+		},
+		{
+			"id": ".fpa.",
+			"value": "fpa."
+		},
+		{
+			"id": ".fpp.",
+			"value": "fpp."
+		},
+		{
+			"id": ".grd.",
+			"value": "Grd."
+		},
+		{
+			"id": ".pass.",
+			"value": "Pass."
+		},
+		{
+			"id": ".caus.",
+			"value": "Caus."
+		},
+		{
+			"id": ".desid.",
+			"value": "desid."
+		},
+		{
+			"id": ".intens.",
+			"value": "intens."
+		},
+		{
+			"id": ".denom.",
+			"value": "denom."
+		},
+		{
+			"id": ".ger.",
+			"value": "පු."
+		},
+		{
+			"id": ".abs.",
+			"value": "පු."
+		},
+		{
+			"id": ".inf.",
+			"value": "Inf."
+		},
+		{
+			"id": ".n.",
+			"value": "නාම"
+		},
+		{
+			"id": ".n:base.",
+			"value": "නාම"
+		},
+		{
+			"id": ".adj.",
+			"value": "ති"
+		},
+		{
+			"id": ".ti.",
+			"value": "ති"
+		},
+		{
+			"id": ".num.",
+			"value": "num."
+		},
+		{
+			"id": ".pron.",
+			"value": "සර්වනාමය"
+		},
+		{
+			"id": ".pron.per.",
+			"value": "pron.per."
+		},
+		{
+			"id": ".pron.demon.",
+			"value": "pron.demon."
+		},
+		{
+			"id": ".pron.rel.",
+			"value": "pron.rel."
+		},
+		{
+			"id": ".pron.interr.",
+			"value": "pron.interr."
+		},
+		{
+			"id": ".pron.indef.",
+			"value": "pron.indef."
+		},
+		{
+			"id": ".v.",
+			"value": "ක්‍රි."
+		},
+		{
+			"id": ".v:ind.",
+			"value": "ක්‍රි"
+		},
+		{
+			"id": ".ind.",
+			"value": "නි"
+		},
+		{
+			"id": ".adv.",
+			"value": "ක්‍රි.වි"
+		},
+		{
+			"id": ".adj:base.",
+			"value": "adj:base."
+		},
+		{
+			"id": ".conj.",
+			"value": "conj."
+		},
+		{
+			"id": ".prep.",
+			"value": "prep."
+		},
+		{
+			"id": ".interj.",
+			"value": "interj."
+		},
+		{
+			"id": ".comp.",
+			"value": "සන්‍ධි"
+		},
+		{
+			"id": ".pre.",
+			"value": "උපසර්ගය"
+		},
+		{
+			"id": ".part.",
+			"value": "part"
+		},
+		{
+			"id": ".root.",
+			"value": "ධාතු"
+		},
+		{
+			"id": ".suf.",
+			"value": "පස"
+		},
+		{
+			"id": ".end.",
+			"value": "case end."
+		},
+		{
+			"id": "_un_auto_factormean_",
+			"value": "—Auto—"
+		},
+		{
+			"id": "_un_auto_mean_",
+			"value": "&nbsp;× × ×&nbsp;"
+		},
+		{
+			"id": ".un.",
+			"value": "slur."
+		}
+	],
+	"type_str": [
+		{
+			"id": ".n.",
+			"value": "නාම"
+		},
+		{
+			"id": ".v.",
+			"value": "ක්‍රි"
+		},
+		{
+			"id": ".ti.",
+			"value": "ති"
+		},
+		{
+			"id": ".ind.",
+			"value": "නි"
+		},
+		{
+			"id": ".pron.",
+			"value": "සර්වනාමය"
+		},
+		{
+			"id": ".adj.",
+			"value": "ති."
+		},
+		{
+			"id": ".v:ind.",
+			"value": "v.ind."
+		},
+		{
+			"id": ".num.",
+			"value": "num."
+		},
+		{
+			"id": ".un.",
+			"value": "සන්‍ධි"
+		},
+		{
+			"id": ".comp.",
+			"value": "සමාස"
+		},
+		{
+			"id": ".pron:base.",
+			"value": "pron:base."
+		},
+		{
+			"id": ".adj:base.",
+			"value": "adj:base."
+		},
+		{
+			"id": ".n:base.",
+			"value": "n:base."
+		},
+		{
+			"id": ".ti:base.",
+			"value": "ti:base."
+		},
+		{
+			"id": ".num:base.",
+			"value": "num:base."
+		},
+		{
+			"id": ".pre.",
+			"value": "උපසර්ගය"
+		},
+		{
+			"id": ".root.",
+			"value": "ධාතු"
+		},
+		{
+			"id": ".suf.",
+			"value": "පස"
+		},
+		{
+			"id": ".end.",
+			"value": "case end."
+		},
+		{
+			"id": ".v:base.",
+			"value": "v:base."
+		}
+	],
+	"formula": [
+		{
+			"id": ".pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": "$.pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.pl.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.abl.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.acc.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.dat.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.gen.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.inst.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.loc.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.nom.",
+			"value": "~"
+		},
+		{
+			"id": ".sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": "$.sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".m.$.sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".nt.$.sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".f.$.sg.$.voc.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.doub.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.opt.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.caus.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.pl.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".3p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".1p.$.sg.$.pass.",
+			"value": "~"
+		},
+		{
+			"id": ".2p.$.sg.$.pass.",
+			"value": "~"
+		}
+	],
+	"parent_formula": [
+		{
+			"id": ".imp.",
+			"value": "~"
+		},
+		{
+			"id": ".cond.",
+			"value": "~"
+		},
+		{
+			"id": ".opt.",
+			"value": "~"
+		},
+		{
+			"id": ".pres.",
+			"value": "~"
+		},
+		{
+			"id": ".aor.",
+			"value": "~"
+		},
+		{
+			"id": ".pf.",
+			"value": "~"
+		},
+		{
+			"id": ".fut.",
+			"value": "~"
+		},
+		{
+			"id": ".prp.",
+			"value": "~"
+		},
+		{
+			"id": ".prpa.",
+			"value": "~"
+		},
+		{
+			"id": ".prpp.",
+			"value": "~"
+		},
+		{
+			"id": ".pp.",
+			"value": "~"
+		},
+		{
+			"id": ".ppa.",
+			"value": "~"
+		},
+		{
+			"id": ".ppp.",
+			"value": "~"
+		},
+		{
+			"id": ".futp.",
+			"value": "~"
+		},
+		{
+			"id": ".fpa.",
+			"value": "~"
+		},
+		{
+			"id": ".fpp.",
+			"value": "~"
+		},
+		{
+			"id": ".grd.",
+			"value": "~"
+		},
+		{
+			"id": ".pass.",
+			"value": "~"
+		},
+		{
+			"id": ".caus.",
+			"value": "~"
+		},
+		{
+			"id": ".desid.",
+			"value": "~"
+		},
+		{
+			"id": ".intens.",
+			"value": "~"
+		},
+		{
+			"id": ".ger.",
+			"value": "~"
+		},
+		{
+			"id": ".abs.",
+			"value": "~"
+		},
+		{
+			"id": ".inf.",
+			"value": "~"
+		}
+	],
+	"dictname": [
+		{
+			"id": "bh",
+			"value": "巴漢-明法尊者"
+		},
+		{
+			"id": "sy",
+			"value": "漢譯-水野弘元"
+		},
+		{
+			"id": "user",
+			"value": "User Dict"
+		},
+		{
+			"id": "co",
+			"value": "Concise"
+		},
+		{
+			"id": "unkow",
+			"value": "Unknown"
+		},
+		{
+			"id": "vn",
+			"value": "SYS_IR-V"
+		},
+		{
+			"id": "SCR",
+			"value": "Root-中"
+		},
+		{
+			"id": "ENR",
+			"value": "Root-EN"
+		},
+		{
+			"id": "parts",
+			"value": "Parts"
+		},
+		{
+			"id": "sys_ir",
+			"value": "SYS_IR-K"
+		},
+		{
+			"id": "PM",
+			"value": "Pāḷi-Myr"
+		},
+		{
+			"id": "",
+			"value": ""
+		},
+		{
+			"id": "",
+			"value": ""
+		},
+		{
+			"id": "",
+			"value": ""
+		}
+	],
+	"dictname_short": [
+		{
+			"id": "bh",
+			"value": "巴漢"
+		},
+		{
+			"id": "sy",
+			"value": "水漢"
+		},
+		{
+			"id": "user",
+			"value": "User"
+		},
+		{
+			"id": "co",
+			"value": "Con"
+		},
+		{
+			"id": "unkow",
+			"value": "Unknown"
+		},
+		{
+			"id": "vn",
+			"value": "SYS_IR-V"
+		},
+		{
+			"id": "SCR",
+			"value": "根中"
+		},
+		{
+			"id": "ENR",
+			"value": "Root"
+		},
+		{
+			"id": "parts",
+			"value": "Parts"
+		},
+		{
+			"id": "sys_ir",
+			"value": "IR"
+		},
+		{
+			"id": "PM",
+			"value": "Pāḷi-Myr"
+		},
+		{
+			"id": "",
+			"value": ""
+		},
+		{
+			"id": "",
+			"value": ""
+		},
+		{
+			"id": "",
+			"value": ""
+		}
+	],
+	"language": {
+		"en": "English",
+		"si": "සිංහල",
+		"my": "සුවණ‍්ණභූමි",
+		"zh": "චීන",
+		"zh_cn": "Simple චීන",
+		"zh_tw": "Traditional චීන",
+		"zh-hans": "Simple චීන",
+		"zh-hant": "Traditional චීන"
+	},
+	"LogType": {
+		"10": "edit channel",
+		"11": "new channel",
+		"20": "edit article",
+		"21": "new article",
+		"30": "lookup",
+		"40": "edit term",
+		"41": "lookup term",
+		"42": "_TERM_IN_SENT_",
+		"50": "search",
+		"60": "edit wbw",
+		"61": "realation map",
+		"62": "new wbw",
+		"70": "edit sentence",
+		"71": "new sentence",
+		"80": "edit collection",
+		"81": "new collection",
+		"90": "search nissaya",
+		"100": "open reader",
+		"101": "open studio"
+	}
+}

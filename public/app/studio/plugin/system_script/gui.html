@@ -1,0 +1,25 @@
+<div class="code_list_dropdown"
+	style="margin-left: 0.5em;margin-right: 0.5em;margin-top: 0.4em;margin-bottom: 0.2em;height:2em;width: auto">
+	<span style="margin-left:auto; display:flex; align-items: center; height:2em; width:auto;">
+		<?php echo $module_gui_str['editor_layout']['1005']; ?>：</span>
+	<select id="code_list0" onchange="layoutWordHeadCode(0,this)" style="height:2em;width: auto">
+		<option value="org">Pāḷi Roman</option>
+		<option value="si_c">සින්හල</option>
+		<option value="myanmar">မြန်မာ</option>
+		<option value="telugu">తెలుగు</option>
+	</select>
+</div>
+<div class="code_list_dropdown"
+	style="margin-left: 0.5em;margin-right: 0.5em;margin-top: 0.2em;margin-bottom: 0.4em;height:auto;width: auto">
+	<span style="margin-left:auto; display:flex; align-items: center; height:auto; width: auto">
+		<?php echo $module_gui_str['editor_layout']['1006'];//次要編碼 ?>：</span>
+	<select id="code_list1" onchange="layoutWordHeadCode(1,this)" style="height:2em;width: auto">
+		<option value="none">None</option>
+		<option value="org">Pāḷi Roman</option>
+		<option value="myanmar">မြန်မာ</option>
+		<option value="si_c">සින්හල</option>
+		<option value="zh">简体中文</option>
+		<option value="tw">正體中文</option>
+		<option value="telugu">తెలుగు</option>
+	</select>
+</div>

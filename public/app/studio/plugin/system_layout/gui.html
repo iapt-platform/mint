@@ -1,0 +1,253 @@
+<div class="menu" id="menu_layout">
+	<h1><?php echo $module_gui_str['editor_layout']['1001']; ?></h1>
+	<!--css-->
+	<div class="submenu">
+		<p class="submenu_title" onclick="submenu_show_detail(this)">
+			<?php echo $module_gui_str['editor_layout']['1002']; ?>
+			<svg class="icon">
+				<use xlink:href="svg/icon.svg#ic_add"></use>
+			</svg>
+		</p>
+		<div class="submenu_details">
+			<textarea id="id_layout_style" style="width: 100%; height: 20em"></textarea>
+			<button type="button" onclick="editor_layout_applyNewStyle()">
+				<?php echo $module_gui_str['editor_layout']['1003']; ?>
+			</button>
+		</div>
+	</div>
+	<!--end of css-->
+
+	<!--sandhi-->
+	<div class="submenu">
+		<p class="submenu_title" onclick="submenu_show_detail(this)">
+			<?php echo $_local->gui->channel; ?>
+			<svg class="icon">
+				<use xlink:href="svg/icon.svg#ic_add"></use>
+			</svg>
+		</p>
+		<div id="layout_channel" class="submenu_details">
+			<div>
+				<button onclick='renderChannelList()'>
+				<svg class='icon' style='fill: var(--box-bg-color1)'>
+				<use xlink:href='../../node_modules/bootstrap-icons/bootstrap-icons.svg#arrow-clockwise'>
+				</svg>
+				<?php echo $_local->gui->refresh; ?>
+				</button>
+			</div>
+			<div id="layout_channel_innter"></div>
+		</div>
+	</div>
+	<!--end of sandhi-->
+
+	<!--sandhi-->
+	<div class="submenu">
+		<p class="submenu_title" onclick="submenu_show_detail(this)">
+			<?php echo $module_gui_str['editor_layout']['1007']; ?>
+			<svg class="icon">
+				<use xlink:href="svg/icon.svg#ic_add"></use>
+			</svg>
+		</p>
+		<div class="submenu_details">
+			<ul>
+				<li>
+					<input
+						type="checkbox"
+						checked
+						id="id_layout_sandhi_parent"
+						onclick="editSandhiDisplay('parent',this)"
+					/><?php echo $module_gui_str['editor_layout']['1011']; ?>
+				</li>
+				<li>
+					<input
+						type="checkbox"
+						checked
+						id="id_layout_sandhi_word"
+						onclick="editSandhiDisplay('word',this)"
+					/><?php echo $module_gui_str['editor_layout']['1010']; ?>
+				</li>
+				<li>
+					<input
+						type="checkbox"
+						checked
+						id="id_layout_sandhi_begin"
+						onclick="editSandhiDisplay('begin',this)"
+					/><?php echo $module_gui_str['editor_layout']['1008']; ?>
+				</li>
+				<li>
+					<input
+						type="checkbox"
+						checked
+						id="id_layout_sandhi_end"
+						onclick="editSandhiDisplay('end',this)"
+					/><?php echo $module_gui_str['editor_layout']['1009']; ?>
+				</li>
+				<li>
+					<input
+						type="checkbox"
+						id="id_layout_sandhi_combin"
+					/><?php echo $module_gui_str['editor_layout']['1012']; ?>
+				</li>
+				<li>
+					<input
+						type="checkbox"
+						checked
+						id="id_layout_sandhi_word"
+						onclick="editSandhiDisplay('comp_word',this)"
+					/><?php echo "sandhi_word"; ?>
+				</li>
+				<li>
+					<input
+						type="checkbox"
+						checked
+						id="id_layout_sandhi_parent"
+						onclick="editSandhiDisplay('comp_parent',this)"
+					/><?php echo "sandhi_parent"; ?>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!--end of sandhi-->
+
+	<!--术语系统显示设置-->
+	<div class="submenu">
+		<p class="submenu_title" onclick="submenu_show_detail(this)">
+			<?php echo $_local->gui->terms_system; ?>
+			<svg class="icon">
+				<use xlink:href="svg/icon.svg#ic_add"></use>
+			</svg>
+		</p>
+		<div class="submenu_details">
+			<div>译文术语模板</div>
+			<div>首词</div>
+			<ul>
+				<li>
+					<input
+						type="radio"
+						name="term_tmp_a"
+						checked
+						id=""
+						onclick="term_tmp('a','%mean%（%pali%）')"
+					/>非人（Amanussa）%mean%（%pali%）
+				</li>
+				<li>
+					<input
+						type="radio"
+						name="term_tmp_a"
+						onclick="term_tmp('a','%mean%（%pali%，%mymean%）')"
+					/>非人（Amanussa,妖精）%pali%，%mymean%）
+				</li>
+				<li>
+					<input
+						type="radio"
+						name="term_tmp_a"
+						onclick="term_tmp('a','%mymean%（%pali%,%mean%）')"
+					/>妖精（Amanussa，非人）%mymean%（%pali%,%mean%）
+				</li>
+				<li>
+					<input type="radio" name="term_tmp_a" onclick="term_tmp('a','new')" /><input
+						type="input"
+						id="term_my_tmp"
+						onchange="term_tmp('a','new')"
+					/>
+				</li>
+			</ul>
+			<div>其他词</div>
+			<ul>
+				<li>
+					<input
+						type="radio"
+						name="term_tmp_a2"
+						checked
+						id=""
+						onclick="term_tmp('a2','%mean%（%pali%）')"
+					/>非人（Amanussa）%mean%（%pali%）
+				</li>
+				<li><input type="radio" name="term_tmp_a2" onclick="term_tmp('a2','%mean%')" />非人（%mean%）</li>
+				<li>
+					<input type="radio" name="term_tmp_a2" onclick="term_tmp('a2','new')" /><input
+						type="input"
+						id="term_my_tmp2"
+						onchange="term_tmp('a2','new')"
+					/>
+				</li>
+			</ul>
+			<div>逐词解析注释模板</div>
+			<ul>
+				<li>
+					<input
+						type="radio"
+						name="term_tmp_b"
+						checked
+						id=""
+						onclick="term_tmp('b','[%pali%]%note%')"
+					/>[Amanussa]注释
+				</li>
+				<li>
+					<input
+						type="radio"
+						name="term_tmp_b"
+						onclick="term_tmp('b','[%pali%]-%mean2% %note%')"
+					/>[Amanussa]-妖精 注释）
+				</li>
+				<li>
+					<input type="radio" name="term_tmp_b" onclick="term_tmp('b','new')" /><input
+						type="input"
+						id="term_my_tmp_b"
+						onchange="term_tmp('b','new')"
+					/>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<!--逐句显示设置-->
+	<div class="submenu">
+		<p class="submenu_title" onclick="submenu_show_detail(this)">
+			逐句模式
+			<svg class="icon">
+				<use xlink:href="svg/icon.svg#ic_add"></use>
+			</svg>
+		</p>
+		<div class="submenu_details">
+			<div>
+				<input type="checkbox" checked onclick="set_tran_show_mode(1,this)" />在编辑状态下显示预览<br />
+				<input type="checkbox" checked onclick="set_tran_show_mode(2,this)" />在阅读状态下显示编辑框<br />
+				<input type="checkbox" checked onclick="set_tran_show_mode(2,this)" />在阅读状态下显示预览框
+			</div>
+			<div>
+				逐句显示基准
+				<select id="code_list0" onchange="layout_break_base()">
+					<option value="org">WBW-Kosalla(推荐)</option>
+					<option value="si_c">Tr-En-Bhikkhu Bodhi</option>
+					<option value="telugu">Tr-Sc-Kosalla</option>
+				</select>
+			</div>
+
+			<div>
+				不兼容资源
+				<ul>
+					<li value="si_c">
+						Tr-En-Bhikkhu Bodhi 转换为
+						<span>
+							<select id="code_list0" onchange="layout_break_base()">
+								<option value="org">逐段显示</option>
+								<option value="si_c">显示为逐句</option>
+								<option value="telugu">切分为逐句</option>
+							</select>
+						</span>
+					</li>
+					<li value="telugu">
+						Tr-Sc-Kosalla 转换为
+						<span>
+							<select id="code_list0" onchange="layout_break_base()">
+								<option value="org">逐段显示</option>
+								<option value="si_c">显示为逐句</option>
+								<option value="telugu">切分为逐句</option>
+							</select>
+						</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

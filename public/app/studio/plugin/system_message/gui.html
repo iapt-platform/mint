@@ -1,0 +1,27 @@
+<!--  消息 -->
+<style>
+	.msgbox_r>.head,
+	.msgbox_s>.head {
+		font-size: 90%;
+		border-bottom: 1px solid var(--border-line-color);
+		color: gray;
+		margin-bottom: 6px;
+	}
+</style>
+<div id="msg_panal_right_head" style="display:flex;">
+	<div id="msg_panal_list_toolbar">
+		<span id="msg_list_title"><?php echo $_local->gui->message; ?>
+		</span>
+	</div>
+	<div id="msg_panal_content_toolbar">
+		<button onclick="msg_show_list_panal()"><?php echo $_local->gui->back;?></button>
+		<span id="msg_content_title"></span>
+	</div>
+	<guide gid="studio_message" style="margin-left:auto;"></guide>
+</div>
+<div id="msg_panal_right">
+	<div id="msg_panal_list">
+	</div>
+	<div id="msg_panal_content">
+	</div>
+</div>

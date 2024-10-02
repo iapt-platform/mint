@@ -1,0 +1,150 @@
+:root{
+    --bgDisplay:block;
+}
+
+body {
+
+}
+#dict_list_shell{
+	display:none;
+	position: fixed;
+    top: 0;
+	width:100%;
+	height:100%;
+	background-color:#020202d9;
+	z-index: 100;
+	padding-top: 60px;
+}
+#dict_list{
+	width:300px;	
+	text-align:left;
+    -webkit-transition-duration: 0.4s;
+	transition-duration: 0.4s;		
+}
+.dict_list_off{
+	-webkit-transform:translateX(-100%);
+	-moz-transform:translateX(-100%);
+	transform:translateX(-100%);
+}
+.dict_list_on{
+	-webkit-transform:translateX(0);
+	-moz-transform:translateX(0);
+	transform:translateX(0);
+}
+
+#dict_user{
+	display:none;
+}
+.left_nav_bar{
+	display:none;
+}
+.right_nav_bar_off{
+	position: fixed;
+    top: 0;
+	width:100%;
+	height:100%;
+	background-color:white;
+	-webkit-transform:translateX(100%);
+	-moz-transform:translateX(100%);
+	transform:translateX(100%);
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}
+
+.right_nav_bar_on{
+	position: fixed;
+    top: 0;
+	width:100%;
+	height:100%;
+	background-color:white;
+    -webkit-transform:translateX(0em);
+    -moz-transform:translateX:(0em);
+    transform:translateX:(0em);
+	-webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+	overflow-y: scroll;
+
+}
+
+#search_input{
+	display:none;
+}
+#tool_bar_right{
+	display:none;
+}
+#header_nav{
+	display:none;
+}
+#footer_nav{
+	display:flex;
+}
+#page_header_4{
+	display:flex;
+}
+.index_inner{
+	margin-top: 0; 
+}
+
+.book_block{
+    width: initial;
+    height: initial;
+    display: flex;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.book_block_cover{
+	width:4em;
+	height:5em;
+	border: 5px solid #ddb483;
+}
+.book_block_info{
+    margin: 5px;
+}
+.book_block_title{
+
+}
+.book_block_detail{
+
+}
+
+#tool_bar_right{display:none;}
+
+#para_res_list_shell{
+
+}
+#para_res_list_header{
+	display:block;
+	padding: 8px;
+}
+
+#dict_ref_search_input {
+	margin-left: 0.1em;
+	font-size: 120%;
+	padding: 0.3em;
+}
+
+#left_menu_button{
+	display: block;
+}
+
+#trubo_split {
+	font-size: unset;
+}
+
+#right_bar{
+	display:none;
+}
+.search_toolbar{
+	padding:0.5em 0;
+}
+
+guide{
+	display:none;
+}
+.dict_find_gramma guide{
+	display:unset;
+}
+#search_info {
+    display: block;
+}

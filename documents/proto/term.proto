@@ -1,0 +1,77 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.term.v1;
+
+
+/*
+ * Term 服务
+ * 
+ *  
+ * 
+ */
+service Term{
+	rpc GetTermListForStudio (TermListRequest) returns (TermListReply){}
+	rpc GetTermListForWord (TermListRequest) returns (TermListReply){}
+	rpc GetTermListForChannel (TermListRequest) returns (TermListReply){} //这个 channel 里面的全部术语
+	rpc GetTerm (TermRequest) returns (TermReply){}
+	rpc SetTerm (TermRequest) returns (TermReply){}
+	rpc AddTerm (TermRequest) returns (TermReply){}
+	rpc DelTerm (TermRequest) returns (TermReply){}
+}
+
+message TermListRequest{
+	string Id = 1;
+	string Search = 3;
+	EnumAllowingSearch SearchCol = 4;
+	int32  CurrentPage = 5;
+	int32  PerPage = 6;
+	EnumAllowingOrderby OrderBy = 7;
+	bool   Desc = 8;
+}
+
+enum EnumAllowingSearch{
+	EAS_WORD = 0;
+	EAS_NOTE = 1;
+}
+enum EnumAllowingOrderby{
+	EAO_UPDATED_AT = 0;
+	EAO_CREATED_AT = 1;
+	EAO_WORD       = 2;
+}
+
+message TermRequest{
+	string Id          = 1;
+	string Word        = 2;
+	string Tag         = 3;	
+	string Meaning     = 4;
+	string Meaning2    = 5;
+	string Note        = 6;
+	string Channel     = 7;
+	string Studio      = 8;
+
+	string Lang             = 51;
+	User   Editor           = 52;
+	EnumPublicity Publicity = 53;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message TermReply{
+	bool ok          = 1;
+	string message   = 2;
+	TermRequest data = 3;
+}
+
+message TermListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated TermRequest rows = 1;
+		int32    Count = 2;
+		int32    CurrentPage = 3;
+		int32    PerPage = 4;
+	}
+}

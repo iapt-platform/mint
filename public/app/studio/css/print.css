@@ -1,0 +1,78 @@
+.mainview {
+	padding: 5px;
+}
+.trans_text_info {
+	display: none;
+}
+.trans_text_block {
+	background-color: unset;
+}
+#btn_close_printprev {
+	display: none;
+}
+.word_head_bar {
+	display: none;
+}
+.sutta_top_blank {
+	height: 0;
+}
+#toolbar {
+	display: none;
+}
+
+#left_tool_bar {
+	display: none;
+	visibility: hidden;
+}
+
+.sent_wbw_trans_bar {
+	display: none;
+}
+
+.in_word_button {
+	display: none;
+}
+
+#sutta_text {
+	margin-bottom: 0;
+}
+
+#end_of_page {
+	display: none;
+}
+
+.pardiv {
+	display: block;
+}
+.wbwdiv {
+	display: block;
+}
+.wbwparblock {
+	display: block;
+}
+.sent_wbw_trans {
+	display: block;
+}
+.sent_wbw {
+	page-break-inside: avoid;
+}
+
+.sent_wbw_trans {
+	border-bottom-width: 2px;
+}
+
+.translate_sent {
+	page-break-before: avoid;
+    margin-top: 1em;
+}
+.sent_wbw_trans {
+	page-break-inside: avoid;
+}
+
+#id_info_panal {
+	display: none;
+}
+
+.term_other{
+    color:unset;
+}

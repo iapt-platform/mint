@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" >
+	<symbol id="icon_print" viewBox="0 0 32 32">
+		<path class="a" d="M26.667,12.667H8a4,4,0,0,0-4,4v8H9.333V30h16V24.667h5.333v-8A4,4,0,0,0,26.667,12.667Zm-4,14.667H12V20.667H22.667Zm4-9.333A1.333,1.333,0,1,1,28,16.667,1.329,1.329,0,0,1,26.667,18ZM25.333,6h-16v5.333h16Z" transform="translate(-1.333 -2)"/>
+	</symbol>
+</svg>

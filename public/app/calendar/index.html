@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<link href="../lib/main.css" rel="stylesheet" />
+	<script src="../public/js/jquery.js"></script>
+	<script src="../public/js/comm.js"></script>
+	<script src="jquery-3.3.1.min.js"></script>
+	<script src="julian.js"></script>
+	<script src="lune.js"></script>
+	<script src="suncalc.js"></script>
+	<script src="./planet_position/js/planet-positions.js"></script>
+
+	<script src="city_15000.js"></script>
+	<script src="../studio/js/fixedsticky.js"></script>
+	<script src="../guide/guide.js"></script>
+	<link type="text/css" rel="stylesheet" href="../guide/guide.css" />
+
+	<script src="../public/js/marked.js"></script>
+	<!--获取语言-->
+
+	<script>
+		var g_language = getCookie("language");
+	</script>
+	<!--语言包-->
+	<script>
+		var localString = new Array();
+		localString["zh-cn"] = {
+			and_another: "又 ",
+			atitude: "纬度",
+			BE: "佛历",
+			bhumma: "周二",
+			budha: "周三",
+			canda: "周一",
+			confirm: "确认",
+			date: "日期",
+			day: "日",
+			days: "天 ",
+			departure_in_detail: "起飞详情",
+			dhamma_time: "会延续五千年的教法 ",
+			eat: "进餐",
+			gama_entry: "入村",
+			guru: "周四",
+			hori_ref_time: "蒙气差修正 ",
+			kala: "适当的时间",
+			language_select: "选择语言",
+			left: "还剩下",
+			loading: "载入中……",
+			longitude: "经度",
+			māsa: "月",
+			mins: "分钟",
+			month: "月 ",
+			month_1: "月 ",
+			months: "个月 ",
+			my_loc: "我的位置",
+			need_inform: "未告知其他比库",
+			no_string: "不能",
+			noon_time: "正午",
+			noon_time: "正午",
+			note: "注释",
+			now_time: "现在",
+			pacchā_māsa: "下个月",
+			pakkha: "月相变化 ",
+			past: "已过去",
+			pubba_māsa: "上个月",
+			ravi: "周日",
+			saṃvacchara: "年",
+			season: "季节 ",
+			sec: "秒",
+			sora: "周六",
+			sukka: "周五",
+			sun_height_degree: "正午太阳高度 ",
+			time: "时间",
+			twilight_time: "曙光",
+			twilight_time: "曙光",
+			vikala: "不适当的时间",
+			week_day: "星期",
+			year_0: "年",
+			year_1: "年 ",
+			years: "年 ",
+			yes_string: "可以",
+			timezone: "时区",
+			local: "本地",
+			loading: "载入中",
+			sun_set: "日落",
+			unknown: "未知",
+			altitude: "海拔",
+			today: "今天",
+			week: "周",
+			list: "列表",
+			location: "所在地",
+			city_name: "城市名",
+			re_loc: "重新定位",
+		};
+		localString["zh-tw"] = {
+			and_another: "又 ",
+			atitude: "緯度",
+			BE: "佛曆",
+			bhumma: "週二",
+			budha: "週三",
+			canda: "週一",
+			confirm: "確認",
+			date: "日期",
+			day: "日",
+			days: "天 ",
+			departure_in_detail: "起飛詳情",
+			dhamma_time: "會延續五千年的教法 ",
+			eat: "進餐",
+			gama_entry: "入村",
+			guru: "週四",
+			hori_ref_time: "蒙氣差修正 ",
+			kala: "適當的時間",
+			language_select: "選擇語言",
+			left: "還剩下",
+			loading: "載入中……",
+			longitude: "經度",
+			māsa: "月",
+			mins: "分鐘",
+			month: "月 ",
+			month_1: "月 ",
+			months: "個月 ",
+			my_loc: "我的位置",
+			need_inform: "未告知其他比庫",
+			no_string: "不能",
+			noon_time: "正午",
+			noon_time: "正午",
+			note: "註釋",
+			now_time: "現在",
+			pacchā_māsa: "下個月",
+			pakkha: "月相變化 ",
+			past: "已過去",
+			pubba_māsa: "上個月",
+			ravi: "週日",
+			saṃvacchara: "年",
+			season: "季節 ",
+			sec: "秒",
+			sora: "週六",
+			sukka: "週五",
+			sun_height_degree: "正午太陽高度 ",
+			time: "時間",
+			twilight_time: "曙光",
+			twilight_time: "曙光",
+			vikala: "不適當的時間",
+			week_day: "星期",
+			year_0: "年",
+			year_1: "年 ",
+			years: "年 ",
+			yes_string: "可以",
+			timezone: "時區",
+			local: "本地",
+			loading: "載入中",
+			sun_set: "日落",
+			unknown: "未知",
+			altitude: "海拔",
+			today: "今天",
+			week: "周",
+			list: "列表",
+			location: "所在地",
+			city_name: "城市名",
+			re_loc: "重新定位",
+		};
+		localString["default"] = {
+			and_another: " and ",
+			atitude: "Atitude",
+			BE: "Buddhist Era ",
+			bhumma: "Bhumma",
+			budha: "Budha",
+			canda: "Canda",
+			confirm: "Confirm",
+			date: "Date ",
+			day: " day(s) ",
+			days: " day(s) ",
+			departure_in_detail: "departure in detail",
+			dhamma_time: "5000 Years of the Buddha’s Dispensation ",
+			eat: "eat",
+			gama_entry: "entry the village",
+			guru: "Guru",
+			hori_ref_time: "horizontal refraction correct ",
+			kala: "suitable time",
+			language_select: "bhāsā",
+			left: "Remains ",
+			loading: "loading…",
+			longitude: "Longitude",
+			māsa: "māsa",
+			mins: "(min)",
+			month: "Month ",
+			month_1: "- ",
+			months: " month(s) ",
+			my_loc: "attasmiṃ",
+			need_inform: "without informing other Bhikkhu ",
+			no_string: "cannot ",
+			noon_time: "NOON",
+			noon_time: "NOON",
+			note: "Note",
+			now_time: "NOW",
+			pacchā_māsa: "pacchā-māsa",
+			pakkha: "Lunar Phases ",
+			past: "Passed ",
+			pubba_māsa: "pubba-māsa",
+			ravi: "Ravi",
+			saṃvacchara: "saṃvacchara",
+			season: "Season ",
+			sec: "sec ",
+			sora: "Sora",
+			sukka: "Sukka",
+			sun_height_degree: "Max solar altitude ",
+			time: "Time",
+			twilight_time: "dawn",
+			twilight_time: "dawn",
+			vikala: "unsuitable time",
+			week_day: "Day",
+			year_0: "saṃvacchara",
+			year_1: "- ",
+			years: " year(s) ",
+			yes_string: "can ",
+			timezone: "Timezone",
+			local: "local",
+			loading: "loading",
+			sun_set: "sunset",
+			unknown: "unknown",
+			altitude: "Altitude",
+			today: "today",
+			week: "week",
+			list: "list",
+			location: "location",
+			city_name: "city name",
+			re_loc: "relocation",
+		};
+		localString["en"] = {
+			and_another: " and ",
+			atitude: "Atitude",
+			BE: "Buddhist Era ",
+			bhumma: "Bhumma",
+			budha: "Budha",
+			canda: "Canda",
+			confirm: "Confirm",
+			date: "Date",
+			day: " day(s) ",
+			days: " day(s) ",
+			departure_in_detail: "departure in detail",
+			dhamma_time: "5000 Years of the Buddha’s Dispensation ",
+			eat: "eat",
+			gama_entry: "entry the village",
+			guru: "Guru",
+			hori_ref_time: "horizontal refraction correct ",
+			kala: "suitable time",
+			language_select: "Language",
+			left: "Remains ",
+			loading: "loading…",
+			longitude: "Longitude",
+			māsa: "māsa",
+			mins: "(min)",
+			month: "Month ",
+			month_1: "- ",
+			months: " month(s) ",
+			my_loc: "my location",
+			need_inform: "without informing other Bhikkhu ",
+			no_string: "cannot ",
+			noon_time: "NOON",
+			noon_time: "NOON",
+			note: "Note",
+			now_time: "NOW",
+			pacchā_māsa: "pacchā-māsa",
+			pakkha: "Lunar Phases ",
+			past: "Passed ",
+			pubba_māsa: "pubba-māsa",
+			ravi: "Ravi",
+			saṃvacchara: "saṃvacchara",
+			season: "Season ",
+			sec: "sec",
+			sora: "Sora",
+			sukka: "Sukka",
+			sun_height_degree: "Max solar altitude ",
+			time: "time",
+			twilight_time: "dawn",
+			twilight_time: "dawn",
+			vikala: "unsuitable time",
+			week_day: "Day",
+			year_0: "year",
+			year_1: "- ",
+			years: " year(s) ",
+			yes_string: "can ",
+			timezone: "Timezone",
+			local: "local",
+			loading: "loading",
+			sun_set: "sunset",
+			unknown: "unknown",
+			altitude: "Altitude",
+			today: "today",
+			week: "week",
+			list: "list",
+			location: "location",
+			city_name: "city name",
+			re_loc: "relocation",
+		};
+		localString["my"] = {
+			and_another: " and ",
+			atitude: "Atitude",
+			BE: "Buddhist Era ",
+			bhumma: "ဘုမ္မ",
+			budha: "ဗုဓ",
+			canda: "စန္ဒ",
+			confirm: "Confirm",
+			date: "Date ",
+			day: " day(s) ",
+			days: " day(s) ",
+			departure_in_detail: "departure in detail",
+			dhamma_time: "5000 Years of the Buddha’s Dispensation ",
+			eat: "eat",
+			gama_entry: "entry the village",
+			guru: "ဂုရု",
+			hori_ref_time: "horizontal refraction correct ",
+			kala: "ကာလ",
+			language_select: "ဘာသာ",
+			left: "Remains ",
+			loading: "loading…",
+			longitude: "Longitude",
+			māsa: "မာသ",
+			mins: "(min)",
+			month: "Month ",
+			month_1: "- ",
+			months: " month(s) ",
+			my_loc: "အတ္တသ္မိံ",
+			need_inform: "without informing other Bhikkhu ",
+			no_string: "cannot ",
+			noon_time: "မဇ္ဈန္ဟိက",
+			noon_time: "မဇ္ဈန္ဟိက",
+			note: "Note",
+			now_time: "ပစ္စုပ္ပန္န",
+			pacchā_māsa: "ပစ္ဆာ-မာသ",
+			pakkha: "Lunar Phases ",
+			past: "Passed ",
+			pubba_māsa: "ပုဗ္ဗ-မာသ",
+			ravi: "ရဝိ",
+			saṃvacchara: "သံဝစ္ဆရ",
+			season: "Season ",
+			sec: "sec ",
+			sora: "သောရ",
+			sukka: "သုက္က",
+			sun_height_degree: "Max solar altitude ",
+			time: "Time",
+			twilight_time: "အရုဏုဂ္ဂမန",
+			twilight_time: "အရုဏုဂ္ဂမန",
+			vikala: "ဝိကာလ",
+			week_day: "Day",
+			year_0: "year",
+			year_1: "- ",
+			years: " year(s) ",
+			yes_string: "can ",
+			timezone: "Timezone",
+			local: "local",
+			loading: "loading",
+			sun_set: "sunset",
+			unknown: "unknown",
+			altitude: "Altitude",
+			today: "today",
+			week: "week",
+			list: "list",
+			location: "location",
+			city_name: "city name",
+			re_loc: "relocation",
+		};
+		localString["si"] = {
+			and_another: " ච ",
+			atitude: "Atitude",
+			BE: "බුද්ධ වර්ෂය ",
+			bhumma: "භුම්ම",
+			budha: "බුධ",
+			canda: "චන්ද",
+			confirm: "Confirm",
+			date: "දිවස ",
+			day: " දිවසා(නි) ",
+			days: " දිවසා(නි) ",
+			departure_in_detail: "departure in detail",
+			dhamma_time: "සම්මා සම්බුද්ධස්ස සාසනං පට්ච-වස්ස-සහස්සානි පවත්තිස්සති ",
+			eat: "eat",
+			gama_entry: "entry the village",
+			guru: "ගු‍රු",
+			hori_ref_time: "horizontal refraction correct ",
+			kala: "කාල",
+			language_select: "භාෂාව",
+			left: "අවසිට්ඨ ",
+			loading: "ප්‍රවේශනය වෙනවා ",
+			longitude: "Longitude",
+			māsa: "මාස",
+			mins: "(min)",
+			month: "මාස ",
+			month_1: "- ",
+			months: " මාසා(නි) ",
+			my_loc: "අත‍්තස‍්මිං",
+			need_inform: "without informing other Bhikkhu ",
+			no_string: "cannot ",
+			noon_time: "මජ්ඣන්හික",
+			noon_time: "මජ්ඣන්හික",
+			note: "නෝට්ටුව ",
+			now_time: "පච්චුප්පන්න",
+			pacchā_māsa: "පච්ඡා-මාස",
+			pakkha: "පක්ඛ ",
+			past: "අතික්කන්ත ",
+			pubba_māsa: "පුබ්බ-මාස",
+			ravi: "රවි",
+			saṃvacchara: "සංවච්ඡ‍ර",
+			season: "උතු ",
+			sec: "sec",
+			sora: "සො‍ර",
+			sukka: "සුක්ක",
+			sun_height_degree: "Max solar altitude ",
+			time: "time",
+			twilight_time: "අ‍රුණුග්ගමන",
+			twilight_time: "අ‍රුණුග්ගමන",
+			vikala: "විකාල",
+			week_day: "වා‍ර ",
+			year_0: "සංවච්ඡ‍ර",
+			year_1: "- ",
+			years: " සංවච්ඡ‍රා(නි) ",
+			yes_string: "can ",
+			timezone: "Timezone",
+			local: "local",
+			loading: "loading",
+			sun_set: "sunset",
+			unknown: "unknown",
+			altitude: "Altitude",
+			today: "today",
+			week: "week",
+			list: "list",
+			location: "location",
+			city_name: "city name",
+			re_loc: "relocation",
+		};
+		var pali_month_name = [
+			{ id: "5", position: 0, value: "assajuja", season: "vassāna", season_icon: "☔" }, //9.X-八-十五-樓
+			{ id: "6", position: 1.25, value: "kattika", season: "vassāna", season_icon: "☔" }, //10.X-九-十五-昂
+			{ id: "7", position: 3.5, value: "māgasira", season: "hemanta", season_icon: "❄" }, //11.X-十-十五-觜
+			{ id: "8", position: 5.75, value: "phussa", season: "hemanta", season_icon: "❄" }, //12.X-十一-十五-鬼
+			{ id: "9", position: 8, value: "māgha", season: "hemanta", season_icon: "❄" }, //1.X-十二-十五-星
+			{ id: "10", position: 10, value: "phagguna", season: "hemanta", season_icon: "❄" }, //2.X-正月-十四、十五-張、異
+			{ id: "11", position: 12.25, value: "citta", season: "gimhāna", season_icon: "☀" }, //3.X-二月-十五-角
+			{ id: "12", position: 14.5, value: "vesākha", season: "gimhāna", season_icon: "☀" }, //4.X-三月-十五-氐
+			{ id: "1", position: 16.75, value: "jeṭṭha", season: "gimhāna", season_icon: "☀" }, //5.X-四-十五-心
+			{ id: "2", position: 18.75, value: "asāḷha", season: "gimhāna", season_icon: "☀" }, //6.X-五-十五、十六-箕、斗
+			{ id: "3", position: 21, value: "sāvana", season: "vassāna", season_icon: "☔" }, //7.X-六-十五-女
+			{ id: "4", position: 23.5, value: "poṭṭhapāda", season: "vassāna", season_icon: "☔" }, //8.x-七-十五、十六-室、壁
+			{ id: "5", position: 26, value: "assajuja", season: "vassāna", season_icon: "☔" }, //9.X-八-十五-樓
+		];
+		var pali_nakkhatta_name = [
+			{ id: "0", value: "assayuja", name_zh: "娄宿" },//V3
+			{ id: "1", value: "bharaṇī", name_zh: "胃宿" },
+			{ id: "2", value: "Kattikā", name_zh: "昂宿" },//V4
+			{ id: "3", value: "rohiṇī", name_zh: "毕宿" },
+			{ id: "4", value: "magasira", name_zh: "觜宿" },//H1
+			{ id: "5", value: "Addā", name_zh: "参宿" },
+			{ id: "6", value: "punabbasu", name_zh: "井宿" },
+			{ id: "7", value: "phussa", name_zh: "鬼宿" },//H2
+			{ id: "8", value: "Asilesā", name_zh: "柳宿" },
+			{ id: "9", value: "maghā", name_zh: "星宿" },//H3
+			{ id: "10", value: "pubbaphagguṇī", name_zh: "张宿" },//H4
+			{ id: "11", value: "uttaraphagguṇī", name_zh: "翼宿" },//H4
+			{ id: "12", value: "hattha", name_zh: "轸宿" },
+			{ id: "13", value: "cittā", name_zh: "角宿" },//G1
+			{ id: "14", value: "sāti", name_zh: "亢宿" },
+			{ id: "15", value: "visākhā", name_zh: "氐宿" },//G2
+			{ id: "16", value: "anurādhā", name_zh: "房宿" },
+			{ id: "17", value: "jeṭṭha", name_zh: "心宿" },//G3
+			{ id: "18", value: "mūlā", name_zh: "尾宿" },
+			{ id: "19", value: "pubbāsāḷha", name_zh: "箕宿" },//G4
+			{ id: "20", value: "uttarāsāḷha", name_zh: "斗宿" },//G4
+			{ id: "21", value: "savaṇa", name_zh: "女宿" },//V1
+			{ id: "22", value: "dhaniṭṭhā", name_zh: "虚宿" },
+			{ id: "23", value: "satabhisaja", name_zh: "危宿" },
+			{ id: "24", value: "pubbabhaddapadā", name_zh: "室宿" },//V2
+			{ id: "25", value: "uttarabhaddapadā", name_zh: "壁宿" },//V2
+			{ id: "26", value: "revatī", name_zh: "奎宿" },
+		];
+		var horoscope_name = [
+			{ id: "0", value: "Aries", name_zh: "白羊", icon: "♈" },
+			{ id: "1", value: "Taurus", name_zh: "金牛", icon: "♉" },
+			{ id: "2", value: "Gemini", name_zh: "双子", icon: "♊" },
+			{ id: "3", value: "Cancer", name_zh: "巨蟹", icon: "♋" },
+			{ id: "4", value: "Leo", name_zh: "狮子", icon: "♌" },
+			{ id: "5", value: "Virgo", name_zh: "处女", icon: "♍" },
+			{ id: "6", value: "Libra", name_zh: "天秤", icon: "♎" },
+			{ id: "7", value: "Scorpio", name_zh: "天蝎", icon: "♏" },
+			{ id: "8", value: "Sagittarius", name_zh: "射手", icon: "♐" },
+			{ id: "9", value: "Capricornus", name_zh: "摩羯", icon: "♑" },
+			{ id: "10", value: "Aquarius", name_zh: "水瓶", icon: "♒" },
+			{ id: "11", value: "Pisces", name_zh: "双鱼", icon: "♓" },
+		];
+	</script>
+	<script>
+		var current_phase = phase();
+		console.log(current_phase); //输出到控制台
+
+		//$("#title_text").html(localString[g_language].BE);
+		var new_list = new Array(); //新月列表
+		var first_list = new Array(); //上弦月列表
+		var full_list = new Array(); //满月列表
+		var last_list = new Array(); //下弦月列表
+		var planets = new Array(); //
+		var lunar_position = new Object();
+
+		var g_coordinate_this = new Object();
+		var g_now_date = new Date();
+		var today = new Date();
+		var start_day = new Date();
+		var next_year = new Date();
+		var sun_times = new Object();
+		var curr_position = "";
+		curr_position = localStorage.getItem("local_position");
+		if (curr_position) {
+			g_coordinate_this.AT = curr_position.split("#")[0];
+			g_coordinate_this.LT = curr_position.split("#")[1];
+			g_coordinate_this.height = curr_position.split("#")[2];
+			if (g_coordinate_this.AT >= 0) {
+				var AT_string = angle_trans(g_coordinate_this.AT)[0] + "°" + angle_trans(g_coordinate_this.AT)[1] +
+					"’" +
+					angle_trans(g_coordinate_this.AT)[2] +
+					"” N";
+
+			} else {
+				var AT_string = angle_trans(0 - g_coordinate_this.AT)[0] + "°" + angle_trans(0 - g_coordinate_this.AT)[1] +
+					"’" +
+					angle_trans(0 - g_coordinate_this.AT)[2] +
+					"” S";
+			}
+
+			if (g_coordinate_this.LT >= 0) {
+				var LT_string = angle_trans(g_coordinate_this.LT)[0] + "°" + angle_trans(g_coordinate_this.LT)[1] +
+					"’" +
+					angle_trans(g_coordinate_this.LT)[2] +
+					"” E";
+
+			} else {
+				var LT_string = angle_trans(0 - g_coordinate_this.LT)[0] + "°" + angle_trans(0 - g_coordinate_this.LT)[1] +
+					"’" +
+					angle_trans(0 - g_coordinate_this.LT)[2] +
+					"” W";
+			}
+
+			if (g_coordinate_this.height != "null") {
+				var height_string = g_coordinate_this.height + "M";
+			} else {
+				var height_string = localString[g_language].unknown;
+			}
+		} else {
+			getLocation();
+		}
+
+
+		function show_time() {
+			if ($("#input_time").val()) {
+				today = new Date($("#input_time").val());
+			} else {
+				today = g_now_date;
+			}
+			lunar_phase_list_refresh();
+			get_position(today);
+
+			let d_earth_to_moon =
+				lunar_position.position.x ^
+				(2 + lunar_position.position.y) ^
+				(2 + lunar_position.position.z) ^
+				2 ^
+				0.5;
+			let d_earth_to_moon_0 = phase(today).distance;
+
+			sun_times = SunCalc.getTimes(
+				today,
+				g_coordinate_this.AT,
+				g_coordinate_this.LT,
+				g_coordinate_this.height / 1000
+			);
+			sun_position = SunCalc.getPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
+			moon_position = SunCalc.getMoonPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
+			moon_Illumination = SunCalc.getMoonIllumination(today);
+		}
+		//根据时间计算偏角，输出
+		function get_position(date_time) {
+			let planets_position = new Object();
+			planets = window.lagrange.planet_positions.getPositions(date_time);
+			//planets = global.planet_positions.getPositions(today);
+			//console.log(planets)//输出到控制台
+			earth_position = window.lagrange.planet_positions.getPositions(date_time)[3];
+			lunar_position = window.lagrange.planet_positions.getPositions(date_time)[11];
+			let lunar_position_angle = 0;
+			let lunar_station = 0;
+			let earth_position_angle = 0;
+			let earth_station = 0;
+			let earth_position_angle_round = 0;
+			let lunar_position_angle_round = 0;
+			//太阳相对地球的黄道偏角
+			if (earth_position.position.y >= 0) {
+				earth_position_angle = Math.atan2(earth_position.position.y, earth_position.position.x);
+			} else {
+				earth_position_angle =
+					Math.PI * 2 + Math.atan2(earth_position.position.y, earth_position.position.x);
+			}
+			earth_position_angle_round = earth_position_angle / Math.PI / 2 + 0.5;
+			earth_position_angle_round = earth_position_angle_round - Math.floor(earth_position_angle_round);
+			earth_station = earth_position_angle_round * 12;
+			planets_position.solar_station = earth_station;
+			planets_position.solar_position_angle = earth_position_angle_round * Math.PI * 2;
+			planets_position.solar_position_angle_round = earth_position_angle_round;
+			//月球相对地球的黄道偏角——角度差算法
+			lunar_position_angle_round = earth_position_angle_round + phase(date_time).phase;
+			lunar_position_angle_round = lunar_position_angle_round - Math.floor(lunar_position_angle_round);
+			lunar_position_angle = lunar_position_angle_round * Math.PI * 2;
+			lunar_station = lunar_position_angle_round * 27;
+			//月球相对地球的黄道偏角算法——向量差算法
+			let lunar_to_earth = new Object();
+			lunar_to_earth.y = lunar_position.position.y - earth_position.position.y;
+			lunar_to_earth.x = lunar_position.position.x - earth_position.position.x;
+			if (lunar_to_earth.y >= 0) {
+				lunar_position_angle2 = Math.atan2(lunar_to_earth.y, lunar_to_earth.x);
+			} else {
+				lunar_position_angle2 = Math.PI * 2 + Math.atan2(lunar_to_earth.y, lunar_to_earth.x);
+			}
+			lunar_position_angle_round2 = lunar_position_angle2 / Math.PI / 2;
+			//lunar_position_angle_round = lunar_position_angle_round - Math.floor(lunar_position_angle_round)
+			lunar_position_angle2 = lunar_position_angle_round2 * Math.PI * 2;
+
+			lunar_station2 = lunar_position_angle_round2 * 27;
+
+			planets_position.lunar_station = lunar_station; //月站值【角度差算夹角】
+			planets_position.lunar_position_angle = lunar_position_angle; //月站角【角度差算夹角】
+			planets_position.lunar_position_angle_round = lunar_position_angle_round; //月站圆周比率【角度差算夹角】
+			planets_position.lunar_station2 = lunar_station2; //月站值【矢量差算夹角】
+			planets_position.lunar_position_angle2 = lunar_position_angle2; //月站角【矢量差算夹角】
+			planets_position.lunar_position_angle_round2 = lunar_position_angle_round2; //月站圆周比率【矢量差算夹角】
+			return planets_position;
+		}
+		//根据;
+		function get_station_name(data_time) {
+			//获取星象信息
+			var x_m = 0;
+			let solar_num = 0;
+			let lunar_num = 0;
+			let result = new Object();
+			solar_num = get_position(data_time).solar_station;
+			solar_num = Math.floor(solar_num);
+			lunar_num = get_position(data_time).lunar_station;
+			next_month = new Date()
+			next_month.setDate(data_time.getDate() + 30)
+			lunar_month_num = get_position(phaseRange(data_time, next_month, FULL)[0]).lunar_station
+			for (x_m in pali_month_name) {
+				if (lunar_month_num > pali_month_name[x_m].position && lunar_month_num < pali_month_name[Number(x_m) + 1].position) {
+					result.month_name = pali_month_name[x_m]
+					break;
+				} else if (lunar_month_num < 1.25 || lunar_month_num >= 26) {
+					result.month_name = pali_month_name[0]
+					break;
+				}
+
+			}
+			lunar_num = Math.floor(lunar_num);
+
+			result.solar = horoscope_name[solar_num]; //黄道十二宫星象名称
+			result.lunar = pali_nakkhatta_name[lunar_num]; //27星宿月站名称
+			result.nextfullmoon = phaseRange(data_time, next_month, FULL)[0]
+			return result;
+		}
+		function show_position() {
+			curr_position = localStorage.getItem("local_position");
+			if (curr_position) {
+				g_coordinate_this.AT = curr_position.split("#")[0];
+				g_coordinate_this.LT = curr_position.split("#")[1];
+				g_coordinate_this.height = curr_position.split("#")[2];
+				if (g_coordinate_this.AT >= 0) {
+					var AT_string = angle_trans(g_coordinate_this.AT).str;
+
+				} else {
+					var AT_string = angle_trans(0 - g_coordinate_this.AT).str;
+				}
+
+				if (g_coordinate_this.LT >= 0) {
+					var LT_string = angle_trans(g_coordinate_this.LT).str;
+
+				} else {
+					var LT_string = angle_trans(0 - g_coordinate_this.LT).str;
+				}
+
+				if (g_coordinate_this.height != "null") {
+					var height_string = g_coordinate_this.height + "M";
+				} else {
+					var height_string = localString[g_language].unknown;
+				}
+			} else {
+				getLocation();
+			}
+			$("#AT_str").html(AT_string);
+			$("#LT_str").html(LT_string);
+			$("#altitude_string").html(height_string);
+			if (g_coordinate_this.AT < 0) {
+				$("#AT_°")[0].value = angle_trans(0 - g_coordinate_this.AT).d;
+				$("#AT_’")[0].value = angle_trans(0 - g_coordinate_this.AT).m;
+				$("#AT_”")[0].value = angle_trans(0 - g_coordinate_this.AT).s;
+				$("#NS")[0].value = "-";
+			}
+			else {
+				$("#AT_°")[0].value = angle_trans(g_coordinate_this.AT).d;
+				$("#AT_’")[0].value = angle_trans(g_coordinate_this.AT).m;
+				$("#AT_”")[0].value = angle_trans(g_coordinate_this.AT).s;
+				$("#NS")[0].value = "+";
+
+			}
+			if (g_coordinate_this.LT < 0) {
+				$("#LT_°")[0].value = angle_trans(0 - g_coordinate_this.LT).d;
+				$("#LT_’")[0].value = angle_trans(0 - g_coordinate_this.LT).m;
+				$("#LT_”")[0].value = angle_trans(0 - g_coordinate_this.LT).s;
+				$("#WE")[0].value = "-";
+
+			}
+			else {
+				$("#LT_°")[0].value = angle_trans(g_coordinate_this.LT).d;
+				$("#LT_’")[0].value = angle_trans(g_coordinate_this.LT).m;
+				$("#LT_”")[0].value = angle_trans(g_coordinate_this.LT).s;
+				$("#WE")[0].value = "+";
+			}
+			$("#HT_M")[0].value = g_coordinate_this.height;
+			$("#city_str").html(find_city(g_coordinate_this.AT, g_coordinate_this.LT).name);
+		}
+
+		//show_position();
+		function getLocation() {
+			//自动定位
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(showPosition, showError);
+			} else {
+				$("#selected_position_string").html("Geolocation is not supported by this browser.");
+			}
+		}
+		function showPosition(position) {
+			alert("get cordinate success");
+			g_coordinate_this.AT = position.coords.latitude; //纬度
+			g_coordinate_this.LT = position.coords.longitude; //经度
+			g_coordinate_this.height = position.coords.altitude; //海拔高度
+
+			let position_string = g_coordinate_this.AT + "#" + g_coordinate_this.LT + "#" + g_coordinate_this.height;
+			localStorage.setItem("local_position", position_string);
+
+		}
+
+		function position_input() {
+			//手动输入
+			var LT = Number($("#LT_°")[0].value);
+			LT += Number($("#LT_’")[0].value) / 60;
+			LT += Number($("#LT_”")[0].value) / 3600;
+			LT = Number($("#WE")[0].value + LT);
+			var AT = Number($("#AT_°")[0].value);
+			AT += Number($("#AT_’")[0].value) / 60;
+			AT += Number($("#AT_”")[0].value) / 3600;
+			AT = Number($("#NS")[0].value + AT);
+			if (AT != 0) {
+				g_coordinate_this.LT = LT;
+				g_coordinate_this.AT = AT;
+			}
+		}
+		function showError(error) {
+			switch (error.code) {
+				case error.PERMISSION_DENIED:
+					alert("定位失败,用户拒绝请求地理定位");
+					break;
+				case error.POSITION_UNAVAILABLE:
+					alert("定位失败,位置信息是不可用");
+					break;
+				case error.TIMEOUT:
+					alert("定位失败,请求获取用户位置超时");
+					break;
+				case error.UNKNOWN_ERROR:
+					alert("定位失败,定位系统失效");
+					break;
+			}
+		}
+		function angle_trans(angle, type) {
+			var angle_str = new Object;
+			if (type == "L") {
+				if (angle >= 0) {
+					angle_str.suf = "E";
+				} else {
+					angle_str.suf = "W";
+				}
+			}
+			else {
+				if (angle >= 0) {
+					angle_str.suf = "N";
+				} else {
+					angle_str.suf = "S";
+				}
+			}
+			angle = Math.abs(angle);
+			angle_str.d = Math.floor(angle);
+			angle_str.m = Math.floor((angle - angle_str.d) * 60);
+			angle_str.s = Math.round((angle - angle_str.d) * 60 - angle_str.m);
+
+			angle_str.str = angle_str.d + "°" + angle_str.m + "’" + angle_str.s + "”" + angle_str.suf;
+
+			return angle_str;
+		}
+		function input_position() {
+			$("#position_input").show();
+		}
+		var g_event_list_arr = new Array();
+		function get_event_arr() {
+			let today = new Date();
+			let date = new Date();
+			for (i = -360; i < 360; i++) {
+				date.setTime(today.getTime() + i * 3600 * 24 * 1000);
+				let info_obj = new Object();
+				info_obj.id = "dawn" + i;
+				info_obj.title = "🌆" + localString[g_language].twilight_time;
+				info_obj.start = SunCalc.getTimes(
+					date,
+					g_coordinate_this.AT,
+					g_coordinate_this.LT,
+					g_coordinate_this.height / 1000
+				).dawn;
+				g_event_list_arr.push(info_obj);
+
+				info_obj = new Object();
+				info_obj.id = "noon" + i;
+				info_obj.title = "🌞" + localString[g_language].noon_time;
+				info_obj.start = SunCalc.getTimes(
+					date,
+					g_coordinate_this.AT,
+					g_coordinate_this.LT,
+					g_coordinate_this.height / 1000
+				).solarNoon;
+
+				g_event_list_arr.push(info_obj);
+				info_obj = new Object();
+				info_obj.id = "sunset" + i;
+				info_obj.title = "🌇" + localString[g_language].sun_set;
+				info_obj.start = SunCalc.getTimes(
+					date,
+					g_coordinate_this.AT,
+					g_coordinate_this.LT,
+					g_coordinate_this.height / 1000
+				).sunset;
+				g_event_list_arr.push(info_obj);
+			}
+
+			next_year.setDate(start_day.getDate() + 360);
+			start_day.setDate(today.getDate() - 360);
+			last_list = phaseRange(start_day, next_year, LAST); //获取下弦月列表
+			for (i_last in last_list) {
+				info_obj = new Object();
+				info_obj.id = "last_moon" + i_last;
+				info_obj.title = "🌗" + get_station_name(last_list[i_last]).lunar.value;
+				info_obj.start = last_list[i_last];
+				g_event_list_arr.push(info_obj);
+			}
+			new_list = phaseRange(start_day, next_year, NEW); //获取新月列表
+			for (i_new in new_list) {
+				info_obj = new Object();
+				info_obj.id = "new_moon" + i_new;
+				info_obj.title = "🌑" + get_station_name(new_list[i_new]).lunar.value;
+				info_obj.start = new_list[i_new];
+				g_event_list_arr.push(info_obj);
+			}
+			first_list = phaseRange(start_day, next_year, FIRST); //获取上弦月列表
+			for (i_first in first_list) {
+				info_obj = new Object();
+				info_obj.id = "first_moon" + i_first;
+				info_obj.title = "🌓" + get_station_name(first_list[i_first]).lunar.value;
+				info_obj.start = first_list[i_first];
+				g_event_list_arr.push(info_obj);
+			}
+			full_list = phaseRange(start_day, next_year, FULL); //获取满月列表
+			for (i_full in full_list) {
+				info_obj = new Object();
+				info_obj.id = "full_moon" + i_full;
+				info_obj.title = "🌕@" + get_station_name(full_list[i_full]).lunar.value + "🌟";
+				info_obj.start = full_list[i_full];
+				g_event_list_arr.push(info_obj);
+
+				info_obj = new Object();
+				info_obj.id = "month" + i_full;
+				info_obj.title = get_station_name(full_list[i_full]).month_name.value + localString[g_language].month;
+				info_obj.start = full_list[i_full];
+				g_event_list_arr.push(info_obj);
+			}
+
+			/*console.log(last_list); //输出到控制台
+			console.log(new_list); //输出到控制台
+			console.log(first_list); //输出到控制台
+			console.log(full_list); //输出到控制台*/
+		}
+		get_event_arr();
+	</script>
+	<script src="../lib/main.js"></script>
+	<script>
+		function getCookie(name) {
+			var start = document.cookie.indexOf(name + "=");
+			var len = start + name.length + 1;
+			if (!start && name != document.cookie.substring(0, name.length)) {
+				return null;
+			}
+			if (start == -1) return null;
+			var end = document.cookie.indexOf(";", len);
+			if (end == -1) end = document.cookie.length;
+			return decodeURI(document.cookie.substring(len, end));
+		}
+
+		document.addEventListener("DOMContentLoaded", function () {
+			var initialTimeZone = "local";
+			var timeZoneSelectorEl = document.getElementById("time-zone-selector");
+			var loadingEl = document.getElementById("loading");
+			var calendarEl = document.getElementById("calendar");
+
+			var calendar = new FullCalendar.Calendar(calendarEl, {
+				timeZone: initialTimeZone,
+				locale: getCookie("language"),
+				headerToolbar: {
+					left: "prev,next today",
+					center: "title",
+					right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+				},
+				//initialDate: "2020-12-12",
+				navLinks: true, // can click day/week names to navigate views
+				editable: true,
+				selectable: true,
+				dayMaxEvents: true, // allow "more" link when too many events
+				//resources: g_event_list_arr,
+				events: g_event_list_arr,
+				defaultTimedEventDuration: "00:01",
+				eventClick: function (info) {
+					info.jsEvent.preventDefault(); // don't let the browser navigate
+
+					if (info.event.url) {
+						window.open(info.event.url);
+					}
+				},
+				loading: function (bool) {
+					if (bool) {
+						loadingEl.style.display = "inline"; // show
+					} else {
+						loadingEl.style.display = "none"; // hide
+					}
+				},
+
+				eventTimeFormat: { hour: "numeric", minute: "2-digit" },
+				dateClick: function (arg) {
+					console.log("dateClick", calendar.formatIso(arg.date));
+				},
+				select: function (arg) {
+					console.log("select", calendar.formatIso(arg.start), calendar.formatIso(arg.end));
+				},
+			});
+
+			calendar.render();
+			// load the list of available timezones, build the <select> options
+			// it's HIGHLY recommended to use a different library for network requests, not this internal util func
+			FullCalendar.requestJson(
+				"GET",
+				"php/get-time-zones.php",
+				{},
+				function (timeZones) {
+					timeZones.forEach(function (timeZone) {
+						var optionEl;
+
+						if (timeZone !== "UTC") {
+							// UTC is already in the list
+							optionEl = document.createElement("option");
+							optionEl.value = timeZone;
+							optionEl.innerText = timeZone;
+							timeZoneSelectorEl.appendChild(optionEl);
+						}
+					});
+				},
+				function () {
+					// TODO: handle error
+				}
+			);
+
+			// when the timezone selector changes, dynamically change the calendar option
+			timeZoneSelectorEl.addEventListener("change", function () {
+				calendar.setOption("timeZone", this.value);
+			});
+		});
+	</script>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+			font-size: 14px;
+		}
+
+		#top {
+			background: #eee;
+			border-bottom: 1px solid #ddd;
+			padding: 0 10px;
+			line-height: 40px;
+			font-size: 12px;
+		}
+
+		.left {
+			float: left;
+		}
+
+		.right {
+			float: right;
+		}
+
+		.clear {
+			clear: both;
+		}
+
+		#script-warning,
+		#loading {
+			display: none;
+		}
+
+		#script-warning {
+			font-weight: bold;
+			color: red;
+		}
+
+		#calendar {
+			max-width: 1100px;
+			margin: 40px auto;
+			padding: 0 10px;
+		}
+
+		.tzo {
+			color: #000;
+		}
+
+		input[type="number"i] {
+			width: 2.5em;
+		}
+	</style>
+</head>
+
+<body>
+	<title id="page_title"></title>
+	<div id="top" style="display: inline-flex;width: 100vw;">
+		<div class="left" style="display: inline-flex;height: 5vh;margin: auto 1em;">
+			<span style="white-space: nowrap;max-height: 5vh;white-space: nowrap;margin: auto 0;">
+				<script>
+					document.write(localString[g_language].timezone + "：");
+					$("#page_title").html(localString[g_language].BE);
+				</script>
+			</span>
+			<select id="time-zone-selector" style="max-height: 5vh;height: fit-content;margin: auto 0;">
+				<option value="local" selected>
+					<script>
+						document.write(localString[g_language].local);
+					</script>
+				</option>
+				<option value="UTC">UTC</option>
+			</select>
+		</div>
+		<div style="display: inline-block;margin-left:5%; justify-content: center; width: 25em">
+			<div style="line-height: 2em; margin-top: 7px">
+				<script>
+					document.write(localString[g_language].atitude);
+				</script>
+				<span id="AT_str" onclick="show_ele(this)">✏</span>
+				<span class="coordinate_input" style="flex: 7; white-space: nowrap; display: none">
+					<input id="AT_°" type="number" min="0" max="89" /> °
+					<input id="AT_’" type="number" min="0" max="59" /> ’
+					<input id="AT_”" type="number" min="0" max="59" /> ”
+					<select id="NS">
+						<option value="+">N</option>
+						<option value="-">S</option>
+					</select>
+					<button onclick="coordinate_confirm('AT')">
+						<script>
+							document.write(localString[g_language].confirm);
+						</script>
+					</button>
+				</span>
+			</div>
+			<div style="line-height: 2em">
+				<script>
+					document.write(localString[g_language].longitude);
+				</script>
+				<span id="LT_str" onclick="show_ele(this)">✏</span>
+				<span class="coordinate_input" onblur="show_ele(this)"
+					style="flex: 7; white-space: nowrap; display: none">
+					<input id="LT_°" type="number" min="0" max="179" style="width: 3em" /> °
+					<input id="LT_’" type="number" min="0" max="59" /> ’
+					<input id="LT_”" type="number" min="0" max="59" /> ”
+					<select id="WE">
+						<option value="+">E</option>
+						<option value="-">W</option>
+					</select>
+					<button onclick="coordinate_confirm('LT')">
+						<script>
+							document.write(localString[g_language].confirm);
+						</script>
+					</button>
+				</span>
+			</div>
+			<div style="line-height: 2em">
+				<script>
+					document.write(localString[g_language].altitude);
+				</script>
+				<span id="altitude_string" onclick="show_ele(this)"></span>
+				<span class="coordinate_input" style="flex: 7; white-space: nowrap; display: none">
+					<input id="HT_M" type="number" min="0" max="19999" style="width: 4em" /> M
+					<button onclick="coordinate_confirm('HT')">
+						<script>
+							document.write(localString[g_language].confirm);
+						</script>
+					</button>
+				</span>
+			</div>
+		</div>
+		<div style="display: inline-block; width: 50%; justify-content: center;">
+			<script>
+				document.write(localString[g_language].location);
+			</script>
+			<span id="city_str" onclick=""></span>
+			<button id="re_loc" onclick="getLocation()">
+				<script>
+					document.write(localString[g_language].re_loc);
+				</script>
+			</button>
+			<span id="city_info"></span>
+			<input class="cityinput" id="citySelect" value="" style="display: none;">
+			<div class="citySelector" style="position: absolute; left: 8px; top: 25.6px; z-index: 999999;">
+				<div class="cityBox hide" id="cityBox"></div>
+			</div>
+
+
+		</div>
+		<div style="display: inline-block; width: 50%; justify-content: center;">
+			<script>
+				//document.write(localString[g_language].location);
+				document.write("单日查询：");
+				function set_date_info(date_time_element){
+					var date_info = new Object();
+					date_info = get_station_name(new Date(date_time_element.value))
+					let string="";
+					string += "在" + date_info.month_name.season_icon + date_info.month_name.season + "的" + date_info.month_name.value + "月";
+					string +=  "<br>月亮星宿：" + date_info.lunar.value + date_info.lunar.name_zh + "<br>";
+					string += "太阳星宿：" + date_info.solar.value + date_info.solar.name_zh;
+					string += "<br>月圆时间：" + date_info.nextfullmoon.toLocaleString()
+					$("#date_info_indetal").html(string)
+				}
+			</script>
+			<input type="datetime-local" id="input_date" onblur="set_date_info(this)" style="display: block;">
+			<span id="date_info_indetal" ></span>
+
+
+		</div>
+		<div class="right">
+			<span id="loading">
+				<script>
+					document.write(localString[g_language].loading + "…");
+				</script>
+			</span>
+			<span id="script-warning"><code>php/get-events.php</code> must be running.</span>
+		</div>
+
+		<div class="clear"></div>
+	</div>
+
+	<div id="calendar"></div>
+</body>
+<script>
+	$("#citySelect")[0].value = localString[g_language].city_name;
+	function position_modify() {
+		var LT = Number($("#LT_°")[0].value);
+		LT += Number($("#LT_’")[0].value) / 60;
+		LT += Number($("#LT_”")[0].value) / 3600;
+		LT = Number($("#WE")[0].value + LT);
+		var AT = Number($("#AT_°")[0].value);
+		AT += Number($("#AT_’")[0].value) / 60;
+		AT += Number($("#AT_”")[0].value) / 3600;
+		AT = Number($("#NS")[0].value + AT);
+		if (AT != 0 || LT != 0) {
+			g_coordinate_this.LT = LT;
+			g_coordinate_this.AT = AT;
+		}
+		g_coordinate_this.height = Number($("#HT_M")[0].value);
+		//将新的坐标数据存到localStorage
+		let position_string = g_coordinate_this.AT + "#" + g_coordinate_this.LT + "#" + g_coordinate_this.height;
+		localStorage.setItem("local_position", position_string);
+		show_position();
+	}
+	function position_modify_confirm(obj) {
+		position_modify();
+
+		show_ele(obj);
+	}
+	function show_ele(obj) {
+		if ($(obj).siblings("span").css("display") == "none") {
+			$(obj).hide();
+			$(obj).siblings("span").show();
+		} else {
+			$(obj).show();
+			$(obj).siblings("span").hide();
+		}
+	}
+	function getLocation() {
+		//自动定位
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(showPosition, showError);
+		} else {
+			$("#selected_position_string").html("Geolocation is not supported by this browser.");
+		}
+	}
+	function showPosition(position) {
+		alert("get cordinate success");
+		g_coordinate_this.AT = position.coords.latitude; //纬度
+		g_coordinate_this.LT = position.coords.longitude; //经度
+		g_coordinate_this.height = position.coords.altitude; //海拔高度
+	}
+
+	function position_input() {
+		//手动输入
+		var LT = Number($("#LT_°")[0].value);
+		LT += Number($("#LT_’")[0].value) / 60;
+		LT += Number($("#LT_”")[0].value) / 3600;
+		LT = Number($("#WE")[0].value + LT);
+		var AT = Number($("#AT_°")[0].value);
+		AT += Number($("#AT_’")[0].value) / 60;
+		AT += Number($("#AT_”")[0].value) / 3600;
+		AT = Number($("#NS")[0].value + AT);
+		if (AT != 0) {
+			g_coordinate_this.LT = LT;
+			g_coordinate_this.AT = AT;
+		}
+	}
+	function showError(error) {
+		switch (error.code) {
+			case error.PERMISSION_DENIED:
+				alert("定位失败,用户拒绝请求地理定位");
+				break;
+			case error.POSITION_UNAVAILABLE:
+				alert("定位失败,位置信息是不可用");
+				break;
+			case error.TIMEOUT:
+				alert("定位失败,请求获取用户位置超时");
+				break;
+			case error.UNKNOWN_ERROR:
+				alert("定位失败,定位系统失效");
+				break;
+		}
+	}
+	function coordinate_confirm(type) {
+		switch (type) {
+			case "AT":
+				show_ele('#AT_str');
+				break;
+			case "LT":
+				show_ele('#LT_str');
+				break;
+			case "HT":
+				show_ele('#altitude_string');
+				break;
+		}
+		position_modify();
+	}
+	function show_position() {
+		curr_position = localStorage.getItem("local_position");
+		if (curr_position) {
+			g_coordinate_this.AT = curr_position.split("#")[0];
+			g_coordinate_this.LT = curr_position.split("#")[1];
+			g_coordinate_this.height = curr_position.split("#")[2];
+			if (g_coordinate_this.AT >= 0) {
+				var AT_string = angle_trans(g_coordinate_this.AT).str;
+
+			} else {
+				var AT_string = angle_trans(0 - g_coordinate_this.AT).str;
+			}
+
+			if (g_coordinate_this.LT >= 0) {
+				var LT_string = angle_trans(g_coordinate_this.LT).str;
+
+			} else {
+				var LT_string = angle_trans(0 - g_coordinate_this.LT).str;
+			}
+
+			if (g_coordinate_this.height != "null") {
+				var height_string = g_coordinate_this.height + "M";
+			} else {
+				var height_string = localString[g_language].unknown;
+			}
+		} else {
+			getLocation();
+		}
+		$("#AT_str").html(AT_string);
+		$("#LT_str").html(LT_string);
+		$("#altitude_string").html(height_string);
+		if (g_coordinate_this.AT < 0) {
+			$("#AT_°")[0].value = angle_trans(0 - g_coordinate_this.AT).d;
+			$("#AT_’")[0].value = angle_trans(0 - g_coordinate_this.AT).m;
+			$("#AT_”")[0].value = angle_trans(0 - g_coordinate_this.AT).s;
+			$("#NS")[0].value = "-";
+		}
+		else {
+			$("#AT_°")[0].value = angle_trans(g_coordinate_this.AT).d;
+			$("#AT_’")[0].value = angle_trans(g_coordinate_this.AT).m;
+			$("#AT_”")[0].value = angle_trans(g_coordinate_this.AT).s;
+			$("#NS")[0].value = "+";
+
+		}
+		if (g_coordinate_this.LT < 0) {
+			$("#LT_°")[0].value = angle_trans(0 - g_coordinate_this.LT).d;
+			$("#LT_’")[0].value = angle_trans(0 - g_coordinate_this.LT).m;
+			$("#LT_”")[0].value = angle_trans(0 - g_coordinate_this.LT).s;
+			$("#WE")[0].value = "-";
+
+		}
+		else {
+			$("#LT_°")[0].value = angle_trans(g_coordinate_this.LT).d;
+			$("#LT_’")[0].value = angle_trans(g_coordinate_this.LT).m;
+			$("#LT_”")[0].value = angle_trans(g_coordinate_this.LT).s;
+			$("#WE")[0].value = "+";
+		}
+		$("#HT_M")[0].value = g_coordinate_this.height;
+		$("#city_str").html(find_city(g_coordinate_this.AT, g_coordinate_this.LT).name);
+	}
+
+	show_position();
+
+
+	$(document).ready(function () {
+		$("button").each(function () {
+			if ($(this).html() == "today") {
+				$(this).html(localString[g_language].today);
+			}
+			if ($(this).html() == "list") {
+				$(this).html(localString[g_language].list);
+			}
+			if ($(this).html() == "week") {
+				$(this).html(localString[g_language].week);
+			}
+			if ($(this).html() == "month") {
+				$(this).html(localString[g_language].month);
+			}
+			if ($(this).html() == "day") {
+				$(this).html(localString[g_language].day);
+			}
+		});
+	});
+	$(document).ready(function () {
+		$("button").click(function () {
+			$("button").each(function () {
+				if ($(this).html().indexOf("today") != -1) {
+					$(this).html(localString[g_language].today);
+				}
+				if ($(this).html().indexOf("list") != -1) {
+					$(this).html(localString[g_language].list);
+				}
+				if ($(this).html().indexOf("week") != -1) {
+					$(this).html(localString[g_language].week);
+				}
+				if ($(this).html().indexOf("month") != -1) {
+					$(this).html(localString[g_language].month);
+				}
+				if ($(this).html().indexOf("day") != -1 && $(this).html().indexOf("today") == -1) {
+					$(this).html(localString[g_language].day);
+				}
+			});
+		});
+	});
+
+	$(document).ready(function () {
+		$("div").click(function () {
+			$("button").each(function () {
+				if ($(this).html().indexOf("today") != -1) {
+					$(this).html(localString[g_language].today);
+				}
+				if ($(this).html().indexOf("list") != -1) {
+					$(this).html(localString[g_language].list);
+				}
+				if ($(this).html().indexOf("week") != -1) {
+					$(this).html(localString[g_language].week);
+				}
+				if ($(this).html().indexOf("month") != -1) {
+					$(this).html(localString[g_language].month);
+				}
+				if ($(this).html().indexOf("day") != -1 && $(this).html().indexOf("today") == -1) {
+					$(this).html(localString[g_language].day);
+				}
+			});
+		});
+	});
+	//给出两个经纬度坐标直接的距离
+	function distance(x, y) {
+		var toRadians = function (num) {
+			return num * Math.PI / 180;
+		};
+		var lat1 = x.latitude;
+		var lon1 = x.longitude;
+		var lat2 = y.latitude;
+		var lon2 = y.longitude;
+
+		var R = 6371; // km
+		var φ1 = toRadians(lat1);//纬度弧度1
+		var φ2 = toRadians(lat2);//纬度弧度2
+		var Δφ = toRadians(lat2 - lat1);//纬度弧度差
+		var Δλ = toRadians(lon2 - lon1);//经度弧度差
+		var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+			Math.cos(φ1) * Math.cos(φ2) *
+			Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		return R * c;
+	}
+	function find_city(latitude, longitude) {
+		var point = new Object;
+		var point_X = new Object;
+		var city_info = new Object;
+		var min_S = 10000
+		point.latitude = latitude;
+		point.longitude = longitude;
+		for (i in city_list) {
+			point_X.latitude = city_list[i].latitude;
+			point_X.longitude = city_list[i].longitude;
+			if (distance(point, point_X) < min_S) {
+				city_info = city_list[i];
+				min_S = distance(point, point_X);
+			}
+		}
+		if (min_S == 10000) {
+			city_info.name = localString[g_language].unknown;
+			city_info.asciiName = localString[g_language].unknown;
+		}
+		return (city_info);
+	}
+
+</script>
+<style type="text/css">
+	.demo {
+		width: 220px;
+		margin: 20px auto;
+	}
+
+
+	/* citySelector */
+	.citySelector {
+		font: 12px/1.5 tahoma, arial, \5b8b\4f53;
+		background: #fff;
+		text-align: left;
+	}
+
+	.cityslide {
+		width: 250px;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border: 1px solid #85BEE5;
+		border-right-color: #3485C0;
+		border-bottom-color: #3485C0;
+		box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+		margin-top: -2px;
+	}
+
+	.cityslide li {
+		list-style: none;
+		overflow: hidden;
+		height: 16px;
+		padding: 4px 5px;
+	}
+
+	.cityslide li.on {
+		background: #9CD9FF;
+		color: #fff;
+	}
+
+	.cityslide li b {
+		font-weight: normal;
+	}
+
+	.cityslide li.empty {
+		background: #fff2e8;
+		color: #666;
+	}
+
+	.cityslide li.empty em {
+		color: red;
+		font-style: normal;
+	}
+
+	.cityname {
+		float: left;
+	}
+
+	.cityspell {
+		float: right;
+	}
+
+	.cityBox {
+		width: 320px;
+		border: 1px solid #85BEE5;
+		overflow: hidden;
+		box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+	}
+
+	.cityBox ul {
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+	}
+
+	.cityBox ul li {
+		float: left;
+		list-style: none;
+		padding: 2px 4px;
+		border: 1px solid #85BEE5;
+		cursor: pointer;
+		margin-left: 4px;
+		display: inline;
+		background: #E1EFFE;
+	}
+
+	.cityBox ul li.on {
+		background: #fff;
+		border-bottom-color: #fff;
+		position: relative;
+	}
+
+	.hide {
+		display: none;
+	}
+
+	p.tip {
+		color: #666;
+		line-height: 20px;
+		padding: 5px;
+		margin: 0;
+		text-indent: 3px;
+	}
+
+	.hotCity {
+		border-top: 1px solid #85BEE5;
+		margin-top: -1px;
+		clear: left;
+		overflow: hidden;
+		padding-bottom: 5px;
+		padding-top: 5px;
+		_margin-bottom: 8px;
+	}
+
+	.cityTab {
+		overflow: hidden;
+	}
+
+	.cityTab dl {
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+	}
+
+	.cityTab dl dt {
+		float: left;
+		padding-left: 3px;
+		color: #F30;
+		text-indent: 5px;
+		font-family: "Lucida console", "consolas", "courier new";
+		line-height: 22px;
+		font-size: 14px;
+		width: 20px;
+	}
+
+	.cityTab dl dd {
+		margin-left: 2px;
+		float: left;
+		width: 290px;
+	}
+
+	.cityTab dl dd a {
+		padding-left: 5px;
+		width: 66px;
+		line-height: 22px;
+		display: inline-block;
+		color: #000;
+		text-decoration: none;
+	}
+
+	.cityTab dl dd a:hover {
+		text-decoration: underline;
+		color: red
+	}
+
+	.cityinput {
+		font-size: 12px;
+		padding-left: 2px;
+		background: url(T1EPyLXm0hXXXXXXXX-200-100.png) no-repeat 150px 5px;
+		border: 1px solid #D8D8D8;
+	}
+</style>
+<script type="text/javascript">
+	/* *
+	 * ---------------------------------------- *
+	 * 城市选择组件 v1.0
+	 * Author: VVG
+	 * QQ: 83816819
+	 * Mail: mysheller@163.com
+	 * http://www.cnblogs.com/NNUF/
+	 * ---------------------------------------- *
+	 * Date: 2012-07-10
+	 * ---------------------------------------- *
+	 * */
+
+	/* *
+	 * 全局空间 Vcity
+	 * */
+	var Vcity = {};
+	/* *
+	 * 静态方法集
+	 * @name _m
+	 * */
+	Vcity._m = {
+		/* 选择元素 */
+		$: function (arg, context) {
+			var tagAll, n, eles = [], i, sub = arg.substring(1);
+			context = context || document;
+			if (typeof arg == 'string') {
+				switch (arg.charAt(0)) {
+					case '#':
+						return document.getElementById(sub);
+						break;
+					case '.':
+						if (context.getElementsByClassName) return context.getElementsByClassName(sub);
+						tagAll = Vcity._m.$('*', context);
+						n = tagAll.length;
+						for (i = 0; i < n; i++) {
+							if (tagAll[i].className.indexOf(sub) > -1) eles.push(tagAll[i]);
+						}
+						return eles;
+						break;
+					default:
+						return context.getElementsByTagName(arg);
+						break;
+				}
+			}
+		},
+
+		/* 绑定事件 */
+		on: function (node, type, handler) {
+			node.addEventListener ? node.addEventListener(type, handler, false) : node.attachEvent('on' + type, handler);
+		},
+
+		/* 获取事件 */
+		getEvent: function (event) {
+			return event || window.event;
+		},
+
+		/* 获取事件目标 */
+		getTarget: function (event) {
+			return event.target || event.srcElement;
+		},
+
+		/* 获取元素位置 */
+		getPos: function (node) {
+			var scrollx = document.documentElement.scrollLeft || document.body.scrollLeft,
+				scrollt = document.documentElement.scrollTop || document.body.scrollTop;
+			var pos = node.getBoundingClientRect();
+			return { top: pos.top + scrollt, right: pos.right + scrollx, bottom: pos.bottom + scrollt, left: pos.left + scrollx }
+		},
+
+		/* 添加样式名 */
+		addClass: function (c, node) {
+			if (!node) return;
+			node.className = Vcity._m.hasClass(c, node) ? node.className : node.className + ' ' + c;
+		},
+
+		/* 移除样式名 */
+		removeClass: function (c, node) {
+			var reg = new RegExp("(^|\\s+)" + c + "(\\s+|$)", "g");
+			if (!Vcity._m.hasClass(c, node)) return;
+			node.className = reg.test(node.className) ? node.className.replace(reg, '') : node.className;
+		},
+
+		/* 是否含有CLASS */
+		hasClass: function (c, node) {
+			if (!node || !node.className) return false;
+			return node.className.indexOf(c) > -1;
+		},
+
+		/* 阻止冒泡 */
+		stopPropagation: function (event) {
+			event = event || window.event;
+			event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+		},
+		/* 去除两端空格 */
+		trim: function (str) {
+			return str.replace(/^\s+|\s+$/g, '');
+		}
+	};
+
+	/* 所有城市数据,可以按照格式自行添加（北京|beijing|bj），前16条为热门城市 */
+
+	Vcity.allCity = ['北京|beijing|bj', '上海|shanghai|sh', '重庆|chongqing|cq', '深圳|shenzhen|sz', '广州|guangzhou|gz', '杭州|hangzhou|hz',
+		'南京|nanjing|nj', '苏州|shuzhou|sz', '天津|tianjin|tj', '成都|chengdu|cd', '南昌|nanchang|nc', '三亚|sanya|sy', '青岛|qingdao|qd',
+		'厦门|xiamen|xm', '西安|xian|xa', '长沙|changsha|cs'];
+	var city_str_nex = ""
+	for (i in city_list) {
+		city_str_nex = city_list[i].name + "|" + city_list[i].asciiName + "|" + city_list[i].asciiName.slice(0, 2);
+		Vcity.allCity.push(city_str_nex);
+	}
+
+	/* 正则表达式 筛选中文城市名、拼音、首字母 */
+
+	Vcity.regEx = /^([\u4E00-\u9FA5\uf900-\ufa2d]+)\|(\w+)\|(\w)\w*$/i;
+	Vcity.regExChiese = /([\u4E00-\u9FA5\uf900-\ufa2d]+)/;
+
+	/* *
+	 * 格式化城市数组为对象oCity，按照a-h,i-p,q-z,hot热门城市分组：
+	 * {HOT:{hot:[]},ABCDEFGH:{a:[1,2,3],b:[1,2,3]},IJKLMNOP:{i:[1.2.3],j:[1,2,3]},QRSTUVWXYZ:{}}
+	 * */
+
+	(function () {
+		var citys = Vcity.allCity, match, letter,
+			regEx = Vcity.regEx,
+			reg2 = /^[a-h]$/i, reg3 = /^[i-p]$/i, reg4 = /^[q-z]$/i;
+		if (!Vcity.oCity) {
+			Vcity.oCity = { hot: {}, ABCDEFGH: {}, IJKLMNOP: {}, QRSTUVWXYZ: {} };
+			//console.log(citys.length);
+			for (var i = 0, n = citys.length; i < n; i++) {
+				match = regEx.exec(citys[i]);
+				letter = match[3].toUpperCase();
+				if (reg2.test(letter)) {
+					if (!Vcity.oCity.ABCDEFGH[letter]) Vcity.oCity.ABCDEFGH[letter] = [];
+					Vcity.oCity.ABCDEFGH[letter].push(match[1]);
+				} else if (reg3.test(letter)) {
+					if (!Vcity.oCity.IJKLMNOP[letter]) Vcity.oCity.IJKLMNOP[letter] = [];
+					Vcity.oCity.IJKLMNOP[letter].push(match[1]);
+				} else if (reg4.test(letter)) {
+					if (!Vcity.oCity.QRSTUVWXYZ[letter]) Vcity.oCity.QRSTUVWXYZ[letter] = [];
+					Vcity.oCity.QRSTUVWXYZ[letter].push(match[1]);
+				}
+				/* 热门城市 前16条 */
+				if (i < 16) {
+					if (!Vcity.oCity.hot['hot']) Vcity.oCity.hot['hot'] = [];
+					Vcity.oCity.hot['hot'].push(match[1]);
+				}
+			}
+		}
+	})();
+	/* 城市HTML模板 */
+	Vcity._template = [
+		'<p class="tip">热门城市(支持汉字/拼音)</p>',
+		'<ul>',
+		'<li class="on">热门城市</li>',
+		'<li>A~H</li>',
+		'<li>I~P</li>',
+		'<li>Q~Z</li>',
+		'</ul>'
+	];
+
+	/* *
+	 * 城市控件构造函数
+	 * @CitySelector
+	 * */
+
+	Vcity.CitySelector = function () {
+		this.initialize.apply(this, arguments);
+	};
+
+	Vcity.CitySelector.prototype = {
+
+		constructor: Vcity.CitySelector,
+
+		/* 初始化 */
+
+		initialize: function (options) {
+			var input = options.input;
+			this.input = Vcity._m.$('#' + input);
+			this.inputEvent();
+		},
+
+		/* *
+		 * @createWarp
+		 * 创建城市BOX HTML 框架
+		 * */
+
+		createWarp: function () {
+			var inputPos = Vcity._m.getPos(this.input);
+			var div = this.rootDiv = document.createElement('div');
+			var that = this;
+
+			// 设置DIV阻止冒泡
+			Vcity._m.on(this.rootDiv, 'click', function (event) {
+				Vcity._m.stopPropagation(event);
+			});
+
+			// 设置点击文档隐藏弹出的城市选择框
+			Vcity._m.on(document, 'click', function (event) {
+				event = Vcity._m.getEvent(event);
+				var target = Vcity._m.getTarget(event);
+				if (target == that.input) return false;
+				//console.log(target.className);
+				if (that.cityBox) Vcity._m.addClass('hide', that.cityBox);
+				if (that.ul) Vcity._m.addClass('hide', that.ul);
+				if (that.myIframe) Vcity._m.addClass('hide', that.myIframe);
+			});
+			div.className = 'citySelector';
+			div.style.position = 'absolute';
+			div.style.left = inputPos.left + 'px';
+			div.style.top = inputPos.bottom + 'px';
+			div.style.zIndex = 999999;
+
+			// 判断是否IE6，如果是IE6需要添加iframe才能遮住SELECT框
+			var isIe = (document.all) ? true : false;
+			var isIE6 = this.isIE6 = isIe && !window.XMLHttpRequest;
+			if (isIE6) {
+				var myIframe = this.myIframe = document.createElement('iframe');
+				myIframe.frameborder = '0';
+				myIframe.src = 'about:blank';
+				myIframe.style.position = 'absolute';
+				myIframe.style.zIndex = '-1';
+				this.rootDiv.appendChild(this.myIframe);
+			}
+
+			var childdiv = this.cityBox = document.createElement('div');
+			childdiv.className = 'cityBox';
+			childdiv.id = 'cityBox';
+			childdiv.innerHTML = Vcity._template.join('');
+			var hotCity = this.hotCity = document.createElement('div');
+			hotCity.className = 'hotCity';
+			childdiv.appendChild(hotCity);
+			div.appendChild(childdiv);
+			this.createHotCity();
+		},
+
+		/* *
+		 * @createHotCity
+		 * TAB下面DIV：hot,a-h,i-p,q-z 分类HTML生成，DOM操作
+		 * {HOT:{hot:[]},ABCDEFGH:{a:[1,2,3],b:[1,2,3]},IJKLMNOP:{},QRSTUVWXYZ:{}}
+		 **/
+
+		createHotCity: function () {
+			var odiv, odl, odt, odd, odda = [], str, key, ckey, sortKey, regEx = Vcity.regEx,
+				oCity = Vcity.oCity;
+			for (key in oCity) {
+				odiv = this[key] = document.createElement('div');
+				// 先设置全部隐藏hide
+				odiv.className = key + ' ' + 'cityTab hide';
+				sortKey = [];
+				for (ckey in oCity[key]) {
+					sortKey.push(ckey);
+					// ckey按照ABCDEDG顺序排序
+					sortKey.sort();
+				}
+				for (var j = 0, k = sortKey.length; j < k; j++) {
+					odl = document.createElement('dl');
+					odt = document.createElement('dt');
+					odd = document.createElement('dd');
+					odt.innerHTML = sortKey[j] == 'hot' ? '&nbsp;' : sortKey[j];
+					odda = [];
+					for (var i = 0, n = oCity[key][sortKey[j]].length; i < n; i++) {
+						str = '<a href="#">' + oCity[key][sortKey[j]][i] + '</a>';
+						odda.push(str);
+					}
+					odd.innerHTML = odda.join('');
+					odl.appendChild(odt);
+					odl.appendChild(odd);
+					odiv.appendChild(odl);
+				}
+
+				// 移除热门城市的隐藏CSS
+				Vcity._m.removeClass('hide', this.hot);
+				this.hotCity.appendChild(odiv);
+			}
+			document.body.appendChild(this.rootDiv);
+			/* IE6 */
+			this.changeIframe();
+
+			this.tabChange();
+			this.linkEvent();
+		},
+
+		/* *
+		 *  tab按字母顺序切换
+		 *  @ tabChange
+		 * */
+
+		tabChange: function () {
+			var lis = Vcity._m.$('li', this.cityBox);
+			var divs = Vcity._m.$('div', this.hotCity);
+			var that = this;
+			for (var i = 0, n = lis.length; i < n; i++) {
+				lis[i].index = i;
+				lis[i].onclick = function () {
+					for (var j = 0; j < n; j++) {
+						Vcity._m.removeClass('on', lis[j]);
+						Vcity._m.addClass('hide', divs[j]);
+					}
+					Vcity._m.addClass('on', this);
+					Vcity._m.removeClass('hide', divs[this.index]);
+					/* IE6 改变TAB的时候 改变Iframe 大小*/
+					that.changeIframe();
+				};
+			}
+		},
+
+		/* *
+		 * 城市LINK事件
+		 *  @linkEvent
+		 * */
+
+		linkEvent: function () {
+			var links = Vcity._m.$('a', this.hotCity);
+			var that = this;
+			for (var i = 0, n = links.length; i < n; i++) {
+				links[i].onclick = function () {
+					that.input.value = this.innerHTML;
+					Vcity._m.addClass('hide', that.cityBox);
+					/* 点击城市名的时候隐藏myIframe */
+					Vcity._m.addClass('hide', that.myIframe);
+				}
+			}
+		},
+
+		/* *
+		 * INPUT城市输入框事件
+		 * @inputEvent
+		 * */
+
+		inputEvent: function () {
+			var that = this;
+			Vcity._m.on(this.input, 'click', function (event) {
+				event = event || window.event;
+				if (!that.cityBox) {
+					that.createWarp();
+				} else if (!!that.cityBox && Vcity._m.hasClass('hide', that.cityBox)) {
+					// slideul 不存在或者 slideul存在但是是隐藏的时候 两者不能共存
+					if (!that.ul || (that.ul && Vcity._m.hasClass('hide', that.ul))) {
+						Vcity._m.removeClass('hide', that.cityBox);
+
+						/* IE6 移除iframe 的hide 样式 */
+						//alert('click');
+						Vcity._m.removeClass('hide', that.myIframe);
+						that.changeIframe();
+					}
+				}
+			});
+			Vcity._m.on(this.input, 'focus', function () {
+				that.input.select();
+				if (that.input.value == localString[g_language].city_name) that.input.value = '';
+			});
+			Vcity._m.on(this.input, 'blur', function () {
+				if (that.input.value == '') that.input.value = localString[g_language].city_name;
+			});
+			Vcity._m.on(this.input, 'keyup', function (event) {
+				event = event || window.event;
+				var keycode = event.keyCode;
+				Vcity._m.addClass('hide', that.cityBox);
+				that.createUl();
+
+				/* 移除iframe 的hide 样式 */
+				Vcity._m.removeClass('hide', that.myIframe);
+
+				// 下拉菜单显示的时候捕捉按键事件
+				if (that.ul && !Vcity._m.hasClass('hide', that.ul) && !that.isEmpty) {
+					that.KeyboardEvent(event, keycode);
+				}
+			});
+		},
+
+		/* *
+		 * 生成下拉选择列表
+		 * @ createUl
+		 * */
+
+		createUl: function () {
+			//console.log('createUL');
+			var str;
+			var value = Vcity._m.trim(this.input.value);
+			// 当value不等于空的时候执行
+			if (value !== '') {
+				var reg = new RegExp("^" + value + "|\\|" + value, 'gi');
+				// 此处需设置中文输入法也可用onpropertychange
+				var searchResult = [];
+				for (var i = 0, n = Vcity.allCity.length; i < n; i++) {
+					if (reg.test(Vcity.allCity[i])) {
+						var match = Vcity.regEx.exec(Vcity.allCity[i]);
+						if (searchResult.length !== 0) {
+							str = '<li><b class="cityname">' + match[1] + '</b><b class="cityspell">' + match[2] + '</b></li>';
+						} else {
+							str = '<li class="on"><b class="cityname">' + match[1] + '</b><b class="cityspell">' + match[2] + '</b></li>';
+						}
+						searchResult.push(str);
+					}
+				}
+				this.isEmpty = false;
+				// 如果搜索数据为空
+				if (searchResult.length == 0) {
+					this.isEmpty = true;
+					str = '<li class="empty">对不起，没有找到数据 "<em>' + value + '</em>"</li>';
+					searchResult.push(str);
+				}
+				// 如果slideul不存在则添加ul
+				if (!this.ul) {
+					var ul = this.ul = document.createElement('ul');
+					ul.className = 'cityslide';
+					this.rootDiv && this.rootDiv.appendChild(ul);
+					// 记录按键次数，方向键
+					this.count = 0;
+				} else if (this.ul && Vcity._m.hasClass('hide', this.ul)) {
+					this.count = 0;
+					Vcity._m.removeClass('hide', this.ul);
+				}
+				this.ul.innerHTML = searchResult.join('');
+
+				/* IE6 */
+				this.changeIframe();
+
+				// 绑定Li事件
+				this.liEvent();
+			} else {
+				Vcity._m.addClass('hide', this.ul);
+				Vcity._m.removeClass('hide', this.cityBox);
+
+				Vcity._m.removeClass('hide', this.myIframe);
+
+				this.changeIframe();
+			}
+		},
+
+		/* IE6的改变遮罩SELECT 的 IFRAME尺寸大小 */
+		changeIframe: function () {
+			if (!this.isIE6) return;
+			this.myIframe.style.width = this.rootDiv.offsetWidth + 'px';
+			this.myIframe.style.height = this.rootDiv.offsetHeight + 'px';
+		},
+
+		/* *
+		 * 特定键盘事件，上、下、Enter键
+		 * @ KeyboardEvent
+		 * */
+
+		KeyboardEvent: function (event, keycode) {
+			var lis = Vcity._m.$('li', this.ul);
+			var len = lis.length;
+			switch (keycode) {
+				case 40: //向下箭头↓
+					this.count++;
+					if (this.count > len - 1) this.count = 0;
+					for (var i = 0; i < len; i++) {
+						Vcity._m.removeClass('on', lis[i]);
+					}
+					Vcity._m.addClass('on', lis[this.count]);
+					break;
+				case 38: //向上箭头↑
+					this.count--;
+					if (this.count < 0) this.count = len - 1;
+					for (i = 0; i < len; i++) {
+						Vcity._m.removeClass('on', lis[i]);
+					}
+					Vcity._m.addClass('on', lis[this.count]);
+					break;
+				case 13: // enter键
+					this.input.value = Vcity.regExChiese.exec(lis[this.count].innerHTML)[0];
+					Vcity._m.addClass('hide', this.ul);
+					Vcity._m.addClass('hide', this.ul);
+					/* IE6 */
+					Vcity._m.addClass('hide', this.myIframe);
+					break;
+				default:
+					break;
+			}
+		},
+
+		/* *
+		 * 下拉列表的li事件
+		 * @ liEvent
+		 * */
+
+		liEvent: function () {
+			var that = this;
+			var lis = Vcity._m.$('li', this.ul);
+			for (var i = 0, n = lis.length; i < n; i++) {
+				Vcity._m.on(lis[i], 'click', function (event) {
+					event = Vcity._m.getEvent(event);
+					var target = Vcity._m.getTarget(event);
+					that.input.value = Vcity.regExChiese.exec(target.innerHTML)[0];
+					Vcity._m.addClass('hide', that.ul);
+					/* IE6 下拉菜单点击事件 */
+					Vcity._m.addClass('hide', that.myIframe);
+				});
+				Vcity._m.on(lis[i], 'mouseover', function (event) {
+					event = Vcity._m.getEvent(event);
+					var target = Vcity._m.getTarget(event);
+					Vcity._m.addClass('on', target);
+				});
+				Vcity._m.on(lis[i], 'mouseout', function (event) {
+					event = Vcity._m.getEvent(event);
+					var target = Vcity._m.getTarget(event);
+					Vcity._m.removeClass('on', target);
+				})
+			}
+		}
+	};
+	var test = new Vcity.CitySelector({ input: 'citySelect' });
+	var test2 = new Vcity.CitySelector({ input: 'citySelect1' });
+</script>
+
+</body>
+
+</html>

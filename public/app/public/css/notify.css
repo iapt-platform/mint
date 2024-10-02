@@ -1,0 +1,30 @@
+.pcd_notify {
+	position: fixed;
+	top: 3.6em;
+	left: 40vw;
+	min-width: 20em;
+	max-width: 95%;
+	text-align: center;
+	background-color: rgba(128, 128, 128, 0.64);
+	color: white;
+	padding: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 8px;
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.5;
+	z-index: 2000;
+}
+.pcd_notify_bar {
+	position: fixed;
+	top: 6em;
+	left: 0;
+	width: 100%;
+	text-align: left;
+	background-color: rgba(255, 72, 0, 0.753);
+	color: rgb(0, 0, 0);
+	padding: 5px;
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.5;
+	z-index: 2000;
+}

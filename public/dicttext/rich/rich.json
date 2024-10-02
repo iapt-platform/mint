@@ -1,0 +1,51 @@
+[
+	{
+		"rediskey": "dict://bhmf",
+		"database": "",
+		"table": "bhmf",
+		"keycol": "1",
+		"csv": ["bhmf.csv"]
+	},
+	{
+		"rediskey": "dict://concise",
+		"database": "",
+		"table": "concise",
+		"keycol": "1",
+		"csv": ["concise.csv"]
+	},
+	{
+		"rediskey": "dict://sinhala",
+		"database": "",
+		"table": "sinhala",
+		"keycol": "1",
+		"csv": ["pali_sinhala.csv"]
+	},
+	{
+		"rediskey": "dict://pm",
+		"database": "",
+		"table": "pm",
+		"keycol": "1",
+		"csv": ["pm.csv"]
+	},
+	{
+		"rediskey": "dict://shuihan",
+		"database": "",
+		"table": "shuihan",
+		"keycol": "1",
+		"csv": ["shuihan.csv"]
+	},
+	{
+		"rediskey": "dict://uhan_en",
+		"database": "",
+		"table": "uhan_en",
+		"keycol": "1",
+		"csv": ["uhan_en.csv"]
+	},
+	{
+		"rediskey": "dict://uhan",
+		"database": "",
+		"table": "uhan",
+		"keycol": "1",
+		"csv": ["uhan.csv"]
+	}
+]

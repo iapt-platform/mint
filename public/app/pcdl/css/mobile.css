@@ -1,0 +1,32 @@
+body {
+    font-family: Arial, Verdana;
+    font-style: normal;
+    color: #444444;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.mainview {
+    padding: 0 20px;
+    z-index: 1;
+    margin-left: 5px;
+    float: left;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}
+
+#leftmenuinner {
+    position: fixed;
+    /* display: block; */
+    display: inline-block;
+    top: 42px;
+    left: 0;
+    padding: 0;
+    height: 100%;
+    width: 0;
+    background-color: #f5f5f5;
+    float: left;
+    z-index: 15;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}

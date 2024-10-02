@@ -1,0 +1,495 @@
+id,book,par_num,level,class,title,text
+NULL,p50,1,1,chapter,"Kaccāyana  dhātu mañjūsā","Kaccāyana  dhātu mañjūsā"
+NULL,p50,2,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
+NULL,p50,3,100,gatha1,,"Nirutti nikarā’pāra-pāravāra’ntagaṃ muniṃ,"
+NULL,p50,4,100,gathalast,,"Vanditvā dhātumañjūsaṃ-brūmi pāvacanañjasaṃ."
+NULL,p50,5,100,gatha1,,"Sogatāgama mā’gamma-taṃ taṃvyākaraṇāni ca,"
+NULL,p50,6,100,gathalast,,"Pāṭhe cā’paṭhitāpe’ttha dhātvatthā ca pavuccare."
+NULL,p50,7,100,bodytext,,"Chanda’hānitthamo’kāraṃ-dhātvantānaṃ  siyākva ci, yūnaṃ dīgho ca dhātumhā-pubbama’tthapadaṃ api."
+NULL,p50,8,8,hangnum,1.,1.
+NULL,p50,9,100,gatha1,," Bhū sattāyaṃ paca pāke gamusappa gatimhi (ca);"
+NULL,p50,10,100,gathalast,,"Siloka (dhātu) saṅghāte saki saṅkāya (vattate;)."
+NULL,p50,11,8,hangnum,2.,2.
+NULL,p50,12,100,gatha1,," (Atho) kuka-vakā’dāne ke sadde aki lakkhaṇe;"
+NULL,p50,13,100,gathalast,,"Ku sadde kucchite ṭaṅka dhāraṇe maki maṇḍane."
+NULL,p50,14,8,hangnum,3.,3.
+NULL,p50,15,100,gatha1,," Vaki koṭillayātrāsu sakka-ṭīkadvayaṃ gate;"
+NULL,p50,16,100,gathalast,,"Kaki lolattane yāte takī (idha) gatādisu."
+NULL,p50,17,100,bodytext,,"4.  Vava, lokanavittisu cakkhavutimhi (tu) rukkha (ca) khe thirahiṃsakhaṇe niya, mo’panayiṭṭhi vatādisa muṇḍisu dikkha (’tha) kakkha-kakhā hasane tura, hiṃsanavuddhigatīsu (hi) dakkha’danamhi (tu) jakkha (ca) bhakkha (matā) ana, jāladukhesu (tu) dikkha (ca) dukkha (ca) ikkha disa’ṅka na ko’kha suse."
+NULL,p50,18,100,bodytext,,"5. [A] nikkha cumbane’(pi) sikkha vijju’pādu’ pāsānamhi rakkha guttivāraṇe (pi) uñchane (siyā’pi) bhikkha yāvaladdhya’laddhisū (pi) vakkha rosasaṃhatesu mokkha muttiyaṃ caje (pi) cikkha vācabodhanesu."
+NULL,p50,19,100,bodytext,,"[Ba]  nakha makha rakha naṅkhāmaṅkharakkhī’khīlaṅkhā lakha vakha ikha iṅkhā uṅkha vaṅkhū’kha gatyaṃ vakhi makhi kakhi kaṅkhe khī khaye ukkha seke khu khutadhanisu (vutto) khe(’tha) khāde supe (ca.)"
+NULL,p50,20,8,hangnum,6.,6.
+NULL,p50,21,100,gatha1,," Aggo (tu) gatikoṭille laga saṅge mage’sane;"
+NULL,p50,22,100,gathalast,,"Agī igī rigī ligī vagī gatya’tthadhātavo."
+NULL,p50,23,8,hangnum,7.,7.
+NULL,p50,24,100,gatha1,," Silāgha katthane jaggha hasane aggha agghane;"
+NULL,p50,25,100,gathalast,,"Sighī āghāyane (hoti) laghi sosagatīsu (ca;)."
+NULL,p50,26,8,hangnum,8.,8.
+NULL,p50,27,100,gatha1,," Vaca byattavace yāca yācane ruca dittiyaṃ;"
+NULL,p50,28,100,gathalast,,"Suca soke kuca sadde (atho) vica vivecane."
+NULL,p50,29,8,hangnum,"9. ","9. "
+NULL,p50,30,100,gatha1,," Añca pūjāgate vañca gamane kiñcā’vamaddane;"
+NULL,p50,31,100,gathalast,,"Luñcā’panayane nacca naccane maca rocane."
+NULL,p50,32,8,hangnum,10.,10.
+NULL,p50,33,100,gatha1,," Accā’ccane cu vacane saco (tu) samavāyane;"
+NULL,p50,34,100,gathalast,,"Paca yāte kaci-vacca dittiyaṃ maci dhāraṇe."
+NULL,p50,35,8,hangnum,11.,11.
+NULL,p50,36,100,gatha1,," Puccha sampucchane muccha mohasmiṃ lañcha lakkhaṇe;"
+NULL,p50,37,100,gathalast,,"Añchā’yāme (bhave) puñcha puñchane uñcha uñchane."
+NULL,p50,38,8,hangnum,12.,12.
+NULL,p50,39,100,gatha1,," Taccho tanukiraye piñcha piñchane rāja dittiyaṃ;"
+NULL,p50,40,100,gathalast,,"Vajā’jagamane rañja rāge bhañjā’vamaddane."
+NULL,p50,41,8,hangnum,13.,13.
+NULL,p50,42,100,gatha1,," Añju byattigatīkanti makkhaṇesve’ja kampane;"
+NULL,p50,43,100,gathalast,,"Bhaja saṃsevane sañja saṅge (tu) iñja kampane."
+NULL,p50,44,8,hangnum,"14. ","14. "
+NULL,p50,45,100,gatha1,," Yaja devaccane dānasaṅgatīkaraṇesu (ca);"
+NULL,p50,46,100,gathalast,,"Tijakkhamanisānesu dāne(’pi) caja hāniyaṃ."
+NULL,p50,47,8,hangnum,15.,15.
+NULL,p50,48,100,gatha1,," Sajā’liṅgana vissajja nimmāṇe mujja mujjane;"
+NULL,p50,49,100,gathalast,,"Majja saṃsuddhiyaṃ lajja lajjane tajja tajjane."
+NULL,p50,50,8,hangnum,16.,16.
+NULL,p50,51,100,gatha1,," Ajja-sajjā’jjane sajja nimmāṇe gajja saddane;"
+NULL,p50,52,100,gathalast,,"Guja-kuja dvayaṃ sadde akhyatte khajja bhakkhaṇe."
+NULL,p50,53,8,hangnum,17.,17.
+NULL,p50,54,100,gatha1,," Bhajja pāke viji bhayacalane vīja vījane;"
+NULL,p50,55,100,gathalast,,"Khajī gamanavekalle jī jaye ju jave (siyā;)."
+NULL,p50,56,8,hangnum,18.,18.
+NULL,p50,57,100,gatha1,," Jhe cintāyujjha ussagge gamane aṭa-paṭa dvayaṃ;"
+NULL,p50,58,100,gathalast,,"Naṭa nacce raṭa paribhāsane vaṭa veṭhane."
+NULL,p50,59,8,hangnum,"19. ","19. "
+NULL,p50,60,100,gatha1,," Vaṭṭa āvattane vaṇṭa vaṇṭatthe kaṭa maddane;"
+NULL,p50,61,100,gathalast,,"Phuṭo visaraṇādīsu kaṭa saṃvaraṇe gate."
+NULL,p50,62,8,hangnum,20.,20.
+NULL,p50,63,100,gatha1,," Ghuṭa ghose patighāte viṭa’kkose (ca) pesane;"
+NULL,p50,64,100,gathalast,,"Bhaṭa bhatyaṃ kuṭa-koṭṭacchedane luṭa loṭane."
+NULL,p50,65,8,hangnum,21.,21.
+NULL,p50,66,100,gatha1,," Jaṭa-jhaṭa-piṭa saṅghāte ciṭu’ttāse ghaṭī’hane;"
+NULL,p50,67,100,gathalast,,"Ghaṭi saṅghaṭṭane taṭṭa cchedane muṭa maddane."
+NULL,p50,68,8,hangnum,22.,22.
+NULL,p50,69,100,gatha1,," Paṭha byattavace heṭha bādhāyaṃ veṭha veṭhane;"
+NULL,p50,70,100,gathalast,,"Suṭhī-kuṭhī dvayaṃ sose pīṭha hiṃsanadhāraṇe."
+NULL,p50,71,8,hangnum,23.,23.
+NULL,p50,72,100,gatha1,," Kaṭha sosanapākesu vaṭha thulattane (bhave);"
+NULL,p50,73,100,gathalast,,"Kaṭhi sose ruṭha-luṭho’paghāte saṭha ketave."
+NULL,p50,74,8,hangnum,"24. ","24. "
+NULL,p50,75,100,gatha1,," (Siyā haṭha balakkāre kaḍibhede kaḍicchide;"
+NULL,p50,76,100,gathalast,,"Maṇḍa vibhūsane caṇḍa caṇḍikke bhaḍi bhaṅḍane."
+NULL,p50,77,8,hangnum,25.,25.
+NULL,p50,78,100,gatha1,," Paḍi uppaṇḍane liṅgavekalle muḍi khaṇḍane,"
+NULL,p50,79,100,gathalast,,"Gaḍi vatte’kadesamhi gaḍi sannivaye(’pica;);"
+NULL,p50,80,8,hangnum,26.,26.
+NULL,p50,81,100,gatha1,," Raḍi-eraḍi hiṃsāyaṃ piḍi saṅghātaādisu,"
+NULL,p50,82,100,gathalast,,"Kuḍi dāhe paḍi gate hiḍi āhiṇḍane (siyā;);"
+NULL,p50,83,8,hangnum,27.,27.
+NULL,p50,84,100,gatha1,," Karaṇḍa bhājana’tthamhi (atho) laḍi jigucchane,"
+NULL,p50,85,100,gathalast,,"(Vattate) meḍikoṭille saḍi gumbatthamīraṇe;"
+NULL,p50,86,8,hangnum,28.,28.
+NULL,p50,87,100,gatha1,," (Atho’pi) aḍi aṇḍatthe (dissate) tuḍi toḍane,"
+NULL,p50,88,100,gathalast,,"Vaḍḍha saṃvaḍḍhane kaḍḍha kaḍḍhaṇe bhaṇa bhāsane;"
+NULL,p50,89,8,hangnum,"29. ","29. "
+NULL,p50,90,100,gatha1,," Soṇa vaṇṇe guṇa’bhyāse iṇa-pheṇa dvayaṃ gate,"
+NULL,p50,91,100,gathalast,,"Paṇa vohārathomesu (vattate) kaṇa milane;"
+NULL,p50,92,8,hangnum,30.,30.
+NULL,p50,93,100,gatha1,," Aṇa-raṇa-kaṇa-muṇa-kvaṇa-kuṇa sadde,"
+NULL,p50,94,100,gatha2,,"Yata patiyatane juta dittimhi;"
+NULL,p50,95,100,gatha3,,"Ata-pata gamane cita saññāṇe,"
+NULL,p50,96,100,gathalast,,"Kita vāsā’do vatu vattumhi."
+NULL,p50,97,8,hangnum,31.,31.
+NULL,p50,98,100,gatha1,," (Bhave) kattha silāghāyaṃ matha-mattha viloḷane,"
+NULL,p50,99,100,gathalast,,"Nātha yācanasantāpa isserā’siṃsanesu (ca;)"
+NULL,p50,100,8,hangnum,32.,32.
+NULL,p50,101,100,gatha1,," Putha (ce) puthu vitthāre byatha bhīticalesu (ca),"
+NULL,p50,102,100,gathalast,,"Gotthu vaṃse patha-pantha gate nanda samiddhiyaṃ;"
+NULL,p50,103,8,hangnum,33.,33.
+NULL,p50,104,100,gatha1,," Vandā’bhivādathomesu gada byattavace’(pica),"
+NULL,p50,105,100,gathalast,,"(Atho) ninda garahāyaṃ khadi pakkhandanādisu;"
+NULL,p50,106,8,hangnum,"34. ","34. "
+NULL,p50,107,100,gatha1,," Edī (tu) kiñcicalena cadi kantihiḷādane,"
+NULL,p50,108,100,gathalast,,"Kilidī paridevādo udissavakiledane;"
+NULL,p50,109,8,hangnum,35.,35.
+NULL,p50,110,100,gatha1,," Idī (tu) paramissariye adiandu (ca) bandhane,"
+NULL,p50,111,100,gathalast,,"Bhaganda sevane (hoti) bhadda kalyāṇakammani;"
+NULL,p50,112,8,hangnum,36.,36.
+NULL,p50,113,100,gatha1,," Sida siṅgārapākesu sadduharitasosane,"
+NULL,p50,114,100,gathalast,,"Madi balye muda-madā santose madda maddane;"
+NULL,p50,115,8,hangnum,37.,37.
+NULL,p50,116,100,gatha1,," Sandu passavanādīsu kanda’vhāne (ca’) rodane,"
+NULL,p50,117,100,gathalast,,"Vida lābhe dada dāne rudi assuvimocane;"
+NULL,p50,118,8,hangnum,38.,38.
+NULL,p50,119,100,gatha1,," Sado visaraṇā’dānagamane (cā’)vasādane,"
+NULL,p50,120,100,gathalast,,"Hiḷāda (tu) sukhe sūdakkharaṇe rada vilekhaṇe;"
+NULL,p50,121,8,hangnum,39.,39.
+NULL,p50,122,100,gatha1,," Sāda assādanādīsu gada byattavace’(pica),"
+NULL,p50,123,100,gathalast,,"Nada abyattasadde (tu) radā’dā-khāda-bhakkhaṇe;"
+NULL,p50,124,8,hangnum,"40. ","40. "
+NULL,p50,125,100,gatha1,," Adda yācanayātrādisva (tho) mida sinehane,"
+NULL,p50,126,100,gathalast,,"(Siyā) khuda jigacchāyaṃ daḷidda duggaccaṃ (hi tu;)"
+NULL,p50,127,8,hangnum,41.,41.
+NULL,p50,128,100,gatha1,," Dā dave du gatīvuddhayaṃ dā dāne vida jānane,"
+NULL,p50,129,100,gathalast,,"Tadi ālasiye bādha bādhāyaṃ gudha kīḷane;"
+NULL,p50,130,8,hangnum,42.,42.
+NULL,p50,131,100,gatha1,," (Atho) gādha patiṭṭhāyaṃ vuṭhu-edha (ca) vuddhiyaṃ,"
+NULL,p50,132,100,gathalast,,"Dhā (hoti) dhāraṇe (ceva) cintāyaṃ budha bodhane;"
+NULL,p50,133,8,hangnum,43.,43.
+NULL,p50,134,100,gatha1,," Sidhu gatimhi yudha sampahāre vidha vedhane,"
+NULL,p50,135,100,gathalast,,"Rādha hiṃsāyasaṃrādhe badha-bandha (ca) bandhane;"
+NULL,p50,136,8,hangnum,44.,44.
+NULL,p50,137,100,gatha1,," Sidha-sādha (ca) siddhimhi dhe pāne indha dittiyaṃ,"
+NULL,p50,138,100,gatha2,,"Māna pūjāya vana-sana sambhave ana pāṇane;"
+NULL,p50,139,100,gathalast,,"Kana dittigatīkantyaṃ khana-khanva’vadāraṇe."
+NULL,p50,140,8,hangnum,"45. ","45. "
+NULL,p50,141,100,gatha1,," Gupa gopanake gupa saṃvaraṇe tapa santāpe tapa issariye,"
+NULL,p50,142,100,gathalast,,"Cupa mandagate tapuubbege rapa-lapa vākye sapa akkose;"
+NULL,p50,143,8,hangnum,46.,46.
+NULL,p50,144,100,gatha1,," Japa-jappa vace’byatte tappa santappane (siyā),"
+NULL,p50,145,100,gathalast,,"Kapi kiñcicale kappa sāmatthe vepu kampane;"
+NULL,p50,146,8,hangnum,47.,47.
+NULL,p50,147,100,gatha1,," Tappa santagatecchede takke hiṃsādisu’(ccate),"
+NULL,p50,148,100,gathalast,,"Vapa bījavinikkhepe dhūpa santapane’(pi ca);"
+NULL,p50,149,8,hangnum,48.,48.
+NULL,p50,150,100,gatha1,," Capa sāntve pu pavane jhapa dāhe supo saye,"
+NULL,p50,151,100,gathalast,,"Puppha vikasane (hoti) ramba’lambavasaṃsane;"
+NULL,p50,152,8,hangnum,49.,49.
+NULL,p50,153,100,gatha1,," Cumba vadanasaṃyoge kamba saṃvaraṇe (mato),"
+NULL,p50,154,100,gathalast,,"Amba sadde (ca) assāde tāyane sabi maṇḍane;"
+NULL,p50,155,8,hangnum,"50. ","50. "
+NULL,p50,156,100,gatha1,," Gabba dappe’bba-sabbā’(pi) gamane pubba pūraṇe,"
+NULL,p50,157,100,gathalast,,"Gumba’bbagumbane cabba adane ubba dhāraṇe;"
+NULL,p50,158,8,hangnum,51.,51.
+NULL,p50,159,100,gatha1,," Labha lābhe jambha gattavināme subha sobhane,"
+NULL,p50,160,100,gathalast,,"Bhī bhaye rabha rābhasse (cā)’rambhe khubha sañcale;"
+NULL,p50,161,8,hangnum,52.,52.
+NULL,p50,162,100,gatha1,," Thambha-khambha patibandhe gabbha pāgabbhiye vadhe,"
+NULL,p50,163,100,gathalast,,"Sumbha saṃsumbhane sambha vissāse yabha methune;"
+NULL,p50,164,8,hangnum,53.,53.
+NULL,p50,165,100,gatha1,," Dubha jīgiṃsane dabbha ganthane udrabhā’dane,"
+NULL,p50,166,100,gathalast,,"Kamū (tu) padavikkhepe khamū (tu) sahaṇe (siyā;)"
+NULL,p50,167,8,hangnum,54.,54.
+NULL,p50,168,100,gatha1,," Bhamu anavaṭṭhāne (ca) vamu uggiraṇādisu,"
+NULL,p50,169,100,gathalast,,"Kilamu-klamū gelaññe ramu kīḷā’ya (mīrito;)"
+NULL,p50,170,8,hangnum,55.,55.
+NULL,p50,171,100,gatha1,," Damo dame nama name (atho) sama parissame,"
+NULL,p50,172,100,gathalast,,"Yamu uparame nāse ama yāte mu bandhane;"
+NULL,p50,173,8,hangnum,"56. ","56. "
+NULL,p50,174,100,gatha1,," Dhamo pumo (ca) dhamane tama saṅkāvibhūsane,"
+NULL,p50,175,100,gathalast,,"Dhuma-thīma (ca) saṅghāte tama sāntva’vasādiye;"
+NULL,p50,176,8,hangnum,57.,57.
+NULL,p50,177,100,gatha1,," Ayo vayo paya-mayo nayo rayagatimhi (ca)"
+NULL,p50,178,100,gathalast,,"Daya dānagatīrakkhā hiṃsādisu yu missane;"
+NULL,p50,179,100,gatha1,,"Cāya sampūjane tāya santāne pāya vuddhiyaṃ,"
+NULL,p50,180,100,gathalast,,"(Atho) usūya dosā’vikaraṇe sāya sāyane;"
+NULL,p50,181,8,hangnum,58.,58.
+NULL,p50,182,100,gatha1,," Tara taraṇasmiṃ thara santharaṇe bhara bharaṇasmiṃ phara sampharaṇe,"
+NULL,p50,183,100,gathalast,,"Sara gati cintā hiṃsā sadde phura calanādo hara haraṇasmiṃ;"
+NULL,p50,184,8,hangnum,59.,59.
+NULL,p50,185,100,gatha1,," Ri santatismiṃ ri gate ru sadde khuracchidasmiṃ dhara dhāraṇamhi,"
+NULL,p50,186,100,gathalast,,"Jara jīraṇatthe marapāṇacāge khara sekanāse ghara sevanamhi;"
+NULL,p50,187,8,hangnum,"60. ","60. "
+NULL,p50,188,100,gatha1,," Garo nigareṇa seke dara ḍāhe vidāraṇe,"
+NULL,p50,189,100,gathalast,,"Cara gatibhakkhaṇesu vara saṃvaraṇādisu;"
+NULL,p50,190,8,hangnum,61.,61.
+NULL,p50,191,100,gatha1,," Caracchede aranāse gate (ca) pūra pūraṇe,"
+NULL,p50,192,100,gathalast,,"Kura kkose nara naye jāgara supinakkhaye;"
+NULL,p50,193,8,hangnum,62.,62.
+NULL,p50,194,100,gatha1,," Pīlu-palū-sala-hulā gatya’tthā cala kampane,"
+NULL,p50,195,100,gathalast,,"Khala sañcalane phulla vikāse jala dittiyaṃ;"
+NULL,p50,196,8,hangnum,63.,63.
+NULL,p50,197,100,gatha1,," Phala nipphattiyaṃ (hoti) dala dittividāraṇe,"
+NULL,p50,198,100,gathalast,,"Dala duggatiyaṃ nīla vaṇṇe mīla nimīlane;"
+NULL,p50,199,8,hangnum,64.,64.
+NULL,p50,200,100,gatha1,," Sila samādhimhi kīla bandhe gala-gilā’dane,"
+NULL,p50,201,100,gathalast,,"Kūla āvaraṇe sūla rujāyaṃ balapāṇane;"
+NULL,p50,202,8,hangnum,65.,65.
+NULL,p50,203,100,gatha1,," Tala-mūla patiṭṭhāyaṃ vala-valla nivāraṇe,"
+NULL,p50,204,100,gathalast,,"Palla ninne (ca) gamane mala-malla’vadhāraṇe;"
+NULL,p50,205,8,hangnum,"66. ","66. "
+NULL,p50,206,100,gatha1,," (Vattate) khila kāṭhinne kalile ala-kala dvayaṃ,"
+NULL,p50,207,100,gathalast,,"Vella sañcalane kalla sajjane alibandhane;"
+NULL,p50,208,8,hangnum,67.,67.
+NULL,p50,209,100,gatha1,," Culla hāvakiraye thūlā’kassane cūla maddane,"
+NULL,p50,210,100,gathalast,,"(Vattate) khala soceyyo pala rakkhagatesu(pi;)"
+NULL,p50,211,8,hangnum,68.,68.
+NULL,p50,212,100,gatha1,," Kela-khela-cela-pela-vela-sañcalanādisu,"
+NULL,p50,213,100,gathalast,,"Ava rakkhaṇe jīva pāṇadhāraṇe (tu) plavo gate;"
+NULL,p50,214,8,hangnum,69.,69.
+NULL,p50,215,100,gatha1,," Kaṇḍuvanamhi kaṇḍuvo saraṇe chedane dave,"
+NULL,p50,216,100,gathalast,,"Davo (tu) davane devu devane sevu sevane;"
+NULL,p50,217,8,hangnum,70.,70.
+NULL,p50,218,100,gatha1,," Dhāva gamanavuddhimhi (paṭhito) dhovu dhovane;"
+NULL,p50,219,100,gatha2,,"Ve-vī dve tantusantāne ve-vu saṃvaraṇe (siyā)"
+NULL,p50,220,100,gathalast,,"Hve avhāne keva seke dhuva yātrā thiresu (ca;);"
+NULL,p50,221,8,hangnum,"71. ","71. "
+NULL,p50,222,100,gatha1,," Asa gasa adane ghasa adanasmiṃ-isa pariyese isuicchāyaṃ,"
+NULL,p50,223,100,gathalast,,"Sasu pāṇanagatihiṃsā’dya’tthe-masa āmasane musa sammose;"
+NULL,p50,224,8,hangnum,72.,72.
+NULL,p50,225,100,gatha1,," Kusa akkose dusa appīte-tusa santose pusa posamhi,"
+NULL,p50,226,100,gathalast,,"Rusa ālepe rusa hiṃsāyaṃ-masu macchere usu dāhe (’pi;)"
+NULL,p50,227,8,hangnum,73.,73.
+NULL,p50,228,100,gatha1,," Hasa hasanasmiṃ ghusa saddasmiṃ-tasa ubbege trasa ubbege,"
+NULL,p50,229,100,gathalast,,"Lasa kantya’tthe rasa assāde-(puna)bhasa bhasmikaraṇe(cā’pi;)"
+NULL,p50,230,8,hangnum,74.,74.
+NULL,p50,231,100,gatha1,," Gavesa maggaṇe paṃsa nāsane disa pekkhaṇe,"
+NULL,p50,232,100,gathalast,,"Sāsā’nusiṭṭhiyaṃ haṃsa pitiyaṃ pāsa bandhane;"
+NULL,p50,233,8,hangnum,75.,75.
+NULL,p50,234,100,gatha1,," Saṃsa pasaṃsane issa issāyaṃ kassa kassane,"
+NULL,p50,235,100,gathalast,,"Dhaṃsa padhaṃsane siṃsa icchāyaṃ ghaṃsa ghaṃsane;"
+NULL,p50,236,8,hangnum,"76. ","76. "
+NULL,p50,237,100,gatha1,," Saṃsa-daṃsā (tu) ḍasane bhāsa vācāya dittiyaṃ,"
+NULL,p50,238,100,gathalast,,"(Siyā) bhusa alaṅkāre (atho) āsū’pavesane;"
+NULL,p50,239,8,hangnum,77.,77.
+NULL,p50,240,100,gatha1,," Vasa kantinivāsesu vassasecanasaddane,"
+NULL,p50,241,100,gathalast,,"Kisa sāṇe kasa gate kasa hiṃsāvilekhane;"
+NULL,p50,242,8,hangnum,78.,78.
+NULL,p50,243,100,gatha1,," Disā’tisajjanā’dīsu kāsa dittimhi sajjane,"
+NULL,p50,244,100,gathalast,,"(Duve dhātu) khasa-jhasa hiṃsāyaṃ misa milane;"
+NULL,p50,245,8,hangnum,79.,79.
+NULL,p50,246,100,gatha1,," Su hiṃsākulasandhānayātrā’dīsu su passave,"
+NULL,p50,247,100,gathalast,,"Su sadde su pasavane si saye (ca) si sevane;"
+NULL,p50,248,8,hangnum,80.,80.
+NULL,p50,249,100,gatha1,," Maha pūjāyā’rahapūjāyaṃ-guha saṃvaraṇe liha assāde,"
+NULL,p50,250,100,gathalast,,"Raha cāgasmiṃ muha mucchāyaṃ-maha sattāyaṃ bahu saṃkhyāne;"
+NULL,p50,251,8,hangnum,"81. ","81. "
+NULL,p50,252,100,gatha1,," Saha khame daha bhasmikaraṇe (ca) patiṭṭhāyaṃ,"
+NULL,p50,253,100,gathalast,,"Ruha sañjanane ūha vitakke vaha pāpaṇe;"
+NULL,p50,254,8,hangnum,82.,82.
+NULL,p50,255,100,gatha1,," Duha’ppapūraṇe nāse diho upacaye (mato),"
+NULL,p50,256,100,gathalast,,"Nindāyaṃ garaho īha ghaṭṭane miha sevane;"
+NULL,p50,257,8,hangnum,83.,83.
+NULL,p50,258,100,gatha1,," Gāha viloḷane brūha-baha-braha (ca) vuddhiyaṃ,"
+NULL,p50,259,100,gatha2,,"Vhe saddamhi hasane hā cāge luḷa manthane"
+NULL,p50,260,100,gathalast,,"Kīḷavihāramhi laḷa vilāse’(mesavuddhikā;)"
+NULL,p50,261,2,chapter,"Tudādayo avuddhikā","Tudādayo avuddhikā"
+NULL,p50,262,8,hangnum,84.,84.
+NULL,p50,263,100,gatha1,," Tuda byathāyaṃ (tu) nuda kkhepaṇe likha lekhaṇe,"
+NULL,p50,264,100,gathalast,,"Kuca saṅkocane rica kkharaṇe khaca bandhane;"
+NULL,p50,265,8,hangnum,"85. ","85. "
+NULL,p50,266,100,gatha1,," Uca sadde samavāye vijī bhayacalesu (ca),"
+NULL,p50,267,100,gathalast,,"(Vattate) bhuja koṭille valañjo (tu) valañjane;"
+NULL,p50,268,8,hangnum,86.,86.
+NULL,p50,269,100,gatha1,," Bhaja sevāputhakkāre ruja roge aṭā’ṭane,"
+NULL,p50,270,100,gathalast,,"Kuṭacchede (ca) koṭille agā sajjhāyanā’disu;"
+NULL,p50,271,8,hangnum,87.,87.
+NULL,p50,272,100,gatha1,," Puṇo subha kiraye vatta vattane cata yācane,"
+NULL,p50,273,100,gathalast,,"Putha pāke pūtibhāve kuthasaṃklesane’(pi ca;)"
+NULL,p50,274,8,hangnum,88.,88.
+NULL,p50,275,100,gatha1,," (Ubho dhātu) putha-patha vitthāre vida jānane,"
+NULL,p50,276,100,gathalast,,"Hada uccāra ussagge-cintāyaṃ mida hiṃsane;"
+NULL,p50,277,8,hangnum,89.,89.
+NULL,p50,278,100,gatha1,," Nandha vinandhane thīna-puna saṅghātavācino,"
+NULL,p50,279,100,gathalast,,"Kapa acchādane vappa vāraṇe khipa peraṇe;"
+NULL,p50,280,8,hangnum,90.,90.
+NULL,p50,281,100,gatha1,," Supo saye chupo phasse (vattate) capa sāntvane,"
+NULL,p50,282,100,gathalast,,"Nabha (dhātu) vihiṃsāyaṃ rumbha uppīḷanādisu;"
+NULL,p50,283,8,hangnum,"91. ","91. "
+NULL,p50,284,100,gatha1,," Sumbha saṃsumbhane jambha jambhane jubha nicchubhe,"
+NULL,p50,285,100,gathalast,,"Ṭhubha niṭṭhubhane camu adane chamu hīḷane;"
+NULL,p50,286,8,hangnum,92.,92.
+NULL,p50,287,100,gatha1,," Jhamu dāhe chamu adane irīya vattane’(pi ca),"
+NULL,p50,288,100,gathalast,,"Kira (dhātu) vikiraṇe giro nigiraṇā’disu;"
+NULL,p50,289,8,hangnum,93.,93.
+NULL,p50,290,100,gatha1,," Phura sañcalanādīsu kura saddā’danesu (ca),"
+NULL,p50,291,100,gathalast,,"Khuracchede vilikhaṇe ghura bhīme gilā’dane;"
+NULL,p50,292,8,hangnum,94.,94.
+NULL,p50,293,100,gatha1,," Tila snehe cila vāse hila hāve silu’ñchane,"
+NULL,p50,294,100,gathalast,,"Bila bhede thūla caye kusacchedana pūraṇe;"
+NULL,p50,295,8,hangnum,95.,95.
+NULL,p50,296,100,gatha1,," Visappavese pharaṇe disā’tisajjanā’disu"
+NULL,p50,297,100,gatha2,,"Phula phasse musa theyye thusa appikirayāya (tu)"
+NULL,p50,298,100,gathalast,,"Guḷa mokkhe guḷa parivattanamhi (tudādayo;)"
+NULL,p50,299,100,bodytext,,"Hū  bhuvādayo luttavikaraṇā"
+NULL,p50,300,8,hangnum,96.,96.
+NULL,p50,301,100,gatha1,," Hū-bhū sattāya (mu’ccanti) i ajjhāne gatimhi (ca,)"
+NULL,p50,302,100,gathalast,,"Khā-khyā (dvayaṃ) pakathane ji jaye ñā’vabodhane;"
+NULL,p50,303,8,hangnum,97.,97.
+NULL,p50,304,100,gatha1,," Sī-ḷī vehāsagamane ṭhā gatīvinivuttiyaṃ,"
+NULL,p50,305,100,gathalast,,"Nī pāpaṇe muna ñāṇe hana hiṃsāgatīsu (’pi)"
+NULL,p50,306,8,hangnum,98.,98.
+NULL,p50,307,100,gatha1,," Pārakkhaṇamhi pā pāne brū vācāyaṃ viyattiyaṃ,"
+NULL,p50,308,100,gathalast,,"Bhā dittiyaṃ mā pamāṇe (atho) yā pāpuṇe (siyā;)"
+NULL,p50,309,8,hangnum,99.,99.
+NULL,p50,310,100,gatha1,," (Duvepi) rā-lā ādāne vā gatīgandhanesu (pi,)"
+NULL,p50,311,100,gathalast,,"Asa (dhātu) bhuvi (khyāto) si saye sā samatthiye;"
+NULL,p50,312,2,chapter,"Juhotyā’dayo  sadvibhāvaluttavikaraṇā.","Juhotyā’dayo  sadvibhāvaluttavikaraṇā."
+NULL,p50,313,8,hangnum,100.,100.
+NULL,p50,314,100,gatha1,," Hū dāne’(pi ca) ādāne havyadāne (ca vattate,)"
+NULL,p50,315,100,gathalast,,"Hā cāge kamu yātrāyaṃ dā dāne dhā (ca) dhāraṇe;"
+NULL,p50,316,100,centered,,"Avikaraṇabhūvādayo samattā."
+NULL,p50,317,2,chapter,Rudhādayo,Rudhādayo
+NULL,p50,318,8,hangnum,101.,101.
+NULL,p50,319,100,gatha1,," Rudhi āvaraṇe muca mocane rica recane,"
+NULL,p50,320,100,gathalast,,"Sica seke yuja yoge bhuja pālanabhojane;"
+NULL,p50,321,8,hangnum,102.,102.
+NULL,p50,322,100,gatha1,," Katicchede chidi dvedhākaraṇe bhida vidāraṇe"
+NULL,p50,323,100,gatha2,,"Vida lābhe lupacchede vināse lipalimpane"
+NULL,p50,324,100,gathalast,,"Pisa saṃcuṇṇane hisi vihiṃsāyaṃ (rudhādayo;)"
+NULL,p50,325,2,chapter,"Divādayo ","Divādayo "
+NULL,p50,326,8,hangnum,103.,103.
+NULL,p50,327,100,gatha1,," Divu kīlā vijigiṃsā vohārajjuti thomite,"
+NULL,p50,328,100,gathalast,,"Sivu tantūnasantāne khī khaye khā pakāsane;"
+NULL,p50,329,8,hangnum,104.,104.
+NULL,p50,330,100,gatha1,," Kā-gā sadde (pi) ghā gandho’pādāne ruca rocane,"
+NULL,p50,331,100,gathalast,,"Kaca dityaṃ muca moce (atho) vica vivecane;"
+NULL,p50,332,8,hangnum,105.,105.
+NULL,p50,333,100,gatha1,," Rañja rāge sañja saṅge khalane majja suddhiyaṃ,"
+NULL,p50,334,100,gathalast,,"Yujo samādhimhi lujo vināse jhā vicintane;"
+NULL,p50,335,8,hangnum,106.,106.
+NULL,p50,336,100,gatha1,," Tā pālane chidi dvedhākāre mida sinehane,"
+NULL,p50,337,100,gathalast,,"Madu’mmāde khida dīnabhāve bhida vidāraṇe;"
+NULL,p50,338,8,hangnum,107.,107.
+NULL,p50,339,100,gatha1,," Sida pāke padagate vida sattā vicintane,"
+NULL,p50,340,100,gathalast,,"Dī khaye supane dā (ca) dāne dātva’vakhaṇḍane;"
+NULL,p50,341,8,hangnum,"108. ","108. "
+NULL,p50,342,100,gatha1,," Budhā’vagamanā’dīsu atthesu yudha yujjhane,"
+NULL,p50,343,100,gathalast,,"Kudha kope sudha soce rādha hiṃsāya siddhiyaṃ;"
+NULL,p50,344,8,hangnum,109.,109.
+NULL,p50,345,100,gatha1,," Idha saṃsiddhivuddhīsu sidha-sādha (ca) siddhiyaṃ,"
+NULL,p50,346,100,gathalast,,"Vidha vedhe gidha gedhe rudhi āvaraṇā’disu;"
+NULL,p50,347,8,hangnum,110.,110.
+NULL,p50,348,100,gatha1,," Mana ñāṇe janu’ppāde hana hiṃsāgatīsu (pi,)"
+NULL,p50,349,100,gathalast,,"Sinā soce kupa kope tapa santāpa pīṇane;"
+NULL,p50,350,8,hangnum,111.,111.
+NULL,p50,351,100,gatha1,," Lupacchede rupa nāse pakāse dipa dittiyaṃ,"
+NULL,p50,352,100,gathalast,,"Dapa hāse labha lābhe lubha gedhe khubho cale;"
+NULL,p50,353,8,hangnum,112.,112.
+NULL,p50,354,100,gatha1,," Samū’pasama khedesu hara-hirī (ca) lajjane,"
+NULL,p50,355,100,gathalast,,"Milā gattavīnāme (ca) gilā hāsakkhaye (pi ca;)"
+NULL,p50,356,8,hangnum,"113. ","113. "
+NULL,p50,357,100,gatha1,," Lī silese dravīkāre vā gatī bandhanesu (ca,)"
+NULL,p50,358,100,gathalast,,"Lisi lese tusa tose silisā’liṅganādisu;"
+NULL,p50,359,8,hangnum,114.,114.
+NULL,p50,360,100,gatha1,," Kilisa kaliso’patāpe (atho) tasa pipāsane,"
+NULL,p50,361,100,gathalast,,"Rusa rose disa-dusa appītimhi (duve siyuṃ;)"
+NULL,p50,362,8,hangnum,115.,115.
+NULL,p50,363,100,gatha1,," Yasuppayatane asu khepane (pi ca vattate,)"
+NULL,p50,364,100,gathalast,,"Susa sose bhasa adhopāte nasa adassane;"
+NULL,p50,365,100,bodytext,,"116. Sā’ssāde sā’vasāne (ca) sā tanūkaraṇe (pi ca) hā cāge muha vecitte naha sajjanabandhane naha soce pihicchāyaṃ siniha-saniha pītiyaṃ."
+NULL,p50,366,2,chapter,"Svādayo ","Svādayo "
+NULL,p50,367,100,bodytext,,"117. Su savaṇe saka sattimhi khī khayamhi gi saddane,"
+NULL,p50,368,100,gathalast,,"Apa-sambhū (ca) pāpuṇane hi gatimhi vū saṃvare;"
+NULL,p50,369,2,chapter,Kiyādayo,Kiyādayo
+NULL,p50,370,8,hangnum,118.,118.
+NULL,p50,371,100,gatha1,," Kī vinimaye ci caye ji jaye ñā’vabodhane,"
+NULL,p50,372,100,gathalast,,"Thava’bhitthave kampane dhu (atho) pu pavane (siyā;)"
+NULL,p50,373,8,hangnum,119.,119.
+NULL,p50,374,100,gatha1,,"Pī tappaṇe mā pamāṇe khipakkhepe mi hiṃsane,"
+NULL,p50,375,100,gatha2,,"Mi pamāṇe mu bandhe (ca) lu pacchede si bandhane"
+NULL,p50,376,100,gathalast,,"Asa bhakkhaṇe (atho) gaha upādāne (kiyādayo;)"
+NULL,p50,377,2,chapter,"Tanādayo ","Tanādayo "
+NULL,p50,378,8,hangnum,120.,120.
+NULL,p50,379,100,gatha1,," Tanu vitthāre saka sattismiṃ-du paritāpe sanu dānasmiṃ,"
+NULL,p50,380,100,gatha2,,"Vana yācāyaṃ manu bodhasmiṃ-hi gate apa pāpuṇanasmiṃ (hi,)"
+NULL,p50,381,100,gathalast,,"Kara karaṇasmiṃ(bhavati)si bandhe-su abhissavane(tanu ādīni;)"
+NULL,p50,382,100,centered,,"Niccaṃ ṇeṇayantā curādayo."
+NULL,p50,383,8,hangnum,121.,121.
+NULL,p50,384,100,gatha1,," Cura theyye loka (dhātu) dassane aki lakkhaṇe,"
+NULL,p50,385,100,gathalast,,"Siyā thaka patighāte (puna) takka vitakkaṇe;"
+NULL,p50,386,8,hangnum,122.,122.
+NULL,p50,387,100,gatha1,," Lakkha dassanaaṅkesu (vattate) makkha makkhaṇe,"
+NULL,p50,388,100,gathalast,,"Bhakkhā’dane mokkha moce sukha-dukkha (ca) takiraye;"
+NULL,p50,389,8,hangnum,"123. ","123. "
+NULL,p50,390,100,gatha1,," Liṅga cittakirayā’dīsu maga-magga gavesane,"
+NULL,p50,391,100,gathalast,,"(Punā’pi) paca vitthāre klese vañca palambhane."
+NULL,p50,392,8,hangnum,124.,124.
+NULL,p50,393,100,gatha1,," Vacca ajjhāyane acca pūjāyaṃ vaca bhāsane,"
+NULL,p50,394,100,gathalast,,"Raca patiyatane suca pesuññe ruca rocane;"
+NULL,p50,395,8,hangnum,125.,125.
+NULL,p50,396,100,gatha1,," Mucappamocane loca dassane kaca dittiyaṃ,"
+NULL,p50,397,100,gathalast,,"Sajjā’jja ajjane tajja tajjane vajja vajjane;"
+NULL,p50,398,8,hangnum,126.,126.
+NULL,p50,399,100,gatha1,," Yuja saṃyamane pūja pūjāyaṃ tija tejane,"
+NULL,p50,400,100,gathalast,,"Paja magga saṃvaraṇe gate bhaja vibhājane;"
+NULL,p50,401,8,hangnum,127.,127.
+NULL,p50,402,100,gatha1,," (Atho) bhāja puthakkāre sabhāja pītidassane,"
+NULL,p50,403,100,gathalast,,"(Atho tu) ghaṭa saṅghāte ghaṭṭa sañcalanā’disu;"
+NULL,p50,404,8,hangnum,"128. ","128. "
+NULL,p50,405,100,gatha1,," Kuṭa-koṭṭacchedane (dve) kuṭa ākoṭanā’disu,"
+NULL,p50,406,100,gathalast,,"Naṭa nacce caṭa-puṭa bhede vaṇṭa vibhājane;"
+NULL,p50,407,8,hangnum,129.,129.
+NULL,p50,408,100,gatha1,," Tuvaṭṭa ekasayane ghaṭo visaraṇe (siyā),"
+NULL,p50,409,100,gatha2,,"Guṇṭha oguṇṭhane heṭha bādhāyaṃ veṭha veṭhane"
+NULL,p50,410,100,gathalast,,"Guḍi veṭhe kaḍi-khaḍi bhedane maḍi bhūsane;"
+NULL,p50,411,8,hangnum,130.,130.
+NULL,p50,412,100,gatha1,," Paṇḍa-bhaṇḍa paribhāse daḍi āṇāya (mīrito),"
+NULL,p50,413,100,gathalast,,"Taḍi saṃtāḷane piṇḍa saṅghāte chaḍḍa chaḍḍane;"
+NULL,p50,414,8,hangnum,131.,131.
+NULL,p50,415,100,gatha1,," Vaṇṇa saṃvaṇṇane cuṇṇa cuṇṇane āṇa pesane,"
+NULL,p50,416,100,gathalast,,"Gaṇa saṃkalane kaṇṇa savaṇe cinta cintane;"
+NULL,p50,417,8,hangnum,132.,132.
+NULL,p50,418,100,gatha1,," Santa saṅkocane manta gutta bhāsana jānane,"
+NULL,p50,419,100,gathalast,,"Cita saṃcetanā’disu kitta saṃsaddane (bhave;)"
+NULL,p50,420,8,hangnum,"133. ","133. "
+NULL,p50,421,100,gatha1,," Yata nīyyātane gantha sandabbhe attha yācane,"
+NULL,p50,422,100,gathalast,,"Katha vākyappabandhe (ca) vida ñāṇe nude cuda;"
+NULL,p50,423,8,hangnum,134.,134.
+NULL,p50,424,100,gatha1,," Chadā’pavāraṇe chadda vamane chanda icchayaṃ,"
+NULL,p50,425,100,gathalast,,"Vadī’bhivāda thomesu bhadikalyāṇakammani;"
+NULL,p50,426,8,hangnum,135.,135.
+NULL,p50,427,100,gatha1,," Hiḷāda (tu) sukhe gandha sūcane vidha kampane,"
+NULL,p50,428,100,gathalast,,"Randha pāke (atho) māna pūjāyaṃ nu tthutimhi (tu;)"
+NULL,p50,429,8,hangnum,136.,136.
+NULL,p50,430,100,gatha1,," Thana devasadde ūna parihāne thena coriye,"
+NULL,p50,431,100,gathalast,,"Dhana sadde ñapa tosa nisāna māraṇā’disu;"
+NULL,p50,432,8,hangnum,137.,137.
+NULL,p50,433,100,gatha1,," Lapa vākye jhapa dāhe rupa ropaṇaādisu,"
+NULL,p50,434,100,gathalast,,"Pī tappane (siyā) kappa vitakke labhi vañcane;"
+NULL,p50,435,8,hangnum,"138. ","138. "
+NULL,p50,436,100,gatha1,," (Atho) vahi garahāyaṃ samu sāntvana dassane,"
+NULL,p50,437,100,gathalast,,"Kamu icchāya kantimhi (siyā) thoma silāghane;"
+NULL,p50,438,8,hangnum,139.,139.
+NULL,p50,439,100,gatha1,," Timu temana saṅkāsu ama rogagatā’disu,"
+NULL,p50,440,100,gathalast,,"Saṃgāma yuddhe (vatteyya) īra vācā pakampane;"
+NULL,p50,441,8,hangnum,140.,140.
+NULL,p50,442,100,gatha1,," Vara āvaraṇi’cchāsu yācāyaṃ dhara dhāraṇe,"
+NULL,p50,443,100,gathalast,,"Tīra kamma samattimhi pāra sāmatthiyā’disu;"
+NULL,p50,444,8,hangnum,141.,141.
+NULL,p50,445,100,gatha1,," Tulu’mmāne khala sove sañcaye pālarakkhaṇe,"
+NULL,p50,446,100,gathalast,,"Kala saṅkalanā’dīsu (bhave) mīla nimīlane;"
+NULL,p50,447,8,hangnum,142.,142.
+NULL,p50,448,100,gatha1,," Sīlū’padhāraṇe mūla rohaṇe lala icchane,"
+NULL,p50,449,100,gathalast,,"Dula ukkhepaṇe pūla mahattana samussaye;"
+NULL,p50,450,8,hangnum,"143. ","143. "
+NULL,p50,451,100,gatha1,," Ghusa sadde pisa pese bhusā’laṅkaraṇe (siyā,)"
+NULL,p50,452,100,gathalast,,"Rusa pārusiye khuṃsa akkose pusa posane;"
+NULL,p50,453,8,hangnum,144.,144.
+NULL,p50,454,100,gatha1,," Disa uccāraṇā’dīsu vasa acchādane (siyā,)"
+NULL,p50,455,100,gathalast,,"Rasa’ssāde rave snehe (atho) sisa visesane;"
+NULL,p50,456,8,hangnum,145.,145.
+NULL,p50,457,100,gatha1,," Si bandhe missa sammisse kuha vimbhāpane siyā,"
+NULL,p50,458,100,gathalast,,"Raha cāge gate (cā’pi) maha pūjāya (mīrito;)"
+NULL,p50,459,8,hangnum,146.,146.
+NULL,p50,460,100,gatha1,," Pihi’cchāyaṃ siyā vīḷa lajjāyaṃ eḷa phāḷane"
+NULL,p50,461,100,gatha2,,"Hīḷa gārahiye pīḷa bādhāyaṃ taḷa tāḷane"
+NULL,p50,462,100,gathalast,,"Laḷa (dhātū)’pasevā’yaṃ (vattatī’mecurādayo;)"
+NULL,p50,463,100,centered,,"Samattā sattagaṇā."
+NULL,p50,464,8,hangnum,"147. ","147. "
+NULL,p50,465,100,gatha1,," Bhuvādī ca rudhādī ca-divādi svā’dayo gaṇā,"
+NULL,p50,466,100,gathalast,,"Kiyādī ca tanādī ca-curādītī’dha sattadhā;"
+NULL,p50,467,8,hangnum,148.,148.
+NULL,p50,468,100,gatha1,," Kirayāvācittamakkhātu-me’kekattho bahū’dito,"
+NULL,p50,469,100,gathalast,,"Payogato’nugantabbā-anekatthā hi dhātavo;"
+NULL,p50,470,8,hangnum,149.,149.
+NULL,p50,471,100,gatha1,," Hitāya mandabuddhīnaṃ-vyattaṃ vaṇṇakkamā lahuṃ,"
+NULL,p50,472,100,gathalast,,"Racitā dhātumañjusā-sīlavaṃsena dhīmatā;"
+NULL,p50,473,8,hangnum,150.,150.
+NULL,p50,474,100,gatha1,," Saddhammapaṅkeruharājahaṃso,"
+NULL,p50,475,100,gatha2,,"Āsiṭṭhadhammaṭṭhiti sīlavaṃso;"
+NULL,p50,476,100,gatha3,,"Yakkhaddilenākhya nivāsavāsī,"
+NULL,p50,477,100,gathalast,,"Yatissaro soyamidaṃ akāsi;"
+NULL,p50,478,100,centered,,"Kaccāyana dhātumañjūsā samattā."
+NULL,p50,479,4,subhead,"Sācariyānusiṭṭhā  parisiṭṭhaparibhāsā","Sācariyānusiṭṭhā  parisiṭṭhaparibhāsā"
+NULL,p50,480,8,hangnum,1.,1.
+NULL,p50,481,100,gatha1,," Ekā nekassa rānantū-’bhayesaṃ antimā sarā,"
+NULL,p50,482,100,gathalast,,"Aṅgānubandhā dhātūnaṃ-vuccante’pi yathākkamaṃ;"
+NULL,p50,483,8,hangnum,2.,2.
+NULL,p50,484,100,gatha1,," Dhātuno vyāñjanā pubbe-niggahītaṃ sama’ntimā,"
+NULL,p50,485,100,gathalast,,"Ivaṇṇenā’rudhādīna-manubandhena ciṇhitaṃ;"
+NULL,p50,486,8,hangnum,3.,3.
+NULL,p50,487,100,gatha1,," Sesā’nubandhā sabbesaṃ-hontī’dhu’ccāraṇapphalā,"
+NULL,p50,488,100,gathalast,,"Uccāvacapphalā bhāsa-ntarampatvā bha vanti’pi;"
+NULL,p50,489,8,hangnum,"4. ","4. "
+NULL,p50,490,100,gatha1,," Nāmadhātuka bhāvo’pi-kirayāya adhikārato,"
+NULL,p50,491,100,gathalast,,"Viruddhantarābhāvā-kvacideva payujjate;"
+NULL,p50,492,8,hangnum,5.,5.
+NULL,p50,493,100,gatha1,," Dvandayuttivasā kvāpi-ādeso yovibhattiyā,"
+NULL,p50,494,100,gathalast,,"Guṇādibhāva saddo’pi-takirayatthe vidhīyate;"

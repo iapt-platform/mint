@@ -1,0 +1,1395 @@
+id,book,par_num,level,class,title,text
+NULL,p156,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
+NULL,p156,2,100,nikaya,,Khuddakanikāye
+NULL,p156,3,1,book,Dhammapadapāḷi,Dhammapadapāḷi
+NULL,p156,4,2,chapter,"1. Yamakavaggo","1. Yamakavaggo"
+NULL,p156,5,8,hangnum,1.,1.
+NULL,p156,6,100,gatha1,," Manopubbaṅgamā  dhammā, manoseṭṭhā manomayā;"
+NULL,p156,7,100,gatha2,,"Manasā ce paduṭṭhena, bhāsati vā karoti vā;"
+NULL,p156,8,100,gathalast,,"Tato naṃ dukkhamanveti, cakkaṃva vahato padaṃ."
+NULL,p156,9,8,hangnum,2.,2.
+NULL,p156,10,100,gatha1,," Manopubbaṅgamā dhammā, manoseṭṭhā manomayā;"
+NULL,p156,11,100,gatha2,,"Manasā ce pasannena, bhāsati vā karoti vā;"
+NULL,p156,12,100,gathalast,,"Tato naṃ sukhamanveti, chāyāva anapāyinī [anupāyinī (ka.)]."
+NULL,p156,13,8,hangnum,3.,3.
+NULL,p156,14,100,gatha1,," Akkocchi  maṃ avadhi maṃ, ajini [ajinī (?)] maṃ ahāsi me;"
+NULL,p156,15,100,gathalast,,"Ye ca taṃ upanayhanti, veraṃ tesaṃ na sammati."
+NULL,p156,16,8,hangnum,4.,4.
+NULL,p156,17,100,gatha1,," Akkocchi maṃ avadhi maṃ, ajini maṃ ahāsi me;"
+NULL,p156,18,100,gathalast,,"Ye ca taṃ nupanayhanti, veraṃ tesūpasammati."
+NULL,p156,19,8,hangnum,5.,5.
+NULL,p156,20,100,gatha1,," Na  hi verena verāni, sammantīdha kudācanaṃ;"
+NULL,p156,21,100,gathalast,,"Averena ca sammanti, esa dhammo sanantano."
+NULL,p156,22,8,hangnum,6.,6.
+NULL,p156,23,100,gatha1,," Pare  ca na vijānanti, mayamettha yamāmase;"
+NULL,p156,24,100,gathalast,,"Ye ca tattha vijānanti, tato sammanti medhagā."
+NULL,p156,25,8,hangnum,7.,7.
+NULL,p156,26,100,gatha1,," Subhānupassiṃ viharantaṃ, indriyesu asaṃvutaṃ;"
+NULL,p156,27,100,gatha2,,"Bhojanamhi cāmattaññuṃ, kusītaṃ hīnavīriyaṃ;"
+NULL,p156,28,100,gathalast,,"Taṃ ve pasahati māro, vāto rukkhaṃva dubbalaṃ."
+NULL,p156,29,8,hangnum,8.,8.
+NULL,p156,30,100,gatha1,," Asubhānupassiṃ viharantaṃ, indriyesu susaṃvutaṃ;"
+NULL,p156,31,100,gatha2,,"Bhojanamhi ca mattaññuṃ, saddhaṃ āraddhavīriyaṃ;"
+NULL,p156,32,100,gathalast,,"Taṃ ve nappasahati māro, vāto selaṃva pabbataṃ."
+NULL,p156,33,8,hangnum,9.,9.
+NULL,p156,34,100,gatha1,," Anikkasāvo kāsāvaṃ, yo vatthaṃ paridahissati;"
+NULL,p156,35,100,gathalast,,"Apeto damasaccena, na so kāsāvamarahati."
+NULL,p156,36,8,hangnum,10.,10.
+NULL,p156,37,100,gatha1,," Yo ca vantakasāvassa, sīlesu susamāhito;"
+NULL,p156,38,100,gathalast,,"Upeto damasaccena, sa ve kāsāvamarahati."
+NULL,p156,39,8,hangnum,11.,11.
+NULL,p156,40,100,gatha1,," Asāre sāramatino, sāre cāsāradassino;"
+NULL,p156,41,100,gathalast,,"Te sāraṃ nādhigacchanti, micchāsaṅkappagocarā."
+NULL,p156,42,8,hangnum,12.,12.
+NULL,p156,43,100,gatha1,," Sārañca  sārato ñatvā, asārañca asārato;"
+NULL,p156,44,100,gathalast,,"Te sāraṃ adhigacchanti, sammāsaṅkappagocarā."
+NULL,p156,45,8,hangnum,13.,13.
+NULL,p156,46,100,gatha1,," Yathā agāraṃ ducchannaṃ, vuṭṭhī samativijjhati;"
+NULL,p156,47,100,gathalast,,"Evaṃ abhāvitaṃ cittaṃ, rāgo samativijjhati."
+NULL,p156,48,8,hangnum,14.,14.
+NULL,p156,49,100,gatha1,," Yathā  agāraṃ suchannaṃ, vuṭṭhī na samativijjhati;"
+NULL,p156,50,100,gathalast,,"Evaṃ subhāvitaṃ cittaṃ, rāgo na samativijjhati."
+NULL,p156,51,8,hangnum,15.,15.
+NULL,p156,52,100,gatha1,," Idha  socati pecca socati, pāpakārī ubhayattha socati;"
+NULL,p156,53,100,gathalast,,"So socati so vihaññati, disvā kammakiliṭṭhamattano."
+NULL,p156,54,8,hangnum,16.,16.
+NULL,p156,55,100,gatha1,," Idha modati pecca modati, katapuñño ubhayattha modati;"
+NULL,p156,56,100,gathalast,,"So modati so pamodati, disvā kammavisuddhimattano."
+NULL,p156,57,8,hangnum,17.,17.
+NULL,p156,58,100,gatha1,," Idha tappati pecca tappati, pāpakārī [pāpakāri (?)] ubhayattha tappati;"
+NULL,p156,59,100,gathalast,,"‘‘Pāpaṃ me kata’’nti tappati, bhiyyo [bhīyo (sī.)] tappati duggatiṃ gato."
+NULL,p156,60,8,hangnum,18.,18.
+NULL,p156,61,100,gatha1,," Idha nandati pecca nandati, katapuñño ubhayattha nandati;"
+NULL,p156,62,100,gathalast,,"‘‘Puññaṃ me kata’’nti nandati, bhiyyo nandati suggatiṃ gato."
+NULL,p156,63,8,hangnum,19.,19.
+NULL,p156,64,100,gatha1,," Bahumpi ce saṃhita [sahitaṃ (sī. syā. kaṃ. pī.)] bhāsamāno, na takkaro hoti naro pamatto;"
+NULL,p156,65,100,gathalast,,"Gopova  gāvo gaṇayaṃ paresaṃ, na bhāgavā sāmaññassa hoti."
+NULL,p156,66,8,hangnum,20.,20.
+NULL,p156,67,100,gatha1,," Appampi ce saṃhita bhāsamāno, dhammassa hoti [hotī (sī. pī.)] anudhammacārī;"
+NULL,p156,68,100,gatha2,,"Rāgañca dosañca pahāya mohaṃ, sammappajāno suvimuttacitto;"
+NULL,p156,69,100,gathalast,,"Anupādiyāno idha vā huraṃ vā, sa bhāgavā sāmaññassa hoti."
+NULL,p156,70,100,centered,,"Yamakavaggo paṭhamo niṭṭhito."
+NULL,p156,71,2,chapter,"2. Appamādavaggo","2. Appamādavaggo"
+NULL,p156,72,8,hangnum,21.,21.
+NULL,p156,73,100,gatha1,," Appamādo  amatapadaṃ [amataṃ padaṃ (ka.)], pamādo maccuno padaṃ;"
+NULL,p156,74,100,gathalast,,"Appamattā na mīyanti, ye pamattā yathā matā."
+NULL,p156,75,8,hangnum,22.,22.
+NULL,p156,76,100,gatha1,," Evaṃ [etaṃ (sī. syā. kaṃ. pī.)] visesato ñatvā, appamādamhi paṇḍitā;"
+NULL,p156,77,100,gathalast,,"Appamāde pamodanti, ariyānaṃ gocare ratā."
+NULL,p156,78,8,hangnum,23.,23.
+NULL,p156,79,100,gatha1,," Te jhāyino sātatikā, niccaṃ daḷhaparakkamā;"
+NULL,p156,80,100,gathalast,,"Phusanti dhīrā nibbānaṃ, yogakkhemaṃ anuttaraṃ."
+NULL,p156,81,8,hangnum,24.,24.
+NULL,p156,82,100,gatha1,," Uṭṭhānavato satīmato [satimato (sī. syā. ka.)], sucikammassa nisammakārino;"
+NULL,p156,83,100,gathalast,,"Saññatassa dhammajīvino, appamattassa [apamattassa (?)] yasobhivaḍḍhati."
+NULL,p156,84,8,hangnum,25.,25.
+NULL,p156,85,100,gatha1,," Uṭṭhānenappamādena, saṃyamena damena ca;"
+NULL,p156,86,100,gathalast,,"Dīpaṃ kayirātha medhāvī, yaṃ ogho nābhikīrati."
+NULL,p156,87,8,hangnum,26.,26.
+NULL,p156,88,100,gatha1,," Pamādamanuyuñjanti, bālā dummedhino janā;"
+NULL,p156,89,100,gathalast,,"Appamādañca medhāvī, dhanaṃ seṭṭhaṃva rakkhati."
+NULL,p156,90,8,hangnum,27.,27.
+NULL,p156,91,100,gatha1,," Mā pamādamanuyuñjetha, mā kāmaratisanthavaṃ [sandhavaṃ (ka)];"
+NULL,p156,92,100,gathalast,,"Appamatto hi jhāyanto, pappoti vipulaṃ sukhaṃ."
+NULL,p156,93,8,hangnum,28.,28.
+NULL,p156,94,100,gatha1,," Pamādaṃ appamādena, yadā nudati paṇḍito;"
+NULL,p156,95,100,gatha2,,"Paññāpāsādamāruyha, asoko sokiniṃ pajaṃ;"
+NULL,p156,96,100,gathalast,,"Pabbataṭṭhova bhūmaṭṭhe [bhummaṭṭhe (sī. syā.)], dhīro bāle avekkhati."
+NULL,p156,97,8,hangnum,29.,29.
+NULL,p156,98,100,gatha1,," Appamatto  pamattesu, suttesu bahujāgaro;"
+NULL,p156,99,100,gathalast,,"Abalassaṃva  sīghasso, hitvā yāti sumedhaso."
+NULL,p156,100,8,hangnum,30.,30.
+NULL,p156,101,100,gatha1,," Appamādena maghavā, devānaṃ seṭṭhataṃ gato;"
+NULL,p156,102,100,gathalast,,"Appamādaṃ pasaṃsanti, pamādo garahito sadā."
+NULL,p156,103,8,hangnum,31.,31.
+NULL,p156,104,100,gatha1,," Appamādarato bhikkhu, pamāde bhayadassi vā;"
+NULL,p156,105,100,gathalast,,"Saṃyojanaṃ aṇuṃ thūlaṃ, ḍahaṃ aggīva gacchati."
+NULL,p156,106,8,hangnum,32.,32.
+NULL,p156,107,100,gatha1,," Appamādarato bhikkhu, pamāde bhayadassi vā;"
+NULL,p156,108,100,gathalast,,"Abhabbo parihānāya, nibbānasseva santike."
+NULL,p156,109,100,centered,,"Appamādavaggo dutiyo niṭṭhito."
+NULL,p156,110,2,chapter,"3. Cittavaggo","3. Cittavaggo"
+NULL,p156,111,8,hangnum,33.,33.
+NULL,p156,112,100,gatha1,," Phandanaṃ  capalaṃ cittaṃ, dūrakkhaṃ [durakkhaṃ (sabbattha)] dunnivārayaṃ;"
+NULL,p156,113,100,gathalast,,"Ujuṃ karoti medhāvī, usukārova tejanaṃ."
+NULL,p156,114,8,hangnum,34.,34.
+NULL,p156,115,100,gatha1,," Vārijova thale khitto, okamokataubbhato;"
+NULL,p156,116,100,gathalast,,"Pariphandatidaṃ cittaṃ, māradheyyaṃ pahātave."
+NULL,p156,117,8,hangnum,35.,35.
+NULL,p156,118,100,gatha1,," Dunniggahassa lahuno, yatthakāmanipātino;"
+NULL,p156,119,100,gathalast,,"Cittassa damatho sādhu, cittaṃ dantaṃ sukhāvahaṃ."
+NULL,p156,120,8,hangnum,36.,36.
+NULL,p156,121,100,gatha1,," Sududdasaṃ  sunipuṇaṃ, yatthakāmanipātinaṃ;"
+NULL,p156,122,100,gathalast,,"Cittaṃ rakkhetha medhāvī, cittaṃ guttaṃ sukhāvahaṃ."
+NULL,p156,123,8,hangnum,37.,37.
+NULL,p156,124,100,gatha1,," Dūraṅgamaṃ ekacaraṃ [ekacāraṃ (ka.)], asarīraṃ guhāsayaṃ;"
+NULL,p156,125,100,gathalast,,"Ye  cittaṃ saṃyamessanti, mokkhanti mārabandhanā."
+NULL,p156,126,8,hangnum,38.,38.
+NULL,p156,127,100,gatha1,," Anavaṭṭhitacittassa, saddhammaṃ avijānato;"
+NULL,p156,128,100,gathalast,,"Pariplavapasādassa, paññā na paripūrati."
+NULL,p156,129,8,hangnum,39.,39.
+NULL,p156,130,100,gatha1,," Anavassutacittassa, ananvāhatacetaso;"
+NULL,p156,131,100,gathalast,,"Puññapāpapahīnassa, natthi jāgarato bhayaṃ."
+NULL,p156,132,8,hangnum,40.,40.
+NULL,p156,133,100,gatha1,," Kumbhūpamaṃ kāyamimaṃ viditvā, nagarūpamaṃ cittamidaṃ ṭhapetvā;"
+NULL,p156,134,100,gathalast,,"Yodhetha māraṃ paññāvudhena, jitañca rakkhe anivesano siyā."
+NULL,p156,135,8,hangnum,41.,41.
+NULL,p156,136,100,gatha1,," Aciraṃ  vatayaṃ kāyo, pathaviṃ adhisessati;"
+NULL,p156,137,100,gathalast,,"Chuddho apetaviññāṇo, niratthaṃva kaliṅgaraṃ."
+NULL,p156,138,8,hangnum,42.,42.
+NULL,p156,139,100,gatha1,," Diso disaṃ yaṃ taṃ kayirā, verī vā pana verinaṃ;"
+NULL,p156,140,100,gathalast,,"Micchāpaṇihitaṃ cittaṃ, pāpiyo [pāpiyaṃ (?)] naṃ tato kare."
+NULL,p156,141,8,hangnum,43.,43.
+NULL,p156,142,100,gatha1,," Na taṃ mātā pitā kayirā, aññe vāpi ca ñātakā;"
+NULL,p156,143,100,gathalast,,"Sammāpaṇihitaṃ cittaṃ, seyyaso naṃ tato kare."
+NULL,p156,144,100,centered,,"Cittavaggo tatiyo niṭṭhito."
+NULL,p156,145,2,chapter,"4. Pupphavaggo","4. Pupphavaggo"
+NULL,p156,146,8,hangnum,44.,44.
+NULL,p156,147,100,gatha1,," Ko  imaṃ [komaṃ (ka.)] pathaviṃ vicessati [vijessati (sī. syā. pī.)], yamalokañca imaṃ sadevakaṃ;"
+NULL,p156,148,100,gathalast,,"Ko dhammapadaṃ sudesitaṃ, kusalo pupphamiva pacessati [pupphamivappacessati (ka.)]."
+NULL,p156,149,8,hangnum,45.,45.
+NULL,p156,150,100,gatha1,," Sekho pathaviṃ vicessati, yamalokañca imaṃ sadevakaṃ;"
+NULL,p156,151,100,gathalast,,"Sekho dhammapadaṃ sudesitaṃ, kusalo pupphamiva pacessati."
+NULL,p156,152,8,hangnum,46.,46.
+NULL,p156,153,100,gatha1,," Pheṇūpamaṃ  kāyamimaṃ viditvā, marīcidhammaṃ abhisambudhāno;"
+NULL,p156,154,100,gathalast,,"Chetvāna mārassa papupphakāni [sapupphakāni (ṭīkā)], adassanaṃ maccurājassa gacche."
+NULL,p156,155,8,hangnum,47.,47.
+NULL,p156,156,100,gatha1,," Pupphāni heva pacinantaṃ, byāsattamanasaṃ [byāsattamānasaṃ (ka.)] naraṃ;"
+NULL,p156,157,100,gathalast,,"Suttaṃ gāmaṃ mahoghova, maccu ādāya gacchati."
+NULL,p156,158,8,hangnum,48.,48.
+NULL,p156,159,100,gatha1,," Pupphāni heva pacinantaṃ, byāsattamanasaṃ naraṃ;"
+NULL,p156,160,100,gathalast,,"Atittaññeva kāmesu, antako kurute vasaṃ."
+NULL,p156,161,8,hangnum,49.,49.
+NULL,p156,162,100,gatha1,," Yathāpi bhamaro pupphaṃ, vaṇṇagandhamaheṭhayaṃ [vaṇṇagandhamapoṭhayaṃ (ka.)];"
+NULL,p156,163,100,gathalast,,"Paleti rasamādāya, evaṃ gāme munī care."
+NULL,p156,164,8,hangnum,50.,50.
+NULL,p156,165,100,gatha1,," Na paresaṃ vilomāni, na paresaṃ katākataṃ;"
+NULL,p156,166,100,gathalast,,"Attanova avekkheyya, katāni akatāni ca."
+NULL,p156,167,8,hangnum,51.,51.
+NULL,p156,168,100,gatha1,," Yathāpi  ruciraṃ pupphaṃ, vaṇṇavantaṃ agandhakaṃ;"
+NULL,p156,169,100,gathalast,,"Evaṃ subhāsitā vācā, aphalā hoti akubbato."
+NULL,p156,170,8,hangnum,52.,52.
+NULL,p156,171,100,gatha1,," Yathāpi  ruciraṃ pupphaṃ, vaṇṇavantaṃ sugandhakaṃ [sagandhakaṃ (sī. syā. kaṃ. pī.)];"
+NULL,p156,172,100,gathalast,,"Evaṃ subhāsitā vācā, saphalā hoti kubbato [sakubbato (sī. pī.), pakubbato (sī. aṭṭha.), sukubbato (syā. kaṃ.)]."
+NULL,p156,173,8,hangnum,53.,53.
+NULL,p156,174,100,gatha1,," Yathāpi  puppharāsimhā, kayirā mālāguṇe bahū;"
+NULL,p156,175,100,gathalast,,"Evaṃ jātena maccena, kattabbaṃ kusalaṃ bahuṃ."
+NULL,p156,176,8,hangnum,54.,54.
+NULL,p156,177,100,gatha1,," Na pupphagandho paṭivātameti, na candanaṃ tagaramallikā [tagaramallikā (sī. syā. kaṃ. pī.)];"
+NULL,p156,178,100,gathalast,,"Satañca gandho paṭivātameti, sabbā disā sappuriso pavāyati."
+NULL,p156,179,8,hangnum,55.,55.
+NULL,p156,180,100,gatha1,," Candanaṃ tagaraṃ vāpi, uppalaṃ atha vassikī;"
+NULL,p156,181,100,gathalast,,"Etesaṃ gandhajātānaṃ, sīlagandho anuttaro."
+NULL,p156,182,8,hangnum,56.,56.
+NULL,p156,183,100,gatha1,," Appamatto ayaṃ gandho, yvāyaṃ tagaracandanaṃ [yāyaṃ tagaracandanī (sī. syā. kaṃ. pī.)];"
+NULL,p156,184,100,gathalast,,"Yo ca sīlavataṃ gandho, vāti devesu uttamo."
+NULL,p156,185,8,hangnum,57.,57.
+NULL,p156,186,100,gatha1,," Tesaṃ sampannasīlānaṃ, appamādavihārinaṃ;"
+NULL,p156,187,100,gathalast,,"Sammadaññā vimuttānaṃ, māro maggaṃ na vindati."
+NULL,p156,188,8,hangnum,58.,58.
+NULL,p156,189,100,gatha1,," Yathā saṅkāraṭhānasmiṃ [saṅkāradhānasmiṃ (sī. syā. kaṃ. pī.)], ujjhitasmiṃ mahāpathe;"
+NULL,p156,190,100,gathalast,,"Padumaṃ tattha jāyetha, sucigandhaṃ manoramaṃ."
+NULL,p156,191,8,hangnum,59.,59.
+NULL,p156,192,100,gatha1,," Evaṃ  saṅkārabhūtesu, andhabhūte [andhībhūte (ka.)] puthujjane;"
+NULL,p156,193,100,gathalast,,"Atirocati paññāya, sammāsambuddhasāvako."
+NULL,p156,194,100,centered,,"Pupphavaggo catuttho niṭṭhito."
+NULL,p156,195,2,chapter,"5. Bālavaggo","5. Bālavaggo"
+NULL,p156,196,8,hangnum,60.,60.
+NULL,p156,197,100,gatha1,," Dīghā  jāgarato ratti, dīghaṃ santassa yojanaṃ;"
+NULL,p156,198,100,gathalast,,"Dīgho bālānaṃ saṃsāro, saddhammaṃ avijānataṃ."
+NULL,p156,199,8,hangnum,61.,61.
+NULL,p156,200,100,gatha1,," Carañce nādhigaccheyya, seyyaṃ sadisamattano;"
+NULL,p156,201,100,gathalast,,"Ekacariyaṃ [ekacariyaṃ (ka.)] daḷhaṃ kayirā, natthi bāle sahāyatā."
+NULL,p156,202,8,hangnum,62.,62.
+NULL,p156,203,100,gatha1,," Puttā matthi dhanammatthi [puttamatthi dhanamatthi (ka.)], iti bālo vihaññati;"
+NULL,p156,204,100,gathalast,,"Attā hi [attāpi (?)] attano natthi, kuto puttā kuto dhanaṃ."
+NULL,p156,205,8,hangnum,63.,63.
+NULL,p156,206,100,gatha1,," Yo bālo maññati bālyaṃ, paṇḍito vāpi tena so;"
+NULL,p156,207,100,gathalast,,"Bālo ca paṇḍitamānī, sa ve ‘‘bālo’’ti vuccati."
+NULL,p156,208,8,hangnum,64.,64.
+NULL,p156,209,100,gatha1,," Yāvajīvampi ce bālo, paṇḍitaṃ payirupāsati;"
+NULL,p156,210,100,gathalast,,"Na so dhammaṃ vijānāti, dabbī sūparasaṃ yathā."
+NULL,p156,211,8,hangnum,65.,65.
+NULL,p156,212,100,gatha1,," Muhuttamapi  ce viññū, paṇḍitaṃ payirupāsati;"
+NULL,p156,213,100,gathalast,,"Khippaṃ dhammaṃ vijānāti, jivhā sūparasaṃ yathā."
+NULL,p156,214,8,hangnum,66.,66.
+NULL,p156,215,100,gatha1,," Caranti bālā dummedhā, amitteneva attanā;"
+NULL,p156,216,100,gathalast,,"Karontā pāpakaṃ kammaṃ, yaṃ hoti kaṭukapphalaṃ."
+NULL,p156,217,8,hangnum,67.,67.
+NULL,p156,218,100,gatha1,," Na  taṃ kammaṃ kataṃ sādhu, yaṃ katvā anutappati;"
+NULL,p156,219,100,gathalast,,"Yassa assumukho rodaṃ, vipākaṃ paṭisevati."
+NULL,p156,220,8,hangnum,68.,68.
+NULL,p156,221,100,gatha1,," Tañca  kammaṃ kataṃ sādhu, yaṃ katvā nānutappati;"
+NULL,p156,222,100,gathalast,,"Yassa patīto sumano, vipākaṃ paṭisevati."
+NULL,p156,223,8,hangnum,69.,69.
+NULL,p156,224,100,gatha1,," Madhuvā [madhuṃ vā (dī. ni. ṭīkā 1)] maññati bālo, yāva pāpaṃ na paccati;"
+NULL,p156,225,100,gathalast,,"Yadā ca paccati pāpaṃ, bālo [atha bālo (sī. syā.) atha (?)] dukkhaṃ nigacchati."
+NULL,p156,226,8,hangnum,70.,70.
+NULL,p156,227,100,gatha1,," Māse māse kusaggena, bālo bhuñjeyya bhojanaṃ;"
+NULL,p156,228,100,gathalast,,"Na so saṅkhātadhammānaṃ [saṅkhatadhammānaṃ (sī. pī. ka.)], kalaṃ agghati soḷasiṃ."
+NULL,p156,229,8,hangnum,71.,71.
+NULL,p156,230,100,gatha1,," Na hi pāpaṃ kataṃ kammaṃ, sajju khīraṃva muccati;"
+NULL,p156,231,100,gathalast,,"Ḍahantaṃ bālamanveti, bhasmacchannova [bhasmāchannova (sī. pī. ka.)] pāvako."
+NULL,p156,232,8,hangnum,72.,72.
+NULL,p156,233,100,gatha1,," Yāvadeva anatthāya, ñattaṃ [ñātaṃ (?)] bālassa jāyati;"
+NULL,p156,234,100,gathalast,,"Hanti bālassa sukkaṃsaṃ, muddhamassa vipātayaṃ."
+NULL,p156,235,8,hangnum,73.,73.
+NULL,p156,236,100,gatha1,," Asantaṃ  bhāvanamiccheyya [asantaṃ bhāvamiccheyya (syā.), asantabhāvanamiccheyya (ka.)], purekkhārañca bhikkhusu;"
+NULL,p156,237,100,gathalast,,"Āvāsesu ca issariyaṃ, pūjā parakulesu ca."
+NULL,p156,238,8,hangnum,74.,74.
+NULL,p156,239,100,gatha1,," Mameva  kata maññantu, gihīpabbajitā ubho;"
+NULL,p156,240,100,gatha2,,"Mamevātivasā assu, kiccākiccesu kismici;"
+NULL,p156,241,100,gathalast,,"Iti bālassa saṅkappo, icchā māno ca vaḍḍhati."
+NULL,p156,242,8,hangnum,75.,75.
+NULL,p156,243,100,gatha1,," Aññā hi lābhūpanisā, aññā nibbānagāminī;"
+NULL,p156,244,100,gatha2,,"Evametaṃ abhiññāya, bhikkhu buddhassa sāvako;"
+NULL,p156,245,100,gathalast,,"Sakkāraṃ nābhinandeyya, vivekamanubrūhaye."
+NULL,p156,246,100,centered,,"Bālavaggo pañcamo niṭṭhito."
+NULL,p156,247,2,chapter,"6. Paṇḍitavaggo","6. Paṇḍitavaggo"
+NULL,p156,248,8,hangnum,76.,76.
+NULL,p156,249,100,gatha1,," Nidhīnaṃva  pavattāraṃ, yaṃ passe vajjadassinaṃ;"
+NULL,p156,250,100,gatha2,,"Niggayhavādiṃ medhāviṃ, tādisaṃ paṇḍitaṃ bhaje;"
+NULL,p156,251,100,gathalast,,"Tādisaṃ bhajamānassa, seyyo hoti na pāpiyo."
+NULL,p156,252,8,hangnum,77.,77.
+NULL,p156,253,100,gatha1,," Ovadeyyānusāseyya, asabbhā ca nivāraye;"
+NULL,p156,254,100,gathalast,,"Satañhi so piyo hoti, asataṃ hoti appiyo."
+NULL,p156,255,8,hangnum,78.,78.
+NULL,p156,256,100,gatha1,," Na bhaje pāpake mitte, na bhaje purisādhame;"
+NULL,p156,257,100,gathalast,,"Bhajetha mitte kalyāṇe, bhajetha purisuttame."
+NULL,p156,258,8,hangnum,79.,79.
+NULL,p156,259,100,gatha1,," Dhammapīti  sukhaṃ seti, vippasannena cetasā;"
+NULL,p156,260,100,gathalast,,"Ariyappavedite dhamme, sadā ramati paṇḍito."
+NULL,p156,261,8,hangnum,80.,80.
+NULL,p156,262,100,gatha1,," Udakañhi  nayanti nettikā, usukārā namayanti [damayanti (ka.)] tejanaṃ;"
+NULL,p156,263,100,gathalast,,"Dāruṃ namayanti tacchakā, attānaṃ damayanti paṇḍitā."
+NULL,p156,264,8,hangnum,81.,81.
+NULL,p156,265,100,gatha1,," Selo yathā ekaghano [ekagghano (ka.)], vātena na samīrati;"
+NULL,p156,266,100,gathalast,,"Evaṃ nindāpasaṃsāsu, na samiñjanti paṇḍitā."
+NULL,p156,267,8,hangnum,82.,82.
+NULL,p156,268,100,gatha1,," Yathāpi rahado gambhīro, vippasanno anāvilo;"
+NULL,p156,269,100,gathalast,,"Evaṃ dhammāni sutvāna, vippasīdanti paṇḍitā."
+NULL,p156,270,8,hangnum,83.,83.
+NULL,p156,271,100,gatha1,," Sabbattha ve sappurisā cajanti, na  kāmakāmā lapayanti santo;"
+NULL,p156,272,100,gathalast,,"Sukhena phuṭṭhā atha vā dukhena, na uccāvacaṃ [noccāvacaṃ (sī. aṭṭha.)] paṇḍitā dassayanti."
+NULL,p156,273,8,hangnum,84.,84.
+NULL,p156,274,100,gatha1,," Na  attahetu na parassa hetu, na puttamicche na dhanaṃ na raṭṭhaṃ;"
+NULL,p156,275,100,gathalast,,"Na iccheyya [nayicche (pī.), nicche (?)] adhammena samiddhimattano, sa sīlavā paññavā dhammiko siyā."
+NULL,p156,276,8,hangnum,85.,85.
+NULL,p156,277,100,gatha1,," Appakā te manussesu, ye janā pāragāmino;"
+NULL,p156,278,100,gathalast,,"Athāyaṃ itarā pajā, tīramevānudhāvati."
+NULL,p156,279,8,hangnum,86.,86.
+NULL,p156,280,100,gatha1,," Ye  ca kho sammadakkhāte, dhamme dhammānuvattino;"
+NULL,p156,281,100,gathalast,,"Te janā pāramessanti, maccudheyyaṃ suduttaraṃ."
+NULL,p156,282,8,hangnum,87.,87.
+NULL,p156,283,100,gatha1,," Kaṇhaṃ  dhammaṃ vippahāya, sukkaṃ bhāvetha paṇḍito;"
+NULL,p156,284,100,gathalast,,"Okā anokamāgamma, viveke yattha dūramaṃ."
+NULL,p156,285,8,hangnum,88.,88.
+NULL,p156,286,100,gatha1,," Tatrābhiratimiccheyya, hitvā kāme akiñcano;"
+NULL,p156,287,100,gathalast,,"Pariyodapeyya [pariyodāpeyya (?)] attānaṃ, cittaklesehi paṇḍito."
+NULL,p156,288,8,hangnum,89.,89.
+NULL,p156,289,100,gatha1,," Yesaṃ sambodhiyaṅgesu, sammā cittaṃ subhāvitaṃ;"
+NULL,p156,290,100,gatha2,,"Ādānapaṭinissagge, anupādāya ye ratā;"
+NULL,p156,291,100,gathalast,,"Khīṇāsavā jutimanto, te loke parinibbutā."
+NULL,p156,292,100,centered,,"Paṇḍitavaggo chaṭṭho niṭṭhito."
+NULL,p156,293,2,chapter,"7. Arahantavaggo","7. Arahantavaggo"
+NULL,p156,294,8,hangnum,90.,90.
+NULL,p156,295,100,gatha1,," Gataddhino  visokassa, vippamuttassa sabbadhi;"
+NULL,p156,296,100,gathalast,,"Sabbaganthappahīnassa, pariḷāho na vijjati."
+NULL,p156,297,8,hangnum,91.,91.
+NULL,p156,298,100,gatha1,," Uyyuñjanti  satīmanto, na nikete ramanti te;"
+NULL,p156,299,100,gathalast,,"Haṃsāva pallalaṃ hitvā, okamokaṃ jahanti te."
+NULL,p156,300,8,hangnum,92.,92.
+NULL,p156,301,100,gatha1,," Yesaṃ  sannicayo natthi, ye pariññātabhojanā;"
+NULL,p156,302,100,gatha2,,"Suññato animitto ca, vimokkho yesaṃ gocaro;"
+NULL,p156,303,100,gathalast,,"Ākāse va sakuntānaṃ [sakuṇānaṃ (ka.)], gati tesaṃ durannayā."
+NULL,p156,304,8,hangnum,93.,93.
+NULL,p156,305,100,gatha1,," Yassāsavā  parikkhīṇā, āhāre ca anissito;"
+NULL,p156,306,100,gatha2,,"Suññato animitto ca, vimokkho yassa gocaro;"
+NULL,p156,307,100,gathalast,,"Ākāse va sakuntānaṃ, padaṃ tassa durannayaṃ."
+NULL,p156,308,8,hangnum,94.,94.
+NULL,p156,309,100,gatha1,," Yassindriyāni samathaṅgatāni [samathaṃ gatāni (sī. pī.)], assā yathā sārathinā sudantā;"
+NULL,p156,310,100,gathalast,,"Pahīnamānassa anāsavassa, devāpi tassa pihayanti tādino."
+NULL,p156,311,8,hangnum,95.,95.
+NULL,p156,312,100,gatha1,," Pathavisamo no virujjhati, indakhilupamo [indakhīlūpamo (sī. syā. ka.)] tādi subbato;"
+NULL,p156,313,100,gathalast,,"Rahadova apetakaddamo, saṃsārā na bhavanti tādino."
+NULL,p156,314,8,hangnum,96.,96.
+NULL,p156,315,100,gatha1,," Santaṃ  tassa manaṃ hoti, santā vācā ca kamma ca;"
+NULL,p156,316,100,gathalast,,"Sammadaññā vimuttassa, upasantassa tādino."
+NULL,p156,317,8,hangnum,97.,97.
+NULL,p156,318,100,gatha1,," Assaddho akataññū ca, sandhicchedo ca yo naro;"
+NULL,p156,319,100,gathalast,,"Hatāvakāso vantāso, sa ve uttamaporiso."
+NULL,p156,320,8,hangnum,98.,98.
+NULL,p156,321,100,gatha1,," Gāme vā yadi vāraññe, ninne vā yadi vā thale;"
+NULL,p156,322,100,gathalast,,"Yattha arahanto viharanti, taṃ bhūmirāmaṇeyyakaṃ."
+NULL,p156,323,8,hangnum,99.,99.
+NULL,p156,324,100,gatha1,," Ramaṇīyāni  araññāni, yattha na ramatī jano;"
+NULL,p156,325,100,gatha2,,"Vītarāgā ramissanti, na te kāmagavesino."
+NULL,p156,326,100,centered,,"Arahantavaggo sattamo niṭṭhito."
+NULL,p156,327,2,chapter,"8. Sahassavaggo","8. Sahassavaggo"
+NULL,p156,328,8,hangnum,100.,100.
+NULL,p156,329,100,gatha1,," Sahassamapi  ce vācā, anatthapadasaṃhitā;"
+NULL,p156,330,100,gathalast,,"Ekaṃ atthapadaṃ seyyo, yaṃ sutvā upasammati."
+NULL,p156,331,8,hangnum,101.,101.
+NULL,p156,332,100,gatha1,," Sahassamapi ce gāthā, anatthapadasaṃhitā;"
+NULL,p156,333,100,gathalast,,"Ekaṃ gāthāpadaṃ seyyo, yaṃ sutvā upasammati."
+NULL,p156,334,8,hangnum,102.,102.
+NULL,p156,335,100,gatha1,," Yo ca gāthā sataṃ bhāse, anatthapadasaṃhitā [anatthapadasañhitaṃ (ka.) visesanaṃ hetaṃ gāthātipadassa];"
+NULL,p156,336,100,gathalast,,"Ekaṃ dhammapadaṃ seyyo, yaṃ sutvā upasammati."
+NULL,p156,337,8,hangnum,103.,103.
+NULL,p156,338,100,gatha1,," Yo sahassaṃ sahassena, saṅgāme mānuse jine;"
+NULL,p156,339,100,gathalast,,"Ekañca jeyyamattānaṃ [attānaṃ (sī. pī.)], sa ve saṅgāmajuttamo."
+NULL,p156,340,8,hangnum,104.,104.
+NULL,p156,341,100,gatha1,," Attā  have jitaṃ seyyo, yā cāyaṃ itarā pajā;"
+NULL,p156,342,100,gathalast,,"Attadantassa posassa, niccaṃ saññatacārino."
+NULL,p156,343,8,hangnum,105.,105.
+NULL,p156,344,100,gatha1,," Neva devo na gandhabbo, na māro saha brahmunā;"
+NULL,p156,345,100,gathalast,,"Jitaṃ apajitaṃ kayirā, tathārūpassa jantuno."
+NULL,p156,346,8,hangnum,106.,106.
+NULL,p156,347,100,gatha1,," Māse  māse sahassena, yo yajetha sataṃ samaṃ;"
+NULL,p156,348,100,gatha2,,"Ekañca bhāvitattānaṃ, muhuttamapi pūjaye;"
+NULL,p156,349,100,gathalast,,"Sāyeva pūjanā seyyo, yañce vassasataṃ hutaṃ."
+NULL,p156,350,8,hangnum,107.,107.
+NULL,p156,351,100,gatha1,," Yo ca vassasataṃ jantu, aggiṃ paricare vane;"
+NULL,p156,352,100,gatha2,,"Ekañca bhāvitattānaṃ, muhuttamapi pūjaye;"
+NULL,p156,353,100,gathalast,,"Sāyeva pūjanā seyyo, yañce vassasataṃ hutaṃ."
+NULL,p156,354,8,hangnum,108.,108.
+NULL,p156,355,100,gatha1,," Yaṃ  kiñci yiṭṭhaṃ va hutaṃ va [yiṭṭhañca hutañca (ka.)] loke, saṃvaccharaṃ yajetha puññapekkho;"
+NULL,p156,356,100,gathalast,,"Sabbampi taṃ na catubhāgameti, abhivādanā ujjugatesu seyyo."
+NULL,p156,357,8,hangnum,109.,109.
+NULL,p156,358,100,gatha1,," Abhivādanasīlissa, niccaṃ vuḍḍhāpacāyino [vaddhāpacāyino (sī. pī.)];"
+NULL,p156,359,100,gathalast,,"Cattāro dhammā vaḍḍhanti, āyu vaṇṇo sukhaṃ balaṃ."
+NULL,p156,360,8,hangnum,110.,110.
+NULL,p156,361,100,gatha1,," Yo ca vassasataṃ jīve, dussīlo asamāhito;"
+NULL,p156,362,100,gathalast,,"Ekāhaṃ jīvitaṃ seyyo, sīlavantassa jhāyino."
+NULL,p156,363,8,hangnum,111.,111.
+NULL,p156,364,100,gatha1,," Yo ca vassasataṃ jīve, duppañño asamāhito;"
+NULL,p156,365,100,gathalast,,"Ekāhaṃ jīvitaṃ seyyo, paññavantassa jhāyino."
+NULL,p156,366,8,hangnum,112.,112.
+NULL,p156,367,100,gatha1,," Yo  ca vassasataṃ jīve, kusīto hīnavīriyo;"
+NULL,p156,368,100,gathalast,,"Ekāhaṃ jīvitaṃ seyyo, vīriyamārabhato daḷhaṃ."
+NULL,p156,369,8,hangnum,113.,113.
+NULL,p156,370,100,gatha1,," Yo  ca vassasataṃ jīve, apassaṃ udayabbayaṃ;"
+NULL,p156,371,100,gathalast,,"Ekāhaṃ jīvitaṃ seyyo, passato udayabbayaṃ."
+NULL,p156,372,8,hangnum,114.,114.
+NULL,p156,373,100,gatha1,," Yo  ca vassasataṃ jīve, apassaṃ amataṃ padaṃ;"
+NULL,p156,374,100,gathalast,,"Ekāhaṃ jīvitaṃ seyyo, passato amataṃ padaṃ."
+NULL,p156,375,8,hangnum,115.,115.
+NULL,p156,376,100,gatha1,," Yo ca vassasataṃ jīve, apassaṃ dhammamuttamaṃ;"
+NULL,p156,377,100,gathalast,,"Ekāhaṃ jīvitaṃ seyyo, passato dhammamuttamaṃ."
+NULL,p156,378,100,centered,,"Sahassavaggo aṭṭhamo niṭṭhito."
+NULL,p156,379,2,chapter,"9. Pāpavaggo","9. Pāpavaggo"
+NULL,p156,380,8,hangnum,116.,116.
+NULL,p156,381,100,gatha1,," Abhittharetha  kalyāṇe, pāpā cittaṃ nivāraye;"
+NULL,p156,382,100,gathalast,,"Dandhañhi karoto puññaṃ, pāpasmiṃ ramatī mano."
+NULL,p156,383,8,hangnum,117.,117.
+NULL,p156,384,100,gatha1,," Pāpañce puriso kayirā, na naṃ [na taṃ (sī. pī.)] kayirā punappunaṃ;"
+NULL,p156,385,100,gathalast,,"Na tamhi chandaṃ kayirātha, dukkho pāpassa uccayo."
+NULL,p156,386,8,hangnum,118.,118.
+NULL,p156,387,100,gatha1,," Puññañce puriso kayirā, kayirā naṃ [kayirāthetaṃ (sī. syā.), kayirāthenaṃ (pī.)] punappunaṃ;"
+NULL,p156,388,100,gathalast,,"Tamhi chandaṃ kayirātha, sukho puññassa uccayo."
+NULL,p156,389,8,hangnum,119.,119.
+NULL,p156,390,100,gatha1,," Pāpopi  passati bhadraṃ, yāva pāpaṃ na paccati;"
+NULL,p156,391,100,gathalast,,"Yadā ca paccati pāpaṃ, atha pāpo pāpāni [atha pāpāni (?)] passati."
+NULL,p156,392,8,hangnum,120.,120.
+NULL,p156,393,100,gatha1,," Bhadropi  passati pāpaṃ, yāva bhadraṃ na paccati;"
+NULL,p156,394,100,gathalast,,"Yadā ca paccati bhadraṃ, atha bhadro bhadrāni [atha bhadrāni (?)] passati."
+NULL,p156,395,8,hangnum,121.,121.
+NULL,p156,396,100,gatha1,," Māvamaññetha [māppamaññetha (sī. syā. pī.)] pāpassa, na mantaṃ [na maṃ taṃ (sī. pī.), na mattaṃ (syā.)] āgamissati;"
+NULL,p156,397,100,gatha2,,"Udabindunipātena, udakumbhopi pūrati;"
+NULL,p156,398,100,gathalast,,"Bālo pūrati [pūrati bālo (sī. ka.), āpūrati bālo (syā.)] pāpassa, thokaṃ thokampi [thoka thokampi (sī. pī.)] ācinaṃ."
+NULL,p156,399,8,hangnum,122.,122.
+NULL,p156,400,100,gatha1,," Māvamaññetha puññassa, na mantaṃ āgamissati;"
+NULL,p156,401,100,gatha2,,"Udabindunipātena, udakumbhopi pūrati;"
+NULL,p156,402,100,gathalast,,"Dhīro pūrati puññassa, thokaṃ thokampi ācinaṃ."
+NULL,p156,403,8,hangnum,123.,123.
+NULL,p156,404,100,gatha1,," Vāṇijova bhayaṃ maggaṃ, appasattho mahaddhano;"
+NULL,p156,405,100,gathalast,,"Visaṃ jīvitukāmova, pāpāni parivajjaye."
+NULL,p156,406,8,hangnum,124.,124.
+NULL,p156,407,100,gatha1,," Pāṇimhi  ce vaṇo nāssa, hareyya pāṇinā visaṃ;"
+NULL,p156,408,100,gathalast,,"Nābbaṇaṃ visamanveti, natthi pāpaṃ akubbato."
+NULL,p156,409,8,hangnum,125.,125.
+NULL,p156,410,100,gatha1,," Yo  appaduṭṭhassa narassa dussati, suddhassa posassa anaṅgaṇassa;"
+NULL,p156,411,100,gathalast,,"Tameva bālaṃ pacceti pāpaṃ, sukhumo rajo paṭivātaṃva khitto."
+NULL,p156,412,8,hangnum,126.,126.
+NULL,p156,413,100,gatha1,," Gabbhameke uppajjanti, nirayaṃ pāpakammino;"
+NULL,p156,414,100,gathalast,,"Saggaṃ sugatino yanti, parinibbanti anāsavā."
+NULL,p156,415,8,hangnum,127.,127.
+NULL,p156,416,100,gatha1,," Na  antalikkhe na samuddamajjhe, na pabbatānaṃ vivaraṃ pavissa [pavisaṃ (syā.)];"
+NULL,p156,417,100,gathalast,,"Na  vijjatī [na vijjati (ka. sī. pī. ka.)] so jagatippadeso, yatthaṭṭhito [yatraṭṭhito (syā.)] mucceyya pāpakammā."
+NULL,p156,418,8,hangnum,128.,128.
+NULL,p156,419,100,gatha1,," Na antalikkhe na samuddamajjhe, na pabbatānaṃ vivaraṃ pavissa;"
+NULL,p156,420,100,gathalast,,"Na vijjatī so jagatippadeso, yatthaṭṭhitaṃ [yatraṭṭhitaṃ (syā.)] nappasaheyya maccu."
+NULL,p156,421,100,centered,,"Pāpavaggo navamo niṭṭhito."
+NULL,p156,422,2,chapter,"10. Daṇḍavaggo","10. Daṇḍavaggo"
+NULL,p156,423,8,hangnum,129.,129.
+NULL,p156,424,100,gatha1,," Sabbe tasanti daṇḍassa, sabbe bhāyanti maccuno;"
+NULL,p156,425,100,gathalast,,"Attānaṃ upamaṃ katvā, na haneyya na ghātaye."
+NULL,p156,426,8,hangnum,130.,130.
+NULL,p156,427,100,gatha1,," Sabbe  tasanti daṇḍassa, sabbesaṃ jīvitaṃ piyaṃ;"
+NULL,p156,428,100,gathalast,,"Attānaṃ upamaṃ katvā, na haneyya na ghātaye."
+NULL,p156,429,8,hangnum,131.,131.
+NULL,p156,430,100,gatha1,," Sukhakāmāni  bhūtāni, yo daṇḍena vihiṃsati;"
+NULL,p156,431,100,gathalast,,"Attano sukhamesāno, pecca so na labhate sukhaṃ."
+NULL,p156,432,8,hangnum,132.,132.
+NULL,p156,433,100,gatha1,," Sukhakāmāni  bhūtāni, yo daṇḍena na hiṃsati;"
+NULL,p156,434,100,gathalast,,"Attano sukhamesāno, pecca so labhate sukhaṃ."
+NULL,p156,435,8,hangnum,133.,133.
+NULL,p156,436,100,gatha1,," Māvoca pharusaṃ kañci, vuttā paṭivadeyyu taṃ [paṭivadeyyuṃ taṃ (ka.)];"
+NULL,p156,437,100,gathalast,,"Dukkhā hi sārambhakathā, paṭidaṇḍā phuseyyu taṃ [phuseyyuṃ taṃ (ka.)]."
+NULL,p156,438,8,hangnum,134.,134.
+NULL,p156,439,100,gatha1,," Sace  neresi attānaṃ, kaṃso upahato yathā;"
+NULL,p156,440,100,gathalast,,"Esa pattosi nibbānaṃ, sārambho te na vijjati."
+NULL,p156,441,8,hangnum,135.,135.
+NULL,p156,442,100,gatha1,," Yathā daṇḍena gopālo, gāvo pājeti gocaraṃ;"
+NULL,p156,443,100,gathalast,,"Evaṃ jarā ca maccu ca, āyuṃ pājenti pāṇinaṃ."
+NULL,p156,444,8,hangnum,136.,136.
+NULL,p156,445,100,gatha1,," Atha pāpāni kammāni, karaṃ bālo na bujjhati;"
+NULL,p156,446,100,gathalast,,"Sehi kammehi dummedho, aggidaḍḍhova tappati."
+NULL,p156,447,8,hangnum,137.,137.
+NULL,p156,448,100,gatha1,," Yo daṇḍena adaṇḍesu, appaduṭṭhesu dussati;"
+NULL,p156,449,100,gathalast,,"Dasannamaññataraṃ ṭhānaṃ, khippameva nigacchati."
+NULL,p156,450,8,hangnum,138.,138.
+NULL,p156,451,100,gatha1,," Vedanaṃ  pharusaṃ jāniṃ, sarīrassa ca bhedanaṃ [sarīrassa pabhedanaṃ (syā.)];"
+NULL,p156,452,100,gathalast,,"Garukaṃ vāpi ābādhaṃ, cittakkhepañca [cittakkhepaṃ va (sī. syā. pī.)] pāpuṇe."
+NULL,p156,453,8,hangnum,139.,139.
+NULL,p156,454,100,gatha1,," Rājato vā upasaggaṃ [upassaggaṃ (sī. pī.)], abbhakkhānañca [abbhakkhānaṃ va (sī. pī.)] dāruṇaṃ;"
+NULL,p156,455,100,gathalast,,"Parikkhayañca [parikkhayaṃ va (sī. syā. pī.)] ñātīnaṃ, bhogānañca [bhogānaṃ va (sī. syā. pī.)] pabhaṅguraṃ [pabhaṅgunaṃ (ka.)]."
+NULL,p156,456,8,hangnum,140.,140.
+NULL,p156,457,100,gatha1,," Atha vāssa agārāni, aggi ḍahati [ḍayhati (ka.)] pāvako;"
+NULL,p156,458,100,gathalast,,"Kāyassa bhedā duppañño, nirayaṃ sopapajjati [so upapajjati (sī. syā.)]."
+NULL,p156,459,8,hangnum,141.,141.
+NULL,p156,460,100,gatha1,," Na  naggacariyā na jaṭā na paṅkā, nānāsakā thaṇḍilasāyikā vā;"
+NULL,p156,461,100,gathalast,,"Rajojallaṃ ukkuṭikappadhānaṃ, sodhenti maccaṃ avitiṇṇakaṅkhaṃ."
+NULL,p156,462,8,hangnum,142.,142.
+NULL,p156,463,100,gatha1,," Alaṅkato cepi samaṃ careyya, santo danto niyato brahmacārī;"
+NULL,p156,464,100,gathalast,,"Sabbesu  bhūtesu nidhāya daṇḍaṃ, so brāhmaṇo so samaṇo sa bhikkhu."
+NULL,p156,465,8,hangnum,143.,143.
+NULL,p156,466,100,gatha1,," Hirīnisedho puriso, koci lokasmi vijjati;"
+NULL,p156,467,100,gathalast,,"Yo niddaṃ [nindaṃ (sī. pī.) saṃ. ni. 1.18] apabodheti [apabodhati (sī. syā. pī.)], asso bhadro kasāmiva."
+NULL,p156,468,8,hangnum,144.,144.
+NULL,p156,469,100,gatha1,," Asso  yathā bhadro kasāniviṭṭho, ātāpino saṃvegino bhavātha;"
+NULL,p156,470,100,gatha2,,"Saddhāya sīlena ca vīriyena ca, samādhinā dhammavinicchayena ca;"
+NULL,p156,471,100,gathalast,,"Sampannavijjācaraṇā patissatā, jahissatha [pahassatha (sī. syā. pī.)] dukkhamidaṃ anappakaṃ."
+NULL,p156,472,8,hangnum,145.,145.
+NULL,p156,473,100,gatha1,," Udakañhi nayanti nettikā, usukārā namayanti tejanaṃ;"
+NULL,p156,474,100,gathalast,,"Dāruṃ namayanti tacchakā, attānaṃ damayanti subbatā."
+NULL,p156,475,100,centered,,"Daṇḍavaggo dasamo niṭṭhito."
+NULL,p156,476,2,chapter,"11. Jarāvaggo","11. Jarāvaggo"
+NULL,p156,477,8,hangnum,146.,146.
+NULL,p156,478,100,gatha1,," Ko  nu hāso [kinnu hāso (ka.)] kimānando, niccaṃ pajjalite sati;"
+NULL,p156,479,100,gathalast,,"Andhakārena onaddhā, padīpaṃ na gavesatha."
+NULL,p156,480,8,hangnum,147.,147.
+NULL,p156,481,100,gatha1,," Passa cittakataṃ bimbaṃ, arukāyaṃ samussitaṃ;"
+NULL,p156,482,100,gathalast,,"Āturaṃ bahusaṅkappaṃ, yassa natthi dhuvaṃ ṭhiti."
+NULL,p156,483,8,hangnum,148.,148.
+NULL,p156,484,100,gatha1,," Parijiṇṇamidaṃ  rūpaṃ, roganīḷaṃ [roganiḍḍhaṃ (sī. pī.), roganiddhaṃ (syā.)] pabhaṅguraṃ;"
+NULL,p156,485,100,gathalast,,"Bhijjati pūtisandeho, maraṇantañhi jīvitaṃ."
+NULL,p156,486,8,hangnum,149.,149.
+NULL,p156,487,100,gatha1,," Yānimāni  apatthāni [yānimāni apatthāni (sī. syā. pī.), yānimāni’paviddhāni (?)], alābūneva [alāpūneva (sī. syā. pī.)] sārade;"
+NULL,p156,488,100,gathalast,,"Kāpotakāni aṭṭhīni, tāni disvāna kā rati."
+NULL,p156,489,8,hangnum,150.,150.
+NULL,p156,490,100,gatha1,," Aṭṭhīnaṃ nagaraṃ kataṃ, maṃsalohitalepanaṃ;"
+NULL,p156,491,100,gathalast,,"Yattha jarā ca maccu ca, māno makkho ca ohito."
+NULL,p156,492,8,hangnum,151.,151.
+NULL,p156,493,100,gatha1,," Jīranti ve rājarathā sucittā, atho sarīrampi jaraṃ upeti;"
+NULL,p156,494,100,gathalast,,"Satañca dhammo na jaraṃ upeti, santo have sabbhi pavedayanti."
+NULL,p156,495,8,hangnum,152.,152.
+NULL,p156,496,100,gatha1,," Appassutāyaṃ puriso, balibaddhova [balivaddova (sī. syā. pī.)] jīrati;"
+NULL,p156,497,100,gathalast,,"Maṃsāni tassa vaḍḍhanti, paññā tassa na vaḍḍhati."
+NULL,p156,498,8,hangnum,153.,153.
+NULL,p156,499,100,gatha1,," Anekajātisaṃsāraṃ, sandhāvissaṃ anibbisaṃ;"
+NULL,p156,500,100,gathalast,,"Gahakāraṃ [gahakārakaṃ (sī. syā. pī.)] gavesanto, dukkhā jāti punappunaṃ."
+NULL,p156,501,8,hangnum,154.,154.
+NULL,p156,502,100,gatha1,," Gahakāraka diṭṭhosi, puna gehaṃ na kāhasi;"
+NULL,p156,503,100,gatha2,,"Sabbā  te phāsukā bhaggā, gahakūṭaṃ visaṅkhataṃ;"
+NULL,p156,504,100,gathalast,,"Visaṅkhāragataṃ cittaṃ, taṇhānaṃ khayamajjhagā."
+NULL,p156,505,8,hangnum,155.,155.
+NULL,p156,506,100,gatha1,," Acaritvā brahmacariyaṃ, aladdhā yobbane dhanaṃ;"
+NULL,p156,507,100,gathalast,,"Jiṇṇakoñcāva jhāyanti, khīṇamaccheva pallale."
+NULL,p156,508,8,hangnum,156.,156.
+NULL,p156,509,100,gatha1,," Acaritvā  brahmacariyaṃ, aladdhā yobbane dhanaṃ;"
+NULL,p156,510,100,gathalast,,"Senti cāpātikhīṇāva, purāṇāni anutthunaṃ."
+NULL,p156,511,100,centered,,"Jarāvaggo ekādasamo niṭṭhito."
+NULL,p156,512,2,chapter,"12. Attavaggo","12. Attavaggo"
+NULL,p156,513,8,hangnum,157.,157.
+NULL,p156,514,100,gatha1,," Attānañce  piyaṃ jaññā, rakkheyya naṃ surakkhitaṃ;"
+NULL,p156,515,100,gathalast,,"Tiṇṇaṃ aññataraṃ yāmaṃ, paṭijaggeyya paṇḍito."
+NULL,p156,516,8,hangnum,158.,158.
+NULL,p156,517,100,gatha1,," Attānameva paṭhamaṃ, patirūpe nivesaye;"
+NULL,p156,518,100,gathalast,,"Athaññamanusāseyya, na kilisseyya paṇḍito."
+NULL,p156,519,8,hangnum,159.,159.
+NULL,p156,520,100,gatha1,," Attānaṃ  ce tathā kayirā, yathāññamanusāsati;"
+NULL,p156,521,100,gathalast,,"Sudanto vata dametha, attā hi kira duddamo."
+NULL,p156,522,8,hangnum,160.,160.
+NULL,p156,523,100,gatha1,," Attā hi attano nātho, ko hi nātho paro siyā;"
+NULL,p156,524,100,gathalast,,"Attanā hi sudantena, nāthaṃ labhati dullabhaṃ."
+NULL,p156,525,8,hangnum,161.,161.
+NULL,p156,526,100,gatha1,," Attanā hi kataṃ pāpaṃ, attajaṃ attasambhavaṃ;"
+NULL,p156,527,100,gathalast,,"Abhimatthati [abhimantati (sī. pī.)] dummedhaṃ, vajiraṃ vasmamayaṃ [vajiraṃva’mhamayaṃ (syā. ka.)] maṇiṃ."
+NULL,p156,528,8,hangnum,162.,162.
+NULL,p156,529,100,gatha1,," Yassa  accantadussīlyaṃ, māluvā sālamivotthataṃ;"
+NULL,p156,530,100,gathalast,,"Karoti so tathattānaṃ, yathā naṃ icchatī diso."
+NULL,p156,531,8,hangnum,163.,163.
+NULL,p156,532,100,gatha1,," Sukarāni  asādhūni, attano ahitāni ca;"
+NULL,p156,533,100,gathalast,,"Yaṃ ve hitañca sādhuñca, taṃ ve paramadukkaraṃ."
+NULL,p156,534,8,hangnum,164.,164.
+NULL,p156,535,100,gatha1,," Yo sāsanaṃ arahataṃ, ariyānaṃ dhammajīvinaṃ;"
+NULL,p156,536,100,gatha2,,"Paṭikkosati dummedho, diṭṭhiṃ nissāya pāpikaṃ;"
+NULL,p156,537,100,gathalast,,"Phalāni kaṭṭhakasseva, attaghātāya [attaghaññāya (sī. syā. pī.)] phallati."
+NULL,p156,538,8,hangnum,165.,165.
+NULL,p156,539,100,gatha1,," Attanā  hi [attanāva (sī. syā. pī.)] kataṃ pāpaṃ, attanā saṃkilissati;"
+NULL,p156,540,100,gatha2,,"Attanā akataṃ pāpaṃ, attanāva visujjhati;"
+NULL,p156,541,100,gathalast,,"Suddhī asuddhi paccattaṃ, nāñño aññaṃ [nāññamañño(sī.)] visodhaye."
+NULL,p156,542,8,hangnum,166.,166.
+NULL,p156,543,100,gatha1,," Attadatthaṃ  paratthena, bahunāpi na hāpaye;"
+NULL,p156,544,100,gathalast,,"Attadatthamabhiññāya, sadatthapasuto siyā."
+NULL,p156,545,100,centered,,"Attavaggo dvādasamo niṭṭhito."
+NULL,p156,546,2,chapter,"13. Lokavaggo","13. Lokavaggo"
+NULL,p156,547,8,hangnum,167.,167.
+NULL,p156,548,100,gatha1,," Hīnaṃ dhammaṃ na seveyya, pamādena na saṃvase;"
+NULL,p156,549,100,gathalast,,"Micchādiṭṭhiṃ na seveyya, na siyā lokavaḍḍhano."
+NULL,p156,550,8,hangnum,168.,168.
+NULL,p156,551,100,gatha1,," Uttiṭṭhe nappamajjeyya, dhammaṃ sucaritaṃ care;"
+NULL,p156,552,100,gathalast,,"Dhammacārī sukhaṃ seti, asmiṃ loke paramhi ca."
+NULL,p156,553,8,hangnum,169.,169.
+NULL,p156,554,100,gatha1,," Dhammaṃ  care sucaritaṃ, na naṃ duccaritaṃ care;"
+NULL,p156,555,100,gathalast,,"Dhammacārī sukhaṃ seti, asmiṃ loke paramhi ca."
+NULL,p156,556,8,hangnum,170.,170.
+NULL,p156,557,100,gatha1,," Yathā pubbuḷakaṃ [pubbuḷakaṃ (sī. pī.)] passe, yathā passe marīcikaṃ;"
+NULL,p156,558,100,gathalast,,"Evaṃ lokaṃ avekkhantaṃ, maccurājā na passati."
+NULL,p156,559,8,hangnum,171.,171.
+NULL,p156,560,100,gatha1,," Etha passathimaṃ lokaṃ, cittaṃ rājarathūpamaṃ;"
+NULL,p156,561,100,gathalast,,"Yattha bālā visīdanti, natthi saṅgo vijānataṃ."
+NULL,p156,562,8,hangnum,172.,172.
+NULL,p156,563,100,gatha1,," Yo  ca pubbe pamajjitvā, pacchā so nappamajjati;"
+NULL,p156,564,100,gathalast,,"Somaṃ lokaṃ pabhāseti, abbhā muttova candimā."
+NULL,p156,565,8,hangnum,173.,173.
+NULL,p156,566,100,gatha1,," Yassa pāpaṃ kataṃ kammaṃ, kusalena pidhīyati [pitīyati (sī. syā. pī.)];"
+NULL,p156,567,100,gathalast,,"Somaṃ lokaṃ pabhāseti, abbhā muttova candimā."
+NULL,p156,568,8,hangnum,174.,174.
+NULL,p156,569,100,gatha1,," Andhabhūto [andhībhūto (ka.)] ayaṃ loko, tanukettha vipassati;"
+NULL,p156,570,100,gathalast,,"Sakuṇo jālamuttova, appo saggāya gacchati."
+NULL,p156,571,8,hangnum,175.,175.
+NULL,p156,572,100,gatha1,," Haṃsādiccapathe yanti, ākāse yanti iddhiyā;"
+NULL,p156,573,100,gathalast,,"Nīyanti dhīrā lokamhā, jetvā māraṃ savāhiniṃ [savāhanaṃ (syā. ka.)]."
+NULL,p156,574,8,hangnum,176.,176.
+NULL,p156,575,100,gatha1,," Ekaṃ dhammaṃ atītassa, musāvādissa jantuno;"
+NULL,p156,576,100,gathalast,,"Vitiṇṇaparalokassa, natthi pāpaṃ akāriyaṃ."
+NULL,p156,577,8,hangnum,177.,177.
+NULL,p156,578,100,gatha1,," Na  ve kadariyā devalokaṃ vajanti, bālā have nappasaṃsanti dānaṃ;"
+NULL,p156,579,100,gathalast,,"Dhīro ca dānaṃ anumodamāno, teneva  so hoti sukhī parattha."
+NULL,p156,580,8,hangnum,178.,178.
+NULL,p156,581,100,gatha1,," Pathabyā ekarajjena, saggassa gamanena vā;"
+NULL,p156,582,100,gathalast,,"Sabbalokādhipaccena, sotāpattiphalaṃ varaṃ."
+NULL,p156,583,100,centered,,"Lokavaggo terasamo niṭṭhito."
+NULL,p156,584,2,chapter,"14. Buddhavaggo","14. Buddhavaggo"
+NULL,p156,585,8,hangnum,179.,179.
+NULL,p156,586,100,gatha1,," Yassa  jitaṃ nāvajīyati, jitaṃ yassa [jitamassa (sī. syā. pī.), jitaṃ massa (ka.)] no yāti koci loke;"
+NULL,p156,587,100,gathalast,,"Taṃ buddhamanantagocaraṃ, apadaṃ kena padena nessatha."
+NULL,p156,588,8,hangnum,180.,180.
+NULL,p156,589,100,gatha1,," Yassa jālinī visattikā, taṇhā natthi kuhiñci netave;"
+NULL,p156,590,100,gathalast,,"Taṃ buddhamanantagocaraṃ, apadaṃ kena padena nessatha."
+NULL,p156,591,8,hangnum,181.,181.
+NULL,p156,592,100,gatha1,," Ye jhānapasutā dhīrā, nekkhammūpasame ratā;"
+NULL,p156,593,100,gathalast,,"Devāpi tesaṃ pihayanti, sambuddhānaṃ satīmataṃ."
+NULL,p156,594,8,hangnum,182.,182.
+NULL,p156,595,100,gatha1,," Kiccho  manussapaṭilābho, kicchaṃ maccāna jīvitaṃ;"
+NULL,p156,596,100,gathalast,,"Kicchaṃ saddhammassavanaṃ, kiccho buddhānamuppādo."
+NULL,p156,597,8,hangnum,183.,183.
+NULL,p156,598,100,gatha1,," Sabbapāpassa akaraṇaṃ, kusalassa upasampadā [kusalassūpasampadā (syā.)];"
+NULL,p156,599,100,gathalast,,"Sacittapariyodapanaṃ [sacittapariyodāpanaṃ (?)], etaṃ buddhāna sāsanaṃ."
+NULL,p156,600,8,hangnum,184.,184.
+NULL,p156,601,100,gatha1,," Khantī paramaṃ tapo titikkhā, nibbānaṃ [nibbāṇaṃ (ka. sī. pī.)] paramaṃ vadanti buddhā;"
+NULL,p156,602,100,gathalast,,"Na hi pabbajito parūpaghātī, na [ayaṃ nakāro sī. syā. pī. pātthakesu na dissati] samaṇo hoti paraṃ viheṭhayanto."
+NULL,p156,603,8,hangnum,185.,185.
+NULL,p156,604,100,gatha1,," Anūpavādo anūpaghāto [anupavādo anupaghāto (syā. ka.)], pātimokkhe ca saṃvaro;"
+NULL,p156,605,100,gatha2,,"Mattaññutā ca bhattasmiṃ, pantañca sayanāsanaṃ;"
+NULL,p156,606,100,gathalast,,"Adhicitte ca āyogo, etaṃ buddhāna sāsanaṃ."
+NULL,p156,607,8,hangnum,186.,186.
+NULL,p156,608,100,gatha1,," Na  kahāpaṇavassena, titti kāmesu vijjati;"
+NULL,p156,609,100,gathalast,,"Appassādā dukhā kāmā, iti viññāya paṇḍito."
+NULL,p156,610,8,hangnum,187.,187.
+NULL,p156,611,100,gatha1,," Api  dibbesu kāmesu, ratiṃ so nādhigacchati;"
+NULL,p156,612,100,gathalast,,"Taṇhakkhayarato hoti, sammāsambuddhasāvako."
+NULL,p156,613,8,hangnum,188.,188.
+NULL,p156,614,100,gatha1,," Bahuṃ ve saraṇaṃ yanti, pabbatāni vanāni ca;"
+NULL,p156,615,100,gathalast,,"Ārāmarukkhacetyāni, manussā bhayatajjitā."
+NULL,p156,616,8,hangnum,189.,189.
+NULL,p156,617,100,gatha1,," Netaṃ kho saraṇaṃ khemaṃ, netaṃ saraṇamuttamaṃ;"
+NULL,p156,618,100,gathalast,,"Netaṃ saraṇamāgamma, sabbadukkhā pamuccati."
+NULL,p156,619,8,hangnum,190.,190.
+NULL,p156,620,100,gatha1,," Yo  ca buddhañca dhammañca, saṅghañca saraṇaṃ gato;"
+NULL,p156,621,100,gathalast,,"Cattāri ariyasaccāni, sammappaññāya passati."
+NULL,p156,622,8,hangnum,191.,191.
+NULL,p156,623,100,gatha1,," Dukkhaṃ dukkhasamuppādaṃ, dukkhassa ca atikkamaṃ;"
+NULL,p156,624,100,gathalast,,"Ariyaṃ caṭṭhaṅgikaṃ maggaṃ, dukkhūpasamagāminaṃ."
+NULL,p156,625,8,hangnum,192.,192.
+NULL,p156,626,100,gatha1,," Etaṃ  kho saraṇaṃ khemaṃ, etaṃ saraṇamuttamaṃ;"
+NULL,p156,627,100,gathalast,,"Etaṃ saraṇamāgamma, sabbadukkhā pamuccati."
+NULL,p156,628,8,hangnum,193.,193.
+NULL,p156,629,100,gatha1,," Dullabho purisājañño, na so sabbattha jāyati;"
+NULL,p156,630,100,gathalast,,"Yattha so jāyati dhīro, taṃ kulaṃ sukhamedhati."
+NULL,p156,631,8,hangnum,194.,194.
+NULL,p156,632,100,gatha1,," Sukho buddhānamuppādo, sukhā saddhammadesanā;"
+NULL,p156,633,100,gathalast,,"Sukhā saṅghassa sāmaggī, samaggānaṃ tapo sukho."
+NULL,p156,634,8,hangnum,195.,195.
+NULL,p156,635,100,gatha1,," Pūjārahe pūjayato, buddhe yadi va sāvake;"
+NULL,p156,636,100,gathalast,,"Papañcasamatikkante, tiṇṇasokapariddave."
+NULL,p156,637,8,hangnum,196.,196.
+NULL,p156,638,100,gatha1,," Te  tādise pūjayato, nibbute akutobhaye;"
+NULL,p156,639,100,gathalast,,"Na sakkā puññaṃ saṅkhātuṃ, imettamapi kenaci."
+NULL,p156,640,100,centered,,"Buddhavaggo cuddasamo niṭṭhito."
+NULL,p156,641,2,chapter,"15. Sukhavaggo","15. Sukhavaggo"
+NULL,p156,642,8,hangnum,197.,197.
+NULL,p156,643,100,gatha1,," Susukhaṃ  vata jīvāma, verinesu averino;"
+NULL,p156,644,100,gathalast,,"Verinesu manussesu, viharāma averino."
+NULL,p156,645,8,hangnum,198.,198.
+NULL,p156,646,100,gatha1,," Susukhaṃ  vata jīvāma, āturesu anāturā;"
+NULL,p156,647,100,gathalast,,"Āturesu manussesu, viharāma anāturā."
+NULL,p156,648,8,hangnum,199.,199.
+NULL,p156,649,100,gatha1,," Susukhaṃ vata jīvāma, ussukesu anussukā;"
+NULL,p156,650,100,gathalast,,"Ussukesu  manassesu, viharāma anussukā."
+NULL,p156,651,8,hangnum,200.,200.
+NULL,p156,652,100,gatha1,," Susukhaṃ vata jīvāma, yesaṃ no natthi kiñcanaṃ;"
+NULL,p156,653,100,gathalast,,"Pītibhakkhā bhavissāma, devā ābhassarā yathā."
+NULL,p156,654,8,hangnum,201.,201.
+NULL,p156,655,100,gatha1,," Jayaṃ veraṃ pasavati, dukkhaṃ seti parājito;"
+NULL,p156,656,100,gathalast,,"Upasanto sukhaṃ seti, hitvā jayaparājayaṃ."
+NULL,p156,657,8,hangnum,202.,202.
+NULL,p156,658,100,gatha1,," Natthi rāgasamo aggi, natthi dosasamo kali;"
+NULL,p156,659,100,gathalast,,"Natthi khandhasamā [khandhādisā (sī. syā. pī. rūpasiddhiyā sameti)] dukkhā, natthi santiparaṃ sukhaṃ."
+NULL,p156,660,8,hangnum,203.,203.
+NULL,p156,661,100,gatha1,," Jighacchāparamā  rogā, saṅkhāraparamā [saṅkārā paramā (bahūsu)] dukhā;"
+NULL,p156,662,100,gathalast,,"Etaṃ ñatvā yathābhūtaṃ, nibbānaṃ paramaṃ sukhaṃ."
+NULL,p156,663,8,hangnum,204.,204.
+NULL,p156,664,100,gatha1,," Ārogyaparamā lābhā, santuṭṭhiparamaṃ dhanaṃ;"
+NULL,p156,665,100,gathalast,,"Vissāsaparamā ñāti [vissāsaparamo ñāti (ka. sī.), vissāsaparamā ñātī (sī. aṭṭha.), vissāsā paramā ñāti (ka.)], nibbānaṃ paramaṃ [nibbāṇaparamaṃ (ka. sī.)] sukhaṃ."
+NULL,p156,666,8,hangnum,205.,205.
+NULL,p156,667,100,gatha1,," Pavivekarasaṃ  pitvā [pītvā (sī. syā. kaṃ. pī.)], rasaṃ upasamassa ca;"
+NULL,p156,668,100,gathalast,,"Niddaro hoti nippāpo, dhammapītirasaṃ pivaṃ."
+NULL,p156,669,8,hangnum,206.,206.
+NULL,p156,670,100,gatha1,," Sāhu  dassanamariyānaṃ, sannivāso sadā sukho;"
+NULL,p156,671,100,gathalast,,"Adassanena bālānaṃ, niccameva sukhī siyā."
+NULL,p156,672,8,hangnum,207.,207.
+NULL,p156,673,100,gatha1,," Bālasaṅgatacārī [bālasaṅgaticārī (ka.)] hi, dīghamaddhāna socati;"
+NULL,p156,674,100,gatha2,,"Dukkho bālehi saṃvāso, amitteneva sabbadā;"
+NULL,p156,675,100,gathalast,,"Dhīro ca sukhasaṃvāso, ñātīnaṃva samāgamo."
+NULL,p156,676,8,hangnum,208.,208.
+NULL,p156,677,100,gatha1,," Tasmā hi –"
+NULL,p156,678,100,gatha2,,"Dhīrañca paññañca bahussutañca, dhorayhasīlaṃ  vatavantamariyaṃ;"
+NULL,p156,679,100,gathalast,,"Taṃ tādisaṃ sappurisaṃ sumedhaṃ, bhajetha nakkhattapathaṃva candimā [tasmā hi dhīraṃ paññañca, bahussutañca dhorayhaṃ; sīlaṃ dhutavatamariyaṃ, taṃ tādisaṃ sappurisaṃ; sumedhaṃ bhajetha nakkhattapathaṃva candimā; (ka.)]."
+NULL,p156,680,100,centered,,"Sukhavaggo pannarasamo niṭṭhito."
+NULL,p156,681,2,chapter,"16. Piyavaggo","16. Piyavaggo"
+NULL,p156,682,8,hangnum,209.,209.
+NULL,p156,683,100,gatha1,," Ayoge  yuñjamattānaṃ, yogasmiñca ayojayaṃ;"
+NULL,p156,684,100,gathalast,,"Atthaṃ hitvā piyaggāhī, pihetattānuyoginaṃ."
+NULL,p156,685,8,hangnum,210.,210.
+NULL,p156,686,100,gatha1,," Mā  piyehi samāgañchi, appiyehi kudācanaṃ;"
+NULL,p156,687,100,gathalast,,"Piyānaṃ adassanaṃ dukkhaṃ, appiyānañca dassanaṃ."
+NULL,p156,688,8,hangnum,211.,211.
+NULL,p156,689,100,gatha1,," Tasmā piyaṃ na kayirātha, piyāpāyo hi pāpako;"
+NULL,p156,690,100,gathalast,,"Ganthā tesaṃ na vijjanti, yesaṃ natthi piyāppiyaṃ."
+NULL,p156,691,8,hangnum,212.,212.
+NULL,p156,692,100,gatha1,," Piyato jāyatī soko, piyato jāyatī [jāyate (ka.)] bhayaṃ;"
+NULL,p156,693,100,gathalast,,"Piyato vippamuttassa, natthi soko kuto bhayaṃ."
+NULL,p156,694,8,hangnum,213.,213.
+NULL,p156,695,100,gatha1,," Pemato  jāyatī soko, pemato jāyatī bhayaṃ;"
+NULL,p156,696,100,gathalast,,"Pemato vippamuttassa, natthi soko kuto bhayaṃ."
+NULL,p156,697,8,hangnum,214.,214.
+NULL,p156,698,100,gatha1,," Ratiyā jāyatī soko, ratiyā jāyatī bhayaṃ;"
+NULL,p156,699,100,gathalast,,"Ratiyā vippamuttassa, natthi soko kuto bhayaṃ."
+NULL,p156,700,8,hangnum,215.,215.
+NULL,p156,701,100,gatha1,," Kāmato jāyatī soko, kāmato jāyatī bhayaṃ;"
+NULL,p156,702,100,gathalast,,"Kāmato  vippamuttassa, natthi soko kuto bhayaṃ."
+NULL,p156,703,8,hangnum,216.,216.
+NULL,p156,704,100,gatha1,," Taṇhāya jāyatī [jāyate (ka.)] soko, taṇhāya jāyatī bhayaṃ;"
+NULL,p156,705,100,gathalast,,"Taṇhāya vippamuttassa, natthi soko kuto bhayaṃ."
+NULL,p156,706,8,hangnum,217.,217.
+NULL,p156,707,100,gatha1,," Sīladassanasampannaṃ, dhammaṭṭhaṃ saccavedinaṃ;"
+NULL,p156,708,100,gathalast,,"Attano kamma kubbānaṃ, taṃ jano kurute piyaṃ."
+NULL,p156,709,8,hangnum,218.,218.
+NULL,p156,710,100,gatha1,," Chandajāto anakkhāte, manasā ca phuṭo siyā;"
+NULL,p156,711,100,gathalast,,"Kāmesu ca appaṭibaddhacitto [appaṭibandhacitto (ka.)], uddhaṃsototi vuccati."
+NULL,p156,712,8,hangnum,219.,219.
+NULL,p156,713,100,gatha1,," Cirappavāsiṃ purisaṃ, dūrato sotthimāgataṃ;"
+NULL,p156,714,100,gathalast,,"Ñātimittā suhajjā ca, abhinandanti āgataṃ."
+NULL,p156,715,8,hangnum,220.,220.
+NULL,p156,716,100,gatha1,," Tatheva  katapuññampi, asmā lokā paraṃ gataṃ;"
+NULL,p156,717,100,gathalast,,"Puññāni paṭigaṇhanti, piyaṃ ñātīva āgataṃ."
+NULL,p156,718,100,centered,,"Piyavaggo soḷasamo niṭṭhito."
+NULL,p156,719,2,chapter,"17. Kodhavaggo","17. Kodhavaggo"
+NULL,p156,720,8,hangnum,221.,221.
+NULL,p156,721,100,gatha1,," Kodhaṃ  jahe vippajaheyya mānaṃ, saṃyojanaṃ sabbamatikkameyya;"
+NULL,p156,722,100,gathalast,,"Taṃ nāmarūpasmimasajjamānaṃ, akiñcanaṃ nānupatanti dukkhā."
+NULL,p156,723,8,hangnum,222.,222.
+NULL,p156,724,100,gatha1,," Yo ve uppatitaṃ kodhaṃ, rathaṃ bhantaṃva vāraye [dhāraye (sī. syā. pī.)];"
+NULL,p156,725,100,gathalast,,"Tamahaṃ  sārathiṃ brūmi, rasmiggāho itaro jano."
+NULL,p156,726,8,hangnum,223.,223.
+NULL,p156,727,100,gatha1,," Akkodhena jine kodhaṃ, asādhuṃ sādhunā jine;"
+NULL,p156,728,100,gathalast,,"Jine kadariyaṃ dānena, saccenālikavādinaṃ."
+NULL,p156,729,8,hangnum,224.,224.
+NULL,p156,730,100,gatha1,," Saccaṃ bhaṇe na kujjheyya, dajjā appampi [dajjā’ppasmimpi (sī. pī.), dajjā appasmi (syā. ka.)] yācito;"
+NULL,p156,731,100,gathalast,,"Etehi tīhi ṭhānehi, gacche devāna santike."
+NULL,p156,732,8,hangnum,225.,225.
+NULL,p156,733,100,gatha1,," Ahiṃsakā  ye munayo [ahiṃsakāyā munayo (ka.)], niccaṃ kāyena saṃvutā;"
+NULL,p156,734,100,gathalast,,"Te yanti accutaṃ ṭhānaṃ, yattha gantvā na socare."
+NULL,p156,735,8,hangnum,226.,226.
+NULL,p156,736,100,gatha1,," Sadā jāgaramānānaṃ, ahorattānusikkhinaṃ;"
+NULL,p156,737,100,gathalast,,"Nibbānaṃ adhimuttānaṃ, atthaṃ gacchanti āsavā."
+NULL,p156,738,8,hangnum,227.,227.
+NULL,p156,739,100,gatha1,," Porāṇametaṃ  atula, netaṃ ajjatanāmiva;"
+NULL,p156,740,100,gatha2,,"Nindanti tuṇhimāsīnaṃ, nindanti bahubhāṇinaṃ;"
+NULL,p156,741,100,gathalast,,"Mitabhāṇimpi nindanti, natthi loke anindito."
+NULL,p156,742,8,hangnum,228.,228.
+NULL,p156,743,100,gatha1,," Na cāhu na ca bhavissati, na cetarahi vijjati;"
+NULL,p156,744,100,gathalast,,"Ekantaṃ nindito poso, ekantaṃ vā pasaṃsito."
+NULL,p156,745,8,hangnum,229.,229.
+NULL,p156,746,100,gatha1,," Yaṃ ce viññū pasaṃsanti, anuvicca suve suve;"
+NULL,p156,747,100,gathalast,,"Acchiddavuttiṃ [acchinnavuttiṃ (ka.)] medhāviṃ, paññāsīlasamāhitaṃ."
+NULL,p156,748,8,hangnum,230.,230.
+NULL,p156,749,100,gatha1,," Nikkhaṃ [nekkhaṃ (sī. syā. pī.)] jambonadasseva, ko taṃ ninditumarahati;"
+NULL,p156,750,100,gathalast,,"Devāpi naṃ pasaṃsanti, brahmunāpi pasaṃsito."
+NULL,p156,751,8,hangnum,231.,231.
+NULL,p156,752,100,gatha1,," Kāyappakopaṃ rakkheyya, kāyena saṃvuto siyā;"
+NULL,p156,753,100,gathalast,,"Kāyaduccaritaṃ hitvā, kāyena sucaritaṃ care."
+NULL,p156,754,8,hangnum,232.,232.
+NULL,p156,755,100,gatha1,," Vacīpakopaṃ  rakkheyya, vācāya saṃvuto siyā;"
+NULL,p156,756,100,gathalast,,"Vacīduccaritaṃ hitvā, vācāya sucaritaṃ care."
+NULL,p156,757,8,hangnum,233.,233.
+NULL,p156,758,100,gatha1,," Manopakopaṃ rakkheyya, manasā saṃvuto siyā;"
+NULL,p156,759,100,gathalast,,"Manoduccaritaṃ hitvā, manasā sucaritaṃ care."
+NULL,p156,760,8,hangnum,234.,234.
+NULL,p156,761,100,gatha1,," Kāyena  saṃvutā dhīrā, atho vācāya saṃvutā;"
+NULL,p156,762,100,gathalast,,"Manasā saṃvutā dhīrā, te ve suparisaṃvutā."
+NULL,p156,763,100,centered,,"Kodhavaggo sattarasamo niṭṭhito."
+NULL,p156,764,2,chapter,"18. Malavaggo","18. Malavaggo"
+NULL,p156,765,8,hangnum,235.,235.
+NULL,p156,766,100,gatha1,," Paṇḍupalāsova  dānisi, yamapurisāpi ca te [taṃ (sī. syā. kaṃ. pī.)] upaṭṭhitā;"
+NULL,p156,767,100,gathalast,,"Uyyogamukhe ca tiṭṭhasi, pātheyyampi ca te na vijjati."
+NULL,p156,768,8,hangnum,236.,236.
+NULL,p156,769,100,gatha1,,"So  karohi dīpamattano, khippaṃ vāyama paṇḍito bhava;"
+NULL,p156,770,100,gathalast,,"Niddhantamalo anaṅgaṇo, dibbaṃ ariyabhūmiṃ upehisi [dibbaṃ ariyabhūmimehisi (sī. syā. pī.), dibbamariyabhūmiṃ upehisi (?)]."
+NULL,p156,771,8,hangnum,237.,237.
+NULL,p156,772,100,gatha1,," Upanītavayo ca dānisi, sampayātosi  yamassa santike;"
+NULL,p156,773,100,gathalast,,"Vāso [vāsopi ca (bahūsu)] te natthi antarā, pātheyyampi ca te na vijjati."
+NULL,p156,774,8,hangnum,238.,238.
+NULL,p156,775,100,gatha1,," So karohi dīpamattano, khippaṃ vāyama paṇḍito bhava;"
+NULL,p156,776,100,gathalast,,"Niddhantamalo anaṅgaṇo, na punaṃ jātijaraṃ [na puna jātijaraṃ (sī. syā.), na puna jātijjaraṃ (ka.)] upehisi."
+NULL,p156,777,8,hangnum,239.,239.
+NULL,p156,778,100,gatha1,," Anupubbena medhāvī, thokaṃ thokaṃ khaṇe khaṇe;"
+NULL,p156,779,100,gathalast,,"Kammāro rajatasseva, niddhame malamattano."
+NULL,p156,780,8,hangnum,240.,240.
+NULL,p156,781,100,gatha1,," Ayasāva malaṃ samuṭṭhitaṃ [samuṭṭhāya (ka.)], tatuṭṭhāya [taduṭṭhāya (sī. syā. pī.)] tameva khādati;"
+NULL,p156,782,100,gathalast,,"Evaṃ atidhonacārinaṃ, sāni kammāni [sakakammāni (sī. pī.)] nayanti duggatiṃ."
+NULL,p156,783,8,hangnum,241.,241.
+NULL,p156,784,100,gatha1,," Asajjhāyamalā  mantā, anuṭṭhānamalā gharā;"
+NULL,p156,785,100,gathalast,,"Malaṃ vaṇṇassa kosajjaṃ, pamādo rakkhato malaṃ."
+NULL,p156,786,8,hangnum,242.,242.
+NULL,p156,787,100,gatha1,," Malitthiyā duccaritaṃ, maccheraṃ dadato malaṃ;"
+NULL,p156,788,100,gathalast,,"Malā ve pāpakā dhammā, asmiṃ loke paramhi ca."
+NULL,p156,789,8,hangnum,243.,243.
+NULL,p156,790,100,gatha1,," Tato malā malataraṃ, avijjā paramaṃ malaṃ;"
+NULL,p156,791,100,gathalast,,"Etaṃ malaṃ pahantvāna, nimmalā hotha bhikkhavo."
+NULL,p156,792,8,hangnum,244.,244.
+NULL,p156,793,100,gatha1,," Sujīvaṃ  ahirikena, kākasūrena dhaṃsinā;"
+NULL,p156,794,100,gathalast,,"Pakkhandinā pagabbhena, saṃkiliṭṭhena jīvitaṃ."
+NULL,p156,795,8,hangnum,245.,245.
+NULL,p156,796,100,gatha1,," Hirīmatā  ca dujjīvaṃ, niccaṃ sucigavesinā;"
+NULL,p156,797,100,gathalast,,"Alīnenāppagabbhena, suddhājīvena passatā."
+NULL,p156,798,8,hangnum,246.,246.
+NULL,p156,799,100,gatha1,," Yo pāṇamatipāteti, musāvādañca bhāsati;"
+NULL,p156,800,100,gathalast,,"Loke adinnamādiyati, paradārañca gacchati."
+NULL,p156,801,8,hangnum,247.,247.
+NULL,p156,802,100,gatha1,," Surāmerayapānañca, yo naro anuyuñjati;"
+NULL,p156,803,100,gathalast,,"Idhevameso lokasmiṃ, mūlaṃ khaṇati attano."
+NULL,p156,804,8,hangnum,248.,248.
+NULL,p156,805,100,gatha1,," Evaṃ bho purisa jānāhi, pāpadhammā asaññatā;"
+NULL,p156,806,100,gathalast,,"Mā taṃ lobho adhammo ca, ciraṃ dukkhāya randhayuṃ."
+NULL,p156,807,8,hangnum,249.,249.
+NULL,p156,808,100,gatha1,," Dadāti ve yathāsaddhaṃ, yathāpasādanaṃ [yattha pasādanaṃ (katthaci)] jano;"
+NULL,p156,809,100,gatha2,,"Tattha yo maṅku bhavati [tattha ce maṃku yo hoti (sī.), tattha yo maṅkuto hoti (syā.)], paresaṃ pānabhojane;"
+NULL,p156,810,100,gathalast,,"Na so divā vā rattiṃ vā, samādhimadhigacchati."
+NULL,p156,811,8,hangnum,250.,250.
+NULL,p156,812,100,gatha1,," Yassa  cetaṃ samucchinnaṃ, mūlaghaccaṃ [mūlaghacchaṃ (ka.)] samūhataṃ;"
+NULL,p156,813,100,gathalast,,"Sa ve divā vā rattiṃ vā, samādhimadhigacchati."
+NULL,p156,814,8,hangnum,251.,251.
+NULL,p156,815,100,gatha1,," Natthi rāgasamo aggi, natthi dosasamo gaho;"
+NULL,p156,816,100,gathalast,,"Natthi mohasamaṃ jālaṃ, natthi taṇhāsamā nadī."
+NULL,p156,817,8,hangnum,252.,252.
+NULL,p156,818,100,gatha1,," Sudassaṃ vajjamaññesaṃ, attano pana duddasaṃ;"
+NULL,p156,819,100,gatha2,,"Paresaṃ hi so vajjāni, opunāti [ophunāti (ka.)] yathā bhusaṃ;"
+NULL,p156,820,100,gathalast,,"Attano pana chādeti, kaliṃva kitavā saṭho."
+NULL,p156,821,8,hangnum,253.,253.
+NULL,p156,822,100,gatha1,," Paravajjānupassissa,  niccaṃ ujjhānasaññino;"
+NULL,p156,823,100,gathalast,,"Āsavā tassa vaḍḍhanti, ārā so āsavakkhayā."
+NULL,p156,824,8,hangnum,254.,254.
+NULL,p156,825,100,gatha1,," Ākāseva padaṃ natthi, samaṇo natthi bāhire;"
+NULL,p156,826,100,gathalast,,"Papañcābhiratā pajā, nippapañcā tathāgatā."
+NULL,p156,827,8,hangnum,255.,255.
+NULL,p156,828,100,gatha1,," Ākāseva padaṃ natthi, samaṇo natthi bāhire;"
+NULL,p156,829,100,gathalast,,"Saṅkhārā sassatā natthi, natthi buddhānamiñjitaṃ."
+NULL,p156,830,100,centered,,"Malavaggo aṭṭhārasamo niṭṭhito."
+NULL,p156,831,2,chapter,"19. Dhammaṭṭhavaggo","19. Dhammaṭṭhavaggo"
+NULL,p156,832,8,hangnum,256.,256.
+NULL,p156,833,100,gatha1,," Na  tena hoti dhammaṭṭho, yenatthaṃ sāhasā [sahasā (sī. syā. ka.)] naye;"
+NULL,p156,834,100,gathalast,,"Yo ca atthaṃ anatthañca, ubho niccheyya paṇḍito."
+NULL,p156,835,8,hangnum,257.,257.
+NULL,p156,836,100,gatha1,," Asāhasena  dhammena, samena nayatī pare;"
+NULL,p156,837,100,gathalast,,"Dhammassa gutto medhāvī, ‘‘dhammaṭṭho’’ti pavuccati."
+NULL,p156,838,8,hangnum,258.,258.
+NULL,p156,839,100,gatha1,," Na tena paṇḍito hoti, yāvatā bahu bhāsati;"
+NULL,p156,840,100,gathalast,,"Khemī averī abhayo, ‘‘paṇḍito’’ti pavuccati."
+NULL,p156,841,8,hangnum,259.,259.
+NULL,p156,842,100,gatha1,," Na tāvatā dhammadharo, yāvatā bahu bhāsati;"
+NULL,p156,843,100,gatha2,,"Yo ca appampi sutvāna, dhammaṃ kāyena passati;"
+NULL,p156,844,100,gathalast,,"Sa ve dhammadharo hoti, yo dhammaṃ nappamajjati."
+NULL,p156,845,8,hangnum,260.,260.
+NULL,p156,846,100,gatha1,," Na  tena thero so hoti [thero hoti (sī. syā.)], yenassa palitaṃ siro;"
+NULL,p156,847,100,gathalast,,"Paripakko  vayo tassa, ‘‘moghajiṇṇo’’ti vuccati."
+NULL,p156,848,8,hangnum,261.,261.
+NULL,p156,849,100,gatha1,," Yamhi saccañca dhammo ca, ahiṃsā saṃyamo damo;"
+NULL,p156,850,100,gathalast,,"Sa ve vantamalo dhīro, ‘‘thero’’ iti [so theroti (syā. ka.)] pavuccati."
+NULL,p156,851,8,hangnum,262.,262.
+NULL,p156,852,100,gatha1,," Na vākkaraṇamattena, vaṇṇapokkharatāya vā;"
+NULL,p156,853,100,gathalast,,"Sādhurūpo naro hoti, issukī maccharī saṭho."
+NULL,p156,854,8,hangnum,263.,263.
+NULL,p156,855,100,gatha1,," Yassa cetaṃ samucchinnaṃ, mūlaghaccaṃ samūhataṃ;"
+NULL,p156,856,100,gathalast,,"Sa vantadoso medhāvī, ‘‘sādhurūpo’’ti vuccati."
+NULL,p156,857,8,hangnum,264.,264.
+NULL,p156,858,100,gatha1,," Na muṇḍakena samaṇo, abbato alikaṃ bhaṇaṃ;"
+NULL,p156,859,100,gathalast,,"Icchālobhasamāpanno, samaṇo kiṃ bhavissati."
+NULL,p156,860,8,hangnum,265.,265.
+NULL,p156,861,100,gatha1,," Yo  ca sameti pāpāni, aṇuṃ thūlāni sabbaso;"
+NULL,p156,862,100,gathalast,,"Samitattā hi pāpānaṃ, ‘‘samaṇo’’ti pavuccati."
+NULL,p156,863,8,hangnum,266.,266.
+NULL,p156,864,100,gatha1,," Na  tena bhikkhu so hoti, yāvatā bhikkhate pare;"
+NULL,p156,865,100,gathalast,,"Vissaṃ dhammaṃ samādāya, bhikkhu hoti na tāvatā."
+NULL,p156,866,8,hangnum,267.,267.
+NULL,p156,867,100,gatha1,," Yodha puññañca pāpañca, bāhetvā brahmacariyavā [brahmacariyaṃ (ka.)];"
+NULL,p156,868,100,gathalast,,"Saṅkhāya loke carati, sa ve ‘‘bhikkhū’’ti vuccati."
+NULL,p156,869,8,hangnum,268.,268.
+NULL,p156,870,100,gatha1,," Na monena munī hoti, mūḷharūpo aviddasu;"
+NULL,p156,871,100,gathalast,,"Yo ca tulaṃva paggayha, varamādāya paṇḍito."
+NULL,p156,872,8,hangnum,269.,269.
+NULL,p156,873,100,gatha1,," Pāpāni  parivajjeti, sa munī tena so muni;"
+NULL,p156,874,100,gathalast,,"Yo munāti ubho loke, ‘‘muni’’ tena pavuccati."
+NULL,p156,875,8,hangnum,270.,270.
+NULL,p156,876,100,gatha1,," Na tena ariyo hoti, yena pāṇāni hiṃsati;"
+NULL,p156,877,100,gathalast,,"Ahiṃsā  sabbapāṇānaṃ, ‘‘ariyo’’ti pavuccati."
+NULL,p156,878,8,hangnum,271.,271.
+NULL,p156,879,100,gatha1,," Na sīlabbatamattena, bāhusaccena vā pana;"
+NULL,p156,880,100,gathalast,,"Atha vā samādhilābhena, vivittasayanena vā."
+NULL,p156,881,8,hangnum,272.,272.
+NULL,p156,882,100,gatha1,," Phusāmi nekkhammasukhaṃ, aputhujjanasevitaṃ;"
+NULL,p156,883,100,gathalast,,"Bhikkhu vissāsamāpādi, appatto āsavakkhayaṃ."
+NULL,p156,884,100,centered,,"Dhammaṭṭhavaggo ekūnavīsatimo niṭṭhito."
+NULL,p156,885,2,chapter,"20. Maggavaggo","20. Maggavaggo"
+NULL,p156,886,8,hangnum,273.,273.
+NULL,p156,887,100,gatha1,," Maggānaṭṭhaṅgiko  seṭṭho, saccānaṃ caturo padā;"
+NULL,p156,888,100,gathalast,,"Virāgo seṭṭho dhammānaṃ, dvipadānañca cakkhumā."
+NULL,p156,889,8,hangnum,274.,274.
+NULL,p156,890,100,gatha1,," Eseva [esova (sī. pī.)] maggo natthañño, dassanassa visuddhiyā;"
+NULL,p156,891,100,gathalast,,"Etañhi tumhe paṭipajjatha, mārassetaṃ pamohanaṃ."
+NULL,p156,892,8,hangnum,275.,275.
+NULL,p156,893,100,gatha1,," Etañhi tumhe paṭipannā, dukkhassantaṃ karissatha;"
+NULL,p156,894,100,gathalast,,"Akkhāto vo [akkhāto ve (sī. pī.)] mayā maggo, aññāya sallakantanaṃ [sallasanthanaṃ (sī. pī.), sallasatthanaṃ (syā.)]."
+NULL,p156,895,8,hangnum,276.,276.
+NULL,p156,896,100,gatha1,," Tumhehi kiccamātappaṃ, akkhātāro tathāgatā;"
+NULL,p156,897,100,gathalast,,"Paṭipannā pamokkhanti, jhāyino mārabandhanā."
+NULL,p156,898,8,hangnum,277.,277.
+NULL,p156,899,100,gatha1,," ‘‘Sabbe  saṅkhārā aniccā’’ti, yadā paññāya passati;"
+NULL,p156,900,100,gathalast,,"Atha  nibbindati dukkhe, esa maggo visuddhiyā."
+NULL,p156,901,8,hangnum,278.,278.
+NULL,p156,902,100,gatha1,," ‘‘Sabbe saṅkhārā dukkhā’’ti, yadā paññāya passati;"
+NULL,p156,903,100,gathalast,,"Atha nibbindati dukkhe, esa maggo visuddhiyā."
+NULL,p156,904,8,hangnum,279.,279.
+NULL,p156,905,100,gatha1,," ‘‘Sabbe dhammā anattā’’ti, yadā paññāya passati;"
+NULL,p156,906,100,gathalast,,"Atha nibbindati dukkhe, esa maggo visuddhiyā."
+NULL,p156,907,8,hangnum,280.,280.
+NULL,p156,908,100,gatha1,," Uṭṭhānakālamhi anuṭṭhahāno, yuvā balī ālasiyaṃ upeto;"
+NULL,p156,909,100,gathalast,,"Saṃsannasaṅkappamano [asampannasaṅkappamano (ka.)] kusīto, paññāya maggaṃ alaso na vindati."
+NULL,p156,910,8,hangnum,281.,281.
+NULL,p156,911,100,gatha1,," Vācānurakkhī  manasā susaṃvuto, kāyena ca nākusalaṃ kayirā [akusalaṃ na kayirā (sī. syā. kaṃ. pī.)];"
+NULL,p156,912,100,gathalast,,"Ete tayo kammapathe visodhaye, ārādhaye maggamisippaveditaṃ."
+NULL,p156,913,8,hangnum,282.,282.
+NULL,p156,914,100,gatha1,," Yogā ve jāyatī [jāyate (katthaci)] bhūri, ayogā bhūrisaṅkhayo;"
+NULL,p156,915,100,gatha2,,"Etaṃ dvedhāpathaṃ ñatvā, bhavāya vibhavāya ca;"
+NULL,p156,916,100,gathalast,,"Tathāttānaṃ niveseyya, yathā bhūri pavaḍḍhati."
+NULL,p156,917,8,hangnum,283.,283.
+NULL,p156,918,100,gatha1,," Vanaṃ  chindatha mā rukkhaṃ, vanato jāyate bhayaṃ;"
+NULL,p156,919,100,gathalast,,"Chetvā vanañca vanathañca, nibbanā hotha bhikkhavo."
+NULL,p156,920,8,hangnum,284.,284.
+NULL,p156,921,100,gatha1,," Yāva hi vanatho na chijjati, aṇumattopi narassa nārisu;"
+NULL,p156,922,100,gathalast,,"Paṭibaddhamanova [paṭibandhamanova (ka.)] tāva so, vaccho khīrapakova [khīrapānova (pī.)] mātari."
+NULL,p156,923,8,hangnum,285.,285.
+NULL,p156,924,100,gatha1,," Ucchinda  sinehamattano kumudaṃ sāradikaṃva [pāṇinā];"
+NULL,p156,925,100,gathalast,,"Santimaggameva brūhaya, nibbānaṃ sugatena desitaṃ."
+NULL,p156,926,8,hangnum,286.,286.
+NULL,p156,927,100,gatha1,," Idha vassaṃ vasissāmi, idha hemantagimhisu;"
+NULL,p156,928,100,gathalast,,"Iti bālo vicinteti, antarāyaṃ na bujjhati."
+NULL,p156,929,8,hangnum,287.,287.
+NULL,p156,930,100,gatha1,," Taṃ puttapasusammattaṃ, byāsattamanasaṃ naraṃ;"
+NULL,p156,931,100,gathalast,,"Suttaṃ gāmaṃ mahoghova, maccu ādāya gacchati."
+NULL,p156,932,8,hangnum,288.,288.
+NULL,p156,933,100,gatha1,," Na  santi puttā tāṇāya, na pitā nāpi bandhavā;"
+NULL,p156,934,100,gathalast,,"Antakenādhipannassa, natthi ñātīsu tāṇatā."
+NULL,p156,935,8,hangnum,289.,289.
+NULL,p156,936,100,gatha1,," Etamatthavasaṃ ñatvā, paṇḍito sīlasaṃvuto;"
+NULL,p156,937,100,gathalast,,"Nibbānagamanaṃ maggaṃ, khippameva visodhaye."
+NULL,p156,938,100,centered,,"Maggavaggo vīsatimo niṭṭhito."
+NULL,p156,939,2,chapter,"21. Pakiṇṇakavaggo","21. Pakiṇṇakavaggo"
+NULL,p156,940,8,hangnum,290.,290.
+NULL,p156,941,100,gatha1,," Mattāsukhapariccāgā, passe ce vipulaṃ sukhaṃ;"
+NULL,p156,942,100,gathalast,,"Caje mattāsukhaṃ dhīro, sampassaṃ vipulaṃ sukhaṃ."
+NULL,p156,943,8,hangnum,291.,291.
+NULL,p156,944,100,gatha1,," Paradukkhūpadhānena, attano [yo attano (syā. pī. ka.)] sukhamicchati;"
+NULL,p156,945,100,gathalast,,"Verasaṃsaggasaṃsaṭṭho, verā so na parimuccati."
+NULL,p156,946,8,hangnum,292.,292.
+NULL,p156,947,100,gatha1,," Yañhi  kiccaṃ apaviddhaṃ [tadapaviddhaṃ (sī. syā.)], akiccaṃ pana kayirati;"
+NULL,p156,948,100,gathalast,,"Unnaḷānaṃ pamattānaṃ, tesaṃ vaḍḍhanti āsavā."
+NULL,p156,949,8,hangnum,293.,293.
+NULL,p156,950,100,gatha1,," Yesañca susamāraddhā, niccaṃ kāyagatā sati;"
+NULL,p156,951,100,gatha2,,"Akiccaṃ te na sevanti, kicce sātaccakārino;"
+NULL,p156,952,100,gathalast,,"Satānaṃ sampajānānaṃ, atthaṃ gacchanti āsavā."
+NULL,p156,953,8,hangnum,294.,294.
+NULL,p156,954,100,gatha1,," Mātaraṃ  pitaraṃ hantvā, rājāno dve ca khattiye;"
+NULL,p156,955,100,gathalast,,"Raṭṭhaṃ sānucaraṃ hantvā, anīgho yāti brāhmaṇo."
+NULL,p156,956,8,hangnum,295.,295.
+NULL,p156,957,100,gatha1,," Mātaraṃ pitaraṃ hantvā, rājāno dve ca sotthiye;"
+NULL,p156,958,100,gathalast,,"Veyagghapañcamaṃ hantvā, anīgho yāti brāhmaṇo."
+NULL,p156,959,8,hangnum,296.,296.
+NULL,p156,960,100,gatha1,," Suppabuddhaṃ pabujjhanti, sadā gotamasāvakā;"
+NULL,p156,961,100,gathalast,,"Yesaṃ divā ca ratto ca, niccaṃ buddhagatā sati."
+NULL,p156,962,8,hangnum,297.,297.
+NULL,p156,963,100,gatha1,," Suppabuddhaṃ pabujjhanti, sadā gotamasāvakā;"
+NULL,p156,964,100,gathalast,,"Yesaṃ divā ca ratto ca, niccaṃ dhammagatā sati."
+NULL,p156,965,8,hangnum,298.,298.
+NULL,p156,966,100,gatha1,," Suppabuddhaṃ  pabujjhanti, sadā gotamasāvakā;"
+NULL,p156,967,100,gathalast,,"Yesaṃ divā ca ratto ca, niccaṃ saṅghagatā sati."
+NULL,p156,968,8,hangnum,299.,299.
+NULL,p156,969,100,gatha1,," Suppabuddhaṃ pabujjhanti, sadā gotamasāvakā;"
+NULL,p156,970,100,gathalast,,"Yesaṃ divā ca ratto ca, niccaṃ kāyagatā sati."
+NULL,p156,971,8,hangnum,300.,300.
+NULL,p156,972,100,gatha1,," Suppabuddhaṃ pabujjhanti, sadā gotamasāvakā;"
+NULL,p156,973,100,gathalast,,"Yesaṃ divā ca ratto ca, ahiṃsāya rato mano."
+NULL,p156,974,8,hangnum,301.,301.
+NULL,p156,975,100,gatha1,," Suppabuddhaṃ pabujjhanti, sadā gotamasāvakā;"
+NULL,p156,976,100,gathalast,,"Yesaṃ  divā ca ratto ca, bhāvanāya rato mano."
+NULL,p156,977,8,hangnum,302.,302.
+NULL,p156,978,100,gatha1,," Duppabbajjaṃ durabhiramaṃ, durāvāsā gharā dukhā;"
+NULL,p156,979,100,gatha2,,"Dukkhosamānasaṃvāso, dukkhānupatitaddhagū;"
+NULL,p156,980,100,gathalast,,"Tasmā na caddhagū siyā, na ca [tasmā na caddhagū na ca (ka.)] dukkhānupatito siyā [dukkhānupātito (?)]."
+NULL,p156,981,8,hangnum,303.,303.
+NULL,p156,982,100,gatha1,," Saddho sīlena sampanno, yasobhogasamappito;"
+NULL,p156,983,100,gathalast,,"Yaṃ yaṃ padesaṃ bhajati, tattha tattheva pūjito."
+NULL,p156,984,8,hangnum,304.,304.
+NULL,p156,985,100,gatha1,," Dūre santo pakāsenti, himavantova pabbato;"
+NULL,p156,986,100,gathalast,,"Asantettha na dissanti, rattiṃ khittā yathā sarā."
+NULL,p156,987,8,hangnum,305.,305.
+NULL,p156,988,100,gatha1,," Ekāsanaṃ  ekaseyyaṃ, eko caramatandito;"
+NULL,p156,989,100,gathalast,,"Eko damayamattānaṃ, vanante ramito siyā."
+NULL,p156,990,100,centered,,"Pakiṇṇakavaggo ekavīsatimo niṭṭhito."
+NULL,p156,991,2,chapter,"22. Nirayavaggo","22. Nirayavaggo"
+NULL,p156,992,8,hangnum,306.,306.
+NULL,p156,993,100,gatha1,," Abhūtavādī  nirayaṃ upeti, yo vāpi [yo cāpi (sī. pī. ka.)] katvā na karomi cāha [na karomīti cāha (syā.)];"
+NULL,p156,994,100,gathalast,,"Ubhopi te pecca samā bhavanti, nihīnakammā manujā parattha."
+NULL,p156,995,8,hangnum,307.,307.
+NULL,p156,996,100,gatha1,," Kāsāvakaṇṭhā bahavo, pāpadhammā asaññatā;"
+NULL,p156,997,100,gathalast,,"Pāpā pāpehi kammehi, nirayaṃ te upapajjare."
+NULL,p156,998,8,hangnum,308.,308.
+NULL,p156,999,100,gatha1,," Seyyo  ayoguḷo bhutto, tatto aggisikhūpamo;"
+NULL,p156,1000,100,gathalast,,"Yañce bhuñjeyya dussīlo, raṭṭhapiṇḍamasaññato."
+NULL,p156,1001,8,hangnum,309.,309.
+NULL,p156,1002,100,gatha1,," Cattāri ṭhānāni naro pamatto, āpajjati paradārūpasevī;"
+NULL,p156,1003,100,gathalast,,"Apuññalābhaṃ na nikāmaseyyaṃ, nindaṃ tatīyaṃ nirayaṃ catutthaṃ."
+NULL,p156,1004,8,hangnum,310.,310.
+NULL,p156,1005,100,gatha1,," Apuññalābho  ca gatī ca pāpikā, bhītassa bhītāya ratī ca thokikā;"
+NULL,p156,1006,100,gathalast,,"Rājā ca daṇḍaṃ garukaṃ paṇeti, tasmā naro paradāraṃ na seve."
+NULL,p156,1007,8,hangnum,311.,311.
+NULL,p156,1008,100,gatha1,," Kuso yathā duggahito, hatthamevānukantati;"
+NULL,p156,1009,100,gathalast,,"Sāmaññaṃ dupparāmaṭṭhaṃ, nirayāyupakaḍḍhati."
+NULL,p156,1010,8,hangnum,312.,312.
+NULL,p156,1011,100,gatha1,," Yaṃ  kiñci sithilaṃ kammaṃ, saṃkiliṭṭhañca yaṃ vataṃ;"
+NULL,p156,1012,100,gathalast,,"Saṅkassaraṃ brahmacariyaṃ, na taṃ hoti mahapphalaṃ."
+NULL,p156,1013,8,hangnum,313.,313.
+NULL,p156,1014,100,gatha1,," Kayirā ce kayirāthenaṃ [kayirā naṃ (ka.)], daḷhamenaṃ parakkame;"
+NULL,p156,1015,100,gathalast,,"Sithilo hi paribbājo, bhiyyo ākirate rajaṃ."
+NULL,p156,1016,8,hangnum,314.,314.
+NULL,p156,1017,100,gatha1,," Akataṃ  dukkaṭaṃ seyyo, pacchā tappati dukkaṭaṃ;"
+NULL,p156,1018,100,gathalast,,"Katañca sukataṃ seyyo, yaṃ katvā nānutappati."
+NULL,p156,1019,8,hangnum,315.,315.
+NULL,p156,1020,100,gatha1,," Nagaraṃ yathā paccantaṃ, guttaṃ santarabāhiraṃ;"
+NULL,p156,1021,100,gatha2,,"Evaṃ  gopetha attānaṃ, khaṇo vo [khaṇo ve (sī. pī. ka.)] mā upaccagā;"
+NULL,p156,1022,100,gathalast,,"Khaṇātītā hi socanti, nirayamhi samappitā."
+NULL,p156,1023,8,hangnum,316.,316.
+NULL,p156,1024,100,gatha1,," Alajjitāye lajjanti, lajjitāye na lajjare;"
+NULL,p156,1025,100,gathalast,,"Micchādiṭṭhisamādānā, sattā gacchanti duggatiṃ."
+NULL,p156,1026,8,hangnum,317.,317.
+NULL,p156,1027,100,gatha1,," Abhaye bhayadassino, bhaye cābhayadassino;"
+NULL,p156,1028,100,gathalast,,"Micchādiṭṭhisamādānā, sattā gacchanti duggatiṃ."
+NULL,p156,1029,8,hangnum,318.,318.
+NULL,p156,1030,100,gatha1,," Avajje  vajjamatino, vajje cāvajjadassino;"
+NULL,p156,1031,100,gathalast,,"Micchādiṭṭhisamādānā, sattā gacchanti duggatiṃ."
+NULL,p156,1032,8,hangnum,319.,319.
+NULL,p156,1033,100,gatha1,," Vajjañca vajjato ñatvā, avajjañca avajjato;"
+NULL,p156,1034,100,gathalast,,"Sammādiṭṭhisamādānā, sattā gacchanti suggatiṃ."
+NULL,p156,1035,100,centered,,"Nirayavaggo dvāvīsatimo niṭṭhito."
+NULL,p156,1036,2,chapter,"23. Nāgavaggo","23. Nāgavaggo"
+NULL,p156,1037,8,hangnum,320.,320.
+NULL,p156,1038,100,gatha1,," Ahaṃ  nāgova saṅgāme, cāpato patitaṃ saraṃ;"
+NULL,p156,1039,100,gathalast,,"Ativākyaṃ titikkhissaṃ, dussīlo hi bahujjano."
+NULL,p156,1040,8,hangnum,321.,321.
+NULL,p156,1041,100,gatha1,," Dantaṃ  nayanti samitiṃ, dantaṃ rājābhirūhati;"
+NULL,p156,1042,100,gathalast,,"Danto seṭṭho manussesu, yotivākyaṃ titikkhati."
+NULL,p156,1043,8,hangnum,322.,322.
+NULL,p156,1044,100,gatha1,," Varamassatarā dantā, ājānīyā ca [ājānīyāva (syā.)] sindhavā;"
+NULL,p156,1045,100,gathalast,,"Kuñjarā ca [kuñjarāva (syā.)] mahānāgā, attadanto tato varaṃ."
+NULL,p156,1046,8,hangnum,323.,323.
+NULL,p156,1047,100,gatha1,," Na  hi etehi yānehi, gaccheyya agataṃ disaṃ;"
+NULL,p156,1048,100,gathalast,,"Yathāttanā sudantena, danto dantena gacchati."
+NULL,p156,1049,8,hangnum,324.,324.
+NULL,p156,1050,100,gatha1,," Dhanapālo [dhanapālako (sī. syā. kaṃ. pī.)] nāma kuñjaro, kaṭukabhedano [kaṭukappabhedano (sī. syā. pī.)] dunnivārayo;"
+NULL,p156,1051,100,gathalast,,"Baddho kabaḷaṃ na bhuñjati, sumarati [susarati (ka.)] nāgavanassa kuñjaro."
+NULL,p156,1052,8,hangnum,325.,325.
+NULL,p156,1053,100,gatha1,," Middhī  yadā hoti mahagghaso ca, niddāyitā samparivattasāyī;"
+NULL,p156,1054,100,gathalast,,"Mahāvarāhova nivāpapuṭṭho, punappunaṃ gabbhamupeti mando."
+NULL,p156,1055,8,hangnum,326.,326.
+NULL,p156,1056,100,gatha1,," Idaṃ  pure cittamacāri cārikaṃ, yenicchakaṃ yatthakāmaṃ yathāsukhaṃ;"
+NULL,p156,1057,100,gathalast,,"Tadajjahaṃ niggahessāmi yoniso, hatthippabhinnaṃ viya aṅkusaggaho."
+NULL,p156,1058,8,hangnum,327.,327.
+NULL,p156,1059,100,gatha1,," Appamādaratā hotha, sacittamanurakkhatha;"
+NULL,p156,1060,100,gathalast,,"Duggā uddharathattānaṃ, paṅke sannova [sattova (sī. pī.)] kuñjaro."
+NULL,p156,1061,8,hangnum,328.,328.
+NULL,p156,1062,100,gatha1,," Sace labhetha nipakaṃ sahāyaṃ, saddhiṃ caraṃ sādhuvihāridhīraṃ;"
+NULL,p156,1063,100,gathalast,,"Abhibhuyya sabbāni parissayāni, careyya tenattamano satīmā."
+NULL,p156,1064,8,hangnum,329.,329.
+NULL,p156,1065,100,gatha1,," No  ce labhetha nipakaṃ sahāyaṃ, saddhiṃ caraṃ sādhuvihāridhīraṃ;"
+NULL,p156,1066,100,gathalast,,"Rājāva raṭṭhaṃ vijitaṃ pahāya, eko care mātaṅgaraññeva nāgo."
+NULL,p156,1067,8,hangnum,330.,330.
+NULL,p156,1068,100,gatha1,," Ekassa caritaṃ seyyo, natthi bāle sahāyatā;"
+NULL,p156,1069,100,gathalast,,"Eko care na ca pāpāni kayirā, appossukko mātaṅgaraññeva nāgo."
+NULL,p156,1070,8,hangnum,331.,331.
+NULL,p156,1071,100,gatha1,," Atthamhi  jātamhi sukhā sahāyā, tuṭṭhī sukhā yā itarītarena;"
+NULL,p156,1072,100,gathalast,,"Puññaṃ sukhaṃ jīvitasaṅkhayamhi, sabbassa dukkhassa sukhaṃ pahānaṃ."
+NULL,p156,1073,8,hangnum,332.,332.
+NULL,p156,1074,100,gatha1,," Sukhā  matteyyatā loke, atho petteyyatā sukhā;"
+NULL,p156,1075,100,gathalast,,"Sukhā sāmaññatā loke, atho brahmaññatā sukhā."
+NULL,p156,1076,8,hangnum,333.,333.
+NULL,p156,1077,100,gatha1,," Sukhaṃ yāva jarā sīlaṃ, sukhā saddhā patiṭṭhitā;"
+NULL,p156,1078,100,gathalast,,"Sukho paññāya paṭilābho, pāpānaṃ akaraṇaṃ sukhaṃ."
+NULL,p156,1079,100,centered,,"Nāgavaggo tevīsatimo niṭṭhito."
+NULL,p156,1080,2,chapter,"24. Taṇhāvaggo","24. Taṇhāvaggo"
+NULL,p156,1081,8,hangnum,334.,334.
+NULL,p156,1082,100,gatha1,," Manujassa  pamattacārino, taṇhā vaḍḍhati māluvā viya;"
+NULL,p156,1083,100,gathalast,,"So plavatī [plavati (sī. pī.), palavetī (ka.), uplavati (?)] hurā huraṃ, phalamicchaṃva vanasmi vānaro."
+NULL,p156,1084,8,hangnum,335.,335.
+NULL,p156,1085,100,gatha1,," Yaṃ esā sahate jammī, taṇhā loke visattikā;"
+NULL,p156,1086,100,gathalast,,"Sokā tassa pavaḍḍhanti, abhivaṭṭhaṃva [abhivaḍḍhaṃva (syā.), abhivaṭṭaṃva (pī.), abhivuḍḍhaṃva (ka.)] bīraṇaṃ."
+NULL,p156,1087,8,hangnum,336.,336.
+NULL,p156,1088,100,gatha1,," Yo cetaṃ sahate jammiṃ, taṇhaṃ loke duraccayaṃ;"
+NULL,p156,1089,100,gathalast,,"Sokā tamhā papatanti, udabinduva pokkharā."
+NULL,p156,1090,8,hangnum,337.,337.
+NULL,p156,1091,100,gatha1,," Taṃ vo vadāmi bhaddaṃ vo, yāvantettha samāgatā;"
+NULL,p156,1092,100,gatha2,,"Taṇhāya mūlaṃ khaṇatha, usīratthova bīraṇaṃ;"
+NULL,p156,1093,100,gathalast,,"Mā vo naḷaṃva sotova, māro bhañji punappunaṃ."
+NULL,p156,1094,8,hangnum,338.,338.
+NULL,p156,1095,100,gatha1,," Yathāpi  mūle anupaddave daḷhe, chinnopi rukkho punareva rūhati;"
+NULL,p156,1096,100,gathalast,,"Evampi taṇhānusaye anūhate, nibbattatī dukkhamidaṃ punappunaṃ."
+NULL,p156,1097,8,hangnum,339.,339.
+NULL,p156,1098,100,gatha1,," Yassa chattiṃsati sotā, manāpasavanā bhusā;"
+NULL,p156,1099,100,gathalast,,"Māhā [vāhā (sī. syā. pī.)] vahanti duddiṭṭhiṃ, saṅkappā rāganissitā."
+NULL,p156,1100,8,hangnum,340.,340.
+NULL,p156,1101,100,gatha1,," Savanti  sabbadhi sotā, latā uppajja [ubbhijja (sī. syā. kaṃ. pī.)] tiṭṭhati;"
+NULL,p156,1102,100,gathalast,,"Tañca disvā lataṃ jātaṃ, mūlaṃ paññāya chindatha."
+NULL,p156,1103,8,hangnum,341.,341.
+NULL,p156,1104,100,gatha1,," Saritāni sinehitāni ca, somanassāni bhavanti jantuno;"
+NULL,p156,1105,100,gathalast,,"Te sātasitā sukhesino, te ve jātijarūpagā narā."
+NULL,p156,1106,8,hangnum,342.,342.
+NULL,p156,1107,100,gatha1,," Tasiṇāya purakkhatā pajā, parisappanti sasova bandhito [bādhito (bahūsu)];"
+NULL,p156,1108,100,gathalast,,"Saṃyojanasaṅgasattakā, dukkhamupenti punappunaṃ cirāya."
+NULL,p156,1109,8,hangnum,343.,343.
+NULL,p156,1110,100,gatha1,," Tasiṇāya purakkhatā pajā, parisappanti sasova bandhito;"
+NULL,p156,1111,100,gathalast,,"Tasmā tasiṇaṃ vinodaye, ākaṅkhanta [bhikkhū ākaṅkhī (sī.), bhikkhu ākaṅkhaṃ (syā.)] virāgamattano."
+NULL,p156,1112,8,hangnum,344.,344.
+NULL,p156,1113,100,gatha1,," Yo nibbanatho vanādhimutto, vanamutto vanameva dhāvati;"
+NULL,p156,1114,100,gathalast,,"Taṃ puggalametha passatha, mutto bandhanameva dhāvati."
+NULL,p156,1115,8,hangnum,345.,345.
+NULL,p156,1116,100,gatha1,," Na  taṃ daḷhaṃ bandhanamāhu dhīrā, yadāyasaṃ dārujapabbajañca [dārūjaṃ babbajañca (sī. pī.)];"
+NULL,p156,1117,100,gathalast,,"Sārattarattā  maṇikuṇḍalesu, puttesu dāresu ca yā apekkhā."
+NULL,p156,1118,8,hangnum,346.,346.
+NULL,p156,1119,100,gatha1,," Etaṃ daḷhaṃ bandhanamāhu dhīrā, ohārinaṃ sithilaṃ duppamuñcaṃ;"
+NULL,p156,1120,100,gathalast,,"Etampi chetvāna paribbajanti, anapekkhino kāmasukhaṃ pahāya."
+NULL,p156,1121,8,hangnum,347.,347.
+NULL,p156,1122,100,gatha1,," Ye rāgarattānupatanti sotaṃ, sayaṃkataṃ makkaṭakova jālaṃ;"
+NULL,p156,1123,100,gathalast,,"Etampi chetvāna vajanti dhīrā, anapekkhino sabbadukkhaṃ pahāya."
+NULL,p156,1124,8,hangnum,348.,348.
+NULL,p156,1125,100,gatha1,," Muñca  pure muñca pacchato, majjhe muñca bhavassa pāragū;"
+NULL,p156,1126,100,gathalast,,"Sabbattha vimuttamānaso, na punaṃ jātijaraṃ upehisi."
+NULL,p156,1127,8,hangnum,349.,349.
+NULL,p156,1128,100,gatha1,," Vitakkamathitassa jantuno, tibbarāgassa subhānupassino;"
+NULL,p156,1129,100,gathalast,,"Bhiyyo taṇhā pavaḍḍhati, esa kho daḷhaṃ [esa gāḷhaṃ (ka.)] karoti bandhanaṃ."
+NULL,p156,1130,8,hangnum,350.,350.
+NULL,p156,1131,100,gatha1,," Vitakkūpasame  ca [vitakkūpasameva (ka.)] yo rato, asubhaṃ bhāvayate sadā sato;"
+NULL,p156,1132,100,gathalast,,"Esa [eso (?)] kho byanti kāhiti, esa [eso (?)] checchati mārabandhanaṃ."
+NULL,p156,1133,8,hangnum,351.,351.
+NULL,p156,1134,100,gatha1,," Niṭṭhaṅgato  asantāsī, vītataṇho anaṅgaṇo;"
+NULL,p156,1135,100,gathalast,,"Acchindi bhavasallāni, antimoyaṃ samussayo."
+NULL,p156,1136,8,hangnum,352.,352.
+NULL,p156,1137,100,gatha1,," Vītataṇho anādāno, niruttipadakovido;"
+NULL,p156,1138,100,gatha2,,"Akkharānaṃ sannipātaṃ, jaññā pubbāparāni ca;"
+NULL,p156,1139,100,gathalast,,"Sa ve ‘‘antimasārīro, mahāpañño mahāpuriso’’ti vuccati."
+NULL,p156,1140,8,hangnum,353.,353.
+NULL,p156,1141,100,gatha1,," Sabbābhibhū sabbavidūhamasmi, sabbesu dhammesu anūpalitto;"
+NULL,p156,1142,100,gathalast,,"Sabbañjaho taṇhakkhaye vimutto, sayaṃ abhiññāya kamuddiseyyaṃ."
+NULL,p156,1143,8,hangnum,354.,354.
+NULL,p156,1144,100,gatha1,," Sabbadānaṃ dhammadānaṃ jināti, sabbarasaṃ dhammaraso jināti;"
+NULL,p156,1145,100,gathalast,,"Sabbaratiṃ dhammarati jināti, taṇhakkhayo sabbadukkhaṃ jināti."
+NULL,p156,1146,8,hangnum,355.,355.
+NULL,p156,1147,100,gatha1,," Hananti bhogā dummedhaṃ, no ca pāragavesino;"
+NULL,p156,1148,100,gathalast,,"Bhogataṇhāya dummedho, hanti aññeva attanaṃ."
+NULL,p156,1149,8,hangnum,356.,356.
+NULL,p156,1150,100,gatha1,," Tiṇadosāni khettāni, rāgadosā ayaṃ pajā;"
+NULL,p156,1151,100,gathalast,,"Tasmā hi vītarāgesu, dinnaṃ hoti mahapphalaṃ."
+NULL,p156,1152,8,hangnum,357.,357.
+NULL,p156,1153,100,gatha1,," Tiṇadosāni  khettāni, dosadosā ayaṃ pajā;"
+NULL,p156,1154,100,gathalast,,"Tasmā hi vītadosesu, dinnaṃ hoti mahapphalaṃ."
+NULL,p156,1155,8,hangnum,358.,358.
+NULL,p156,1156,100,gatha1,," Tiṇadosāni khettāni, mohadosā ayaṃ pajā;"
+NULL,p156,1157,100,gathalast,,"Tasmā hi vītamohesu, dinnaṃ hoti mahapphalaṃ."
+NULL,p156,1158,8,hangnum,359.,359.
+NULL,p156,1159,100,gatha1,," (Tiṇadosāni  khettāni, icchādosā ayaṃ pajā;"
+NULL,p156,1160,100,gathalast,,"Tasmā hi vigaticchesu, dinnaṃ hoti mahapphalaṃ.) [( ) videsapotthakesu natthi, aṭṭhakathāyampi na dissati]"
+NULL,p156,1161,100,gatha2,,"Tiṇadosāni khettāni, taṇhādosā ayaṃ pajā;"
+NULL,p156,1162,100,gathalast,,"Tasmā hi vītataṇhesu, dinnaṃ hoti mahapphalaṃ."
+NULL,p156,1163,100,centered,,"Taṇhāvaggo catuvīsatimo niṭṭhito."
+NULL,p156,1164,2,chapter,"25. Bhikkhuvaggo","25. Bhikkhuvaggo"
+NULL,p156,1165,8,hangnum,360.,360.
+NULL,p156,1166,100,gatha1,," Cakkhunā saṃvaro sādhu, sādhu sotena saṃvaro;"
+NULL,p156,1167,100,gathalast,,"Ghānena saṃvaro sādhu, sādhu jivhāya saṃvaro."
+NULL,p156,1168,8,hangnum,361.,361.
+NULL,p156,1169,100,gatha1,," Kāyena saṃvaro sādhu, sādhu vācāya saṃvaro;"
+NULL,p156,1170,100,gatha2,,"Manasā saṃvaro sādhu, sādhu sabbattha saṃvaro;"
+NULL,p156,1171,100,gathalast,,"Sabbattha saṃvuto bhikkhu, sabbadukkhā pamuccati."
+NULL,p156,1172,8,hangnum,362.,362.
+NULL,p156,1173,100,gatha1,," Hatthasaṃyato pādasaṃyato, vācāsaṃyato saṃyatuttamo;"
+NULL,p156,1174,100,gathalast,,"Ajjhattarato samāhito, eko santusito tamāhu bhikkhuṃ."
+NULL,p156,1175,8,hangnum,363.,363.
+NULL,p156,1176,100,gatha1,," Yo  mukhasaṃyato bhikkhu, mantabhāṇī anuddhato;"
+NULL,p156,1177,100,gathalast,,"Atthaṃ dhammañca dīpeti, madhuraṃ tassa bhāsitaṃ."
+NULL,p156,1178,8,hangnum,364.,364.
+NULL,p156,1179,100,gatha1,," Dhammārāmo  dhammarato, dhammaṃ anuvicintayaṃ;"
+NULL,p156,1180,100,gathalast,,"Dhammaṃ anussaraṃ bhikkhu, saddhammā na parihāyati."
+NULL,p156,1181,8,hangnum,365.,365.
+NULL,p156,1182,100,gatha1,," Salābhaṃ nātimaññeyya, nāññesaṃ pihayaṃ care;"
+NULL,p156,1183,100,gathalast,,"Aññesaṃ pihayaṃ bhikkhu, samādhiṃ nādhigacchati."
+NULL,p156,1184,8,hangnum,366.,366.
+NULL,p156,1185,100,gatha1,," Appalābhopi ce bhikkhu, salābhaṃ nātimaññati;"
+NULL,p156,1186,100,gathalast,,"Taṃ ve devā pasaṃsanti, suddhājīviṃ atanditaṃ."
+NULL,p156,1187,8,hangnum,367.,367.
+NULL,p156,1188,100,gatha1,," Sabbaso nāmarūpasmiṃ, yassa natthi mamāyitaṃ;"
+NULL,p156,1189,100,gathalast,,"Asatā ca na socati, sa ve ‘‘bhikkhū’’ti vuccati."
+NULL,p156,1190,8,hangnum,368.,368.
+NULL,p156,1191,100,gatha1,," Mettāvihārī yo bhikkhu, pasanno buddhasāsane;"
+NULL,p156,1192,100,gathalast,,"Adhigacche padaṃ santaṃ, saṅkhārūpasamaṃ sukhaṃ."
+NULL,p156,1193,8,hangnum,369.,369.
+NULL,p156,1194,100,gatha1,," Siñca bhikkhu imaṃ nāvaṃ, sittā te lahumessati;"
+NULL,p156,1195,100,gathalast,,"Chetvā rāgañca dosañca, tato nibbānamehisi."
+NULL,p156,1196,8,hangnum,370.,370.
+NULL,p156,1197,100,gatha1,," Pañca chinde pañca jahe, pañca cuttari bhāvaye;"
+NULL,p156,1198,100,gathalast,,"Pañca saṅgātigo bhikkhu, ‘‘oghatiṇṇo’’ti vuccati."
+NULL,p156,1199,8,hangnum,371.,371.
+NULL,p156,1200,100,gatha1,," Jhāya bhikkhu [jhāya tuvaṃ bhikkhu (?)] mā pamādo [mā ca pamādo (sī. syā. pī.)], mā te kāmaguṇe ramessu [bhamassu (sī. pī.), bhavassu (syā.), ramassu (ka.)] cittaṃ;"
+NULL,p156,1201,100,gathalast,,"Mā lohaguḷaṃ gilī pamatto, mā kandi ‘‘dukkhamida’’nti ḍayhamāno."
+NULL,p156,1202,8,hangnum,372.,372.
+NULL,p156,1203,100,gatha1,," Natthi jhānaṃ apaññassa, paññā natthi ajhāyato [ajjhāyino (ka.)];"
+NULL,p156,1204,100,gathalast,,"Yamhi jhānañca paññā ca, sa ve nibbānasantike."
+NULL,p156,1205,8,hangnum,373.,373.
+NULL,p156,1206,100,gatha1,," Suññāgāraṃ  paviṭṭhassa, santacittassa bhikkhuno;"
+NULL,p156,1207,100,gathalast,,"Amānusī rati hoti, sammā dhammaṃ vipassato."
+NULL,p156,1208,8,hangnum,374.,374.
+NULL,p156,1209,100,gatha1,," Yato yato sammasati, khandhānaṃ udayabbayaṃ;"
+NULL,p156,1210,100,gathalast,,"Labhatī [labhati (pī.), labhate (ka.)] pītipāmojjaṃ, amataṃ taṃ vijānataṃ."
+NULL,p156,1211,8,hangnum,375.,375.
+NULL,p156,1212,100,gatha1,," Tatrāyamādi bhavati, idha paññassa bhikkhuno;"
+NULL,p156,1213,100,gathalast,,"Indriyagutti santuṭṭhi, pātimokkhe ca saṃvaro."
+NULL,p156,1214,8,hangnum,376.,376.
+NULL,p156,1215,100,gatha1,," Mitte bhajassu kalyāṇe, suddhājīve atandite;"
+NULL,p156,1216,100,gatha2,,"Paṭisanthāravutyassa [paṭisandhāravutyassa (ka.)], ācārakusalo siyā;"
+NULL,p156,1217,100,gathalast,,"Tato pāmojjabahulo, dukkhassantaṃ karissati."
+NULL,p156,1218,8,hangnum,377.,377.
+NULL,p156,1219,100,gatha1,," Vassikā viya pupphāni, maddavāni [majjavāni (ka. ṭīkā) paccavāni (ka. aṭṭha.)] pamuñcati;"
+NULL,p156,1220,100,gathalast,,"Evaṃ rāgañca dosañca, vippamuñcetha bhikkhavo."
+NULL,p156,1221,8,hangnum,378.,378.
+NULL,p156,1222,100,gatha1,," Santakāyo santavāco, santavā susamāhito [santamano susamāhito (syā. pī.), santamano samāhito (ka.)];"
+NULL,p156,1223,100,gathalast,,"Vantalokāmiso bhikkhu, ‘‘upasanto’’ti vuccati."
+NULL,p156,1224,8,hangnum,379.,379.
+NULL,p156,1225,100,gatha1,," Attanā codayattānaṃ, paṭimaṃsetha attanā [paṭimāse attamattanā (sī. pī.), paṭimaṃse tamattanā (syā.)];"
+NULL,p156,1226,100,gathalast,,"So attagutto satimā, sukhaṃ bhikkhu vihāhisi."
+NULL,p156,1227,8,hangnum,380.,380.
+NULL,p156,1228,100,gatha1,," Attā hi attano nātho, (ko hi nātho paro siyā) [( ) videsapotthakesu natthi]"
+NULL,p156,1229,100,gatha2,,"Attā hi attano gati;"
+NULL,p156,1230,100,gathalast,,"Tasmā saṃyamamattānaṃ [saṃyamaya’ttānaṃ (sī. pī.)], assaṃ bhadraṃva vāṇijo."
+NULL,p156,1231,8,hangnum,381.,381.
+NULL,p156,1232,100,gatha1,," Pāmojjabahulo  bhikkhu, pasanno buddhasāsane;"
+NULL,p156,1233,100,gathalast,,"Adhigacche padaṃ santaṃ, saṅkhārūpasamaṃ sukhaṃ."
+NULL,p156,1234,8,hangnum,382.,382.
+NULL,p156,1235,100,gatha1,," Yo  have daharo bhikkhu, yuñjati buddhasāsane;"
+NULL,p156,1236,100,gathalast,,"Somaṃ [so imaṃ (sī. syā. kaṃ. pī.)] lokaṃ pabhāseti, abbhā muttova candimā."
+NULL,p156,1237,100,centered,,"Bhikkhuvaggo pañcavīsatimo niṭṭhito."
+NULL,p156,1238,2,chapter,"26. Brāhmaṇavaggo","26. Brāhmaṇavaggo"
+NULL,p156,1239,8,hangnum,383.,383.
+NULL,p156,1240,100,gatha1,," Chinda sotaṃ parakkamma, kāme panuda brāhmaṇa;"
+NULL,p156,1241,100,gathalast,,"Saṅkhārānaṃ khayaṃ ñatvā, akataññūsi brāhmaṇa."
+NULL,p156,1242,8,hangnum,384.,384.
+NULL,p156,1243,100,gatha1,," Yadā dvayesu dhammesu, pāragū hoti brāhmaṇo;"
+NULL,p156,1244,100,gathalast,,"Athassa sabbe saṃyogā, atthaṃ gacchanti jānato."
+NULL,p156,1245,8,hangnum,385.,385.
+NULL,p156,1246,100,gatha1,," Yassa pāraṃ apāraṃ vā, pārāpāraṃ na vijjati;"
+NULL,p156,1247,100,gathalast,,"Vītaddaraṃ visaṃyuttaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1248,8,hangnum,386.,386.
+NULL,p156,1249,100,gatha1,," Jhāyiṃ virajamāsīnaṃ, katakiccamanāsavaṃ;"
+NULL,p156,1250,100,gathalast,,"Uttamatthamanuppattaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1251,8,hangnum,387.,387.
+NULL,p156,1252,100,gatha1,," Divā  tapati ādicco, rattimābhāti candimā;"
+NULL,p156,1253,100,gatha2,,"Sannaddho khattiyo tapati, jhāyī tapati brāhmaṇo;"
+NULL,p156,1254,100,gathalast,,"Atha sabbamahorattiṃ [sabbamahorattaṃ (?)], buddho tapati tejasā."
+NULL,p156,1255,8,hangnum,388.,388.
+NULL,p156,1256,100,gatha1,," Bāhitapāpoti  brāhmaṇo, samacariyā samaṇoti vuccati;"
+NULL,p156,1257,100,gathalast,,"Pabbājayamattano malaṃ, tasmā ‘‘pabbajito’’ti vuccati."
+NULL,p156,1258,8,hangnum,389.,389.
+NULL,p156,1259,100,gatha1,," Na  brāhmaṇassa pahareyya, nāssa muñcetha brāhmaṇo;"
+NULL,p156,1260,100,gathalast,,"Dhī [dhi (syā. byākaraṇesu)] brāhmaṇassa hantāraṃ, tato dhī yassa [yo + assa = yassa] muñcati."
+NULL,p156,1261,8,hangnum,390.,390.
+NULL,p156,1262,100,gatha1,," Na brāhmaṇassetadakiñci seyyo, yadā nisedho manaso piyehi;"
+NULL,p156,1263,100,gathalast,,"Yato yato hiṃsamano nivattati, tato tato sammatimeva dukkhaṃ."
+NULL,p156,1264,8,hangnum,391.,391.
+NULL,p156,1265,100,gatha1,," Yassa kāyena vācāya, manasā natthi dukkaṭaṃ;"
+NULL,p156,1266,100,gathalast,,"Saṃvutaṃ tīhi ṭhānehi, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1267,8,hangnum,392.,392.
+NULL,p156,1268,100,gatha1,," Yamhā dhammaṃ vijāneyya, sammāsambuddhadesitaṃ;"
+NULL,p156,1269,100,gathalast,,"Sakkaccaṃ taṃ namasseyya, aggihuttaṃva brāhmaṇo."
+NULL,p156,1270,8,hangnum,393.,393.
+NULL,p156,1271,100,gatha1,," Na jaṭāhi na gottena, na jaccā hoti brāhmaṇo;"
+NULL,p156,1272,100,gathalast,,"Yamhi saccañca dhammo ca, so sucī so ca brāhmaṇo."
+NULL,p156,1273,8,hangnum,394.,394.
+NULL,p156,1274,100,gatha1,," Kiṃ  te jaṭāhi dummedha, kiṃ te ajinasāṭiyā;"
+NULL,p156,1275,100,gathalast,,"Abbhantaraṃ te gahanaṃ, bāhiraṃ parimajjasi."
+NULL,p156,1276,8,hangnum,395.,395.
+NULL,p156,1277,100,gatha1,," Paṃsukūladharaṃ jantuṃ, kisaṃ dhamanisanthataṃ;"
+NULL,p156,1278,100,gathalast,,"Ekaṃ vanasmiṃ jhāyantaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1279,8,hangnum,396.,396.
+NULL,p156,1280,100,gatha1,," Na  cāhaṃ brāhmaṇaṃ brūmi, yonijaṃ mattisambhavaṃ;"
+NULL,p156,1281,100,gatha2,,"Bhovādi nāma so hoti, sace hoti sakiñcano;"
+NULL,p156,1282,100,gathalast,,"Akiñcanaṃ anādānaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1283,8,hangnum,397.,397.
+NULL,p156,1284,100,gatha1,," Sabbasaṃyojanaṃ chetvā, yo ve na paritassati;"
+NULL,p156,1285,100,gathalast,,"Saṅgātigaṃ  visaṃyuttaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1286,8,hangnum,398.,398.
+NULL,p156,1287,100,gatha1,," Chetvā  naddhiṃ [nandhiṃ (ka. sī.), nandiṃ (pī.)] varattañca, sandānaṃ [sandāmaṃ (sī.)] sahanukkamaṃ;"
+NULL,p156,1288,100,gathalast,,"Ukkhittapalighaṃ buddhaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1289,8,hangnum,399.,399.
+NULL,p156,1290,100,gatha1,," Akkosaṃ vadhabandhañca, aduṭṭho yo titikkhati;"
+NULL,p156,1291,100,gathalast,,"Khantībalaṃ balānīkaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1292,8,hangnum,400.,400.
+NULL,p156,1293,100,gatha1,," Akkodhanaṃ vatavantaṃ, sīlavantaṃ anussadaṃ;"
+NULL,p156,1294,100,gathalast,,"Dantaṃ antimasārīraṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1295,8,hangnum,401.,401.
+NULL,p156,1296,100,gatha1,," Vāri  pokkharapatteva, āraggeriva sāsapo;"
+NULL,p156,1297,100,gathalast,,"Yo na limpati [lippati (sī. pī.)] kāmesu, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1298,8,hangnum,402.,402.
+NULL,p156,1299,100,gatha1,," Yo dukkhassa pajānāti, idheva khayamattano;"
+NULL,p156,1300,100,gathalast,,"Pannabhāraṃ visaṃyuttaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1301,8,hangnum,403.,403.
+NULL,p156,1302,100,gatha1,," Gambhīrapaññaṃ medhāviṃ, maggāmaggassa kovidaṃ;"
+NULL,p156,1303,100,gathalast,,"Uttamatthamanuppattaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1304,8,hangnum,404.,404.
+NULL,p156,1305,100,gatha1,," Asaṃsaṭṭhaṃ  gahaṭṭhehi, anāgārehi cūbhayaṃ;"
+NULL,p156,1306,100,gathalast,,"Anokasārimappicchaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1307,8,hangnum,405.,405.
+NULL,p156,1308,100,gatha1,," Nidhāya daṇḍaṃ bhūtesu, tasesu thāvaresu ca;"
+NULL,p156,1309,100,gathalast,,"Yo na hanti na ghāteti, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1310,8,hangnum,406.,406.
+NULL,p156,1311,100,gatha1,," Aviruddhaṃ viruddhesu, attadaṇḍesu nibbutaṃ;"
+NULL,p156,1312,100,gathalast,,"Sādānesu anādānaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1313,8,hangnum,407.,407.
+NULL,p156,1314,100,gatha1,," Yassa rāgo ca doso ca, māno makkho ca pātito;"
+NULL,p156,1315,100,gathalast,,"Sāsaporiva  āraggā [āragge (ka.)], tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1316,8,hangnum,408.,408.
+NULL,p156,1317,100,gatha1,," Akakkasaṃ  viññāpaniṃ, giraṃ saccamudīraye;"
+NULL,p156,1318,100,gathalast,,"Yāya nābhisaje kañci [kiñci (ka.)], tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1319,8,hangnum,409.,409.
+NULL,p156,1320,100,gatha1,," Yodha dīghaṃ va rassaṃ vā, aṇuṃ thūlaṃ subhāsubhaṃ;"
+NULL,p156,1321,100,gathalast,,"Loke adinnaṃ nādiyati [nādeti (ma. ni. 2.459)], tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1322,8,hangnum,410.,410.
+NULL,p156,1323,100,gatha1,," Āsā yassa na vijjanti, asmiṃ loke paramhi ca;"
+NULL,p156,1324,100,gathalast,,"Nirāsāsaṃ [nirāsayaṃ (sī. syā. pī.), nirāsakaṃ (?)] visaṃyuttaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1325,8,hangnum,411.,411.
+NULL,p156,1326,100,gatha1,," Yassālayā na vijjanti, aññāya akathaṃkathī;"
+NULL,p156,1327,100,gathalast,,"Amatogadhamanuppattaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1328,8,hangnum,412.,412.
+NULL,p156,1329,100,gatha1,," Yodha puññañca pāpañca, ubho saṅgamupaccagā;"
+NULL,p156,1330,100,gathalast,,"Asokaṃ virajaṃ suddhaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1331,8,hangnum,413.,413.
+NULL,p156,1332,100,gatha1,," Candaṃva vimalaṃ suddhaṃ, vippasannamanāvilaṃ;"
+NULL,p156,1333,100,gathalast,,"Nandībhavaparikkhīṇaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1334,8,hangnum,414.,414.
+NULL,p156,1335,100,gatha1,," Yomaṃ [yo imaṃ (sī. syā. kaṃ. pī.)] palipathaṃ duggaṃ, saṃsāraṃ mohamaccagā;"
+NULL,p156,1336,100,gatha2,,"Tiṇṇo pāragato [pāragato (sī. syā. kaṃ. pī.)] jhāyī, anejo akathaṃkathī;"
+NULL,p156,1337,100,gathalast,,"Anupādāya nibbuto, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1338,8,hangnum,415.,415.
+NULL,p156,1339,100,gatha1,," Yodha  kāme pahantvāna [pahatvāna (sī. pī.)], anāgāro paribbaje;"
+NULL,p156,1340,100,gathalast,,"Kāmabhavaparikkhīṇaṃ, tamahaṃ brūmi brāhmaṇaṃ [idaṃ gāthādvayaṃ videsapotthakesu sakideva dassitaṃ]."
+NULL,p156,1341,8,hangnum,416.,416.
+NULL,p156,1342,100,gatha1,," Yodha taṇhaṃ pahantvāna, anāgāro paribbaje;"
+NULL,p156,1343,100,gathalast,,"Taṇhābhavaparikkhīṇaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1344,8,hangnum,417.,417.
+NULL,p156,1345,100,gatha1,," Hitvā  mānusakaṃ yogaṃ, dibbaṃ yogaṃ upaccagā;"
+NULL,p156,1346,100,gathalast,,"Sabbayogavisaṃyuttaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1347,8,hangnum,418.,418.
+NULL,p156,1348,100,gatha1,," Hitvā ratiñca aratiñca, sītibhūtaṃ nirūpadhiṃ;"
+NULL,p156,1349,100,gathalast,,"Sabbalokābhibhuṃ vīraṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1350,8,hangnum,419.,419.
+NULL,p156,1351,100,gatha1,," Cutiṃ yo vedi sattānaṃ, upapattiñca sabbaso;"
+NULL,p156,1352,100,gathalast,,"Asattaṃ sugataṃ buddhaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1353,8,hangnum,420.,420.
+NULL,p156,1354,100,gatha1,," Yassa gatiṃ na jānanti, devā gandhabbamānusā;"
+NULL,p156,1355,100,gathalast,,"Khīṇāsavaṃ arahantaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1356,8,hangnum,421.,421.
+NULL,p156,1357,100,gatha1,," Yassa  pure ca pacchā ca, majjhe ca natthi kiñcanaṃ;"
+NULL,p156,1358,100,gathalast,,"Akiñcanaṃ anādānaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1359,8,hangnum,422.,422.
+NULL,p156,1360,100,gatha1,," Usabhaṃ  pavaraṃ vīraṃ, mahesiṃ vijitāvinaṃ;"
+NULL,p156,1361,100,gathalast,,"Anejaṃ nhātakaṃ [nahātakaṃ (sī. syā. kaṃ pī.)] buddhaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1362,8,hangnum,423.,423.
+NULL,p156,1363,100,gatha1,," Pubbenivāsaṃ yo vedi, saggāpāyañca passati,"
+NULL,p156,1364,100,gatha2,,"Atho jātikkhayaṃ patto, abhiññāvosito muni;"
+NULL,p156,1365,100,gathalast,,"Sabbavositavosānaṃ, tamahaṃ brūmi brāhmaṇaṃ."
+NULL,p156,1366,100,centered,,"Brāhmaṇavaggo chabbīsatimo niṭṭhito."
+NULL,p156,1367,100,bodytext,,"(Ettāvatā  sabbapaṭhame yamakavagge cuddasa vatthūni, appamādavagge nava, cittavagge nava, pupphavagge dvādasa, bālavagge pannarasa, paṇḍitavagge ekādasa, arahantavagge dasa, sahassavagge cuddasa, pāpavagge dvādasa, daṇḍavagge ekādasa, jarāvagge nava, attavagge dasa, lokavagge ekādasa, buddhavagge nava [aṭṭha (ka.)], sukhavagge aṭṭha, piyavagge nava, kodhavagge aṭṭha, malavagge dvādasa, dhammaṭṭhavagge dasa, maggavagge dvādasa, pakiṇṇakavagge nava, nirayavagge nava, nāgavagge aṭṭha, taṇhāvagge dvādasa, bhikkhuvagge dvādasa, brāhmaṇavagge cattālīsāti pañcādhikāni tīṇi vatthusatāni."
+NULL,p156,1368,100,gatha2,,"Satevīsacatussatā, catusaccavibhāvinā;"
+NULL,p156,1369,100,gathalast,,"Satattayañca vatthūnaṃ, pañcādhikaṃ samuṭṭhitāti) [( ) etthantare pāṭho videsapotthakesu natthi, aṭṭhakathāsuyeva dissati]."
+NULL,p156,1370,100,bodytext,,"[dhammapadassa vaggassuddānaṃ§yamakaṃ pamādaṃ cittaṃ, pupphaṃ bālañca paṇḍitaṃ.§rahantaṃ sahassaṃ pāpaṃ, daṇḍaṃ jarā attalokaṃ.§buddhaṃ sukhaṃ piyaṃ kodhaṃ, malaṃ dhammaṭṭhamaggañca.§pakiṇṇakaṃ nirayaṃ nāgaṃ, taṇhā bhikkhū ca brāhmaṇo.§gāthāyuddānaṃ§yamake vīsagāthāyo, appamādalokamhi ca.§piye dvādasagāthāyo, citte jarattekādasa.§pupphabālasahassamhi, buddha magga pakiṇṇake.§soḷasa paṇḍite kodhe, niraye nāge catuddasa.§arahante dasaggāthā, pāpasukhamhi terasa.§sattarasa daṇḍadhammaṭṭhe, malamhi ekavīsati.§taṇhāvagge sattabbīsa, tevīsa bhikkhuvaggamhi.§brāhmaṇe ekatālīsa, catussatā satevīsa. (ka.)]"
+NULL,p156,1371,100,bodytext,,"Dhammapade vaggānamuddānaṃ –"
+NULL,p156,1372,100,gatha2,,"Yamakappamādo  cittaṃ, pupphaṃ bālena paṇḍito;"
+NULL,p156,1373,100,gathalast,,"Arahanto sahassañca, pāpaṃ daṇḍena te dasa."
+NULL,p156,1374,100,gatha1,,"Jarā  attā ca loko ca, buddho sukhaṃ piyena ca;"
+NULL,p156,1375,100,gathalast,,"Kodho malañca dhammaṭṭho, maggavaggena vīsati."
+NULL,p156,1376,100,gatha2,,"Pakiṇṇaṃ nirayo nāgo, taṇhā bhikkhu ca brāhmaṇo;"
+NULL,p156,1377,100,gathalast,,"Ete chabbīsati vaggā, desitādiccabandhunā."
+NULL,p156,1378,100,bodytext,,"Gāthānamuddānaṃ –"
+NULL,p156,1379,100,gatha2,,"Yamake vīsati gāthā, appamādamhi dvādasa;"
+NULL,p156,1380,100,gathalast,,"Ekādasa cittavagge, pupphavaggamhi soḷasa."
+NULL,p156,1381,100,gatha2,,"Bāle ca soḷasa gāthā, paṇḍitamhi catuddasa;"
+NULL,p156,1382,100,gathalast,,"Arahante dasa gāthā, sahasse honti soḷasa."
+NULL,p156,1383,100,gatha2,,"Terasa pāpavaggamhi, daṇḍamhi dasa satta ca;"
+NULL,p156,1384,100,gathalast,,"Ekādasa jarā vagge, attavaggamhi tā dasa."
+NULL,p156,1385,100,gatha2,,"Dvādasa  lokavaggamhi, buddhavaggamhi ṭhārasa [soḷasa (sabbattha)];"
+NULL,p156,1386,100,gathalast,,"Sukhe ca piyavagge ca, gāthāyo honti dvādasa."
+NULL,p156,1387,100,gatha2,,"Cuddasa kodhavaggamhi, malavaggekavīsati;"
+NULL,p156,1388,100,gathalast,,"Sattarasa ca dhammaṭṭhe, maggavagge sattarasa."
+NULL,p156,1389,100,gatha2,,"Pakiṇṇe soḷasa gāthā, niraye nāge ca cuddasa;"
+NULL,p156,1390,100,gathalast,,"Chabbīsa taṇhāvaggamhi, tevīsa bhikkhuvaggikā."
+NULL,p156,1391,100,gatha2,,"Ekatālīsagāthāyo, brāhmaṇe vaggamuttame;"
+NULL,p156,1392,100,gatha3,,"Gāthāsatāni cattāri, tevīsa ca punāpare;"
+NULL,p156,1393,100,gathalast,,"Dhammapade nipātamhi, desitādiccabandhunāti."
+NULL,p156,1394,100,centered,,"Dhammapadapāḷi niṭṭhitā."

@@ -1,0 +1,22 @@
+#login_body {
+    flex-direction: column;
+	padding: 0.2em;
+}
+
+#login_left {
+    padding-right: 0;
+    padding-top: 6em;
+}
+
+#login_form_div{
+	width:100%;
+}
+
+#login_right {
+    margin-top: 2em;
+    margin-left: 10px;
+    margin-right: 8px;
+}
+.fun_block{
+	max-width: 100%;
+}

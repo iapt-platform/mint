@@ -1,0 +1,1002 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link type="text/css" rel="stylesheet" href="../pcdl/css/font.css" />
+		<link type="text/css" rel="stylesheet" href="../pcdl/css/basic_style.css" />
+		<link type="text/css" rel="stylesheet" href="../pcdl/css/style.css" />
+		<link type="text/css" rel="stylesheet" href="../pcdl/css/color_day.css" id="colorchange" />
+		<link
+			type="text/css"
+			rel="stylesheet"
+			href="../pcdl/css/style_mobile.css"
+			media="screen and (max-width:800px)"
+		/>
+
+		<script src="../public/js/jquery.js"></script>
+		<script src="../public/js/comm.js"></script>
+		<script src="jquery-3.3.1.min.js"></script>
+		<script src="julian.js"></script>
+		<script src="lune.js"></script>
+		<script src="suncalc.js"></script>
+		<script src="./planet_position/js/planet-positions.js"></script>
+
+		<script src="../studio/js/fixedsticky.js"></script>
+		<script src="../guide/guide.js"></script>
+		<link type="text/css" rel="stylesheet" href="../guide/guide.css" />
+
+		<script src="../public/js/marked.js"></script>
+		<!--获取语言-->
+		<script>
+			var g_language = "en";
+			var g_currLink = "";
+			function lang_init(strPage) {
+				g_currLink = strPage;
+			}
+			function setLang(strLang) {
+				g_language = strLang;
+				setCookie("language", g_language, 365);
+				window.location.assign(location.pathname + "?language=" + g_language);
+			}
+		</script>
+		<script>
+			var localString = new Array();
+			localString["zh-cn"] = {
+				and_another: "又 ",
+				atitude: "纬度",
+				BE: "佛历",
+				bhumma: "周二",
+				budha: "周三",
+				canda: "周一",
+				confirm: "确认",
+				date: "日期",
+				day: "日",
+				days: "天 ",
+				departure_in_detail: "起飞详情",
+				dhamma_time: "会延续五千年的教法 ",
+				eat: "进餐",
+				gama_entry: "入村",
+				guru: "周四",
+				hori_ref_time: "蒙气差修正 ",
+				kala: "适当的时间",
+				language_select: "选择语言",
+				left: "还剩下",
+				loading: "载入中……",
+				longitude: "经度",
+				māsa: "月",
+				mins: "分钟",
+				month: "月 ",
+				month_1: "月 ",
+				months: "个月 ",
+				my_loc: "我的位置",
+				need_inform: "未告知其他比库",
+				no_string: "不能",
+				noon_time: "正午",
+				noon_time: "正午",
+				note: "注释",
+				now_time: "现在",
+				pacchā_māsa: "下个月",
+				pakkha: "月相变化 ",
+				past: "已过去",
+				pubba_māsa: "上个月",
+				ravi: "周日",
+				saṃvacchara: "年",
+				season: "季节 ",
+				sec: "秒",
+				sora: "周六",
+				sukka: "周五",
+				sun_height_degree: "正午太阳高度 ",
+				time: "时间",
+				twilight_time: "曙光",
+				twilight_time: "曙光",
+				vikala: "不适当的时间",
+				week_day: "星期",
+				year_0: "年",
+				year_1: "年 ",
+				years: "年 ",
+				yes_string: "可以",
+			};
+			localString["zh-tw"] = {
+				and_another: "又 ",
+				atitude: "緯度",
+				BE: "佛曆",
+				bhumma: "週二",
+				budha: "週三",
+				canda: "週一",
+				confirm: "確認",
+				date: "日期",
+				day: "日",
+				days: "天 ",
+				departure_in_detail: "起飛詳情",
+				dhamma_time: "會延續五千年的教法 ",
+				eat: "進餐",
+				gama_entry: "入村",
+				guru: "週四",
+				hori_ref_time: "蒙氣差修正 ",
+				kala: "適當的時間",
+				language_select: "選擇語言",
+				left: "還剩下",
+				loading: "載入中……",
+				longitude: "經度",
+				māsa: "月",
+				mins: "分鐘",
+				month: "月 ",
+				month_1: "月 ",
+				months: "個月 ",
+				my_loc: "我的位置",
+				need_inform: "未告知其他比庫",
+				no_string: "不能",
+				noon_time: "正午",
+				noon_time: "正午",
+				note: "註釋",
+				now_time: "現在",
+				pacchā_māsa: "下個月",
+				pakkha: "月相變化 ",
+				past: "已過去",
+				pubba_māsa: "上個月",
+				ravi: "週日",
+				saṃvacchara: "年",
+				season: "季節 ",
+				sec: "秒",
+				sora: "週六",
+				sukka: "週五",
+				sun_height_degree: "正午太陽高度 ",
+				time: "時間",
+				twilight_time: "曙光",
+				twilight_time: "曙光",
+				vikala: "不適當的時間",
+				week_day: "星期",
+				year_0: "年",
+				year_1: "年 ",
+				years: "年 ",
+				yes_string: "可以",
+			};
+			localString["default"] = {
+				and_another: " and ",
+				atitude: "Atitude",
+				BE: "Buddhist Era ",
+				bhumma: "Bhumma",
+				budha: "Budha",
+				canda: "Canda",
+				confirm: "Confirm",
+				date: "Date ",
+				day: " day(s) ",
+				days: " day(s) ",
+				departure_in_detail: "departure in detail",
+				dhamma_time: "5000 Years of the Buddha’s Dispensation ",
+				eat: "eat",
+				gama_entry: "entry the village",
+				guru: "Guru",
+				hori_ref_time: "horizontal refraction correct ",
+				kala: "suitable time",
+				language_select: "bhāsā",
+				left: "Remains ",
+				loading: "loading…",
+				longitude: "Longitude",
+				māsa: "māsa",
+				mins: "(min)",
+				month: "Month ",
+				month_1: "- ",
+				months: " month(s) ",
+				my_loc: "attasmiṃ",
+				need_inform: "without informing other Bhikkhu ",
+				no_string: "cannot ",
+				noon_time: "NOON",
+				noon_time: "NOON",
+				note: "Note",
+				now_time: "NOW",
+				pacchā_māsa: "pacchā-māsa",
+				pakkha: "Lunar Phases ",
+				past: "Passed ",
+				pubba_māsa: "pubba-māsa",
+				ravi: "Ravi",
+				saṃvacchara: "saṃvacchara",
+				season: "Season ",
+				sec: "sec ",
+				sora: "Sora",
+				sukka: "Sukka",
+				sun_height_degree: "Max solar altitude ",
+				time: "Time",
+				twilight_time: "dawn",
+				twilight_time: "dawn",
+				vikala: "unsuitable time",
+				week_day: "Day",
+				year_0: "saṃvacchara",
+				year_1: "- ",
+				years: " year(s) ",
+				yes_string: "can ",
+			};
+			localString["en"] = {
+				and_another: " and ",
+				atitude: "Atitude",
+				BE: "Buddhist Era ",
+				bhumma: "Bhumma",
+				budha: "Budha",
+				canda: "Canda",
+				confirm: "Confirm",
+				date: "Date",
+				day: " day(s) ",
+				days: " day(s) ",
+				departure_in_detail: "departure in detail",
+				dhamma_time: "5000 Years of the Buddha’s Dispensation ",
+				eat: "eat",
+				gama_entry: "entry the village",
+				guru: "Guru",
+				hori_ref_time: "horizontal refraction correct ",
+				kala: "suitable time",
+				language_select: "Language",
+				left: "Remains ",
+				loading: "loading…",
+				longitude: "Longitude",
+				māsa: "māsa",
+				mins: "(min)",
+				month: "Month ",
+				month_1: "- ",
+				months: " month(s) ",
+				my_loc: "my location",
+				need_inform: "without informing other Bhikkhu ",
+				no_string: "cannot ",
+				noon_time: "NOON",
+				noon_time: "NOON",
+				note: "Note",
+				now_time: "NOW",
+				pacchā_māsa: "pacchā-māsa",
+				pakkha: "Lunar Phases ",
+				past: "Passed ",
+				pubba_māsa: "pubba-māsa",
+				ravi: "Ravi",
+				saṃvacchara: "saṃvacchara",
+				season: "Season ",
+				sec: "sec",
+				sora: "Sora",
+				sukka: "Sukka",
+				sun_height_degree: "Max solar altitude ",
+				time: "time",
+				twilight_time: "dawn",
+				twilight_time: "dawn",
+				vikala: "unsuitable time",
+				week_day: "Day",
+				year_0: "year",
+				year_1: "- ",
+				years: " year(s) ",
+				yes_string: "can ",
+			};
+			localString["my"] = {
+				and_another: " and ",
+				atitude: "Atitude",
+				BE: "Buddhist Era ",
+				bhumma: "ဘုမ္မ",
+				budha: "ဗုဓ",
+				canda: "စန္ဒ",
+				confirm: "Confirm",
+				date: "Date ",
+				day: " day(s) ",
+				days: " day(s) ",
+				departure_in_detail: "departure in detail",
+				dhamma_time: "5000 Years of the Buddha’s Dispensation ",
+				eat: "eat",
+				gama_entry: "entry the village",
+				guru: "ဂုရု",
+				hori_ref_time: "horizontal refraction correct ",
+				kala: "ကာလ",
+				language_select: "ဘာသာ",
+				left: "Remains ",
+				loading: "loading…",
+				longitude: "Longitude",
+				māsa: "မာသ",
+				mins: "(min)",
+				month: "Month ",
+				month_1: "- ",
+				months: " month(s) ",
+				my_loc: "အတ္တသ္မိံ",
+				need_inform: "without informing other Bhikkhu ",
+				no_string: "cannot ",
+				noon_time: "မဇ္ဈန္ဟိက",
+				noon_time: "မဇ္ဈန္ဟိက",
+				note: "Note",
+				now_time: "ပစ္စုပ္ပန္န",
+				pacchā_māsa: "ပစ္ဆာ-မာသ",
+				pakkha: "Lunar Phases ",
+				past: "Passed ",
+				pubba_māsa: "ပုဗ္ဗ-မာသ",
+				ravi: "ရဝိ",
+				saṃvacchara: "သံဝစ္ဆရ",
+				season: "Season ",
+				sec: "sec ",
+				sora: "သောရ",
+				sukka: "သုက္က",
+				sun_height_degree: "Max solar altitude ",
+				time: "Time",
+				twilight_time: "အရုဏုဂ္ဂမန",
+				twilight_time: "အရုဏုဂ္ဂမန",
+				vikala: "ဝိကာလ",
+				week_day: "Day",
+				year_0: "year",
+				year_1: "- ",
+				years: " year(s) ",
+				yes_string: "can ",
+			};
+			localString["si"] = {
+				and_another: " ච ",
+				atitude: "Atitude",
+				BE: "බුද්ධ වර්ෂය ",
+				bhumma: "භුම්ම",
+				budha: "බුධ",
+				canda: "චන්ද",
+				confirm: "Confirm",
+				date: "දිවස ",
+				day: " දිවසා(නි) ",
+				days: " දිවසා(නි) ",
+				departure_in_detail: "departure in detail",
+				dhamma_time: "සම්මා සම්බුද්ධස්ස සාසනං පට්ච-වස්ස-සහස්සානි පවත්තිස්සති ",
+				eat: "eat",
+				gama_entry: "entry the village",
+				guru: "ගු‍රු",
+				hori_ref_time: "horizontal refraction correct ",
+				kala: "කාල",
+				language_select: "භාෂාව",
+				left: "අවසිට්ඨ ",
+				loading: "ප්‍රවේශනය වෙනවා ",
+				longitude: "Longitude",
+				māsa: "මාස",
+				mins: "(min)",
+				month: "මාස ",
+				month_1: "- ",
+				months: " මාසා(නි) ",
+				my_loc: "අත‍්තස‍්මිං",
+				need_inform: "without informing other Bhikkhu ",
+				no_string: "cannot ",
+				noon_time: "මජ්ඣන්හික",
+				noon_time: "මජ්ඣන්හික",
+				note: "නෝට්ටුව ",
+				now_time: "පච්චුප්පන්න",
+				pacchā_māsa: "පච්ඡා-මාස",
+				pakkha: "පක්ඛ ",
+				past: "අතික්කන්ත ",
+				pubba_māsa: "පුබ්බ-මාස",
+				ravi: "රවි",
+				saṃvacchara: "සංවච්ඡ‍ර",
+				season: "උතු ",
+				sec: "sec",
+				sora: "සො‍ර",
+				sukka: "සුක්ක",
+				sun_height_degree: "Max solar altitude ",
+				time: "time",
+				twilight_time: "අ‍රුණුග්ගමන",
+				twilight_time: "අ‍රුණුග්ගමන",
+				vikala: "විකාල",
+				week_day: "වා‍ර ",
+				year_0: "සංවච්ඡ‍ර",
+				year_1: "- ",
+				years: " සංවච්ඡ‍රා(නි) ",
+				yes_string: "can ",
+			};
+			var pali_month_name = [
+				{ id: "1", value: "jeṭṭha", season: "gimhāna", season_icon: "☀" }, //5.X-四-十五-心
+				{ id: "2", value: "asāḷha", season: "gimhāna", season_icon: "☀" }, //6.X-五-十五、十六-箕、斗
+				{ id: "3", value: "sāvana", season: "vassāna", season_icon: "☔" }, //7.X-六-十五-女
+				{ id: "4", value: "poṭṭhapāda", season: "vassāna", season_icon: "☔" }, //8.x-七-十五、十六-室、壁
+				{ id: "5", value: "assajuja", season: "vassāna", season_icon: "☔" }, //9.X-八-十五-樓
+				{ id: "6", value: "kattika", season: "vassāna", season_icon: "☔" }, //10.X-九-十五-昂
+				{ id: "7", value: "māgasira", season: "hemanta", season_icon: "❄" }, //11.X-十-十五-觜
+				{ id: "8", value: "phussa", season: "hemanta", season_icon: "❄" }, //12.X-十一-十五-鬼
+				{ id: "9", value: "māgha", season: "hemanta", season_icon: "❄" }, //1.X-十二-十五-星
+				{ id: "10", value: "phagguna", season: "hemanta", season_icon: "❄" }, //2.X-正月-十四、十五-張、異
+				{ id: "11", value: "citta", season: "gimhāna", season_icon: "☀" }, //3.X-二月-十五-角
+				{ id: "12", value: "vesākha", season: "gimhāna", season_icon: "☀" }, //4.X-三月-十五-氐
+			];
+			var pali_nakkhatta_name = [
+				{ id: "0", value: "assayuja", name_zh: "娄宿" },
+				{ id: "1", value: "bharaṇī", name_zh: "胃宿" },
+				{ id: "2", value: "Kattikā", name_zh: "昂宿" },
+				{ id: "3", value: "rohiṇī", name_zh: "毕宿" },
+				{ id: "4", value: "magasira", name_zh: "觜宿" },
+				{ id: "5", value: "Addā", name_zh: "参宿" },
+				{ id: "6", value: "punabbasu", name_zh: "井宿" },
+				{ id: "7", value: "phussa", name_zh: "鬼宿" },
+				{ id: "8", value: "Asilesā", name_zh: "柳宿" },
+				{ id: "9", value: "maghā", name_zh: "星宿" },
+				{ id: "10", value: "pubbaphagguṇī", name_zh: "张宿" },
+				{ id: "11", value: "uttaraphagguṇī", name_zh: "翼宿" },
+				{ id: "12", value: "hattha", name_zh: "轸宿" },
+				{ id: "13", value: "cittā", name_zh: "角宿" },
+				{ id: "14", value: "sāti", name_zh: "亢宿" },
+				{ id: "15", value: "visākhā", name_zh: "氐宿" },
+				{ id: "16", value: "anurādhā", name_zh: "房宿" },
+				{ id: "17", value: "jeṭṭha", name_zh: "心宿" },
+				{ id: "18", value: "mūlā", name_zh: "尾宿" },
+				{ id: "19", value: "pubbāsāḷha", name_zh: "箕宿" },
+				{ id: "20", value: "uttarāsāḷha", name_zh: "斗宿" },
+				{ id: "21", value: "savaṇa", name_zh: "女宿" },
+				{ id: "22", value: "dhaniṭṭhā", name_zh: "虚宿" },
+				{ id: "23", value: "satabhisaja", name_zh: "危宿" },
+				{ id: "24", value: "pubbabhaddapadā", name_zh: "室宿" },
+				{ id: "25", value: "uttarabhaddapadā", name_zh: "壁宿" },
+				{ id: "26", value: "revatī", name_zh: "奎宿" },
+			];
+			var horoscope_name = [
+				{ id: "0", value: "Aries", name_zh: "白羊", icon: "♈" },
+				{ id: "1", value: "Taurus", name_zh: "金牛", icon: "♉" },
+				{ id: "2", value: "Gemini", name_zh: "双子", icon: "♊" },
+				{ id: "3", value: "Cancer", name_zh: "巨蟹", icon: "♋" },
+				{ id: "4", value: "Leo", name_zh: "狮子", icon: "♌" },
+				{ id: "5", value: "Virgo", name_zh: "处女", icon: "♍" },
+				{ id: "6", value: "Libra", name_zh: "天秤", icon: "♎" },
+				{ id: "7", value: "Scorpio", name_zh: "天蝎", icon: "♏" },
+				{ id: "8", value: "Sagittarius", name_zh: "射手", icon: "♐" },
+				{ id: "9", value: "Capricornus", name_zh: "摩羯", icon: "♑" },
+				{ id: "10", value: "Aquarius", name_zh: "水瓶", icon: "♒" },
+				{ id: "11", value: "Pisces", name_zh: "双鱼", icon: "♓" },
+			];
+		</script>
+		<style>
+			.card {
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+				font-size: 1em;
+				line-height: 1.3;
+			}
+
+			.card > .title > a,
+			.card > .title > a:link {
+				color: var(--main-color);
+			}
+
+			.card a:hover {
+				color: var(--tool-link-hover-color);
+			}
+
+			.index_inner {
+				width: 960px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			.table_line {
+				display: flex;
+				border-bottom: solid;
+			}
+
+			.table_column {
+				flex: 1;
+			}
+
+			.correct {
+				background-color: gold;
+			}
+			#position_input {
+				width: fit-content;
+				background: #dfdfdf;
+				padding: 1em;
+				border: solid 2px #7d7d7d;
+				border-radius: 0.5em;
+				position: absolute;
+				left: 5em;
+				top: 10em;
+			}
+			#position_input input[type="number" i] {
+				width: 4em;
+			}
+			#position_input span {
+			}
+			#position_input select {
+				width: 3.5em;
+			}
+		</style>
+		<title id="title_text"> </title>
+	</head>
+
+	<body>
+		<!--多语言范例
+        <script>
+            document.write(localString[g_language].XXXX);
+        </script>
+
+    -->
+		<div id="position_change">
+			<span id="selected_position_string" onclick="input_position()">
+				<script>
+					document.write(localString[g_language].loading);
+					//localString[g_language].loading;
+				</script>
+			</span>
+			<!--自动定位-->
+			<button onclick="getLocation()" style="font-size: 100%; padding: 2px 6px">
+				<svg class="icon" style="min-width: 1.8em; min-height: 1.8em">
+					<path
+						d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"
+					/>
+				</svg>
+				<script>
+					document.write(localString[g_language].my_loc);
+					//localString[g_language].my_loc
+				</script>
+			</button>
+			<div id="position_input" style="display: none">
+				<div style="display: flex">
+					<span style="flex: 3; justify-content: flex-end; display: flex; margin: auto 1em auto 0">
+						<script>
+							document.write(localString[g_language].atitude);
+						</script></span
+					>
+					<span style="flex: 7; white-space: nowrap">
+						<input id="AT_°" type="number" min="0" max="90" /> °
+						<input id="AT_’" type="number" min="0" max="60" /> ’
+						<input id="AT_”" type="number" min="0" max="60" /> ”
+						<select id="NS">
+							<option value="+">N</option>
+							<option value="-">S</option>
+						</select>
+					</span>
+				</div>
+				<div style="display: flex">
+					<span style="flex: 3; justify-content: flex-end; display: flex; margin: auto 1em auto 0"
+						><script>
+							document.write(localString[g_language].longitude);
+						</script></span
+					><span style="flex: 7; white-space: nowrap">
+						<input id="LT_°" type="number" min="0" max="180" /> °
+						<input id="LT_’" type="number" min="0" max="60" /> ’
+						<input id="LT_”" type="number" min="0" max="60" /> ”
+						<select id="WE">
+							<option value="+">E</option>
+							<option value="-">W</option>
+						</select></span
+					>
+				</div>
+				<div id="position_selected"></div>
+				<div style="display: flex">
+					<button onclick="getLocation()" style="margin: 0 auto">
+						<script>
+							document.write(localString[g_language].confirm);
+						</script>
+					</button>
+				</div>
+			</div>
+
+			<input id="input_time" type="datetime-local" />
+		</div>
+		<div>
+			<div onclick="show_time()">Sun time table</div>
+			<div>破晓<span id="today_dawn"></span></div>
+			<div>正午<span id="today_solarNoon"></span></div>
+			<div>日落<span id="today_sunset"></span></div>
+			<div>月相<span id="today_moon_phase"></span></div>
+			<div>圆满度<span id="today_moon_percent"></span></div>
+			<div>太阳相位于南偏西<span id="today_sun_azimuth"></span></div>
+			<div>月亮相位于北偏东<span id="today_moon_azimuth"></span></div>
+			<div>日月角<span id="angle_sun_e_moon"></span></div>
+			<div>月相角<span id="today_moon_angle"></span></div>
+			<div>当前时间<span id="curr_time"></span></div>
+			<div>现在时间<span id="now_time"></span></div>
+			<div>当前時間戳<span id="curr_time_unix"></span></div>
+			<div>地球角度<span id="earth_angle"></span></div>
+			<div>月亮角度<span id="moon_angle"></span></div>
+			<div>月亮角度2<span id="moon_angle2"></span></div>
+
+			<div>
+				<span>精准月相时间及星宿（强化戒德之日）</span>
+				<table id="lunar_phase_list" style="max-width: 70vw; width: -webkit-fill-available"></table>
+			</div>
+		</div>
+		<script>
+			var current_phase = phase();
+			console.log(current_phase); //输出到控制台
+
+			$("#title_text").html(localString[g_language].BE);
+			var new_list = new Array(); //新月列表
+			var first_list = new Array(); //上弦月列表
+			var full_list = new Array(); //满月列表
+			var last_list = new Array(); //下弦月列表
+			var planets = new Array(); //
+			var lunar_position = new Object();
+
+			var g_coordinate_this = new Object();
+			var g_now_date = new Date();
+			var today = new Date();
+			var start_day = new Date();
+			var next_year = new Date();
+			var sun_times = new Object();
+
+			var curr_position = localStorage.getItem("local_position");
+			if (curr_position) {
+				g_coordinate_this.AT = curr_position.split("#")[0];
+				g_coordinate_this.LT = curr_position.split("#")[1];
+				g_coordinate_this.height = curr_position.split("#")[2];
+				if (g_coordinate_this.AT >= 0) {
+					var AT_string = angle_trans(g_coordinate_this.AT) + "N";
+				} else {
+					var AT_string = angle_trans(g_coordinate_this.AT) + "S";
+				}
+				if (g_coordinate_this.LT >= 0) {
+					var LT_string = angle_trans(g_coordinate_this.LT) + "E";
+				} else {
+					var LT_string = angle_trans(g_coordinate_this.LT) + "W";
+				}
+				let height_string = g_coordinate_this.height + "M";
+				$("#selected_position_string").html(AT_string + " " + LT_string + " " + height_string);
+			} else {
+				getLocation();
+			}
+			function show_time() {
+				if ($("#input_time").val()) {
+					today = new Date($("#input_time").val());
+				} else {
+					today = g_now_date;
+				}
+				if (phase(today).phase <= 0.5) {
+					start_day.setDate(today.getDate() - 16); //退到本月的新月之前
+					start_day = phaseHunt(start_day).full_date; //得到之前最近的满月日
+					start_day.setDate(start_day.getDate() + 1);
+				} else {
+					start_day.setDate(today.getDate() - 31); //退到本月的新月之前
+					start_day = phaseHunt(start_day).full_date; //得到之前最近的满月日
+					start_day.setDate(start_day.getDate() + 1);
+				}
+				next_year.setDate(start_day.getDate() + 360);
+
+				last_list = phaseRange(start_day, next_year, LAST); //获取下弦月列表
+				new_list = phaseRange(start_day, next_year, NEW); //获取新月列表
+				first_list = phaseRange(start_day, next_year, FIRST); //获取上弦月列表
+				full_list = phaseRange(start_day, next_year, FULL); //获取满月列表
+
+				console.log(last_list); //输出到控制台
+				console.log(new_list); //输出到控制台
+				console.log(first_list); //输出到控制台
+				console.log(full_list); //输出到控制台
+				lunar_phase_list_refresh();
+				get_position(today);
+
+				let d_earth_to_moon =
+					lunar_position.position.x ^
+					(2 + lunar_position.position.y) ^
+					(2 + lunar_position.position.z) ^
+					2 ^
+					0.5;
+				let d_earth_to_moon_0 = phase(today).distance;
+
+				sun_times = SunCalc.getTimes(
+					today,
+					g_coordinate_this.AT,
+					g_coordinate_this.LT,
+					g_coordinate_this.height / 1000
+				);
+				sun_position = SunCalc.getPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
+				moon_position = SunCalc.getMoonPosition(today, g_coordinate_this.AT, g_coordinate_this.LT);
+				moon_Illumination = SunCalc.getMoonIllumination(today);
+				$("#today_dawn").html(sun_times.dawn.toLocaleTimeString()); //破晓
+				$("#today_solarNoon").html(sun_times.solarNoon.toLocaleTimeString()); //正午
+				$("#today_sunset").html(sun_times.sunset.toLocaleTimeString()); //日落
+				$("#today_sun_azimuth").html(angle_trans((sun_position.azimuth / Math.PI) * 180)); //太阳水平弧度
+				$("#today_moon_azimuth").html(angle_trans((moon_position.azimuth / Math.PI) * 180)); //月亮水平弧度
+				$("#today_moon_phase").html(phase(today).phase); //月相值
+				$("#today_moon_percent").html(phase(today).illuminated); //月照度
+				$("#today_moon_angle").html(angle_trans((moon_Illumination.angle / Math.PI) * 180)); //月相角
+				$("#angle_sun_e_moon").html(
+					angle_trans((Math.abs(Math.PI + sun_position.azimuth - moon_position.azimuth) / Math.PI) * 180)
+				); //月亮水平弧度
+				$("#curr_time").html(today.toLocaleTimeString()); //当前时间
+				$("#now_time").html(g_now_date.toLocaleTimeString()); //现在
+				$("#curr_time_unix").html(today.getTime()); //時間戳
+
+				let earth_angle_string = "";
+				earth_angle_string += get_position(today).solar_position_angle + "——";
+				earth_angle_string += get_position(today).solar_position_angle_round + "——";
+				earth_angle_string += get_position(today).solar_station + "——";
+				earth_angle_string += get_station_name(today).solar.icon;
+				$("#earth_angle").html(earth_angle_string); //地球角度
+
+				let moon_angle_string = "";
+				moon_angle_string += get_position(today).lunar_position_angle + "——";
+				moon_angle_string += get_position(today).lunar_position_angle_round + "——";
+				moon_angle_string += get_position(today).lunar_station + "——";
+				moon_angle_string += get_station_name(today).lunar.value;
+				$("#moon_angle").html(moon_angle_string); //月亮角度——角度差算法
+
+				let moon_angle_string2 = "";
+				moon_angle_string2 += get_position(today).lunar_position_angle2 + "——";
+				moon_angle_string2 += get_position(today).lunar_position_angle_round2 + "——";
+				moon_angle_string2 += get_position(today).lunar_station2 + "——";
+				moon_angle_string2 += get_station_name(today).lunar.value;
+				$("#moon_angle2").html(moon_angle_string2); //月亮角度——向量差算法
+			}
+			//根据时间计算偏角，输出
+			function get_position(date_time) {
+				let planets_position = new Object();
+				planets = window.lagrange.planet_positions.getPositions(date_time);
+				//planets = global.planet_positions.getPositions(today);
+				//console.log(planets)//输出到控制台
+				earth_position = window.lagrange.planet_positions.getPositions(date_time)[3];
+				lunar_position = window.lagrange.planet_positions.getPositions(date_time)[11];
+				let lunar_position_angle = 0;
+				let lunar_station = 0;
+				let earth_position_angle = 0;
+				let earth_station = 0;
+				let earth_position_angle_round = 0;
+				let lunar_position_angle_round = 0;
+				//太阳相对地球的黄道偏角
+				if (earth_position.position.y >= 0) {
+					earth_position_angle = Math.atan2(earth_position.position.y, earth_position.position.x);
+				} else {
+					earth_position_angle =
+						Math.PI * 2 + Math.atan2(earth_position.position.y, earth_position.position.x);
+				}
+				earth_position_angle_round = earth_position_angle / Math.PI / 2 + 0.5;
+				earth_position_angle_round = earth_position_angle_round - Math.floor(earth_position_angle_round);
+				earth_station = earth_position_angle_round * 12;
+				planets_position.solar_station = earth_station;
+				planets_position.solar_position_angle = earth_position_angle_round * Math.PI * 2;
+				planets_position.solar_position_angle_round = earth_position_angle_round;
+				//月球相对地球的黄道偏角——角度差算法
+				lunar_position_angle_round = earth_position_angle_round + phase(date_time).phase;
+				lunar_position_angle_round = lunar_position_angle_round - Math.floor(lunar_position_angle_round);
+				lunar_position_angle = lunar_position_angle_round * Math.PI * 2;
+				lunar_station = lunar_position_angle_round * 27;
+				//月球相对地球的黄道偏角算法——向量差算法
+				let lunar_to_earth = new Object();
+				lunar_to_earth.y = lunar_position.position.y - earth_position.position.y;
+				lunar_to_earth.x = lunar_position.position.x - earth_position.position.x;
+				if (lunar_to_earth.y >= 0) {
+					lunar_position_angle2 = Math.atan2(lunar_to_earth.y, lunar_to_earth.x);
+				} else {
+					lunar_position_angle2 = Math.PI * 2 + Math.atan2(lunar_to_earth.y, lunar_to_earth.x);
+				}
+				lunar_position_angle_round2 = lunar_position_angle2 / Math.PI / 2;
+				//lunar_position_angle_round = lunar_position_angle_round - Math.floor(lunar_position_angle_round)
+				lunar_position_angle2 = lunar_position_angle_round2 * Math.PI * 2;
+
+				lunar_station2 = lunar_position_angle_round2 * 27;
+
+				planets_position.lunar_station = lunar_station; //月站值【角度差算夹角】
+				planets_position.lunar_position_angle = lunar_position_angle; //月站角【角度差算夹角】
+				planets_position.lunar_position_angle_round = lunar_position_angle_round; //月站圆周比率【角度差算夹角】
+				planets_position.lunar_station2 = lunar_station2; //月站值【矢量差算夹角】
+				planets_position.lunar_position_angle2 = lunar_position_angle2; //月站角【矢量差算夹角】
+				planets_position.lunar_position_angle_round2 = lunar_position_angle_round2; //月站圆周比率【矢量差算夹角】
+				return planets_position;
+			}
+			根据;
+			function get_station_name(data_time) {
+				//获取星象信息
+				let solar_num = 0;
+				let lunar_num = 0;
+				solar_num = get_position(data_time).solar_station;
+				solar_num = Math.floor(solar_num);
+				lunar_num = get_position(data_time).lunar_station;
+				lunar_num = Math.floor(lunar_num);
+
+				let result = new Object();
+				result.solar = horoscope_name[solar_num]; //黄道十二宫星象名称
+				result.lunar = pali_nakkhatta_name[lunar_num]; //27星宿月站名称
+				return result;
+			}
+			function lunar_phase_list_refresh() {
+				let output = "";
+				//画表头
+				output += "<tr class='table_line'>";
+				output += "<th class='table_column'>月份</th>";
+				output += "<th class='table_column'>下弦</th>";
+				output += "<th class='table_column'>新月(诵戒)</th>";
+				output += "<th class='table_column'>上弦</th>";
+				output += "<th class='table_column'>满月(诵戒)</th>";
+				output += "</tr>";
+				//画内容
+				let month_num = Math.min(last_list.length, new_list.length, first_list.length, full_list.length);
+				for (let i_month = 0; i_month < month_num; i_month++) {
+					output += "<tr class='table_line'>";
+					output += "<td class='table_column'>";
+					output += Math.round(get_position(full_list[i_month]).solar_station * 100) / 100;
+					//output += "—"
+					//output += get_station_name(full_list[i_month]).lunar.value
+					//output += "—"
+					//output += get_station_name(full_list[i_month]).solar.name_zh
+					//output += "—"
+					//output += get_station_name(full_list[i_month]).solar.icon
+					output += "</td>";
+					//下弦月
+					if (
+						SunCalc.getTimes(
+							last_list[i_month],
+							g_coordinate_this.AT,
+							g_coordinate_this.LT,
+							g_coordinate_this.height / 1000
+						).dawn -
+							last_list[i_month] <=
+						0
+					) {
+						//如果在破晓之后，不修正
+						output += "<td class='table_column' title='" + last_list[i_month].toLocaleTimeString() + "'>";
+						output += last_list[i_month].toLocaleDateString();
+						output += "<br />";
+						output += get_station_name(last_list[i_month]).lunar.value;
+						//output += Math.round(get_position(last_list[i_month]).lunar_station * 100) / 100
+						output += "</td>";
+					} else {
+						//如果在破晓之前，修正提前一天
+						output +=
+							"<td class='table_column correct' title='" + last_list[i_month].toLocaleString() + "'>";
+						let temp_date = last_list[i_month];
+						temp_date.setDate(temp_date.getDate() - 1);
+						output += temp_date.toLocaleDateString();
+						output += "<br />";
+						output += get_station_name(last_list[i_month]).lunar.value;
+						//output += Math.round(get_position(last_list[i_month]).lunar_station * 100) / 100
+						output += "</td>";
+					}
+					//新月
+					if (
+						SunCalc.getTimes(
+							new_list[i_month],
+							g_coordinate_this.AT,
+							g_coordinate_this.LT,
+							g_coordinate_this.height / 1000
+						).dawn -
+							new_list[i_month] <=
+						0
+					) {
+						//如果在破晓之后，不修正
+						output += "<td class='table_column' title='" + new_list[i_month].toLocaleTimeString() + "'>";
+						output += new_list[i_month].toLocaleDateString();
+						output += "<br />";
+						output += get_station_name(new_list[i_month]).lunar.value;
+						//output += Math.round(get_position(new_list[i_month]).lunar_station * 100) / 100
+						output += "</td>";
+					} else {
+						//如果在破晓之前，修正提前一天
+						output +=
+							"<td class='table_column correct' title='" + new_list[i_month].toLocaleString() + "'>";
+						let temp_date = new_list[i_month];
+						temp_date.setDate(temp_date.getDate() - 1);
+						output += temp_date.toLocaleDateString();
+						output += "<br />";
+						output += get_station_name(new_list[i_month]).lunar.value;
+						//output += Math.round(get_position(new_list[i_month]).lunar_station * 100) / 100
+						output += "</td>";
+					}
+					//上弦月
+					if (
+						SunCalc.getTimes(
+							first_list[i_month],
+							g_coordinate_this.AT,
+							g_coordinate_this.LT,
+							g_coordinate_this.height / 1000
+						).dawn -
+							first_list[i_month] <=
+						0
+					) {
+						//如果在破晓之后，不修正
+						output += "<td class='table_column' title='" + first_list[i_month].toLocaleTimeString() + "'>";
+						output += first_list[i_month].toLocaleDateString();
+						output += "<br />";
+						output += get_station_name(first_list[i_month]).lunar.value;
+						//output += Math.round(get_position(first_list[i_month]).lunar_station * 100) / 100
+						output += "</td>";
+					} else {
+						//如果在破晓之前，修正提前一天
+						output +=
+							"<td class='table_column correct' title='" + first_list[i_month].toLocaleString() + "'>";
+						let temp_date = first_list[i_month];
+						temp_date.setDate(temp_date.getDate() - 1);
+						output += temp_date.toLocaleDateString();
+						output += "<br />";
+						output += get_station_name(first_list[i_month]).lunar.value;
+						//output += Math.round(get_position(first_list[i_month]).lunar_station * 100) / 100
+						output += "</td>";
+					}
+					//满月
+					if (
+						SunCalc.getTimes(
+							full_list[i_month],
+							g_coordinate_this.AT,
+							g_coordinate_this.LT,
+							g_coordinate_this.height / 1000
+						).dawn -
+							full_list[i_month] <=
+						0
+					) {
+						//如果在破晓之后，不修正
+						output += "<td class='table_column' title='" + full_list[i_month].toLocaleTimeString() + "'>";
+						output += full_list[i_month].toLocaleDateString();
+						output += "<br />";
+						output += get_station_name(full_list[i_month]).lunar.value;
+						//output += Math.round(get_position(full_list[i_month]).lunar_station * 100) / 100
+						output += "</td>";
+					} else {
+						//如果在破晓之前，修正提前一天
+						output +=
+							"<td class='table_column correct' title='" + full_list[i_month].toLocaleString() + "'>";
+						let temp_date = full_list[i_month];
+						temp_date.setDate(temp_date.getDate() - 1);
+						output += temp_date.toLocaleDateString();
+						output += "<br />";
+						output += get_station_name(full_list[i_month]).lunar.value;
+						//output += Math.round(get_position(full_list[i_month]).lunar_station * 100) / 100
+						output += "</td>";
+					}
+					output += "</tr>";
+				}
+				$("#lunar_phase_list").html(output);
+			}
+			function getLocation() {
+				//自动定位
+				if (navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(showPosition, showError);
+				} else {
+					$("#selected_position_string").html("Geolocation is not supported by this browser.");
+				}
+			}
+			function showPosition(position) {
+				alert("get cordinate success");
+				g_coordinate_this.AT = position.coords.latitude; //纬度
+				g_coordinate_this.LT = position.coords.longitude; //经度
+				g_coordinate_this.height = position.coords.altitude; //海拔高度
+				//手动输入
+				var LT = Number($("#LT_°")[0].value);
+				LT += Number($("#LT_’")[0].value) / 60;
+				LT += Number($("#LT_”")[0].value) / 3600;
+				LT = Number($("#WE")[0].value + LT);
+				var AT = Number($("#AT_°")[0].value);
+				AT += Number($("#AT_’")[0].value) / 60;
+				AT += Number($("#AT_”")[0].value) / 3600;
+				AT = Number($("#NS")[0].value + AT);
+				if (AT != 0) {
+					g_coordinate_this.LT = LT;
+					g_coordinate_this.AT = AT;
+				}
+
+				let position_string =
+					g_coordinate_this.AT + "#" + g_coordinate_this.LT + "#" + g_coordinate_this.height;
+				localStorage.setItem("local_position", position_string);
+
+				if (g_coordinate_this.AT >= 0) {
+					var AT_string = angle_trans(g_coordinate_this.AT) + "N";
+				} else {
+					var AT_string = angle_trans(g_coordinate_this.AT) + "S";
+				}
+				if (g_coordinate_this.LT >= 0) {
+					var LT_string = angle_trans(g_coordinate_this.LT) + "E";
+				} else {
+					var LT_string = angle_trans(g_coordinate_this.LT) + "W";
+				}
+				let height_string = g_coordinate_this.height + "M";
+				$("#selected_position_string").html(AT_string + " " + LT_string + " " + height_string);
+				$("#position_input").hide();
+			}
+			function showError(error) {
+				switch (error.code) {
+					case error.PERMISSION_DENIED:
+						alert("定位失败,用户拒绝请求地理定位");
+						break;
+					case error.POSITION_UNAVAILABLE:
+						alert("定位失败,位置信息是不可用");
+						break;
+					case error.TIMEOUT:
+						alert("定位失败,请求获取用户位置超时");
+						break;
+					case error.UNKNOWN_ERROR:
+						alert("定位失败,定位系统失效");
+						break;
+				}
+			}
+			function angle_trans(angle) {
+				var angle_str = "";
+				var num_d = Math.floor(angle);
+				var num_m = Math.floor((angle - num_d) * 60);
+				var num_s = Math.round((angle - num_d) * 60 - num_m);
+				if (num_d != 0) {
+					angle_str += num_d + "°";
+				}
+				if (num_m != 0) {
+					angle_str += num_m + "’";
+				}
+				if (num_s != 0) {
+					angle_str += num_s + "”";
+				}
+				return angle_str;
+			}
+			function input_position() {
+				$("#position_input").show();
+			}
+		</script>
+	</body>
+</html>

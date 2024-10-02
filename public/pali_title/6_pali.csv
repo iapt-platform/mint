@@ -1,0 +1,303 @@
+id,book,par_num,level,class,title,text
+NULL,p6,1,100,centered,," Namo tassa bhagavato arahato sammāsambuddhassa"
+NULL,p6,2,1,chapter,Kamalāñjali,Kamalāñjali
+NULL,p6,3,8,hangnum,1.,1.
+NULL,p6,4,100,gatha1,," Kamalāsana kamalāpati pamathādhipa vajirā,"
+NULL,p6,5,100,gatha2,,"Yudhadānava manujoraga bhujagāsana patinaṃ;"
+NULL,p6,6,100,gatha3,,"Makuṭāhita manidīdhiti bhamarāvali bhajitaṃ,"
+NULL,p6,7,100,gathalast,,"Paṇamā’mahaṃ anaghaṃ muni caraṇāmala kamalaṃ."
+NULL,p6,8,8,hangnum,2.,2.
+NULL,p6,9,100,gatha1,," Kamalālaya sadi’saṅkita kalamaṅgala ruciraṃ,"
+NULL,p6,10,100,gatha2,,"Jutirañjitaṃ abhinijjita subhakañcana nalinaṃ;"
+NULL,p6,11,100,gatha3,,"Janitā cira samaye nija pitu bhūpati namitaṃ,"
+NULL,p6,12,100,gathalast,,"Paṇamā’mahaṃ anaghaṃ muni caraṇāmala kamalaṃ."
+NULL,p6,13,8,hangnum,3.,3.
+NULL,p6,14,100,gatha1,," Saraṇāgata rajanīpati dinasekhara namitaṃ,"
+NULL,p6,15,100,gatha2,,"Bhajitākhila janapāvanaṃ abhikaṅkhita sukhadaṃ;"
+NULL,p6,16,100,gatha3,,"Vasudhātala sayamuggata sarasīruha mahitaṃ,"
+NULL,p6,17,100,gathalast,,"Paṇamā’mahaṃ anaghaṃ muni caraṇāmala kamalaṃ."
+NULL,p6,18,8,hangnum,4.,4.
+NULL,p6,19,100,gatha1,," Diradāsana tarupantika ghaṭitāsanaṃ abhayaṃ,"
+NULL,p6,20,100,gatha2,,"Vijayāsana samadhiṭṭhita caturaṅgika viriyaṃ;"
+NULL,p6,21,100,gatha3,,"Dharamānaka suriyehani vijitantaka dhajiniṃ,"
+NULL,p6,22,100,gathalast,,"Paṇamā’mahaṃ abhipātita namuciddhaja vibhavaṃ."
+NULL,p6,23,8,hangnum,5.,5.
+NULL,p6,24,100,gatha1,," Sadayodita piyabhārati vijitantaka samaraṃ,"
+NULL,p6,25,100,gatha2,,"Dasapārami balakampita sadharādhara dharaniṃ;"
+NULL,p6,26,100,gatha3,,"Girimekhala varavārana sirasānata caraṇaṃ,"
+NULL,p6,27,100,gathalast,,"Paṇamā’mahaṃ abhinandita sanarāmara bhuvanaṃ."
+NULL,p6,28,8,hangnum,6.,6.
+NULL,p6,29,100,gatha1,," Nikhilāsava vigame’nativimalīkata hadayaṃ,"
+NULL,p6,30,100,gatha2,,"Tadanantara viditākhila matigocara visayaṃ;"
+NULL,p6,31,100,gatha3,,"Visayīkata bhuvanattayaṃ atilokiya caritaṃ,"
+NULL,p6,32,100,gathalast,,"Paṇamā’mahaṃ aparājitaṃ arahaṃ muniṃ asamaṃ."
+NULL,p6,33,8,hangnum,7.,7.
+NULL,p6,34,100,gatha1,," Mudubhārati madhupāsita nalinopama vadanaṃ,"
+NULL,p6,35,100,gatha2,,"Rucirāyata nalinīdala nibha locana yugalaṃ;"
+NULL,p6,36,100,gatha3,,"Udayodita ravimaṇḍala jalitāmala niṭilaṃ,"
+NULL,p6,37,100,gathalast,,"Paṇamā’maha akutobhayaṃ anaghaṃ muni pamukhaṃ."
+NULL,p6,38,8,hangnum,8.,8.
+NULL,p6,39,100,gatha1,," Asitambuda rucikuñcita mudu kuntala lalitaṃ,"
+NULL,p6,40,100,gatha2,,"Bhuvanodara vitatāmita jutisañcaya jalitaṃ;"
+NULL,p6,41,100,gatha3,,"Madamodita diradopama gativibbhama ruciraṃ,"
+NULL,p6,42,100,gathalast,,"Paṇamā’mahaṃ amatandada munipuṅgavaṃ asamaṃ."
+NULL,p6,43,8,hangnum,9.,9.
+NULL,p6,44,100,gatha1,," Karuṇārasa paribhāvita savaṇāmata vacanaṃ,"
+NULL,p6,45,100,gatha2,,"Virudāvali sataghosita yasapūrita bhuvanaṃ;"
+NULL,p6,46,100,gatha3,,"Sumanohara varalakkhaṇa sirisañcaya sadanaṃ,"
+NULL,p6,47,100,gathalast,,"Paṇamā’mahaṃ uditāmala sasimaṇḍala vadanaṃ."
+NULL,p6,48,8,hangnum,10.,10.
+NULL,p6,49,100,gatha1,," Vinayāraha janamānasa kumudākara sasinaṃ,"
+NULL,p6,50,100,gatha2,,"Tasināpaga parisosana satadīdhiti tulitaṃ;"
+NULL,p6,51,100,gatha3,,"Tamanāsava munisevitaṃ apalokita sukhadaṃ,"
+NULL,p6,52,100,gathalast,,"Paṇamā’mahaṃ aniketanaṃ akhilāgati vigataṃ."
+NULL,p6,53,8,hangnum,11.,11.
+NULL,p6,54,100,gatha1,," Sahitākhila bhayabheravaṃ abhayāgata saranaṃ,"
+NULL,p6,55,100,gatha2,,"Ajarāmara sukhadāyakaṃ anirākata karuṇaṃ;"
+NULL,p6,56,100,gatha3,,"Tamupāsaka janasevita supatiṭṭhita caraṇaṃ,"
+NULL,p6,57,100,gathalast,,"Paṇamā’mahaṃ ahitāpahaṃ anaghuttama caraṇaṃ."
+NULL,p6,58,8,hangnum,12.,12.
+NULL,p6,59,100,gatha1,," Karuṇāmata rasapurita vīmalākhila hadayaṃ,"
+NULL,p6,60,100,gatha2,,"Vihitāmita janatāhitaṃ anukampita bhuvanaṃ;"
+NULL,p6,61,100,gatha3,,"Bhuvane sutaṃ avanīpati sata sevita caraṇaṃ,"
+NULL,p6,62,100,gathalast,,"Paṇamā’mahaṃ anaghaṃ muniṃ aghanāsana caturaṃ."
+NULL,p6,63,8,hangnum,13.,13.
+NULL,p6,64,100,gatha1,," Aratīrati paripīlita yatimānasa damanaṃ,"
+NULL,p6,65,100,gatha2,,"Nijasāsana vinivārita puthutitthiya samaṇaṃ;"
+NULL,p6,66,100,gatha3,,"Paravādika janatākata paribhāsita khamanaṃ,"
+NULL,p6,67,100,gathalast,,"Paṇamā’mahaṃ atidevata vara gotama samaṇaṃ."
+NULL,p6,68,8,hangnum,14.,14.
+NULL,p6,69,100,gatha1,," Saraṇāgata bhayanāsana vajirālaya paṇibhaṃ,"
+NULL,p6,70,100,gatha2,,"Bhavasāgara patitāmita janatārana nirataṃ;"
+NULL,p6,71,100,gatha3,,"Sirasāvahaṃ amalañjali puṭapaṅkaja makulaṃ,"
+NULL,p6,72,100,gathalast,,"Paṇamā’mahaṃ akhilalāya vigataṃ muniṃ atulaṃ."
+NULL,p6,73,8,hangnum,15.,15.
+NULL,p6,74,100,gatha1,," Vimalīkata janamānasa vigatāsava bhagavaṃ,"
+NULL,p6,75,100,gatha2,,"Bhavapāraga vibhavāmata sukhadāyaka satataṃ;"
+NULL,p6,76,100,gatha3,,"Paramādara garugārava vinataṃ jina payataṃ,"
+NULL,p6,77,100,gathalast,,"Padapaṅkaja rajasā mama samalaṅkuru sirasaṃ."
+NULL,p6,78,8,hangnum,16.,16.
+NULL,p6,79,100,gatha1,," Pavanāhata dumapallavaṃ iva nārata capalaṃ,"
+NULL,p6,80,100,gatha2,,"Bhavalālasa malinīkataṃ ajitindriya nivahaṃ;"
+NULL,p6,81,100,gatha3,,"Cira sañcita duritāhataṃ anivārita timisaṃ,"
+NULL,p6,82,100,gathalast,,"Vimalīkuru karuṇābhara sutaraṃ mama hadayaṃ."
+NULL,p6,83,8,hangnum,17.,17.
+NULL,p6,84,100,gatha1,," Adaye dayaṃ anaye nayaṃ api yo guṇaṃ aguṇe,"
+NULL,p6,85,100,gatha2,,"Ahite hitaṃ akaro kvacida api kenaci nakataṃ;"
+NULL,p6,86,100,gatha3,,"Sadaye jina sunaye guṇasadane tayi nitaraṃ,"
+NULL,p6,87,100,gathalast,,"Suhite hitacarite’nagha ramate mama hadayaṃ."
+NULL,p6,88,8,hangnum,18.,18.
+NULL,p6,89,100,gatha1,," Bhavasaṅkaṭa patitenapi bhavatā cira caritaṃ,"
+NULL,p6,90,100,gatha2,,"Visame sama caraṇaṃ khalu dasapārami bharaṇaṃ;"
+NULL,p6,91,100,gatha3,,"Sarato’hani sarato nisi supinenapi satataṃ,"
+NULL,p6,92,100,gathalast,,"Ramate jina sumate tvayi sadayaṃ mama hadayaṃ."
+NULL,p6,93,8,hangnum,19.,19.
+NULL,p6,94,100,gatha1,," Atiduddadaṃ adadī bhavaṃ atidukkaraṃ akarī;"
+NULL,p6,95,100,gatha2,,"Atidukkhamaṃ akhamī vata karuṇānidhi’rasamo,"
+NULL,p6,96,100,gatha3,,"Iti te guṇaṃ anaghaṃ muni sarato mama hadayaṃ,"
+NULL,p6,97,100,gathalast,,"Ramate’hani ramate nisi ramate tvayi satataṃ."
+NULL,p6,98,8,hangnum,20.,20.
+NULL,p6,99,100,gatha1,," Atiduccaraṃ acarī bhavaṃ atiduddamaṃ adamī,"
+NULL,p6,100,100,gatha2,,"Atiduddayaṃ adayī vata sadayāpara hadayo;"
+NULL,p6,101,100,gatha3,,"Iti te guṇaṃ anaghaṃ muni sarato mama hadayaṃ,"
+NULL,p6,102,100,gathalast,,"Ramate’hani ramate nisi ramate tvayi satataṃ."
+NULL,p6,103,8,hangnum,21.,21.
+NULL,p6,104,100,gatha1,," Atiduggamaṃ agamī bhavaṃ atidujjayaṃ ajayī,"
+NULL,p6,105,100,gatha2,,"Atidussahaṃ asahī vata samupekkhita manaso;"
+NULL,p6,106,100,gatha3,,"Iti te guṇaṃ anaghaṃ muni sarato mama hadayaṃ,"
+NULL,p6,107,100,gathalast,,"Ramate’hani ramate nisi ramate tvayi satataṃ."
+NULL,p6,108,8,hangnum,22.,22.
+NULL,p6,109,100,gatha1,," Atidāruna palayānala sadisānala jalite,"
+NULL,p6,110,100,gatha2,,"Niraye vinipatito ciraṃ aghatāpita manaso;"
+NULL,p6,111,100,gatha3,,"Na sariṃ sakida api te pita bhajituṃ padanalinaṃ,"
+NULL,p6,112,100,gathalast,,"Khama gotama narasārathi tamidaṃ mama khalitaṃ."
+NULL,p6,113,8,hangnum,23.,23.
+NULL,p6,114,100,gatha1,," Tiriyaggata-gatiyaṃ ciraṃ anavaṭṭhita carito,"
+NULL,p6,115,100,gatha2,,"Atiniṭṭhura vadhatajjita bhayakampita hadayo;"
+NULL,p6,116,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,117,100,gathalast,,"Khama gotama purisuttama tamidaṃ mama khalitaṃ."
+NULL,p6,118,8,hangnum,24.,24.
+NULL,p6,119,100,gatha1,," Paridevana nirato ciraṃ atha pettiya visaye,"
+NULL,p6,120,100,gatha2,,"Sujighacchita supipāsita parisosita jaṭhare;"
+NULL,p6,121,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,122,100,gathalast,,"Khama gotama dipaduttama tamidaṃ mama khalitaṃ."
+NULL,p6,123,8,hangnum,25.,25.
+NULL,p6,124,100,gatha1,," Vivaso bhusaṃ aghadūsita manasāsura visaye,"
+NULL,p6,125,100,gatha2,,"Janito ghanatimire ciraṃ atidukkhita hadayo;"
+NULL,p6,126,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,127,100,gathalast,,"Khama gotama vasisattama tamidaṃ mama khalitaṃ."
+NULL,p6,128,8,hangnum,26.,26.
+NULL,p6,129,100,gatha1,," Manasā cira vihitaṃ saraṃ atikibbisa caritaṃ,"
+NULL,p6,130,100,gatha2,,"Samathenatha suvirājiya taṃ asaññitaṃ upago;"
+NULL,p6,131,100,gatha3,,"Na sariṃ sakida api te pita bhajituṃ pada nalinaṃ,"
+NULL,p6,132,100,gathalast,,"Khama gotama vasipuṅgava tamidaṃ mama khalitaṃ."
+NULL,p6,133,8,hangnum,27.,27.
+NULL,p6,134,100,gatha1,," Vijigucchiya duritaṃ nija vapusā kataṃ amitaṃ,"
+NULL,p6,135,100,gatha2,,"Tanu vajjitaṃ upago bhavaṃ iha bhāvita samatho;"
+NULL,p6,136,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,137,100,gathalast,,"Khama gotama yatikuñjara tamidaṃ mama khalitaṃ."
+NULL,p6,138,8,hangnum,28.,28.
+NULL,p6,139,100,gatha1,," Ratanattaya rahite bhusa bahulīkata durite,"
+NULL,p6,140,100,gatha2,,"Janito paravisaye budhajana nindiya carite;"
+NULL,p6,141,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,142,100,gathalast,,"Khama gotama karuṇānidhi tamidaṃ mama khalitaṃ."
+NULL,p6,143,8,hangnum,29.,29.
+NULL,p6,144,100,gatha1,," Janito yadi manujesupi vikalindriya nivaho,"
+NULL,p6,145,100,gatha2,,"Tanunā karacaraṇādihi vikate’niha dukhito;"
+NULL,p6,146,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,147,100,gathalast,,"Khama gotama matisāgara tamidaṃ mama khalitaṃ."
+NULL,p6,148,8,hangnum,30.,30.
+NULL,p6,149,100,gatha1,," Vidhināhita matibhāvana rahito tamapihito,"
+NULL,p6,150,100,gatha2,,"Visadesupi kusalādisu tathadassana vimukho;"
+NULL,p6,151,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,152,100,gathalast,,"Khama gotama narakesari tamidaṃ mama khalitaṃ."
+NULL,p6,153,8,hangnum,31.,31.
+NULL,p6,154,100,gatha1,," Sucirenapi bhuvi dullabhaṃ asamaṃ khaṇaṃ alabhaṃ,"
+NULL,p6,155,100,gatha2,,"Sanarāmara janatāhita sukhadaṃ muni jananaṃ;"
+NULL,p6,156,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,157,100,gathalast,,"Khama gotama vadataṃvara tamidaṃ mama khalitaṃ."
+NULL,p6,158,8,hangnum,32.,32.
+NULL,p6,159,100,gatha1,," Nisitāyudha vadhasajjita khaḷaniddaya hadayo,"
+NULL,p6,160,100,gatha2,,"Parahiṃsana ruci bhiṃsana yamasodara sadiso;"
+NULL,p6,161,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,162,100,gathalast,,"Khama gotama munisattama tamidaṃ mama khalitaṃ."
+NULL,p6,163,8,hangnum,33.,33.
+NULL,p6,164,100,gatha1,," Parasantaka haraṇe katamati bañcana bahulo,"
+NULL,p6,165,100,gatha2,,"Gharasandhika paripanthika sahasākati nirato;"
+NULL,p6,166,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,167,100,gathalast,,"Khama gotama munipuṅgava tamidaṃ mama khalitaṃ."
+NULL,p6,168,8,hangnum,34.,34.
+NULL,p6,169,100,gatha1,," Navayobbana madagabbita parimucchita hadayo,"
+NULL,p6,170,100,gatha2,,"Sucisajjana vijigucchiya paradārika nirato;"
+NULL,p6,171,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,172,100,gathalast,,"Khama gotama karuṇābhara tamidaṃ mama khalitaṃ."
+NULL,p6,173,8,hangnum,35.,35.
+NULL,p6,174,100,gatha1,," Madirāsavarata nāgarajana santata bhajito,"
+NULL,p6,175,100,gatha2,,"Garugārava hiridūrita tiriyaggata carito;"
+NULL,p6,176,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,177,100,gathalast,,"Khama gotama vihatāsava tamidaṃ mama khalitaṃ."
+NULL,p6,178,8,hangnum,36.,36.
+NULL,p6,179,100,gatha1,," Sapitāmaha papitāmaha nicitaṃ dhanaṃ amitaṃ,"
+NULL,p6,180,100,gatha2,,"Pitusañcitamapi nāsiya kitavo hatavibhavo;"
+NULL,p6,181,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,182,100,gathalast,,"Khama gotama vijitantaka tamidaṃ mama khalitaṃ."
+NULL,p6,183,8,hangnum,37.,37.
+NULL,p6,184,100,gatha1,," Vitathālika vacano parapiyasuññata karaṇo,"
+NULL,p6,185,100,gatha2,,"Pharusaṃ bhaṇaṃ atinipphala bahubhāsana nipuṇo;"
+NULL,p6,186,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,187,100,gathalast,,"Khama gotama bhuvanesuta tamidaṃ mama khalitaṃ."
+NULL,p6,188,8,hangnum,38.,38.
+NULL,p6,189,100,gatha1,," Parasampadaṃ abhijhāyana nirantara dukhito,"
+NULL,p6,190,100,gatha2,,"Nabhirajjhana paramo kvaci phaladassana rahito;"
+NULL,p6,191,100,gatha3,,"Na sariṃ sakidapi te pita bhajituṃ padanalinaṃ,"
+NULL,p6,192,100,gathalast,,"Khama gotama guṇasāgara tamidaṃ mama khalitaṃ."
+NULL,p6,193,8,hangnum,39.,39.
+NULL,p6,194,100,gatha1,," Bhavato bhavaṃ aparāparaṃ ayatāciraṃ iti me,"
+NULL,p6,195,100,gatha2,,"Vapusā atha vacasāpi ca manasā kataṃ amitaṃ;"
+NULL,p6,196,100,gatha3,,"Khama gotama duritāpaha duritaṃ bahuvihitaṃ,"
+NULL,p6,197,100,gathalast,,"Dada me sivapadaṃ accutaṃ amataṃ bhavavigataṃ."
+NULL,p6,198,8,hangnum,40.,40.
+NULL,p6,199,100,gatha1,," Timirāvuta kuṇapākula vijigucchiya pavane,"
+NULL,p6,200,100,gatha2,,"Janikāsuci jaṭhare bahu kimisantati sadane;"
+NULL,p6,201,100,gatha3,,"Asayiṃ bhavagahaṇe caraṃ ahaṃ appaṭisaraṇe,"
+NULL,p6,202,100,gathalast,,"Saranaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,203,8,hangnum,41.,41.
+NULL,p6,204,100,gatha1,," Bahi nikkhamaṃ asakiṃ bhagatiriyaṃ patha patito,"
+NULL,p6,205,100,gatha2,,"Agadaṅkara kata sallaka satakhaṇdita karaṇo;"
+NULL,p6,206,100,gatha3,,"Amariṃ bhavagahaṇe caraṃ ahaṃ appaṭisaraṇe,"
+NULL,p6,207,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi tarane."
+NULL,p6,208,8,hangnum,42.,42.
+NULL,p6,209,100,gatha1,," Patito bahi ratipillaka tanurāmaya mathito,"
+NULL,p6,210,100,gatha2,,"Vadituṃ kimu viditumpi ca na sahaṃ matirahito;"
+NULL,p6,211,100,gatha3,,"Amariṃ bhavagahaṇe caraṃ ahaṃ apphṭisaraṇe,"
+NULL,p6,212,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,213,8,hangnum,43.,43.
+NULL,p6,214,100,gatha1,," Janito yadi sukhito janadayito piyajanako,"
+NULL,p6,215,100,gatha2,,"Puthuko bahuvidha-kīlananirato gadagahito;"
+NULL,p6,216,100,gatha3,,"Amariṃ bhavagahaṇe caraṃ ahaṃ appaṭisaraṇe,"
+NULL,p6,217,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,218,8,hangnum,44.,44.
+NULL,p6,219,100,gatha1,," Tarunopi hi gharabandhana gathitomita vibhavo,"
+NULL,p6,220,100,gatha2,,"Sahasā gadagahito piyabhariyāsuta viyuto;"
+NULL,p6,221,100,gatha3,,"Amariṃ bhavagahaṇe caraṃ ahaṃ appaṭisaraṇe,"
+NULL,p6,222,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,223,8,hangnum,45.,45.
+NULL,p6,224,100,gatha1,," Ajaraṃ tanuṃ abhimaññiya navayobbana vasiko,"
+NULL,p6,225,100,gatha2,,"Jarasā parimathito paraṃ ananuṭṭhita kusalo;"
+NULL,p6,226,100,gatha3,,"Amariṃ bhavagahaṇe caraṃ ahaṃ appaṭisaraṇe,"
+NULL,p6,227,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,228,8,hangnum,46.,46.
+NULL,p6,229,100,gatha1,," Nirujo dhuvaṃ arujaṃ tanuṃ abhimaññiya samado,"
+NULL,p6,230,100,gatha2,,"Kusalāsaya vimukho bhusaṃ avaso gadanihato;"
+NULL,p6,231,100,gatha3,,"Amariṃ bhavagahaṇe caraṃ ahaṃ appaṭisaraṇe,"
+NULL,p6,232,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,233,8,hangnum,47.,47.
+NULL,p6,234,100,gatha1,," Pavicintiya sakajīvitaṃ amaraṃ dhuvaṃ anighaṃ,"
+NULL,p6,235,100,gatha2,,"Iti jīvitamadagabbita matirujjhita kusalo;"
+NULL,p6,236,100,gatha3,,"Amariṃ bhavagahaṇe caraṃ ahaṃ appaṭisaraṇe,"
+NULL,p6,237,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,238,8,hangnum,48.,48.
+NULL,p6,239,100,gatha1,," Parahiṃsana dhanamosana paradārika nirato,"
+NULL,p6,240,100,gatha2,,"Dharanīpati gahito bahu vadhabandhana nihato;"
+NULL,p6,241,100,gatha3,,"Amariṃ bhavagahaṇe caraṃ ahaṃ appaṭisaraṇe,"
+NULL,p6,242,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,243,8,hangnum,49.,49.
+NULL,p6,244,100,gatha1,," Narakodaka patito giritarumatthaka galito,"
+NULL,p6,245,100,gatha2,,"Migavāḷaka gahito visadhara jātihi ḍasito;"
+NULL,p6,246,100,gatha3,,"Amariṃ bhavagahaṇe caraṃ ahaṃ appaṭisaraṇe,"
+NULL,p6,247,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,248,8,hangnum,50.,50.
+NULL,p6,249,100,gatha1,," Abhicāraka vidhikopita nisicāraka gahito,"
+NULL,p6,250,100,gatha2,,"Savisodana sahasādana pabhutīhi ca khalito;"
+NULL,p6,251,100,gatha3,,"Amariṃ bhavagahaṇe caraṃ ahaṃ appaṭisaraṇe,"
+NULL,p6,252,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,253,8,hangnum,51.,51.
+NULL,p6,254,100,gatha1,," Sayamevaca sajanopari kupito mativiyuto,"
+NULL,p6,255,100,gatha2,,"Savisādana galakantana pabhutāmita khalito;"
+NULL,p6,256,100,gatha3,,"Amariṃ bhavagahaṇe caraṃ ahaṃ appaṭisaraṇe,"
+NULL,p6,257,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,258,8,hangnum,52.,52.
+NULL,p6,259,100,gatha1,," Pitupūjana niratāsaya sukhito pitudayito,"
+NULL,p6,260,100,gatha2,,"Maraṇenaca pituno bhusaṃ anusocana nirato;"
+NULL,p6,261,100,gatha3,,"Parudiṃ ciraṃ atidussaha kasire bhavagahaṇe,"
+NULL,p6,262,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,263,8,hangnum,53.,53.
+NULL,p6,264,100,gatha1,," Samupaṭṭhiya janikaṃ nijaṃ abhivādana paramo,"
+NULL,p6,265,100,gatha2,,"Maraṇenaca janikāyanusaritā guṇamahimaṃ;"
+NULL,p6,266,100,gatha3,,"Parudiṃ ciraṃ atidussaha kasire bhavagahaṇe,"
+NULL,p6,267,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,268,8,hangnum,54.,54.
+NULL,p6,269,100,gatha1,," Gurudevata patimānana paramo piyasuvaco,"
+NULL,p6,270,100,gatha2,,"Samupāsitacaraṇo gurumaraṇenatidukhito;"
+NULL,p6,271,100,gatha3,,"Parudiṃ ciraṃ atidussaha kasire bhavagahaṇe,"
+NULL,p6,272,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,273,8,hangnum,55.,55.
+NULL,p6,274,100,gatha1,," Gharamedhitaṃ upagomitavibhavo ratibahulo,"
+NULL,p6,275,100,gatha2,,"Maraṇe piyabhariyāsutaduhitū’natikaruṇaṃ;"
+NULL,p6,276,100,gatha3,,"Parudiṃ ciraṃ atidussaha kasire bhavagahaṇe,"
+NULL,p6,277,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,278,8,hangnum,56.,56.
+NULL,p6,279,100,gatha1,," Piyapubbaja sahajānuja bhagiṇidvaya maraṇe,"
+NULL,p6,280,100,gatha2,,"Nija bandhava-sakha-sissaka maraṇe pyatikaruṇaṃ;"
+NULL,p6,281,100,gatha3,,"Parudiṃ ciraṃ atidussaha kasire bhavagahaṇe,"
+NULL,p6,282,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,283,8,hangnum,57.,57.
+NULL,p6,284,100,gatha1,," Jagatīpati gahaṇā ripujanatakkara haraṇā,"
+NULL,p6,285,100,gatha2,,"Saritodaka vahaṇā puthujalitānala dahaṇā;"
+NULL,p6,286,100,gatha3,,"Parudiṃ hatavibhavo ciramiha duggatigahaṇe,"
+NULL,p6,287,100,gathalast,,"Saraṇaṃ bhava bhagavaṃ mama bhavanīradhi taraṇe."
+NULL,p6,288,8,hangnum,58.,58.
+NULL,p6,289,100,gatha1,," Atiduggama visamākula bhavasaṅkaṭa patite,"
+NULL,p6,290,100,gatha2,,"Byasanaṃ ciramiti dussahaṃ anubhūyapi vimitaṃ;"
+NULL,p6,291,100,gatha3,,"Na jahe sukhalavavañcitahadayo bhavatasinaṃ,"
+NULL,p6,292,100,gathalast,,"Tamapākuru karuṇānidhi tasinaṃ mama kasiṇaṃ."
+NULL,p6,293,8,hangnum,59.,59.
+NULL,p6,294,100,gatha1,," Jananāvadhi maraṇaṃ viya maraṇāvadhi jananaṃ,"
+NULL,p6,295,100,gatha2,,"Ubhayenapi bhayamevahi bhavato mama niyataṃ;"
+NULL,p6,296,100,gatha3,,"Sivamevaca jananāvadhi maraṇāvadhi rahitaṃ,"
+NULL,p6,297,100,gathalast,,"Dada me sivaṃ amatandada taṃ anāsava bhagavaṃ."
+NULL,p6,298,8,hangnum,60.,60.
+NULL,p6,299,100,gatha1,," Ciradikkhitamapi me manaṃ anivārita tasinaṃ,"
+NULL,p6,300,100,gatha2,,"Bhavato bhava ratipīlitaṃ ahaho kalighaṭitaṃ!"
+NULL,p6,301,100,gatha3,,"Tamato pita bhayato mamamava me bhava saraṇaṃ,"
+NULL,p6,302,100,gathalast,,"Bhagavaṃ paṭisaraṇaṃ mama bhavanīradhi taraṇaṃ."

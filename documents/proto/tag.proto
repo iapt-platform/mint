@@ -1,0 +1,82 @@
+syntax = "proto3";
+import "public.proto";
+
+package pcds.tag.v1;
+
+
+/*
+ * Tag 服务
+ * 
+ *  
+ * 
+ */
+service Tag{
+	rpc GetResListByTag (ResListRequest) returns (TagListReply){}
+	rpc GetTagListByRes (TagListResRequest) returns (TagListReply){}
+
+	rpc GetTagListForStudio (TagListRequest) returns (TagListReply){}
+	rpc GetTag (TagRequest) returns (TagReply){}
+	rpc SetTag (TagRequest) returns (TagReply){}
+	rpc AddTag (TagRequest) returns (TagReply){}
+	rpc DelTag (TagRequest) returns (TagReply){}
+}
+
+message TagListRequest{
+	string Id = 1;
+	string Search = 3;
+	EnumAllowingSearch SearchCol = 4;
+	int32  CurrentPage = 5;
+	int32  PerPage = 6;
+	EnumAllowingOrderby OrderBy = 7;
+	bool   Desc = 8;
+}
+
+message ResListRequest{
+	repeated string TagId = 1;
+	EnumResType ResType = 2;
+}
+message TagListResRequest{
+	repeated string ResId = 1;
+}
+
+enum EnumAllowingSearch{
+	EAS_Name = 0;
+}
+enum EnumAllowingOrderby{
+	EAO_UPDATED_AT = 0;
+	EAO_CREATED_AT = 1;
+	EAO_Name       = 2;
+}
+
+message TagRequest{
+	string Id          = 1;
+	string Name        = 2;
+	string Description = 3;	
+	int32  Color       = 4;
+	Studio Studio      = 5;
+
+	string Lang             = 51;
+	User   Editor           = 52;
+	EnumPublicity Publicity = 53;
+
+	string CreatedAt = 101; 
+	string UpdatedAt = 102; 
+}
+
+
+message TagReply{
+	bool ok          = 1;
+	string message   = 2;
+	TagRequest data = 3;
+}
+
+message TagListReply{
+	bool ok = 1;
+	string message = 2;
+	message data{
+		repeated TagRequest rows = 1;
+		int32    Count = 2;
+		int32    CurrentPage = 3;
+		int32    PerPage = 4;
+	}
+}

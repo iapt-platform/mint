@@ -1,0 +1,46 @@
+:root {
+	--bg-color: #ffffff;
+    --main-color: #1E1E1E;
+	--main-color1: #626262;
+	--main-color1: #626262;
+    --detail-color: #626262;
+    --tool-title-color: #1B1C1C;
+    --tool-color: #FFFFFF;
+    --tool--hidden-color: #C7C7C7;
+    --btn-color: #DFDFDF;
+    --btn-border-color: #7D7D7D;
+    --btn-hover-color: #FFFFFF;
+    --link-color: #6baaff;
+    --tool-link-hover-color: #A1C9FF;
+    --link-hover-color: #1F7DF5;
+    --mean-user-color: #F9468F;
+    --bg-color: #FFFFFF;
+    --tool-bg-color: #333333;
+    --tool-bg-color1: #494A4B;
+    --tool-bg-color2: #636363;
+    --tool-bg-color3: #3E3E3E;
+    --btn-hover-bg-color: #494949;
+    --btn-border-line-color: #7D7D7D;
+    --input-bg-color: #424242;
+    --select-bg-color: #424242;
+    --drop-bg-color: #EBEBEB;
+    --border-line-color: #C5C7CB;
+    --tool-line-color: #A4A4A4;
+    --border: 1px solid var(--border-line-color);
+    --border-shadow: #D2D2D2;
+    --shadow-color: rgba(0, 0, 0, 0.28);
+    --nocolor: rgba(255, 255, 255, 0);
+    --booka: #DDDDFF;
+    --bookx: #E4E4E4;
+    --info-bg-color: rgba(255, 255, 255, 0.8);
+    --error-text: #ff4141;
+    /*new color*/
+    --new-tool-bg: #333333;
+    --new-tool-content-bg: #4D4D4D;
+    --new-tool-list-hover-bg: #7B7B7B;
+    --new-tool-btn-border: #7B7B7B;
+    --new-tool-btn: #CDCDCD;
+    --new-tool-content-disabled: #989898;
+    --new-tool-input-text-bg: #171717;
+    --new-tag-bg: #6374EF;
+}

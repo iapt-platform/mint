@@ -1,0 +1,146 @@
+id,book,par_num,100,class,title,text,auther
+NULL,93,3,1,book,Sīlakkhandhavaggapāḷi,戒蕴品,庄春江
+NULL,93,4,2,chapter,1. Brahmajālasuttaṃ,1、梵网经,庄春江
+NULL,93,5,4,subhead,Paribbājakakathā,游行者之说,庄春江
+NULL,93,12,4,subhead,Cūḷasīlaṃ,小戒,庄春江
+NULL,93,41,4,subhead,Majjhimasīlaṃ,中戒,庄春江
+NULL,93,53,4,subhead,Mahāsīlaṃ,大戒,庄春江
+NULL,93,63,4,subhead,Pubbantakappikā,属于过去时间的,庄春江
+NULL,93,66,4,subhead,Sassatavādo,恒常论,庄春江
+NULL,93,79,4,subhead,Ekaccasassatavādo,某部分恒常论,庄春江
+NULL,93,99,4,subhead,Antānantavādo,有边无边论,庄春江
+NULL,93,111,4,subhead,Amarāvikkhepavādo,诡辩论,庄春江
+NULL,93,118,4,subhead,Adhiccasamuppannavādo,自然生论,庄春江
+NULL,93,127,4,subhead,Aparantakappikā,属于未来时间的,庄春江
+NULL,93,129,4,subhead,Saññīvādo,有想论,庄春江
+NULL,93,133,4,subhead,Asaññīvādo,无想论,庄春江
+NULL,93,137,4,subhead,Nevasaññīnāsaññīvādo,非想非非想论,庄春江
+NULL,93,141,4,subhead,Ucchedavādo,断灭论,庄春江
+NULL,93,151,4,subhead,Diṭṭhadhammanibbānavādo,当生涅槃论,庄春江
+NULL,93,164,4,subhead,Paritassitavipphanditavāro,（暂缺）,庄春江
+NULL,93,178,4,subhead,Phassapaccayāvāro,以触为缘章,庄春江
+NULL,93,192,4,subhead,Netaṃ ṭhānaṃ vijjativāro,这是不可能的章,庄春江
+NULL,93,206,4,subhead,Diṭṭhigatikādhiṭṭhānavaṭṭakathā,到达见依处的轮回谈说,庄春江
+NULL,93,208,4,subhead,Vivaṭṭakathādi,还灭之谈说等,庄春江
+NULL,93,217,2,chapter,2. Sāmaññaphalasuttaṃ,2、沙门果经,庄春江
+NULL,93,218,4,subhead,Rājāmaccakathā,国王大臣的谈论,庄春江
+NULL,93,226,4,subhead,Komārabhaccajīvakakathā,养子耆婆的谈论,庄春江
+NULL,93,232,4,subhead,Sāmaññaphalapucchā,沙门果的问题,庄春江
+NULL,93,238,4,subhead,Pūraṇakassapavādo,富兰那迦叶之论,庄春江
+NULL,93,242,4,subhead,Makkhaligosālavādo,末迦利瞿舍罗之论,庄春江
+NULL,93,246,4,subhead,Ajitakesakambalavādo,阿夷多翅舍钦婆罗之论,庄春江
+NULL,93,250,4,subhead,Pakudhakaccāyanavādo,浮陀迦旃延之论,庄春江
+NULL,93,254,4,subhead,Nigaṇṭhanāṭaputtavādo,尼干子若提子之论,庄春江
+NULL,93,258,4,subhead,Sañcayabelaṭṭhaputtavādo,散惹耶毗罗梨子之论,庄春江
+NULL,93,262,4,subhead,Paṭhamasandiṭṭhikasāmaññaphalaṃ,第一个当生看得见的沙门果,庄春江
+NULL,93,267,4,subhead,Dutiyasandiṭṭhikasāmaññaphalaṃ,第二个当生看得见的沙门果,庄春江
+NULL,93,272,4,subhead,Paṇītatarasāmaññaphalaṃ,更胜妙的沙门果,庄春江
+NULL,93,278,4,subhead,Cūḷasīlaṃ,小戒,庄春江
+NULL,93,288,4,subhead,Majjhimasīlaṃ,中戒,庄春江
+NULL,93,300,4,subhead,Mahāsīlaṃ,大戒,庄春江
+NULL,93,310,4,subhead,Indriyasaṃvaro,根的自制,庄春江
+NULL,93,312,4,subhead,Satisampajaññaṃ,正念与正知,庄春江
+NULL,93,314,4,subhead,Santoso,知足,庄春江
+NULL,93,316,4,subhead,Nīvaraṇappahānaṃ,（暂缺）,庄春江
+NULL,93,327,4,subhead,Paṭhamajjhānaṃ,初禅,庄春江
+NULL,93,330,4,subhead,Dutiyajjhānaṃ,第二禅,庄春江
+NULL,93,333,4,subhead,Tatiyajjhānaṃ,第三禅,庄春江
+NULL,93,336,4,subhead,Catutthajjhānaṃ,第四禅,庄春江
+NULL,93,339,4,subhead,Vipassanāñāṇaṃ,毗婆舍那智,庄春江
+NULL,93,342,4,subhead,Manomayiddhiñāṇaṃ,意生神通智,庄春江
+NULL,93,345,4,subhead,Iddhividhañāṇaṃ,各种神通智,庄春江
+NULL,93,348,4,subhead,Dibbasotañāṇaṃ,天耳智,庄春江
+NULL,93,351,4,subhead,Cetopariyañāṇaṃ,他心智,庄春江
+NULL,93,354,4,subhead,Pubbenivāsānussatiñāṇaṃ,前世住处之回忆智,庄春江
+NULL,93,357,4,subhead,Dibbacakkhuñāṇaṃ,天眼智,庄春江
+NULL,93,360,4,subhead,Āsavakkhayañāṇaṃ,烦恼之灭尽智,庄春江
+NULL,93,363,4,subhead,Ajātasattuupāsakattapaṭivedanā,阿阇世-作为优婆塞的陈述,庄春江
+NULL,93,369,2,chapter,3. Ambaṭṭhasuttaṃ,3、安玻德经,庄春江
+NULL,93,371,4,subhead,Pokkharasātivatthu,玻科勒沙低的事,庄春江
+NULL,93,373,4,subhead,Ambaṭṭhamāṇavo,安玻德学生婆罗门,庄春江
+NULL,93,382,4,subhead,Paṭhamaibbhavādo,第一次卑贱说,庄春江
+NULL,93,385,4,subhead,Dutiyaibbhavādo,第二次卑贱说,庄春江
+NULL,93,387,4,subhead,Tatiyaibbhavādo,第三次卑贱说,庄春江
+NULL,93,389,4,subhead,Dāsiputtavādo,婢女之子说,庄春江
+NULL,93,402,4,subhead,Ambaṭṭhavaṃsakathā,安玻德的种姓说,庄春江
+NULL,93,406,4,subhead,Khattiyaseṭṭhabhāvo,刹帝利的最胜性,庄春江
+NULL,93,422,4,subhead,Vijjācaraṇakathā,明与行之说,庄春江
+NULL,93,431,4,subhead,Catuapāyamukhaṃ,四个败散口,庄春江
+NULL,93,442,4,subhead,Pubbakaisibhāvānuyogo,以前仙人状态的实行,庄春江
+NULL,93,452,4,subhead,Dvelakkhaṇādassanaṃ,二相的未见,庄春江
+NULL,93,458,4,subhead,Pokkharasātibuddhupasaṅkamanaṃ,玻科勒沙低往见佛陀,庄春江
+NULL,93,466,4,subhead,Pokkharasātiupāsakattapaṭivedanā,玻科勒沙低-作为优婆塞的陈述,庄春江
+NULL,93,469,2,chapter,4. Soṇadaṇḍasuttaṃ,4、犬杖经,庄春江
+NULL,93,470,4,subhead,Campeyyakabrāhmaṇagahapatikā,瞻波城的婆罗门、屋主,庄春江
+NULL,93,474,4,subhead,Soṇadaṇḍaguṇakathā,犬杖的种种谈说,庄春江
+NULL,93,488,4,subhead,Buddhaguṇakathā,佛陀的种种谈说,庄春江
+NULL,93,520,4,subhead,Soṇadaṇḍaparivitakko,犬杖的深思,庄春江
+NULL,93,524,4,subhead,Brāhmaṇapaññatti,婆罗门的安立,庄春江
+NULL,93,535,4,subhead,Sīlapaññākathā,戒、慧的谈说,庄春江
+NULL,93,538,4,subhead,Soṇadaṇḍaupāsakattapaṭivedanā,犬杖-作为优婆塞的陈述,庄春江
+NULL,93,544,2,chapter,5. Kūṭadantasuttaṃ,5、古得旦得经,庄春江
+NULL,93,545,4,subhead,Khāṇumatakabrāhmaṇagahapatikā,柯奴玛得的婆罗门、屋主,庄春江
+NULL,93,553,4,subhead,Kūṭadantaguṇakathā,古得旦得的种种谈说,庄春江
+NULL,93,568,4,subhead,Buddhaguṇakathā,佛陀的种种谈说,庄春江
+NULL,93,600,4,subhead,Mahāvijitarājayaññakathā,（暂缺）,庄春江
+NULL,93,606,4,subhead,Catuparikkhāraṃ,四个资助,庄春江
+NULL,93,608,4,subhead,Aṭṭha parikkhārā,八个资助,庄春江
+NULL,93,610,4,subhead,Catuparikkhāraṃ,四个资助,庄春江
+NULL,93,612,4,subhead,Tisso vidhā,三种,庄春江
+NULL,93,614,4,subhead,Dasa ākārā,十相,庄春江
+NULL,93,616,4,subhead,Soḷasa ākārā,十六相,庄春江
+NULL,93,629,4,subhead,Niccadānaanukulayaññaṃ,经常性施物-随家牲祭,庄春江
+NULL,93,652,4,subhead,Kūṭadantaupāsakattapaṭivedanā,古得旦得-作为优婆塞的陈述,庄春江
+NULL,93,654,4,subhead,Sotāpattiphalasacchikiriyā,入流果的作证,庄春江
+NULL,93,661,2,chapter,6. Mahālisuttaṃ,6、摩诃里经,庄春江
+NULL,93,662,4,subhead,Brāhmaṇadūtavatthu,婆罗门使者的事,庄春江
+NULL,93,665,4,subhead,Oṭṭhaddhalicchavīvatthu,（暂缺）,庄春江
+NULL,93,671,4,subhead,Ekaṃsabhāvitasamādhi,修习一边之定,庄春江
+NULL,93,680,4,subhead,Catuariyaphalaṃ,四种圣者之果,庄春江
+NULL,93,685,4,subhead,Ariyaaṭṭhaṅgikamaggo,八支圣道,庄春江
+NULL,93,688,4,subhead,Dvepabbajitavatthu,二位出家者的事,庄春江
+NULL,93,692,2,chapter,7. Jāliyasuttaṃ,7、若里亚经,庄春江
+NULL,93,693,4,subhead,Dvepabbajitavatthu,二位出家者的事,庄春江
+NULL,93,698,2,chapter,8. Mahāsīhanādasuttaṃ,8、狮子吼大经,庄春江
+NULL,93,699,4,subhead,Acelakassapavatthu,裸体迦叶的事,庄春江
+NULL,93,705,4,subhead,Samanuyuñjāpanakathā,审问的谈说,庄春江
+NULL,93,714,4,subhead,Ariyo aṭṭhaṅgiko maggo,八支圣道,庄春江
+NULL,93,716,4,subhead,Tapopakkamakathā,苦行着手者的谈说,庄春江
+NULL,93,720,4,subhead,Tapopakkamaniratthakathā,无利益的苦行着手者的谈说,庄春江
+NULL,93,742,4,subhead,Sīlasamādhipaññāsampadā,戒定慧具足,庄春江
+NULL,93,749,4,subhead,Sīhanādakathā,狮子吼的谈说,庄春江
+NULL,93,757,4,subhead,Titthiyaparivāsakathā,外道别住的谈说,庄春江
+NULL,93,762,2,chapter,9. Poṭṭhapādasuttaṃ,9、玻得播达经,庄春江
+NULL,93,763,4,subhead,Poṭṭhapādaparibbājakavatthu,游行者玻得播达的事,庄春江
+NULL,93,770,4,subhead,Abhisaññānirodhakathā,增上想灭的谈说,庄春江
+NULL,93,776,4,subhead,Sahetukasaññuppādanirodhakathā,想生灭有因的谈说,庄春江
+NULL,93,789,4,subhead,Saññāattakathā,想-真我的谈说,庄春江
+NULL,93,802,4,subhead,Cittahatthisāriputtapoṭṭhapādavatthu,质多象舍利弗与玻得播达的事,庄春江
+NULL,93,807,4,subhead,Ekaṃsikadhammo,明确法,庄春江
+NULL,93,826,4,subhead,Tayo attapaṭilābhā,三种真我取得,庄春江
+NULL,93,848,4,subhead,Cittahatthisāriputtaupasampadā,质多象舍利弗受具足戒,庄春江
+NULL,93,852,2,chapter,10. Subhasuttaṃ,10、苏玻经,庄春江
+NULL,93,853,4,subhead,Subhamāṇavavatthu,学生婆罗门苏玻的事,庄春江
+NULL,93,862,4,subhead,Sīlakkhandho,戒蕴,庄春江
+NULL,93,870,4,subhead,Samādhikkhandho,定蕴,庄春江
+NULL,93,895,4,subhead,Paññākkhandho,慧蕴,庄春江
+NULL,93,915,2,chapter,11. Kevaṭṭasuttaṃ,11、给哇得经,庄春江
+NULL,93,916,4,subhead,Kevaṭṭagahapatiputtavatthu,屋主之子给哇得的事,庄春江
+NULL,93,920,4,subhead,Iddhipāṭihāriyaṃ,神通神变,庄春江
+NULL,93,927,4,subhead,Ādesanāpāṭihāriyaṃ,记心神变,庄春江
+NULL,93,932,4,subhead,Anusāsanīpāṭihāriyaṃ,教诫神变,庄春江
+NULL,93,936,4,subhead,Bhūtanirodhesakabhikkhuvatthu,比丘寻求存在的灭的事,庄春江
+NULL,93,951,4,subhead,Tīradassisakuṇupamā,寻岸鸟的譬喻,庄春江
+NULL,93,965,2,chapter,12. Lohiccasuttaṃ,12、罗希者经,庄春江
+NULL,93,966,4,subhead,Lohiccabrāhmaṇavatthu,罗希者婆罗门的事,庄春江
+NULL,93,976,4,subhead,Lohiccabrāhmaṇānuyogo,罗希者婆罗门的实行,庄春江
+NULL,93,983,4,subhead,Tayo codanārahā,三种适合呵责者,庄春江
+NULL,93,987,4,subhead,Nacodanārahasatthu,不适合呵责的大师,庄春江
+NULL,93,992,2,chapter,13. Tevijjasuttaṃ,13、三明经,庄春江
+NULL,93,997,4,subhead,Maggāmaggakathā,道、非道的谈说,庄春江
+NULL,93,1002,4,subhead,Vāseṭṭhamāṇavānuyogo,学生婆罗门袜谢德的实行,庄春江
+NULL,93,1020,4,subhead,Janapadakalyāṇīupamā,地方上美女的譬喻,庄春江
+NULL,93,1027,4,subhead,Nisseṇīupamā,阶梯的譬喻,庄春江
+NULL,93,1034,4,subhead,Aciravatīnadīupamā,阿致罗筏底河的譬喻,庄春江
+NULL,93,1047,4,subhead,Saṃsandanakathā,合流的谈说,庄春江
+NULL,93,1057,4,subhead,Brahmalokamaggadesanā,梵天世界之道的教导,庄春江
