@@ -16,8 +16,8 @@ RUN update-alternatives --set editor /usr/bin/vim.basic
 RUN mkdir -p $HOME/downloads
 
 # https://opensearch.org/downloads.html#opensearch
+ARG OPENSEARCH_ARCH
 ENV OPENSEARCH_VERSION "2.17.0"
-ENV OPENSEARCH_ARCH "arm64"
 ENV OPENSEARCH_JAVA_HOME "/opt/opensearch-${OPENSEARCH_VERSION}/jdk"
 RUN wget -q -P $HOME/downloads \
     https://artifacts.opensearch.org/releases/bundle/opensearch/${OPENSEARCH_VERSION}/opensearch-${OPENSEARCH_VERSION}-linux-${OPENSEARCH_ARCH}.tar.gz
