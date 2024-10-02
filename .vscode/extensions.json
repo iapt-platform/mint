@@ -1,0 +1,33 @@
+{
+  "recommendations": [
+    "ms-vscode.cpptools-extension-pack",
+    "rust-lang.rust-analyzer",
+    "vscjava.vscode-java-pack",
+    "golang.go",
+    "ms-python.python",
+    "jakebecker.elixir-ls",
+    "phoenixframework.phoenix",
+    "ms-python.autopep8",
+    "redhat.ansible",
+    "redhat.vscode-xml",
+    "redhat.vscode-yaml",
+    "foxundermoon.shell-format",
+    "mtxr.sqltools",
+    "mrorz.language-gettext",
+    "tamasfe.even-better-toml",
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+    "zxh404.vscode-proto3",
+    "mrkou47.thrift-syntax-support",
+    "ms-vscode-remote.remote-ssh",
+    "ms-azuretools.vscode-docker",
+    "vscode-icons-team.vscode-icons",
+    "akamud.vscode-theme-onedark",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "gruntfuggly.todo-tree",
+    "donjayamanne.githistory",
+    "streetsidesoftware.code-spell-checker"
+  ]
+}
