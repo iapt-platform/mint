@@ -1,0 +1,13 @@
+- name: auto-loader optimization for morus
+  ansible.builtin.shell:
+    cmd: composer install --optimize-autoloader --no-dev
+    chdir: "{{ app_deploy_root }}/agile/rpc/morus/morus"
+
+- name: upload morus rpc service
+  become: true
+  template:
+    src: v2/morus.service.j2
+    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-morus.service
+    owner: root
+    group: root
+    mode: "0644"

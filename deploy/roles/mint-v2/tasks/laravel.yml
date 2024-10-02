@@ -1,0 +1,143 @@
+# https://laravel.com/docs/10.x/deployment
+
+- name: clone source code(laravel)
+  ansible.builtin.git:
+    repo: "https://github.com/iapt-platform/mint.git"
+    dest: "{{ app_deploy_root }}/htdocs"
+    version: "laravel"
+
+- name: install nodejs packages for v2
+  ansible.builtin.shell:
+    cmd: yarnpkg install
+    chdir: "{{ app_deploy_root }}/htdocs"
+
+- name: install nodejs packages for v1
+  ansible.builtin.shell:
+    cmd: yarnpkg install
+    chdir: "{{ app_deploy_root }}/htdocs/public"
+
+- name: upload .env(v2)
+  become: true
+  template:
+    src: v2/env.j2
+    dest: "{{ app_deploy_root }}/htdocs/.env"
+    owner: www-data
+    group: www-data
+    mode: "0444"
+
+- name: upload config.php(v1)
+  become: true
+  template:
+    src: v1/config.php.j2
+    dest: "{{ app_deploy_root }}/htdocs/public/app/config.php"
+    owner: www-data
+    group: www-data
+    mode: "0444"
+
+- name: upload config.js(v1)
+  become: true
+  template:
+    src: v1/config.js.j2
+    dest: "{{ app_deploy_root }}/htdocs/public/app/config.js"
+    owner: www-data
+    group: www-data
+    mode: "0444"
+
+- name: setup bootstrap folder for {{ ansible_user }}
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_root }}/htdocs/bootstrap/cache"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    recurse: yes
+
+- name: auto-loader optimization for v2
+  ansible.builtin.shell:
+    cmd: composer update --optimize-autoloader --no-dev
+    chdir: "{{ app_deploy_root }}/htdocs"
+
+- name: auto-loader optimization for v1
+  ansible.builtin.shell:
+    cmd: composer update --optimize-autoloader --no-dev
+    chdir: "{{ app_deploy_root }}/htdocs/public"
+
+- name: setup bootstrap folder for php-fpm
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_root }}/htdocs/bootstrap/cache"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+- name: setup storage folder for v2 for php-fpm
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_root }}/htdocs/storage"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+- name: caching configuration
+  become: true
+  ansible.builtin.shell:
+    cmd: su www-data -pc "php artisan config:cache"
+    chdir: "{{ app_deploy_root }}/htdocs"
+
+- name: caching events
+  become: true
+  ansible.builtin.shell:
+    cmd: su www-data -pc "php artisan event:cache"
+    chdir: "{{ app_deploy_root }}/htdocs"
+
+- name: caching routes
+  become: true
+  ansible.builtin.shell:
+    cmd: su www-data -pc "php artisan route:cache"
+    chdir: "{{ app_deploy_root }}/htdocs"
+
+- name: caching views
+  become: true
+  ansible.builtin.shell:
+    cmd: su www-data -pc "php artisan view:cache"
+    chdir: "{{ app_deploy_root }}/htdocs"
+
+- name: setup sqlite3 db for v1
+  become: true
+  ansible.builtin.file:
+    src: /var/www/shared/appdata
+    dest: "{{ app_deploy_root }}/htdocs/storage/app/data"
+    state: link
+
+# https://laravel.com/docs/10.x/scheduling#running-the-scheduler
+- name: upload scheduler service
+  become: true
+  template:
+    src: v2/scheduler.service.j2
+    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-scheduler.service
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: upload scheduler timer
+  become: true
+  template:
+    src: v2/scheduler.timer.j2
+    dest: /usr/lib/systemd/system/mint-{{ app_deploy_env }}-scheduler.timer
+    owner: root
+    group: root
+    mode: "0644"
+
+- import_tasks: queue-workers.yml
+
+- name: clone source code(agile)
+  ansible.builtin.git:
+    repo: "https://github.com/iapt-platform/mint.git"
+    dest: "{{ app_deploy_root }}/agile"
+    version: "agile"
+
+# - import_tasks: morus.yml
+- import_tasks: lily.yml
+- import_tasks: tulip.yml

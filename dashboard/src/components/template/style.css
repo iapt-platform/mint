@@ -1,0 +1,23 @@
+.pcd_word {
+  text-decoration: none;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.pcd_word:hover {
+  text-decoration: underline dotted;
+}
+.sent_read p {
+  display: inline;
+}
+
+.sent_read_translation:hover {
+  background-color: beige;
+}
+
+.sent_read_interactive_button:hover ~ .sent_read_translation {
+  background-color: beige;
+}
+
+.sent_read_translation:hover ~ .sent_read_interactive_button {
+  border: 1px solid black;
+}

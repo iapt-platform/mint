@@ -1,0 +1,15 @@
+[Unit]
+Description=Mint lily worker service for {{ app_deploy_env }}
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash lily.sh -d -c config.toml --worker {{ queue }}
+WorkingDirectory={{ app_deploy_root }}/agile/rpc/lily
+User=www-data
+Group=www-data
+Restart=always
+RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target

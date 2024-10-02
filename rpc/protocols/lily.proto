@@ -1,0 +1,69 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.github.saturn_xiv.palm.plugins.lily.v1";
+package palm.lily.v1;
+
+import "google/protobuf/duration.proto";
+
+// ----------------------------------------------------------------------------
+
+service Excel {
+  rpc Parse(S3File) returns (ExcelModel) {}
+  rpc Generate(ExcelModel) returns (S3File) {}
+}
+
+message ExcelModel {
+  message Sheet {
+    message Cell {
+      uint32 row = 1;
+      uint32 col = 2;
+      string val = 3;
+    }
+    string name = 1;
+    repeated Cell cells = 2;
+  }
+  repeated Sheet sheets = 1;
+}
+// ----------------------------------------------------------------------------
+
+service S3 {
+  rpc GetFile(S3GetFileRequest) returns (S3GetFileResponse) {}
+}
+
+message S3File {
+  string bucket = 1;
+  string name = 2;
+
+  string content_type = 9;
+}
+
+message S3GetFileRequest {
+  string bucket = 1;
+  string name = 2;
+  google.protobuf.Duration ttl = 9;
+}
+message S3GetFileResponse {
+  string url = 1;
+}
+// ----------------------------------------------------------------------------
+
+service Tex {
+  rpc ToPdf(TexToRequest) returns (S3File) {}
+  rpc ToWord(TexToRequest) returns (S3File) {}
+}
+
+message TexToRequest {
+  string title = 1;
+  map<string, bytes> files = 2;
+  optional google.protobuf.Duration ttl = 7;
+  optional string owner = 8;
+  bool published = 9;
+}
+
+// ----------------------------------------------------------------------------
+
+service Epub {
+  rpc Build(EpubBuildRequest) returns (S3File) {}
+}
+
+message EpubBuildRequest {}

@@ -1,0 +1,51 @@
+properties:
+  uid:
+    type: string
+  title:
+    type: string
+  title_text:
+    type: string
+  subtitle:
+    type: string
+  summary:
+    type: string
+  _summary:
+    type: string
+  content:
+    type: string
+  content_type:
+    type: string
+  html:
+    type: string
+  path:
+    type: object
+    properties:
+      key:
+        type: string
+      book:
+        type: number
+      paragraph:
+        type: number
+      title:
+        type: string
+      paliTitle:
+        type: string
+      level:
+        type: number
+  studio:
+    type: object
+    properties:
+      id:
+        type: string
+      nickName:
+        type: string
+      studioName:
+        type: string
+      realName:
+        type: string
+      avatar:
+        type: string
+  created_at:
+    type: string
+  updated_at:
+    type: string

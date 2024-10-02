@@ -1,0 +1,22 @@
+- name: Install node.js packages
+  become: true
+  apt:
+    pkg:
+      - nodejs
+      - npm
+      - yarnpkg
+
+- name: create deployment folder
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_root }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+
+- name: create logs folder
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_root }}/logs"
+    state: directory
+    owner: "www-data"
+    group: "www-data"

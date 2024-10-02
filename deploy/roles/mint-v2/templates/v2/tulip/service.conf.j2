@@ -1,0 +1,15 @@
+[Unit]
+Description=Mint tulip rpc service for {{ app_deploy_env }}
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/php server.php
+WorkingDirectory={{ app_deploy_root }}/agile/rpc/tulip/tulip
+User=www-data
+Group=www-data
+Restart=always
+RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target

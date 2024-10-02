@@ -1,0 +1,41 @@
+openapi: 3.0.0
+info:
+  title: MINT API
+  description: International Academy Of Pali Tipitaka(国际巴利三藏学院)
+  version: 2022.12.8
+servers:
+  - url: https://staging.wikipali.org/api/v2
+    description: Internal staging server for testing
+  - url: https://www.wikipali.org/api/v2
+    description: Main production server
+  - url: https://www.wikipali.cc/api/v2
+    description: Main production server in china
+  - url: http://127.0.0.1:8000/api/v2
+    description: local dev
+paths:
+  /users:
+    $ref: "./resources/auth/users/index.yaml"
+  /users/sign-in:
+    $ref: "./resources/auth/users/sign-in.yaml"
+  /channel:
+    $ref: "./resources/channel/index.yaml"
+  /channel/{channelId}:
+    $ref: "./resources/channel/show.yaml"
+  /palitext:
+    $ref: "./resources/corpus/pali-text/index.yaml"
+  /discussion:
+    $ref: "./resources/discussion/index.yaml"
+  /channel-io:
+    $ref: "./resources/io/channel/export.yaml"
+  /chapter-io:
+    $ref: "./resources/io/chapter/export.yaml"
+  /sentence-io:
+    $ref: "./resources/io/sentence/export.yaml"
+  /progress:
+    $ref: "./resources/progress/index.yaml"
+  /sentence:
+    $ref: "./resources/sentence/index.yaml"
+  /corpus:
+    $ref: "./resources/corpus/corpus/index.yaml"
+  /chapter-index:
+    $ref: "./resources/chapter-index/index.yaml"

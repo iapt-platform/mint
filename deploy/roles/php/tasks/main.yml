@@ -1,0 +1,66 @@
+- name: Add php repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: ppa:ondrej/php
+
+- name: Install php packages
+  become: true
+  apt:
+    pkg:
+      - php{{ app_php_version }}-cli
+      - php{{ app_php_version }}-fpm
+      - php{{ app_php_version }}-xml
+      - php{{ app_php_version }}-imap
+      - php{{ app_php_version }}-intl
+      - php{{ app_php_version }}-mbstring
+      - php{{ app_php_version }}-bcmath
+      - php{{ app_php_version }}-bz2
+      - php{{ app_php_version }}-zip
+      - php{{ app_php_version }}-curl
+      - php{{ app_php_version }}-gd
+      - php{{ app_php_version }}-imagick
+      - php{{ app_php_version }}-pgsql
+      - php{{ app_php_version }}-mysql
+      - php{{ app_php_version }}-sqlite3
+      - php{{ app_php_version }}-redis
+      - php{{ app_php_version }}-amqp
+
+- name: Creates composer install directory
+  file:
+    path: "{{ ansible_env.HOME }}/.local/bin"
+    state: directory
+
+# https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos
+- name: Download composer
+  get_url:
+    url: https://getcomposer.org/download/latest-stable/composer.phar
+    dest: "{{ ansible_env.HOME }}/.local/bin/composer"
+    mode: 0755
+
+- name: Maximum allowed size for uploaded files
+  become: true
+  ansible.builtin.lineinfile:
+    path: "/etc/php/{{ app_php_version }}/fpm/php.ini"
+    line: "upload_max_filesize = 256M"
+    regexp: "^upload_max_filesize ="
+
+- name: Maximum size of POST data that will be accept
+  become: true
+  ansible.builtin.lineinfile:
+    path: "/etc/php/{{ app_php_version }}/fpm/php.ini"
+    line: "post_max_size = 256M"
+    regexp: "^post_max_size ="
+
+- name: Restart php-fpm
+  become: true
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: "php{{ app_php_version }}-fpm"
+
+- name: Restart nginx
+  become: true
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: nginx

@@ -1,0 +1,21 @@
+properties:
+  uid:
+    type: string
+  book:
+    type: string
+  para:
+    type: string
+  channel_id:
+    type: string
+  progress:
+    type: number
+  lang:
+    type: string
+  title:
+    type: string
+  summary:
+    type: string
+  updated_at:
+    type: string
+  created_at:
+    type: string

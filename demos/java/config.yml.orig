@@ -1,0 +1,4 @@
+logging:
+  level: INFO
+  loggers:
+    com.github.iapt_platform: DEBUG

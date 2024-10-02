@@ -1,0 +1,14 @@
+.sentence p {
+  margin: 0;
+}
+.sentence.ant-typography p {
+  margin: 0;
+}
+
+.cart_delete {
+  visibility: hidden;
+}
+
+.cart_item:hover .cart_delete {
+  visibility: unset;
+}

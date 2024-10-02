@@ -1,0 +1,34 @@
+target=aarch64-linux-gnu
+gcc_version=12
+clang_version=15
+
+[settings]
+os=Linux
+arch=armv8
+compiler=clang
+compiler.version=$clang_version
+compiler.libcxx=libstdc++11
+compiler.cppstd=20
+build_type=Release
+
+boost:compiler=gcc
+boost:compiler.cppstd=11
+boost:compiler.version=$gcc_version
+boost:compiler.libcxx=libstdc++11
+
+[env]
+CHOST=$target
+CC=clang-$clang_version
+CXX=clang++-$clang_version
+CFLAGS="-target $target -ccc-gcc-name $target-gcc-$gcc_version"
+CXXFLAGS="-target $target -ccc-gcc-name $target-gcc-$gcc_version"
+LDFLAGS="--ld-path=ld.lld-$clang_version"
+
+boost:CC=$target-gcc-$gcc_version
+boost:CXX=$target-g++-$gcc_version
+boost:CFLAGS=""
+boost:CXXFLAGS=""
+boost:LDFLAGS=""
+
+[options]
+libpng:neon=False

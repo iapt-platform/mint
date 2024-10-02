@@ -1,0 +1,25 @@
+properties:
+  uid:
+    type: string
+  book_id:
+    type: string
+  paragraph:
+    type: string
+  word_start:
+    type: string
+  word_end:
+    type: string
+  content:
+    type: string
+  content_type:
+    type: string
+  channel_uid:
+    type: string
+  editor_uid:
+    type: string
+  language:
+    type: string
+  updated_at:
+    type: string
+  created_at:
+    type: string

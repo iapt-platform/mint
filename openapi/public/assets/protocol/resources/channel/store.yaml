@@ -1,0 +1,35 @@
+post:
+  summary: Store a newly created resource in storage.
+  tags:
+    - channel
+  requestBody:
+    required: true
+    description: 新建channel参数
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              required: true
+            studio:
+              type: string
+          required:
+            - name
+            - studio
+  responses:
+    "200": # status code
+      description: A JSON array of channel information
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                $ref: "./channel.yaml"

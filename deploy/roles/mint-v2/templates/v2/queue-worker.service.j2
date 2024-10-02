@@ -1,0 +1,15 @@
+[Unit]
+Description=Mint {{ action }} worker for {{ app_deploy_env }}
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/php artisan mq:{{ action }}
+WorkingDirectory={{ app_deploy_root }}/htdocs
+User=www-data
+Group=www-data
+Restart=always
+RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.github.iapt_platform.mint.plugins.morus.v1";
+package mint.morus.v1;
+
+// ----------------------------------------------------------------------------
+service Markdown {
+  rpc ToHtml(MarkdownToHtmlRequest) returns (MarkdownToHtmlResponse) {}
+}
+
+message MarkdownToHtmlRequest {
+  string payload = 1;
+  bool sanitize = 2;
+}
+message MarkdownToHtmlResponse { string payload = 1; }

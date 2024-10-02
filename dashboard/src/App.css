@@ -1,0 +1,13 @@
+@import "~antd/dist/antd.min.css";
+@import "~react-quill/dist/quill.snow.css";
+@import "~video.js/dist/video-js.css";
+@import "./assets/font/main.css";
+@import "./theme/antd.dark.css";
+@import "./theme/antpro.dark.css";
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Noto Sans", "NotoSans-ExtraLight", "Noto Sans SC",
+    "Noto Sans TC", "Noto Sans Myanmar", "ATaiThamKHNewV3-Normal";
+}

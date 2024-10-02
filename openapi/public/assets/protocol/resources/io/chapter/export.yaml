@@ -1,0 +1,52 @@
+get:
+  summary: 从某个时间点导出章节索引数据。
+  tags:
+    - import-export
+  description: 返回多行数据。支持分页。每次输出会附带符合要求的记录数。根据每次导出数据和记录数计算导出进度。导出的数据如果uid跟原有数据重复，为更新数据。没有的是新数据。
+  parameters:
+    - name: view
+      in: query
+      required: true
+      description: 查询的内容
+      schema:
+        type: string
+        enum:
+          - public
+    - name: update_at
+      in: query
+      description: 导出的时间点。时间格式"2020-05-14T08:07:30.000000Z"。如果不设置。从最初的数据开始导出。推荐记录每次导出结束的最后一条记录的时间。下次导出用这个时间作为参数。
+      schema:
+        type: string
+    - name: limit
+      in: query
+      description: 每次提取记录数
+      schema:
+        type: number
+        minimum: 1
+        maximum: 1000
+    - name: offset
+      in: query
+      description: 从第几条记录开始提取
+      schema:
+        type: number
+  responses:
+    "200": # status code
+      description: A JSON array of user names
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: object
+                    $ref: "./data.yaml"
+                  count:
+                    type: number
+                    description: 符合要求的记录总数

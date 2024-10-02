@@ -1,0 +1,10 @@
+ansible_user: "deploy"
+ansible_python_interpreter: /usr/bin/python3
+ansible_ssh_private_key_file: "{{ inventory_dir }}/.ssh/id_ed25519"
+
+app_deploy_target: "/var/www/{{ inventory_hostname }}"
+app_php_version: "8.2"
+app_downloads: "{{ ansible_env.HOME }}/downloads"
+app_backup: "{{ ansible_env.HOME }}/backups"
+app_dashboard_base_path: "/pcd"
+app_postgresql_version: "14"

@@ -1,0 +1,72 @@
+/*术语输入AT弹出菜单*/
+.text_input > .textarea {
+  padding: 5px;
+  font-family: inherit;
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  font-size: 14px;
+  line-height: 1;
+  border: 1px solid #ddd;
+  white-space: pre-wrap;
+  word-break: break-all;
+  z-index: 1;
+  resize: vertical;
+  color: var(--main-color);
+  background-color: #e4e45c52;
+  border: unset;
+  border-radius: 8px;
+  padding: 5px;
+  line-height: 1.5em;
+}
+.text_input > .text_shadow {
+  position: absolute;
+  width: 100%;
+  visibility: hidden;
+}
+.text_input .cursor {
+  position: absolute;
+  border-left: 1px solid #000;
+}
+.text_input > .menu {
+  background-color: #b2b2b2;
+  width: 200px;
+  height: 300px;
+  box-shadow: #000;
+  position: absolute;
+  display: none;
+  z-index: 100;
+  box-shadow: 0 5px 7px rgb(0 0 0 / 25%);
+}
+.text_input > .menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.text_input > .menu ul li {
+  cursor: pointer;
+  padding: 0;
+  margin: 5px;
+}
+.text_input > .menu ul li:hover {
+  background: linear-gradient(90deg, #40a9ff, transparent);
+}
+
+.term_at_menu_input {
+  padding: 5px;
+  border-bottom: 1px solid gray;
+}
+.text_input {
+  width: 100%;
+  position: relative;
+}
+
+.term_mean {
+  /*text-transform: capitalize;*/
+  white-space: nowrap;
+}
+.term_at_menu_ul > .term_focus {
+  border-radius: unset;
+  box-shadow: unset;
+  background: linear-gradient(90deg, #40a9ff, transparent);
+}

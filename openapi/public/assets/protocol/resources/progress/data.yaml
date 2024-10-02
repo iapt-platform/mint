@@ -1,0 +1,58 @@
+properties:
+  title:
+    type: string
+  toc:
+    type: string
+  book:
+    type: string
+  para:
+    type: string
+  path:
+    type: string
+  tags:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+  channel:
+    type: object
+    properties:
+      name:
+        type: string
+      owner_uid:
+        type: string
+  studio:
+    type: object
+    properties:
+      id:
+        type: string
+      nickName:
+        type: string
+      studioName:
+        type: string
+      realName:
+        type: string
+      avatar:
+        type: string
+  channel_id:
+    type: string
+  summary:
+    type: string
+  view:
+    type: number
+  like:
+    type: number
+  status:
+    type: number
+  progress:
+    type: number
+  progress_line:
+    type: number
+  created_at:
+    type: string
+  updated_at:
+    type: string

@@ -1,0 +1,39 @@
+post:
+  summary: 新建一条discussion.
+  tags:
+    - discussion
+  description:
+  parameters:
+    - name: title
+      in: path
+      required: false
+      description: title of discussion 建立新问题时, title为必填项目
+      schema:
+        type: string
+    - name: content
+      in: path
+      required: false
+      description: content of discussion
+      schema:
+        type: string
+    - name: parent
+      in: path
+      required: false
+      description: 回答的问题的id. 建立问题时无需此参数。建立回答时需要。
+      schema:
+        type: uuid
+  responses:
+    "200": # status code
+      description: A JSON array of user names
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                $ref: "./data.yaml"

@@ -1,0 +1,6 @@
+- name: Test ssh connection
+  ping:
+
+- name: Show facts available on the system
+  ansible.builtin.debug:
+    var: ansible_facts

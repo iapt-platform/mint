@@ -1,0 +1,49 @@
+[requires]
+libxcrypt/4.4.28
+zlib/1.2.13
+libcurl/7.85.0
+openssl/1.1.1q
+boost/1.80.0
+cpp-httplib/0.11.2
+cpr/1.9.0
+nlohmann_json/3.11.2
+inja/3.3.0
+tomlplusplus/3.2.0
+yaml-cpp/0.7.0
+cppcodec/0.2
+libpq/14.5
+libpqxx/7.7.4
+# libmysqlclient/8.0.17
+mariadb-connector-c/3.1.12
+sqlite3/3.39.4
+sqlitecpp/3.2.0
+soci/4.0.3
+mongo-cxx-driver/3.6.7
+redis-plus-plus/1.3.3
+rabbitmq-c/0.11.0
+amqp-cpp/4.3.18
+zmqpp/4.2.0
+paho-mqtt-cpp/1.2.0
+libgit2/1.5.0
+libssh2/1.10.0
+# libpng/1.6.37
+serial/1.2.1
+# net-snmp/5.9.1
+# imgui/1.88
+flatbuffers/2.0.8
+protobuf/3.21.4
+grpc/1.50.0 
+
+[options]
+zeromq:encryption=None
+sqlite3:build_executable=False
+soci:with_sqlite3=True
+# soci:with_mysql=True
+soci:with_postgresql=True
+soci:with_boost=True
+boost:without_stacktrace=True
+boost:without_python=True
+
+[generators]
+cmake
+cmake_find_package

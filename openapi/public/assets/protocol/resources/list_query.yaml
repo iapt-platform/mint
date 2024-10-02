@@ -1,0 +1,28 @@
+- name: search
+  in: query
+  description: 搜索关键字
+  schema:
+    type: string
+- name: order
+  in: query
+  description: 排序字段
+  schema:
+    type: string
+- name: dir
+  in: query
+  description: 排序方向
+  schema:
+    type: string
+    enum:
+      - desc
+      - asc
+- name: limit
+  in: query
+  description: 每页记录数
+  schema:
+    type: number
+- name: offset
+  in: query
+  description: 从第几条记录开始提取
+  schema:
+    type: number

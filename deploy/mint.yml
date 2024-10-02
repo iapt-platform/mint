@@ -1,0 +1,85 @@
+- name: "local compile"
+  hosts: building
+  tasks:
+    - name: "install dashboard dependencies"
+      ansible.builtin.shell:
+        cmd: yarn install
+        chdir: "{{ playbook_dir }}/../dashboard"
+    - name: "build dashboard"
+      ansible.builtin.shell:
+        cmd: yarn build
+        chdir: "{{ playbook_dir }}/../dashboard"
+      environment:
+        NODE_OPTIONS: "--max_old_space_size=4096"
+        PUBLIC_URL: "{{ app_dashboard_base_path }}"
+        REACT_APP_DEFAULT_LOCALE: "zh-Hans"
+        REACT_APP_LANGUAGES: "en-US,zh-Hans,zh-Hant"
+        REACT_APP_ENABLE_LOCAL_TOKEN: "true"
+        REACT_APP_TOKEN_KEY: "token.20230919"
+        REACT_APP_DOCUMENTS_SERVER: "{{ app_documents_server }}"
+        REACT_APP_RPC_SERVER: "{{ app_grpc_web_server }}"
+        REACT_APP_ASSETS_SERVER: "{{ app_assets_server }}"
+        REACT_APP_API_SERVER: "https://{{ app_domain }}"
+        REACT_APP_ICP_CODE: "{{ app_icp_code }}"
+        REACT_APP_MPS_CODE: "{{ app_mps_code }}"
+        REACT_APP_QUESTIONNAIRE_LINK: "{{ app_questionnaire_link }}"
+
+- name: deploy php-fpm servers
+  hosts:
+    - php_fpm
+  roles:
+    # FIXME: conflict with php daemon
+    # - php
+    - mint-v2
+
+# - name: run db migrations
+#   hosts:
+#     - dbm
+#   tasks:
+#     - name: run laravel db -migrate
+#       become: true
+#       ansible.builtin.shell:
+#         cmd: su www-data -pc "php artisan migrate"
+#         chdir: "{{ app_deploy_root }}/htdocs"
+
+- name: setup tulip
+  hosts:
+    - tulip
+  tasks:
+    - name: setup tmp folder
+      become: true
+      ansible.builtin.file:
+        path: "{{ app_deploy_root }}/agile/rpc/tulip/tulip/tmp"
+        state: directory
+        owner: "www-data"
+        group: "www-data"
+    - name: upload pali.stop
+      become: true
+      ansible.builtin.copy:
+        dest: "/usr/share/postgresql/{{ app_postgresql_version }}/tsearch_data/"
+        src: "{{ playbook_dir }}/../rpc/tulip/tulip/dictionary/pali.stop"
+        owner: root
+        group: root
+        mode: "0644"
+    - name: upload pali.syn
+      become: true
+      ansible.builtin.copy:
+        dest: "/usr/share/postgresql/{{ app_postgresql_version }}/tsearch_data/"
+        src: "{{ playbook_dir }}/../rpc/tulip/tulip/dictionary/pali.syn"
+        owner: root
+        group: root
+        mode: "0644"
+    - name: restrat postgresql server
+      become: true
+      ansible.builtin.systemd:
+        state: restarted
+        name: postgresql
+    - name: run tulip db migrate
+      ansible.builtin.shell:
+        cmd: dbmate up
+        chdir: "{{ app_deploy_root }}/agile/rpc/tulip/tulip/db"
+    - name: restrat mint-{{ app_deploy_env }}-tulip service
+      become: true
+      ansible.builtin.systemd:
+        state: restarted
+        name: mint-{{ app_deploy_env }}-tulip.service

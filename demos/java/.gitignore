@@ -1,0 +1,6 @@
+/dependency-reduced-pom.xml
+/target/
+/.idea/
+
+/tmp/
+/*.yml

@@ -1,0 +1,12 @@
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 9999
+  },
+  "ssl": {
+    "ca-file": "tmp/ca.crt",
+    "key-file": "tmp/client.key",
+    "cert-file": "tmp/client.crt",
+    "authority": "www.change-me.org"
+  }
+}

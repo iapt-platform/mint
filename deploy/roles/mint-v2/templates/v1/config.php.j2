@@ -1,0 +1,67 @@
+<?php
+
+#域名设置
+define("GRPC_WEB_SERVER","{{ app_grpc_web_server}}");
+define("ASSETS_SERVER","{{ app_assets_server }}");
+define("DOCUMENTS_SERVER","{{ app_documents_server }}");
+define('APP_KEY','{{ app_secret_key }}');
+define('APP_ENV','{{ app_deploy_env }}');
+define('CORS_ALLOWED_ORIGINS', '{{ app_cors_allowed_origins }}');
+define('DASHBOARD_BASE_PATH', "{{ app_dashboard_base_path }}");
+
+/*
+电子邮件设置
+PHPMailer
+*/
+define("Email", [
+                                 "Host"=>"{{ app_smtp_host }}",//Set the SMTP server to send through
+                                 "SMTPAuth"=>true,//Enable SMTP authentication
+                                 "Username"=>'{{ app_smtp_user }}',//SMTP username
+                                 "Password"=>'{{ app_smtp_password }}',//SMTP password
+                                 "Port"=>{{ app_smtp_port }},//TCP port to connect to 465; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+                                 "From"=>"{{ app_smtp_user }}",
+                                 "Sender"=>"webmaster"
+                                 ]);
+
+/*
+数据库设置
+*/
+define("Database",[
+        "type"=>"pgsql",
+        "server"=>"{{ app_postgresql_host }}",
+        "port"=>{{ app_postgresql_port }},
+        "name"=>"{{ app_postgresql_dbname }}",
+        "sslmode" => "disable",
+        "user" => "{{ app_postgresql_user }}",
+        "password" => "{{ app_postgresql_password }}"
+]);
+
+
+/*
+Redis 设置，
+*/
+define("Redis",[        
+        "host" => "{{ app_redis_host }}",
+        "port" => {{ app_redis_port }},
+        "password" => "",
+        "prefix"=>"{{ app_deploy_env }}://www"
+]);
+
+
+# 雪花id
+define("SnowFlake",[
+        "DatacenterId"=>{{ app_snowflake_data_center_id }},
+        "WorkerId"=>{{ app_snowflake_worker_id }}
+]);
+
+#目录设置，不能更改
+require_once __DIR__."/config.dir.php";
+
+/*
+数据表
+*/
+#表设置，此行不能更改
+require_once __DIR__."/config.table.php";
+
+
+?>

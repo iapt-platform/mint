@@ -1,0 +1,18 @@
+target=x86_64-linux-gnu
+clang_version=15
+
+[settings]
+os=Linux
+arch=x86_64
+compiler=clang
+compiler.version=$clang_version
+compiler.libcxx=libstdc++11
+compiler.cppstd=20
+build_type=Release
+
+[env]
+CC=clang-$clang_version
+CXX=clang++-$clang_version
+CFLAGS="-target $target"
+CXXFLAGS="-target $target"
+LDFLAGS="--ld-path=mold"

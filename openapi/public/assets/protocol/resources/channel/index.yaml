@@ -1,0 +1,72 @@
+get:
+  summary: Returns a list of channels.
+  tags:
+    - channel
+  description: 返回多行数据。支持关键字搜索，分页，排序
+  parameters:
+    - name: view
+      in: query
+      required: true
+      description: 查询的内容
+      schema:
+        type: string
+        enum:
+          - public
+          - studio
+          - user
+    - name: updated_at
+      in: query
+      description: 返回在这个时间之后更新(含新建)的channel列表。app知道目前手机离线包里面的channel表的最新一条记录的更新时间。把这个时间传进去就行。例子 2023-09-18T05:39:51.000000Z
+      schema:
+        type: string
+        format: date-time
+    - name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+    - name: order
+      in: query
+      description: 排序字段
+      schema:
+        type: string
+    - name: dir
+      in: query
+      description: 排序方向
+      schema:
+        type: string
+        enum:
+          - desc
+          - asc
+    - name: limit
+      in: query
+      description: 每页记录数
+      schema:
+        type: number
+    - name: offset
+      in: query
+      description: 从第几条记录开始提取
+      schema:
+        type: number
+  responses:
+    "200": # status code
+      description: A JSON array of user names
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      $ref: "./channel.yaml"
+                  count:
+                    type: number

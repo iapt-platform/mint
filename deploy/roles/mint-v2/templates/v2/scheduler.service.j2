@@ -1,0 +1,9 @@
+[Unit]
+Description=Mint scheduler for {{ app_deploy_env }}
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/php artisan schedule:run
+WorkingDirectory={{ app_deploy_root }}/htdocs
+User=www-data
+Group=www-data

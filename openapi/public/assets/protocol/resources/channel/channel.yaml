@@ -1,0 +1,9 @@
+properties:
+  uid:
+    type: string
+  name:
+    type: string
+  summary:
+    type: string
+  owner_uid:
+    type: string

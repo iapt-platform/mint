@@ -1,0 +1,8 @@
+- import_tasks: init.yml
+- import_tasks: laravel.yml
+- import_tasks: dashboard.yml
+
+- name: Force systemd to reread configs
+  become: true
+  systemd:
+    daemon_reload: yes

@@ -1,0 +1,84 @@
+get:
+  summary: 返回已有译文的章节信息
+  tags:
+    - progress
+  description: 返回多行数据。支持关键字搜索，分页，排序
+  parameters:
+    - name: view
+      in: query
+      required: true
+      description: 查询什么内容
+      schema:
+        type: string
+        enum:
+          - chapter
+    - name: tags
+      in: query
+      required: false
+      description: 标签过滤。空为全部标签。
+      schema:
+        type: string
+    - name: studio
+      in: query
+      required: false
+      description: studio选择。默认选择全部studio
+      schema:
+        type: string
+    - name: progress
+      in: query
+      required: false
+      description: 完成度过滤，默认值0.8
+      schema:
+        type: number
+        minimum: 0
+        maximum: 1
+    - name: lang
+      in: query
+      required: true
+      description: 语言过滤 如zh
+      schema:
+        type: string
+    - name: channel
+      in: query
+      required: false
+      description: channel名称过滤
+      schema:
+        type: string
+    - name: channel_type
+      in: query
+      required: false
+      description: channel类型过滤 默认值 translation
+      schema:
+        type: string
+        enum:
+          - translation
+          - nissaya
+          - original
+          - commentary
+    - name: limit
+      in: query
+      description: 每次提取记录数,默认20
+      schema:
+        type: number
+        minimum: 1
+        maximum: 1000
+    - name: offset
+      in: query
+      description: 从第几条记录开始提取，默认值0
+      schema:
+        type: number
+  responses:
+    "200": # status code
+      description: A JSON array of user names
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                $ref: "./data.yaml"
