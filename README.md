@@ -12,6 +12,8 @@ $ git clone https://github.com/iapt-platform/mint.git ~/workspace/iapt-platform/
 $ cd ~/workspace/iapt-platform/mint/
 # Load the mint-spring image
 $ podman load -i tmp/mint-spring-TIMESTAMP.tar.xz
+# Start postgresql/redis/rabbitmq... services
+$ ./docker/spring/start.sh services
 # Start a backend server
 $ ./docker/spring/start.sh backend 8080 # http://localhost:8080
 # Start a frontend server
