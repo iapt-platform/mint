@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export CODE="mint-frontend"
+export CODE="mint-spring"
 export NAME="$CODE-$USER"
 
 if podman container exists $NAME; then
