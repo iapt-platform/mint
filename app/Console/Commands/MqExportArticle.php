@@ -48,6 +48,8 @@ class MqExportArticle extends Command
                         'id'=>$message->id,
                         '--format'=>$message->format,
                         'query_id'=>$message->queryId,
+                        '--origin'=>$message->origin,
+                        '--translation'=>$message->translation,
                     ];
             if(isset($message->token) && is_string($message->token)){
                 $data['--token'] = $message->token;

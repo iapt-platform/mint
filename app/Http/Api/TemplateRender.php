@@ -366,7 +366,8 @@ class TemplateRender{
             case 'markdown':
                 if(isset($props["meaning"])){
                     $key = 'term-'.$props["word"];
-                    if(isset($GLOBALS[$key])){
+                    if(isset($GLOBALS[$key]) && $GLOBALS[$key]===1){
+                        $GLOBALS[$key]++;
                         $output = $props["meaning"];
                     }else{
                         $GLOBALS[$key] = 1;
@@ -375,8 +376,8 @@ class TemplateRender{
                 }else{
                     $output = $props["word"];
                 }
-                //如果有内容，显示为脚注
-                if(!empty($props["note"])){
+                //如果有内容且第一次出现，显示为脚注
+                if(!empty($props["note"]) && $GLOBALS[$key]===1){
                     if(isset($GLOBALS['note_sn'])){
                         $GLOBALS['note_sn']++;
                     }else{

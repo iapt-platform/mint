@@ -201,6 +201,7 @@ class ArticleResource extends JsonResource
                 'format'=> $format,
                 'footnote' => true,
                 'origin' => $request->get('origin',true),
+                'paragraph' => $request->get('paragraph',false),
             ]);
             //Log::debug('article render',['content'=>$this->content,'format'=>$format,'html'=>$html]);
             $data["html"] = $htmlRender->convert($this->content,$channels);
