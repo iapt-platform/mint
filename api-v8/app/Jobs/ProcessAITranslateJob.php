@@ -14,7 +14,7 @@ class ProcessAITranslateJob extends BaseRabbitMQJob
         try {
             // Laravel会自动注入
             $this->aiService = app(AiTranslateService::class);
-            return $this->aiService->processTranslate($this->messageId, $messageData, $this);
+            return $this->aiService->processTranslate($this->messageId, $messageData);
         } catch (\Exception $e) {
             // 记录失败指标
 
@@ -33,4 +33,11 @@ class ProcessAITranslateJob extends BaseRabbitMQJob
         // 消息处理最终失败，准备发送到死信队列
         $this->aiService->handleFailedTranslate($this->messageId, $messageData, $exception);
     }
+    public function stop()
+    {
+        parent::stop();
+        $this->aiService->stop();
+    }
+
+    public static function publish(AiTranslateService $ai) {}
 }

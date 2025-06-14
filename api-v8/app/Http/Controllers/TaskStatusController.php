@@ -190,8 +190,8 @@ class TaskStatusController extends Controller
             if ($aiAssistant) {
                 try {
                     $ai = app(AiTranslateService::class);
-                    $params = $ai->makeByTask($taskId, $aiAssistant->uid);
-                    Log::debug('ai task', ['message' => count($params)]);
+                    $params = $ai->makeByTask($taskId, $aiAssistant->uid, true);
+                    //\App\Jobs\AiTranslate::dispatch(['message_id' => Str::uuid(), 'payload' => $params]);
                     $aiTask = Task::find($taskId);
                     $aiTask->executor_id = $aiAssistant->uid;
                     $aiTask->status = 'queue';

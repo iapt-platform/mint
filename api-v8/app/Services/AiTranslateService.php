@@ -18,7 +18,7 @@ use App\Http\Api\ChannelApi;
 use App\Http\Controllers\AuthController;
 
 use App\Http\Api\MdRender;
-use App\Jobs\ProcessAITranslateJob;
+use App\Exceptions\SectionTimeoutException;
 
 class DatabaseException extends \Exception {}
 
@@ -28,20 +28,22 @@ class AiTranslateService
     private $modelToken = null;
     private $task = null;
     protected $mq;
-    private $apiTimeout = 100;
+    private $apiTimeout = 30;
     private $llmTimeout = 300;
     private $taskTopicId;
-    public function __construct()
-    {
-        $this->mq = app(RabbitMQService::class);
-    }
+    private $stop = false;
+    private $maxProcessTime = 15 * 60; //一个句子的最大处理时间
+    private $mqTimeout = 60;
+
+    public function __construct() {}
 
     /**
      * @param string $messageId
      * @param array $translateData
      */
-    public function processTranslate(string $messageId, array $messages, ProcessAITranslateJob $job): bool
+    public function processTranslate(string $messageId, array $messages): bool
     {
+        $start = time();
 
         if (!is_array($messages) || count($messages) === 0) {
             Log::error('message is not array');
@@ -76,12 +78,14 @@ class AiTranslateService
             null
         );
 
+        $time = [$this->maxProcessTime];
         for ($i = $pointer; $i < count($messages); $i++) {
             // 获取当前内存使用量
             Log::debug("memory usage: " . memory_get_usage(true) / 1024 / 1024 . " MB");
             // 获取峰值内存使用量
             Log::debug("memory peak usage: " . memory_get_peak_usage(true) / 1024 / 1024 . " MB");
-            if ($job->isStop()) {
+
+            if ($this->stop) {
                 Log::info("收到退出信号 pointer={$i}");
                 return false;
             }
@@ -89,7 +93,7 @@ class AiTranslateService
                 //检测到停止标记
                 return false;
             }
-            //$this->mq->publishMessage('heartbeat_queue', ['delivery_mode' => 2]);
+
             RedisClusters::put($pointerKey, $i);
             $message = $messages[$i];
             $taskDiscussionContent = [];
@@ -180,13 +184,22 @@ class AiTranslateService
             } else {
                 Log::error('no task discussion root');
             }
+
+            //计算剩余时间是否足够再做一次
+            $time[] = time() - $start;
+            rsort($time);
+            $remain = $this->mqTimeout - (time() - $start);
+            if ($remain < $time[0]) {
+                throw new SectionTimeoutException;
+            }
         }
         //任务完成 修改任务状态为 done
         if ($i === count($messages)) {
             $this->setTaskStatus($this->task->id, 'done');
+            RedisClusters::forget($pointerKey);
+            Log::info('ai translate task complete');
         }
-        RedisClusters::forget($pointerKey);
-        Log::info('ai translate task complete');
+
         return true;
     }
     private function setTaskStatus($taskId, $status)
@@ -261,7 +274,7 @@ class AiTranslateService
             "temperature" => 0.7,
             "stream" => false
         ];
-        Log::info($this->queue . ' LLM request' . $message->model->url . ' model:' . $param['model']);
+        Log::info($this->queue . ' LLM request ' . $message->model->url . ' model:' . $param['model']);
         Log::debug($this->queue . ' LLM api request', [
             'url' => $message->model->url,
             'data' => json_encode($param),
@@ -625,8 +638,13 @@ class AiTranslateService
             array_push($mqData, $aiMqData);
         }
         if ($send) {
-            $this->mq->publishMessage('ai_translate', $mqData);
+            $mq = app(RabbitMQService::class);
+            $mq->publishMessage('ai_translate', $mqData);
         }
         return $mqData;
+    }
+    public function stop()
+    {
+        $this->stop = true;
     }
 }

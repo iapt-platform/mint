@@ -111,8 +111,4 @@ abstract class BaseRabbitMQJob implements ShouldQueue
     {
         $this->stop = true;
     }
-    public function isStop()
-    {
-        return $this->stop;
-    }
 }
