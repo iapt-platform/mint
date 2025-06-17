@@ -483,7 +483,7 @@ class AiTranslateService
      * @param  string  $taskId 任务uuid
      * @return array 拆解后的提示词数组
      */
-    public function makeByTask(string $taskId, $aiAssistantId, bool $send = true)
+    public static function makeByTask(string $taskId, $aiAssistantId)
     {
         $task = Task::findOrFail($taskId);
         $description = $task->description;
@@ -637,11 +637,12 @@ class AiTranslateService
             ];
             array_push($mqData, $aiMqData);
         }
-        if ($send) {
-            $mq = app(RabbitMQService::class);
-            $mq->publishMessage('ai_translate', $mqData);
-        }
-        return $mqData;
+        $output = [
+            'model' => $aiModel->toArray(),
+            'task' => $task,
+        ];
+        $output['payload'] = $mqData;
+        return $output;
     }
     public function stop()
     {

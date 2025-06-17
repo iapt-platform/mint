@@ -126,7 +126,14 @@ return [
     ],
     'rabbitmq' => [
         'queues' => [
-            'ai_translate' => [
+            'ai_translate_cn' => [
+                'retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3),
+                'max_loop_count' => env('RABBITMQ_AI_MAX_LOOP', 10),
+                'timeout' => env('RABBITMQ_AI_TIMEOUT', 300),
+                'dead_letter_queue' => 'ai_translate_dlq',
+                'dead_letter_exchange' => 'ai_translate_dlx',
+            ],
+            'ai_translate_us' => [
                 'retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3),
                 'max_loop_count' => env('RABBITMQ_AI_MAX_LOOP', 10),
                 'timeout' => env('RABBITMQ_AI_TIMEOUT', 300),
