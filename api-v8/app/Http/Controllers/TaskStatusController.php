@@ -188,20 +188,22 @@ class TaskStatusController extends Controller
                 ->select('assignee_id')->get();
             $aiAssistant = AiModel::whereIn('uid', $taskAssignee)->first();
             if ($aiAssistant) {
+                $aiTask = Task::find($taskId);
                 try {
-                    $ai = app(AiTranslateService::class);
-                    $params = $ai->makeByTask($taskId, $aiAssistant->uid, true);
-                    //\App\Jobs\AiTranslate::dispatch(['message_id' => Str::uuid(), 'payload' => $params]);
-                    $aiTask = Task::find($taskId);
+                    //$ai = app(AiTranslateService::class);
+                    //$params = $ai->makeByTask($taskId, $aiAssistant->uid, true);
+                    \App\Jobs\ProcessAITranslateJob::publish($taskId, $aiAssistant->uid);
                     $aiTask->executor_id = $aiAssistant->uid;
                     $aiTask->status = 'queue';
-                    $aiTask->save();
                     $this->pushChange('queue', $taskId);
                 } catch (\Exception $e) {
+                    $aiTask->status = 'pending';
                     Log::error('ai assistant start fail', [
                         'task' => $taskId,
                         'error' => $e->getMessage()
                     ]);
+                } finally {
+                    $aiTask->save();
                 }
             }
         }
