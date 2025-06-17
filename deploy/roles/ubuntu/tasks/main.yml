@@ -6,7 +6,7 @@
 
 - name: Install dependicy packages
   become: true
-  apt:
+  ansible.builtin.apt:
     pkg:
       - apt-transport-https
       - software-properties-common
