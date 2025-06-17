@@ -3,11 +3,13 @@
 namespace App\Jobs;
 
 use App\Services\AiTranslateService;
+use App\Services\RabbitMQService;
 use Illuminate\Support\Facades\Log;
 
 class ProcessAITranslateJob extends BaseRabbitMQJob
 {
     private $aiService;
+
     protected function processMessage(array $messageData)
     {
         $startTime = microtime(true);
@@ -39,5 +41,18 @@ class ProcessAITranslateJob extends BaseRabbitMQJob
         $this->aiService->stop();
     }
 
-    public static function publish(AiTranslateService $ai) {}
+    public static function publish(string $taskId, $aiAssistantId)
+    {
+        $us = ['openai.com', 'googleapis.com', 'x.ai', 'anthropic.com'];
+        $data = AiTranslateService::makeByTask($taskId, $aiAssistantId);
+        $mq = app(RabbitMQService::class);
+        $queue = 'ai_translate_cn';
+        $found = array_filter($us, function ($value) use ($data) {
+            return str_contains($data['model']['url'], $value);
+        });
+        if (count($found) > 0) {
+            $queue = 'ai_translate_us';
+        }
+        $mq->publishMessage($queue, $data);
+    }
 }
