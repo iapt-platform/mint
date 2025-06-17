@@ -9,7 +9,7 @@ $ source $HOME/tmp/python3/bin/activate
 > python3 -m pip install -e .
 
 > python3 -m ai_translate -h
-> python3 -m ai_translate -d -c config.toml -n worker-us-1 -q ai.translate.us
+> python3 -m ai_translate -d -c config.toml -n worker-us-1 -q ai_translate_cn
 
 # exit the virtual env
 > deactivate
