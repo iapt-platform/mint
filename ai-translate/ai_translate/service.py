@@ -8,7 +8,7 @@ import time
 
 import requests
 
-from . import is_stopped
+from .utils import is_stopped
 
 logger = logging.getLogger(__name__)
 
