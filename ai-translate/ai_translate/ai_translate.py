@@ -1,18 +1,15 @@
 import json
 import time
 import logging
-import requests
 from typing import List, Dict, Any, Optional
 from datetime import datetime
-from requests.exceptions import RequestException
 from dataclasses import dataclass
-import pdb
 import time
+
+import requests
 
 from . import is_stopped
 
-# 配置日志
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
