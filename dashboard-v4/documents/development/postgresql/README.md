@@ -9,14 +9,11 @@
 - 导出数据库
 
   ```bash
-  pg_dump -O -s -h 127.0.0.1 -p 5432 -U www demo > demo-schema-20221009.sql
-  pg_dump -Fc -O -a -h 127.0.0.1 -p 5432 -U www demo | gzip -9 > demo-data-20221009.dump.gz
+  pg_dump -Fc -O -a -Z 9 --dbname postgresql://USER:PASSWORD@HOST:PORT/DB_NAME -T migrations -f DB_NAME-data-$(date +"%Y%m%d%H%M%S").dump.gz
   ```
 
 - 导入数据库
 
   ```bash
-  psql -h 127.0.0.1 -p 5432 -U www demo < demo-schema-20221009.sql
-  gunzip demo-20221009.dump.gz
-  pg_restore -Fc -h 127.0.0.1 -p 5432 -U www -d demo < demo-20221009.dump
+  pg_restore -h HOST -p PORT -U USER -d DB_NAME -1 FILE
   ```
