@@ -1,7 +1,6 @@
-import json
 import dataclasses
-from dataclasses import dataclass, fields, is_dataclass
-from typing import Type, get_type_hints, get_origin, get_args, Union, List, Dict, Any, Optional
+from dataclasses import fields, is_dataclass
+from typing import Type, get_type_hints, get_origin, get_args, Union, List, Dict, Any
 from types import SimpleNamespace
 # 方法1: 使用递归反射的通用解码器
 
@@ -34,7 +33,6 @@ def decode_dataclass(cls, data):
         field_value = data[field_name]
         field_values[field_name] = _decode_field_value(field_type, field_value)
     output = cls(**field_values)
-    breakpoint()
     return output
 
 
