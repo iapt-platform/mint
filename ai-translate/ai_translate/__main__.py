@@ -3,7 +3,7 @@ import argparse
 import sys
 import os
 
-from . import launch
+from . import launch, is_stopped
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ def main():
     else:
         logging.basicConfig(
             level=logging.DEBUG if args.debug else logging.INFO, format='%(levelname)-5s %(asctime)s(%(module)s): %(message)s')
-
+    is_stopped()
     try:
         launch(args.name, args.queue, args.config)
     except KeyboardInterrupt:
