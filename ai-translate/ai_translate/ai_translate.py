@@ -9,6 +9,8 @@ from dataclasses import dataclass
 import pdb
 import time
 
+from . import is_stopped
+
 # 配置日志
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -111,7 +113,7 @@ class AiTranslateService:
 
     def process_translate(self, message_id: str, body: Message) -> bool:
         """处理翻译任务"""
-
+        is_stopped()
         taskStartAt = int(time.time())
 
         self.task = body.task
@@ -150,11 +152,9 @@ class AiTranslateService:
         times = [self.maxProcessTime]
         # breakpoint()
         for i in range(pointer, len(body.payload)):
-            startAt = int(time.time())
+            is_stopped()
 
-            # 检测停止标记的工具函数需要实现
-            # if Tools.is_stop():
-            #     return False
+            startAt = int(time.time())
 
             message = body.payload[i]
             task_discussion_content = []
