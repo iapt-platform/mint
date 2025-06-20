@@ -4,21 +4,18 @@
 
 ## Usage
 
-## Development
+### Prepare source codes
 
 ```bash
-$ sudo apt install -y git screen crun podman buildah fuse-overlayfs 
-# Load the mint-spring image
-$ podman load -i tmp/mint-spring-TIMESTAMP.tar.xz
+$ sudo apt install -y git
 $ git clone https://github.com/iapt-platform/mint.git ~/workspace/iapt-platform/mint
 $ cd ~/workspace/iapt-platform/mint/
-# Start postgresql/redis/rabbitmq... services
-$ ./docker/spring/start.sh services
-# Start a backend server
-$ ./docker/spring/start.sh backend 8080 # http://localhost:8080
-# Start a frontend server
-$ ./docker/spring/start.sh frontend 3000 # http://localhost:3000
+# Update third dependencies
+$ git submodule update --init --recursive
 ```
+
+- [Setup container toolchains](./docker/)
+- [Start development environment](./docker/spring/)
 
 ## Documents
 
