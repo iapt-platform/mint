@@ -54,7 +54,16 @@
 
 - name: Change the default Docker storage location
   become: true
-  ansible.builtin.file:
+  ansible.builtin.copy:
     src: daemon.json
     dest: /etc/docker/daemon.json
+    mode: "0644"
+
+# https://kubernetes.io/docs/setup/production-environment/container-runtimes/#prerequisite-ipv4-forwarding-optional
+- name: Enable IPv4 packet forwarding
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.d/101-k8s.conf
+    line: "net.ipv4.ip_forward = 1"
+    create: true
     mode: "0644"
