@@ -1,8 +1,8 @@
 import logging
 
-from .ai_translate import AiTranslateService, SectionTimeout, Message
+from .service import AiTranslateService, SectionTimeout, Message
 from .decode_dataclass import ns_to_dataclass
-from . import is_stopped
+from .utils import is_stopped
 
 logger = logging.getLogger(__name__)
 

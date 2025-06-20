@@ -1,0 +1,6 @@
+[submodule "api-v8/storage/resources"]
+	path = api-v8/storage/resources
+	url = https://github.com/iapt-platform/clove.git
+[submodule "api-v12/storage/resources"]
+	path = api-v12/storage/resources
+	url = https://github.com/iapt-platform/clove.git

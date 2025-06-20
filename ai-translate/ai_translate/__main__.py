@@ -3,7 +3,8 @@ import argparse
 import sys
 import os
 
-from . import launch, is_stopped
+from . import launch
+from .utils import is_stopped
 
 logger = logging.getLogger(__name__)
 

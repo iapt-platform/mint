@@ -1,8 +1,6 @@
 import logging
 import tomllib
 import json
-import os
-import sys
 
 import pika
 from redis.cluster import RedisCluster
@@ -10,14 +8,8 @@ from types import SimpleNamespace
 
 from .worker import handle_message
 
+
 logger = logging.getLogger(__name__)
-
-
-def is_stopped():
-    f = ".stop"
-    logger.warning("file %s exists, will be exit", f)
-    if os.path.exists(f):
-        sys.exit(0)
 
 
 def open_redis_cluster(config):
