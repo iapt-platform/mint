@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 import { useIntl } from "react-intl";
-import { Button, Popover, Modal, message, Tag, Space } from "antd";
+import { Button, Popover, Tag, Space } from "antd";
 import { ActionType, ProList } from "@ant-design/pro-components";
-import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 
-import { delete_, get } from "../../request";
+import { get } from "../../request";
 
-import { IDeleteResponse } from "../../components/api/Article";
 import { useRef, useState } from "react";
 
 import { getSorterUrl } from "../../utils";
@@ -24,41 +23,6 @@ const AiModelList = ({ studioName }: IWidget) => {
   const intl = useIntl(); //i18n
 
   const [openCreate, setOpenCreate] = useState(false);
-
-  const showDeleteConfirm = (id: string, title: string) => {
-    Modal.confirm({
-      icon: <ExclamationCircleOutlined />,
-      title:
-        intl.formatMessage({
-          id: "message.delete.confirm",
-        }) +
-        intl.formatMessage({
-          id: "message.irrevocable",
-        }),
-
-      content: title,
-      okText: intl.formatMessage({
-        id: "buttons.delete",
-      }),
-      okType: "danger",
-      cancelText: intl.formatMessage({
-        id: "buttons.no",
-      }),
-      onOk() {
-        console.log("delete", id);
-        return delete_<IDeleteResponse>(`/v2/group/${id}`)
-          .then((json) => {
-            if (json.ok) {
-              message.success("删除成功");
-              ref.current?.reload();
-            } else {
-              message.error(json.message);
-            }
-          })
-          .catch((e) => console.log("Oops errors!", e));
-      },
-    });
-  };
 
   const ref = useRef<ActionType>();
 

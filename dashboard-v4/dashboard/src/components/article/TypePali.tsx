@@ -25,8 +25,6 @@ import { TaskBuilderChapterModal } from "../task/TaskBuilderChapter";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 import { ArticleTplModal } from "../template/Builder/ArticleTpl";
-import { IPayload, ITokenCreate, ITokenCreateResponse } from "../api/token";
-import TokenModal from "./TokenModal";
 
 interface IWidget {
   type?: ArticleType;
@@ -76,6 +74,7 @@ const TypePaliWidget = ({
 
   const srcDataMode = mode === "edit" || mode === "wbw" ? "edit" : "read";
 
+  console.debug("articleId", articleId);
   useEffect(() => {
     const parts = focus?.split("-");
     if (parts?.length === 2) {
@@ -222,20 +221,21 @@ const TypePaliWidget = ({
       title = id ? (id.length > 1 ? id[1] : "unknown") : "unknown";
     }
   }
-  let mBook = "",
-    mPara = "";
+
+  let mBook = "0",
+    mPara = "0";
+  if (typeof articleId === "string") {
+    [mBook, mPara] = articleId.split("-");
+  }
   let fullPath: ITocPathNode[] = [];
   if (articleData && articleData.path && articleData.path.length > 0) {
-    if (typeof articleId === "string") {
-      [mBook, mPara] = articleId.split("-");
-      const currNode: ITocPathNode = {
-        book: parseInt(mBook),
-        paragraph: parseInt(mPara),
-        title: title ?? "",
-        level: articleData.path[articleData.path.length - 1].level + 1,
-      };
-      fullPath = [...articleData.path, currNode];
-    }
+    const currNode: ITocPathNode = {
+      book: parseInt(mBook),
+      paragraph: parseInt(mPara),
+      title: title ?? "",
+      level: articleData.path[articleData.path.length - 1].level + 1,
+    };
+    fullPath = [...articleData.path, currNode];
   }
 
   return (
