@@ -3,6 +3,11 @@ import { useAppSelector } from "../../../hooks";
 import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
 import Lookup from "../../dict/Lookup";
 import { NissayaCardPop } from "../../general/NissayaCard";
+import {
+  convertMyanmarPaliToRoman,
+  convertMyanmarPaliArrayToRoman,
+} from "../../../myanmar-pali-converter";
+import { Tooltip } from "antd";
 
 export interface IMeaning {
   base: string;
@@ -60,12 +65,18 @@ const NissayaMeaningWidget = ({ text, code = "my" }: IWidget) => {
   if (typeof text === "undefined") {
     return <></>;
   }
+
   return (
     <span>
       {words?.map((item, id) => {
+        const result = convertMyanmarPaliToRoman(item.base);
         return (
           <span key={id}>
-            <Lookup search={item.base}>{item.base}</Lookup>
+            <Lookup search={item.base}>
+              <Tooltip title={result} mouseEnterDelay={2}>
+                {item.base}
+              </Tooltip>
+            </Lookup>
             {item.ending?.map((item, id) => {
               return <NissayaCardPop text={item} key={id} trigger={item} />;
             })}{" "}
