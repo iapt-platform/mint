@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
+import { Tag, Tooltip, Typography } from "antd";
 import { useAppSelector } from "../../../hooks";
+
 import { getEnding } from "../../../reducers/nissaya-ending-vocabulary";
 import Lookup from "../../dict/Lookup";
 import { NissayaCardPop } from "../../general/NissayaCard";
-import {
-  convertMyanmarPaliToRoman,
-  convertMyanmarPaliArrayToRoman,
-} from "../../../myanmar-pali-converter";
-import { Tooltip } from "antd";
+import { convertMyanmarPaliToRoman } from "../../../myanmar-pali-converter";
+
+const { Text } = Typography;
 
 export interface IMeaning {
   base: string;
@@ -51,12 +51,16 @@ const NissayaMeaningWidget = ({ text, code = "my" }: IWidget) => {
   const [words, setWords] = useState<IMeaning[]>();
   const endings = useAppSelector(getEnding);
 
+  const match = text?.match(/#(\d+)%/);
+  const cf = match ? parseInt(match[1]) : null;
+
   useEffect(() => {
     if (typeof text === "undefined" || typeof endings === "undefined") {
       return;
     }
 
-    const mWords: IMeaning[] = text.split(" ").map((item) => {
+    const _text = text.replace(/#\d+%/, "");
+    const mWords: IMeaning[] = _text.split(" ").map((item) => {
       return nissayaBase(item, endings);
     });
     setWords(mWords);
@@ -67,23 +71,26 @@ const NissayaMeaningWidget = ({ text, code = "my" }: IWidget) => {
   }
 
   return (
-    <span>
-      {words?.map((item, id) => {
-        const result = convertMyanmarPaliToRoman(item.base);
-        return (
-          <span key={id}>
-            <Lookup search={item.base}>
-              <Tooltip title={result} mouseEnterDelay={2}>
-                {item.base}
-              </Tooltip>
-            </Lookup>
-            {item.ending?.map((item, id) => {
-              return <NissayaCardPop text={item} key={id} trigger={item} />;
-            })}{" "}
-          </span>
-        );
-      })}
-    </span>
+    <Text>
+      <>
+        {words?.map((item, id) => {
+          const result = convertMyanmarPaliToRoman(item.base);
+          return (
+            <span key={id}>
+              <Lookup search={item.base}>
+                <Tooltip title={result} mouseEnterDelay={2}>
+                  {item.base}
+                </Tooltip>
+              </Lookup>
+              {item.ending?.map((item, id) => {
+                return <NissayaCardPop text={item} key={id} trigger={item} />;
+              })}{" "}
+            </span>
+          );
+        })}
+      </>
+      <>{cf !== null && cf < 90 ? <Tag color="red">{cf}</Tag> : undefined}</>
+    </Text>
   );
 };
 
