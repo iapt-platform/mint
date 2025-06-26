@@ -54,5 +54,6 @@ class ProcessAITranslateJob extends BaseRabbitMQJob
             $queue = 'ai_translate_us';
         }
         $mq->publishMessage($queue, $data);
+        return count($data['payload']);
     }
 }
