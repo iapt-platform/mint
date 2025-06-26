@@ -10,3 +10,6 @@ customer-timeout = 600
 namespace = 'testing://'
 host = '127.0.0.1'
 port = 6371
+
+[app]
+api-url = 'http://127.0.0.1:8000/api'
