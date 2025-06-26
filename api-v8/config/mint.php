@@ -78,15 +78,15 @@ return [
     */
     'path' => [
         'dependence' => storage_path('depandence'),
-        'palitext' => public_path('palihtml'),
-        'palitext_filelist' => public_path('palihtml') . '/filelist.csv',
-        'palicsv' => public_path('tmp') . '/palicsv',
-        'pali_title' => public_path('pali_title'),
-        'paliword' => public_path('paliword'),
-        'paliword_book' => public_path('paliword') . "/book",
-        'paliword_index' => public_path('paliword') . "/index",
-        'word_statistics' => public_path('dependence') . "/word_statistics/data",
-        'dict_text' => public_path('dicttext'),
+        'palitext' => storage_path('resources/pali_html'),
+        'palitext_filelist' => storage_path('resources/pali_html/filelist.csv'),
+        'palicsv' => storage_path('app/tmp/pali_csv'),
+        'pali_title' => storage_path('resources/pali_title'),
+        'paliword' => storage_path('resources/pali_word'),
+        'paliword_book' => storage_path('resources/pali_word/book'),
+        'paliword_index' => storage_path('resources/pali_word/index'),
+        'word_statistics' => storage_path('resources/word_statistics/data'),
+        'dict_text' => storage_path('resources/dict_text'),
     ],
 
     'admin' => [
