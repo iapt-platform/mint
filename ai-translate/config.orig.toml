@@ -4,6 +4,7 @@ port = 5672
 user = 'www'
 password = 'change-me'
 virtual-host = 'testing'
+customer-timeout = 600
 
 [redis]
 namespace = 'testing://'
