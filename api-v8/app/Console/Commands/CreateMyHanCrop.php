@@ -86,7 +86,7 @@ class CreateMyHanCrop extends Command
             foreach ($words as $key => $value) {
                 $wordWithIndex[] = [
                     'index' => $key + 1,
-                    'word' => $value,
+                    'word' => trim($value),
                 ];
             }
             $data = [

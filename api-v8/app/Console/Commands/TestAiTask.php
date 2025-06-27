@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Api\AiTaskPrepare;
-use App\Services\AiTranslateService;
+use App\Models\TaskAssignee;
+use App\Models\AiModel;
 
 class TestAiTask extends Command
 {
@@ -41,11 +41,15 @@ class TestAiTask extends Command
     public function handle()
     {
         $taskId = $this->argument('id');
-        $ai = app(AiTranslateService::class);
-        $params = $ai->makeByTask($taskId, !$this->option('test'));
-        var_dump($params);
-        var_dump($this->option('test'));
-        $this->info('total:' . count($params));
+        $taskAssignee = TaskAssignee::where('task_id', $taskId)
+            ->select('assignee_id')->get();
+        $aiAssistant = AiModel::whereIn('uid', $taskAssignee)->first();
+        if ($aiAssistant) {
+            $count = \App\Jobs\ProcessAITranslateJob::publish($taskId, $aiAssistant->uid);
+            $this->info('publish total:' . $count);
+        } else {
+            $this->error('no ai assistant');
+        }
         return 0;
     }
 }
