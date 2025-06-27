@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ai_translate"
-version = "2025.6.11"
+version = "2025.6.27"
 requires-python = ">= 3.13"
 description = "An OpenAI consumer process"
 readme = "README.md"
