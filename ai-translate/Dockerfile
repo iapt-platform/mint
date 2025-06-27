@@ -38,7 +38,7 @@ RUN bash -c "source $HOME/python3/bin/activate && python3 -m pip install -e /opt
 
 RUN echo "$(date -u +%4Y%m%d%H%M%S)" | sudo tee /VERSION
 
-# VOLUME /srv
-# WORKDIR /srv
+VOLUME /srv
+WORKDIR /srv
 
 CMD ["/bin/bash", "-l"]
