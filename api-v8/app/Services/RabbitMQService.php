@@ -99,6 +99,16 @@ class RabbitMQService
         }
         $arguments = new AMQPTable($workerArgs);
 
+        $this->channel->queue_declare(
+            $queueName,
+            false,  // passive
+            true,   // durable
+            false,  // exclusive
+            false,  // auto_delete
+            false,  // nowait
+            $arguments
+        );
+        /*
         // 检查队列是否存在
         try {
             $this->channel->queue_declare(
@@ -129,6 +139,7 @@ class RabbitMQService
                 throw $e;
             }
         }
+            */
     }
 
     public function publishMessage(string $queueName, array $data): bool
