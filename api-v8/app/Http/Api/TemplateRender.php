@@ -535,7 +535,7 @@ class TemplateRender
         $innerString = "";
         $props = [
             "pali" => $pali,
-            "meaning" => $meaning,
+            "meaning" => explode('=', $meaning),
             "lang" => $this->lang,
         ];
         switch ($this->format) {
