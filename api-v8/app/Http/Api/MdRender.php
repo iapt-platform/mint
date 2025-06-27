@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use App\Models\Channel;
 use Illuminate\Support\Facades\Log;
 use App\Tools\Markdown;
+//use App\Services\TemplateRender;
 
 define("STACK_DEEP", 8);
 
@@ -297,6 +298,7 @@ class MdRender
             foreach ($channelId as $key => $id) {
                 $channelInfo[] = Channel::where('uid', $id)->first();
             }
+
             $tplRender = new TemplateRender(
                 $props,
                 $channelInfo,
@@ -308,6 +310,13 @@ class MdRender
             );
             $tplRender->options($this->options);
             $tplProps = $tplRender->render($tpl_name);
+
+            /*
+            $tplProps = TemplateRender::name($tpl_name)
+                ->options($this->options)
+                ->param($props)
+                ->render();
+                */
             if ($this->options['format'] === 'react' && $tplProps) {
                 $props = $doc->createAttribute("props");
                 $props->nodeValue = $tplProps['props'];
@@ -333,35 +342,11 @@ class MdRender
                     return '';
                 }
                 break;
-            case 'html':
-                if (isset($tplProps)) {
-                    if (is_array($tplProps)) {
-                        return '';
-                    } else {
-                        return $tplProps;
-                    }
-                } else {
-                    Log::error('tplProps undefine');
-                    return '';
-                }
-                break;
-            case 'tex':
-                if (isset($tplProps)) {
-                    if (is_array($tplProps)) {
-                        return '';
-                    } else {
-                        return $tplProps;
-                    }
-                } else {
-                    Log::error('tplProps undefine');
-                    return '';
-                }
-                break;
             default:
-                /**text simple markdown */
+                /**html tex text simple markdown */
                 if (isset($tplProps)) {
                     if (is_array($tplProps)) {
-                        return '';
+                        return $tplProps[0];
                     } else {
                         return $tplProps;
                     }
