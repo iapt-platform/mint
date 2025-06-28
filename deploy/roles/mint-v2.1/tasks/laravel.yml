@@ -43,7 +43,7 @@
     - wbw.analyses
     - export.pali.chapter
     - export.article
-    - ai.translate
+    # - ai.translate
   loop_control:
     loop_var: worker_name
 
