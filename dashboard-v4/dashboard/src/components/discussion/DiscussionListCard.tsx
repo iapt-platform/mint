@@ -148,6 +148,7 @@ const DiscussionListCardWidget = ({
               return (
                 <div key={index}>
                   <Paragraph
+                    type="secondary"
                     ellipsis={{
                       rows: 2,
                       expandable: true,
