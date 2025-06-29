@@ -13,8 +13,8 @@ export TAR="$CODE-$VERSION"
 
 podman pull ubuntu:latest
 podman build --build-arg PYTHON_VERSION=$1 -t $CODE .
-# podman save --format=oci-archive -o $TAR-$(uname -m).tar $CODE
-# md5sum $TAR.tar >$TAR.md5
+podman save --format=oci-archive -o $TAR-$(uname -m).tar $CODE
+md5sum $TAR.tar >$TAR.md5
 
 echo "done($TAR.tar)."
 

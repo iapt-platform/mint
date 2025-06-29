@@ -32,9 +32,9 @@ RUN echo 'source $HOME/python3/bin/activate' >> $HOME/.bashrc
 ADD --chown=deploy https://bootstrap.pypa.io/get-pip.py /opt/
 RUN bash -c "source $HOME/python3/bin/activate && python3 /opt/get-pip.py"
 
-COPY --chown=deploy README.md pyproject.toml /opt/ai-translate/
-COPY --chown=deploy ai_translate /opt/ai-translate/ai_translate
-RUN bash -c "source $HOME/python3/bin/activate && python3 -m pip install -e /opt/ai-translate"
+# COPY --chown=deploy README.md pyproject.toml /opt/ai-translate/
+# COPY --chown=deploy ai_translate /opt/ai-translate/ai_translate
+# RUN bash -c "source $HOME/python3/bin/activate && python3 -m pip install -e /opt/ai-translate"
 
 RUN echo "$(date -u +%4Y%m%d%H%M%S)" | sudo tee /VERSION
 
