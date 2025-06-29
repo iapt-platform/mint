@@ -13,8 +13,8 @@ class TaskFailException(Exception):
         super().__init__(self.message)
 
 
-def handle_message(redis, ch, method, id, content_type, body, api_url, customer_timeout):
-    MaxRetry = 3
+def handle_message(redis, ch, method, id, content_type, body, api_url: str, customer_timeout: int):
+    MaxRetry: int = 3
     try:
         logger.info("process message start (%s) messages", len(body.payload))
         consumer = AiTranslateService(
@@ -28,7 +28,7 @@ def handle_message(redis, ch, method, id, content_type, body, api_url, customer_
     except Exception as e:
         # retry
         retryKey = f'{redis[1]}/message/retry/{id}'
-        retry = 0
+        retry: int = 0
         if redis[0].exists(retryKey):
             retry = redis[0].get(retryKey)
         if retry > MaxRetry:
