@@ -47,6 +47,9 @@
   loop_control:
     loop_var: worker_name
 
+- name: Setup clove resources
+  ansible.builtin.import_tasks: clove.yml
+
 - name: Setup schedule run
   ansible.builtin.import_tasks: schedule-run.yml
 

@@ -1,0 +1,16 @@
+- name: Clone source codes
+  ansible.builtin.git:
+    repo: "https://github.com/iapt-platform/clove.git"
+    dest: "{{ app_deploy_target | dirname }}/clove"
+
+- name: Setup resources for v8
+  ansible.builtin.file:
+    src: "{{ app_deploy_target | dirname }}/clove"
+    dest: "{{ app_deploy_target }}/api-v8/storage/resources"
+    state: link
+
+- name: Setup resources for v12
+  ansible.builtin.file:
+    src: "{{ app_deploy_target | dirname }}/clove"
+    dest: "{{ app_deploy_target }}/api-v12/storage/resources"
+    state: link
