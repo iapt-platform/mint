@@ -14,3 +14,6 @@ dependencies = ["pika", "requests", "redis[hiredis]", "openai"]
 
 [project.scripts]
 mint-ai-translate-consumer = "ai_translate.__main__:main"
+
+[tool.setuptools]
+py-modules = []
