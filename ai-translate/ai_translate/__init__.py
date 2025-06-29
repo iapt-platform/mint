@@ -31,7 +31,7 @@ def start_consumer(context, name, config, queue, callback):
             virtual_host=config['virtual-host']))
     channel = connection.channel()
 
-    def callback(ch, method, properties, body):
+    def _callback(ch, method, properties, body):
         logger.info("received message(%s,%s)",
                     properties.message_id, properties.content_type)
         handle_message(context, ch, method, properties.message_id,
@@ -40,7 +40,7 @@ def start_consumer(context, name, config, queue, callback):
                        callback, ['customer-timeout'])
 
     channel.basic_consume(
-        queue=queue, on_message_callback=callback, auto_ack=False)
+        queue=queue, on_message_callback=_callback, auto_ack=False)
 
     logger.info('start a consumer(%s) for queue(%s)', name, queue)
     channel.start_consuming()
