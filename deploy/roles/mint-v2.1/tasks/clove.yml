@@ -3,14 +3,28 @@
     repo: "https://github.com/iapt-platform/clove.git"
     dest: "{{ app_deploy_target | dirname }}/clove"
 
+# - name: Clean resources for v8
+#   ansible.builtin.file:
+#     path: "{{ app_deploy_target }}/api-v8/storage/resources"
+#     state: absent
+
 - name: Setup resources for v8
+  become: true
   ansible.builtin.file:
     src: "{{ app_deploy_target | dirname }}/clove"
     dest: "{{ app_deploy_target }}/api-v8/storage/resources"
     state: link
+    force: true
+
+# - name: Clean resources for v12
+#   ansible.builtin.file:
+#     path: "{{ app_deploy_target }}/api-v12/storage/resources"
+#     state: absent
 
 - name: Setup resources for v12
+  become: true
   ansible.builtin.file:
     src: "{{ app_deploy_target | dirname }}/clove"
     dest: "{{ app_deploy_target }}/api-v12/storage/resources"
     state: link
+    force: true
