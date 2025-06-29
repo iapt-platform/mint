@@ -175,14 +175,12 @@ class AiTranslateService:
 
             # 写入句子 discussion
             topic_children = []
-            # 提示词
-            topic_children.append(message.prompt)
             # 任务结果
             topic_children.append(response_llm['content'])
             # 推理过程写入discussion
             if response_llm.get('reasoningContent'):
                 topic_children.append(response_llm['reasoningContent'])
-            self._sentence_discussion(s_uid, topic_children)
+            self._sentence_discussion(s_uid, message.prompt, topic_children)
 
             # 修改task 完成度
             progress = self._set_task_progress(
@@ -222,12 +220,12 @@ class AiTranslateService:
         logger.info('ai translate task complete')
         return True
 
-    def _sentence_discussion(self, id, discussions):
+    def _sentence_discussion(self, id, prompt, discussions):
         topic_id = self._task_discussion(
             id,
             'sentence',
             self.task.title,
-            self.task.category,
+            prompt,
             None
         )
 
