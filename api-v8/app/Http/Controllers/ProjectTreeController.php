@@ -46,7 +46,6 @@ class ProjectTreeController extends Controller
                 'old_id' => $value['id'],
                 'title' => $value['title'],
                 'type' => $value['type'],
-
                 'res_id' => $value['res_id'],
                 'parent_id' => $value['parent_id'],
                 'path' => null,
@@ -62,13 +61,13 @@ class ProjectTreeController extends Controller
         }
         foreach ($newData as $key => $value) {
             if ($value['parent_id']) {
-                $found = array_filter($newData, function ($element) use ($value) {
+                $parent = array_find($newData, function ($element) use ($value) {
                     return $element['old_id'] == $value['parent_id'];
                 });
-                if (count($found) > 0) {
-                    $newData[$key]['parent_id'] = $found[0]['uid'];
-                    $parentPath = $found[0]['path'] ? json_decode($found[0]['path']) : [];
-                    $newData[$key]['path'] = json_encode([...$parentPath, $found[0]['uid']], JSON_UNESCAPED_UNICODE);
+                if ($parent) {
+                    $newData[$key]['parent_id'] = $parent['uid'];
+                    $parentPath = $parent['path'] ? json_decode($parent['path']) : [];
+                    $newData[$key]['path'] = json_encode([...$parentPath, $parent['uid']], JSON_UNESCAPED_UNICODE);
                 } else {
                     $newData[$key]['parent_id'] = null;
                 }
