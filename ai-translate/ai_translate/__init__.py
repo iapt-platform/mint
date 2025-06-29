@@ -37,7 +37,7 @@ def start_consumer(context, name, config, queue, callback):
         handle_message(context, ch, method, properties.message_id,
                        properties.content_type, json.loads(
                            body, object_hook=SimpleNamespace),
-                       callback, ['customer-timeout'])
+                       callback, config['customer-timeout'])
 
     channel.basic_consume(
         queue=queue, on_message_callback=_callback, auto_ack=False)
