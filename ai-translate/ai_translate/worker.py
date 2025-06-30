@@ -28,9 +28,8 @@ def handle_message(redis, ch, method, id, content_type, body, api_url: str, cust
     except Exception as e:
         # retry
         retryKey = f'{redis[1]}/message/retry/{id}'
-        retry: int = 0
-        if redis[0].exists(retryKey):
-            retry = redis[0].get(retryKey)
+        retry = int(redis[0].get(retryKey)
+                    or 0) if redis[0].exists(retryKey) else 0
         if retry > MaxRetry:
             logger.error(f'超过最大重试次数[{MaxRetry}]，任务失败')
             # NACK 丢弃或者进入死信队列

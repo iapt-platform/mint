@@ -253,10 +253,11 @@ class AiTranslateService:
         response = requests.patch(
             url, json=data, headers=headers, timeout=self.api_timeout)
 
-        if not response.ok:
-            logger.error(f'ai_translate task status error: {response.json()}')
-        else:
+        if response.ok:
             logger.info(f'ai_translate task status successful ({status})')
+        else:
+            logger.error(
+                f'ai_translate task status update fail. response: {response.text}')
 
     def _save_model_log(self, token: str, data: Dict[str, Any]) -> bool:
         """保存模型日志"""
