@@ -24,6 +24,8 @@ def handle_message(redis, ch, method, id, content_type, body, api_url: str, cust
         ch.basic_ack(delivery_tag=method.delivery_tag)  # 确认消息
     except SectionTimeout as e:
         # 时间到了，活还没干完 NACK 并重新入队
+        logger.info(
+            f'time is not enough for complete current message id={id}. requeued')
         ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
     except Exception as e:
         # retry
@@ -31,11 +33,10 @@ def handle_message(redis, ch, method, id, content_type, body, api_url: str, cust
         retry = int(redis[0].get(retryKey)
                     or 0) if redis[0].exists(retryKey) else 0
         if retry > MaxRetry:
-            logger.error(f'超过最大重试次数[{MaxRetry}]，任务失败')
+            logger.warning(f'超过最大重试次数[{MaxRetry}]，任务失败 id={id}')
             # NACK 丢弃或者进入死信队列
             ch.basic_nack(delivery_tag=method.delivery_tag,
                           requeue=False)
-            raise TaskFailException
         retry = retry+1
         redis[0].set(retryKey, retry)
         # NACK 并重新入队
