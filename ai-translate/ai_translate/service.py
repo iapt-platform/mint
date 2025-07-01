@@ -303,8 +303,7 @@ class AiTranslateService:
         else:
             task_discussion_data['title'] = title
 
-        logger.debug(
-            f'{self.queue} discussion create: {url}, data: {json.dumps(task_discussion_data)}')
+        logger.info(f'{self.queue} discussion create: {url},')
 
         headers = {'Authorization': f'Bearer {self.model_token}'}
         response = requests.post(
@@ -315,8 +314,8 @@ class AiTranslateService:
                 f'{self.queue} discussion create error: {response.json()}')
             return False
 
-        logger.debug(
-            f'{self.queue} discussion create: {json.dumps(response.json())}')
+        # logger.debug(
+        #    f'{self.queue} discussion create: {json.dumps(response.json())}')
 
         response_data = response.json()
         if response_data.get('data', {}).get('id'):
