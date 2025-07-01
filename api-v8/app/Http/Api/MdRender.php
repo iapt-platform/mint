@@ -399,9 +399,13 @@ class MdRender
                 $lines = explode("\n", $markdown);
                 $newLines = array();
                 foreach ($lines as  $line) {
-                    if (strstr($line, '=') === FALSE) {
+                    if (
+                        strstr($line, '=') === FALSE &&
+                        strstr($line, '$') === FALSE
+                    ) {
                         $newLines[] = $line;
                     } else {
+                        $line = str_replace('$', '=', $line);
                         $nissaya = explode('=', $line);
                         $meaning = array_slice($nissaya, 1);
                         $meaning = implode('=', $meaning);
