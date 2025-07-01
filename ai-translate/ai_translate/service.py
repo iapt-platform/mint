@@ -25,6 +25,18 @@ class SectionTimeout(Exception):
         super().__init__(self.message)
 
 
+class TaskFailException(Exception):
+    def __init__(self, message="task fail"):
+        self.message = message
+        super().__init__(self.message)
+
+
+class LLMFailException(Exception):
+    def __init__(self, message="LLM request fail"):
+        self.message = message
+        super().__init__(self.message)
+
+
 @dataclass
 class TaskProgress:
     """任务进度"""
@@ -325,8 +337,9 @@ class AiTranslateService:
 
         logger.info(
             f'{self.queue} LLM request {message.model.url} model: {param["model"]}')
-        logger.debug(
-            f'{self.queue} LLM api request: {message.model.url}, data: {json.dumps(param)}')
+
+        # logger.debug(
+        #     f'{self.queue} LLM api request: {message.model.url}, data: {json.dumps(param)}')
 
         # 写入 model log
         model_log_data = {
@@ -376,7 +389,7 @@ class AiTranslateService:
                 # 某些错误不需要重试
                 if status in [400, 401, 403, 404, 422]:
                     logger.warning(f"客户端错误，不重试: {status}")
-                    raise e
+                    raise LLMFailException
 
                 # 服务器错误或网络错误可以重试
                 if attempt < max_retries:
@@ -396,7 +409,7 @@ class AiTranslateService:
                     logger.error(e)
 
         ai_data = response.json()
-        logger.debug(f'{self.queue} LLM http response: {response.json()}')
+        # logger.debug(f'{self.queue} LLM http response: {response.json()}')
 
         response_content = ai_data['choices'][0]['message']['content']
         reasoning_content = ai_data['choices'][0]['message'].get(
