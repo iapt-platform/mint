@@ -155,7 +155,7 @@ class AiTranslateService:
                 self.task.id,
                 'task',
                 self.task.title,
-                self.task.category,
+                f'id:{message_id}',
                 None
             )
         times = [self.maxProcessTime]
