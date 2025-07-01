@@ -43,13 +43,9 @@ const NissayaCtl = ({ pali, meaning, lang, children }: IWidgetNissayaCtl) => {
       ) : (
         <></>
       )}
-      {lang === "my" ? (
-        meaning
-          ?.slice(-1)
-          .map((item, id) => <NissayaMeaning key={id} text={item} />)
-      ) : (
-        <>{meaning2}</>
-      )}
+      {meaning?.slice(-1).map((item, id) => (
+        <NissayaMeaning key={id} text={item} />
+      ))}
     </span>
   );
 };

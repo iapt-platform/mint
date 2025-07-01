@@ -23,8 +23,9 @@ def handle_message(redis, ch, method, id, content_type, body, api_url: str, cust
             f'time is not enough for complete current message id={id}. requeued')
         ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
     except LLMFailException as e:
-        ch.basic_ack(delivery_tag=method.delivery_tag)  # 确认消息
-        logger.info(f'message {id} ack')
+        ch.basic_nack(delivery_tag=method.delivery_tag,
+                      requeue=False)
+        logger.warning(f'message {id} LLMFailException')
     except Exception as e:
         # retry
         retryKey = f'{redis[1]}/message/retry/{id}'
@@ -40,8 +41,7 @@ def handle_message(redis, ch, method, id, content_type, body, api_url: str, cust
             redis[0].set(retryKey, retry)
             # NACK 并重新入队
             logger.warning(f'消息处理错误，重新压入队列 [{retry}/{MaxRetry}]')
-            ch.basic_nack(delivery_tag=method.delivery_tag,
-                          requeue=True)
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
             logger.error(f"error: {e}")
             logger.exception("发生异常")
     finally:
