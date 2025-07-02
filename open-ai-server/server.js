@@ -61,10 +61,7 @@ app.post("/api/openai", async (req, res) => {
       // 非流式响应
       const completion = await openai.chat.completions.create(payload);
 
-      res.json({
-        success: true,
-        data: completion,
-      });
+      res.json(completion);
     }
   } catch (error) {
     console.error("API Error:", error);
