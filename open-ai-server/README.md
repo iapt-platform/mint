@@ -15,8 +15,6 @@ npm install
 ```bash
 # 开发模式（自动重启）
 npm run dev
-# 启动服务器（端口4000）
-PORT=4000 npm run dev
 
 # 生产模式
 npm start
@@ -56,6 +54,11 @@ npm start
 **流式响应**：返回 Server-Sent Events 格式的实时数据流
 
 服务器会在端口 3000 上运行，你可以通过环境变量`PORT`来修改端口号。
+
+```bash
+# 启动服务器（端口4000）
+PORT=4000 npm run dev
+```
 
 ## 测试
 
