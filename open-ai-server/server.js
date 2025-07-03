@@ -13,7 +13,7 @@ app.use(express.json());
 app.post("/api/openai", async (req, res) => {
   try {
     const { open_ai_url, api_key, payload } = req.body;
-
+    console.debug("request", open_ai_url);
     // 验证必需的参数
     if (!open_ai_url || !api_key || !payload) {
       return res.status(400).json({
@@ -61,10 +61,7 @@ app.post("/api/openai", async (req, res) => {
       // 非流式响应
       const completion = await openai.chat.completions.create(payload);
 
-      res.json({
-        success: true,
-        data: completion,
-      });
+      res.json(completion);
     }
   } catch (error) {
     console.error("API Error:", error);

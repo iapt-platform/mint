@@ -4,12 +4,13 @@ import {
   Input,
   message,
   Modal,
+  notification,
   Space,
   Steps,
   Typography,
 } from "antd";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Workflow from "./Workflow";
 import {
   IProjectTreeData,
@@ -33,7 +34,11 @@ import {
 } from "../api/token";
 import ProjectWithTasks from "./ProjectWithTasks";
 import { useIntl } from "react-intl";
+import { NotificationPlacement } from "antd/lib/notification";
+import React from "react";
 const { Text, Paragraph } = Typography;
+
+const Context = React.createContext({ name: "Default" });
 
 interface IModal {
   studioName?: string;
@@ -75,7 +80,7 @@ export const TaskBuilderChapterModal = ({
     </>
   );
 };
-
+type NotificationType = "success" | "info" | "warning" | "error";
 interface IWidget {
   studioName?: string;
   channels?: string[];
@@ -257,147 +262,172 @@ const TaskBuilderChapter = ({
   };
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
-  const DoButton = () => (
-    <Button
-      loading={loading}
-      disabled={loading}
-      type="primary"
-      onClick={async () => {
-        if (!studioName || !chapter) {
-          console.error("缺少参数", studioName, chapter);
-          return;
-        }
-        setLoading(true);
-        //生成projects
-        setMessages((origin) => [...origin, "正在生成任务组……"]);
-        const url = "/v2/project-tree";
-        const values: IProjectTreeInsertRequest = {
-          studio_name: studioName,
-          data: chapter.map((item, id) => {
-            return {
-              id: item.paragraph.toString(),
-              title: id === 0 && title ? title : item.text ?? "",
-              type: "instance",
-              weight: item.chapter_strlen,
-              parent_id: item.parent.toString(),
-              res_id: `${item.book}-${item.paragraph}`,
-            };
-          }),
-        };
-        console.info("api request", url, values);
-        const res = await post<IProjectTreeInsertRequest, IProjectTreeResponse>(
-          url,
-          values
-        );
-        console.info("api response", res);
-        if (!res.ok) {
-          setMessages((origin) => [...origin, "正在生成任务组失败"]);
-          return;
-        } else {
-          setProjects(res.data.rows);
-          setMessages((origin) => [...origin, "生成任务组成功"]);
-        }
-        //生成tasks
-        setMessages((origin) => [...origin, "正在生成任务……"]);
-        const taskUrl = "/v2/task-group";
-        if (!workflow) {
-          return;
-        }
+  const [api, contextHolder] = notification.useNotification();
 
-        let taskData: ITaskGroupInsertData[] = res.data.rows
-          .filter((value) => value.isLeaf)
-          .map((project, pId) => {
-            return {
-              project_id: project.id,
-              tasks: workflow.map((task, tId) => {
-                let newContent = task.description;
-                prop
-                  ?.find((pValue) => pValue.taskId === task.id)
-                  ?.param?.forEach((value: IParam) => {
-                    //替换数字参数
-                    if (value.type === "number") {
-                      const searchValue = `${value.key}=${value.value}`;
-                      const replaceValue =
-                        `${value.key}=` +
-                        (value.initValue + value.step * pId).toString();
-                      newContent = newContent?.replace(
-                        searchValue,
-                        replaceValue
-                      );
-                    } else {
-                      //替换book
-                      if (project.resId) {
-                        const [book, paragraph] = project.resId.split("-");
-                        newContent = newContent?.replace(
-                          "book=#",
-                          `book=${book}`
-                        );
-                        newContent = newContent?.replace(
-                          "paragraphs=#",
-                          `paragraphs=${paragraph}`
-                        );
-                        //替换channel
-                        //查找toke
+  const openNotification = (
+    type: NotificationType,
+    title: string,
+    description?: string
+  ) => {
+    api[type]({
+      message: title,
+      description: description,
+    });
+  };
 
-                        const [channel, power] = value.value.split("@");
-                        const mToken = tokens?.find(
-                          (token) =>
-                            token.payload.book?.toString() === book &&
-                            token.payload.para_start?.toString() ===
-                              paragraph &&
-                            token.payload.res_id === channel &&
-                            (power && power.length > 0
-                              ? token.payload.power === power
-                              : true)
-                        );
-                        newContent = newContent?.replace(
-                          value.key,
-                          channel + (mToken ? "@" + mToken?.token : "")
-                        );
-                      }
-                    }
-                  });
-
-                console.debug("description", newContent);
+  const DoButton = () => {
+    return (
+      <>
+        <Button
+          loading={loading}
+          disabled={loading}
+          type="primary"
+          onClick={async () => {
+            if (!studioName || !chapter) {
+              console.error("缺少参数", studioName, chapter);
+              return;
+            }
+            setLoading(true);
+            //生成projects
+            setMessages((origin) => [...origin, "正在生成任务组……"]);
+            const url = "/v2/project-tree";
+            const values: IProjectTreeInsertRequest = {
+              studio_name: studioName,
+              data: chapter.map((item, id) => {
                 return {
-                  ...task,
+                  id: item.paragraph.toString(),
+                  title: id === 0 && title ? title : item.text ?? "",
                   type: "instance",
-                  description: newContent,
+                  weight: item.chapter_strlen,
+                  parent_id: item.parent.toString(),
+                  res_id: `${item.book}-${item.paragraph}`,
                 };
               }),
             };
-          });
+            let res;
+            try {
+              console.info("api request", url, values);
+              res = await post<IProjectTreeInsertRequest, IProjectTreeResponse>(
+                url,
+                values
+              );
+              console.info("api response", res);
+              // 检查响应状态
+              if (!res.ok) {
+                throw new Error(`HTTP error! status: `);
+              }
+              setProjects(res.data.rows);
+              setMessages((origin) => [...origin, "生成任务组成功"]);
+            } catch (error) {
+              console.error("Fetch error:", error);
+              openNotification("error", "生成任务组失败");
+              throw error;
+            }
 
-        console.info("api request", taskUrl, taskData);
-        const taskRes = await post<ITaskGroupInsertRequest, ITaskGroupResponse>(
-          taskUrl,
-          { data: taskData }
-        );
-        if (taskRes.ok) {
-          message.success("ok");
-          setMessages((origin) => [...origin, "生成任务成功"]);
-          setMessages((origin) => [
-            ...origin,
-            "生成任务" + taskRes.data.taskCount,
-          ]);
-          setMessages((origin) => [
-            ...origin,
-            "生成任务关联" + taskRes.data.taskRelationCount,
-          ]);
-          setMessages((origin) => [
-            ...origin,
-            "打开译经楼-我的任务查看已经生成的任务",
-          ]);
-          setDone(true);
-        }
-        setLoading(false);
-      }}
-    >
-      Done
-    </Button>
-  );
+            //生成tasks
+            setMessages((origin) => [...origin, "正在生成任务……"]);
+            const taskUrl = "/v2/task-group";
+            if (!workflow) {
+              return;
+            }
+
+            let taskData: ITaskGroupInsertData[] = res.data.rows
+              .filter((value) => value.isLeaf)
+              .map((project, pId) => {
+                return {
+                  project_id: project.id,
+                  tasks: workflow.map((task, tId) => {
+                    let newContent = task.description;
+                    prop
+                      ?.find((pValue) => pValue.taskId === task.id)
+                      ?.param?.forEach((value: IParam) => {
+                        //替换数字参数
+                        if (value.type === "number") {
+                          const searchValue = `${value.key}=${value.value}`;
+                          const replaceValue =
+                            `${value.key}=` +
+                            (value.initValue + value.step * pId).toString();
+                          newContent = newContent?.replace(
+                            searchValue,
+                            replaceValue
+                          );
+                        } else {
+                          //替换book
+                          if (project.resId) {
+                            const [book, paragraph] = project.resId.split("-");
+                            newContent = newContent?.replace(
+                              "book=#",
+                              `book=${book}`
+                            );
+                            newContent = newContent?.replace(
+                              "paragraphs=#",
+                              `paragraphs=${paragraph}`
+                            );
+                            //替换channel
+                            //查找toke
+
+                            const [channel, power] = value.value.split("@");
+                            const mToken = tokens?.find(
+                              (token) =>
+                                token.payload.book?.toString() === book &&
+                                token.payload.para_start?.toString() ===
+                                  paragraph &&
+                                token.payload.res_id === channel &&
+                                (power && power.length > 0
+                                  ? token.payload.power === power
+                                  : true)
+                            );
+                            newContent = newContent?.replace(
+                              value.key,
+                              channel + (mToken ? "@" + mToken?.token : "")
+                            );
+                          }
+                        }
+                      });
+
+                    console.debug("description", newContent);
+                    return {
+                      ...task,
+                      type: "instance",
+                      description: newContent,
+                    };
+                  }),
+                };
+              });
+
+            console.info("api request", taskUrl, taskData);
+            const taskRes = await post<
+              ITaskGroupInsertRequest,
+              ITaskGroupResponse
+            >(taskUrl, { data: taskData });
+            if (taskRes.ok) {
+              setMessages((origin) => [...origin, "生成任务成功"]);
+              setMessages((origin) => [
+                ...origin,
+                "生成任务" + taskRes.data.taskCount,
+              ]);
+              setMessages((origin) => [
+                ...origin,
+                "生成任务关联" + taskRes.data.taskRelationCount,
+              ]);
+              setMessages((origin) => [
+                ...origin,
+                "打开译经楼-我的任务查看已经生成的任务",
+              ]);
+              openNotification("success", "生成任务成功");
+              setDone(true);
+            }
+            setLoading(false);
+          }}
+        >
+          Done
+        </Button>
+      </>
+    );
+  };
   return (
     <div style={style}>
+      {contextHolder}
       <Steps current={current} items={items} />
       <div className="steps-content" style={{ minHeight: 400 }}>
         {steps[current].content}

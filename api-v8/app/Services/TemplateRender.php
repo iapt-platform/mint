@@ -54,6 +54,7 @@ class TemplateRender
             'cf' => \App\Services\Templates\ConfidenceTemplate::class,
             'nissaya' => \App\Services\Templates\NissayaTemplate::class,
             'term' => \App\Services\Templates\TermTemplate::class,
+            'note' => \App\Services\Templates\NoteTemplate::class,
         ];
 
         if (!isset($templateMap[$this->templateName])) {
