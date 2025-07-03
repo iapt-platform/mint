@@ -132,14 +132,14 @@ class TermTemplate extends AbstractTemplate
         if ($channel && !empty($channel)) {
             $channelId = $channel;
         } else {
-            if (count($this->channel_id) > 0) {
-                $channelId = $this->channel_id[0];
+            if (count($this->options['channel_id']) > 0) {
+                $channelId = $this->options['channel_id'][0];
             } else {
                 $channelId = null;
             }
         }
 
-        if (count($this->channelInfo) === 0) {
+        if (count($this->options['channelInfo']) === 0) {
             if (!empty($channel)) {
                 $channelInfo = Channel::where('uid', $channel)->first();
                 if (!$channelInfo) {
@@ -155,7 +155,7 @@ class TermTemplate extends AbstractTemplate
                 return $output;
             }
         } else {
-            $channelInfo = $this->channelInfo[0];
+            $channelInfo = $this->options['channelInfo'][0];
         }
 
         if (Str::isUuid($channelId)) {
@@ -165,8 +165,8 @@ class TermTemplate extends AbstractTemplate
             } else {
                 $langFamily = 'zh';
             }
-            $this->info("term:{$word} 先查属于这个channel 的", 'term');
-            $this->info('channel id' . $channelId, 'term');
+            Log::info("term:{$word} 先查属于这个channel 的", 'term');
+            Log::info('channel id' . $channelId, 'term');
             $table = DhammaTerm::where("word", $word)
                 ->where('channal', $channelId);
             if ($tag && !empty($tag)) {
@@ -179,7 +179,7 @@ class TermTemplate extends AbstractTemplate
             $tplParam = false;
             $lang = '';
             $langFamily = '';
-            $studioId = $this->studioId;
+            $studioId = $this->options['studioId'];
         }
 
         if (!$tplParam) {
@@ -252,7 +252,7 @@ class TermTemplate extends AbstractTemplate
             $output["channel"] = $tplParam->channal;
             if (!empty($tplParam->note)) {
                 $mdRender = new MdRender(['format' => $this->options['format']]);
-                $output['note'] = $mdRender->convert($tplParam->note, $this->channel_id);
+                $output['note'] = $mdRender->convert($tplParam->note, $this->options['channel_id']);
             }
             if (isset($isCommunity)) {
                 $output["isCommunity"] = true;
