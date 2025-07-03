@@ -553,17 +553,8 @@ class TemplateRender
                     'tpl' => 'nissaya',
                 ];
                 break;
-            case 'text':
-                $output = $pali . '၊' . $meaning;
-                break;
-            case 'tex':
-                $output = $pali . '၊' . $meaning;
-                break;
-            case 'simple':
-                $output = $pali . '၊' . $meaning;
-                break;
             case 'prompt':
-                $output = Tools::MyToRm($pali) . ':' . $meaning;
+                $output = Tools::MyToRm($pali) . ':' . end($props["meaning"]);
                 break;
             default:
                 $output = $pali . '၊' . $meaning;
