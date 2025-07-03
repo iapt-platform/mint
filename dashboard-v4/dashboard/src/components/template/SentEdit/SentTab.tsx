@@ -20,7 +20,6 @@ import SentTabCopy from "./SentTabCopy";
 import { fullUrl } from "../../../utils";
 import SentWbw from "./SentWbw";
 import SentTabButtonWbw from "./SentTabButtonWbw";
-import "./style.css";
 
 const { Text } = Typography;
 
@@ -111,6 +110,23 @@ const SentTabWidget = ({
         onChange={(activeKey: string) => {
           setCurrKey(activeKey);
         }}
+        style={
+          isCompact
+            ? {
+                position: currKey === "close" ? "absolute" : "unset",
+                marginTop: -32,
+                width: "100%",
+                marginRight: 10,
+                backgroundColor:
+                  hover || currKey !== "close"
+                    ? "rgba(128, 128, 128, 0.1)"
+                    : "unset",
+              }
+            : {
+                padding: "0 8px",
+                backgroundColor: "rgba(128, 128, 128, 0.1)",
+              }
+        }
         tabBarStyle={{ marginBottom: 0 }}
         size="small"
         tabBarGutter={0}
