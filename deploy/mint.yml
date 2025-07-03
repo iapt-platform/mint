@@ -56,7 +56,6 @@
         - wbw.analyses
         - export.pali.chapter
         - export.article
-        - ai.translate
 
 - name: Start mint php-fpm
   hosts:
@@ -73,11 +72,11 @@
   hosts:
     - ai_translate
   tasks:
-    - name: Start ai-translate service
+    - name: Disable php ai-translate service
       ansible.builtin.systemd_service:
         name: "{{ app_container_prefix }}-{{ app_domain }}-worker-mq-ai.translate"
-        enabled: true
-        state: restarted
+        enabled: false
+        state: stopped
         scope: user
 
 - name: Setup nginx

@@ -67,3 +67,6 @@
     line: "net.ipv4.ip_forward = 1"
     create: true
     mode: "0644"
+
+- name: Setup kubernetes
+  ansible.builtin.import_tasks: kubernetes.yml

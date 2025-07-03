@@ -23,7 +23,7 @@ def main():
     parser.add_argument('-d', '--debug',
                         action='store_true', help='run on debug mode')
     parser.add_argument('-v', '--version',
-                        action='version', version='%(prog)s v2025.6.11')
+                        action='version', version='%(prog)s v2025.6.27')
     args = parser.parse_args()
 
     if args.debug:

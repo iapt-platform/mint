@@ -25,6 +25,18 @@ class SectionTimeout(Exception):
         super().__init__(self.message)
 
 
+class TaskFailException(Exception):
+    def __init__(self, message="task fail"):
+        self.message = message
+        super().__init__(self.message)
+
+
+class LLMFailException(Exception):
+    def __init__(self, message="LLM request fail"):
+        self.message = message
+        super().__init__(self.message)
+
+
 @dataclass
 class TaskProgress:
     """任务进度"""
@@ -143,7 +155,7 @@ class AiTranslateService:
                 self.task.id,
                 'task',
                 self.task.title,
-                self.task.category,
+                f'id:{message_id}',
                 None
             )
         times = [self.maxProcessTime]
@@ -175,14 +187,12 @@ class AiTranslateService:
 
             # 写入句子 discussion
             topic_children = []
-            # 提示词
-            topic_children.append(message.prompt)
             # 任务结果
             topic_children.append(response_llm['content'])
             # 推理过程写入discussion
             if response_llm.get('reasoningContent'):
                 topic_children.append(response_llm['reasoningContent'])
-            self._sentence_discussion(s_uid, topic_children)
+            self._sentence_discussion(s_uid, message.prompt, topic_children)
 
             # 修改task 完成度
             progress = self._set_task_progress(
@@ -222,12 +232,12 @@ class AiTranslateService:
         logger.info('ai translate task complete')
         return True
 
-    def _sentence_discussion(self, id, discussions):
+    def _sentence_discussion(self, id, prompt, discussions):
         topic_id = self._task_discussion(
             id,
             'sentence',
             self.task.title,
-            self.task.category,
+            prompt,
             None
         )
 
@@ -255,10 +265,11 @@ class AiTranslateService:
         response = requests.patch(
             url, json=data, headers=headers, timeout=self.api_timeout)
 
-        if not response.ok:
-            logger.error(f'ai_translate task status error: {response.json()}')
-        else:
+        if response.ok:
             logger.info(f'ai_translate task status successful ({status})')
+        else:
+            logger.error(
+                f'ai_translate task status update fail. response: {response.text}')
 
     def _save_model_log(self, token: str, data: Dict[str, Any]) -> bool:
         """保存模型日志"""
@@ -292,8 +303,7 @@ class AiTranslateService:
         else:
             task_discussion_data['title'] = title
 
-        logger.debug(
-            f'{self.queue} discussion create: {url}, data: {json.dumps(task_discussion_data)}')
+        logger.info(f'{self.queue} discussion create: {url},')
 
         headers = {'Authorization': f'Bearer {self.model_token}'}
         response = requests.post(
@@ -304,8 +314,8 @@ class AiTranslateService:
                 f'{self.queue} discussion create error: {response.json()}')
             return False
 
-        logger.debug(
-            f'{self.queue} discussion create: {json.dumps(response.json())}')
+        # logger.debug(
+        #    f'{self.queue} discussion create: {json.dumps(response.json())}')
 
         response_data = response.json()
         if response_data.get('data', {}).get('id'):
@@ -326,8 +336,9 @@ class AiTranslateService:
 
         logger.info(
             f'{self.queue} LLM request {message.model.url} model: {param["model"]}')
-        logger.debug(
-            f'{self.queue} LLM api request: {message.model.url}, data: {json.dumps(param)}')
+
+        # logger.debug(
+        #     f'{self.queue} LLM api request: {message.model.url}, data: {json.dumps(param)}')
 
         # 写入 model log
         model_log_data = {
@@ -377,7 +388,7 @@ class AiTranslateService:
                 # 某些错误不需要重试
                 if status in [400, 401, 403, 404, 422]:
                     logger.warning(f"客户端错误，不重试: {status}")
-                    raise e
+                    raise LLMFailException
 
                 # 服务器错误或网络错误可以重试
                 if attempt < max_retries:
@@ -397,7 +408,7 @@ class AiTranslateService:
                     logger.error(e)
 
         ai_data = response.json()
-        logger.debug(f'{self.queue} LLM http response: {response.json()}')
+        # logger.debug(f'{self.queue} LLM http response: {response.json()}')
 
         response_content = ai_data['choices'][0]['message']['content']
         reasoning_content = ai_data['choices'][0]['message'].get(

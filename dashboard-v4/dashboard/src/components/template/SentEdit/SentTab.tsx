@@ -101,295 +101,298 @@ const SentTabWidget = ({
     : undefined;
 
   return (
-    <Tabs
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      activeKey={currKey}
-      onChange={(activeKey: string) => {
-        setCurrKey(activeKey);
-      }}
-      style={
-        isCompact
-          ? {
-              position: currKey === "close" ? "absolute" : "unset",
-              marginTop: -32,
-              width: "100%",
-              marginRight: 10,
-              backgroundColor:
-                hover || currKey !== "close"
-                  ? "rgba(128, 128, 128, 0.1)"
-                  : "unset",
-            }
-          : {
-              padding: "0 8px",
-              backgroundColor: "rgba(128, 128, 128, 0.1)",
-            }
-      }
-      tabBarStyle={{ marginBottom: 0 }}
-      size="small"
-      tabBarGutter={0}
-      tabBarExtraContent={
-        <Space>
-          <TocPath
-            link="none"
-            data={mPath}
-            channels={channelsId}
-            trigger={path ? path.length > 0 ? path[0].title : <></> : <></>}
-          />
-          <Text>{sentId[0]}</Text>
-          <SentTabCopy wbwData={wbwData} text={`{{${sentId[0]}}}`} />
-          <SentMenu
-            book={book}
-            para={para}
-            loading={magicDictLoading}
-            mode={mode}
-            onMagicDict={(type: string) => {
-              if (typeof onMagicDict !== "undefined") {
-                onMagicDict(type);
+    <div className="sent_block">
+      <Tabs
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        activeKey={currKey}
+        type="card"
+        onChange={(activeKey: string) => {
+          setCurrKey(activeKey);
+        }}
+        style={
+          isCompact
+            ? {
+                position: currKey === "close" ? "absolute" : "unset",
+                marginTop: -32,
+                width: "100%",
+                marginRight: 10,
+                backgroundColor:
+                  hover || currKey !== "close"
+                    ? "rgba(128, 128, 128, 0.1)"
+                    : "unset",
               }
-            }}
-            onMenuClick={(key: string) => {
-              switch (key) {
-                case "compact":
-                  if (typeof onCompact !== "undefined") {
-                    setIsCompact(true);
-                    onCompact(true);
-                  }
-                  break;
-                case "normal":
-                  if (typeof onCompact !== "undefined") {
-                    setIsCompact(false);
-                    onCompact(false);
-                  }
-                  break;
-                case "origin-edit":
-                  if (typeof onModeChange !== "undefined") {
-                    onModeChange("edit");
-                  }
-                  break;
-                case "origin-wbw":
-                  if (typeof onModeChange !== "undefined") {
-                    onModeChange("wbw");
-                  }
-                  break;
-                case "copy-id":
-                  const id = `{{${book}-${para}-${wordStart}-${wordEnd}}}`;
-                  navigator.clipboard.writeText(id).then(() => {
-                    message.success("编号已经拷贝到剪贴板");
-                  });
-                  break;
-                case "copy-link":
-                  let link = `/article/para/${book}-${para}?mode=edit`;
-                  link += `&book=${book}&par=${para}`;
-                  if (channelsId) {
-                    link += `&channel=` + channelsId?.join("_");
-                  }
-                  link += `&focus=${book}-${para}-${wordStart}-${wordEnd}`;
-                  navigator.clipboard.writeText(fullUrl(link)).then(() => {
-                    message.success("链接地址已经拷贝到剪贴板");
-                  });
-                  break;
-                case "affix":
-                  if (typeof onAffix !== "undefined") {
-                    onAffix();
-                  }
-                  break;
-                default:
-                  break;
+            : {
+                padding: "0 8px",
+                backgroundColor: "rgba(128, 128, 128, 0.1)",
               }
-            }}
-          />
-        </Space>
-      }
-      items={[
-        {
-          label: (
-            <span style={tabButtonStyle}>
-              <Badge size="small" count={0}>
-                <CloseOutlined />
-              </Badge>
-            </span>
-          ),
-          key: "close",
-          children: <></>,
-        },
-        {
-          label: (
-            <SentTabButton
-              style={tabButtonStyle}
-              icon={<TranslationOutlined />}
-              type="translation"
-              sentId={id}
-              count={
-                currTranNum
-                  ? currTranNum -
-                    (loadedRes?.translation ? loadedRes.translation : 0)
-                  : undefined
-              }
-              title={intl.formatMessage({
-                id: "channel.type.translation.label",
-              })}
+        }
+        tabBarStyle={{ marginBottom: 0 }}
+        size="small"
+        tabBarGutter={0}
+        tabBarExtraContent={
+          <Space>
+            <TocPath
+              link="none"
+              data={mPath}
+              channels={channelsId}
+              trigger={path ? path.length > 0 ? path[0].title : <></> : <></>}
             />
-          ),
-          key: "translation",
-          children: (
-            <SentCanRead
-              book={parseInt(sId[0])}
-              para={parseInt(sId[1])}
-              wordStart={parseInt(sId[2])}
-              wordEnd={parseInt(sId[3])}
-              type="translation"
-              channelsId={channelsId}
-              onCreate={() => setCurrTranNum((origin) => origin + 1)}
-            />
-          ),
-        },
-        {
-          label: (
-            <SentTabButton
-              style={tabButtonStyle}
-              icon={<CloseOutlined />}
-              type="nissaya"
-              sentId={id}
-              count={
-                currNissayaNum
-                  ? currNissayaNum -
-                    (loadedRes?.nissaya ? loadedRes.nissaya : 0)
-                  : undefined
-              }
-              title={intl.formatMessage({
-                id: "channel.type.nissaya.label",
-              })}
-            />
-          ),
-          key: "nissaya",
-          children: (
-            <SentCanRead
-              book={parseInt(sId[0])}
-              para={parseInt(sId[1])}
-              wordStart={parseInt(sId[2])}
-              wordEnd={parseInt(sId[3])}
-              type="nissaya"
-              channelsId={channelsId}
-              onCreate={() => setCurrNissayaNum((origin) => origin + 1)}
-            />
-          ),
-        },
-        {
-          label: (
-            <SentTabButton
-              style={tabButtonStyle}
-              icon={<TranslationOutlined />}
-              type="commentary"
-              sentId={id}
-              count={
-                currCommNum
-                  ? currCommNum -
-                    (loadedRes?.commentary ? loadedRes.commentary : 0)
-                  : undefined
-              }
-              title={intl.formatMessage({
-                id: "channel.type.commentary.label",
-              })}
-            />
-          ),
-          key: "commentary",
-          children: (
-            <SentCanRead
-              book={parseInt(sId[0])}
-              para={parseInt(sId[1])}
-              wordStart={parseInt(sId[2])}
-              wordEnd={parseInt(sId[3])}
-              type="commentary"
-              channelsId={channelsId}
-              onCreate={() => setCurrCommNum((origin) => origin + 1)}
-            />
-          ),
-        },
-        {
-          label: (
-            <SentTabButton
-              icon={<BlockOutlined />}
-              type="original"
-              sentId={id}
-              count={originNum}
-              title={intl.formatMessage({
-                id: "channel.type.original.label",
-              })}
-            />
-          ),
-          key: "original",
-          children: (
-            <SentCanRead
-              book={parseInt(sId[0])}
-              para={parseInt(sId[1])}
-              wordStart={parseInt(sId[2])}
-              wordEnd={parseInt(sId[3])}
-              type="original"
-              origin={origin}
-            />
-          ),
-        },
-        {
-          label: (
-            <SentTabButton
-              style={tabButtonStyle}
-              icon={<BlockOutlined />}
-              type="original"
-              sentId={id}
-              count={currSimilarNum}
-              title={intl.formatMessage({
-                id: "buttons.sim",
-              })}
-            />
-          ),
-          key: "sim",
-          children: (
-            <SentSim
-              book={parseInt(sId[0])}
-              para={parseInt(sId[1])}
-              wordStart={parseInt(sId[2])}
-              wordEnd={parseInt(sId[3])}
-              channelsId={channelsId}
-              limit={5}
-              onCreate={() => setCurrSimilarNum((origin) => origin + 1)}
-            />
-          ),
-        },
-        {
-          label: (
-            <SentTabButtonWbw
-              style={tabButtonStyle}
-              sentId={id}
-              count={0}
-              onMenuClick={(keyPath: string[]) => {
-                switch (keyPath.join("-")) {
-                  case "show-progress":
-                    setShowWbwProgress((origin) => !origin);
+            <Text>{sentId[0]}</Text>
+            <SentTabCopy wbwData={wbwData} text={`{{${sentId[0]}}}`} />
+            <SentMenu
+              book={book}
+              para={para}
+              loading={magicDictLoading}
+              mode={mode}
+              onMagicDict={(type: string) => {
+                if (typeof onMagicDict !== "undefined") {
+                  onMagicDict(type);
+                }
+              }}
+              onMenuClick={(key: string) => {
+                switch (key) {
+                  case "compact":
+                    if (typeof onCompact !== "undefined") {
+                      setIsCompact(true);
+                      onCompact(true);
+                    }
+                    break;
+                  case "normal":
+                    if (typeof onCompact !== "undefined") {
+                      setIsCompact(false);
+                      onCompact(false);
+                    }
+                    break;
+                  case "origin-edit":
+                    if (typeof onModeChange !== "undefined") {
+                      onModeChange("edit");
+                    }
+                    break;
+                  case "origin-wbw":
+                    if (typeof onModeChange !== "undefined") {
+                      onModeChange("wbw");
+                    }
+                    break;
+                  case "copy-id":
+                    const id = `{{${book}-${para}-${wordStart}-${wordEnd}}}`;
+                    navigator.clipboard.writeText(id).then(() => {
+                      message.success("编号已经拷贝到剪贴板");
+                    });
+                    break;
+                  case "copy-link":
+                    let link = `/article/para/${book}-${para}?mode=edit`;
+                    link += `&book=${book}&par=${para}`;
+                    if (channelsId) {
+                      link += `&channel=` + channelsId?.join("_");
+                    }
+                    link += `&focus=${book}-${para}-${wordStart}-${wordEnd}`;
+                    navigator.clipboard.writeText(fullUrl(link)).then(() => {
+                      message.success("链接地址已经拷贝到剪贴板");
+                    });
+                    break;
+                  case "affix":
+                    if (typeof onAffix !== "undefined") {
+                      onAffix();
+                    }
+                    break;
+                  default:
                     break;
                 }
               }}
             />
-          ),
-          key: "wbw",
-          children: (
-            <SentWbw
-              book={parseInt(sId[0])}
-              para={parseInt(sId[1])}
-              wordStart={parseInt(sId[2])}
-              wordEnd={parseInt(sId[3])}
-              channelsId={channelsId}
-              wbwProgress={showWbwProgress}
-            />
-          ),
-        },
-        {
-          label: <span style={tabButtonStyle}>{"关系图"}</span>,
-          key: "relation-graphic",
-          children: <RelaGraphic wbwData={wbwData} />,
-        },
-      ]}
-    />
+          </Space>
+        }
+        items={[
+          {
+            label: (
+              <span style={tabButtonStyle}>
+                <Badge size="small" count={0}>
+                  <CloseOutlined />
+                </Badge>
+              </span>
+            ),
+            key: "close",
+            children: <></>,
+          },
+          {
+            label: (
+              <SentTabButton
+                style={tabButtonStyle}
+                icon={<TranslationOutlined />}
+                type="translation"
+                sentId={id}
+                count={
+                  currTranNum
+                    ? currTranNum -
+                      (loadedRes?.translation ? loadedRes.translation : 0)
+                    : undefined
+                }
+                title={intl.formatMessage({
+                  id: "channel.type.translation.label",
+                })}
+              />
+            ),
+            key: "translation",
+            children: (
+              <SentCanRead
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                type="translation"
+                channelsId={channelsId}
+                onCreate={() => setCurrTranNum((origin) => origin + 1)}
+              />
+            ),
+          },
+          {
+            label: (
+              <SentTabButton
+                style={tabButtonStyle}
+                icon={<CloseOutlined />}
+                type="nissaya"
+                sentId={id}
+                count={
+                  currNissayaNum
+                    ? currNissayaNum -
+                      (loadedRes?.nissaya ? loadedRes.nissaya : 0)
+                    : undefined
+                }
+                title={intl.formatMessage({
+                  id: "channel.type.nissaya.label",
+                })}
+              />
+            ),
+            key: "nissaya",
+            children: (
+              <SentCanRead
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                type="nissaya"
+                channelsId={channelsId}
+                onCreate={() => setCurrNissayaNum((origin) => origin + 1)}
+              />
+            ),
+          },
+          {
+            label: (
+              <SentTabButton
+                style={tabButtonStyle}
+                icon={<TranslationOutlined />}
+                type="commentary"
+                sentId={id}
+                count={
+                  currCommNum
+                    ? currCommNum -
+                      (loadedRes?.commentary ? loadedRes.commentary : 0)
+                    : undefined
+                }
+                title={intl.formatMessage({
+                  id: "channel.type.commentary.label",
+                })}
+              />
+            ),
+            key: "commentary",
+            children: (
+              <SentCanRead
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                type="commentary"
+                channelsId={channelsId}
+                onCreate={() => setCurrCommNum((origin) => origin + 1)}
+              />
+            ),
+          },
+          {
+            label: (
+              <SentTabButton
+                icon={<BlockOutlined />}
+                type="original"
+                sentId={id}
+                count={originNum}
+                title={intl.formatMessage({
+                  id: "channel.type.original.label",
+                })}
+              />
+            ),
+            key: "original",
+            children: (
+              <SentCanRead
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                type="original"
+                origin={origin}
+              />
+            ),
+          },
+          {
+            label: (
+              <SentTabButton
+                style={tabButtonStyle}
+                icon={<BlockOutlined />}
+                type="original"
+                sentId={id}
+                count={currSimilarNum}
+                title={intl.formatMessage({
+                  id: "buttons.sim",
+                })}
+              />
+            ),
+            key: "sim",
+            children: (
+              <SentSim
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                channelsId={channelsId}
+                limit={5}
+                onCreate={() => setCurrSimilarNum((origin) => origin + 1)}
+              />
+            ),
+          },
+          {
+            label: (
+              <SentTabButtonWbw
+                style={tabButtonStyle}
+                sentId={id}
+                count={0}
+                onMenuClick={(keyPath: string[]) => {
+                  switch (keyPath.join("-")) {
+                    case "show-progress":
+                      setShowWbwProgress((origin) => !origin);
+                      break;
+                  }
+                }}
+              />
+            ),
+            key: "wbw",
+            children: (
+              <SentWbw
+                book={parseInt(sId[0])}
+                para={parseInt(sId[1])}
+                wordStart={parseInt(sId[2])}
+                wordEnd={parseInt(sId[3])}
+                channelsId={channelsId}
+                wbwProgress={showWbwProgress}
+              />
+            ),
+          },
+          {
+            label: <span style={tabButtonStyle}>{"关系图"}</span>,
+            key: "relation-graphic",
+            children: <RelaGraphic wbwData={wbwData} />,
+          },
+        ]}
+      />
+    </div>
   );
 };
 

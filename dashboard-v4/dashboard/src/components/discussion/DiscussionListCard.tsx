@@ -20,6 +20,8 @@ import { courseInfo } from "../../reducers/current-course";
 import { courseUser } from "../../reducers/course-user";
 import TimeShow from "../general/TimeShow";
 
+const { Paragraph } = Typography;
+
 export type TResType =
   | "article"
   | "channel"
@@ -126,14 +128,14 @@ const DiscussionListCardWidget = ({
                       {entity.title}
                     </Button>
                   </div>
-                  <Space>
+                  <div>
                     <TimeShow
                       type="secondary"
                       showIcon={false}
                       createdAt={entity.createdAt}
                       updatedAt={entity.updatedAt}
                     />
-                  </Space>
+                  </div>
                 </>
               );
             },
@@ -142,11 +144,22 @@ const DiscussionListCardWidget = ({
             dataIndex: "content",
             search: false,
             render(dom, entity, index, action, schema) {
+              const content = entity.summary ?? entity.content;
               return (
-                <div>
-                  <div key={index}>
-                    {entity.summary ?? entity.content?.substring(0, 100)}
-                  </div>
+                <div key={index}>
+                  <Paragraph
+                    type="secondary"
+                    ellipsis={{
+                      rows: 2,
+                      expandable: true,
+                      onEllipsis: (ellipsis) => {
+                        console.log("Ellipsis changed:", ellipsis);
+                      },
+                    }}
+                    title={content}
+                  >
+                    {content}
+                  </Paragraph>
                 </div>
               );
             },

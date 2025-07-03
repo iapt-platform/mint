@@ -6,24 +6,41 @@
     owner: "{{ ansible_user }}"
     mode: "0755"
 
-# - name: Download source code
-#   ansible.builtin.unarchive:
-#     src: https://github.com/iapt-platform/mint/archive/{{ mint_version }}.zip
-#     dest: "{{ app_deploy_target | dirname }}"
-#     remote_src: true
-#     creates: "{{ app_deploy_target }}"
+# ---------------------------------------------------------
 
-- name: Download source codes
-  ansible.builtin.git:
-    repo: "https://github.com/iapt-platform/mint.git"
-    dest: "{{ app_deploy_target | dirname }}/repo"
+- name: Download source code
+  ansible.builtin.unarchive:
+    src: https://github.com/iapt-platform/mint/archive/{{ mint_version }}.zip
+    dest: "{{ app_deploy_target | dirname }}"
+    remote_src: true
+    creates: "{{ app_deploy_target }}"
 
-- name: Clone to spec version
-  ansible.builtin.git:
-    repo: "{{ app_deploy_target | dirname }}/repo"
-    dest: "{{ app_deploy_target }}"
-    depth: 1
-    single_branch: true
+# ---------------------------------------------------------
+
+# - name: Clone source codes directly
+#   ansible.builtin.git:
+#     repo: "https://github.com/iapt-platform/mint.git"
+#     dest: "{{ app_deploy_target }}"
+#     version: "{{ mint_version }}"
+
+# ---------------------------------------------------------
+
+# - name: Clone source codes to repo
+#   ansible.builtin.git:
+#     repo: "https://github.com/iapt-platform/mint.git"
+#     dest: "{{ app_deploy_target | dirname }}/repo"
+#     update: true
+#     version: "development"
+
+# - name: Clone to from local repo
+#   ansible.builtin.git:
+#     repo: "{{ app_deploy_target | dirname }}/repo"
+#     dest: "{{ app_deploy_target }}"
+#     version: "{{ mint_version }}"
+#     # depth: 1
+#     # single_branch: true
+
+# ---------------------------------------------------------
 
 - name: Upload dashboard-v4 dist
   ansible.posix.synchronize:
@@ -48,3 +65,21 @@
   ansible.builtin.systemd:
     daemon_reload: true
     scope: user
+
+- name: Upload version.txt(api-v8)
+  ansible.builtin.template:
+    src: version.txt.j2
+    dest: "{{ app_deploy_target }}/api-v8/public/version.txt"
+    mode: "0555"
+
+- name: Upload version.txt(api-v12)
+  ansible.builtin.template:
+    src: version.txt.j2
+    dest: "{{ app_deploy_target }}/api-v12/public/version.txt"
+    mode: "0555"
+
+- name: Upload version.txt(dashboard-v4)
+  ansible.builtin.template:
+    src: version.txt.j2
+    dest: "{{ app_deploy_target }}/dashboard-v4/dashboard/dist/version.txt"
+    mode: "0555"
