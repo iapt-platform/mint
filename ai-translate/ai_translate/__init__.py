@@ -53,6 +53,7 @@ def launch(name, queue, config_file):
         logger.debug('api-url:(%s)', config['app']['api-url'])
         redis_cli = open_redis_cluster(config['redis'])
         openai_proxy = config['app'].get('openai-proxy', None)
+        logger.debug(f'openai_proxy:({openai_proxy})')
         start_consumer(redis_cli, name,
                        config['rabbitmq'], 
                        queue, config['app']['api-url'], 
