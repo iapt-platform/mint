@@ -1,9 +1,10 @@
-const express = require("express");
-const OpenAI = require("openai");
-const cors = require("cors");
+import express from "express";
+import OpenAI from "openai";
+import cors from "cors";
+
+import logger from "./logger";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // 中间件
 app.use(cors());
@@ -13,7 +14,7 @@ app.use(express.json());
 app.post("/api/openai", async (req, res) => {
   try {
     const { open_ai_url, api_key, payload } = req.body;
-    console.debug("request", open_ai_url);
+    logger.debug("request %s", open_ai_url);
     // 验证必需的参数
     if (!open_ai_url || !api_key || !payload) {
       return res.status(400).json({
@@ -42,7 +43,7 @@ app.post("/api/openai", async (req, res) => {
           ...payload,
           stream: true,
         });
-        console.info("waiting response");
+        logger.info("waiting response");
         for await (const chunk of stream) {
           const data = JSON.stringify(chunk);
           res.write(`data: ${data}\n\n`);
@@ -51,7 +52,7 @@ app.post("/api/openai", async (req, res) => {
         res.write("data: [DONE]\n\n");
         res.end();
       } catch (streamError) {
-        console.error("Streaming error:", streamError);
+        logger.error("Streaming error: %s", streamError);
         res.write(
           `data: ${JSON.stringify({ error: streamError.message })}\n\n`
         );
@@ -64,7 +65,7 @@ app.post("/api/openai", async (req, res) => {
       res.json(completion);
     }
   } catch (error) {
-    console.error("API Error:", error);
+    logger.error("API Error: %s", error);
 
     // 处理不同类型的错误
     if (error.status) {
@@ -86,11 +87,4 @@ app.get("/health", (req, res) => {
   res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
-// 启动服务器
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Health check: http://localhost:${PORT}/health`);
-  console.log(`API endpoint: http://localhost:${PORT}/api/openai`);
-});
-
-module.exports = app;
+export default app;
