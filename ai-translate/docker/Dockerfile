@@ -30,7 +30,8 @@ RUN echo 'source $HOME/python3/bin/activate' >> $HOME/.bashrc
 
 # https://pip.pypa.io/en/stable/installation/#get-pip-py
 ADD --chown=deploy https://bootstrap.pypa.io/get-pip.py /opt/
-RUN bash -c "source $HOME/python3/bin/activate && python3 /opt/get-pip.py"
+RUN bash -c ". $HOME/python3/bin/activate && python3 /opt/get-pip.py"
+RUN bash -c ". $HOME/python3/bin/activate && pip install pika requests redis[hiredis] openai"
 
 # COPY --chown=deploy README.md pyproject.toml /opt/ai-translate/
 # COPY --chown=deploy ai_translate /opt/ai-translate/ai_translate

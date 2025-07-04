@@ -41,10 +41,37 @@ class TestMdRender extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (\App\Tools\Tools::isStop()) {
             return 0;
         }
-        Log::info('md render start item='.$this->argument('item'));
+
+        $content = <<<md
+        # 测试
+        ## 测试
+
+        {{note|text=这是一个普通信息提示|type=info}}
+
+        下面是一个警告信息：
+        {{warning|message=请注意这个重要提示|title=重要}}
+
+        你也可以使用位置参数：
+        {{note|
+        成功完成操作|
+        success}}
+
+        支持嵌套模板：
+        {{info|
+        content=外层信息 {{note|内嵌提示|warning}} 继续外层|
+        title=嵌套示例}}
+
+        **粗体文本** 和 *斜体文本* 也被支持。
+        md;
+        $parser = new \App\Services\Template\TemplateService(false);
+        $render = $parser->parseAndRender($content, 'json');
+        var_dump($render);
+        return 0;
+
+        Log::info('md render start item=' . $this->argument('item'));
         $data = array();
         $data['bold'] = <<<md
         **三十位** 经在[中间]六处为**[licchavi]**，在极果为**慧解脱**
@@ -147,24 +174,24 @@ class TestMdRender extends Command
         Markdown::driver($this->option('driver'));
 
         $format = $this->option('format');
-        if(empty($format)){
-            $formats = ['react','unity','text','tex','html','simple'];
-        }else{
+        if (empty($format)) {
+            $formats = ['react', 'unity', 'text', 'tex', 'html', 'simple'];
+        } else {
             $formats = [$format];
         }
         foreach ($formats as $format) {
             $this->info("format:{$format}");
             foreach ($data as $key => $value) {
                 $_item = $this->argument('item');
-                if(!empty($_item) && $key !==$_item){
+                if (!empty($_item) && $key !== $_item) {
                     continue;
                 }
                 $mdRender = new MdRender([
-                    'format'=>$format,
-                    'footnote'=>true,
-                    'paragraph'=>true,
+                    'format' => $format,
+                    'footnote' => true,
+                    'paragraph' => true,
                 ]);
-                $output = $mdRender->convert($value,['00ae2c48-c204-4082-ae79-79ba2740d506']);
+                $output = $mdRender->convert($value, ['00ae2c48-c204-4082-ae79-79ba2740d506']);
                 echo $output;
             }
         }

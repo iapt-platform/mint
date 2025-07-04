@@ -5,4 +5,4 @@ if [ "$#" -ne 1 ]; then
     exit 1
 fi
 
-podman run --rm -it --events-backend=file --hostname=palm --network host -v $PWD:/srv:z "mint-php$1"
+podman run --rm -it --events-backend=file --hostname=palm --network host -v $PWD:/srv:z "mint-php-$1"

@@ -61,7 +61,7 @@ class ProjectTreeController extends Controller
         }
         foreach ($newData as $key => $value) {
             if ($value['parent_id']) {
-                $parent = array_find($newData, function ($element) use ($value) {
+                $parent = \array_find($newData, function ($element) use ($value) {
                     return $element['old_id'] == $value['parent_id'];
                 });
                 if ($parent) {
