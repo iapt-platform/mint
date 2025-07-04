@@ -105,6 +105,7 @@ class CreateMyHanCrop extends Command
             Storage::disk('local')->makeDirectory($dir);
             Storage::disk('local')->makeDirectory($dir . '/img');
             Storage::disk('local')->put($dir . "/index.html", $content);
+            Storage::disk('local')->put($dir . "/img/{$page}", $page);
             $this->info("page={$page} word=" . count($words));
         } else {
             $this->error('page' . $page . 'no words');

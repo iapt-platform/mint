@@ -7,7 +7,7 @@ from .utils import is_stopped
 logger = logging.getLogger(__name__)
 
 
-def handle_message(redis, ch, method, id, content_type, body, api_url: str, customer_timeout: int):
+def handle_message(redis, ch, method, id, content_type, body, api_url: str,openai_proxy:str, customer_timeout: int):
     MaxRetry: int = 3
     try:
         logger.info("process message start (%s) messages", len(body.payload))
