@@ -61,9 +61,18 @@ class ProjectTreeController extends Controller
         }
         foreach ($newData as $key => $value) {
             if ($value['parent_id']) {
+                $parent = null;
+                /*
                 $parent = \array_find($newData, function ($element) use ($value) {
                     return $element['old_id'] == $value['parent_id'];
                 });
+                */
+                foreach ($newData as $item) {
+                    if ($item['old_id'] == $value['parent_id']) {
+                        $parent = $item;
+                        break;
+                    }
+                }
                 if ($parent) {
                     $newData[$key]['parent_id'] = $parent['uid'];
                     $parentPath = $parent['path'] ? json_decode($parent['path']) : [];
