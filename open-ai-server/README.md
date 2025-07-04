@@ -12,13 +12,11 @@ npm install
 
 1. **启动服务器**：
 
-```bash
-# 开发模式（自动重启）
-npm run dev
+`bash
+npm run build
+node dist/main-XXX.js config.json
 
-# 生产模式
-npm start
-```
+````
 
 ## 主要功能特点
 
@@ -48,7 +46,7 @@ npm start
     "stream": true // 可选，启用流式响应
   }
 }
-```
+````
 
 **非流式响应**：返回完整的 JSON 结果
 **流式响应**：返回 Server-Sent Events 格式的实时数据流
