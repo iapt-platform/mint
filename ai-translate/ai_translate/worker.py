@@ -12,7 +12,7 @@ def handle_message(redis, ch, method, id, content_type, body, api_url: str,opena
     try:
         logger.info("process message start (%s) messages", len(body.payload))
         consumer = AiTranslateService(
-            redis, ch, method, api_url, customer_timeout)
+            redis, ch, method, api_url,openai_proxy, customer_timeout)
         messages = ns_to_dataclass([body], Message)
         consumer.process_translate(id, messages[0])
         ch.basic_ack(delivery_tag=method.delivery_tag)  # 确认消息
