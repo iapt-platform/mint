@@ -14,7 +14,7 @@ app.use(express.json());
 app.post("/api/openai", async (req, res) => {
   try {
     const { open_ai_url, api_key, payload } = req.body;
-    logger.debug("request %s", open_ai_url);
+
     // 验证必需的参数
     if (!open_ai_url || !api_key || !payload) {
       return res.status(400).json({
@@ -22,63 +22,139 @@ app.post("/api/openai", async (req, res) => {
       });
     }
 
-    // 初始化OpenAI客户端
-    const openai = new OpenAI({
-      apiKey: api_key,
-      baseURL: open_ai_url,
-    });
+    // 检测不同的 AI 服务提供商
 
-    // 检查是否需要流式响应
+    const isClaudeAPI =
+      open_ai_url.includes("anthropic.com") || open_ai_url.includes("claude");
+
     const isStreaming = payload.stream === true;
 
+    // 构建请求URL和headers
+    let requestUrl = open_ai_url;
+    let headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${api_key}`,
+    };
+
+    if (isClaudeAPI) {
+      // Claude API使用特殊的header格式
+      headers["x-api-key"] = api_key;
+      headers["anthropic-version"] = "2023-06-01";
+    }
+
     if (isStreaming) {
-      // 流式响应
+      // 流式响应处理
       res.setHeader("Content-Type", "text/event-stream");
       res.setHeader("Cache-Control", "no-cache");
       res.setHeader("Connection", "keep-alive");
       res.setHeader("Access-Control-Allow-Origin", "*");
 
       try {
-        const stream = await openai.chat.completions.create({
-          ...payload,
-          stream: true,
+        const response = await fetch(requestUrl, {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(payload),
         });
-        logger.info("waiting response");
-        for await (const chunk of stream) {
-          const data = JSON.stringify(chunk);
-          res.write(`data: ${data}\n\n`);
+
+        // 复制响应头到客户端
+        response.headers.forEach((value, key) => {
+          // 跳过一些不需要的头部
+          if (
+            ![
+              "content-encoding",
+              "content-length",
+              "transfer-encoding",
+            ].includes(key.toLowerCase())
+          ) {
+            res.setHeader(key, value);
+          }
+        });
+
+        // 设置响应状态码（直接使用大模型返回的状态码）
+        res.status(response.status);
+
+        if (!response.ok) {
+          // 对于错误响应，也要透传原始数据
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value, { stream: true });
+            res.write(chunk);
+          }
+          res.end();
+          return;
         }
 
-        res.write("data: [DONE]\n\n");
+        // 处理成功的流式响应
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          res.write(chunk);
+        }
+
         res.end();
       } catch (streamError) {
-        logger.error("Streaming error: %s", streamError);
-        res.write(
-          `data: ${JSON.stringify({ error: streamError.message })}\n\n`
-        );
-        res.end();
+        console.error("Streaming error:", streamError);
+
+        // 网络错误或其他系统错误
+        res.status(500);
+        res.setHeader("Content-Type", "application/json");
+        res.json({
+          error: "Proxy server error",
+          message: streamError.message,
+          type: "proxy_error",
+        });
       }
     } else {
-      // 非流式响应
-      const completion = await openai.chat.completions.create(payload);
+      // 非流式响应处理
+      const response = await fetch(requestUrl, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(payload),
+      });
 
-      res.json(completion);
+      // 复制响应头到客户端
+      response.headers.forEach((value, key) => {
+        // 跳过一些不需要的头部
+        if (
+          !["content-encoding", "content-length", "transfer-encoding"].includes(
+            key.toLowerCase()
+          )
+        ) {
+          res.setHeader(key, value);
+        }
+      });
+
+      // 设置响应状态码（直接使用大模型返回的状态码）
+      res.status(response.status);
+
+      // 获取响应数据
+      const responseData = await response.json();
+
+      // 直接返回原始响应数据，不进行任何修改
+      res.json(responseData);
     }
   } catch (error) {
-    logger.error("API Error: %s", error);
+    console.error("Proxy Error:", error);
 
-    // 处理不同类型的错误
-    if (error.status) {
-      return res.status(error.status).json({
-        error: error.message,
-        type: error.type || "api_error",
+    // 只有在系统级错误时才返回代理服务器的错误信息
+    // 比如网络错误、JSON解析错误等
+    if (!res.headersSent) {
+      res.status(500).json({
+        error: "Proxy server error",
+        message: error.message,
+        type: "proxy_error",
       });
     }
-
-    res.status(500).json({
-      error: "Internal server error",
-      message: error.message,
-    });
   }
 });
 
