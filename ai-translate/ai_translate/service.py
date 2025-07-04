@@ -106,7 +106,7 @@ class Message:
 class AiTranslateService:
     """AI翻译服务"""
 
-    def __init__(self, redis, ch, method, api_url, customer_timeout):
+    def __init__(self, redis, ch, method, api_url, openai_proxy,customer_timeout):
         self.queue = 'ai_translate'
         self.model_token = None
         self.task = None
@@ -119,6 +119,7 @@ class AiTranslateService:
         self.customer_timeout = customer_timeout
         self.channel = ch
         self.maxProcessTime = 15 * 60  # 一个句子的最大处理时间
+        self.openai_proxy=openai_proxy 
 
     def process_translate(self, message_id: str, body: Message) -> bool:
         """处理翻译任务"""
@@ -355,12 +356,24 @@ class AiTranslateService:
 
         while attempt < max_retries:
             try:
-                response = requests.post(
-                    message.model.url,
-                    json=param,
-                    headers=headers,
-                    timeout=self.llm_timeout
-                )
+                if self.openai_proxy:
+                    response = requests.post(
+                        self.openai_proxy,
+                        json={
+                            "open_ai_url": message.model.url,
+                            "api_key": message.model.key,
+                            'payload':param,
+                        },
+                        headers=headers,
+                        timeout=self.llm_timeout
+                    )
+                else:
+                    response = requests.post(
+                        message.model.url,
+                        json=param,
+                        headers=headers,
+                        timeout=self.llm_timeout
+                    )
                 response.raise_for_status()
 
                 logger.info(f'{self.queue} LLM request successful')
