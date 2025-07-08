@@ -3,16 +3,14 @@ import OpenAI from "openai";
 import cors from "cors";
 
 import logger from "./logger";
+import config from "./config";
 
 const app = express();
 
 // 中间件
 app.use(cors());
 app.use(express.json());
-// 设置配置的函数
-const setConfig = (config) => {
-  app.locals.config = config;
-};
+const api_server = config["api_server"];
 // POST 路由处理OpenAI请求
 app.post("/api/openai", async (req, res) => {
   try {
@@ -28,8 +26,7 @@ app.post("/api/openai", async (req, res) => {
       }
     } else {
       //get model info from api server
-      // 通过 req.app.locals.config 访问配置
-      const url = req.app.locals.config.api_server + `/v2/ai-model/${model_id}`;
+      const url = api_server + `/v2/ai-model/${model_id}`;
       const res = await fetch(url, {
         method: "GET",
         headers: {
