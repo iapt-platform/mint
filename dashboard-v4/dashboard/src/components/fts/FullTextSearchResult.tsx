@@ -12,7 +12,7 @@ import AiTranslate from "../ai/AiTranslate";
 
 const { Title, Text } = Typography;
 
-interface IFtsData {
+export interface IFtsData {
   rank?: number;
   highlight?: string;
   book: number;
@@ -23,7 +23,7 @@ interface IFtsData {
   paliTitle?: string;
   path?: ITocPathNode[];
 }
-interface IFtsResponse {
+export interface IFtsResponse {
   ok: boolean;
   message: string;
   data: {
@@ -31,7 +31,7 @@ interface IFtsResponse {
     count: number;
   };
 }
-interface IFtsItem {
+export interface IFtsItem {
   book: number;
   paragraph: number;
   title?: string;
@@ -43,51 +43,29 @@ interface IFtsItem {
 
 export type ISearchView = "pali" | "title" | "page" | "number";
 interface IWidget {
-  keyWord?: string;
-  keyWords?: string[];
-  engin?: "wbw" | "tulip";
-  tags?: string[];
-  bookId?: string | null;
-  book?: number;
-  para?: number;
-  bold?: string | null;
-  orderBy?: string | null;
-  match?: string | null;
-  keyWord2?: string;
   view?: ISearchView;
-  pageType?: string;
+  ftsData?: IFtsItem[];
+  total?: number;
+  loading: boolean;
+  currPage: number;
+  onChange?: (page: number, pageSize: number) => void;
 }
 const FullTxtSearchResultWidget = ({
-  keyWord,
-  keyWords,
-  engin = "wbw",
-  tags,
-  bookId,
-  book,
-  para,
-  orderBy,
-  match,
-  bold,
-  keyWord2,
-  view = "pali",
-  pageType,
+  view,
+  ftsData,
+  total,
+  loading = false,
+  currPage = 1,
+  onChange,
 }: IWidget) => {
-  const [ftsData, setFtsData] = useState<IFtsItem[]>();
-  const [total, setTotal] = useState<number>();
-  const [loading, setLoading] = useState(false);
-  const [currPage, setCurrPage] = useState<number>(1);
-
+  /*
   useEffect(
     () => setCurrPage(1),
     [view, keyWord, keyWords, tags, bookId, match, pageType, bold]
   );
 
   useEffect(() => {
-    /**
-     * 搜索引擎选择逻辑
-     * 如果 keyWord 包涵空格 使用 tulip
-     * 如果 keyWord 不包涵空格 使用 wbw
-     */
+
     let words;
     let api = "";
     if (keyWord?.trim().includes(" ")) {
@@ -140,6 +118,7 @@ const FullTxtSearchResultWidget = ({
           });
           setFtsData(result);
           setTotal(json.data.count);
+          onFound && onFound(result);
         } else {
           console.error(json.message);
         }
@@ -157,6 +136,7 @@ const FullTxtSearchResultWidget = ({
     view,
     bold,
   ]);
+  */
   return (
     <List
       style={{ width: "100%" }}
@@ -164,12 +144,10 @@ const FullTxtSearchResultWidget = ({
       size="small"
       dataSource={ftsData}
       pagination={{
-        onChange: (page) => {
-          console.log(page);
-          setCurrPage(page);
-        },
+        onChange: onChange,
         showQuickJumper: true,
         showSizeChanger: false,
+        current: currPage,
         pageSize: 10,
         total: total,
         position: "both",
