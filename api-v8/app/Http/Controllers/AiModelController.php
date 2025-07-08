@@ -40,6 +40,9 @@ class AiModelController extends Controller
                 $table = AiModel::where('owner_id', $request->get('user_id'))
                     ->orWhere('privacy', 'public');
                 break;
+            case 'chat':
+                $table = AiModel::where('owner_id', config("mint.admin.root_uuid"));
+                break;
         }
         if ($request->has('keyword')) {
             $table = $table->where('name', 'like', '%' . $request->get('keyword') . '%');

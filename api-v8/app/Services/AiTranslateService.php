@@ -19,12 +19,13 @@ use App\Http\Controllers\AuthController;
 
 use App\Http\Api\MdRender;
 use App\Exceptions\SectionTimeoutException;
+use App\Exceptions\TaskFailException;
 
 class DatabaseException extends \Exception {}
 
 class AiTranslateService
 {
-    private $queue = 'ai_translate';
+    private $queue = 'ai_translate_v2';
     private $modelToken = null;
     private $task = null;
     protected $mq;
@@ -34,9 +35,15 @@ class AiTranslateService
     private $stop = false;
     private $maxProcessTime = 15 * 60; //一个句子的最大处理时间
     private $mqTimeout = 60;
+    private $openaiProxy = null;
 
     public function __construct() {}
 
+    public function setProxy(string $proxy): self
+    {
+        $this->openaiProxy = $proxy;
+        return $this;
+    }
     /**
      * @param string $messageId
      * @param array $translateData
@@ -99,13 +106,8 @@ class AiTranslateService
             $taskDiscussionContent = [];
 
             //推理
-            try {
-                $responseLLM = $this->requestLLM($message);
-                $taskDiscussionContent[] = '- LLM request successful';
-            } catch (RequestException $e) {
-                throw $e;
-            }
-
+            $responseLLM = $this->requestLLM($message);
+            $taskDiscussionContent[] = '- LLM request successful';
 
             if ($this->task->category === 'translate') {
                 //写入句子库
@@ -173,7 +175,7 @@ class AiTranslateService
             $taskDiscussionContent[] = "- progress=" . $progress;
             //写入task discussion
             if ($this->taskTopicId) {
-                $content = implode('\n', $taskDiscussionContent);
+                $content = implode("\n", $taskDiscussionContent);
                 $dId = $this->taskDiscussion(
                     $this->task->id,
                     'task',
@@ -274,6 +276,17 @@ class AiTranslateService
             "temperature" => 0.7,
             "stream" => false
         ];
+        if ($this->openaiProxy) {
+            $requestUrl = $this->openaiProxy;
+            $body = [
+                'open_ai_url' => $message->model->url,
+                'api_key' => $message->model->key,
+                'payload' => $param,
+            ];
+        } else {
+            $requestUrl = $message->model->url;
+            $body = $param;
+        }
         Log::info($this->queue . ' LLM request ' . $message->model->url . ' model:' . $param['model']);
         Log::debug($this->queue . ' LLM api request', [
             'url' => $message->model->url,
@@ -294,7 +307,7 @@ class AiTranslateService
                 try {
                     $response = Http::withToken($message->model->key)
                         ->timeout($this->llmTimeout)
-                        ->post($message->model->url, $param);
+                        ->post($requestUrl, $body);
 
                     // 如果状态码是 4xx 或 5xx，会自动抛出 RequestException
                     $response->throw();
@@ -308,13 +321,22 @@ class AiTranslateService
                     self::saveModelLog($this->modelToken, $modelLogData);
                     break; // 跳出 while 循环
                 } catch (RequestException $e) {
+                    Log::error($this->queue . ' LLM request exception: ' . $e->getMessage());
+                    $failResponse = $e->response;
+                    $modelLogData['request_headers'] = json_encode($failResponse->handlerStats(), JSON_UNESCAPED_UNICODE);
+                    $modelLogData['response_headers'] = json_encode($failResponse->headers(), JSON_UNESCAPED_UNICODE);
+                    $modelLogData['status'] = $failResponse->status();
+                    $modelLogData['response_data'] = $response->body();
+                    $modelLogData['success'] = false;
+                    self::saveModelLog($this->modelToken, $modelLogData);
+
                     $attempt++;
                     $status = $e->response->status();
 
                     // 某些错误不需要重试
                     if (in_array($status, [400, 401, 403, 404, 422])) {
                         Log::warning("客户端错误，不重试: {$status}\n");
-                        throw $e; // 重新抛出异常
+                        throw new TaskFailException; // 重新抛出异常
                     }
                     // 服务器错误或网络错误可以重试
                     if ($attempt < $maxRetries) {
@@ -323,19 +345,13 @@ class AiTranslateService
                         sleep($delay);
                     } else {
                         Log::error("达到最大重试次数，请求最终失败\n");
-                        throw $e;
+                        throw new TaskFailException;
                     }
+                } catch (\Exception $e) {
+                    throw $e;
                 }
             }
-        } catch (RequestException $e) {
-            Log::error($this->queue . ' LLM request exception: ' . $e->getMessage());
-            $failResponse = $e->response;
-            $modelLogData['request_headers'] = json_encode($failResponse->handlerStats(), JSON_UNESCAPED_UNICODE);
-            $modelLogData['response_headers'] = json_encode($failResponse->headers(), JSON_UNESCAPED_UNICODE);
-            $modelLogData['status'] = $failResponse->status();
-            $modelLogData['response_data'] = $response->body();
-            $modelLogData['success'] = false;
-            self::saveModelLog($this->modelToken, $modelLogData);
+        } catch (\Exception $e) {
             throw $e;
         }
 

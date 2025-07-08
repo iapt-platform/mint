@@ -1,8 +1,10 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Row, Col, Breadcrumb, Space, Tabs, Select } from "antd";
+import { Row, Col, Breadcrumb, Space, Tabs, Select, Button, Affix } from "antd";
 import FullSearchInput from "../../../components/fts/FullSearchInput";
 import FullTextSearchResult, {
+  IFtsItem,
+  IFtsResponse,
   ISearchView,
 } from "../../../components/fts/FullTextSearchResult";
 import FtsBookList from "../../../components/fts/FtsBookList";
@@ -12,16 +14,26 @@ import PageNumberList from "../../../components/fts/PageNumberList";
 import { Key } from "antd/es/table/interface";
 
 import BookTreeWithTags from "../../../components/corpus/BookTreeWithTags";
+import AIChatComponent from "../../../components/chat/AiChat";
+import { get } from "../../../request";
 
 const Widget = () => {
   const { key } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [bookRoot, setBookRoot] = useState("default");
   const [bookPath, setBookPath] = useState<string[]>([]);
   const navigate = useNavigate();
   const [pageType, setPageType] = useState("P");
   const [view, setView] = useState<ISearchView | undefined>("pali");
   const [caseWord, setCaseWord] = useState<string[]>();
+  const [prompt, setPrompt] = useState<string>();
+  const [sysPrompt, setSysPrompt] = useState<string>();
+
+  const [ftsData, setFtsData] = useState<IFtsItem[]>();
+  const [total, setTotal] = useState<number>();
+  const [loading, setLoading] = useState(false);
+  const [currPage, setCurrPage] = useState<number>(1);
+
+  const [chat, setChat] = useState(false);
 
   useEffect(() => {
     const v = searchParams.get("view");
@@ -30,19 +42,112 @@ const Widget = () => {
     }
   }, [key, searchParams]);
 
+  const sTags = searchParams.get("tags")?.split(",");
+  const bookId = searchParams.get("book");
+  const orderBy = searchParams.get("orderby");
+  const match = searchParams.get("match");
+  const bold = searchParams.get("bold");
+
+  useEffect(
+    () => setCurrPage(1),
+    [view, key, caseWord, sTags, bookId, match, pageType, bold]
+  );
+
   useEffect(() => {
-    let currRoot: string | null;
-    currRoot = localStorage.getItem("pali_path_root");
-    if (currRoot === null) {
-      currRoot = "default";
+    /**
+     * 搜索引擎选择逻辑
+     * 如果 keyWord 包涵空格 使用 tulip
+     * 如果 keyWord 不包涵空格 使用 wbw
+     */
+    let words;
+    let api = "";
+    if (key?.trim().includes(" ")) {
+      api = "search";
+      words = key;
+    } else {
+      api = "search-pali-wbw";
+      words = caseWord?.join();
     }
-    setBookRoot(currRoot);
-  }, []);
+
+    let url = `/v2/${api}?view=${view}&key=${words}`;
+    if (typeof sTags !== "undefined") {
+      url += `&tags=${sTags}`;
+    }
+    if (bookId) {
+      url += `&book=${bookId}`;
+    }
+    if (orderBy) {
+      url += `&orderby=${orderBy}`;
+    }
+    if (match) {
+      url += `&match=${match}`;
+    }
+    if (pageType) {
+      url += `&type=${pageType}`;
+    }
+    if (bold) {
+      url += `&bold=${bold}`;
+    }
+    const offset = (currPage - 1) * 10;
+    url += `&limit=10&offset=${offset}`;
+    console.log("fetch url", url);
+    setLoading(true);
+    get<IFtsResponse>(url)
+      .then((json) => {
+        if (json.ok) {
+          console.log("data", json.data);
+          const result: IFtsItem[] = json.data.rows.map((item) => {
+            return {
+              book: item.book,
+              paragraph: item.paragraph,
+              title: item.title ? item.title : item.paliTitle,
+              paliTitle: item.paliTitle,
+              content: item.highlight
+                ? item.highlight.replaceAll("** ti ", "**ti ")
+                : item.content,
+              path: item.path,
+              rank: item.rank,
+            };
+          });
+          setFtsData(result);
+          setTotal(json.data.count);
+          if (result && result.length > 0) {
+            const chat = result
+              .map((item) => {
+                return `## ${item.title}-${item.paliTitle} \n\n${item.content}\n\n`;
+              })
+              .join("");
+            setSysPrompt(`${chat}\n\n请根据上述巴利文本内容,回答用户的问题`);
+          }
+        } else {
+          console.error(json.message);
+        }
+      })
+      .finally(() => setLoading(false));
+  }, [
+    bold,
+    bookId,
+    caseWord,
+    currPage,
+    key,
+    match,
+    orderBy,
+    pageType,
+    sTags,
+    view,
+  ]);
+
+  let bookRoot = "default";
+  const currRoot = localStorage.getItem("pali_path_root");
+  if (currRoot) {
+    bookRoot = currRoot;
+  }
+
   return (
     <>
       <Row>
         <Col flex="auto"></Col>
-        <Col flex="1440px">
+        <Col>
           <Row>
             <Col xs={0} sm={6} md={5}>
               <BookTreeWithTags
@@ -65,7 +170,7 @@ const Widget = () => {
                 }}
               />
             </Col>
-            <Col xs={24} sm={18} md={13}>
+            <Col xs={24} sm={18} md={12}>
               <Space direction="vertical" style={{ padding: 10 }}>
                 <Space>
                   <FullSearchInput
@@ -167,65 +272,115 @@ const Widget = () => {
                     },
                   ]}
                 />
-                <FullTextSearchResult
-                  view={view as ISearchView}
-                  pageType={pageType}
-                  keyWord={key}
-                  keyWords={caseWord}
-                  tags={searchParams.get("tags")?.split(",")}
-                  bookId={searchParams.get("book")}
-                  orderBy={searchParams.get("orderby")}
-                  match={searchParams.get("match")}
-                  bold={searchParams.get("bold")}
+                <AIChatComponent
+                  initMessage={prompt}
+                  systemPrompt={sysPrompt}
+                  onChat={() => setChat(true)}
                 />
+                <div>
+                  <Space>
+                    <Button
+                      onClick={() =>
+                        setPrompt(
+                          `写一个关于**${key}**的概要，概要中的观点应该引用上述巴利文经文，并逐条列出每个巴利原文每个段落的摘要`
+                        )
+                      }
+                    >
+                      概要
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        setPrompt(
+                          `写一个介绍**${key}**的百科词条，词条中的观点应该引用巴利文经文，并给出引用的巴利原文和译文`
+                        )
+                      }
+                    >
+                      术语
+                    </Button>
+                  </Space>
+                </div>
+                {chat ? (
+                  <></>
+                ) : (
+                  <FullTextSearchResult
+                    view={view}
+                    ftsData={ftsData}
+                    total={total}
+                    loading={loading}
+                    currPage={currPage}
+                    onChange={(page) => {
+                      console.log(page);
+                      setCurrPage(page);
+                    }}
+                  />
+                )}
               </Space>
             </Col>
-            <Col xs={0} sm={0} md={6}>
-              {key && parseInt(key) ? (
-                <PageNumberList
-                  keyWord={key}
-                  onSelect={(selectedKeys: Key[]) => {
-                    console.log("selectedKeys", selectedKeys);
-                    if (selectedKeys.length > 0) {
-                      if (typeof selectedKeys[0] === "string") {
-                        const queryString = selectedKeys[0].split("-");
-                        if (queryString.length === 3) {
-                          setCaseWord(queryString[1].split(","));
-                          if (parseInt(queryString[2]) === 0) {
-                            searchParams.delete("book");
-                          } else {
-                            searchParams.set("book", queryString[2]);
+            <Col xs={0} sm={0} md={7}>
+              <Affix offsetTop={0}>
+                <div style={{ height: "100vh", overflowY: "auto" }}>
+                  {key && parseInt(key) ? (
+                    <PageNumberList
+                      keyWord={key}
+                      onSelect={(selectedKeys: Key[]) => {
+                        console.log("selectedKeys", selectedKeys);
+                        if (selectedKeys.length > 0) {
+                          if (typeof selectedKeys[0] === "string") {
+                            const queryString = selectedKeys[0].split("-");
+                            if (queryString.length === 3) {
+                              setCaseWord(queryString[1].split(","));
+                              if (parseInt(queryString[2]) === 0) {
+                                searchParams.delete("book");
+                              } else {
+                                searchParams.set("book", queryString[2]);
+                              }
+                              setSearchParams(searchParams);
+                            }
                           }
-                          setSearchParams(searchParams);
                         }
-                      }
-                    }
-                  }}
-                />
-              ) : (
-                <CaseList
-                  word={key}
-                  lines={5}
-                  onChange={(value: string[]) => setCaseWord(value)}
-                />
-              )}
+                      }}
+                    />
+                  ) : (
+                    <CaseList
+                      word={key}
+                      lines={5}
+                      onChange={(value: string[]) => setCaseWord(value)}
+                    />
+                  )}
 
-              <FtsBookList
-                view={view}
-                keyWord={key}
-                keyWords={caseWord}
-                tags={searchParams.get("tags")?.split(",")}
-                match={searchParams.get("match")}
-                bookId={searchParams.get("book")}
-                onSelect={(bookId: number) => {
-                  if (bookId !== 0) {
-                    searchParams.set("book", bookId.toString());
-                  } else {
-                    searchParams.delete("book");
-                  }
-                  setSearchParams(searchParams);
-                }}
-              />
+                  <FtsBookList
+                    view={view}
+                    keyWord={key}
+                    keyWords={caseWord}
+                    tags={searchParams.get("tags")?.split(",")}
+                    match={searchParams.get("match")}
+                    bookId={searchParams.get("book")}
+                    onSelect={(bookId: number) => {
+                      if (bookId !== 0) {
+                        searchParams.set("book", bookId.toString());
+                      } else {
+                        searchParams.delete("book");
+                      }
+                      setSearchParams(searchParams);
+                    }}
+                  />
+                  {chat ? (
+                    <FullTextSearchResult
+                      view={view}
+                      ftsData={ftsData}
+                      total={total}
+                      loading={loading}
+                      currPage={currPage}
+                      onChange={(page) => {
+                        console.log(page);
+                        setCurrPage(page);
+                      }}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              </Affix>
             </Col>
           </Row>
         </Col>

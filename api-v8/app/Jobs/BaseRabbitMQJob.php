@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
+use App\Exceptions\TaskFailException;
 
 abstract class BaseRabbitMQJob implements ShouldQueue
 {
@@ -54,6 +55,9 @@ abstract class BaseRabbitMQJob implements ShouldQueue
             ]);
 
             return $result;
+        } catch (TaskFailException $e) {
+            $this->handleFinalFailure($this->messageData, $e);
+            throw $e;
         } catch (\Exception $e) {
             Log::error("队列消息处理失败", [
                 'queue' => $this->queueName,
