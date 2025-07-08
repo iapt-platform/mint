@@ -16,6 +16,8 @@ app.post("/api/openai", async (req, res) => {
   try {
     const { model_id, open_ai_url, api_key, payload } = req.body;
 
+    let requestUrl = open_ai_url;
+    let apiKey = api_key;
     // 验证必需的参数
     if (!model_id) {
       if (!open_ai_url || !api_key || !payload) {
@@ -26,39 +28,57 @@ app.post("/api/openai", async (req, res) => {
       }
     } else {
       //get model info from api server
-      const url = api_server + `/v2/ai-model/${model_id}`;
-      const res = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      // 获取响应数据
-      const model = await res.json();
-      open_ai_url = model.url;
-      api_key = model.key;
+      try {
+        const url = api_server + `/v2/ai-model/${model_id}`;
+        logger.info("get model info from api server " + url);
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        // 获取响应数据
+        const model = await response.json();
+        if (model.ok) {
+          requestUrl = model.data.url;
+          apiKey = model.data.key;
+        } else {
+          return res.status(400).json({
+            error:
+              "Missing required parameters: open_ai_url, api_key, or payload",
+          });
+        }
+      } catch (error) {
+        logger.error(error.message);
+        if (!res.headersSent) {
+          res.status(500).json({
+            error: "Proxy server error",
+            message: error.message,
+            type: "proxy_error",
+          });
+        }
+      }
     }
 
     // 检测不同的 AI 服务提供商
 
     const isClaudeAPI =
-      open_ai_url.includes("anthropic.com") || open_ai_url.includes("claude");
+      requestUrl.includes("anthropic.com") || requestUrl.includes("claude");
 
     const isStreaming = payload.stream === true;
 
     // 构建请求URL和headers
-    let requestUrl = open_ai_url;
+
     let headers = {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${api_key}`,
+      Authorization: `Bearer ${apiKey}`,
     };
 
     if (isClaudeAPI) {
       // Claude API使用特殊的header格式
-      headers["x-api-key"] = api_key;
+      headers["x-api-key"] = apiKey;
       headers["anthropic-version"] = "2023-06-01";
     }
-
     if (isStreaming) {
       // 流式响应处理
       res.setHeader("Content-Type", "text/event-stream");
@@ -120,7 +140,7 @@ app.post("/api/openai", async (req, res) => {
 
         res.end();
       } catch (streamError) {
-        console.error("Streaming error:", streamError);
+        logger.error("Streaming error:" + streamError.message);
 
         // 网络错误或其他系统错误
         res.status(500);
@@ -161,7 +181,7 @@ app.post("/api/openai", async (req, res) => {
       res.json(responseData);
     }
   } catch (error) {
-    console.error("Proxy Error:", error);
+    logger.error("Proxy Error:" + error.message);
 
     // 只有在系统级错误时才返回代理服务器的错误信息
     // 比如网络错误、JSON解析错误等
@@ -181,4 +201,3 @@ app.get("/health", (req, res) => {
 });
 
 export default app;
-export { setConfig };
