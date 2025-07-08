@@ -25,6 +25,7 @@ import {
 import Marked from "../general/Marked";
 import { IAiModel, IAiModelListResponse } from "../api/ai";
 import { get } from "../../request";
+import User from "../auth/User";
 
 const { TextArea } = Input;
 
@@ -176,13 +177,15 @@ const AIChatComponent = ({
       }
       try {
         const payload = {
-          model: selectedModel,
+          model: models?.find((value) => value.uid === selectedModel)?.model,
           messages: messages,
           stream: true,
           temperature: 0.7,
           max_tokens: 2000,
         };
-        const response = await fetch(process.env.REACT_APP_OPENAI_PROXY, {
+        const url = process.env.REACT_APP_OPENAI_PROXY;
+        console.info("api request", url, payload);
+        const response = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
