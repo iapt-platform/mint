@@ -9,17 +9,37 @@ const app = express();
 // 中间件
 app.use(cors());
 app.use(express.json());
-
+// 设置配置的函数
+const setConfig = (config) => {
+  app.locals.config = config;
+};
 // POST 路由处理OpenAI请求
 app.post("/api/openai", async (req, res) => {
   try {
-    const { open_ai_url, api_key, payload } = req.body;
+    const { model_id, open_ai_url, api_key, payload } = req.body;
 
     // 验证必需的参数
-    if (!open_ai_url || !api_key || !payload) {
-      return res.status(400).json({
-        error: "Missing required parameters: open_ai_url, api_key, or payload",
+    if (!model_id) {
+      if (!open_ai_url || !api_key || !payload) {
+        return res.status(400).json({
+          error:
+            "Missing required parameters: open_ai_url, api_key, or payload",
+        });
+      }
+    } else {
+      //get model info from api server
+      // 通过 req.app.locals.config 访问配置
+      const url = req.app.locals.config.api_server + `/v2/ai-model/${model_id}`;
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+      // 获取响应数据
+      const model = await res.json();
+      open_ai_url = model.url;
+      api_key = model.key;
     }
 
     // 检测不同的 AI 服务提供商
@@ -164,3 +184,4 @@ app.get("/health", (req, res) => {
 });
 
 export default app;
+export { setConfig };
