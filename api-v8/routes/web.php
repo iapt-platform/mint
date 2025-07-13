@@ -6,6 +6,8 @@ use App\Http\Controllers\WbwAnalysisController;
 use App\Http\Controllers\PageIndexController;
 use App\Http\Controllers\AssetsController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,8 +44,7 @@ Route::get('/book/{id}', function ($id) {
 });
 Route::redirect('/privacy', '/privacy/index');
 
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\BookController;
+
 
 
 Route::post('/theme/toggle', [BookController::class, 'toggleTheme'])->name('theme.toggle');
@@ -69,4 +70,10 @@ Route::prefix('blog')->group(function () {
     Route::get('/{user}/tag/{tag}', [BlogController::class, 'tag'])->name('blog.tag');
     Route::get('/{user}/search', [BlogController::class, 'search'])->name('blog.search');
     Route::get('/{user}/{post}', [BlogController::class, 'show'])->name('blog.show');
+});
+
+Route::group(['prefix' => 'tools'], function () {
+    Route::get('/nissaya_format_converter', function () {
+        return view('nissaya_format_converter');
+    });
 });
