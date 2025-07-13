@@ -110,6 +110,7 @@ const items = {
   "buttons.clone": "Clone",
   "buttons.general": "General",
   "buttons.ai-models": "AI Models",
+  "buttons.new": "New",
 };
 
 export default items;

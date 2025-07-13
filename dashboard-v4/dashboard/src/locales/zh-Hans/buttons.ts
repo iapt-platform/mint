@@ -111,6 +111,7 @@ const items = {
   "buttons.clone": "克隆",
   "buttons.general": "常规",
   "buttons.ai-models": "AI模型",
+  "buttons.new": "新建",
 };
 
 export default items;
