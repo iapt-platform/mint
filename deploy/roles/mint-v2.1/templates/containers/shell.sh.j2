@@ -1,3 +1,3 @@
 #!/bin/sh
 
-podman run --rm -it --events-backend=file --hostname=mint --network host -w {{ app_deploy_target }} -v {{ app_deploy_target }}:{{ app_deploy_target }}:z {{ app_mint_image_name }} /bin/bash -l
+podman run --rm -it --events-backend=file --hostname=mint --network host -w {{ app_deploy_target }} -v /srv/{{ app_domain }}/clove:/srv/{{ app_domain }}/clove:z -v {{ app_deploy_target }}:{{ app_deploy_target }}:z {{ app_mint_image_name }} /bin/bash -l
