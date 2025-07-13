@@ -69,8 +69,8 @@ class ChannelController extends Controller
                 }
                 //判断当前用户是否有指定的studio的权限
                 $studioId = StudioApi::getIdByName($request->get('name'));
-                if ($user['user_uid'] !== $studioId) {
-                    return $this->error(__('auth.failed'));
+                if (!StudioApi::userCanList($user['user_uid'], $studioId)) {
+                    return $this->error(__('auth.failed'), 403, 403);
                 }
 
                 $table = Channel::select($indexCol);
@@ -296,7 +296,7 @@ class ChannelController extends Controller
             }
             return $this->ok(["rows" => $result, "count" => $count]);
         } else {
-            return $this->error("没有查询到数据");
+            return $this->ok(["rows" => [], "count" => 0]);
         }
     }
 
@@ -543,13 +543,13 @@ class ChannelController extends Controller
         }
         //判断当前用户是否有指定的studio的权限
         $studioId = StudioApi::getIdByName($request->get('studio'));
-        if ($user['user_uid'] !== $studioId) {
+        if (!StudioApi::userCanManage($user['user_uid'], $studioId)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
         $studio = StudioApi::getById($studioId);
         //查询是否重复
         if (Channel::where('name', $request->get('name'))
-            ->where('owner_uid', $user['user_uid'])
+            ->where('owner_uid', $studioId)
             ->exists()
         ) {
             return $this->error(__('validation.exists', ['name']), 200, 200);
@@ -558,7 +558,7 @@ class ChannelController extends Controller
         $channel = new Channel;
         $channel->id = app('snowflake')->id();
         $channel->name = $request->get('name');
-        $channel->owner_uid = $user['user_uid'];
+        $channel->owner_uid = $studioId;
         $channel->type = $request->get('type');
         $channel->lang = $request->get('lang');
         $channel->editor_id = $user['user_id'];
