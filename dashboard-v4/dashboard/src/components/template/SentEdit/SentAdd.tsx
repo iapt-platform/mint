@@ -5,6 +5,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { IChannel } from "../../channel/Channel";
 import ChannelTableModal from "../../channel/ChannelTableModal";
 import { TChannelType } from "../../api/Channel";
+import { useIntl } from "react-intl";
 
 interface IWidget {
   disableChannels?: string[];
@@ -17,7 +18,7 @@ const Widget = ({
   onSelect,
 }: IWidget) => {
   const [channelPickerOpen, setChannelPickerOpen] = useState(false);
-
+  const intl = useIntl();
   return (
     <ChannelTableModal
       disableChannels={disableChannels}
@@ -31,7 +32,7 @@ const Widget = ({
             setChannelPickerOpen(true);
           }}
         >
-          Add
+          {intl.formatMessage({ id: "buttons.new" })}
         </Button>
       }
       open={channelPickerOpen}

@@ -105,51 +105,52 @@ const SentCanReadWidget = ({
           onClick={() => load()}
         />
       </div>
-      <SentAdd
-        disableChannels={channels}
-        type={type}
-        onSelect={(channel: IChannel) => {
-          if (typeof user === "undefined") {
-            return;
-          }
-          const newSent: ISentence = {
-            content: "",
-            contentType: "markdown",
-            html: "",
-            book: book,
-            para: para,
-            wordStart: wordStart,
-            wordEnd: wordEnd,
-            editor: {
-              id: user.id,
-              nickName: user.nickName,
-              userName: user.realName,
-            },
-            channel: channel,
-            translationChannels: channelsId,
-            updateAt: "",
-            openInEditMode: true,
-          };
-          setSentData((origin) => {
-            return [newSent, ...origin];
-          });
-
-          setChannels((origin) => {
-            if (origin) {
-              if (!origin.includes(newSent.channel.id)) {
-                origin.push(newSent.channel.id);
-                return origin;
-              }
-            } else {
-              return [newSent.channel.id];
+      <div style={{ textAlign: "center" }}>
+        <SentAdd
+          disableChannels={channels}
+          type={type}
+          onSelect={(channel: IChannel) => {
+            if (typeof user === "undefined") {
+              return;
             }
-          });
-          if (typeof onCreate !== "undefined") {
-            onCreate();
-          }
-        }}
-      />
+            const newSent: ISentence = {
+              content: "",
+              contentType: "markdown",
+              html: "",
+              book: book,
+              para: para,
+              wordStart: wordStart,
+              wordEnd: wordEnd,
+              editor: {
+                id: user.id,
+                nickName: user.nickName,
+                userName: user.realName,
+              },
+              channel: channel,
+              translationChannels: channelsId,
+              updateAt: "",
+              openInEditMode: true,
+            };
+            setSentData((origin) => {
+              return [newSent, ...origin];
+            });
 
+            setChannels((origin) => {
+              if (origin) {
+                if (!origin.includes(newSent.channel.id)) {
+                  origin.push(newSent.channel.id);
+                  return origin;
+                }
+              } else {
+                return [newSent.channel.id];
+              }
+            });
+            if (typeof onCreate !== "undefined") {
+              onCreate();
+            }
+          }}
+        />
+      </div>
       {sentData.map((item, id) => {
         let diffText: string | null = null;
         if (origin) {

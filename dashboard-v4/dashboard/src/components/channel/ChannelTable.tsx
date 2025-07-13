@@ -246,7 +246,7 @@ const ChannelTableWidget = ({
           },
           {
             title: intl.formatMessage({
-              id: "dict.fields.createdAt.label",
+              id: "forms.fields.created-at.label",
             }),
             key: "progress",
             hideInTable: typeof chapter === "undefined",
