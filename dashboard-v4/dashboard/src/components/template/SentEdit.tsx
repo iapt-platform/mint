@@ -1,4 +1,4 @@
-import { Affix, Card } from "antd";
+import { Affix } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { IStudio } from "../auth/Studio";
 
@@ -14,6 +14,7 @@ import { TChannelType } from "../api/Channel";
 import { useAppSelector } from "../../hooks";
 import { currFocus } from "../../reducers/focus";
 import { ISentenceData } from "../api/Corpus";
+import "./SentEdit/style.css";
 
 export interface IResNumber {
   translation?: number;
@@ -210,23 +211,13 @@ export const SentEditInner = ({
   );
 
   return (
-    <Card
+    <div
       ref={divRef}
-      bodyStyle={{ paddingBottom: 0, paddingLeft: 0, paddingRight: 0 }}
-      style={{
-        border: isFocus
-          ? "2px solid rgb(0 0 200 / 50%)"
-          : "1px solid rgb(128 128 128 / 10%)",
-        marginTop: 4,
-        borderRadius: 6,
-        backgroundColor: "rgb(255 255 255 / 8%)",
-        width: "100%",
-      }}
-      size="small"
+      className={`sent-edit-inner` + (isFocus ? " sent-focus" : "")}
     >
       {affix ? (
         <Affix offsetTop={44}>
-          <div style={{ backgroundColor: "white" }}>{content}</div>
+          <div className="affix">{content}</div>
         </Affix>
       ) : (
         content
@@ -258,7 +249,7 @@ export const SentEditInner = ({
         onModeChange={(value: ArticleMode | undefined) => setArticleMode(value)}
         onAffix={() => setAffix(!affix)}
       />
-    </Card>
+    </div>
   );
 };
 
