@@ -21,3 +21,77 @@
 .sent_read_translation:hover ~ .sent_read_interactive_button {
   border: 1px solid black;
 }
+
+.sent-edit-inner {
+  border: 1px solid rgb(129 129 129 / 10%);
+  margin-top: 4px;
+  border-radius: 6px;
+  background-color: rgb(255 255 255 / 8%);
+  width: 100%;
+}
+.sent-focus {
+  border: 2px solid rgb(0 0 200 / 50%);
+}
+
+.sent-edit-inner .affix {
+  background-color: white;
+}
+.sent_tabs {
+  padding: 0 8px;
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+.sent_tabs.compact {
+  position: unset;
+  margin-top: -32px;
+  width: 100%;
+  margin-right: 10px;
+  background-color: unset;
+}
+
+.sent_tabs:hover .sent_tabs.compact {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+.sent_tabs.compact.curr_close {
+  position: absolute;
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+.sent_tabs .content {
+  padding: 0 8px;
+}
+
+.sent_tabs .ant-tabs-tab {
+  background: #c6c5c5 !important;
+}
+.sent_tabs .ant-tabs-tab-active {
+  background: rgba(128, 128, 128, 0.1) !important;
+}
+
+/** 2 级 组件 */
+.sent-edit-inner .sent-edit-inner .sent_tabs {
+  background-color: rgba(128, 128, 128, 0.9);
+}
+.sent-edit-inner .sent-edit-inner .sent_tabs .ant-tabs-tab {
+  background: #ececec !important;
+}
+
+.sent-edit-inner .sent-edit-inner .sent_tabs .ant-tabs-tab-active {
+  background: rgba(128, 128, 128, 0.1) !important;
+}
+
+/** 3 级 组件 */
+.sent-edit-inner .sent-edit-inner .sent-edit-inner .sent_tabs {
+  background-color: rgb(200, 200, 200);
+}
+.sent-edit-inner .sent-edit-inner .sent-edit-inner .sent_tabs .ant-tabs-tab {
+  background: #c6c5c5 !important;
+}
+
+.sent-edit-inner
+  .sent-edit-inner
+  .sent-edit-inner
+  .sent_tabs
+  .ant-tabs-tab-active {
+  background: rgba(128, 128, 128, 0.9) !important;
+}
