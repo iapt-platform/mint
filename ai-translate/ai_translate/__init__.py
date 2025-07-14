@@ -20,7 +20,7 @@ def open_redis_cluster(config):
     return (cli, config['namespace'])
 
 
-def start_consumer(context, name, config, queue, callback,proxy):
+def start_consumer(context, name, config, queue, callback, proxy):
     logger.debug("open rabbitmq %s@%s:%d/%s with timeout %ds",
                  config['user'], config['host'], config['port'], config['virtual-host'], config['customer-timeout'])
     connection = pika.BlockingConnection(
@@ -37,7 +37,7 @@ def start_consumer(context, name, config, queue, callback,proxy):
         handle_message(context, ch, method, properties.message_id,
                        properties.content_type, json.loads(
                            body, object_hook=SimpleNamespace),
-                       callback,proxy, config['customer-timeout'])
+                       callback, proxy, config['customer-timeout'])
 
     channel.basic_consume(
         queue=queue, on_message_callback=_callback, auto_ack=False)
@@ -55,6 +55,6 @@ def launch(name, queue, config_file):
         openai_proxy = config['app'].get('openai-proxy', None)
         logger.debug(f'openai_proxy:({openai_proxy})')
         start_consumer(redis_cli, name,
-                       config['rabbitmq'], 
-                       queue, config['app']['api-url'], 
+                       config['rabbitmq'],
+                       queue, config['app']['api-url'],
                        openai_proxy)

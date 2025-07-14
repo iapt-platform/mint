@@ -183,7 +183,7 @@ class DictController extends Controller
             }
         }
 
-        if ($resultCount < 2) {
+        if ($resultCount < 2 && $request->has('content')) {
             //查询内文
             $wordDataOutput = [];
             $table = UserDict::select($indexCol)

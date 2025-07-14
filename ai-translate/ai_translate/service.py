@@ -106,7 +106,7 @@ class Message:
 class AiTranslateService:
     """AI翻译服务"""
 
-    def __init__(self, redis, ch, method, api_url, openai_proxy,customer_timeout):
+    def __init__(self, redis, ch, method, api_url, openai_proxy, customer_timeout):
         self.queue = 'ai_translate'
         self.model_token = None
         self.task = None
@@ -119,7 +119,7 @@ class AiTranslateService:
         self.customer_timeout = customer_timeout
         self.channel = ch
         self.maxProcessTime = 15 * 60  # 一个句子的最大处理时间
-        self.openai_proxy=openai_proxy 
+        self.openai_proxy = openai_proxy
 
     def process_translate(self, message_id: str, body: Message) -> bool:
         """处理翻译任务"""
@@ -362,7 +362,7 @@ class AiTranslateService:
                         json={
                             "open_ai_url": message.model.url,
                             "api_key": message.model.key,
-                            'payload':param,
+                            'payload': param,
                         },
                         headers=headers,
                         timeout=self.llm_timeout
@@ -401,6 +401,7 @@ class AiTranslateService:
                 # 某些错误不需要重试
                 if status in [400, 401, 403, 404, 422]:
                     logger.warning(f"客户端错误，不重试: {status}")
+                    self._save_model_log(self.model_token, model_log_data)
                     raise LLMFailException
 
                 # 服务器错误或网络错误可以重试
@@ -421,7 +422,6 @@ class AiTranslateService:
                     logger.error(e)
 
         ai_data = response.json()
-        # logger.debug(f'{self.queue} LLM http response: {response.json()}')
 
         response_content = ai_data['choices'][0]['message']['content']
         reasoning_content = ai_data['choices'][0]['message'].get(

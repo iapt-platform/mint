@@ -653,10 +653,20 @@ class AiTranslateService
             ];
             array_push($mqData, $aiMqData);
         }
+
         $output = [
             'model' => $aiModel->toArray(),
             'task' => $task,
         ];
+        $us = ['openai.com', 'googleapis.com', 'x.ai', 'anthropic.com'];
+        $found = array_filter($us, function ($value) use ($output) {
+            return str_contains($output['model']['url'], $value);
+        });
+        if ($found) {
+            $output['area'] = 'us';
+        } else {
+            $output['area'] = 'cn';
+        }
         $output['payload'] = $mqData;
         return $output;
     }
