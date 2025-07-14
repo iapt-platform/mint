@@ -11,6 +11,7 @@ import {
   MenuProps,
   Card,
   Affix,
+  Typography,
 } from "antd";
 import {
   SendOutlined,
@@ -21,6 +22,10 @@ import {
   UserOutlined,
   RobotOutlined,
   PaperClipOutlined,
+  LeftOutlined,
+  RightOutlined,
+  CheckOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import Marked from "../general/Marked";
 import { IAiModel, IAiModelListResponse } from "../api/ai";
@@ -28,6 +33,7 @@ import { get } from "../../request";
 import User from "../auth/User";
 
 const { TextArea } = Input;
+const { Text } = Typography;
 
 // 类型定义
 interface Message {
@@ -36,6 +42,8 @@ interface Message {
   content: string;
   timestamp: string;
   model?: string;
+  versions?: string[]; // 存储所有版本的内容
+  currentVersionIndex?: number; // 当前显示的版本索引
 }
 
 interface OpenAIMessage {
@@ -66,6 +74,7 @@ interface IWidget {
   systemPrompt?: string;
   onChat?: () => void;
 }
+
 const AIChatComponent = ({
   initMessage,
   systemPrompt = "你是一个巴利语专家",
@@ -75,6 +84,8 @@ const AIChatComponent = ({
   const [inputValue, setInputValue] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedModel, setSelectedModel] = useState<string>("");
+  const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
+  const [editingContent, setEditingContent] = useState<string>("");
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -112,6 +123,7 @@ const AIChatComponent = ({
       sendMessage();
     }
   }, [initMessage]);
+
   // 打字机效果 - 支持流式输入
   const typeWriter = useCallback(
     (text: string, callback: () => void): NodeJS.Timeout => {
@@ -169,7 +181,11 @@ const AIChatComponent = ({
 
   // 调用OpenAI API - 支持流式输出
   const callOpenAI = useCallback(
-    async (messages: OpenAIMessage[]): Promise<void> => {
+    async (
+      messages: OpenAIMessage[],
+      isRegenerate: boolean = false,
+      messageIndex?: number
+    ): Promise<void> => {
       setIsLoading(false); // 开始流式输出时取消loading状态
       if (typeof process.env.REACT_APP_OPENAI_PROXY === "undefined") {
         console.error("no REACT_APP_OPENAI_PROXY");
@@ -189,7 +205,7 @@ const AIChatComponent = ({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer AIzaSyCzr8KqEdaQ3cRCxsFwSHh8c7kF3RZTZWw`, // 或你的API密钥
+            Authorization: `Bearer AIzaSyCzr8KqEdaQ3cRCxsFwSHh8c7kF3RZTZWw`,
           },
           body: JSON.stringify({
             model_id: selectedModel,
@@ -217,14 +233,36 @@ const AIChatComponent = ({
           },
           (finalContent: string) => {
             // 完成时的回调
-            const aiMessage: Message = {
-              id: Date.now(),
-              type: "ai",
-              content: finalContent,
-              timestamp: new Date().toLocaleTimeString(),
-              model: selectedModel,
-            };
-            setMessages((prev) => [...prev, aiMessage]);
+            if (isRegenerate && messageIndex !== undefined) {
+              // 重新生成时，添加到版本历史中
+              setMessages((prev) => {
+                const newMessages = [...prev];
+                const targetMessage = newMessages[messageIndex];
+                if (targetMessage) {
+                  if (!targetMessage.versions) {
+                    targetMessage.versions = [targetMessage.content];
+                    targetMessage.currentVersionIndex = 0;
+                  }
+                  targetMessage.versions.push(finalContent);
+                  targetMessage.currentVersionIndex =
+                    targetMessage.versions.length - 1;
+                  targetMessage.content = finalContent;
+                }
+                return newMessages;
+              });
+            } else {
+              // 新消息
+              const aiMessage: Message = {
+                id: Date.now(),
+                type: "ai",
+                content: finalContent,
+                timestamp: new Date().toLocaleTimeString(),
+                model: selectedModel,
+                versions: [finalContent],
+                currentVersionIndex: 0,
+              };
+              setMessages((prev) => [...prev, aiMessage]);
+            }
           }
         );
 
@@ -275,14 +313,34 @@ const AIChatComponent = ({
         // 如果真实API失败，回退到模拟响应
         const mockResponse = await simulateAIResponse(messages);
         typeWriter(mockResponse, () => {
-          const aiMessage: Message = {
-            id: Date.now(),
-            type: "ai",
-            content: mockResponse,
-            timestamp: new Date().toLocaleTimeString(),
-            model: selectedModel,
-          };
-          setMessages((prev) => [...prev, aiMessage]);
+          if (isRegenerate && messageIndex !== undefined) {
+            setMessages((prev) => {
+              const newMessages = [...prev];
+              const targetMessage = newMessages[messageIndex];
+              if (targetMessage) {
+                if (!targetMessage.versions) {
+                  targetMessage.versions = [targetMessage.content];
+                  targetMessage.currentVersionIndex = 0;
+                }
+                targetMessage.versions.push(mockResponse);
+                targetMessage.currentVersionIndex =
+                  targetMessage.versions.length - 1;
+                targetMessage.content = mockResponse;
+              }
+              return newMessages;
+            });
+          } else {
+            const aiMessage: Message = {
+              id: Date.now(),
+              type: "ai",
+              content: mockResponse,
+              timestamp: new Date().toLocaleTimeString(),
+              model: selectedModel,
+              versions: [mockResponse],
+              currentVersionIndex: 0,
+            };
+            setMessages((prev) => [...prev, aiMessage]);
+          }
         });
       }
     },
@@ -324,6 +382,8 @@ const AIChatComponent = ({
         type: "user",
         content: messageText,
         timestamp: new Date().toLocaleTimeString(),
+        versions: [messageText],
+        currentVersionIndex: 0,
       };
 
       setMessages((prev) => [...prev, userMessage]);
@@ -385,11 +445,8 @@ const AIChatComponent = ({
           { role: "user", content: userMessage.content },
         ];
 
-        // 移除旧的AI回答
-        setMessages((prev) => prev.slice(0, messageIndex));
-
         try {
-          await callOpenAI(conversationHistory);
+          await callOpenAI(conversationHistory, true, messageIndex);
         } catch (error) {
           console.error("刷新回答失败:", error);
           message.error("刷新回答失败，请重试");
@@ -399,15 +456,80 @@ const AIChatComponent = ({
     [messages, systemPrompt, callOpenAI]
   );
 
-  // 编辑用户消息
-  const editUserMessage = useCallback(
-    (messageIndex: number, newContent: string): void => {
-      const updatedMessages = [...messages];
-      updatedMessages[messageIndex].content = newContent;
-      setMessages(updatedMessages);
+  // 切换消息版本
+  const switchMessageVersion = useCallback(
+    (messageIndex: number, direction: "prev" | "next"): void => {
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        const message = newMessages[messageIndex];
+        if (
+          message &&
+          message.versions &&
+          message.currentVersionIndex !== undefined
+        ) {
+          const currentIndex = message.currentVersionIndex;
+          const maxIndex = message.versions.length - 1;
+
+          let newIndex = currentIndex;
+          if (direction === "prev" && currentIndex > 0) {
+            newIndex = currentIndex - 1;
+          } else if (direction === "next" && currentIndex < maxIndex) {
+            newIndex = currentIndex + 1;
+          }
+
+          if (newIndex !== currentIndex) {
+            message.currentVersionIndex = newIndex;
+            message.content = message.versions[newIndex];
+          }
+        }
+        return newMessages;
+      });
+    },
+    []
+  );
+
+  // 开始编辑用户消息
+  const startEditingMessage = useCallback(
+    (messageIndex: number): void => {
+      const message = messages[messageIndex];
+      if (message && message.type === "user") {
+        setEditingMessageId(message.id);
+        setEditingContent(message.content);
+      }
     },
     [messages]
   );
+
+  // 确认编辑
+  const confirmEdit = useCallback((): void => {
+    if (editingMessageId !== null) {
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        const messageIndex = newMessages.findIndex(
+          (m) => m.id === editingMessageId
+        );
+        if (messageIndex !== -1) {
+          const message = newMessages[messageIndex];
+          if (!message.versions) {
+            message.versions = [message.content];
+            message.currentVersionIndex = 0;
+          }
+          message.versions.push(editingContent);
+          message.currentVersionIndex = message.versions.length - 1;
+          message.content = editingContent;
+        }
+        return newMessages;
+      });
+      setEditingMessageId(null);
+      setEditingContent("");
+    }
+  }, [editingMessageId, editingContent]);
+
+  // 取消编辑
+  const cancelEdit = useCallback((): void => {
+    setEditingMessageId(null);
+    setEditingContent("");
+  }, []);
 
   // 处理键盘事件
   const handleKeyPress = useCallback(
@@ -418,6 +540,19 @@ const AIChatComponent = ({
       }
     },
     [sendMessage]
+  );
+
+  // 处理编辑时的键盘事件
+  const handleEditKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
+      if (e.key === "Enter" && e.ctrlKey) {
+        e.preventDefault();
+        confirmEdit();
+      } else if (e.key === "Escape") {
+        cancelEdit();
+      }
+    },
+    [confirmEdit, cancelEdit]
   );
 
   // 模型选择菜单
@@ -464,150 +599,301 @@ const AIChatComponent = ({
   );
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#f5f5f5",
+      }}
+    >
       {/* 聊天显示窗口 */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg, index) => (
-          <div
-            key={msg.id}
-            className={`flex ${
-              msg.type === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
+      <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
+        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+          {messages.map((msg, index) => (
             <div
-              className={`group max-w-[70%] ${
-                msg.type === "user"
-                  ? "bg-blue-500 text-white rounded-l-lg rounded-tr-lg"
-                  : "bg-white border rounded-r-lg rounded-tl-lg shadow-sm"
-              } p-4 relative`}
+              key={msg.id}
+              style={{
+                display: "flex",
+                justifyContent: msg.type === "user" ? "flex-end" : "flex-start",
+              }}
             >
-              <div className="flex items-start space-x-3">
-                <Avatar
-                  size={32}
-                  icon={
-                    msg.type === "user" ? <UserOutlined /> : <RobotOutlined />
-                  }
-                  className={
-                    msg.type === "user" ? "bg-blue-600" : "bg-gray-500"
-                  }
-                />
-                <div className="flex-1">
-                  <div className="text-sm font-medium mb-1">
-                    {msg.type === "user"
-                      ? "你"
-                      : msg.model
-                      ? models?.find((m) => m.uid === msg.model)?.name
-                      : "AI助手"}
-                  </div>
-                  <div className="text-sm leading-relaxed whitespace-pre-wrap">
-                    <Marked text={msg.content} />
-                  </div>
-                  <div className="text-xs opacity-60 mt-2">{msg.timestamp}</div>
-                </div>
-              </div>
-
-              {/* 悬浮工具按钮 */}
               <div
-                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                style={{ textAlign: "right" }}
+                style={{
+                  maxWidth: "70%",
+                  backgroundColor: msg.type === "user" ? "#1890ff" : "#ffffff",
+                  color: msg.type === "user" ? "white" : "black",
+                  borderRadius: "8px",
+                  padding: "16px",
+                  position: "relative",
+                  border: msg.type === "ai" ? "1px solid #d9d9d9" : "none",
+                  boxShadow:
+                    msg.type === "ai"
+                      ? "0 1px 2px rgba(0, 0, 0, 0.03)"
+                      : "none",
+                }}
               >
-                <Space size="small">
-                  <Tooltip title="复制">
-                    <Button
-                      size="small"
-                      type="text"
-                      icon={<CopyOutlined />}
-                      onClick={() => copyMessage(msg.content)}
-                    />
-                  </Tooltip>
-                  {msg.type === "user" ? (
-                    <Tooltip title="编辑">
-                      <Button
-                        size="small"
-                        type="text"
-                        icon={<EditOutlined />}
-                        onClick={() => {
-                          const newContent = prompt("编辑消息:", msg.content);
-                          if (newContent !== null) {
-                            editUserMessage(index, newContent);
+                <div style={{ display: "flex", alignItems: "flex-start" }}>
+                  <Space>
+                    <div>
+                      <Space>
+                        <Avatar
+                          size={32}
+                          icon={
+                            msg.type === "user" ? (
+                              <UserOutlined />
+                            ) : (
+                              <RobotOutlined />
+                            )
                           }
-                        }}
-                      />
-                    </Tooltip>
-                  ) : (
-                    <Dropdown menu={refreshMenu(index)} trigger={["hover"]}>
-                      <Button
-                        size="small"
-                        type="text"
-                        icon={<ReloadOutlined />}
-                      />
-                    </Dropdown>
-                  )}
-                </Space>
+                          style={{
+                            backgroundColor:
+                              msg.type === "user"
+                                ? "#rgb(0 132 253 / 50%)"
+                                : "#595959",
+                          }}
+                        />
+                        <div
+                          style={{
+                            fontSize: "14px",
+                            fontWeight: 500,
+                            marginBottom: "4px",
+                          }}
+                        >
+                          {msg.type === "user"
+                            ? "你"
+                            : msg.model
+                            ? models?.find((m) => m.uid === msg.model)?.name
+                            : "AI助手"}
+                        </div>
+                      </Space>
+                      {/* 显示版本导航 */}
+                      {msg.versions && msg.versions.length > 1 && (
+                        <div style={{ marginBottom: "8px" }}>
+                          <Space size="small">
+                            <Button
+                              size="small"
+                              type="text"
+                              icon={<LeftOutlined />}
+                              disabled={msg.currentVersionIndex === 0}
+                              onClick={() =>
+                                switchMessageVersion(index, "prev")
+                              }
+                            />
+                            <Text
+                              style={{
+                                fontSize: "12px",
+                                color:
+                                  msg.type === "user"
+                                    ? "rgba(255,255,255,0.7)"
+                                    : "#666",
+                              }}
+                            >
+                              {(msg.currentVersionIndex || 0) + 1}/
+                              {msg.versions.length}
+                            </Text>
+                            <Button
+                              size="small"
+                              type="text"
+                              icon={<RightOutlined />}
+                              disabled={
+                                msg.currentVersionIndex ===
+                                msg.versions.length - 1
+                              }
+                              onClick={() =>
+                                switchMessageVersion(index, "next")
+                              }
+                            />
+                          </Space>
+                        </div>
+                      )}
+
+                      {/* 编辑模式 */}
+                      {editingMessageId === msg.id ? (
+                        <div>
+                          <TextArea
+                            value={editingContent}
+                            onChange={(e) => setEditingContent(e.target.value)}
+                            onKeyPress={handleEditKeyPress}
+                            autoSize={{ minRows: 2, maxRows: 8 }}
+                            style={{ marginBottom: "8px" }}
+                          />
+                          <Space size="small">
+                            <Button
+                              size="small"
+                              type="primary"
+                              icon={<CheckOutlined />}
+                              onClick={confirmEdit}
+                            >
+                              确认
+                            </Button>
+                            <Button
+                              size="small"
+                              icon={<CloseOutlined />}
+                              onClick={cancelEdit}
+                            >
+                              取消
+                            </Button>
+                          </Space>
+                        </div>
+                      ) : (
+                        <div>
+                          <div
+                            style={{
+                              fontSize: "14px",
+                              lineHeight: "1.5",
+                              whiteSpace: "pre-wrap",
+                              wordBreak: "break-word",
+                            }}
+                          >
+                            <Marked text={msg.content} />
+                          </div>
+                          <div
+                            style={{
+                              fontSize: "12px",
+                              opacity: 0.6,
+                              marginTop: "8px",
+                            }}
+                          >
+                            {msg.timestamp}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </Space>
+                </div>
+
+                {/* 悬浮工具按钮 */}
+                {editingMessageId !== msg.id && (
+                  <div>
+                    <Space size="small">
+                      <Tooltip title="复制">
+                        <Button
+                          size="small"
+                          type="text"
+                          icon={<CopyOutlined />}
+                          onClick={() => copyMessage(msg.content)}
+                        />
+                      </Tooltip>
+                      {msg.type === "user" ? (
+                        <Tooltip title="编辑">
+                          <Button
+                            size="small"
+                            type="text"
+                            icon={<EditOutlined />}
+                            onClick={() => startEditingMessage(index)}
+                          />
+                        </Tooltip>
+                      ) : (
+                        <Dropdown menu={refreshMenu(index)} trigger={["hover"]}>
+                          <Button
+                            size="small"
+                            type="text"
+                            icon={<ReloadOutlined />}
+                          />
+                        </Dropdown>
+                      )}
+                    </Space>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-        ))}
+          ))}
 
-        {/* 显示AI正在输入的消息 */}
-        {isTyping && (
-          <div className="flex justify-start">
-            <div className="max-w-[70%] bg-white border rounded-r-lg rounded-tl-lg shadow-sm p-4">
-              <div className="flex items-start space-x-3">
-                <Avatar
-                  size={32}
-                  icon={<RobotOutlined />}
-                  className="bg-gray-500"
-                />
-                <div className="flex-1">
-                  <div className="text-sm font-medium mb-1">
-                    {models?.find((m) => m.uid === selectedModel)?.name ||
-                      "AI助手"}
-                  </div>
-                  <Marked text={currentTypingMessage} />
+          {/* 显示AI正在输入的消息 */}
+          {isTyping && (
+            <div style={{ display: "flex", justifyContent: "flex-start" }}>
+              <div
+                style={{
+                  maxWidth: "70%",
+                  backgroundColor: "#ffffff",
+                  border: "1px solid #d9d9d9",
+                  borderRadius: "8px",
+                  padding: "16px",
+                  boxShadow: "0 1px 2px rgba(0, 0, 0, 0.03)",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "flex-start" }}>
+                  <Space>
+                    <Avatar
+                      size={32}
+                      icon={<RobotOutlined />}
+                      style={{ backgroundColor: "#595959" }}
+                    />
+                    <div>
+                      <div
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: 500,
+                          marginBottom: "4px",
+                        }}
+                      >
+                        {models?.find((m) => m.uid === selectedModel)?.name ||
+                          "AI助手"}
+                      </div>
+                      <Marked text={currentTypingMessage} />
+                    </div>
+                  </Space>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {isLoading && !isTyping && (
-          <div className="flex justify-start">
-            <div className="max-w-[70%] bg-white border rounded-r-lg rounded-tl-lg shadow-sm p-4">
-              <div className="flex items-center space-x-3">
-                <Avatar
-                  size={32}
-                  icon={<RobotOutlined />}
-                  className="bg-gray-500"
-                />
-                <Spin size="small" />
-                <span className="text-sm text-gray-500">正在思考...</span>
+          {isLoading && !isTyping && (
+            <div style={{ display: "flex", justifyContent: "flex-start" }}>
+              <div
+                style={{
+                  maxWidth: "70%",
+                  backgroundColor: "#ffffff",
+                  border: "1px solid #d9d9d9",
+                  borderRadius: "8px",
+                  padding: "16px",
+                  boxShadow: "0 1px 2px rgba(0, 0, 0, 0.03)",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Space>
+                    <Avatar
+                      size={32}
+                      icon={<RobotOutlined />}
+                      style={{ backgroundColor: "#595959" }}
+                    />
+                    <Spin size="small" />
+                    <span style={{ fontSize: "14px", color: "#666" }}>
+                      正在思考...
+                    </span>
+                  </Space>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-
+          )}
+        </Space>
         <div ref={messagesEndRef} />
       </div>
 
       {/* 用户输入区域 */}
       <Affix offsetBottom={10}>
-        <Card bordered={true} style={{ borderRadius: 10, borderColor: "gray" }}>
-          <div className="max-w-4xl mx-auto">
+        <Card style={{ borderRadius: "10px", borderColor: "#d9d9d9" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
             {/* 输入框 */}
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", marginBottom: "8px" }}>
               <TextArea
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="提出你的问题，如：总结下面的内容..."
                 autoSize={{ minRows: 1, maxRows: 6 }}
-                className="resize-none pr-12"
+                style={{ resize: "none", paddingRight: "48px" }}
               />
             </div>
 
             {/* 功能按钮和模型选择 */}
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <Space>
                 <Tooltip title="附加文件">
                   <Button
@@ -617,7 +903,7 @@ const AIChatComponent = ({
                   />
                 </Tooltip>
               </Space>
-              <div>
+              <Space>
                 <Dropdown menu={modelMenu} trigger={["click"]}>
                   <Button size="small" type="text">
                     {models?.find((m) => m.uid === selectedModel)?.name}
@@ -629,9 +915,8 @@ const AIChatComponent = ({
                   icon={<SendOutlined />}
                   onClick={() => sendMessage()}
                   disabled={!inputValue.trim() || isLoading}
-                  className="absolute right-2 bottom-2"
                 />
-              </div>
+              </Space>
             </div>
           </div>
         </Card>
