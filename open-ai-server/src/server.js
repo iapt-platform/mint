@@ -87,6 +87,7 @@ app.post("/api/openai", async (req, res) => {
       res.setHeader("Access-Control-Allow-Origin", "*");
 
       try {
+        logger.info("request " + requestUrl);
         const response = await fetch(requestUrl, {
           method: "POST",
           headers: headers,
