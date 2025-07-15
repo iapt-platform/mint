@@ -21,11 +21,13 @@ def open_redis_cluster(config):
 
 
 def start_consumer(context, name, config, queue, callback, proxy):
+    HeartBeat = 3600
     logger.debug("open rabbitmq %s@%s:%d/%s with timeout %ds",
                  config['user'], config['host'], config['port'], config['virtual-host'], config['customer-timeout'])
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(
             host=config['host'], port=config['port'],
+            heartbeat=HeartBeat,
             credentials=pika.PlainCredentials(
                 config['user'], config['password']),
             virtual_host=config['virtual-host']))
@@ -37,7 +39,7 @@ def start_consumer(context, name, config, queue, callback, proxy):
         handle_message(context, ch, method, properties.message_id,
                        properties.content_type, json.loads(
                            body, object_hook=SimpleNamespace),
-                       callback, proxy, config['customer-timeout'])
+                       callback, proxy, HeartBeat, name)
 
     channel.basic_consume(
         queue=queue, on_message_callback=_callback, auto_ack=False)

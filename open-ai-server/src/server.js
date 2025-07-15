@@ -79,6 +79,8 @@ app.post("/api/openai", async (req, res) => {
       headers["x-api-key"] = apiKey;
       headers["anthropic-version"] = "2023-06-01";
     }
+
+    logger.info("request " + requestUrl);
     if (isStreaming) {
       // 流式响应处理
       res.setHeader("Content-Type", "text/event-stream");
