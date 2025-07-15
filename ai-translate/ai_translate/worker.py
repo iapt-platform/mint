@@ -7,12 +7,12 @@ from .utils import is_stopped
 logger = logging.getLogger(__name__)
 
 
-def handle_message(redis, ch, method, id, content_type, body, api_url: str, openai_proxy: str, customer_timeout: int):
+def handle_message(redis, ch, method, id, content_type, body, api_url: str, openai_proxy: str, customer_timeout: int, worker_name: str):
     MaxRetry: int = 3
     try:
         logger.info("process message start (%s) messages", len(body.payload))
         consumer = AiTranslateService(
-            redis, ch, method, api_url, openai_proxy, customer_timeout)
+            redis, ch, method, api_url, openai_proxy, customer_timeout, worker_name)
         messages = ns_to_dataclass([body], Message)
         consumer.process_translate(id, messages[0])
         logger.info(f'message {id} ack')

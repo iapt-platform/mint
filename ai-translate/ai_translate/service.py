@@ -106,7 +106,7 @@ class Message:
 class AiTranslateService:
     """AI翻译服务"""
 
-    def __init__(self, redis, ch, method, api_url, openai_proxy, customer_timeout):
+    def __init__(self, redis, ch, method, api_url, openai_proxy, customer_timeout, worker_name: str):
         self.queue = 'ai_translate'
         self.model_token = None
         self.task = None
@@ -120,6 +120,7 @@ class AiTranslateService:
         self.channel = ch
         self.maxProcessTime = 15 * 60  # 一个句子的最大处理时间
         self.openai_proxy = openai_proxy
+        self.worker_name = worker_name
 
     def process_translate(self, message_id: str, body: Message) -> bool:
         """处理翻译任务"""
@@ -156,7 +157,7 @@ class AiTranslateService:
                 self.task.id,
                 'task',
                 self.task.title,
-                f'id:{message_id}',
+                f'id:{message_id} worker:{self.worker_name}',
                 None
             )
         times = [self.maxProcessTime]
