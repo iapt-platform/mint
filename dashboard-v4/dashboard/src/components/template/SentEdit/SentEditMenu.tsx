@@ -162,6 +162,7 @@ const SentEditMenuWidget = ({
 
   return (
     <div
+      style={{ position: "relative" }}
       onMouseEnter={() => {
         setIsHover(true);
       }}
