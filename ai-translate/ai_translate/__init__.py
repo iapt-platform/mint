@@ -1,6 +1,8 @@
 import logging
 import tomllib
 import json
+import socket
+import os
 
 import pika
 from redis.cluster import RedisCluster
@@ -44,6 +46,7 @@ def start_consumer(context, name, config, queue, callback, proxy):
     channel.basic_consume(
         queue=queue, on_message_callback=_callback, auto_ack=False)
 
+    name = "%s.%s.%d" % (name, socket.gethostname(), os.getpid())
     logger.info('start a consumer(%s) for queue(%s)', name, queue)
     channel.start_consuming()
 

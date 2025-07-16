@@ -10,6 +10,7 @@
     - task
     - fort
     - ai_translate
+    - openai_proxy
   roles:
     - mint-v2.1
 
@@ -68,15 +69,26 @@
         state: restarted
         scope: user
 
-- name: Start mint php-fpm
+- name: Start mint ai-translate worker
   hosts:
     - ai_translate
   tasks:
-    - name: Disable php ai-translate service
+    - name: Enable php ai-translate service
       ansible.builtin.systemd_service:
         name: "{{ app_container_prefix }}-{{ app_domain }}-worker-mq-ai.translate"
-        enabled: false
-        state: stopped
+        enabled: true
+        state: started
+        scope: user
+
+- name: Start mint openai-proxy worker
+  hosts:
+    - openai_proxy
+  tasks:
+    - name: Enable openai-proxy service
+      ansible.builtin.systemd_service:
+        name: "{{ app_container_prefix }}-{{ app_domain }}-worker-mq-openai.proxy"
+        enabled: true
+        state: started
         scope: user
 
 - name: Setup nginx

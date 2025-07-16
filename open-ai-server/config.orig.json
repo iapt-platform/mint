@@ -1,5 +1,5 @@
 {
   "port": 4000,
   "debug": true,
-  "api_server": "http://staging.wikipali.org/api"
+  "api-server": "https://staging.wikipali.org"
 }
