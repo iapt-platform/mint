@@ -1,0 +1,35 @@
+- name: Upload script for openai-proxy
+  ansible.builtin.template:
+    src: containers/openai-proxy.sh.j2
+    dest: "{{ app_deploy_target }}/scripts/openai-proxy.sh"
+    mode: "0555"
+
+- name: Upload config for openai-proxy
+  ansible.builtin.template:
+    src: v2/openai-proxy.json.j2
+    dest: "{{ app_deploy_target }}/open-ai-server/config.json"
+    mode: "0555"
+
+- name: Stop openai-proxy server
+  containers.podman.podman_container:
+    name: "{{ app_domain }}-openai.proxy"
+    state: absent
+
+- name: Create openai-proxy container
+  containers.podman.podman_container:
+    name: "{{ app_domain }}-openai.proxy"
+    image: "mint-nodejs-jod"
+    command: "{{ app_deploy_target }}/scripts/openai-proxy.sh"
+    volumes:
+      - "{{ app_deploy_target }}/open-ai-server:{{ app_deploy_target }}:z"
+    workdir: "{{ app_deploy_target }}"
+    state: present
+    auto_remove: true
+    generate_systemd:
+      path: "{{ ansible_env.HOME }}/.config/systemd/user"
+      container_prefix: "{{ app_container_prefix }}"
+      new: true
+      names: true
+      restart_policy: always
+      restart_sec: 10
+      stop_timeout: 5

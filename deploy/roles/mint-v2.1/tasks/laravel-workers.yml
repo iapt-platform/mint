@@ -1,6 +1,6 @@
 - name: Upload script for worker-{{ zone_name }}-{{ worker_name }}
   ansible.builtin.template:
-    src: containers/worker/php.sh.j2
+    src: containers/laravel-worker.sh.j2
     dest: "{{ app_deploy_target }}/scripts/worker-{{ zone_name }}-{{ worker_name }}.sh"
     mode: "0555"
 
@@ -16,6 +16,7 @@
     command: "{{ app_deploy_target }}/scripts/worker-{{ zone_name }}-{{ worker_name }}.sh"
     volumes:
       - "{{ app_deploy_target }}:{{ app_deploy_target }}:z"
+      - "/srv/{{ app_domain }}/clove:/srv/{{ app_domain }}/clove:z"
     workdir: "{{ app_deploy_target }}"
     state: present
     auto_remove: true

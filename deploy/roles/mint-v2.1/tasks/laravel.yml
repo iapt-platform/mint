@@ -33,7 +33,7 @@
     auto_remove: true
 
 - name: Setup background php worker
-  ansible.builtin.include_tasks: php/workers.yml
+  ansible.builtin.include_tasks: laravel-workers.yml
   vars:
     zone_name: mq
   loop:
