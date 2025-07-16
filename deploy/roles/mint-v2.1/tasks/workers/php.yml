@@ -1,6 +1,6 @@
 - name: Upload script for worker-{{ zone_name }}-{{ worker_name }}
   ansible.builtin.template:
-    src: containers/worker.sh.j2
+    src: containers/worker/php.sh.j2
     dest: "{{ app_deploy_target }}/scripts/worker-{{ zone_name }}-{{ worker_name }}.sh"
     mode: "0555"
 
