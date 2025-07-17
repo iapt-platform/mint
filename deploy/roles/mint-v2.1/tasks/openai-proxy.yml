@@ -27,6 +27,8 @@
     command: "{{ app_deploy_target }}/start.sh"
     volumes:
       - "{{ app_deploy_target }}/open-ai-server:{{ app_deploy_target }}:z"
+    ports:
+      - "0.0.0.0:{{ app_openai_proxy_listen_port }}:8080/tcp"
     workdir: "{{ app_deploy_target }}"
     state: present
     auto_remove: true
