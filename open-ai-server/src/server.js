@@ -10,7 +10,7 @@ const app = express();
 // 中间件
 app.use(cors());
 app.use(express.json());
-const api_server = config["api_server"];
+const api_url = config["api_url"];
 // POST 路由处理OpenAI请求
 app.post("/api/openai", async (req, res) => {
   try {
@@ -29,7 +29,7 @@ app.post("/api/openai", async (req, res) => {
     } else {
       //get model info from api server
       try {
-        const url = api_server + `/v2/ai-model/${model_id}`;
+        const url = api_url + `/v2/ai-model/${model_id}`;
         logger.info("get model info from api server " + url);
         const response = await fetch(url, {
           method: "GET",
