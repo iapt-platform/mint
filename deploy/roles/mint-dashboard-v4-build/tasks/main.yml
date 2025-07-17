@@ -30,3 +30,5 @@
     REACT_APP_ICP_CODE: "{{ app_icp_code }}"
     REACT_APP_MPS_CODE: "{{ app_mps_code }}"
     REACT_APP_QUESTIONNAIRE_LINK: "{{ app_questionnaire_link }}"
+    # https://github.com/iapt-platform/mint/blob/5e81587433455cbc4994da49db5b880cf79e3539/dashboard-v4/dashboard/.env.orig#L17
+    REACT_APP_OPENAI_PROXY: "{{ app_openai_proxy_server }}"

@@ -52,8 +52,8 @@
 
 - name: Upload docker shell script
   ansible.builtin.template:
-    src: containers/shell.sh.j2
-    dest: "{{ app_deploy_target }}/scripts/shell.sh"
+    src: containers/api-v8.sh.j2
+    dest: "{{ app_deploy_target }}/scripts/api-v8.sh"
     mode: "0555"
 
 - name: Setup laravel
