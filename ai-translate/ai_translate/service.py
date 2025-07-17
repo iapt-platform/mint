@@ -280,10 +280,9 @@ class AiTranslateService:
         headers = {'Authorization': f'Bearer {token}'}
         response = requests.post(
             url, json=data, headers=headers, timeout=self.api_timeout)
-        # breakpoint()
         if not response.ok:
             logger.error(
-                f'ai-translate model log create failed: {response.json()}')
+                f'ai-translate model log create failed: {response.text}')
             return False
         return True
 
@@ -389,10 +388,10 @@ class AiTranslateService:
                 break
             except requests.exceptions.RequestException as e:
                 model_log_data.update({
-                    'response_headers': json.dumps(dict(e.response.request.headers), ensure_ascii=False),
+                    'request_headers': json.dumps(dict(e.response.request.headers), ensure_ascii=False),
                     'response_headers': json.dumps(dict(e.response.headers), ensure_ascii=False),
                     'status': e.response.status_code,
-                    'response_data': json.dumps(e.response.json(), ensure_ascii=False),
+                    'response_data': e.response.text,
                     'success': False
                 })
                 attempt += 1
