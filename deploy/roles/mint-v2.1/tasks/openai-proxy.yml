@@ -24,7 +24,7 @@
   containers.podman.podman_container:
     name: "{{ app_domain }}-openai.proxy"
     image: "mint-nodejs-jod"
-    command: "{{ app_deploy_target }}/open-ai-server/start.sh"
+    command: "{{ app_deploy_target }}/start.sh"
     volumes:
       - "{{ app_deploy_target }}/open-ai-server:{{ app_deploy_target }}:z"
     workdir: "{{ app_deploy_target }}"

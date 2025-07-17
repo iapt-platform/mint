@@ -19,7 +19,7 @@
   containers.podman.podman_container:
     name: "{{ app_domain }}-worker-mq-ai.translate"
     image: "mint-python-3.13"
-    command: "{{ app_deploy_target }}/ai-translate/start.sh"
+    command: "{{ app_deploy_target }}/start.sh"
     volumes:
       - "{{ app_deploy_target }}/ai-translate:{{ app_deploy_target }}:z"
     workdir: "{{ app_deploy_target }}"
