@@ -1,14 +1,14 @@
 - name: Upload script for ai.translate
   ansible.builtin.template:
     src: containers/ai-translate.sh.j2
-    dest: "{{ app_deploy_target }}/scripts/worker-mq-ai.translate.sh"
+    dest: "{{ app_deploy_target }}/ai-translate/start.sh"
     mode: "0555"
 
 - name: Upload config for ai.translate
   ansible.builtin.template:
     src: v2/ai-translate.toml.j2
     dest: "{{ app_deploy_target }}/ai-translate/config.toml"
-    mode: "0555"
+    mode: "0444"
 
 - name: Stop ai.translate
   containers.podman.podman_container:
@@ -19,7 +19,7 @@
   containers.podman.podman_container:
     name: "{{ app_domain }}-worker-mq-ai.translate"
     image: "mint-python-3.13"
-    command: "{{ app_deploy_target }}/scripts/worker-mq-ai.translate.sh"
+    command: "{{ app_deploy_target }}/ai-translate/start.sh"
     volumes:
       - "{{ app_deploy_target }}/ai-translate:{{ app_deploy_target }}:z"
     workdir: "{{ app_deploy_target }}"

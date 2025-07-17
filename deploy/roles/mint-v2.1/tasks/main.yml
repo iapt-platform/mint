@@ -15,6 +15,9 @@
     remote_src: true
     creates: "{{ app_deploy_target }}"
 
+- name: Setup clove resources
+  ansible.builtin.import_tasks: clove.yml
+
 # ---------------------------------------------------------
 
 # - name: Clone source codes directly
@@ -55,6 +58,12 @@
 
 - name: Setup laravel
   ansible.builtin.import_tasks: laravel.yml
+
+- name: Setup ai-translate
+  ansible.builtin.import_tasks: ai-translate.yml
+
+- name: Setup openai-proxy
+  ansible.builtin.import_tasks: openai-proxy.yml
 
 - name: Force systemd to reread configs
   become: true

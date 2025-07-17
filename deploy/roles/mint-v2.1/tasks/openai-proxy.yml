@@ -1,14 +1,14 @@
 - name: Upload script for openai-proxy
   ansible.builtin.template:
     src: containers/openai-proxy.sh.j2
-    dest: "{{ app_deploy_target }}/scripts/openai-proxy.sh"
+    dest: "{{ app_deploy_target }}/open-ai-server/start.sh"
     mode: "0555"
 
 - name: Upload config for openai-proxy
   ansible.builtin.template:
     src: v2/openai-proxy.json.j2
     dest: "{{ app_deploy_target }}/open-ai-server/config.json"
-    mode: "0555"
+    mode: "0444"
 
 - name: Upload openai-proxy dist
   ansible.posix.synchronize:
@@ -24,7 +24,7 @@
   containers.podman.podman_container:
     name: "{{ app_domain }}-openai.proxy"
     image: "mint-nodejs-jod"
-    command: "{{ app_deploy_target }}/scripts/openai-proxy.sh"
+    command: "{{ app_deploy_target }}/open-ai-server/start.sh"
     volumes:
       - "{{ app_deploy_target }}/open-ai-server:{{ app_deploy_target }}:z"
     workdir: "{{ app_deploy_target }}"
