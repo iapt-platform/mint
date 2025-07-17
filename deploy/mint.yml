@@ -2,6 +2,7 @@
   hosts: 127.0.0.1
   roles:
     - mint-dashboard-v4-build
+    - openai-proxy-build
 
 - name: Setup mint repo
   hosts:

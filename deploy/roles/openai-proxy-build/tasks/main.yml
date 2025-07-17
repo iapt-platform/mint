@@ -1,0 +1,10 @@
+- name: Install nodejs dependencies
+  ansible.builtin.shell: npm install
+  args:
+    chdir: "{{ playbook_dir }}/tmp/mint/open-ai-server"
+    creates: "{{ playbook_dir }}/tmp/mint/open-ai-server/node_modules"
+
+- name: Build target dist
+  ansible.builtin.shell: npm run build
+  args:
+    chdir: "{{ playbook_dir }}/tmp/mint/open-ai-server"

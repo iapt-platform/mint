@@ -10,6 +10,11 @@
     dest: "{{ app_deploy_target }}/open-ai-server/config.json"
     mode: "0555"
 
+- name: Upload openai-proxy dist
+  ansible.posix.synchronize:
+    src: "{{ playbook_dir }}/tmp/mint/open-ai-server/dist/"
+    dest: "{{ app_deploy_target }}/open-ai-server/dist/"
+
 - name: Stop openai-proxy server
   containers.podman.podman_container:
     name: "{{ app_domain }}-openai.proxy"

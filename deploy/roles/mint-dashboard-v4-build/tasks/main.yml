@@ -4,13 +4,13 @@
     dest: "{{ playbook_dir }}/tmp/mint"
     version: "{{ mint_version }}"
 
-- name: Extract dashboard node_modules
+- name: Extract dashboard-v4 node_modules
   ansible.builtin.unarchive:
     src: dashboard-20241201115354.tar.xz
     dest: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard"
     creates: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard/node_modules"
 
-- name: Build dashboard dist
+- name: Build dashboard-v4 dist
   ansible.builtin.shell: yarn build
   args:
     chdir: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard"
