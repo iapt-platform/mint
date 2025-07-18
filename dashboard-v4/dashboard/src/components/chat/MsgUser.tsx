@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Message } from "./AiChat";
 import Marked from "../general/Marked";
 import TextArea from "antd/lib/input/TextArea";
@@ -18,7 +18,14 @@ interface IWidget {
 
 const MsgUser = ({ msg, onChange }: IWidget) => {
   const [editing, setEditing] = useState(false);
-  const [content, setContent] = useState(msg?.content ?? "");
+  const [current, setCurrent] = useState(0);
+  const [content, setContent] = useState<string>("");
+
+  useEffect(() => {
+    if (msg?.versions && msg?.versions.length > 0) {
+      setContent(msg.versions[current].content);
+    }
+  }, [current, msg]);
 
   const confirmEdit = useCallback((): void => {
     onChange && onChange(content);
@@ -90,7 +97,7 @@ const MsgUser = ({ msg, onChange }: IWidget) => {
         ) : (
           <div>
             <div>
-              <Marked text={msg?.content} />
+              <Marked text={msg?.versions[current].content} />
             </div>
             <div
               style={{
@@ -99,7 +106,7 @@ const MsgUser = ({ msg, onChange }: IWidget) => {
                 marginTop: "8px",
               }}
             >
-              {msg?.timestamp}
+              {msg?.versions[current].timestamp}
             </div>
             <div>
               <Space size="small">
@@ -111,7 +118,7 @@ const MsgUser = ({ msg, onChange }: IWidget) => {
                     onClick={() => {
                       msg &&
                         navigator.clipboard
-                          .writeText(msg.content)
+                          .writeText(msg.versions[current].content)
                           .then((value) => message.success("已复制到剪贴板"))
                           .catch((reason: any) => {
                             console.error("复制失败:", reason);
