@@ -2,38 +2,28 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   Input,
   Button,
-  Avatar,
   Dropdown,
-  message,
   Tooltip,
   Space,
-  Spin,
   MenuProps,
   Card,
   Affix,
-  Typography,
 } from "antd";
 import {
   SendOutlined,
-  CopyOutlined,
-  EditOutlined,
-  ReloadOutlined,
   DownOutlined,
-  UserOutlined,
-  RobotOutlined,
   PaperClipOutlined,
-  LeftOutlined,
-  RightOutlined,
-  CheckOutlined,
-  CloseOutlined,
 } from "@ant-design/icons";
-import Marked from "../general/Marked";
 import { IAiModel, IAiModelListResponse } from "../api/ai";
 import { get } from "../../request";
-import User from "../auth/User";
+import MsgUser from "./MsgUser";
+import MsgAssistant from "./MsgAssistant";
+import MsgTyping from "./MsgTyping";
+import MsgLoading from "./MsgLoading";
+import MsgSystem from "./MsgSystem";
+import MsgError from "./MsgError";
 
 const { TextArea } = Input;
-const { Text } = Typography;
 
 // 类型定义
 export interface MessageVersion {
@@ -84,8 +74,6 @@ const AIChatComponent = ({
   const [inputValue, setInputValue] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedModel, setSelectedModel] = useState<string>("");
-  const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
-  const [editingContent, setEditingContent] = useState<string>("");
   const [refreshingMessageId, setRefreshingMessageId] = useState<number | null>(
     null
   );
@@ -94,6 +82,8 @@ const AIChatComponent = ({
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [currentTypingMessage, setCurrentTypingMessage] = useState<string>("");
   const [models, setModels] = useState<IAiModel[]>();
+
+  const [error, setError] = useState<string>();
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({
@@ -162,7 +152,7 @@ const AIChatComponent = ({
       isRegenerate: boolean = false,
       messageIndex?: number
     ): Promise<{ success: boolean; content?: string; error?: string }> => {
-      setIsLoading(false);
+      setError(undefined);
       if (typeof process.env.REACT_APP_OPENAI_PROXY === "undefined") {
         console.error("no REACT_APP_OPENAI_PROXY");
         return { success: false, error: "API配置错误" };
@@ -176,17 +166,19 @@ const AIChatComponent = ({
           max_tokens: 2000,
         };
         const url = process.env.REACT_APP_OPENAI_PROXY;
-        console.info("api request", url, payload);
+        const data = {
+          model_id: selectedModel,
+          payload: payload,
+        };
+        console.info("api request", url, data);
+        setIsLoading(true);
         const response = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer AIzaSyCzr8KqEdaQ3cRCxsFwSHh8c7kF3RZTZWw`,
           },
-          body: JSON.stringify({
-            model_id: selectedModel,
-            payload: payload,
-          }),
+          body: JSON.stringify(data),
         });
 
         if (!response.ok) {
@@ -330,47 +322,22 @@ const AIChatComponent = ({
         ];
 
         const result = await callOpenAI(conversationHistory);
+        setIsLoading(false);
         if (!result.success) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: Date.now(),
-              type: "error",
-              content: result.error || "请求失败，请重试",
-              timestamp: new Date().toLocaleTimeString(),
-            },
-          ]);
-          setIsLoading(false);
+          setError("请求失败，请重试");
         }
       } catch (error) {
         console.error("发送消息失败:", error);
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: Date.now(),
-            type: "error",
-            content: "请求失败，请重试",
-            timestamp: new Date().toLocaleTimeString(),
-          },
-        ]);
+        setError("请求失败，请重试");
         setIsLoading(false);
       }
     },
     [inputValue, messages, systemPrompt, callOpenAI, scrollToBottom]
   );
 
-  const copyMessage = useCallback(async (content: string): Promise<void> => {
-    try {
-      await navigator.clipboard.writeText(content);
-      message.success("已复制到剪贴板");
-    } catch (error) {
-      console.error("复制失败:", error);
-      message.error("复制失败");
-    }
-  }, []);
-
   const refreshAIResponse = useCallback(
     async (messageIndex: number): Promise<void> => {
+      console.debug("refresh", messageIndex);
       const userMessage = messages[messageIndex - 1];
       if (userMessage && userMessage.type === "user") {
         setRefreshingMessageId(messages[messageIndex].id);
@@ -392,18 +359,10 @@ const AIChatComponent = ({
             true,
             messageIndex
           );
+          setIsLoading(false);
           if (!result.success) {
-            setMessages((prev) => {
-              const newMessages = [...prev];
-              newMessages[messageIndex] = {
-                id: Date.now(),
-                type: "error",
-                content: result.error || "重新生成失败，请重试",
-                timestamp: new Date().toLocaleTimeString(),
-              };
-              setRefreshingMessageId(null);
-              return newMessages;
-            });
+            setError("重新生成失败，请重试");
+            setRefreshingMessageId(null);
           } else {
             // Ensure the message type is set to "ai" on successful refresh
             setMessages((prev) => {
@@ -435,93 +394,31 @@ const AIChatComponent = ({
           }
         } catch (error) {
           console.error("刷新回答失败:", error);
-          setMessages((prev) => {
-            const newMessages = [...prev];
-            newMessages[messageIndex] = {
-              id: Date.now(),
-              type: "error",
-              content: "重新生成失败，请重试",
-              timestamp: new Date().toLocaleTimeString(),
-            };
-            setRefreshingMessageId(null);
-            return newMessages;
-          });
+          setIsLoading(false);
+          setError("请求失败，请重试");
+          setRefreshingMessageId(null);
         }
       }
     },
     [messages, systemPrompt, callOpenAI, selectedModel]
   );
 
-  const switchMessageVersion = useCallback(
-    (messageIndex: number, direction: "prev" | "next"): void => {
-      setMessages((prev) => {
-        const newMessages = [...prev];
+  const confirmEdit = useCallback((id: number, text: string): void => {
+    setMessages((prev) => {
+      const newMessages = [...prev];
+      const messageIndex = newMessages.findIndex((m) => m.id === id);
+      if (messageIndex !== -1) {
         const message = newMessages[messageIndex];
-        if (
-          message &&
-          message.versions &&
-          message.currentVersionIndex !== undefined
-        ) {
-          const currentIndex = message.currentVersionIndex;
-          const maxIndex = message.versions.length - 1;
-
-          let newIndex = currentIndex;
-          if (direction === "prev" && currentIndex > 0) {
-            newIndex = currentIndex - 1;
-          } else if (direction === "next" && currentIndex < maxIndex) {
-            newIndex = currentIndex + 1;
-          }
-
-          if (newIndex !== currentIndex) {
-            message.currentVersionIndex = newIndex;
-            message.content = message.versions[newIndex].content;
-            message.model = message.versions[newIndex].model;
-          }
+        if (!message.versions) {
+          message.versions = [{ content: message.content, model: "" }];
+          message.currentVersionIndex = 0;
         }
-        return newMessages;
-      });
-    },
-    []
-  );
-
-  const startEditingMessage = useCallback(
-    (messageIndex: number): void => {
-      const message = messages[messageIndex];
-      if (message && message.type === "user") {
-        setEditingMessageId(message.id);
-        setEditingContent(message.content);
+        message.versions.push({ content: text, model: "" });
+        message.currentVersionIndex = message.versions.length - 1;
+        message.content = text;
       }
-    },
-    [messages]
-  );
-
-  const confirmEdit = useCallback((): void => {
-    if (editingMessageId !== null) {
-      setMessages((prev) => {
-        const newMessages = [...prev];
-        const messageIndex = newMessages.findIndex(
-          (m) => m.id === editingMessageId
-        );
-        if (messageIndex !== -1) {
-          const message = newMessages[messageIndex];
-          if (!message.versions) {
-            message.versions = [{ content: message.content, model: "" }];
-            message.currentVersionIndex = 0;
-          }
-          message.versions.push({ content: editingContent, model: "" });
-          message.currentVersionIndex = message.versions.length - 1;
-          message.content = editingContent;
-        }
-        return newMessages;
-      });
-      setEditingMessageId(null);
-      setEditingContent("");
-    }
-  }, [editingMessageId, editingContent]);
-
-  const cancelEdit = useCallback((): void => {
-    setEditingMessageId(null);
-    setEditingContent("");
+      return newMessages;
+    });
   }, []);
 
   const handleKeyPress = useCallback(
@@ -534,18 +431,6 @@ const AIChatComponent = ({
     [sendMessage]
   );
 
-  const handleEditKeyPress = useCallback(
-    (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
-      if (e.key === "Enter" && e.ctrlKey) {
-        e.preventDefault();
-        confirmEdit();
-      } else if (e.key === "Escape") {
-        cancelEdit();
-      }
-    },
-    [confirmEdit, cancelEdit]
-  );
-
   const modelMenu: MenuProps = {
     selectedKeys: [selectedModel],
     onClick: ({ key }) => setSelectedModel(key),
@@ -555,340 +440,59 @@ const AIChatComponent = ({
     })),
   };
 
-  const refreshMenu = useCallback(
-    (messageIndex: number): MenuProps => ({
-      onClick: ({ key }) => {
-        if (key === "refresh") {
-          refreshAIResponse(messageIndex);
-        }
-      },
-      items: [
-        {
-          key: "refresh",
-          label: "重新生成",
-        },
-        {
-          type: "divider",
-        },
-        {
-          key: "model-submenu",
-          label: "选择模型重新生成",
-          children: models?.map((model) => ({
-            key: model.uid,
-            label: model.name,
-            onClick: () => {
-              setSelectedModel(model.uid);
-              refreshAIResponse(messageIndex);
-            },
-          })),
-        },
-      ],
-    }),
-    [refreshAIResponse, models]
-  );
-
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
         backgroundColor: "#f5f5f5",
+        width: "100%",
       }}
     >
       <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
         <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-          {messages.map(
-            (msg, index) =>
-              msg.id !== refreshingMessageId && (
-                <div
-                  key={msg.id}
-                  style={{
-                    display: "flex",
-                    justifyContent:
-                      msg.type === "user"
-                        ? "flex-end"
-                        : msg.type === "error"
-                        ? "center"
-                        : "flex-start",
-                  }}
-                >
-                  <div
-                    style={{
-                      maxWidth: msg.type === "error" ? "100%" : "70%",
-                      backgroundColor:
-                        msg.type === "user"
-                          ? "#1890ff"
-                          : msg.type === "error"
-                          ? "#fff1f0"
-                          : "#ffffff",
-                      color:
-                        msg.type === "user"
-                          ? "white"
-                          : msg.type === "error"
-                          ? "#ff4d4f"
-                          : "black",
-                      borderRadius: "8px",
-                      padding: "16px",
-                      position: "relative",
-                      border:
-                        msg.type === "ai"
-                          ? "1px solid #d9d9d9"
-                          : msg.type === "error"
-                          ? "1px solid #ff4d4f"
-                          : "none",
-                      boxShadow:
-                        msg.type === "ai" || msg.type === "error"
-                          ? "0 1px 2px rgba(0, 0, 0, 0.03)"
-                          : "none",
-                      textAlign: msg.type === "error" ? "center" : "left",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "flex-start" }}>
-                      <Space>
-                        {msg.type !== "error" && (
-                          <Avatar
-                            size={32}
-                            icon={
-                              msg.type === "user" ? (
-                                <UserOutlined />
-                              ) : (
-                                <RobotOutlined />
-                              )
-                            }
-                            style={{
-                              backgroundColor:
-                                msg.type === "user"
-                                  ? "rgb(0 132 253 / 50%)"
-                                  : "#595959",
-                            }}
-                          />
-                        )}
-                        <div>
-                          {msg.type !== "error" && (
-                            <div
-                              style={{
-                                fontSize: "14px",
-                                fontWeight: 500,
-                                marginBottom: "4px",
-                              }}
-                            >
-                              {msg.type === "user"
-                                ? "你"
-                                : msg.model
-                                ? models?.find((m) => m.uid === msg.model)?.name
-                                : "AI助手"}
-                            </div>
-                          )}
-                          {editingMessageId === msg.id ? (
-                            <div>
-                              <TextArea
-                                value={editingContent}
-                                onChange={(e) =>
-                                  setEditingContent(e.target.value)
-                                }
-                                onKeyPress={handleEditKeyPress}
-                                autoSize={{ minRows: 2, maxRows: 8 }}
-                                style={{ marginBottom: "8px" }}
-                              />
-                              <Space size="small">
-                                <Button
-                                  size="small"
-                                  type="primary"
-                                  icon={<CheckOutlined />}
-                                  onClick={confirmEdit}
-                                >
-                                  确认
-                                </Button>
-                                <Button
-                                  size="small"
-                                  icon={<CloseOutlined />}
-                                  onClick={cancelEdit}
-                                >
-                                  取消
-                                </Button>
-                              </Space>
-                            </div>
-                          ) : (
-                            <div>
-                              <div
-                                style={{
-                                  fontSize: "14px",
-                                  lineHeight: "1.5",
-                                  whiteSpace: "pre-wrap",
-                                  wordBreak: "break-word",
-                                }}
-                              >
-                                <Marked text={msg.content} />
-                              </div>
-                              <div
-                                style={{
-                                  fontSize: "12px",
-                                  opacity: 0.6,
-                                  marginTop: "8px",
-                                }}
-                              >
-                                {msg.timestamp}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </Space>
-                    </div>
-                    <Space>
-                      {msg.versions && msg.versions.length > 1 && (
-                        <div style={{ marginBottom: "8px" }}>
-                          <Space size="small">
-                            <Button
-                              size="small"
-                              type="text"
-                              icon={<LeftOutlined />}
-                              disabled={msg.currentVersionIndex === 0}
-                              onClick={() =>
-                                switchMessageVersion(index, "prev")
-                              }
-                            />
-                            <Text
-                              style={{
-                                fontSize: "12px",
-                                color:
-                                  msg.type === "user"
-                                    ? "rgba(255,255,255,0.7)"
-                                    : "#666",
-                              }}
-                            >
-                              {(msg.currentVersionIndex || 0) + 1}/
-                              {msg.versions.length}
-                            </Text>
-                            <Button
-                              size="small"
-                              type="text"
-                              icon={<RightOutlined />}
-                              disabled={
-                                msg.currentVersionIndex ===
-                                msg.versions.length - 1
-                              }
-                              onClick={() =>
-                                switchMessageVersion(index, "next")
-                              }
-                            />
-                          </Space>
-                        </div>
-                      )}
-                      {editingMessageId !== msg.id && (
-                        <div>
-                          <Space size="small">
-                            <Tooltip title="复制">
-                              <Button
-                                size="small"
-                                type="text"
-                                icon={<CopyOutlined />}
-                                onClick={() => copyMessage(msg.content)}
-                              />
-                            </Tooltip>
-                            {msg.type === "user" ? (
-                              <Tooltip title="编辑">
-                                <Button
-                                  size="small"
-                                  type="text"
-                                  icon={<EditOutlined />}
-                                  onClick={() => startEditingMessage(index)}
-                                />
-                              </Tooltip>
-                            ) : msg.type === "error" ? (
-                              <Tooltip title="重试">
-                                <Button
-                                  size="small"
-                                  type="text"
-                                  icon={<ReloadOutlined />}
-                                  onClick={() => refreshAIResponse(index)}
-                                />
-                              </Tooltip>
-                            ) : (
-                              <Dropdown
-                                menu={refreshMenu(index)}
-                                trigger={["hover"]}
-                              >
-                                <Button
-                                  size="small"
-                                  type="text"
-                                  icon={<ReloadOutlined />}
-                                />
-                              </Dropdown>
-                            )}
-                          </Space>
-                        </div>
-                      )}
-                    </Space>
-                  </div>
-                </div>
-              )
+          <MsgSystem value={systemPrompt} />
+          {messages.map((msg, index) => {
+            if (msg.id === refreshingMessageId) {
+              return <></>;
+            } else {
+              if (msg.type === "user") {
+                return (
+                  <MsgUser
+                    msg={msg}
+                    onChange={(value: string) => confirmEdit(index, value)}
+                  />
+                );
+              } else if (msg.type === "ai") {
+                return (
+                  <MsgAssistant
+                    msg={msg}
+                    models={models}
+                    onRefresh={() => refreshAIResponse(index)}
+                  />
+                );
+              } else {
+                return <>unknown</>;
+              }
+            }
+          })}
+          {error ? (
+            <MsgError
+              message={error}
+              onRefresh={() => refreshAIResponse(messages.length - 1)}
+            />
+          ) : (
+            <></>
           )}
-
           {isTyping && (
-            <div style={{ display: "flex", justifyContent: "flex-start" }}>
-              <div
-                style={{
-                  maxWidth: "70%",
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #d9d9d9",
-                  borderRadius: "8px",
-                  padding: "16px",
-                  boxShadow: "0 1px 2px rgba(0, 0, 0, 0.03)",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "flex-start" }}>
-                  <Space>
-                    <Avatar
-                      size={32}
-                      icon={<RobotOutlined />}
-                      style={{ backgroundColor: "#595959" }}
-                    />
-                    <div>
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          fontWeight: 500,
-                          marginBottom: "4px",
-                        }}
-                      >
-                        {models?.find((m) => m.uid === selectedModel)?.name ||
-                          "AI助手"}
-                      </div>
-                      <Marked text={currentTypingMessage} />
-                    </div>
-                  </Space>
-                </div>
-              </div>
-            </div>
+            <MsgTyping
+              text={currentTypingMessage}
+              model={models?.find((m) => m.uid === selectedModel)}
+            />
           )}
 
           {isLoading && !isTyping && (
-            <div style={{ display: "flex", justifyContent: "flex-start" }}>
-              <div
-                style={{
-                  maxWidth: "70%",
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #d9d9d9",
-                  borderRadius: "8px",
-                  padding: "16px",
-                  boxShadow: "0 1px 2px rgba(0, 0, 0, 0.03)",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <Space>
-                    <Avatar
-                      size={32}
-                      icon={<RobotOutlined />}
-                      style={{ backgroundColor: "#595959" }}
-                    />
-                    <Spin size="small" />
-                    <span style={{ fontSize: "14px", color: "#666" }}>
-                      正在思考...
-                    </span>
-                  </Space>
-                </div>
-              </div>
-            </div>
+            <MsgLoading model={models?.find((m) => m.uid === selectedModel)} />
           )}
         </Space>
         <div ref={messagesEndRef} />
