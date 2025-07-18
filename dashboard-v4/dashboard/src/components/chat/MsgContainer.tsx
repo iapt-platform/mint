@@ -12,7 +12,6 @@ const MsgContainer = ({ children }: IWidget) => {
       <div
         style={{
           maxWidth: "95%",
-          backgroundColor: "#ffffff",
           color: "black",
           borderRadius: "8px",
           padding: "16px",
