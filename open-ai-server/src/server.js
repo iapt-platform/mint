@@ -10,7 +10,7 @@ const app = express();
 // 中间件
 app.use(cors());
 app.use(express.json());
-const api_url = config["api_url"];
+const api_url = config["api-url"];
 // POST 路由处理OpenAI请求
 app.post("/api/openai", async (req, res) => {
   try {
