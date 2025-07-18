@@ -50,7 +50,8 @@ const MsgUser = ({ msg, onChange }: IWidget) => {
       <div
         style={{
           maxWidth: "70%",
-          backgroundColor: "rgba(0.7,0.7,0.7,0.1)",
+          minWidth: 400,
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
           color: "black",
           borderRadius: "8px",
           padding: "16px",
@@ -88,14 +89,7 @@ const MsgUser = ({ msg, onChange }: IWidget) => {
           </div>
         ) : (
           <div>
-            <div
-              style={{
-                fontSize: "14px",
-                lineHeight: "1.5",
-                whiteSpace: "pre-wrap",
-                wordBreak: "break-word",
-              }}
-            >
+            <div>
               <Marked text={msg?.content} />
             </div>
             <div
