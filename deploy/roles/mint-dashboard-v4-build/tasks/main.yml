@@ -14,7 +14,7 @@
   ansible.builtin.shell: yarn build
   args:
     chdir: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard"
-    creates: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard/dist-{{ mint_version }}"
+    # creates: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard/dist-{{ mint_version }}"
   environment:
     BUILD_PATH: "dist-{{ mint_version }}"
     NODE_OPTIONS: "--max_old_space_size=4096"
