@@ -8,20 +8,27 @@ import {
   RightOutlined,
 } from "@ant-design/icons";
 import { IAiModel } from "../api/ai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MenuProps } from "antd/es/menu";
 import Marked from "../general/Marked";
+import MsgContainer from "./MsgContainer";
 
 const { Text } = Typography;
 
 interface IWidget {
   msg?: Message;
   models?: IAiModel[];
-  onRefresh?: (modelIndex: number) => void;
+  onRefresh?: (modelId: string) => void;
 }
 
 const MsgAssistant = ({ msg, models, onRefresh }: IWidget) => {
   const [currentVersion, setCurrentVersion] = useState(0);
+
+  useEffect(() => {
+    if (msg) {
+      setCurrentVersion(msg?.versions.length - 1);
+    }
+  }, [msg]);
 
   const switchMessageVersion = (direction: "prev" | "next"): void => {
     if (msg && msg.versions) {
@@ -39,8 +46,8 @@ const MsgAssistant = ({ msg, models, onRefresh }: IWidget) => {
 
   const refreshMenu: MenuProps = {
     onClick: ({ key }) => {
-      if (key === "refresh") {
-        onRefresh && onRefresh(0);
+      if (key === "refresh" && msg) {
+        onRefresh && onRefresh(msg.versions[currentVersion].model);
       }
     },
     items: [
@@ -58,106 +65,87 @@ const MsgAssistant = ({ msg, models, onRefresh }: IWidget) => {
           key: model.uid,
           label: model.name,
           onClick: () => {
-            onRefresh && onRefresh(id);
+            onRefresh && onRefresh(model.uid);
           },
         })),
       },
     ],
   };
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "flex-start",
-      }}
-    >
+    <MsgContainer>
       <div
         style={{
-          maxWidth: "90%",
-          backgroundColor: "#ffffff",
-          color: "black",
-          borderRadius: "8px",
-          padding: "16px",
-          border: "none",
-          boxShadow: "0 1px 2px rgba(0, 0, 0, 0.03)",
-          textAlign: "left",
+          fontSize: "14px",
+          fontWeight: 500,
+          marginBottom: "4px",
         }}
       >
-        <div
-          style={{
-            fontSize: "14px",
-            fontWeight: 500,
-            marginBottom: "4px",
-          }}
-        >
-          {msg?.model
-            ? models?.find((m) => m.uid === msg.model)?.name
-            : "AI助手"}
-        </div>
-        <div>
-          <Marked text={msg?.content} />
-        </div>
-        <div>
-          <Space>
-            {msg?.versions && msg.versions.length > 1 && (
-              <div style={{ marginBottom: "8px" }}>
-                <Space size="small">
-                  <Button
-                    size="small"
-                    type="text"
-                    icon={<LeftOutlined />}
-                    disabled={msg.currentVersionIndex === 0}
-                    onClick={() => switchMessageVersion("prev")}
-                  />
-                  <Text
-                    style={{
-                      fontSize: "12px",
-                      color:
-                        msg.type === "user" ? "rgba(255,255,255,0.7)" : "#666",
-                    }}
-                  >
-                    {(msg.currentVersionIndex || 0) + 1}/{msg.versions.length}
-                  </Text>
-                  <Button
-                    size="small"
-                    type="text"
-                    icon={<RightOutlined />}
-                    disabled={
-                      msg.currentVersionIndex === msg.versions.length - 1
-                    }
-                    onClick={() => switchMessageVersion("next")}
-                  />
-                </Space>
-              </div>
-            )}
-            <div>
+        {msg?.versions[currentVersion].model
+          ? models?.find((m) => m.uid === msg.versions[currentVersion].model)
+              ?.name
+          : "AI助手"}
+      </div>
+      <div>
+        <Marked text={msg?.versions[currentVersion].content} />
+      </div>
+      <div>
+        <Space>
+          {msg?.versions && msg.versions.length > 1 && (
+            <div style={{ marginBottom: "8px" }}>
               <Space size="small">
-                <Tooltip title="复制">
-                  <Button
-                    size="small"
-                    type="text"
-                    icon={<CopyOutlined />}
-                    onClick={() => {
-                      msg &&
-                        navigator.clipboard
-                          .writeText(msg.content)
-                          .then((value) => message.success("已复制到剪贴板"))
-                          .catch((reason: any) => {
-                            console.error("复制失败:", reason);
-                            message.error("复制失败");
-                          });
-                    }}
-                  />
-                </Tooltip>
-                <Dropdown menu={refreshMenu} trigger={["hover"]}>
-                  <Button size="small" type="text" icon={<ReloadOutlined />} />
-                </Dropdown>
+                <Button
+                  size="small"
+                  type="text"
+                  icon={<LeftOutlined />}
+                  disabled={currentVersion === 0}
+                  onClick={() => switchMessageVersion("prev")}
+                />
+                <Text
+                  style={{
+                    fontSize: "12px",
+                    color:
+                      msg.type === "user" ? "rgba(255,255,255,0.7)" : "#666",
+                  }}
+                >
+                  {(currentVersion || 0) + 1}/{msg.versions.length}
+                </Text>
+                <Button
+                  size="small"
+                  type="text"
+                  icon={<RightOutlined />}
+                  disabled={currentVersion === msg.versions.length - 1}
+                  onClick={() => switchMessageVersion("next")}
+                />
               </Space>
             </div>
-          </Space>
-        </div>
+          )}
+          <div>
+            <Space size="small">
+              <Tooltip title="复制">
+                <Button
+                  size="small"
+                  type="text"
+                  icon={<CopyOutlined />}
+                  onClick={() => {
+                    msg &&
+                      navigator.clipboard
+                        .writeText(msg.versions[currentVersion].content)
+                        .then((value) => message.success("已复制到剪贴板"))
+                        .catch((reason: any) => {
+                          console.error("复制失败:", reason);
+                          message.error("复制失败");
+                        });
+                  }}
+                />
+              </Tooltip>
+              <Dropdown menu={refreshMenu} trigger={["hover"]}>
+                <Button size="small" type="text" icon={<ReloadOutlined />} />
+              </Dropdown>
+            </Space>
+          </div>
+        </Space>
       </div>
-    </div>
+    </MsgContainer>
   );
 };
 
