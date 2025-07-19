@@ -77,6 +77,7 @@ const AIChatComponent = ({
   const [inputValue, setInputValue] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedModel, setSelectedModel] = useState<string>("");
+  const [fetchModel, setFetchModel] = useState<string>("");
   const [refreshingMessageId, setRefreshingMessageId] = useState<number | null>(
     null
   );
@@ -161,14 +162,15 @@ const AIChatComponent = ({
         console.error("no REACT_APP_OPENAI_PROXY");
         return { success: false, error: "API配置错误" };
       }
-      console.log("modelId", modelId);
+
       try {
+        setFetchModel(modelId);
         const payload = {
           model: models?.find((value) => value.uid === modelId)?.model,
           messages: messages,
           stream: true,
           temperature: 0.7,
-          max_tokens: 2000,
+          max_tokens: 3000, //本次回复”最大输出长度
         };
         const url = process.env.REACT_APP_OPENAI_PROXY;
         const data = {
@@ -201,10 +203,11 @@ const AIChatComponent = ({
         const typeController = streamTypeWriter(
           (content: string) => {},
           (finalContent: string) => {
+            console.log("newData in callOpenAI", finalContent);
             const newData: MessageVersion = {
               id: Date.now(),
               content: finalContent,
-              model: selectedModel,
+              model: modelId,
               role: "assistant",
               timestamp: new Date().toLocaleTimeString(),
             };
@@ -279,7 +282,7 @@ const AIChatComponent = ({
         return { success: false, error: "API调用失败，请重试" };
       }
     },
-    [models, selectedModel, streamTypeWriter, currentTypingMessage]
+    [models, streamTypeWriter, fetchModel, currentTypingMessage]
   );
 
   const sendMessage = useCallback(
@@ -364,7 +367,8 @@ const AIChatComponent = ({
             setError("重新生成失败，请重试");
             setRefreshingMessageId(null);
           } else {
-            // Ensure the message type is set to "ai" on successful refresh
+            /*
+            console.log("newData refreshAIResponse", result);
             setMessages((prev) => {
               const newMessages = [...prev];
               const targetMessage = newMessages[messageIndex];
@@ -372,7 +376,7 @@ const AIChatComponent = ({
                 const newData: MessageVersion = {
                   id: Date.now(),
                   content: result.content || "",
-                  model: selectedModel,
+                  model: modelId,
                   role: "assistant",
                   timestamp: new Date().toLocaleTimeString(),
                 };
@@ -385,6 +389,7 @@ const AIChatComponent = ({
               setRefreshingMessageId(null);
               return newMessages;
             });
+            */
           }
         } catch (error) {
           console.error("刷新回答失败:", error);
@@ -394,7 +399,7 @@ const AIChatComponent = ({
         }
       }
     },
-    [messages, systemPrompt, callOpenAI, selectedModel]
+    [messages, systemPrompt, callOpenAI, fetchModel]
   );
 
   const confirmEdit = useCallback((id: number, text: string): void => {
@@ -479,7 +484,7 @@ const AIChatComponent = ({
             <MsgError
               message={error}
               onRefresh={() =>
-                refreshAIResponse(messages.length - 1, selectedModel)
+                refreshAIResponse(messages.length - 1, fetchModel)
               }
             />
           ) : (
@@ -488,12 +493,12 @@ const AIChatComponent = ({
           {isTyping && (
             <MsgTyping
               text={currentTypingMessage}
-              model={models?.find((m) => m.uid === selectedModel)}
+              model={models?.find((m) => m.uid === fetchModel)}
             />
           )}
 
           {isLoading && !isTyping && (
-            <MsgLoading model={models?.find((m) => m.uid === selectedModel)} />
+            <MsgLoading model={models?.find((m) => m.uid === fetchModel)} />
           )}
         </Space>
         <div ref={messagesEndRef} />
