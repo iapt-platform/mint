@@ -48,6 +48,9 @@ class AiAssistantApi
                 if (strpos($user->model, $key) !== false) {
                     $logo = $value;
                     break;
+                } else if (strpos($user->url, $key) !== false) {
+                    $logo = $value;
+                    break;
                 }
             }
             $base = config('app.url') . '/assets/images/avatar/';
