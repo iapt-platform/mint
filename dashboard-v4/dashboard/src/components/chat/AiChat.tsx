@@ -23,6 +23,8 @@ import MsgLoading from "./MsgLoading";
 import MsgSystem from "./MsgSystem";
 import MsgError from "./MsgError";
 import PromptButtonGroup from "./PromptButtonGroup";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
 
 const { TextArea } = Input;
 
@@ -89,6 +91,8 @@ const AIChatComponent = ({
   const [models, setModels] = useState<IAiModel[]>();
 
   const [error, setError] = useState<string>();
+
+  const user = useAppSelector(currentUser);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({
@@ -444,7 +448,7 @@ const AIChatComponent = ({
     })),
   };
 
-  return (
+  return user ? (
     <div
       style={{
         display: "flex",
@@ -555,6 +559,8 @@ const AIChatComponent = ({
         </Card>
       </Affix>
     </div>
+  ) : (
+    <></>
   );
 };
 
