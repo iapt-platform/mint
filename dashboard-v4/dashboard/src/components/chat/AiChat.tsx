@@ -22,6 +22,7 @@ import MsgTyping from "./MsgTyping";
 import MsgLoading from "./MsgLoading";
 import MsgSystem from "./MsgSystem";
 import MsgError from "./MsgError";
+import PromptButtonGroup from "./PromptButtonGroup";
 
 const { TextArea } = Input;
 
@@ -533,6 +534,7 @@ const AIChatComponent = ({
                     icon={<PaperClipOutlined />}
                   />
                 </Tooltip>
+                <PromptButtonGroup onText={setInputValue} />
               </Space>
               <Space>
                 <Dropdown menu={modelMenu} trigger={["click"]}>
