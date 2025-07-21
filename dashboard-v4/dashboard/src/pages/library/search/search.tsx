@@ -277,28 +277,7 @@ const Widget = () => {
                   systemPrompt={sysPrompt}
                   onChat={() => setChat(true)}
                 />
-                <div>
-                  <Space>
-                    <Button
-                      onClick={() =>
-                        setPrompt(
-                          `写一个关于**${key}**的概要，概要中的观点应该引用上述巴利文经文，并逐条列出每个巴利原文每个段落的摘要`
-                        )
-                      }
-                    >
-                      概要
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        setPrompt(
-                          `写一个介绍**${key}**的百科词条，词条中的观点应该引用巴利文经文，并给出引用的巴利原文和译文`
-                        )
-                      }
-                    >
-                      术语
-                    </Button>
-                  </Space>
-                </div>
+
                 {chat ? (
                   <></>
                 ) : (
