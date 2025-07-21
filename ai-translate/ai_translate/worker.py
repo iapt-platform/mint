@@ -17,6 +17,7 @@ def handle_message(redis, ch, method, id, content_type, body, api_url: str, open
         consumer.process_translate(id, messages[0])
         logger.info(f'message {id} ack')
         ch.basic_ack(delivery_tag=method.delivery_tag)  # 确认消息
+        consumer.handle_complete()
     except SectionTimeout as e:
         # 时间到了，活还没干完 NACK 并重新入队
         logger.warning(
