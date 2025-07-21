@@ -188,14 +188,15 @@ class AiTranslateService:
             s_uid = self._get_sentence_id(message.sentence)
 
             # 写入句子 discussion
-            topic_children = []
-            # 任务结果
-            topic_children.append(response_llm['content'])
-            # 推理过程写入discussion
-            if response_llm.get('reasoningContent'):
-                topic_children.append(response_llm['reasoningContent'])
-            self._sentence_discussion(
-                s_uid, message.prompt, topic_children)
+            if s_uid:
+                topic_children = []
+                # 任务结果
+                topic_children.append(response_llm['content'])
+                # 推理过程写入discussion
+                if response_llm.get('reasoningContent'):
+                    topic_children.append(response_llm['reasoningContent'])
+                self._sentence_discussion(
+                    s_uid, message.prompt, topic_children)
 
             # 修改task 完成度
             progress = self._set_task_progress(
@@ -492,28 +493,33 @@ class AiTranslateService:
 
     def _get_sentence_id(self, sentence: Sentence) -> str:
         """获取句子ID"""
-        url = f"{self.api_url}/v2/sentence-info/aa"
-        logger.info(f'ai translate: {url}')
+        try:
+            url = f"{self.api_url}/v2/sentence-info/aa"
+            logger.info(f'ai translate: {url}')
 
-        params = {
-            'book': sentence.book_id,
-            'par': sentence.paragraph,
-            'start': sentence.word_start,
-            'end': sentence.word_end,
-            'channel': sentence.channel_uid
-        }
+            params = {
+                'book': sentence.book_id,
+                'par': sentence.paragraph,
+                'start': sentence.word_start,
+                'end': sentence.word_end,
+                'channel': sentence.channel_uid
+            }
 
-        headers = {'Authorization': f'Bearer {self.model_token}'}
-        response = requests.get(
-            url, params=params, headers=headers, timeout=self.api_timeout)
+            headers = {'Authorization': f'Bearer {self.model_token}'}
+            response = requests.get(
+                url, params=params, headers=headers, timeout=self.api_timeout)
 
-        if not response.json().get('ok'):
-            logger.error(f'{self.queue} sentence id error: {response.json()}')
+            if not response.json().get('ok'):
+                logger.error(
+                    f'{self.queue} sentence id error: {response.text}')
+                return False
+
+            s_uid = response.json()['data']['id']
+            logger.debug(f"sentence id={s_uid}")
+            return s_uid
+        except Exception as e:
+            logger.error(f"error: {e}")
             return False
-
-        s_uid = response.json()['data']['id']
-        logger.debug(f"sentence id={s_uid}")
-        return s_uid
 
     def _set_task_progress(self, current: TaskProgress) -> int:
         """设置任务进度"""
@@ -580,3 +586,17 @@ class AiTranslateService:
                 )
         except Exception as e:
             logger.error(f'处理失败ai任务时出错: {str(e)}')
+
+    def handle_complete(self):
+        try:
+            # 将故障信息写入task discussion
+            if self.task_topic_id:
+                d_id = self._task_discussion(
+                    self.task.id,
+                    'task',
+                    '任务处理完成',
+                    '任务处理完成',
+                    self.task_topic_id
+                )
+        except Exception as e:
+            logger.error(f'处理任务完成时出错: {str(e)}')
