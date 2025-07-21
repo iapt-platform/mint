@@ -194,7 +194,8 @@ class AiTranslateService:
             # 推理过程写入discussion
             if response_llm.get('reasoningContent'):
                 topic_children.append(response_llm['reasoningContent'])
-            self._sentence_discussion(s_uid, message.prompt, topic_children)
+            self._sentence_discussion(
+                s_uid, message.prompt, topic_children)
 
             # 修改task 完成度
             progress = self._set_task_progress(
@@ -542,7 +543,7 @@ class AiTranslateService:
 
         return progress
 
-    def handle_failed_translate(self, message_id: str, translate_data: List[Any], exception: Exception):
+    def handle_failed(self, message_id: str, message: str, exception: Exception):
         """处理失败的翻译任务"""
         try:
             # 彻底失败时的业务逻辑
@@ -551,11 +552,29 @@ class AiTranslateService:
 
             # 将故障信息写入task discussion
             if self.task_topic_id:
-                error_message = f"**处理失败ai任务时出错** 请重启任务 message id={message_id} 错误信息：{str(exception)}"
+                error_message = f"**任务处理失败** 请重启任务 \n- message id={message_id} \n- 错误信息：{message} \n- 异常：{str(exception)}"
                 d_id = self._task_discussion(
                     self.task.id,
                     'task',
-                    self.task.title,
+                    '任务处理失败',
+                    error_message,
+                    self.task_topic_id
+                )
+        except Exception as e:
+            logger.error(f'处理失败ai任务时出错: {str(e)}')
+
+    def handle_retry(self, message_id: str, message: str, exception: Exception):
+        """处理失败的翻译任务"""
+        try:
+            # 失败时的业务逻辑
+
+            # 将故障信息写入task discussion
+            if self.task_topic_id:
+                error_message = f"任务处理出错 正在重试 \n- message id={message_id} \n- 错误信息：{message} \n- 异常：{str(exception)}"
+                d_id = self._task_discussion(
+                    self.task.id,
+                    'task',
+                    '任务处理出错',
                     error_message,
                     self.task_topic_id
                 )
