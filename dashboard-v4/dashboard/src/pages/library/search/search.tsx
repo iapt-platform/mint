@@ -25,7 +25,6 @@ const Widget = () => {
   const [pageType, setPageType] = useState("P");
   const [view, setView] = useState<ISearchView | undefined>("pali");
   const [caseWord, setCaseWord] = useState<string[]>();
-  const [prompt, setPrompt] = useState<string>();
   const [sysPrompt, setSysPrompt] = useState<string>();
 
   const [ftsData, setFtsData] = useState<IFtsItem[]>();
@@ -117,7 +116,9 @@ const Widget = () => {
                 return `## ${item.title}-${item.paliTitle} \n\n${item.content}\n\n`;
               })
               .join("");
-            setSysPrompt(`${chat}\n\n请根据上述巴利文本内容,回答用户的问题`);
+            setSysPrompt(
+              `# 搜索词：${key}\n\n# 搜索结果：\n\n${chat}\n\n请根据上述巴利文本内容,回答用户的问题`
+            );
           }
         } else {
           console.error(json.message);
@@ -273,7 +274,6 @@ const Widget = () => {
                   ]}
                 />
                 <AIChatComponent
-                  initMessage={prompt}
                   systemPrompt={sysPrompt}
                   onChat={() => setChat(true)}
                 />
