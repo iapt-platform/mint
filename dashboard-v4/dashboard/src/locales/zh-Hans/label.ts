@@ -77,6 +77,7 @@ const items = {
   "labels.task.status.expired": "已过期",
   "labels.task.status.queue": "排队中",
   "labels.task.status.stop": "停止",
+  "labels.task.status.quit": "放弃",
   "labels.filter": "过滤器",
   "labels.participants": "参与者",
   "labels.task.category": "任务类型",

@@ -90,6 +90,7 @@ const TaskStatusButton = ({
       menuEnable = [
         "done",
         "stop",
+        "quit",
         requested_restart_enable ? "requested_restart" : "done",
       ];
       break;
@@ -107,6 +108,9 @@ const TaskStatusButton = ({
       break;
     case "stop":
       menuEnable = ["restarted"];
+      break;
+    case "quit":
+      menuEnable = ["published"];
       break;
   }
 
