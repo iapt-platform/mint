@@ -22,17 +22,10 @@ const Description = ({ task, onChange, onDiscussion }: IWidget) => {
   const [mode, setMode] = useState<"read" | "edit">("read");
   const [content, setContent] = useState(task?.description);
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
 
   useEffect(() => setContent(task?.description), [task]);
   return (
     <div>
-      <DiscussionDrawer
-        open={open}
-        onClose={() => setOpen(false)}
-        resId={task?.id}
-        resType="task"
-      />
       <div
         style={{
           display: "flex",
@@ -46,16 +39,7 @@ const Description = ({ task, onChange, onDiscussion }: IWidget) => {
         <span>
           {mode === "read" ? (
             <Space>
-              <Button
-                key={1}
-                onClick={() => {
-                  if (typeof onDiscussion === "undefined") {
-                    setOpen(true);
-                  } else {
-                    onDiscussion();
-                  }
-                }}
-              >
+              <Button key={1} onClick={onDiscussion}>
                 {intl.formatMessage({ id: "buttons.discussion" })}
               </Button>
               <Button
