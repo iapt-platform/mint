@@ -1,8 +1,36 @@
 import { Progress, Tag, Tooltip } from "antd";
-import { ITaskData, ITaskResponse } from "../api/task";
+import { ITaskData, ITaskResponse, TTaskStatus } from "../api/task";
 import { useIntl } from "react-intl";
 import { useEffect, useState } from "react";
 import { get } from "../../request";
+
+export const TaskStatusColor = (status?: TTaskStatus) => {
+  let color = "";
+  switch (status) {
+    case "pending":
+      color = "default";
+      break;
+    case "published":
+      color = "orange";
+      break;
+    case "running":
+      color = "processing";
+      break;
+    case "done":
+      color = "success";
+      break;
+    case "restarted":
+      color = "error";
+      break;
+    case "requested_restart":
+      color = "warning";
+      break;
+    case "stop":
+      color = "error";
+      break;
+  }
+  return color;
+};
 
 interface IWidget {
   task?: ITaskData;
@@ -35,31 +63,7 @@ const TaskStatus = ({ task }: IWidget) => {
     };
   }, [task]);
 
-  let color = "";
-  switch (task?.status) {
-    case "pending":
-      color = "default";
-      break;
-    case "published":
-      color = "orange";
-      break;
-    case "running":
-      color = "processing";
-      break;
-    case "done":
-      color = "success";
-      break;
-    case "restarted":
-      color = "error";
-      break;
-    case "requested_restart":
-      color = "warning";
-      break;
-    case "stop":
-      color = "error";
-      break;
-  }
-
+  const color = TaskStatusColor(task?.status);
   return (
     <>
       <Tag color={color}>
