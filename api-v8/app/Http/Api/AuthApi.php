@@ -31,7 +31,10 @@ class AuthApi
                 return ['user_uid' => $jwt->uid, 'user_id' => $jwt->id];
             }
         } else if (isset($_COOKIE['user_uid'])) {
-            return ['user_uid' => $_COOKIE['user_uid'], 'user_id' => $_COOKIE['user_id']];
+            return [
+                'user_uid' => $_COOKIE['user_uid'],
+                'user_id' => $_COOKIE['user_id']
+            ];
         } else {
             return false;
         }

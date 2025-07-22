@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
 use App\Models\Task;
 use App\Models\TaskRelation;
 use App\Models\TaskAssignee;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Models\AiModel;
 use App\Http\Resources\TaskResource;
 use App\Http\Api\AuthApi;
 use App\Http\Api\WatchApi;
-use App\Models\AiModel;
-use App\Services\AiTranslateService;
+use App\Http\Api\UserApi;
+
 
 
 class TaskStatusController extends Controller
@@ -126,6 +128,9 @@ class TaskStatusController extends Controller
             case 'restarted':
                 $this->pushChange('restarted', $task->id);
                 break;
+            case 'quit':
+                $this->pushChange('quit', $task->id);
+                break;
             case 'done':
                 $this->pushChange('done', $task->id);
                 $task->finished_at = now();
@@ -190,8 +195,6 @@ class TaskStatusController extends Controller
             if ($aiAssistant) {
                 $aiTask = Task::find($taskId);
                 try {
-                    //$ai = app(AiTranslateService::class);
-                    //$params = $ai->makeByTask($taskId, $aiAssistant->uid, true);
                     \App\Jobs\ProcessAITranslateJob::publish($taskId, $aiAssistant->uid);
                     $aiTask->executor_id = $aiAssistant->uid;
                     $aiTask->status = 'queue';
@@ -209,6 +212,7 @@ class TaskStatusController extends Controller
         }
 
         $allChanged = [];
+        $discussion = app(\App\Services\DiscussionService::class);
         foreach ($this->changeTasks as $key => $tasksId) {
             $allChanged = array_merge($allChanged, $tasksId);
             #change status in related
@@ -226,17 +230,34 @@ class TaskStatusController extends Controller
             if ($key === 'restart') {
                 $data['finished_at'] = null;
             }
+            if ($key === 'quit') {
+                $data['executor_id'] = null;
+            }
             Task::whereIn('id', $tasksId)
                 ->update($data);
-            //发送站内信
-            $send = WatchApi::change(
-                resId: $tasksId,
-                from: $user['user_uid'],
-                message: "任务状态变为 {$key}",
-            );
-            Log::debug('watch message', [
-                'send-to' => $send,
-            ]);
+
+            try {
+                //发送站内信
+                $send = WatchApi::change(
+                    resId: $tasksId,
+                    from: $user['user_uid'],
+                    message: "任务状态变为 {$key}",
+                );
+                Log::debug('watch message', [
+                    'send-to' => $send,
+                ]);
+                $editor = UserApi::getByUuid($user['user_uid']);
+                foreach ($tasksId as $taskId) {
+                    $discussion->create([
+                        'res_id' => $taskId,
+                        'res_type' => 'task',
+                        'title' => "{$editor['nickName']} 将任务状态变为 {$key}",
+                        'editor_uid' => $user['user_uid'],
+                    ]);
+                }
+            } catch (\Throwable $th) {
+                Log::error($th->getMessage());
+            }
         }
 
         //changed tasks

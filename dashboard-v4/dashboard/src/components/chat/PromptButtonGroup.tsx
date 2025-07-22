@@ -84,8 +84,8 @@ const PromptButtonGroup = ({ onText }: IWidget) => {
     if (!user) {
       return;
     }
-    const getPrompt = async (studio: string) => {
-      const urlTpl = `/v2/article?view=template&studio_name=${user?.realName}&subtitle=_template_prompt_&content=true`;
+    const getPromptOne = async (studio: string) => {
+      const urlTpl = `/v2/article?view=template&studio_name=${studio}&subtitle=_template_prompt_&content=true`;
       const json = await get<IArticleListResponse>(urlTpl);
       if (json.ok) {
         if (json.data.rows.length > 0) {
@@ -97,17 +97,18 @@ const PromptButtonGroup = ({ onText }: IWidget) => {
       return false;
     };
 
-    getPrompt(user?.realName).then((value) => {
-      if (value) {
-        setData(parseMarkdownToPromptNodes(value));
-      } else {
-        getPrompt("admin").then((value) => {
-          if (value) {
-            setData(parseMarkdownToPromptNodes(value));
-          }
-        });
+    const getPrompt = async () => {
+      const my = await getPromptOne(user.realName);
+      if (my) {
+        setData(parseMarkdownToPromptNodes(my));
+        return;
       }
-    });
+      const system = await getPromptOne("admin");
+      if (system) {
+        setData(parseMarkdownToPromptNodes(system));
+      }
+    };
+    getPrompt().catch((e) => console.error(e));
   }, [user, user?.realName]);
 
   return (

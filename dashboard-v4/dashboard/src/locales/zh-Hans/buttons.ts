@@ -101,6 +101,7 @@ const items = {
   "buttons.task.status.change.to.done": "完成任务",
   "buttons.task.status.change.to.restarted": "重做",
   "buttons.task.status.change.to.requested_restart": "请求重做",
+  "buttons.task.status.change.to.quit": "放弃任务",
   "buttons.access-token.get": "获取访问口令",
   "buttons.task.add.pre-task": "添加前置任务",
   "buttons.task.add.next-task": "添加后置任务",

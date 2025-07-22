@@ -17,6 +17,8 @@ import TaskStatus from "./TaskStatus";
 import Description from "./Description";
 import Category from "./Category";
 import { useIntl } from "react-intl";
+import TaskLog from "./TaskLog";
+import DiscussionDrawer from "../discussion/DiscussionDrawer";
 
 const { Text } = Typography;
 
@@ -40,6 +42,8 @@ const TaskReader = ({ taskId, onChange, onDiscussion }: IWidget) => {
   const [openNextTask, setOpenNextTask] = useState(false);
   const [task, setTask] = useState<ITaskData>();
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
     const url = `/v2/task/${taskId}`;
     console.info("task api request", url);
@@ -191,13 +195,20 @@ const TaskReader = ({ taskId, onChange, onDiscussion }: IWidget) => {
         </Space>
       </div>
       <Divider />
+      <TaskLog taskId={taskId} onMore={() => setOpen(true)} />
       <Description
         task={task}
         onChange={(data) => {
           setTask(data[0]);
           onChange && onChange(data);
         }}
-        onDiscussion={onDiscussion}
+        onDiscussion={() => setOpen(true)}
+      />
+      <DiscussionDrawer
+        open={open}
+        onClose={() => setOpen(false)}
+        resId={taskId}
+        resType="task"
       />
     </div>
   );
