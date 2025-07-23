@@ -2,7 +2,6 @@ import {
   Button,
   Divider,
   Input,
-  message,
   Modal,
   notification,
   Space,
@@ -10,7 +9,7 @@ import {
   Typography,
 } from "antd";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Workflow from "./Workflow";
 import {
   IProjectTreeData,
@@ -34,11 +33,8 @@ import {
 } from "../api/token";
 import ProjectWithTasks from "./ProjectWithTasks";
 import { useIntl } from "react-intl";
-import { NotificationPlacement } from "antd/lib/notification";
 import React from "react";
 const { Text, Paragraph } = Typography;
-
-const Context = React.createContext({ name: "Default" });
 
 interface IModal {
   studioName?: string;
