@@ -287,7 +287,7 @@ const AIChatComponent = ({
         return { success: false, error: "API调用失败，请重试" };
       }
     },
-    [models, streamTypeWriter, fetchModel, currentTypingMessage]
+    [models, streamTypeWriter, currentTypingMessage]
   );
 
   const sendMessage = useCallback(
@@ -310,7 +310,6 @@ const AIChatComponent = ({
       setMessages((prev) => [...prev, userMessage]);
       setInputValue("");
       setIsLoading(true);
-      onChat && onChat();
 
       // Scroll to the new user message
       scrollToBottom();
@@ -339,7 +338,14 @@ const AIChatComponent = ({
         setIsLoading(false);
       }
     },
-    [inputValue, messages, systemPrompt, callOpenAI, scrollToBottom]
+    [
+      inputValue,
+      scrollToBottom,
+      systemPrompt,
+      messages,
+      callOpenAI,
+      selectedModel,
+    ]
   );
 
   const refreshAIResponse = useCallback(
@@ -404,7 +410,7 @@ const AIChatComponent = ({
         }
       }
     },
-    [messages, systemPrompt, callOpenAI, fetchModel]
+    [messages, systemPrompt, callOpenAI]
   );
 
   const confirmEdit = useCallback((id: number, text: string): void => {
@@ -441,7 +447,10 @@ const AIChatComponent = ({
 
   const modelMenu: MenuProps = {
     selectedKeys: [selectedModel],
-    onClick: ({ key }) => setSelectedModel(key),
+    onClick: ({ key }) => {
+      console.log("setSelectedModel", key);
+      setSelectedModel(key);
+    },
     items: models?.map((model) => ({
       key: model.uid,
       label: model.name,
@@ -466,6 +475,7 @@ const AIChatComponent = ({
               if (msg.type === "user") {
                 return (
                   <MsgUser
+                    key={index}
                     msg={msg}
                     onChange={(value: string) => confirmEdit(index, value)}
                   />
@@ -473,6 +483,7 @@ const AIChatComponent = ({
               } else if (msg.type === "ai") {
                 return (
                   <MsgAssistant
+                    key={index}
                     msg={msg}
                     models={models}
                     onRefresh={(modelId: string) => {
@@ -550,7 +561,10 @@ const AIChatComponent = ({
                 <Button
                   type="primary"
                   icon={<SendOutlined />}
-                  onClick={() => sendMessage()}
+                  onClick={() => {
+                    sendMessage();
+                    onChat && onChat();
+                  }}
                   disabled={!inputValue.trim() || isLoading}
                 />
               </Space>
