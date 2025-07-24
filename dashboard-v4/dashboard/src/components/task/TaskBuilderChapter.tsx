@@ -162,7 +162,7 @@ const TaskBuilderChapter = ({
             workflow={workflow}
             channelsId={channels}
             onChange={(data: IProp[] | undefined) => {
-              console.info("prop value", data);
+              console.info("TaskBuilderProp prop value", data);
               setProp(data);
               let channels = new Map<string, number>();
               data?.forEach((value) => {
@@ -196,7 +196,7 @@ const TaskBuilderChapter = ({
                 console.info("api request", url, values);
                 post<ITokenCreate, ITokenCreateResponse>(url, values).then(
                   (json) => {
-                    console.info("api response", json);
+                    console.info("api response token", json);
                     setTokens(json.data.rows);
                   }
                 );
@@ -271,6 +271,48 @@ const TaskBuilderChapter = ({
     });
   };
 
+  //生成任务组
+  const projectGroup = async () => {
+    if (!studioName || !chapter) {
+      console.error("缺少参数", studioName, chapter);
+      return;
+    }
+    const url = "/v2/project-tree";
+    const values: IProjectTreeInsertRequest = {
+      studio_name: studioName,
+      data: chapter.map((item, id) => {
+        return {
+          id: item.paragraph.toString(),
+          title: id === 0 && title ? title : item.text ?? "",
+          type: "instance",
+          weight: item.chapter_strlen,
+          parent_id: item.parent.toString(),
+          res_id: `${item.book}-${item.paragraph}`,
+        };
+      }),
+    };
+    let res;
+    try {
+      console.info("api request", url, values);
+      res = await post<IProjectTreeInsertRequest, IProjectTreeResponse>(
+        url,
+        values
+      );
+      console.info("api response", res);
+      // 检查响应状态
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: `);
+      }
+      setProjects(res.data.rows);
+      setMessages((origin) => [...origin, "生成任务组成功"]);
+    } catch (error) {
+      console.error("Fetch error:", error);
+      openNotification("error", "生成任务组失败");
+      throw error;
+    }
+    return res.data.rows;
+  };
+
   const DoButton = () => {
     return (
       <>
@@ -286,48 +328,20 @@ const TaskBuilderChapter = ({
             setLoading(true);
             //生成projects
             setMessages((origin) => [...origin, "正在生成任务组……"]);
-            const url = "/v2/project-tree";
-            const values: IProjectTreeInsertRequest = {
-              studio_name: studioName,
-              data: chapter.map((item, id) => {
-                return {
-                  id: item.paragraph.toString(),
-                  title: id === 0 && title ? title : item.text ?? "",
-                  type: "instance",
-                  weight: item.chapter_strlen,
-                  parent_id: item.parent.toString(),
-                  res_id: `${item.book}-${item.paragraph}`,
-                };
-              }),
-            };
-            let res;
-            try {
-              console.info("api request", url, values);
-              res = await post<IProjectTreeInsertRequest, IProjectTreeResponse>(
-                url,
-                values
-              );
-              console.info("api response", res);
-              // 检查响应状态
-              if (!res.ok) {
-                throw new Error(`HTTP error! status: `);
-              }
-              setProjects(res.data.rows);
-              setMessages((origin) => [...origin, "生成任务组成功"]);
-            } catch (error) {
-              console.error("Fetch error:", error);
-              openNotification("error", "生成任务组失败");
-              throw error;
+            const res = await projectGroup();
+            if (!res) {
+              return;
             }
 
             //生成tasks
             setMessages((origin) => [...origin, "正在生成任务……"]);
+
             const taskUrl = "/v2/task-group";
             if (!workflow) {
               return;
             }
 
-            let taskData: ITaskGroupInsertData[] = res.data.rows
+            let taskData: ITaskGroupInsertData[] = res
               .filter((value) => value.isLeaf)
               .map((project, pId) => {
                 return {
@@ -373,6 +387,15 @@ const TaskBuilderChapter = ({
                                   ? token.payload.power === power
                                   : true)
                             );
+                            if (!mToken) {
+                              console.warn(
+                                "token not found",
+                                book,
+                                paragraph,
+                                channel,
+                                power
+                              );
+                            }
                             newContent = newContent?.replace(
                               value.key,
                               channel + (mToken ? "@" + mToken?.token : "")
