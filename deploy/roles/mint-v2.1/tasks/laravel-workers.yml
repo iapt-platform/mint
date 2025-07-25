@@ -9,6 +9,11 @@
     name: "{{ app_domain }}-worker-{{ zone_name }}-{{ worker_name }}"
     state: absent
 
+- name: Waiting for write-back
+  ansible.builtin.pause:
+    # minutes: 1
+    seconds: 5
+
 - name: Create {{ zone_name }}-{{ worker_name }}
   containers.podman.podman_container:
     name: "{{ app_domain }}-worker-{{ zone_name }}-{{ worker_name }}"
