@@ -44,7 +44,7 @@ def start_consumer(context, name, config, queue, callback, proxy):
                        callback, proxy, HeartBeat, name)
 
     channel.basic_consume(
-        queue=queue, on_message_callback=_callback, auto_ack=False)
+        queue=queue, on_message_callback=_callback, auto_ack=True)
 
     name = "%s.%s.%d" % (name, socket.gethostname(), os.getpid())
     logger.info('start a consumer(%s) for queue(%s)', name, queue)

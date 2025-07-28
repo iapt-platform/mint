@@ -131,7 +131,7 @@ class AiTranslateService:
 
         self.redis_clusters.set(
             f"{self.redis_namespace}/task/{self.task.id}/message_id", message_id)
-        pointer_key = f"{self.redis_namespace}/task/{message_id}/pointer"
+        pointer_key = f"{self.redis_namespace}/task/{self.task.id}/pointer"
         pointer = 0
 
         if self.redis_clusters.exists(pointer_key):
@@ -216,20 +216,6 @@ class AiTranslateService:
             else:
                 logger.error('no task discussion root')
 
-            if i + 1 < len(body.payload):
-                self.redis_clusters.set(pointer_key, i+1)
-                # 计算本次时间和剩余时间
-                # breakpoint()
-                onceTime = int(time.time())-startAt
-                times.append(onceTime)
-                times.sort(reverse=True)
-                # 取出第一个元素
-                maxTime = times[0]
-                # 计算剩余时间
-                remain = self.customer_timeout-(int(time.time())-taskStartAt)
-                if remain < maxTime:
-                    # 时间不足
-                    raise SectionTimeout
         # 任务完成 修改任务状态为 done
         self._set_task_status(self.task.id, 'done')
         self.redis_clusters.delete(pointer_key)
@@ -570,10 +556,10 @@ class AiTranslateService:
             logger.error(f'处理失败ai任务时出错: {str(e)}')
 
     def handle_retry(self, message_id: str, message: str, exception: Exception):
-        """处理失败的翻译任务"""
+        """处理失败 需要重试"""
         try:
             # 失败时的业务逻辑
-
+            self._set_task_status(self.task.id, 'pause')
             # 将故障信息写入task discussion
             if self.task_topic_id:
                 error_message = f"任务处理出错 正在重试 \n- message id={message_id} \n- 错误信息：{message} \n- 异常：{str(exception)}"
@@ -600,3 +586,6 @@ class AiTranslateService:
                 )
         except Exception as e:
             logger.error(f'处理任务完成时出错: {str(e)}')
+
+    def get_task_id(self) -> str:
+        return self.task.id

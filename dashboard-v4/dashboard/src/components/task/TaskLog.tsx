@@ -1,10 +1,11 @@
-import { Button, Timeline } from "antd";
+import { Button, Skeleton, Timeline } from "antd";
 import React, { useEffect, useState } from "react";
 import { get } from "../../request";
 import { ICommentApiData, ICommentListResponse } from "../api/Comment";
 import TimeShow from "../general/TimeShow";
 import { StatusButtons, TTaskStatus } from "../api/task";
 import { TaskStatusColor } from "./TaskStatus";
+import User from "../auth/User";
 
 interface IWidget {
   taskId?: string;
@@ -12,15 +13,21 @@ interface IWidget {
 }
 const TaskLog = ({ taskId, onMore }: IWidget) => {
   const [data, setData] = useState<ICommentApiData[]>();
+  const [total, setTotal] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    const url: string = `/v2/discussion?view=res_id&id=${taskId}&limit=5`;
+    const url: string = `/v2/discussion?type=discussion&res_type=task&view=question&id=${taskId}&limit=5&offset=0&status=active`;
     console.info("api request", url);
-    get<ICommentListResponse>(url).then((json) => {
-      if (json.ok) {
-        console.debug("discussion api response", json);
-        setData(json.data.rows);
-      }
-    });
+    setLoading(true);
+    get<ICommentListResponse>(url)
+      .then((json) => {
+        if (json.ok) {
+          console.debug("discussion api response", json);
+          setData(json.data.rows);
+          setTotal(json.data.count);
+        }
+      })
+      .finally(() => setLoading(false));
   }, [taskId]);
 
   function findKeywordInTitle(title?: string): string | undefined {
@@ -41,12 +48,14 @@ const TaskLog = ({ taskId, onMore }: IWidget) => {
   return (
     <>
       <Timeline>
+        {loading && <Skeleton paragraph={{ rows: 1 }} active avatar />}
         {data?.map((item, id) => {
           const status = findKeywordInTitle(item.title);
           return (
             <Timeline.Item
               key={id}
               color={TaskStatusColor(status as TTaskStatus)}
+              dot={<User {...item.editor} showName={false} />}
             >
               <div>
                 <TimeShow
@@ -59,11 +68,13 @@ const TaskLog = ({ taskId, onMore }: IWidget) => {
             </Timeline.Item>
           );
         })}
-        <Timeline.Item>
-          <Button type="link" onClick={onMore}>
-            更多
-          </Button>
-        </Timeline.Item>
+        {total > 5 && (
+          <Timeline.Item>
+            <Button type="link" onClick={onMore}>
+              更多
+            </Button>
+          </Timeline.Item>
+        )}
       </Timeline>
     </>
   );
