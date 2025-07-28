@@ -5,6 +5,7 @@ import { ICommentApiData, ICommentListResponse } from "../api/Comment";
 import TimeShow from "../general/TimeShow";
 import { StatusButtons, TTaskStatus } from "../api/task";
 import { TaskStatusColor } from "./TaskStatus";
+import User from "../auth/User";
 
 interface IWidget {
   taskId?: string;
@@ -13,7 +14,7 @@ interface IWidget {
 const TaskLog = ({ taskId, onMore }: IWidget) => {
   const [data, setData] = useState<ICommentApiData[]>();
   useEffect(() => {
-    const url: string = `/v2/discussion?view=res_id&id=${taskId}&limit=5`;
+    const url: string = `/v2/discussion?type=discussion&res_type=task&view=question&id=${taskId}&limit=5&offset=0&status=active`;
     console.info("api request", url);
     get<ICommentListResponse>(url).then((json) => {
       if (json.ok) {
@@ -47,6 +48,7 @@ const TaskLog = ({ taskId, onMore }: IWidget) => {
             <Timeline.Item
               key={id}
               color={TaskStatusColor(status as TTaskStatus)}
+              dot={<User {...item.editor} showName={false} />}
             >
               <div>
                 <TimeShow
