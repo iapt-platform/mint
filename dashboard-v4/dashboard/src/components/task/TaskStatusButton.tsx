@@ -112,6 +112,9 @@ const TaskStatusButton = ({
     case "quit":
       menuEnable = ["published"];
       break;
+    case "pause":
+      menuEnable = ["restarted"];
+      break;
   }
 
   const items: IStatusMenu[] = StatusButtons.map((item) => {

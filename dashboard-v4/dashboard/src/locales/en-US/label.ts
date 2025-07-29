@@ -70,6 +70,7 @@ const items = {
   "labels.task.status.queue": "queue",
   "labels.task.status.stop": "stop",
   "labels.task.status.quit": "quit",
+  "labels.task.status.pause": "pause",
   "labels.filter": "filter",
   "labels.participants": "participants",
   "labels.task.category": "task category",
