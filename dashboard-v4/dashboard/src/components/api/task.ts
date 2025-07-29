@@ -28,7 +28,8 @@ export type TTaskStatus =
   | "expired"
   | "queue"
   | "stop"
-  | "quit";
+  | "quit"
+  | "pause";
 export const StatusButtons: TTaskStatus[] = [
   "pending",
   "published",
