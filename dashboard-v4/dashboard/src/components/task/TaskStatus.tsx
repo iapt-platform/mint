@@ -4,32 +4,23 @@ import { useIntl } from "react-intl";
 import { useEffect, useState } from "react";
 import { get } from "../../request";
 
-export const TaskStatusColor = (status?: TTaskStatus) => {
-  let color = "";
-  switch (status) {
-    case "pending":
-      color = "default";
-      break;
-    case "published":
-      color = "orange";
-      break;
-    case "running":
-      color = "processing";
-      break;
-    case "done":
-      color = "success";
-      break;
-    case "restarted":
-      color = "error";
-      break;
-    case "requested_restart":
-      color = "warning";
-      break;
-    case "stop":
-      color = "error";
-      break;
-  }
-  return color;
+const taskStatusColors: Record<TTaskStatus, string> = {
+  pending: "default",
+  published: "orange",
+  running: "processing",
+  done: "success",
+  restarted: "warning",
+  requested_restart: "warning",
+  closed: "error",
+  canceled: "error",
+  expired: "error",
+  queue: "default",
+  stop: "error",
+  quit: "error",
+  pause: "warning",
+};
+export const TaskStatusColor = (status: TTaskStatus = "pending"): string => {
+  return taskStatusColors[status];
 };
 
 interface IWidget {
