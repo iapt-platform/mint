@@ -28,11 +28,11 @@ def main():
     args = parser.parse_args()
 
     if args.debug:
-        now = datetime.datetime.now()
-        logging.basicConfig(filename=now.strftime("%Y%m%d%H%M%S.log"),
-                            level=args.debug, format='%(levelname)-5s %(asctime)s(%(pathname)s %(lineno)d): %(message)s')
+        logging.basicConfig(
+            level=args.debug, format='%(levelname)-5s %(asctime)s(%(pathname)s %(lineno)d): %(message)s')
     else:
-        logging.basicConfig(level=logging.INFO,
+        now = datetime.datetime.now()
+        logging.basicConfig(filename=now.strftime("%Y%m%d%H%M%S.log"), level=logging.INFO,
                             format='%(levelname)-5s %(asctime)s(%(module)s): %(message)s')
     is_stopped()
     try:
