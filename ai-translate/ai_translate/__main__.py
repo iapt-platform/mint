@@ -2,6 +2,7 @@ import logging
 import argparse
 import sys
 import os
+import datetime
 
 from . import launch
 from .utils import is_stopped
@@ -27,11 +28,12 @@ def main():
     args = parser.parse_args()
 
     if args.debug:
-        logging.basicConfig(
-            level=logging.DEBUG if args.debug else logging.INFO, format='%(levelname)-5s %(asctime)s(%(pathname)s %(lineno)d): %(message)s')
+        now = datetime.datetime.now()
+        logging.basicConfig(filename=now.strftime("%Y%m%d%H%M%S.log"),
+                            level=args.debug, format='%(levelname)-5s %(asctime)s(%(pathname)s %(lineno)d): %(message)s')
     else:
-        logging.basicConfig(
-            level=logging.DEBUG if args.debug else logging.INFO, format='%(levelname)-5s %(asctime)s(%(module)s): %(message)s')
+        logging.basicConfig(level=logging.INFO,
+                            format='%(levelname)-5s %(asctime)s(%(module)s): %(message)s')
     is_stopped()
     try:
         launch(args.name, args.queue, args.config)
