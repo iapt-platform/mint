@@ -13,17 +13,12 @@ class MockOpenAIController extends Controller
      */
     public function chatCompletions(Request $request): JsonResponse
     {
-        $delay = $request->query('delay', 'true');
-        if ($delay === "true") {
-            // 随机延迟
-            $this->randomDelay();
-        }
-        $error = $request->query('error', "true");
+        // 随机延迟
+        $this->randomDelay($request->query('delay', 'h'));
+
         // 随机返回错误
-        if ($error === "true") {
-            if ($errorResponse = $this->randomError()) {
-                return $errorResponse;
-            }
+        if ($errorResponse = $this->randomError($request->query('error', "h"))) {
+            return $errorResponse;
         }
 
         $model = $request->input('model', 'gpt-3.5-turbo');
@@ -57,17 +52,12 @@ class MockOpenAIController extends Controller
      */
     public function completions(Request $request): JsonResponse
     {
-        $delay = $request->query('delay', true);
-        if ($delay === true) {
-            // 随机延迟
-            $this->randomDelay();
-        }
-        $error = $request->query('error', true);
+        // 随机延迟
+        $this->randomDelay($request->query('delay', 'h'));
+
         // 随机返回错误
-        if ($error === true) {
-            if ($errorResponse = $this->randomError()) {
-                return $errorResponse;
-            }
+        if ($errorResponse = $this->randomError($request->query('error', "h"))) {
+            return $errorResponse;
         }
 
         $model = $request->input('model', 'text-davinci-003');
@@ -99,13 +89,6 @@ class MockOpenAIController extends Controller
      */
     public function models(Request $request): JsonResponse
     {
-        // 随机延迟
-        $this->randomDelay();
-
-        // 随机返回错误
-        if ($errorResponse = $this->randomError()) {
-            return $errorResponse;
-        }
 
         return response()->json([
             'object' => 'list',
@@ -135,36 +118,63 @@ class MockOpenAIController extends Controller
     /**
      * 随机延迟
      */
-    private function randomDelay(): void
+    private function randomDelay(string $level): void
     {
-        // 90% 概率 1-3秒延迟
-        // 10% 概率 60-100秒延迟
-        if (rand(1, 100) <= 10) {
-            sleep(rand(60, 100));
-        } else {
-            sleep(rand(1, 3));
+        switch ($level) {
+            case 'l':
+                sleep(1);
+                break;
+            case 'm':
+                sleep(rand(1, 3));
+                break;
+            case 'h':
+                // 90% 概率 1-3秒延迟
+                // 10% 概率 60-100秒延迟
+                if (rand(1, 100) <= 10) {
+                    sleep(rand(60, 100));
+                } else {
+                    sleep(rand(1, 3));
+                }
+                break;
+            default:
+                break;
         }
     }
 
     /**
      * 随机返回错误响应
      */
-    private function randomError(): ?JsonResponse
+    private function randomError(string $level): ?JsonResponse
     {
-        // 20% 概率返回错误
-        if (rand(1, 100) <= 20) {
-            $errorType = rand(1, 3);
-
-            switch ($errorType) {
-                case 1:
-                    return $this->badRequestError();
-                case 2:
-                    return $this->internalServerError();
-                case 3:
+        switch ($level) {
+            case 'l':
+                if (rand(1, 100) <= 10) {
                     return $this->rateLimitError();
-            }
+                }
+                break;
+            case 'm':
+                if (rand(1, 100) <= 20) {
+                    return $this->rateLimitError();
+                }
+                break;
+            case 'h':
+                // 20% 概率返回三种错误
+                if (rand(1, 100) <= 20) {
+                    $errorType = rand(1, 3);
+                    switch ($errorType) {
+                        case 1:
+                            return $this->badRequestError();
+                        case 2:
+                            return $this->internalServerError();
+                        case 3:
+                            return $this->rateLimitError();
+                    }
+                }
+                break;
+            default:
+                return null;
+                break;
         }
-
         return null;
     }
 
