@@ -10,7 +10,7 @@ class TestWorkerStartProject extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan test:worker.start.project 0c3d2f69-1098-428b-95db-f1183667c799 restarted
+     * php artisan test:worker.start.project 0c3d2f69-1098-428b-95db-f1183667c799
      * @var string
      */
     protected $signature = 'test:worker.start.project {project} {--token=}';
