@@ -13,14 +13,14 @@ class MockOpenAIController extends Controller
      */
     public function chatCompletions(Request $request): JsonResponse
     {
-        $delay = $request->query('delay', true);
-        if ($delay === true) {
+        $delay = $request->query('delay', 'true');
+        if ($delay === "true") {
             // 随机延迟
             $this->randomDelay();
         }
-        $error = $request->query('error', true);
+        $error = $request->query('error', "true");
         // 随机返回错误
-        if ($error === true) {
+        if ($error === "true") {
             if ($errorResponse = $this->randomError()) {
                 return $errorResponse;
             }
