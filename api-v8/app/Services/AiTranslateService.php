@@ -273,7 +273,8 @@ class AiTranslateService
                 ["role" => "system", "content" => $message->model->system_prompt ?? ''],
                 ["role" => "user", "content" => $message->prompt],
             ],
-            "temperature" => 0.7,
+            "temperature" => 0.3,  # 低随机性，确保准确
+            "top_k" => 20,         # 限制候选词范围
             "stream" => false
         ];
         if ($this->openaiProxy) {
