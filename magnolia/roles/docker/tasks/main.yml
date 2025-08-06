@@ -28,6 +28,12 @@
     dest: /etc/apt/sources.list.d/docker.list
     mode: "0644"
 
+- name: Update apt cache
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    # cache_valid_time: 3600
+
 - name: Install docker packages
   become: true
   ansible.builtin.apt:
