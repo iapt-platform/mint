@@ -1,0 +1,8 @@
+- name: Reset root password
+  become: true
+  shell: echo "root:$(pwgen 32 1)" | chpasswd
+
+- name: Reset {{ ansible_user }} password
+  become: true
+  shell: echo "{{ ansible_user }}:$(pwgen 32 1)" | chpasswd
+  when: ansible_user != 'root'

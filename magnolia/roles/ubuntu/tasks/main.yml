@@ -1,0 +1,78 @@
+- name: Update apt cache
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    # cache_valid_time: 3600
+
+- name: Install dependicy packages
+  become: true
+  ansible.builtin.apt:
+    pkg:
+      - apt-transport-https
+      - software-properties-common
+      - gnupg
+      - sshpass
+      - rsync
+      - at
+      - sysstat
+      - libtool
+      - ethtool
+      - nethogs
+      - dnsutils
+      - dnsmasq
+      - uuid-runtime
+      - lshw
+      - tcpdump
+      - lm-sensors
+      - dmidecode
+      - net-tools
+      - iputils-arping
+      - iputils-ping
+      - telnet
+      - vim
+      - git
+      - pwgen
+      - locales
+      - ntpdate
+      - tree
+      - wget
+      - curl
+      - zip
+      - unzip
+      - systemd-cron
+      - systemd-timesyncd
+      - systemd-journal-remote
+      - screen
+      - tmux
+      - certbot
+      - python3-certbot-nginx
+
+- name: Set default editor to vim
+  become: true
+  ansible.builtin.shell: update-alternatives --set editor /usr/bin/vim.basic
+
+- name: Set git rebase mode
+  become: true
+  ansible.builtin.shell: git config --global pull.rebase false
+
+- name: setup git to use http v1.1
+  ansible.builtin.shell: git config --global http.version HTTP/1.1
+
+# ---------------------------------------------------
+
+- name: Enable ssh service
+  become: true
+  ansible.builtin.systemd:
+    name: ssh
+    enabled: true
+    masked: false
+
+- name: Enable systemd-timesyncd service
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-timesyncd
+    enabled: true
+    masked: false
+
+- name: Clean system
+  include_tasks: clean.yml

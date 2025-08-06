@@ -1,0 +1,16 @@
+[Unit]
+Description=Advanced key-value store
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/redis-server /etc/redis/node-{{ app_redis_port }}.conf --supervised systemd --daemonize no
+PIDFile=/run/redis-node-{{ app_redis_port }}.pid
+TimeoutStartSec=180
+TimeoutStopSec=120
+Restart=always
+User=redis
+Group=redis
+
+[Install]
+WantedBy=multi-user.target

@@ -4,6 +4,9 @@
 
 ```bash
 sudo pacman -S buildkit docker-buildx
+
+docker image load -i xxx.tar
+docker image ls --tree
 ```
 
 ## Documents
@@ -14,7 +17,3 @@ sudo pacman -S buildkit docker-buildx
 | ----------------------------------------------------------- | --- |
 | [8](https://laravel.com/docs/10.x/releases#support-policy)  | 8.1 |
 | [12](https://laravel.com/docs/12.x/releases#support-policy) | 8.4 |
-
-### Commands
-
-- docker image ls --tree

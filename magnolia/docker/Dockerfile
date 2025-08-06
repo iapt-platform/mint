@@ -34,16 +34,18 @@ RUN python3.13 -m ensurepip --upgrade
 # RUN echo 'deploy ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/101-deploy
 # USER deploy
 
+RUN mkdir $HOME/local $HOME/tmp $HOME/downloads
+
 # https://github.com/sdkman/sdkman-cli
 # https://docs.gradle.org/current/userguide/compatibility.html
 ENV JDK_VERSION="21.0.2-open"
 RUN curl -s "https://get.sdkman.io" | bash
 RUN sed -i -e 's/sdkman_auto_answer=false/sdkman_auto_answer=true/g' $HOME/.sdkman/etc/config
-RUN . $HOME/.sdkman/bin/sdkman-init.sh \
+RUN bash -c ". $HOME/.sdkman/bin/sdkman-init.sh \
     && sdk install java ${JDK_VERSION} \
     && sdk install maven \
     && sdk install gradle \
-    && sdk install kotlin
+    && sdk install kotlin"
 
 # https://github.com/nvm-sh/nvm
 ENV NVM_VERSION="v0.40.3"
@@ -51,11 +53,13 @@ RUN git clone -b ${NVM_VERSION} https://github.com/nvm-sh/nvm.git $HOME/.nvm
 RUN echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.bashrc 
 RUN echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $HOME/.bashrc 
 RUN echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> $HOME/.bashrc
-RUN . $HOME/.nvm/nvm.sh && nvm install --lts && npm install -g yarn
+RUN bash -c ". $HOME/.nvm/nvm.sh \
+    && nvm install --lts \
+    && npm install -g yarn"
 
 # https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos
 RUN wget -q -O $HOME/downloads/composer https://getcomposer.org/installer
-RUN cd $HOME/downloads/composer && php composer && mv composer.phar /usr/local/bin/composer
+RUN cd $HOME/downloads && php composer && mv composer.phar /usr/local/bin/composer
 
 RUN echo "$(date -u +%4Y%m%d%H%M%S)" | tee /VERSION
 

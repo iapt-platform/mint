@@ -1,0 +1,4 @@
+- name: Redis cluster node
+  hosts: all
+  roles:
+    - redis
