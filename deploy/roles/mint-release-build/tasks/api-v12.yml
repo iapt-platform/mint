@@ -1,0 +1,9 @@
+- name: Install api v12 dependencies
+  ansible.builtin.shell: |
+    npm install
+    php8.4 /usr/local/bin/composer install
+    
+    exit 0
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/api-v12"

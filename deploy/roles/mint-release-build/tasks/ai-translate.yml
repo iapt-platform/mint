@@ -1,0 +1,11 @@
+- name: Install ai-translate dependencies
+  ansible.builtin.shell: |
+    python3 -m venv $PWD/python3
+    source $PWD/python3/bin/activate
+    python3 -m pip install -e .
+    deactivate
+    
+    exit 0
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/ai-translate"

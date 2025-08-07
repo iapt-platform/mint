@@ -1,0 +1,9 @@
+- name: Install openai-proxy nodejs dependencies
+  ansible.builtin.shell: npm install
+  args:
+    chdir: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/open-ai-server"
+
+- name: Build openai-proxy target dist
+  ansible.builtin.shell: npm run build
+  args:
+    chdir: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/open-ai-server"

@@ -1,0 +1,41 @@
+- name: Download source code
+  ansible.builtin.unarchive:
+    src: https://github.com/iapt-platform/mint/archive/{{ mint_version }}.zip
+    dest: "{{ ansible_env.HOME }}/build"
+    remote_src: true
+
+- name: Build dashboard v4
+  ansible.builtin.import_tasks: dashboard-v4.yml
+
+- name: Build openai proxy
+  ansible.builtin.import_tasks: openai-proxy.yml
+
+- name: Setup api-v8
+  ansible.builtin.import_tasks: api-v8.yml
+
+- name: Setup api-v12
+  ansible.builtin.import_tasks: api-v12.yml
+
+- name: Setup ai translate
+  ansible.builtin.import_tasks: ai-translate.yml
+
+- name: Create mint-{{ mint_version }}.tar
+  ansible.builtin.shell: "tar cf mint-{{ mint_version }}.tar -C {{ ansible_env.HOME }}/build/mint-{{ mint_version }} api-v12 api-v8 dashboard-v4/dist ai-translate open-ai-server/dist"
+  args:
+    chdir: "{{ ansible_env.HOME }}/tmp"
+
+- name: Create {{ ansible_env.HOME }}/tmp/{{ app_domain }}
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/tmp/{{ app_domain }}"
+    state: directory
+    mode: "0755"
+
+- name: Create mint-{{ mint_version }}.tar.xz
+  ansible.builtin.shell: "xz -z -F xz -C sha256 --best -T +1 mint-{{ mint_version }}.tar"
+  args:
+    chdir: "{{ ansible_env.HOME }}/tmp/{{ app_domain }}"
+
+- name: Remove mint-{{ mint_version }}
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}"
+    state: absent

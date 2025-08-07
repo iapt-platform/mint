@@ -1,0 +1,25 @@
+- name: Extract dashboard-v4 node_modules
+  ansible.builtin.unarchive:
+    src: dashboard-20241201115354.tar.xz
+    dest: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/dashboard-v4/dashboard"
+
+- name: Build dashboard-v4 dist
+  ansible.builtin.shell: yarn build
+  args:
+    chdir: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/dashboard-v4/dashboard"
+  environment:
+    NODE_OPTIONS: "--max_old_space_size=2048"
+    PUBLIC_URL: "{{ app_dashboard_base_path }}"
+    REACT_APP_DEFAULT_LOCALE: "zh-Hans"
+    REACT_APP_LANGUAGES: "en-US,zh-Hans,zh-Hant"
+    REACT_APP_ENABLE_LOCAL_TOKEN: "true"
+    REACT_APP_TOKEN_KEY: "token.20250320"
+    REACT_APP_DOCUMENTS_SERVER: "{{ app_documents_server }}"
+    REACT_APP_RPC_SERVER: "{{ app_grpc_web_server }}"
+    REACT_APP_ASSETS_SERVER: "{{ app_assets_server }}"
+    REACT_APP_API_SERVER: "https://{{ app_domain }}"
+    REACT_APP_ICP_CODE: "{{ app_icp_code }}"
+    REACT_APP_MPS_CODE: "{{ app_mps_code }}"
+    REACT_APP_QUESTIONNAIRE_LINK: "{{ app_questionnaire_link }}"
+    # https://github.com/iapt-platform/mint/blob/5e81587433455cbc4994da49db5b880cf79e3539/dashboard-v4/dashboard/.env.orig#L17
+    REACT_APP_OPENAI_PROXY: "{{ app_openai_proxy_server }}/api/openai"
