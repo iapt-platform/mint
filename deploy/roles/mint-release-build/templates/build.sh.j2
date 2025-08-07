@@ -1,0 +1,60 @@
+#!/bin/bash
+
+set -e
+
+. $HOME/.sdkman/bin/sdkman-init.sh
+. $HOME/.nvm/nvm.sh
+
+# cd {{ app_deploy_target }}/dashboard-v4/dashboard/
+# if [ -d dist ]
+# then
+#     rm -f dist
+# fi
+# https://github.com/iapt-platform/mint/blob/5e81587433455cbc4994da49db5b880cf79e3539/dashboard-v4/dashboard/.env.orig#L17
+# NODE_OPTIONS="--max_old_space_size=2048" \
+#     PUBLIC_URL="{{ app_dashboard_base_path }}" \
+#     REACT_APP_DEFAULT_LOCALE="zh-Hans" \
+#     REACT_APP_LANGUAGES="en-US,zh-Hans,zh-Hant" \
+#     REACT_APP_ENABLE_LOCAL_TOKEN="true" \
+#     REACT_APP_TOKEN_KEY="token.20250320" \
+#     REACT_APP_DOCUMENTS_SERVER="{{ app_documents_server }}" \
+#     REACT_APP_RPC_SERVER="{{ app_grpc_web_server }}" \
+#     REACT_APP_ASSETS_SERVER="{{ app_assets_server }}" \
+#     REACT_APP_API_SERVER="https://{{ app_domain }}" \
+#     REACT_APP_ICP_CODE="{{ app_icp_code }}" \
+#     REACT_APP_MPS_CODE="{{ app_mps_code }}" \
+#     REACT_APP_QUESTIONNAIRE_LINK="{{ app_questionnaire_link }}" \
+#     REACT_APP_OPENAI_PROXY="{{ app_openai_proxy_server }}/api/openai" \
+#     npm run build
+
+cd {{ app_deploy_target }}/api-v8/
+npm install
+php8.1 /usr/local/bin/composer install
+cd {{ app_deploy_target }}/api-v8/public
+npm install
+php8.1 /usr/local/bin/composer install
+
+cd {{ app_deploy_target }}/api-v12/
+npm install
+php8.4 /usr/local/bin/composer install
+
+# cd {{ app_deploy_target }}/open-ai-server/
+# npm install
+# if [ -d dist ]
+# then
+#     rm -f dist
+# fi
+# npm run build
+
+cd {{ app_deploy_target }}/ai-translate/
+python3 -m venv $PWD/python3
+. $PWD/python3/bin/activate
+python3 -m pip install -e .
+deactivate
+
+mkdir -p {{ app_deploy_target }}/tmp/{{ app_domain }}
+cd {{ app_deploy_target }}/tmp/{{ app_domain }}/
+tar cf mint-{{ mint_version }}.tar -C {{ app_deploy_target }} api-v12 api-v8 dashboard-v4/dashboard/dist ai-translate open-ai-server/dist
+xz -z -F xz -C sha256 --best -T +1 mint-{{ mint_version }}.tar
+
+exit 0

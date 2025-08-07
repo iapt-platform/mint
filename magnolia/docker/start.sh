@@ -2,4 +2,4 @@
 
 export CODE="magnolia"
 
-docker run --rm -it --hostname=palm --network host -v $PWD:/srv/:z $CODE
+docker run --rm -it --hostname=mint --network host -v $PWD:/srv/:z $CODE

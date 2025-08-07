@@ -23,6 +23,8 @@
     dest: /usr/local/bin/kubectl
     state: link
 
+# alias kubectl="minikube kubectl --"
+
 - name: Setup Kubectl
   ansible.builtin.shell:
     cmd: kubectl help

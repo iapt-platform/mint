@@ -1,3 +1,18 @@
+- name: Setup local build folder
+  hosts: localhost
+  tasks:
+    - name: Git checkout repo
+      ansible.builtin.git:
+        repo: "https://github.com/iapt-platform/mint.git"
+        dest: "{{ playbook_dir }}/tmp/mint"
+        version: "{{ mint_version }}"
+
+- name: Build on local
+  hosts: localhost
+  roles:
+    - mint-dashboard-v4-build
+    - mint-openai-proxy-build
+
 - name: Setup deploy folder
   hosts: all:!localhost
   tasks:
@@ -9,7 +24,19 @@
         owner: "{{ ansible_user }}"
         mode: "0755"
 
-- name: Build mint package
+- name: Upload local build dist folders
+  hosts: building
+  tasks:
+    - name: Upload dashboard-v4 dist
+      ansible.posix.synchronize:
+        src: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard/dist-{{ mint_version }}/"
+        dest: "{{ app_deploy_target }}/dashboard-v4/dashboard/dist/"
+    - name: Upload openai-proxy dist
+      ansible.posix.synchronize:
+        src: "{{ playbook_dir }}/tmp/mint/open-ai-server/dist/"
+        dest: "{{ app_deploy_target }}/open-ai-server/dist/"
+
+- name: Build mint package on remote
   hosts: building
   roles:
     - mint-release-build
@@ -25,6 +52,7 @@
   tasks:
     - name: "Upload mint-{{ mint_version }}.tar.xz"
       ansible.builtin.unarchive:
-        src: "{{ ansible_env.HOME }}/tmp/{{ app_domain }}/mint-{{ mint_version }}.tar.xz"
+        src: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/tmp/{{ app_domain }}/mint-{{ mint_version }}.tar.xz"
         dest: /srv/{{ app_domain }}
+        creates: "{{ app_deploy_target }}"
       delegate_to: building

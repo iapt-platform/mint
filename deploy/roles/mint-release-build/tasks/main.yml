@@ -1,41 +1,63 @@
+- name: Create {{ ansible_env.HOME }}/build
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/build"
+    state: directory
+    mode: "0755"
+
 - name: Download source code
   ansible.builtin.unarchive:
     src: https://github.com/iapt-platform/mint/archive/{{ mint_version }}.zip
     dest: "{{ ansible_env.HOME }}/build"
     remote_src: true
+    creates: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}"
 
-- name: Build dashboard v4
-  ansible.builtin.import_tasks: dashboard-v4.yml
+- name: Extract dashboard-v4 node_modules
+  ansible.builtin.unarchive:
+    src: dashboard-20241201115354.tar.xz
+    dest: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/dashboard-v4/dashboard"
+    creates: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/dashboard-v4/dashboard/node_modules"
 
-- name: Build openai proxy
-  ansible.builtin.import_tasks: openai-proxy.yml
+# - name: Build dashboard v4
+#   ansible.builtin.import_tasks: dashboard-v4.yml
 
-- name: Setup api-v8
-  ansible.builtin.import_tasks: api-v8.yml
+# - name: Build openai proxy
+#   ansible.builtin.import_tasks: openai-proxy.yml
 
-- name: Setup api-v12
-  ansible.builtin.import_tasks: api-v12.yml
+# - name: Setup api-v8
+#   ansible.builtin.import_tasks: api-v8.yml
 
-- name: Setup ai translate
-  ansible.builtin.import_tasks: ai-translate.yml
+# - name: Setup api-v12
+#   ansible.builtin.import_tasks: api-v12.yml
 
-- name: Create mint-{{ mint_version }}.tar
-  ansible.builtin.shell: "tar cf mint-{{ mint_version }}.tar -C {{ ansible_env.HOME }}/build/mint-{{ mint_version }} api-v12 api-v8 dashboard-v4/dist ai-translate open-ai-server/dist"
-  args:
-    chdir: "{{ ansible_env.HOME }}/tmp"
+# - name: Setup ai translate
+#   ansible.builtin.import_tasks: ai-translate.yml
 
-- name: Create {{ ansible_env.HOME }}/tmp/{{ app_domain }}
-  ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/tmp/{{ app_domain }}"
-    state: directory
-    mode: "0755"
+- name: Upload build.sh
+  ansible.builtin.template:
+    src: build.sh.j2
+    dest: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/scripts/build.sh"
+    mode: "0555"
 
-- name: Create mint-{{ mint_version }}.tar.xz
-  ansible.builtin.shell: "xz -z -F xz -C sha256 --best -T +1 mint-{{ mint_version }}.tar"
-  args:
-    chdir: "{{ ansible_env.HOME }}/tmp/{{ app_domain }}"
+- name: Setup mint dependencies and build mint-{{ mint_version }}.tar.xz
+  ansible.builtin.shell:
+    cmd: "docker run --rm -it --hostname=mint --network host -v {{ ansible_env.HOME }}/build/mint-{{ mint_version }}:{{ app_deploy_target }}:z {{ app_docker_image_name }} {{ app_deploy_target }}/scripts/build.sh"
+    creates: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/tmp/{{ app_domain }}/mint-{{ mint_version }}.tar.xz"
+# - name: Create {{ ansible_env.HOME }}/tmp/{{ app_domain }}
+#   ansible.builtin.file:
+#     path: "{{ ansible_env.HOME }}/tmp/{{ app_domain }}"
+#     state: directory
+#     mode: "0755"
 
-- name: Remove mint-{{ mint_version }}
-  ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}"
-    state: absent
+# - name: Create mint-{{ mint_version }}.tar
+#   ansible.builtin.shell: "tar cf mint-{{ mint_version }}.tar -C {{ ansible_env.HOME }}/build/mint-{{ mint_version }} api-v12 api-v8 dashboard-v4/dashboard/dist ai-translate open-ai-server/dist"
+#   args:
+#     chdir: "{{ ansible_env.HOME }}/tmp/{{ app_domain }}"
+
+# - name: Create mint-{{ mint_version }}.tar.xz
+#   ansible.builtin.shell: "xz -z -F xz -C sha256 --best -T +1 mint-{{ mint_version }}.tar"
+#   args:
+#     chdir: "{{ ansible_env.HOME }}/tmp/{{ app_domain }}"
+# - name: Remove mint-{{ mint_version }}
+#   ansible.builtin.file:
+#     path: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}"
+#     state: absent

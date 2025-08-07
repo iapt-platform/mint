@@ -14,3 +14,5 @@ app_php_version: "8.1"
 app_php_memory_limit: "128M"
 app_container_prefix: "mint"
 app_consumer_loop_limit_ai_translate: 16
+
+app_docker_image_name: "magnolia"
