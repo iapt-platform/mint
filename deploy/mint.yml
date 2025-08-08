@@ -24,18 +24,6 @@
         owner: "{{ ansible_user }}"
         mode: "0755"
 
-- name: Upload local build dist folders
-  hosts: building
-  tasks:
-    - name: Upload dashboard-v4 dist
-      ansible.posix.synchronize:
-        src: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard/dist-{{ mint_version }}/"
-        dest: "{{ app_deploy_target }}/dashboard-v4/dashboard/dist/"
-    - name: Upload openai-proxy dist
-      ansible.posix.synchronize:
-        src: "{{ playbook_dir }}/tmp/mint/open-ai-server/dist/"
-        dest: "{{ app_deploy_target }}/open-ai-server/dist/"
-
 - name: Build mint package on remote
   hosts: building
   roles:

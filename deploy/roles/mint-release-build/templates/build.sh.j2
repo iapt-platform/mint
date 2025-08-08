@@ -2,8 +2,8 @@
 
 set -e
 
-. $HOME/.sdkman/bin/sdkman-init.sh
-. $HOME/.nvm/nvm.sh
+source $HOME/.sdkman/bin/sdkman-init.sh
+source $HOME/.nvm/nvm.sh
 
 # cd {{ app_deploy_target }}/dashboard-v4/dashboard/
 # if [ -d dist ]
@@ -13,6 +13,7 @@ set -e
 # https://github.com/iapt-platform/mint/blob/5e81587433455cbc4994da49db5b880cf79e3539/dashboard-v4/dashboard/.env.orig#L17
 # NODE_OPTIONS="--max_old_space_size=2048" \
 #     PUBLIC_URL="{{ app_dashboard_base_path }}" \
+#     BUILD_PATH: "dist-{{ app_domain }}-{{ mint_version }}"
 #     REACT_APP_DEFAULT_LOCALE="zh-Hans" \
 #     REACT_APP_LANGUAGES="en-US,zh-Hans,zh-Hant" \
 #     REACT_APP_ENABLE_LOCAL_TOKEN="true" \
@@ -28,15 +29,15 @@ set -e
 #     npm run build
 
 cd {{ app_deploy_target }}/api-v8/
-npm install
-php8.1 /usr/local/bin/composer install
+NO_COLOR=true npm install --quiet
+php8.1 /usr/local/bin/composer install --no-ansi --quiet
 cd {{ app_deploy_target }}/api-v8/public
-npm install
-php8.1 /usr/local/bin/composer install
+NO_COLOR=true npm install --quiet
+php8.1 /usr/local/bin/composer install --no-ansi --quiet
 
 cd {{ app_deploy_target }}/api-v12/
-npm install
-php8.4 /usr/local/bin/composer install
+NO_COLOR=true npm install --quiet
+php8.4 /usr/local/bin/composer install --no-ansi --quiet
 
 # cd {{ app_deploy_target }}/open-ai-server/
 # npm install
@@ -47,14 +48,25 @@ php8.4 /usr/local/bin/composer install
 # npm run build
 
 cd {{ app_deploy_target }}/ai-translate/
-python3 -m venv $PWD/python3
-. $PWD/python3/bin/activate
-python3 -m pip install -e .
+if [ ! -d python3 ]
+then
+    python3.13 -m venv $PWD/python3
+fi
+source $PWD/python3/bin/activate
+if [ ! -f get-pip.py ]
+then
+    wget -O get-pip.py https://bootstrap.pypa.io/get-pip.py
+fi
+python get-pip.py
+python -m pip install --quiet -e .
 deactivate
 
 mkdir -p {{ app_deploy_target }}/tmp/{{ app_domain }}
 cd {{ app_deploy_target }}/tmp/{{ app_domain }}/
-tar cf mint-{{ mint_version }}.tar -C {{ app_deploy_target }} api-v12 api-v8 dashboard-v4/dashboard/dist ai-translate open-ai-server/dist
+tar cf mint-{{ mint_version }}.tar -C {{ app_deploy_target }} \
+    api-v12 api-v8 \
+    dashboard-v4/dashboard/dist open-ai-server/dist \
+    ai-translate/ai_translate ai-translate/pyproject.toml ai-translate/python3
 xz -z -F xz -C sha256 --best -T +1 mint-{{ mint_version }}.tar
 
 exit 0

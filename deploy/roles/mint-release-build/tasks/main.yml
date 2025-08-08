@@ -11,26 +11,21 @@
     remote_src: true
     creates: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}"
 
-- name: Extract dashboard-v4 node_modules
-  ansible.builtin.unarchive:
-    src: dashboard-20241201115354.tar.xz
-    dest: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/dashboard-v4/dashboard"
-    creates: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/dashboard-v4/dashboard/node_modules"
+- name: Upload dashboard-v4 dist
+  ansible.posix.synchronize:
+    src: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard/dist-{{ app_domain }}-{{ mint_version }}/"
+    dest: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/dashboard-v4/dashboard/dist/"
 
-# - name: Build dashboard v4
-#   ansible.builtin.import_tasks: dashboard-v4.yml
+- name: Upload openai-proxy dist
+  ansible.posix.synchronize:
+    src: "{{ playbook_dir }}/tmp/mint/open-ai-server/dist/"
+    dest: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/open-ai-server/dist/"
 
-# - name: Build openai proxy
-#   ansible.builtin.import_tasks: openai-proxy.yml
-
-# - name: Setup api-v8
-#   ansible.builtin.import_tasks: api-v8.yml
-
-# - name: Setup api-v12
-#   ansible.builtin.import_tasks: api-v12.yml
-
-# - name: Setup ai translate
-#   ansible.builtin.import_tasks: ai-translate.yml
+- name: Upload shell.sh
+  ansible.builtin.template:
+    src: shell.sh.j2
+    dest: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/scripts/shell.sh"
+    mode: "0555"
 
 - name: Upload build.sh
   ansible.builtin.template:
@@ -42,22 +37,3 @@
   ansible.builtin.shell:
     cmd: "docker run --rm -it --hostname=mint --network host -v {{ ansible_env.HOME }}/build/mint-{{ mint_version }}:{{ app_deploy_target }}:z {{ app_docker_image_name }} {{ app_deploy_target }}/scripts/build.sh"
     creates: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/tmp/{{ app_domain }}/mint-{{ mint_version }}.tar.xz"
-# - name: Create {{ ansible_env.HOME }}/tmp/{{ app_domain }}
-#   ansible.builtin.file:
-#     path: "{{ ansible_env.HOME }}/tmp/{{ app_domain }}"
-#     state: directory
-#     mode: "0755"
-
-# - name: Create mint-{{ mint_version }}.tar
-#   ansible.builtin.shell: "tar cf mint-{{ mint_version }}.tar -C {{ ansible_env.HOME }}/build/mint-{{ mint_version }} api-v12 api-v8 dashboard-v4/dashboard/dist ai-translate open-ai-server/dist"
-#   args:
-#     chdir: "{{ ansible_env.HOME }}/tmp/{{ app_domain }}"
-
-# - name: Create mint-{{ mint_version }}.tar.xz
-#   ansible.builtin.shell: "xz -z -F xz -C sha256 --best -T +1 mint-{{ mint_version }}.tar"
-#   args:
-#     chdir: "{{ ansible_env.HOME }}/tmp/{{ app_domain }}"
-# - name: Remove mint-{{ mint_version }}
-#   ansible.builtin.file:
-#     path: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}"
-#     state: absent

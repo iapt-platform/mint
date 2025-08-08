@@ -2,15 +2,15 @@
   ansible.builtin.unarchive:
     src: dashboard-20241201115354.tar.xz
     dest: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard"
-    creates: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard/node_modules"
+    creates: "node_modules"
 
 - name: Build dashboard-v4 dist
   ansible.builtin.shell: yarn build
   args:
     chdir: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard"
-    # creates: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard/dist-{{ mint_version }}"
+    creates: "dist-{{ app_domain }}-{{ mint_version }}"
   environment:
-    BUILD_PATH: "dist-{{ mint_version }}"
+    BUILD_PATH: "dist-{{ app_domain }}-{{ mint_version }}"
     NODE_OPTIONS: "--max_old_space_size=5120"
     PUBLIC_URL: "{{ app_dashboard_base_path }}"
     REACT_APP_DEFAULT_LOCALE: "zh-Hans"
