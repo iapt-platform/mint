@@ -2,7 +2,7 @@
   ansible.builtin.unarchive:
     src: dashboard-20241201115354.tar.xz
     dest: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard"
-    creates: "node_modules"
+    creates: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard/node_modules"
 
 - name: Build dashboard-v4 dist
   ansible.builtin.shell: yarn build

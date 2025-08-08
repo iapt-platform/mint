@@ -1,0 +1,16 @@
+- name: Clone clove project
+  ansible.builtin.git:
+    repo: "https://github.com/iapt-platform/clove.git"
+    dest: "{{ playbook_dir }}/tmp/clove"
+
+- name: Create clove.tar.xz
+  ansible.builtin.shell: |
+    set -e
+    tar cf clove.tar -C {{ playbook_dir }}/tmp/clove \
+      dict_text pali_html pali_sentence pali_similarity pali_title pali_word word_statistics
+    xz -z -F xz -C sha256 --best -T +1 clove.tar
+    exit 0
+  args:
+    executable: /usr/bin/bash
+    chdir: "{{ playbook_dir }}/tmp"
+    creates: clove.tar.xz

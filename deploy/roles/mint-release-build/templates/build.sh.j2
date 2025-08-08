@@ -29,15 +29,15 @@ source $HOME/.nvm/nvm.sh
 #     npm run build
 
 cd {{ app_deploy_target }}/api-v8/
-NO_COLOR=true npm install --quiet
-php8.1 /usr/local/bin/composer install --no-ansi --quiet
+NO_COLOR=true npm install --quiet --omit=dev
+php8.1 /usr/local/bin/composer install --no-ansi --quiet --optimize-autoloader --no-dev
 cd {{ app_deploy_target }}/api-v8/public
-NO_COLOR=true npm install --quiet
-php8.1 /usr/local/bin/composer install --no-ansi --quiet
+NO_COLOR=true npm install --quiet --omit=dev
+php8.1 /usr/local/bin/composer install --no-ansi --quiet --optimize-autoloader --no-dev
 
 cd {{ app_deploy_target }}/api-v12/
-NO_COLOR=true npm install --quiet
-php8.4 /usr/local/bin/composer install --no-ansi --quiet
+NO_COLOR=true npm install --quiet --omit=dev
+php8.4 /usr/local/bin/composer install --no-ansi --quiet --optimize-autoloader --no-dev
 
 # cd {{ app_deploy_target }}/open-ai-server/
 # npm install

@@ -33,7 +33,13 @@
     dest: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/scripts/build.sh"
     mode: "0555"
 
-- name: Setup mint dependencies and build mint-{{ mint_version }}.tar.xz
+- name: "Setup mint dependencies and build mint-{{ mint_version }}.tar.xz"
   ansible.builtin.shell:
     cmd: "docker run --rm -it --hostname=mint --network host -v {{ ansible_env.HOME }}/build/mint-{{ mint_version }}:{{ app_deploy_target }}:z {{ app_docker_image_name }} {{ app_deploy_target }}/scripts/build.sh"
     creates: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/tmp/{{ app_domain }}/mint-{{ mint_version }}.tar.xz"
+
+- name: "Download mint-{{ mint_version }}.tar.xz"
+  ansible.posix.synchronize:
+    src: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/tmp/{{ app_domain }}/mint-{{ mint_version }}.tar.xz"
+    dest: "{{ playbook_dir }}/tmp/{{ app_domain }}-mint-{{ mint_version }}.tar.xz"
+    mode: pull

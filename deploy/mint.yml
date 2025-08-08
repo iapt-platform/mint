@@ -12,35 +12,14 @@
   roles:
     - mint-dashboard-v4-build
     - mint-openai-proxy-build
-
-- name: Setup deploy folder
-  hosts: all:!localhost
-  tasks:
-    - name: Create www folder
-      become: true
-      ansible.builtin.file:
-        path: "{{ app_deploy_target | dirname }}"
-        state: directory
-        owner: "{{ ansible_user }}"
-        mode: "0755"
+    - clove-build
 
 - name: Build mint package on remote
   hosts: building
   roles:
     - mint-release-build
 
-- name: Build mint package
-  hosts:
-    - web
-    - fort
-    - fpm
-    - task
-    - ai_translate
-    - openai_proxy
-  tasks:
-    - name: "Upload mint-{{ mint_version }}.tar.xz"
-      ansible.builtin.unarchive:
-        src: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/tmp/{{ app_domain }}/mint-{{ mint_version }}.tar.xz"
-        dest: /srv/{{ app_domain }}
-        creates: "{{ app_deploy_target }}"
-      delegate_to: building
+- name: Setup deploy folder
+  hosts: all:!localhost
+  roles:
+    - mint-v2.2
