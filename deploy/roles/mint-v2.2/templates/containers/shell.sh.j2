@@ -2,5 +2,5 @@
 
 docker run --rm -it --hostname=mint --network host \
     -v /srv/{{ app_deploy_target | dirname }}/clove:/srv/{{ app_deploy_target | dirname }}/clove:z \
-    -v {{ app_deploy_target }}/api-v8:{{ app_deploy_target }}/api-v8:z \
+    -v {{ app_deploy_target }}:{{ app_deploy_target }}:z \
     {{ app_docker_image_name }} 

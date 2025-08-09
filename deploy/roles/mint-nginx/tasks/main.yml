@@ -22,6 +22,14 @@
     mode: "0644"
     force: false
 
+- name: Set document root
+  become: true
+  ansible.builtin.shell: sed -i '5s#.*#root {{ app_deploy_target }}/api-v8/public;#' /etc/nginx/sites-enabled/{{ app_domain }}.conf
+
+- name: Set dashboard alias
+  become: true
+  ansible.builtin.shell: sed -i '25s#.*#alias {{ app_deploy_target }}/dashboard-v4/dashboard/dist/#' /etc/nginx/sites-enabled/{{ app_domain }}.conf
+
 - name: Reload nginx.conf
   become: true
   ansible.builtin.shell: nginx -s reload

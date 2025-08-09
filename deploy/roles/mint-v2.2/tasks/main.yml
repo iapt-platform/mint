@@ -73,3 +73,11 @@
     src: version.txt.j2
     dest: "{{ app_deploy_target }}/dashboard-v4/dashboard/dist/version.txt"
     mode: "0555"
+
+# -----------------------------------------------------------------------------
+
+- name: Create a current link
+  ansible.builtin.file:
+    src: "{{ app_deploy_target }}"
+    dest: "{{ app_deploy_target | dirname }}/current"
+    state: link
