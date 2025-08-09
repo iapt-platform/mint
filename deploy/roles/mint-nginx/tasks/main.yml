@@ -10,8 +10,9 @@
   become: true
   ansible.builtin.template:
     src: fpm.conf.j2
-    dest: /etc/nginx/sites-enabled/{{ app_domain }}-fpm.conf
+    dest: /etc/nginx/sites-enabled/php-fpm-{{ app_php_fpm_port }}.conf
     mode: "0644"
+    force: false
 
 - name: Upload nginx.conf
   become: true
@@ -19,3 +20,8 @@
     src: nginx.conf.j2
     dest: /etc/nginx/sites-enabled/{{ app_domain }}.conf
     mode: "0644"
+    force: false
+
+- name: Reload nginx.conf
+  become: true
+  ansible.builtin.shell: nginx -s reload

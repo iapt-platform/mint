@@ -1,0 +1,10 @@
+[Unit]
+Description=Runs Mint {{ app_domain }} scheduler every minute
+
+[Timer]
+OnBootSec=15minutes
+OnUnitActiveSec=1minute
+Unit={{ app_container_prefix }}-{{ app_domain }}-worker-schedule-run.service
+
+[Install]
+WantedBy=timers.target

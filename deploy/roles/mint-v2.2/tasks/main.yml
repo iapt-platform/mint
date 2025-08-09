@@ -1,0 +1,75 @@
+- name: Create mint folder
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_target }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Upload mint data
+  ansible.builtin.unarchive:
+    src: "{{ playbook_dir }}/tmp/{{ app_domain }}-mint-{{ mint_version }}.tar.xz"
+    dest: "{{ app_deploy_target }}"
+    creates: "{{ app_deploy_target }}/api-v12"
+
+- name: Setup clove
+  ansible.builtin.import_tasks: clove.yml
+
+# -----------------------------------------------------------------------------
+
+- name: Create scripts folder
+  ansible.builtin.file:
+    path: "{{ app_deploy_target }}/scripts"
+    state: directory
+    mode: "0755"
+
+- name: Upload setup.sh
+  ansible.builtin.template:
+    src: containers/shell.sh.j2
+    dest: "{{ app_deploy_target }}/scripts/shell.sh"
+    mode: "0555"
+
+- name: Upload run.sh
+  ansible.builtin.template:
+    src: containers/run.sh.j2
+    dest: "{{ app_deploy_target }}/scripts/run.sh"
+    mode: "0555"
+
+# -----------------------------------------------------------------------------
+
+- name: Setup laravel
+  ansible.builtin.import_tasks: laravel.yml
+
+# -----------------------------------------------------------------------------
+
+- name: Upload config for ai.translate
+  ansible.builtin.template:
+    src: v2/ai-translate.toml.j2
+    dest: "{{ app_deploy_target }}/ai-translate/config.toml"
+    mode: "0444"
+
+- name: Upload config for openai-proxy
+  ansible.builtin.template:
+    src: v2/openai-proxy.json.j2
+    dest: "{{ app_deploy_target }}/open-ai-server/config.json"
+    mode: "0444"
+
+# -----------------------------------------------------------------------------
+
+- name: Upload version.txt(api-v8)
+  ansible.builtin.template:
+    src: version.txt.j2
+    dest: "{{ app_deploy_target }}/api-v8/public/version.txt"
+    mode: "0555"
+
+- name: Upload version.txt(api-v12)
+  ansible.builtin.template:
+    src: version.txt.j2
+    dest: "{{ app_deploy_target }}/api-v12/public/version.txt"
+    mode: "0555"
+
+- name: Upload version.txt(dashboard-v4)
+  ansible.builtin.template:
+    src: version.txt.j2
+    dest: "{{ app_deploy_target }}/dashboard-v4/dashboard/dist/version.txt"
+    mode: "0555"

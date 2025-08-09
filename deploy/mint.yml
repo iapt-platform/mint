@@ -23,3 +23,9 @@
   hosts: all:!localhost
   roles:
     - mint-v2.2
+
+- name: Setup nginx
+  hosts:
+    - web
+  roles:
+    - mint-nginx
