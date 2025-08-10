@@ -11,6 +11,7 @@ app_postgresql_version: "16"
 app_open_search_version: "2.19.1"
 app_python_version: "3.13"
 app_php_version: "8.1"
+app_php_fpm_port: 9081
 app_php_memory_limit: "128M"
 app_container_prefix: "mint"
 app_consumer_loop_limit_ai_translate: 16

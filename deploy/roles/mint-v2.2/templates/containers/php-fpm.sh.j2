@@ -1,0 +1,5 @@
+#!/bin/sh
+
+docker run --rm --hostname=mint -p {{ app_php_fpm_port }}:9000 -v /srv:/srv:z {{ app_docker_image_name }} /bin/bash -c \
+    "sed -i 's/^listen = .*/listen = 9000/g' /etc/php/{{ app_php_version }}/fpm/pool.d/www.conf && /usr/sbin/php-fpm{{ app_php_version }} --nodaemonize --fpm-config /etc/php/{{ app_php_version }}/fpm/php-fpm.conf"
+   

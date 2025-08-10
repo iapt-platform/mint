@@ -21,10 +21,7 @@ elif [ "$1" = "ai-translate" ]; then
 elif [ "$1" = "openai-proxy" ]; then
     cd $WORK_DIR/openai-proxy/
     source "$HOME/.nvm/nvm.sh"    
-    node dist/main.*.js config.json
-elif [ "$1" = "php-fpm" ]; then
-    sed -i 's/^listen = .*/listen = 9000/g' /etc/php/{{ app_php_version }}/fpm/pool.d/www.conf
-    /usr/sbin/php-fpm{{ app_php_version }} --nodaemonize --fpm-config /etc/php/{{ app_php_version }}/fpm/php-fpm.conf
+    node dist/main.*.js config.json    
 elif [ "$1" = "setup" ]; then
     cd $WORK_DIR/api-v8/
     echo "caching configuration "

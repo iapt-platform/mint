@@ -28,7 +28,7 @@
 
 - name: Set dashboard alias
   become: true
-  ansible.builtin.shell: sed -i '25s#.*#alias {{ app_deploy_target }}/dashboard-v4/dashboard/dist/#' /etc/nginx/sites-enabled/{{ app_domain }}.conf
+  ansible.builtin.shell: sed -i '25s#.*#alias {{ app_deploy_target }}/dashboard-v4/dashboard/dist/;#' /etc/nginx/sites-enabled/{{ app_domain }}.conf
 
 - name: Reload nginx.conf
   become: true

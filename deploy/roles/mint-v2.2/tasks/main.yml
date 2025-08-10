@@ -35,6 +35,12 @@
     dest: "{{ app_deploy_target }}/scripts/run.sh"
     mode: "0555"
 
+- name: Upload php-fpm.sh
+  become: true
+  ansible.builtin.template:
+    src: containers/php-fpm.sh.j2
+    dest: "/srv/php-fpm-{{ app_php_version }}.sh"
+    mode: "0555"
 # -----------------------------------------------------------------------------
 
 - name: Setup laravel
