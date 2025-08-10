@@ -1,7 +1,7 @@
 - name: Create nginx logs folder
   become: true
   ansible.builtin.file:
-    path: "{{ app_deploy_target | dirname }}/logs"
+    path: "{{ app_deploy_target | dirname }}/logs/nginx"
     state: directory
     owner: www-data
     mode: "0755"

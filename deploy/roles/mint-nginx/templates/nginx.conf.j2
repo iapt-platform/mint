@@ -16,8 +16,8 @@ server {
     gzip_vary on;
     client_max_body_size 512M;
 
-    access_log {{ app_deploy_target | dirname }}/logs/access.log;
-    error_log {{ app_deploy_target | dirname }}/logs/error.log warn;
+    access_log {{ app_deploy_target | dirname }}/logs/nginx/access.log;
+    error_log {{ app_deploy_target | dirname }}/logs/nginx/error.log warn;
     # access_log syslog:server=unix:/dev/log,tag={{ app_domain }},nohostname,severity=info combined;
     # error_log  syslog:server=unix:/dev/log,tag={{ app_domain }},nohostname,severity=error;
 

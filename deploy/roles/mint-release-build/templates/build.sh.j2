@@ -51,6 +51,7 @@ cd {{ app_deploy_target }}/ai-translate/
 if [ ! -d python3 ]
 then
     python3.13 -m venv $PWD/python3
+    sleep 1
 fi
 source $PWD/python3/bin/activate
 if [ ! -f get-pip.py ]
