@@ -283,6 +283,7 @@ export const WbwSentCtl = ({
 
   console.debug("wbw sent lang", channelLang);
 
+  console.debug("wbw sent wordData", wordData);
   const loadAnswer = () => {
     if (courseAnswer) {
       return;
