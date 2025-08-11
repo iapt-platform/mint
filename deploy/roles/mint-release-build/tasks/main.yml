@@ -1,45 +1,45 @@
-- name: Create {{ ansible_env.HOME }}/build
+- name: Create build folder
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/build"
+    path: "{{ app_build_target | dirname }}"
     state: directory
     mode: "0755"
 
 - name: Download source code
   ansible.builtin.unarchive:
     src: https://github.com/iapt-platform/mint/archive/{{ mint_version }}.zip
-    dest: "{{ ansible_env.HOME }}/build"
+    dest: "{{ app_build_target | dirname }}"
     remote_src: true
-    creates: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}"
+    creates: "{{ app_build_target }}"
 
 - name: Upload dashboard-v4 dist
   ansible.posix.synchronize:
     src: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard/dist-{{ app_domain }}-{{ mint_version }}/"
-    dest: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/dashboard-v4/dashboard/dist/"
+    dest: "{{ app_build_target }}/dashboard-v4/dashboard/dist/"
 
 - name: Upload openai-proxy dist
   ansible.posix.synchronize:
     src: "{{ playbook_dir }}/tmp/mint/open-ai-server/dist/"
-    dest: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/open-ai-server/dist/"
+    dest: "{{ app_build_target }}/open-ai-server/dist/"
 
 - name: Upload shell.sh
   ansible.builtin.template:
     src: shell.sh.j2
-    dest: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/scripts/shell.sh"
+    dest: "{{ app_build_target }}/scripts/shell.sh"
     mode: "0555"
 
 - name: Upload build.sh
   ansible.builtin.template:
     src: build.sh.j2
-    dest: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/scripts/build.sh"
+    dest: "{{ app_build_target }}/scripts/build.sh"
     mode: "0555"
 
-- name: "Setup mint dependencies and build mint-{{ mint_version }}.tar.xz"
+- name: Setup mint dependencies and build mint.tar.xz
   ansible.builtin.shell:
-    cmd: "docker run --rm -it --hostname=mint --network host -v {{ ansible_env.HOME }}/build/mint-{{ mint_version }}:{{ app_deploy_target }}:z {{ app_docker_image_name }} {{ app_deploy_target }}/scripts/build.sh"
-    creates: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/tmp/{{ app_domain }}/mint-{{ mint_version }}.tar.xz"
+    cmd: "docker run --rm -it --hostname=mint --network host -v {{ app_build_target }}:{{ app_deploy_target }}:z {{ app_docker_image_name }} /bin/bash -c {{ app_deploy_target }}/scripts/build.sh"
+    creates: "{{ app_build_target }}/tmp/{{ app_domain }}/mint-{{ mint_version }}.tar.xz"
 
-- name: "Download mint-{{ mint_version }}.tar.xz"
+- name: Download mint.tar.xz
   ansible.posix.synchronize:
-    src: "{{ ansible_env.HOME }}/build/mint-{{ mint_version }}/tmp/{{ app_domain }}/mint-{{ mint_version }}.tar.xz"
+    src: "{{ app_build_target }}/tmp/{{ app_domain }}/mint-{{ mint_version }}.tar.xz"
     dest: "{{ playbook_dir }}/tmp/{{ app_domain }}-mint-{{ mint_version }}.tar.xz"
     mode: pull

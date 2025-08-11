@@ -15,7 +15,7 @@ server {
     gzip_types text/plain text/css application/xml application/javascript;
     gzip_vary on;
     client_max_body_size 512M;
-
+    
     access_log {{ app_deploy_target | dirname }}/logs/nginx/access.log;
     error_log {{ app_deploy_target | dirname }}/logs/nginx/error.log warn;
     # access_log syslog:server=unix:/dev/log,tag={{ app_domain }},nohostname,severity=info combined;
@@ -46,7 +46,7 @@ server {
         # for nginx v1.18
         # fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;
-        fastcgi_hide_header X-Powered-By;
+        fastcgi_hide_header X-Powered-By;        
     }
  
     location ~ /\.(?!well-known).* {

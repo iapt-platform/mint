@@ -19,15 +19,21 @@
 - name: Create logs folder
   become: true
   ansible.builtin.file:
-    path: "{{ app_deploy_target | dirname }}/logs/laravel"
+    path: "{{ app_deploy_target | dirname }}/logs/laravel-v8"
     state: directory
     owner: www-data
     mode: "0755"
 
+- name: Remove logs folder
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_deploy_target }}/api-v8/storage/logs"
+    state: absent
+
 - name: Link logs folder
   become: true
   ansible.builtin.file:
-    src: "{{ app_deploy_target | dirname }}/logs/laravel"
+    src: "{{ app_deploy_target | dirname }}/logs/laravel-v8"
     dest: "{{ app_deploy_target }}/api-v8/storage/logs"
     state: link
 

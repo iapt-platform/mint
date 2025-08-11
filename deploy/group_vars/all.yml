@@ -3,6 +3,7 @@ ansible_python_interpreter: /usr/bin/python3
 ansible_ssh_private_key_file: "{{ inventory_dir }}/.ssh/id_ed25519"
 
 app_deploy_target: "/srv/{{ app_domain }}/mint-{{ mint_version }}"
+app_build_target: "{{ ansible_env.HOME }}/build/{{ app_domain }}/mint-{{ mint_version }}"
 app_downloads: "{{ ansible_env.HOME }}/downloads"
 app_debug: false
 
