@@ -11,7 +11,7 @@ TimeoutStopSec=120
 Restart=always
 User=www-data
 Group=www-data
-Environment="OPENSEARCH_JAVA_HOME=/opt/opensearch-{{ open_search_version }}"
+Environment="OPENSEARCH_JAVA_HOME=/opt/opensearch-{{ open_search_version }}/jdk"
 
 [Install]
 WantedBy=multi-user.target
