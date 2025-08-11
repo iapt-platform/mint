@@ -14,6 +14,7 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa
 RUN apt install -y zip unzip vim locales locales-all rsync openssh-client telnet sshpass pwgen screen \
     tzdata tree asciidoc doxygen imagemagick ffmpeg fonts-dejavu-extra texlive-full \
     git cmake build-essential ninja-build \
+    redis-tools postgresql-client mariadb-client \
     php8.1-fpm php8.1-mbstring php8.1-xml php8.1-bcmath php8.1-curl php8.1-zip \
     php8.1-mysql php8.1-pgsql php8.1-sqlite3 php8.1-redis php8.1-mongodb php8.1-amqp php8.1-zmq \
     php8.1-imagick php8.1-gd php8.1-intl php8.1-soap \
