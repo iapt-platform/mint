@@ -34,7 +34,7 @@ export interface IApiResponsePaliChapter {
   data: IApiPaliChapterList;
 }
 
-export interface IApiResponsePaliPara {
+export interface IPaliPara {
   book: number;
   paragraph: number;
   level: number;
@@ -49,6 +49,18 @@ export interface IApiResponsePaliPara {
   parent: number;
   chapter_strlen: number;
   path: string;
+  uid: string;
+}
+
+export interface IPaliParagraphResponse {
+  ok: boolean;
+  message: string;
+  data: IPaliPara;
+}
+export interface IPaliListResponse {
+  ok: boolean;
+  message: string;
+  data: { rows: IPaliPara[]; count: number };
 }
 
 /**
