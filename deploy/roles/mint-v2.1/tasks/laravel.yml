@@ -32,8 +32,8 @@
     workdir: "{{ app_deploy_target }}"
     auto_remove: true
 
-- name: Setup background worker
-  ansible.builtin.include_tasks: workers.yml
+- name: Setup background php worker
+  ansible.builtin.include_tasks: laravel-workers.yml
   vars:
     zone_name: mq
   loop:
@@ -43,7 +43,6 @@
     - wbw.analyses
     - export.pali.chapter
     - export.article
-    # - ai.translate
   loop_control:
     loop_var: worker_name
 

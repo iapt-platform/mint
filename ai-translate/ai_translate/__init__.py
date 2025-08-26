@@ -1,6 +1,8 @@
 import logging
 import tomllib
 import json
+import socket
+import os
 
 import pika
 from redis.cluster import RedisCluster
@@ -20,12 +22,14 @@ def open_redis_cluster(config):
     return (cli, config['namespace'])
 
 
-def start_consumer(context, name, config, queue, callback,proxy):
+def start_consumer(context, name, config, queue, callback, proxy):
+    HeartBeat = 3600
     logger.debug("open rabbitmq %s@%s:%d/%s with timeout %ds",
                  config['user'], config['host'], config['port'], config['virtual-host'], config['customer-timeout'])
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(
             host=config['host'], port=config['port'],
+            heartbeat=HeartBeat,
             credentials=pika.PlainCredentials(
                 config['user'], config['password']),
             virtual_host=config['virtual-host']))
@@ -37,11 +41,12 @@ def start_consumer(context, name, config, queue, callback,proxy):
         handle_message(context, ch, method, properties.message_id,
                        properties.content_type, json.loads(
                            body, object_hook=SimpleNamespace),
-                       callback,proxy, config['customer-timeout'])
+                       callback, proxy, HeartBeat, name)
 
     channel.basic_consume(
-        queue=queue, on_message_callback=_callback, auto_ack=False)
+        queue=queue, on_message_callback=_callback, auto_ack=True)
 
+    name = "%s.%s.%d" % (name, socket.gethostname(), os.getpid())
     logger.info('start a consumer(%s) for queue(%s)', name, queue)
     channel.start_consuming()
 
@@ -52,9 +57,9 @@ def launch(name, queue, config_file):
         config = tomllib.load(config_fd)
         logger.debug('api-url:(%s)', config['app']['api-url'])
         redis_cli = open_redis_cluster(config['redis'])
-        openai_proxy = config['app'].get('openai-proxy', None)
+        openai_proxy = config['app'].get('openai-proxy-url', None)
         logger.debug(f'openai_proxy:({openai_proxy})')
         start_consumer(redis_cli, name,
-                       config['rabbitmq'], 
-                       queue, config['app']['api-url'], 
+                       config['rabbitmq'],
+                       queue, config['app']['api-url'],
                        openai_proxy)

@@ -106,7 +106,7 @@ class Message:
 class AiTranslateService:
     """AI翻译服务"""
 
-    def __init__(self, redis, ch, method, api_url, openai_proxy,customer_timeout):
+    def __init__(self, redis, ch, method, api_url, openai_proxy, customer_timeout, worker_name: str):
         self.queue = 'ai_translate'
         self.model_token = None
         self.task = None
@@ -119,7 +119,8 @@ class AiTranslateService:
         self.customer_timeout = customer_timeout
         self.channel = ch
         self.maxProcessTime = 15 * 60  # 一个句子的最大处理时间
-        self.openai_proxy=openai_proxy 
+        self.openai_proxy = openai_proxy
+        self.worker_name = worker_name
 
     def process_translate(self, message_id: str, body: Message) -> bool:
         """处理翻译任务"""
@@ -130,7 +131,7 @@ class AiTranslateService:
 
         self.redis_clusters.set(
             f"{self.redis_namespace}/task/{self.task.id}/message_id", message_id)
-        pointer_key = f"{self.redis_namespace}/task/{message_id}/pointer"
+        pointer_key = f"{self.redis_namespace}/task/{self.task.id}/pointer"
         pointer = 0
 
         if self.redis_clusters.exists(pointer_key):
@@ -156,7 +157,7 @@ class AiTranslateService:
                 self.task.id,
                 'task',
                 self.task.title,
-                f'id:{message_id}',
+                f'id:{message_id} worker:{self.worker_name}',
                 None
             )
         times = [self.maxProcessTime]
@@ -187,13 +188,15 @@ class AiTranslateService:
             s_uid = self._get_sentence_id(message.sentence)
 
             # 写入句子 discussion
-            topic_children = []
-            # 任务结果
-            topic_children.append(response_llm['content'])
-            # 推理过程写入discussion
-            if response_llm.get('reasoningContent'):
-                topic_children.append(response_llm['reasoningContent'])
-            self._sentence_discussion(s_uid, message.prompt, topic_children)
+            if s_uid:
+                topic_children = []
+                # 任务结果
+                topic_children.append(response_llm['content'])
+                # 推理过程写入discussion
+                if response_llm.get('reasoningContent'):
+                    topic_children.append(response_llm['reasoningContent'])
+                self._sentence_discussion(
+                    s_uid, message.prompt, topic_children)
 
             # 修改task 完成度
             progress = self._set_task_progress(
@@ -213,20 +216,6 @@ class AiTranslateService:
             else:
                 logger.error('no task discussion root')
 
-            if i + 1 < len(body.payload):
-                self.redis_clusters.set(pointer_key, i+1)
-                # 计算本次时间和剩余时间
-                # breakpoint()
-                onceTime = int(time.time())-startAt
-                times.append(onceTime)
-                times.sort(reverse=True)
-                # 取出第一个元素
-                maxTime = times[0]
-                # 计算剩余时间
-                remain = self.customer_timeout-(int(time.time())-taskStartAt)
-                if remain < maxTime:
-                    # 时间不足
-                    raise SectionTimeout
         # 任务完成 修改任务状态为 done
         self._set_task_status(self.task.id, 'done')
         self.redis_clusters.delete(pointer_key)
@@ -279,10 +268,9 @@ class AiTranslateService:
         headers = {'Authorization': f'Bearer {token}'}
         response = requests.post(
             url, json=data, headers=headers, timeout=self.api_timeout)
-        # breakpoint()
         if not response.ok:
             logger.error(
-                f'ai-translate model log create failed: {response.json()}')
+                f'ai-translate model log create failed: {response.text}')
             return False
         return True
 
@@ -362,7 +350,7 @@ class AiTranslateService:
                         json={
                             "open_ai_url": message.model.url,
                             "api_key": message.model.key,
-                            'payload':param,
+                            'payload': param,
                         },
                         headers=headers,
                         timeout=self.llm_timeout
@@ -388,10 +376,10 @@ class AiTranslateService:
                 break
             except requests.exceptions.RequestException as e:
                 model_log_data.update({
-                    'response_headers': json.dumps(dict(e.response.request.headers), ensure_ascii=False),
+                    'request_headers': json.dumps(dict(e.response.request.headers), ensure_ascii=False),
                     'response_headers': json.dumps(dict(e.response.headers), ensure_ascii=False),
                     'status': e.response.status_code,
-                    'response_data': json.dumps(e.response.json(), ensure_ascii=False),
+                    'response_data': e.response.text,
                     'success': False
                 })
                 attempt += 1
@@ -401,6 +389,7 @@ class AiTranslateService:
                 # 某些错误不需要重试
                 if status in [400, 401, 403, 404, 422]:
                     logger.warning(f"客户端错误，不重试: {status}")
+                    self._save_model_log(self.model_token, model_log_data)
                     raise LLMFailException
 
                 # 服务器错误或网络错误可以重试
@@ -421,7 +410,6 @@ class AiTranslateService:
                     logger.error(e)
 
         ai_data = response.json()
-        # logger.debug(f'{self.queue} LLM http response: {response.json()}')
 
         response_content = ai_data['choices'][0]['message']['content']
         reasoning_content = ai_data['choices'][0]['message'].get(
@@ -491,28 +479,33 @@ class AiTranslateService:
 
     def _get_sentence_id(self, sentence: Sentence) -> str:
         """获取句子ID"""
-        url = f"{self.api_url}/v2/sentence-info/aa"
-        logger.info(f'ai translate: {url}')
+        try:
+            url = f"{self.api_url}/v2/sentence-info/aa"
+            logger.info(f'ai translate: {url}')
 
-        params = {
-            'book': sentence.book_id,
-            'par': sentence.paragraph,
-            'start': sentence.word_start,
-            'end': sentence.word_end,
-            'channel': sentence.channel_uid
-        }
+            params = {
+                'book': sentence.book_id,
+                'par': sentence.paragraph,
+                'start': sentence.word_start,
+                'end': sentence.word_end,
+                'channel': sentence.channel_uid
+            }
 
-        headers = {'Authorization': f'Bearer {self.model_token}'}
-        response = requests.get(
-            url, params=params, headers=headers, timeout=self.api_timeout)
+            headers = {'Authorization': f'Bearer {self.model_token}'}
+            response = requests.get(
+                url, params=params, headers=headers, timeout=self.api_timeout)
 
-        if not response.json().get('ok'):
-            logger.error(f'{self.queue} sentence id error: {response.json()}')
+            if not response.json().get('ok'):
+                logger.error(
+                    f'{self.queue} sentence id error: {response.text}')
+                return False
+
+            s_uid = response.json()['data']['id']
+            logger.debug(f"sentence id={s_uid}")
+            return s_uid
+        except Exception as e:
+            logger.error(f"error: {e}")
             return False
-
-        s_uid = response.json()['data']['id']
-        logger.debug(f"sentence id={s_uid}")
-        return s_uid
 
     def _set_task_progress(self, current: TaskProgress) -> int:
         """设置任务进度"""
@@ -542,7 +535,7 @@ class AiTranslateService:
 
         return progress
 
-    def handle_failed_translate(self, message_id: str, translate_data: List[Any], exception: Exception):
+    def handle_failed(self, message_id: str, message: str, exception: Exception):
         """处理失败的翻译任务"""
         try:
             # 彻底失败时的业务逻辑
@@ -551,13 +544,48 @@ class AiTranslateService:
 
             # 将故障信息写入task discussion
             if self.task_topic_id:
-                error_message = f"**处理失败ai任务时出错** 请重启任务 message id={message_id} 错误信息：{str(exception)}"
+                error_message = f"**任务处理失败** 请重启任务 \n- message id={message_id} \n- 错误信息：{message} \n- 异常：{str(exception)}"
                 d_id = self._task_discussion(
                     self.task.id,
                     'task',
-                    self.task.title,
+                    '任务处理失败',
                     error_message,
                     self.task_topic_id
                 )
         except Exception as e:
             logger.error(f'处理失败ai任务时出错: {str(e)}')
+
+    def handle_retry(self, message_id: str, message: str, exception: Exception):
+        """处理失败 需要重试"""
+        try:
+            # 失败时的业务逻辑
+            self._set_task_status(self.task.id, 'pause')
+            # 将故障信息写入task discussion
+            if self.task_topic_id:
+                error_message = f"任务处理出错 正在重试 \n- message id={message_id} \n- 错误信息：{message} \n- 异常：{str(exception)}"
+                d_id = self._task_discussion(
+                    self.task.id,
+                    'task',
+                    '任务处理出错',
+                    error_message,
+                    self.task_topic_id
+                )
+        except Exception as e:
+            logger.error(f'处理失败ai任务时出错: {str(e)}')
+
+    def handle_complete(self):
+        try:
+            # 将故障信息写入task discussion
+            if self.task_topic_id:
+                d_id = self._task_discussion(
+                    self.task.id,
+                    'task',
+                    '任务处理完成',
+                    '任务处理完成',
+                    self.task_topic_id
+                )
+        except Exception as e:
+            logger.error(f'处理任务完成时出错: {str(e)}')
+
+    def get_task_id(self) -> str:
+        return self.task.id

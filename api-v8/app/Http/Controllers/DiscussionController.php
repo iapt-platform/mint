@@ -210,7 +210,7 @@ class DiscussionController extends Controller
 
         $table = $table->orderBy($request->get('order', 'created_at'), $request->get('dir', 'desc'));
         $table = $table->skip($request->get("offset", 0))
-            ->take($request->get('limit', 1000));
+            ->take($request->get('limit', 100));
 
         $result = $table->get();
 

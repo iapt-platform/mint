@@ -273,7 +273,8 @@ class AiTranslateService
                 ["role" => "system", "content" => $message->model->system_prompt ?? ''],
                 ["role" => "user", "content" => $message->prompt],
             ],
-            "temperature" => 0.7,
+            "temperature" => 0.3,  # 低随机性，确保准确
+            "top_k" => 20,         # 限制候选词范围
             "stream" => false
         ];
         if ($this->openaiProxy) {
@@ -653,10 +654,20 @@ class AiTranslateService
             ];
             array_push($mqData, $aiMqData);
         }
+
         $output = [
             'model' => $aiModel->toArray(),
             'task' => $task,
         ];
+        $us = ['openai.com', 'googleapis.com', 'x.ai', 'anthropic.com'];
+        $found = array_filter($us, function ($value) use ($output) {
+            return str_contains($output['model']['url'], $value);
+        });
+        if ($found) {
+            $output['area'] = 'us';
+        } else {
+            $output['area'] = 'cn';
+        }
         $output['payload'] = $mqData;
         return $output;
     }

@@ -45,16 +45,9 @@ class ProcessAITranslateJob extends BaseRabbitMQJob
 
     public static function publish(string $taskId, $aiAssistantId)
     {
-        $us = ['openai.com', 'googleapis.com', 'x.ai', 'anthropic.com'];
         $data = AiTranslateService::makeByTask($taskId, $aiAssistantId);
         $mq = app(RabbitMQService::class);
-        $queue = 'ai_translate_cn';
-        $found = array_filter($us, function ($value) use ($data) {
-            return str_contains($data['model']['url'], $value);
-        });
-        if (count($found) > 0) {
-            $queue = 'ai_translate_us';
-        }
+        $queue = 'ai_translate_v2';
         $mq->publishMessage($queue, $data);
         return count($data['payload']);
     }

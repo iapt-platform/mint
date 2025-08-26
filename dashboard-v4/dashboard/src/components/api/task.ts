@@ -27,7 +27,9 @@ export type TTaskStatus =
   | "canceled"
   | "expired"
   | "queue"
-  | "stop";
+  | "stop"
+  | "quit"
+  | "pause";
 export const StatusButtons: TTaskStatus[] = [
   "pending",
   "published",
@@ -35,6 +37,7 @@ export const StatusButtons: TTaskStatus[] = [
   "done",
   "restarted",
   "requested_restart",
+  "quit",
 ];
 export type TTaskType = "instance" | "workflow" | "group";
 

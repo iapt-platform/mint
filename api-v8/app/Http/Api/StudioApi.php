@@ -52,7 +52,8 @@ class StudioApi
             }
             if ($userInfo->avatar) {
                 $img = str_replace('.jpg', '_s.jpg', $userInfo->avatar);
-                if (App::environment('local')) {
+
+                if (App::environment(['local', 'testing'])) {
                     $data['avatar'] = Storage::url($img);
                 } else {
                     $data['avatar'] = Storage::temporaryUrl($img, now()->addDays(6));
