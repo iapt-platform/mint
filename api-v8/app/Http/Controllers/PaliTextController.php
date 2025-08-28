@@ -9,6 +9,7 @@ use App\Models\Tag;
 use App\Models\TagMap;
 use Illuminate\Http\Request;
 use App\Tools\RedisClusters;
+use App\Http\Resources\PaliTextResource;
 
 class PaliTextController extends Controller
 {
@@ -130,6 +131,42 @@ class PaliTextController extends Controller
                 $all_count = $table->count();
                 $chapters = $table->orderBy('paragraph')->get();
                 break;
+            case 'children':
+                if ($request->has('id')) {
+                    $root = PaliText::where('uid', $request->get('id'))
+                        ->first();
+                } else {
+                    $root = PaliText::where('book', $request->get('book'))
+                        ->where('paragraph', $request->get('para'))
+                        ->first();
+                }
+
+                if ($root->level >= 8) {
+                    $chapters = [];
+                    break;
+                }
+                $start = $root->paragraph + 1;
+                $end = $root->paragraph + $root->chapter_len - 1;
+                $nextLevelChapter = PaliText::where('book', $root->book)
+                    ->whereBetween('paragraph', [$start, $end])
+                    ->whereBetween('level', [$root->level + 1, 7])
+                    ->orderBy('level', 'asc')
+                    ->first();
+                if ($nextLevelChapter) {
+                    //存在子目录
+                    $chapters = PaliText::where('book', $root->book)
+                        ->whereBetween('paragraph', [$start, $end])
+                        ->where('level', $nextLevelChapter->level)
+                        ->orderBy('paragraph', 'asc')
+                        ->get();
+                } else {
+                    $chapters = PaliText::where('book', $root->book)
+                        ->whereBetween('paragraph', [$start, $end])
+                        ->orderBy('paragraph', 'asc')
+                        ->get();
+                }
+                $all_count = count($chapters);
+                break;
             case 'paragraph':
                 $result = PaliText::where('book', $request->get('book'))
                     ->where('paragraph', $request->get('para'))
@@ -210,20 +247,17 @@ class PaliTextController extends Controller
 
                 break;
         }
-        if ($chapters) {
-            if ($request->get('view') !== 'book-toc') {
-                foreach ($chapters as $key => $value) {
-                    if (is_object($value)) {
-                        //TODO $value->book 可能不存在
-                        $progress_key = "/chapter_dynamic/{$value->book}/{$value->paragraph}/global";
-                        $chapters[$key]->progress_line = RedisClusters::get($progress_key);
-                    }
+
+        if ($request->get('view') !== 'book-toc') {
+            foreach ($chapters as $key => $value) {
+                if (is_object($value)) {
+                    //TODO $value->book 可能不存在
+                    $progress_key = "/chapter_dynamic/{$value->book}/{$value->paragraph}/global";
+                    $chapters[$key]->progress_line = RedisClusters::get($progress_key);
                 }
             }
-            return $this->ok(["rows" => $chapters, "count" => $all_count]);
-        } else {
-            return $this->error("no data");
         }
+        return $this->ok(["rows" => $chapters, "count" => $all_count]);
     }
 
     /**
@@ -240,13 +274,15 @@ class PaliTextController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show(string $id)
     {
         //
-
+        $para = explode('-', $id);
+        $paragraph = PaliText::where('book', $para[0])->where('paragraph', $para[1])->first();
+        return $this->ok(new PaliTextResource($paragraph));
     }
 
     /**
