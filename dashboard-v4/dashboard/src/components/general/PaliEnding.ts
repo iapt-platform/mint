@@ -16,6 +16,7 @@ export const getPaliBase = (word: string): string[] => {
   output.sort((a, b) => a.length - b.length);
   return output;
 };
+export const paliEndingType = ["n", "ti", "v", "ind", "pron", "num", "adj"];
 export const paliEnding = [
   {
     end1: "a",
