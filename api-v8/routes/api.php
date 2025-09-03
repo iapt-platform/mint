@@ -117,6 +117,7 @@ use App\Http\Controllers\ModelLogController;
 use App\Http\Controllers\SentenceAttachmentController;
 use App\Http\Controllers\EmailCertificationController;
 use App\Http\Controllers\MockOpenAIController;
+use App\Http\Controllers\SysModelController;
 
 
 
@@ -291,6 +292,7 @@ Route::group(['prefix' => 'v2'], function () {
     Route::apiResource('sentence-attachment', SentenceAttachmentController::class);
     Route::apiResource('email-certification', EmailCertificationController::class);
     Route::apiResource('sentence-info', SentenceInfoController::class);
+    Route::apiResource('system-model', SysModelController::class);
 
     Route::post('mock/openai/chat/completions', [MockOpenAIController::class, 'chatCompletions']);
     Route::post('mock/openai/completions', [MockOpenAIController::class, 'completions']);
