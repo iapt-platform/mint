@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\AiModel;
+use App\Http\Resources\AiModelResource;
+use App\Tools\RedisClusters;
+
+class AIModelService
+{
+
+    public function getModelsById($id)
+    {
+        $table = AiModel::whereIn('uid', $id);
+        $result = $table->get();
+        return AiModelResource::collection(resource: $result);
+    }
+
+    public function getSysModels()
+    {
+        $types = ['wbw', 'chat'];
+        $sysModels = [];
+        foreach ($types as $key => $type) {
+            $sysModels[$type] =  $this->getModelsById(RedisClusters::get('/ai/model/system/' . $type) ?? []);
+        }
+        return $sysModels;
+    }
+}
