@@ -22,9 +22,17 @@ import { IRelation, IRelationListResponse } from "./pages/admin/relation/list";
 import { pushRelation } from "./reducers/relation";
 import { IGroupMemberListResponse } from "./components/api/Group";
 import { IStudio } from "./components/auth/Studio";
+import { IAiModel } from "./components/api/ai";
 
+export interface ISettingModels {
+  wbw?: IAiModel[];
+  chat?: IAiModel[];
+}
 export interface ISiteInfoResponse {
+  logo: string;
   title: string;
+  subhead: string;
+  models?: ISettingModels;
 }
 interface IUserData {
   id: string;
@@ -73,22 +81,12 @@ export const grammarTermFetch = () => {
 };
 
 const init = () => {
-  get<ISiteInfoResponse | IErrorResponse>("/v2/site-info/en").then(
-    (response) => {
-      if ("title" in response) {
-        const it: ISite = {
-          title: response.title,
-          subhead: "",
-          keywords: [],
-          description: "",
-          copyright: "",
-          logo: "",
-          author: { name: "", email: "" },
-        };
-        store.dispatch(refreshLayout(it));
-      }
+  get<ISite | IErrorResponse>("/v2/site-info/en").then((response) => {
+    if ("title" in response) {
+      const it: ISite = response;
+      store.dispatch(refreshLayout(it));
     }
-  );
+  });
   //获取用户登录信息
   const token = getToken();
   if (token) {
