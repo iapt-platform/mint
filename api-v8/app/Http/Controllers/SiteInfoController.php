@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use App\Tools\RedisClusters;
+use App\Services\AIModelService;
+
 
 class SiteInfoController extends Controller
 {
@@ -41,6 +44,7 @@ class SiteInfoController extends Controller
         } else {
             App::setLocale($language);
         }
+        $model = app(AIModelService::class);
         $response = [
             'logo' => __("site.logo"),
             'title' => __('site.title'),
@@ -52,6 +56,9 @@ class SiteInfoController extends Controller
                 'name' => __('site.author.name'),
                 'email' => __('site.author.email'),
             ],
+            'settings' => [
+                'models' => $model->getSysModels(),
+            ]
         ];
         return response()->json(
             $response,
