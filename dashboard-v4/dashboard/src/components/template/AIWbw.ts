@@ -1,7 +1,9 @@
 import { useState, useCallback } from "react";
 import { IWbw } from "./Wbw/WbwWord";
-import { paliEndingType } from "../general/PaliEnding";
+import { paliEndingGrammar, paliEndingType } from "../general/PaliEnding";
 import { useIntl } from "react-intl";
+import { useAppSelector } from "../../hooks";
+import { siteInfo } from "../../reducers/layout";
 
 // 类型定义
 export interface WbwElement<T> {
@@ -16,8 +18,9 @@ interface StreamController {
 
 interface ProcessWbwStreamOptions {
   modelId: string;
-  prompt: string;
+  data: IWbw[];
   endingType: string[];
+  endingGrammar: string[];
   onProgress?: (data: IWbw[], isComplete: boolean) => void;
   onComplete?: (finalData: IWbw[]) => void;
   onError?: (error: string) => void;
@@ -28,8 +31,9 @@ interface ProcessWbwStreamOptions {
  */
 export const processWbwStream = async ({
   modelId,
-  prompt,
+  data,
   endingType,
+  endingGrammar,
   onProgress,
   onComplete,
   onError,
@@ -44,16 +48,10 @@ export const processWbwStream = async ({
     onError?.(error);
     return { success: false, error };
   }
-
-  try {
-    const payload = {
-      model: "grok-3", // 或者从models数组中获取实际模型名称
-      messages: [
-        {
-          role: "system",
-          content: `你是一个巴利语专家，
-        用户提供的json 数据 是巴利文句子的全部单词
-          请根据每个单词的拼写 real.value 填写如下字段
+  const sys_prompt = `
+  你是一个巴利语专家。用户提供的jsonl 数据 是巴利文句子的全部单词
+请根据每个单词的拼写 real.value 填写如下字段
+巴利单词的词典原型：parent.value  
 单词的中文意思：meaning.value
 巴利单词的拆分：factors.value  
 语尾请加[]
@@ -62,8 +60,31 @@ export const processWbwStream = async ({
 \`\`\`csv
 ${endingType.join("\n")}
 \`\`\`
+
+请按照下表填写巴利语单词的语法信息 grammar.value
+名词和形容词填写 性,数,格
+动词填写 人称,数,时态语气
+用 $ 作为分隔符
+\`\`\`csv
+${endingGrammar.join("\n")}
+\`\`\`
  直接输出JSONL格式数据
-`,
+`;
+
+  const jsonl = data.map((obj) => JSON.stringify(obj)).join("\n");
+  const prompt = `
+\`\`\`jsonl
+${jsonl}
+\`\`\`
+`;
+  console.debug("ai wbw system prompt", sys_prompt, prompt);
+  try {
+    const payload = {
+      model: "grok-3", // 或者从models数组中获取实际模型名称
+      messages: [
+        {
+          role: "system",
+          content: sys_prompt,
         },
         { role: "user", content: prompt },
       ],
@@ -109,7 +130,7 @@ ${endingType.join("\n")}
         try {
           // 解析JSONL行
           const parsedData = JSON.parse(jsonlLine.trim());
-          console.info("stream ok", parsedData);
+          console.info("ai wbw stream ok", parsedData);
           // 转换为IWbw格式
           const wbwData: IWbw = {
             book: parsedData.book || 0,
@@ -256,36 +277,47 @@ export const useWbwStreamProcessor = () => {
     );
   });
 
-  const processStream = useCallback(async (modelId: string, prompt: string) => {
-    setIsProcessing(true);
-    setWbwData([]);
-    setError(undefined);
+  const endingGrammar = paliEndingGrammar.map((item) => {
+    return (
+      intl.formatMessage({ id: `dict.fields.type.${item}.label` }) +
+      `:.${item}.`
+    );
+  });
 
-    const result = await processWbwStream({
-      modelId,
-      prompt,
-      endingType,
-      onProgress: (data, isComplete) => {
-        console.info("onProgress", data);
-        setWbwData([...data]); // 创建新数组触发重渲染
-      },
-      onComplete: (finalData) => {
-        setWbwData(finalData);
+  const processStream = useCallback(
+    async (modelId: string, data: IWbw[]) => {
+      setIsProcessing(true);
+      setWbwData([]);
+      setError(undefined);
+
+      const result = await processWbwStream({
+        modelId,
+        data,
+        endingType,
+        endingGrammar,
+        onProgress: (data, isComplete) => {
+          console.info("onProgress", data);
+          setWbwData([...data]); // 创建新数组触发重渲染
+        },
+        onComplete: (finalData) => {
+          setWbwData(finalData);
+          setIsProcessing(false);
+        },
+        onError: (errorMessage) => {
+          setError(errorMessage);
+          setIsProcessing(false);
+        },
+      });
+
+      if (!result.success) {
+        setError(result.error || "处理失败");
         setIsProcessing(false);
-      },
-      onError: (errorMessage) => {
-        setError(errorMessage);
-        setIsProcessing(false);
-      },
-    });
+      }
 
-    if (!result.success) {
-      setError(result.error || "处理失败");
-      setIsProcessing(false);
-    }
-
-    return result;
-  }, []);
+      return result;
+    },
+    [endingGrammar, endingType]
+  );
 
   return {
     processStream,
