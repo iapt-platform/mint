@@ -32,6 +32,7 @@ import { courseInfo } from "../../reducers/current-course";
 import { ISentenceWbwListResponse } from "../api/Corpus";
 import { IDeleteResponse } from "../api/Article";
 import { useWbwStreamProcessor } from "./AIWbw";
+import { siteInfo } from "../../reducers/layout";
 
 export const getWbwProgress = (data: IWbw[], answer?: IWbw[]) => {
   //计算完成度
@@ -284,6 +285,11 @@ export const WbwSentCtl = ({
   const user = useAppSelector(currentUser);
   const course = useAppSelector(courseInfo);
 
+  const site = useAppSelector(siteInfo);
+  const wbwModel = site?.settings?.models?.wbw
+    ? site?.settings?.models?.wbw[0] ?? null
+    : null;
+
   console.debug("wbw sent lang", channelLang);
 
   console.debug("wbw sent wordData", wordData);
@@ -318,32 +324,54 @@ export const WbwSentCtl = ({
 
   useEffect(() => {
     setWordData((origin) => {
-      origin.forEach((value, index, array) => {
-        const newOne = wbwData.find(
+      const newData = origin.map((item) => {
+        let newItem = item;
+        const aiWbw = wbwData.find(
           (v) =>
-            v.sn.join() === value.sn.join() || v.real.value === value.real.value
+            v.sn.join() === item.sn.join() || v.real.value === item.real.value
         );
-        if (newOne) {
-          if (array[index].meaning !== undefined && newOne.meaning) {
-            array[index].meaning.value = newOne.meaning.value;
+        if (aiWbw) {
+          if (newItem.meaning && aiWbw.meaning) {
+            newItem.meaning.value = aiWbw.meaning.value;
           }
-          if (array[index].factors !== undefined && newOne.factors) {
-            array[index].factors.value = newOne.factors.value;
+          if (newItem.factors && aiWbw.factors) {
+            newItem.factors.value = aiWbw.factors.value;
           }
-          if (
-            array[index].factorMeaning !== undefined &&
-            newOne.factorMeaning
-          ) {
-            array[index].factorMeaning.value = newOne.factorMeaning.value;
+          if (newItem.factorMeaning && aiWbw.factorMeaning) {
+            newItem.factorMeaning.value = aiWbw.factorMeaning.value;
           }
-          if (array[index].type !== undefined && newOne.type) {
-            array[index].type.value = newOne.type.value;
+          if (newItem.parent && aiWbw.parent) {
+            if (aiWbw.parent.value && aiWbw.parent.value !== "") {
+              newItem.parent.value = aiWbw.parent.value;
+            }
           }
+          if (newItem.type && aiWbw.type && aiWbw.type.value) {
+            newItem.type.value = aiWbw.type.value.replaceAll(" ", "");
+            if (newItem.grammar && aiWbw.grammar && aiWbw.grammar.value) {
+              newItem.grammar.value = aiWbw.grammar.value.replaceAll(" ", "");
+              console.debug(
+                "ai wbw origin case",
+                newItem.real.value,
+                newItem.case?.value
+              );
+              if (newItem.case?.value === "") {
+                newItem.case.value = `${aiWbw.type.value}#${aiWbw.grammar.value}`;
+                console.debug(
+                  "ai wbw new case",
+                  newItem.real.value,
+                  newItem.case.value
+                );
+              }
+            }
+          }
+          console.debug("ai wbw replace", newItem.real.value, newItem);
         }
+        return newItem;
       });
-      return origin;
+      return newData;
     });
   }, [wbwData]);
+
   useEffect(() => setShowProgress(wbwProgress), [wbwProgress]);
 
   const settings = useAppSelector(settingInfo);
@@ -886,6 +914,7 @@ export const WbwSentCtl = ({
               {
                 key: "ai-magic-dict-current",
                 label: "ai-magic-dict",
+                disabled: !wbwModel,
               },
               {
                 key: "progress",
@@ -935,14 +964,7 @@ export const WbwSentCtl = ({
                   magicDictLookup();
                   break;
                 case "ai-magic-dict-current":
-                  const json = JSON.stringify(wordData, null, 2);
-                  const aiData = `
-\`\`\`json
-${json}
-\`\`\`
-                    `;
-                  console.log("ai", aiData);
-                  processStream("32226fe6-503f-43a2-bc95-5660ea7a29c4", aiData);
+                  wbwModel && processStream(wbwModel.uid, wordData);
                   break;
                 case "wbw-dict-publish-all":
                   wbwPublish(
