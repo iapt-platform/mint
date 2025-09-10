@@ -74,9 +74,10 @@ export function parseMarkdownToPromptNodes(markdown: string): IPromptNode[] {
 
 interface IWidget {
   onText?: (prompt: string) => void;
+  disabled?: boolean;
 }
 // 按钮组组件
-const PromptButtonGroup = ({ onText }: IWidget) => {
+const PromptButtonGroup = ({ disabled = false, onText }: IWidget) => {
   const user = useAppSelector(currentUser);
   const [data, setData] = useState<IPromptNode[]>([]);
 
@@ -123,7 +124,7 @@ const PromptButtonGroup = ({ onText }: IWidget) => {
 
           return (
             <Dropdown key={node.text} menu={{ items }} trigger={["click"]}>
-              <Button type="link" size="small">
+              <Button type="link" size="small" disabled={disabled}>
                 {node.text}
               </Button>
             </Dropdown>
@@ -132,6 +133,7 @@ const PromptButtonGroup = ({ onText }: IWidget) => {
           return (
             <Button
               key={node.text}
+              disabled={disabled}
               onClick={() => onText && onText(node.prompt || "")}
             >
               {node.text}
