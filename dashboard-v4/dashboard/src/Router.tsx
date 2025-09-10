@@ -92,6 +92,9 @@ import LibraryDownloadPage from "./pages/library/download/Download";
 import LibraryNotifications from "./pages/library/notifications";
 import LibraryNotificationsList from "./pages/library/notifications/list";
 
+import LibraryChat from "./pages/library/chat";
+import LibraryChatAI from "./pages/library/chat/ai";
+
 import Studio from "./pages/studio";
 import StudioHome from "./pages/studio/home";
 
@@ -307,6 +310,9 @@ const Widget = () => {
         <Route path="search" element={<LibrarySearch />}>
           <Route path="home" element={<LibrarySearchKey />} />
           <Route path="key/:key" element={<LibrarySearchKey />} />
+        </Route>
+        <Route path="chat" element={<LibraryChat />}>
+          <Route path="ai/new" element={<LibraryChatAI />} />
         </Route>
 
         <Route path="download" element={<LibraryDownload />}>
