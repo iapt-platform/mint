@@ -15,7 +15,7 @@ class MockOpenAIApiTest extends TestCase
     /**
      * 测试聊天完成 API - 成功响应
      */
-    public function test_chat_completions_success_response()
+    public function test_openai_completions_success_response()
     {
         $response = $this->postJson($this->baseUrl . '/chat/completions', [
             'model' => 'gpt-3.5-turbo',
