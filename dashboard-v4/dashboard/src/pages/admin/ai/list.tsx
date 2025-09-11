@@ -11,41 +11,28 @@ import {
 import { useAppSelector } from "../../../hooks";
 import { siteInfo } from "../../../reducers/layout";
 
-interface RecordType {
-  key: string;
-  title: string;
-  description?: string;
+interface IWidget {
+  type: "wbw" | "chat";
+  models?: RecordType[];
 }
-
-const Widget = () => {
-  const [models, setModels] = useState<RecordType[]>();
-
+const ModelSelect = ({ type, models }: IWidget) => {
   const [targetKeys, setTargetKeys] = useState<string[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
   const site = useAppSelector(siteInfo);
 
   useEffect(() => {
-    const url = `/v2/ai-model?view=chat`;
-    get<IAiModelListResponse>(url)
-      .then((json) => {
-        if (json.ok) {
-          setModels(
-            json.data.rows.map((item) => {
-              return {
-                key: item.uid,
-                title: item.name,
-                description: item.model,
-              };
-            })
-          );
-        }
-      })
-      .finally(() => {
-        const wbw = site?.settings?.models?.wbw?.map((item) => item.uid) ?? [];
-        setTargetKeys(wbw);
-      });
-  }, [site?.settings?.models?.wbw]);
+    let target: string[] = [];
+    switch (type) {
+      case "wbw":
+        target = site?.settings?.models?.wbw?.map((item) => item.uid) ?? [];
+        break;
+      case "chat":
+        target = site?.settings?.models?.chat?.map((item) => item.uid) ?? [];
+        break;
+    }
+    setTargetKeys(target);
+  }, [site?.settings?.models, type]);
 
   const onChange = (
     nextTargetKeys: string[],
@@ -55,7 +42,7 @@ const Widget = () => {
     setTargetKeys(nextTargetKeys);
     const url = `/v2/system-model`;
     post<IAiModelSystem, IAiModelResponse>(url, {
-      view: "wbw",
+      view: type,
       models: nextTargetKeys,
     })
       .then((json) => {
@@ -78,18 +65,52 @@ const Widget = () => {
   };
 
   return (
+    <Transfer
+      dataSource={models}
+      titles={["All", "Selected"]}
+      targetKeys={targetKeys}
+      selectedKeys={selectedKeys}
+      onChange={onChange}
+      onSelectChange={onSelectChange}
+      render={(item) => item.title}
+    />
+  );
+};
+
+interface RecordType {
+  key: string;
+  title: string;
+  description?: string;
+}
+
+const Widget = () => {
+  const [models, setModels] = useState<RecordType[]>();
+
+  useEffect(() => {
+    const url = `/v2/ai-model?view=chat`;
+    console.log("api request", url);
+    get<IAiModelListResponse>(url).then((json) => {
+      console.log("api response", json);
+      if (json.ok) {
+        setModels(
+          json.data.rows.map((item) => {
+            return {
+              key: item.uid,
+              title: item.name,
+              description: item.model,
+            };
+          })
+        );
+      }
+    });
+  }, []);
+
+  return (
     <div>
       <Divider>WBW</Divider>
-      <Transfer
-        dataSource={models}
-        titles={["All", "Selected"]}
-        targetKeys={targetKeys}
-        selectedKeys={selectedKeys}
-        onChange={onChange}
-        onSelectChange={onSelectChange}
-        render={(item) => item.title}
-      />
+      <ModelSelect models={models} type="wbw" />
       <Divider>Chat</Divider>
+      <ModelSelect models={models} type="chat" />
     </div>
   );
 };
