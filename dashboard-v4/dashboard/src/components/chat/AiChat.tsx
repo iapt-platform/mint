@@ -26,6 +26,7 @@ import PromptButtonGroup from "./PromptButtonGroup";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 import { IFtsResponse } from "../fts/FullTextSearchResult";
+import { siteInfo } from "../../reducers/layout";
 
 const { TextArea } = Input;
 
@@ -100,6 +101,7 @@ const AIChatComponent = ({
   const [error, setError] = useState<string>();
 
   const user = useAppSelector(currentUser);
+  const site = useAppSelector(siteInfo);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({
@@ -109,17 +111,14 @@ const AIChatComponent = ({
   }, []);
 
   useEffect(() => {
-    const url = `/v2/ai-model?view=chat`;
-    console.info("api request", url);
-    get<IAiModelListResponse>(url).then((json) => {
-      if (json.ok) {
-        setModels(json.data.rows);
-        if (json.data.rows.length > 0) {
-          setSelectedModel(json.data.rows[0].uid);
-        }
-      }
-    });
-  }, []);
+    setModels(site?.settings?.models?.chat ?? []);
+    if (
+      site?.settings?.models?.chat &&
+      site?.settings?.models?.chat.length > 0
+    ) {
+      setSelectedModel(site?.settings?.models?.chat[0].uid);
+    }
+  }, [site?.settings?.models?.chat]);
 
   useEffect(() => {
     scrollToBottom();
