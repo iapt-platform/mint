@@ -1,31 +1,45 @@
 import { useMemo, useCallback } from "react";
 import { MessageNode } from "../types/chat";
 
-export function useActivePath(rawMessages: MessageNode[]) {
+export function useActivePath(
+  rawMessages: MessageNode[],
+  activePoint?: string
+) {
   const computeActivePath = useCallback(() => {
-    // 从system消息开始，沿着is_active=true的路径构建激活链
-    const messageMap = new Map(rawMessages.map((m) => [m.uid, m]));
+    // 从root消息开始，最新消息的路径构建激活链
+    console.debug("ai chat", rawMessages);
     const activePath: MessageNode[] = [];
 
     // 找到system消息（根节点）
-    const systemMsg = rawMessages.find(
-      (m) => m.role === "system" && !m.parent_id && m.is_active
-    );
-    if (!systemMsg) return [];
+    let rootMsg = rawMessages.find((m) => !m.parent_id);
+    if (!rootMsg) return [];
 
-    // 沿着激活路径构建链
-    let current: MessageNode | undefined = systemMsg;
-    while (current) {
-      activePath.push(current);
-
-      // 找到当前消息的激活子消息
-      current = rawMessages.find(
-        (m) => m.parent_id === current?.uid && m.is_active
+    if (activePoint) {
+      //向上
+      const activeMsg = rawMessages.find((v) => v.uid === activePoint);
+      if (!activeMsg) {
+        return [];
+      }
+      let currParent: MessageNode | undefined = rawMessages.find(
+        (m) => m.uid === activeMsg.parent_id
       );
+      while (currParent) {
+        const pId = currParent.parent_id;
+        activePath.unshift(currParent);
+        currParent = rawMessages.find((v) => v.uid === pId);
+      }
+      rootMsg = activeMsg;
+    }
+    let current: MessageNode | undefined = rootMsg;
+    while (current) {
+      const currId: string = current.uid;
+      activePath.push(current);
+      // 找到当前消息的激活子消息
+      current = rawMessages.filter((value) => value.parent_id === currId).pop();
     }
 
     return activePath;
-  }, [rawMessages]);
+  }, [activePoint, rawMessages]);
 
   return useMemo(() => computeActivePath(), [computeActivePath]);
 }
