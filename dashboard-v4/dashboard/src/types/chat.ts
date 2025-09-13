@@ -98,6 +98,7 @@ export interface ChatState {
   streaming_session_id?: string;
   current_model?: IAiModel;
   error?: string;
+  is_initialized?: boolean;
 }
 
 // 聊天操作接口
