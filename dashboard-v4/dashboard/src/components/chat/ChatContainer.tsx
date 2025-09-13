@@ -1,5 +1,4 @@
 // dashboard-v4/dashboard/src/components/chat/ChatContainer.tsx
-import { useEffect } from "react";
 import { useChatData } from "../../hooks/useChatData";
 import { SessionGroup } from "./SessionGroup";
 import { ChatInput } from "./ChatInput";
@@ -13,14 +12,6 @@ interface ChatContainerProps {
 
 export function ChatContainer({ chatId }: ChatContainerProps) {
   const { chatState, actions } = useChatData(chatId);
-
-  useEffect(() => {
-    actions.loadMessages();
-  }, [chatId, actions.loadMessages, actions]);
-
-  useEffect(() => {
-    console.debug("chatState.session_groups", chatState.session_groups);
-  }, [chatState.session_groups]);
 
   return (
     <div className="chat-container">
