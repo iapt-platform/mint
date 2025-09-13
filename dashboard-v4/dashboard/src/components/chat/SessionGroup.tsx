@@ -30,9 +30,10 @@ export function SessionGroup({
       {/* 用户消息 */}
       {session.user_message && (
         <UserMessage
-          message={session.user_message}
+          session={session}
           onEdit={(content) => onEdit && onEdit(session.session_id, content)}
           onCopy={() => onCopy && onCopy(session.user_message!.uid)}
+          onVersionSwitch={onVersionSwitch}
         />
       )}
 
@@ -58,7 +59,7 @@ export function SessionGroup({
             versions={session.versions}
             currentVersion={session.current_version}
             onSwitch={(versionIndex) =>
-              onVersionSwitch(session.session_id, versionIndex)
+              onVersionSwitch(session.versions[versionIndex].message_id)
             }
           />
         )}
