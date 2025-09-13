@@ -1,5 +1,5 @@
 // dashboard-v4/dashboard/src/hooks/useChatData.ts
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import {
   MessageNode,
   ChatState,
@@ -23,8 +23,8 @@ export function useChatData(chatId: string): {
   // Mock模式：直接使用mock数据
   const [rawMessages, setRawMessages] = useState<MessageNode[]>([]);
   const [pendingMessages, setPendingMessages] = useState<PendingMessage[]>([]);
-
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false); // 新增：标记是否已初始化
   const [streamingMessage, setStreamingMessage] = useState<string>();
   const [streamingSessionId, setStreamingSessionId] = useState<string>();
   const [error, setError] = useState<string>();
@@ -42,16 +42,45 @@ export function useChatData(chatId: string): {
 
   // 加载消息列表
   const loadMessages = useCallback(async () => {
+    // 如果 chatId 为空或无效，不执行加载
+    if (!chatId || chatId.trim() === "") {
+      return;
+    }
+
     try {
       setIsLoading(true);
+      setError(undefined); // 清除之前的错误
+
       const response = await messageApi.getMessages(chatId);
       setRawMessages(response.data.rows);
+      setIsInitialized(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "加载消息失败");
+      const errorMessage = err instanceof Error ? err.message : "加载消息失败";
+      setError(errorMessage);
+      console.error("加载消息失败:", err);
     } finally {
       setIsLoading(false);
     }
   }, [chatId]);
+
+  // 当 chatId 变化时自动加载消息
+  useEffect(() => {
+    // 重置状态
+    setIsInitialized(false);
+    setRawMessages([]);
+    setPendingMessages([]);
+    setError(undefined);
+    setActivePoint(undefined);
+
+    // 加载新的消息
+    loadMessages();
+  }, [chatId, loadMessages]);
+
+  // 手动刷新方法（供外部调用）
+  const refreshMessages = useCallback(async () => {
+    setIsInitialized(false);
+    await loadMessages();
+  }, [loadMessages]);
 
   // 构建对话历史（用于AI API调用）
   const buildConversationHistory = useCallback(
@@ -76,6 +105,7 @@ export function useChatData(chatId: string): {
     },
     [activePath]
   );
+
   // 保存消息组到数据库
   const saveMessageGroup = useCallback(
     async (tempId: string, messages: MessageNode[]) => {
@@ -116,6 +146,7 @@ export function useChatData(chatId: string): {
     },
     [chatId]
   );
+
   // 发送消息给AI并处理响应
   const sendMessageToAI = useCallback(
     async (userMessage: MessageNode, pendingGroup: PendingMessage) => {
@@ -331,6 +362,7 @@ export function useChatData(chatId: string): {
 
         setPendingMessages((prev) => [...prev, pendingGroup]);
         console.debug("ai chat", pendingGroup);
+
         // 如果是用户消息，发送给AI
         if (role === "user") {
           await sendMessageToAI(newUserMessage, pendingGroup);
@@ -478,13 +510,13 @@ export function useChatData(chatId: string): {
     async (messageId: string) => {
       try {
         await messageApi.deleteMessage(messageId);
-        await loadMessages(); // 重新加载数据
+        await refreshMessages(); // 使用 refreshMessages 而不是 loadMessages
       } catch (err) {
         console.error("删除失败:", err);
         setError(err instanceof Error ? err.message : "删除失败");
       }
     },
-    [loadMessages]
+    [refreshMessages]
   );
 
   const setModel = useCallback((model: IAiModel | undefined) => {
@@ -497,7 +529,7 @@ export function useChatData(chatId: string): {
       editMessage,
       retryMessage,
       refreshResponse,
-      loadMessages,
+      loadMessages: refreshMessages, // 对外暴露的是 refreshMessages
       likeMessage,
       dislikeMessage,
       copyMessage,
@@ -510,7 +542,7 @@ export function useChatData(chatId: string): {
       editMessage,
       retryMessage,
       refreshResponse,
-      loadMessages,
+      refreshMessages,
       likeMessage,
       dislikeMessage,
       copyMessage,
@@ -529,6 +561,7 @@ export function useChatData(chatId: string): {
       session_groups: sessionGroups,
       pending_messages: pendingMessages,
       is_loading: isLoading,
+      is_initialized: isInitialized, // 新增：初始化状态
       streaming_message: streamingMessage,
       streaming_session_id: streamingSessionId,
       current_model: currModel,
