@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Button, Input } from "antd";
+import { Button, Input, Typography } from "antd";
 import { EditOutlined, CopyOutlined } from "@ant-design/icons";
 import { UserMessageProps } from "../../types/chat";
 import { VersionSwitcher } from "./VersionSwitcher";
 
 const { TextArea } = Input;
+const { Text } = Typography;
 
 const UserMessage = ({
   session,
@@ -53,7 +54,7 @@ const UserMessage = ({
           </div>
         ) : (
           <div className="message-text">
-            {message.content}
+            <Text>{message.content}</Text>
             {message.save_status === "pending" && (
               <span className="status-indicator pending">发送中...</span>
             )}
