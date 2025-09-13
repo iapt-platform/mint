@@ -8,6 +8,7 @@ import {
   ShareAltOutlined,
 } from "@ant-design/icons";
 import { AssistantMessageProps } from "../../types/chat";
+import Marked from "../general/Marked";
 
 const AssistantMessage = ({
   messages,
@@ -43,52 +44,14 @@ const AssistantMessage = ({
   return (
     <div className="assistant-message">
       <div className="message-header">
-        <span className="role-label">Assistant</span>
-        {mainMessage?.model_id && (
-          <span className="model-info">{mainMessage.model_id}</span>
-        )}
-
-        {!isPending && (
-          <div className="message-actions">
-            <Space size="small">
-              <Button
-                size="small"
-                type="text"
-                icon={<RedoOutlined />}
-                onClick={onRefresh}
-              />
-              <Button
-                size="small"
-                type="text"
-                icon={<LikeOutlined />}
-                onClick={() => mainMessage && onLike && onLike(mainMessage.uid)}
-              />
-              <Button
-                size="small"
-                type="text"
-                icon={<DislikeOutlined />}
-                onClick={() =>
-                  mainMessage && onDislike && onDislike(mainMessage.uid)
-                }
-              />
-              <Button
-                size="small"
-                type="text"
-                icon={<CopyOutlined />}
-                onClick={handleCopy}
-              />
-              <Button
-                size="small"
-                type="text"
-                icon={<ShareAltOutlined />}
-                onClick={handleShare}
-              />
-            </Space>
-          </div>
-        )}
+        <span className="role-label">
+          {mainMessage?.model_id && (
+            <span className="model-info">{mainMessage.model_id}</span>
+          )}
+        </span>
       </div>
 
-      <div className="message-content">
+      <div className="message-content" style={{ backgroundColor: "unset" }}>
         {/* Tool calls 显示 */}
         {toolMessages.length > 0 && (
           <div className="tool-calls">
@@ -104,7 +67,7 @@ const AssistantMessage = ({
         {/* 主要回答内容 */}
         {mainMessage?.content && (
           <div className="message-text">
-            {mainMessage.content}
+            <Marked text={mainMessage.content} />
             {isPending && (
               <span className="status-indicator pending">生成中...</span>
             )}
@@ -118,6 +81,45 @@ const AssistantMessage = ({
           </div>
         )}
       </div>
+      {!isPending && (
+        <div className="message-actions">
+          <Space size="small">
+            <Button
+              size="small"
+              type="text"
+              icon={<CopyOutlined />}
+              onClick={handleCopy}
+            />
+
+            <Button
+              size="small"
+              type="text"
+              icon={<LikeOutlined />}
+              onClick={() => mainMessage && onLike && onLike(mainMessage.uid)}
+            />
+            <Button
+              size="small"
+              type="text"
+              icon={<DislikeOutlined />}
+              onClick={() =>
+                mainMessage && onDislike && onDislike(mainMessage.uid)
+              }
+            />
+            <Button
+              size="small"
+              type="text"
+              icon={<ShareAltOutlined />}
+              onClick={handleShare}
+            />
+            <Button
+              size="small"
+              type="text"
+              icon={<RedoOutlined />}
+              onClick={onRefresh}
+            />
+          </Space>
+        </div>
+      )}
     </div>
   );
 };
