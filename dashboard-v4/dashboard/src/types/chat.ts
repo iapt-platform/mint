@@ -1,3 +1,6 @@
+import { IAiModel } from "../components/api/ai";
+
+export type TOpenAIRole = "system" | "user" | "assistant" | "function" | "tool";
 // 工具调用相关类型
 export interface ToolCall {
   id: string;
@@ -38,7 +41,7 @@ export interface MessageNode {
   chat_id: string;
   parent_id?: string;
   session_id: string;
-  role: "system" | "user" | "assistant" | "tool";
+  role: TOpenAIRole;
   content?: string;
   model_id?: string;
   tool_calls?: ToolCall[];
@@ -58,11 +61,8 @@ export interface MessageNode {
 // 版本信息
 export interface VersionInfo {
   version_index: number; // 版本索引（0,1,2...）
+  message_id: string; //该版本第一个message uid
   model_id?: string; // 该版本使用的模型
-  model_name?: string; // 模型显示名称
-  created_at: string; // 版本创建时间
-  message_count: number; // 该版本包含的消息数量
-  token_usage?: number; // 该版本的token使用量
 }
 
 // Session 信息
@@ -96,17 +96,17 @@ export interface ChatState {
   is_loading: boolean;
   streaming_message?: string;
   streaming_session_id?: string;
-  current_model: string;
+  current_model?: IAiModel;
   error?: string;
 }
 
 // 聊天操作接口
 export interface ChatActions {
-  switchVersion: (sessionId: string, versionIndex: number) => Promise<void>;
+  switchVersion: (activeMsgId: string) => void;
   editMessage: (
     sessionId: string,
     content: string,
-    role?: "user" | "assistant"
+    role?: TOpenAIRole
   ) => Promise<void>;
   retryMessage: (tempId: string) => Promise<void>;
   refreshResponse: (sessionId: string, modelId?: string) => Promise<void>;
@@ -116,13 +116,15 @@ export interface ChatActions {
   copyMessage: (messageId: string) => void;
   shareMessage: (messageId: string) => Promise<string>;
   deleteMessage: (messageId: string) => Promise<void>;
+  setModel: (model: IAiModel | undefined) => void;
 }
 
 // API 请求类型
 export interface CreateMessageRequest {
   messages: Array<{
+    uid?: string;
     parent_id?: string;
-    role: "user" | "assistant" | "tool";
+    role: TOpenAIRole;
     content?: string;
     model_id?: string;
     tool_calls?: ToolCall[];
@@ -141,6 +143,7 @@ export interface ApiResponse<T> {
   ok: boolean;
   message: string;
   data: T;
+  errors?: Record<string, string[]>; // 添加可选的错误字段
 }
 
 export interface ChatResponse {
@@ -180,7 +183,7 @@ export interface ModelAdapter {
   handleFunctionCall(functionCall: ToolCall): Promise<any>;
 }
 export interface OpenAIMessage {
-  role: "system" | "user" | "assistant" | "function" | "tool";
+  role: TOpenAIRole;
   content?: string;
   name?: string;
   tool_calls?: ToolCall[];
@@ -216,7 +219,7 @@ export interface ParsedChunk {
 // 组件 Props 类型
 export interface SessionGroupProps {
   session: SessionInfo;
-  onVersionSwitch: (sessionId: string, versionIndex: number) => void;
+  onVersionSwitch: (nexMsgId: string) => void;
   onRefresh: (sessionId: string, modelId?: string) => void;
   onEdit: (sessionId: string, content: string) => void;
   onRetry?: (tempId: string) => void;
@@ -224,12 +227,14 @@ export interface SessionGroupProps {
   onDislike?: (messageId: string) => void;
   onCopy?: (messageId: string) => void;
   onShare?: (messageId: string) => Promise<string>;
+  onModelChange?: (model: IAiModel) => void;
 }
 
 export interface UserMessageProps {
-  message: MessageNode;
+  session: SessionInfo;
   onEdit?: (content: string) => void;
   onCopy?: () => void;
+  onVersionSwitch?: (message_id: string) => void;
 }
 
 export interface AssistantMessageProps {
@@ -251,6 +256,7 @@ export interface VersionSwitcherProps {
 
 export interface ChatInputProps {
   onSend: (content: string) => void;
+  onModelChange?: (model: IAiModel | undefined) => void;
   disabled?: boolean;
   placeholder?: string;
 }
