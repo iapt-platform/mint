@@ -1,27 +1,35 @@
+// dashboard-v4/dashboard/src/hooks/useChatData.ts
 import { useState, useCallback, useMemo } from "react";
 import {
   MessageNode,
   ChatState,
   ChatActions,
   PendingMessage,
+  OpenAIMessage,
+  TOpenAIRole,
 } from "../types/chat";
 
 import { useActivePath } from "./useActivePath";
 import { useSessionGroups } from "./useSessionGroups";
-import { messageApi } from "../services/messageApi";
+//import { messageApi } from "../services/messageApi";
+import { mockMessageApi as messageApi } from "../services/mockMessageApi";
 import { getModelAdapter } from "../services/modelAdapters";
+import { IAiModel } from "../components/api/ai";
 
 export function useChatData(chatId: string): {
   chatState: ChatState;
   actions: ChatActions;
 } {
+  // Mock模式：直接使用mock数据
   const [rawMessages, setRawMessages] = useState<MessageNode[]>([]);
   const [pendingMessages, setPendingMessages] = useState<PendingMessage[]>([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [streamingMessage, setStreamingMessage] = useState<string>();
   const [streamingSessionId, setStreamingSessionId] = useState<string>();
-  const [currentModel, setCurrentModel] = useState("gpt-4");
   const [error, setError] = useState<string>();
+  const [activePoint, setActivePoint] = useState<string>();
+  const [currModel, setCurrModel] = useState<IAiModel>();
 
   // 合并已保存和待保存的消息用于显示
   const allMessages = useMemo(() => {
@@ -29,7 +37,7 @@ export function useChatData(chatId: string): {
     return [...rawMessages, ...pending];
   }, [rawMessages, pendingMessages]);
 
-  const activePath = useActivePath(allMessages);
+  const activePath = useActivePath(allMessages, activePoint);
   const sessionGroups = useSessionGroups(activePath, allMessages);
 
   // 加载消息列表
@@ -48,10 +56,10 @@ export function useChatData(chatId: string): {
   // 构建对话历史（用于AI API调用）
   const buildConversationHistory = useCallback(
     (baseMessages: MessageNode[], newUserMessage?: MessageNode) => {
-      const history = activePath
+      const history: OpenAIMessage[] = activePath
         .filter((m) => m.role !== "tool") // 排除tool消息
         .map((m) => ({
-          role: m.role as any,
+          role: m.role,
           content: m.content || "",
           tool_calls: m.tool_calls,
           tool_call_id: m.tool_call_id,
@@ -68,11 +76,55 @@ export function useChatData(chatId: string): {
     },
     [activePath]
   );
+  // 保存消息组到数据库
+  const saveMessageGroup = useCallback(
+    async (tempId: string, messages: MessageNode[]) => {
+      try {
+        const savedMessages = await messageApi.createMessages(chatId, {
+          messages: messages.map((m) => ({
+            uid: m.uid,
+            parent_id: m.parent_id,
+            role: m.role,
+            content: m.content,
+            model_id: m.model_id,
+            tool_calls: m.tool_calls,
+            tool_call_id: m.tool_call_id,
+            metadata: m.metadata,
+          })),
+        });
 
+        // 更新本地状态：移除pending，添加到已保存消息
+        setPendingMessages((prev) => prev.filter((p) => p.temp_id !== tempId));
+        setRawMessages((prev) => [...prev, ...savedMessages.data]);
+      } catch (err) {
+        console.error("保存消息组失败:", err);
+        setPendingMessages((prev) =>
+          prev.map((p) =>
+            p.temp_id === tempId
+              ? {
+                  ...p,
+                  error: err instanceof Error ? err.message : "保存失败",
+                  messages: p.messages.map((m) => ({
+                    ...m,
+                    save_status: "failed" as const,
+                  })),
+                }
+              : p
+          )
+        );
+      }
+    },
+    [chatId]
+  );
   // 发送消息给AI并处理响应
   const sendMessageToAI = useCallback(
     async (userMessage: MessageNode, pendingGroup: PendingMessage) => {
       try {
+        if (!currModel) {
+          console.error("no model selected");
+          return;
+        }
+        console.debug("ai chat send message current model", currModel);
         setIsLoading(true);
         setStreamingSessionId(pendingGroup.session_id);
 
@@ -80,7 +132,7 @@ export function useChatData(chatId: string): {
           rawMessages,
           userMessage
         );
-        const adapter = getModelAdapter(currentModel);
+        const adapter = getModelAdapter(currModel.name);
 
         // 处理Function Call的循环逻辑
         let currentMessages = conversationHistory;
@@ -134,7 +186,7 @@ export function useChatData(chatId: string): {
                 : allAiMessages[allAiMessages.length - 1].uid,
             role: "assistant",
             content: responseContent,
-            model_id: currentModel,
+            model_id: currModel.uid,
             tool_calls: functionCalls.length > 0 ? functionCalls : undefined,
             metadata,
             is_active: true,
@@ -223,56 +275,12 @@ export function useChatData(chatId: string): {
         setStreamingSessionId(undefined);
       }
     },
-    [rawMessages, currentModel, chatId, buildConversationHistory]
-  );
-
-  // 保存消息组到数据库
-  const saveMessageGroup = useCallback(
-    async (tempId: string, messages: MessageNode[]) => {
-      try {
-        const savedMessages = await messageApi.createMessages(chatId, {
-          messages: messages.map((m) => ({
-            parent_id: m.parent_id,
-            role: m.role as any,
-            content: m.content,
-            model_id: m.model_id,
-            tool_calls: m.tool_calls,
-            tool_call_id: m.tool_call_id,
-            metadata: m.metadata,
-          })),
-        });
-
-        // 更新本地状态：移除pending，添加到已保存消息
-        setPendingMessages((prev) => prev.filter((p) => p.temp_id !== tempId));
-        setRawMessages((prev) => [...prev, ...savedMessages.data]);
-      } catch (err) {
-        console.error("保存消息组失败:", err);
-        setPendingMessages((prev) =>
-          prev.map((p) =>
-            p.temp_id === tempId
-              ? {
-                  ...p,
-                  error: err instanceof Error ? err.message : "保存失败",
-                  messages: p.messages.map((m) => ({
-                    ...m,
-                    save_status: "failed" as const,
-                  })),
-                }
-              : p
-          )
-        );
-      }
-    },
-    [chatId]
+    [currModel, buildConversationHistory, rawMessages, saveMessageGroup, chatId]
   );
 
   // 编辑消息 - 创建新版本
   const editMessage = useCallback(
-    async (
-      sessionId: string,
-      content: string,
-      role: "user" | "assistant" = "user"
-    ) => {
+    async (sessionId: string, content: string, role: TOpenAIRole = "user") => {
       const tempId = `temp_${Date.now()}`;
 
       try {
@@ -295,9 +303,10 @@ export function useChatData(chatId: string): {
         const newSessionId =
           sessionId === "new" ? `session_${tempId}` : `session_${tempId}`;
 
+        const maxId = Math.max(...rawMessages.map((msg) => msg.id));
         // 创建新的用户消息
         const newUserMessage: MessageNode = {
-          id: 0,
+          id: maxId + 1,
           uid: `temp_user_${tempId}`,
           temp_id: tempId,
           chat_id: chatId,
@@ -321,7 +330,7 @@ export function useChatData(chatId: string): {
         };
 
         setPendingMessages((prev) => [...prev, pendingGroup]);
-
+        console.debug("ai chat", pendingGroup);
         // 如果是用户消息，发送给AI
         if (role === "user") {
           await sendMessageToAI(newUserMessage, pendingGroup);
@@ -344,7 +353,7 @@ export function useChatData(chatId: string): {
         );
       }
     },
-    [chatId, activePath, sendMessageToAI]
+    [rawMessages, chatId, activePath, sendMessageToAI]
   );
 
   // 重试失败的消息
@@ -378,39 +387,10 @@ export function useChatData(chatId: string): {
   );
 
   // 切换版本
-  const switchVersion = useCallback(
-    async (sessionId: string, versionIndex: number) => {
-      try {
-        // 找到指定版本的消息
-        const sessionMessages = rawMessages.filter(
-          (m) => m.session_id === sessionId
-        );
-        const versions =
-          sessionGroups.find((sg) => sg.session_id === sessionId)?.versions ||
-          [];
-
-        if (versionIndex >= versions.length) return;
-
-        const targetVersion = versions[versionIndex];
-        const versionMessages = sessionMessages.filter(
-          (m) => m.created_at === targetVersion.created_at
-        );
-
-        // 调用API更新激活状态
-        await messageApi.switchVersion(
-          chatId,
-          versionMessages.map((m) => m.uid)
-        );
-
-        // 重新加载数据
-        await loadMessages();
-      } catch (err) {
-        console.error("切换版本失败:", err);
-        setError(err instanceof Error ? err.message : "切换版本失败");
-      }
-    },
-    [rawMessages, sessionGroups, chatId, loadMessages]
-  );
+  const switchVersion = useCallback((activeMsgId: string) => {
+    console.debug("activeMsgId", activeMsgId);
+    setActivePoint(activeMsgId);
+  }, []);
 
   // 刷新AI回答
   const refreshResponse = useCallback(
@@ -418,8 +398,6 @@ export function useChatData(chatId: string): {
       const session = sessionGroups.find((sg) => sg.session_id === sessionId);
       if (!session?.user_message) return;
 
-      // 使用指定的模型或当前模型
-      const useModel = modelId || currentModel;
       const tempId = `temp_refresh_${Date.now()}`;
 
       try {
@@ -451,7 +429,7 @@ export function useChatData(chatId: string): {
         setError(err instanceof Error ? err.message : "刷新失败");
       }
     },
-    [sessionGroups, currentModel, sendMessageToAI]
+    [sessionGroups, sendMessageToAI]
   );
 
   // 消息操作功能
@@ -509,6 +487,39 @@ export function useChatData(chatId: string): {
     [loadMessages]
   );
 
+  const setModel = useCallback((model: IAiModel | undefined) => {
+    setCurrModel(model);
+  }, []);
+
+  const actions = useMemo(
+    () => ({
+      switchVersion,
+      editMessage,
+      retryMessage,
+      refreshResponse,
+      loadMessages,
+      likeMessage,
+      dislikeMessage,
+      copyMessage,
+      shareMessage,
+      deleteMessage,
+      setModel,
+    }),
+    [
+      switchVersion,
+      editMessage,
+      retryMessage,
+      refreshResponse,
+      loadMessages,
+      likeMessage,
+      dislikeMessage,
+      copyMessage,
+      shareMessage,
+      deleteMessage,
+      setModel,
+    ]
+  );
+
   return {
     chatState: {
       chat_id: chatId,
@@ -520,20 +531,9 @@ export function useChatData(chatId: string): {
       is_loading: isLoading,
       streaming_message: streamingMessage,
       streaming_session_id: streamingSessionId,
-      current_model: currentModel,
+      current_model: currModel,
       error,
     },
-    actions: {
-      switchVersion,
-      editMessage,
-      retryMessage,
-      refreshResponse,
-      loadMessages,
-      likeMessage,
-      dislikeMessage,
-      copyMessage,
-      shareMessage,
-      deleteMessage,
-    },
+    actions,
   };
 }
