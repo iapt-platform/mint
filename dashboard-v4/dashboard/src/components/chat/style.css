@@ -1,12 +1,10 @@
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
 }
 
 .messages-area {
   flex: 1;
-  overflow-y: auto;
   padding: 16px;
 }
 
