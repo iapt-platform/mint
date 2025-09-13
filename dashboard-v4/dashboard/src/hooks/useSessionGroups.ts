@@ -1,3 +1,4 @@
+// dashboard-v4/dashboard/src/hooks/useSessionGroups.ts
 import { useMemo, useCallback } from "react";
 import { MessageNode, SessionInfo, VersionInfo } from "../types/chat";
 
@@ -7,44 +8,38 @@ export function useSessionGroups(
 ) {
   const computeSessionVersions = useCallback(
     (sessionId: string): VersionInfo[] => {
+      /**
+       * 找到session的parent message
+       * parent message children 就是versions
+       */
       // 找到该session的所有消息
       const sessionMessages = rawMessages.filter(
         (m) => m.session_id === sessionId
       );
 
-      // 按不同的创建时间和父消息分组，计算版本
-      const versionMap = new Map<string, MessageNode[]>();
+      if (sessionMessages.length === 0) {
+        return [];
+      }
+      const firstMsg = sessionMessages.sort((a, b) => a.id - b.id)[0];
+      const parentMsg = rawMessages.find(
+        (value) => value.uid === firstMsg.parent_id
+      );
 
-      sessionMessages.forEach((msg) => {
-        // 使用第一个AI消息的创建时间作为版本标识
-        const firstAiMsg = sessionMessages
-          .filter((m) => m.role === "assistant")
-          .sort((a, b) => a.id - b.id)[0];
-
-        const versionKey = firstAiMsg ? firstAiMsg.created_at : msg.created_at;
-
-        if (!versionMap.has(versionKey)) {
-          versionMap.set(versionKey, []);
-        }
-        versionMap.get(versionKey)!.push(msg);
-      });
+      if (!parentMsg) {
+        return [];
+      }
+      const childrenMsg = rawMessages.filter(
+        (value) => value.parent_id === parentMsg.uid
+      );
+      console.debug("parentMsg", parentMsg, childrenMsg);
 
       // 转换为VersionInfo数组
-      const versions: VersionInfo[] = Array.from(versionMap.entries())
-        .map(([timestamp, messages], index) => {
-          const aiMessage = messages.find((m) => m.role === "assistant");
-          return {
-            version_index: index,
-            model_id: aiMessage?.model_id,
-            created_at: timestamp,
-            message_count: messages.length,
-            token_usage: aiMessage?.metadata?.token_usage?.total_tokens,
-          };
-        })
-        .sort(
-          (a, b) =>
-            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        );
+      const versions: VersionInfo[] = childrenMsg.map((msg, index) => {
+        return {
+          version_index: index,
+          message_id: msg.uid,
+        };
+      });
 
       return versions;
     },
@@ -57,11 +52,11 @@ export function useSessionGroups(
       const activeAiMsg = sessionMessages.find(
         (m) => m.role === "assistant" && m.is_active
       );
-      if (!activeAiMsg) return 0;
+      if (!activeAiMsg) return versions.length - 1;
 
       // 根据创建时间找到对应的版本索引
       const versionIndex = versions.findIndex(
-        (v) => v.created_at === activeAiMsg.created_at
+        (v) => v.message_id === activeAiMsg.uid
       );
       return Math.max(0, versionIndex);
     },
