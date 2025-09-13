@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+// dashboard-v4/dashboard/src/components/chat/ChatContainer.tsx
+import { useEffect } from "react";
 import { useChatData } from "../../hooks/useChatData";
 import { SessionGroup } from "./SessionGroup";
 import { ChatInput } from "./ChatInput";
 import { StreamingMessage } from "./StreamingMessage";
-import { mockChatState } from "../../hooks/mockChatData";
 
 import "./style.css";
 
@@ -13,15 +13,19 @@ interface ChatContainerProps {
 
 export function ChatContainer({ chatId }: ChatContainerProps) {
   const { chatState, actions } = useChatData(chatId);
-  const [chatStateMock] = useState(mockChatState);
+
   useEffect(() => {
     actions.loadMessages();
   }, [chatId, actions.loadMessages, actions]);
 
+  useEffect(() => {
+    console.debug("chatState.session_groups", chatState.session_groups);
+  }, [chatState.session_groups]);
+
   return (
     <div className="chat-container">
       <div className="messages-area">
-        {chatStateMock.session_groups.map((session) => (
+        {chatState.session_groups.map((session) => (
           <SessionGroup
             key={session.session_id}
             session={session}
@@ -52,6 +56,7 @@ export function ChatContainer({ chatId }: ChatContainerProps) {
 
       <ChatInput
         onSend={(content) => actions.editMessage("new", content)}
+        onModelChange={actions.setModel}
         disabled={chatState.is_loading}
         placeholder="输入你的问题..."
       />
