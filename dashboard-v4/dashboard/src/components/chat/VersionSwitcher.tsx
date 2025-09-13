@@ -33,12 +33,6 @@ export function VersionSwitcher({
                 版本 {currentVersion + 1} / {versions.length}
               </div>
               <div>模型: {currentVersionInfo.model_id || "未知"}</div>
-              <div>
-                创建: {new Date(currentVersionInfo.created_at).toLocaleString()}
-              </div>
-              {currentVersionInfo.token_usage && (
-                <div>Token: {currentVersionInfo.token_usage}</div>
-              )}
             </div>
           }
         >
