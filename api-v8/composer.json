@@ -19,6 +19,7 @@
         "laravel/tinker": "^2.5",
         "league/flysystem-aws-s3-v3": "^1.0",
         "mustache/mustache": "^2.14",
+        "opensearch-project/opensearch-php": "^2.4",
         "php-amqplib/php-amqplib": ">=3.0",
         "php-ffmpeg/php-ffmpeg": "^1.1",
         "phpoffice/phpspreadsheet": "^1.28"
@@ -74,7 +75,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
