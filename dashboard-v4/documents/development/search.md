@@ -57,12 +57,11 @@
 | `category`       | array        | 文档分类，例如 ["sutta", "vinaya"]                                   |
 | `author`         | string       | 作者或译者                                                           |
 | `language`       | string       | 资源语言 pali,zh-Hans,zh-Hant,en-US,my 等                            |
-| `created_at`     | string       | 原始文档创建时间                                                     |
-| `updated_at`     | string       | 原始文档更新时间                                                     |
+| `updated_at`     | date         | 原始文档更新时间                                                     |
 
 ---
 
-## 4. 检索需求
+## 4. 技术实现
 
 1. **全文搜索**
 
@@ -92,21 +91,79 @@
    - 只搜索 sentence
 
 6. **页码搜索**
+
    - 只搜索 `page_refs`
+
+7. **简繁体互查**
+
+   1. 索引时 & 查询时，程序层用 OpenCC 转换简繁（更灵活）
+   2. 使用 OpenSearch ICU plugin 的 icu_transform 做简繁映射
+
+8. **处理变音符号**
+
+   - analysis-icu
+
+9. **模糊搜索+精确匹配**
+
+```json
+{
+  "mappings": {
+    "properties": {
+      "content": {
+        "type": "text",
+        "analyzer": "icu_analyzer",
+        "fields": {
+          "raw": { "type": "keyword" }
+          // 精确匹配整段内容或句子
+        }
+      }
+    }
+  },
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "icu_analyzer": {
+          "tokenizer": "icu_tokenizer",
+          "filter": ["icu_folding", "lowercase"]
+        }
+      }
+    }
+  }
+}
+```
+
+模糊搜索（支持巴利 diacritics 和英文转写）
+
+```json
+{
+  "query": {
+    "match": {
+      "content": "mettā"
+    }
+  }
+}
+```
+
+精确匹配（只要完全等于）
+
+```json
+{
+  "query": {
+    "term": {
+      "title.raw": "mettā"
+    }
+  }
+}
+```
 
 ---
 
 ## 5. 插件依赖
 
-- **必需**
-
-  - k-NN 插件（已支持向量搜索，无需额外安装）
-  - 中文分词
-  - 巴利文转英文字母
-
-- **可选**
-
-  - 简繁体转换
+- k-NN 插件（已支持向量搜索，无需额外安装）
+- 中文分词
+- 巴利文转英文字母 `analysis-icu`
+- 简繁体转换 `icu_transform`
 
 ## 多语言 embedding 模型（托管型 调用 API 即可）
 
