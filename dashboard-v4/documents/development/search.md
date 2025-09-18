@@ -40,25 +40,25 @@
 
 ### 核心字段
 
-| 字段             | 类型         | 说明                                                   |
-| ---------------- | ------------ | ------------------------------------------------------ |
-| `id`             | string       | 文档唯一 ID                                            |
-| `resource_id`    | uuid         | 文档在数据库中的 id                                    |
-| `resource_type`  | string       | 文档类型，例如 dictionary / translation / pali_text    |
-| `title`          | string       | 文档标题，可以是中文或巴利文                           |
-| `summary`        | string       | 文档摘要 纯文本                                        |
-| `content`        | string       | 文档主体内容，支持 Markdown，可能包含黑体字            |
-| `content_vector` | dense_vector | 文档主体内容的 embedding，                             |
-| `related_id`     | string       | 用于关联的 ID 段落 id 句子 id                          |
-| `bold_single`    | string       | 单个黑体文本，用于搜索加权                             |
-| `bold_multi`     | string       | 多个黑体文本，用于搜索加权                             |
-| `page_refs`      | array        | 页码标记数组，例如 \["V3.81","M3.58"，“PTS Vin II 57”] |
-| `tags`           | array        | 文档主题标签                                           |
-| `category`       | array        | 文档分类，例如 ["sutta", "vinaya"]                     |
-| `author`         | string       | 作者或译者                                             |
-| `language`       | string       | 资源语言 pali,zh-Hans,zh-Hant,en-US,pali 等            |
-| `created_at`     | string       | 原始文档创建时间                                       |
-| `updated_at`     | string       | 原始文档更新时间                                       |
+| 字段             | 类型         | 说明                                                                 |
+| ---------------- | ------------ | -------------------------------------------------------------------- |
+| `id`             | string       | 文档唯一 ID                                                          |
+| `resource_id`    | uuid         | 文档在数据库中的 id                                                  |
+| `resource_type`  | string       | 文档类型，例如 article / term / dictionary / translation / pali_text |
+| `title`          | string       | 文档标题，可以是中文或巴利文                                         |
+| `summary`        | string       | 文档摘要 纯文本                                                      |
+| `content`        | string       | 文档主体内容，支持 Markdown，可能包含黑体字                          |
+| `content_vector` | dense_vector | 文档主体内容的 embedding，                                           |
+| `related_id`     | string       | 用于关联的 ID 段落 id 句子 id                                        |
+| `bold_single`    | string       | 单个黑体文本，用于搜索加权                                           |
+| `bold_multi`     | string       | 多个黑体文本，用于搜索加权                                           |
+| `page_refs`      | array        | 页码标记数组，例如 \["V3.81","M3.58"，“PTS Vin II 57”]               |
+| `tags`           | array        | 文档主题标签                                                         |
+| `category`       | array        | 文档分类，例如 ["sutta", "vinaya"]                                   |
+| `author`         | string       | 作者或译者                                                           |
+| `language`       | string       | 资源语言 pali,zh-Hans,zh-Hant,en-US,my 等                            |
+| `created_at`     | string       | 原始文档创建时间                                                     |
+| `updated_at`     | string       | 原始文档更新时间                                                     |
 
 ---
 
@@ -76,14 +76,23 @@
    - 按 `tags` 过滤主题
    - 按 `category` 过滤文献分类
 
-3. **搜索加权**
+3. **黑体字搜索加权**
 
    - 若匹配到 `bold_single` `bold_multi`（Markdown 黑体），排名靠前
 
 4. **语义搜索**
 
    - 基于 `vector` 检索相似句子
+   - 基于 `vector` 检索不同语言相似句子
+   -
+
+5. **巴利相似句**
+
    - 忽略格位变化
+   - 只搜索 sentence
+
+6. **页码搜索**
+   - 只搜索 `page_refs`
 
 ---
 
@@ -103,10 +112,10 @@
 
 适合快速上线，效果好，但依赖外部服务。
 
-1. **OpenAI - `text-embedding-multilingual-002`**
+1. **OpenAI - `text-embedding-3-small`**
 
-- https://platform.openai.com/docs/models/text-embedding-3-large
-- https://platform.openai.com/docs/models/text-embedding-3-small
+- [text-embedding-3-large](https://platform.openai.com/docs/models/text-embedding-3-large)
+- [text-embedding-3-small](https://platform.openai.com/docs/models/text-embedding-3-small)
 
 - 支持 100+ 语言（含中文、英文、缅文）。
 - 1536 维向量。
@@ -114,7 +123,26 @@
 - 部署成本：只需 API 调用。
 - 场景：最稳妥，适合你的「用户用中文 → 检索缅文/英文/巴利文」需求。
 
-2. **Cohere - `embed-multilingual-v3.0`**
+```bash
+curl https://api.openai.com/v1/embeddings \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d '{
+    "model": "text-embedding-3-small",
+    "input": "佛陀在祇园精舍说法"
+  }'
+
+15 token
+```
+
+Prices per 1M tokens.
+
+| Model                  | Cost  | Batch cost |
+| ---------------------- | ----- | ---------- |
+| text-embedding-3-small | $0.02 | $0.01      |
+| text-embedding-3-large | $0.13 | $0.065     |
+
+1. **Cohere - `embed-multilingual-v3.0`**
 
    - 支持 100+ 语言，1024 维。
    - 在跨语言语义检索任务中表现接近 OpenAI。
