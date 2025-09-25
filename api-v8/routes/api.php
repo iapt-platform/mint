@@ -120,6 +120,8 @@ use App\Http\Controllers\MockOpenAIController;
 use App\Http\Controllers\SysModelController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
+use App\Http\Controllers\SearchPlusController;
+use App\Http\Controllers\SearchSuggestController;
 
 
 
@@ -301,4 +303,12 @@ Route::group(['prefix' => 'v2'], function () {
     Route::post('mock/openai/chat/completions', [MockOpenAIController::class, 'chatCompletions']);
     Route::post('mock/openai/completions', [MockOpenAIController::class, 'completions']);
     Route::get('mock/openai/models', [MockOpenAIController::class, 'models']);
+
+    Route::apiResource('chat-messages', ChatMessageController::class);
+});
+
+
+Route::group(['prefix' => 'v3'], function () {
+    Route::apiResource('search', SearchPlusController::class);
+    Route::apiResource('search-suggest', SearchSuggestController::class);
 });
