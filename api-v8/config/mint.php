@@ -147,4 +147,16 @@ return [
             ],
         ],
     ],
+    'opensearch' => [
+        'index' => 'wikipali',
+        'config' => [
+            'scheme' => env('OPENSEARCH_SCHEME', 'http'),
+            'host' => env('OPENSEARCH_HOST', '127.0.0.1'),
+            'port' => env('OPENSEARCH_PORT', 9200),
+            'username' => env('OPENSEARCH_USERNAME', ''),
+            'password' => env('OPENSEARCH_PASSWORD', ''),
+            'ssl_verification' => env('OPENSEARCH_SSL_VERIFICATION', false),
+        ],
+
+    ],
 ];
