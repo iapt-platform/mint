@@ -216,7 +216,6 @@ Route::group(['prefix' => 'v2'], function () {
     Route::apiResource('user-statistic', UserStatisticController::class);
     Route::apiResource('sent-sim', SentSimController::class);
     Route::apiResource('nissaya-ending', NissayaEndingController::class);
-    Route::get('nissaya-ending-card', [NissayaEndingController::class, "nissaya_card"]);
     Route::get('nissaya-ending-export', [NissayaEndingController::class, "export"]);
     Route::get('nissaya-ending-import', [NissayaEndingController::class, "import"]);
     Route::get('nissaya-ending-vocabulary', [NissayaEndingController::class, "vocabulary"]);
