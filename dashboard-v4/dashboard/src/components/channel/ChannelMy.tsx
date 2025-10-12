@@ -10,6 +10,7 @@ import {
   Select,
   Skeleton,
   Space,
+  Tag,
   Tooltip,
   Tree,
 } from "antd";
@@ -450,7 +451,12 @@ const ChannelMy = ({
                       <Button type="link">
                         <Space>
                           <StudioName data={node.channel.studio} hideName />
-                          {node.channel.title}
+                          <>{node.channel.title}</>
+                          <Tag>
+                            {intl.formatMessage({
+                              id: `channel.type.${node.channel.type}.label`,
+                            })}
+                          </Tag>
                         </Space>
                       </Button>
                     </div>
@@ -468,6 +474,13 @@ const ChannelMy = ({
                               key: "copy-to",
                               label: intl.formatMessage({
                                 id: "buttons.copy.to",
+                              }),
+                              icon: <CopyOutlined />,
+                            },
+                            {
+                              key: "import",
+                              label: intl.formatMessage({
+                                id: "buttons.import",
                               }),
                               icon: <CopyOutlined />,
                             },
