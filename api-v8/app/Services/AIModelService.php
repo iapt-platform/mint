@@ -16,12 +16,20 @@ class AIModelService
         return AiModelResource::collection(resource: $result);
     }
 
-    public function getSysModels()
+    public function getSysModels($type = null)
     {
-        $types = ['wbw', 'chat'];
+        if (empty($type)) {
+            $types = ['wbw', 'chat', 'summarize'];
+        } else {
+            $types = [$type];
+        }
+
         $sysModels = [];
         foreach ($types as $key => $type) {
             $sysModels[$type] =  $this->getModelsById(RedisClusters::get('/ai/model/system/' . $type) ?? []);
+        }
+        if (!empty($type)) {
+            return $sysModels[$type];
         }
         return $sysModels;
     }
