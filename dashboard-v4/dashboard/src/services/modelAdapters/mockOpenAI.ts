@@ -6,8 +6,11 @@ import {
   ParsedChunk,
   ToolCall,
 } from "../../types/chat";
+import { IAiModel } from "../../components/api/ai";
 
 export class MockOpenAIAdapter extends BaseModelAdapter {
+  model: IAiModel | undefined;
+
   name = "mock-gpt-4";
   supportsFunctionCall = true;
 
@@ -259,7 +262,7 @@ export class MockOpenAIAdapter extends BaseModelAdapter {
 
       return {
         content: delta?.content,
-        function_call: delta?.function_call,
+        tool_calls: delta?.function_call,
         finish_reason: finishReason,
       };
     } catch (error) {
@@ -274,16 +277,16 @@ export class MockOpenAIAdapter extends BaseModelAdapter {
     // 模拟函数执行延迟
     await this.mockDelay(300);
 
-    switch (functionCall.function) {
+    switch (functionCall.function.name) {
       case "searchTerm":
-        return await this.mockSearchTerm(functionCall.arguments.term);
+        return await this.mockSearchTerm(functionCall.function.arguments);
       case "getWeather":
-        return await this.mockGetWeather(functionCall.arguments.city);
+        return await this.mockGetWeather(functionCall.function.arguments);
       default:
         console.warn(
-          `[Mock OpenAI] Unknown function: ${functionCall.function}`
+          `[Mock OpenAI] Unknown function: ${functionCall.function.name}`
         );
-        throw new Error(`未知函数: ${functionCall.function}`);
+        throw new Error(`未知函数: ${functionCall.function.name}`);
     }
   }
 
@@ -361,8 +364,8 @@ export class MockOpenAIAdapter extends BaseModelAdapter {
       temperature: options.temperature || 0.7,
       max_tokens: options.max_tokens || 2000,
       top_p: options.top_p || 1,
-      functions: options.functions,
-      function_call: options.function_call || "auto", // 确保不为undefined
+      tools: options.tools ?? [],
+      tool_choice: "auto", // 确保不为undefined
     };
   }
 }
