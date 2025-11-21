@@ -195,7 +195,7 @@ class TaskStatusController extends Controller
             if ($aiAssistant) {
                 $aiTask = Task::find($taskId);
                 try {
-                    \App\Jobs\ProcessAITranslateJob::publish($taskId, $aiAssistant->uid);
+                    $msgId = \App\Jobs\ProcessAITranslateJob::publish($taskId, $aiAssistant->uid);
                     $aiTask->executor_id = $aiAssistant->uid;
                     $aiTask->status = 'queue';
                     $this->pushChange('queue', $taskId);
@@ -252,6 +252,7 @@ class TaskStatusController extends Controller
                         'res_id' => $taskId,
                         'res_type' => 'task',
                         'title' => "{$editor['nickName']} 将任务状态变为 {$key}",
+                        'content' => isset($msgId) ? "message id:{$msgId}" : null,
                         'editor_uid' => $user['user_uid'],
                     ]);
                 }
