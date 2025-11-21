@@ -1,17 +1,19 @@
 import FooterBar from "../../components/library/FooterBar";
 
 import HeadBar from "../../components/library/HeadBar";
-import AIChatComponent from "../../components/chat/AiChat";
-import { Content } from "antd/lib/layout/layout";
 import TreeText from "../../components/article/TreeText";
 import { ChatContainer } from "../../components/chat/ChatContainer";
+import NissayaAligner from "../../components/corpus/NissayaAligner";
 
 const Widget = () => {
   return (
     <div>
       <HeadBar />
-      <Content>
+      <div>
         <div>Home Page</div>
+        <div style={{ backgroundColor: "white" }}>
+          <NissayaAligner />
+        </div>
         <TreeText
           type="chapter"
           rootId="140-92"
@@ -27,7 +29,7 @@ const Widget = () => {
         >
           <ChatContainer chatId={"123"} />
         </div>
-      </Content>
+      </div>
       <FooterBar />
     </div>
   );
