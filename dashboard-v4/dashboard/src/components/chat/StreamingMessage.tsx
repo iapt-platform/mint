@@ -1,4 +1,5 @@
 import React from "react";
+import Marked from "../general/Marked";
 
 interface StreamingMessageProps {
   content: string;
@@ -15,7 +16,7 @@ export function StreamingMessage({ content }: StreamingMessageProps) {
 
       <div className="message-content">
         <div className="message-text">
-          {content}
+          <Marked text={content} />
           <span className="cursor">|</span>
         </div>
       </div>

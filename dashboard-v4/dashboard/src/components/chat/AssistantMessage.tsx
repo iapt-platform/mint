@@ -9,9 +9,11 @@ import {
 } from "@ant-design/icons";
 import { AssistantMessageProps } from "../../types/chat";
 import Marked from "../general/Marked";
+import { VersionSwitcher } from "./VersionSwitcher";
+import ToolMessage from "./ToolMessage";
 
 const AssistantMessage = ({
-  messages,
+  session,
   onRefresh,
   onEdit,
   isPending,
@@ -19,7 +21,10 @@ const AssistantMessage = ({
   onDislike,
   onCopy,
   onShare,
+  onVersionSwitch,
 }: AssistantMessageProps) => {
+  const messages = session.ai_messages;
+
   const mainMessage = messages.find((m) => m.role === "assistant" && m.content);
   const toolMessages = messages.filter((m) => m.role === "tool");
 
@@ -53,17 +58,7 @@ const AssistantMessage = ({
 
       <div className="message-content" style={{ backgroundColor: "unset" }}>
         {/* Tool calls 显示 */}
-        {toolMessages.length > 0 && (
-          <div className="tool-calls">
-            {toolMessages.map((toolMsg, index) => (
-              <div key={toolMsg.uid} className="tool-result">
-                <span className="tool-label">Tool {index + 1}</span>
-                <div className="tool-content">{toolMsg.content}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
+        <ToolMessage session={session} />
         {/* 主要回答内容 */}
         {mainMessage?.content && (
           <div className="message-text">
@@ -111,6 +106,17 @@ const AssistantMessage = ({
               icon={<ShareAltOutlined />}
               onClick={handleShare}
             />
+            {/* 版本切换器 */}
+            {session.versions && session.versions.length > 1 && (
+              <VersionSwitcher
+                versions={session.versions}
+                currentVersion={session.current_version}
+                onSwitch={(versionIndex) =>
+                  onVersionSwitch &&
+                  onVersionSwitch(session.versions[versionIndex].message_id)
+                }
+              />
+            )}
             <Button
               size="small"
               type="text"

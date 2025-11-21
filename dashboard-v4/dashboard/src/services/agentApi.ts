@@ -1,11 +1,11 @@
+import { FunctionDefinition } from "../types/chat";
 import {
   SearchByQueryArgs,
   SearchByPageRefArgs,
   GetTermDefinitionArgs,
   SearchPaliArgs,
   SearchResponse,
-  AICallbackFunction,
-} from "../types/agent"; // 假设你的类型定义文件名为 apiTypes.ts
+} from "../types/search"; // 假设你的类型定义文件名为 apiTypes.ts
 
 /**
  * 基础 API URL
@@ -13,6 +13,40 @@ import {
  */
 const API_BASE_URL = "http://localhost:8000/api/v3";
 
+export const system_prompt = `
+你是一个专业的、精通巴利语和汉语的佛教文献检索助手。你的任务是分析用户的查询，并利用你拥有的工具（函数）来获取信息。
+
+严格遵守以下原则：
+1.  优先并恰当地使用提供的工具来满足用户的查询需求。
+2.  你的回答必须简洁、直接，仅包含从工具中获得的信息，不添加任何额外闲聊。
+3.  如果一个查询无法被任何工具处理，或者需要与用户进行澄清，请清晰地说明。
+4.  当用户的查询包含**页码标记**（例如：M3.58, V3.81）时，必须使用 search_by_page_ref 函数。
+5.  当用户的查询是**明确的佛教术语或词汇**（例如：四圣谛, mettā）时，必须使用 search_pali 和 get_term_definition 函数 进行两次搜索，获取巴利文原文和术语字典结果。
+6.  当用户的查询是**描述性、自然语言问题**（例如：佛陀关于慈悲的教导）时，必须使用 search_by_query 函数。
+7.  当用户的查询是**普通关键词**（例如：比丘, 袈裟）时，使用 search_by_query 函数。
+
+以下是你的工具箱：
+- search_by_query: 用于通用的模糊和语义搜索。
+- search_by_page_ref: 专门用于处理页码搜索。
+- get_term_definition: 专门用于获取术语定义。
+- search_pali: 专门用于处理巴利文搜索。
+
+请严格根据上述原则，选择最恰当的工具来处理用户的请求。
+如果用户追问的问题可以使用之前的数据回答，那么无需再次调用工具。
+`;
+
+export type AICallbackFunction = {
+  name:
+    | "search_by_query"
+    | "search_by_page_ref"
+    | "get_term_definition"
+    | "search_pali";
+  arguments:
+    | SearchByQueryArgs
+    | SearchByPageRefArgs
+    | GetTermDefinitionArgs
+    | SearchPaliArgs;
+};
 // ---------------------------------------------------------------- //
 //                  低层 API 客户端（使用 fetch）                  //
 // ---------------------------------------------------------------- //
@@ -59,21 +93,18 @@ const apiClient = async <T>(
 /**
  * 通用搜索函数，处理模糊和语义查询。
  */
-const searchByQuery = async (
+export const searchByQuery = async (
   args: SearchByQueryArgs
 ): Promise<SearchResponse> => {
   return apiClient<SearchResponse>("/search", {
     q: args.query,
-    search_mode: args.search_mode,
-    resource_type: args.resource_type,
-    language: args.language,
   });
 };
 
 /**
  * 专门处理页码搜索的函数。
  */
-const searchByPageRef = async (
+export const searchByPageRef = async (
   args: SearchByPageRefArgs
 ): Promise<SearchResponse> => {
   return apiClient<SearchResponse>("/search", {
@@ -86,24 +117,25 @@ const searchByPageRef = async (
 /**
  * 专门用于获取术语定义的函数。
  */
-const getTermDefinition = async (
+export const getTermDefinition = async (
   args: GetTermDefinitionArgs
 ): Promise<SearchResponse> => {
   return apiClient<SearchResponse>("/search", {
     q: args.term,
-    search_mode: "exact", // 固定为精确搜索
-    resource_type: ["dictionary"], // 仅搜索字典类型
+    resource_type: "term",
   });
 };
 
 /**
  * 专门用于巴利文精确搜索的函数。
  */
-const searchPali = async (args: SearchPaliArgs): Promise<SearchResponse> => {
+export const searchPali = async (
+  args: SearchPaliArgs
+): Promise<SearchResponse> => {
   return apiClient<SearchResponse>("/search", {
     q: args.query,
-    search_mode: "exact", // 巴利文搜索通常是精确的
-    language: ["pali"], // 仅搜索巴利文
+    resource_type: "original_text", // 仅搜索原文
+    language: "pali", // 仅搜索巴利文
   });
 };
 
@@ -138,6 +170,92 @@ export const handleFunctionCall = async (
   }
 };
 
+export const tools: FunctionDefinition[] = [
+  {
+    type: "function",
+    function: {
+      name: "search_by_query",
+      description: "通用搜索函数，支持模糊与语义查询。",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description: "用户输入的查询语句（如: 佛陀关于慈悲的教导）",
+          },
+          search_mode: {
+            type: "string",
+            enum: ["fuzzy", "semantic"],
+            description: "搜索模式: fuzzy=模糊, semantic=语义",
+          },
+        },
+        required: ["query", "search_mode"],
+        additionalProperties: false,
+      },
+    },
+    strict: true,
+  },
+  {
+    type: "function",
+    function: {
+      name: "search_by_page_ref",
+      description: "根据页码标记（如 M3.58, V3.81）搜索对应内容。",
+      parameters: {
+        type: "object",
+        properties: {
+          page_refs: {
+            type: "string",
+            description: "经文页码标记（如 M3.58）",
+          },
+        },
+        required: ["page_refs"],
+        additionalProperties: false,
+      },
+    },
+    strict: true,
+  },
+  {
+    type: "function",
+    function: {
+      name: "get_term_definition",
+      description: "获取佛教术语的精确定义，主要从字典资源。",
+      parameters: {
+        type: "object",
+        properties: {
+          term: {
+            type: "string",
+            description: "佛教术语（如: 四圣谛, 五蕴, 涅槃）",
+          },
+        },
+        required: ["term"],
+        additionalProperties: false,
+      },
+    },
+    strict: true,
+  },
+  {
+    type: "function",
+    function: {
+      name: "search_pali",
+      description:
+        "在巴利文语料中进行关键词搜索，被搜索词可以是巴利文或者其他语言。",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description:
+              "被搜索词，巴利文词汇或短语（如: mettā, anicca）或者其他语言的佛教专有名词",
+          },
+        },
+        required: ["query"],
+        additionalProperties: false,
+      },
+    },
+    strict: true,
+  },
+];
+
 // ---------------------------------------------------------------- //
 //                  使用示例                                       //
 // ---------------------------------------------------------------- //
@@ -169,4 +287,3 @@ const main = async () => {
   }
 };
  */
-// main();

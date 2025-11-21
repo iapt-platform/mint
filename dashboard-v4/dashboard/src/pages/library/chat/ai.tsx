@@ -4,7 +4,13 @@ import { ChatContainer } from "../../../components/chat/ChatContainer";
 const AI = () => {
   const { id } = useParams();
 
-  return <ChatContainer chatId={id ?? ""} />;
+  return (
+    <div>
+      <div style={{ width: 1000, marginLeft: "auto", marginRight: "auto" }}>
+        <ChatContainer chatId={id ?? ""} />
+      </div>
+    </div>
+  );
 };
 
 export default AI;

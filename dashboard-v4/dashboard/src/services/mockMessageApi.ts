@@ -5,7 +5,25 @@ import {
   ApiResponse,
   MessageNode,
 } from "../types/chat";
+import { system_prompt } from "./agentApi";
 // Mock 消息数据库
+
+// System 消息 (根节点)
+const rootMessage: MessageNode = {
+  id: 1,
+  uid: "msg-system-001",
+  chat_id: "chat-001",
+  session_id: "system-session",
+  role: "system",
+  content: system_prompt,
+  is_active: true,
+  created_at: "2025-01-15T10:00:00Z",
+  updated_at: "2025-01-15T10:00:00Z",
+};
+const teamArgs = JSON.stringify({ term: "dhamma" });
+
+const jsonString = `{"took":15,"timed_out":false,"_shards":{"total":1,"successful":1,"skipped":0,"failed":0},"hits":{"total":{"value":520,"relation":"eq"},"max_score":10.384174,"hits":[{"_index":"wikipali","_id":"pali_para_93_532","_score":10.384174,"_source":{"id":"pali_para_93_532","resource_id":"dfe69668-da34-11ec-b3cc-fb89202f7b35","resource_type":"paragraph","title":{"text":"Paragraph 532 of Book 93"},"summary":{"text":"314. Atha kho bhagavā te brāhmaṇe etadavoca..."},"content":{"display":"314. Atha kho bhagavā te brāhmaṇe etadavoca...","text":"314. Atha kho bhagavā te brāhmaṇe etadavoca...","exact":"314. Atha kho bhagavā te brāhmaṇe etadavoca..."},"bold_single":"","bold_multi":" ","related_id":99,"category":"pali","language":"pali","updated_at":"2025-09-24T16:14:18+00:00","granularity":"paragraph"}},{"_index":"wikipali","_id":"pali_para_93_531","_score":10.380177,"_source":{"id":"pali_para_93_531","resource_id":"dfe69665-da34-11ec-b3c9-3745b943adc6","resource_type":"paragraph","title":{"text":"Paragraph 531 of Book 93"},"summary":{"text":"313. Evaṃ vutte, te brāhmaṇā soṇadaṇḍaṃ brāhmaṇaṃ etadavocuṃ..."},"content":{"display":"313. Evaṃ vutte, te brāhmaṇā soṇadaṇḍaṃ brāhmaṇaṃ etadavocuṃ...","text":"313. Evaṃ vutte, te brāhmaṇā soṇadaṇḍaṃ brāhmaṇaṃ etadavocuṃ...","exact":"313. Evaṃ vutte, te brāhmaṇā soṇadaṇḍaṃ brāhmaṇaṃ etadavocuṃ..."},"bold_single":"","bold_multi":" ","related_id":99,"category":"pali","language":"pali","updated_at":"2025-09-24T16:14:18+00:00","granularity":"paragraph"}}]},"aggregations":{"granularity":{"doc_count_error_upper_bound":0,"sum_other_doc_count":0,"buckets":[{"key":"paragraph","doc_count":520}]},"resource_type":{"doc_count_error_upper_bound":0,"sum_other_doc_count":0,"buckets":[{"key":"paragraph","doc_count":520}]},"language":{"doc_count_error_upper_bound":0,"sum_other_doc_count":0,"buckets":[{"key":"pali","doc_count":520}]},"category":{"doc_count_error_upper_bound":0,"sum_other_doc_count":0,"buckets":[{"key":"pali","doc_count":520}]}}}`;
+
 let mockMessages: MessageNode[] = [
   // System 消息 (根节点)
   {
@@ -47,8 +65,12 @@ let mockMessages: MessageNode[] = [
     tool_calls: [
       {
         id: "call_dhamma_001",
-        function: "searchTerm",
-        arguments: { term: "dhamma" },
+        index: 0,
+        type: "function",
+        function: {
+          name: "searchTerm",
+          arguments: teamArgs,
+        },
       },
     ],
     is_active: true,
@@ -70,8 +92,7 @@ let mockMessages: MessageNode[] = [
     parent_id: "msg-assistant-001",
     session_id: "session-001",
     role: "tool",
-    content:
-      '{"term":"dhamma","definition":"法；教法；正义；真理","etymology":"来自梵语dharma","category":"佛教基本概念","explanation":"Dhamma是佛教中最核心的概念之一，指佛陀的教导、宇宙的法则以及存在的真理。"}',
+    content: jsonString,
     tool_call_id: "call_dhamma_001",
     is_active: true,
     created_at: "2025-01-15T10:01:35Z",
@@ -272,7 +293,9 @@ export const mockMessageApi = {
     await mockDelay();
 
     console.log(`[Mock API] Getting messages for chat: ${chatId}`);
-
+    if (!chatId || chatId.trim() === "") {
+      mockMessages = [rootMessage];
+    }
     return {
       ok: true,
       message: "Messages retrieved successfully",
@@ -316,7 +339,7 @@ export const mockMessageApi = {
         uid: uuid,
         chat_id: chatId,
         parent_id: parent_id,
-        session_id: generateUuid(), // 在实际应用中，这可能由前端或后端逻辑确定
+        session_id: msgRequest.session_id ?? generateUuid(), // 在实际应用中，这可能由前端或后端逻辑确定
         role: msgRequest.role,
         content: msgRequest.content,
         model_id: msgRequest.model_id,

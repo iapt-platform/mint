@@ -1,6 +1,7 @@
 .chat-container {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 .messages-area {
@@ -26,6 +27,15 @@
 .user-message,
 .assistant-message {
   margin-bottom: 12px;
+}
+
+.user-message {
+  display: flex;
+  justify-content: flex-end;
+}
+.user-message .message-content {
+  border: 1px solid rgba(128, 128, 128, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .message-header {

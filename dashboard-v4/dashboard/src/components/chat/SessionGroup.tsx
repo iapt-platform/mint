@@ -53,21 +53,10 @@ export function SessionGroup({
           </div>
         )}
 
-        {/* 版本切换器 */}
-        {hasMultipleVersions && !isPending && !hasFailed && (
-          <VersionSwitcher
-            versions={session.versions}
-            currentVersion={session.current_version}
-            onSwitch={(versionIndex) =>
-              onVersionSwitch(session.versions[versionIndex].message_id)
-            }
-          />
-        )}
-
         {/* AI消息内容 */}
         {!hasFailed && session.ai_messages.length > 0 && (
           <AssistantMessage
-            messages={session.ai_messages}
+            session={session}
             onRefresh={() => onRefresh && onRefresh(session.session_id)}
             onEdit={(content) => onEdit && onEdit(session.session_id, content)}
             isPending={isPending}
@@ -75,6 +64,7 @@ export function SessionGroup({
             onDislike={onDislike}
             onCopy={onCopy}
             onShare={onShare}
+            onVersionSwitch={onVersionSwitch}
           />
         )}
       </div>
