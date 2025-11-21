@@ -157,9 +157,12 @@ const NissayaCardWidget = ({
         </Title>
         <div>
           <Link to={`/nissaya/ending/${term?.word}`} target="_blank">
-            {intl.formatMessage({
-              id: "buttons.open.in.new.tab",
-            },{item:''})}
+            {intl.formatMessage(
+              {
+                id: "buttons.open.in.new.tab",
+              },
+              { item: "" }
+            )}
           </Link>
           <Button
             type="link"
@@ -170,7 +173,7 @@ const NissayaCardWidget = ({
       </div>
       <Paragraph>{term?.meaning}</Paragraph>
       <MdView html={term?.html} />
-      {cardData ? <NissayaCardTable data={cardData} /> : <></>}
+      {cardData && <NissayaCardTable data={cardData} />}
     </div>
   );
 };
