@@ -12,7 +12,7 @@ interface IWidget {
   important?: boolean;
   onClose?: Function;
 }
-const CopyToModalWidget = ({
+const CopyToModal = ({
   trigger,
   channel,
   sentencesId,
@@ -72,4 +72,4 @@ const CopyToModalWidget = ({
   );
 };
 
-export default CopyToModalWidget;
+export default CopyToModal;
