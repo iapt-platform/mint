@@ -1,11 +1,50 @@
 import { IAiModel } from "../components/api/ai";
 
 export type TOpenAIRole = "system" | "user" | "assistant" | "function" | "tool";
+
+//
+// 流输出数据
+export interface ChatCompletionChunk {
+  id: string;
+  object: "chat.completion.chunk";
+  created: number;
+  model: string;
+  service_tier: string;
+  system_fingerprint: string;
+  choices: Choice[];
+  obfuscation: string;
+}
+
+export interface Choice {
+  index: number;
+  delta: Delta;
+  logprobs: null | any;
+  finish_reason: string | null;
+}
+
+export interface Delta {
+  role?: "assistant" | "user" | "system";
+  content?: string | null;
+  tool_calls?: ToolCall[];
+  refusal?: string | null;
+}
 // 工具调用相关类型
 export interface ToolCall {
-  id: string;
-  function: string;
-  arguments: Record<string, any>;
+  index: number;
+  id?: string;
+  type: "function";
+  function: ToolFunction;
+  result?: string;
+}
+
+export interface ToolFunction {
+  name: string;
+  arguments: string;
+}
+
+export interface ParsedToolFunction<T = any> {
+  name: string;
+  arguments: T; // 解析后的对象
 }
 
 // 消息元数据
@@ -121,12 +160,14 @@ export interface ChatActions {
 }
 
 // API 请求类型
+
 export interface CreateMessageRequest {
   messages: Array<{
     uid?: string;
     parent_id?: string;
     role: TOpenAIRole;
     content?: string;
+    session_id?: string;
     model_id?: string;
     tool_calls?: ToolCall[];
     tool_call_id?: string;
@@ -161,27 +202,18 @@ export interface MessageListResponse {
 }
 
 // 模型适配器相关类型
-/*
+
 export interface ModelAdapter {
   name: string;
   supportsFunctionCall: boolean;
-  sendMessage(
-    messages: OpenAIMessage[],
-    options: SendOptions
-  ): Promise<StreamResponse>;
-  parseStreamChunk(chunk: string): ParsedChunk | null;
-  handleFunctionCall(functionCall: ToolCall): Promise<any>;
-}
-*/
-export interface ModelAdapter {
-  name: string;
-  supportsFunctionCall: boolean;
+  model: IAiModel | undefined;
   sendMessage(
     messages: OpenAIMessage[],
     options: SendOptions
   ): Promise<AsyncIterable<string>>; // 修改这里
   parseStreamChunk(chunk: string): ParsedChunk | null;
   handleFunctionCall(functionCall: ToolCall): Promise<any>;
+  setModel(model: IAiModel): void;
 }
 export interface OpenAIMessage {
   role: TOpenAIRole;
@@ -191,16 +223,53 @@ export interface OpenAIMessage {
   tool_call_id?: string;
 }
 
+// 支持的 JSON Schema 基础类型
+export type JSONSchemaPrimitiveType =
+  | "object"
+  | "array"
+  | "string"
+  | "number"
+  | "boolean"
+  | "null";
+
+// 通用 JSON Schema 定义
+export interface JSONSchema {
+  type: JSONSchemaPrimitiveType;
+  description?: string;
+
+  // object 专属
+  properties?: Record<string, JSONSchema>;
+  required?: string[];
+  additionalProperties?: boolean;
+
+  // array 专属
+  items?: JSONSchema;
+
+  // string 专属
+  enum?: string[];
+}
+
+// Function 定义接口
+export interface FunctionDefinition {
+  type: "function";
+  function: {
+    name: string;
+    description?: string;
+    parameters: JSONSchema & { type: "object" }; // 根必须是 object
+  };
+  strict?: boolean;
+}
+
 export interface SendOptions {
+  model?: string;
+  messages?: OpenAIMessage[];
+  stream?: boolean;
   temperature?: number;
   max_tokens?: number;
+  max_completion_tokens?: number; //stream模式使用
   top_p?: number;
-  functions?: Array<{
-    name: string;
-    description: string;
-    parameters: any;
-  }>;
-  function_call?: string | { name: string };
+  tools?: Array<FunctionDefinition>;
+  tool_choice?: string | "auto" | "none";
 }
 
 export interface StreamResponse {
@@ -209,12 +278,9 @@ export interface StreamResponse {
 }
 
 export interface ParsedChunk {
-  content?: string;
-  function_call?: {
-    name?: string;
-    arguments?: string;
-  };
-  finish_reason?: string;
+  content?: string | null;
+  tool_calls?: ToolCall[];
+  finish_reason?: string | null;
 }
 
 // 组件 Props 类型
@@ -239,7 +305,7 @@ export interface UserMessageProps {
 }
 
 export interface AssistantMessageProps {
-  messages: MessageNode[];
+  session: SessionInfo;
   onRefresh?: () => void;
   onEdit?: (content: string) => void;
   isPending?: boolean;
@@ -247,6 +313,7 @@ export interface AssistantMessageProps {
   onDislike?: (messageId: string) => void;
   onCopy?: (messageId: string) => void;
   onShare?: (messageId: string) => Promise<string>;
+  onVersionSwitch?: (message_id: string) => void;
 }
 
 export interface VersionSwitcherProps {
