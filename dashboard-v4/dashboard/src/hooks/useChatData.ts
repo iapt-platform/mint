@@ -7,6 +7,9 @@ import {
   PendingMessage,
   OpenAIMessage,
   TOpenAIRole,
+  ParsedChunk,
+  ToolCall,
+  CreateMessageRequest,
 } from "../types/chat";
 
 import { useActivePath } from "./useActivePath";
@@ -43,10 +46,11 @@ export function useChatData(chatId: string): {
   // 加载消息列表
   const loadMessages = useCallback(async () => {
     // 如果 chatId 为空或无效，不执行加载
+    /*
     if (!chatId || chatId.trim() === "") {
       return;
     }
-
+*/
     try {
       setIsLoading(true);
       setError(undefined); // 清除之前的错误
@@ -85,14 +89,12 @@ export function useChatData(chatId: string): {
   // 构建对话历史（用于AI API调用）
   const buildConversationHistory = useCallback(
     (baseMessages: MessageNode[], newUserMessage?: MessageNode) => {
-      const history: OpenAIMessage[] = activePath
-        .filter((m) => m.role !== "tool") // 排除tool消息
-        .map((m) => ({
-          role: m.role,
-          content: m.content || "",
-          tool_calls: m.tool_calls,
-          tool_call_id: m.tool_call_id,
-        }));
+      const history: OpenAIMessage[] = activePath.map((m) => ({
+        role: m.role,
+        content: m.content || "",
+        tool_calls: m.tool_calls,
+        tool_call_id: m.tool_call_id,
+      }));
 
       if (newUserMessage) {
         history.push({
@@ -110,18 +112,20 @@ export function useChatData(chatId: string): {
   const saveMessageGroup = useCallback(
     async (tempId: string, messages: MessageNode[]) => {
       try {
-        const savedMessages = await messageApi.createMessages(chatId, {
+        const data: CreateMessageRequest = {
           messages: messages.map((m) => ({
             uid: m.uid,
             parent_id: m.parent_id,
             role: m.role,
             content: m.content,
+            session_id: m.session_id,
             model_id: m.model_id,
             tool_calls: m.tool_calls,
             tool_call_id: m.tool_call_id,
             metadata: m.metadata,
           })),
-        });
+        };
+        const savedMessages = await messageApi.createMessages(chatId, data);
 
         // 更新本地状态：移除pending，添加到已保存消息
         setPendingMessages((prev) => prev.filter((p) => p.temp_id !== tempId));
@@ -146,7 +150,14 @@ export function useChatData(chatId: string): {
     },
     [chatId]
   );
-
+  // 一个安全 JSON 解析函数
+  function safeJsonParse(str: string): any {
+    try {
+      return JSON.parse(str);
+    } catch {
+      return str; // 返回原始字符串，避免崩溃
+    }
+  }
   // 发送消息给AI并处理响应
   const sendMessageToAI = useCallback(
     async (userMessage: MessageNode, pendingGroup: PendingMessage) => {
@@ -163,7 +174,7 @@ export function useChatData(chatId: string): {
           rawMessages,
           userMessage
         );
-        const adapter = getModelAdapter(currModel.name);
+        const adapter = getModelAdapter(currModel);
 
         // 处理Function Call的循环逻辑
         let currentMessages = conversationHistory;
@@ -173,7 +184,7 @@ export function useChatData(chatId: string): {
         while (maxIterations-- > 0) {
           // 流式处理AI响应
           let responseContent = "";
-          let functionCalls: any[] = [];
+          let functionCalls: ToolCall[] = [];
           let metadata: any = {};
 
           const streamResponse = await adapter.sendMessage(currentMessages, {
@@ -181,19 +192,64 @@ export function useChatData(chatId: string): {
             max_tokens: 2048,
           });
 
-          // 模拟流式输出处理
+          // 用于存储流式拼接的 tool_calls
+          const toolCallBuffer = new Map<number, ToolCall>();
+
+          // 流式输出处理
           await new Promise((resolve, reject) => {
             const processStream = async () => {
               try {
-                // 这里应该是实际的流处理逻辑
                 for await (const chunk of streamResponse) {
-                  const parsed = adapter.parseStreamChunk(chunk);
+                  const parsed: ParsedChunk | null =
+                    adapter.parseStreamChunk(chunk);
+
+                  // 处理内容流
                   if (parsed?.content) {
                     responseContent += parsed.content;
                     setStreamingMessage(responseContent);
                   }
-                  if (parsed?.function_call) {
-                    // 处理function call
+
+                  // 处理 tool_calls
+                  if (parsed?.tool_calls) {
+                    for (const call of parsed.tool_calls) {
+                      //console.info("ai chat call", call);
+                      const existing = toolCallBuffer.get(call.index);
+                      if (existing) {
+                        // 拼接 arguments
+                        existing.function.arguments +=
+                          call.function.arguments || "";
+                        //console.debug("ai chat 拼接 arguments", existing);
+                      } else {
+                        // 初始化新 tool_call
+                        //console.debug("ai chat 初始化新 tool_call", call);
+                        toolCallBuffer.set(call.index, {
+                          ...call,
+                          function: {
+                            ...call.function,
+                            arguments: call.function.arguments || "",
+                          },
+                        });
+                      }
+                    }
+
+                    console.info(
+                      "ai chat function call (buffer)",
+                      toolCallBuffer
+                    );
+                  }
+
+                  // 如果模型说明调用结束
+                  if (parsed?.finish_reason === "tool_calls") {
+                    // 在这里 arguments 已经拼接完整，可以解析
+                    const toolCalls: ToolCall[] = [];
+                    toolCallBuffer.forEach((value: ToolCall, key: number) => {
+                      toolCalls.push(value);
+                    });
+
+                    console.info("ai chat Final tool calls", toolCalls);
+
+                    // TODO: 在这里触发你实际的函数调用逻辑
+                    functionCalls = toolCalls;
                   }
                 }
                 resolve(undefined);
@@ -204,8 +260,8 @@ export function useChatData(chatId: string): {
             processStream();
           });
 
-          // 创建AI响应消息
-          const aiMessage: MessageNode = {
+          // 创建AI请求消息
+          const toolCallsMessage: MessageNode = {
             id: 0,
             uid: `temp_ai_${pendingGroup.temp_id}_${allAiMessages.length}`,
             temp_id: pendingGroup.temp_id,
@@ -226,32 +282,34 @@ export function useChatData(chatId: string): {
             updated_at: new Date().toISOString(),
           };
 
-          allAiMessages.push(aiMessage);
+          allAiMessages.push(toolCallsMessage);
 
           // 如果有function calls，处理它们
           if (functionCalls.length > 0) {
             const toolResults = await Promise.all(
               functionCalls.map((call) => adapter.handleFunctionCall(call))
             );
-
-            const toolMessages = functionCalls.map((call, index) => ({
-              id: 0,
-              uid: `temp_tool_${pendingGroup.temp_id}_${index}`,
-              temp_id: pendingGroup.temp_id,
-              chat_id: chatId,
-              session_id: pendingGroup.session_id,
-              parent_id: aiMessage.uid,
-              role: "tool" as const,
-              content: JSON.stringify(toolResults[index]),
-              tool_call_id: call.id,
-              is_active: true,
-              save_status: "pending" as const,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-            }));
+            //ai相应消息
+            const toolMessages: MessageNode[] = functionCalls.map(
+              (call, index) => ({
+                id: 0,
+                uid: `temp_tool_${pendingGroup.temp_id}_${index}`,
+                temp_id: pendingGroup.temp_id,
+                chat_id: chatId,
+                session_id: pendingGroup.session_id,
+                parent_id: toolCallsMessage.uid,
+                role: "tool" as const,
+                content: JSON.stringify(toolResults[index]),
+                tool_call_id: call.id,
+                is_active: true,
+                save_status: "pending" as const,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+              })
+            );
 
             allAiMessages.push(...toolMessages);
-
+            console.debug("ai chat allAiMessages", allAiMessages);
             // 更新对话历史，继续循环
             currentMessages.push(
               {
@@ -265,6 +323,7 @@ export function useChatData(chatId: string): {
                 tool_call_id: tm.tool_call_id,
               }))
             );
+            console.debug("ai chat currentMessages", currentMessages);
 
             continue;
           }
