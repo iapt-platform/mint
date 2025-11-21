@@ -1,14 +1,35 @@
+// dashboard-v4/dashboard/src/services/modelAdapters/openai.ts
+
 import { BaseModelAdapter } from "./base";
 import {
   OpenAIMessage,
   SendOptions,
   ParsedChunk,
-  ToolCall,
+  ChatCompletionChunk,
 } from "../../types/chat";
+import { IAiModel } from "../../components/api/ai";
+import { tools } from "../agentApi";
 
 export class OpenAIAdapter extends BaseModelAdapter {
+  model: IAiModel | undefined;
   name = "gpt-4";
   supportsFunctionCall = true;
+
+  protected buildRequestPayload(
+    messages: OpenAIMessage[],
+    options: SendOptions
+  ) {
+    return {
+      model: this.model?.name,
+      messages,
+      stream: true,
+      temperature: options.temperature || 0.7,
+      max_completion_tokens: options.max_tokens || 2048,
+      top_p: options.top_p || 1,
+      tools: tools,
+      tool_choice: "auto",
+    };
+  }
 
   // 修改这个方法
   async sendMessage(
@@ -20,8 +41,8 @@ export class OpenAIAdapter extends BaseModelAdapter {
     return this.createStreamIterable(payload);
   }
 
-  // 新增这个私有方法
   private async *createStreamIterable(payload: any): AsyncIterable<string> {
+    console.log("ai chat send message", payload);
     const response = await fetch(process.env.REACT_APP_OPENAI_PROXY!, {
       method: "POST",
       headers: {
@@ -29,7 +50,7 @@ export class OpenAIAdapter extends BaseModelAdapter {
         Authorization: `Bearer ${process.env.REACT_APP_OPENAI_KEY}`,
       },
       body: JSON.stringify({
-        model_id: "gpt-4",
+        model_id: this.model?.uid,
         payload,
       }),
     });
@@ -71,45 +92,17 @@ export class OpenAIAdapter extends BaseModelAdapter {
   // 其他方法保持不变
   parseStreamChunk(chunk: string): ParsedChunk | null {
     try {
-      const parsed = JSON.parse(chunk);
+      const parsed: ChatCompletionChunk = JSON.parse(chunk);
       const delta = parsed.choices?.[0]?.delta;
       const finishReason = parsed.choices?.[0]?.finish_reason;
 
       return {
         content: delta?.content,
-        function_call: delta?.function_call,
+        tool_calls: delta?.tool_calls,
         finish_reason: finishReason,
       };
     } catch {
       return null;
     }
-  }
-
-  async handleFunctionCall(functionCall: ToolCall): Promise<any> {
-    switch (functionCall.function) {
-      case "searchTerm":
-        return await this.searchTerm(functionCall.arguments.term);
-      case "getWeather":
-        return await this.getWeather(functionCall.arguments.city);
-      default:
-        throw new Error(`未知函数: ${functionCall.function}`);
-    }
-  }
-
-  private async searchTerm(term: string) {
-    const response = await fetch(
-      `/v2/search-pali-wbw?view=pali&key=${term}&limit=20&offset=0`
-    );
-    const result = await response.json();
-    return result.ok ? result.data.rows : { error: "搜索失败" };
-  }
-
-  private async getWeather(city: string) {
-    return {
-      city,
-      temperature: "25°C",
-      condition: "晴朗",
-      humidity: "60%",
-    };
   }
 }
