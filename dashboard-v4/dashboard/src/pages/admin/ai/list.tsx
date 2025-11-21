@@ -11,8 +11,10 @@ import {
 import { useAppSelector } from "../../../hooks";
 import { siteInfo } from "../../../reducers/layout";
 
+type IType = "wbw" | "chat" | "summarize";
+const selectors: IType[] = ["wbw", "chat", "summarize"];
 interface IWidget {
-  type: "wbw" | "chat";
+  type: IType;
   models?: RecordType[];
 }
 const ModelSelect = ({ type, models }: IWidget) => {
@@ -107,10 +109,14 @@ const Widget = () => {
 
   return (
     <div>
-      <Divider>WBW</Divider>
-      <ModelSelect models={models} type="wbw" />
-      <Divider>Chat</Divider>
-      <ModelSelect models={models} type="chat" />
+      {selectors.map((item, id) => {
+        return (
+          <div key={id}>
+            <Divider>{item}</Divider>
+            <ModelSelect models={models} type={item} />
+          </div>
+        );
+      })}
     </div>
   );
 };
