@@ -28,7 +28,7 @@ class OpenSearchService
             'bold_multi' => 10,
             'title.pali.text'   => 3,
             'title.zh'          => 3,
-            'summary.text'           => 2,
+            'summary.text'      => 2,
             'content.pali.text' => 1,
             'content.zh'        => 1,
         ],
