@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Services\SearchPaliDataService;
 use App\Services\OpenSearchService;
+use App\Services\SummaryService;
 use Illuminate\Support\Facades\Log;
 use App\Models\PaliText;
 
@@ -12,10 +13,10 @@ class IndexPaliText extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan opensearch:index-pali 93 --para=5
+     * php artisan opensearch:index-pali 93 --para=6
      * @var string
      */
-    protected $signature = 'opensearch:index-pali {book : The book ID to index data for} {--para= : index paragraph No. omit to all} {--granularity= : The granularity to index (paragraph, sutta, sentence; omit to index all)}';
+    protected $signature = 'opensearch:index-pali {book : The book ID to index data for} {--test} {--para= : index paragraph No. omit to all} {--summary=on} {--granularity= : The granularity to index (paragraph, sutta, sentence; omit to index all)}';
 
     /**
      * The console command description.
@@ -26,6 +27,9 @@ class IndexPaliText extends Command
 
     protected $searchPaliDataService;
     protected $openSearchService;
+    protected $summaryService;
+    private $isTest = false;
+    private $summary = 'on';
 
     /**
      * Create a new command instance.
@@ -34,11 +38,13 @@ class IndexPaliText extends Command
      */
     public function __construct(
         SearchPaliDataService $searchPaliDataService,
-        OpenSearchService $openSearchService
+        OpenSearchService $openSearchService,
+        SummaryService $summaryService
     ) {
         parent::__construct();
         $this->searchPaliDataService = $searchPaliDataService;
         $this->openSearchService = $openSearchService;
+        $this->summaryService = $summaryService;
     }
 
     /**
@@ -51,6 +57,13 @@ class IndexPaliText extends Command
         $book = $this->argument('book');
         $granularity = $this->option('granularity');
         $paragraph = $this->option('para');
+        $this->summary = $this->option('summary');
+
+        if ($this->option('test')) {
+            $this->isTest = true;
+            $this->info('test mode');
+        }
+
 
         try {
             // Test OpenSearch connection
@@ -101,7 +114,7 @@ class IndexPaliText extends Command
                 'pali' => $title,
             ],
             'summary' => [
-                'text' => ''
+                'text' => $this->summary === 'on' ? $this->summaryService->summarize($paraContent['markdown']) : ''
             ],
             'content' => [
                 'pali' => $paraContent['markdown'],
@@ -119,7 +132,13 @@ class IndexPaliText extends Command
         if ($paraInfo['level'] < 8) {
             $document['title']['suggest'] = $paraContent['words'];
         }
-        return $this->openSearchService->create($document['id'], $document);
+        if ($this->isTest) {
+            $this->info($document['title']['pali']);
+            $this->info($document['summary']['text']);
+        } else {
+            $this->openSearchService->create($document['id'], $document);
+        }
+        return;
     }
 
     /**
@@ -145,7 +164,7 @@ class IndexPaliText extends Command
                 'pali' => "{$currChapter} paragraph {$paraInfo['paragraph']}"
             ],
             'summary' => [
-                'text' => ''
+                'text' => $this->summary ? $this->summaryService->summarize($content['markdown']) : ''
             ],
             'content' => [
                 'pali' => implode("\n\n", $markdown),
@@ -159,7 +178,13 @@ class IndexPaliText extends Command
             'granularity' => 'session',
             'path' => $this->getPathTitle(json_decode($paraInfo['path'])),
         ];
-        return $this->openSearchService->create($document['id'], $document);
+        if ($this->isTest) {
+            $this->info($document['title']['pali']);
+            $this->info($document['summary']['text']);
+        } else {
+            $this->openSearchService->create($document['id'], $document);
+        }
+        return;
     }
 
     private function getPathTitle(array $input)
@@ -216,7 +241,7 @@ class IndexPaliText extends Command
             }
             $this->indexPaliParagraph($para->toArray(), $paraContent, $commentaryId);
             $this->info("{$para['book']}-[{$para['paragraph']}]-[{$commentaryId}]");
-            //usleep(200 * 1000);
+            usleep(100);
         }
 
         $this->info("Successfully indexed $total paragraphs for book: $book");
