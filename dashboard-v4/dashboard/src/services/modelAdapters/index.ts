@@ -1,3 +1,4 @@
+import { IAiModel } from "../../components/api/ai";
 import { ModelAdapter } from "../../types/chat";
 import { MockOpenAIAdapter } from "./mockOpenAI";
 import { OpenAIAdapter } from "./openai";
@@ -5,15 +6,17 @@ import { OpenAIAdapter } from "./openai";
 const adapters = new Map<string, ModelAdapter>();
 
 // 注册适配器
-adapters.set("gpt-4", new OpenAIAdapter());
-adapters.set("gpt-3.5-turbo", new OpenAIAdapter());
+adapters.set("gpt-4.1", new OpenAIAdapter());
+adapters.set("gpt-4.1-mini", new OpenAIAdapter());
 adapters.set("deepseek-v3", new MockOpenAIAdapter());
 
-export function getModelAdapter(modelId: string): ModelAdapter {
-  const adapter = adapters.get(modelId);
+export function getModelAdapter(model: IAiModel): ModelAdapter {
+  const adapter = adapters.get(model.name);
+
   if (!adapter) {
-    throw new Error(`未找到模型适配器: ${modelId}`);
+    throw new Error(`未找到模型适配器: ${model.name}`);
   }
+  adapter.setModel(model);
   return adapter;
 }
 
