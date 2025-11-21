@@ -1,5 +1,4 @@
 import express from "express";
-import OpenAI from "openai";
 import cors from "cors";
 
 import logger from "./logger";
@@ -113,7 +112,14 @@ app.post("/api/openai", async (req, res) => {
 
         // 设置响应状态码（直接使用大模型返回的状态码）
         res.status(response.status);
-        logger.info(response.status);
+
+        if (response.status !== 200) {
+          logger.error(response.status);
+          logger.error(JSON.stringify(response.body));
+        } else {
+          logger.info(response.status);
+        }
+
         if (!response.ok) {
           // 对于错误响应，也要透传原始数据
           const reader = response.body.getReader();
