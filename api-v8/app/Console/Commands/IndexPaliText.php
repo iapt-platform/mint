@@ -16,7 +16,12 @@ class IndexPaliText extends Command
      * php artisan opensearch:index-pali 93 --para=6
      * @var string
      */
-    protected $signature = 'opensearch:index-pali {book : The book ID to index data for} {--test} {--para= : index paragraph No. omit to all} {--summary=on} {--granularity= : The granularity to index (paragraph, sutta, sentence; omit to index all)}';
+    protected $signature = 'opensearch:index-pali {book : The book ID to index data for}
+    {--test}
+    {--para= : index paragraph No. omit to all}
+    {--summary=on}
+    {--resume}
+    {--granularity= : The granularity to index (paragraph, sutta, sentence; omit to index all)}';
 
     /**
      * The console command description.
@@ -29,7 +34,7 @@ class IndexPaliText extends Command
     protected $openSearchService;
     protected $summaryService;
     private $isTest = false;
-    private $summary = 'on';
+    private $summary = false;
 
     /**
      * Create a new command instance.
@@ -54,10 +59,10 @@ class IndexPaliText extends Command
      */
     public function handle()
     {
-        $book = $this->argument('book');
+        $book = (int)$this->argument('book');
         $granularity = $this->option('granularity');
         $paragraph = $this->option('para');
-        $this->summary = $this->option('summary');
+        $this->summary = $this->option('summary') === 'on';
 
         if ($this->option('test')) {
             $this->isTest = true;
@@ -74,10 +79,11 @@ class IndexPaliText extends Command
                 return 1;
             }
             $overallStatus = 0; // Track overall command status (0 for success, 1 for any failure)
-
-            if ((int)$book === 0) {
-                $maxBookId = PaliText::max('book');
+            $maxBookId = PaliText::max('book');
+            if ($book === 0) {
                 $booksId = range(1, $maxBookId);
+            } else if ($this->option('resume')) {
+                $booksId = range($book, $maxBookId);
             } else {
                 $booksId = [$book];
             }
@@ -114,7 +120,7 @@ class IndexPaliText extends Command
                 'pali' => $title,
             ],
             'summary' => [
-                'text' => $this->summary === 'on' ? $this->summaryService->summarize($paraContent['markdown']) : ''
+                'text' => $this->summary  ? $this->summaryService->summarize($paraContent['markdown']) : ''
             ],
             'content' => [
                 'pali' => $paraContent['markdown'],
@@ -241,7 +247,7 @@ class IndexPaliText extends Command
             }
             $this->indexPaliParagraph($para->toArray(), $paraContent, $commentaryId);
             $this->info("{$para['book']}-[{$para['paragraph']}]-[{$commentaryId}]");
-            usleep(100);
+            usleep(10000);
         }
 
         $this->info("Successfully indexed $total paragraphs for book: $book");
