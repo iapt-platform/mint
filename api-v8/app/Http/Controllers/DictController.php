@@ -55,7 +55,8 @@ class DictController extends Controller
             $inMyHanGroup = true;
         }
         $resultCount = 0;
-        for ($i = 0; $i < 2; $i++) {
+        $MAX_LOOP = 2;
+        for ($i = 0; $i < $MAX_LOOP; $i++) {
             # code...
             $word_base = [];
             $wordDataOutput = [];
@@ -105,7 +106,7 @@ class DictController extends Controller
                 }
                 $dictList = [
                     'href' => '#' . $anchor,
-                    'title' => "{$word}",
+                    'title' => $word,
                     'children' => [],
                 ];
                 foreach ($result as $key => $value) {
@@ -160,8 +161,11 @@ class DictController extends Controller
                     }
                 }
 
-                $wordDataOutput[] = $wordData;
-                $dictListOutput[] = $dictList;
+                if ($i < $MAX_LOOP - 1 || count($wordData['dict']) > 0) {
+                    $wordDataOutput[] = $wordData;
+                    $dictListOutput[] = $dictList;
+                }
+
 
                 //TODO 加变格查询
                 $case = new CaseMan();
@@ -174,6 +178,9 @@ class DictController extends Controller
                 }
             }
 
+            usort($wordDataOutput, function ($a, $b) {
+                return count($b['dict']) - count($a['dict']);
+            });
             $wordDataPass[] = ['pass' => $i + 1, 'words' => $wordDataOutput];
 
             if (count($word_base) === 0) {
