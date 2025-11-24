@@ -1,5 +1,4 @@
 import express from "express";
-import OpenAI from "openai";
 import cors from "cors";
 
 import logger from "./logger";
@@ -18,6 +17,7 @@ app.post("/api/openai", async (req, res) => {
 
     let requestUrl = open_ai_url;
     let apiKey = api_key;
+    let aiBody = payload;
     // 验证必需的参数
     if (!model_id) {
       if (!open_ai_url || !api_key || !payload) {
@@ -42,6 +42,7 @@ app.post("/api/openai", async (req, res) => {
         if (model.ok) {
           requestUrl = model.data.url;
           apiKey = model.data.key;
+          aiBody.model = model.data.model;
         } else {
           return res.status(400).json({
             error:
@@ -65,7 +66,7 @@ app.post("/api/openai", async (req, res) => {
     const isClaudeAPI =
       requestUrl.includes("anthropic.com") || requestUrl.includes("claude");
 
-    const isStreaming = payload.stream === true;
+    const isStreaming = aiBody.stream === true;
 
     // 构建请求URL和headers
 
@@ -92,7 +93,7 @@ app.post("/api/openai", async (req, res) => {
         const response = await fetch(requestUrl, {
           method: "POST",
           headers: headers,
-          body: JSON.stringify(payload),
+          body: JSON.stringify(aiBody),
         });
 
         // 复制响应头到客户端
@@ -111,6 +112,13 @@ app.post("/api/openai", async (req, res) => {
 
         // 设置响应状态码（直接使用大模型返回的状态码）
         res.status(response.status);
+
+        if (response.status !== 200) {
+          logger.error(response.status);
+          logger.error(JSON.stringify(response.body));
+        } else {
+          logger.info(response.status);
+        }
 
         if (!response.ok) {
           // 对于错误响应，也要透传原始数据
@@ -158,7 +166,7 @@ app.post("/api/openai", async (req, res) => {
       const response = await fetch(requestUrl, {
         method: "POST",
         headers: headers,
-        body: JSON.stringify(payload),
+        body: JSON.stringify(aiBody),
       });
 
       // 复制响应头到客户端

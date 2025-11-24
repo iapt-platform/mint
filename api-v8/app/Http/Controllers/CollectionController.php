@@ -201,7 +201,8 @@ class CollectionController extends Controller
     {
         $result  = Collection::where('uid', $id)->first();
         if (!$result) {
-            return $this->warning("没有查询到数据 id={$id}");
+            Log::warning("没有查询到数据 id={$id}");
+            return $this->error("没有查询到数据 id={$id}");
         }
         if ($result->status < 30) {
             //私有文章，判断权限

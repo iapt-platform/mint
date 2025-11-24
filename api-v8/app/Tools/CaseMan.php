@@ -259,14 +259,25 @@ class CaseMan
                             if (!isset($newBase[$base])) {
                                 $newBase[$base] = array();
                             }
-                            array_push($newBase[$base], [
+                            $info = [
                                 'word' => $currWord,
                                 'type' => $ending[2],
                                 'grammar' => $ending[3],
                                 'parent' => $base,
                                 'factors' => "{$base}+[{$ending[1]}]",
                                 'confidence' => $ending[4],
-                            ]);
+                            ];
+                            array_push($newBase[$base], $info);
+                            if ($ending[2] === '.n.') {
+                                $info['type'] = '.ti.';
+                                array_push($newBase[$base], $info);
+                                $info['type'] = '.adj.';
+                                array_push($newBase[$base], $info);
+                            }
+                            if ($ending[2] === '.ti.') {
+                                $info['type'] = '.adj.';
+                                array_push($newBase[$base], $info);
+                            }
                         }
                     }
                 }
@@ -284,9 +295,7 @@ class CaseMan
             foreach ($newBase as $base => $rows) {
                 # code...
                 if (($verify = $this->VerifyBase($base, $rows)) !== false) {
-                    if (count($verify) > 0) {
-                        $output[$base] = $verify;
-                    }
+                    $output[$base] = $verify;
                 }
             }
             if (count($output) == 0) {
@@ -317,14 +326,21 @@ class CaseMan
     {
         #
         $output = array();
-        $dictWords = UserDict::where('word', $base)->select(['type', 'grammar'])->groupBy(['type', 'grammar'])->get();
+        $dictWords = UserDict::where('word', $base)
+            ->select(['type', 'grammar'])
+            ->groupBy(['type', 'grammar'])
+            ->get();
         if (count($dictWords) > 0) {
             $newBase[$base] = 1;
             $case = array();
             //字典中这个拼写的单词的语法信息
             foreach ($dictWords as $value) {
-                # code...
-                $case["{$value->type}{$value->grammar}"] = 1;
+                if ($value->type === '.n.') {
+                    $arrGrammar = explode('$', $value->grammar);
+                    $case[$value->type . $arrGrammar[0]] = 1;
+                } else {
+                    $case[$value->type] = 1;
+                }
             }
             foreach ($rows as $value) {
                 //根据输入的猜测的type,grammar拼接合理的 parent 语法信息
@@ -342,7 +358,7 @@ class CaseMan
                         $parentType = '';
                         break;
                 }
-                if (!empty($value['grammar']) && $value['type'] !== ".v.") {
+                if (!empty($value['grammar']) && $value['type'] === ".n.") {
                     $arrGrammar = explode('$', $value['grammar']);
                     $parentType .=  $arrGrammar[0];
                 }

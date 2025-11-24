@@ -1,4 +1,4 @@
-import { Button, Dropdown, message, Progress, Space, Tree } from "antd";
+import { Alert, Button, Dropdown, message, Progress, Space, Tree } from "antd";
 import { useEffect, useState } from "react";
 import { MoreOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 
@@ -31,6 +31,8 @@ import moment from "moment";
 import { courseInfo } from "../../reducers/current-course";
 import { ISentenceWbwListResponse } from "../api/Corpus";
 import { IDeleteResponse } from "../api/Article";
+import { useWbwStreamProcessor } from "./AIWbw";
+import { siteInfo } from "../../reducers/layout";
 
 export const getWbwProgress = (data: IWbw[], answer?: IWbw[]) => {
   //计算完成度
@@ -277,12 +279,20 @@ export const WbwSentCtl = ({
   const [showProgress, setShowProgress] = useState(false);
   const [check, setCheck] = useState(answer ? true : false);
   const [courseAnswer, setCourseAnswer] = useState<IWbw[]>();
+  const { processStream, isProcessing, wbwData, error } =
+    useWbwStreamProcessor();
 
   const user = useAppSelector(currentUser);
   const course = useAppSelector(courseInfo);
 
+  const site = useAppSelector(siteInfo);
+  const wbwModel = site?.settings?.models?.wbw
+    ? site?.settings?.models?.wbw[0] ?? null
+    : null;
+
   console.debug("wbw sent lang", channelLang);
 
+  console.debug("wbw sent wordData", wordData);
   const loadAnswer = () => {
     if (courseAnswer) {
       return;
@@ -312,6 +322,56 @@ export const WbwSentCtl = ({
     }
   };
 
+  useEffect(() => {
+    setWordData((origin) => {
+      const newData = origin.map((item) => {
+        let newItem = item;
+        const aiWbw = wbwData.find(
+          (v) =>
+            v.sn.join() === item.sn.join() || v.real.value === item.real.value
+        );
+        if (aiWbw) {
+          if (newItem.meaning && aiWbw.meaning) {
+            newItem.meaning.value = aiWbw.meaning.value;
+          }
+          if (newItem.factors && aiWbw.factors) {
+            newItem.factors.value = aiWbw.factors.value;
+          }
+          if (newItem.factorMeaning && aiWbw.factorMeaning) {
+            newItem.factorMeaning.value = aiWbw.factorMeaning.value;
+          }
+          if (newItem.parent && aiWbw.parent) {
+            if (aiWbw.parent.value && aiWbw.parent.value !== "") {
+              newItem.parent.value = aiWbw.parent.value;
+            }
+          }
+          if (newItem.type && aiWbw.type && aiWbw.type.value) {
+            newItem.type.value = aiWbw.type.value.replaceAll(" ", "");
+            if (newItem.grammar && aiWbw.grammar && aiWbw.grammar.value) {
+              newItem.grammar.value = aiWbw.grammar.value.replaceAll(" ", "");
+              console.debug(
+                "ai wbw origin case",
+                newItem.real.value,
+                newItem.case?.value
+              );
+              if (newItem.case?.value === "") {
+                newItem.case.value = `${aiWbw.type.value}#${aiWbw.grammar.value}`;
+                console.debug(
+                  "ai wbw new case",
+                  newItem.real.value,
+                  newItem.case.value
+                );
+              }
+            }
+          }
+          console.debug("ai wbw replace", newItem.real.value, newItem);
+        }
+        return newItem;
+      });
+      return newData;
+    });
+  }, [wbwData]);
+
   useEffect(() => setShowProgress(wbwProgress), [wbwProgress]);
 
   const settings = useAppSelector(settingInfo);
@@ -324,9 +384,25 @@ export const WbwSentCtl = ({
 
   const newMode = useAppSelector(_mode);
 
-  const update = (data: IWbw[]) => {
-    console.debug("wbw update");
-    setWordData(paraMark(data));
+  const update = (data: IWbw[], replace: boolean = true) => {
+    if (replace) {
+      setWordData(paraMark(data));
+    } else {
+      setWordData((origin) => {
+        origin.forEach((value, index, array) => {
+          const newOne = data.find(
+            (v) =>
+              v.sn.join() === value.sn.join() ||
+              v.real.value === value.real.value
+          );
+          if (newOne) {
+            array[index] = newOne;
+          }
+        });
+        return origin;
+      });
+    }
+
     if (typeof onChange !== "undefined") {
       onChange(data);
     }
@@ -808,11 +884,23 @@ export const WbwSentCtl = ({
         <div className="progress" style={{ width: 400 }}>
           <Progress percent={progress} size="small" />
         </div>
+
         <Space>
           <Studio data={studio} hideAvatar />
           {<TimeShow updatedAt={updatedAt.toString()} />}
         </Space>
       </div>
+      {error ? <Alert message={error} /> : <></>}
+      {isProcessing ? (
+        <div>
+          <Progress
+            percent={Math.round((wbwData.length * 100) / wordData.length)}
+            size="small"
+          />
+        </div>
+      ) : (
+        <></>
+      )}
       <div className={`layout-${layoutDirection}`}>
         <Dropdown
           menu={{
@@ -822,6 +910,11 @@ export const WbwSentCtl = ({
                 label: intl.formatMessage({
                   id: "buttons.magic-dict",
                 }),
+              },
+              {
+                key: "ai-magic-dict-current",
+                label: "ai-magic-dict",
+                disabled: !wbwModel,
               },
               {
                 key: "progress",
@@ -869,6 +962,9 @@ export const WbwSentCtl = ({
                 case "magic-dict-current":
                   setLoading(true);
                   magicDictLookup();
+                  break;
+                case "ai-magic-dict-current":
+                  wbwModel && processStream(wbwModel.uid, wordData);
                   break;
                 case "wbw-dict-publish-all":
                   wbwPublish(
@@ -932,6 +1028,13 @@ export const WbwSentCtl = ({
         </Dropdown>
         {layoutDirection === "h" ? (
           wordData
+            .map((item) => {
+              const newData = wbwData.find(
+                (value) => value.sn.join() === item.sn.join()
+              );
+
+              return newData ?? item;
+            })
             .map((item, index) => {
               let newItem = item;
               const spell = item.real.value;

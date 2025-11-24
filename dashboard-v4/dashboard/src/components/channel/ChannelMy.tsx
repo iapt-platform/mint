@@ -10,6 +10,7 @@ import {
   Select,
   Skeleton,
   Space,
+  Tag,
   Tooltip,
   Tree,
 } from "antd";
@@ -37,6 +38,7 @@ import CopyToModal from "./CopyToModal";
 import { ArticleType } from "../article/Article";
 import { ChannelInfoModal } from "./ChannelInfo";
 import TokenModal from "../article/TokenModal";
+import NissayaAlignerModal from "../corpus/NissayaAlignerModal";
 
 const { Search } = Input;
 
@@ -89,6 +91,7 @@ const ChannelMy = ({
   const [search, setSearch] = useState<string>();
   const [loading, setLoading] = useState(true);
   const [copyChannel, setCopyChannel] = useState<IChannel>();
+  const [nissayaOpen, setNissayaOpen] = useState(false);
   const [copyOpen, setCopyOpen] = useState<boolean>(false);
   const [infoOpen, setInfoOpen] = useState<boolean>(false);
   const [statistic, setStatistic] = useState<IItem>();
@@ -450,7 +453,12 @@ const ChannelMy = ({
                       <Button type="link">
                         <Space>
                           <StudioName data={node.channel.studio} hideName />
-                          {node.channel.title}
+                          <>{node.channel.title}</>
+                          <Tag>
+                            {intl.formatMessage({
+                              id: `channel.type.${node.channel.type}.label`,
+                            })}
+                          </Tag>
                         </Space>
                       </Button>
                     </div>
@@ -468,6 +476,13 @@ const ChannelMy = ({
                               key: "copy-to",
                               label: intl.formatMessage({
                                 id: "buttons.copy.to",
+                              }),
+                              icon: <CopyOutlined />,
+                            },
+                            {
+                              key: "import-nissaya",
+                              label: intl.formatMessage({
+                                id: "buttons.import",
                               }),
                               icon: <CopyOutlined />,
                             },
@@ -495,6 +510,14 @@ const ChannelMy = ({
                                   type: node.channel.type,
                                 });
                                 setCopyOpen(true);
+                                break;
+                              case "import-nissaya":
+                                setCopyChannel({
+                                  id: node.channel.uid,
+                                  name: node.channel.title,
+                                  type: node.channel.type,
+                                });
+                                setNissayaOpen(true);
                                 break;
                               case "statistic":
                                 setInfoOpen(true);
@@ -534,6 +557,12 @@ const ChannelMy = ({
         channel={copyChannel}
         open={copyOpen}
         onClose={() => setCopyOpen(false)}
+      />
+      <NissayaAlignerModal
+        sentencesId={sentencesId}
+        channel={copyChannel}
+        open={nissayaOpen}
+        onClose={() => setNissayaOpen(false)}
       />
       <ChannelInfoModal
         sentenceCount={sentenceCount}

@@ -16,6 +16,36 @@ export const getPaliBase = (word: string): string[] => {
   output.sort((a, b) => a.length - b.length);
   return output;
 };
+export const paliEndingType = ["n", "ti", "v", "ind", "pron", "num", "adj"];
+export const paliEndingGrammar = [
+  "nom",
+  "acc",
+  "gen",
+  "dat",
+  "inst",
+  "abl",
+  "loc",
+  "voc",
+  "sg",
+  "pl",
+  "m",
+  "nt",
+  "f",
+  "1p",
+  "2p",
+  "3p",
+  "pres",
+  "aor",
+  "fut",
+  "pf",
+  "imp",
+  "cond",
+  "adv",
+  "conj",
+  "abs",
+  "ger",
+  "inf",
+];
 export const paliEnding = [
   {
     end1: "a",

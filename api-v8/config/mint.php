@@ -108,6 +108,7 @@ return [
     ],
 
     'ai' => [
+        'proxy' => env('OPENAI_PROXY', 'http://127.0.0.1:4000'),
         'assistant' => 'test161',
         'default' => 'kimi',
         'logo' => [
@@ -146,5 +147,17 @@ return [
                 'max_length' => 10000,
             ],
         ],
+    ],
+    'opensearch' => [
+        'index' => 'wikipali',
+        'config' => [
+            'scheme' => env('OPENSEARCH_SCHEME', 'http'),
+            'host' => env('OPENSEARCH_HOST', '127.0.0.1'),
+            'port' => env('OPENSEARCH_PORT', 9200),
+            'username' => env('OPENSEARCH_USERNAME', ''),
+            'password' => env('OPENSEARCH_PASSWORD', ''),
+            'ssl_verification' => env('OPENSEARCH_SSL_VERIFICATION', false),
+        ],
+
     ],
 ];

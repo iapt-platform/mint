@@ -117,6 +117,11 @@ use App\Http\Controllers\ModelLogController;
 use App\Http\Controllers\SentenceAttachmentController;
 use App\Http\Controllers\EmailCertificationController;
 use App\Http\Controllers\MockOpenAIController;
+use App\Http\Controllers\SysModelController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ChatMessageController;
+use App\Http\Controllers\SearchPlusController;
+use App\Http\Controllers\SearchSuggestController;
 
 
 
@@ -211,7 +216,6 @@ Route::group(['prefix' => 'v2'], function () {
     Route::apiResource('user-statistic', UserStatisticController::class);
     Route::apiResource('sent-sim', SentSimController::class);
     Route::apiResource('nissaya-ending', NissayaEndingController::class);
-    Route::get('nissaya-ending-card', [NissayaEndingController::class, "nissaya_card"]);
     Route::get('nissaya-ending-export', [NissayaEndingController::class, "export"]);
     Route::get('nissaya-ending-import', [NissayaEndingController::class, "import"]);
     Route::get('nissaya-ending-vocabulary', [NissayaEndingController::class, "vocabulary"]);
@@ -291,8 +295,19 @@ Route::group(['prefix' => 'v2'], function () {
     Route::apiResource('sentence-attachment', SentenceAttachmentController::class);
     Route::apiResource('email-certification', EmailCertificationController::class);
     Route::apiResource('sentence-info', SentenceInfoController::class);
+    Route::apiResource('system-model', SysModelController::class);
+    Route::apiResource('chats', ChatController::class);
+    Route::apiResource('chat-messages', ChatMessageController::class);
 
     Route::post('mock/openai/chat/completions', [MockOpenAIController::class, 'chatCompletions']);
     Route::post('mock/openai/completions', [MockOpenAIController::class, 'completions']);
     Route::get('mock/openai/models', [MockOpenAIController::class, 'models']);
+
+    Route::apiResource('chat-messages', ChatMessageController::class);
+});
+
+
+Route::group(['prefix' => 'v3'], function () {
+    Route::apiResource('search', SearchPlusController::class);
+    Route::apiResource('search-suggest', SearchSuggestController::class);
 });

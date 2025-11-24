@@ -6,6 +6,7 @@ use App\Services\AiTranslateService;
 use App\Services\RabbitMQService;
 use Illuminate\Support\Facades\Log;
 use App\Exceptions\TaskFailException;
+use App\Tools\RedisClusters;
 
 class ProcessAITranslateJob extends BaseRabbitMQJob
 {
@@ -43,12 +44,13 @@ class ProcessAITranslateJob extends BaseRabbitMQJob
         $this->aiService->stop();
     }
 
-    public static function publish(string $taskId, $aiAssistantId)
+    public static function publish(string $taskId, $aiAssistantId): string
     {
         $data = AiTranslateService::makeByTask($taskId, $aiAssistantId);
         $mq = app(RabbitMQService::class);
         $queue = 'ai_translate_v2';
-        $mq->publishMessage($queue, $data);
-        return count($data['payload']);
+        $msgId = $mq->publishMessage($queue, []);
+        RedisClusters::put("/mq/message/{$msgId}/data", $data);
+        return $msgId;
     }
 }

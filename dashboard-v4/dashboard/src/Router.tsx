@@ -38,6 +38,9 @@ import AdminUsersShow from "./pages/admin/users/show";
 import AdminInvite from "./pages/admin/invite";
 import AdminInviteList from "./pages/admin/invite/list";
 
+import AdminAI from "./pages/admin/ai";
+import AdminAIList from "./pages/admin/ai/list";
+
 import LibraryHome from "./pages/library";
 
 import LibraryCommunity from "./pages/library/community";
@@ -88,6 +91,10 @@ import LibraryDownloadPage from "./pages/library/download/Download";
 
 import LibraryNotifications from "./pages/library/notifications";
 import LibraryNotificationsList from "./pages/library/notifications/list";
+
+import LibraryChat from "./pages/library/chat";
+import LibraryChatAI from "./pages/library/chat/ai";
+import LibraryChatNew from "./pages/library/chat/new";
 
 import Studio from "./pages/studio";
 import StudioHome from "./pages/studio/home";
@@ -188,6 +195,9 @@ const Widget = () => {
           </Route>
           <Route path="invite" element={<AdminInvite />}>
             <Route path="list" element={<AdminInviteList />} />
+          </Route>
+          <Route path="ai" element={<AdminAI />}>
+            <Route path="list" element={<AdminAIList />} />
           </Route>
         </Route>
 
@@ -301,6 +311,10 @@ const Widget = () => {
         <Route path="search" element={<LibrarySearch />}>
           <Route path="home" element={<LibrarySearchKey />} />
           <Route path="key/:key" element={<LibrarySearchKey />} />
+        </Route>
+        <Route path="chat" element={<LibraryChat />}>
+          <Route path="new" element={<LibraryChatNew />} />
+          <Route path="c/:id" element={<LibraryChatAI />} />
         </Route>
 
         <Route path="download" element={<LibraryDownload />}>

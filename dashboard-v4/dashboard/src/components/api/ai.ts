@@ -98,3 +98,8 @@ export interface IAiModelLogListResponse {
   message: string;
   data: { rows: IAiModelLogData[]; total: number };
 }
+
+export interface IAiModelSystem {
+  view: string;
+  models: string[];
+}

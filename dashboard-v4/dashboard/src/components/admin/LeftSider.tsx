@@ -40,6 +40,10 @@ const LeftSiderWidget = ({ selectedKeys = "" }: IWidgetHeadBar) => {
           key: "nissaya-ending",
         },
         {
+          label: <Link to="/admin/ai/list">AI</Link>,
+          key: "ai",
+        },
+        {
           label: "Dictionary",
           key: "dict",
           children: [

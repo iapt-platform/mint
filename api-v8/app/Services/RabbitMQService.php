@@ -143,7 +143,7 @@ class RabbitMQService
             */
     }
 
-    public function publishMessage(string $queueName, array $data): bool
+    public function publishMessage(string $queueName, array $data): string
     {
         try {
             $this->setupQueue($queueName);
@@ -161,7 +161,7 @@ class RabbitMQService
             $this->channel->basic_publish($message, '', $queueName);
 
             Log::info("Message published to queue: {$queueName} msg id={$msgId}");
-            return true;
+            return $msgId;
         } catch (\Exception $e) {
             Log::error("Failed to publish message to queue: {$queueName}", [
                 'error' => $e->getMessage(),
