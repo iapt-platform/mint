@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Services\SearchPaliDataService;
 use App\Services\OpenSearchService;
 use App\Services\SummaryService;
+use App\Services\TagService;
 use Illuminate\Support\Facades\Log;
 use App\Models\PaliText;
 
@@ -33,6 +34,7 @@ class IndexPaliText extends Command
     protected $searchPaliDataService;
     protected $openSearchService;
     protected $summaryService;
+    protected $tagService;
     private $isTest = false;
     private $summary = false;
 
@@ -44,12 +46,14 @@ class IndexPaliText extends Command
     public function __construct(
         SearchPaliDataService $searchPaliDataService,
         OpenSearchService $openSearchService,
-        SummaryService $summaryService
+        SummaryService $summaryService,
+        TagService $tagService
     ) {
         parent::__construct();
         $this->searchPaliDataService = $searchPaliDataService;
         $this->openSearchService = $openSearchService;
         $this->summaryService = $summaryService;
+        $this->tagService = $tagService;
     }
 
     /**
@@ -102,7 +106,7 @@ class IndexPaliText extends Command
     /**
      *
      */
-    protected function indexPaliParagraph($paraInfo, $paraContent, $related_id)
+    protected function indexPaliParagraph($paraInfo, $paraContent, $related_id, array $category)
     {
         $paraId = $paraInfo['book'] . '_' . $paraInfo['paragraph'];
         $resource_id = $paraInfo['uid'];
@@ -129,7 +133,7 @@ class IndexPaliText extends Command
             'bold_single' => implode(' ', $paraContent['bold1']),
             'bold_multi' => implode(' ', array_merge($paraContent['bold2'], $paraContent['bold3'])),
             'related_id' => $related_id,
-            'category' => 'pali', // Assuming Pali paragraphs are sutta; adjust as needed
+            'category' => $category, // Assuming Pali paragraphs are sutta; adjust as needed
             'language' => 'pali',
             'updated_at' => now()->toIso8601String(),
             'granularity' => 'paragraph',
@@ -207,7 +211,7 @@ class IndexPaliText extends Command
      * @param int $book
      * @return int
      */
-    protected function indexPaliParagraphs($book, $paragraph)
+    protected function indexPaliParagraphs($book, $paragraph = null)
     {
         $this->info("Starting to index paragraphs for book: $book");
         $total = 0;
@@ -219,7 +223,8 @@ class IndexPaliText extends Command
             $paragraphs = PaliText::where('book', $book)
                 ->orderBy('paragraph')->cursor();
         }
-
+        $bookUid = PaliText::where('book', $book)->where('level', 1)->first()->uid;
+        $category = $this->tagService->getTagsName($bookUid);
         $headings = [];
         $currChapterTitle = '';
         $commentaryId = '';
@@ -245,7 +250,7 @@ class IndexPaliText extends Command
                 }
                 $commentaryId = $paraContent['commentary'];
             }
-            $this->indexPaliParagraph($para->toArray(), $paraContent, $commentaryId);
+            $this->indexPaliParagraph($para->toArray(), $paraContent, $commentaryId, $category);
             $this->info("{$para['book']}-[{$para['paragraph']}]-[{$commentaryId}]");
             usleep(10000);
         }
