@@ -95,3 +95,17 @@
   .ant-tabs-tab-active {
   background: rgba(128, 128, 128, 0.9) !important;
 }
+.pcd_sent_commentary {
+  border: 2px dotted darkred;
+  border-radius: 8px;
+  padding: 4px;
+  margin: 6px;
+  background-color: #f5deb357;
+}
+
+.pcd_sent_commentary .pcd_sent_commentary {
+  background-color: #44c76167;
+}
+.pcd_sent_commentary .pcd_sent_commentary .pcd_sent_commentary {
+  display: none;
+}
