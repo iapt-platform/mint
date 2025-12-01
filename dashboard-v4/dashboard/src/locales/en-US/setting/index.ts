@@ -39,6 +39,7 @@ const items = {
   "term.first.show.meaning_pali": "Meaning & Pali",
   "term.first.show.meaning_others": "Meaning & Others Meaning",
   "term.first.show.meaning": "Meaning Only",
+  "setting.layout.commentary.label": "Commentary Layout",
 };
 
 export default items;

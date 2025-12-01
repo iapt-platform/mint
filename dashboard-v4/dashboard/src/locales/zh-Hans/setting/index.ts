@@ -39,6 +39,7 @@ const items = {
   "term.first.show.meaning_pali": "意思巴利",
   "term.first.show.meaning_others": "意思其他解释",
   "term.first.show.meaning": "仅意思",
+  "setting.layout.commentary.label": "注释排版方向",
 };
 
 export default items;
