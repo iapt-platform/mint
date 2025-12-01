@@ -19,6 +19,7 @@ import SentCell from "./SentEdit/SentCell";
 import { settingInfo } from "../../reducers/setting";
 import { GetUserSetting } from "../auth/setting/default";
 import { SENTENCE_FIX_WIDTH } from "../../types/article";
+import { useSetting } from "../../hooks/useSetting";
 
 export interface IResNumber {
   translation?: number;
@@ -142,6 +143,8 @@ export const SentEditInner = ({
   const [affix, setAffix] = useState<boolean>(false);
   const settings = useAppSelector(settingInfo);
   const [commentaryLayout, setCommentaryLayout] = useState("column");
+  const rootFixed = useSetting("setting.layout.root.fixed");
+
   useEffect(() => {
     const layoutCommentary = GetUserSetting(
       "setting.layout.commentary",
@@ -239,7 +242,7 @@ export const SentEditInner = ({
       }}
     >
       <div>
-        {affix ? (
+        {affix || rootFixed === true ? (
           <Affix offsetTop={44}>
             <div className="affix">{content}</div>
           </Affix>

@@ -19,6 +19,7 @@ const SettingArticleWidget = () => {
       <SettingItem data={SettingFind("setting.display.original", settings)} />
       <SettingItem data={SettingFind("setting.layout.direction", settings)} />
       <SettingItem data={SettingFind("setting.layout.commentary", settings)} />
+      <SettingItem data={SettingFind("setting.layout.root.fixed", settings)} />
       <SettingItem data={SettingFind("setting.layout.paragraph", settings)} />
       <SettingItem
         data={SettingFind("setting.pali.script.primary", settings)}

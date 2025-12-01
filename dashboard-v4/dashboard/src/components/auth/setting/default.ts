@@ -278,4 +278,12 @@ export const defaultSetting: ISetting[] = [
     label: "setting.wbw.order.label",
     defaultValue: false,
   },
+  {
+    /**
+     * 是否显示逐词解析输入顺序提示
+     */
+    key: "setting.layout.root.fixed",
+    label: "setting.layout.root.fixed.label",
+    defaultValue: false,
+  },
 ];

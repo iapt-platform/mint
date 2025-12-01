@@ -40,6 +40,7 @@ const items = {
   "term.first.show.meaning_others": "意思其他解释",
   "term.first.show.meaning": "仅意思",
   "setting.layout.commentary.label": "注释排版方向",
+  "setting.layout.root.fixed.label": "根节点固定显示",
 };
 
 export default items;

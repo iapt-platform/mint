@@ -40,6 +40,7 @@ const items = {
   "term.first.show.meaning_others": "Meaning & Others Meaning",
   "term.first.show.meaning": "Meaning Only",
   "setting.layout.commentary.label": "Commentary Layout",
+  "setting.layout.root.fixed.label": "Root Text Fixed",
 };
 
 export default items;
