@@ -77,6 +77,26 @@ export const defaultSetting: ISetting[] = [
   },
   {
     /**
+     * commentary排版方向
+     */
+    key: "setting.layout.commentary",
+    label: "setting.layout.commentary.label",
+    description: "setting.layout.direction.description",
+    defaultValue: "column",
+    options: [
+      {
+        value: "column",
+        label: "setting.layout.direction.col.label",
+      },
+      {
+        value: "row",
+        label: "setting.layout.direction.row.label",
+      },
+    ],
+    widget: "radio-button",
+  },
+  {
+    /**
      * 段落或者逐句对读
      */
     key: "setting.layout.paragraph",
