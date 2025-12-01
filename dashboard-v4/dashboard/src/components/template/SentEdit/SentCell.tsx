@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import { Divider, message as AntdMessage, Modal, Collapse } from "antd";
+import { message as AntdMessage, Modal, Collapse } from "antd";
 import { ExclamationCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 
 import { ISentence } from "../SentEdit";
@@ -496,7 +496,6 @@ const SentCellWidget = ({
           <SentAttachment sentenceId={sentData?.id} />
         </Collapse.Panel>
       </Collapse>
-      {compact ? undefined : <Divider style={{ margin: "10px 0" }} />}
     </div>
   );
 };

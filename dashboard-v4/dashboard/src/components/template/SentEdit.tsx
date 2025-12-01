@@ -15,6 +15,11 @@ import { useAppSelector } from "../../hooks";
 import { currFocus } from "../../reducers/focus";
 import { ISentenceData } from "../api/Corpus";
 import "./SentEdit/style.css";
+import SentCell from "./SentEdit/SentCell";
+import { settingInfo } from "../../reducers/setting";
+import { GetUserSetting } from "../auth/setting/default";
+import { SENTENCE_FIX_WIDTH } from "../../types/article";
+import { useSetting } from "../../hooks/useSetting";
 
 export interface IResNumber {
   translation?: number;
@@ -84,6 +89,7 @@ export interface IWidgetSentEditInner {
   channels?: string[];
   origin?: ISentence[];
   translation?: ISentence[];
+  commentaries?: ISentence[];
   answer?: ISentence;
   path?: ITocPathNode[];
   layout?: "row" | "column";
@@ -98,6 +104,7 @@ export interface IWidgetSentEditInner {
   readonly?: boolean;
   wbwProgress?: number;
   wbwScore?: number;
+
   onTranslationChange?: (data: ISentence) => void;
 }
 export const SentEditInner = ({
@@ -121,6 +128,7 @@ export const SentEditInner = ({
   mode,
   showWbwProgress = false,
   readonly = false,
+  commentaries,
   onTranslationChange,
 }: IWidgetSentEditInner) => {
   const [wbwData, setWbwData] = useState<IWbw[]>();
@@ -133,6 +141,20 @@ export const SentEditInner = ({
   const focus = useAppSelector(currFocus);
   const divRef = useRef<HTMLDivElement>(null);
   const [affix, setAffix] = useState<boolean>(false);
+  const settings = useAppSelector(settingInfo);
+  const [commentaryLayout, setCommentaryLayout] = useState("column");
+  const rootFixed = useSetting("setting.layout.root.fixed");
+
+  useEffect(() => {
+    const layoutCommentary = GetUserSetting(
+      "setting.layout.commentary",
+      settings
+    );
+
+    layoutCommentary &&
+      typeof layoutCommentary === "string" &&
+      setCommentaryLayout(layoutCommentary);
+  }, [settings]);
 
   useEffect(() => {
     if (focus) {
@@ -214,41 +236,67 @@ export const SentEditInner = ({
     <div
       ref={divRef}
       className={`sent-edit-inner` + (isFocus ? " sent-focus" : "")}
+      style={{
+        display: commentaryLayout === "column" ? "block" : "flex",
+        width: commentaryLayout === "column" ? "100%" : SENTENCE_FIX_WIDTH,
+      }}
     >
-      {affix ? (
-        <Affix offsetTop={44}>
-          <div className="affix">{content}</div>
-        </Affix>
-      ) : (
-        content
-      )}
-      <SentTab
-        id={id}
-        book={book}
-        para={para}
-        wordStart={wordStart}
-        wordEnd={wordEnd}
-        channelsId={channelsId}
-        path={path}
-        tranNum={tranNum}
-        nissayaNum={nissayaNum}
-        commNum={commNum}
-        originNum={originNum}
-        simNum={simNum}
-        loadedRes={loadedRes}
-        wbwData={wbwData}
-        origin={origin}
-        magicDictLoading={magicDictLoading}
-        compact={isCompact}
-        mode={articleMode}
-        onMagicDict={(type: string) => {
-          setMagicDict(type);
-          setMagicDictLoading(true);
-        }}
-        onCompact={(value: boolean) => setIsCompact(value)}
-        onModeChange={(value: ArticleMode | undefined) => setArticleMode(value)}
-        onAffix={() => setAffix(!affix)}
-      />
+      <div>
+        {affix || rootFixed === true ? (
+          <Affix offsetTop={44}>
+            <div className="affix">{content}</div>
+          </Affix>
+        ) : (
+          content
+        )}
+        <div
+          style={{
+            width: commentaryLayout === "column" ? "unset" : SENTENCE_FIX_WIDTH,
+          }}
+        >
+          <SentTab
+            id={id}
+            book={book}
+            para={para}
+            wordStart={wordStart}
+            wordEnd={wordEnd}
+            channelsId={channelsId}
+            path={path}
+            tranNum={tranNum}
+            nissayaNum={nissayaNum}
+            commNum={commNum}
+            originNum={originNum}
+            simNum={simNum}
+            loadedRes={loadedRes}
+            wbwData={wbwData}
+            origin={origin}
+            magicDictLoading={magicDictLoading}
+            compact={isCompact}
+            mode={articleMode}
+            onMagicDict={(type: string) => {
+              setMagicDict(type);
+              setMagicDictLoading(true);
+            }}
+            onCompact={(value: boolean) => setIsCompact(value)}
+            onModeChange={(value: ArticleMode | undefined) =>
+              setArticleMode(value)
+            }
+            onAffix={() => setAffix(!affix)}
+          />
+        </div>
+      </div>
+      <div className="pcd_sent_commentary">
+        {commentaries?.map((item, id) => {
+          return (
+            <SentCell
+              value={item}
+              key={id}
+              isPr={false}
+              editMode={item.openInEditMode}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };

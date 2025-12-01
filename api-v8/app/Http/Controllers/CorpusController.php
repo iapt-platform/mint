@@ -112,9 +112,10 @@ class CorpusController extends Controller
     {
         //
     }
-    public function getSentTpl($id, $channels, $mode = 'edit', $onlyProps = false, $format = 'react')
+    public function getSentTpl($id, $inputChannels, $mode = 'edit', $onlyProps = false, $format = 'react')
     {
         $sent = [];
+        $channels = $inputChannels;
         $sentId = \explode('-', $id);
         if (count($sentId) !== 4) {
             return false;
@@ -122,17 +123,17 @@ class CorpusController extends Controller
         $bookId = (int)$sentId[0];
         if ($bookId < 1000) {
             if ($mode === 'read') {
-                $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+                $originalChannelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
             } else {
-                $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+                $originalChannelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
             }
         } else {
-            $channelId = CustomBook::where('book_id', $bookId)->value('channel_id');
+            $originalChannelId = CustomBook::where('book_id', $bookId)->value('channel_id');
         }
 
 
-        if (isset($channelId) && $channelId) {
-            array_push($channels, $channelId);
+        if (isset($originalChannelId) && $originalChannelId) {
+            array_push($channels, $originalChannelId);
         }
         $record = Sentence::select($this->selectCol)
             ->where('book_id', $sentId[0])
@@ -585,6 +586,7 @@ class CorpusController extends Controller
         $sent = [];
         $sent["origin"] = [];
         $sent["translation"] = [];
+        $sent["commentaries"] = [];
 
         //获取句子编号列表
         $sentList = [];
@@ -594,13 +596,10 @@ class CorpusController extends Controller
             $value->sid = "{$currSentId}_{$value->channel_uid}";
         }
         $channelsId = array();
-        $count = 0;
         foreach ($indexChannel as $channelId => $info) {
-            if ($count > 0) {
-                $channelsId[] = $channelId;
-            }
-            $count++;
+            $channelsId[] = $channelId;
         }
+        array_pop($channelsId);
         //遍历列表查找每个句子的所有channel的数据，并填充
         $currPara = "";
         foreach ($sentList as $currSentId => $arrSentId) {
@@ -761,6 +760,17 @@ class CorpusController extends Controller
                                 }
                             );
                             break;
+                        case 'commentary':
+                            $options = [
+                                'debug' => $this->debug,
+                                'format' => $format,
+                                'mode' => $mode,
+                                'channelType' => 'translation',
+                                'contentType' => $row->content_type,
+                            ];
+                            $mdRender = new MdRender($options);
+                            $newSent['html'] = $mdRender->convert($row->content, $channelsId);
+                            break;
                         default:
                             $options = [
                                 'debug' => $this->debug,
@@ -779,6 +789,9 @@ class CorpusController extends Controller
                     case 'wbw':
                     case 'original':
                         array_push($sent["origin"], $newSent);
+                        break;
+                    case 'commentary':
+                        array_push($sent["commentaries"], $newSent);
                         break;
                     default:
                         array_push($sent["translation"], $newSent);
@@ -977,6 +990,7 @@ class CorpusController extends Controller
             "wordEnd" => $word_end,
             "origin" => [],
             "translation" => [],
+            "commentaries" => [],
         ];
 
         if ($book < 1000) {
