@@ -4,15 +4,15 @@ import { useAppSelector } from "../hooks";
 import { settingInfo } from "../reducers/setting";
 
 export function useSetting(key: string) {
-  const [commentaryLayout, setCommentaryLayout] = useState("column");
+  const [commentaryLayout, setCommentaryLayout] = useState<
+    string | number | boolean | string[] | undefined
+  >();
   const settings = useAppSelector(settingInfo);
 
   useEffect(() => {
     const layoutCommentary = GetUserSetting(key, settings);
 
-    layoutCommentary &&
-      typeof layoutCommentary === "string" &&
-      setCommentaryLayout(layoutCommentary);
+    setCommentaryLayout(layoutCommentary);
   }, [key, settings]);
 
   return commentaryLayout;
