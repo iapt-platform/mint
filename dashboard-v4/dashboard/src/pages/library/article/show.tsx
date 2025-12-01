@@ -58,6 +58,7 @@ import PrPull from "../../../components/corpus/PrPull";
 import NotificationIcon from "../../../components/notification/NotificationIcon";
 import SentCart from "../../../components/template/SentEdit/SentCart";
 import { useIntl } from "react-intl";
+import { useSetting } from "../../../hooks/useSetting";
 
 export const scrollToTop = () => {
   document.getElementById("article-root")?.scrollIntoView();
@@ -92,6 +93,8 @@ const Widget = () => {
   const intl = useIntl();
 
   const paraChange = useAppSelector(paraParam);
+
+  const cLayout = useSetting("setting.layout.commentary");
 
   useEffect(() => {
     if (typeof paraChange === "undefined") {
@@ -358,7 +361,10 @@ const Widget = () => {
         </Affix>
         <div
           key="main"
-          style={{ width: `calc(100% - ${rightBarWidth})`, display: "flex" }}
+          style={{
+            width: `calc(100% - ${rightBarWidth})`,
+            display: "flex",
+          }}
         >
           <div
             className="article_shell"
@@ -366,7 +372,7 @@ const Widget = () => {
             style={{
               marginLeft: "auto",
               marginRight: "auto",
-              width: 1100,
+              width: cLayout === "column" ? 1200 : "100%",
               maxWidth: currMode === "read" ? 750 : "unset",
             }}
           >
