@@ -38,7 +38,7 @@
 }
 .sent_tabs {
   padding: 0 8px;
-  background-color: rgba(128, 128, 128, 0.1);
+  background-color: rgba(92, 164, 247, 0.1);
 }
 
 .sent_tabs.compact {
@@ -65,10 +65,11 @@
   background: #c6c5c5 !important;
 }
 .sent_tabs .ant-tabs-tab-active {
-  background: rgba(128, 128, 128, 0.1) !important;
+  background: rgba(92, 164, 247, 0.1) !important;
 }
 
 /** 2 级 组件 */
+/*
 .sent-edit-inner .sent-edit-inner .sent_tabs {
   background-color: rgba(128, 128, 128, 0.9);
 }
@@ -79,8 +80,9 @@
 .sent-edit-inner .sent-edit-inner .sent_tabs .ant-tabs-tab-active {
   background: rgba(128, 128, 128, 0.1) !important;
 }
-
+*/
 /** 3 级 组件 */
+/*
 .sent-edit-inner .sent-edit-inner .sent-edit-inner .sent_tabs {
   background-color: rgb(200, 200, 200);
 }
@@ -95,6 +97,7 @@
   .ant-tabs-tab-active {
   background: rgba(128, 128, 128, 0.9) !important;
 }
+  */
 .pcd_sent_commentary {
   border: 2px dotted darkred;
   border-radius: 8px;
