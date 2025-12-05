@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Http\Client\ConnectionException;
 
-class ChatGPTService
+class OpenAIService
 {
     protected int $retries = 3;
     protected int $delayMs = 2000;
@@ -126,58 +126,3 @@ class ChatGPTService
         ];
     }
 }
-
-/**
- namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\RequestException;
-
-class ChatGPTController extends Controller
-{
-    public function ask(Request $request)
-    {
-        $question = $request->input('question', 'Hello, who are you?');
-
-        try {
-            $response = Http::withToken(env('OPENAI_API_KEY'))
-                ->timeout(10) // 请求超时时间（秒）
-                ->retry(3, 2000, function ($exception, $request) {
-                    // 仅当是连接/响应超时才重试
-                    return $exception instanceof ConnectionException;
-                })
-                ->post('https://api.openai.com/v1/chat/completions', [
-                    'model' => 'gpt-4-1106-preview',
-                    'messages' => [
-                        ['role' => 'system', 'content' => '你是一个有帮助的助手。'],
-                        ['role' => 'user', 'content' => $question],
-                    ],
-                    'temperature' => 0.7,
-                ]);
-
-            $data = $response->json();
-
-            return response()->json([
-                'reply' => $data['choices'][0]['message']['content'] ?? '没有返回内容。',
-            ]);
-
-        } catch (ConnectionException $e) {
-            // 所有重试都失败
-            Log::error('请求超时：' . $e->getMessage());
-            return response()->json(['error' => '请求超时，请稍后再试。'], 504);
-        } catch (RequestException $e) {
-            // 非超时类的请求异常（如 400/500）
-            Log::error('请求失败：' . $e->getMessage());
-            return response()->json(['error' => '请求失败：' . $e->getMessage()], 500);
-        } catch (\Exception $e) {
-            // 其他异常
-            Log::error('未知错误：' . $e->getMessage());
-            return response()->json(['error' => '发生未知错误。'], 500);
-        }
-    }
-}
-
- */
