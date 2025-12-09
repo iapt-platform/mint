@@ -59,7 +59,26 @@ class OpenAIService
         return $this;
     }
 
-    public function ask(string $question): string|array
+    public function setStream(bool $stream): static
+    {
+        $this->stream = $stream;
+
+        // 流式时需要无限超时
+        if ($stream) {
+            $this->timeout = 0;
+        }
+
+        return $this;
+    }
+    public function setMaxToken(int $maxTokens): static
+    {
+        $this->maxTokens = $maxTokens;
+        return $this;
+    }
+    /**
+     * 发送 GPT 请求（支持流式与非流式）
+     */
+    public function send(string $question): string|array
     {
         for ($attempt = 1; $attempt <= $this->retries; $attempt++) {
             try {
