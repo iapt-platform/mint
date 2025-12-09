@@ -124,6 +124,16 @@ class ChannelApi
         }
     }
 
+    public static function getChannelByName($name)
+    {
+        $channel = Channel::where('name', $name)
+            ->first();
+        if (!$channel) {
+            throw new \Exception('channel is invalid');
+        }
+        return $channel;
+    }
+
     /**
      * 获取某个studio 的某个语言的自定义书的channel
      * 如果没有，建立
