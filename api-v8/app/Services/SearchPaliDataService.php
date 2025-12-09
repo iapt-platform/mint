@@ -173,7 +173,7 @@ class SearchPaliDataService
      * @param int $para
      * @return array $sentence
      */
-    private function getSentenceText($book, $para, $start, $end)
+    public function getSentenceText($book, $para, $start, $end)
     {
         $words = WbwTemplate::where('book', $book)
             ->where('paragraph', $para)
@@ -200,7 +200,7 @@ class SearchPaliDataService
                 $markdown .= $word->word . ' ';
             }
         }
-        $markdown = str_replace([' ti', ' ,', ' .', ' ?'], ['ti', ',', '.', '?'], $markdown);
+        $markdown = str_replace([' ti', ' ,', ' .', ' ?', '‘ ‘ ', ' ’ ’'], ['ti', ',', '.', '?', '‘‘', '’’'], $markdown);
         $markdown = str_replace(['~~  ~~', '** **'], [' ', ' '], $markdown);
         $text = implode(' ', $arrText);
         $text = str_replace([' ti', ' ,', ' .', ' ?'], ['ti', ',', '.', '?'], $text);
