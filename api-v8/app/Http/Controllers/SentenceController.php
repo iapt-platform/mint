@@ -329,7 +329,7 @@ class SentenceController extends Controller
                     $sent['book_id'],
                     isset($sent['access_token']) ? $sent['access_token'] : null
                 )) {
-                    $destChannel = Channel::where('uid', $sent['channel_uid'])->first();;
+                    $destChannel = Channel::where('uid', $sent['channel_uid'])->first();
                 } else {
                     continue;
                 }
