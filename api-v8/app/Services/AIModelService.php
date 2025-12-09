@@ -15,6 +15,12 @@ class AIModelService
         $result = $table->get();
         return AiModelResource::collection(resource: $result);
     }
+    public function getModelById($id)
+    {
+        $result = AiModel::where('uid', $id)
+            ->first();
+        return new AiModelResource(resource: $result);
+    }
 
     public function getSysModels($type = null)
     {
