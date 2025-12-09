@@ -92,6 +92,11 @@ class InitSystemChannel extends Command
             'type' => 'translation',
             'lang' => 'zh-Hans',
         ],
+        [
+            "name" => '_System_commentary_',
+            'type' => 'commentary',
+            'lang' => 'en',
+        ],
     ];
 
     /**
