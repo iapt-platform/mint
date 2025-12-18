@@ -49,22 +49,10 @@ class UpgradeSystemCommentary extends Command
 4. 请不要遗漏任何commentary中的句子，也不要打乱顺序
 5. 同时保持pali的句子数量不变，不要增删
 6. 应该将全部commentary中的句子都与pali句子对应，不要有遗漏
-7. 对照排版时，请保持原来的字体设置：原来是黑体就是黑体，原来不是黑体就不是黑体。尤其是pali巴利原文，请不要改变字体
 
 **输出范例**
-[
-    {
-        "id": "165-6-112-136",
-        "content": "Yepi te, bho gotama, ahesuṃ atītamaddhānaṃ arahanto sammāsambuddhā tepi bhagavanto etaparamaṃyeva sammā bhikkhusaṅghaṃ paṭipādesuṃ – seyyathāpi etarahi bhotā gotamena sammā bhikkhusaṅgho paṭipādito.",
-        "commentary": [
-            "131-9-35-63",
-            "131-9-64-72",
-            "131-9-73-82",
-            "131-9-83-95",
-            "131-9-96-130"
-        ]
-    }
-]
+{"id":0,"commentary":[0,1]}
+{"id":1,"commentary":[2]}
 md;
     /**
      * The console command description.
@@ -82,8 +70,11 @@ md;
      *
      * @return void
      */
-    public function __construct(AIModelService $model, SentenceService $sent, OpenAIService $openAI)
-    {
+    public function __construct(
+        AIModelService $model,
+        SentenceService $sent,
+        OpenAIService $openAI
+    ) {
         $this->modelService = $model;
         $this->sentenceService = $sent;
         $this->openAIService = $openAI;
