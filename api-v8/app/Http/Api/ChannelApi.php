@@ -21,6 +21,7 @@ class ChannelApi
                 'type' => $channel['type'],
                 'lang' => $channel['lang'],
                 'studio_id' => $channel['owner_uid'],
+                'status' => $channel['status'],
             ];
         } else {
             return false;
