@@ -92,6 +92,12 @@ class InitSystemChannel extends Command
             'type' => 'translation',
             'lang' => 'zh-Hans',
         ],
+        [
+            "name" => '_System_commentary_',
+            'type' => 'commentary',
+            'lang' => 'en',
+            'status' => 30,
+        ],
     ];
 
     /**
@@ -131,6 +137,9 @@ class InitSystemChannel extends Command
             $channel->create_time = time() * 1000;
             $channel->modify_time = time() * 1000;
             $channel->is_system = true;
+            if (isset($value['status'])) {
+                $channel->status = $value['status'];
+            }
             $channel->save();
             $this->info("created" . $value['name']);
         }

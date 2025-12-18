@@ -93,7 +93,12 @@ class CategoryController extends Controller
             $chaptersParam[] = [$chapter->book, $chapter->paragraph];
         }
         // 获取该分类下的章节
-        $books = ProgressChapter::with('channel.owner')->whereIns(['book', 'para'], $chaptersParam)
+        $books = ProgressChapter::with('channel.owner')
+            ->leftJoin('pali_texts', function ($join) {
+                $join->on('progress_chapters.book', '=', 'pali_texts.book')
+                    ->on('progress_chapters.para', '=', 'pali_texts.paragraph');
+            })
+            ->whereIns(['progress_chapters.book', 'progress_chapters.para'], $chaptersParam)
             ->whereHas('channel', function ($query) {
                 $query->where('status', 30);
             })
@@ -115,7 +120,7 @@ class CategoryController extends Controller
                 "publisher" => $book->channel->owner,
                 "type" => __('labels.' . $book->channel->type),
                 "category_id" => $id,
-                "cover" => "/assets/images/cover/1/214.jpg",
+                "cover" => "/assets/images/cover/zh-hans/1/{$book->pcd_book_id}.png",
                 "description" => $book->summary ?? "比库戒律的详细说明",
                 "language" => __('language.' . $book->channel->lang),
             ];

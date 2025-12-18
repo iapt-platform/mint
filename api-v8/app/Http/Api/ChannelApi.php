@@ -21,6 +21,7 @@ class ChannelApi
                 'type' => $channel['type'],
                 'lang' => $channel['lang'],
                 'studio_id' => $channel['owner_uid'],
+                'status' => $channel['status'],
             ];
         } else {
             return false;
@@ -122,6 +123,16 @@ class ChannelApi
         } else {
             return $channel->uid;
         }
+    }
+
+    public static function getChannelByName($name)
+    {
+        $channel = Channel::where('name', $name)
+            ->first();
+        if (!$channel) {
+            throw new \Exception('channel is invalid');
+        }
+        return $channel;
     }
 
     /**
