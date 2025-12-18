@@ -225,7 +225,7 @@ const ChannelMy = ({
       .then((res) => {
         console.debug("progress data api response", res);
         const items: IItem[] = res.data.rows
-          .filter((value) => value.name.substring(0, 4) !== "_Sys")
+          .filter((value) => value.name.substring(0, 4) !== "_sys")
           .map((item, id) => {
             const date = new Date(item.created_at);
             let all: number = 0;
