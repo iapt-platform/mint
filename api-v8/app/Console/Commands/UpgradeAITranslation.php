@@ -163,16 +163,80 @@ class UpgradeAITranslation extends Command
             ->setTemperature(0.0)
             ->setStream(false)
             ->send("# pali\n\n{$originalText}\n\n");
-        $completeAt = time();
+        $complete = time() - $startAt;
         $translationText = $response['choices'][0]['message']['content'] ?? '[]';
-        Log::debug($translationText);
+        Log::debug("complete in {$complete}s", $translationText);
         $json = [];
         if (is_string($translationText)) {
             $json = LlmResponseParser::jsonl($translationText);
         }
         return $json;
     }
-    private function aiWBW($book, $para) {}
+    private function aiWBW($book, $para)
+    {
+        $sysPrompt = <<<md
+        你是一个佛教翻译专家，精通巴利文和缅文，精通巴利文逐词解析
+        ## 翻译要求：
+        - 请将用户提供的巴利句子单词表中的每个巴利文单词翻译为中文
+        - 这些单词是一个完整的句子，请根据单词的上下文翻译
+        - original 里面的数据是巴利文单词
+        - 输入格式为 json 数组
+        - 输出jsonl格式
+
+        在原来的数据中添加下列输出字段
+        1. meaning:单词的中文意思，如果有两个可能的意思，两个意思之间用/符号分隔
+        2. factors:单词的拆分 字符串数组
+        3. factorMeaning:每个拆分组分的中文意思 字符串数组
+        4. parent:单词的词典原型(词干)
+        5. confidence:你认为你给出的这个单词的信息的信心指数（准确程度） 数值1-100 如果觉得非常有把握100, 如果觉得把握不大，适当降低信心指数
+        6. note:如果你认为信心指数很低，这个是疑难单词，请在note字段写明原因，如果不是疑难单词，请不要填写note
+
+
+        **范例**：
+
+        {"id":1,"original":"bhikkhusanghassa","meaning":"比库僧团[的]","factors":["bhikkhu","sangha","ssa"],"factorMeaning":["比库","僧团","属格"],"parent":"bhikkhusangha","confidence":100}
+
+        直接输出jsonl, 无需其他内容
+        md;
+        $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+        $sentences = Sentence::where('channel_uid', $channelId)
+            ->where('book_id', $book)
+            ->where('paragraph', $para)
+            ->get();
+        $result = [];
+        foreach ($sentences as $key => $sentence) {
+            $wbw = json_decode($sentence->content);
+            $tpl = [];
+            foreach ($wbw as $key => $word) {
+                if (!empty($word['real'])) {
+                    $tpl[] = [
+                        'id' => $word['sn'],
+                        'original' => $word['real'],
+                    ];
+                }
+            }
+
+            $tplText = json_encode($tpl, JSON_UNESCAPED_UNICODE);
+            Log::debug($tplText);
+            $startAt = time();
+            $response = $this->openAIService->setApiUrl($this->model['url'])
+                ->setModel($this->model['model'])
+                ->setApiKey($this->model['key'])
+                ->setSystemPrompt($sysPrompt)
+                ->setTemperature(0.7)
+                ->setStream(false)
+                ->send("```json\n{$tplText}\n```");
+            $complete = time() - $startAt;
+            $content = $response['choices'][0]['message']['content'] ?? '';
+            Log::debug("ai response in {$complete}s content=" . $content);
+            $id = "{$sentence->book_id}-{$sentence->paragraph}-{$sentence->word_start}-{$sentence->word_end}";
+            $result[] = [
+                'id' => $id,
+                'content' => $content,
+            ];
+        }
+        return $result;
+    }
     private function aiNissayaTranslate($book, $para)
     {
         $sysPrompt = <<<md
