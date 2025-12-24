@@ -1,9 +1,9 @@
 FROM ubuntu:latest
 LABEL maintainer="Jeremy Zheng"
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND="noninteractive"
 # https://launchpad.net/~ondrej/+archive/ubuntu/php
-ARG PHP_VERSION=8.4
+ARG PHP_VERSION=8.5
 
 RUN apt update
 RUN apt -y install lsb-release apt-utils \
@@ -42,7 +42,7 @@ RUN wget -q -O $HOME/downloads/composer https://getcomposer.org/installer
 RUN cd $HOME/downloads && php${PHP_VERSION} composer && cp composer.phar /usr/local/bin/composer
 
 # https://github.com/nvm-sh/nvm
-ENV NVM_VERSION "v0.40.3"
+ENV NVM_VERSION="v0.40.3"
 RUN git clone -b ${NVM_VERSION} https://github.com/nvm-sh/nvm.git $HOME/.nvm
 RUN echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.bashrc
 RUN echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $HOME/.bashrc
@@ -51,6 +51,8 @@ RUN bash -i -c "nvm install --lts"
 RUN bash -i -c "npm install -g yarn"
 
 RUN echo "$(date -u +%4Y%m%d%H%M%S)" | tee /VERSION
+
+EXPOSE 9000/tcp 8080/tcp
 
 VOLUME /srv
 WORKDIR /srv
