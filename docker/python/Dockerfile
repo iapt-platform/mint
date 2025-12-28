@@ -22,9 +22,9 @@ RUN apt -y install git vim locales locales-all tzdata build-essential \
     fonts-tibetan-machine fonts-ddc-uchen fonts-monlam fonts-sambhota-tsugring fonts-sambhota-yigchung \
     imagemagick ffmpeg graphviz pandoc texlive-full \
     python${PYTHON_VERSION}-full python${PYTHON_VERSION}-dev \
-    libssl-dev libpq-dev libmysqlclient-dev
-RUN apt -y autoremove
-RUN apt -y clean
+    libssl-dev libpq-dev libmysqlclient-dev \
+    && apt -y autoremove \
+    && apt -y clean
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 RUN locale-gen
