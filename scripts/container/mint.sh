@@ -20,8 +20,11 @@ if [[ "$#" -eq 1 && "$1" == "diagnose" ]]; then
     echo "NodeJs: $(node -v)"
     echo "npm: $(npm -v)"
     composer diagnose
+elif [[ "$#" -eq 2 && "$1" == "fcgi" ]]; then
+    echo "start FastCGI server listening on 0.0.0.0:$2"
+    php-fpm -F -R
 else
-    echo "unsupported args, USAGE: $0 diagnose|api-v8 PORT|api-v12 PORT"
+    echo "unsupported args, USAGE: $0 diagnose|fcgi PORT"
     exit 1
 fi
 
