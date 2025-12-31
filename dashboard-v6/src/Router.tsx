@@ -7,6 +7,7 @@ const UsersPersonal = lazy(() => import("./pages/users/personal"));
 const DashboardIndex = lazy(() => import("./pages/dashboard/index"));
 const Home = lazy(() => import("./pages/home"));
 
+const RootLayout = lazy(() => import("./layouts/Root"));
 const AnonymousLayout = lazy(() => import("./layouts/anonymous"));
 const DashboardLayout = lazy(() => import("./layouts/dashboard"));
 
@@ -14,6 +15,7 @@ const router = createBrowserRouter(
   [
     {
       path: "/",
+      Component: RootLayout,
       children: [
         { index: true, Component: Home },
         {
