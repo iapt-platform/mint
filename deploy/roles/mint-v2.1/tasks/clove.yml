@@ -1,4 +1,4 @@
-- name: Clone source codes
+- name: Clone clove source codes
   ansible.builtin.git:
     repo: "https://github.com/iapt-platform/clove.git"
     dest: "{{ app_deploy_target | dirname }}/clove"
@@ -8,7 +8,7 @@
 #     path: "{{ app_deploy_target }}/api-v8/storage/resources"
 #     state: absent
 
-- name: Setup resources for v8
+- name: Setup clove resources for v8
   become: true
   ansible.builtin.file:
     src: "{{ app_deploy_target | dirname }}/clove"
@@ -21,7 +21,7 @@
 #     path: "{{ app_deploy_target }}/api-v12/storage/resources"
 #     state: absent
 
-- name: Setup resources for v12
+- name: Setup clove resources for v12
   become: true
   ansible.builtin.file:
     src: "{{ app_deploy_target | dirname }}/clove"

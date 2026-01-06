@@ -1,0 +1,30 @@
+# https://minikube.sigs.k8s.io/docs/start/
+- name: Install minikube
+  become: true
+  ansible.builtin.get_url:
+    url: https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
+    dest: /usr/local/bin/minikube
+    mode: "0755"
+  when: ansible_architecture == "x86_64"
+
+- name: Install minikube
+  become: true
+  ansible.builtin.get_url:
+    url: https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-arm64
+    dest: /usr/local/bin/minikube
+    mode: "0755"
+  when: ansible_architecture == "aarch64"
+
+# https://minikube.sigs.k8s.io/docs/handbook/kubectl/
+- name: Install Kubectl
+  become: true
+  ansible.builtin.file:
+    src: /usr/local/bin/minikube
+    dest: /usr/local/bin/kubectl
+    state: link
+
+# alias kubectl="minikube kubectl --"
+
+- name: Setup Kubectl
+  ansible.builtin.shell:
+    cmd: kubectl help

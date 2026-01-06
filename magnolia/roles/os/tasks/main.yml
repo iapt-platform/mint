@@ -1,0 +1,47 @@
+- include_tasks: init.yml
+- include_tasks: sshd.yml
+- include_tasks: ulimits.yml
+
+- name: Update system
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Kylin'
+
+- name: Update all packages to their latest version
+  become: true
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Kylin'
+
+- name: Install dependicy packages
+  become: true
+  ansible.builtin.apt:
+    pkg:
+      - pwgen
+      - zsh
+      - git
+      - tmux
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Kylin'
+
+- name: Set timezone
+  become: true
+  ansible.builtin.shell: timedatectl set-timezone UTC
+
+- name: Setup journald storage
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: "^#Storage="
+    line: Storage=persistent
+
+# https://www.linode.com/docs/quick-answers/linux/how-to-use-journalctl/
+- name: Setup journald storage keep-free
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/journald.conf
+    state: present
+    regexp: "^#SystemKeepFree="
+    line: SystemKeepFree=6%

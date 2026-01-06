@@ -1,9 +1,8 @@
 # https://laravel.com/docs/12.x/deployment#nginx
 
 server {
-    listen 80;
     server_name {{ app_domain }};
-    root {{ app_deploy_target | dirname }}/current/api-v8/public;
+    root /bla-bla-bla;
  
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-Content-Type-Options "nosniff";
@@ -16,14 +15,14 @@ server {
     gzip_types text/plain text/css application/xml application/javascript;
     gzip_vary on;
     client_max_body_size 512M;
-
-    access_log {{ app_deploy_target | dirname }}/logs/access.log;
-    error_log {{ app_deploy_target | dirname }}/logs/error.log warn;
+    
+    access_log {{ app_deploy_target | dirname }}/logs/nginx/access.log;
+    error_log {{ app_deploy_target | dirname }}/logs/nginx/error.log warn;
     # access_log syslog:server=unix:/dev/log,tag={{ app_domain }},nohostname,severity=info combined;
     # error_log  syslog:server=unix:/dev/log,tag={{ app_domain }},nohostname,severity=error;
 
     location {{ app_dashboard_base_path }}/ {
-            alias {{ app_deploy_target | dirname }}/current/dashboard-v4/dashboard/dist/;
+            alias /bla-bla-bla;
             try_files $uri $uri/ {{ app_dashboard_base_path }}/index.html;
 
             location ~* \.(css|js|png|jpg|jpeg|gif|gz|svg|mp4|ogg|ogv|webm|htc|xml|woff)$ {
@@ -47,7 +46,7 @@ server {
         # for nginx v1.18
         # fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;
-        fastcgi_hide_header X-Powered-By;
+        fastcgi_hide_header X-Powered-By;        
     }
  
     location ~ /\.(?!well-known).* {

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+docker run --rm -d --network host -v /srv:/srv:z {{ app_docker_image_name }} {{ app_deploy_target }}/scripts/run.sh php-fpm
+   

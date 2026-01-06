@@ -1,0 +1,52 @@
+#!/bin/bash
+
+set -e
+
+if [ "$#" -ne 1 ]; then
+    echo "USAGE: $0 COMMAND"
+    exit 1
+fi
+
+export WORK_DIR="{{ app_deploy_target }}"
+
+if [[ "$1" == "mq:discussion" || "$1" == "mq:pr" || "$1" == "mq:progress" || "$1" == "mq:wbw.analyses" || "$1" == "mq:export.pali.chapter" || "$1" == "mq:export.article" || "$1" == "schedule:run" ]]; then
+    cd $WORK_DIR/api-v8/    
+    php -d memory_limit={{ app_php_memory_limit }} artisan $1
+elif [ "$1" = "ai-translate" ]; then
+    cd $WORK_DIR/ai-translate/
+    source $PWD/python3/bin/activate
+    # https://github.com/iapt-platform/mint/blob/df8e1cf7ade16d17add360e7a869540c1ddaf1b9/api-v8/config/mint.php#L129
+    python3 -m ai_translate -c config.toml -n ai.translate -q ai_translate_v2
+elif [ "$1" = "openai-proxy" ]; then
+    cd $WORK_DIR/openai-proxy/
+    source "$HOME/.nvm/nvm.sh"    
+    node dist/main.*.js config.json
+elif [ "$1" = "php-fpm" ]; then
+    cd /var/lib/php/
+    sed -i 's/^listen = .*/listen = {{ app_php_fpm_port }}/g' /etc/php/{{ app_php_version }}/fpm/pool.d/www.conf
+    sed -i 's/^pm.min_spare_servers = .*/pm.min_spare_servers = 4/g' /etc/php/{{ app_php_version }}/fpm/pool.d/www.conf
+    sed -i 's/^pm.max_spare_servers = .*/pm.max_spare_servers = 12/g' /etc/php/{{ app_php_version }}/fpm/pool.d/www.conf
+    sed -i 's/^pm.max_children = .*/pm.max_children = 20/g' /etc/php/{{ app_php_version }}/fpm/pool.d/www.conf
+    sed -i 's/^pm.start_servers = .*/pm.start_servers = 8/g' /etc/php/{{ app_php_version }}/fpm/pool.d/www.conf
+    /usr/sbin/php-fpm{{ app_php_version }} --nodaemonize --fpm-config /etc/php/{{ app_php_version }}/fpm/php-fpm.conf
+elif [ "$1" = "setup" ]; then
+    cd $WORK_DIR/api-v8/
+    echo "caching configuration "
+    php artisan config:cache
+    echo "caching events"
+    php artisan event:cache
+    echo "caching routes"
+    php artisan route:cache
+    echo "caching views"
+    php artisan view:cache
+
+    echo "check file permissions"
+    cd $WORK_DIR/api-v8/
+    chown -R www-data:www-data bootstrap/cache storage
+else
+    echo "unknown command $1"
+    exit 1
+fi
+
+echo 'done.'
+exit 0

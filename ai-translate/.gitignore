@@ -4,3 +4,4 @@
 __pycache__/
 ai_translate.egg-info/
 .stop
+*.log
