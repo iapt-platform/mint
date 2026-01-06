@@ -94,6 +94,8 @@ class UpgradeAITranslation extends Command
                         break;
                     case 'nissaya':
                         $data = $this->aiNissayaTranslate($book, $paragraph);
+                    case 'wbw':
+                        $data = $this->aiWBW($book, $paragraph);
                     default:
                         # code...
                         break;
@@ -185,16 +187,13 @@ class UpgradeAITranslation extends Command
 
         在原来的数据中添加下列输出字段
         1. meaning:单词的中文意思，如果有两个可能的意思，两个意思之间用/符号分隔
-        2. factors:单词的拆分 字符串数组
-        3. factorMeaning:每个拆分组分的中文意思 字符串数组
-        4. parent:单词的词典原型(词干)
         5. confidence:你认为你给出的这个单词的信息的信心指数（准确程度） 数值1-100 如果觉得非常有把握100, 如果觉得把握不大，适当降低信心指数
         6. note:如果你认为信心指数很低，这个是疑难单词，请在note字段写明原因，如果不是疑难单词，请不要填写note
 
 
         **范例**：
 
-        {"id":1,"original":"bhikkhusanghassa","meaning":"比库僧团[的]","factors":["bhikkhu","sangha","ssa"],"factorMeaning":["比库","僧团","属格"],"parent":"bhikkhusangha","confidence":100}
+        {"id":1,"original":"bhikkhusanghassa","meaning":"比库僧团[的]","confidence":100}
 
         直接输出jsonl, 无需其他内容
         md;
@@ -208,10 +207,13 @@ class UpgradeAITranslation extends Command
             $wbw = json_decode($sentence->content);
             $tpl = [];
             foreach ($wbw as $key => $word) {
-                if (!empty($word['real'])) {
+                if (
+                    !empty($word->real->value) &&
+                    $word->type->value !== '.ctl.'
+                ) {
                     $tpl[] = [
-                        'id' => $word['sn'],
-                        'original' => $word['real'],
+                        'id' => $word->sn[0],
+                        'original' => $word->real->value,
                     ];
                 }
             }
@@ -227,12 +229,15 @@ class UpgradeAITranslation extends Command
                 ->setStream(false)
                 ->send("```json\n{$tplText}\n```");
             $complete = time() - $startAt;
-            $content = $response['choices'][0]['message']['content'] ?? '';
+            $content = $response['choices'][0]['message']['content'] ?? '[]';
             Log::debug("ai response in {$complete}s content=" . $content);
+
+            $json = LlmResponseParser::jsonl($content);
+
             $id = "{$sentence->book_id}-{$sentence->paragraph}-{$sentence->word_start}-{$sentence->word_end}";
             $result[] = [
                 'id' => $id,
-                'content' => $content,
+                'content' => json_encode($json, JSON_UNESCAPED_UNICODE),
             ];
         }
         return $result;
