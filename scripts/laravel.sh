@@ -2,7 +2,8 @@
 
 set -e
 
-# git config --global --add safe.directory /workspace
+git config --global --add safe.directory $PWD
+
 composer require guzzlehttp/guzzle
 composer require opensearch-project/opensearch-php
 composer require phpoffice/phpspreadsheet
