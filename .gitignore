@@ -6,5 +6,6 @@
 *.log
 .stop
 *.xz
+*.md5
 
 /k8s/
