@@ -1,0 +1,121 @@
+- name: Create /srv/bin folder
+  become: true
+  ansible.builtin.file:
+    path: /srv/bin
+    state: directory
+    owner: "{{ ansible_user }}"
+    mode: "0755"
+    
+- name: Create scripts folder
+  ansible.builtin.file:
+    path: "{{ app_deploy_target }}/scripts"
+    state: directory
+    mode: "0755"
+
+- name: Upload run.sh
+  ansible.builtin.copy:
+    src: run.sh
+    dest: "{{ app_deploy_target }}/scripts/"
+    mode: '0555'
+
+- name: Upload clean.py
+  ansible.builtin.copy:
+    src: clean.py
+    dest: "{{ app_deploy_target | dirname }}/"
+    mode: '0444'
+
+- name: Upload clean.service
+  become: true
+  ansible.builtin.template:
+    src: clean.service.j2
+    dest: "/etc/systemd/system/{{ app_domain }}-clean.service"
+    mode: "0444"
+
+- name: Upload clean.timer
+  become: true
+  ansible.builtin.template:
+    src: clean.timer.j2
+    dest: "/etc/systemd/system/{{ app_domain }}-clean.timer"
+    mode: "0444"
+
+- name: Upload php-fpm.sh
+  ansible.builtin.copy:
+    src: php-fpm.sh
+    dest: "/srv/bin/"
+    mode: '0555'
+
+- name: Upload php-fpm-v8.1.service
+  become: true
+  ansible.builtin.template:
+    src: php-fpm-8.1.service.j2
+    dest: "/etc/systemd/system/php-fpm-8.1.service"
+    mode: "0444"
+
+- name: Upload php-fpm-8.4.service
+  become: true
+  ansible.builtin.template:
+    src: php-fpm-8.4.service.j2
+    dest: "/etc/systemd/system/php-fpm-8.4.service"
+    mode: "0444"
+
+- name: Upload open-ai-server.sh
+  ansible.builtin.template:
+    src: open-ai-server.sh.j2
+    dest: "{{ app_deploy_target }}/scripts/open-ai-server.sh"
+    mode: "0555"
+
+- name: Upload open-ai-server.service
+  become: true
+  ansible.builtin.template:
+    src: open-ai-server.service.j2
+    dest: "/etc/systemd/system/{{ app_domain }}-open-ai-server.service"
+    mode: "0444"
+
+- name: Upload ai-translate.sh
+  ansible.builtin.template:
+    src: ai-translate.sh.j2
+    dest: "{{ app_deploy_target }}/scripts/ai-translate.sh"
+    mode: "0555"
+
+- name: Upload ai-translate.service
+  become: true
+  ansible.builtin.template:
+    src: ai-translate.service.j2
+    dest: "/etc/systemd/system/{{ app_domain }}-ai-translate.service"
+    mode: "0444"
+
+- name: Upload laravel-job.sh
+  ansible.builtin.template:
+    src: laravel-job.sh.j2
+    dest: "{{ app_deploy_target }}/scripts/laravel-job.sh"
+    mode: "0555"
+
+- name: Upload laravel-worker.service
+  become: true
+  ansible.builtin.template:
+    src: laravel-job.service.j2
+    dest: "/etc/systemd/system/{{ app_domain }}-laravel-job-{{ item.name }}.service"
+    mode: "0444"
+  with_items:
+    - { name: "mq-discussion", image: "{{ app_php81_image }}"}
+    - { name: "mq-pr", image: "{{ app_php81_image }}"}
+    - { name: "mq-progress", image: "{{ app_php81_image }}"}
+    - { name: "mq-wbw.analyses", image: "{{ app_php81_image }}"}
+
+
+- name: Upload laravel sceduler
+  ansible.builtin.import_tasks: laravel-scheduler.yml
+  with_items:
+    - {image: "{{ app_php81_image }}", version: "v8"}
+    - {image: "{{ app_php84_image }}", version: "v12"}
+
+- name: Reload systemd profiles
+  become: true
+  ansible.builtin.shell: systemctl daemon-reload
+
+- name: Enable clean timer
+  become: true
+  ansible.builtin.systemd_service:
+    name: "{{ app_domain }}-clean.timer"
+    state: started
+    enabled: true

@@ -109,7 +109,13 @@
     src: "{{ app_workspace }}/api-v12"
     dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/api-v12"
     recursive: true
-    
+
+- name: Copy ai-translate to release folder
+  ansible.posix.synchronize:    
+    src: "{{ app_workspace }}/ai-translate"
+    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/ai-translate"
+    recursive: true
+
 # - name: Archive release.tar.xz
 #   community.general.archive:
 #     path: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/*"

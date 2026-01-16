@@ -1,0 +1,19 @@
+- name: Upload laravel-scheduler.sh({{ item.version }})
+  ansible.builtin.template:
+    src: laravel-scheduler.sh.j2
+    dest: "{{ app_deploy_target }}/scripts/laravel-scheduler-{{ item.version }}.sh"
+    mode: '0555'
+
+- name: Upload laravel-scheduler.service({{ item.version }})
+  become: true
+  ansible.builtin.template:
+    src: laravel-scheduler.service.j2
+    dest: "/etc/systemd/system/{{ app_domain }}-laravel-scheduler-{{ item.version }}.service"
+    mode: "0444"
+
+- name: Upload laravel-scheduler.timer({{ item.version }})
+  become: true
+  ansible.builtin.template:
+    src: laravel-scheduler.timer.j2
+    dest: "/etc/systemd/system/{{ app_domain }}-laravel-scheduler-{{ item.version }}.timer"
+    mode: "0444"

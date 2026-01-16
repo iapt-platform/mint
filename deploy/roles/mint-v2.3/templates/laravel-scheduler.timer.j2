@@ -1,0 +1,9 @@
+[Unit]
+Description=Run laravel scheduler every minute({{ app_domain }}).
+
+[Timer]
+OnBootSec=15minutes
+OnUnitActiveSec=1minute
+
+[Install]
+WantedBy=timers.target
