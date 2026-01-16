@@ -15,6 +15,10 @@ if [[ "$ID" != "ubuntu" ]]; then
 fi
 # -----------------------------------------------------------------------------
 
+# TODO 
+
+# php artisan mq:wbw.analyses
+
 if [[ "$#" -eq 1 && "$1" == "diagnose" ]]; then
     php --version
     echo "NodeJs: $(node -v)"

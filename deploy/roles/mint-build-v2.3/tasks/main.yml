@@ -2,7 +2,7 @@
   ansible.builtin.file:
     path: "{{ app_workspace | dirname }}"
     state: directory
-    owner: "{{ ansible_user }}"
+    # owner: "{{ ansible_user }}"
     mode: "0755"
 
 - name: Git checkout mint repo
@@ -47,7 +47,7 @@
   args:
     executable: /bin/bash
     chdir: "{{ app_workspace }}/dashboard-v4/dashboard"
-    creates: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/dashboard-v6"
+    creates: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/dashboard-v4"
   environment:
     BUILD_PATH: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/dashboard-v4"
     NODE_OPTIONS: "--max_old_space_size=5120"
@@ -68,7 +68,7 @@
 
 - name: Build dashboard-v6
   ansible.builtin.shell: |
-    source ~/.nvm/nvm.sh && vite build --base={{ app_dashboard_v6_base_path }} --outDir {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/dashboard-v6
+    source ~/.nvm/nvm.sh && npm run build -- --base={{ app_dashboard_v6_base_path }} --outDir {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/dashboard-v6
   args:
     executable: /bin/bash
     chdir: "{{ app_workspace }}/dashboard-v6"
@@ -90,7 +90,7 @@
     
 - name: Build open-ai proxy server
   ansible.builtin.shell: |
-    source ~/.nvm/nvm.sh && webpack --config webpack.config.js --output-path {{ app_workspace }}/open-ai-server
+    source ~/.nvm/nvm.sh && npm run build -- --output-path {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/open-ai-server
   args:
     executable: /bin/bash
     chdir: "{{ app_workspace }}/open-ai-server"
@@ -99,31 +99,33 @@
     NODE_ENV: production
     
 - name: Copy api-v8 to release folder
-  ansible.builtin.copy:
-    remote: true
+  ansible.posix.synchronize:    
     src: "{{ app_workspace }}/api-v8"
-    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/api-v8/"
-    mode: '0755'
-  args:
-    creates: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/api-v8"
-
+    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/api-v8"
+    recursive: true
+    
 - name: Copy api-v12 to release folder
-  ansible.builtin.copy:
-    remote: true
+  ansible.posix.synchronize:    
     src: "{{ app_workspace }}/api-v12"
-    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/api-v12/"
-    mode: '0755'
-  args:
-    creates: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/api-v12"
+    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/api-v12"
+    recursive: true
+    
+# - name: Archive release.tar.xz
+#   community.general.archive:
+#     path: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/*"
+#     dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz"
+#     format: xz
+#     remove: true
 
-- name: Archive only the contents of the /var/www/html folder
-  community.general.archive:
-    path: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/*"
-    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz"
-    format: xz
-    remove: true
- 
-- name: Download mint.tar.xz
-    ansible.builtin.fetch:
-      src: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz"
-      dest: "{{ playbook_dir }}/tmp/"
+- name: Archive release.tar.xz
+  ansible.builtin.shell: tar --remove-files -cJf {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz -C {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }} .
+  args:
+    creates: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz"
+  environment:
+    XZ_OPT: "-9"
+
+- name: Download release.tar.xz
+  ansible.builtin.fetch:
+    src: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz"
+    dest: "{{ playbook_dir }}/tmp/"
+    flat: true

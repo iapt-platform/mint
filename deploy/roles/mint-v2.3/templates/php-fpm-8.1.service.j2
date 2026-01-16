@@ -1,0 +1,15 @@
+[Unit]
+Description=php-fpm 8.1(mint).
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User={{ ansible_user }}
+ExecStart=/usr/bin/docker run --rm --name php-fpm-8.1 -p 127.0.0.1:{{ app_php_fpm81_port }}:9000/tcp -v /srv:/srv:z {{ app_php81_image }} /srv/bin/php-fpm.sh
+ExecStop=/usr/bin/docker stop php-fpm-8.1
+WorkingDirectory={{ app_deploy_target }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

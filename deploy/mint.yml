@@ -1,10 +1,28 @@
-- name: Building mint release package
+- name: Prepare the env
   hosts: localhost
+  tasks:
+    - name: Check if mint.tar.xz file exists
+      ansible.builtin.stat:
+        path: "{{ playbook_dir }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz"
+      register: mint_release_file_status
+
+- name: Building release package
+  hosts: localhost      
   roles:
-    - mint-build-v2.3
+    - role: mint-build-v2.3
+      when: not mint_release_file_status.stat.exists
   vars:
     app_workspace: "{{ ansible_facts['env']['HOME'] }}/build/mint"
 
+- name: Upload and setup release package
+  hosts:
+    - task
+    - php_fpm
+    - task
+    - ai_translate
+    - openai_proxy
+  roles:
+    - role: mint-v2.3
 
 # - name: Setup local build folder
 #   hosts: localhost
