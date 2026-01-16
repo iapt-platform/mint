@@ -1,31 +1,39 @@
-- name: Setup local build folder
-  hosts: localhost
-  tasks:
-    - name: Git checkout repo
-      ansible.builtin.git:
-        repo: "https://github.com/iapt-platform/mint.git"
-        dest: "{{ playbook_dir }}/tmp/mint"
-        version: "{{ mint_version }}"
-
-- name: Build on local
+- name: Building mint release package
   hosts: localhost
   roles:
-    - mint-dashboard-v4-build
-    - mint-openai-proxy-build
-    - clove-build
+    - mint-build-v2.3
+  vars:
+    app_workspace: "{{ ansible_facts['env']['HOME'] }}/build/mint"
 
-- name: Build mint package on remote
-  hosts: building
-  roles:
-    - mint-release-build
 
-- name: Setup deploy folder
-  hosts: all:!localhost
-  roles:
-    - mint-v2.2
+# - name: Setup local build folder
+#   hosts: localhost
+#   tasks:
+#     - name: Git checkout repo
+#       ansible.builtin.git:
+#         repo: "https://github.com/iapt-platform/mint.git"
+#         dest: "{{ playbook_dir }}/tmp/mint"
+#         version: "{{ mint_version }}"
 
-- name: Setup nginx
-  hosts:
-    - web
-  roles:
-    - mint-nginx
+# - name: Build on local
+#   hosts: localhost
+#   roles:
+#     - mint-dashboard-v4-build
+#     - mint-openai-proxy-build
+#     - clove-build
+
+# - name: Build mint package on remote
+#   hosts: building
+#   roles:
+#     - mint-release-build
+
+# - name: Setup deploy folder
+#   hosts: all:!localhost
+#   roles:
+#     - mint-v2.2
+
+# - name: Setup nginx
+#   hosts:
+#     - web
+#   roles:
+#     - mint-nginx

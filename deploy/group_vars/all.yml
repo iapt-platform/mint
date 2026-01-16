@@ -3,18 +3,23 @@ ansible_python_interpreter: /usr/bin/python3
 ansible_ssh_private_key_file: "{{ inventory_dir }}/.ssh/id_ed25519"
 
 app_deploy_target: "/srv/{{ app_domain }}/mint-{{ mint_version }}"
-app_build_target: "{{ ansible_env.HOME }}/build/{{ app_domain }}/mint-{{ mint_version }}"
-app_downloads: "{{ ansible_env.HOME }}/downloads"
 app_debug: false
 
-app_dashboard_base_path: "/pcd"
-app_postgresql_version: "16"
-app_open_search_version: "2.19.1"
-app_python_version: "3.13"
-app_php_version: "8.1"
-app_php_fpm_port: 9081
+app_api_v8_php_base_path: "/api"
+app_api_v8_php_version: "8.1"
+app_api_v8_php_fpm_port: 9810
+app_api_v8_php_image: "wikipali/mint:php-8.1-20251225"
+
+app_api_v12_php_base_path: "/api-v2026"
+app_api_v12_php_version: "8.4"
+app_api_v12_php_fpm_port: 9840
+app_api_v12_php_image: "wikipali/mint:php-8.4-20260108"
+
+app_dashboard_v4_base_path: "/pcd"
+app_dashboard_v6_base_path: "/pcd-v2026"
+
+app_dashboard_token_key: "token.20260116"
 app_php_memory_limit: "128M"
-app_container_prefix: "mint"
 app_consumer_loop_limit_ai_translate: 16
 
-app_docker_image_name: "magnolia"
+app_python_image: "wikipali/mint:php-8.4-20260108"

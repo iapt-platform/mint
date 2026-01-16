@@ -20,10 +20,13 @@ elif [[ "$PHP_VERSION" == "8.4.16" ]]; then
     npm install
     cd $WORKSPACE/dashboard-v6/
     npm install
+    cd $WORKSPACE/open-ai-server/
+    npm install
 
     cd $WORKSPACE/
     $TAR api-v12-$VERSION.tar.xz -C api-v12 node_modules package-lock.json vendor composer.lock    
     $TAR dashboard-v6-$VERSION.tar.xz -C dashboard-v6 node_modules package-lock.json
+    $TAR open-ai-server-$VERSION.tar.xz -C open-ai-server node_modules package-lock.json
 else
     echo "unsupported php version $PHP_VERSION"
     exit 1
