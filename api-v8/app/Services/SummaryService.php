@@ -24,7 +24,8 @@ class SummaryService
     public function __construct(AIModelService $aiModels)
     {
         $models = $aiModels->getSysModels('summarize');
-        $this->modelId = $models[0]['uid'];
+        // FIXME
+        // $this->modelId = $models[0]['uid'];
         $this->apiUrl = config('mint.ai.proxy') . '/api/openai';
     }
 
