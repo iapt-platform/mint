@@ -5,7 +5,7 @@
     state: directory
     owner: "{{ ansible_user }}"
     mode: "0755"
-    
+
 - name: Create scripts folder
   ansible.builtin.file:
     path: "{{ app_deploy_target }}/scripts"
@@ -16,13 +16,13 @@
   ansible.builtin.copy:
     src: run.sh
     dest: "{{ app_deploy_target }}/scripts/"
-    mode: '0555'
+    mode: "0555"
 
 - name: Upload clean.py
   ansible.builtin.copy:
     src: clean.py
     dest: "{{ app_deploy_target | dirname }}/"
-    mode: '0444'
+    mode: "0444"
 
 - name: Upload clean.service
   become: true
@@ -42,7 +42,7 @@
   ansible.builtin.copy:
     src: php-fpm.sh
     dest: "/srv/bin/"
-    mode: '0555'
+    mode: "0555"
 
 - name: Upload php-fpm-v8.1.service
   become: true
@@ -97,21 +97,20 @@
     dest: "/etc/systemd/system/{{ app_domain }}-laravel-job-{{ item.name }}.service"
     mode: "0444"
   with_items:
-    - { name: "mq-discussion", image: "{{ app_php81_image }}"}
-    - { name: "mq-pr", image: "{{ app_php81_image }}"}
-    - { name: "mq-progress", image: "{{ app_php81_image }}"}
-    - { name: "mq-wbw.analyses", image: "{{ app_php81_image }}"}
-
+    - { name: "mq-discussion", image: "{{ app_php81_image }}" }
+    - { name: "mq-pr", image: "{{ app_php81_image }}" }
+    - { name: "mq-progress", image: "{{ app_php81_image }}" }
+    - { name: "mq-wbw.analyses", image: "{{ app_php81_image }}" }
 
 - name: Upload laravel sceduler
-  ansible.builtin.import_tasks: laravel-scheduler.yml
+  ansible.builtin.include_tasks: laravel-scheduler.yml
   with_items:
-    - {image: "{{ app_php81_image }}", version: "v8"}
-    - {image: "{{ app_php84_image }}", version: "v12"}
+    - { image: "{{ app_php81_image }}", version: "v8" }
+    - { image: "{{ app_php84_image }}", version: "v12" }
 
 - name: Reload systemd profiles
   become: true
-  ansible.builtin.shell: systemctl daemon-reload
+  ansible.builtin.command: systemctl daemon-reload
 
 - name: Enable clean timer
   become: true

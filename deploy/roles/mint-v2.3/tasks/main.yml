@@ -1,10 +1,24 @@
-- name: Pull {{ item }} image
-  ansible.builtin.shell: docker pull {{ item }}
+- name: Pull docker image
+  ansible.builtin.command: docker pull {{ item }}
   with_items:
     - "{{ app_php81_image }}"
     - "{{ app_php84_image }}"
     - "{{ app_python_image }}"
     - "{{ app_nodejs_image }}"
+
+- name: Create /srv/python3 folder
+  become: true
+  ansible.builtin.file:
+    path: /srv/python3
+    state: directory
+    owner: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Extract python3.tar.xz
+  ansible.builtin.unarchive:
+    src: python3-{{ ansible_facts['architecture'] }}-2026011614.tar.xz
+    dest: /srv
+    creates: /srv/python3/pyvenv.cfg
 
 - name: Create workspace folder
   become: true

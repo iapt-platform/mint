@@ -62,9 +62,8 @@
     REACT_APP_API_SERVER: "https://{{ app_domain }}"
     REACT_APP_ICP_CODE: "{{ app_icp_code }}"
     REACT_APP_MPS_CODE: "{{ app_mps_code }}"
-    REACT_APP_QUESTIONNAIRE_LINK: "{{ app_questionnaire_link }}"    
+    REACT_APP_QUESTIONNAIRE_LINK: "{{ app_questionnaire_link }}"
     REACT_APP_OPENAI_PROXY: "{{ app_openai_proxy_server }}/api/openai"
-      
 
 - name: Build dashboard-v6
   ansible.builtin.shell: |
@@ -85,9 +84,9 @@
     VITE_API_SERVER: "https://{{ app_domain }}"
     VITE_ICP_CODE: "{{ app_icp_code }}"
     VITE_MPS_CODE: "{{ app_mps_code }}"
-    VITE_QUESTIONNAIRE_LINK: "{{ app_questionnaire_link }}"    
+    VITE_QUESTIONNAIRE_LINK: "{{ app_questionnaire_link }}"
     VITE_OPENAI_PROXY: "{{ app_openai_proxy_server }}/api/openai"
-    
+
 - name: Build open-ai proxy server
   ansible.builtin.shell: |
     source ~/.nvm/nvm.sh && npm run build -- --output-path {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/open-ai-server
@@ -97,23 +96,23 @@
     creates: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/open-ai-server"
   environment:
     NODE_ENV: production
-    
+
 - name: Copy api-v8 to release folder
-  ansible.posix.synchronize:    
+  ansible.posix.synchronize:
     src: "{{ app_workspace }}/api-v8"
-    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/api-v8"
+    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}"
     recursive: true
-    
+
 - name: Copy api-v12 to release folder
-  ansible.posix.synchronize:    
+  ansible.posix.synchronize:
     src: "{{ app_workspace }}/api-v12"
-    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/api-v12"
+    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}"
     recursive: true
 
 - name: Copy ai-translate to release folder
-  ansible.posix.synchronize:    
+  ansible.posix.synchronize:
     src: "{{ app_workspace }}/ai-translate"
-    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/ai-translate"
+    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}"
     recursive: true
 
 # - name: Archive release.tar.xz
@@ -124,7 +123,7 @@
 #     remove: true
 
 - name: Archive release.tar.xz
-  ansible.builtin.shell: tar --remove-files -cJf {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz -C {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }} .
+  ansible.builtin.command: tar --remove-files -cJf {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz -C {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }} .
   args:
     creates: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz"
   environment:

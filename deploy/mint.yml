@@ -7,7 +7,7 @@
       register: mint_release_file_status
 
 - name: Building release package
-  hosts: localhost      
+  hosts: localhost
   roles:
     - role: mint-build-v2.3
       when: not mint_release_file_status.stat.exists
@@ -23,7 +23,6 @@
     - openai_proxy
   roles:
     - role: mint-v2.3
-
 # - name: Setup local build folder
 #   hosts: localhost
 #   tasks:
