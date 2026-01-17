@@ -10,8 +10,8 @@ export TAR="tar -cJf"
 
 git config --global --add safe.directory $PWD
 
-# docker run --rm -it --hostname=palm --network host -v $(dirname $PWD):/workspace:z wikipali/mint:php-8.1-20251225
-# docker run --rm -it --hostname=palm --network host -v $(dirname $PWD):/workspace:z wikipali/mint:php-8.4-20260108
+# docker run --rm -it -v $(dirname $PWD):/workspace:z wikipali/mint:php-8.1-20251225
+# docker run --rm -it -v $(dirname $PWD):/workspace:z wikipali/mint:php-8.4-20260108
 
 if [[ "$PHP_VERSION" == "8.1.34" ]]; then
     cd $WORKSPACE/
@@ -35,6 +35,8 @@ elif [[ "$PHP_VERSION" == "8.4.16" ]]; then
     fi
     . /srv/python3/bin/activate
     python3 -m pip install -e .
+
+    # npm install --omit=dev
 
     cd $WORKSPACE/
     $TAR api-v12-$VERSION.tar.xz -C api-v12 node_modules package-lock.json vendor composer.lock    

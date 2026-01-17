@@ -12,10 +12,10 @@
     state: directory
     mode: "0755"
 
-- name: Upload run.sh
-  ansible.builtin.copy:
-    src: run.sh
-    dest: "{{ app_deploy_target }}/scripts/"
+- name: Upload laravel.sh
+  ansible.builtin.template:
+    src: laravel.sh.j2
+    dest: "{{ app_deploy_target }}/scripts/laravel.sh"
     mode: "0555"
 
 - name: Upload clean.py
@@ -84,12 +84,6 @@
     dest: "/etc/systemd/system/{{ app_domain }}-ai-translate.service"
     mode: "0444"
 
-- name: Upload laravel-job.sh
-  ansible.builtin.template:
-    src: laravel-job.sh.j2
-    dest: "{{ app_deploy_target }}/scripts/laravel-job.sh"
-    mode: "0555"
-
 - name: Upload laravel-worker.service
   become: true
   ansible.builtin.template:
@@ -97,10 +91,12 @@
     dest: "/etc/systemd/system/{{ app_domain }}-laravel-job-{{ item.name }}.service"
     mode: "0444"
   with_items:
-    - { name: "mq-discussion", image: "{{ app_php81_image }}" }
-    - { name: "mq-pr", image: "{{ app_php81_image }}" }
-    - { name: "mq-progress", image: "{{ app_php81_image }}" }
-    - { name: "mq-wbw.analyses", image: "{{ app_php81_image }}" }
+    - { name: "mq-discussion", image: "{{ app_php81_image }}", args: "mq:discussion" }
+    - { name: "mq-pr", image: "{{ app_php81_image }}", args: "mq:pr" }
+    - { name: "mq-progress", image: "{{ app_php81_image }}", args: "mq:progress" }
+    - { name: "mq-wbw.analyses", image: "{{ app_php81_image }}", args: "mq:wbw.analyses" }
+    - { name: "mq-export.pali.chapter", image: "{{ app_php81_image }}", args: "mq:export.pali.chapter" }
+    - { name: "mq-export.article", image: "{{ app_php81_image }}", args: "mq:export.article" }
 
 - name: Upload laravel sceduler
   ansible.builtin.include_tasks: laravel-scheduler.yml

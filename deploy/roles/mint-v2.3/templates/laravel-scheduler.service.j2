@@ -6,7 +6,7 @@ After=network-online.target
 [Service]
 Type=oneshot
 User={{ ansible_user }}
-ExecStart=/usr/bin/docker run --rm --name {{ app_domain }}-laravel-scheduler-{{ item.version }} -v /srv:/srv:z {{ item.image }} {{ app_deploy_target }}/scripts/laravel-scheduler-{{ item.version }}.sh
+ExecStart=/usr/bin/docker run --rm --name {{ app_domain }}-laravel-scheduler-{{ item.version }} -v /srv:/srv:z {{ item.image }} {{ app_deploy_target }}/scripts/laravel.sh schedule:run
 ExecStop=/usr/bin/docker stop {{ app_domain }}-laravel-scheduler-{{ item.version }}
 WorkingDirectory={{ app_deploy_target }}
 

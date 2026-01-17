@@ -6,7 +6,7 @@ After=network-online.target
 [Service]
 Type=simple
 User={{ ansible_user }}
-ExecStart=/usr/bin/docker run --rm --name {{ app_domain }}-laravel-job-{{ item.name }} -v /srv:/srv:z {{ item.image }} {{ app_deploy_target }}/scripts/laravel-job.sh {{ item.name }}
+ExecStart=/usr/bin/docker run --rm --name {{ app_domain }}-laravel-job-{{ item.name }} -v /srv:/srv:z {{ item.image }} {{ app_deploy_target }}/scripts/laravel.sh {{ item.args }}
 ExecStop=/usr/bin/docker stop {{ app_domain }}-laravel-job-{{ item.name }}
 WorkingDirectory={{ app_deploy_target }}
 Restart=always

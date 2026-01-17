@@ -10,7 +10,7 @@ RUN apt -y install lsb-release apt-utils \
     debian-keyring debian-archive-keyring apt-transport-https software-properties-common curl wget gnupg
 RUN add-apt-repository -y ppa:ondrej/php
 RUN apt -y upgrade
-RUN apt -y install git vim locales locales-all tzdata build-essential \
+RUN apt -y install git vim locales locales-all inetutils-telnet iproute2 tzdata build-essential \
     php${PHP_VERSION}-cli php${PHP_VERSION}-fpm \
     php${PHP_VERSION}-xml php${PHP_VERSION}-imap php${PHP_VERSION}-intl php${PHP_VERSION}-mbstring php${PHP_VERSION}-bcmath \
     php${PHP_VERSION}-bz2 php${PHP_VERSION}-zip php${PHP_VERSION}-curl php${PHP_VERSION}-gd php${PHP_VERSION}-imagick \
