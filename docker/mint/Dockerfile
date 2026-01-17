@@ -24,7 +24,7 @@ RUN apt -y install git vim locales locales-all inetutils-telnet iproute2 tzdata 
     fonts-ipaexfont fonts-ipafont fonts-konatu fonts-ipafont-nonfree-jisx0208 fonts-ipafont-nonfree-uigothic \
     fonts-mikachan \
     fonts-tibetan-machine fonts-ddc-uchen fonts-monlam fonts-sambhota-tsugring fonts-sambhota-yigchung \
-    imagemagick ffmpeg graphviz pandoc texlive-full \
+    imagemagick ffmpeg graphviz pandoc texlive-full p7zip-full \
     python3-full python3-dev \
     libssl-dev libpq-dev libmysqlclient-dev \
     && apt -y autoremove \

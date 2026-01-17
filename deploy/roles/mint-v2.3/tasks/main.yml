@@ -5,6 +5,7 @@
     - "{{ app_php84_image }}"
     - "{{ app_python_image }}"
     - "{{ app_nodejs_image }}"
+  when: app_pull_images
 
 - name: Create /srv/python3 folder
   become: true
@@ -42,6 +43,9 @@
 
 - name: Upload configurations
   ansible.builtin.import_tasks: config.yml
+
+- name: Setup laravel
+  ansible.builtin.import_tasks: laravel-setup.yml
 
 - name: Setup systemd services
   ansible.builtin.import_tasks: systemd.yml

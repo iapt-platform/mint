@@ -19,7 +19,7 @@
 
 - name: Extract api-v8
   ansible.builtin.unarchive:
-    src: api-v8-{{ ansible_facts['architecture'] }}-20260116065749.tar.xz
+    src: api-v8-20260117.tar.xz
     dest: "{{ app_workspace }}/api-v8"
     creates: "{{ app_workspace }}/api-v8/composer.lock"
 

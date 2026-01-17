@@ -13,14 +13,16 @@ if [[ "$ID" != "ubuntu" ]]; then
     echo "unsupported distribution $ID"
     exit 1
 fi
+
+. $HOME/.nvm/nvm.sh
 # -----------------------------------------------------------------------------
 
 export PHP_VERSION="$(php -r 'echo PHP_VERSION;')"
 
 if [[ "$PHP_VERSION" == "8.1.34" ]]; then
-    export WORKSPACE=$PWD/api-v8
-if [[ "$PHP_VERSION" == "8.4.16" ]]; then
-    export WORKSPACE=$PWD/api-v12
+    export WORKSPACE={{ app_deploy_target }}/api-v8
+elif [[ "$PHP_VERSION" == "8.4.16" ]]; then
+    export WORKSPACE={{ app_deploy_target }}/api-v12
 else
     echo "unsupported php $PHP_VERSION"
     exit 1
@@ -29,6 +31,7 @@ fi
 # -----------------------------------------------------------------------------
 
 if [[ "$#" -eq 1 && "$1" == "diagnose" ]]; then
+    echo "workspace: $WORKSPACE"
     php --version
     echo "NodeJs: $(node -v)"
     echo "npm: $(npm -v)"
@@ -45,7 +48,6 @@ elif [[ "$#" -eq 1 && "$1" == "setup" ]]; then
     php artisan view:cache
 
     echo "check file permissions"    
-    mkdir storage/logs
     chown -R www-data:www-data bootstrap/cache storage
 elif [[ "$#" -eq 1 ]]; then
     cd $WORKSPACE/

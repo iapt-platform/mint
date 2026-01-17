@@ -22,3 +22,4 @@ app_php81_image: "wikipali/mint:php-8.1-20251225"
 app_php84_image: "wikipali/mint:php-8.4-20260108"
 app_python_image: "wikipali/mint:php-8.4-20260108"
 app_nodejs_image: "wikipali/mint:php-8.4-20260108"
+app_pull_images: false
