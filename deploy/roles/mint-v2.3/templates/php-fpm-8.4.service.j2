@@ -6,9 +6,9 @@ After=network-online.target
 [Service]
 Type=simple
 User={{ ansible_user }}
-ExecStart=/usr/bin/docker run --rm --name php-fpm-8.4 -p 127.0.0.1:{{ app_php_fpm84_port }}:9000/tcp -v /srv:/srv:z {{ app_php84_image }} /srv/bin/php-fpm.sh
+ExecStart=/usr/bin/docker run --rm --name php-fpm-8.4 -p 0.0.0.0:{{ app_php_fpm84_port }}:9000/tcp -v /srv:/srv:z {{ app_php84_image }} /srv/bin/php-fpm.sh 8.4
 ExecStop=/usr/bin/docker stop php-fpm-8.4
-WorkingDirectory={{ app_deploy_target }}
+WorkingDirectory=/srv
 Restart=always
 
 [Install]
