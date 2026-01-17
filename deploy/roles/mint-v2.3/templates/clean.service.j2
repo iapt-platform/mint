@@ -6,8 +6,7 @@ After=network-online.target
 [Service]
 Type=oneshot
 User=root
-Group=root
-ExecStart=/usr/bin/python3 clean.py -k {{ app_deploy_keeps }}
+ExecStart=/usr/bin/python3 clean.py -d -k {{ app_deploy_keeps }}
 WorkingDirectory={{ app_deploy_target | dirname }}
 
 [Install]
