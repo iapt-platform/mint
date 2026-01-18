@@ -92,13 +92,18 @@
     - { image: "{{ app_php81_image }}", version: "v8" }
     - { image: "{{ app_php84_image }}", version: "v12" }
 
+# - name: Reload systemd profiles
+#   become: true
+#   ansible.builtin.command: systemctl daemon-reload
+
 - name: Reload systemd profiles
   become: true
-  ansible.builtin.command: systemctl daemon-reload
+  ansible.builtin.systemd_service:
+    daemon_reload: true
 
 - name: Enable clean timer
   become: true
   ansible.builtin.systemd_service:
     name: "{{ app_domain }}-clean.timer"
-    state: started
+    state: restarted
     enabled: true

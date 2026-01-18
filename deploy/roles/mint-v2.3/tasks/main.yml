@@ -41,11 +41,20 @@
     dest: "{{ app_deploy_target }}"
     creates: "{{ app_deploy_target }}/api-v12"
 
+- name: Create scripts folder
+  ansible.builtin.file:
+    path: "{{ app_deploy_target }}/scripts"
+    state: directory
+    mode: "0755"
+
+- name: Upload laravel.sh
+  ansible.builtin.template:
+    src: laravel.sh.j2
+    dest: "{{ app_deploy_target }}/scripts/laravel.sh"
+    mode: "0555"
+
 - name: Upload configurations
   ansible.builtin.import_tasks: config.yml
-
-- name: Setup laravel
-  ansible.builtin.import_tasks: laravel-setup.yml
 
 - name: Setup systemd services
   ansible.builtin.import_tasks: systemd.yml

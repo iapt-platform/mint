@@ -15,42 +15,94 @@
     app_workspace: "{{ ansible_facts['env']['HOME'] }}/build/mint"
 
 - name: Upload and setup release package
-  hosts:
-    - task
-    - php_fpm
-    - task
+  hosts:    
+    - laravel_web
+    - laravel_tasks
+    - laravel_scheduler
     - ai_translate
-    - openai_proxy
+    - open_ai_server
   roles:
     - role: mint-v2.3
-# - name: Setup local build folder
-#   hosts: localhost
-#   tasks:
-#     - name: Git checkout repo
-#       ansible.builtin.git:
-#         repo: "https://github.com/iapt-platform/mint.git"
-#         dest: "{{ playbook_dir }}/tmp/mint"
-#         version: "{{ mint_version }}"
 
-# - name: Build on local
-#   hosts: localhost
-#   roles:
-#     - mint-dashboard-v4-build
-#     - mint-openai-proxy-build
-#     - clove-build
+- name: Setup laravel framework
+  hosts:    
+    - laravel_web
+    - laravel_tasks
+    - laravel_scheduler
+  tasks:
+    - name: Setup api-v8
+      ansible.builtin.command: docker run --rm -it -v /srv:/srv:z {{ app_php81_image }} {{ app_deploy_target }}/scripts/laravel.sh setup      
+    - name: Setup api-v12
+      ansible.builtin.command: docker run --rm -it -v /srv:/srv:z {{ app_php84_image }} {{ app_deploy_target }}/scripts/laravel.sh setup
 
-# - name: Build mint package on remote
-#   hosts: building
-#   roles:
-#     - mint-release-build
+- name: Start laravel scheduler
+  hosts:    
+    - laravel_scheduler
+  tasks:
+    - name: Enable systemd service(v8)
+      become: true
+      ansible.builtin.systemd_service:
+        name: "{{ app_domain }}-laravel-scheduler-v8.service"
+        state: restarted
+        enabled: true
+    - name: Enable systemd service(v12)
+      become: true
+      ansible.builtin.systemd_service:
+        name: "{{ app_domain }}-laravel-scheduler-v12.service"
+        state: restarted
+        enabled: true
 
-# - name: Setup deploy folder
-#   hosts: all:!localhost
-#   roles:
-#     - mint-v2.2
+- name: Start laravel job
+  hosts:    
+    - laravel_task
+  tasks:
+    - name: Enable systemd service
+      become: true
+      ansible.builtin.systemd_service:
+        name: "{{ app_domain }}-laravel-job-{{ item }}.service"
+        state: restarted
+        enabled: true
+      with_items:
+        - { name: "mq-discussion"}
+        - { name: "mq-pr"}
+        - { name: "mq-progress"}
+        - { name: "mq-wbw.analyses"}
+        - { name: "mq-export.pali.chapter"}
+        - { name: "mq-export.article"}
+    
+- name: Start ai-translate service
+  hosts:    
+    - ai_translate
+  tasks:
+    - name: Enable systemd service
+      become: true
+      ansible.builtin.systemd_service:
+        name: "{{ app_domain }}-ai-translate.service"
+        state: restarted
+        enabled: true
 
-# - name: Setup nginx
-#   hosts:
-#     - web
-#   roles:
-#     - mint-nginx
+- name: Start open-ai-server
+  hosts:    
+    - open_ai_server
+  tasks:
+    - name: Enable systemd service
+      become: true
+      ansible.builtin.systemd_service:
+        name: "{{ app_domain }}-open-ai-server.service"
+        state: restarted
+        enabled: true
+
+- name: Setup nginx
+  hosts:
+    - nginx
+  tasks:
+    - name: Test nginx configuration
+      become: true
+      ansible.builtin.command: nginx -t
+    - name: Restart nginx    
+      become: true
+      ansible.builtin.systemd_service:
+        name: nginx
+        state: restarted
+        enabled: true
+      
