@@ -7,6 +7,20 @@
     - "{{ app_nodejs_image }}"
   when: app_pull_images
 
+- name: Create /srv/bin folder
+  become: true
+  ansible.builtin.file:
+    path: /srv/bin
+    state: directory
+    owner: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Upload docker.sh
+  ansible.builtin.template:
+    src: docker.sh.j2
+    dest: "/srv/bin/docker.sh"
+    mode: "0555"
+
 - name: Create /srv/python3 folder
   become: true
   ansible.builtin.file:

@@ -17,7 +17,7 @@
 - name: Upload and setup release package
   hosts:    
     - laravel_web
-    - laravel_tasks
+    - laravel_task
     - laravel_scheduler
     - ai_translate
     - open_ai_server
@@ -27,7 +27,7 @@
 - name: Setup laravel framework
   hosts:    
     - laravel_web
-    - laravel_tasks
+    - laravel_task
     - laravel_scheduler
   tasks:
     - name: Setup api-v8
@@ -39,16 +39,16 @@
   hosts:    
     - laravel_scheduler
   tasks:
-    - name: Enable systemd service(v8)
+    - name: Enable laravel scheduler timer(v8)
       become: true
       ansible.builtin.systemd_service:
-        name: "{{ app_domain }}-laravel-scheduler-v8.service"
+        name: "{{ app_domain }}-laravel-scheduler-v8.timer"
         state: restarted
         enabled: true
-    - name: Enable systemd service(v12)
+    - name: Enable laravel scheduler timer(v12)
       become: true
       ansible.builtin.systemd_service:
-        name: "{{ app_domain }}-laravel-scheduler-v12.service"
+        name: "{{ app_domain }}-laravel-scheduler-v12.timer"
         state: restarted
         enabled: true
 
@@ -56,10 +56,10 @@
   hosts:    
     - laravel_task
   tasks:
-    - name: Enable systemd service
+    - name: Enable laravel job service
       become: true
       ansible.builtin.systemd_service:
-        name: "{{ app_domain }}-laravel-job-{{ item }}.service"
+        name: "{{ app_domain }}-laravel-job-{{ item.name }}.service"
         state: restarted
         enabled: true
       with_items:
@@ -74,7 +74,7 @@
   hosts:    
     - ai_translate
   tasks:
-    - name: Enable systemd service
+    - name: Enable ai-translate service
       become: true
       ansible.builtin.systemd_service:
         name: "{{ app_domain }}-ai-translate.service"
@@ -85,7 +85,7 @@
   hosts:    
     - open_ai_server
   tasks:
-    - name: Enable systemd service
+    - name: Enable open-ai-server service
       become: true
       ansible.builtin.systemd_service:
         name: "{{ app_domain }}-open-ai-server.service"
@@ -96,6 +96,31 @@
   hosts:
     - nginx
   tasks:
+    - name: Fix document root
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/nginx/sites-enabled/{{ app_domain }}.conf
+        regexp: '^root '
+        line: "root {{ app_deploy_target }}/api-v8/public;"
+    - name: Fix {{ app_dashboard_v4_base_path }}
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/nginx/sites-enabled/{{ app_domain }}.conf
+        search_string: 'dashboard-v4'
+        line: "alias {{ app_deploy_target }}/dashboard-v4/;"
+    - name: Fix {{ app_dashboard_v6_base_path }}
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/nginx/sites-enabled/{{ app_domain }}.conf
+        search_string: 'dashboard-v6'
+        line: "alias {{ app_deploy_target }}/dashboard-v6/;"
+    - name: Create nginx logs folder
+      become: true
+      ansible.builtin.file:
+        path: "{{ app_deploy_target | dirname }}/logs"
+        state: directory
+        owner: www-data
+        mode: "0755"
     - name: Test nginx configuration
       become: true
       ansible.builtin.command: nginx -t

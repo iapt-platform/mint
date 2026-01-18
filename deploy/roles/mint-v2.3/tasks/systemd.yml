@@ -1,11 +1,3 @@
-- name: Create /srv/bin folder
-  become: true
-  ansible.builtin.file:
-    path: /srv/bin
-    state: directory
-    owner: "{{ ansible_user }}"
-    mode: "0755"
-
 - name: Upload clean.py
   ansible.builtin.copy:
     src: clean.py
