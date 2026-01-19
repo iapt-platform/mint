@@ -14,6 +14,7 @@ class UpgradeController extends Controller
     public function index()
     {
         //
+        return $this->ok(['data' => 'ok']);
     }
 
     /**
