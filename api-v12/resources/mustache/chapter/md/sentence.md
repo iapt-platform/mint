@@ -1,0 +1,7 @@
+[[origin]]
+
+[[#translations]]
+[[content]]
+
+[[/translations]]
+
