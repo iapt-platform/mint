@@ -54,7 +54,10 @@ class LlmResponseParser
         // 纯粹的 JSON 字符串（情况 1）在第一次尝试时应该已经成功。
 
         // 如果解析失败，则返回 空数据
-        Log::error('解析失败' . $input);
+        Log::error('JSON 解析失败', [
+            'error' => json_last_error_msg(),
+            'input_preview' => mb_substr($input, 0, 500),
+        ]);
         return [];
     }
 
