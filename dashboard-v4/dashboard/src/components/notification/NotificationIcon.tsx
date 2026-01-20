@@ -26,7 +26,7 @@ const NotificationIconWidget = () => {
     }
     const now = new Date();
     const notificationUpdatedAt = localStorage.getItem(
-      "notification/updatedAt"
+      "notification/updatedAt",
     );
     if (notificationUpdatedAt) {
       if (now.getTime() - parseInt(notificationUpdatedAt) < 59000) {
@@ -46,7 +46,7 @@ const NotificationIconWidget = () => {
         console.debug("notification fetch ok ", json.data.unread);
         localStorage.setItem(
           "notification/updatedAt",
-          now.getTime().toString()
+          now.getTime().toString(),
         );
         localStorage.setItem("notification/count", json.data.unread.toString());
         setCount(json.data.unread);
@@ -60,7 +60,7 @@ const NotificationIconWidget = () => {
             const content = json.data.rows[0].content;
             localStorage.setItem(
               "notification/message",
-              JSON.stringify({ title: title, content: content })
+              JSON.stringify({ title: title, content: content }),
             );
             //发送通知
             console.debug("notification isMute", isMute, mute);
@@ -70,7 +70,7 @@ const NotificationIconWidget = () => {
                   const notification = new Notification(title, {
                     body: content,
                     icon:
-                      process.env.REACT_APP_API_HOST +
+                      process.env.REACT_APP_API_BASE +
                       "/assets/images/wikipali_logo.png",
                     tag: json.data.rows[0].id,
                   });
