@@ -8,8 +8,7 @@ export default defineConfig({
     host: "127.0.0.1",
     port: 4000,
     proxy: {
-      "/api": "http://127.0.0.1:8080",
-      "/api-v2026": "http://127.0.0.1:8088",
+      "/api": "http://127.0.0.1:8000",
     },
   },
   plugins: [react()],

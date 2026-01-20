@@ -225,7 +225,7 @@ Route::group(['prefix' => 'v2'], function () {
     Route::get('relation-import', [RelationController::class, "import"]);
     Route::apiResource('term-vocabulary', TermVocabularyController::class);
     Route::apiResource('related-paragraph', RelatedParagraphController::class);
-    Route::apiResource('search', SearchController::class);
+    Route::apiResource('search-1', SearchController::class); // FIXME
     Route::get('search-book-list', [SearchController::class, 'book_list']);
     Route::apiResource('pali-word-index', WordIndexController::class);
     Route::apiResource('studio', StudioController::class);

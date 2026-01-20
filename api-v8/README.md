@@ -295,6 +295,8 @@ php artisan mq:discussion
 php artisan mq:pr
 php artisan mq:progress
 php artisan mq:wbw.analyses
+php artisan mq:export.pali.chapter
+php artisan mq:export.article
 ```
 
 ## 运行dev server
