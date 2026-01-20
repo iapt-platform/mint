@@ -5,7 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class EmailCertif extends Mailable
@@ -37,7 +37,7 @@ class EmailCertif extends Mailable
         $randomNumber = random_int(1000, 9999);
         $key = "/email/certification/" . $this->uuid;
         Log::debug('email certification', ['key' => $key, 'value' => $randomNumber]);
-        RedisClusters::put($key, $randomNumber,  30 * 60);
+        Cache::put($key, $randomNumber,  30 * 60);
         return $this->view('emails.certification.' . $this->lang)
             ->with([
                 'code' => $randomNumber,

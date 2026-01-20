@@ -16,7 +16,6 @@ use App\Models\BookTitle as BookSeries;
 
 use App\Http\Controllers\CorpusController;
 
-use App\Tools\RedisClusters;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
 use App\Http\Api\PaliTextApi;
@@ -675,7 +674,7 @@ class TemplateRender
     {
         $paraId = $this->get_param($this->param, "para", 1);
         $channelId = $this->channel_id[0];
-        $props = RedisClusters::remember(
+        $props = Cache::remember(
             "/quote/{$channelId}/{$paraId}",
             config('mint.cache.expire'),
             function () use ($paraId, $channelId) {

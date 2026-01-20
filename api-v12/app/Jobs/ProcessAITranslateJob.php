@@ -6,7 +6,7 @@ use App\Services\AiTranslateService;
 use App\Services\RabbitMQService;
 use Illuminate\Support\Facades\Log;
 use App\Exceptions\TaskFailException;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 
 class ProcessAITranslateJob extends BaseRabbitMQJob
 {
@@ -50,7 +50,7 @@ class ProcessAITranslateJob extends BaseRabbitMQJob
         $mq = app(RabbitMQService::class);
         $queue = 'ai_translate_v2';
         $msgId = $mq->publishMessage($queue, []);
-        RedisClusters::put("/mq/message/{$msgId}/data", $data);
+        Cache::put("/mq/message/{$msgId}/data", $data);
         return $msgId;
     }
 }

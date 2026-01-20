@@ -6,7 +6,7 @@ use App\Models\Task;
 use App\Models\TaskRelation;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\App;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class TaskApi
@@ -84,8 +84,8 @@ class TaskApi
     public static function getRelationTasks($taskId, $relation = 'pre')
     {
         $key = TaskApi::taskRelationRedisKey($taskId, $relation);
-        //Log::debug('task redis key=' . $key . ' has=' . RedisClusters::has($key));
-        $data = RedisClusters::remember($key,  24 * 3600, function () use ($taskId, $relation) {
+        //Log::debug('task redis key=' . $key . ' has=' . Cache::has($key));
+        $data = Cache::remember($key,  24 * 3600, function () use ($taskId, $relation) {
             Log::debug('getRelationTasks task=' . $taskId . ' relation=' . $relation);
             if ($relation === 'pre') {
                 $where = 'next_task_id';
@@ -127,9 +127,9 @@ class TaskApi
         }
         foreach ($relationsId as $taskId => $value) {
             $key = TaskApi::taskRelationRedisKey($taskId, 'pre');
-            RedisClusters::forget($key);
+            Cache::forget($key);
             $key = TaskApi::taskRelationRedisKey($taskId, 'next');
-            RedisClusters::forget($key);
+            Cache::forget($key);
         }
     }
     public static function taskRelationRedisKey($taskId, $relation = 'pre')

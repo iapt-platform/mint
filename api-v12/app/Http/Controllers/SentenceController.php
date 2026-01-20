@@ -20,7 +20,6 @@ use App\Http\Api\ChannelApi;
 use App\Http\Api\PaliTextApi;
 use App\Http\Api\Mq;
 use App\Models\AccessToken;
-use App\Tools\RedisClusters;
 use App\Tools\OpsLog;
 
 use Firebase\JWT\JWT;
@@ -537,7 +536,7 @@ class SentenceController extends Controller
         //清除cache
         $channelId = $param[4];
         $currSentId = "{$param[0]}-{$param[1]}-{$param[2]}-{$param[3]}";
-        RedisClusters::forget("/sent/{$channelId}/{$currSentId}");
+        Cache::forget("/sent/{$channelId}/{$currSentId}");
         //保存历史记录
         if ($request->has('prEditor')) {
             $this->saveHistory(
@@ -606,8 +605,8 @@ class SentenceController extends Controller
             if (!empty($word->meaning->value)) {
                 $newData['data'] = $word->meaning->value;
                 WbwAnalysis::insert($newData);
-                RedisClusters::put("{$prefix}/{$word->real->value}/3/{$editorId}", $word->meaning->value);
-                RedisClusters::put("{$prefix}/{$word->real->value}/3/0", $word->meaning->value);
+                Cache::put("{$prefix}/{$word->real->value}/3/{$editorId}", $word->meaning->value);
+                Cache::put("{$prefix}/{$word->real->value}/3/0", $word->meaning->value);
             }
             if (isset($word->factors) && isset($word->factorMeaning)) {
                 $factors = explode('+', str_replace('-', '+', $word->factors->value));
@@ -619,8 +618,8 @@ class SentenceController extends Controller
                             $newData['data'] = $factorMeaning[$key];
                             $newData['type'] = 5;
                             WbwAnalysis::insert($newData);
-                            RedisClusters::put("{$prefix}/{$factor}/5/{$editorId}", $factorMeaning[$key]);
-                            RedisClusters::put("{$prefix}/{$factor}/5/0", $factorMeaning[$key]);
+                            Cache::put("{$prefix}/{$factor}/5/{$editorId}", $factorMeaning[$key]);
+                            Cache::put("{$prefix}/{$factor}/5/0", $factorMeaning[$key]);
                         }
                     }
                 }

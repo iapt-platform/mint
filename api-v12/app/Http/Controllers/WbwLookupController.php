@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use App\Tools\CaseMan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-use App\Tools\RedisClusters;
 use App\Http\Api\DictApi;
 use App\Http\Api\AuthApi;
 
@@ -172,12 +171,12 @@ class WbwLookupController extends Controller
             'case' => 8,
         ];
         $fieldId = $fieldMap[$field];
-        $myPreference = RedisClusters::get("{$prefix}/{$word}/{$fieldId}/{$userId}");
+        $myPreference = Cache::get("{$prefix}/{$word}/{$fieldId}/{$userId}");
         if (!empty($myPreference)) {
             Log::debug($word . '命中我的wbw-' . $field, ['data' => $myPreference]);
             return ['value' => $myPreference, 'status' => 5];
         } else {
-            $myPreference = RedisClusters::get("{$prefix}/{$word}/3/0");
+            $myPreference = Cache::get("{$prefix}/{$word}/3/0");
             if (!empty($myPreference)) {
                 Log::debug($word . '命中社区wbw-' . $field, ['data' => $myPreference]);
                 return ['value' => $myPreference, 'status' => 5];

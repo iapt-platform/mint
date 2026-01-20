@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\Log;
 
 class ProgressImgController extends Controller
@@ -40,26 +39,26 @@ class ProgressImgController extends Controller
     {
         //
         return response()->stream(function () use ($id) {
-            $key = str_replace('-','/',$id);
-            $svg = RedisClusters::get('svg/'.$key, function () use ($key) {
+            $key = str_replace('-', '/', $id);
+            $svg = Cache::get('svg/' . $key, function () use ($key) {
                 $viewHeight = 60;
                 $svg = "<svg xmlns='http://www.w3.org/2000/svg'  fill='currentColor' viewBox='0 0 300 60'>";
-                $data = RedisClusters::get($key);
-                if(is_array($data)){
+                $data = Cache::get($key);
+                if (is_array($data)) {
                     $point = [];
                     foreach ($data as $key => $value) {
-                        $point[] = ($key*10) . ',' . $viewHeight-($value/20)-3;
+                        $point[] = ($key * 10) . ',' . $viewHeight - ($value / 20) - 3;
                     }
-                    $svg .= '<polyline points="'. implode(' ',$point) . '"';
+                    $svg .= '<polyline points="' . implode(' ', $point) . '"';
                     $svg .= ' style="fill:none;stroke:green;stroke-width:3" /></svg>';
-                }else{
+                } else {
                     $svg .= '<polyline points="0,0 1,0" /></svg>';
                 }
                 return $svg;
-            } , config('mint.cache.expire') );
+            }, config('mint.cache.expire'));
             echo $svg;
         }, 200, ['Content-Type' => 'image/svg+xml']);
-    /*
+        /*
     ————————————————
     原文作者：Summer
     转自链接：https://learnku.com/laravel/wikis/25600

@@ -8,7 +8,7 @@ use App\Http\Resources\InviteResource;
 use Illuminate\Support\Str;
 use App\Mail\EmailCertif;
 use Illuminate\Support\Facades\Mail;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 use App\Models\UserInfo;
 
 class EmailCertificationController extends Controller
@@ -68,7 +68,7 @@ class EmailCertificationController extends Controller
     public function show(string $id)
     {
         //
-        $code = RedisClusters::get("/email/certification/" . $id);
+        $code = Cache::get("/email/certification/" . $id);
         if (empty($code)) {
             return $this->error('Certification is avalide', 200, 200);
         }

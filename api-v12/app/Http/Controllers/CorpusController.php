@@ -19,7 +19,6 @@ use App\Models\CustomBook;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use App\Tools\RedisClusters;
 use App\Http\Api\MdRender;
 use App\Http\Api\SuggestionApi;
 use App\Http\Api\ChannelApi;
@@ -744,7 +743,7 @@ class CorpusController extends Controller
 
                             break;
                         case 'nissaya':
-                            $newSent['html'] = RedisClusters::remember(
+                            $newSent['html'] = Cache::remember(
                                 "/sent/{$channelId}/{$currSentId}/{$format}",
                                 config('mint.cache.expire'),
                                 function () use ($row, $mode, $format) {
@@ -1022,7 +1021,7 @@ class CorpusController extends Controller
         } else {
             $keyCanRead .= 'guest';
         }
-        $channelCanRead = RedisClusters::remember(
+        $channelCanRead = Cache::remember(
             $keyCanRead,
             config('mint.cache.expire'),
             function () use ($userUuid) {

@@ -6,7 +6,7 @@ use App\Models\AiModel;
 use Illuminate\Http\Request;
 use App\Http\Api\AuthApi;
 use Illuminate\Support\Facades\Log;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\AiModelResource;
 
 class SysModelController extends Controller
@@ -25,7 +25,7 @@ class SysModelController extends Controller
             Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);
         }
-        $modelsId = RedisClusters::get($this->key . $request->get('view', 'wbw'));
+        $modelsId = Cache::get($this->key . $request->get('view', 'wbw'));
         if (!is_array($modelsId)) {
             $modelsId = [];
         }
@@ -53,7 +53,7 @@ class SysModelController extends Controller
             Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);
         }
-        RedisClusters::put(
+        Cache::put(
             $this->key . $request->get('view', 'wbw'),
             $request->get('models')
         );

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -22,10 +21,10 @@ class OfflineIndexController extends Controller
         //
         $key = '/offline/index';
 
-        if (!RedisClusters::has($key)) {
+        if (!Cache::has($key)) {
             return [];
         }
-        $fileInfo = RedisClusters::get($key);
+        $fileInfo = Cache::get($key);
         $output = [];
         foreach ($fileInfo as $key => $file) {
             if ($request->has('file')) {

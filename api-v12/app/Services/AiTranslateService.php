@@ -5,7 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 
 use App\Models\Task;
 use App\Models\PaliText;
@@ -61,12 +61,12 @@ class AiTranslateService
         $first = $messages[0];
         $this->task = $first->task->info;
         $taskId = $this->task->id;
-        RedisClusters::put("/task/{$taskId}/message_id", $messageId);
+        Cache::put("/task/{$taskId}/message_id", $messageId);
         $pointerKey = "/task/{$taskId}/pointer";
         $pointer = 0;
-        if (RedisClusters::has($pointerKey)) {
+        if (Cache::has($pointerKey)) {
             //回到上次中断的点
-            $pointer = RedisClusters::get($pointerKey);
+            $pointer = Cache::get($pointerKey);
             Log::info("last break point {$pointer}");
         }
 
@@ -101,7 +101,7 @@ class AiTranslateService
                 return false;
             }
 
-            RedisClusters::put($pointerKey, $i);
+            Cache::put($pointerKey, $i);
             $message = $messages[$i];
             $taskDiscussionContent = [];
 
@@ -198,7 +198,7 @@ class AiTranslateService
         //任务完成 修改任务状态为 done
         if ($i === count($messages)) {
             $this->setTaskStatus($this->task->id, 'done');
-            RedisClusters::forget($pointerKey);
+            Cache::forget($pointerKey);
             Log::info('ai translate task complete');
         }
 

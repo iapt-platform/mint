@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\App;
 
 use Symfony\Component\Process\Process;
@@ -170,7 +170,7 @@ class ExportZip extends Command
             'link' => $link,
             'hostname' => 'Amazon cloud storage(Hongkong)',
         ];
-        $info = RedisClusters::get('/offline/index');
+        $info = Cache::get('/offline/index');
         if (!is_array($info)) {
             $info = array();
         }
@@ -180,11 +180,11 @@ class ExportZip extends Command
             'filename' => $zipFile,
             'url' => $url,
             'create_at' => date("Y-m-d H:i:s"),
-            'chapter' => RedisClusters::get("/export/chapter/count"),
+            'chapter' => Cache::get("/export/chapter/count"),
             'filesize' => filesize($zipFullFileName),
             'min_app_ver' => '1.3',
         ];
-        RedisClusters::put('/offline/index', $info);
+        Cache::put('/offline/index', $info);
         sleep(5);
         try {
             unlink($exportFullFileName);

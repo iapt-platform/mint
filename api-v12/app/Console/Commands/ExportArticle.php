@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 use App\Tools\ExportDownload;
 use App\Http\Api\MdRender;
 
@@ -49,30 +49,32 @@ class ExportArticle extends Command
     {
         $this->info('task export chapter start');
         Log::debug('task export chapter start');
-        if(\App\Tools\Tools::isStop()){
+        if (\App\Tools\Tools::isStop()) {
             return 0;
         }
         $options = [
-            'queryId'=>$this->argument('query_id'),
-            'format'=>$this->option('format'),
-            'debug'=>$this->option('debug'),
-            'filename'=>'article',
+            'queryId' => $this->argument('query_id'),
+            'format' => $this->option('format'),
+            'debug' => $this->option('debug'),
+            'filename' => 'article',
         ];
         $upload = new ExportDownload($options);
 
         MdRender::init();
-        $m = new \Mustache_Engine(array('entity_flags'=>ENT_QUOTES,
-                                        'delimiters' => '[[ ]]',
-                                        'escape'=>function ($value){
-                                            return $value;
-                                        }));
+        $m = new \Mustache_Engine(array(
+            'entity_flags' => ENT_QUOTES,
+            'delimiters' => '[[ ]]',
+            'escape' => function ($value) {
+                return $value;
+            }
+        ));
 
         $sections = array();
         $articles = array();
 
 
         $article = $this->fetch($this->argument('id'));
-        if(!$article){
+        if (!$article) {
             return 1;
         }
 
@@ -81,79 +83,80 @@ class ExportArticle extends Command
         $bookMeta['book_title'] = $article['title_text'];
 
         $articles[] = [
-            'level'=>1,
-            'title'=>$article['title_text'],
-            'content'=>isset($article['html'])?$article['html']:'',
+            'level' => 1,
+            'title' => $article['title_text'],
+            'content' => isset($article['html']) ? $article['html'] : '',
         ];
         $progress = 0.1;
-        $this->info($upload->setStatus($progress,'export article content title='.$article['title_text']));
+        $this->info($upload->setStatus($progress, 'export article content title=' . $article['title_text']));
 
-        if(isset($article['toc']) && count($article['toc'])>0){
-            $this->info('has sub article '. count($article['toc']));
+        if (isset($article['toc']) && count($article['toc']) > 0) {
+            $this->info('has sub article ' . count($article['toc']));
             $step = 0.8 / count($article['toc']);
             $baseLevel = 0;
             foreach ($article['toc'] as $key => $value) {
-                if($baseLevel === 0){
+                if ($baseLevel === 0) {
                     $baseLevel = $value['level'] - 2;
                 }
                 $progress += $step;
-                $this->info($upload->setStatus($progress,'exporting article title='.$value['title']));
+                $this->info($upload->setStatus($progress, 'exporting article title=' . $value['title']));
                 $article = $this->fetch($value['key']);
-                if(!$article){
-                    $this->info($upload->setStatus($progress,'exporting article fail title='.$value['title']));
+                if (!$article) {
+                    $this->info($upload->setStatus($progress, 'exporting article fail title=' . $value['title']));
                     continue;
                 }
-                $this->info($upload->setStatus($progress,'exporting article success title='.$article['title_text']));
+                $this->info($upload->setStatus($progress, 'exporting article success title=' . $article['title_text']));
                 $articles[] = [
-                    'level'=>$value['level']-$baseLevel,
-                    'title'=>$article['title_text'],
-                    'content'=>isset($article['html'])?$article['html']:'',
+                    'level' => $value['level'] - $baseLevel,
+                    'title' => $article['title_text'],
+                    'content' => isset($article['html']) ? $article['html'] : '',
                 ];
             }
         }
 
         $sections[] = [
-            'name'=>'articles',
-            'body'=>['articles'=>$articles],
+            'name' => 'articles',
+            'body' => ['articles' => $articles],
         ];
-        $this->info($upload->setStatus(0.9,'export article content done'));
+        $this->info($upload->setStatus(0.9, 'export article content done'));
         Log::debug('导出结束');
 
 
-        $upload->upload('article',$sections,$bookMeta);
-        $this->info($upload->setStatus(1,'export article done'));
+        $upload->upload('article', $sections, $bookMeta);
+        $this->info($upload->setStatus(1, 'export article done'));
         return 0;
     }
 
-    private function fetch($articleId){
+    private function fetch($articleId)
+    {
         $api = config('mint.server.api.bamboo');
         $basicUrl = $api . '/v2/article/';
         $url =  $basicUrl . $articleId;;
-        $this->info('http request url='.$url);
+        $this->info('http request url=' . $url);
 
         $urlParam = [
-                'mode' => 'read',
-                'format' => 'markdown',
-                'anthology'=> $this->option('anthology'),
-                'channel' => $this->option('channel'),
-                'origin' => 'true' /*$this->option('origin')*/,
-                'paragraph' => true,
+            'mode' => 'read',
+            'format' => 'markdown',
+            'anthology' => $this->option('anthology'),
+            'channel' => $this->option('channel'),
+            'origin' => 'true' /*$this->option('origin')*/,
+            'paragraph' => true,
         ];
 
-        Log::debug('export article http request',['url'=>$url,'param'=>$urlParam]);
-        if($this->option('token')){
-            $response = Http::withToken($this->option('token'))->get($url,$urlParam);
-        }else{
-            $response = Http::get($url,$urlParam);
+        Log::debug('export article http request', ['url' => $url, 'param' => $urlParam]);
+        if ($this->option('token')) {
+            $response = Http::withToken($this->option('token'))->get($url, $urlParam);
+        } else {
+            $response = Http::get($url, $urlParam);
         }
 
-        if($response->failed()){
-            $this->error('http request error'.$response->json('message'));
-            Log::error('http request error',['error'=>$response->json('message')]);
+        if ($response->failed()) {
+            $this->error('http request error' . $response->json('message'));
+            Log::error('http request error', ['error' => $response->json('message')]);
             return false;
         }
-        if(!$response->json('ok')){
-            $this->error('http request error'.$response->json('message'));
+        if (!$response->json('ok')) {
+            $this->error('http request error' . $response->json('message'));
             return false;
         }
         $article = $response->json('data');

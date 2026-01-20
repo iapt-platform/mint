@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\UserDict;
 use Illuminate\Support\Facades\DB;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 
 class CacheDictPreference extends Command
 {
@@ -60,7 +60,7 @@ class CacheDictPreference extends Command
             $meaning = trim($meaning, " $");
             if (!empty($meaning)) {
                 $m = explode('$', $meaning);
-                RedisClusters::put("{$prefix}/{$word->word}/{$word->language}", $m[0]);
+                Cache::put("{$prefix}/{$word->word}/{$word->language}", $m[0]);
             }
             $bar->advance();
             $count++;

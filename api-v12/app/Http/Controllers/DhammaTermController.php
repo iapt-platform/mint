@@ -17,7 +17,7 @@ use App\Http\Api\StudioApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\ShareApi;
 use App\Tools\Tools;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -154,7 +154,7 @@ class DhammaTermController extends Controller
                 break;
             case 'hot-meaning':
                 $key = 'term/hot_meaning';
-                $value = RedisClusters::get($key, function () use ($request) {
+                $value = Cache::get($key, function () use ($request) {
                     $hotMeaning = [];
                     $words = DhammaTerm::select('word')
                         ->where('language', $request->get("language"))
@@ -178,7 +178,7 @@ class DhammaTermController extends Controller
                             ];
                         }
                     }
-                    RedisClusters::put($key, $hotMeaning, 3600);
+                    Cache::put($key, $hotMeaning, 3600);
                     return $hotMeaning;
                 }, config('mint.cache.expire'));
                 return $this->ok(["rows" => $value, "count" => count($value)]);
@@ -294,10 +294,10 @@ class DhammaTermController extends Controller
             //通用 查询studio所有channel
             $channels = Channel::where('owner_uid', $term->owner)->select('uid')->get();
             foreach ($channels as $channel) {
-                RedisClusters::forget("/term/{$channel}/{$term->word}");
+                Cache::forget("/term/{$channel}/{$term->word}");
             }
         } else {
-            RedisClusters::forget("/term/{$term->channal}/{$term->word}");
+            Cache::forget("/term/{$term->channal}/{$term->word}");
         }
     }
 

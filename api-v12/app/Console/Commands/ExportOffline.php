@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\Redis;
 
 class ExportOffline extends Command
@@ -55,7 +54,7 @@ class ExportOffline extends Command
         }
 
         //清空redis
-        RedisClusters::put('/offline/index', []);
+        Cache::put('/offline/index', []);
 
         //删除全部的旧文件
         foreach (scandir($exportDir) as $key => $file) {

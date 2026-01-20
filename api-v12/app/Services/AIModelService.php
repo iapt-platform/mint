@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\AiModel;
 use App\Http\Resources\AiModelResource;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 
 class AIModelService
 {
@@ -32,7 +32,7 @@ class AIModelService
 
         $sysModels = [];
         foreach ($types as $key => $type) {
-            $sysModels[$type] =  $this->getModelsById(RedisClusters::get('/ai/model/system/' . $type) ?? []);
+            $sysModels[$type] =  $this->getModelsById(Cache::get('/ai/model/system/' . $type) ?? []);
         }
         if (!empty($type)) {
             return $sysModels[$type];

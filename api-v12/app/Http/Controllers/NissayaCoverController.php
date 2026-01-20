@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 
 class NissayaCoverController extends Controller
 {
@@ -15,7 +15,7 @@ class NissayaCoverController extends Controller
     public function index()
     {
         //
-        $cover = RedisClusters::get('/statistics/nissaya/cover');
+        $cover = Cache::get('/statistics/nissaya/cover');
         return $this->ok($cover);
     }
 

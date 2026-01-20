@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Http\Api\AuthApi;
 use App\Http\Api\Mq;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 use App\Tools\ExportDownload;
 
 class ExportController extends Controller
@@ -24,40 +24,40 @@ class ExportController extends Controller
     {
         $queryId = Str::uuid();
         $token = AuthApi::getToken($request);
-        switch ($request->get('type','chapter')) {
+        switch ($request->get('type', 'chapter')) {
             case 'chapter':
                 $data = [
-                    'book'=>$request->get('book'),
-                    'para'=>$request->get('par'),
-                    'channel'=>$request->get('channel'),
-                    'format'=>$request->get('format'),
-                    'origin'=>$request->get('origin'),
-                    'translation'=>$request->get('translation'),
-                    'queryId'=>$queryId,
+                    'book' => $request->get('book'),
+                    'para' => $request->get('par'),
+                    'channel' => $request->get('channel'),
+                    'format' => $request->get('format'),
+                    'origin' => $request->get('origin'),
+                    'translation' => $request->get('translation'),
+                    'queryId' => $queryId,
                 ];
-                if($token){
+                if ($token) {
                     $data['token'] = $token;
                 }
-                Mq::publish('export_pali_chapter',$data);
+                Mq::publish('export_pali_chapter', $data);
                 break;
             case 'article':
                 $data = [
-                    'id'=>$request->get('id'),
-                    'channel'=>$request->get('channel'),
-                    'format'=>$request->get('format'),
-                    'origin'=>$request->get('origin'),
-                    'translation'=>$request->get('translation'),
-                    'queryId'=>$queryId,
-                    'anthology'=>$request->get('anthology'),
-                    'channel'=>$request->get('channel'),
+                    'id' => $request->get('id'),
+                    'channel' => $request->get('channel'),
+                    'format' => $request->get('format'),
+                    'origin' => $request->get('origin'),
+                    'translation' => $request->get('translation'),
+                    'queryId' => $queryId,
+                    'anthology' => $request->get('anthology'),
+                    'channel' => $request->get('channel'),
                 ];
-                if($token){
+                if ($token) {
                     $data['token'] = $token;
                 }
-                Mq::publish('export_article',$data);
+                Mq::publish('export_article', $data);
                 break;
             default:
-                return $this->error('unknown type '.$request->get('type'),400,400);
+                return $this->error('unknown type ' . $request->get('type'), 400, 400);
                 break;
         }
 
@@ -84,19 +84,18 @@ class ExportController extends Controller
     public function show($filename)
     {
         //
-        $exportChapter = new ExportDownload(['queryId'=>$filename]);
+        $exportChapter = new ExportDownload(['queryId' => $filename]);
         $exportStatus = $exportChapter->getStatus();
-        if(empty($exportStatus)){
-            return $this->error('no file',200,200);
+        if (empty($exportStatus)) {
+            return $this->error('no file', 200, 200);
         };
 
         $output = array();
         $output['status'] = $exportStatus;
-        if($exportStatus['progress']===1){
+        if ($exportStatus['progress'] === 1) {
             $output['url'] = $exportStatus['url'];
         }
         return $this->ok($output);
-
     }
 
     /**

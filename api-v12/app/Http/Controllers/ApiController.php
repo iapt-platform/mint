@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use App\Tools\RedisClusters;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
 
@@ -37,25 +36,25 @@ class ApiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id)
+    public function show(Request $request, $id)
     {
         //
         $times = $id;
         $currTime = time();
-        $key= "pref-s/";
+        $key = "pref-s/";
         $begin = $currTime - $times - 1;
         $value = 0;
-        for ($i=$begin; $i <= $currTime; $i++) {
-            $keyApi = $key.$request->get('api','all')."/".$i;
-            if(!empty(Redis::get($keyApi.'/delay'))){
-                if($request->get('item') === 'average'){
-                    $value += intval(Redis::get($keyApi.'/delay') / Redis::get($keyApi.'/count'));
-                }else{
-                    $value += (int)Redis::get($keyApi.'/'.$request->get('item'));
+        for ($i = $begin; $i <= $currTime; $i++) {
+            $keyApi = $key . $request->get('api', 'all') . "/" . $i;
+            if (!empty(Redis::get($keyApi . '/delay'))) {
+                if ($request->get('item') === 'average') {
+                    $value += intval(Redis::get($keyApi . '/delay') / Redis::get($keyApi . '/count'));
+                } else {
+                    $value += (int)Redis::get($keyApi . '/' . $request->get('item'));
                 }
             }
         }
-        $value = $value/$times;
+        $value = $value / $times;
         return $this->ok($value);
     }
 
@@ -69,24 +68,24 @@ class ApiController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $currMinute = intval(time()/60);
-        $key= "pref-m/";
+        $currMinute = intval(time() / 60);
+        $key = "pref-m/";
         $begin = $currMinute - 60;
         $output = [];
-        for ($i=$begin; $i <= $currMinute; $i++) {
+        for ($i = $begin; $i <= $currMinute; $i++) {
             $value = 0;
-            $keyApi = $key.$request->get('api','all')."/".$i;
-            if(!empty(Redis::get($keyApi.'/delay'))){
-                if($request->get('item') === 'average'){
-                    $value += intval(Redis::get($keyApi.'/delay') / Redis::get($keyApi.'/count'));
-                }else{
-                    $value += (int)Redis::get($keyApi.'/'.$request->get('item'));
+            $keyApi = $key . $request->get('api', 'all') . "/" . $i;
+            if (!empty(Redis::get($keyApi . '/delay'))) {
+                if ($request->get('item') === 'average') {
+                    $value += intval(Redis::get($keyApi . '/delay') / Redis::get($keyApi . '/count'));
+                } else {
+                    $value += (int)Redis::get($keyApi . '/' . $request->get('item'));
                 }
-            }else{
+            } else {
                 $value = 0;
             }
-            $time = date("H:i:s",$i);
-            $output[] = ['date'=>$time,'value'=>$value];
+            $time = date("H:i:s", $i);
+            $output[] = ['date' => $time, 'value' => $value];
         }
         return $this->ok($output);
     }

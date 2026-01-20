@@ -7,7 +7,7 @@ use App\Http\Api\Mq;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 
 class MqAiTranslate extends Command
 {
@@ -60,12 +60,12 @@ class MqAiTranslate extends Command
             //获取model token
             $first = $messages[0];
             $taskId = $first->task->info->id;
-            RedisClusters::put("/task/{$taskId}/message_id", $messageId);
+            Cache::put("/task/{$taskId}/message_id", $messageId);
             $pointerKey = "/message/{$messageId}/pointer";
             $pointer = 0;
-            if (RedisClusters::has($pointerKey)) {
+            if (Cache::has($pointerKey)) {
                 //回到上次中断的点
-                $pointer = RedisClusters::get($pointerKey);
+                $pointer = Cache::get($pointerKey);
             }
 
             Log::debug($queue . ' ai assistant token', ['user' => $first->model->uid]);
@@ -94,7 +94,7 @@ class MqAiTranslate extends Command
             }
 
             for ($i = $pointer; $i < count($messages); $i++) {
-                RedisClusters::put($pointerKey, $i);
+                Cache::put($pointerKey, $i);
                 $message = $messages[$i];
                 $taskDiscussionContent = [];
                 $param = [
@@ -324,7 +324,7 @@ class MqAiTranslate extends Command
                     $this->setTaskStatus($message->task->info->id, 'done', $modelToken);
                 }
             }
-            RedisClusters::forget($pointerKey);
+            Cache::forget($pointerKey);
             $this->info('ai translate task complete');
             return 0;
         });

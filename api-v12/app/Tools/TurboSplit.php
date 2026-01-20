@@ -7,7 +7,7 @@ require_once __DIR__ . '/../../public/app/public/casesuf.inc';
 use Illuminate\Support\Facades\Log;
 use App\Models\WordPart;
 use App\Models\UserDict;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 
 class TurboSplit
 {
@@ -184,7 +184,7 @@ class TurboSplit
         $search = $word;
 
         //获取单词权重
-        $weight = RedisClusters::remember(
+        $weight = Cache::remember(
             'palicanon/wordpart/weight/' . $search,
             config('mint.cache.expire'),
             function () use ($search) {
@@ -216,7 +216,7 @@ class TurboSplit
             $base_weight = 0;
             $len = 0;
             foreach ($newWord as $x => $x_len) {
-                $weight = RedisClusters::remember(
+                $weight = Cache::remember(
                     'palicanon/wordpart/weight/' . $x,
                     config('mint.cache.expire'),
                     function () use ($x) {
@@ -249,7 +249,7 @@ class TurboSplit
 
         $isFound = false;
         $count = 0;
-        $wordPart  = RedisClusters::remember(
+        $wordPart  = Cache::remember(
             "turbosplit/part/{$word}",
             config('mint.cache.expire'),
             function () use ($word) {
@@ -273,7 +273,7 @@ class TurboSplit
 
         //fomular of confidence value 信心值计算公式
         if ($isFound) {
-            $cf  = RedisClusters::remember(
+            $cf  = Cache::remember(
                 "turbosplit/confidence/" . $word,
                 config('mint.cache.expire'),
                 function () use ($word, $count, $case_len) {

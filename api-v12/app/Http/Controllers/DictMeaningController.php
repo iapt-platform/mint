@@ -5,22 +5,41 @@ namespace App\Http\Controllers;
 use App\Models\UserDict;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use App\Tools\RedisClusters;
 
 class DictMeaningController extends Controller
 {
     protected $langOrder = [
-        "zh-Hans"=>[
-            "zh-Hans","zh-Hant","jp","en","my","vi"
+        "zh-Hans" => [
+            "zh-Hans",
+            "zh-Hant",
+            "jp",
+            "en",
+            "my",
+            "vi"
         ],
-        "zh-Hant"=>[
-            "zh-Hant","zh-Hans","jp","en","my","vi"
+        "zh-Hant" => [
+            "zh-Hant",
+            "zh-Hans",
+            "jp",
+            "en",
+            "my",
+            "vi"
         ],
-        "en"=>[
-            "en","my","zh-Hant","zh-Hans","jp","vi"
+        "en" => [
+            "en",
+            "my",
+            "zh-Hant",
+            "zh-Hans",
+            "jp",
+            "vi"
         ],
-        "jp"=>[
-            "jp","en","my","zh-Hant","zh-Hans","vi"
+        "jp" => [
+            "jp",
+            "en",
+            "my",
+            "zh-Hant",
+            "zh-Hans",
+            "vi"
         ],
     ];
 
@@ -32,26 +51,27 @@ class DictMeaningController extends Controller
     public function index(Request $request)
     {
         //
-        $words = explode("-",$request->get('word'));
+        $words = explode("-", $request->get('word'));
         $lang = $request->get('lang');
         $key = "dict_first_mean/";
         $meaning = [];
         foreach ($words as $key => $word) {
             # code...
-            $meaning[] = ['word'=>$word,'meaning'=>$this->get($word,$lang)];
+            $meaning[] = ['word' => $word, 'meaning' => $this->get($word, $lang)];
         }
 
         return $this->ok($meaning);
     }
 
-    public function get(string $word,string $lang){
+    public function get(string $word, string $lang)
+    {
         $currMeaning = "";
-        if(isset($this->langOrder[$lang])){
+        if (isset($this->langOrder[$lang])) {
             foreach ($this->langOrder[$lang] as $key => $value) {
                 # 遍历每种语言。找到返回
                 $cacheKey = "dict_first_mean/{$value}/{$word}";
-                $meaning = RedisClusters::get($cacheKey);
-                if(!empty($meaning)){
+                $meaning = Cache::get($cacheKey);
+                if (!empty($meaning)) {
                     $currMeaning = $meaning;
                     break;
                 }

@@ -8,7 +8,7 @@ use App\Models\PaliText;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SentResource;
-use App\Tools\RedisClusters;
+use Illuminate\Support\Facades\Cache;
 
 class SentenceInfoController extends Controller
 {
@@ -115,7 +115,7 @@ class SentenceInfoController extends Controller
             foreach ($sentFinished as $sent) {
                 # code...
                 $key_sent_id = $sent->book_id . '-' . $sent->paragraph . '-' . $sent->word_start . '-' . $sent->word_end;
-                $para_strlen += RedisClusters::remember(
+                $para_strlen += Cache::remember(
                     'pali-sent/strlen/' . $key_sent_id,
                     config('mint.cache.expire'),
                     function () use ($sent) {
