@@ -53,7 +53,7 @@ class UserOperation
          * 1. 操作日志
          * =========================
          */
-        UserOperationLog::create([
+        UserOperationLog::forceCreate([
             'id'          => app('snowflake')->id(),
             'user_id'     => $user['user_id'],
             'op_type_id'  => $newLog['op_type_id'],
@@ -62,6 +62,7 @@ class UserOperation
             'timezone'    => $clientTimezone,
             'create_time' => $currTime,
         ]);
+
 
         /**
          * =========================
@@ -79,7 +80,7 @@ class UserOperation
         }
 
         if ($isNewFrame) {
-            UserOperationFrame::create([
+            UserOperationFrame::forceCreate([
                 'id'        => app('snowflake')->id(),
                 'user_id'   => $user['user_id'],
                 'op_start'  => $currTime - self::MIN_INTERVAL,
@@ -93,11 +94,11 @@ class UserOperation
         } else {
             $thisActiveTime = $currTime - (int) $lastFrame->op_end;
 
-            $lastFrame->update([
+            $lastFrame->forceFill([
                 'op_end'   => $currTime,
                 'duration' => $currTime - (int) $lastFrame->op_start,
                 'hit'      => $lastFrame->hit + 1,
-            ]);
+            ])->save();
         }
 
         /**
@@ -117,8 +118,12 @@ class UserOperation
             $daily->increment('duration', $thisActiveTime);
             $daily->increment('hit');
         } else {
-            $daily->fill([
-                'id'       => app('snowflake')->id(),
+            $id = app('snowflake')->id();
+            if (app()->isLocal()) {
+                Log::debug('snowflake ' . $id);
+            }
+            $daily->forceFill([
+                'id'       => $id,
                 'duration' => self::MIN_INTERVAL,
                 'hit'      => 1,
             ])->save();
