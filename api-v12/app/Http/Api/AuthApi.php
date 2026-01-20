@@ -9,6 +9,10 @@ use Firebase\JWT\Key;
 
 class AuthApi
 {
+    public static function getJwtKey()
+    {
+        return config('mint.app.jwt_secrets_key');
+    }
     public static function getToken(Request $request)
     {
         $token = $request->bearerToken();
@@ -19,7 +23,8 @@ class AuthApi
         $token = $request->bearerToken();
         if ($token) {
             try {
-                $jwt = JWT::decode($token, new Key(config('app.key'), 'HS512'));
+
+                $jwt = JWT::decode($token, new Key(self::getJwtKey(), 'HS512'));
             } catch (\Exception $e) {
                 return false;
             }
