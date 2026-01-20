@@ -19,7 +19,10 @@ class AppServiceProvider extends ServiceProvider
         //雪花算法
 
         $this->app->singleton('snowflake', function () {
-            return (new Snowflake(config('mint.snowflake_data_center_id'), config('mint.snowflake.worker_id')))
+            return (new Snowflake(
+                config('mint.snowflake.data_center_id'),
+                config('mint.snowflake.worker_id')
+            ))
                 ->setStartTimeStamp(strtotime(config('mint.snowflake.start')) * 1000)
                 ->setSequenceResolver(
                     new LaravelSequenceResolver(
