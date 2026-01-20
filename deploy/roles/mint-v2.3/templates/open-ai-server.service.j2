@@ -1,0 +1,15 @@
+[Unit]
+Description=open-ai server({{ app_domain }}).
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User={{ ansible_user }}
+ExecStart=/usr/bin/docker run --rm --name {{ app_domain }}-open-ai-server -p 127.0.0.1:{{ app_openai_proxy_listen_port }}:8080/tcp -v /srv:/srv:z {{ app_nodejs_image }} {{ app_deploy_target }}/scripts/open-ai-server.sh
+ExecStop=/usr/bin/docker stop {{ app_domain }}-open-ai-server
+WorkingDirectory={{ app_deploy_target }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,136 @@
+- name: Create build folder
+  ansible.builtin.file:
+    path: "{{ app_workspace | dirname }}"
+    state: directory
+    # owner: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Git checkout mint repo
+  ansible.builtin.git:
+    repo: "https://github.com/iapt-platform/mint.git"
+    dest: "{{ app_workspace }}"
+    version: "{{ mint_version }}"
+
+- name: Extract dashboard-v4
+  ansible.builtin.unarchive:
+    src: dashboard-v4-{{ ansible_facts['architecture'] }}-20260116065749.tar.xz
+    dest: "{{ app_workspace }}/dashboard-v4/dashboard"
+    creates: "{{ app_workspace }}/dashboard-v4/dashboard/yarn.lock"
+
+- name: Extract api-v8
+  ansible.builtin.unarchive:
+    src: api-v8-20260117.tar.xz
+    dest: "{{ app_workspace }}/api-v8"
+    creates: "{{ app_workspace }}/api-v8/composer.lock"
+
+- name: Extract dashboard-v6
+  ansible.builtin.unarchive:
+    src: dashboard-v6-{{ ansible_facts['architecture'] }}-20260116064312.tar.xz
+    dest: "{{ app_workspace }}/dashboard-v6"
+    creates: "{{ app_workspace }}/dashboard-v6/package-lock.json"
+
+- name: Extract api-v12
+  ansible.builtin.unarchive:
+    src: api-v12-{{ ansible_facts['architecture'] }}-20260116064312.tar.xz
+    dest: "{{ app_workspace }}/api-v12"
+    creates: "{{ app_workspace }}/api-v12/composer.lock"
+
+- name: Extract open-ai-server
+  ansible.builtin.unarchive:
+    src: open-ai-server-{{ ansible_facts['architecture'] }}-20260116064312.tar.xz
+    dest: "{{ app_workspace }}/open-ai-server"
+    creates: "{{ app_workspace }}/open-ai-server/package-lock.json"
+
+- name: Build dashboard-v4
+  ansible.builtin.shell: |
+    source ~/.nvm/nvm.sh && yarn build
+  args:
+    executable: /bin/bash
+    chdir: "{{ app_workspace }}/dashboard-v4/dashboard"
+    creates: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/dashboard-v4"
+  environment:
+    BUILD_PATH: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/dashboard-v4"
+    NODE_OPTIONS: "--max_old_space_size=5120"
+    PUBLIC_URL: "{{ app_dashboard_v4_base_path }}"
+    REACT_APP_DEFAULT_LOCALE: "zh-Hans"
+    REACT_APP_LANGUAGES: "en-US,zh-Hans,zh-Hant"
+    REACT_APP_ENABLE_LOCAL_TOKEN: "true"
+    REACT_APP_TOKEN_KEY: "{{ app_dashboard_token_key }}"
+    REACT_APP_DOCUMENTS_SERVER: "{{ app_documents_server }}"
+    REACT_APP_RPC_SERVER: "{{ app_grpc_web_server }}"
+    REACT_APP_ASSETS_SERVER: "{{ app_assets_server }}"
+    REACT_APP_API_SERVER: "https://{{ app_domain }}"
+    REACT_APP_ICP_CODE: "{{ app_icp_code }}"
+    REACT_APP_MPS_CODE: "{{ app_mps_code }}"
+    REACT_APP_QUESTIONNAIRE_LINK: "{{ app_questionnaire_link }}"
+    REACT_APP_OPENAI_PROXY: "{{ app_openai_proxy_server }}/api/openai"
+
+- name: Build dashboard-v6
+  ansible.builtin.shell: |
+    source ~/.nvm/nvm.sh && npm run build -- --base={{ app_dashboard_v6_base_path }} --outDir {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/dashboard-v6
+  args:
+    executable: /bin/bash
+    chdir: "{{ app_workspace }}/dashboard-v6"
+    creates: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/dashboard-v6"
+  environment:
+    NODE_ENV: production
+    VITE_DEFAULT_LOCALE: "zh-Hans"
+    VITE_LANGUAGES: "en-US,zh-Hans,zh-Hant"
+    VITE_ENABLE_LOCAL_TOKEN: "true"
+    VITE_TOKEN_KEY: "{{ app_dashboard_token_key }}"
+    VITE_DOCUMENTS_SERVER: "{{ app_documents_server }}"
+    VITE_RPC_SERVER: "{{ app_grpc_web_server }}"
+    VITE_ASSETS_SERVER: "{{ app_assets_server }}"
+    VITE_API_SERVER: "https://{{ app_domain }}"
+    VITE_ICP_CODE: "{{ app_icp_code }}"
+    VITE_MPS_CODE: "{{ app_mps_code }}"
+    VITE_QUESTIONNAIRE_LINK: "{{ app_questionnaire_link }}"
+    VITE_OPENAI_PROXY: "{{ app_openai_proxy_server }}/api/openai"
+
+- name: Build open-ai proxy server
+  ansible.builtin.shell: |
+    source ~/.nvm/nvm.sh && npm run build -- --output-path {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/open-ai-server
+  args:
+    executable: /bin/bash
+    chdir: "{{ app_workspace }}/open-ai-server"
+    creates: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/open-ai-server"
+  environment:
+    NODE_ENV: production
+
+- name: Copy api-v8 to release folder
+  ansible.posix.synchronize:
+    src: "{{ app_workspace }}/api-v8"
+    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}"
+    recursive: true
+
+- name: Copy api-v12 to release folder
+  ansible.posix.synchronize:
+    src: "{{ app_workspace }}/api-v12"
+    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}"
+    recursive: true
+
+- name: Copy ai-translate to release folder
+  ansible.posix.synchronize:
+    src: "{{ app_workspace }}/ai-translate"
+    dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}"
+    recursive: true
+
+# - name: Archive release.tar.xz
+#   community.general.archive:
+#     path: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}/*"
+#     dest: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz"
+#     format: xz
+#     remove: true
+
+- name: Archive release.tar.xz
+  ansible.builtin.command: tar --remove-files -cJf {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz -C {{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }} .
+  args:
+    creates: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz"
+  environment:
+    XZ_OPT: "-9"
+
+- name: Download release.tar.xz
+  ansible.builtin.fetch:
+    src: "{{ app_workspace }}/tmp/{{ app_domain }}-{{ mint_version }}.tar.xz"
+    dest: "{{ playbook_dir }}/tmp/"
+    flat: true

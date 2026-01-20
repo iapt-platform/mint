@@ -10,7 +10,7 @@ RUN apt -y install lsb-release apt-utils \
     debian-keyring debian-archive-keyring apt-transport-https software-properties-common curl wget gnupg
 RUN add-apt-repository -y ppa:ondrej/php
 RUN apt -y upgrade
-RUN apt -y install git vim locales locales-all tzdata build-essential \
+RUN apt -y install git vim locales locales-all inetutils-telnet iproute2 tzdata build-essential \
     php${PHP_VERSION}-cli php${PHP_VERSION}-fpm \
     php${PHP_VERSION}-xml php${PHP_VERSION}-imap php${PHP_VERSION}-intl php${PHP_VERSION}-mbstring php${PHP_VERSION}-bcmath \
     php${PHP_VERSION}-bz2 php${PHP_VERSION}-zip php${PHP_VERSION}-curl php${PHP_VERSION}-gd php${PHP_VERSION}-imagick \
@@ -24,7 +24,7 @@ RUN apt -y install git vim locales locales-all tzdata build-essential \
     fonts-ipaexfont fonts-ipafont fonts-konatu fonts-ipafont-nonfree-jisx0208 fonts-ipafont-nonfree-uigothic \
     fonts-mikachan \
     fonts-tibetan-machine fonts-ddc-uchen fonts-monlam fonts-sambhota-tsugring fonts-sambhota-yigchung \
-    imagemagick ffmpeg graphviz pandoc texlive-full \
+    imagemagick ffmpeg graphviz pandoc texlive-full p7zip-full \
     python3-full python3-dev \
     libssl-dev libpq-dev libmysqlclient-dev \
     && apt -y autoremove \

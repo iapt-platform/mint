@@ -1,0 +1,14 @@
+[Unit]
+Description=Laravel scheduler({{ app_domain }}).
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User={{ ansible_user }}
+ExecStart=/usr/bin/docker run --rm --name {{ app_domain }}-laravel-scheduler-{{ item.version }} -v /srv:/srv:z {{ item.image }} {{ app_deploy_target }}/scripts/laravel.sh schedule:run
+ExecStop=/usr/bin/docker stop {{ app_domain }}-laravel-scheduler-{{ item.version }}
+WorkingDirectory={{ app_deploy_target }}
+
+[Install]
+WantedBy=multi-user.target

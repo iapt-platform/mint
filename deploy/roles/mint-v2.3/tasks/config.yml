@@ -1,0 +1,29 @@
+- name: Upload .env(v2)
+  ansible.builtin.template:
+    src: v2/env.j2
+    dest: "{{ app_deploy_target }}/api-v8/.env"
+    mode: "0444"
+
+- name: Upload config.php(v1)
+  ansible.builtin.template:
+    src: v1/config.php.j2
+    dest: "{{ app_deploy_target }}/api-v8/public/app/config.php"
+    mode: "0444"
+
+- name: Upload config.js(v1)
+  ansible.builtin.template:
+    src: v1/config.js.j2
+    dest: "{{ app_deploy_target }}/api-v8/public/app/config.js"
+    mode: "0444"
+
+- name: Upload ai-translate.toml
+  ansible.builtin.template:
+    src: ai-translate.toml.j2
+    dest: "{{ app_deploy_target }}/ai-translate/config.toml"
+    mode: "0444"
+
+- name: Upload open-ai-server.json
+  ansible.builtin.template:
+    src: open-ai-server.json.j2
+    dest: "{{ app_deploy_target }}/open-ai-server/config.json"
+    mode: "0444"
