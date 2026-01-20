@@ -4,6 +4,8 @@ return [
     'app' => [
         'icp_code' => env('APP_ICP_CODE', ''),
         'mps_code' => env('APP_MPS_CODE', ''),
+        'jwt_secrets_key' => env('JWT_SECRETS_KEY', ''),
+
     ],
     'languages' => [
         'en' => 'English',
