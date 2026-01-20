@@ -129,7 +129,7 @@ class CategoryController extends Controller
     }
     private function loadCategories()
     {
-        $json = file_get_contents(public_path("app/palicanon/category/default.json"));
+        $json = file_get_contents(public_path("date/category/default.json"));
         $tree = json_decode($json, true);
         $flat = self::flattenWithIds($tree);
         return $flat;
