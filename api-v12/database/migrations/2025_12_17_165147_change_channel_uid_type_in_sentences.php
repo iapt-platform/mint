@@ -14,16 +14,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('sentences', function (Blueprint $table) {
-            DB::statement("
+        // ① 先清洗数据（保证可转换）
+        DB::statement("
+            UPDATE sentences
+            SET channel_uid = NULL
+            WHERE channel_uid IS NOT NULL
+              AND trim(channel_uid) = ''
+        ");
+
+        // ② 再修改字段类型
+        DB::statement("
             ALTER TABLE sentences
             ALTER COLUMN channel_uid TYPE uuid
-            USING CASE
-                WHEN channel_uid = '' THEN NULL
-                ELSE channel_uid::uuid
-            END
+            USING channel_uid::uuid
         ");
-        });
     }
 
     /**
@@ -33,8 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('sentences', function (Blueprint $table) {
-            DB::statement('ALTER TABLE sentences ALTER COLUMN channel_uid TYPE varchar(255) USING channel_uid::varchar');
-        });
+        DB::statement('ALTER TABLE sentences ALTER COLUMN channel_uid TYPE varchar(36) USING channel_uid::text');
     }
 };
