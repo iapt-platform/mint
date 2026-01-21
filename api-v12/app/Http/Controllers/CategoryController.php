@@ -21,15 +21,16 @@ class CategoryController extends Controller
         $categoryData = [];
         foreach ($categories as $category) {
             if ($category['level'] == 1) {
-                $categoryBooks = $this->getBooks($categories, $category['id']);
+                $children = $this->subCategories($categories, $category['id']);
                 $categoryData[] = [
                     'category' => $category,
-                    'books' => array_slice(array_values($categoryBooks), 0, 3)
+                    'children' => $children,
                 ];
             }
         }
+        $update = $this->getUpdateBooks();
 
-        return view('library.index', compact('categoryData', 'categories'));
+        return view('library.index', compact('categoryData', 'categories', 'update'));
     }
 
     public function show($id)
@@ -54,6 +55,29 @@ class CategoryController extends Controller
         return view('library.category', compact('currentCategory', 'subCategories', 'categoryBooks', 'breadcrumbs'));
     }
 
+    private function subCategories($categories, int $id)
+    {
+        return array_filter($categories, function ($cat) use ($id) {
+            return $cat['parent_id'] == $id;
+        });
+    }
+
+    private function getUpdateBooks()
+    {
+        $books = ProgressChapter::with('channel.owner')
+            ->leftJoin('pali_texts', function ($join) {
+                $join->on('progress_chapters.book', '=', 'pali_texts.book')
+                    ->on('progress_chapters.para', '=', 'pali_texts.paragraph');
+            })
+            ->whereHas('channel', function ($query) {
+                $query->where('status', 30);
+            })
+            ->where('progress', '>', config('mint.library.list_min_progress'))
+            ->take(10)
+            ->get();
+
+        return $this->getBooksInfo($books);
+    }
     private function getBooks($categories, $id)
     {
         $currentCategory = collect($categories)->firstWhere('id', $id);
@@ -105,10 +129,15 @@ class CategoryController extends Controller
             ->where('progress', '>', config('mint.library.list_min_progress'))
             ->get();
 
+        return $this->getBooksInfo($books);
+    }
+
+    private function getBooksInfo($books,)
+    {
         $pali = PaliText::where('level', 1)->get();
         // 获取该分类下的书籍
         $categoryBooks = [];
-        $books->each(function ($book) use (&$categoryBooks, $id, $pali) {
+        $books->each(function ($book) use (&$categoryBooks,  $pali) {
             $title = $book->title;
             if (empty($title)) {
                 $title = $pali->firstWhere('book', $book->book)->toc;
@@ -119,7 +148,6 @@ class CategoryController extends Controller
                 "author" => $book->channel->name,
                 "publisher" => $book->channel->owner,
                 "type" => __('labels.' . $book->channel->type),
-                "category_id" => $id,
                 "cover" => "/assets/images/cover/zh-hans/1/{$book->pcd_book_id}.png",
                 "description" => $book->summary ?? "比库戒律的详细说明",
                 "language" => __('language.' . $book->channel->lang),
