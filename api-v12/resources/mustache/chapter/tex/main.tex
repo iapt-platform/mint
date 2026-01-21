@@ -1,0 +1,20 @@
+% 导言区
+\documentclass[a4paper, 12pt, fontset=ubuntu]{article} % book, report, letter
+\usepackage{ctex} % Use chinese package
+
+\title{\heiti [[book_title]]}
+\author{\kaishu [[book_author]]}
+\date{\today}
+
+% 正文区
+
+\begin{document}
+    \maketitle % 头部信息在正文显示
+    \newpage
+    \tableofcontents % 显示索引列
+
+    [[#sections]]
+    \include{ [[filename]]}
+    [[/sections]]
+
+\end{document}

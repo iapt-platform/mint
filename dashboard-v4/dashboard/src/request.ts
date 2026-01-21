@@ -19,7 +19,7 @@ export interface I500Response {
 
 export const backend = (p: string) =>
   `${process.env.REACT_APP_API_BASE}/api${p}`;
-
+export const API_HOST = `${process.env.REACT_APP_API_BASE}`;
 export const GRPC_HOST: string =
   process.env.REACT_APP_GRPC_HOST || "http://127.0.0.1:9999";
 
@@ -80,7 +80,7 @@ export const post = async <Q, R>(path: string, body: Q): Promise<R> => {
 
 export const patch = <Request, Response>(
   path: string,
-  body: Request,
+  body: Request
 ): Promise<Response> => {
   const data = options("PATCH");
   data.body = JSON.stringify(body);
@@ -94,7 +94,7 @@ export const patch = <Request, Response>(
 
 export const put = async <Request, Response>(
   path: string,
-  body: Request,
+  body: Request
 ): Promise<Response> => {
   const data = options("PUT");
   data.body = JSON.stringify(body);

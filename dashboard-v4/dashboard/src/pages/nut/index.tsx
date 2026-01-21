@@ -4,6 +4,7 @@ import HeadBar from "../../components/library/HeadBar";
 import TreeText from "../../components/article/TreeText";
 import { ChatContainer } from "../../components/chat/ChatContainer";
 import NissayaAligner from "../../components/corpus/NissayaAligner";
+import WbwSent from "../../components/nut/test/WbwSent";
 
 const Widget = () => {
   return (
@@ -11,6 +12,9 @@ const Widget = () => {
       <HeadBar />
       <div>
         <div>Home Page</div>
+        <div style={{ backgroundColor: "white" }}>
+          <WbwSent />
+        </div>
         <div style={{ backgroundColor: "white" }}>
           <NissayaAligner />
         </div>

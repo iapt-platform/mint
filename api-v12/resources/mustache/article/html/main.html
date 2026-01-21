@@ -1,0 +1,87 @@
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>[[book_title]]</title>
+    <style>
+        p {
+            text-indent: 2em;
+            line-height: 1.7em;
+        }
+        .sentence>p{
+            display: inline;
+        }
+        a {
+            text-decoration: none;
+        }
+        .paragraph {
+            margin-bottom: 1em;
+        }
+
+        .row {
+            display: flex;
+        }
+        img{
+            max-width: 100%;
+        }
+        @media screen and (max-width: 960px){
+            .row {
+                flex-direction: column;
+            }
+        }
+        .col {
+            flex: 5;
+        }
+        code {
+            background-color: #ffe4c478;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .origin {
+            font-family: times;
+        }
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+            display: block;
+            width: -webkit-max-content;
+            width: max-content;
+            max-width: 100%;
+        }
+
+        td,
+        th {
+            padding: 0;
+        }
+
+        table th {
+            font-weight: 600;
+        }
+
+        table th,
+        table td {
+            padding: 6px 13px;
+            border: 1px solid black;
+        }
+
+        table tr {
+            background-color: #ffffff;
+            border-top: 1px solid hsl(210, 18%, 87%);
+        }
+
+        table img {
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+<h1>[[book_title]]</h1>
+
+<h2>目录</h2>
+<ul>
+    [[#sections]]
+    <li><a href="#[[filename]]">[[filename]]</a></li>
+    [[/sections]]
+</ul>
+
