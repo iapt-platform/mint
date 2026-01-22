@@ -17,7 +17,7 @@ class SetLocale
     public function handle(Request $request, Closure $next): Response
     {
         // 支持的语言（Laravel 推荐小写 + 标准化）
-        $supportedLocales = ['en', 'zh-hans', 'zh-hant'];
+        $supportedLocales = ['en', 'zh-Hans', 'zh-Hant'];
         $defaultLocale = config('app.locale', 'en');
 
         // 1️⃣ URL 参数 ?lang=
