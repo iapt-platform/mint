@@ -31,6 +31,7 @@ import User from "../../auth/User";
 import { ISentenceListResponse } from "../../api/Corpus";
 import { toISentence } from "./SentCanRead";
 import SentAttachment from "./SentAttachment";
+import NissayaSent from "../Nissaya/NissayaSent";
 
 interface ISnowFlakeResponse {
   ok: boolean;
@@ -430,6 +431,8 @@ const SentCellWidget = ({
                   content={sentData.content}
                   oldContent={diffText}
                 />
+              ) : sentData.channel.type === "nissaya" ? (
+                <NissayaSent data={JSON.parse(sentData.content ?? "[])")} />
               ) : (
                 <MdView
                   className="sentence"
