@@ -28,11 +28,11 @@ class NissayaParserTest extends TestCase
         $result = $this->parser->parse($content);
 
         $this->assertCount(2, $result);
-        $this->assertEquals('pañcamassa', $result[0]['pali']);
+        $this->assertEquals('pañcamassa', $result[0]['original']);
         $this->assertEquals('ပဉ္စမဝဂ်၏', $result[0]['translation']);
         $this->assertEmpty($result[0]['notes']);
 
-        $this->assertEquals('paṭhame', $result[1]['pali']);
+        $this->assertEquals('paṭhame', $result[1]['original']);
         $this->assertEquals('ပထမသုတ်၌', $result[1]['translation']);
     }
 
@@ -46,7 +46,7 @@ class NissayaParserTest extends TestCase
         $result = $this->parser->parse($content);
 
         $this->assertCount(2, $result);
-        $this->assertEquals('uttānāti', $result[0]['pali']);
+        $this->assertEquals('uttānāti', $result[0]['original']);
         $this->assertEquals('ဥတ္တာနာ-ဟူသည်ကား', $result[0]['translation']);
         $this->assertCount(1, $result[0]['notes']);
         $this->assertEquals('ထင်ရှားသော', $result[0]['notes'][0]);
@@ -62,7 +62,7 @@ class NissayaParserTest extends TestCase
         $result = $this->parser->parse($content);
 
         $this->assertCount(1, $result);
-        $this->assertEquals('uttānāti', $result[0]['pali']);
+        $this->assertEquals('uttānāti', $result[0]['original']);
         $this->assertContains('ထင်ရှားသော', $result[0]['notes']);
     }
 
@@ -76,7 +76,7 @@ class NissayaParserTest extends TestCase
         $result = $this->parser->parse($content);
 
         $this->assertCount(1, $result);
-        $this->assertEquals('uttānāti', $result[0]['pali']);
+        $this->assertEquals('uttānāti', $result[0]['original']);
         $this->assertEquals('ဥတ္တာနာ-ဟူသည်ကား', $result[0]['translation']);
         $this->assertCount(1, $result[0]['notes']);
         $this->assertEquals('ထင်ရှားသော', $result[0]['notes'][0]);
@@ -92,7 +92,7 @@ class NissayaParserTest extends TestCase
         $result = $this->parser->parse($content);
 
         $this->assertCount(1, $result);
-        $this->assertEquals('uttānāti', $result[0]['pali']);
+        $this->assertEquals('uttānāti', $result[0]['original']);
         $this->assertCount(2, $result[0]['notes']);
         $this->assertEquals('ထင်ရှားသော', $result[0]['notes'][0]);
         $this->assertEquals('第二个注释', $result[0]['notes'][1]);
@@ -142,23 +142,23 @@ TEXT;
         $this->assertCount(5, $result);
 
         // 第一条记录
-        $this->assertEquals('pañcamassa', $result[0]['pali']);
+        $this->assertEquals('pañcamassa', $result[0]['original']);
         $this->assertEmpty($result[0]['notes']);
 
         // 第二条记录
-        $this->assertEquals('paṭhame', $result[1]['pali']);
+        $this->assertEquals('paṭhame', $result[1]['original']);
 
         // 第三条记录 - 有单个注释
-        $this->assertEquals('uttānāti', $result[2]['pali']);
+        $this->assertEquals('uttānāti', $result[2]['original']);
         $this->assertCount(1, $result[2]['notes']);
 
         // 第四条记录 - 有``格式注释
-        $this->assertEquals('appaṭicchannā', $result[3]['pali']);
+        $this->assertEquals('appaṭicchannā', $result[3]['original']);
         $this->assertCount(1, $result[3]['notes']);
         $this->assertEquals('另一种注释格式', $result[3]['notes'][0]);
 
         // 第五条记录 - 有两个注释
-        $this->assertEquals('dhammā', $result[4]['pali']);
+        $this->assertEquals('dhammā', $result[4]['original']);
         $this->assertCount(2, $result[4]['notes']);
         $this->assertEquals('第一个注释', $result[4]['notes'][0]);
         $this->assertEquals('第二个注释', $result[4]['notes'][1]);
@@ -198,8 +198,8 @@ TEXT;
             $result = $this->parser->parseFile($tempFile);
 
             $this->assertCount(2, $result);
-            $this->assertEquals('pañcamassa', $result[0]['pali']);
-            $this->assertEquals('paṭhame', $result[1]['pali']);
+            $this->assertEquals('pañcamassa', $result[0]['original']);
+            $this->assertEquals('paṭhame', $result[1]['original']);
         } finally {
             // 清理临时文件
             if (file_exists($tempFile)) {
