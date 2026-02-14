@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Sentence;
 use App\Models\SentHistory;
+use App\Models\Channel;
+
 use Illuminate\Support\Str;
 
 class SentenceService
@@ -25,8 +27,9 @@ class SentenceService
             $row->content_type = $data['content_type'];
         }
         $row->strlen = mb_strlen($data['content'], "UTF-8");
-        $row->language = $data['lang'];
-        $row->status = $data['status'];
+        $lang = Channel::where('uid', $data['channel_uid'])->value('lang');
+        $row->language = $lang;
+        $row->status = $data['status'] ?? 10;
         if (isset($data['copy'])) {
             //复制句子，保留原作者信息
             $row->editor_uid = $data["editor_uid"];
