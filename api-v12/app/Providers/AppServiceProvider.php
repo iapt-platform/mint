@@ -7,6 +7,7 @@ use Godruoyi\Snowflake\Snowflake;
 use Godruoyi\Snowflake\LaravelSequenceResolver;
 use App\Tools\QueryBuilderMacro;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use App\Services\RomanizeService;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
                     )
                 );
         });
+
+        $this->app->singleton(RomanizeService::class);
     }
 
     /**
