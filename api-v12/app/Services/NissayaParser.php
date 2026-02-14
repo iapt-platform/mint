@@ -69,9 +69,9 @@ class NissayaParser
                     }
 
                     // 解析新记录
-                    list($pali, $translation) = explode('=', $line, 2);
+                    list($original, $translation) = explode('=', $line, 2);
                     $currentRecord = [
-                        'pali' => trim($pali),
+                        'original' => trim($original),
                         'translation' => trim($translation),
                         'notes' => []
                     ];
@@ -84,7 +84,7 @@ class NissayaParser
                 } elseif ($currentRecord === null) {
                     // 情况2: 第一行没有等号,可能是不完整的巴利文
                     $currentRecord = [
-                        'pali' => trim($line),
+                        'original' => trim($line),
                         'translation' => '',
                         'notes' => []
                     ];
