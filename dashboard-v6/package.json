@@ -10,21 +10,29 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/charts": "^2.6.7",
     "@ant-design/pro-components": "^3.1.4-0",
     "@ant-design/x": "^2.2.2",
     "@graphiql/react": "^0.37.3",
     "@reduxjs/toolkit": "^2.11.2",
+    "@types/diff": "^7.0.2",
     "@types/js-cookie": "^3.0.6",
+    "@types/marked": "^5.0.2",
+    "@types/video.js": "^7.3.58",
     "antd": "^6.3.0",
+    "dayjs": "^1.11.19",
+    "diff": "^8.0.3",
     "jose": "^6.1.3",
     "js-cookie": "^3.0.5",
+    "marked": "^17.0.2",
     "rc-virtual-list": "^3.19.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-intl": "^7.1.14",
     "react-redux": "^9.2.0",
     "react-router": "^7.13.0",
-    "usehooks-ts": "^3.1.1"
+    "usehooks-ts": "^3.1.1",
+    "video.js": "^8.23.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

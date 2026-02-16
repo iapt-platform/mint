@@ -22,7 +22,8 @@
         "opensearch-project/opensearch-php": "^2.4",
         "php-amqplib/php-amqplib": "^3.7",
         "php-ffmpeg/php-ffmpeg": "^1.3",
-        "phpoffice/phpspreadsheet": "^5.3"
+        "phpoffice/phpspreadsheet": "^5.3",
+        "predis/predis": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
