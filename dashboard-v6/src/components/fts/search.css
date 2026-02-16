@@ -1,0 +1,26 @@
+.search_content > p > del {
+  background-color: rgba(255, 255, 0, 0.5);
+  color: black;
+  text-decoration: none;
+}
+.search_content > p > strong > del {
+  background-color: rgba(255, 255, 0, 0.5);
+  color: black;
+  font-weight: 700;
+  text-decoration: none;
+}
+.search_content em {
+  color: #177ddc;
+  font-style: unset;
+}
+
+.bld {
+  font-weight: 700;
+}
+
+.hl {
+  background-color: rgba(255, 255, 0, 0.5);
+}
+.note {
+  color: #177ddc;
+}

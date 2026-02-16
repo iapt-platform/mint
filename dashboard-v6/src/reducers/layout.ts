@@ -1,41 +1,54 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
+import { ISettingModels } from "../load";
 
-export interface IRefresh {
+export interface IAuthor {
+  name: string;
+  email: string;
+}
+
+export interface ISite {
+  logo: string;
   title: string;
   subhead: string;
+  keywords: string[];
   description: string;
   copyright: string;
-  version: string;
+  author: IAuthor;
+  settings?: {
+    models?: ISettingModels;
+  };
 }
 
-interface LayoutState {
+interface IState {
+  site?: ISite;
   title?: string;
-  subhead?: string;
-  description?: string;
-  copyright?: string;
-  version?: string;
 }
 
-const initialState: LayoutState = {};
+const initialState: IState = {};
 
-export const layoutSlice = createSlice({
+export const slice = createSlice({
   name: "layout",
   initialState,
   reducers: {
-    refresh: (state, action: PayloadAction<IRefresh>) => {
-      state.version = action.payload.version;
-      state.subhead = action.payload.subhead;
-      state.description = action.payload.description;
-      state.copyright = action.payload.copyright;
-      state.version = action.payload.version;
+    refresh: (state, action: PayloadAction<ISite>) => {
+      state.site = action.payload;
+    },
+    setTitle: (state, action: PayloadAction<string>) => {
+      state.title = action.payload;
     },
   },
 });
 
-export const { refresh } = layoutSlice.actions;
+export const { refresh, setTitle } = slice.actions;
 
-export const selectVersion = (state: RootState) => state.layout.version;
+export const layout = (state: RootState): IState => state.layout;
 
-export default layoutSlice.reducer;
+export const siteInfo = (state: RootState): ISite | undefined =>
+  state.layout.site;
+
+export const pageTitle = (state: RootState): string | undefined =>
+  state.layout.title;
+
+export default slice.reducer;
