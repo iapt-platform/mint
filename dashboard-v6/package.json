@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ant-design/charts": "^2.6.7",
+    "@ant-design/plots": "^2.6.8",
     "@ant-design/pro-components": "^3.1.4-0",
     "@ant-design/x": "^2.2.2",
     "@graphiql/react": "^0.37.3",
