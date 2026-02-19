@@ -2,10 +2,9 @@
  *
  */
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { ENetStatus } from "../components/general/NetStatus";
 
 import type { RootState } from "../store";
-
+export type ENetStatus = "loading" | "success" | "fail";
 export interface INetStatus {
   message?: string;
   status?: ENetStatus;

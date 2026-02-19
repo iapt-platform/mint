@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { ITermDataResponse } from "../components/api/Term";
+import type { ITermDataResponse } from "../api/Term";
 
 import type { RootState } from "../store";
 

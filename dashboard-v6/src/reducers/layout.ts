@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
-import { ISettingModels } from "../load";
+import type { ISettingModels } from "../load"
 
 export interface IAuthor {
   name: string;

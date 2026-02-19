@@ -2,12 +2,17 @@
  *
  */
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { TPanelName } from "../components/article/RightPanel";
 
 import type { RootState } from "../store";
 
-export interface ITermCommand {}
-
+export type TPanelName =
+  | "dict"
+  | "channel"
+  | "discussion"
+  | "suggestion"
+  | "grammar"
+  | "close"
+  | "open";
 interface IState {
   open?: TPanelName;
 }

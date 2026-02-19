@@ -20,7 +20,14 @@ import zhHant from "./zh-Hant";
 
 const KEY = "locale";
 
+export const DEFAULT: string =
+  import.meta.env.REACT_APP_DEFAULT_LOCALE || "zh-Hans";
+
 export const detect = (): string => Cookies.get(KEY) || "en-US";
+
+export const get = (): string => {
+  return localStorage.getItem(KEY) || Cookies.get(KEY) || DEFAULT;
+};
 
 export const set = (locale: string) => {
   switch (locale) {

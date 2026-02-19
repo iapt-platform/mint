@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
-import { ISuggestionData } from "../components/api/Suggestion";
+import type { ISuggestionData } from "../api/Suggestion";
 
 interface IState {
   suggestion?: ISuggestionData | null;

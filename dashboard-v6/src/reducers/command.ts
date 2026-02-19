@@ -2,15 +2,13 @@
  * 查字典，添加术语命令
  */
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { IWidgetDict } from "../components/dict/DictComponent";
-import { ITerm } from "../components/term/TermEdit";
 
 import type { RootState } from "../store";
-
-export interface ITermCommand {}
+import type { IDict } from "../api/Dict";
+import type { ITerm } from "../api/Term";
 
 export interface ICommand {
-  prop?: ITerm | IWidgetDict;
+  prop?: ITerm | IDict;
   type?: "term" | "dict";
 }
 interface IState {

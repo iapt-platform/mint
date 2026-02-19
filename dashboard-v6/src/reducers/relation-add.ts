@@ -2,9 +2,9 @@
  *
  */
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { IRelation } from "../pages/admin/relation/list";
 
 import type { RootState } from "../store";
+import type { IRelation } from "../api/relation";
 
 export interface IRelationParam {
   book: number;

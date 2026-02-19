@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
-import { IStudio } from "../components/auth/Studio";
+import type { IStudio } from "../api/Auth";
 
 export const ROLE_ROOT = "root";
 export const ROLE_ADMINISTRATOR = "administrator";

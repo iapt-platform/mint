@@ -9,20 +9,25 @@ import {
   studioSignIn,
 } from "./reducers/current-user";
 //import { DURATION } from "./reducers/current-user";
-import { ISite, refresh as refreshLayout } from "./reducers/layout";
-import { ISettingItem, refresh as refreshSetting } from "./reducers/setting";
+import { type ISite, refresh as refreshLayout } from "./reducers/layout";
+import {
+  type ISettingItem,
+  refresh as refreshSetting,
+} from "./reducers/setting";
 import { refresh as refreshTheme } from "./reducers/theme";
-import { get, IErrorResponse } from "./request";
+import { get } from "./request";
 import { get as getLang } from "./locales";
 
 import store from "./store";
-import { grammar, ITerm, update } from "./reducers/term-vocabulary";
+import { grammar, type ITerm, update } from "./reducers/term-vocabulary";
 import { push as nissayaEndingPush } from "./reducers/nissaya-ending-vocabulary";
-import { IRelation, IRelationListResponse } from "./pages/admin/relation/list";
+
 import { pushRelation } from "./reducers/relation";
-import { IGroupMemberListResponse } from "./components/api/Group";
-import { IStudio } from "./components/auth/Studio";
-import { IAiModel } from "./components/api/ai";
+import type { IGroupMemberListResponse } from "./api/Group";
+
+import type { IAiModel } from "./api/ai";
+import type { IStudio } from "./api/Auth";
+import type { IRelation, IRelationListResponse } from "./api/relation";
 
 export interface ISettingModels {
   wbw?: IAiModel[];
@@ -81,7 +86,7 @@ export const grammarTermFetch = () => {
 };
 
 const init = () => {
-  get<ISite | IErrorResponse>("/v2/site-info/en").then((response) => {
+  get<ISite>("/v2/site-info/en").then((response) => {
     if ("title" in response) {
       const it: ISite = response;
       store.dispatch(refreshLayout(it));
@@ -158,7 +163,7 @@ const init = () => {
   get<IRelationListResponse>(urlRelation).then((json) => {
     console.debug("relations api response", json);
     if (json.ok) {
-      const items: IRelation[] = json.data.rows.map((item, id) => {
+      const items: IRelation[] = json.data.rows.map((item) => {
         return {
           id: item.id,
           name: item.name,

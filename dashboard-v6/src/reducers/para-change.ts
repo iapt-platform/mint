@@ -2,9 +2,9 @@
  * 章节改变命令
  */
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { ArticleType } from "../components/article/Article";
 
 import type { RootState } from "../store";
+import type { ArticleType } from "../api/Corpus";
 
 export interface IParam {
   book: number;

@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
-import { IApiResponseDictData } from "../components/api/Dict";
+import type { IApiResponseDictData } from "../api/Dict";
 
 /**
  * 在查询字典后，将查询结果放入map

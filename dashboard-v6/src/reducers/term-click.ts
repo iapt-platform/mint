@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
-import { ITerm } from "../components/term/TermEdit";
+import type { ITerm } from "../api/Term";
 
 interface IState {
   word?: ITerm | null;

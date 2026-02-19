@@ -1,5 +1,5 @@
 export const gfwClear = (input: string): string => {
-  if (process.env.REACT_APP_ICP_CODE) {
+  if (import.meta.env.VITE_REACT_APP_ICP_CODE) {
     gfwBlackList.forEach((value) => {
       input = input.replaceAll(value, "wikipali.org");
     });

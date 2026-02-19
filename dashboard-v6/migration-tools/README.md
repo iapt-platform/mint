@@ -4,17 +4,17 @@
 
 ## 📦 工具包内容
 
-| 文件 | 类型 | 说明 |
-|------|------|------|
-| **migration-checklist.md** | 📋 文档 | 详细的迁移检查清单（主文档） |
+| 文件                            | 类型    | 说明                           |
+| ------------------------------- | ------- | ------------------------------ |
+| **migration-checklist.md**      | 📋 文档 | 详细的迁移检查清单（主文档）   |
 | **static-methods-migration.md** | 🚨 文档 | 静态方法迁移专项指南（重要！） |
-| **scan-api-diff.js** | 🔍 脚本 | API 差异扫描器 |
-| **import-replace.js** | 🔧 脚本 | 批量替换工具 |
-| **replace-static-import.js** | 🔧 脚本 | 静态方法 import 替换工具 |
-| **generate-global-utils.js** | 📝 脚本 | 全局单例工具生成器 |
-| **component-template.js** | 📝 脚本 | 组件模板生成器 |
-| **USAGE.md** | 📖 文档 | 详细使用指南 |
-| **README.md** | 📄 文档 | 本文件 |
+| **scan-api-diff.js**            | 🔍 脚本 | API 差异扫描器                 |
+| **import-replace.js**           | 🔧 脚本 | 批量替换工具                   |
+| **replace-static-import.js**    | 🔧 脚本 | 静态方法 import 替换工具       |
+| **generate-global-utils.js**    | 📝 脚本 | 全局单例工具生成器             |
+| **component-template.js**       | 📝 脚本 | 组件模板生成器                 |
+| **USAGE.md**                    | 📖 文档 | 详细使用指南                   |
+| **README.md**                   | 📄 文档 | 本文件                         |
 
 ---
 
@@ -37,6 +37,8 @@ node replace-static-import.js ./src --dry-run
 
 # 3. 执行替换（备份）
 node replace-static-import.js ./src --backup
+
+NODE_NO_WARNINGS=1 npx tsc --noEmit -p tsconfig.app.json
 ```
 
 ✅ **优势**：最小改动，业务代码几乎不需要修改
@@ -95,6 +97,7 @@ node scan-api-diff.js /path/to/old-project/src --json=report.json
 ```
 
 **报告示例：**
+
 ```
 📊 Ant Design v4 → v6 API 差异扫描报告
 ===============================================================================
@@ -122,6 +125,7 @@ node import-replace.js ./src --backup
 ```
 
 **自动处理的变更：**
+
 - ✅ `visible` → `open`
 - ✅ `onVisibleChange` → `onOpenChange`
 - ✅ `moment` → `dayjs`
@@ -147,6 +151,7 @@ node component-template.js --theme ./src/theme
 ```
 
 **可用模板：**
+
 - `basic` - 基础组件
 - `form` - 表单组件（含验证）
 - `modal` - Modal 弹窗组件
@@ -207,12 +212,12 @@ node scan-api-diff.js ./src
 
 ### 方案对比
 
-| 步骤 | 不处理静态方法 | 处理静态方法（推荐） |
-|------|---------------|---------------------|
-| 工作量 | 大（每个文件都要改） | 小（批量替换） |
-| 风险 | 高（容易遗漏） | 低（自动化） |
-| 耗时 | 20-30 小时 | 5-7 小时 |
-| 是否推荐 | ❌ | ✅ |
+| 步骤     | 不处理静态方法       | 处理静态方法（推荐） |
+| -------- | -------------------- | -------------------- |
+| 工作量   | 大（每个文件都要改） | 小（批量替换）       |
+| 风险     | 高（容易遗漏）       | 低（自动化）         |
+| 耗时     | 20-30 小时           | 5-7 小时             |
+| 是否推荐 | ❌                   | ✅                   |
 
 ---
 
@@ -315,6 +320,7 @@ node scan-api-diff.js ./src
 ### Q: 替换工具安全吗？
 
 A: 请务必：
+
 - ✅ 先使用 `--dry-run` 预览
 - ✅ 使用 `--backup` 备份
 - ✅ 使用 Git 版本控制
@@ -322,13 +328,15 @@ A: 请务必：
 ### Q: 扫描器报告太多问题怎么办？
 
 A: 分优先级处理：
+
 1. 先修复 🔴 Critical 和 🟠 High
 2. 逐步处理 🟡 Medium
 3. 最后优化 🟢 Low
 
 ### Q: 某些组件无法自动迁移怎么办？
 
-A: 
+A:
+
 - 参考 `migration-checklist.md` 中的 API 对照表
 - 使用 `component-template.js` 生成参考模板
 - 查阅 Ant Design 官方文档
@@ -336,6 +344,7 @@ A:
 ### Q: 主题系统如何集成？
 
 A:
+
 ```bash
 # 1. 生成主题文件
 node component-template.js --theme ./src/theme
@@ -367,6 +376,7 @@ ReactDOM.render(
 ```
 
 **预估工作量：**
+
 - 🔴 Critical 问题: 预计 1-2 天
 - 🟠 High 问题: 预计 3-5 天
 - 🟡 Medium 问题: 预计 5-7 天
@@ -386,6 +396,7 @@ ReactDOM.render(
 ### 贡献改进
 
 如果你发现工具的 bug 或有改进建议：
+
 - 修改相应的脚本文件
 - 更新文档
 - 分享给团队
@@ -429,4 +440,4 @@ ReactDOM.render(
 
 ---
 
-*最后更新: 2026-02-14*
+_最后更新: 2026-02-14_

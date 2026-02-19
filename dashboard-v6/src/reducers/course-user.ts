@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
-import { TCourseRole } from "../components/api/Course";
+import type { TCourseRole } from "../api/Course";
 
 export const ROLE_ROOT = "root";
 export const ROLE_ASSISTANT = "assistant";

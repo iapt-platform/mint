@@ -2,9 +2,9 @@
  *
  */
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { ISentence } from "../components/template/SentEdit";
 
 import type { RootState } from "../store";
+import type { ISentence } from "../api/Corpus";
 
 interface IState {
   sentences?: ISentence[];

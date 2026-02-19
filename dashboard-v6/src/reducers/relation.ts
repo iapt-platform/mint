@@ -2,9 +2,9 @@
  * 从服务器获取的术语表
  */
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { IRelation } from "../pages/admin/relation/list";
 
 import type { RootState } from "../store";
+import type { IRelation } from "../api/relation";
 
 interface IState {
   relations?: IRelation[];

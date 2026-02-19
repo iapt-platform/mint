@@ -1,21 +1,21 @@
-import { SortOrder } from "antd/lib/table/interface";
+import type { SortOrder } from "antd/lib/table/interface"
 import lodash from "lodash";
 
 export function dashboardBasePath(): string {
-  if (process.env.PUBLIC_URL.includes("http")) {
+  if (import.meta.env.BASE_URL.includes("http")) {
     //for CDN
-    return process.env.PUBLIC_URL;
+    return import.meta.env.BASE_URL;
   } else {
-    return window.location.origin + process.env.PUBLIC_URL;
+    return window.location.origin + import.meta.env.BASE_URL;
   }
 }
 
 export function fullUrl(url: string): string {
-  if (process.env.PUBLIC_URL.includes("http")) {
+  if (import.meta.env.BASE_URL.includes("http")) {
     //for CDN
-    return process.env.PUBLIC_URL + url;
+    return import.meta.env.BASE_URL + url;
   } else {
-    return window.location.origin + process.env.PUBLIC_URL + url;
+    return window.location.origin + import.meta.env.BASE_URL + url;
   }
 }
 

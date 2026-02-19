@@ -3,12 +3,9 @@
  */
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-import { TResType } from "../components/discussion/DiscussionListCard";
-import { ISentence } from "../components/template/SentEdit";
-
 import type { RootState } from "../store";
-
-export interface ITermCommand {}
+import type { ISentence } from "../api/Corpus";
+import type { TResType } from "../api/discussion";
 
 export interface IShowDiscussion {
   type: "discussion" | "pr";
