@@ -1,7 +1,6 @@
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import Loading from "./components/loading/Loading";
 
 const UsersSignIn = lazy(() => import("./pages/users/sign-in"));
 const UsersPersonal = lazy(() => import("./pages/users/personal"));
@@ -42,11 +41,7 @@ const router = createBrowserRouter(
 );
 
 const Widget = () => {
-  return (
-    <Suspense fallback={<Loading />}>
-      <RouterProvider router={router} />
-    </Suspense>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default Widget;
