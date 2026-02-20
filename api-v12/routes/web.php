@@ -63,6 +63,8 @@ Route::prefix('library')->group(function () {
     Route::get('/category/{id}', [CategoryController::class, 'show'])->name('library.category.show');
     Route::get('/book/{id}', [BookController::class, 'show'])->name('library.book.show');
     Route::get('/book/{id}/read', [BookController::class, 'read'])->name('library.book.read');
+    Route::get('/wiki', [BookController::class, 'read'])->name('library.wiki');
+    Route::get('/download', [BookController::class, 'read'])->name('library.download');
 });
 // 博客路由
 Route::prefix('blog')->group(function () {

@@ -4,12 +4,13 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
 
 use App\Services\OpenAIService;
 use App\Services\AIModelService;
 use App\Services\SentenceService;
 use App\Services\SearchPaliDataService;
+use App\Services\AIAssistant\NissayaTranslateService;
+use App\Http\Resources\AiModelResource;
 use App\Http\Controllers\AuthController;
 
 use App\Models\PaliText;
@@ -26,6 +27,7 @@ class UpgradeAITranslation extends Command
     /**
      * The name and signature of the console command.
      * php artisan upgrade:ai.translation translation --book=141 --para=535
+     * php artisan upgrade:ai.translation nissaya --book=207 --para=1247
      * @var string
      */
     protected $signature = 'upgrade:ai.translation {type} {--book=} {--para=} {--resume} {--model=} ';
@@ -39,7 +41,8 @@ class UpgradeAITranslation extends Command
     protected $sentenceService;
     protected $modelService;
     protected $openAIService;
-    protected $model;
+    protected $nissayaTranslateService;
+    protected AiModelResource $model;
     protected $modelToken;
     protected $workChannel;
     protected $accessToken;
@@ -51,11 +54,13 @@ class UpgradeAITranslation extends Command
     public function __construct(
         AIModelService $model,
         SentenceService $sent,
-        OpenAIService $openAI
+        OpenAIService $openAI,
+        NissayaTranslateService $nissayaTranslate
     ) {
         $this->modelService = $model;
         $this->sentenceService = $sent;
         $this->openAIService = $openAI;
+        $this->nissayaTranslateService = $nissayaTranslate;
         parent::__construct();
     }
 
@@ -94,8 +99,10 @@ class UpgradeAITranslation extends Command
                         break;
                     case 'nissaya':
                         $data = $this->aiNissayaTranslate($book, $paragraph);
+                        break;
                     case 'wbw':
                         $data = $this->aiWBW($book, $paragraph);
+                        break;
                     default:
                         # code...
                         break;
@@ -269,6 +276,8 @@ class UpgradeAITranslation extends Command
             ->get();
         $result = [];
         foreach ($sentences as $key => $sentence) {
+            $id = "{$sentence->book_id}-{$sentence->paragraph}-{$sentence->word_start}-{$sentence->word_end}";
+            /*
             $nissaya = [];
             $rows = explode("\n", $sentence->content);
             foreach ($rows as $key => $row) {
@@ -292,10 +301,15 @@ class UpgradeAITranslation extends Command
             $complete = time() - $startAt;
             $content = $response['choices'][0]['message']['content'] ?? '';
             Log::debug("ai response in {$complete}s content=" . $content);
-            $id = "{$sentence->book_id}-{$sentence->paragraph}-{$sentence->word_start}-{$sentence->word_end}";
+            */
+            $aiNissaya = $this->nissayaTranslateService
+                ->setModel($this->model)
+                ->translate($sentence->content, false);
+            Log::debug("ai response ", ['content' => $aiNissaya['data']]);
             $result[] = [
                 'id' => $id,
-                'content' => $content,
+                'content' => json_encode($aiNissaya['data'] ?? [], JSON_UNESCAPED_UNICODE),
+                'content_type' => 'json'
             ];
         }
         return $result;

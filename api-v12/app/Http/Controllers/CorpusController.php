@@ -747,15 +747,19 @@ class CorpusController extends Controller
                                 "/sent/{$channelId}/{$currSentId}/{$format}",
                                 config('mint.cache.expire'),
                                 function () use ($row, $mode, $format) {
-                                    return MdRender::render(
-                                        $row->content,
-                                        [$row->channel_uid],
-                                        null,
-                                        $mode,
-                                        "nissaya",
-                                        $row->content_type,
-                                        $format
-                                    );
+                                    if ($row->content_type === 'markdown') {
+                                        return MdRender::render(
+                                            $row->content,
+                                            [$row->channel_uid],
+                                            null,
+                                            $mode,
+                                            "nissaya",
+                                            $row->content_type,
+                                            $format
+                                        );
+                                    } else {
+                                        return null;
+                                    }
                                 }
                             );
                             break;

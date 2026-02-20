@@ -7,18 +7,22 @@ import PaliText from "./Wbw/PaliText";
 import { MoreIcon } from "../../assets/icon";
 
 interface IWidgetNissayaCtl {
+  original?: string;
   pali?: string;
   meaning?: string[];
   lang?: string;
+  note?: string;
   children?: React.ReactNode | React.ReactNode[];
 }
-const NissayaCtl = ({ pali, meaning, lang, children }: IWidgetNissayaCtl) => {
+export const NissayaCtl = ({
+  pali,
+  meaning,
+  lang,
+  children,
+}: IWidgetNissayaCtl) => {
   const settings = useAppSelector(settingInfo);
   const layout = GetUserSetting("setting.nissaya.layout.read", settings);
   console.debug("NissayaCtl layout", layout);
-  const isArray = Array.isArray(children);
-  const meaning2 = isArray ? children[1] : "";
-  const show = -1;
   const ect = meaning
     ?.slice(0, -1)
     .map((item, id) => <NissayaMeaning key={id} text={item} />);
