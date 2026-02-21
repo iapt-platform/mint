@@ -6,7 +6,9 @@ import Router from "./Router";
 import store from "./store";
 import { detect as detect_locale, messages as get_messages } from "./locales";
 import Loading from "./components/loading/Loading";
+import onLoad from "./load";
 
+onLoad();
 const locale = detect_locale();
 const messages = get_messages(locale);
 
