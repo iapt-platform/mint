@@ -1,6 +1,6 @@
 import { useIntl } from "react-intl";
 import { useState } from "react";
-import { _Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { Divider, Menu, Typography } from "antd";
 import { Avatar } from "antd";
 import { Popover } from "antd";
@@ -17,7 +17,7 @@ import {
   currentUser as _currentUser,
   studioList,
 } from "../../reducers/current-user";
-import type { TooltipPlacement } from "antd/lib/tooltip"
+import type { TooltipPlacement } from "antd/lib/tooltip";
 import SettingModal from "./setting/SettingModal";
 import { AdminIcon } from "../../assets/icon";
 import User from "./User";
