@@ -113,6 +113,7 @@ const items = {
   "buttons.general": "常规",
   "buttons.ai-models": "AI模型",
   "buttons.new": "新建",
+  "buttons.sign-up": "注册",
 };
 
 export default items;
