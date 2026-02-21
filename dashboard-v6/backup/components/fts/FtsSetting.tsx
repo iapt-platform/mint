@@ -1,5 +1,5 @@
 import { Popover, Typography } from "antd";
-import type { ISetting } from "../auth/setting/default"
+import type { ISetting } from "../auth/setting/default";
 import SettingItem from "../auth/setting/SettingItem";
 const { Link } = Typography;
 
@@ -42,7 +42,7 @@ const FtsSettingWidget = ({
     <Popover
       overlayStyle={{ width: 300 }}
       placement="bottom"
-      arrowPointAtCenter
+      arrow={{ pointAtCenter: true }}
       content={
         <>
           {searchSetting.map((item, index) => (
