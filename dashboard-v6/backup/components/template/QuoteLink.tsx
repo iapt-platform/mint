@@ -1,7 +1,7 @@
 import { Popover, Typography } from "antd";
 
-import { ArticleCtl, type TDisplayStyle } from "./Article"
-import { type IWidgetTermCtl, TermCtl } from "./Term"
+import { ArticleCtl, type TDisplayStyle } from "./Article";
+import { type IWidgetTermCtl, TermCtl } from "./Term";
 import { useEffect, useState } from "react";
 
 const { Text } = Typography;
@@ -89,7 +89,7 @@ const QuoteLinkCtl = ({
       ) : (
         <Popover
           placement="top"
-          arrowPointAtCenter
+          arrow={{ pointAtCenter: true }}
           content={
             <>
               <TermCtl {...term} compact={true} />{" "}

@@ -95,7 +95,7 @@ const Filter = ({ initValue, onChange }: IWidget) => {
     <Popover
       placement="bottomLeft"
       trigger={"click"}
-      arrowPointAtCenter
+      arrow={{ pointAtCenter: true }}
       title={intl.formatMessage({ id: "labels.filter" })}
       content={
         <div style={{ width: 780 }}>

@@ -1,7 +1,7 @@
 import { Popover } from "antd";
 import { useEffect, useState } from "react";
 import SentCell from "./SentCell";
-import type { ISentence } from "../SentEdit"
+import type { ISentence } from "../SentEdit";
 import { useAppSelector } from "../../../hooks";
 import { prInfo, refresh } from "../../../reducers/pr-load";
 import store from "../../../store";
@@ -59,7 +59,7 @@ const SuggestionPopoverWidget = ({
   return (
     <Popover
       placement="bottomRight"
-      arrowPointAtCenter
+      arrow={{ pointAtCenter: true }}
       content={
         <div>
           <SentCell value={sentData} key={1} isPr={true} showDiff={false} />

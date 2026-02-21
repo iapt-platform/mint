@@ -30,7 +30,7 @@ const DictListWidget = (prop: IWidgetDictList) => {
         <Affix offsetTop={50}>
           <Popover
             placement="bottomRight"
-            arrowPointAtCenter
+            arrow={{ pointAtCenter: true }}
             content={dictNav}
             trigger="click"
           >

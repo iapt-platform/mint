@@ -1,6 +1,6 @@
 import { useIntl } from "react-intl";
 import { Popover, Avatar } from "antd";
-import type { IStudio } from "./Studio"
+import type { IStudio } from "./Studio";
 import { Link } from "react-router";
 import React from "react";
 
@@ -47,7 +47,7 @@ const StudioCardWidget = ({ studio, children, popOver }: IWidget) => {
         )
       }
       placement="bottomRight"
-      arrowPointAtCenter
+      arrow={{ pointAtCenter: true }}
     >
       {children}
     </Popover>

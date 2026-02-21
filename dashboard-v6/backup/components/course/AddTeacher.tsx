@@ -58,7 +58,7 @@ const AddTeacherWidget = ({ _____groupId }: IWidget) => {
   return (
     <Popover
       placement="bottom"
-      arrowPointAtCenter
+      arrow={{ pointAtCenter: true }}
       content={form}
       trigger="click"
     >

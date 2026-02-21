@@ -79,7 +79,7 @@ const AddMemberWidget = ({ groupId, onCreated }: IWidget) => {
   return (
     <Popover
       placement="bottomLeft"
-      arrowPointAtCenter
+      arrow={{ pointAtCenter: true }}
       content={form}
       trigger="click"
       open={open}

@@ -55,7 +55,7 @@ const SentCartWidget = () => {
     <>
       <Popover
         placement="bottomRight"
-        arrowPointAtCenter
+        arrow={{ pointAtCenter: true }}
         destroyTooltipOnHide
         getTooltipContainer={(_node: HTMLElement) =>
           document.getElementsByClassName("toolbar_center")[0] as HTMLElement

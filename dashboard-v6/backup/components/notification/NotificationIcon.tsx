@@ -100,7 +100,7 @@ const NotificationIconWidget = () => {
       {currUser ? (
         <Popover
           placement="bottomLeft"
-          arrowPointAtCenter
+          arrow={{ pointAtCenter: true }}
           destroyTooltipOnHide
           content={
             <div style={{ width: 600 }}>
