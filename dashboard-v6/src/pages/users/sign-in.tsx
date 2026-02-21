@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { LoginForm, ProFormText } from "@ant-design/pro-components";
 import { message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 interface loginRequest {
   username: string;
