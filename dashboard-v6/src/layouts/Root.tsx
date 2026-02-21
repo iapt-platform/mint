@@ -4,7 +4,6 @@ const Widget = () => {
   // TODO
   return (
     <div>
-      <div>root header</div>
       <div>
         <Outlet />
       </div>
