@@ -157,7 +157,7 @@ const TypePageWidget = ({
 
   return (
     <div>
-      {pageInfo ? <Alert message={pageInfo} type="info" closable /> : undefined}
+      {pageInfo ? <Alert title={pageInfo} type="info" closable /> : undefined}
       {paramPali ? (
         <>
           <TypePali

@@ -1,12 +1,13 @@
 import { ProFormCascader } from "@ant-design/pro-components";
 import { message } from "antd";
-import { useAppSelector } from "../../hooks";
-import { currentUser } from "../../reducers/current-user";
+import { useAppSelector } from "../../../src/hooks";
+import { currentUser } from "../../../src/reducers/current-user";
 
-import { get } from "../../request";
-import type { IApiResponseChannelList } from "../../api/Channel";
-import type { IStudio } from "../auth/Studio";
+import { get } from "../../../src/request";
+import type { IApiResponseChannelList } from "../../../src/api/Channel";
+
 import { useIntl } from "react-intl";
+import type { IStudio } from "../../../src/api/Auth";
 
 interface IOption {
   value: string;

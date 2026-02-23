@@ -10,12 +10,14 @@ import SentTabButton from "./SentTabButton";
 import SentCanRead from "./SentCanRead";
 import SentSim from "./SentSim";
 import { useIntl } from "react-intl";
-import TocPath, { type ITocPathNode } from "../../corpus/TocPath";
-import type { IWbw } from "../Wbw/WbwWord"
+import TocPath, {
+  type ITocPathNode,
+} from "../../../../src/components/tipitaka/TocPath";
+import type { IWbw } from "../Wbw/WbwWord";
 import RelaGraphic from "../Wbw/RelaGraphic";
 import SentMenu from "./SentMenu";
-import type { ArticleMode } from "../../article/Article"
-import type { IResNumber, ISentence } from "../SentEdit"
+import type { ArticleMode } from "../../article/Article";
+import type { IResNumber, ISentence } from "../SentEdit";
 import SentTabCopy from "./SentTabCopy";
 import { fullUrl } from "../../../utils";
 import SentWbw from "./SentWbw";

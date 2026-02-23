@@ -5,7 +5,7 @@ import { useNavigate, _useParams, useSearchParams } from "react-router";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 import { useAppDispatch } from "../../../hooks";
-import { type IUser, signIn, TO_HOME } from "../../../reducers/current-user"
+import { type IUser, signIn, TO_HOME } from "../../../reducers/current-user";
 import { get, post } from "../../../request";
 import { useState } from "react";
 
@@ -36,7 +36,7 @@ const Widget = () => {
 
   return (
     <>
-      {error ? <Alert message={error} type="error" /> : undefined}
+      {error ? <Alert title={error} type="error" /> : undefined}
       <ProForm<IFormData>
         onFinish={async (values: IFormData) => {
           setError(undefined);

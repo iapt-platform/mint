@@ -2,7 +2,7 @@ import { Button, Dropdown, Modal, Space, Typography } from "antd";
 import { DoubleRightOutlined, DoubleLeftOutlined } from "@ant-design/icons";
 import { FolderOutlined } from "@ant-design/icons";
 
-import type { ITocPathNode } from "../corpus/TocPath"
+import type { ITocPathNode } from "../../../src/components/tipitaka/TocPath";
 
 const { Paragraph, Text } = Typography;
 

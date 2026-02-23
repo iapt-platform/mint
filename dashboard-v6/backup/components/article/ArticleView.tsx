@@ -1,8 +1,10 @@
 import { Typography, Divider, Skeleton, Space } from "antd";
 
 import MdView from "../template/MdView";
-import TocPath, { type ITocPathNode } from "../corpus/TocPath";
-import PaliChapterChannelList from "../corpus/PaliChapterChannelList";
+import TocPath, {
+  type ITocPathNode,
+} from "../../../src/components/tipitaka/TocPath";
+import PaliChapterChannelList from "../../../src/components/tipitaka/PaliChapterChannelList";
 import type { ArticleMode, ArticleType } from "./Article";
 import VisibleObserver from "../general/VisibleObserver";
 import type { IStudio } from "../auth/Studio";

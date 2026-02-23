@@ -1,7 +1,7 @@
 import { Space } from "antd";
 
-import type { IChannelApiData } from "../../api/Channel";
-import Studio, { type IStudio } from "../auth/Studio";
+import type { IChannelApiData } from "../../../src/api/Channel";
+import Studio, { type IStudio } from "../../../src/components/auth/Studio";
 
 interface IWidget {
   channel: IChannelApiData;

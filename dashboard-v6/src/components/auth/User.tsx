@@ -3,6 +3,42 @@ import { getAvatarColor } from "./utils";
 
 const { Text } = Typography;
 
+interface IUserAvatar {
+  nickName?: string;
+  userName?: string;
+  avatar?: string;
+  hideAvatar?: boolean;
+  hideNickName?: boolean;
+  showUserName?: boolean;
+}
+export const UserWithAvatar = ({
+  nickName,
+  userName,
+  avatar,
+  hideAvatar = false,
+  hideNickName = false,
+  showUserName = false,
+}: IUserAvatar) => {
+  return (
+    <span>
+      {hideAvatar ? null : (
+        <Avatar
+          size={"small"}
+          src={avatar}
+          style={
+            avatar ? undefined : { backgroundColor: getAvatarColor(nickName) }
+          }
+        >
+          {nickName?.slice(0, 2)}
+        </Avatar>
+      )}
+      {hideNickName ? null : <Text>{nickName}</Text>}
+      {!hideNickName && showUserName ? <Text>@</Text> : undefined}
+      {showUserName ? <Text>{userName}</Text> : undefined}
+    </span>
+  );
+};
+
 interface IWidget {
   id?: string;
   nickName?: string;
@@ -13,7 +49,7 @@ interface IWidget {
   showUserName?: boolean;
   hidePopover?: boolean;
 }
-const UserWidget = ({
+const User = ({
   nickName,
   userName,
   avatar,
@@ -68,4 +104,4 @@ const UserWidget = ({
   );
 };
 
-export default UserWidget;
+export default User;

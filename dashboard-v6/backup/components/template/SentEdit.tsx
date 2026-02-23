@@ -5,7 +5,7 @@ import type { IStudio } from "../auth/Studio";
 import type { IUser } from "../auth/User";
 import type { IChannel } from "../channel/Channel";
 import type { TContentType } from "../discussion/DiscussionCreate";
-import type { ITocPathNode } from "../corpus/TocPath";
+import type { ITocPathNode } from "../../../src/components/tipitaka/TocPath";
 import SentContent from "./SentEdit/SentContent";
 import SentTab from "./SentEdit/SentTab";
 import type { IWbw } from "./Wbw/WbwWord";
@@ -36,26 +36,6 @@ export interface ISentenceId {
   wordEnd: number;
 }
 
-export const toISentence = (apiData: ISentenceData): ISentence => {
-  return {
-    id: apiData.id,
-    content: apiData.content,
-    contentType: apiData.content_type,
-    html: apiData.html,
-    book: apiData.book,
-    para: apiData.paragraph,
-    wordStart: apiData.word_start,
-    wordEnd: apiData.word_end,
-    editor: apiData.editor,
-    studio: apiData.studio,
-    channel: apiData.channel,
-    updateAt: apiData.updated_at,
-    acceptor: apiData.acceptor,
-    prEditAt: apiData.pr_edit_at,
-    forkAt: apiData.fork_at,
-    suggestionCount: apiData.suggestionCount,
-  };
-};
 export interface IWidgetSentEditInner {
   id: string;
   book: number;

@@ -2,6 +2,7 @@ import { Outlet } from "react-router";
 
 const Widget = () => {
   // TODO
+
   return (
     <div>
       <div>

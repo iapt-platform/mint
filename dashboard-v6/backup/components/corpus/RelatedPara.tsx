@@ -3,7 +3,9 @@ import { Badge, Card, List, message, Modal, Skeleton } from "antd";
 
 import { get } from "../../request";
 import { useEffect, useState, type JSX } from "react";
-import TocPath, { type ITocPathNode } from "./TocPath";
+import TocPath, {
+  type ITocPathNode,
+} from "../../../src/components/tipitaka/TocPath";
 import store from "../../store";
 import { change } from "../../reducers/para-change";
 

@@ -2,18 +2,19 @@ import { Button, message, Select, Table, Tooltip, Typography } from "antd";
 import { type Change, diffChars } from "diff";
 import { useEffect, useState } from "react";
 
-import { post } from "../../request";
+import { post } from "../../../src/request";
 import type {
+  ISentence,
   ISentenceDiffData,
   ISentenceDiffRequest,
   ISentenceDiffResponse,
   ISentenceListResponse,
   ISentenceNewRequest,
-} from "../../api/Corpus";
-import type { IChannel } from "./Channel";
-import { type ISentence, toISentence } from "../template/SentEdit";
-import store from "../../store";
-import { accept } from "../../reducers/accept-pr";
+} from "../../../src/api/Corpus";
+
+import store from "../../../src/store";
+import { accept } from "../../../src/reducers/accept-pr";
+import type { IChannel } from "../../../src/api/Channel";
 
 const { Text } = Typography;
 
@@ -209,7 +210,9 @@ const ChannelSentDiffWidget = ({
                     toISentence(item)
                   );
                   store.dispatch(accept(newData));
-                  onSubmit && onSubmit(json.data.count);
+                  if (onSubmit) {
+                    onSubmit(json.data.count);
+                  }
                 } else {
                   message.error(json.message);
                 }
@@ -252,7 +255,7 @@ const ChannelSentDiffWidget = ({
               title: "pali",
               width: "33%",
               dataIndex: "pali",
-              render: (_value, record, _index) => {
+              render: (_value, record) => {
                 return (
                   <Text>
                     <div
@@ -283,7 +286,7 @@ const ChannelSentDiffWidget = ({
               ),
               width: "33%",
               dataIndex: "destContent",
-              render: (_value, record, _index) => {
+              render: (_value, record) => {
                 const diff: Change[] = diffChars(
                   record.destContent ? record.destContent : "",
                   record.srcContent ? record.srcContent : ""

@@ -12,7 +12,7 @@ import type {
 import ArticleView, { type IFirstAnthology } from "./ArticleView";
 import TocTree from "./TocTree";
 import PaliText from "../template/Wbw/PaliText";
-import type { ITocPathNode } from "../corpus/TocPath";
+import type { ITocPathNode } from "../../../src/components/tipitaka/TocPath";
 import type { ArticleMode, ArticleType } from "./Article";
 import "./article.css";
 import ArticleSkeleton from "./ArticleSkeleton";

@@ -1,7 +1,7 @@
 import { Select } from "antd";
 import { useEffect, useState } from "react";
-import { get } from "../../request";
-import type { IStudio } from "../auth/Studio"
+import { get } from "../../../src/request";
+import type { IStudio } from "../../../src/components/auth/Studio";
 
 interface IStudioListResponse {
   ok: boolean;

@@ -1,7 +1,9 @@
+import type { LoaderFunctionArgs } from "react-router";
 import type { IStudio, TRole } from "./Auth";
+import { get } from "../request";
 export interface IChannel {
-  name: string;
   id: string;
+  name: string;
   type?: TChannelType;
   lang?: string;
 }
@@ -76,4 +78,20 @@ export interface ISentInChapterListDataRow {
   paragraph: number;
   word_begin: number;
   word_end: number;
+}
+
+export async function channelLoader({ params }: LoaderFunctionArgs) {
+  const channelId = params.channelId;
+
+  if (!channelId) {
+    throw new Response("Missing channelId", { status: 400 });
+  }
+
+  const res = await get<IApiResponseChannel>(`/api/v2/channel/${channelId}`);
+
+  if (!res.ok) {
+    throw new Response("Channel not found", { status: 404 });
+  }
+
+  return res.data;
 }

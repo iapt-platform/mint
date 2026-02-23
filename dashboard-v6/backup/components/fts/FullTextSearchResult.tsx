@@ -3,8 +3,10 @@ import { _Button, List, Skeleton, Space, Tag, Typography } from "antd";
 import { Link } from "react-router";
 
 import { _get } from "../../request";
-import TocPath, { type ITocPathNode } from "../corpus/TocPath";
-import type { TContentType } from "../discussion/DiscussionCreate"
+import TocPath, {
+  type ITocPathNode,
+} from "../../../src/components/tipitaka/TocPath";
+import type { TContentType } from "../discussion/DiscussionCreate";
 import Marked from "../general/Marked";
 import PaliText from "../template/Wbw/PaliText";
 import "./search.css";

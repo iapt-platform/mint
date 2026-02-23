@@ -11,20 +11,23 @@ import {
 } from "@ant-design/icons";
 
 import ChannelCreate from "./ChannelCreate";
-import { delete_, get } from "../../request";
-import type { IApiResponseChannelList, TChannelType } from "../../api/Channel";
+import { delete_, get } from "../../../src/request";
+import type {
+  IApiResponseChannelList,
+  TChannelType,
+} from "../../../src/api/Channel";
 import { PublicityValueEnum } from "../studio/table";
-import type { IDeleteResponse } from "../../api/Article";
+import type { IDeleteResponse } from "../../../src/api/Article";
 import { useEffect, useRef, useState } from "react";
-import type { TRole } from "../../api/Auth";
+import type { IStudio, TRole } from "../../../src/api/Auth";
 import ShareModal from "../share/ShareModal";
 import { EResType } from "../share/Share";
-import StudioName, { type IStudio } from "../auth/Studio";
+import StudioName from "../../../src/components/auth/Studio";
 import StudioSelect from "./StudioSelect";
-import type { IChannel } from "./Channel";
-import { getSorterUrl } from "../../utils";
+
+import { getSorterUrl } from "../../../src/utils";
 import TransferCreate from "../transfer/TransferCreate";
-import { TransferOutLinedIcon } from "../../assets/icon";
+import { TransferOutLinedIcon } from "../../../src/assets/icon";
 
 const { Text } = Typography;
 
@@ -105,7 +108,6 @@ const ChannelTableWidget = ({
   studioName,
   disableChannels,
   channelType,
-  ___type,
   chapter,
   onSelect,
 }: IWidget) => {

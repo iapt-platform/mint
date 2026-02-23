@@ -1,5 +1,5 @@
 const items = {
-  "error.email.exists": "该邮箱已经存在",
+  "error.email.exists": "email exists",
 };
 
 export default items;

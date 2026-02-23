@@ -16,6 +16,7 @@ export type TCodeConvertor =
   | "roman_to_thai"
   | "roman_to_taitham"
   | "roman_to_si";
+
 export function XmlToReact(
   text: string,
   wordWidget: boolean = false,

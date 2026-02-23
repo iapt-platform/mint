@@ -6,10 +6,10 @@ import {
 } from "@ant-design/pro-components";
 import { message } from "antd";
 
-import { post } from "../../request";
-import type { IApiResponseChannel } from "../../api/Channel";
+import { post } from "../../../src/request";
+import type { IApiResponseChannel } from "../../../src/api/Channel";
 import ChannelTypeSelect from "./ChannelTypeSelect";
-import LangSelect from "../general/LangSelect";
+import LangSelect from "../../../src/components/general/LangSelect";
 import { useRef } from "react";
 
 interface IFormData {

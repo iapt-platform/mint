@@ -7,16 +7,16 @@ import {
   WarningTwoTone,
 } from "@ant-design/icons";
 
-import type { TChannelType } from "../../api/Channel";
-import { post } from "../../request";
+import type { IChannel, TChannelType } from "../../../src/api/Channel";
+import { post } from "../../../src/request";
 import ChannelTableModal from "./ChannelTableModal";
-import type { IChannel } from "./Channel";
+
 import type {
   IPayload,
   ITokenCreate,
   ITokenCreateResponse,
   TPower,
-} from "../../api/token";
+} from "../../../src/api/token";
 
 const { Text } = Typography;
 

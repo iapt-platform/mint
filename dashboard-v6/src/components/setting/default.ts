@@ -1,4 +1,4 @@
-import type { ISettingItem } from "../../../reducers/setting"
+import type { ISettingItem } from "../../reducers/setting";
 
 export interface ISettingItemOption {
   label: string;

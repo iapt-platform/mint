@@ -1,7 +1,7 @@
 import { useIntl } from "react-intl";
 import { ProForm, ProFormText } from "@ant-design/pro-components";
 import { Alert, message } from "antd";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 import { useAppDispatch } from "../../../hooks";

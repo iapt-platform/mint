@@ -1,6 +1,6 @@
 import { useIntl } from "react-intl";
 import { ProForm, ProFormText } from "@ant-design/pro-components";
-import { Alert, type AlertProps } from "antd"
+import { Alert, type AlertProps } from "antd";
 
 import { post } from "../../../request";
 import { useState } from "react";
@@ -30,7 +30,7 @@ const Widget = () => {
   const [type, setType] = useState<AlertProps["type"]>("info");
   return (
     <>
-      {notify ? <Alert message={notify} type={type} showIcon /> : <></>}
+      {notify ? <Alert title={notify} type={type} showIcon /> : <></>}
       <ProForm<IFormData>
         onFinish={async (values: IFormData) => {
           console.debug(values);

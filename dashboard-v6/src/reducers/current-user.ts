@@ -20,6 +20,7 @@ export const get = (): string | null => {
     return token;
   }
   token = localStorage.getItem(KEY);
+  console.debug("token", KEY, token);
   if (token) {
     return token;
   }

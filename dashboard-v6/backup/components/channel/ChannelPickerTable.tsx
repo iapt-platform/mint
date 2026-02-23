@@ -13,16 +13,19 @@ import {
 
 import type {
   IApiResponseChannelList,
+  IChannel,
   IFinal,
   TChannelType,
-} from "../../api/Channel";
-import { post } from "../../request";
-import { LockIcon } from "../../assets/icon";
-import Studio, { type IStudio } from "../auth/Studio";
+} from "../../../src/api/Channel";
+import { post } from "../../../src/request";
+import { LockIcon } from "../../../src/assets/icon";
+
 import ProgressSvg from "./ProgressSvg";
-import type { IChannel } from "./Channel";
-import type { ArticleType } from "../article/Article";
+
 import CopyToModal from "./CopyToModal";
+import type { IStudio } from "../../../src/api/Auth";
+import type { ArticleType } from "../../../src/api/Corpus";
+import Studio from "../../../src/components/auth/Studio";
 
 const { Link, Text } = Typography;
 

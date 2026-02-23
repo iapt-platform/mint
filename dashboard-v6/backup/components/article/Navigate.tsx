@@ -4,7 +4,7 @@ import { get } from "../../request";
 import type { ArticleType } from "./Article";
 import React from "react";
 import NavigateButton from "./NavigateButton";
-import type { ITocPathNode } from "../corpus/TocPath";
+import type { ITocPathNode } from "../../../src/components/tipitaka/TocPath";
 
 interface INavButton {
   title: string;

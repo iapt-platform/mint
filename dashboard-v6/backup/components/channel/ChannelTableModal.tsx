@@ -3,10 +3,10 @@ import { Modal } from "antd";
 
 import type { ArticleType } from "../article/Article";
 import ChannelTable, { type IChapter } from "./ChannelTable";
-import { useAppSelector } from "../../hooks";
-import { currentUser as _currentUser } from "../../reducers/current-user";
+import { useAppSelector } from "../../../src/hooks";
+import { currentUser as _currentUser } from "../../../src/reducers/current-user";
 import type { IChannel } from "./Channel";
-import type { TChannelType } from "../../api/Channel";
+import type { TChannelType } from "../../../src/api/Channel";
 import { useIntl } from "react-intl";
 
 interface IWidget {

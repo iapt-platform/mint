@@ -13,14 +13,16 @@ export interface ISignIn {
 
 const KEY = "token";
 export const get = (): string | null => {
-  return sessionStorage.getItem(KEY);
+  return sessionStorage.getItem(KEY) ?? localStorage.getItem(KEY);
 };
 
-const set = (token: string) => {
+export const set = (token: string) => {
+  localStorage.setItem(KEY, token);
   sessionStorage.setItem(KEY, token);
 };
 
-const remove = () => {
+export const remove = () => {
+  localStorage.removeItem(KEY);
   sessionStorage.removeItem(KEY);
 };
 

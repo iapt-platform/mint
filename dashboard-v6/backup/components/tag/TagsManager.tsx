@@ -47,7 +47,7 @@ const TagsManagerWidget = ({
         destroyOnClose
         footer={false}
       >
-        {title ? <Alert message={title} /> : undefined}
+        {title ? <Alert title={title} /> : undefined}
         <TagsOnItem
           studioName={studioName}
           courseId={courseId}

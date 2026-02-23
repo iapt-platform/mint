@@ -898,6 +898,131 @@ const MoreSvg = () => (
     ></path>
   </svg>
 );
+
+const TaskSvg = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <rect x="2.5" y="2.5" width="19" height="19" rx="2.5" />
+    <path d="M8 2.5h8v4H8z" />
+
+    <path d="M6.5 10h11" />
+    <path d="M6.5 14h7" />
+
+    <path d="M7 18l2.5 2.5 6-6" />
+  </svg>
+);
+
+const ChannelSvg = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <rect x="3" y="4" width="13" height="17" rx="2" />
+
+    <rect x="8" y="3" width="13" height="17" rx="2" />
+
+    <path d="M11 8h7" />
+    <path d="M11 12h7" />
+
+    <path d="M6 9l-2 2 2 2" />
+    <path d="M4 11h4" />
+
+    <path d="M6 15l-2 2 2 2" />
+    <path d="M4 17h4" />
+  </svg>
+);
+
+const DocumentSvg = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M6 2.5h8l4 4v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-17a2 2 0 0 1 2-2z" />
+
+    <path d="M14 2.5v4h4" />
+
+    <path d="M8 11h8" />
+    <path d="M8 15h8" />
+    <path d="M8 19h5" />
+  </svg>
+);
+
+const TipitakaSvg = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <circle cx="12" cy="12" r="9" />
+
+    <circle cx="12" cy="12" r="2" />
+    <path d="M12 5.5v4.5" />
+    <path d="M12 14v4.5" />
+    <path d="M5.5 12h4.5" />
+    <path d="M14 12h4.5" />
+
+    <path d="M7.8 7.8l3.2 3.2" />
+    <path d="M13 13l3.2 3.2" />
+    <path d="M16.2 7.8L13 11" />
+    <path d="M11 13l-3.2 3.2" />
+  </svg>
+);
+
+const RobotSvg = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <rect x="4" y="5" width="16" height="12" rx="4" />
+
+    <path d="M12 2.5v2.5" />
+    <circle cx="12" cy="2.5" r="0.8" fill="currentColor" stroke="none" />
+
+    <circle cx="9" cy="11" r="1" />
+    <circle cx="15" cy="11" r="1" />
+
+    <path d="M9 15h6" />
+
+    <path d="M8 19h8" />
+  </svg>
+);
+
 export const DictIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DictSvg} {...props} />
 );
@@ -1069,4 +1194,24 @@ export const GroupIcon = (props: Partial<CustomIconComponentProps>) => (
 
 export const MoreIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={MoreSvg} {...props} />
+);
+
+export const TaskIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={TaskSvg} {...props} />
+);
+
+export const ChannelIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ChannelSvg} {...props} />
+);
+
+export const DocumentIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={DocumentSvg} {...props} />
+);
+
+export const TipitakaIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={TipitakaSvg} {...props} />
+);
+
+export const RobotIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={RobotSvg} {...props} />
 );

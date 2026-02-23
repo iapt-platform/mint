@@ -160,6 +160,7 @@ const SignInAvatar = ({ style, placement = "bottomRight" }: IWidget) => {
             >
               {user.nickName?.slice(0, 2)}
             </Avatar>
+            {user.nickName}
           </span>
         </Popover>
         <SettingModal

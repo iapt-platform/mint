@@ -1187,7 +1187,7 @@ export const WbwSentCtl = memo(
           </Space>
         </div>
 
-        {error && <Alert message={error} />}
+        {error && <Alert title={error} />}
 
         {isProcessing && (
           <div>
