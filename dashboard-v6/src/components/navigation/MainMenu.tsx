@@ -30,7 +30,7 @@ const Widget = ({ onSearch }: Props) => {
       label: "搜索",
     },
     {
-      key: "/workspace/home",
+      key: "/workspace",
       icon: <HomeOutlined />,
       label: "主页",
     },
