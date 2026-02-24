@@ -8,10 +8,8 @@
     <title>@yield('title', '巴利书库')</title>
     @stack('styles')
     <link href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/icons-sprite.svg" rel="stylesheet" />
-    <script
-        src="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/js/tabler.min.js">
-    </script>
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/js/tabler.min.js"></script>
 
     <style>
         .book-card {
@@ -118,6 +116,147 @@
             margin-top: 0.5rem;
         }
 
+        /* Navigation Styles */
+        .top-nav {
+            height: 50px;
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-item a:hover {
+            opacity: 0.8;
+        }
+
+        /* Hamburger Menu */
+        .hamburger-btn {
+            display: none;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            border-radius: 0.375rem;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            z-index: 1001;
+            transition: background 0.2s;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* CSS Hamburger Icon */
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 24px;
+        }
+
+        .hamburger-icon span {
+            display: block;
+            height: 2px;
+            background: white;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .hamburger-btn.active .hamburger-icon span:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .hamburger-btn.active .hamburger-icon span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-btn.active .hamburger-icon span:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            padding-top: 60px;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-nav-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-nav-item a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .mobile-nav-item a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .mobile-overlay.active {
+            display: block;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .hero-title {
                 font-size: 2rem;
@@ -134,6 +273,22 @@
             .stat-number {
                 font-size: 2rem;
             }
+
+            .top-nav {
+                padding: 0 1rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .hamburger-btn {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
         }
 
         @media (max-width: 576px) {
@@ -144,26 +299,83 @@
             .hero-subtitle {
                 font-size: 0.9rem;
             }
+
+            .top-nav {
+                padding: 0 0.5rem;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="page">
+        <!-- Mobile Overlay -->
+        <div class="mobile-overlay" id="mobileOverlay"></div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <ul class="mobile-nav-menu">
+                <li class="mobile-nav-item">
+                    <a href="{{ route('library.home') }}">首页</a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="{{ route('library.wiki') }}">百科</a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="{{ route('library.download') }}">下载</a>
+                </li>
+                <li class="mobile-nav-item">
+                    @auth
+                    <a href="#">我的账户</a>
+                    @else
+                    <a href="#">注册/登录</a>
+                    @endauth
+                </li>
+                <li class="mobile-nav-item" style="padding: 1rem 2rem;">
+                    <x-language-switcher />
+                </li>
+            </ul>
+        </div>
+
         <!-- Hero Section -->
         <section class="hero-section">
             <div class="hero-overlay">
-                <div style="height:30px;width:100%;display: flex;justify-content: center;">
-                    <div style="color:white;flex:1;">
-                    </div>
-                    <div style="color:white;">
-                        <x-language-switcher />
-                    </div>
+                <div class="top-nav">
+                    <!-- Desktop Menu -->
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="{{ route('library.home') }}">首页</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('library.wiki') }}">百科</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('library.download') }}">下载</a>
+                        </li>
+                        <li class="nav-item">
+                            @auth
+                            <a href="#">我的账户</a>
+                            @else
+                            <a href="#">注册/登录</a>
+                            @endauth
+                        </li>
+                        <li class="nav-item">
+                            <x-language-switcher />
+                        </li>
+                    </ul>
+
+                    <!-- Hamburger Button -->
+                    <button class="hamburger-btn" id="hamburgerBtn">
+                        <div class="hamburger-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </button>
                 </div>
             </div>
 
             <div class="hero-content">
-
                 <h1 class="hero-title">巴利书库</h1>
                 <p class="hero-subtitle">探索wikipali，开启智慧之门</p>
 
@@ -186,6 +398,30 @@
     <!-- Tabler JS and Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta21/dist/js/tabler.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Hamburger Menu Toggle
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('active');
+            mobileOverlay.classList.toggle('active');
+            hamburgerBtn.classList.toggle('active');
+        }
+
+        hamburgerBtn.addEventListener('click', toggleMenu);
+        mobileOverlay.addEventListener('click', toggleMenu);
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.mobile-nav-item a').forEach(link => {
+            link.addEventListener('click', () => {
+                toggleMenu();
+            });
+        });
+    </script>
+
     @stack('scripts')
 </body>
 

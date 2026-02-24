@@ -11,6 +11,7 @@ import { ArticleMode } from "../../article/Article";
 import SuggestionFocus from "./SuggestionFocus";
 import store from "../../../store";
 import { push } from "../../../reducers/sentence";
+import NissayaSent from "../Nissaya/NissayaSent";
 
 interface ILayoutFlex {
   left: number;
@@ -152,34 +153,38 @@ const SentContentWidget = ({
       <div style={{ flex: layoutFlex.left, color: "#9f3a01" }}>
         {origin?.map((item, id) => {
           if (item.contentType === "json") {
-            return (
-              <WbwSentCtl
-                key={id}
-                book={book}
-                para={para}
-                wordStart={wordStart}
-                wordEnd={wordEnd}
-                studio={item.studio}
-                channelId={item.channel.id}
-                channelType={item.channel.type}
-                channelLang={item.channel.lang}
-                data={JSON.parse(item.content ?? "")}
-                answer={answer ? JSON.parse(answer.content ?? "") : undefined}
-                mode={mode}
-                wbwProgress={wbwProgress}
-                readonly={readonly}
-                onChange={(data: IWbw[]) => {
-                  if (typeof onWbwChange !== "undefined") {
-                    onWbwChange(data);
-                  }
-                }}
-                onMagicDictDone={() => {
-                  if (typeof onMagicDictDone !== "undefined") {
-                    onMagicDictDone();
-                  }
-                }}
-              />
-            );
+            if (item.channel.type === "nissaya") {
+              return <NissayaSent data={JSON.parse(item.content ?? "[])")} />;
+            } else {
+              return (
+                <WbwSentCtl
+                  key={id}
+                  book={book}
+                  para={para}
+                  wordStart={wordStart}
+                  wordEnd={wordEnd}
+                  studio={item.studio}
+                  channelId={item.channel.id}
+                  channelType={item.channel.type}
+                  channelLang={item.channel.lang}
+                  data={JSON.parse(item.content ?? "")}
+                  answer={answer ? JSON.parse(answer.content ?? "") : undefined}
+                  mode={mode}
+                  wbwProgress={wbwProgress}
+                  readonly={readonly}
+                  onChange={(data: IWbw[]) => {
+                    if (typeof onWbwChange !== "undefined") {
+                      onWbwChange(data);
+                    }
+                  }}
+                  onMagicDictDone={() => {
+                    if (typeof onMagicDictDone !== "undefined") {
+                      onMagicDictDone();
+                    }
+                  }}
+                />
+              );
+            }
           } else {
             return <SentCell key={id} initValue={item} wordWidget={true} />;
           }

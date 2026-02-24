@@ -1,0 +1,278 @@
+id,book,name,term,v_title,m_title,p_title,abbr
+1,1,Namakkārapāḷi,namakkārapāḷi,namakkārapāḷi,namakkārapāḷi,namakkārapāḷi,namakkārapāḷi
+2,1,namakkāraṭīkā,namakkāraṭīkā,namakkāraṭīkā,namakkāraṭīkā,namakkāraṭīkā,namakkāraṭīkā
+3,2,Mahāpaṇāmapāṭha(Buddhavandanā),mahāpaṇāmapāṭha,mahāpaṇāmapāṭha,mahāpaṇāmapāṭha,mahāpaṇāmapāṭha,mahāpaṇāmapāṭha
+4,2,tigumbacetiya thomanā,tigumbacetiya thomanā,tigumbacetiya thomanā,tigumbacetiya thomanā,tigumbacetiya thomanā,tigumbacetiya thomanā
+5,2,vāsamālinīkya,vāsamālinīkya,vāsamālinīkya,vāsamālinīkya,vāsamālinīkya,vāsamālinīkya
+6,3,Lakkhaṇāto,lakkhaṇāto,lakkhaṇāto,lakkhaṇāto,lakkhaṇāto,lakkhaṇāto
+7,4,Suttavandanā,suttavandanā,suttavandanā,suttavandanā,suttavandanā,suttavandanā
+12,9,Abhidhānappadīpikāṭīkā,abhidhānappadīpikāṭīkā,abhidhānappadīpikāṭīkā,abhidhānappadīpikāṭīkā,abhidhānappadīpikāṭīkā,abhidhānappadīpikāṭīkā
+13,10,Subodhālaṅkāro,subodhālaṅkāro,subodhālaṅkāro,subodhālaṅkāro,subodhālaṅkāro,subodhālaṅkāro
+14,11,Subodhālaṅkāraṭīkā,subodhālaṅkāraṭīkā,subodhālaṅkāraṭīkā,subodhālaṅkāraṭīkā,subodhālaṅkāraṭīkā,subodhālaṅkāraṭīkā
+15,12,Bālāvatāra,bālāvatāra,bālāvatāra,bālāvatāra,bālāvatāra,bālāvatāra
+16,13,Moggallānasuttapāṭho,moggallānasuttapāṭho,moggallānasuttapāṭho,moggallānasuttapāṭho,moggallānasuttapāṭho,moggallānasuttapāṭho
+17,13,moggallānabyākaraṇaṃ,moggallānabyākaraṇaṃ,moggallānabyākaraṇaṃ,moggallānabyākaraṇaṃ,moggallānabyākaraṇaṃ,moggallānabyākaraṇaṃ
+18,14,Kaccāyanabyākaraṇaṃ,kaccāyanabyākaraṇaṃ,kaccāyanabyākaraṇaṃ,kaccāyanabyākaraṇaṃ,kaccāyanabyākaraṇaṃ,kaccāyanabyākaraṇaṃ
+19,14,mahākaccāyanasaddāpāṭha,mahākaccāyanasaddāpāṭha,mahākaccāyanasaddāpāṭha,mahākaccāyanasaddāpāṭha,mahākaccāyanasaddāpāṭha,mahākaccāyanasaddāpāṭha
+20,15,Saddanītippakaraṇaṃ (padamālā),saddanītippakaraṇaṃ (padamālā),saddanītippakaraṇaṃ (padamālā),saddanītippakaraṇaṃ (padamālā),saddanītippakaraṇaṃ (padamālā),saddanītippakaraṇaṃ (padamālā)
+21,16,Saddanītippakaraṇaṃ,saddanītippakaraṇaṃ (dhātumālā),saddanītippakaraṇaṃ (dhātumālā),saddanītippakaraṇaṃ (dhātumālā),saddanītippakaraṇaṃ (dhātumālā),saddanītippakaraṇaṃ (dhātumālā)
+22,17,Padarūpasiddhi,padarūpasiddhi,padarūpasiddhi,padarūpasiddhi,padarūpasiddhi,padarūpasiddhi
+23,18,Moggallāna pañcikā ṭīkā,moggallāna pañcikā ṭīkā,moggallāna pañcikā ṭīkā,moggallāna pañcikā ṭīkā,moggallāna pañcikā ṭīkā,moggallāna pañcikā ṭīkā
+24,19,Payogasiddhipāḷi,payogasiddhipāḷi,payogasiddhipāḷi,payogasiddhipāḷi,payogasiddhipāḷi,payogasiddhipāḷi
+25,20,Vuttodayaṃ,vuttodayaṃ,vuttodayaṃ,vuttodayaṃ,vuttodayaṃ,vuttodayaṃ
+26,21,Abhidhānappadīpikā,abhidhānappadīpikā,abhidhānappadīpikā,abhidhānappadīpikā,abhidhānappadīpikā,abhidhānappadīpikā
+27,22,Niruttidīpanīpāṭha,niruttidīpanīpāṭha,niruttidīpanīpāṭha,niruttidīpanīpāṭha,niruttidīpanīpāṭha,niruttidīpanīpāṭha
+28,23,Paramatthadīpanī,paramatthadīpanī,paramatthadīpanī,paramatthadīpanī,paramatthadīpanī,paramatthadīpanī
+29,24,Anudīpanīpāṭha,anudīpanīpāṭha,anudīpanīpāṭha,anudīpanīpāṭha,anudīpanīpāṭha,anudīpanīpāṭha
+30,25,Paṭṭhānuddesa dīpanīpāṭha,paṭṭhānuddesa dīpanīpāṭha,paṭṭhānuddesa dīpanīpāṭha,paṭṭhānuddesa dīpanīpāṭha,paṭṭhānuddesa dīpanīpāṭha,paṭṭhānuddesa dīpanīpāṭha
+31,26,Caturārakkhadīpanī,caturārakkhadīpanī,caturārakkhadīpanī,caturārakkhadīpanī,caturārakkhadīpanī,caturārakkhadīpanī
+32,27,Kavidappaṇanīti,kavidappaṇanīti,kavidappaṇanīti,kavidappaṇanīti,kavidappaṇanīti,kavidappaṇanīti
+33,28,Nītimañjarī,nītimañjarī,nītimañjarī,nītimañjarī,nītimañjarī,nītimañjarī
+34,29,Dhammanīti,dhammanīti,dhammanīti,dhammanīti,dhammanīti,dhammanīti
+35,30,Mahārahanīti,mahārahanīti,mahārahanīti,mahārahanīti,mahārahanīti,mahārahanīti
+36,31,Lokanīti,lokanīti,lokanīti,lokanīti,lokanīti,lokanīti
+37,32,Suttantanīti,suttantanīti,suttantanīti,suttantanīti,suttantanīti,suttantanīti
+38,32,vasalasutta,vasalasutta,vasalasutta,vasalasutta,vasalasutta,vasalasutta
+39,33,Sūrassatīnīti,sūrassatīnīti,sūrassatīnīti,sūrassatīnīti,sūrassatīnīti,sūrassatīnīti
+40,34,Cāṇakyanītipāḷi,cāṇakyanītipāḷi,cāṇakyanītipāḷi,cāṇakyanītipāḷi,cāṇakyanītipāḷi,cāṇakyanītipāḷi
+41,35,Naradakkhadīpanī,naradakkhadīpanī,naradakkhadīpanī,naradakkhadīpanī,naradakkhadīpanī,naradakkhadīpanī
+42,36,Rasavāhinī,rasavāhinī,rasavāhinī,rasavāhinī,rasavāhinī,rasavāhinī
+43,37,Sīmavisodhanī,sīmavisodhanī,sīmavisodhanī,sīmavisodhanī,sīmavisodhanī,sīmavisodhanī
+44,38,Vessantarāgīti,vessantarāgīti,vessantarāgīti,vessantarāgīti,vessantarāgīti,vessantarāgīti
+45,39,Dīghanikāye,saṅgayana-puccha vissajjanā dīghanikāye,saṅgayana-puccha vissajjanā dīghanikāye,saṅgayana-puccha vissajjanā dīghanikāye,saṅgayana-puccha vissajjanā dīghanikāye,(saṅgayana-puccha vissajjanā) dīghanikāye
+46,40,Majjhimanikāya,saṅgayana-puccha vissajjanā majjhimanikāya,saṅgayana-puccha vissajjanā majjhimanikāya,saṅgayana-puccha vissajjanā majjhimanikāya,saṅgayana-puccha vissajjanā majjhimanikāya,(saṅgayana-puccha vissajjanā) majjhimanikāya
+47,41,Saṃyuttanikāye,saṅgayana-puccha vissajjanā saṃyuttanikāye,saṅgayana-puccha vissajjanā saṃyuttanikāye,saṅgayana-puccha vissajjanā saṃyuttanikāye,saṅgayana-puccha vissajjanā saṃyuttanikāye,(saṅgayana-puccha vissajjanā) saṃyuttanikāye
+48,42,Aṅguttaranikāye,saṅgayana-puccha vissajjanā aṅguttaranikāye,saṅgayana-puccha vissajjanā aṅguttaranikāye,saṅgayana-puccha vissajjanā aṅguttaranikāye,saṅgayana-puccha vissajjanā aṅguttaranikāye,(saṅgayana-puccha vissajjanā) aṅguttaranikāye
+49,43,Vinayapiṭaka,saṅgayana-puccha vissajjanā vinayapiṭaka,saṅgayana-puccha vissajjanā vinayapiṭaka,saṅgayana-puccha vissajjanā vinayapiṭaka,saṅgayana-puccha vissajjanā vinayapiṭaka,(saṅgayana-puccha vissajjanā) vinayapiṭaka
+50,44,Abhidhammapiṭaka,saṅgayana-puccha vissajjanā abhidhammapiṭaka,saṅgayana-puccha vissajjanā abhidhammapiṭaka,saṅgayana-puccha vissajjanā abhidhammapiṭaka,saṅgayana-puccha vissajjanā abhidhammapiṭaka,(saṅgayana-puccha vissajjanā) abhidhammapiṭaka
+51,45,Aṭṭhakathā,saṅgayana-puccha vissajjanā aṭṭhakathā,saṅgayana-puccha vissajjanā aṭṭhakathā,saṅgayana-puccha vissajjanā aṭṭhakathā,saṅgayana-puccha vissajjanā aṭṭhakathā,(saṅgayana-puccha vissajjanā) aṭṭhakathā
+52,46,Milidaṭīkā,milidaṭīkā,milidaṭīkā,milidaṭīkā,milidaṭīkā,milidaṭīkā
+53,47,Padamañjarī,padamañjarī,padamañjarī,padamañjarī,padamañjarī,padamañjarī
+54,48,Padasādhanaṃ,padasādhanaṃ,padasādhanaṃ,padasādhanaṃ,padasādhanaṃ,padasādhanaṃ
+55,49,Saddabindu pakaraṇaṃ,saddabindu pakaraṇaṃ,saddabindu pakaraṇaṃ,saddabindu pakaraṇaṃ,saddabindu pakaraṇaṃ,saddabindu pakaraṇaṃ
+56,50,Kaccāyana dhātu mañjūsā,kaccāyana  dhātu mañjūsā,kaccāyana  dhātu mañjūsā,kaccāyana  dhātu mañjūsā,kaccāyana  dhātu mañjūsā,kaccāyana  dhātu mañjūsā
+57,51,Samantakūṭavaṇṇanā,samantakūṭavaṇṇanā,samantakūṭavaṇṇanā,samantakūṭavaṇṇanā,samantakūṭavaṇṇanā,samantakūṭavaṇṇanā
+58,52,Vuttisametā,moggallāna vuttivivaraṇapañcikā.,moggallāna vuttivivaraṇapañcikā.,moggallāna vuttivivaraṇapañcikā.,moggallāna vuttivivaraṇapañcikā.,moggallāna vuttivivaraṇapañcikā.
+59,53,Thupavaṃsa,thupavaṃsa,thupavaṃsa,thupavaṃsa,thupavaṃsa,thupavaṃsa
+60,54,Dāṭhāvaṃsa,dāṭhāvaṃsa,dāṭhāvaṃsa,dāṭhāvaṃsa,dāṭhāvaṃsa,dāṭhāvaṃsa
+61,55,Dhātupāṭha vilāsiniyā,dhātupāṭha  vilāsiniyā,dhātupāṭha  vilāsiniyā,dhātupāṭha  vilāsiniyā,dhātupāṭha  vilāsiniyā,dhātupāṭha  vilāsiniyā
+62,56,Dhātuvaṃsa,dhātuvaṃsa,dhātuvaṃsa,dhātuvaṃsa,dhātuvaṃsa,dhātuvaṃsa
+63,57,Hatthavanagallavihāra vaṃso,hatthavanagallavihāra  vaṃso,hatthavanagallavihāra  vaṃso,hatthavanagallavihāra  vaṃso,hatthavanagallavihāra  vaṃso,hatthavanagallavihāra  vaṃso
+64,58,Jinacaritaya,jinacaritaya,jinacaritaya,jinacaritaya,jinacaritaya,jinacaritaya
+65,59,Jinavaṃsadīpaṃ,jinavaṃsadīpaṃ,jinavaṃsadīpaṃ,jinavaṃsadīpaṃ,jinavaṃsadīpaṃ,jinavaṃsadīpaṃ
+66,60,Telakaṭāhagāthā,telakaṭāhagāthā,telakaṭāhagāthā,telakaṭāhagāthā,telakaṭāhagāthā,telakaṭāhagāthā
+67,61,Cūḷaganthavaṃsapāḷi,cūḷaganthavaṃsapāḷi,cūḷaganthavaṃsapāḷi,cūḷaganthavaṃsapāḷi,cūḷaganthavaṃsapāḷi,cūḷaganthavaṃsapāḷi
+68,62,Sāsanavaṃsappadīpikā,sāsanavaṃsappadīpikā,sāsanavaṃsappadīpikā,sāsanavaṃsappadīpikā,sāsanavaṃsappadīpikā,sāsanavaṃsappadīpikā
+69,63,Mahāvaṃsapāḷi,mahāvaṃsapāḷi,mahāvaṃsapāḷi,mahāvaṃsapāḷi,mahāvaṃsapāḷi,mahāvaṃsapāḷi
+70,64,Visuddhimaggo(Paṭhamo bhāgo),visuddhimagga,visuddhimagga,visuddhimagga,visuddhimagga,visuddhi.
+71,65,Visuddhimaggo(Dutiyo bhāgo),visuddhimagga,visuddhimagga,visuddhimagga,visuddhimagga,visuddhi.
+72,66,Visuddhimagga-mahāṭīkā(Paṭhamo bhāgo),Visuddhimagga-mahāṭīkā,visuddhimagga-mahāṭīkā,visuddhimagga-mahāṭīkā,Visuddhimagga-mahāṭīkā,visuddhi. ṭī.
+73,67,Visuddhimagga-mahāṭīkā(Dutiyo bhāgo),Visuddhimagga-mahāṭīkā,visuddhimagga-mahāṭīkā,visuddhimagga-mahāṭīkā,Visuddhimagga-mahāṭīkā,visuddhi. ṭī.
+74,68,Visuddhimagga nidānakathā,visuddhimagga-nidānakathā,visuddhimagga-nidānakathā,visuddhimagga-nidānakathā,visuddhimagga-nidānakathā,visuddhimagga-nidānakathā
+75,69,Paṭṭhānapāḷi(Dutiyo bhāgo),paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhāna.
+76,70,Paṭṭhānapāḷi(Tatiyo bhāgo),paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhāna.
+77,71,Paṭṭhānapāḷi(Catuttho bhāgo),paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhāna.
+78,72,Paṭṭhānapāḷi(Pañcamo bhāgo),paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhāna.
+79,73,Dhammasaṅgaṇīpāḷi,dhammasaṅgaṇīpāḷi,dhammasaṅgaṇīpāḷi,dhammasaṅgaṇīpāḷi,dhammasaṅgaṇīpāḷi,abhi. dha.
+80,74,Vibhaṅgapāḷi,vibhaṅgapāḷi,vibhaṅgapāḷi,vibhaṅgapāḷi,vibhaṅgapāḷi,abhi. vi.
+81,75,Dhātukathāpāḷi,dhātukathāpāḷi,dhātukathāpāḷi,dhātukathāpāḷi,dhātukathāpāḷi,abhi. dhā.
+82,76,Puggalapaññattipāḷi,puggalapaññattipāḷi,puggalapaññattipāḷi,puggalapaññattipāḷi,puggalapaññattipāḷi,abhi. pu.
+83,77,Kathāvatthupāḷi,kathāvatthupāḷi,kathāvatthupāḷi,kathāvatthupāḷi,kathāvatthupāḷi,abhi. ka.
+84,78,Yamakapāḷi (paṭhamo bhāgo),yamakapāḷi,yamakapāḷi,yamakapāḷi,yamakapāḷi,yamaka.
+85,79,Yamakapāḷi (dutiyo bhāgo),yamakapāḷi,yamakapāḷi,yamakapāḷi,yamakapāḷi,yamaka.
+86,80,Yamakapāḷi (tatiyo bhāgo),yamakapāḷi,yamakapāḷi,yamakapāḷi,yamakapāḷi,yamaka.
+87,81,Paṭṭhānapāḷi(Paṭhamo bhāgo),paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhānapāḷi,paṭṭhāna.
+88,82,Dasakanipātapāḷi,aṅguttaranikāya,aṅguttaranikāya-2,aṅguttaranikāya,aṅguttaranikāya,aṃ.
+89,83,Ekādasakanipātapāḷi,aṅguttaranikāya,aṅguttaranikāya-2,aṅguttaranikāya,aṅguttaranikāya,aṃ.
+90,84,Ekakanipātapāḷi,aṅguttaranikāya,aṅguttaranikāya-1,aṅguttaranikāya,aṅguttaranikāya,aṃ.
+91,85,Dukanipātapāḷi,aṅguttaranikāya,aṅguttaranikāya-1,aṅguttaranikāya,aṅguttaranikāya,aṃ.
+92,86,Tikanipātapāḷi,aṅguttaranikāya,aṅguttaranikāya-1,aṅguttaranikāya,aṅguttaranikāya,aṃ.
+93,87,Catukkanipātapāḷi,aṅguttaranikāya,aṅguttaranikāya-2,aṅguttaranikāya,aṅguttaranikāya,aṃ.
+94,88,Pañcakanipātapāḷi,aṅguttaranikāya,aṅguttaranikāya-1,aṅguttaranikāya,aṅguttaranikāya,aṃ.
+95,89,Chakkanipātapāḷi,aṅguttaranikāya,aṅguttaranikāya-2,aṅguttaranikāya,aṅguttaranikāya,aṃ.
+96,90,Sattakanipātapāḷi,aṅguttaranikāya,aṅguttaranikāya-2,aṅguttaranikāya,aṅguttaranikāya,aṃ.
+97,91,Aṭṭhakanipātapāḷi,aṅguttaranikāya,aṅguttaranikāya-1,aṅguttaranikāya,aṅguttaranikāya,aṃ.
+98,92,Navakanipātapāḷi,aṅguttaranikāya,aṅguttaranikāya-1,aṅguttaranikāya,aṅguttaranikāya,aṃ.
+99,93,Sīlakkhandhavaggapāḷi,dīghanikāya,dīghanikāya,dīghanikāya,dīghanikāya,dī.
+100,94,Mahāvaggapāḷi,dīghanikāya,dīghanikāya,dīghanikāya,dīghanikāya,dī.
+101,95,Pāthikavaggapāḷi,dīghanikāya,dīghanikāya,dīghanikāya,dīghanikāya,dī.
+102,96,Dhammasaṅgaṇī-aṭṭhakathā,dhammasaṅgaṇī-aṭṭhakathā,dhammasaṅgaṇī-aṭṭhakathā,dhammasaṅgaṇī-aṭṭhakathā,dhammasaṅgaṇī-aṭṭhakathā,abhi. ṭṭha. 1
+103,97,Vibhaṅga-aṭṭhakathā,vibhaṅga-aṭṭhakathā,vibhaṅga-aṭṭhakathā,vibhaṅga-aṭṭhakathā,vibhaṅga-aṭṭhakathā,abhi. ṭṭha. 2
+104,98,Pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,abhi. ṭṭha. 3
+105,98,puggalapaññatti-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,abhi. ṭṭha. 3
+106,98,kathāvatthu-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,abhi. ṭṭha. 3
+107,98,yamakappakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,abhi. ṭṭha. 3
+108,98,paṭṭhānappakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,pañcapakaraṇa-aṭṭhakathā,abhi. ṭṭha. 3
+109,99,Ekakanipāta-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṃ. ṭṭha.
+110,100,Dukanipāta-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṃ. ṭṭha.
+111,100,manorathapūraṇī,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṃ. ṭṭha.
+112,100,manorathapūraṇī,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṃ. ṭṭha.
+113,101,Pañcakanipāta-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṃ. ṭṭha.
+114,101,manorathapūraṇī,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṃ. ṭṭha.
+115,101,manorathapūraṇī,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṃ. ṭṭha.
+116,102,Aṭṭhakanipāta-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṃ. ṭṭha.
+117,102,manorathapūraṇī,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṃ. ṭṭha.
+118,102,manorathapūraṇī,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṃ. ṭṭha.
+119,102,manorathapūraṇī,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṅguttaranikāya-aṭṭhakathā,aṃ. ṭṭha.
+120,103,Sīlakkhandhavaggaṭṭhakathā,dīghanikāya-aṭṭhakathā,dīghanikāya-aṭṭhakathā,dīghanikāya-aṭṭhakathā,dīghanikāya-aṭṭhakathā,dī. ṭṭha.
+121,104,Mahāvaggaṭṭhakathā,dīghanikāya-aṭṭhakathā,dīghanikāya-aṭṭhakathā,dīghanikāya-aṭṭhakathā,dīghanikāya-aṭṭhakathā,dī. ṭṭha.
+122,105,Pāthikavaggaṭṭhakathā,dīghanikāya-aṭṭhakathā,dīghanikāya-aṭṭhakathā,dīghanikāya-aṭṭhakathā,dīghanikāya-aṭṭhakathā,dī. ṭṭha.
+123,106,Therīgāthā-aṭṭhakathā,therīgāthā-aṭṭhakathā,therīgāthā-aṭṭhakathā,therīgāthā-aṭṭhakathā,therīgāthā-aṭṭhakathā,therī. ṭṭha.
+124,107,Apadāna-aṭṭhakathā,apadāna-aṭṭhakathā,apadāna-aṭṭhakathā,apadāna-aṭṭhakathā,apadāna-aṭṭhakathā,apa. ṭṭha.
+125,108,Buddhavaṃsa-aṭṭhakathā,buddhavaṃsa-aṭṭhakathā,buddhavaṃsa-aṭṭhakathā,buddhavaṃsa-aṭṭhakathā,buddhavaṃsa-aṭṭhakathā,buddhavaṃ. ṭṭha.
+126,109,Cariyāpiṭaka-aṭṭhakathā,cariyāpiṭaka-aṭṭhakathā,cariyāpiṭaka-aṭṭhakathā,cariyāpiṭaka-aṭṭhakathā,cariyāpiṭaka-aṭṭhakathā,cariyā. ṭṭha.
+127,110,Jātaka-aṭṭhakathā(Paṭhamo bhāgo),jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jā. ṭṭha.
+128,111,Jātaka-aṭṭhakathā(Dutiyo bhāgo),jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jā. ṭṭha.
+129,112,Jātaka-aṭṭhakathā(Tatiyo bhāgo),jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jā. ṭṭha.
+130,113,Jātaka-aṭṭhakathā(Catuttho bhāgo),jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jā. ṭṭha.
+131,113,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jā. ṭṭha.
+132,114,Jātaka-aṭṭhakathā(Pañcamo bhāgo),jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jā. ṭṭha.
+133,115,Jātaka-aṭṭhakathā(Chaṭṭho bhāgo),jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jā. ṭṭha.
+134,116,Khuddakapāṭha-aṭṭhakathā,khuddakapāṭha-aṭṭhakathā,khuddakapāṭha-aṭṭhakathā,khuddakapāṭha-aṭṭhakathā,khuddakapāṭha-aṭṭhakathā,khuddaka. ṭṭha.
+135,117,Jātaka-aṭṭhakathā(Sattamo bhāgo),jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jātaka-aṭṭhakathā,jā. ṭṭha.
+136,118,Mahāniddesa-aṭṭhakathā,mahāniddesa-aṭṭhakathā,mahāniddesa-aṭṭhakathā,mahāniddesa-aṭṭhakathā,mahāniddesa-aṭṭhakathā,mahāni. ṭṭha.
+137,119,Cūḷaniddesa-aṭṭhakathā,cūḷaniddesa-aṭṭhakathā,cūḷaniddesa-aṭṭhakathā,cūḷaniddesa-aṭṭhakathā,cūḷaniddesa-aṭṭhakathā,cūḷani. ṭṭha.
+138,120,Paṭisambhidāmagga-aṭṭhakathā,paṭisambhidāmagga-aṭṭhakathā,paṭisambhidāmagga-aṭṭhakathā,paṭisambhidāmagga-aṭṭhakathā,paṭisambhidāmagga-aṭṭhakathā,paṭisaṃ. ṭṭha.
+139,121,Nettippakaraṇa-aṭṭhakathā,nettippakaraṇa-aṭṭhakathā,nettippakaraṇa-aṭṭhakathā,nettippakaraṇa-aṭṭhakathā,nettippakaraṇa-aṭṭhakathā,netti. ṭṭha.
+140,122,Dhammapada-aṭṭhakathā,dhammapada-aṭṭhakathā,dhammapada-aṭṭhakathā,dhammapada-aṭṭhakathā,dhammapada-aṭṭhakathā,dhamma. ṭṭha.
+141,123,Udāna-aṭṭhakathā,udāna-aṭṭhakathā,udāna-aṭṭhakathā,udāna-aṭṭhakathā,udāna-aṭṭhakathā,udāna. ṭṭha.
+142,124,Itivuttaka-aṭṭhakathā,itivuttaka-aṭṭhakathā,itivuttaka-aṭṭhakathā,itivuttaka-aṭṭhakathā,itivuttaka-aṭṭhakathā,itivutta. ṭṭha.
+143,125,Suttanipāta-aṭṭhakathā,suttanipāta-aṭṭhakathā,suttanipāta-aṭṭhakathā,suttanipāta-aṭṭhakathā,suttanipāta-aṭṭhakathā,suttani. ṭṭha.
+144,126,Vimānavatthu-aṭṭhakathā,vimānavatthu-aṭṭhakathā,vimānavatthu-aṭṭhakathā,vimānavatthu-aṭṭhakathā,vimānavatthu-aṭṭhakathā,vimāna. ṭṭha.
+145,127,Petavatthu-aṭṭhakathā,petavatthu-aṭṭhakathā,petavatthu-aṭṭhakathā,petavatthu-aṭṭhakathā,petavatthu-aṭṭhakathā,peta. ṭṭha.
+146,128,Theragāthā-aṭṭhakathā(Paṭhamo bhāgo),Theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,thera. ṭṭha.
+147,129,Theragāthā-aṭṭhakathā(Dutiyo bhāgo),Theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,theragāthā-aṭṭhakathā,Theragāthā-aṭṭhakathā,thera. ṭṭha.
+148,130,Mūlapaṇṇāsa-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,ma. ṭṭha.
+149,131,Majjhimapaṇṇāsa-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,ma. ṭṭha.
+150,132,Uparipaṇṇāsa-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,majimanikaya-aṭṭhakathā,ma. ṭṭha.
+151,133,Sagāthāvagga-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃ. ṭṭha.
+152,134,Nidānavagga-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃ. ṭṭha.
+153,135,Khandhavagga-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃ. ṭṭha.
+154,136,Saḷāyatanavagga-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃ. ṭṭha.
+155,137,Mahāvagga-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃyuttanikāya-aṭṭhakathā,saṃ. ṭṭha.
+156,138,Pārājikakaṇḍa-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,pārājikakaṇḍa-aṭṭhakathā,vinaya-aṭṭhakathā,vi. ṭṭha.
+157,139,Pācittiya-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,pācittiyādi-aṭṭhakathā,vinaya-aṭṭhakathā,vi. ṭṭha.
+158,140,Mahāvagga-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,pācittiyādi-aṭṭhakathā,vinaya-aṭṭhakathā,vi. ṭṭha.
+159,141,Cūḷavagga-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,cūḷavaggādi-aṭṭhakathā,vinaya-aṭṭhakathā,vi. ṭṭha.
+160,142,Parivāra-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,cūḷavaggādi-aṭṭhakathā,vinaya-aṭṭhakathā,vi. ṭṭha.
+161,143,Therāpadānapāḷi(Paṭhamo bhāgo),therāpadānapāḷi,therāpadānapāḷi,therāpadānapāḷi,therāpadānapāḷi,apa.
+162,144,Therāpadānapāḷi(Dutiyo bhāgo),therāpadānapāḷi,therāpadānapāḷi,therāpadānapāḷi,therāpadānapāḷi,apa.
+163,144,therīapadānapāḷi,therīapadānapāḷi,therīapadānapāḷi,therīapadānapāḷi,therīapadānapāḷi,therīapadānapāḷi
+164,145,Buddhavaṃsapāḷi,buddhavaṃsapāḷi,buddhavaṃsapāḷi,buddhavaṃsapāḷi,buddhavaṃsapāḷi,buddhavaṃ.
+165,146,Cariyāpiṭakapāḷi,cariyāpiṭakapāḷi,cariyāpiṭakapāḷi,cariyāpiṭakapāḷi,cariyāpiṭakapāḷi,cariyā.
+166,147,Jātakapāḷi(Dutiyo bhāgo),jātakapāḷi,jātakapāḷi,jātakapāḷi,jātakapāḷi,jā.
+167,148,Jātakapāḷi(Paṭhamo bhāgo),jātakapāḷi,jātakapāḷi,jātakapāḷi,jātakapāḷi,jā.
+168,149,Mahāniddesapāḷi,mahāniddesapāḷi,mahāniddesapāḷi,mahāniddesapāḷi,mahāniddesapāḷi,mahāni.
+169,150,Cūḷaniddesapāḷi,cūḷaniddesapāḷi,cūḷaniddesapāḷi,cūḷaniddesapāḷi,cūḷaniddesapāḷi,cūḷani.
+170,151,Paṭisambhidāmaggapāḷi,paṭisambhidāmaggapāḷi,paṭisambhidāmaggapāḷi,paṭisambhidāmaggapāḷi,paṭisambhidāmaggapāḷi,paṭisaṃ.
+171,152,Milindapañhapāḷi,milindapañhapāḷi,milindapañhapāḷi,milindapañhapāḷi,milindapañhapāḷi,milinda.
+172,153,Nettippakaraṇapāḷi,nettippakaraṇapāḷi,nettippakaraṇapāḷi,nettippakaraṇapāḷi,nettippakaraṇapāḷi,netti.
+173,154,Khuddakapāṭhapāḷi,khuddakapāṭhapāḷi,khuddakapāṭhapāḷi,khuddakapāṭhapāḷi,khuddakapāṭhapāḷi,khuddaka.
+174,155,Peṭakopadesapāḷi,peṭakopadesapāḷi,peṭakopadesapāḷi,peṭakopadesapāḷi,peṭakopadesapāḷi,peṭako.
+175,156,Dhammapadapāḷi,dhammapadapāḷi,dhammapadapāḷi,dhammapadapāḷi,dhammapadapāḷi,dhamma.
+176,157,Udānapāḷi,udānapāḷi,udānapāḷi,udānapāḷi,udānapāḷi,udāna.
+177,158,Itivuttakapāḷi,itivuttakapāḷi,itivuttakapāḷi,itivuttakapāḷi,itivuttakapāḷi,itivutta.
+178,159,Suttanipātapāḷi,suttanipātapāḷi,suttanipātapāḷi,suttanipātapāḷi,suttanipātapāḷi,suttani.
+179,160,Vimānavatthupāḷi,vimānavatthupāḷi,vimānavatthupāḷi,vimānavatthupāḷi,vimānavatthupāḷi,vimāna.
+180,161,Petavatthupāḷi,petavatthupāḷi,petavatthupāḷi,petavatthupāḷi,petavatthupāḷi,peta.
+181,162,Theragāthāpāḷi,theragāthāpāḷi,theragāthāpāḷi,theragāthāpāḷi,theragāthāpāḷi,theragāthā.
+182,163,Therīgāthāpāḷi,therīgāthāpāḷi,therīgāthāpāḷi,therīgāthāpāḷi,therīgāthāpāḷi,therī.
+183,164,Mūlapaṇṇāsapāḷi,majjhimanikaya,majjhimanikaya,majjhimanikaya,majjhimanikaya,ma.
+184,165,Majjhimapaṇṇāsapāḷi,majjhimanikaya,majjhimanikaya,majjhimanikaya,majjhimanikaya,ma.
+185,166,Uparipaṇṇāsapāḷi,majjhimanikaya,majjhimanikaya,majjhimanikaya,majjhimanikaya,ma.
+186,167,Sagāthāvaggo,saṃyuttanikāya,saṃyuttanikāya,saṃyuttanikāya,saṃyuttanikāya,saṃ.
+187,168,Nidānavaggo,saṃyuttanikāya,saṃyuttanikāya,saṃyuttanikāya,saṃyuttanikāya,saṃ.
+188,169,Khandhavaggo,saṃyuttanikāya,saṃyuttanikāya,saṃyuttanikāya,saṃyuttanikāya,saṃ.
+189,170,Saḷāyatanavaggo,saṃyuttanikāya,saṃyuttanikāya,saṃyuttanikāya,saṃyuttanikāya,saṃ.
+190,171,Mahāvaggo,saṃyuttanikāya,saṃyuttanikāya,saṃyuttanikāya,saṃyuttanikāya,saṃ.
+191,172,dhammasaṅgaṇī-mūlaṭīkā,dhammasaṅgaṇī-mūlaṭīkā,dhammasaṅgaṇī-mūlaṭīkā,dhammasaṅgaṇī-mūlaṭīkā,dhammasaṅgaṇī-mūlaṭīkā,mūlaṭī. 1
+192,173,vibhaṅga-mūlaṭīkā,vibhaṅga-mūlaṭīkā,vibhaṅga-mūlaṭīkā,vibhaṅga-mūlaṭīkā,vibhaṅga-mūlaṭīkā,mūlaṭī. 2
+193,173,Vibhaṅga-anuṭīkā,vibhaṅga-anuṭīkā,vibhaṅga-anuṭīkā,vibhaṅga-anuṭīkā,vibhaṅga-anuṭīkā,anuṭī. 2
+194,174,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,mūlaṭī. 3
+195,174,mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,mūlaṭī. 3
+196,174,mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,mūlaṭī. 3
+197,174,mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,mūlaṭī. 3
+198,174,mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,pañcapakaraṇa-mūlaṭīkā,mūlaṭī. 3
+199,175,dhammasaṅgaṇī-anuṭīkā,dhammasaṅgaṇī-anuṭīkā,dhammasaṅgaṇī-anuṭīkā,dhammasaṅgaṇī-anuṭīkā,dhammasaṅgaṇī-anuṭīkā,anuṭī. 1
+200,176,dhātukathāpakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,anuṭī. 3
+201,176,puggalapaññattipakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,anuṭī. 3
+202,176,kathāvatthupakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,anuṭī. 3
+203,176,anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,anuṭī. 3
+204,176,anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,pañcapakaraṇa-anuṭīkā,anuṭī. 3
+205,177,Ganthārambhakathā,abhidhammāvatāro,abhidhammāvatāro,abhidhammāvatāro,abhidhammāvatāro,abhidhammāvatāro
+206,177,nāmarūpaparicchedo,nāmarūpaparicchedo,nāmarūpaparicchedo,nāmarūpaparicchedo,nāmarūpaparicchedo,nāmarūpaparicchedo
+207,177,paramatthavinicchayo,paramatthavinicchayo,paramatthavinicchayo,paramatthavinicchayo,paramatthavinicchayo,paramatthavinicchayo
+208,177,saccasaṅkhepo,saccasaṅkhepo,saccasaṅkhepo,saccasaṅkhepo,saccasaṅkhepo,saccasaṅkhepo
+209,178,Abhidhammatthasaṅgaho,abhidhammatthasaṅgaho,abhidhammatthasaṅgaho,abhidhammatthasaṅgaho,abhidhammatthasaṅgaho,abhidhammatthasaṅgaho
+210,178,abhidhammatthavibhāvinīṭīkā,abhidhammatthavibhāvinīṭīkā,abhidhammatthavibhāvinīṭīkā,abhidhammatthavibhāvinīṭīkā,abhidhammatthavibhāvinīṭīkā,abhidhammatthavibhāvinīṭīkā
+211,179,Paṭhamo paricchedo,abhidhammāvatāra-purāṇaṭīkā,abhidhammāvatāra-purāṇaṭīkā,abhidhammāvatāra-purāṇaṭīkā,abhidhammāvatāra-purāṇaṭīkā,abhidhammāvatāra-purāṇaṭīkā
+212,179,abhidhammāvatāra-abhinavaṭīkā,abhidhammāvatāra-abhinavaṭīkā,abhidhammāvatāra-abhinavaṭīkā,abhidhammāvatāra-abhinavaṭīkā,abhidhammāvatāra-abhinavaṭīkā,abhidhammāvatāra-abhinavaṭīkā
+213,180,Abhidhammamātikāpāḷi,abhidhammamātikāpāḷi,abhidhammamātikāpāḷi,abhidhammamātikāpāḷi,abhidhammamātikāpāḷi,abhidhammamātikāpāḷi
+214,180,mohavicchedanī,mohavicchedanī,mohavicchedanī,mohavicchedanī,mohavicchedanī,mohavicchedanī
+215,181,Ekakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṃ. ṭī.
+216,182,Dukanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṃ. ṭī.
+217,182,tikanipāta-ṭīkā,tikanipāta-ṭīkā,tikanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,tikanipāta-ṭīkā,aṃ. ṭī.
+218,182,catukkanipāta-ṭīkā,catukkanipāta-ṭīkā,catukkanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,catukkanipāta-ṭīkā,aṃ. ṭī.
+219,183,Pañcakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṃ. ṭī.
+220,183,chakkanipāta-ṭīkā,chakkanipāta-ṭīkā,chakkanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,chakkanipāta-ṭīkā,aṃ. ṭī.
+221,183,sattakanipāta-ṭīkā,sattakanipāta-ṭīkā,sattakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,sattakanipāta-ṭīkā,aṃ. ṭī.
+222,184,Aṭṭhakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṅguttaranikāya-ṭīkā,aṃ. ṭī.
+223,184,navakanipāta-ṭīkā,navakanipāta-ṭīkā,navakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,navakanipāta-ṭīkā,aṃ. ṭī.
+224,184,dasakanipāta-ṭīkā,dasakanipāta-ṭīkā,dasakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,dasakanipāta-ṭīkā,aṃ. ṭī.
+225,184,ekādasakanipāta-ṭīkā,ekādasakanipāta-ṭīkā,ekādasakanipāta-ṭīkā,aṅguttaranikāya-ṭīkā,ekādasakanipāta-ṭīkā,aṃ. ṭī.
+226,185,Sīlakkhandhavaggaṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dī. ṭī.
+227,186,Mahāvaggaṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dī. ṭī.
+228,187,Pāthikavaggaṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dīghanikāya-ṭīkā,dī. ṭī.
+229,188,Sīlakkhandhavaggaabhinavaṭīkā,dīghanikāya-abhinavaṭīkā,dīghanikāya-abhinavaṭīkā,dīghanikāya-abhinavaṭīkā,dīghanikāya-abhinavaṭīkā,dī. abhi. ṭī.
+230,189,Sīlakkhandhavaggaabhinavaṭīkā,dīghanikāya-abhinavaṭīkā,dīghanikāya-abhinavaṭīkā,dīghanikāya-abhinavaṭīkā,dīghanikāya-abhinavaṭīkā,dī. abhi. ṭī.
+231,190,Nettippakaraṇa-ṭīkā,nettippakaraṇa-ṭīkā,nettippakaraṇa-ṭīkā,nettippakaraṇa-ṭīkā,nettippakaraṇa-ṭīkā,netti. ṭī.
+232,191,Nettivibhāvinī,nettivibhāvinī,nettivibhāvinī,nettivibhāvinī,nettivibhāvinī,netti. vibhā.
+233,192,Mūlapaṇṇāsa-ṭīkā,majjhimanikaya-ṭīkā,majjhimanikaya-ṭīkā,majjhimanikaya-ṭīkā,majjhimanikaya-ṭīkā,ma. ṭī.
+234,193,Majjhimapaṇṇāsaṭīkā,majjhimanikaya-ṭīkā,majjhimanikaya-ṭīkā,majjhimanikaya-ṭīkā,majjhimanikaya-ṭīkā,ma. ṭī.
+235,194,Uparipaṇṇāsa-ṭīkā,majjhimanikaya-ṭīkā,majjhimanikaya-ṭīkā,majjhimanikaya-ṭīkā,majjhimanikaya-ṭīkā,ma. ṭī.
+236,195,Sagāthāvaggaṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃ. ṭī.
+237,196,Nidānavaggaṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃ. ṭī.
+238,197,Khandhavaggaṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃ. ṭī.
+239,198,Saḷāyatanavaggaṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃ. ṭī.
+240,199,Mahāvaggaṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃyuttanikāya-ṭīkā,saṃ. ṭī.
+241,200,Vinayavinicchayo,vinayavinicchayo,vinayavinicchayo,vinayavinicchayo,vinayavinicchayo,vinayavinicchayo
+242,200,uttaravinicchayo,uttaravinicchayo,uttaravinicchayo,uttaravinicchayo,uttaravinicchayo,uttaravinicchayo
+243,201,Vinayavinicchayaṭīkā(Paṭhamo bhāgo),vinayavinicchaya-ṭīkā,vinayavinicchaya-ṭīkā,vinayavinicchaya-ṭīkā,vinayavinicchaya-ṭīkā,vinayavinicchaya-ṭīkā
+244,201,uttaravinicchaya-ṭīkā,uttaravinicchaya-ṭīkā,uttaravinicchaya-ṭīkā,uttaravinicchaya-ṭīkā,uttaravinicchaya-ṭīkā,uttaravinicchaya-ṭīkā
+245,202,Pācityādiyojanā,pācityādiyojanā,pācityādiyojanā,pācityādiyojanā,pācityādiyojanā,pācityādiyojanā
+246,203,Khuddasikkhā-mūlasikkhā,khuddasikkhā,khuddasikkhā,khuddasikkhā,khuddasikkhā,khuddasikkhā
+247,203,khuddasikkhā,khuddasikkhā,khuddasikkhā,khuddasikkhā,khuddasikkhā,khuddasikkhā
+248,203,khuddasikkhā,khuddasikkhā,khuddasikkhā,khuddasikkhā,khuddasikkhā,khuddasikkhā
+249,203,mūlasikkhā,mūlasikkhā,mūlasikkhā,mūlasikkhā,mūlasikkhā,mūlasikkhā
+250,203,mūlasikkhā,mūlasikkhā,mūlasikkhā,mūlasikkhā,mūlasikkhā,mūlasikkhā
+251,204,sāratthadīpanī-ṭīkā (paṭhamo bhāgo),sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sārattha. ṭī.
+252,205,sāratthadīpanī-ṭīkā (dutiyo bhāgo),sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sārattha. ṭī.
+253,206,sāratthadīpanī-ṭīkā (tatiyo bhāgo),sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sārattha. ṭī.
+254,206,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sārattha. ṭī.
+255,206,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sārattha. ṭī.
+256,206,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sāratthadīpanī-ṭīkā,sārattha. ṭī.
+257,207,Bhikkhupātimokkhapāḷi,pātimokkhapāḷi,pātimokkhapāḷi,pātimokkhapāḷi,pātimokkhapāḷi,pātimokkha
+258,207,pātimokkhapāḷi,pātimokkhapāḷi,pātimokkhapāḷi,pātimokkhapāḷi,pātimokkhapāḷi,pātimokkha
+259,207,kaṅkhāvitaraṇī,kaṅkhāvitaraṇī,kaṅkhāvitaraṇī,kaṅkhāvitaraṇī,kaṅkhāvitaraṇī,kaṅkhā.
+260,208,Vinayasaṅgaha-aṭṭhakathā,vinayasaṅgaha-aṭṭhakathā,vinayasaṅgaha-aṭṭhakathā,vinayasaṅgaha-aṭṭhakathā,vinayasaṅgaha-aṭṭhakathā,vinayasaṅgaha-aṭṭhakathā
+261,209,Vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajīra. ṭī.
+262,209,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajīra. ṭī.
+263,209,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajīra. ṭī.
+264,209,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajīra. ṭī.
+265,209,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajīra. ṭī.
+266,209,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajirabuddhi-ṭīkā,vajīra. ṭī.
+267,210,Vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimati. ṭī.
+268,210,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimati. ṭī.
+269,210,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimati. ṭī.
+270,210,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimati. ṭī.
+271,210,Vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,vimativinodanī-ṭīkā,Vimativinodanī-ṭīkā,vimati. ṭī.
+272,211,Vinayālaṅkāra-ṭīkā,vinayālaṅkāra-ṭīkā,vinayālaṅkāra-ṭīkā,vinayālaṅkāra-ṭīkā,vinayālaṅkāra-ṭīkā,ālaṅkāra. ṭī.
+273,212,Kaṅkhāvitaraṇīpurāṇa-ṭīkā,kaṅkhāvitaraṇīpurāṇa-ṭīkā,kaṅkhāvitaraṇīpurāṇa-ṭīkā,kaṅkhāvitaraṇīpurāṇa-ṭīkā,kaṅkhāvitaraṇīpurāṇa-ṭīkā,kaṅkhā. ṭī.
+274,212,Kaṅkhāvitaraṇī-abhinavaṭīkā,kaṅkhāvitaraṇī-abhinavaṭīkā,kaṅkhāvitaraṇī-abhinavaṭīkā,kaṅkhāvitaraṇī-abhinavaṭīkā,kaṅkhāvitaraṇī-abhinavaṭīkā,kaṅkhā.
+275,213,Pārājikapāḷi,pārājikapāḷi,pārājikapāḷi,pārājikapāḷi,vinayapiṭaka,vi.
+276,214,Pācittiyapāḷi,pācittiyapāḷi,pācittiyapāḷi,pācittiyapāḷi,vinayapiṭaka,vi.
+277,215,Mahāvaggapāḷi,mahāvaggapāḷi,mahāvaggapāḷi,mahāvaggapāḷi,vinayapiṭaka,vi.
+278,216,Cūḷavaggapāḷi,cūḷavaggapāḷi,cūḷavaggapāḷi,cūḷavaggapāḷi,vinayapiṭaka,vi.
+279,217,Parivārapāḷi,parivārapāḷi,parivārapāḷi,parivārapāḷi,vinayapiṭaka,vi.
+280,139,samantapāsādikā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,vinaya-aṭṭhakathā,vi. ṭṭha.
+281,214,(VN)Bhikkhunīvibhaṅgo,pācittiyapāḷi,pācittiyapāḷi,pācittiyapāḷi,vinayapiṭaka,vi.
