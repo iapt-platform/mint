@@ -28,6 +28,7 @@ const AnonymousLayout = lazy(() => import("./layouts/anonymous"));
 const DashboardLayout = lazy(() => import("./layouts/dashboard"));
 const WorkspaceLayout = lazy(() => import("./layouts/workspace"));
 const WorkspaceEditorLayout = lazy(() => import("./layouts/workspace/editor"));
+const WorkspaceHomeLayout = lazy(() => import("./layouts/workspace/home"));
 
 // ↓ 新增：TestLayout
 const TestLayout = lazy(() => import("./layouts/test"));
@@ -75,11 +76,7 @@ const router = createBrowserRouter(
           Component: WorkspaceLayout,
           handle: { crumb: "workspace" },
           children: [
-            { index: true, Component: WorkspaceLayout },
-            {
-              path: "home",
-              Component: UsersPersonal,
-            },
+            { index: true, Component: WorkspaceHomeLayout },
             {
               path: "ai",
               Component: UsersPersonal,
