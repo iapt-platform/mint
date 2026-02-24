@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import players from "video.js";
+
 import VideoPlayer from "./VideoPlayer";
 import type { IAttachmentResponse } from "../../api/Attachments";
 import { get } from "../../request";
+import type Player from "video.js/dist/types/player";
 
 interface IWidget {
   fileName?: string;
@@ -11,8 +12,8 @@ interface IWidget {
   type?: string;
 }
 const VideoWidget = ({ fileId, src, type }: IWidget) => {
-  const playerRef = useRef<players.Player | null>(null);
-  const [url, setUrl] = useState<string>();
+  const playerRef = useRef<Player | null>(null);
+  const [urlFetch, setUrlFetch] = useState<string>("");
 
   useEffect(() => {
     if (fileId) {
@@ -21,19 +22,13 @@ const VideoWidget = ({ fileId, src, type }: IWidget) => {
       get<IAttachmentResponse>(url).then((json) => {
         console.debug("VideoWidget api response", json);
         if (json.ok) {
-          setUrl(json.data.url);
+          setUrlFetch(json.data.url);
         }
       });
     }
   }, [fileId]);
 
-  useEffect(() => {
-    if (src) {
-      setUrl(src);
-    }
-  }, [src]);
-
-  const handlePlayerReady = (player: players.Player) => {
+  const handlePlayerReady = (player: Player) => {
     if (playerRef.current) {
       playerRef.current = player;
       player.on("waiting", () => {
@@ -56,7 +51,7 @@ const VideoWidget = ({ fileId, src, type }: IWidget) => {
         poster: "",
         sources: [
           {
-            src: url ? url : "",
+            src: src ?? urlFetch,
             type: type ? type : "video/mp4",
           },
         ],

@@ -1,14 +1,23 @@
 import { useRef, useEffect } from "react";
 import videojs from "video.js";
+import type Player from "video.js/dist/types/player";
+import "video.js/dist/video-js.css";
+
+type PlayerOptions = typeof videojs.options;
 
 interface IProps {
-  options: videojs.PlayerOptions;
-  onReady: (player: videojs.Player) => void;
+  options: PlayerOptions;
+  onReady?: (player: Player) => void;
 }
 
 const VideoPlayerWidget = ({ options, onReady }: IProps) => {
   const videoRef = useRef<HTMLDivElement>(null);
-  const playerRef = useRef<VideoJsPlayer | null>(null);
+  const playerRef = useRef<Player | null>(null);
+  const onReadyRef = useRef(onReady);
+
+  useEffect(() => {
+    onReadyRef.current = onReady;
+  }, [onReady]);
 
   useEffect(() => {
     if (!playerRef.current) {
@@ -17,9 +26,9 @@ const VideoPlayerWidget = ({ options, onReady }: IProps) => {
 
       videoRef.current?.appendChild(videoElement);
 
-      const player = (playerRef.current = videojs(videoElement, options, () =>
-        onReady?.(player)
-      ));
+      const player = (playerRef.current = videojs(videoElement, options, () => {
+        onReadyRef.current?.(player);
+      }));
     } else {
       const player = playerRef.current;
 
@@ -30,7 +39,7 @@ const VideoPlayerWidget = ({ options, onReady }: IProps) => {
         player.src(options.sources);
       }
     }
-  }, [options, onReady]);
+  }, [options]); // 移除 onReady 依赖，改用 ref
 
   useEffect(() => {
     return () => {
@@ -44,7 +53,7 @@ const VideoPlayerWidget = ({ options, onReady }: IProps) => {
 
   return (
     <div data-vjs-player>
-      <div ref={videoRef} className="video-js" />
+      <div ref={videoRef} />
     </div>
   );
 };

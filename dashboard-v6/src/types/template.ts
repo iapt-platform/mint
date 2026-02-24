@@ -6,3 +6,11 @@ export type TCodeConvertor =
   | "roman_to_thai"
   | "roman_to_taitham"
   | "roman_to_si";
+
+export type TDisplayStyle =
+  | "modal"
+  | "card"
+  | "toggle"
+  | "link"
+  | "window"
+  | "popover";

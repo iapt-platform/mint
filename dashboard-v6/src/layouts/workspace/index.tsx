@@ -41,7 +41,7 @@ const Widget = () => {
           <HeaderBreadcrumb />
         </Header>
 
-        <Content style={{ padding: 20 }}>
+        <Content style={{ padding: 12 }}>
           <Outlet />
         </Content>
       </Layout>

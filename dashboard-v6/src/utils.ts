@@ -1,4 +1,4 @@
-import type { SortOrder } from "antd/lib/table/interface"
+import type { SortOrder } from "antd/lib/table/interface";
 import lodash from "lodash";
 
 export function dashboardBasePath(): string {
@@ -80,4 +80,23 @@ export const convertToPlain = (html: string): string => {
 
 export const randomString = (): string => {
   return lodash.times(20, () => lodash.random(35).toString(36)).join("");
+};
+/**
+ * 10进制数字转为16进制字符串
+ * @param {number} arg
+ * @returns
+ */
+/*
+作者：sq800
+链接：https://juejin.cn/post/7250029395024281656
+来源：稀土掘金
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+*/
+export const numToHex = (arg: number) => {
+  try {
+    const a = arg.toString(16).toUpperCase();
+    return a.length % 2 === 1 ? "0" + a : a;
+  } catch (e) {
+    console.warn("数字转16进制出错:", e);
+  }
 };

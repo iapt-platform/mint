@@ -2,6 +2,8 @@ import { lazy } from "react";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { channelLoader } from "./api/Channel";
+import { testRoutes } from "./routes/testRoutes";
+import { buildRouteConfig } from "./routes/buildRoutes";
 
 const UsersSignIn = lazy(() => import("./pages/users/sign-in"));
 const UsersSignUp = lazy(() => import("./pages/users/sign-up"));
@@ -25,6 +27,10 @@ const RootLayout = lazy(() => import("./layouts/Root"));
 const AnonymousLayout = lazy(() => import("./layouts/anonymous"));
 const DashboardLayout = lazy(() => import("./layouts/dashboard"));
 const WorkspaceLayout = lazy(() => import("./layouts/workspace"));
+const WorkspaceEditorLayout = lazy(() => import("./layouts/workspace/editor"));
+
+// ↓ 新增：TestLayout
+const TestLayout = lazy(() => import("./layouts/test"));
 
 const router = createBrowserRouter(
   [
@@ -124,13 +130,60 @@ const router = createBrowserRouter(
                     },
                     {
                       path: "setting",
-                      Component: WorkspaceChannelSetting, // ← 新页面组件
+                      Component: WorkspaceChannelSetting,
                       handle: { crumb: "setting" },
                     },
                   ],
                 },
               ],
             },
+            {
+              path: "edit",
+              Component: WorkspaceEditorLayout,
+              handle: { crumb: "edit" },
+              children: [
+                {
+                  path: "article",
+                  children: [{ path: ":id" }],
+                },
+                {
+                  path: "anthology",
+                  children: [{ path: ":id" }],
+                },
+                {
+                  path: "series",
+                  children: [{ path: ":id" }],
+                },
+                {
+                  path: "chapter",
+                  children: [{ path: ":id" }],
+                },
+                {
+                  path: "para",
+                  children: [{ path: ":id" }],
+                },
+                {
+                  path: "cs-para",
+                  children: [{ path: ":id" }],
+                },
+                {
+                  path: "wiki",
+                  children: [{ path: ":id" }],
+                },
+              ],
+            },
+          ],
+        },
+
+        // ─── Test 路由：使用 TestLayout + 自动注册 testRoutes ───────────────
+        {
+          path: "test",
+          Component: TestLayout,
+          children: [
+            // index: 访问 /test 时显示欢迎页（由 TestLayout 内部处理）
+            { index: true },
+            // 自动将 testRoutes 转换为路由配置
+            ...buildRouteConfig(testRoutes),
           ],
         },
       ],
