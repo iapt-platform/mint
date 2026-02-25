@@ -1,42 +1,10 @@
 import { ProList } from "@ant-design/pro-components";
 import { Space, Typography } from "antd";
 
-import { get } from "../../request";
-import User, { type IUser } from "../auth/User";
 import TimeShow from "../general/TimeShow";
-import type { IChannel } from "../channel/Channel"
-import { MergeIcon2 } from "../../assets/icon";
-import type { IStudio } from "../auth/Studio"
 
 const { Paragraph } = Typography;
 
-export interface ISentHistoryData {
-  id: string;
-  sent_uid: string;
-  content: string;
-  editor: IUser;
-  landmark: string;
-  fork_from?: IChannel;
-  fork_studio?: IStudio;
-  pr_from?: string | null;
-  accepter?: IUser;
-  created_at: string;
-}
-
-export interface ISentHistoryListResponse {
-  ok: boolean;
-  message: string;
-  data: { rows: ISentHistoryData[]; count: number };
-}
-
-interface ISentHistory {
-  content: string;
-  editor: IUser;
-  fork_from?: IChannel;
-  pr_from?: string | null;
-  accepter?: IUser;
-  createdAt: string;
-}
 interface IWidget {
   sentId?: string;
 }

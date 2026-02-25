@@ -5,6 +5,12 @@ import { channelLoader } from "./api/Channel";
 import { testRoutes } from "./routes/testRoutes";
 import { buildRouteConfig } from "./routes/buildRoutes";
 
+const RootLayout = lazy(() => import("./layouts/Root"));
+const AnonymousLayout = lazy(() => import("./layouts/anonymous"));
+const DashboardLayout = lazy(() => import("./layouts/dashboard"));
+const WorkspaceLayout = lazy(() => import("./layouts/workspace"));
+const WorkspaceEditorLayout = lazy(() => import("./layouts/workspace/editor"));
+
 const UsersSignIn = lazy(() => import("./pages/users/sign-in"));
 const UsersSignUp = lazy(() => import("./pages/users/sign-up"));
 const UsersForgotPassword = lazy(() => import("./pages/users/forgot-password"));
@@ -22,13 +28,7 @@ const WorkspaceChannelSetting = lazy(
 const WorkspaceTipitaka = lazy(
   () => import("./pages/workspace/tipitaka/bypath")
 );
-
-const RootLayout = lazy(() => import("./layouts/Root"));
-const AnonymousLayout = lazy(() => import("./layouts/anonymous"));
-const DashboardLayout = lazy(() => import("./layouts/dashboard"));
-const WorkspaceLayout = lazy(() => import("./layouts/workspace"));
-const WorkspaceEditorLayout = lazy(() => import("./layouts/workspace/editor"));
-const WorkspaceHomeLayout = lazy(() => import("./layouts/workspace/home"));
+const WorkspaceHome = lazy(() => import("./pages/workspace/home"));
 
 // ↓ 新增：TestLayout
 const TestLayout = lazy(() => import("./layouts/test"));
@@ -76,7 +76,7 @@ const router = createBrowserRouter(
           Component: WorkspaceLayout,
           handle: { crumb: "workspace" },
           children: [
-            { index: true, Component: WorkspaceHomeLayout },
+            { index: true, Component: WorkspaceHome },
             {
               path: "ai",
               Component: UsersPersonal,

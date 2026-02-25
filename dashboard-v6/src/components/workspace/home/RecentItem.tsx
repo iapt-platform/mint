@@ -1,11 +1,25 @@
 import type { CSSProperties } from "react";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import type { RecentItem as RecentItemType } from "../../../api/workspace";
+import type { ArticleType } from "../../../api/Corpus";
 
-const typeColor: Record<string, string> = {
-  tipitaka: "#b5854a",
+const typeColor: Record<ArticleType, string> = {
+  chapter: "#b5854a",
   article: "#4a7fb5",
+  anthology: "#4ab58a",
+  series: "#4ab58a",
+  para: "#4ab58a",
+  sent: "#4ab58a",
+  sim: "#4ab58a",
+  page: "#4ab58a",
+  textbook: "#4ab58a",
+  term: "#4ab58a",
   task: "#4ab58a",
+  "cs-para": "#4ab58a",
+  "sent-original": "#4ab58a",
+  "sent-commentary": "#4ab58a",
+  "sent-nissaya": "#4ab58a",
+  "sent-translation": "#4ab58a",
 };
 
 type RecentItemProps = RecentItemType & {
@@ -24,7 +38,11 @@ export default function RecentItem({
 
   return (
     <>
-      <div style={styles.row} className="workspace-recent-item" onClick={onClick}>
+      <div
+        style={styles.row}
+        className="workspace-recent-item"
+        onClick={onClick}
+      >
         <div style={styles.emoji}>{emoji}</div>
         <div style={styles.info}>
           <span style={styles.title}>{title}</span>

@@ -107,7 +107,7 @@ const VideoModal = ({ url, id, type, title }: IVideoCtl) => {
       </Typography.Link>
       <Modal
         width={800}
-        destroyOnClose
+        destroyOnHidden
         style={{ maxWidth: "90%", top: 20, height: 700 }}
         title={
           <div

@@ -44,7 +44,7 @@ const TagsManagerWidget = ({
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        destroyOnClose
+        destroyOnHidden
         footer={false}
       >
         {title ? <Alert title={title} /> : undefined}

@@ -64,7 +64,7 @@ const ChannelTableModalWidget = ({
         title={intl.formatMessage({
           id: "buttons.select.channel",
         })}
-        destroyOnClose
+        destroyOnHidden
         footer={false}
         open={isModalOpen}
         onOk={handleOk}

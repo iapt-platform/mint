@@ -80,6 +80,23 @@ export interface ISentInChapterListDataRow {
   word_end: number;
 }
 
+export interface IResNumberResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    my: number;
+    collaboration: number;
+  };
+}
+
+export interface IResNumber {
+  translation?: number;
+  nissaya?: number;
+  commentary?: number;
+  origin?: number;
+  sim?: number;
+}
+
 export async function channelLoader({ params }: LoaderFunctionArgs) {
   const channelId = params.channelId;
 

@@ -14,10 +14,14 @@ import { currentUser as _currentUser } from "../../../reducers/current-user";
 import type { IChannel } from "../../channel/Channel";
 import type { IWbw } from "../Wbw/WbwWord";
 
-export const toISentence = (item: ISentenceData, channelsId?: string[]) => {
+export const toISentence = (
+  item: ISentenceData,
+  channelsId?: string[]
+): ISentence => {
   return {
     id: item.id,
     content: item.content,
+    contentType: item.content_type,
     html: item.html,
     book: item.book,
     para: item.paragraph,
@@ -26,11 +30,12 @@ export const toISentence = (item: ISentenceData, channelsId?: string[]) => {
     editor: item.editor,
     studio: item.studio,
     channel: item.channel,
-    contentType: item.content_type,
+    updateAt: item.updated_at,
+    acceptor: item.acceptor,
+    prEditAt: item.pr_edit_at,
+    forkAt: item.fork_at,
     suggestionCount: item.suggestionCount,
     translationChannels: channelsId,
-    forkAt: item.fork_at,
-    updateAt: item.updated_at,
   };
 };
 

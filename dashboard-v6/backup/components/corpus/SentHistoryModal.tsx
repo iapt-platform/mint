@@ -51,7 +51,7 @@ const SentHistoryModalWidget = ({
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        destroyOnClose
+        destroyOnHidden
       >
         <SentHistory sentId={sentId} />
       </Modal>

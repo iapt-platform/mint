@@ -4,6 +4,9 @@ import type { ComponentType } from "react";
 const TestVideoPlayerTest = lazy(
   () => import("../components/video/VideoPlayerTest")
 );
+const SentSimTest = lazy(
+  () => import("../components/sentence-editor/SentSimTest")
+);
 
 // 你可以继续添加更多测试组件
 // const TestButtonDemo = lazy(() => import("../components/button/ButtonDemo"));
@@ -21,6 +24,11 @@ export const testRoutes: TestRouteObject[] = [
     path: "VideoPlayer",
     label: "视频播放器",
     Component: TestVideoPlayerTest,
+  },
+  {
+    path: "SimSentence",
+    label: "相似句",
+    Component: SentSimTest,
   },
   // 示例：嵌套结构
   // {

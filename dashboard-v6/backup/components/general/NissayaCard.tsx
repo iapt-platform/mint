@@ -55,7 +55,7 @@ export const NissayaCardModal = ({ text, trigger }: INissayaCardModal) => {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        destroyOnClose
+        destroyOnHidden
       >
         <NissayaCardWidget text={text} />
       </Modal>

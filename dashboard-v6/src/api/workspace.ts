@@ -1,3 +1,6 @@
+import type { ArticleType } from "./Corpus";
+import { getRecentByUser } from "./recent";
+
 export type ModuleItem = {
   key: string;
   title: string;
@@ -16,7 +19,7 @@ export type RecentItem = {
   title: string;
   subtitle: string;
   time: string;
-  type: "tipitaka" | "article" | "task";
+  type: ArticleType;
   emoji: string;
 };
 
@@ -53,7 +56,7 @@ export async function fetchModules(): Promise<ModuleItem[]> {
       titleZh: "任务",
       description: "管理个人修学计划、法务安排与日常待办事项。",
       icon: "CheckSquareOutlined",
-      path: "/workspace/channel",
+      path: "/workspace/task",
       color: "#4ab58a",
       bg: "linear-gradient(135deg, #ecfdf6 0%, #ccf0e0 100%)",
       accent: "#1a7a56",
@@ -63,7 +66,19 @@ export async function fetchModules(): Promise<ModuleItem[]> {
 }
 
 // TODO: replace with real fetch
-export async function fetchRecentItems(): Promise<RecentItem[]> {
+export async function fetchRecentItems(userId: string): Promise<RecentItem[]> {
+  const res = await getRecentByUser(userId, 10);
+  return res.data.rows.map((item, id) => {
+    return {
+      id: id,
+      title: item.title,
+      subtitle: "Tipitaka · 律藏",
+      time: item.updated_at,
+      type: item.type,
+      emoji: "📜",
+    };
+  });
+  /*
   return [
     {
       id: 1,
@@ -106,4 +121,5 @@ export async function fetchRecentItems(): Promise<RecentItem[]> {
       emoji: "📚",
     },
   ];
+  */
 }

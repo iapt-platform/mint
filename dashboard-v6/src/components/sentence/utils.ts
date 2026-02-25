@@ -1,22 +1,26 @@
 import type { ISentence, ISentenceData } from "../../api/Corpus";
 
-export const toISentence = (apiData: ISentenceData): ISentence => {
+export const toISentence = (
+  item: ISentenceData,
+  channelsId?: string[]
+): ISentence => {
   return {
-    id: apiData.id,
-    content: apiData.content,
-    contentType: apiData.content_type,
-    html: apiData.html,
-    book: apiData.book,
-    para: apiData.paragraph,
-    wordStart: apiData.word_start,
-    wordEnd: apiData.word_end,
-    editor: apiData.editor,
-    studio: apiData.studio,
-    channel: apiData.channel,
-    updateAt: apiData.updated_at,
-    acceptor: apiData.acceptor,
-    prEditAt: apiData.pr_edit_at,
-    forkAt: apiData.fork_at,
-    suggestionCount: apiData.suggestionCount,
+    id: item.id,
+    content: item.content,
+    contentType: item.content_type,
+    html: item.html,
+    book: item.book,
+    para: item.paragraph,
+    wordStart: item.word_start,
+    wordEnd: item.word_end,
+    editor: item.editor,
+    studio: item.studio,
+    channel: item.channel,
+    updateAt: item.updated_at,
+    acceptor: item.acceptor,
+    prEditAt: item.pr_edit_at,
+    forkAt: item.fork_at,
+    suggestionCount: item.suggestionCount,
+    translationChannels: channelsId,
   };
 };

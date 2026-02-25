@@ -32,7 +32,7 @@ const NissayaEndingWidget = ({
       form={form}
       autoFocusFirstInput
       modalProps={{
-        destroyOnClose: true,
+        destroyOnHidden: true,
         onCancel: () => console.log("run"),
       }}
       submitTimeout={2000}

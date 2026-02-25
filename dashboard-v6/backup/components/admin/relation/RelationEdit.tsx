@@ -85,7 +85,7 @@ const RelationEditWidget = ({
       form={form}
       autoFocusFirstInput
       modalProps={{
-        destroyOnClose: true,
+        destroyOnHidden: true,
         onCancel: () => console.log("onCancel"),
       }}
       submitTimeout={3000}

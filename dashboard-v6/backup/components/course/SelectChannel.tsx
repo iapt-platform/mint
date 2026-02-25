@@ -48,7 +48,7 @@ const SelectChannelWidget = ({
           }
           autoFocusFirstInput
           modalProps={{
-            destroyOnClose: true,
+            destroyOnHidden: true,
             onCancel: () => console.log("run"),
           }}
           submitTimeout={20000}

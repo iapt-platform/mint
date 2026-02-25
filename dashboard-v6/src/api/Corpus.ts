@@ -51,8 +51,6 @@ export type ArticleType =
   | "sim"
   | "page"
   | "textbook"
-  | "exercise"
-  | "exercise-list"
   | "sent-original"
   | "sent-commentary"
   | "sent-nissaya"
@@ -394,16 +392,6 @@ export interface ISentencePrResponse {
     count: number;
     webhook: { message: string; ok: boolean };
   };
-}
-
-export interface ISimSent {
-  sent: string;
-  sim: number;
-}
-export interface ISentenceSimListResponse {
-  ok: boolean;
-  message: string;
-  data: { rows: ISimSent[]; count: number };
 }
 
 export interface ISentenceWbwListResponse {

@@ -57,7 +57,7 @@ const RecentModalWidget = ({
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        destroyOnClose
+        destroyOnHidden
       >
         <RecentList
           onSelect={(

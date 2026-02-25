@@ -1,4 +1,5 @@
 import type { ArticleMode, ArticleType } from "../api/Corpus";
+export const SENTENCE_FIX_WIDTH = 800;
 
 export interface IArticleParam {
   type: ArticleType;

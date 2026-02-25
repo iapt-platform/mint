@@ -44,7 +44,7 @@ const CourseInviteWidget = ({ courseId, onCreated }: IWidget) => {
         onCancel={() => setVisible(false)}
         open={visible}
         footer={false}
-        destroyOnClose
+        destroyOnHidden
       >
         <StepsForm<IFormData>
           formRef={formRef}

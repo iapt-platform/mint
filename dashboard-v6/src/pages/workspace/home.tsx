@@ -5,18 +5,25 @@ import ModuleGrid from "../../components/workspace/home/ModuleGrid";
 import RecentList from "../../components/workspace/home/RecentList";
 import { fetchModules, fetchRecentItems } from "../../api/workspace";
 import type { ModuleItem, RecentItem } from "../../api/workspace";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
 
 export default function WorkspaceHome() {
   const [modules, setModules] = useState<ModuleItem[]>([]);
   const [recentItems, setRecentItems] = useState<RecentItem[]>([]);
+  const user = useAppSelector(currentUser);
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
     fetchModules().then(setModules);
-    fetchRecentItems().then(setRecentItems);
-  }, []);
+    fetchRecentItems(user?.id).then(setRecentItems);
+  }, [user]);
 
   return (
     <div style={styles.page}>
+      <title>欢迎来到wikipali</title>
       <WorkspaceHero />
 
       <div style={styles.content}>

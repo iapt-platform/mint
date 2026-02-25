@@ -36,7 +36,7 @@ const ProjectEditDrawer = ({
         width={650}
         onClose={onCloseDrawer}
         open={open}
-        destroyOnClose
+        destroyOnHidden
       >
         <ProjectEdit studioName={studioName} projectId={projectId} />
       </Drawer>

@@ -9,7 +9,7 @@ import {
 } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { get } from "../../request";
-import type { ArticleType } from "../article/Article"
+import type { ArticleType } from "../article/Article";
 import ExportSettingLayout from "./ExportSettingLayout";
 
 const { Text } = Typography;
@@ -151,7 +151,7 @@ const ExportModalWidget = ({
   useEffect(() => setIsModalOpen(open), [open]);
   return (
     <Modal
-      destroyOnClose
+      destroyOnHidden
       title="导出"
       width={400}
       open={isModalOpen}

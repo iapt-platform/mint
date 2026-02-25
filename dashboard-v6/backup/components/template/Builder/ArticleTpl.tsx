@@ -248,7 +248,7 @@ export const ArticleTplModal = ({
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        destroyOnClose
+        destroyOnHidden
       >
         <ArticleTplWidget
           type={type}

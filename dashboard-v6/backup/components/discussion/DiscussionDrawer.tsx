@@ -4,7 +4,7 @@ import { FullscreenOutlined, FullscreenExitOutlined } from "@ant-design/icons";
 
 import _DiscussionTopic from "./DiscussionTopic";
 import _DiscussionListCard, { type TResType } from "./DiscussionListCard";
-import type { _IComment } from "./DiscussionItem"
+import type { _IComment } from "./DiscussionItem";
 import _DiscussionAnchor from "./DiscussionAnchor";
 import { Link } from "react-router";
 import { useIntl } from "react-intl";
@@ -51,7 +51,7 @@ const DiscussionDrawerWidget = ({
       </span>
       <Drawer
         title="Discussion"
-        destroyOnClose
+        destroyOnHidden
         extra={
           <Space>
             <Link to={`/discussion/show/${resType}/${resId}`} target="_blank">
