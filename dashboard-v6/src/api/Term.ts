@@ -1,5 +1,6 @@
 import type { IStudio, IUser, TRole } from "./Auth";
 import type { IChannel } from "./Channel";
+import { get } from "../request";
 
 export interface ITerm {
   id?: string;
@@ -37,6 +38,7 @@ export interface ITermDataRequest {
   copy_lang?: string;
   pr?: boolean;
 }
+
 export interface ITermDataResponse {
   id: number;
   guid: string;
@@ -59,11 +61,13 @@ export interface ITermDataResponse {
   created_at: string;
   updated_at: string;
 }
+
 export interface ITermResponse {
   ok: boolean;
   message: string;
   data: ITermDataResponse;
 }
+
 export interface ITermListResponse {
   ok: boolean;
   message: string;
@@ -77,10 +81,12 @@ interface IMeaningCount {
   meaning: string;
   count: number;
 }
+
 interface IStudioChannel {
   name: string;
   uid: string;
 }
+
 export interface ITermCreate {
   word: string;
   meaningCount: IMeaningCount[];
@@ -88,6 +94,7 @@ export interface ITermCreate {
   language: string;
   studio: IStudio;
 }
+
 export interface ITermCreateResponse {
   ok: boolean;
   message: string;
@@ -97,4 +104,24 @@ export interface ITermCreateResponse {
 export interface ITermDeleteRequest {
   uuid: boolean;
   id: string[];
+}
+
+// ---------- API ----------
+
+export interface IGetTermParams {
+  id: string;
+  mode: "read" | "edit";
+  channelsId?: string | null;
+}
+
+export function getTerm({
+  id,
+  mode,
+  channelsId,
+}: IGetTermParams): Promise<ITermResponse> {
+  const url =
+    `/api/v2/terms/${id}?mode=${mode}` +
+    (channelsId ? `&channel=${channelsId}` : "");
+
+  return get<ITermResponse>(url);
 }

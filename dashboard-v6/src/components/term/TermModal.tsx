@@ -52,7 +52,7 @@ const TermModalWidget = (props: IWidget) => {
             <span>术语</span>
             {studioName && (
               <Link
-                to={`/workspace/editor/wiki/${restEditProps.id}`}
+                to={`/workspace/edit/wiki/${restEditProps.id}`}
                 target="_blank"
                 style={{ fontSize: "12px", fontWeight: "normal" }}
               >

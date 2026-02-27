@@ -1,11 +1,11 @@
 import { useParams } from "react-router";
 
-import TermShow from "../../../components/term/TermShow";
+import TypeTerm from "../../../components/article/TypeTerm";
 
 const Widget = () => {
   const { id } = useParams();
 
-  return <TermShow wordId={id} />;
+  return <TypeTerm id={id} />;
 };
 
 export default Widget;

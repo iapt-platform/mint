@@ -17,7 +17,7 @@ import { useState, useCallback } from "react";
  * - mergedValue: 最终确定的状态值。
  * - setMergedValue: 更新状态的函数（内部会自动判断是更新本地状态还是仅触发回调）。
  * * [使用示例]
- * const [open, setOpen] = useMergedState(false, {
+ * const [open, setOpen] = useMergedState<boolean>(false, {
  * value: props.open,
  * onChange: props.onOpenChange
  * });
@@ -26,7 +26,7 @@ function useMergedState<T>(
   defaultStateValue: T | (() => T),
   option?: {
     value?: T;
-    onChange?: (value: T, prevValue: T) => void;
+    onChange?: (value: T) => void;
   }
 ): [T, (value: T) => void] {
   const { value, onChange } = option || {};
@@ -57,7 +57,7 @@ function useMergedState<T>(
 
       // 无论受控还是非受控，都触发回调通知父组件
       if (onChange) {
-        onChange(newValue, mergedValue);
+        onChange(newValue);
       }
     },
     [value, mergedValue, onChange]
