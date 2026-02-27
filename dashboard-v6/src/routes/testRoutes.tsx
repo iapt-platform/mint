@@ -7,6 +7,11 @@ const TestVideoPlayerTest = lazy(
 const SentSimTest = lazy(
   () => import("../components/sentence-editor/SentSimTest")
 );
+const SentEditInnerDemo = lazy(
+  () => import("../components/sentence-editor/SentEditInnerDemo")
+);
+
+const TermTest = lazy(() => import("../components/term/TermTest"));
 
 // 你可以继续添加更多测试组件
 // const TestButtonDemo = lazy(() => import("../components/button/ButtonDemo"));
@@ -30,6 +35,17 @@ export const testRoutes: TestRouteObject[] = [
     label: "相似句",
     Component: SentSimTest,
   },
+  {
+    path: "SentEditInnerDemo",
+    label: "SentEditInnerDemo",
+    Component: SentEditInnerDemo,
+  },
+  {
+    path: "TermTest",
+    label: "TermTest",
+    Component: TermTest,
+  },
+
   // 示例：嵌套结构
   // {
   //   path: "button",

@@ -6,7 +6,7 @@ import { useEffect, useState, type JSX } from "react";
 
 import store from "../../store";
 import { change } from "../../reducers/para-change";
-import type { ITocPathNode } from "../../api/Corpus";
+import type { ITocPathNode } from "../../api/pali-text";
 import TocPath from "../tipitaka/TocPath";
 
 interface ITag {

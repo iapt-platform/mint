@@ -1,6 +1,6 @@
 import { Space, Tooltip } from "antd";
 
-import type { ISentence } from "../../api/Corpus";
+import type { ISentence } from "../../api/sentence";
 import { HandOutlinedIcon } from "../../assets/icon";
 import SuggestionPopover from "./SuggestionPopover";
 import { prOpen } from "./utils";

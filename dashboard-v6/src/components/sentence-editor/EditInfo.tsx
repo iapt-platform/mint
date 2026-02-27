@@ -13,7 +13,7 @@ import type {
   ISentHistoryData,
   ISentHistoryListResponse,
 } from "../../api/sentence-history";
-import type { ISentence } from "../../api/Corpus";
+import type { ISentence } from "../../api/sentence";
 
 const { Text } = Typography;
 

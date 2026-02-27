@@ -1,4 +1,4 @@
-import type { ArticleType } from "./Corpus";
+import type { ArticleType } from "./Article";
 import { getRecentByUser } from "./recent";
 
 export type ModuleItem = {

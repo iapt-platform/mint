@@ -1,7 +1,7 @@
 import { Divider, Space } from "antd";
 import SuggestionButton from "./SuggestionButton";
 import DiscussionButton from "../discussion/DiscussionButton";
-import type { ISentence } from "../../api/Corpus";
+import type { ISentence } from "../../api/sentence";
 import {
   type MouseEventHandler,
   useCallback,

@@ -1,5 +1,5 @@
 import { get } from "../request";
-import type { ArticleType } from "./Corpus";
+import type { ArticleType } from "./Article";
 
 export interface IRecent {
   id: string;

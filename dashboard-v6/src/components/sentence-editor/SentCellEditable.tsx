@@ -4,18 +4,18 @@ import { Button, message, Typography } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
 
 import { post, put } from "../../request";
-import type {
-  ISentence,
-  ISentencePrRequest,
-  ISentencePrResponse,
-} from "../../api/Corpus";
+import type { ISentence } from "../../api/sentence";
 
 import TermTextArea from "../general/TermTextArea";
 import { useAppSelector } from "../../hooks";
 import { wordList } from "../../reducers/sent-word";
 
 import { sentSave } from "../../api/sentence";
-import Builder from "../tpl-builder/Builder";
+import TplBuilder from "../tpl-builder/TplBuilder";
+import type {
+  ISentencePrRequest,
+  ISentencePrResponse,
+} from "../../api/sentence-pr";
 
 const { Text } = Typography;
 
@@ -179,7 +179,7 @@ const SentCellEditable = ({
             </Button>
           </span>
           <Text keyboard style={{ cursor: "pointer" }}>
-            <Builder trigger={"<t>"} />
+            <TplBuilder trigger={"<t>"} />
           </Text>
         </div>
         <div>

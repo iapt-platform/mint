@@ -2,7 +2,7 @@ import { useState } from "react";
 import { type RadioChangeEvent, Space } from "antd";
 import { Radio } from "antd";
 
-import type { ISentence } from "../../api/Corpus";
+import type { ISentence } from "../../api/sentence";
 import { SuggestionIcon } from "../../assets/icon";
 import SuggestionAdd from "./SuggestionAdd";
 import SuggestionList from "./SuggestionList";

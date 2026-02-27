@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 
 import { get } from "../../request";
-import type { IChapterChannelListResponse } from "../../api/Corpus";
+
 import type { IChapter } from "./BookViewer";
 import ChapterInChannel, { type IChapterChannelData } from "./ChapterInChannel";
+import type { IChapterChannelListResponse } from "../../api/progress";
 
 interface IWidget {
   para: IChapter;

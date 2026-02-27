@@ -5,8 +5,7 @@ import {
   FieldTimeOutlined,
   FolderOutlined,
 } from "@ant-design/icons";
-
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate, useMatches, type UIMatch } from "react-router";
 import {
   ChannelIcon,
   CourseOutLinedIcon,
@@ -15,111 +14,202 @@ import {
   TaskIcon,
   TipitakaIcon,
 } from "../../assets/icon";
+import React from "react";
+
+/* ================= 类型 ================= */
+
+interface MenuItem {
+  key: string;
+  label?: React.ReactNode;
+  icon?: React.ReactNode;
+  type?: "divider";
+  children?: MenuItem[];
+
+  /** ⭐ 用于高亮匹配 */
+  activeId?: string | string[];
+}
 
 interface Props {
   onSearch?: () => void;
 }
+
+export interface RouteHandle {
+  id?: string;
+  crumb?: string | ((match: UIMatch) => string);
+}
+/* ================= 当前路由ID ================= */
+
+function useCurrentRouteId(): string | undefined {
+  const matches = useMatches() as UIMatch<number, RouteHandle>[];
+  return [...matches].reverse().find((match) => match.handle?.id)?.handle?.id;
+}
+
+/* ================= 匹配算法 ================= */
+
+function matchActive(routeId: string | undefined, active?: string | string[]) {
+  if (!routeId || !active) return false;
+
+  const list = Array.isArray(active) ? active : [active];
+
+  return list.some((id) => routeId === id || routeId.startsWith(id + "."));
+}
+
+/* ================= 找当前选中key ================= */
+
+function findSelectedKey(
+  items: MenuItem[],
+  routeId?: string
+): string | undefined {
+  for (const item of items) {
+    if (matchActive(routeId, item.activeId)) return item.key;
+
+    if (item.children) {
+      const k = findSelectedKey(item.children, routeId);
+      if (k) return k;
+    }
+  }
+}
+
+/* ================= 找展开父级keys ================= */
+
+function findOpenKeys(
+  items: MenuItem[],
+  routeId?: string,
+  parents: string[] = []
+): string[] {
+  for (const item of items) {
+    if (matchActive(routeId, item.activeId)) {
+      return parents;
+    }
+
+    if (item.children) {
+      const found = findOpenKeys(item.children, routeId, [
+        ...parents,
+        item.key,
+      ]);
+      if (found.length) return found;
+    }
+  }
+  return [];
+}
+
+/* ================= 菜单配置 ================= */
+
+const items: MenuItem[] = [
+  {
+    key: "search",
+    icon: <SearchOutlined />,
+    label: "搜索",
+  },
+  {
+    key: "/workspace",
+    icon: <HomeOutlined />,
+    label: "主页",
+    activeId: "workspace.home",
+  },
+  {
+    key: "/workspace/ai",
+    icon: <RobotIcon />,
+    label: "AI",
+    activeId: "workspace.ai",
+  },
+  {
+    key: "/workspace/tipitaka",
+    icon: <TipitakaIcon />,
+    label: "巴利三藏",
+    activeId: "workspace.tipitaka",
+  },
+
+  { type: "divider", key: "d1" },
+
+  {
+    key: "/workspace/recent",
+    icon: <FieldTimeOutlined />,
+    label: "最近打开",
+  },
+
+  {
+    key: "/workspace/articles",
+    icon: <DocumentIcon />,
+    label: "文章",
+    children: [
+      {
+        key: "/workspace/articles/uncategorized",
+        label: "未分类",
+        icon: <FolderOutlined />,
+      },
+      {
+        key: "/workspace/articles/angl",
+        label: "文集1",
+        icon: <FolderOutlined />,
+      },
+      {
+        key: "/workspace/articles",
+        label: "ALL",
+      },
+    ],
+  },
+
+  {
+    key: "/workspace/channel",
+    icon: <ChannelIcon />,
+    label: "频道",
+    activeId: "workspace.channel",
+  },
+
+  {
+    key: "/workspace/term",
+    icon: <ChannelIcon />,
+    label: "Term",
+    activeId: "workspace.term",
+  },
+
+  {
+    key: "/workspace/course",
+    icon: <CourseOutLinedIcon />,
+    label: "Course",
+  },
+
+  {
+    key: "/workspace/task",
+    icon: <TaskIcon />,
+    label: "Task",
+    activeId: "workspace.task",
+    children: [
+      {
+        key: "/workspace/task/pending",
+        label: "Pending",
+        activeId: "workspace.task.pending",
+      },
+      {
+        key: "/workspace/task/to-do-list",
+        label: "To-Do List",
+        activeId: "workspace.task.todo",
+      },
+      {
+        key: "/workspace/task/hell",
+        label: "Task Hell",
+        activeId: "workspace.task.hell",
+      },
+    ],
+  },
+];
+
+/* ================= 组件 ================= */
+
 const Widget = ({ onSearch }: Props) => {
-  const location = useLocation();
   const navigate = useNavigate();
+  const routeId = useCurrentRouteId();
 
-  const items: MenuProps["items"] = [
-    {
-      key: "search",
-      icon: <SearchOutlined />,
-      label: "搜索",
-    },
-    {
-      key: "/workspace",
-      icon: <HomeOutlined />,
-      label: "主页",
-    },
-    {
-      key: "/workspace/ai",
-      icon: <RobotIcon />,
-      label: "AI",
-    },
-    {
-      key: "/workspace/tipitaka",
-      icon: <TipitakaIcon />,
-      label: "巴利三藏",
-    },
-    {
-      key: "divider",
-      type: "divider",
-    },
-    {
-      key: "/workspace/recent",
-      icon: <FieldTimeOutlined />,
-      label: "最近打开",
-      children: [],
-    },
-    {
-      key: "/workspace/articles",
-      icon: <DocumentIcon />,
-      label: "文章",
-      children: [
-        {
-          key: "/workspace/articles/uncategorized",
-          label: "未分类",
-          icon: <FolderOutlined />,
-        },
-        {
-          key: "/workspace/articles/angl",
-          label: "文集1",
-          icon: <FolderOutlined />,
-        },
-        {
-          key: "/workspace/articles",
-          label: "ALL",
-        },
-      ],
-    },
-    {
-      key: "/workspace/channel",
-      icon: <ChannelIcon />,
-      label: "频道",
-    },
-    {
-      key: "/workspace/course",
-      icon: <CourseOutLinedIcon />,
-      label: "course",
-    },
-    {
-      key: "/workspace/task",
-      icon: <TaskIcon />,
-      label: "task",
-      children: [
-        {
-          key: "/workspace/task/pending",
-          label: "pending",
-        },
-        {
-          key: "/workspace/task/to-do-list",
-          label: "To-do List",
-        },
-        {
-          key: "/workspace/task/hell",
-          label: "task hell",
-        },
-      ],
-    },
-  ];
+  console.log("nav", routeId);
+  /** 当前选中 */
+  const selectedKey = findSelectedKey(items, routeId);
 
-  /** 当前高亮规则 */
-  const selectedKey: string =
-    location.pathname === "/"
-      ? "/"
-      : (items?.find(
-          (i) =>
-            i &&
-            "key" in i &&
-            typeof i.key === "string" &&
-            location.pathname.startsWith(i.key)
-        )?.key as string) || "";
+  /** 自动展开父级 */
+  const openKeys = findOpenKeys(items, routeId);
 
-  /** 点击菜单 */
-  const handleClick = ({ key }: { key: string }) => {
+  /** 点击 */
+  const handleClick: MenuProps["onClick"] = ({ key }) => {
     if (key === "search") {
       onSearch?.();
       return;
@@ -130,8 +220,9 @@ const Widget = ({ onSearch }: Props) => {
   return (
     <Menu
       mode="inline"
-      selectedKeys={[selectedKey]}
-      items={items}
+      selectedKeys={selectedKey ? [selectedKey] : []}
+      defaultOpenKeys={openKeys}
+      items={items as MenuProps["items"]}
       onClick={handleClick}
       style={{ borderRight: 0 }}
     />

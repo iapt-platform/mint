@@ -11,7 +11,8 @@ import {
   ReloadOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import type { ArticleMode, ISentence, TContentType } from "../../api/Corpus";
+import type { ISentence } from "../../api/sentence";
+import type { ArticleMode, TContentType } from "../../api/Article";
 
 import {
   CommentOutlinedIcon,

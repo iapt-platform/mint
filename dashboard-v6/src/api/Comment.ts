@@ -1,5 +1,5 @@
 import type { IUser } from "./Auth";
-import type { TContentType } from "./Corpus";
+import type { TContentType } from "./Article";
 import type { TDiscussionType, TResType } from "./discussion";
 import type { ITagMapData } from "./Tag";
 

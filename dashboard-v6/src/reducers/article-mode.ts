@@ -4,7 +4,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
-import type { ArticleMode } from "../api/Corpus";
+import type { ArticleMode } from "../api/Article";
 
 interface IMode {
   id?: string;

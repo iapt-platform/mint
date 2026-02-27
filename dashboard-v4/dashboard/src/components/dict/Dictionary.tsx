@@ -93,6 +93,7 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
             <Col flex="560px">
               <div style={{ display: "flex" }}>
                 <SearchVocabulary
+                  key={wordInput?.toLowerCase()}
                   compact={compact}
                   value={wordInput?.toLowerCase()}
                   onSearch={dictSearch}

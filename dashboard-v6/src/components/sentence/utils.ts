@@ -1,4 +1,4 @@
-import type { ISentence, ISentenceData } from "../../api/Corpus";
+import type { ISentence, ISentenceData } from "../../api/sentence";
 
 export const toISentence = (
   item: ISentenceData,

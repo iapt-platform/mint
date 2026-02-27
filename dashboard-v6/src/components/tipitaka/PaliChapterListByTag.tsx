@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { get } from "../../request";
-import type { IPaliChapterListResponse } from "../../api/Corpus";
+import type { IPaliChapterListResponse } from "../../api/pali-text";
 import type { IPaliChapterData } from "./PaliChapterCard";
 import PaliChapterList, { type IChapterClickEvent } from "./PaliChapterList";
 

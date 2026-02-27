@@ -1,30 +1,11 @@
 import { Avatar } from "antd";
 import { useEffect, useState } from "react";
-import type { IUser } from "../auth/User"
+import type { IUser } from "../auth/User";
 import DiscussionShow from "./DiscussionShow";
 import DiscussionEdit from "./DiscussionEdit";
-import type { TResType } from "./DiscussionListCard"
-import type { TDiscussionType } from "./Discussion"
+import type { TResType } from "./DiscussionListCard";
+import type { TDiscussionType } from "./Discussion";
 
-export interface IComment {
-  id?: string; //id未提供为新建
-  resId?: string;
-  resType?: TResType;
-  type: TDiscussionType;
-  tplId?: string;
-  user: IUser;
-  parent?: string | null;
-  title?: string;
-  content?: string;
-  html?: string;
-  summary?: string;
-  status?: "active" | "close";
-  children?: IComment[];
-  childrenCount?: number;
-  newTpl?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-}
 interface IWidget {
   data: IComment;
   isFocus?: boolean;

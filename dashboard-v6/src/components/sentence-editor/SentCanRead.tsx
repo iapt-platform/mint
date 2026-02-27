@@ -4,7 +4,7 @@ import { ReloadOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
 import type { IChannel, TChannelType } from "../../api/Channel";
-import type { ISentence, ISentenceListResponse } from "../../api/Corpus";
+import type { ISentence, ISentenceListResponse } from "../../api/sentence";
 
 import SentCell from "./SentCell";
 import SentAdd from "./SentAdd";

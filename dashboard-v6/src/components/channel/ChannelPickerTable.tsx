@@ -24,7 +24,7 @@ import ProgressSvg from "./ProgressSvg";
 
 import CopyToModal from "./CopyToModal";
 import type { IStudio } from "../../../src/api/Auth";
-import type { ArticleType } from "../../../src/api/Corpus";
+import type { ArticleType } from "../../api/Article";
 import Studio from "../../../src/components/auth/Studio";
 
 const { Link, Text } = Typography;

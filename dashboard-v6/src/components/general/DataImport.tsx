@@ -1,11 +1,12 @@
 import { ModalForm, ProFormUploadDragger } from "@ant-design/pro-components";
 import { Form, message } from "antd";
 
-import { API_HOST, get } from "../../../request";
+import { get } from "../../request";
 import type { UploadFile } from "antd/es/upload/interface";
-import type { IAttachmentResponse } from "../../../api/Attachments";
+import type { IAttachmentResponse } from "../../api/Attachments";
 import modal from "antd/lib/modal";
 import { useIntl } from "react-intl";
+import type { JSX } from "react";
 
 interface INissayaEndingUpload {
   filename: UploadFile<IAttachmentResponse>[];
@@ -24,7 +25,7 @@ interface IWidget {
   url: string;
   urlExtra?: string;
   trigger?: JSX.Element;
-  onSuccess?: Function;
+  onSuccess?: () => void;
 }
 const DataImportWidget = ({
   title,
@@ -91,7 +92,7 @@ const DataImportWidget = ({
         fieldProps={{
           name: "file",
         }}
-        action={`${API_HOST}/api/v2/attachments?is_tmp=true`}
+        action={`${import.meta.env.BASE_URL}/api/v2/attachments?is_tmp=true`}
       />
     </ModalForm>
   );

@@ -15,7 +15,6 @@ const UsersSignIn = lazy(() => import("./pages/users/sign-in"));
 const UsersSignUp = lazy(() => import("./pages/users/sign-up"));
 const UsersForgotPassword = lazy(() => import("./pages/users/forgot-password"));
 const UsersResetPassword = lazy(() => import("./pages/users/reset-password"));
-const UsersPersonal = lazy(() => import("./pages/users/personal"));
 const DashboardIndex = lazy(() => import("./pages/dashboard/index"));
 const Home = lazy(() => import("./pages/home"));
 const WorkspaceChannel = lazy(() => import("./pages/workspace/channel/list"));
@@ -29,6 +28,10 @@ const WorkspaceTipitaka = lazy(
   () => import("./pages/workspace/tipitaka/bypath")
 );
 const WorkspaceHome = lazy(() => import("./pages/workspace/home"));
+const WorkspaceChat = lazy(() => import("./pages/workspace/chat"));
+
+const WorkspaceTerm = lazy(() => import("./pages/workspace/term/list"));
+const WorkspaceTermEdit = lazy(() => import("./pages/workspace/term/edit"));
 
 // ↓ 新增：TestLayout
 const TestLayout = lazy(() => import("./layouts/test"));
@@ -74,18 +77,18 @@ const router = createBrowserRouter(
         {
           path: "workspace",
           Component: WorkspaceLayout,
-          handle: { crumb: "workspace" },
+          handle: { id: "workspace.home", crumb: "workspace" },
           children: [
             { index: true, Component: WorkspaceHome },
             {
               path: "ai",
-              Component: UsersPersonal,
-              handle: { crumb: "ai" },
+              Component: WorkspaceChat,
+              handle: { id: "workspace.ai", crumb: "ai" },
             },
             {
               path: "tipitaka",
               Component: WorkspaceTipitaka,
-              handle: { crumb: "tipitaka" },
+              handle: { id: "workspace.tipitaka", crumb: "tipitaka" },
               children: [
                 {
                   path: ":root",
@@ -107,7 +110,7 @@ const router = createBrowserRouter(
             },
             {
               path: "channel",
-              handle: { crumb: "channel" },
+              handle: { id: "workspace.channel", crumb: "channel" },
               children: [
                 {
                   index: true,
@@ -133,6 +136,11 @@ const router = createBrowserRouter(
                   ],
                 },
               ],
+            },
+            {
+              path: "term",
+              handle: { id: "workspace.term", crumb: "term" },
+              Component: WorkspaceTerm,
             },
             {
               path: "edit",
@@ -165,7 +173,13 @@ const router = createBrowserRouter(
                 },
                 {
                   path: "wiki",
-                  children: [{ path: ":id" }],
+                  children: [
+                    {
+                      path: ":id",
+                      Component: WorkspaceTermEdit,
+                      children: [{ index: true, Component: WorkspaceTermEdit }],
+                    },
+                  ],
                 },
               ],
             },

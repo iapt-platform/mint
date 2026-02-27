@@ -8,9 +8,10 @@ import { get } from "../../request";
 import { get as getLang } from "../../locales";
 
 import NissayaCardTable, { type INissayaRelation } from "./NissayaCardTable";
-import { TermModalMock as TermModal } from "../term/TermModal";
+
 import type { ITerm } from "../../api/Term";
 import MdView from "../general/MdView";
+import TermModal from "../term/TermModal";
 
 const { Paragraph, Title } = Typography;
 

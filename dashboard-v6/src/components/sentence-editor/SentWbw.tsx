@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ReloadOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
-import type { ISentence, ISentenceWbwListResponse } from "../../api/Corpus";
+import type { ISentence, ISentenceWbwListResponse } from "../../api/sentence";
 
 import { useAppSelector } from "../../hooks";
 import { courseInfo, memberInfo } from "../../reducers/current-course";

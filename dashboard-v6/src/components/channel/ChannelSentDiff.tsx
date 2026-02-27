@@ -2,7 +2,7 @@ import { Button, message, Select, Table, Tooltip, Typography } from "antd";
 import { type Change, diffChars } from "diff";
 import { useEffect, useState } from "react";
 
-import { post } from "../../../src/request";
+import { post } from "../../request";
 import type {
   ISentence,
   ISentenceDiffData,
@@ -10,11 +10,11 @@ import type {
   ISentenceDiffResponse,
   ISentenceListResponse,
   ISentenceNewRequest,
-} from "../../../src/api/Corpus";
+} from "../../api/sentence";
 
-import store from "../../../src/store";
-import { accept } from "../../../src/reducers/accept-pr";
-import type { IChannel } from "../../../src/api/Channel";
+import store from "../../store";
+import { accept } from "../../reducers/accept-pr";
+import type { IChannel } from "../../api/Channel";
 import { toISentence } from "../sentence/utils";
 
 const { Text } = Typography;

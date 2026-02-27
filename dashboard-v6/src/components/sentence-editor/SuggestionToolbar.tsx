@@ -2,7 +2,7 @@ import { Divider, Popconfirm, Space, Tooltip, Typography } from "antd";
 import { LikeOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useIntl } from "react-intl";
 
-import type { ISentence } from "../../api/Corpus";
+import type { ISentence } from "../../api/sentence";
 import PrAcceptButton from "./PrAcceptButton";
 import InteractiveButton from "./InteractiveButton";
 

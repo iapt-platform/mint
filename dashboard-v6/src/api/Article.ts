@@ -1,6 +1,40 @@
 import type { IStudio, IStudioApiResponse, IUser, TRole } from "./Auth";
 import type { IChannel } from "./Channel";
-import type { ITocPathNode } from "./Corpus";
+import type { ITocPathNode } from "./pali-text";
+
+export type TContentType = "text" | "markdown" | "html" | "json";
+
+export type ArticleMode = "read" | "edit" | "wbw" | "auto";
+export type ArticleType =
+  | "anthology"
+  | "article"
+  | "series"
+  | "chapter"
+  | "para"
+  | "cs-para"
+  | "sent"
+  | "sim"
+  | "page"
+  | "textbook"
+  | "sent-original"
+  | "sent-commentary"
+  | "sent-nissaya"
+  | "sent-translation"
+  | "term"
+  | "task";
+/**
+ * 每种article type 对应的路由参数
+ * article/id?anthology=id&channel=id1,id2&mode=ArticleMode
+ * chapter/book-para?channel=id1,id2&mode=ArticleMode
+ * para/book?par=para1,para2&channel=id1,id2&mode=ArticleMode
+ * cs-para/book-para?channel=id1,id2&mode=ArticleMode
+ * sent/id?channel=id1,id2&mode=ArticleMode
+ * sim/id?channel=id1,id2&mode=ArticleMode
+ * textbook/articleId?course=id&mode=ArticleMode
+ * exercise/articleId?course=id&exercise=id&username=name&mode=ArticleMode
+ * exercise-list/articleId?course=id&exercise=id&mode=ArticleMode
+ * sent-original/id
+ */
 
 export interface IArticleListApiResponse {
   article: string;

@@ -3,7 +3,7 @@ import { useIntl } from "react-intl";
 import { message as AntdMessage, Modal, Collapse } from "antd";
 import { ExclamationCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 
-import type { ISentence } from "../../api/Corpus";
+import type { ISentence } from "../../api/sentence";
 import SentEditMenu from "./SentEditMenu";
 import SentCellEditable from "./SentCellEditable";
 
@@ -27,7 +27,7 @@ import CopyToModal from "../channel/CopyToModal";
 import store from "../../store";
 import { randomString } from "../../utils";
 import User from "../auth/User";
-import type { ISentenceListResponse } from "../../api/Corpus";
+import type { ISentenceListResponse } from "../../api/sentence";
 
 import SentAttachment from "./SentAttachment";
 
@@ -75,7 +75,10 @@ const SentCellWidget = ({
   console.debug("SentCell render", value);
   const intl = useIntl();
   const [isEditMode, setIsEditMode] = useState(editMode);
-  const [sentData, setSentData] = useState<ISentence | undefined>(initValue);
+  // 用一个独立的 state 存储来自 acceptPr 的覆盖值
+  const [overrideSentData, setOverrideSentData] = useState<
+    ISentence | undefined
+  >(undefined);
   const [loading, setLoading] = useState(false);
   const [uuid] = useState(randomString());
   const endings = useAppSelector(getEnding);
@@ -86,6 +89,11 @@ const SentCellWidget = ({
   const discussionMessage = useAppSelector(message);
   const anchorInfo = useAppSelector(anchor);
   const [copyOpen, setCopyOpen] = useState<boolean>(false);
+
+  // sentData 由 useMemo 派生：优先级 overrideSentData > value > initValue
+  const sentData = useMemo(() => {
+    return overrideSentData ?? value ?? initValue;
+  }, [overrideSentData, value, initValue]);
 
   const sentId = `${sentData?.book}-${sentData?.para}-${sentData?.wordStart}-${sentData?.wordEnd}`;
   const sid = `${sentData?.book}_${sentData?.para}_${sentData?.wordStart}_${sentData?.wordEnd}_${sentData?.channel?.id}`;
@@ -115,30 +123,18 @@ const SentCellWidget = ({
     }
   }, [anchorInfo, initValue?.id, sid]);
 
-  useEffect(() => {
-    if (value) {
-      setSentData(value);
-    }
-  }, [value]);
+  // 保留一个 setter 供内部使用（如 refresh、paste、format convert 等）
+  // 这些场景改为直接更新 overrideSentData
+  const setSentData = (data: ISentence) => {
+    setOverrideSentData(data);
+  };
 
   useEffect(() => {
     console.debug("sent cell acceptPr", acceptPr, uuid);
-    if (isPr) {
-      console.debug("sent cell is pr");
-      return;
-    }
-    if (typeof acceptPr === "undefined" || acceptPr.length === 0) {
-      console.debug("sent cell acceptPr is empty");
-      return;
-    }
-    if (!sentData) {
-      console.debug("sent cell sentData is empty");
-      return;
-    }
-    if (changedSent?.includes(uuid)) {
-      console.debug("sent cell already apply", uuid);
-      return;
-    }
+    if (isPr) return;
+    if (typeof acceptPr === "undefined" || acceptPr.length === 0) return;
+    if (!sentData) return;
+    if (changedSent?.includes(uuid)) return;
 
     const found = acceptPr
       .filter((value) => typeof value !== "undefined")
@@ -146,10 +142,14 @@ const SentCellWidget = ({
         const vId = `${value.book}_${value.para}_${value.wordStart}_${value.wordEnd}_${value.channel.id}`;
         return vId === sid;
       });
+
     if (typeof found !== "undefined") {
-      console.debug("sent cell sentence apply", uuid, found, found);
-      setSentData(found);
-      store.dispatch(done(uuid));
+      console.debug("sent cell sentence apply", uuid, found);
+      // 用 setTimeout 将 setState 移出 effect 同步体，避免级联渲染
+      setTimeout(() => {
+        setOverrideSentData(found);
+        store.dispatch(done(uuid));
+      }, 0);
     }
   }, [acceptPr, sentData, isPr, uuid, changedSent, sid]);
 

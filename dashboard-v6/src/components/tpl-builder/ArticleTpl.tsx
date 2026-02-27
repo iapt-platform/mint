@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { ArticleType } from "../../api/Corpus";
+import type { ArticleType } from "../../api/Article";
 import type { TDisplayStyle } from "../../types/template";
 
 interface IWidget {

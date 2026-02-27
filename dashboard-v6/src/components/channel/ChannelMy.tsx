@@ -38,7 +38,7 @@ import CopyToModal from "./CopyToModal";
 
 import { ChannelInfoModal } from "./ChannelInfo";
 
-import type { ArticleType } from "../../api/Corpus";
+import type { ArticleType } from "../../api/Article";
 import { getSentIdInArticle } from "./utils";
 import TokenModal from "../token/TokenModal";
 import NissayaAlignerModal from "../nissaya/NissayaAlignerModal";

@@ -2,7 +2,7 @@ import { Button } from "antd";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 
-import type { ISentence } from "../../api/Corpus";
+import type { ISentence } from "../../api/sentence";
 import SentCellEditable from "./SentCellEditable";
 
 interface IWidget {

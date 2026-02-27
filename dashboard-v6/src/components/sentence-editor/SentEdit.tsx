@@ -10,13 +10,15 @@ import "./style.css";
 import { settingInfo } from "../../reducers/setting";
 
 import { useSetting } from "../../hooks/useSetting";
-import type { ArticleMode, ISentence, ITocPathNode } from "../../api/Corpus";
+import type { ArticleMode } from "../../api/Article";
 import { GetUserSetting } from "../setting/default";
 import SentContent from "./SentContent";
 import type { IWbw } from "../../types/wbw";
 import SentTab from "./SentTab";
 import { SENTENCE_FIX_WIDTH } from "../../types/article";
 import SentCell from "./SentCell";
+import type { ISentence } from "../../api/sentence";
+import type { ITocPathNode } from "../../api/pali-text";
 
 export interface IResNumber {
   translation?: number;

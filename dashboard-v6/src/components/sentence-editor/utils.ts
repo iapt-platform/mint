@@ -1,4 +1,4 @@
-import type { ISentence } from "../../api/Corpus";
+import type { ISentence } from "../../api/sentence";
 
 import type { ISentCart } from "./SentCart";
 import store from "../../store";

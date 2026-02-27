@@ -20,7 +20,7 @@ import { post } from "../../request";
 import type {
   ISentenceDiffRequest,
   ISentenceDiffResponse,
-} from "../../api/Corpus";
+} from "../../api/sentence";
 
 const { Dragger } = Upload;
 const { TextArea } = Input;

@@ -5,8 +5,9 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import MainMenu from "../../components/navigation/MainMenu";
 import SignInAvatar from "../../components/auth/SignInAvatar";
 import HeaderBreadcrumb from "../../components/navigation/HeaderBreadcrumb";
+import ThemeSwitch from "../../components/theme/ThemeSwitch";
 
-const { Header, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 const Widget = () => {
   const [collapsed, setCollapsed] = useState(false);
   return (
@@ -28,18 +29,20 @@ const Widget = () => {
         <MainMenu />
       </Sider>
       <Layout>
-        <Header
+        <div
           style={{
-            backgroundColor: "white",
             padding: "0 24px", // 建议保留左右内边距，否则内容会贴边
             display: "flex",
             alignItems: "center", // 垂直居中
             height: 44,
-            // justifyContent: 'space-between', // 如果需要左右分布（如左侧面包屑，右侧头像）可开启
+            justifyContent: "space-between", // 如果需要左右分布（如左侧面包屑，右侧头像）可开启
           }}
         >
           <HeaderBreadcrumb />
-        </Header>
+          <div>
+            <ThemeSwitch />
+          </div>
+        </div>
 
         <Content style={{ padding: 12 }}>
           <Outlet />

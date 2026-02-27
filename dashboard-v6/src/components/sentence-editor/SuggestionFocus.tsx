@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useAppSelector } from "../../hooks";
 import { prInfo } from "../../reducers/pr-load";
 
@@ -10,6 +10,7 @@ interface IWidget {
   channelId: string;
   children?: React.ReactNode;
 }
+
 const SuggestionFocusWidget = ({
   book,
   para,
@@ -19,31 +20,28 @@ const SuggestionFocusWidget = ({
   children,
 }: IWidget) => {
   const pr = useAppSelector(prInfo);
-  const [highlight, setHighlight] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);
 
+  // 直接派生，无需 useState + useEffect
+  const highlight =
+    !!pr &&
+    book === pr.book &&
+    para === pr.paragraph &&
+    start === pr.word_start &&
+    end === pr.word_end &&
+    channelId === pr.channel.id;
+
+  // 仅负责滚动这一"外部副作用"，不再 setState
   useEffect(() => {
-    if (pr) {
-      if (
-        book === pr.book &&
-        para === pr.paragraph &&
-        start === pr.word_start &&
-        end === pr.word_end &&
-        channelId === pr.channel.id
-      ) {
-        setHighlight(true);
-        divRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-          inline: "nearest",
-        });
-      } else {
-        setHighlight(false);
-      }
-    } else {
-      setHighlight(false);
+    if (highlight) {
+      divRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
+      });
     }
-  }, [book, channelId, end, para, pr, start]);
+  }, [highlight]);
+
   return (
     <div
       ref={divRef}

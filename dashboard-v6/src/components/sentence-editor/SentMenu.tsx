@@ -3,7 +3,7 @@ import { Badge, Button, Dropdown, Space } from "antd";
 import { MoreOutlined, CheckOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 
-import type { ArticleMode } from "../../api/Corpus";
+import type { ArticleMode } from "../../api/Article";
 import RelatedPara from "../related-para/RelatedPara";
 
 interface IWidget {

@@ -3,7 +3,7 @@ import { Breadcrumb, Popover, Tag, Typography } from "antd";
 
 import React, { type JSX } from "react";
 import { fullUrl } from "../../utils";
-import type { ITocPathNode } from "../../api/Corpus";
+import type { ITocPathNode } from "../../api/pali-text";
 import PaliText from "../general/PaliText";
 
 export declare type ELinkType = "none" | "blank" | "self";

@@ -14,7 +14,7 @@ import {
   type ISettingItem,
   refresh as refreshSetting,
 } from "./reducers/setting";
-import { refresh as refreshTheme } from "./reducers/theme";
+import { themeChange, type TThemeMode } from "./reducers/theme";
 import { get } from "./request";
 import { get as getLang } from "./locales";
 
@@ -178,10 +178,10 @@ const init = () => {
 
   //获取用户选择的主题
   const theme = localStorage.getItem("theme");
-  if (theme === "dark") {
-    store.dispatch(refreshTheme("dark"));
+  if (theme) {
+    store.dispatch(themeChange(theme as TThemeMode));
   } else {
-    store.dispatch(refreshTheme("ant"));
+    store.dispatch(themeChange("system"));
   }
 
   //设置时区到cookie

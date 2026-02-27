@@ -4,7 +4,7 @@ import { Modal } from "antd";
 import ChannelPickerTable from "./ChannelPickerTable";
 
 import { useIntl } from "react-intl";
-import type { ArticleType } from "../../api/Corpus";
+import type { ArticleType } from "../../api/Article";
 import type { IChannel } from "../../api/Channel";
 
 interface IWidget {

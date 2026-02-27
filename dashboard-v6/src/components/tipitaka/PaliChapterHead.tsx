@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { message } from "antd";
 
-import type { IApiResponsePaliChapter, ITocPathNode } from "../../api/Corpus";
+import type {
+  IApiResponsePaliChapter,
+  ITocPathNode,
+} from "../../api/pali-text";
 import { get } from "../../request";
 
 import type { IChapter } from "./BookViewer";

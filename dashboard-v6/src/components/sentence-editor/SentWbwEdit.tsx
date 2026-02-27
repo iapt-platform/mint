@@ -3,7 +3,7 @@ import { useIntl } from "react-intl";
 import { Button, message } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 
-import type { ISentence } from "../../api/Corpus";
+import type { ISentence } from "../../api/sentence";
 
 import type { IWbw } from "../../types/wbw";
 import { sentSave } from "../../api/sentence";

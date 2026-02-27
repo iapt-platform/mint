@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import { Card, List, message, Space, Tag } from "antd";
 
 import type { IChannelApiData } from "../../api/Channel";
-import type { IApiResponseChannelList } from "../../api/Corpus";
+
 import { get } from "../../request";
 import ChannelListItem from "./ChannelListItem";
 import type { IStudio } from "../../api/Auth";
+import type { IApiResponseChannelList } from "../../api/progress";
 
 export interface ChannelFilterProps {
   chapterProgress: number;

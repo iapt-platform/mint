@@ -7,8 +7,8 @@ import { DeleteOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
 
-import type { IChapterListResponse } from "../../api/Corpus";
 import type { IArticleParam } from "../../types/article";
+import type { IChapterListResponse } from "../../api/progress";
 
 const { Text } = Typography;
 

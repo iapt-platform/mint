@@ -25,6 +25,7 @@ export interface ChannelInfoProps {
   studio: IStudio;
   count?: number;
 }
+
 /**
  * 句子完成情况
  * [句子字符数，是否完成]

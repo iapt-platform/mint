@@ -18,10 +18,13 @@ import SentTabCopy from "./SentTabCopy";
 import { fullUrl } from "../../utils";
 import SentWbw from "./SentWbw";
 import SentTabButtonWbw from "./SentTabButtonWbw";
-import type { ArticleMode, ISentence, ITocPathNode } from "../../api/Corpus";
+
 import type { IWbw } from "../../types/wbw";
 import type { IResNumber } from "../../api/Channel";
 import RelaGraphic from "../wbw/RelaGraphic";
+import type { ITocPathNode } from "../../api/pali-text";
+import type { ArticleMode } from "../../api/Article";
+import type { ISentence } from "../../api/sentence";
 
 const { Text } = Typography;
 

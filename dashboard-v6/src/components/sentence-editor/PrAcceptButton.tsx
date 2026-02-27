@@ -8,7 +8,7 @@ import type {
   ISentence,
   ISentenceRequest,
   ISentenceResponse,
-} from "../../api/Corpus";
+} from "../../api/sentence";
 import store from "../../store";
 import { accept } from "../../reducers/accept-pr";
 import { toISentence } from "../sentence/utils";

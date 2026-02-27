@@ -7,7 +7,7 @@ import { currentUser as _currentUser } from "../../reducers/current-user";
 
 import type { IChannel, TChannelType } from "../../api/Channel";
 import { useIntl } from "react-intl";
-import type { ArticleType } from "../../api/Corpus";
+import type { ArticleType } from "../../api/Article";
 
 interface IWidget {
   trigger?: React.ReactNode;

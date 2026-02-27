@@ -3,7 +3,7 @@ import { Alert, Button, Space } from "antd";
 
 import SuggestionList from "./SuggestionList";
 import SuggestionAdd from "./SuggestionAdd";
-import type { ISentence } from "../../api/Corpus";
+import type { ISentence } from "../../api/sentence";
 import Marked from "../general/Marked";
 import { useAppSelector } from "../../hooks";
 import { message } from "../../reducers/discussion";

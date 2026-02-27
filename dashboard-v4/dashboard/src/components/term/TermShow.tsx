@@ -53,6 +53,7 @@ const TermShowWidget = ({
               {compact ? <></> : <Col flex="auto"></Col>}
               <Col flex="560px">
                 <SearchVocabulary
+                  key={word}
                   value={word}
                   onSearch={dictSearch}
                   onSplit={(word: string | undefined) => {
