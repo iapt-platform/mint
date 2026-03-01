@@ -9,6 +9,7 @@ interface IWidget {
   open?: boolean;
   tpl?: ArticleType;
   articleId?: string;
+  channelsId?: string | null;
   title?: string;
   onClose?: () => void;
 }

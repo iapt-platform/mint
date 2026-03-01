@@ -1,16 +1,16 @@
 import { useNavigate, useParams } from "react-router";
 
-import TermEdit from "../../../components/term/TermEdit";
+import TypeTerm from "../../../components/article/TypeTerm";
 
 const Widget = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   return (
-    <TermEdit
+    <TypeTerm
       id={id}
-      onUpdate={() => {
-        navigate(`/workspace/edit/wiki/${id}`);
+      onEdit={() => {
+        navigate(`/workspace/edit/wiki/${id}/edit`);
       }}
     />
   );

@@ -1,5 +1,6 @@
 import type { IStudio, IStudioApiResponse, IUser, TRole } from "./Auth";
 import type { IChannel } from "./Channel";
+import { get } from "../request";
 import type { ITocPathNode } from "./pali-text";
 
 export type TContentType = "text" | "markdown" | "html" | "json";
@@ -276,3 +277,38 @@ export interface IArticleFtsListResponse {
     page: { size: number; current: number; total: number };
   };
 }
+
+// src/api/Article.ts 新增部分
+
+export const fetchChapterArticle = (
+  articleId: string,
+  mode: "read" | "edit",
+  channelId?: string | null
+): Promise<IArticleResponse> => {
+  let url = `/api/v2/corpus-chapter/${articleId}?mode=${mode}`;
+  if (channelId) url += `&channels=${channelId}`;
+  return get<IArticleResponse>(url);
+};
+
+export const fetchParaArticle = (
+  book: string,
+  para: string,
+  mode: "read" | "edit",
+  channelId?: string | null
+): Promise<IArticleResponse> => {
+  let url = `/api/v2/corpus?view=para&book=${book}&par=${para}&mode=${mode}`;
+  if (channelId) url += `&channels=${channelId}`;
+  return get<IArticleResponse>(url);
+};
+
+export const fetchNextParaChunk = (
+  paraId: string,
+  mode: string,
+  from: number,
+  to: number,
+  channelId?: string | null
+): Promise<IArticleResponse> => {
+  let url = `/api/v2/corpus-chapter/${paraId}?mode=${mode}&from=${from}&to=${to}`;
+  if (channelId) url += `&channels=${channelId}`;
+  return get<IArticleResponse>(url);
+};

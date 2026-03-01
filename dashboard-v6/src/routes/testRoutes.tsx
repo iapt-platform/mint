@@ -10,8 +10,12 @@ const SentSimTest = lazy(
 const SentEditInnerDemo = lazy(
   () => import("../components/sentence-editor/SentEditInnerDemo")
 );
+const EditableTreeTest = lazy(
+  () => import("../components/article/components/EditableTreeTest")
+);
 
 const TermTest = lazy(() => import("../components/term/TermTest"));
+const TypePaliTest = lazy(() => import("../components/article/TypePaliTest"));
 
 // 你可以继续添加更多测试组件
 // const TestButtonDemo = lazy(() => import("../components/button/ButtonDemo"));
@@ -44,6 +48,16 @@ export const testRoutes: TestRouteObject[] = [
     path: "TermTest",
     label: "TermTest",
     Component: TermTest,
+  },
+  {
+    path: "EditableTreeTest",
+    label: "EditableTreeTest",
+    Component: EditableTreeTest,
+  },
+  {
+    path: "TypePaliTest",
+    label: "TypePaliTest",
+    Component: TypePaliTest,
   },
 
   // 示例：嵌套结构

@@ -76,6 +76,7 @@ export const TaskBuilderChapterModal = ({
     </>
   );
 };
+
 type NotificationType = "success" | "info" | "warning" | "error";
 interface IWidget {
   studioName?: string;

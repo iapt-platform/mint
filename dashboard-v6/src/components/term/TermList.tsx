@@ -20,6 +20,7 @@ import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 import type { IChannel } from "../../api/Channel";
 import DataImport from "../general/DataImport";
+import { Link } from "react-router";
 
 interface IItem {
   sn: number;
@@ -106,6 +107,13 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
             key: "word",
             tooltip: "单词过长会自动收缩",
             ellipsis: true,
+            render(_dom, entity) {
+              return (
+                <Link to={`/workspace/edit/wiki/${entity.id}`}>
+                  {entity.word}
+                </Link>
+              );
+            },
           },
           {
             title: intl.formatMessage({

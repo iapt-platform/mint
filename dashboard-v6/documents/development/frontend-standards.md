@@ -105,7 +105,6 @@ components/VideoPlayer/core/
 
 ```text
 api 层              抛出结构化错误，不处理 UI
-QueryClient 全局    处理通用错误（401 / 403 / 500）
 hook onError        处理业务特定错误（该 feature 内有特殊含义的错误码）
 组件层 try/catch    处理仅影响当前组件交互的错误（如表单校验）
 ```
@@ -115,25 +114,10 @@ hook onError        处理业务特定错误（该 feature 内有特殊含义的
 ```text
 收到错误
   ├── 所有页面都一样处理？（401/403/500）
-  │     → QueryClient 全局 onError
+  │
   └── 只在这个业务场景特殊处理？
         ├── 影响整个 feature 的逻辑  → hook 的 onError
         └── 只影响当前组件交互       → 组件内 try/catch
-```
-
-**全局错误处理示例：**
-
-```ts
-const queryClient = new QueryClient({
-  queryCache: new QueryCache({
-    onError: (error) => {
-      if (error.code === 403) notification.error({ message: "权限不足" });
-      if (error.code === 401) authStore.logout();
-      if (error.code >= 500) notification.error({ message: "服务器异常" });
-      // 其他 code 不处理，交给业务层
-    },
-  }),
-});
 ```
 
 **⚠️ antd v6 notification 问题**：`App.useApp()` 取到的实例无法在 QueryClient 回调中直接使用，需挂载单例：
@@ -183,13 +167,12 @@ useEffect(() => {
 
 ## 推荐技术栈
 
-| 职责         | 方案                                |
-| ------------ | ----------------------------------- |
-| 异步状态管理 | TanStack Query v5                   |
-| 全局同步状态 | Zustand                             |
-| 路由         | React Router v7                     |
-| HTTP 客户端  | Axios（拦截器统一处理 token、错误） |
-| UI 组件库    | Ant Design v6                       |
+| 职责         | 方案                |
+| ------------ | ------------------- |
+| 全局同步状态 | redux               |
+| 路由         | React Router v7     |
+| HTTP 客户端  | fetch token、错误） |
+| UI 组件库    | Ant Design v6       |
 
 ---
 

@@ -31,6 +31,7 @@ const WorkspaceHome = lazy(() => import("./pages/workspace/home"));
 const WorkspaceChat = lazy(() => import("./pages/workspace/chat"));
 
 const WorkspaceTerm = lazy(() => import("./pages/workspace/term/list"));
+const WorkspaceTermShow = lazy(() => import("./pages/workspace/term/show"));
 const WorkspaceTermEdit = lazy(() => import("./pages/workspace/term/edit"));
 
 // ↓ 新增：TestLayout
@@ -149,7 +150,16 @@ const router = createBrowserRouter(
               children: [
                 {
                   path: "article",
-                  children: [{ path: ":id" }],
+                  children: [
+                    {
+                      path: ":id",
+                      children: [
+                        {
+                          path: "edit",
+                        },
+                      ],
+                    },
+                  ],
                 },
                 {
                   path: "anthology",
@@ -173,11 +183,17 @@ const router = createBrowserRouter(
                 },
                 {
                   path: "wiki",
+                  handle: { crumb: "wiki" },
                   children: [
                     {
                       path: ":id",
-                      Component: WorkspaceTermEdit,
-                      children: [{ index: true, Component: WorkspaceTermEdit }],
+                      children: [
+                        { index: true, Component: WorkspaceTermShow },
+                        {
+                          path: "edit",
+                          Component: WorkspaceTermEdit,
+                        },
+                      ],
                     },
                   ],
                 },

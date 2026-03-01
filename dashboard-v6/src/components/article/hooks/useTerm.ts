@@ -1,7 +1,7 @@
 import { useEffect, useState, useTransition } from "react";
 
 import type { ArticleMode, IArticleDataResponse } from "../../../api/Article";
-import { getTerm } from "../../../api/Term";
+import { getTerm, type ITermDataResponse } from "../../../api/Term";
 import { message } from "antd";
 
 interface IUseTermOptions {
@@ -12,7 +12,7 @@ interface IUseTermOptions {
 
 export function useTerm({ id, mode = "read", channelId }: IUseTermOptions) {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
-  const [articleHtml, setArticleHtml] = useState<string[]>(["<span />"]);
+  const [term, setTerm] = useState<ITermDataResponse>();
   const [errorCode, setErrorCode] = useState<number>();
   const [isPending, startTransition] = useTransition();
 
@@ -43,8 +43,7 @@ export function useTerm({ id, mode = "read", channelId }: IUseTermOptions) {
           summary: data.note,
           content: data.note ?? "",
           content_type: "markdown",
-          html: data.html,
-          path: [],
+          html: data.html ?? data.note ?? "<span />",
           editor: data.editor,
           status: 30,
           lang: data.language,
@@ -52,14 +51,12 @@ export function useTerm({ id, mode = "read", channelId }: IUseTermOptions) {
           updated_at: data.updated_at,
         });
 
-        setArticleHtml(
-          data.html ? [data.html] : data.note ? [data.note] : ["<span />"]
-        );
+        setTerm(data);
       } catch (e) {
         setErrorCode(e as number);
       }
     });
   }, [id, channelId, mode]);
 
-  return { articleData, articleHtml, errorCode, loading: isPending };
+  return { articleData, term, errorCode, loading: isPending };
 }

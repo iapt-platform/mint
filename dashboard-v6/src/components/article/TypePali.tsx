@@ -1,0 +1,257 @@
+// src/features/TypePaliWidget.tsx
+
+import { Divider, Dropdown, Button, Space, Tag } from "antd";
+import { MoreOutlined } from "@ant-design/icons";
+import { useEffect } from "react";
+import type {
+  ArticleMode,
+  ArticleType,
+  IArticleDataResponse,
+} from "../../api/Article";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
+import store from "../../store";
+import { refresh as focusRefresh } from "../../reducers/focus";
+import useTipitaka from "../../hooks/useTipitaka";
+
+import ArticleLayout from "./components/ArticleLayout";
+
+import { useState } from "react";
+import type { ITocPathNode } from "../../api/pali-text";
+import TocTree from "./components/TocTree";
+import PaliText from "../general/PaliText";
+import Navigate from "./components/Navigate";
+import TplBuilder from "../tpl-builder/TplBuilder";
+import ArticleHeader from "./components/ArticleHeader";
+import { TaskBuilderChapterModal } from "../task/TaskBuilderChapterModal";
+
+interface ISearchParams {
+  key: string;
+  value: string;
+}
+
+interface IWidget {
+  type?: ArticleType;
+  id?: string;
+  mode?: ArticleMode | null;
+  channelId?: string | null;
+  book?: string | null;
+  para?: string | null;
+  active?: boolean;
+  focus?: string | null;
+  hideNav?: boolean;
+  onArticleChange?: (
+    type: ArticleType,
+    id: string,
+    target: string,
+    param?: ISearchParams[]
+  ) => void;
+  onLoad?: (data: IArticleDataResponse) => void;
+  onTitle?: (title: string) => void;
+}
+
+const TypePali = ({
+  type,
+  id,
+  mode = "read",
+  channelId,
+  book,
+  para,
+  active = true,
+  focus,
+  hideNav = false,
+  onArticleChange,
+}: IWidget) => {
+  const user = useAppSelector(currentUser);
+  const channels = channelId?.split("_");
+
+  const [taskBuilderModalOpen, setTaskBuilderModalOpen] = useState(false);
+  const [tplOpen, setTplOpen] = useState(false);
+
+  const {
+    articleData,
+    articleHtml,
+    toc,
+    loading,
+    errorCode,
+    remains,
+    loadNextChunk,
+  } = useTipitaka({ type, id, mode, channelId, book, para, active });
+
+  // focus 副作用保留在 feature 层，因为它与 Redux store 耦合属于业务交互
+  useEffect(() => {
+    const parts = focus?.split("-");
+    if (parts?.length === 2) {
+      store.dispatch(focusRefresh({ type: "para", id: focus }));
+    } else if (parts?.length === 4) {
+      store.dispatch(focusRefresh({ type: "sentence", id: focus }));
+    }
+  }, [focus]);
+
+  // 派生展示数据
+  let title = "";
+  if (articleData) {
+    if (type === "chapter") {
+      title = articleData.title_text ?? articleData.title;
+    } else {
+      const chapterId = id?.split("-");
+      title = chapterId
+        ? chapterId.length > 1
+          ? chapterId[1]
+          : "unknown"
+        : "unknown";
+    }
+  }
+
+  let mBook = "0",
+    mPara = "0";
+  if (typeof id === "string") {
+    [mBook, mPara] = id.split("-");
+  }
+
+  let fullPath: ITocPathNode[] = [];
+  if (articleData?.path && articleData.path.length > 0) {
+    const currNode: ITocPathNode = {
+      book: parseInt(mBook),
+      paragraph: parseInt(mPara),
+      title: title ?? "",
+      level: articleData.path[articleData.path.length - 1].level + 1,
+    };
+    fullPath = [...articleData.path, currNode];
+  }
+  /*
+  const handlePathChange = (
+    node: ITocPathNode,
+    e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
+  ) => {
+    let newType = type;
+    let newArticle = "";
+    if (node.level === 0) {
+      newType = "series";
+      newArticle = node.title;
+    } else {
+      newType = "chapter";
+      newArticle = node.key ? node.key : `${node.book}-${node.paragraph}`;
+    }
+    const target = e.ctrlKey || e.metaKey ? "_blank" : "self";
+    onArticleChange?.(newType, newArticle, target);
+  };
+*/
+  return (
+    <div>
+      <TaskBuilderChapterModal
+        studioName={user?.realName}
+        book={parseInt(mBook ?? "0")}
+        para={parseInt(mPara ?? "0")}
+        channels={channels}
+        open={taskBuilderModalOpen}
+        onClose={() => setTaskBuilderModalOpen(false)}
+      />
+      <TplBuilder
+        title={title}
+        tpl="chapter"
+        articleId={id}
+        channelsId={channelId}
+        open={tplOpen}
+        onClose={() => setTplOpen(false)}
+      />
+
+      <div></div>
+      <ArticleHeader
+        action={
+          <Dropdown
+            menu={{
+              items: [
+                { key: "tpl", label: "获取模板" },
+                { key: "task", label: "生成任务" },
+              ],
+              onClick: ({ key }) => {
+                if (key === "task") setTaskBuilderModalOpen(true);
+                if (key === "tpl") setTplOpen(true);
+              },
+            }}
+            placement="bottomRight"
+          >
+            <Button shape="circle" size="small" icon={<MoreOutlined />} />
+          </Dropdown>
+        }
+      />
+      <ArticleLayout
+        title={title}
+        subTitle={articleData?.subtitle}
+        summary={articleData?.summary}
+        content={articleData?.content}
+        html={articleHtml}
+        loading={loading}
+        errorCode={errorCode}
+        remains={remains}
+        onEnd={() => {
+          if (type === "chapter") loadNextChunk();
+        }}
+      />
+
+      <Divider />
+
+      <TocTree
+        treeData={toc?.map((item) => {
+          const strTitle = item.title ?? item.pali_title;
+          const key = item.key ?? `${item.book}-${item.paragraph}`;
+          const progress = item.progress?.map((p, id) => (
+            <Tag key={id}>{Math.round(p * 100) + "%"}</Tag>
+          ));
+          return {
+            key,
+            title: (
+              <Space>
+                <PaliText text={strTitle === "" ? "[unnamed]" : strTitle} />
+                {progress}
+              </Space>
+            ),
+            level: item.level,
+          };
+        })}
+        onClick={(
+          id: string,
+          e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+        ) => {
+          if (e.ctrlKey || e.metaKey) {
+            onArticleChange?.("chapter", id, "_blank");
+          } else {
+            onArticleChange?.("chapter", id, "_self");
+          }
+        }}
+      />
+
+      <Divider />
+
+      {!hideNav && (
+        <Navigate
+          type={type}
+          articleId={id}
+          path={fullPath}
+          onPathChange={(key: string) => {
+            const node = articleData?.path?.find((v) => v.title === key);
+            if (node) {
+              const newType = node.level === 0 ? "series" : "chapter";
+              const newArticle = node.key ?? `${node.book}-${node.paragraph}`;
+              onArticleChange?.(newType, newArticle, "self");
+            }
+          }}
+          onChange={(
+            event: React.MouseEvent<HTMLElement, MouseEvent>,
+            newId: string
+          ) => {
+            const target = event.ctrlKey || event.metaKey ? "_blank" : "_self";
+            let param: ISearchParams[] = [];
+            if (type === "para" && newId?.split("-").length > 1) {
+              param = [{ key: "par", value: newId.split("-")[1] }];
+            }
+            onArticleChange?.(type as ArticleType, newId, target, param);
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
+export default TypePali;
