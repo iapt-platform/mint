@@ -100,3 +100,7 @@ export const numToHex = (arg: number) => {
     console.warn("数字转16进制出错:", e);
   }
 };
+
+export const scrollToTop = () => {
+  document.getElementById("article-root")?.scrollIntoView();
+};

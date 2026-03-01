@@ -42,14 +42,14 @@ const NavigateWidget = ({
 
   useEffect(() => {
     if (type && articleId) {
-      get<INavResponse>(`/v2/article-nav?type=${type}&id=${articleId}`).then(
-        (json) => {
-          if (json.ok) {
-            setPrev(json.data.prev);
-            setNext(json.data.next);
-          }
+      get<INavResponse>(
+        `/api/v2/article-nav?type=${type}&id=${articleId}`
+      ).then((json) => {
+        if (json.ok) {
+          setPrev(json.data.prev);
+          setNext(json.data.next);
         }
-      );
+      });
     }
   }, [articleId, type]);
 

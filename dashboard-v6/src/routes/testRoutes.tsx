@@ -44,32 +44,26 @@ export const testRoutes: TestRouteObject[] = [
     label: "SentEditInnerDemo",
     Component: SentEditInnerDemo,
   },
-  {
-    path: "TermTest",
-    label: "TermTest",
-    Component: TermTest,
-  },
+
   {
     path: "EditableTreeTest",
     label: "EditableTreeTest",
     Component: EditableTreeTest,
   },
   {
-    path: "TypePaliTest",
-    label: "TypePaliTest",
-    Component: TypePaliTest,
+    path: "editor",
+    label: "Editor",
+    children: [
+      {
+        path: "TermTest",
+        label: "TermTest",
+        Component: TermTest,
+      },
+      {
+        path: "TypePaliTest",
+        label: "TypePaliTest",
+        Component: TypePaliTest,
+      },
+    ],
   },
-
-  // 示例：嵌套结构
-  // {
-  //   path: "button",
-  //   label: "按钮",
-  //   children: [
-  //     {
-  //       path: "basic",
-  //       label: "基础按钮",
-  //       Component: TestButtonDemo,
-  //     },
-  //   ],
-  // },
 ];
