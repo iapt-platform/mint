@@ -110,7 +110,7 @@ interface IWidgetTocTree {
   treeData?: ListNodeData[];
   expandedKeys?: Key[];
   selectedKeys?: Key[];
-  onSelect?: (selectedId?: string[]) => void;
+  onSelect?: (selectedId: string[]) => void;
   onClick?: (
     selectedId: string,
     e: React.MouseEvent<HTMLSpanElement, MouseEvent>

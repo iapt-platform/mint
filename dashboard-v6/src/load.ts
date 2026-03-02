@@ -112,7 +112,7 @@ const init = () => {
       }
     });
 
-    get<IGroupMemberListResponse>("/v2/group-member?view=user").then(
+    get<IGroupMemberListResponse>("/api/v2/group-member?view=user").then(
       (response) => {
         console.log("auth", response);
         if (response.ok) {

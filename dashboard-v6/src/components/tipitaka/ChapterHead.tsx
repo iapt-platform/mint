@@ -18,7 +18,9 @@ const ChapterHeadWidget = (prop: IWidgetPaliChapterHeading) => {
   return (
     <>
       <Title level={4}>
-        <Link to={`/article/chapter/${prop.data.book}-${prop.data.para}`}>
+        <Link
+          to={`/workspace/edit/chapter/${prop.data.book}-${prop.data.para}`}
+        >
           {prop.data.title}
         </Link>
       </Title>

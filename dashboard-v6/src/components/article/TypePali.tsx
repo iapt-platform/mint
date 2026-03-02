@@ -2,7 +2,7 @@
 
 import { Divider, Dropdown, Button, Space, Tag } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import type {
   ArticleMode,
   ArticleType,
@@ -31,6 +31,7 @@ interface ISearchParams {
 }
 
 interface IWidget {
+  headerExtra?: ReactNode;
   type?: ArticleType;
   id?: string;
   mode?: ArticleMode | null;
@@ -51,6 +52,7 @@ interface IWidget {
 }
 
 const TypePali = ({
+  headerExtra,
   type,
   id,
   mode = "read",
@@ -158,6 +160,7 @@ const TypePali = ({
 
       <div></div>
       <ArticleHeader
+        header={headerExtra}
         action={
           <Dropdown
             menu={{

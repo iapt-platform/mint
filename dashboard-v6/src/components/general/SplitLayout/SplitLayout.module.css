@@ -1,0 +1,82 @@
+/* ─────────────────────────────────────────────
+   SplitLayout.module.css
+   ───────────────────────────────────────────── */
+
+/* 整体 Splitter 容器：撑满父元素 */
+.splitter {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── 左侧面板 ── */
+.leftPanel {
+  overflow: hidden;
+  /* 收起动画：宽度过渡由 antd Splitter 控制，
+     此处只做内容淡出保护 */
+  transition: opacity 0.2s ease;
+}
+
+/* 左侧面板内部竖向 flex 容器 */
+.sidebarInner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 标题行 */
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px 8px 12px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--ant-color-split, #f0f0f0);
+  min-height: 40px;
+}
+
+.sidebarTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+/* 收起按钮：标题行右侧 */
+.collapseBtn {
+  flex-shrink: 0;
+  color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.45));
+}
+
+.collapseBtn:hover {
+  color: var(--ant-color-primary, #1677ff) !important;
+  background: var(--ant-color-primary-bg, #e6f4ff) !important;
+}
+
+/* 侧边栏主体，允许滚动 */
+.sidebarContent {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ── 右侧面板 ── */
+.rightPanel {
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── 展开按钮（右侧使用）── */
+/* 框架提供默认样式；右侧组件可自行覆盖 */
+.expandBtn {
+  color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.45));
+  border-radius: 4px;
+}
+
+.expandBtn:hover {
+  color: var(--ant-color-primary, #1677ff) !important;
+  background: var(--ant-color-primary-bg, #e6f4ff) !important;
+}

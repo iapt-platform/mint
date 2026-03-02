@@ -33,6 +33,13 @@ const WorkspaceChat = lazy(() => import("./pages/workspace/chat"));
 const WorkspaceTerm = lazy(() => import("./pages/workspace/term/list"));
 const WorkspaceTermShow = lazy(() => import("./pages/workspace/term/show"));
 const WorkspaceTermEdit = lazy(() => import("./pages/workspace/term/edit"));
+const WorkspaceEditChapter = lazy(
+  () => import("./pages/workspace/editor/chapter")
+);
+
+const WorkspaceAnthologyList = lazy(
+  () => import("./pages/workspace/anthology/anthology")
+);
 
 // ↓ 新增：TestLayout
 const TestLayout = lazy(() => import("./layouts/test"));
@@ -85,6 +92,11 @@ const router = createBrowserRouter(
               path: "ai",
               Component: WorkspaceChat,
               handle: { id: "workspace.ai", crumb: "ai" },
+            },
+            {
+              path: "anthology",
+              Component: WorkspaceAnthologyList,
+              handle: { id: "workspace.anthology", crumb: "anthology" },
             },
             {
               path: "tipitaka",
@@ -171,7 +183,14 @@ const router = createBrowserRouter(
                 },
                 {
                   path: "chapter",
-                  children: [{ path: ":id" }],
+                  children: [
+                    {
+                      path: ":id",
+                      children: [
+                        { index: true, Component: WorkspaceEditChapter },
+                      ],
+                    },
+                  ],
                 },
                 {
                   path: "para",

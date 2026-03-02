@@ -2,8 +2,12 @@ import { Button, Drawer, Space, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 
+import type {
+  ArticleMode,
+  ArticleType,
+  IArticleDataResponse,
+} from "../../api/Article";
 import Article from "./Article";
-import type { IArticleDataResponse } from "../../api/Article";
 const { Text } = Typography;
 
 interface IWidget {

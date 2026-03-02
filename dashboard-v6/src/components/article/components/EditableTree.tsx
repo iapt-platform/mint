@@ -135,9 +135,9 @@ interface IWidget {
   addFileButton?: React.ReactNode;
   addOnArticle?: TreeNodeData;
   updatedNode?: TreeNodeData;
-  onChange?: (listTreeData?: ListNodeData[]) => void;
+  onChange?: (listTreeData: ListNodeData[]) => void;
   onSelect?: (selectedKeys: React.Key[]) => void;
-  onSave?: (listTreeData?: ListNodeData[]) => void;
+  onSave?: (listTreeData: ListNodeData[]) => void;
   onAppend?: (parent: TreeNodeData) => Promise<TreeNodeData>;
   onTitleClick?: (
     e: React.MouseEvent<HTMLElement, MouseEvent>,

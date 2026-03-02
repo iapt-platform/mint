@@ -16,7 +16,9 @@ const EditableTreeTest = lazy(
 
 const TermTest = lazy(() => import("../components/term/TermTest"));
 const TypePaliTest = lazy(() => import("../components/article/TypePaliTest"));
-
+const SplitLayoutTest = lazy(
+  () => import("../components/general/SplitLayout/SplitLayoutTest")
+);
 // 你可以继续添加更多测试组件
 // const TestButtonDemo = lazy(() => import("../components/button/ButtonDemo"));
 
@@ -49,6 +51,11 @@ export const testRoutes: TestRouteObject[] = [
     path: "EditableTreeTest",
     label: "EditableTreeTest",
     Component: EditableTreeTest,
+  },
+  {
+    path: "SplitLayoutTest",
+    label: "SplitLayoutTest",
+    Component: SplitLayoutTest,
   },
   {
     path: "editor",

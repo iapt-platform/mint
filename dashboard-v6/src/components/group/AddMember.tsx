@@ -27,10 +27,13 @@ const AddMemberWidget = ({ groupId, onCreated }: IWidget) => {
       onFinish={async (values: IFormData) => {
         console.log(values);
         if (typeof groupId !== "undefined") {
-          post<IGroupMemberRequest, IGroupMemberResponse>("/v2/group-member", {
-            user_id: values.userId,
-            group_id: groupId,
-          }).then((json) => {
+          post<IGroupMemberRequest, IGroupMemberResponse>(
+            "/api/v2/group-member",
+            {
+              user_id: values.userId,
+              group_id: groupId,
+            }
+          ).then((json) => {
             console.log("add member", json);
             if (json.ok) {
               message.success(intl.formatMessage({ id: "flashes.success" }));

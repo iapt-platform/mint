@@ -4,6 +4,7 @@ import {
   HomeOutlined,
   FieldTimeOutlined,
   FolderOutlined,
+  FileOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useMatches, type UIMatch } from "react-router";
 import {
@@ -129,23 +130,19 @@ const items: MenuItem[] = [
   },
 
   {
-    key: "/workspace/articles",
+    key: "/workspace/articles/",
     icon: <DocumentIcon />,
     label: "文章",
     children: [
       {
-        key: "/workspace/articles/uncategorized",
-        label: "未分类",
-        icon: <FolderOutlined />,
-      },
-      {
-        key: "/workspace/articles/angl",
-        label: "文集1",
-        icon: <FolderOutlined />,
-      },
-      {
         key: "/workspace/articles",
-        label: "ALL",
+        label: "全部文章",
+        icon: <FileOutlined />,
+      },
+      {
+        key: "/workspace/anthology",
+        label: "文集",
+        icon: <FolderOutlined />,
       },
     ],
   },

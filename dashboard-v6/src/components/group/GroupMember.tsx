@@ -60,7 +60,7 @@ const GroupMemberWidget = ({ groupId }: IWidgetGroupFile) => {
         request={async (params = {}, sorter, filter) => {
           console.log(params, sorter, filter);
 
-          let url = `/v2/group-member?view=group&id=${groupId}`;
+          let url = `/api/v2/group-member?view=group&id=${groupId}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
@@ -157,7 +157,7 @@ const GroupMemberWidget = ({ groupId }: IWidgetGroupFile) => {
                   onConfirm={() => {
                     console.log("delete", row.id);
                     delete_<IGroupMemberDeleteResponse>(
-                      "/v2/group-member/" + row.id
+                      "/api/v2/group-member/" + row.id
                     ).then((json) => {
                       if (json.ok) {
                         console.log("delete ok");
