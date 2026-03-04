@@ -1,6 +1,5 @@
 import { Divider, Typography } from "antd";
 
-import AnthologyTocTree from "./AnthologyTocTree";
 import { useIntl } from "react-intl";
 import ArticleSkeleton from "../article/components/ArticleSkeleton";
 import ErrorResult from "../general/ErrorResult";
@@ -17,12 +16,7 @@ interface Props {
   onArticleClick?: (anthologyId: string, id: string, target: string) => void;
 }
 
-const AnthologyTocEdit = ({
-  id,
-  channels,
-  editorStudioName,
-  onArticleClick,
-}: Props) => {
+const AnthologyTocEdit = ({ id, editorStudioName }: Props) => {
   const { data, loading, errorCode } = useAnthology(id);
   const intl = useIntl();
 
@@ -38,13 +32,6 @@ const AnthologyTocEdit = ({
             {intl.formatMessage({ id: "labels.table-of-content" })}
           </Title>
 
-          <AnthologyTocTree
-            anthologyId={id}
-            channels={channels}
-            onClick={(anthologyId, id, target) =>
-              onArticleClick?.(anthologyId, id, target)
-            }
-          />
           <EditableTocTree
             studioName={data?.studio.realName}
             editorStudioName={editorStudioName}

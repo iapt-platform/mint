@@ -301,7 +301,7 @@ export interface IFetchArticleParams {
   /** 频道 ID 列表，后端用 `_` 分隔；anthology 有 default_channel 时可不传 */
   channelIds?: string[];
   /** 文集 UUID，影响 path / toc 生成和 channel 回退逻辑 */
-  anthologyId?: string;
+  anthologyId?: string | null;
   /** 课程 ID，影响 channel 选择（答案频道 / 用户作业频道） */
   courseId?: string;
   /** 读写模式，后端默认 read */
@@ -582,6 +582,22 @@ export async function anthologyLoader({ params }: LoaderFunctionArgs) {
   }
 
   const res = await fetchAnthology(id);
+
+  if (!res.ok) {
+    throw new Response("Channel not found", { status: 404 });
+  }
+
+  return res.data;
+}
+
+export async function articleLoader({ params }: LoaderFunctionArgs) {
+  const id = params.id;
+
+  if (!id) {
+    throw new Response("Missing channelId", { status: 400 });
+  }
+
+  const res = await fetchArticle(id);
 
   if (!res.ok) {
     throw new Response("Channel not found", { status: 404 });

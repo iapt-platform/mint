@@ -18,9 +18,7 @@ const Widget = () => {
         id={id}
         onArticleClick={(anthologyId, articleId, target) => {
           console.log("click", target);
-          navigate(
-            `/workspace/article/${articleId}?anthology=${anthologyId}&channel=${articleId}`
-          );
+          navigate(`/workspace/article/${articleId}?anthology=${anthologyId}`);
         }}
       />
     </>

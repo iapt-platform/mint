@@ -2,6 +2,16 @@ import { GraphQLError } from "graphql";
 
 import { get as get_token } from "./reducers/session";
 
+export class HttpError extends Error {
+  constructor(
+    public status: number,
+    message?: string
+  ) {
+    super(message ?? `HTTP ${status}`);
+    this.name = "HttpError";
+  }
+}
+
 export const upload = () => {
   return {
     Authorization: `Bearer ${get_token()}`,
@@ -22,6 +32,19 @@ export const options = (method: string): RequestInit => {
 
 export const get = async <R>(path: string): Promise<R> => {
   const response = await fetch(path, options("GET"));
+
+  if (!response.ok) {
+    // 尝试读取后端返回的错误信息
+    let message: string | undefined;
+    try {
+      const body = await response.json();
+      message = body?.message ?? body?.error;
+    } catch {
+      // 忽略，body 可能不是 JSON
+    }
+    throw new HttpError(response.status, message);
+  }
+
   const res: R = await response.json();
   return res;
 };

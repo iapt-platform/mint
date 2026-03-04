@@ -23,6 +23,7 @@ import {
   fetchAnthology,
   type IAnthologyDataResponse,
 } from "../../../api/Article";
+import { HttpError } from "../../../request";
 
 interface UseAnthologyResult {
   data: IAnthologyDataResponse | null;
@@ -58,9 +59,15 @@ export const useAnthology = (id?: string): UseAnthologyResult => {
         }
 
         setData(res.data);
-      } catch (err) {
+      } catch (e) {
+        console.error("anthology fetch", e);
+
         if (active) {
-          setErrorCode(err as number);
+          if (e instanceof HttpError) {
+            setErrorCode(e.status); // 422 / 429 / 500 / 502 …
+          } else {
+            setErrorCode(0); // 用 0 表示网络层错误
+          }
         }
       } finally {
         if (active) setLoading(false);

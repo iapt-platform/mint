@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Modal } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import type {
@@ -21,6 +21,7 @@ interface IWidget {
   hideInteractive?: boolean;
   hideTitle?: boolean;
   isSubWindow?: boolean;
+  headerExtra?: React.ReactNode;
   onArticleChange?: (type: ArticleType, id: string, target?: TTarget) => void;
   onArticleEdit?: (value: IArticleDataResponse) => void;
   onLoad?: (data: IArticleDataResponse) => void;
@@ -29,12 +30,13 @@ interface IWidget {
     e: React.MouseEvent<HTMLElement, MouseEvent>
   ) => void;
 }
-const TypeArticleWidget = ({
+const TypeArticle = ({
   channelId,
   parentChannels,
   articleId,
   anthologyId,
   mode = "read",
+  headerExtra,
   active = false,
   hideInteractive = false,
   hideTitle = false,
@@ -46,6 +48,7 @@ const TypeArticleWidget = ({
   const [edit, setEdit] = useState(false);
   return (
     <div>
+      {headerExtra}
       {edit ? (
         <ArticleEdit
           anthologyId={anthologyId ? anthologyId : undefined}
@@ -97,4 +100,4 @@ const TypeArticleWidget = ({
   );
 };
 
-export default TypeArticleWidget;
+export default TypeArticle;

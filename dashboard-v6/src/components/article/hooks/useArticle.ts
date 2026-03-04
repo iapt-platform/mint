@@ -39,6 +39,7 @@ import type {
   IArticleDataResponse,
   IFetchArticleParams,
 } from "../../../api/Article";
+import { HttpError } from "../../../request";
 
 interface IUseArticleReturn {
   data: IArticleDataResponse | null;
@@ -90,9 +91,15 @@ export const useArticle = (
 
         setData(res.data);
       } catch (e) {
+        console.error("article fetch", e);
         if (!active) return;
-        setErrorCode(e as number);
-        setErrorMessage("Unknown error");
+        if (e instanceof HttpError) {
+          setErrorCode(e.status); // 422 / 429 / 500 / 502 …
+          setErrorMessage(e.message);
+        } else {
+          setErrorCode(0); // 用 0 表示网络层错误
+          setErrorMessage("Network error");
+        }
       } finally {
         if (active) setLoading(false);
       }

@@ -1,13 +1,7 @@
-import { useEffect, useState } from "react";
+import type React from "react";
 import { Divider, Space, Tag } from "antd";
 
-import { get } from "../../request";
-import type {
-  ArticleMode,
-  ArticleType,
-  IArticleNavData,
-  IArticleNavResponse,
-} from "../../api/Article";
+import type { ArticleMode, ArticleType } from "../../api/Article";
 
 import "./article.css";
 
@@ -20,7 +14,7 @@ import PaliText from "../general/PaliText";
 import type { IFirstAnthology } from "./components/ArticleLayout";
 import ArticleSkeleton from "./components/ArticleSkeleton";
 import ArticleLayout from "./components/ArticleLayout";
-import NavigateButton from "./components/NavigateButton";
+import ArticleNavigation from "./components/ArticleNavigation";
 import TocPath from "../tipitaka/TocPath";
 import { useArticle } from "./hooks/useArticle";
 
@@ -41,6 +35,7 @@ interface IWidget {
   ) => void;
   onEdit?: () => void;
 }
+
 const ArticleReader = ({
   articleId,
   channelId,
@@ -53,12 +48,12 @@ const ArticleReader = ({
   onAnthologySelect,
   onEdit,
 }: IWidget) => {
-  const [nav, setNav] = useState<IArticleNavData>();
   const srcDataMode = mode === "edit" || mode === "wbw" ? "edit" : "read";
 
   const { data, loading, errorCode, refresh } = useArticle(articleId, {
     mode: srcDataMode,
     channelIds: channelId ? channelId?.split("_") : [],
+    anthologyId: anthologyId,
   });
 
   const articleData = data;
@@ -72,21 +67,6 @@ const ArticleReader = ({
     articleHtml = [""];
   }
 
-  useEffect(() => {
-    const url = `/v2/nav-article/${articleId}_${anthologyId}`;
-    console.info("api request", url);
-    get<IArticleNavResponse>(url)
-      .then((json) => {
-        console.debug("api response", json);
-        if (json.ok) {
-          setNav(json.data);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  }, [anthologyId, articleId]);
-
   let anthology: IFirstAnthology | undefined;
   if (articleData?.anthology_count && articleData.anthology_first) {
     anthology = {
@@ -97,20 +77,6 @@ const ArticleReader = ({
   }
 
   const title = articleData?.title_text ?? articleData?.title;
-
-  let endOfChapter = false;
-  if (nav?.curr && nav?.next) {
-    if (nav?.curr?.level > nav?.next?.level) {
-      endOfChapter = true;
-    }
-  }
-
-  let topOfChapter = false;
-  if (nav?.curr && nav?.prev) {
-    if (nav?.curr?.level > nav?.prev?.level) {
-      topOfChapter = true;
-    }
-  }
 
   return (
     <div>
@@ -201,38 +167,11 @@ const ArticleReader = ({
             }}
           />
           <Divider />
-          <NavigateButton
-            prevTitle={nav?.prev?.title}
-            nextTitle={nav?.next?.title}
-            topOfChapter={topOfChapter}
-            endOfChapter={endOfChapter}
+          <ArticleNavigation
+            articleId={articleId}
+            anthologyId={anthologyId}
             path={articleData?.path}
-            onNext={() => {
-              if (onArticleChange && nav?.next?.article_id) {
-                onArticleChange("article", nav?.next?.article_id);
-              }
-            }}
-            onPrev={() => {
-              if (onArticleChange && nav?.prev?.article_id) {
-                onArticleChange("article", nav?.prev?.article_id);
-              }
-            }}
-            onPathChange={(key: string) => {
-              if (typeof onArticleChange !== "undefined") {
-                const node = articleData?.path?.find(
-                  (value) => value.key === key
-                );
-                if (node) {
-                  let newType: ArticleType = "article";
-                  if (node.level === 0) {
-                    newType = "anthology";
-                  }
-                  if (node.key) {
-                    onArticleChange(newType, node.key, "_self");
-                  }
-                }
-              }
-            }}
+            onArticleChange={onArticleChange}
           />
           {hideInteractive ? <></> : <></>}
         </>

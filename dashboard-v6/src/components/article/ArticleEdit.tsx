@@ -57,7 +57,7 @@ interface IWidget {
   onSubmit?: (data: IArticleDataResponse) => void;
 }
 
-const ArticleEditWidget = ({
+const ArticleEdit = ({
   studioName,
   articleId,
   anthologyId,
@@ -149,7 +149,7 @@ const ArticleEditWidget = ({
             to_tpl: values.to_tpl,
             anthology_id: anthologyId,
           };
-          const url = `/v2/article/${articleId}`;
+          const url = `/api/v2/article/${articleId}`;
           console.info("save url", url, request);
           put<IArticleDataRequest, IArticleResponse>(url, request)
             .then((res) => {
@@ -172,7 +172,7 @@ const ArticleEditWidget = ({
             });
         }}
         request={async () => {
-          const url = `/v2/article/${articleId}`;
+          const url = `/api/v2/article/${articleId}`;
           console.info("url", url);
           const res = await get<IArticleResponse>(url);
           console.log("article", res);
@@ -300,4 +300,4 @@ const ArticleEditWidget = ({
   );
 };
 
-export default ArticleEditWidget;
+export default ArticleEdit;

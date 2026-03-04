@@ -3,11 +3,10 @@ import { useIntl } from "react-intl";
 import { TeamOutlined } from "@ant-design/icons";
 import { Button, Space } from "antd";
 
-import { ArticleTplModal } from "../template/Builder/ArticleTpl";
 import ShareModal from "../share/ShareModal";
-import { EResType } from "../share/Share";
-import AddToAnthology from "./AddToAnthology";
-import Builder from "../template/Builder/Builder";
+import TplBuilder from "../tpl-builder/TplBuilder";
+import AddToAnthology from "../anthology/AddToAnthology";
+import { EResType } from "../share/utils";
 
 interface IWidget {
   studioName?: string;
@@ -22,7 +21,7 @@ const ArticleEditToolsWidget = ({
   const intl = useIntl();
   return (
     <Space>
-      <Builder trigger={<Button type="link">{"<t>"}</Button>} />
+      <TplBuilder trigger={<Button type="link">{"<t>"}</Button>} />
       {articleId ? (
         <AddToAnthology
           trigger={<Button type="link">加入文集</Button>}
@@ -46,9 +45,9 @@ const ArticleEditToolsWidget = ({
       <Link to={`/article/article/${articleId}`} target="_blank">
         {intl.formatMessage({ id: "buttons.open.in.tab" })}
       </Link>
-      <ArticleTplModal
+      <TplBuilder
         title={title}
-        type="article"
+        tpl="article"
         articleId={articleId}
         trigger={<Button type="link">获取模版</Button>}
       />

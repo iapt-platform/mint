@@ -7,6 +7,7 @@ import type {
   ArticleType,
   IArticleDataResponse,
 } from "../../api/Article";
+import TypeArticle from "./TypeArticle";
 const { Text } = Typography;
 
 interface IWidget {
@@ -25,12 +26,10 @@ interface IWidget {
   onArticleEdit?: (value: IArticleDataResponse) => void;
 }
 
-const ArticleDrawerWidget = ({
+const ArticleDrawer = ({
   trigger,
   title,
   type,
-  book,
-  para,
   channelId,
   articleId,
   mode,
@@ -43,9 +42,11 @@ const ArticleDrawerWidget = ({
   useEffect(() => {
     setOpenDrawer(open);
   }, [open]);
+
   useEffect(() => {
     setDrawerTitle(title);
   }, [title]);
+
   const showDrawer = () => {
     setOpenDrawer(true);
   };
@@ -61,11 +62,9 @@ const ArticleDrawerWidget = ({
   };
 
   const getUrl = (openMode?: string): string => {
-    let url = `/article/${type}/${articleId}?mode=`;
+    let url = `/workspace/${type}/${articleId}?mode=`;
     url += openMode ? openMode : mode ? mode : "read";
     url += channelId ? `&channel=${channelId}` : "";
-    url += book ? `&book=${book}` : "";
-    url += para ? `&par=${para}` : "";
     return url;
   };
 
@@ -95,18 +94,17 @@ const ArticleDrawerWidget = ({
         extra={
           <Space>
             <Button>
-              <Link to={getUrl()}>在单页面中打开</Link>
-            </Button>
-            <Button>
-              <Link to={getUrl("edit")}>翻译模式</Link>
+              <Link to={getUrl()} target="_blank">
+                在新标签页打开
+              </Link>
             </Button>
           </Space>
         }
       >
-        <>mock</>
+        <TypeArticle articleId={articleId} />
       </Drawer>
     </>
   );
 };
 
-export default ArticleDrawerWidget;
+export default ArticleDrawer;

@@ -40,6 +40,7 @@ import { EResType } from "../share/utils";
 import TplBuilder from "../tpl-builder/TplBuilder";
 import AddToAnthology from "../anthology/AddToAnthology";
 import StatusBadge from "../general/StatusBadge";
+import ArticleDrawer from "./ArticleDrawer";
 
 const { Text } = Typography;
 
@@ -95,6 +96,8 @@ const ArticleList = ({
   onPageChange,
 }: IWidget) => {
   const intl = useIntl(); //i18n
+  const [openDrawer, setOpenOpenDrawer] = useState(false);
+  const [currArticleId, setCurrArticleId] = useState<string>();
   const [openCreate, setOpenCreate] = useState(false);
   const [anthologyId, setAnthologyId] = useState<string>();
   const [myNumber, setMyNumber] = useState<number>(0);
@@ -234,8 +237,11 @@ const ArticleList = ({
                       onClick={(
                         event: React.MouseEvent<HTMLElement, MouseEvent>
                       ) => {
-                        if (typeof onSelect !== "undefined") {
+                        if (onSelect) {
                           onSelect(row.id, row.title, event);
+                        } else {
+                          setOpenOpenDrawer(true);
+                          setCurrArticleId(row.id);
                         }
                       }}
                     >
@@ -588,6 +594,16 @@ const ArticleList = ({
         resName={transferName}
         open={transferOpen}
         onOpenChange={(visible: boolean) => setTransferOpen(visible)}
+      />
+
+      <ArticleDrawer
+        articleId={currArticleId}
+        type="article"
+        open={openDrawer}
+        onClose={() => {
+          setCurrArticleId(undefined);
+          setOpenOpenDrawer(false);
+        }}
       />
     </>
   );

@@ -4,7 +4,7 @@ import { RouterProvider } from "react-router/dom";
 import { channelLoader } from "./api/Channel";
 import { testRoutes } from "./routes/testRoutes";
 import { buildRouteConfig } from "./routes/buildRoutes";
-import { anthologyLoader } from "./api/Article";
+import { anthologyLoader, articleLoader } from "./api/Article";
 
 const RootLayout = lazy(() => import("./layouts/Root"));
 const AnonymousLayout = lazy(() => import("./layouts/anonymous"));
@@ -44,9 +44,15 @@ const WorkspaceAnthologyList = lazy(
 const WorkspaceAnthologyShow = lazy(
   () => import("./pages/workspace/anthology/show")
 );
+const WorkspaceAnthologyEdit = lazy(
+  () => import("./pages/workspace/anthology/edit")
+);
 
 // 文章
 const WorkspaceArticleList = lazy(() => import("./pages/workspace/article"));
+const WorkspaceArticleShow = lazy(
+  () => import("./pages/workspace/article/show")
+);
 
 // ↓ 新增：TestLayout
 const TestLayout = lazy(() => import("./layouts/test"));
@@ -113,12 +119,21 @@ const router = createBrowserRouter(
                 },
                 {
                   path: ":id",
-                  Component: WorkspaceAnthologyShow,
                   loader: anthologyLoader,
                   handle: {
                     crumb: (match: { data: { title: string } }) =>
                       match.data.title,
                   },
+                  children: [
+                    { index: true, Component: WorkspaceAnthologyShow },
+                    {
+                      path: "edit",
+                      handle: {
+                        crumb: "edit",
+                      },
+                      Component: WorkspaceAnthologyEdit,
+                    },
+                  ],
                 },
               ],
             },
@@ -135,7 +150,12 @@ const router = createBrowserRouter(
                 },
                 {
                   path: ":id",
-                  Component: WorkspaceAnthologyShow,
+                  Component: WorkspaceArticleShow,
+                  loader: articleLoader,
+                  handle: {
+                    crumb: (match: { data: { title: string } }) =>
+                      match.data.title,
+                  },
                 },
               ],
             },

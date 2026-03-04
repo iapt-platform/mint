@@ -1,12 +1,11 @@
 import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
-import { useNavigate, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import ArticleList from "../../../components/article/ArticleList";
 
 const Widget = () => {
   const user = useAppSelector(currentUser);
   const studioName = user?.realName;
-  const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -43,9 +42,6 @@ const Widget = () => {
         onTabChange={handleTabChange}
         onPageChange={handlePageChange}
         studioName={studioName}
-        onSelect={(id) => {
-          navigate(`/workspace/article/${id}`);
-        }}
       />
     </>
   );

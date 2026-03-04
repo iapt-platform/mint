@@ -168,6 +168,15 @@ const EditableTreeWidget = ({
     tocGetTreeData(initValue ?? [])
   );
 
+  const [prevInitValue, setPrevInitValue] = useState<
+    ListNodeData[] | undefined
+  >(undefined);
+
+  if (!isControlled && initValue !== undefined && initValue !== prevInitValue) {
+    setPrevInitValue(initValue);
+    setInternalGData(tocGetTreeData(initValue));
+  }
+
   // 用 state 存上一次的 prop 值，用于在 render 阶段对比变化
   // 这是 React 官方文档推荐的派生 state 模式
   // https://react.dev/reference/react/useState#storing-information-from-previous-renders
