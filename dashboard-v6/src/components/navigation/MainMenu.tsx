@@ -130,18 +130,20 @@ const items: MenuItem[] = [
   },
 
   {
-    key: "/workspace/articles/",
+    key: "/workspace/articles",
     icon: <DocumentIcon />,
     label: "文章",
     children: [
       {
-        key: "/workspace/articles",
+        key: "/workspace/article",
         label: "全部文章",
+        activeId: "workspace.article",
         icon: <FileOutlined />,
       },
       {
         key: "/workspace/anthology",
         label: "文集",
+        activeId: "workspace.anthology",
         icon: <FolderOutlined />,
       },
     ],

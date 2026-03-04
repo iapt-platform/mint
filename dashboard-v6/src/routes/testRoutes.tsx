@@ -19,6 +19,10 @@ const TypePaliTest = lazy(() => import("../components/article/TypePaliTest"));
 const SplitLayoutTest = lazy(
   () => import("../components/general/SplitLayout/SplitLayoutTest")
 );
+
+const ArticleReader = lazy(
+  () => import("../components/article/ArticleReaderTest")
+);
 // 你可以继续添加更多测试组件
 // const TestButtonDemo = lazy(() => import("../components/button/ButtonDemo"));
 
@@ -70,6 +74,11 @@ export const testRoutes: TestRouteObject[] = [
         path: "TypePaliTest",
         label: "TypePaliTest",
         Component: TypePaliTest,
+      },
+      {
+        path: "ArticleReader",
+        label: "ArticleReader",
+        Component: ArticleReader,
       },
     ],
   },

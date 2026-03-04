@@ -1,13 +1,10 @@
-import type { ArticleMode, ArticleType } from "./Article";
-import AnthologyDetail from "./AnthologyDetail";
 import "./article.css";
-import { useState, useMemo } from "react";
-import ErrorResult from "../general/ErrorResult";
-import ArticleSkeleton from "./ArticleSkeleton";
+
+import type { ArticleMode } from "../../api/Article";
+import AnthologyDetail from "../anthology/AnthologyDetail";
 
 interface IWidget {
-  type?: ArticleType;
-  articleId?: string;
+  id?: string;
   mode?: ArticleMode | null;
   channelId?: string | null;
   onArticleChange?: (
@@ -16,55 +13,21 @@ interface IWidget {
     target: string,
     extra?: { anthologyId?: string }
   ) => void;
-  onFinal?: () => void;
-  onLoad?: () => void;
-  onTitle?: (title: string) => void;
 }
 
-const TypeAnthologyWidget = ({
-  channelId,
-  articleId,
-  onArticleChange,
-  onTitle,
-}: IWidget) => {
-  const [loading, setLoading] = useState(false);
-  const [errorCode, setErrorCode] = useState<number | null>(null);
-
-  /** ✅ 避免每次 render 都 split */
-  const channels = useMemo(
-    () => (channelId ? channelId.split("_") : undefined),
-    [channelId]
-  );
+const TypeAnthologyWidget = ({ channelId, id, onArticleChange }: IWidget) => {
+  const channels = channelId ? channelId.split("_") : undefined;
 
   return (
-    <div>
-      {loading && <ArticleSkeleton />}
-
-      {!loading && errorCode && <ErrorResult code={errorCode} />}
-
-      {!errorCode && (
-        <AnthologyDetail
-          visible={!loading}
-          channels={channels}
-          aid={articleId}
-          onArticleClick={(anthologyId, articleId, target) => {
-            onArticleChange?.("article", articleId, target, {
-              anthologyId,
-            });
-          }}
-          onLoading={setLoading}
-          onError={(error: unknown) => {
-            console.error(error);
-            //TODO get real error code
-            setErrorCode(404);
-            //setErrorCode(message); //old code
-          }}
-          onTitle={(value) => {
-            onTitle?.(value);
-          }}
-        />
-      )}
-    </div>
+    <AnthologyDetail
+      channels={channels}
+      id={id}
+      onArticleClick={(anthologyId, articleId, target) => {
+        onArticleChange?.("article", articleId, target, {
+          anthologyId,
+        });
+      }}
+    />
   );
 };
 

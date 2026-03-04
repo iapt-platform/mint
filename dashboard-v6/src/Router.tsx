@@ -4,6 +4,7 @@ import { RouterProvider } from "react-router/dom";
 import { channelLoader } from "./api/Channel";
 import { testRoutes } from "./routes/testRoutes";
 import { buildRouteConfig } from "./routes/buildRoutes";
+import { anthologyLoader } from "./api/Article";
 
 const RootLayout = lazy(() => import("./layouts/Root"));
 const AnonymousLayout = lazy(() => import("./layouts/anonymous"));
@@ -36,10 +37,16 @@ const WorkspaceTermEdit = lazy(() => import("./pages/workspace/term/edit"));
 const WorkspaceEditChapter = lazy(
   () => import("./pages/workspace/editor/chapter")
 );
-
+// 文集
 const WorkspaceAnthologyList = lazy(
-  () => import("./pages/workspace/anthology/anthology")
+  () => import("./pages/workspace/anthology")
 );
+const WorkspaceAnthologyShow = lazy(
+  () => import("./pages/workspace/anthology/show")
+);
+
+// 文章
+const WorkspaceArticleList = lazy(() => import("./pages/workspace/article"));
 
 // ↓ 新增：TestLayout
 const TestLayout = lazy(() => import("./layouts/test"));
@@ -95,8 +102,42 @@ const router = createBrowserRouter(
             },
             {
               path: "anthology",
-              Component: WorkspaceAnthologyList,
-              handle: { id: "workspace.anthology", crumb: "anthology" },
+              handle: {
+                id: "workspace.anthology",
+                crumb: "anthology",
+              },
+              children: [
+                {
+                  index: true,
+                  Component: WorkspaceAnthologyList,
+                },
+                {
+                  path: ":id",
+                  Component: WorkspaceAnthologyShow,
+                  loader: anthologyLoader,
+                  handle: {
+                    crumb: (match: { data: { title: string } }) =>
+                      match.data.title,
+                  },
+                },
+              ],
+            },
+            {
+              path: "article",
+              handle: {
+                id: "workspace.article",
+                crumb: "article",
+              },
+              children: [
+                {
+                  index: true,
+                  Component: WorkspaceArticleList,
+                },
+                {
+                  path: ":id",
+                  Component: WorkspaceAnthologyShow,
+                },
+              ],
             },
             {
               path: "tipitaka",

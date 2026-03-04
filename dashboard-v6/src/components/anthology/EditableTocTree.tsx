@@ -28,14 +28,14 @@ import ArticleDrawer from "../article/ArticleDrawer";
 interface IWidget {
   anthologyId?: string;
   studioName?: string;
-  myStudioName?: string;
-  anthology?: IAnthologyDataResponse;
+  editorStudioName?: string;
+  anthology?: IAnthologyDataResponse | null;
 }
-const EditableTocTreeWidget = ({
+const EditableTocTree = ({
   anthologyId,
   anthology,
   studioName,
-  myStudioName,
+  editorStudioName,
 }: IWidget) => {
   const [tocData, setTocData] = useState<ListNodeData[]>([]);
   const [addArticle, setAddArticle] = useState<TreeNodeData>();
@@ -109,7 +109,7 @@ const EditableTocTreeWidget = ({
         addOnArticle={addArticle}
         addFileButton={
           <ArticleListModal
-            studioName={myStudioName}
+            studioName={editorStudioName}
             trigger={<Button icon={<FolderOpenOutlined />}>添加</Button>}
             multiple={false}
             onSelect={(id: string, title: string) => {
@@ -213,4 +213,4 @@ const EditableTocTreeWidget = ({
   );
 };
 
-export default EditableTocTreeWidget;
+export default EditableTocTree;

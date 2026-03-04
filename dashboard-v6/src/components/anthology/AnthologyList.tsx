@@ -47,6 +47,12 @@ interface IWidget {
   showCreate?: boolean;
   showOption?: boolean;
   onTitleClick?: (id: string) => void;
+  // 受控参数（可选），不传则组件内部自治
+  tab?: string;
+  page?: number;
+  pageSize?: number;
+  onTabChange?: (tab: string) => void;
+  onPageChange?: (page: number, pageSize: number) => void;
 }
 const AnthologyListWidget = ({
   title,
@@ -54,18 +60,28 @@ const AnthologyListWidget = ({
   showCreate = true,
   showOption = true,
   onTitleClick,
+  tab,
+  page,
+  pageSize,
+  onTabChange,
+  onPageChange,
 }: IWidget) => {
   const intl = useIntl();
   const [openCreate, setOpenCreate] = useState(false);
 
-  const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
+  // 受控/非受控：外部传入则用外部值，否则用内部 state
+  const [internalTab, setInternalTab] = useState<string>("my");
+  const [internalPage, setInternalPage] = useState<number>(1);
+  const [internalPageSize, setInternalPageSize] = useState<number>(10);
+
+  const currentTab = tab !== undefined ? tab : internalTab;
+  const currentPage = page !== undefined ? page : internalPage;
+  const currentPageSize = pageSize !== undefined ? pageSize : internalPageSize;
+
   const [myNumber, setMyNumber] = useState<number>(0);
   const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
 
   useEffect(() => {
-    /**
-     * 获取各种课程的数量
-     */
     const url = `/api/v2/anthology-my-number?studio=${studioName}`;
     console.log("url", url);
     get<IResNumberResponse>(url).then((json) => {
@@ -75,6 +91,27 @@ const AnthologyListWidget = ({
       }
     });
   }, [studioName]);
+
+  const handleTabChange = (key: string) => {
+    console.log("show course", key);
+    // 切 tab 时重置页码到第1页（由 key 变化触发 ProTable 重新挂载来实现）
+    if (onTabChange) {
+      onTabChange(key);
+    } else {
+      setInternalTab(key);
+      setInternalPage(1); // 非受控模式下手动重置
+    }
+    // 注意：不需要 ref.current?.reload()，params 变化会自动触发
+  };
+
+  const handlePageChange = (newPage: number, newPageSize: number) => {
+    if (onPageChange) {
+      onPageChange(newPage, newPageSize);
+    } else {
+      setInternalPage(newPage);
+      setInternalPageSize(newPageSize);
+    }
+  };
 
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
@@ -136,6 +173,11 @@ const AnthologyListWidget = ({
       <ProTable<IItem>
         headerTitle={title}
         actionRef={ref}
+        // key 变化时强制重新挂载，使 defaultCurrent 重新生效
+        // tab 切换或 pageSize 改变时都会重置到第1页
+        key={`${currentTab}-${currentPageSize}`}
+        // params 变化会自动触发 request，用于将 tab 传递给 request 函数
+        params={{ tab: currentTab }}
         columns={[
           {
             title: intl.formatMessage({
@@ -282,11 +324,14 @@ const AnthologyListWidget = ({
         ]}
         request={async (params = {}, sorter, filter) => {
           console.log(params, sorter, filter);
-          let url = `/api/v2/anthology?view=studio&view2=${activeKey}&name=${studioName}`;
+          // tab 从 params 读取（由 ProTable 的 params prop 注入）
+          // current 和 pageSize 由 ProTable 内部管理，直接从 params 读
+          const tab = params.tab ?? currentTab;
+          let url = `/api/v2/anthology?view=studio&view2=${tab}&name=${studioName}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
-            (params.pageSize ? params.pageSize : 20);
-          url += `&limit=${params.pageSize}&offset=${offset}`;
+            (params.pageSize ? params.pageSize : currentPageSize);
+          url += `&limit=${params.pageSize ?? currentPageSize}&offset=${offset}`;
           url += params.keyword ? "&search=" + params.keyword : "";
 
           url += getSorterUrl(sorter);
@@ -314,9 +359,19 @@ const AnthologyListWidget = ({
         rowKey="id"
         bordered
         pagination={{
+          // 用 defaultCurrent / defaultPageSize（非受控）避免与 ProTable 内部状态冲突
+          // F5 重入时从 URL 读到的 currentPage 作为初始值正确生效
+          defaultCurrent: currentPage,
+          defaultPageSize: currentPageSize,
           showQuickJumper: true,
           showSizeChanger: true,
-          pageSize: 10,
+        }}
+        // 用 table 级别的 onChange 捕获分页事件，只在用户操作时触发一次，不会循环
+        onChange={(pagination) => {
+          handlePageChange(
+            pagination.current ?? 1,
+            pagination.pageSize ?? currentPageSize
+          );
         }}
         search={false}
         options={{
@@ -349,14 +404,17 @@ const AnthologyListWidget = ({
         ]}
         toolbar={{
           menu: {
-            activeKey,
+            activeKey: currentTab,
             items: [
               {
                 key: "my",
                 label: (
                   <span>
                     {intl.formatMessage({ id: "labels.this-studio" })}
-                    <StatusBadge count={myNumber} active={activeKey === "my"} />
+                    <StatusBadge
+                      count={myNumber}
+                      active={currentTab === "my"}
+                    />
                   </span>
                 ),
               },
@@ -367,16 +425,14 @@ const AnthologyListWidget = ({
                     {intl.formatMessage({ id: "labels.collaboration" })}
                     <StatusBadge
                       count={collaborationNumber}
-                      active={activeKey === "collaboration"}
+                      active={currentTab === "collaboration"}
                     />
                   </span>
                 ),
               },
             ],
             onChange(key) {
-              console.log("show course", key);
-              setActiveKey(key);
-              ref.current?.reload();
+              handleTabChange(key as string);
             },
           },
         }}

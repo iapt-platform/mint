@@ -1,12 +1,8 @@
 import { Drawer, Typography } from "antd";
 import React, { useEffect, useState } from "react";
-
-import ArticleView from "./ArticleView";
-import {
-  IArticleDataResponse,
-  IArticleResponse,
-} from "../../../src/api/Article";
-import { put } from "../../../src/request";
+import { put } from "../../request";
+import type { IArticleDataResponse, IArticleResponse } from "../../api/Article";
+import ArticleLayout from "./components/ArticleLayout";
 
 const { Paragraph } = Typography;
 
@@ -71,17 +67,14 @@ const ArticlePrevDrawerWidget = ({
       >
         <Paragraph type="danger">{errorMsg}</Paragraph>
         {articleData ? (
-          <ArticleView
-            id={articleData.uid}
+          <ArticleLayout
             title={articleData.title}
             subTitle={articleData.subtitle}
             summary={articleData.summary}
             content={articleData.content ? articleData.content : ""}
             html={articleData.html ? [articleData.html] : []}
-            path={articleData.path}
             created_at={articleData.created_at}
             updated_at={articleData.updated_at}
-            articleId={articleId}
           />
         ) : (
           <></>

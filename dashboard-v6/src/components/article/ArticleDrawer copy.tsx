@@ -2,11 +2,8 @@ import { Button, Drawer, Space, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 
-import type {
-  ArticleMode,
-  ArticleType,
-  IArticleDataResponse,
-} from "../../api/Article";
+import Article from "./Article";
+import type { IArticleDataResponse } from "../../api/Article";
 const { Text } = Typography;
 
 interface IWidget {
@@ -33,10 +30,12 @@ const ArticleDrawerWidget = ({
   para,
   channelId,
   articleId,
+  anthologyId,
   mode,
   open,
   onClose,
   onTitleChange,
+  onArticleEdit,
 }: IWidget) => {
   const [openDrawer, setOpenDrawer] = useState(open);
   const [drawerTitle, setDrawerTitle] = useState(title);
@@ -87,7 +86,7 @@ const ArticleDrawerWidget = ({
             {drawerTitle}
           </Text>
         }
-        size={1000}
+        width={1000}
         placement="right"
         onClose={onDrawerClose}
         open={openDrawer}
@@ -103,7 +102,22 @@ const ArticleDrawerWidget = ({
           </Space>
         }
       >
-        <>mock</>
+        <Article
+          active={true}
+          type={type as ArticleType}
+          book={book}
+          para={para}
+          channelId={channelId}
+          articleId={articleId}
+          anthologyId={anthologyId}
+          mode={mode}
+          onArticleEdit={(value: IArticleDataResponse) => {
+            setDrawerTitle(value.title_text);
+            if (typeof onArticleEdit !== "undefined") {
+              onArticleEdit(value);
+            }
+          }}
+        />
       </Drawer>
     </>
   );

@@ -1,4 +1,4 @@
-import { Button, Dropdown, Tooltip } from "antd";
+import { Button, Dropdown, Space } from "antd";
 import {
   ReloadOutlined,
   MoreOutlined,
@@ -9,17 +9,20 @@ import {
   InfoCircleOutlined,
 } from "@ant-design/icons";
 
-import { useAppSelector } from "../../hooks";
-import { currentUser } from "../../reducers/current-user";
-import AddToAnthology from "./AddToAnthology";
+import { useAppSelector } from "../../../hooks";
+import { currentUser } from "../../../reducers/current-user";
+
 import { useState } from "react";
-import { fullUrl } from "../../utils";
-import { ArticleTplModal } from "../template/Builder/ArticleTpl";
-import AnthologiesAtArticle from "./AnthologiesAtArticle";
-import type { TRole } from "../../api/Auth";
+import { fullUrl } from "../../../utils";
+
+import type { TRole } from "../../../api/Auth";
 import { useIntl } from "react-intl";
-import { TabIcon } from "../../assets/icon";
-import WordCount from "./WordCount";
+import { TabIcon } from "../../../assets/icon";
+
+import AnthologiesAtArticle from "../../anthology/AnthologiesAtArticle";
+import AddToAnthology from "../../anthology/AddToAnthology";
+import TplBuilder from "../../tpl-builder/TplBuilder";
+import WordCount from "../WordCount";
 
 interface IWidget {
   articleId?: string;
@@ -27,8 +30,12 @@ interface IWidget {
   title?: string;
   role?: TRole;
   isSubWindow?: boolean;
-  onEdit?: Function;
-  onAnthologySelect?: Function;
+  onRefresh?: () => void;
+  onEdit?: () => void;
+  onAnthologySelect?: (
+    id: string,
+    e: React.MouseEvent<HTMLElement, MouseEvent>
+  ) => void;
 }
 const TypeArticleReaderToolbarWidget = ({
   articleId,
@@ -36,6 +43,7 @@ const TypeArticleReaderToolbarWidget = ({
   title,
   role = "reader",
   isSubWindow = false,
+  onRefresh,
   onEdit,
   onAnthologySelect,
 }: IWidget) => {
@@ -59,36 +67,33 @@ const TypeArticleReaderToolbarWidget = ({
             <AnthologiesAtArticle
               articleId={articleId}
               anthologyId={anthologyId}
-              onClick={(
-                id: string,
-                e: React.MouseEvent<HTMLElement, MouseEvent>
-              ) => {
-                if (typeof onAnthologySelect !== "undefined") {
+              onClick={(id, e) => {
+                if (onAnthologySelect) {
                   onAnthologySelect(id, e);
                 }
               }}
             />
           )}
         </div>
-        <div>
-          <Tooltip
-            title={intl.formatMessage({
+        <Space>
+          {/** 编辑按钮 */}
+          <Button
+            type="primary"
+            disabled={!editable}
+            icon={<EditOutlined />}
+            onClick={() => {
+              if (typeof onEdit !== "undefined") {
+                onEdit();
+              }
+            }}
+          >
+            {intl.formatMessage({
               id: "buttons.edit",
             })}
-          >
-            <Button
-              type="link"
-              size="small"
-              disabled={!editable}
-              icon={<EditOutlined />}
-              onClick={() => {
-                if (typeof onEdit !== "undefined") {
-                  onEdit();
-                }
-              }}
-            />
-          </Tooltip>
-          <Button type="link" size="small" icon={<ReloadOutlined />} />
+          </Button>
+          {/** 刷新按钮 */}
+          <Button type="link" icon={<ReloadOutlined />} onClick={onRefresh} />
+          {/** 更多 */}
           <Dropdown
             menu={{
               items: [
@@ -155,10 +160,11 @@ const TypeArticleReaderToolbarWidget = ({
                   case "add_to_anthology":
                     setAddToAnthologyOpen(true);
                     break;
-                  case "fork":
+                  case "fork": {
                     const url = `/studio/${user?.realName}/article/create?parent=${articleId}`;
                     window.open(fullUrl(url), "_blank");
                     break;
+                  }
                   case "tpl":
                     setTplOpen(true);
                     break;
@@ -182,7 +188,7 @@ const TypeArticleReaderToolbarWidget = ({
               type="link"
             />
           </Dropdown>
-        </div>
+        </Space>
       </div>
       {articleId ? (
         <AddToAnthology
@@ -192,9 +198,9 @@ const TypeArticleReaderToolbarWidget = ({
         />
       ) : undefined}
 
-      <ArticleTplModal
+      <TplBuilder
         title={title}
-        type="article"
+        tpl="article"
         articleId={articleId}
         open={tplOpen}
         onClose={() => setTplOpen(false)}

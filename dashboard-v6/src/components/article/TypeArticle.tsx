@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { Modal } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
-import type { IArticleDataResponse } from "../../api/Article";
-import type { ArticleMode, ArticleType } from "./Article";
-import TypeArticleReader from "./TypeArticleReader";
+import type {
+  ArticleMode,
+  ArticleType,
+  IArticleDataResponse,
+} from "../../api/Article";
+
+import TypeArticleReader from "./ArticleReader";
 import ArticleEdit from "./ArticleEdit";
+import type { TTarget } from "../../types";
 
 interface IWidget {
-  type?: ArticleType;
   articleId?: string;
   mode?: ArticleMode | null;
   channelId?: string | null;
@@ -17,13 +21,15 @@ interface IWidget {
   hideInteractive?: boolean;
   hideTitle?: boolean;
   isSubWindow?: boolean;
-  onArticleChange?: Function;
-  onArticleEdit?: Function;
-  onLoad?: Function;
-  onAnthologySelect?: Function;
+  onArticleChange?: (type: ArticleType, id: string, target?: TTarget) => void;
+  onArticleEdit?: (value: IArticleDataResponse) => void;
+  onLoad?: (data: IArticleDataResponse) => void;
+  onAnthologySelect?: (
+    id: string,
+    e: React.MouseEvent<HTMLElement, MouseEvent>
+  ) => void;
 }
 const TypeArticleWidget = ({
-  type,
   channelId,
   parentChannels,
   articleId,
@@ -34,7 +40,6 @@ const TypeArticleWidget = ({
   hideTitle = false,
   isSubWindow = false,
   onArticleChange,
-  onLoad,
   onAnthologySelect,
   onArticleEdit,
 }: IWidget) => {
@@ -66,7 +71,6 @@ const TypeArticleWidget = ({
       ) : (
         <TypeArticleReader
           isSubWindow={isSubWindow}
-          type={type}
           channelId={channelId}
           parentChannels={parentChannels}
           articleId={articleId}
@@ -76,11 +80,6 @@ const TypeArticleWidget = ({
           hideInteractive={hideInteractive}
           hideTitle={hideTitle}
           onArticleChange={onArticleChange}
-          onLoad={(data: IArticleDataResponse) => {
-            if (typeof onLoad !== "undefined") {
-              onLoad(data);
-            }
-          }}
           onAnthologySelect={(
             id: string,
             e: React.MouseEvent<HTMLElement, MouseEvent>
