@@ -241,6 +241,7 @@ const Widget = ({ onSearch, onRecent }: Props) => {
     navigate(key);
   };
 
+  //TODO 在这个组件打开search recent
   return (
     <Menu
       mode="inline"
