@@ -1,9 +1,16 @@
-import { FileOutlined, FolderOutlined } from "@ant-design/icons";
-import { Segmented, Tree, Typography } from "antd";
+import {
+  BugOutlined,
+  FileOutlined,
+  FolderOutlined,
+  SearchOutlined,
+  CommentOutlined,
+} from "@ant-design/icons";
+import { Input, Segmented, Tree, Typography } from "antd";
 import type { TreeDataNode } from "antd";
 import { useState, type ReactNode } from "react";
 import SplitLayout from "./SplitLayout";
 import { useSplitLayout } from "./SplitLayoutContext";
+import type { RightToolbarTab } from "./RightToolbar";
 
 // ─────────────────────────────────────────────
 // 模拟文件树数据
@@ -62,18 +69,6 @@ const treeData: TreeDataNode[] = [
       },
     ],
   },
-  {
-    title: "staging",
-    key: "staging",
-    icon: <FolderOutlined />,
-    children: [
-      {
-        title: "inventory.yml",
-        key: "staging/inventory.yml",
-        icon: <FileOutlined />,
-      },
-    ],
-  },
   { title: ".gitignore", key: ".gitignore", icon: <FileOutlined /> },
   { title: "ansible.cfg", key: "ansible.cfg", icon: <FileOutlined /> },
 ];
@@ -98,6 +93,90 @@ workers:
       CONCURRENCY: 4`;
 
 // ─────────────────────────────────────────────
+// 右边栏 tabs 配置
+// ─────────────────────────────────────────────
+
+const rightTabs: RightToolbarTab[] = [
+  { key: "chat", icon: <CommentOutlined />, label: "对话" },
+  { key: "search", icon: <SearchOutlined />, label: "搜索" },
+  { key: "debug", icon: <BugOutlined />, label: "调试" },
+];
+
+// ─────────────────────────────────────────────
+// 右边栏面板内容
+// ─────────────────────────────────────────────
+
+const rightPanels: Record<string, ReactNode> = {
+  chat: (
+    <div style={{ padding: 16 }}>
+      <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+        模拟对话面板
+      </Typography.Text>
+      <div
+        style={{
+          marginTop: 12,
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
+        }}
+      >
+        {[
+          "部署流程是什么？",
+          "如何回滚到上个版本？",
+          "worker 数量如何调整？",
+        ].map((q) => (
+          <div
+            key={q}
+            style={{
+              padding: "8px 12px",
+              background: "var(--ant-color-fill-quaternary, #f5f5f5)",
+              borderRadius: 6,
+              fontSize: 13,
+              cursor: "pointer",
+            }}
+          >
+            {q}
+          </div>
+        ))}
+      </div>
+    </div>
+  ),
+  search: (
+    <div style={{ padding: 16 }}>
+      <Input.Search placeholder="搜索文件内容..." size="small" />
+      <div style={{ marginTop: 12 }}>
+        <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+          搜索结果将显示在此处
+        </Typography.Text>
+      </div>
+    </div>
+  ),
+  debug: (
+    <div style={{ padding: 16 }}>
+      <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+        调试信息
+      </Typography.Text>
+      <pre
+        style={{
+          marginTop: 8,
+          fontSize: 12,
+          background: "var(--ant-color-fill-quaternary, #f5f5f5)",
+          borderRadius: 6,
+          padding: 12,
+          overflow: "auto",
+        }}
+      >
+        {JSON.stringify(
+          { env: "production", workers: 3, status: "running" },
+          null,
+          2
+        )}
+      </pre>
+    </div>
+  ),
+};
+
+// ─────────────────────────────────────────────
 // 共用样式
 // ─────────────────────────────────────────────
 
@@ -109,15 +188,6 @@ const headerStyle: React.CSSProperties = {
   borderBottom: "1px solid var(--ant-color-split, #f0f0f0)",
   minHeight: 40,
   flexShrink: 0,
-};
-
-const preStyle: React.CSSProperties = {
-  background: "var(--ant-color-fill-quaternary, #f5f5f5)",
-  borderRadius: 6,
-  padding: 16,
-  fontSize: 13,
-  lineHeight: 1.7,
-  overflow: "auto",
 };
 
 // ─────────────────────────────────────────────
@@ -136,8 +206,7 @@ function MockSidebar() {
 }
 
 // ─────────────────────────────────────────────
-// 方案 A：MockContentA
-// expandButton 由外部（render props）注入，组件本身无框架依赖
+// 方案 A：expandButton 由外部 render props 注入
 // ─────────────────────────────────────────────
 
 interface MockContentAProps {
@@ -170,15 +239,25 @@ function MockContentA({ headerExtra }: MockContentAProps) {
           Last commit: <strong>add multi ai-translate worker support</strong> ·
           11 months ago
         </Typography.Paragraph>
-        <pre style={preStyle}>{fileContent}</pre>
+        <pre
+          style={{
+            background: "var(--ant-color-fill-quaternary,#f5f5f5)",
+            borderRadius: 6,
+            padding: 16,
+            fontSize: 13,
+            lineHeight: 1.7,
+            overflow: "auto",
+          }}
+        >
+          {fileContent}
+        </pre>
       </div>
     </div>
   );
 }
 
 // ─────────────────────────────────────────────
-// 方案 B：MockContentB
-// 自己调用 useSplitLayout() 取 expandButton，无需外部注入
+// 方案 B：自己调用 useSplitLayout() 取 expandButton
 // ─────────────────────────────────────────────
 
 function MockContentB() {
@@ -209,7 +288,18 @@ function MockContentB() {
           Last commit: <strong>add multi ai-translate worker support</strong> ·
           11 months ago
         </Typography.Paragraph>
-        <pre style={preStyle}>{fileContent}</pre>
+        <pre
+          style={{
+            background: "var(--ant-color-fill-quaternary,#f5f5f5)",
+            borderRadius: 6,
+            padding: 16,
+            fontSize: 13,
+            lineHeight: 1.7,
+            overflow: "auto",
+          }}
+        >
+          {fileContent}
+        </pre>
       </div>
     </div>
   );
@@ -233,7 +323,7 @@ export default function SplitLayoutTest() {
           alignItems: "center",
           gap: 12,
           padding: "8px 16px",
-          borderBottom: "1px solid var(--ant-color-split, #f0f0f0)",
+          borderBottom: "1px solid var(--ant-color-split,#f0f0f0)",
           flexShrink: 0,
         }}
       >
@@ -251,23 +341,27 @@ export default function SplitLayoutTest() {
         />
       </div>
 
-      {/* 方案 A：children 是函数，框架把 expandButton 作为参数传入 */}
+      {/* 方案 A */}
       {mode === "A" && (
         <SplitLayout
           key="mode-a"
           sidebarTitle="mint / deploy"
           sidebar={<MockSidebar />}
+          rightTabs={rightTabs}
+          rightPanels={rightPanels}
         >
           {({ expandButton }) => <MockContentA headerExtra={expandButton} />}
         </SplitLayout>
       )}
 
-      {/* 方案 B：children 是普通 ReactNode，MockContentB 自己取 expandButton */}
+      {/* 方案 B */}
       {mode === "B" && (
         <SplitLayout
           key="mode-b"
           sidebarTitle="mint / deploy"
           sidebar={<MockSidebar />}
+          rightTabs={rightTabs}
+          rightPanels={rightPanels}
         >
           <MockContentB />
         </SplitLayout>

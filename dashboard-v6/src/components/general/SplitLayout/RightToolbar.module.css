@@ -1,0 +1,46 @@
+/* ─────────────────────────────────────────────
+   RightToolbar.module.css
+   纵向图标工具栏，固定宽度，居中排列
+   ───────────────────────────────────────────── */
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  width: 40px;
+  flex-shrink: 0;
+  height: 100%;
+  border-left: 1px solid var(--ant-color-split, #f0f0f0);
+  background: var(--ant-color-bg-container, #fff);
+  box-sizing: border-box;
+}
+
+.tabBtn {
+  width: 28px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px !important;
+  color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.45)) !important;
+  font-size: 16px;
+  padding: 0 !important;
+  flex-shrink: 0;
+}
+
+.tabBtn:hover {
+  color: var(--ant-color-text, rgba(0, 0, 0, 0.88)) !important;
+  background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06)) !important;
+}
+
+.active {
+  color: var(--ant-color-primary, #1677ff) !important;
+  background: var(--ant-color-primary-bg, #e6f4ff) !important;
+}
+
+.active:hover {
+  color: var(--ant-color-primary, #1677ff) !important;
+  background: var(--ant-color-primary-bg, #e6f4ff) !important;
+}

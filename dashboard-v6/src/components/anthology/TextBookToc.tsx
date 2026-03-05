@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import AnthologyTocTree from "./AnthologyTocTree";
 import { get } from "../../request";
 import type { ICourseResponse } from "../../api/Course";
+import type { TTarget } from "../../types";
 
 interface IWidget {
   courseId?: string | null;
   channels?: string[];
-  onClick?: (article: string, target: string) => void;
+  onClick?: (article: string, target?: TTarget) => void;
 }
 const TextBookTocWidget = ({ courseId, channels, onClick }: IWidget) => {
   const [anthologyId, setAnthologyId] = useState<string>();
@@ -29,7 +30,7 @@ const TextBookTocWidget = ({ courseId, channels, onClick }: IWidget) => {
     <AnthologyTocTree
       anthologyId={anthologyId}
       channels={channels}
-      onClick={(_anthology: string, article: string, target: string) => {
+      onClick={(_anthology, article, target) => {
         console.debug("AnthologyTocTree onClick", article);
         if (typeof onClick !== "undefined") {
           onClick(article, target);

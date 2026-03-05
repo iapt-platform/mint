@@ -1,5 +1,5 @@
 import { Button, Layout, Space } from "antd";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet } from "react-router";
 import { useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import MainMenu from "../../components/navigation/MainMenu";
@@ -7,17 +7,11 @@ import SignInAvatar from "../../components/auth/SignInAvatar";
 import HeaderBreadcrumb from "../../components/navigation/HeaderBreadcrumb";
 import ThemeSwitch from "../../components/theme/ThemeSwitch";
 import { NetworkStatus } from "../../components/general/NetworkStatus";
-import RecentModal from "../../components/recent/RecentModal";
 
 const { Sider, Content } = Layout;
 const Widget = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [recentOpen, setRecentOpen] = useState(false);
-  const navigate = useNavigate();
 
-  const recent = () => {
-    setRecentOpen(true);
-  };
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
@@ -34,7 +28,7 @@ const Widget = () => {
             onClick={() => setCollapsed(!collapsed)}
           />
         </div>
-        <MainMenu onRecent={recent} />
+        <MainMenu />
       </Sider>
       <Layout>
         <div
@@ -57,17 +51,6 @@ const Widget = () => {
           <Outlet />
         </Content>
       </Layout>
-      <RecentModal
-        open={recentOpen}
-        onOpenChange={() => setRecentOpen(false)}
-        onSelect={(e, row) => {
-          if (e.ctrlKey || e.metaKey) {
-            window.open("");
-          } else {
-            navigate(`/workspace/${row.type}/${row.articleId}`);
-          }
-        }}
-      />
     </Layout>
   );
 };

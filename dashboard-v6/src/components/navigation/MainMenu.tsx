@@ -15,10 +15,11 @@ import {
   TaskIcon,
   TipitakaIcon,
 } from "../../assets/icon";
-import React from "react";
+import React, { useState } from "react";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 import { useRecent } from "../../hooks/useRecent.ts";
+import RecentModal from "../recent/RecentModal.tsx";
 
 /* ================= 类型 ================= */
 
@@ -31,11 +32,6 @@ interface MenuItem {
 
   /** ⭐ 用于高亮匹配 */
   activeId?: string | string[];
-}
-
-interface Props {
-  onSearch?: () => void;
-  onRecent?: () => void;
 }
 
 export interface RouteHandle {
@@ -99,18 +95,21 @@ function findOpenKeys(
 }
 
 /* ================= 组件 ================= */
-
-const Widget = ({ onSearch, onRecent }: Props) => {
+interface Props {
+  onSearch?: () => void;
+}
+const Widget = ({ onSearch }: Props) => {
   const navigate = useNavigate();
   const routeId = useCurrentRouteId();
   const currUser = useAppSelector(currentUser);
 
   const { data } = useRecent(currUser?.id, 5, 0);
+  const [recentOpen, setRecentOpen] = useState(false);
 
   const recentList: MenuItem[] = data
-    ? data?.data.rows.map((item) => {
+    ? data?.data.rows.map((item, id) => {
         return {
-          key: item.id,
+          key: `recent-${id}`,
           label: item.title,
         };
       })
@@ -235,22 +234,34 @@ const Widget = ({ onSearch, onRecent }: Props) => {
       onSearch?.();
       return;
     } else if (key === "/workspace/recent/list") {
-      onRecent?.();
+      setRecentOpen(true);
       return;
     }
     navigate(key);
   };
 
-  //TODO 在这个组件打开search recent
   return (
-    <Menu
-      mode="inline"
-      selectedKeys={selectedKey ? [selectedKey] : []}
-      defaultOpenKeys={openKeys}
-      items={items as MenuProps["items"]}
-      onClick={handleClick}
-      style={{ borderRight: 0 }}
-    />
+    <>
+      <Menu
+        mode="inline"
+        selectedKeys={selectedKey ? [selectedKey] : []}
+        defaultOpenKeys={openKeys}
+        items={items as MenuProps["items"]}
+        onClick={handleClick}
+        style={{ borderRight: 0 }}
+      />
+      <RecentModal
+        open={recentOpen}
+        onOpenChange={() => setRecentOpen(false)}
+        onSelect={(e, row) => {
+          if (e.ctrlKey || e.metaKey) {
+            window.open("");
+          } else {
+            navigate(`/workspace/${row.type}/${row.articleId}`);
+          }
+        }}
+      />
+    </>
   );
 };
 

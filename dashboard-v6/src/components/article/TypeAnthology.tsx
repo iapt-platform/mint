@@ -2,6 +2,7 @@ import "./article.css";
 
 import type { ArticleMode } from "../../api/Article";
 import AnthologyDetail from "../anthology/AnthologyReader";
+import type { TTarget } from "../../types";
 
 interface IWidget {
   id?: string;
@@ -10,7 +11,7 @@ interface IWidget {
   onArticleChange?: (
     type: string,
     articleId: string,
-    target: string,
+    target?: TTarget,
     extra?: { anthologyId?: string }
   ) => void;
 }

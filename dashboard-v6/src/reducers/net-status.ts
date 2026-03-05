@@ -1,6 +1,12 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
+export type EApiStatus =
+  | "pending" // 初始未检测
+  | "success" // 初始未检测
+  | "fail" // 检测中
+  | "loading"; // 网络 + API 均正常
+
 /**
  * 网络状态枚举
  *
@@ -11,7 +17,6 @@ import type { RootState } from "../store";
  * api_error   - 网络正常，但 API 返回非 2xx 响应
  * api_timeout - 网络正常，但 API 请求超时未响应
  *
- * @deprecated 旧值 "loading" | "success" | "fail" 已由上述状态替代
  */
 export type ENetStatus =
   | "idle" // 初始未检测
@@ -24,6 +29,7 @@ export type ENetStatus =
 export interface INetStatus {
   /** 当前状态 */
   status: ENetStatus;
+  api_status?: EApiStatus;
   /** 可选描述信息（错误原因、HTTP 状态码等） */
   message?: string;
   /** 上次成功检测时间（ISO string） */
@@ -41,6 +47,7 @@ interface IState {
 const initialState: IState = {
   status: {
     status: "idle",
+    api_status: "pending",
   },
 };
 

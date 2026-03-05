@@ -1,7 +1,6 @@
 import type { IntlShape } from "react-intl";
 import type { ArticleMode, TContentType } from "./Article";
-import store from "../store";
-import { statusChange } from "../reducers/net-status";
+
 import { get, put } from "../request";
 import { message } from "antd";
 import { toISentence } from "../components/sentence/utils";
@@ -154,7 +153,8 @@ export const sentSave = async (
   ok?: (res: ISentence) => void,
   finish?: () => void
 ): Promise<ISentenceData | null> => {
-  store.dispatch(statusChange({ status: "loading" }));
+  //FIXME
+  //store.dispatch(statusChange({ status: "loading" }));
   const id = `${sent.book}_${sent.para}_${sent.wordStart}_${sent.wordEnd}_${sent.channel.id}`;
   const url = `/v2/sentence/${id}?mode=edit&html=true`;
   console.info("SentWbwEdit url", url);
@@ -177,22 +177,28 @@ export const sentSave = async (
         const newData: ISentence = toISentence(res.data);
         ok(newData);
       }
-
+      /** 
+       * FIXME 
       store.dispatch(
         statusChange({
           status: "success",
           message: intl.formatMessage({ id: "flashes.success" }),
         })
       );
+      */
       return res.data;
     } else {
       message.error(res.message);
-      store.dispatch(
+      /**
+       * FIXME
+             store.dispatch(
         statusChange({
           status: "fail",
           message: res.message,
         })
       );
+       */
+
       return null;
     }
   } catch (e) {
