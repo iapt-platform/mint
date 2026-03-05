@@ -16,6 +16,9 @@ import {
   TipitakaIcon,
 } from "../../assets/icon";
 import React from "react";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
+import { useRecent } from "../../hooks/useRecent.ts";
 
 /* ================= 类型 ================= */
 
@@ -32,6 +35,7 @@ interface MenuItem {
 
 interface Props {
   onSearch?: () => void;
+  onRecent?: () => void;
 }
 
 export interface RouteHandle {
@@ -94,112 +98,130 @@ function findOpenKeys(
   return [];
 }
 
-/* ================= 菜单配置 ================= */
-
-const items: MenuItem[] = [
-  {
-    key: "search",
-    icon: <SearchOutlined />,
-    label: "搜索",
-  },
-  {
-    key: "/workspace",
-    icon: <HomeOutlined />,
-    label: "主页",
-    activeId: "workspace.home",
-  },
-  {
-    key: "/workspace/ai",
-    icon: <RobotIcon />,
-    label: "AI",
-    activeId: "workspace.ai",
-  },
-  {
-    key: "/workspace/tipitaka",
-    icon: <TipitakaIcon />,
-    label: "巴利三藏",
-    activeId: "workspace.tipitaka",
-  },
-
-  { type: "divider", key: "d1" },
-
-  {
-    key: "/workspace/recent",
-    icon: <FieldTimeOutlined />,
-    label: "最近打开",
-  },
-
-  {
-    key: "/workspace/articles",
-    icon: <DocumentIcon />,
-    label: "文章",
-    children: [
-      {
-        key: "/workspace/article",
-        label: "全部文章",
-        activeId: "workspace.article",
-        icon: <FileOutlined />,
-      },
-      {
-        key: "/workspace/anthology",
-        label: "文集",
-        activeId: "workspace.anthology",
-        icon: <FolderOutlined />,
-      },
-    ],
-  },
-
-  {
-    key: "/workspace/channel",
-    icon: <ChannelIcon />,
-    label: "频道",
-    activeId: "workspace.channel",
-  },
-
-  {
-    key: "/workspace/term",
-    icon: <ChannelIcon />,
-    label: "Term",
-    activeId: "workspace.term",
-  },
-
-  {
-    key: "/workspace/course",
-    icon: <CourseOutLinedIcon />,
-    label: "Course",
-  },
-
-  {
-    key: "/workspace/task",
-    icon: <TaskIcon />,
-    label: "Task",
-    activeId: "workspace.task",
-    children: [
-      {
-        key: "/workspace/task/pending",
-        label: "Pending",
-        activeId: "workspace.task.pending",
-      },
-      {
-        key: "/workspace/task/to-do-list",
-        label: "To-Do List",
-        activeId: "workspace.task.todo",
-      },
-      {
-        key: "/workspace/task/hell",
-        label: "Task Hell",
-        activeId: "workspace.task.hell",
-      },
-    ],
-  },
-];
-
 /* ================= 组件 ================= */
 
-const Widget = ({ onSearch }: Props) => {
+const Widget = ({ onSearch, onRecent }: Props) => {
   const navigate = useNavigate();
   const routeId = useCurrentRouteId();
+  const currUser = useAppSelector(currentUser);
 
+  const { data } = useRecent(currUser?.id, 5, 0);
+
+  const recentList: MenuItem[] = data
+    ? data?.data.rows.map((item) => {
+        return {
+          key: item.id,
+          label: item.title,
+        };
+      })
+    : [];
+
+  /* ================= 菜单配置 ================= */
+
+  const items: MenuItem[] = [
+    {
+      key: "search",
+      icon: <SearchOutlined />,
+      label: "搜索",
+    },
+    {
+      key: "/workspace",
+      icon: <HomeOutlined />,
+      label: "主页",
+      activeId: "workspace.home",
+    },
+    {
+      key: "/workspace/ai",
+      icon: <RobotIcon />,
+      label: "AI",
+      activeId: "workspace.ai",
+    },
+    {
+      key: "/workspace/tipitaka",
+      icon: <TipitakaIcon />,
+      label: "巴利三藏",
+      activeId: "workspace.tipitaka",
+    },
+
+    { type: "divider", key: "d1" },
+
+    {
+      key: "/workspace/recent",
+      icon: <FieldTimeOutlined />,
+      label: "最近打开",
+      children: [
+        ...recentList,
+        {
+          key: "/workspace/recent/list",
+          label: "更多……",
+        },
+      ],
+    },
+
+    {
+      key: "/workspace/doc",
+      icon: <DocumentIcon />,
+      label: "文档",
+      children: [
+        {
+          key: "/workspace/article",
+          label: "文章",
+          activeId: "workspace.article",
+          icon: <FileOutlined />,
+        },
+        {
+          key: "/workspace/anthology",
+          label: "文集",
+          activeId: "workspace.anthology",
+          icon: <FolderOutlined />,
+        },
+      ],
+    },
+
+    {
+      key: "/workspace/channel",
+      icon: <ChannelIcon />,
+      label: "频道",
+      activeId: "workspace.channel",
+    },
+
+    {
+      key: "/workspace/term",
+      icon: <ChannelIcon />,
+      label: "Term",
+      activeId: "workspace.term",
+    },
+
+    {
+      key: "/workspace/course",
+      icon: <CourseOutLinedIcon />,
+      label: "Course",
+    },
+
+    {
+      key: "/workspace/task",
+      icon: <TaskIcon />,
+      label: "Task",
+      activeId: "workspace.task",
+      children: [
+        {
+          key: "/workspace/task/pending",
+          label: "Pending",
+          activeId: "workspace.task.pending",
+        },
+        {
+          key: "/workspace/task/to-do-list",
+          label: "To-Do List",
+          activeId: "workspace.task.todo",
+        },
+        {
+          key: "/workspace/task/hell",
+          label: "Task Hell",
+          activeId: "workspace.task.hell",
+        },
+      ],
+    },
+  ];
   console.log("nav", routeId);
   /** 当前选中 */
   const selectedKey = findSelectedKey(items, routeId);
@@ -211,6 +233,9 @@ const Widget = ({ onSearch }: Props) => {
   const handleClick: MenuProps["onClick"] = ({ key }) => {
     if (key === "search") {
       onSearch?.();
+      return;
+    } else if (key === "/workspace/recent/list") {
+      onRecent?.();
       return;
     }
     navigate(key);
