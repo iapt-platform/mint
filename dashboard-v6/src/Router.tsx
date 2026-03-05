@@ -118,7 +118,7 @@ const router = createBrowserRouter(
                   Component: WorkspaceAnthologyList,
                 },
                 {
-                  path: ":id",
+                  path: ":anthologyId",
                   loader: anthologyLoader,
                   handle: {
                     crumb: (match: { data: { title: string } }) =>
@@ -132,6 +132,10 @@ const router = createBrowserRouter(
                         crumb: "edit",
                       },
                       Component: WorkspaceAnthologyEdit,
+                    },
+                    {
+                      path: ":articleId",
+                      Component: WorkspaceArticleShow,
                     },
                   ],
                 },
@@ -149,7 +153,7 @@ const router = createBrowserRouter(
                   Component: WorkspaceArticleList,
                 },
                 {
-                  path: ":id",
+                  path: ":articleId",
                   Component: WorkspaceArticleShow,
                   loader: articleLoader,
                   handle: {

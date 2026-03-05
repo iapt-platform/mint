@@ -1,9 +1,9 @@
 import { useNavigate, useParams, useSearchParams } from "react-router";
 
-import AnthologyDetail from "../../../components/anthology/AnthologyDetail";
+import AnthologyReader from "../../../components/anthology/AnthologyReader";
 
 const Widget = () => {
-  const { id } = useParams(); //url 参数
+  const { anthologyId } = useParams(); //url 参数
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -13,12 +13,15 @@ const Widget = () => {
   return (
     <>
       <title>{"anthology-"}</title>
-      <AnthologyDetail
+      <AnthologyReader
         channels={channels}
-        id={id}
+        id={anthologyId}
         onArticleClick={(anthologyId, articleId, target) => {
           console.log("click", target);
-          navigate(`/workspace/article/${articleId}?anthology=${anthologyId}`);
+          navigate(`/workspace/anthology/${anthologyId}/${articleId}`);
+        }}
+        onEdit={() => {
+          navigate(`/workspace/anthology/${anthologyId}/edit`);
         }}
       />
     </>

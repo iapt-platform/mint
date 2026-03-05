@@ -4,15 +4,12 @@ import { get } from "../../request";
 import type { IArticleMapListResponse } from "../../api/Article";
 import type { ListNodeData } from "../article/components/EditableTree";
 import TocTree from "../article/components/TocTree";
+import type { TTarget } from "../../types";
 
 interface IWidget {
   anthologyId?: string;
   channels?: string[];
-  onClick?: (
-    anthologyId: string,
-    id: string,
-    target: "_blank" | "self"
-  ) => void;
+  onClick?: (anthologyId: string, id: string, target?: TTarget) => void;
   onArticleSelect?: (anthologyId: string, keys: string[]) => void;
 }
 const AnthologyTocTreeWidget = ({
@@ -72,7 +69,7 @@ const AnthologyTocTreeWidget = ({
         id: string,
         e: React.MouseEvent<HTMLSpanElement, MouseEvent>
       ) => {
-        const target = e.ctrlKey || e.metaKey ? "_blank" : "self";
+        const target = e.ctrlKey || e.metaKey ? "_blank" : "_self";
         if (
           typeof onClick !== "undefined" &&
           typeof anthologyId !== "undefined"

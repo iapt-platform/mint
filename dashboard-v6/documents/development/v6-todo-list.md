@@ -28,7 +28,7 @@
 - [ ] `/dict/list`=>`resources/dict`
 - [x] `/term/list`=>`workgroup/term`
 - [ ] `/article/list`=>`workgroup/article`
-- [ ] `/anthology/list`=>`workgroup/anthology`
+- [x] `/anthology/list`=>`workgroup/anthology`
 - [ ] `/attachment/list`=>`resources/attachment`
 - [ ] `/tags/list`=>`resources/tags`
 
@@ -36,7 +36,7 @@
 
 ### 4️⃣ Collaboration 模块
 
-- [ ] `/group/list`=>`collaboration/team-space`
+- [ ] `/group/list`=>`collaboration/team`
 - [ ] `/invite/list`=>`collaboration/invite`
 - [ ] `/transfer/list`=>`collaboration/transfer`
 

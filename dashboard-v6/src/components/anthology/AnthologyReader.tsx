@@ -1,22 +1,26 @@
-import { Divider, Typography } from "antd";
+import { Button, Divider, Space, Typography } from "antd";
+import { EditOutlined, ReloadOutlined } from "@ant-design/icons";
 
-import AnthologyTocTree from "../anthology/AnthologyTocTree";
+import AnthologyTocTree from "./AnthologyTocTree";
 import { useIntl } from "react-intl";
 import ArticleSkeleton from "../article/components/ArticleSkeleton";
 import ErrorResult from "../general/ErrorResult";
 import AnthologyInfo from "./components/AnthologyInfo";
 import { useAnthology } from "./hooks/useAnthology";
+import ArticleHeader from "../article/components/ArticleHeader";
+import type { TTarget } from "../../types";
 
 const { Title } = Typography;
 
 interface Props {
   id?: string;
   channels?: string[];
-  onArticleClick?: (anthologyId: string, id: string, target: string) => void;
+  onArticleClick?: (anthologyId: string, id: string, target?: TTarget) => void;
+  onEdit?: () => void;
 }
 
-const AnthologyDetailWidget = ({ id, channels, onArticleClick }: Props) => {
-  const { data, loading, errorCode } = useAnthology(id);
+const AnthologyReader = ({ id, channels, onArticleClick, onEdit }: Props) => {
+  const { data, loading, errorCode, refresh } = useAnthology(id);
   const intl = useIntl();
 
   return (
@@ -25,6 +29,20 @@ const AnthologyDetailWidget = ({ id, channels, onArticleClick }: Props) => {
       {!loading && errorCode && <ErrorResult code={errorCode} />}
       {!loading && !errorCode && (
         <>
+          <ArticleHeader
+            action={
+              <Space>
+                <Button type="primary" icon={<EditOutlined />} onClick={onEdit}>
+                  edit
+                </Button>
+                <Button
+                  type="link"
+                  icon={<ReloadOutlined />}
+                  onClick={refresh}
+                />
+              </Space>
+            }
+          />
           <AnthologyInfo data={data} />
           <Divider />
           <Title level={5}>
@@ -44,4 +62,4 @@ const AnthologyDetailWidget = ({ id, channels, onArticleClick }: Props) => {
   );
 };
 
-export default AnthologyDetailWidget;
+export default AnthologyReader;

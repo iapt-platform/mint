@@ -575,32 +575,32 @@ export const fetchAnthology = (id: string): Promise<IAnthologyResponse> => {
 };
 
 export async function anthologyLoader({ params }: LoaderFunctionArgs) {
-  const id = params.id;
+  const id = params.anthologyId;
 
   if (!id) {
-    throw new Response("Missing channelId", { status: 400 });
+    throw new Response("Missing anthologyId", { status: 400 });
   }
 
   const res = await fetchAnthology(id);
 
   if (!res.ok) {
-    throw new Response("Channel not found", { status: 404 });
+    throw new Response("anthology not found", { status: 404 });
   }
 
   return res.data;
 }
 
 export async function articleLoader({ params }: LoaderFunctionArgs) {
-  const id = params.id;
+  const id = params.articleId;
 
   if (!id) {
-    throw new Response("Missing channelId", { status: 400 });
+    throw new Response("Missing articleId", { status: 400 });
   }
 
   const res = await fetchArticle(id);
 
   if (!res.ok) {
-    throw new Response("Channel not found", { status: 404 });
+    throw new Response("article not found", { status: 404 });
   }
 
   return res.data;

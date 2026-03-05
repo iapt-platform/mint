@@ -1,7 +1,7 @@
 import "./article.css";
 
 import type { ArticleMode } from "../../api/Article";
-import AnthologyDetail from "../anthology/AnthologyDetail";
+import AnthologyDetail from "../anthology/AnthologyReader";
 
 interface IWidget {
   id?: string;
