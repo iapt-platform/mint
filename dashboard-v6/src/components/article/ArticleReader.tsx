@@ -17,6 +17,7 @@ import ArticleLayout from "./components/ArticleLayout";
 import ArticleNavigation from "./components/ArticleNavigation";
 import TocPath from "../tipitaka/TocPath";
 import { useArticle } from "./hooks/useArticle";
+import ArticleHeader from "./components/ArticleHeader";
 
 interface IWidget {
   articleId?: string;
@@ -28,6 +29,7 @@ interface IWidget {
   hideInteractive?: boolean;
   hideTitle?: boolean;
   isSubWindow?: boolean;
+  headerExtra?: React.ReactNode;
   onArticleChange?: (type: ArticleType, id: string, target?: TTarget) => void;
   onAnthologySelect?: (
     id: string,
@@ -44,6 +46,7 @@ const ArticleReader = ({
   hideInteractive = false,
   hideTitle = false,
   isSubWindow = false,
+  headerExtra,
   onArticleChange,
   onAnthologySelect,
   onEdit,
@@ -86,44 +89,55 @@ const ArticleReader = ({
         <ErrorResult code={errorCode} />
       ) : (
         <>
-          <TypeArticleReaderToolbar
-            title={title}
-            articleId={articleId}
-            anthologyId={anthologyId}
-            role={articleData?.role}
-            isSubWindow={isSubWindow}
-            onRefresh={refresh}
-            onEdit={() => {
-              if (typeof onEdit !== "undefined") {
-                onEdit();
-              }
-            }}
-            onAnthologySelect={(
-              id: string,
-              e: React.MouseEvent<HTMLElement, MouseEvent>
-            ) => {
-              if (typeof onAnthologySelect !== "undefined") {
-                onAnthologySelect(id, e);
-              }
-            }}
+          <ArticleHeader
+            header={
+              <Space>
+                {headerExtra}
+                <TocPath
+                  data={articleData?.path}
+                  channels={[]}
+                  onChange={(node, e) => {
+                    let newType: ArticleType = "article";
+                    if (node.level === 0) {
+                      newType = "anthology";
+                    }
+                    if (typeof onArticleChange !== "undefined") {
+                      if (node.key) {
+                        const newArticleId = node.key;
+                        const target =
+                          e.ctrlKey || e.metaKey ? "_blank" : "_self";
+                        onArticleChange(newType, newArticleId, target);
+                      }
+                    }
+                  }}
+                />
+              </Space>
+            }
+            action={
+              <TypeArticleReaderToolbar
+                title={title}
+                articleId={articleId}
+                anthologyId={anthologyId}
+                role={articleData?.role}
+                isSubWindow={isSubWindow}
+                onRefresh={refresh}
+                onEdit={() => {
+                  if (typeof onEdit !== "undefined") {
+                    onEdit();
+                  }
+                }}
+                onAnthologySelect={(
+                  id: string,
+                  e: React.MouseEvent<HTMLElement, MouseEvent>
+                ) => {
+                  if (typeof onAnthologySelect !== "undefined") {
+                    onAnthologySelect(id, e);
+                  }
+                }}
+              />
+            }
           />
-          <TocPath
-            data={articleData?.path}
-            channels={[]}
-            onChange={(node, e) => {
-              let newType: ArticleType = "article";
-              if (node.level === 0) {
-                newType = "anthology";
-              }
-              if (typeof onArticleChange !== "undefined") {
-                if (node.key) {
-                  const newArticleId = node.key;
-                  const target = e.ctrlKey || e.metaKey ? "_blank" : "_self";
-                  onArticleChange(newType, newArticleId, target);
-                }
-              }
-            }}
-          />
+
           <ArticleLayout
             title={title}
             subTitle={articleData?.subtitle}

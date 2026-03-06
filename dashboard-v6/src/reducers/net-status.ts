@@ -6,7 +6,13 @@ export type EApiStatus =
   | "success" // 初始未检测
   | "fail" // 检测中
   | "loading"; // 网络 + API 均正常
+export interface IApiStatus {
+  /** 当前状态 */
+  status: EApiStatus;
 
+  /** 可选描述信息（错误原因、HTTP 状态码等） */
+  message?: string;
+}
 /**
  * 网络状态枚举
  *
@@ -29,7 +35,7 @@ export type ENetStatus =
 export interface INetStatus {
   /** 当前状态 */
   status: ENetStatus;
-  api_status?: EApiStatus;
+
   /** 可选描述信息（错误原因、HTTP 状态码等） */
   message?: string;
   /** 上次成功检测时间（ISO string） */
@@ -42,12 +48,12 @@ export interface INetStatus {
 
 interface IState {
   status: INetStatus;
+  api_status?: IApiStatus;
 }
 
 const initialState: IState = {
   status: {
     status: "idle",
-    api_status: "pending",
   },
 };
 

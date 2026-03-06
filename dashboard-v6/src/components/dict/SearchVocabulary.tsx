@@ -1,5 +1,5 @@
 import { get } from "../../request";
-import type { IVocabularyListResponse } from "../../api/Dict";
+import type { IVocabularyListResponse } from "../../api/dict";
 import { useRef, useState } from "react";
 import { AutoComplete, Input, Space, Typography } from "antd";
 import { DictIcon } from "../../assets/icon";
@@ -16,10 +16,10 @@ interface IWidget {
   api?: string;
   compact?: boolean;
   onSearch?: (value: string, split?: boolean) => void;
-  onSplit?: (value: string | null) => void;
+  onSplit?: (value?: string) => void;
 }
 
-const SearchVocabularyWidget = ({
+const SearchVocabulary = ({
   value,
   api = "vocabulary",
   compact = false,
@@ -67,7 +67,7 @@ const SearchVocabularyWidget = ({
       onSplit?.(strFactors.replaceAll("-", "+"));
     } else {
       setFactors([]);
-      onSplit?.(null);
+      onSplit?.(undefined);
     }
   };
 
@@ -75,7 +75,7 @@ const SearchVocabularyWidget = ({
     stopLookup();
     if (value === "") return;
 
-    get<IVocabularyListResponse>(`/v2/${api}?view=key&key=${value}`)
+    get<IVocabularyListResponse>(`/api/v2/${api}?view=key&key=${value}`)
       .then((json) => {
         const words: ValueType[] = json.data.rows
           .map((item) => {
@@ -152,4 +152,4 @@ const SearchVocabularyWidget = ({
   );
 };
 
-export default SearchVocabularyWidget;
+export default SearchVocabulary;

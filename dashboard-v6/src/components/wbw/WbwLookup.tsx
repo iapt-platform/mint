@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useAppSelector } from "../../hooks";
 import { add, updateIndex, wordIndex } from "../../reducers/inline-dict";
 import { get } from "../../request";
-import type { IApiResponseDictList } from "../../api/Dict";
+import type { IApiResponseDictList } from "../../api/dict";
 import store from "../../store";
 
 interface IWidget {

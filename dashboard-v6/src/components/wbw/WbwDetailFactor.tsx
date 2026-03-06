@@ -9,7 +9,7 @@ import {
 } from "../../reducers/inline-dict";
 import { get } from "../../request";
 import store from "../../store";
-import type { IApiResponseDictList } from "../../api/Dict";
+import type { IApiResponseDictList } from "../../api/dict";
 
 import type { IWbw } from "../../types/wbw";
 import { getFactorsInDict } from "./utils";

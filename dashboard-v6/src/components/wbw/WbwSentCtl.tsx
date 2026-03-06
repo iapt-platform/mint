@@ -35,7 +35,7 @@ import type { ISentenceWbwListResponse } from "../../api/sentence";
 import type { IStudio } from "../../api/Auth";
 import { useWbwStreamProcessor } from "../../hooks/useWbwStreamProcessor";
 import { GetUserSetting } from "../setting/default";
-import type { IDictRequest } from "../../api/Dict";
+import type { IDictRequest } from "../../api/dict";
 import { UserWbwPost } from "../dict/utils";
 import type { IDeleteResponse } from "../../api/Group";
 import Studio from "../auth/Studio";

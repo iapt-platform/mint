@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LoadingOutlined, WarningOutlined } from "@ant-design/icons";
 
-import type { IPreferenceResponse } from "../../api/Dict";
+import type { IPreferenceResponse } from "../../api/dict";
 import { Space } from "antd";
 import WbwParent from "./WbwParent";
 import type { IWbw, TWbwDisplayMode } from "../../types/wbw";

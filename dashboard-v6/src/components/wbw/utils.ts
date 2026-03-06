@@ -1,6 +1,6 @@
 import type { IntlShape } from "react-intl";
 import type { MenuProps } from "antd";
-import type { IApiResponseDictData } from "../../api/Dict";
+import type { IApiResponseDictData } from "../../api/dict";
 import type { IWbw, TFieldName } from "../../types/wbw";
 
 export const caseInDict = (

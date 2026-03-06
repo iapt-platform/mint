@@ -1,3 +1,5 @@
+// dashboard-v6/src/api/Dict.ts
+
 import type { IStudio, IUser } from "./Auth";
 
 export interface IDict {
@@ -146,3 +148,68 @@ export interface IPreferenceResponse {
   message: string;
   data: IApiResponseDictData;
 }
+
+export interface IWordGrammar {
+  word: string;
+  type: string;
+  grammar: string;
+  parent: string;
+  factors: string;
+  confidence: number;
+}
+
+export interface IWordByDict {
+  dictname: string;
+  description?: string;
+  meta?: IDictInfo;
+  word?: string;
+  note?: string;
+  anchor: string;
+}
+export interface IDictInfo {
+  author: string;
+  publisher: string;
+  published?: string;
+  url: string;
+}
+
+export interface IWordCardData {
+  word: string;
+  factors: string;
+  parents: string;
+  case?: string[];
+  grammar: IWordGrammar[];
+  anchor: string;
+  dict: IWordByDict[];
+}
+
+export interface IDictWords {
+  pass: string;
+  words: IWordCardData[];
+}
+
+export interface IAnchorData {
+  href: string;
+  title: string;
+  children?: IAnchorData[];
+}
+
+export interface IDictContentData {
+  dictlist: IAnchorData[];
+  words: IDictWords[];
+  caselist: ICaseListData[];
+  time?: number;
+  count?: number;
+}
+export interface IApiDictContentData {
+  ok: boolean;
+  message: string;
+  data: IDictContentData;
+}
+
+import { get } from "../request";
+
+export const fetchDictByWord = (word: string): Promise<IApiDictContentData> => {
+  const url = `/api/v2/dict?word=${word}`;
+  return get<IApiDictContentData>(url);
+};

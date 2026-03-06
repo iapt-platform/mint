@@ -3,7 +3,7 @@ import { Space } from "antd";
 import { LoadingOutlined, WarningOutlined } from "@ant-design/icons";
 
 import WbwFactors from "./WbwFactors";
-import type { IPreferenceResponse } from "../../api/Dict";
+import type { IPreferenceResponse } from "../../api/dict";
 import type { IWbw, TWbwDisplayMode } from "../../types/wbw";
 
 interface IWidget {

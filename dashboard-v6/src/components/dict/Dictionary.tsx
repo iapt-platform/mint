@@ -1,0 +1,167 @@
+import { useCallback, useState } from "react";
+import { Layout, Affix, Col, Row } from "antd";
+
+import DictSearch from "./DictSearch";
+import SearchVocabulary from "./SearchVocabulary";
+import Compound from "./Compound";
+import TermShow from "../term/TermShow";
+
+const { Content } = Layout;
+
+interface IWidget {
+  word?: string;
+  compact?: boolean;
+  onSearch?: (word?: string) => void;
+}
+
+const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
+  const [split, setSplit] = useState<string>();
+  const [wordSearch, setWordSearch] = useState<string>();
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  const [dictType, setDictType] = useState("dict");
+  const [wordInput, setWordInput] = useState(word);
+  const [wordId, setWordId] = useState<string>();
+
+  // 用 state 记录上一次的 prop，渲染期派生的标准做法
+  const [prevWordProp, setPrevWordProp] = useState<string | undefined>(word);
+  const [prevSearch, setPrevSearch] = useState<string | undefined>(undefined);
+
+  const wordChange = useCallback((value?: string) => {
+    let currWord: string | undefined = "";
+    if (value?.includes(":")) {
+      const param = value.split(" ");
+      param.forEach((item) => {
+        const kv = item.split(":");
+        if (kv.length === 2) {
+          switch (kv[0]) {
+            case "type":
+              setDictType(kv[1]);
+              break;
+            case "word":
+              currWord = kv[1];
+              break;
+            case "id":
+              setWordId(kv[1]);
+              break;
+            default:
+              break;
+          }
+        }
+      });
+    } else {
+      setDictType("dict");
+      currWord = value?.toLowerCase();
+    }
+    document.getElementById("pcd_dict_top")?.scrollIntoView();
+    return currWord;
+  }, []);
+
+  // 渲染期派生：word prop 变化时同步更新 wordInput / wordSearch
+  if (word !== prevWordProp) {
+    setPrevWordProp(word);
+    setWordInput(word);
+
+    if (word !== prevSearch) {
+      setPrevSearch(word);
+      const currWord = word?.includes(":")
+        ? word // 复杂格式保持原值，wordChange 会在实际搜索时解析
+        : word?.toLowerCase();
+      setWordSearch(currWord);
+    }
+  }
+
+  const wordInputChange = useCallback(
+    (value: string | undefined) => {
+      setWordInput(value);
+      if (value === prevSearch) {
+        console.debug("same word, skip search", value);
+        return;
+      }
+      setPrevSearch(value);
+      const currWord = wordChange(value);
+      setWordSearch(currWord);
+    },
+    [wordChange, prevSearch]
+  );
+
+  const dictSearch = useCallback(
+    (value: string, isFactor?: boolean) => {
+      console.info("onSearch", value);
+      const currWord = wordChange(value);
+      if (typeof onSearch !== "undefined" && !isFactor) {
+        onSearch(currWord);
+      }
+      // 用户主动搜索不去重
+      setPrevSearch(value);
+      setWordSearch(currWord);
+    },
+    [wordChange, onSearch]
+  );
+
+  return (
+    <div ref={setContainer}>
+      <div id="pcd_dict_top"></div>
+      <Affix
+        offsetTop={0}
+        target={compact ? () => container : undefined}
+        className="dict_search_div"
+      >
+        <div
+          style={{
+            backgroundColor: "rgba(100,100,100,0.3)",
+            backdropFilter: "blur(5px)",
+          }}
+        >
+          <Row style={{ paddingTop: "0.5em", paddingBottom: "0.5em" }}>
+            {compact ? <></> : <Col flex="auto"></Col>}
+            <Col flex="560px">
+              <div style={{ display: "flex" }}>
+                <SearchVocabulary
+                  compact={compact}
+                  value={wordInput?.toLowerCase()}
+                  onSearch={dictSearch}
+                  onSplit={(word) => {
+                    console.log("onSplit", word);
+                    setSplit(word);
+                  }}
+                />
+              </div>
+            </Col>
+            {compact ? <></> : <Col flex="auto"></Col>}
+          </Row>
+        </div>
+      </Affix>
+      <Content style={{ minHeight: 700 }}>
+        <Row>
+          {compact ? <></> : <Col flex="auto"></Col>}
+          <Col flex="1260px">
+            {dictType === "dict" ? (
+              <div>
+                <Compound word={word} add={split} onSearch={dictSearch} />
+                <DictSearch word={wordSearch} compact={compact} />
+              </div>
+            ) : (
+              <TermShow
+                word={wordSearch}
+                wordId={wordId}
+                hideInput
+                onIdChange={(value: string) => {
+                  const newInput = `type:term id:${value}`;
+                  console.debug("term onIdChange setWordInput", newInput);
+                  if (typeof onSearch !== "undefined") {
+                    onSearch(newInput);
+                  } else {
+                    wordInputChange(newInput);
+                  }
+                }}
+              />
+            )}
+          </Col>
+          {compact ? <></> : <Col flex="auto"></Col>}
+        </Row>
+      </Content>
+    </div>
+  );
+};
+
+export default DictionaryWidget;

@@ -1,9 +1,11 @@
 import type {
   IDictRequest,
   IDictResponse,
+  IPreferenceRequest,
+  IPreferenceResponse,
   IUserDictCreate,
-} from "../../api/Dict";
-import { post } from "../../request";
+} from "../../api/dict";
+import { post, put } from "../../request";
 
 export const UserWbwPost = (data: IDictRequest[], view: string) => {
   let wordData: IDictRequest[] = data;
@@ -80,8 +82,22 @@ export const UserWbwPost = (data: IDictRequest[], view: string) => {
       wordData = [...wordData, ...factors];
     }
   });
-  return post<IUserDictCreate, IDictResponse>("/v2/userdict", {
+  return post<IUserDictCreate, IDictResponse>("/api/v2/userdict", {
     view: view,
     data: JSON.stringify(wordData),
   });
+};
+
+export const setValue = async (id: string, value: number) => {
+  const url = `/api/v2/dict-preference/${id}`;
+  const values: IPreferenceRequest = {
+    confidence: value,
+  };
+  console.debug("api request", url, values);
+
+  const result = await put<IPreferenceRequest, IPreferenceResponse>(
+    url,
+    values
+  );
+  return result;
 };

@@ -5,7 +5,7 @@ import { add, updateIndex, wordIndex } from "../../reducers/inline-dict";
 import { get } from "../../request";
 import store from "../../store";
 
-import type { IApiResponseDictList } from "../../api/Dict";
+import type { IApiResponseDictList } from "../../api/dict";
 import WbwCase from "./WbwCase";
 
 import WbwFactorMeaning from "./WbwFactorMeaning";

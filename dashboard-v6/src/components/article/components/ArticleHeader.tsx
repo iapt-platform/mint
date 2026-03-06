@@ -1,4 +1,5 @@
 import type React from "react";
+import styles from "../../general/SplitLayout/SplitLayout.module.css";
 
 interface IWidget {
   header?: React.ReactNode;
@@ -6,7 +7,10 @@ interface IWidget {
 }
 const ArticleHeader = ({ header, action }: IWidget) => {
   return (
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
+    <div
+      className={styles.sidebarHeader}
+      style={{ display: "flex", justifyContent: "space-between" }}
+    >
       <div>{header}</div>
       {/**action */}
       <div>{action}</div>

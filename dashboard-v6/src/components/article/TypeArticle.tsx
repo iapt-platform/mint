@@ -48,7 +48,6 @@ const TypeArticle = ({
   const [edit, setEdit] = useState(false);
   return (
     <div>
-      {headerExtra}
       {edit ? (
         <ArticleEdit
           anthologyId={anthologyId ? anthologyId : undefined}
@@ -82,6 +81,7 @@ const TypeArticle = ({
           active={active}
           hideInteractive={hideInteractive}
           hideTitle={hideTitle}
+          headerExtra={headerExtra}
           onArticleChange={onArticleChange}
           onAnthologySelect={(
             id: string,

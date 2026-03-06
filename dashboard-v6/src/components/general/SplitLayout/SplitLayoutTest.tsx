@@ -97,84 +97,89 @@ workers:
 // ─────────────────────────────────────────────
 
 const rightTabs: RightToolbarTab[] = [
-  { key: "chat", icon: <CommentOutlined />, label: "对话" },
-  { key: "search", icon: <SearchOutlined />, label: "搜索" },
-  { key: "debug", icon: <BugOutlined />, label: "调试" },
-];
-
-// ─────────────────────────────────────────────
-// 右边栏面板内容
-// ─────────────────────────────────────────────
-
-const rightPanels: Record<string, ReactNode> = {
-  chat: (
-    <div style={{ padding: 16 }}>
-      <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-        模拟对话面板
-      </Typography.Text>
-      <div
-        style={{
-          marginTop: 12,
-          display: "flex",
-          flexDirection: "column",
-          gap: 8,
-        }}
-      >
-        {[
-          "部署流程是什么？",
-          "如何回滚到上个版本？",
-          "worker 数量如何调整？",
-        ].map((q) => (
-          <div
-            key={q}
-            style={{
-              padding: "8px 12px",
-              background: "var(--ant-color-fill-quaternary, #f5f5f5)",
-              borderRadius: 6,
-              fontSize: 13,
-              cursor: "pointer",
-            }}
-          >
-            {q}
-          </div>
-        ))}
-      </div>
-    </div>
-  ),
-  search: (
-    <div style={{ padding: 16 }}>
-      <Input.Search placeholder="搜索文件内容..." size="small" />
-      <div style={{ marginTop: 12 }}>
+  {
+    key: "chat",
+    icon: <CommentOutlined />,
+    label: "对话",
+    content: (
+      <div style={{ padding: 16 }}>
         <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-          搜索结果将显示在此处
+          模拟对话面板
         </Typography.Text>
+        <div
+          style={{
+            marginTop: 12,
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+          }}
+        >
+          {[
+            "部署流程是什么？",
+            "如何回滚到上个版本？",
+            "worker 数量如何调整？",
+          ].map((q) => (
+            <div
+              key={q}
+              style={{
+                padding: "8px 12px",
+                background: "var(--ant-color-fill-quaternary, #f5f5f5)",
+                borderRadius: 6,
+                fontSize: 13,
+                cursor: "pointer",
+              }}
+            >
+              {q}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  ),
-  debug: (
-    <div style={{ padding: 16 }}>
-      <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-        调试信息
-      </Typography.Text>
-      <pre
-        style={{
-          marginTop: 8,
-          fontSize: 12,
-          background: "var(--ant-color-fill-quaternary, #f5f5f5)",
-          borderRadius: 6,
-          padding: 12,
-          overflow: "auto",
-        }}
-      >
-        {JSON.stringify(
-          { env: "production", workers: 3, status: "running" },
-          null,
-          2
-        )}
-      </pre>
-    </div>
-  ),
-};
+    ),
+  },
+  {
+    key: "search",
+    icon: <SearchOutlined />,
+    label: "搜索",
+    content: (
+      <div style={{ padding: 16 }}>
+        <Input.Search placeholder="搜索文件内容..." size="small" />
+        <div style={{ marginTop: 12 }}>
+          <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+            搜索结果将显示在此处
+          </Typography.Text>
+        </div>
+      </div>
+    ),
+  },
+  {
+    key: "debug",
+    icon: <BugOutlined />,
+    label: "调试",
+    content: (
+      <div style={{ padding: 16 }}>
+        <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+          调试信息
+        </Typography.Text>
+        <pre
+          style={{
+            marginTop: 8,
+            fontSize: 12,
+            background: "var(--ant-color-fill-quaternary, #f5f5f5)",
+            borderRadius: 6,
+            padding: 12,
+            overflow: "auto",
+          }}
+        >
+          {JSON.stringify(
+            { env: "production", workers: 3, status: "running" },
+            null,
+            2
+          )}
+        </pre>
+      </div>
+    ),
+  },
+];
 
 // ─────────────────────────────────────────────
 // 共用样式
@@ -348,7 +353,6 @@ export default function SplitLayoutTest() {
           sidebarTitle="mint / deploy"
           sidebar={<MockSidebar />}
           rightTabs={rightTabs}
-          rightPanels={rightPanels}
         >
           {({ expandButton }) => <MockContentA headerExtra={expandButton} />}
         </SplitLayout>
@@ -361,7 +365,6 @@ export default function SplitLayoutTest() {
           sidebarTitle="mint / deploy"
           sidebar={<MockSidebar />}
           rightTabs={rightTabs}
-          rightPanels={rightPanels}
         >
           <MockContentB />
         </SplitLayout>
