@@ -8,11 +8,10 @@ use App\Models\DictInfo;
 use App\Models\GroupMember;
 use Illuminate\Http\Request;
 use App\Tools\CaseMan;
-use Illuminate\Support\Facades\Log;
 use App\Http\Api\DictApi;
 use App\Http\Api\AuthApi;
 
-require_once __DIR__ . "/../../../public/app/dict/grm_abbr.php";
+require_once __DIR__ . "/../../Tools/grm_abbr.php";
 
 
 class DictController extends Controller
