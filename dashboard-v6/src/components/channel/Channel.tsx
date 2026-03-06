@@ -1,4 +1,4 @@
-import type { IChannel } from "../../../src/api/Channel";
+import type { IChannel } from "../../api/channel";
 
 const ChannelWidget = ({ name }: IChannel) => {
   return <span>{name}</span>;

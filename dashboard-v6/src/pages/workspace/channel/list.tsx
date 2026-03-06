@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 
 import ChannelTable from "../../../components/channel/ChannelTable";
-import type { IChannel } from "../../../api/Channel";
+import type { IChannel } from "../../../api/channel";
 import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
 

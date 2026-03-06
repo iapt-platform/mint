@@ -3,7 +3,7 @@ import { Typography } from "antd";
 import { LikeOutlined, EyeOutlined } from "@ant-design/icons";
 import { Tiny } from "@ant-design/plots";
 
-import type { IChannelApiData } from "../../api/Channel";
+import type { IChannelApiData } from "../../api/channel";
 import ChannelListItem from "../channel/ChannelListItem";
 import TimeShow from "../general/TimeShow";
 import { useIntl } from "react-intl";

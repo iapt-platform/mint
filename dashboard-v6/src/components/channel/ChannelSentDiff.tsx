@@ -14,7 +14,7 @@ import type {
 
 import store from "../../store";
 import { accept } from "../../reducers/accept-pr";
-import type { IChannel } from "../../api/Channel";
+import type { IChannel } from "../../api/channel";
 import { toISentence } from "../sentence/utils";
 
 const { Text } = Typography;

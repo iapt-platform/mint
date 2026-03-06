@@ -1,5 +1,5 @@
 import type { IUser } from "./Auth";
-import type { IChannel } from "./Channel";
+import type { IChannel } from "./channel";
 
 export interface INotificationPutResponse {
   ok: boolean;

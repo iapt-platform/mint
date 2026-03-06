@@ -13,6 +13,7 @@ import {
   DocumentIcon,
   RobotIcon,
   TaskIcon,
+  TermIcon,
   TipitakaIcon,
 } from "../../assets/icon";
 import React, { useState } from "react";
@@ -180,14 +181,14 @@ const Widget = ({ onSearch }: Props) => {
     {
       key: "/workspace/channel",
       icon: <ChannelIcon />,
-      label: "频道",
+      label: "版本",
       activeId: "workspace.channel",
     },
 
     {
       key: "/workspace/term",
-      icon: <ChannelIcon />,
-      label: "Term",
+      icon: <TermIcon />,
+      label: "术语",
       activeId: "workspace.term",
     },
 
@@ -200,7 +201,7 @@ const Widget = ({ onSearch }: Props) => {
     {
       key: "/workspace/task",
       icon: <TaskIcon />,
-      label: "Task",
+      label: "任务",
       activeId: "workspace.task",
       children: [
         {

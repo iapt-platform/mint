@@ -5,7 +5,7 @@ import { Alert, Button } from "antd";
 import ChannelPicker from "./ChannelPicker";
 import store from "../../store";
 import { openPanel } from "../../reducers/right-panel";
-import type { IChannel } from "../../api/Channel";
+import type { IChannel } from "../../api/channel";
 
 interface IWidget {
   channels?: string | null;

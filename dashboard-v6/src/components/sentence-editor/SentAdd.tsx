@@ -3,7 +3,7 @@ import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 
 import { useIntl } from "react-intl";
-import type { IChannel, TChannelType } from "../../api/Channel";
+import type { IChannel, TChannelType } from "../../api/channel";
 import ChannelTableModal from "../channel/ChannelTableModal";
 
 interface IWidget {

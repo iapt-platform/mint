@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import { channelLoader } from "./api/Channel";
+import { channelLoader } from "./api/channel";
 import { testRoutes } from "./routes/testRoutes";
 import { buildRouteConfig } from "./routes/buildRoutes";
 import { anthologyLoader, articleLoader } from "./api/Article";

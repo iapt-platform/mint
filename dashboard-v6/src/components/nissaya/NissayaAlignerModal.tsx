@@ -1,7 +1,7 @@
 import { Modal } from "antd";
 import NissayaAligner from "./NissayaAligner";
 import { useState, type JSX } from "react";
-import type { IChannel } from "../../api/Channel";
+import type { IChannel } from "../../api/channel";
 
 interface IWidget {
   trigger?: JSX.Element | string;

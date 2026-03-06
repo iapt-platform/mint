@@ -1,5 +1,5 @@
 import type { IStudio, IUser, TRole } from "./Auth";
-import type { IChannel } from "./Channel";
+import type { IChannel } from "./channel";
 import { get } from "../request";
 
 export interface ITerm {

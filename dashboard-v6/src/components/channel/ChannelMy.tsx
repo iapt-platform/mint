@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+// src/components/channel/ChannelMy.tsx
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useIntl } from "react-intl";
-import type { Key } from "antd/es/table/interface";
 import {
   Badge,
   Button,
@@ -14,6 +15,7 @@ import {
   Tooltip,
   Tree,
 } from "antd";
+import type { Key } from "antd/es/table/interface";
 import {
   GlobalOutlined,
   EditOutlined,
@@ -23,27 +25,20 @@ import {
   InfoCircleOutlined,
 } from "@ant-design/icons";
 
-import { get, post } from "../../request";
-import type {
-  IApiResponseChannelList,
-  IChannel,
-  ISentInChapterListResponse,
-} from "../../api/Channel";
-import type { IItem, IProgressRequest } from "./ChannelPickerTable";
 import { LockFillIcon, LockIcon } from "../../assets/icon";
 import StudioName from "../auth/Studio";
 import ProgressSvg from "./ProgressSvg";
-
 import CopyToModal from "./CopyToModal";
-
 import { ChannelInfoModal } from "./ChannelInfo";
-
 import type { ArticleType } from "../../api/Article";
-import { getSentIdInArticle } from "./utils";
 import TokenModal from "../token/TokenModal";
 import NissayaAlignerModal from "../nissaya/NissayaAlignerModal";
+import { useChannelProgress } from "./hooks/useChannelProgress";
+import type { IChannel, IChannelItem } from "../../api/channel";
 
 const { Search } = Input;
+
+// ─── 类型 ────────────────────────────────────────────────────────────────────
 
 interface IToken {
   channelId?: string;
@@ -54,7 +49,7 @@ interface IToken {
 interface ChannelTreeNode {
   key: string;
   title: string | React.ReactNode;
-  channel: IItem;
+  channel: IChannelItem;
   icon?: React.ReactNode;
   children?: ChannelTreeNode[];
 }
@@ -66,6 +61,55 @@ interface IWidget {
   style?: React.CSSProperties;
   onSelect?: (selected: IChannel[]) => void;
 }
+
+// ─── 纯函数：对频道列表排序 / 过滤，不依赖任何 state ────────────────────────
+
+function buildTreeData(
+  channelList: IChannelItem[],
+  selectedRowKeys: React.Key[],
+  owner: string,
+  search?: string
+): ChannelTreeNode[] {
+  let ordered: IChannelItem[];
+
+  if (owner === "my") {
+    ordered = channelList.filter((v) => v.role === "owner");
+  } else {
+    const selectedSet = new Set(selectedRowKeys.map(String));
+
+    const selected = channelList.filter((v) => selectedSet.has(v.uid));
+    const seen = new Set(selected.map((v) => v.uid));
+
+    const progressing = channelList.filter(
+      (v) => v.progress > 0 && !seen.has(v.uid)
+    );
+    progressing.forEach((v) => seen.add(v.uid));
+
+    const mine = channelList.filter(
+      (v) => v.role === "owner" && !seen.has(v.uid)
+    );
+    mine.forEach((v) => seen.add(v.uid));
+
+    const others = channelList.filter(
+      (v) => !seen.has(v.uid) && v.role !== "member"
+    );
+
+    ordered = [...selected, ...progressing, ...mine, ...others];
+  }
+
+  if (search) {
+    ordered = ordered.filter((v) => v.title.includes(search));
+  }
+
+  return ordered.map((item) => ({
+    key: item.uid,
+    title: item.title,
+    channel: item,
+  }));
+}
+
+// ─── 组件 ────────────────────────────────────────────────────────────────────
+
 const ChannelMy = ({
   type,
   articleId,
@@ -74,176 +118,232 @@ const ChannelMy = ({
   onSelect,
 }: IWidget) => {
   const intl = useIntl();
+  console.debug("ChannelMy render");
+  // ── 远程数据（hook 负责全部异步逻辑）──────────────────────────────────────
+  const { channels, sentencesId, sentenceCount, loading, refresh } =
+    useChannelProgress(type, articleId);
+
+  // ── 局部 UI 状态 ──────────────────────────────────────────────────────────
   const [selectedRowKeys, setSelectedRowKeys] =
     useState<React.Key[]>(selectedKeys);
-  const [treeData, setTreeData] = useState<ChannelTreeNode[]>();
   const [dirty, setDirty] = useState(false);
-  const [channels, setChannels] = useState<IItem[]>([]);
   const [owner, setOwner] = useState("all");
   const [search, setSearch] = useState<string>();
-  const [loading, setLoading] = useState(true);
+
+  // modal 状态
   const [copyChannel, setCopyChannel] = useState<IChannel>();
   const [nissayaOpen, setNissayaOpen] = useState(false);
-  const [copyOpen, setCopyOpen] = useState<boolean>(false);
-  const [infoOpen, setInfoOpen] = useState<boolean>(false);
-  const [statistic, setStatistic] = useState<IItem>();
-  const [sentenceCount, setSentenceCount] = useState<number>(0);
-  const [sentencesId, setSentencesId] = useState<string[]>();
-  const [token, SetToken] = useState<IToken>();
+  const [copyOpen, setCopyOpen] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [statistic, setStatistic] = useState<IChannelItem>();
+  const [token, setToken] = useState<IToken>();
   const [tokenOpen, setTokenOpen] = useState(false);
 
-  console.debug("ChannelMy render", type, articleId);
+  // ── selectedKeys prop 同步：用 JSON 序列化做稳定比较，避免数组引用变化触发循环 ──
+  // 父组件每次 render 传入新数组字面量（如 selectedKeys={[]}）时，
+  // 若直接放进 useEffect 依赖，引用每次都不同，会无限触发。
+  const selectedKeysKey = JSON.stringify(selectedKeys);
+  const selectedKeysRef = useRef(selectedKeys);
+  useEffect(() => {
+    selectedKeysRef.current = selectedKeys;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedKeysKey]);
 
-  //TODO remove useEffect
-  const loadChannel = useCallback(async (sentences: string[]) => {
-    setSentenceCount(sentences.length);
-    setLoading(true);
+  useEffect(() => {
+    setSelectedRowKeys(selectedKeysRef.current);
+  }, [selectedKeysKey]);
 
-    try {
-      const res = await post<IProgressRequest, IApiResponseChannelList>(
-        "/api/v2/channel-progress",
-        {
-          sentence: sentences,
-          owner: "all",
-        }
-      );
+  // ── 派生数据：useMemo 替代 useEffect + setState，不产生额外渲染轮次 ──────
+  const treeData = useMemo(
+    () => buildTreeData(channels, selectedRowKeys, owner, search),
+    [channels, selectedRowKeys, owner, search]
+  );
 
-      const items: IItem[] = res.data.rows
-        .filter((v) => !v.name.startsWith("_sys"))
-        .map((item, id) => {
-          const date = new Date(item.created_at);
+  // ── 回调 ──────────────────────────────────────────────────────────────────
 
-          let all = 0;
-          let finished = 0;
+  const handleConfirm = useCallback(() => {
+    if (!onSelect) return;
+    setDirty(false);
+    const selected: IChannel[] = selectedRowKeys.map((item) => ({
+      id: item.toString(),
+      name: treeData.find((v) => v.channel.uid === item)?.channel.title ?? "",
+    }));
+    onSelect(selected);
+  }, [onSelect, selectedRowKeys, treeData]);
 
-          item.final?.forEach((v) => {
-            all += v[0];
-            if (v[1]) finished += v[0];
-          });
-
-          return {
-            id,
-            uid: item.uid,
-            title: item.name,
-            summary: item.summary,
-            studio: item.studio,
-            shareType: "my",
-            role: item.role,
-            type: item.type,
-            publicity: item.status,
-            createdAt: date.getTime(),
-            final: item.final,
-            progress: all ? finished / all : 0,
-            content_created_at: item.content_created_at,
-            content_updated_at: item.content_updated_at,
-          };
-        });
-
-      setChannels(items);
-    } finally {
-      setLoading(false);
-    }
+  const handleCancel = useCallback(() => {
+    setSelectedRowKeys(selectedKeysRef.current);
+    setDirty(false);
   }, []);
 
-  const load = useCallback(async () => {
-    let sentList: string[] = [];
+  const handleCheck = useCallback(
+    (checked: Key[] | { checked: Key[]; halfChecked: Key[] }) => {
+      setDirty(true);
+      if (!Array.isArray(checked)) return;
 
-    if (type === "chapter") {
-      const id = articleId?.split("-");
-      if (id?.length === 2) {
-        const url = `/api/v2/sentences-in-chapter?book=${id[0]}&para=${id[1]}`;
+      if (checked.length > selectedRowKeys.length) {
+        const add = checked.filter(
+          (v) => !selectedRowKeys.includes(v.toString())
+        );
+        if (add.length > 0) {
+          setSelectedRowKeys((prev) => [...prev, add[0]]);
+        }
+      } else {
+        setSelectedRowKeys(selectedRowKeys.filter((v) => checked.includes(v)));
+      }
+    },
+    [selectedRowKeys]
+  );
 
-        try {
-          const res = await get<ISentInChapterListResponse>(url);
-          if (!res?.ok) return;
+  const handleNodeClick = useCallback(
+    (node: ChannelTreeNode) => {
+      setDirty(false);
+      onSelect?.([{ id: node.key, name: node.channel.title }]);
+    },
+    [onSelect]
+  );
 
-          sentList = res.data.rows.map(
-            (item) =>
-              `${item.book}-${item.paragraph}-${item.word_begin}-${item.word_end}`
+  // ── titleRender ───────────────────────────────────────────────────────────
+
+  const titleRender = useCallback(
+    (node: ChannelTreeNode) => {
+      let pIcon = <></>;
+      switch (node.channel.publicity) {
+        case 5:
+          pIcon = (
+            <Tooltip title={"私有不可公开"}>
+              <LockFillIcon />
+            </Tooltip>
           );
-        } catch (err) {
-          console.error(err);
-          return;
-        }
-      }
-    } else {
-      sentList = getSentIdInArticle();
-    }
-
-    setSentencesId(sentList);
-    await loadChannel(sentList);
-  }, [type, articleId, loadChannel]);
-
-  useEffect(() => {
-    load();
-  }, [load]);
-
-  useEffect(() => {
-    setSelectedRowKeys(selectedKeys);
-  }, [selectedKeys]);
-
-  useEffect(() => {
-    sortChannels(channels);
-  }, [channels, selectedRowKeys, owner]);
-
-  interface IChannelFilter {
-    key?: string;
-    owner?: string;
-    selectedRowKeys?: React.Key[];
-  }
-
-  const sortChannels = (channelList: IItem[], filter?: IChannelFilter) => {
-    const mOwner = filter?.owner ?? owner;
-    if (mOwner === "my") {
-      //我自己的
-      const myChannel = channelList.filter((value) => value.role === "owner");
-      const data = myChannel.map((item) => {
-        return { key: item.uid, title: item.title, channel: item };
-      });
-      setTreeData(data);
-    } else {
-      //当前被选择的
-      const selectedChannel: IItem[] = [];
-      const mSelectedRowKeys = filter?.selectedRowKeys ?? selectedRowKeys;
-      mSelectedRowKeys.forEach((channelId) => {
-        const channel = channelList.find((value) => value.uid === channelId);
-        if (channel) {
-          selectedChannel.push(channel);
-        }
-      });
-      let show = mSelectedRowKeys;
-      //有进度的
-      const progressing = channelList.filter(
-        (value) => value.progress > 0 && !show.includes(value.uid)
-      );
-      show = [...show, ...progressing.map((item) => item.uid)];
-      //我自己的
-      const myChannel = channelList.filter(
-        (value) => value.role === "owner" && !show.includes(value.uid)
-      );
-      show = [...show, ...myChannel.map((item) => item.uid)];
-      //其他的
-      const others = channelList.filter(
-        (value) => !show.includes(value.uid) && value.role !== "member"
-      );
-      let channelData = [
-        ...selectedChannel,
-        ...progressing,
-        ...myChannel,
-        ...others,
-      ];
-
-      const key = filter?.key ?? search;
-      if (key) {
-        channelData = channelData.filter((value) => value.title.includes(key));
+          break;
+        case 10:
+          pIcon = (
+            <Tooltip title={"私有"}>
+              <LockIcon />
+            </Tooltip>
+          );
+          break;
+        case 30:
+          pIcon = (
+            <Tooltip title={"公开"}>
+              <GlobalOutlined />
+            </Tooltip>
+          );
+          break;
       }
 
-      const data = channelData.map((item) => {
-        return { key: item.uid, title: item.title, channel: item };
-      });
-      setTreeData(data);
-    }
-  };
+      const badgeIndex = selectedRowKeys.findIndex(
+        (v) => v === node.channel.uid
+      );
+
+      return (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          {/* 左侧：频道信息 + 进度 */}
+          <div
+            style={{ width: "100%", borderRadius: 5, padding: "0 5px" }}
+            onClick={() => handleNodeClick(node)}
+          >
+            <div key="info" style={{ overflowX: "clip", display: "flex" }}>
+              <Space>
+                {pIcon}
+                {node.channel.role !== "member" ? <EditOutlined /> : undefined}
+              </Space>
+              <Button type="link">
+                <Space>
+                  <StudioName data={node.channel.studio} hideName />
+                  <>{node.channel.title}</>
+                  <Tag>
+                    {intl.formatMessage({
+                      id: `channel.type.${node.channel.type}.label`,
+                    })}
+                  </Tag>
+                </Space>
+              </Button>
+            </div>
+            <div key="progress">
+              <ProgressSvg data={node.channel.final} width={200} />
+            </div>
+          </div>
+
+          {/* 右侧：更多菜单 */}
+          <Badge count={dirty ? badgeIndex + 1 : 0}>
+            <div>
+              <Dropdown
+                trigger={["click"]}
+                menu={{
+                  items: [
+                    {
+                      key: "copy-to",
+                      label: intl.formatMessage({ id: "buttons.copy.to" }),
+                      icon: <CopyOutlined />,
+                    },
+                    {
+                      key: "import-nissaya",
+                      label: intl.formatMessage({ id: "buttons.import" }),
+                      icon: <CopyOutlined />,
+                    },
+                    {
+                      key: "statistic",
+                      label: intl.formatMessage({ id: "buttons.statistic" }),
+                      icon: <InfoCircleOutlined />,
+                    },
+                    {
+                      key: "token",
+                      label: intl.formatMessage({
+                        id: "buttons.access-token.get",
+                      }),
+                      icon: <InfoCircleOutlined />,
+                    },
+                  ],
+                  onClick: (e) => {
+                    const ch: IChannel = {
+                      id: node.channel.uid,
+                      name: node.channel.title,
+                      type: node.channel.type,
+                    };
+                    switch (e.key) {
+                      case "copy-to":
+                        setCopyChannel(ch);
+                        setCopyOpen(true);
+                        break;
+                      case "import-nissaya":
+                        setCopyChannel(ch);
+                        setNissayaOpen(true);
+                        break;
+                      case "statistic":
+                        setStatistic(node.channel);
+                        setInfoOpen(true);
+                        break;
+                      case "token":
+                        setToken({
+                          channelId: node.channel.uid,
+                          type: type as ArticleType,
+                          articleId,
+                        });
+                        setTokenOpen(true);
+                        break;
+                    }
+                  },
+                }}
+                placement="bottomRight"
+              >
+                <Button type="link" size="small" icon={<MoreOutlined />} />
+              </Dropdown>
+            </div>
+          </Badge>
+        </div>
+      );
+    },
+    [dirty, selectedRowKeys, handleNodeClick, intl, type, articleId]
+  );
+
+  // ── 渲染 ──────────────────────────────────────────────────────────────────
 
   return (
     <div style={style}>
@@ -252,6 +352,7 @@ const ChannelMy = ({
         open={tokenOpen}
         onClose={() => setTokenOpen(false)}
       />
+
       <Card
         size="small"
         title={
@@ -259,16 +360,14 @@ const ChannelMy = ({
             <Search
               placeholder="版本名称"
               onSearch={(value) => {
-                console.debug(value);
                 setSearch(value);
-                sortChannels(channels, { key: value });
               }}
               style={{ width: 120 }}
             />
             <Select
               defaultValue="all"
               style={{ width: 80 }}
-              bordered={false}
+              variant="borderless"
               options={[
                 {
                   value: "all",
@@ -279,57 +378,33 @@ const ChannelMy = ({
                   label: intl.formatMessage({ id: "buttons.channel.my" }),
                 },
               ]}
-              onSelect={(value: string) => {
-                setOwner(value);
-              }}
+              onSelect={(value: string) => setOwner(value)}
             />
           </Space>
         }
         extra={
-          <Space size={"small"}>
+          <Space size="small">
             <Button
               size="small"
               type="link"
               disabled={!dirty}
-              onClick={() => {
-                if (typeof onSelect !== "undefined") {
-                  setDirty(false);
-                  const selected: IChannel[] = selectedRowKeys.map((item) => {
-                    return {
-                      id: item.toString(),
-                      name:
-                        treeData?.find((value) => value.channel.uid === item)
-                          ?.channel.title ?? "",
-                    };
-                  });
-                  onSelect(selected);
-                }
-              }}
+              onClick={handleConfirm}
             >
-              {intl.formatMessage({
-                id: "buttons.ok",
-              })}
+              {intl.formatMessage({ id: "buttons.ok" })}
             </Button>
             <Button
               size="small"
               type="link"
               disabled={!dirty}
-              onClick={() => {
-                setSelectedRowKeys(selectedKeys);
-                setDirty(false);
-              }}
+              onClick={handleCancel}
             >
-              {intl.formatMessage({
-                id: "buttons.cancel",
-              })}
+              {intl.formatMessage({ id: "buttons.cancel" })}
             </Button>
             <Button
               type="link"
               size="small"
               icon={<ReloadOutlined />}
-              onClick={() => {
-                load();
-              }}
+              onClick={refresh}
             />
           </Space>
         }
@@ -344,196 +419,13 @@ const ChannelMy = ({
             checkable
             treeData={treeData}
             blockNode
-            onCheck={(
-              checked: Key[] | { checked: Key[]; halfChecked: Key[] }
-            ) => {
-              setDirty(true);
-              if (Array.isArray(checked)) {
-                if (checked.length > selectedRowKeys.length) {
-                  const add = checked.filter(
-                    (value) => !selectedRowKeys.includes(value.toString())
-                  );
-                  if (add.length > 0) {
-                    setSelectedRowKeys([...selectedRowKeys, add[0]]);
-                  }
-                } else {
-                  setSelectedRowKeys(
-                    selectedRowKeys.filter((value) => checked.includes(value))
-                  );
-                }
-              }
-            }}
+            onCheck={handleCheck}
             onSelect={() => {}}
-            titleRender={(node: ChannelTreeNode) => {
-              let pIcon = <></>;
-              switch (node.channel.publicity) {
-                case 5:
-                  pIcon = (
-                    <Tooltip title={"私有不可公开"}>
-                      <LockFillIcon />
-                    </Tooltip>
-                  );
-                  break;
-                case 10:
-                  pIcon = (
-                    <Tooltip title={"私有"}>
-                      <LockIcon />
-                    </Tooltip>
-                  );
-                  break;
-                case 30:
-                  pIcon = (
-                    <Tooltip title={"公开"}>
-                      <GlobalOutlined />
-                    </Tooltip>
-                  );
-                  break;
-              }
-              const badge = selectedRowKeys.findIndex(
-                (value) => value === node.channel.uid
-              );
-              return (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "100%",
-                      borderRadius: 5,
-                      padding: "0 5px",
-                    }}
-                    onClick={() => {
-                      console.log(node);
-                      if (channels) {
-                        sortChannels(channels);
-                      }
-                      setDirty(false);
-                      if (typeof onSelect !== "undefined") {
-                        onSelect([
-                          {
-                            id: node.key,
-                            name: node.channel.title,
-                          },
-                        ]);
-                      }
-                    }}
-                  >
-                    <div
-                      key="info"
-                      style={{ overflowX: "clip", display: "flex" }}
-                    >
-                      <Space>
-                        {pIcon}
-                        {node.channel.role !== "member" ? (
-                          <EditOutlined />
-                        ) : undefined}
-                      </Space>
-                      <Button type="link">
-                        <Space>
-                          <StudioName data={node.channel.studio} hideName />
-                          <>{node.channel.title}</>
-                          <Tag>
-                            {intl.formatMessage({
-                              id: `channel.type.${node.channel.type}.label`,
-                            })}
-                          </Tag>
-                        </Space>
-                      </Button>
-                    </div>
-                    <div key="progress">
-                      <ProgressSvg data={node.channel.final} width={200} />
-                    </div>
-                  </div>
-                  <Badge count={dirty ? badge + 1 : 0}>
-                    <div>
-                      <Dropdown
-                        trigger={["click"]}
-                        menu={{
-                          items: [
-                            {
-                              key: "copy-to",
-                              label: intl.formatMessage({
-                                id: "buttons.copy.to",
-                              }),
-                              icon: <CopyOutlined />,
-                            },
-                            {
-                              key: "import-nissaya",
-                              label: intl.formatMessage({
-                                id: "buttons.import",
-                              }),
-                              icon: <CopyOutlined />,
-                            },
-                            {
-                              key: "statistic",
-                              label: intl.formatMessage({
-                                id: "buttons.statistic",
-                              }),
-                              icon: <InfoCircleOutlined />,
-                            },
-                            {
-                              key: "token",
-                              label: intl.formatMessage({
-                                id: "buttons.access-token.get",
-                              }),
-                              icon: <InfoCircleOutlined />,
-                            },
-                          ],
-                          onClick: (e) => {
-                            switch (e.key) {
-                              case "copy-to":
-                                setCopyChannel({
-                                  id: node.channel.uid,
-                                  name: node.channel.title,
-                                  type: node.channel.type,
-                                });
-                                setCopyOpen(true);
-                                break;
-                              case "import-nissaya":
-                                setCopyChannel({
-                                  id: node.channel.uid,
-                                  name: node.channel.title,
-                                  type: node.channel.type,
-                                });
-                                setNissayaOpen(true);
-                                break;
-                              case "statistic":
-                                setInfoOpen(true);
-                                setStatistic(node.channel);
-                                break;
-                              case "token":
-                                SetToken({
-                                  channelId: node.channel.uid,
-                                  type: type as ArticleType,
-                                  articleId: articleId,
-                                });
-                                setTokenOpen(true);
-                                break;
-                              default:
-                                break;
-                            }
-                          },
-                        }}
-                        placement="bottomRight"
-                      >
-                        <Button
-                          type="link"
-                          size="small"
-                          icon={<MoreOutlined />}
-                        ></Button>
-                      </Dropdown>
-                    </div>
-                  </Badge>
-                </div>
-              );
-            }}
+            titleRender={titleRender}
           />
         )}
       </Card>
+
       <CopyToModal
         sentencesId={sentencesId}
         channel={copyChannel}
@@ -555,4 +447,5 @@ const ChannelMy = ({
     </div>
   );
 };
+
 export default ChannelMy;

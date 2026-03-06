@@ -1,5 +1,5 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Splitter } from "antd";
+import { Button, Popover, Splitter } from "antd";
 import { useCallback, useState, type ReactNode } from "react";
 import RightToolbar, { type RightToolbarTab } from "./RightToolbar";
 import styles from "./SplitLayout.module.css";
@@ -103,14 +103,23 @@ export default function SplitLayout({
   }, []);
 
   const expandButton = collapsed ? (
-    <Button
-      type="text"
-      size="small"
-      icon={<MenuUnfoldOutlined />}
-      onClick={toggle}
-      className={styles.expandBtn}
-      title="展开侧边栏"
-    />
+    <Popover
+      placement="bottomLeft"
+      content={
+        <div style={{ width: 300, height: 500, overflowY: "auto" }}>
+          {sidebar}
+        </div>
+      }
+    >
+      <Button
+        type="text"
+        size="small"
+        icon={<MenuUnfoldOutlined />}
+        onClick={toggle}
+        className={styles.expandBtn}
+        title="展开侧边栏"
+      />
+    </Popover>
   ) : null;
 
   // ── 右边栏状态 ──

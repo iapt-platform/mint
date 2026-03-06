@@ -9,7 +9,7 @@ import { Alert, message } from "antd";
 import type {
   IApiResponseChannel,
   IApiResponseChannelData,
-} from "../../api/Channel";
+} from "../../api/channel";
 import { get, put } from "../../request";
 import ChannelTypeSelect from "./ChannelTypeSelect";
 import LangSelect from "../general/LangSelect";

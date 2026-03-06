@@ -1,6 +1,6 @@
 import { get, post, put, delete_ } from "../request";
 import type { ISentence } from "./sentence";
-import type { IChannel } from "./Channel";
+import type { IChannel } from "./channel";
 import type { IUser } from "./Auth";
 
 // ─── 原有类型定义，保持不动 ─────────────────────────────────────────────────────

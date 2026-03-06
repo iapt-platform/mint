@@ -2,7 +2,7 @@ import { useIntl } from "react-intl";
 import { ProFormSlider } from "@ant-design/pro-components";
 import type { SliderMarks } from "antd/es/slider";
 
-const ConfidenceWidget = () => {
+const Confidence = () => {
   const intl = useIntl();
   const marks: SliderMarks = {
     0: intl.formatMessage({ id: "forms.fields.confidence.0.label" }),
@@ -21,4 +21,4 @@ const ConfidenceWidget = () => {
   );
 };
 
-export default ConfidenceWidget;
+export default Confidence;

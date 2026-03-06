@@ -11,7 +11,7 @@ import Edit from "../../../components/channel/Edit";
 import WebhookList from "../../../components/webhook/WebhookList";
 import WebhookEdit from "../../../components/webhook/WebhookEdit";
 import { EResType } from "../../../components/share/utils";
-import type { IApiResponseChannelData } from "../../../api/Channel";
+import type { IApiResponseChannelData } from "../../../api/channel";
 import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
 

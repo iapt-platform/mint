@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ReloadOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
-import type { IChannel, TChannelType } from "../../api/Channel";
+import type { IChannel, TChannelType } from "../../api/channel";
 import type { ISentence, ISentenceListResponse } from "../../api/sentence";
 
 import SentCell from "./SentCell";

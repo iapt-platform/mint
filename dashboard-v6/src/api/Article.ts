@@ -1,7 +1,7 @@
 //src/api/article.ts
 
 import type { IStudio, IStudioApiResponse, IUser, TRole } from "./Auth";
-import type { IChannel } from "./Channel";
+import type { IChannel } from "./channel";
 import { delete_, get, post, put } from "../request";
 import type { ITocPathNode } from "./pali-text";
 import type { LoaderFunctionArgs } from "react-router";

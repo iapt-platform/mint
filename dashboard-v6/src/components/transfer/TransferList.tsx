@@ -17,7 +17,7 @@ import { useIntl } from "react-intl";
 import type { BaseType } from "antd/lib/typography/Base";
 import type { IStudio, IUser } from "../../api/Auth";
 import type { TResType } from "../../api/discussion";
-import type { IChannel } from "../../api/Channel";
+import type { IChannel } from "../../api/channel";
 import StatusBadge from "../general/StatusBadge";
 
 const { Text } = Typography;

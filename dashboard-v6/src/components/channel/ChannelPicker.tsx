@@ -5,7 +5,7 @@ import ChannelPickerTable from "./ChannelPickerTable";
 
 import { useIntl } from "react-intl";
 import type { ArticleType } from "../../api/Article";
-import type { IChannel } from "../../api/Channel";
+import type { IChannel } from "../../api/channel";
 
 interface IWidget {
   trigger?: React.ReactNode;

@@ -1,6 +1,7 @@
+// src/api/channel.ts
 import type { LoaderFunctionArgs } from "react-router";
 import type { IStudio, TRole } from "./Auth";
-import { get } from "../request";
+import { get, post } from "../request";
 export interface IChannel {
   id: string;
   name: string;
@@ -98,6 +99,28 @@ export interface IResNumber {
   sim?: number;
 }
 
+export interface IProgressRequest {
+  sentence: string[];
+  owner?: string;
+}
+
+export interface IChannelItem {
+  id: number;
+  uid: string;
+  title: string;
+  summary: string;
+  type: TChannelType;
+  studio: IStudio;
+  shareType: string;
+  role?: string;
+  publicity: number;
+  final?: IFinal[];
+  progress: number;
+  createdAt: number;
+  content_created_at?: string;
+  content_updated_at?: string;
+}
+
 export async function channelLoader({ params }: LoaderFunctionArgs) {
   const channelId = params.channelId;
 
@@ -113,3 +136,33 @@ export async function channelLoader({ params }: LoaderFunctionArgs) {
 
   return res.data;
 }
+
+// ─── 获取章节内所有句子 ID ───────────────────────────────────────────────────
+
+/**
+ * 按 book + paragraph 拉取章节内所有句子坐标
+ */
+export const fetchSentencesInChapter = (
+  bookId: string,
+  para: string
+): Promise<ISentInChapterListResponse> =>
+  get<ISentInChapterListResponse>(
+    `/api/v2/sentences-in-chapter?book=${bookId}&para=${para}`
+  );
+
+// ─── 获取频道进度列表 ────────────────────────────────────────────────────────
+
+/**
+ * 批量查询句子在各频道的翻译进度
+ *
+ * @param sentences 句子 ID 列表，格式 `book-para-wordBegin-wordEnd`
+ * @param owner     "all" = 全部可见频道；"my" = 仅自己拥有的
+ */
+export const fetchChannelProgress = (
+  sentences: string[],
+  owner: "all" | "my" = "all"
+): Promise<IApiResponseChannelList> =>
+  post<IProgressRequest, IApiResponseChannelList>("/api/v2/channel-progress", {
+    sentence: sentences,
+    owner,
+  });

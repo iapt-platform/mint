@@ -16,7 +16,7 @@ import type {
   IApiResponseChannelList,
   IChannel,
   TChannelType,
-} from "../../../src/api/Channel";
+} from "../../api/channel";
 import { PublicityValueEnum } from "../studio/table";
 import type { IDeleteResponse } from "../../../src/api/Article";
 import { useEffect, useRef, useState } from "react";

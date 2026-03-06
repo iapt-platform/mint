@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import ChannelPickerTable from "./ChannelPickerTable";
 import ChannelSentDiff from "./ChannelSentDiff";
 import CopyToResult from "./CopyToResult";
-import type { IChannel } from "../../api/Channel";
+import type { IChannel } from "../../api/channel";
 import type { ArticleType } from "../../api/Article";
 
 interface IWidget {

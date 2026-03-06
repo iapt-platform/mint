@@ -20,7 +20,7 @@ import SentWbw from "./SentWbw";
 import SentTabButtonWbw from "./SentTabButtonWbw";
 
 import type { IWbw } from "../../types/wbw";
-import type { IResNumber } from "../../api/Channel";
+import type { IResNumber } from "../../api/channel";
 import RelaGraphic from "../wbw/RelaGraphic";
 import type { ITocPathNode } from "../../api/pali-text";
 import type { ArticleMode } from "../../api/Article";

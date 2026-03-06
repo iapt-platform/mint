@@ -14,16 +14,16 @@ import {
 import type {
   IApiResponseChannelList,
   IChannel,
-  IFinal,
-  TChannelType,
-} from "../../../src/api/Channel";
+  IChannelItem,
+  IProgressRequest,
+} from "../../api/channel";
 import { post } from "../../../src/request";
 import { LockIcon } from "../../../src/assets/icon";
 
 import ProgressSvg from "./ProgressSvg";
 
 import CopyToModal from "./CopyToModal";
-import type { IStudio } from "../../../src/api/Auth";
+
 import type { ArticleType } from "../../api/Article";
 import Studio from "../../../src/components/auth/Studio";
 
@@ -33,26 +33,6 @@ interface IParams {
   owner?: string;
 }
 
-export interface IProgressRequest {
-  sentence: string[];
-  owner?: string;
-}
-export interface IItem {
-  id: number;
-  uid: string;
-  title: string;
-  summary: string;
-  type: TChannelType;
-  studio: IStudio;
-  shareType: string;
-  role?: string;
-  publicity: number;
-  final?: IFinal[];
-  progress: number;
-  createdAt: number;
-  content_created_at?: string;
-  content_updated_at?: string;
-}
 interface IWidget {
   type?: ArticleType | "editable";
   articleId?: string;
@@ -118,7 +98,7 @@ const ChannelPickerTableWidget = ({
           }
         />
       ) : undefined}
-      <ProList<IItem, IParams>
+      <ProList<IChannelItem, IParams>
         actionRef={ref}
         rowSelection={
           showCheckBox
@@ -211,7 +191,7 @@ const ChannelPickerTableWidget = ({
             }
           );
           console.debug("progress data", res.data.rows);
-          const items: IItem[] = res.data.rows
+          const items: IChannelItem[] = res.data.rows
             .filter((value) => value.name.substring(0, 4) !== "_Sys")
             .map((item, id) => {
               const date = new Date(item.created_at);

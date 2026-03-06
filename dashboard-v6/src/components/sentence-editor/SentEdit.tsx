@@ -1,7 +1,7 @@
 import { Affix } from "antd";
 import { useEffect, useRef, useState, useMemo } from "react";
 
-import type { TChannelType } from "../../api/Channel";
+import type { TChannelType } from "../../api/channel";
 import { useAppSelector } from "../../hooks";
 import { currFocus } from "../../reducers/focus";
 

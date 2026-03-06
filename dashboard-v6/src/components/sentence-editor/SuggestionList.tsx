@@ -7,7 +7,7 @@ import type { ISuggestionListResponse } from "../../api/Suggestion";
 
 import type { ISentence } from "../../api/sentence";
 import SentCell from "./SentCell";
-import type { IChannel } from "../../api/Channel";
+import type { IChannel } from "../../api/channel";
 interface IWidget {
   book: number;
   para: number;

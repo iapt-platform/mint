@@ -1,6 +1,6 @@
 import { get } from "../request";
 import type { IStudio, IUser } from "./Auth";
-import type { IChannel } from "./Channel";
+import type { IChannel } from "./channel";
 
 // ─── 原有类型定义，保持不动 ─────────────────────────────────────────────────────
 

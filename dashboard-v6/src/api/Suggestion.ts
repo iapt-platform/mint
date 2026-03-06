@@ -1,5 +1,5 @@
 import type { IUser } from "./Auth";
-import type { IChannelApiData } from "./Channel";
+import type { IChannelApiData } from "./channel";
 
 export interface ISuggestionCount {
   suggestion?: number;

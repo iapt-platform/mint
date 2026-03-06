@@ -12,7 +12,7 @@ import ShareModal from "../../../components/share/ShareModal";
 import { fullUrl } from "../../../utils";
 import type { IArticleParam } from "../../../types/article";
 import { EResType } from "../../../components/share/utils";
-import type { IApiResponseChannel } from "../../../api/Channel";
+import type { IApiResponseChannel } from "../../../api/channel";
 
 const Widget = () => {
   const { channelId } = useParams(); //url 参数

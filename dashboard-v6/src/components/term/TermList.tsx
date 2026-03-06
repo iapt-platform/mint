@@ -18,7 +18,7 @@ import TermModal from "./TermModal";
 import { getSorterUrl } from "../../utils";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
-import type { IChannel } from "../../api/Channel";
+import type { IChannel } from "../../api/channel";
 import DataImport from "../general/DataImport";
 import { Link } from "react-router";
 

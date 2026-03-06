@@ -5,7 +5,7 @@ import ChannelTable, { type IChapter } from "./ChannelTable";
 import { useAppSelector } from "../../../src/hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 
-import type { IChannel, TChannelType } from "../../api/Channel";
+import type { IChannel, TChannelType } from "../../api/channel";
 import { useIntl } from "react-intl";
 import type { ArticleType } from "../../api/Article";
 

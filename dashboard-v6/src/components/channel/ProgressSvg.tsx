@@ -1,4 +1,4 @@
-import type { IFinal } from "../../../src/api/Channel";
+import type { IFinal } from "../../api/channel";
 
 interface IWidget {
   data?: IFinal[];

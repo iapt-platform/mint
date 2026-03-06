@@ -22,7 +22,7 @@ import {
 import TermModal from "./TermModal";
 import TermEdit from "./TermEdit";
 import type { ITermDataResponse } from "../../api/Term";
-import type { IChannel } from "../../api/Channel";
+import type { IChannel } from "../../api/channel";
 
 const { Title, Text, Paragraph } = Typography;
 

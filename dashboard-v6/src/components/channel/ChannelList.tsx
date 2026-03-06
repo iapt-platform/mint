@@ -2,7 +2,7 @@ import { useIntl } from "react-intl";
 import { useState, useEffect } from "react";
 import { Card, List, message, Space, Tag } from "antd";
 
-import type { IChannelApiData } from "../../api/Channel";
+import type { IChannelApiData } from "../../api/channel";
 
 import { get } from "../../request";
 import ChannelListItem from "./ChannelListItem";

@@ -7,7 +7,7 @@ import {
   WarningTwoTone,
 } from "@ant-design/icons";
 
-import type { IChannel, TChannelType } from "../../../src/api/Channel";
+import type { IChannel, TChannelType } from "../../api/channel";
 import { post } from "../../../src/request";
 import ChannelTableModal from "./ChannelTableModal";
 

@@ -5,7 +5,7 @@ import { get, put } from "../request";
 import { message } from "antd";
 import { toISentence } from "../components/sentence/utils";
 import type { IStudio, IUser } from "./Auth";
-import type { IChannel } from "./Channel";
+import type { IChannel } from "./channel";
 import type { ISuggestionCount } from "./Suggestion";
 import type { ITocPathNode } from "./pali-text";
 

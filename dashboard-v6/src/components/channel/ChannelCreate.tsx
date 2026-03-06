@@ -7,7 +7,7 @@ import {
 import { message } from "antd";
 
 import { post } from "../../../src/request";
-import type { IApiResponseChannel } from "../../../src/api/Channel";
+import type { IApiResponseChannel } from "../../api/channel";
 import ChannelTypeSelect from "./ChannelTypeSelect";
 import LangSelect from "../../../src/components/general/LangSelect";
 import { useRef } from "react";

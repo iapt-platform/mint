@@ -4,7 +4,7 @@ import { useAppSelector } from "../../../src/hooks";
 import { currentUser } from "../../../src/reducers/current-user";
 
 import { get } from "../../../src/request";
-import type { IApiResponseChannelList } from "../../../src/api/Channel";
+import type { IApiResponseChannelList } from "../../api/channel";
 
 import { useIntl } from "react-intl";
 import type { IStudio } from "../../../src/api/Auth";

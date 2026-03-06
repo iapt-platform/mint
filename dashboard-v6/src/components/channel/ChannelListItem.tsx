@@ -1,6 +1,6 @@
 import { Space } from "antd";
 
-import type { IChannelApiData } from "../../../src/api/Channel";
+import type { IChannelApiData } from "../../api/channel";
 import Studio from "../../../src/components/auth/Studio";
 import type { IStudio } from "../../api/Auth";
 

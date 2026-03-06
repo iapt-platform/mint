@@ -2,7 +2,7 @@ import { useEffect, useState, type JSX } from "react";
 import { Modal } from "antd";
 
 import CopyToStep from "./CopyToStep";
-import type { IChannel } from "../../api/Channel";
+import type { IChannel } from "../../api/channel";
 
 interface IWidget {
   trigger?: JSX.Element | string;

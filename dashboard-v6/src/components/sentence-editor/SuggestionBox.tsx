@@ -87,20 +87,14 @@ export interface IAnswerCount {
 }
 
 const SuggestionBoxWidget = () => {
-  const [openNotification, setOpenNotification] = useState(false);
-  const [sentData, setSentData] = useState<ISentence>();
+  const [openNotification, setOpenNotification] = useState(
+    localStorage.getItem("read_pr_Notification") !== "ok"
+  );
   const discussionMessage = useAppSelector(message);
-  /**
-   * TODO useMemo
-   */
-  if (discussionMessage?.type === "pr") {
-    setSentData(discussionMessage.sent);
-  }
-  if (localStorage.getItem("read_pr_Notification") === "ok") {
-    setOpenNotification(false);
-  } else {
-    setOpenNotification(true);
-  }
+
+  // ✅ 直接派生，无需 useState + useEffect
+  const sentData =
+    discussionMessage?.type === "pr" ? discussionMessage.sent : undefined;
 
   return sentData ? (
     <Suggestion
@@ -110,8 +104,7 @@ const SuggestionBoxWidget = () => {
       onNotificationChange={(value: boolean) => setOpenNotification(value)}
     />
   ) : (
-    <></>
+    <>没有指定句子</>
   );
 };
-
 export default SuggestionBoxWidget;

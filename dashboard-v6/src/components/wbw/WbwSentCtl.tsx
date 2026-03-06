@@ -29,7 +29,7 @@ import {
   type TWbwDisplayMode,
   type WbwElement,
 } from "../../types/wbw";
-import type { IChannel, TChannelType } from "../../api/Channel";
+import type { IChannel, TChannelType } from "../../api/channel";
 import type { ArticleMode } from "../../api/Article";
 import type { ISentenceWbwListResponse } from "../../api/sentence";
 import type { IStudio } from "../../api/Auth";

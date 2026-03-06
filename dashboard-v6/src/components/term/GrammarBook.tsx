@@ -24,7 +24,7 @@ import { get } from "../../request";
 import type {
   IApiResponseChannelData,
   IApiResponseChannelList,
-} from "../../api/Channel";
+} from "../../api/channel";
 import { grammarTermFetch } from "../../load";
 import TermModal from "./TermModal";
 import { popRecent, pushRecent } from "./utils";

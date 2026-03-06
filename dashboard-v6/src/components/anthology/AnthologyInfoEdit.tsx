@@ -18,7 +18,7 @@ import LangSelect from "../general/LangSelect";
 import PublicitySelect from "../studio/PublicitySelect";
 import { useState } from "react";
 import type { DefaultOptionType } from "antd/lib/select";
-import type { IApiResponseChannelList } from "../../api/Channel";
+import type { IApiResponseChannelList } from "../../api/channel";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 
