@@ -5,12 +5,12 @@ import { channelLoader } from "./api/channel";
 import { testRoutes } from "./routes/testRoutes";
 import { buildRouteConfig } from "./routes/buildRoutes";
 import { anthologyLoader, articleLoader } from "./api/Article";
+import { termLoader } from "./api/Term";
 
 const RootLayout = lazy(() => import("./layouts/Root"));
 const AnonymousLayout = lazy(() => import("./layouts/anonymous"));
 const DashboardLayout = lazy(() => import("./layouts/dashboard"));
 const WorkspaceLayout = lazy(() => import("./layouts/workspace"));
-const WorkspaceEditorLayout = lazy(() => import("./layouts/workspace/editor"));
 
 const UsersSignIn = lazy(() => import("./pages/users/sign-in"));
 const UsersSignUp = lazy(() => import("./pages/users/sign-up"));
@@ -28,15 +28,16 @@ const WorkspaceChannelSetting = lazy(
 const WorkspaceTipitaka = lazy(
   () => import("./pages/workspace/tipitaka/bypath")
 );
+const WorkspaceTipitakaChapter = lazy(
+  () => import("./pages/workspace/tipitaka/chapter")
+);
 const WorkspaceHome = lazy(() => import("./pages/workspace/home"));
 const WorkspaceChat = lazy(() => import("./pages/workspace/chat"));
 
 const WorkspaceTerm = lazy(() => import("./pages/workspace/term/list"));
 const WorkspaceTermShow = lazy(() => import("./pages/workspace/term/show"));
 const WorkspaceTermEdit = lazy(() => import("./pages/workspace/term/edit"));
-const WorkspaceEditChapter = lazy(
-  () => import("./pages/workspace/editor/chapter")
-);
+
 // 文集
 const WorkspaceAnthologyList = lazy(
   () => import("./pages/workspace/anthology")
@@ -165,22 +166,36 @@ const router = createBrowserRouter(
             },
             {
               path: "tipitaka",
-              Component: WorkspaceTipitaka,
               handle: { id: "workspace.tipitaka", crumb: "tipitaka" },
               children: [
                 {
-                  path: ":root",
+                  path: "lib",
                   Component: WorkspaceTipitaka,
                   children: [
                     {
-                      path: ":path",
+                      path: ":root",
                       Component: WorkspaceTipitaka,
                       children: [
                         {
-                          path: ":tag",
+                          path: ":path",
                           Component: WorkspaceTipitaka,
+                          children: [
+                            {
+                              path: ":tag",
+                              Component: WorkspaceTipitaka,
+                            },
+                          ],
                         },
                       ],
+                    },
+                  ],
+                },
+                {
+                  path: "chapter",
+                  children: [
+                    {
+                      path: ":id",
+                      Component: WorkspaceTipitakaChapter,
                     },
                   ],
                 },
@@ -218,66 +233,21 @@ const router = createBrowserRouter(
             {
               path: "term",
               handle: { id: "workspace.term", crumb: "term" },
-              Component: WorkspaceTerm,
-            },
-            {
-              path: "edit",
-              Component: WorkspaceEditorLayout,
-              handle: { crumb: "edit" },
               children: [
+                { index: true, Component: WorkspaceTerm },
                 {
-                  path: "article",
+                  path: ":id",
+                  loader: termLoader,
+                  handle: {
+                    crumb: (match: { data: { word: string } }) =>
+                      match.data.word,
+                  },
                   children: [
+                    { index: true, Component: WorkspaceTermShow },
                     {
-                      path: ":id",
-                      children: [
-                        {
-                          path: "edit",
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  path: "anthology",
-                  children: [{ path: ":id" }],
-                },
-                {
-                  path: "series",
-                  children: [{ path: ":id" }],
-                },
-                {
-                  path: "chapter",
-                  children: [
-                    {
-                      path: ":id",
-                      children: [
-                        { index: true, Component: WorkspaceEditChapter },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  path: "para",
-                  children: [{ path: ":id" }],
-                },
-                {
-                  path: "cs-para",
-                  children: [{ path: ":id" }],
-                },
-                {
-                  path: "wiki",
-                  handle: { crumb: "wiki" },
-                  children: [
-                    {
-                      path: ":id",
-                      children: [
-                        { index: true, Component: WorkspaceTermShow },
-                        {
-                          path: "edit",
-                          Component: WorkspaceTermEdit,
-                        },
-                      ],
+                      path: "edit",
+                      handle: { crumb: "edit" },
+                      Component: WorkspaceTermEdit,
                     },
                   ],
                 },

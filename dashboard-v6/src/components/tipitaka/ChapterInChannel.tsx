@@ -62,7 +62,7 @@ const ChapterInChannelWidget = ({
               }
         }
         renderItem={(item, id) => {
-          let url = `/article/chapter/${book}-${para}`;
+          let url = `/workspace/tipitaka/chapter/${book}-${para}`;
           const currMode = searchParams.get("mode");
           url += currMode ? `?mode=${currMode}` : "?mode=read";
           url += item.channel.id ? `&channel=${item.channel.id}` : "";

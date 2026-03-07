@@ -45,3 +45,16 @@
 ### 新增
 
 - [ ] `/discussion`=> [1]
+
+### article page
+
+- [x] "anthology"
+- [x] "article"
+- [ ] "textbook"
+- [x] "term"
+- [ ] "task"
+- [ ] "chapter"
+- [ ] "para"
+- [ ] "series"
+- [ ] "cs-para"
+- [ ] "page"

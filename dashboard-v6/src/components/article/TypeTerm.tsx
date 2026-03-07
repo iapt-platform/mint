@@ -1,4 +1,4 @@
-import { Breadcrumb, Button } from "antd";
+import { Breadcrumb, Button, Space } from "antd";
 import type { ArticleMode } from "../../api/Article";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
@@ -12,10 +12,17 @@ interface IWidget {
   id?: string;
   mode?: ArticleMode | null;
   channelId?: string | null;
+  headerExtra?: React.ReactNode;
   onEdit?: () => void;
 }
 
-const TypeTermWidget = ({ channelId, id, mode = "read", onEdit }: IWidget) => {
+const TypeTermWidget = ({
+  channelId,
+  id,
+  mode = "read",
+  headerExtra,
+  onEdit,
+}: IWidget) => {
   const { articleData, term, errorCode, loading } = useTerm({
     id,
     channelId,
@@ -33,13 +40,16 @@ const TypeTermWidget = ({ channelId, id, mode = "read", onEdit }: IWidget) => {
       <title>{articleData?.title}-百科</title>
       <ArticleHeader
         header={
-          <Breadcrumb
-            items={path}
-            style={{
-              whiteSpace: "nowrap",
-              width: "100%",
-            }}
-          />
+          <Space>
+            {headerExtra}
+            <Breadcrumb
+              items={path}
+              style={{
+                whiteSpace: "nowrap",
+                width: "100%",
+              }}
+            />
+          </Space>
         }
         action={
           <Button type="primary" onClick={onEdit}>

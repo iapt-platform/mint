@@ -65,7 +65,7 @@ const Widget = () => {
   // 3. 处理纯粹的副作用：重定向
   useEffect(() => {
     if (typeof root === "undefined") {
-      navigate("/workspace/tipitaka/" + bookRoot, { replace: true });
+      navigate("/workspace/tipitaka/lib/" + bookRoot, { replace: true });
     } else {
       localStorage.setItem("pali_path_root", root);
     }
@@ -90,7 +90,9 @@ const Widget = () => {
                     onChange={(_, newPath) => {
                       // 只需要改变 URL，剩下的交给 useMemo 自动计算
                       const pathStr = newPath?.join("_").toLowerCase();
-                      navigate(`/workspace/tipitaka/${bookRoot}/${pathStr}`);
+                      navigate(
+                        `/workspace/tipitaka/lib/${bookRoot}/${pathStr}`
+                      );
                     }}
                   />
                 </div>
@@ -103,7 +105,7 @@ const Widget = () => {
                 path={bookPath}
                 onChange={(e: IEventBookTreeOnchange) => {
                   navigate(
-                    `/workspace/tipitaka/${bookRoot}/${e.path.join("_")}`
+                    `/workspace/tipitaka/lib/${bookRoot}/${e.path.join("_")}`
                   );
                 }}
                 onTocLoad={setTocData} // 直接设置，简化写法

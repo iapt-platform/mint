@@ -25,7 +25,7 @@ import TplBuilder from "../tpl-builder/TplBuilder";
 import ArticleHeader from "./components/ArticleHeader";
 import { TaskBuilderChapterModal } from "../task/TaskBuilderChapterModal";
 
-interface ISearchParams {
+export interface ISearchParams {
   key: string;
   value: string;
 }

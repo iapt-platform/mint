@@ -109,9 +109,7 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
             ellipsis: true,
             render(_dom, entity) {
               return (
-                <Link to={`/workspace/edit/wiki/${entity.id}`}>
-                  {entity.word}
-                </Link>
+                <Link to={`/workspace/term/${entity.id}`}>{entity.word}</Link>
               );
             },
           },

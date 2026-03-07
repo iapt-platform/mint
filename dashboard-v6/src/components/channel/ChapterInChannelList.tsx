@@ -131,7 +131,7 @@ const ChapterInChannelListWidget = ({ channelId, onSelect }: IWidget) => {
           width: 120,
           valueType: "option",
           render: (_text, row, index) => {
-            let editLink = `/article/chapter/${row.book}-${row.paragraph}?mode=edit`;
+            let editLink = `/workspace/tipitaka/chapter/${row.book}-${row.paragraph}?mode=edit`;
             editLink += channelId ? `&channel=${channelId}` : "";
             return [
               <Dropdown.Button

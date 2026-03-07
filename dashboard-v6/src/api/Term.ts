@@ -1,6 +1,7 @@
 import type { IStudio, IUser, TRole } from "./Auth";
 import type { IChannel } from "./channel";
 import { get } from "../request";
+import type { LoaderFunctionArgs } from "react-router";
 
 export interface ITerm {
   id?: string;
@@ -110,7 +111,7 @@ export interface ITermDeleteRequest {
 
 export interface IGetTermParams {
   id: string;
-  mode: "read" | "edit";
+  mode?: "read" | "edit";
   channelsId?: string | null;
 }
 
@@ -119,9 +120,29 @@ export function getTerm({
   mode,
   channelsId,
 }: IGetTermParams): Promise<ITermResponse> {
-  const url =
-    `/api/v2/terms/${id}?mode=${mode}` +
-    (channelsId ? `&channel=${channelsId}` : "");
+  let url = `/api/v2/terms/${id}?a=a`;
+  if (mode) {
+    url += `&mode=${mode}`;
+  }
+  if (channelsId) {
+    url += `&channel=${channelsId}`;
+  }
 
   return get<ITermResponse>(url);
+}
+
+export async function termLoader({ params }: LoaderFunctionArgs) {
+  const termId = params.id;
+
+  if (!termId) {
+    throw new Response("Missing termId", { status: 400 });
+  }
+
+  const res = await getTerm({ id: termId });
+
+  if (!res.ok) {
+    throw new Response("term not found", { status: 404 });
+  }
+
+  return res.data;
 }
