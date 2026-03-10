@@ -31,14 +31,14 @@ const items: MenuProps["items"] = [
 ];
 
 export interface IWidgetSentReadFrame {
-  origin?: ISentence[];
-  translation?: ISentence[];
-  layout?: "row" | "column";
+  sentId?: string;
   book?: number;
   para?: number;
   wordStart?: number;
   wordEnd?: number;
-  sentId?: string;
+  origin?: ISentence[];
+  translation?: ISentence[];
+  layout?: "row" | "column";
   error?: string;
 }
 

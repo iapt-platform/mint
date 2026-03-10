@@ -16,7 +16,7 @@ import type { ITermListResponse } from "../../api/Term";
 import { Link } from "react-router";
 import type { IUser } from "../../api/Auth";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 interface IItem<R> {
   value: R;
@@ -168,14 +168,10 @@ const TermCommunityWidget = ({ word }: IWidget) => {
   ) : undefined;
 
   return show ? (
-    <Card>
-      <Space>
-        <Title level={5} id={`community`}>
-          {"社区术语"}
-        </Title>
-        <Link to={`/term/list/${word}`}>详情</Link>
-      </Space>
-
+    <Card
+      title={"社区术语"}
+      extra={<Link to={`/term/list/${word}`}>详情</Link>}
+    >
       <div key="meaning">
         <Space style={{ flexWrap: "wrap" }}>
           <Text strong>{"意思："}</Text>

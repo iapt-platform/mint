@@ -137,7 +137,7 @@ const Widget = ({ onSearch }: Props) => {
       activeId: "workspace.ai",
     },
     {
-      key: "/workspace/tipitaka",
+      key: "/workspace/tipitaka/lib",
       icon: <TipitakaIcon />,
       label: "巴利三藏",
       activeId: "workspace.tipitaka",

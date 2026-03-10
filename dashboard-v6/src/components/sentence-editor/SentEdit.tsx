@@ -53,6 +53,7 @@ export interface IWidgetSentEditInner {
   commNum?: number;
   originNum: number;
   simNum?: number;
+
   compact?: boolean;
   mode?: ArticleMode;
   showWbwProgress?: boolean;

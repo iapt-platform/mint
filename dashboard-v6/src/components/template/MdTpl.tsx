@@ -5,6 +5,7 @@ import Nissaya from "./Nissaya";
 import Note from "./Note";
 import ParaHandle from "./ParaHandle";
 import ParaShell from "./ParaShell";
+import Paragraph from "./Paragraph";
 import Quote from "./Quote";
 import Reference from "./Reference";
 import SentEdit from "./SentEdit";
@@ -54,6 +55,9 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Reference props={props ? props : ""} />;
     case "cf":
       return <Confidence props={props ? props : ""} />;
+    case "paragraph":
+      return <Paragraph props={props ? props : ""} />;
+
     default:
       return <>未定义模版({tpl})</>;
   }

@@ -17,11 +17,9 @@ interface IWidgetWordCardByDict {
 }
 const WordCardByDictWidget = ({ data, children }: IWidgetWordCardByDict) => {
   return (
-    <Card>
-      <Space>
-        <Title level={5} id={data.anchor}>
-          {data.dictname}
-        </Title>
+    <Card
+      title={data.dictname}
+      extra={
         <Popover
           overlayStyle={{ maxWidth: 600 }}
           content={
@@ -67,7 +65,8 @@ const WordCardByDictWidget = ({ data, children }: IWidgetWordCardByDict) => {
         >
           <Button type="link" icon={<InfoCircleOutlined />} />
         </Popover>
-      </Space>
+      }
+    >
       <div className="dict_content">
         <MdView html={data.note} />
       </div>

@@ -1,4 +1,4 @@
-import { Space, Typography } from "antd";
+import { Flex, Space, Typography } from "antd";
 
 import GrammarPop from "./GrammarPop";
 import WordCardByDict from "./WordCardByDict";
@@ -25,7 +25,7 @@ const WordCardWidget = ({ data }: IWidgetWordCard) => {
     });
   });
   return (
-    <>
+    <Flex gap="medium" vertical>
       <Title level={4} id={data.anchor}>
         {data.word}
       </Title>
@@ -79,12 +79,10 @@ const WordCardWidget = ({ data }: IWidgetWordCard) => {
       )}
       <Community word={data.word} />
       <TermCommunity word={data.word} />
-      <div>
-        {data.dict.map((it, id) => {
-          return <WordCardByDict key={id} data={it} />;
-        })}
-      </div>
-    </>
+      {data.dict.map((it, id) => {
+        return <WordCardByDict key={id} data={it} />;
+      })}
+    </Flex>
   );
 };
 
