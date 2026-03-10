@@ -5,7 +5,7 @@ import ChannelPickerTable from "./ChannelPickerTable";
 import ChannelSentDiff from "./ChannelSentDiff";
 import CopyToResult from "./CopyToResult";
 import type { IChannel } from "../../api/channel";
-import type { ArticleType } from "../../api/Article";
+import type { ArticleType } from "../../api/article";
 
 interface IWidget {
   initStep?: number;

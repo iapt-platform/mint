@@ -7,7 +7,7 @@ import type {
   ArticleMode,
   ArticleType,
   IArticleDataResponse,
-} from "../../api/Article";
+} from "../../api/article";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 import store from "../../store";
@@ -24,6 +24,8 @@ import Navigate from "./components/Navigate";
 import TplBuilder from "../tpl-builder/TplBuilder";
 import ArticleHeader from "./components/ArticleHeader";
 import { TaskBuilderChapterModal } from "../task/TaskBuilderChapterModal";
+import type { TTarget } from "../../types";
+import TocPath from "../tipitaka/TocPath";
 
 export interface ISearchParams {
   key: string;
@@ -44,7 +46,7 @@ interface IWidget {
   onArticleChange?: (
     type: ArticleType,
     id: string,
-    target: string,
+    target: TTarget,
     param?: ISearchParams[]
   ) => void;
   onLoad?: (data: IArticleDataResponse) => void;
@@ -121,7 +123,7 @@ const TypePali = ({
     };
     fullPath = [...articleData.path, currNode];
   }
-  /*
+
   const handlePathChange = (
     node: ITocPathNode,
     e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
@@ -135,10 +137,10 @@ const TypePali = ({
       newType = "chapter";
       newArticle = node.key ? node.key : `${node.book}-${node.paragraph}`;
     }
-    const target = e.ctrlKey || e.metaKey ? "_blank" : "self";
+    const target = e.ctrlKey || e.metaKey ? "_blank" : "_self";
     onArticleChange?.(newType, newArticle, target);
   };
-*/
+
   return (
     <div>
       <TaskBuilderChapterModal
@@ -160,7 +162,16 @@ const TypePali = ({
 
       <div></div>
       <ArticleHeader
-        header={headerExtra}
+        header={
+          <Space>
+            <>{headerExtra}</>
+            <TocPath
+              data={articleData?.path}
+              channels={channels}
+              onChange={handlePathChange}
+            />
+          </Space>
+        }
         action={
           <Dropdown
             menu={{
@@ -237,7 +248,7 @@ const TypePali = ({
             if (node) {
               const newType = node.level === 0 ? "series" : "chapter";
               const newArticle = node.key ?? `${node.book}-${node.paragraph}`;
-              onArticleChange?.(newType, newArticle, "self");
+              onArticleChange?.(newType, newArticle, "_self");
             }
           }}
           onChange={(

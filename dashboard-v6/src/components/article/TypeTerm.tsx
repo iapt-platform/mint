@@ -1,5 +1,5 @@
 import { Breadcrumb, Button, Space } from "antd";
-import type { ArticleMode } from "../../api/Article";
+import type { ArticleMode } from "../../api/article";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 

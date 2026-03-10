@@ -1,5 +1,5 @@
 import { Space, Typography } from "antd";
-import type { IAnthologyDataResponse } from "../../../api/Article";
+import type { IAnthologyDataResponse } from "../../../api/article";
 import Studio from "../../auth/Studio";
 import TimeShow from "../../general/TimeShow";
 import Marked from "../../general/Marked";

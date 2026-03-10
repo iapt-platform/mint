@@ -1,5 +1,5 @@
 import type { IntlShape } from "react-intl";
-import type { ArticleMode, TContentType } from "./Article";
+import type { ArticleMode, TContentType } from "./article";
 
 import { get, put } from "../request";
 import { message } from "antd";

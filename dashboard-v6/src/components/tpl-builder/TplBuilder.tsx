@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Modal, Tabs } from "antd";
-import type { ArticleType } from "../../api/Article";
+import type { ArticleType } from "../../api/article";
 import { ArticleTplMock } from "./ArticleTpl";
 import { VideoTplMock } from "./VideoTpl";
 

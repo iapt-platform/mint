@@ -14,7 +14,7 @@ import type {
   IArticleMapRequest,
   IArticleMapUpdateRequest,
   IArticleResponse,
-} from "../../api/Article";
+} from "../../api/article";
 import ArticleListModal from "../article/ArticleListModal";
 
 import { fullUrl, randomString } from "../../utils";

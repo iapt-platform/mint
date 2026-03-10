@@ -2,7 +2,7 @@
 // Props
 // ─────────────────────────────────────────────
 
-import type { ArticleMode } from "../../api/Article";
+import type { ArticleMode } from "../../api/article";
 import AnthologyTocTree from "../../components/anthology/AnthologyTocTree";
 import TypeArticle from "../../components/article/TypeArticle";
 import Editor from "../../components/editor";

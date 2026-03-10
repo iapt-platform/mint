@@ -27,7 +27,7 @@ import type { IComment } from "./DiscussionItem";
 import TimeShow from "../general/TimeShow";
 import Marked from "../general/Marked";
 import { delete_, put } from "../../request";
-import type { IDeleteResponse } from "../../api/Article";
+import type { IDeleteResponse } from "../../api/article";
 import { fullUrl } from "../../utils";
 import type { ICommentRequest, ICommentResponse } from "../../api/Comment";
 import { useState } from "react";

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import React from "react";
 import NavigateButton from "./NavigateButton";
-import type { ArticleType } from "../../../api/Article";
+import type { ArticleType } from "../../../api/article";
 import type { ITocPathNode } from "../../../api/pali-text";
 import { get } from "../../../request";
 

@@ -6,7 +6,7 @@ import type {
   ArticleMode,
   ArticleType,
   IArticleDataResponse,
-} from "../../api/Article";
+} from "../../api/article";
 import TypeArticle from "./TypeArticle";
 const { Text } = Typography;
 

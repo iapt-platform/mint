@@ -4,7 +4,7 @@ import { RouterProvider } from "react-router/dom";
 import { channelLoader } from "./api/channel";
 import { testRoutes } from "./routes/testRoutes";
 import { buildRouteConfig } from "./routes/buildRoutes";
-import { anthologyLoader, articleLoader } from "./api/Article";
+import { anthologyLoader, articleLoader } from "./api/article";
 import { termLoader } from "./api/Term";
 
 const RootLayout = lazy(() => import("./layouts/Root"));

@@ -13,7 +13,7 @@ import type {
   IArticleCreateRequest,
   IArticleDataResponse,
   IArticleResponse,
-} from "../../api/Article";
+} from "../../api/article";
 import LangSelect from "../general/LangSelect";
 import { useEffect, useRef, useState } from "react";
 

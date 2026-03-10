@@ -1,7 +1,7 @@
 import { Skeleton } from "antd";
 import { useEffect, useState } from "react";
 import { get } from "../../request";
-import type { IArticleResponse } from "../../api/Article";
+import type { IArticleResponse } from "../../api/article";
 import type { ICommentAnchorResponse } from "../../api/Comment";
 
 import AnchorCard from "./AnchorCard";

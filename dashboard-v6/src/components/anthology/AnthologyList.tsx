@@ -15,7 +15,7 @@ import AnthologyCreate from "./AnthologyCreate";
 import type {
   IAnthologyListResponse,
   IDeleteResponse,
-} from "../../api/Article";
+} from "../../api/article";
 import { delete_, get } from "../../request";
 import { PublicityValueEnum } from "../studio/table";
 import { useEffect, useRef, useState } from "react";

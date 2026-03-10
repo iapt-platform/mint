@@ -4,7 +4,7 @@ import { Card, Space, Segmented } from "antd";
 
 import store from "../../store";
 import { modeChange } from "../../reducers/article-mode";
-import type { ArticleMode } from "../../api/Article";
+import type { ArticleMode } from "../../api/article";
 
 interface IWidgetArticleCard {
   title?: React.ReactNode;

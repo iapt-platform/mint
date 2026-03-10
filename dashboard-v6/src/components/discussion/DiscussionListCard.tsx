@@ -10,7 +10,7 @@ import { type ActionType, ProList } from "@ant-design/pro-components";
 import { renderBadge } from "../channel/ChannelTable";
 import DiscussionCreate from "./DiscussionCreate";
 import User from "../auth/User";
-import type { IArticleListResponse } from "../../api/Article";
+import type { IArticleListResponse } from "../../api/article";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 import { CommentOutlinedIcon, TemplateOutlinedIcon } from "../../assets/icon";

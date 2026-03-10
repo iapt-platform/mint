@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import type { RecentItem as RecentItemType } from "../../../api/workspace";
-import type { ArticleType } from "../../../api/Article";
+import type { ArticleType } from "../../../api/article";
 
 const typeColor: Record<ArticleType, string> = {
   chapter: "#b5854a",

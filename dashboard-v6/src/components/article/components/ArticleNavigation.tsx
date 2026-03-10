@@ -4,7 +4,7 @@ import type {
   ArticleType,
   IArticleNavData,
   IArticleNavResponse,
-} from "../../../api/Article";
+} from "../../../api/article";
 import type { TTarget } from "../../../types";
 import NavigateButton from "./NavigateButton";
 import type { ITocPathNode } from "../../../api/pali-text";

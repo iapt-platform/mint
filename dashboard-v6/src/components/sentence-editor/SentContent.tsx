@@ -9,7 +9,7 @@ import SuggestionFocus from "./SuggestionFocus";
 import store from "../../store";
 import { push } from "../../reducers/sentence";
 import type { ISentence } from "../../api/sentence";
-import type { ArticleMode } from "../../api/Article";
+import type { ArticleMode } from "../../api/article";
 import type { IWbw } from "../../types/wbw";
 import { GetUserSetting } from "../setting/default";
 import NissayaSent from "../nissaya/NissayaSent";

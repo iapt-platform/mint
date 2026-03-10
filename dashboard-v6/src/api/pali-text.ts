@@ -1,4 +1,6 @@
+// src/api/pali-text.ts
 import type { MenuProps } from "antd";
+
 export interface ITocPathNode {
   key?: string;
   book?: number;
@@ -100,3 +102,65 @@ export interface IChapterTocListResponse {
   message: string;
   data: { rows: IChapterToc[]; count: number };
 }
+
+import { get } from "../request";
+import type { IArticleResponse } from "./article";
+
+export interface IFetchPaliBookTocParams {
+  /** 二选一：传 series 走系列模式，否则传 book + para */
+  series?: string;
+  book?: number;
+  para?: number;
+}
+
+/**
+ * 获取巴利文目录列表
+ * GET /api/v2/palitext?view=book-toc[&series=xxx | &book=x&para=y]
+ */
+export const fetchPaliBookToc = (
+  params: IFetchPaliBookTocParams
+): Promise<IPaliTocListResponse> => {
+  const query = new URLSearchParams({ view: "book-toc" });
+
+  if (params.series) {
+    query.set("series", params.series);
+  } else {
+    if (params.book !== undefined) query.set("book", String(params.book));
+    if (params.para !== undefined) query.set("para", String(params.para));
+  }
+
+  return get<IPaliTocListResponse>(`/api/v2/palitext?${query.toString()}`);
+};
+
+export const fetchChapter = (
+  articleId: string,
+  mode: "read" | "edit",
+  channelId?: string | null
+): Promise<IArticleResponse> => {
+  let url = `/api/v2/corpus-chapter/${articleId}?mode=${mode}`;
+  if (channelId) url += `&channels=${channelId}`;
+  return get<IArticleResponse>(url);
+};
+
+export const fetchPara = (
+  book: string,
+  para: string,
+  mode: "read" | "edit",
+  channelId?: string | null
+): Promise<IArticleResponse> => {
+  let url = `/api/v2/corpus?view=para&book=${book}&par=${para}&mode=${mode}`;
+  if (channelId) url += `&channels=${channelId}`;
+  return get<IArticleResponse>(url);
+};
+
+export const fetchNextParaChunk = (
+  paraId: string,
+  mode: string,
+  from: number,
+  to: number,
+  channelId?: string | null
+): Promise<IArticleResponse> => {
+  let url = `/api/v2/corpus-chapter/${paraId}?mode=${mode}&from=${from}&to=${to}`;
+  if (channelId) url += `&channels=${channelId}`;
+  return get<IArticleResponse>(url);
+};

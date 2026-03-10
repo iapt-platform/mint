@@ -12,7 +12,7 @@ import type {
   ITokenCreateResponse,
   TPower,
 } from "../../api/token";
-import type { ArticleType } from "../../api/Article";
+import type { ArticleType } from "../../api/article";
 const { Text } = Typography;
 
 interface IWidget {

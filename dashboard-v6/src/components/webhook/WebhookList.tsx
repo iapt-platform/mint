@@ -13,7 +13,7 @@ import {
 } from "@ant-design/icons";
 
 import { delete_, get } from "../../request";
-import type { IDeleteResponse } from "../../api/Article";
+import type { IDeleteResponse } from "../../api/article";
 import { useRef } from "react";
 import type { IWebhookApiData, IWebhookListResponse } from "../../api/webhook";
 

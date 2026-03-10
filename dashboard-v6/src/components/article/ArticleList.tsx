@@ -23,7 +23,7 @@ import {
 
 import ArticleCreate from "./ArticleCreate";
 import { delete_, get } from "../../request";
-import type { IArticleListResponse, IDeleteResponse } from "../../api/Article";
+import type { IArticleListResponse, IDeleteResponse } from "../../api/article";
 import { PublicityValueEnum } from "../studio/table";
 import { useEffect, useRef, useState } from "react";
 

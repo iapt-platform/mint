@@ -30,7 +30,7 @@ import {
   type WbwElement,
 } from "../../types/wbw";
 import type { IChannel, TChannelType } from "../../api/channel";
-import type { ArticleMode } from "../../api/Article";
+import type { ArticleMode } from "../../api/article";
 import type { ISentenceWbwListResponse } from "../../api/sentence";
 import type { IStudio } from "../../api/Auth";
 import { useWbwStreamProcessor } from "../../hooks/useWbwStreamProcessor";

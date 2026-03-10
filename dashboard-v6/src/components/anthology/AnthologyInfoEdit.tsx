@@ -13,7 +13,7 @@ import type {
   IAnthologyDataRequest,
   IAnthologyDataResponse,
   IAnthologyResponse,
-} from "../../api/Article";
+} from "../../api/article";
 import LangSelect from "../general/LangSelect";
 import PublicitySelect from "../studio/PublicitySelect";
 import { useState } from "react";

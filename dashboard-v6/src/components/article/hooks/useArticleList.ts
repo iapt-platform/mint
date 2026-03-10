@@ -44,12 +44,12 @@ import { useState, useEffect, useCallback } from "react";
 
 import type { SortOrder } from "antd/es/table/interface";
 
-import { fetchArticleList } from "../../../api/Article";
+import { fetchArticleList } from "../../../api/article";
 import type {
   IArticleDataResponse,
   IListArticleParams,
   TArticleSortField,
-} from "../../../api/Article";
+} from "../../../api/article";
 
 interface IArticleListData {
   rows: IArticleDataResponse[];

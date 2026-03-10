@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { get } from "../../request";
-import type { IArticleMapListResponse } from "../../api/Article";
+import type { IArticleMapListResponse } from "../../api/article";
 import type { ListNodeData } from "../article/components/EditableTree";
 import TocTree from "../article/components/TocTree";
 import type { TTarget } from "../../types";

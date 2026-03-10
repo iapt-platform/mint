@@ -4,7 +4,7 @@ import { Card } from "antd";
 import { Typography } from "antd";
 
 import StudioName from "../auth/Studio";
-import type { IAnthologyData } from "../../api/Article";
+import type { IAnthologyData } from "../../api/article";
 
 const { Title, Text } = Typography;
 

@@ -5,7 +5,7 @@ import AnthologyModal from "../anthology/AnthologyModal";
 import type {
   IArticleMapAddRequest,
   IArticleMapAddResponse,
-} from "../../api/Article";
+} from "../../api/article";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 

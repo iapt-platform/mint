@@ -232,7 +232,7 @@ class SentenceController extends Controller
             }
             return $this->ok($output);
         } else {
-            return $this->error("没有查询到数据");
+            return $this->ok([]);
         }
     }
     /**

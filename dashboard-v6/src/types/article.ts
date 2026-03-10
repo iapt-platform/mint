@@ -1,4 +1,4 @@
-import type { ArticleMode, ArticleType } from "../api/Article";
+import type { ArticleMode, ArticleType } from "../api/article";
 
 export const SENTENCE_FIX_WIDTH = 800;
 

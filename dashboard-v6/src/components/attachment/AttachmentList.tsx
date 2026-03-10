@@ -26,7 +26,7 @@ import { type ActionType, ProList } from "@ant-design/pro-components";
 import type { IUserDictDeleteRequest } from "../../api/dict";
 import { delete_2, get, put } from "../../request";
 import { useRef, useState } from "react";
-import type { IDeleteResponse } from "../../api/Article";
+import type { IDeleteResponse } from "../../api/article";
 import TimeShow from "../general/TimeShow";
 import { getSorterUrl } from "../../utils";
 import {

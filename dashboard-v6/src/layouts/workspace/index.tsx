@@ -33,10 +33,10 @@ const Widget = () => {
       <Layout>
         <div
           style={{
-            padding: "0 24px", // 建议保留左右内边距，否则内容会贴边
+            padding: "4 16px", // 建议保留左右内边距，否则内容会贴边
             display: "flex",
             alignItems: "center", // 垂直居中
-            height: 44,
+            height: 24,
             justifyContent: "space-between", // 如果需要左右分布（如左侧面包屑，右侧头像）可开启
           }}
         >

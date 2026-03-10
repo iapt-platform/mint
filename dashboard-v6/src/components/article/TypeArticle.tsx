@@ -5,7 +5,7 @@ import type {
   ArticleMode,
   ArticleType,
   IArticleDataResponse,
-} from "../../api/Article";
+} from "../../api/article";
 
 import TypeArticleReader from "./ArticleReader";
 import ArticleEdit from "./ArticleEdit";

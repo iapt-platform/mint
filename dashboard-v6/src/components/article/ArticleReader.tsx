@@ -1,7 +1,7 @@
 import type React from "react";
 import { Divider, Space, Tag } from "antd";
 
-import type { ArticleMode, ArticleType } from "../../api/Article";
+import type { ArticleMode, ArticleType } from "../../api/article";
 
 import "./article.css";
 

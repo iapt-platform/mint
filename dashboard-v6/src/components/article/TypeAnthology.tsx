@@ -1,6 +1,6 @@
 import "./article.css";
 
-import type { ArticleMode } from "../../api/Article";
+import type { ArticleMode } from "../../api/article";
 import AnthologyDetail from "../anthology/AnthologyReader";
 import type { TTarget } from "../../types";
 

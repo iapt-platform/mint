@@ -1,64 +1,71 @@
-import { Button, List } from "antd";
-import { useEffect, useState } from "react";
-import { useIntl } from "react-intl";
-import { Link } from "react-router";
+// src/components/Recent.tsx
+import { List, Alert } from "antd";
+import { ClockCircleOutlined } from "@ant-design/icons";
+import type { IGetRecentByUserParams } from "../../api/recent";
+import { type IRecentData } from "../../api/recent";
+import { useRecent } from "../../hooks/useRecent.ts";
 
-import { get } from "../../request";
-import type { IView, IViewListResponse } from "../../api/view";
+interface RecentProps extends IGetRecentByUserParams {
+  onClick?: (id: string) => void;
+}
 
-const RecentWidget = () => {
-  const [listData, setListData] = useState<IView[]>([]);
-  const intl = useIntl();
-  useEffect(() => {
-    const url = `/api/v2/view?view=user&limit=10`;
-    get<IViewListResponse>(url).then((json) => {
-      if (json.ok) {
-        const items: IView[] = json.data.rows.map((item, id) => {
-          return {
-            sn: id + 1,
-            id: item.id,
-            title: item.title,
-            subtitle: item.org_title,
-            type: item.target_type,
-            meta: JSON.parse(item.meta),
-            updatedAt: item.updated_at,
-          };
-        });
-        setListData(items);
-      }
-    });
-  }, []);
-  return (
-    <div style={{ padding: 6 }}>
-      <List
-        itemLayout="vertical"
-        header={intl.formatMessage({
-          id: `labels.recent-scan`,
-        })}
-        size="small"
-        dataSource={listData}
-        renderItem={(item) => {
-          let url = `/article/${item.type}/`;
-          switch (item.type) {
-            case "chapter":
-              url += item.meta.book + "-" + item.meta.para;
-              break;
+export const Recent = ({
+  userId,
+  pageSize = 20,
+  page = 0,
+  type,
+  onClick,
+}: RecentProps) => {
+  const { data, loading, errorCode, refresh } = useRecent(
+    userId,
+    pageSize,
+    page,
+    type
+  );
 
-            default:
-              break;
-          }
-          return (
-            <List.Item>
-              <Link to={url} target="_blank">
-                {item.title ? item.title : item.subtitle}
-              </Link>
-            </List.Item>
-          );
-        }}
+  if (errorCode !== null) {
+    return (
+      <Alert
+        type="error"
+        title={`加载失败（错误码：${errorCode}）`}
+        action={
+          <a onClick={refresh} style={{ cursor: "pointer" }}>
+            重试
+          </a>
+        }
       />
-      <Button type="link">{intl.formatMessage({ id: "buttons.more" })}</Button>
-    </div>
+    );
+  }
+
+  const rows: IRecentData[] = data?.data?.rows ?? [];
+
+  return (
+    <List<IRecentData>
+      loading={loading}
+      dataSource={rows}
+      locale={{ emptyText: "暂无最近访问记录" }}
+      renderItem={(item) => (
+        <List.Item
+          key={item.id}
+          onClick={() => onClick?.(item.id)}
+          style={{ cursor: onClick ? "pointer" : "default" }}
+        >
+          <List.Item.Meta
+            avatar={
+              <ClockCircleOutlined style={{ fontSize: 16, marginTop: 4 }} />
+            }
+            title={item.title}
+            description={
+              <span style={{ fontSize: 12, color: "#999" }}>
+                {item.type}
+                {item.updated_at
+                  ? ` · ${new Date(item.updated_at).toLocaleString("zh-CN")}`
+                  : ""}
+              </span>
+            }
+          />
+        </List.Item>
+      )}
+    />
   );
 };
-
-export default RecentWidget;

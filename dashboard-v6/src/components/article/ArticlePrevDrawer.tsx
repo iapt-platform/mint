@@ -1,7 +1,7 @@
 import { Drawer, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { put } from "../../request";
-import type { IArticleDataResponse, IArticleResponse } from "../../api/Article";
+import type { IArticleDataResponse, IArticleResponse } from "../../api/article";
 import ArticleLayout from "./components/ArticleLayout";
 
 const { Paragraph } = Typography;

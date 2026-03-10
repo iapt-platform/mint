@@ -19,7 +19,7 @@ import WbwRelationAdd from "./WbwRelationAdd";
 import WbwReal from "./WbwReal";
 import WbwDetailFm from "./WbwDetailFm";
 import type { IStudio } from "../../api/Auth";
-import type { ArticleMode } from "../../api/Article";
+import type { ArticleMode } from "../../api/article";
 import {
   WbwStatus,
   type IWbw,

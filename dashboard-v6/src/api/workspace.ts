@@ -1,4 +1,4 @@
-import type { ArticleType } from "./Article";
+import type { ArticleType } from "./article";
 import { getRecentByUser } from "./recent";
 
 export type ModuleItem = {
@@ -67,7 +67,7 @@ export async function fetchModules(): Promise<ModuleItem[]> {
 
 // TODO: replace with real fetch
 export async function fetchRecentItems(userId: string): Promise<RecentItem[]> {
-  const res = await getRecentByUser(userId, 10);
+  const res = await getRecentByUser({ userId, pageSize: 10 });
   return res.data.rows.map((item, id) => {
     return {
       id: id,

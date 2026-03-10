@@ -59,12 +59,12 @@ import {
   createArticle,
   updateArticle,
   deleteArticle,
-} from "../../../api/Article";
+} from "../../../api/article";
 import type {
   IArticleDataResponse,
   IArticleCreateRequest,
   IArticleDataRequest,
-} from "../../../api/Article";
+} from "../../../api/article";
 
 // ─────────────────────────────────────────────
 // Callbacks

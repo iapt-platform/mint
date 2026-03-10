@@ -18,7 +18,7 @@ import { getEnding } from "../../reducers/nissaya-ending-vocabulary";
 import { anchor, message } from "../../reducers/discussion";
 import TextDiff from "../general/TextDiff";
 
-import type { IDeleteResponse } from "../../api/Article";
+import type { IDeleteResponse } from "../../api/article";
 import { delete_, get } from "../../request";
 
 import "./style.css";

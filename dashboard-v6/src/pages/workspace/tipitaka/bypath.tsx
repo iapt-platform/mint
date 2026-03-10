@@ -10,7 +10,7 @@ import BookTreeList, {
 import PaliChapterListByTag from "../../../components/tipitaka/PaliChapterListByTag";
 import type { IChapterClickEvent } from "../../../components/tipitaka/PaliChapterList";
 import BookViewer from "../../../components/tipitaka/BookViewer";
-import Recent from "../../../components/recent/Recent";
+import Recent from "../../../components/recent/RecentRead";
 
 // 将纯逻辑函数移出组件外，避免每次渲染都重新定义
 const getTagByPath = (

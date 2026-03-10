@@ -23,7 +23,7 @@ import {
   fetchSentencesInChapter,
   type IChannelItem,
 } from "../../../api/channel";
-import type { ArticleType } from "../../../api/Article";
+import type { ArticleType } from "../../../api/article";
 import { getSentIdInArticle } from "../utils";
 
 interface IUseChannelProgressReturn {

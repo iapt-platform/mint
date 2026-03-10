@@ -5,10 +5,7 @@ const Widget = () => {
 
   return (
     <div>
-      <div>
-        <Outlet />
-      </div>
-      <div>root layout footer</div>
+      <Outlet />
     </div>
   );
 };

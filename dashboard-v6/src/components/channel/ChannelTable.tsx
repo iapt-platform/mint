@@ -18,7 +18,7 @@ import type {
   TChannelType,
 } from "../../api/channel";
 import { PublicityValueEnum } from "../studio/table";
-import type { IDeleteResponse } from "../../../src/api/Article";
+import type { IDeleteResponse } from "../../api/article";
 import { useEffect, useRef, useState } from "react";
 import type { IStudio, TRole } from "../../../src/api/Auth";
 import ShareModal from "../share/ShareModal";

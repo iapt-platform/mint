@@ -6,12 +6,8 @@ import type {
   ArticleType,
   IArticleDataResponse,
   IChapterToc,
-} from "../api/Article";
-import {
-  fetchChapterArticle,
-  fetchParaArticle,
-  fetchNextParaChunk,
-} from "../api/Article";
+} from "../api/article";
+import { fetchChapter, fetchNextParaChunk, fetchPara } from "../api/pali-text";
 
 interface IUseTipitakaProps {
   type?: ArticleType;
@@ -68,15 +64,10 @@ const useTipitaka = ({
       try {
         let response;
         if (type === "chapter") {
-          response = await fetchChapterArticle(id, srcDataMode, channelId);
+          response = await fetchChapter(id, srcDataMode, channelId);
         } else if (type === "para") {
           const _book = book ?? id;
-          response = await fetchParaArticle(
-            _book,
-            para ?? "",
-            srcDataMode,
-            channelId
-          );
+          response = await fetchPara(_book, para ?? "", srcDataMode, channelId);
         } else {
           return;
         }

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Modal } from "antd";
 
 import Token from "./Token";
-import type { ArticleType } from "../../api/Article";
+import type { ArticleType } from "../../api/article";
 
 interface IWidget {
   channelId?: string;

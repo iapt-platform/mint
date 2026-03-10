@@ -14,7 +14,7 @@ import { currentUser as _currentUser } from "../../reducers/current-user";
 import { useEffect, useRef, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import type { IComment, TDiscussionType } from "../../api/discussion";
-import type { TContentType } from "../../api/Article";
+import type { TContentType } from "../../api/article";
 import { discussionCountUpgrade, toIComment } from "./utils";
 
 interface IWidget {

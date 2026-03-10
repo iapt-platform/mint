@@ -14,50 +14,7 @@ import {
   ChapterOutlinedIcon,
   ParagraphOutlinedIcon,
 } from "../../assets/icon";
-import type { ArticleType } from "../../api/Article";
-
-export interface IRecentRequest {
-  type: ArticleType;
-  article_id: string;
-  param?: string;
-}
-interface IParam {
-  book?: string;
-  para?: string;
-  channel?: string;
-  mode?: string;
-}
-interface IRecentData {
-  id: string;
-  title: string;
-  type: ArticleType;
-  article_id: string;
-  param: string | null;
-  updated_at: string;
-}
-
-export interface IRecentResponse {
-  ok: boolean;
-  message: string;
-  data: IRecentData;
-}
-interface IRecentListResponse {
-  ok: boolean;
-  message: string;
-  data: {
-    rows: IRecentData[];
-    count: number;
-  };
-}
-
-export interface IRecent {
-  id: string;
-  title: string;
-  type: ArticleType;
-  articleId: string;
-  updatedAt: string;
-  param?: IParam;
-}
+import type { IRecent, IRecentListResponse } from "../../api/recent";
 
 interface IWidget {
   onSelect?: (

@@ -23,7 +23,7 @@ import type { IWbw } from "../../types/wbw";
 import type { IResNumber } from "../../api/channel";
 import RelaGraphic from "../wbw/RelaGraphic";
 import type { ITocPathNode } from "../../api/pali-text";
-import type { ArticleMode } from "../../api/Article";
+import type { ArticleMode } from "../../api/article";
 import type { ISentence } from "../../api/sentence";
 
 const { Text } = Typography;

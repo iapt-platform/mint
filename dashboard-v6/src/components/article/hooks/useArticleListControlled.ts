@@ -37,11 +37,11 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-import { fetchArticleList } from "../../../api/Article";
+import { fetchArticleList } from "../../../api/article";
 import type {
   IArticleDataResponse,
   IListArticleParams,
-} from "../../../api/Article";
+} from "../../../api/article";
 
 interface IArticleListData {
   rows: IArticleDataResponse[];

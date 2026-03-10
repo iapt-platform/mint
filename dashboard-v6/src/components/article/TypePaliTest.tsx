@@ -17,7 +17,7 @@ import {
 } from "antd";
 import { PlayCircleOutlined, ReloadOutlined } from "@ant-design/icons";
 import TypePali from "./TypePali"; // 根据实际路径调整
-import type { ArticleMode, ArticleType } from "../../api/Article";
+import type { ArticleMode, ArticleType } from "../../api/article";
 
 const { Title, Text } = Typography;
 const { useToken } = theme;

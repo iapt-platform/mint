@@ -1,6 +1,6 @@
 import { useEffect, useState, useTransition } from "react";
 
-import type { ArticleMode, IArticleDataResponse } from "../../../api/Article";
+import type { ArticleMode, IArticleDataResponse } from "../../../api/article";
 import { getTerm, type ITermDataResponse } from "../../../api/Term";
 import { message } from "antd";
 

@@ -22,7 +22,7 @@ import { delete_, get, post } from "../../request";
 import { useRef, useState } from "react";
 
 import TagsList from "./TagList";
-import type { IDeleteResponse } from "../../api/Article";
+import type { IDeleteResponse } from "../../api/article";
 import store from "../../store";
 import { tagsUpgrade } from "../../reducers/discussion-count";
 

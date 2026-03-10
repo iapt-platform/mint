@@ -34,11 +34,11 @@
 // ─────────────────────────────────────────────
 import { useState, useEffect, useCallback, useRef } from "react";
 
-import { fetchArticle } from "../../../api/Article";
+import { fetchArticle } from "../../../api/article";
 import type {
   IArticleDataResponse,
   IFetchArticleParams,
-} from "../../../api/Article";
+} from "../../../api/article";
 import { HttpError } from "../../../request";
 
 interface IUseArticleReturn {

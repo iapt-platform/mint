@@ -25,7 +25,7 @@ import type { TooltipPlacement } from "antd/es/tooltip"; // antd6: 路径从 lib
 import { temp } from "../../reducers/setting";
 import TagsArea from "../tag/TagsArea";
 import type { IStudio } from "../../api/Auth";
-import type { ArticleMode } from "../../api/Article";
+import type { ArticleMode } from "../../api/article";
 import type { ITagMapData } from "../../api/Tag";
 import PaliText from "../general/PaliText";
 import { bookMarkColor } from "./utils";

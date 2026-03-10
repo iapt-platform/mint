@@ -28,7 +28,7 @@ import type {
 import { delete_2, get } from "../../request";
 import { useEffect, useRef, useState } from "react";
 import DictEdit from "./DictEdit";
-import type { IDeleteResponse } from "../../api/Article";
+import type { IDeleteResponse } from "../../api/article";
 import TimeShow from "../general/TimeShow";
 import { getSorterUrl } from "../../utils";
 import MdView from "../general/MdView";

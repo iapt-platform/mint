@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useSearchParams } from "react-router";
-import type { ArticleMode } from "../../../api/Article";
+import type { ArticleMode } from "../../../api/article";
 import ArticleEditor from "../../../features/editor/Article";
 
 const Widget = () => {

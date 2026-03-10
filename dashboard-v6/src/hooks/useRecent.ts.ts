@@ -1,4 +1,4 @@
-// hooks/useRecent.ts
+// src/hooks/useRecent.ts
 /**
  * useRecent
  *
@@ -23,6 +23,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { getRecentByUser, type IRecentListResponse } from "../api/recent";
 import { HttpError } from "../request";
+import type { ArticleType } from "../api/article";
 
 interface UseRecentResult {
   data: IRecentListResponse | null;
@@ -34,7 +35,8 @@ interface UseRecentResult {
 export const useRecent = (
   userId?: string,
   pageSize: number = 20,
-  page: number = 0
+  page: number = 0,
+  type?: ArticleType // 新增
 ): UseRecentResult => {
   const [data, setData] = useState<IRecentListResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -53,7 +55,7 @@ export const useRecent = (
       setErrorCode(null);
 
       try {
-        const res = await getRecentByUser(userId, pageSize, page);
+        const res = await getRecentByUser({ userId, pageSize, page, type });
         if (!active) return;
 
         if (!res.ok) {
@@ -82,7 +84,7 @@ export const useRecent = (
     return () => {
       active = false;
     };
-  }, [userId, pageSize, page, tick]);
+  }, [userId, pageSize, page, tick, type]);
 
   return { data, loading, errorCode, refresh };
 };

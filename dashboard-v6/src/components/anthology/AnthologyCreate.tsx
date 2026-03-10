@@ -10,7 +10,7 @@ import LangSelect from "../general/LangSelect";
 import type {
   IAnthologyCreateRequest,
   IAnthologyResponse,
-} from "../../api/Article";
+} from "../../api/article";
 import { post } from "../../request";
 import { useRef } from "react";
 

@@ -10,7 +10,7 @@ import {
 
 import type { ITermDeleteRequest, ITermListResponse } from "../../api/Term";
 import { delete_2, get } from "../../request";
-import type { IDeleteResponse } from "../../api/Article";
+import type { IDeleteResponse } from "../../api/article";
 import { useRef } from "react";
 import TermExport from "./TermExport";
 

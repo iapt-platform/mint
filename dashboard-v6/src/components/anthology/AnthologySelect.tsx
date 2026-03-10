@@ -1,7 +1,7 @@
 import { Select } from "antd";
 import { useEffect, useState } from "react";
 import { get } from "../../request";
-import type { IAnthologyListResponse } from "../../api/Article";
+import type { IAnthologyListResponse } from "../../api/article";
 
 interface IOptions {
   value: string;

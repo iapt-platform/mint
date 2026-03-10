@@ -30,7 +30,7 @@ import StudioName from "../auth/Studio";
 import ProgressSvg from "./ProgressSvg";
 import CopyToModal from "./CopyToModal";
 import { ChannelInfoModal } from "./ChannelInfo";
-import type { ArticleType } from "../../api/Article";
+import type { ArticleType } from "../../api/article";
 import TokenModal from "../token/TokenModal";
 import NissayaAlignerModal from "../nissaya/NissayaAlignerModal";
 import { useChannelProgress } from "./hooks/useChannelProgress";

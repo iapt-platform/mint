@@ -10,7 +10,7 @@ import "./style.css";
 import { settingInfo } from "../../reducers/setting";
 
 import { useSetting } from "../../hooks/useSetting";
-import type { ArticleMode } from "../../api/Article";
+import type { ArticleMode } from "../../api/article";
 import { GetUserSetting } from "../setting/default";
 import SentContent from "./SentContent";
 import type { IWbw } from "../../types/wbw";

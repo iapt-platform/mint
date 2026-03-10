@@ -6,7 +6,7 @@ import WbwMeaningSelect from "./WbwMeaningSelect";
 
 import CaseFormula from "./CaseFormula";
 import EditableLabel from "../general/EditableLabel";
-import type { ArticleMode } from "../../api/Article";
+import type { ArticleMode } from "../../api/article";
 import { errorClass } from "./utils";
 import type { IWbw, TWbwDisplayMode } from "../../types/wbw";
 

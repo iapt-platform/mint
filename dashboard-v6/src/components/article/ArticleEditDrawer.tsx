@@ -1,6 +1,6 @@
 import { Drawer } from "antd";
 import React, { useEffect, useState } from "react";
-import type { IArticleDataResponse } from "../../api/Article";
+import type { IArticleDataResponse } from "../../api/article";
 
 import ArticleEdit from "./ArticleEdit";
 

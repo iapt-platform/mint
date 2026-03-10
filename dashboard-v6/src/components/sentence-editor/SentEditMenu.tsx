@@ -12,7 +12,7 @@ import {
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import type { ISentence } from "../../api/sentence";
-import type { ArticleMode, TContentType } from "../../api/Article";
+import type { ArticleMode, TContentType } from "../../api/article";
 
 import {
   CommentOutlinedIcon,

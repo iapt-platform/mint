@@ -23,7 +23,7 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import ArticleReader from "./ArticleReader";
-import type { ArticleMode } from "../../api/Article";
+import type { ArticleMode } from "../../api/article";
 
 const { darkAlgorithm } = theme;
 const { Title, Text } = Typography;

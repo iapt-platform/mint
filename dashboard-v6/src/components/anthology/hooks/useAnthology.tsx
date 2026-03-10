@@ -22,7 +22,7 @@ import { useState, useEffect, useCallback } from "react";
 import {
   fetchAnthology,
   type IAnthologyDataResponse,
-} from "../../../api/Article";
+} from "../../../api/article";
 import { HttpError } from "../../../request";
 
 interface UseAnthologyResult {

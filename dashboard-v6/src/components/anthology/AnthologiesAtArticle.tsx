@@ -1,7 +1,7 @@
 import { Space, Typography, message } from "antd";
 import { useEffect, useState } from "react";
 import { get } from "../../request";
-import type { IArticleMapListResponse } from "../../api/Article";
+import type { IArticleMapListResponse } from "../../api/article";
 
 const { Link, Paragraph } = Typography;
 interface IList {
