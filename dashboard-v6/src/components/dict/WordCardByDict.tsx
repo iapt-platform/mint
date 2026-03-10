@@ -1,4 +1,4 @@
-import { Button, Card, Popover, Space, Tabs } from "antd";
+import { Button, Card, Popover, Tabs } from "antd";
 import { Typography } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 
@@ -9,7 +9,7 @@ import DictInfoCopyRef from "./DictInfoCopyRef";
 import MdView from "../general/MdView";
 import type { IWordByDict } from "../../api/dict";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 interface IWidgetWordCardByDict {
   data: IWordByDict;
@@ -21,7 +21,7 @@ const WordCardByDictWidget = ({ data, children }: IWidgetWordCardByDict) => {
       title={data.dictname}
       extra={
         <Popover
-          overlayStyle={{ maxWidth: 600 }}
+          styles={{ root: { maxWidth: 600 } }}
           content={
             <div>
               <Tabs
