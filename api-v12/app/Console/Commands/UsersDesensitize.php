@@ -61,7 +61,8 @@ class UsersDesensitize extends Command
 
             if (
                 mb_substr($user->username, 0, 4) === 'test' ||
-                $user->username === 'admin'
+                $user->username === 'admin' ||
+                $user->username === 'visuddhinanda'
             ) {
                 $this->info('test user jump' . $user->username);
                 $jumped++;
