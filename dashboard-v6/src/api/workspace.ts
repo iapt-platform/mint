@@ -24,7 +24,7 @@ export type ModuleStats = {
 export type ModuleItem = ModuleConfig & { stats: string };
 
 export type RecentItem = {
-  id: number;
+  id: string;
   title: string;
   subtitle: string;
   time: string;
@@ -90,8 +90,8 @@ export async function fetchModules(): Promise<ModuleItem[]> {
 
 export async function fetchRecentItems(userId: string): Promise<RecentItem[]> {
   const res = await getRecentByUser({ userId, pageSize: 10 });
-  return res.data.rows.map((item, id) => ({
-    id,
+  return res.data.rows.map((item) => ({
+    id: item.article_id,
     title: item.title,
     subtitle: "Tipitaka · 律藏",
     time: item.updated_at,

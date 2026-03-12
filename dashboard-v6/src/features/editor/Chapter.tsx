@@ -2,13 +2,18 @@
 // Props
 // ─────────────────────────────────────────────
 
+import { useLocation } from "react-router";
 import type { ArticleMode, ArticleType } from "../../api/article";
 import TypePali, {
   type ISearchParams,
 } from "../../components/article/TypePali";
 import Editor from "../../components/editor";
 import PaliTextToc from "../../components/tipitaka/PaliTextToc";
+import { useSaveRecent } from "../../hooks/useSaveRecent";
 import type { TTarget } from "../../types";
+import { useEffect } from "react";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
 
 export interface ChapterEditorProps {
   chapterId?: string;
@@ -39,6 +44,20 @@ export default function ChapterEditor({
   const [book, para] = chapterId
     ? chapterId.split("-").map((item) => parseInt(item))
     : [undefined, undefined];
+  const currUser = useAppSelector(currentUser);
+  const { save } = useSaveRecent();
+  const { search } = useLocation();
+
+  useEffect(() => {
+    if (!currUser?.id || !chapterId) return;
+
+    save({
+      type: "chapter",
+      article_id: chapterId,
+      param: search || undefined,
+    });
+  }, [currUser?.id, chapterId, search, save]);
+
   return (
     <Editor
       sidebarTitle="recent scan"
@@ -54,7 +73,20 @@ export default function ChapterEditor({
         />
       }
       articleId={chapterId}
+      articleType="chapter"
       channelId={channelId}
+      onChannelSelect={(selected) => {
+        if (chapterId) {
+          const channelParams = [
+            {
+              key: "channel",
+              value: selected.map((item) => item.id).join("_"),
+            },
+          ];
+          console.debug("onChannelSelect", channelParams);
+          onArticleChange?.("chapter", chapterId, "_self", channelParams);
+        }
+      }}
     >
       {({ expandButton }) => (
         <TypePali

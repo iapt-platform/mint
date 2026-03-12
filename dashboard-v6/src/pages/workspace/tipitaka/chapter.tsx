@@ -1,4 +1,9 @@
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router";
 import type { ArticleMode } from "../../../api/article";
 import ChapterEditor from "../../../features/editor/Chapter";
 
@@ -6,7 +11,7 @@ const Widget = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
+  const { search } = useLocation();
   const mode = searchParams.get("mode") ?? "read";
   const channelId = searchParams.get("channel");
 
@@ -16,17 +21,20 @@ const Widget = () => {
       mode={mode as ArticleMode}
       channelId={channelId}
       onSelect={(id) => {
-        navigate(`/workspace/tipitaka/chapter/${id}`);
+        navigate(`/workspace/tipitaka/chapter/${id}${search}`);
       }}
-      onArticleChange={(type, id, target) => {
+      onArticleChange={(type, id, target, param) => {
         const url = `workspace/tipitaka/${type}/${id}`;
+        const urlSearch = param
+          ? "?" + param?.map((item) => `${item.key}=${item.value}`).join("&")
+          : search;
         if (target === "_blank") {
           window.open(
-            `${window.location.origin}${import.meta.env.BASE_URL}${url}`,
+            `${window.location.origin}${import.meta.env.BASE_URL}${url}${urlSearch}`,
             "_blank"
           );
         } else {
-          navigate(`/${url}`);
+          navigate(`/${url}${urlSearch}`);
         }
       }}
     />

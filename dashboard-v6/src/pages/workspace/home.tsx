@@ -8,11 +8,13 @@ import { fetchModules, fetchRecentItems } from "../../api/workspace";
 import type { ModuleItem, RecentItem } from "../../api/workspace";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
+import { useNavigate } from "react-router";
 
 export default function WorkspaceHome() {
   const [modules, setModules] = useState<ModuleItem[]>([]);
   const [recentItems, setRecentItems] = useState<RecentItem[]>([]);
   const user = useAppSelector(currentUser);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
@@ -33,7 +35,14 @@ export default function WorkspaceHome() {
         </SectionPanel>
 
         <SectionPanel title="最近访问">
-          <RecentList items={recentItems} />
+          <RecentList
+            items={recentItems}
+            onClick={(type, id) => {
+              if (type === "chapter") {
+                navigate(`/workspace/tipitaka/${type}/${id}`);
+              }
+            }}
+          />
         </SectionPanel>
       </div>
     </div>

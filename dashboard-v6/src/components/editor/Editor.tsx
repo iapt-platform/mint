@@ -14,6 +14,8 @@ import {
 import ChatPanel from "./panels/ChatPanel";
 import SuggestionPanel from "./panels/SuggestionPanel";
 import GrammarBookPanel from "./panels/GrammarBookPanel";
+import type { ArticleType } from "../../api/article";
+import type { IChannel } from "../../api/channel";
 
 // ─────────────────────────────────────────────
 // Props
@@ -44,9 +46,11 @@ export interface EditorProps {
 
   // ── 业务参数（透传给右边栏面板）──
   articleId?: string;
+  articleType?: ArticleType;
   anthologyId?: string;
   /** 多个 channelId 用 "_" 拼接的原始字符串，Editor 内部负责解析 */
   channelId?: string | null;
+  onChannelSelect?: (selected: IChannel[]) => void;
 }
 
 // ─────────────────────────────────────────────
@@ -58,8 +62,10 @@ export default function Editor({
   sidebar,
   children,
   articleId,
+  articleType,
   anthologyId,
   channelId,
+  onChannelSelect,
 }: EditorProps) {
   const channels = channelId ? channelId.split("_") : undefined;
 
@@ -82,7 +88,14 @@ export default function Editor({
       key: "channel",
       icon: <ChannelIcon />,
       label: "版本",
-      content: <ChannelPanel articleId={articleId} channels={channels} />,
+      content: (
+        <ChannelPanel
+          articleId={articleId}
+          type={articleType}
+          channels={channels}
+          onSelect={onChannelSelect}
+        />
+      ),
     },
     {
       key: "discussion",
