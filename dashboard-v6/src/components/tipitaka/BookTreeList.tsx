@@ -141,6 +141,25 @@ const BoolTreeListWidget = ({
     }
   }
 
+  const bcItems = [
+    {
+      title: (
+        <Link to={`/workspace/tipitaka/${currRoot}`}>
+          <HomeOutlined />
+        </Link>
+      ),
+    },
+    ...bookPath.map((item) => {
+      return {
+        title: (
+          <Link to={`/workspace/tipitaka/${currRoot}/${item.to}`}>
+            <PaliText text={item.title} />
+          </Link>
+        ),
+      };
+    }),
+  ];
+
   return (
     <>
       <Row style={{ padding: 10 }}>
@@ -149,22 +168,7 @@ const BoolTreeListWidget = ({
           sm={24}
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Breadcrumb>
-            <Breadcrumb.Item>
-              <Link to={`/workspace/tipitaka/${currRoot}`}>
-                <HomeOutlined />
-              </Link>
-            </Breadcrumb.Item>
-            {bookPath.map((item, id) => {
-              return (
-                <Breadcrumb.Item key={id}>
-                  <Link to={`/workspace/tipitaka/${currRoot}/${item.to}`}>
-                    <PaliText text={item.title} />
-                  </Link>
-                </Breadcrumb.Item>
-              );
-            })}
-          </Breadcrumb>
+          <Breadcrumb items={bcItems} />
           {/**
            * TODO reload
              *           <FullSearchInput

@@ -6,7 +6,7 @@ interface IWidget {
   path: string[];
 }
 
-const DictGroupTitleWidget = ({ title, path }: IWidget) => {
+const DictGroupTitle = ({ title, path }: IWidget) => {
   const [fixed, setFixed] = useState<boolean>();
   return (
     <Affix
@@ -16,24 +16,19 @@ const DictGroupTitleWidget = ({ title, path }: IWidget) => {
       }
       onChange={(affixed) => setFixed(affixed)}
     >
-      {fixed ? (
+      {!fixed && title}
+      {fixed && (
         <Breadcrumb
           style={{
             backgroundColor: "white",
             padding: 4,
             borderBottom: "1px solid gray",
           }}
-        >
-          <Breadcrumb.Item key={"top"}>Top</Breadcrumb.Item>
-          {path.map((item, index) => {
-            return <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>;
-          })}
-        </Breadcrumb>
-      ) : (
-        title
+          items={[{ title: "Top" }, ...path.map((item) => ({ title: item }))]}
+        />
       )}
     </Affix>
   );
 };
 
-export default DictGroupTitleWidget;
+export default DictGroupTitle;

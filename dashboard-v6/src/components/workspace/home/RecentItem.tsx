@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { theme } from "antd";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import type { RecentItem as RecentItemType } from "../../../api/workspace";
 import type { ArticleType } from "../../../api/article";
@@ -34,7 +35,65 @@ export default function RecentItem({
   time,
   onClick,
 }: RecentItemProps) {
+  const { token } = theme.useToken();
   const color = typeColor[type];
+
+  const styles: Record<string, CSSProperties> = {
+    row: {
+      display: "flex",
+      alignItems: "center",
+      gap: 14,
+      padding: "14px 20px",
+      borderBottom: `1px solid ${token.colorBorderSecondary}`,
+      background: token.colorBgContainer,
+    },
+    emoji: {
+      fontSize: 20,
+      width: 36,
+      textAlign: "center",
+      flexShrink: 0,
+    },
+    info: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      gap: 2,
+      minWidth: 0,
+    },
+    title: {
+      fontSize: 14,
+      fontWeight: 500,
+      color: token.colorText,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+    },
+    subtitle: {
+      fontSize: 12,
+      color: token.colorTextTertiary,
+    },
+    right: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-end",
+      gap: 4,
+      flexShrink: 0,
+    },
+    tag: {
+      fontSize: 11,
+      fontWeight: 600,
+      padding: "2px 8px",
+      borderRadius: 4,
+      letterSpacing: "0.04em",
+      textTransform: "uppercase",
+    },
+    time: {
+      fontSize: 11,
+      color: token.colorTextQuaternary,
+      display: "flex",
+      alignItems: "center",
+    },
+  };
 
   return (
     <>
@@ -65,66 +124,9 @@ export default function RecentItem({
           cursor: pointer;
         }
         .workspace-recent-item:hover {
-          background: #f7f7f5 !important;
+          background: ${token.colorBgTextHover} !important;
         }
       `}</style>
     </>
   );
 }
-
-const styles: Record<string, CSSProperties> = {
-  row: {
-    display: "flex",
-    alignItems: "center",
-    gap: 14,
-    padding: "14px 20px",
-    borderBottom: "1px solid #f0ece6",
-    background: "#fff",
-  },
-  emoji: {
-    fontSize: 20,
-    width: 36,
-    textAlign: "center",
-    flexShrink: 0,
-  },
-  info: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    gap: 2,
-    minWidth: 0,
-  },
-  title: {
-    fontSize: 14,
-    fontWeight: 500,
-    color: "#2d2416",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  },
-  subtitle: {
-    fontSize: 12,
-    color: "#a09080",
-  },
-  right: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-end",
-    gap: 4,
-    flexShrink: 0,
-  },
-  tag: {
-    fontSize: 11,
-    fontWeight: 600,
-    padding: "2px 8px",
-    borderRadius: 4,
-    letterSpacing: "0.04em",
-    textTransform: "uppercase",
-  },
-  time: {
-    fontSize: 11,
-    color: "#b5a898",
-    display: "flex",
-    alignItems: "center",
-  },
-};

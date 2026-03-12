@@ -1,5 +1,5 @@
-import type { IWidgetSentReadFrame } from "../sentence-editor/SentRead";
-import SentReadFrame from "../sentence-editor/SentRead";
+import type { IWidgetSentReadFrame } from "../sentence/SentRead";
+import SentReadFrame from "../sentence/SentRead";
 
 interface IWidget {
   props: string;

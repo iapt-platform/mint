@@ -14,7 +14,7 @@ const SentAttachment = ({ sentenceId }: IWidget) => {
     if (!sentenceId) {
       return;
     }
-    const url = `/v2/sentence-attachment?view=sentence&id=${sentenceId}`;
+    const url = `/api/v2/sentence-attachment?view=sentence&id=${sentenceId}`;
     console.debug("api request", url);
     get<IResAttachmentListResponse>(url).then((json) => {
       console.debug("api response", json);

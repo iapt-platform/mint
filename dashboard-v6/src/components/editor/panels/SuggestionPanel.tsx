@@ -1,4 +1,4 @@
-import SuggestionBox from "../../sentence-editor/SuggestionBox";
+import SuggestionBox from "../../sentence/SuggestionBox";
 
 interface SearchPanelProps {
   articleId?: string;

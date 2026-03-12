@@ -1,7 +1,4 @@
-import {
-  SentEditInner,
-  type IWidgetSentEditInner,
-} from "../sentence-editor/SentEdit";
+import { SentEditInner, type IWidgetSentEditInner } from "../sentence/SentEdit";
 
 interface IWidgetSentEdit {
   props: string;

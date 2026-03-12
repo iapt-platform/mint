@@ -14,12 +14,12 @@ import "./style.css";
 import type { ISentence } from "../../api/sentence";
 import { get } from "../../request";
 import { GetUserSetting } from "../setting/default";
-import type { TCodeConvertor } from "../../types/template";
 import { openDiscussion } from "../discussion/utils";
 import { prOpen } from "./utils";
 import MdView from "../general/MdView";
 import InteractiveButton from "./InteractiveButton";
 import type { IEditableSentence } from "../../api/sentence";
+import MdOrigin from "./components/MdOrigin";
 
 const { Text } = Typography;
 
@@ -31,7 +31,7 @@ const items: MenuProps["items"] = [
 ];
 
 export interface IWidgetSentReadFrame {
-  sentId?: string;
+  id?: string;
   book?: number;
   para?: number;
   wordStart?: number;
@@ -57,12 +57,6 @@ const SentReadFrame = ({
   const [active, setActive] = useState(false);
   const [sentData, setSentData] = useState<IWidgetSentEditInner>();
   const [showEdit, setShowEdit] = useState(false);
-
-  /** 派生数据：主巴利编码 */
-  const paliCode = useMemo(() => {
-    const v = GetUserSetting("setting.pali.script.primary", settings);
-    return (v ?? "roman") as TCodeConvertor;
-  }, [settings]);
 
   /** 派生数据：是否显示原文 */
   const displayOriginal = useMemo(() => {
@@ -152,14 +146,7 @@ const SentReadFrame = ({
         }}
       >
         {origin?.map((item, id) => (
-          <Text key={id}>
-            <MdView
-              style={{ color: "brown" }}
-              html={item.html}
-              wordWidget
-              convertor={paliCode}
-            />
-          </Text>
+          <MdOrigin text={item.html} key={id} />
         ))}
       </span>
 

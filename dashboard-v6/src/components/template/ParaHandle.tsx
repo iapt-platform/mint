@@ -4,7 +4,7 @@ import { fullUrl, scrollToTop } from "../../utils";
 import { useIntl } from "react-intl";
 import store from "../../store";
 import { modeChange } from "../../reducers/article-mode";
-import { addToCart } from "../sentence-editor/utils";
+import { addToCart } from "../sentence/utils";
 
 interface IWidgetParaHandleCtl {
   book: number;

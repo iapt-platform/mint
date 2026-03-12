@@ -1,26 +1,36 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { EditOutlined, EyeOutlined } from "@ant-design/icons";
+
 import { useAppSelector } from "../../hooks";
 import { currFocus } from "../../reducers/focus";
 import { ParaHandleCtl } from "./ParaHandle";
+import { SentEditInner, type IWidgetSentEditInner } from "../sentence/SentEdit";
+import { Button } from "antd";
+import type { ArticleMode } from "../../api/article";
+import ParagraphRead from "../tipitaka/components/ParagraphRead";
 
-interface IWidgetParaShellCtl {
+export interface IParagraphProps {
   book: number;
   para: number;
-  mode?: string;
+  mode?: ArticleMode;
   channels?: string[];
   sentenceIds: string[];
-  children?: React.ReactNode | React.ReactNode[];
+  children?: IWidgetSentEditInner[];
+  onModeChange?: (mode: ArticleMode) => void;
 }
-const ParagraphCtl = ({
+export const ParagraphCtl = ({
   book,
   para,
   mode = "read",
   channels,
   sentenceIds,
   children,
-}: IWidgetParaShellCtl) => {
+  onModeChange,
+}: IParagraphProps) => {
+  const [innerMode, setInnerMode] = useState<ArticleMode>("read");
   const focus = useAppSelector(currFocus);
-
+  console.debug("para children", book, para, children?.length);
+  console.debug("para children", children);
   const isFocus = useMemo(() => {
     if (focus) {
       if (focus.focus?.type === "para") {
@@ -58,11 +68,8 @@ const ParagraphCtl = ({
     >
       <div
         style={{
-          position: "absolute",
-          marginTop: -31,
-          marginLeft: -6,
-          border: border,
-          borderRadius: "6px",
+          display: "flex",
+          justifyContent: "space-between",
         }}
       >
         <ParaHandleCtl
@@ -72,8 +79,40 @@ const ParagraphCtl = ({
           channels={channels}
           sentences={sentenceIds}
         />
+        <div>
+          {innerMode === "edit" && (
+            <Button
+              type="link"
+              icon={<EyeOutlined />}
+              onClick={() => {
+                if (onModeChange) {
+                  onModeChange("read");
+                } else {
+                  setInnerMode("read");
+                }
+              }}
+            />
+          )}
+          {innerMode === "read" && (
+            <Button
+              type="link"
+              icon={<EditOutlined />}
+              onClick={() => {
+                if (onModeChange) {
+                  onModeChange("edit");
+                } else {
+                  setInnerMode("edit");
+                }
+              }}
+            />
+          )}
+        </div>
       </div>
-      {children}
+      <div>
+        {innerMode === "edit" &&
+          children?.map((item) => <SentEditInner {...item} />)}
+        {innerMode === "read" && <ParagraphRead data={children} />}
+      </div>
     </div>
   );
 };
@@ -83,7 +122,7 @@ interface IWidget {
   children?: React.ReactNode | React.ReactNode[];
 }
 const Widget = ({ props }: IWidget) => {
-  const prop = JSON.parse(atob(props)) as IWidgetParaShellCtl;
+  const prop = JSON.parse(atob(props)) as IParagraphProps;
   return (
     <>
       <ParagraphCtl {...prop} />

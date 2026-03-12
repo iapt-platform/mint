@@ -1,4 +1,7 @@
+// src/components/workspace/home/ModuleCard.tsx
+
 import type { CSSProperties } from "react";
+import { theme } from "antd";
 import { useNavigate } from "react-router";
 import {
   BookOutlined,
@@ -28,6 +31,68 @@ export default function ModuleCard({
   path,
 }: ModuleCardProps) {
   const navigate = useNavigate();
+  const { token } = theme.useToken();
+
+  const styles: Record<string, CSSProperties> = {
+    card: {
+      borderRadius: token.borderRadiusLG,
+      padding: 20,
+      border: `1px solid ${token.colorBorderSecondary}`,
+    },
+    inner: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 12,
+      position: "relative",
+    },
+    icon: {
+      fontSize: 22,
+      width: 44,
+      height: 44,
+      borderRadius: 10,
+      border: "1.5px solid",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: token.colorBgContainer + "99",
+    },
+    info: {
+      flex: 1,
+    },
+    titleRow: {
+      display: "flex",
+      alignItems: "baseline",
+      gap: 8,
+      marginBottom: 6,
+    },
+    title: {
+      fontSize: 16,
+      fontWeight: 700,
+      letterSpacing: "-0.01em",
+      fontFamily: "Georgia, serif",
+    },
+    titleZh: {
+      fontSize: 12,
+      color: token.colorTextTertiary,
+    },
+    desc: {
+      fontSize: 13,
+      color: token.colorTextSecondary,
+      lineHeight: 1.6,
+      margin: "0 0 8px",
+    },
+    stats: {
+      fontSize: 12,
+      fontWeight: 500,
+    },
+    arrow: {
+      position: "absolute",
+      top: 0,
+      right: 0,
+      fontSize: 14,
+      opacity: 0.5,
+    },
+  };
 
   return (
     <>
@@ -37,13 +102,7 @@ export default function ModuleCard({
         onClick={() => navigate(path)}
       >
         <div style={styles.inner}>
-          <div
-            style={{
-              ...styles.icon,
-              color,
-              borderColor: color + "33",
-            }}
-          >
+          <div style={{ ...styles.icon, color, borderColor: color + "33" }}>
             {iconMap[icon]}
           </div>
           <div style={styles.info}>
@@ -59,77 +118,16 @@ export default function ModuleCard({
       </div>
 
       <style>{`
-        .workspace-module-card {
-          cursor: pointer;
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
-          box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        }
-        .workspace-module-card:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        }
-      `}</style>
+  .workspace-module-card {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: ${token.boxShadowTertiary};
+  }
+  .workspace-module-card:hover {
+    transform: translateY(-3px);
+    box-shadow: ${token.boxShadow};
+  }
+`}</style>
     </>
   );
 }
-
-const styles: Record<string, CSSProperties> = {
-  card: {
-    borderRadius: 12,
-    padding: 20,
-    border: "1px solid rgba(0,0,0,0.06)",
-  },
-  inner: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-    position: "relative",
-  },
-  icon: {
-    fontSize: 22,
-    width: 44,
-    height: 44,
-    borderRadius: 10,
-    border: "1.5px solid",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "rgba(255,255,255,0.6)",
-  },
-  info: {
-    flex: 1,
-  },
-  titleRow: {
-    display: "flex",
-    alignItems: "baseline",
-    gap: 8,
-    marginBottom: 6,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 700,
-    letterSpacing: "-0.01em",
-    fontFamily: "Georgia, serif",
-  },
-  titleZh: {
-    fontSize: 12,
-    color: "#a09080",
-  },
-  desc: {
-    fontSize: 13,
-    color: "#6b5f52",
-    lineHeight: 1.6,
-    margin: "0 0 8px",
-  },
-  stats: {
-    fontSize: 12,
-    fontWeight: 500,
-  },
-  arrow: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    fontSize: 14,
-    opacity: 0.5,
-  },
-};

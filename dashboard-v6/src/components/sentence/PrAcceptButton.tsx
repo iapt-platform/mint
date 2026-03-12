@@ -24,7 +24,7 @@ const PrAcceptButtonWidget = ({ data, onAccept }: IWidget) => {
 
   const save = () => {
     setSaving(true);
-    const url = `/v2/sentence/${data.book}_${data.para}_${data.wordStart}_${data.wordEnd}_${data.channel.id}`;
+    const url = `/api/v2/sentence/${data.book}_${data.para}_${data.wordStart}_${data.wordEnd}_${data.channel.id}`;
     const prData = {
       book: data.book,
       para: data.para,

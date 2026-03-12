@@ -49,7 +49,7 @@ const DiscussionAnchorWidget = ({
     let url: string;
     switch (resType) {
       case "sentence":
-        url = `/v2/sentence/${resId}`;
+        url = `/api/v2/sentence/${resId}`;
         console.info("api request", url);
         setLoading(true);
         get<ISentenceResponse>(url)

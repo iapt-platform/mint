@@ -1,3 +1,4 @@
+// src/pages/workspace/home.tsx
 import { useEffect, useState, type CSSProperties } from "react";
 import WorkspaceHero from "../../components/workspace/home/WorkspaceHero";
 import SectionPanel from "../../components/workspace/home/SectionPanel";
@@ -42,7 +43,6 @@ export default function WorkspaceHome() {
 const styles: Record<string, CSSProperties> = {
   page: {
     minHeight: "100vh",
-    background: "#f9f8f6",
     fontFamily: "'Noto Serif SC', 'Source Han Serif CN', Georgia, serif",
   },
   content: {

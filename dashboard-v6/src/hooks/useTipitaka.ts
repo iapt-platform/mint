@@ -8,6 +8,7 @@ import type {
   IChapterToc,
 } from "../api/article";
 import { fetchChapter, fetchNextParaChunk, fetchPara } from "../api/pali-text";
+import type { IParagraphProps } from "../components/template/Paragraph";
 
 interface IUseTipitakaProps {
   type?: ArticleType;
@@ -22,6 +23,7 @@ interface IUseTipitakaProps {
 interface IUseTipitakaReturn {
   articleData: IArticleDataResponse | undefined;
   articleHtml: string[];
+  nodeData: IParagraphProps[];
   toc: IChapterToc[] | undefined;
   loading: boolean;
   errorCode: number | undefined;
@@ -40,7 +42,8 @@ const useTipitaka = ({
   active = true,
 }: IUseTipitakaProps): IUseTipitakaReturn => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
-  const [articleHtml, setArticleHtml] = useState<string[]>(["<span />"]);
+  const [articleHtml, setArticleHtml] = useState<string[]>([]);
+  const [nodeData, setNodeData] = useState<IParagraphProps[]>([]);
   const [toc, setToc] = useState<IChapterToc[]>();
   const [loading, setLoading] = useState(false);
   const [errorCode, setErrorCode] = useState<number>();
@@ -79,6 +82,9 @@ const useTipitaka = ({
           setArticleHtml([
             response.data.html ?? response.data.content ?? "<span />",
           ]);
+          if (response.data.content && response.data.content_type === "json") {
+            setNodeData(JSON.parse(response.data.content));
+          }
           setToc(response.data.toc);
           setRemains(response.data.from !== undefined);
           setErrorCode(undefined);
@@ -131,6 +137,12 @@ const useTipitaka = ({
           return prev;
         });
         setArticleHtml((prev) => [...prev, response.data.content as string]);
+        if (response.data.content && response.data.content_type === "json") {
+          const newNodes: IParagraphProps[] = JSON.parse(
+            response.data.content
+          ) as IParagraphProps[];
+          setNodeData((prev) => [...prev, ...newNodes]);
+        }
       }
     } catch (e) {
       console.error("loadNextChunk error", e);
@@ -144,6 +156,7 @@ const useTipitaka = ({
   return {
     articleData,
     articleHtml,
+    nodeData,
     toc,
     loading,
     errorCode,

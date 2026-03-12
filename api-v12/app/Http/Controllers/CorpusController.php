@@ -532,7 +532,8 @@ class CorpusController extends Controller
         if (count($record) === 0) {
             return $this->error("no data");
         }
-        $this->result['content'] = $this->makeContent($record, $mode, $indexChannel, $indexedHeading, false, true);
+        $this->result['content'] = json_encode($this->makeContentObj($record, $mode, $indexChannel), JSON_UNESCAPED_UNICODE);
+        $this->result['content_type'] = 'json';
         if (!$request->has('from')) {
             //第一次才显示toc
             $this->result['toc'] = TocResource::collection($toc);
@@ -580,8 +581,6 @@ class CorpusController extends Controller
     private function makeContent($record, $mode, $indexChannel, $indexedHeading = [], $onlyProps = false, $paraMark = false, $format = 'react')
     {
         $content = [];
-        $lastSent = "0-0";
-        $sentCount = 0;
         $sent = [];
         $sent["origin"] = [];
         $sent["translation"] = [];
@@ -589,7 +588,7 @@ class CorpusController extends Controller
 
         //获取句子编号列表
         $sentList = [];
-        foreach ($record as $key => $value) {
+        foreach ($record as  $value) {
             $currSentId = "{$value->book_id}-{$value->paragraph}-{$value->word_start}-{$value->word_end}";
             $sentList[$currSentId] = [$value->book_id, $value->paragraph, $value->word_start, $value->word_end];
             $value->sid = "{$currSentId}_{$value->channel_uid}";
@@ -606,7 +605,6 @@ class CorpusController extends Controller
             if ($currPara !== $para) {
                 $currPara = $para;
                 //输出段落标记
-
                 if ($paraMark) {
                     $sentInPara = array();
                     foreach ($sentList as $sentId => $sentParam) {
@@ -812,6 +810,234 @@ class CorpusController extends Controller
         $output = \implode("", $content);
         return "<div>{$output}</div>";
     }
+
+    /**
+     * 根据句子库数据生成以段落为单位的文章内容
+     * $record 句子数据
+     * $mode read | edit | wbw
+     * $indexChannel channel索引
+     * $indexedHeading 标题索引 用于给段落加标题标签 <h1> ect.
+     */
+    private function makeContentObj($record, $mode, $indexChannel, $format = 'react')
+    {
+        $content = [];
+
+
+        //获取句子编号列表
+        $paraIndex = [];
+        foreach ($record as  $value) {
+            $currSentId = "{$value->book_id}-{$value->paragraph}-{$value->word_start}-{$value->word_end}";
+            $value->sid = "{$currSentId}_{$value->channel_uid}";
+
+            $currParaId = "{$value->book_id}-{$value->paragraph}";
+            if (!isset($paraIndex[$currParaId])) {
+                $paraIndex[$currParaId] = [];
+            }
+            $paraIndex[$currParaId][] = $value;
+        }
+        $channelsId = array();
+        foreach ($indexChannel as $channelId => $info) {
+            $channelsId[] = $channelId;
+        }
+        array_pop($channelsId);
+        //遍历列表查找每个句子的所有channel的数据，并填充
+        $paragraphs = [];
+        foreach ($paraIndex as $currParaId => $sentData) {
+            $arrParaId = explode('-', $currParaId);
+            $sentIndex = [];
+            foreach ($sentData as  $sent) {
+                $currSentId = "{$sent->book_id}-{$sent->paragraph}-{$sent->word_start}-{$sent->word_end}";
+                $sentIndex[$currSentId] = [$sent->book_id, $sent->paragraph, $sent->word_start, $sent->word_end];
+            }
+            $sentInPara = array_values($sentIndex);
+            $paraProps = [
+                'book' => $arrParaId[0],
+                'para' => $arrParaId[1],
+                'channels' => $channelsId,
+                'sentences' => $sentInPara,
+                'mode' => $mode,
+                'children' => [],
+            ];
+            //建立段落里面的句子列表
+            foreach ($sentIndex as $ids => $arrSentId) {
+                $sentNode = $this->newSent($arrSentId[0], $arrSentId[1], $arrSentId[2], $arrSentId[3]);
+                foreach ($indexChannel as $channelId => $info) {
+                    # code...
+                    $sid = "{$ids}_{$channelId}";
+                    if (isset($info->studio)) {
+                        $studioInfo = $info->studio;
+                    } else {
+                        $studioInfo = null;
+                    }
+                    $newSent = [
+                        "content" => "",
+                        "html" => "",
+                        "book" => $arrSentId[0],
+                        "para" => $arrSentId[1],
+                        "wordStart" => $arrSentId[2],
+                        "wordEnd" => $arrSentId[3],
+                        "channel" => [
+                            "name" => $info->name,
+                            "type" => $info->type,
+                            "id" => $info->uid,
+                            'lang' => $info->lang,
+                        ],
+                        "studio" => $studioInfo,
+                        "updateAt" => "",
+                        "suggestionCount" => SuggestionApi::getCountBySent($arrSentId[0], $arrSentId[1], $arrSentId[2], $arrSentId[3], $channelId),
+                    ];
+
+                    $row = Arr::first($sentData, function ($value, $key) use ($sid) {
+                        return $value->sid === $sid;
+                    });
+                    if ($row) {
+                        $newSent['id'] = $row->uid;
+                        $newSent['content'] = $row->content;
+                        $newSent['contentType'] = $row->content_type;
+                        $newSent['html'] = '';
+                        $newSent["editor"] = UserApi::getByUuid($row->editor_uid);
+                        /**
+                         * TODO 刷库改数据
+                         * 旧版api没有更新updated_at所以造成旧版的数据updated_at数据比modify_time 要晚
+                         */
+                        $newSent['forkAt'] =  $row->fork_at; //
+                        $newSent['updateAt'] =  $row->updated_at; //
+                        $newSent['updateAt'] = date("Y-m-d H:i:s.", $row->modify_time / 1000) . ($row->modify_time % 1000) . " UTC";
+
+                        $newSent['createdAt'] = $row->created_at;
+                        if ($mode !== "read") {
+                            if (isset($row->acceptor_uid) && !empty($row->acceptor_uid)) {
+                                $newSent["acceptor"] = UserApi::getByUuid($row->acceptor_uid);
+                                $newSent["prEditAt"] = $row->pr_edit_at;
+                            }
+                        }
+                        switch ($info->type) {
+                            case 'wbw':
+                            case 'original':
+                                //
+                                // 在编辑模式下。
+                                // 如果是原文，查看是否有逐词解析数据，
+                                // 有的话优先显示。
+                                // 阅读模式直接显示html原文
+                                // 传过来的数据一定有一个原文channel
+                                //
+                                if ($mode === "read") {
+                                    $newSent['content'] = "";
+                                    $newSent['html'] = MdRender::render(
+                                        $row->content,
+                                        [$row->channel_uid],
+                                        null,
+                                        $mode,
+                                        "translation",
+                                        $row->content_type,
+                                        $format
+                                    );
+                                } else {
+                                    if ($row->content_type === 'json') {
+                                        $newSent['channel']['type'] = "wbw";
+                                        if (isset($this->wbwChannels[0])) {
+                                            $newSent['channel']['name'] = $indexChannel[$this->wbwChannels[0]]->name;
+                                            $newSent['channel']['lang'] = $indexChannel[$this->wbwChannels[0]]->lang;
+                                            $newSent['channel']['id'] = $this->wbwChannels[0];
+                                            //存在一个translation channel
+                                            //尝试查找逐词解析数据。找到，替换现有数据
+                                            $wbwData = $this->getWbw(
+                                                $arrSentId[0],
+                                                $arrSentId[1],
+                                                $arrSentId[2],
+                                                $arrSentId[3],
+                                                $this->wbwChannels[0]
+                                            );
+                                            if ($wbwData) {
+                                                $newSent['content'] = $wbwData;
+                                                $newSent['contentType'] = 'json';
+                                                $newSent['html'] = "";
+                                                $newSent['studio'] = $indexChannel[$this->wbwChannels[0]]->studio;
+                                            }
+                                        }
+                                    } else {
+                                        $newSent['content'] = $row->content;
+                                        $newSent['html'] = MdRender::render(
+                                            $row->content,
+                                            [$row->channel_uid],
+                                            null,
+                                            $mode,
+                                            "translation",
+                                            $row->content_type,
+                                            $format
+                                        );
+                                    }
+                                }
+
+                                break;
+                            case 'nissaya':
+                                $newSent['html'] = Cache::remember(
+                                    "/sent/{$channelId}/{$ids}/{$format}",
+                                    config('mint.cache.expire'),
+                                    function () use ($row, $mode, $format) {
+                                        if ($row->content_type === 'markdown') {
+                                            return MdRender::render(
+                                                $row->content,
+                                                [$row->channel_uid],
+                                                null,
+                                                $mode,
+                                                "nissaya",
+                                                $row->content_type,
+                                                $format
+                                            );
+                                        } else {
+                                            return null;
+                                        }
+                                    }
+                                );
+                                break;
+                            case 'commentary':
+                                $options = [
+                                    'debug' => $this->debug,
+                                    'format' => $format,
+                                    'mode' => $mode,
+                                    'channelType' => 'translation',
+                                    'contentType' => $row->content_type,
+                                ];
+                                $mdRender = new MdRender($options);
+                                $newSent['html'] = $mdRender->convert($row->content, $channelsId);
+                                break;
+                            default:
+                                $options = [
+                                    'debug' => $this->debug,
+                                    'format' => $format,
+                                    'mode' => $mode,
+                                    'channelType' => 'translation',
+                                    'contentType' => $row->content_type,
+                                ];
+                                $mdRender = new MdRender($options);
+                                $newSent['html'] = $mdRender->convert($row->content, [$row->channel_uid]);
+                                //Log::debug('md render', ['content' => $row->content, 'options' => $options, 'render' => $newSent['html']]);
+                                break;
+                        }
+                    } else {
+                        Log::warning('no sentence record');
+                    }
+                    switch ($info->type) {
+                        case 'wbw':
+                        case 'original':
+                            array_push($sentNode["origin"], $newSent);
+                            break;
+                        case 'commentary':
+                            array_push($sentNode["commentaries"], $newSent);
+                            break;
+                        default:
+                            array_push($sentNode["translation"], $newSent);
+                            break;
+                    }
+                }
+                $paraProps['children'][] = $sentNode;
+            }
+            $paragraphs[] = $paraProps;
+        }
+        return $paragraphs;
+    }
+
     public function getWbw($book, $para, $start, $end, $channel)
     {
         /**

@@ -4,11 +4,9 @@ import type { ComponentType } from "react";
 const TestVideoPlayerTest = lazy(
   () => import("../components/video/VideoPlayerTest")
 );
-const SentSimTest = lazy(
-  () => import("../components/sentence-editor/SentSimTest")
-);
+const SentSimTest = lazy(() => import("../components/sentence/SentSimTest"));
 const SentEditInnerDemo = lazy(
-  () => import("../components/sentence-editor/SentEditInnerDemo")
+  () => import("../components/sentence/SentEditInnerDemo")
 );
 const EditableTreeTest = lazy(
   () => import("../components/article/components/EditableTreeTest")

@@ -1,8 +1,8 @@
-import { Typography, Divider, Skeleton, Space } from "antd";
+import { Typography, Divider, Skeleton, Space, Flex } from "antd";
 import type { IStudio, IUser } from "../../../api/Auth";
 import VisibleObserver from "../../general/VisibleObserver";
 import MdView from "../../general/MdView";
-import type { JSX } from "react";
+import type { JSX, ReactNode } from "react";
 import ArticleSkeleton from "./ArticleSkeleton";
 import ErrorResult from "../../general/ErrorResult";
 import User from "../../auth/User";
@@ -23,6 +23,7 @@ export interface IArticleLayout {
   summary?: string | null;
   content?: string;
   html?: string[];
+  nodes?: ReactNode[];
   resList?: JSX.Element;
   created_at?: string;
   updated_at?: string;
@@ -42,6 +43,7 @@ const ArticleLayout = ({
   summary,
   content,
   html = [],
+  nodes,
   editor,
   updated_at,
   resList,
@@ -61,7 +63,7 @@ const ArticleLayout = ({
         <ErrorResult code={errorCode} />
       ) : (
         <div>
-          <Space orientation="vertical">
+          <Flex orientation="vertical" gap="middle">
             {hideTitle ? (
               <></>
             ) : (
@@ -83,7 +85,7 @@ const ArticleLayout = ({
               <User {...editor} /> edit at {updated_at}
             </Space>
             <Divider />
-          </Space>
+          </Flex>
           {html
             ? html.map((item, id) => {
                 return (
@@ -93,6 +95,7 @@ const ArticleLayout = ({
                 );
               })
             : content}
+          {nodes}
           {remains ? (
             <>
               <VisibleObserver

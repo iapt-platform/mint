@@ -229,15 +229,16 @@ const DiscussionListCardWidget = ({
             //获取channel模版
             let studioName: string | undefined;
             switch (resType) {
-              case "sentence":
-                const url = `/v2/sentence/${resId}`;
+              case "sentence": {
+                const url = `/api/v2/sentence/${resId}`;
                 console.info("api request", url);
                 const sentInfo = await get<ISentenceResponse>(url);
                 console.info("api response", sentInfo);
                 studioName = sentInfo.data.studio.realName;
                 break;
+              }
             }
-            const urlTpl = `/v2/article?view=template&studio_name=${studioName}&subtitle=_template_discussion_topic_&content=true`;
+            const urlTpl = `/api/v2/article?view=template&studio_name=${studioName}&subtitle=_template_discussion_topic_&content=true`;
             const resTpl = await get<IArticleListResponse>(urlTpl);
             if (resTpl.ok) {
               console.log("resTpl.data.rows", resTpl.data.rows);

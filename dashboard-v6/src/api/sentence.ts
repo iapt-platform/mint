@@ -156,7 +156,7 @@ export const sentSave = async (
   //FIXME
   //store.dispatch(statusChange({ status: "loading" }));
   const id = `${sent.book}_${sent.para}_${sent.wordStart}_${sent.wordEnd}_${sent.channel.id}`;
-  const url = `/v2/sentence/${id}?mode=edit&html=true`;
+  const url = `/api/v2/sentence/${id}?mode=edit&html=true`;
   console.info("SentWbwEdit url", url);
 
   try {
@@ -223,7 +223,7 @@ export async function fetchSentence(
   channelId: string
 ): Promise<ISentenceData> {
   const sentId = `${book}-${para}-${wordStart}-${wordEnd}`;
-  const url = `/v2/sentence?view=channel&sentence=${sentId}&channel=${channelId}&html=true`;
+  const url = `/api/v2/sentence?view=channel&sentence=${sentId}&channel=${channelId}&html=true`;
 
   const json = await get<ISentenceListResponse>(url);
 
@@ -239,7 +239,7 @@ export async function fetchSentence(
  */
 export async function saveSentence(sent: ISentence): Promise<ISentenceData> {
   const id = `${sent.book}_${sent.para}_${sent.wordStart}_${sent.wordEnd}_${sent.channel.id}`;
-  const url = `/v2/sentence/${id}?mode=edit&html=true`;
+  const url = `/api/v2/sentence/${id}?mode=edit&html=true`;
 
   const json = await put<ISentenceRequest, ISentenceResponse>(url, {
     book: sent.book,
@@ -267,7 +267,7 @@ export async function acceptSentencePr(
   prData: ISentence
 ): Promise<ISentenceData> {
   const id = `${prData.book}_${prData.para}_${prData.wordStart}_${prData.wordEnd}_${prData.channel.id}`;
-  const url = `/v2/sentence/${id}?mode=edit&html=true`;
+  const url = `/api/v2/sentence/${id}?mode=edit&html=true`;
 
   const json = await put<ISentenceRequest, ISentenceResponse>(url, {
     book: prData.book,

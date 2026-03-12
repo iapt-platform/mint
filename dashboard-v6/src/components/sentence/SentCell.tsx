@@ -172,7 +172,7 @@ const SentCellWidget = ({
     if (typeof sentData === "undefined") {
       return;
     }
-    let url = `/v2/sentence?view=channel&sentence=${sentId}&html=true`;
+    let url = `/api/v2/sentence?view=channel&sentence=${sentId}&html=true`;
     url += `&channel=${sentData.channel.id}`;
     console.debug("api request", url);
     setLoading(true);

@@ -57,7 +57,6 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Confidence props={props ? props : ""} />;
     case "paragraph":
       return <Paragraph props={props ? props : ""} />;
-
     default:
       return <>未定义模版({tpl})</>;
   }

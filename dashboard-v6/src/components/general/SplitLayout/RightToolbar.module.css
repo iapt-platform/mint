@@ -7,7 +7,7 @@
 .container {
   display: flex;
   flex-direction: row;
-  height: 100%;
+  height: 100vh;
   overflow: hidden;
 }
 
@@ -53,7 +53,7 @@
 .panelBody {
   overflow-y: scroll;
   overflow-x: hidden;
-  height: calc(100vh - 96px);
+  height: calc(100vh - 40px);
   /* display:contents 的子项可直接撑满 */
   display: flex;
   flex-direction: column;

@@ -137,7 +137,7 @@ export interface IArticleDataResponse {
   summary: string | null;
   _summary?: string;
   content?: string;
-  content_type?: string;
+  content_type?: TContentType;
   toc?: IChapterToc[];
   html?: string;
   path?: ITocPathNode[];

@@ -1,3 +1,4 @@
+// src/components/workspace/home/ModuleGrid.tsx
 import type { CSSProperties } from "react";
 import type { ModuleItem } from "../../../api/workspace";
 import ModuleCard from "./ModuleCard";

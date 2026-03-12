@@ -41,7 +41,7 @@ const SentCanReadWidget = ({
 
   const load = useCallback(() => {
     const sentId = `${book}-${para}-${wordStart}-${wordEnd}`;
-    let url = `/v2/sentence?view=sent-can-read&sentence=${sentId}&type=${type}&mode=edit&html=true`;
+    let url = `/api/v2/sentence?view=sent-can-read&sentence=${sentId}&type=${type}&mode=edit&html=true`;
     url += channelsId ? `&excludes=${channelsId.join()}` : "";
     if (type === "commentary" || type === "similar") {
       url += channelsId ? `&channels=${channelsId.join()}` : "";

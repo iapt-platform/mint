@@ -1,5 +1,5 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Popover, Splitter } from "antd";
+import { Affix, Button, Popover, Splitter } from "antd";
 import { useCallback, useState, type ReactNode } from "react";
 import RightToolbar, { type RightToolbarTab } from "./RightToolbar";
 import styles from "./SplitLayout.module.css";
@@ -233,12 +233,14 @@ export default function SplitLayout({
                 resizable={rightOpen}
                 className={styles.rightAreaPanel}
               >
-                <RightToolbar
-                  tabs={rightTabs!}
-                  activeKey={rightActiveKey}
-                  onTabClick={onRightTabClick}
-                  onClose={closeRightPanel}
-                />
+                <Affix offsetTop={0}>
+                  <RightToolbar
+                    tabs={rightTabs!}
+                    activeKey={rightActiveKey}
+                    onTabClick={onRightTabClick}
+                    onClose={closeRightPanel}
+                  />
+                </Affix>
               </Splitter.Panel>
             </Splitter>
           ) : (

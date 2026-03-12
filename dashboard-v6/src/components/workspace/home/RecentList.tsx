@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { theme } from "antd";
 import type { RecentItem as RecentItemType } from "../../../api/workspace";
 import RecentItem from "./RecentItem";
 
@@ -7,6 +8,17 @@ type RecentListProps = {
 };
 
 export default function RecentList({ items }: RecentListProps) {
+  const { token } = theme.useToken();
+
+  const styles: Record<string, CSSProperties> = {
+    list: {
+      background: token.colorBgContainer,
+      borderRadius: token.borderRadiusLG,
+      border: `1px solid ${token.colorBorderSecondary}`,
+      overflow: "hidden",
+    },
+  };
+
   return (
     <div style={styles.list}>
       {items.map((item) => (
@@ -15,12 +27,3 @@ export default function RecentList({ items }: RecentListProps) {
     </div>
   );
 }
-
-const styles: Record<string, CSSProperties> = {
-  list: {
-    background: "#fff",
-    borderRadius: 12,
-    border: "1px solid #ede9e3",
-    overflow: "hidden",
-  },
-};
