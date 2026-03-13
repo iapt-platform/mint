@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Modal } from "antd";
-import RecentList, { type IRecent } from "./RecentList";
+import RecentList from "./RecentList";
 import { useIntl } from "react-intl";
+import type { IRecent } from "../../api/recent";
 
 interface IWidget {
   trigger?: React.ReactNode;
