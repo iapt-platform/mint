@@ -1,36 +1,34 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 
 import { useAppSelector } from "../../hooks";
 import { currFocus } from "../../reducers/focus";
 import { ParaHandleCtl } from "./ParaHandle";
-import { SentEditInner, type IWidgetSentEditInner } from "../sentence/SentEdit";
+import { SentEditInner } from "../sentence/SentEdit";
 import { Button } from "antd";
 import type { ArticleMode } from "../../api/article";
 import ParagraphRead from "../tipitaka/components/ParagraphRead";
+import type { IParagraphNode } from "../../api/pali-text";
 
-export interface IParagraphProps {
-  book: number;
-  para: number;
-  mode?: ArticleMode;
-  channels?: string[];
-  sentenceIds: string[];
-  children?: IWidgetSentEditInner[];
+interface IParagraphProps extends IParagraphNode {
+  loading?: boolean;
   onModeChange?: (mode: ArticleMode) => void;
 }
+
 export const ParagraphCtl = ({
   book,
   para,
-  mode = "read",
+  mode,
   channels,
   sentenceIds,
   children,
+  loading,
   onModeChange,
 }: IParagraphProps) => {
-  const [innerMode, setInnerMode] = useState<ArticleMode>("read");
   const focus = useAppSelector(currFocus);
   console.debug("para children", book, para, children?.length);
   console.debug("para children", children);
+
   const isFocus = useMemo(() => {
     if (focus) {
       if (focus.focus?.type === "para") {
@@ -80,28 +78,26 @@ export const ParagraphCtl = ({
           sentences={sentenceIds}
         />
         <div>
-          {innerMode === "edit" && (
+          {mode === "edit" && (
             <Button
+              loading={loading}
               type="link"
               icon={<EyeOutlined />}
               onClick={() => {
                 if (onModeChange) {
                   onModeChange("read");
-                } else {
-                  setInnerMode("read");
                 }
               }}
             />
           )}
-          {innerMode === "read" && (
+          {mode === "read" && (
             <Button
+              loading={loading}
               type="link"
               icon={<EditOutlined />}
               onClick={() => {
                 if (onModeChange) {
                   onModeChange("edit");
-                } else {
-                  setInnerMode("edit");
                 }
               }}
             />
@@ -109,9 +105,9 @@ export const ParagraphCtl = ({
         </div>
       </div>
       <div>
-        {innerMode === "edit" &&
+        {mode === "edit" &&
           children?.map((item) => <SentEditInner {...item} />)}
-        {innerMode === "read" && <ParagraphRead data={children} />}
+        {mode === "read" && <ParagraphRead data={children} />}
       </div>
     </div>
   );

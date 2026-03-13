@@ -26,7 +26,7 @@ import ArticleHeader from "./components/ArticleHeader";
 import { TaskBuilderChapterModal } from "../task/TaskBuilderChapterModal";
 import type { TTarget } from "../../types";
 import TocPath from "../tipitaka/TocPath";
-import { ParagraphCtl } from "../template/Paragraph";
+import ParagraphNode from "../tipitaka/ParagraphNode";
 
 export interface ISearchParams {
   key: string;
@@ -196,7 +196,7 @@ const TypePali = ({
         subTitle={articleData?.subtitle}
         summary={articleData?.summary}
         nodes={nodeData.map((item) => {
-          return <ParagraphCtl {...item} />;
+          return <ParagraphNode initData={item} />;
         })}
         loading={loading}
         errorCode={errorCode}

@@ -19,38 +19,17 @@ class ParagraphContentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, PaliContentService $paliService)
     {
-        //
-    }
+        $data = $request->validate([
+            'book' => 'required|integer',
+            'para' => 'required|integer',
+            'to' => 'integer',
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *      * @param  \Illuminate\Http\Request  $request
-     * @param string $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request, string $id)
-    {
-        $paliService = app(PaliContentService::class);
-
-        //
-        $sentId = \explode('-', $id);
         $channels = [];
         if ($request->has('channels')) {
-            if (strpos($request->get('channels'), ',') === FALSE) {
-                $_channels = explode('_', $request->get('channels'));
-            } else {
-                $_channels = explode(',', $request->get('channels'));
-            }
+            $_channels = explode(',', str_replace('_', ',', $request->get('channels')));
             foreach ($_channels as $key => $channel) {
                 if (Str::isUuid($channel)) {
                     $channels[] = $channel;
@@ -71,7 +50,8 @@ class ParagraphContentController extends Controller
             $channels[] = $channelId;
         }
 
-        $chapter = PaliText::where('book', $sentId[0])->where('paragraph', $sentId[1])->first();
+        $chapter = PaliText::where('book', $data['book'])
+            ->where('paragraph', $data['para'])->first();
         if (!$chapter) {
             return $this->error("no data");
         }
@@ -80,9 +60,13 @@ class ParagraphContentController extends Controller
 
         $indexChannel = [];
         $indexChannel = $paliService->getChannelIndex($channels);
-        $from = $sentId[1];
-        $to =  $sentId[2] ?? $sentId[1];
-        $record = Sentence::where('book_id', $sentId[0])
+        $from = $data['para'];
+        if (isset($data['to'])) {
+            $to = $data['to'];
+        } else {
+            $to = $data['para'];
+        }
+        $record = Sentence::where('book_id', $data['book'])
             ->whereBetween('paragraph', [$from, $to])
             ->whereIn('channel_uid', $channels)
             ->orderBy('paragraph')
@@ -91,11 +75,33 @@ class ParagraphContentController extends Controller
         if (count($record) === 0) {
             return $this->error("no data");
         }
-        $result = [];
-        $result['content'] = json_encode($paliService->makeContentObj($record, $mode, $indexChannel), JSON_UNESCAPED_UNICODE);
-        $result['content_type'] = 'json';
-        return $this->ok($result);
+        $result = $paliService->makeContentObj($record, $mode, $indexChannel);
+
+        return $this->ok([
+            'items' => $result,
+            'pagination' => [
+                'page' => 1,
+                'pageSize' => $to - $from + 1,
+                'total' => $to - $from + 1
+            ],
+        ]);
     }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *      * @param  \Illuminate\Http\Request  $request
+     * @param string $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request, string $id) {}
 
     /**
      * Update the specified resource in storage.

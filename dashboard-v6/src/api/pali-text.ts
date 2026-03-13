@@ -1,5 +1,9 @@
 // src/api/pali-text.ts
 import type { MenuProps } from "antd";
+import { get } from "../request";
+import type { ArticleMode, IArticleResponse } from "./article";
+import type { IWidgetSentEditInner } from "../components/sentence/SentEdit";
+import type { PaginatedResponse } from ".";
 
 export interface ITocPathNode {
   key?: string;
@@ -103,9 +107,6 @@ export interface IChapterTocListResponse {
   data: { rows: IChapterToc[]; count: number };
 }
 
-import { get } from "../request";
-import type { IArticleResponse } from "./article";
-
 export interface IFetchPaliBookTocParams {
   /** 二选一：传 series 走系列模式，否则传 book + para */
   series?: string;
@@ -163,4 +164,27 @@ export const fetchNextParaChunk = (
   let url = `/api/v2/chapter-content/${paraId}?mode=${mode}&from=${from}&to=${to}`;
   if (channelId) url += `&channels=${channelId}`;
   return get<IArticleResponse>(url);
+};
+
+export interface IParagraphNode {
+  book: number;
+  para: number;
+  mode?: ArticleMode;
+  channels?: string[];
+  sentenceIds: string[];
+  children?: IWidgetSentEditInner[];
+}
+
+type ParagraphNodeListResponse = PaginatedResponse<IParagraphNode>;
+
+export const fetchParaNodeChunk = (
+  book: number,
+  from: number,
+  to: number,
+  mode: ArticleMode,
+  channelIds?: string | null
+): Promise<ParagraphNodeListResponse> => {
+  let url = `/api/v2/paragraph-content?book=${book}&mode=${mode}&para=${from}&to=${to}`;
+  if (channelIds) url += `&channels=${channelIds}`;
+  return get<ParagraphNodeListResponse>(url);
 };

@@ -1,5 +1,5 @@
 import { Button, Layout, Space } from "antd";
-import { Outlet } from "react-router";
+import { Navigate, Outlet } from "react-router";
 import { useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import MainMenu from "../../components/navigation/MainMenu";
@@ -7,10 +7,16 @@ import SignInAvatar from "../../components/auth/SignInAvatar";
 import HeaderBreadcrumb from "../../components/navigation/HeaderBreadcrumb";
 import ThemeSwitch from "../../components/theme/ThemeSwitch";
 import { NetworkStatus } from "../../components/general/NetworkStatus";
+import { useAuth } from "../../hooks/useAuth";
 
 const { Sider, Content } = Layout;
 const Widget = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/anonymous/sign-in" replace />;
+  }
 
   return (
     <Layout style={{ minHeight: "100vh" }}>

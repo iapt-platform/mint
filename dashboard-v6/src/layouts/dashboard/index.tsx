@@ -1,8 +1,14 @@
-import { Outlet } from "react-router";
+import { Navigate, Outlet } from "react-router";
 
 import Footer from "../Footer";
+import { useAuth } from "../../hooks/useAuth";
 
 const Widget = () => {
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/anonymous/sign-in" replace />;
+  }
   // TODO
   return (
     <div>

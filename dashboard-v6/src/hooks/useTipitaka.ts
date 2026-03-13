@@ -7,8 +7,12 @@ import type {
   IArticleDataResponse,
   IChapterToc,
 } from "../api/article";
-import { fetchChapter, fetchNextParaChunk, fetchPara } from "../api/pali-text";
-import type { IParagraphProps } from "../components/template/Paragraph";
+import {
+  fetchChapter,
+  fetchNextParaChunk,
+  fetchPara,
+  type IParagraphNode,
+} from "../api/pali-text";
 
 interface IUseTipitakaProps {
   type?: ArticleType;
@@ -23,7 +27,7 @@ interface IUseTipitakaProps {
 interface IUseTipitakaReturn {
   articleData: IArticleDataResponse | undefined;
   articleHtml: string[];
-  nodeData: IParagraphProps[];
+  nodeData: IParagraphNode[];
   toc: IChapterToc[] | undefined;
   loading: boolean;
   errorCode: number | undefined;
@@ -43,7 +47,7 @@ const useTipitaka = ({
 }: IUseTipitakaProps): IUseTipitakaReturn => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [articleHtml, setArticleHtml] = useState<string[]>([]);
-  const [nodeData, setNodeData] = useState<IParagraphProps[]>([]);
+  const [nodeData, setNodeData] = useState<IParagraphNode[]>([]);
   const [toc, setToc] = useState<IChapterToc[]>();
   const [loading, setLoading] = useState(false);
   const [errorCode, setErrorCode] = useState<number>();
@@ -138,9 +142,9 @@ const useTipitaka = ({
         });
         setArticleHtml((prev) => [...prev, response.data.content as string]);
         if (response.data.content && response.data.content_type === "json") {
-          const newNodes: IParagraphProps[] = JSON.parse(
+          const newNodes: IParagraphNode[] = JSON.parse(
             response.data.content
-          ) as IParagraphProps[];
+          ) as IParagraphNode[];
           setNodeData((prev) => [...prev, ...newNodes]);
         }
       }
