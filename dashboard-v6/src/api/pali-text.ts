@@ -137,7 +137,7 @@ export const fetchChapter = (
   mode: "read" | "edit",
   channelId?: string | null
 ): Promise<IArticleResponse> => {
-  let url = `/api/v2/corpus-chapter/${articleId}?mode=${mode}`;
+  let url = `/api/v2/chapter-content/${articleId}?mode=${mode}`;
   if (channelId) url += `&channels=${channelId}`;
   return get<IArticleResponse>(url);
 };
@@ -160,7 +160,7 @@ export const fetchNextParaChunk = (
   to: number,
   channelId?: string | null
 ): Promise<IArticleResponse> => {
-  let url = `/api/v2/corpus-chapter/${paraId}?mode=${mode}&from=${from}&to=${to}`;
+  let url = `/api/v2/chapter-content/${paraId}?mode=${mode}&from=${from}&to=${to}`;
   if (channelId) url += `&channels=${channelId}`;
   return get<IArticleResponse>(url);
 };

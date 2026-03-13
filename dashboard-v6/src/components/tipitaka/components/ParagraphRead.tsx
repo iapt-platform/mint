@@ -1,11 +1,18 @@
+import { Flex } from "antd";
+import { useSetting } from "../../../hooks/useSetting";
 import MdOrigin from "../../sentence/components/MdOrigin";
 import MdTranslation from "../../sentence/components/MdTranslation";
 import type { IWidgetSentEditInner } from "../../sentence/SentEdit";
+import CommentaryPad from "./CommentrayPad";
 
 interface IWidget {
   data?: IWidgetSentEditInner[];
 }
 const ParagraphRead = ({ data }: IWidget) => {
+  const direction = useSetting("setting.layout.direction");
+  const layoutCommentary = useSetting("setting.layout.commentary");
+  console.debug("direction", direction);
+
   const channels: string[] = [];
   data?.forEach((value) => {
     value.translation?.forEach((trans) => {
@@ -14,9 +21,19 @@ const ParagraphRead = ({ data }: IWidget) => {
       }
     });
   });
+
+  let commentaries: number = 0;
+  data?.forEach((value) => {
+    value.commentaries?.forEach((comm) => {
+      if (comm.content && comm.content?.length > 0) {
+        commentaries++;
+      }
+    });
+  });
+
   return (
-    <div>
-      <div style={{ display: "flex" }}>
+    <Flex vertical={layoutCommentary === "row"}>
+      <Flex gap="middle" vertical={direction === "row"} style={{ flex: 5 }}>
         {/**原文区 */}
         <div className="sent_read" style={{ flex: 5, padding: 4 }}>
           {data?.map((item) => {
@@ -46,10 +63,20 @@ const ParagraphRead = ({ data }: IWidget) => {
             );
           })}
         </div>
-      </div>
+      </Flex>
       {/**注疏区 */}
-      <div></div>
-    </div>
+      {commentaries > 0 && (
+        <div style={{ flex: 5 }}>
+          <CommentaryPad>
+            {data?.map((item) => {
+              return item.commentaries?.map((item, id) => {
+                return <MdTranslation text={item.html} key={id} />;
+              });
+            })}
+          </CommentaryPad>
+        </div>
+      )}
+    </Flex>
   );
 };
 

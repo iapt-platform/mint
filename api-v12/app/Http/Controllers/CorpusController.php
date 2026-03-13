@@ -7,13 +7,11 @@ use Carbon\Carbon;
 use App\Models\Sentence;
 use App\Models\Channel;
 use App\Models\PaliText;
-use App\Models\WbwTemplate;
 use App\Models\WbwBlock;
 use App\Models\Wbw;
 use App\Models\Discussion;
 use App\Models\PaliSentence;
 use App\Models\SentSimIndex;
-use App\Models\CustomBookSentence;
 use App\Models\CustomBook;
 
 use Illuminate\Support\Str;
@@ -532,7 +530,7 @@ class CorpusController extends Controller
         if (count($record) === 0) {
             return $this->error("no data");
         }
-        $this->result['content'] = json_encode($this->makeContentObj($record, $mode, $indexChannel), JSON_UNESCAPED_UNICODE);
+        $this->result['content'] = json_encode($this->makeContent($record, $mode, $indexChannel), JSON_UNESCAPED_UNICODE);
         $this->result['content_type'] = 'json';
         if (!$request->has('from')) {
             //第一次才显示toc

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PaliText;
 use Illuminate\Http\Request;
 use App\Http\Resources\ChapterResource;
+use App\Services\PaliTextService;
 
 class ChapterController extends Controller
 {
@@ -60,12 +61,18 @@ class ChapterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\PaliText  $paliText
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(PaliText $paliText)
+    public function show(string $id)
     {
-        //
+        $para = explode('-', $id);
+        if (count($para) < 2) {
+            return $this->error('参数错误', 400, 400);
+        }
+        $paliTextService = app(PaliTextService::class);
+        $paragraph = $paliTextService->getCurrChapter($para[0], $para[1]);
+        return $this->ok(new ChapterResource($paragraph));
     }
 
     /**

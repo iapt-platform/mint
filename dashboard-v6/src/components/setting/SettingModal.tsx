@@ -1,14 +1,19 @@
 import { Modal, Tabs } from "antd";
 import { useState } from "react";
-import SettingArticle from "./SettingArticle";
 import SettingAccount from "./SettingAccount";
+import { useIntl } from "react-intl";
+import SettingNissaya from "./SettingNissaya";
+import SettingDict from "./SettingDict";
+import SettingEditor from "./SettingEditor";
 interface IWidget {
   trigger?: React.ReactNode;
   open?: boolean;
   onClose?: (isOpen: boolean) => void;
 }
-const SettingModalWidget = ({ trigger, open, onClose }: IWidget) => {
+const SettingModal = ({ trigger, open, onClose }: IWidget) => {
   const [isInnerOpen, setIsInnerOpen] = useState(false);
+  const intl = useIntl();
+
   const isModalOpen = open ?? isInnerOpen;
 
   const showModal = () => {
@@ -38,12 +43,21 @@ const SettingModalWidget = ({ trigger, open, onClose }: IWidget) => {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
+        style={{ top: 10, maxWidth: 600 }}
       >
         <Tabs
-          tabPlacement="start"
+          tabPlacement="top"
           items={[
             { label: "账户", key: "account", children: <SettingAccount /> }, // 务必填写 key
-            { label: "编辑器", key: "editor", children: <SettingArticle /> },
+            { label: "编辑器", key: "editor", children: <SettingEditor /> },
+            { label: "Nissaya", key: "nissaya", children: <SettingNissaya /> },
+            {
+              label: intl.formatMessage({
+                id: `columns.library.dict.title`,
+              }),
+              key: "dict",
+              children: <SettingDict />,
+            },
           ]}
         />
       </Modal>
@@ -51,4 +65,4 @@ const SettingModalWidget = ({ trigger, open, onClose }: IWidget) => {
   );
 };
 
-export default SettingModalWidget;
+export default SettingModal;

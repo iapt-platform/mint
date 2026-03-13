@@ -5,6 +5,7 @@ import {
   FieldTimeOutlined,
   FolderOutlined,
   FileOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useMatches, type UIMatch } from "react-router";
 import {
@@ -21,6 +22,7 @@ import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 import { useRecent } from "../../hooks/useRecent.ts";
 import RecentModal from "../recent/RecentModal.tsx";
+import SettingModal from "../setting/SettingModal.tsx";
 
 /* ================= 类型 ================= */
 
@@ -106,6 +108,7 @@ const Widget = ({ onSearch }: Props) => {
 
   const { data } = useRecent(currUser?.id, 5, 0);
   const [recentOpen, setRecentOpen] = useState(false);
+  const [openSetting, setOpenSetting] = useState(false);
 
   const recentList: MenuItem[] = data
     ? data?.data.rows.map((item, id) => {
@@ -142,7 +145,12 @@ const Widget = ({ onSearch }: Props) => {
       label: "巴利三藏",
       activeId: "workspace.tipitaka",
     },
-
+    {
+      key: "/workspace/setting",
+      icon: <SettingOutlined />,
+      label: "setting",
+      activeId: "workspace.setting",
+    },
     { type: "divider", key: "d1" },
 
     {
@@ -237,6 +245,9 @@ const Widget = ({ onSearch }: Props) => {
     } else if (key === "/workspace/recent/list") {
       setRecentOpen(true);
       return;
+    } else if (key === "/workspace/setting") {
+      setOpenSetting(true);
+      return;
     }
     navigate(key);
   };
@@ -262,6 +273,7 @@ const Widget = ({ onSearch }: Props) => {
           }
         }}
       />
+      <SettingModal open={openSetting} onClose={() => setOpenSetting(false)} />
     </>
   );
 };
