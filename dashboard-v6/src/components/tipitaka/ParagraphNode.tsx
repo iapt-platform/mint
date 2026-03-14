@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { fetchParaNodeChunk, type IParagraphNode } from "../../api/pali-text";
-import { ParagraphCtl } from "../template/Paragraph";
+import Paragraph from "./components/Paragraph";
 
 interface IWidget {
   initData: IParagraphNode;
@@ -12,7 +12,7 @@ const ParagraphNode = ({ initData }: IWidget) => {
   return (
     <>
       {currData && (
-        <ParagraphCtl
+        <Paragraph
           loading={loading}
           {...currData}
           onModeChange={async (mode) => {

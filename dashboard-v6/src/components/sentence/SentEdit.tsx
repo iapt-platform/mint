@@ -62,6 +62,7 @@ export interface IWidgetSentEditInner {
   wbwScore?: number;
 
   onTranslationChange?: (data: ISentence) => void;
+  onModeChange?: (mode: ArticleMode) => void;
 }
 
 export const SentEditInner = ({
@@ -86,6 +87,7 @@ export const SentEditInner = ({
   readonly = false,
   commentaries,
   onTranslationChange,
+  onModeChange,
 }: IWidgetSentEditInner) => {
   const [wbwData, setWbwData] = useState<IWbw[]>();
   const [magicDict, setMagicDict] = useState<string>();
@@ -98,6 +100,8 @@ export const SentEditInner = ({
   const settings = useAppSelector(settingInfo);
   const divRef = useRef<HTMLDivElement>(null);
   const rootFixed = useSetting("setting.layout.root.fixed");
+
+  const currMode = mode ?? articleMode;
 
   // ✅ 从 settings 派生 commentaryLayout，无需 state + effect
   const commentaryLayout = useMemo<string>(() => {
@@ -167,7 +171,7 @@ export const SentEditInner = ({
       layout={layout}
       magicDict={magicDict}
       compact={isCompact}
-      mode={articleMode}
+      mode={currMode}
       wbwProgress={showWbwProgress}
       readonly={readonly}
       onWbwChange={(data: IWbw[]) => {
@@ -221,15 +225,18 @@ export const SentEditInner = ({
             origin={origin}
             magicDictLoading={magicDictLoading}
             compact={isCompact}
-            mode={articleMode}
+            mode={currMode}
             onMagicDict={(type: string) => {
               setMagicDict(type);
               setMagicDictLoading(true);
             }}
             onCompact={(value: boolean) => setIsCompact(value)}
-            onModeChange={(value: ArticleMode | undefined) =>
-              setArticleMode(value)
-            }
+            onModeChange={(value: ArticleMode | undefined) => {
+              if (value) {
+                setArticleMode(value);
+                onModeChange?.(value);
+              }
+            }}
             onAffix={() => setAffix(!affix)}
           />
         </div>

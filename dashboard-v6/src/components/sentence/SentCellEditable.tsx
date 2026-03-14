@@ -16,6 +16,7 @@ import type {
   ISentencePrRequest,
   ISentencePrResponse,
 } from "../../api/sentence-pr";
+import { toISentence } from "./utils";
 
 const { Text } = Typography;
 
@@ -30,6 +31,7 @@ interface IWidget {
 }
 const SentCellEditable = ({
   data,
+  onSave,
   onPrSave,
   onClose,
   onCreate,
@@ -48,14 +50,24 @@ const SentCellEditable = ({
       return;
     }
     setSaving(true);
-    sentSave({ ...data, content: value }, intl)
-      .then((value) => {
-        if (value) {
+    sentSave({ ...data, content: value })
+      .then((json) => {
+        if (json?.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
+          if (typeof onSave !== "undefined") {
+            const newData: ISentence = toISentence(json.data);
+            onSave(newData);
+          }
+        } else {
+          message.error(json?.message);
         }
       })
       .finally(() => {
         setSaving(false);
+      })
+      .catch((e) => {
+        console.error("catch", e);
+        message.error(e.message);
       });
   };
 

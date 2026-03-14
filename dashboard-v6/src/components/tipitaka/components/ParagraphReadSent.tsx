@@ -8,7 +8,7 @@ import CommentaryPad from "./CommentaryPad";
 interface IWidget {
   data?: IWidgetSentEditInner[];
 }
-const ParagraphRead = ({ data }: IWidget) => {
+const ParagraphReadSent = ({ data }: IWidget) => {
   const direction = useSetting("setting.layout.direction");
   const layoutCommentary = useSetting("setting.layout.commentary");
   console.debug("direction", direction);
@@ -69,4 +69,4 @@ const ParagraphRead = ({ data }: IWidget) => {
   );
 };
 
-export default ParagraphRead;
+export default ParagraphReadSent;

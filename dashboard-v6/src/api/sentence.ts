@@ -1,9 +1,7 @@
-import type { IntlShape } from "react-intl";
 import type { ArticleMode, TContentType } from "./article";
 
 import { get, put } from "../request";
-import { message } from "antd";
-import { toISentence } from "../components/sentence/utils";
+
 import type { IStudio, IUser } from "./Auth";
 import type { IChannel } from "./channel";
 import type { ISuggestionCount } from "./Suggestion";
@@ -148,11 +146,8 @@ export interface ISentEditData {
 // ─── 原有函数，保持不动，重构完成后再删除 ──────────────────────────────────────
 
 export const sentSave = async (
-  sent: ISentence,
-  intl: IntlShape,
-  ok?: (res: ISentence) => void,
-  finish?: () => void
-): Promise<ISentenceData | null> => {
+  sent: ISentence
+): Promise<ISentenceResponse | null> => {
   //FIXME
   //store.dispatch(statusChange({ status: "loading" }));
   const id = `${sent.book}_${sent.para}_${sent.wordStart}_${sent.wordEnd}_${sent.channel.id}`;
@@ -171,41 +166,10 @@ export const sentSave = async (
       channels: sent.translationChannels?.join(),
       token: sessionStorage.getItem(sent.channel.id),
     });
-    if (res.ok) {
-      if (ok) {
-        console.debug("sent save ok", res.data);
-        const newData: ISentence = toISentence(res.data);
-        ok(newData);
-      }
-      /** 
-       * FIXME 
-      store.dispatch(
-        statusChange({
-          status: "success",
-          message: intl.formatMessage({ id: "flashes.success" }),
-        })
-      );
-      */
-      return res.data;
-    } else {
-      message.error(res.message);
-      /**
-       * FIXME
-             store.dispatch(
-        statusChange({
-          status: "fail",
-          message: res.message,
-        })
-      );
-       */
-
-      return null;
-    }
+    return res;
   } catch (e) {
     console.error("catch", e);
     return null;
-  } finally {
-    finish?.();
   }
 };
 

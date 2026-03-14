@@ -50,10 +50,10 @@ const SentWbwEditWidget = ({ data, onSave, onClose }: IWidget) => {
         onChange={(wbwData: IWbw[]) => {
           const newSent = { ...data };
           newSent.content = JSON.stringify(wbwData);
-          sentSave(newSent, intl)
+          sentSave(newSent)
             .then((value) => {
               if (value) {
-                newSent.html = value.html;
+                newSent.html = value.data.html;
                 onSave?.(newSent);
               } else {
                 console.error("返回数据失败");

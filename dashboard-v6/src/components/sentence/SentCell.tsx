@@ -223,11 +223,11 @@ const SentCellWidget = ({
               navigator.clipboard.readText().then((value: string) => {
                 if (sentData && value !== "") {
                   sentData.content = value;
-                  const newSent = sentSave(sentData, intl);
+                  const newSent = sentSave(sentData);
                   newSent.then((value) => {
                     //发布句子的改变，让同样的句子更新
-                    if (value) {
-                      const newData: ISentence = toISentence(value);
+                    if (value?.ok) {
+                      const newData: ISentence = toISentence(value.data);
                       store.dispatch(accept([newData]));
                       if (typeof onChange !== "undefined") {
                         onChange(newData);
@@ -335,7 +335,7 @@ const SentCellWidget = ({
                 newData.contentType = "json";
                 newData.content = JSON.stringify(wbw);
                 setSentData(newData);
-                sentSave(newData, intl);
+                sentSave(newData);
               }
 
               setIsEditMode(true);
@@ -364,7 +364,7 @@ const SentCellWidget = ({
                       .join("\n");
                     newData.content = newContent;
                     newData["contentType"] = "markdown";
-                    sentSave(newData, intl);
+                    sentSave(newData);
                     setSentData(newData);
                   }
                   setIsEditMode(true);
