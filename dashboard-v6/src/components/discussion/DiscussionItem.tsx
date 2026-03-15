@@ -1,30 +1,29 @@
 import { Avatar } from "antd";
 import { useEffect, useState } from "react";
-import type { IUser } from "../auth/User";
+
 import DiscussionShow from "./DiscussionShow";
 import DiscussionEdit from "./DiscussionEdit";
-import type { TResType } from "./DiscussionListCard";
-import type { TDiscussionType } from "./Discussion";
+import type { IComment, TDiscussionType } from "../../api/discussion";
 
 interface IWidget {
   data: IComment;
   isFocus?: boolean;
   hideTitle?: boolean;
-  onSelect?: Function;
-  onCreated?: Function;
-  onDelete?: Function;
-  onReply?: Function;
-  onClose?: Function;
-  onConvert?: Function;
+  onSelect?: (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    value: IComment
+  ) => void;
+  onCreated?: (e: IComment) => void;
+  onDelete?: () => void;
+  onClose?: (close: boolean) => void;
+  onConvert?: (value: TDiscussionType) => void;
 }
 const DiscussionItemWidget = ({
   data,
   isFocus = false,
   hideTitle = false,
   onSelect,
-  onCreated,
   onDelete,
-  onReply,
   onClose,
   onConvert,
 }: IWidget) => {
@@ -55,11 +54,6 @@ const DiscussionItemWidget = ({
               setCurrData(e);
               setEdit(false);
             }}
-            onCreated={(e: IComment) => {
-              if (typeof onCreated !== "undefined") {
-                onCreated(e);
-              }
-            }}
             onClose={() => setEdit(false)}
           />
         ) : (
@@ -74,14 +68,9 @@ const DiscussionItemWidget = ({
                 onSelect(e, currData);
               }
             }}
-            onDelete={(_id: string) => {
+            onDelete={() => {
               if (typeof onDelete !== "undefined") {
                 onDelete();
-              }
-            }}
-            onReply={() => {
-              if (typeof onReply !== "undefined") {
-                onReply(currData);
               }
             }}
             onClose={(value: boolean) => {

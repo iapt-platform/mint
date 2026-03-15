@@ -1,19 +1,21 @@
 import { List } from "antd";
 
-import DiscussionItem, { type IComment } from "./DiscussionItem";
+import DiscussionItem from "./DiscussionItem";
+import type { IComment } from "../../api/discussion";
 
 interface IWidget {
   data: IComment[];
-  onSelect?: Function;
-  onDelete?: Function;
-  onReply?: Function;
-  onClose?: Function;
+  onSelect?: (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    data: IComment
+  ) => void;
+  onDelete?: (id: string) => void;
+  onClose?: (item: IComment) => void;
 }
 const DiscussionListWidget = ({
   data,
   onSelect,
   onDelete,
-  onReply,
   onClose,
 }: IWidget) => {
   return (
@@ -39,13 +41,8 @@ const DiscussionListWidget = ({
               }
             }}
             onDelete={() => {
-              if (typeof onDelete !== "undefined") {
-                onDelete(item.id);
-              }
-            }}
-            onReply={() => {
-              if (typeof onReply !== "undefined") {
-                onReply(item);
+              if (item.id) {
+                onDelete?.(item.id);
               }
             }}
             onClose={() => {

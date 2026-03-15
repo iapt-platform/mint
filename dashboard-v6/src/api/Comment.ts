@@ -1,7 +1,10 @@
+// src/api/Comment.ts
+
 import type { IUser } from "./Auth";
 import type { TContentType } from "./article";
 import type { TDiscussionType, TResType } from "./discussion";
 import type { ITagMapData } from "./Tag";
+import { get } from "../request";
 
 export interface ICommentRequest {
   id?: string;
@@ -84,4 +87,19 @@ export interface IDiscussionCountResponse {
   ok: boolean;
   message: string;
   data: { discussions: IDiscussionCountData[]; tags: ITagMapData[] };
+}
+
+export interface IFetchCommentListParams {
+  limit?: number;
+  offset?: number;
+  status?: "active" | "close";
+}
+
+export async function fetchCommentList(
+  taskId: string,
+  params: IFetchCommentListParams = {}
+): Promise<ICommentListResponse> {
+  const { limit = 5, offset = 0, status = "active" } = params;
+  const url = `/v2/discussion?type=discussion&res_type=task&view=question&id=${taskId}&limit=${limit}&offset=${offset}&status=${status}`;
+  return get<ICommentListResponse>(url);
 }

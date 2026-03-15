@@ -164,27 +164,7 @@ const DiscussionCreateWidget = ({
                     id: "forms.fields.content.label",
                   })}
                   tooltip="可以直接粘贴屏幕截图"
-                >
-                  <ReactQuill
-                    theme="snow"
-                    style={{ height: 180 }}
-                    modules={{
-                      toolbar: [
-                        ["bold", "italic", "underline", "strike"],
-                        ["blockquote", "code-block"],
-                        [{ header: 1 }, { header: 2 }],
-                        [{ list: "ordered" }, { list: "bullet" }],
-                        [{ indent: "-1" }, { indent: "+1" }],
-                        [{ size: ["small", false, "large", "huge"] }],
-                        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                        ["link", "image", "video"],
-                        [{ color: [] }, { background: [] }],
-                        [{ font: [] }],
-                        [{ align: [] }],
-                      ],
-                    }}
-                  />
-                </Form.Item>
+                ></Form.Item>
               ) : contentType === "markdown" ? (
                 <Form.Item
                   name="content"

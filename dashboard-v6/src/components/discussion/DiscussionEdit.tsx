@@ -12,8 +12,8 @@ import type { IComment } from "../../api/discussion";
 
 interface IWidget {
   data: IComment;
-  onUpdated?: Function;
-  onClose?: Function;
+  onUpdated?: (value: IComment) => void;
+  onClose?: () => void;
 }
 const DiscussionEditWidget = ({ data, onUpdated, onClose }: IWidget) => {
   const intl = useIntl();
@@ -60,7 +60,7 @@ const DiscussionEditWidget = ({ data, onUpdated, onClose }: IWidget) => {
               if (json.ok) {
                 console.log(intl.formatMessage({ id: "flashes.success" }));
                 if (typeof onUpdated !== "undefined") {
-                  const newData = {
+                  const newData: IComment = {
                     id: json.data.id, //id未提供为新建
                     resId: json.data.res_id,
                     resType: json.data.res_type,
@@ -72,6 +72,7 @@ const DiscussionEditWidget = ({ data, onUpdated, onClose }: IWidget) => {
                     childrenCount: json.data.children_count,
                     createdAt: json.data.created_at,
                     updatedAt: json.data.updated_at,
+                    type: json.data.type,
                   };
                   onUpdated(newData);
                 }

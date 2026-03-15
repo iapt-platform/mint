@@ -23,7 +23,6 @@ import {
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 
-import type { IComment } from "./DiscussionItem";
 import TimeShow from "../general/TimeShow";
 import Marked from "../general/Marked";
 import { delete_, put } from "../../request";
@@ -31,21 +30,23 @@ import type { IDeleteResponse } from "../../api/article";
 import { fullUrl } from "../../utils";
 import type { ICommentRequest, ICommentResponse } from "../../api/Comment";
 import { useState } from "react";
-import MdView from "../template/MdView";
-import type { TDiscussionType } from "./Discussion";
-import { discussionCountUpgrade } from "./DiscussionCount";
+import type { IComment, TDiscussionType } from "../../api/discussion";
+import { discussionCountUpgrade } from "./utils";
+import MdView from "../general/MdView";
 
 const { Text } = Typography;
 
 interface IWidget {
   data: IComment;
   hideTitle?: boolean;
-  onEdit?: Function;
-  onSelect?: Function;
-  onDelete?: Function;
-  onReply?: Function;
-  onClose?: Function;
-  onConvert?: Function;
+  onEdit?: () => void;
+  onSelect?: (
+    e: React.MouseEvent<HTMLElement, MouseEvent>,
+    value: IComment
+  ) => void;
+  onDelete?: (id: string) => void;
+  onClose?: (value: boolean) => void;
+  onConvert?: (type: TDiscussionType) => void;
 }
 const DiscussionShowWidget = ({
   data,
@@ -53,7 +54,6 @@ const DiscussionShowWidget = ({
   onEdit,
   onSelect,
   onDelete,
-  ___onReply,
   onClose,
   onConvert,
 }: IWidget) => {
@@ -144,7 +144,7 @@ const DiscussionShowWidget = ({
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     switch (e.key) {
-      case "copy-link":
+      case "copy-link": {
         let url = `/discussion/topic/`;
         if (data.id) {
           if (data.parent) {
@@ -160,12 +160,14 @@ const DiscussionShowWidget = ({
           message.success("链接地址已经拷贝到剪贴板");
         });
         break;
-      case "copy-tpl":
+      }
+      case "copy-tpl": {
         const tpl = `{{qa|id=${data.id}|style=collapse}}`;
         navigator.clipboard.writeText(tpl).then(() => {
           notification.success({ message: "链接地址已经拷贝到剪贴板" });
         });
         break;
+      }
       case "edit":
         if (typeof onEdit !== "undefined") {
           onEdit();
@@ -281,7 +283,7 @@ const DiscussionShowWidget = ({
             strong
             onClick={(e) => {
               if (typeof onSelect !== "undefined") {
-                onSelect(e);
+                onSelect(e, data);
               }
             }}
           >

@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import DiscussionTopic from "./DiscussionTopic";
-import type { TResType } from "./DiscussionListCard"
-import type { IComment } from "./DiscussionItem"
 
 import { Button, Space, Typography } from "antd";
-import type { TDiscussionType } from "./Discussion"
+
 import QaList from "./QaList";
+import type { IComment, TResType } from "../../api/discussion";
 
 const { Text } = Typography;
 
@@ -16,7 +15,7 @@ interface IWidget {
   resType?: TResType;
   showTopicId?: string;
   focus?: string;
-  onTopicReady?: Function;
+  onTopicReady?: (value: IComment) => void;
 }
 
 const DiscussionWidget = ({
@@ -81,7 +80,7 @@ const DiscussionWidget = ({
             onTopicDelete={() => {
               setChildrenDrawer(false);
             }}
-            onConvert={(_value: TDiscussionType) => {
+            onConvert={() => {
               setChildrenDrawer(false);
             }}
           />
@@ -94,7 +93,6 @@ const DiscussionWidget = ({
             _e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
             comment: IComment
           ) => showChildrenDrawer(comment)}
-          onReply={(comment: IComment) => showChildrenDrawer(comment)}
         />
       )}
     </>

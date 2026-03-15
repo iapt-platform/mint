@@ -50,6 +50,7 @@ const DiscussionWidget = ({
     }
   }, [showTopicId]);
 
+  
   useEffect(() => {
     setChildrenDrawer(false);
   }, [resId]);

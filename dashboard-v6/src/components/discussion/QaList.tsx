@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
-import type { TResType } from "./DiscussionListCard";
+
 import { get } from "../../request";
 import type { ICommentListResponse } from "../../api/Comment";
-import DiscussionItem, { type IComment } from "./DiscussionItem";
+import DiscussionItem from "./DiscussionItem";
+import type { IComment, TResType } from "../../api/discussion";
 
 interface IWidget {
   resId?: string;
   resType?: TResType;
-  onSelect?: Function;
-  onReply?: Function;
+  onSelect?: (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    value: IComment
+  ) => void;
 }
-const QaListWidget = ({ resId, resType, onSelect, _____onReply }: IWidget) => {
+const QaListWidget = ({ resId, resType, onSelect }: IWidget) => {
   const [data, setData] = useState<IComment[]>();
 
   useEffect(() => {
@@ -23,7 +26,7 @@ const QaListWidget = ({ resId, resType, onSelect, _____onReply }: IWidget) => {
     get<ICommentListResponse>(url).then((json) => {
       if (json.ok) {
         console.debug("discussion api response", json);
-        const items: IComment[] = json.data.rows.map((item, _id) => {
+        const items: IComment[] = json.data.rows.map((item) => {
           return {
             id: item.id,
             resId: item.res_id,
@@ -60,9 +63,7 @@ const QaListWidget = ({ resId, resType, onSelect, _____onReply }: IWidget) => {
                   e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
                   value: IComment
                 ) => {
-                  if (typeof onSelect !== "undefined") {
-                    onSelect(e, value);
-                  }
+                  onSelect?.(e, value);
                 }}
               />
               <div

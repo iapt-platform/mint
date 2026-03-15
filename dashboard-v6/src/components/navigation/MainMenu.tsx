@@ -52,6 +52,7 @@ function useCurrentRouteId(): string | undefined {
 
 function matchActive(routeId: string | undefined, active?: string | string[]) {
   if (!routeId || !active) return false;
+  if (routeId === active) return true;
 
   const list = Array.isArray(active) ? active : [active];
 
@@ -65,12 +66,13 @@ function findSelectedKey(
   routeId?: string
 ): string | undefined {
   for (const item of items) {
-    if (matchActive(routeId, item.activeId)) return item.key;
-
+    // ✅ 先递归子级
     if (item.children) {
       const k = findSelectedKey(item.children, routeId);
       if (k) return k;
     }
+    // 子级没找到，再匹配自身
+    if (matchActive(routeId, item.activeId)) return item.key;
   }
 }
 
@@ -82,16 +84,17 @@ function findOpenKeys(
   parents: string[] = []
 ): string[] {
   for (const item of items) {
-    if (matchActive(routeId, item.activeId)) {
-      return parents;
-    }
-
+    // ✅ 先递归子级
     if (item.children) {
       const found = findOpenKeys(item.children, routeId, [
         ...parents,
         item.key,
       ]);
       if (found.length) return found;
+    }
+    // 子级没找到，再匹配自身（叶子节点命中，返回父级路径）
+    if (matchActive(routeId, item.activeId)) {
+      return parents;
     }
   }
   return [];
@@ -218,14 +221,24 @@ const Widget = ({ onSearch }: Props) => {
           activeId: "workspace.task.pending",
         },
         {
-          key: "/workspace/task/to-do-list",
-          label: "To-Do List",
-          activeId: "workspace.task.todo",
+          key: "/workspace/task/hall",
+          label: "Task hall",
+          activeId: "workspace.task.hall",
         },
         {
-          key: "/workspace/task/hell",
-          label: "Task Hell",
-          activeId: "workspace.task.hell",
+          key: "/workspace/task/list",
+          label: "To-Do List",
+          activeId: "workspace.task.list",
+        },
+        {
+          key: "/workspace/task/project",
+          label: "projects",
+          activeId: "workspace.task.project",
+        },
+        {
+          key: "/workspace/task/workflows",
+          label: "workflows",
+          activeId: "workspace.task.workflows",
         },
       ],
     },

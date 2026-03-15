@@ -42,6 +42,11 @@ const ThemedApp = () => {
           colorPrimary: "#1677ff",
           borderRadius: 6,
         },
+        components: {
+          Menu: {
+            collapsedWidth: 40,
+          },
+        },
       }}
     >
       <AntdApp>

@@ -13,7 +13,7 @@ export const TaskBuilderChapterModal = ({ open = false, onClose }: IModal) => {
     <>
       <Modal
         destroyOnHidden={true}
-        maskClosable={false}
+        mask={{ closable: false }}
         width={1400}
         style={{ top: 10 }}
         title={""}

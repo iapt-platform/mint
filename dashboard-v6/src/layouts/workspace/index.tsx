@@ -26,8 +26,14 @@ const Widget = () => {
         collapsible
         collapsed={collapsed}
       >
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <SignInAvatar />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: 4,
+          }}
+        >
+          <SignInAvatar hideName={collapsed} />
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}

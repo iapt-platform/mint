@@ -30,9 +30,14 @@ const { Title, Paragraph, Text } = Typography;
 interface IWidget {
   placement?: TooltipPlacement;
   style?: React.CSSProperties;
+  hideName?: boolean;
 }
 
-const SignInAvatar = ({ style, placement = "bottomRight" }: IWidget) => {
+const SignInAvatar = ({
+  style,
+  placement = "bottomRight",
+  hideName = false,
+}: IWidget) => {
   const intl = useIntl();
   const navigate = useNavigate();
   const [settingOpen, setSettingOpen] = useState(false);
@@ -160,7 +165,7 @@ const SignInAvatar = ({ style, placement = "bottomRight" }: IWidget) => {
             >
               {user.nickName?.slice(0, 2)}
             </Avatar>
-            {user.nickName}
+            {!hideName && user.nickName}
           </span>
         </Popover>
         <SettingModal

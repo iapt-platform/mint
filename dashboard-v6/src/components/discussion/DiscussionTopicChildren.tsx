@@ -1,18 +1,19 @@
 import { List, message, Skeleton } from "antd";
-import { IconType } from "antd/lib/notification";
+
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { get } from "../../request";
 import type { ICommentListResponse } from "../../api/Comment";
+
+import DiscussionCreate from "./DiscussionCreate";
+import type { IComment, TResType } from "../../api/discussion";
 import type {
   ISentHistoryData,
   ISentHistoryListResponse,
-} from "../corpus/SentHistory";
-import SentHistoryGroup from "../corpus/SentHistoryGroup";
-import DiscussionCreate from "./DiscussionCreate";
-import DiscussionItem, { type IComment } from "./DiscussionItem";
-import type { TResType } from "./DiscussionListCard";
+} from "../../api/sentence-history";
+import DiscussionItem from "./DiscussionItem";
+import SentHistoryGroup from "../sentence-history.tsx/SentHistoryGroup";
 
 interface IItem {
   type: "comment" | "sent";
@@ -29,8 +30,8 @@ interface IWidget {
   topicId?: string;
   focus?: string;
   hideReply?: boolean;
-  onItemCountChange?: Function;
-  onTopicCreate?: Function;
+  onItemCountChange?: (total: number, parentId?: string | null) => void;
+  onTopicCreate?: (value: IComment) => void;
 }
 const DiscussionTopicChildrenWidget = ({
   topic,
@@ -96,7 +97,7 @@ const DiscussionTopicChildrenWidget = ({
     let currSent: ISentHistoryData[] = [];
     let currOldSent: string | undefined;
     let sentBegin = false;
-    mixItems.forEach((value, _index, _array) => {
+    mixItems.forEach((value) => {
       if (value.type === "comment") {
         if (sentBegin) {
           sentBegin = false;
@@ -247,7 +248,7 @@ const DiscussionTopicChildrenWidget = ({
               onItemCountChange(data.length + 1, value.parent);
             }
           }}
-          onTopicCreated={(value: IconType) => {
+          onTopicCreated={(value) => {
             if (typeof onTopicCreate !== "undefined") {
               onTopicCreate(value);
             }

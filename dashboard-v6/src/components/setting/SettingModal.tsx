@@ -5,6 +5,9 @@ import { useIntl } from "react-intl";
 import SettingNissaya from "./SettingNissaya";
 import SettingDict from "./SettingDict";
 import SettingEditor from "./SettingEditor";
+import { useAppSelector } from "../../hooks";
+import { currentUser } from "../../reducers/current-user";
+import AiModelList from "../ai-model/AiModelList";
 interface IWidget {
   trigger?: React.ReactNode;
   open?: boolean;
@@ -13,6 +16,7 @@ interface IWidget {
 const SettingModal = ({ trigger, open, onClose }: IWidget) => {
   const [isInnerOpen, setIsInnerOpen] = useState(false);
   const intl = useIntl();
+  const currUser = useAppSelector(currentUser);
 
   const isModalOpen = open ?? isInnerOpen;
 
@@ -57,6 +61,11 @@ const SettingModal = ({ trigger, open, onClose }: IWidget) => {
               }),
               key: "dict",
               children: <SettingDict />,
+            },
+            {
+              label: "model",
+              key: "model",
+              children: <AiModelList studioName={currUser?.realName} />,
             },
           ]}
         />

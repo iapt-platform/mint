@@ -4,21 +4,22 @@ import { LinkOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
 import type { ICommentListResponse } from "../../api/Comment";
-import type { IComment } from "./DiscussionItem";
+
 import type { IAnswerCount } from "./DiscussionDrawer";
 import { type ActionType, ProList } from "@ant-design/pro-components";
-import { renderBadge } from "../channel/ChannelTable";
 import DiscussionCreate from "./DiscussionCreate";
 import User from "../auth/User";
 import type { IArticleListResponse } from "../../api/article";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 import { CommentOutlinedIcon, TemplateOutlinedIcon } from "../../assets/icon";
-import type { ISentenceResponse } from "../../api/Corpus";
-import type { TDiscussionType } from "./Discussion";
+
 import { courseInfo } from "../../reducers/current-course";
 import { courseUser } from "../../reducers/course-user";
 import TimeShow from "../general/TimeShow";
+import type { IComment, TDiscussionType, TResType } from "../../api/discussion";
+import type { ISentenceResponse } from "../../api/sentence";
+import StatusBadge from "../general/StatusBadge";
 
 const { Paragraph } = Typography;
 
@@ -47,7 +48,6 @@ const DiscussionListCardWidget = ({
   type = "discussion",
   pageSize = 10,
   onItemCountChange,
-  ___onReply,
   onReady,
 }: IWidget) => {
   const ref = useRef<ActionType | null>(null);
@@ -247,7 +247,7 @@ const DiscussionListCardWidget = ({
                   (value) =>
                     items.findIndex((old) => old.tplId === value.uid) === -1
                 )
-                .map((item, _index) => {
+                .map((item) => {
                   return {
                     tplId: item.uid,
                     resId: resId,
@@ -301,7 +301,10 @@ const DiscussionListCardWidget = ({
                 label: (
                   <span>
                     active
-                    {renderBadge(activeNumber, activeKey === "active")}
+                    <StatusBadge
+                      count={activeNumber}
+                      active={activeKey === "active"}
+                    />
                   </span>
                 ),
               },
@@ -310,7 +313,10 @@ const DiscussionListCardWidget = ({
                 label: (
                   <span>
                     close
-                    {renderBadge(closeNumber, activeKey === "close")}
+                    <StatusBadge
+                      count={closeNumber}
+                      active={activeKey === "close"}
+                    />
                   </span>
                 ),
               },
@@ -329,7 +335,7 @@ const DiscussionListCardWidget = ({
           resId={resId}
           resType={resType}
           type={type}
-          onCreated={(_e: IComment) => {
+          onCreated={() => {
             if (typeof onItemCountChange !== "undefined") {
               onItemCountChange(count + 1);
             }
