@@ -208,7 +208,6 @@ const Widget = ({ onSearch }: Props) => {
       icon: <CourseOutLinedIcon />,
       label: "Course",
     },
-
     {
       key: "/workspace/task",
       icon: <TaskIcon />,
@@ -239,6 +238,28 @@ const Widget = ({ onSearch }: Props) => {
           key: "/workspace/task/workflows",
           label: "workflows",
           activeId: "workspace.task.workflows",
+        },
+      ],
+    },
+    {
+      key: "/workspace/tools",
+      icon: <CourseOutLinedIcon />,
+      label: "tools",
+      children: [
+        {
+          key: "/workspace/tools/tag",
+          label: "tag",
+          activeId: "workspace.tools.tag",
+        },
+        {
+          key: "/workspace/tools/drive",
+          label: "drive",
+          activeId: "workspace.tools.drive",
+        },
+        {
+          key: "/workspace/tools/dict",
+          label: "dict",
+          activeId: "workspace.tools.dict",
         },
       ],
     },
