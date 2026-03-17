@@ -52,7 +52,6 @@ class OfflineIndexController extends Controller
                     continue;
                 }
             }
-            //Log::info('offline-index: link=' . $s3Link);
             $url[] = [
                 'link' => $s3Link,
                 'hostname' => 'Amazon cloud storage(Hongkong)',

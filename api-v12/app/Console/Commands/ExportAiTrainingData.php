@@ -8,15 +8,18 @@ use App\Models\Sentence;
 use App\Models\PaliSentence;
 use App\Http\Api\MdRender;
 use Illuminate\Support\Facades\File;
+use App\Http\Api\ChannelApi;
+use App\Services\PaliTextService;
 
 class ExportAiTrainingData extends Command
 {
+    private $ShortTrans = 0.17;
     /**
      * The name and signature of the console command.
      * php artisan export:ai.training.data
      * @var string
      */
-    protected $signature = 'export:ai.training.data {--format=gz  : zip file format 7z,lzma,gz }';
+    protected $signature = 'export:ai.training.data {--format=gz  : zip file format 7z,lzma,gz } {--test}';
 
     /**
      * The console command description.
@@ -67,11 +70,14 @@ class ExportAiTrainingData extends Command
             $this->info('make dir successful ' . $dirname);
         }
 
+        $fpIndex = fopen($dirname . '/index.md', 'w');
+        if ($fpIndex === false) {
+            die('无法创建索引文件');
+        }
 
         $channels = [
-            '19f53a65-81db-4b7d-8144-ac33f1217d34',
-            'e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43',
             '7ac4d13b-a43d-4409-91b5-5f2a82b916b3',
+            'e5bc5c97-a6fb-4ccb-b7df-be6dcfee9c43',
             '74ebf4c5-c243-4948-955d-6c277e29276a',
             '3b0cb0aa-ea88-4ce5-b67d-00a3e76220cc',
             '5310999c-0b0c-4bb0-9bb9-9cdd176e9ef0',
@@ -80,6 +86,16 @@ class ExportAiTrainingData extends Command
 
         $start = time();
         foreach ($channels as $key => $channel) {
+            if ($this->option('test') && $key > 0) {
+                // test mode 只跑一个
+                break;
+            }
+            fwrite($fpIndex, "# {$channel}\n");
+            $channelInfo = ChannelApi::getById($channel);
+            if ($channelInfo) {
+                fwrite($fpIndex, "- 版本名称：{$channelInfo['name']}\n");
+                fwrite($fpIndex, "- 语言：{$channelInfo['lang']}\n");
+            }
             // 创建文件
             $this->info('export start' . $channel);
             $filename = $channel . '.jsonl';
@@ -108,7 +124,19 @@ class ExportAiTrainingData extends Command
                 if (isset($done[$id])) {
                     continue;
                 }
-                $content = MdRender::render(
+                //获取原文
+                $origin = PaliSentence::where('book', $sent->book_id)
+                    ->where('paragraph', $sent->paragraph)
+                    ->where('word_begin', $sent->word_start)
+                    ->where('word_end', $sent->word_end)
+                    ->value('text');
+                //忽略空的原文
+                if (self::isEmpty($origin)) {
+                    Log::warning('origin is empty id=' . $id);
+                    continue;
+                }
+                // 渲染译文
+                $translation = MdRender::render(
                     $sent->content,
                     [$channel],
                     null,
@@ -117,20 +145,34 @@ class ExportAiTrainingData extends Command
                     $sent->content_type,
                     'text',
                 );
-                $origin = PaliSentence::where('book', $sent->book_id)
-                    ->where('paragraph', $sent->paragraph)
-                    ->where('word_begin', $sent->word_start)
-                    ->where('word_end', $sent->word_end)
-                    ->value('text');
-                if (empty($origin)) {
-                    Log::warning('origin is empty id=' . $id);
-                    continue;
-                }
-                if (empty($content)) {
+                $translation = trim($translation);
+                // 忽略空的译文
+                if (self::isEmpty($translation)) {
                     Log::warning('translation is empty id=' . $id);
                     continue;
                 }
-                $currData = ['id' => $id, 'original' => $origin, 'translation' => trim($content)];
+
+                //忽略过短的译文
+                if (mb_strlen($translation) / mb_strlen($origin) < $this->ShortTrans) {
+                    Log::warning('translation is short id=' . $id);
+                    continue;
+                }
+                //原文与翻译完全相同
+                if ($translation === $origin) {
+                    Log::warning('translation is same id=' . $id);
+                    continue;
+                }
+                // 获取分类标签
+                $paliTextService = app(PaliTextService::class);
+                $tags = $paliTextService->getParaCategoryTags($sent->book_id, $sent->paragraph);
+                $path = $paliTextService->getParaPathTitle($sent->book_id, $sent->paragraph);
+                $currData = [
+                    'id' => $id,
+                    'original' => $origin,
+                    'translation' => $translation,
+                    'category' => $tags,
+                    'path' => $path,
+                ];
 
                 fwrite($fp, json_encode($currData, JSON_UNESCAPED_UNICODE) . "\n");
                 $bar->advance();
@@ -138,6 +180,7 @@ class ExportAiTrainingData extends Command
             }
             fclose($fp);
         }
+        fclose($fpIndex);
 
         $this->info((time() - $start) . ' seconds');
         $this->call('export:zip2', [
@@ -151,5 +194,11 @@ class ExportAiTrainingData extends Command
         File::deleteDirectory($dirname);
 
         return 0;
+    }
+
+    private function isEmpty(string $input)
+    {
+        $result = preg_replace('/[\s\d\p{P}]/u', '', $input);
+        return empty($result);
     }
 }

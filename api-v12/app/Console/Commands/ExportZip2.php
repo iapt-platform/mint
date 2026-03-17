@@ -143,9 +143,17 @@ class ExportZip2 extends Command
         */
 
         $info = Cache::get('/offline/index', []);
-
+        if (!is_array($info)) {
+            $info = [];
+        }
+        $id = $this->argument('id');
+        // 先移除已有相同 id 的记录
+        $info = array_values(array_filter($info, function ($item) use ($id) {
+            return !isset($item['id']) || $item['id'] != $id;
+        }));
+        // 再追加新数据
         $info[] = [
-            'id' => $this->argument('id'),
+            'id' => $id,
             'title' => $this->argument('title'),
             'filename' => $zipFile,
             'url' => $url,
