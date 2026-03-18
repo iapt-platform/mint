@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\PaliText;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class PaliTextService
 {
@@ -39,10 +40,14 @@ class PaliTextService
         if (!$bookPara) {
             return [];
         }
-        if (isset($bookPara->uid) && $bookPara->uid) {
+        if (Str::isUuid($bookPara->uid)) {
             return app(TagService::class)->getTagsName($bookPara->uid);
         } else {
-            Log::error('book uid is null', ['book' => $book, 'para' => $para]);
+            Log::error('book uid not uuid', [
+                'book' => $book,
+                'para' => $para,
+                'uid' => $bookPara->uid
+            ]);
             return [];
         }
     }
