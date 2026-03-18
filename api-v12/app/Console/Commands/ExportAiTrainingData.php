@@ -45,7 +45,7 @@ class ExportAiTrainingData extends Command
      */
     public function handle()
     {
-        Log::debug('task export offline sentence-table start');
+        Log::info('task export offline sentence-table start');
         //创建文件夹
         $base = 'app/tmp/export/offline';
         $exportDir = storage_path($base);
