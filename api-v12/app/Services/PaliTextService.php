@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\PaliText;
+use Illuminate\Support\Facades\Log;
 
 class PaliTextService
 {
@@ -28,13 +29,22 @@ class PaliTextService
         if ($paragraph) {
             return $paragraph;
         } else {
+            Log::error('not found book ', ['book' => $book, 'para' => $para]);
             return null;
         }
     }
-    public function getParaCategoryTags(int $book, int $para)
+    public function getParaCategoryTags(int $book, int $para): array
     {
         $bookPara = self::getBookPara($book, $para);
-        return app(TagService::class)->getTagsName($bookPara->uid);
+        if (!$bookPara) {
+            return [];
+        }
+        if (isset($bookPara->uid) && $bookPara->uid) {
+            return app(TagService::class)->getTagsName($bookPara->uid);
+        } else {
+            Log::error('book uid is null', ['book' => $book, 'para' => $para]);
+            return [];
+        }
     }
     public function getParaInfo(int $book, int $para)
     {
