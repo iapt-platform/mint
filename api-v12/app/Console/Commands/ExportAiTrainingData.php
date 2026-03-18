@@ -115,7 +115,9 @@ class ExportAiTrainingData extends Command
                 'word_end',
                 'content',
                 'content_type'
-            ])->orderBy('book_id')
+            ])
+                ->whereNotNull('content')
+                ->orderBy('book_id')
                 ->orderBy('paragraph')
                 ->orderBy('word_start')->cursor();
             $done = [];
@@ -198,6 +200,9 @@ class ExportAiTrainingData extends Command
 
     private function isEmpty(string $input)
     {
+        if (empty($input)) {
+            return true;
+        }
         $result = preg_replace('/[\s\d\p{P}]/u', '', $input);
         return empty($result);
     }
