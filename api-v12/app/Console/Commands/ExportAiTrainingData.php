@@ -198,7 +198,7 @@ class ExportAiTrainingData extends Command
         return 0;
     }
 
-    private function isEmpty(string $input)
+    private function isEmpty(?string $input): bool
     {
         if (empty($input)) {
             return true;
