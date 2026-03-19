@@ -73,7 +73,7 @@ const DiscussionAnchorWidget = ({
           .finally(() => setLoading(false));
         break;
       case "article":
-        url = `/v2/article/${resId}`;
+        url = `/api/v2/article/${resId}`;
         console.info("url", url);
         setLoading(true);
 

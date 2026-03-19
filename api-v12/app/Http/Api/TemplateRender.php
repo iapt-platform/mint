@@ -22,6 +22,8 @@ use App\Http\Api\PaliTextApi;
 
 use App\Tools\Tools;
 
+use App\Services\ArticleService;
+
 class TemplateRender
 {
     protected $param = [];
@@ -159,16 +161,41 @@ class TemplateRender
                 $result = $this->render_ai();
                 break;
             default:
-                # code...
-                $result = [
-                    'props' => base64_encode(\json_encode([])),
-                    'html' => '',
-                    'tag' => 'span',
-                    'tpl' => 'unknown',
-                ];
+                if (mb_substr($tpl_name, 0, 4, "UTF-8") === 'Tpl:') {
+                    $result = $this->render_tpl($tpl_name);
+                } else {
+                    $result = [
+                        'props' => base64_encode(\json_encode([])),
+                        'html' => '',
+                        'tag' => 'span',
+                        'tpl' => 'unknown',
+                    ];
+                }
+
                 break;
         }
         return $result;
+    }
+
+    public function render_tpl($name)
+    {
+        $article = app(ArticleService::class)->getRawByTitle($name);
+        $content = $article->content;
+        if (count($this->param) > 0) {
+            $m = new \Mustache_Engine(array(
+                'entity_flags' => ENT_QUOTES,
+                'escape' => function ($value) {
+                    return $value;
+                }
+            ));
+            $content = $m->render($content, $this->param);
+        }
+        return [
+            'props' => base64_encode(\json_encode(['content' => $content])),
+            'html' => $content,
+            'tag' => 'span',
+            'tpl' => 'tpl',
+        ];
     }
 
     public function getTermProps($word, $tag = null, $channel = null)

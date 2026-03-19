@@ -406,6 +406,7 @@ export const updateArticle = (
   articleId: string,
   data: IArticleDataRequest
 ): Promise<IArticleResponse> => {
+  console.debug("updateArticle", articleId);
   return put<IArticleDataRequest, IArticleResponse>(
     `/api/v2/article/${articleId}`,
     data
@@ -531,7 +532,7 @@ export const fetchArticleList = (
     parts.push(`order=${orderBy}`, `dir=${dir}`);
   }
 
-  const url = `/v2/article?${parts.join("&")}`;
+  const url = `/api/v2/article?${parts.join("&")}`;
   return get<IArticleListResponse>(url);
 };
 

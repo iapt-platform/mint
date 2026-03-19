@@ -12,6 +12,7 @@ import SentEdit from "./SentEdit";
 import SentRead from "./SentRead";
 import Term from "./Term";
 import Toggle from "./Toggle";
+import Tpl from "./Tpl";
 import Video from "./Video";
 import WbwSent from "./WbwSent";
 import Wd from "./Wd";
@@ -57,6 +58,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Confidence props={props ? props : ""} />;
     case "paragraph":
       return <Paragraph props={props ? props : ""} />;
+    case "tpl":
+      return <Tpl props={props ? props : ""} />;
     default:
       return <>未定义模版({tpl})</>;
   }

@@ -49,7 +49,7 @@ const AddToAnthologyWidget = ({
   const handleSelect = (id: string) => {
     if (!articleIds) return;
 
-    post<IArticleMapAddRequest, IArticleMapAddResponse>("/v2/article-map", {
+    post<IArticleMapAddRequest, IArticleMapAddResponse>("/api/v2/article-map", {
       anthology_id: id,
       article_id: articleIds,
       operation: "add",

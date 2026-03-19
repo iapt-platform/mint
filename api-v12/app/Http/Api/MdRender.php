@@ -346,7 +346,11 @@ class MdRender
                 /**html tex text simple markdown */
                 if (isset($tplProps)) {
                     if (is_array($tplProps)) {
-                        return $tplProps[0];
+                        if (isset($tplProps[0])) {
+                            return $tplProps[0];
+                        } else {
+                            return '';
+                        }
                     } else {
                         return $tplProps;
                     }

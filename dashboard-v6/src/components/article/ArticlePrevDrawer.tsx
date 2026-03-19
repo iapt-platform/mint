@@ -1,5 +1,5 @@
 import { Drawer, Typography } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { put } from "../../request";
 import type { IArticleDataResponse, IArticleResponse } from "../../api/article";
 import ArticleLayout from "./components/ArticleLayout";
@@ -16,27 +16,15 @@ interface IWidget {
   articleId: string;
 }
 
-const ArticlePrevDrawerWidget = ({
-  trigger,
-  title,
-  content,
-  articleId,
-}: IWidget) => {
+const ArticlePrevDrawer = ({ trigger, title, content, articleId }: IWidget) => {
   const [articleData, setArticleData] = useState<IArticleDataResponse>();
   const [open, setOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string>();
 
   const showDrawer = () => {
-    setOpen(true);
-  };
-
-  const onClose = () => {
-    setOpen(false);
-  };
-
-  useEffect(() => {
+    console.info("ArticlePrevDrawer save");
     put<IArticlePrevRequest, IArticleResponse>(
-      `/v2/article-preview/${articleId}`,
+      `/api/v2/article-preview/${articleId}`,
       {
         content: content ? content : "",
       }
@@ -52,7 +40,12 @@ const ArticlePrevDrawerWidget = ({
       .catch((e: IArticleResponse) => {
         setErrorMsg(e.message);
       });
-  }, [articleId, content]);
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
@@ -84,4 +77,4 @@ const ArticlePrevDrawerWidget = ({
   );
 };
 
-export default ArticlePrevDrawerWidget;
+export default ArticlePrevDrawer;

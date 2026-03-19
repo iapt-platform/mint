@@ -44,7 +44,7 @@ const ArticleCreateWidget = ({
   console.log("parentId", parentId);
   useEffect(() => {
     if (parentId) {
-      get<IArticleResponse>(`/v2/article/${parentId}`).then((json) => {
+      get<IArticleResponse>(`/api/v2/article/${parentId}`).then((json) => {
         console.log("article", json);
 
         if (json.ok) {
@@ -73,7 +73,7 @@ const ArticleCreateWidget = ({
           values.studio = studio;
           values.parentId = parentId ? parentId : undefined;
           const res = await post<IArticleCreateRequest, IArticleResponse>(
-            `/v2/article`,
+            `/api/v2/article`,
             values
           );
           console.log(res);
