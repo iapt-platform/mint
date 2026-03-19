@@ -11,6 +11,7 @@ class ExportDiscussion extends Command
 {
     /**
      * The name and signature of the console command.
+     * php artisan export:discussion
      */
     protected $signature = 'export:discussion {editor : The editor UID to export discussions for}';
 
@@ -165,8 +166,9 @@ class ExportDiscussion extends Command
                 : trim($translation->content ?? '（无译文内容）');
 
             $this->writeLine("# {$paliContent}\n");
-            $this->writeLine("  - **译文**: {$translationAtTime}");
+            $this->writeLine("  - **历史译文**: {$translationAtTime}");
             $this->writeLine("  - **评论**: " . trim($discussion->title ?? '') . trim($discussion->content ?? ''));
+            $this->writeLine("  - **当前译文**: {$translation->content}");
             $this->writeLine('');
         }
 
