@@ -1,11 +1,8 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
-import { Button, Dropdown, type MenuProps, Typography } from "antd";
-import { LoadingOutlined, CloseOutlined } from "@ant-design/icons";
+import { useEffect, useState, useCallback } from "react";
+import { Dropdown, Flex, type MenuProps, Typography } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
-import { useAppSelector } from "../../hooks";
-import { settingInfo } from "../../reducers/setting";
-
-import { type IWidgetSentEditInner, SentEditInner } from "./SentEdit";
+import { type IWidgetSentEditInner } from "./SentEdit";
 
 import store from "../../store";
 import { push } from "../../reducers/sentence";
@@ -13,13 +10,15 @@ import "./style.css";
 
 import type { ISentence } from "../../api/sentence";
 import { get } from "../../request";
-import { GetUserSetting } from "../setting/default";
 import { openDiscussion } from "../discussion/utils";
 import { prOpen } from "./utils";
-import MdView from "../general/MdView";
 import InteractiveButton from "./InteractiveButton";
 import type { IEditableSentence } from "../../api/sentence";
 import MdOrigin from "./components/MdOrigin";
+import EditPad from "./components/EditPad";
+import MdTranslation from "./components/MdTranslation";
+import CommentaryPad from "../tipitaka/components/CommentaryPad";
+import { useSetting } from "../../hooks/useSetting";
 
 const { Text } = Typography;
 
@@ -38,6 +37,7 @@ export interface IWidgetSentReadFrame {
   wordEnd?: number;
   origin?: ISentence[];
   translation?: ISentence[];
+  commentaries?: ISentence[];
   layout?: "row" | "column";
   error?: string;
 }
@@ -45,37 +45,21 @@ export interface IWidgetSentReadFrame {
 const SentReadFrame = ({
   origin,
   translation,
+  commentaries,
   book,
   para,
   wordStart,
   wordEnd,
   error,
 }: IWidgetSentReadFrame) => {
-  const settings = useAppSelector(settingInfo);
+  const layoutDirection = useSetting("setting.layout.direction");
+  const layoutCommentary = useSetting("setting.layout.commentary");
+  const displayOriginal = useSetting("setting.display.original");
 
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [active, setActive] = useState(false);
   const [sentData, setSentData] = useState<IWidgetSentEditInner>();
   const [showEdit, setShowEdit] = useState(false);
-
-  /** 派生数据：是否显示原文 */
-  const displayOriginal = useMemo(() => {
-    return GetUserSetting("setting.display.original", settings);
-  }, [settings]);
-
-  /** 派生数据：布局方向 */
-  const layoutDirection = useMemo<React.CSSProperties["flexDirection"]>(() => {
-    const v = GetUserSetting("setting.layout.direction", settings);
-    if (
-      v === "row" ||
-      v === "column" ||
-      v === "row-reverse" ||
-      v === "column-reverse"
-    ) {
-      return v;
-    }
-    return "row";
-  }, [settings]);
 
   /** push 到 store（副作用） */
   useEffect(() => {
@@ -121,101 +105,90 @@ const SentReadFrame = ({
   }, []);
 
   return (
-    <span
-      className="sent_read_shell"
-      style={{ flexDirection: layoutDirection }}
-    >
-      <Text type="danger" mark>
-        {error}
-      </Text>
-
+    <div className="sent_read_shell">
+      {error && (
+        <Text type="danger" mark>
+          {error}
+        </Text>
+      )}
       {/* anchor */}
-      <span
+      <div
         dangerouslySetInnerHTML={{
           __html: `<span class="pcd_sent" id="sent_${book}-${para}-${wordStart}-${wordEnd}"></span>`,
         }}
       />
+      <Flex vertical={layoutCommentary === "row"}>
+        <Flex
+          gap="middle"
+          vertical={layoutDirection === "row"}
+          style={{ flex: 5 }}
+        >
+          {/* 原文 */}
+          <span
+            style={{
+              flex: 5,
+              color: "#9f3a01",
+              display:
+                displayOriginal === false && translation?.length
+                  ? "none"
+                  : "block",
+            }}
+          >
+            {origin?.map((item, id) => (
+              <MdOrigin text={item.html} key={id} />
+            ))}
+          </span>
 
-      {/* 原文 */}
-      <span
-        style={{
-          flex: 5,
-          color: "#9f3a01",
-          display:
-            displayOriginal === false && translation?.length ? "none" : "block",
-        }}
-      >
-        {origin?.map((item, id) => (
-          <MdOrigin text={item.html} key={id} />
-        ))}
-      </span>
+          {/* 译文 */}
+          <span className="sent_read" style={{ flex: 5 }}>
+            {translation?.map((item, id) => (
+              <span key={id} style={{ border: active ? "1px" : "unset" }}>
+                {loadingId === item.id && <LoadingOutlined />}
 
-      {/* 译文 */}
-      <span className="sent_read" style={{ flex: 5 }}>
-        {translation?.map((item, id) => (
-          <span key={id}>
-            {loadingId === item.id && <LoadingOutlined />}
+                <Dropdown
+                  trigger={["contextMenu"]}
+                  menu={{
+                    items,
+                    onClick: (e) => handleMenuClick(e.key, item),
+                  }}
+                >
+                  {showEdit && <MdTranslation text={item.html} />}
+                </Dropdown>
 
-            <Dropdown
-              trigger={["contextMenu"]}
-              menu={{
-                items,
-                onClick: (e) => handleMenuClick(e.key, item),
-              }}
-            >
-              <Text
-                className="sent_read_translation"
-                style={{ display: showEdit ? "none" : "inline" }}
-              >
-                <MdView
-                  html={item.html}
-                  style={{ backgroundColor: active ? "beige" : undefined }}
-                />
-              </Text>
-            </Dropdown>
-
-            {/* 编辑面板 */}
-            {showEdit && (
-              <div>
-                <div style={{ textAlign: "right" }}>
-                  <Button
-                    size="small"
-                    icon={<CloseOutlined />}
-                    onClick={() => setShowEdit(false)}
-                  >
-                    返回审阅模式
-                  </Button>
-                </div>
-
-                {sentData ? (
-                  <SentEditInner
-                    mode="edit"
-                    {...sentData}
+                {/* 编辑面板 */}
+                {showEdit && (
+                  <EditPad
+                    data={sentData}
                     onTranslationChange={(data: ISentence) => {
                       if (!translation) return;
                       const copy = [...translation];
                       copy[id] = data;
                     }}
+                    onClose={() => setShowEdit(false)}
                   />
-                ) : (
-                  "无数据"
                 )}
-              </div>
-            )}
 
-            <InteractiveButton
-              data={item}
-              compact
-              float
-              hideCount
-              hideInZero
-              onMouseEnter={() => setActive(true)}
-              onMouseLeave={() => setActive(false)}
-            />
+                <InteractiveButton
+                  data={item}
+                  compact
+                  float
+                  hideCount
+                  hideInZero
+                  onMouseEnter={() => setActive(true)}
+                  onMouseLeave={() => setActive(false)}
+                />
+              </span>
+            ))}
           </span>
-        ))}
-      </span>
-    </span>
+        </Flex>
+        {/**注疏区 */}
+        <CommentaryPad>
+          {commentaries?.map((item, id) => {
+            return <MdTranslation text={item.html} key={id} />;
+          })}
+        </CommentaryPad>
+      </Flex>
+    </div>
   );
 };
 
