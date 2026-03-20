@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Modal } from "antd";
 import TagList from "./TagList";
-import type { ITagData } from "../../api/Tag";
+import type { ITagData } from "../../api/tag";
 
 interface IWidget {
   studioName?: string;

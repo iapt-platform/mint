@@ -7,9 +7,9 @@ import {
 } from "@ant-design/pro-components";
 import { Tag, message } from "antd";
 
-import { get, post, put } from "../../request";
+import { post, put } from "../../request";
 import { useRef } from "react";
-import type { ITagRequest, ITagResponse } from "../../api/Tag";
+import { fetchTag, type ITagRequest, type ITagResponse } from "../../api/tag";
 
 interface IWidgetCourseCreate {
   studio?: string;
@@ -52,7 +52,7 @@ const TagCreateWidget = ({ studio, tagId, onCreate }: IWidgetCourseCreate) => {
         console.log(values);
         if (studio) {
           values.studio = studio;
-          let url = `/v2/tag`;
+          let url = `/api/v2/tag`;
           if (tagId) {
             url += `/${tagId}`;
           }
@@ -81,9 +81,7 @@ const TagCreateWidget = ({ studio, tagId, onCreate }: IWidgetCourseCreate) => {
       request={
         tagId
           ? async () => {
-              const url = `/v2/tag/${tagId}`;
-              console.info("api request", url);
-              const res = await get<ITagResponse>(url);
+              const res = await fetchTag(tagId);
               console.info("api response", res);
               return res.data;
             }

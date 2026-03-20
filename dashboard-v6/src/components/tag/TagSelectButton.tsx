@@ -5,7 +5,7 @@ import { useAppSelector } from "../../hooks";
 import { courseInfo } from "../../reducers/current-course";
 import { currentUser } from "../../reducers/current-user";
 import TagsManager from "./TagsManager";
-import type { ITagMapData } from "../../api/Tag";
+import type { ITagMapData } from "../../api/tag";
 
 interface IWidget {
   resId?: string;

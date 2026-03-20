@@ -3,7 +3,7 @@
 import type { IUser } from "./Auth";
 import type { TContentType } from "./article";
 import type { TDiscussionType, TResType } from "./discussion";
-import type { ITagMapData } from "./Tag";
+import type { ITagMapData } from "./tag";
 import { get } from "../request";
 
 export interface ICommentRequest {

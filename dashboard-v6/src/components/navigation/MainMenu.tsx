@@ -247,19 +247,41 @@ const Widget = ({ onSearch }: Props) => {
       label: "tools",
       children: [
         {
-          key: "/workspace/tools/tag",
+          key: "/workspace/tag",
           label: "tag",
-          activeId: "workspace.tools.tag",
+          activeId: "workspace.tag",
         },
         {
-          key: "/workspace/tools/drive",
+          key: "/workspace/drive",
           label: "drive",
-          activeId: "workspace.tools.drive",
+          activeId: "workspace.drive",
         },
         {
-          key: "/workspace/tools/dict",
+          key: "/workspace/dict",
           label: "dict",
-          activeId: "workspace.tools.dict",
+          activeId: "workspace.dict",
+        },
+      ],
+    },
+    {
+      key: "/workspace/collaboration",
+      icon: <CourseOutLinedIcon />,
+      label: "collaboration",
+      children: [
+        {
+          key: "/workspace/team",
+          label: "team",
+          activeId: "workspace.team",
+        },
+        {
+          key: "/workspace/invite",
+          label: "invite",
+          activeId: "workspace.invite",
+        },
+        {
+          key: "/workspace/transfer",
+          label: "transfer",
+          activeId: "workspace.transfer",
         },
       ],
     },

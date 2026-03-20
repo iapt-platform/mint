@@ -4,7 +4,7 @@ import { type ActionType, ProList } from "@ant-design/pro-components";
 import { Space, Tag, Button, Layout, Popconfirm } from "antd";
 import { delete_, get } from "../../request";
 import type { IShareListResponse } from "../../api/Share";
-import type { IDeleteResponse } from "../../api/Group";
+import type { IDeleteResponse } from "../../api/group";
 
 const { Content } = Layout;
 
@@ -76,7 +76,7 @@ const GroupFileWidget = ({ groupId }: IWidget) => {
                   })}
                   onConfirm={() => {
                     console.log("delete", row.id);
-                    delete_<IDeleteResponse>("/v2/share/" + row.id).then(
+                    delete_<IDeleteResponse>("/api/v2/share/" + row.id).then(
                       (json) => {
                         if (json.ok) {
                           console.log("delete ok");
@@ -101,7 +101,7 @@ const GroupFileWidget = ({ groupId }: IWidget) => {
         request={async (params = {}, sorter, filter) => {
           console.log(params, sorter, filter);
 
-          let url = `/v2/share?view=group&id=${groupId}`;
+          let url = `/api/v2/share?view=group&id=${groupId}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);

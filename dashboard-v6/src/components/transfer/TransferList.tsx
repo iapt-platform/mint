@@ -60,7 +60,7 @@ const TransferListWidget = ({ studioName }: IWidget) => {
     const data: ITransferRequest = {
       status: status,
     };
-    put<ITransferRequest, ITransferResponse>(`/v2/transfer/${id}`, data)
+    put<ITransferRequest, ITransferResponse>(`/api/v2/transfer/${id}`, data)
       .then((json) => {
         if (json.ok) {
           ref.current?.reload();
@@ -187,7 +187,7 @@ const TransferListWidget = ({ studioName }: IWidget) => {
           },
         }}
         request={async (params = {}) => {
-          let url = `/v2/transfer?view=studio&name=${studioName}&view2=${activeKey}`;
+          let url = `/api/v2/transfer?view=studio&name=${studioName}&view2=${activeKey}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);

@@ -13,7 +13,7 @@ import type { IUserRequest, IUserResponse } from "../../api/Auth";
 import type { UploadFile } from "antd/es/upload/interface";
 import { get as getToken } from "../../reducers/current-user";
 import type { IAttachmentResponse } from "../../api/Attachments";
-import type { IDeleteResponse } from "../../api/Group";
+import type { IDeleteResponse } from "../../api/group";
 
 interface IAccount {
   id: string;

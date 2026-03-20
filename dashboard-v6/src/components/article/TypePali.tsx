@@ -96,15 +96,12 @@ const TypePali = ({
   // 派生展示数据
   let title = "";
   if (articleData) {
-    if (type === "chapter") {
-      title = articleData.title_text ?? articleData.title;
-    } else {
-      const chapterId = id?.split("-");
-      title = chapterId
-        ? chapterId.length > 1
-          ? chapterId[1]
-          : "unknown"
-        : "unknown";
+    title = articleData.title_text ?? articleData.title;
+    if (type === "para" && id) {
+      const [, para] = id.split("-");
+      if (para) {
+        title = title + "-" + para;
+      }
     }
   }
 
@@ -198,6 +195,13 @@ const TypePali = ({
         nodes={nodeData.map((item) => {
           return <ParagraphNode initData={item} />;
         })}
+        html={
+          nodeData.length === 0
+            ? articleData?.content
+              ? [articleData?.content]
+              : [""]
+            : [""]
+        }
         loading={loading}
         errorCode={errorCode}
         remains={remains}

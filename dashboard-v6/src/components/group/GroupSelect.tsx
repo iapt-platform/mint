@@ -2,7 +2,7 @@ import { ProFormSelect } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 
 import { get } from "../../request";
-import type { IGroupListResponse } from "../../api/Group";
+import type { IGroupListResponse } from "../../api/group";
 
 interface IWidget {
   name?: string;
@@ -29,7 +29,7 @@ const GroupSelectWidget = ({
         mode: multiple ? "multiple" : undefined,
       }}
       request={async ({ keyWords }) => {
-        const url = `/v2/group?view=all&search=${keyWords}`;
+        const url = `/api/v2/group?view=all&search=${keyWords}`;
         console.log("group keyWord", url);
         const json = await get<IGroupListResponse>(url);
         const userList = json.data.rows.map((item) => {

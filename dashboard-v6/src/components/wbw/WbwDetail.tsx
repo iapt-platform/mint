@@ -37,7 +37,7 @@ import { tempSet } from "../../reducers/setting";
 import { PopPlacement } from "./WbwPali";
 import store from "../../store";
 import TagSelectButton from "../tag/TagSelectButton";
-import type { ITagMapData } from "../../api/Tag";
+import type { ITagMapData } from "../../api/tag";
 
 interface IWidget {
   data: IWbw;

@@ -1,6 +1,6 @@
 import { message } from "antd";
 import { delete_ } from "../request";
-import type { IDeleteResponse } from "./Group";
+import type { IDeleteResponse } from "./group";
 
 export interface IAttachmentRequest {
   id: string;

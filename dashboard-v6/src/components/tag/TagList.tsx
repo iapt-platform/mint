@@ -2,7 +2,7 @@ import { type ActionType, ProList } from "@ant-design/pro-components";
 import { Button, Popover, Tag } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
-import type { ITagData, ITagResponseList } from "../../api/Tag";
+import type { ITagData, ITagResponseList } from "../../api/tag";
 import { getSorterUrl, numToHex } from "../../utils";
 import { get } from "../../request";
 import { useRef, useState } from "react";
@@ -63,7 +63,7 @@ const TagsList = ({ studioName, readonly = false, onSelect }: IWidget) => {
       rowKey="name"
       request={async (params = {}, sorter, filter) => {
         console.log(params, sorter, filter);
-        let url = `/v2/tag?view=studio&name=${studioName}`;
+        let url = `/api/v2/tag?view=studio&name=${studioName}`;
         const offset =
           ((params.current ? params.current : 1) - 1) *
           (params.pageSize ? params.pageSize : 20);

@@ -6,18 +6,21 @@ import {
 } from "@ant-design/pro-components";
 import { message } from "antd";
 import { post } from "../../request";
-import type { IGroupRequest, IGroupResponse } from "../../api/group";
 import { useRef } from "react";
+import LangSelect from "../general/LangSelect";
+import { dashboardBasePath } from "../../utils";
+import type { IInviteRequest, IInviteResponse } from "../../api/Auth";
 
 interface IFormData {
-  name: string;
+  email: string;
+  lang: string;
 }
 
-interface IWidgetGroupCreate {
+interface IWidget {
   studio?: string;
   onCreate?: () => void;
 }
-const GroupCreateWidget = ({ studio, onCreate }: IWidgetGroupCreate) => {
+const InviteCreateWidget = ({ studio, onCreate }: IWidget) => {
   const intl = useIntl();
   const formRef = useRef<ProFormInstance | undefined>(undefined);
 
@@ -28,12 +31,16 @@ const GroupCreateWidget = ({ studio, onCreate }: IWidgetGroupCreate) => {
         if (typeof studio === "undefined") {
           return;
         }
-        console.log(values);
-        const res = await post<IGroupRequest, IGroupResponse>(`/api/v2/group`, {
-          name: values.name,
-          studio_name: studio,
-        });
-        console.log(res);
+        const url = `/api/v2/invite`;
+        const data: IInviteRequest = {
+          email: values.email,
+          lang: values.lang,
+          studio: studio,
+          dashboard: dashboardBasePath(),
+        };
+        console.info("api request", values);
+        const res = await post<IInviteRequest, IInviteResponse>(url, data);
+        console.debug("api response", res);
         if (res.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
           if (typeof onCreate !== "undefined") {
@@ -48,21 +55,22 @@ const GroupCreateWidget = ({ studio, onCreate }: IWidgetGroupCreate) => {
       <ProForm.Group>
         <ProFormText
           width="md"
-          name="name"
+          name="email"
           required
-          label={intl.formatMessage({ id: "channel.name" })}
+          label={intl.formatMessage({ id: "forms.fields.email.label" })}
           rules={[
             {
               required: true,
-              message: intl.formatMessage({
-                id: "channel.create.message.noname",
-              }),
+              type: "email",
             },
           ]}
         />
+      </ProForm.Group>
+      <ProForm.Group>
+        <LangSelect />
       </ProForm.Group>
     </ProForm>
   );
 };
 
-export default GroupCreateWidget;
+export default InviteCreateWidget;

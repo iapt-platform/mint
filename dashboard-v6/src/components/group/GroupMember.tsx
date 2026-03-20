@@ -8,7 +8,7 @@ import { delete_, get } from "../../request";
 import type {
   IGroupMemberDeleteResponse,
   IGroupMemberListResponse,
-} from "../../api/Group";
+} from "../../api/group";
 import User from "../auth/User";
 import type { IUser } from "../../api/Auth";
 

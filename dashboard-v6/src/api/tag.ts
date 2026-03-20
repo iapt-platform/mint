@@ -1,3 +1,5 @@
+import type { LoaderFunctionArgs } from "react-router";
+import { get } from "../request";
 import type { IStudio, IUser } from "./Auth";
 
 export interface TagNode {
@@ -80,4 +82,24 @@ export interface ITagMapResponseList {
   ok: boolean;
   message: string;
   data: { rows: ITagMapData[]; count: number };
+}
+
+export const fetchTag = (tagId: string): Promise<ITagResponse> => {
+  return get<ITagResponse>(`/api/v2/tag/${tagId}`);
+};
+
+export async function tagLoader({ params }: LoaderFunctionArgs) {
+  const tagId = params.tagId;
+
+  if (!tagId) {
+    throw new Response("Missing tagId", { status: 400 });
+  }
+
+  const res = await fetchTag(tagId);
+
+  if (!res.ok) {
+    throw new Response("tag not found", { status: 404 });
+  }
+
+  return res.data;
 }

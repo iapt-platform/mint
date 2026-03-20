@@ -1,5 +1,5 @@
 import { Space } from "antd";
-import type { IGroup } from "../../api/Group";
+import type { IGroup } from "../../api/group";
 
 interface IWidget {
   group?: IGroup;

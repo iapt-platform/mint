@@ -5,7 +5,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
 import type { IDiscussionCountData } from "../api/Comment";
-import type { ITagMapData } from "../api/Tag";
+import type { ITagMapData } from "../api/tag";
 
 export interface IUpgrade {
   resId: string;

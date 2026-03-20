@@ -1,6 +1,6 @@
 import type { IStudio } from "./Auth";
 import type { TChannelType } from "./channel";
-import type { TagNode } from "./Tag";
+import type { TagNode } from "./tag";
 
 export interface IApiResponseChannelListData {
   channel_id: string;

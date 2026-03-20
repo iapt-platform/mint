@@ -1,3 +1,5 @@
+import type { LoaderFunctionArgs } from "react-router";
+import { get } from "../request";
 import type { IStudio, IUser, TRole } from "./Auth";
 
 export interface IGroup {
@@ -80,4 +82,24 @@ export interface IDeleteResponse {
   ok: boolean;
   message: string;
   data: number;
+}
+
+export const fetchGroup = (groupId: string): Promise<IGroupResponse> => {
+  return get<IGroupResponse>(`/api/v2/group/${groupId}`);
+};
+
+export async function groupLoader({ params }: LoaderFunctionArgs) {
+  const teamId = params.teamId;
+
+  if (!teamId) {
+    throw new Response("Missing teamId", { status: 400 });
+  }
+
+  const res = await fetchGroup(teamId);
+
+  if (!res.ok) {
+    throw new Response("team not found", { status: 404 });
+  }
+
+  return res.data;
 }

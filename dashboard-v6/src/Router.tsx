@@ -11,6 +11,10 @@ import articleRoutes from "./routes/articleRoutes";
 import tipitakaRoutes from "./routes/tipitakaRoutes";
 import channelRoutes from "./routes/channelRoutes";
 import termRoutes from "./routes/termRoutes";
+import teamRoutes from "./routes/teamRoutes";
+import inviteRoutes from "./routes/inviteRoutes";
+import transferRoutes from "./routes/transferRoutes";
+import tagRoutes from "./routes/tagRoutes";
 
 const RootLayout = lazy(() => import("./layouts/Root"));
 const AnonymousLayout = lazy(() => import("./layouts/anonymous"));
@@ -84,6 +88,10 @@ const router = createBrowserRouter(
             ...tipitakaRoutes,
             ...channelRoutes,
             ...termRoutes,
+            ...teamRoutes,
+            ...inviteRoutes,
+            ...transferRoutes,
+            ...tagRoutes,
           ],
         },
 
@@ -91,10 +99,7 @@ const router = createBrowserRouter(
         {
           path: "test",
           Component: TestLayout,
-          children: [
-            { index: true },
-            ...buildRouteConfig(testRoutes),
-          ],
+          children: [{ index: true }, ...buildRouteConfig(testRoutes)],
         },
       ],
     },

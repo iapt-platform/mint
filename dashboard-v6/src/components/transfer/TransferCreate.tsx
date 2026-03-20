@@ -71,7 +71,7 @@ const TransferCreateWidget = ({
           new_owner: values.studio,
         };
         const res = await post<ITransferRequest, ITransferCreateResponse>(
-          `/v2/transfer`,
+          `/api/v2/transfer`,
           data
         );
         if (res.ok) {

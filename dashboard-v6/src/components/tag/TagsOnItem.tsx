@@ -16,7 +16,7 @@ import type {
   ITagMapRequest,
   ITagMapResponse,
   ITagMapResponseList,
-} from "../../api/Tag";
+} from "../../api/tag";
 import { getSorterUrl, numToHex } from "../../utils";
 import { delete_, get, post } from "../../request";
 import { useRef, useState } from "react";
@@ -62,7 +62,7 @@ const TagsOnItem = ({
                 readonly
                 onSelect={async (record: ITagData) => {
                   //新建记录
-                  const url = "/v2/tag-map";
+                  const url = "/api/v2/tag-map";
                   const data: ITagMapRequest = {
                     table_name: resType,
                     anchor_id: resId,
@@ -108,7 +108,7 @@ const TagsOnItem = ({
       rowKey="name"
       request={async (params = {}, sorter, filter) => {
         console.log(params, sorter, filter);
-        let url = `/v2/tag-map?view=item&studio=${studioName}&res_id=${resId}`;
+        let url = `/api/v2/tag-map?view=item&studio=${studioName}&res_id=${resId}`;
         const offset =
           ((params.current ? params.current : 1) - 1) *
           (params.pageSize ? params.pageSize : 10);
@@ -171,7 +171,7 @@ const TagsOnItem = ({
             <Popconfirm
               title="Delete the tag?"
               onConfirm={async () => {
-                const url = `/v2/tag-map/${entity.id}?course=${courseId}`;
+                const url = `/api/v2/tag-map/${entity.id}?course=${courseId}`;
                 console.log("delete api request", url);
                 try {
                   const json = await delete_<IDeleteResponse>(url);

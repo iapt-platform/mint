@@ -160,6 +160,9 @@ class TemplateRender
             case 'ai':
                 $result = $this->render_ai();
                 break;
+            case 'para':
+                $result = $this->render_para();
+                break;
             default:
                 if (mb_substr($tpl_name, 0, 4, "UTF-8") === 'Tpl:') {
                     $result = $this->render_tpl($tpl_name);
@@ -190,12 +193,45 @@ class TemplateRender
             ));
             $content = $m->render($content, $this->param);
         }
-        return [
-            'props' => base64_encode(\json_encode(['content' => $content])),
-            'html' => $content,
-            'tag' => 'span',
-            'tpl' => 'tpl',
-        ];
+        $output = [];
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props' => base64_encode(\json_encode(['content' => $content])),
+                    'html' => $content,
+                    'tag' => 'span',
+                    'tpl' => 'tpl',
+                ];
+                break;
+            default:
+                $output = $content;
+                break;
+        }
+        return $output;
+    }
+
+    public function render_para()
+    {
+        $props = [];
+        $props['id'] = $this->get_param($this->param, "id", 1);
+        $props['title'] = $this->get_param($this->param, "title", 2);
+        $props['style'] = $this->get_param($this->param, "style", 3);
+
+        $output = [];
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props' => base64_encode(\json_encode($props)),
+                    'html' => $props['title'],
+                    'tag' => 'span',
+                    'tpl' => 'para',
+                ];
+                break;
+            default:
+                $output = $props['title'];
+                break;
+        }
+        return $output;
     }
 
     public function getTermProps($word, $tag = null, $channel = null)
@@ -960,7 +996,7 @@ class TemplateRender
 
         $sid = $this->get_param($this->param, "id", 1);
         $channel = $this->get_param($this->param, "channel", 2);
-        $text = $this->get_param($this->param, "text", 2, 'both');
+        $show = $this->get_param($this->param, "text", 2, 'both');
 
         if (!empty($channel)) {
             $channels = explode(',', $channel);
@@ -988,7 +1024,7 @@ class TemplateRender
         } else {
             $tpl = "sentedit";
         }
-
+        $props['show'] = $show;
         //输出引用
         $arrSid = explode('-', $sid);
         $bookPara = array_slice($arrSid, 0, 2);
@@ -1027,14 +1063,14 @@ class TemplateRender
                 break;
             case 'prompt':
                 $output = '';
-                if ($text === 'both' || $text === 'origin') {
+                if ($show === 'both' || $show === 'origin') {
                     if (isset($props['origin']) && is_array($props['origin'])) {
                         foreach ($props['origin'] as $key => $value) {
                             $output .= $value['html'];
                         }
                     }
                 }
-                if ($text === 'both' || $text === 'translation') {
+                if ($show === 'both' || $show === 'translation') {
                     if (isset($props['translation']) && is_array($props['translation'])) {
                         foreach ($props['translation'] as $key => $value) {
                             $output .= $value['html'];
@@ -1045,14 +1081,14 @@ class TemplateRender
             case 'html':
                 $output = '';
                 $output .= '<span class="sentence">';
-                if ($text === 'both' || $text === 'origin') {
+                if ($show === 'both' || $show === 'origin') {
                     if (isset($props['origin']) && is_array($props['origin'])) {
                         foreach ($props['origin'] as $key => $value) {
                             $output .= '<span class="origin">' . $value['html'] . '</span>';
                         }
                     }
                 }
-                if ($text === 'both' || $text === 'translation') {
+                if ($show === 'both' || $show === 'translation') {
                     if (isset($props['translation']) && is_array($props['translation'])) {
                         foreach ($props['translation'] as $key => $value) {
                             $output .= '<span class="translation">' . $value['html'] . '</span>';
@@ -1072,7 +1108,7 @@ class TemplateRender
                 break;
             case 'simple':
                 $output = '';
-                if ($text === 'both' || $text === 'origin') {
+                if ($show === 'both' || $show === 'origin') {
                     if (empty($output)) {
                         if (
                             isset($props['origin']) &&
@@ -1085,7 +1121,7 @@ class TemplateRender
                         }
                     }
                 }
-                if ($text === 'both' || $text === 'translation') {
+                if ($show === 'both' || $show === 'translation') {
                     if (
                         isset($props['translation']) &&
                         is_array($props['translation']) &&
@@ -1099,7 +1135,7 @@ class TemplateRender
                 break;
             case 'markdown':
                 $output = '';
-                if ($text === 'both' || $text === 'origin') {
+                if ($show === 'both' || $show === 'origin') {
                     if (
                         $this->options['origin'] === true ||
                         $this->options['origin'] === 'true'
@@ -1111,7 +1147,7 @@ class TemplateRender
                         }
                     }
                 }
-                if ($text === 'both' || $text === 'translation') {
+                if ($show === 'both' || $show === 'translation') {
                     if (
                         $this->options['translation']  === true ||
                         $this->options['translation']  === 'true'
@@ -1125,7 +1161,7 @@ class TemplateRender
                                 $output .= trim($value['html']);
                             }
                         } else {
-                            if ($text === 'translation') {
+                            if ($show === 'translation') {
                                 //无译文用原文代替
                                 if (isset($props['origin']) && is_array($props['origin'])) {
                                     foreach ($props['origin'] as $key => $value) {

@@ -73,8 +73,21 @@ const useTipitaka = ({
         if (type === "chapter") {
           response = await fetchChapter(id, srcDataMode, channelId);
         } else if (type === "para") {
-          const _book = book ?? id;
-          response = await fetchPara(_book, para ?? "", srcDataMode, channelId);
+          const [book, pFrom, pTo] = id
+            .split("-")
+            .map((item) => parseInt(item));
+          const _to = pTo ?? pFrom;
+
+          const pList: number[] = [];
+          for (let index = pFrom; index <= _to; index++) {
+            pList.push(index);
+          }
+          response = await fetchPara(
+            book.toString(),
+            pList.join(","),
+            srcDataMode,
+            channelId
+          );
         } else {
           return;
         }

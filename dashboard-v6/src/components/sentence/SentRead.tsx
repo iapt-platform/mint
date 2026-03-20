@@ -39,6 +39,7 @@ export interface IWidgetSentReadFrame {
   translation?: ISentence[];
   commentaries?: ISentence[];
   layout?: "row" | "column";
+  show?: "origin" | "translation" | "both";
   error?: string;
 }
 
@@ -50,6 +51,7 @@ const SentReadFrame = ({
   para,
   wordStart,
   wordEnd,
+  show = "both",
   error,
 }: IWidgetSentReadFrame) => {
   const layoutDirection = useSetting("setting.layout.direction");
@@ -124,20 +126,22 @@ const SentReadFrame = ({
           style={{ flex: 5 }}
         >
           {/* 原文 */}
-          <span
-            style={{
-              flex: 5,
-              color: "#9f3a01",
-              display:
-                displayOriginal === false && translation?.length
-                  ? "none"
-                  : "block",
-            }}
-          >
-            {origin?.map((item, id) => (
-              <MdOrigin text={item.html} key={id} />
-            ))}
-          </span>
+          {(show === "both" || show === "origin") && (
+            <span
+              style={{
+                flex: 5,
+                color: "#9f3a01",
+                display:
+                  displayOriginal === false && translation?.length
+                    ? "none"
+                    : "block",
+              }}
+            >
+              {origin?.map((item, id) => (
+                <MdOrigin text={item.html} key={id} />
+              ))}
+            </span>
+          )}
 
           {/* 译文 */}
           <span className="sent_read" style={{ flex: 5 }}>
@@ -152,7 +156,7 @@ const SentReadFrame = ({
                     onClick: (e) => handleMenuClick(e.key, item),
                   }}
                 >
-                  {showEdit && <MdTranslation text={item.html} />}
+                  {!showEdit && <MdTranslation text={item.html} />}
                 </Dropdown>
 
                 {/* 编辑面板 */}

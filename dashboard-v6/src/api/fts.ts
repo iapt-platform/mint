@@ -1,4 +1,4 @@
-import type { ITag } from "./Tag";
+import type { ITag } from "./tag";
 export interface IFtsData {
   book: number;
   paragraph: number;

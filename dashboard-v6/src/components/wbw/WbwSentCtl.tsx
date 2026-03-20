@@ -37,7 +37,7 @@ import { useWbwStreamProcessor } from "../../hooks/useWbwStreamProcessor";
 import { GetUserSetting } from "../setting/default";
 import type { IDictRequest } from "../../api/dict";
 import { UserWbwPost } from "../dict/utils";
-import type { IDeleteResponse } from "../../api/Group";
+import type { IDeleteResponse } from "../../api/group";
 import Studio from "../auth/Studio";
 import {
   createSnIndexMap,

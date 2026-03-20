@@ -1,5 +1,5 @@
 import { Badge, Popover, Tag } from "antd";
-import type { ITagMapData } from "../../api/Tag";
+import type { ITagMapData } from "../../api/tag";
 
 import { useAppSelector } from "../../hooks";
 import { tagList } from "../../reducers/discussion-count";

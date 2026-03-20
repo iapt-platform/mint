@@ -23,7 +23,7 @@ import { grammar, type ITerm, update } from "./reducers/term-vocabulary";
 import { push as nissayaEndingPush } from "./reducers/nissaya-ending-vocabulary";
 
 import { pushRelation } from "./reducers/relation";
-import type { IGroupMemberListResponse } from "./api/Group";
+import type { IGroupMemberListResponse } from "./api/group";
 
 import type { IAiModel } from "./api/ai";
 import type { IStudio } from "./api/Auth";

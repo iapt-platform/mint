@@ -3,6 +3,7 @@ import GrammarTermLookup from "./GrammarTermLookup";
 import Mermaid from "./Mermaid";
 import Nissaya from "./Nissaya";
 import Note from "./Note";
+import Para from "./Para";
 import ParaHandle from "./ParaHandle";
 import ParaShell from "./ParaShell";
 import Paragraph from "./Paragraph";
@@ -42,7 +43,7 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Nissaya props={props ? props : ""}>{children}</Nissaya>;
     case "toggle":
       return <Toggle props={props ? props : undefined}>{children}</Toggle>;
-    case "para":
+    case "para_handle":
       return <ParaHandle props={props ? props : ""} />;
     case "mermaid":
       return <Mermaid props={props ? props : ""} />;
@@ -60,6 +61,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Paragraph props={props ? props : ""} />;
     case "tpl":
       return <Tpl props={props ? props : ""} />;
+    case "para":
+      return <Para props={props ? props : ""} />;
     default:
       return <>未定义模版({tpl})</>;
   }

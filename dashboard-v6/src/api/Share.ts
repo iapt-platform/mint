@@ -1,5 +1,5 @@
 import type { IUser, TRole } from "./Auth";
-import type { IGroup } from "./Group";
+import type { IGroup } from "./group";
 
 export interface IShareRequest {
   res_id: string;

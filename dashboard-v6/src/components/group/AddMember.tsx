@@ -7,7 +7,7 @@ import type { IUserListResponse } from "../../api/Auth";
 import type {
   IGroupMemberRequest,
   IGroupMemberResponse,
-} from "../../api/Group";
+} from "../../api/group";
 import { useState } from "react";
 
 interface IFormData {
@@ -55,7 +55,7 @@ const AddMemberWidget = ({ groupId, onCreated }: IWidget) => {
           request={async ({ keyWords }) => {
             console.log("keyWord", keyWords);
             const json = await get<IUserListResponse>(
-              `/v2/user?view=key&key=${keyWords}`
+              `/api/v2/user?view=key&key=${keyWords}`
             );
             const userList = json.data.rows.map((item) => {
               return {

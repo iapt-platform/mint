@@ -8,6 +8,9 @@ const WorkspaceTipitaka = lazy(
 const WorkspaceTipitakaChapter = lazy(
   () => import("../pages/workspace/tipitaka/chapter")
 );
+const WorkspaceTipitakaPara = lazy(
+  () => import("../pages/workspace/tipitaka/para")
+);
 
 const tipitakaRoutes: RouteObject[] = [
   {
@@ -43,7 +46,17 @@ const tipitakaRoutes: RouteObject[] = [
           {
             path: ":id",
             Component: WorkspaceTipitakaChapter,
-            handle: { id: "workspace.tipitaka.chapter", crumb: "chapter" },
+            handle: { id: "workspace.tipitaka", crumb: "chapter" },
+          },
+        ],
+      },
+      {
+        path: "para",
+        children: [
+          {
+            path: ":id",
+            Component: WorkspaceTipitakaPara,
+            handle: { id: "workspace.tipitaka", crumb: "para" },
           },
         ],
       },

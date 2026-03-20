@@ -16,7 +16,7 @@ import User from "../auth/User";
 import type { IUser, TRole } from "../../api/Auth";
 
 import Group from "../group/Group";
-import type { IGroup } from "../../api/Group";
+import type { IGroup } from "../../api/group";
 
 interface ICollaborator {
   sn?: number;

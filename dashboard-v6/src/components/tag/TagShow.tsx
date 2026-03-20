@@ -1,7 +1,7 @@
 import { type ActionType, ProList } from "@ant-design/pro-components";
 import { Button } from "antd";
 
-import type { ITagMapData, ITagMapResponseList } from "../../api/Tag";
+import type { ITagMapData, ITagMapResponseList } from "../../api/tag";
 import { getSorterUrl } from "../../utils";
 import { get } from "../../request";
 import { useRef } from "react";
@@ -23,7 +23,7 @@ const TagsList = ({ tagId }: IWidget) => {
       rowKey="name"
       request={async (params = {}, sorter, filter) => {
         console.log(params, sorter, filter);
-        let url = `/v2/tag-map?view=items&tag_id=${tagId}`;
+        let url = `/api/v2/tag-map?view=items&tag_id=${tagId}`;
         const offset =
           ((params.current ? params.current : 1) - 1) *
           (params.pageSize ? params.pageSize : pageSize);
