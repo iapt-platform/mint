@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AnthologyTocTree from "./AnthologyTocTree";
 import { get } from "../../request";
-import type { ICourseResponse } from "../../api/Course";
+import type { ICourseResponse } from "../../api/course";
 import type { TTarget } from "../../types";
 
 interface IWidget {

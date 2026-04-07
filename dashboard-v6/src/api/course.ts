@@ -1,3 +1,6 @@
+// /src/api/course.ts
+import type { LoaderFunctionArgs } from "react-router";
+import { get } from "../request";
 import type { IStudio, IUser } from "./Auth";
 import type { IChannel } from "./channel";
 
@@ -222,4 +225,24 @@ export interface ICourseExerciseResponse {
     rows: IExerciseListData[];
     count: number;
   };
+}
+
+export const fetchCourse = (courseId: string): Promise<ICourseResponse> => {
+  return get<ICourseResponse>(`/api/v2/course/${courseId}`);
+};
+
+export async function courseLoader({ params }: LoaderFunctionArgs) {
+  const courseId = params.courseId;
+
+  if (!courseId) {
+    throw new Response("Missing courseId", { status: 400 });
+  }
+
+  const res = await fetchCourse(courseId);
+
+  if (!res.ok) {
+    throw new Response("Channel not found", { status: 404 });
+  }
+
+  return res.data;
 }

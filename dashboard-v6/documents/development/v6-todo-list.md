@@ -24,7 +24,7 @@
 
 #### 内容模块
 
-- [ ] `/course/list`=>`workgroup/course` [2]
+- [x] `/course/list`=>`workgroup/course` [2]
 - [x] `/dict/list`=>`resources/dict` [1]
 - [x] `/term/list`=>`workgroup/term`
 - [x] `/article/list`=>`workgroup/article`
