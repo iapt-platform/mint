@@ -407,7 +407,7 @@ const AttachmentWidget = ({
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);
 
-          let url = "/v2/attachment?";
+          let url = "/api/v2/attachment?";
           switch (view) {
             case "studio":
               url += `view=studio&studio=${currStudio}`;

@@ -1,9 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+namespace App\Services;
 
 use App\Models\Sentence;
 use App\Models\Channel;
@@ -18,8 +15,10 @@ use App\Http\Api\StudioApi;
 use App\Http\Api\AuthApi;
 use App\Http\Resources\TocResource;
 use App\Services\PaliContentService;
+use Illuminate\Support\Facades\Log;
 
-class ChapterContentController extends Controller
+
+class ChapterService
 {
     protected $result = [
         "uid" => '',
@@ -55,62 +54,39 @@ class ChapterContentController extends Controller
         'updated_at',
     ];
 
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    private $MaxStrLen = 3000;
+    public function setMaxSize(int $size)
     {
-        //
+        $this->MaxStrLen = $size;
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function chapterWithContent(string $id)
     {
-        //
+        //getChannels
+
+        //chapter info
+
+        //chapter rang
+
+        //chapter content
     }
+    public function paraWithContent(string $id) {}
 
-    /**
-     * Store a newly created resource in storage.
+    public function csParaWithContent(string $id) {}
 
-     * @param  \Illuminate\Http\Request  $request
-     * @param string $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request, string $id)
+    public function paraContent(int $book, int $from, int $to) {}
+    private function currChapter() {}
+
+    private function getChannels(array|null $input, string $mode)
     {
-        /**
-        $user = AuthApi::current($request);
-        if ($user) {
-            $this->userUuid = $user['user_uid'];
-        }
-         */
-        //
-
-
-
         $channels = [];
-        if ($request->has('channels')) {
-            if (strpos($request->get('channels'), ',') === FALSE) {
-                $_channels = explode('_', $request->get('channels'));
-            } else {
-                $_channels = explode(',', $request->get('channels'));
-            }
-            foreach ($_channels as $key => $channel) {
+        if (is_array($input)) {
+            foreach ($input as  $channel) {
                 if (Str::isUuid($channel)) {
                     $channels[] = $channel;
                 }
             }
         }
 
-        $mode = $request->get('mode', 'read');
         if ($mode === 'read') {
             //阅读模式加载html格式原文
             $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
@@ -135,38 +111,46 @@ class ChapterContentController extends Controller
         $indexChannel = [];
         $paliService = app(PaliContentService::class);
         $indexChannel = $paliService->getChannelIndex($channels);
-        // the end of channel
-
-
-
-        //chapter info
-        $sentId = \explode('-', $id);
-        $chapter = PaliText::where('book', $sentId[0])->where('paragraph', $sentId[1])->first();
+        return [
+            'channels' => $channels,
+            'index' => $indexChannel,
+            'translations' => $tranChannels,
+            'request' => $input,
+        ];
+    }
+    private function chapterInfo(int $book, int $para, array $channelInfo)
+    {
+        $result = [];
+        $chapter = PaliText::where('book', $book)->where('paragraph', $para)->first();
         if (!$chapter) {
-            return $this->error("no data");
+            //FIXME throw
         }
-
 
         if (empty($chapter->toc)) {
             $this->result['title'] = "unknown";
         } else {
-            $this->result['title'] = $chapter->toc;
-            $this->result['sub_title'] = $chapter->toc;
-            $this->result['path'] = json_decode($chapter->path);
+            $result['title'] = $chapter->toc;
+            $result['sub_title'] = $chapter->toc;
+            $result['path'] = json_decode($chapter->path);
         }
 
 
         $title = Sentence::select($this->selectCol)
-            ->where('book_id', $sentId[0])
-            ->where('paragraph', $sentId[1])
-            ->whereIn('channel_uid', $tranChannels)
+            ->where('book_id', $book)
+            ->where('paragraph', $para)
+            ->whereIn('channel_uid', $channelInfo['translation'])
             ->first();
         if ($title) {
-            $this->result['title'] = MdRender::render($title->content, [$title->channel_uid]);
+            $result['title'] = MdRender::render($title->content, [$title->channel_uid]);
             $mdRender = new MdRender(['format' => 'simple']);
-            $this->result['title_text'] = $mdRender->convert($title->content, [$title->channel_uid]);
+            $result['title_text'] = $mdRender->convert($title->content, [$title->channel_uid]);
         }
 
+        return $result;
+    }
+
+    private function chapterContentRang($book, $para, $from, $to)
+    {
         /**
          * 获取句子数据
          * 算法：
@@ -175,30 +159,31 @@ class ChapterContentController extends Controller
          * 3. 如果二者都不是，lazy load
          */
         //1. 计算 标题和下一级第一个标题之间 是否有间隔
+        $chapter = PaliText::where('book', $book)->where('paragraph', $para)->first();
 
-        $paraFrom = $sentId[1];
-        $paraTo = $sentId[1] + $chapter->chapter_len - 1;
-        $nextChapter =  PaliText::where('book', $sentId[0])
-            ->where('paragraph', ">", $sentId[1])
+        $paraFrom = $para;
+        $paraTo = $para + $chapter->chapter_len - 1;
+        $nextChapter =  PaliText::where('book', $book)
+            ->where('paragraph', ">", $para)
             ->where('level', '<', 8)
             ->orderBy('paragraph')
             ->value('paragraph');
-        $between = $nextChapter - $sentId[1];
+        $between = $nextChapter - $para;
 
         //查找子目录
         $chapterLen = $chapter->chapter_len;
-        $toc = PaliText::where('book', $sentId[0])
+        $toc = PaliText::where('book', $book)
             ->whereBetween('paragraph', [$paraFrom + 1, $paraFrom + $chapterLen - 1])
             ->where('level', '<', 8)
             ->orderBy('paragraph')
             ->select(['book', 'paragraph', 'level', 'toc'])
             ->get();
-        $maxLen = 3000;
+
         if ($between > 1) {
             //有间隔
             $paraTo = $nextChapter - 1;
         } else {
-            if ($chapter->chapter_strlen > $maxLen) {
+            if ($chapter->chapter_strlen > $this->MaxStrLen) {
                 if (count($toc) > 0) {
                     //有子目录只输出标题和目录
                     $paraTo = $paraFrom;
@@ -211,12 +196,12 @@ class ChapterContentController extends Controller
             }
         }
 
-        $pFrom = $request->get('from', $paraFrom);
-        $pTo = $request->get('to', $paraTo);
+        $pFrom = $from ?? $paraFrom;
+        $pTo = $to ?? $paraTo;
         //根据句子的长度找到这次应该加载的段落
 
         $paliText = PaliText::select(['paragraph', 'lenght'])
-            ->where('book', $sentId[0])
+            ->where('book', $book)
             ->whereBetween('paragraph', [$pFrom, $pTo])
             ->orderBy('paragraph')
             ->get();
@@ -224,63 +209,48 @@ class ChapterContentController extends Controller
         $currTo = $pTo;
         foreach ($paliText as $para) {
             $sumLen += $para->lenght;
-            if ($sumLen > $maxLen) {
+            if ($sumLen > $this->MaxStrLen) {
                 $currTo = $para->paragraph;
                 break;
             }
         }
+        return ['toc' => $toc, 'from' => $pFrom, 'to' => $currTo];
+    }
 
+    private function subChapterToc($toc)
+    {
+        //第一次才显示toc
+        return TocResource::collection($toc);
+    }
 
-        //content
+    private function chapterContent($book, $para, $rang, $channelInfo, $mode)
+    {
+        $result = [];
+        $paliService = app(PaliContentService::class);
         $record = Sentence::select($this->selectCol)
-            ->where('book_id', $sentId[0])
-            ->whereBetween('paragraph', [$pFrom, $currTo])
-            ->whereIn('channel_uid', $channels)
+            ->where('book_id', $book)
+            ->whereBetween('paragraph', [$rang['from'], $rang['to']])
+            ->whereIn('channel_uid', $channelInfo['channels'])
             ->orderBy('paragraph')
             ->orderBy('word_start')
             ->get();
         if (count($record) === 0) {
-            return $this->error("no data");
+            Log::warning('no data');
         }
-        $this->result['content'] = json_encode($paliService->makeContentObj($record, $mode, $indexChannel), JSON_UNESCAPED_UNICODE);
-        $this->result['content_type'] = 'json';
-        if (!$request->has('from')) {
-            //第一次才显示toc
-            $this->result['toc'] = TocResource::collection($toc);
+        $result['content'] = json_encode($paliService->makeContentObj(
+            $record,
+            $mode,
+            $channelInfo['index']
+        ), JSON_UNESCAPED_UNICODE);
+        $result['content_type'] = 'json';
+
+        if ($rang['to'] < $para) {
+            $result['from'] = $rang['to'] + 1;
+            $result['to'] = $para;
+            $result['paraId'] = "{$book}-{$para}";
+            $result['channels'] = implode(',', $channelInfo['request']);
+            $result['mode'] =  $mode;
         }
-        if ($currTo < $pTo) {
-            $this->result['from'] = $currTo + 1;
-            $this->result['to'] = $pTo;
-            $this->result['paraId'] = $id;
-            $this->result['channels'] = $request->get('channels');
-            $this->result['mode'] = $request->get('mode');
-        }
-
-        return $this->ok($this->result);
-    }
-
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return $result;
     }
 }

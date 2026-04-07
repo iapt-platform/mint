@@ -134,8 +134,9 @@ const UserDictListWidget = ({
     <>
       <ProList<IWord, IParams>
         actionRef={ref}
-        metas={{
-          title: {
+        columns={[
+          {
+            listSlot: "title",
             dataIndex: "word",
             title: "拼写",
             search: word ? false : undefined,
@@ -165,7 +166,9 @@ const UserDictListWidget = ({
               );
             },
           },
-          subTitle: {
+          {
+            dataIndex: "subTitle",
+            listSlot: "subTitle",
             search: false,
             render: (_text, row) => {
               return (
@@ -203,8 +206,8 @@ const UserDictListWidget = ({
               );
             },
           },
-          description: {
-            dataIndex: "meaning",
+          {
+            listSlot: "description",
             title: "description",
             search: false,
             render(_dom, entity) {
@@ -232,37 +235,18 @@ const UserDictListWidget = ({
               );
             },
           },
-          content: compact
-            ? undefined
-            : {
-                search: false,
-                render(_dom, entity) {
-                  return (
-                    <div>
-                      <div>{entity.factors}</div>
-                    </div>
-                  );
-                },
-              },
-        }}
-        columns={[
           {
-            title: intl.formatMessage({
-              id: "dict.fields.sn.label",
-            }),
-            dataIndex: "sn",
-            key: "sn",
-            width: 80,
+            listSlot: "content",
             search: false,
-          },
-          {
-            title: intl.formatMessage({
-              id: "dict.fields.word.label",
-            }),
-            dataIndex: "word",
-            key: "word",
-            tooltip: "单词过长会自动收缩",
-            ellipsis: true,
+            render(_dom, entity) {
+              return (
+                compact && (
+                  <div>
+                    <div>{entity.factors}</div>
+                  </div>
+                )
+              );
+            },
           },
           {
             title: intl.formatMessage({

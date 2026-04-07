@@ -252,9 +252,9 @@ const Widget = ({ onSearch }: Props) => {
           activeId: "workspace.tag",
         },
         {
-          key: "/workspace/drive",
-          label: "drive",
-          activeId: "workspace.drive",
+          key: "/workspace/driver",
+          label: "driver",
+          activeId: "workspace.driver",
         },
         {
           key: "/workspace/dict",

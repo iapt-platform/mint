@@ -25,11 +25,11 @@
 #### 内容模块
 
 - [ ] `/course/list`=>`workgroup/course` [2]
-- [ ] `/dict/list`=>`resources/dict` [1]
+- [x] `/dict/list`=>`resources/dict` [1]
 - [x] `/term/list`=>`workgroup/term`
 - [x] `/article/list`=>`workgroup/article`
 - [x] `/anthology/list`=>`workgroup/anthology`
-- [ ] `/attachment/list`=>`resources/attachment`
+- [x] `/attachment/list`=>`resources/attachment`
 - [x] `/tags/list`=>`resources/tags` [3]
 
 ---
