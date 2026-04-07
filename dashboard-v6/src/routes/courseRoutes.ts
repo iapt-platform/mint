@@ -11,6 +11,9 @@ const WorkspaceCourseShow = lazy(
 const WorkspaceCourseSetting = lazy(
   () => import("../pages/workspace/course/edit")
 );
+const WorkspaceCourseTextbook = lazy(
+  () => import("../pages/workspace/course/textbook")
+);
 
 const courseRoutes: RouteObject[] = [
   {
@@ -36,6 +39,16 @@ const courseRoutes: RouteObject[] = [
             path: "setting",
             Component: WorkspaceCourseSetting,
             handle: { id: "workspace.course.setting", crumb: "setting" },
+          },
+          {
+            path: "textbook",
+            handle: { id: "workspace.course.textbook", crumb: "textbook" },
+            children: [
+              {
+                path: ":articleId",
+                children: [{ index: true, Component: WorkspaceCourseTextbook }],
+              },
+            ],
           },
         ],
       },

@@ -8,12 +8,14 @@ import type { TTarget } from "../../types";
 
 interface IWidget {
   anthologyId?: string;
+  articleId?: string;
   channels?: string[];
   onClick?: (anthologyId: string, id: string, target?: TTarget) => void;
   onArticleSelect?: (anthologyId: string, keys: string[]) => void;
 }
 const AnthologyTocTreeWidget = ({
   anthologyId,
+  articleId,
   channels,
   onClick,
   onArticleSelect,
@@ -57,6 +59,7 @@ const AnthologyTocTreeWidget = ({
     <TocTree
       treeData={tocData}
       expandedKeys={expandedKeys}
+      selectedKeys={[articleId ?? ""]}
       onSelect={(keys: string[]) => {
         if (
           typeof onArticleSelect !== "undefined" &&

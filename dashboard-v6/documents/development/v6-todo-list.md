@@ -50,7 +50,7 @@
 
 - [x] "anthology"
 - [x] "article"
-- [ ] "textbook"
+- [x] "textbook"
 - [x] "term"
 - [x] "chapter"
 - [x] "para"

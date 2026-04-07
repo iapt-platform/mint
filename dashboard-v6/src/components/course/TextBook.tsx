@@ -21,7 +21,7 @@ const TextBookWidget = ({ anthologyId, courseId }: IWidget) => {
           <AnthologyDetail
             aid={anthologyId}
             onArticleClick={(_, articleId: string, target?: TTarget) => {
-              const url = `/article/textbook/${articleId}?mode=read&course=${courseId}`;
+              const url = `/workspace/course/${courseId}/textbook/${articleId}?mode=read&course=${courseId}`;
               if (target === "_blank") {
                 window.open(fullUrl(url), "_blank");
               } else {
