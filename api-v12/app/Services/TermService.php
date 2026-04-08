@@ -30,4 +30,10 @@ class TermService
             ->get();
         return ['items' => $result, 'total' => count($result)];
     }
+
+    public function get($id)
+    {
+        $result = DhammaTerm::find($id);
+        return $result;
+    }
 }
