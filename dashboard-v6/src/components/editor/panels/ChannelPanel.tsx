@@ -21,7 +21,7 @@ export default function ChannelPanel({
   onSelect,
 }: ChannelPanelProps) {
   const handleSelect = (selected: IChannel[]) => {
-    console.log("channel selected:", selected);
+    console.log("channel selected hello", selected);
     onSelect?.(selected);
   };
 

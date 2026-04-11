@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import DiscussionTopic from "./DiscussionTopic";
@@ -26,7 +26,7 @@ interface IWidget {
   onTopicReady?: (value: IComment) => void;
 }
 
-const DiscussionWidget = ({
+const Discussion = ({
   resId,
   resType,
   showTopicId,
@@ -35,35 +35,37 @@ const DiscussionWidget = ({
   type = "discussion",
   onTopicReady,
 }: IWidget) => {
-  const [childrenDrawer, setChildrenDrawer] = useState(false);
-  const [topicId, setTopicId] = useState<string>();
-  const [topic, setTopic] = useState<IComment>();
+  // 用户手动点击触发的状态
+  const [manualTopicId, setManualTopicId] = useState<string>();
+  const [manualTopic, setManualTopic] = useState<IComment>();
+  const [manualOpen, setManualOpen] = useState(false);
+
+  // 用于检测 resId 变化时重置
+  const [prevResId, setPrevResId] = useState(resId);
+  if (prevResId !== resId) {
+    setPrevResId(resId);
+    setManualOpen(false);
+    setManualTopicId(undefined);
+    setManualTopic(undefined);
+  }
+
   const [answerCount, setAnswerCount] = useState<IAnswerCount>();
   const [topicTitle, setTopicTitle] = useState<string>();
 
-  useEffect(() => {
-    if (showTopicId) {
-      setChildrenDrawer(true);
-      setTopicId(showTopicId);
-    } else {
-      setChildrenDrawer(false);
-    }
-  }, [showTopicId]);
-
-  
-  useEffect(() => {
-    setChildrenDrawer(false);
-  }, [resId]);
+  // 完全派生，不需要 effect
+  const childrenDrawer = manualOpen || !!showTopicId;
+  const topicId = manualOpen ? manualTopicId : showTopicId;
+  const topic = manualOpen ? manualTopic : undefined;
 
   const showChildrenDrawer = (comment: IComment) => {
     console.debug("discussion comment", comment);
-    setChildrenDrawer(true);
+    setManualOpen(true);
     if (comment.id) {
-      setTopicId(comment.id);
-      setTopic(undefined);
+      setManualTopicId(comment.id);
+      setManualTopic(undefined);
     } else {
-      setTopicId(undefined);
-      setTopic(comment);
+      setManualTopicId(undefined);
+      setManualTopic(comment);
     }
   };
 
@@ -75,7 +77,7 @@ const DiscussionWidget = ({
             <Button
               shape="circle"
               icon={<ArrowLeftOutlined />}
-              onClick={() => setChildrenDrawer(false)}
+              onClick={() => setManualOpen(false)}
             />
             <Text strong style={{ fontSize: 16 }}>
               {topic ? topic.title : topicTitle}
@@ -87,8 +89,10 @@ const DiscussionWidget = ({
             topic={topic}
             focus={focus}
             hideTitle
-            onItemCountChange={(count: number, parent: string) => {
-              setAnswerCount({ id: parent, count: count });
+            onItemCountChange={(total: number, parentId?: string | null) => {
+              if (parentId) {
+                setAnswerCount({ id: parentId, count: total });
+              }
             }}
             onTopicReady={(value: IComment) => {
               setTopicTitle(value.title);
@@ -96,12 +100,8 @@ const DiscussionWidget = ({
                 onTopicReady(value);
               }
             }}
-            onTopicDelete={() => {
-              setChildrenDrawer(false);
-            }}
-            onConvert={() => {
-              setChildrenDrawer(false);
-            }}
+            onTopicDelete={() => setManualOpen(false)}
+            onConvert={() => setManualOpen(false)}
           />
         </div>
       ) : (
@@ -118,18 +118,11 @@ const DiscussionWidget = ({
           onReady={() => {}}
           changedAnswerCount={answerCount}
           onItemCountChange={(count: number) => {
-            store.dispatch(
-              countChange({
-                count: count,
-                resId: resId,
-                resType: resType,
-              })
-            );
+            store.dispatch(countChange({ count, resId, resType }));
           }}
         />
       )}
     </>
   );
 };
-
-export default DiscussionWidget;
+export default Discussion;

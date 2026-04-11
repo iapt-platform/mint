@@ -1,12 +1,13 @@
 import { Statistic, StatisticCard } from "@ant-design/pro-components";
 import { Modal } from "antd";
 import { useState } from "react";
-import type { IItem } from "./ChannelPickerTable";
+
+import type { IChannelItem } from "../../api/channel";
 
 interface IChannelInfoModal {
   sentenceCount: number;
   open?: boolean;
-  channel?: IItem;
+  channel?: IChannelItem;
   onClose?: () => void;
 }
 
@@ -39,7 +40,7 @@ export const ChannelInfoModal = ({
 };
 interface IWidget {
   sentenceCount: number;
-  channel?: IItem;
+  channel?: IChannelItem;
 }
 const ChannelInfoWidget = ({ sentenceCount, channel }: IWidget) => {
   let totalStrLen = 0;

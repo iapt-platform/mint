@@ -5,12 +5,14 @@
 - 4 Collection 文集
 - 5 版本片段
  */
-export enum EResType {
-  pcs = 1,
-  channel = 2,
-  article = 3,
-  collection = 4,
-  workflow = 6,
-  project = 7,
-  modal = 8,
-}
+export const EResType = {
+  pcs: 1,
+  channel: 2,
+  article: 3,
+  collection: 4,
+  workflow: 6,
+  project: 7,
+  modal: 8,
+} as const;
+
+export type EResType = (typeof EResType)[keyof typeof EResType];

@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 
 import DiscussionTopicInfo from "./DiscussionTopicInfo";
 import DiscussionTopicChildren from "./DiscussionTopicChildren";
-import type { IComment } from "./DiscussionItem"
-import type { TResType } from "./DiscussionListCard"
-import type { TDiscussionType } from "./Discussion"
+import type { IComment, TDiscussionType, TResType } from "../../api/discussion";
 
 interface IWidget {
   resType?: TResType;
@@ -13,10 +11,10 @@ interface IWidget {
   focus?: string;
   hideTitle?: boolean;
   hideReply?: boolean;
-  onItemCountChange?: Function;
-  onTopicReady?: Function;
-  onTopicDelete?: Function;
-  onConvert?: Function;
+  onItemCountChange?: (total: number, parentId?: string | null) => void;
+  onTopicReady?: (value: IComment) => void;
+  onTopicDelete?: (id?: string) => void;
+  onConvert?: (value: TDiscussionType) => void;
 }
 const DiscussionTopicWidget = ({
   resType,
@@ -31,7 +29,6 @@ const DiscussionTopicWidget = ({
   onConvert,
 }: IWidget) => {
   const [count, setCount] = useState<number>();
-  const [_currResId, setCurrResId] = useState<string>();
   const [currTopicId, setCurrTopicId] = useState(topicId);
   const [currTopic, setCurrTopic] = useState<IComment | undefined>(topic);
   useEffect(() => {
@@ -46,23 +43,12 @@ const DiscussionTopicWidget = ({
         hideTitle={hideTitle}
         childrenCount={count}
         onReady={(value: IComment) => {
-          setCurrResId(value.resId);
           setCurrTopic(value);
           console.log("discussion onReady", value);
-          if (typeof onTopicReady !== "undefined") {
-            onTopicReady(value);
-          }
+          onTopicReady?.(value);
         }}
-        onDelete={() => {
-          if (typeof onTopicDelete !== "undefined") {
-            onTopicDelete();
-          }
-        }}
-        onConvert={(value: TDiscussionType) => {
-          if (typeof onConvert !== "undefined") {
-            onConvert(value);
-          }
-        }}
+        onDelete={onTopicDelete}
+        onConvert={onConvert}
       />
       <DiscussionTopicChildren
         topic={currTopic}
@@ -71,12 +57,10 @@ const DiscussionTopicWidget = ({
         focus={focus}
         topicId={topicId}
         hideReply={hideReply}
-        onItemCountChange={(count: number, e: string) => {
+        onItemCountChange={(total: number, parentId?: string | null) => {
           //把新建回答的消息传出去。
-          setCount(count);
-          if (typeof onItemCountChange !== "undefined") {
-            onItemCountChange(count, e);
-          }
+          setCount(total);
+          onItemCountChange?.(total, parentId);
         }}
         onTopicCreate={(value: IComment) => {
           console.log("onTopicCreate", value);

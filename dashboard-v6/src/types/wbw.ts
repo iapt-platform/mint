@@ -25,12 +25,14 @@ export interface IWbwField {
   value: string;
 }
 
-export enum WbwStatus {
-  initiate = 0,
-  auto = 3,
-  apply = 5,
-  manual = 7,
-}
+export const WbwStatus = {
+  initiate: 0,
+  auto: 3,
+  apply: 5,
+  manual: 7,
+} as const;
+
+export type WbwStatus = (typeof WbwStatus)[keyof typeof WbwStatus];
 
 export interface IWbwAttachment {
   id: string;

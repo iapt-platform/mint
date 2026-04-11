@@ -1,9 +1,9 @@
 import { Button, message, Segmented, Typography } from "antd";
-import type { SegmentedValue } from "antd/lib/segmented"
+import type { SegmentedValue } from "antd/lib/segmented";
 import { useState } from "react";
 import { CopyOutlined } from "@ant-design/icons";
-import type { IWordByDict } from "./WordCardByDict"
 import { useIntl } from "react-intl";
+import type { IWordByDict } from "../../api/dict";
 const { Text } = Typography;
 
 interface IWidget {

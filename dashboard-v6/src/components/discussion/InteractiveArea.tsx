@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Tabs } from "antd";
 
-import type { TResType } from "./DiscussionListCard"
 import Discussion from "./Discussion";
 import { get } from "../../request";
 import QaBox from "./QaBox";
+import type { TResType } from "../../api/discussion";
 
 interface IInteractive {
   ok: boolean;
@@ -30,7 +30,7 @@ interface IWidget {
 }
 const InteractiveAreaWidget = ({ resId, resType }: IWidget) => {
   const [showQa, setShowQa] = useState(false);
-  const [_qaCanEdit, setQaCanEdit] = useState(false);
+
   const [showHelp, setShowHelp] = useState(false);
   const [showDiscussion, setShowDiscussion] = useState(false);
 
@@ -41,7 +41,6 @@ const InteractiveAreaWidget = ({ resId, resType }: IWidget) => {
           console.debug("interactive", json);
           if (json.data.qa.can_create || json.data.qa.can_reply) {
             setShowQa(true);
-            setQaCanEdit(true);
           } else if (json.data.qa.count > 0) {
             setShowQa(true);
           } else {

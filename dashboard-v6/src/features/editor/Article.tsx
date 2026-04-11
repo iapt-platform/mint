@@ -3,6 +3,7 @@
 // ─────────────────────────────────────────────
 
 import type { ArticleMode } from "../../api/article";
+import type { IChannel } from "../../api/channel";
 import AnthologyTocTree from "../../components/anthology/AnthologyTocTree";
 import TypeArticle from "../../components/article/TypeArticle";
 import Editor from "../../components/editor";
@@ -26,6 +27,7 @@ export interface ArticleEditorProps {
   onAnthologySelect?: (anthologyId: string) => void;
   /** 文章内部触发跳转（type: 'article' | 'anthology' 等） */
   onArticleChange?: (type: string, id: string) => void;
+  onChannelSelect?: (selected: IChannel[]) => void;
 }
 
 // ─────────────────────────────────────────────
@@ -41,6 +43,7 @@ export default function ArticleEditor({
   onArticleClick,
   onAnthologySelect,
   onArticleChange,
+  onChannelSelect,
 }: ArticleEditorProps) {
   const channels = channelId ? channelId.split("_") : undefined;
 
@@ -61,6 +64,7 @@ export default function ArticleEditor({
       articleId={articleId}
       anthologyId={anthologyId}
       channelId={channelId}
+      onChannelSelect={onChannelSelect}
     >
       {({ expandButton }) => (
         <TypeArticle

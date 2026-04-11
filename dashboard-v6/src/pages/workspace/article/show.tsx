@@ -4,7 +4,7 @@ import ArticleEditor from "../../../features/editor/Article";
 
 const Widget = () => {
   const { articleId, anthologyId } = useParams();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const mode = searchParams.get("mode") ?? "read";
@@ -41,6 +41,19 @@ const Widget = () => {
         } else {
           navigate(`/workspace/${type}/${id}`);
         }
+      }}
+      onChannelSelect={(selected) => {
+        console.debug("channel hello hello", selected);
+        console.debug("channel changed", selected);
+        const channelsParams = Array.isArray(selected)
+          ? selected.map((item) => item.id)
+          : [];
+        console.debug("channelsParams", channelsParams);
+
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("channel", channelsParams.join());
+        console.debug("channel set", channelsParams);
+        setSearchParams(newParams);
       }}
     />
   );

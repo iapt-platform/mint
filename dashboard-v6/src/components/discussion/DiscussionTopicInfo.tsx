@@ -3,19 +3,19 @@ import { useEffect, useState } from "react";
 
 import { get } from "../../request";
 import type { ICommentResponse } from "../../api/Comment";
-import DiscussionItem, { type IComment } from "./DiscussionItem";
-import type { TDiscussionType } from "./Discussion";
+import DiscussionItem from "./DiscussionItem";
+
+import type { IComment, TDiscussionType } from "../../api/discussion";
 
 interface IWidget {
   topicId?: string;
   topic?: IComment;
   childrenCount?: number;
   hideTitle?: boolean;
-  onDelete?: Function;
-  onReply?: Function;
-  onClose?: Function;
-  onReady?: Function;
-  onConvert?: Function;
+  onDelete?: (id?: string) => void;
+  onClose?: (data: IComment) => void;
+  onReady?: (discussion: IComment) => void;
+  onConvert?: (value: TDiscussionType) => void;
 }
 const DiscussionTopicInfoWidget = ({
   topicId,
@@ -24,7 +24,6 @@ const DiscussionTopicInfoWidget = ({
   hideTitle = false,
   onReady,
   onDelete,
-  onReply,
   onClose,
   onConvert,
 }: IWidget) => {
@@ -88,25 +87,12 @@ const DiscussionTopicInfoWidget = ({
           data={data}
           hideTitle={hideTitle}
           onDelete={() => {
-            if (typeof onDelete !== "undefined") {
-              onDelete(data.id);
-            }
-          }}
-          onReply={() => {
-            if (typeof onReply !== "undefined") {
-              onReply(data);
-            }
+            onDelete?.(data.id);
           }}
           onClose={() => {
-            if (typeof onClose !== "undefined") {
-              onClose(data);
-            }
+            onClose?.(data);
           }}
-          onConvert={(value: TDiscussionType) => {
-            if (typeof onConvert !== "undefined") {
-              onConvert(value);
-            }
-          }}
+          onConvert={onConvert}
         />
       ) : (
         <></>

@@ -93,7 +93,10 @@ export default function Editor({
           articleId={articleId}
           type={articleType}
           channels={channels}
-          onSelect={onChannelSelect}
+          onSelect={(selected) => {
+            console.debug(selected);
+            onChannelSelect?.(selected);
+          }}
         />
       ),
     },

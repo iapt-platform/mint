@@ -121,20 +121,24 @@ const TaskBuilderChapter = ({
               }}
             />
           </Space>
-          <ChapterToc
-            key={2}
-            book={book}
-            para={para}
-            maxLevel={7}
-            onData={(data: IChapterToc[]) => {
-              setChapter(data);
-              if (data.length > 0) {
-                if (!title && data[0].text) {
-                  setTitle(data[0].text);
+          {book && para ? (
+            <ChapterToc
+              key={2}
+              book={book}
+              para={para}
+              maxLevel={7}
+              onData={(data: IChapterToc[]) => {
+                setChapter(data);
+                if (data.length > 0) {
+                  if (!title && data[0].text) {
+                    setTitle(data[0].text);
+                  }
                 }
-              }
-            }}
-          />
+              }}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       ),
     },

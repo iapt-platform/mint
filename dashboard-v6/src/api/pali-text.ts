@@ -188,3 +188,17 @@ export const fetchParaNodeChunk = (
   if (channelIds) url += `&channels=${channelIds}`;
   return get<ParagraphNodeListResponse>(url);
 };
+
+export interface IFetchChapterTocParams {
+  book: number;
+  para: number;
+}
+
+export const fetchChapterToc = (
+  params: IFetchChapterTocParams
+): Promise<IChapterTocListResponse> => {
+  const { book, para } = params;
+  return get<IChapterTocListResponse>(
+    `/v2/chapter?view=toc&book=${book}&para=${para}`
+  );
+};
