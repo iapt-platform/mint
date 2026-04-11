@@ -564,4 +564,20 @@ class PaliContentService
         }
         return $indexChannel;
     }
+
+    public function sentences(array $sentenceIds, array $channelIds, string $mode)
+    {
+        $query = [];
+        foreach ($sentenceIds as $id) {
+            # code...
+            $query[] = explode('-', $id);
+        }
+        $record = Sentence::select($this->selectCol)
+            ->whereIns(['book_id', 'paragraph', 'word_start', 'word_end'], $query)
+            ->whereIn('channel_uid', $channelIds)
+            ->get();
+        $indexChannel = $this->getChannelIndex($channelIds);
+        $result = $this->makeContentObj($record, $mode, $indexChannel);
+        return $result;
+    }
 }
