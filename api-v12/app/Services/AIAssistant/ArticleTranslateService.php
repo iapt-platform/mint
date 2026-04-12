@@ -4,16 +4,24 @@ namespace App\Services\AIAssistant;
 
 use App\Services\ArticleService;
 use App\Services\PaliContentService;
+use App\Services\SentenceService;
+
 use App\Models\CustomBook;
+
+
 use Illuminate\Support\Facades\Log;
+use App\Http\Api\ChannelApi;
 
 class ArticleTranslateService
 {
     protected ArticleService $articleService;
     protected PaliContentService $paliContentService;
     protected TranslateService $translateService;
+    protected SentenceService $sentenceService;
+
     protected string $modelId;
-    protected array $translation;
+    protected array $translation = [];
+    protected string $outputChannelId;
 
     protected string $systemPrompt = <<<PROMPT
     请根据提供的原文，翻译为简体中文。
@@ -43,10 +51,12 @@ class ArticleTranslateService
         ArticleService $article,
         PaliContentService $paliContent,
         TranslateService $translateService,
+        SentenceService $sentenceService
     ) {
         $this->articleService = $article;
         $this->paliContentService = $paliContent;
         $this->translateService = $translateService;
+        $this->sentenceService = $sentenceService;
     }
 
     /**
@@ -60,13 +70,32 @@ class ArticleTranslateService
         $this->modelId = $model;
         return $this;
     }
-
-    public function translate(string $articleId)
+    /**
+     * 设置模型配置
+     *
+     * @param string $model
+     * @return self
+     */
+    public function setChannel(string $id): self
+    {
+        $this->outputChannelId = $id;
+        return $this;
+    }
+    public function translateAnthology($anthologyId)
+    {
+        $articles = $this->articleService->articlesInAnthology($anthologyId);
+        foreach ($articles as $key => $article) {
+            $this->translateArticle($article)->save();
+        }
+        return count($articles);
+    }
+    public function translateArticle(string $articleId)
     {
         //获取文章中的句子id
         $sentenceIds = $this->articleService->sentenceIds($articleId);
         if (!$sentenceIds || count($sentenceIds) === 0) {
-            return null;
+            $this->translation = [];
+            return $this;
         }
         $bookId = (int)explode('-', $sentenceIds[0])[0];
         //提取原文
@@ -96,7 +125,36 @@ class ArticleTranslateService
         return $this;
     }
     //写入结果channel
-    public function save(string $channelId) {}
+    public function save()
+    {
+        if (
+            !is_array($this->translation) ||
+            count($this->translation) === 0
+        ) {
+            return 0;
+        }
+        $channelInfo = ChannelApi::getById($this->outputChannelId);
+        $sentData = [];
+        $sentData = array_map(function ($n) use ($channelInfo) {
+            $sId = explode('-', $n['id']);
+            return [
+                'book_id' => $sId[0],
+                'paragraph' => $sId[1],
+                'word_start' => $sId[2],
+                'word_end' => $sId[3],
+                'channel_uid' => $channelInfo['id'],
+                'content' => $n['content'],
+                'content_type' => $n['content_type'] ?? 'markdown',
+                'lang' => $channelInfo['lang'],
+                'status' => $channelInfo['status'],
+                'editor_uid' => $this->modelId,
+            ];
+        }, $this->translation);
+        foreach ($sentData as  $value) {
+            $this->sentenceService->save($value);
+        }
+        return count($sentData);
+    }
     public function get()
     {
         return $this->translation;

@@ -12,7 +12,7 @@ class TestAIArticleTranslate extends Command
      * php artisan test:ai.article.translate
      * @var string
      */
-    protected $signature = 'test:ai.article.translate';
+    protected $signature = 'test:ai.article.translate {--article=} {--anthology=} {--model=}  {--channel=}';
 
     /**
      * The console command description.
@@ -26,15 +26,31 @@ class TestAIArticleTranslate extends Command
      */
     public function handle()
     {
+        if (
+            !$this->option('model') ||
+            !$this->option('channel')
+        ) {
+            $this->error('model,article,channel is requested');
+            return;
+        }
         //
         // ===== 创建 Service =====
         $service = app(ArticleTranslateService::class);
         // ===== 执行 =====
-        $result = $service->setModel('dd81ce6c-e9ff-46b2-b1af-947728ba996e')
-            ->translate('2deaf8dd-65b3-4a76-86c4-deec7afabc38')
-            ->get();
-
-        // ===== 调试输出（建议保留）=====
-        dump($result);
+        if ($this->option('article')) {
+            $this->info('article translate start');
+            $total = $service->setModel($this->option('model'))
+                ->setChannel($this->option('channel'))
+                ->translateArticle($this->option('article'))
+                ->save();
+            $this->info("{$total} sentences saved");
+        }
+        if ($this->option('anthology')) {
+            $this->info('anthology translate start');
+            $total = $service->setModel($this->option('model'))
+                ->setChannel($this->option('channel'))
+                ->translateAnthology($this->option('anthology'));
+            $this->info("{$total} article saved");
+        }
     }
 }
