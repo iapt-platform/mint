@@ -6,7 +6,7 @@ import type { IStudio } from "../api/Auth";
 export const ROLE_ROOT = "root";
 export const ROLE_ADMINISTRATOR = "administrator";
 
-export const TO_SIGN_IN = "/anonymous/users/sign-in";
+export const TO_SIGN_IN = "/anonymous/sign-in";
 export const TO_PROFILE = "/dashboard/users/logs";
 export const TO_HOME = "/";
 
