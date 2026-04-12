@@ -82,14 +82,14 @@ class ArticleTranslateService
         $this->outputChannelId = $id;
         return $this;
     }
-    public function translateAnthology($anthologyId, ?callable $fn = null): int
+    public function translateAnthology($anthologyId, ?callable $onEach = null): int
     {
         $articles = $this->articleService->articlesInAnthology($anthologyId);
 
         foreach ($articles as $article) {
             $sentences = $this->translateArticle($article)->save();
-            if ($fn) {
-                $fn($article, $sentences);
+            if ($onEach) {
+                $onEach($article, $sentences);
             }
         }
 
