@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Article;
+use App\Models\ArticleCollection;
 
 class ArticleService
 {
@@ -36,5 +37,13 @@ class ArticleService
         preg_match_all('/\{\{\s*(.*?)\s*\}\}/', $text, $matches);
 
         return $matches[1] ?? [];
+    }
+
+    public function articlesInAnthology($anthologyId)
+    {
+        $inCollection = ArticleCollection::where('collect_id', $anthologyId)
+            ->select('article_id')
+            ->get()->toArray();
+        return array_map(fn($item) => $item['article_id'], $inCollection);
     }
 }
