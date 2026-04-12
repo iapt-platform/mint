@@ -3,7 +3,6 @@ import * as jose from "jose";
 
 import type { RootState } from "../store";
 
-export const SIGN_IN = "/anonymous/sign-in";
 export const PERSONAL = "/dashboard/personal";
 
 export interface ISignIn {
