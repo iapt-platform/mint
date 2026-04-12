@@ -43,16 +43,10 @@ const Widget = () => {
         }
       }}
       onChannelSelect={(selected) => {
-        console.debug("channel hello hello", selected);
         console.debug("channel changed", selected);
-        const channelsParams = Array.isArray(selected)
-          ? selected.map((item) => item.id)
-          : [];
-        console.debug("channelsParams", channelsParams);
-
+        const channelsParams = selected.map((item) => item.id).join("_");
         const newParams = new URLSearchParams(searchParams);
-        newParams.set("channel", channelsParams.join());
-        console.debug("channel set", channelsParams);
+        newParams.set("channel", channelsParams);
         setSearchParams(newParams);
       }}
     />
