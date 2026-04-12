@@ -49,8 +49,8 @@ class TestAIArticleTranslate extends Command
             $this->info('anthology translate start');
             $total = $service->setModel($this->option('model'))
                 ->setChannel($this->option('channel'))
-                ->translateAnthology($this->option('anthology'), function ($article) {
-                    $this->info('translating article ' . $article);
+                ->translateAnthology($this->option('anthology'), function ($article, $sentences) {
+                    $this->info("translate article {$article} sentences {$sentences}");
                 });
             $this->info("{$total} article saved");
         }

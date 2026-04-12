@@ -87,10 +87,10 @@ class ArticleTranslateService
         $articles = $this->articleService->articlesInAnthology($anthologyId);
 
         foreach ($articles as $article) {
+            $sentences = $this->translateArticle($article)->save();
             if ($fn) {
-                $fn($article);
+                $fn($article, $sentences);
             }
-            $this->translateArticle($article)->save();
         }
 
         return count($articles);
