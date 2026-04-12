@@ -11,6 +11,7 @@ use App\Models\CustomBook;
 
 use Illuminate\Support\Facades\Log;
 use App\Http\Api\ChannelApi;
+use Carbon\Callback;
 
 class ArticleTranslateService
 {
@@ -81,12 +82,17 @@ class ArticleTranslateService
         $this->outputChannelId = $id;
         return $this;
     }
-    public function translateAnthology($anthologyId)
+    public function translateAnthology($anthologyId, ?callable $fn = null): int
     {
         $articles = $this->articleService->articlesInAnthology($anthologyId);
-        foreach ($articles as $key => $article) {
+
+        foreach ($articles as $article) {
+            if ($fn) {
+                $fn($article);
+            }
             $this->translateArticle($article)->save();
         }
+
         return count($articles);
     }
     public function translateArticle(string $articleId)
