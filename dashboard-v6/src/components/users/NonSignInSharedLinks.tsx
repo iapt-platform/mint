@@ -1,11 +1,12 @@
 import { FormattedMessage } from "react-intl";
 import { Link } from "react-router";
 import { Divider, Space } from "antd";
+import { TO_SIGN_IN } from "../../reducers/current-user";
 
 const Widget = () => {
   return (
     <Space>
-      <Link to="/anonymous/sign-in">
+      <Link to={TO_SIGN_IN}>
         <FormattedMessage id="buttons.sign-in" />
       </Link>
       <Divider orientation="vertical" />

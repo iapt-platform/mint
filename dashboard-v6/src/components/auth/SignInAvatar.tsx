@@ -16,6 +16,7 @@ import { useAppSelector } from "../../hooks";
 import {
   currentUser as _currentUser,
   studioList,
+  TO_SIGN_IN,
 } from "../../reducers/current-user";
 import type { TooltipPlacement } from "antd/lib/tooltip";
 import SettingModal from "../setting/SettingModal";
@@ -146,7 +147,7 @@ const SignInAvatar = ({
                       case "logout":
                         sessionStorage.removeItem("token");
                         localStorage.removeItem("token");
-                        navigate("/anonymous/users/sign-in");
+                        navigate(TO_SIGN_IN);
                         break;
                     }
                   }}

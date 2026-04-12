@@ -3,7 +3,7 @@ import { Modal } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 import { useAppSelector } from "../../hooks";
-import { isGuest } from "../../reducers/current-user";
+import { isGuest, TO_SIGN_IN } from "../../reducers/current-user";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
@@ -37,7 +37,7 @@ const LoginAlertModalWidget = ({ enable = false, mode = "read" }: IWidget) => {
         cancelText: intl.formatMessage({
           id: "buttons.use.as.guest",
         }),
-        onOk: () => navigate("/anonymous/users/sign-in"),
+        onOk: () => navigate(TO_SIGN_IN),
         onCancel: () => localStorage.setItem("guest_mode", "true"),
       });
     }

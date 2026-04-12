@@ -15,6 +15,7 @@ import { get } from "../../request";
 import LangSelect from "../general/LangSelect";
 import type { IInviteResponse } from "../../api/Auth";
 import { onSignIn } from "./utils";
+import { TO_SIGN_IN } from "../../reducers/current-user";
 
 export interface IAccountForm {
   email: string;
@@ -143,10 +144,7 @@ export const SignUpSuccess = () => {
       status="success"
       title="注册成功"
       subTitle={
-        <Button
-          type="primary"
-          onClick={() => navigate("/anonymous/users/sign-in")}
-        >
+        <Button type="primary" onClick={() => navigate(TO_SIGN_IN)}>
           {intl.formatMessage({
             id: "buttons.sign-in",
           })}

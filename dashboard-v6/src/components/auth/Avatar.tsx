@@ -14,6 +14,7 @@ import {
 import { useAppSelector } from "../../hooks";
 import {
   currentUser as _currentUser,
+  TO_SIGN_IN,
   type IUser,
 } from "../../reducers/current-user";
 import type { TooltipPlacement } from "antd/lib/tooltip";
@@ -58,7 +59,7 @@ const UserCard = ({ user }: IUserCard) => {
             onClick={() => {
               sessionStorage.removeItem("token");
               localStorage.removeItem("token");
-              navigate("/anonymous/users/sign-in");
+              navigate(TO_SIGN_IN);
             }}
           />
         </Tooltip>,
