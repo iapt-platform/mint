@@ -80,6 +80,21 @@
 
         .toc-disabled { color: #6c757d; cursor: not-allowed; pointer-events: none; }
         .dark-mode .toc-disabled { color: #adb5bd; }
+        .toc-active {
+            color: #206bc4 !important;
+            font-weight: 600;
+            background: rgba(32, 107, 196, 0.08);
+            border-left: 3px solid #206bc4;
+            padding-left: 6px !important;
+            border-radius: 2px;
+            cursor: default;
+            pointer-events: none;
+        }
+        .dark-mode .toc-active {
+            color: #4dabf7 !important;
+            background: rgba(77, 171, 247, 0.1);
+            border-left-color: #4dabf7;
+        }
     </style>
 </head>
 
@@ -133,8 +148,10 @@
             @if(isset($book['toc']) && count($book['toc']) > 0)
             <ul>
                 @foreach ($book['toc'] as $item)
-                <li class="toc-level-{{ $item['level'] }} {{ $item['disabled'] ? 'toc-disabled' : '' }}">
-                    @if (!$item['disabled'])
+                <li class="toc-level-{{ $item['level'] }} {{ $item['active'] ?? false ? 'toc-active' : ($item['disabled'] ? 'toc-disabled' : '') }}">
+                    @if($item['active'] ?? false)
+                    <span>{{ $item['title'] }}</span>
+                    @elseif(!$item['disabled'])
                     {{-- ✅ 修改1：使用文集阅读路由，传 anthology + article 两个参数 --}}
                     <a href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $item['id']]) }}">
                         {{ $item['title'] }}
@@ -161,8 +178,10 @@
                 @if(isset($book['toc']) && count($book['toc']) > 0)
                 <ul>
                     @foreach ($book['toc'] as $item)
-                    <li class="toc-level-{{ $item['level'] }} {{ $item['disabled'] ? 'toc-disabled' : '' }}">
-                        @if (!$item['disabled'])
+                    <li class="toc-level-{{ $item['level'] }} {{ $item['active'] ?? false ? 'toc-active' : ($item['disabled'] ? 'toc-disabled' : '') }}">
+                        @if($item['active'] ?? false)
+                        <span>{{ $item['title'] }}</span>
+                        @elseif(!$item['disabled'])
                         {{-- ✅ 修改1：同上 --}}
                         <a href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $item['id']]) }}">
                             {{ $item['title'] }}
