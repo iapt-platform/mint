@@ -14,7 +14,6 @@ use App\Models\WbwBlock;
 use App\Models\PaliSentence;
 use App\Models\CustomBook;
 
-use App\Http\Controllers\AuthController;
 use App\Http\Resources\ChannelResource;
 
 use App\Http\Api\AuthApi;
@@ -371,7 +370,13 @@ class ChannelController extends Controller
         }
         //获取单句长度
         if (count($query) > 0) {
-            $table = Sentence::whereIns(['book_id', 'paragraph', 'word_start', 'word_end', 'channel_uid'], $queryWithChannel)
+            $table = Sentence::whereIns([
+                'book_id',
+                'paragraph',
+                'word_start',
+                'word_end',
+                'channel_uid'
+            ], $queryWithChannel)
                 ->select(['book_id', 'paragraph', 'word_start', 'word_end', 'strlen']);
             $sentLen = $table->get();
 
@@ -391,7 +396,8 @@ class ChannelController extends Controller
         //获取全网公开的有译文的channel
         if ($request->input('owner') === 'all' || $request->input('owner') === 'public') {
             if (count($query) > 0) {
-                $publicChannelsWithContent = Sentence::whereIns(['book_id', 'paragraph', 'word_start', 'word_end'], $query)
+                $fields = ['book_id', 'paragraph', 'word_start', 'word_end'];
+                $publicChannelsWithContent = Sentence::whereIns($fields, $query)
                     ->where('strlen', '>', 0)
                     ->where('status', 30)
                     ->groupBy('channel_uid')
