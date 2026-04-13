@@ -33,10 +33,9 @@ class AnthologyReadController extends Controller
         // ── 2. 构建完整目录（所有 level，保留层级信息） ────────────────────
         $fullArticleList = collect($col['article_list'] ?? []);
 
-        // toc：只取 level=1 的顶级节点，交给阅读页左侧目录使用
-        // 与 book.read 的 toc 格式保持一致
+        // toc：全部节点，交给阅读页左侧目录使用
+        // 当前章节标记 active=true、disabled=true（高亮且不可点击）
         $toc = $fullArticleList
-            ->filter(fn($a) => ($a['level'] ?? 1) === 1)
             ->values()
             ->map(fn($a) => [
                 'id'       => $a['article_id'],
@@ -44,7 +43,8 @@ class AnthologyReadController extends Controller
                 'summary'  => '',
                 'progress' => 0,
                 'level'    => (int) ($a['level'] ?? 1),
-                'disabled' => false,
+                'disabled' => $a['article_id'] === $articleId,
+                'active'   => $a['article_id'] === $articleId,
             ])
             ->toArray();
 
@@ -64,7 +64,7 @@ class AnthologyReadController extends Controller
         $content = [[
             'id'    => $articleId,
             'level' => 100,
-            'text'  => [[$artArray['html'] ?? $artArray['content']]],
+            'text'  => [[$artArray['html'] ?? $artArray['content'] ?? 'null']],
         ]];
 
         // ── 4. 计算翻页（pagination） ─────────────────────────────────────────
