@@ -82,8 +82,8 @@ class ArticleService
             ->select('channel_uid')
             ->get();
         $channels = [];
-        foreach ($publicChannelIds as  $id) {
-            $channels = ChannelApi::getById($id);
+        foreach ($publicChannelIds as  $channel) {
+            $channels[] = ChannelApi::getById($channel->channel_uid);
         }
         return $channels;
     }
