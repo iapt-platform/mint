@@ -18,7 +18,7 @@ class AnthologyReadController extends Controller
     // read
     // GET /library/anthology/{anthology}/read/{article}
     // =========================================================================
-    public function read(string $anthologyId, string $articleId)
+    public function read(Request $request, string $anthologyId, string $articleId)
     {
         // ── 1. 获取文集信息 ───────────────────────────────────────────────────
         $colResult = $this->collectionService->getCollection($anthologyId);
@@ -41,7 +41,16 @@ class AnthologyReadController extends Controller
         }
 
         // ArticleResource 需要 format=html
-        $fakeRequest = Request::create('', 'GET', ['format' => 'html']);
+        $urlParam = [
+            'mode' => 'read',
+            'format' => 'html',
+            'anthology' => $anthologyId,
+            'channel' => $request->input('channel', null),
+            'origin' => 'true',
+            'paragraph' => true,
+        ];
+
+        $fakeRequest = Request::create('', 'GET', $urlParam);
         $artResource = $artResult['data'];
         $artArray    = $artResource->toArray($fakeRequest);
 
@@ -120,12 +129,12 @@ class AnthologyReadController extends Controller
             'pagination'  => $pagination,
             'content'     => $content,
         ];
-
+        $channels = $this->articleService->articleChannels($articleId);
         // blade 里有 $relatedBooks，传空数组防止 undefined variable
         $relatedBooks = [];
 
         // 翻页路由需要 anthologyId，传给 blade 供覆盖路由使用
-        return view('library.book.read', compact('book', 'relatedBooks', 'anthologyId'));
+        return view('library.book.read', compact('book', 'relatedBooks', 'anthologyId', 'channels'));
     }
 
     // =========================================================================

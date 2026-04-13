@@ -39,47 +39,137 @@
             display: none;
         }
 
-        .related-books { margin-top: 30px; }
+        .related-books {
+            margin-top: 30px;
+        }
 
-        .card-img-container { height: 150px; overflow: hidden; }
-        .card-img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .card-img-container {
+            height: 150px;
+            overflow: hidden;
+        }
+
+        .card-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
         @media (max-width: 767px) {
-            .content-area { width: 100%; }
-            .main-container { padding: 0; }
-            .card { border: none; }
+            .content-area {
+                width: 100%;
+            }
+
+            .main-container {
+                padding: 0;
+            }
+
+            .card {
+                border: none;
+            }
         }
 
         @media (min-width: 768px) {
-            .toc-sidebar { display: block; }
-            .content-area { max-width: calc(100% - 270px); }
+            .toc-sidebar {
+                display: block;
+            }
+
+            .content-area {
+                max-width: calc(100% - 270px);
+            }
         }
 
         @media (min-width: 992px) {
-            .right-sidebar { display: block; }
-            .content-area { max-width: calc(100% - 570px); }
+            .right-sidebar {
+                display: block;
+            }
+
+            .content-area {
+                max-width: calc(100% - 570px);
+            }
         }
 
-        .dark-mode { background-color: #1a1a1a; color: #ffffff; }
-        .dark-mode .card { background-color: #2a2a2a; border-color: #3a3a3a; color: #ffffff; }
-        .dark-mode .navbar { background-color: #2a2a2a; }
-        .dark-mode .offcanvas { background-color: #2a2a2a; color: #ffffff; }
-        .dark-mode .offcanvas .nav-link { color: #ffffff; }
-        .dark-mode .toc-sidebar, .dark-mode .right-sidebar { background-color: #2a2a2a; }
+        .dark-mode {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
 
-        .toc-sidebar ul, .offcanvas-body ul { list-style: none; padding: 0; }
-        .toc-sidebar ul li, .offcanvas-body ul li { padding: 5px 0; }
-        .toc-sidebar ul li a, .offcanvas-body ul li a { color: #206bc4; text-decoration: none; }
-        .toc-sidebar ul li a:hover, .offcanvas-body ul li a:hover { text-decoration: underline; }
-        .dark-mode .toc-sidebar ul li a, .dark-mode .offcanvas-body ul li a { color: #4dabf7; }
+        .dark-mode .card {
+            background-color: #2a2a2a;
+            border-color: #3a3a3a;
+            color: #ffffff;
+        }
 
-        .toc-level-1 { padding-left: 0 !important; }
-        .toc-level-2 { padding-left: 10px !important; }
-        .toc-level-3 { padding-left: 20px !important; }
-        .toc-level-4 { padding-left: 30px !important; }
+        .dark-mode .navbar {
+            background-color: #2a2a2a;
+        }
 
-        .toc-disabled { color: #6c757d; cursor: not-allowed; pointer-events: none; }
-        .dark-mode .toc-disabled { color: #adb5bd; }
+        .dark-mode .offcanvas {
+            background-color: #2a2a2a;
+            color: #ffffff;
+        }
+
+        .dark-mode .offcanvas .nav-link {
+            color: #ffffff;
+        }
+
+        .dark-mode .toc-sidebar,
+        .dark-mode .right-sidebar {
+            background-color: #2a2a2a;
+        }
+
+        .toc-sidebar ul,
+        .offcanvas-body ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-sidebar ul li,
+        .offcanvas-body ul li {
+            padding: 5px 0;
+        }
+
+        .toc-sidebar ul li a,
+        .offcanvas-body ul li a {
+            color: #206bc4;
+            text-decoration: none;
+        }
+
+        .toc-sidebar ul li a:hover,
+        .offcanvas-body ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .dark-mode .toc-sidebar ul li a,
+        .dark-mode .offcanvas-body ul li a {
+            color: #4dabf7;
+        }
+
+        .toc-level-1 {
+            padding-left: 0 !important;
+        }
+
+        .toc-level-2 {
+            padding-left: 10px !important;
+        }
+
+        .toc-level-3 {
+            padding-left: 20px !important;
+        }
+
+        .toc-level-4 {
+            padding-left: 30px !important;
+        }
+
+        .toc-disabled {
+            color: #6c757d;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .dark-mode .toc-disabled {
+            color: #adb5bd;
+        }
+
         .toc-active {
             color: #206bc4 !important;
             font-weight: 600;
@@ -90,6 +180,7 @@
             cursor: default;
             pointer-events: none;
         }
+
         .dark-mode .toc-active {
             color: #4dabf7 !important;
             background: rgba(77, 171, 247, 0.1);
@@ -117,7 +208,37 @@
                 @endif
                 <span>{{ $book['title'] }}</span>
             </div>
-            <div class="navbar-nav flex-row order-md-last">
+            <div class="navbar-nav flex-row order-md-last align-items-center">
+                {{-- Desktop Dropdown --}}
+                @if(!empty($channels))
+                <div class="nav-item dropdown d-none d-md-block me-2">
+                    <a href="#" class="nav-link" data-bs-toggle="dropdown">
+                        <i class="fas fa-layer-group me-1"></i>
+                        版本
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-end">
+                        @foreach($channels as $channel)
+                        <a class="dropdown-item"
+                            href="{{ request()->fullUrlWithQuery(['channel' => $channel['id']]) }}">
+                            {{ $channel['name'] }}
+                            <small class="text-muted">
+                                ({{ __('language.' . $channel['lang']) }})
+                            </small>
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Mobile Drawer Trigger --}}
+                <div class="nav-item d-md-none me-2">
+                    <a href="#" class="nav-link"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#channelDrawer">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </div>
+                @endif
                 <div class="nav-item">
                     <a href="#" class="nav-link" id="themeToggle">
                         <i class="fas fa-moon"></i>
@@ -139,6 +260,47 @@
     </header>
 
     <!-- TOC Drawer (Mobile) -->
+    @if(!empty($channels))
+    <div class="offcanvas offcanvas-end"
+        tabindex="-1"
+        id="channelDrawer">
+
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">选择版本</h5>
+
+            <button type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas">
+            </button>
+        </div>
+
+        <div class="offcanvas-body">
+
+            <div class="list-group list-group-flush">
+
+                @foreach($channels as $channel)
+
+                <a
+                    href="{{ request()->fullUrlWithQuery(['channel' => $channel['id']]) }}"
+                    class="list-group-item list-group-item-action">
+
+                    <div class="fw-bold">
+                        {{ $channel['name'] }}
+                    </div>
+
+                    <small class="text-muted">
+                        {{ __('language.' . $channel['lang']) }}
+                    </small>
+
+                </a>
+
+                @endforeach
+
+            </div>
+
+        </div>
+    </div>
+    @endif
     <div class="offcanvas offcanvas-start" tabindex="-1" id="tocDrawer" aria-labelledby="tocDrawerLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="tocDrawerLabel">目录</h5>
@@ -226,11 +388,11 @@
                                 @foreach ($rows as $col)
                                 <div style="flex:1;">
                                     @if($paragraph['level'] < 8)
-                                    {{-- ✅ 修改3：{!! !!} 不转义，渲染 HTML 内容 --}}
-                                    <h{{ $paragraph['level'] }}>{!! $col !!}</h{{ $paragraph['level'] }}>
-                                    @else
-                                    <p>{!! $col !!}</p>
-                                    @endif
+                                        {{-- ✅ 修改3：{!! !!} 不转义，渲染 HTML 内容 --}}
+                                        <h{{ $paragraph['level'] }}>{!! $col !!}</h{{ $paragraph['level'] }}>
+                                        @else
+                                        <p>{!! $col !!}</p>
+                                        @endif
                                 </div>
                                 @endforeach
                             </div>
@@ -317,7 +479,11 @@
                 <h5>下载</h5>
                 <ul class="list-unstyled">
                     @foreach ($book['downloads'] as $download)
-                    <li><a href="{{ $download['url'] }}" class="btn btn-outline-primary mb-2 w-100"><i class="fas fa-download me-2"></i>{{ $download['format'] }}</a></li>
+                    <li>
+                        <a href="{{ $download['url'] }}" class="btn btn-outline-primary mb-2 w-100">
+                            <i class="fas fa-download me-2"></i>{{ $download['format'] }}
+                        </a>
+                    </li>
                     @endforeach
                 </ul>
                 @endif
@@ -340,7 +506,6 @@
 
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const themeToggle = document.getElementById('themeToggle');
         themeToggle.addEventListener('click', (e) => {
@@ -350,11 +515,17 @@
             document.body.classList.toggle('light-mode', isDark);
             fetch('{{ route("theme.toggle") }}', {
                 method: 'POST',
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' },
-                body: JSON.stringify({ theme: isDark ? 'light' : 'dark' })
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    theme: isDark ? 'light' : 'dark'
+                })
             });
             themeToggle.innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
         });
     </script>
 </body>
+
 </html>
