@@ -21,25 +21,25 @@ class SentPrResource extends JsonResource
         //获取用户信息
         $user = AuthApi::current($request);
         $role = 'reader';
-        if($user && $user["user_uid"] === $this->editor_uid ){
+        if ($user && $user["user_uid"] === $this->editor_uid) {
             $role = 'owner';
         }
         $channel = ChannelApi::getById($this->channel_uid);
-        $mode = $request->get("mode",'read');
+        $mode = $request->input("mode", 'read');
         return [
-            "id"=>$this->id,
-            "uid"=>$this->uid,
-            "book"=> $this->book_id,
-            "paragraph"=> $this->paragraph,
-            "word_start"=> $this->word_start,
-            "word_end"=> $this->word_end,
-            "editor"=> UserApi::getByUuid($this->editor_uid),
-            "channel"=> $channel,
-            "content"=>$this->content,
-            "html"=> MdRender::render($this->content,[$this->channel_uid],null,$mode,$channel['type']),
-            "role"=>$role,
-            "created_at"=> $this->created_at,
-            "updated_at"=> $this->updated_at,
+            "id" => $this->id,
+            "uid" => $this->uid,
+            "book" => $this->book_id,
+            "paragraph" => $this->paragraph,
+            "word_start" => $this->word_start,
+            "word_end" => $this->word_end,
+            "editor" => UserApi::getByUuid($this->editor_uid),
+            "channel" => $channel,
+            "content" => $this->content,
+            "html" => MdRender::render($this->content, [$this->channel_uid], null, $mode, $channel['type']),
+            "role" => $role,
+            "created_at" => $this->created_at,
+            "updated_at" => $this->updated_at,
         ];
     }
 }

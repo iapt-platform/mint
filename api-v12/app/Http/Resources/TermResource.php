@@ -42,8 +42,8 @@ class TermResource extends JsonResource
         ];
 
 
-        if ($request->has('channel') && !empty($request->get('channel'))) {
-            $channels = explode('_', $request->get('channel'));
+        if ($request->has('channel') && !empty($request->input('channel'))) {
+            $channels = explode('_', $request->input('channel'));
         } else {
             if (!empty($this->channal) && Str::isUuid($this->channal)) {
                 $channelId = $this->channal;
@@ -65,7 +65,7 @@ class TermResource extends JsonResource
         if (!empty($this->note)) {
             $mdRender = new MdRender(
                 [
-                    'mode' => $request->get('mode', 'read'),
+                    'mode' => $request->input('mode', 'read'),
                     'format' => 'react',
                     'studioId' => $this->owner,
                 ]
@@ -95,7 +95,7 @@ class TermResource extends JsonResource
         if (isset($summaryContent)) {
             $mdRender = new MdRender(
                 [
-                    'mode' => $request->get('mode', 'read'),
+                    'mode' => $request->input('mode', 'read'),
                     'format' => 'text',
                     'studioId' => $this->owner,
                 ]
