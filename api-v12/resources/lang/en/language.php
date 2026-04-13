@@ -1,4 +1,5 @@
 <?php
+// api-v12/resources/lang/en/language.php
 return [
     'en' => 'English',
     'pali' => 'pali',
