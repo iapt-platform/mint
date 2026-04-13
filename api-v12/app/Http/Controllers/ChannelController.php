@@ -50,15 +50,15 @@ class ChannelController extends Controller
         if ($request->has("book")) {
             $indexCol[] = 'progress_chapters.progress';
         }
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'public':
                 $table = Channel::select($indexCol)
                     ->where('status', 30);
                 /*
                 if ($request->has("book")) {
                     $table = $table->leftJoin('progress_chapters', 'channels.uid', '=', 'progress_chapters.channel_id',)
-                        ->where('progress_chapters.book', $request->get("book"))
-                        ->where('progress_chapters.para', $request->get("paragraph"));
+                        ->where('progress_chapters.book', $request->input("book"))
+                        ->where('progress_chapters.para', $request->input("paragraph"));
                 }*/
                 break;
             case 'studio':
@@ -68,13 +68,13 @@ class ChannelController extends Controller
                     return $this->error(__('auth.failed'));
                 }
                 //判断当前用户是否有指定的studio的权限
-                $studioId = StudioApi::getIdByName($request->get('name'));
+                $studioId = StudioApi::getIdByName($request->input('name'));
                 if (!StudioApi::userCanList($user['user_uid'], $studioId)) {
                     return $this->error(__('auth.failed'), 403, 403);
                 }
 
                 $table = Channel::select($indexCol);
-                if ($request->get('view2', 'my') === 'my') {
+                if ($request->input('view2', 'my') === 'my') {
                     $table = $table->where('owner_uid', $studioId);
                 } else {
                     //协作
@@ -84,8 +84,8 @@ class ChannelController extends Controller
                         $resId[] = $res['res_id'];
                     }
                     $table = $table->whereIn('channels.uid', $resId);
-                    if ($request->get('collaborator', 'all') !== 'all') {
-                        $table = $table->where('owner_uid', $request->get('collaborator'));
+                    if ($request->input('collaborator', 'all') !== 'all') {
+                        $table = $table->where('owner_uid', $request->input('collaborator'));
                     } else {
                         $table = $table->where('owner_uid', '<>', $studioId);
                     }
@@ -101,7 +101,7 @@ class ChannelController extends Controller
                     return $this->error(__('auth.failed'));
                 }
                 //判断当前用户是否有指定的studio的权限
-                if ($user['user_uid'] !== StudioApi::getIdByName($request->get('name'))) {
+                if ($user['user_uid'] !== StudioApi::getIdByName($request->input('name'))) {
                     return $this->error(__('auth.failed'));
                 }
                 $channelById = [];
@@ -157,8 +157,8 @@ class ChannelController extends Controller
                     $channelById[$value['res_id']] = $value;
                 }
                 //获取全网公开channel
-                $chapter = PaliTextApi::getChapterStartEnd($request->get('book'), $request->get('para'));
-                $publicChannelsWithContent = Sentence::where('book_id', $request->get('book'))
+                $chapter = PaliTextApi::getChapterStartEnd($request->input('book'), $request->input('para'));
+                $publicChannelsWithContent = Sentence::where('book_id', $request->input('book'))
                     ->whereBetween('paragraph', $chapter)
                     ->where('strlen', '>', 0)
                     ->where('status', 30)
@@ -185,49 +185,49 @@ class ChannelController extends Controller
                 break;
             case 'id':
                 $table = Channel::select($indexCol)
-                    ->whereIn('uid', explode(',', $request->get("id")));
+                    ->whereIn('uid', explode(',', $request->input("id")));
         }
 
         if ($request->has("book")) {
-            if ($request->get("view") === "public") {
+            if ($request->input("view") === "public") {
                 $table = $table->leftJoin('progress_chapters', 'channels.uid', '=', 'progress_chapters.channel_id',)
-                    ->where('progress_chapters.book', $request->get("book"))
-                    ->where('progress_chapters.para', $request->get("paragraph"));
+                    ->where('progress_chapters.book', $request->input("book"))
+                    ->where('progress_chapters.para', $request->input("paragraph"));
             } else {
                 $table = $table->leftJoin('progress_chapters', function ($join) use ($request) {
                     $join->on('channels.uid', '=', 'progress_chapters.channel_id')
-                        ->where('progress_chapters.book', $request->get("book"))
-                        ->where('progress_chapters.para', $request->get("paragraph")); // 条件写在这里！
+                        ->where('progress_chapters.book', $request->input("book"))
+                        ->where('progress_chapters.para', $request->input("paragraph")); // 条件写在这里！
                 });
             }
 
             /* leftJoin('progress_chapters', 'channels.uid', '=', 'progress_chapters.channel_id',)
-                ->where('progress_chapters.book', $request->get("book"))
-                ->where('progress_chapters.para', $request->get("paragraph"));*/
+                ->where('progress_chapters.book', $request->input("book"))
+                ->where('progress_chapters.para', $request->input("paragraph"));*/
         }
         //处理搜索
-        if (!empty($request->get("search"))) {
-            $table = $table->where('name', 'like', "%" . $request->get("search") . "%");
+        if (!empty($request->input("search"))) {
+            $table = $table->where('name', 'like', "%" . $request->input("search") . "%");
         }
         if ($request->has("type")) {
-            $table = $table->where('type', $request->get("type"));
+            $table = $table->where('type', $request->input("type"));
         }
         if ($request->has("updated_at")) {
-            $table = $table->where('updated_at', '>', $request->get("updated_at"));
+            $table = $table->where('updated_at', '>', $request->input("updated_at"));
         }
         if ($request->has("created_at")) {
-            $table = $table->where('created_at', '>', $request->get("created_at"));
+            $table = $table->where('created_at', '>', $request->input("created_at"));
         }
         //获取记录总条数
         $count = $table->count();
         //处理排序
         $table = $table->orderBy(
-            $request->get("order", 'created_at'),
-            $request->get("dir", 'desc')
+            $request->input("order", 'created_at'),
+            $request->input("dir", 'desc')
         );
         //处理分页
-        $table = $table->skip($request->get("offset", 0))
-            ->take($request->get("limit", 200));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input("limit", 200));
         Log::debug('channel sql ' . $table->toSql());
         //获取数据
         $result = $table->get();
@@ -236,7 +236,7 @@ class ChannelController extends Controller
             if ($request->has('progress')) {
                 //获取进度
                 //获取单句长度
-                $sentLen = PaliSentence::where('book', $request->get('book'))
+                $sentLen = PaliSentence::where('book', $request->input('book'))
                     ->whereBetween('paragraph', $chapter)
                     ->orderBy('word_begin')
                     ->select(['book', 'paragraph', 'word_begin', 'word_end', 'length'])
@@ -245,7 +245,7 @@ class ChannelController extends Controller
             foreach ($result as $key => $value) {
                 if ($request->has('progress')) {
                     //获取进度
-                    $finalTable = Sentence::where('book_id', $request->get('book'))
+                    $finalTable = Sentence::where('book_id', $request->input('book'))
                         ->whereBetween('paragraph', $chapter)
                         ->where('channel_uid', $value->uid)
                         ->where('strlen', '>', 0)
@@ -312,7 +312,7 @@ class ChannelController extends Controller
             return $this->error(__('auth.failed'));
         }
         //判断当前用户是否有指定的studio的权限
-        $studioId = StudioApi::getIdByName($request->get('studio'));
+        $studioId = StudioApi::getIdByName($request->input('studio'));
         if ($user['user_uid'] !== $studioId) {
             return $this->error(__('auth.failed'));
         }
@@ -338,7 +338,7 @@ class ChannelController extends Controller
     {
         $indexCol = ['uid', 'name', 'summary', 'type', 'owner_uid', 'lang', 'status', 'updated_at', 'created_at'];
 
-        $sent = $request->get('sentence');
+        $sent = $request->input('sentence');
         $query = [];
         $queryWithChannel = [];
         $sentContainer = [];
@@ -389,7 +389,7 @@ class ChannelController extends Controller
         $channelId = [];
 
         //获取全网公开的有译文的channel
-        if ($request->get('owner') === 'all' || $request->get('owner') === 'public') {
+        if ($request->input('owner') === 'all' || $request->input('owner') === 'public') {
             if (count($query) > 0) {
                 $publicChannelsWithContent = Sentence::whereIns(['book_id', 'paragraph', 'word_start', 'word_end'], $query)
                     ->where('strlen', '>', 0)
@@ -414,7 +414,7 @@ class ChannelController extends Controller
         $user = AuthApi::current($request);
         if ($user !== false) {
             //我自己的
-            if ($request->get('owner') === 'all' || $request->get('owner') === 'my') {
+            if ($request->input('owner') === 'all' || $request->input('owner') === 'my') {
                 $my = Channel::select($indexCol)->where('owner_uid', $user['user_uid'])->get();
                 foreach ($my as $key => $value) {
                     $channelId[] = $value->uid;
@@ -427,7 +427,7 @@ class ChannelController extends Controller
             }
 
             //获取共享channel
-            if ($request->get('owner') === 'all' || $request->get('owner') === 'collaborator') {
+            if ($request->input('owner') === 'all' || $request->input('owner') === 'collaborator') {
                 $allSharedChannels = ShareApi::getResList($user['user_uid'], 2);
                 foreach ($allSharedChannels as $key => $value) {
                     # code...
@@ -542,13 +542,13 @@ class ChannelController extends Controller
             return $this->error(__('auth.failed'), 401, 401);
         }
         //判断当前用户是否有指定的studio的权限
-        $studioId = StudioApi::getIdByName($request->get('studio'));
+        $studioId = StudioApi::getIdByName($request->input('studio'));
         if (!StudioApi::userCanManage($user['user_uid'], $studioId)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
         $studio = StudioApi::getById($studioId);
         //查询是否重复
-        if (Channel::where('name', $request->get('name'))
+        if (Channel::where('name', $request->input('name'))
             ->where('owner_uid', $studioId)
             ->exists()
         ) {
@@ -557,10 +557,10 @@ class ChannelController extends Controller
 
         $channel = new Channel;
         $channel->id = app('snowflake')->id();
-        $channel->name = $request->get('name');
+        $channel->name = $request->input('name');
         $channel->owner_uid = $studioId;
-        $channel->type = $request->get('type');
-        $channel->lang = $request->get('lang');
+        $channel->type = $request->input('type');
+        $channel->lang = $request->input('lang');
         $channel->editor_id = $user['user_id'];
         if (isset($studio['roles'])) {
             if (in_array('basic', $studio['roles'])) {
@@ -630,16 +630,16 @@ class ChannelController extends Controller
         }
         if ($channel->owner_uid !== $user["user_uid"]) {
             //判断是否为协作
-            $power = ShareApi::getResPower($user["user_uid"], $request->get('id'));
+            $power = ShareApi::getResPower($user["user_uid"], $request->input('id'));
             if ($power < 30) {
                 return $this->error(__('auth.failed'), 403, 403);
             }
         }
-        $channel->name = $request->get('name');
-        $channel->type = $request->get('type');
-        $channel->summary = $request->get('summary');
-        $channel->lang = $request->get('lang');
-        $channel->status = $request->get('status');
+        $channel->name = $request->input('name');
+        $channel->type = $request->input('type');
+        $channel->summary = $request->input('summary');
+        $channel->lang = $request->input('lang');
+        $channel->status = $request->input('status');
         $channel->save();
         return $this->ok($channel);
     }
@@ -662,28 +662,28 @@ class ChannelController extends Controller
         }
         if ($channel->owner_uid !== $user["user_uid"]) {
             //判断是否为协作
-            $power = ShareApi::getResPower($user["user_uid"], $request->get('id'));
+            $power = ShareApi::getResPower($user["user_uid"], $request->input('id'));
             if ($power < 30) {
                 return $this->error(__('auth.failed'), [], 403);
             }
         }
         if ($request->has('name')) {
-            $channel->name = $request->get('name');
+            $channel->name = $request->input('name');
         }
         if ($request->has('type')) {
-            $channel->type = $request->get('type');
+            $channel->type = $request->input('type');
         }
         if ($request->has('summary')) {
-            $channel->summary = $request->get('summary');
+            $channel->summary = $request->input('summary');
         }
         if ($request->has('lang')) {
-            $channel->lang = $request->get('lang');
+            $channel->lang = $request->input('lang');
         }
         if ($request->has('status')) {
-            $channel->status = $request->get('status');
+            $channel->status = $request->input('status');
         }
         if ($request->has('config')) {
-            $channel->status = $request->get('config');
+            $channel->status = $request->input('config');
         }
         $channel->save();
         return $this->ok($channel);

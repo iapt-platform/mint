@@ -16,31 +16,32 @@ class UserController extends Controller
     public function index(Request $request)
     {
         //
-        switch ($request->get("view")) {
+        switch ($request->input("view")) {
             case 'key':
-                $table = UserInfo::where('username','like','%'.$request->get("key").'%')
-                                ->orWhere('nickname','like','%'.$request->get("key").'%');
+                $table = UserInfo::where('username', 'like', '%' . $request->input("key") . '%')
+                    ->orWhere('nickname', 'like', '%' . $request->input("key") . '%');
 
                 break;
 
             case 'all':
-                $table = UserInfo::where('id','>',0);
+                $table = UserInfo::where('id', '>', 0);
                 break;
         }
-        if($request->has("search")){
-            $table = $table->where('nickname', 'like', "%".$request->get("search")."%");
+        if ($request->has("search")) {
+            $table = $table->where('nickname', 'like', "%" . $request->input("search") . "%");
         }
-        if($request->has("role")){
-            $table = $table->whereJsonContains('role',$request->get('role'));
+        if ($request->has("role")) {
+            $table = $table->whereJsonContains('role', $request->input('role'));
         }
         $count = $table->count();
-        $table = $table->orderBy($request->get('order','username'),
-                                 $request->get('dir','desc'));
-        $table = $table->skip($request->get("offset",0))
-                       ->take($request->get('limit',20));
+        $table = $table->orderBy(
+            $request->input('order', 'username'),
+            $request->input('dir', 'desc')
+        );
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 20));
         $result = $table->get();
-        return $this->ok(['rows'=>UserResource::collection($result),'count'=>$count]);
-
+        return $this->ok(['rows' => UserResource::collection($result), 'count' => $count]);
     }
 
     /**
@@ -63,7 +64,7 @@ class UserController extends Controller
     public function show($id)
     {
         //
-        $user = UserInfo::where('userid',$id)->first();
+        $user = UserInfo::where('userid', $id)->first();
         return $this->ok(new UserResource($user));
     }
 
@@ -77,13 +78,13 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $user = UserInfo::where('userid',$id)->first();
-        if($request->has('roles')){
-            $user->role = json_encode($request->get('roles'));
-        }else{
-            $user->nickname = $request->get('nickName');
-            $user->avatar = $request->get('avatar');
-            $user->email = $request->get('email');
+        $user = UserInfo::where('userid', $id)->first();
+        if ($request->has('roles')) {
+            $user->role = json_encode($request->input('roles'));
+        } else {
+            $user->nickname = $request->input('nickName');
+            $user->avatar = $request->input('avatar');
+            $user->email = $request->input('email');
         }
         $user->save();
         return $this->ok(new UserResource($user));

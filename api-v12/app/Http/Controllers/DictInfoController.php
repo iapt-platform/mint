@@ -16,9 +16,9 @@ class DictInfoController extends Controller
     public function index(Request $request)
     {
         //
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'name':
-                $table = DictInfo::where('name',$request->get('name'));
+                $table = DictInfo::where('name', $request->input('name'));
                 break;
 
             default:
@@ -26,18 +26,20 @@ class DictInfoController extends Controller
                 break;
         }
 
-        $table = $table->orderBy($request->get('order','updated_at'),
-                                $request->get('dir','desc'));
+        $table = $table->orderBy(
+            $request->input('order', 'updated_at'),
+            $request->input('dir', 'desc')
+        );
 
-        $table = $table->skip($request->get('offset',0))
-                       ->take($request->get('limit',100));
+        $table = $table->skip($request->input('offset', 0))
+            ->take($request->input('limit', 100));
 
         $result = $table->get();
         $count = count($result);
         return $this->ok([
-                            "rows"=>DictInfoResource::collection($result),
-                            "count"=>$count
-                        ]);
+            "rows" => DictInfoResource::collection($result),
+            "count" => $count
+        ]);
     }
 
     /**

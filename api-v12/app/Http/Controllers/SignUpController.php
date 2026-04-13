@@ -31,31 +31,31 @@ class SignUpController extends Controller
     public function store(Request $request)
     {
         //先查询invite核对uuid
-        if(!Invite::where('id',$request->get('token'))
-                  ->where('email',$request->get('email'))->exists()){
-            $this->error('error token','',200);
+        if (!Invite::where('id', $request->input('token'))
+            ->where('email', $request->input('email'))->exists()) {
+            $this->error('error token', '', 200);
         }
-        if(UserInfo::where('username',$request->get('name'))->exists()){
-            $this->error('avoid user name','',200);
+        if (UserInfo::where('username', $request->input('name'))->exists()) {
+            $this->error('avoid user name', '', 200);
         }
 
         try {
-            DB::transaction(function() use($request){
+            DB::transaction(function () use ($request) {
                 $user = new UserInfo;
                 $user->userid = Str::Uuid();
-                $user->username = $request->get('username');
-                $user->nickname = $request->get('nickname');
-                $user->email = $request->get('email');
-                $user->password = md5($request->get('password'));
+                $user->username = $request->input('username');
+                $user->nickname = $request->input('nickname');
+                $user->email = $request->input('email');
+                $user->password = md5($request->input('password'));
                 $user->role = json_encode(['basic']);
-                $user->create_time = time()*1000;
-                $user->modify_time = time()*1000;
+                $user->create_time = time() * 1000;
+                $user->modify_time = time() * 1000;
                 $user->save();
 
                 //标记invite
-                Invite::where('id',$request->get('token'))
-                        ->where('email',$request->get('email'))
-                        ->update(['status'=>'sign-up']);
+                Invite::where('id', $request->input('token'))
+                    ->where('email', $request->input('email'))
+                    ->update(['status' => 'sign-up']);
                 //建立channel
 
                 $channel_draft = new Channel;
@@ -63,16 +63,16 @@ class SignUpController extends Controller
                 $channel_draft->name = 'draft';
                 $channel_draft->owner_uid = $user->userid;
                 $channel_draft->type = "translation";
-                $channel_draft->lang = $request->get('lang');
+                $channel_draft->lang = $request->input('lang');
                 $channel_draft->status = 5;
                 $channel_draft->editor_id = $user->id;
-                $channel_draft->create_time = time()*1000;
-                $channel_draft->modify_time = time()*1000;
+                $channel_draft->create_time = time() * 1000;
+                $channel_draft->modify_time = time() * 1000;
                 $channel_draft->save();
             });
-        }catch(\Exception $e) {
-            Log::error('user create fail',['data'=>$e]);
-            return $this->error('user create fail',500,500);
+        } catch (\Exception $e) {
+            Log::error('user create fail', ['data' => $e]);
+            return $this->error('user create fail', 500, 500);
         }
         return $this->ok('ok');
     }
@@ -83,16 +83,16 @@ class SignUpController extends Controller
      * @param  string $username
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,string $username)
+    public function show(Request $request, string $username)
     {
         //
-        $email = UserInfo::where('email',$request->get('email'))->exists();
-        $user = UserInfo::where('username',$username)->exists();
-        if($email && $user){
+        $email = UserInfo::where('email', $request->input('email'))->exists();
+        $user = UserInfo::where('username', $username)->exists();
+        if ($email && $user) {
             //send email
             return $this->ok('ok');
-        }else{
-            return $this->error(['email'=>$email,'username'=>$user],[200],200);
+        } else {
+            return $this->error(['email' => $email, 'username' => $user], [200], 200);
         }
     }
 

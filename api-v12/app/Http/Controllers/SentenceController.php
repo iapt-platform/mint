@@ -53,12 +53,12 @@ class SentenceController extends Controller
             'updated_at'
         ];
 
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'public':
                 //获取全部公开的译文
                 //首先获取某个类型的 channel 列表
                 $channels = [];
-                $channel_type = $request->get('channel_type', 'translation');
+                $channel_type = $request->input('channel_type', 'translation');
                 if ($channel_type === "original") {
                     $pali_channel = ChannelApi::getSysChannel("_System_Pali_VRI_");
                     if ($pali_channel !== false) {
@@ -75,13 +75,13 @@ class SentenceController extends Controller
                 }
                 $table = Sentence::select($indexCol)
                     ->whereIn('channel_uid', $channels)
-                    ->where('updated_at', '>', $request->get('updated_after', '1970-1-1'));
+                    ->where('updated_at', '>', $request->input('updated_after', '1970-1-1'));
                 break;
             case 'fulltext':
                 if (isset($_COOKIE['user_uid'])) {
                     $userUid = $_COOKIE['user_uid'];
                 }
-                $key = $request->get('key');
+                $key = $request->input('key');
                 if (empty($key)) {
                     return $this->error("没有关键词");
                 }
@@ -92,7 +92,7 @@ class SentenceController extends Controller
                 break;
             case 'channel':
                 //句子编号列表在某个channel下的全部内容
-                $sent = explode(',', $request->get('sentence'));
+                $sent = explode(',', $request->input('sentence'));
                 $query = [];
                 foreach ($sent as $value) {
                     # code...
@@ -100,7 +100,7 @@ class SentenceController extends Controller
                     $query[] = $ids;
                 }
                 $table = Sentence::select($indexCol)
-                    ->where('channel_uid', $request->get('channel'))
+                    ->where('channel_uid', $request->input('channel'))
                     ->whereIns(['book_id', 'paragraph', 'word_start', 'word_end'], $query);
                 break;
             case 'sent-can-read':
@@ -109,7 +109,7 @@ class SentenceController extends Controller
                  */
                 //获取用户有阅读权限的所有channel
                 //全网公开
-                $type = $request->get('type', 'translation');
+                $type = $request->input('type', 'translation');
                 $channelTable = Channel::where("type", $type)->select(['uid', 'name']);
                 $channelPub = $channelTable->where('status', 30)->get();
 
@@ -152,7 +152,7 @@ class SentenceController extends Controller
                     ];
                 }
                 $channels = [];
-                $excludeChannels = explode(',', $request->get('excludes'));
+                $excludeChannels = explode(',', $request->input('excludes'));
 
                 foreach ($channelCanRead as $key => $value) {
                     # code...
@@ -160,7 +160,7 @@ class SentenceController extends Controller
                         $channels[] = $key;
                     }
                 }
-                $sent = explode('-', $request->get('sentence'));
+                $sent = explode('-', $request->input('sentence'));
                 $table = Sentence::select($indexCol)
                     ->whereIn('channel_uid', $channels)
                     ->where('ver', '>', 1)
@@ -170,17 +170,17 @@ class SentenceController extends Controller
                     ->where('word_end', $sent[3]);
                 break;
             case 'chapter':
-                $chapter =  PaliTextApi::getChapterStartEnd($request->get('book'), $request->get('para'));
+                $chapter =  PaliTextApi::getChapterStartEnd($request->input('book'), $request->input('para'));
                 $table = Sentence::where('ver', '>', 1)
-                    ->where('book_id', $request->get('book'))
+                    ->where('book_id', $request->input('book'))
                     ->whereBetween('paragraph', $chapter)
-                    ->whereIn('channel_uid', explode(',', $request->get('channels')));
+                    ->whereIn('channel_uid', explode(',', $request->input('channels')));
                 break;
             case 'paragraph':
                 $table = Sentence::where('ver', '>', 1)
-                    ->where('book_id', $request->get('book'))
-                    ->whereIn('paragraph', explode(',', $request->get('para')))
-                    ->whereIn('channel_uid', explode(',', $request->get('channels')))
+                    ->where('book_id', $request->input('book'))
+                    ->whereIn('paragraph', explode(',', $request->input('para')))
+                    ->whereIn('channel_uid', explode(',', $request->input('channels')))
                     ->orderBy('book_id')->orderBy('paragraph')->orderBy('word_start');
                 break;
             case 'my-edit':
@@ -195,33 +195,33 @@ class SentenceController extends Controller
                 # code...
                 break;
         }
-        if (!empty($request->get("key"))) {
-            $table = $table->where('content', 'like', '%' . $request->get("key") . '%');
+        if (!empty($request->input("key"))) {
+            $table = $table->where('content', 'like', '%' . $request->input("key") . '%');
         }
 
         $count = $table->count();
-        if ($request->get('strlen', false)) {
+        if ($request->input('strlen', false)) {
             $totalStrLen = $table->sum('strlen');
         }
-        if ($request->get('view') !== 'paragraph') {
+        if ($request->input('view') !== 'paragraph') {
             $table = $table->orderBy(
-                $request->get('order', 'updated_at'),
-                $request->get('dir', 'desc')
+                $request->input('order', 'updated_at'),
+                $request->input('dir', 'desc')
             );
         }
 
-        $table = $table->skip($request->get("offset", 0))
-            ->take($request->get('limit', 1000));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 1000));
         $result = $table->get();
 
         if ($result) {
             $output = ["count" => $count];
             if (
-                $request->get('view') === 'sent-can-read' ||
-                $request->get('view') === 'channel' ||
-                $request->get('view') === 'chapter' ||
-                $request->get('view') === 'paragraph' ||
-                $request->get('view') === 'my-edit'
+                $request->input('view') === 'sent-can-read' ||
+                $request->input('view') === 'channel' ||
+                $request->input('view') === 'chapter' ||
+                $request->input('view') === 'paragraph' ||
+                $request->input('view') === 'my-edit'
             ) {
                 $output["rows"] = SentResource::collection($result);
             } else {
@@ -240,7 +240,7 @@ class SentenceController extends Controller
      */
     public function sent_in_channel(Request $request)
     {
-        $sent = $request->get('sentences');
+        $sent = $request->input('sentences');
         $query = [];
         foreach ($sent as $value) {
             # code...
@@ -250,7 +250,7 @@ class SentenceController extends Controller
             }
         }
         $table = Sentence::select(['id', 'book_id', 'paragraph', 'word_start', 'word_end', 'content', 'channel_uid', 'updated_at'])
-            ->where('channel_uid', $request->get('channel'))
+            ->where('channel_uid', $request->input('channel'))
             ->whereIns(['book_id', 'paragraph', 'word_start', 'word_end'], $query);
         $result = $table->get();
         if ($result) {
@@ -307,18 +307,18 @@ class SentenceController extends Controller
         if ($request->has('channel')) {
             if ($this->UserCanEdit(
                 $user["user_uid"],
-                $request->get('channel'),
-                $request->get('book', 0),
-                $request->get('access_token', null)
+                $request->input('channel'),
+                $request->input('book', 0),
+                $request->input('access_token', null)
             )) {
-                $destChannel = Channel::where('uid', $request->get('channel'))->first();;
+                $destChannel = Channel::where('uid', $request->input('channel'))->first();;
             } else {
                 return $this->error(__('auth.failed'), 403, 403);
             }
         }
         $sentFirst = null;
         $changedSent = [];
-        foreach ($request->get('sentences') as $key => $sent) {
+        foreach ($request->input('sentences') as $key => $sent) {
             # 权限
             if (!$request->has('channel')) {
 
@@ -398,7 +398,7 @@ class SentenceController extends Controller
 
             //保存历史记录
             if ($request->has('copy')) {
-                $fork_from = $request->get('fork_from', null);
+                $fork_from = $request->input('fork_from', null);
                 $this->saveHistory(
                     $row->uid,
                     $sent["editor_uid"],
@@ -505,19 +505,19 @@ class SentenceController extends Controller
             "uid" => Str::orderedUuid(),
             "create_time" => time() * 1000,
         ]);
-        $sent->content = $request->get('content');
+        $sent->content = $request->input('content');
         if ($request->has('contentType')) {
-            $sent->content_type = $request->get('contentType');
+            $sent->content_type = $request->input('contentType');
         }
         $sent->language = $channel->lang;
         $sent->status = $channel->status;
-        $sent->strlen = mb_strlen($request->get('content'), "UTF-8");
+        $sent->strlen = mb_strlen($request->input('content'), "UTF-8");
         $sent->modify_time = time() * 1000;
         if ($request->has('prEditor')) {
-            $realEditor = $request->get('prEditor');
+            $realEditor = $request->input('prEditor');
             $sent->acceptor_uid = $user["user_uid"];
-            $sent->pr_edit_at = $request->get('prEditAt');
-            $sent->pr_id = $request->get('prId');
+            $sent->pr_edit_at = $request->input('prEditAt');
+            $sent->pr_id = $request->input('prId');
         } else {
             $realEditor = $user["user_uid"];
             $sent->acceptor_uid = null;
@@ -542,13 +542,13 @@ class SentenceController extends Controller
             $this->saveHistory(
                 $sent->uid,
                 $realEditor,
-                $request->get('content'),
+                $request->input('content'),
                 $user["user_uid"],
                 null,
-                $request->get('prUuid'),
+                $request->input('prUuid'),
             );
         } else {
-            $this->saveHistory($sent->uid, $realEditor, $request->get('content'));
+            $this->saveHistory($sent->uid, $realEditor, $request->input('content'));
         }
 
         Mq::publish('progress', [

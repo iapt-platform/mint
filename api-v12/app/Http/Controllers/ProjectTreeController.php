@@ -35,12 +35,12 @@ class ProjectTreeController extends Controller
             Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);
         }
-        $studioId = StudioApi::getIdByName($request->get('studio_name'));
+        $studioId = StudioApi::getIdByName($request->input('studio_name'));
         if (!ProjectController::canEdit($user['user_uid'], $studioId)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
         $newData = [];
-        foreach ($request->get('data') as $key => $value) {
+        foreach ($request->input('data') as $key => $value) {
             $data = [
                 'uid' => Str::uuid(),
                 'old_id' => $value['id'],
@@ -80,14 +80,14 @@ class ProjectTreeController extends Controller
                 } else {
                     $newData[$key]['parent_id'] = null;
                 }
-            } else if (!empty($request->get('parent_id'))) {
-                $pPath = Project::where('uid', $request->get('parent_id'))->value('path');
+            } else if (!empty($request->input('parent_id'))) {
+                $pPath = Project::where('uid', $request->input('parent_id'))->value('path');
                 $parentPath = json_decode($pPath);
                 if (!is_array($parentPath)) {
                     $parentPath = [];
                 }
-                $newData[$key]['path'] = json_encode([...$parentPath, $request->get('parent_id')], JSON_UNESCAPED_UNICODE);
-                $newData[$key]['parent_id'] = $request->get('parent_id');
+                $newData[$key]['path'] = json_encode([...$parentPath, $request->input('parent_id')], JSON_UNESCAPED_UNICODE);
+                $newData[$key]['parent_id'] = $request->input('parent_id');
             }
         }
         $output = [];

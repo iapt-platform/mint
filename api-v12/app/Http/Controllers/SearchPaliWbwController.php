@@ -21,78 +21,79 @@ class SearchPaliWbwController extends Controller
         //获取书的范围
         $bookId = [];
         $search = new SearchController;
-        if($request->has('book')){
-            foreach (explode(',',$request->get('book')) as $key => $id) {
+        if ($request->has('book')) {
+            foreach (explode(',', $request->input('book')) as $key => $id) {
                 $bookId[] = (int)$id;
             }
-        }else if($request->has('tags')){
+        } else if ($request->has('tags')) {
             //查询搜索范围
             //查询搜索范围
-            $tagItems = explode(';',$request->get('tags'));
+            $tagItems = explode(';', $request->input('tags'));
 
             foreach ($tagItems as $tagItem) {
-                $bookId = array_merge($bookId,$search->getBookIdByTags(explode(',',$tagItem)));
+                $bookId = array_merge($bookId, $search->getBookIdByTags(explode(',', $tagItem)));
             }
         }
 
-        $keyWords = explode(',',$request->get('key'));
-        $table = WbwTemplate::whereIn('real',$keyWords)
-                            ->groupBy(['book','paragraph'])
-                            ->selectRaw('book,paragraph,sum(weight) as rank');
+        $keyWords = explode(',', $request->input('key'));
+        $table = WbwTemplate::whereIn('real', $keyWords)
+            ->groupBy(['book', 'paragraph'])
+            ->selectRaw('book,paragraph,sum(weight) as rank');
         $whereBold = '';
-        if($request->get('bold')==='on'){
-            $table = $table->where('style','bld');
+        if ($request->input('bold') === 'on') {
+            $table = $table->where('style', 'bld');
             $whereBold = " and style='bld'";
-        }else if($request->get('bold')==='off'){
-            $table = $table->where('style','<>','bld');
+        } else if ($request->input('bold') === 'off') {
+            $table = $table->where('style', '<>', 'bld');
             $whereBold = " and style <> 'bld'";
         }
-        $placeholderWord = implode(",",array_fill(0, count($keyWords), '?')) ;
+        $placeholderWord = implode(",", array_fill(0, count($keyWords), '?'));
         $whereWord = "real in ({$placeholderWord})";
         $whereBookId = '';
-        if(count($bookId)>0){
-            $table =  $table->whereIn('pcd_book_id',$bookId);
-            $placeholderBookId = implode(",",array_fill(0, count($bookId), '?')) ;
+        if (count($bookId) > 0) {
+            $table =  $table->whereIn('pcd_book_id', $bookId);
+            $placeholderBookId = implode(",", array_fill(0, count($bookId), '?'));
             $whereBookId = " and pcd_book_id in ({$placeholderBookId}) ";
         }
         $queryCount = "SELECT count(*) FROM ( SELECT book,paragraph FROM wbw_templates WHERE $whereWord $whereBookId $whereBold  GROUP BY book,paragraph) T;";
-        $count = DB::select($queryCount,array_merge($keyWords,$bookId));
+        $count = DB::select($queryCount, array_merge($keyWords, $bookId));
 
-        $table =  $table->orderBy('rank','desc');
-        $table =  $table->skip($request->get("offset",0))
-                        ->take($request->get('limit',10));
+        $table =  $table->orderBy('rank', 'desc');
+        $table =  $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 10));
 
         $result = $table->get();
         return $this->ok([
-            "rows"=>SearchPaliWbwResource::collection($result),
-            "count"=>$count[0]->count,
-            ]);
+            "rows" => SearchPaliWbwResource::collection($result),
+            "count" => $count[0]->count,
+        ]);
     }
 
-    public function book_list(Request $request){
+    public function book_list(Request $request)
+    {
         //获取书的范围
         $bookId = [];
         $search = new SearchController;
-        if($request->has('tags')){
+        if ($request->has('tags')) {
             //查询搜索范围
             //查询搜索范围
-            $tagItems = explode(';',$request->get('tags'));
+            $tagItems = explode(';', $request->input('tags'));
 
             foreach ($tagItems as $tagItem) {
-                $bookId = array_merge($bookId,$search->getBookIdByTags(explode(',',$tagItem)));
+                $bookId = array_merge($bookId, $search->getBookIdByTags(explode(',', $tagItem)));
             }
         }
-        $keyWords = explode(',',$request->get('key'));
-        $table = WbwTemplate::whereIn('real',$keyWords);
+        $keyWords = explode(',', $request->input('key'));
+        $table = WbwTemplate::whereIn('real', $keyWords);
 
-        if(count($bookId)>0){
-            $table = $table->whereIn('pcd_book_id',$bookId);
+        if (count($bookId) > 0) {
+            $table = $table->whereIn('pcd_book_id', $bookId);
         }
         $table = $table->groupBy('pcd_book_id')
-                       ->selectRaw('pcd_book_id,count(*) as co')
-                       ->orderBy('co','desc');
+            ->selectRaw('pcd_book_id,count(*) as co')
+            ->orderBy('co', 'desc');
         $result = $table->get();
-        return $this->ok(["rows"=>SearchBookResource::collection($result),"count"=>count($result)]);
+        return $this->ok(["rows" => SearchBookResource::collection($result), "count" => count($result)]);
     }
     /**
      * Store a newly created resource in storage.

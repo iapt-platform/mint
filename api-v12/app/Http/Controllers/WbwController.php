@@ -44,7 +44,7 @@ class WbwController extends Controller
             //未登录用户
             return $this->error(__('auth.failed'), [], 401);
         }
-        $channel = Channel::where('uid', $request->get('channel_id'))->first();
+        $channel = Channel::where('uid', $request->input('channel_id'))->first();
         if (!$channel) {
             return $this->error(__('auth.failed'));
         }
@@ -56,9 +56,9 @@ class WbwController extends Controller
             }
         }
         //查看WbwBlock是否已经建立
-        $wbwBlockId = WbwBlock::where('book_id', $request->get('book'))
-            ->where('paragraph', $request->get('para'))
-            ->where('channel_uid', $request->get('channel_id'))
+        $wbwBlockId = WbwBlock::where('book_id', $request->input('book'))
+            ->where('paragraph', $request->input('para'))
+            ->where('channel_uid', $request->input('channel_id'))
             ->value('uid');
         if (!Str::isUuid($wbwBlockId)) {
             $wbwBlock = new WbwBlock();
@@ -67,9 +67,9 @@ class WbwController extends Controller
             $wbwBlock->uid = $wbwBlockId;
             $wbwBlock->creator_uid = $user["user_uid"];
             $wbwBlock->editor_id = $user["user_id"];
-            $wbwBlock->book_id = $request->get('book');
-            $wbwBlock->paragraph = $request->get('para');
-            $wbwBlock->channel_uid = $request->get('channel_id');
+            $wbwBlock->book_id = $request->input('book');
+            $wbwBlock->paragraph = $request->input('para');
+            $wbwBlock->channel_uid = $request->input('channel_id');
             $wbwBlock->lang = $channel->lang;
             $wbwBlock->status = $channel->status;
             $wbwBlock->create_time = time() * 1000;
@@ -77,12 +77,12 @@ class WbwController extends Controller
             $wbwBlock->save();
         }
         $wbw = Wbw::where('block_uid', $wbwBlockId)
-            ->where('wid', $request->get('sn'))
+            ->where('wid', $request->input('sn'))
             ->first();
-        $sent = PaliSentence::where('book', $request->get('book'))
-            ->where('paragraph', $request->get('para'))
-            ->where('word_begin', "<=", $request->get('sn'))
-            ->where('word_end', ">=", $request->get('sn'))
+        $sent = PaliSentence::where('book', $request->input('book'))
+            ->where('paragraph', $request->input('para'))
+            ->where('word_begin', "<=", $request->input('sn'))
+            ->where('word_end', ">=", $request->input('sn'))
             ->first();
         if (!$wbw) {
             //建立一个句子的逐词解析数据
@@ -117,8 +117,8 @@ class WbwController extends Controller
                 $newWbw->uid = Str::uuid();
                 $newWbw->creator_uid = $channel->owner_uid;
                 $newWbw->editor_id = $user["user_id"];
-                $newWbw->book_id = $request->get('book');
-                $newWbw->paragraph = $request->get('para');
+                $newWbw->book_id = $request->input('book');
+                $newWbw->paragraph = $request->input('para');
                 $newWbw->wid = $word->sn[0];
                 $newWbw->block_uid = $wbwBlockId;
                 $newWbw->data = $xml;
@@ -127,7 +127,7 @@ class WbwController extends Controller
                 $newWbw->create_time = time() * 1000;
                 $newWbw->modify_time = time() * 1000;
                 $newWbw->save();
-                if ($word->sn[0] === $request->get('sn')) {
+                if ($word->sn[0] === $request->input('sn')) {
                     $wbw = $newWbw;
                 }
             }
@@ -135,7 +135,7 @@ class WbwController extends Controller
 
         $count = 0;
         $wbwId = array();
-        foreach ($request->get('data') as $row) {
+        foreach ($request->input('data') as $row) {
             $wbw = Wbw::where('block_uid', $wbwBlockId)
                 ->where('wid', $row['sn'])
                 ->first();
@@ -156,11 +156,11 @@ class WbwController extends Controller
         //获取整个句子数据
         $corpus = new CorpusController;
         $wbwString = $corpus->getWbw(
-            $request->get('book'),
-            $request->get('para'),
+            $request->input('book'),
+            $request->input('para'),
             $sent->word_begin,
             $sent->word_end,
-            $request->get('channel_id')
+            $request->input('channel_id')
         );
         if ($wbwString) {
             $wbwSentence = json_decode($wbwString);

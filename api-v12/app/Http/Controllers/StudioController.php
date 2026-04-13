@@ -18,25 +18,25 @@ class StudioController extends Controller
     public function index(Request $request)
     {
         //
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'collaboration-channel':
                 //协作channel 拥有者列表
-                $studioId = StudioApi::getIdByName($request->get('studio_name'));
-                $resList = ShareApi::getResList($studioId,2);
-                $resId=[];
+                $studioId = StudioApi::getIdByName($request->input('studio_name'));
+                $resList = ShareApi::getResList($studioId, 2);
+                $resId = [];
                 foreach ($resList as $res) {
                     $resId[] = $res['res_id'];
                 }
                 $owners = Channel::whereIn('uid', $resId)
-                                ->where('owner_uid','<>', $studioId)
-                                ->select('owner_uid')
-                                ->groupBy('owner_uid')->get();
+                    ->where('owner_uid', '<>', $studioId)
+                    ->select('owner_uid')
+                    ->groupBy('owner_uid')->get();
                 $output = [];
                 foreach ($owners as $key => $owner) {
                     # code...
                     $output[] = StudioApi::getById($owner->owner_uid);
                 }
-                return $this->ok(['rows'=>$output,'count'=>count($output)]);
+                return $this->ok(['rows' => $output, 'count' => count($output)]);
                 break;
         }
     }

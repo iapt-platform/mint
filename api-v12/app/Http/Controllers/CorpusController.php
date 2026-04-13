@@ -78,7 +78,7 @@ class CorpusController extends Controller
     public function index(Request $request)
     {
         //
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'para':
                 return $this->showPara($request);
                 break;
@@ -171,7 +171,7 @@ class CorpusController extends Controller
         if ($user) {
             $this->userUuid = $user['user_uid'];
         }
-        $channels = \explode('_', $request->get('channels'));
+        $channels = \explode('_', $request->input('channels'));
 
         $this->result['uid'] = "";
         $this->result['title'] = "";
@@ -179,7 +179,7 @@ class CorpusController extends Controller
         $this->result['summary'] = "";
         $this->result['lang'] = "";
         $this->result['status'] = 30;
-        $this->result['content'] = $this->getSentTpl($id, $channels, $request->get('mode', 'edit'));
+        $this->result['content'] = $this->getSentTpl($id, $channels, $request->input('mode', 'edit'));
         return $this->ok($this->result);
     }
     /**
@@ -257,7 +257,7 @@ class CorpusController extends Controller
     public function showPara(Request $request)
     {
         if ($request->has('debug')) {
-            $this->debug = explode(',', $request->get('debug'));
+            $this->debug = explode(',', $request->input('debug'));
         }
         $user = AuthApi::current($request);
         if ($user) {
@@ -265,7 +265,7 @@ class CorpusController extends Controller
         }
         //
         $channels = [];
-        if ($request->get('mode') === 'edit') {
+        if ($request->input('mode') === 'edit') {
             //翻译模式加载json格式原文
             $channels[] = ChannelApi::getSysChannel('_System_Wbw_VRI_');
         } else {
@@ -274,19 +274,19 @@ class CorpusController extends Controller
         }
 
         if ($request->has('channels')) {
-            if (strpos($request->get('channels'), ',') === FALSE) {
-                $getChannel = explode('_', $request->get('channels'));
+            if (strpos($request->input('channels'), ',') === FALSE) {
+                $getChannel = explode('_', $request->input('channels'));
             } else {
-                $getChannel = explode(',', $request->get('channels'));
+                $getChannel = explode(',', $request->input('channels'));
             }
             $channels = array_merge($channels, $getChannel);
         }
-        $para = explode(",", $request->get('par'));
+        $para = explode(",", $request->input('par'));
 
         //段落所在章节
-        $parent = PaliText::where('book', $request->get('book'))
+        $parent = PaliText::where('book', $request->input('book'))
             ->where('paragraph', $para[0])->first();
-        $chapter = PaliText::where('book', $request->get('book'))
+        $chapter = PaliText::where('book', $request->input('book'))
             ->where('paragraph', $parent->parent)->first();
         if ($chapter) {
             if (empty($chapter->toc)) {
@@ -340,7 +340,7 @@ class CorpusController extends Controller
          * 获取句子数据
          */
         $record = Sentence::select($this->selectCol)
-            ->where('book_id', $request->get('book'))
+            ->where('book_id', $request->input('book'))
             ->whereIn('paragraph', $para)
             ->whereIn('channel_uid', $channels)
             ->orderBy('paragraph')
@@ -349,7 +349,7 @@ class CorpusController extends Controller
         if (count($record) === 0) {
             $this->result['content'] = "<span>No Data</span>";
         } else {
-            $this->result['content'] = $this->makeContent($record, $request->get('mode', 'read'), $indexChannel, $indexedHeading, false, true);
+            $this->result['content'] = $this->makeContent($record, $request->input('mode', 'read'), $indexChannel, $indexedHeading, false, true);
         }
 
         return $this->ok($this->result);
@@ -364,7 +364,7 @@ class CorpusController extends Controller
     public function showChapter(Request $request, string $id)
     {
         if ($request->has('debug')) {
-            $this->debug = explode(',', $request->get('debug'));
+            $this->debug = explode(',', $request->input('debug'));
         }
         $user = AuthApi::current($request);
         if ($user) {
@@ -374,10 +374,10 @@ class CorpusController extends Controller
         $sentId = \explode('-', $id);
         $channels = [];
         if ($request->has('channels')) {
-            if (strpos($request->get('channels'), ',') === FALSE) {
-                $_channels = explode('_', $request->get('channels'));
+            if (strpos($request->input('channels'), ',') === FALSE) {
+                $_channels = explode('_', $request->input('channels'));
             } else {
-                $_channels = explode(',', $request->get('channels'));
+                $_channels = explode(',', $request->input('channels'));
             }
             foreach ($_channels as $key => $channel) {
                 if (Str::isUuid($channel)) {
@@ -386,7 +386,7 @@ class CorpusController extends Controller
             }
         }
 
-        $mode = $request->get('mode', 'read');
+        $mode = $request->input('mode', 'read');
         if ($mode === 'read') {
             //阅读模式加载html格式原文
             $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
@@ -502,8 +502,8 @@ class CorpusController extends Controller
             }
         }
 
-        $pFrom = $request->get('from', $paraFrom);
-        $pTo = $request->get('to', $paraTo);
+        $pFrom = $request->input('from', $paraFrom);
+        $pTo = $request->input('to', $paraTo);
         //根据句子的长度找到这次应该加载的段落
 
         $paliText = PaliText::select(['paragraph', 'lenght'])
@@ -540,8 +540,8 @@ class CorpusController extends Controller
             $this->result['from'] = $currTo + 1;
             $this->result['to'] = $pTo;
             $this->result['paraId'] = $id;
-            $this->result['channels'] = $request->get('channels');
-            $this->result['mode'] = $request->get('mode');
+            $this->result['channels'] = $request->input('channels');
+            $this->result['mode'] = $request->input('mode');
         }
 
         return $this->ok($this->result);

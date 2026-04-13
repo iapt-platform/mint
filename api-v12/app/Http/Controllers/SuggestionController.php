@@ -16,10 +16,10 @@ class SuggestionController extends Controller
     public function index()
     {
         //
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'chapter':
-                $chapter = PaliTextApi::getChapterStartEnd($request->get('book'),$request->get('para'));
-                if(!$chapter){
+                $chapter = PaliTextApi::getChapterStartEnd($request->input('book'), $request->input('para'));
+                if (!$chapter) {
                     return $this->error("no data");
                 }
 

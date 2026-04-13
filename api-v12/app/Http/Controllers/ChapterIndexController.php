@@ -16,29 +16,31 @@ class ChapterIndexController extends Controller
     public function index(Request $request)
     {
         //
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'public':
-                $channels = Channel::where('status',30)->select('uid');
-                $table = ProgressChapter::whereIn('channel_id',$channels);
-            break;
+                $channels = Channel::where('status', 30)->select('uid');
+                $table = ProgressChapter::whereIn('channel_id', $channels);
+                break;
         }
-        if($request->has("updated_at")){
-            $table = $table->where('updated_at','>', $request->get("updated_at"));
+        if ($request->has("updated_at")) {
+            $table = $table->where('updated_at', '>', $request->input("updated_at"));
         }
-        if($request->has("created_at")){
-            $table = $table->where('created_at','>', $request->get("created_at"));
+        if ($request->has("created_at")) {
+            $table = $table->where('created_at', '>', $request->input("created_at"));
         }
         //获取记录总条数
         $count = $table->count();
         //处理排序
-        $table = $table->orderBy($request->get("order",'created_at'),
-                                 $request->get("dir",'desc'));
+        $table = $table->orderBy(
+            $request->input("order", 'created_at'),
+            $request->input("dir", 'desc')
+        );
         //处理分页
-        $table = $table->skip($request->get("offset",0))
-                       ->take($request->get("limit",200));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input("limit", 200));
         //获取数据
         $result = $table->get();
-        return $this->ok(["rows"=>$result,"count"=>$count]);
+        return $this->ok(["rows" => $result, "count" => $count]);
     }
 
     /**

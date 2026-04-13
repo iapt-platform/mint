@@ -23,31 +23,32 @@ class TagController extends Controller
     {
         //
 
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'studio':
-                $studioId = StudioApi::getIdByName($request->get('name'));
-                $table = Tag::where('owner_id',$studioId);
+                $studioId = StudioApi::getIdByName($request->input('name'));
+                $table = Tag::where('owner_id', $studioId);
                 break;
         }
 
-        if($request->has("search")){
-            $table = $table->where('name', 'like', "%".$request->get("search")."%");
+        if ($request->has("search")) {
+            $table = $table->where('name', 'like', "%" . $request->input("search") . "%");
         }
 
         $count = $table->count();
 
-        $table = $table->orderBy($request->get('order','created_at'),$request->get('dir','desc'));
+        $table = $table->orderBy($request->input('order', 'created_at'), $request->input('dir', 'desc'));
 
-        $table = $table->skip($request->get("offset",0))
-                    ->take($request->get('limit',10));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 10));
 
         $result = $table->get();
 
         return $this->ok(
             [
-            "rows"=>TagResource::collection($result),
-            "count"=>$count,
-            ]);
+                "rows" => TagResource::collection($result),
+                "count" => $count,
+            ]
+        );
     }
 
     /**
@@ -60,24 +61,25 @@ class TagController extends Controller
     {
         //
         $user = AuthApi::current($request);
-        if(!$user){
-            return $this->error(__('auth.failed'),401,401);
+        if (!$user) {
+            return $this->error(__('auth.failed'), 401, 401);
         }
         //判断当前用户是否有指定的studio的权限
-        $studioId = StudioApi::getIdByName($request->get('studio'));
-        if($user['user_uid'] !== $studioId){
-            return $this->error(__('auth.failed'),403,403);
+        $studioId = StudioApi::getIdByName($request->input('studio'));
+        if ($user['user_uid'] !== $studioId) {
+            return $this->error(__('auth.failed'), 403, 403);
         }
         //查询是否重复
-        if(Tag::where('name',$request->get('name'))
-                  ->where('owner_id',$user['user_uid'])
-                  ->exists()){
-            return $this->error(__('validation.exists',['name']),200,200);
+        if (Tag::where('name', $request->input('name'))
+            ->where('owner_id', $user['user_uid'])
+            ->exists()
+        ) {
+            return $this->error(__('validation.exists', ['name']), 200, 200);
         }
         $tag = new Tag;
-        $tag->name = $request->get("name");
-        $tag->description = $request->get("description");
-        $tag->color = $request->get("color");
+        $tag->name = $request->input("name");
+        $tag->description = $request->input("description");
+        $tag->color = $request->input("color");
         $tag->owner_id = $studioId;
         $tag->save();
         return $this->ok(new TagResource($tag));
@@ -93,7 +95,6 @@ class TagController extends Controller
     {
         //
         return $this->ok(new TagResource($tag));
-
     }
 
     /**
@@ -107,25 +108,26 @@ class TagController extends Controller
     {
         //
         $user = AuthApi::current($request);
-        if(!$user){
-            return $this->error(__('auth.failed'),401,401);
+        if (!$user) {
+            return $this->error(__('auth.failed'), 401, 401);
         }
         //判断当前用户是否有指定的studio的权限
-        $studioId = StudioApi::getIdByName($request->get('studio'));
-        if($user['user_uid'] !== $studioId){
-            return $this->error(__('auth.failed'),403,403);
+        $studioId = StudioApi::getIdByName($request->input('studio'));
+        if ($user['user_uid'] !== $studioId) {
+            return $this->error(__('auth.failed'), 403, 403);
         }
         //查询是否重复
-        if(Tag::where('name',$request->get('name'))
-                  ->where('owner_id',$user['user_uid'])
-                  ->where('id','<>',$tag->id)
-                  ->exists()){
-            return $this->error(__('validation.exists',['name']),200,200);
+        if (Tag::where('name', $request->input('name'))
+            ->where('owner_id', $user['user_uid'])
+            ->where('id', '<>', $tag->id)
+            ->exists()
+        ) {
+            return $this->error(__('validation.exists', ['name']), 200, 200);
         }
 
-        $tag->name = $request->get("name");
-        $tag->description = $request->get("description");
-        $tag->color = $request->get("color");
+        $tag->name = $request->input("name");
+        $tag->description = $request->input("description");
+        $tag->color = $request->input("color");
         $tag->owner_id = $studioId;
         $tag->save();
         return $this->ok(new TagResource($tag));

@@ -20,8 +20,14 @@ class AnthologyController extends Controller
 
     // 作者色池：同上，根据 studio.id 首字节取余
     private array $authorColors = [
-        '#c8860a', '#2e7d32', '#1565c0', '#6a1b9a',
-        '#c62828', '#00695c', '#4e342e', '#37474f',
+        '#c8860a',
+        '#2e7d32',
+        '#1565c0',
+        '#6a1b9a',
+        '#c62828',
+        '#00695c',
+        '#4e342e',
+        '#37474f',
     ];
 
     public function __construct(private CollectionService $collectionService) {}
@@ -73,7 +79,7 @@ class AnthologyController extends Controller
             'cover_gradient' => $this->coverGradients[$colorIdx % count($this->coverGradients)],
             'author'         => $this->formatAuthor($item['studio'] ?? []),
             'chapters'       => $chapters,
-            'children_number'=> $item['childrenNumber'] ?? count($chapters),
+            'children_number' => $item['childrenNumber'] ?? count($chapters),
             'updated_at'     => isset($item['updated_at'])
                 ? \Carbon\Carbon::parse($item['updated_at'])->format('Y-m-d')
                 : '',
@@ -86,14 +92,14 @@ class AnthologyController extends Controller
     public function index(Request $request)
     {
         $perPage     = 10;
-        $currentPage = (int) $request->get('page', 1);
+        $currentPage = (int) $request->input('page', 1);
 
         $result = $this->collectionService->getPublicList($perPage, $currentPage);
 
         // $result['data'] 是 CollectionResource collection，转为数组逐条加工
         $items = collect($result['data'])
             ->values()
-            ->map(fn ($item, $i) => $this->formatForCard(
+            ->map(fn($item, $i) => $this->formatForCard(
                 is_array($item) ? $item : $item->toArray(request()),
                 $i
             ));
@@ -110,8 +116,8 @@ class AnthologyController extends Controller
 
         // 侧边栏作者列表：从当页数据聚合（如需完整列表可单独查询）
         $authors = $items
-            ->groupBy(fn ($i) => $i['author']['name'])
-            ->map(fn ($group, $name) => [
+            ->groupBy(fn($i) => $i['author']['name'])
+            ->map(fn($group, $name) => [
                 'name'     => $name,
                 'initials' => $group->first()['author']['initials'],
                 'color'    => $group->first()['author']['color'],
@@ -147,9 +153,9 @@ class AnthologyController extends Controller
 
         // 只保留 level=1 的顶级章节
         $articles = collect($raw['article_list'] ?? [])
-            ->filter(fn ($a) => ($a['level'] ?? 1) === 1)
+            ->filter(fn($a) => ($a['level'] ?? 1) === 1)
             ->values()
-            ->map(fn ($a, $i) => [
+            ->map(fn($a, $i) => [
                 'id'    => $a['article_id'],
                 'order' => $i + 1,
                 'title' => $a['title'],
@@ -184,19 +190,18 @@ class AnthologyController extends Controller
         // 相关文集：同作者其他文集
         $relatedResult = $this->collectionService->getPublicList(20, 1);
         $related = collect($relatedResult['data'])
-            ->map(fn ($item) => is_array($item) ? $item : $item->toArray(request()))
-            ->filter(fn ($item) =>
+            ->map(fn($item) => is_array($item) ? $item : $item->toArray(request()))
+            ->filter(
+                fn($item) =>
                 $item['uid'] !== $uid &&
-                ($item['studio']['id'] ?? '') === ($raw['studio']['id'] ?? '')
+                    ($item['studio']['id'] ?? '') === ($raw['studio']['id'] ?? '')
             )
             ->take(3)
-            ->map(fn ($item) => [
+            ->map(fn($item) => [
                 'id'             => $item['uid'],
                 'title'          => $item['title'],
                 'author_name'    => $item['studio']['nickName'] ?? $item['studio']['studioName'] ?? '',
-                'cover_gradient' => $this->coverGradients[
-                    $this->colorIndex($item['uid']) % count($this->coverGradients)
-                ],
+                'cover_gradient' => $this->coverGradients[$this->colorIndex($item['uid']) % count($this->coverGradients)],
             ])
             ->values();
 

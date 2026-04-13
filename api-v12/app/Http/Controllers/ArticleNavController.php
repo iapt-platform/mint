@@ -16,9 +16,9 @@ class ArticleNavController extends Controller
     public function index(Request $request)
     {
         //
-        switch ($request->get('type')) {
+        switch ($request->input('type')) {
             case 'chapter':
-                $para = explode('-', $request->get('id'));
+                $para = explode('-', $request->input('id'));
                 $prev = PaliText::where('book', $para[0])
                     ->where('paragraph', '<', $para[1])
                     ->where('level', '<', 8)
@@ -41,7 +41,7 @@ class ArticleNavController extends Controller
                 }
                 break;
             case 'para':
-                $para = explode('-', $request->get('id'));
+                $para = explode('-', $request->input('id'));
                 $prev = PaliText::where('book', $para[0])
                     ->where('paragraph', '<', $para[1])
                     ->orderBy('paragraph', 'desc')

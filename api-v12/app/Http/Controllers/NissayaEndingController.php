@@ -38,33 +38,33 @@ class NissayaEndingController extends Controller
         ]);
 
         if (($request->has('case'))) {
-            $table->whereIn('case', explode(",", $request->get('case')));
+            $table->whereIn('case', explode(",", $request->input('case')));
         }
 
         if (($request->has('lang'))) {
-            $table->whereIn('lang', explode(",", $request->get('lang')));
+            $table->whereIn('lang', explode(",", $request->input('lang')));
         }
 
         if (($request->has('relation'))) {
-            $table->where('relation', $request->get('relation'));
+            $table->where('relation', $request->input('relation'));
         }
         if (($request->has('case'))) {
-            $table->where('case', $request->get('case'));
+            $table->where('case', $request->input('case'));
         }
 
         if (($request->has('search'))) {
-            $table->where('ending', 'like', "%" . $request->get('search') . "%");
+            $table->where('ending', 'like', "%" . $request->input('search') . "%");
         }
 
         $count = $table->count();
 
         $table->orderBy(
-            $request->get('order', 'updated_at'),
-            $request->get('dir', 'desc')
+            $request->input('order', 'updated_at'),
+            $request->input('dir', 'desc')
         );
 
-        $table->skip($request->get("offset", 0))
-            ->take($request->get('limit', 1000));
+        $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 1000));
         $result = $table->get();
 
         return $this->ok(["rows" => NissayaEndingResource::collection($result), "count" => $count]);
@@ -73,7 +73,7 @@ class NissayaEndingController extends Controller
     public function vocabulary(Request $request)
     {
         $result = NissayaEnding::select(['ending'])
-            ->where('lang', $request->get('lang'))
+            ->where('lang', $request->input('lang'))
             ->groupBy('ending')
             ->get();
         return $this->ok(["rows" => $result, "count" => count($result)]);
@@ -100,10 +100,10 @@ class NissayaEndingController extends Controller
         $new->ending = $validated['ending'];
         $new->strlen = mb_strlen($validated['ending'], "UTF-8");
         $new->lang = $validated['lang'];
-        $new->relation = $request->get('relation');
-        $new->case = $request->get('case');
+        $new->relation = $request->input('relation');
+        $new->case = $request->input('case');
         if ($request->has('from')) {
-            $new->from = json_encode($request->get('from'), JSON_UNESCAPED_UNICODE);
+            $new->from = json_encode($request->input('from'), JSON_UNESCAPED_UNICODE);
         } else {
             $new->from = null;
         }
@@ -140,26 +140,26 @@ class NissayaEndingController extends Controller
         }
         //查询是否重复
         /*
-        $table = NissayaEnding::where('ending',$request->get('ending'))
-                 ->where('lang',$request->get('lang'))
-                 ->where('relation',$request->get('relation'));
-        $from = json_encode($request->get('from'),JSON_UNESCAPED_UNICODE);
+        $table = NissayaEnding::where('ending',$request->input('ending'))
+                 ->where('lang',$request->input('lang'))
+                 ->where('relation',$request->input('relation'));
+        $from = json_encode($request->input('from'),JSON_UNESCAPED_UNICODE);
         if(empty($from)){
             $table = $table->whereNull('from');
         }else{
-            $json = $request->get('from');
+            $json = $request->input('from');
             $table = $table->whereJsonContains('from',['case'=>$json['case']]);
         }
         if($table->exists()){
             return $this->error(__('validation.exists',['name']));
         }
 */
-        $nissayaEnding->ending = $request->get('ending');
-        $nissayaEnding->strlen = mb_strlen($request->get('ending'), "UTF-8");
-        $nissayaEnding->lang = $request->get('lang');
-        $nissayaEnding->relation = $request->get('relation');
-        if ($request->has('from') && !empty($request->get('from'))) {
-            $nissayaEnding->from = json_encode($request->get('from'), JSON_UNESCAPED_UNICODE);
+        $nissayaEnding->ending = $request->input('ending');
+        $nissayaEnding->strlen = mb_strlen($request->input('ending'), "UTF-8");
+        $nissayaEnding->lang = $request->input('lang');
+        $nissayaEnding->relation = $request->input('relation');
+        if ($request->has('from') && !empty($request->input('from'))) {
+            $nissayaEnding->from = json_encode($request->input('from'), JSON_UNESCAPED_UNICODE);
         } else {
             $nissayaEnding->from = null;
         }
@@ -222,7 +222,7 @@ class NissayaEndingController extends Controller
             return $this->error(__('auth.failed'));
         }
 
-        $filename = $request->get('filename');
+        $filename = $request->input('filename');
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $reader->setReadDataOnly(true);
         $spreadsheet = $reader->load($filename);

@@ -20,40 +20,40 @@ class ArticleProgressController extends Controller
     public function index(Request $request)
     {
         //
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'chapter':
-                $chapter = PaliTextApi::getChapterStartEnd($request->get('book'),$request->get('para'));
-                $channels = Sentence::where('book_id',$request->get('book'))
-                                    ->whereBetween('paragraph',$chapter)
-                                    ->where('strlen','>',0)
-                                    ->groupBy('channel_uid')
-                                    ->select('channel_uid')
-                                    ->get();
+                $chapter = PaliTextApi::getChapterStartEnd($request->input('book'), $request->input('para'));
+                $channels = Sentence::where('book_id', $request->input('book'))
+                    ->whereBetween('paragraph', $chapter)
+                    ->where('strlen', '>', 0)
+                    ->groupBy('channel_uid')
+                    ->select('channel_uid')
+                    ->get();
                 //获取单句长度
-                $sentLen = PaliSentence::where('book',$request->get('book'))
-                            ->whereBetween('paragraph',$chapter)
-                            ->orderBy('word_begin')
-                            ->select(['book','paragraph','word_begin','word_end','length'])
-                            ->get();
+                $sentLen = PaliSentence::where('book', $request->input('book'))
+                    ->whereBetween('paragraph', $chapter)
+                    ->orderBy('word_begin')
+                    ->select(['book', 'paragraph', 'word_begin', 'word_end', 'length'])
+                    ->get();
                 //获取每个channel的完成度
                 foreach ($channels as $key => $value) {
                     # code...
-                    $finished = Sentence::where('book_id',$request->get('book'))
-                    ->whereBetween('paragraph',$chapter)
-                    ->where('channel_uid',$value->channel_uid)
-                    ->where('strlen','>',0)
-                    ->select(['strlen','book_id','paragraph','word_start','word_end'])
-                    ->get();
-                    $final=[];
+                    $finished = Sentence::where('book_id', $request->input('book'))
+                        ->whereBetween('paragraph', $chapter)
+                        ->where('channel_uid', $value->channel_uid)
+                        ->where('strlen', '>', 0)
+                        ->select(['strlen', 'book_id', 'paragraph', 'word_start', 'word_end'])
+                        ->get();
+                    $final = [];
                     foreach ($sentLen as  $sent) {
                         # code...
-                        $first = Arr::first($finished, function ($value, $key) use($sent) {
-                            return ($value->book_id==$sent->book &&
-                                    $value->paragraph==$sent->paragraph &&
-                                    $value->word_start==$sent->word_begin &&
-                                    $value->word_end==$sent->word_end);
+                        $first = Arr::first($finished, function ($value, $key) use ($sent) {
+                            return ($value->book_id == $sent->book &&
+                                $value->paragraph == $sent->paragraph &&
+                                $value->word_start == $sent->word_begin &&
+                                $value->word_end == $sent->word_end);
                         });
-                        $final[] = [$sent->length,$first?true:false];
+                        $final[] = [$sent->length, $first ? true : false];
                     }
                     $value['final'] = $final;
                 }

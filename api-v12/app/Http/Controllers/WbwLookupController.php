@@ -57,10 +57,10 @@ class WbwLookupController extends Controller
 
         $this->initSysDict();
 
-        $words = \explode(',', $request->get("word"));
-        $bases = \explode(',', $request->get("base"));
+        $words = \explode(',', $request->input("word"));
+        $bases = \explode(',', $request->input("base"));
         # 查询深度
-        $deep = $request->get("deep", 2);
+        $deep = $request->input("deep", 2);
         $result = $this->lookup($words, $bases, $deep);
         $endAt = microtime(true) * 1000;
 
@@ -204,10 +204,10 @@ class WbwLookupController extends Controller
         // system regular
         $this->initSysDict();
 
-        $channel = Channel::find($request->get('channel_id'));
-        $orgData = $request->get('data');
+        $channel = Channel::find($request->input('channel_id'));
+        $orgData = $request->input('data');
         $lang = [];
-        foreach ($request->get('lang', []) as $value) {
+        foreach ($request->input('lang', []) as $value) {
             $lang[] = strtolower($value);
         }
         //句子中的单词
@@ -420,7 +420,7 @@ class WbwLookupController extends Controller
     {
         $startAt = microtime(true) * 1000;
 
-        $channel = Channel::find($request->get('channel_id'));
+        $channel = Channel::find($request->input('channel_id'));
 
         //查询句子中的单词
         $sent = \explode('-', $sentId);

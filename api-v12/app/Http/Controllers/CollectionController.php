@@ -20,12 +20,12 @@ class CollectionController extends Controller
     public function index(Request $request)
     {
         try {
-            $table = match ($request->get('view')) {
+            $table = match ($request->input('view')) {
                 'studio_list' => $this->service->buildStudioListQuery(),
                 'studio'      => $this->buildStudioIndex($request),
                 'public'      => $this->service->buildPublicQuery(
                     $request->has('studio')
-                        ? StudioApi::getIdByName($request->get('studio'))
+                        ? StudioApi::getIdByName($request->input('studio'))
                         : null
                 ),
                 default       => throw new \InvalidArgumentException('无法识别的view参数'),
@@ -37,21 +37,21 @@ class CollectionController extends Controller
         }
 
         if ($request->filled('search')) {
-            $table = $table->where('title', 'like', '%' . $request->get('search') . '%');
+            $table = $table->where('title', 'like', '%' . $request->input('search') . '%');
         }
 
         $count = $table->count();
 
         if ($request->has('order') && $request->has('dir')) {
-            $table = $table->orderBy($request->get('order'), $request->get('dir'));
+            $table = $table->orderBy($request->input('order'), $request->input('dir'));
         } else {
-            $orderCol = $request->get('view') === 'studio_list' ? 'count' : 'updated_at';
+            $orderCol = $request->input('view') === 'studio_list' ? 'count' : 'updated_at';
             $table = $table->orderBy($orderCol, 'desc');
         }
 
         $result = $table
-            ->skip($request->get('offset', 0))
-            ->take($request->get('limit', 1000))
+            ->skip($request->input('offset', 0))
+            ->take($request->input('limit', 1000))
             ->get();
 
         return $this->ok([
@@ -68,7 +68,7 @@ class CollectionController extends Controller
             throw new \Illuminate\Auth\AuthenticationException(__('auth.failed'));
         }
 
-        $studioId = StudioApi::getIdByName($request->get('name'));
+        $studioId = StudioApi::getIdByName($request->input('name'));
         if ($user['user_uid'] !== $studioId) {
             throw new \Illuminate\Auth\AuthenticationException(__('auth.failed'));
         }
@@ -76,7 +76,7 @@ class CollectionController extends Controller
         return $this->service->buildStudioQuery(
             $user['user_uid'],
             $studioId,
-            $request->get('view2', 'my')
+            $request->input('view2', 'my')
         );
     }
 
@@ -98,19 +98,19 @@ class CollectionController extends Controller
             return $this->error(__('auth.failed'), 401, 401);
         }
 
-        if ($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))) {
+        if ($user['user_uid'] !== StudioApi::getIdByName($request->input('studio'))) {
             return $this->error(__('auth.failed'), 403, 403);
         }
 
-        if (Collection::where('title', $request->get('title'))->where('owner', $user['user_uid'])->exists()) {
+        if (Collection::where('title', $request->input('title'))->where('owner', $user['user_uid'])->exists()) {
             return $this->error(__('validation.exists'), 200, 200);
         }
 
         $newOne = new Collection;
         $newOne->id           = app('snowflake')->id();
         $newOne->uid          = Str::uuid();
-        $newOne->title        = $request->get('title');
-        $newOne->lang         = $request->get('lang');
+        $newOne->title        = $request->input('title');
+        $newOne->lang         = $request->input('lang');
         $newOne->article_list = '[]';
         $newOne->owner        = $user['user_uid'];
         $newOne->owner_id     = $user['user_id'];
@@ -167,16 +167,16 @@ class CollectionController extends Controller
             return $this->error(__('auth.failed'), 403, 403);
         }
 
-        $collection->title           = $request->get('title');
-        $collection->subtitle        = $request->get('subtitle');
-        $collection->summary         = $request->get('summary');
-        $collection->lang            = $request->get('lang');
-        $collection->status          = $request->get('status');
-        $collection->default_channel = $request->get('default_channel');
+        $collection->title           = $request->input('title');
+        $collection->subtitle        = $request->input('subtitle');
+        $collection->summary         = $request->input('summary');
+        $collection->lang            = $request->input('lang');
+        $collection->status          = $request->input('status');
+        $collection->default_channel = $request->input('default_channel');
         $collection->modify_time     = time() * 1000;
 
         if ($request->has('aritcle_list')) {
-            $collection->article_list = json_encode($request->get('aritcle_list'));
+            $collection->article_list = json_encode($request->input('aritcle_list'));
         }
 
         $collection->save();

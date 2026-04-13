@@ -17,32 +17,32 @@ class UserOperationDailyController extends Controller
     public function index(Request $request)
     {
         //
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case "user-all":
-                $queryUserUuid = UserApi::getIdByName($request->get('studio_name'));
+                $queryUserUuid = UserApi::getIdByName($request->input('studio_name'));
                 $user = AuthApi::current($request);
-                if(!$user){
+                if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
                 //TODO 判断是否有查看权限
-                if($queryUserUuid !== $user["user_uid"]){
+                if ($queryUserUuid !== $user["user_uid"]) {
                     return $this->error(__('auth.failed'));
                 }
-                $result = UserOperationDaily::where('user_id',$user["user_id"])
-                                  ->select(['date_int','duration','hit'])
-                                  ->orderBy("date_int")
-                                  ->get();
+                $result = UserOperationDaily::where('user_id', $user["user_id"])
+                    ->select(['date_int', 'duration', 'hit'])
+                    ->orderBy("date_int")
+                    ->get();
                 break;
             case "user-year":
-                $queryUserId = UserApi::getIntIdByName($request->get('studio_name'));
+                $queryUserId = UserApi::getIntIdByName($request->input('studio_name'));
                 //TODO 判断是否有查看权限
-                $result = UserOperationDaily::where('user_id',$queryUserId)
-                                  ->select(['date_int','duration'])
-                                  ->orderBy("date_int")
-                                  ->get();
+                $result = UserOperationDaily::where('user_id', $queryUserId)
+                    ->select(['date_int', 'duration'])
+                    ->orderBy("date_int")
+                    ->get();
                 break;
         }
-        return $this->ok(["rows"=>$result,"count"=>count($result)]);
+        return $this->ok(["rows" => $result, "count" => count($result)]);
     }
 
     /**

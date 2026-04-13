@@ -24,13 +24,13 @@ class ShareController extends Controller
         $result = false;
         $role = "member";
         $indexCol = ['id', 'res_id', 'res_type', 'power', 'updated_at', 'created_at'];
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'res':
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
-                $table = Share::where('res_id', $request->get('id'));
-                $power = ShareApi::getResPower($user['user_uid'], $request->get('id'), $table->value('res_type'));
+                $table = Share::where('res_id', $request->input('id'));
+                $power = ShareApi::getResPower($user['user_uid'], $request->input('id'), $table->value('res_type'));
                 switch ($power) {
                     case 10:
                         $role = "member";
@@ -48,10 +48,10 @@ class ShareController extends Controller
                     return $this->error(__('auth.failed'));
                 }
                 //TODO 判断当前用户是否有指定的 group 的权限
-                if (GroupInfo::where('uid', $request->get('id'))->where('owner', $user['user_uid'])->exists()) {
+                if (GroupInfo::where('uid', $request->input('id'))->where('owner', $user['user_uid'])->exists()) {
                     $role = "owner";
                 }
-                $table = Share::where('cooperator_id', $request->get('id'));
+                $table = Share::where('cooperator_id', $request->input('id'));
                 break;
         }
         if (isset($_GET["search"])) {
@@ -65,8 +65,8 @@ class ShareController extends Controller
             $table = $table->orderBy('updated_at', 'desc');
         }
 
-        $table->skip($request->get('offset', 0))
-            ->take($request->get('limit', 1000));
+        $table->skip($request->input('offset', 0))
+            ->take($request->input('limit', 1000));
 
         $result = $table->get();
         //TODO 获取当前用户的身份
@@ -88,23 +88,23 @@ class ShareController extends Controller
     public function store(Request $request)
     {
         //
-        foreach ($request->get('user_id') as $key => $value) {
+        foreach ($request->input('user_id') as $key => $value) {
             if (!Str::isUuid($value)) {
                 continue;
             }
             $row = Share::where('cooperator_id', $value)
-                ->where('res_id', $request->get('res_id'))->first();
+                ->where('res_id', $request->input('res_id'))->first();
             if (!$row) {
                 $row = new Share();
                 $row->id = app('snowflake')->id();
                 $row->cooperator_id = $value;
-                $row->res_id = $request->get('res_id');
-                $row->res_type = $request->get('res_type');
+                $row->res_id = $request->input('res_id');
+                $row->res_type = $request->input('res_type');
                 $row->create_time = time() * 1000;
             }
             $c_type = ['user' => 0, 'group' => 1];
-            $row->cooperator_type = $c_type[$request->get('user_type')];
-            switch ($request->get('role')) {
+            $row->cooperator_type = $c_type[$request->input('user_type')];
+            switch ($request->input('role')) {
                 case 'manager':
                 case 'editor':
                     $row->power = 20;
@@ -116,7 +116,7 @@ class ShareController extends Controller
             $row->modify_time = time() * 1000;
             $row->save();
         }
-        return $this->ok(count($request->get('user_id')));
+        return $this->ok(count($request->input('user_id')));
     }
 
     /**
@@ -150,7 +150,7 @@ class ShareController extends Controller
             //普通成员没有删除权限
             return $this->error(__('auth.failed'));
         }
-        switch ($request->get('role')) {
+        switch ($request->input('role')) {
             case 'manager':
             case 'editor':
                 $share->power = 20;

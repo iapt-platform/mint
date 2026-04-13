@@ -17,7 +17,7 @@ class OfflineIndexController extends Controller
     public function index(Request $request)
     {
         //
-        $index = app(PacketService::class)->index($request->get('file', null));
+        $index = app(PacketService::class)->index($request->input('file', null));
 
         return response()->json(
             $index,

@@ -26,19 +26,19 @@ class TermExportController extends Controller
     public function index(Request $request)
     {
         $user = AuthApi::current($request);
-        if(!$user){
+        if (!$user) {
             return $this->error(__('auth.failed'));
         }
-//TODO 判断是否有导出权限
-        switch ($request->get("view")) {
+        //TODO 判断是否有导出权限
+        switch ($request->input("view")) {
             case 'channel':
                 # code...
-                $rows = DhammaTerm::where('channal',$request->get("id"))->cursor();
+                $rows = DhammaTerm::where('channal', $request->input("id"))->cursor();
                 break;
             case 'studio':
                 # code...
-                $studioId = StudioApi::getIdByName($request->get("name"));
-                $rows = DhammaTerm::where('owner',$studioId)->cursor();
+                $studioId = StudioApi::getIdByName($request->input("name"));
+                $rows = DhammaTerm::where('owner', $studioId)->cursor();
                 break;
             default:
                 $this->error('no view');
@@ -74,10 +74,10 @@ class TermExportController extends Controller
         $filename = storage_path("app/tmp/{$fId}");
         $writer->save($filename);
         $key = "download/tmp/{$fId}";
-        Redis::set($key,file_get_contents($filename));
-        Redis::expire($key,300);
+        Redis::set($key, file_get_contents($filename));
+        Redis::expire($key, 300);
         unlink($filename);
-        return $this->ok(['uuid'=>$fId,'filename'=>"term.xlsx",'type'=>"application/vnd.ms-excel"]);
+        return $this->ok(['uuid' => $fId, 'filename' => "term.xlsx", 'type' => "application/vnd.ms-excel"]);
     }
 
     /**
@@ -102,52 +102,53 @@ class TermExportController extends Controller
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment; filename="term.xlsx"');
         $content = Redis::get("download/tmp/{$downloadId}");
-        file_put_contents("php://output",$content);
+        file_put_contents("php://output", $content);
     }
 
-    public function import(Request $request){
+    public function import(Request $request)
+    {
         $user = AuthApi::current($request);
-        if(!$user){
-            return $this->error(__('auth.failed'),401,401);
+        if (!$user) {
+            return $this->error(__('auth.failed'), 401, 401);
         }
         /**
          * 判断是否有权限
          */
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'channel':
                 # 向channel里面导入，忽略源数据的channel id 和 owner 都设置为这个channel 的
-                $channel = ChannelApi::getById($request->get('id'));
+                $channel = ChannelApi::getById($request->input('id'));
                 $owner_id = $channel['studio_id'];
-                if($owner_id !== $user["user_uid"]){
+                if ($owner_id !== $user["user_uid"]) {
                     //判断是否为协作
-                    $power = ShareApi::getResPower($user["user_uid"],$request->get('id'));
-                    if($power<20){
-                        return $this->error(__('auth.failed'),403,403);
+                    $power = ShareApi::getResPower($user["user_uid"], $request->input('id'));
+                    if ($power < 20) {
+                        return $this->error(__('auth.failed'), 403, 403);
                     }
                 }
                 $language = $channel['lang'];
                 break;
             case 'studio':
                 # 向 studio 里面导入，忽略源数据的 owner 但是要检测 channel id 是否有权限
-                $owner_id = StudioApi::getIdByName($request->get('name'));
-                if(!$owner_id){
-                    return $this->error('no studio name',403,403);
+                $owner_id = StudioApi::getIdByName($request->input('name'));
+                if (!$owner_id) {
+                    return $this->error('no studio name', 403, 403);
                 }
 
                 break;
         }
 
         $message = "";
-        $filename = $request->get('filename');
-        if(Storage::missing($filename)){
-            return $this->error('no file '.$filename);
+        $filename = $request->input('filename');
+        if (Storage::missing($filename)) {
+            return $this->error('no file ' . $filename);
         }
         $contents = Storage::get($filename);
         $fId = Str::uuid();
         $tmpFile = storage_path("app/tmp/{$fId}.xlsx");
-        $ok = file_put_contents($tmpFile,$contents);
-        if($ok===false){
-            return $this->error('create tmp file fail '.$tmpFile,500,500);
+        $ok = file_put_contents($tmpFile, $contents);
+        if ($ok === false) {
+            return $this->error('create tmp file fail ' . $tmpFile, 500, 500);
         }
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $reader->setReadDataOnly(true);
@@ -166,28 +167,28 @@ class TermExportController extends Controller
             $tag = $activeWorksheet->getCell("F{$currLine}")->getValue();
             $language = $activeWorksheet->getCell("G{$currLine}")->getValue();
             $channel_id = $activeWorksheet->getCell("H{$currLine}")->getValue();
-            $query = ['word'=>$word,'tag'=>$tag];
+            $query = ['word' => $word, 'tag' => $tag];
             $channelId = null;
-            switch ($request->get('view')) {
+            switch ($request->input('view')) {
                 case 'channel':
                     # 向channel里面导入，忽略源数据的channel id 和 owner 都设置为这个channel 的
-                    $query['channal'] = $request->get('id');
-                    $channelId = $request->get('id');
+                    $query['channal'] = $request->input('id');
+                    $channelId = $request->input('id');
                     break;
                 case 'studio':
                     # 向 studio 里面导入，忽略源数据的owner 但是要检测 channel id 是否有权限
                     $query['owner'] = $owner_id;
-                    if(!empty($channel_id)){
+                    if (!empty($channel_id)) {
 
                         //有channel 数据，查看是否在studio中
                         $channel = ChannelApi::getById($channel_id);
-                        if($channel === false){
+                        if ($channel === false) {
                             $message .= "没有查到版本信息：{$channel_id} - {$word}\n";
                             $currLine++;
                             $countFail++;
                             continue 2;
                         }
-                        if($owner_id != $channel['studio_id']){
+                        if ($owner_id != $channel['studio_id']) {
                             $message .= "版本不在studio中：{$channel_id} - {$word}\n";
                             $currLine++;
                             $countFail++;
@@ -200,27 +201,27 @@ class TermExportController extends Controller
                     break;
             }
 
-            if(empty($id) && empty($word)){
+            if (empty($id) && empty($word)) {
                 break;
             }
 
             //查询此id是否有旧数据
-            if(!empty($id)){
+            if (!empty($id)) {
                 $oldRow = DhammaTerm::find($id);
                 //TODO 有 id 无 word 删除数据
-                if(empty($word)){
+                if (empty($word)) {
                     //查看权限
-                    if($oldRow->owner !== $user['user_uid']){
-                        if(!empty($oldRow->channal)){
+                    if ($oldRow->owner !== $user['user_uid']) {
+                        if (!empty($oldRow->channal)) {
                             //看是否为协作
-                            $power = ShareApi::getResPower($user['user_uid'],$oldRow->channal);
-                            if($power < 20){
+                            $power = ShareApi::getResPower($user['user_uid'], $oldRow->channal);
+                            if ($power < 20) {
                                 $message .= "无删除权限：{$id} - {$word}\n";
                                 $currLine++;
                                 $countFail++;
                                 continue;
                             }
-                        }else{
+                        } else {
                             $message .= "无删除权限：{$id} - {$word}\n";
                             $currLine++;
                             $countFail++;
@@ -232,27 +233,27 @@ class TermExportController extends Controller
                     $currLine++;
                     continue;
                 }
-            }else{
+            } else {
                 $oldRow = null;
             }
             //查询是否跟已有数据重复
             $row = DhammaTerm::where($query)->first();
-            if(!$row){
+            if (!$row) {
                 //不重复
-                if(isset($oldRow) && $oldRow){
+                if (isset($oldRow) && $oldRow) {
                     //找到旧的记录-修改旧数据
                     $row = $oldRow;
-                }else{
+                } else {
                     //没找到旧的记录-新建
                     $row = new DhammaTerm();
                     $row->id = app('snowflake')->id();
                     $row->guid = Str::uuid();
                     $row->word = $word;
-                    $row->create_time = time()*1000;
+                    $row->create_time = time() * 1000;
                 }
-            }else{
+            } else {
                 //重复-如果与旧的id不同,报错
-                if(isset($oldRow) && $oldRow && $row->guid !== $id){
+                if (isset($oldRow) && $oldRow && $row->guid !== $id) {
                     $message .= "重复的数据：{$id} - {$word}\n";
                     $currLine++;
                     $countFail++;
@@ -269,13 +270,13 @@ class TermExportController extends Controller
             $row->channal = $channelId;
             $row->editor_id = $user['user_id'];
             $row->owner = $owner_id;
-            $row->modify_time = time()*1000;
+            $row->modify_time = time() * 1000;
             $row->save();
 
             $currLine++;
         } while (true);
         unlink($tmpFile);
-        return $this->ok(["success"=>$currLine-2-$countFail,'fail'=>($countFail)],$message);
+        return $this->ok(["success" => $currLine - 2 - $countFail, 'fail' => ($countFail)], $message);
     }
 
 

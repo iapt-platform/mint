@@ -67,7 +67,7 @@ class UserStatisticController extends Controller
         $termCountWithNote = 0;
         $myDictCount = 0;
         //总经验值
-        if (!$request->has('view') || $request->get('view') === 'exp-sum') {
+        if (!$request->has('view') || $request->input('view') === 'exp-sum') {
             $expSum = Cache::remember(
                 "user/{$userName}/exp/sum",
                 $cacheExpiry,
@@ -79,7 +79,7 @@ class UserStatisticController extends Controller
         }
 
         //逐词解析
-        if (!$request->has('view') || $request->get('view') === 'wbw-count') {
+        if (!$request->has('view') || $request->input('view') === 'wbw-count') {
             $wbwCount = Cache::remember(
                 "user/{$userName}/wbw/count",
                 $cacheExpiry,
@@ -91,7 +91,7 @@ class UserStatisticController extends Controller
         }
 
         //查字典次数
-        if (!$request->has('view') || $request->get('view') === 'lookup-count') {
+        if (!$request->has('view') || $request->input('view') === 'lookup-count') {
             $lookupCount = Cache::remember(
                 "user/{$userName}/lookup/count",
                 $cacheExpiry,
@@ -104,7 +104,7 @@ class UserStatisticController extends Controller
         }
         //译文
         //TODO 判断是否是译文channel
-        if (!$request->has('view') || $request->get('view') === 'translation-count') {
+        if (!$request->has('view') || $request->input('view') === 'translation-count') {
             $translationCount = Cache::remember(
                 "user/{$userName}/translation/count",
                 $cacheExpiry,
@@ -124,7 +124,7 @@ class UserStatisticController extends Controller
             );
         }
         //术语
-        if (!$request->has('view') || $request->get('view') === 'term-count') {
+        if (!$request->has('view') || $request->input('view') === 'term-count') {
             $termCount = Cache::remember(
                 "user/{$userName}/term/count",
                 $cacheExpiry,
@@ -144,7 +144,7 @@ class UserStatisticController extends Controller
             );
         }
         //单词本
-        if (!$request->has('view') || $request->get('view') === 'my-dict-count') {
+        if (!$request->has('view') || $request->input('view') === 'my-dict-count') {
             $myDictCount = Cache::remember(
                 "user/{$userName}/dict/count",
                 $cacheExpiry,

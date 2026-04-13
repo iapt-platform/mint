@@ -45,12 +45,12 @@ class ApiController extends Controller
         $begin = $currTime - $times - 1;
         $value = 0;
         for ($i = $begin; $i <= $currTime; $i++) {
-            $keyApi = $key . $request->get('api', 'all') . "/" . $i;
+            $keyApi = $key . $request->input('api', 'all') . "/" . $i;
             if (!empty(Redis::get($keyApi . '/delay'))) {
-                if ($request->get('item') === 'average') {
+                if ($request->input('item') === 'average') {
                     $value += intval(Redis::get($keyApi . '/delay') / Redis::get($keyApi . '/count'));
                 } else {
-                    $value += (int)Redis::get($keyApi . '/' . $request->get('item'));
+                    $value += (int)Redis::get($keyApi . '/' . $request->input('item'));
                 }
             }
         }
@@ -74,12 +74,12 @@ class ApiController extends Controller
         $output = [];
         for ($i = $begin; $i <= $currMinute; $i++) {
             $value = 0;
-            $keyApi = $key . $request->get('api', 'all') . "/" . $i;
+            $keyApi = $key . $request->input('api', 'all') . "/" . $i;
             if (!empty(Redis::get($keyApi . '/delay'))) {
-                if ($request->get('item') === 'average') {
+                if ($request->input('item') === 'average') {
                     $value += intval(Redis::get($keyApi . '/delay') / Redis::get($keyApi . '/count'));
                 } else {
-                    $value += (int)Redis::get($keyApi . '/' . $request->get('item'));
+                    $value += (int)Redis::get($keyApi . '/' . $request->input('item'));
                 }
             } else {
                 $value = 0;

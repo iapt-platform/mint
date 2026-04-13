@@ -35,10 +35,10 @@ class DiscussionController extends Controller
         if ($user) {
             $userInfo = UserApi::getByUuid($user['user_uid']);
         }
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'question-by-topic':
-                $topic = Discussion::where('id', $request->get('id'));
-                $topic->where('status', $request->get('status', 'active'))
+                $topic = Discussion::where('id', $request->input('id'));
+                $topic->where('status', $request->input('status', 'active'))
                     ->select('res_id')->first();
                 if (!$topic) {
                     return $this->error("无效的id");
@@ -48,7 +48,7 @@ class DiscussionController extends Controller
                     ->where('status', 'active')->count();
                 $closeNumber = Discussion::where('res_id', $topic->res_id)
                     ->where('status', 'close')->count();
-                $table->where('status', $request->get('status', 'active'))
+                $table->where('status', $request->input('status', 'active'))
                     ->where('parent', null);
                 break;
             case 'question':
@@ -58,7 +58,7 @@ class DiscussionController extends Controller
                  * basic用户看到别人在别人channel发表的discussion
                  *
                  */
-                if (!$user && $request->get('type') === 'discussion') {
+                if (!$user && $request->input('type') === 'discussion') {
                     return $this->ok([
                         "rows" => [],
                         "count" => 0,
@@ -68,14 +68,14 @@ class DiscussionController extends Controller
                         'can_reply' => false,
                     ]);
                 }
-                $resType = $request->get('res_type');
+                $resType = $request->input('res_type');
                 if ($user) {
                     switch ($resType) {
                         case 'sentence':
                             # code...
                             break;
                         case 'wbw':
-                            $block_uid = Wbw::where('uid', $request->get('id'))->value('block_uid');
+                            $block_uid = Wbw::where('uid', $request->input('id'))->value('block_uid');
                             if ($block_uid) {
                                 $channelId = WbwBlock::where('uid', $block_uid)->value('channel_uid');
                                 if ($channelId) {
@@ -90,8 +90,8 @@ class DiscussionController extends Controller
                 }
 
 
-                $resId = [$request->get('id')];
-                if (!empty($request->get('course'))) {
+                $resId = [$request->input('id')];
+                if (!empty($request->input('course'))) {
                     //
                     /**
                      * 如果res id 是答案，获取学员提问
@@ -99,12 +99,12 @@ class DiscussionController extends Controller
                      */
                     //获取学员提问
                     //获取学员channel
-                    if ($request->get('show_student') === 'true') {
-                        $channelsId = CourseApi::getStudentChannels($request->get('course'));
+                    if ($request->input('show_student') === 'true') {
+                        $channelsId = CourseApi::getStudentChannels($request->input('course'));
                         switch ($resType) {
                             case 'wbw':
                                 //获取答案单词编号
-                                $wbwWord = Wbw::where('uid', $request->get('id'))
+                                $wbwWord = Wbw::where('uid', $request->input('id'))
                                     ->first();
                                 $wbwId = WbwSentenceController::getWbwIdByChannels(
                                     $channelsId,
@@ -120,10 +120,10 @@ class DiscussionController extends Controller
                     }
                 }
                 $table = Discussion::whereIn('res_id', $resId)
-                    ->where('type', $request->get('type', 'discussion'))
-                    ->where('status', $request->get('status', 'active'))
+                    ->where('type', $request->input('type', 'discussion'))
+                    ->where('status', $request->input('status', 'active'))
                     ->where('parent', null);
-                if ($request->get('type') === 'discussion') {
+                if ($request->input('type') === 'discussion') {
                     if (
                         isset($userInfo) &&
                         isset($userInfo['roles']) &&
@@ -137,18 +137,18 @@ class DiscussionController extends Controller
                 }
                 $activeNumber = Discussion::whereIn('res_id', $resId)
                     ->where('parent', null)
-                    ->where('type', $request->get('type', 'discussion'))
+                    ->where('type', $request->input('type', 'discussion'))
                     ->where('status', 'active')->count();
                 $closeNumber = Discussion::whereIn('res_id', $resId)
                     ->where('parent', null)
-                    ->where('type', $request->get('type', 'discussion'))
+                    ->where('type', $request->input('type', 'discussion'))
                     ->where('status', 'close')->count();
                 break;
             case 'answer':
-                $table = Discussion::where('parent', $request->get('id'));
-                $activeNumber = Discussion::where('parent', $request->get('id'))
+                $table = Discussion::where('parent', $request->input('id'));
+                $activeNumber = Discussion::where('parent', $request->input('id'))
                     ->where('status', 'active')->count();
-                $closeNumber = Discussion::where('parent', $request->get('id'))
+                $closeNumber = Discussion::where('parent', $request->input('id'))
                     ->where('status', 'close')->count();
                 break;
             case 'res_id':
@@ -156,9 +156,9 @@ class DiscussionController extends Controller
                  * 先获取顶级节点
                  * 需要确定用户身份，manager查看全部topic 普通用户只显示自己提交的topic
                  */
-                $roots = Discussion::where('res_id', $request->get('id'))
-                    ->where('type', $request->get('type', 'discussion'))
-                    ->whereIn('status', explode(',', $request->get('status', 'active')))
+                $roots = Discussion::where('res_id', $request->input('id'))
+                    ->where('type', $request->input('type', 'discussion'))
+                    ->whereIn('status', explode(',', $request->input('status', 'active')))
                     ->where('parent', null)
                     ->select('id')
                     ->get();
@@ -167,11 +167,11 @@ class DiscussionController extends Controller
                     $query->whereIn('id', $roots)
                         ->orWhereIn('parent', $roots);
                 });
-                $activeNumber = Discussion::where('res_id', $request->get('id'))
-                    ->where('type', $request->get('type', 'discussion'))
+                $activeNumber = Discussion::where('res_id', $request->input('id'))
+                    ->where('type', $request->input('type', 'discussion'))
                     ->where('status', 'active')->count();
-                $closeNumber = Discussion::where('res_id', $request->get('id'))
-                    ->where('type', $request->get('type', 'discussion'))
+                $closeNumber = Discussion::where('res_id', $request->input('id'))
+                    ->where('type', $request->input('type', 'discussion'))
                     ->where('status', 'close')->count();
                 break;
             case 'topic-by-user':
@@ -183,16 +183,16 @@ class DiscussionController extends Controller
                     return $this->error('', 403, 403);
                 }
                 $table = Discussion::where('editor_uid', $user['user_uid'])
-                    ->where('type', $request->get('type', 'discussion'))
-                    ->whereIn('status', explode(',', $request->get('status', 'active')))
+                    ->where('type', $request->input('type', 'discussion'))
+                    ->whereIn('status', explode(',', $request->input('status', 'active')))
                     ->where('parent', null);
                 $activeNumber = Discussion::where('editor_uid', $user['user_uid'])
                     ->where('parent', null)
-                    ->where('type', $request->get('type', 'discussion'))
+                    ->where('type', $request->input('type', 'discussion'))
                     ->where('status', 'active')->count();
                 $closeNumber = Discussion::where('editor_uid', $user['user_uid'])
                     ->where('parent', null)
-                    ->where('type', $request->get('type', 'discussion'))
+                    ->where('type', $request->input('type', 'discussion'))
                     ->where('status', 'close')->count();
                 break;
             case 'all':
@@ -208,9 +208,9 @@ class DiscussionController extends Controller
         }
         $count = $table->count();
 
-        $table = $table->orderBy($request->get('order', 'created_at'), $request->get('dir', 'desc'));
-        $table = $table->skip($request->get("offset", 0))
-            ->take($request->get('limit', 100));
+        $table = $table->orderBy($request->input('order', 'created_at'), $request->input('dir', 'desc'));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 100));
 
         $result = $table->get();
 
@@ -218,11 +218,11 @@ class DiscussionController extends Controller
         $can_reply = false;
         $user = AuthApi::current($request);
 
-        switch ($request->get('type', 'discussion')) {
+        switch ($request->input('type', 'discussion')) {
             case 'qa':
-                switch ($request->get('res_type')) {
+                switch ($request->input('res_type')) {
                     case 'article':
-                        if ($user && ArticleController::userCanEditId($user['user_uid'], $request->get('id'))) {
+                        if ($user && ArticleController::userCanEditId($user['user_uid'], $request->input('id'))) {
                             $can_create = true;
                             $can_reply = true;
                         }
@@ -230,11 +230,11 @@ class DiscussionController extends Controller
                 }
                 break;
             case 'help':
-                switch ($request->get('res_type')) {
+                switch ($request->input('res_type')) {
                     case 'article':
                         if ($user) {
                             $can_reply = true;
-                            if (ArticleController::userCanEditId($user['user_uid'], $request->get('id'))) {
+                            if (ArticleController::userCanEditId($user['user_uid'], $request->input('id'))) {
                                 $can_create = true;
                             }
                         }
@@ -262,7 +262,7 @@ class DiscussionController extends Controller
     public function discussion_tree(Request $request)
     {
         $output = [];
-        $sentences = $request->get("data");
+        $sentences = $request->input("data");
         foreach ($sentences as $key => $sentence) {
             # 先查句子信息
             $sentInfo = Sentence::where('book_id', $sentence['book'])
@@ -313,7 +313,7 @@ class DiscussionController extends Controller
 
         if ($request->has('parent')) {
             $rules = [];
-            $parentInfo = Discussion::find($request->get('parent'));
+            $parentInfo = Discussion::find($request->input('parent'));
             if (!$parentInfo) {
                 return $this->error('no record');
             }
@@ -332,15 +332,15 @@ class DiscussionController extends Controller
             $discussion->res_id = $parentInfo->res_id;
             $discussion->res_type = $parentInfo->res_type;
         } else {
-            $discussion->res_id = $request->get('res_id');
-            $discussion->res_type = $request->get('res_type');
+            $discussion->res_id = $request->input('res_id');
+            $discussion->res_type = $request->input('res_type');
         }
-        $discussion->type = $request->get('type', 'discussion');
-        $discussion->tpl_id = $request->get('tpl_id');
-        $discussion->title = $request->get('title', null);
-        $discussion->content = $request->get('content', null);
-        $discussion->content_type = $request->get('content_type', "markdown");
-        $discussion->parent = $request->get('parent', null);
+        $discussion->type = $request->input('type', 'discussion');
+        $discussion->tpl_id = $request->input('tpl_id');
+        $discussion->title = $request->input('title', null);
+        $discussion->content = $request->input('content', null);
+        $discussion->content_type = $request->input('content_type', "markdown");
+        $discussion->parent = $request->input('parent', null);
         $discussion->editor_uid = $user['user_uid'];
         $discussion->save();
         //更新parent children_count
@@ -348,7 +348,7 @@ class DiscussionController extends Controller
             $parentInfo->increment('children_count', 1);
             $parentInfo->save();
         }
-        if ($request->get('notification', true)) {
+        if ($request->input('notification', true)) {
             Mq::publish('discussion', new DiscussionResource($discussion));
         }
 
@@ -454,11 +454,11 @@ class DiscussionController extends Controller
             return $this->error(__('auth.failed'), [403], 403);
         }
 
-        $discussion->title = $request->get('title', null);
-        $discussion->content = $request->get('content', null);
-        $discussion->status = $request->get('status', 'active');
+        $discussion->title = $request->input('title', null);
+        $discussion->content = $request->input('content', null);
+        $discussion->status = $request->input('status', 'active');
         if ($request->has('type')) {
-            $discussion->type = $request->get('type');
+            $discussion->type = $request->input('type');
         }
         //$discussion->editor_uid = $user['user_uid'];
         $discussion->save();

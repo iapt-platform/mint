@@ -29,21 +29,21 @@ class ForgotPasswordController extends Controller
     public function store(Request $request)
     {
         //
-        $user = UserInfo::where('email',$request->get('email'))->first();
-        if(!$user){
-            return $this->error('no user',404,404);
+        $user = UserInfo::where('email', $request->input('email'))->first();
+        if (!$user) {
+            return $this->error('no user', 404, 404);
         }
         $resetToken = Str::uuid();
         $user->reset_password_token = $resetToken;
         $ok = $user->save();
-        if(!$ok){
-            return $this->error('fail on update reset_password_token',500,500);
+        if (!$ok) {
+            return $this->error('fail on update reset_password_token', 500, 500);
         }
 
-        Mail::to($request->get('email'))
-            ->send(new ForgotPassword($resetToken,$request->get('lang'),$request->get('dashboard')));
-        if(Mail::failures()){
-            return $this->error('send email fail',[],200);
+        Mail::to($request->input('email'))
+            ->send(new ForgotPassword($resetToken, $request->input('lang'), $request->input('dashboard')));
+        if (Mail::failures()) {
+            return $this->error('send email fail', [], 200);
         }
         return $this->ok('');
     }

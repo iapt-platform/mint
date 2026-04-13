@@ -17,9 +17,9 @@ class VocabularyController extends Controller
     public function index(Request $request)
     {
         //
-        switch ($request->get("view")) {
+        switch ($request->input("view")) {
             case 'key':
-                $key = $request->get("key");
+                $key = $request->input("key");
                 $result = Cache::remember(
                     "/dict_vocabulary/{$key}",
                     config('mint.cache.expire'),

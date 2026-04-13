@@ -98,10 +98,10 @@ class ChapterContentController extends Controller
 
         $channels = [];
         if ($request->has('channels')) {
-            if (strpos($request->get('channels'), ',') === FALSE) {
-                $_channels = explode('_', $request->get('channels'));
+            if (strpos($request->input('channels'), ',') === FALSE) {
+                $_channels = explode('_', $request->input('channels'));
             } else {
-                $_channels = explode(',', $request->get('channels'));
+                $_channels = explode(',', $request->input('channels'));
             }
             foreach ($_channels as $key => $channel) {
                 if (Str::isUuid($channel)) {
@@ -110,7 +110,7 @@ class ChapterContentController extends Controller
             }
         }
 
-        $mode = $request->get('mode', 'read');
+        $mode = $request->input('mode', 'read');
         if ($mode === 'read') {
             //阅读模式加载html格式原文
             $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
@@ -211,8 +211,8 @@ class ChapterContentController extends Controller
             }
         }
 
-        $pFrom = $request->get('from', $paraFrom);
-        $pTo = $request->get('to', $paraTo);
+        $pFrom = $request->input('from', $paraFrom);
+        $pTo = $request->input('to', $paraTo);
         //根据句子的长度找到这次应该加载的段落
 
         $paliText = PaliText::select(['paragraph', 'lenght'])
@@ -252,8 +252,8 @@ class ChapterContentController extends Controller
             $this->result['from'] = $currTo + 1;
             $this->result['to'] = $pTo;
             $this->result['paraId'] = $id;
-            $this->result['channels'] = $request->get('channels');
-            $this->result['mode'] = $request->get('mode');
+            $this->result['channels'] = $request->input('channels');
+            $this->result['mode'] = $request->input('mode');
         }
 
         return $this->ok($this->result);

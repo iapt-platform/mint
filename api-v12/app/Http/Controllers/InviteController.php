@@ -35,13 +35,13 @@ class InviteController extends Controller
             'created_at',
             'updated_at'
         ]);
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'studio':
-                if (empty($request->get('studio'))) {
+                if (empty($request->input('studio'))) {
                     return $this->error(__('auth.failed'));
                 }
                 //判断当前用户是否有指定的studio的权限
-                if ($user['user_uid'] !== StudioApi::getIdByName($request->get('studio'))) {
+                if ($user['user_uid'] !== StudioApi::getIdByName($request->input('studio'))) {
                     return $this->error(__('auth.failed'));
                 }
                 $table = $table->where('user_uid', $user["user_uid"]);
@@ -54,16 +54,16 @@ class InviteController extends Controller
                 break;
         }
         if ($request->has('search')) {
-            $table = $table->where('email', 'like', '%' . $request->get('search') . "%");
+            $table = $table->where('email', 'like', '%' . $request->input('search') . "%");
         }
         $count = $table->count();
         $table = $table->orderBy(
-            $request->get('order', 'updated_at'),
-            $request->get('dir', 'desc')
+            $request->input('order', 'updated_at'),
+            $request->input('dir', 'desc')
         );
 
-        $table = $table->skip($request->get('offset', 0))
-            ->take($request->get('limit', 1000));
+        $table = $table->skip($request->input('offset', 0))
+            ->take($request->input('limit', 1000));
 
         $result = $table->get();
         return $this->ok(["rows" => InviteResource::collection($result), "count" => $count]);
@@ -79,13 +79,13 @@ class InviteController extends Controller
     {
         //
         $sender = '';
-        if (!empty($request->get('studio'))) {
+        if (!empty($request->input('studio'))) {
             $user = AuthApi::current($request);
             if (!$user) {
                 return $this->error(__('auth.failed'), 401, 401);
             }
             //判断当前用户是否有指定的studio的权限
-            $studio_id = StudioApi::getIdByName($request->get('studio'));
+            $studio_id = StudioApi::getIdByName($request->input('studio'));
             if ($user['user_uid'] !== $studio_id) {
                 return $this->error(__('auth.failed'));
             }
@@ -96,26 +96,26 @@ class InviteController extends Controller
 
         //查询是否重复
         if (
-            Invite::where('email', $request->get('email'))->exists() ||
-            UserInfo::where('email', $request->get('email'))->exists()
+            Invite::where('email', $request->input('email'))->exists() ||
+            UserInfo::where('email', $request->input('email'))->exists()
         ) {
             return $this->error('email.exists', __('validation.exists', ['email']), 200);
         }
 
         $uuid = Str::uuid();
-        Mail::to($request->get('email'))
+        Mail::to($request->input('email'))
             ->send(new InviteMail(
                 $uuid,
-                $request->get('subject', 'sign up wikipali'),
-                $request->get('lang'),
-                $request->get('dashboard')
+                $request->input('subject', 'sign up wikipali'),
+                $request->input('lang'),
+                $request->input('dashboard')
             ));
         if (Mail::failures()) {
             return $this->error('send email fail', '', 200);
         } else {
             $invite = new Invite;
             $invite->id = $uuid;
-            $invite->email = $request->get('email');
+            $invite->email = $request->input('email');
             $invite->user_uid = $sender;
             $invite->status = 'invited';
             $invite->save();

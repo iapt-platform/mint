@@ -25,7 +25,7 @@ class AiTranslateController extends Controller
     public function store(Request $request)
     {
         //
-        return $this->fetch(strip_tags($request->get('origin')));
+        return $this->fetch(strip_tags($request->input('origin')));
     }
 
     private function fetch($origin, $engin = 'kimi', $prompt_pre = '', $prompt_suf = '请翻译上述巴利文。')
@@ -73,7 +73,7 @@ class AiTranslateController extends Controller
                 ->where('paragraph', $para[1])
                 ->value('text');
             if (!empty($content)) {
-                return $this->fetch($content, $request->get('engin', config('mint.ai.default')));
+                return $this->fetch($content, $request->input('engin', config('mint.ai.default')));
             } else {
                 return $this->error('no content', 200, 200);
             }

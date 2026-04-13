@@ -29,13 +29,13 @@ class CommandController extends Controller
     {
         //
         $user = AuthApi::current($request);
-        if(!$user || $user['user_uid'] !== 'ba5463f3-72d1-4410-858e-eadd10884713'){
-            return $this->error(__('auth.failed'),403,403);
+        if (!$user || $user['user_uid'] !== 'ba5463f3-72d1-4410-858e-eadd10884713') {
+            return $this->error(__('auth.failed'), 403, 403);
         }
 
-        Mq::publish('task',[
-            'name'=>$request->get('name'),
-            'param'=>$request->get('param'),
+        Mq::publish('task', [
+            'name' => $request->input('name'),
+            'param' => $request->input('param'),
         ]);
         return $this->ok('ok');
     }

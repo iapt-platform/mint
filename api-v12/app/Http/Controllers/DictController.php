@@ -35,8 +35,8 @@ class DictController extends Controller
         $words = [];
         $word_base = [];
         $searched = [];
-        $words[$request->get('word')] = [];
-        $userLang = $request->get('lang', "zh");
+        $words[$request->input('word')] = [];
+        $userLang = $request->input('lang', "zh");
 
         /**
          * 临时代码判断是否在缅汉字典群里面。在群里的用户可以产看缅汉字典pdf

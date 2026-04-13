@@ -24,7 +24,7 @@ class NotificationController extends Controller
             Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);
         }
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'to':
                 $table = Notification::where('to', $user['user_uid']);
                 $unread = Notification::where('to', $user['user_uid'])
@@ -33,14 +33,14 @@ class NotificationController extends Controller
         }
 
         if ($request->has('status')) {
-            $table = $table->whereIn('status', explode(',', $request->get('status')));
+            $table = $table->whereIn('status', explode(',', $request->input('status')));
         }
         $count = $table->count();
 
-        $table = $table->orderBy($request->get('order', 'created_at'), $request->get('dir', 'desc'));
+        $table = $table->orderBy($request->input('order', 'created_at'), $request->input('dir', 'desc'));
 
-        $table = $table->skip($request->get("offset", 0))
-            ->take($request->get('limit', 10));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 10));
 
         $result = $table->get();
 
@@ -70,12 +70,12 @@ class NotificationController extends Controller
         $new = new Notification;
         $new->id = Str::uuid();
         $new->from = $user['user_uid'];
-        $new->to = $request->get('to');
-        $new->url = $request->get('url');
-        $new->content = $request->get('content');
-        $new->res_type = $request->get('res_type');
-        $new->res_id = $request->get('res_id');
-        $new->channel = $request->get('channel');
+        $new->to = $request->input('to');
+        $new->url = $request->input('url');
+        $new->content = $request->input('content');
+        $new->res_type = $request->input('res_type');
+        $new->res_id = $request->input('res_id');
+        $new->channel = $request->input('channel');
         $new->save();
 
         return $this->ok(new NotificationResource($new));
@@ -125,7 +125,7 @@ class NotificationController extends Controller
             return $this->error(__('auth.failed'), 401, 401);
         }
         if ($notification->to === $user['user_uid']) {
-            $notification->status = $request->get('status', 'read');
+            $notification->status = $request->input('status', 'read');
             $notification->save();
             $unread = Notification::where('to', $notification->to)
                 ->where('status', 'unread')

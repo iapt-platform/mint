@@ -25,72 +25,80 @@ class CourseMemberController extends Controller
     {
         //
         $user = AuthApi::current($request);
-        if(!$user){
-            return $this->error(__('auth.failed',[403],403));
+        if (!$user) {
+            return $this->error(__('auth.failed', [403], 403));
         }
         //判断当前用户是否有指定的 course 的权限
-        $role = CourseMember::where('course_id', $request->get('id',$request->get('course')))
-                            ->where('user_id',$user['user_uid'])
-                            ->value('role');
-        if(empty($role)){
-            return $this->error(__('auth.failed',[403],403));
+        $role = CourseMember::where('course_id', $request->input('id', $request->input('course')))
+            ->where('user_id', $user['user_uid'])
+            ->value('role');
+        if (empty($role)) {
+            return $this->error(__('auth.failed', [403], 403));
         }
 
-        $result=false;
-		$indexCol = ['id','user_id','course_id',
-                    'channel_id','role','editor_uid',
-                    'updated_at','created_at'];
-		switch ($request->get('view')) {
+        $result = false;
+        $indexCol = [
+            'id',
+            'user_id',
+            'course_id',
+            'channel_id',
+            'role',
+            'editor_uid',
+            'updated_at',
+            'created_at'
+        ];
+        switch ($request->input('view')) {
             case 'course':
-	            # 获取 course 内所有 成员
-                $table = CourseMember::where('course_id', $request->get('id'))
-                                    ->where('is_current',true);
-				break;
+                # 获取 course 内所有 成员
+                $table = CourseMember::where('course_id', $request->input('id'))
+                    ->where('is_current', true);
+                break;
             case 'timeline':
                 /**
                  * 编辑时间线
                  */
-                $table = CourseMember::where('user_id',$request->get('userId'));
-                if($request->get('timeline','current')==='current'){
-                    $table = $table->where('course_id', $request->get('course'));
+                $table = CourseMember::where('user_id', $request->input('userId'));
+                if ($request->input('timeline', 'current') === 'current') {
+                    $table = $table->where('course_id', $request->input('course'));
                 }
 
                 break;
             default:
-                return $this->error('无法识别的参数view',400,400);
-            break;
+                return $this->error('无法识别的参数view', 400, 400);
+                break;
         }
-        if(!empty($request->get("role")) && $request->get("role") !=='all'){
-            $table = $table->where('role', $request->get("role"));
+        if (!empty($request->input("role")) && $request->input("role") !== 'all') {
+            $table = $table->where('role', $request->input("role"));
         }
-        if(!empty($request->get("status"))){
-            $table = $table->whereIn('status', explode(',',$request->get("status")) );
+        if (!empty($request->input("status"))) {
+            $table = $table->whereIn('status', explode(',', $request->input("status")));
         }
-        if(!empty($request->get("search"))){
-            $usersId = UserInfo::where('nickname','like', '%'.$request->get("search")."%")
-                            ->select('userid')
-                            ->get();
+        if (!empty($request->input("search"))) {
+            $usersId = UserInfo::where('nickname', 'like', '%' . $request->input("search") . "%")
+                ->select('userid')
+                ->get();
             $table = $table->whereIn('user_id', $usersId);
         }
 
         $count = $table->count();
 
-        $table = $table->orderBy($request->get('order','created_at'),
-                                $request->get('dir','asc'));
+        $table = $table->orderBy(
+            $request->input('order', 'created_at'),
+            $request->input('dir', 'asc')
+        );
 
-        $table = $table->skip($request->get('offset',0))
-              ->take($request->get('limit',1000));
+        $table = $table->skip($request->input('offset', 0))
+            ->take($request->input('limit', 1000));
 
         $result = $table->get();
 
         //获取当前用户角色
-        $role = CourseMember::where('course_id', $request->get('id'))
-                            ->where('user_id', $user['user_uid'])
-                            ->where('is_current',true)
-                            ->value('role');
+        $role = CourseMember::where('course_id', $request->input('id'))
+            ->where('user_id', $user['user_uid'])
+            ->where('is_current', true)
+            ->value('role');
 
-		return $this->ok(["rows"=>CourseMemberResource::collection($result),'role'=>$role,"count"=>$count]);
-
+        return $this->ok(["rows" => CourseMemberResource::collection($result), 'role' => $role, "count" => $count]);
     }
 
     /**
@@ -103,8 +111,8 @@ class CourseMemberController extends Controller
     {
         //
         $user = AuthApi::current($request);
-        if(!$user){
-            return $this->error(__('auth.failed',[403],403));
+        if (!$user) {
+            return $this->error(__('auth.failed', [403], 403));
         }
         $validated = $request->validate([
             'user_id' => 'required',
@@ -113,23 +121,24 @@ class CourseMemberController extends Controller
             'status' => 'required',
         ]);
         //查找重复的
-        if($validated['status'] !== 'invited'){
-            if(CourseMember::where('course_id', $validated['course_id'])
-                        ->where('user_id',$validated['user_id'])
-                        ->exists()){
-                return $this->error('member exists',[200],200);
+        if ($validated['status'] !== 'invited') {
+            if (CourseMember::where('course_id', $validated['course_id'])
+                ->where('user_id', $validated['user_id'])
+                ->exists()
+            ) {
+                return $this->error('member exists', [200], 200);
             }
         }
 
-        if($validated['status'] === 'invited'){
+        if ($validated['status'] === 'invited') {
             $userId = $validated['user_id'];
-        }else{
+        } else {
             $userId = $user['user_uid'];
         }
 
-        CourseMember::where('course_id',$validated['course_id'])
-            ->where('user_id',$userId)
-            ->update(['is_current'=>false]);
+        CourseMember::where('course_id', $validated['course_id'])
+            ->where('user_id', $userId)
+            ->update(['is_current' => false]);
 
         $newMember = new CourseMember();
         $newMember->course_id = $validated['course_id'];
@@ -144,29 +153,30 @@ class CourseMemberController extends Controller
          * manual: progressing
          */
         $course  = Course::find($validated['course_id']);
-        if(!$course){
+        if (!$course) {
             return $this->error('invalid course');
         }
         switch ($course->join) {
             case 'open': //开放学习课程
-                if($validated['status']!=='joined' &&
-                    $validated['status']!=='invited'
-                    ){
-                    return $this->error('invalid course',[200],200);
-                    }
+                if (
+                    $validated['status'] !== 'joined' &&
+                    $validated['status'] !== 'invited'
+                ) {
+                    return $this->error('invalid course', [200], 200);
+                }
                 break;
             case 'manual': //人工审核课程
-                if($validated['status']!=='applied' &&
-                    $validated['status']!=='invited'
-                    ){
-                    return $this->error('invalid course',[200],200);
-                    }
+                if (
+                    $validated['status'] !== 'applied' &&
+                    $validated['status'] !== 'invited'
+                ) {
+                    return $this->error('invalid course', [200], 200);
+                }
                 break;
         }
         $newMember->save();
 
         return $this->ok(new CourseMemberResource($newMember));
-
     }
 
     /**
@@ -176,25 +186,25 @@ class CourseMemberController extends Controller
      * @param  string  $courseId
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,string $courseId)
+    public function show(Request $request, string $courseId)
     {
         //
         $user = AuthApi::current($request);
-        if(!$user){
+        if (!$user) {
             return $this->error(__('auth.failed'));
         }
         $userId = $user['user_uid'];
-        if(!empty($request->get('user_uid'))){
-            $userId = $request->get('user_uid');
+        if (!empty($request->input('user_uid'))) {
+            $userId = $request->input('user_uid');
         }
-        $member = CourseMember::where('course_id',$courseId)
-                                ->where('user_id',$userId)
-                                ->where('is_current',true)
-                                ->first();
-        if($member){
+        $member = CourseMember::where('course_id', $courseId)
+            ->where('user_id', $userId)
+            ->where('is_current', true)
+            ->first();
+        if ($member) {
             return $this->ok(new CourseMemberResource($member));
-        }else{
-            return $this->error('no result',200,200);
+        } else {
+            return $this->error('no result', 200, 200);
         }
     }
 
@@ -213,7 +223,7 @@ class CourseMemberController extends Controller
          * 原有记录变为历史记录
          */
         $user = AuthApi::current($request);
-        if(!$user){
+        if (!$user) {
             return $this->error(__('auth.failed'));
         }
 
@@ -228,44 +238,41 @@ class CourseMemberController extends Controller
         $courseMember->is_current = false;
         $courseMember->save();
 
-        if($request->has('channel_id')) {
-            if($newMember->user_id !== $user['user_uid']){
+        if ($request->has('channel_id')) {
+            if ($newMember->user_id !== $user['user_uid']) {
                 return $this->error(__('auth.failed'));
             }
-            $newMember->channel_id = $request->get('channel_id');
+            $newMember->channel_id = $request->input('channel_id');
         }
-        if($request->has('status')) {
-            $newMember->status = $request->get('status');
+        if ($request->has('status')) {
+            $newMember->status = $request->input('status');
         }
         $newMember->save();
         return $this->ok(new CourseMemberResource($newMember));
-
     }
     public function set_channel(Request $request)
     {
         //
         $user = AuthApi::current($request);
-        if(!$user){
+        if (!$user) {
             return $this->error(__('auth.failed'));
         }
 
-        if($request->has('channel_id')) {
-            $courseMember = CourseMember::where('course_id',$request->get('course_id'))
-                                        ->where('user_id',$user['user_uid'])
-                                        ->where('is_current',true)
-                                        ->first();
-            if($courseMember){
-                $courseMember->channel_id = $request->get('channel_id');
+        if ($request->has('channel_id')) {
+            $courseMember = CourseMember::where('course_id', $request->input('course_id'))
+                ->where('user_id', $user['user_uid'])
+                ->where('is_current', true)
+                ->first();
+            if ($courseMember) {
+                $courseMember->channel_id = $request->input('channel_id');
                 $courseMember->save();
                 return $this->ok(new CourseMemberResource($courseMember));
-            }else{
+            } else {
                 return $this->error(__('auth.failed'));
             }
-        }else{
+        } else {
             return $this->error(__('auth.failed'));
         }
-
-
     }
 
     /**
@@ -275,25 +282,25 @@ class CourseMemberController extends Controller
      * @param  \App\Models\CourseMember  $courseMember
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,CourseMember $courseMember)
+    public function destroy(Request $request, CourseMember $courseMember)
     {
         //查看删除者有没有删除权限
         //查询删除者的权限
         $user = AuthApi::current($request);
-        if(!$user){
+        if (!$user) {
             return $this->error(__('auth.failed'));
         }
 
-        $isOwner = Course::where('id',$courseMember->course_id)->where('studio_id',$user["user_uid"])->exists();
-        if(!$isOwner){
-            $courseUser = CourseMember::where('course_id',$courseMember->course_id)
-                ->where('user_id',$user["user_uid"])
+        $isOwner = Course::where('id', $courseMember->course_id)->where('studio_id', $user["user_uid"])->exists();
+        if (!$isOwner) {
+            $courseUser = CourseMember::where('course_id', $courseMember->course_id)
+                ->where('user_id', $user["user_uid"])
                 ->select('role')->first();
             //open 课程 可以删除自己
 
-            if(!$courseUser){
+            if (!$courseUser) {
                 //被删除的不是自己
-                if($courseUser->role ==="student"){
+                if ($courseUser->role === "student") {
                     //普通成员没有删除权限
                     return $this->error(__('auth.failed'));
                 }
@@ -313,25 +320,26 @@ class CourseMemberController extends Controller
     public function curr(Request $request)
     {
         $user = AuthApi::current($request);
-        if(!$user){
+        if (!$user) {
             return $this->error(__('auth.failed'));
         }
-        $courseUser = CourseMember::where('course_id',$request->get("course_id"))
-                                ->where('user_id',$user["user_uid"])
-                                ->where('is_current',true)
-                                ->select(['role','channel_id'])->first();
-        if($courseUser){
+        $courseUser = CourseMember::where('course_id', $request->input("course_id"))
+            ->where('user_id', $user["user_uid"])
+            ->where('is_current', true)
+            ->select(['role', 'channel_id'])->first();
+        if ($courseUser) {
             return $this->ok($courseUser);
-        }else{
+        } else {
             return $this->error("not member");
         }
     }
 
-    public function export(Request $request){
+    public function export(Request $request)
+    {
 
-        $courseUser = CourseMember::where('course_id',$request->get("course_id"))
-                                    ->where('is_current',true)
-                                    ->get();
+        $courseUser = CourseMember::where('course_id', $request->input("course_id"))
+            ->where('is_current', true)
+            ->get();
 
         $spreadsheet = new Spreadsheet();
         $activeWorksheet = $spreadsheet->getActiveSheet();

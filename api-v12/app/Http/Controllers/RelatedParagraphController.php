@@ -28,6 +28,7 @@
  * 制作时包含全部段落。做好后把没有相关段落的段落删掉？？
  *
  */
+
 namespace App\Http\Controllers;
 
 use App\Models\RelatedParagraph;
@@ -44,26 +45,26 @@ class RelatedParagraphController extends Controller
     public function index(Request $request)
     {
         //
-        $first = RelatedParagraph::where('book',$request->get('book'))
-                                    ->where('para',$request->get('para'))
-                                    ->where('cs_para','>',0)
-                                    ->first();
-        $result = RelatedParagraph::where('book_name',$first->book_name)
-                                    ->where('cs_para',$first->cs_para)
-                                    ->orderBy('book_id')
-                                    ->orderBy('para')
-                                    ->get();
-        $books=[];
+        $first = RelatedParagraph::where('book', $request->input('book'))
+            ->where('para', $request->input('para'))
+            ->where('cs_para', '>', 0)
+            ->first();
+        $result = RelatedParagraph::where('book_name', $first->book_name)
+            ->where('cs_para', $first->cs_para)
+            ->orderBy('book_id')
+            ->orderBy('para')
+            ->get();
+        $books = [];
         foreach ($result as $value) {
             # 把段落整合成书。有几本书就有几条输出纪录
-            if(!isset($books[$value->book_id])){
+            if (!isset($books[$value->book_id])) {
                 $books[$value->book_id]['book'] = $value->book;
                 $books[$value->book_id]['book_id'] = $value->book_id;
                 $books[$value->book_id]['cs6_para'] = $value->cs_para;
             }
-            $books[$value->book_id]['para'][]=$value->para;
+            $books[$value->book_id]['para'][] = $value->para;
         }
-        return $this->ok(["rows"=>RelatedParagraphResource::collection($books),"count"=>count($books)]);
+        return $this->ok(["rows" => RelatedParagraphResource::collection($books), "count" => count($books)]);
     }
 
     /**

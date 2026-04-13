@@ -32,7 +32,7 @@ class TaskController extends Controller
             return $this->error(__('auth.failed'), 401, 401);
         }
 
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'all':
                 $table = Task::whereNotNull('owner_id');
                 break;
@@ -43,8 +43,8 @@ class TaskController extends Controller
                 $table = Task::where('owner_id', $user['user_uid']);
                 break;
             case 'project':
-                $projects = Project::where('uid', $request->get('project_id'))
-                    ->orWhereJsonContains('path', $request->get('project_id'))
+                $projects = Project::where('uid', $request->input('project_id'))
+                    ->orWhereJsonContains('path', $request->input('project_id'))
                     ->select('uid')
                     ->get();
                 $table = Task::whereIn('project_id', $projects);
@@ -56,23 +56,23 @@ class TaskController extends Controller
         if ($request->has('executor_id_includes')) {
             $table = $table->whereIn(
                 'executor_id',
-                explode(',', $request->get('executor_id_includes'))
+                explode(',', $request->input('executor_id_includes'))
             );
         }
         if ($request->has('executor_id_not-includes')) {
             $table = $table->whereNotIn(
                 'executor_id',
-                explode(',', $request->get('executor_id_not-includes'))
+                explode(',', $request->input('executor_id_not-includes'))
             );
         }
         if ($request->has('assignees_id_includes')) {
-            $assigneesId = explode(',', $request->get('assignees_id_includes'));
+            $assigneesId = explode(',', $request->input('assignees_id_includes'));
             $assigneesTasks = TaskAssignee::whereIn('assignee_id', $assigneesId)
                 ->select('task_id')->get();
             $table = $table->whereIn('id', $assigneesTasks);
         }
         if ($request->has('assignees_id_not-includes')) {
-            $assigneesId = explode(',', $request->get('assignees_id_includes'));
+            $assigneesId = explode(',', $request->input('assignees_id_includes'));
             $assigneesTasks = TaskAssignee::whereIn('assignee_id', $assigneesId)
                 ->select('task_id')->get();
             $table = $table->whereNotIn('id', $assigneesTasks);
@@ -85,13 +85,13 @@ class TaskController extends Controller
             $table = $table->has('task_assignees');
         }
 
-        if ($request->get('sign_up_equals') === 'true') {
+        if ($request->input('sign_up_equals') === 'true') {
             $table = $table->whereNull('assignees_id')
                 ->whereNull('executor_id');
         }
         /**某人参与的 */
         if ($request->has('participants_id_includes')) {
-            $id = explode(',', $request->get('participants_id_includes'));
+            $id = explode(',', $request->input('participants_id_includes'));
             $tasks_id = TaskAssignee::whereIn('assignee_id', $id)->select('task_id')->get();
             $table = $table->where(function ($query) use ($id, $tasks_id) {
                 $query->whereIn('executor_id', $id)
@@ -100,7 +100,7 @@ class TaskController extends Controller
         }
 
         if ($request->has('participants_id_not-includes')) {
-            $id = explode(',', $request->get('participants_id_includes'));
+            $id = explode(',', $request->input('participants_id_includes'));
             $tasks_id = TaskAssignee::whereIn('assignee_id', $id)->select('task_id')->get();
             $table = $table->where(function ($query) use ($id, $tasks_id) {
                 $query->whereNotIn('executor_id', $id)
@@ -109,20 +109,20 @@ class TaskController extends Controller
         }
 
         if ($request->has('keyword')) {
-            $table = $table->where('title', 'like', '%' . $request->get('keyword') . '%');
+            $table = $table->where('title', 'like', '%' . $request->input('keyword') . '%');
         }
-        if ($request->has('status') && $request->get('status') !== 'all') {
-            $table = $table->whereIn('status', explode(',', $request->get('status')));
+        if ($request->has('status') && $request->input('status') !== 'all') {
+            $table = $table->whereIn('status', explode(',', $request->input('status')));
         }
         $count = $table->count();
 
         $table = $table->orderBy(
-            $request->get('order', 'created_at'),
-            $request->get('dir', 'asc')
+            $request->input('order', 'created_at'),
+            $request->input('dir', 'asc')
         );
 
-        $table = $table->skip($request->get("offset", 0))
-            ->take($request->get('limit', 1000));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 1000));
 
         Log::debug('sql', ['sql' => $table->toSql()]);
 
@@ -149,37 +149,37 @@ class TaskController extends Controller
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
-        $studioId = StudioApi::getIdByName($request->get('studio_name'));
+        $studioId = StudioApi::getIdByName($request->input('studio_name'));
 
         if (!self::canEdit($user['user_uid'], $studioId)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
         $new = Task::firstOrNew(
             [
-                'id' => $request->get('id')
+                'id' => $request->input('id')
             ],
             [
                 'owner_id' => $studioId,
                 'creator_id' => $user['user_uid'],
-                'project_id' => $request->get('project_id'),
+                'project_id' => $request->input('project_id'),
             ],
         );
 
-        if (Str::isUuid($request->get('id'))) {
-            $new->id = $request->get('id');
+        if (Str::isUuid($request->input('id'))) {
+            $new->id = $request->input('id');
         } else {
             $new->id =  Str::uuid();
         }
-        $new->title = $request->get('title');
+        $new->title = $request->input('title');
         $new->editor_id = $user['user_uid'];
-        $new->parent_id = $request->get('parent_id');
-        $new->type = $request->get('type');
+        $new->parent_id = $request->input('parent_id');
+        $new->type = $request->input('type');
         //处理任务顺序
-        if ($request->get('parent_id')) {
-            $maxOrder = Task::where('parent_id', $request->get('parent_id'))
+        if ($request->input('parent_id')) {
+            $maxOrder = Task::where('parent_id', $request->input('parent_id'))
                 ->max('order');
         } else {
-            $maxOrder = Task::where('project_id', $request->get('project_id'))
+            $maxOrder = Task::where('project_id', $request->input('project_id'))
                 ->max('order');
         }
         if ($maxOrder === null) {
@@ -222,21 +222,21 @@ class TaskController extends Controller
             return $this->error(__('auth.failed'), 403, 403);
         }
         if ($request->has('title')) {
-            $task->title = $request->get('title');
+            $task->title = $request->input('title');
         }
         if ($request->has('description')) {
-            $task->description = $request->get('description');
+            $task->description = $request->input('description');
         }
         if ($request->has('category')) {
-            $task->category = $request->get('category');
+            $task->category = $request->input('category');
         }
         if ($request->has('progress')) {
-            $task->progress = $request->get('progress');
+            $task->progress = $request->input('progress');
         }
         if ($request->has('assignees_id')) {
             $delete = TaskAssignee::where('task_id', $task->id)->delete();
             $assigneesData = [];
-            foreach ($request->get('assignees_id') as $key => $id) {
+            foreach ($request->input('assignees_id') as $key => $id) {
                 $assigneesData[] = [
                     'id' => Str::uuid(),
                     'task_id' => $task->id,
@@ -247,21 +247,21 @@ class TaskController extends Controller
             TaskAssignee::insert($assigneesData);
         }
         if ($request->has('roles')) {
-            $task->roles = json_encode($request->get('roles'), JSON_UNESCAPED_UNICODE);
+            $task->roles = json_encode($request->input('roles'), JSON_UNESCAPED_UNICODE);
         }
         if ($request->has('executor_id')) {
-            $task->executor_id = $request->get('executor_id');
+            $task->executor_id = $request->input('executor_id');
         }
         if ($request->has('executor_relation_task_id')) {
-            $task->executor_relation_task_id = $request->get('executor_relation_task_id');
+            $task->executor_relation_task_id = $request->input('executor_relation_task_id');
         }
         if ($request->has('project_id')) {
-            $task->project_id = $request->get('project_id');
+            $task->project_id = $request->input('project_id');
         }
         if ($request->has('pre_task_id')) {
             TaskApi::setRelationTasks(
                 $task->id,
-                explode(',', $request->get('pre_task_id')),
+                explode(',', $request->input('pre_task_id')),
                 $user['user_uid'],
                 'pre'
             );
@@ -269,16 +269,16 @@ class TaskController extends Controller
         if ($request->has('next_task_id')) {
             TaskApi::setRelationTasks(
                 $task->id,
-                explode(',', $request->get('next_task_id')),
+                explode(',', $request->input('next_task_id')),
                 $user['user_uid'],
                 'next'
             );
         }
         if ($request->has('is_milestone')) {
-            $task->is_milestone = $request->get('is_milestone');
+            $task->is_milestone = $request->input('is_milestone');
         }
         if ($request->has('order')) {
-            $task->order = $request->get('order');
+            $task->order = $request->input('order');
         }
 
         $task->editor_id = $user['user_uid'];

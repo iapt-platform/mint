@@ -17,24 +17,24 @@ class WebHookController extends Controller
      */
     public function index(Request $request)
     {
-		switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'channel':
-                $table = WebHook::where('res_type','channel')->where('res_id',$request->get('id'));
+                $table = WebHook::where('res_type', 'channel')->where('res_id', $request->input('id'));
                 break;
             default:
                 return $this->error("no view");
                 break;
         }
-        if(!empty($search)){
-            $table->where('url', 'like', $search."%");
+        if (!empty($search)) {
+            $table->where('url', 'like', $search . "%");
         }
-        $table->orderBy($request->get('order','updated_at'),$request->get('dir','desc'));
+        $table->orderBy($request->input('order', 'updated_at'), $request->input('dir', 'desc'));
         $count = $table->count();
-        $table->skip($request->get("offset",0))
-              ->take($request->get('limit',1000));
+        $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 1000));
 
         $result = $table->get();
-        return $this->ok(["rows"=>WebHookResource::collection($result),"count"=>$count]);
+        return $this->ok(["rows" => WebHookResource::collection($result), "count" => $count]);
     }
 
     /**
@@ -47,8 +47,8 @@ class WebHookController extends Controller
     {
         //
         $user = AuthApi::current($request);
-        if(!$user){
-            return $this->error(__('auth.failed'),[],401);
+        if (!$user) {
+            return $this->error(__('auth.failed'), [], 401);
         }
 
         $validated = $request->validate([
@@ -64,12 +64,12 @@ class WebHookController extends Controller
         $new->res_id = $validated['res_id'];
         $new->url = $validated['url'];
         $new->receiver = $validated['receiver'];
-        if($request->has('event')){
-            $new->event = json_encode($request->get('event'),JSON_UNESCAPED_UNICODE);
-        }else{
+        if ($request->has('event')) {
+            $new->event = json_encode($request->input('event'), JSON_UNESCAPED_UNICODE);
+        } else {
             $new->event = null;
         }
-        $new->status = $request->get('status','active');
+        $new->status = $request->input('status', 'active');
         $new->editor_uid = $user['user_uid'];
         $new->save();
         return $this->ok(new WebHookResource($new));
@@ -85,7 +85,7 @@ class WebHookController extends Controller
     {
         //
         $webHook = WebHook::find($id);
-        if(!$webHook){
+        if (!$webHook) {
             return $this->error('no id');
         }
         return $this->ok(new WebHookResource($webHook));
@@ -102,8 +102,8 @@ class WebHookController extends Controller
     {
         //
         $user = AuthApi::current($request);
-        if(!$user){
-            return $this->error(__('auth.failed'),[],401);
+        if (!$user) {
+            return $this->error(__('auth.failed'), [], 401);
         }
 
         $validated = $request->validate([
@@ -114,19 +114,19 @@ class WebHookController extends Controller
         ]);
         //TODO 判断权限
         $webHook = WebHook::find($id);
-        if(!$webHook){
+        if (!$webHook) {
             return $this->error('no id');
         }
         $webHook->res_type = $validated['res_type'];
         $webHook->res_id = $validated['res_id'];
         $webHook->url = $validated['url'];
         $webHook->receiver = $validated['receiver'];
-        if($request->has('event')){
-            $webHook->event = json_encode($request->get('event'),JSON_UNESCAPED_UNICODE);
-        }else{
+        if ($request->has('event')) {
+            $webHook->event = json_encode($request->input('event'), JSON_UNESCAPED_UNICODE);
+        } else {
             $webHook->event = null;
         }
-        $webHook->status = $request->get('status');
+        $webHook->status = $request->input('status');
         $webHook->editor_uid = $user['user_uid'];
         $webHook->save();
         return $this->ok(new WebHookResource($webHook));
@@ -138,15 +138,15 @@ class WebHookController extends Controller
      * @param  \App\Models\WebHook  $webHook
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,string $id)
+    public function destroy(Request $request, string $id)
     {
         //
         $user = AuthApi::current($request);
-        if(!$user){
+        if (!$user) {
             return $this->error(__('auth.failed'));
         }
         $webHook = WebHook::find($id);
-        if(!$webHook){
+        if (!$webHook) {
             return $this->error('no id');
         }
         //TODO 判断当前用户是否有权限

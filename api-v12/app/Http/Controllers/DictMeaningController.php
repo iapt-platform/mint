@@ -51,8 +51,8 @@ class DictMeaningController extends Controller
     public function index(Request $request)
     {
         //
-        $words = explode("-", $request->get('word'));
-        $lang = $request->get('lang');
+        $words = explode("-", $request->input('word'));
+        $lang = $request->input('lang');
         $key = "dict_first_mean/";
         $meaning = [];
         foreach ($words as $key => $word) {

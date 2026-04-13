@@ -26,24 +26,23 @@ class ResetPasswordController extends Controller
     public function store(Request $request)
     {
         //
-        $user = UserInfo::where('reset_password_token',$request->get('token'))
-                        ->where('username',$request->get('username'))
-                        ->first();
-        if(!$user){
-        return $this->error('no token',404,404);
+        $user = UserInfo::where('reset_password_token', $request->input('token'))
+            ->where('username', $request->input('username'))
+            ->first();
+        if (!$user) {
+            return $this->error('no token', 404, 404);
         }
-        if(mb_strlen($request->get('password'),'UTF-8')<6){
-            return $this->error('input is invalid',402,402);
+        if (mb_strlen($request->input('password'), 'UTF-8') < 6) {
+            return $this->error('input is invalid', 402, 402);
         }
-        $user->password = md5($request->get('password'));
+        $user->password = md5($request->input('password'));
         $user->reset_password_token = null;
         $ok = $user->save();
-        if($ok){
+        if ($ok) {
             return $this->ok($user);
-        }else{
-            return $this->error('fail to set password',500,500);
+        } else {
+            return $this->error('fail to set password', 500, 500);
         }
-
     }
 
     /**
@@ -55,10 +54,10 @@ class ResetPasswordController extends Controller
     public function show($token)
     {
         //
-        $user = UserInfo::where('reset_password_token',$token)
-                        ->select(['username'])->first();
-        if(!$user){
-            return $this->error('no token',404,404);
+        $user = UserInfo::where('reset_password_token', $token)
+            ->select(['username'])->first();
+        if (!$user) {
+            return $this->error('no token', 404, 404);
         }
         return $this->ok($user);
     }

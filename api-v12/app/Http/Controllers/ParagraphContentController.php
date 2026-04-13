@@ -29,7 +29,7 @@ class ParagraphContentController extends Controller
 
         $channels = [];
         if ($request->has('channels')) {
-            $_channels = explode(',', str_replace('_', ',', $request->get('channels')));
+            $_channels = explode(',', str_replace('_', ',', $request->input('channels')));
             foreach ($_channels as $key => $channel) {
                 if (Str::isUuid($channel)) {
                     $channels[] = $channel;
@@ -37,7 +37,7 @@ class ParagraphContentController extends Controller
             }
         }
 
-        $mode = $request->get('mode', 'read');
+        $mode = $request->input('mode', 'read');
         if ($mode === 'read') {
             //阅读模式加载html格式原文
             $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');

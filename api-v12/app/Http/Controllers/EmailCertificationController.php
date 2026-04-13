@@ -32,25 +32,25 @@ class EmailCertificationController extends Controller
     public function store(Request $request)
     {
         //查询是否重复
-        if (UserInfo::where('email', $request->get('email'))->exists()) {
+        if (UserInfo::where('email', $request->input('email'))->exists()) {
             return $this->error('email.exists', 'err.email.exists', 200);
         }
         $sender = config("mint.admin.root_uuid");
 
         $uuid = Str::uuid();
         $invite = Invite::firstOrNew(
-            ['email' => $request->get('email')],
+            ['email' => $request->input('email')],
             ['id' => $uuid]
         );
         $invite->user_uid = $sender;
         $invite->status = 'invited';
         $invite->save();
 
-        Mail::to($request->get('email'))
+        Mail::to($request->input('email'))
             ->send(new EmailCertif(
                 $invite->id,
-                $request->get('subject', 'sign up wikipali'),
-                $request->get('lang'),
+                $request->input('subject', 'sign up wikipali'),
+                $request->input('lang'),
             ));
         if (Mail::failures()) {
             return $this->error('send email fail', '', 200);
