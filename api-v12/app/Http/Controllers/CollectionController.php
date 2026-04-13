@@ -11,6 +11,7 @@ use App\Http\Api\StudioApi;
 use App\Http\Resources\CollectionResource;
 use App\Services\CollectionService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class CollectionController extends Controller
 {
@@ -18,16 +19,65 @@ class CollectionController extends Controller
 
     public function index(Request $request)
     {
-        $result = $this->service->buildIndexQuery($request);
-
-        if (isset($result['error'])) {
-            return $this->error($result['error'], $result['code'] ?? 200, $result['code'] ?? 200);
+        try {
+            $table = match ($request->get('view')) {
+                'studio_list' => $this->service->buildStudioListQuery(),
+                'studio'      => $this->buildStudioIndex($request),
+                'public'      => $this->service->buildPublicQuery(
+                    $request->has('studio')
+                        ? StudioApi::getIdByName($request->get('studio'))
+                        : null
+                ),
+                default       => throw new \InvalidArgumentException('无法识别的view参数'),
+            };
+        } catch (\Illuminate\Auth\AuthenticationException $e) {
+            return $this->error($e->getMessage(), 403, 403);
+        } catch (\InvalidArgumentException $e) {
+            return $this->error($e->getMessage(), 200, 200);
         }
 
+        if ($request->filled('search')) {
+            $table = $table->where('title', 'like', '%' . $request->get('search') . '%');
+        }
+
+        $count = $table->count();
+
+        if ($request->has('order') && $request->has('dir')) {
+            $table = $table->orderBy($request->get('order'), $request->get('dir'));
+        } else {
+            $orderCol = $request->get('view') === 'studio_list' ? 'count' : 'updated_at';
+            $table = $table->orderBy($orderCol, 'desc');
+        }
+
+        $result = $table
+            ->skip($request->get('offset', 0))
+            ->take($request->get('limit', 1000))
+            ->get();
+
         return $this->ok([
-            'rows'  => CollectionResource::collection($result['data']),
-            'count' => $result['count'],
+            'rows'  => CollectionResource::collection($result),
+            'count' => $count,
         ]);
+    }
+
+    // studio 分支的鉴权逻辑留在 controller
+    private function buildStudioIndex(Request $request): Builder
+    {
+        $user = AuthApi::current($request);
+        if (!$user) {
+            throw new \Illuminate\Auth\AuthenticationException(__('auth.failed'));
+        }
+
+        $studioId = StudioApi::getIdByName($request->get('name'));
+        if ($user['user_uid'] !== $studioId) {
+            throw new \Illuminate\Auth\AuthenticationException(__('auth.failed'));
+        }
+
+        return $this->service->buildStudioQuery(
+            $user['user_uid'],
+            $studioId,
+            $request->get('view2', 'my')
+        );
     }
 
     public function showMyNumber(Request $request)

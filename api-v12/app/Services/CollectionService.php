@@ -9,6 +9,7 @@ use App\Http\Api\ShareApi;
 use Illuminate\Http\Request;
 use App\Http\Resources\CollectionResource;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Builder;
 
 class CollectionService
 {
@@ -76,56 +77,8 @@ class CollectionService
         return ['data' => ['my' => $my, 'collaboration' => $collaboration]];
     }
 
-    /**
-     * 构建 index 查询，根据 view 参数分发不同逻辑
-     */
-    public function buildIndexQuery(Request $request): array
-    {
 
-        $table = match ($request->get('view')) {
-            'studio_list' => $this->buildStudioListQuery($this->indexCol),
-            'studio'      => $this->buildStudioQuery($request, $this->indexCol),
-            'public'      => $this->buildPublicQuery($request, $this->indexCol),
-            default       => null,
-        };
-
-        if ($table === null) {
-            return ['error' => '无法识别的view参数'];
-        }
-
-        // 如果是鉴权失败从 studio 分支返回的错误
-        if (isset($table['error'])) {
-            return $table;
-        }
-
-        // 搜索
-        if ($request->filled('search')) {
-            $table = $table->where('title', 'like', '%' . $request->get('search') . '%');
-        }
-
-        $count = $table->count();
-
-        // 排序
-        if ($request->has('order') && $request->has('dir')) {
-            $table = $table->orderBy($request->get('order'), $request->get('dir'));
-        } else {
-            $orderCol = $request->get('view') === 'studio_list' ? 'count' : 'updated_at';
-            $table = $table->orderBy($orderCol, 'desc');
-        }
-
-        $result = $table
-            ->skip($request->get('offset', 0))
-            ->take($request->get('limit', 1000))
-            ->get();
-
-        return ['data' => $result, 'count' => $count];
-    }
-
-    // -------------------------------------------------------------------------
-    // 私有：各 view 的查询构建
-    // -------------------------------------------------------------------------
-
-    private function buildStudioListQuery(array $indexCol)
+    public function buildStudioListQuery(): Builder
     {
         return Collection::select(['owner'])
             ->selectRaw('count(*) as count')
@@ -133,37 +86,25 @@ class CollectionService
             ->groupBy('owner');
     }
 
-    private function buildStudioQuery(Request $request, array $indexCol): array|\Illuminate\Database\Eloquent\Builder
+    public function buildStudioQuery(string $userUid, string $studioId, string $view2 = 'my'): Builder
     {
-        $user = AuthApi::current($request);
-        if (!$user) {
-            return ['error' => __('auth.failed'), 'code' => 403];
-        }
+        $table = Collection::select($this->indexCol);
 
-        $studioId = StudioApi::getIdByName($request->get('name'));
-        if ($user['user_uid'] !== $studioId) {
-            return ['error' => __('auth.failed'), 'code' => 403];
-        }
-
-        $table = Collection::select($indexCol);
-
-        if ($request->get('view2', 'my') === 'my') {
+        if ($view2 === 'my') {
             return $table->where('owner', $studioId);
         }
 
-        // 协作
         $resList = ShareApi::getResList($studioId, 4);
         $resId = array_column($resList, 'res_id');
 
         return $table->whereIn('uid', $resId)->where('owner', '<>', $studioId);
     }
 
-    private function buildPublicQuery(Request $request, array $indexCol)
+    public function buildPublicQuery(?string $studioId = null): Builder
     {
-        $table = Collection::select($indexCol)->where('status', 30);
+        $table = Collection::select($this->indexCol)->where('status', 30);
 
-        if ($request->has('studio')) {
-            $studioId = StudioApi::getIdByName($request->get('studio'));
+        if ($studioId) {
             $table = $table->where('owner', $studioId);
         }
 
