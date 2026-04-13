@@ -352,7 +352,7 @@
                         <li class="nav-item">
                             <a href="{{ route('library.wiki') }}">百科</a>
                         </li>
-                        <li class="mobile-nav-item">
+                        <li class="nav-item">
                             <a href="{{ route('library.anthology.index') }}">文集</a>
                         </li>
                         <li class="nav-item">
