@@ -9,6 +9,8 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\Library\AnthologyController;
+use App\Http\Controllers\Library\AnthologyReadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,13 +61,22 @@ Route::post('/logout', function () {
     return redirect('/login');
 })->name('logout');
 
-Route::prefix('library')->group(function () {
-    Route::get('/', [CategoryController::class, 'index'])->name('library.home');
-    Route::get('/category/{id}', [CategoryController::class, 'show'])->name('library.category.show');
-    Route::get('/book/{id}', [BookController::class, 'show'])->name('library.book.show');
-    Route::get('/book/{id}/read', [BookController::class, 'read'])->name('library.book.read');
-    Route::get('/wiki', [BookController::class, 'read'])->name('library.wiki');
-    Route::get('/download', [DownloadController::class, 'index'])->name('library.download');
+Route::prefix('library')->name('library.')->group(function () {
+    Route::get('/', [CategoryController::class, 'index'])->name('home');
+    Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
+    Route::get('/book/{id}', [BookController::class, 'show'])->name('book.show');
+    Route::get('/book/{id}/read', [BookController::class, 'read'])->name('book.read');
+    Route::get('/wiki', [BookController::class, 'read'])->name('wiki');
+    Route::get('/download', [DownloadController::class, 'index'])->name('download');
+    // 文集
+    Route::get('/anthology',          [AnthologyController::class, 'index'])->name('anthology.index');
+    Route::get('/anthology/{id}',     [AnthologyController::class, 'show'])->name('anthology.show');
+
+    // 文集阅读
+    Route::get(
+        '/anthology/{anthology}/read/{article}',
+        [AnthologyReadController::class, 'read']
+    )->name('anthology.read');
 });
 // 博客路由
 Route::prefix('blog')->group(function () {
