@@ -4,8 +4,11 @@ namespace App\Services;
 
 use App\Models\Article;
 use App\Models\ArticleCollection;
+use App\Models\Sentence;
+
 use App\Http\Resources\ArticleResource;
 use Illuminate\Support\Facades\Log;
+use App\Http\Api\ChannelApi;
 
 class ArticleService
 {
@@ -61,5 +64,27 @@ class ArticleService
             'data' => new ArticleResource($result),
             'ok' => true
         ];
+    }
+
+    public function articleChannels(string $id): array
+    {
+        $sentences = $this->sentenceIds($id);
+        $query = [];
+        foreach ($sentences as $value) {
+            $ids = explode('-', $value);
+            $query[] = $ids;
+        }
+        $fields = ['book_id', 'paragraph', 'word_start', 'word_end'];
+        $publicChannelIds = Sentence::whereIns($fields, $query)
+            ->where('strlen', '>', 0)
+            ->where('status', 30)
+            ->groupBy('channel_uid')
+            ->select('channel_uid')
+            ->get();
+        $channels = [];
+        foreach ($publicChannelIds as  $id) {
+            $channels = ChannelApi::getById($id);
+        }
+        return $channels;
     }
 }
