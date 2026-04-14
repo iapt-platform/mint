@@ -3,7 +3,7 @@
     <div class="card h-100">
         <div class="card-body">
             <div class="book-cover-container">
-                <a href="{{ route('library.book.show', $book['id']) }}" class="text-decoration-none">
+                <a href="{{ route('library.tipitaka.show', $book['id']) }}" class="text-decoration-none">
                     <img src="{{ $book['cover'] ?? 'https://via.placeholder.com/300x400?text=No+Cover' }}"
                         alt="{{ $book['title'] ?? '未知书籍' }}"
                         class="book-cover"

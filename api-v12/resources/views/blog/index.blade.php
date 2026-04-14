@@ -21,7 +21,7 @@
                 <div class="article-title-wrapper">
                     <h2 class="article-title">
                         <a
-                            href="{{ route('library.book.read', $post['uid']) }}">{{ $post->title }}</a>
+                            href="{{ route('library.tipitaka.read', $post['uid']) }}">{{ $post->title }}</a>
                     </h2>
 
                     <h3 class="article-subtitle">

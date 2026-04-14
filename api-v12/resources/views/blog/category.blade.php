@@ -33,7 +33,7 @@
 <section class="article-list--compact">
     @foreach ($posts as $post)
     <article>
-        <a href="{{ route('library.book.read', $post['uid']) }}">
+        <a href="{{ route('library.tipitaka.read', $post['uid']) }}">
             <div class="article-details">
                 <h2 class="article-title">{{ $post->title }}</h2>
                 <footer class="article-time">

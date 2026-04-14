@@ -64,8 +64,8 @@ Route::post('/logout', function () {
 Route::prefix('library')->name('library.')->group(function () {
     Route::get('/', [CategoryController::class, 'index'])->name('home');
     Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
-    Route::get('/book/{id}', [BookController::class, 'show'])->name('book.show');
-    Route::get('/book/{id}/read', [BookController::class, 'read'])->name('book.read');
+    Route::get('/tipitaka/{id}', [BookController::class, 'show'])->name('tipitaka.show');
+    Route::get('/tipitaka/{id}/read', [BookController::class, 'read'])->name('tipitaka.read');
     Route::get('/wiki', [BookController::class, 'read'])->name('wiki');
     Route::get('/download', [DownloadController::class, 'index'])->name('download');
     // 文集
