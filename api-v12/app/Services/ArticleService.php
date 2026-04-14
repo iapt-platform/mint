@@ -32,14 +32,14 @@ class ArticleService
     }
 
     /**
-     * 提取字符串中 {{ }} 之间的内容
+     * 提取字符串中 {{1-2-3-4}} 格式的内容（四段数字）
      *
      * @param string $text
      * @return array
      */
     public function extractBracesContent(string $text): array
     {
-        preg_match_all('/\{\{\s*(.*?)\s*\}\}/', $text, $matches);
+        preg_match_all('/\{\{\s*(\d+-\d+-\d+-\d+)\s*\}\}/', $text, $matches);
 
         return $matches[1] ?? [];
     }
@@ -66,9 +66,12 @@ class ArticleService
         ];
     }
 
-    public function articleChannels(string $id): array
+    public function articleChannels(string $id): ?array
     {
         $sentences = $this->sentenceIds($id);
+        if (!$sentences) {
+            return null;
+        }
         $query = [];
         foreach ($sentences as $value) {
             $ids = explode('-', $value);
