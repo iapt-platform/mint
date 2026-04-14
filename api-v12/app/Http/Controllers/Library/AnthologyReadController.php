@@ -132,9 +132,10 @@ class AnthologyReadController extends Controller
         $channels = $this->articleService->articleChannels($articleId);
         // blade 里有 $relatedBooks，传空数组防止 undefined variable
         $relatedBooks = [];
+        $editor_link = config('mint.server.dashboard_base_path') . "/workspace/anthology/{$anthologyId}/{$book['id']}";
 
         // 翻页路由需要 anthologyId，传给 blade 供覆盖路由使用
-        return view('library.book.read', compact('book', 'relatedBooks', 'anthologyId', 'channels'));
+        return view('library.book.read', compact('book', 'relatedBooks', 'anthologyId', 'channels', 'editor_link'));
     }
 
     // =========================================================================
