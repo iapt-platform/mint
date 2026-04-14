@@ -220,6 +220,26 @@
                 @endif
             </div>
             <div class="navbar-nav flex-row order-md-last align-items-center">
+                {{-- Desktop 设置按钮 --}}
+                <div class="nav-item d-none d-md-block me-2">
+                    <a href="#"
+                        class="nav-link"
+                        data-bs-toggle="modal"
+                        data-bs-target="#settingsModal">
+                        <i class="fas fa-cog me-1"></i>
+                        设置
+                    </a>
+                </div>
+
+                {{-- Mobile 设置按钮 --}}
+                <div class="nav-item d-md-none me-2">
+                    <a href="#"
+                        class="nav-link"
+                        data-bs-toggle="modal"
+                        data-bs-target="#settingsModal">
+                        <i class="fas fa-cog"></i>
+                    </a>
+                </div>
                 {{-- Desktop Dropdown --}}
                 @if(!empty($channels))
                 <div class="nav-item dropdown d-none d-md-block me-2">
@@ -516,6 +536,154 @@
         </div>
 
     </div>
+
+    <!-- Settings Modal -->
+    <div class="modal modal-blur fade" id="settingsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <form id="settingsForm" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">阅读设置</h5>
+
+                    <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    {{-- 显示原文 --}}
+                    <div class="mb-4">
+                        <label class="form-label">显示原文</label>
+
+                        <label class="form-check form-switch">
+                            <input class="form-check-input"
+                                type="checkbox"
+                                id="showOrigin">
+
+                            <span class="form-check-label">
+                                开启/关闭原文显示
+                            </span>
+                        </label>
+                    </div>
+
+                    {{-- 界面语言 --}}
+                    <div class="mb-4">
+                        <label class="form-label">界面语言</label>
+
+                        <select class="form-select" id="uiLanguage">
+                            <option value="auto">自动</option>
+                            <option value="zh">简体中文</option>
+                            <option value="en">英文</option>
+                        </select>
+                    </div>
+
+                    {{-- 巴利文脚本 --}}
+                    <div class="mb-4">
+                        <label class="form-label">巴利文脚本</label>
+
+                        <select class="form-select" id="paliScript">
+                            <option value="auto">自动</option>
+                            <option value="roman">罗马</option>
+                            <option value="myanmar">缅文</option>
+                            <option value="thai">泰文</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                        class="btn btn-link"
+                        data-bs-dismiss="modal">
+                        取消
+                    </button>
+
+                    <button type="submit"
+                        class="btn btn-primary">
+                        确定
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleOriginDisplay(show) {
+            document.querySelectorAll('.origin').forEach(el => {
+                el.style.display = show ? 'unset' : 'none';
+            });
+        }
+
+        function setCookie(name, value, days = 365) {
+            let expires = "";
+            const date = new Date();
+
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+
+            expires = "; expires=" + date.toUTCString();
+
+            document.cookie =
+                name + "=" + encodeURIComponent(value) +
+                expires +
+                "; path=/";
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+
+            const parts = value.split(`; ${name}=`);
+
+            if (parts.length === 2)
+                return decodeURIComponent(parts.pop().split(';').shift());
+
+            return null;
+        }
+
+        // 初始化加载 cookie
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const showOrigin =
+                getCookie('show_origin') === 'true';
+
+            document.getElementById('showOrigin').checked =
+                showOrigin;
+
+            document.getElementById('uiLanguage').value =
+                getCookie('ui_language') || 'auto';
+
+            document.getElementById('paliScript').value =
+                getCookie('pali_script') || 'auto';
+
+            // 应用原文显示设置
+            toggleOriginDisplay(showOrigin);
+        });
+
+        // 提交保存
+        document.getElementById('settingsForm')
+            .addEventListener('submit', function(e) {
+
+                e.preventDefault();
+
+                setCookie(
+                    'show_origin',
+                    document.getElementById('showOrigin').checked
+                );
+
+                setCookie(
+                    'ui_language',
+                    document.getElementById('uiLanguage').value
+                );
+
+                setCookie(
+                    'pali_script',
+                    document.getElementById('paliScript').value
+                );
+                toggleOriginDisplay(showOrigin);
+                location.reload();
+            });
+    </script>
 
     <script>
         const themeToggle = document.getElementById('themeToggle');
