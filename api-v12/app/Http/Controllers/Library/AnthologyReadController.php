@@ -63,12 +63,8 @@ class AnthologyReadController extends Controller
         ]];
 
         // ── 4. 计算翻页（pagination） ─────────────────────────────────────────
-        // 只在 level=1 的节点间翻页（与目录一致）
-        $level1 = $fullArticleList
-            ->filter(fn($a) => ($a['level'] ?? 1) === 1)
-            ->values();
 
-        $currentIndex = $level1->search(
+        $currentIndex = $fullArticleList->search(
             fn($a) => $a['article_id'] === $articleId
         );
 
@@ -77,14 +73,14 @@ class AnthologyReadController extends Controller
 
         if ($currentIndex !== false) {
             if ($currentIndex > 0) {
-                $prevItem = $level1[$currentIndex - 1];
+                $prevItem = $fullArticleList[$currentIndex - 1];
                 $prev = [
                     'id'    => $prevItem['article_id'],
                     'title' => $prevItem['title'],
                 ];
             }
-            if ($currentIndex < $level1->count() - 1) {
-                $nextItem = $level1[$currentIndex + 1];
+            if ($currentIndex < $fullArticleList->count() - 1) {
+                $nextItem = $fullArticleList[$currentIndex + 1];
                 $next = [
                     'id'    => $nextItem['article_id'],
                     'title' => $nextItem['title'],
