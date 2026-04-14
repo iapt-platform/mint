@@ -220,6 +220,27 @@
                 @endif
             </div>
             <div class="navbar-nav flex-row order-md-last align-items-center">
+                {{-- Desktop 编辑器按钮 --}}
+                @if(!empty($editor_link))
+                <div class="nav-item d-none d-md-block me-2">
+                    <a href="{{ $editor_link }}"
+                        target="_blank"
+                        class="nav-link">
+                        <i class="fas fa-pen-to-square me-1"></i>
+                        编辑器
+                    </a>
+                </div>
+
+                {{-- Mobile 编辑器按钮 --}}
+                <div class="nav-item d-md-none me-2">
+                    <a href="{{ $editor_link }}"
+                        target="_blank"
+                        class="nav-link">
+                        <i class="fas fa-pen-to-square"></i>
+                    </a>
+                </div>
+                @endif
+
                 {{-- Desktop 设置按钮 --}}
                 <div class="nav-item d-none d-md-block me-2">
                     <a href="#"
