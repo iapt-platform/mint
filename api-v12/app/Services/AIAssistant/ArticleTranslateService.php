@@ -46,6 +46,12 @@ class ArticleTranslateService
       2. content(译文)
     - 无需输出原文
     - 只输出jsonl格式的译文 无需出处额外的解释
+
+     # 输出范例
+     ```jsonl
+    {"id":"1-2-3-4","content":"译文"}
+    {"id":"2-3-4-5","content":"译文"}
+    ```
     PROMPT;
 
     public function __construct(
