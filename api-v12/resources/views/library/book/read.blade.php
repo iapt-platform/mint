@@ -26,6 +26,22 @@
             width: 250px;
             flex-shrink: 0;
             display: none;
+
+            position: sticky;
+            top: 0;
+
+            height: 100vh;
+
+            overflow-y: auto;
+            overflow-x: hidden;
+
+            scrollbar-width: thin;
+        }
+
+        .toc-sidebar .card-body {
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
         .content-area {
@@ -134,7 +150,11 @@
             text-decoration: none;
         }
 
-        .toc-sidebar ul li a:hover,
+        .toc-sidebar ul li a:hover {
+            text-decoration: none;
+
+        }
+
         .offcanvas-body ul li a:hover {
             text-decoration: underline;
         }
@@ -172,11 +192,27 @@
             color: #adb5bd;
         }
 
+        .toc_item {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         .toc_item:hover {
             color: #206bc4 !important;
-            background: rgba(32, 107, 196, 0.08);
+            background: rgba(32, 107, 196, 0.15);
             border-radius: 2px;
             cursor: 'pointer';
+        }
+
+        .toc_item a,
+        .toc_item span {
+            display: block;
+            width: 100%;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .toc-active {
@@ -364,14 +400,18 @@
                 @foreach ($book['toc'] as $item)
                 <li class="toc_item toc-level-{{ $item['level'] }} {{ $item['active'] ?? false ? 'toc-active' : ($item['disabled'] ? 'toc-disabled' : '') }}">
                     @if($item['active'] ?? false)
-                    <span>{{ $item['title'] }}</span>
+                    <span title="{{ $item['title'] }}">
+                        {{ $item['title'] }}
+                    </span>
                     @elseif(!$item['disabled'])
                     {{-- ✅ 修改1：使用文集阅读路由，传 anthology + article 两个参数 --}}
-                    <a href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $item['id']]) }}">
+                    <a href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $item['id']]) }}" title="{{ $item['title'] }}">
                         {{ $item['title'] }}
                     </a>
                     @else
-                    <span>{{ $item['title'] }}</span>
+                    <span title="{{ $item['title'] }}">
+                        {{ $item['title'] }}
+                    </span>
                     @endif
                 </li>
                 @endforeach
