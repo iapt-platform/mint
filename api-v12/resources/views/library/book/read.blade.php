@@ -194,6 +194,10 @@
             background: rgba(77, 171, 247, 0.1);
             border-left-color: #4dabf7;
         }
+
+        .origin {
+            color: darkred;
+        }
     </style>
 </head>
 
@@ -214,7 +218,6 @@
                     </a>
                 </small>
                 @endif
-                <span>{{ $book['title'] }}</span>
             </div>
             <div class="navbar-nav flex-row order-md-last align-items-center">
                 {{-- Desktop Dropdown --}}
