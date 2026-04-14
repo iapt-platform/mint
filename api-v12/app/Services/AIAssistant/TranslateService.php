@@ -111,15 +111,17 @@ class TranslateService
             if (empty($content)) {
                 throw new \Exception('LLM返回内容为空');
             }
-
+            Log::info('翻译完成', [
+                'content'=>$content,
+                'duration' => $complete,
+                'input_tokens' => $response['usage']['prompt_tokens'] ?? 0,
+                'output_tokens' => $response['usage']['completion_tokens'] ?? 0,
+            ]);
             // 4. 解析JSONL格式的翻译结果
             $translatedData = $this->jsonlToArray($content);
 
-            Log::info('NissayaTranslate: 翻译完成', [
-                'duration' => $complete,
+            Log::info('解析完成', [
                 'output_items' => count($translatedData),
-                'input_tokens' => $response['usage']['prompt_tokens'] ?? 0,
-                'output_tokens' => $response['usage']['completion_tokens'] ?? 0,
             ]);
 
             return TranslationResponseDTO::fromArray([
@@ -186,7 +188,7 @@ class TranslateService
             if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
                 $result[] = $decoded;
             } else {
-                Log::warning('NissayaTranslate: 无法解析JSON行', [
+                Log::warning('无法解析JSON行', [
                     'line' => $line,
                     'error' => json_last_error_msg(),
                 ]);
