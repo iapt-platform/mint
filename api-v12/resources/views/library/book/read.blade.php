@@ -144,20 +144,22 @@
             color: #4dabf7;
         }
 
+
+
         .toc-level-1 {
             padding-left: 0 !important;
         }
 
         .toc-level-2 {
-            padding-left: 10px !important;
+            padding-left: 16px !important;
         }
 
         .toc-level-3 {
-            padding-left: 20px !important;
+            padding-left: 24px !important;
         }
 
         .toc-level-4 {
-            padding-left: 30px !important;
+            padding-left: 36px !important;
         }
 
         .toc-disabled {
@@ -170,12 +172,18 @@
             color: #adb5bd;
         }
 
+        .toc_item:hover {
+            color: #206bc4 !important;
+            background: rgba(32, 107, 196, 0.08);
+            border-radius: 2px;
+            cursor: 'pointer';
+        }
+
         .toc-active {
             color: #206bc4 !important;
             font-weight: 600;
             background: rgba(32, 107, 196, 0.08);
             border-left: 3px solid #206bc4;
-            padding-left: 6px !important;
             border-radius: 2px;
             cursor: default;
             pointer-events: none;
@@ -310,7 +318,7 @@
             @if(isset($book['toc']) && count($book['toc']) > 0)
             <ul>
                 @foreach ($book['toc'] as $item)
-                <li class="toc-level-{{ $item['level'] }} {{ $item['active'] ?? false ? 'toc-active' : ($item['disabled'] ? 'toc-disabled' : '') }}">
+                <li class="toc_item toc-level-{{ $item['level'] }} {{ $item['active'] ?? false ? 'toc-active' : ($item['disabled'] ? 'toc-disabled' : '') }}">
                     @if($item['active'] ?? false)
                     <span>{{ $item['title'] }}</span>
                     @elseif(!$item['disabled'])
@@ -340,7 +348,7 @@
                 @if(isset($book['toc']) && count($book['toc']) > 0)
                 <ul>
                     @foreach ($book['toc'] as $item)
-                    <li class="toc-level-{{ $item['level'] }} {{ $item['active'] ?? false ? 'toc-active' : ($item['disabled'] ? 'toc-disabled' : '') }}">
+                    <li class="toc_item toc-level-{{ $item['level'] }} {{ $item['active'] ?? false ? 'toc-active' : ($item['disabled'] ? 'toc-disabled' : '') }}">
                         @if($item['active'] ?? false)
                         <span>{{ $item['title'] }}</span>
                         @elseif(!$item['disabled'])
