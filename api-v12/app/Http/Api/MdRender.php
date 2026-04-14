@@ -645,8 +645,10 @@ class MdRender
                     $output .= '</div>';
                     unset($GLOBALS['note']);
                 }
+
                 //处理图片链接
                 $output = str_replace('<img src="', '<img src="' . config('app.url'), $output);
+                $output = $this->replaceSinglePWithSpan($output);
                 break;
             case 'markdown':
                 //处理脚注
@@ -682,7 +684,27 @@ class MdRender
         );
 
         $output  = $mdRender->convert($markdown, $channelId, $queryId);
-
         return $output;
+    }
+
+    /**
+     * 如果字符串中只有一对 p 标签，则替换为 span
+     *
+     * @param string $html
+     * @return string
+     */
+    public static function replaceSinglePWithSpan(string $html): string
+    {
+        preg_match_all('/<p\b[^>]*>.*?<\/p>/is', $html, $matches);
+
+        if (count($matches[0]) === 1) {
+            return preg_replace(
+                ['/^\s*<p\b([^>]*)>/i', '/<\/p>\s*$/i'],
+                ['<span$1>', '</span>'],
+                $html
+            );
+        }
+
+        return $html;
     }
 }
