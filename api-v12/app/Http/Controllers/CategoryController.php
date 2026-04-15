@@ -8,6 +8,7 @@ use App\Models\ProgressChapter;
 use App\Models\Tag;
 use App\Models\TagMap;
 
+
 class CategoryController extends Controller
 {
     protected static int $nextId = 1;
@@ -116,10 +117,6 @@ class CategoryController extends Controller
         }
         // 获取该分类下的章节
         $books = ProgressChapter::with('channel.owner')
-            ->leftJoin('pali_texts', function ($join) {
-                $join->on('progress_chapters.book', '=', 'pali_texts.book')
-                    ->on('progress_chapters.para', '=', 'pali_texts.paragraph');
-            })
             ->whereIns(['progress_chapters.book', 'progress_chapters.para'], $chaptersParam)
             ->whereHas('channel', function ($query) {
                 $query->where('status', 30);
@@ -140,13 +137,18 @@ class CategoryController extends Controller
             if (empty($title)) {
                 $title = $pali->firstWhere('book', $book->book)->toc;
             }
+            //Log::debug('getBooksInfo', ['book' => $book->book, 'paragraph' => $book->para]);
+            $pcd_book_id = $pali->first(function ($item) use ($book) {
+                return $item->book == $book->book
+                    && $item->paragraph == $book->para;
+            })?->pcd_book_id;
             $categoryBooks[] = [
                 "id" => $book->uid,
                 "title" => $title,
                 "author" => $book->channel->name,
                 "publisher" => $book->channel->owner,
                 "type" => __('labels.' . $book->channel->type),
-                "cover" => "/assets/images/cover/zh-hans/1/{$book->pcd_book_id}.png",
+                "cover" => "/assets/images/cover/zh-hans/1/{$pcd_book_id}.png",
                 "description" => $book->summary ?? "比库戒律的详细说明",
                 "language" => __('language.' . $book->channel->lang),
             ];
