@@ -404,15 +404,20 @@
                         {{ $item['title'] }}
                     </span>
                     @elseif(!$item['disabled'])
+
+                    @if(isset($anthologyId))
                     {{-- ✅ 修改1：使用文集阅读路由，传 anthology + article 两个参数 --}}
                     <a href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $item['id'],'channel' => request('channel')]) }}" title="{{ $item['title'] }}">
-                        {{ $item['title'] }}
-                    </a>
-                    @else
-                    <span title="{{ $item['title'] }}">
-                        {{ $item['title'] }}
-                    </span>
-                    @endif
+                        @else
+                        <a href="{{ route('library.tipitaka.read', ['id' => $item['id'] ,'channel' => request('channel')]) }}" title="{{ $item['title'] }}">
+                            @endif
+                            {{ $item['title'] }}
+                        </a>
+                        @else
+                        <span title="{{ $item['title'] }}">
+                            {{ $item['title'] }}
+                        </span>
+                        @endif
                 </li>
                 @endforeach
             </ul>
@@ -436,13 +441,17 @@
                         @if($item['active'] ?? false)
                         <span>{{ $item['title'] }}</span>
                         @elseif(!$item['disabled'])
-                        {{-- ✅ 修改1：同上 --}}
+                        {{-- --}}
+                        @if(isset($anthologyId))
                         <a href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $item['id'],'channel' => request('channel')]) }}">
-                            {{ $item['title'] }}
-                        </a>
-                        @else
-                        <span>{{ $item['title'] }}</span>
-                        @endif
+                            @else
+                            <a href="{{ route('library.tipitaka.read', ['id' => $item['id'],'channel' => request('channel')]) }}">
+                                @endif
+                                {{ $item['title'] }}
+                            </a>
+                            @else
+                            <span>{{ $item['title'] }}</span>
+                            @endif
                     </li>
                     @endforeach
                 </ul>
@@ -503,36 +512,52 @@
                         @if(!empty($book['pagination']['prev']))
                         <li class="page-item page-prev">
                             {{-- ✅ 修改2：翻页也用文集路由 --}}
-                            <a class="page-link" href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $book['pagination']['prev']['id'],'channel' => request('channel')]) }}">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                            <path d="M15 6l-6 6l6 6"></path>
-                                        </svg>
+                            @if(isset($anthologyId))
+                            <a class="page-link"
+                                href="{{ route('library.anthology.read', [
+                                        'anthology' => $anthologyId,
+                                        'article' => $book['pagination']['prev']['id'],
+                                        'channel' => request('channel')
+                                ]) }}">
+                                @else
+                                <a class="page-link" href="{{ route('library.tipitaka.read', [
+                                        'id' => $book['pagination']['prev']['id'],
+                                        'channel' => request('channel')
+                                ]) }}">
+                                    @endif
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                                <path d="M15 6l-6 6l6 6"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="col">
+                                            <div class="page-item-subtitle">上一篇</div>
+                                            <div class="page-item-title">{{ $book['pagination']['prev']['title'] }}</div>
+                                        </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="page-item-subtitle">上一篇</div>
-                                        <div class="page-item-title">{{ $book['pagination']['prev']['title'] }}</div>
-                                    </div>
-                                </div>
-                            </a>
+                                </a>
                         </li>
                         @endif
                         @if(!empty($book['pagination']['next']))
                         <li class="page-item page-next">
+                            @if(isset($anthologyId))
                             <a class="page-link" href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $book['pagination']['next']['id'],'channel' => request('channel')]) }}">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <div class="page-item-subtitle">下一篇</div>
-                                        <div class="page-item-title">{{ $book['pagination']['next']['title'] }}</div>
+                                @else
+                                <a class="page-link" href="{{ route('library.tipitaka.read', ['id' => $book['pagination']['next']['id'],'channel' => request('channel')]) }}">
+                                    @endif
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="page-item-subtitle">下一篇</div>
+                                            <div class="page-item-title">{{ $book['pagination']['next']['title'] }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                                <path d="M9 6l6 6l-6 6"></path>
+                                            </svg>
+                                        </div>
                                     </div>
-                                    <div class="col-auto">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                            <path d="M9 6l6 6l-6 6"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                            </a>
+                                </a>
                         </li>
                         @endif
                     </ul>
