@@ -7,10 +7,10 @@ use App\Http\Controllers\PageIndexController;
 use App\Http\Controllers\AssetsController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\BookController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\Library\AnthologyController;
 use App\Http\Controllers\Library\AnthologyReadController;
+use App\Http\Controllers\Library\BookController;
 
 /*
 |--------------------------------------------------------------------------
