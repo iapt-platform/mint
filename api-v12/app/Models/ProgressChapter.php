@@ -11,9 +11,8 @@ class ProgressChapter extends Model
     use HasFactory;
     protected $fillable = [
         'book',
-        'book',
         'channel_id',
-        'lang' => 'en',
+        'lang',
         'all_trans',
         'public',
         'progress',
@@ -51,6 +50,13 @@ class ProgressChapter extends Model
     {
         return $this->hasOne(Channel::class, 'uid', 'channel_id');
     }
+
+    public function paliText()
+    {
+        return $this->hasOne(PaliText::class, 'book', 'book')
+            ->whereColumn('paragraph', 'progress_chapters.para');
+    }
+
     public function views()
     {
         return $this->hasMany('App\Models\View', 'target_id', 'uid');
