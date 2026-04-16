@@ -1,3 +1,4 @@
+{{-- api-v12/resources/views/library/layouts/app.blade.php --}}
 <!doctype html>
 <html lang="zh">
 
@@ -29,6 +30,10 @@
             .book-cover {
                 height: 150px;
             }
+        }
+
+        .nav-overlay {
+            position: absolute;
         }
 
         .hero-section {
@@ -305,100 +310,205 @@
             }
         }
     </style>
+
+    <style>
+        :root {
+            --sf: #c8860a;
+            --sf-light: #f5e6c8;
+            --sf-pale: #fdf8f0;
+            --ink: #1a1208;
+            --ink-soft: #4a3f2f;
+            --ink-muted: #8a7a68;
+            --bdr: #e8ddd0;
+            --card-bg: #fffdf9;
+        }
+
+        /* Breadcrumb bar */
+        .anthology-breadcrumb-bar {
+            background: rgba(255, 255, 255, .55);
+            border-bottom: 1px solid var(--bdr);
+            padding: .5rem 0;
+        }
+
+        .anthology-breadcrumb-bar .bc-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .anthology-breadcrumb-bar .breadcrumb {
+            margin: 0;
+            font-size: .78rem;
+            flex-shrink: 0;
+        }
+
+        .anthology-breadcrumb-bar .breadcrumb-item a {
+            color: var(--sf);
+            text-decoration: none;
+        }
+
+        .anthology-breadcrumb-bar .breadcrumb-item.active {
+            color: var(--ink-muted);
+        }
+
+        .anthology-breadcrumb-bar .breadcrumb-item+.breadcrumb-item::before {
+            color: var(--ink-muted);
+        }
+
+        /* Top nav inside breadcrumb bar */
+        .bc-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .bc-nav li a {
+            font-size: .82rem;
+            color: var(--ink-soft);
+            text-decoration: none;
+            white-space: nowrap;
+            transition: color .15s;
+        }
+
+        .bc-nav li a:hover {
+            color: var(--sf);
+        }
+
+        .bc-nav li a.active {
+            color: var(--sf);
+            font-weight: 600;
+        }
+
+        /* Mobile nav: hamburger */
+        .bc-hamburger {
+            display: none;
+            background: none;
+            border: 1px solid var(--bdr);
+            border-radius: 5px;
+            padding: 4px 8px;
+            cursor: pointer;
+            color: var(--ink-soft);
+            line-height: 1;
+        }
+
+        .bc-hamburger:hover {
+            border-color: var(--sf);
+            color: var(--sf);
+        }
+
+        /* Mobile drawer */
+        .bc-mobile-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .4);
+            z-index: 1040;
+        }
+
+        .bc-mobile-overlay.open {
+            display: block;
+        }
+
+        .bc-mobile-drawer {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 240px;
+            height: 100vh;
+            background: var(--card-bg);
+            border-left: 1px solid var(--bdr);
+            z-index: 1050;
+            transition: right .25s ease;
+            padding: 1rem 0;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, .1);
+        }
+
+        .bc-mobile-drawer.open {
+            right: 0;
+        }
+
+        .bc-mobile-drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .5rem 1.25rem .75rem;
+            border-bottom: 1px solid var(--bdr);
+            margin-bottom: .5rem;
+        }
+
+        .bc-mobile-drawer-header span {
+            font-size: .85rem;
+            font-weight: 600;
+            color: var(--ink-soft);
+        }
+
+        .bc-mobile-drawer-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--ink-muted);
+            font-size: 1rem;
+            line-height: 1;
+            padding: 2px;
+        }
+
+        .bc-mobile-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .bc-mobile-nav li a {
+            display: block;
+            padding: .65rem 1.25rem;
+            font-size: .9rem;
+            color: var(--ink-soft);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(232, 221, 208, .5);
+            transition: background .15s;
+        }
+
+        .bc-mobile-nav li a:hover {
+            background: var(--sf-pale);
+            color: var(--sf);
+        }
+
+        .bc-mobile-nav li a.active {
+            color: var(--sf);
+            font-weight: 600;
+        }
+
+        @media (max-width: 640px) {
+            .bc-nav {
+                display: none;
+            }
+
+            .bc-hamburger {
+                display: inline-flex;
+                align-items: center;
+            }
+        }
+    </style>
+
+
 </head>
 
 <body>
     <div class="page">
-        <!-- Mobile Overlay -->
-        <div class="mobile-overlay" id="mobileOverlay"></div>
 
-        <!-- Mobile Menu -->
-        <div class="mobile-menu" id="mobileMenu">
-            <ul class="mobile-nav-menu">
-                <li class="mobile-nav-item">
-                    <a href="{{ route('library.home') }}">首页</a>
-                </li>
-                <li class="mobile-nav-item">
-                    <a href="{{ route('library.wiki') }}">百科</a>
-                </li>
-                <li class="mobile-nav-item">
-                    <a href="{{ route('library.anthology.index') }}">文集</a>
-                </li>
-                <li class="mobile-nav-item">
-                    <a href="{{ route('library.download') }}">下载</a>
-                </li>
-                <li class="mobile-nav-item">
-                    @auth
-                    <a href="#">我的账户</a>
-                    @else
-                    <a href="#">注册/登录</a>
-                    @endauth
-                </li>
-                <li class="mobile-nav-item" style="padding: 1rem 2rem;">
-                    <x-language-switcher />
-                </li>
-            </ul>
-        </div>
+        <x-library.header />
 
-        <!-- Hero Section -->
-        <section class="hero-section">
-            <div class="hero-overlay">
-                <div class="top-nav">
-                    <!-- Desktop Menu -->
-                    <ul class="nav-menu">
-                        <li class="nav-item">
-                            <a href="{{ route('library.home') }}">首页</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('library.wiki') }}">百科</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('library.anthology.index') }}">文集</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('library.download') }}">下载</a>
-                        </li>
-                        <li class="nav-item">
-                            @auth
-                            <a href="#">我的账户</a>
-                            @else
-                            <a href="#">注册/登录</a>
-                            @endauth
-                        </li>
-                        <li class="nav-item">
-                            <x-language-switcher />
-                        </li>
-                    </ul>
-
-                    <!-- Hamburger Button -->
-                    <button class="hamburger-btn" id="hamburgerBtn">
-                        <div class="hamburger-icon">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </button>
-                </div>
-            </div>
-
-            <div class="hero-content">
-                <h1 class="hero-title">巴利书库</h1>
-                <p class="hero-subtitle">探索wikipali，开启智慧之门</p>
-
-                <div class="search-box">
-                    <div class="input-group">
-                        <input type="text" class="form-control form-control-lg" placeholder="搜索图书、作者或主题...">
-                        <button class="btn btn-primary btn-lg" type="button">
-                            <i class="ti ti-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
+        @yield('hero')
 
         <div class="page-wrapper">
             @yield('content')
         </div>
+
     </div>
 
     <!-- Tabler JS and Bootstrap -->
@@ -407,8 +517,33 @@
 
     <script>
         // Hamburger Menu Toggle
-        const hamburgerBtn = document.getElementById('hamburgerBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
+
+        (function() {
+            const btn = document.getElementById('bcHamburger');
+            const overlay = document.getElementById('bcOverlay');
+            const drawer = document.getElementById('bcDrawer');
+            const close = document.getElementById('bcDrawerClose');
+
+            if (!btn) return;
+
+            function open() {
+                drawer.classList.add('open');
+                overlay.classList.add('open');
+            }
+
+            function shut() {
+                drawer.classList.remove('open');
+                overlay.classList.remove('open');
+            }
+
+            btn.addEventListener('click', open);
+            overlay.addEventListener('click', shut);
+            close.addEventListener('click', shut);
+
+            drawer.querySelectorAll('a').forEach(a => {
+                a.addEventListener('click', shut);
+            });
+        })();
         const mobileOverlay = document.getElementById('mobileOverlay');
 
         function toggleMenu() {
