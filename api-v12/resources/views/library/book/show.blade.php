@@ -87,7 +87,7 @@
                     <div class="card-body">
                         <div class="list-group">
                             @foreach($book['contents'] as $chapter)
-                            <a href="{{ route('library.tipitaka.read', $chapter['id']) }}?chapter={{ $loop->iteration }}"
+                            <a href="{{ route('library.tipitaka.read', $chapter['id']) }}?channel={{ $chapter['channel'] }}"
                                 class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h4 class="mb-1">{{ $chapter['title'] }}</h4>

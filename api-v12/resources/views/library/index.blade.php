@@ -1,8 +1,37 @@
+{{-- api-v12/resources/views/library/index.blade.php --}}
 @extends('library.layouts.app')
 
 @section('title', __('labels.home'))
 
+@section('hero')
+<section class="hero-section">
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+        <h1 class="hero-title">巴利书库</h1>
+        <p class="hero-subtitle">探索wikipali，开启智慧之门</p>
+
+        <div class="search-box">
+            <div class="input-group">
+                <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    placeholder="搜索图书、作者或主题...">
+
+                <button class="btn btn-primary btn-lg" type="button">
+                    <i class="ti ti-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</section>
+@endsection
+
+
 @section('content')
+
 <div class="page-body">
     <div class="container-xl">
         <div class="page-header d-print-none">
