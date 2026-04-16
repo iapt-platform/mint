@@ -9,6 +9,8 @@ use App\Models\ProgressChapter;
 use App\Models\PaliText;
 use App\Models\Sentence;
 
+use App\Services\ChapterService;
+
 class BookController extends Controller
 {
     protected $maxChapterLen = 50000;
@@ -46,9 +48,13 @@ class BookController extends Controller
     }
 
 
-    public function read($id)
+    public function read(Request $request, $id)
     {
-        $bookRaw = $this->loadBook($id);
+        $chapterService = app(ChapterService::class);
+        [$book, $para] = explode('-', $id);
+        $channelId = $request->input('channel');
+        $chapterUid = $chapterService->getUidByChannel($book, $para, $channelId);
+        $bookRaw = $this->loadBook($chapterUid);
 
         if (!$bookRaw) {
             abort(404);
@@ -60,8 +66,11 @@ class BookController extends Controller
         $book['categories'] = $this->getBookCategory($bookRaw->book, $bookRaw->para);
         $book['tags'] = [];
         $book['pagination'] = $this->pagination($bookRaw);
-        $book['content'] = $this->getBookContent($id);
-        return view('library.book.read', compact('book'));
+        $book['content'] = $this->getBookContent($chapterUid);
+        $channels = $chapterService->publicChannels($bookRaw->book, $bookRaw->para);
+        $editor_link = config('mint.server.dashboard_base_path') . "/workspace/tipitaka/chapter/{$id}?channel={$channelId}";
+
+        return view('library.book.read', compact('book', 'channels', 'editor_link'));
     }
 
     private function loadBook($id)
@@ -112,7 +121,7 @@ class BookController extends Controller
             ->whereBetween('para', [$start, $end])
             ->where('channel_id', $channelId)->orderBy('para')->get();
 
-        $toc = $paliTexts->map(function ($paliText) use ($chapters) {
+        $toc = $paliTexts->map(function ($paliText) use ($chapters, $channelId) {
             $title = $paliText->toc;
             if (count($chapters) > 0) {
                 $found = array_filter($chapters->toArray(), function ($chapter) use ($paliText) {
@@ -131,7 +140,8 @@ class BookController extends Controller
                 }
             }
             return [
-                "id" => $id ?? '',
+                "id" => "{$paliText->book}-{$paliText->paragraph}",
+                "channel" => $channelId,
                 "title" => $title,
                 "summary" => $summary ?? "",
                 "progress" => $progress ?? 0,
