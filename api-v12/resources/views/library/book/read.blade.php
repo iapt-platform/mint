@@ -7,237 +7,18 @@
     <title>{{ $book['title'] }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/css/tabler.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    @vite(['resources/css/reader.css', 'resources/js/app.js'])
+
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/js/tabler.min.js"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .main-container {
-            display: flex;
-            gap: 20px;
-            padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .toc-sidebar {
-            width: 250px;
-            flex-shrink: 0;
-            display: none;
-
-            position: sticky;
-            top: 0;
-
-            height: 100vh;
-
-            overflow-y: auto;
-            overflow-x: hidden;
-
-            scrollbar-width: thin;
-        }
-
-        .toc-sidebar .card-body {
-            height: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        .content-area {
-            flex-grow: 1;
-            max-width: 100%;
-        }
-
-        .right-sidebar {
-            width: 300px;
-            flex-shrink: 0;
-            display: none;
-        }
-
-        .related-books {
-            margin-top: 30px;
-        }
-
-        .card-img-container {
-            height: 150px;
-            overflow: hidden;
-        }
-
-        .card-img-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        @media (max-width: 767px) {
-            .content-area {
-                width: 100%;
-            }
-
-            .main-container {
-                padding: 0;
-            }
-
-            .card {
-                border: none;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .toc-sidebar {
-                display: block;
-            }
-
-            .content-area {
-                max-width: calc(100% - 270px);
-            }
-        }
-
-        @media (min-width: 992px) {
-            .right-sidebar {
-                display: block;
-            }
-
-            .content-area {
-                max-width: calc(100% - 570px);
-            }
-        }
-
-        .dark-mode {
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
-
-        .dark-mode .card {
-            background-color: #2a2a2a;
-            border-color: #3a3a3a;
-            color: #ffffff;
-        }
-
-        .dark-mode .navbar {
-            background-color: #2a2a2a;
-        }
-
-        .dark-mode .offcanvas {
-            background-color: #2a2a2a;
-            color: #ffffff;
-        }
-
-        .dark-mode .offcanvas .nav-link {
-            color: #ffffff;
-        }
-
-        .dark-mode .toc-sidebar,
-        .dark-mode .right-sidebar {
-            background-color: #2a2a2a;
-        }
-
-        .toc-sidebar ul,
-        .offcanvas-body ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .toc-sidebar ul li,
-        .offcanvas-body ul li {
-            padding: 5px 0;
-        }
-
-        .toc-sidebar ul li a,
-        .offcanvas-body ul li a {
-            color: #206bc4;
-            text-decoration: none;
-        }
-
-        .toc-sidebar ul li a:hover {
-            text-decoration: none;
-
-        }
-
-        .offcanvas-body ul li a:hover {
-            text-decoration: underline;
-        }
-
-        .dark-mode .toc-sidebar ul li a,
-        .dark-mode .offcanvas-body ul li a {
-            color: #4dabf7;
-        }
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
-
-        .toc-level-1 {
-            padding-left: 0 !important;
-        }
-
-        .toc-level-2 {
-            padding-left: 16px !important;
-        }
-
-        .toc-level-3 {
-            padding-left: 24px !important;
-        }
-
-        .toc-level-4 {
-            padding-left: 36px !important;
-        }
-
-        .toc-disabled {
-            color: #6c757d;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .dark-mode .toc-disabled {
-            color: #adb5bd;
-        }
-
-        .toc_item {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .toc_item:hover {
-            color: #206bc4 !important;
-            background: rgba(32, 107, 196, 0.15);
-            border-radius: 2px;
-            cursor: 'pointer';
-        }
-
-        .toc_item a,
-        .toc_item span {
-            display: block;
-            width: 100%;
-
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .toc-active {
-            color: #206bc4 !important;
-            font-weight: 600;
-            background: rgba(32, 107, 196, 0.08);
-            border-left: 3px solid #206bc4;
-            border-radius: 2px;
-            cursor: default;
-            pointer-events: none;
-        }
-
-        .dark-mode .toc-active {
-            color: #4dabf7 !important;
-            background: rgba(77, 171, 247, 0.1);
-            border-left-color: #4dabf7;
-        }
-
-        .origin {
-            color: darkred;
-        }
-    </style>
 </head>
 
+
 <body class="{{ session('theme', 'light') }}-mode">
+    <x-term-drawer />
 
     <!-- Navbar -->
     <header class="navbar navbar-expand-md navbar-light d-print-none">
@@ -791,6 +572,7 @@
             themeToggle.innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
         });
     </script>
+
 </body>
 
 </html>
