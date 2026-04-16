@@ -45,11 +45,12 @@ class AnthologyReadController extends Controller
             'mode' => 'read',
             'format' => 'html',
             'anthology' => $anthologyId,
-            'channel' => $request->input('channel', null),
             'origin' => 'true',
             'paragraph' => true,
         ];
-
+        if ($request->has('channel')) {
+            $urlParam['channel'] = $request->input('channel');
+        }
         $fakeRequest = Request::create('', 'GET', $urlParam);
         $artResource = $artResult['data'];
         $artArray    = $artResource->toArray($fakeRequest);
