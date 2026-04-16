@@ -66,7 +66,8 @@ Route::prefix('library')->name('library.')->group(function () {
     Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
     Route::get('/tipitaka/{id}', [BookController::class, 'show'])->name('tipitaka.show');
     Route::get('/tipitaka/{id}/read', [BookController::class, 'read'])->name('tipitaka.read');
-    Route::get('/wiki', [BookController::class, 'read'])->name('wiki');
+    Route::get('/wiki', [BookController::class, 'read'])->name('wiki.index');
+    Route::get('/wiki/{lang}/{word}', [BookController::class, 'read'])->name('wiki.show');
     Route::get('/download', [DownloadController::class, 'index'])->name('download');
     // 文集
     Route::get('/anthology',          [AnthologyController::class, 'index'])->name('anthology.index');
