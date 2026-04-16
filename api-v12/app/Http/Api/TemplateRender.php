@@ -396,54 +396,15 @@ class TemplateRender
                 ];
                 break;
             case 'html':
-                if (isset($props["meaning"])) {
-                    $GLOBALS[$this->glossaryKey][$props["word"]] = $props['meaning'];
-
-                    $key = 'term-' . $props["word"];
-                    $termHead = "<a href='#'>" . $props['meaning'] . "</a>";
-
-                    if (isset($GLOBALS[$key])) {
-                        $output = $termHead;
-                    } else {
-                        $GLOBALS[$key] = 1;
-                        $output = $termHead . '(<em>' . $props["word"] . '</em>)';
-                    }
-                } else {
-                    $output = $props["word"];
-                }
-                break;
-            case 'text':
-                if (isset($props["meaning"])) {
-                    $key = 'term-' . $props["word"];
-                    if (isset($GLOBALS[$key])) {
-                        $output = $props["meaning"];
-                    } else {
-                        $GLOBALS[$key] = 1;
-                        $output = $props["meaning"] . '(' . $props["word"] . ')';
-                    }
-                } else {
-                    $output = $props["word"];
-                }
-                break;
-            case 'tex':
-                if (isset($props["meaning"])) {
-                    $key = 'term-' . $props["word"];
-                    if (isset($GLOBALS[$key])) {
-                        $output = $props["meaning"];
-                    } else {
-                        $GLOBALS[$key] = 1;
-                        $output = $props["meaning"] . '(' . $props["word"] . ')';
-                    }
-                } else {
-                    $output = $props["word"];
-                }
-                break;
-            case 'simple':
-                if (isset($props["meaning"])) {
-                    $output = $props["meaning"];
-                } else {
-                    $output = $props["word"];
-                }
+                $no = isset($props['id']) ? '' : 'term_invalid';
+                $id = isset($props['id']) ? $props['id'] : '';
+                $output = "<span ";
+                $output .= "class='term-ref {$no}' ";
+                $output .= "data-id='{$id}' ";
+                $output .= "data-term='{$props['word']}' ";
+                $output .= ">";
+                $output .= $props['meaning'] ?? $props['word'];
+                $output .= "</span>";
                 break;
             case 'markdown':
                 if (isset($props["meaning"])) {
@@ -476,11 +437,7 @@ class TemplateRender
                 }
                 break;
             default:
-                if (isset($props["meaning"])) {
-                    $output = $props["meaning"];
-                } else {
-                    $output = $props["word"];
-                }
+                $output = $props['meaning'] ?? $props['word'];
                 break;
         }
         return $output;
