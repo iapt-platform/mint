@@ -5,17 +5,18 @@ namespace App\Services;
 use App\Models\Sentence;
 use App\Models\Channel;
 use App\Models\PaliText;
+use App\Models\ProgressChapter;
 
 use Illuminate\Support\Str;
 use App\Http\Api\MdRender;
 use App\Http\Api\ChannelApi;
-use App\Http\Api\StudioApi;
 
 
-use App\Http\Api\AuthApi;
+
 use App\Http\Resources\TocResource;
 use App\Services\PaliContentService;
 use Illuminate\Support\Facades\Log;
+
 
 
 class ChapterService
@@ -252,5 +253,31 @@ class ChapterService
             $result['mode'] =  $mode;
         }
         return $result;
+    }
+
+    public function publicChannels(int $book, int $para)
+    {
+        $channelIds = ProgressChapter::with('channel')
+            ->where('book', $book)
+            ->where('para', $para)
+            ->whereHas('channel', function ($query) {
+                $query->where('status', 30);
+            })
+            ->select('channel_id')
+            ->get();
+        $channels = [];
+        foreach ($channelIds as  $channel) {
+            $channels[] = ChannelApi::getById($channel->channel_id);
+        }
+        return $channels;
+    }
+
+    public function getUidByChannel(int $book, int $para, string $channelId)
+    {
+        $uid = ProgressChapter::where('book', $book)
+            ->where('para', $para)
+            ->where('channel_id', $channelId)
+            ->value('uid');
+        return $uid;
     }
 }
