@@ -9,7 +9,7 @@
 
             <ul class="bc-nav">
                 <li><a href="{{ route('library.home') }}">首页</a></li>
-                <li><a href="{{ route('library.wiki.index') }}">百科</a></li>
+                <li><a href="{{ route('library.wiki.home') }}">百科</a></li>
                 <li><a href="{{ route('library.anthology.index') }}">文集</a></li>
                 <li><a href="{{ route('library.download') }}">下载</a></li>
 
@@ -46,7 +46,7 @@
 
     <ul class="bc-mobile-nav">
         <li><a href="{{ route('library.home') }}">首页</a></li>
-        <li><a href="{{ route('library.wiki.index') }}">百科</a></li>
+        <li><a href="{{ route('library.wiki.home') }}">百科</a></li>
         <li><a href="{{ route('library.anthology.index') }}">文集</a></li>
         <li><a href="{{ route('library.download') }}">下载</a></li>
 
