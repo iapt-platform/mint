@@ -112,7 +112,7 @@ class AITermService
     public function create(string $id)
     {
         // 获取术语
-        $term = app(TermService::class)->get($id);
+        $term = app(TermService::class)->getRaw($id);
         // 全文搜索
         $query = $this->query($term->word);
         $res = json_encode($query, JSON_UNESCAPED_UNICODE);
