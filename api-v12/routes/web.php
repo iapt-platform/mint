@@ -11,6 +11,7 @@ use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\Library\AnthologyController;
 use App\Http\Controllers\Library\AnthologyReadController;
 use App\Http\Controllers\Library\BookController;
+use App\Http\Controllers\WikiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,21 +64,25 @@ Route::post('/logout', function () {
 
 Route::prefix('library')->name('library.')->group(function () {
     Route::get('/', [CategoryController::class, 'index'])->name('home');
+
     Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
     Route::get('/tipitaka/{id}', [BookController::class, 'show'])->name('tipitaka.show');
     Route::get('/tipitaka/{id}/read', [BookController::class, 'read'])->name('tipitaka.read');
-    Route::get('/wiki', [BookController::class, 'read'])->name('wiki.index');
-    Route::get('/wiki/{lang}/{word}', [BookController::class, 'read'])->name('wiki.show');
+
+    Route::get('/wiki', [WikiController::class, 'home'])->name('wiki.home');
+    Route::get('/wiki/{lang}', [WikiController::class, 'index'])->name('wiki.index');
+    Route::get('/wiki/{lang}/{word}', [WikiController::class, 'show'])->name('wiki.show');
+
     Route::get('/download', [DownloadController::class, 'index'])->name('download');
     // 文集
     Route::get('/anthology',          [AnthologyController::class, 'index'])->name('anthology.index');
     Route::get('/anthology/{id}',     [AnthologyController::class, 'show'])->name('anthology.show');
-
-    // 文集阅读
     Route::get(
         '/anthology/{anthology}/read/{article}',
         [AnthologyReadController::class, 'read']
     )->name('anthology.read');
+
+    Route::get('/search', [DownloadController::class, 'index'])->name('search');
 });
 // 博客路由
 Route::prefix('blog')->group(function () {
