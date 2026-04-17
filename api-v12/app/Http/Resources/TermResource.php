@@ -13,6 +13,7 @@ use App\Http\Api\ShareApi;
 use App\Http\Api\AuthApi;
 use App\Models\UserOperationDaily;
 use App\Models\DhammaTerm;
+use App\Helpers\MarkdownHelper;
 
 class TermResource extends JsonResource
 {
@@ -66,12 +67,15 @@ class TermResource extends JsonResource
             $mdRender = new MdRender(
                 [
                     'mode' => $request->input('mode', 'read'),
-                    'format' => 'react',
+                    'format' => $request->input('format', 'react'),
                     'studioId' => $this->owner,
                 ]
             );
             $data["html"]  = $mdRender->convert($this->note, $channels, null);
-            $summaryContent = $this->note;
+            $paragraphs = MarkdownHelper::splitByParagraphs($this->note);
+            if (is_array($paragraphs) && count($paragraphs) > 0) {
+                $summaryContent = $paragraphs[0];
+            }
         } else if ($request->has('community_summary')) {
             $lang = strtolower($this->language);
             if ($lang === 'zh') {
