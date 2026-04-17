@@ -13,6 +13,7 @@ import { fullUrl } from "../../../utils";
 import type { IArticleParam } from "../../../types/article";
 import { EResType } from "../../../components/share/utils";
 import type { IApiResponseChannel } from "../../../api/channel";
+import TermList from "../../../components/term/TermList";
 
 const Widget = () => {
   const { channelId } = useParams(); //url 参数
@@ -79,7 +80,7 @@ const Widget = () => {
             {
               label: `term`,
               key: "term",
-              //children: <TermList channelId={channelId} />,
+              children: <TermList channelId={channelId} />,
             },
           ]}
         />

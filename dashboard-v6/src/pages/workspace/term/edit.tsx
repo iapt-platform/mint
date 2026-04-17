@@ -10,7 +10,7 @@ const Widget = () => {
     <TermEdit
       id={id}
       onUpdate={() => {
-        navigate(`/workspace/edit/wiki/${id}`);
+        navigate(`/workspace/term/${id}`);
       }}
     />
   );
