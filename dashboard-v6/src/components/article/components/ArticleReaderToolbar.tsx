@@ -7,6 +7,9 @@ import {
   FileOutlined,
   CopyOutlined,
   InfoCircleOutlined,
+  ShareAltOutlined,
+  ExportOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 
 import { useAppSelector } from "../../../hooks";
@@ -91,8 +94,7 @@ const TypeArticleReaderToolbarWidget = ({
               id: "buttons.edit",
             })}
           </Button>
-          {/** 刷新按钮 */}
-          <Button type="link" icon={<ReloadOutlined />} onClick={onRefresh} />
+          {/** 导出 */}
           {/** 更多 */}
           <Dropdown
             menu={{
@@ -107,6 +109,59 @@ const TypeArticleReaderToolbarWidget = ({
                   key: "open_in_tab",
                   icon: <TabIcon />,
                 },
+                {
+                  label: intl.formatMessage({
+                    id: "buttons.export",
+                  }),
+                  key: "export",
+                  icon: <ExportOutlined />,
+                },
+                {
+                  label: intl.formatMessage({
+                    id: "buttons.open.in.library",
+                  }),
+                  key: "open_in_library",
+                  icon: <EyeOutlined />,
+                },
+              ],
+              onClick: ({ key }) => {
+                console.log(`Click on item ${key}`);
+                switch (key) {
+                  case "open_in_tab":
+                    window.open(
+                      fullUrl(`/article/article/${articleId}`),
+                      "_blank"
+                    );
+                    break;
+                  case "open_in_library":
+                    window.open(
+                      import.meta.env.VITE_APP_API_SERVER +
+                        `/library/anthology/${anthologyId}/read/${articleId}`,
+                      "_blank"
+                    );
+                    break;
+                  case "add_to_anthology":
+                    setAddToAnthologyOpen(true);
+                    break;
+                }
+              },
+            }}
+            placement="bottomRight"
+          >
+            <Button
+              onClick={(e) => e.preventDefault()}
+              icon={<ShareAltOutlined />}
+              size="small"
+              type="link"
+            />
+          </Dropdown>
+          {/** 刷新按钮 */}
+          <Button type="link" icon={<ReloadOutlined />} onClick={onRefresh} />
+
+          {/** 更多 */}
+          <Dropdown
+            menu={{
+              items: [
                 {
                   label: intl.formatMessage({
                     id: "buttons.add_to_anthology",
@@ -141,12 +196,6 @@ const TypeArticleReaderToolbarWidget = ({
               onClick: ({ key }) => {
                 console.log(`Click on item ${key}`);
                 switch (key) {
-                  case "open_in_tab":
-                    window.open(
-                      fullUrl(`/article/article/${articleId}`),
-                      "_blank"
-                    );
-                    break;
                   case "add_to_anthology":
                     setAddToAnthologyOpen(true);
                     break;
@@ -160,11 +209,6 @@ const TypeArticleReaderToolbarWidget = ({
                     break;
                   case "word-count":
                     setWordCountOpen(true);
-                    break;
-                  case "edit":
-                    if (typeof onEdit !== "undefined") {
-                      onEdit();
-                    }
                     break;
                 }
               },
