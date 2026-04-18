@@ -11,20 +11,15 @@
 
     @vite(['resources/css/main.css', 'resources/js/app.js'])
 
-    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet" />
-
-    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/js/tabler.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </head>
 
 <body>
     <div class="page">
 
-        <x-library.header />
-
-        @yield('hero')
+        <div class="hero-wrapper">
+            <x-library.header />
+            @yield('hero')
+        </div>
 
         <div class="page-wrapper">
             @yield('content')
