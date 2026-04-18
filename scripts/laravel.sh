@@ -12,7 +12,8 @@ composer require firebase/php-jwt
 composer require casbin/casbin
 
 npm install --save \
-    bootstrap bulma @tabler/core @material/web \
+    bootstrap bulma @material/web \
+    @tabler/core @tabler/icons @tabler/icons-webfont \
     @fortawesome/fontawesome-free dayjs \
     marked dompurify jsdom
 exit 0
