@@ -2,7 +2,7 @@
 @extends('library.layouts.app')
 
 @push('styles')
-@vite(['resources/css/wiki.css', 'resources/css/wiki-content.css'])
+@vite(['resources/css/wiki.css', 'resources/css/wiki-content.css','resources/css/wiki-search.css'])
 @endpush
 
 @section('content')
