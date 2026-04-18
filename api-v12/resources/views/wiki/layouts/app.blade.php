@@ -63,7 +63,3 @@
 {{-- 术语抽屉（移动端，全局唯一） --}}
 <x-wiki.term-drawer />
 @endsection
-
-@push('scripts')
-@vite(['resources/js/term-tooltip.js'])
-@endpush
