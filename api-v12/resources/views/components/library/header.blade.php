@@ -12,13 +12,6 @@
                 <li><a href="{{ route('library.wiki.home') }}">百科</a></li>
                 <li><a href="{{ route('library.anthology.index') }}">文集</a></li>
                 <li><a href="{{ route('library.download') }}">下载</a></li>
-
-                @auth
-                <li><a href="#">我的账户</a></li>
-                @else
-                <li><a href="#">注册/登录</a></li>
-                @endauth
-
                 <li>
                     <x-language-switcher />
                 </li>
@@ -49,13 +42,6 @@
         <li><a href="{{ route('library.wiki.home') }}">百科</a></li>
         <li><a href="{{ route('library.anthology.index') }}">文集</a></li>
         <li><a href="{{ route('library.download') }}">下载</a></li>
-
-        @auth
-        <li><a href="#">我的账户</a></li>
-        @else
-        <li><a href="#">注册/登录</a></li>
-        @endauth
-
         <li style="padding:1rem 1.25rem;">
             <x-language-switcher />
         </li>
