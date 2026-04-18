@@ -1,3 +1,7 @@
+/* resources/css/main.css */
+@import "@tabler/core/dist/css/tabler.min.css";
+@import "@tabler/icons-webfont/dist/tabler-icons.min.css";
+
 .book-card {
     transition: transform 0.2s;
 }
@@ -24,7 +28,6 @@
 .hero-section {
     height: 250px;
     width: 100%;
-    background-image: url('{{ URL::asset("assets/images/hero-2.jpg") }}');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -337,6 +340,33 @@
 
 .anthology-breadcrumb-bar .breadcrumb-item + .breadcrumb-item::before {
     color: var(--ink-muted);
+}
+
+.hero-wrapper {
+    position: relative;
+}
+
+.hero-wrapper:has(.hero-section) .anthology-breadcrumb-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: transparent;
+    border-bottom: none;
+}
+
+.hero-wrapper:has(.hero-section) .bc-nav li a {
+    color: white;
+}
+
+.hero-wrapper:has(.hero-section) .bc-nav li a:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.hero-wrapper:has(.hero-section) .bc-hamburger {
+    border-color: rgba(255, 255, 255, 0.6);
+    color: white;
 }
 
 /* Top nav inside breadcrumb bar */
