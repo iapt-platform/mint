@@ -1,10 +1,7 @@
 /**
  * resources/js/term-tooltip.js
- * WikiPāli 术语 tooltip（桌面 Popover）+ 抽屉（移动端 Offcanvas）
- *
- * 依赖：Bootstrap 5（bootstrap.Popover / bootstrap.Offcanvas）
- *       已由 Tabler 全局引入，无需重复 import
  */
+import * as bootstrap from "bootstrap";
 
 (function () {
     "use strict";
@@ -23,6 +20,17 @@
 
     // ── 设备判断 ──────────────────────────────────────────────────────
     const isMobile = () => window.innerWidth < 768;
+
+    // ── Skeleton 模板 ─────────────────────────────────────────────────
+    function buildSkeletonContent() {
+        return `
+            <div class="wiki-term-skeleton">
+                <div class="wiki-term-skeleton-word"></div>
+                <div class="wiki-term-skeleton-line"></div>
+                <div class="wiki-term-skeleton-line short"></div>
+            </div>
+        `;
+    }
 
     // ── Popover 内容模板 ──────────────────────────────────────────────
     function buildPopoverContent(data) {
@@ -49,19 +57,16 @@
     }
 
     // ── 桌面端：Bootstrap Popover ─────────────────────────────────────
-    function initDesktopPopover(el, data) {
-        // 防止重复初始化
+    function initDesktopPopover(el, content) {
         if (el._wikiPopover) return el._wikiPopover;
 
         const popover = new bootstrap.Popover(el, {
             trigger: "manual",
             html: true,
-            placement: "bottom", // flip 会自动在空间不足时翻转为 top
+            placement: "bottom",
             fallbackPlacements: ["top", "bottom"],
             customClass: "wiki-term-popover",
-            content: buildPopoverContent(data),
-            // 让 popover 自身也可以接收鼠标事件（解决移入气泡消失问题）
-            // Bootstrap 5.2+ 支持 sanitize: false 保留自定义 html
+            content: content,
             sanitize: false,
         });
 
@@ -71,7 +76,6 @@
 
         function scheduleHide() {
             hideTimer = setTimeout(() => {
-                // 如果鼠标此刻在 popover 内，不关闭
                 const tipEl = document.querySelector(".wiki-term-popover.show");
                 if (tipEl && tipEl.matches(":hover")) return;
                 popover.hide();
@@ -82,7 +86,6 @@
             clearTimeout(hideTimer);
         }
 
-        // 触发元素
         el.addEventListener("mouseenter", () => {
             cancelHide();
             popover.show();
@@ -90,7 +93,6 @@
 
         el.addEventListener("mouseleave", scheduleHide);
 
-        // Popover 显示后，给气泡本身绑定 mouseenter / mouseleave
         el.addEventListener("shown.bs.popover", () => {
             const tipEl = document.querySelector(".wiki-term-popover.show");
             if (!tipEl) return;
@@ -101,7 +103,20 @@
         return popover;
     }
 
-    // ── 移动端：Bootstrap Offcanvas（全局共享一个） ────────────────────
+    function updateDesktopPopover(el, data) {
+        const popover = el._wikiPopover;
+        if (!popover) return;
+        // 更新内容
+        const tip = document.querySelector(".wiki-term-popover.show");
+        if (tip) {
+            tip.querySelector(".popover-body").innerHTML =
+                buildPopoverContent(data);
+        }
+        // 同步 popover 内部 config，供下次 show 使用
+        popover._config.content = buildPopoverContent(data);
+    }
+
+    // ── 移动端：Bootstrap Offcanvas ───────────────────────────────────
     let offcanvasInstance = null;
 
     function getOffcanvas() {
@@ -109,37 +124,49 @@
         const el = document.getElementById("wikiTermDrawer");
         if (!el) return null;
         offcanvasInstance = new bootstrap.Offcanvas(el, { scroll: false });
+
+        el.addEventListener("hidden.bs.offcanvas", () => {
+            document
+                .querySelectorAll(".offcanvas-backdrop")
+                .forEach((b) => b.remove());
+            document.body.classList.remove("modal-open");
+            document.body.style.removeProperty("overflow");
+            document.body.style.removeProperty("padding-right");
+        });
+
         return offcanvasInstance;
     }
 
-    function showMobileDrawer(data) {
+    function showMobileDrawerSkeleton() {
         const oc = getOffcanvas();
         if (!oc) return;
 
+        document.getElementById("wikiTermDrawerWord").innerHTML =
+            '<div class="wiki-term-skeleton-word"></div>';
+        document.getElementById("wikiTermDrawerMeaning").innerHTML =
+            '<div class="wiki-term-skeleton-line short"></div>';
+        document.getElementById(
+            "wikiTermCardSlot"
+        ).innerHTML = `<div class="wiki-term-skeleton">
+                <div class="wiki-term-skeleton-line"></div>
+                <div class="wiki-term-skeleton-line short"></div>
+            </div>`;
+        document.getElementById("wikiTermDrawerLink").style.display = "none";
+
+        oc.show();
+    }
+
+    function fillMobileDrawer(data) {
         const meaning = (data.meaning || "").trim();
         const summary = (data.summary || "").trim();
         const showSummary = summary && summary !== meaning;
 
-        document.getElementById("wikiTermCardSlot").innerHTML = `
-            <div class="wiki-term-card">
-                <div class="wiki-term-card-word">${data.word || ""}</div>
-                <div class="wiki-term-card-body">
-                    ${
-                        meaning
-                            ? `<div class="wiki-term-card-meaning">${meaning}</div>`
-                            : ""
-                    }
-                    ${
-                        showSummary
-                            ? `<div class="wiki-term-card-summary">${summary}</div>`
-                            : ""
-                    }
-                </div>
-            </div>
-        `;
-
-        document.getElementById("wikiTermDrawerLink").style.display = "none";
-        oc.show();
+        document.getElementById("wikiTermDrawerWord").textContent =
+            data.word || "";
+        document.getElementById("wikiTermDrawerMeaning").textContent = meaning;
+        document.getElementById("wikiTermCardSlot").innerHTML = showSummary
+            ? `<div class="wiki-term-card-summary">${summary}</div>`
+            : "";
     }
 
     // ── 入口：扫描所有 .term-ref ──────────────────────────────────────
@@ -148,35 +175,39 @@
         if (!refs.length) return;
 
         refs.forEach((el) => {
-            // 桌面：mouseenter 时懒加载并初始化 Popover
+            // 桌面：mouseenter 时先显示 skeleton，数据回来后更新
             el.addEventListener("mouseenter", async function onFirstEnter() {
                 if (isMobile()) return;
 
+                // 立即显示 skeleton popover
+                const popover = initDesktopPopover(el, buildSkeletonContent());
+                popover.show();
+
                 try {
                     const data = await fetchTerm(el.dataset.id);
-                    const popover = initDesktopPopover(el, data);
-                    // 首次加载后直接 show（mouseenter 已触发）
-                    popover.show();
+                    updateDesktopPopover(el, data);
                 } catch (e) {
                     console.warn(
                         "[WikiPāli] term fetch failed",
                         el.dataset.id,
                         e
                     );
+                    popover.hide();
                 }
 
-                // 移除首次监听，后续由 Popover 自身管理
                 el.removeEventListener("mouseenter", onFirstEnter);
             });
 
-            // 移动端：点击触发抽屉
+            // 移动端：点击立即弹出 skeleton，数据回来后填充
             el.addEventListener("click", async (e) => {
                 if (!isMobile()) return;
                 e.preventDefault();
 
+                showMobileDrawerSkeleton();
+
                 try {
                     const data = await fetchTerm(el.dataset.id);
-                    showMobileDrawer(data);
+                    fillMobileDrawer(data);
                 } catch (err) {
                     console.warn(
                         "[WikiPāli] term fetch failed",
@@ -188,7 +219,6 @@
         });
     }
 
-    // DOM 就绪后执行
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", init);
     } else {
