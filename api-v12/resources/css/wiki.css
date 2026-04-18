@@ -481,6 +481,11 @@
     max-height: 55vh;
 }
 
+.wiki-term-drawer .offcanvas-header {
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+}
+
 .wiki-drawer-word {
     font-family: "Noto Serif", Georgia, serif;
     font-size: 1.125rem;
@@ -498,7 +503,7 @@
 
 .wiki-drawer-summary {
     font-size: 0.9375rem;
-    color: var(--tblr-secondary);
+    color: var(--tblr-body-color);
     line-height: 1.65;
 }
 
@@ -571,4 +576,40 @@
     font-size: 0.8125rem;
     color: var(--tblr-secondary);
     line-height: 1.55;
+}
+
+/** wiki term */
+
+/* Skeleton 基础 */
+.wiki-term-skeleton-word,
+.wiki-term-skeleton-line {
+    background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+    background-size: 200% 100%;
+    animation: wiki-skeleton-shimmer 1.2s infinite;
+    border-radius: 4px;
+}
+
+.wiki-term-skeleton-word {
+    height: 18px;
+    width: 120px;
+    margin-bottom: 8px;
+}
+
+.wiki-term-skeleton-line {
+    height: 13px;
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.wiki-term-skeleton-line.short {
+    width: 60%;
+}
+
+@keyframes wiki-skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
 }
