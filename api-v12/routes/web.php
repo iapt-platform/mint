@@ -12,6 +12,7 @@ use App\Http\Controllers\Library\AnthologyController;
 use App\Http\Controllers\Library\AnthologyReadController;
 use App\Http\Controllers\Library\BookController;
 use App\Http\Controllers\WikiController;
+use App\Http\Controllers\Library\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,7 +83,7 @@ Route::prefix('library')->name('library.')->group(function () {
         [AnthologyReadController::class, 'read']
     )->name('anthology.read');
 
-    Route::get('/search', [DownloadController::class, 'index'])->name('search');
+    Route::get('/search', [SearchController::class, 'search'])->name('search');
 });
 // 博客路由
 Route::prefix('blog')->group(function () {
