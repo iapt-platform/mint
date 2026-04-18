@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\App;
+
+use App\Services\PacketService;
 
 class OfflineIndexController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -19,50 +17,10 @@ class OfflineIndexController extends Controller
     public function index(Request $request)
     {
         //
-        $key = '/offline/index';
+        $index = app(PacketService::class)->index($request->input('file', null));
 
-        if (!Cache::has($key)) {
-            return [];
-        }
-        $fileInfo = Cache::get($key);
-        $output = [];
-        foreach ($fileInfo as $key => $file) {
-            if ($request->has('file')) {
-                if ($file['id'] !== $request->get('file')) {
-                    continue;
-                }
-            }
-            $zipFile = $file['filename'];
-            $bucket = config('mint.attachments.bucket_name.temporary');
-            $tmpFile =  $bucket . '/' . $zipFile;
-            $url = array();
-            foreach (config('mint.server.cdn_urls') as $key => $cdn) {
-                $url[] = [
-                    'link' => $cdn . '/' . $zipFile,
-                    'hostname' => 'cdn-' . $key,
-                ];
-            }
-            if (App::environment('local')) {
-                $s3Link = Storage::url($tmpFile);
-            } else {
-                try {
-                    $s3Link = Storage::temporaryUrl($tmpFile, now()->addDays(2));
-                } catch (\Exception $e) {
-                    Log::error('offline-index {Exception}', ['exception' => $e]);
-                    continue;
-                }
-            }
-            //Log::info('offline-index: link=' . $s3Link);
-            $url[] = [
-                'link' => $s3Link,
-                'hostname' => 'Amazon cloud storage(Hongkong)',
-            ];
-            $file['url'] = $url;
-            Log::debug('offline-index: file info=', ['data' => $file]);
-            $output[] = $file;
-        }
         return response()->json(
-            $output,
+            $index,
             200,
             [
                 'Content-Type' => 'application/json;charset=UTF-8',

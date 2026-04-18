@@ -18,57 +18,57 @@ class TagsInChapterCountController extends Controller
      */
     public function index()
     {
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case "chapter":
-                $progress = $request->get('progress',0.8);
-                $lang = $request->get('lang');
-                $channelType = $request->get('type','translation');
+                $progress = $request->input('progress', 0.8);
+                $lang = $request->input('lang');
+                $channelType = $request->input('type', 'translation');
 
                 $tm = (new TagMap)->getTable();
-                $pc =(new ProgressChapter)->getTable();
+                $pc = (new ProgressChapter)->getTable();
                 $tg = (new Tag)->getTable();
 
                 //标签过滤
-                if($request->get('tags') && $request->get('tags')!==''){
-                    $tags = explode(',',$request->get('tags'));
+                if ($request->input('tags') && $request->input('tags') !== '') {
+                    $tags = explode(',', $request->input('tags'));
                     foreach ($tags as $tag) {
                         # code...
-                        if(!empty($tag)){
+                        if (!empty($tag)) {
                             $tagNames[] = $tag;
                         }
                     }
                 }
-                if(isset($tagNames)){
-                    $where1 = " where co = ".count($tagNames);
-                    $a = implode(",",array_fill(0, count($tagNames), '?')) ;
+                if (isset($tagNames)) {
+                    $where1 = " where co = " . count($tagNames);
+                    $a = implode(",", array_fill(0, count($tagNames), '?'));
                     $in1 = "and t.name in ({$a})";
                     $param = $tagNames;
-                }else{
+                } else {
                     $where1 = " ";
                     $in1 = " ";
                 }
-                if(Str::isUuid($request->get('channel'))){
-                    $channel = "and channel_id = '".$request->get('channel')."' ";
-                }else{
+                if (Str::isUuid($request->input('channel'))) {
+                    $channel = "and channel_id = '" . $request->input('channel') . "' ";
+                } else {
                     $channel = "";
                 }
                 //完成度过滤
                 $param[] = $progress;
 
                 //语言过滤
-                if(!empty($request->get('lang'))){
+                if (!empty($request->input('lang'))) {
                     $whereLang = " and pc.lang = ? ";
-                    $param[] = $request->get('lang');
-                }else{
+                    $param[] = $request->input('lang');
+                } else {
                     $whereLang = "   ";
                 }
                 //channel type过滤
-				if($request->has('channel_type') && !empty($request->get('channel_type'))){
-					$channel_type = "and ch.type = ? ";
-					$param[] = $request->get('channel_type');
-				}else{
-					$channel_type = "";
-				}
+                if ($request->has('channel_type') && !empty($request->input('channel_type'))) {
+                    $channel_type = "and ch.type = ? ";
+                    $param[] = $request->input('channel_type');
+                } else {
+                    $channel_type = "";
+                }
 
                 $param_count = $param;
 
@@ -102,8 +102,8 @@ class TagsInChapterCountController extends Controller
 				) TID
 				left join tags t2 on t2.id = TID.tag_id
 				order by count desc";
-                $result = DB::select($query,$param);
-                return $this->ok(['rows'=>$result,'count'=>count($result)]);
+                $result = DB::select($query, $param);
+                return $this->ok(['rows' => $result, 'count' => count($result)]);
                 break;
         }
     }

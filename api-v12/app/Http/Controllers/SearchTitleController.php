@@ -16,19 +16,19 @@ class SearchTitleController extends Controller
     public function index(Request $request)
     {
         //
-        $key = strtolower($request->get('key'));
-        $table = PaliText::where('level','<',8)
-                         ->where(function ($query) use($key){
-                            $query->where('title_en','like',"%{$key}%")
-                                  ->orWhere('title','like',"%{$key}%");
-                        });
+        $key = strtolower($request->input('key'));
+        $table = PaliText::where('level', '<', 8)
+            ->where(function ($query) use ($key) {
+                $query->where('title_en', 'like', "%{$key}%")
+                    ->orWhere('title', 'like', "%{$key}%");
+            });
         $count = $table->count();
         $table = $table->orderBy('title_en');
-        $table = $table->skip($request->get("offset",0))
-                         ->take($request->get('limit',10));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 10));
 
         $result = $table->get();
-        return $this->ok(["rows"=>SearchTitleIndexResource::collection($result),"count"=>$count]);
+        return $this->ok(["rows" => SearchTitleIndexResource::collection($result), "count" => $count]);
     }
 
     /**

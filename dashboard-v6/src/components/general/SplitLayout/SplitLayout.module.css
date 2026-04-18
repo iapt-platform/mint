@@ -1,0 +1,98 @@
+/* ─────────────────────────────────────────────
+   SplitLayout.module.css
+   ───────────────────────────────────────────── */
+
+.root {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;   /* 子项撑满高度，防止上下排列 */
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── 左侧面板 ── */
+.sidebar {
+  flex-shrink: 0;
+  min-width: 0;           /* 允许宽度收缩到 0，防止撑破 flex 行 */
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--ant-color-split, #f0f0f0);
+  transition: width 0.15s ease;
+  box-sizing: border-box;
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 6px 6px 6px 12px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--ant-color-split, #f0f0f0);
+  min-height: 40px;
+  box-sizing: border-box;
+}
+
+.sidebarTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.collapseBtn {
+  flex-shrink: 0;
+  color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.45));
+}
+.collapseBtn:hover {
+  color: var(--ant-color-primary, #1677ff) !important;
+  background: var(--ant-color-primary-bg, #e6f4ff) !important;
+}
+
+.sidebarContent {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+}
+
+/* ── 右侧主区域 ── */
+.mainArea {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.splitter {
+  width: 100%;
+  height: 100%;
+}
+
+.centerPanel {
+  overflow: hidden;
+  height: 100%;
+}
+
+/* 展开按钮（由中间内容区组件放置） */
+.expandBtn {
+  color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.45));
+  border-radius: 4px;
+}
+.expandBtn:hover {
+  color: var(--ant-color-primary, #1677ff) !important;
+  background: var(--ant-color-primary-bg, #e6f4ff) !important;
+}
+
+/* 右边栏 Splitter.Panel */
+.rightAreaPanel {
+  overflow: hidden;
+  padding: 0 !important;
+}

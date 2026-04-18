@@ -4,7 +4,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
-import type { IDict } from "../api/Dict";
+import type { IDict } from "../api/dict";
 import type { ITerm } from "../api/Term";
 
 export interface ICommand {

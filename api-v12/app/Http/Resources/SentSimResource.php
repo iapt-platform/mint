@@ -22,12 +22,12 @@ class SentSimResource extends JsonResource
     {
         //获取实际句子信息
         $sent = PaliSentence::find($this->sent2);
-        $channels = explode(',',$request->get('channels'));
-        $mode = explode(',',$request->get('mode','read'));
-        $sentId = $sent->book.'-'.$sent->paragraph.'-'.$sent->word_begin.'-'.$sent->word_end;
+        $channels = explode(',', $request->input('channels'));
+        $mode = explode(',', $request->input('mode', 'read'));
+        $sentId = $sent->book . '-' . $sent->paragraph . '-' . $sent->word_begin . '-' . $sent->word_end;
         $Sent = new CorpusController();
         $tpl =
-        $data['sent'] = $Sent->getSentTpl($sentId,$channels,$mode);
+            $data['sent'] = $Sent->getSentTpl($sentId, $channels, $mode);
         $data['sim'] = $this->sim;
         return $data;
     }

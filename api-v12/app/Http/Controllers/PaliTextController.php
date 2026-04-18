@@ -22,13 +22,13 @@ class PaliTextController extends Controller
     {
         //
         $all_count = 0;
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'chapter-tag':
                 $tm = (new TagMap)->getTable();
                 $tg = (new Tag)->getTable();
                 $pt = (new PaliText)->getTable();
-                if ($request->get('tags') && $request->get('tags') !== '') {
-                    $tags = explode(',', $request->get('tags'));
+                if ($request->input('tags') && $request->input('tags') !== '') {
+                    $tags = explode(',', $request->input('tags'));
                     foreach ($tags as $tag) {
                         # code...
                         if (!empty($tag)) {
@@ -76,8 +76,8 @@ class PaliTextController extends Controller
                 break;
 
             case 'chapter':
-                if ($request->get('tags') && $request->get('tags') !== '') {
-                    $tags = explode(',', $request->get('tags'));
+                if ($request->input('tags') && $request->input('tags') !== '') {
+                    $tags = explode(',', $request->input('tags'));
                     foreach ($tags as $tag) {
                         # code...
                         if (!empty($tag)) {
@@ -125,19 +125,19 @@ class PaliTextController extends Controller
                 $all_count = count($chapters);
                 break;
             case 'chapter_children':
-                $table = PaliText::where('book', $request->get('book'))
-                    ->where('parent', $request->get('para'))
+                $table = PaliText::where('book', $request->input('book'))
+                    ->where('parent', $request->input('para'))
                     ->where('level', '<', 8);
                 $all_count = $table->count();
                 $chapters = $table->orderBy('paragraph')->get();
                 break;
             case 'children':
                 if ($request->has('id')) {
-                    $root = PaliText::where('uid', $request->get('id'))
+                    $root = PaliText::where('uid', $request->input('id'))
                         ->first();
                 } else {
-                    $root = PaliText::where('book', $request->get('book'))
-                        ->where('paragraph', $request->get('para'))
+                    $root = PaliText::where('book', $request->input('book'))
+                        ->where('paragraph', $request->input('para'))
                         ->first();
                 }
 
@@ -168,8 +168,8 @@ class PaliTextController extends Controller
                 $all_count = count($chapters);
                 break;
             case 'paragraph':
-                $result = PaliText::where('book', $request->get('book'))
-                    ->where('paragraph', $request->get('para'))
+                $result = PaliText::where('book', $request->input('book'))
+                    ->where('paragraph', $request->input('para'))
                     ->first();
                 if ($result) {
                     return $this->ok($result);
@@ -191,13 +191,13 @@ class PaliTextController extends Controller
                  */
 
                 if ($request->has('series')) {
-                    $book_title = $request->get('series');
+                    $book_title = $request->input('series');
                     //获取丛书书目列表
-                    $books = BookTitle::where('title', $request->get('series'))->get();
+                    $books = BookTitle::where('title', $request->input('series'))->get();
                 } else {
                     //查询这个目录的顶级目录
-                    $path = PaliText::where('book', $request->get('book'))
-                        ->where('paragraph', $request->get('para'))
+                    $path = PaliText::where('book', $request->input('book'))
+                        ->where('paragraph', $request->input('para'))
                         ->select('path')->first();
                     if (!$path) {
                         return $this->error("no data");
@@ -248,7 +248,7 @@ class PaliTextController extends Controller
                 break;
         }
 
-        if ($request->get('view') !== 'book-toc') {
+        if ($request->input('view') !== 'book-toc') {
             foreach ($chapters as $key => $value) {
                 if (is_object($value)) {
                     //TODO $value->book 可能不存在

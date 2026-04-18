@@ -4,7 +4,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
-import type { ISentence } from "../api/Corpus";
+import type { ISentence } from "../api/sentence";
 import type { TResType } from "../api/discussion";
 
 export interface IShowDiscussion {

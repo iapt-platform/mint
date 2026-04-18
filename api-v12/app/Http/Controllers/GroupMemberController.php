@@ -24,17 +24,17 @@ class GroupMemberController extends Controller
         }
         $result = false;
         $indexCol = ['id', 'user_id', 'group_id', 'power', 'level', 'status', 'updated_at', 'created_at'];
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'group':
                 # 获取 group 内所有 成员
                 //判断当前用户是否有指定的 group 的权限
-                if (GroupMember::where('group_id', $request->get('id'))
+                if (GroupMember::where('group_id', $request->input('id'))
                     ->where('user_id', $user['user_uid'])
                     ->exists()
                 ) {
-                    $table = GroupMember::where('group_id', $request->get('id'));
+                    $table = GroupMember::where('group_id', $request->input('id'));
                     //当前用户角色
-                    $power = GroupMember::where('group_id', $request->get('id'))
+                    $power = GroupMember::where('group_id', $request->input('id'))
                         ->where('user_id', $user['user_uid'])
                         ->value('power');
                     $roles = ["owner", "manager", "member"];
@@ -57,8 +57,8 @@ class GroupMemberController extends Controller
             $table = $table->orderBy('created_at');
         }
 
-        $table->skip($request->get('offset', 0))
-            ->take($request->get('limit', 1000));
+        $table->skip($request->input('offset', 0))
+            ->take($request->input('limit', 1000));
 
         $result = $table->get();
 

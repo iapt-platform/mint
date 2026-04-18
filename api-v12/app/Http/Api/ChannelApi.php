@@ -27,6 +27,14 @@ class ChannelApi
             return false;
         }
     }
+    public static function getByIds(array $ids)
+    {
+        $channels = [];
+        foreach ($ids as  $id) {
+            $channels[] = self::getById($id);
+        }
+        return $channels;
+    }
     public static function getCanReadByUser($userUuid = null)
     {
         #获取 user 在某章节 所有有权限的 channel 列表

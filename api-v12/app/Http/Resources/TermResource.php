@@ -13,6 +13,7 @@ use App\Http\Api\ShareApi;
 use App\Http\Api\AuthApi;
 use App\Models\UserOperationDaily;
 use App\Models\DhammaTerm;
+use App\Helpers\MarkdownHelper;
 
 class TermResource extends JsonResource
 {
@@ -42,8 +43,8 @@ class TermResource extends JsonResource
         ];
 
 
-        if ($request->has('channel') && !empty($request->get('channel'))) {
-            $channels = explode('_', $request->get('channel'));
+        if ($request->has('channel') && !empty($request->input('channel'))) {
+            $channels = explode('_', $request->input('channel'));
         } else {
             if (!empty($this->channal) && Str::isUuid($this->channal)) {
                 $channelId = $this->channal;
@@ -65,13 +66,16 @@ class TermResource extends JsonResource
         if (!empty($this->note)) {
             $mdRender = new MdRender(
                 [
-                    'mode' => $request->get('mode', 'read'),
-                    'format' => 'react',
+                    'mode' => $request->input('mode', 'read'),
+                    'format' => $request->input('format', 'react'),
                     'studioId' => $this->owner,
                 ]
             );
             $data["html"]  = $mdRender->convert($this->note, $channels, null);
-            $summaryContent = $this->note;
+            $paragraphs = MarkdownHelper::splitByParagraphs($this->note);
+            if (is_array($paragraphs) && count($paragraphs) > 0) {
+                $summaryContent = $paragraphs[0];
+            }
         } else if ($request->has('community_summary')) {
             $lang = strtolower($this->language);
             if ($lang === 'zh') {
@@ -95,7 +99,7 @@ class TermResource extends JsonResource
         if (isset($summaryContent)) {
             $mdRender = new MdRender(
                 [
-                    'mode' => $request->get('mode', 'read'),
+                    'mode' => $request->input('mode', 'read'),
                     'format' => 'text',
                     'studioId' => $this->owner,
                 ]

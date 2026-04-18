@@ -45,9 +45,9 @@ class NissayaCardController extends Controller
     {
         //
         $cardData = [];
-        App::setLocale($request->get('lang'));
+        App::setLocale($request->input('lang'));
         $localTerm = ChannelApi::getSysChannel(
-            "_System_Grammar_Term_" . strtolower($request->get('lang')) . "_",
+            "_System_Grammar_Term_" . strtolower($request->input('lang')) . "_",
             "_System_Grammar_Term_en_"
         );
         if (!$localTerm) {
@@ -166,7 +166,7 @@ class NissayaCardController extends Controller
                  */
                 $arrLocalEnding = array();
                 $localEndings = NissayaEnding::where('relation', $relation['name'])
-                    ->where('lang', $request->get('lang'))
+                    ->where('lang', $request->input('lang'))
                     ->get();
                 foreach ($localEndings as $localEnding) {
                     if (empty($localEnding->from) || $localEnding->from === $relation->from) {
@@ -186,7 +186,7 @@ class NissayaCardController extends Controller
             }
         }
 
-        if ($request->get('content_type', 'markdown') === 'markdown') {
+        if ($request->input('content_type', 'markdown') === 'markdown') {
             $m = new \Mustache_Engine(array('entity_flags' => ENT_QUOTES));
             $tpl = file_get_contents(resource_path("mustache/nissaya_ending_card.tpl"));
             $result = $m->render($tpl, $cardData);

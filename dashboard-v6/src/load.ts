@@ -14,7 +14,7 @@ import {
   type ISettingItem,
   refresh as refreshSetting,
 } from "./reducers/setting";
-import { refresh as refreshTheme } from "./reducers/theme";
+import { themeChange, type TThemeMode } from "./reducers/theme";
 import { get } from "./request";
 import { get as getLang } from "./locales";
 
@@ -23,7 +23,7 @@ import { grammar, type ITerm, update } from "./reducers/term-vocabulary";
 import { push as nissayaEndingPush } from "./reducers/nissaya-ending-vocabulary";
 
 import { pushRelation } from "./reducers/relation";
-import type { IGroupMemberListResponse } from "./api/Group";
+import type { IGroupMemberListResponse } from "./api/group";
 
 import type { IAiModel } from "./api/ai";
 import type { IStudio } from "./api/Auth";
@@ -75,18 +75,18 @@ interface INissayaEndingResponse {
 
 export const grammarTermFetch = () => {
   //获取语法术语表
-  get<ITermResponse>(`/v2/term-vocabulary?view=grammar&lang=` + getLang()).then(
-    (json) => {
-      if (json.ok) {
-        console.debug("grammar dispatch", json.data.rows);
-        store.dispatch(grammar(json.data.rows));
-      }
+  get<ITermResponse>(
+    `/api/v2/term-vocabulary?view=grammar&lang=` + getLang()
+  ).then((json) => {
+    if (json.ok) {
+      console.debug("grammar dispatch", json.data.rows);
+      store.dispatch(grammar(json.data.rows));
     }
-  );
+  });
 };
 
 const init = () => {
-  get<ISite>("/v2/site-info/en").then((response) => {
+  get<ISite>("/api/v2/site-info/en").then((response) => {
     if ("title" in response) {
       const it: ISite = response;
       store.dispatch(refreshLayout(it));
@@ -95,7 +95,7 @@ const init = () => {
   //获取用户登录信息
   const token = getToken();
   if (token) {
-    get<ITokenRefreshResponse>("/v2/auth/current").then((response) => {
+    get<ITokenRefreshResponse>("/api/v2/auth/current").then((response) => {
       console.log("auth", response);
       if (response.ok) {
         const it: IUser = {
@@ -112,7 +112,7 @@ const init = () => {
       }
     });
 
-    get<IGroupMemberListResponse>("/v2/group-member?view=user").then(
+    get<IGroupMemberListResponse>("/api/v2/group-member?view=user").then(
       (response) => {
         console.log("auth", response);
         if (response.ok) {
@@ -140,7 +140,7 @@ const init = () => {
 
   //获取术语表
   get<ITermResponse>(
-    `/v2/term-vocabulary?view=community&lang=` + getLang()
+    `/api/v2/term-vocabulary?view=community&lang=` + getLang()
   ).then((json) => {
     if (json.ok) {
       store.dispatch(update(json.data.rows));
@@ -148,7 +148,7 @@ const init = () => {
   });
 
   //获取nissaya ending 表
-  get<INissayaEndingResponse>(`/v2/nissaya-ending-vocabulary?lang=my`).then(
+  get<INissayaEndingResponse>(`/api/v2/nissaya-ending-vocabulary?lang=my`).then(
     (json) => {
       if (json.ok) {
         const nissayaEnding = json.data.rows.map((item) => item.ending);
@@ -158,7 +158,7 @@ const init = () => {
   );
 
   //获取 relation 表
-  const urlRelation = `/v2/relation?vocabulary=true&limit=1000`;
+  const urlRelation = `/api/v2/relation?vocabulary=true&limit=1000`;
   console.debug("relations api request", urlRelation);
   get<IRelationListResponse>(urlRelation).then((json) => {
     console.debug("relations api response", json);
@@ -178,10 +178,10 @@ const init = () => {
 
   //获取用户选择的主题
   const theme = localStorage.getItem("theme");
-  if (theme === "dark") {
-    store.dispatch(refreshTheme("dark"));
+  if (theme) {
+    store.dispatch(themeChange(theme as TThemeMode));
   } else {
-    store.dispatch(refreshTheme("ant"));
+    store.dispatch(themeChange("system"));
   }
 
   //设置时区到cookie

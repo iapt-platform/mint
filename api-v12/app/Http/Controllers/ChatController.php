@@ -26,7 +26,7 @@ class ChatController extends Controller
         $total = $query->count();
 
         $chats = $query->orderBy('updated_at', 'desc')
-            ->paginate($request->get('limit', 20));
+            ->paginate($request->input('limit', 20));
 
         return $this->ok([
             'rows' => ChatResource::collection($chats),

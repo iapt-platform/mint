@@ -297,6 +297,10 @@ md;
     {
         $output  = [];
         foreach ($input as $key => $value) {
+            if (!isset($original[$key])) {
+                Log::warning('no id');
+                continue;
+            }
             $value['id'] = $original[$key]['id'];
             if (isset($value['commentary'])) {
                 $newCommentary = array_map(function ($n) use ($commentary) {

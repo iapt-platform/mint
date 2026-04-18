@@ -2,26 +2,29 @@
 
 @section('title', $currentCategory['name'] . ' - 巴利书库')
 
+@section('breadcrumb')
+<li class="breadcrumb-item">
+    <a href="{{ route('library.home') }}">首页</a>
+</li>
+
+@foreach($breadcrumbs as $breadcrumb)
+@if($loop->last)
+<li class="breadcrumb-item active">{{ $breadcrumb['name'] }}</li>
+@else
+<li class="breadcrumb-item">
+    <a href="{{ route('library.category.show', $breadcrumb['id']) }}">{{ $breadcrumb['name'] }}</a>
+</li>
+@endif
+@endforeach
+@endsection
+
 @section('content')
 <div class="page-body">
     <div class="container-xl">
         <div class="page-header d-print-none">
             <div class="row align-items-center">
                 <div class="col">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('library.home') }}">{{ __('labels.home') }}</a></li>
-                            @foreach($breadcrumbs as $breadcrumb)
-                            @if($loop->last)
-                            <li class="breadcrumb-item active">{{ $breadcrumb['name'] }}</li>
-                            @else
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('library.category.show', $breadcrumb['id']) }}">{{ $breadcrumb['name'] }}</a>
-                            </li>
-                            @endif
-                            @endforeach
-                        </ol>
-                    </nav>
+
                     <h2 class="page-title">{{ $currentCategory['name'] }}</h2>
                 </div>
             </div>

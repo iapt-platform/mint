@@ -25,7 +25,7 @@ class GroupController extends Controller
         //
         $result = false;
         $indexCol = ['uid', 'name', 'description', 'owner', 'updated_at', 'created_at'];
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'studio':
                 # 获取studio内所有group
                 $user = AuthApi::current($request);
@@ -33,13 +33,13 @@ class GroupController extends Controller
                     return $this->error(__('auth.failed'));
                 }
                 //判断当前用户是否有指定的studio的权限
-                $studioId = StudioApi::getIdByName($request->get('name'));
+                $studioId = StudioApi::getIdByName($request->input('name'));
                 if ($user['user_uid'] !== $studioId) {
                     return $this->error(__('auth.failed'));
                 }
 
                 $table = GroupInfo::select($indexCol);
-                if ($request->get('view2', 'my') === 'my') {
+                if ($request->input('view2', 'my') === 'my') {
                     $table = $table->where('owner', $studioId);
                 } else {
                     //我参加的group
@@ -56,20 +56,20 @@ class GroupController extends Controller
                 break;
         }
         if ($request->has("search")) {
-            $table = $table->where('name', 'like', "%" . $request->get("search") . "%");
+            $table = $table->where('name', 'like', "%" . $request->input("search") . "%");
         }
         $count = $table->count();
 
-        if ($request->get('view') === 'studio_list') {
+        if ($request->input('view') === 'studio_list') {
             $table = $table->orderBy('count', 'desc');
         } else {
             $table = $table->orderBy(
-                $request->get('order', 'updated_at'),
-                $request->get('dir', 'desc')
+                $request->input('order', 'updated_at'),
+                $request->input('dir', 'desc')
             );
         }
-        $table->skip($request->get('offset', 0))
-            ->take($request->get('limit', 1000));
+        $table->skip($request->input('offset', 0))
+            ->take($request->input('limit', 1000));
 
         $result = $table->get();
         if ($result) {
@@ -90,7 +90,7 @@ class GroupController extends Controller
             return $this->error(__('auth.failed'));
         }
         //判断当前用户是否有指定的studio的权限
-        $studioId = StudioApi::getIdByName($request->get('studio'));
+        $studioId = StudioApi::getIdByName($request->input('studio'));
         if ($user['user_uid'] !== $studioId) {
             return $this->error(__('auth.failed'));
         }
@@ -115,19 +115,19 @@ class GroupController extends Controller
             return $this->error(__('auth.failed'));
         }
         //判断当前用户是否有指定的studio的权限
-        if ($user['user_uid'] !== StudioApi::getIdByName($request->get('studio_name'))) {
+        if ($user['user_uid'] !== StudioApi::getIdByName($request->input('studio_name'))) {
             return $this->error(__('auth.failed'));
         }
         //查询是否重复
-        if (GroupInfo::where('name', $request->get('name'))->where('owner', $user['user_uid'])->exists()) {
+        if (GroupInfo::where('name', $request->input('name'))->where('owner', $user['user_uid'])->exists()) {
             return $this->error(__('validation.exists', ['name']));
         }
-        $studioId = StudioApi::getIdByName($request->get('studio_name'));
+        $studioId = StudioApi::getIdByName($request->input('studio_name'));
         $group = new GroupInfo;
         DB::transaction(function () use ($group, $request, $user, $studioId) {
             $group->id = app('snowflake')->id();
             $group->uid = Str::uuid();
-            $group->name = $request->get('name');
+            $group->name = $request->input('name');
             $group->owner = $studioId;
             $group->create_time = time() * 1000;
             $group->modify_time = time() * 1000;
@@ -138,7 +138,7 @@ class GroupController extends Controller
             $newMember->user_id = $studioId;
             $newMember->group_id = $group->uid;
             $newMember->power = 0;
-            $newMember->group_name = $request->get('name');
+            $newMember->group_name = $request->input('name');
             $newMember->save();
         });
 
@@ -199,10 +199,10 @@ class GroupController extends Controller
         if ($user['user_uid'] !== $group->owner) {
             return $this->error(__('auth.failed'));
         }
-        $group->name = $request->get('name');
-        $group->description = $request->get('description');
+        $group->name = $request->input('name');
+        $group->description = $request->input('description');
         if ($request->has('status')) {
-            $group->status = $request->get('status');
+            $group->status = $request->input('status');
         }
         $group->create_time = time() * 1000;
         $group->modify_time = time() * 1000;

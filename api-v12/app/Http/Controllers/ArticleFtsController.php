@@ -1,7 +1,9 @@
 <?php
+
 /**
  * 文章全文搜索
  */
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -23,23 +25,23 @@ class ArticleFtsController extends Controller
     {
         //
         $pageSize = 10;
-        $pageCurrent = $request->get('from',0);
+        $pageCurrent = $request->input('from', 0);
 
         $articlesId = [];
-        if(!empty($request->get('anthology'))){
+        if (!empty($request->input('anthology'))) {
             //子节点
-            $node = ArticleCollection::where('article_id',$request->get('id'))
-                        ->where('collect_id',$request->get('anthology'))->first();
-            if($node){
-                $nodeList = ArticleCollection::where('collect_id',$request->get('anthology'))
-                                ->where('id','>=',(int)$node->id)
-                                ->orderBy('id')
-                                ->skip($request->get('from',0))
-                                ->get();
+            $node = ArticleCollection::where('article_id', $request->input('id'))
+                ->where('collect_id', $request->input('anthology'))->first();
+            if ($node) {
+                $nodeList = ArticleCollection::where('collect_id', $request->input('anthology'))
+                    ->where('id', '>=', (int)$node->id)
+                    ->orderBy('id')
+                    ->skip($request->input('from', 0))
+                    ->get();
                 $result = [];
                 $count = 0;
                 foreach ($nodeList as $curr) {
-                    if($count>0 && $curr->level <= $node->level){
+                    if ($count > 0 && $curr->level <= $node->level) {
                         break;
                     }
                     $result[] = $curr;
@@ -48,27 +50,27 @@ class ArticleFtsController extends Controller
                     $articlesId[] = $value->article_id;
                 }
             }
-        }else{
-            $articlesId[] = $request->get('id');
+        } else {
+            $articlesId[] = $request->input('id');
         }
         $total = count($articlesId);
-        $channels = explode(',',$request->get('channels'));
+        $channels = explode(',', $request->input('channels'));
         $output = [];
-        for ($i=$pageCurrent; $i <$pageCurrent+$pageSize ; $i++) {
-            if($i>=$total){
+        for ($i = $pageCurrent; $i < $pageCurrent + $pageSize; $i++) {
+            if ($i >= $total) {
                 break;
             }
             $curr = $articlesId[$i];
             foreach ($channels as $channel) {
                 # code...
-                $article = $this->fetch($curr,$channel);
+                $article = $this->fetch($curr, $channel);
                 if ($article === false) {
                     Log::error('fetch fail');
-                }else{
+                } else {
                     # code...
                     $content = $article['html'];
-                    if(!empty($request->get('key'))){
-                        if(strpos($content,$request->get('key')) !== false){
+                    if (!empty($request->input('key'))) {
+                        if (strpos($content, $request->input('key')) !== false) {
                             $output[] = $article;
                         }
                     }
@@ -76,44 +78,47 @@ class ArticleFtsController extends Controller
             }
         }
 
-        return $this->ok(['rows'=>$output,
-            'page'=>[
+        return $this->ok([
+            'rows' => $output,
+            'page' => [
                 'size' => $pageSize,
                 'current' => $pageCurrent,
                 'total' => $total
-            ],]);
+            ],
+        ]);
     }
 
-    private function fetch($articleId,$channel,$token=null){
+    private function fetch($articleId, $channel, $token = null)
+    {
         try {
             $api = config('mint.server.api.bamboo');
             $basicUrl = $api . '/v2/article/';
             $url =  $basicUrl . $articleId;;
 
             $urlParam = [
-                    'mode' => 'read',
-                    'format' => 'text',
-                    'channel' => $channel,
+                'mode' => 'read',
+                'format' => 'text',
+                'channel' => $channel,
             ];
-            Log::debug('http request',['url'=>$url,'param'=>$urlParam]);
-            if($token){
-                $response = Http::withToken($this->option('token'))->get($url,$urlParam);
-            }else{
-                $response = Http::get($url,$urlParam);
+            Log::debug('http request', ['url' => $url, 'param' => $urlParam]);
+            if ($token) {
+                $response = Http::withToken($this->option('token'))->get($url, $urlParam);
+            } else {
+                $response = Http::get($url, $urlParam);
             }
 
-            if($response->failed()){
-                Log::error('http request error'.$response->json('message'));
+            if ($response->failed()) {
+                Log::error('http request error' . $response->json('message'));
                 return false;
             }
-            if(!$response->json('ok')){
+            if (!$response->json('ok')) {
                 return false;
             }
             $article = $response->json('data');
             return $article;
-        }catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             // 处理请求过程中抛出的异常
-            Log::error('fetch',['error'=>$th]);
+            Log::error('fetch', ['error' => $th]);
             return false;
         }
     }

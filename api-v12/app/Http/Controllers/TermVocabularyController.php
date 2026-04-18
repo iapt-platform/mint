@@ -5,10 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\DhammaTerm;
 use Illuminate\Http\Request;
 use App\Http\Resources\TermVocabularyResource;
-use App\Http\Api\ChannelApi;
+use App\Services\TermService;
 
 class TermVocabularyController extends Controller
 {
+    protected TermService $termService;
+
+    public function __construct(TermService $termService)
+    {
+        $this->termService = $termService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,36 +22,27 @@ class TermVocabularyController extends Controller
      */
     public function index(Request $request)
     {
-        //
-        $table = DhammaTerm::select(['guid','word','tag','meaning','other_meaning']);
-        switch ($request->get('view')) {
-            case "grammar":
-                $localTerm = ChannelApi::getSysChannel(
-                    "_System_Grammar_Term_".strtolower($request->get('lang'))."_",
-                    "_System_Grammar_Term_en_"
-                );
-                if(!$localTerm){
-                    return $this->error('no term channel');
-                }
-                $table = $table->where('channal',$localTerm);
-                break;
-            case "studio":
-                break;
-            case "user":
-                break;
-            case "community":
-                $localTerm = ChannelApi::getSysChannel(
-                    "_community_term_".strtolower($request->get('lang'))."_",
-                    "_community_term_en_"
-                );
-                if(!$localTerm){
-                    return $this->error('no term channel');
-                }
-                $table = $table->where('channal',$localTerm);
-                break;
-        }
-        $result = $table->get();
-        return $this->ok(["rows"=>TermVocabularyResource::collection($result),'count'=>count($result)]);
+        // ✅ 数据验证
+        $validated = $request->validate([
+            'view' => ['required', 'string'],
+            'lang' => ['nullable', 'string'],
+        ]);
+
+        $view = $validated['view'];
+        $lang = $validated['lang'] ?? null;
+
+        // ✅ 使用 match 替代 switch
+        $data = match ($view) {
+            'grammar'   => $this->termService->getGrammarGlossary($lang),
+            'community' => $this->termService->getCommunityGlossary($lang),
+            'studio', 'user' => throw new \Exception('not implemented'),
+            default     => throw new \InvalidArgumentException('invalid view'),
+        };
+
+        return $this->ok([
+            'rows'  => TermVocabularyResource::collection($data['items']),
+            'count' => $data['total'],
+        ]);
     }
 
     /**

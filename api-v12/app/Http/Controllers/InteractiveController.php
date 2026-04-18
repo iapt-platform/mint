@@ -40,36 +40,36 @@ class InteractiveController extends Controller
         //
         $user = AuthApi::current($request);
         $data = [];
-        switch ($request->get('res_type')) {
+        switch ($request->input('res_type')) {
             case 'article':
                 /* qa */
                 $data['qa'] = [
                     'can_create' => false,
                     'can_reply' => false,
                 ];
-                if($user && ArticleController::userCanEditId($user['user_uid'],$res_id)){
+                if ($user && ArticleController::userCanEditId($user['user_uid'], $res_id)) {
                     $data['qa']['can_create'] = true;
                     $data['qa']['can_reply'] = true;
                 }
-                $data['qa']['count'] = Discussion::where('res_id',$res_id)
-                                                ->where('type','qa')
-                                                ->where('status','close')
-                                                ->count();
+                $data['qa']['count'] = Discussion::where('res_id', $res_id)
+                    ->where('type', 'qa')
+                    ->where('status', 'close')
+                    ->count();
                 /* help */
                 $data['help'] = [
                     'can_create' => false,
                     'can_reply' => false,
                 ];
-                if($user){
+                if ($user) {
                     $data['help']['can_reply'] = true;
-                    if(ArticleController::userCanEditId($user['user_uid'],$res_id)){
+                    if (ArticleController::userCanEditId($user['user_uid'], $res_id)) {
                         $data['help']['can_create'] = true;
                     }
                 }
-                $data['help']['count'] = Discussion::where('res_id',$res_id)
-                                                ->where('type','help')
-                                                ->where('status','active')
-                                                ->count();
+                $data['help']['count'] = Discussion::where('res_id', $res_id)
+                    ->where('type', 'help')
+                    ->where('status', 'active')
+                    ->count();
 
 
 
@@ -78,14 +78,14 @@ class InteractiveController extends Controller
                     'can_create' => false,
                     'can_reply' => false,
                 ];
-                if($user){
+                if ($user) {
                     $data['discussion']['can_reply'] = true;
                     $data['discussion']['can_create'] = true;
                 }
-                $data['discussion']['count'] = Discussion::where('res_id',$res_id)
-                                                ->where('type','discussion')
-                                                ->where('status','active')
-                                                ->count();
+                $data['discussion']['count'] = Discussion::where('res_id', $res_id)
+                    ->where('type', 'discussion')
+                    ->where('status', 'active')
+                    ->count();
                 break;
         }
 

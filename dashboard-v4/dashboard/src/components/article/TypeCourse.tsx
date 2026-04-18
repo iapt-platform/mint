@@ -65,22 +65,13 @@ interface IWidget {
   onLoading?: Function;
   onError?: Function;
 }
-const TypeCourseWidget = ({
+const TypeCourse = ({
   type,
-  book,
-  para,
   channelId,
   articleId,
   courseId,
-  exerciseId,
-  userName,
   mode = "read",
-  active = false,
   onArticleChange,
-  onFinal,
-  onLoad,
-  onLoading,
-  onError,
 }: IWidget) => {
   const intl = useIntl();
   const [anthologyId, setAnthologyId] = useState<string>();
@@ -252,4 +243,4 @@ const TypeCourseWidget = ({
   );
 };
 
-export default TypeCourseWidget;
+export default TypeCourse;

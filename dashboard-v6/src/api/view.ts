@@ -1,4 +1,4 @@
-import type { ArticleType } from "./Corpus";
+import type { ArticleType } from "./article";
 
 export interface IViewRequest {
   target_type: ArticleType;

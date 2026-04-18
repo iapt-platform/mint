@@ -38,20 +38,20 @@ class DictPreferenceController extends Controller
                 'user_dicts.editor_id',
             ]);
         //处理搜索
-        if (!empty($request->get("keyword"))) {
-            $table = $table->where('word_indices.word', 'like', "%" . $request->get("keyword") . "%");
+        if (!empty($request->input("keyword"))) {
+            $table = $table->where('word_indices.word', 'like', "%" . $request->input("keyword") . "%");
         }
 
         //获取记录总条数
         $count = $table->count();
         //处理排序
         $table = $table->orderBy(
-            $request->get("order", 'word_indices.count'),
-            $request->get("dir", 'desc')
+            $request->input("order", 'word_indices.count'),
+            $request->input("dir", 'desc')
         );
         //处理分页
-        $table = $table->skip($request->get("offset", 0))
-            ->take($request->get("limit", 200));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input("limit", 200));
         //获取数据
         $result = $table->get();
         return $this->ok([

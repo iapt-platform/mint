@@ -27,13 +27,13 @@ class SentPrController extends Controller
     public function index(Request $request)
     {
         //
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'sent-info':
-                $table = SentPr::where('book_id', $request->get('book'))
-                    ->where('paragraph', $request->get('para'))
-                    ->where('word_start', $request->get('start'))
-                    ->where('word_end', $request->get('end'))
-                    ->where('channel_uid', $request->get('channel'));
+                $table = SentPr::where('book_id', $request->input('book'))
+                    ->where('paragraph', $request->input('para'))
+                    ->where('word_start', $request->input('start'))
+                    ->where('word_end', $request->input('end'))
+                    ->where('channel_uid', $request->input('channel'));
                 $all_count = $table->count();
                 $result = $table->orderBy('created_at', 'desc')->get();
 
@@ -63,7 +63,7 @@ class SentPrController extends Controller
     public function pr_tree(Request $request)
     {
         $output = [];
-        $sentences = $request->get("data");
+        $sentences = $request->input("data");
         foreach ($sentences as $key => $sentence) {
             # 先查句子信息
             $sentInfo = Sentence::where('book_id', $sentence['book'])
@@ -153,8 +153,8 @@ class SentPrController extends Controller
         $suggestionData =  [
             'data' => new SentPrResource($new),
             'token' => AuthApi::getToken($request),
-            'notification' => $request->get('notification', true),
-            'webhook' => $request->get('webhook', true),
+            'notification' => $request->input('notification', true),
+            'webhook' => $request->input('webhook', true),
         ];
         Mq::publish(
             'suggestion',
@@ -226,7 +226,7 @@ class SentPrController extends Controller
         if ($sentPr->editor_uid !== $user['user_uid']) {
             return $this->error('not power', 403, 403);
         }
-        $sentPr->content = $request->get('text');
+        $sentPr->content = $request->input('text');
         $sentPr->modify_time = time() * 1000;
         $sentPr->save();
         return $this->ok($sentPr);

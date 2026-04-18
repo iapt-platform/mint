@@ -1,5 +1,5 @@
 import type { IStudio, IUser } from "./Auth";
-import type { IChannel } from "./Channel";
+import type { IChannel } from "./channel";
 import type { TResType } from "./discussion";
 
 export type ITransferStatus = "transferred" | "accept" | "refuse" | "cancel";

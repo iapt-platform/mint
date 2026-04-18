@@ -24,15 +24,15 @@ class ExportController extends Controller
     {
         $queryId = Str::uuid();
         $token = AuthApi::getToken($request);
-        switch ($request->get('type', 'chapter')) {
+        switch ($request->input('type', 'chapter')) {
             case 'chapter':
                 $data = [
-                    'book' => $request->get('book'),
-                    'para' => $request->get('par'),
-                    'channel' => $request->get('channel'),
-                    'format' => $request->get('format'),
-                    'origin' => $request->get('origin'),
-                    'translation' => $request->get('translation'),
+                    'book' => $request->input('book'),
+                    'para' => $request->input('par'),
+                    'channel' => $request->input('channel'),
+                    'format' => $request->input('format'),
+                    'origin' => $request->input('origin'),
+                    'translation' => $request->input('translation'),
                     'queryId' => $queryId,
                 ];
                 if ($token) {
@@ -42,14 +42,14 @@ class ExportController extends Controller
                 break;
             case 'article':
                 $data = [
-                    'id' => $request->get('id'),
-                    'channel' => $request->get('channel'),
-                    'format' => $request->get('format'),
-                    'origin' => $request->get('origin'),
-                    'translation' => $request->get('translation'),
+                    'id' => $request->input('id'),
+                    'channel' => $request->input('channel'),
+                    'format' => $request->input('format'),
+                    'origin' => $request->input('origin'),
+                    'translation' => $request->input('translation'),
                     'queryId' => $queryId,
-                    'anthology' => $request->get('anthology'),
-                    'channel' => $request->get('channel'),
+                    'anthology' => $request->input('anthology'),
+                    'channel' => $request->input('channel'),
                 ];
                 if ($token) {
                     $data['token'] = $token;
@@ -57,7 +57,7 @@ class ExportController extends Controller
                 Mq::publish('export_article', $data);
                 break;
             default:
-                return $this->error('unknown type ' . $request->get('type'), 400, 400);
+                return $this->error('unknown type ' . $request->input('type'), 400, 400);
                 break;
         }
 

@@ -73,12 +73,12 @@ class AuthController extends Controller
     {
 
         $query = UserInfo::where(function ($query) use ($request) {
-            $query->where('username', $request->get('username'))
-                ->where('password', md5($request->get('password')));
+            $query->where('username', $request->input('username'))
+                ->where('password', md5($request->input('password')));
         })
             ->orWhere(function ($query) use ($request) {
-                $query->where('email', $request->get('username'))
-                    ->where('password', md5($request->get('password')));
+                $query->where('email', $request->input('username'))
+                    ->where('password', md5($request->input('password')));
             });
         //Log::info($query->toSql());
         $user = $query->first();

@@ -29,35 +29,44 @@ class SentInChannelController extends Controller
     public function store(Request $request)
     {
         //
-        $sent = $request->get('sentences') ;
+        $sent = $request->input('sentences');
         $query = [];
         foreach ($sent as $value) {
             # code...
-            $ids = explode('-',$value);
-            if(count($ids)===4){
+            $ids = explode('-', $value);
+            if (count($ids) === 4) {
                 $query[] = $ids;
             }
         }
         $channelsQuery = array();
-        $channelsInput = $request->get('channels');
+        $channelsInput = $request->input('channels');
         foreach ($channelsInput as $value) {
-            if(Str::isUuid($value)){
+            if (Str::isUuid($value)) {
                 $channelsQuery[] = $value;
-            }else{
+            } else {
                 $channelId = ChannelApi::getSysChannel($value);
-                if($channelId){
+                if ($channelId) {
                     $channelsQuery[] = $channelId;
                 }
             }
         }
 
-        $table = Sentence::select(['id','book_id','paragraph',
-                                   'word_start','word_end','content','content_type',
-                                   'editor_uid','channel_uid','updated_at'])
-                        ->whereIn('channel_uid', $channelsQuery)
-                        ->whereIns(['book_id','paragraph','word_start','word_end'],$query);
+        $table = Sentence::select([
+            'id',
+            'book_id',
+            'paragraph',
+            'word_start',
+            'word_end',
+            'content',
+            'content_type',
+            'editor_uid',
+            'channel_uid',
+            'updated_at'
+        ])
+            ->whereIn('channel_uid', $channelsQuery)
+            ->whereIns(['book_id', 'paragraph', 'word_start', 'word_end'], $query);
         $result = $table->get();
-        return $this->ok(["rows"=>$result,"count"=>count($result)]);
+        return $this->ok(["rows" => $result, "count" => count($result)]);
     }
 
     /**

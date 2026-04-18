@@ -4,7 +4,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
-import type { ArticleType } from "../api/Corpus";
+import type { ArticleType } from "../api/article";
 
 export interface IParam {
   book: number;

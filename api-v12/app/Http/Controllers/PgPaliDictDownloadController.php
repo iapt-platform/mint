@@ -15,14 +15,14 @@ class PgPaliDictDownloadController extends Controller
      */
     public function index(Request $request)
     {
-        $currPage = $request->get('page',1);
+        $currPage = $request->input('page', 1);
         $path = 'export/fts/pali';
-        $filename = $path."/pali-{$currPage}.syn";
-        if(Redis::exists($filename)){
+        $filename = $path . "/pali-{$currPage}.syn";
+        if (Redis::exists($filename)) {
             $content = Redis::get($filename);
             return $this->ok($content);
-        }else{
-            return $this->error('no file',200,200);
+        } else {
+            return $this->error('no file', 200, 200);
         }
     }
 

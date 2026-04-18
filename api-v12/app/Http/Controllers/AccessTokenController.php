@@ -38,7 +38,7 @@ class AccessTokenController extends Controller
             Log::error('未登录');
             return $this->error(__('auth.failed'), [], 401);
         }
-        $payload = $request->get('payload');
+        $payload = $request->input('payload');
         $result = array();
         foreach ($payload as $key => $value) {
             //鉴权

@@ -25,7 +25,7 @@ class SysModelController extends Controller
             Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);
         }
-        $modelsId = Cache::get($this->key . $request->get('view', 'wbw'));
+        $modelsId = Cache::get($this->key . $request->input('view', 'wbw'));
         if (!is_array($modelsId)) {
             $modelsId = [];
         }
@@ -54,8 +54,8 @@ class SysModelController extends Controller
             return $this->error(__('auth.failed'), 401, 401);
         }
         Cache::put(
-            $this->key . $request->get('view', 'wbw'),
-            $request->get('models')
+            $this->key . $request->input('view', 'wbw'),
+            $request->input('models')
         );
         return $this->ok('ok');
     }

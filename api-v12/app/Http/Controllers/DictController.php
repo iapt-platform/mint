@@ -8,11 +8,10 @@ use App\Models\DictInfo;
 use App\Models\GroupMember;
 use Illuminate\Http\Request;
 use App\Tools\CaseMan;
-use Illuminate\Support\Facades\Log;
 use App\Http\Api\DictApi;
 use App\Http\Api\AuthApi;
 
-require_once __DIR__ . "/../../../public/app/dict/grm_abbr.php";
+require_once __DIR__ . "/../../Tools/grm_abbr.php";
 
 
 class DictController extends Controller
@@ -36,8 +35,8 @@ class DictController extends Controller
         $words = [];
         $word_base = [];
         $searched = [];
-        $words[$request->get('word')] = [];
-        $userLang = $request->get('lang', "zh");
+        $words[$request->input('word')] = [];
+        $userLang = $request->input('lang', "zh");
 
         /**
          * 临时代码判断是否在缅汉字典群里面。在群里的用户可以产看缅汉字典pdf

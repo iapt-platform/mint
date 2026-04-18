@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PaliText;
 use Illuminate\Http\Request;
 use App\Http\Resources\ChapterResource;
+use App\Services\PaliTextService;
 
 class ChapterController extends Controller
 {
@@ -16,14 +17,14 @@ class ChapterController extends Controller
     public function index(Request $request)
     {
         //
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'toc':
-                $chapter = PaliText::where('book', $request->get('book'))
-                    ->where('paragraph', $request->get('para'))
+                $chapter = PaliText::where('book', $request->input('book'))
+                    ->where('paragraph', $request->input('para'))
                     ->first();
-                $start = $request->get('para');
-                $end = $request->get('para') + $chapter->chapter_len - 1;
-                $table = PaliText::where('book', $request->get('book'))
+                $start = $request->input('para');
+                $end = $request->input('para') + $chapter->chapter_len - 1;
+                $table = PaliText::where('book', $request->input('book'))
                     ->whereBetween('paragraph', [$start, $end])
                     ->where('level', '<', 100)
                     ->select(['book', 'paragraph', 'level', 'text', 'chapter_len', 'chapter_strlen', 'parent']);
@@ -33,12 +34,12 @@ class ChapterController extends Controller
         $count = $table->count();
         //处理排序
         $table = $table->orderBy(
-            $request->get("order", 'paragraph'),
-            $request->get("dir", 'asc')
+            $request->input("order", 'paragraph'),
+            $request->input("dir", 'asc')
         );
         //处理分页
-        $table = $table->skip($request->get("offset", 0))
-            ->take($request->get("limit", 1000));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input("limit", 1000));
         $result = $table->get();
         return $this->ok([
             "rows" => ChapterResource::collection($result),
@@ -60,12 +61,18 @@ class ChapterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\PaliText  $paliText
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(PaliText $paliText)
+    public function show(string $id)
     {
-        //
+        $para = explode('-', $id);
+        if (count($para) < 2) {
+            return $this->error('参数错误', 400, 400);
+        }
+        $paliTextService = app(PaliTextService::class);
+        $paragraph = $paliTextService->getCurrChapter($para[0], $para[1]);
+        return $this->ok(new ChapterResource($paragraph));
     }
 
     /**

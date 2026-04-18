@@ -42,7 +42,7 @@ class TaskGroupController extends Controller
             return $this->error(__('auth.failed'), 401, 401);
         }
         //获取全部的project_id
-        $input = $request->get(key: 'data');
+        $input = $request->input(key: 'data');
         $id = [];
         foreach ($input as $key => $value) {
             $id[$value['project_id']] = 1;

@@ -112,6 +112,7 @@ const items = {
   "buttons.general": "General",
   "buttons.ai-models": "AI Models",
   "buttons.new": "New",
+  "buttons.sign-up": "sign-up",
 };
 
 export default items;

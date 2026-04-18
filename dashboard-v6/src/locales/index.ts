@@ -34,7 +34,7 @@ export const set = (locale: string) => {
     case "zh-Hans":
       dayjs.locale("zh-cn");
       break;
-    case "zh-Hants":
+    case "zh-Hant":
       dayjs.locale("zh-tw");
       break;
     default:
@@ -50,7 +50,7 @@ export const messages = (
   switch (locale) {
     case "zh-Hans":
       return zhHans;
-    case "zh-Hants":
+    case "zh-Hant":
       return zhHant;
     default:
       return enUS;

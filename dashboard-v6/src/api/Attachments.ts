@@ -1,3 +1,7 @@
+import { message } from "antd";
+import { delete_ } from "../request";
+import type { IDeleteResponse } from "./group";
+
 export interface IAttachmentRequest {
   id: string;
   name: string;
@@ -36,3 +40,17 @@ export interface IResAttachmentListResponse {
   message: string;
   data: { rows: IResAttachmentData[]; count: number };
 }
+
+export const deleteRes = (id: string) => {
+  const url = `/v2/attachment/${id}`;
+  console.info("attachment delete url", url);
+  delete_<IDeleteResponse>(url)
+    .then((json) => {
+      if (json.ok) {
+        message.success("删除成功");
+      } else {
+        message.error(json.message);
+      }
+    })
+    .catch((e) => console.log("Oops errors!", e));
+};

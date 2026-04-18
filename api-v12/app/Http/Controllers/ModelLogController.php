@@ -22,10 +22,10 @@ class ModelLogController extends Controller
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'model':
                 # code..
-                $table = ModelLog::where('model_id', $request->get('id'));
+                $table = ModelLog::where('model_id', $request->input('id'));
                 break;
 
             default:
@@ -33,16 +33,16 @@ class ModelLogController extends Controller
                 break;
         }
         if ($request->has('search')) {
-            $table = $table->where('email', 'like', '%' . $request->get('search') . "%");
+            $table = $table->where('email', 'like', '%' . $request->input('search') . "%");
         }
         $count = $table->count();
         $table = $table->orderBy(
-            $request->get('order', 'updated_at'),
-            $request->get('dir', 'desc')
+            $request->input('order', 'updated_at'),
+            $request->input('dir', 'desc')
         );
 
-        $table = $table->skip($request->get('offset', 0))
-            ->take($request->get('limit', 20));
+        $table = $table->skip($request->input('offset', 0))
+            ->take($request->input('limit', 20));
 
         $result = $table->get();
         return $this->ok(["rows" => ModelLogResource::collection($result), "total" => $count]);
@@ -59,14 +59,14 @@ class ModelLogController extends Controller
         //
         $modelLog = new ModelLog();
         $modelLog->uid = Str::uuid();
-        $modelLog->model_id = $request->get('model_id');
-        $modelLog->request_at = $request->get('request_at');
-        $modelLog->request_headers = $request->get('request_headers');
-        $modelLog->request_data = $request->get('request_data');
-        $modelLog->response_headers = $request->get('response_headers');
-        $modelLog->response_data = $request->get('response_data');
-        $modelLog->status = $request->get('status');
-        $modelLog->success = $request->get('success', true);
+        $modelLog->model_id = $request->input('model_id');
+        $modelLog->request_at = $request->input('request_at');
+        $modelLog->request_headers = $request->input('request_headers');
+        $modelLog->request_data = $request->input('request_data');
+        $modelLog->response_headers = $request->input('response_headers');
+        $modelLog->response_data = $request->input('response_data');
+        $modelLog->status = $request->input('status');
+        $modelLog->success = $request->input('success', true);
         $modelLog->save();
         return $this->ok(new ModelLogResource($modelLog));
     }

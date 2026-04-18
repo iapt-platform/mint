@@ -17,28 +17,28 @@ class SentSimController extends Controller
     public function index(Request $request)
     {
         //
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'sentence':
-                $sentId = PaliSentence::where('book',$request->get('book'))
-                                ->where('paragraph',$request->get('paragraph'))
-                                ->where('word_begin',$request->get('start'))
-                                ->where('word_end',$request->get('end'))
-                                ->value('id');
-                if(!$sentId){
+                $sentId = PaliSentence::where('book', $request->input('book'))
+                    ->where('paragraph', $request->input('paragraph'))
+                    ->where('word_begin', $request->input('start'))
+                    ->where('word_end', $request->input('end'))
+                    ->value('id');
+                if (!$sentId) {
                     return $this->error("no sent");
                 }
-                $table = SentSim::where('sent1',$sentId)
-                                ->orderBy('sim','desc');
+                $table = SentSim::where('sent1', $sentId)
+                    ->orderBy('sim', 'desc');
                 break;
         }
-        $table->where('sim','>=',$request->get('sim',0));
+        $table->where('sim', '>=', $request->input('sim', 0));
         $count = $table->count();
-        $table->skip($request->get("offset",0))
-              ->take($request->get('limit',20));
+        $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 20));
         $result = $table->get();
-        if($result){
-            return $this->ok(["rows"=>SentSimResource::collection($result),"count"=>$count]);
-        }else{
+        if ($result) {
+            return $this->ok(["rows" => SentSimResource::collection($result), "count" => $count]);
+        } else {
             return $this->error("no data");
         }
     }

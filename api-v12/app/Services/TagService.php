@@ -6,7 +6,7 @@ use App\Models\TagMap;
 
 class TagService
 {
-    public function getTagsName(string $resId)
+    public function getTagsName(string $resId): array
     {
         $tagsName = TagMap::where('table_name', 'pali_texts')
             ->where('anchor_id', $resId)

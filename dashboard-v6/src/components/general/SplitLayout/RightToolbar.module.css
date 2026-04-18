@@ -1,0 +1,104 @@
+/* ─────────────────────────────────────────────
+   RightToolbar.module.css
+   面板内容区 + 纵向图标工具栏
+   ───────────────────────────────────────────── */
+
+/* 外层容器：flex row，面板在左，工具栏在右 */
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── 面板内容区 ── */
+.panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  border-left: 1px solid var(--ant-color-split, #f0f0f0);
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px 8px 12px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--ant-color-split, #f0f0f0);
+  min-height: 40px;
+}
+
+.panelTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.closeBtn {
+  flex-shrink: 0;
+  color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.45));
+}
+.closeBtn:hover {
+  color: var(--ant-color-primary, #1677ff) !important;
+  background: var(--ant-color-primary-bg, #e6f4ff) !important;
+}
+
+.panelBody {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: calc(100vh - 40px);
+  /* display:contents 的子项可直接撑满 */
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── 纵向图标工具栏 ── */
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  width: 40px;
+  flex-shrink: 0;
+  height: 100%;
+  border-left: 1px solid var(--ant-color-split, #f0f0f0);
+  background: var(--ant-color-bg-container, #fff);
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.tabBtn {
+  width: 28px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px !important;
+  color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.45)) !important;
+  font-size: 16px;
+  padding: 0 !important;
+  flex-shrink: 0;
+}
+
+.tabBtn:hover {
+  color: var(--ant-color-text, rgba(0, 0, 0, 0.88)) !important;
+  background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06)) !important;
+}
+
+.active {
+  color: var(--ant-color-primary, #1677ff) !important;
+  background: var(--ant-color-primary-bg, #e6f4ff) !important;
+}
+
+.active:hover {
+  color: var(--ant-color-primary, #1677ff) !important;
+  background: var(--ant-color-primary-bg, #e6f4ff) !important;
+}

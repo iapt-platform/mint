@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Log;
 
 use App\Models\DhammaTerm;
 use App\Models\Channel;
@@ -18,9 +17,6 @@ use App\Http\Api\ChannelApi;
 use App\Http\Api\ShareApi;
 use App\Tools\Tools;
 use Illuminate\Support\Facades\Cache;
-
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
 class DhammaTermController extends Controller
@@ -49,11 +45,11 @@ class DhammaTermController extends Controller
             'updated_at'
         ];
 
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'create-by-channel':
                 # 新建术语时。根据术语所在channel 给出新建术语所需数据。如语言，备选意思等。
                 #获取channel信息
-                $currChannel = Channel::where('uid', $request->get('channel'))->first();
+                $currChannel = Channel::where('uid', $request->input('channel'))->first();
                 if (!$currChannel) {
                     return $this->error(__('auth.failed'));
                 }
@@ -63,7 +59,7 @@ class DhammaTermController extends Controller
                     ->select(['name', 'uid'])
                     ->get();
                 #获取全网意思列表
-                $meanings = DhammaTerm::where('word', $request->get('word'))
+                $meanings = DhammaTerm::where('word', $request->input('word'))
                     ->where('language', $currChannel->lang)
                     ->select(['meaning', 'other_meaning'])
                     ->get();
@@ -91,7 +87,7 @@ class DhammaTermController extends Controller
                     $meaningCount[] = ['meaning' => $key, 'count' => $value];
                 }
                 return $this->ok([
-                    "word" => $request->get('word'),
+                    "word" => $request->input('word'),
                     "meaningCount" => $meaningCount,
                     "studioChannels" => $studioChannels,
                     "language" => $currChannel->lang,
@@ -105,7 +101,7 @@ class DhammaTermController extends Controller
                     return $this->error(__('auth.failed'), [], 401);
                 }
                 //判断当前用户是否有指定的studio的权限
-                if ($user['user_uid'] !== StudioApi::getIdByName($request->get('name'))) {
+                if ($user['user_uid'] !== StudioApi::getIdByName($request->input('name'))) {
                     return $this->error(__('auth.failed'), [], 403);
                 }
                 $table = DhammaTerm::select($indexCol)
@@ -118,19 +114,19 @@ class DhammaTermController extends Controller
                     return $this->error(__('auth.failed'));
                 }
                 //判断当前用户是否有指定的 channel 的权限
-                $channel = Channel::find($request->get('id'));
+                $channel = Channel::find($request->input('id'));
                 if ($user['user_uid'] !== $channel->owner_uid) {
                     //看是否为协作
-                    $power = ShareApi::getResPower($user['user_uid'], $request->get('id'));
+                    $power = ShareApi::getResPower($user['user_uid'], $request->input('id'));
                     if ($power === 0) {
                         return $this->error(__('auth.failed'), [], 403);
                     }
                 }
                 $table = DhammaTerm::select($indexCol)
-                    ->where('channal', $request->get('id'));
+                    ->where('channal', $request->input('id'));
                 break;
             case 'show':
-                return $this->ok(DhammaTerm::find($request->get('id')));
+                return $this->ok(DhammaTerm::find($request->input('id')));
                 break;
             case 'user':
                 # code...
@@ -139,32 +135,32 @@ class DhammaTermController extends Controller
                     return $this->error(__('auth.failed'));
                 }
                 $userUid = $user['user_uid'];
-                $search = $request->get('search');
+                $search = $request->input('search');
                 $table = DhammaTerm::select($indexCol)
                     ->where('owner', $userUid);
                 break;
             case 'word':
                 $table = DhammaTerm::select($indexCol)
-                    ->whereIn('word', explode(',', $request->get("word")))
-                    ->orWhereIn('meaning', explode(',', $request->get("word")));
+                    ->whereIn('word', explode(',', $request->input("word")))
+                    ->orWhereIn('meaning', explode(',', $request->input("word")));
                 break;
             case 'tag':
                 $table = DhammaTerm::select($indexCol)
-                    ->whereIn('tag', explode(',', $request->get("tag")));
+                    ->whereIn('tag', explode(',', $request->input("tag")));
                 break;
             case 'hot-meaning':
                 $key = 'term/hot_meaning';
                 $value = Cache::get($key, function () use ($request) {
                     $hotMeaning = [];
                     $words = DhammaTerm::select('word')
-                        ->where('language', $request->get("language"))
+                        ->where('language', $request->input("language"))
                         ->groupby('word')
                         ->get();
 
                     foreach ($words as $key => $word) {
                         # code...
                         $result = DhammaTerm::select(DB::raw('count(*) as word_count, meaning'))
-                            ->where('language', $request->get("language"))
+                            ->where('language', $request->input("language"))
                             ->where('word', $word['word'])
                             ->groupby('meaning')
                             ->orderby('word_count', 'desc')
@@ -173,7 +169,7 @@ class DhammaTermController extends Controller
                             $hotMeaning[] = [
                                 'word' => $word['word'],
                                 'meaning' => $result['meaning'],
-                                'language' => $request->get("language"),
+                                'language' => $request->input("language"),
                                 'owner' => '',
                             ];
                         }
@@ -188,7 +184,7 @@ class DhammaTermController extends Controller
                 break;
         }
 
-        $search = $request->get('search');
+        $search = $request->input('search');
         if (!empty($search)) {
             $table = $table->where(function ($query) use ($search) {
                 $query->where('word', 'like', $search . "%")
@@ -197,9 +193,9 @@ class DhammaTermController extends Controller
             });
         }
         $count = $table->count();
-        $table = $table->orderBy($request->get('order', 'updated_at'), $request->get('dir', 'desc'));
-        $table = $table->skip($request->get("offset", 0))
-            ->take($request->get('limit', 1000));
+        $table = $table->orderBy($request->input('order', 'updated_at'), $request->input('dir', 'desc'));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 1000));
         $result = $table->get();
 
         return $this->ok(["rows" => TermResource::collection($result), "count" => $count]);
@@ -228,13 +224,13 @@ class DhammaTermController extends Controller
          * 一个channel下面word+tag+language 唯一
          */
         $table = DhammaTerm::where('owner', $user["user_uid"])
-            ->where('word', $request->get("word"))
-            ->where('tag', $request->get("tag"));
-        if (!empty($request->get("channel"))) {
-            $isDoesntExist = $table->where('channal', $request->get("channel"))
+            ->where('word', $request->input("word"))
+            ->where('tag', $request->input("tag"));
+        if (!empty($request->input("channel"))) {
+            $isDoesntExist = $table->where('channal', $request->input("channel"))
                 ->doesntExist();
         } else {
-            $isDoesntExist = $table->whereNull('channal')->where('language', $request->get("language"))
+            $isDoesntExist = $table->whereNull('channal')->where('language', $request->input("language"))
                 ->doesntExist();
         }
 
@@ -243,21 +239,21 @@ class DhammaTermController extends Controller
             $term = new DhammaTerm;
             $term->id = app('snowflake')->id();
             $term->guid = Str::uuid();
-            $term->word = $request->get("word");
-            $term->word_en = Tools::getWordEn($request->get("word"));
-            $term->meaning = $request->get("meaning");
-            $term->other_meaning = $request->get("other_meaning");
-            $term->note = $request->get("note");
-            $term->tag = $request->get("tag");
-            $term->channal = $request->get("channel");
-            $term->language = $request->get("language");
-            if (!empty($request->get("channel"))) {
-                $channelInfo = ChannelApi::getById($request->get("channel"));
+            $term->word = $request->input("word");
+            $term->word_en = Tools::getWordEn($request->input("word"));
+            $term->meaning = $request->input("meaning");
+            $term->other_meaning = $request->input("other_meaning");
+            $term->note = $request->input("note");
+            $term->tag = $request->input("tag");
+            $term->channal = $request->input("channel");
+            $term->language = $request->input("language");
+            if (!empty($request->input("channel"))) {
+                $channelInfo = ChannelApi::getById($request->input("channel"));
                 if (!$channelInfo) {
                     return $this->error("channel id failed");
                 } else {
                     //查看有没有channel权限
-                    $power = ShareApi::getResPower($user["user_uid"], $request->get("channel"), 2);
+                    $power = ShareApi::getResPower($user["user_uid"], $request->input("channel"), 2);
                     if ($power < 20) {
                         return $this->error(__('auth.failed'));
                     }
@@ -266,9 +262,9 @@ class DhammaTermController extends Controller
                 }
             } else {
                 if ($request->has("studioId")) {
-                    $studioId = $request->get("studioId");
+                    $studioId = $request->input("studioId");
                 } else if ($request->has("studioName")) {
-                    $studioId = StudioApi::getIdByName($request->get("studioName"));
+                    $studioId = StudioApi::getIdByName($request->input("studioName"));
                 }
                 if (Str::isUuid($studioId)) {
                     $term->owner = $studioId;
@@ -350,13 +346,13 @@ class DhammaTermController extends Controller
             }
         }
 
-        $dhammaTerm->word = $request->get("word");
-        $dhammaTerm->word_en = Tools::getWordEn($request->get("word"));
-        $dhammaTerm->meaning = $request->get("meaning");
-        $dhammaTerm->other_meaning = $request->get("other_meaning");
-        $dhammaTerm->note = $request->get("note");
-        $dhammaTerm->tag = $request->get("tag");
-        $dhammaTerm->language = $request->get("language");
+        $dhammaTerm->word = $request->input("word");
+        $dhammaTerm->word_en = Tools::getWordEn($request->input("word"));
+        $dhammaTerm->meaning = $request->input("meaning");
+        $dhammaTerm->other_meaning = $request->input("other_meaning");
+        $dhammaTerm->note = $request->input("note");
+        $dhammaTerm->tag = $request->input("tag");
+        $dhammaTerm->language = $request->input("language");
         $dhammaTerm->editor_id = $user["user_id"];
         $dhammaTerm->create_time = time() * 1000;
         $dhammaTerm->modify_time = time() * 1000;
@@ -384,7 +380,7 @@ class DhammaTermController extends Controller
         $count = 0;
         if ($request->has("uuid")) {
             //查看是否有删除权限
-            foreach ($request->get("id") as $key => $uuid) {
+            foreach ($request->input("id") as $key => $uuid) {
                 $term = DhammaTerm::find($uuid);
                 if ($term->owner !== $user['user_uid']) {
                     if (!empty($term->channal)) {
@@ -402,7 +398,7 @@ class DhammaTermController extends Controller
                 $this->deleteCache($term);
             }
         } else {
-            $arrId = json_decode($request->get("id"), true);
+            $arrId = json_decode($request->input("id"), true);
             foreach ($arrId as $key => $id) {
                 # code...
                 $term = DhammaTerm::where('id', $id)

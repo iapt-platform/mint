@@ -21,7 +21,7 @@ class CompoundController extends Controller
         if (!$dict_id) {
             return $this->error('没有找到 robot_compound 字典');
         }
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'only-word':
                 $result = UserDict::where('dict_id', $dict_id)
                     ->groupBy('word')->select('word')->get();
@@ -55,9 +55,9 @@ class CompoundController extends Controller
         }
         //删除旧数据
         $del = UserDict::where('dict_id', $dict_id)
-            ->whereIn('word', $request->get('index'))
+            ->whereIn('word', $request->input('index'))
             ->delete();
-        foreach ($request->get('words') as $key => $word) {
+        foreach ($request->input('words') as $key => $word) {
             $new = new UserDict;
             $new->id = app('snowflake')->id();
             $new->word = $word['word'];
@@ -75,7 +75,7 @@ class CompoundController extends Controller
             $new->flag = 0; //标记为维护状态
             $new->save();
         }
-        return $this->ok(count($request->get('words')));
+        return $this->ok(count($request->input('words')));
     }
 
     /**

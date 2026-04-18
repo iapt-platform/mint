@@ -34,10 +34,10 @@ class SentenceInfoController extends Controller
 
     private function getSentProgress(Request $request, $date = '')
     {
-        $channel = $request->get('channel');
-        $from = $request->get('from');
+        $channel = $request->input('channel');
+        $from = $request->input('from');
         if ($request->has('to')) {
-            $to = $request->get('to');
+            $to = $request->input('to');
         } else {
             $to = $this->_endParagraph;
         }
@@ -50,30 +50,30 @@ class SentenceInfoController extends Controller
         # percent
         $view = 'strlen';
         if ($request->has('view')) {
-            $view = $request->get('view');
+            $view = $request->input('view');
         } else if ($request->has('type')) {
-            $view = $request->get('type');
+            $view = $request->input('type');
         }
 
 
         #一页书中的字符数
         $pageStrLen = 2000;
         if ($request->has('strlen')) {
-            $pageStrLen = $request->get('strlen');
+            $pageStrLen = $request->input('strlen');
         }
         if ($request->has('pagelen')) {
-            $pageStrLen = $request->get('pagelen');
+            $pageStrLen = $request->input('pagelen');
         }
 
         # 页数
         $pageNumber = 300;
         if ($request->has('pages')) {
-            $pageNumber = $request->get('pages');
+            $pageNumber = $request->input('pages');
         }
 
-        $db = Sentence::where('sentences.channel_uid', $request->get('channel'))
-            ->where('sentences.book_id', '>=', $request->get('book'))
-            ->where('sentences.paragraph', '>=', $request->get('from'))
+        $db = Sentence::where('sentences.channel_uid', $request->input('channel'))
+            ->where('sentences.book_id', '>=', $request->input('book'))
+            ->where('sentences.paragraph', '>=', $request->input('from'))
             ->where('sentences.paragraph', '<=', $to);
         if ($view === "palistrlen") {
             $db = $db->leftJoin('pali_texts', function ($join) {
@@ -94,20 +94,20 @@ class SentenceInfoController extends Controller
         }
         #计算已完成百分比
         $percent = 0;
-        if (($view === 'page' && !empty($request->get('pages'))) || $view === 'percent') {
+        if (($view === 'page' && !empty($request->input('pages'))) || $view === 'percent') {
             #计算完成的句子在巴利语句子表中的字符串长度百分比
             $db = Sentence::select(['book_id', 'paragraph', 'word_start', 'word_end'])
-                ->where('channel_uid', $request->get('channel'))
-                ->where('book_id', '>=', $request->get('book'))
-                ->where('paragraph', '>=', $request->get('from'))
+                ->where('channel_uid', $request->input('channel'))
+                ->where('book_id', '>=', $request->input('book'))
+                ->where('paragraph', '>=', $request->input('from'))
                 ->where('paragraph', '<=', $to);
             if (!empty($date)) {
                 $db = $db->whereDate('created_at', '=', $date);
             }
             $sentFinished = $db->get();
             #查询这些句子的总共等效巴利语字符数
-            $allStrLen = PaliSentence::where('book', $request->get('book'))
-                ->where('paragraph', '>=', $request->get('from'))
+            $allStrLen = PaliSentence::where('book', $request->input('book'))
+                ->where('paragraph', '>=', $request->input('from'))
                 ->where('paragraph', '<=', $to)
                 ->sum('length');
             $para_strlen = 0;
@@ -133,9 +133,9 @@ class SentenceInfoController extends Controller
         switch ($view) {
             case 'page':
                 # 输出已经完成的页数
-                if (!empty($request->get('pages'))) {
+                if (!empty($request->input('pages'))) {
                     #给了页码，用百分比计算
-                    $resulte = $percent * $request->get('pages');
+                    $resulte = $percent * $request->input('pages');
                 } else {
                     #没给页码，用每页字符数计算
                     $resulte = $strlen / $pageStrLen;
@@ -167,7 +167,7 @@ class SentenceInfoController extends Controller
         $resulte = $this->getSentProgress($request);
         $svg = "<svg  xmlns='http://www.w3.org/2000/svg'  xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 100 25'>";
 
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'percent':
                 # code...
                 $resulte = $resulte * 100;
@@ -211,10 +211,10 @@ class SentenceInfoController extends Controller
         # percent
         $view = 'strlen';
         if ($request->has('view')) {
-            $view = $request->get('view');
+            $view = $request->input('view');
         }
         if ($request->has('type')) {
-            $view = $request->get('type');
+            $view = $request->input('type');
         }
 
 
@@ -224,12 +224,12 @@ class SentenceInfoController extends Controller
 
         ob_clean();
         ob_start();
-        $channel = $request->get('channel');
-        $from = $request->get('from');
+        $channel = $request->input('channel');
+        $from = $request->input('from');
         if ($request->has('to')) {
-            $to = $request->get('to');
+            $to = $request->input('to');
         } else {
-            $chapterLen = PaliText::where('book', $request->get('book'))->where('paragraph', $from)->value('chapter_len');
+            $chapterLen = PaliText::where('book', $request->input('book'))->where('paragraph', $from)->value('chapter_len');
             $to =  $from + $chapterLen - 1;
             $this->_endParagraph = $to;
         }
@@ -360,11 +360,11 @@ class SentenceInfoController extends Controller
     public function show(Request $request, string $sentenceId)
     {
         //
-        $sentence = Sentence::where('book_id', $request->get('book'))
-            ->where('paragraph', $request->get('par'))
-            ->where('word_start', $request->get('start'))
-            ->where('word_end', $request->get('end'))
-            ->where('channel_uid', $request->get('channel'))
+        $sentence = Sentence::where('book_id', $request->input('book'))
+            ->where('paragraph', $request->input('par'))
+            ->where('word_start', $request->input('start'))
+            ->where('word_end', $request->input('end'))
+            ->where('channel_uid', $request->input('channel'))
             ->firstOrFail();
         return $this->ok(new SentResource($sentence));
     }

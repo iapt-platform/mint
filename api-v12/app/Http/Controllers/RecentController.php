@@ -20,20 +20,22 @@ class RecentController extends Controller
         //
         switch ($request->view) {
             case 'user':
-                $table = Recent::where('user_uid',$request->get('id'));
+                $table = Recent::where('user_uid', $request->input('id'));
                 break;
             default:
                 return $this->error('known view');
                 break;
         }
-
-        $table->orderBy($request->get('order','updated_at'),$request->get('dir','desc'));
+        if ($request->has('type')) {
+            $table->where('type', $request->input('type'));
+        }
+        $table->orderBy($request->input('order', 'updated_at'), $request->input('dir', 'desc'));
         $count = $table->count();
-        $table->skip($request->get("offset",0))
-              ->take($request->get('limit',1000));
+        $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 1000));
 
         $result = $table->get();
-		return $this->ok(["rows"=>RecentResource::collection($result),"count"=>$count]);
+        return $this->ok(["rows" => RecentResource::collection($result), "count" => $count]);
     }
 
     /**
@@ -45,8 +47,8 @@ class RecentController extends Controller
     public function store(Request $request)
     {
         $user = AuthApi::current($request);
-        if(!$user){
-            return $this->error(__('auth.failed'),[],401);
+        if (!$user) {
+            return $this->error(__('auth.failed'), [], 401);
         }
 
         $validated = $request->validate([
@@ -55,13 +57,13 @@ class RecentController extends Controller
         ]);
 
         $row = Recent::firstOrNew([
-            "type"=>$request->get("type"),
-            "article_id"=>$request->get("article_id"),
-            "user_uid"=>$user['user_uid'],
-        ],[
-            "id"=>Str::uuid(),
+            "type" => $request->input("type"),
+            "article_id" => $request->input("article_id"),
+            "user_uid" => $user['user_uid'],
+        ], [
+            "id" => Str::uuid(),
         ]);
-        $row->param = $request->get("param",null);
+        $row->param = $request->input("param", null);
         $row->save();
         return $this->ok(new RecentResource($row));
     }
@@ -76,7 +78,6 @@ class RecentController extends Controller
     {
         //
         return $this->ok(new RecentResource($recent));
-
     }
 
     /**

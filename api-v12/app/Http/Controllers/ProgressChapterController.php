@@ -25,38 +25,38 @@ class ProgressChapterController extends Controller
     public function index(Request $request)
     {
 
-        $minProgress = (float)$request->get('progress', 0.8);
+        $minProgress = (float)$request->input('progress', 0.8);
 
-        $offset = (int)$request->get('offset', 0);
+        $offset = (int)$request->input('offset', 0);
 
-        $limit = (int)$request->get('limit', 20);
+        $limit = (int)$request->input('limit', 20);
 
-        $channel_id = $request->get('channel');
+        $channel_id = $request->input('channel');
 
         //
 
         $chapters = false;
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'ids':
-                $aChannel = explode(',', $request->get('channel'));
+                $aChannel = explode(',', $request->input('channel'));
                 $chapters = ProgressChapter::select("channel_id")->selectRaw("uid as id")
                     ->with(['channel' => function ($query) {  //city对应上面province模型中定义的city方法名  闭包内是子查询
                         return $query->select('*');
                     }])
-                    ->where("book", $request->get('book'))
-                    ->where("para", $request->get('par'))
+                    ->where("book", $request->input('book'))
+                    ->where("para", $request->input('par'))
                     ->whereIn('channel_id', $aChannel)->get();
                 $all_count = count($chapters);
                 break;
             case 'studio':
                 #查询该studio的channel
-                $name = $request->get('name');
-                $studioId = StudioApi::getIdByName($request->get('name'));
+                $name = $request->input('name');
+                $studioId = StudioApi::getIdByName($request->input('name'));
                 if ($studioId === false) {
                     return $this->error('no user');
                 }
                 $table = Channel::where('owner_uid', $studioId);
-                if ($request->get('public') === "true") {
+                if ($request->input('public') === "true") {
                     $table = $table->where('status', 30);
                 }
                 $channels = $table->select('uid')->get();
@@ -67,8 +67,8 @@ class ProgressChapterController extends Controller
                     })
                     ->where('progress', '>', 0.85)
                     ->orderby('progress_chapters.created_at', 'desc')
-                    ->skip($request->get("offset", 0))
-                    ->take($request->get("limit", 1000))
+                    ->skip($request->input("offset", 0))
+                    ->take($request->input("limit", 1000))
                     ->get();
                 $all_count = ProgressChapter::whereIn('progress_chapters.channel_id', $channels)
                     ->where('progress', '>', 0.85)->count();
@@ -91,8 +91,8 @@ class ProgressChapterController extends Controller
                 }
                 break;
             case 'chapter-tag':
-                if ($request->get('tags') && $request->get('tags') !== '') {
-                    $tags = explode(',', $request->get('tags'));
+                if ($request->input('tags') && $request->input('tags') !== '') {
+                    $tags = explode(',', $request->input('tags'));
                     foreach ($tags as $tag) {
                         # code...
                         if (!empty($tag)) {
@@ -173,11 +173,11 @@ class ProgressChapterController extends Controller
                     ->leftJoin('channels', 'progress_chapters.channel_id', '=', 'channels.uid')
                     ->where("progress", ">", $minProgress)
                     ->where('channels.status', '>=', 30);
-                if (!empty($request->get('channel_type'))) {
-                    $chapters =  $chapters->where('channels.type', $request->get('channel_type'));
+                if (!empty($request->input('channel_type'))) {
+                    $chapters =  $chapters->where('channels.type', $request->input('channel_type'));
                 }
-                if (!empty($request->get('lang'))) {
-                    $chapters =  $chapters->where('progress_chapters.lang', $request->get('lang'));
+                if (!empty($request->input('lang'))) {
+                    $chapters =  $chapters->where('progress_chapters.lang', $request->input('lang'));
                 }
                 $chapters =  $chapters->groupBy('channel_id')
                     ->orderBy('count', 'desc')
@@ -204,8 +204,8 @@ class ProgressChapterController extends Controller
                     'progress_chapters.updated_at'
                 )
                     ->leftJoin('channels', 'progress_chapters.channel_id', '=', 'channels.uid')
-                    ->where("book", $request->get('book'))
-                    ->where("para", $request->get('par'))
+                    ->where("book", $request->input('book'))
+                    ->where("para", $request->input('par'))
                     ->orderBy('progress', 'desc')
                     ->get();
                 foreach ($chapters as $key => $value) {
@@ -246,8 +246,8 @@ class ProgressChapterController extends Controller
                 $pt = (new PaliText)->getTable();
 
                 //标签过滤
-                if ($request->has('tags') && !empty($request->get('tags'))) {
-                    $tags = explode(',', $request->get('tags'));
+                if ($request->has('tags') && !empty($request->input('tags'))) {
+                    $tags = explode(',', $request->input('tags'));
                     foreach ($tags as $tag) {
                         # code...
                         if (!empty($tag)) {
@@ -265,9 +265,9 @@ class ProgressChapterController extends Controller
                     $in1 = " ";
                 }
                 if ($request->has('studio')) {
-                    $studioId = StudioApi::getIdByName($request->get('studio'));
+                    $studioId = StudioApi::getIdByName($request->input('studio'));
                     $table = Channel::where('owner_uid', $studioId);
-                    if ($request->get('public') === "true") {
+                    if ($request->input('public') === "true") {
                         $table = $table->where('status', 30);
                     }
                     $channels = $table->select('uid')->get();
@@ -291,16 +291,16 @@ class ProgressChapterController extends Controller
                 $param[] = $minProgress;
 
                 //语言过滤
-                if (!empty($request->get('lang'))) {
+                if (!empty($request->input('lang'))) {
                     $whereLang = " and pc.lang = ? ";
-                    $param[] = $request->get('lang');
+                    $param[] = $request->input('lang');
                 } else {
                     $whereLang = "   ";
                 }
                 //channel type过滤
-                if ($request->has('channel_type') && !empty($request->get('channel_type'))) {
+                if ($request->has('channel_type') && !empty($request->input('channel_type'))) {
                     $channel_type = "and ch.type = ? ";
-                    $param[] = $request->get('channel_type');
+                    $param[] = $request->input('channel_type');
                 } else {
                     $channel_type = "";
                 }
@@ -381,13 +381,13 @@ class ProgressChapterController extends Controller
             case 'top':
                 break;
             case 'search':
-                $key = $request->get('key');
+                $key = $request->input('key');
                 $table = ProgressChapter::where('title', 'like', "%{$key}%");
                 //获取记录总条数
                 $all_count = $table->count();
                 //处理排序
                 if ($request->has("order") && $request->has("dir")) {
-                    $table = $table->orderBy($request->get("order"), $request->get("dir"));
+                    $table = $table->orderBy($request->input("order"), $request->input("dir"));
                 } else {
                     //默认排序
                     $table = $table->orderBy('updated_at', 'desc');
@@ -395,11 +395,11 @@ class ProgressChapterController extends Controller
                 //处理分页
                 if ($request->has("limit")) {
                     if ($request->has("offset")) {
-                        $offset = $request->get("offset");
+                        $offset = $request->input("offset");
                     } else {
                         $offset = 0;
                     }
-                    $table = $table->skip($offset)->take($request->get("limit"));
+                    $table = $table->skip($offset)->take($request->input("limit"));
                 }
                 //获取数据
                 $chapters = $table->get();

@@ -27,8 +27,8 @@ class TaskResource extends JsonResource
             'mode' => 'read',
             'format' => 'react',
             'footnote' => true,
-            'origin' => $request->get('origin', true),
-            'paragraph' => $request->get('paragraph', false),
+            'origin' => $request->input('origin', true),
+            'paragraph' => $request->input('paragraph', false),
         ]);
         $data = [
             'id' => $this->id,

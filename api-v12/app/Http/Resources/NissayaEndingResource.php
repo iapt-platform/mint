@@ -18,27 +18,27 @@ class NissayaEndingResource extends JsonResource
     public function toArray($request)
     {
         $data = [
-            "id"=>$this->id,
-            "ending"=> $this->ending,
-            "lang"=> $this->lang,
-            "relation"=> $this->relation,
-            "case"=> $this->case,
-            "from"=> json_decode($this->from),
-            "count"=> $this->count,
-            "editor"=> UserApi::getByUuid($this->editor_id),
-            "created_at"=> $this->created_at,
-            "updated_at"=> $this->updated_at,
+            "id" => $this->id,
+            "ending" => $this->ending,
+            "lang" => $this->lang,
+            "relation" => $this->relation,
+            "case" => $this->case,
+            "from" => json_decode($this->from),
+            "count" => $this->count,
+            "editor" => UserApi::getByUuid($this->editor_id),
+            "created_at" => $this->created_at,
+            "updated_at" => $this->updated_at,
         ];
 
-        if($this->lang === 'my'){
-            $uiLang = strtolower($request->get('ui-lang','en')) ;
+        if ($this->lang === 'my') {
+            $uiLang = strtolower($request->input('ui-lang', 'en'));
             $term_channel = ChannelApi::getSysChannel("_System_Grammar_Term_{$uiLang}_");
-            if($term_channel){
-                $term = DhammaTerm::where("word",$this->ending)
-                                            ->where('channal',$term_channel)
-                                            ->first();
+            if ($term_channel) {
+                $term = DhammaTerm::where("word", $this->ending)
+                    ->where('channal', $term_channel)
+                    ->first();
                 $data['term_channel'] = $term_channel;
-                if($term){
+                if ($term) {
                     $data['term_id'] = $term->guid;
                 }
             }

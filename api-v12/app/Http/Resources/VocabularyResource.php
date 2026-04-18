@@ -20,7 +20,7 @@ class VocabularyResource extends JsonResource
             "word" => $this['word'],
             "count" => $this['count'],
             "strlen" => $this['strlen'],
-            "meaning" => $dictMeaning->get($this['word'], $request->get("lang", "zh-Hans")),
+            "meaning" => $dictMeaning->get($this['word'], $request->input("lang", "zh-Hans")),
         ];
     }
 }

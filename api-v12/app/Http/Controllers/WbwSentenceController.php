@@ -29,85 +29,88 @@ class WbwSentenceController extends Controller
         $result = [];
         $user = AuthApi::current($request);
         $user_uid = null;
-        if($user){
+        if ($user) {
             $user_uid = $user['user_uid'];
         }
-        $sentId = $request->get('book').'-'.
-                    $request->get('para').'-'.
-                    $request->get('wordStart').'-'.
-                    $request->get('wordEnd');
-        switch ($request->get('view')) {
+        $sentId = $request->input('book') . '-' .
+            $request->input('para') . '-' .
+            $request->input('wordStart') . '-' .
+            $request->input('wordEnd');
+        switch ($request->input('view')) {
             case 'course-answer':
-                if($request->has('course')){
-                    $channelsId[] = Course::where('id',$request->get('course'))
-                                    ->value('channel_id');
+                if ($request->has('course')) {
+                    $channelsId[] = Course::where('id', $request->input('course'))
+                        ->value('channel_id');
                 }
                 break;
             case 'sent-can-read':
                 $channels = [];
-                if($request->has('course')){
-                    $channels = CourseApi::getStudentChannels($request->get('course'));
-                    $channels[] = Course::where('id',$request->get('course'))
-                                    ->value('channel_id');
-                }else{
+                if ($request->has('course')) {
+                    $channels = CourseApi::getStudentChannels($request->input('course'));
+                    $channels[] = Course::where('id', $request->input('course'))
+                        ->value('channel_id');
+                } else {
                     $channels = ChannelApi::getCanReadByUser($user_uid);
                 }
 
 
-                if($request->has('exclude')){
+                if ($request->has('exclude')) {
                     //移除无需查询的channel
                     foreach ($channels as $key => $id) {
-                        if($id !== $request->get('exclude')){
+                        if ($id !== $request->input('exclude')) {
                             $channelsId[] = $id;
                         }
                     }
-                }else if($request->has('channels')){
+                } else if ($request->has('channels')) {
                     //仅列出指定的channel
-                    $include = explode(',', $request->get('channels'));
+                    $include = explode(',', $request->input('channels'));
                     foreach ($channels as $key => $id) {
-                        if(in_array($id, $include)){
+                        if (in_array($id, $include)) {
                             $channelsId[] = $id;
                         }
                     }
-                }else{
+                } else {
                     $channelsId = $channels;
                 }
                 break;
         }
 
         $validBlocks = WbwSentenceController::getBlocksByChannels(
-                $channelsId,
-                $request->get('book'),
-                $request->get('para'),
-                $request->get('wordStart')
-            );
+            $channelsId,
+            $request->input('book'),
+            $request->input('para'),
+            $request->input('wordStart')
+        );
 
         foreach ($validBlocks as $key => $blockId) {
-        $channel = WbwBlock::where('uid',$blockId)->first();
-        $corpus = new CorpusController;
-        $props = $corpus->getSentTpl($sentId,[$channel->channel_uid],
-                        'edit',true,
-                        'react');
-        $result[] = $props;
+            $channel = WbwBlock::where('uid', $blockId)->first();
+            $corpus = new CorpusController;
+            $props = $corpus->getSentTpl(
+                $sentId,
+                [$channel->channel_uid],
+                'edit',
+                true,
+                'react'
+            );
+            $result[] = $props;
         }
-        return $this->ok(['rows'=>$result,'count'=>count($result)]);
-
-
+        return $this->ok(['rows' => $result, 'count' => count($result)]);
     }
 
-    public static function getBlocksByChannels($channelsId,$book,$para,$wordId){
-        $wbwBlocksId = WbwBlock::where('book_id',$book)
-                            ->where('paragraph',$para)
-                            ->whereIn('channel_uid',$channelsId)
-                            ->select('uid')
-                            ->get();
-        $validBlocks = Wbw::whereIn('block_uid',$wbwBlocksId)
-                        ->where('book_id',$book)
-                        ->where('paragraph',$para)
-                        ->where('wid',$wordId)
-                        ->select('block_uid')
-                        ->groupBy('block_uid')
-                        ->get();
+    public static function getBlocksByChannels($channelsId, $book, $para, $wordId)
+    {
+        $wbwBlocksId = WbwBlock::where('book_id', $book)
+            ->where('paragraph', $para)
+            ->whereIn('channel_uid', $channelsId)
+            ->select('uid')
+            ->get();
+        $validBlocks = Wbw::whereIn('block_uid', $wbwBlocksId)
+            ->where('book_id', $book)
+            ->where('paragraph', $para)
+            ->where('wid', $wordId)
+            ->select('block_uid')
+            ->groupBy('block_uid')
+            ->get();
         $blocksId = [];
         foreach ($validBlocks as $key => $block) {
             $blocksId[] = $block->block_uid;
@@ -115,14 +118,15 @@ class WbwSentenceController extends Controller
         return $blocksId;
     }
 
-    public static function getWbwIdByChannels($channelsId,$book,$para,$wordId){
-        $validBlocks = WbwSentenceController::getBlocksByChannels($channelsId,$book,$para,$wordId);
-        $wbwId = Wbw::whereIn('block_uid',$validBlocks)
-                        ->where('book_id',$book)
-                        ->where('paragraph',$para)
-                        ->where('wid',$wordId)
-                        ->select('uid')
-                        ->get();
+    public static function getWbwIdByChannels($channelsId, $book, $para, $wordId)
+    {
+        $validBlocks = WbwSentenceController::getBlocksByChannels($channelsId, $book, $para, $wordId);
+        $wbwId = Wbw::whereIn('block_uid', $validBlocks)
+            ->where('book_id', $book)
+            ->where('paragraph', $para)
+            ->where('wid', $wordId)
+            ->select('uid')
+            ->get();
         $id = [];
         foreach ($wbwId as $key => $value) {
             $id[] = $value->uid;
@@ -169,27 +173,27 @@ class WbwSentenceController extends Controller
      * @param  \App\Models\Wbw  $wbw
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,string $sentId)
+    public function destroy(Request $request, string $sentId)
     {
         //
         //鉴权
         $user = AuthApi::current($request);
-        if(!$user ){
+        if (!$user) {
             //未登录用户
-            return $this->error(__('auth.failed'),401,401);
+            return $this->error(__('auth.failed'), 401, 401);
         }
-        $channelId = $request->get('channel');
-        if(!ChannelApi::canManageByUser($channelId,$user['user_uid'])){
-            return $this->error(__('auth.failed'),403,403);
+        $channelId = $request->input('channel');
+        if (!ChannelApi::canManageByUser($channelId, $user['user_uid'])) {
+            return $this->error(__('auth.failed'), 403, 403);
         }
-        $sent = explode('-',$sentId);
-        $wbwBlockId = WbwBlock::where('book_id',$sent[0])
-                        ->where('paragraph',$sent[1])
-                        ->where('channel_uid',$channelId)
-                        ->value('uid');
-        $delete = Wbw::where('block_uid',$wbwBlockId)
-                    ->whereBetween('wid',[$sent[2],$sent[3]])
-                    ->delete();
+        $sent = explode('-', $sentId);
+        $wbwBlockId = WbwBlock::where('book_id', $sent[0])
+            ->where('paragraph', $sent[1])
+            ->where('channel_uid', $channelId)
+            ->value('uid');
+        $delete = Wbw::where('block_uid', $wbwBlockId)
+            ->whereBetween('wid', [$sent[2], $sent[3]])
+            ->delete();
         return $this->ok($delete);
     }
 }

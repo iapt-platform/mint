@@ -839,11 +839,12 @@ class CorpusController extends Controller
             $xmlString = "<root>" . $wbw . "</root>";
             try {
                 $xmlWord = simplexml_load_string($xmlString);
+                $wordsList = $xmlWord->xpath('//word');
             } catch (\Exception $e) {
-                Log::error('corpus', ['error' => $e]);
-                continue;
+                Log::error('corpus getWbw', ['error' => $e, 'data' => $xmlString]);
+                return false;
             }
-            $wordsList = $xmlWord->xpath('//word');
+
             foreach ($wordsList as $word) {
                 $case = \str_replace(['#', '.'], ['$', ''], $word->case->__toString());
                 $case = \str_replace('$$', '$', $case);

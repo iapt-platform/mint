@@ -19,17 +19,17 @@ class SentenceAttachmentController extends Controller
     {
         switch ($request->view) {
             case 'sentence':
-                $table = SentenceAttachment::where('sentence_id', $request->get('id'));
+                $table = SentenceAttachment::where('sentence_id', $request->input('id'));
                 break;
             default:
                 return $this->error('known view');
                 break;
         }
 
-        $table->orderBy($request->get('order', 'updated_at'), $request->get('dir', 'desc'));
+        $table->orderBy($request->input('order', 'updated_at'), $request->input('dir', 'desc'));
         $count = $table->count();
-        $table->skip($request->get("offset", 0))
-            ->take($request->get('limit', 1000));
+        $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 1000));
 
         $result = $table->get();
         return $this->ok([

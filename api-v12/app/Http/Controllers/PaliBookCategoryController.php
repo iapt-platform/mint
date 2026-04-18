@@ -35,7 +35,7 @@ class PaliBookCategoryController extends Controller
      */
     public function show($file)
     {
-        $data = file_get_contents(public_path("app/palicanon/category/{$file}.json"));
+        $data = file_get_contents(public_path("data/category/{$file}.json"));
         if ($data === false) {
             return $this->error('no file');
         }

@@ -1,28 +1,23 @@
+// src/reducers/theme.ts
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-
 import type { RootState } from "../store";
 
-export type TTheme = "dark" | "ant" | undefined;
+export type TThemeMode = "system" | "light" | "dark";
 
-interface IState {
-  theme?: string;
-}
+const initialState = {
+  mode: (localStorage.getItem("theme/mode") as TThemeMode) ?? "system",
+};
 
-const initialState: IState = { theme: "ant" };
-
-export const slice = createSlice({
+const themeSlice = createSlice({
   name: "theme",
   initialState,
   reducers: {
-    refresh: (state, action: PayloadAction<string>) => {
-      state.theme = action.payload;
+    themeChange: (state, action: PayloadAction<TThemeMode>) => {
+      state.mode = action.payload;
     },
   },
 });
 
-export const { refresh } = slice.actions;
-
-export const currTheme = (state: RootState): string | undefined =>
-  state.theme.theme;
-
-export default slice.reducer;
+export const { themeChange } = themeSlice.actions;
+export const mode = (state: RootState) => state.theme.mode;
+export default themeSlice.reducer;

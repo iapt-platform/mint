@@ -293,10 +293,11 @@ class MdRender
              * 生成模版参数
              *
              */
-            //TODO 判断$channelId里面的是否都是uuid
             $channelInfo = [];
             foreach ($channelId as $key => $id) {
-                $channelInfo[] = Channel::where('uid', $id)->first();
+                if (Str::isUuid($id)) {
+                    $channelInfo[] = Channel::where('uid', $id)->first();
+                }
             }
 
             $tplRender = new TemplateRender(
@@ -346,7 +347,11 @@ class MdRender
                 /**html tex text simple markdown */
                 if (isset($tplProps)) {
                     if (is_array($tplProps)) {
-                        return $tplProps[0];
+                        if (isset($tplProps[0])) {
+                            return $tplProps[0];
+                        } else {
+                            return '';
+                        }
                     } else {
                         return $tplProps;
                     }
@@ -640,8 +645,10 @@ class MdRender
                     $output .= '</div>';
                     unset($GLOBALS['note']);
                 }
+
                 //处理图片链接
                 $output = str_replace('<img src="', '<img src="' . config('app.url'), $output);
+                $output = $this->replaceSinglePWithSpan($output);
                 break;
             case 'markdown':
                 //处理脚注
@@ -677,7 +684,27 @@ class MdRender
         );
 
         $output  = $mdRender->convert($markdown, $channelId, $queryId);
-
         return $output;
+    }
+
+    /**
+     * 如果字符串中只有一对 p 标签，则替换为 span
+     *
+     * @param string $html
+     * @return string
+     */
+    public static function replaceSinglePWithSpan(string $html): string
+    {
+        preg_match_all('/<p\b[^>]*>.*?<\/p>/is', $html, $matches);
+
+        if (count($matches[0]) === 1) {
+            return preg_replace(
+                ['/^\s*<p\b([^>]*)>/i', '/<\/p>\s*$/i'],
+                ['<span$1>', '</span>'],
+                $html
+            );
+        }
+
+        return $html;
     }
 }

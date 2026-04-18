@@ -31,13 +31,24 @@ const TermSvg = () => (
 );
 
 const SuggestionSvg = () => (
-  <svg width="1em" height="1em" fill="currentColor" viewBox="0 0 235 235">
-    <path d="M 159.635,82.894 C 148.467,72.784 133.286,65 117,65 100.715,65 85.656,72.783 74.487,82.894 62.844,93.434 56.431,106.871 56.431,123 c 0,27.668 15.389,43.912 20.445,48.839 1.361,1.326 4.104,4.766 7.428,9.145 -2.43,2.298 -3.934,5.412 -3.934,8.844 0,4.016 2.053,7.599 5.249,9.943 -0.298,0.974 -0.47,1.995 -0.47,3.055 0,3.836 2.096,7.228 5.292,9.293 -0.499,1.149 -0.781,2.602 -0.781,3.911 0,5.556 4.935,8.97 11,8.97 h 32.802 c 6.064,0 10.999,-3.414 10.999,-8.97 0,-1.309 -0.283,-2.66 -0.781,-3.808 3.196,-2.064 5.293,-5.508 5.293,-9.344 0,-1.06 -0.172,-2.107 -0.47,-3.081 3.196,-2.344 5.248,-5.94 5.248,-9.956 0,-3.36 -1.445,-6.419 -3.786,-8.702 3.46,-4.511 6.319,-8.068 7.721,-9.43 13.461,-13.067 20.005,-29.843 20.005,-48.709 0,-16.129 -6.413,-29.566 -18.056,-40.106 z M 117,80 l 43,55 h -29.273 v 75 h -28 V 135 H 74 Z" />
-    <path d="m 117,60.8955 c 6.56,0 16,-5.317 16,-11.877 V 19.688 c 0,-6.56 -9.44,-11.877 -16,-11.877 -6.56,0 -16,5.317 -16,11.877 v 29.3315 c 0,6.559 9.44,11.876 16,11.876 z" />
-    <path d="m 222.244,106 h -29.3305 c -6.56,0 -11.877,10.44 -11.877,17 0,6.56 5.317,17 11.877,17 h 29.3305 c 6.56,0 11.877,-10.44 11.877,-17 0,-6.56 -5.317,-17 -11.877,-17 z" />
-    <path d="M 41.2085,106 H 11.877 C 5.317,106 0,116.44 0,123 c 0,6.56 5.317,17 11.877,17 h 29.3315 c 6.56,0 11.877,-10.44 11.877,-17 0,-6.56 -5.317,-17 -11.877,-17 z" />
-    <path d="M 72.31325,55.08925 49.63875,33.98275 C 44.76375,29.59475 34.2525,32.991 29.8655,37.866 c -4.388,4.876 -6.99275,15.38625 -2.11675,19.77325 l 22.6745,21.1055 c 2.27,2.043 5.84469,1.464413 8.67569,1.464413 3.25,0 8.75206,-2.741663 11.09706,-5.347663 4.387,-4.875 6.99225,-15.38425 2.11725,-19.77225 z" />
-    <path d="m 204.2555,37.8645 c -4.39,-4.877 -13.898,-8.27125 -18.773,-3.88325 l -22.673,21.1075 c -4.876,4.389 -3.271,14.89825 1.117,19.77325 2.346,2.606 5.582,5.347663 8.832,5.347663 2.831,0 8.672,0.578587 10.941,-1.464413 l 22.673,-21.1065 c 4.876,-4.389 2.271,-14.89925 -2.117,-19.77425 z" />
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <rect x="3" y="3" width="14" height="18" rx="2" />
+
+    <path d="M6 8h8" />
+    <path d="M6 12h6" />
+
+    <path d="M14 14l6-6 2 2-6 6-3 1z" />
+    <path d="M19 9l2 2" />
   </svg>
 );
 
@@ -898,6 +909,149 @@ const MoreSvg = () => (
     ></path>
   </svg>
 );
+
+const TaskSvg = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <rect x="2.5" y="2.5" width="19" height="19" rx="2.5" />
+    <path d="M8 2.5h8v4H8z" />
+
+    <path d="M6.5 10h11" />
+    <path d="M6.5 14h7" />
+
+    <path d="M7 18l2.5 2.5 6-6" />
+  </svg>
+);
+
+const DocumentSvg = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M6 2.5h8l4 4v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-17a2 2 0 0 1 2-2z" />
+
+    <path d="M14 2.5v4h4" />
+
+    <path d="M8 11h8" />
+    <path d="M8 15h8" />
+    <path d="M8 19h5" />
+  </svg>
+);
+
+const TipitakaSvg = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <circle cx="12" cy="12" r="9" />
+
+    <circle cx="12" cy="12" r="2" />
+    <path d="M12 5.5v4.5" />
+    <path d="M12 14v4.5" />
+    <path d="M5.5 12h4.5" />
+    <path d="M14 12h4.5" />
+
+    <path d="M7.8 7.8l3.2 3.2" />
+    <path d="M13 13l3.2 3.2" />
+    <path d="M16.2 7.8L13 11" />
+    <path d="M11 13l-3.2 3.2" />
+  </svg>
+);
+
+const RobotSvg = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <rect x="4" y="5" width="16" height="12" rx="4" />
+
+    <path d="M12 2.5v2.5" />
+    <circle cx="12" cy="2.5" r="0.8" fill="currentColor" stroke="none" />
+
+    <circle cx="9" cy="11" r="1" />
+    <circle cx="15" cy="11" r="1" />
+
+    <path d="M9 15h6" />
+
+    <path d="M8 19h8" />
+  </svg>
+);
+
+const ChannelSvg = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <rect x="9" y="2.5" width="6" height="7" rx="1.5" />
+
+    <path d="M12 9.5v2" />
+    <path d="M12 11.5L5 14" />
+    <path d="M12 11.5L19 14" />
+
+    <rect x="2.5" y="14" width="7" height="7" rx="1.5" />
+    <path d="M4.5 17h3" />
+
+    <rect x="14.5" y="14" width="7" height="7" rx="1.5" />
+    <path d="M16.5 17h3" />
+  </svg>
+);
+
+const GrammarSvg = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+
+    <path d="M9 8c-2 0-2 2-2 2v1c0 1-1 2-2 2 1 0 2 1 2 2v1c0 0 0 2 2 2" />
+    <path d="M15 8c2 0 2 2 2 2v1c0 1 1 2 2 2-1 0-2 1-2 2v1c0 0 0 2-2 2" />
+  </svg>
+);
+
 export const DictIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DictSvg} {...props} />
 );
@@ -1069,4 +1223,28 @@ export const GroupIcon = (props: Partial<CustomIconComponentProps>) => (
 
 export const MoreIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={MoreSvg} {...props} />
+);
+
+export const TaskIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={TaskSvg} {...props} />
+);
+
+export const ChannelIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ChannelSvg} {...props} />
+);
+
+export const DocumentIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={DocumentSvg} {...props} />
+);
+
+export const TipitakaIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={TipitakaSvg} {...props} />
+);
+
+export const RobotIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={RobotSvg} {...props} />
+);
+
+export const GrammarIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={GrammarSvg} {...props} />
 );

@@ -28,16 +28,16 @@ class AiModelController extends Controller
             Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);
         }
-        switch ($request->get('view')) {
+        switch ($request->input('view')) {
             case 'all':
                 $table = AiModel::whereNotNull('owner_id');
                 break;
             case 'studio':
-                $studioId = StudioApi::getIdByName($request->get('name'));
+                $studioId = StudioApi::getIdByName($request->input('name'));
                 $table = AiModel::where('owner_id', $studioId);
                 break;
             case 'usable':
-                $table = AiModel::where('owner_id', $request->get('user_id'))
+                $table = AiModel::where('owner_id', $request->input('user_id'))
                     ->orWhere('privacy', 'public');
                 break;
             case 'chat':
@@ -45,17 +45,17 @@ class AiModelController extends Controller
                 break;
         }
         if ($request->has('keyword')) {
-            $table = $table->where('name', 'like', '%' . $request->get('keyword') . '%');
+            $table = $table->where('name', 'like', '%' . $request->input('keyword') . '%');
         }
         $count = $table->count();
 
         $table = $table->orderBy(
-            $request->get('order', 'created_at'),
-            $request->get('dir', 'asc')
+            $request->input('order', 'created_at'),
+            $request->input('dir', 'asc')
         );
 
-        $table = $table->skip($request->get("offset", 0))
-            ->take($request->get('limit', 1000));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 1000));
 
         $result = $table->get();
 
@@ -80,13 +80,13 @@ class AiModelController extends Controller
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
-        $studioId = StudioApi::getIdByName($request->get('studio_name'));
+        $studioId = StudioApi::getIdByName($request->input('studio_name'));
         Log::debug('store', ['studioId' => $studioId, 'user' => $user]);
         if (!self::canEdit($user['user_uid'], $studioId)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
         $new = new AiModel();
-        $new->name = $request->get('name');
+        $new->name = $request->input('name');
         $new->uid = Str::uuid();
         $new->real_name = Str::uuid();
         $new->owner_id = $studioId;
@@ -124,13 +124,13 @@ class AiModelController extends Controller
         if (!self::canEdit($user['user_uid'], $aiModel->owner_id)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
-        $aiModel->name = $request->get('name');
-        $aiModel->description = $request->get('description');
-        $aiModel->system_prompt = $request->get('system_prompt');
-        $aiModel->url = $request->get('url');
-        $aiModel->model = $request->get('model');
-        $aiModel->key = $request->get('key');
-        $aiModel->privacy = $request->get('privacy');
+        $aiModel->name = $request->input('name');
+        $aiModel->description = $request->input('description');
+        $aiModel->system_prompt = $request->input('system_prompt');
+        $aiModel->url = $request->input('url');
+        $aiModel->model = $request->input('model');
+        $aiModel->key = $request->input('key');
+        $aiModel->privacy = $request->input('privacy');
         $aiModel->editor_id = $user['user_uid'];
         $aiModel->save();
         return $this->ok(new AiModelResource($aiModel));

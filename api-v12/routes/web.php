@@ -7,7 +7,12 @@ use App\Http\Controllers\PageIndexController;
 use App\Http\Controllers\AssetsController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\BookController;
+use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\Library\AnthologyController;
+use App\Http\Controllers\Library\AnthologyReadController;
+use App\Http\Controllers\Library\BookController;
+use App\Http\Controllers\WikiController;
+use App\Http\Controllers\Library\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,13 +63,27 @@ Route::post('/logout', function () {
     return redirect('/login');
 })->name('logout');
 
-Route::prefix('library')->group(function () {
-    Route::get('/', [CategoryController::class, 'index'])->name('library.home');
-    Route::get('/category/{id}', [CategoryController::class, 'show'])->name('library.category.show');
-    Route::get('/book/{id}', [BookController::class, 'show'])->name('library.book.show');
-    Route::get('/book/{id}/read', [BookController::class, 'read'])->name('library.book.read');
-    Route::get('/wiki', [BookController::class, 'read'])->name('library.wiki');
-    Route::get('/download', [BookController::class, 'read'])->name('library.download');
+Route::prefix('library')->name('library.')->group(function () {
+    Route::get('/', [CategoryController::class, 'index'])->name('home');
+
+    Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
+    Route::get('/tipitaka/{id}', [BookController::class, 'show'])->name('tipitaka.show');
+    Route::get('/tipitaka/{id}/read', [BookController::class, 'read'])->name('tipitaka.read');
+
+    Route::get('/wiki', [WikiController::class, 'home'])->name('wiki.home');
+    Route::get('/wiki/{lang}', [WikiController::class, 'index'])->name('wiki.index');
+    Route::get('/wiki/{lang}/{word}', [WikiController::class, 'show'])->name('wiki.show');
+
+    Route::get('/download', [DownloadController::class, 'index'])->name('download');
+    // 文集
+    Route::get('/anthology',          [AnthologyController::class, 'index'])->name('anthology.index');
+    Route::get('/anthology/{id}',     [AnthologyController::class, 'show'])->name('anthology.show');
+    Route::get(
+        '/anthology/{anthology}/read/{article}',
+        [AnthologyReadController::class, 'read']
+    )->name('anthology.read');
+
+    Route::get('/search', [SearchController::class, 'search'])->name('search');
 });
 // 博客路由
 Route::prefix('blog')->group(function () {

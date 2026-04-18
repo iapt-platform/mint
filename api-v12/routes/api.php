@@ -123,6 +123,8 @@ use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\SearchPlusController;
 use App\Http\Controllers\SearchSuggestController;
 use App\Http\Controllers\UpgradeController;
+use App\Http\Controllers\ChapterContentController;
+use App\Http\Controllers\ParagraphContentController;
 
 
 
@@ -303,6 +305,8 @@ Route::group(['prefix' => 'v2'], function () {
     Route::apiResource('system-model', SysModelController::class);
     Route::apiResource('chats', ChatController::class);
     Route::apiResource('chat-messages', ChatMessageController::class);
+    Route::apiResource('chapter-content', ChapterContentController::class);
+    Route::apiResource('paragraph-content', ParagraphContentController::class);
 
     Route::post('mock/openai/chat/completions', [MockOpenAIController::class, 'chatCompletions']);
     Route::post('mock/openai/completions', [MockOpenAIController::class, 'completions']);

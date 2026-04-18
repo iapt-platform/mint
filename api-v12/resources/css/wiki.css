@@ -1,0 +1,574 @@
+/* resources/css/wiki.css */
+/* WikiPāli — 布局、导航、组件样式 */
+
+/* ── 字体 ── */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;1,400&display=swap");
+
+/* ── 三栏布局 ── */
+.wiki-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr 200px;
+    grid-template-areas: "left main right";
+    gap: 1.5rem;
+    align-items: start;
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
+}
+
+.wiki-sidebar-left {
+    grid-area: left;
+}
+.wiki-main {
+    grid-area: main;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.wiki-sidebar-right {
+    grid-area: right;
+}
+
+/* ── 通用卡片 ── */
+.wiki-card {
+    background: var(--tblr-bg-surface);
+    border: 1px solid var(--tblr-border-color);
+    border-radius: var(--tblr-border-radius-lg);
+    padding: 1.5rem;
+}
+
+/* ── 侧边栏 ── */
+.wiki-sidebar-section {
+    background: var(--tblr-bg-surface);
+    border: 1px solid var(--tblr-border-color);
+    border-radius: var(--tblr-border-radius-lg);
+    padding: 1rem 1.125rem;
+    margin-bottom: 1rem;
+}
+
+.wiki-sidebar-title {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--tblr-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.wiki-cat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wiki-cat-list li {
+    margin-bottom: 2px;
+}
+
+.wiki-cat-list a {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--tblr-body-color);
+    text-decoration: none;
+    padding: 5px 8px;
+    border-radius: var(--tblr-border-radius);
+    transition: background 0.12s;
+}
+
+.wiki-cat-list a:hover {
+    background: var(--tblr-bg-surface-secondary);
+}
+.wiki-cat-list a.active {
+    background: var(--tblr-bg-surface-secondary);
+    font-weight: 500;
+    color: var(--tblr-primary);
+}
+
+/* ── 目录 ── */
+.wiki-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wiki-toc-list li {
+    border-bottom: 1px solid var(--tblr-border-color);
+}
+
+.wiki-toc-list li:last-child {
+    border-bottom: none;
+}
+
+.wiki-toc-list a {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--tblr-secondary);
+    text-decoration: none;
+    padding: 5px 0;
+    transition: color 0.12s;
+}
+
+.wiki-toc-list a:hover {
+    color: var(--tblr-body-color);
+}
+.wiki-toc-list a.active {
+    color: var(--tblr-body-color);
+    font-weight: 500;
+}
+
+.wiki-toc-list .toc-level-2 a {
+    padding-left: 0.5rem;
+}
+
+.wiki-toc-list .toc-level-3 a {
+    padding-left: 1rem;
+}
+
+.wiki-toc-num {
+    color: var(--tblr-secondary);
+    margin-right: 5px;
+    font-size: 0.75rem;
+}
+
+/* ── 相关条目 ── */
+.wiki-related-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wiki-related-list li {
+    border-bottom: 1px solid var(--tblr-border-color);
+}
+
+.wiki-related-list li:last-child {
+    border-bottom: none;
+}
+
+.wiki-related-list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8125rem;
+    color: var(--tblr-primary);
+    text-decoration: none;
+    padding: 6px 0;
+}
+
+.wiki-related-zh {
+    font-size: 0.75rem;
+    color: var(--tblr-secondary);
+}
+
+/* ── 元信息表格 ── */
+.wiki-meta-table {
+    width: 100%;
+    font-size: 0.8125rem;
+    border-collapse: collapse;
+}
+
+.wiki-meta-table td {
+    padding: 3px 0;
+}
+.wiki-meta-table td:last-child {
+    text-align: right;
+    color: var(--tblr-secondary);
+}
+
+/* ── 条目头部 ── */
+.wiki-entry-header {
+    margin-bottom: 1.25rem;
+}
+
+.wiki-entry-title {
+    font-family: "Noto Serif", Georgia, serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0.375rem 0 0.75rem;
+    color: var(--tblr-body-color);
+}
+
+.wiki-entry-langs-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 0.5rem;
+}
+
+.wiki-lang-pill {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--tblr-border-color);
+    color: var(--tblr-secondary);
+}
+
+.wiki-lang-pill strong {
+    font-weight: 500;
+    color: var(--tblr-body-color);
+    margin-right: 3px;
+}
+
+/* ── 语言版本切换 ── */
+.wiki-entry-lang-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 0.625rem 0.875rem;
+    background: var(--tblr-bg-surface-secondary);
+    border-radius: var(--tblr-border-radius);
+    margin-bottom: 1.25rem;
+    font-size: 0.8125rem;
+}
+
+.wiki-entry-lang-label {
+    color: var(--tblr-secondary);
+}
+
+.wiki-entry-lang-btn {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--tblr-border-color);
+    color: var(--tblr-primary);
+    text-decoration: none;
+    transition: background 0.12s;
+}
+
+.wiki-entry-lang-btn:hover {
+    background: var(--tblr-bg-surface);
+}
+
+/* ── 质量标签 ── */
+.wiki-quality-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.6875rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.wiki-quality-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.wiki-badge--featured {
+    background: #eaf3de;
+    color: #3b6d11;
+    border: 1px solid #c0dd97;
+}
+.wiki-badge--featured .wiki-quality-dot {
+    background: #639922;
+}
+
+.wiki-badge--review {
+    background: #faeeda;
+    color: #854f0b;
+    border: 1px solid #fac775;
+}
+.wiki-badge--review .wiki-quality-dot {
+    background: #ba7517;
+}
+
+.wiki-badge--stub {
+    background: #f1efe8;
+    color: #5f5e5a;
+    border: 1px solid #d3d1c7;
+}
+.wiki-badge--stub .wiki-quality-dot {
+    background: #888780;
+}
+
+/* ── 标签 ── */
+.wiki-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 1rem;
+    border-top: 1px solid var(--tblr-border-color);
+    margin-top: 1.5rem;
+}
+
+.wiki-tag {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--tblr-border-color);
+    color: var(--tblr-secondary);
+    text-decoration: none;
+    transition: background 0.12s;
+}
+
+.wiki-tag:hover {
+    background: var(--tblr-bg-surface-secondary);
+    color: var(--tblr-body-color);
+}
+
+/* ── 首页今日条目 ── */
+.wiki-today-banner {
+    background: var(--tblr-bg-surface-secondary);
+    border: 1px solid var(--tblr-border-color);
+    border-radius: var(--tblr-border-radius-lg);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+}
+
+.wiki-today-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--tblr-border-radius);
+    background: #e1f5ee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.375rem;
+    flex-shrink: 0;
+}
+
+.wiki-today-label {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tblr-secondary);
+    margin-bottom: 4px;
+}
+
+.wiki-today-title {
+    font-family: "Noto Serif", Georgia, serif;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--tblr-body-color);
+}
+
+.wiki-today-snippet {
+    font-size: 0.875rem;
+    color: var(--tblr-secondary);
+    line-height: 1.6;
+}
+
+.wiki-today-link {
+    font-size: 0.8125rem;
+    color: var(--tblr-primary);
+    text-decoration: none;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+/* ── 首页精选网格 ── */
+.wiki-featured-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.wiki-featured-card {
+    border: 1px solid var(--tblr-border-color);
+    border-radius: var(--tblr-border-radius);
+    padding: 10px 12px;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    transition: background 0.12s;
+    color: var(--tblr-body-color);
+}
+
+.wiki-featured-card:hover {
+    background: var(--tblr-bg-surface-secondary);
+}
+
+.wiki-featured-label {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tblr-secondary);
+    margin-bottom: 5px;
+}
+
+.wiki-featured-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.wiki-featured-pali {
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--tblr-secondary);
+}
+
+/* ── term-ref 行内术语标记 ── */
+.term-ref {
+    font-style: italic;
+    color: var(--tblr-primary);
+    border-bottom: 1px dotted var(--tblr-primary);
+    cursor: pointer;
+}
+
+/* ── Popover 覆盖样式（桌面 tooltip） ── */
+.wiki-term-popover.popover {
+    max-width: 280px;
+    font-size: 0.8125rem;
+    border: 0.5px solid var(--tblr-border-color);
+    border-radius: var(--tblr-border-radius-lg);
+    box-shadow: none;
+}
+
+.wiki-term-popover .popover-arrow {
+    display: none;
+}
+.wiki-term-popover .popover-body {
+    padding: 0;
+}
+
+/* 巴利原文标题行 */
+.wiki-popover-word {
+    font-family: "Noto Serif", Georgia, serif;
+    font-size: 0.9375rem;
+    font-style: italic;
+    font-weight: 600;
+    color: var(--tblr-primary);
+    padding: 10px 14px 10px;
+    border-bottom: 0.5px solid var(--tblr-border-color);
+}
+
+/* 释义区 */
+.wiki-popover-body {
+    padding: 10px 14px 12px;
+}
+
+.wiki-popover-meaning {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--tblr-body-color);
+    margin-bottom: 5px;
+}
+
+.wiki-popover-summary {
+    font-size: 0.8125rem;
+    color: var(--tblr-secondary);
+    line-height: 1.55;
+}
+
+.wiki-popover-meaning {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--tblr-body-color);
+    padding: 8px 14px 4px;
+}
+
+.wiki-popover-summary {
+    font-size: 0.8125rem;
+    color: var(--tblr-secondary);
+    line-height: 1.55;
+    padding: 0 14px 12px;
+}
+
+/* ── 移动端 Offcanvas 抽屉 ── */
+.wiki-term-drawer {
+    border-radius: 1rem 1rem 0 0;
+    max-height: 55vh;
+}
+
+.wiki-drawer-word {
+    font-family: "Noto Serif", Georgia, serif;
+    font-size: 1.125rem;
+    font-style: italic;
+    font-weight: 600;
+    color: var(--tblr-primary);
+}
+
+.wiki-drawer-meaning {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--tblr-body-color);
+    margin-top: 2px;
+}
+
+.wiki-drawer-summary {
+    font-size: 0.9375rem;
+    color: var(--tblr-secondary);
+    line-height: 1.65;
+}
+
+.wiki-drawer-link {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: var(--tblr-primary);
+    text-decoration: none;
+}
+
+/* ── 响应式 ── */
+@media (max-width: 992px) {
+    .wiki-layout {
+        grid-template-columns: 180px 1fr;
+        grid-template-areas:
+            "left main"
+            "left right";
+    }
+
+    .wiki-sidebar-right {
+        grid-area: right;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .wiki-sidebar-right .wiki-sidebar-section {
+        flex: 1 1 180px;
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .wiki-layout {
+        grid-template-columns: 1fr;
+        grid-template-areas: "main" "right" "left";
+    }
+
+    .wiki-featured-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .wiki-sidebar-left,
+    .wiki-sidebar-right {
+        display: none;
+    }
+}
+
+/* ── term-card 共享（Popover + 抽屉复用） ── */
+.wiki-term-card-word {
+    font-family: "Noto Serif", Georgia, serif;
+    font-size: 0.9375rem;
+    font-style: italic;
+    font-weight: 600;
+    color: var(--tblr-primary);
+    padding: 8px;
+    margin-bottom: 8px;
+    border-bottom: 0.5px solid var(--tblr-border-color);
+}
+
+.wiki-term-card-meaning {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--tblr-body-color);
+    margin-bottom: 5px;
+}
+
+.wiki-term-card-summary {
+    font-size: 0.8125rem;
+    color: var(--tblr-secondary);
+    line-height: 1.55;
+}

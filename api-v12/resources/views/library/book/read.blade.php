@@ -4,326 +4,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Reading - {{ $book['title'] }}</title>
-    <!-- Tabler CSS -->
+    <title>{{ $book['title'] }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/css/tabler.min.css" />
-    <!-- FontAwesome for icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    <script
-        src="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/js/tabler.min.js">
-    </script>
-    <style>
-        /* Custom styles for responsive layout */
-        body {
-            font-family: 'Inter', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
-        }
+    @vite(['resources/css/reader.css', 'resources/js/app.js'])
 
-        .main-container {
-            display: flex;
-            gap: 20px;
-            padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/js/tabler.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        .toc-sidebar {
-            width: 250px;
-            flex-shrink: 0;
-            display: none;
-        }
 
-        .content-area {
-            flex-grow: 1;
-            max-width: 100%;
-        }
-
-        .right-sidebar {
-            width: 300px;
-            flex-shrink: 0;
-            display: none;
-        }
-
-        .related-books {
-            margin-top: 30px;
-        }
-
-        .card-img-container {
-            height: 150px;
-            overflow: hidden;
-        }
-
-        .card-img-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Mobile: Show only content, TOC in drawer */
-        @media (max-width: 767px) {
-            .content-area {
-                width: 100%;
-            }
-
-            .main-container {
-                padding: 0;
-
-            }
-
-            .card {
-                border: none;
-            }
-        }
-
-        /* Tablet: Show TOC and content */
-        @media (min-width: 768px) {
-            .toc-sidebar {
-                display: block;
-            }
-
-            .content-area {
-                max-width: calc(100% - 270px);
-            }
-        }
-
-        /* Desktop: Show TOC, content, and right sidebar */
-        @media (min-width: 992px) {
-            .right-sidebar {
-                display: block;
-            }
-
-            .content-area {
-                max-width: calc(100% - 570px);
-            }
-        }
-
-        /* Dark mode styles */
-        .dark-mode {
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
-
-        .dark-mode .card {
-            background-color: #2a2a2a;
-            border-color: #3a3a3a;
-            color: #ffffff;
-        }
-
-        .dark-mode .navbar {
-            background-color: #2a2a2a;
-        }
-
-        .dark-mode .offcanvas {
-            background-color: #2a2a2a;
-            color: #ffffff;
-        }
-
-        .dark-mode .offcanvas .nav-link {
-            color: #ffffff;
-        }
-
-        .dark-mode .toc-sidebar,
-        .dark-mode .right-sidebar {
-            background-color: #2a2a2a;
-        }
-
-        .toc-sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .toc-sidebar ul li {
-            padding: 10px 0;
-        }
-
-        .toc-sidebar ul li a {
-            color: #206bc4;
-            text-decoration: none;
-        }
-
-        .toc-sidebar ul li a:hover {
-            text-decoration: underline;
-        }
-
-        .dark-mode .toc-sidebar ul li a {
-            color: #4dabf7;
-        }
-
-        /* Multi-level TOC styles */
-        .toc-sidebar ul,
-        .offcanvas-body ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .toc-sidebar ul li,
-        .offcanvas-body ul li {
-            padding: 5px 0;
-        }
-
-        .toc-sidebar ul li a,
-        .offcanvas-body ul li a {
-            color: #206bc4;
-            text-decoration: none;
-        }
-
-        .toc-sidebar ul li a:hover,
-        .offcanvas-body ul li a:hover {
-            text-decoration: underline;
-        }
-
-        .dark-mode .toc-sidebar ul li a,
-        .dark-mode .offcanvas-body ul li a {
-            color: #4dabf7;
-        }
-
-        /* Indentation for TOC levels */
-        .toc-level-1 {
-            padding-left: 0 !important;
-        }
-
-        .toc-level-2 {
-            padding-left: 10px !important;
-        }
-
-        .toc-level-3 {
-            padding-left: 20px !important;
-        }
-
-        .toc-level-4 {
-            padding-left: 30px !important;
-        }
-
-        /* Disabled TOC item styles */
-        .toc-disabled {
-            color: #6c757d;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .dark-mode .toc-disabled {
-            color: #adb5bd;
-        }
-    </style>
 </head>
 
+
 <body class="{{ session('theme', 'light') }}-mode">
+    <x-term-drawer />
+
     <!-- Navbar -->
     <header class="navbar navbar-expand-md navbar-light d-print-none">
         <div class="container-xl">
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocDrawer" aria-controls="tocDrawer">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <h1 class="navbar-brand">{{ $book['title'] }}</h1>
-            <div class="navbar-nav flex-row order-md-last">
-                <!-- Theme Toggle -->
+            {{-- 面包屑：文集标题 > 文章标题 --}}
+            <div class="navbar-brand d-flex flex-column lh-1">
+                @if(!empty($book['anthology']))
+                <small class="text-muted" style="font-size:.75rem;">
+                    <a href="{{ route('library.anthology.show', $book['anthology']['id']) }}" class="text-muted text-decoration-none">
+                        {{ $book['anthology']['title'] }}
+                    </a>
+                </small>
+                @endif
+            </div>
+            <div class="navbar-nav flex-row order-md-last align-items-center">
+                {{-- Desktop 编辑器按钮 --}}
+                @if(!empty($editor_link))
+                <div class="nav-item d-none d-md-block me-2">
+                    <a href="{{ $editor_link }}"
+                        target="_blank"
+                        class="nav-link">
+                        <i class="fas fa-pen-to-square me-1"></i>
+                        编辑器
+                    </a>
+                </div>
+
+                {{-- Mobile 编辑器按钮 --}}
+                <div class="nav-item d-md-none me-2">
+                    <a href="{{ $editor_link }}"
+                        target="_blank"
+                        class="nav-link">
+                        <i class="fas fa-pen-to-square"></i>
+                    </a>
+                </div>
+                @endif
+
+                {{-- Desktop 设置按钮 --}}
+                <div class="nav-item d-none d-md-block me-2">
+                    <a href="#"
+                        class="nav-link"
+                        data-bs-toggle="modal"
+                        data-bs-target="#settingsModal">
+                        <i class="fas fa-cog me-1"></i>
+                        设置
+                    </a>
+                </div>
+
+                {{-- Mobile 设置按钮 --}}
+                <div class="nav-item d-md-none me-2">
+                    <a href="#"
+                        class="nav-link"
+                        data-bs-toggle="modal"
+                        data-bs-target="#settingsModal">
+                        <i class="fas fa-cog"></i>
+                    </a>
+                </div>
+                {{-- Desktop Dropdown --}}
+                @if(!empty($channels))
+                <div class="nav-item dropdown d-none d-md-block me-2">
+                    <a href="#" class="nav-link" data-bs-toggle="dropdown">
+                        <i class="fas fa-layer-group me-1"></i>
+                        版本
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-end">
+                        @foreach($channels as $channel)
+                        <a class="dropdown-item"
+                            href="{{ request()->fullUrlWithQuery(['channel' => $channel['id']]) }}">
+                            {{ $channel['name'] }}
+                            <small class="text-muted">
+                                ({{ __('language.' . $channel['lang']) }})
+                            </small>
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Mobile Drawer Trigger --}}
+                <div class="nav-item d-md-none me-2">
+                    <a href="#" class="nav-link"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#channelDrawer">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </div>
+                @endif
                 <div class="nav-item">
                     <a href="#" class="nav-link" id="themeToggle">
                         <i class="fas fa-moon"></i>
                     </a>
                 </div>
-                <!-- User Settings -->
+                @auth
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
-                        <span class="avatar avatar-sm" style="background-image: url({{ auth()->user()->avatar ?? 'https://via.placeholder.com/40' }})">use</span>
+                    <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown">
+                        <span class="avatar avatar-sm" style="background-image: url({{ auth()->user()->avatar ?? '' }})"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end">
                         <a class="dropdown-item" href="#">Profile</a>
-                        <a class="dropdown-item" href="#">Settings</a>
                         <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
                     </div>
                 </div>
+                @endauth
             </div>
         </div>
     </header>
 
-    <!-- TOC Drawer for Mobile -->
+    <!-- TOC Drawer (Mobile) -->
+    @if(!empty($channels))
+    <div class="offcanvas offcanvas-end"
+        tabindex="-1"
+        id="channelDrawer">
+
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">选择版本</h5>
+
+            <button type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas">
+            </button>
+        </div>
+
+        <div class="offcanvas-body">
+
+            <div class="list-group list-group-flush">
+
+                @foreach($channels as $channel)
+
+                <a
+                    href="{{ request()->fullUrlWithQuery(['channel' => $channel['id']]) }}"
+                    class="list-group-item list-group-item-action">
+
+                    <div class="fw-bold">
+                        {{ $channel['name'] }}
+                    </div>
+
+                    <small class="text-muted">
+                        {{ __('language.' . $channel['lang']) }}
+                    </small>
+
+                </a>
+
+                @endforeach
+
+            </div>
+
+        </div>
+    </div>
+    @endif
     <div class="offcanvas offcanvas-start" tabindex="-1" id="tocDrawer" aria-labelledby="tocDrawerLabel">
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="tocDrawerLabel">Table of Contents</h5>
+            <h5 class="offcanvas-title" id="tocDrawerLabel">目录</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            @if(isset($book['toc']) && is_array($book['toc']) && count($book['toc']) > 0)
+            @if(isset($book['toc']) && count($book['toc']) > 0)
             <ul>
-                @foreach ($book['toc'] as $index => $item)
-                <li class="toc-level-{{ $item['level'] }} {{ $item['disabled'] ? 'toc-disabled' : '' }}">
-                    @if (!$item['disabled'])
-                    <a href="{{ route('library.book.read', $item['id']) }}">{{ $item['title'] }}</a>
-                    @else
-                    <span>{{ $item['title'] }}</span>
-                    @endif
+                @foreach ($book['toc'] as $item)
+                <li class="toc_item toc-level-{{ $item['level'] }} {{ $item['active'] ?? false ? 'toc-active' : ($item['disabled'] ? 'toc-disabled' : '') }}">
+                    @if($item['active'] ?? false)
+                    <span title="{{ $item['title'] }}">
+                        {{ $item['title'] }}
+                    </span>
+                    @elseif(!$item['disabled'])
+
+                    @if(isset($anthologyId))
+                    {{-- ✅ 修改1：使用文集阅读路由，传 anthology + article 两个参数 --}}
+                    <a href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $item['id'],'channel' => request('channel')]) }}" title="{{ $item['title'] }}">
+                        @else
+                        <a href="{{ route('library.tipitaka.read', ['id' => $item['id'] ,'channel' => request('channel')]) }}" title="{{ $item['title'] }}">
+                            @endif
+                            {{ $item['title'] }}
+                        </a>
+                        @else
+                        <span title="{{ $item['title'] }}">
+                            {{ $item['title'] }}
+                        </span>
+                        @endif
                 </li>
                 @endforeach
             </ul>
             @else
-            <div class="alert alert-warning">
-                此书没有目录
-            </div>
+            <div class="alert alert-warning">此书没有目录</div>
             @endif
         </div>
     </div>
 
     <!-- Main Content Area -->
     <div class="main-container">
-        <!-- Table of Contents Sidebar (Tablet+) -->
+
+        <!-- TOC Sidebar (Tablet+) -->
         <div class="toc-sidebar card">
             <div class="card-body">
-                <h5>Table of Contents</h5>
-                @if(isset($book['toc']) && is_array($book['toc']) && count($book['toc']) > 0)
+                <h5>目录</h5>
+                @if(isset($book['toc']) && count($book['toc']) > 0)
                 <ul>
-                    @foreach ($book['toc'] as $index => $item)
-                    <li class="toc-level-{{ $item['level'] }} {{ $item['disabled'] ? 'toc-disabled' : '' }}">
-                        @if (!$item['disabled'])
-                        <a href="{{ route('library.book.read', $item['id']) }}">
-                            {{ $item['title'] }}
-                        </a>
-                        @else
+                    @foreach ($book['toc'] as $item)
+                    <li class="toc_item toc-level-{{ $item['level'] }} {{ $item['active'] ?? false ? 'toc-active' : ($item['disabled'] ? 'toc-disabled' : '') }}">
+                        @if($item['active'] ?? false)
                         <span>{{ $item['title'] }}</span>
-                        @endif
+                        @elseif(!$item['disabled'])
+                        {{-- --}}
+                        @if(isset($anthologyId))
+                        <a href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $item['id'],'channel' => request('channel')]) }}">
+                            @else
+                            <a href="{{ route('library.tipitaka.read', ['id' => $item['id'],'channel' => request('channel')]) }}">
+                                @endif
+                                {{ $item['title'] }}
+                            </a>
+                            @else
+                            <span>{{ $item['title'] }}</span>
+                            @endif
                     </li>
                     @endforeach
                 </ul>
                 @else
-                <div class="alert alert-warning">
-                    此书没有目录
-                </div>
+                <div class="alert alert-warning">此书没有目录</div>
                 @endif
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="content-area card">
-
             <div class="card-body">
-                <!-- text area -->
+
                 <div>
                     <h2>{{ $book['title'] }}</h2>
-                    <p><strong>Author:</strong> <span>{{ $book['author'] }}@
+                    <p>
+                        <strong>Author:</strong>
+                        <span>
+                            {{ $book['author'] }}
+                            @if(isset($book['publisher']))
+                            @
                             <a href="{{ route('blog.index', ['user' => $book['publisher']->username]) }}">
                                 {{ $book['publisher']->nickname }}
                             </a>
-                        </span></p>
+                            @endif
+                        </span>
+                    </p>
 
                     <div class="content">
-                        @if(isset($book['content']))
-                        @foreach ($book['content'] as $index => $paragraph)
+                        @if(isset($book['content']) && count($book['content']) > 0)
+                        @foreach ($book['content'] as $paragraph)
                         <div id="para-{{ $paragraph['id'] }}">
-
                             @foreach ($paragraph['text'] as $rows)
                             <div style="display:flex;">
-
                                 @foreach ($rows as $col)
                                 <div style="flex:1;">
-                                    @if($paragraph['level']<8)
-                                        <h{{ $paragraph['level'] }}>{{ $col }}</h{{ $paragraph['level'] }}>
+                                    @if($paragraph['level'] < 8)
+                                        {{-- ✅ 修改3：{!! !!} 不转义，渲染 HTML 内容 --}}
+                                        <h{{ $paragraph['level'] }}>{!! $col !!}</h{{ $paragraph['level'] }}>
                                         @else
-                                        <p>{{ $col }}</p>
+                                        <p>{!! $col !!}</p>
                                         @endif
                                 </div>
                                 @endforeach
-
                             </div>
                             @endforeach
                         </div>
@@ -333,52 +286,69 @@
                         @endif
                     </div>
                 </div>
+
                 <!-- Nav buttons -->
                 <div class="mt-6 pt-6">
                     <ul class="pagination">
-                        @if(!empty($book["pagination"]["prev"]))
+                        @if(!empty($book['pagination']['prev']))
                         <li class="page-item page-prev">
-                            <a class="page-link" href='{{ route("library.book.read",$book["pagination"]["prev"]["id"]) }}'>
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <!-- Download SVG icon from http://tabler.io/icons/icon/chevron-left -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                            <path d="M15 6l-6 6l6 6"></path>
-                                        </svg>
+                            {{-- ✅ 修改2：翻页也用文集路由 --}}
+                            @if(isset($anthologyId))
+                            <a class="page-link"
+                                href="{{ route('library.anthology.read', [
+                                        'anthology' => $anthologyId,
+                                        'article' => $book['pagination']['prev']['id'],
+                                        'channel' => request('channel')
+                                ]) }}">
+                                @else
+                                <a class="page-link" href="{{ route('library.tipitaka.read', [
+                                        'id' => $book['pagination']['prev']['id'],
+                                        'channel' => request('channel')
+                                ]) }}">
+                                    @endif
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                                <path d="M15 6l-6 6l6 6"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="col">
+                                            <div class="page-item-subtitle">上一篇</div>
+                                            <div class="page-item-title">{{ $book['pagination']['prev']['title'] }}</div>
+                                        </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="page-item-subtitle">previous</div>
-                                        <div class="page-item-title">{{ $book["pagination"]["prev"]["title"] }}</div>
-                                    </div>
-                                </div>
-                            </a>
+                                </a>
                         </li>
                         @endif
-                        @if(!empty($book["pagination"]["next"]))
+                        @if(!empty($book['pagination']['next']))
                         <li class="page-item page-next">
-                            <a class="page-link" href='{{ route("library.book.read",$book["pagination"]["next"]["id"]) }}'>
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <div class="page-item-subtitle">next</div>
-                                        <div class="page-item-title">{{ $book["pagination"]["next"]["title"] }}</div>
+                            @if(isset($anthologyId))
+                            <a class="page-link" href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $book['pagination']['next']['id'],'channel' => request('channel')]) }}">
+                                @else
+                                <a class="page-link" href="{{ route('library.tipitaka.read', ['id' => $book['pagination']['next']['id'],'channel' => request('channel')]) }}">
+                                    @endif
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="page-item-subtitle">下一篇</div>
+                                            <div class="page-item-title">{{ $book['pagination']['next']['title'] }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                                <path d="M9 6l6 6l-6 6"></path>
+                                            </svg>
+                                        </div>
                                     </div>
-                                    <div class="col-auto">
-                                        <!-- Download SVG icon from http://tabler.io/icons/icon/chevron-right -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                            <path d="M9 6l6 6l-6 6"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                            </a>
+                                </a>
                         </li>
                         @endif
                     </ul>
                 </div>
+
                 <!-- Related Books -->
+                @if(!empty($relatedBooks))
                 <div class="related-books">
                     <h3>Related Books</h3>
                     <div class="row row-cards">
-                        @if(isset($relatedBooks))
                         @foreach ($relatedBooks as $relatedBook)
                         <div class="col-md-4">
                             <div class="card">
@@ -393,11 +363,9 @@
                             </div>
                         </div>
                         @endforeach
-                        @else
-                        <div>没有相关章节</div>
-                        @endif
                     </div>
                 </div>
+                @endif
 
             </div>
         </div>
@@ -405,88 +373,206 @@
         <!-- Right Sidebar (Desktop) -->
         <div class="right-sidebar card">
             <div class="card-body">
-                <h5>Download</h5>
+                @if(!empty($book['downloads']))
+                <h5>下载</h5>
                 <ul class="list-unstyled">
-                    @if(isset($book['downloads']))
                     @foreach ($book['downloads'] as $download)
-                    <li><a href="{{ $download['url'] }}" class="btn btn-outline-primary mb-2 w-100"><i class="fas fa-download me-2"></i>{{ $download['format'] }}</a></li>
+                    <li>
+                        <a href="{{ $download['url'] }}" class="btn btn-outline-primary mb-2 w-100">
+                            <i class="fas fa-download me-2"></i>{{ $download['format'] }}
+                        </a>
+                    </li>
                     @endforeach
-                    @else
-                    <div>没有下载链接</div>
-                    @endif
                 </ul>
-                <h5>Category</h5>
+                @endif
+
+                @if(!empty($book['categories']))
+                <h5>分类</h5>
                 @foreach ($book['categories'] as $category)
                 <span class="badge bg-blue text-blue-fg">{{ $category['name'] }}</span>
                 @endforeach
-                <h5>Tags</h5>
-                <div>
-                    @foreach ($book['tags'] as $tag)
-                    <span class="badge me-1">{{ $tag['name'] }}</span>
-                    @endforeach
-                </div>
+                @endif
+
+                @if(!empty($book['tags']))
+                <h5>标签</h5>
+                @foreach ($book['tags'] as $tag)
+                <span class="badge me-1">{{ $tag['name'] }}</span>
+                @endforeach
+                @endif
             </div>
+        </div>
+
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal modal-blur fade" id="settingsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <form id="settingsForm" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">阅读设置</h5>
+
+                    <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    {{-- 显示原文 --}}
+                    <div class="mb-4">
+                        <label class="form-label">显示原文</label>
+
+                        <label class="form-check form-switch">
+                            <input class="form-check-input"
+                                type="checkbox"
+                                id="showOrigin">
+
+                            <span class="form-check-label">
+                                开启/关闭原文显示
+                            </span>
+                        </label>
+                    </div>
+
+                    {{-- 界面语言 --}}
+                    <div class="mb-4">
+                        <label class="form-label">界面语言</label>
+
+                        <select class="form-select" id="uiLanguage">
+                            <option value="auto">自动</option>
+                            <option value="zh">简体中文</option>
+                            <option value="en">英文</option>
+                        </select>
+                    </div>
+
+                    {{-- 巴利文脚本 --}}
+                    <div class="mb-4">
+                        <label class="form-label">巴利文脚本</label>
+
+                        <select class="form-select" id="paliScript">
+                            <option value="auto">自动</option>
+                            <option value="roman">罗马</option>
+                            <option value="myanmar">缅文</option>
+                            <option value="thai">泰文</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                        class="btn btn-link"
+                        data-bs-dismiss="modal">
+                        取消
+                    </button>
+
+                    <button type="submit"
+                        class="btn btn-primary">
+                        确定
+                    </button>
+
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Tabler JS and Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta21/dist/js/tabler.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        themeToggle.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (body.classList.contains('light-mode')) {
-                body.classList.remove('light-mode');
-                body.classList.add('dark-mode');
-                fetch('{{ route("theme.toggle") }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        theme: 'dark'
-                    })
-                });
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                body.classList.remove('dark-mode');
-                body.classList.add('light-mode');
-                fetch('{{ route("theme.toggle") }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        theme: 'light'
-                    })
-                });
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            }
+        function toggleOriginDisplay(show) {
+            document.querySelectorAll('.origin').forEach(el => {
+                el.style.display = show ? 'unset' : 'none';
+            });
+        }
+
+        function setCookie(name, value, days = 365) {
+            let expires = "";
+            const date = new Date();
+
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+
+            expires = "; expires=" + date.toUTCString();
+
+            document.cookie =
+                name + "=" + encodeURIComponent(value) +
+                expires +
+                "; path=/";
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+
+            const parts = value.split(`; ${name}=`);
+
+            if (parts.length === 2)
+                return decodeURIComponent(parts.pop().split(';').shift());
+
+            return null;
+        }
+
+        // 初始化加载 cookie
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const showOrigin =
+                getCookie('show_origin') === 'true';
+
+            document.getElementById('showOrigin').checked =
+                showOrigin;
+
+            document.getElementById('uiLanguage').value =
+                getCookie('ui_language') || 'auto';
+
+            document.getElementById('paliScript').value =
+                getCookie('pali_script') || 'auto';
+
+            // 应用原文显示设置
+            toggleOriginDisplay(showOrigin);
         });
 
-        // Smooth scroll for TOC links
-        document.querySelectorAll('.toc-sidebar a, .offcanvas-body a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
+        // 提交保存
+        document.getElementById('settingsForm')
+            .addEventListener('submit', function(e) {
+
                 e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                targetElement.scrollIntoView({
-                    behavior: 'smooth'
-                });
-                // Close drawer on mobile after clicking
-                if (window.innerWidth < 768) {
-                    const drawer = document.querySelector('#tocDrawer');
-                    const bsDrawer = bootstrap.Offcanvas.getInstance(drawer);
-                    bsDrawer.hide();
-                }
+
+                setCookie(
+                    'show_origin',
+                    document.getElementById('showOrigin').checked
+                );
+
+                setCookie(
+                    'ui_language',
+                    document.getElementById('uiLanguage').value
+                );
+
+                setCookie(
+                    'pali_script',
+                    document.getElementById('paliScript').value
+                );
+                toggleOriginDisplay(showOrigin);
+                location.reload();
             });
+    </script>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isDark = document.body.classList.contains('dark-mode');
+            document.body.classList.toggle('dark-mode', !isDark);
+            document.body.classList.toggle('light-mode', isDark);
+            fetch('{{ route("theme.toggle") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    theme: isDark ? 'light' : 'dark'
+                })
+            });
+            themeToggle.innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
         });
     </script>
+
 </body>
 
 </html>

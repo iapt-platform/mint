@@ -16,9 +16,9 @@ class WordIndexController extends Controller
     public function index(Request $request)
     {
         //
-        switch ($request->get("view")) {
+        switch ($request->input("view")) {
             case 'key':
-                $key = $request->get("key");
+                $key = $request->input("key");
                 /*
                 $result = Cache::remember("/word_index/{$key}",10,function() use($key){
                     return WordIndex::where('word','like',$key."%")

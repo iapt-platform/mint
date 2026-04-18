@@ -40,31 +40,31 @@ class RelationController extends Controller
             'created_at'
         ]);
         if (($request->has('case'))) {
-            $table = $table->whereIn('case', explode(",", $request->get('case')));
+            $table = $table->whereIn('case', explode(",", $request->input('case')));
         }
         if (($request->has('search'))) {
-            $table = $table->where('name', 'like', $request->get('search') . "%");
+            $table = $table->where('name', 'like', $request->input('search') . "%");
         }
         if (($request->has('name'))) {
-            $table = $table->where('name', $request->get('name'));
+            $table = $table->where('name', $request->input('name'));
         }
         if (($request->has('from'))) {
-            $table = $table->whereJsonContains('from->case', $request->get('from'));
+            $table = $table->whereJsonContains('from->case', $request->input('from'));
         }
         if (($request->has('to'))) {
-            $table = $table->whereJsonContains('to', $request->get('to'));
+            $table = $table->whereJsonContains('to', $request->input('to'));
         }
         if (($request->has('match'))) {
-            $table = $table->whereJsonContains('match', $request->get('match'));
+            $table = $table->whereJsonContains('match', $request->input('match'));
         }
         if (($request->has('category'))) {
-            $table = $table->where('category', $request->get('category'));
+            $table = $table->where('category', $request->input('category'));
         }
-        $table = $table->orderBy($request->get('order', 'updated_at'), $request->get('dir', 'desc'));
+        $table = $table->orderBy($request->input('order', 'updated_at'), $request->input('dir', 'desc'));
         $count = $table->count();
 
-        $table = $table->skip($request->get("offset", 0))
-            ->take($request->get('limit', 1000));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 1000));
         $result = $table->get();
 
         $output = ["rows" => RelationResource::collection($result), "count" => $count];
@@ -95,25 +95,25 @@ class RelationController extends Controller
         $validated = $request->validate([
             'name' => 'required',
         ]);
-        $case = $request->get('case', '');
+        $case = $request->input('case', '');
         $new = new Relation;
         $new->name = $validated['name'];
 
-        $new->case = $request->get('case');
-        $new->category = $request->get('category');
+        $new->case = $request->input('case');
+        $new->category = $request->input('category');
 
         if ($request->has('from')) {
-            $new->from = json_encode($request->get('from'), JSON_UNESCAPED_UNICODE);
+            $new->from = json_encode($request->input('from'), JSON_UNESCAPED_UNICODE);
         } else {
             $new->from = null;
         }
         if ($request->has('to')) {
-            $new->to = json_encode($request->get('to'), JSON_UNESCAPED_UNICODE);
+            $new->to = json_encode($request->input('to'), JSON_UNESCAPED_UNICODE);
         } else {
             $new->to = null;
         }
         if ($request->has('match')) {
-            $new->match = json_encode($request->get('match'), JSON_UNESCAPED_UNICODE);
+            $new->match = json_encode($request->input('match'), JSON_UNESCAPED_UNICODE);
         } else {
             $new->match = null;
         }
@@ -150,22 +150,22 @@ class RelationController extends Controller
             return $this->error(__('auth.failed'));
         }
 
-        $relation->name = $request->get('name');
-        $relation->case = $request->get('case');
-        $relation->category = $request->get('category');
+        $relation->name = $request->input('name');
+        $relation->case = $request->input('case');
+        $relation->category = $request->input('category');
 
         if ($request->has('from')) {
-            $relation->from = json_encode($request->get('from'), JSON_UNESCAPED_UNICODE);
+            $relation->from = json_encode($request->input('from'), JSON_UNESCAPED_UNICODE);
         } else {
             $relation->from = null;
         }
         if ($request->has('to')) {
-            $relation->to = json_encode($request->get('to'), JSON_UNESCAPED_UNICODE);
+            $relation->to = json_encode($request->input('to'), JSON_UNESCAPED_UNICODE);
         } else {
             $relation->to = null;
         }
         if ($request->has('match')) {
-            $relation->match = json_encode($request->get('match'), JSON_UNESCAPED_UNICODE);
+            $relation->match = json_encode($request->input('match'), JSON_UNESCAPED_UNICODE);
         } else {
             $relation->match = null;
         }
@@ -231,7 +231,7 @@ class RelationController extends Controller
             return $this->error(__('auth.failed'));
         }
 
-        $filename = $request->get('filename');
+        $filename = $request->input('filename');
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $reader->setReadDataOnly(true);
         $spreadsheet = $reader->load($filename);

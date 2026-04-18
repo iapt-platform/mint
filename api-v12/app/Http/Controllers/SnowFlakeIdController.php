@@ -15,10 +15,10 @@ class SnowFlakeIdController extends Controller
     {
         //
         $output = [];
-        for ($i=0 ; $i < $request->get('count',1)  ; $i++ ) {
+        for ($i = 0; $i < $request->input('count', 1); $i++) {
             $output[] = app('snowflake')->id();
         }
-        return $this->ok(['rows'=>$output,'count'=>count($output)]);
+        return $this->ok(['rows' => $output, 'count' => count($output)]);
     }
 
     /**

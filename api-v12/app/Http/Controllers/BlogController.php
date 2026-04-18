@@ -187,7 +187,7 @@ class BlogController extends Controller
     // 搜索
     public function search(Request $request)
     {
-        $query = $request->get('q');
+        $query = $request->input('q');
 
         if (empty($query)) {
             return redirect()->route('blog.index');

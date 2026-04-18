@@ -97,7 +97,7 @@ class TaskStatusController extends Controller
             return $this->error('no status', 400, 400);
         }
 
-        $task->status = $request->get('status');
+        $task->status = $request->input('status');
         $task->editor_id = $user['user_uid'];
         $task->save();
         if ($task->type === 'workflow') {
@@ -108,7 +108,7 @@ class TaskStatusController extends Controller
                 ]
             );
         }
-        switch ($request->get('status')) {
+        switch ($request->input('status')) {
             case 'published':
                 $this->pushChange('published', $id);
                 # 开启子任务

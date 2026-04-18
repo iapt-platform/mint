@@ -34,17 +34,17 @@ class AiAssistantController extends Controller
             ->orWhere('privacy', 'public')
             ->orWhereIn('uid', $resId);
         if ($request->has('keyword')) {
-            $table = $table->where('name', 'like', '%' . $request->get('keyword') . '%');
+            $table = $table->where('name', 'like', '%' . $request->input('keyword') . '%');
         }
         $count = $table->count();
 
         $table = $table->orderBy(
-            $request->get('order', 'created_at'),
-            $request->get('dir', 'asc')
+            $request->input('order', 'created_at'),
+            $request->input('dir', 'asc')
         );
 
-        $table = $table->skip($request->get("offset", 0))
-            ->take($request->get('limit', 1000));
+        $table = $table->skip($request->input("offset", 0))
+            ->take($request->input('limit', 1000));
 
         $result = $table->get();
 

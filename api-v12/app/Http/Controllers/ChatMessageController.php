@@ -20,11 +20,11 @@ class ChatMessageController extends Controller
     public function index(Request $request)
     {
         //
-        $query = ChatMessage::where('chat_id', $request->get('chat'));
+        $query = ChatMessage::where('chat_id', $request->input('chat'));
 
         $total = $query->count();
 
-        $messages = $query->orderBy('id')->paginate($request->get('limit', 500));
+        $messages = $query->orderBy('id')->paginate($request->input('limit', 500));
 
         return $this->ok([
             'data' => ChatMessageResource::collection($messages),

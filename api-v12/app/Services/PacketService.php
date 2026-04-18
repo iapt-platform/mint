@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\Models\Channel;
-use App\Models\Sentence;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 use App\Http\Api\ChannelApi;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\App;
 
 /**
  * PacketService
@@ -42,18 +44,18 @@ class PacketService
      */
     private array $tempFiles = [];
 
+
     /**
-     * 构造函数
+     *
      *
      * @param string $paliChannelUid 巴利原文的channel_uid
      * @param array $translationChannelUids 译文版本的channel_uid数组
      */
-    public function __construct(array $translationChannelUids)
+    public function channels(array $translationChannelUids)
     {
         $this->paliChannelUid = ChannelApi::getSysChannel('_System_Pali_VRI_');
         $this->translationChannelUids = $translationChannelUids;
     }
-
     /**
      * 执行导出并打包
      *
@@ -303,5 +305,51 @@ class PacketService
         }
 
         rmdir($dir);
+    }
+
+    public function index(?string $id = null)
+    {
+        $key = '/offline/index';
+
+        if (!Cache::has($key)) {
+            return [];
+        }
+        $fileInfo = Cache::get($key);
+        $output = [];
+        foreach ($fileInfo as $key => $file) {
+            if ($id) {
+                if ($file['id'] !== $id) {
+                    continue;
+                }
+            }
+            $zipFile = $file['filename'];
+            $bucket = config('mint.attachments.bucket_name.temporary');
+            $tmpFile =  $bucket . '/' . $zipFile;
+            $url = array();
+            foreach (config('mint.server.cdn_urls') as $key => $cdn) {
+                $url[] = [
+                    'link' => $cdn . '/' . $zipFile,
+                    'hostname' => 'cdn-' . $key,
+                ];
+            }
+            if (App::environment('local')) {
+                $s3Link = Storage::url($tmpFile);
+            } else {
+                try {
+                    $s3Link = Storage::temporaryUrl($tmpFile, now()->addDays(2));
+                } catch (\Exception $e) {
+                    Log::error('offline-index {Exception}', ['exception' => $e]);
+                    continue;
+                }
+            }
+            $url[] = [
+                'link' => $s3Link,
+                'hostname' => 'Amazon cloud storage(Hongkong)',
+            ];
+            $file['url'] = $url;
+            Log::debug('offline-index: file info=', ['data' => $file]);
+            $output[] = $file;
+        }
+        return $output;
     }
 }
