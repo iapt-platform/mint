@@ -11,21 +11,47 @@ class HitItemDTO
         public string $title,
         public string $path,
         public array $category,
+        public string $highlight,
+
     ) {}
 
     public static function fromArray(array $data): self
     {
         $source = $data['_source'];
+        $highlight = $data['highlight'];
+        $highlightArray = [];
+        if (is_array($highlight)) {
+            foreach ($highlight as $key => $value) {
+                $highlightArray = array_merge($highlightArray, $value);
+            }
+        }
+
+        $content = $source['content'];
+        $contentArray = [];
+        if (is_array($content)) {
+            foreach ($content as $key => $value) {
+                $contentArray[] = $value;
+            }
+        }
+        $category = [];
+        if (is_array($source['category'])) {
+            $category = $source['category'];
+        } else {
+            $category = [$source['category']];
+        }
 
         return new self(
             id: $source['id'],
             score: $data['_score'],
             title: $source['title']['pali'] ?? '',
-            content: $source['content']['pali'] ?? '',
+            content: implode('', $contentArray),
             path: $source['path'] ?? '',
-            category: $source['category'] ?? [],
+            category: $category,
+            highlight: implode('', $highlightArray),
         );
     }
+
+
 
     /**
      * 提取 para 引用ID（核心逻辑🔥）
