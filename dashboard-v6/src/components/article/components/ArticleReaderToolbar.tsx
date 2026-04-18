@@ -117,33 +117,23 @@ const TypeArticleReaderToolbarWidget = ({
                 },
                 {
                   label: intl.formatMessage({
-                    id: "buttons.edit",
+                    id: "buttons.get_template",
                   }),
-                  key: "edit",
-                  icon: <EditOutlined />,
-                  disabled: !editable,
-                },
-                {
-                  label: intl.formatMessage({
-                    id: "buttons.open.in.studio",
-                  }),
-                  key: "open-studio",
-                  icon: <EditOutlined />,
-                  disabled: user ? false : true,
-                },
-                {
-                  label: "获取文章引用模版",
                   key: "tpl",
                   icon: <FileOutlined />,
                 },
                 {
-                  label: "创建副本",
+                  label: intl.formatMessage({
+                    id: "buttons.duplicate",
+                  }),
                   key: "fork",
                   icon: <CopyOutlined />,
                   disabled: user ? false : true,
                 },
                 {
-                  label: "字数统计",
+                  label: intl.formatMessage({
+                    id: "buttons.word_count",
+                  }),
                   key: "word-count",
                   icon: <InfoCircleOutlined />,
                 },
