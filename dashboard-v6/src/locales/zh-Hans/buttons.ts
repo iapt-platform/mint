@@ -114,6 +114,9 @@ const items = {
   "buttons.ai-models": "AI模型",
   "buttons.new": "新建",
   "buttons.sign-up": "注册",
+  "buttons.get_template": "获取引用模版",
+  "buttons.duplicate": "创建副本",
+  "buttons.word_count": "字数统计",
 };
 
 export default items;
