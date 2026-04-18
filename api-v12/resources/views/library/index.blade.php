@@ -4,7 +4,7 @@
 @section('title', __('labels.home'))
 
 @section('hero')
-<section class="hero-section">
+<section class="hero-section" style="background-image: url('{{ URL::asset("assets/images/hero-2.jpg") }}')">
 
     <div class="hero-overlay"></div>
 
