@@ -424,6 +424,17 @@ class OpenSearchService
                 $query = $this->buildFuzzyQuery($params['query']);
         }
 
+        if (!empty($params['highlight_pre_tags'])) {
+            $highlight_pre_tags = $params['highlight_pre_tags'];
+        } else {
+            $highlight_pre_tags = ['<mark>'];
+        }
+        if (!empty($params['highlight_post_tags'])) {
+            $highlight_post_tags = $params['highlight_post_tags'];
+        } else {
+            $highlight_post_tags = ['</mark>'];
+        }
+
         // ---------- 最终 DSL ----------
         $dsl = [
             'from' => $from,
@@ -451,8 +462,8 @@ class OpenSearchService
                 "fragmenter" => "sentence",
                 "fragment_size" => 200,
                 "number_of_fragments" => 1,
-                'pre_tags' => ['_'],
-                'post_tags' => ['_'],
+                'pre_tags' => $highlight_pre_tags,
+                'post_tags' => $highlight_post_tags,
             ],
         ];
 
