@@ -5,7 +5,7 @@
 <div class="wiki-home-container">
     {{-- 中央法轮图 --}}
     <div class="dharma-wheel-wrapper">
-        <img src="{{ asset('images/dharma-wheel.svg') }}" alt="Dharma Wheel" class="dharma-wheel-img">
+        <img src="{{ asset('assets/images/dhamma-wheel.svg') }}" alt="Dharma Wheel" class="dharma-wheel-img">
     </div>
 
     {{-- 欢迎标题 --}}
