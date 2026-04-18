@@ -2,3 +2,4 @@
 /dist/
 /package-lock.json
 /.env.local
+/.env.production.local
