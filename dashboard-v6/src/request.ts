@@ -3,12 +3,12 @@ import { GraphQLError } from "graphql";
 import { get as get_token } from "./reducers/session";
 
 export class HttpError extends Error {
-  constructor(
-    public status: number,
-    message?: string
-  ) {
+  status: number;
+
+  constructor(status: number, message?: string) {
     super(message ?? `HTTP ${status}`);
     this.name = "HttpError";
+    this.status = status;
   }
 }
 
