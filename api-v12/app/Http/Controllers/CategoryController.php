@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\DB;
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
@@ -12,7 +14,7 @@ use App\Models\TagMap;
 class CategoryController extends Controller
 {
     protected static int $nextId = 1;
-    public function index()
+    public function home()
     {
         $categories = $this->loadCategories();
 
@@ -32,8 +34,28 @@ class CategoryController extends Controller
         return view('library.index', compact('categoryData', 'categories', 'update'));
     }
 
-    public function show($id)
+
+    public function index()
     {
+        $categories = $this->loadCategories();
+
+        // 获取一级分类和对应的书籍
+        $categoryData = [];
+        foreach ($categories as $category) {
+            if ($category['level'] == 1) {
+                $children = $this->subCategories($categories, $category['id']);
+                $categoryData[] = [
+                    'category' => $category,
+                    'children' => $children,
+                ];
+            }
+        }
+
+        return view('library.index', compact('categoryData', 'categories'));
+    }
+    public function category(int $id)
+    {
+
         $categories = $this->loadCategories();
 
         $currentCategory = collect($categories)->firstWhere('id', $id);
@@ -53,6 +75,8 @@ class CategoryController extends Controller
 
         return view('library.category', compact('currentCategory', 'subCategories', 'categoryBooks', 'breadcrumbs'));
     }
+
+
 
     private function subCategories($categories, int $id)
     {
@@ -163,7 +187,7 @@ class CategoryController extends Controller
         return $flat;
     }
 
-    public static function flattenWithIds(array $tree, int $parentId = 0, int $level = 1): array
+    public static function flattenWithIds(array $tree,  int $parentId = 0, int $level = 1): array
     {
 
         $flat = [];
@@ -184,7 +208,7 @@ class CategoryController extends Controller
 
             if (isset($node['children']) && is_array($node['children'])) {
                 $childrenLevel = $level + 1;
-                $flat = array_merge($flat, self::flattenWithIds($node['children'], $currentId, $childrenLevel));
+                $flat = array_merge($flat, self::flattenWithIds($node['children'],  $currentId, $childrenLevel));
             }
         }
 
