@@ -1,0 +1,20 @@
+openapi: 3.0.0
+info:
+  title: Rhododendron
+  description: A LLM service
+  version: 2026.4.19
+servers:
+  - url: http://192.168.0.10
+paths:
+  /users:
+    get:
+      summary: Returns a list of users
+      responses:
+        "200":
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
