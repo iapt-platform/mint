@@ -12,7 +12,7 @@
 <li class="breadcrumb-item active">{{ $breadcrumb['name'] }}</li>
 @else
 <li class="breadcrumb-item">
-    <a href="{{ route('library.category.show', $breadcrumb['id']) }}">{{ $breadcrumb['name'] }}</a>
+    <a href="{{ route('library.tipitaka.category', ['id'=>$breadcrumb['id']]) }}">{{ $breadcrumb['name'] }}</a>
 </li>
 @endif
 @endforeach
@@ -36,7 +36,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card">
                     <div class="card-body text-center">
-                        <a href="{{ route('library.category.show', $subCategory['id']) }}" class="btn btn-primary">
+                        <a href="{{ route('library.tipitaka.category', ['id'=>$subCategory['id']]) }}" class="btn btn-primary">
                             {{ $subCategory['name'] }}
                         </a>
                     </div>

@@ -57,7 +57,7 @@
                             {{ $data['category']['name'] }}
                         </h3>
                         <div class="card-actions">
-                            <a href="{{ route('library.category.show', $data['category']['id']) }}"
+                            <a href="{{ route('library.tipitaka.category', ['id'=>$data['category']['id']]) }}"
                                 class="btn btn-primary btn-sm">
                                 {{ __('buttons.more') }}
                                 <svg class="icon ms-1" width="24" height="24">
@@ -70,7 +70,7 @@
                     <div class="card-body">
                         @foreach($data['children'] as $child)
                         <div class="mb-1">
-                            <a href="{{ route('library.category.show', $child['id']) }}">
+                            <a href="{{ route('library.tipitaka.category', ['id'=>$child['id']]) }}">
                                 {{ $child['name'] }}
                             </a>
                         </div>
@@ -80,7 +80,7 @@
             </div>
             @endforeach
         </div>
-
+        @isset($update)
         <div class="card h-100">
             <div class="card-header">
                 <h3 class="card-title">
@@ -91,6 +91,7 @@
                 @include('components.book-list', ['books' => $update])
             </div>
         </div>
+        @endisset
     </div>
 </div>
 @endsection
