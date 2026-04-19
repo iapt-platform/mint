@@ -1,0 +1,23 @@
+[project]
+name = "rhododendron"
+version = "2026.4.19"
+authors = [
+    { name = "Visuddhinanda", email = "visuddhinanda@gmail.com" },
+    { name = "Kassapa", email = "ven.kassapa@qq.com" },
+]
+description = "A LLM service"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+dependencies = ["bottle>=0.13", "langchain>=1.2"]
+
+[project.urls]
+Homepage = "https://github.com/iapt-platform/mint/tree/master/rhododendron"
+Issues = "https://github.com/iapt-platform/mint/issues"
+
+[project.scripts]
+rhododendron = "rhododendron:main_cli"
