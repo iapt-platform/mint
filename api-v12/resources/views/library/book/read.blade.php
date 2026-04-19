@@ -1,3 +1,4 @@
+{{-- api-v12/resources/views/library/book/read.blade.php --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 

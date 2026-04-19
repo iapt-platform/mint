@@ -1,5 +1,7 @@
 // resources/js/app.js
-import "./bootstrap";
-import "./term-tooltip";
+import './bootstrap';
+import { initNavbar } from './modules/navbar';
 
-import "@tabler/core/dist/js/tabler.min.js";
+document.addEventListener('DOMContentLoaded', () => {
+    initNavbar();
+});

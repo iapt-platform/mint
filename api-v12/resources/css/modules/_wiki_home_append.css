@@ -1,0 +1,163 @@
+/* ══════════════════════════════════════════
+   十五、Wiki 首页（home.blade.php）
+   替代原 home.blade.php 内联 <style>，风格与 wiki 整体保持一致
+   ══════════════════════════════════════════ */
+
+.wiki-home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 300px);
+    padding: 3rem 1.5rem;
+}
+
+/* ── 法轮图标 ── */
+.wiki-home-wheel {
+    margin-bottom: 1.5rem;
+}
+
+.wiki-home-wheel-img {
+    width: 120px;
+    height: auto;
+    opacity: 0.85;
+    transition: transform 0.3s ease;
+}
+
+.wiki-home-wheel-img:hover {
+    transform: scale(1.05);
+}
+
+/* ── 标题 ── */
+.wiki-home-title {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.wiki-home-title h1 {
+    font-family: "Noto Serif", Georgia, serif;
+    font-size: 2.25rem;
+    font-weight: 600;
+    color: var(--tblr-body-color);
+    margin-bottom: 0.5rem;
+}
+
+/* ── 搜索框 ── */
+.wiki-home-search {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto 1.5rem;
+}
+
+/* ── 热门标签 ── */
+.wiki-home-hot-tags {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-size: 0.9rem;
+}
+
+.wiki-hot-tag {
+    display: inline-block;
+    padding: 0.3rem 0.75rem;
+    background: var(--tblr-bg-surface-secondary);
+    border: 1px solid var(--tblr-border-color);
+    border-radius: 20px;
+    color: var(--tblr-secondary);
+    font-size: 0.8125rem;
+    text-decoration: none;
+    margin: 2px;
+    transition: background 0.12s, color 0.12s;
+}
+
+.wiki-hot-tag:hover {
+    background: var(--wp-brand-light);
+    border-color: var(--wp-brand);
+    color: var(--wp-brand-dark);
+}
+
+/* ── 语言选择 ── */
+.wiki-home-languages {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+}
+
+.wiki-home-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    gap: 1.5rem;
+    color: var(--tblr-secondary);
+    font-size: 0.875rem;
+}
+
+.wiki-home-divider::before,
+.wiki-home-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--tblr-border-color);
+}
+
+.wiki-language-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.wiki-language-tag {
+    display: inline-block;
+    padding: 0.4rem 1.125rem;
+    background: var(--tblr-bg-surface-secondary);
+    border: 1px solid var(--tblr-border-color);
+    border-radius: 30px;
+    color: var(--tblr-body-color);
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: background 0.12s, border-color 0.12s;
+}
+
+.wiki-language-tag:hover {
+    background: var(--wp-brand-light);
+    border-color: var(--wp-brand);
+    color: var(--wp-brand-dark);
+}
+
+.wiki-language-tag.active {
+    background: var(--wp-brand);
+    border-color: var(--wp-brand);
+    color: #fff;
+}
+
+.wiki-language-tag.active:hover {
+    background: var(--wp-brand-dark);
+    border-color: var(--wp-brand-dark);
+}
+
+/* ── 统计 ── */
+.wiki-home-stats {
+    text-align: center;
+    font-size: 0.875rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--tblr-border-color);
+    width: 100%;
+    max-width: 640px;
+}
+
+/* ── 响应式 ── */
+@media (max-width: 768px) {
+    .wiki-home-container {
+        min-height: calc(100vh - 200px);
+        padding: 2rem 1rem;
+    }
+
+    .wiki-home-wheel-img { width: 90px; }
+
+    .wiki-home-title h1  { font-size: 1.75rem; }
+
+    .wiki-language-tag {
+        padding: 0.35rem 0.875rem;
+        font-size: 0.8125rem;
+    }
+}

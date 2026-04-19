@@ -1,0 +1,5 @@
+/* resources/css/components/_card.css
+   通用卡片（title + list 结构）。
+   wiki 专属卡片（.wiki-card、.wiki-sidebar-section）在 modules/_wiki.css 中定义。
+   此文件预留其他栏目卡片扩展。
+*/

@@ -1,4 +1,8 @@
-/* ── 追加到 resources/css/wiki.css 末尾 ── */
+/* resources/css/components/_search-results.css
+   统一搜索结果页组件样式。
+   来源：wiki-search.css（与 wiki.css 末尾重复内容已去重，以 wiki 栏目为准）。
+   适用于 /library/search?type= 所有类型。
+*/
 
 /* ── 搜索栏 ── */
 .wiki-search-bar-wrap {
@@ -24,7 +28,7 @@
 
 /* ── 搜索结果列表容器 ── */
 .wiki-search-results {
-    padding: 0;         /* 覆盖 wiki-card 默认 padding，由卡片自身管理间距 */
+    padding: 0;
 }
 
 /* ── 搜索结果卡片 ── */
@@ -64,7 +68,7 @@
 }
 
 .wiki-search-card-word {
-    font-family: 'Noto Serif', Georgia, serif;
+    font-family: "Noto Serif", Georgia, serif;
     font-size: 0.875rem;
     font-style: italic;
     color: var(--tblr-secondary);
@@ -78,10 +82,9 @@
     margin: 0 0 6px;
 }
 
-/* highlight 高亮词 */
 .wiki-search-card-snippet mark {
-    background: #FAEEDA;
-    color: #854F0B;
+    background: #faeeda;
+    color: #854f0b;
     padding: 1px 2px;
     border-radius: 3px;
     font-style: normal;
@@ -97,23 +100,6 @@
 
 .wiki-search-card-sep {
     color: var(--tblr-border-color-dark, #adb5bd);
-}
-
-/* ── 分类筛选 badge ── */
-.wiki-cat-count {
-    font-size: 0.6875rem;
-    background: var(--tblr-bg-surface-secondary);
-    border: 1px solid var(--tblr-border-color);
-    border-radius: 20px;
-    padding: 1px 7px;
-    color: var(--tblr-secondary);
-    margin-left: auto;
-    flex-shrink: 0;
-}
-
-.wiki-cat-list a {
-    display: flex;           /* 覆盖原 block，让 count badge 右对齐 */
-    align-items: center;
 }
 
 /* ── 空状态 ── */
@@ -149,65 +135,4 @@
 .wiki-empty-desc a {
     color: var(--tblr-primary);
     text-decoration: none;
-}
-
-/* ── 分页 ── */
-.wiki-pagination {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    padding: 1.5rem 0 0.5rem;
-    flex-wrap: wrap;
-}
-
-.wiki-page-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 34px;
-    height: 34px;
-    padding: 0 6px;
-    border-radius: var(--tblr-border-radius);
-    border: 1px solid var(--tblr-border-color);
-    font-size: 0.875rem;
-    color: var(--tblr-body-color);
-    text-decoration: none;
-    background: var(--tblr-bg-surface);
-    transition: background 0.12s, border-color 0.12s;
-    user-select: none;
-}
-
-.wiki-page-btn:hover:not(.wiki-page-btn--active):not(.wiki-page-btn--disabled) {
-    background: var(--tblr-bg-surface-secondary);
-    border-color: var(--tblr-border-color-dark, #adb5bd);
-    color: var(--tblr-body-color);
-    text-decoration: none;
-}
-
-.wiki-page-btn--active {
-    background: var(--tblr-primary);
-    border-color: var(--tblr-primary);
-    color: #fff;
-    font-weight: 500;
-    cursor: default;
-    pointer-events: none;
-}
-
-.wiki-page-btn--disabled {
-    color: var(--tblr-secondary);
-    cursor: default;
-    pointer-events: none;
-    opacity: 0.5;
-}
-
-.wiki-page-ellipsis {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 28px;
-    height: 34px;
-    font-size: 0.875rem;
-    color: var(--tblr-secondary);
-    user-select: none;
 }

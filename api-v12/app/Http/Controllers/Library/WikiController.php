@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Library;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\WikiContentParser;
 use App\Services\TermService;
@@ -95,7 +96,7 @@ HTML,
         ];
 
 
-        return view('wiki.index', [
+        return view('library.wiki.index', [
             'today'         => $today,
             'featured'      => $this->featured($terms),
             'stats'         => $this->mockStats(),
@@ -134,7 +135,7 @@ HTML,
         ];
         $parsed  = WikiContentParser::parse($entry['content']);
 
-        return view('wiki.show', [
+        return view('library.wiki.show', [
             'entry' => array_merge($entry, [
                 'content' => $parsed['content'],
                 'toc'     => $parsed['toc'],
@@ -195,7 +196,7 @@ HTML,
             'meaning'   => '佛陀的偈颂集，佛教最重要的经典之一',
         ];
 
-        return view('wiki.home', [
+        return view('library.wiki.home', [
             'languages'     => $languages,
             'currentLang'   => $lang,
             'stats'         => $stats,

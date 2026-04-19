@@ -54,7 +54,7 @@ class SearchController extends Controller
             'last_page'    => max(1, (int) ceil($dto->hits->total / $perPage)),
         ];
 
-        return view('wiki.search', [
+        return view('library.search', [
             'lang'           => $lang,
             'query'          => $query,
             'results'        => $results,

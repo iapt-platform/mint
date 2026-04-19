@@ -1,0 +1,23 @@
+/* resources/css/components/_card-book.css
+   书籍卡片组件。支持 vertical（封面上、标题下）和 horizontal（封面左、标题右）两种布局。
+   来源：main.css 的 .book-card / .book-cover 段落。
+*/
+
+.book-card {
+    transition: transform 0.2s;
+}
+
+.book-card:hover {
+    transform: translateY(-2px);
+}
+
+.book-cover {
+    height: 200px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .book-cover {
+        height: 150px;
+    }
+}

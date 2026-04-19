@@ -1,3 +1,4 @@
+{{-- api-v12/resources/views/library/anthology/show.blade.php --}}
 @extends('library.layouts.app')
 
 @section('title', $anthology['title'] . ' · 巴利书库')

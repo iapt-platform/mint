@@ -11,7 +11,7 @@ use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\Library\AnthologyController;
 use App\Http\Controllers\Library\AnthologyReadController;
 use App\Http\Controllers\Library\BookController;
-use App\Http\Controllers\WikiController;
+use App\Http\Controllers\Library\WikiController;
 use App\Http\Controllers\Library\SearchController;
 
 /*
