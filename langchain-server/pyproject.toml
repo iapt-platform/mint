@@ -18,3 +18,6 @@ dependencies = ["bottle>=0.13", "langchain>=1.2"]
 [project.urls]
 Homepage = "https://github.com/iapt-platform/mint/tree/master/rhododendron"
 Issues = "https://github.com/iapt-platform/mint/issues"
+
+[project.scripts]
+rhododendron = "rhododendron:main_cli"
