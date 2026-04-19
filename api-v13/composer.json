@@ -10,10 +10,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "aws/aws-sdk-php": "^3.379",
+        "casbin/casbin": "^4.1",
+        "firebase/php-jwt": "^7.0",
+        "guzzlehttp/guzzle": "^7.10",
         "inertiajs/inertia-laravel": "^3.0",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
-        "laravel/wayfinder": "^0.1.14"
+        "laravel/wayfinder": "^0.1.14",
+        "opensearch-project/opensearch-php": "^2.6",
+        "phpoffice/phpspreadsheet": "^5.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24",

@@ -4,7 +4,7 @@ set -e
 
 git config --global --add safe.directory "$(dirname -- "$(realpath -- "$PWD")")"
 
-composer8.5 require --no-scripts \
+composer require --no-scripts \
     guzzlehttp/guzzle opensearch-project/opensearch-php phpoffice/phpspreadsheet aws/aws-sdk-php firebase/php-jwt casbin/casbin
 
 npm install --save \
