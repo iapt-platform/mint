@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\PaliText;
@@ -13,6 +14,22 @@ use App\Models\TagMap;
 
 class CategoryController extends Controller
 {
+    // 封面渐变色池：uid 首字节取余循环，保证同一文集颜色稳定
+    private array $coverGradients = [
+        'linear-gradient(160deg, #2d1020, #ae6b8b)',
+        'linear-gradient(160deg, #1a2d10,rgba(75, 114, 36, 0.61))',
+        'linear-gradient(160deg, #0d1f3c,rgb(55, 98, 150))',
+        'linear-gradient(160deg, #2d1020,rgb(151, 69, 94))',
+        'linear-gradient(160deg, #1a1a2d,rgb(76, 68, 146))',
+        'linear-gradient(160deg, #1a2820,rgb(55, 124, 99))',
+    ];
+    // -------------------------------------------------------------------------
+    // 从 uid / id 字符串中提取一个稳定的整数，用于色池取余
+    // -------------------------------------------------------------------------
+    private function colorIndex(string $uid): int
+    {
+        return hexdec(substr(str_replace('-', '', $uid), 0, 4)) % 255;
+    }
     protected static int $nextId = 1;
     public function home()
     {
@@ -73,7 +90,7 @@ class CategoryController extends Controller
         // 获取面包屑
         $breadcrumbs = $this->getBreadcrumbs($currentCategory, $categories);
 
-        return view('library.category', compact('currentCategory', 'subCategories', 'categoryBooks', 'breadcrumbs'));
+        return view('library.tipitaka.category', compact('currentCategory', 'subCategories', 'categoryBooks', 'breadcrumbs'));
     }
 
 
@@ -166,13 +183,23 @@ class CategoryController extends Controller
                 return $item->book == $book->book
                     && $item->paragraph == $book->para;
             })?->pcd_book_id;
+
+            $coverFile = "/assets/images/cover/zh-hans/1/{$pcd_book_id}.png";
+            if (File::exists(public_path($coverFile))) {
+                $coverUrl = $coverFile;
+            } else {
+                $coverUrl = null;
+            }
+            $colorIdx = $this->colorIndex($book->uid);
+
             $categoryBooks[] = [
                 "id" => $book->uid,
                 "title" => $title,
                 "author" => $book->channel->name,
                 "publisher" => $book->channel->owner,
                 "type" => __('labels.' . $book->channel->type),
-                "cover" => "/assets/images/cover/zh-hans/1/{$pcd_book_id}.png",
+                "cover" => $coverUrl,
+                'cover_gradient' => $this->coverGradients[$colorIdx % count($this->coverGradients)],
                 "description" => $book->summary ?? "比库戒律的详细说明",
                 "language" => __('language.' . $book->channel->lang),
             ];

@@ -1,579 +1,389 @@
-{{-- api-v12/resources/views/library/book/read.blade.php --}}
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+{{-- resources/views/library/book/read.blade.php
+     全站共用阅读器。供 anthology/read 和 tipitaka/read 路由使用。
+     重构：改为 @extends('layouts.reader')，移除 CDN 引入，JS 提取为模块。
+--}}
+@extends('layouts.reader')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $book['title'] }}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/css/tabler.min.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+@section('title', $book['title'])
 
-    @vite(['resources/css/reader.css', 'resources/js/app.js'])
+@section('body-class', session('theme', 'light') . '-mode')
 
-    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/js/tabler.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{{-- 术语抽屉（所有阅读页统一使用 wiki.term-drawer） --}}
+@push('scripts')
+@vite('resources/js/modules/term-tooltip.js')
+@endpush
 
+@section('reader-content')
 
-</head>
+{{-- 术语抽屉 --}}
+<x-wiki.term-drawer />
 
+{{-- Navbar --}}
+<header class="navbar navbar-expand-md navbar-light d-print-none">
+    <div class="container-xl">
+        <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#tocDrawer"
+            aria-controls="tocDrawer">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-<body class="{{ session('theme', 'light') }}-mode">
-    <x-term-drawer />
-
-    <!-- Navbar -->
-    <header class="navbar navbar-expand-md navbar-light d-print-none">
-        <div class="container-xl">
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocDrawer" aria-controls="tocDrawer">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            {{-- 面包屑：文集标题 > 文章标题 --}}
-            <div class="navbar-brand d-flex flex-column lh-1">
-                @if(!empty($book['anthology']))
-                <small class="text-muted" style="font-size:.75rem;">
-                    <a href="{{ route('library.anthology.show', $book['anthology']['id']) }}" class="text-muted text-decoration-none">
-                        {{ $book['anthology']['title'] }}
-                    </a>
-                </small>
-                @endif
-            </div>
-            <div class="navbar-nav flex-row order-md-last align-items-center">
-                {{-- Desktop 编辑器按钮 --}}
-                @if(!empty($editor_link))
-                <div class="nav-item d-none d-md-block me-2">
-                    <a href="{{ $editor_link }}"
-                        target="_blank"
-                        class="nav-link">
-                        <i class="fas fa-pen-to-square me-1"></i>
-                        编辑器
-                    </a>
-                </div>
-
-                {{-- Mobile 编辑器按钮 --}}
-                <div class="nav-item d-md-none me-2">
-                    <a href="{{ $editor_link }}"
-                        target="_blank"
-                        class="nav-link">
-                        <i class="fas fa-pen-to-square"></i>
-                    </a>
-                </div>
-                @endif
-
-                {{-- Desktop 设置按钮 --}}
-                <div class="nav-item d-none d-md-block me-2">
-                    <a href="#"
-                        class="nav-link"
-                        data-bs-toggle="modal"
-                        data-bs-target="#settingsModal">
-                        <i class="fas fa-cog me-1"></i>
-                        设置
-                    </a>
-                </div>
-
-                {{-- Mobile 设置按钮 --}}
-                <div class="nav-item d-md-none me-2">
-                    <a href="#"
-                        class="nav-link"
-                        data-bs-toggle="modal"
-                        data-bs-target="#settingsModal">
-                        <i class="fas fa-cog"></i>
-                    </a>
-                </div>
-                {{-- Desktop Dropdown --}}
-                @if(!empty($channels))
-                <div class="nav-item dropdown d-none d-md-block me-2">
-                    <a href="#" class="nav-link" data-bs-toggle="dropdown">
-                        <i class="fas fa-layer-group me-1"></i>
-                        版本
-                    </a>
-
-                    <div class="dropdown-menu dropdown-menu-end">
-                        @foreach($channels as $channel)
-                        <a class="dropdown-item"
-                            href="{{ request()->fullUrlWithQuery(['channel' => $channel['id']]) }}">
-                            {{ $channel['name'] }}
-                            <small class="text-muted">
-                                ({{ __('language.' . $channel['lang']) }})
-                            </small>
-                        </a>
-                        @endforeach
-                    </div>
-                </div>
-
-                {{-- Mobile Drawer Trigger --}}
-                <div class="nav-item d-md-none me-2">
-                    <a href="#" class="nav-link"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#channelDrawer">
-                        <i class="fas fa-layer-group"></i>
-                    </a>
-                </div>
-                @endif
-                <div class="nav-item">
-                    <a href="#" class="nav-link" id="themeToggle">
-                        <i class="fas fa-moon"></i>
-                    </a>
-                </div>
-                @auth
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown">
-                        <span class="avatar avatar-sm" style="background-image: url({{ auth()->user()->avatar ?? '' }})"></span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" href="#">Profile</a>
-                        <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
-                    </div>
-                </div>
-                @endauth
-            </div>
-        </div>
-    </header>
-
-    <!-- TOC Drawer (Mobile) -->
-    @if(!empty($channels))
-    <div class="offcanvas offcanvas-end"
-        tabindex="-1"
-        id="channelDrawer">
-
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title">选择版本</h5>
-
-            <button type="button"
-                class="btn-close"
-                data-bs-dismiss="offcanvas">
-            </button>
-        </div>
-
-        <div class="offcanvas-body">
-
-            <div class="list-group list-group-flush">
-
-                @foreach($channels as $channel)
-
-                <a
-                    href="{{ request()->fullUrlWithQuery(['channel' => $channel['id']]) }}"
-                    class="list-group-item list-group-item-action">
-
-                    <div class="fw-bold">
-                        {{ $channel['name'] }}
-                    </div>
-
-                    <small class="text-muted">
-                        {{ __('language.' . $channel['lang']) }}
-                    </small>
-
+        <div class="navbar-brand d-flex flex-column lh-1">
+            @if(!empty($book['anthology']))
+            <small class="text-muted" style="font-size:.75rem;">
+                <a href="{{ route('library.anthology.show', $book['anthology']['id']) }}"
+                    class="text-muted text-decoration-none">
+                    {{ $book['anthology']['title'] }}
                 </a>
-
-                @endforeach
-
-            </div>
-
-        </div>
-    </div>
-    @endif
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="tocDrawer" aria-labelledby="tocDrawerLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="tocDrawerLabel">目录</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            @if(isset($book['toc']) && count($book['toc']) > 0)
-            <ul>
-                @foreach ($book['toc'] as $item)
-                <li class="toc_item toc-level-{{ $item['level'] }} {{ $item['active'] ?? false ? 'toc-active' : ($item['disabled'] ? 'toc-disabled' : '') }}">
-                    @if($item['active'] ?? false)
-                    <span title="{{ $item['title'] }}">
-                        {{ $item['title'] }}
-                    </span>
-                    @elseif(!$item['disabled'])
-
-                    @if(isset($anthologyId))
-                    {{-- ✅ 修改1：使用文集阅读路由，传 anthology + article 两个参数 --}}
-                    <a href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $item['id'],'channel' => request('channel')]) }}" title="{{ $item['title'] }}">
-                        @else
-                        <a href="{{ route('library.tipitaka.read', ['id' => $item['id'] ,'channel' => request('channel')]) }}" title="{{ $item['title'] }}">
-                            @endif
-                            {{ $item['title'] }}
-                        </a>
-                        @else
-                        <span title="{{ $item['title'] }}">
-                            {{ $item['title'] }}
-                        </span>
-                        @endif
-                </li>
-                @endforeach
-            </ul>
-            @else
-            <div class="alert alert-warning">此书没有目录</div>
+            </small>
             @endif
         </div>
-    </div>
 
-    <!-- Main Content Area -->
+        <div class="navbar-nav flex-row order-md-last align-items-center">
+
+            {{-- 编辑器按钮 --}}
+            @if(!empty($editor_link))
+            <div class="nav-item me-2">
+                <a href="{{ $editor_link }}" target="_blank" class="nav-link">
+                    <i class="ti ti-pencil me-1 d-none d-md-inline"></i>
+                    <span class="d-none d-md-inline">编辑器</span>
+                    <i class="ti ti-pencil d-md-none"></i>
+                </a>
+            </div>
+            @endif
+
+            {{-- 设置 --}}
+            <div class="nav-item me-2">
+                <a href="#"
+                    class="nav-link"
+                    data-bs-toggle="modal"
+                    data-bs-target="#settingsModal">
+                    <i class="ti ti-settings me-1 d-none d-md-inline"></i>
+                    <span class="d-none d-md-inline">设置</span>
+                    <i class="ti ti-settings d-md-none"></i>
+                </a>
+            </div>
+
+            {{-- 版本切换：desktop 版本在右侧边栏展示，mobile 触发 offcanvas --}}
+            @if(!empty($channels))
+            <div class="nav-item d-md-none me-2">
+                <a href="#" class="nav-link"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#channelDrawer">
+                    <i class="ti ti-layers"></i>
+                </a>
+            </div>
+            @endif
+
+            {{-- 夜间模式 --}}
+            <div class="nav-item">
+                <a href="#" class="nav-link" id="themeToggle">
+                    <i class="ti ti-moon"></i>
+                </a>
+            </div>
+
+            @auth
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link d-flex lh-1 text-reset p-0"
+                    data-bs-toggle="dropdown">
+                    <span class="avatar avatar-sm"
+                        style="background-image: url({{ auth()->user()->avatar ?? '' }})">
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <a class="dropdown-item" href="{{ route('logout') }}">退出</a>
+                </div>
+            </div>
+            @endauth
+
+        </div>
+    </div>
+</header>
+
+{{-- 版本 Offcanvas（mobile） --}}
+@if(!empty($channels))
+<div class="offcanvas offcanvas-end" tabindex="-1" id="channelDrawer">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">选择版本</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="list-group list-group-flush">
+            @foreach($channels as $channel)
+            <a href="{{ request()->fullUrlWithQuery(['channel' => $channel['id']]) }}"
+                class="list-group-item list-group-item-action">
+                <div class="fw-bold">{{ $channel['name'] }}</div>
+                <small class="text-muted">{{ __('language.' . $channel['lang']) }}</small>
+            </a>
+            @endforeach
+        </div>
+    </div>
+</div>
+@endif
+
+{{-- TOC Offcanvas（mobile） --}}
+<div class="offcanvas offcanvas-start" tabindex="-1" id="tocDrawer">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">目录</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        @include('library.book._toc', ['toc' => $book['toc'] ?? []])
+    </div>
+</div>
+
+{{-- 主内容区 --}}
+<div class="container-xl">
     <div class="main-container">
 
-        <!-- TOC Sidebar (Tablet+) -->
+        {{-- TOC 侧边栏（tablet+） --}}
         <div class="toc-sidebar card">
             <div class="card-body">
                 <h5>目录</h5>
-                @if(isset($book['toc']) && count($book['toc']) > 0)
-                <ul>
-                    @foreach ($book['toc'] as $item)
-                    <li class="toc_item toc-level-{{ $item['level'] }} {{ $item['active'] ?? false ? 'toc-active' : ($item['disabled'] ? 'toc-disabled' : '') }}">
-                        @if($item['active'] ?? false)
-                        <span>{{ $item['title'] }}</span>
-                        @elseif(!$item['disabled'])
-                        {{-- --}}
-                        @if(isset($anthologyId))
-                        <a href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $item['id'],'channel' => request('channel')]) }}">
-                            @else
-                            <a href="{{ route('library.tipitaka.read', ['id' => $item['id'],'channel' => request('channel')]) }}">
-                                @endif
-                                {{ $item['title'] }}
-                            </a>
-                            @else
-                            <span>{{ $item['title'] }}</span>
-                            @endif
-                    </li>
-                    @endforeach
-                </ul>
-                @else
-                <div class="alert alert-warning">此书没有目录</div>
-                @endif
+                @include('library.book._toc', ['toc' => $book['toc'] ?? []])
             </div>
         </div>
 
-        <!-- Main Content -->
+        {{-- 正文 --}}
         <div class="content-area card">
             <div class="card-body">
 
-                <div>
-                    <h2>{{ $book['title'] }}</h2>
-                    <p>
-                        <strong>Author:</strong>
-                        <span>
-                            {{ $book['author'] }}
-                            @if(isset($book['publisher']))
-                            @
-                            <a href="{{ route('blog.index', ['user' => $book['publisher']->username]) }}">
-                                {{ $book['publisher']->nickname }}
-                            </a>
-                            @endif
-                        </span>
-                    </p>
+                <h2>{{ $book['title'] }}</h2>
+                <p>
+                    <strong>作者：</strong>
+                    {{ $book['author'] }}
+                    @if(isset($book['publisher']))
+                    @ <a href="{{ route('blog.index', ['user' => $book['publisher']->username]) }}">
+                        {{ $book['publisher']->nickname }}
+                    </a>
+                    @endif
+                </p>
 
-                    <div class="content">
-                        @if(isset($book['content']) && count($book['content']) > 0)
-                        @foreach ($book['content'] as $paragraph)
-                        <div id="para-{{ $paragraph['id'] }}">
-                            @foreach ($paragraph['text'] as $rows)
-                            <div style="display:flex;">
-                                @foreach ($rows as $col)
-                                <div style="flex:1;">
-                                    @if($paragraph['level'] < 8)
-                                        {{-- ✅ 修改3：{!! !!} 不转义，渲染 HTML 内容 --}}
-                                        <h{{ $paragraph['level'] }}>{!! $col !!}</h{{ $paragraph['level'] }}>
-                                        @else
-                                        <p>{!! $col !!}</p>
-                                        @endif
-                                </div>
-                                @endforeach
+                <div class="content">
+                    @if(isset($book['content']) && count($book['content']) > 0)
+                    @foreach ($book['content'] as $paragraph)
+                    <div id="para-{{ $paragraph['id'] }}">
+                        @foreach ($paragraph['text'] as $rows)
+                        <div style="display:flex;">
+                            @foreach ($rows as $col)
+                            <div style="flex:1;">
+                                @if($paragraph['level'] < 8)
+                                    <h{{ $paragraph['level'] }}>{!! $col !!}</h{{ $paragraph['level'] }}>
+                                    @else
+                                    <p>{!! $col !!}</p>
+                                    @endif
                             </div>
                             @endforeach
                         </div>
                         @endforeach
-                        @else
-                        <div>没有内容</div>
-                        @endif
                     </div>
+                    @endforeach
+                    @else
+                    <div>没有内容</div>
+                    @endif
                 </div>
 
-                <!-- Nav buttons -->
+                {{-- 上下翻页 --}}
                 <div class="mt-6 pt-6">
                     <ul class="pagination">
                         @if(!empty($book['pagination']['prev']))
                         <li class="page-item page-prev">
-                            {{-- ✅ 修改2：翻页也用文集路由 --}}
-                            @if(isset($anthologyId))
-                            <a class="page-link"
-                                href="{{ route('library.anthology.read', [
-                                        'anthology' => $anthologyId,
-                                        'article' => $book['pagination']['prev']['id'],
-                                        'channel' => request('channel')
-                                ]) }}">
-                                @else
-                                <a class="page-link" href="{{ route('library.tipitaka.read', [
-                                        'id' => $book['pagination']['prev']['id'],
-                                        'channel' => request('channel')
-                                ]) }}">
-                                    @endif
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                                <path d="M15 6l-6 6l6 6"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="col">
-                                            <div class="page-item-subtitle">上一篇</div>
-                                            <div class="page-item-title">{{ $book['pagination']['prev']['title'] }}</div>
-                                        </div>
+                            <a class="page-link" href="{{ isset($anthologyId)
+                            ? route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $book['pagination']['prev']['id'], 'channel' => request('channel')])
+                            : route('library.tipitaka.read', ['id' => $book['pagination']['prev']['id'], 'channel' => request('channel')]) }}">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M15 6l-6 6l6 6"></path>
+                                        </svg>
                                     </div>
-                                </a>
+                                    <div class="col">
+                                        <div class="page-item-subtitle">上一篇</div>
+                                        <div class="page-item-title">{{ $book['pagination']['prev']['title'] }}</div>
+                                    </div>
+                                </div>
+                            </a>
                         </li>
                         @endif
                         @if(!empty($book['pagination']['next']))
                         <li class="page-item page-next">
-                            @if(isset($anthologyId))
-                            <a class="page-link" href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $book['pagination']['next']['id'],'channel' => request('channel')]) }}">
-                                @else
-                                <a class="page-link" href="{{ route('library.tipitaka.read', ['id' => $book['pagination']['next']['id'],'channel' => request('channel')]) }}">
-                                    @endif
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <div class="page-item-subtitle">下一篇</div>
-                                            <div class="page-item-title">{{ $book['pagination']['next']['title'] }}</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                                <path d="M9 6l6 6l-6 6"></path>
-                                            </svg>
-                                        </div>
+                            <a class="page-link" href="{{ isset($anthologyId)
+                            ? route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $book['pagination']['next']['id'], 'channel' => request('channel')])
+                            : route('library.tipitaka.read', ['id' => $book['pagination']['next']['id'], 'channel' => request('channel')]) }}">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <div class="page-item-subtitle">下一篇</div>
+                                        <div class="page-item-title">{{ $book['pagination']['next']['title'] }}</div>
                                     </div>
-                                </a>
+                                    <div class="col-auto">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M9 6l6 6l-6 6"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
                         </li>
                         @endif
                     </ul>
                 </div>
 
-                <!-- Related Books -->
-                @if(!empty($relatedBooks))
-                <div class="related-books">
-                    <h3>Related Books</h3>
-                    <div class="row row-cards">
-                        @foreach ($relatedBooks as $relatedBook)
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-img-container">
-                                    <img src="{{ $relatedBook['image'] }}" alt="{{ $relatedBook['title'] }}">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ $relatedBook['title'] }}</h5>
-                                    <p class="card-text">{{ $relatedBook['description'] }}</p>
-                                    <a href="{{ $relatedBook['link'] }}" class="btn btn-primary">Read Now</a>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
-
             </div>
         </div>
 
-        <!-- Right Sidebar (Desktop) -->
-        <div class="right-sidebar card">
-            <div class="card-body">
-                @if(!empty($book['downloads']))
-                <h5>下载</h5>
-                <ul class="list-unstyled">
-                    @foreach ($book['downloads'] as $download)
+        {{-- 右侧边栏 --}}
+        <div class="right-sidebar">
+
+            {{-- 版本卡片（desktop，wiki 侧边栏同款） --}}
+            @if(!empty($channels))
+            <div class="reader-channel-card">
+                <div class="reader-channel-title">版本</div>
+                <ul class="reader-channel-list">
+                    @foreach($channels as $channel)
                     <li>
-                        <a href="{{ $download['url'] }}" class="btn btn-outline-primary mb-2 w-100">
-                            <i class="fas fa-download me-2"></i>{{ $download['format'] }}
+                        <a href="{{ request()->fullUrlWithQuery(['channel' => $channel['id']]) }}"
+                            class="{{ request('channel') == $channel['id'] ? 'active' : '' }}">
+                            {{ $channel['name'] }}
+                            <span class="reader-channel-lang">{{ __('language.' . $channel['lang']) }}</span>
                         </a>
                     </li>
                     @endforeach
                 </ul>
-                @endif
+            </div>
+            @endif
 
-                @if(!empty($book['categories']))
-                <h5>分类</h5>
-                @foreach ($book['categories'] as $category)
-                <span class="badge bg-blue text-blue-fg">{{ $category['name'] }}</span>
-                @endforeach
-                @endif
+            {{-- 下载 --}}
+            @if(!empty($book['downloads']))
+            <div class="reader-channel-card">
+                <div class="reader-channel-title">下载</div>
+                <ul class="list-unstyled mb-0">
+                    @foreach ($book['downloads'] as $download)
+                    <li>
+                        <a href="{{ $download['url'] }}" class="btn btn-outline-primary mb-2 w-100">
+                            <i class="ti ti-download me-2"></i>{{ $download['format'] }}
+                        </a>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
 
-                @if(!empty($book['tags']))
-                <h5>标签</h5>
+            {{-- 标签 --}}
+            @if(!empty($book['tags']))
+            <div class="reader-channel-card">
+                <div class="reader-channel-title">标签</div>
                 @foreach ($book['tags'] as $tag)
                 <span class="badge me-1">{{ $tag['name'] }}</span>
                 @endforeach
-                @endif
             </div>
+            @endif
+
         </div>
 
     </div>
+</div>
 
-    <!-- Settings Modal -->
-    <div class="modal modal-blur fade" id="settingsModal" tabindex="-1">
-        <div class="modal-dialog">
-            <form id="settingsForm" class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">阅读设置</h5>
-
-                    <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"></button>
+{{-- 阅读设置 Modal --}}
+<div class="modal modal-blur fade" id="settingsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form id="settingsForm" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">阅读设置</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-4">
+                    <label class="form-label">显示原文</label>
+                    <label class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="showOrigin">
+                        <span class="form-check-label">开启/关闭原文显示</span>
+                    </label>
                 </div>
-
-                <div class="modal-body">
-
-                    {{-- 显示原文 --}}
-                    <div class="mb-4">
-                        <label class="form-label">显示原文</label>
-
-                        <label class="form-check form-switch">
-                            <input class="form-check-input"
-                                type="checkbox"
-                                id="showOrigin">
-
-                            <span class="form-check-label">
-                                开启/关闭原文显示
-                            </span>
-                        </label>
-                    </div>
-
-                    {{-- 界面语言 --}}
-                    <div class="mb-4">
-                        <label class="form-label">界面语言</label>
-
-                        <select class="form-select" id="uiLanguage">
-                            <option value="auto">自动</option>
-                            <option value="zh">简体中文</option>
-                            <option value="en">英文</option>
-                        </select>
-                    </div>
-
-                    {{-- 巴利文脚本 --}}
-                    <div class="mb-4">
-                        <label class="form-label">巴利文脚本</label>
-
-                        <select class="form-select" id="paliScript">
-                            <option value="auto">自动</option>
-                            <option value="roman">罗马</option>
-                            <option value="myanmar">缅文</option>
-                            <option value="thai">泰文</option>
-                        </select>
-                    </div>
-
+                <div class="mb-4">
+                    <label class="form-label">界面语言</label>
+                    <select class="form-select" id="uiLanguage">
+                        <option value="auto">自动</option>
+                        <option value="zh">简体中文</option>
+                        <option value="en">英文</option>
+                    </select>
                 </div>
-
-                <div class="modal-footer">
-
-                    <button type="button"
-                        class="btn btn-link"
-                        data-bs-dismiss="modal">
-                        取消
-                    </button>
-
-                    <button type="submit"
-                        class="btn btn-primary">
-                        确定
-                    </button>
-
+                <div class="mb-4">
+                    <label class="form-label">巴利文脚本</label>
+                    <select class="form-select" id="paliScript">
+                        <option value="auto">自动</option>
+                        <option value="roman">罗马</option>
+                        <option value="myanmar">缅文</option>
+                        <option value="thai">泰文</option>
+                    </select>
                 </div>
-            </form>
-        </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-bs-dismiss="modal">取消</button>
+                <button type="submit" class="btn btn-primary">确定</button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <script>
-        function toggleOriginDisplay(show) {
-            document.querySelectorAll('.origin').forEach(el => {
-                el.style.display = show ? 'unset' : 'none';
-            });
-        }
+@endsection
 
-        function setCookie(name, value, days = 365) {
-            let expires = "";
-            const date = new Date();
-
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-
-            expires = "; expires=" + date.toUTCString();
-
-            document.cookie =
-                name + "=" + encodeURIComponent(value) +
-                expires +
-                "; path=/";
-        }
-
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-
-            const parts = value.split(`; ${name}=`);
-
-            if (parts.length === 2)
-                return decodeURIComponent(parts.pop().split(';').shift());
-
-            return null;
-        }
-
-        // 初始化加载 cookie
-        document.addEventListener('DOMContentLoaded', function() {
-
-            const showOrigin =
-                getCookie('show_origin') === 'true';
-
-            document.getElementById('showOrigin').checked =
-                showOrigin;
-
-            document.getElementById('uiLanguage').value =
-                getCookie('ui_language') || 'auto';
-
-            document.getElementById('paliScript').value =
-                getCookie('pali_script') || 'auto';
-
-            // 应用原文显示设置
-            toggleOriginDisplay(showOrigin);
+@push('scripts')
+<script>
+    // 夜间模式
+    document.getElementById('themeToggle').addEventListener('click', function(e) {
+        e.preventDefault();
+        const isDark = document.body.classList.contains('dark-mode');
+        document.body.classList.toggle('dark-mode', !isDark);
+        document.body.classList.toggle('light-mode', isDark);
+        this.innerHTML = isDark ?
+            '<i class="ti ti-moon"></i>' :
+            '<i class="ti ti-sun"></i>';
+        fetch('{{ route("theme.toggle") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                theme: isDark ? 'light' : 'dark'
+            })
         });
+    });
 
-        // 提交保存
-        document.getElementById('settingsForm')
-            .addEventListener('submit', function(e) {
+    // 阅读设置
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+        return null;
+    }
 
-                e.preventDefault();
+    function setCookie(name, value, days = 365) {
+        const date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + date.toUTCString() + '; path=/';
+    }
 
-                setCookie(
-                    'show_origin',
-                    document.getElementById('showOrigin').checked
-                );
-
-                setCookie(
-                    'ui_language',
-                    document.getElementById('uiLanguage').value
-                );
-
-                setCookie(
-                    'pali_script',
-                    document.getElementById('paliScript').value
-                );
-                toggleOriginDisplay(showOrigin);
-                location.reload();
-            });
-    </script>
-
-    <script>
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.addEventListener('click', (e) => {
-            e.preventDefault();
-            const isDark = document.body.classList.contains('dark-mode');
-            document.body.classList.toggle('dark-mode', !isDark);
-            document.body.classList.toggle('light-mode', isDark);
-            fetch('{{ route("theme.toggle") }}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    theme: isDark ? 'light' : 'dark'
-                })
-            });
-            themeToggle.innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+    function toggleOriginDisplay(show) {
+        document.querySelectorAll('.origin').forEach(el => {
+            el.style.display = show ? 'unset' : 'none';
         });
-    </script>
+    }
 
-</body>
+    document.addEventListener('DOMContentLoaded', function() {
+        const showOrigin = getCookie('show_origin') === 'true';
+        document.getElementById('showOrigin').checked = showOrigin;
+        document.getElementById('uiLanguage').value = getCookie('ui_language') || 'auto';
+        document.getElementById('paliScript').value = getCookie('pali_script') || 'auto';
+        toggleOriginDisplay(showOrigin);
+    });
 
-</html>
+    document.getElementById('settingsForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        setCookie('show_origin', document.getElementById('showOrigin').checked);
+        setCookie('ui_language', document.getElementById('uiLanguage').value);
+        setCookie('pali_script', document.getElementById('paliScript').value);
+        location.reload();
+    });
+</script>
+@endpush

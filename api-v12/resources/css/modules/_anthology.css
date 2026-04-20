@@ -1,0 +1,697 @@
+/* resources/css/modules/_anthology.css
+   文集栏目专属样式。
+   来源：anthology/index.blade.php + anthology/show.blade.php 内联 <style>，
+   两处重复规则已去重，以实际渲染效果为准。
+*/
+
+/* ══════════════════════════════════════════
+   一、封面组件（.book-cover）
+   对应 components/ui/book-cover.blade.php
+   ══════════════════════════════════════════ */
+
+.book-cover {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 尺寸 */
+.book-cover--sm  { width: 34px;  min-width: 34px;  height: 46px; }
+.book-cover--md  { width: 130px; min-width: 130px; height: 180px; }
+.book-cover--lg  { width: 155px; min-width: 155px; height: 215px; border-radius: 3px 9px 9px 3px; }
+
+/* 3D 书脊 */
+.book-cover--3d {
+    box-shadow:
+        -4px 0 0 rgba(0,0,0,.3),
+        -6px 4px 14px rgba(0,0,0,.4),
+        4px 4px 18px rgba(0,0,0,.3);
+}
+
+.book-cover--3d::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 13px;
+    background: linear-gradient(to right, rgba(0,0,0,.4), rgba(0,0,0,.1));
+    border-radius: 3px 0 0 3px;
+    z-index: 2;
+}
+
+/* 纹理叠加 */
+.book-cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        45deg, transparent, transparent 8px,
+        rgba(255,255,255,.015) 8px, rgba(255,255,255,.015) 9px
+    );
+    z-index: 1;
+}
+
+/* 图片封面 */
+.book-cover__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 文字封面 */
+.book-cover__text {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding: 0 .5rem;
+}
+
+.book-cover__title {
+    font-family: 'Noto Serif SC', 'Noto Serif', Georgia, serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.6;
+    letter-spacing: .12em;
+    word-break: break-all;
+}
+
+.book-cover--sm .book-cover__title {
+    font-size: .6rem;
+    letter-spacing: .04em;
+    line-height: 1.3;
+}
+
+.book-cover__divider {
+    width: 28px;
+    height: 1px;
+    background: var(--wp-brand);
+    margin: .5rem auto;
+}
+
+.book-cover__subtitle {
+    font-size: .65rem;
+    color: rgba(255,255,255,.45);
+    letter-spacing: .04em;
+}
+
+/* ══════════════════════════════════════════
+   二、作者头像组件（.author-avatar）
+   对应 components/ui/author-avatar.blade.php
+   ══════════════════════════════════════════ */
+
+.author-avatar {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.author-avatar__img,
+.author-avatar__initials {
+    border-radius: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+/* 尺寸 */
+.author-avatar--sm .author-avatar__img,
+.author-avatar--sm .author-avatar__initials {
+    width: 24px; height: 24px;
+    font-size: .65rem;
+}
+
+.author-avatar--md .author-avatar__img,
+.author-avatar--md .author-avatar__initials {
+    width: 28px; height: 28px;
+    font-size: .68rem;
+}
+
+.author-avatar--lg .author-avatar__img,
+.author-avatar--lg .author-avatar__initials {
+    width: 48px; height: 48px;
+    font-size: .95rem;
+}
+
+.author-avatar__initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #fff;
+}
+
+.author-avatar__name {
+    font-size: .8rem;
+    color: var(--wp-ink-soft);
+    font-weight: 500;
+    display: block;
+}
+
+.author-avatar--lg .author-avatar__name {
+    font-size: .9rem;
+}
+
+.author-avatar__sub {
+    font-size: .72rem;
+    color: var(--wp-ink-muted);
+    display: block;
+}
+
+/* ══════════════════════════════════════════
+   三、文集卡片（.anthology-card）
+   横向布局：封面左 + 内容右
+   ══════════════════════════════════════════ */
+
+.anthology-card {
+    background: var(--wp-card-bg);
+    border: 1px solid var(--wp-border);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    transition: box-shadow .25s, transform .25s;
+    margin-bottom: 1.1rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.anthology-card:hover {
+    box-shadow: 0 8px 28px rgba(200,134,10,.12), 0 2px 8px rgba(0,0,0,.06);
+    transform: translateY(-2px);
+    color: inherit;
+    text-decoration: none;
+}
+
+.anthology-card .book-cover {
+    border-radius: 0;
+}
+
+.anthology-card__body {
+    padding: 1.1rem 1.4rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.anthology-card__title {
+    font-family: 'Noto Serif SC', 'Noto Serif', Georgia, serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--wp-ink);
+    margin-bottom: .35rem;
+    line-height: 1.4;
+}
+
+.anthology-card:hover .anthology-card__title { color: var(--wp-brand); }
+
+.anthology-card__desc {
+    font-size: .8rem;
+    color: var(--wp-ink-muted);
+    margin-bottom: .65rem;
+    line-height: 1.65;
+}
+
+.anthology-card__author { margin-bottom: .7rem; }
+
+.anthology-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .3rem;
+    margin-top: auto;
+}
+
+.anthology-tag {
+    font-size: .7rem;
+    color: var(--wp-ink-muted);
+    background: var(--wp-brand-light);
+    border: 1px solid var(--wp-border);
+    padding: 1px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.anthology-tag--more {
+    background: transparent;
+    border-color: transparent;
+    color: var(--wp-brand);
+}
+
+.anthology-card__meta {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    margin-top: .65rem;
+    padding-top: .65rem;
+    border-top: 1px solid var(--wp-border);
+}
+
+.anthology-meta-item {
+    font-size: .72rem;
+    color: var(--wp-ink-muted);
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+}
+
+/* ══════════════════════════════════════════
+   四、页面头部（index 页）
+   ══════════════════════════════════════════ */
+
+.anthology-page-header {
+    background: linear-gradient(135deg, var(--wp-ink) 0%, #2d2010 100%);
+    padding: 2.25rem 0 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.anthology-page-header::before {
+    content: '藏';
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16rem;
+    font-weight: 700;
+    color: rgba(255,255,255,.03);
+    position: absolute;
+    right: -1rem;
+    top: -2.5rem;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.anthology-page-header h1 {
+    font-family: 'Noto Serif SC', 'Noto Serif', Georgia, serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 .3rem;
+    letter-spacing: .08em;
+}
+
+.anthology-page-header p {
+    color: rgba(255,255,255,.45);
+    font-size: .85rem;
+    margin: 0;
+}
+
+.result-badge {
+    background: var(--wp-brand);
+    color: var(--wp-ink);
+    font-size: .75rem;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin-left: .6rem;
+    vertical-align: middle;
+}
+
+/* ══════════════════════════════════════════
+   五、侧边栏卡片（index + show 共用）
+   ══════════════════════════════════════════ */
+
+.sb-card {
+    background: var(--wp-card-bg);
+    border: 1px solid var(--wp-border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.15rem;
+}
+
+.sb-head {
+    padding: .8rem 1.2rem;
+    border-bottom: 1px solid var(--wp-border);
+    font-family: 'Noto Serif SC', 'Noto Serif', Georgia, serif;
+    font-size: .875rem;
+    font-weight: 600;
+    color: var(--wp-ink-soft);
+    letter-spacing: .04em;
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+}
+
+.sb-head::before {
+    content: '';
+    display: block;
+    width: 3px;
+    height: 13px;
+    background: var(--wp-brand);
+    border-radius: 2px;
+}
+
+/* 侧边栏 meta 行 */
+.smeta-row {
+    display: flex;
+    padding: .7rem 1.2rem;
+    border-bottom: 1px solid var(--wp-border);
+    font-size: .8rem;
+    align-items: flex-start;
+    gap: .45rem;
+}
+
+.smeta-row:last-child { border-bottom: none; }
+
+.smeta-label {
+    color: var(--wp-ink-muted);
+    min-width: 65px;
+    flex-shrink: 0;
+}
+
+.smeta-value {
+    color: var(--wp-ink-soft);
+    font-weight: 500;
+}
+
+.smeta-value a {
+    color: var(--wp-brand);
+    text-decoration: none;
+}
+
+.smeta-value a:hover { text-decoration: underline; }
+
+/* 作者块（show 页侧边栏大头像版） */
+.author-block {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: 1.1rem 1.2rem;
+}
+
+.author-block-name {
+    font-weight: 600;
+    font-size: .9rem;
+    color: var(--wp-ink);
+    margin-bottom: .18rem;
+}
+
+.author-block-stats {
+    font-size: .75rem;
+    color: var(--wp-ink-muted);
+}
+
+.author-bio {
+    font-size: .78rem;
+    color: var(--wp-ink-muted);
+    line-height: 1.65;
+    padding: .9rem 1.2rem 1.1rem;
+    border-top: 1px solid var(--wp-border);
+}
+
+/* 相关文集列表 */
+.related-ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.related-ul li a {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    padding: .7rem 1.2rem;
+    border-bottom: 1px solid var(--wp-border);
+    text-decoration: none;
+    transition: background .15s;
+}
+
+.related-ul li:last-child a { border-bottom: none; }
+.related-ul li a:hover { background: var(--wp-surface-alt); }
+
+.related-t {
+    font-size: .8rem;
+    color: var(--wp-ink-soft);
+    font-weight: 500;
+    margin-bottom: .18rem;
+    line-height: 1.3;
+}
+
+.related-ul li a:hover .related-t { color: var(--wp-brand); }
+
+.related-a {
+    font-size: .7rem;
+    color: var(--wp-ink-muted);
+}
+
+/* 作者列表（index 侧边栏） */
+.author-ul {
+    list-style: none;
+    padding: .35rem 0;
+    margin: 0;
+}
+
+.author-ul li a {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .45rem 1.15rem;
+    text-decoration: none;
+    transition: background .15s;
+}
+
+.author-ul li a:hover { background: var(--wp-surface-alt); }
+
+/* ══════════════════════════════════════════
+   六、文章目录（show 页）
+   ══════════════════════════════════════════ */
+
+.sec-card {
+    background: var(--wp-card-bg);
+    border: 1px solid var(--wp-border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.3rem;
+}
+
+.sec-header {
+    padding: .85rem 1.4rem;
+    border-bottom: 1px solid var(--wp-border);
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+}
+
+.sec-bar {
+    width: 3px;
+    height: 15px;
+    background: var(--wp-brand);
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.sec-title {
+    font-family: 'Noto Serif SC', 'Noto Serif', Georgia, serif;
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--wp-ink-soft);
+    letter-spacing: .04em;
+}
+
+.sec-count {
+    margin-left: auto;
+    font-size: .75rem;
+    color: var(--wp-ink-muted);
+    background: var(--wp-brand-light);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.sec-body {
+    padding: 1.15rem 1.4rem;
+    font-size: .855rem;
+    color: var(--wp-ink-soft);
+    line-height: 1.95;
+}
+
+.sec-body p            { margin-bottom: .8rem; }
+.sec-body p:last-child { margin-bottom: 0; }
+
+/* TOC 列表 */
+.toc-ul {
+    list-style: none;
+    padding: .35rem 0;
+    margin: 0;
+}
+
+.toc-ul li a {
+    display: flex;
+    align-items: center;
+    padding: .65rem 1.4rem;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(232,221,208,.5);
+    transition: background .15s;
+}
+
+.toc-ul li:last-child a { border-bottom: none; }
+.toc-ul li a:hover      { background: var(--wp-surface-alt); }
+
+.toc-num {
+    font-size: .72rem;
+    color: var(--wp-ink-muted);
+    width: 26px;
+    flex-shrink: 0;
+}
+
+.toc-name {
+    font-size: .855rem;
+    color: var(--wp-ink-soft);
+    flex: 1;
+    line-height: 1.4;
+}
+
+.toc-ul li a:hover .toc-name { color: var(--wp-brand); }
+
+.toc-arrow {
+    color: var(--wp-border);
+    font-size: .85rem;
+}
+
+.toc-ul li a:hover .toc-arrow { color: var(--wp-brand); }
+
+/* ══════════════════════════════════════════
+   七、Hero（show 页）
+   ══════════════════════════════════════════ */
+
+.anthology-hero {
+    background: linear-gradient(135deg, var(--wp-ink) 0%, #2d2010 100%);
+    padding: 2.5rem 0;
+}
+
+.hero-inner {
+    display: flex;
+    gap: 2.25rem;
+    align-items: flex-start;
+}
+
+.hero-content { flex: 1; min-width: 0; }
+
+.hero-title {
+    font-family: 'Noto Serif SC', 'Noto Serif', Georgia, serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+    margin-bottom: .4rem;
+}
+
+.hero-subtitle {
+    font-size: .88rem;
+    color: rgba(255,255,255,.45);
+    font-style: italic;
+    letter-spacing: .04em;
+    margin-bottom: 1.1rem;
+}
+
+.hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem;
+    margin-bottom: 1.3rem;
+}
+
+.hero-tag {
+    font-size: .72rem;
+    padding: 2px 9px;
+    border-radius: 20px;
+    background: rgba(200,134,10,.2);
+    color: var(--wp-brand);
+    border: 1px solid rgba(200,134,10,.3);
+}
+
+.hero-info-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.4rem;
+    margin-bottom: 1.3rem;
+}
+
+.hi-item { display: flex; align-items: center; gap: .45rem; }
+
+.hi-label {
+    font-size: .72rem;
+    color: rgba(255,255,255,.4);
+    letter-spacing: .04em;
+    display: block;
+}
+
+.hi-value {
+    font-size: .83rem;
+    color: rgba(255,255,255,.82);
+    display: block;
+}
+
+.hero-desc {
+    font-size: .85rem;
+    color: rgba(255,255,255,.6);
+    line-height: 1.85;
+    margin-bottom: 1.6rem;
+    max-width: 600px;
+}
+
+/* Hero 按钮 */
+.btn-read-primary {
+    background: var(--wp-brand);
+    color: var(--wp-ink);
+    font-weight: 700;
+    font-size: .88rem;
+    padding: .55rem 1.6rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    transition: background .2s, transform .15s;
+}
+
+.btn-read-primary:hover {
+    background: #dea020;
+    color: var(--wp-ink);
+    transform: translateY(-1px);
+}
+
+.btn-outline-hero {
+    background: transparent;
+    color: rgba(255,255,255,.7);
+    font-size: .85rem;
+    padding: .5rem 1.3rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,.2);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    transition: all .2s;
+    margin-left: .65rem;
+}
+
+.btn-outline-hero:hover {
+    border-color: rgba(255,255,255,.5);
+    color: #fff;
+}
+
+/* ══════════════════════════════════════════
+   八、响应式
+   ══════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+    .hero-inner {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .anthology-card {
+        flex-direction: column;
+    }
+
+    .anthology-card .book-cover--md {
+        width: 100%;
+        min-width: unset;
+        height: 90px;
+    }
+}

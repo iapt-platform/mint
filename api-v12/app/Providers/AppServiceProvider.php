@@ -8,7 +8,8 @@ use Godruoyi\Snowflake\LaravelSequenceResolver;
 use App\Tools\QueryBuilderMacro;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use App\Services\RomanizeService;
-
+use Illuminate\Support\Facades\View;
+use App\View\Composers\BlogViewComposer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -42,5 +43,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         QueryBuilder::mixin($queryBuilderMacro = $this->app->make(QueryBuilderMacro::class));
+        View::composer('blog.*', BlogViewComposer::class);
+        View::composer('layouts.blog', BlogViewComposer::class);
     }
 }

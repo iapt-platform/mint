@@ -44,7 +44,7 @@ class BookController extends Controller
             $otherVersions[] = $this->getBookInfo($book);
         });
 
-        return view('library.book.show', compact('book', 'otherVersions'));
+        return view('library.tipitaka.show', compact('book', 'otherVersions'));
     }
 
 

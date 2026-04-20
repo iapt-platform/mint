@@ -1,0 +1,132 @@
+/* resources/css/modules/_tipitaka.css
+   Tipitaka 栏目专属样式。
+   来源：book-list.blade.php / book-item.blade.php 内联样式提取，
+   去除 CDN 引入，风格与 wiki 对齐。
+*/
+
+/* ══════════════════════════════════════════
+   一、书籍卡片（.card-book）
+   纵向：封面上 + 信息下
+   ══════════════════════════════════════════ */
+
+.card-book {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-book:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.card-book__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.card-book__link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 封面：撑满卡片宽度 */
+.card-book .book-cover--md {
+    width: 100%;
+    min-width: unset;
+    height: 200px;
+    border-radius: var(--tblr-border-radius);
+}
+
+@media (max-width: 768px) {
+    .card-book .book-cover--md {
+        height: 150px;
+    }
+}
+
+/* 信息区 */
+.card-book__info {
+    padding: 0.75rem 0 0;
+}
+
+.card-book__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--tblr-body-color);
+    margin-bottom: 0.25rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-book:hover .card-book__title {
+    color: var(--tblr-primary);
+}
+
+.card-book__author {
+    font-size: 0.8125rem;
+    color: var(--tblr-secondary);
+    margin-bottom: 0.25rem;
+}
+
+.card-book__publisher {
+    font-size: 0.8125rem;
+    color: var(--tblr-secondary);
+    margin-bottom: 0.375rem;
+}
+
+.card-book__publisher-link {
+    color: var(--tblr-primary);
+    text-decoration: none;
+}
+
+.card-book__publisher-link:hover {
+    text-decoration: underline;
+}
+
+.card-book__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 0.375rem;
+}
+
+.card-book__badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--tblr-bg-surface-secondary);
+    border: 1px solid var(--tblr-border-color);
+    border-radius: 20px;
+    font-size: 0.6875rem;
+    color: var(--tblr-secondary);
+}
+
+/* ══════════════════════════════════════════
+   二、书籍网格（.book-grid）
+   ══════════════════════════════════════════ */
+
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.25rem;
+}
+
+@media (max-width: 575px) {
+    .book-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.875rem;
+    }
+}
+
+/* ══════════════════════════════════════════
+   三、show 页 — 文字截断
+   ══════════════════════════════════════════ */
+
+.line2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

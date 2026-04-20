@@ -1,97 +1,67 @@
-{{-- api-v12/resources/views/library/index.blade.php --}}
-@extends('library.layouts.app')
+{{-- resources/views/library/index.blade.php
+     Library 门户首页。
+--}}
+@extends('layouts.library')
 
-@section('title', __('labels.home'))
+@section('title', '巴利书库')
 
 @section('hero')
-<section class="hero-section" style="background-image: url('{{ URL::asset("assets/images/hero-2.jpg") }}')">
-
+<section class="hero-section"
+         style="background-image: url('{{ URL::asset('assets/images/hero-2.jpg') }}')">
     <div class="hero-overlay"></div>
-
     <div class="hero-content">
         <h1 class="hero-title">巴利书库</h1>
-        <p class="hero-subtitle">探索wikipali，开启智慧之门</p>
-
+        <p class="hero-subtitle">探索 WikiPāli，开启智慧之门</p>
         <div class="search-box">
-            <div class="input-group">
-                <input
-                    type="text"
-                    class="form-control form-control-lg"
-                    placeholder="搜索图书、作者或主题...">
-
-                <button class="btn btn-primary btn-lg" type="button">
-                    <i class="ti ti-search"></i>
-                </button>
-            </div>
+            <x-ui.search-input
+                :action="route('library.search')"
+                placeholder="搜索图书、作者或主题…"
+                size="lg"
+            />
         </div>
     </div>
-
 </section>
 @endsection
 
-
 @section('content')
-
 <div class="page-body">
     <div class="container-xl">
-        <div class="page-header d-print-none">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h2 class="page-title">巴利书库</h2>
-                    <div class="text-muted mt-1">探索古老的佛教经典</div>
-                </div>
-            </div>
-        </div>
 
-        {{-- ✅ 所有卡片的统一容器 --}}
-        <div class="row g-4">
+        {{-- 分类卡片 --}}
+        <div class="row g-4 mt-1">
             @foreach($categoryData as $data)
-            {{-- ✅ 响应式列 --}}
             <div class="col-12 col-md-6 col-lg-3">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <svg class="icon me-2" width="24" height="24">
-                                <use xlink:href="#tabler-book"></use>
-                            </svg>
-                            {{ $data['category']['name'] }}
-                        </h3>
-                        <div class="card-actions">
-                            <a href="{{ route('library.tipitaka.category', ['id'=>$data['category']['id']]) }}"
-                                class="btn btn-primary btn-sm">
-                                {{ __('buttons.more') }}
-                                <svg class="icon ms-1" width="24" height="24">
-                                    <use xlink:href="#tabler-arrow-right"></use>
-                                </svg>
-                            </a>
-                        </div>
+                <div class="wiki-card h-100">
+                    <div class="wiki-sidebar-title" style="margin-bottom: 0.75rem;">
+                        <i class="ti ti-book me-1"></i>
+                        {{ $data['category']['name'] }}
+                        <a href="{{ route('library.tipitaka.category', ['id' => $data['category']['id']]) }}"
+                           class="btn btn-sm btn-primary ms-auto" style="float:right; font-size: 0.75rem;">
+                            更多 <i class="ti ti-arrow-right"></i>
+                        </a>
                     </div>
-
-                    <div class="card-body">
+                    <ul class="wiki-cat-list">
                         @foreach($data['children'] as $child)
-                        <div class="mb-1">
-                            <a href="{{ route('library.tipitaka.category', ['id'=>$child['id']]) }}">
+                        <li>
+                            <a href="{{ route('library.tipitaka.category', ['id' => $child['id']]) }}">
                                 {{ $child['name'] }}
                             </a>
-                        </div>
+                        </li>
                         @endforeach
-                    </div>
+                    </ul>
                 </div>
             </div>
             @endforeach
         </div>
+
+        {{-- 最近更新 --}}
         @isset($update)
-        <div class="card h-100">
-            <div class="card-header">
-                <h3 class="card-title">
-                    update
-                </h3>
-            </div>
-            <div class="card-body">
-                @include('components.book-list', ['books' => $update])
-            </div>
+        <div class="wiki-card mt-4">
+            <div class="wiki-sidebar-title" style="margin-bottom: 1rem;">最近更新</div>
+            <x-ui.book-grid :books="$update" />
         </div>
         @endisset
+
     </div>
 </div>
 @endsection
