@@ -4,7 +4,7 @@
 @section('title', $currentCategory['name'] . ' · 巴利书库-重构')
 
 @push('styles')
-@vite(['resources/css/modules/_tipitaka.css','resources/css/modules/_wiki.css','resources/css/modules/_anthology.css'])
+@vite(['resources/css/modules/_tipitaka.css'])
 @endpush
 
 @section('breadcrumb')
