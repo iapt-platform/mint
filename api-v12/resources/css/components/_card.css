@@ -1,5 +1,287 @@
 /* resources/css/components/_card.css
-   通用卡片（title + list 结构）。
-   wiki 专属卡片（.wiki-card、.wiki-sidebar-section）在 modules/_wiki.css 中定义。
-   此文件预留其他栏目卡片扩展。
+   全站通用卡片、侧边栏、列表组件。
+   从 _wiki.css 提取，供 wiki / tipitaka / anthology / search 共用。
+   wiki 专属样式（质量徽章、条目头部、term popover 等）保留在 modules/_wiki.css。
 */
+
+/* ══════════════════════════════════════════
+   一、通用卡片
+   ══════════════════════════════════════════ */
+
+.wiki-card {
+    background: var(--tblr-bg-surface);
+    border: 1px solid var(--tblr-border-color);
+    border-radius: var(--tblr-border-radius-lg);
+    padding: 1.5rem;
+}
+
+/* ══════════════════════════════════════════
+   二、侧边栏区块
+   ══════════════════════════════════════════ */
+
+.wiki-sidebar-section {
+    background: var(--tblr-bg-surface);
+    border: 1px solid var(--tblr-border-color);
+    border-radius: var(--tblr-border-radius-lg);
+    padding: 1rem 1.125rem;
+    margin-bottom: 1rem;
+}
+
+.wiki-sidebar-title {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--tblr-secondary);
+    margin-bottom: 0.75rem;
+}
+
+/* ══════════════════════════════════════════
+   三、分类列表
+   ══════════════════════════════════════════ */
+
+.wiki-cat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wiki-cat-list li {
+    margin-bottom: 2px;
+}
+
+.wiki-cat-list a {
+    display: flex;
+    align-items: center;
+    font-size: 0.8125rem;
+    color: var(--tblr-body-color);
+    text-decoration: none;
+    padding: 5px 8px;
+    border-radius: var(--tblr-border-radius);
+    transition: background 0.12s;
+}
+
+.wiki-cat-list a:hover {
+    background: var(--tblr-bg-surface-secondary);
+}
+
+.wiki-cat-list a.active {
+    background: var(--tblr-bg-surface-secondary);
+    font-weight: 500;
+    color: var(--tblr-primary);
+}
+
+.wiki-cat-count {
+    font-size: 0.6875rem;
+    background: var(--tblr-bg-surface-secondary);
+    border: 1px solid var(--tblr-border-color);
+    border-radius: 20px;
+    padding: 1px 7px;
+    color: var(--tblr-secondary);
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════
+   四、TOC 列表
+   ══════════════════════════════════════════ */
+
+.wiki-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wiki-toc-list li {
+    border-bottom: 1px solid var(--tblr-border-color);
+}
+
+.wiki-toc-list li:last-child {
+    border-bottom: none;
+}
+
+.wiki-toc-list a {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--tblr-secondary);
+    text-decoration: none;
+    padding: 5px 0;
+    transition: color 0.12s;
+}
+
+.wiki-toc-list a:hover  { color: var(--tblr-body-color); }
+.wiki-toc-list a.active { color: var(--tblr-body-color); font-weight: 500; }
+
+.wiki-toc-list .toc-level-2 a { padding-left: 0.5rem; }
+.wiki-toc-list .toc-level-3 a { padding-left: 1rem; }
+
+.wiki-toc-num {
+    color: var(--tblr-secondary);
+    margin-right: 5px;
+    font-size: 0.75rem;
+}
+
+/* ══════════════════════════════════════════
+   五、相关条目列表
+   ══════════════════════════════════════════ */
+
+.wiki-related-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wiki-related-list li {
+    border-bottom: 1px solid var(--tblr-border-color);
+}
+
+.wiki-related-list li:last-child { border-bottom: none; }
+
+.wiki-related-list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8125rem;
+    color: var(--tblr-primary);
+    text-decoration: none;
+    padding: 6px 0;
+}
+
+.wiki-related-zh {
+    font-size: 0.75rem;
+    color: var(--tblr-secondary);
+}
+
+/* ══════════════════════════════════════════
+   六、元信息表格
+   ══════════════════════════════════════════ */
+
+.wiki-meta-table {
+    width: 100%;
+    font-size: 0.8125rem;
+    border-collapse: collapse;
+}
+
+.wiki-meta-table td { padding: 3px 0; }
+
+.wiki-meta-table td:last-child {
+    text-align: right;
+    color: var(--tblr-secondary);
+}
+
+/* ══════════════════════════════════════════
+   七、条目头部（通用标题区）
+   ══════════════════════════════════════════ */
+
+.wiki-entry-header { margin-bottom: 1.25rem; }
+
+.wiki-entry-title {
+    font-family: "Noto Serif", Georgia, serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0.375rem 0 0.75rem;
+    color: var(--tblr-body-color);
+}
+
+/* ══════════════════════════════════════════
+   八、精选卡片网格（tipitaka index / wiki index 共用）
+   ══════════════════════════════════════════ */
+
+.wiki-featured-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.wiki-featured-card {
+    border: 1px solid var(--tblr-border-color);
+    border-radius: var(--tblr-border-radius);
+    padding: 10px 12px;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    transition: background 0.12s;
+    color: var(--tblr-body-color);
+}
+
+.wiki-featured-card:hover {
+    background: var(--tblr-bg-surface-secondary);
+    color: var(--tblr-body-color);
+}
+
+.wiki-featured-label {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tblr-secondary);
+    margin-bottom: 5px;
+}
+
+.wiki-featured-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.wiki-featured-pali {
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--tblr-secondary);
+}
+
+@media (max-width: 768px) {
+    .wiki-featured-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* ══════════════════════════════════════════
+   九、作者头像组件（从 _anthology.css 提取）
+   ══════════════════════════════════════════ */
+
+.author-avatar {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.author-avatar__img,
+.author-avatar__initials {
+    border-radius: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.author-avatar--sm .author-avatar__img,
+.author-avatar--sm .author-avatar__initials { width: 24px; height: 24px; font-size: .65rem; }
+
+.author-avatar--md .author-avatar__img,
+.author-avatar--md .author-avatar__initials { width: 28px; height: 28px; font-size: .68rem; }
+
+.author-avatar--lg .author-avatar__img,
+.author-avatar--lg .author-avatar__initials { width: 48px; height: 48px; font-size: .95rem; }
+
+.author-avatar__initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #fff;
+}
+
+.author-avatar__name {
+    font-size: .8rem;
+    color: var(--tblr-body-color);
+    font-weight: 500;
+    display: block;
+}
+
+.author-avatar--lg .author-avatar__name { font-size: .9rem; }
+
+.author-avatar__sub {
+    font-size: .72rem;
+    color: var(--tblr-secondary);
+    display: block;
+}

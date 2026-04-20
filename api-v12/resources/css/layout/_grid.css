@@ -1,9 +1,9 @@
 /* resources/css/layout/_grid.css
    全站断点定义 + 通用栏容器。
-   各栏目三栏/两栏 grid 在此定义基础变量，具体 grid-template 在各 module 实现。
+   包含从 _wiki.css 提取的三栏布局，供所有栏目复用。
 */
 
-/* ── 断点 token（与 Tabler Bootstrap 保持一致） ── */
+/* ── 断点 token ── */
 :root {
     --bp-sm:  576px;
     --bp-md:  768px;
@@ -11,7 +11,64 @@
     --bp-xl:  1200px;
 }
 
-/* ── 通用两栏容器 ── */
+/* ══════════════════════════════════════════
+   三栏布局（原 .wiki-layout，全站通用）
+   ══════════════════════════════════════════ */
+
+.wiki-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr 200px;
+    grid-template-areas: "left main right";
+    gap: 1.5rem;
+    align-items: start;
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
+}
+
+.wiki-sidebar-left  { grid-area: left; }
+.wiki-sidebar-right { grid-area: right; }
+
+.wiki-main {
+    grid-area: main;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (max-width: 992px) {
+    .wiki-layout {
+        grid-template-columns: 180px 1fr;
+        grid-template-areas:
+            "left main"
+            "left right";
+    }
+
+    .wiki-sidebar-right {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .wiki-sidebar-right .wiki-sidebar-section {
+        flex: 1 1 180px;
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .wiki-layout {
+        grid-template-columns: 1fr;
+        grid-template-areas: "main" "right" "left";
+    }
+
+    .wiki-sidebar-left,
+    .wiki-sidebar-right {
+        display: none;
+    }
+}
+
+/* ── 通用两栏容器（预留） ── */
 .layout-2col {
     display: grid;
     grid-template-columns: 220px 1fr;
@@ -21,26 +78,8 @@
     padding-bottom: 3rem;
 }
 
-/* ── 通用三栏容器 ── */
-.layout-3col {
-    display: grid;
-    grid-template-columns: 200px 1fr 200px;
-    gap: 1.5rem;
-    align-items: start;
-    padding-top: 1.5rem;
-    padding-bottom: 3rem;
-}
-
-/* ── 响应式降级 ── */
-@media (max-width: 992px) {
-    .layout-3col {
-        grid-template-columns: 180px 1fr;
-    }
-}
-
 @media (max-width: 768px) {
-    .layout-2col,
-    .layout-3col {
+    .layout-2col {
         grid-template-columns: 1fr;
     }
 }
