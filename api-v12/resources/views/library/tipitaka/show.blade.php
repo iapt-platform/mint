@@ -4,7 +4,7 @@
 @section('title', $book['title'] . ' · 巴利书库')
 
 @push('styles')
-    @vite('resources/css/modules/_tipitaka.css')
+@vite('resources/css/modules/_tipitaka.css')
 @endpush
 
 @section('breadcrumb')
@@ -32,13 +32,12 @@
                     :title="$book['title']"
                     size="md"
                     :style3d="false"
-                    style="width: 100%; min-width: unset; height: 220px;"
-                />
+                    style="width: 100%; min-width: unset; height: 220px;" />
 
                 {{-- 操作按钮 --}}
                 <div style="margin-top: 1rem;">
                     <a href="{{ route('library.tipitaka.read', $book['id']) }}"
-                       class="btn btn-primary w-100 mb-2">
+                        class="btn btn-primary w-100 mb-2">
                         <i class="ti ti-book-2 me-1"></i>
                         在线阅读
                     </a>
@@ -70,7 +69,7 @@
                         <td>出版</td>
                         <td>
                             <a href="{{ route('blog.index', ['user' => $book['publisher']->username]) }}"
-                               style="color: var(--tblr-primary); text-decoration: none;">
+                                style="color: var(--tblr-primary); text-decoration: none;">
                                 {{ $book['publisher']->nickname }}
                             </a>
                         </td>
@@ -97,17 +96,21 @@
                     @foreach($book['contents'] as $chapter)
                     <li>
                         <a href="{{ route('library.tipitaka.read', $chapter['id']) }}?channel={{ $chapter['channel'] }}">
-                            <span class="wiki-toc-num">{{ $loop->index + 1 }}</span>
-                            {{ $chapter['title'] }}
+                            <div style="display: flex;">
+                                <div>{{ $chapter['title'] }}</div>
+                                <div>
+                                    <span style="margin-left: auto; font-size: 0.75rem; color: var(--tblr-secondary);">
+                                        {{ $chapter['progress'] }}%
+                                    </span>
+                                </div>
+                            </div>
                             @if(isset($chapter['summary']))
                             <span style="font-size: 0.75rem; color: var(--tblr-secondary); margin-left: 0.5rem;" class="line2">
                                 {{ $chapter['summary'] }}
                             </span>
                             @endif
                             @if(isset($chapter['progress']) && $chapter['progress'] > 0)
-                            <span style="margin-left: auto; font-size: 0.75rem; color: var(--tblr-secondary);">
-                                {{ $chapter['progress'] }}%
-                            </span>
+
                             @endif
                         </a>
                     </li>
