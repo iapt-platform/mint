@@ -10,7 +10,7 @@
 
 {{-- 术语抽屉（所有阅读页统一使用 wiki.term-drawer） --}}
 @push('scripts')
-@vite('resources/js/modules/term-tooltip.js')
+@vite(['resources/css/tufte.css', 'resources/js/modules/term-tooltip.js'])
 @endpush
 
 @section('reader-content')
