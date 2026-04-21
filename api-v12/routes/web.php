@@ -75,6 +75,7 @@ Route::prefix('library')->name('library.')->group(function () {
     Route::get('/wiki/{lang}', [WikiController::class, 'index'])->name('wiki.index');
     Route::get('/wiki/{lang}/{word}', [WikiController::class, 'show'])->name('wiki.show');
 
+    Route::get('/course', [DownloadController::class, 'index'])->name('course');
     Route::get('/download', [DownloadController::class, 'index'])->name('download');
     // 文集
     Route::get('/anthology',          [AnthologyController::class, 'index'])->name('anthology.index');
