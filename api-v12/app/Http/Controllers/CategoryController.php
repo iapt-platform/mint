@@ -46,9 +46,13 @@ class CategoryController extends Controller
                 ];
             }
         }
-        $update = $this->getUpdateBooks();
+        $recentBooks = $this->getRecent();
 
-        return view('library.index', compact('categoryData', 'categories', 'update'));
+        return view('library.index', compact(
+            'categoryData',
+            'categories',
+            'recentBooks'
+        ));
     }
 
 
@@ -70,6 +74,7 @@ class CategoryController extends Controller
 
         return view('library.index', compact('categoryData', 'categories'));
     }
+
     public function category(int $id)
     {
 
@@ -89,8 +94,19 @@ class CategoryController extends Controller
         $categoryBooks = $this->getBooks($categories, $id);
         // 获取面包屑
         $breadcrumbs = $this->getBreadcrumbs($currentCategory, $categories);
+        $types = $this->types();
+        return view('library.tipitaka.category', compact(
+            'currentCategory',
+            'subCategories',
+            'categoryBooks',
+            'breadcrumbs',
+            'types'
+        ));
+    }
 
-        return view('library.tipitaka.category', compact('currentCategory', 'subCategories', 'categoryBooks', 'breadcrumbs'));
+    private function types()
+    {
+        return ['translation', 'original', 'nissaya'];
     }
 
 
@@ -100,6 +116,71 @@ class CategoryController extends Controller
         return array_filter($categories, function ($cat) use ($id) {
             return $cat['parent_id'] == $id;
         });
+    }
+    private function getRecent()
+    {
+        return [
+            [
+                'id'         => 'book-001',
+                'title'      => '相应部·因缘篇',
+                'author'     => 'Bhikkhu Bodhi',
+                'cover'      => null,                          // 无封面时显示渐变
+                'cover_gradient' => 'linear-gradient(135deg, #2d5a8e 0%, #1a3a5c 100%)',
+                'updated_at' => '2小时前',
+                'is_new'     => true,                          // true=新增, false=更新
+                'category'   => '经藏',
+            ],
+            [
+                'id'         => 'book-002',
+                'title'      => '长部·梵网经',
+                'author'     => 'Bhikkhu Sujato',
+                'cover'      => null,
+                'cover_gradient' => 'linear-gradient(135deg, #5a2d8e 0%, #3a1a5c 100%)',
+                'updated_at' => '昨天',
+                'is_new'     => false,
+                'category'   => '经藏',
+            ],
+            [
+                'id'         => 'book-003',
+                'title'      => '法句经注',
+                'author'     => 'Buddhaghosa',
+                'cover'      => null,
+                'cover_gradient' => 'linear-gradient(135deg, #8e5a2d 0%, #5c3a1a 100%)',
+                'updated_at' => '3天前',
+                'is_new'     => false,
+                'category'   => '注释',
+            ],
+            [
+                'id'         => 'book-004',
+                'title'      => '律藏·波罗夷',
+                'author'     => 'Bhikkhu Brahmali',
+                'cover'      => null,
+                'cover_gradient' => 'linear-gradient(135deg, #2d8e5a 0%, #1a5c3a 100%)',
+                'updated_at' => '5天前',
+                'is_new'     => true,
+                'category'   => '律藏',
+            ],
+            [
+                'id'         => 'book-005',
+                'title'      => '清净道论',
+                'author'     => 'Buddhaghosa',
+                'cover'      => null,
+                'cover_gradient' => 'linear-gradient(135deg, #8e2d2d 0%, #5c1a1a 100%)',
+                'updated_at' => '1周前',
+                'is_new'     => false,
+                'category'   => '注释',
+            ],
+            [
+                'id'         => 'book-006',
+                'title'      => '增支部·一集',
+                'author'     => 'Bhikkhu Bodhi',
+                'cover'      => null,
+                'cover_gradient' => 'linear-gradient(135deg, #2d7a8e 0%, #1a4a5c 100%)',
+                'updated_at' => '1周前',
+                'is_new'     => false,
+                'category'   => '经藏',
+            ],
+        ];
     }
 
     private function getUpdateBooks()
