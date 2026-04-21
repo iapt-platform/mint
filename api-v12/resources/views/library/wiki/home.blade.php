@@ -4,7 +4,6 @@
      所有样式来自 modules/_wiki.css，无内联 <style>。
 --}}
 @extends('library.wiki.layouts.app')
-@extends('wiki.layouts.app')
 
 @section('title', 'WikiPāli · 佛教百科-重构')
 
