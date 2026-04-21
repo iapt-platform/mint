@@ -10,12 +10,12 @@ class AnthologyController extends Controller
 {
     // 封面渐变色池：uid 首字节取余循环，保证同一文集颜色稳定
     private array $coverGradients = [
-        'linear-gradient(160deg, #2d2010, #4a3010)',
-        'linear-gradient(160deg, #1a2d10, #2d4a18)',
-        'linear-gradient(160deg, #0d1f3c, #1a3660)',
-        'linear-gradient(160deg, #2d1020, #4a1830)',
-        'linear-gradient(160deg, #1a1a2d, #2a2a50)',
-        'linear-gradient(160deg, #1a2820, #2d4438)',
+        'linear-gradient(160deg, #2d2010,rgb(94, 60, 20))',
+        'linear-gradient(160deg, #1a2d10,rgb(64, 105, 34))',
+        'linear-gradient(160deg, #0d1f3c,rgb(31, 64, 112))',
+        'linear-gradient(160deg, #2d1020,rgb(109, 35, 71))',
+        'linear-gradient(160deg, #1a1a2d,rgb(48, 48, 92))',
+        'linear-gradient(160deg, #1a2820,rgb(53, 80, 66))',
     ];
 
     // 作者色池：同上，根据 studio.id 首字节取余
