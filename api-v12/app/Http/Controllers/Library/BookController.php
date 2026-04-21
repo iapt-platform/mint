@@ -10,6 +10,7 @@ use App\Models\PaliText;
 use App\Models\Sentence;
 
 use App\Services\ChapterService;
+use App\Services\PaliContentService;
 
 class BookController extends Controller
 {
@@ -204,30 +205,40 @@ class BookController extends Controller
             }
         }
 
+        $paraStart = $curr->paragraph;
+        $paraEnd = $endParagraph;
+        $paragraphs = app(PaliContentService::class)->paragraphs(
+            $book->book,
+            $paraStart,
+            $paraEnd,
+            [$book->channel_id],
+            ['mode' => 'read', 'format' => 'html', 'original' => false]
+        );
+
         //获取句子数据
-        $sentences = Sentence::where('book_id', $book->book)
-            ->whereBetween('paragraph', [$curr->paragraph, $endParagraph])
-            ->where('channel_uid', $book->channel_id)
-            ->orderBy('paragraph')
-            ->orderBy('word_start')
-            ->get();
+
         $pali = PaliText::where('book', $book->book)
             ->whereBetween('paragraph', [$curr->paragraph, $endParagraph])
+            ->select(['paragraph', 'level'])
             ->orderBy('paragraph')
             ->get();
         $result = [];
-        for ($i = $curr->paragraph; $i <= $endParagraph; $i++) {
-            $texts = array_filter($sentences->toArray(), function ($sentence) use ($i) {
-                return $sentence['paragraph'] == $i;
-            });
-            $contents = array_map(function ($text) {
-                return $text['content'];
-            }, $texts);
-            $currPali = $pali->firstWhere('paragraph', $i);
+        foreach ($paragraphs as $key => $paragraph) {
+            $content = [];
+            foreach ($paragraph['children'] as $key => $sent) {
+                if (isset($sent['translation'])) {
+                    foreach ($sent['translation'] as $key => $translation) {
+                        $curr = $translation['html'] ?? $translation['content'];
+                        $content[] = "<span class='sentence'>{$curr}</span>";
+                    }
+                }
+            }
+            $currPaliPara = $pali->firstWhere('paragraph', $paragraph['para']);
+            $level = $currPaliPara->level;
             $paragraph = [
-                'id' => $i,
-                'level' => $currPali->level,
-                'text' => [[implode('', $contents)]],
+                'id' => $paragraph['para'],
+                'level' => $level,
+                'text' => [[implode('', $content)]],
             ];
             $result[] = $paragraph;
         }
