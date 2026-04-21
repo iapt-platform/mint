@@ -446,7 +446,7 @@ class TemplateRender
     private  function render_note()
     {
         $note = $this->get_param($this->param, "text", 1);
-        $trigger = $this->get_param($this->param, "trigger", 2);
+        $trigger = $this->get_param($this->param, "trigger", 2, '');
         $props = ["note" => $note];
         $innerString = "";
         if (!empty($trigger)) {
@@ -487,18 +487,19 @@ class TemplateRender
                     $GLOBALS['note_sn'] = 1;
                     $GLOBALS['note'] = array();
                 }
+                $noteContent = MdRender::render(
+                    $props["note"],
+                    $this->channel_id,
+                    null,
+                    'read',
+                    'translation',
+                    'markdown',
+                    'html'
+                );
                 $GLOBALS['note'][] = [
                     'sn' => $GLOBALS['note_sn'],
                     'trigger' => $trigger,
-                    'content' => MdRender::render(
-                        $props["note"],
-                        $this->channel_id,
-                        null,
-                        'read',
-                        'translation',
-                        'markdown',
-                        'html'
-                    ),
+                    'content' => $noteContent,
                 ];
 
                 $link = "<a href='#footnote-" . $GLOBALS['note_sn'] . "' name='note-" . $GLOBALS['note_sn'] . "'>";
@@ -507,6 +508,11 @@ class TemplateRender
                 } else {
                     $output = $link . $trigger . "</a>";
                 }
+                $output = "<label for=\"sn-proprietary-monotype-bembo\"
+                class=\"margin-toggle sidenote-number\" >{$trigger}</label>
+                <input type=\"checkbox\" id=\"{$GLOBALS['note_sn']}-proprietary-monotype-bembo\"
+                class=\"margin-toggle\"/>
+                <span class=\"sidenote\">{$noteContent}</span>";
                 break;
             case 'text':
                 $output = $trigger;
