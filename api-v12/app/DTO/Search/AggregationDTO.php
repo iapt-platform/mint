@@ -23,4 +23,15 @@ class AggregationDTO
             buckets: array_map(fn($bucket) => BucketDTO::fromArray($bucket), $data['buckets']),
         );
     }
+    public function toArray(): array
+    {
+        return [
+            'doc_count_error_upper_bound' => $this->doc_count_error_upper_bound,
+            'sum_other_doc_count' => $this->sum_other_doc_count,
+            'buckets' => array_map(
+                fn(BucketDTO $bucket) => $bucket->toArray(),
+                $this->buckets
+            ),
+        ];
+    }
 }

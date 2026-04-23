@@ -6,12 +6,16 @@ class HitItemDTO
 {
     public function __construct(
         public string $id,
+        public string $resId,
         public float $score,
         public string $content,
         public string $title,
         public string $path,
         public array $category,
         public string $highlight,
+        public string $updated,
+        public string $type,
+        public string $language,
 
     ) {}
 
@@ -36,7 +40,9 @@ class HitItemDTO
         $titleArray = [];
         if (is_array($source['title'])) {
             foreach ($source['title'] as $key => $value) {
-                $titleArray[] = $value;
+                if (strpos($key, 'suggest') === false) {
+                    $titleArray[] = $value;
+                }
             }
         }
         $title = implode('', $titleArray);
@@ -56,6 +62,10 @@ class HitItemDTO
             path: $source['path'] ?? '',
             category: $category,
             highlight: implode('', $highlightArray),
+            updated: $source['updated_at'],
+            type: $source['resource_type'],
+            language: $source['language'],
+            resId: $source['resource_id'],
         );
     }
 

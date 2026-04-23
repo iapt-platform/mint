@@ -20,4 +20,14 @@ class AggregationsDTO
             category: AggregationDTO::fromArray($data['category']),
         );
     }
+
+    public function toArray(): array
+    {
+        return [
+            'granularity'   => $this->granularity->toArray(),
+            'resource_type' => $this->resource_type->toArray(),
+            'language'      => $this->language->toArray(),
+            'category'      => $this->category->toArray(),
+        ];
+    }
 }
