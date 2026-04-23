@@ -508,9 +508,9 @@ class TemplateRender
                 } else {
                     $output = $link . $trigger . "</a>";
                 }
-                $output = "<label for=\"sn-proprietary-monotype-bembo\"
+                $output = "<label for=\"sn-{$GLOBALS['note_sn']}\"
                 class=\"margin-toggle sidenote-number\" >{$trigger}</label>
-                <input type=\"checkbox\" id=\"{$GLOBALS['note_sn']}-proprietary-monotype-bembo\"
+                <input type=\"checkbox\" id=\"sn-{$GLOBALS['note_sn']}\"
                 class=\"margin-toggle\"/>
                 <span class=\"sidenote\">{$noteContent}</span>";
                 break;
