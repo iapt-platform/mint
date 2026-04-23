@@ -10,13 +10,13 @@
        $autofocus   — 是否自动聚焦（默认 false）
 --}}
 @props([
-    'action',
-    'value'        => '',
-    'placeholder'  => '搜索…',
-    'buttonText'   => '搜索',
-    'size'         => 'md',
-    'hiddenFields' => [],
-    'autofocus'    => false,
+'action',
+'value' => '',
+'placeholder' => '搜索…',
+'buttonText' => '搜索',
+'size' => 'md',
+'hiddenFields' => [],
+'autofocus' => false,
 ])
 
 <form action="{{ $action }}" method="GET" class="search-input-form">
@@ -30,9 +30,9 @@
             {{ $autofocus ? 'autofocus' : '' }} />
 
         @foreach ($hiddenFields as $name => $val)
-            @if ($val)
-                <input type="hidden" name="{{ $name }}" value="{{ $val }}">
-            @endif
+        @if ($val)
+        <input type="hidden" name="{{ $name }}" value="{{ $val }}">
+        @endif
         @endforeach
 
         <button class="btn btn-primary" type="submit">
