@@ -75,38 +75,154 @@ class CategoryController extends Controller
         return view('library.index', compact('categoryData', 'categories'));
     }
 
-    public function category(int $id)
+    // app/Http/Controllers/Library/CategoryController.php
+    // category() 方法修改版
+    // 变更：
+    //   1. $id 改为可选参数，无参数时显示顶级分类（首页复用）
+    //   2. 新增 $filters 过滤参数（type / lang / author / sort）
+    //   3. 新增右边栏数据：$recommended / $activeAuthors
+    //   4. 新增 $filterOptions（过滤器选项 + 计数）
+    //   5. 新增 $totalCount
+
+    public function category(?int $id = null)
     {
 
         $categories = $this->loadCategories();
 
-        $currentCategory = collect($categories)->firstWhere('id', $id);
-        if (!$currentCategory) {
-            abort(404);
+        // ── 当前分类 ──────────────────────────────────────────
+        if ($id) {
+            $currentCategory = collect($categories)->firstWhere('id', $id);
+            if (!$currentCategory) {
+                abort(404);
+            }
+            $breadcrumbs = $this->getBreadcrumbs($currentCategory, $categories);
+        } else {
+            // 首页：虚拟顶级分类
+            $currentCategory = ['id' => null, 'name' => '三藏'];
+            $breadcrumbs     = [];
         }
 
-        // 获取子分类
-        $subCategories = array_filter($categories, function ($cat) use ($id) {
-            return $cat['parent_id'] == $id;
-        });
+        // ── 子分类 ─────────────────────────────────────────────
+        $subCategories = array_values(array_filter(
+            $categories,
+            fn($cat) => $cat['parent_id'] == $id
+        ));
 
-        // 获取该分类下的书籍
-        $categoryBooks = $this->getBooks($categories, $id);
-        // 获取面包屑
-        $breadcrumbs = $this->getBreadcrumbs($currentCategory, $categories);
+        // ── 过滤参数 ────────────────────────────────────────────
+        $selectedType   = request('type',   'all');
+        $selectedLang   = request('lang',   'all');
+        $selectedAuthor = request('author', 'all');
+        $selectedSort   = request('sort',   'updated_at');
+
+        $selected = [
+            'type'   => $selectedType,
+            'lang'   => $selectedLang,
+            'author' => $selectedAuthor,
+            'sort'   => $selectedSort,
+        ];
+
+        // ── 书籍列表（过滤+排序，真实实现替换此处） ──────────────
+        $categoryBooks = $this->getBooks($categories, $id, $selected);
+        // TODO: 将 $selected 传入 getBooks() 做实际过滤
+
+        $totalCount = count($categoryBooks);
+
+        // ── 过滤器选项（mock，真实实现从书籍数据聚合） ────────────
+        $filterOptions = [
+            'types' => [
+                ['value' => 'all',         'label' => '全部',    'count' => $totalCount],
+                ['value' => 'original',    'label' => '原文',    'count' => 0],
+                ['value' => 'translation', 'label' => '译文',    'count' => 0],
+                ['value' => 'nissaya',     'label' => 'Nissaya', 'count' => 0],
+            ],
+            'languages' => [
+                ['value' => 'all',  'label' => '全部',   'count' => $totalCount],
+                ['value' => 'zh-Hans',   'label' => '简体中文',   'count' => 0],
+                ['value' => 'zh-Hant',   'label' => '繁体中文',   'count' => 0],
+                ['value' => 'pi',   'label' => '巴利语', 'count' => 0],
+                ['value' => 'en',   'label' => '英语',   'count' => 0],
+            ],
+            'authors' => $this->getAuthorOptions($categoryBooks),
+        ];
+
+        // ── 右边栏：本周推荐（mock） ────────────────────────────
+        $recommended = [
+            ['id' => 1, 'title' => '相应部·因缘篇',  'category' => '经藏'],
+            ['id' => 2, 'title' => '法句经',          'category' => '经藏'],
+            ['id' => 3, 'title' => '清净道论',        'category' => '注释'],
+            ['id' => 4, 'title' => '律藏·波罗夷',    'category' => '律藏'],
+            ['id' => 5, 'title' => '长部·梵网经',    'category' => '经藏'],
+        ];
+
+        // ── 右边栏：活跃译者（mock） ────────────────────────────
+        $activeAuthors = [
+            [
+                'name'    => 'Bhikkhu Bodhi',
+                'avatar'  => null,
+                'color'   => '#2d5a8e',
+                'initials' => 'BB',
+                'count'   => 24,
+            ],
+            [
+                'name'    => 'Bhikkhu Sujato',
+                'avatar'  => null,
+                'color'   => '#5a2d8e',
+                'initials' => 'BS',
+                'count'   => 18,
+            ],
+            [
+                'name'    => 'Buddhaghosa',
+                'avatar'  => null,
+                'color'   => '#8e5a2d',
+                'initials' => 'BG',
+                'count'   => 12,
+            ],
+            [
+                'name'    => 'Bhikkhu Brahmali',
+                'avatar'  => null,
+                'color'   => '#2d8e5a',
+                'initials' => 'BR',
+                'count'   => 9,
+            ],
+        ];
+
         $types = $this->types();
+
         return view('library.tipitaka.category', compact(
             'currentCategory',
             'subCategories',
             'categoryBooks',
             'breadcrumbs',
-            'types'
+            'types',
+            'selected',
+            'filterOptions',
+            'totalCount',
+            'recommended',
+            'activeAuthors',
         ));
+    }
+
+    // ── 辅助：从书籍列表聚合作者选项（mock，真实实现替换） ─────────
+    private function getAuthorOptions(array $books): array
+    {
+        // TODO: 从 $books 聚合真实作者列表
+        return [
+            ['value' => 'all',             'label' => '全部作者',      'count' => count($books)],
+            ['value' => 'bhikkhu-bodhi',   'label' => 'Bhikkhu Bodhi', 'count' => 0],
+            ['value' => 'bhikkhu-sujato',  'label' => 'Bhikkhu Sujato', 'count' => 0],
+            ['value' => 'buddhaghosa',     'label' => 'Buddhaghosa',   'count' => 0],
+            ['value' => 'bhikkhu-brahmali', 'label' => 'Bhikkhu Brahmali', 'count' => 0],
+        ];
     }
 
     private function types()
     {
-        return ['translation', 'original', 'nissaya'];
+        return [
+            ['id' => '1', 'name' => 'sutta'],
+            ['id' => '48', 'name' => 'vinaya'],
+            ['id' => '66', 'name' => 'abhidhamma'],
+            ['id' => '82', 'name' => 'añña']
+        ];
     }
 
 
@@ -199,25 +315,25 @@ class CategoryController extends Controller
 
         return $this->getBooksInfo($books);
     }
-    private function getBooks($categories, $id)
+    private function getBooks($categories, $id, $filters)
     {
-        $currentCategory = collect($categories)->firstWhere('id', $id);
-        if (!$currentCategory) {
-            abort(404);
-        }
 
-        // 标签查章节
-        $tagNames = $currentCategory['tag'];
-        $tm = (new TagMap)->getTable();
-        $tg = (new Tag)->getTable();
-        $pt = (new PaliText)->getTable();
-        $where1 = " where co = " . count($tagNames);
-        $a = implode(",", array_fill(0, count($tagNames), '?'));
-        $in1 = "and t.name in ({$a})";
-        $param = $tagNames;
-        $where2 = "where level = 1";
-        $query = "
-                        select uid as id,book,paragraph,level,toc as title,chapter_strlen,parent,path from (
+        if ($id) {
+            $currentCategory = collect($categories)->firstWhere('id', $id);
+            if (!$currentCategory) {
+                abort(404);
+            }
+            // 标签查章节
+            $tagNames = $currentCategory['tag'];
+            $tm = (new TagMap)->getTable();
+            $tg = (new Tag)->getTable();
+            $pt = (new PaliText)->getTable();
+            $where1 = " where co = " . count($tagNames);
+            $a = implode(",", array_fill(0, count($tagNames), '?'));
+            $in1 = "and t.name in ({$a})";
+            $param = $tagNames;
+            $where2 = "where level = 1";
+            $query = "select uid as id,book,paragraph,level,toc as title,chapter_strlen,parent,path from (
                             select anchor_id as cid from (
                                 select tm.anchor_id , count(*) as co
                                     from $tm as  tm
@@ -232,20 +348,35 @@ class CategoryController extends Controller
                         $where2
                         order by book,paragraph";
 
-        $chapters = DB::select($query, $param);
-        $chaptersParam = [];
-        foreach ($chapters as $key => $chapter) {
-            $chaptersParam[] = [$chapter->book, $chapter->paragraph];
+            $chapters = DB::select($query, $param);
+            $chaptersParam = [];
+            foreach ($chapters as $key => $chapter) {
+                $chaptersParam[] = [$chapter->book, $chapter->paragraph];
+            }
+            // 获取该分类下的章节
+            $books = ProgressChapter::with('channel.owner')
+                ->whereIns(['progress_chapters.book', 'progress_chapters.para'], $chaptersParam)
+                ->whereHas('channel', function ($query) {
+                    $query->where('status', 30);
+                })
+                ->where('progress', '>', config('mint.library.list_min_progress'))
+                ->get();
+        } else {
+            $booksChapter = PaliText::select(['book', 'paragraph'])->where('level', 1)->get();
+            $chapters = [];
+            foreach ($booksChapter as $key => $value) {
+                $chapters[] = [$value->book, $value->paragraph];
+            }
+            $books = ProgressChapter::with('channel.owner')
+                ->whereHas('channel', function ($query) use ($filters) {
+                    $filters['type'] === 'all' ? $query->where('status', 30) :
+                        $query->where('status', 30)->where('type', $filters['type']);
+                })
+                ->where('progress', '>', config('mint.library.list_min_progress'))
+                ->whereIns(['book', 'para'], $chapters)
+                ->take(100)
+                ->get();
         }
-        // 获取该分类下的章节
-        $books = ProgressChapter::with('channel.owner')
-            ->whereIns(['progress_chapters.book', 'progress_chapters.para'], $chaptersParam)
-            ->whereHas('channel', function ($query) {
-                $query->where('status', 30);
-            })
-            ->where('progress', '>', config('mint.library.list_min_progress'))
-            ->get();
-
         return $this->getBooksInfo($books);
     }
 
