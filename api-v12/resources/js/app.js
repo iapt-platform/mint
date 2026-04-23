@@ -1,7 +1,8 @@
 // resources/js/app.js
-import './bootstrap';
-import { initNavbar } from './modules/navbar';
+import "./bootstrap";
+import "./search-suggest";
+import { initNavbar } from "./modules/navbar";
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     initNavbar();
 });
