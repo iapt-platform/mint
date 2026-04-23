@@ -18,7 +18,7 @@ class HitItemDTO
     public static function fromArray(array $data): self
     {
         $source = $data['_source'];
-        $highlight = $data['highlight'];
+        $highlight = $data['highlight'] ?? null;
         $highlightArray = [];
         if (is_array($highlight)) {
             foreach ($highlight as $key => $value) {
@@ -33,6 +33,14 @@ class HitItemDTO
                 $contentArray[] = $value;
             }
         }
+        $titleArray = [];
+        if (is_array($source['title'])) {
+            foreach ($source['title'] as $key => $value) {
+                $titleArray[] = $value;
+            }
+        }
+        $title = implode('', $titleArray);
+
         $category = [];
         if (is_array($source['category'])) {
             $category = $source['category'];
@@ -43,7 +51,7 @@ class HitItemDTO
         return new self(
             id: $source['id'],
             score: $data['_score'],
-            title: $source['title']['pali'] ?? '',
+            title: $title,
             content: implode('', $contentArray),
             path: $source['path'] ?? '',
             category: $category,
