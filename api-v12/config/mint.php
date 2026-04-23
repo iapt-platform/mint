@@ -151,7 +151,7 @@ return [
         ],
     ],
     'opensearch' => [
-        'index' => 'wikipali',
+        'index' => 'wikipali_20260423',
         'config' => [
             'scheme' => env('OPENSEARCH_SCHEME', 'http'),
             'host' => env('OPENSEARCH_HOST', '127.0.0.1'),
