@@ -66,7 +66,7 @@ Route::post('/logout', function () {
 Route::prefix('library')->name('library.')->group(function () {
     Route::get('/', [CategoryController::class, 'home'])->name('home');
 
-    Route::get('/tipitaka', [CategoryController::class, 'index'])->name('tipitaka.index');
+    Route::get('/tipitaka', [CategoryController::class, 'category'])->name('tipitaka.index');
     Route::get('/tipitaka/category/{id}', [CategoryController::class, 'category'])->name('tipitaka.category');
     Route::get('/tipitaka/{id}', [BookController::class, 'show'])->name('tipitaka.show');
     Route::get('/tipitaka/{id}/read', [BookController::class, 'read'])->name('tipitaka.read');
