@@ -11,7 +11,7 @@ use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\Library\AnthologyController;
 use App\Http\Controllers\Library\AnthologyReadController;
 use App\Http\Controllers\Library\BookController;
-use App\Http\Controllers\WikiController;
+use App\Http\Controllers\Library\WikiController;
 use App\Http\Controllers\Library\SearchController;
 
 /*
@@ -64,9 +64,10 @@ Route::post('/logout', function () {
 })->name('logout');
 
 Route::prefix('library')->name('library.')->group(function () {
-    Route::get('/', [CategoryController::class, 'index'])->name('home');
+    Route::get('/', [CategoryController::class, 'home'])->name('home');
 
-    Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
+    Route::get('/tipitaka', [CategoryController::class, 'category'])->name('tipitaka.index');
+    Route::get('/tipitaka/category/{id}', [CategoryController::class, 'category'])->name('tipitaka.category');
     Route::get('/tipitaka/{id}', [BookController::class, 'show'])->name('tipitaka.show');
     Route::get('/tipitaka/{id}/read', [BookController::class, 'read'])->name('tipitaka.read');
 
@@ -74,6 +75,7 @@ Route::prefix('library')->name('library.')->group(function () {
     Route::get('/wiki/{lang}', [WikiController::class, 'index'])->name('wiki.index');
     Route::get('/wiki/{lang}/{word}', [WikiController::class, 'show'])->name('wiki.show');
 
+    Route::get('/course', [DownloadController::class, 'index'])->name('course');
     Route::get('/download', [DownloadController::class, 'index'])->name('download');
     // 文集
     Route::get('/anthology',          [AnthologyController::class, 'index'])->name('anthology.index');

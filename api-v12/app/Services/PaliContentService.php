@@ -1,5 +1,5 @@
 <?php
-// api-v8/app/Services/OpenSearchService.php
+// api-v8/app/Services/PaliContentService.php
 namespace App\Services;
 
 use App\Models\Sentence;
@@ -578,6 +578,58 @@ class PaliContentService
             ->get();
         $indexChannel = $this->getChannelIndex($channelIds);
         $result = $this->makeContentObj($record, $mode, $indexChannel);
+        return $result;
+    }
+
+    public function paragraphs(int $book, int $start, int $end, array $channelIds, array $param)
+    {
+
+        $channels = [];
+        foreach ($channelIds as $key => $channel) {
+            if (Str::isUuid($channel)) {
+                $channels[] = $channel;
+            }
+        }
+        $channelId = false;
+        if ($param['original']) {
+            if ($param['mode'] === 'read') {
+                //阅读模式加载html格式原文
+                $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+            } else {
+                //翻译模式加载json格式原文
+                $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+            }
+        }
+
+
+        if ($channelId !== false) {
+            $channels[] = $channelId;
+        }
+        #获取channel索引表
+        $tranChannels = [];
+        $channelInfo = Channel::whereIn("uid", $channels)
+            ->select(['uid', 'type', 'lang', 'name'])->get();
+        foreach ($channelInfo as $key => $value) {
+            # code...
+            if ($value->type === "translation") {
+                $tranChannels[] = $value->uid;
+            }
+        }
+        $indexChannel = [];
+        $paliService = app(PaliContentService::class);
+        $indexChannel = $paliService->getChannelIndex($channels);
+        // the end of channel
+
+        //content
+        $record = Sentence::select($this->selectCol)
+            ->where('book_id', $book)
+            ->whereBetween('paragraph', [$start, $end])
+            ->whereIn('channel_uid', $channels)
+            ->orderBy('paragraph')
+            ->orderBy('word_start')
+            ->get();
+
+        $result = $paliService->makeContentObj($record, $param['mode'], $indexChannel, $param['format']);
         return $result;
     }
 }

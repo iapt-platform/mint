@@ -7,6 +7,9 @@ import {
   FileOutlined,
   CopyOutlined,
   InfoCircleOutlined,
+  ShareAltOutlined,
+  ExportOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 
 import { useAppSelector } from "../../../hooks";
@@ -91,8 +94,7 @@ const TypeArticleReaderToolbarWidget = ({
               id: "buttons.edit",
             })}
           </Button>
-          {/** 刷新按钮 */}
-          <Button type="link" icon={<ReloadOutlined />} onClick={onRefresh} />
+          {/** 导出 */}
           {/** 更多 */}
           <Dropdown
             menu={{
@@ -109,43 +111,17 @@ const TypeArticleReaderToolbarWidget = ({
                 },
                 {
                   label: intl.formatMessage({
-                    id: "buttons.add_to_anthology",
+                    id: "buttons.export",
                   }),
-                  key: "add_to_anthology",
-                  icon: <InboxOutlined />,
-                  disabled: user ? false : true,
+                  key: "export",
+                  icon: <ExportOutlined />,
                 },
                 {
                   label: intl.formatMessage({
-                    id: "buttons.edit",
+                    id: "buttons.open.in.library",
                   }),
-                  key: "edit",
-                  icon: <EditOutlined />,
-                  disabled: !editable,
-                },
-                {
-                  label: intl.formatMessage({
-                    id: "buttons.open.in.studio",
-                  }),
-                  key: "open-studio",
-                  icon: <EditOutlined />,
-                  disabled: user ? false : true,
-                },
-                {
-                  label: "获取文章引用模版",
-                  key: "tpl",
-                  icon: <FileOutlined />,
-                },
-                {
-                  label: "创建副本",
-                  key: "fork",
-                  icon: <CopyOutlined />,
-                  disabled: user ? false : true,
-                },
-                {
-                  label: "字数统计",
-                  key: "word-count",
-                  icon: <InfoCircleOutlined />,
+                  key: "open_in_library",
+                  icon: <EyeOutlined />,
                 },
               ],
               onClick: ({ key }) => {
@@ -157,6 +133,69 @@ const TypeArticleReaderToolbarWidget = ({
                       "_blank"
                     );
                     break;
+                  case "open_in_library":
+                    window.open(
+                      import.meta.env.VITE_APP_API_SERVER +
+                        `/library/anthology/${anthologyId}/read/${articleId}`,
+                      "_blank"
+                    );
+                    break;
+                  case "add_to_anthology":
+                    setAddToAnthologyOpen(true);
+                    break;
+                }
+              },
+            }}
+            placement="bottomRight"
+          >
+            <Button
+              onClick={(e) => e.preventDefault()}
+              icon={<ShareAltOutlined />}
+              size="small"
+              type="link"
+            />
+          </Dropdown>
+          {/** 刷新按钮 */}
+          <Button type="link" icon={<ReloadOutlined />} onClick={onRefresh} />
+
+          {/** 更多 */}
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  label: intl.formatMessage({
+                    id: "buttons.add_to_anthology",
+                  }),
+                  key: "add_to_anthology",
+                  icon: <InboxOutlined />,
+                  disabled: user ? false : true,
+                },
+                {
+                  label: intl.formatMessage({
+                    id: "buttons.get_template",
+                  }),
+                  key: "tpl",
+                  icon: <FileOutlined />,
+                },
+                {
+                  label: intl.formatMessage({
+                    id: "buttons.duplicate",
+                  }),
+                  key: "fork",
+                  icon: <CopyOutlined />,
+                  disabled: user ? false : true,
+                },
+                {
+                  label: intl.formatMessage({
+                    id: "buttons.word_count",
+                  }),
+                  key: "word-count",
+                  icon: <InfoCircleOutlined />,
+                },
+              ],
+              onClick: ({ key }) => {
+                console.log(`Click on item ${key}`);
+                switch (key) {
                   case "add_to_anthology":
                     setAddToAnthologyOpen(true);
                     break;
@@ -170,11 +209,6 @@ const TypeArticleReaderToolbarWidget = ({
                     break;
                   case "word-count":
                     setWordCountOpen(true);
-                    break;
-                  case "edit":
-                    if (typeof onEdit !== "undefined") {
-                      onEdit();
-                    }
                     break;
                 }
               },

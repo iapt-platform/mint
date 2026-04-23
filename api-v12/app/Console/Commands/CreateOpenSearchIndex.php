@@ -64,26 +64,12 @@ class CreateOpenSearchIndex extends Command
         } catch (\Exception $e) {
             if (str_contains($e->getMessage(), 'exists')) {
                 $this->warn('Index already exists, attempting to update...');
-                try {
-                    $update = $openSearch->updateIndex();
-                    if (!empty($update['settings']) && $update['settings']['acknowledged']) {
-                        $this->info('Index settings updated successfully');
-                    }
-                    if (!empty($update['mappings']) && $update['mappings']['acknowledged']) {
-                        $this->info('Index mappings updated successfully');
-                    }
-                    if (empty($update['settings']) && empty($update['mappings'])) {
-                        $this->warn('No settings or mappings provided for update');
-                    }
-                } catch (\Exception $updateException) {
-                    $this->error('Failed to update index: ' . $updateException->getMessage());
-                    return 1;
-                }
             } else {
                 $this->error('Failed to create index: ' . $e->getMessage());
-                return 1;
             }
+            return 1;
         }
+
         return 0;
     }
 }

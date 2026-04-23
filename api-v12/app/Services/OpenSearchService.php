@@ -90,6 +90,7 @@ class OpenSearchService
                     'pali_synonyms' => [
                         'type' => 'synonym_graph',
                         'synonyms_path' => 'analysis/pali_synonyms.txt',
+                        'updateable' => true,
                     ],
                 ],
                 'char_filter' => [
@@ -289,7 +290,11 @@ class OpenSearchService
             return [false, $message];
         }
     }
-
+    public function indexExists()
+    {
+        $index = config('mint.opensearch.index');
+        return $this->client->indices()->exists(['index' => $index]);
+    }
     /** 索引管理方法保持不变... **/
 
     public function createIndex()
@@ -333,6 +338,47 @@ class OpenSearchService
     {
         $index = config('mint.opensearch.index');
         return $this->client->indices()->delete(['index' => $index]);
+    }
+    /**
+     * 获取索引文档数量（支持条件统计）
+     *
+     * @param  array|null  $query  可选的查询条件（OpenSearch DSL query 部分）
+     *                             例如：
+     *                             [
+     *                                 'term' => ['language' => 'zh']
+     *                             ]
+     *
+     * @return int  文档总数
+     *
+     * @throws \Exception
+     *
+     * @example
+     * // 获取索引全部文档数量
+     * $count = $service->count();
+     *
+     * // 按条件统计（例如：只统计有 embedding 的文档）
+     * $count = $service->count([
+     *     'exists' => ['field' => 'content.vector']
+     * ]);
+     */
+    public function count(?array $query = null): int
+    {
+        $index = config('mint.opensearch.index');
+
+        $params = [
+            'index' => $index,
+        ];
+
+        // 如果传入 query，则按条件统计
+        if (!empty($query)) {
+            $params['body'] = [
+                'query' => $query
+            ];
+        }
+
+        $response = $this->client->count($params);
+
+        return (int) ($response['count'] ?? 0);
     }
 
     public function create(string $id, array $body)
