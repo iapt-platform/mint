@@ -13,17 +13,17 @@ class ExportPaliSynonyms extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan export:pali.synonyms
+     * php artisan export:pali.synonyms --output=
      * @var string
      */
-    protected $signature = 'export:pali.synonyms';
+    protected $signature = 'export:pali.synonyms {--output=}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = '导出openSearch用的巴利语变格表';
 
     /**
      * Create a new command instance.
@@ -42,27 +42,23 @@ class ExportPaliSynonyms extends Command
      */
     public function handle()
     {
+        if (!$this->option('output')) {
+            $this->error('please set output file option --output=file');
+            return 1;
+        }
         //irregular
         $dictId = ['4d3a0d92-0adc-4052-80f5-512a2603d0e8'];
         //regular
         $dictId[] = DictApi::getSysDict('system_regular');
-        $path = storage_path('app/export/fts');
-        if (!is_dir($path)) {
-            $res = mkdir($path, 0700, true);
-            if (!$res) {
-                Log::error('mkdir fail path=' . $path);
-                return 1;
-            }
-        }
 
-        $filename = "/pali_synonyms.txt";
-        $fp = fopen($path . $filename, 'w') or die("Unable to open file!");
-        foreach ($dictId as $key => $dict) {
+        $filename = $this->option('output');
+        $fp = fopen($filename, 'w') or die("Unable to open file!");
+        foreach ($dictId as  $dict) {
             $parents = UserDict::where('dict_id', $dict)
                 ->select('parent')
                 ->groupBy('parent')->cursor();
 
-            foreach ($parents as $key => $parent) {
+            foreach ($parents as  $parent) {
                 $words = UserDict::where('dict_id', $dict)
                     ->where('parent', $parent->parent)
                     ->select('word')
