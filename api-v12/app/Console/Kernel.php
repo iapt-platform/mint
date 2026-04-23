@@ -23,6 +23,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('upgrade:weekly')
             ->weekly()
             ->emailOutputOnFailure(config("mint.email.ScheduleEmailOutputOnFailure"));
+
+        $schedule->command('app:index-open-search')
+            ->everyFiveMinutes()
+            ->emailOutputOnFailure(config("mint.email.ScheduleEmailOutputOnFailure"));
     }
 
     /**
