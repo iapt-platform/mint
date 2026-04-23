@@ -34,12 +34,12 @@ class SearchController extends Controller
         $results = [];
         foreach ($dto->hits->items as $key => $item) {
             $results[] = [
-                'word'     => 'word',
+                'word'     => $item->id,
                 'zh'       => $item->title,
                 'lang'     => 'pi',
                 'category' => '法义术语',
                 'quality'  => 'featured',
-                'snippet'  => $item->highlight,
+                'snippet'  => !empty($item->highlight) ? $item->highlight : $item->content,
                 'updated'  => '2025-11-12',
             ];
         }
