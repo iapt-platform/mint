@@ -92,7 +92,7 @@ class IndexPaliText extends Command
                 $booksId = [$book];
             }
             foreach ($booksId as $key => $bookId) {
-                $this->indexPaliParagraphs($bookId, $paragraph);
+                $this->indexTipitakaParagraphs($bookId, $paragraph);
             }
 
             return $overallStatus;
@@ -104,11 +104,66 @@ class IndexPaliText extends Command
     }
 
     /**
+     * Index Pali paragraphs for a given book.
+     *
+     * @param int $book
+     * @return int
+     */
+    protected function indexTipitakaParagraphs($book, $paragraph = null)
+    {
+        $this->info("Starting to index paragraphs for book: $book");
+        $total = 0;
+        if ($paragraph) {
+            $paragraphs = PaliText::where('book', $book)
+                ->where('paragraph', $paragraph)
+                ->orderBy('paragraph')->cursor();
+        } else {
+            $paragraphs = PaliText::where('book', $book)
+                ->orderBy('paragraph')->cursor();
+        }
+        $bookUid = PaliText::where('book', $book)->where('level', 1)->first()->uid;
+        $category = $this->tagService->getTagsName($bookUid);
+        $headings = [];
+        $currChapterTitle = '';
+        $commentaryId = '';
+        $currSession = [];
+        foreach ($paragraphs as $key => $para) {
+            $total++;
+            if ($para->level < 8) {
+                $currChapterTitle = $para->toc;
+            }
+            if ($para->class === 'nikaya') {
+                $nikaya = $para->text;
+            }
+            $paraContent = $this->searchPaliDataService
+                ->getParaContent($para['book'], $para['paragraph']);
+            if (!empty($commentaryId)) {
+                $currSession[] = $paraContent;
+            }
+            if (isset($paraContent['commentary'])) {
+                if (!empty($commentaryId)) {
+                    //保存 session
+                    $this->indexPaliSession($para->toArray(), $currSession, $currChapterTitle, $commentaryId);
+                    $currSession = [];
+                }
+                $commentaryId = $paraContent['commentary'];
+            }
+            $this->indexParagraph($para->toArray(), $paraContent, $commentaryId, $category);
+            $this->info("{$para['book']}-[{$para['paragraph']}]-[{$commentaryId}]");
+            usleep(10000);
+        }
+
+        $this->info("Successfully indexed $total paragraphs for book: $book");
+        Log::info("Indexed $total paragraphs for book: $book");
+
+        return 0;
+    }
+    /**
      *
      */
-    protected function indexPaliParagraph($paraInfo, $paraContent, $related_id, array $category)
+    protected function indexParagraph($paraInfo, $paraContent, $related_id, array $category)
     {
-        $paraId = $paraInfo['book'] . '_' . $paraInfo['paragraph'];
+        $paraId = $paraInfo['book'] . '-' . $paraInfo['paragraph'];
         $resource_id = $paraInfo['uid'];
         $path = json_decode($paraInfo['path']);
         if (is_array($path) && count($path) > 0) {
@@ -117,9 +172,9 @@ class IndexPaliText extends Command
             $title = '';
         }
         $document = [
-            'id' => "pali_para_{$paraId}",
+            'id' => "tipitaka_paragraph_pi_{$paraId}",
             'resource_id' => $resource_id, // Use uid from getPaliData for resource_id
-            'resource_type' => 'original_text',
+            'resource_type' => 'tipitaka',
             'title' => [
                 'pali' => $title,
             ],
@@ -127,14 +182,14 @@ class IndexPaliText extends Command
                 'text' => $this->summary  ? $this->summaryService->summarize($paraContent['markdown']) : ''
             ],
             'content' => [
-                'pali' => $paraContent['markdown'],
+                'pali' => $paraContent['text'],
                 'suggest' => $paraContent['words'],
             ],
             'bold_single' => implode(' ', $paraContent['bold1']),
             'bold_multi' => implode(' ', array_merge($paraContent['bold2'], $paraContent['bold3'])),
-            'related_id' => $related_id,
+            'related_id' => $paraId,
             'category' => $category, // Assuming Pali paragraphs are sutta; adjust as needed
-            'language' => 'pali',
+            'language' => 'pi',
             'updated_at' => now()->toIso8601String(),
             'granularity' => 'paragraph',
             'path' => $this->getPathTitle($path),
@@ -197,69 +252,7 @@ class IndexPaliText extends Command
         return;
     }
 
-    private function getPathTitle(array $input)
-    {
-        $output = [];
-        foreach ($input as $key => $node) {
-            $output[] = $node->title;
-        }
-        return implode('/', $output);
-    }
-    /**
-     * Index Pali paragraphs for a given book.
-     *
-     * @param int $book
-     * @return int
-     */
-    protected function indexPaliParagraphs($book, $paragraph = null)
-    {
-        $this->info("Starting to index paragraphs for book: $book");
-        $total = 0;
-        if ($paragraph) {
-            $paragraphs = PaliText::where('book', $book)
-                ->where('paragraph', $paragraph)
-                ->orderBy('paragraph')->cursor();
-        } else {
-            $paragraphs = PaliText::where('book', $book)
-                ->orderBy('paragraph')->cursor();
-        }
-        $bookUid = PaliText::where('book', $book)->where('level', 1)->first()->uid;
-        $category = $this->tagService->getTagsName($bookUid);
-        $headings = [];
-        $currChapterTitle = '';
-        $commentaryId = '';
-        $currSession = [];
-        foreach ($paragraphs as $key => $para) {
-            $total++;
-            if ($para->level < 8) {
-                $currChapterTitle = $para->toc;
-            }
-            if ($para->class === 'nikaya') {
-                $nikaya = $para->text;
-            }
-            $paraContent = $this->searchPaliDataService
-                ->getParaContent($para['book'], $para['paragraph']);
-            if (!empty($commentaryId)) {
-                $currSession[] = $paraContent;
-            }
-            if (isset($paraContent['commentary'])) {
-                if (!empty($commentaryId)) {
-                    //保存 session
-                    $this->indexPaliSession($para->toArray(), $currSession, $currChapterTitle, $commentaryId);
-                    $currSession = [];
-                }
-                $commentaryId = $paraContent['commentary'];
-            }
-            $this->indexPaliParagraph($para->toArray(), $paraContent, $commentaryId, $category);
-            $this->info("{$para['book']}-[{$para['paragraph']}]-[{$commentaryId}]");
-            usleep(10000);
-        }
 
-        $this->info("Successfully indexed $total paragraphs for book: $book");
-        Log::info("Indexed $total paragraphs for book: $book");
-
-        return 0;
-    }
 
     /**
      * Index Pali suttas for a given book (placeholder for future implementation).
@@ -285,5 +278,15 @@ class IndexPaliText extends Command
         $this->warn("Sentence indexing is not yet implemented for book: $book");
         Log::warning("Sentence indexing not implemented for book: $book");
         return 1;
+    }
+
+
+    private function getPathTitle(array $input)
+    {
+        $output = [];
+        foreach ($input as $key => $node) {
+            $output[] = $node->title;
+        }
+        return implode('/', $output);
     }
 }

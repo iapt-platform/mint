@@ -111,9 +111,8 @@ class SearchPaliDataService
         $text = [];
         $wordList = [];
         foreach ($sentences as $key => $sentence) {
-            $content = $this->getSentenceText($book, $para, $sentence->word_begin, $sentence->word_end);
-            $id = "{$book}-{$para}-{$sentence->word_begin}-{$sentence->word_end}";
-            $markdown[] = "`id:{$id}`" . $content['markdown'];
+            $content = $this->getSentenceContent($book, $para, $sentence->word_begin, $sentence->word_end);
+            $markdown[] = $content['markdown'];
             $text[] = $content['text'];
             $wordList = array_merge($wordList, $content['words']);
         }
@@ -173,7 +172,7 @@ class SearchPaliDataService
      * @param int $para
      * @return array $sentence
      */
-    public function getSentenceText($book, $para, $start, $end)
+    public function getSentenceContent($book, $para, $start, $end)
     {
         $words = WbwTemplate::where('book', $book)
             ->where('paragraph', $para)
@@ -200,15 +199,27 @@ class SearchPaliDataService
                 $markdown .= $word->word . ' ';
             }
         }
-        $markdown = str_replace([' ti', ' ,', ' .', ' ?', '‘ ‘ ', ' ’ ’'], ['ti', ',', '.', '?', '‘‘', '’’'], $markdown);
+
+        //去掉多于的空格
+
+        $markdown = $this->removeSpace($markdown);
+        //合并连续的黑体
         $markdown = str_replace(['~~  ~~', '** **'], [' ', ' '], $markdown);
-        $text = implode(' ', $arrText);
-        $text = str_replace([' ti', ' ,', ' .', ' ?'], ['ti', ',', '.', '?'], $text);
+
+        $text = $this->removeSpace(implode(' ', $arrText));
         return [
             'markdown' => $this->abbrReplace(trim($markdown)),
             'text' => $this->abbrReplace($text),
             'words' => $wordList,
         ];
+    }
+    private function removeSpace(string $input)
+    {
+        return str_replace(
+            [' ti', ' ,', ' .', ' ?', ' ;', '[ ', ' ]', '( ', ' )', '‘ ‘ ', ' ’ ’'],
+            ['ti', ',', '.', '?', ';', '[', ']', '(', ')', '‘‘', '’’'],
+            $input
+        );
     }
     private function abbrReplace($input)
     {

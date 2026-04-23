@@ -11,3 +11,12 @@
     max-width: 500px;
     margin: 0 auto;
 }
+
+.search-suggest-dropdown {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.search-suggest-dropdown .dropdown-item {
+    cursor: pointer;
+}

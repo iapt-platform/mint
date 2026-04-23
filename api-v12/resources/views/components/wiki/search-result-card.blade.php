@@ -5,9 +5,13 @@
 
     <div class="wiki-search-card-header">
         <a class="wiki-search-card-title"
-           href="{{ route('library.wiki.show', [$result['lang'], $result['word']]) }}">
-            {{ $result['zh'] }}
-            <span class="wiki-search-card-word">{{ $result['word'] }}</span>
+            href="
+            @if($result['type']==='term')
+            {{ route('library.wiki.show', [$result['lang'], $result['id']]) }}
+            @endif
+            ">
+            {{ $result['title'] }}
+            <span class="wiki-search-card-word">{{ $result['type'] }}</span>
         </a>
         <x-wiki.quality-badge :quality="$result['quality']" />
     </div>

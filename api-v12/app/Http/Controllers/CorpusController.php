@@ -109,8 +109,13 @@ class CorpusController extends Controller
     {
         //
     }
-    public function getSentTpl($id, $inputChannels, $mode = 'edit', $onlyProps = false, $format = 'react')
-    {
+    public function getSentTpl(
+        $id,
+        $inputChannels,
+        $mode = 'edit',
+        $onlyProps = false,
+        $format = 'react'
+    ) {
         $sent = [];
         $channels = $inputChannels;
         $sentId = \explode('-', $id);
@@ -157,7 +162,18 @@ class CorpusController extends Controller
                 break;
             }
         }
-        return $this->makeContent($record, $mode, $channelIndex, [], $onlyProps, false, $format);
+        if (count($record) === 0) {
+            return null;
+        }
+        return $this->makeContent(
+            $record,
+            $mode,
+            $channelIndex,
+            [],
+            $onlyProps,
+            false,
+            $format
+        );
     }
     /**
      * Display the specified resource.
@@ -576,8 +592,15 @@ class CorpusController extends Controller
      * $indexChannel channel索引
      * $indexedHeading 标题索引 用于给段落加标题标签 <h1> ect.
      */
-    private function makeContent($record, $mode, $indexChannel, $indexedHeading = [], $onlyProps = false, $paraMark = false, $format = 'react')
-    {
+    private function makeContent(
+        $record,
+        $mode,
+        $indexChannel,
+        $indexedHeading = [],
+        $onlyProps = false,
+        $paraMark = false,
+        $format = 'react'
+    ) {
         $content = [];
         $sent = [];
         $sent["origin"] = [];
@@ -797,6 +820,7 @@ class CorpusController extends Controller
                         break;
                 }
             }
+            //FIXME 移到for外面
             if ($onlyProps) {
                 return $sent;
             }

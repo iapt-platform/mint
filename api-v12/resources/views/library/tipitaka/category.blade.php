@@ -75,7 +75,7 @@
                     :action="route('library.search')"
                     :value="request('q')"
                     placeholder="搜索三藏原文译文"
-                    :hidden-fields="['type' => 'tipitaka']" />
+                    :hidden-fields="['resource_type' => 'tipitaka']" />
             </div>
 
             {{-- 1. 子分类 --}}

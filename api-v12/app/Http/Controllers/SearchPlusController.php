@@ -59,7 +59,7 @@ class SearchPlusController extends Controller
         $granularity  = $request->input('granularity');   // 文档颗粒度
         $language     = $request->input('language');      // 语言
         $category     = $request->input('category');      // 分类
-        $tags         = $request->input('tags', []);      // 标签
+        $tags         = $request->has('tags') ? explode(',', $request->input('tags')) : [];      // 标签
         $pageRefs     = $request->input('page_refs', []); // 页码标记
         $relatedId    = $request->input('related_id'); // 关联 ID
         $author       = $request->input('author');        // 作者/译者 (metadata.author)

@@ -35,6 +35,7 @@ class TermResource extends JsonResource
             "tag" => $this->tag,
             "note" => $this->note,
             "language" => $this->language,
+            "channel_id" => $this->channal,
             "channal" => $this->channal,
             "studio" => StudioApi::getById($this->owner),
             "editor" => UserApi::getById($this->editor_id),
@@ -46,9 +47,9 @@ class TermResource extends JsonResource
         if ($request->has('channel') && !empty($request->input('channel'))) {
             $channels = explode('_', $request->input('channel'));
         } else {
-            if (!empty($this->channal) && Str::isUuid($this->channal)) {
-                $channelId = $this->channal;
-                $data["channel"] = ChannelApi::getById($this->channal);
+            if (!empty($this->channel_id) && Str::isUuid($this->channel_id)) {
+                $channelId = $this->channel_id;
+                $data["channel"] = ChannelApi::getById($this->channel_id);
             } else {
                 $channelId = ChannelApi::getSysChannel('_community_translation_' . $this->language . '_');
                 if (empty($channelId)) {

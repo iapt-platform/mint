@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\OpenSearchService;
 use App\DTO\Search\SearchDataDTO;
-
+use Carbon\Carbon;
 
 class SearchController extends Controller
 {
@@ -17,7 +17,7 @@ class SearchController extends Controller
         $category = $request->input('category', 'all');
         $page     = max(1, (int) $request->input('page', 1));
         $perPage  = 10;
-        $lang = $request->input('lang');
+        $lang = $request->input('language');
 
         $search = app(OpenSearchService::class);
         // 组装搜索参数
@@ -26,7 +26,7 @@ class SearchController extends Controller
             'pageSize'     => $perPage,
             'page'     => $page,
             'language'     => $lang,
-            'resourceType'     => $request->input('type'),
+            'resourceType'     => $request->input('resource_type'),
         ];
         $result = $search->search($params);
 
@@ -34,18 +34,19 @@ class SearchController extends Controller
         $results = [];
         foreach ($dto->hits->items as $key => $item) {
             $results[] = [
-                'word'     => $item->id,
-                'zh'       => $item->title,
-                'lang'     => 'pi',
-                'category' => '法义术语',
+                'id'     => $item->resId,
+                'title'       => $item->title,
+                'type'     => $item->type,
+                'lang'     => $item->language,
+                'category' => $item->type,
                 'quality'  => 'featured',
                 'snippet'  => !empty($item->highlight) ? $item->highlight : $item->content,
-                'updated'  => '2025-11-12',
+                'updated'  => Carbon::parse($item->updated)->format('Y-m-d'),
             ];
         }
 
-        $category = $dto->aggregations->category->buckets;
-
+        $aggregations = $dto->aggregations->toArray();
+        unset($aggregations['resource_type']);
         // 分页对象（兼容 Blade paginator 风格）
         $pagination = [
             'total'        => $dto->hits->total,
@@ -60,8 +61,8 @@ class SearchController extends Controller
             'results'        => $results,
             'pagination'     => $pagination,
             'category'       => 'all',
-            'filters'     => $category,
-            'categories'     => $this->types(),
+            'filters'     => $aggregations,
+            'types'     => $this->types(),
             'recentUpdates'  => [],
         ]);
     }
@@ -70,11 +71,9 @@ class SearchController extends Controller
     private function types(): array
     {
         return [
-            ['slug' => 'all',      'label' => '全部'],
-            ['slug' => 'term',     'label' => '法义术语'],
-            ['slug' => 'original_text',   'label' => '原文'],
-            ['slug' => 'translation',     'label' => '译文'],
-            ['slug' => 'article',   'label' => '文章'],
+            ['slug' => 'term',     'label' => '百科词条'],
+            ['slug' => 'tipitaka',   'label' => '巴利三藏'],
+            ['slug' => 'article',   'label' => '文章文集'],
             ['slug' => 'course', 'label' => '课程'],
             ['slug' => 'dictionary',    'label' => '字典'],
         ];

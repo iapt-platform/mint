@@ -11,7 +11,7 @@ use App\Services\OpenSearchService;
  *
  * 返回示例：
  *
- * 请求：GET /api/v2/suggest?q=dhamma&fields=title,content&limit=10
+ * 请求：GET /api/v3/search-suggest?q=dhamma&fields=title,content&limit=10
  *
  * 返回：
  * {
@@ -19,22 +19,26 @@ use App\Services\OpenSearchService;
  *   "data": {
  *     "query": "dhamma",
  *     "suggestions": [
- *       {
- *         "text": "dhammapada",
- *         "source": "title",
- *         "score": 5.2,
- *         "resource_type": "sutta",
- *         "language": "pali",
- *         "doc_id": "doc_123"
- *       },
- *       {
- *         "text": "dhammapadā",
- *         "source": "content",
- *         "score": 4.8,
- *         "resource_type": "commentary",
- *         "language": "pali",
- *         "doc_id": "doc_456"
- *       }
+      {
+        "text": "dhammacakkapavattanasutta",
+        "source": "content",
+        "score": 1,
+        "resource_type": "term",
+        "language": "zh",
+        "doc_id": "term_69258244-bccd-40ed-bfaa-ddef4ae5ae4c",
+        "category": [],
+        "granularity": null
+      },
+      {
+        "text": "dhammacakkappavattanasutta",
+        "source": "content",
+        "score": 1,
+        "resource_type": "term",
+        "language": "zh-hans",
+        "doc_id": "term_bcb14399-ea80-4a8a-aeab-a4c927e45fdd",
+        "category": [],
+        "granularity": null
+      }
  *     ],
  *     "total": 2
  *   }

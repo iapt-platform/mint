@@ -25,11 +25,12 @@
 
     {{-- 搜索框 --}}
     <div class="wiki-home-search">
-        <x-wiki.search-box
+        <x-ui.search-input
             :action="route('library.search')"
+            :value="request('q')"
             placeholder="搜索佛法词条、经典、人物..."
-            button-text="搜索"
-            size="lg" />
+            size="lg"
+            :hidden-fields="['resource_type' => 'term']" />
     </div>
 
     {{-- 热门搜索标签 --}}

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\DhammaTerm;
 use App\Http\Api\ChannelApi;
 use App\Http\Resources\TermResource;
+use Illuminate\Http\Request;
 
 
 class TermService
@@ -38,7 +39,19 @@ class TermService
         return $result;
     }
 
-    public function communityTerm(string $word, string $lang)
+    public function isCommunity(?string $channelId)
+    {
+        $channel = ChannelApi::getById($channelId);
+        if (!$channel) {
+            return false;
+        }
+        if (strpos($channel['name'], '_community_term_') === false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    public function communityTerm(string $word, string $lang, string $format)
     {
         $localTermChannel = ChannelApi::getSysChannel(
             "_community_term_" . strtolower($lang) . "_"
@@ -47,7 +60,15 @@ class TermService
             ->where('channal', $localTermChannel)
             ->first();
         if ($result) {
-            return new TermResource($result);
+            $resource = new TermResource($result);
+            $urlParam = ['format' => $format];
+            $fakeRequest = Request::create('', 'GET', $urlParam);
+            $termArray    = $resource->toArray($fakeRequest);
+            if ($result) {
+                return $termArray;
+            } else {
+                return null;
+            }
         } else {
             return null;
         }
@@ -67,5 +88,19 @@ class TermService
             "data" => TermResource::collection($result),
             "count" => 10
         ];
+    }
+
+    public function find(string $id, string $format): ?array
+    {
+        $result = DhammaTerm::find($id);
+        $resource = new TermResource($result);
+        $urlParam = ['format' => $format];
+        $fakeRequest = Request::create('', 'GET', $urlParam);
+        $termArray    = $resource->toArray($fakeRequest);
+        if ($result) {
+            return $termArray;
+        } else {
+            return null;
+        }
     }
 }

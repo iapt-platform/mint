@@ -979,15 +979,19 @@ class TemplateRender
             true,
             $this->format
         );
-        if ($props === false) {
+        if (!$props) {
             $props['error'] = "句子模版渲染错误。句子参数个数不符。应该是四个。";
+            Log::error('句子模版渲染错误。句子参数个数不符。应该是四个。');
         }
         if ($this->mode === 'read') {
             $tpl = "sentread";
         } else {
             $tpl = "sentedit";
         }
-        $props['show'] = $show;
+        if (is_array($props)) {
+            $props['show'] = $show;
+        }
+
         //输出引用
         $arrSid = explode('-', $sid);
         $bookPara = array_slice($arrSid, 0, 2);

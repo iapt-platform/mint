@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\WikiContentParser;
 use App\Services\TermService;
+use Illuminate\Support\Str;
 
 class WikiController extends Controller
 {
@@ -108,11 +109,14 @@ HTML,
 
     public function show(string $lang, string $word)
     {
+        if (Str::isUuid($word)) {
+            $term = $this->termService->find($word, 'html');
+        } else {
+            $term = $this->termService->communityTerm($word, $lang, 'html');
+        }
 
-        $term = $this->termService->communityTerm($word, $lang);
-        $urlParam = ['format' => 'html'];
-        $fakeRequest = Request::create('', 'GET', $urlParam);
-        $termArray    = $term->toArray($fakeRequest);
+
+        $termArray    = $term;
         $entry = [
             'word'      => $termArray['word'],
             'lang'      => $termArray['language'],
@@ -131,7 +135,7 @@ HTML,
                 ['word' => 'Vipassanā', 'zh' => '内观', 'lang' => 'pi'],
                 ['word' => 'Ti-lakkhaṇa', 'zh' => '三相', 'lang' => 'pi'],
             ],
-            'content' => $termArray['html']
+            'content' => $termArray['html'] ?? ''
         ];
         $parsed  = WikiContentParser::parse($entry['content']);
 

@@ -6,8 +6,6 @@ use Illuminate\Console\Command;
 use App\Http\Api\DictApi;
 use App\Models\UserDict;
 use App\Models\DhammaTerm;
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Log;
 
 class ExportPaliSynonyms extends Command
 {

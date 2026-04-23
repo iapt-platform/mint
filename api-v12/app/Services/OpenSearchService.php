@@ -76,6 +76,10 @@ class OpenSearchService
                         'tokenizer' => 'standard',
                         'filter' => ['lowercase', 'asciifolding']
                     ],
+                    'zh_suggest_analyzer' => [
+                        'tokenizer' => 'ik_smart',
+                        'char_filter' => ['tsconvert'],
+                    ],
                     // 中文简繁统一 (繁 -> 简)
                     'zh_index_analyzer' => [
                         'tokenizer' => 'ik_max_word',
@@ -145,9 +149,13 @@ class OpenSearchService
                             ],
                         ],
                         // 自动建议字段
-                        'suggest' => [
+                        'suggest_pali' => [
                             'type' => 'completion',
                             'analyzer' => 'pali_suggest_analyzer'
+                        ],
+                        'suggest_zh' => [
+                            'type' => 'completion',
+                            'analyzer' => 'zh_suggest_analyzer'
                         ],
                     ],
                 ],
@@ -212,10 +220,14 @@ class OpenSearchService
                                 'engine'     => 'nmslib',
                             ],
                         ],
-                        'suggest' => [
+                        'suggest_pali' => [
                             'type' => 'completion',
                             'analyzer' => 'pali_suggest_analyzer'
-                        ]
+                        ],
+                        'suggest_zh' => [
+                            'type' => 'completion',
+                            'analyzer' => 'zh_suggest_analyzer'
+                        ],
                     ],
                 ],
                 'related_id' => ['type' => 'keyword'],
@@ -775,8 +787,10 @@ class OpenSearchService
     ): array {
         // 字段映射配置
         $fieldMap = [
-            'title' => 'title.suggest',
-            'content' => 'content.suggest',
+            'title_pali' => 'title.suggest_pali',
+            'title_zh' => 'title.suggest_zh',
+            'content_pali' => 'content.suggest_pali',
+            'content_zh' => 'content.suggest_zh',
         ];
 
         // 处理字段参数

@@ -4,7 +4,7 @@
 @section('title', '文集 · 巴利书库')
 
 @push('styles')
-    @vite('resources/css/modules/_anthology.css')
+@vite('resources/css/modules/_anthology.css')
 @endpush
 
 @section('breadcrumb')
@@ -32,14 +32,13 @@
             <div class="col-lg-9">
 
                 @forelse($anthologies as $item)
-                    <x-ui.card-anthology
-                        :item="$item"
-                        :href="route('library.anthology.show', $item['id'])"
-                    />
+                <x-ui.card-anthology
+                    :item="$item"
+                    :href="route('library.anthology.show', $item['id'])" />
                 @empty
-                    <div class="wiki-card">
-                        <x-ui.empty-state title="暂无文集" />
-                    </div>
+                <div class="wiki-card">
+                    <x-ui.empty-state title="暂无文集" />
+                </div>
                 @endforelse
 
                 {{-- 分页 --}}
@@ -57,8 +56,7 @@
                     <x-ui.search-input
                         :action="route('library.search')"
                         placeholder="搜索文集…"
-                        :hidden-fields="['type' => 'anthology']"
-                    />
+                        :hidden-fields="['resource_type' => 'anthology']" />
                 </div>
 
                 {{-- 作者列表 --}}
@@ -75,8 +73,7 @@
                                     :initials="$author['initials']"
                                     :name="$author['name']"
                                     :sub="$author['count'] . ' 篇文集'"
-                                    size="md"
-                                />
+                                    size="md" />
                             </a>
                         </li>
                         @endforeach

@@ -49,10 +49,11 @@ class UsersDesensitize extends Command
             $this->info('test mode');
         } else {
             $this->error('this is not test mode');
+            if (!$this->confirm("desensitize all users information?")) {
+                return 0;
+            }
         }
-        if (!$this->confirm("desensitize all users information?")) {
-            return 0;
-        }
+
         $users = UserInfo::cursor();
         $total = UserInfo::count();
         $desensitized = 0;
