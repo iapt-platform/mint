@@ -10,14 +10,14 @@ use App\Services\TagService;
 use Illuminate\Support\Facades\Log;
 use App\Models\PaliText;
 
-class IndexPaliText extends Command
+class IndexTipitaka extends Command
 {
     /**
      * The name and signature of the console command.
      * php artisan opensearch:index-pali 93 --para=6
      * @var string
      */
-    protected $signature = 'opensearch:index-pali {book : The book ID to index data for}
+    protected $signature = 'opensearch:index-tipitaka {book : The book ID to index data for}
     {--test}
     {--para= : index paragraph No. omit to all}
     {--summary=on}
@@ -92,7 +92,7 @@ class IndexPaliText extends Command
                 $booksId = [$book];
             }
             foreach ($booksId as $key => $bookId) {
-                $this->indexTipitakaParagraphs($bookId, $paragraph);
+                $this->indexTipitakaBook($bookId, $paragraph);
             }
 
             return $overallStatus;
@@ -109,7 +109,7 @@ class IndexPaliText extends Command
      * @param int $book
      * @return int
      */
-    protected function indexTipitakaParagraphs($book, $paragraph = null)
+    protected function indexTipitakaBook($book, $paragraph = null)
     {
         $this->info("Starting to index paragraphs for book: $book");
         $total = 0;
