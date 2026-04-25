@@ -29,7 +29,7 @@ class InitSystemChannel extends Command
         ],
         [
             "name" => '_System_Wbw_VRI_',
-            'type' => 'original',
+            'type' => 'wbw',
             'lang' => 'pali',
         ],
         [

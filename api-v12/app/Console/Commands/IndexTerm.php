@@ -8,32 +8,34 @@ use App\Services\OpenSearchService;
 use App\Services\TermService;
 use Illuminate\Support\Facades\Log;
 
-
 class IndexTerm extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan opensearch:index-term --word=anomadassī
+     *
      * @var string
+     *
+     * @example
+     *   php artisan opensearch:index-term
+     *   php artisan opensearch:index-term --word=anomadassī
+     *   php artisan opensearch:index-term --test
      */
     protected $signature = 'opensearch:index-term
-    {--test}
-    {--word= : index word. omit to all}';
+        {--test}
+        {--word= : 指定单个词条进行索引，省略则索引全部}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Index Term data into OpenSearch ';
+    protected $description = 'Index Term data into OpenSearch';
 
-    private $isTest = false;
-    private $summary = false;
+    /** @var bool 是否为测试模式（只打印，不写入 OpenSearch） */
+    private bool $isTest = false;
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct(
         protected OpenSearchService $openSearchService,
@@ -45,93 +47,110 @@ class IndexTerm extends Command
     /**
      * Execute the console command.
      *
-     * @return int
+     * 遍历所有（或指定）DhammaTerm，逐条构建文档并写入 OpenSearch。
+     * 测试模式下（--test）只打印文档内容，不执行写入。
+     *
+     * @return int  0 表示成功，1 表示失败
      */
-    public function handle()
+    public function handle(): int
     {
         $word = $this->option('word');
-
 
         if ($this->option('test')) {
             $this->isTest = true;
             $this->info('test mode');
         }
 
-
         try {
-            // Test OpenSearch connection
             [$connected, $message] = $this->openSearchService->testConnection();
             if (!$connected) {
                 $this->error($message);
                 Log::error($message);
                 return 1;
             }
-            $overallStatus = 0; // Track overall command status (0 for success, 1 for any failure)
+
             $total = DhammaTerm::count();
             $terms = DhammaTerm::select(['guid', 'word'])->orderBy('updated_at', 'asc');
+
             if ($word) {
                 $terms = $terms->where('word', $word);
             }
 
+            $overallStatus = 0;
+
             foreach ($terms->cursor() as $key => $term) {
-                $percent = (int)(($key * 100) / $total);
+                $percent = (int) (($key * 100) / $total);
                 $this->info("[{$percent}%]-{$key}  " . $term->word);
                 $this->indexTerm($term->guid);
             }
 
             return $overallStatus;
         } catch (\Exception $e) {
-            $this->error("Failed to index Pali data: " . $e->getMessage());
-            Log::error("Failed to index Term data : ", ['error' => $e]);
+            $this->error('Failed to index Term data: ' . $e->getMessage());
+            Log::error('Failed to index Term data', ['error' => $e]);
             return 1;
         }
     }
 
     /**
+     * 构建单条词条文档并写入 OpenSearch
      *
+     * 文档结构遵循新版 mapping：
+     *   title.text.pali / title.text.zh  → 全文检索
+     *   title.suggest.pali / title.suggest.zh → 自动建议
+     *   content.text.pali / content.text.zh   → 正文内容
+     *
+     * @param  string  $id  DhammaTerm 的 guid
+     * @return void
      */
-    protected function indexTerm(string $id)
+    protected function indexTerm(string $id): void
     {
-        $termData = $this->termService->find($id, 'text');
-        $channelName = $termData["channel"]['name'] ?? '';
-        $isCommunity = $this->termService->isCommunity($termData["channel_id"]);
-        $content = $termData['html'] ?? $termData['meaning'];
+        $termData    = $this->termService->find($id, 'text');
+        $channelName = $termData['channel']['name'] ?? '';
+        $isCommunity = $this->termService->isCommunity($termData['channel_id']);
+        $content     = $termData['html'] ?? $termData['meaning'];
+
         $document = [
-            'id' => "term_{$id}",
-            'resource_id' => $id, // Use uid from getPaliData for resource_id
+            'id'            => "term_{$id}",
+            'resource_id'   => $id,
             'resource_type' => 'term',
-            'title' => [
-                'pali' => $termData['word'],
-                'zh' => $termData['meaning'],
-                'suggest_pali' => [$termData['word']],
-                'suggest_zh' => [$termData['meaning']],
+            'title'         => [
+                'text' => [
+                    'pali' => $termData['word'],
+                    'zh'   => $termData['meaning'],
+                ],
+                'suggest' => [
+                    'pali' => [$termData['word']],
+                    'zh'   => [$termData['meaning']],
+                ],
             ],
             'summary' => [
-                'text' => $termData['summary'] ?? $termData['note'] ?? ''
+                'text' => $termData['summary'] ?? $termData['note'] ?? '',
             ],
-            'content' => [],
+            'content'     => [],
             'bold_single' => [$termData['meaning'], $termData['word']],
-            'related_id' => $termData['word'],
-            'category' => [],
-            'tags' => $isCommunity ? ['community'] : [],
-            'language' => $termData['language'],
-            'updated_at' => now()->toIso8601String(),
-            'path' => $termData['studio']['realName'] . "/{$channelName}",
+            'related_id'  => $termData['word'],
+            'category'    => [],
+            'tags'        => $isCommunity ? ['community'] : [],
+            'language'    => $termData['language'],
+            'updated_at'  => now()->toIso8601String(),
+            'path'        => $termData['studio']['realName'] . "/{$channelName}",
         ];
 
-        if (strpos($termData['language'], 'zh') !== false) {
-            $document['content']['zh'] = $content;
+        // TODO: 补充语言判断，将内容放入对应的 text.pali 或 text.zh 字段
+        $plainText = strip_tags($content);
+        if (str_contains($termData['language'], 'zh')) {
+            $document['content']['text']['zh'] = $plainText;
         } else {
-            //TODO 判断语言 放在合适的字段
-            $document['content']['zh'] = $content;
+            $document['content']['text']['zh'] = $plainText;
         }
+        $document['content']['display']    = $content;             // 展示
 
         if ($this->isTest) {
-            $this->info($document['title']['pali']);
+            $this->info($document['title']['text']['pali']);
             $this->info($document['summary']['text']);
         } else {
             $this->openSearchService->create($document['id'], $document);
         }
-        return;
     }
 }

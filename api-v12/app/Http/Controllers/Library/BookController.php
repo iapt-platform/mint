@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Library;
 
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Facades\Log;
+
+
 use Illuminate\Http\Request;
 use App\Models\ProgressChapter;
 use App\Models\PaliText;
@@ -11,11 +14,23 @@ use App\Models\Sentence;
 
 use App\Services\ChapterService;
 use App\Services\PaliContentService;
+use App\Services\OpenSearchService;
+
+use App\DTO\Search\HitItemDTO;
+
 
 class BookController extends Controller
 {
     protected $maxChapterLen = 50000;
     protected $minChapterLen = 100;
+
+    /**
+     * 构造函数，注入 OpenSearchService
+     *
+     * @param  \App\Services\OpenSearchService  $searchService
+     */
+    public function __construct(protected OpenSearchService $searchService) {}
+
     public function show($id)
     {
         $bookRaw = $this->loadBook($id);
@@ -51,27 +66,49 @@ class BookController extends Controller
 
     public function read(Request $request, $id)
     {
-        $chapterService = app(ChapterService::class);
-        [$book, $para] = explode('-', $id);
+        $start = microtime(true);
+        $lap = function (string $label) use ($start): void {
+            $elapsed = round((microtime(true) - $start) * 1000, 2);
+            Log::debug("[book.read] {$label}", ['elapsed_ms' => $elapsed]);
+        };
+
+        $lap('start');
+
         $channelId = $request->input('channel');
-        $chapterUid = $chapterService->getUidByChannel($book, $para, $channelId);
-        $bookRaw = $this->loadBook($chapterUid);
+        $openSearchId = "tipitaka_chapter_{$id}_{$channelId}";
 
-        if (!$bookRaw) {
-            abort(404);
-        }
-        $channelId = $bookRaw->channel_id; // 替换为具体的 channel_id 值
+        $chapter = HitItemDTO::fromArray($this->searchService->get($openSearchId))->toArray();
+        $lap('searchService->get + HitItemDTO');
 
-        $book = $this->getBookInfo($bookRaw);
-        $book['toc'] = $this->getBookToc($bookRaw->book, $bookRaw->para, $channelId, 2, 7);
-        $book['categories'] = $this->getBookCategory($bookRaw->book, $bookRaw->para);
-        $book['tags'] = [];
-        $book['pagination'] = $this->pagination($bookRaw);
-        $book['content'] = $this->getBookContent($chapterUid);
-        $channels = $chapterService->publicChannels($bookRaw->book, $bookRaw->para);
-        $editor_link = config('mint.server.dashboard_base_path') . "/workspace/tipitaka/chapter/{$id}?channel={$channelId}";
+        [$bookId, $paraId] = explode('-', $id);
 
-        return view('library.book.read', compact('book', 'channels', 'editor_link'));
+        $chapterService = app(ChapterService::class);
+
+        $book = [];
+
+        $book['toc'] = $this->getBookToc((int)$bookId, (int)$paraId, $channelId, 2, 7);
+        $lap('getBookToc');
+
+        $book['categories'] = $chapter['category'];
+        $book['title']      = $chapter['title'];
+        $book['author']     = 'author'; // FIXME
+        $book['tags']       = [];
+
+        $book['pagination'] = $this->pagination((int)$bookId, (int)$paraId, $channelId);
+        $lap('pagination');
+
+        $book['content'] = $chapter['display'];
+
+        $channels = $chapterService->publicChannels((int)$bookId, (int)$paraId);
+        $lap('publicChannels');
+
+        $editor_link = config('mint.server.dashboard_base_path')
+            . "/workspace/tipitaka/chapter/{$id}?channel={$channelId}";
+
+        $view = view('library.book.read', compact('book', 'channels', 'editor_link'));
+        $lap('view compiled — total');
+
+        return $view;
     }
 
     private function loadBook($id)
@@ -107,50 +144,53 @@ class BookController extends Controller
         ];
     }
 
-    private function getBookToc(int $book, int $paragraph, string $channelId, $minLevel = 2, $maxLevel = 2)
+    private function getBookToc(int $book, int $paragraph, string $channelId, $minLevel = 2, $maxLevel = 2): array
     {
-        //先找到书的起始（书名）章节
-        //一个book 里面可以有多本书
         $currBook = $this->bookStart($book, $paragraph);
+
         $start = $currBook->paragraph;
-        $end = $currBook->paragraph + $currBook->chapter_len - 1;
+        $end   = $currBook->paragraph + $currBook->chapter_len - 1;
+
         $paliTexts = PaliText::where('book', $book)
-            ->whereBetween('paragraph',  [$start, $end])
-            ->whereBetween('level', [$minLevel, $maxLevel])->orderBy('paragraph')->get();
+            ->whereBetween('paragraph', [$start, $end])
+            ->whereBetween('level', [$minLevel, $maxLevel])
+            ->orderBy('paragraph')
+            ->get();
 
         $chapters = ProgressChapter::where('book', $book)
             ->whereBetween('para', [$start, $end])
-            ->where('channel_id', $channelId)->orderBy('para')->get();
+            ->where('channel_id', $channelId)
+            ->orderBy('para')
+            ->get();
 
-        $toc = $paliTexts->map(function ($paliText) use ($chapters, $channelId) {
-            $title = $paliText->toc;
-            if (count($chapters) > 0) {
-                $found = array_filter($chapters->toArray(), function ($chapter) use ($paliText) {
-                    return $chapter['book'] == $paliText->book && $chapter['para'] == $paliText->paragraph;
-                });
-                if (count($found) > 0) {
-                    $chapter = array_shift($found);
-                    if (!empty($chapter['title'])) {
-                        $title = $chapter['title'];
-                    }
-                    if (!empty($chapter['summary'])) {
-                        $summary = $chapter['summary'];
-                    }
-                    $progress = (int)($chapter['progress'] * 100);
-                    $id = $chapter['uid'];
-                }
+        // keyBy 建索引，map 里 O(1) 查找，完全避免 toArray() 序列化和 array_filter O(n×m) 扫描
+        $chaptersIndexed = $chapters->keyBy('para');
+
+        return $paliTexts->map(function ($paliText) use ($chaptersIndexed, $channelId) {
+            $title    = $paliText->toc;
+            $summary  = '';
+            $progress = 0;
+            $disabled = true;
+
+            /** @var ProgressChapter|null $chapter */
+            $chapter = $chaptersIndexed->get($paliText->paragraph);
+            if ($chapter) {
+                if (!empty($chapter->title))   $title   = $chapter->title;
+                if (!empty($chapter->summary)) $summary = $chapter->summary;
+                $progress = (int)($chapter->progress * 100);
+                $disabled = false;
             }
+
             return [
-                "id" => "{$paliText->book}-{$paliText->paragraph}",
-                "channel" => $channelId,
-                "title" => $title,
-                "summary" => $summary ?? "",
-                "progress" => $progress ?? 0,
-                "level" => (int)$paliText->level,
-                "disabled" => !isset($progress),
+                'id'       => "{$paliText->book}-{$paliText->paragraph}",
+                'channel'  => $channelId,
+                'title'    => $title,
+                'summary'  => $summary,
+                'progress' => $progress,
+                'level'    => (int)$paliText->level,
+                'disabled' => $disabled,
             ];
-        })->toArray();
-        return $toc;
+        })->all();
     }
 
     public function getBookCategory($book, $paragraph)
@@ -173,91 +213,20 @@ class BookController extends Controller
             ->first();
         return $currBook;
     }
-    public function getBookContent($id)
+
+
+    public function pagination(int $book, int $para, string $channelId)
     {
-        //查询book信息
-        $book = $this->loadBook($id);
-        $currBook = $this->bookStart($book->book, $book->para);
+        $currBook = $this->bookStart($book, $para);
         $start = $currBook->paragraph;
         $end = $currBook->paragraph + $currBook->chapter_len - 1;
         // 查询起始段落
-        $paragraphs = PaliText::where('book', $book->book)
+        $paragraphs = PaliText::where('book', $book)
             ->whereBetween('paragraph', [$start, $end])
             ->where('level', '<', 8)
             ->orderBy('paragraph')
             ->get();
-        $curr = $paragraphs->firstWhere('paragraph', $book->para);
-        $endParagraph = $curr->paragraph + $curr->chapter_len - 1;
-        if ($curr->chapter_strlen > $this->maxChapterLen) {
-            //太大了，修改结束位置 找到下一级
-            foreach ($paragraphs as $key => $paragraph) {
-                if ($paragraph->paragraph > $curr->paragraph) {
-                    if ($paragraph->chapter_strlen <= $this->maxChapterLen) {
-                        $endParagraph = $paragraph->paragraph + $paragraph->chapter_len - 1;
-                        break;
-                    }
-                    if ($paragraph->level <= $curr->level) {
-                        //不能往下走了，就是它了
-                        $endParagraph = $paragraphs[$key - 1]->paragraph + $paragraphs[$key - 1]->chapter_len - 1;
-                        break;
-                    }
-                }
-            }
-        }
-
-        $paraStart = $curr->paragraph;
-        $paraEnd = $endParagraph;
-        $paragraphs = app(PaliContentService::class)->paragraphs(
-            $book->book,
-            $paraStart,
-            $paraEnd,
-            [$book->channel_id],
-            ['mode' => 'read', 'format' => 'html', 'original' => false]
-        );
-
-        //获取句子数据
-
-        $pali = PaliText::where('book', $book->book)
-            ->whereBetween('paragraph', [$curr->paragraph, $endParagraph])
-            ->select(['paragraph', 'level'])
-            ->orderBy('paragraph')
-            ->get();
-        $result = [];
-        foreach ($paragraphs as $key => $paragraph) {
-            $content = [];
-            foreach ($paragraph['children'] as $key => $sent) {
-                if (isset($sent['translation'])) {
-                    foreach ($sent['translation'] as $key => $translation) {
-                        $curr = $translation['html'] ?? $translation['content'];
-                        $content[] = "<span class='sentence'>{$curr}</span>";
-                    }
-                }
-            }
-            $currPaliPara = $pali->firstWhere('paragraph', $paragraph['para']);
-            $level = $currPaliPara->level;
-            $paragraph = [
-                'id' => $paragraph['para'],
-                'level' => $level,
-                'text' => [[implode('', $content)]],
-            ];
-            $result[] = $paragraph;
-        }
-
-        return $result;
-    }
-
-    public function pagination($book)
-    {
-        $currBook = $this->bookStart($book->book, $book->para);
-        $start = $currBook->paragraph;
-        $end = $currBook->paragraph + $currBook->chapter_len - 1;
-        // 查询起始段落
-        $paragraphs = PaliText::where('book', $book->book)
-            ->whereBetween('paragraph', [$start, $end])
-            ->where('level', '<', 8)
-            ->orderBy('paragraph')
-            ->get();
-        $curr = $paragraphs->firstWhere('paragraph', $book->para);
+        $curr = $paragraphs->firstWhere('paragraph', $para);
         $current = $curr; //实际显示的段落
         $endParagraph = $curr->paragraph + $curr->chapter_len - 1;
         if ($curr->chapter_strlen > $this->maxChapterLen) {
@@ -288,7 +257,7 @@ class BookController extends Controller
             $nextTranslation = ProgressChapter::with('channel.owner')
                 ->where('book', $nextPali->book)
                 ->where('para', $nextPali->paragraph)
-                ->where('channel_id', $book->channel_id)
+                ->where('channel_id', $channelId)
                 ->first();
             if ($nextTranslation) {
                 if (!empty($nextTranslation->title)) {
@@ -296,7 +265,7 @@ class BookController extends Controller
                 } else {
                     $next['title'] = $nextPali->toc;
                 }
-                $next['id'] = $nextTranslation->uid;
+                $next['id'] = "{$nextPali->book}-{$nextPali->paragraph}";
             }
         }
 
@@ -305,7 +274,7 @@ class BookController extends Controller
             $prevTranslation = ProgressChapter::with('channel.owner')
                 ->where('book', $prevPali->book)
                 ->where('para', $prevPali->paragraph)
-                ->where('channel_id', $book->channel_id)
+                ->where('channel_id', $channelId)
                 ->first();
             if ($prevTranslation) {
                 if (!empty($prevTranslation->title)) {
@@ -313,7 +282,7 @@ class BookController extends Controller
                 } else {
                     $prev['title'] = $prevPali->toc;
                 }
-                $prev['id'] = $prevTranslation->uid;
+                $prev['id'] = "{$prevPali->book}-{$prevPali->paragraph}";
             }
         }
 

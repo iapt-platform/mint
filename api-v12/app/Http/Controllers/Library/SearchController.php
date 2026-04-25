@@ -33,7 +33,7 @@ class SearchController extends Controller
         $dto = SearchDataDTO::fromArray($result);
         $results = [];
         foreach ($dto->hits->items as $key => $item) {
-            $results[] = [
+            $data = [
                 'id'     => $item->resId,
                 'title'       => $item->title,
                 'type'     => $item->type,
@@ -43,6 +43,11 @@ class SearchController extends Controller
                 'snippet'  => !empty($item->highlight) ? $item->highlight : $item->content,
                 'updated'  => Carbon::parse($item->updated)->format('Y-m-d'),
             ];
+            if ($item->type === 'tipitaka') {
+                $arrId = explode('_', $item->id);
+                $data['chapter'] = ['id' => $arrId['2'], 'channel' => $arrId['3']];
+            }
+            $results[] = $data;
         }
 
         $aggregations = $dto->aggregations->toArray();

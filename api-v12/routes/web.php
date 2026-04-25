@@ -6,13 +6,14 @@ use App\Http\Controllers\WbwAnalysisController;
 use App\Http\Controllers\PageIndexController;
 use App\Http\Controllers\AssetsController;
 use App\Http\Controllers\BlogController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\Library\AnthologyController;
 use App\Http\Controllers\Library\AnthologyReadController;
 use App\Http\Controllers\Library\BookController;
 use App\Http\Controllers\Library\WikiController;
 use App\Http\Controllers\Library\SearchController;
+use App\Http\Controllers\Library\HomeController;
+use App\Http\Controllers\Library\TipitakaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,10 +65,10 @@ Route::post('/logout', function () {
 })->name('logout');
 
 Route::prefix('library')->name('library.')->group(function () {
-    Route::get('/', [CategoryController::class, 'home'])->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 
-    Route::get('/tipitaka', [CategoryController::class, 'category'])->name('tipitaka.index');
-    Route::get('/tipitaka/category/{id}', [CategoryController::class, 'category'])->name('tipitaka.category');
+    Route::get('/tipitaka', [TipitakaController::class, 'index'])->name('tipitaka.index');
+    Route::get('/tipitaka/category/{id}', [TipitakaController::class, 'index'])->name('tipitaka.category');
     Route::get('/tipitaka/{id}', [BookController::class, 'show'])->name('tipitaka.show');
     Route::get('/tipitaka/{id}/read', [BookController::class, 'read'])->name('tipitaka.read');
 

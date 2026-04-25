@@ -4,20 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Services\OpenSearchService;
 use Illuminate\Http\Request;
+use App\DTO\Search\HitItemDTO;
 
 class SearchPlusController extends Controller
 {
-    protected $searchService;
-
     /**
      * 构造函数，注入 OpenSearchService
      *
      * @param  \App\Services\OpenSearchService  $searchService
      */
-    public function __construct(OpenSearchService $searchService)
-    {
-        $this->searchService = $searchService;
-    }
+    public function __construct(protected OpenSearchService $searchService) {}
 
     /**
      * Display a listing of the resource.
@@ -133,6 +129,7 @@ class SearchPlusController extends Controller
     public function show($id)
     {
         //
+        return $this->ok(HitItemDTO::fromArray($this->searchService->get($id)));
     }
 
     /**

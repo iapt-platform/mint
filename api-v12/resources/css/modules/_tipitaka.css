@@ -353,3 +353,45 @@
         width: 100%;
     }
 }
+
+/* 目录项布局 */
+.toc-item {
+    display: flex;
+    flex-direction: column; /* 默认：手机上下 */
+    gap: 0.4rem;
+}
+
+/* 标题 */
+.toc-title {
+    font-size: 0.95rem;
+}
+
+/* 进度区 */
+.toc-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* 百分比 */
+.toc-progress-text {
+    font-size: 0.7rem;
+    color: var(--tblr-secondary);
+    white-space: nowrap;
+}
+
+/* ≥ md（平板/桌面）：左右分布 */
+@media (min-width: 768px) {
+    .toc-item {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .toc-title {
+        flex: 1;
+    }
+
+    .toc-progress {
+        width: 140px;
+    }
+}

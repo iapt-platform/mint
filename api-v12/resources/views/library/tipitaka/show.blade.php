@@ -95,13 +95,27 @@
                 <ul class="wiki-toc-list">
                     @foreach($book['contents'] as $chapter)
                     <li>
-                        <a href="{{ route('library.tipitaka.read', $chapter['id']) }}?channel={{ $chapter['channel'] }}">
-                            <div style="display: flex;">
-                                <div>{{ $chapter['title'] }}</div>
-                                <div>
-                                    <span style="margin-left: auto; font-size: 0.75rem; color: var(--tblr-secondary);">
-                                        {{ $chapter['progress'] }}%
-                                    </span>
+                        <a href="{{ route('library.tipitaka.read', $chapter['id']) }}?channel={{ $chapter['channel'] }}" target="_blank">
+                            <div class="toc-item">
+                                <div class="toc-title">
+                                    {{ $chapter['title'] }}
+                                </div>
+
+                                <div class="toc-progress">
+                                    @php
+                                    $p = $chapter['progress'];
+                                    $color = $p >= 80 ? 'bg-green' : ($p >= 30 ? 'bg-yellow' : 'bg-red');
+                                    @endphp
+
+                                    <div class="progress" style="height: 6px;">
+                                        <div
+                                            class="progress-bar {{ $color }}"
+                                            style="width: {{ $p }}%">
+                                        </div>
+                                    </div>
+                                    <div class="toc-progress-text">
+                                        {{ $p }}%
+                                    </div>
                                 </div>
                             </div>
                             @if(isset($chapter['summary']))

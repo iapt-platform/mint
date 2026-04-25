@@ -9,12 +9,16 @@ use App\Services\SummaryService;
 use App\Services\TagService;
 use Illuminate\Support\Facades\Log;
 use App\Models\PaliText;
+use App\Models\Sentence;
+use App\Services\PaliContentService;
+use App\Http\Api\ChannelApi;
+use App\Models\ProgressChapter;
 
 class IndexTipitaka extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan opensearch:index-pali 93 --para=6
+     * php artisan opensearch:index-tipitaka 93 --para=6 --granularity=chapter
      * @var string
      */
     protected $signature = 'opensearch:index-tipitaka {book : The book ID to index data for}
@@ -22,7 +26,7 @@ class IndexTipitaka extends Command
     {--para= : index paragraph No. omit to all}
     {--summary=on}
     {--resume}
-    {--granularity= : The granularity to index (paragraph, sutta, sentence; omit to index all)}';
+    {--granularity=all : The granularity to index (paragraph, sutta, sentence; omit to index all)}';
 
     /**
      * The console command description.
@@ -31,10 +35,7 @@ class IndexTipitaka extends Command
      */
     protected $description = 'Index Pali data into OpenSearch for a specified book and optional granularity (all granularities if not specified)';
 
-    protected $searchPaliDataService;
-    protected $openSearchService;
-    protected $summaryService;
-    protected $tagService;
+
     private $isTest = false;
     private $summary = false;
 
@@ -44,16 +45,12 @@ class IndexTipitaka extends Command
      * @return void
      */
     public function __construct(
-        SearchPaliDataService $searchPaliDataService,
-        OpenSearchService $openSearchService,
-        SummaryService $summaryService,
-        TagService $tagService
+        protected SearchPaliDataService $searchPaliDataService,
+        protected OpenSearchService $openSearchService,
+        protected SummaryService $summaryService,
+        protected TagService $tagService
     ) {
         parent::__construct();
-        $this->searchPaliDataService = $searchPaliDataService;
-        $this->openSearchService = $openSearchService;
-        $this->summaryService = $summaryService;
-        $this->tagService = $tagService;
     }
 
     /**
@@ -92,7 +89,18 @@ class IndexTipitaka extends Command
                 $booksId = [$book];
             }
             foreach ($booksId as $key => $bookId) {
-                $this->indexTipitakaBook($bookId, $paragraph);
+                if (
+                    $this->option('granularity') === 'chapter' ||
+                    $this->option('granularity') === 'all'
+                ) {
+                    $this->indexChapter($bookId);
+                }
+                if (
+                    $this->option('granularity') === 'paragraph' ||
+                    $this->option('granularity') === 'all'
+                ) {
+                    $this->indexTipitakaParagraph($bookId, $paragraph);
+                }
             }
 
             return $overallStatus;
@@ -109,7 +117,7 @@ class IndexTipitaka extends Command
      * @param int $book
      * @return int
      */
-    protected function indexTipitakaBook($book, $paragraph = null)
+    protected function indexTipitakaParagraph($book, $paragraph = null)
     {
         $this->info("Starting to index paragraphs for book: $book");
         $total = 0;
@@ -260,13 +268,157 @@ class IndexTipitaka extends Command
      * @param int $book
      * @return int
      */
-    protected function indexPaliSutta($book)
+    protected function indexChapter($book)
     {
-        $this->warn("Sutta indexing is not yet implemented for book: $book");
-        Log::warning("Sutta indexing not implemented for book: $book");
-        return 1;
+        $this->info("Starting to index paragraphs for book: $book");
+        $total = 0;
+        $chapters = PaliText::where('book', $book)
+            ->where('level', '<', 8)
+            ->orderBy('paragraph')->get();
+        foreach ($chapters as $key => $chapter) {
+            if ($chapter->level === 1) {
+                $category = $this->tagService->getTagsName($chapter->uid);
+            }
+            /**
+             * 章节的起始位置算法
+             * 从章节的标题，到下一个章节的标题之间
+             */
+            $start = $chapter->paragraph;
+            if ($key === count($chapters) - 1) {
+                $end = PaliText::where('book', $book)
+                    ->orderBy('paragraph', 'desc')->first()
+                    ->value('paragraph');
+            } else {
+                $end = $chapters[$key + 1]->paragraph;
+            }
+            //获取这个段落之间的全部channel
+            $channels = Sentence::where('book_id', $book)
+                ->whereBetween('paragraph', [$start, $end])
+                ->select('channel_uid')
+                ->groupBy('channel_uid')->get();
+            $this->info("index chapter start={$start} end={$end}");
+
+            foreach ($channels as $key => $channel) {
+                $display = [];
+                $content = [];
+                $channelInfo = ChannelApi::getById($channel->channel_uid);
+                $this->info('channel =' . $channelInfo['name']);
+                if ($channelInfo['type'] === 'wbw') {
+                    $this->info('wbw channel skip');
+                    continue;
+                }
+                $paragraphsData = app(PaliContentService::class)->paragraphs(
+                    $book,
+                    $start,
+                    $end,
+                    [$channel->channel_uid],
+                    ['mode' => 'read', 'format' => 'html', 'original' => true]
+                );
+                //生成html数据
+
+                $title = '';
+                foreach ($paragraphsData as $key => $paragraph) {
+                    $translation = [];
+                    $original = [];
+                    foreach ($paragraph['children'] as $key => $sent) {
+                        if (isset($sent['translation'])) {
+                            foreach ($sent['translation'] as $key => $tran) {
+                                $curr = $tran['html'] ?? $tran['content'];
+                                $translation[] = "<span class='sentence'>{$curr}</span>";
+                                if ($tran['para'] === $start && !empty($curr)) {
+                                    $title = $curr;
+                                }
+                            }
+                        }
+                        if (
+                            isset($sent['origin']) ||
+                            is_array($sent['origin']) ||
+                            count($sent['origin']) > 0
+                        ) {
+                            $ori = $sent['origin'][0];
+                            $curr = $ori['html'] ?? $ori['content'];
+                            $original[] = "<span class='sentence origin'>{$curr}</span>";
+                            if (empty($title) && $ori['para'] === $start && !empty($curr)) {
+                                $title = $curr;
+                            }
+                        }
+                    }
+
+
+                    $level = $paragraph['para'] === $start ? $chapter->level : 0;
+                    $strOriginal = implode('', $original);
+                    $strTranslation = implode('', $translation);
+
+                    if ($level > 0) {
+                        $display[] = "<div><h{$level}>{$strOriginal}</h{$level}><h{$level}>{$strTranslation}</h{$level}></div>";
+                    } else {
+                        $display[] = "<div><p>{$strOriginal}</p><p>{$strTranslation}</p></div>";
+                    }
+
+                    if ($channelInfo['type'] === 'original') {
+                        $content[] = $strOriginal;
+                    } else {
+                        $content[] = $strTranslation;
+                    }
+                }
+                $this->chapterSave([
+                    'book' => $book,
+                    'para' => $start,
+                    'channel' => $channel->channel_uid,
+                    'display' => implode('', $display),
+                    'content' => implode('', $content),
+                    'title' => strip_tags($title),
+                    'cat' => $category
+                ]);
+            }
+        }
+
+
+        return 0;
     }
 
+    protected function chapterSave(array $param)
+    {
+        $progress = ProgressChapter::where('book', $param['book'])
+            ->where('para', $param['para'])
+            ->where('channel_id', $param['channel'])
+            ->first();
+        $channel = ChannelApi::getById($param['channel']);
+        $document = [
+            'id'            => "tipitaka_chapter_{$param['book']}-{$param['para']}_{$param['channel']}",
+            'resource_id'   => $progress ? $progress->uid : "{$param['book']}-{$param['para']}_{$param['channel']}",
+            'resource_type' => 'tipitaka',
+            'title'         => [],
+            'summary' => [
+                'text' => '',
+            ],
+            'content'     => [],
+            'related_id'  => "{$param['book']}-{$param['para']}",
+            'category'    => $param['cat'],
+            'language'    => $channel['lang'],
+            'updated_at'  => now()->toIso8601String(),
+            'granularity' => 'chapter',
+        ];
+
+        // TODO: 补充语言判断，将内容放入对应的 text.pali 或 text.zh 字段
+        $plainText = strip_tags($param['content']);
+        $title = strip_tags($param['title']);
+        if (str_contains($channel['lang'], 'zh')) {
+            $document['content']['text']['zh'] = $plainText;
+            $document['title']['text']['zh'] = $title;
+        } else {
+            $document['content']['text']['pali'] = $plainText;
+            $document['title']['text']['pali'] = $title;
+        }
+        $document['content']['display']    = $param['display'];             // 展示
+
+        if ($this->isTest) {
+            $this->info($param['content']);
+        } else {
+            $this->openSearchService->create($document['id'], $document);
+            $this->info("create index {$document['id']} size=" . strlen($param['content']));
+        }
+    }
     /**
      * Index Pali sentences for a given book (placeholder for future implementation).
      *

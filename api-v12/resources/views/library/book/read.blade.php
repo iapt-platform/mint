@@ -161,24 +161,8 @@
                 </p>
 
                 <div class="content">
-                    @if(isset($book['content']) && count($book['content']) > 0)
-                    @foreach ($book['content'] as $paragraph)
-                    <div id="para-{{ $paragraph['id'] }}">
-                        @foreach ($paragraph['text'] as $rows)
-                        <div style="display:flex;">
-                            @foreach ($rows as $col)
-                            <div style="flex:1;">
-                                @if($paragraph['level'] < 8)
-                                    <h{{ $paragraph['level'] }}>{!! $col !!}</h{{ $paragraph['level'] }}>
-                                    @else
-                                    <p>{!! $col !!}</p>
-                                    @endif
-                            </div>
-                            @endforeach
-                        </div>
-                        @endforeach
-                    </div>
-                    @endforeach
+                    @if(isset($book['content']))
+                    {{!! $book['content'] !!}}
                     @else
                     <div>没有内容</div>
                     @endif

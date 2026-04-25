@@ -9,6 +9,9 @@
             @if($result['type']==='term')
             {{ route('library.wiki.show', [$result['lang'], $result['id']]) }}
             @endif
+            @if($result['type']==='tipitaka')
+            {{ route('library.tipitaka.read', ['id' => $result['chapter']['id'], 'channel' => $result['chapter']['channel']]) }}
+            @endif
             ">
             {{ $result['title'] }}
             <span class="wiki-search-card-word">{{ $result['type'] }}</span>
