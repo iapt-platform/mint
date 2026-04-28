@@ -110,6 +110,15 @@ class IndexTerm extends Command
         $isCommunity = $this->termService->isCommunity($termData['channel_id']);
         $content     = $termData['html'] ?? $termData['meaning'];
 
+        $categories = $this->extractCategories($termData['note'] ?? '');
+        $quality = $this->extractFirstQuality($termData['note'] ?? '');
+        $tags = [];
+        foreach ($categories as $key => $category) {
+            $tags[] = "category:{$category}";
+        }
+        if (!empty($quality)) {
+            $tags[] = "quality:{$quality}";
+        }
         $document = [
             'id'            => "term_{$id}",
             'resource_id'   => $id,
@@ -125,16 +134,17 @@ class IndexTerm extends Command
                 ],
             ],
             'summary' => [
-                'text' => $termData['summary'] ?? $termData['note'] ?? '',
+                'text' => $termData['summary'] ?? '',
             ],
             'content'     => [],
             'bold_single' => [$termData['meaning'], $termData['word']],
             'related_id'  => $termData['word'],
-            'category'    => [],
-            'tags'        => $isCommunity ? ['community'] : [],
+            'category'    => null,
+            'tags'        => $tags,
             'language'    => $termData['language'],
             'updated_at'  => now()->toIso8601String(),
             'path'        => $termData['studio']['realName'] . "/{$channelName}",
+            'metadata' => ['channel' => $termData['channel_id']],
         ];
 
         // TODO: 补充语言判断，将内容放入对应的 text.pali 或 text.zh 字段
@@ -152,5 +162,41 @@ class IndexTerm extends Command
         } else {
             $this->openSearchService->create($document['id'], $document);
         }
+    }
+
+    /**
+     * 提取 Markdown 中的 {{category|...}} 分类标签
+     *
+     * @param string $content
+     * @return array
+     */
+    private function extractCategories(string $content): array
+    {
+        if (empty($content)) {
+            return [];
+        }
+        preg_match_all('/\{\{category\|([^}]+)\}\}/u', $content, $matches);
+
+        return array_values(array_filter(array_map(
+            fn($item) => trim($item),
+            $matches[1] ?? []
+        )));
+    }
+
+    /**
+     * 提取 Markdown 中第一个 {{quality|...}} 标签内的内容
+     *
+     * @param string $content
+     * @return string
+     */
+    private function extractFirstQuality(string $content): string
+    {
+        if (empty($content)) {
+            return '';
+        }
+
+        preg_match('/\{\{quality\|([^}]+)\}\}/u', $content, $matches);
+
+        return isset($matches[1]) ? trim($matches[1]) : '';
     }
 }

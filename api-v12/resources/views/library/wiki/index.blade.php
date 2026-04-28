@@ -14,6 +14,7 @@
         :hidden-fields="['resource_type' => 'term']" />
 </div>
 {{-- 今日条目 --}}
+@isset($today)
 <div class="wiki-today-banner">
     <div class="wiki-today-icon">☸</div>
     <div class="wiki-today-body">
@@ -28,8 +29,10 @@
         </a>
     </div>
 </div>
+@endisset
 
 {{-- 精选条目 --}}
+@if(isset($featured) && is_array($featured) && count($featured)>0)
 <div class="wiki-card">
     <div class="wiki-sidebar-title" style="margin-bottom: 14px;">精选条目</div>
     <div class="wiki-featured-grid">
@@ -43,6 +46,34 @@
         @endforeach
     </div>
 </div>
+@endif
+
+
+@if(isset($subs) && is_array($subs) && count($subs) > 0)
+
+{{-- 取一级分类名称作为标题 --}}
+@php
+$catLabel = collect(config('taxonomy'))->firstWhere('id', $category)['label'] ?? $category;
+@endphp
+
+<div class="wiki-card wiki-subcat-block">
+
+    <div class="wiki-subcat-block-header">
+        <span class="wiki-subcat-block-title">{{ $catLabel }}</span>
+        <a class="wiki-subcat-block-more"
+            href="{{ route('library.wiki.index', ['lang' => $lang]) }}?category={{ $category }}">
+            浏览全部
+        </a>
+    </div>
+
+    @foreach ($subs as $sub)
+    <x-wiki.sub-category :sub="$sub" :lang="$lang" />
+    @endforeach
+
+</div>
+
+@endif
+
 
 @endsection
 
@@ -64,6 +95,24 @@
             <td>{{ $stats['contributors'] }}</td>
         </tr>
     </table>
+</div>
+
+
+
+
+<div class="wiki-sidebar-section">
+    <div class="wiki-sidebar-title">质量等级</div>
+    <ul class="wiki-cat-list" id="qualityFilterList">
+        @foreach ($qualities as $q)
+        <li>
+            <a href="{{ request()->fullUrlWithQuery(['quality' => $q['value']]) }}"
+                class="wiki-quality-filter-item {{ $quality === $q['value'] ? 'active' : '' }}"
+                data-quality="{{ $q['value'] }}">
+                <span>{{ $q['label'] }}</span><span>{{ $q['subtitle'] }}</span>
+            </a>
+        </li>
+        @endforeach
+    </ul>
 </div>
 
 @endsection

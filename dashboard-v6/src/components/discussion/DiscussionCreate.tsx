@@ -78,7 +78,7 @@ const DiscussionCreateWidget = ({
                     content_type: "markdown",
                     type: topic.type,
                   };
-                  const url = `/v2/discussion`;
+                  const url = `/api/v2/discussion`;
                   console.log("create topic api request", url, topicData);
                   const newTopic = await post<
                     ICommentRequest,
@@ -97,7 +97,7 @@ const DiscussionCreateWidget = ({
                   }
                 }
               }
-              const url = `/v2/discussion`;
+              const url = `/api/v2/discussion`;
               const data: ICommentRequest = {
                 res_id: resId,
                 res_type: resType,

@@ -169,7 +169,7 @@ const DiscussionListCardWidget = ({
           },
         }}
         request={async (params = {}, _sorter, _filter) => {
-          let url: string = `/v2/discussion?type=${type}&res_type=${resType}&`;
+          let url: string = `/api/v2/discussion?type=${type}&res_type=${resType}&`;
           if (typeof topicId !== "undefined") {
             url += `view=question-by-topic&id=${topicId}`;
           } else if (typeof resId !== "undefined") {

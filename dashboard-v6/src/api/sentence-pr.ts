@@ -69,7 +69,7 @@ export async function fetchSentencePrList(
   wordEnd: number,
   channelId: string
 ): Promise<ISentencePrData[]> {
-  const url = `/v2/sentpr?view=sent-info&book=${book}&para=${para}&start=${wordStart}&end=${wordEnd}&channel=${channelId}`;
+  const url = `/api/v2/sentpr?view=sent-info&book=${book}&para=${para}&start=${wordStart}&end=${wordEnd}&channel=${channelId}`;
 
   const json = await get<ISentencePrListResponse>(url);
 
@@ -88,7 +88,7 @@ export async function createSentencePr(
   content: string
 ): Promise<void> {
   const json = await post<ISentencePrRequest, ISentencePrResponse>(
-    `/v2/sentpr`,
+    `/api/v2/sentpr`,
     {
       book: sentence.book,
       para: sentence.para,
@@ -112,7 +112,7 @@ export async function updateSentencePr(
   content: string
 ): Promise<void> {
   const json = await put<Pick<ISentencePrRequest, "text">, ISentencePrResponse>(
-    `/v2/sentpr/${prId}`,
+    `/api/v2/sentpr/${prId}`,
     { text: content }
   );
 
@@ -125,7 +125,7 @@ export async function updateSentencePr(
  * 删除 PR
  */
 export async function deleteSentencePr(prId: string): Promise<void> {
-  const json = await delete_<IDeleteResponse>(`/v2/sentpr/${prId}`);
+  const json = await delete_<IDeleteResponse>(`/api/v2/sentpr/${prId}`);
 
   if (!json.ok) {
     throw new Error(json.message ?? "删除失败");

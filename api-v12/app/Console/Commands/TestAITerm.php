@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Services\AITermService;
+use App\Services\AIAssistant\AITermService;
 
 class TestAITerm extends Command
 {
@@ -29,10 +29,10 @@ class TestAITerm extends Command
         //
         // ===== 创建 Service =====
         $service = app(AITermService::class);
-        $service->setModel('dd81ce6c-e9ff-46b2-b1af-947728ba996e');
 
         // ===== 执行 =====
-        $result = $service->create('f3ba16e5-862d-49c4-b5b0-39ab8b8ca4f4');
+        $result = $service->setModel('dd81ce6c-e9ff-46b2-b1af-947728ba996e')
+            ->update('f3ba16e5-862d-49c4-b5b0-39ab8b8ca4f4');
 
         // ===== 调试输出（建议保留）=====
         dump($result);

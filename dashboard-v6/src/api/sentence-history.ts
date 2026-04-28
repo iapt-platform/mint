@@ -48,7 +48,7 @@ export async function fetchSentenceHistory(
   view: THistoryView = "sentence",
   fork = false
 ): Promise<ISentHistoryData[]> {
-  let url = `/v2/sent_history?view=${view}&id=${sentId}`;
+  let url = `/api/v2/sent_history?view=${view}&id=${sentId}`;
   if (fork) {
     url += `&fork=1`;
   }

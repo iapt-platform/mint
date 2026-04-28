@@ -50,7 +50,7 @@ const UserSelectWidget = ({
 
         if (typeof keyWords === "string") {
           const json = await get<IUserListResponse>(
-            `/v2/user?view=key&key=${keyWords}`
+            `/api/v2/user?view=key&key=${keyWords}`
           );
           console.info("api response user select", json);
           const userList: RequestOptionsType[] = json.data.rows.map((item) => {

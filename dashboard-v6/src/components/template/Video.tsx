@@ -12,7 +12,7 @@ import type { TDisplayStyle } from "../../types/template";
 const { Text } = Typography;
 
 const getUrl = async (fileId: string) => {
-  const url = `/v2/attachment/${fileId}`;
+  const url = `/api/v2/attachment/${fileId}`;
   const res = await get<IAttachmentResponse>(url);
   return res.ok ? res.data.url : "";
 };

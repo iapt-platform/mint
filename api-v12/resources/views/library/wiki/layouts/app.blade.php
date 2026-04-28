@@ -6,7 +6,7 @@
 @extends('layouts.library')
 
 @push('styles')
-    @vite('resources/css/modules/_wiki.css')
+@vite('resources/css/modules/_wiki.css')
 @endpush
 
 @section('content')
@@ -15,49 +15,55 @@
 
     {{-- 左侧边栏 --}}
     @hasSection('wiki-sidebar-left')
-        <aside class="wiki-sidebar-left">
-            @yield('wiki-sidebar-left')
-        </aside>
+    <aside class="wiki-sidebar-left">
+        @yield('wiki-sidebar-left')
+    </aside>
     @else
-        @if(isset($lang))
-        <aside class="wiki-sidebar-left">
+    @if(isset($lang))
+    <aside class="wiki-sidebar-left">
 
-            @isset($categories)
-            <div class="wiki-sidebar-section">
-                <div class="wiki-sidebar-title">分类浏览</div>
-                <ul class="wiki-cat-list">
-                    @foreach ($categories as $cat)
-                    <li>
-                        <a href="{{ route('library.wiki.index', ['lang' => $lang]) }}?category={{ $cat['slug'] }}"
-                           class="{{ (request('category', 'all') === $cat['slug']) ? 'active' : '' }}">
-                            {{ $cat['label'] }}
-                            @if(isset($cat['count']))
-                                <span class="wiki-cat-count">{{ $cat['count'] }}</span>
-                            @endif
-                        </a>
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
-            @endisset
+        @isset($categories)
+        <div class="wiki-sidebar-section">
+            <div class="wiki-sidebar-title">分类浏览</div>
+            <ul class="wiki-cat-list">
+                <li>
+                    <a href="{{ route('library.wiki.index', ['lang' => $lang]) }}"
+                        class="{{ (request('category', 'all') === 'all') ? 'active' : '' }}">
+                        全部
+                    </a>
+                </li>
+                @foreach ($categories as $cat)
+                <li>
+                    <a href="{{ route('library.wiki.index', ['lang' => $lang]) }}?category={{ $cat['id'] }}"
+                        class="{{ (request('category', 'all') === $cat['id']) ? 'active' : '' }}">
+                        {{ $cat['label'] }}
+                        @if(isset($cat['count']))
+                        <span class="wiki-cat-count">{{ $cat['count'] }}</span>
+                        @endif
+                    </a>
+                </li>
+                @endforeach
+            </ul>
+        </div>
+        @endisset
 
-            @isset($recentUpdates)
-            <div class="wiki-sidebar-section">
-                <div class="wiki-sidebar-title">最近更新</div>
-                <ul class="wiki-cat-list">
-                    @foreach ($recentUpdates as $item)
-                    <li>
-                        <a href="{{ route('library.wiki.show', [$item['lang'], $item['word']]) }}">
-                            {{ $item['word'] }}
-                        </a>
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
-            @endisset
+        @isset($recentUpdates)
+        <div class="wiki-sidebar-section">
+            <div class="wiki-sidebar-title">最近更新</div>
+            <ul class="wiki-cat-list">
+                @foreach ($recentUpdates as $item)
+                <li>
+                    <a href="{{ route('library.wiki.show', [$item['lang'], $item['word']]) }}">
+                        {{ $item['word'] }}
+                    </a>
+                </li>
+                @endforeach
+            </ul>
+        </div>
+        @endisset
 
-        </aside>
-        @endif
+    </aside>
+    @endif
     @endif
 
     {{-- 主内容区 --}}

@@ -158,7 +158,6 @@ class IndexTipitaka extends Command
             }
             $this->indexParagraph($para->toArray(), $paraContent, $commentaryId, $category);
             $this->info("{$para['book']}-[{$para['paragraph']}]-[{$commentaryId}]");
-            usleep(10000);
         }
 
         $this->info("Successfully indexed $total paragraphs for book: $book");
@@ -184,14 +183,14 @@ class IndexTipitaka extends Command
             'resource_id' => $resource_id, // Use uid from getPaliData for resource_id
             'resource_type' => 'tipitaka',
             'title' => [
-                'pali' => $title,
+                'text' => ['pali' => $title,],
             ],
             'summary' => [
                 'text' => $this->summary  ? $this->summaryService->summarize($paraContent['markdown']) : ''
             ],
             'content' => [
-                'pali' => $paraContent['text'],
-                'suggest' => $paraContent['words'],
+                'text' => ['pali' => $paraContent['text']],
+                'suggest' => ['pali' => $paraContent['words']],
             ],
             'bold_single' => implode(' ', $paraContent['bold1']),
             'bold_multi' => implode(' ', array_merge($paraContent['bold2'], $paraContent['bold3'])),
@@ -203,10 +202,10 @@ class IndexTipitaka extends Command
             'path' => $this->getPathTitle($path),
         ];
         if ($paraInfo['level'] < 8) {
-            $document['title']['suggest'] = $paraContent['words'];
+            $document['title']['suggest']['pali'] = $paraContent['words'];
         }
         if ($this->isTest) {
-            $this->info($document['title']['pali']);
+            $this->info($document['title']['text']['pali']);
             $this->info($document['summary']['text']);
         } else {
             $this->openSearchService->create($document['id'], $document);
@@ -364,6 +363,7 @@ class IndexTipitaka extends Command
                 $this->chapterSave([
                     'book' => $book,
                     'para' => $start,
+                    'level' => $chapter->level,
                     'channel' => $channel->channel_uid,
                     'display' => implode('', $display),
                     'content' => implode('', $content),
@@ -397,7 +397,7 @@ class IndexTipitaka extends Command
             'category'    => $param['cat'],
             'language'    => $channel['lang'],
             'updated_at'  => now()->toIso8601String(),
-            'granularity' => 'chapter',
+            'granularity' => $param['level'] === 1 ? 'book' : 'chapter',
         ];
 
         // TODO: 补充语言判断，将内容放入对应的 text.pali 或 text.zh 字段

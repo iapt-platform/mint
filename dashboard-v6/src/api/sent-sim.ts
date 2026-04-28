@@ -33,7 +33,7 @@ export async function fetchSentSim(
   const { book, para, wordStart, wordEnd, limit, offset, sim, channelsId } =
     params;
 
-  let url = `/v2/sent-sim?view=sentence&book=${book}&paragraph=${para}&start=${wordStart}&end=${wordEnd}&mode=edit`;
+  let url = `/api/v2/sent-sim?view=sentence&book=${book}&paragraph=${para}&start=${wordStart}&end=${wordEnd}&mode=edit`;
   url += `&limit=${limit}`;
   url += `&offset=${offset}`;
   url += `&sim=${sim}`;

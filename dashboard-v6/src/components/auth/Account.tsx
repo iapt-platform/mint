@@ -23,7 +23,7 @@ const AccountWidget = ({ userId, onLoad }: IWidget) => {
       onFinish={async (values: IUserApiData) => {
         console.log(values);
 
-        const url = `/v2/user/${userId}`;
+        const url = `/api/v2/user/${userId}`;
         const postData = {
           roles: values.role,
         };
@@ -38,7 +38,7 @@ const AccountWidget = ({ userId, onLoad }: IWidget) => {
       }}
       params={{}}
       request={async () => {
-        const url = `/v2/user/${userId}`;
+        const url = `/api/v2/user/${userId}`;
         console.log("url", url);
         const res = await get<IUserResponse>(url);
         if (res.ok) {

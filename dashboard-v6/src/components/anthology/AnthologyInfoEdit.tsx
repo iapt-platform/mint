@@ -167,7 +167,7 @@ const AnthologyInfoEditWidget = ({
             if (typeof keyWords === "undefined") {
               return currChannel ? [currChannel] : [];
             }
-            const url = `/v2/channel?view=studio&name=${studioName}`;
+            const url = `/api/v2/channel?view=studio&name=${studioName}`;
             console.log("url", url);
             const json = await get<IApiResponseChannelList>(url);
             const textbookList = json.data.rows.map((item) => {

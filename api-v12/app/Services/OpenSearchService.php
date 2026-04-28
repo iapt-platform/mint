@@ -574,78 +574,131 @@ class OpenSearchService
      */
     public function search(array $params): array
     {
-        $page     = $params['page']     ?? 1;
+        $page     = $params['page'] ?? 1;
         $pageSize = $params['pageSize'] ?? 20;
         $from     = ($page - 1) * $pageSize;
         $mode     = $params['searchMode'] ?? 'fuzzy';
 
+        // 排除字段
+        if (!empty($params['excludes']) && is_array($params['excludes'])) {
+            $excludes = array_merge($this->sourceExcludes, $params['excludes']);
+        } else {
+            $excludes = $this->sourceExcludes;
+        }
+
         // ---------- 过滤条件 ----------
         $filters = [];
+
         if (!empty($params['resourceType'])) {
             $filters[] = ['term' => ['resource_type' => $params['resourceType']]];
         }
+
         if (!empty($params['resourceId'])) {
             $filters[] = ['term' => ['resource_id' => $params['resourceId']]];
         }
+
         if (!empty($params['granularity'])) {
             $filters[] = ['term' => ['granularity' => $params['granularity']]];
         }
+
         if (!empty($params['language'])) {
             $filters[] = ['term' => ['language' => $params['language']]];
         }
+
         if (!empty($params['category'])) {
-            $filters[] = ['term' => ['category' => $params['category']]];
+            if (is_array($params['category'])) {
+                $categories = $params['category'];
+            } else {
+                $categories = [$params['category']];
+            }
+
+            // 必须匹配全部：为每个 category 创建一个 term 条件
+            foreach ($categories as $category) {
+                $filters[] = ['term' => ['category' => $category]];
+            }
         }
+
         if (!empty($params['tags'])) {
             $filters[] = ['terms' => ['tags' => $params['tags']]];
         }
+
         if (!empty($params['pageRefs'])) {
             $filters[] = ['terms' => ['page_refs' => $params['pageRefs']]];
         }
+
         if (!empty($params['relatedId'])) {
             $filters[] = ['term' => ['related_id' => $params['relatedId']]];
         }
+
         if (!empty($params['author'])) {
             $filters[] = ['match' => ['metadata.author' => $params['author']]];
         }
+
         if (!empty($params['channel'])) {
             $filters[] = ['term' => ['metadata.channel' => $params['channel']]];
         }
 
         // ---------- 查询部分 ----------
-        switch ($mode) {
-            case 'exact':
-                $query = $this->buildExactQuery($params['query']);
-                break;
-            case 'semantic':
-                $query = $this->buildSemanticQuery($params['query']);
-                break;
-            case 'hybrid':
-                $query = $this->buildHybridQuery($params['query']);
-                break;
-            case 'fuzzy':
-            default:
-                $query = $this->buildFuzzyQuery($params['query']);
+        $queryText = trim($params['query'] ?? '');
+
+        if ($queryText === '') {
+            $query = ['match_all' => new \stdClass()];
+        } else {
+            switch ($mode) {
+                case 'exact':
+                    $query = $this->buildExactQuery($queryText);
+                    break;
+
+                case 'semantic':
+                    $query = $this->buildSemanticQuery($queryText);
+                    break;
+
+                case 'hybrid':
+                    $query = $this->buildHybridQuery($queryText);
+                    break;
+
+                case 'fuzzy':
+                default:
+                    $query = $this->buildFuzzyQuery($queryText);
+                    break;
+            }
         }
 
-        $highlightPreTags  = $params['highlight_pre_tags']  ?? ['<mark>'];
+        $highlightPreTags  = $params['highlight_pre_tags'] ?? ['<mark>'];
         $highlightPostTags = $params['highlight_post_tags'] ?? ['</mark>'];
 
         // ---------- 最终 DSL ----------
         $dsl = [
             'from'    => $from,
             'size'    => $pageSize,
-            '_source' => ['excludes' => $this->sourceExcludes],
+            '_source' => ['excludes' => $excludes],
             'query'   => !empty($filters)
-                ? ['bool' => ['must' => [$query], 'filter' => $filters]]
+                ? [
+                    'bool' => [
+                        'must'   => [$query],
+                        'filter' => $filters,
+                    ]
+                ]
                 : $query,
             'aggs' => [
-                'resource_type' => ['terms' => ['field' => 'resource_type']],
-                'language'      => ['terms' => ['field' => 'language']],
-                'category'      => ['terms' => ['field' => 'category']],
-                'granularity'   => ['terms' => ['field' => 'granularity']],
+                'resource_type' => [
+                    'terms' => ['field' => 'resource_type']
+                ],
+                'language' => [
+                    'terms' => ['field' => 'language']
+                ],
+                'category' => [
+                    'terms' => ['field' => 'category']
+                ],
+                'granularity' => [
+                    'terms' => ['field' => 'granularity']
+                ],
             ],
-            'highlight' => [
+        ];
+
+        // 只有有搜索词时才开启高亮
+        if ($queryText !== '') {
+            $dsl['highlight'] = [
                 'fields' => [
                     'title.text.pali'   => new \stdClass(),
                     'title.text.zh'     => new \stdClass(),
@@ -653,15 +706,18 @@ class OpenSearchService
                     'content.text.pali' => new \stdClass(),
                     'content.text.zh'   => new \stdClass(),
                 ],
-                'fragmenter'         => 'sentence',
-                'fragment_size'      => 200,
+                'fragmenter'          => 'sentence',
+                'fragment_size'       => 200,
                 'number_of_fragments' => 1,
-                'pre_tags'           => $highlightPreTags,
-                'post_tags'          => $highlightPostTags,
-            ],
-        ];
+                'pre_tags'            => $highlightPreTags,
+                'post_tags'           => $highlightPostTags,
+            ];
+        }
 
-        Log::debug('OpenSearchService::search', ['dsl' => json_encode($dsl, JSON_UNESCAPED_UNICODE)]);
+        Log::debug(
+            'OpenSearchService::search',
+            ['dsl' => json_encode($dsl, JSON_UNESCAPED_UNICODE)]
+        );
 
         return $this->client->search([
             'index' => config('mint.opensearch.index'),

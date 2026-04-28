@@ -30,7 +30,7 @@ const SentHistoryWidget = ({ sentId }: IWidget) => {
         }
         console.log(params, sorter, filter);
 
-        let url = `/v2/sent_history?view=sentence&id=${sentId}`;
+        let url = `/api/v2/sent_history?view=sentence&id=${sentId}`;
         const offset =
           ((params.current ? params.current : 1) - 1) *
           (params.pageSize ? params.pageSize : 20);

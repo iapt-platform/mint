@@ -13,7 +13,11 @@
         size="lg"
         :hidden-fields="['resource_type' => 'term']" />
 </div>
-<article class="wiki-card">
+<article class="wiki-card" style="position: relative;">
+
+    <x-wiki.entry-actions
+        :editUrl="$entry['edit_url']"
+        :title="$entry['zh']" />
 
     {{-- 条目头部 --}}
     <x-wiki.entry-header :entry="$entry" />

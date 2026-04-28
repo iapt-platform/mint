@@ -7,11 +7,14 @@ use Illuminate\Http\Request;
 use App\Helpers\WikiContentParser;
 use App\Services\TermService;
 use Illuminate\Support\Str;
+use App\Services\OpenSearchService;
+
 
 class WikiController extends Controller
 {
     public function __construct(
-        private TermService    $termService
+        private TermService    $termService,
+        private OpenSearchService    $searchService
     ) {}
 
     // ── Mock 数据 ────────────────────────────────────────────────
@@ -50,79 +53,172 @@ HTML,
         ];
     }
 
-    private function featured(array $all): array
-    {
-        return array_map(function ($item) {
-            return ['word' => $item['word'],     'zh' => $item['meaning'],   'lang' => $item['language'], 'category' => '法义术语'];
-        }, $all);
-    }
 
-    private function mockStats(): array
-    {
-        return [
-            'total'        => 2847,
-            'this_month'   => 43,
-            'contributors' => 128,
-        ];
-    }
-
-    private function mockRecentUpdates(): array
-    {
-        return [
-            ['word' => 'Nibbāna',  'lang' => 'pi'],
-            ['word' => '四圣谛',   'lang' => 'zh'],
-            ['word' => '阿含经',   'lang' => 'zh'],
-            ['word' => 'Rājagaha', 'lang' => 'pi'],
-        ];
-    }
 
     // ── Actions ──────────────────────────────────────────────────
 
-    public function index(string $lang)
+    public function index(Request $request, string $lang)
     {
-        $result = $this->termService->communityTerms($lang);
-        $fakeRequest = Request::create('', 'GET', []);
-        $termResource = $result['data'];
-        $terms    = $termResource->toArray($fakeRequest);
+        $quality = $request->input('quality')
+            ?? $request->cookie('wiki_quality_filter')
+            ?? 'draft';
 
-        $first = $terms[0];
+        $cookie = cookie()->forever('wiki_quality_filter', $quality);
+
+        $category = $request->input('category');
+        $subs     = null;
+
+        if ($category) {
+            $taxNode = collect(config('taxonomy'))->firstWhere('id', $category);
+            $subs    = $taxNode ? $this->subEntries($taxNode['subs'], $lang, $quality) : null;
+        }
+
+        $result      = $this->termService->communityTerms($lang);
+        $fakeRequest = Request::create('', 'GET', []);
+        $terms       = $result['data']->toArray($fakeRequest);
+        $first       = $terms[0];
+
         $today = [
-            'word'      => $first['word'],
-            'lang'      => $first['language'],
-            'slug'      => $first['word'],
-            'meaning'        => $first['meaning'],
-            'quality'   => 'featured',   // featured | stub | review | null
-            'category'  => '法义术语',
-            'content' => $first['summary']
+            'word'     => $first['word'],
+            'lang'     => $first['language'],
+            'slug'     => $first['word'],
+            'meaning'  => $first['meaning'],
+            'quality'  => 'featured',
+            'category' => '法义术语',
+            'content'  => $first['summary'],
         ];
 
 
-        return view('library.wiki.index', [
-            'today'         => $today,
-            'featured'      => $this->featured($terms),
-            'stats'         => $this->mockStats(),
-            'recentUpdates' => $this->mockRecentUpdates(),
-            'categories'    => $this->categories(),
-            'lang' => $lang
-        ]);
+
+        return response()
+            ->view('library.wiki.index', [
+                'today'         => $request->has('category') ? null : $today,
+                'featured'      => $category ? null : $this->featured($terms),
+                'stats'         => $this->mockStats(),
+                'recentUpdates' => $this->mockRecentUpdates(),
+                'categories'    => $this->categories(),
+                'lang'          => $lang,
+                'category'      => $category,
+                'subs'          => $subs,   // null | array of subs with entries
+                'quality'   => $quality,
+                'qualities' => $this->qualities(),
+            ])->withCookie($cookie);
     }
+
+    /**
+     * 给每个二级分类注入 词条列表
+     * 真实数据替换时：按 sub['tags'] 查询术语表，返回同结构数组即可
+     */
+    private function subEntries(array $subs, string $lang, string $quality): array
+    {
+        return array_map(function ($sub) use ($lang, $quality) {
+            $entries = $this->querySubCat($sub['tags'], $lang, $quality);
+            return array_merge($sub, ['entries' => $entries]);
+        }, $subs);
+    }
+
+    private function querySubCat(array $cats, string $lang, string $quality): array
+    {
+        $params = [
+            'pageSize'     => 1000,
+            'resourceType' => 'term',
+            'language'     => $lang,
+            'tags'         => array_map(fn($n) => "category:{$n}", $cats),
+        ];
+
+        $result = $this->searchService->search($params);
+
+        // 质量等级（数值越小等级越高）
+        $qualityRank = [
+            'featured' => 1,
+            'standard' => 2,
+            'draft'    => 3,
+            'pending'  => 4,
+        ];
+
+        // 当前允许的最大等级
+        $maxRank = $qualityRank[$quality] ?? 4;
+
+        $unique = [];
+
+        foreach ($result['hits']['hits'] as $item) {
+            $text = $item['_source']['title']['text'];
+            $id   = $item['_source']['resource_id'];
+
+            if (isset($item['_source']['tags'])) {
+                $itemQuality = $this->getQuality($item['_source']['tags']) ?? 'pending';
+            } else {
+                $itemQuality = 'pending';
+            }
+
+            $itemRank = $qualityRank[$itemQuality] ?? 4;
+
+            // 按输入质量过滤
+            if ($itemRank > $maxRank) {
+                continue;
+            }
+
+            $record = [
+                'id'      => $id,
+                'word'    => $text['pali'],
+                'zh'      => $text['zh'],
+                'quality' => $itemQuality,
+            ];
+
+            // 用 pali + zh 去重
+            $key = mb_strtolower(trim($text['pali']) . '|' . trim($text['zh']));
+
+            // 如果不存在，直接保存
+            if (!isset($unique[$key])) {
+                $unique[$key] = $record;
+                continue;
+            }
+
+            // 已存在时，保留质量更高的
+            $existingQuality = $unique[$key]['quality'];
+            $existingRank    = $qualityRank[$existingQuality] ?? 4;
+
+            if ($itemRank < $existingRank) {
+                $unique[$key] = $record;
+            }
+        }
+
+        return array_values($unique);
+    }
+
+    private function getQuality(array $tags)
+    {
+        $qualityTag = array_find($tags, function ($tag) {
+            return str_contains($tag, 'quality:');
+        });
+        if ($qualityTag) {
+            return mb_substr($qualityTag, 8, null, "UTF-8");
+        } else {
+            return null;
+        }
+    }
+
 
     public function show(string $lang, string $word)
     {
         if (Str::isUuid($word)) {
             $term = $this->termService->find($word, 'html');
         } else {
-            $term = $this->termService->communityTerm($word, $lang, 'html');
+            $term = $this->termService->communityWiki($word, $lang, 'html');
         }
 
-
-        $termArray    = $term;
+        $result = $this->searchService->get("term_{$term['guid']}");
+        if (isset($result['_source']['tags'])) {
+            $quality = $this->getQuality($result['_source']['tags']);
+        } else {
+            $quality = null;
+        }
         $entry = [
-            'word'      => $termArray['word'],
-            'lang'      => $termArray['language'],
-            'slug'      => $termArray['word'],
-            'meaning'        => $termArray['meaning'],
-            'quality'   => 'featured',   // featured | stub | review | null
+            'word'      => $term['word'],
+            'lang'      => $term['language'],
+            'slug'      => $term['word'],
+            'meaning'        => $term['meaning'],
+            'quality'   => $quality,   // featured | standard | draft | pending | null
             'category'  => '法义术语',
             'tags'      => [],
             'langs'     => [
@@ -131,11 +227,8 @@ HTML,
             ],
             'related' => [
                 ['word' => 'Dukkha',    'zh' => '苦',   'lang' => 'pi'],
-                ['word' => 'Anattā',    'zh' => '无我', 'lang' => 'pi'],
-                ['word' => 'Vipassanā', 'zh' => '内观', 'lang' => 'pi'],
-                ['word' => 'Ti-lakkhaṇa', 'zh' => '三相', 'lang' => 'pi'],
             ],
-            'content' => $termArray['html'] ?? ''
+            'content' => $term['html'] ?? ''
         ];
         $parsed  = WikiContentParser::parse($entry['content']);
 
@@ -143,25 +236,25 @@ HTML,
             'entry' => array_merge($entry, [
                 'content' => $parsed['content'],
                 'toc'     => $parsed['toc'],
+                'edit_url' => config('mint.server.dashboard_base_path') . "/workspace/term/{$term['guid']}/edit",
+                'zh' => '编辑'
             ]),
             'categories' => $this->categories(),
-            'lang' => $lang
+            'lang' => $lang,
+
         ]);
     }
+
 
     // ── Helpers ──────────────────────────────────────────────────
 
     private function categories(): array
     {
-        return [
-            ['slug' => 'all',      'label' => '全部'],
-            ['slug' => 'term',     'label' => '法义术语'],
-            ['slug' => 'person',   'label' => '人物传记'],
-            ['slug' => 'text',     'label' => '经典文献'],
-            ['slug' => 'school',   'label' => '宗派历史'],
-            ['slug' => 'practice', 'label' => '修行方法'],
-            ['slug' => 'place',    'label' => '佛教地理'],
-        ];
+        $cats = collect(config('taxonomy'))
+            ->map(fn($cat) => ['id' => $cat['id'], 'label' => $cat['label']])
+            ->toArray();
+
+        return $cats;
     }
 
     // 在 WikiController.php 中添加此方法
@@ -207,5 +300,42 @@ HTML,
             'hotTags'       => $hotTags,
             'dailyTerm'     => $dailyTerm,
         ]);
+    }
+
+
+    private function qualities(): array
+    {
+        return [
+            ['value' => 'featured', 'label' => '典范条目', 'subtitle' => '平台推荐'],
+            ['value' => 'standard',  'label' => '规范条目', 'subtitle' => '邀请试读'],
+            ['value' => 'draft',     'label' => '草稿', 'subtitle' => '仅供参考'],
+            ['value' => 'pending',   'label' => '待定', 'subtitle' => '审稿专用'],
+        ];
+    }
+
+    private function featured(array $all): array
+    {
+        return array_map(function ($item) {
+            return ['word' => $item['word'],     'zh' => $item['meaning'],   'lang' => $item['language'], 'category' => '法义术语'];
+        }, $all);
+    }
+
+    private function mockStats(): array
+    {
+        return [
+            'total'        => 2847,
+            'this_month'   => 43,
+            'contributors' => 128,
+        ];
+    }
+
+    private function mockRecentUpdates(): array
+    {
+        return [
+            ['word' => 'Nibbāna',  'lang' => 'pi'],
+            ['word' => '四圣谛',   'lang' => 'zh'],
+            ['word' => '阿含经',   'lang' => 'zh'],
+            ['word' => 'Rājagaha', 'lang' => 'pi'],
+        ];
     }
 }

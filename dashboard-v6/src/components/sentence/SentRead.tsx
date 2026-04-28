@@ -83,7 +83,7 @@ const SentReadFrame = ({
 
         try {
           const json = await get<IEditableSentence>(
-            `/v2/editable-sentence/${item.id}`
+            `/api/v2/editable-sentence/${item.id}`
           );
           if (json.ok) {
             setSentData(json.data);

@@ -16,7 +16,7 @@ class TermService
             "_community_term_" . strtolower($lang) . "_",
             "_community_term_en_"
         );
-        $result = DhammaTerm::select(['word', 'tag', 'meaning', 'other_meaning'])
+        $result = DhammaTerm::select(['guid', 'word', 'tag', 'meaning', 'other_meaning'])
             ->where('channal', $localTermChannel)
             ->get();
         return ['items' => $result, 'total' => count($result)];
@@ -73,6 +73,30 @@ class TermService
             return null;
         }
     }
+
+    public function communityWiki(string $word, string $lang, string $format)
+    {
+        $localTermChannel = ChannelApi::getSysChannel(
+            "_community_translation_" . strtolower($lang) . "_"
+        );
+        $result = DhammaTerm::where('word', $word)
+            ->where('channal', $localTermChannel)
+            ->first();
+        if ($result) {
+            $resource = new TermResource($result);
+            $urlParam = ['format' => $format];
+            $fakeRequest = Request::create('', 'GET', $urlParam);
+            $termArray    = $resource->toArray($fakeRequest);
+            if ($result) {
+                return $termArray;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
     public function communityTerms(string $lang)
     {
         $localTermChannel = ChannelApi::getSysChannel(
@@ -102,5 +126,10 @@ class TermService
         } else {
             return null;
         }
+    }
+
+    public function update(string $id, array $data)
+    {
+        DhammaTerm::where('guid', $id)->update($data);
     }
 }

@@ -62,7 +62,7 @@ const CollaboratorWidget = ({ resId, load = false, onReload }: IWidget) => {
       request={async (params = {}, sorter, filter) => {
         console.log(params, sorter, filter);
 
-        let url = `/v2/share?view=res&id=${resId}`;
+        let url = `/api/v2/share?view=res&id=${resId}`;
         const offset =
           ((params.current ? params.current : 1) - 1) *
           (params.pageSize ? params.pageSize : 20);
@@ -163,7 +163,7 @@ const CollaboratorWidget = ({ resId, load = false, onReload }: IWidget) => {
                   }),
                   onClick: (e) => {
                     put<IShareUpdateRequest, IShareResponse>(
-                      `/v2/share/${row.id}`,
+                      `/api/v2/share/${row.id}`,
                       {
                         role: e.key as TRole,
                       }
@@ -192,7 +192,7 @@ const CollaboratorWidget = ({ resId, load = false, onReload }: IWidget) => {
                 })}
                 onConfirm={() => {
                   console.log("delete", row.id);
-                  delete_<IShareDeleteResponse>("/v2/share/" + row.id)
+                  delete_<IShareDeleteResponse>("/api/v2/share/" + row.id)
                     .then((json) => {
                       if (json.ok) {
                         message.success("delete ok");

@@ -58,7 +58,7 @@ const RelatedParaWidget = ({ book, para, trigger }: IWidget) => {
         setLoad(true);
         try {
           const json = await get<IRelatedParaResponse>(
-            `/v2/related-paragraph?book=${book}&para=${para}`
+            `/api/v2/related-paragraph?book=${book}&para=${para}`
           );
           console.log("import", json);
           if (json.ok) {

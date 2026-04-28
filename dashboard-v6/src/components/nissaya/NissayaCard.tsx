@@ -112,7 +112,7 @@ const NissayaCardWidget = ({
     }
 
     // ── Network request ─────────────────────────────────────────────────────
-    const url = `/v2/nissaya-card/${text}?lang=${uiLang}&content_type=json`;
+    const url = `/api/v2/nissaya-card/${text}?lang=${uiLang}&content_type=json`;
     console.debug("api request", url);
 
     let cancelled = false;

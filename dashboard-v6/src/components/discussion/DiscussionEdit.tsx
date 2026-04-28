@@ -48,7 +48,7 @@ const DiscussionEditWidget = ({ data, onUpdated, onClose }: IWidget) => {
           },
         }}
         onFinish={async (values) => {
-          const url = `/v2/discussion/${data.id}`;
+          const url = `/api/v2/discussion/${data.id}`;
           const newData: ICommentRequest = {
             title: values.title,
             content: values.content,

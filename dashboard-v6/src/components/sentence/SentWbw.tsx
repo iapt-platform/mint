@@ -47,7 +47,7 @@ const SentWbwWidget = ({
   }
 
   const load = useCallback(async () => {
-    let url = `/v2/wbw-sentence?view=sent-can-read`;
+    let url = `/api/v2/wbw-sentence?view=sent-can-read`;
     url += `&book=${book}&para=${para}&wordStart=${wordStart}&wordEnd=${wordEnd}`;
 
     if (myCourse && course) {

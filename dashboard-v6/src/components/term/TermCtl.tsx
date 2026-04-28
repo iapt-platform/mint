@@ -175,7 +175,7 @@ export const TermCtl = ({
         dispatch({ type: "SET_TERM_DATA", payload: dataMap(term) });
         return;
       } else {
-        const url = `/v2/terms/${id}?community_summary=1`;
+        const url = `/api/v2/terms/${id}?community_summary=1`;
         console.info("api request", url);
         setLoading(true);
         get<ITermResponse>(url)

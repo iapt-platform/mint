@@ -163,6 +163,9 @@ class TemplateRender
             case 'para':
                 $result = $this->render_para();
                 break;
+            case 'category':
+                $result = $this->render_category();
+                break;
             default:
                 if (mb_substr($tpl_name, 0, 4, "UTF-8") === 'Tpl:') {
                     $result = $this->render_tpl($tpl_name);
@@ -229,6 +232,28 @@ class TemplateRender
                 break;
             default:
                 $output = $props['title'];
+                break;
+        }
+        return $output;
+    }
+
+    public function render_category()
+    {
+        $props = [];
+        $props['name'] = $this->get_param($this->param, "name", 1);
+
+        $output = [];
+        switch ($this->format) {
+            case 'react':
+                $output = [
+                    'props' => base64_encode(\json_encode($props)),
+                    'html' => $props['name'],
+                    'tag' => 'span',
+                    'tpl' => 'para',
+                ];
+                break;
+            default:
+                $output = $props['name'];
                 break;
         }
         return $output;

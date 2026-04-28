@@ -107,7 +107,7 @@ const AttachmentWidget = ({
       onOk() {
         console.log("delete", id);
         return delete_2<IUserDictDeleteRequest, IDeleteResponse>(
-          `/v2/userdict/${id}`,
+          `/api/v2/userdict/${id}`,
           {
             id: JSON.stringify(id),
           }
@@ -134,7 +134,7 @@ const AttachmentWidget = ({
         editable={{
           onSave: async (key, record, originRow) => {
             console.log(key, record, originRow);
-            const url = `/v2/attachment/${key}`;
+            const url = `/api/v2/attachment/${key}`;
             const res = await put<IAttachmentUpdate, IAttachmentResponse>(url, {
               title: record.title,
             });

@@ -17,7 +17,7 @@ const VideoWidget = ({ fileId, src, type }: IWidget) => {
 
   useEffect(() => {
     if (fileId) {
-      const url = `/v2/attachment/${fileId}`;
+      const url = `/api/v2/attachment/${fileId}`;
       console.info("VideoWidget api request", url);
       get<IAttachmentResponse>(url).then((json) => {
         console.debug("VideoWidget api response", json);

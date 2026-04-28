@@ -117,7 +117,7 @@ const ArticleCreateWidget = ({
             debounceTime={300}
             request={async ({ keyWords }) => {
               console.log("keyWord", keyWords);
-              let url = `/v2/anthology?view=studio&view2=my&name=${studio}`;
+              let url = `/api/v2/anthology?view=studio&view2=my&name=${studio}`;
               url += keyWords ? "&search=" + keyWords : "";
               const res = await get<IAnthologyListResponse>(url);
               const result = res.data.rows.map((item) => {

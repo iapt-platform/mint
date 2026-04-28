@@ -84,7 +84,7 @@ const SentCellEditable = ({
       channel: data.channel.id,
       text: value ?? "",
     };
-    post<ISentencePrRequest, ISentencePrResponse>(`/v2/sentpr`, newData)
+    post<ISentencePrRequest, ISentencePrResponse>(`/api/v2/sentpr`, newData)
       .then((json) => {
         if (json.ok) {
           message.success(intl.formatMessage({ id: "flashes.success" }));
@@ -109,7 +109,7 @@ const SentCellEditable = ({
       return;
     }
     setSaving(true);
-    const url = `/v2/sentpr/${data.id}`;
+    const url = `/api/v2/sentpr/${data.id}`;
     console.log("url", url);
     put<ISentencePrRequest, ISentencePrResponse>(url, {
       text: value,
