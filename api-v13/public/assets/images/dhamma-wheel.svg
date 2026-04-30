@@ -1,0 +1,70 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 金色渐变 -->
+    <radialGradient id="gold" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff7cc"/>
+      <stop offset="60%" stop-color="#d4af37"/>
+      <stop offset="100%" stop-color="#8c6b1f"/>
+    </radialGradient>
+
+    <!-- 外圈花纹 -->
+    <pattern id="ornament" patternUnits="userSpaceOnUse" width="20" height="20">
+      <circle cx="10" cy="10" r="2" fill="#b8962e"/>
+    </pattern>
+  </defs>
+
+  <!-- 外圈 -->
+  <circle cx="256" cy="256" r="240" fill="url(#gold)" stroke="#5a4715" stroke-width="6"/>
+
+  <!-- 花纹装饰环 -->
+  <circle cx="256" cy="256" r="210" fill="none" stroke="url(#ornament)" stroke-width="10"/>
+
+  <!-- 内圈 -->
+  <circle cx="256" cy="256" r="180" fill="none" stroke="#5a4715" stroke-width="6"/>
+
+  <!-- 辐条 (24根) -->
+  <g stroke="#5a4715" stroke-width="4" stroke-linecap="round">
+    <!-- 使用旋转生成 -->
+    <line x1="256" y1="256" x2="256" y2="80"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(15 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(30 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(45 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(60 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(75 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(90 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(105 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(120 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(135 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(150 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(165 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(180 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(195 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(210 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(225 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(240 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(255 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(270 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(285 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(300 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(315 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(330 256 256)"/>
+    <line x1="256" y1="256" x2="256" y2="80" transform="rotate(345 256 256)"/>
+  </g>
+
+  <!-- 中心莲花 -->
+  <g>
+    <circle cx="256" cy="256" r="40" fill="#fff7cc" stroke="#5a4715" stroke-width="4"/>
+    <!-- 花瓣 -->
+    <g fill="#d4af37">
+      <ellipse cx="256" cy="210" rx="12" ry="28"/>
+      <ellipse cx="256" cy="302" rx="12" ry="28"/>
+      <ellipse cx="210" cy="256" rx="28" ry="12"/>
+      <ellipse cx="302" cy="256" rx="28" ry="12"/>
+      <ellipse cx="226" cy="226" rx="10" ry="22" transform="rotate(-45 226 226)"/>
+      <ellipse cx="286" cy="226" rx="10" ry="22" transform="rotate(45 286 226)"/>
+      <ellipse cx="226" cy="286" rx="10" ry="22" transform="rotate(45 226 286)"/>
+      <ellipse cx="286" cy="286" rx="10" ry="22" transform="rotate(-45 286 286)"/>
+    </g>
+  </g>
+
+</svg>
