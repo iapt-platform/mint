@@ -199,6 +199,13 @@ HTML,
             return null;
         }
     }
+    private function getCategories(array $tags)
+    {
+        $catTag = array_filter($tags, function ($tag) {
+            return str_contains($tag, 'category:');
+        });
+        return array_map(fn($item) => mb_substr($item, mb_strlen('category:', 'UTF-8')), $catTag);
+    }
 
 
     public function show(string $lang, string $word)
@@ -215,6 +222,8 @@ HTML,
         } else {
             $quality = null;
         }
+
+        $cats = $this->getCategories($result['_source']['tags']);
         $entry = [
             'word'      => $term['word'],
             'lang'      => $term['language'],
@@ -222,14 +231,12 @@ HTML,
             'meaning'        => $term['meaning'],
             'quality'   => $quality,   // featured | standard | draft | pending | null
             'category'  => '法义术语',
-            'tags'      => [],
+            'tags'      => $cats,
             'langs'     => [
                 ['lang' => 'zh-Hant', 'label' => '繁体中文',   'word' => '无常'],
                 ['lang' => 'en', 'label' => 'English', 'word' => 'Impermanence'],
             ],
-            'related' => [
-                ['word' => 'Dukkha',    'zh' => '苦',   'lang' => 'pi'],
-            ],
+            'related' => $this->related($cats),
             'content' => $term['html'] ?? ''
         ];
         $parsed  = WikiContentParser::parse($entry['content']);
@@ -248,6 +255,26 @@ HTML,
         ]);
     }
 
+    private function related(array $tags): array
+    {
+        $params = [
+            'pageSize'     => 5,
+            'resourceType' => 'term',
+            'tags'         => array_map(fn($n) => "category:{$n}", $tags),
+        ];
+
+        $result = $this->searchService->search($params);
+        $relates = [];
+
+        foreach ($result['hits']['hits'] as $item) {
+            $relates[] = [
+                'word' => $item['_source']['title']['text']['pali'],
+                'zh' => $item['_source']['title']['text']['zh'],
+                'lang' => $item['_source']['language']
+            ];
+        }
+        return $relates;
+    }
 
     // ── Helpers ──────────────────────────────────────────────────
 
