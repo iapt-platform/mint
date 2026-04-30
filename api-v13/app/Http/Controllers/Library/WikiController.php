@@ -12,6 +12,14 @@ use App\Services\OpenSearchService;
 
 class WikiController extends Controller
 {
+    // 质量等级（数值越小等级越高）
+    private  $qualityRank = [
+        'featured' => 1,
+        'standard' => 2,
+        'draft'    => 3,
+        'pending'  => 4,
+    ];
+
     public function __construct(
         private TermService    $termService,
         private OpenSearchService    $searchService
@@ -128,16 +136,10 @@ HTML,
 
         $result = $this->searchService->search($params);
 
-        // 质量等级（数值越小等级越高）
-        $qualityRank = [
-            'featured' => 1,
-            'standard' => 2,
-            'draft'    => 3,
-            'pending'  => 4,
-        ];
+
 
         // 当前允许的最大等级
-        $maxRank = $qualityRank[$quality] ?? 4;
+        $maxRank = $this->qualityRank[$quality] ?? 4;
 
         $unique = [];
 
@@ -151,7 +153,7 @@ HTML,
                 $itemQuality = 'pending';
             }
 
-            $itemRank = $qualityRank[$itemQuality] ?? 4;
+            $itemRank = $this->qualityRank[$itemQuality] ?? 4;
 
             // 按输入质量过滤
             if ($itemRank > $maxRank) {
@@ -176,7 +178,7 @@ HTML,
 
             // 已存在时，保留质量更高的
             $existingQuality = $unique[$key]['quality'];
-            $existingRank    = $qualityRank[$existingQuality] ?? 4;
+            $existingRank    = $this->qualityRank[$existingQuality] ?? 4;
 
             if ($itemRank < $existingRank) {
                 $unique[$key] = $record;
@@ -237,7 +239,8 @@ HTML,
                 'content' => $parsed['content'],
                 'toc'     => $parsed['toc'],
                 'edit_url' => config('mint.server.dashboard_base_path') . "/workspace/term/{$term['guid']}/edit",
-                'zh' => '编辑'
+                'zh' => '编辑',
+                'other_versions' => $this->otherVersions($term['word']),
             ]),
             'categories' => $this->categories(),
             'lang' => $lang,
@@ -337,5 +340,35 @@ HTML,
             ['word' => '阿含经',   'lang' => 'zh'],
             ['word' => 'Rājagaha', 'lang' => 'pi'],
         ];
+    }
+
+
+    private function otherVersions(string $word): array
+    {
+        $params = [
+            'query' => $word,
+            'pageSize'     => 10,
+            'resourceType' => 'term',
+            'tags'         => array_map(fn($n) => "quality:{$n}", array_keys($this->qualityRank)),
+        ];
+
+        $result = $this->searchService->search($params);
+        $versions = [];
+
+        foreach ($result['hits']['hits'] as $item) {
+            $text = $item['_source']['title']['text'];
+            $id   = $item['_source']['resource_id'];
+            $versions[] = [
+                'type'     => 'term',
+                'id'       => $id,
+                'lang'     => $item['_source']['language'],
+                'title'    => $text['zh'] ?? 'null',
+                'quality'  => $this->getQuality($item['_source']['tags'] ?? 'quality:pending'),
+                'category' => '法義術語',
+                'snippet'  => $item['_source']['summary']['text'],
+                'updated'  => $item['_source']['updated_at'],
+            ];
+        }
+        return $versions;
     }
 }

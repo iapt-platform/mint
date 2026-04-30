@@ -185,7 +185,7 @@
 }
 
 .wiki-today-title {
-    font-family: "Noto Serif", Georgia, serif;
+    font-family: 'Noto Serif', Georgia, serif;
     font-size: 1.125rem;
     font-weight: 600;
     margin-bottom: 6px;
@@ -237,7 +237,7 @@
 }
 
 .wiki-popover-word {
-    font-family: "Noto Serif", Georgia, serif;
+    font-family: 'Noto Serif', Georgia, serif;
     font-size: 0.9375rem;
     font-style: italic;
     font-weight: 600;
@@ -275,7 +275,7 @@
 }
 
 .wiki-drawer-word {
-    font-family: "Noto Serif", Georgia, serif;
+    font-family: 'Noto Serif', Georgia, serif;
     font-size: 1.125rem;
     font-style: italic;
     font-weight: 600;
@@ -304,7 +304,7 @@
 }
 
 .wiki-term-card-word {
-    font-family: "Noto Serif", Georgia, serif;
+    font-family: 'Noto Serif', Georgia, serif;
     font-size: 0.9375rem;
     font-style: italic;
     font-weight: 600;
@@ -364,7 +364,7 @@
    ══════════════════════════════════════════ */
 
 .wiki-content-body {
-    font-family: "Noto Serif", Georgia, "Times New Roman", serif;
+    font-family: 'Noto Serif', Georgia, 'Times New Roman', serif;
     font-size: 1rem;
     line-height: 1.875;
     color: var(--tblr-body-color);
@@ -383,7 +383,7 @@
 .wiki-content-body h4,
 .wiki-content-body h5,
 .wiki-content-body h6 {
-    font-family: "Noto Serif", Georgia, serif;
+    font-family: 'Noto Serif', Georgia, serif;
     font-weight: 600;
     line-height: 1.3;
     color: var(--tblr-body-color);
@@ -471,7 +471,7 @@
     margin-bottom: 1.5em;
 }
 .wiki-content-body th {
-    font-family: "Noto Serif", Georgia, serif;
+    font-family: 'Noto Serif', Georgia, serif;
     font-weight: 600;
     font-size: 0.8125rem;
     text-align: left;
@@ -494,7 +494,7 @@
 .wiki-content-body code {
     font-family: var(
         --tblr-font-monospace,
-        "SFMono-Regular",
+        'SFMono-Regular',
         Consolas,
         monospace
     );
@@ -558,7 +558,7 @@
     margin-bottom: 2rem;
 }
 .wiki-home-title h1 {
-    font-family: "Noto Serif", Georgia, serif;
+    font-family: 'Noto Serif', Georgia, serif;
     font-size: 2.25rem;
     font-weight: 600;
     color: var(--tblr-body-color);
@@ -586,7 +586,9 @@
     font-size: 0.8125rem;
     text-decoration: none;
     margin: 2px;
-    transition: background 0.12s, color 0.12s;
+    transition:
+        background 0.12s,
+        color 0.12s;
 }
 .wiki-hot-tag:hover {
     background: var(--wp-brand-light);
@@ -610,7 +612,7 @@
 }
 .wiki-home-divider::before,
 .wiki-home-divider::after {
-    content: "";
+    content: '';
     flex: 1;
     border-bottom: 1px solid var(--tblr-border-color);
 }
@@ -630,7 +632,9 @@
     color: var(--tblr-body-color);
     font-size: 0.875rem;
     text-decoration: none;
-    transition: background 0.12s, border-color 0.12s;
+    transition:
+        background 0.12s,
+        border-color 0.12s;
 }
 .wiki-language-tag:hover {
     background: var(--wp-brand-light);
@@ -804,7 +808,7 @@
 }
 
 .wiki-term-link--featured::before {
-    content: "★";
+    content: '★';
     display: inline-block;
     margin-right: 0.2em;
     font-size: 0.75em;
@@ -882,7 +886,9 @@ content: "●";
     color: var(--tblr-secondary);
     cursor: pointer;
     text-decoration: none;
-    transition: background 0.12s, color 0.12s;
+    transition:
+        background 0.12s,
+        color 0.12s;
 }
 
 .wiki-action-btn:hover {
@@ -939,4 +945,10 @@ content: "●";
     border: none;
     cursor: pointer;
     text-decoration: underline;
+}
+
+.wiki-other-versions {
+    padding-top: 1.25rem;
+    margin-top: 1.25rem;
+    border-top: 1px solid var(--tblr-border-color);
 }

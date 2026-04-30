@@ -39,6 +39,16 @@
         @endforeach
     </div>
 
+    {{-- 其他版本 --}}
+    @if(isset($entry['other_versions']) && count($entry['other_versions']) > 0)
+    <div class="wiki-other-versions">
+        <div class="wiki-sidebar-title" style="margin-bottom: 0.75rem;">其他版本</div>
+        @foreach ($entry['other_versions'] as $version)
+        <x-wiki.search-result-card :result="$version" :lang="$lang" />
+        @endforeach
+    </div>
+    @endif
+
 </article>
 
 @endsection
