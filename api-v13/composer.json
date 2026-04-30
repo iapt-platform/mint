@@ -13,13 +13,19 @@
         "aws/aws-sdk-php": "^3.379",
         "casbin/casbin": "^4.1",
         "firebase/php-jwt": "^7.0",
+        "godruoyi/php-snowflake": "^3.2",
         "guzzlehttp/guzzle": "^7.10",
         "inertiajs/inertia-laravel": "^3.0",
+        "intervention/image": "^4.0",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
         "laravel/wayfinder": "^0.1.14",
+        "mustache/mustache": "^3.0",
         "opensearch-project/opensearch-php": "^2.6",
-        "phpoffice/phpspreadsheet": "^5.6"
+        "php-amqplib/php-amqplib": "^3.7",
+        "php-ffmpeg/php-ffmpeg": "^1.4",
+        "phpoffice/phpspreadsheet": "^5.7",
+        "predis/predis": "^3.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24",

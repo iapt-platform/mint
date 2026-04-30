@@ -5,7 +5,7 @@ set -e
 git config --global --add safe.directory "$(dirname -- "$(realpath -- "$PWD")")"
 
 composer require --no-scripts \
-    guzzlehttp/guzzle opensearch-project/opensearch-php phpoffice/phpspreadsheet aws/aws-sdk-php firebase/php-jwt casbin/casbin
+    guzzlehttp/guzzle opensearch-project/opensearch-php phpoffice/phpspreadsheet aws/aws-sdk-php firebase/php-jwt casbin/casbin godruoyi/php-snowflake intervention/image mustache/mustache php-amqplib/php-amqplib php-ffmpeg/php-ffmpeg predis/predis
 
 npm install --save \
     bootstrap bulma @material/web \
