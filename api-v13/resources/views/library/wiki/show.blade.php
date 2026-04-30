@@ -33,7 +33,7 @@
     {{-- 标签 --}}
     <div class="wiki-tags">
         @foreach ($entry['tags'] as $tag)
-        <a class="wiki-tag" href="{{ route('library.wiki.index') }}?tag={{ $tag }}">
+        <a class="wiki-tag" href="{{ route('library.wiki.index',[$lang]) }}?tag={{ $tag }}">
             {{ $tag }}
         </a>
         @endforeach
