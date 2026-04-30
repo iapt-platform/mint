@@ -12,6 +12,14 @@ use App\Services\OpenSearchService;
 
 class WikiController extends Controller
 {
+    // 质量等级（数值越小等级越高）
+    private  $qualityRank = [
+        'featured' => 1,
+        'standard' => 2,
+        'draft'    => 3,
+        'pending'  => 4,
+    ];
+
     public function __construct(
         private TermService    $termService,
         private OpenSearchService    $searchService
@@ -128,16 +136,10 @@ HTML,
 
         $result = $this->searchService->search($params);
 
-        // 质量等级（数值越小等级越高）
-        $qualityRank = [
-            'featured' => 1,
-            'standard' => 2,
-            'draft'    => 3,
-            'pending'  => 4,
-        ];
+
 
         // 当前允许的最大等级
-        $maxRank = $qualityRank[$quality] ?? 4;
+        $maxRank = $this->qualityRank[$quality] ?? 4;
 
         $unique = [];
 
@@ -151,7 +153,7 @@ HTML,
                 $itemQuality = 'pending';
             }
 
-            $itemRank = $qualityRank[$itemQuality] ?? 4;
+            $itemRank = $this->qualityRank[$itemQuality] ?? 4;
 
             // 按输入质量过滤
             if ($itemRank > $maxRank) {
@@ -176,7 +178,7 @@ HTML,
 
             // 已存在时，保留质量更高的
             $existingQuality = $unique[$key]['quality'];
-            $existingRank    = $qualityRank[$existingQuality] ?? 4;
+            $existingRank    = $this->qualityRank[$existingQuality] ?? 4;
 
             if ($itemRank < $existingRank) {
                 $unique[$key] = $record;
@@ -197,6 +199,13 @@ HTML,
             return null;
         }
     }
+    private function getCategories(array $tags)
+    {
+        $catTag = array_filter($tags, function ($tag) {
+            return str_contains($tag, 'category:');
+        });
+        return array_map(fn($item) => mb_substr($item, mb_strlen('category:', 'UTF-8')), $catTag);
+    }
 
 
     public function show(string $lang, string $word)
@@ -213,6 +222,8 @@ HTML,
         } else {
             $quality = null;
         }
+
+        $cats = $this->getCategories($result['_source']['tags']);
         $entry = [
             'word'      => $term['word'],
             'lang'      => $term['language'],
@@ -220,14 +231,12 @@ HTML,
             'meaning'        => $term['meaning'],
             'quality'   => $quality,   // featured | standard | draft | pending | null
             'category'  => '法义术语',
-            'tags'      => [],
+            'tags'      => $cats,
             'langs'     => [
                 ['lang' => 'zh-Hant', 'label' => '繁体中文',   'word' => '无常'],
                 ['lang' => 'en', 'label' => 'English', 'word' => 'Impermanence'],
             ],
-            'related' => [
-                ['word' => 'Dukkha',    'zh' => '苦',   'lang' => 'pi'],
-            ],
+            'related' => $this->related($cats),
             'content' => $term['html'] ?? ''
         ];
         $parsed  = WikiContentParser::parse($entry['content']);
@@ -237,7 +246,8 @@ HTML,
                 'content' => $parsed['content'],
                 'toc'     => $parsed['toc'],
                 'edit_url' => config('mint.server.dashboard_base_path') . "/workspace/term/{$term['guid']}/edit",
-                'zh' => '编辑'
+                'zh' => '编辑',
+                'other_versions' => $this->otherVersions($term['word']),
             ]),
             'categories' => $this->categories(),
             'lang' => $lang,
@@ -245,6 +255,26 @@ HTML,
         ]);
     }
 
+    private function related(array $tags): array
+    {
+        $params = [
+            'pageSize'     => 5,
+            'resourceType' => 'term',
+            'tags'         => array_map(fn($n) => "category:{$n}", $tags),
+        ];
+
+        $result = $this->searchService->search($params);
+        $relates = [];
+
+        foreach ($result['hits']['hits'] as $item) {
+            $relates[] = [
+                'word' => $item['_source']['title']['text']['pali'],
+                'zh' => $item['_source']['title']['text']['zh'],
+                'lang' => $item['_source']['language']
+            ];
+        }
+        return $relates;
+    }
 
     // ── Helpers ──────────────────────────────────────────────────
 
@@ -337,5 +367,35 @@ HTML,
             ['word' => '阿含经',   'lang' => 'zh'],
             ['word' => 'Rājagaha', 'lang' => 'pi'],
         ];
+    }
+
+
+    private function otherVersions(string $word): array
+    {
+        $params = [
+            'query' => $word,
+            'pageSize'     => 10,
+            'resourceType' => 'term',
+            'tags'         => array_map(fn($n) => "quality:{$n}", array_keys($this->qualityRank)),
+        ];
+
+        $result = $this->searchService->search($params);
+        $versions = [];
+
+        foreach ($result['hits']['hits'] as $item) {
+            $text = $item['_source']['title']['text'];
+            $id   = $item['_source']['resource_id'];
+            $versions[] = [
+                'type'     => 'term',
+                'id'       => $id,
+                'lang'     => $item['_source']['language'],
+                'title'    => $text['zh'] ?? 'null',
+                'quality'  => $this->getQuality($item['_source']['tags'] ?? 'quality:pending'),
+                'category' => '法義術語',
+                'snippet'  => $item['_source']['summary']['text'],
+                'updated'  => $item['_source']['updated_at'],
+            ];
+        }
+        return $versions;
     }
 }

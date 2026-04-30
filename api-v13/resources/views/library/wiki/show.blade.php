@@ -33,11 +33,21 @@
     {{-- 标签 --}}
     <div class="wiki-tags">
         @foreach ($entry['tags'] as $tag)
-        <a class="wiki-tag" href="{{ route('library.wiki.index') }}?tag={{ $tag }}">
+        <a class="wiki-tag" href="{{ route('library.wiki.index',[$lang]) }}?tag={{ $tag }}">
             {{ $tag }}
         </a>
         @endforeach
     </div>
+
+    {{-- 其他版本 --}}
+    @if(isset($entry['other_versions']) && count($entry['other_versions']) > 0)
+    <div class="wiki-other-versions">
+        <div class="wiki-sidebar-title" style="margin-bottom: 0.75rem;">其他版本</div>
+        @foreach ($entry['other_versions'] as $version)
+        <x-wiki.search-result-card :result="$version" :lang="$lang" />
+        @endforeach
+    </div>
+    @endif
 
 </article>
 
@@ -52,7 +62,6 @@
         @foreach ($entry['toc'] as $i => $item)
         <li class="toc-level-{{ $item['level'] }}">
             <a href="#{{ $item['id'] }}">
-                <span class="wiki-toc-num">{{ $i + 1 }}</span>
                 {{ $item['text'] }}
             </a>
         </li>

@@ -109,16 +109,19 @@
     transition: color 0.12s;
 }
 
-.wiki-toc-list a:hover  { color: var(--tblr-body-color); }
-.wiki-toc-list a.active { color: var(--tblr-body-color); font-weight: 500; }
+.wiki-toc-list a:hover {
+    color: var(--tblr-body-color);
+}
+.wiki-toc-list a.active {
+    color: var(--tblr-body-color);
+    font-weight: 500;
+}
 
-.wiki-toc-list .toc-level-2 a { padding-left: 0.5rem; }
-.wiki-toc-list .toc-level-3 a { padding-left: 1rem; }
-
-.wiki-toc-num {
-    color: var(--tblr-secondary);
-    margin-right: 5px;
-    font-size: 0.75rem;
+.wiki-toc-list .toc-level-2 a {
+    padding-left: 0.5rem;
+}
+.wiki-toc-list .toc-level-3 a {
+    padding-left: 1rem;
 }
 
 /* ══════════════════════════════════════════
@@ -135,7 +138,9 @@
     border-bottom: 1px solid var(--tblr-border-color);
 }
 
-.wiki-related-list li:last-child { border-bottom: none; }
+.wiki-related-list li:last-child {
+    border-bottom: none;
+}
 
 .wiki-related-list a {
     display: flex;
@@ -162,7 +167,9 @@
     border-collapse: collapse;
 }
 
-.wiki-meta-table td { padding: 3px 0; }
+.wiki-meta-table td {
+    padding: 3px 0;
+}
 
 .wiki-meta-table td:last-child {
     text-align: right;
@@ -173,10 +180,12 @@
    七、条目头部（通用标题区）
    ══════════════════════════════════════════ */
 
-.wiki-entry-header { margin-bottom: 1.25rem; }
+.wiki-entry-header {
+    margin-bottom: 1.25rem;
+}
 
 .wiki-entry-title {
-    font-family: "Noto Serif", Georgia, serif;
+    font-family: 'Noto Serif', Georgia, serif;
     font-size: 1.75rem;
     font-weight: 600;
     line-height: 1.25;
@@ -244,7 +253,7 @@
 .author-avatar {
     display: flex;
     align-items: center;
-    gap: .5rem;
+    gap: 0.5rem;
 }
 
 .author-avatar__img,
@@ -255,13 +264,25 @@
 }
 
 .author-avatar--sm .author-avatar__img,
-.author-avatar--sm .author-avatar__initials { width: 24px; height: 24px; font-size: .65rem; }
+.author-avatar--sm .author-avatar__initials {
+    width: 24px;
+    height: 24px;
+    font-size: 0.65rem;
+}
 
 .author-avatar--md .author-avatar__img,
-.author-avatar--md .author-avatar__initials { width: 28px; height: 28px; font-size: .68rem; }
+.author-avatar--md .author-avatar__initials {
+    width: 28px;
+    height: 28px;
+    font-size: 0.68rem;
+}
 
 .author-avatar--lg .author-avatar__img,
-.author-avatar--lg .author-avatar__initials { width: 48px; height: 48px; font-size: .95rem; }
+.author-avatar--lg .author-avatar__initials {
+    width: 48px;
+    height: 48px;
+    font-size: 0.95rem;
+}
 
 .author-avatar__initials {
     display: flex;
@@ -272,16 +293,18 @@
 }
 
 .author-avatar__name {
-    font-size: .8rem;
+    font-size: 0.8rem;
     color: var(--tblr-body-color);
     font-weight: 500;
     display: block;
 }
 
-.author-avatar--lg .author-avatar__name { font-size: .9rem; }
+.author-avatar--lg .author-avatar__name {
+    font-size: 0.9rem;
+}
 
 .author-avatar__sub {
-    font-size: .72rem;
+    font-size: 0.72rem;
     color: var(--tblr-secondary);
     display: block;
 }
