@@ -1,0 +1,199 @@
+/* resources/css/components/_card-book.css
+   书籍封面组件（.book-cover）+ 纵向书籍卡片（.card-book）。
+   .book-cover 从 _anthology.css 提取，供 anthology / tipitaka 共用。
+*/
+
+/* ══════════════════════════════════════════
+   一、书籍封面（.book-cover）
+   ══════════════════════════════════════════ */
+
+.book-cover {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 尺寸 */
+.book-cover--sm { width: 34px;  min-width: 34px;  height: 46px; }
+.book-cover--md { width: 130px; min-width: 130px; height: 180px; }
+.book-cover--lg { width: 155px; min-width: 155px; height: 215px; border-radius: 3px 9px 9px 3px; }
+
+/* 3D 书脊 */
+.book-cover--3d {
+    box-shadow:
+        -4px 0 0 rgba(0,0,0,.3),
+        -6px 4px 14px rgba(0,0,0,.4),
+        4px 4px 18px rgba(0,0,0,.3);
+}
+
+.book-cover--3d::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 13px;
+    background: linear-gradient(to right, rgba(0,0,0,.4), rgba(0,0,0,.1));
+    border-radius: 3px 0 0 3px;
+    z-index: 2;
+}
+
+/* 纹理叠加 */
+.book-cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        45deg, transparent, transparent 8px,
+        rgba(255,255,255,.015) 8px, rgba(255,255,255,.015) 9px
+    );
+    z-index: 1;
+}
+
+/* 图片封面 */
+.book-cover__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 文字封面 */
+.book-cover__text {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding: 0 .5rem;
+}
+
+.book-cover__title {
+    font-family: 'Noto Serif SC', 'Noto Serif', Georgia, serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.6;
+    letter-spacing: .12em;
+    word-break: break-all;
+}
+
+.book-cover--sm .book-cover__title {
+    font-size: .6rem;
+    letter-spacing: .04em;
+    line-height: 1.3;
+}
+
+.book-cover__divider {
+    width: 28px;
+    height: 1px;
+    background: var(--wp-brand);
+    margin: .5rem auto;
+}
+
+.book-cover__subtitle {
+    font-size: .65rem;
+    color: rgba(255,255,255,.45);
+    letter-spacing: .04em;
+}
+
+/* ══════════════════════════════════════════
+   二、纵向书籍卡片（.card-book）
+   tipitaka 列表页使用
+   ══════════════════════════════════════════ */
+
+.card-book {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-book:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.1);
+}
+
+.card-book__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.card-book__link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 封面撑满卡片宽度 */
+.card-book .book-cover--md {
+    width: 100%;
+    min-width: unset;
+    height: 200px;
+    border-radius: var(--tblr-border-radius);
+}
+
+@media (max-width: 768px) {
+    .card-book .book-cover--md { height: 150px; }
+}
+
+.card-book__info { padding: .75rem 0 0; }
+
+.card-book__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--tblr-body-color);
+    margin-bottom: .25rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-book:hover .card-book__title { color: var(--tblr-primary); }
+
+.card-book__author,
+.card-book__publisher {
+    font-size: .8125rem;
+    color: var(--tblr-secondary);
+    margin-bottom: .25rem;
+}
+
+.card-book__publisher-link {
+    color: var(--tblr-primary);
+    text-decoration: none;
+}
+
+.card-book__publisher-link:hover { text-decoration: underline; }
+
+.card-book__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: .375rem;
+}
+
+.card-book__badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--tblr-bg-surface-secondary);
+    border: 1px solid var(--tblr-border-color);
+    border-radius: 20px;
+    font-size: .6875rem;
+    color: var(--tblr-secondary);
+}
+
+/* ══════════════════════════════════════════
+   三、书籍网格
+   ══════════════════════════════════════════ */
+
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.25rem;
+}
+
+@media (max-width: 575px) {
+    .book-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: .875rem;
+    }
+}

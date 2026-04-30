@@ -135,7 +135,7 @@ const DiscussionTopicChildrenWidget = ({
 
   useEffect(() => {
     if (resType === "sentence" && resId) {
-      const url = `/v2/sent_history?view=sentence&id=${resId}&order=created_at&dir=asc`;
+      const url = `/api/v2/sent_history?view=sentence&id=${resId}&order=created_at&dir=asc`;
       setLoading(true);
       get<ISentHistoryListResponse>(url)
         .then((res) => {
@@ -153,7 +153,7 @@ const DiscussionTopicChildrenWidget = ({
       return;
     }
     setLoading(true);
-    const url = `/v2/discussion?view=answer&id=${topicId}`;
+    const url = `/api/v2/discussion?view=answer&id=${topicId}`;
     console.info("api request", url);
     get<ICommentListResponse>(url)
       .then((json) => {

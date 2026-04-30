@@ -49,7 +49,7 @@ const WebhookListWidget = ({ channelId, studioName }: IWidget) => {
       }),
       onOk() {
         console.log("delete", id);
-        return delete_<IDeleteResponse>(`/v2/webhook/${id}`)
+        return delete_<IDeleteResponse>(`/api/v2/webhook/${id}`)
           .then((json) => {
             if (json.ok) {
               message.success("删除成功");
@@ -188,7 +188,7 @@ const WebhookListWidget = ({ channelId, studioName }: IWidget) => {
         ]}
         request={async (params = {}, sorter, filter) => {
           console.log(params, sorter, filter);
-          let url = `/v2/webhook?view=channel&id=${channelId}`;
+          let url = `/api/v2/webhook?view=channel&id=${channelId}`;
           const offset =
             ((params.current ? params.current : 1) - 1) *
             (params.pageSize ? params.pageSize : 20);

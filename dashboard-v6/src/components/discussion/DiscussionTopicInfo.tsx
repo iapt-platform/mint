@@ -44,7 +44,7 @@ const DiscussionTopicInfoWidget = ({
     if (typeof topicId === "undefined") {
       return;
     }
-    const url = `/v2/discussion/${topicId}`;
+    const url = `/api/v2/discussion/${topicId}`;
     console.info("discussion api request", url);
     get<ICommentResponse>(url)
       .then((json) => {

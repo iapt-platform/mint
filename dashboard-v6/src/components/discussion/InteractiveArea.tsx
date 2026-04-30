@@ -35,7 +35,7 @@ const InteractiveAreaWidget = ({ resId, resType }: IWidget) => {
   const [showDiscussion, setShowDiscussion] = useState(false);
 
   useEffect(() => {
-    get<IInteractive>(`/v2/interactive/${resId}?res_type=${resType}`).then(
+    get<IInteractive>(`/api/v2/interactive/${resId}?res_type=${resType}`).then(
       (json) => {
         if (json.ok) {
           console.debug("interactive", json);

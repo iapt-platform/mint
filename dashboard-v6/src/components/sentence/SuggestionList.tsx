@@ -45,7 +45,7 @@ const SuggestionListWidget = ({
     const controller = new AbortController();
 
     const fetchData = async () => {
-      const url = `/v2/sentpr?view=sent-info&book=${book}&para=${para}&start=${wordStart}&end=${wordEnd}&channel=${channel.id}`;
+      const url = `/api/v2/sentpr?view=sent-info&book=${book}&para=${para}&start=${wordStart}&end=${wordEnd}&channel=${channel.id}`;
       console.log("url", url);
       setLoading(true);
       try {

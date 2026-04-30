@@ -34,7 +34,7 @@ const DiscussionAnchorWidget = ({
 
   useEffect(() => {
     if (typeof topicId === "string") {
-      const url = `/v2/discussion-anchor/${topicId}`;
+      const url = `/api/v2/discussion-anchor/${topicId}`;
       console.info("api request", url);
       get<ICommentAnchorResponse>(url).then((json) => {
         console.debug("api response", json);
@@ -58,7 +58,7 @@ const DiscussionAnchorWidget = ({
             if (json.ok) {
               const id = `${json.data.book}-${json.data.paragraph}-${json.data.word_start}-${json.data.word_end}`;
               const channel = json.data.channel.id;
-              const url = `/v2/corpus-sent/${id}?mode=edit&channels=${channel}`;
+              const url = `/api/v2/corpus-sent/${id}?mode=edit&channels=${channel}`;
               console.log("url", url);
               get<IArticleResponse>(url).then((json) => {
                 if (json.ok) {

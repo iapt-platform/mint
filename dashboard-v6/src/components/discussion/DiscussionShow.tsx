@@ -79,7 +79,7 @@ const DiscussionShowWidget = ({
         id: "buttons.no",
       }),
       onOk() {
-        const url = `/v2/discussion/${id}`;
+        const url = `/api/v2/discussion/${id}`;
         console.info("Discussion delete api request", url);
         return delete_<IDeleteResponse>(url)
           .then((json) => {
@@ -100,7 +100,7 @@ const DiscussionShowWidget = ({
   };
 
   const close = (value: boolean) => {
-    const url = `/v2/discussion/${data.id}`;
+    const url = `/api/v2/discussion/${data.id}`;
     const newData: ICommentRequest = {
       title: data.title,
       content: data.content,
@@ -122,7 +122,7 @@ const DiscussionShowWidget = ({
   };
 
   const convert = (newType: TDiscussionType) => {
-    const url = `/v2/discussion/${data.id}`;
+    const url = `/api/v2/discussion/${data.id}`;
     const newData: ICommentRequest = {
       title: data.title,
       content: data.content,

@@ -20,7 +20,7 @@ const QaListWidget = ({ resId, resType, onSelect }: IWidget) => {
     if (!resType || !resType) {
       return;
     }
-    let url: string = `/v2/discussion?res_type=${resType}&view=res_id&id=${resId}`;
+    let url: string = `/api/v2/discussion?res_type=${resType}&view=res_id&id=${resId}`;
     url += "&dir=asc&type=qa&status=active,close";
     console.info("api request", url);
     get<ICommentListResponse>(url).then((json) => {

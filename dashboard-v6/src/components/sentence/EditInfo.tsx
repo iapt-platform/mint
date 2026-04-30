@@ -26,7 +26,7 @@ const Fork = ({ sentId, highlight = false }: IFork) => {
 
   useEffect(() => {
     if (sentId) {
-      const url = `/v2/sent_history?view=sentence&id=${sentId}&fork=1`;
+      const url = `/api/v2/sent_history?view=sentence&id=${sentId}&fork=1`;
       get<ISentHistoryListResponse>(url).then((json) => {
         if (json.ok) {
           setData(json.data.rows);

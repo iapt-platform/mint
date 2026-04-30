@@ -29,7 +29,7 @@ export const discussionCountUpgrade = (resId?: string) => {
   if (typeof resId === "undefined") {
     return;
   }
-  const url = `/v2/discussion-count/${resId}`;
+  const url = `/api/v2/discussion-count/${resId}`;
   console.info("discussion-count api request", url);
   get<IDiscussionCountResponse>(url).then((json) => {
     console.debug("discussion-count api response", json);

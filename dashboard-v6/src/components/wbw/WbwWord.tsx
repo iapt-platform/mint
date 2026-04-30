@@ -114,15 +114,15 @@ const WbwWordWidget = ({
     if (searchWord.length === 0) {
       return;
     }
-    get<IApiResponseDictList>(`/v2/wbwlookup?word=${searchWord.join()}`).then(
-      (json) => {
-        console.log("lookup ok", json.data.count);
-        console.log("time", json.data.time);
-        //存储到redux
-        store.dispatch(add(json.data.rows));
-        store.dispatch(updateIndex(searchWord));
-      }
-    );
+    get<IApiResponseDictList>(
+      `/api/v2/wbwlookup?word=${searchWord.join()}`
+    ).then((json) => {
+      console.log("lookup ok", json.data.count);
+      console.log("time", json.data.time);
+      //存储到redux
+      store.dispatch(add(json.data.rows));
+      store.dispatch(updateIndex(searchWord));
+    });
 
     console.log("lookup", searchWord);
   };

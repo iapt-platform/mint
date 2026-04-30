@@ -262,7 +262,7 @@ export async function fetchSnowflakeIds(count: number): Promise<string[]> {
     ok: boolean;
     message?: string;
     data: { rows: string[]; count: number };
-  }>(`/v2/snowflake?count=${count}`);
+  }>(`/api/v2/snowflake?count=${count}`);
 
   if (!json.ok) {
     throw new Error(json.message ?? "获取 ID 失败");

@@ -199,6 +199,6 @@ export const fetchChapterToc = (
 ): Promise<IChapterTocListResponse> => {
   const { book, para } = params;
   return get<IChapterTocListResponse>(
-    `/v2/chapter?view=toc&book=${book}&para=${para}`
+    `/api/v2/chapter?view=toc&book=${book}&para=${para}`
   );
 };

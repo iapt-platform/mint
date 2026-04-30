@@ -154,7 +154,7 @@ const SentCellWidget = ({
   }, [acceptPr, sentData, isPr, uuid, changedSent, sid]);
 
   const deletePr = (id: string) => {
-    delete_<IDeleteResponse>(`/v2/sentpr/${id}`)
+    delete_<IDeleteResponse>(`/api/v2/sentpr/${id}`)
       .then((json) => {
         if (json.ok) {
           AntdMessage.success("删除成功");
@@ -323,7 +323,7 @@ const SentCellWidget = ({
                 : [];
               if (wbw.length > 0) {
                 const snowflake = await get<ISnowFlakeResponse>(
-                  `/v2/snowflake?count=${wbw.length}`
+                  `/api/v2/snowflake?count=${wbw.length}`
                 );
                 wbw.forEach((_value: IWbw, index: number, array: IWbw[]) => {
                   array[index].uid = snowflake.data.rows[index];

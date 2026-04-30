@@ -40,10 +40,12 @@ const WbwDetailFactorWidget = ({
 
       if (search.length === 0) return;
 
-      get<IApiResponseDictList>(`/v2/wbwlookup?base=${search}`).then((json) => {
-        console.log("lookup ok", json.data.count);
-        store.dispatch(add(json.data.rows));
-      });
+      get<IApiResponseDictList>(`/api/v2/wbwlookup?base=${search}`).then(
+        (json) => {
+          console.log("lookup ok", json.data.count);
+          store.dispatch(add(json.data.rows));
+        }
+      );
     },
     [inlineWordIndex]
   );

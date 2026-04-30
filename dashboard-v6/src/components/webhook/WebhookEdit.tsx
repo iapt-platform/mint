@@ -63,12 +63,12 @@ const WebhookEditWidget = ({
           let res: IWebhookResponse;
           if (typeof id === "undefined") {
             res = await post<IWebhookRequest, IWebhookResponse>(
-              `/v2/webhook`,
+              `/api/v2/webhook`,
               data
             );
           } else {
             res = await put<IWebhookRequest, IWebhookResponse>(
-              `/v2/webhook/${id}`,
+              `/api/v2/webhook/${id}`,
               data
             );
           }
@@ -87,7 +87,7 @@ const WebhookEditWidget = ({
         request={
           id
             ? async () => {
-                const url = `/v2/webhook/${id}`;
+                const url = `/api/v2/webhook/${id}`;
                 const res: IWebhookResponse = await get<IWebhookResponse>(url);
                 console.log("get", res);
                 if (res.ok) {

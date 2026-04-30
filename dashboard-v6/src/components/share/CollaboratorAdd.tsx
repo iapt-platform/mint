@@ -44,7 +44,7 @@ const CollaboratorAddWidget = ({ resId, resType, onSuccess }: IWidget) => {
             res_id: resId,
             res_type: resType,
           };
-          const url = "/v2/share";
+          const url = "/api/v2/share";
           console.info("share api request", url, postData);
           post<IShareRequest, IShareResponse>(url, postData).then((json) => {
             console.debug("share api response", json);

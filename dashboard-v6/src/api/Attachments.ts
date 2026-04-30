@@ -42,7 +42,7 @@ export interface IResAttachmentListResponse {
 }
 
 export const deleteRes = (id: string) => {
-  const url = `/v2/attachment/${id}`;
+  const url = `/api/v2/attachment/${id}`;
   console.info("attachment delete url", url);
   delete_<IDeleteResponse>(url)
     .then((json) => {

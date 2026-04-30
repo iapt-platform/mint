@@ -282,7 +282,7 @@ const WbwSentCtl = memo(
     );
 
     const postWord = useCallback((postParam: IWbwRequest) => {
-      const url = `/v2/wbw`;
+      const url = `/api/v2/wbw`;
       console.info("wbw api request", url, postParam);
       post<IWbwRequest, IWbwUpdateResponse>(url, postParam).then((json) => {
         console.info("wbw api response", json);
@@ -351,7 +351,7 @@ const WbwSentCtl = memo(
 
     const magicDictLookup = useCallback(() => {
       const _lang = GetUserSetting("setting.dict.lang", settings);
-      const url = `/v2/wbwlookup`;
+      const url = `/api/v2/wbwlookup`;
 
       post<IMagicDictRequest, IMagicDictResponse>(url, {
         book: book,
@@ -487,7 +487,7 @@ const WbwSentCtl = memo(
     }, [wordData, update, saveWbwAll]);
 
     const deleteWbw = useCallback(() => {
-      const url = `/v2/wbw-sentence/${sentId}?channel=${channelId}`;
+      const url = `/api/v2/wbw-sentence/${sentId}?channel=${channelId}`;
       console.info("api request", url);
       setLoading(true);
       delete_<IDeleteResponse>(url)
@@ -513,7 +513,7 @@ const WbwSentCtl = memo(
         return;
       }
 
-      let url = `/v2/wbw-sentence?view=course-answer`;
+      let url = `/api/v2/wbw-sentence?view=course-answer`;
       url += `&book=${book}&para=${para}&wordStart=${wordStart}&wordEnd=${wordEnd}`;
       url += `&course=${course.courseId}`;
 

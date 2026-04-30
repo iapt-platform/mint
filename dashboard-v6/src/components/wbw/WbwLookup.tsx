@@ -45,7 +45,7 @@ const WbwLookup = ({ words, run = false, delay = 300 }: IWidget) => {
     if (searchWord.length === 0) {
       return;
     }
-    const url = `/v2/wbwlookup?word=${searchWord.join()}`;
+    const url = `/api/v2/wbwlookup?word=${searchWord.join()}`;
     console.info("api request", url);
     get<IApiResponseDictList>(url).then((json) => {
       console.debug("api response", json);

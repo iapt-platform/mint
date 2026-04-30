@@ -100,6 +100,6 @@ export async function fetchCommentList(
   params: IFetchCommentListParams = {}
 ): Promise<ICommentListResponse> {
   const { limit = 5, offset = 0, status = "active" } = params;
-  const url = `/v2/discussion?type=discussion&res_type=task&view=question&id=${taskId}&limit=${limit}&offset=${offset}&status=${status}`;
+  const url = `/api/v2/discussion?type=discussion&res_type=task&view=question&id=${taskId}&limit=${limit}&offset=${offset}&status=${status}`;
   return get<ICommentListResponse>(url);
 }

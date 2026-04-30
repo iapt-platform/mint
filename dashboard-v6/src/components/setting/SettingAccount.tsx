@@ -44,7 +44,7 @@ const SettingAccountWidget = () => {
           console.debug("upload ", values.avatar[0].response);
           _avatar = values.avatar[0].response.data.name;
         }
-        const url = `/v2/user/${user?.id}`;
+        const url = `/api/v2/user/${user?.id}`;
         const postData = {
           nickName: values.nickName,
           avatar: _avatar,
@@ -61,7 +61,7 @@ const SettingAccountWidget = () => {
       }}
       params={{}}
       request={async () => {
-        const url = `/v2/user/${user?.id}`;
+        const url = `/api/v2/user/${user?.id}`;
         console.log("url", url);
         const res = await get<IUserResponse>(url);
         if (!res.ok) {
@@ -98,7 +98,7 @@ const SettingAccountWidget = () => {
           },
           onRemove: (file: UploadFile<unknown>): boolean => {
             console.log("remove", file);
-            const url = `/v2/attachment/1?name=${file.uid}`;
+            const url = `/api/v2/attachment/1?name=${file.uid}`;
             console.info("avatar delete url", url);
             delete_<IDeleteResponse>(url)
               .then((json) => {
