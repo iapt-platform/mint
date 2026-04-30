@@ -1,0 +1,119 @@
+/* resources/css/layout/_navbar.css
+   顶部导航栏：面包屑 bar + desktop 导航链接 + mobile 汉堡按钮。
+   来源：main.css 的 .anthology-breadcrumb-bar、.bc-nav、.bc-hamburger 段落。
+   以 wiki.css 中同名规则为准（main.css 无冲突，wiki.css 中无同名规则，直接迁移）。
+*/
+
+/* ── Breadcrumb bar ── */
+.anthology-breadcrumb-bar {
+    background: rgba(255, 255, 255, 0.55);
+    border-bottom: 1px solid var(--wp-border);
+    padding: 0.5rem 0;
+}
+
+.anthology-breadcrumb-bar .bc-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.anthology-breadcrumb-bar .breadcrumb {
+    margin: 0;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+}
+
+.anthology-breadcrumb-bar .breadcrumb-item a {
+    color: var(--wp-brand);
+    text-decoration: none;
+}
+
+.anthology-breadcrumb-bar .breadcrumb-item.active {
+    color: var(--wp-ink-muted);
+}
+
+.anthology-breadcrumb-bar .breadcrumb-item + .breadcrumb-item::before {
+    color: var(--wp-ink-muted);
+}
+
+/* ── Hero 覆盖状态：breadcrumb bar 透明悬浮于 hero 之上 ── */
+.hero-wrapper:has(.hero-section) .anthology-breadcrumb-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: transparent;
+    border-bottom: none;
+}
+
+.hero-wrapper:has(.hero-section) .bc-nav li a {
+    color: white;
+}
+
+.hero-wrapper:has(.hero-section) .bc-nav li a:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.hero-wrapper:has(.hero-section) .bc-hamburger {
+    border-color: rgba(255, 255, 255, 0.6);
+    color: white;
+}
+
+/* ── Desktop 导航链接 ── */
+.bc-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.bc-nav li a {
+    font-size: 0.82rem;
+    color: var(--wp-ink-soft);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s;
+}
+
+.bc-nav li a:hover {
+    color: var(--wp-brand);
+}
+
+.bc-nav li a.active {
+    color: var(--wp-brand);
+    font-weight: 600;
+}
+
+/* ── 汉堡按钮（mobile） ── */
+.bc-hamburger {
+    display: none;
+    background: none;
+    border: 1px solid var(--wp-border);
+    border-radius: 5px;
+    padding: 4px 8px;
+    cursor: pointer;
+    color: var(--wp-ink-soft);
+    line-height: 1;
+}
+
+.bc-hamburger:hover {
+    border-color: var(--wp-brand);
+    color: var(--wp-brand);
+}
+
+/* ── 响应式 ── */
+@media (max-width: 640px) {
+    .bc-nav {
+        display: none;
+    }
+
+    .bc-hamburger {
+        display: inline-flex;
+        align-items: center;
+    }
+}
