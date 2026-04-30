@@ -62,7 +62,6 @@
         @foreach ($entry['toc'] as $i => $item)
         <li class="toc-level-{{ $item['level'] }}">
             <a href="#{{ $item['id'] }}">
-                <span class="wiki-toc-num">{{ $i + 1 }}</span>
                 {{ $item['text'] }}
             </a>
         </li>
