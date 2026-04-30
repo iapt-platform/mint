@@ -58,7 +58,7 @@ class AccessTokenController extends Controller
                     }
                     break;
                 default:
-                    continue;
+                    continue 2;
                     break;
             }
             //获取token
