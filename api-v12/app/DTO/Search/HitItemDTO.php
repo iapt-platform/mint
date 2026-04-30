@@ -79,7 +79,7 @@ class HitItemDTO
             content: $content,
             path: $source['path'] ?? '',
             category: $category,
-            tags: $source['tags'],
+            tags: $source['tags'] ?? [],
             highlight: implode('', $highlightArray),
             updated: $source['updated_at'],
             type: $source['resource_type'],
@@ -132,7 +132,7 @@ class HitItemDTO
      */
     public function getParaId(): ?string
     {
-        if (preg_match('/pali_para_(\d+)_(\d+)/', $this->id, $matches)) {
+        if (preg_match('/tipitaka_paragraph_pi_(\d+)-(\d+)/', $this->id, $matches)) {
             return "{$matches[1]}-{$matches[2]}";
         }
         return null;
