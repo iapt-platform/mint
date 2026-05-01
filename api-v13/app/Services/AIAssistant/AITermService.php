@@ -2,6 +2,8 @@
 
 namespace App\Services\AIAssistant;
 
+use Illuminate\Support\Facades\Log;
+
 use App\Services\OpenSearchService;
 use App\Services\TermService;
 use App\Services\OpenAIService;
@@ -12,7 +14,7 @@ use App\DTO\Search\SearchDataDTO;
 
 class AITermService
 {
-    protected $pageSize = 20;
+    protected $pageSize = 50;
     protected AiModelResource $model;
 
 
@@ -24,10 +26,12 @@ class AITermService
 
     搜素结果是json数组
     字段
-    - title(标题)
+    - title:(标题)
     - content:(内容)
-    - path(章节路径)
-    - link(引用链接)
+    - path:(章节路径)
+    - link:(引用链接)
+
+    link 是一个类似"{{para|id=202-1878|title=202-1878|style=reference}}" 的字符串，后面输出的时候请原样输出，不要做任何改变
 
     要求：
     1. 参考维基百科的形式和结构
@@ -39,17 +43,21 @@ class AITermService
     7. 请在文档的开头输出一个模板 {{quality|pending}}
 
     **观点引用标准格式：**
-    《文献中文名》在《章节中文名》中指出/解释/说明："巴利文原文"（中文翻译及必要说明）。(link引用链接)
+    《文献中文名》在《章节中文名》中指出/解释/说明："巴利文原文"（中文翻译及必要说明）。[link]
+
+        ### 引用标准与技术要求
+    - **数据源绑定：** 请遍历我提供的 JSON 搜索结果。对于数组中的每一项，必须使用其对应的 `link` 字段值。
+    - **硬性禁止：** 禁止在最终文档中出现 "link"、"引用链接" 或方括号占位符，必须替换为 JSON 中实际的链接文本。
 
     如果某个观点有多个出处，请分别列出巴利文引用链接。范例
-    《文献中文名》在《章节中文名》中指出/解释/说明："巴利文原文"（中文翻译及必要说明）。(link引用链接1)(link引用链接2)
+    《文献中文名》在《章节中文名》中指出/解释/说明："巴利文原文"（中文翻译及必要说明）。[link引用链接1][link引用链接2]
     示例：
     《疑惑度脱新注》在《染色学处注释》中指出："*Kiriyākiriyanti nivāsanapārupanato, kappassa anādānato kiriyākiriyaṃ*"[9]（穿着下衣、披上衣是作为，不采取如法措施是不作为，故为作为-不作为）。{{para|id=202-1878|title=202-1878|style=reference}}
 
         **引用处理规则（按优先级）：**
 
     1. 【有明确论断句】直接引用该句巴利文：
-    《X》在《Y》中指出："巴利文原文"（译文）。(link)
+    《X》在《Y》中指出："巴利文原文"（译文）。[link]
 
     2. 【叙事段落，无单一论断句】从段落中选取最能代表该段核心意思的
     一个完整句子作为代表句引用，不得跳过巴利文：
@@ -57,7 +65,7 @@ class AITermService
     （该句译文）。(link)
 
     3. 【段落过长】从原文中截取开头或核心句，以省略号表示省略：
-    "巴利文开头...（省略）"（译文说明省略范围）。(link)
+    "巴利文开头...（省略）"（译文说明省略范围）。[link]
 
     **绝对禁止：** 任何观点陈述只有中文转述而没有对应巴利文引用。
     如确实无法提取，须注明"（原文为纯叙事，节录如下）"并仍须给出
@@ -65,7 +73,7 @@ class AITermService
 
     **输出前自检：**
     逐条检查每一个观点陈述，确认是否符合以下格式：
-    [中文陈述] + "巴利文" + （译文） + (link)
+    [中文陈述] + "巴利文" + （译文） + [link]
     若有不符合的条目，返回修改后再输出。
 
     词条结构应包括：
@@ -81,7 +89,7 @@ class AITermService
     - 使用Markdown格式
     - 标题层级清晰（#, ##, ###）
     - 直接输出百科正文，无需大标题
-    - 引用格式：《文献中文名》在《章节中文名》中 + 动词 + "巴利文"  + （巴利文的中文译文）(link引用链接)
+    - 引用格式：《文献中文名》在《章节中文名》中 + 动词 + "巴利文"  + （巴利文的中文译文）[link]
     - 引用动词可用：指出、解释、说明、定义、描述、强调、阐述、论述等
     - 巴利文使用罗马转写
     - 关键术语首次出现时提供巴利文和中文对照
@@ -207,6 +215,8 @@ class AITermService
         // 组装搜索参数
         $params = [
             'query'        => $word,
+            'resourceType' => 'tipitaka',
+            'granularity' => 'paragraph',
             'pageSize'     => $this->pageSize,
         ];
         $result = $search->search($params);
@@ -214,13 +224,16 @@ class AITermService
         $dto = SearchDataDTO::fromArray($result);
         $res = array();
         foreach ($dto->hits->items as $key => $item) {
+
             $res[] = [
                 'title' => $item->title,
                 'content' => $item->content,
                 'path' => $item->path,
+                'pid' => $item->getParaId(),
                 'link' => $item->getParaLink()
             ];
         }
+        Log::debug('query ' . count($res));
         return $res;
     }
 
@@ -230,7 +243,10 @@ class AITermService
         $term = $this->termService->getRaw($id);
         // 全文搜索
         $query = $this->query($term->word);
+
         $res = json_encode($query, JSON_UNESCAPED_UNICODE);
+        $resText = "# 搜索结果\n```json\n{$res}\n```\n";
+        $termText = "# 巴利术语\n\n{$term->word}\n\n";
         //LLM 生成
         $response = $this->openAIService->setApiUrl($this->model['url'])
             ->setModel($this->model['model'])
@@ -238,13 +254,62 @@ class AITermService
             ->setSystemPrompt($this->sysPrompt)
             ->setTemperature(0.5)
             ->setStream(false)
-            ->send(
-                "# 巴利术语\n\n{$term->word}\n\n"
-            );
+            ->send($resText . $termText);
 
         $content = $response['choices'][0]['message']['content'] ?? '';
+
+        //输出自检报告
+        Log::debug('llm response', ['strlen' => $content]);
+        $paraIds = $this->extractAllParaIds($content);
+        Log::debug('has paragraph ref ', ['total' => count($paraIds), 'id' => $paraIds]);
+        $searchPid = array_map(fn($item) => $item['pid'], $query);
+        $diff = array_values(array_diff($paraIds, $searchPid));
+        Log::debug('diff', ['total' => count($diff), 'data' => $diff]);
+
         $this->termService->update($id, ['note' => $content]);
         return $content;
     }
+
     public function create(string $word) {}
+
+    /**
+     * Extract all unique ID values from MediaWiki template parameter strings
+     *
+     * Parses a string that may contain multiple "{{para|...}}" templates
+     * and returns an array of unique 'id' parameter values found.
+     *
+     * @param string $str The input string containing zero or more {{para|...}} templates
+     * @return array<int, string> Array of unique extracted ID values (e.g., ['16-1376', 'ABC-123'])
+     *                            Returns empty array if no IDs are found
+     *
+     * @example
+     *   // Single template
+     *   extractAllParaIds('{{para|id=16-1376|title=test}}')
+     *   // returns ['16-1376']
+     *
+     *   // Multiple templates with duplicates
+     *   extractAllParaIds('{{para|id=16-1376}} and {{para|id=16-1376|style=ref}}')
+     *   // returns ['16-1376'] (duplicate removed)
+     *
+     *   // Multiple unique IDs
+     *   extractAllParaIds('{{para|id=16-1376}} {{para|id=ABC-123}} {{para|id=16-1376}}')
+     *   // returns ['16-1376', 'ABC-123']
+     */
+    public function extractAllParaIds(string $str): array
+    {
+        $ids = [];
+
+        // Find all {{para|...}} patterns
+        if (preg_match_all('/{{para\|(.*?)}}/', $str, $matches)) {
+            foreach ($matches[1] as $content) {
+                // Extract id= value from each template content
+                if (preg_match('/id=([^|&}]+)/', $content, $idMatch)) {
+                    $ids[] = $idMatch[1];
+                }
+            }
+        }
+
+        // Remove duplicates and preserve order of first occurrence
+        return array_values(array_unique($ids));
+    }
 }
