@@ -57,11 +57,15 @@ class TemplateRender
      * string $format  'react' | 'text' | 'tex' | 'unity'
      * @return void
      */
-    public function __construct($param, $channelInfo, $mode, $format = 'react', $studioId = '', $debug = [], $lang = 'zh-Hans')
+    public function __construct(array $param, $channelInfo, string $mode, string $format = 'react', ?string $studioId = null, $debug = [], $lang = 'zh-Hans')
     {
         $this->param = $param;
-        foreach ($channelInfo as $value) {
-            $this->channel_id[] = $value->uid;
+        foreach ($channelInfo as $channel) {
+            if ($channel && isset($channel->uid)) {
+                $this->channel_id[] = $channel->uid;
+            } else {
+                Log::error('template render init error invalid channel');
+            }
         }
         $this->channelInfo = $channelInfo;
         $this->mode = $mode;
@@ -375,7 +379,7 @@ class TemplateRender
         $output = [
             "word" => $word,
             "parentChannelId" => $channelId,
-            "parentStudioId" => $channelInfo->owner_uid,
+            "parentStudioId" => $channelInfo ? $channelInfo->owner_uid : null,
         ];
         $innerString = $output["word"];
         if ($tplParam) {

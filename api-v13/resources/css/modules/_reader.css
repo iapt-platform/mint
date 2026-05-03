@@ -9,8 +9,10 @@
    ══════════════════════════════════════════ */
 
 body {
-    font-family: "Inter", sans-serif;
-    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Inter', sans-serif;
+    transition:
+        background-color 0.3s,
+        color 0.3s;
 }
 
 /* ══════════════════════════════════════════
@@ -46,13 +48,13 @@ body {
 
 /* ── 正文区（中）── */
 .content-area {
-    flex: 1;            /* 替代原 flex-grow:1，配合 min-width 防止收缩 */
-    min-width: 0;       /* 修复：内容较窄时列不收缩 */
+    flex: 1; /* 替代原 flex-grow:1，配合 min-width 防止收缩 */
+    min-width: 0; /* 修复：内容较窄时列不收缩 */
 }
 
 /* ── 右侧边栏 ── */
 .right-sidebar {
-    width: 220px;       /* 收窄，原 300px 偏宽 */
+    width: 220px; /* 收窄，原 300px 偏宽 */
     flex-shrink: 0;
     display: none;
 }
@@ -158,18 +160,30 @@ body {
     text-decoration: none;
 }
 
-.toc-sidebar ul li a:hover      { text-decoration: none; }
-.offcanvas-body ul li a:hover   { text-decoration: underline; }
+.toc-sidebar ul li a:hover {
+    text-decoration: none;
+}
+.offcanvas-body ul li a:hover {
+    text-decoration: underline;
+}
 
 .dark-mode .toc-sidebar ul li a,
 .dark-mode .offcanvas-body ul li a {
     color: #4dabf7;
 }
 
-.toc-level-1 { padding-left: 0 !important; }
-.toc-level-2 { padding-left: 16px !important; }
-.toc-level-3 { padding-left: 24px !important; }
-.toc-level-4 { padding-left: 36px !important; }
+.toc-level-1 {
+    padding-left: 0 !important;
+}
+.toc-level-2 {
+    padding-left: 16px !important;
+}
+.toc-level-3 {
+    padding-left: 24px !important;
+}
+.toc-level-4 {
+    padding-left: 36px !important;
+}
 
 .toc-disabled {
     color: #6c757d;
@@ -177,7 +191,9 @@ body {
     pointer-events: none;
 }
 
-.dark-mode .toc-disabled { color: #adb5bd; }
+.dark-mode .toc-disabled {
+    color: #adb5bd;
+}
 
 .toc_item {
     white-space: nowrap;
@@ -220,10 +236,6 @@ body {
 /* ══════════════════════════════════════════
    六、正文内容
    ══════════════════════════════════════════ */
-
-.origin {
-    color: darkred;
-}
 
 /* 术语引用 */
 .term-ref {

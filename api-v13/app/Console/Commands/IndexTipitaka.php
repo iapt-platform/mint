@@ -297,10 +297,14 @@ class IndexTipitaka extends Command
                 ->groupBy('channel_uid')->get();
             $this->info("index chapter start={$start} end={$end}");
 
-            foreach ($channels as $key => $channel) {
+            foreach ($channels as $channel) {
                 $display = [];
                 $content = [];
                 $channelInfo = ChannelApi::getById($channel->channel_uid);
+                if (!$channelInfo) {
+                    Log::error('invalid channel', ['id' => $channel->channel_uid]);
+                    continue;
+                }
                 $this->info('channel =' . $channelInfo['name']);
                 if ($channelInfo['type'] === 'wbw') {
                     $this->info('wbw channel skip');
@@ -311,21 +315,23 @@ class IndexTipitaka extends Command
                     $start,
                     $end,
                     [$channel->channel_uid],
-                    ['mode' => 'read', 'format' => 'html', 'original' => true]
+                    ['mode' => 'read', 'format' => 'html', 'original' => false]
                 );
                 //生成html数据
 
                 $title = '';
-                foreach ($paragraphsData as $key => $paragraph) {
+                foreach ($paragraphsData as $paragraph) {
                     $translation = [];
                     $original = [];
-                    foreach ($paragraph['children'] as $key => $sent) {
+                    foreach ($paragraph['children'] as  $sent) {
                         if (isset($sent['translation'])) {
-                            foreach ($sent['translation'] as $key => $tran) {
-                                $curr = $tran['html'] ?? $tran['content'];
-                                $translation[] = "<span class='sentence'>{$curr}</span>";
-                                if ($tran['para'] === $start && !empty($curr)) {
-                                    $title = $curr;
+                            foreach ($sent['translation'] as  $tran) {
+                                if ($tran['channel']['id'] === $channel->channel_uid) {
+                                    $html = $tran['html'] ?? $tran['content'];
+                                    $translation[] = "<span class='sentence'>{$html}</span>";
+                                    if ($tran['para'] === $start && !empty($curr)) {
+                                        $title = $curr;
+                                    }
                                 }
                             }
                         }
@@ -334,30 +340,34 @@ class IndexTipitaka extends Command
                             is_array($sent['origin']) ||
                             count($sent['origin']) > 0
                         ) {
-                            $ori = $sent['origin'][0];
-                            $curr = $ori['html'] ?? $ori['content'];
-                            $original[] = "<span class='sentence origin'>{$curr}</span>";
-                            if (empty($title) && $ori['para'] === $start && !empty($curr)) {
-                                $title = $curr;
+                            foreach ($sent['origin'] as  $origin) {
+                                if ($origin['channel']['id'] === $channel->channel_uid) {
+                                    $html = $origin['html'] ?? $origin['content'];
+                                    $original[] = "<span class='sentence origin'>{$html}</span>";
+                                    if (empty($title) && $origin['para'] === $start && !empty($curr)) {
+                                        $title = $curr;
+                                    }
+                                }
                             }
                         }
                     }
-
 
                     $level = $paragraph['para'] === $start ? $chapter->level : 0;
                     $strOriginal = implode('', $original);
                     $strTranslation = implode('', $translation);
 
-                    if ($level > 0) {
-                        $display[] = "<div><h{$level}>{$strOriginal}</h{$level}><h{$level}>{$strTranslation}</h{$level}></div>";
+                    if ($channelInfo['type'] === 'original') {
+                        $htmlContent = $strOriginal;
                     } else {
-                        $display[] = "<div><p>{$strOriginal}</p><p>{$strTranslation}</p></div>";
+                        $htmlContent = $strTranslation;
                     }
 
-                    if ($channelInfo['type'] === 'original') {
-                        $content[] = $strOriginal;
+                    $area = $channelInfo['type'] === 'original' ? 'original' : 'translation';
+
+                    if ($level > 0) {
+                        $display[] = "<div class='{$area}' data-para='{$paragraph['para']}'><h{$level}>{$htmlContent}</h{$level}></div>";
                     } else {
-                        $content[] = $strTranslation;
+                        $display[] = "<div class='{$area}' data-para='{$paragraph['para']}'><p>{$htmlContent}</p></div>";
                     }
                 }
                 $this->chapterSave([
@@ -365,10 +375,9 @@ class IndexTipitaka extends Command
                     'para' => $start,
                     'level' => $chapter->level,
                     'channel' => $channel->channel_uid,
-                    'display' => implode('', $display),
-                    'content' => implode('', $content),
+                    'content' => implode('', $display),
                     'title' => strip_tags($title),
-                    'cat' => $category
+                    'cat' => $category ?? null
                 ]);
             }
         }
@@ -410,7 +419,7 @@ class IndexTipitaka extends Command
             $document['content']['text']['pali'] = $plainText;
             $document['title']['text']['pali'] = $title;
         }
-        $document['content']['display']    = $param['display'];             // 展示
+        $document['content']['display']    = $param['content'];             // 展示
 
         if ($this->isTest) {
             $this->info($param['content']);

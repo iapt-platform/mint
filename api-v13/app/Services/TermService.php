@@ -33,7 +33,7 @@ class TermService
         return ['items' => $result, 'total' => count($result)];
     }
 
-    public function getRaw($id)
+    public function getRaw(string $id)
     {
         $result = DhammaTerm::find($id);
         return $result;

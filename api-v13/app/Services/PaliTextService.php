@@ -8,7 +8,14 @@ use Illuminate\Support\Str;
 
 class PaliTextService
 {
-    public function getParent(int $book, int $para) {}
+    public function getParent(int $book, int $para)
+    {
+        $parent = PaliText::where('book', $book)
+            ->where('paragraph',  $para)->value('parent');
+
+        return $parent ? PaliText::where('book', $book)
+            ->where('paragraph',  $parent)->first() : null;
+    }
     public function getCurrChapter(int $book, int $para)
     {
         $paragraph = PaliText::where('book', $book)

@@ -170,12 +170,10 @@
                     <span class="tipitaka-sort-bar__label">排序</span>
                     <select class="form-select form-select-sm tipitaka-sort-select"
                         onchange="window.location=this.value">
-                        <option value="{{ request()->fullUrlWithQuery(['sort' => 'updated_at']) }}"
-                            {{ $selected['sort'] === 'updated_at' ? 'selected' : '' }}>最新</option>
-                        <option value="{{ request()->fullUrlWithQuery(['sort' => 'title']) }}"
-                            {{ $selected['sort'] === 'title' ? 'selected' : '' }}>标题</option>
-                        <option value="{{ request()->fullUrlWithQuery(['sort' => 'author']) }}"
-                            {{ $selected['sort'] === 'author' ? 'selected' : '' }}>作者</option>
+                        @foreach($sortList as $sort)
+                        <option value="{{ request()->fullUrlWithQuery(['sort' => $sort['key']]) }}"
+                            {{ $selected['sort'] === $sort['key'] ? 'selected' : '' }}>{{ $sort['label'] }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
