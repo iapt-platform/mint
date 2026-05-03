@@ -1,13 +1,33 @@
 /* resources/css/base/_typography.css
-   全站基础排版。
-   Noto Serif 已在 library.css 入口处 @import，此处只设置使用规则。
+   全站基础排版。无副作用，不覆盖组件样式。
+   Noto Serif 字体已在 library.css 入口 @import，此处只声明使用规则。
 */
 
-/* 正文衬线字体作用域由各 module 自行声明（如 .wiki-content-body）。
-   全站默认保持 Tabler 的 sans-serif 体系，不在此全局覆盖。 */
-
-/* 标题基础 */
-h1, h2, h3, h4, h5, h6 {
+/* ── 标题 ── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     line-height: 1.3;
     font-weight: 600;
+}
+
+/* ── 链接基础 ── */
+a {
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 0.05em;
+}
+
+/* ── 行内代码 ── */
+code {
+    font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-size: 0.875em;
+}
+
+/* ── 图片 ── */
+img {
+    max-width: 100%;
+    height: auto;
 }

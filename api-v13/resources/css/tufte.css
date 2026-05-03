@@ -1,6 +1,7 @@
 @charset "UTF-8";
 
-/* Import ET Book styles
+/* api-v13/resources/css/tufte.css
+Import ET Book styles
    adapted from https://github.com/edwardtufte/et-book/blob/gh-pages/et-book.css */
 
 /* Tufte CSS styles */
@@ -165,6 +166,10 @@ img {
     line-height: 1.3;
     vertical-align: baseline;
     position: relative;
+    border: 1px solid wheat;
+    padding: 6px;
+    border-radius: 8px;
+    background-color: #f5deb330;
 }
 
 .sidenote-number {
@@ -186,7 +191,7 @@ img {
 }
 
 .sidenote:before {
-    content: counter(sidenote-counter) " ";
+    content: counter(sidenote-counter) ' ';
     font-size: 100%;
     top: -0.5rem;
 }
@@ -205,17 +210,17 @@ table.fullwidth {
 
 div.table-wrapper {
     overflow-x: auto;
-    font-family: "Trebuchet MS", "Gill Sans", "Gill Sans MT", sans-serif;
+    font-family: 'Trebuchet MS', 'Gill Sans', 'Gill Sans MT', sans-serif;
 }
 
 .sans {
-    font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, sans-serif;
     letter-spacing: 0.03em;
 }
 
 code,
 pre > code {
-    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
     font-size: 1rem;
     line-height: 1.42;
     -webkit-text-size-adjust: 100%; /* Prevent adjustments of font size after orientation changes in iOS. See https://github.com/edwardtufte/tufte-css/issues/81#issuecomment-261953409 */

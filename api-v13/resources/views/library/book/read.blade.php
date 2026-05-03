@@ -10,7 +10,7 @@
 
 {{-- 术语抽屉（所有阅读页统一使用 wiki.term-drawer） --}}
 @push('scripts')
-@vite(['resources/css/tufte.css', 'resources/js/modules/term-tooltip.js'])
+@vite(['resources/js/modules/term-tooltip.js'])
 @endpush
 
 @section('reader-content')
@@ -65,13 +65,15 @@
                 </a>
             </div>
 
-            {{-- 版本切换：desktop 版本在右侧边栏展示，mobile 触发 offcanvas --}}
+            {{-- 版本切换：所有设备统一触发 offcanvas，放在设置右边 --}}
             @if(!empty($channels))
-            <div class="nav-item d-md-none me-2">
+            <div class="nav-item me-2">
                 <a href="#" class="nav-link"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#channelDrawer">
-                    <i class="ti ti-layers"></i>
+                    <i class="ti ti-stack-2 me-1 d-none d-md-inline"></i>
+                    <span class="d-none d-md-inline">版本</span>
+                    <i class="ti ti-stack-2 d-md-none"></i>
                 </a>
             </div>
             @endif
@@ -111,11 +113,19 @@
     <div class="offcanvas-body">
         <div class="list-group list-group-flush">
             @foreach($channels as $channel)
+            @php $isActive = request('channel') == $channel['id']; @endphp
+            @if($isActive)
+            <div class="list-group-item active pe-none">
+                <div class="fw-bold">{{ $channel['name'] }}</div>
+                <small class="opacity-75">{{ __('language.' . $channel['lang']) }}</small>
+            </div>
+            @else
             <a href="{{ request()->fullUrlWithQuery(['channel' => $channel['id']]) }}"
                 class="list-group-item list-group-item-action">
                 <div class="fw-bold">{{ $channel['name'] }}</div>
                 <small class="text-muted">{{ __('language.' . $channel['lang']) }}</small>
             </a>
+            @endif
             @endforeach
         </div>
     </div>
@@ -134,7 +144,7 @@
 </div>
 
 {{-- 主内容区 --}}
-<div class="container-xl">
+<div class="container-fluid px-0">
     <div class="main-container">
 
         {{-- TOC 侧边栏（tablet+） --}}
@@ -160,13 +170,14 @@
                     @endif
                 </p>
 
-                <div class="content">
+                {{-- ↓ 正文内容用 article 包裹，隔离排版作用域 ── --}}
+                <article class="reader-body">
                     @if(isset($book['content']))
-                    {{!! $book['content'] !!}}
+                    {!! $book['content'] !!}
                     @else
                     <div>没有内容</div>
                     @endif
-                </div>
+                </article>
 
                 {{-- 上下翻页 --}}
                 <div class="mt-6 pt-6">
@@ -218,23 +229,7 @@
         {{-- 右侧边栏 --}}
         <div class="right-sidebar">
 
-            {{-- 版本卡片（desktop，wiki 侧边栏同款） --}}
-            @if(!empty($channels))
-            <div class="reader-channel-card">
-                <div class="reader-channel-title">版本</div>
-                <ul class="reader-channel-list">
-                    @foreach($channels as $channel)
-                    <li>
-                        <a href="{{ request()->fullUrlWithQuery(['channel' => $channel['id']]) }}"
-                            class="{{ request('channel') == $channel['id'] ? 'active' : '' }}">
-                            {{ $channel['name'] }}
-                            <span class="reader-channel-lang">{{ __('language.' . $channel['lang']) }}</span>
-                        </a>
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
+
 
             {{-- 下载 --}}
             @if(!empty($book['downloads']))
