@@ -73,7 +73,12 @@ class TipitakaController extends Controller
         $selectedType   = request('type',   'all');
         $selectedLang   = request('lang',   'all');
         $selectedAuthor = request('author', 'all');
-        $selectedSort   = request('sort',   'updated_at');
+        $selectedSort   = request('sort',   'new');
+
+        $sortList = [
+            ['key' => 'new',         'label' => '最新',],
+            ['key' => 'progress',    'label' => '完成度',],
+        ];
 
         $selected = [
             'type'   => $selectedType,
@@ -84,39 +89,73 @@ class TipitakaController extends Controller
 
         // ── 书籍列表（过滤+排序，真实实现替换此处） ──────────────
         $categoryBooks = $this->getBooks($categories, $id, $selected);
-        // TODO: 将 $selected 传入 getBooks() 做实际过滤
 
         $totalCount = count($categoryBooks);
 
         // ── 过滤器选项（mock，真实实现从书籍数据聚合） ────────────
         $filterOptions = [
-            'types' => [
-                ['value' => 'all',         'label' => '全部',    'count' => $totalCount],
-                ['value' => 'original',    'label' => '原文',    'count' => 0],
-                ['value' => 'translation', 'label' => '译文',    'count' => 0],
-                ['value' => 'nissaya',     'label' => 'Nissaya', 'count' => 0],
-            ],
-            'languages' => [
-                ['value' => 'all',  'label' => '全部',   'count' => $totalCount],
-                ['value' => 'zh-Hans',   'label' => '简体中文',   'count' => 0],
-                ['value' => 'zh-Hant',   'label' => '繁体中文',   'count' => 0],
-                ['value' => 'pi',   'label' => '巴利语', 'count' => 0],
-                ['value' => 'en',   'label' => '英语',   'count' => 0],
-            ],
+            'types' => $this->filterTypes(),
+            'languages' => $this->filterLanguages(),
             'authors' => $this->getAuthorOptions($categoryBooks),
         ];
 
         // ── 右边栏：本周推荐（mock） ────────────────────────────
-        $recommended = [
+        $recommended = $this->mockRecommended();
+
+        // ── 右边栏：活跃译者（mock） ────────────────────────────
+        $activeAuthors = $this->mockActiveAuthors();
+
+        $types = $this->types();
+
+        return view('library.tipitaka.category', compact(
+            'currentCategory',
+            'subCategories',
+            'categoryBooks',
+            'breadcrumbs',
+            'types',
+            'selected',
+            'filterOptions',
+            'totalCount',
+            'recommended',
+            'activeAuthors',
+            'sortList'
+        ));
+    }
+
+    private function filterLanguages()
+    {
+        return [
+            ['value' => 'all',  'label' => '全部',   'count' => 0],
+            ['value' => 'zh-Hans',   'label' => '简体中文',   'count' => 0],
+            ['value' => 'zh-Hant',   'label' => '繁体中文',   'count' => 0],
+            ['value' => 'pi',   'label' => '巴利语', 'count' => 0],
+            ['value' => 'en',   'label' => '英语',   'count' => 0],
+        ];
+    }
+
+    private function filterTypes()
+    {
+        return [
+            ['value' => 'all',         'label' => '全部',    'count' => 0],
+            ['value' => 'original',    'label' => '原文',    'count' => 0],
+            ['value' => 'translation', 'label' => '译文',    'count' => 0],
+            ['value' => 'nissaya',     'label' => 'Nissaya', 'count' => 0],
+        ];
+    }
+
+    private function mockRecommended()
+    {
+        return [
             ['id' => 1, 'title' => '相应部·因缘篇',  'category' => '经藏'],
             ['id' => 2, 'title' => '法句经',          'category' => '经藏'],
             ['id' => 3, 'title' => '清净道论',        'category' => '注释'],
             ['id' => 4, 'title' => '律藏·波罗夷',    'category' => '律藏'],
             ['id' => 5, 'title' => '长部·梵网经',    'category' => '经藏'],
         ];
-
-        // ── 右边栏：活跃译者（mock） ────────────────────────────
-        $activeAuthors = [
+    }
+    private function mockActiveAuthors()
+    {
+        return [
             [
                 'name'    => 'Bhikkhu Bodhi',
                 'avatar'  => null,
@@ -146,21 +185,6 @@ class TipitakaController extends Controller
                 'count'   => 9,
             ],
         ];
-
-        $types = $this->types();
-
-        return view('library.tipitaka.category', compact(
-            'currentCategory',
-            'subCategories',
-            'categoryBooks',
-            'breadcrumbs',
-            'types',
-            'selected',
-            'filterOptions',
-            'totalCount',
-            'recommended',
-            'activeAuthors',
-        ));
     }
 
     // ── 辅助：从书籍列表聚合作者选项（mock，真实实现替换） ─────────
@@ -195,9 +219,8 @@ class TipitakaController extends Controller
         });
     }
 
-    private function getBooks($categories, $id, $filters)
+    private function getBooksIdInCat(array $categories, ?string $id)
     {
-
         if ($id) {
             $currentCategory = collect($categories)->firstWhere('id', $id);
             if (!$currentCategory) {
@@ -217,7 +240,14 @@ class TipitakaController extends Controller
         foreach ($booksChapter as $key => $value) {
             $chapters[] = [$value->book, $value->paragraph];
         }
-        $books = ProgressChapter::with('channel.owner')
+        return $chapters;
+    }
+    private function getBooks(array $categories, ?string $id, array $filters)
+    {
+        //根据分类获取书号
+        $chapters = $this->getBooksIdInCat($categories, $id);
+
+        $table = ProgressChapter::with('channel.owner')
             ->whereHas('channel', function ($query) use ($filters) {
                 $query->where('status', 30);
 
@@ -229,14 +259,18 @@ class TipitakaController extends Controller
                     $query->where('lang', $filters['lang']);
                 }
             })
-            ->where('progress', '>', config('mint.library.list_min_progress'))
-            ->whereIns(['book', 'para'], $chapters)
-            ->take(100)
-            ->get();
+            ->whereNotNull('last_chapter_completed_at')
+            ->whereIns(['book', 'para'], $chapters);
+        if ($filters['sort'] === 'new') {
+            $table = $table->orderBy('last_chapter_completed_at', 'desc');
+        } else if ($filters['sort'] === 'progress') {
+            $table = $table->orderBy('progress', 'desc');
+        }
+        $books = $table->take(100)->get();
         return $this->getBooksInfo($books);
     }
 
-    private function getBooksInfo($books,)
+    private function getBooksInfo(mixed $books)
     {
         $pali = PaliText::where('level', 1)->get();
         // 获取该分类下的书籍
@@ -265,6 +299,7 @@ class TipitakaController extends Controller
                 "title" => $title,
                 "author" => $book->channel->name,
                 "publisher" => $book->channel->owner,
+                'completed_chapters' => $book->completed_chapters,
                 "type" => __('labels.' . $book->channel->type),
                 "cover" => $coverUrl,
                 'cover_gradient' => $this->coverGradients[$colorIdx % count($this->coverGradients)],
