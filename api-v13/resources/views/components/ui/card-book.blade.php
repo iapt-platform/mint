@@ -45,6 +45,9 @@
                 @if(!empty($book['type']))
                 <span class="card-book__badge">{{ $book['type'] }}</span>
                 @endif
+                @if(!empty($book['completed_chapters']))
+                <span class="card-book__badge">§{{ $book['completed_chapters'] }}</span>
+                @endif
             </div>
         </div>
 
