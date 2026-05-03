@@ -64,21 +64,22 @@ class BookController extends Controller
     }
 
 
-    public function read(Request $request, $id)
+    public function read(Request $request, string $id)
     {
         $start = microtime(true);
+        /*
         $lap = function (string $label) use ($start): void {
             $elapsed = round((microtime(true) - $start) * 1000, 2);
             Log::debug("[book.read] {$label}", ['elapsed_ms' => $elapsed]);
         };
-
-        $lap('start');
+*/
+        //$lap('start');
 
         $channelId = $request->input('channel');
         $openSearchId = "tipitaka_chapter_{$id}_{$channelId}";
 
         $chapter = HitItemDTO::fromArray($this->searchService->get($openSearchId))->toArray();
-        $lap('searchService->get + HitItemDTO');
+        //$lap('searchService->get + HitItemDTO');
 
         [$bookId, $paraId] = explode('-', $id);
 
@@ -87,7 +88,7 @@ class BookController extends Controller
         $book = [];
 
         $book['toc'] = $this->getBookToc((int)$bookId, (int)$paraId, $channelId, 2, 7);
-        $lap('getBookToc');
+        //$lap('getBookToc');
 
         $book['categories'] = $chapter['category'];
         $book['title']      = $chapter['title'];
@@ -95,23 +96,24 @@ class BookController extends Controller
         $book['tags']       = [];
 
         $book['pagination'] = $this->pagination((int)$bookId, (int)$paraId, $channelId);
-        $lap('pagination');
+        //$lap('pagination');
 
         $book['content'] = $chapter['display'];
+        Log::debug($chapter['display']);
 
         $channels = $chapterService->publicChannels((int)$bookId, (int)$paraId);
-        $lap('publicChannels');
+        //$lap('publicChannels');
 
         $editor_link = config('mint.server.dashboard_base_path')
             . "/workspace/tipitaka/chapter/{$id}?channel={$channelId}";
 
         $view = view('library.book.read', compact('book', 'channels', 'editor_link'));
-        $lap('view compiled — total');
+        //$lap('view compiled — total');
 
         return $view;
     }
 
-    private function loadBook($id)
+    private function loadBook(string $id)
     {
         $book = ProgressChapter::with('channel.owner')->find($id);
         return $book;
