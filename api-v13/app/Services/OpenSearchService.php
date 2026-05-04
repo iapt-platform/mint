@@ -199,7 +199,7 @@ class OpenSearchService
                             'method'    => [
                                 'name'       => 'hnsw',
                                 'space_type' => 'cosinesimil',
-                                'engine'     => 'nmslib',
+                                'engine'     => 'faiss',
                             ],
                         ],
                         'suggest' => [
@@ -235,7 +235,7 @@ class OpenSearchService
                             'method'    => [
                                 'name'       => 'hnsw',
                                 'space_type' => 'cosinesimil',
-                                'engine'     => 'nmslib',
+                                'engine'     => 'faiss',
                             ],
                         ],
                     ],
@@ -286,7 +286,7 @@ class OpenSearchService
                             'method'    => [
                                 'name'       => 'hnsw',
                                 'space_type' => 'cosinesimil',
-                                'engine'     => 'nmslib',
+                                'engine'     => 'faiss',
                             ],
                         ],
                         'suggest' => [
