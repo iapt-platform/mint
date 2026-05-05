@@ -10,6 +10,68 @@ use Illuminate\Http\Request;
 
 class TermService
 {
+    public function attachLocalName(array $categoryData, string $lang): array
+    {
+        $allNames = [];
+
+        // 收集所有 name
+        foreach ($categoryData as $item) {
+
+            if (!empty($item['category']['name'])) {
+                $allNames[] = $item['category']['name'];
+            }
+
+            foreach ($item['children'] as $child) {
+                if (!empty($child['name'])) {
+                    $allNames[] = $child['name'];
+                }
+            }
+        }
+
+        // 去重
+        $allNames = array_values(array_unique($allNames));
+
+        // 查词典
+        $terms = $this->glossaryByLemma($allNames, $lang);
+
+        // 构建映射
+        $termMap = [];
+        if ($terms) {
+            foreach ($terms as $term) {
+                $termMap[$term->word] = $term->meaning;
+            }
+        }
+
+        // 回填
+        foreach ($categoryData as &$item) {
+
+            $name = $item['category']['name'] ?? null;
+            $item['category']['local_name'] = $termMap[$name] ?? $name;
+
+            foreach ($item['children'] as &$child) {
+                $childName = $child['name'] ?? null;
+                $child['local_name'] = $termMap[$childName] ?? $childName;
+            }
+        }
+
+        unset($item, $child);
+
+        return $categoryData;
+    }
+    public function glossaryByLemma(array $words, string $lang)
+    {
+        $localTermChannel = ChannelApi::getSysChannel(
+            "_community_term_" . strtolower($lang) . "_"
+        );
+        if (!$localTermChannel) {
+            return null;
+        }
+        $result = DhammaTerm::select(['guid', 'word', 'tag', 'meaning', 'other_meaning'])
+            ->whereIn('word', $words)
+            ->where('channal', $localTermChannel)
+            ->get();
+        return $result;
+    }
     public function getCommunityGlossary($lang)
     {
         $localTermChannel = ChannelApi::getSysChannel(
