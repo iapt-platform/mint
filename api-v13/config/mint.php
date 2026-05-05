@@ -10,7 +10,10 @@ return [
     'languages' => [
         'en' => 'English',
         'zh-Hans' => '简体中文',
-        'zh-Hant' => '繁体中文',
+        'zh-Hant' => '繁體中文',
+        'my' => 'မြန်မာဘာသာ',
+        'th' => 'ภาษาไทย',
+        'si' => 'සිංහල',
     ],
     'default_language' => 'en',
     'library' => [
