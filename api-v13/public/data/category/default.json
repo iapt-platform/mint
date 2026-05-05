@@ -82,35 +82,35 @@
                         "tag": ["sutta", "aṅguttaranikāya", "tikanipāta"]
                     },
                     {
-                        "name": "Catukkanipāta",
+                        "name": "catukkanipāta",
                         "tag": ["sutta", "aṅguttaranikāya", "catukkanipāta"]
                     },
                     {
-                        "name": "Pañcakanipāta",
+                        "name": "pañcakanipāta",
                         "tag": ["sutta", "aṅguttaranikāya", "pañcakanipāta"]
                     },
                     {
-                        "name": "Chakkanipāta",
+                        "name": "chakkanipāta",
                         "tag": ["sutta", "aṅguttaranikāya", "chakkanipāta"]
                     },
                     {
-                        "name": "Sattakanipāta",
+                        "name": "sattakanipāta",
                         "tag": ["sutta", "aṅguttaranikāya", "sattakanipāta"]
                     },
                     {
-                        "name": "Aṭṭhakanipāta",
+                        "name": "aṭṭhakanipāta",
                         "tag": ["sutta", "aṅguttaranikāya", "aṭṭhakanipāta"]
                     },
                     {
-                        "name": "Navakanipāta",
+                        "name": "navakanipāta",
                         "tag": ["sutta", "aṅguttaranikāya", "navakanipāta"]
                     },
                     {
-                        "name": "Dasakanipāta",
+                        "name": "dasakanipāta",
                         "tag": ["sutta", "aṅguttaranikāya", "dasakanipāta"]
                     },
                     {
-                        "name": "Ekādasakanipāta",
+                        "name": "ekādasakanipāta",
                         "tag": ["sutta", "aṅguttaranikāya", "ekādasakanipāta"]
                     }
                 ]
@@ -120,79 +120,79 @@
                 "tag": ["sutta", "khuddakanikāya"],
                 "children": [
                     {
-                        "name": "Khuddakapāṭha",
+                        "name": "khuddakapāṭha",
                         "tag": ["sutta", "khuddakanikāya", "khuddakapāṭha"]
                     },
                     {
-                        "name": "Dhammapada",
+                        "name": "dhammapada",
                         "tag": ["sutta", "khuddakanikāya", "dhammapada"]
                     },
                     {
-                        "name": "Udāna",
+                        "name": "udāna",
                         "tag": ["sutta", "khuddakanikāya", "udāna"]
                     },
                     {
-                        "name": "Itivuttaka",
+                        "name": "itivuttaka",
                         "tag": ["sutta", "khuddakanikāya", "itivuttaka"]
                     },
                     {
-                        "name": "Suttanipāta",
+                        "name": "suttanipāta",
                         "tag": ["sutta", "khuddakanikāya", "suttanipāta"]
                     },
                     {
-                        "name": "Vimānavatthu",
+                        "name": "vimānavatthu",
                         "tag": ["sutta", "khuddakanikāya", "vimānavatthu"]
                     },
                     {
-                        "name": "Petavatthu",
+                        "name": "petavatthu",
                         "tag": ["sutta", "khuddakanikāya", "petavatthu"]
                     },
                     {
-                        "name": "Theragāthā",
+                        "name": "theragāthā",
                         "tag": ["sutta", "khuddakanikāya", "theragāthā"]
                     },
                     {
-                        "name": "Therīgāthā",
+                        "name": "therīgāthā",
                         "tag": ["sutta", "khuddakanikāya", "therīgāthā"]
                     },
                     {
-                        "name": "Therāpadāna",
+                        "name": "therāpadāna",
                         "tag": ["sutta", "khuddakanikāya", "therāpadāna"]
                     },
                     {
-                        "name": "Buddhavaṃsa",
+                        "name": "buddhavaṃsa",
                         "tag": ["sutta", "khuddakanikāya", "buddhavaṃsa"]
                     },
                     {
-                        "name": "Cariyāpiṭaka",
+                        "name": "cariyāpiṭaka",
                         "tag": ["sutta", "khuddakanikāya", "cariyāpiṭaka"]
                     },
                     {
-                        "name": "Jātaka",
+                        "name": "jātaka",
                         "tag": ["sutta", "khuddakanikāya", "jātaka"]
                     },
                     {
-                        "name": "Mahāniddesa",
+                        "name": "mahāniddesa",
                         "tag": ["sutta", "khuddakanikāya", "mahāniddesa"]
                     },
                     {
-                        "name": "Cūḷaniddesa",
+                        "name": "cūḷaniddesa",
                         "tag": ["sutta", "khuddakanikāya", "cūḷaniddesa"]
                     },
                     {
-                        "name": "Paṭisambhidāmagga",
+                        "name": "paṭisambhidāmagga",
                         "tag": ["sutta", "khuddakanikāya", "paṭisambhidāmagga"]
                     },
                     {
-                        "name": "Nettippakaraṇa",
+                        "name": "nettippakaraṇa",
                         "tag": ["sutta", "khuddakanikāya", "nettippakaraṇa"]
                     },
                     {
-                        "name": "Milindapañha",
+                        "name": "milindapañha",
                         "tag": ["sutta", "khuddakanikāya", "milindapañha"]
                     },
                     {
-                        "name": "Peṭakopadesa",
+                        "name": "peṭakopadesa",
                         "tag": ["sutta", "khuddakanikāya", "peṭakopadesa"]
                     }
                 ]
@@ -224,51 +224,51 @@
                 "tag": ["vinaya", "parivāra"]
             },
             {
-                "name": "Ṭīkā",
+                "name": "ṭīkā",
                 "tag": ["vinaya", "ṭīkā"],
                 "children": [
                     {
-                        "name": "Sāratthadīpanī",
+                        "name": "sāratthadīpanī",
                         "tag": ["vinaya", "ṭīkā", "sāratthadīpanī"]
                     },
                     {
-                        "name": "Pātimokkha",
+                        "name": "pātimokkha",
                         "tag": ["vinaya", "ṭīkā", "pātimokkha"]
                     },
                     {
-                        "name": "Vajirabuddhi",
+                        "name": "vajirabuddhi",
                         "tag": ["vinaya", "ṭīkā", "vajirabuddhi"]
                     },
                     {
-                        "name": "Vimativinodanī",
+                        "name": "vimativinodanī",
                         "tag": ["vinaya", "ṭīkā", "vimativinodanī"]
                     },
                     {
-                        "name": "Vinayavinicchayo",
+                        "name": "vinayavinicchayo",
                         "tag": ["vinaya", "ṭīkā", "vinayavinicchaya"]
                     },
                     {
-                        "name": "Vinayasaṅgaha",
+                        "name": "vinayasaṅgaha",
                         "tag": ["vinaya", "ṭīkā", "vinayasaṅgaha"]
                     },
                     {
-                        "name": "Vinayālaṅkāra",
+                        "name": "vinayālaṅkāra",
                         "tag": ["vinaya", "ṭīkā", "vinayālaṅkāra"]
                     },
                     {
-                        "name": "Uttaravinicchaya",
+                        "name": "uttaravinicchaya",
                         "tag": ["vinaya", "ṭīkā", "uttaravinicchaya"]
                     },
                     {
-                        "name": "Pācityādiyojanā",
+                        "name": "pācityādiyojanā",
                         "tag": ["vinaya", "ṭīkā", "pācityādiyojanā"]
                     },
                     {
-                        "name": "Khuddasikkhā",
+                        "name": "khuddasikkhā",
                         "tag": ["vinaya", "ṭīkā", "khuddasikkhā"]
                     },
                     {
-                        "name": "Mūlasikkhā",
+                        "name": "mūlasikkhā",
                         "tag": ["vinaya", "ṭīkā", "mūlasikkhā"]
                     }
                 ]
@@ -276,67 +276,67 @@
         ]
     },
     {
-        "name": "Abhidhammapiṭaka",
+        "name": "abhidhammapiṭaka",
         "tag": ["abhidhamma"],
         "children": [
             {
-                "name": "Dhammasaṅgaṇī",
+                "name": "dhammasaṅgaṇī",
                 "tag": ["abhidhamma", "dhammasaṅgaṇī"]
             },
             {
-                "name": "Vibhaṅga",
+                "name": "vibhaṅga",
                 "tag": ["abhidhamma", "vibhaṅga"]
             },
             {
-                "name": "Dhātukathā",
+                "name": "dhātukathā",
                 "tag": ["abhidhamma", "dhātukathā"]
             },
             {
-                "name": "Puggalapaññatti",
+                "name": "puggalapaññatti",
                 "tag": ["abhidhamma", "puggalapaññatti"]
             },
             {
-                "name": "Kathāvatthu",
+                "name": "kathāvatthu",
                 "tag": ["abhidhamma", "kathāvatthu"]
             },
             {
-                "name": "Yamaka",
+                "name": "yamaka",
                 "tag": ["abhidhamma", "yamaka"]
             },
             {
-                "name": "Paṭṭhāna",
+                "name": "paṭṭhāna",
                 "tag": ["abhidhamma", "paṭṭhāna"]
             },
             {
-                "name": "Añña",
+                "name": "añña",
                 "tag": [],
                 "children": [
                     {
-                        "name": "Abhidhammatthasaṅgaha",
+                        "name": "abhidhammatthasaṅgaha",
                         "tag": ["abhidhamma", "abhidhammatthasaṅgaha"]
                     },
                     {
-                        "name": "Abhidhammāvatāra",
+                        "name": "abhidhammāvatāra",
                         "tag": ["abhidhamma", "abhidhammāvatāra"]
                     },
                     {
-                        "name": "Nāmarūpaparicchedo",
+                        "name": "nāmarūpaparicchedo",
                         "tag": ["abhidhamma", "nāmarūpapariccheda"]
                     },
                     {
-                        "name": "Paramatthavinicchayo",
+                        "name": "paramatthavinicchayo",
                         "tag": ["abhidhamma", "paramatthavinicchaya"]
                     },
                     {
-                        "name": "Saccasaṅkhepo",
+                        "name": "saccasaṅkhepo",
                         "tag": ["abhidhamma", "saccasaṅkhepa"]
                     },
                     {
-                        "name": "Abhidhammamātikāpāḷi",
+                        "name": "abhidhammamātikāpāḷi",
                         "tag": ["abhidhamma", "abhidhammamātikāpāḷi"]
                     },
                     {
-                        "name": "Mohavicchedanī",
+                        "name": "mohavicchedanī",
                         "tag": ["abhidhamma", "mohavicchedanī"]
                     }
                 ]
@@ -344,19 +344,19 @@
         ]
     },
     {
-        "name": "Añña",
+        "name": "añña",
         "tag": ["añña"],
         "children": [
             {
-                "name": "Visuddhimagga",
+                "name": "visuddhimagga",
                 "tag": ["añña", "visuddhimagga"],
                 "children": [
                     {
-                        "name": "Visuddhimagga",
+                        "name": "visuddhimagga",
                         "tag": ["añña", "visuddhimagga", "aṭṭhakathā"]
                     },
                     {
-                        "name": "Visuddhimagga-mahāṭīkā",
+                        "name": "visuddhimagga-mahāṭīkā",
                         "tag": [
                             "añña",
                             "visuddhimagga",
@@ -365,17 +365,17 @@
                         ]
                     },
                     {
-                        "name": "Visuddhimagga-nidānakathā",
+                        "name": "visuddhimagga-nidānakathā",
                         "tag": ["añña", "visuddhimagga", "nidānakathā"]
                     }
                 ]
             },
             {
-                "name": "Saṃgāyanassa-Pucchā Vissajjanā",
+                "name": "saṃgāyanassa-pucchā vissajjanā",
                 "tag": ["añña", "saṅgayana-puccha vissajjanā"],
                 "children": [
                     {
-                        "name": "Dīghanikāya(Pu-Vi)",
+                        "name": "dīghanikāya(pu-vi)",
                         "tag": [
                             "añña",
                             "saṅgayana-puccha vissajjanā",
@@ -383,7 +383,7 @@
                         ]
                     },
                     {
-                        "name": "Majjhimanikāya(Pu-Vi)",
+                        "name": "majjhimanikāya(pu-vi)",
                         "tag": [
                             "añña",
                             "saṅgayana-puccha vissajjanā",
@@ -391,7 +391,7 @@
                         ]
                     },
                     {
-                        "name": "Saṃyuttanikāya(Pu-Vi)",
+                        "name": "saṃyuttanikāya(pu-vi)",
                         "tag": [
                             "añña",
                             "saṅgayana-puccha vissajjanā",
@@ -399,7 +399,7 @@
                         ]
                     },
                     {
-                        "name": "Aṅguttaranikāya(Pu-Vi)",
+                        "name": "aṅguttaranikāya(pu-vi)",
                         "tag": [
                             "añña",
                             "saṅgayana-puccha vissajjanā",
@@ -407,7 +407,7 @@
                         ]
                     },
                     {
-                        "name": "Vinayapiṭaka(Pu-Vi)",
+                        "name": "vinayapiṭaka(pu-vi)",
                         "tag": [
                             "añña",
                             "saṅgayana-puccha vissajjanā",
@@ -415,7 +415,7 @@
                         ]
                     },
                     {
-                        "name": "Abhidhammapiṭaka(Pu-Vi)",
+                        "name": "abhidhammapiṭaka(pu-vi)",
                         "tag": [
                             "añña",
                             "saṅgayana-puccha vissajjanā",
@@ -423,7 +423,7 @@
                         ]
                     },
                     {
-                        "name": "Aṭṭhakathā(Pu-Vi)",
+                        "name": "aṭṭhakathā(pu-vi)",
                         "tag": [
                             "añña",
                             "saṅgayana-puccha vissajjanā",
@@ -433,23 +433,23 @@
                 ]
             },
             {
-                "name": "Leḍī Sayādo Gantha-Saṅgaho",
+                "name": "leḍī sayādo gantha-saṅgaho",
                 "tag": ["añña", "leḍī sayādo"],
                 "children": [
                     {
-                        "name": "Niruttidīpanīpāṭha",
+                        "name": "niruttidīpanīpāṭha",
                         "tag": ["añña", "leḍī sayādo", "niruttidīpanīpāṭha"]
                     },
                     {
-                        "name": "Paramatthadīpanī",
+                        "name": "paramatthadīpanī",
                         "tag": ["añña", "leḍī sayādo", "paramatthadīpanī"]
                     },
                     {
-                        "name": "Anudīpanīpāṭha",
+                        "name": "anudīpanīpāṭha",
                         "tag": ["añña", "leḍī sayādo", "anudīpanīpāṭha"]
                     },
                     {
-                        "name": "Paṭṭhānuddesa dīpanīpāṭha",
+                        "name": "paṭṭhānuddesa dīpanīpāṭha",
                         "tag": [
                             "añña",
                             "leḍī sayādo",
@@ -459,11 +459,11 @@
                 ]
             },
             {
-                "name": "Buddha-Vandanā Gantha-Saṅgaho",
+                "name": "buddha-vandanā gantha-saṅgaho",
                 "tag": ["añña", "buddha-vandanā ganthasaṅgaha"],
                 "children": [
                     {
-                        "name": "Namakkāratīkā",
+                        "name": "namakkāratīkā",
                         "tag": [
                             "añña",
                             "buddha-vandanā ganthasaṅgaha",
@@ -471,7 +471,7 @@
                         ]
                     },
                     {
-                        "name": "Mahāpaṇāmapāṭha",
+                        "name": "mahāpaṇāmapāṭha",
                         "tag": [
                             "añña",
                             "buddha-vandanā ganthasaṅgaha",
@@ -479,7 +479,7 @@
                         ]
                     },
                     {
-                        "name": "Lakkhaṇāto Buddhathomanāgāthā",
+                        "name": "lakkhaṇāto buddhathomanāgāthā",
                         "tag": [
                             "añña",
                             "buddha-vandanā ganthasaṅgaha",
@@ -487,7 +487,7 @@
                         ]
                     },
                     {
-                        "name": "Suttavandanā",
+                        "name": "suttavandanā",
                         "tag": [
                             "añña",
                             "buddha-vandanā ganthasaṅgaha",
@@ -495,7 +495,7 @@
                         ]
                     },
                     {
-                        "name": "Jinālaṅkāra",
+                        "name": "jinālaṅkāra",
                         "tag": [
                             "añña",
                             "buddha-vandanā ganthasaṅgaha",
@@ -503,7 +503,7 @@
                         ]
                     },
                     {
-                        "name": "Kamalāñjali",
+                        "name": "kamalāñjali",
                         "tag": [
                             "añña",
                             "buddha-vandanā ganthasaṅgaha",
@@ -511,7 +511,7 @@
                         ]
                     },
                     {
-                        "name": "Pajjamadhu",
+                        "name": "pajjamadhu",
                         "tag": [
                             "añña",
                             "buddha-vandanā ganthasaṅgaha",
@@ -519,7 +519,7 @@
                         ]
                     },
                     {
-                        "name": "Buddhaguṇagāthāvalī",
+                        "name": "buddhaguṇagāthāvalī",
                         "tag": [
                             "añña",
                             "buddha-vandanā ganthasaṅgaha",
@@ -529,11 +529,11 @@
                 ]
             },
             {
-                "name": "Vaṃsa Gantha-Saṅgaho",
+                "name": "vaṃsa gantha-saṅgaho",
                 "tag": ["añña", "vaṃsa ganthasaṅgaha"],
                 "children": [
                     {
-                        "name": "Cūḷaganthavaṃsa",
+                        "name": "cūḷaganthavaṃsa",
                         "tag": [
                             "añña",
                             "vaṃsa ganthasaṅgaha",
@@ -549,17 +549,17 @@
                         ]
                     },
                     {
-                        "name": "Mahāvaṃsa",
+                        "name": "mahāvaṃsa",
                         "tag": ["añña", "vaṃsa ganthasaṅgaha", "mahāvaṃsapāḷi"]
                     }
                 ]
             },
             {
-                "name": "Byākaraṇa Gantha-Saṅgaho",
+                "name": "byākaraṇa gantha-saṅgaho",
                 "tag": ["añña", "byākaraṇa ganthasaṅgaha"],
                 "children": [
                     {
-                        "name": "Moggallānasuttapāṭha",
+                        "name": "moggallānasuttapāṭha",
                         "tag": [
                             "añña",
                             "byākaraṇa ganthasaṅgaha",
@@ -567,7 +567,7 @@
                         ]
                     },
                     {
-                        "name": "Moggallānabyākaraṇa",
+                        "name": "moggallānabyākaraṇa",
                         "tag": [
                             "añña",
                             "byākaraṇa ganthasaṅgaha",
@@ -575,7 +575,7 @@
                         ]
                     },
                     {
-                        "name": "Kaccāyanabyākaraṇaṃ",
+                        "name": "kaccāyanabyākaraṇaṃ",
                         "tag": [
                             "añña",
                             "byākaraṇa ganthasaṅgaha",
@@ -583,7 +583,7 @@
                         ]
                     },
                     {
-                        "name": "Saddanītippakaraṇaṃ",
+                        "name": "saddanītippakaraṇaṃ",
                         "tag": [
                             "añña",
                             "byākaraṇa ganthasaṅgaha",
@@ -591,7 +591,7 @@
                         ]
                     },
                     {
-                        "name": "Padarūpasiddhi",
+                        "name": "padarūpasiddhi",
                         "tag": [
                             "añña",
                             "byākaraṇa ganthasaṅgaha",
@@ -599,7 +599,7 @@
                         ]
                     },
                     {
-                        "name": "Moggallāna pañcikā ṭīkā",
+                        "name": "moggallāna pañcikā ṭīkā",
                         "tag": [
                             "añña",
                             "byākaraṇa ganthasaṅgaha",
@@ -607,7 +607,7 @@
                         ]
                     },
                     {
-                        "name": "Payogasiddhipāṭha",
+                        "name": "payogasiddhipāṭha",
                         "tag": [
                             "añña",
                             "byākaraṇa ganthasaṅgaha",
@@ -615,11 +615,11 @@
                         ]
                     },
                     {
-                        "name": "Vuttodayaṃ",
+                        "name": "vuttodayaṃ",
                         "tag": ["añña", "byākaraṇa ganthasaṅgaha", "vuttodaya"]
                     },
                     {
-                        "name": "Abhidhānappadīpikāpāṭha",
+                        "name": "abhidhānappadīpikāpāṭha",
                         "tag": [
                             "añña",
                             "byākaraṇa ganthasaṅgaha",
@@ -627,7 +627,7 @@
                         ]
                     },
                     {
-                        "name": "Subodhālaṅkārapāṭha",
+                        "name": "subodhālaṅkārapāṭha",
                         "tag": [
                             "añña",
                             "byākaraṇa ganthasaṅgaha",
@@ -635,49 +635,49 @@
                         ]
                     },
                     {
-                        "name": "Bālāvatāra",
+                        "name": "bālāvatāra",
                         "tag": ["añña", "byākaraṇa ganthasaṅgaha", "bālāvatāra"]
                     }
                 ]
             },
             {
-                "name": "Nīti-Gantha-Saṅgaho",
+                "name": "nīti-gantha-saṅgaho",
                 "tag": ["añña", "nīti-ganthasaṅgaha"],
                 "children": [
                     {
-                        "name": "Kavidappaṇanīti",
+                        "name": "kavidappaṇanīti",
                         "tag": ["añña", "nīti-ganthasaṅgaha", "kavidappaṇanīti"]
                     },
                     {
-                        "name": "Nītimañjarī",
+                        "name": "nītimañjarī",
                         "tag": ["añña", "nīti-ganthasaṅgaha", "nītimañjarī"]
                     },
                     {
-                        "name": "Dhammanīti",
+                        "name": "dhammanīti",
                         "tag": ["añña", "nīti-ganthasaṅgaha", "dhammanīti"]
                     },
                     {
-                        "name": "Mahārahanīti",
+                        "name": "mahārahanīti",
                         "tag": ["añña", "nīti-ganthasaṅgaha", "mahārahanīti"]
                     },
                     {
-                        "name": "Lokanīti",
+                        "name": "lokanīti",
                         "tag": ["añña", "nīti-ganthasaṅgaha", "lokanīti"]
                     },
                     {
-                        "name": "Suttantanīti",
+                        "name": "suttantanīti",
                         "tag": ["añña", "nīti-ganthasaṅgaha", "suttantanīti"]
                     },
                     {
-                        "name": "Sūrassatīnīti",
+                        "name": "sūrassatīnīti",
                         "tag": ["añña", "nīti-ganthasaṅgaha", "sūrassatīnīti"]
                     },
                     {
-                        "name": "Cāṇakyanītipāḷi",
+                        "name": "cāṇakyanītipāḷi",
                         "tag": ["añña", "nīti-ganthasaṅgaha", "cāṇakyanītipāḷi"]
                     },
                     {
-                        "name": "Naradakkhadīpanī",
+                        "name": "naradakkhadīpanī",
                         "tag": [
                             "añña",
                             "nīti-ganthasaṅgaha",
@@ -685,7 +685,7 @@
                         ]
                     },
                     {
-                        "name": "Caturārakkhadīpanī",
+                        "name": "caturārakkhadīpanī",
                         "tag": [
                             "añña",
                             "nīti-ganthasaṅgaha",
@@ -695,15 +695,15 @@
                 ]
             },
             {
-                "name": "Pakiṇṇaka-Gantha-Saṅgaho",
+                "name": "pakiṇṇaka-gantha-saṅgaho",
                 "tag": ["añña", "pakiṇṇaka-ganthasaṅgaha"],
                 "children": [
                     {
-                        "name": "Rasavāhinī",
+                        "name": "rasavāhinī",
                         "tag": ["añña", "pakiṇṇaka-ganthasaṅgaha", "rasavāhinī"]
                     },
                     {
-                        "name": "Sīmavisodhanī",
+                        "name": "sīmavisodhanī",
                         "tag": [
                             "añña",
                             "pakiṇṇaka-ganthasaṅgaha",
@@ -711,7 +711,7 @@
                         ]
                     },
                     {
-                        "name": "Vessantarāgīti",
+                        "name": "vessantarāgīti",
                         "tag": [
                             "añña",
                             "pakiṇṇaka-ganthasaṅgaha",
@@ -721,11 +721,11 @@
                 ]
             },
             {
-                "name": "Sihaḷa-Gantha-Saṅgaho",
+                "name": "sihaḷa-gantha-saṅgaho",
                 "tag": ["añña", "sihaḷa-ganthasaṅgaha"],
                 "children": [
                     {
-                        "name": "Moggallāna vuttivivaraṇapañcikā",
+                        "name": "moggallāna vuttivivaraṇapañcikā",
                         "tag": [
                             "añña",
                             "sihaḷa-ganthasaṅgaha",
@@ -733,15 +733,15 @@
                         ]
                     },
                     {
-                        "name": "Thupavaṃsa",
+                        "name": "thupavaṃsa",
                         "tag": ["añña", "sihaḷa-ganthasaṅgaha", "thupavaṃsa"]
                     },
                     {
-                        "name": "Dāṭhāvaṃsa",
+                        "name": "dāṭhāvaṃsa",
                         "tag": ["añña", "sihaḷa-ganthasaṅgaha", "dāṭhāvaṃsa"]
                     },
                     {
-                        "name": "Dhātupāṭha vilāsiniyā",
+                        "name": "dhātupāṭha vilāsiniyā",
                         "tag": [
                             "añña",
                             "sihaḷa-ganthasaṅgaha",
@@ -749,11 +749,11 @@
                         ]
                     },
                     {
-                        "name": "Dhātuvaṃsa",
+                        "name": "dhātuvaṃsa",
                         "tag": ["añña", "sihaḷa-ganthasaṅgaha", "dhātuvaṃsa"]
                     },
                     {
-                        "name": "Hatthavanagallavihāravaṃsa",
+                        "name": "hatthavanagallavihāravaṃsa",
                         "tag": [
                             "añña",
                             "sihaḷa-ganthasaṅgaha",
@@ -761,15 +761,15 @@
                         ]
                     },
                     {
-                        "name": "Jinacaritaya",
+                        "name": "jinacaritaya",
                         "tag": ["añña", "sihaḷa-ganthasaṅgaha", "jinacaritaya"]
                     },
                     {
-                        "name": "Jinavaṃsadīpaṃ",
+                        "name": "jinavaṃsadīpaṃ",
                         "tag": ["añña", "sihaḷa-ganthasaṅgaha", "jinavaṃsadīpa"]
                     },
                     {
-                        "name": "Telakaṭāhagāthā",
+                        "name": "telakaṭāhagāthā",
                         "tag": [
                             "añña",
                             "sihaḷa-ganthasaṅgaha",
@@ -777,15 +777,15 @@
                         ]
                     },
                     {
-                        "name": "Milidaṭīkā",
+                        "name": "milidaṭīkā",
                         "tag": ["añña", "sihaḷa-ganthasaṅgaha", "milidaṭīkā"]
                     },
                     {
-                        "name": "Padamañjarī",
+                        "name": "padamañjarī",
                         "tag": ["añña", "sihaḷa-ganthasaṅgaha", "padamañjarī"]
                     },
                     {
-                        "name": "Padasādhana",
+                        "name": "padasādhana",
                         "tag": ["añña", "sihaḷa-ganthasaṅgaha", "padasādhana"]
                     },
                     {
@@ -797,7 +797,7 @@
                         ]
                     },
                     {
-                        "name": "Kaccāyanadhātumañjūsā",
+                        "name": "kaccāyanadhātumañjūsā",
                         "tag": [
                             "añña",
                             "sihaḷa-ganthasaṅgaha",
@@ -805,7 +805,7 @@
                         ]
                     },
                     {
-                        "name": "Samantakūṭavaṇṇanā",
+                        "name": "samantakūṭavaṇṇanā",
                         "tag": [
                             "añña",
                             "sihaḷa-ganthasaṅgaha",
