@@ -288,7 +288,7 @@ class IndexTipitaka extends Command
                     ->orderBy('paragraph', 'desc')->first()
                     ->value('paragraph');
             } else {
-                $end = $chapters[$key + 1]->paragraph;
+                $end = $chapters[$key + 1]->paragraph - 1;
             }
             //获取这个段落之间的全部channel
             $channels = Sentence::where('book_id', $book)
@@ -324,13 +324,14 @@ class IndexTipitaka extends Command
                     $translation = [];
                     $original = [];
                     foreach ($paragraph['children'] as  $sent) {
+                        $sid = "{$sent['book']}-{$sent['para']}-{$sent['wordStart']}-{$sent['wordEnd']}";
                         if (isset($sent['translation'])) {
                             foreach ($sent['translation'] as  $tran) {
                                 if ($tran['channel']['id'] === $channel->channel_uid) {
                                     $html = $tran['html'] ?? $tran['content'];
-                                    $translation[] = "<span class='sentence'>{$html}</span>";
-                                    if ($tran['para'] === $start && !empty($curr)) {
-                                        $title = $curr;
+                                    $translation[] = "<div class='sentence' data-sid='{$sid}'>{$html}</div>";
+                                    if ($tran['para'] === $start && !empty($html)) {
+                                        $title = $html;
                                     }
                                 }
                             }
@@ -343,9 +344,9 @@ class IndexTipitaka extends Command
                             foreach ($sent['origin'] as  $origin) {
                                 if ($origin['channel']['id'] === $channel->channel_uid) {
                                     $html = $origin['html'] ?? $origin['content'];
-                                    $original[] = "<span class='sentence origin'>{$html}</span>";
-                                    if (empty($title) && $origin['para'] === $start && !empty($curr)) {
-                                        $title = $curr;
+                                    $original[] = "<div class='sentence origin'  data-sid='{$sid}'>{$html}</div>";
+                                    if (empty($title) && $origin['para'] === $start && !empty($html)) {
+                                        $title = $html;
                                     }
                                 }
                             }
@@ -367,7 +368,7 @@ class IndexTipitaka extends Command
                     if ($level > 0) {
                         $display[] = "<div class='{$area}' data-para='{$paragraph['para']}'><h{$level}>{$htmlContent}</h{$level}></div>";
                     } else {
-                        $display[] = "<div class='{$area}' data-para='{$paragraph['para']}'><p>{$htmlContent}</p></div>";
+                        $display[] = "<div class='{$area}' data-para='{$paragraph['para']}'><div class='para-block'>{$htmlContent}</div></div>";
                     }
                 }
                 $this->chapterSave([

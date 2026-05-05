@@ -10,7 +10,7 @@
 
 {{-- 术语抽屉（所有阅读页统一使用 wiki.term-drawer） --}}
 @push('scripts')
-@vite(['resources/js/modules/term-tooltip.js'])
+@vite(['resources/js/modules/term-tooltip.js','resources/js/reader.js'])
 @endpush
 
 @section('reader-content')
@@ -287,12 +287,21 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="form-label">巴利文脚本</label>
+                    <label class="form-label">巴利语脚本</label>
                     <select class="form-select" id="paliScript">
                         <option value="auto">自动</option>
                         <option value="roman">罗马</option>
                         <option value="myanmar">缅文</option>
                         <option value="thai">泰文</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">注疏版本</label>
+                    <select class="form-select" id="commentary">
+                        <option value="none">不显示</option>
+                        @foreach($commentaryChannels as $channel)
+                        <option value="{{ $channel['id'] }}">{{ $channel['name'] }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
@@ -354,6 +363,7 @@
         document.getElementById('showOrigin').checked = showOrigin;
         document.getElementById('uiLanguage').value = getCookie('ui_language') || 'auto';
         document.getElementById('paliScript').value = getCookie('pali_script') || 'auto';
+        document.getElementById('commentary').value = getCookie('commentary') || 'none';
         toggleOriginDisplay(showOrigin);
     });
 
@@ -362,7 +372,16 @@
         setCookie('show_origin', document.getElementById('showOrigin').checked);
         setCookie('ui_language', document.getElementById('uiLanguage').value);
         setCookie('pali_script', document.getElementById('paliScript').value);
-        location.reload();
+        setCookie('commentary', document.getElementById('commentary').value);
+        // 修改 URL 的 comm 参数
+        const commValue = document.getElementById('commentary').value;
+        const url = new URL(window.location.href);
+        if (commValue === 'none') {
+            url.searchParams.delete('comm');
+        } else {
+            url.searchParams.set('comm', commValue);
+        }
+        window.location.href = url.toString();
     });
 </script>
 @endpush
