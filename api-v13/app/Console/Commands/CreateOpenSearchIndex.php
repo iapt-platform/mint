@@ -51,6 +51,7 @@ class CreateOpenSearchIndex extends Command
 
         // Attempt to create or update index
         try {
+            $this->info('create openSearch index. index name='.config('mint.opensearch.index'));
             $crate = $openSearch->createIndex();
             if ($crate['acknowledged']) {
                 $this->info('Index created successfully: ' . $crate['index']);
