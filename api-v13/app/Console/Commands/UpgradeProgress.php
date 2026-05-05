@@ -61,7 +61,7 @@ class UpgradeProgress extends Command
         } else {
             $sentences = Sentence::where('strlen', '>', 0)
                 ->where('book_id', '<', 1000)
-                ->where('channel_uid', '<>', '')
+                ->whereNotNull('channel_uid')
                 ->groupby('book_id', 'paragraph', 'channel_uid')
                 ->select('book_id', 'paragraph', 'channel_uid');
         }
@@ -111,7 +111,8 @@ class UpgradeProgress extends Command
                     'created_at' => $finalAt,
                     'updated_at' => $updateAt,
                 ];
-                Log::debug('Progress updateOrInsert', ['para' => $paraInfo, 'data' => $paraData]);
+                //Log::debug('Progress updateOrInsert', ['para' => $paraInfo, 'data' => $paraData]);
+                $this->info('Progress updateOrInsert'.json_encode($paraInfo));
                 Progress::updateOrInsert($paraInfo, $paraData);
             }
         }
