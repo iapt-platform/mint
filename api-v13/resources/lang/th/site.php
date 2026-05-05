@@ -19,14 +19,14 @@ return [
     'author.name' => 'iapt',
     'author.email' => 'visuddhindand@gmail.com',
     'nav' => [
-        'home' => 'Home',
-        'tipitaka' => 'Tipitaka',
-        'wiki' => 'Wiki',
-        'anthology' => 'Anthology',
-        'download' => 'Download',
+        'home' => 'หน้าหลัก',
+        'tipitaka' => 'พระไตรปิฎก',
+        'wiki' => 'สารานุกรม',
+        'anthology' => 'ชุดบทความ',
+        'download' => 'ดาวน์โหลด',
 
-        'menu' => 'Menu',
-        'open_menu' => 'Open menu',
-        'close_menu' => 'Close menu',
+        'menu' => 'เมนู',
+        'open_menu' => 'เปิดเมนู',
+        'close_menu' => 'ปิดเมนู',
     ],
 ];

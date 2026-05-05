@@ -7,13 +7,13 @@
 @section('title', 'WikiPāli · 巴利书库')
 
 @push('styles')
-    @vite('resources/css/modules/_library-index.css')
+@vite('resources/css/modules/_library-index.css')
 @endpush
 
 {{-- Hero --}}
 @section('hero')
 <section class="hero-section"
-         style="background-image: url('{{ URL::asset('assets/images/hero-2.jpg') }}')">
+    style="background-image: url('{{ URL::asset('assets/images/hero-2.jpg') }}')">
     <div class="hero-overlay"></div>
     <div class="hero-content">
         <h1 class="hero-title">WikiPāli 巴利书库</h1>
@@ -22,8 +22,7 @@
             <x-ui.search-input
                 :action="route('library.search')"
                 placeholder="搜索经典、词条、文集…"
-                size="lg"
-            />
+                size="lg" />
         </div>
     </div>
 </section>
@@ -41,7 +40,7 @@
                     巴利三藏
                 </h2>
                 <a href="{{ route('library.tipitaka.index') }}"
-                   class="lib-section__more">
+                    class="lib-section__more">
                     进入三藏 <i class="ti ti-arrow-right"></i>
                 </a>
             </div>
@@ -52,10 +51,10 @@
                     <div class="wiki-card h-100">
                         <div class="lib-cat-card__head">
                             <span class="lib-cat-card__name">
-                                {{ $data['category']['name'] }}
+                                {{ $data['category']['local_name'] }}
                             </span>
                             <a href="{{ route('library.tipitaka.category', ['id' => $data['category']['id']]) }}"
-                               class="lib-cat-card__more">
+                                class="lib-cat-card__more">
                                 更多 <i class="ti ti-arrow-right"></i>
                             </a>
                         </div>
@@ -63,7 +62,7 @@
                             @foreach($data['children'] as $child)
                             <li>
                                 <a href="{{ route('library.tipitaka.category', ['id' => $child['id']]) }}">
-                                    {{ $child['name'] }}
+                                    {{ $child['local_name'] }}
                                 </a>
                             </li>
                             @endforeach
@@ -87,7 +86,7 @@
                     </span>
                 </h2>
                 <a href="{{ route('library.tipitaka.index') }}"
-                   class="lib-section__more">
+                    class="lib-section__more">
                     查看全部 <i class="ti ti-arrow-right"></i>
                 </a>
             </div>
@@ -95,7 +94,7 @@
             <div class="wiki-card lib-recent">
                 @foreach($recentBooks as $book)
                 <a href="{{ route('library.tipitaka.show', $book['id']) }}"
-                   class="lib-recent__item">
+                    class="lib-recent__item">
 
                     {{-- 封面缩略图 --}}
                     <x-ui.book-cover
@@ -103,8 +102,7 @@
                         :gradient="$book['cover_gradient'] ?? 'linear-gradient(135deg,#2d2010,#1a1208)'"
                         :title="$book['title']"
                         size="sm"
-                        :style3d="false"
-                    />
+                        :style3d="false" />
 
                     {{-- 信息 --}}
                     <div class="lib-recent__info">

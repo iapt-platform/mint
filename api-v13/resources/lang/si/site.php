@@ -19,14 +19,14 @@ return [
     'author.name' => 'iapt',
     'author.email' => 'visuddhindand@gmail.com',
     'nav' => [
-        'home' => 'Home',
-        'tipitaka' => 'Tipitaka',
-        'wiki' => 'Wiki',
-        'anthology' => 'Anthology',
-        'download' => 'Download',
+        'home' => 'මුල් පිටුව',
+        'tipitaka' => 'තිපිටකය',
+        'wiki' => 'විද්‍යාකෝෂය',
+        'anthology' => 'සංග්‍රහය',
+        'download' => 'බාගත කිරීම',
 
-        'menu' => 'Menu',
-        'open_menu' => 'Open menu',
-        'close_menu' => 'Close menu',
+        'menu' => 'මෙනුව',
+        'open_menu' => 'මෙනුව විවෘත කරන්න',
+        'close_menu' => 'මෙනුව වසන්න',
     ],
 ];

@@ -19,14 +19,14 @@ return [
     'author.name' => 'iapt',
     'author.email' => 'visuddhindand@gmail.com',
     'nav' => [
-        'home' => 'Home',
-        'tipitaka' => 'Tipitaka',
-        'wiki' => 'Wiki',
-        'anthology' => 'Anthology',
-        'download' => 'Download',
+        'home' => 'ပင်မစာမျက်နှာ',
+        'tipitaka' => 'တိပိဋက',
+        'wiki' => 'ဗဟုသုတ',
+        'anthology' => 'စာစု',
+        'download' => 'ဒေါင်းလုဒ်',
 
-        'menu' => 'Menu',
-        'open_menu' => 'Open menu',
-        'close_menu' => 'Close menu',
+        'menu' => 'မီနူး',
+        'open_menu' => 'မီနူးဖွင့်ရန်',
+        'close_menu' => 'မီနူးပိတ်ရန်',
     ],
 ];
