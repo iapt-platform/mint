@@ -31,6 +31,10 @@ class Markdown
      */
     public static function replaceSinglePWithSpan(string $html): string
     {
+        // 先过滤掉只含空白/全角空格的 <p>
+        $html = preg_replace('/<p\b[^>]*>[\s　]*<\/p>/u', '', $html);
+        $html = trim($html);
+
         preg_match_all('/<p\b[^>]*>.*?<\/p>/is', $html, $matches);
 
         if (count($matches[0]) === 1) {

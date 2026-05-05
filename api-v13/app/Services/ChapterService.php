@@ -255,7 +255,7 @@ class ChapterService
         return $result;
     }
 
-    public function publicChannels(int $book, int $para)
+    public function publicChannels(int $book, int $para, ?string $type = null)
     {
         $channelIds = ProgressChapter::with('channel')
             ->where('book', $book)
