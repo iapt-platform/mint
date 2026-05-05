@@ -15,6 +15,12 @@ article.reader-body {
     counter-reset: sidenote-counter;
 }
 
+article.reader-body div.sentence {
+    display: inline;
+}
+article.reader-body div.translation .para-block {
+    margin-bottom: 0.75em;
+}
 /* ── 段落 ── */
 article.reader-body p {
     margin-bottom: 1.25rem;
@@ -99,7 +105,7 @@ article.reader-body label.sidenote-number {
     article.reader-body .marginnote {
         float: right;
         clear: right;
-        margin-right: -35%; /* 收窄，适配 reader 右侧无大空白的布局 */
+        margin-right: -35%;
         width: 28%;
         margin-top: 0.3rem;
         margin-bottom: 0;
@@ -161,10 +167,11 @@ article.reader-body .sidenote::before {
 }
 
 article.reader-body .sidenote-number::after {
-    content: counter(sidenote-counter);
+    content: '[' counter(sidenote-counter) ']';
     font-size: 0.75rem;
     top: -0.5rem;
     left: 0.1rem;
+    color: var(--tblr-primary);
 }
 
 article.reader-body .sidenote::before {
@@ -172,9 +179,60 @@ article.reader-body .sidenote::before {
     font-size: 0.75rem;
     top: -0.5rem;
 }
+/* ══════════════════════════════════════════
+   三、Commentary 注释（点击展开，始终在句子下方）
+   DOM 结构（由 JS 注入）：
+     div.sentence
+     input.commentary-toggle#commentary-N
+     div.commentary-note[data-uuid]
+   ══════════════════════════════════════════ */
+
+/* checkbox 隐藏 */
+article.reader-body input.commentary-toggle {
+    display: none;
+}
+
+/* icon label：行内，插在句子文字末尾 */
+article.reader-body label.commentary-icon {
+    display: inline;
+    cursor: pointer;
+    margin-left: 4px;
+    color: var(--tblr-primary);
+    vertical-align: middle;
+    font-size: 0.85rem;
+    user-select: none;
+    transition: opacity 0.15s;
+}
+
+article.reader-body label.commentary-icon:hover {
+    opacity: 0.7;
+}
+
+/* 注释块默认隐藏 */
+article.reader-body .commentary-note {
+    display: none;
+}
+
+/* 展开：checkbox checked → 相邻的 .commentary-note 显示 */
+article.reader-body .commentary-toggle:checked + .commentary-note {
+    display: block;
+    clear: both;
+    width: 95%;
+    margin: 0.5rem 2.5% 0.75rem;
+    padding: 8px 12px;
+    border-left: 3px solid var(--tblr-primary);
+    border-radius: 0 6px 6px 0;
+    background-color: #f5deb330;
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+.dark-mode article.reader-body .commentary-toggle:checked + .commentary-note {
+    background-color: rgba(139, 109, 56, 0.15);
+}
 
 /* ══════════════════════════════════════════
-   三、正文内 origin（原文显示）
+   四、正文内 origin（原文显示）
    ══════════════════════════════════════════ */
 
 article.reader-body .origin {
@@ -186,7 +244,7 @@ article.reader-body .origin {
 }
 
 /* ══════════════════════════════════════════
-   四、Epigraph（题词）
+   五、Epigraph（题词）
    ══════════════════════════════════════════ */
 
 article.reader-body div.epigraph {

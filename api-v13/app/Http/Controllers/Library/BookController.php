@@ -13,7 +13,7 @@ use App\Models\PaliText;
 use App\Models\Sentence;
 
 use App\Services\ChapterService;
-use App\Services\PaliContentService;
+use App\Services\PaliTextService;
 use App\Services\OpenSearchService;
 
 use App\DTO\Search\HitItemDTO;
@@ -29,9 +29,12 @@ class BookController extends Controller
      *
      * @param  \App\Services\OpenSearchService  $searchService
      */
-    public function __construct(protected OpenSearchService $searchService) {}
+    public function __construct(
+        protected OpenSearchService $searchService,
+        protected PaliTextService $paliTextService
+    ) {}
 
-    public function show($id)
+    public function show(string $id)
     {
         $bookRaw = $this->loadBook($id);
 
@@ -64,31 +67,56 @@ class BookController extends Controller
     }
 
 
+    private function fetchCommentary(int $book, int $paraStart, int $paraEnd, string $channelId)
+    {
+        $notes = Sentence::where('book_id', $book)
+            ->whereBetween('paragraph', [$paraStart, $paraEnd])
+            ->where('channel_uid', $channelId)
+            ->select(['uid', 'book_id', 'paragraph', 'word_start', 'word_end'])->get()->toArray();
+        Log::debug('fetchCommentary', ['data' => $notes]);
+        return $notes;
+    }
+
+    private function injectNoteMarkers(string $html, array $notesMap): string
+    {
+        if (empty($notesMap)) return $html;
+
+        return preg_replace_callback(
+            '/(<div class=\'sentence\' data-sid=\'([^\']+)\')/',
+            function ($matches) use ($notesMap) {
+                $sid = $matches[2];
+                if (!isset($notesMap[$sid])) return $matches[0];
+                $uid = $notesMap[$sid];
+                return $matches[1] . " data-note-id='{$uid}'";
+            },
+            $html
+        );
+    }
     public function read(Request $request, string $id)
     {
-        $start = microtime(true);
-        /*
-        $lap = function (string $label) use ($start): void {
-            $elapsed = round((microtime(true) - $start) * 1000, 2);
-            Log::debug("[book.read] {$label}", ['elapsed_ms' => $elapsed]);
-        };
-*/
-        //$lap('start');
 
         $channelId = $request->input('channel');
         $openSearchId = "tipitaka_chapter_{$id}_{$channelId}";
 
         $chapter = HitItemDTO::fromArray($this->searchService->get($openSearchId))->toArray();
-        //$lap('searchService->get + HitItemDTO');
 
         [$bookId, $paraId] = explode('-', $id);
+        if ($request->has('comm')) {
+            $currChapter = $this->paliTextService->getCurrChapter($bookId, $paraId);
+            $commentaries = $this->fetchCommentary($bookId, $paraId, $paraId + $currChapter->chapter_len - 1, $request->input('comm'));
+            // sid 格式：{book_id}-{paragraph}-{word_start}-{word_end}
+            $notesMap = collect($commentaries)->keyBy(function ($note) {
+                return "{$note['book_id']}-{$note['paragraph']}-{$note['word_start']}-{$note['word_end']}";
+            })->map(fn($note) => $note['uid'])->toArray();
+            Log::debug('note map', ['data' => $notesMap]);
+        }
+
 
         $chapterService = app(ChapterService::class);
 
         $book = [];
 
         $book['toc'] = $this->getBookToc((int)$bookId, (int)$paraId, $channelId, 2, 7);
-        //$lap('getBookToc');
 
         $book['categories'] = $chapter['category'];
         $book['title']      = $chapter['title'];
@@ -96,22 +124,32 @@ class BookController extends Controller
         $book['tags']       = [];
 
         $book['pagination'] = $this->pagination((int)$bookId, (int)$paraId, $channelId);
-        //$lap('pagination');
 
-        $book['content'] = $chapter['display'];
-        Log::debug($chapter['display']);
 
-        $channels = $chapterService->publicChannels((int)$bookId, (int)$paraId);
-        //$lap('publicChannels');
+        if (isset($notesMap)) {
+            $book['content'] = $this->injectNoteMarkers($chapter['display'], $notesMap);
+        } else {
+            $book['content'] = $chapter['display'];
+        }
+        Log::debug($book['content']);
+
+        $allChannels = $chapterService->publicChannels((int)$bookId, (int)$paraId);
+        $commentaryChannels = array_filter($allChannels, function ($channel) {
+            return $channel['type'] === 'commentary';
+        });
+        $channels = array_filter($allChannels, function ($channel) {
+            return $channel['type'] !== 'commentary';
+        });
 
         $editor_link = config('mint.server.dashboard_base_path')
             . "/workspace/tipitaka/chapter/{$id}?channel={$channelId}";
 
-        $view = view('library.book.read', compact('book', 'channels', 'editor_link'));
-        //$lap('view compiled — total');
+        $view = view('library.book.read', compact('book', 'channels', 'editor_link', 'commentaryChannels'));
 
         return $view;
     }
+
+
 
     private function loadBook(string $id)
     {
