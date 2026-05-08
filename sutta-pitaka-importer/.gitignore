@@ -1,0 +1,6 @@
+/tmp/
+
+/config.toml
+
+*.egg-info
+__pycache__/

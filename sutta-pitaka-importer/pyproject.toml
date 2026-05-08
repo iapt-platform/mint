@@ -1,11 +1,11 @@
 [project]
-name = "rhododendron"
-version = "2026.4.19"
+name = "dahlia"
+version = "2026.5.8"
 authors = [
     { name = "Visuddhinanda", email = "visuddhinanda@gmail.com" },
     { name = "Kassapa", email = "ven.kassapa@qq.com" },
 ]
-description = "A LLM service"
+description = "A rbac service"
 readme = "README.md"
 requires-python = ">=3.14"
 classifiers = [
@@ -13,11 +13,16 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 license = "MIT"
-dependencies = ["bottle", "langchain"]
+dependencies = [
+    "SQLAlchemy",
+    "psycopg[binary,pool]",
+    "mysql-connector-python",
+    "langchain",
+]
 
 [project.urls]
-Homepage = "https://github.com/iapt-platform/mint/tree/master/langchain-server"
+Homepage = "https://github.com/iapt-platform/mint/tree/master/sutta-pitaka-importer"
 Issues = "https://github.com/iapt-platform/mint/issues"
 
 [project.scripts]
-rhododendron = "rhododendron:main_cli"
+dahlia = "dahlia:main"
