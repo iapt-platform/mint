@@ -39,7 +39,7 @@ class UpgradeDict extends Command
         parent::__construct();
     }
 
-    private function scandict($dir)
+    private function scanDict(string $dir)
     {
         if (is_dir($dir)) {
             $this->info("scan:" . $dir);
@@ -50,7 +50,7 @@ class UpgradeDict extends Command
                     $fullPath = $dir . "/" . $file;
                     if (is_dir($fullPath) && $file !== '.' && $file !== '..') {
                         //是目录继续搜索
-                        $this->scandict($fullPath);
+                        $this->scanDict($fullPath);
                     } else {
                         //是文件，查看是否是字典信息文件
                         $infoFile = $fullPath;
@@ -198,14 +198,14 @@ class UpgradeDict extends Command
     /**
      * 获取列的值
      */
-    protected function get($data, $colname, $defualt = "")
+    protected function get(array $data, string $colName, $default = "")
     {
-        if (isset($this->cols[$colname])) {
-            return $data[$this->cols[$colname]];
-        } else if (isset($this->dictInfo['cols'][$colname])) {
-            return $this->dictInfo['cols'][$colname];
+        if (isset($this->cols[$colName])) {
+            return $data[$this->cols[$colName]];
+        } else if (isset($this->dictInfo['cols'][$colName])) {
+            return $this->dictInfo['cols'][$colName];
         } else {
-            return $defualt;
+            return $default;
         }
     }
     /**
@@ -219,7 +219,7 @@ class UpgradeDict extends Command
             return 0;
         }
         $this->info("upgrade dict start");
-        $this->scandict(config("mint.path.dict_text"));
+        $this->scanDict(config("mint.path.dict_text"));
         $this->info("upgrade dict done");
 
         return 0;
