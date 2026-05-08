@@ -25,41 +25,41 @@ class InitSystemDict extends Command
     /**
      * name 不要修改。因为在程序其他地方，用name 查询词典id
      */
-    protected $dictionary =[
+    protected $dictionary = [
         [
-            "name"=>'robot_compound',
-            'shortname'=>'compound',
-            'description'=>'split compound by AI',
-            'src_lang'=>'pa',
-            'dest_lang'=>'cm',
+            "name" => 'robot_compound',
+            'shortname' => 'compound',
+            'description' => 'split compound by AI',
+            'src_lang' => 'pa',
+            'dest_lang' => 'cm',
         ],
         [
-            "name"=>'system_regular',
-            'shortname'=>'regular',
-            'description'=>'system regular',
-            'src_lang'=>'pa',
-            'dest_lang'=>'cm',
+            "name" => 'system_regular',
+            'shortname' => 'regular',
+            'description' => 'system regular',
+            'src_lang' => 'pa',
+            'dest_lang' => 'cm',
         ],
         [
-            "name"=>'community',
-            'shortname'=>'社区',
-            'description'=>'由用户贡献词条的社区字典',
-            'src_lang'=>'pa',
-            'dest_lang'=>'cm',
+            "name" => 'community',
+            'shortname' => '社区',
+            'description' => '由用户贡献词条的社区字典',
+            'src_lang' => 'pa',
+            'dest_lang' => 'cm',
         ],
         [
-            "name"=>'community_extract',
-            'shortname'=>'社区汇总',
-            'description'=>'由用户贡献词条的社区字典汇总统计',
-            'src_lang'=>'pa',
-            'dest_lang'=>'cm',
+            "name" => 'community_extract',
+            'shortname' => '社区汇总',
+            'description' => '由用户贡献词条的社区字典汇总统计',
+            'src_lang' => 'pa',
+            'dest_lang' => 'cm',
         ],
         [
-            "name"=>'system_preference',
-            'shortname'=>'系统单词首选项',
-            'description'=>'通过系统筛选出的首选项，只包含语法信息',
-            'src_lang'=>'pa',
-            'dest_lang'=>'cm',
+            "name" => 'system_preference',
+            'shortname' => '系统单词首选项',
+            'description' => '通过系统筛选出的首选项，只包含语法信息',
+            'src_lang' => 'pa',
+            'dest_lang' => 'cm',
         ],
     ];
 
@@ -80,10 +80,10 @@ class InitSystemDict extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (\App\Tools\Tools::isStop()) {
             return 0;
         }
-        $this->info("start");
+        $this->info("init:system.dict start");
         foreach ($this->dictionary as $key => $value) {
             # code...
             $channel = DictInfo::firstOrNew([
@@ -94,10 +94,12 @@ class InitSystemDict extends Command
             $channel->description = $value['description'];
             $channel->src_lang = $value['src_lang'];
             $channel->dest_lang = $value['dest_lang'];
-            $channel->meta = json_encode($value,JSON_UNESCAPED_UNICODE);
+            $channel->meta = json_encode($value, JSON_UNESCAPED_UNICODE);
             $channel->save();
             $this->info("updated {$value['name']}");
         }
+        $this->info("init:system.dict successful");
+
         return 0;
     }
 }
