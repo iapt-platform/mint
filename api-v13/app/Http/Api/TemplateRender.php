@@ -405,8 +405,16 @@ class TemplateRender
     private function render_term()
     {
         $word = $this->get_param($this->param, "word", 1);
-
-        $props = $this->getTermProps($word, '');
+        if (str_contains($word, '@')) {
+            [$wordHead, $tag] = explode('@', $word);
+        }
+        if (str_contains($word, '#')) {
+            [$wordHead, $display] = explode('#', $word);
+        }
+        $props = $this->getTermProps($wordHead ?? $word, $tag ?? '');
+        if (isset($display)) {
+            $props['meaning'] = $display;
+        }
 
         $output = $props['word'];
         switch ($this->format) {
