@@ -65,9 +65,9 @@ class SentenceService
                     'access_token' => $sentChannelInfo[1] ?? $params['token'],
                 ],
      */
-    public function saveRpc(array $sentence, string $editorToken)
+    public function saveRpc(string $endpoint, array $sentence, string $editorToken)
     {
-        $url = config('app.url') . '/api/v2/sentence';
+        $url = $endpoint;
 
         Log::info(" sentence update {$url}");
         $response = Http::timeout($this->timeOut)
