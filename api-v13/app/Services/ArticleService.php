@@ -44,7 +44,7 @@ class ArticleService
         return $matches[1] ?? [];
     }
 
-    public function articlesInAnthology($anthologyId)
+    public function articlesInAnthology(string $anthologyId)
     {
         $inCollection = ArticleCollection::where('collect_id', $anthologyId)
             ->select('article_id')
