@@ -63,6 +63,7 @@ export default function ArticleEditor({
       }
       articleId={articleId}
       anthologyId={anthologyId}
+      articleType={"article"}
       channelId={channelId}
       onChannelSelect={onChannelSelect}
     >
