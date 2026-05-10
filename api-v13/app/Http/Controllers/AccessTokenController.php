@@ -40,6 +40,7 @@ class AccessTokenController extends Controller
         }
         $payload = $request->input('payload');
         $result = array();
+        Log::debug('token', ['payload' => $payload]);
         foreach ($payload as $key => $value) {
             //鉴权
             switch ($value['res_type']) {
@@ -76,7 +77,7 @@ class AccessTokenController extends Controller
             }
 
             try {
-                $jwt = JWT::encode($value, $token->token, 'HS512');
+                $jwt = JWT::encode($value, $token->token . $token->token, 'HS512');
             } catch (\Exception $e) {
                 Log::error('jwt', ['error' => $e]);
                 continue;

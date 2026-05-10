@@ -276,9 +276,9 @@ class SentenceController extends Controller
                     return false;
                 }
                 $key = AccessToken::where('res_id', $channelId)->value('token');
-                $jwt = JWT::decode($access_token, new Key($key, 'HS512'));
+                $jwt = JWT::decode($access_token, new Key($key . $key, 'HS512'));
                 Log::debug('access token', ['jwt' => $jwt]);
-                if ($jwt->book !== $book) {
+                if ($jwt->book && $jwt->book !== $book) {
                     Log::error('access token error');
                     return false;
                 }
