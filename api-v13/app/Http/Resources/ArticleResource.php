@@ -17,7 +17,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Api\MdRender;
 use App\Http\Api\UserApi;
 use App\Http\Api\StudioApi;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\ChannelApi;
 
 
@@ -45,7 +45,7 @@ class ArticleResource extends JsonResource
             "updated_at" => $this->updated_at,
         ];
 
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if ($user) {
             $canEdit = ArticleController::userCanEdit($user['user_uid'], $this);
             if ($canEdit) {

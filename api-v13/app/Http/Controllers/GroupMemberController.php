@@ -6,7 +6,7 @@ use App\Models\GroupMember;
 use App\Models\GroupInfo;
 use Illuminate\Http\Request;
 use App\Http\Resources\GroupMemberResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 
 class GroupMemberController extends Controller
 {
@@ -18,7 +18,7 @@ class GroupMemberController extends Controller
     public function index(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -135,7 +135,7 @@ class GroupMemberController extends Controller
         //
         //查看删除者有没有删除权限
         //查询删除者的权限
-        $currUser = AuthApi::current($request);
+        $currUser = AuthService::current($request);
         if (!$currUser) {
             return $this->error(__('auth.failed'));
         }

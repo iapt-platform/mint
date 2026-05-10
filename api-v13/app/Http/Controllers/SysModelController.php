@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AiModel;
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\AiModelResource;
@@ -20,7 +20,7 @@ class SysModelController extends Controller
     public function index(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);
@@ -48,7 +48,7 @@ class SysModelController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);

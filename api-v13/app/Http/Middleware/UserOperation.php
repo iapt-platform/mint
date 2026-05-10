@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\UserOperationLog;
 use App\Models\UserOperationFrame;
 use App\Models\UserOperationDaily;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 
 class UserOperation
 {
@@ -26,7 +26,7 @@ class UserOperation
     {
         $response = $next($request);
 
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (! $user) {
             return $response;
         }

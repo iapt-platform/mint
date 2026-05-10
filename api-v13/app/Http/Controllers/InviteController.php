@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invite;
 use App\Models\UserInfo;
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\UserApi;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\InviteResource;
@@ -23,7 +23,7 @@ class InviteController extends Controller
     public function index(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -80,7 +80,7 @@ class InviteController extends Controller
         //
         $sender = '';
         if (!empty($request->input('studio'))) {
-            $user = AuthApi::current($request);
+            $user = AuthService::current($request);
             if (!$user) {
                 return $this->error(__('auth.failed'), 401, 401);
             }

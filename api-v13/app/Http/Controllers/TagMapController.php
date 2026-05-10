@@ -7,7 +7,7 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\Http\Resources\TagMapResource;
 use App\Http\Resources\TagResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Api\CourseApi;
 use Illuminate\Support\Str;
@@ -86,7 +86,7 @@ class TagMapController extends Controller
      */
     public function store(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -161,7 +161,7 @@ class TagMapController extends Controller
      */
     public function destroy(Request $request, TagMap $tagMap)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }

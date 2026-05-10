@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserOperationDaily;
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\UserApi;
 
 class UserOperationDailyController extends Controller
@@ -20,7 +20,7 @@ class UserOperationDailyController extends Controller
         switch ($request->input('view')) {
             case "user-all":
                 $queryUserUuid = UserApi::getIdByName($request->input('studio_name'));
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }

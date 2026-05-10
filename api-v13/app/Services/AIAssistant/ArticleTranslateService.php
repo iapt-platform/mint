@@ -11,7 +11,7 @@ use App\Models\CustomBook;
 
 use Illuminate\Support\Facades\Log;
 use App\Http\Api\ChannelApi;
-use Carbon\Callback;
+
 
 class ArticleTranslateService
 {

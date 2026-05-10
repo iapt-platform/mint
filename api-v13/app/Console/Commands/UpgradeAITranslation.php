@@ -10,9 +10,9 @@ use App\Services\AIModelService;
 use App\Services\SentenceService;
 use App\Services\SearchPaliDataService;
 use App\Services\AIAssistant\NissayaTranslateService;
+use App\Services\AuthService;
 
 use App\Http\Resources\AiModelResource;
-use App\Http\Controllers\AuthController;
 
 use App\Models\PaliText;
 use App\Models\PaliSentence;
@@ -75,7 +75,7 @@ class UpgradeAITranslation extends Command
         if ($this->option('model')) {
             $this->model = $this->modelService->getModelById($this->option('model'));
             $this->info("model:{$this->model['model']}");
-            $this->modelToken = AuthController::getUserToken($this->model['uid']);
+            $this->modelToken = AuthService::getUserToken($this->model['uid']);
         }
         $this->workChannel = ChannelApi::getById($this->ask('请输入结果channel'));
 

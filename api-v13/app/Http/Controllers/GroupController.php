@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\GroupResource;
 
@@ -28,7 +28,7 @@ class GroupController extends Controller
         switch ($request->input('view')) {
             case 'studio':
                 # 获取studio内所有group
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -85,7 +85,7 @@ class GroupController extends Controller
      */
     public function showMyNumber(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -110,7 +110,7 @@ class GroupController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -162,7 +162,7 @@ class GroupController extends Controller
         }
         if ($result->status < 30) {
             //私有，判断权限
-            $user = AuthApi::current($request);
+            $user = AuthService::current($request);
             if (!$user) {
                 return $this->error(__('auth.failed'));
             }
@@ -191,7 +191,7 @@ class GroupController extends Controller
     public function update(Request $request, GroupInfo $group)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -219,7 +219,7 @@ class GroupController extends Controller
     public function destroy(Request $request, GroupInfo $group)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }

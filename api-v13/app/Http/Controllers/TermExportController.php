@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\ShareApi;
@@ -25,7 +25,7 @@ class TermExportController extends Controller
      */
     public function index(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -107,7 +107,7 @@ class TermExportController extends Controller
 
     public function import(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }

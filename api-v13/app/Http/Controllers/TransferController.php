@@ -6,7 +6,7 @@ use App\Models\Transfer;
 use App\Models\Channel;
 use App\Models\Article;
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Api\UserApi;
 use App\Http\Resources\TransferResource;
@@ -25,7 +25,7 @@ class TransferController extends Controller
         switch ($request->input('view')) {
             case 'studio':
                 # 获取studio内所有channel
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -83,7 +83,7 @@ class TransferController extends Controller
      */
     public function store(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -164,7 +164,7 @@ class TransferController extends Controller
      */
     public function update(Request $request, Transfer $transfer)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), [403], 403);
         }

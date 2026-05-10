@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AiModel;
 use Illuminate\Http\Request;
 use App\Http\Resources\AiAssistantResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\ShareApi;
 
 use Illuminate\Support\Facades\Log;
@@ -20,7 +20,7 @@ class AiAssistantController extends Controller
     public function index(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);

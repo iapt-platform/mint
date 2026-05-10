@@ -6,7 +6,7 @@ use App\Models\ArticleCollection;
 use App\Models\Article;
 use App\Models\Collection;
 use App\Http\Api\ShareApi;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
 use App\Http\Resources\ArticleMapResource;
 use Illuminate\Support\Facades\Log;
@@ -91,7 +91,7 @@ class ArticleMapController extends Controller
             return $this->error("no recorder");
         }
         //鉴权
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -167,7 +167,7 @@ class ArticleMapController extends Controller
             return $this->error("no recorder");
         }
         //鉴权
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }

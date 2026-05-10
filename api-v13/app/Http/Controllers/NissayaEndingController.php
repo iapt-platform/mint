@@ -7,7 +7,7 @@ use App\Models\Relation;
 use App\Models\DhammaTerm;
 use Illuminate\Http\Request;
 use App\Http\Resources\NissayaEndingResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\ChannelApi;
 use Illuminate\Support\Facades\App;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -87,7 +87,7 @@ class NissayaEndingController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -134,7 +134,7 @@ class NissayaEndingController extends Controller
     public function update(Request $request, NissayaEnding $nissayaEnding)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -178,7 +178,7 @@ class NissayaEndingController extends Controller
     public function destroy(Request $request, NissayaEnding $nissayaEnding)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -217,7 +217,7 @@ class NissayaEndingController extends Controller
 
     public function import(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }

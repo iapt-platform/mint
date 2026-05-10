@@ -9,7 +9,7 @@ use App\Models\UserDict;
 use App\Models\WordIndex;
 use App\Http\Resources\DictPreferenceResource;
 use App\Http\Api\DictApi;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 
 class DictPreferenceController extends Controller
 {
@@ -91,7 +91,7 @@ class DictPreferenceController extends Controller
      */
     public function update(Request $request,  $id)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), [], 401);
         }

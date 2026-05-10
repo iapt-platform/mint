@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use Illuminate\Support\Facades\Log;
 
 class StoreDiscussionRequest extends FormRequest
@@ -16,7 +16,7 @@ class StoreDiscussionRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = AuthApi::current($this);
+        $user = AuthService::current($this);
         if (!$user) {
             Log::warning('discussion store auth failed', ['request' => $this]);
             return false;

@@ -15,7 +15,7 @@ use App\Http\Api\ChannelApi;
 use App\Http\Api\StudioApi;
 
 
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Resources\TocResource;
 use App\Services\PaliContentService;
 
@@ -87,7 +87,7 @@ class ChapterContentController extends Controller
     public function show(Request $request, string $id)
     {
         /**
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if ($user) {
             $this->userUuid = $user['user_uid'];
         }

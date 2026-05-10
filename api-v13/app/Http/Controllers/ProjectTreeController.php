@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use Illuminate\Support\Str;
 use App\Http\Api\StudioApi;
 use Illuminate\Support\Facades\Log;
@@ -30,7 +30,7 @@ class ProjectTreeController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);

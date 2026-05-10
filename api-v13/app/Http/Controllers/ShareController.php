@@ -6,7 +6,7 @@ use App\Models\Share;
 use App\Models\GroupInfo;
 use Illuminate\Http\Request;
 use App\Http\Resources\ShareResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\ShareApi;
 use Illuminate\Support\Str;
 
@@ -20,7 +20,7 @@ class ShareController extends Controller
     public function index(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         $result = false;
         $role = "member";
         $indexCol = ['id', 'res_id', 'res_type', 'power', 'updated_at', 'created_at'];
@@ -140,7 +140,7 @@ class ShareController extends Controller
     public function update(Request $request, Share $share)
     {
         //查询权限
-        $currUser = AuthApi::current($request);
+        $currUser = AuthService::current($request);
         if (!$currUser) {
             return $this->error(__('auth.failed'));
         }
@@ -174,7 +174,7 @@ class ShareController extends Controller
     public function destroy(Request $request, Share $share)
     {
         //查询权限
-        $currUser = AuthApi::current($request);
+        $currUser = AuthService::current($request);
         if (!$currUser) {
             return $this->error(__('auth.failed'));
         }

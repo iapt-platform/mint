@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
 use App\Http\Api;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\DictApi;
 use App\Http\Resources\UserDictResource;
 use Illuminate\Support\Str;
@@ -43,7 +43,7 @@ class UserDictController extends Controller
         switch ($request->input('view')) {
             case 'all':
                 # 获取studio内所有channel
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -51,7 +51,7 @@ class UserDictController extends Controller
                 break;
             case 'studio':
                 # 获取studio内所有channel
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -144,7 +144,7 @@ class UserDictController extends Controller
     public function store(Request $request)
     {
         //
-        $user  = AuthApi::current($request);
+        $user  = AuthService::current($request);
         if (!$user) {
             $this->error("not login");
         }
@@ -263,7 +263,7 @@ class UserDictController extends Controller
     public function destroy(Request $request, $id)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), [], 403);
         }

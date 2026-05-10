@@ -8,7 +8,7 @@ use App\Http\Api\StudioApi;
 use App\Models\Collection;
 use App\Models\Channel;
 use App\Models\CourseMember;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Models\Attachment;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -55,7 +55,7 @@ class CourseResource extends JsonResource
             ->where('is_current', true)
             ->select(['role', 'status'])
             ->get();
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if ($user) {
             $data['my_role'] = CourseMember::where('course_id', $this->id)
                 ->where('is_current', true)
@@ -101,7 +101,7 @@ class CourseResource extends JsonResource
         }
 
         if ($request->input('view') === "study" || $request->input('view') === "teach") {
-            $user = AuthApi::current($request);
+            $user = AuthService::current($request);
             if ($user) {
                 $course_member = CourseMember::where('user_id', $user["user_uid"])
                     ->where('course_id', $this->id)

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WebHook;
 use Illuminate\Http\Request;
 use App\Http\Resources\WebHookResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use Illuminate\Support\Str;
 
 class WebHookController extends Controller
@@ -46,7 +46,7 @@ class WebHookController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), [], 401);
         }
@@ -101,7 +101,7 @@ class WebHookController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), [], 401);
         }
@@ -141,7 +141,7 @@ class WebHookController extends Controller
     public function destroy(Request $request, string $id)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }

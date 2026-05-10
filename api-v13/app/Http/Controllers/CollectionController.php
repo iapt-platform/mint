@@ -6,7 +6,7 @@ use App\Models\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\CollectionResource;
 use App\Services\CollectionService;
@@ -63,7 +63,7 @@ class CollectionController extends Controller
     // studio 分支的鉴权逻辑留在 controller
     private function buildStudioIndex(Request $request): Builder
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             throw new \Illuminate\Auth\AuthenticationException(__('auth.failed'));
         }
@@ -93,7 +93,7 @@ class CollectionController extends Controller
 
     public function store(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -132,7 +132,7 @@ class CollectionController extends Controller
 
         if ($result->status < 30) {
             Log::info('私有文章，判断权限' . $id);
-            $user = AuthApi::current($request);
+            $user = AuthService::current($request);
             if (!$user) {
                 Log::warning('未登录');
                 return $this->error(__('auth.failed'), 403, 403);
@@ -158,7 +158,7 @@ class CollectionController extends Controller
             return $this->error('no recorder');
         }
 
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -185,7 +185,7 @@ class CollectionController extends Controller
 
     public function destroy(Request $request, string $id)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }

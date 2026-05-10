@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
 use App\Http\Resources\SentResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\PaliTextApi;
@@ -34,7 +34,7 @@ class SentenceController extends Controller
      */
     public function index(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         $result = false;
         $indexCol = [
             'id',
@@ -113,7 +113,7 @@ class SentenceController extends Controller
                 $channelTable = Channel::where("type", $type)->select(['uid', 'name']);
                 $channelPub = $channelTable->where('status', 30)->get();
 
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 $channelShare = array();
                 $channelMy = array();
                 if ($user) {
@@ -295,7 +295,7 @@ class SentenceController extends Controller
     public function store(Request $request)
     {
         //鉴权
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             //未登录用户
             return $this->error(__('auth.failed'), 401, 401);
@@ -477,7 +477,7 @@ class SentenceController extends Controller
         $param = \explode('_', $id);
 
         //鉴权
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             //未登录鉴权失败
             return $this->error(__('auth.failed'), 403, 403);

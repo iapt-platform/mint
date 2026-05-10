@@ -11,7 +11,7 @@ use App\Tools\CaseMan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Api\DictApi;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 
 
 
@@ -193,7 +193,7 @@ class WbwLookupController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             //未登录用户
             return $this->error(__('auth.failed'), 401, 401);

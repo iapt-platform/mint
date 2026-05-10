@@ -9,7 +9,7 @@ use App\Models\CourseMember;
 use App\Models\Course;
 
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\CourseApi;
@@ -27,7 +27,7 @@ class WbwSentenceController extends Controller
         //
         $channelsId = [];
         $result = [];
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         $user_uid = null;
         if ($user) {
             $user_uid = $user['user_uid'];
@@ -177,7 +177,7 @@ class WbwSentenceController extends Controller
     {
         //
         //鉴权
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             //未登录用户
             return $this->error(__('auth.failed'), 401, 401);

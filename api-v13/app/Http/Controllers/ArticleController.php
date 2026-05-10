@@ -15,7 +15,7 @@ use App\Models\CustomBookId;
 use App\Models\Sentence;
 
 use App\Http\Resources\ArticleResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\ShareApi;
 use App\Http\Api\StudioApi;
 use App\Http\Api\ChannelApi;
@@ -165,7 +165,7 @@ class ArticleController extends Controller
                 break;
             case 'studio':
                 # 获取studio内所有 article
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'), [], 401);
                 }
@@ -245,7 +245,7 @@ class ArticleController extends Controller
      */
     public function showMyNumber(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -276,7 +276,7 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         //判断权限
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             Log::error('未登录');
             return $this->error(__('auth.failed'), [], 401);
@@ -433,7 +433,7 @@ class ArticleController extends Controller
             return $this->error("no recorder");
         }
         //判断权限
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             $user_uid = "";
         } else {
@@ -460,7 +460,7 @@ class ArticleController extends Controller
             return $this->error("no recorder");
         }
         //判断权限
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             $user_uid = "";
         } else {
@@ -493,7 +493,7 @@ class ArticleController extends Controller
             return $this->error("no recorder");
         }
         //鉴权
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         } else {
@@ -550,7 +550,7 @@ class ArticleController extends Controller
     public function destroy(Request $request, Article $article)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }

@@ -8,7 +8,7 @@ use App\Models\UserInfo;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\CourseMemberResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Api\UserApi;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -24,7 +24,7 @@ class CourseMemberController extends Controller
     public function index(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed', [403], 403));
         }
@@ -110,7 +110,7 @@ class CourseMemberController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed', [403], 403));
         }
@@ -189,7 +189,7 @@ class CourseMemberController extends Controller
     public function show(Request $request, string $courseId)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -222,7 +222,7 @@ class CourseMemberController extends Controller
          * 增加一条新纪录
          * 原有记录变为历史记录
          */
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -253,7 +253,7 @@ class CourseMemberController extends Controller
     public function set_channel(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -286,7 +286,7 @@ class CourseMemberController extends Controller
     {
         //查看删除者有没有删除权限
         //查询删除者的权限
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -319,7 +319,7 @@ class CourseMemberController extends Controller
      */
     public function curr(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
