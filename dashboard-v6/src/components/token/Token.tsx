@@ -20,7 +20,7 @@ interface IWidget {
   articleId?: string;
   type?: ArticleType;
 }
-const DictInfoCopyRef = ({ channelId, articleId, type }: IWidget) => {
+const Token = ({ channelId, articleId, type }: IWidget) => {
   const [text, setText] = useState("");
   const [power, setPower] = useState<TPower>("readonly");
   const intl = useIntl();
@@ -41,12 +41,12 @@ const DictInfoCopyRef = ({ channelId, articleId, type }: IWidget) => {
     payload.push({
       res_id: channelId,
       res_type: "channel",
-      book: parseInt(_book),
+      book: parseInt(_book ?? 0),
       para_start: parseInt(_para),
       para_end: parseInt(_para) + 100,
       power: power,
     });
-    const url = "/v2/access-token";
+    const url = "/api/v2/access-token";
     const values = { payload: payload };
     console.info("token api request", url, values);
     post<ITokenCreate, ITokenCreateResponse>(url, values).then((json) => {
@@ -90,4 +90,4 @@ const DictInfoCopyRef = ({ channelId, articleId, type }: IWidget) => {
   );
 };
 
-export default DictInfoCopyRef;
+export default Token;
