@@ -51,6 +51,7 @@ const TokenModal = ({
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
+        destroyOnHidden
       >
         <Token channelId={channelId} articleId={articleId} type={type} />
       </Modal>
