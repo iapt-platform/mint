@@ -25,7 +25,7 @@ const DiscussionCount = ({ courseId }: IWidget) => {
     if (sentId.length === 0) {
       return;
     }
-    const url = "/v2/discussion-count";
+    const url = "/api/v2/discussion-count";
     const data: IDiscussionCountRequest = {
       course_id: courseId ?? undefined,
       sentences: sentId.map((item) => item.split("-")),
