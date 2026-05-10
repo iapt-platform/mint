@@ -22,7 +22,7 @@ readonly class TranslationResponseDTO extends BaseDTO
         public bool $success,
         public string $error,
         public array $data,
-        public TranslationMetaDTO $meta,
+        public ?TranslationMetaDTO $meta = null,
     ) {}
 
     public static function fromArray(array $payload): self
@@ -35,7 +35,7 @@ readonly class TranslationResponseDTO extends BaseDTO
                 $payload['data']
             ),
 
-            meta: TranslationMetaDTO::fromArray($payload['meta']),
+            meta: isset($payload['meta']) ? TranslationMetaDTO::fromArray($payload['meta']) : null,
         );
     }
 }
