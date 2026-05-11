@@ -6,7 +6,7 @@ use App\Services\NissayaParser;
 use App\Services\OpenAIService;
 use App\Services\RomanizeService;
 use App\Services\AIModelService;
-use App\Http\Controllers\AuthController;
+use App\Services\AuthService;
 
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\AiModelResource;
@@ -48,7 +48,7 @@ class TranslateService
     public function setModel(string $model): self
     {
         $this->model = $this->aiModelService->getModelById($model);
-        $this->modelToken = AuthController::getUserToken($model);
+        $this->modelToken = AuthService::getUserToken($model);
         return $this;
     }
     /**
@@ -112,7 +112,7 @@ class TranslateService
                 throw new \Exception('LLM返回内容为空');
             }
             Log::info('翻译完成', [
-                'content'=>$content,
+                'content' => $content,
                 'duration' => $complete,
                 'input_tokens' => $response['usage']['prompt_tokens'] ?? 0,
                 'output_tokens' => $response['usage']['completion_tokens'] ?? 0,

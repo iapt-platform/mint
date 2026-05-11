@@ -233,13 +233,14 @@ class IndexTipitaka extends Command
             'resource_id' => $paraInfo['uid'], // Use uid from getPaliData for resource_id
             'resource_type' => 'original_text',
             'title' => [
-                'pali' => "{$currChapter} paragraph {$paraInfo['paragraph']}"
+                ['text'=>['pali' => "{$currChapter} paragraph {$paraInfo['paragraph']}"]]
+                
             ],
             'summary' => [
                 'text' => $this->summary ? $this->summaryService->summarize($content['markdown']) : ''
             ],
             'content' => [
-                'pali' => implode("\n\n", $markdown),
+                ['text'=>['pali' => implode("\n\n", $markdown)]]
             ],
             'bold_single' => implode(" ", $bold_single),
             'bold_multi' => implode(" ", $bold_multi),

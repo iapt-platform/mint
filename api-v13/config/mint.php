@@ -10,7 +10,10 @@ return [
     'languages' => [
         'en' => 'English',
         'zh-Hans' => '简体中文',
-        'zh-Hant' => '繁体中文',
+        'zh-Hant' => '繁體中文',
+        'my' => 'မြန်မာဘာသာ',
+        'th' => 'ภาษาไทย',
+        'si' => 'සිංහල',
     ],
     'default_language' => 'en',
     'library' => [
@@ -89,6 +92,7 @@ return [
         'paliword_index' => storage_path('resources/pali_word/index'),
         'word_statistics' => storage_path('resources/word_statistics/data'),
         'dict_text' => storage_path('resources/dict_text'),
+        'corpus' => storage_path('resources/corpus'),
     ],
 
     'admin' => [

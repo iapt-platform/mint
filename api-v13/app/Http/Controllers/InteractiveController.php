@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Discussion;
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 
 class InteractiveController extends Controller
 {
@@ -38,7 +38,7 @@ class InteractiveController extends Controller
     public function show(Request $request, string $res_id)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         $data = [];
         switch ($request->input('res_type')) {
             case 'article':

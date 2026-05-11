@@ -6,7 +6,7 @@ use App\Http\Requests\StoreAiModelRequest;
 use App\Http\Requests\UpdateAiModelRequest;
 use App\Models\AiModel;
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use App\Http\Api\StudioApi;
@@ -23,7 +23,7 @@ class AiModelController extends Controller
     public function index(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);
@@ -76,7 +76,7 @@ class AiModelController extends Controller
     public function store(StoreAiModelRequest $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -117,7 +117,7 @@ class AiModelController extends Controller
     public function update(UpdateAiModelRequest $request, AiModel $aiModel)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -145,7 +145,7 @@ class AiModelController extends Controller
     public function destroy(Request $request, AiModel $aiModel)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }

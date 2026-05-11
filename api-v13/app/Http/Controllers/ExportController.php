@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\Mq;
 use Illuminate\Support\Facades\Cache;
 use App\Tools\ExportDownload;
@@ -23,7 +23,7 @@ class ExportController extends Controller
     public function index(Request $request)
     {
         $queryId = Str::uuid();
-        $token = AuthApi::getToken($request);
+        $token = AuthService::getToken($request);
         switch ($request->input('type', 'chapter')) {
             case 'chapter':
                 $data = [

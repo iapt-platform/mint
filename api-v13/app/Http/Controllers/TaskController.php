@@ -11,7 +11,7 @@ use App\Models\TaskAssignee;
 use App\Models\Project;
 use App\Http\Resources\TaskResource;
 
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Api\TaskApi;
 
@@ -26,7 +26,7 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);
@@ -145,7 +145,7 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -214,7 +214,7 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -296,7 +296,7 @@ class TaskController extends Controller
     public function destroy(Request $request, Task  $task)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }

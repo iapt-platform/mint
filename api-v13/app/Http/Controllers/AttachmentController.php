@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
 
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\AttachmentResource;
 use App\Models\Attachment;
@@ -30,7 +30,7 @@ class AttachmentController extends Controller
         //
         switch ($request->input('view')) {
             case 'studio':
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -72,7 +72,7 @@ class AttachmentController extends Controller
      */
     public function store(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -209,7 +209,7 @@ class AttachmentController extends Controller
     public function update(Request $request, Attachment $attachment)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -228,7 +228,7 @@ class AttachmentController extends Controller
     public function destroy(Request $request, string $id)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }

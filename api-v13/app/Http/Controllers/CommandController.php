@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\Mq;
 
 class CommandController extends Controller
@@ -28,7 +28,7 @@ class CommandController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user || $user['user_uid'] !== 'ba5463f3-72d1-4410-858e-eadd10884713') {
             return $this->error(__('auth.failed'), 403, 403);
         }

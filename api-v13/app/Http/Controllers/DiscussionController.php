@@ -15,7 +15,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\WbwSentenceController;
 use App\Http\Resources\DiscussionResource;
 use App\Http\Api\MdRender;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\Mq;
 use App\Http\Api\UserApi;
 use App\Http\Api\ChannelApi;
@@ -31,7 +31,7 @@ class DiscussionController extends Controller
     public function index(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if ($user) {
             $userInfo = UserApi::getByUuid($user['user_uid']);
         }
@@ -216,7 +216,7 @@ class DiscussionController extends Controller
 
         $can_create = false;
         $can_reply = false;
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
 
         switch ($request->input('type', 'discussion')) {
             case 'qa':
@@ -302,7 +302,7 @@ class DiscussionController extends Controller
      */
     public function store(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             Log::error('discussion store auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), [401], 401);
@@ -418,7 +418,7 @@ class DiscussionController extends Controller
     public function update(Request $request, Discussion $discussion)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), [403], 403);
         }
@@ -474,7 +474,7 @@ class DiscussionController extends Controller
     public function destroy(Request $request, Discussion $discussion)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), [401], 401);
         }

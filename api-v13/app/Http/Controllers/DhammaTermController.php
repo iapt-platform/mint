@@ -11,7 +11,7 @@ use App\Models\DhammaTerm;
 use App\Models\Channel;
 use App\Http\Resources\TermResource;
 
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\ShareApi;
@@ -96,7 +96,7 @@ class DhammaTermController extends Controller
                 break;
             case 'studio':
                 # 获取 studio 内所有 term
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'), [], 401);
                 }
@@ -109,7 +109,7 @@ class DhammaTermController extends Controller
                 break;
             case 'channel':
                 # 获取 studio 内所有 term
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -130,7 +130,7 @@ class DhammaTermController extends Controller
                 break;
             case 'user':
                 # code...
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -209,7 +209,7 @@ class DhammaTermController extends Controller
      */
     public function store(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -324,7 +324,7 @@ class DhammaTermController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), [], 401);
         }
@@ -373,7 +373,7 @@ class DhammaTermController extends Controller
         /**
          * 一次删除多个单词
          */
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }

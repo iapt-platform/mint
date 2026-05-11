@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Relation;
 use Illuminate\Http\Request;
 use App\Http\Resources\RelationResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use Illuminate\Support\Facades\App;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -87,7 +87,7 @@ class RelationController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), [], 401);
         }
@@ -145,7 +145,7 @@ class RelationController extends Controller
     public function update(Request $request, Relation $relation)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -184,7 +184,7 @@ class RelationController extends Controller
     public function destroy(Request $request, Relation $relation)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -226,7 +226,7 @@ class RelationController extends Controller
 
     public function import(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }

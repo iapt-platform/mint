@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\UserInfo;
 use Firebase\JWT\JWT;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\App;
-use App\Http\Api\UserApi;
-use App\Http\Api\AiAssistantApi;
+
 use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
@@ -84,7 +83,7 @@ class AuthController extends Controller
         $user = $query->first();
         if ($user) {
             $ExpTime = time() + 60 * 60 * 24 * 365;
-            $key = AuthApi::getJwtKey();
+            $key = AuthService::getJwtKey();
             $payload = [
                 'nbf' => time(),
                 'exp' => $ExpTime,
@@ -101,30 +100,11 @@ class AuthController extends Controller
         }
     }
 
-    public static function getUserToken($userUid)
-    {
-        $user = UserApi::getByUuid($userUid);
-        if (!$user) {
-            $user = AiAssistantApi::getByUuid($userUid);
-        }
-        if ($user) {
-            $ExpTime = time() + 60 * 60 * 24 * 365;
-            $key = AuthApi::getJwtKey();
-            $payload = [
-                'nbf' => time(),
-                'exp' => $ExpTime,
-                'uid' => $user['id'],
-                'id' => $user['sn'],
-            ];
-            $jwt = JWT::encode($payload, $key, 'HS512');
-            return $jwt;
-        }
-        return null;
-    }
+
 
     public function getUserInfoByToken(Request $request)
     {
-        $curr = AuthApi::current($request);
+        $curr = AuthService::current($request);
         if (!$curr) {
             Log::warning('invalid token');
             return $this->error('invalid token', 401, 401);

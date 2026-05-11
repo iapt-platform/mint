@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Library;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cookie;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
 
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
-use App\Models\Tag;
-use App\Models\TagMap;
+use App\Services\TermService;
 
 
 class HomeController extends Controller
@@ -25,23 +24,26 @@ class HomeController extends Controller
         'linear-gradient(160deg, #1a1a2d,rgb(76, 68, 146))',
         'linear-gradient(160deg, #1a2820,rgb(55, 124, 99))',
     ];
-    // -------------------------------------------------------------------------
-    // 从 uid / id 字符串中提取一个稳定的整数，用于色池取余
-    // -------------------------------------------------------------------------
-    private function colorIndex(string $uid): int
-    {
-        return hexdec(substr(str_replace('-', '', $uid), 0, 4)) % 255;
-    }
+    /**
+     * 构造函数，注入 OpenSearchService
+     *
+     * @param  \App\Services\OpenSearchService  $searchService
+     */
+    public function __construct(
+        protected TermService $termService,
+    ) {}
+
     protected static int $nextId = 1;
 
     public function index()
     {
         $categories = $this->loadCategories();
-
+        $locale = Cookie::get('language') ?? 'en';
         // 获取一级分类和对应的书籍
         $categoryData = [];
         foreach ($categories as $category) {
             if ($category['level'] == 1) {
+
                 $children = $this->subCategories($categories, $category['id']);
                 $categoryData[] = [
                     'category' => $category,
@@ -49,6 +51,7 @@ class HomeController extends Controller
                 ];
             }
         }
+        $categoryData = $this->termService->attachLocalName($categoryData, $locale);
         $recentBooks = $this->getUpdateBooks();
 
         return view('library.index', compact(
@@ -58,7 +61,13 @@ class HomeController extends Controller
         ));
     }
 
-
+    // -------------------------------------------------------------------------
+    // 从 uid / id 字符串中提取一个稳定的整数，用于色池取余
+    // -------------------------------------------------------------------------
+    private function colorIndex(string $uid): int
+    {
+        return hexdec(substr(str_replace('-', '', $uid), 0, 4)) % 255;
+    }
 
     private function subCategories($categories, int $id)
     {
@@ -66,71 +75,7 @@ class HomeController extends Controller
             return $cat['parent_id'] == $id;
         });
     }
-    private function getRecent()
-    {
-        return [
-            [
-                'id'         => 'book-001',
-                'title'      => '相应部·因缘篇',
-                'author'     => 'Bhikkhu Bodhi',
-                'cover'      => null,                          // 无封面时显示渐变
-                'cover_gradient' => 'linear-gradient(135deg, #2d5a8e 0%, #1a3a5c 100%)',
-                'updated_at' => '2小时前',
-                'is_new'     => true,                          // true=新增, false=更新
-                'category'   => '经藏',
-            ],
-            [
-                'id'         => 'book-002',
-                'title'      => '长部·梵网经',
-                'author'     => 'Bhikkhu Sujato',
-                'cover'      => null,
-                'cover_gradient' => 'linear-gradient(135deg, #5a2d8e 0%, #3a1a5c 100%)',
-                'updated_at' => '昨天',
-                'is_new'     => false,
-                'category'   => '经藏',
-            ],
-            [
-                'id'         => 'book-003',
-                'title'      => '法句经注',
-                'author'     => 'Buddhaghosa',
-                'cover'      => null,
-                'cover_gradient' => 'linear-gradient(135deg, #8e5a2d 0%, #5c3a1a 100%)',
-                'updated_at' => '3天前',
-                'is_new'     => false,
-                'category'   => '注释',
-            ],
-            [
-                'id'         => 'book-004',
-                'title'      => '律藏·波罗夷',
-                'author'     => 'Bhikkhu Brahmali',
-                'cover'      => null,
-                'cover_gradient' => 'linear-gradient(135deg, #2d8e5a 0%, #1a5c3a 100%)',
-                'updated_at' => '5天前',
-                'is_new'     => true,
-                'category'   => '律藏',
-            ],
-            [
-                'id'         => 'book-005',
-                'title'      => '清净道论',
-                'author'     => 'Buddhaghosa',
-                'cover'      => null,
-                'cover_gradient' => 'linear-gradient(135deg, #8e2d2d 0%, #5c1a1a 100%)',
-                'updated_at' => '1周前',
-                'is_new'     => false,
-                'category'   => '注释',
-            ],
-            [
-                'id'         => 'book-006',
-                'title'      => '增支部·一集',
-                'author'     => 'Bhikkhu Bodhi',
-                'cover'      => null,
-                'cover_gradient' => 'linear-gradient(135deg, #2d7a8e 0%, #1a4a5c 100%)',
-                'updated_at' => '1周前',
-                'is_new'     => false,
-                'category'   => '经藏',
-            ],
-        ];
-    }
+
 
     private function getUpdateBooks()
     {

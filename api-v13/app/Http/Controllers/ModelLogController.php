@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ModelLog;
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Resources\ModelLogResource;
 use Illuminate\Support\Str;
 
@@ -18,7 +18,7 @@ class ModelLogController extends Controller
     public function index(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }

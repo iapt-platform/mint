@@ -44,44 +44,49 @@ class ExportPaliSynonyms extends Command
             $this->error('please set output file option --output=file');
             return 1;
         }
+        /*
         //irregular
         $dictId = ['4d3a0d92-0adc-4052-80f5-512a2603d0e8'];
         //regular
         $dictId[] = DictApi::getSysDict('system_regular');
-
+        $dictId[] = DictApi::getSysDict('robot_compound');
+*/
         $filename = $this->option('output');
         $fp = fopen($filename, 'w') or die("Unable to open file!");
-        foreach ($dictId as  $dict) {
-            $parents = UserDict::where('dict_id', $dict)
-                ->select('parent')
-                ->groupBy('parent')->cursor();
 
-            foreach ($parents as  $parent) {
-                $words = UserDict::where('dict_id', $dict)
-                    ->where('parent', $parent->parent)
-                    ->select('word')
-                    ->groupBy('word')->get();
-                $wordsList = [];
-                foreach ($words as $word) {
-                    $wordsList[$word->word] = 1;
-                }
-                $teams = DhammaTerm::where('word', $parent->parent)
-                    ->select(['meaning'])->get();
-                foreach ($teams as $term) {
-                    $wordsList[$term->meaning] = 1;
-                }
-                $this->info("[{$parent->parent}] " . count($words) . " team=" . count($teams));
-                // 合并 $parent->parent, $words->word, $team->meaning 为一个字符串数组
-                $combinedArray = [];
-                $combinedArray[] = $parent->parent;
-                foreach ($wordsList as $word => $value) {
-                    $combinedArray[] = $word;
-                }
+        $parents = UserDict::select('parent')
+            ->whereNotNull('parent')
+            ->where('parent', '<>', '')
+            ->groupBy('parent')->cursor();
 
-                // 将 $combinedArray 写入 CSV 文件
-                fputcsv($fp, $combinedArray);
+        foreach ($parents as  $parent) {
+            if (str_contains($parent->parent, ' ')) {
+                continue;
             }
+            $words = UserDict::where('parent', $parent->parent)
+                ->select('word')
+                ->groupBy('word')->get();
+            $wordsList = [];
+            foreach ($words as $word) {
+                $wordsList[$word->word] = 1;
+            }
+            $teams = DhammaTerm::where('word', $parent->parent)
+                ->select(['meaning'])->get();
+            foreach ($teams as $term) {
+                $wordsList[$term->meaning] = 1;
+            }
+            $this->info("[{$parent->parent}] " . count($words) . " team=" . count($teams));
+            // 合并 $parent->parent, $words->word, $team->meaning 为一个字符串数组
+            $combinedArray = [];
+            $combinedArray[] = $parent->parent;
+            foreach ($wordsList as $word => $value) {
+                $combinedArray[] = $word;
+            }
+
+            // 将 $combinedArray 写入 CSV 文件
+            fputcsv($fp, $combinedArray);
         }
+
 
         // 关闭文件
         fclose($fp);

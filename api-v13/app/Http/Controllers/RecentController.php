@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Recent;
 use Illuminate\Http\Request;
 use App\Http\Resources\RecentResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use Illuminate\Support\Str;
 
 class RecentController extends Controller
@@ -46,7 +46,7 @@ class RecentController extends Controller
      */
     public function store(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), [], 401);
         }

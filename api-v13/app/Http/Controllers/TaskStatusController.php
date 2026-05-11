@@ -12,7 +12,7 @@ use App\Models\TaskRelation;
 use App\Models\TaskAssignee;
 use App\Models\AiModel;
 use App\Http\Resources\TaskResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\WatchApi;
 use App\Http\Api\UserApi;
 
@@ -85,7 +85,7 @@ class TaskStatusController extends Controller
     {
         //
         $task = Task::findOrFail($id);
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }

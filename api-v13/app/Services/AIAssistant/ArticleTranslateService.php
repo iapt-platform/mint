@@ -5,13 +5,14 @@ namespace App\Services\AIAssistant;
 use App\Services\ArticleService;
 use App\Services\PaliContentService;
 use App\Services\SentenceService;
+use App\Services\AuthService;
 
 use App\Models\CustomBook;
 
 
 use Illuminate\Support\Facades\Log;
 use App\Http\Api\ChannelApi;
-use Carbon\Callback;
+
 
 class ArticleTranslateService
 {
@@ -20,9 +21,12 @@ class ArticleTranslateService
     protected TranslateService $translateService;
     protected SentenceService $sentenceService;
 
+
     protected string $modelId;
+    protected string $modelToken;
     protected array $translation = [];
     protected string $outputChannelId;
+    protected string $currArticleId;
 
     protected string $systemPrompt = <<<PROMPT
     请根据提供的原文，翻译为简体中文。
@@ -75,6 +79,7 @@ class ArticleTranslateService
     public function setModel(string $model): self
     {
         $this->modelId = $model;
+        $this->modelToken = app(AuthService::class)->getUserToken($model);
         return $this;
     }
     /**
@@ -88,21 +93,27 @@ class ArticleTranslateService
         $this->outputChannelId = $id;
         return $this;
     }
-    public function translateAnthology($anthologyId, ?callable $onEach = null): int
-    {
-        $articles = $this->articleService->articlesInAnthology($anthologyId);
 
-        foreach ($articles as $article) {
-            $sentences = $this->translateArticle($article)->save();
+    public function getCurrArticleId()
+    {
+        return $this->currArticleId;
+    }
+    public function translateAnthology(string $anthologyId, ?callable $onEach = null): int
+    {
+        $articleIds = $this->articleService->articlesInAnthology($anthologyId);
+
+        foreach ($articleIds as $article) {
+            $this->translateArticle($article);
             if ($onEach) {
-                $onEach($article, $sentences);
+                $onEach($this);
             }
         }
 
-        return count($articles);
+        return count($articleIds);
     }
     public function translateArticle(string $articleId)
     {
+        $this->currArticleId = $articleId;
         //获取文章中的句子id
         $sentenceIds = $this->articleService->sentenceIds($articleId);
         if (!$sentenceIds || count($sentenceIds) === 0) {
@@ -167,6 +178,36 @@ class ArticleTranslateService
         }
         return count($sentData);
     }
+
+    public function saveRpc(string $endpoint, string $accessToken)
+    {
+        if (
+            !is_array($this->translation) ||
+            count($this->translation) === 0
+        ) {
+            return 0;
+        }
+        $channelInfo = ChannelApi::getById($this->outputChannelId);
+        $sentData = [];
+        $sentData = array_map(function ($n) use ($channelInfo, $accessToken) {
+            $sId = explode('-', $n['id']);
+            return [
+                'book_id' => $sId[0],
+                'paragraph' => $sId[1],
+                'word_start' => $sId[2],
+                'word_end' => $sId[3],
+                'channel_uid' => $channelInfo['id'],
+                'content' => $n['content'],
+                'content_type' => $n['content_type'] ?? 'markdown',
+                'access_token' => $accessToken,
+            ];
+        }, $this->translation);
+        foreach ($sentData as  $value) {
+            $this->sentenceService->saveRpc($endpoint, $value, $this->modelToken);
+        }
+        return count($sentData);
+    }
+
     public function get()
     {
         return $this->translation;

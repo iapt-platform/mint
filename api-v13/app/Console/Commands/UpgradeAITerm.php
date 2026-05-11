@@ -7,9 +7,9 @@ use Illuminate\Console\Command;
 use App\Services\AIModelService;
 use App\Services\TermService;
 use App\Services\AIAssistant\AITermService;
+use App\Services\AuthService;
 
 use App\Http\Resources\AiModelResource;
-use App\Http\Controllers\AuthController;
 
 
 class UpgradeAITerm extends Command
@@ -62,7 +62,7 @@ class UpgradeAITerm extends Command
         $this->aiTermService->setModel($modelId);
         $this->model = $this->modelService->getModelById($modelId);
         $this->info("model:{$this->model['model']}");
-        $this->modelToken = AuthController::getUserToken($modelId);
+        $this->modelToken = AuthService::getUserToken($modelId);
 
         if ($this->option('id')) {
             $terms = [['guid' => $this->option('id'), 'word' => 'word']];

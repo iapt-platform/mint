@@ -63,10 +63,13 @@ const NissayaAligner = ({ sentencesId }: IWidget) => {
   useEffect(() => {
     if (!sentencesId) return;
 
-    post<ISentenceDiffRequest, ISentenceDiffResponse>("/v2/sent-in-channel", {
-      sentences: sentencesId,
-      channels: ["_System_Pali_VRI_"],
-    }).then((json) => {
+    post<ISentenceDiffRequest, ISentenceDiffResponse>(
+      "/api/v2/sent-in-channel",
+      {
+        sentences: sentencesId,
+        channels: ["_System_Pali_VRI_"],
+      }
+    ).then((json) => {
       if (!json.ok) return;
 
       const rows = [...json.data.rows].sort((a, b) => {

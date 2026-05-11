@@ -22,7 +22,7 @@ use App\Http\Api\SuggestionApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\UserApi;
 use App\Http\Api\StudioApi;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
 use App\Http\Resources\TocResource;
@@ -183,7 +183,7 @@ class CorpusController extends Controller
      */
     public function showSent(Request  $request, string $id)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if ($user) {
             $this->userUuid = $user['user_uid'];
         }
@@ -208,7 +208,7 @@ class CorpusController extends Controller
      */
     public function showSentences(Request $request, string $type, string $id)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if ($user) {
             $this->userUuid = $user['user_uid'];
         }
@@ -275,7 +275,7 @@ class CorpusController extends Controller
         if ($request->has('debug')) {
             $this->debug = explode(',', $request->input('debug'));
         }
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if ($user) {
             $this->userUuid = $user['user_uid'];
         }
@@ -382,7 +382,7 @@ class CorpusController extends Controller
         if ($request->has('debug')) {
             $this->debug = explode(',', $request->input('debug'));
         }
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if ($user) {
             $this->userUuid = $user['user_uid'];
         }

@@ -10,7 +10,7 @@ use App\Http\Api\StudioApi;
 use App\Http\Api\UserApi;
 use App\Http\Api\MdRender;
 use App\Http\Api\ShareApi;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Models\UserOperationDaily;
 use App\Models\DhammaTerm;
 use App\Helpers\MarkdownHelper;
@@ -108,7 +108,7 @@ class TermResource extends JsonResource
             $data["summary"]  = $mdRender->convert($summaryContent, $channels, null);
         }
 
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             $data["role"] = 'reader';
         } else {

@@ -15,7 +15,7 @@ use App\Models\Sentence;
 use App\Models\Notification;
 use App\Http\Resources\SentPrResource;
 use App\Http\Api\Mq;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 
 class SentPrController extends Controller
 {
@@ -41,7 +41,7 @@ class SentPrController extends Controller
         }
         if ($result) {
             //修改notification 已读状态
-            $user = AuthApi::current($request);
+            $user = AuthService::current($request);
             if ($user) {
                 $id = array();
                 foreach ($result as $key => $row) {
@@ -110,7 +110,7 @@ class SentPrController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -152,7 +152,7 @@ class SentPrController extends Controller
 
         $suggestionData =  [
             'data' => new SentPrResource($new),
-            'token' => AuthApi::getToken($request),
+            'token' => AuthService::getToken($request),
             'notification' => $request->input('notification', true),
             'webhook' => $request->input('webhook', true),
         ];
@@ -195,7 +195,7 @@ class SentPrController extends Controller
             return $this->error('no data', 404, 404);
         }
         //修改notification 已读状态
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if ($user) {
             Notification::where('res_id', $uid)
                 ->where('to', $user['user_uid'])
@@ -214,7 +214,7 @@ class SentPrController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -241,7 +241,7 @@ class SentPrController extends Controller
     public function destroy(Request $request, string $id)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }

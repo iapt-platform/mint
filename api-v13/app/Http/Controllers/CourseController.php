@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\CourseMember;
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\CourseResource;
 use Illuminate\Support\Facades\DB;
@@ -67,7 +67,7 @@ class CourseController extends Controller
                 break;
             case 'create':
                 # 获取 studio 建立的所有 course
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -79,7 +79,7 @@ class CourseController extends Controller
                 $table = Course::where('studio_id', $user["user_uid"]);
                 break;
             case 'study':
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -98,7 +98,7 @@ class CourseController extends Controller
                 break;
             case 'teach':
                 //我任教的课程
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -139,7 +139,7 @@ class CourseController extends Controller
      */
     public function showMyCourseNumber(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -166,7 +166,7 @@ class CourseController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -244,7 +244,7 @@ class CourseController extends Controller
     public function update(Request $request, Course $course)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -300,7 +300,7 @@ class CourseController extends Controller
     public function destroy(Request $request, Course $course)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }

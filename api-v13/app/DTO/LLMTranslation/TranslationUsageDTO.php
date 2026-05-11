@@ -10,7 +10,7 @@ readonly class TranslationUsageDTO extends BaseDTO
         public int $promptTokens,
         public int $completionTokens,
         public int $totalTokens,
-        public TranslationPromptTokenDetailsDTO $promptTokensDetails,
+        public ?TranslationPromptTokenDetailsDTO $promptTokensDetails = null,
     ) {}
 
     public static function fromArray(array $data): self
@@ -19,9 +19,9 @@ readonly class TranslationUsageDTO extends BaseDTO
             promptTokens: $data['prompt_tokens'],
             completionTokens: $data['completion_tokens'],
             totalTokens: $data['total_tokens'],
-            promptTokensDetails: TranslationPromptTokenDetailsDTO::fromArray(
+            promptTokensDetails: isset($data['prompt_tokens_details']) ? TranslationPromptTokenDetailsDTO::fromArray(
                 $data['prompt_tokens_details']
-            ),
+            ) : null,
         );
     }
 }

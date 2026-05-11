@@ -12,7 +12,7 @@ use App\Http\Api\Mq;
 use App\Http\Api\ChannelApi;
 
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\AuthController;
+use App\Services\AuthService;
 
 class AiTaskPrepare
 {
@@ -114,7 +114,7 @@ class AiTaskPrepare
 
         # ai model
         $aiModel = AiModel::findOrFail($task->executor_id);
-        $modelToken = AuthController::getUserToken($aiModel->uid);
+        $modelToken = AuthService::getUserToken($aiModel->uid);
         $aiModel['token'] = $modelToken;
         $sumLen = 0;
         $mqData = [];

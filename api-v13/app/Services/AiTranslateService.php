@@ -15,7 +15,7 @@ use App\Models\Sentence;
 
 use App\Http\Api\ChannelApi;
 
-use App\Http\Controllers\AuthController;
+use App\Services\AuthService;
 
 use App\Http\Api\MdRender;
 use App\Exceptions\SectionTimeoutException;
@@ -379,14 +379,16 @@ class AiTranslateService
     /**
      * 写入句子库
      */
-    private function saveSentence($sentence)
+    private function saveSentence(array $sentence, ?string $token = null)
     {
         $url = config('app.url') . '/api/v2/sentence';
 
         Log::info($this->queue . " sentence update {$url}");
-        $response = Http::timeout($this->apiTimeout)->withToken($this->modelToken)->post($url, [
-            'sentences' => [$sentence],
-        ]);
+        $response = Http::timeout($this->apiTimeout)
+            ->withToken($token ?? $this->modelToken)
+            ->post($url, [
+                'sentences' => [$sentence],
+            ]);
         if ($response->failed()) {
             Log::error($this->queue . ' sentence update failed', [
                 'url' => $url,
@@ -592,7 +594,7 @@ class AiTranslateService
 
         # ai model
         $aiModel = AiModel::findOrFail($aiAssistantId);
-        $modelToken = AuthController::getUserToken($aiModel->uid);
+        $modelToken = AuthService::getUserToken($aiModel->uid);
         $aiModel['token'] = $modelToken;
         $sumLen = 0;
         $mqData = [];

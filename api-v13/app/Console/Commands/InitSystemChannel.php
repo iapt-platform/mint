@@ -120,7 +120,7 @@ class InitSystemChannel extends Command
         if (\App\Tools\Tools::isStop()) {
             return 0;
         }
-        $this->info("start");
+        $this->info("init:system.channel start");
         foreach ($this->channels as $key => $value) {
             # code...
             $channel = Channel::firstOrNew([
@@ -143,6 +143,8 @@ class InitSystemChannel extends Command
             $channel->save();
             $this->info("created" . $value['name']);
         }
+        $this->info("init:system.channel successful");
+
         return 0;
     }
 }

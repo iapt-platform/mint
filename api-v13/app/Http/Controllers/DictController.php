@@ -9,7 +9,7 @@ use App\Models\GroupMember;
 use Illuminate\Http\Request;
 use App\Tools\CaseMan;
 use App\Http\Api\DictApi;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 
 require_once __DIR__ . "/../../Tools/grm_abbr.php";
 
@@ -41,7 +41,7 @@ class DictController extends Controller
         /**
          * 临时代码判断是否在缅汉字典群里面。在群里的用户可以产看缅汉字典pdf
          */
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if ($user) {
             $inMyHanGroup = GroupMember::where('group_id', '905af467-1bde-4d2c-8dc7-49cfb74e0b09')
                 ->where('user_id', $user['user_uid'])->exists();

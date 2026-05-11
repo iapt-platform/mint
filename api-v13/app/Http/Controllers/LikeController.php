@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Like;
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\UserApi;
 use App\Http\Resources\LikeResource;
 use Illuminate\Support\Str;
@@ -27,7 +27,7 @@ class LikeController extends Controller
                     ->select("type")
                     ->selectRaw("count(*)")
                     ->get();
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if ($user) {
                     foreach ($result as $key => $value) {
                         $curr = Like::where([
@@ -70,7 +70,7 @@ class LikeController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -135,7 +135,7 @@ class LikeController extends Controller
     public function destroy(Request $request, Like $like)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }

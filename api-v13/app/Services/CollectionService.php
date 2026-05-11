@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Collection;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Api\ShareApi;
 use Illuminate\Http\Request;
@@ -55,7 +55,7 @@ class CollectionService
      */
     public function getMyNumber(Request $request): array
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return ['error' => __('auth.failed'), 'code' => 403];
         }

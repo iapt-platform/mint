@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\ViewResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 
 class ViewController extends Controller
@@ -74,7 +74,7 @@ class ViewController extends Controller
                 return $this->ok($count);
                 break;
             case 'user-recent':
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -85,7 +85,7 @@ class ViewController extends Controller
                 return $this->ok($items);
                 break;
             case 'user':
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -94,7 +94,7 @@ class ViewController extends Controller
                 break;
             case 'studio':
                 # 获取studio内所有 数据
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -154,7 +154,7 @@ class ViewController extends Controller
             'target_id' => $target_id,
             'target_type' => $request->input("target_type"),
         ];
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if ($user) {
             //已经登陆
             $user_id = $user['user_uid'];

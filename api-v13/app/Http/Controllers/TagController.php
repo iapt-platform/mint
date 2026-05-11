@@ -9,7 +9,7 @@ use App\Models\TagMap;
 use App\Models\ProgressChapter;
 use Illuminate\Http\Request;
 use App\Http\Resources\TagResource;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 
 class TagController extends Controller
@@ -60,7 +60,7 @@ class TagController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -107,7 +107,7 @@ class TagController extends Controller
     public function update(Request $request, Tag $tag)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }

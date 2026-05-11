@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\ChannelApi;
 use App\Http\Resources\DiscussionCountResource;
 use App\Http\Resources\TagMapResource;
@@ -63,7 +63,7 @@ class DiscussionCountController extends Controller
          * 3. 计算答案channel的结果
          * 4. 计算作业channel的结果
          */
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error('auth.failed', 401, 401);
         }

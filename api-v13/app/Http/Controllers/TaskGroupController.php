@@ -10,7 +10,7 @@ use App\Models\TaskAssignee;
 use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\Request;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 
 use Illuminate\Support\Str;
 
@@ -37,7 +37,7 @@ class TaskGroupController extends Controller
 
         //
 
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }

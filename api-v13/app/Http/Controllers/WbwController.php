@@ -11,7 +11,7 @@ use App\Models\Sentence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Tools\Tools;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\Mq;
@@ -39,7 +39,7 @@ class WbwController extends Controller
     {
         //
         //鉴权
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             //未登录用户
             return $this->error(__('auth.failed'), [], 401);

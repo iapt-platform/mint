@@ -8,8 +8,9 @@ use App\Services\OpenSearchService;
 use App\Services\TermService;
 use App\Services\OpenAIService;
 use App\Services\AIModelService;
+use App\Services\AuthService;
+
 use App\Http\Resources\AiModelResource;
-use App\Http\Controllers\AuthController;
 use App\DTO\Search\SearchDataDTO;
 
 class AITermService
@@ -205,7 +206,7 @@ class AITermService
     public function setModel($id)
     {
         $this->model = $this->modelService->getModelById($id);
-        $this->modelToken = AuthController::getUserToken($id);
+        $this->modelToken = AuthService::getUserToken($id);
         return $this;
     }
 

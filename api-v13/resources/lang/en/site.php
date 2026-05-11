@@ -13,10 +13,20 @@ return [
     'logo' => '/logo.png',
     'title' => 'wikipali',
     'subhead' => 'wikipali',
-    'keywords' => ['pali','buddhistm'],
+    'keywords' => ['pali', 'buddhistm'],
     'description' => 'wikipali',
     'copyright' => 'iapt 2022',
     'author.name' => 'iapt',
     'author.email' => 'visuddhindand@gmail.com',
+    'nav' => [
+        'home' => 'Home',
+        'tipitaka' => 'Tipitaka',
+        'wiki' => 'Wiki',
+        'anthology' => 'Anthology',
+        'download' => 'Download',
 
+        'menu' => 'Menu',
+        'open_menu' => 'Open menu',
+        'close_menu' => 'Close menu',
+    ],
 ];

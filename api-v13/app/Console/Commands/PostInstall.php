@@ -27,7 +27,12 @@ class DeplyInit extends Command
     {
         //
         $this->info('deploy init start');
+
         $this->call('create:opensearch.index');
+        $this->call('init:system.channel');
+        $this->call('init:system.dict');
+        $this->call('upgrade:dict');
+
         $this->info('deploy init done');
     }
 }

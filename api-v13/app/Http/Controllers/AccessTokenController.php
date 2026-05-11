@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Support\Facades\Log;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\ChannelApi;
 
 class AccessTokenController extends Controller
@@ -33,13 +33,14 @@ class AccessTokenController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             Log::error('未登录');
             return $this->error(__('auth.failed'), [], 401);
         }
         $payload = $request->input('payload');
         $result = array();
+        Log::debug('token', ['payload' => $payload]);
         foreach ($payload as $key => $value) {
             //鉴权
             switch ($value['res_type']) {
@@ -76,7 +77,7 @@ class AccessTokenController extends Controller
             }
 
             try {
-                $jwt = JWT::encode($value, $token->token, 'HS512');
+                $jwt = JWT::encode($value, $token->token . $token->token, 'HS512');
             } catch (\Exception $e) {
                 Log::error('jwt', ['error' => $e]);
                 continue;

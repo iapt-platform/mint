@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\GroupMember;
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 
 class GroupResource extends JsonResource
@@ -17,7 +17,7 @@ class GroupResource extends JsonResource
      */
     public function toArray($request)
     {
-		$data = [
+        $data = [
             'uid' => $this->uid,
             'name' => $this->name,
             'description' => $this->description,
@@ -26,14 +26,14 @@ class GroupResource extends JsonResource
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at
         ];
-        $user = AuthApi::current($request);
-        if($user){
-            if($this->owner === $user['user_uid']){
+        $user = AuthService::current($request);
+        if ($user) {
+            if ($this->owner === $user['user_uid']) {
                 $data['role'] = 'owner';
-            }else{
-                $power = GroupMember::where('user_id',$user['user_uid'])
-                                      ->where('group_id',$this->uid)
-                                      ->value('power');
+            } else {
+                $power = GroupMember::where('user_id', $user['user_uid'])
+                    ->where('group_id', $this->uid)
+                    ->value('power');
                 switch ($power) {
                     case 0:
                         $data['role'] = 'owner';

@@ -17,7 +17,7 @@ class UpgradeProgress extends Command
      * php artisan upgrade:progress --book=168 --para=916 --channel=19f53a65-81db-4b7d-8144-ac33f1217d34
      * @var string
      */
-    protected $signature = 'upgrade:progress {--book=} {--para=} {--channel=}';
+    protected $signature = 'upgrade:progress {--book=} {--para=} {--channel=} {--resume}';
 
     /**
      * The console command description.
@@ -52,18 +52,28 @@ class UpgradeProgress extends Command
         $para = $this->option('para');
         $channelId = $this->option('channel');
         if ($book && $para && $channelId) {
-            $sentences = Sentence::where('strlen', '>', 0)
+                $sentences = Sentence::where('strlen', '>', 0)
                 ->where('book_id', $book)
                 ->where('paragraph', $para)
                 ->where('channel_uid', $channelId)
                 ->groupby('book_id', 'paragraph', 'channel_uid')
                 ->select('book_id', 'paragraph', 'channel_uid');
         } else {
-            $sentences = Sentence::where('strlen', '>', 0)
-                ->where('book_id', '<', 1000)
-                ->where('channel_uid', '<>', '')
+            if($this->option('resume')){
+                $sentences = Sentence::where('strlen', '>', 0)
+                ->whereBetween('book_id', [$book,1000])
+                ->where('paragraph','>=', $para)
+                ->whereNotNull('channel_uid')
                 ->groupby('book_id', 'paragraph', 'channel_uid')
                 ->select('book_id', 'paragraph', 'channel_uid');
+            }else{
+                $sentences = Sentence::where('strlen', '>', 0)
+                ->where('book_id', '<', 1000)
+                ->whereNotNull('channel_uid')
+                ->groupby('book_id', 'paragraph', 'channel_uid')
+                ->select('book_id', 'paragraph', 'channel_uid');
+            }
+
         }
         $count = $sentences->count();
         $sentences = $sentences->cursor();
@@ -111,7 +121,8 @@ class UpgradeProgress extends Command
                     'created_at' => $finalAt,
                     'updated_at' => $updateAt,
                 ];
-                Log::debug('Progress updateOrInsert', ['para' => $paraInfo, 'data' => $paraData]);
+                //Log::debug('Progress updateOrInsert', ['para' => $paraInfo, 'data' => $paraData]);
+                $this->info('Progress updateOrInsert'.json_encode($paraInfo));
                 Progress::updateOrInsert($paraInfo, $paraData);
             }
         }

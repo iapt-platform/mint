@@ -16,7 +16,7 @@ use App\Models\CustomBook;
 
 use App\Http\Resources\ChannelResource;
 
-use App\Http\Api\AuthApi;
+use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\PaliTextApi;
@@ -62,7 +62,7 @@ class ChannelController extends Controller
                 break;
             case 'studio':
                 # 获取studio内所有channel
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -95,7 +95,7 @@ class ChannelController extends Controller
                  * studio 的和协作的
                  */
                 #获取user所有有权限的channel列表
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -121,7 +121,7 @@ class ChannelController extends Controller
                  * 某用户有编辑权限的
                  */
                 #获取user所有有权限的channel列表
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -142,7 +142,7 @@ class ChannelController extends Controller
                 break;
             case 'user-in-chapter':
                 #获取user 在某章节 所有有权限的channel列表
-                $user = AuthApi::current($request);
+                $user = AuthService::current($request);
                 if (!$user) {
                     return $this->error(__('auth.failed'));
                 }
@@ -306,7 +306,7 @@ class ChannelController extends Controller
      */
     public function showMyNumber(Request $request)
     {
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
@@ -417,7 +417,7 @@ class ChannelController extends Controller
         }
 
         #获取 user 在某章节 所有有权限的 channel 列表
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if ($user !== false) {
             //我自己的
             if ($request->input('owner') === 'all' || $request->input('owner') === 'my') {
@@ -543,7 +543,7 @@ class ChannelController extends Controller
     public function store(Request $request)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -627,7 +627,7 @@ class ChannelController extends Controller
     public function update(Request $request, Channel $channel)
     {
         //鉴权
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
@@ -659,7 +659,7 @@ class ChannelController extends Controller
     public function patch(Request $request, Channel $channel)
     {
         //鉴权
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'), [], 401);
         }
@@ -703,7 +703,7 @@ class ChannelController extends Controller
     public function destroy(Request $request, Channel $channel)
     {
         //
-        $user = AuthApi::current($request);
+        $user = AuthService::current($request);
         if (!$user) {
             return $this->error(__('auth.failed'));
         }
