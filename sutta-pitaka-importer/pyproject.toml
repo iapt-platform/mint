@@ -18,6 +18,8 @@ dependencies = [
     "psycopg[binary,pool]",
     "mysql-connector-python",
     "langchain",
+    "minio",
+    "pika",
 ]
 
 [project.urls]
