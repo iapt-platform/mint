@@ -7,7 +7,7 @@ authors = [
 ]
 description = "A rbac service"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
@@ -15,9 +15,11 @@ classifiers = [
 license = "MIT"
 dependencies = [
     "SQLAlchemy",
-    "psycopg[binary,pool]",
+    "psycopg[c,pool]",
     "mysql-connector-python",
     "langchain",
+    "minio",
+    "pika",
 ]
 
 [project.urls]
