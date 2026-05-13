@@ -7,6 +7,9 @@ use App\Http\Api\ChannelApi;
 use App\Http\Resources\TermResource;
 use Illuminate\Http\Request;
 
+use App\Tools\Tools;
+
+
 
 class TermService
 {
@@ -193,5 +196,63 @@ class TermService
     public function update(string $id, array $data)
     {
         DhammaTerm::where('guid', $id)->update($data);
+    }
+
+    /**
+     * @param array{
+     *     word: string,
+     *     tag: string,
+     *     channal: string,
+     *     meaning: string,
+     *     other_meaning: string|null,
+     *     note: string|null,
+     *     editor_id: int,
+     * } $data
+     * @return string 返回记录的 id
+     */
+    public function updateOrCreateByWord(array $data): string
+    {
+        $now = time();
+
+        $channelInfo = ChannelApi::getById($data['channel_id']);
+
+        // 先查询是否存在
+        $term = DhammaTerm::where('word', $data['word'])
+            ->where('tag', $data['tag'] ?? null)
+            ->where('channal', $data['channel_id'])
+            ->first();
+
+        if ($term) {
+            // 已存在，直接更新
+            $term->update([
+                'meaning'       => $data['meaning'],
+                'other_meaning' => $data['other_meaning'] ?? null,
+                'note'          => $data['note'] ?? null,
+                'redirect'      => $data['redirect'] ?? null,
+                'editor_id'     => $data['editor_id'],
+                'modify_time'   => $now,
+            ]);
+        } else {
+            // 不存在，新建（一次性写入所有字段）
+            $term = new DhammaTerm();
+            $term->id           = app('snowflake')->id();
+            $term->guid         = (string) \Illuminate\Support\Str::uuid();
+            $term->word         = $data['word'];
+            $term->tag          = $data['tag'] ?? null;
+            $term->channal      = $data['channel_id'];
+            $term->meaning      = $data['meaning'];
+            $term->other_meaning = $data['other_meaning'] ?? null;
+            $term->note         = $data['note'] ?? null;
+            $term->redirect     = $data['redirect'] ?? null;
+            $term->editor_id    = $data['editor_id'];  // 注意：需传入 int 类型的 editor id
+            $term->owner        = $channelInfo['studio_id'];
+            $term->word_en      = Tools::getWordEn($data['word']);
+            $term->language     = $channelInfo['lang'] ?? 'zh-Hans';
+            $term->create_time  = $now;
+            $term->modify_time  = $now;
+            $term->save();
+        }
+
+        return $term->guid;
     }
 }
