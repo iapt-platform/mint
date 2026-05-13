@@ -20,6 +20,8 @@ class UpdateCorpus extends Command
      */
     protected SentenceService $sentenceService;
 
+    protected TermService $termService;
+
     /**
      * Create a new command instance.
      *
@@ -27,8 +29,11 @@ class UpdateCorpus extends Command
      */
     public function __construct(SentenceService $sentenceService)
     {
+    public function __construct(SentenceService $sentenceService, TermService $termService)
+    {
         parent::__construct();
         $this->sentenceService = $sentenceService;
+        $this->termService = $termService;
     }
 
     /**
