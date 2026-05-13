@@ -21,9 +21,11 @@ class IndexTipitaka extends Command
      * php artisan opensearch:index-tipitaka 93 --para=6 --granularity=chapter
      * @var string
      */
-    protected $signature = 'opensearch:index-tipitaka {book : The book ID to index data for}
-    {--test}
+    protected $signature = 'opensearch:index-tipitaka
+    {book : The book ID to index data for}
     {--para= : index paragraph No. omit to all}
+    {--channel= : index channel id omit to all}
+    {--test}
     {--summary=on}
     {--resume}
     {--granularity=all : The granularity to index (paragraph, sutta, sentence; omit to index all)}';
@@ -60,9 +62,14 @@ class IndexTipitaka extends Command
      */
     public function handle()
     {
+        $this->line('index tipitaka start');
         $book = (int)$this->argument('book');
-        $granularity = $this->option('granularity');
         $paragraph = $this->option('para');
+        $channel = $this->option('channel');
+        if ($channel) {
+            $this->line('channel=' . $channel);
+        }
+        $granularity = $this->option('granularity');
         $this->summary = $this->option('summary') === 'on';
 
         if ($this->option('test')) {
@@ -93,7 +100,7 @@ class IndexTipitaka extends Command
                     $this->option('granularity') === 'chapter' ||
                     $this->option('granularity') === 'all'
                 ) {
-                    $this->indexChapter($bookId);
+                    $this->indexChapter($bookId, $channel);
                 }
                 if (
                     $this->option('granularity') === 'paragraph' ||
@@ -233,14 +240,14 @@ class IndexTipitaka extends Command
             'resource_id' => $paraInfo['uid'], // Use uid from getPaliData for resource_id
             'resource_type' => 'original_text',
             'title' => [
-                ['text'=>['pali' => "{$currChapter} paragraph {$paraInfo['paragraph']}"]]
-                
+                ['text' => ['pali' => "{$currChapter} paragraph {$paraInfo['paragraph']}"]]
+
             ],
             'summary' => [
                 'text' => $this->summary ? $this->summaryService->summarize($content['markdown']) : ''
             ],
             'content' => [
-                ['text'=>['pali' => implode("\n\n", $markdown)]]
+                ['text' => ['pali' => implode("\n\n", $markdown)]]
             ],
             'bold_single' => implode(" ", $bold_single),
             'bold_multi' => implode(" ", $bold_multi),
@@ -266,9 +273,10 @@ class IndexTipitaka extends Command
      * Index Pali suttas for a given book (placeholder for future implementation).
      *
      * @param int $book
+     * @param ?string $channel
      * @return int
      */
-    protected function indexChapter($book)
+    protected function indexChapter($book, $channelId = null)
     {
         $this->info("Starting to index paragraphs for book: $book");
         $total = 0;
@@ -292,10 +300,14 @@ class IndexTipitaka extends Command
                 $end = $chapters[$key + 1]->paragraph - 1;
             }
             //获取这个段落之间的全部channel
-            $channels = Sentence::where('book_id', $book)
-                ->whereBetween('paragraph', [$start, $end])
-                ->select('channel_uid')
+            $table = Sentence::where('book_id', $book)
+                ->whereBetween('paragraph', [$start, $end]);
+            if ($channelId) {
+                $table = $table->where('channel_uid', $channelId);
+            }
+            $channels = $table->select('channel_uid')
                 ->groupBy('channel_uid')->get();
+
             $this->info("index chapter start={$start} end={$end}");
 
             foreach ($channels as $channel) {
