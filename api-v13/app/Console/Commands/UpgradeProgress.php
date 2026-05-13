@@ -14,7 +14,7 @@ class UpgradeProgress extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan upgrade:progress --book=168 --para=916 --channel=19f53a65-81db-4b7d-8144-ac33f1217d34
+     * php artisan upgrade:progress --book=152 --channel=19f53a65-81db-4b7d-8144-ac33f1217d34
      * @var string
      */
     protected $signature = 'upgrade:progress {--book=} {--para=} {--channel=} {--resume}';
@@ -51,29 +51,37 @@ class UpgradeProgress extends Command
         $book = $this->option('book');
         $para = $this->option('para');
         $channelId = $this->option('channel');
-        if ($book && $para && $channelId) {
-                $sentences = Sentence::where('strlen', '>', 0)
-                ->where('book_id', $book)
-                ->where('paragraph', $para)
-                ->where('channel_uid', $channelId)
-                ->groupby('book_id', 'paragraph', 'channel_uid')
+        if ($channelId) {
+            $this->line('channel=' . $channelId);
+        }
+        $table = Sentence::where('strlen', '>', 0);
+        if ($book || $para || $channelId) {
+            if ($book) {
+                $table = $table->where('book_id', $book);
+            }
+            if ($para) {
+                $table = $table->where('paragraph', $para);
+            }
+            if ($channelId) {
+                $table = $table->where('channel_uid', $channelId);
+            }
+            $sentences = $table->groupby('book_id', 'paragraph', 'channel_uid')
                 ->select('book_id', 'paragraph', 'channel_uid');
         } else {
-            if($this->option('resume')){
+            if ($this->option('resume')) {
                 $sentences = Sentence::where('strlen', '>', 0)
-                ->whereBetween('book_id', [$book,1000])
-                ->where('paragraph','>=', $para)
-                ->whereNotNull('channel_uid')
-                ->groupby('book_id', 'paragraph', 'channel_uid')
-                ->select('book_id', 'paragraph', 'channel_uid');
-            }else{
+                    ->whereBetween('book_id', [$book, 1000])
+                    ->where('paragraph', '>=', $para)
+                    ->whereNotNull('channel_uid')
+                    ->groupby('book_id', 'paragraph', 'channel_uid')
+                    ->select('book_id', 'paragraph', 'channel_uid');
+            } else {
                 $sentences = Sentence::where('strlen', '>', 0)
-                ->where('book_id', '<', 1000)
-                ->whereNotNull('channel_uid')
-                ->groupby('book_id', 'paragraph', 'channel_uid')
-                ->select('book_id', 'paragraph', 'channel_uid');
+                    ->where('book_id', '<', 1000)
+                    ->whereNotNull('channel_uid')
+                    ->groupby('book_id', 'paragraph', 'channel_uid')
+                    ->select('book_id', 'paragraph', 'channel_uid');
             }
-
         }
         $count = $sentences->count();
         $sentences = $sentences->cursor();
@@ -122,7 +130,7 @@ class UpgradeProgress extends Command
                     'updated_at' => $updateAt,
                 ];
                 //Log::debug('Progress updateOrInsert', ['para' => $paraInfo, 'data' => $paraData]);
-                $this->info('Progress updateOrInsert'.json_encode($paraInfo));
+                $this->info('Progress updateOrInsert' . json_encode($paraInfo));
                 Progress::updateOrInsert($paraInfo, $paraData);
             }
         }
