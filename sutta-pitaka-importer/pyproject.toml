@@ -15,7 +15,7 @@ classifiers = [
 license = "MIT"
 dependencies = [
     "SQLAlchemy",
-    "psycopg[binary,pool]",
+    "psycopg[c,pool]",
     "mysql-connector-python",
     "langchain",
     "minio",
