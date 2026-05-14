@@ -16,7 +16,7 @@ use App\Models\Channel;
 use App\Http\Api\UserApi;
 
 
-#[Signature('app:update-corpus')]
+#[Signature('app:update-corpus --dir= --es')]
 #[Description('Update corpus from JSONL files in corpus directory')]
 class UpdateCorpus extends Command
 {
@@ -51,7 +51,11 @@ class UpdateCorpus extends Command
         $this->info('Starting corpus update process...');
 
         // Get the corpus base path from config
-        $corpusBasePath = config('mint.path.corpus');
+        if ($this->option('dir')) {
+            $corpusBasePath = $this->option('dir');
+        } else {
+            $corpusBasePath = config('mint.path.corpus');
+        }
 
         if (!is_dir($corpusBasePath)) {
             $this->error("Corpus directory not found: {$corpusBasePath}");
@@ -79,7 +83,7 @@ class UpdateCorpus extends Command
                 $totalProcessed += $stats['processed'];
                 $totalErrors += $stats['errors'];
                 $this->info("Directory processed: {$stats['processed']} records saved, {$stats['errors']} errors");
-                if (isset($stats['channels'])) {
+                if ($this->option('es') && isset($stats['channels'])) {
                     foreach ($stats['channels'] as $key => $channelId) {
                         $this->call('upgrade:progress', ['--channel' => $channelId]);
                         $this->call('upgrade:progress.chapter', ['--channel' => $channelId]);
