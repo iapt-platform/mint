@@ -64,6 +64,9 @@ class UpgradeProgressChapter extends Command
         $book = $this->option('book');
         $para = $this->option('para');
         $channelId = $this->option('channel');
+        if ($channelId) {
+            $this->line('channel=' . $channelId);
+        }
 
         \App\Tools\Markdown::driver($this->option('driver'));
 
