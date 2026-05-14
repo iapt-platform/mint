@@ -44,6 +44,10 @@ php artisan export:offline lzma
 start at: Mon 16:00 UTC
 
 ```bash
+# update corpus
+# dir is option omit to storage/resources
+php artisan app:update-corpus --dir=***
+
 # index tipitaka
 php artisan opensearch:index-tipitaka 0 --granularity=chapter
 
