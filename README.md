@@ -1,6 +1,6 @@
-# International Academy Of Pali Tipitaka(国际巴利三藏学院)
+# wikipali project
 
-这是一个开放的基于语料库的巴利语学习和翻译平台。
+这是一个开放的基于语料库的巴利语学习和翻译平台。 
 
 ## Usage
 
