@@ -3,6 +3,17 @@
 ## MQ workers
 
 ```bash
+php artisan mq:discussion
+
+php artisan mq:export.pali.chapter
+
+php artisan mq:export.article
+
+php artisan mq:progress
+
+php artisan mq:task
+
+php artisan mq:wbw.analyses
 
 ```
 
@@ -30,11 +41,22 @@ php artisan export:offline lzma
 
 ## weekly
 
+start at: Mon 16:00 UTC
+
 ```bash
+# index tipitaka
+php artisan opensearch:index-tipitaka 0 --granularity=chapter
+
+# index term
+php artisan opensearch:index-term
+
 # 逐词译数据库分析
 php artisan upgrade:wbw.analyses
 
 # 段落更新图
-php artisan upgrade:chapter.dynamic
+php artisan app:upgrade-progress
+
+# 段落更新图
+php artisan upgrade:chapter.dynamic.weekly
 
 ```
