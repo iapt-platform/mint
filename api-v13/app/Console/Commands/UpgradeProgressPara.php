@@ -10,14 +10,14 @@ use App\Models\ProgressChapter;
 use App\Models\PaliText;
 use Illuminate\Support\Facades\Log;
 
-class UpgradeProgress extends Command
+class UpgradeProgressPara extends Command
 {
     /**
      * The name and signature of the console command.
      * php artisan upgrade:progress --book=152 --channel=19f53a65-81db-4b7d-8144-ac33f1217d34
      * @var string
      */
-    protected $signature = 'upgrade:progress {--book=} {--para=} {--channel=} {--resume}';
+    protected $signature = 'upgrade:progress.para {--book=} {--para=} {--channel=} {--resume}';
 
     /**
      * The console command description.
