@@ -147,7 +147,10 @@ Route::get('/api/sentence/progress/image', [SentenceInfoController::class, 'show
 Route::get('/api/sentence/progress/daily/image', [SentenceInfoController::class, 'showprogressdaily']);
 
 
-Route::group(['prefix' => 'v2'], function () {
+Route::group([
+    'prefix' => 'v2',
+    'as' => 'v2.'
+], function () {
     Route::apiResource('wbw_templates', WbwTemplateController::class);
 
     Route::apiResource('terms', DhammaTermController::class);
@@ -314,7 +317,10 @@ Route::group(['prefix' => 'v2'], function () {
 });
 
 
-Route::group(['prefix' => 'v3'], function () {
+Route::group([
+    'prefix' => 'v3',
+    'as' => 'v3.'
+], function () {
     Route::apiResource('search', SearchPlusController::class);
     Route::apiResource('search-suggest', SearchSuggestController::class);
     Route::apiResource('upgrade', UpgradeController::class);
