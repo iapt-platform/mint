@@ -45,7 +45,7 @@ class Mq
             }
             $connection = new AMQPStreamConnection($host, $port, $user, $password, $vhost);
             $channel = $connection->channel();
-            $channel->queue_declare($queue, false, true, false, false);
+            //$channel->queue_declare($queue, false, true, false, false);
 
             $msgId = Str::uuid();
             Log::info("mq push message queue={$queue} id={$msgId}");
