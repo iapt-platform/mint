@@ -133,6 +133,14 @@ return [
     ],
     'rabbitmq' => [
         'queues' => [
+            'task' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
+            'discussion' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
+            'export_pali_chapter' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
+            'export_article' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
+            'progress' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
+            'content' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
+            'suggestion' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
+            'wbw-analyses' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
             'ai_translate_v2' => [
                 'retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3),
                 'max_loop_count' => env('RABBITMQ_AI_MAX_LOOP', 10),
