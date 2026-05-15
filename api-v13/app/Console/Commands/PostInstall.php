@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class DeplyInit extends Command
+class PostInstall extends Command
 {
     /**
      * The name and signature of the console command.
@@ -26,13 +26,12 @@ class DeplyInit extends Command
     public function handle()
     {
         //
-        $this->info('deploy init start');
+        $this->info('post install start');
 
         $this->call('create:opensearch.index');
         $this->call('init:system.channel');
         $this->call('init:system.dict');
-        $this->call('upgrade:dict');
 
-        $this->info('deploy init done');
+        $this->info('post install done');
     }
 }
