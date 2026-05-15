@@ -28,8 +28,16 @@ class PostInstall extends Command
         //
         $this->info('post install start');
 
+        #openSearch
         $this->call('create:opensearch.index');
+
+        #rabbitmq
+        $this->call('app:create-queue');
+
+        # system channel
         $this->call('init:system.channel');
+
+        # system dictionary
         $this->call('init:system.dict');
 
         $this->info('post install done');
