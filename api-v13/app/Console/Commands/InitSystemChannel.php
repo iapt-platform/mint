@@ -141,7 +141,7 @@ class InitSystemChannel extends Command
                 $channel->status = $value['status'];
             }
             $channel->save();
-            $this->info("created" . $value['name']);
+            $this->line("init " . $value['name']);
         }
         $this->info("init:system.channel successful");
 

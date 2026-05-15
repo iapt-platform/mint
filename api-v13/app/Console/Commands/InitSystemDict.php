@@ -96,7 +96,7 @@ class InitSystemDict extends Command
             $channel->dest_lang = $value['dest_lang'];
             $channel->meta = json_encode($value, JSON_UNESCAPED_UNICODE);
             $channel->save();
-            $this->info("updated {$value['name']}");
+            $this->line("updated {$value['name']}");
         }
         $this->info("init:system.dict successful");
 
