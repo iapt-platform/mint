@@ -1,7 +1,6 @@
 import forms from "./zh-Hans/forms";
 import buttons from "./zh-Hans/buttons";
 import nut from "./zh-Hans/nut";
-import channel from "./zh-Hans/channel";
 import dict from "./zh-Hans/dict";
 import term from "./zh-Hans/term";
 import group from "./zh-Hans/group";
@@ -54,7 +53,6 @@ const items = {
   ...buttons,
   ...forms,
   ...nut,
-  ...channel,
   ...dict,
   ...term,
   ...group,

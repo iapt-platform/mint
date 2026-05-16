@@ -1,13 +1,10 @@
 import forms from "./en-US/forms";
 import buttons from "./en-US/buttons";
 import nut from "./en-US/nut";
-import channel from "./en-US/channel";
 import dict from "./en-US/dict";
 import term from "./en-US/term";
 import group from "./en-US/group";
-import article from "./en-US/article";
 import utilities from "./en-US/utilities";
-import blog from "./en-US/blog";
 import setting from "./en-US/setting";
 import auth from "./en-US/auth";
 import course from "./en-US/course";
@@ -54,13 +51,10 @@ const items = {
   ...buttons,
   ...forms,
   ...nut,
-  ...channel,
   ...dict,
   ...term,
   ...group,
-  ...article,
   ...utilities,
-  ...blog,
   ...setting,
   ...auth,
   ...course,
