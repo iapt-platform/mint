@@ -198,7 +198,7 @@ class OpenSearchService
                             'dimension' => 1536,
                             'method'    => [
                                 'name'       => 'hnsw',
-                                'space_type' => 'cosinesimil',
+                                'space_type' => 'innerproduct',
                                 'engine'     => 'faiss',
                             ],
                         ],
@@ -234,7 +234,7 @@ class OpenSearchService
                             'dimension' => 1536,
                             'method'    => [
                                 'name'       => 'hnsw',
-                                'space_type' => 'cosinesimil',
+                                'space_type' => 'innerproduct',
                                 'engine'     => 'faiss',
                             ],
                         ],
@@ -285,7 +285,7 @@ class OpenSearchService
                             'dimension' => 1536,
                             'method'    => [
                                 'name'       => 'hnsw',
-                                'space_type' => 'cosinesimil',
+                                'space_type' => 'innerproduct',
                                 'engine'     => 'faiss',
                             ],
                         ],
