@@ -23,6 +23,7 @@ import { currentUser } from "../../reducers/current-user";
 import { useRecent } from "../../hooks/useRecent.ts";
 import RecentModal from "../recent/RecentModal.tsx";
 import SettingModal from "../setting/SettingModal.tsx";
+import { useIntl } from "react-intl";
 
 /* ================= 类型 ================= */
 
@@ -105,6 +106,8 @@ interface Props {
   onSearch?: () => void;
 }
 const Widget = ({ onSearch }: Props) => {
+  const intl = useIntl(); //i18n
+
   const navigate = useNavigate();
   const routeId = useCurrentRouteId();
   const currUser = useAppSelector(currentUser);
@@ -145,13 +148,17 @@ const Widget = ({ onSearch }: Props) => {
     {
       key: "/workspace/tipitaka/lib",
       icon: <TipitakaIcon />,
-      label: "巴利三藏",
+      label: intl.formatMessage({
+        id: "columns.studio.palicanon.title",
+      }),
       activeId: "workspace.tipitaka",
     },
     {
       key: "/workspace/setting",
       icon: <SettingOutlined />,
-      label: "setting",
+      label: intl.formatMessage({
+        id: "columns.studio.setting.title",
+      }),
       activeId: "workspace.setting",
     },
     { type: "divider", key: "d1" },
@@ -159,7 +166,9 @@ const Widget = ({ onSearch }: Props) => {
     {
       key: "/workspace/recent",
       icon: <FieldTimeOutlined />,
-      label: "最近打开",
+      label: intl.formatMessage({
+        id: "columns.studio.recent.title",
+      }),
       children: [
         ...recentList,
         {
@@ -176,13 +185,17 @@ const Widget = ({ onSearch }: Props) => {
       children: [
         {
           key: "/workspace/article",
-          label: "文章",
+          label: intl.formatMessage({
+            id: "columns.studio.article.title",
+          }),
           activeId: "workspace.article",
           icon: <FileOutlined />,
         },
         {
           key: "/workspace/anthology",
-          label: "文集",
+          label: intl.formatMessage({
+            id: "columns.studio.anthology.title",
+          }),
           activeId: "workspace.anthology",
           icon: <FolderOutlined />,
         },
@@ -192,26 +205,34 @@ const Widget = ({ onSearch }: Props) => {
     {
       key: "/workspace/channel",
       icon: <ChannelIcon />,
-      label: "版本",
+      label: intl.formatMessage({
+        id: "columns.studio.channel.title",
+      }),
       activeId: "workspace.channel",
     },
 
     {
       key: "/workspace/term",
       icon: <TermIcon />,
-      label: "术语",
+      label: intl.formatMessage({
+        id: "columns.studio.term.title",
+      }),
       activeId: "workspace.term",
     },
 
     {
       key: "/workspace/course",
       icon: <CourseOutLinedIcon />,
-      label: "Course",
+      label: intl.formatMessage({
+        id: "columns.library.course.title",
+      }),
     },
     {
       key: "/workspace/task",
       icon: <TaskIcon />,
-      label: "任务",
+      label: intl.formatMessage({
+        id: "labels.task",
+      }),
       activeId: "workspace.task",
       children: [
         {
@@ -221,7 +242,9 @@ const Widget = ({ onSearch }: Props) => {
         },
         {
           key: "/workspace/task/hall",
-          label: "Task hall",
+          label: intl.formatMessage({
+            id: "labels.task.hall",
+          }),
           activeId: "workspace.task.hall",
         },
         {
@@ -231,12 +254,16 @@ const Widget = ({ onSearch }: Props) => {
         },
         {
           key: "/workspace/task/project",
-          label: "projects",
+          label: intl.formatMessage({
+            id: "labels.task.my.project",
+          }),
           activeId: "workspace.task.project",
         },
         {
           key: "/workspace/task/workflows",
-          label: "workflows",
+          label: intl.formatMessage({
+            id: "labels.task.workflows",
+          }),
           activeId: "workspace.task.workflows",
         },
       ],
@@ -248,7 +275,9 @@ const Widget = ({ onSearch }: Props) => {
       children: [
         {
           key: "/workspace/tag",
-          label: "tag",
+          label: intl.formatMessage({
+            id: "columns.studio.tag.title",
+          }),
           activeId: "workspace.tag",
         },
         {
@@ -266,7 +295,7 @@ const Widget = ({ onSearch }: Props) => {
     {
       key: "/workspace/collaboration",
       icon: <CourseOutLinedIcon />,
-      label: "collaboration",
+      label: intl.formatMessage({ id: "labels.collaboration" }),
       children: [
         {
           key: "/workspace/team",
