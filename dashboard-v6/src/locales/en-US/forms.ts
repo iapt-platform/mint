@@ -98,6 +98,10 @@ const items = {
   "forms.fields.assignees.label": "assignees",
   "forms.fields.model.label": "model",
   "forms.fields.key.label": "key",
+  group: "group",
+  "group.fields.name.label": "group name",
+  "group.files": "files",
+  "group.member": "members",
 };
 
 export default items;
