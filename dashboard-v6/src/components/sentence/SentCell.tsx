@@ -190,6 +190,8 @@ const SentCellWidget = ({
       .finally(() => setLoading(false));
   };
 
+  console.debug("sentence data", sentData, value);
+
   return (
     <div style={{ marginBottom: "8px", backgroundColor: bgColor }}>
       {loading ? <LoadingOutlined /> : <></>}
@@ -436,8 +438,15 @@ const SentCellWidget = ({
                   content={sentData.content}
                   oldContent={diffText}
                 />
-              ) : sentData.channel.type === "nissaya" ? (
-                <NissayaSent data={JSON.parse(sentData.content ?? "[])")} />
+              ) : sentData.channel.type === "nissaya" &&
+                sentData.contentType === "json" ? (
+                <NissayaSent
+                  data={JSON.parse(
+                    sentData.content && sentData.content !== ""
+                      ? sentData.content
+                      : "[]"
+                  )}
+                />
               ) : (
                 <MdView
                   className="sentence"
