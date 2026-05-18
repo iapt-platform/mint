@@ -15,7 +15,7 @@ const uiLang: IUiLang[] = [
   { key: "zh-Hant", label: "繁体中文" },
 ];
 
-const UiLangSelectWidget = () => {
+const UiLangSelect = () => {
   /**
    * ✅ 初始值直接计算
    */
@@ -43,15 +43,16 @@ const UiLangSelectWidget = () => {
     set(key as string); // ← 只传一个参数
     const label = uiLang.find((i) => i.key === key)?.label;
     setCurr(label);
+    location.reload();
   };
 
   return (
     <Dropdown menu={{ items, onClick }} placement="bottomRight">
-      <Button ghost style={{ border: "unset" }} icon={<GlobalOutlined />}>
+      <Button type="text" icon={<GlobalOutlined />}>
         {curr}
       </Button>
     </Dropdown>
   );
 };
 
-export default UiLangSelectWidget;
+export default UiLangSelect;
