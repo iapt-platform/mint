@@ -2,8 +2,6 @@ import forms from "./forms";
 import buttons from "./buttons";
 import nut from "./nut";
 import dict from "./dict";
-import term from "./term";
-import group from "./group";
 import utilities from "./utilities";
 import setting from "./setting";
 import auth from "./auth";
@@ -52,8 +50,6 @@ const items = {
   ...forms,
   ...nut,
   ...dict,
-  ...term,
-  ...group,
   ...utilities,
   ...setting,
   ...auth,
