@@ -270,7 +270,7 @@ class ChannelController extends Controller
                     if ($value->owner_uid === $user['user_uid']) {
                         $value['role'] = 'owner';
                     } else {
-                        if (isset($channelById[$value->uid])) {
+                        if (isset($channelById) && isset($channelById[$value->uid])) {
                             switch ($channelById[$value->uid]['power']) {
                                 case 10:
                                     # code...
@@ -588,8 +588,7 @@ class ChannelController extends Controller
     public function show($id)
     {
         //
-        $indexCol = ['uid', 'name', 'summary', 'type', 'owner_uid', 'lang', 'is_system', 'status', 'updated_at', 'created_at'];
-        $channel = Channel::where("uid", $id)->select($indexCol)->first();
+        $channel = Channel::find($id);
         if (!$channel) {
             return $this->error('no res');
         }
@@ -646,6 +645,12 @@ class ChannelController extends Controller
         $channel->summary = $request->input('summary');
         $channel->lang = $request->input('lang');
         $channel->status = $request->input('status');
+        if ($request->has('source_type')) {
+            $channel->source_type = $request->input('source_type');
+        }
+        if ($request->has('source_id')) {
+            $channel->source_id = $request->input('source_id');
+        }
         $channel->save();
         return $this->ok($channel);
     }

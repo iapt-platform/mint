@@ -1,14 +1,17 @@
 import { useIntl } from "react-intl";
 import {
   ProForm,
+  ProFormSelect,
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
 import { Alert, message } from "antd";
 
-import type {
-  IApiResponseChannel,
-  IApiResponseChannelData,
+import {
+  SOURCE_TYPE_OPTIONS,
+  type IApiResponseChannel,
+  type IApiResponseChannelData,
+  type TChannelSourceType,
 } from "../../api/channel";
 import { get, put } from "../../request";
 import ChannelTypeSelect from "./ChannelTypeSelect";
@@ -25,6 +28,8 @@ interface IFormData {
   summary: string;
   status: number;
   studio: string;
+  source_type?: TChannelSourceType | null;
+  source_id?: string | null;
   isSystem: boolean;
 }
 interface IWidget {
@@ -83,6 +88,8 @@ const EditWidget = ({ studioName, channelId, onLoad }: IWidget) => {
             lang: res.data.lang,
             summary: res.data.summary,
             status: res.data.status,
+            source_type: res.data.source_type,
+            source_id: res.data.source_id,
             studio: studioName ? studioName : "",
             isSystem: res.data.is_system,
           };
@@ -106,6 +113,25 @@ const EditWidget = ({ studioName, channelId, onLoad }: IWidget) => {
         <ProForm.Group>
           <ChannelTypeSelect readonly={isSystem ? true : false} />
           <LangSelect readonly={isSystem ? true : false} />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormSelect
+            options={SOURCE_TYPE_OPTIONS.map((value) => ({
+              value,
+              label: intl.formatMessage({ id: `channel.source_type.${value}` }),
+            }))}
+            initialValue="original"
+            width="xs"
+            name="source_type"
+            allowClear={false}
+            label={intl.formatMessage({ id: "channel.source_type" })}
+          />
+          <ProFormText
+            width="md"
+            name="source_id"
+            allowClear={true}
+            label={intl.formatMessage({ id: "channel.source_id" })}
+          />
         </ProForm.Group>
         <ProForm.Group>
           <PublicitySelect

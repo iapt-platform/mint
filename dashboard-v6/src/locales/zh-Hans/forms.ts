@@ -98,6 +98,10 @@ const items = {
   "forms.fields.assignees.label": "指派给",
   "forms.fields.model.label": "模型",
   "forms.fields.key.label": "密钥",
+  group: "群组",
+  "group.fields.name.label": "群组名",
+  "group.files": "群文档",
+  "group.member": "群成员",
 };
 
 export default items;

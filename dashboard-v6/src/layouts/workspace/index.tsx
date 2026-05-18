@@ -8,6 +8,7 @@ import HeaderBreadcrumb from "../../components/navigation/HeaderBreadcrumb";
 import ThemeSwitch from "../../components/theme/ThemeSwitch";
 import { NetworkStatus } from "../../components/general/NetworkStatus";
 import { useAuth } from "../../hooks/useAuth";
+import UiLangSelect from "../../components/general/UiLangSelect";
 
 const { Sider, Content } = Layout;
 const Widget = () => {
@@ -45,7 +46,7 @@ const Widget = () => {
       <Layout>
         <div
           style={{
-            padding: "4 16px", // 建议保留左右内边距，否则内容会贴边
+            padding: 16, // 建议保留左右内边距，否则内容会贴边
             display: "flex",
             alignItems: "center", // 垂直居中
             height: 24,
@@ -56,6 +57,7 @@ const Widget = () => {
           <Space>
             <NetworkStatus />
             <ThemeSwitch />
+            <UiLangSelect />
           </Space>
         </div>
 

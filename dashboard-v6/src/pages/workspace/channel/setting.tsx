@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router";
 import { TeamOutlined } from "@ant-design/icons";
 import { Button, Card, Tabs } from "antd";
 
-import GoBack from "../../../components/studio/GoBack";
 import ShareModal from "../../../components/share/ShareModal";
 
 import Edit from "../../../components/channel/Edit";
@@ -29,9 +28,7 @@ const Widget = () => {
     <>
       <title>{"channel-" + title}</title>
       <Card
-        title={
-          <GoBack to={`/workspace/${studioName}/channel/list`} title={title} />
-        }
+        title={title}
         extra={
           channelId ? (
             <ShareModal

@@ -1,13 +1,8 @@
 import forms from "./zh-Hans/forms";
 import buttons from "./zh-Hans/buttons";
 import nut from "./zh-Hans/nut";
-import channel from "./zh-Hans/channel";
 import dict from "./zh-Hans/dict";
-import term from "./zh-Hans/term";
-import group from "./zh-Hans/group";
-import article from "./zh-Hans/article";
 import utilities from "./zh-Hans/utilities";
-import blog from "./zh-Hans/blog";
 import setting from "./zh-Hans/setting";
 import auth from "./zh-Hans/auth";
 import course from "./zh-Hans/course";
@@ -54,13 +49,8 @@ const items = {
   ...buttons,
   ...forms,
   ...nut,
-  ...channel,
   ...dict,
-  ...term,
-  ...group,
-  ...article,
   ...utilities,
-  ...blog,
   ...setting,
   ...auth,
   ...course,

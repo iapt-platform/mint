@@ -27,6 +27,12 @@ export interface ChannelInfoProps {
   count?: number;
 }
 
+export type TChannelSourceType = "original" | "reprint" | "ai";
+export const SOURCE_TYPE_OPTIONS: TChannelSourceType[] = [
+  "original",
+  "reprint",
+  "ai",
+];
 /**
  * 句子完成情况
  * [句子字符数，是否完成]
@@ -43,6 +49,8 @@ export interface IApiResponseChannelData {
   status: number;
   is_system: boolean;
   progress?: number;
+  source_type?: TChannelSourceType | null;
+  source_id?: string | null;
   created_at: string;
   updated_at: string;
   role?: TRole;
