@@ -23,7 +23,7 @@ import {
 } from "../../assets/icon";
 import { useIntl } from "react-intl";
 import { fullUrl } from "../../utils";
-import SentHistoryModal from "../sentence-history.tsx/SentHistoryModal";
+import SentHistoryModal from "../sentence-history/SentHistoryModal";
 
 interface IWidget {
   data?: ISentence;

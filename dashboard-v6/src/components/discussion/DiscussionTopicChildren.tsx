@@ -13,7 +13,7 @@ import type {
   ISentHistoryListResponse,
 } from "../../api/sentence-history";
 import DiscussionItem from "./DiscussionItem";
-import SentHistoryGroup from "../sentence-history.tsx/SentHistoryGroup";
+import SentHistoryGroup from "../sentence-history/SentHistoryGroup";
 
 interface IItem {
   type: "comment" | "sent";
