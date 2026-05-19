@@ -8,11 +8,9 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\File;
 
-use Illuminate\Support\Facades\DB;
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
-use App\Models\Tag;
-use App\Models\TagMap;
+
 
 
 class TipitakaController extends Controller
