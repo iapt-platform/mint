@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Library;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cookie;
-
 use Illuminate\Support\Facades\File;
 
 
+use App\Http\Controllers\Controller;
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
 use App\Services\TermService;
@@ -25,9 +25,9 @@ class HomeController extends Controller
         'linear-gradient(160deg, #1a2820,rgb(55, 124, 99))',
     ];
     /**
-     * 构造函数，注入 OpenSearchService
+     * 构造函数，注入 TermService
      *
-     * @param  \App\Services\OpenSearchService  $searchService
+     * @param  \App\Services\TermService  $termService
      */
     public function __construct(
         protected TermService $termService,
@@ -39,6 +39,7 @@ class HomeController extends Controller
     {
         $categories = $this->loadCategories();
         $locale = Cookie::get('language') ?? 'en';
+        Log::debug('$locale=' . $locale);
         // 获取一级分类和对应的书籍
         $categoryData = [];
         foreach ($categories as $category) {

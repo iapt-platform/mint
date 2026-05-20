@@ -3,16 +3,15 @@
 namespace App\Http\Controllers\Library;
 
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
-use Illuminate\Support\Facades\DB;
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
-use App\Models\Tag;
-use App\Models\TagMap;
+use App\Services\TermService;
+
 
 
 class TipitakaController extends Controller
@@ -26,6 +25,16 @@ class TipitakaController extends Controller
         'linear-gradient(160deg, #1a1a2d,rgb(76, 68, 146))',
         'linear-gradient(160deg, #1a2820,rgb(55, 124, 99))',
     ];
+
+    /**
+     * 构造函数，注入 TermService
+     *
+     * @param  \App\Services\TermService  $termService
+     */
+    public function __construct(
+        protected TermService $termService,
+    ) {}
+
     // -------------------------------------------------------------------------
     // 从 uid / id 字符串中提取一个稳定的整数，用于色池取余
     // -------------------------------------------------------------------------
@@ -48,6 +57,8 @@ class TipitakaController extends Controller
     public function index(Request $request, ?int $id = null)
     {
 
+        $locale = Cookie::get('language') ?? 'en';
+
         $categories = $this->loadCategories();
 
         // ── 当前分类 ──────────────────────────────────────────
@@ -68,6 +79,28 @@ class TipitakaController extends Controller
             $categories,
             fn($cat) => $cat['parent_id'] == $id
         ));
+
+        $allNames = array_map(fn($item) => $item['name'], $subCategories);
+
+        // 去重
+        $allNames = array_values(array_unique($allNames));
+
+        // 查词典
+        $terms = $this->termService->glossaryByLemma($allNames, $locale);
+        // 构建映射
+        $termMap = [];
+        if ($terms) {
+            foreach ($terms as $term) {
+                $termMap[$term->word] = $term->meaning;
+            }
+        }
+        // 回填
+        foreach ($subCategories as $key => $cat) {
+            $name = $cat['name'] ?? null;
+            $subCategories[$key]['name'] = $termMap[$name] ?? $name;
+        }
+
+
 
         // ── 过滤参数 ────────────────────────────────────────────
         $selectedType   = request('type',   'all');

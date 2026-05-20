@@ -125,6 +125,7 @@ use App\Http\Controllers\SearchSuggestController;
 use App\Http\Controllers\UpgradeController;
 use App\Http\Controllers\ChapterContentController;
 use App\Http\Controllers\ParagraphContentController;
+use App\Http\Controllers\HeartbeatController;
 
 
 
@@ -310,6 +311,7 @@ Route::group([
     Route::apiResource('chat-messages', ChatMessageController::class);
     Route::apiResource('chapter-content', ChapterContentController::class);
     Route::apiResource('paragraph-content', ParagraphContentController::class);
+    Route::apiResource('heartbeat', HeartbeatController::class);
 
     Route::post('mock/openai/chat/completions', [MockOpenAIController::class, 'chatCompletions']);
     Route::post('mock/openai/completions', [MockOpenAIController::class, 'completions']);

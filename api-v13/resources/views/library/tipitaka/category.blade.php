@@ -78,22 +78,7 @@
                     :hidden-fields="['resource_type' => 'tipitaka']" />
             </div>
 
-            {{-- 1. 子分类 --}}
-            @if(count($subCategories) > 0)
-            <div class="wiki-card tipitaka-filters">
-                <div class="tipitaka-filter-row">
-                    <span class="tipitaka-filter-label">子分类</span>
-                    <div class="tipitaka-filter-pills">
-                        @foreach($subCategories as $sub)
-                        <a href="{{ route('library.tipitaka.category', ['id' => $sub['id']]) }}"
-                            class="tipitaka-pill">
-                            <div class="wiki-featured-title">{{ $sub['name'] }}</div>
-                        </a>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-            @endif
+
 
             {{-- 2. 过滤器区 --}}
             <div class="wiki-card tipitaka-filters">
@@ -160,6 +145,21 @@
                 @endif
 
             </div>
+
+            {{-- 1. 子分类 --}}
+            @if(count($subCategories) > 0)
+            <div class="wiki-card tipitaka-subcategories">
+                <div class="tipitaka-subcategory-grid">
+                    @foreach($subCategories as $sub)
+                    <a href="{{ route('library.tipitaka.category', ['id' => $sub['id']]) }}"
+                        class="tipitaka-subcategory-item">
+                        <i class="ti ti-folder tipitaka-subcategory-icon" aria-hidden="true"></i>
+                        <span class="tipitaka-subcategory-name">{{ $sub['name'] }}</span>
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+            @endif
 
             {{-- 3. 排序 + 结果数 --}}
             <div class="tipitaka-sort-bar">
