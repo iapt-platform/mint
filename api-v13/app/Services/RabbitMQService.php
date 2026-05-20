@@ -41,6 +41,11 @@ class RabbitMQService
         $this->channel->basic_qos(null, 1, null);
     }
 
+    public function isConnected()
+    {
+        return $this->connection->isConnected();
+    }
+
     public function getChannel(): AMQPChannel
     {
         return $this->channel;
