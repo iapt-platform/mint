@@ -151,9 +151,9 @@
             <div class="wiki-card tipitaka-subcategories">
                 <div class="tipitaka-subcategory-grid">
                     @foreach($subCategories as $sub)
-                    <a href="{{ route('library.tipitaka.category', ['id' => $sub['id']]) }}"
+                    <a href="{{ route('library.tipitaka.category', array_filter(['id' => $sub['id'], 'book' => $sub['book'] ?? null])) }}"
                         class="tipitaka-subcategory-item">
-                        <i class="ti ti-folder tipitaka-subcategory-icon" aria-hidden="true"></i>
+                        <i class="ti {{ !empty($sub['book']) ? 'ti-book' : 'ti-folder' }} tipitaka-subcategory-icon" aria-hidden="true"></i>
                         <span class="tipitaka-subcategory-name">{{ $sub['name'] }}</span>
                     </a>
                     @endforeach

@@ -79,7 +79,16 @@ class TipitakaController extends Controller
             $categories,
             fn($cat) => $cat['parent_id'] == $id
         ));
-
+        if (count($subCategories) === 0 && !$request->has('book')) {
+            $paliBooks = $this->getPaliBooks($categories, $id);
+            foreach ($paliBooks as  $value) {
+                $subCategories[] = [
+                    'id' => $id,
+                    'name' => $value->text,
+                    'book' => "{$value->book}-{$value->paragraph}"
+                ];
+            }
+        }
         $allNames = array_map(fn($item) => $item['name'], $subCategories);
 
         // 去重
@@ -119,6 +128,9 @@ class TipitakaController extends Controller
             'author' => $selectedAuthor,
             'sort'   => $selectedSort,
         ];
+        if ($request->has('book')) {
+            $selected['book'] = $request->get('book');
+        }
 
         // ── 书籍列表（过滤+排序，真实实现替换此处） ──────────────
         $categoryBooks = $this->getBooks($categories, $id, $selected);
@@ -275,10 +287,21 @@ class TipitakaController extends Controller
         }
         return $chapters;
     }
+    private function getPaliBooks(array $categories, string $id)
+    {
+        $chapters = $this->getBooksIdInCat($categories, $id);
+
+        $books = PaliText::whereIns(['book', 'paragraph'], $chapters)->get();
+        return $books;
+    }
     private function getBooks(array $categories, ?string $id, array $filters)
     {
         //根据分类获取书号
-        $chapters = $this->getBooksIdInCat($categories, $id);
+        if (isset($filters['book'])) {
+            $chapters = [explode('-', $filters['book'])];
+        } else {
+            $chapters = $this->getBooksIdInCat($categories, $id);
+        }
 
         $table = ProgressChapter::with('channel.owner')
             ->whereHas('channel', function ($query) use ($filters) {
