@@ -35,9 +35,9 @@ class HealthCheckController extends Controller
         try {
             Cache::put('health_check', true, 5);
             Cache::get('health_check');
-            $checks['cache'] = 'true';
+            $checks['cache'] = true;
         } catch (\Throwable $e) {
-            $checks['cache'] = 'failed';
+            $checks['cache'] = false;
             $healthy = false;
             Log::error('Health check failed: cache', ['error' => $e->getMessage()]);
         }
@@ -45,9 +45,9 @@ class HealthCheckController extends Controller
         // Database
         try {
             DB::connection()->getPdo();
-            $checks['db'] = 'true';
+            $checks['db'] = true;
         } catch (\Throwable $e) {
-            $checks['db'] = 'failed';
+            $checks['db'] = false;
             $healthy = false;
             Log::error('Health check failed: db', ['error' => $e->getMessage()]);
         }
@@ -57,9 +57,9 @@ class HealthCheckController extends Controller
             $service = app(OpenSearchService::class);
             [$ok, $msg] = $service->testConnection();
             if (!$ok) throw new \Exception($msg);
-            $checks['opensearch'] = 'true';
+            $checks['opensearch'] = true;
         } catch (\Throwable $e) {
-            $checks['opensearch'] = 'fail';
+            $checks['opensearch'] = false;
             $healthy = false;
             Log::error('Health check failed: opensearch', ['error' => $e->getMessage()]);
         }
@@ -68,15 +68,19 @@ class HealthCheckController extends Controller
         try {
             $service = app(RabbitMQService::class);
             $service->isConnected() ? null : throw new \Exception('Not connected');
-            $checks['rabbitmq'] = 'true';
+            $checks['rabbitmq'] = true;
         } catch (\Throwable $e) {
-            $checks['rabbitmq'] = 'failed';
+            $checks['rabbitmq'] = false;
             $healthy = false;
             Log::error('Health check failed: rabbitmq', ['error' => $e->getMessage()]);
         }
 
         return response()->json(
-            ['createdAt' => now(), 'checks' => $checks],
+            [
+                'createdAt' => now(),
+                'checks' => $checks,
+                'domain' => $_SERVER['HTTP_HOST']
+            ],
             $healthy ? 200 : 500,
             ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
             JSON_UNESCAPED_UNICODE
