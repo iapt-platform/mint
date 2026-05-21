@@ -78,8 +78,8 @@ class HealthCheckController extends Controller
         return response()->json(
             [
                 'createdAt' => now(),
-                'checks' => $checks,
-                'domain' => $_SERVER['HTTP_HOST']
+                'services' => $checks,
+                'host' => $_SERVER['HTTP_HOST']
             ],
             $healthy ? 200 : 500,
             ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
