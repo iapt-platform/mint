@@ -114,7 +114,8 @@ class ExportAiTrainingData extends Command
                 'word_start',
                 'word_end',
                 'content',
-                'content_type'
+                'content_type',
+                'updated_at'
             ])
                 ->whereNotNull('content')
                 ->orderBy('book_id')
@@ -145,7 +146,7 @@ class ExportAiTrainingData extends Command
                     'read',
                     'translation',
                     $sent->content_type,
-                    'text',
+                    'html',
                 );
                 $translation = trim($translation);
                 // 忽略空的译文
@@ -155,10 +156,12 @@ class ExportAiTrainingData extends Command
                 }
 
                 //忽略过短的译文
+                /*
                 if (mb_strlen($translation) / mb_strlen($origin) < $this->ShortTrans) {
                     Log::warning('translation is short id=' . $id);
                     continue;
                 }
+                */
                 //原文与翻译完全相同
                 if ($translation === $origin) {
                     Log::warning('translation is same id=' . $id);
