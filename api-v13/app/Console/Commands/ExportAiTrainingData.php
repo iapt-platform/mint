@@ -174,6 +174,7 @@ class ExportAiTrainingData extends Command
                     'translation' => $translation,
                     'category' => $tags,
                     'path' => $path,
+                    'updated_at' => $sent->updated_at
                 ];
 
                 fwrite($fp, json_encode($currData, JSON_UNESCAPED_UNICODE) . "\n");
