@@ -79,7 +79,8 @@ class HealthCheckController extends Controller
             [
                 'createdAt' => now(),
                 'services' => $checks,
-                'host' => $_SERVER['HTTP_HOST']
+                'host' => $_SERVER['HTTP_HOST'],
+                'document-root' => $_SERVER['DOCUMENT_ROOT']
             ],
             $healthy ? 200 : 500,
             ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
