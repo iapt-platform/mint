@@ -1,4 +1,4 @@
-/* resources/css/components/_pagination.css
+/* resources/css/components/pagination.css
    全站通用分页组件。
    来源：wiki.css / wiki-search.css 的 .wiki-pagination 段落（两处相同，已去重）。
 */
@@ -25,7 +25,9 @@
     color: var(--tblr-body-color);
     text-decoration: none;
     background: var(--tblr-bg-surface);
-    transition: background 0.12s, border-color 0.12s;
+    transition:
+        background 0.12s,
+        border-color 0.12s;
     user-select: none;
 }
 
