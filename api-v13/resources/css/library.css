@@ -17,7 +17,7 @@
 @import './base/_typography.css';
 
 /* 4. 布局层 */
-@import './layout/_grid.css';
+@import './layout/grid.css';
 @import './layout/_navbar.css';
 @import './layout/drawer.css';
 @import './layout/_hero.css';
