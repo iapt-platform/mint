@@ -3,7 +3,7 @@
    公共部分（布局、卡片、侧边栏、TOC、相关列表、meta表格、条目头部、精选网格）
    已提取至：
      - layout/grid.css      → .wiki-layout 三栏布局
-     - components/_card.css  → .wiki-card / .wiki-sidebar-* / .wiki-cat-list /
+     - components/card.css  → .wiki-card / .wiki-sidebar-* / .wiki-cat-list /
                                .wiki-toc-list / .wiki-related-list / .wiki-meta-table /
                                .wiki-entry-header / .wiki-featured-grid / .author-avatar
    本文件只保留 wiki 专属内容。

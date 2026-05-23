@@ -2,7 +2,7 @@
    文集栏目专属样式。
    已提取到公共层：
      - components/card-book.css → .book-cover 封面组件
-     - components/_card.css      → .author-avatar 头像组件
+     - components/card.css      → .author-avatar 头像组件
 */
 
 /* ══════════════════════════════════════════
