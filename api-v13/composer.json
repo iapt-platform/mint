@@ -20,6 +20,7 @@
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
         "laravel/wayfinder": "^0.1.14",
+        "league/flysystem-aws-s3-v3": "^3.34",
         "mustache/mustache": "^3.0",
         "opensearch-project/opensearch-php": "^2.6",
         "php-amqplib/php-amqplib": "^3.7",
