@@ -40,7 +40,7 @@ class ProgressImgController extends Controller
         //
         return response()->stream(function () use ($id) {
             $key = str_replace('-', '/', $id);
-            $svg = Cache::get('svg/' . $key, function () use ($key) {
+            $svg = Cache::remember('svg/' . $key, config('mint.cache.expire'), function () use ($key) {
                 $viewHeight = 60;
                 $svg = "<svg xmlns='http://www.w3.org/2000/svg'  fill='currentColor' viewBox='0 0 300 60'>";
                 $data = Cache::get($key);
@@ -55,7 +55,7 @@ class ProgressImgController extends Controller
                     $svg .= '<polyline points="0,0 1,0" /></svg>';
                 }
                 return $svg;
-            }, config('mint.cache.expire'));
+            });
             echo $svg;
         }, 200, ['Content-Type' => 'image/svg+xml']);
         /*
