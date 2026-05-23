@@ -1,7 +1,7 @@
 /* resources/css/components/_card.css
    全站通用卡片、侧边栏、列表组件。
-   从 _wiki.css 提取，供 wiki / tipitaka / anthology / search 共用。
-   wiki 专属样式（质量徽章、条目头部、term popover 等）保留在 modules/_wiki.css。
+   从 wiki.css 提取，供 wiki / tipitaka / anthology / search 共用。
+   wiki 专属样式（质量徽章、条目头部、term popover 等）保留在 modules/wiki.css。
 */
 
 /* ══════════════════════════════════════════
