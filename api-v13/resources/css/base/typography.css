@@ -1,4 +1,4 @@
-/* resources/css/base/_typography.css
+/* resources/css/base/typography.css
    全站基础排版。无副作用，不覆盖组件样式。
    Noto Serif 字体已在 library.css 入口 @import，此处只声明使用规则。
 */

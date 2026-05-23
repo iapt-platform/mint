@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+
 use App\Models\Invite;
 use App\Models\UserInfo;
-use Illuminate\Http\Request;
 use App\Services\AuthService;
 use App\Http\Api\UserApi;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\InviteResource;
-use Illuminate\Support\Str;
 use App\Mail\InviteMail;
-use Illuminate\Support\Facades\Mail;
+
+
 
 class InviteController extends Controller
 {
@@ -103,23 +107,28 @@ class InviteController extends Controller
         }
 
         $uuid = Str::uuid();
-        Mail::to($request->input('email'))
-            ->send(new InviteMail(
-                $uuid,
-                $request->input('subject', 'sign up wikipali'),
-                $request->input('lang'),
-                $request->input('dashboard')
-            ));
-        if (Mail::failures()) {
+        try {
+            Mail::to($request->input('email'))
+                ->send(new InviteMail(
+                    $uuid,
+                    $request->input('subject', 'sign up wikipali'),
+                    $request->input('lang'),
+                    $request->input('dashboard')
+                ));
+        } catch (\Exception $e) {
+            Log::error('send invite email fail', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+            ]);
             return $this->error('send email fail', '', 200);
-        } else {
-            $invite = new Invite;
-            $invite->id = $uuid;
-            $invite->email = $request->input('email');
-            $invite->user_uid = $sender;
-            $invite->status = 'invited';
-            $invite->save();
         }
+
+        $invite = new Invite;
+        $invite->id = $uuid;
+        $invite->email = $request->input('email');
+        $invite->user_uid = $sender;
+        $invite->status = 'invited';
+        $invite->save();
         return $this->ok(new InviteResource($invite));
     }
 

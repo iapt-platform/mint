@@ -4,7 +4,7 @@
 @section('title', $anthology['title'] . ' · 巴利书库')
 
 @push('styles')
-    @vite('resources/css/modules/_anthology.css')
+@vite('resources/css/modules/anthology.css')
 @endpush
 
 @section('breadcrumb')
@@ -29,8 +29,7 @@
                 :title="$anthology['title']"
                 :subtitle="$anthology['subtitle'] ?? ''"
                 size="lg"
-                :style3d="true"
-            />
+                :style3d="true" />
 
             {{-- 文集信息 --}}
             <div class="hero-content">
@@ -55,8 +54,7 @@
                             :color="$anthology['author']['color']"
                             :initials="$anthology['author']['initials']"
                             :name="$anthology['author']['name']"
-                            size="sm"
-                        />
+                            size="sm" />
                         <div>
                             <span class="hi-label">作者</span>
                             <span class="hi-value">{{ $anthology['author']['name'] }}</span>
@@ -92,13 +90,13 @@
                             'anthology' => $anthology['id'],
                             'article'   => $anthology['articles'][0]['id']
                         ]) }}"
-                       class="btn-read-primary">
+                        class="btn-read-primary">
                         <i class="ti ti-book-2"></i>
                         在线阅读
                     </a>
                     @endif
                     <a href="{{ config('mint.server.dashboard_base_path') }}/workspace/anthology/{{ $anthology['id'] }}"
-                       class="btn-outline-hero">
+                        class="btn-outline-hero">
                         <i class="ti ti-pencil"></i>
                         在编辑器中打开
                     </a>
@@ -127,9 +125,9 @@
                     </div>
                     <div class="sec-body">
                         @foreach(explode("\n", $anthology['about']) as $para)
-                            @if(trim($para))
-                            <p>{{ trim($para) }}</p>
-                            @endif
+                        @if(trim($para))
+                        <p>{{ trim($para) }}</p>
+                        @endif
                         @endforeach
                     </div>
                 </div>
@@ -206,8 +204,7 @@
                             :avatar="$anthology['author']['avatar'] ?? null"
                             :color="$anthology['author']['color']"
                             :initials="$anthology['author']['initials']"
-                            size="lg"
-                        />
+                            size="lg" />
                         <div>
                             <div class="author-block-name">{{ $anthology['author']['name'] }}</div>
                             <div class="author-block-stats">
@@ -235,8 +232,7 @@
                                     :gradient="$rel['cover_gradient']"
                                     :title="mb_substr($rel['title'], 0, 4)"
                                     size="sm"
-                                    :style3d="false"
-                                />
+                                    :style3d="false" />
                                 <div>
                                     <div class="related-t">{{ $rel['title'] }}</div>
                                     <div class="related-a">{{ $rel['author_name'] }}</div>

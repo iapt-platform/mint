@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserInfo;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Mail;
+use Illuminate\Support\Facades\Log;
+
+
+use App\Models\UserInfo;
 use App\Mail\ForgotPassword;
 
 class ForgotPasswordController extends Controller
@@ -40,12 +43,17 @@ class ForgotPasswordController extends Controller
             return $this->error('fail on update reset_password_token', 500, 500);
         }
 
-        Mail::to($request->input('email'))
-            ->send(new ForgotPassword($resetToken, $request->input('lang'), $request->input('dashboard')));
-        if (Mail::failures()) {
+        try {
+            Mail::to($request->input('email'))
+                ->send(new ForgotPassword($resetToken, $request->input('lang'), $request->input('dashboard')));
+        } catch (\Exception $e) {
+            Log::error('send forgot password email fail', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+            ]);
             return $this->error('send email fail', [], 200);
         }
-        return $this->ok('');
+        return $this->ok('successful');
     }
 
     /**

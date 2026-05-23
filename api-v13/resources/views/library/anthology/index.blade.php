@@ -4,7 +4,7 @@
 @section('title', '文集 · 巴利书库')
 
 @push('styles')
-@vite('resources/css/modules/_anthology.css')
+@vite('resources/css/modules/anthology.css')
 @endpush
 
 @section('breadcrumb')

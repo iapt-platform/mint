@@ -1,14 +1,14 @@
-/* resources/css/layout/_grid.css
+/* resources/css/layout/grid.css
    全站断点定义 + 通用栏容器。
-   包含从 _wiki.css 提取的三栏布局，供所有栏目复用。
+   包含从 wiki.css 提取的三栏布局，供所有栏目复用。
 */
 
 /* ── 断点 token ── */
 :root {
-    --bp-sm:  576px;
-    --bp-md:  768px;
-    --bp-lg:  992px;
-    --bp-xl:  1200px;
+    --bp-sm: 576px;
+    --bp-md: 768px;
+    --bp-lg: 992px;
+    --bp-xl: 1200px;
 }
 
 /* ══════════════════════════════════════════
@@ -18,15 +18,19 @@
 .wiki-layout {
     display: grid;
     grid-template-columns: 200px 1fr 200px;
-    grid-template-areas: "left main right";
+    grid-template-areas: 'left main right';
     gap: 1.5rem;
     align-items: start;
     padding-top: 1.5rem;
     padding-bottom: 3rem;
 }
 
-.wiki-sidebar-left  { grid-area: left; }
-.wiki-sidebar-right { grid-area: right; }
+.wiki-sidebar-left {
+    grid-area: left;
+}
+.wiki-sidebar-right {
+    grid-area: right;
+}
 
 .wiki-main {
     grid-area: main;
@@ -40,8 +44,8 @@
     .wiki-layout {
         grid-template-columns: 180px 1fr;
         grid-template-areas:
-            "left main"
-            "left right";
+            'left main'
+            'left right';
     }
 
     .wiki-sidebar-right {
@@ -59,7 +63,7 @@
 @media (max-width: 768px) {
     .wiki-layout {
         grid-template-columns: 1fr;
-        grid-template-areas: "main" "right" "left";
+        grid-template-areas: 'main' 'right' 'left';
     }
 
     .wiki-sidebar-left,

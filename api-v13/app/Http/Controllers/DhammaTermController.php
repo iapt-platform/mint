@@ -150,7 +150,7 @@ class DhammaTermController extends Controller
                 break;
             case 'hot-meaning':
                 $key = 'term/hot_meaning';
-                $value = Cache::get($key, function () use ($request) {
+                $value = Cache::remember($key, config('mint.cache.expire'), function () use ($request) {
                     $hotMeaning = [];
                     $words = DhammaTerm::select('word')
                         ->where('language', $request->input("language"))
@@ -176,7 +176,7 @@ class DhammaTermController extends Controller
                     }
                     Cache::put($key, $hotMeaning, 3600);
                     return $hotMeaning;
-                }, config('mint.cache.expire'));
+                });
                 return $this->ok(["rows" => $value, "count" => count($value)]);
                 break;
             default:

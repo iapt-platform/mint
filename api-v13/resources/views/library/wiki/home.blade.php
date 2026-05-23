@@ -1,7 +1,7 @@
 {{-- resources/views/wiki/home.blade.php
      Wiki 门户首页。
      布局：单栏居中，法轮图标 + 标题 + 搜索框 + 热门标签 + 语言选择。
-     所有样式来自 modules/_wiki.css，无内联 <style>。
+     所有样式来自 modules/wiki.css，无内联 <style>。
 --}}
 @extends('library.wiki.layouts.app')
 

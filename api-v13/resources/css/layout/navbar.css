@@ -1,4 +1,4 @@
-/* resources/css/layout/_navbar.css
+/* resources/css/layout/navbar.css
    顶部导航栏：面包屑 bar + desktop 导航链接 + mobile 汉堡按钮。
    来源：main.css 的 .anthology-breadcrumb-bar、.bc-nav、.bc-hamburger 段落。
    以 wiki.css 中同名规则为准（main.css 无冲突，wiki.css 中无同名规则，直接迁移）。
