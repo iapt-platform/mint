@@ -1,4 +1,4 @@
-/* resources/css/modules/_library-index.css
+/* resources/css/modules/library-index.css
    Library 门户首页专属样式。
 */
 
@@ -110,8 +110,13 @@
 }
 
 @keyframes lib-live-pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.4; }
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.4;
+    }
 }
 
 /* ══════════════════════════════════════════
@@ -119,7 +124,7 @@
    ══════════════════════════════════════════ */
 
 .lib-recent {
-    padding: 0;   /* 覆盖 wiki-card 默认 padding，由 item 自己管理 */
+    padding: 0; /* 覆盖 wiki-card 默认 padding，由 item 自己管理 */
 }
 
 .lib-recent__item {
@@ -232,14 +237,17 @@
     border-radius: var(--tblr-border-radius-lg);
     text-decoration: none;
     color: inherit;
-    transition: background 0.12s, transform 0.15s, box-shadow 0.15s;
+    transition:
+        background 0.12s,
+        transform 0.15s,
+        box-shadow 0.15s;
     height: 100%;
 }
 
 .lib-nav-card:hover {
     background: var(--tblr-bg-surface-secondary);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     color: inherit;
     text-decoration: none;
 }
@@ -296,13 +304,13 @@
     }
 
     .lib-nav-card__desc {
-        display: none;   /* 手机隐藏描述，只显示图标+名称 */
+        display: none; /* 手机隐藏描述，只显示图标+名称 */
     }
 }
 
 /* 三藏分类卡片：手机 2 列已由 Bootstrap col-6 处理 */
 @media (max-width: 575px) {
     .lib-cat-card__more {
-        display: none;  /* 手机隐藏"更多"链接，避免挤压 */
+        display: none; /* 手机隐藏"更多"链接，避免挤压 */
     }
 }
