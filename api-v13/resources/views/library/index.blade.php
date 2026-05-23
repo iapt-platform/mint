@@ -7,7 +7,7 @@
 @section('title', 'WikiPāli · 巴利书库')
 
 @push('styles')
-@vite('resources/css/modules/_library-index.css')
+@vite('resources/css/modules/library-index.css')
 @endpush
 
 {{-- Hero --}}

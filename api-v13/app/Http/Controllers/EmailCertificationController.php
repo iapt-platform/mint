@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Invite;
-use App\Http\Resources\InviteResource;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use App\Mail\EmailCertif;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
+
+use App\Models\Invite;
 use App\Models\UserInfo;
+use App\Http\Resources\InviteResource;
+use App\Mail\EmailCertif;
 
 class EmailCertificationController extends Controller
 {
@@ -46,14 +48,19 @@ class EmailCertificationController extends Controller
         $invite->status = 'invited';
         $invite->save();
 
-        Mail::to($request->input('email'))
-            ->send(new EmailCertif(
-                $invite->id,
-                $request->input('subject', 'sign up wikipali'),
-                $request->input('lang'),
-            ));
-        if (Mail::failures()) {
-            return $this->error('send email fail', '', 200);
+        try {
+            Mail::to($request->input('email'))
+                ->send(new EmailCertif(
+                    $invite->id,
+                    $request->input('subject', 'sign up wikipali'),
+                    $request->input('lang'),
+                ));
+        } catch (\Exception $e) {
+            Log::error('send email fail', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+            ]);
+            return $this->error('send email fail', $e->getMessage(), 200);
         }
 
         return $this->ok(new InviteResource($invite));

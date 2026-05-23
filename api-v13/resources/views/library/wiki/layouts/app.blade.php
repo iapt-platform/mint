@@ -6,7 +6,7 @@
 @extends('layouts.library')
 
 @push('styles')
-@vite('resources/css/modules/_wiki.css')
+@vite('resources/css/modules/wiki.css')
 @endpush
 
 @section('content')

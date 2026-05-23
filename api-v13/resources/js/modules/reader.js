@@ -1,4 +1,4 @@
-// resources/js/modules/_reader.js
+// resources/js/modules/reader.js
 
 export function initReader() {
     injectCommentaryMarkers();
