@@ -1,4 +1,4 @@
-/* resources/css/base/_variables.css
+/* resources/css/base/variables.css
    全站 CSS 变量
    - 第一层：覆盖 Tabler 默认值
    - 第二层：WikiPali 自定义 token
@@ -7,7 +7,9 @@
 
 /* ── Tabler 变量覆盖 ── */
 :root {
-    --tblr-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --tblr-font-sans-serif:
+        system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+        sans-serif;
     --tblr-border-radius: 0.375rem;
     --tblr-border-radius-lg: 0.5rem;
 }
@@ -15,25 +17,25 @@
 /* ── WikiPali 品牌色 token ── */
 :root {
     /* 主色：暖金/琥珀，源自 main.css --sf */
-    --wp-brand:        #c8860a;
-    --wp-brand-light:  #f5e6c8;
-    --wp-brand-pale:   #fdf8f0;
-    --wp-brand-dark:   #9a6508;
+    --wp-brand: #c8860a;
+    --wp-brand-light: #f5e6c8;
+    --wp-brand-pale: #fdf8f0;
+    --wp-brand-dark: #9a6508;
 
     /* 文字层级，源自 main.css --ink */
-    --wp-ink:          #1a1208;
-    --wp-ink-soft:     #4a3f2f;
-    --wp-ink-muted:    #8a7a68;
+    --wp-ink: #1a1208;
+    --wp-ink-soft: #4a3f2f;
+    --wp-ink-muted: #8a7a68;
 
     /* 边框 / 背景 */
-    --wp-border:       #e8ddd0;
-    --wp-card-bg:      #fffdf9;
-    --wp-surface-alt:  #fdf8f0;
+    --wp-border: #e8ddd0;
+    --wp-card-bg: #fffdf9;
+    --wp-surface-alt: #fdf8f0;
 }
 
 /* ── 阅读页专属 token（reader.css 会用到） ── */
 :root {
-    --wp-reader-font-size:    1rem;
-    --wp-reader-line-height:  1.875;
-    --wp-reader-max-width:    720px;
+    --wp-reader-font-size: 1rem;
+    --wp-reader-line-height: 1.875;
+    --wp-reader-max-width: 720px;
 }
