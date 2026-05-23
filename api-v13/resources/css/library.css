@@ -25,7 +25,7 @@
 @import './layout/toolbar.css';
 
 /* 5. 公共组件 */
-@import './components/_search-input.css';
+@import './components/search-input.css';
 @import './components/_search-results.css';
 @import './components/card.css';
 @import './components/card-book.css';
