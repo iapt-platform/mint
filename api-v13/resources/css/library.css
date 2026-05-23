@@ -14,7 +14,7 @@
 /* 3. 基础变量 */
 @import './base/_variables.css';
 @import './base/reset.css';
-@import './base/_typography.css';
+@import './base/typography.css';
 
 /* 4. 布局层 */
 @import './layout/grid.css';
