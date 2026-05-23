@@ -1,4 +1,4 @@
-/* resources/css/components/_search-results.css
+/* resources/css/components/search-results.css
    统一搜索结果页组件样式。
    来源：wiki-search.css（与 wiki.css 末尾重复内容已去重，以 wiki 栏目为准）。
    适用于 /library/search?type= 所有类型。
@@ -68,7 +68,7 @@
 }
 
 .wiki-search-card-word {
-    font-family: "Noto Serif", Georgia, serif;
+    font-family: 'Noto Serif', Georgia, serif;
     font-size: 0.875rem;
     font-style: italic;
     color: var(--tblr-secondary);

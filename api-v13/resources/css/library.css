@@ -26,7 +26,7 @@
 
 /* 5. 公共组件 */
 @import './components/search-input.css';
-@import './components/_search-results.css';
+@import './components/search-results.css';
 @import './components/card.css';
 @import './components/card-book.css';
 @import './components/badge.css';
