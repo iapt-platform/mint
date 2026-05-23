@@ -126,6 +126,7 @@ use App\Http\Controllers\UpgradeController;
 use App\Http\Controllers\ChapterContentController;
 use App\Http\Controllers\ParagraphContentController;
 use App\Http\Controllers\HeartbeatController;
+use App\Http\Controllers\ProgressController;
 
 
 
@@ -326,4 +327,5 @@ Route::group([
     Route::apiResource('search', SearchPlusController::class);
     Route::apiResource('search-suggest', SearchSuggestController::class);
     Route::apiResource('upgrade', UpgradeController::class);
+    Route::apiResource('progress', ProgressController::class);
 });
