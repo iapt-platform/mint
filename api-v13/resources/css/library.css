@@ -29,5 +29,5 @@
 @import './components/_search-results.css';
 @import './components/_card.css';
 @import './components/_card-book.css';
-@import './components/_badge.css';
+@import './components/badge.css';
 @import './components/_pagination.css';
