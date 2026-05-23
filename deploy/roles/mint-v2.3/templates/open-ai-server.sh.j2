@@ -1,9 +1,0 @@
-#!/bin/bash
-
-set -e
-
-. $HOME/.nvm/nvm.sh
-cd {{ app_deploy_target }}/open-ai-server/
-node main.*.js config.json
-
-exit 0

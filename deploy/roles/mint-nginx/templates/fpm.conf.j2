@@ -1,9 +1,0 @@
-upstream php_fpm_{{ app_php_fpm_port }} {
-   # least_conn;
-   
-   {% for host in groups['php_fpm'] %}
-   server {{ host }}:{{ app_php_fpm_port }} weight=10;
-   {% endfor %}
-
-   # server 127.0.0.1:{{ app_php_fpm_port }} backup;
-}

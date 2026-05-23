@@ -1,6 +1,0 @@
-#!/bin/sh
-
-docker run --rm -it --network host \
-    -v /srv/{{ app_deploy_target | dirname }}/clove:/srv/{{ app_deploy_target | dirname }}/clove:z \
-    -v {{ app_deploy_target }}:{{ app_deploy_target }}:z \
-    {{ app_docker_image_name }} 

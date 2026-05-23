@@ -1,3 +1,0 @@
-#!/bin/sh
-
-docker run --rm -it --hostname=mint --network host -v $HOME/build/mint-{{ mint_version }}:{{ app_deploy_target }}:z {{ app_docker_image_name }}

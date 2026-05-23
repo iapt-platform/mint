@@ -1,4 +1,0 @@
-- name: Setup docker
-  hosts: all,!localhost
-  roles:
-    - docker

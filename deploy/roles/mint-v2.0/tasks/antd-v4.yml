@@ -1,6 +1,0 @@
-- name: Upload dashboard
-  ansible.builtin.copy:
-    src: "{{ playbook_dir }}/tmp/mint/dashboard-v4/dashboard/dist-{{ mint_version }}"
-    dest: "{{ app_deploy_target }}/dashboard"
-    mode: "0755"
-    creates: "{{ app_deploy_target }}/dashboard"

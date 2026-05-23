@@ -1,7 +1,0 @@
-- name: Testing ssh connections
-  hosts: all,!localhost
-  roles:
-    - os
-    - ubuntu
-    - container
-    - random-passwords
