@@ -3,5 +3,5 @@
    只做 @import，不写任何样式规则。
 */
 
-@import './modules/_reader.css';
+@import './modules/reader.css';
 @import './modules/reader-content.css';
