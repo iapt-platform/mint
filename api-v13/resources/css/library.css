@@ -20,7 +20,7 @@
 @import './layout/grid.css';
 @import './layout/navbar.css';
 @import './layout/drawer.css';
-@import './layout/_hero.css';
+@import './layout/hero.css';
 @import './layout/footer.css';
 @import './layout/toolbar.css';
 
