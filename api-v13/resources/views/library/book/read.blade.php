@@ -295,6 +295,7 @@
                         <option value="thai">泰文</option>
                     </select>
                 </div>
+                @isset($commentaryChannels)
                 <div class="mb-4">
                     <label class="form-label">注疏版本</label>
                     <select class="form-select" id="commentary">
@@ -304,6 +305,7 @@
                         @endforeach
                     </select>
                 </div>
+                @endisset
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-link" data-bs-dismiss="modal">取消</button>
