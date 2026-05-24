@@ -55,8 +55,7 @@ class AnthologyReadController extends Controller
         $artResource = $artResult['data'];
         $artArray    = $artResource->toArray($fakeRequest);
 
-        // content 统一包装成 book.read 期望的格式：
-        // [ ['id'=>..., 'level'=>1, 'text'=>[[ html_string ]]], ... ]
+
         $content = $artArray['html'] ?? $artArray['content'] ?? 'null';
 
         // ── 4. 计算翻页（pagination） ─────────────────────────────────────────
