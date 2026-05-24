@@ -53,12 +53,6 @@ class ChannelController extends Controller
             case 'public':
                 $table = Channel::select($indexCol)
                     ->where('status', 30);
-                /*
-                if ($request->has("book")) {
-                    $table = $table->leftJoin('progress_chapters', 'channels.uid', '=', 'progress_chapters.channel_id',)
-                        ->where('progress_chapters.book', $request->input("book"))
-                        ->where('progress_chapters.para', $request->input("paragraph"));
-                }*/
                 break;
             case 'studio':
                 # 获取studio内所有channel
@@ -182,6 +176,21 @@ class ChannelController extends Controller
                 $table = Channel::select($indexCol)
                     ->where('owner_uid', config("mint.admin.root_uuid"));
                 break;
+            case 'paragraphs':
+                $channels = Sentence::where('ver', '>', 1)
+                    ->where('book_id', $request->input('book_id'))
+                    ->whereIn('paragraph', explode(',', $request->input('para')))
+                    ->groupBy('channel_uid')->select('channel_uid')->get();
+                if (count($channels) > 0) {
+                    $table = Channel::select($indexCol)
+                        ->where(
+                            'uid',
+                            array_map(fn($item) => $item['channel_uid'], $channels->toArray())
+                        );
+                } else {
+                    $table = Channel::select($indexCol)->whereIsNull('uid');
+                }
+                break;
             case 'id':
                 $table = Channel::select($indexCol)
                     ->whereIn('uid', explode(',', $request->input("id")));
@@ -199,10 +208,6 @@ class ChannelController extends Controller
                         ->where('progress_chapters.para', $request->input("paragraph")); // 条件写在这里！
                 });
             }
-
-            /* leftJoin('progress_chapters', 'channels.uid', '=', 'progress_chapters.channel_id',)
-                ->where('progress_chapters.book', $request->input("book"))
-                ->where('progress_chapters.para', $request->input("paragraph"));*/
         }
         //处理搜索
         if (!empty($request->input("search"))) {
