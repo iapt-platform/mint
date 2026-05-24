@@ -139,7 +139,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body">
-        @include('library.book._toc', ['toc' => $book['toc'] ?? []])
+        @include('library.book.toc', ['toc' => $book['toc'] ?? []])
     </div>
 </div>
 
@@ -151,7 +151,7 @@
         <div class="toc-sidebar card">
             <div class="card-body">
                 <h5>目录</h5>
-                @include('library.book._toc', ['toc' => $book['toc'] ?? []])
+                @include('library.book.toc', ['toc' => $book['toc'] ?? []])
             </div>
         </div>
 
