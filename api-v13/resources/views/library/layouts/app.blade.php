@@ -9,7 +9,7 @@
     <title>@yield('title', '巴利书库')</title>
     @stack('styles')
 
-    @vite(['resources/css/main.css', 'resources/js/app.js'])
+    @vite(['resources/js/app.js'])
 
 </head>
 
