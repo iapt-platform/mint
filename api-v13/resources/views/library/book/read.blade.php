@@ -139,7 +139,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body">
-        @include('library.book._toc', ['toc' => $book['toc'] ?? []])
+        @include('library.book.toc', ['toc' => $book['toc'] ?? []])
     </div>
 </div>
 
@@ -151,7 +151,7 @@
         <div class="toc-sidebar card">
             <div class="card-body">
                 <h5>目录</h5>
-                @include('library.book._toc', ['toc' => $book['toc'] ?? []])
+                @include('library.book.toc', ['toc' => $book['toc'] ?? []])
             </div>
         </div>
 
@@ -295,6 +295,7 @@
                         <option value="thai">泰文</option>
                     </select>
                 </div>
+                @isset($commentaryChannels)
                 <div class="mb-4">
                     <label class="form-label">注疏版本</label>
                     <select class="form-select" id="commentary">
@@ -304,6 +305,7 @@
                         @endforeach
                     </select>
                 </div>
+                @endisset
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-link" data-bs-dismiss="modal">取消</button>
