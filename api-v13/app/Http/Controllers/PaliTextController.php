@@ -10,6 +10,7 @@ use App\Models\TagMap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\PaliTextResource;
+use App\Services\PaliTextService;
 
 class PaliTextController extends Controller
 {
@@ -196,28 +197,14 @@ class PaliTextController extends Controller
                     $books = BookTitle::where('title', $request->input('series'))->get();
                 } else {
                     //查询这个目录的顶级目录
-                    $path = PaliText::where('book', $request->input('book'))
-                        ->where('paragraph', $request->input('para'))
-                        ->select('path')->first();
-                    if (!$path) {
-                        return $this->error("no data");
-                    }
-                    $json = \json_decode($path->path);
-                    $root = null;
-                    foreach ($json as $key => $value) {
-                        # code...
-                        if ($value->level == 1) {
-                            $root = $value;
-                            break;
-                        }
-                    }
-                    if ($root === null) {
-                        return $this->error("no data");
-                    }
                     //查询书起始段落
-                    $rootPara = PaliText::where('book', $root->book)
-                        ->where('paragraph', $root->paragraph)
-                        ->first();
+                    $rootPara = app(PaliTextService::class)->getBookPara(
+                        $request->input('book'),
+                        $request->input('para')
+                    );
+                    if (!$rootPara) {
+                        return $this->error('no book', 404, 404);
+                    }
                     //获取丛书书名
                     $book_title = BookTitle::where('book', $rootPara->book)
                         ->where('paragraph', $rootPara->paragraph)
