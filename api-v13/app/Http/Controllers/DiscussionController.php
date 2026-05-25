@@ -304,7 +304,6 @@ class DiscussionController extends Controller
     {
         $user = AuthService::current($request);
         if (!$user) {
-            Log::error('discussion store auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), [401], 401);
         }
         //
