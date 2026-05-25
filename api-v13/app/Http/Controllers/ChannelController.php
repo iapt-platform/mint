@@ -177,16 +177,14 @@ class ChannelController extends Controller
                     ->where('owner_uid', config("mint.admin.root_uuid"));
                 break;
             case 'paragraphs':
-                $channels = Sentence::where('ver', '>', 1)
-                    ->where('book_id', $request->input('book_id'))
+                $channels = Sentence::where('book_id', $request->input('book_id'))
                     ->whereIn('paragraph', explode(',', $request->input('para')))
                     ->groupBy('channel_uid')->select('channel_uid')->get();
+                Log::debug('channel paragraphs', ['channels' => $channels]);
                 if (count($channels) > 0) {
+                    $channelIds = array_map(fn($item) => $item['channel_uid'], $channels->toArray());
                     $table = Channel::select($indexCol)
-                        ->where(
-                            'uid',
-                            array_map(fn($item) => $item['channel_uid'], $channels->toArray())
-                        );
+                        ->whereIn('uid', $channelIds);
                 } else {
                     $table = Channel::select($indexCol)->whereIsNull('uid');
                 }
