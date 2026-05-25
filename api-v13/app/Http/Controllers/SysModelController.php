@@ -22,7 +22,6 @@ class SysModelController extends Controller
         //
         $user = AuthService::current($request);
         if (!$user) {
-            Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);
         }
         $modelsId = Cache::get($this->key . $request->input('view', 'wbw'));
@@ -50,7 +49,6 @@ class SysModelController extends Controller
         //
         $user = AuthService::current($request);
         if (!$user) {
-            Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);
         }
         Cache::put(

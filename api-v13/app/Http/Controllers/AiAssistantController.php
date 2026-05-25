@@ -22,7 +22,6 @@ class AiAssistantController extends Controller
         //
         $user = AuthService::current($request);
         if (!$user) {
-            Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);
         }
         $resList = ShareApi::getResList($user['user_uid'], 8);

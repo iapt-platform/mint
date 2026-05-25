@@ -23,7 +23,6 @@ class ProjectController extends Controller
     {
         $user = AuthService::current($request);
         if (!$user) {
-            Log::error('notification auth failed {request}', ['request' => $request]);
             return $this->error(__('auth.failed'), 401, 401);
         }
         if ($request->has('studio')) {
