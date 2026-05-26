@@ -24,4 +24,8 @@ return [
     'script_chinese_simple' => 'တရုတ် အသံထွက် (ရိုးရှင်း)',
     'script_chinese_pinyin' => 'တရုတ် ပင်းယင်း',
     'script_telugu' => 'တယ်လူဂူ',
+
+    'toolbox' => 'ကိရိယာများ',
+    'tool_script_convertor' => 'စာလုံးပြောင်းစက်',
+    'tool_script_convertor_desc' => 'ပါဠိစာ အမျိုးမျိုး ပြောင်းလဲခြင်း',
 ];

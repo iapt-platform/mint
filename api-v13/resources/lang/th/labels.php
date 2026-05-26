@@ -24,4 +24,8 @@ return [
     'script_chinese_simple' => 'สัทอักษรจีน (ย่อ)',
     'script_chinese_pinyin' => 'พินอิน',
     'script_telugu' => 'เตลูกู',
+
+    'toolbox' => 'กล่องเครื่องมือ',
+    'tool_script_convertor' => 'ตัวแปลงอักษร',
+    'tool_script_convertor_desc' => 'แปลงอักษรบาลีข้ามสคริปต์',
 ];

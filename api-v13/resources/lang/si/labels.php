@@ -24,4 +24,8 @@ return [
     'script_chinese_simple' => 'චීන උච්චාරණ (සරල)',
     'script_chinese_pinyin' => 'චීන පින්යින්',
     'script_telugu' => 'තෙලිඟු',
+
+    'toolbox' => 'මෙවලම්',
+    'tool_script_convertor' => 'අක්ෂර පරිවර්තකය',
+    'tool_script_convertor_desc' => 'පාලි පෙළ විවිධ අක්ෂර අතර පරිවර්තනය',
 ];

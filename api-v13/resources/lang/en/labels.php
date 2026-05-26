@@ -24,4 +24,8 @@ return [
     'script_chinese_simple' => 'Chinese Phonetic (simple)',
     'script_chinese_pinyin' => 'Chinese Pinyin',
     'script_telugu' => 'Telugu',
+
+    'toolbox' => 'Toolbox',
+    'tool_script_convertor' => 'Script Converter',
+    'tool_script_convertor_desc' => 'Convert Pāli text between scripts',
 ];

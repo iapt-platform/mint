@@ -24,4 +24,8 @@ return [
     'script_chinese_simple' => '锡兰注音（简）',
     'script_chinese_pinyin' => '汉语拼音（锡）',
     'script_telugu' => '泰卢固文',
+
+    'toolbox' => '工具箱',
+    'tool_script_convertor' => '脚本转换器',
+    'tool_script_convertor_desc' => '巴利文字多脚本互转',
 ];

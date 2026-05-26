@@ -130,49 +130,21 @@
         </div>
         @endisset
 
-        {{-- ── 三、栏目导航 ── --}}
+        {{-- ── 三、工具箱 ── --}}
         <div class="lib-section">
             <div class="lib-section__header">
                 <h2 class="lib-section__title">
-                    <i class="ti ti-layout-grid"></i>
-                    全部栏目
+                    <i class="ti ti-tools"></i>
+                    {{ __('labels.toolbox') }}
                 </h2>
             </div>
 
             <div class="row g-3">
-                <div class="col-6 col-sm-4 col-md">
-                    <a href="{{ route('library.tipitaka.index') }}" class="lib-nav-card">
-                        <i class="ti ti-books lib-nav-card__icon"></i>
-                        <div class="lib-nav-card__name">三藏</div>
-                        <div class="lib-nav-card__desc">巴利文原典及译文</div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md">
-                    <a href="{{ route('library.wiki.home') }}" class="lib-nav-card">
-                        <i class="ti ti-world lib-nav-card__icon"></i>
-                        <div class="lib-nav-card__name">百科</div>
-                        <div class="lib-nav-card__desc">佛法术语词典</div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md">
-                    <a href="{{ route('library.anthology.index') }}" class="lib-nav-card">
-                        <i class="ti ti-notebook lib-nav-card__icon"></i>
-                        <div class="lib-nav-card__name">文集</div>
-                        <div class="lib-nav-card__desc">法义探讨与注疏</div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md">
-                    <a href="{{ route('library.course') }}" class="lib-nav-card">
-                        <i class="ti ti-school lib-nav-card__icon"></i>
-                        <div class="lib-nav-card__name">课程</div>
-                        <div class="lib-nav-card__desc">系统学习路径</div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md">
-                    <a href="{{ route('library.download') }}" class="lib-nav-card">
-                        <i class="ti ti-download lib-nav-card__icon"></i>
-                        <div class="lib-nav-card__name">下载</div>
-                        <div class="lib-nav-card__desc">离线阅读资源</div>
+                <div class="col-6 col-sm-4 col-md-3">
+                    <a href="{{ route('library.tools.script-convertor') }}" class="lib-nav-card">
+                        <i class="ti ti-transform lib-nav-card__icon"></i>
+                        <div class="lib-nav-card__name">{{ __('labels.tool_script_convertor') }}</div>
+                        <div class="lib-nav-card__desc">{{ __('labels.tool_script_convertor_desc') }}</div>
                     </a>
                 </div>
             </div>
