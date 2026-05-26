@@ -1,7 +1,7 @@
 {{-- resources/views/library/tipitaka/show.blade.php --}}
 @extends('layouts.library')
 
-@section('title', $book['title'] . ' · 巴利书库')
+@section('title', $book['title'] . ' · ' . __('library.site_name'))
 
 @push('styles')
 @vite('resources/css/modules/tipitaka.css')
@@ -9,10 +9,10 @@
 
 @section('breadcrumb')
 <li class="breadcrumb-item">
-    <a href="{{ route('library.home') }}">首页</a>
+    <a href="{{ route('library.home') }}">{{ __('library.home') }}</a>
 </li>
 <li class="breadcrumb-item">
-    <a href="{{ route('library.tipitaka.index') }}">三藏</a>
+    <a href="{{ route('library.tipitaka.index') }}">{{ __('library.tipitaka') }}</a>
 </li>
 <li class="breadcrumb-item active">{{ $book['title'] }}</li>
 @endsection
@@ -39,11 +39,11 @@
                     <a href="{{ route('library.tipitaka.read', $book['id']) }}"
                         class="btn btn-primary w-100 mb-2">
                         <i class="ti ti-book-2 me-1"></i>
-                        在线阅读
+                        {{ __('library.read_online') }}
                     </a>
                     <button class="btn btn-outline-secondary w-100">
                         <i class="ti ti-download me-1"></i>
-                        下载
+                        {{ __('library.download') }}
                     </button>
                 </div>
 
@@ -61,12 +61,12 @@
 
                 <table class="wiki-meta-table" style="margin-bottom: 1.25rem;">
                     <tr>
-                        <td>作者</td>
+                        <td>{{ __('library.author') }}</td>
                         <td>{{ $book['author'] }}</td>
                     </tr>
                     @if(isset($book['publisher']))
                     <tr>
-                        <td>出版</td>
+                        <td>{{ __('library.publisher') }}</td>
                         <td>
                             <a href="{{ route('blog.index', ['user' => $book['publisher']->username]) }}"
                                 style="color: var(--tblr-primary); text-decoration: none;">
@@ -76,8 +76,8 @@
                     </tr>
                     @endif
                     <tr>
-                        <td>语言</td>
-                        <td>{{ $book['language'] ?? '巴利语' }}</td>
+                        <td>{{ __('library.language') }}</td>
+                        <td>{{ $book['language'] ?? __('library.pali') }}</td>
                     </tr>
                 </table>
 
@@ -91,7 +91,7 @@
             {{-- 目录 --}}
             @if(isset($book['contents']) && count($book['contents']) > 0)
             <div class="wiki-card">
-                <div class="wiki-sidebar-title" style="margin-bottom: 1rem;">目录</div>
+                <div class="wiki-sidebar-title" style="margin-bottom: 1rem;">{{ __('library.toc') }}</div>
                 <ul class="wiki-toc-list">
                     @foreach($book['contents'] as $chapter)
                     <li>
@@ -140,15 +140,15 @@
 
             {{-- 书籍元信息 --}}
             <div class="wiki-sidebar-section">
-                <div class="wiki-sidebar-title">书籍信息</div>
+                <div class="wiki-sidebar-title">{{ __('library.book_info') }}</div>
                 <table class="wiki-meta-table">
                     <tr>
-                        <td>语言</td>
-                        <td>{{ $book['language'] ?? '巴利语' }}</td>
+                        <td>{{ __('library.language') }}</td>
+                        <td>{{ $book['language'] ?? __('library.pali') }}</td>
                     </tr>
                     @if(!empty($book['type']))
                     <tr>
-                        <td>类型</td>
+                        <td>{{ __('library.type') }}</td>
                         <td>{{ $book['type'] }}</td>
                     </tr>
                     @endif
@@ -158,13 +158,13 @@
             {{-- 其他版本 --}}
             @if(!empty($otherVersions) && count($otherVersions) > 0)
             <div class="wiki-sidebar-section">
-                <div class="wiki-sidebar-title">其他版本</div>
+                <div class="wiki-sidebar-title">{{ __('library.other_versions') }}</div>
                 <ul class="wiki-related-list">
                     @foreach($otherVersions as $version)
                     <li>
                         <a href="{{ route('library.tipitaka.show', $version['id']) }}">
                             {{ $version['title'] }}
-                            <span class="wiki-related-zh">{{ $version['language'] ?? '巴利语' }}</span>
+                            <span class="wiki-related-zh">{{ $version['language'] ?? __('library.pali') }}</span>
                         </a>
                     </li>
                     @endforeach

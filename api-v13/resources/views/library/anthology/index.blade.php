@@ -1,7 +1,7 @@
 {{-- resources/views/library/anthology/index.blade.php --}}
 @extends('layouts.library')
 
-@section('title', '文集 · 巴利书库')
+@section('title', __('library.anthology') . ' · ' . __('library.site_name'))
 
 @push('styles')
 @vite('resources/css/modules/anthology.css')
@@ -9,16 +9,16 @@
 
 @section('breadcrumb')
 <li class="breadcrumb-item">
-    <a href="{{ route('library.home') }}">首页</a>
+    <a href="{{ route('library.home') }}">{{ __('library.home') }}</a>
 </li>
-<li class="breadcrumb-item active">文集</li>
+<li class="breadcrumb-item active">{{ __('library.anthology') }}</li>
 @endsection
 
 @section('hero')
 <div class="anthology-page-header">
     <div class="container-xl">
-        <h1>文集 <span class="result-badge">{{ $total }}</span></h1>
-        <p>经论注疏 · 禅修指引 · 法义探讨</p>
+        <h1>{{ __('library.anthology') }} <span class="result-badge">{{ $total }}</span></h1>
+        <p>{{ __('library.anthology_subtitle') }}</p>
     </div>
 </div>
 @endsection
@@ -37,7 +37,7 @@
                     :href="route('library.anthology.show', $item['id'])" />
                 @empty
                 <div class="wiki-card">
-                    <x-ui.empty-state title="暂无文集" />
+                    <x-ui.empty-state :title="__('library.no_anthology')" />
                 </div>
                 @endforelse
 
@@ -55,14 +55,14 @@
                 <div class="sb-card" style="padding: .85rem 1.1rem; margin-bottom: 1.1rem;">
                     <x-ui.search-input
                         :action="route('library.search')"
-                        placeholder="搜索文集…"
+                        :placeholder="__('library.search_anthology')"
                         :hidden-fields="['resource_type' => 'anthology']" />
                 </div>
 
                 {{-- 作者列表 --}}
                 @if(!empty($authors))
                 <div class="sb-card">
-                    <div class="sb-head">作者</div>
+                    <div class="sb-head">{{ __('library.author') }}</div>
                     <ul class="author-ul">
                         @foreach($authors as $author)
                         <li>
@@ -72,7 +72,7 @@
                                     :color="$author['color']"
                                     :initials="$author['initials']"
                                     :name="$author['name']"
-                                    :sub="$author['count'] . ' 篇文集'"
+                                    :sub="$author['count'] . ' ' . __('library.anthology_count_suffix')"
                                     size="md" />
                             </a>
                         </li>

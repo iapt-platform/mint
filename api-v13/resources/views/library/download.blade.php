@@ -8,11 +8,11 @@
         <div class="page-header d-print-none">
             <div class="row align-items-center">
                 <div class="col">
-                    <h2 class="page-title">下载</h2>
-                    <div class="text-muted mt-1">APP 离线数据包</div>
+                    <h2 class="page-title">{{ __('library.download') }}</h2>
+                    <div class="text-muted mt-1">{{ __('library.offline_packets') }}</div>
                 </div>
                 <div class="col-auto ms-auto">
-                    <span class="badge bg-blue-lt fs-6">{{ count($packets) }} 个数据包</span>
+                    <span class="badge bg-blue-lt fs-6">{{ count($packets) }} {{ __('library.packet_count_suffix') }}</span>
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
                         <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
                         <path d="M10 12l2 2l2 -2" />
                     </svg>
-                    离线数据包
+                    {{ __('library.offline_packets') }}
                 </h3>
             </div>
 
@@ -50,8 +50,8 @@
                             <path d="M3 3l18 18" />
                         </svg>
                     </div>
-                    <p class="empty-title">暂无数据包</p>
-                    <p class="empty-subtitle text-muted">当前没有可用的离线数据包。</p>
+                    <p class="empty-title">{{ __('library.no_packets') }}</p>
+                    <p class="empty-subtitle text-muted">{{ __('library.no_packets_desc') }}</p>
                 </div>
             </div>
 
@@ -64,11 +64,11 @@
                 <table class="table table-vcenter card-table table-hover">
                     <thead>
                         <tr>
-                            <th>数据包名称</th>
-                            <th class="text-center" style="width:90px">文件大小</th>
-                            <th class="text-center" style="width:90px">最低版本</th>
-                            <th class="text-center" style="width:160px">创建时间</th>
-                            <th style="min-width:240px">下载链接</th>
+                            <th>{{ __('library.col_name') }}</th>
+                            <th class="text-center" style="width:90px">{{ __('library.col_size') }}</th>
+                            <th class="text-center" style="width:90px">{{ __('library.col_min_version') }}</th>
+                            <th class="text-center" style="width:160px">{{ __('library.created_at') }}</th>
+                            <th style="min-width:240px">{{ __('library.col_links') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -133,12 +133,12 @@
                                             <path d="M7 11l5 5l5 -5" />
                                             <path d="M12 4l0 12" />
                                         </svg>
-                                        {{ $urlItem['hostname'] ?? '下载' }}
+                                        {{ $urlItem['hostname'] ?? __('library.download') }}
                                     </a>
                                     @endforeach
                                 </div>
                                 @else
-                                <span class="text-muted">暂无链接</span>
+                                <span class="text-muted">{{ __('library.no_links') }}</span>
                                 @endif
                             </td>
                         </tr>
@@ -197,7 +197,7 @@
                             </span>
                             @if(!empty($packet['min_app_ver']))
                             <span class="badge bg-lime-lt text-lime">
-                                最低版本 v{{ $packet['min_app_ver'] }}
+                                {{ __('library.min_version_prefix') }}v{{ $packet['min_app_ver'] }}
                             </span>
                             @endif
                         </div>
@@ -215,7 +215,7 @@
                                     <path d="M7 11l5 5l5 -5" />
                                     <path d="M12 4l0 12" />
                                 </svg>
-                                {{ $urlItem['hostname'] ?? '下载' }}
+                                {{ $urlItem['hostname'] ?? __('library.download') }}
                             </a>
                             @endforeach
                         </div>

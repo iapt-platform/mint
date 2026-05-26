@@ -9,7 +9,7 @@
     <x-ui.search-input
         :action="route('library.search')"
         :value="request('q')"
-        placeholder="搜索佛法词条、经典、人物..."
+        :placeholder="__('library.wiki_search_placeholder')"
         size="lg"
         :hidden-fields="['resource_type' => 'term']" />
 </div>
@@ -42,7 +42,7 @@
     {{-- 其他版本 --}}
     @if(isset($entry['other_versions']) && count($entry['other_versions']) > 0)
     <div class="wiki-other-versions">
-        <div class="wiki-sidebar-title" style="margin-bottom: 0.75rem;">其他版本</div>
+        <div class="wiki-sidebar-title" style="margin-bottom: 0.75rem;">{{ __('library.other_versions') }}</div>
         @foreach ($entry['other_versions'] as $version)
         <x-wiki.search-result-card :result="$version" :lang="$lang" />
         @endforeach
@@ -57,7 +57,7 @@
 
 {{-- 目录 --}}
 <div class="wiki-sidebar-section">
-    <div class="wiki-sidebar-title">目录</div>
+    <div class="wiki-sidebar-title">{{ __('library.toc') }}</div>
     <ul class="wiki-toc-list">
         @foreach ($entry['toc'] as $i => $item)
         <li class="toc-level-{{ $item['level'] }}">
@@ -74,14 +74,14 @@
 
 {{-- 条目元信息 --}}
 <div class="wiki-sidebar-section">
-    <div class="wiki-sidebar-title">条目信息</div>
+    <div class="wiki-sidebar-title">{{ __('library.entry_info') }}</div>
     <table class="wiki-meta-table">
         <tr>
-            <td>分类</td>
+            <td>{{ __('library.category') }}</td>
             <td>{{ $entry['category'] }}</td>
         </tr>
         <tr>
-            <td>质量</td>
+            <td>{{ __('library.quality') }}</td>
             <td><x-wiki.quality-badge :quality="$entry['quality']" /></td>
         </tr>
     </table>
