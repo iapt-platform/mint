@@ -87,6 +87,10 @@ Route::prefix('library')->name('library.')->group(function () {
     )->name('anthology.read');
 
     Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+    Route::get('/tools/script-convertor', function () {
+        return view('library.tools.script-convertor');
+    })->name('tools.script-convertor');
 });
 // 博客路由
 Route::prefix('blog')->group(function () {
