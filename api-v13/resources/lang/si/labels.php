@@ -1,9 +1,9 @@
 <?php
 return [
-    'home' => 'Home',
-    'translation' => 'Translation',
-    'original' => 'Original',
-    'nissaya' => 'Nissaya',
+    'home' => 'මුල් පිටුව',
+    'translation' => 'පරිවර්තනය',
+    'original' => 'මූලික',
+    'nissaya' => 'නිස්සය',
 
     'script_convertor' => 'පාලි අක්ෂර පරිවර්තකය',
     'input_script' => 'ආදාන අක්ෂර',

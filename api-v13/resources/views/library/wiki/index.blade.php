@@ -1,7 +1,7 @@
 {{-- resources/views/wiki/index.blade.php --}}
 @extends('library.wiki.layouts.app')
 
-@section('title', 'WikiPāli · 巴利佛典百科')
+@section('title', 'WikiPāli · ' . __('library.wiki_encyclopedia'))
 
 @section('wiki-content')
 {{-- 搜索框组件 --}}
@@ -9,7 +9,7 @@
     <x-ui.search-input
         :action="route('library.search')"
         :value="request('q')"
-        placeholder="搜索佛法词条、经典、人物..."
+        :placeholder="__('library.wiki_search_placeholder')"
         size="lg"
         :hidden-fields="['resource_type' => 'term']" />
 </div>
@@ -18,14 +18,14 @@
 <div class="wiki-today-banner">
     <div class="wiki-today-icon">☸</div>
     <div class="wiki-today-body">
-        <div class="wiki-today-label">今日条目</div>
+        <div class="wiki-today-label">{{ __('library.today_entry') }}</div>
         <div class="wiki-today-title">{{ $today['meaning'] }}（{{ $today['word'] }}）</div>
         <div class="wiki-today-snippet">
             {!! Str::limit(strip_tags($today['content']), 120) !!}
         </div>
         <a class="wiki-today-link"
             href="{{ route('library.wiki.show', [$today['lang'], $today['word']]) }}">
-            阅读完整条目 →
+            {{ __('library.read_full_entry') }}
         </a>
     </div>
 </div>
@@ -34,7 +34,7 @@
 {{-- 精选条目 --}}
 @if(isset($featured) && is_array($featured) && count($featured)>0)
 <div class="wiki-card">
-    <div class="wiki-sidebar-title" style="margin-bottom: 14px;">精选条目</div>
+    <div class="wiki-sidebar-title" style="margin-bottom: 14px;">{{ __('library.featured_entries') }}</div>
     <div class="wiki-featured-grid">
         @foreach ($featured as $item)
         <a class="wiki-featured-card"
@@ -62,7 +62,7 @@ $catLabel = collect(config('taxonomy'))->firstWhere('id', $category)['label'] ??
         <span class="wiki-subcat-block-title">{{ $catLabel }}</span>
         <a class="wiki-subcat-block-more"
             href="{{ route('library.wiki.index', ['lang' => $lang]) }}?category={{ $category }}">
-            浏览全部
+            {{ __('library.view_all') }}
         </a>
     </div>
 
@@ -80,18 +80,18 @@ $catLabel = collect(config('taxonomy'))->firstWhere('id', $category)['label'] ??
 @section('wiki-sidebar')
 
 <div class="wiki-sidebar-section">
-    <div class="wiki-sidebar-title">统计</div>
+    <div class="wiki-sidebar-title">{{ __('library.statistics') }}</div>
     <table class="wiki-meta-table">
         <tr>
-            <td>条目总数</td>
+            <td>{{ __('library.total_entries') }}</td>
             <td>{{ number_format($stats['total']) }}</td>
         </tr>
         <tr>
-            <td>本月新增</td>
+            <td>{{ __('library.this_month') }}</td>
             <td>{{ $stats['this_month'] }}</td>
         </tr>
         <tr>
-            <td>贡献者</td>
+            <td>{{ __('library.contributors') }}</td>
             <td>{{ $stats['contributors'] }}</td>
         </tr>
     </table>
@@ -101,7 +101,7 @@ $catLabel = collect(config('taxonomy'))->firstWhere('id', $category)['label'] ??
 
 
 <div class="wiki-sidebar-section">
-    <div class="wiki-sidebar-title">质量等级</div>
+    <div class="wiki-sidebar-title">{{ __('library.quality_level') }}</div>
     <ul class="wiki-cat-list" id="qualityFilterList">
         @foreach ($qualities as $q)
         <li>

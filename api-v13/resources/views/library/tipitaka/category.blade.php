@@ -4,7 +4,7 @@
 --}}
 @extends('layouts.library')
 
-@section('title', $currentCategory['name'] . ' · 巴利书库')
+@section('title', $currentCategory['name'] . ' · ' . __('library.site_name'))
 
 @push('styles')
 @vite('resources/css/modules/tipitaka.css')
@@ -12,11 +12,11 @@
 
 @section('breadcrumb')
 <li class="breadcrumb-item">
-    <a href="{{ route('library.home') }}">首页</a>
+    <a href="{{ route('library.home') }}">{{ __('library.home') }}</a>
 </li>
 @if($currentCategory['id'])
 <li class="breadcrumb-item">
-    <a href="{{ route('library.tipitaka.index') }}">三藏</a>
+    <a href="{{ route('library.tipitaka.index') }}">{{ __('library.tipitaka') }}</a>
 </li>
 @foreach($breadcrumbs as $breadcrumb)
 @if($loop->last)
@@ -30,7 +30,7 @@
 @endif
 @endforeach
 @else
-<li class="breadcrumb-item active">三藏</li>
+<li class="breadcrumb-item active">{{ __('library.tipitaka') }}</li>
 @endif
 @endsection
 
@@ -45,12 +45,12 @@
 
             {{-- 大分类 --}}
             <div class="wiki-sidebar-section">
-                <div class="wiki-sidebar-title">分类</div>
+                <div class="wiki-sidebar-title">{{ __('library.categories') }}</div>
                 <ul class="wiki-cat-list">
                     <li>
                         <a href="{{ route('library.tipitaka.index') }}"
                             class="{{ !$currentCategory['id'] ? 'active' : '' }}">
-                            全部
+                            {{ __('library.all') }}
                         </a>
                     </li>
                     @foreach($types as $type)
@@ -74,7 +74,7 @@
                 <x-ui.search-input
                     :action="route('library.search')"
                     :value="request('q')"
-                    placeholder="搜索三藏原文译文"
+                    :placeholder="__('library.search_tipitaka')"
                     :hidden-fields="['resource_type' => 'tipitaka']" />
             </div>
 
@@ -85,7 +85,7 @@
 
                 {{-- 类型 --}}
                 <div class="tipitaka-filter-row">
-                    <span class="tipitaka-filter-label">类型</span>
+                    <span class="tipitaka-filter-label">{{ __('library.type') }}</span>
                     <div class="tipitaka-filter-pills">
                         @foreach($filterOptions['types'] as $opt)
                         <a href="{{ request()->fullUrlWithQuery(['type' => $opt['value'], 'page' => null]) }}"
@@ -101,7 +101,7 @@
 
                 {{-- 语言 --}}
                 <div class="tipitaka-filter-row">
-                    <span class="tipitaka-filter-label">语言</span>
+                    <span class="tipitaka-filter-label">{{ __('library.language') }}</span>
                     <div class="tipitaka-filter-pills">
                         @foreach($filterOptions['languages'] as $opt)
                         <a href="{{ request()->fullUrlWithQuery(['lang' => $opt['value'], 'page' => null]) }}"
@@ -117,7 +117,7 @@
 
                 {{-- 作者 --}}
                 <div class="tipitaka-filter-row">
-                    <span class="tipitaka-filter-label">作者</span>
+                    <span class="tipitaka-filter-label">{{ __('library.author') }}</span>
                     <select class="form-select form-select-sm tipitaka-author-select"
                         onchange="window.location=this.value">
                         @foreach($filterOptions['authors'] as $opt)
@@ -139,7 +139,7 @@
                 <div class="tipitaka-filter-clear">
                     <a href="{{ request()->fullUrlWithQuery(['type' => null, 'lang' => null, 'author' => null, 'page' => null]) }}"
                         class="tipitaka-clear-btn">
-                        <i class="ti ti-x"></i> 清除过滤器
+                        <i class="ti ti-x"></i> {{ __('library.clear_filters') }}
                     </a>
                 </div>
                 @endif
@@ -164,10 +164,10 @@
             {{-- 3. 排序 + 结果数 --}}
             <div class="tipitaka-sort-bar">
                 <span class="tipitaka-sort-bar__count">
-                    共 <strong>{{ $totalCount }}</strong> 本
+                    {{ __('library.total_prefix') }} <strong>{{ $totalCount }}</strong> {{ __('library.book_unit') }}
                 </span>
                 <div class="tipitaka-sort-bar__right">
-                    <span class="tipitaka-sort-bar__label">排序</span>
+                    <span class="tipitaka-sort-bar__label">{{ __('library.sort') }}</span>
                     <select class="form-select form-select-sm tipitaka-sort-select"
                         onchange="window.location=this.value">
                         @foreach($sortList as $sort)
@@ -191,7 +191,7 @@
             {{-- 本周推荐 --}}
             @if(!empty($recommended))
             <div class="wiki-sidebar-section">
-                <div class="wiki-sidebar-title">本周推荐</div>
+                <div class="wiki-sidebar-title">{{ __('library.weekly_picks') }}</div>
                 <ul class="wiki-cat-list">
                     @foreach($recommended as $item)
                     <li>
@@ -208,7 +208,7 @@
             {{-- 活跃译者 --}}
             @if(!empty($activeAuthors))
             <div class="wiki-sidebar-section">
-                <div class="wiki-sidebar-title">活跃译者</div>
+                <div class="wiki-sidebar-title">{{ __('library.active_authors') }}</div>
                 <ul class="tipitaka-author-list">
                     @foreach($activeAuthors as $author)
                     <li>
@@ -221,7 +221,7 @@
                                 size="sm" />
                             <div class="tipitaka-author-item__info">
                                 <span class="tipitaka-author-item__name">{{ $author['name'] }}</span>
-                                <span class="tipitaka-author-item__count">{{ $author['count'] }} 本</span>
+                                <span class="tipitaka-author-item__count">{{ $author['count'] }} {{ __('library.book_unit') }}</span>
                             </div>
                         </a>
                     </li>

@@ -24,5 +24,5 @@
     @endforeach
 </ul>
 @else
-<div class="alert alert-warning">此书没有目录</div>
+<div class="alert alert-warning">{{ __('library.no_toc') }}</div>
 @endif

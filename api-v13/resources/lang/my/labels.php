@@ -1,9 +1,9 @@
 <?php
 return [
-    'home' => 'Home',
-    'translation' => 'Translation',
-    'original' => 'Original',
-    'nissaya' => 'Nissaya',
+    'home' => 'ပင်မစာမျက်နှာ',
+    'translation' => 'ဘာသာပြန်',
+    'original' => 'မူရင်း',
+    'nissaya' => 'နိဿယ',
 
     'script_convertor' => 'ပါဠိစာလုံးပြောင်းစက်',
     'input_script' => 'ထည့်သွင်းစာ',

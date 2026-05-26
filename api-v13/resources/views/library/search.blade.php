@@ -7,7 +7,7 @@
 @extends('library.wiki.layouts.app')
 
 
-@section('title', $query ? '"' . $query . '" 的搜索结果 · WikiPāli' : '搜索 · WikiPāli')
+@section('title', $query ? '"' . $query . '" ' . __('library.search_results_title') . ' · WikiPāli' : __('library.search_title') . ' · WikiPāli')
 
 @section('wiki-content')
 
@@ -16,7 +16,7 @@
     <x-ui.search-input
         :action="route('library.search')"
         :value="$query"
-        placeholder="搜索条目、巴利文、梵文…"
+        :placeholder="__('library.search_placeholder')"
         :autofocus="true"
         :hidden-fields="array_filter(['category' => $category !== 'all' ? $category : null])" />
 </div>
@@ -24,14 +24,14 @@
 {{-- 结果摘要 --}}
 <div class="wiki-search-summary">
     @if ($query)
-    搜索 <strong>「{{ $query }}」</strong>
+    {{ __('library.searching') }} <strong>「{{ $query }}」</strong>
     @if ($pagination['total'] > 0)
-    ，共找到 <strong>{{ $pagination['total'] }}</strong> 条结果
+    {{ __('library.results_found_prefix') }} <strong>{{ $pagination['total'] }}</strong> {{ __('library.results_found_suffix') }}
     @if ($pagination['last_page'] > 1)
-    （第 {{ $pagination['current_page'] }} / {{ $pagination['last_page'] }} 页）
+    {{ __('library.page_prefix') }} {{ $pagination['current_page'] }} / {{ $pagination['last_page'] }} {{ __('library.page_suffix') }}
     @endif
     @else
-    ，未找到相关条目
+    {{ __('library.no_results') }}
     @endif
     @endif
 </div>
@@ -61,8 +61,8 @@
 
 <div class="wiki-card">
     <x-ui.empty-state
-        title="未找到相关条目"
-        desc="请尝试其他关键词" />
+        :title="__('library.no_results')"
+        :desc="__('library.try_other_keywords')" />
 </div>
 
 @endif
@@ -75,12 +75,12 @@
 @isset($filters)
 @foreach ($filters as $key=>$filter)
 <div class="wiki-sidebar-section">
-    <div class="wiki-sidebar-title">按{{ $key }}筛选</div>
+    <div class="wiki-sidebar-title">{{ __('library.filter_by') }}{{ $key }}{{ __('library.filter') }}</div>
     <ul class="wiki-cat-list">
         <li>
             <a href="{{ route('library.search', ['q' => $query]) }}"
                 class="{{ $category === 'all' ? 'active' : '' }}">
-                全部
+                {{ __('library.all') }}
             </a>
         </li>
 
@@ -101,7 +101,7 @@
 {{-- 近似词条（无结果时显示） --}}
 @if (count($results) === 0 && $query)
 <div class="wiki-sidebar-section">
-    <div class="wiki-sidebar-title">你可能在找</div>
+    <div class="wiki-sidebar-title">{{ __('library.did_you_mean') }}</div>
     <ul class="wiki-related-list">
         <li>
             <a href="{{ route('library.search', ['q' => substr($query, 0, -1), 'lang' => $lang]) }}">
@@ -120,12 +120,12 @@
 
 
 <div class="wiki-sidebar-section">
-    <div class="wiki-sidebar-title">分类浏览</div>
+    <div class="wiki-sidebar-title">{{ __('library.browse_categories') }}</div>
     <ul class="wiki-cat-list">
         <li>
             <a href="{{ route('library.search', ['q' => $query]) }}"
                 class="{{ $category === 'all' ? 'active' : '' }}">
-                全部
+                {{ __('library.all') }}
             </a>
         </li>
         @foreach ($types as $type)

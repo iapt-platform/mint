@@ -24,12 +24,12 @@
 
         @isset($categories)
         <div class="wiki-sidebar-section">
-            <div class="wiki-sidebar-title">分类浏览</div>
+            <div class="wiki-sidebar-title">{{ __('library.browse_categories') }}</div>
             <ul class="wiki-cat-list">
                 <li>
                     <a href="{{ route('library.wiki.index', ['lang' => $lang]) }}"
                         class="{{ (request('category', 'all') === 'all') ? 'active' : '' }}">
-                        全部
+                        {{ __('library.all') }}
                     </a>
                 </li>
                 @foreach ($categories as $cat)
@@ -49,7 +49,7 @@
 
         @isset($recentUpdates)
         <div class="wiki-sidebar-section">
-            <div class="wiki-sidebar-title">最近更新</div>
+            <div class="wiki-sidebar-title">{{ __('library.recent_updates') }}</div>
             <ul class="wiki-cat-list">
                 @foreach ($recentUpdates as $item)
                 <li>

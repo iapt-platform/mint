@@ -47,7 +47,7 @@
             <div class="nav-item me-2">
                 <a href="{{ $editor_link }}" target="_blank" class="nav-link">
                     <i class="ti ti-pencil me-1 d-none d-md-inline"></i>
-                    <span class="d-none d-md-inline">编辑器</span>
+                    <span class="d-none d-md-inline">{{ __('library.editor') }}</span>
                     <i class="ti ti-pencil d-md-none"></i>
                 </a>
             </div>
@@ -60,7 +60,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#settingsModal">
                     <i class="ti ti-settings me-1 d-none d-md-inline"></i>
-                    <span class="d-none d-md-inline">设置</span>
+                    <span class="d-none d-md-inline">{{ __('library.settings') }}</span>
                     <i class="ti ti-settings d-md-none"></i>
                 </a>
             </div>
@@ -72,7 +72,7 @@
                     data-bs-toggle="offcanvas"
                     data-bs-target="#channelDrawer">
                     <i class="ti ti-stack-2 me-1 d-none d-md-inline"></i>
-                    <span class="d-none d-md-inline">版本</span>
+                    <span class="d-none d-md-inline">{{ __('library.versions') }}</span>
                     <i class="ti ti-stack-2 d-md-none"></i>
                 </a>
             </div>
@@ -94,7 +94,7 @@
                     </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item" href="{{ route('logout') }}">退出</a>
+                    <a class="dropdown-item" href="{{ route('logout') }}">{{ __('library.logout') }}</a>
                 </div>
             </div>
             @endauth
@@ -107,7 +107,7 @@
 @if(!empty($channels))
 <div class="offcanvas offcanvas-end" tabindex="-1" id="channelDrawer">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title">选择版本</h5>
+        <h5 class="offcanvas-title">{{ __('library.select_version') }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body">
@@ -135,7 +135,7 @@
 {{-- TOC Offcanvas（mobile） --}}
 <div class="offcanvas offcanvas-start" tabindex="-1" id="tocDrawer">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title">目录</h5>
+        <h5 class="offcanvas-title">{{ __('library.toc') }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body">
@@ -150,7 +150,7 @@
         {{-- TOC 侧边栏（tablet+） --}}
         <div class="toc-sidebar card">
             <div class="card-body">
-                <h5>目录</h5>
+                <h5>{{ __('library.toc') }}</h5>
                 @include('library.book.toc', ['toc' => $book['toc'] ?? []])
             </div>
         </div>
@@ -161,7 +161,7 @@
 
                 <h2>{{ $book['title'] }}</h2>
                 <p>
-                    <strong>作者：</strong>
+                    <strong>{{ __('library.author') }}：</strong>
                     {{ $book['author'] }}
                     @if(isset($book['publisher']))
                     @ <a href="{{ route('blog.index', ['user' => $book['publisher']->username]) }}">
@@ -175,7 +175,7 @@
                     @if(isset($book['content']))
                     {!! $book['content'] !!}
                     @else
-                    <div>没有内容</div>
+                    <div>{{ __('library.no_content') }}</div>
                     @endif
                 </article>
 
@@ -194,7 +194,7 @@
                                         </svg>
                                     </div>
                                     <div class="col">
-                                        <div class="page-item-subtitle">上一篇</div>
+                                        <div class="page-item-subtitle">{{ __('library.prev_article') }}</div>
                                         <div class="page-item-title">{{ $book['pagination']['prev']['title'] }}</div>
                                     </div>
                                 </div>
@@ -208,7 +208,7 @@
                             : route('library.tipitaka.read', ['id' => $book['pagination']['next']['id'], 'channel' => request('channel')]) }}">
                                 <div class="row align-items-center">
                                     <div class="col">
-                                        <div class="page-item-subtitle">下一篇</div>
+                                        <div class="page-item-subtitle">{{ __('library.next_article') }}</div>
                                         <div class="page-item-title">{{ $book['pagination']['next']['title'] }}</div>
                                     </div>
                                     <div class="col-auto">
@@ -234,7 +234,7 @@
             {{-- 下载 --}}
             @if(!empty($book['downloads']))
             <div class="reader-channel-card">
-                <div class="reader-channel-title">下载</div>
+                <div class="reader-channel-title">{{ __('library.download') }}</div>
                 <ul class="list-unstyled mb-0">
                     @foreach ($book['downloads'] as $download)
                     <li>
@@ -250,7 +250,7 @@
             {{-- 标签 --}}
             @if(!empty($book['tags']))
             <div class="reader-channel-card">
-                <div class="reader-channel-title">标签</div>
+                <div class="reader-channel-title">{{ __('library.tags') }}</div>
                 @foreach ($book['tags'] as $tag)
                 <span class="badge me-1">{{ $tag['name'] }}</span>
                 @endforeach
@@ -267,39 +267,39 @@
     <div class="modal-dialog">
         <form id="settingsForm" class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">阅读设置</h5>
+                <h5 class="modal-title">{{ __('library.reading_settings') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-4">
-                    <label class="form-label">显示原文</label>
+                    <label class="form-label">{{ __('library.show_original') }}</label>
                     <label class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="showOrigin">
-                        <span class="form-check-label">开启/关闭原文显示</span>
+                        <span class="form-check-label">{{ __('library.toggle_original') }}</span>
                     </label>
                 </div>
                 <div class="mb-4">
-                    <label class="form-label">界面语言</label>
+                    <label class="form-label">{{ __('library.ui_language') }}</label>
                     <select class="form-select" id="uiLanguage">
-                        <option value="auto">自动</option>
-                        <option value="zh">简体中文</option>
-                        <option value="en">英文</option>
+                        <option value="auto">{{ __('library.auto') }}</option>
+                        <option value="zh">{{ __('library.lang_zh_hans') }}</option>
+                        <option value="en">{{ __('library.lang_en') }}</option>
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="form-label">巴利语脚本</label>
+                    <label class="form-label">{{ __('library.pali_script') }}</label>
                     <select class="form-select" id="paliScript">
-                        <option value="auto">自动</option>
-                        <option value="roman">罗马</option>
-                        <option value="myanmar">缅文</option>
-                        <option value="thai">泰文</option>
+                        <option value="auto">{{ __('library.auto') }}</option>
+                        <option value="roman">{{ __('library.script_roman') }}</option>
+                        <option value="myanmar">{{ __('library.script_myanmar') }}</option>
+                        <option value="thai">{{ __('library.script_thai') }}</option>
                     </select>
                 </div>
                 @isset($commentaryChannels)
                 <div class="mb-4">
-                    <label class="form-label">注疏版本</label>
+                    <label class="form-label">{{ __('library.commentary_version') }}</label>
                     <select class="form-select" id="commentary">
-                        <option value="none">不显示</option>
+                        <option value="none">{{ __('library.none') }}</option>
                         @foreach($commentaryChannels as $channel)
                         <option value="{{ $channel['id'] }}">{{ $channel['name'] }}</option>
                         @endforeach
@@ -308,8 +308,8 @@
                 @endisset
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal">取消</button>
-                <button type="submit" class="btn btn-primary">确定</button>
+                <button type="button" class="btn btn-link" data-bs-dismiss="modal">{{ __('library.cancel') }}</button>
+                <button type="submit" class="btn btn-primary">{{ __('library.confirm') }}</button>
             </div>
         </form>
     </div>
