@@ -13,10 +13,10 @@ return [
     |
     */
 
-    'reset' => 'Your password has been reset!',
-    'sent' => 'We have emailed your password reset link!',
-    'throttled' => 'Please wait before retrying.',
-    'token' => 'This password reset token is invalid.',
-    'user' => "We can't find a user with that email address.",
+    'reset' => 'ඔබගේ මුරපදය යළි සකසා ඇත!',
+    'sent' => 'මුරපද යළි සැකසුම් සබැඳිය ඔබට ඊමේල් කර ඇත!',
+    'throttled' => 'නැවත උත්සාහ කිරීමට පෙර කරුණාකර රැඳී සිටින්න.',
+    'token' => 'මෙම මුරපද යළි සැකසුම් ටෝකනය වලංගු නොවේ.',
+    'user' => 'එම ඊමේල් ලිපිනයෙන් පරිශීලකයෙකු සොයාගත නොහැක.',
 
 ];

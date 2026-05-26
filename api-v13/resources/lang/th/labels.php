@@ -1,9 +1,9 @@
 <?php
 return [
-    'home' => 'Home',
-    'translation' => 'Translation',
-    'original' => 'Original',
-    'nissaya' => 'Nissaya',
+    'home' => 'หน้าหลัก',
+    'translation' => 'คำแปล',
+    'original' => 'ต้นฉบับ',
+    'nissaya' => 'นิสสัย',
 
     'script_convertor' => 'ตัวแปลงอักษรบาลี',
     'input_script' => 'อักษรต้นฉบับ',
