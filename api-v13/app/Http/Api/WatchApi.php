@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Api;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Models\Like;
 use App\Models\Notification;
@@ -32,7 +31,6 @@ class WatchApi
                 'updated_at' => now(),
             ];
         }
-        Log::debug('notification insert', ['data' => $notifications]);
         $new = Notification::insert($notifications);
         return $new;
     }

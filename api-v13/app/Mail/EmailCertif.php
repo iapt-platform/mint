@@ -6,7 +6,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class EmailCertif extends Mailable
 {
@@ -36,7 +35,6 @@ class EmailCertif extends Mailable
         // 生成一个介于 1000 到 9999 之间的随机整数
         $randomNumber = random_int(1000, 9999);
         $key = "/email/certification/" . $this->uuid;
-        Log::debug('email certification', ['key' => $key, 'value' => $randomNumber]);
         Cache::put($key, $randomNumber,  30 * 60);
         return $this->view('emails.certification.' . $this->lang)
             ->with([

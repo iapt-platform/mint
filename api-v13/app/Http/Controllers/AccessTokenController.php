@@ -35,12 +35,10 @@ class AccessTokenController extends Controller
         //
         $user = AuthService::current($request);
         if (!$user) {
-            Log::error('未登录');
             return $this->error(__('auth.failed'), [], 401);
         }
         $payload = $request->input('payload');
         $result = array();
-        Log::debug('token', ['payload' => $payload]);
         foreach ($payload as $key => $value) {
             //鉴权
             switch ($value['res_type']) {

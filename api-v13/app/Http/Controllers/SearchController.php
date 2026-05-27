@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\SearchResource;
 use App\Http\Resources\SearchTitleResource;
 use App\Http\Resources\SearchBookResource;
-use Illuminate\Support\Facades\Log;
 use App\Tools\Tools;
 use App\Models\WbwTemplate;
 use App\Models\PageNumber;
@@ -50,7 +49,6 @@ class SearchController extends Controller
                         $query->where('title_en', 'like', "%{$key}%")
                             ->orWhere('title', 'like', "%{$key}%");
                     });
-                Log::info($table->toSql());
                 if ($request->has('tags')) {
                     //查询搜索范围
                     $tagItems = explode(';', $request->input('tags'));

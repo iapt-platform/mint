@@ -7,7 +7,6 @@ use App\Services\AuthService;
 use App\Http\Api\ChannelApi;
 use App\Http\Resources\DiscussionCountResource;
 use App\Http\Resources\TagMapResource;
-use Illuminate\Support\Facades\Log;
 use App\Models\Discussion;
 use App\Models\CourseMember;
 use App\Models\Course;
@@ -82,7 +81,6 @@ class DiscussionCountController extends Controller
                 ->where('course_id', $request->input('course_id'))
                 ->select('user_id')
                 ->get();
-            Log::debug('allMembers', ['members' => $allMembers]);
             //找到全部相关channel
             $channels = array();
             //获取答案 channel
@@ -153,7 +151,6 @@ class DiscussionCountController extends Controller
                 }
             }
         }
-        Log::debug('res id', ['res' => $resId]);
         //全部资源id获取完毕
         //获取discussion
         $table = Discussion::select(['id', 'res_id', 'res_type', 'type', 'editor_uid'])
@@ -173,7 +170,6 @@ class DiscussionCountController extends Controller
             ->where('owner_uid', $studioIdForTag)
             ->leftJoin('tags', 'tags.id', '=', 'tag_maps.tag_id')
             ->get();
-        Log::debug('response', ['data' => $discussions]);
         return $this->ok([
             'discussions' => $discussions,
             'tags' => $tags,
@@ -202,7 +198,6 @@ class DiscussionCountController extends Controller
 
         $allTags = $table->get();
         $tags = TagMapResource::collection($allTags);
-        Log::debug('response', ['discussions' => $discussions]);
         return $this->ok([
             'discussions' => $discussions,
             'tags' => $tags,

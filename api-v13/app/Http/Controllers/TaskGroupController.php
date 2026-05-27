@@ -7,7 +7,6 @@ use App\Models\Project;
 use App\Models\TaskRelation;
 use App\Models\TaskAssignee;
 
-use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\Request;
 use App\Services\AuthService;
@@ -54,7 +53,6 @@ class TaskGroupController extends Controller
         foreach ($projects as $key => $project) {
             $id[$project->uid] = $project->owner_id;
             if (!TaskController::canEdit($user['user_uid'], $project->owner_id)) {
-                Log::error(__('auth.failed'), ['user' => $user['user_uid'], 'owner' => $project->owner_id]);
                 return $this->error(__('auth.failed'), 403, 403);
             }
         }

@@ -72,7 +72,6 @@ class AiTranslateService
 
         //获取model token
         $this->modelToken = $first->model->token;
-        Log::debug($this->queue . ' ai assistant token', ['token' => $this->modelToken]);
 
         $this->setTaskStatus($this->task->id, 'running');
 

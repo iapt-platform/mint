@@ -243,9 +243,6 @@ class TaskStatusController extends Controller
                     from: $user['user_uid'],
                     message: "任务状态变为 {$key}",
                 );
-                Log::debug('watch message', [
-                    'send-to' => $send,
-                ]);
                 $editor = UserApi::getByUuid($user['user_uid']);
                 foreach ($tasksId as $taskId) {
                     $discussion->create([

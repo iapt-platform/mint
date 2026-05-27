@@ -52,7 +52,6 @@ class SearchBookResource extends JsonResource
             ->select('tags.name')
             ->get();
 
-        Log::info('tag name', ['data' => $tagsName]);
         return $tagsName;
     }
 }

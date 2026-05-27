@@ -8,7 +8,6 @@ use App\Models\WbwTemplate;
 use App\Models\Channel;
 use Illuminate\Http\Request;
 use App\Tools\CaseMan;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Api\DictApi;
 use App\Services\AuthService;
@@ -173,12 +172,10 @@ class WbwLookupController extends Controller
         $fieldId = $fieldMap[$field];
         $myPreference = Cache::get("{$prefix}/{$word}/{$fieldId}/{$userId}");
         if (!empty($myPreference)) {
-            Log::debug($word . '命中我的wbw-' . $field, ['data' => $myPreference]);
             return ['value' => $myPreference, 'status' => 5];
         } else {
             $myPreference = Cache::get("{$prefix}/{$word}/3/0");
             if (!empty($myPreference)) {
-                Log::debug($word . '命中社区wbw-' . $field, ['data' => $myPreference]);
                 return ['value' => $myPreference, 'status' => 5];
             }
         }

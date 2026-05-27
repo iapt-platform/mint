@@ -278,7 +278,6 @@ class ArticleController extends Controller
         //判断权限
         $user = AuthService::current($request);
         if (!$user) {
-            Log::error('未登录');
             return $this->error(__('auth.failed'), [], 401);
         } else {
             $user_uid = $user['user_uid'];
@@ -286,16 +285,13 @@ class ArticleController extends Controller
 
         $canManage = ArticleController::userCanManage($user_uid, $request->input('studio'));
         if (!$canManage) {
-            Log::error('userCanManage 失败');
             //判断是否有文集权限
             if ($request->has('anthologyId')) {
                 $currPower = ShareApi::getResPower($user_uid, $request->input('anthologyId'));
                 if ($currPower <= 10) {
-                    Log::error('没有文集编辑权限');
                     return $this->error(__('auth.failed'), [], 403);
                 }
             } else {
-                Log::error('没有文集id');
                 return $this->error(__('auth.failed'), [], 403);
             }
         }
@@ -306,8 +302,6 @@ class ArticleController extends Controller
         if(Article::where('title',$request->input('title'))->where('owner',$studioUuid)->exists()){
             return $this->error(__('validation.exists'));
         }*/
-        Log::debug('开始新建' . $request->input('title'));
-
         $newArticle = new Article;
         DB::transaction(function () use ($user, $request, $newArticle) {
             $studioUuid = StudioApi::getIdByName($request->input('studio'));
@@ -328,15 +322,12 @@ class ArticleController extends Controller
             $newArticle->save();
             OpsLog::debug($user['user_uid'], $newArticle);
 
-            Log::debug('开始挂接 id=' . $newArticle->uid);
             $anthologyId = $request->input('anthologyId');
             if (Str::isUuid($anthologyId)) {
                 $parentNode = $request->input('parentNode');
                 if (Str::isUuid($parentNode)) {
-                    Log::debug('有挂接点' . $parentNode);
                     $map = ArticleCollection::where('collect_id', $anthologyId)
                         ->orderBy('id')->get();
-                    Log::debug('查询到原map数据' . count($map));
                     $newMap = array();
                     $parentNodeLevel = -1;
                     $appended = false;
@@ -353,7 +344,6 @@ class ArticleController extends Controller
                                     $newNode['title'] = $newArticle->title;
                                     $newNode['children'] = 0;
                                     $newMap[] = $newNode;
-                                    Log::debug('新增节点', ['node' => $newNode]);
                                     $appended = true;
                                 }
                             } else {
@@ -367,8 +357,6 @@ class ArticleController extends Controller
                     }
                     if ($parentNodeLevel > 0) {
                         if ($appended === false) {
-                            //
-                            Log::debug('没挂上 挂到结尾');
                             $newNode = array();
                             $newNode['collect_id'] = $anthologyId;
                             $newNode['article_id'] = $newArticle->uid;
@@ -378,12 +366,10 @@ class ArticleController extends Controller
                             $newMap[] = $newNode;
                         }
                     } else {
-                        Log::error('没找到挂接点' . $parentNode);
+                        Log::warning('没找到挂接点' . $parentNode);
                     }
-                    Log::debug('新map数据' . count($newMap));
 
                     $delete = ArticleCollection::where('collect_id', $anthologyId)->delete();
-                    Log::debug('删除旧map数据' . $delete);
                     $count = 0;
                     foreach ($newMap as $key => $row) {
                         $new = new ArticleCollection;
@@ -400,7 +386,6 @@ class ArticleController extends Controller
                         $new->save();
                         $count++;
                     }
-                    Log::debug('新map数据' . $count);
                     ArticleMapController::updateCollection($anthologyId);
                 } else {
                     $articleMap = new ArticleCollection();

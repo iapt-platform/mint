@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Library;
 
 use App\Http\Controllers\Controller;
 
-use Illuminate\Support\Facades\Log;
 
 
 use Illuminate\Http\Request;
@@ -73,7 +72,6 @@ class BookController extends Controller
             ->whereBetween('paragraph', [$paraStart, $paraEnd])
             ->where('channel_uid', $channelId)
             ->select(['uid', 'book_id', 'paragraph', 'word_start', 'word_end'])->get()->toArray();
-        Log::debug('fetchCommentary', ['data' => $notes]);
         return $notes;
     }
 
@@ -108,7 +106,6 @@ class BookController extends Controller
             $notesMap = collect($commentaries)->keyBy(function ($note) {
                 return "{$note['book_id']}-{$note['paragraph']}-{$note['word_start']}-{$note['word_end']}";
             })->map(fn($note) => $note['uid'])->toArray();
-            Log::debug('note map', ['data' => $notesMap]);
         }
 
 
@@ -131,8 +128,6 @@ class BookController extends Controller
         } else {
             $book['content'] = $chapter['display'];
         }
-        Log::debug($book['content']);
-
         $allChannels = $chapterService->publicChannels((int)$bookId, (int)$paraId);
         $commentaryChannels = array_filter($allChannels, function ($channel) {
             return $channel['type'] === 'commentary';

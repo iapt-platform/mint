@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Library;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\File;
 
@@ -39,7 +38,6 @@ class HomeController extends Controller
     {
         $categories = $this->loadCategories();
         $locale = Cookie::get('language') ?? 'en';
-        Log::debug('$locale=' . $locale);
         // 获取一级分类和对应的书籍
         $categoryData = [];
         foreach ($categories as $category) {

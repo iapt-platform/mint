@@ -9,7 +9,6 @@ use App\Services\AuthService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\App;
 
-use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -91,9 +90,6 @@ class AuthController extends Controller
                 'id' => $user->id,
             ];
             $jwt = JWT::encode($payload, $key, 'HS512');
-            if (app()->isLocal()) {
-                Log::debug('sing in token' . $jwt);
-            }
             return $this->ok($jwt);
         } else {
             return $this->error('invalid token');
@@ -106,7 +102,6 @@ class AuthController extends Controller
     {
         $curr = AuthService::current($request);
         if (!$curr) {
-            Log::warning('invalid token');
             return $this->error('invalid token', 401, 401);
         }
         $userInfo = UserInfo::where('userid', $curr['user_uid'])

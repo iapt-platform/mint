@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use App\Models\Attachment;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\App;
@@ -20,7 +19,6 @@ class SentenceAttachmentResource extends JsonResource
     public function toArray($request)
     {
         $url = config('app.url') . '/api/v2/attachment/' . $this->attachment_id;
-        Log::info($url);
         //$response = Http::get($url);
 
 

@@ -851,7 +851,6 @@ class TemplateRender
             for ($i = mb_strlen($title, 'UTF-8'); $i > 0; $i--) {
                 $mTitle = mb_substr($title, 0, $i);
                 $has = array_search($mTitle, array_column(BookTitle::my(), 'title2'));
-                Log::debug('run', ['title' => $mTitle, 'has' => $has]);
                 if ($has !== false) {
                     $tmpBookTitle = $mTitle;
                     $tmpBookPage = mb_substr($title, $i);
@@ -861,7 +860,6 @@ class TemplateRender
             }
 
             if (isset($tmpBookTitle)) {
-                Log::debug('book title found', ['title' => $tmpBookTitle, 'page' => $tmpBookPage]);
                 //$tmpBookTitle = $tmpTitle[0];
                 //$tmpBookPage = $tmpTitle[1];
                 $tmpBookPage = (int)str_replace(
@@ -889,7 +887,6 @@ class TemplateRender
                 }
             }
         } else {
-            Log::debug('book title not found');
             $props['found'] = false;
         }
 

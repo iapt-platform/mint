@@ -100,7 +100,6 @@ class ArticleFtsController extends Controller
                 'format' => 'text',
                 'channel' => $channel,
             ];
-            Log::debug('http request', ['url' => $url, 'param' => $urlParam]);
             if ($token) {
                 $response = Http::withToken($this->option('token'))->get($url, $urlParam);
             } else {

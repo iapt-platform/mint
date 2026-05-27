@@ -31,7 +31,6 @@ class WordIndexController extends Controller
                                    ->orderBy('len')
                                    ->orderBy('word_en')
                                    ->take(10);
-                Log::info($table->toSql());
                 $result = $table->get();
 */
                 $result = DB::select("SELECT * from  word_indices where word like ? or word_en like ? order by len, word_en limit 10", [$key . "%", $key . "%"]);
