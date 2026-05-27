@@ -3,11 +3,13 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+
+use Illuminate\Support\Facades\DB;
+
+
 use App\Models\Sentence;
 use App\Models\PaliSentence;
 use App\Models\Progress;
-use App\Models\ProgressChapter;
-use App\Models\PaliText;
 use Illuminate\Support\Facades\Log;
 
 class UpgradeProgressPara extends Command
@@ -83,11 +85,15 @@ class UpgradeProgressPara extends Command
                     ->select('book_id', 'paragraph', 'channel_uid');
             }
         }
-        $count = $sentences->count();
+        $total = DB::query()
+            ->fromSub($sentences, 't')
+            ->count();
         $sentences = $sentences->cursor();
-        $this->info('sentences:' . $count);
+        $this->info('sentences:' . $total);
+        $curr = 0;
         #第二步 更新段落表
         foreach ($sentences as $sentence) {
+
             # 第二步 生成para progress 1,2,15,zh-tw
             # 计算此段落完成时间
             $finalAt = Sentence::where('strlen', '>', 0)
@@ -107,6 +113,12 @@ class UpgradeProgressPara extends Command
                 ->where('channel_uid', $sentence->channel_uid)
                 ->select('word_start')
                 ->get();
+
+            $paraInfo = [
+                'book' => $sentence->book_id,
+                'para' => $sentence->paragraph,
+                'channel_id' => $sentence->channel_uid
+            ];
             if (count($result_sent) > 0) {
                 #查询这些句子的总共等效巴利语字符数
                 $para_strlen = 0;
@@ -117,11 +129,7 @@ class UpgradeProgressPara extends Command
                         ->where('word_begin', $sent->word_start)
                         ->value('length');
                 }
-                $paraInfo = [
-                    'book' => $sentence->book_id,
-                    'para' => $sentence->paragraph,
-                    'channel_id' => $sentence->channel_uid
-                ];
+
                 $paraData = [
                     'lang' => 'en',
                     'all_strlen' => $para_strlen,
@@ -129,9 +137,15 @@ class UpgradeProgressPara extends Command
                     'created_at' => $finalAt,
                     'updated_at' => $updateAt,
                 ];
-                //Log::debug('Progress updateOrInsert', ['para' => $paraInfo, 'data' => $paraData]);
-                $this->info('Progress updateOrInsert' . json_encode($paraInfo));
+
+
                 Progress::updateOrInsert($paraInfo, $paraData);
+            }
+            $curr++;
+            if ($curr % 500 === 0) {
+                $present = (int)($curr * 100 / $total);
+                $this->info("[{$present}%] Progress " . json_encode($paraInfo));
+                sleep(1);
             }
         }
 
