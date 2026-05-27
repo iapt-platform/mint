@@ -2,61 +2,124 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-
-use Illuminate\Support\Facades\DB;
-
-
-use App\Models\Sentence;
 use App\Models\PaliSentence;
 use App\Models\Progress;
-use Illuminate\Support\Facades\Log;
+use App\Models\Sentence;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class UpgradeProgressPara extends Command
 {
-    /**
-     * The name and signature of the console command.
-     * php artisan upgrade:progress --book=152 --channel=19f53a65-81db-4b7d-8144-ac33f1217d34
-     * @var string
-     */
-    protected $signature = 'upgrade:progress.para {--book=} {--para=} {--channel=} {--resume}';
+    protected $signature = 'upgrade:progress.para {--book=} {--para=} {--channel=} {--fresh : 清除缓存断点，从头开始}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
+    protected $description = '更新段落翻译进度（可重入：中断后重跑自动跳过已处理的段落）';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    // 缓存键：记录最后处理到的位置 (book_id, paragraph, channel_uid)，48h 过期
+    private const CACHE_KEY = 'upgrade-progress-para:cursor';
+
+    public function handle(): int
     {
-        parent::__construct();
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
-    {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
-        $this->info('upgrade:progress start');
+
+        if ($this->option('fresh')) {
+            Cache::forget(self::CACHE_KEY);
+            $this->info('Cleared cached cursor.');
+        }
+
+        $this->info('upgrade:progress.para start');
         $startTime = time();
+
         $book = $this->option('book');
         $para = $this->option('para');
         $channelId = $this->option('channel');
+
         if ($channelId) {
-            $this->line('channel=' . $channelId);
+            $this->line('channel='.$channelId);
         }
+
+        // 构建查询：按 (book_id, paragraph, channel_uid) 分组
+        $sentences = $this->buildQuery($book, $para, $channelId);
+
+        // 从缓存恢复断点：跳过上次已处理的记录
+        $cursor = Cache::get(self::CACHE_KEY);
+        if ($cursor && ! $this->option('book')) {
+            $sentences = $this->applyResumeFilter($sentences, $cursor);
+            $this->info("Resuming from book={$cursor['book']}, para={$cursor['para']}");
+        }
+
+        $total = DB::query()->fromSub($sentences, 't')->count();
+        $this->info("sentences: {$total}");
+
+        $curr = 0;
+
+        foreach ($sentences->cursor() as $sentence) {
+            // 计算此段落的完成时间和最后更新时间
+            $baseQuery = Sentence::where('strlen', '>', 0)
+                ->where('book_id', $sentence->book_id)
+                ->where('paragraph', $sentence->paragraph)
+                ->where('channel_uid', $sentence->channel_uid);
+
+            $finalAt = (clone $baseQuery)->max('created_at');
+            $updateAt = (clone $baseQuery)->max('updated_at');
+
+            // 查询段落内每个句子的起始词位置
+            $wordStarts = (clone $baseQuery)->pluck('word_start');
+
+            if ($wordStarts->isNotEmpty()) {
+                // 累加等效巴利语字符数：每个句子对应的 PaliSentence.length
+                $paraStrlen = PaliSentence::where('book', $sentence->book_id)
+                    ->where('paragraph', $sentence->paragraph)
+                    ->whereIn('word_begin', $wordStarts)
+                    ->sum('length');
+
+                $paraInfo = [
+                    'book' => $sentence->book_id,
+                    'para' => $sentence->paragraph,
+                    'channel_id' => $sentence->channel_uid,
+                ];
+
+                Progress::updateOrInsert($paraInfo, [
+                    'lang' => 'en',
+                    'all_strlen' => $paraStrlen,
+                    'public_strlen' => $paraStrlen,
+                    'created_at' => $finalAt,
+                    'updated_at' => $updateAt,
+                ]);
+            }
+
+            $curr++;
+
+            // 每 500 条保存一次断点到缓存
+            if ($curr % 500 === 0) {
+                Cache::put(self::CACHE_KEY, [
+                    'book' => $sentence->book_id,
+                    'para' => $sentence->paragraph,
+                ], now()->addHours(48));
+
+                $percent = (int) ($curr * 100 / $total);
+                $this->info("[{$percent}%] book={$sentence->book_id} para={$sentence->paragraph}");
+                sleep(1);
+            }
+        }
+
+        // 全部完成，清除断点缓存
+        Cache::forget(self::CACHE_KEY);
+
+        $time = time() - $startTime;
+        $this->info("upgrade:progress.para finished in {$time}s");
+
+        return 0;
+    }
+
+    /** 构建分组查询 */
+    private function buildQuery(?string $book, ?string $para, ?string $channelId)
+    {
         $table = Sentence::where('strlen', '>', 0);
+
         if ($book || $para || $channelId) {
             if ($book) {
                 $table = $table->where('book_id', $book);
@@ -67,91 +130,26 @@ class UpgradeProgressPara extends Command
             if ($channelId) {
                 $table = $table->where('channel_uid', $channelId);
             }
-            $sentences = $table->groupby('book_id', 'paragraph', 'channel_uid')
-                ->select('book_id', 'paragraph', 'channel_uid');
         } else {
-            if ($this->option('resume')) {
-                $sentences = Sentence::where('strlen', '>', 0)
-                    ->whereBetween('book_id', [$book, 1000])
-                    ->where('paragraph', '>=', $para)
-                    ->whereNotNull('channel_uid')
-                    ->groupby('book_id', 'paragraph', 'channel_uid')
-                    ->select('book_id', 'paragraph', 'channel_uid');
-            } else {
-                $sentences = Sentence::where('strlen', '>', 0)
-                    ->where('book_id', '<', 1000)
-                    ->whereNotNull('channel_uid')
-                    ->groupby('book_id', 'paragraph', 'channel_uid')
-                    ->select('book_id', 'paragraph', 'channel_uid');
-            }
-        }
-        $total = DB::query()
-            ->fromSub($sentences, 't')
-            ->count();
-        $sentences = $sentences->cursor();
-        $this->info('sentences:' . $total);
-        $curr = 0;
-        #第二步 更新段落表
-        foreach ($sentences as $sentence) {
-
-            # 第二步 生成para progress 1,2,15,zh-tw
-            # 计算此段落完成时间
-            $finalAt = Sentence::where('strlen', '>', 0)
-                ->where('book_id', $sentence->book_id)
-                ->where('paragraph', $sentence->paragraph)
-                ->where('channel_uid', $sentence->channel_uid)
-                ->max('created_at');
-            $updateAt = Sentence::where('strlen', '>', 0)
-                ->where('book_id', $sentence->book_id)
-                ->where('paragraph', $sentence->paragraph)
-                ->where('channel_uid', $sentence->channel_uid)
-                ->max('updated_at');
-            # 查询每个段落的等效巴利语字符数
-            $result_sent = Sentence::where('strlen', '>', 0)
-                ->where('book_id', $sentence->book_id)
-                ->where('paragraph', $sentence->paragraph)
-                ->where('channel_uid', $sentence->channel_uid)
-                ->select('word_start')
-                ->get();
-
-            $paraInfo = [
-                'book' => $sentence->book_id,
-                'para' => $sentence->paragraph,
-                'channel_id' => $sentence->channel_uid
-            ];
-            if (count($result_sent) > 0) {
-                #查询这些句子的总共等效巴利语字符数
-                $para_strlen = 0;
-                foreach ($result_sent as $sent) {
-                    # code...
-                    $para_strlen += PaliSentence::where('book', $sentence->book_id)
-                        ->where('paragraph', $sentence->paragraph)
-                        ->where('word_begin', $sent->word_start)
-                        ->value('length');
-                }
-
-                $paraData = [
-                    'lang' => 'en',
-                    'all_strlen' => $para_strlen,
-                    'public_strlen' => $para_strlen,
-                    'created_at' => $finalAt,
-                    'updated_at' => $updateAt,
-                ];
-
-
-                Progress::updateOrInsert($paraInfo, $paraData);
-            }
-            $curr++;
-            if ($curr % 500 === 0) {
-                $present = (int)($curr * 100 / $total);
-                $this->info("[{$present}%] Progress " . json_encode($paraInfo));
-                sleep(1);
-            }
+            $table = $table->where('book_id', '<', 1000)
+                ->whereNotNull('channel_uid');
         }
 
-        $time = time() - $startTime;
-        $this->info("upgrade progress finished in {$time}s");
+        return $table->groupBy('book_id', 'paragraph', 'channel_uid')
+            ->select('book_id', 'paragraph', 'channel_uid')
+            ->orderBy('book_id')
+            ->orderBy('paragraph');
+    }
 
-        return 0;
+    /** 从断点位置之后继续：跳过 (book < X) 或 (book = X and para <= Y) 的记录 */
+    private function applyResumeFilter($query, array $cursor)
+    {
+        return $query->where(function ($q) use ($cursor) {
+            $q->where('book_id', '>', $cursor['book'])
+                ->orWhere(function ($q2) use ($cursor) {
+                    $q2->where('book_id', $cursor['book'])
+                        ->where('paragraph', '>', $cursor['para']);
+                });
+        });
     }
 }

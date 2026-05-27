@@ -68,9 +68,7 @@ class MqAiTranslate extends Command
                 $pointer = Cache::get($pointerKey);
             }
 
-            Log::debug($queue . ' ai assistant token', ['user' => $first->model->uid]);
             $modelToken = $first->model->token;
-            Log::debug($queue . ' ai assistant token', ['token' => $modelToken]);
 
             $this->setTaskStatus($first->task->info->id, 'running', $modelToken);
 

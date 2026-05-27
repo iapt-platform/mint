@@ -11,7 +11,6 @@ use App\Models\Sentence;
 use App\Http\Api\Mq;
 use App\Http\Api\ChannelApi;
 
-use Illuminate\Support\Facades\Log;
 use App\Services\AuthService;
 
 class AiTaskPrepare
@@ -35,7 +34,6 @@ class AiTaskPrepare
             }
         }
         if (!isset($params['type'])) {
-            Log::error('no $params.type');
             return false;
         }
 
@@ -45,14 +43,12 @@ class AiTaskPrepare
         switch ($params['type']) {
             case 'sentence':
                 if (!isset($params['id'])) {
-                    Log::error('no $params.id');
                     return false;
                 }
                 $sentences[] = explode('-', $params['id']);
                 break;
             case 'para':
                 if (!isset($params['book']) || !isset($params['paragraphs'])) {
-                    Log::error('no $params.book or paragraphs');
                     return false;
                 }
                 $sent = PaliSentence::where('book', $params['book'])
@@ -72,7 +68,6 @@ class AiTaskPrepare
                 break;
             case 'chapter':
                 if (!isset($params['book']) || !isset($params['paragraphs'])) {
-                    Log::error('no $params.book or paragraphs');
                     return false;
                 }
                 $chapterLen = PaliText::where('book', $params['book'])
@@ -121,7 +116,6 @@ class AiTaskPrepare
         foreach ($sentences as $key => $sentence) {
             $sumLen += $sentence['strlen'];
             $sid = implode('-', $sentence['id']);
-            Log::debug($sid);
             $sentChannelInfo = explode('@', $params['channel']);
             $channelId = $sentChannelInfo[0];
             $data = [];

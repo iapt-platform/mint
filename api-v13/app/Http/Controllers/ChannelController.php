@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -180,7 +179,6 @@ class ChannelController extends Controller
                 $channels = Sentence::where('book_id', $request->input('book_id'))
                     ->whereIn('paragraph', explode(',', $request->input('para')))
                     ->groupBy('channel_uid')->select('channel_uid')->get();
-                Log::debug('channel paragraphs', ['channels' => $channels]);
                 if (count($channels) > 0) {
                     $channelIds = array_map(fn($item) => $item['channel_uid'], $channels->toArray());
                     $table = Channel::select($indexCol)
@@ -230,7 +228,6 @@ class ChannelController extends Controller
         //处理分页
         $table = $table->skip($request->input("offset", 0))
             ->take($request->input("limit", 200));
-        Log::debug('channel sql ' . $table->toSql());
         //获取数据
         $result = $table->get();
         //TODO 将下面代码转移到resource

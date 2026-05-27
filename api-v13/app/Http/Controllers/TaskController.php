@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
 
 use App\Models\Task;
 use App\Models\TaskAssignee;
@@ -122,8 +121,6 @@ class TaskController extends Controller
 
         $table = $table->skip($request->input("offset", 0))
             ->take($request->input('limit', 1000));
-
-        Log::debug('sql', ['sql' => $table->toSql()]);
 
         $result = $table->get();
 

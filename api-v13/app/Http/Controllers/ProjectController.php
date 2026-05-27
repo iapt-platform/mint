@@ -10,7 +10,6 @@ use App\Http\Api\ShareApi;
 
 use App\Http\Resources\ProjectResource;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
@@ -68,9 +67,6 @@ class ProjectController extends Controller
             $table = $table->whereIn('status', explode(',', $request->input('status')));
         }
         $count = $table->count();
-
-        $sql = $table->toSql();
-        Log::debug('sql', ['sql' => $sql]);
 
         $table = $table->orderBy($request->input('order', 'id'), $request->input('dir', 'asc'));
 

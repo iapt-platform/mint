@@ -55,7 +55,7 @@ class ExportTag extends Command
         try{
             $stmt = $dbh->prepare($query);
         }catch(PDOException $e){
-            Log::info($e);
+            Log::error($e->getMessage(), ['exception' => $e]);
             return 1;
         }
 

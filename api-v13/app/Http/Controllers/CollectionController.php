@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
 use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\CollectionResource;
@@ -126,22 +125,17 @@ class CollectionController extends Controller
     {
         $result = Collection::where('uid', $id)->first();
         if (!$result) {
-            Log::warning("没有查询到数据 id={$id}");
             return $this->error("没有查询到数据 id={$id}");
         }
 
         if ($result->status < 30) {
-            Log::info('私有文章，判断权限' . $id);
             $user = AuthService::current($request);
             if (!$user) {
-                Log::warning('未登录');
                 return $this->error(__('auth.failed'), 403, 403);
             }
 
             if ($user['user_uid'] !== $result->owner) {
-                Log::info($user['user_uid'] . '私有文章，判断权限' . $id);
                 if (!$this->service->userCanRead($user['user_uid'], $result)) {
-                    Log::warning($user['user_uid'] . '没有读取权限');
                     return $this->error(__('auth.failed'), 403, 403);
                 }
             }

@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Services\AuthService;
-use Illuminate\Support\Facades\Log;
 
 class StoreDiscussionRequest extends FormRequest
 {
@@ -18,7 +17,6 @@ class StoreDiscussionRequest extends FormRequest
     {
         $user = AuthService::current($this);
         if (!$user) {
-            Log::warning('discussion store auth failed', ['request' => $this]);
             return false;
         }
         $this->user = $user;

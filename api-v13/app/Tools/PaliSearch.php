@@ -7,7 +7,6 @@ class PaliSearch
 {
     public static function connect(){
         $host = config('mint.server.rpc.tulip.host') . ':' . config('mint.server.rpc.tulip.port');
-        Log::debug('tulip host='.$host);
         $client = new \Mint\Tulip\V1\SearchClient($host, [
             'credentials' => \Grpc\ChannelCredentials::createInsecure(),
         ]);
@@ -78,7 +77,6 @@ class PaliSearch
                                   $bold1,$bold2,$bold3,
                                   $content,$pcd_book_id){
         $client = PaliSearch::connect();
-        Log::debug('tulip update',['book'=>$book,'paragraph'=>$paragraph]);
         $request = new \Mint\Tulip\V1\UpdateRequest();
         $request->setBook($book);
         $request->setParagraph($paragraph);
@@ -94,7 +92,6 @@ class PaliSearch
             Log::error("ERROR: " . $status->code . ", " . $status->details);
             return false;
         }
-        Log::debug('tulip update success',['book'=>$book,'paragraph'=>$paragraph]);
         return $response->getCount();
     }
 }

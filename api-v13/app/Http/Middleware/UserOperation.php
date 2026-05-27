@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use Illuminate\Support\Facades\Log;
 
 use App\Models\UserOperationLog;
 use App\Models\UserOperationFrame;
@@ -119,9 +118,6 @@ class UserOperation
             $daily->increment('hit');
         } else {
             $id = app('snowflake')->id();
-            if (app()->isLocal()) {
-                Log::debug('snowflake ' . $id);
-            }
             $daily->forceFill([
                 'id'       => $id,
                 'duration' => self::MIN_INTERVAL,

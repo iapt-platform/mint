@@ -9,7 +9,6 @@ use App\Models\WbwAnalysis;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
@@ -272,14 +271,11 @@ class SentenceController extends Controller
             if ($power < 20) {
                 //判断token
                 if (!$access_token) {
-                    Log::error('no access token');
                     return false;
                 }
                 $key = AccessToken::where('res_id', $channelId)->value('token');
                 $jwt = JWT::decode($access_token, new Key($key . $key, 'HS512'));
-                Log::debug('access token', ['jwt' => $jwt]);
                 if ($jwt->book && $jwt->book !== $book) {
-                    Log::error('access token error');
                     return false;
                 }
             }
@@ -344,14 +340,11 @@ class SentenceController extends Controller
                 if ($power < 20) {
                     //判断token
                     if (!isset($sent['access_token'])) {
-                        Log::error('no access token');
                         continue;
                     }
                     $key = AccessToken::where('res_id', $destChannel->uid)->value('token');
                     $jwt = JWT::decode($sent['access_token'], new Key($key, 'HS512'));
-                    Log::debug('access token', ['jwt' => $jwt]);
                     if ($jwt->book !== $sent['book_id']) {
-                        Log::error('access token error');
                         continue;
                     }
                 }

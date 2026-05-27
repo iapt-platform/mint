@@ -4,7 +4,6 @@ namespace App\Http\Api;
 
 use App\Models\Task;
 use App\Models\TaskRelation;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -86,7 +85,6 @@ class TaskApi
         $key = TaskApi::taskRelationRedisKey($taskId, $relation);
         //Log::debug('task redis key=' . $key . ' has=' . Cache::has($key));
         $data = Cache::remember($key,  24 * 3600, function () use ($taskId, $relation) {
-            Log::debug('getRelationTasks task=' . $taskId . ' relation=' . $relation);
             if ($relation === 'pre') {
                 $where = 'next_task_id';
                 $select = 'task_id';

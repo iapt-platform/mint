@@ -5,7 +5,6 @@ namespace App\Http\Api;
 use App\Http\Resources\AiAssistant;
 use App\Models\AiModel;
 use App\Models\UserInfo;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\App;
 
@@ -69,7 +68,6 @@ class UserApi
     public static function userInfo($user)
     {
         if (!$user) {
-            Log::warning('$user=null;');
             return [
                 'id' => 0,
                 'nickName' => 'unknown',

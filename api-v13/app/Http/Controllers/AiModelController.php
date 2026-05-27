@@ -8,7 +8,6 @@ use App\Models\AiModel;
 use Illuminate\Http\Request;
 use App\Services\AuthService;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\AiModelResource;
 
@@ -80,7 +79,6 @@ class AiModelController extends Controller
             return $this->error(__('auth.failed'), 401, 401);
         }
         $studioId = StudioApi::getIdByName($request->input('studio_name'));
-        Log::debug('store', ['studioId' => $studioId, 'user' => $user]);
         if (!self::canEdit($user['user_uid'], $studioId)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
