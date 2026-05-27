@@ -3,40 +3,26 @@
 namespace App\Console\Commands;
 
 use App\Models\DhammaTerm;
-use Illuminate\Console\Command;
 use App\Services\OpenSearchService;
 use App\Services\TermService;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class IndexTerm extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     *
-     * @example
-     *   php artisan opensearch:index-term
-     *   php artisan opensearch:index-term --word=anomadassī
-     *   php artisan opensearch:index-term --test
-     */
     protected $signature = 'opensearch:index-term
         {--test}
-        {--word= : 指定单个词条进行索引，省略则索引全部}';
+        {--word= : 指定单个词条进行索引，省略则索引全部}
+        {--fresh : 清除缓存断点，从头开始}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Index Term data into OpenSearch';
+    protected $description = 'Index Term data into OpenSearch（可重入：中断后重跑自动跳过已索引的词条）';
 
-    /** @var bool 是否为测试模式（只打印，不写入 OpenSearch） */
+    // 缓存键：记录最后成功索引的游标位置，48h 过期
+    private const CACHE_KEY = 'index-term:cursor';
+
     private bool $isTest = false;
 
-    /**
-     * Create a new command instance.
-     */
     public function __construct(
         protected OpenSearchService $openSearchService,
         protected TermService $termService,
@@ -44,14 +30,6 @@ class IndexTerm extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * 遍历所有（或指定）DhammaTerm，逐条构建文档并写入 OpenSearch。
-     * 测试模式下（--test）只打印文档内容，不执行写入。
-     *
-     * @return int  0 表示成功，1 表示失败
-     */
     public function handle(): int
     {
         $word = $this->option('word');
@@ -61,33 +39,61 @@ class IndexTerm extends Command
             $this->info('test mode');
         }
 
+        if ($this->option('fresh')) {
+            Cache::forget(self::CACHE_KEY);
+            $this->info('Cleared cached cursor.');
+        }
+
         try {
             [$connected, $message] = $this->openSearchService->testConnection();
-            if (!$connected) {
+            if (! $connected) {
                 $this->error($message);
                 Log::error($message);
+
                 return 1;
             }
 
-            $total = DhammaTerm::count();
-            $terms = DhammaTerm::select(['guid', 'word'])->orderBy('updated_at', 'asc');
+            // 按自增 id 排序，保证游标稳定（updated_at 可能在运行中被修改）
+            $terms = DhammaTerm::select(['id', 'guid', 'word'])->orderBy('id');
 
             if ($word) {
                 $terms = $terms->where('word', $word);
             }
 
-            $overallStatus = 0;
+            // 从缓存恢复断点：跳过上次已处理的记录
+            $lastId = Cache::get(self::CACHE_KEY);
+            if ($lastId && ! $word) {
+                $terms = $terms->where('id', '>', $lastId);
+                $this->info("Resuming after id={$lastId}");
+            }
 
-            foreach ($terms->cursor() as $key => $term) {
-                $percent = (int) (($key * 100) / $total);
-                $this->info("[{$percent}%]-{$key}  " . $term->word);
+            $total = $terms->count();
+            $this->info("terms to index: {$total}");
+
+            $curr = 0;
+
+            foreach ($terms->cursor() as $term) {
+                $curr++;
+                if ($curr % 10 === 0) {
+                    $percent = (int) ($curr * 100 / $total);
+                    $this->info("[{$percent}%]-{$curr}/{$total}  {$term->word}");
+
+                    // 每 10 条保存一次断点
+                    Cache::put(self::CACHE_KEY, $term->id, now()->addHours(48));
+                }
+
                 $this->indexTerm($term->guid);
             }
 
-            return $overallStatus;
+            // 全部完成，清除断点缓存
+            Cache::forget(self::CACHE_KEY);
+            $this->info("index-term finished. total: {$curr}");
+
+            return 0;
         } catch (\Exception $e) {
-            $this->error('Failed to index Term data: ' . $e->getMessage());
+            $this->error('Failed to index Term data: '.$e->getMessage());
             Log::error('Failed to index Term data', ['error' => $e]);
+
             return 1;
         }
     }
@@ -101,14 +107,13 @@ class IndexTerm extends Command
      *   content.text.pali / content.text.zh   → 正文内容
      *
      * @param  string  $id  DhammaTerm 的 guid
-     * @return void
      */
     protected function indexTerm(string $id): void
     {
-        $termData    = $this->termService->find($id, 'text');
+        $termData = $this->termService->find($id, 'text');
         $channelName = $termData['channel']['name'] ?? '';
         $isCommunity = $this->termService->isCommunity($termData['channel_id']);
-        $content     = $termData['html'] ?? $termData['meaning'];
+        $content = $termData['html'] ?? $termData['meaning'];
 
         $categories = $this->extractCategories($termData['note'] ?? '');
         $quality = $this->extractFirstQuality($termData['note'] ?? '');
@@ -116,34 +121,34 @@ class IndexTerm extends Command
         foreach ($categories as $key => $category) {
             $tags[] = "category:{$category}";
         }
-        if (!empty($quality)) {
+        if (! empty($quality)) {
             $tags[] = "quality:{$quality}";
         }
         $document = [
-            'id'            => "term_{$id}",
-            'resource_id'   => $id,
+            'id' => "term_{$id}",
+            'resource_id' => $id,
             'resource_type' => 'term',
-            'title'         => [
+            'title' => [
                 'text' => [
                     'pali' => $termData['word'],
-                    'zh'   => $termData['meaning'],
+                    'zh' => $termData['meaning'],
                 ],
                 'suggest' => [
                     'pali' => [$termData['word']],
-                    'zh'   => [$termData['meaning']],
+                    'zh' => [$termData['meaning']],
                 ],
             ],
             'summary' => [
                 'text' => $termData['summary'] ?? '',
             ],
-            'content'     => [],
+            'content' => [],
             'bold_single' => [$termData['meaning'], $termData['word']],
-            'related_id'  => $termData['word'],
-            'category'    => null,
-            'tags'        => $tags,
-            'language'    => $termData['language'],
-            'updated_at'  => now()->toIso8601String(),
-            'path'        => $termData['studio']['realName'] . "/{$channelName}",
+            'related_id' => $termData['word'],
+            'category' => null,
+            'tags' => $tags,
+            'language' => $termData['language'],
+            'updated_at' => now()->toIso8601String(),
+            'path' => $termData['studio']['realName']."/{$channelName}",
             'metadata' => ['channel' => $termData['channel_id']],
         ];
 
@@ -154,11 +159,11 @@ class IndexTerm extends Command
         } else {
             $document['content']['text']['zh'] = $plainText;
         }
-        $document['content']['display']    = $content;             // 展示
+        $document['content']['display'] = $content;             // 展示
 
         if ($this->isTest) {
             $this->info($document['title']['text']['pali']);
-            $this->info($document['summary']['text']);
+            //$this->info($document['summary']['text']);
         } else {
             $this->openSearchService->create($document['id'], $document);
         }
@@ -166,9 +171,6 @@ class IndexTerm extends Command
 
     /**
      * 提取 Markdown 中的 {{category|...}} 分类标签
-     *
-     * @param string $content
-     * @return array
      */
     private function extractCategories(string $content): array
     {
@@ -178,16 +180,13 @@ class IndexTerm extends Command
         preg_match_all('/\{\{category\|([^}]+)\}\}/u', $content, $matches);
 
         return array_values(array_filter(array_map(
-            fn($item) => trim($item),
+            fn ($item) => trim($item),
             $matches[1] ?? []
         )));
     }
 
     /**
      * 提取 Markdown 中第一个 {{quality|...}} 标签内的内容
-     *
-     * @param string $content
-     * @return string
      */
     private function extractFirstQuality(string $content): string
     {
