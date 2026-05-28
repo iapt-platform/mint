@@ -129,7 +129,7 @@ class TipitakaController extends Controller
             'sort'   => $selectedSort,
         ];
         if ($request->has('book')) {
-            $selected['book'] = $request->get('book');
+            $selected['book'] = $request->input('book');
         }
 
         // ── 书籍列表（过滤+排序，真实实现替换此处） ──────────────
