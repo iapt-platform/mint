@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
+
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
 use App\Services\TermService;
-
+use App\Models\Tag;
+use App\Models\TagMap;
 
 
 class TipitakaController extends Controller
@@ -118,7 +120,7 @@ class TipitakaController extends Controller
         $selectedSort   = request('sort',   'new');
 
         $sortList = [
-            ['key' => 'new',         'label' => '最新',],
+            ['key' => 'new',         'label' => __('library.badge_updated'),],
             ['key' => 'progress',    'label' => '完成度',],
         ];
 
@@ -336,7 +338,7 @@ class TipitakaController extends Controller
             if (empty($title)) {
                 $title = $pali->firstWhere('book', $book->book)->toc;
             }
-            //Log::debug('getBooksInfo', ['book' => $book->book, 'paragraph' => $book->para]);
+
             $pcd_book_id = $pali->first(function ($item) use ($book) {
                 return $item->book == $book->book
                     && $item->paragraph == $book->para;
@@ -349,11 +351,13 @@ class TipitakaController extends Controller
                 $coverUrl = null;
             }
             $colorIdx = $this->colorIndex($book->uid);
+            $subTitle = $this->getBookType($book->book, $book->para);
 
             $categoryBooks[] = [
                 "id" => $book->uid,
                 "title" => $title,
                 "author" => $book->channel->name,
+                'subTitle' => $subTitle,
                 "publisher" => $book->channel->owner,
                 'completed_chapters' => $book->completed_chapters,
                 "type" => __('labels.' . $book->channel->type),
@@ -364,6 +368,22 @@ class TipitakaController extends Controller
             ];
         });
         return $categoryBooks;
+    }
+
+
+    private function getBookType(int $book, int $para)
+    {
+
+        $paliTextUuid = PaliText::where('book', $book)->where('paragraph', $para)->value('uid');
+        $tagIds = TagMap::where('anchor_id', $paliTextUuid)->select('tag_id')->get();
+        $tags = Tag::whereIn('id', $tagIds)->select('name')->get();
+        foreach ($tags as $key => $tag) {
+            if (in_array($tag->name, ['pāḷi', 'aṭṭhakathā', 'ṭīkā'])) {
+                return __('library.' . $tag->name);
+            }
+        }
+
+        return null;
     }
     private function loadCategories()
     {
