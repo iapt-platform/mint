@@ -116,7 +116,7 @@
                 </div>
 
                 {{-- 作者 --}}
-                <div class="tipitaka-filter-row">
+                <div class="tipitaka-filter-row" style="display:none">
                     <span class="tipitaka-filter-label">{{ __('library.author') }}</span>
                     <select class="form-select form-select-sm tipitaka-author-select"
                         onchange="window.location=this.value">
