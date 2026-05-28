@@ -216,7 +216,12 @@ HTML,
             $term = $this->termService->communityWiki($word, $lang, 'html');
         }
 
-        $result = $this->searchService->get("term_{$term['guid']}");
+        try {
+            $result = $this->searchService->get("term_{$term['guid']}");
+        } catch (\Throwable $th) {
+            abort(404);
+        }
+
         if (isset($result['_source']['tags'])) {
             $quality = $this->getQuality($result['_source']['tags']);
         } else {
