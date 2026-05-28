@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class ChannelApi
 {
-    public static function getById(string $id)
+    public static function getById(?string $id)
     {
         if (!Str::isUuid($id)) {
             return false;
