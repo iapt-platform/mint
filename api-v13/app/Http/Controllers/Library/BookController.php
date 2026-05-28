@@ -101,7 +101,12 @@ class BookController extends Controller
         try {
             $chapter = HitItemDTO::fromArray($this->searchService->get($openSearchId))->toArray();
         } catch (\Throwable $th) {
-            abort(404);
+            $chapter = [
+                'category' => [],
+                'title' => '',
+                'display' => ''
+
+            ];
         }
 
         [$bookId, $paraId] = explode('-', $id);
@@ -124,8 +129,8 @@ class BookController extends Controller
         $studio = StudioApi::getById($channel['studio_id']);
         $book['categories'] = $chapter['category'];
         $book['title']      = $chapter['title'];
-        $book['author']     = $channel['name']; // FIXME
-        $book['studio']     = $studio; // FIXME
+        $book['author']     = $channel['name'];
+        $book['studio']     = $studio;
         $book['tags']       = [];
 
         $book['pagination'] = $this->pagination((int)$bookId, (int)$paraId, $channelId);
