@@ -129,7 +129,11 @@ class SearchPlusController extends Controller
     public function show($id)
     {
         //
-        return $this->ok(HitItemDTO::fromArray($this->searchService->get($id)));
+        try {
+            return $this->ok(HitItemDTO::fromArray($this->searchService->get($id)));
+        } catch (\Throwable $th) {
+            return $this->error("no such index {$id}", 404, 404);
+        }
     }
 
     /**
