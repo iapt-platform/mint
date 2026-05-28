@@ -96,7 +96,11 @@ class BookController extends Controller
         $channelId = $request->input('channel');
         $openSearchId = "tipitaka_chapter_{$id}_{$channelId}";
 
-        $chapter = HitItemDTO::fromArray($this->searchService->get($openSearchId))->toArray();
+        try {
+            $chapter = HitItemDTO::fromArray($this->searchService->get($openSearchId))->toArray();
+        } catch (\Throwable $th) {
+            abort(404);
+        }
 
         [$bookId, $paraId] = explode('-', $id);
         if ($request->has('comm')) {
