@@ -17,6 +17,8 @@ use App\Services\OpenSearchService;
 
 use App\DTO\Search\HitItemDTO;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\StudioApi;
+
 
 class BookController extends Controller
 {
@@ -119,9 +121,11 @@ class BookController extends Controller
 
         $book['toc'] = $this->getBookToc((int)$bookId, (int)$paraId, $channelId, 2, 7);
         $channel = ChannelApi::getById($channelId);
+        $studio = StudioApi::getById($channel['studio_id']);
         $book['categories'] = $chapter['category'];
         $book['title']      = $chapter['title'];
         $book['author']     = $channel['name']; // FIXME
+        $book['studio']     = $studio; // FIXME
         $book['tags']       = [];
 
         $book['pagination'] = $this->pagination((int)$bookId, (int)$paraId, $channelId);
