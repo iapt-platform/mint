@@ -16,7 +16,7 @@ use App\Services\PaliTextService;
 use App\Services\OpenSearchService;
 
 use App\DTO\Search\HitItemDTO;
-
+use App\Http\Api\ChannelApi;
 
 class BookController extends Controller
 {
@@ -118,10 +118,10 @@ class BookController extends Controller
         $book = [];
 
         $book['toc'] = $this->getBookToc((int)$bookId, (int)$paraId, $channelId, 2, 7);
-
+        $channel = ChannelApi::getById($channelId);
         $book['categories'] = $chapter['category'];
         $book['title']      = $chapter['title'];
-        $book['author']     = 'author'; // FIXME
+        $book['author']     = $channel['name']; // FIXME
         $book['tags']       = [];
 
         $book['pagination'] = $this->pagination((int)$bookId, (int)$paraId, $channelId);
