@@ -35,7 +35,7 @@ class AiArticleTranslate extends Command
             $total = $service->setModel($this->option('model'))
                 ->setChannel($this->option('channel'))
                 ->translateArticle($this->option('article'))
-                ->saveRpc($this->option('endpoint'), $this->option('token'));
+                ->save();
             $this->info("{$total} sentences saved");
         }
         if ($this->option('anthology')) {
@@ -47,7 +47,7 @@ class AiArticleTranslate extends Command
                 $total = $service->setModel($this->option('model'))
                     ->setChannel($this->option('channel'))
                     ->translateArticle($article)
-                    ->saveRpc($this->option('endpoint'), $this->option('token'));
+                    ->save();
                 $this->info("{$total} sentences saved");
             }
 
