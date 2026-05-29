@@ -28,6 +28,8 @@ class ArticleTranslateService
     protected string $outputChannelId;
     protected string $currArticleId;
 
+    protected bool $thinking;
+
     protected string $systemPrompt = <<<PROMPT
     请根据提供的原文，翻译为简体中文。
 
@@ -80,6 +82,17 @@ class ArticleTranslateService
     {
         $this->modelId = $model;
         $this->modelToken = app(AuthService::class)->getUserToken($model);
+        return $this;
+    }
+    /**
+     * 设置模型配置
+     *
+     * @param bool $thinking
+     * @return self
+     */
+    public function setThinking(bool $thinking): self
+    {
+        $this->thinking = $thinking;
         return $this;
     }
     /**
