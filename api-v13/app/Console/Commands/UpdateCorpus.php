@@ -16,7 +16,7 @@ use App\Models\Channel;
 use App\Http\Api\UserApi;
 
 
-#[Signature('app:update-corpus --dir= --es')]
+#[Signature('app:update-corpus {--dir=} {--es}')]
 #[Description('Update corpus from JSONL files in corpus directory')]
 class UpdateCorpus extends Command
 {
