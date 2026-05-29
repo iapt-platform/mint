@@ -21,6 +21,7 @@ class TranslateService
     protected AIModelService $aiModelService;
     protected AiModelResource $model;
     protected string $modelToken;
+    protected bool $thinking;
 
     protected bool $stream = false;
     protected array $original; //需要被翻译的原文
@@ -49,6 +50,17 @@ class TranslateService
     {
         $this->model = $this->aiModelService->getModelById($model);
         $this->modelToken = AuthService::getUserToken($model);
+        return $this;
+    }
+    /**
+     * 设置模型配置
+     *
+     * @param bool $thinking
+     * @return self
+     */
+    public function setThinking(bool $thinking): self
+    {
+        $this->thinking = $thinking;
         return $this;
     }
     /**
@@ -90,28 +102,30 @@ class TranslateService
         try {
 
 
-            Log::info('准备翻译', [
+            Log::debug('准备翻译', [
                 'systemPrompt' => $this->systemPrompt,
                 'translatePrompt' => $this->translatePrompt,
             ]);
 
             // 3. 调用LLM进行翻译
-            $response = $this->openAIService
+            $llm = $this->openAIService
                 ->setApiUrl($this->model['url'])
                 ->setModel($this->model['model'])
                 ->setApiKey($this->model['key'])
                 ->setSystemPrompt($this->systemPrompt)
                 ->setTemperature(0.3)
-                ->setStream($this->stream)
-                ->send($this->translatePrompt);
-
+                ->setStream($this->stream);
+            if (isset($this->thinking)) {
+                $llm = $llm->setThinking($this->thinking);
+            }
+            $response = $llm->send($this->translatePrompt);
             $complete = time() - $startAt;
             $content = $response['choices'][0]['message']['content'] ?? '';
 
             if (empty($content)) {
                 throw new \Exception('LLM返回内容为空');
             }
-            Log::info('翻译完成', [
+            Log::debug('翻译完成', [
                 'content' => $content,
                 'duration' => $complete,
                 'input_tokens' => $response['usage']['prompt_tokens'] ?? 0,
@@ -120,7 +134,7 @@ class TranslateService
             // 4. 解析JSONL格式的翻译结果
             $translatedData = $this->jsonlToArray($content);
 
-            Log::info('解析完成', [
+            Log::debug('解析完成', [
                 'output_items' => count($translatedData),
             ]);
 

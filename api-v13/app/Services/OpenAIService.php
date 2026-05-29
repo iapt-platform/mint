@@ -19,6 +19,7 @@ class OpenAIService
     protected bool $stream = false;
     protected int $timeout = 600;
     protected int $maxTokens = 0;
+    protected bool $thinking;
 
     public static function withRetry(int $retries = 3, int $delayMs = 2000): static
     {
@@ -35,6 +36,18 @@ class OpenAIService
     public function setModel(string $model): static
     {
         $this->model = $model;
+        return $this;
+    }
+
+    /**
+     * 设置模型配置
+     *
+     * @param bool $thinking
+     * @return self
+     */
+    public function setThinking(bool $thinking): self
+    {
+        $this->thinking = $thinking;
         return $this;
     }
 
@@ -159,6 +172,10 @@ class OpenAIService
             'temperature' => $this->temperature,
             'stream' => false,
         ];
+
+        if (isset($this->thinking)) {
+            $data['enable_thinking'] = $this->thinking;
+        }
 
         if ($this->maxTokens > 0) {
             $data['max_tokens'] = $this->maxTokens;
