@@ -16,7 +16,7 @@ class ProgressController extends Controller
         //
         switch ($request->input('view')) {
             case 'channel':
-                $table = ProgressChapter::whereIn('channel_id', explode('_', $request->get('channels', '')));
+                $table = ProgressChapter::whereIn('channel_id', explode('_', $request->input('channels', '')));
                 break;
             default:
                 return $this->error('invalid view', 400, 400);
@@ -24,7 +24,7 @@ class ProgressController extends Controller
         }
 
         if ($request->has('lang')) {
-            $table = $table->where('lang', $request->get('lang'));
+            $table = $table->where('lang', $request->input('lang'));
         }
         $count = $table->count();
 

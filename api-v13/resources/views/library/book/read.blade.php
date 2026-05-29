@@ -163,9 +163,9 @@
                 <p>
                     <strong>{{ __('library.author') }}：</strong>
                     {{ $book['author'] }}
-                    @if(isset($book['publisher']))
-                    @ <a href="{{ route('blog.index', ['user' => $book['publisher']->username]) }}">
-                        {{ $book['publisher']->nickname }}
+                    @if(isset($book['studio']))
+                    @ <a href="{{ route('blog.index', ['user' => $book['studio']['studioName']]) }}">
+                        {{ $book['studio']['nickName'] }}
                     </a>
                     @endif
                 </p>

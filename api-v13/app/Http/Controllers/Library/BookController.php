@@ -16,6 +16,8 @@ use App\Services\PaliTextService;
 use App\Services\OpenSearchService;
 
 use App\DTO\Search\HitItemDTO;
+use App\Http\Api\ChannelApi;
+use App\Http\Api\StudioApi;
 
 
 class BookController extends Controller
@@ -99,7 +101,12 @@ class BookController extends Controller
         try {
             $chapter = HitItemDTO::fromArray($this->searchService->get($openSearchId))->toArray();
         } catch (\Throwable $th) {
-            abort(404);
+            $chapter = [
+                'category' => [],
+                'title' => '',
+                'display' => ''
+
+            ];
         }
 
         [$bookId, $paraId] = explode('-', $id);
@@ -118,10 +125,12 @@ class BookController extends Controller
         $book = [];
 
         $book['toc'] = $this->getBookToc((int)$bookId, (int)$paraId, $channelId, 2, 7);
-
+        $channel = ChannelApi::getById($channelId);
+        $studio = StudioApi::getById($channel['studio_id']);
         $book['categories'] = $chapter['category'];
         $book['title']      = $chapter['title'];
-        $book['author']     = 'author'; // FIXME
+        $book['author']     = $channel['name'];
+        $book['studio']     = $studio;
         $book['tags']       = [];
 
         $book['pagination'] = $this->pagination((int)$bookId, (int)$paraId, $channelId);
