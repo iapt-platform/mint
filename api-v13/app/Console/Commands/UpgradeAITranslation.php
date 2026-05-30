@@ -115,7 +115,14 @@ class UpgradeAITranslation extends Command
         if ($this->option('book')) {
             $books = [$this->option('book')];
         } else {
-            $books = range(1, 217);
+            // 未指定 book 时，若已有断点缓存，从上次处理到的 book 继续，无需从 1 开始
+            $startBook = 1;
+            if (! empty($done)) {
+                $doneBooks = array_map(fn ($cursor) => (int) explode('|', $cursor)[0], array_keys($done));
+                $startBook = max($doneBooks);
+                $this->info("resume from book {$startBook}");
+            }
+            $books = range($startBook, 217);
         }
         foreach ($books as $key => $book) {
             $maxParagraph = PaliText::where('book', $book)->max('paragraph');
@@ -131,7 +138,7 @@ class UpgradeAITranslation extends Command
 
                     continue;
                 }
-                $this->info($this->argument('type')." {$book}-{$paragraph}");
+
                 $data = [];
                 switch ($this->argument('type')) {
                     case 'translation':
@@ -148,7 +155,7 @@ class UpgradeAITranslation extends Command
                         break;
                 }
                 $this->save($data);
-
+                $this->info($this->argument('type')." {$book}-{$paragraph} ".count($data).' sentences');
                 // 该处理单元全部写库完成后再标记游标，确保中途中断不会误跳过
                 $done[$cursor] = true;
                 Cache::put($cacheKey, $done, now()->addHours(24));
