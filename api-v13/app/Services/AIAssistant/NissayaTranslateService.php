@@ -155,7 +155,7 @@ PROMPT;
             // 4. 解析JSONL格式的翻译结果
             $translatedData = $this->jsonlToArray($content);
 
-            Log::info('NissayaTranslate: 翻译完成', [
+            Log::debug('NissayaTranslate: 翻译完成', [
                 'duration' => $complete,
                 'output_items' => count($translatedData),
                 'input_tokens' => $response['usage']['prompt_tokens'] ?? 0,
@@ -266,7 +266,7 @@ PROMPT;
             ];
 
             foreach ($batches as $index => $batch) {
-                Log::info("NissayaTranslate: 处理批次 " . ($index + 1) . "/" . count($batches));
+                Log::debug("NissayaTranslate: 处理批次 " . ($index + 1) . "/" . count($batches));
 
                 $jsonlInput = $this->arrayToJsonl($batch);
                 $response = $this->openAIService

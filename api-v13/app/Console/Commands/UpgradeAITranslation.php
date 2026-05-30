@@ -78,7 +78,7 @@ class UpgradeAITranslation extends Command
             $this->modelToken = AuthService::getUserToken($this->model['uid']);
         }
         $this->workChannel = ChannelApi::getById($this->ask('请输入结果channel'));
-
+        // TODO 需要判断输入channel 与翻译类型是否一致 nissaya -> nissaya channel
         $books = [];
         if ($this->option('book')) {
             $books = [$this->option('book')];
