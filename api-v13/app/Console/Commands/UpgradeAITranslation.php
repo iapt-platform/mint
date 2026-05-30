@@ -2,26 +2,22 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-
-use App\Services\OpenAIService;
-use App\Services\AIModelService;
-use App\Services\SentenceService;
-use App\Services\SearchPaliDataService;
-use App\Services\AIAssistant\NissayaTranslateService;
-use App\Services\AuthService;
-
-use App\Http\Resources\AiModelResource;
-
-use App\Models\PaliText;
-use App\Models\PaliSentence;
-use App\Models\Sentence;
-
 use App\Helpers\LlmResponseParser;
-
 use App\Http\Api\ChannelApi;
+use App\Http\Resources\AiModelResource;
+use App\Models\PaliSentence;
+use App\Models\PaliText;
+use App\Models\Sentence;
+use App\Services\AIAssistant\NissayaTranslateService;
+use App\Services\AIModelService;
+use App\Services\AuthService;
+use App\Services\OpenAIService;
+use App\Services\SearchPaliDataService;
+use App\Services\SentenceService;
 use App\Tools\Tools;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class UpgradeAITranslation extends Command
 {
@@ -29,9 +25,13 @@ class UpgradeAITranslation extends Command
      * The name and signature of the console command.
      * php artisan upgrade:ai.translation translation --book=141 --para=535
      * php artisan upgrade:ai.translation nissaya --book=207 --para=1247
+     *
      * @var string
      */
-    protected $signature = 'upgrade:ai.translation {type} {--book=} {--para=} {--resume} {--model=} ';
+    protected $signature = 'upgrade:ai.translation {type} {channel} {--book=} {--para=} {--resume} {--model=} {--fresh : 清除缓存断点，从头开始}';
+
+    // 缓存键前缀：以 type、channel 区分，记录已完成的 "book|para" 集合，中断后重跑自动跳过
+    private const CACHE_KEY_PREFIX = 'upgrade:ai.translation:done';
 
     /**
      * The console command description.
@@ -39,14 +39,23 @@ class UpgradeAITranslation extends Command
      * @var string
      */
     protected $description = 'Command description';
+
     protected $sentenceService;
+
     protected $modelService;
+
     protected $openAIService;
+
     protected $nissayaTranslateService;
+
     protected AiModelResource $model;
+
     protected $modelToken;
+
     protected $workChannel;
+
     protected $accessToken;
+
     /**
      * Create a new command instance.
      *
@@ -77,8 +86,31 @@ class UpgradeAITranslation extends Command
             $this->info("model:{$this->model['model']}");
             $this->modelToken = AuthService::getUserToken($this->model['uid']);
         }
-        $this->workChannel = ChannelApi::getById($this->ask('请输入结果channel'));
-        // TODO 需要判断输入channel 与翻译类型是否一致 nissaya -> nissaya channel
+        $this->workChannel = ChannelApi::getById($this->argument('channel'));
+        // 需要判断输入channel 与翻译类型是否一致 nissaya -> nissaya channel
+        if ($this->workChannel['type'] !== $this->argument('type')) {
+            $this->error('channel type not match request '.$this->argument('type').' input is '.$this->workChannel['type']);
+
+            return 1;
+        }
+
+        $type = $this->argument('type');
+        $channelId = $this->workChannel['id'] ?? '';
+
+        // 缓存键：按 type、channel 区分不同任务的断点
+        $cacheKey = self::CACHE_KEY_PREFIX.':'.$type.':'.$channelId;
+
+        if ($this->option('fresh')) {
+            Cache::forget($cacheKey);
+            $this->info('Cleared cached cursor.');
+        }
+
+        // 是否为完整遍历（未指定 book/para），仅此情形在结束后清空断点缓存
+        $isFullRun = ! $this->option('book') && ! $this->option('para');
+
+        // 从缓存恢复已完成的 (book, para) 集合，作为重入时的稳定游标
+        $done = Cache::get($cacheKey, []);
+
         $books = [];
         if ($this->option('book')) {
             $books = [$this->option('book')];
@@ -92,7 +124,14 @@ class UpgradeAITranslation extends Command
                 $paragraphs = [$this->option('para')];
             }
             foreach ($paragraphs as $key => $paragraph) {
-                $this->info($this->argument('type') . " {$book}-{$paragraph}");
+                // 稳定游标：缓存键已含 type、channel，此处仅以 book|para 标识处理单元
+                $cursor = $book.'|'.$paragraph;
+                if (isset($done[$cursor])) {
+                    $this->info("skip {$cursor}");
+
+                    continue;
+                }
+                $this->info($this->argument('type')." {$book}-{$paragraph}");
                 $data = [];
                 switch ($this->argument('type')) {
                     case 'translation':
@@ -105,12 +144,22 @@ class UpgradeAITranslation extends Command
                         $data = $this->aiWBW($book, $paragraph);
                         break;
                     default:
-                        # code...
+                        // code...
                         break;
                 }
                 $this->save($data);
+
+                // 该处理单元全部写库完成后再标记游标，确保中途中断不会误跳过
+                $done[$cursor] = true;
+                Cache::put($cacheKey, $done, now()->addHours(24));
             }
         }
+
+        // 完整遍历正常结束，清空断点缓存
+        if ($isFullRun) {
+            Cache::forget($cacheKey);
+        }
+
         return 0;
     }
 
@@ -121,21 +170,22 @@ class UpgradeAITranslation extends Command
             ->where('paragraph', $para)
             ->orderBy('word_begin')
             ->get();
-        if (!$sentences) {
+        if (! $sentences) {
             return null;
         }
         $json = [];
         foreach ($sentences as $key => $sentence) {
-            $content = $sentenceService->getSentenceText($book, $para, $sentence->word_begin, $sentence->word_end);
+            $content = $sentenceService->getSentenceContent($book, $para, $sentence->word_begin, $sentence->word_end);
             $id = "{$book}-{$para}-{$sentence->word_begin}-{$sentence->word_end}";
             $json[] = ['id' => $id, 'content' => $content['markdown']];
         }
+
         return $json;
     }
 
     private function aiPaliTranslate($book, $para)
     {
-        $prompt = <<<md
+        $prompt = <<<'md'
         你是一个巴利语翻译助手。
         pali 是巴利原文的一个段落，json格式， 每条记录是一个句子。包括id 和 content 两个字段
         请翻译这个段落为简体中文。
@@ -159,10 +209,11 @@ class UpgradeAITranslation extends Command
     md;
 
         $pali = $this->getPaliContent($book, $para);
-        $originalText = "```json\n" . json_encode($pali, JSON_UNESCAPED_UNICODE) . "\n```";
+        $originalText = "```json\n".json_encode($pali, JSON_UNESCAPED_UNICODE)."\n```";
         Log::debug($originalText);
-        if (!$this->model) {
+        if (! $this->model) {
             Log::error('model is invalid');
+
             return [];
         }
         $startAt = time();
@@ -175,16 +226,18 @@ class UpgradeAITranslation extends Command
             ->send("# pali\n\n{$originalText}\n\n");
         $complete = time() - $startAt;
         $translationText = $response['choices'][0]['message']['content'] ?? '[]';
-        Log::debug("complete in {$complete}s", $translationText);
+        Log::debug("complete in {$complete}s", ['content' => $translationText]);
         $json = [];
         if (is_string($translationText)) {
             $json = LlmResponseParser::jsonl($translationText);
         }
+
         return $json;
     }
+
     private function aiWBW($book, $para)
     {
-        $sysPrompt = <<<md
+        $sysPrompt = <<<'md'
         你是一个佛教翻译专家，精通巴利文和缅文，精通巴利文逐词解析
         ## 翻译要求：
         - 请将用户提供的巴利句子单词表中的每个巴利文单词翻译为中文
@@ -216,7 +269,7 @@ class UpgradeAITranslation extends Command
             $tpl = [];
             foreach ($wbw as $key => $word) {
                 if (
-                    !empty($word->real->value) &&
+                    ! empty($word->real->value) &&
                     $word->type->value !== '.ctl.'
                 ) {
                     $tpl[] = [
@@ -238,7 +291,7 @@ class UpgradeAITranslation extends Command
                 ->send("```json\n{$tplText}\n```");
             $complete = time() - $startAt;
             $content = $response['choices'][0]['message']['content'] ?? '[]';
-            Log::debug("ai response in {$complete}s content=" . $content);
+            Log::debug("ai response in {$complete}s content=".$content);
 
             $json = LlmResponseParser::jsonl($content);
 
@@ -248,22 +301,24 @@ class UpgradeAITranslation extends Command
                 'content' => json_encode($json, JSON_UNESCAPED_UNICODE),
             ];
         }
+
         return $result;
     }
+
     private function aiNissayaTranslate($book, $para)
     {
-        $sysPrompt = <<<md
+        $sysPrompt = <<<'md'
         你是一个佛教翻译专家，精通巴利文和缅文
         ## 翻译要求：
         - 请将nissaya单词表中的巴利文和缅文分别翻译为中文
         - 输入格式为 巴利文:缅文
         - 一行是一条记录，翻译的时候，请不要拆分一行中的巴利文单词或缅文单词，一行中出现多个单词的，一起翻译
         - 输出csv格式内容，分隔符为"$"，
-        - 字段如下：巴利文\$巴利文的中文译文\$缅文\$缅文的中文译文 #两个译文的语义相似度（%）
+        - 字段如下：巴利文$巴利文的中文译文$缅文$缅文的中文译文 #两个译文的语义相似度（%）
 
         **范例**：
 
-        pana\$然而\$ဝါဒန္တရကား\$教义之说 #60%
+        pana$然而$ဝါဒန္တရကား$教义之说 #60%
 
         直接输出csv, 无需其他内容
         用```包裹的行为注释内容，也需要翻译和解释。放在最后面。如果没有```，无需处理
@@ -306,22 +361,24 @@ class UpgradeAITranslation extends Command
             $aiNissaya = $this->nissayaTranslateService
                 ->setModel($this->model)
                 ->translate($sentence->content, false);
-            Log::debug("ai response ", ['content' => $aiNissaya['data']]);
+            Log::debug('ai response ', ['content' => $aiNissaya['data']]);
             $result[] = [
                 'id' => $id,
                 'content' => json_encode($aiNissaya['data'] ?? [], JSON_UNESCAPED_UNICODE),
-                'content_type' => 'json'
+                'content_type' => 'json',
             ];
         }
+
         return $result;
     }
 
     private function save($data)
     {
-        //写入句子库
+        // 写入句子库
         $sentData = [];
         $sentData = array_map(function ($n) {
             $sId = explode('-', $n['id']);
+
             return [
                 'book_id' => $sId[0],
                 'paragraph' => $sId[1],
