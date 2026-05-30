@@ -27,7 +27,7 @@ class UpgradeSystemCommentary extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:sys.commentary {--book=} {--para=} {--list} {--model=} {--fresh : 清除缓存断点，从头开始}';
+    protected $signature = 'upgrade:sys.commentary {--book=} {--para=} {--list} {--model=} {--skip= : 跳过指定的 book_name，逗号分隔，支持前缀通配，如 abhi*,sn2} {--fresh : 清除缓存断点，从头开始}';
 
     protected $prompt = <<<'md'
     你是一个注释对照阅读助手。
@@ -132,6 +132,12 @@ md;
         // 从缓存恢复已完成的 (book_name, cs_para) 集合，作为重入时的稳定游标
         $done = Cache::get(self::CACHE_KEY, []);
 
+        // 需要跳过的 book_name 规则，逗号分隔，以 * 结尾为前缀匹配，否则全等匹配
+        $skipPatterns = [];
+        if ($this->option('skip')) {
+            $skipPatterns = array_values(array_filter(array_map('trim', explode(',', $this->option('skip')))));
+        }
+
         $channel = ChannelApi::getChannelByName('_System_commentary_');
 
         $books = [];
@@ -148,6 +154,12 @@ md;
                 ->get()->toArray();
         }
         foreach ($books as $key => $currBook) {
+            // 命中跳过规则时直接处理下一本：即便上次游标停在此书，也跳到下一个有效 book_name
+            if ($this->shouldSkipBook($currBook['book_name'], $skipPatterns)) {
+                $this->info('skip book '.$currBook['book_name']);
+
+                continue;
+            }
             $paragraphs = [];
             if ($this->option('para')) {
                 $paragraphs[] = ['cs_para' => $this->option('para')];
@@ -276,6 +288,27 @@ md;
         }
 
         return 0;
+    }
+
+    /**
+     * 判断 book_name 是否命中跳过规则。
+     *
+     * @param  array<int, string>  $patterns  以 * 结尾为前缀匹配，否则全等匹配
+     */
+    private function shouldSkipBook(string $bookName, array $patterns): bool
+    {
+        foreach ($patterns as $pattern) {
+            if (str_ends_with($pattern, '*')) {
+                $prefix = rtrim($pattern, '*');
+                if ($prefix !== '' && str_starts_with($bookName, $prefix)) {
+                    return true;
+                }
+            } elseif ($bookName === $pattern) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function hasData($typeData, $typeName)
