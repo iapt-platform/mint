@@ -173,8 +173,9 @@ class OpenAIService
             'stream' => false,
         ];
 
+        // setting of deepseek
         if (isset($this->thinking)) {
-            $data['enable_thinking'] = $this->thinking;
+            $data['thinking'] = ['type' => $this->thinking ? 'enabled' : 'disabled'];
         }
 
         if ($this->maxTokens > 0) {
