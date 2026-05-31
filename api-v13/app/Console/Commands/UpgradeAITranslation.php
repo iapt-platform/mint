@@ -35,7 +35,7 @@ class UpgradeAITranslation extends Command
     {--para=}
     {--resume}
     {--model=}
-    {--thinking : 开启和关闭deepseek thinking true | false}
+    {--thinking= : 开启和关闭deepseek thinking true | false}
     {--fresh : 清除缓存断点，从头开始}';
 
     // 缓存键前缀：以 type、channel 区分，记录已完成的 "book|para" 集合，中断后重跑自动跳过
@@ -79,11 +79,18 @@ class UpgradeAITranslation extends Command
      */
     public function handle()
     {
-        if ($this->option('model')) {
-            $this->model = $this->modelService->getModelById($this->option('model'));
-            $this->info("model:{$this->model['model']}");
-            $this->modelToken = AuthService::getUserToken($this->model['uid']);
+        /**
+         * model
+         */
+        if (!$this->option('model')) {
+            $this->error('model is request');
+            return 1;
         }
+        $this->model = $this->modelService->getModelById($this->option('model'));
+        $this->info("model:{$this->model['model']}");
+        $this->modelToken = AuthService::getUserToken($this->model['uid']);
+
+        //channel
         $this->workChannel = ChannelApi::getById($this->argument('channel'));
         // 需要判断输入channel 与翻译类型是否一致 nissaya -> nissaya channel
         if ($this->workChannel['type'] !== $this->argument('type')) {
@@ -141,7 +148,7 @@ class UpgradeAITranslation extends Command
 
                     continue;
                 }
-
+                $start = time();
                 $data = [];
                 switch ($this->argument('type')) {
                     case 'translation':
@@ -158,7 +165,8 @@ class UpgradeAITranslation extends Command
                         break;
                 }
                 $this->save($data);
-                $this->info($this->argument('type') . " {$book}-{$paragraph} " . count($data) . ' sentences');
+                $time = time() - $start;
+                $this->info($this->argument('type') . " {$book}-{$paragraph} " . count($data) . ' sentences time=' . $time);
                 // 该处理单元全部写库完成后再标记游标，确保中途中断不会误跳过
                 $done[$cursor] = true;
                 Cache::put($cacheKey, $done, now()->addHours(24));
