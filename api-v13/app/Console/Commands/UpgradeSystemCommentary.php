@@ -42,19 +42,19 @@ class UpgradeSystemCommentary extends Command
     不要输出content字段，只输出id,commentary字段
     直接输出jsonl数据，无需解释
 
-**关键规则：**
-1. 根据commentary中的句子的意思找到与pali对应的句子
-1. 如果commentary中的某个句子**有黑体字**，它应该放在pali中对应巴利词汇出现的句子之后
-2. 如果commentary中的某个句子**没有黑体字**，请将其与**上面最近的有黑体字的commentary句子**合并在一起（保持在同一个引用块内），不要单独成行
-3. 有些pali原文句子可能没有对应的注释
-4. 请不要遗漏任何commentary中的句子，也不要打乱顺序
-5. 同时保持pali的句子数量不变，不要增删
-6. 应该将全部commentary中的句子都与pali句子对应，不要有遗漏
+    **关键规则：**
+    1. 根据commentary中的句子的意思找到与pali对应的句子
+    1. 如果commentary中的某个句子**有黑体字**，它应该放在pali中对应巴利词汇出现的句子之后
+    2. 如果commentary中的某个句子**没有黑体字**，请将其与**上面最近的有黑体字的commentary句子**合并在一起（保持在同一个引用块内），不要单独成行
+    3. 有些pali原文句子可能没有对应的注释
+    4. 请不要遗漏任何commentary中的句子，也不要打乱顺序
+    5. 同时保持pali的句子数量不变，不要增删
+    6. 应该将全部commentary中的句子都与pali句子对应，不要有遗漏
 
-**输出范例**
-{"id":0,"commentary":[0,1]}
-{"id":1,"commentary":[2]}
-md;
+    **输出范例**
+    {"id":0,"commentary":[0,1]}
+    {"id":1,"commentary":[2]}
+    md;
 
     /**
      * The console command description.
@@ -105,7 +105,7 @@ md;
                 ->selectRaw('book_name,count(*)')
                 ->get();
             foreach ($result as $key => $value) {
-                $this->info($value['book_name'].'['.$value['count'].']');
+                $this->info($value['book_name'] . '[' . $value['count'] . ']');
             }
 
             return 0;
@@ -114,7 +114,7 @@ md;
             $this->model = $this->modelService->getModelById($this->option('model'));
             // getModelById 始终返回 AiModelResource，未查到时其底层 resource 为 null，需据此判断
             if (empty($this->model->resource)) {
-                $this->error('no model found id='.$this->option('model'));
+                $this->error('no model found id=' . $this->option('model'));
 
                 return 1;
             }
@@ -156,7 +156,7 @@ md;
         foreach ($books as $key => $currBook) {
             // 命中跳过规则时直接处理下一本：即便上次游标停在此书，也跳到下一个有效 book_name
             if ($this->shouldSkipBook($currBook['book_name'], $skipPatterns)) {
-                $this->info('skip book '.$currBook['book_name']);
+                $this->info('skip book ' . $currBook['book_name']);
 
                 continue;
             }
@@ -174,13 +174,13 @@ md;
             }
             foreach ($paragraphs as $key => $paragraph) {
                 // 稳定游标：以 book_name|cs_para 唯一标识一个处理单元
-                $cursor = $currBook['book_name'].'|'.$paragraph['cs_para'];
+                $cursor = $currBook['book_name'] . '|' . $paragraph['cs_para'];
                 // 已完成的单元直接跳过，实现中断后重入续跑
                 if (isset($done[$cursor])) {
                     continue;
                 }
 
-                $message = 'ai commentary '.$currBook['book_name'].'-'.$paragraph['cs_para'];
+                $message = 'ai commentary ' . $currBook['book_name'] . '-' . $paragraph['cs_para'];
                 $this->info($message);
                 $result = RelatedParagraph::where('book_name', $currBook['book_name'])
                     ->where('cs_para', $paragraph['cs_para'])
@@ -208,7 +208,7 @@ md;
                     foreach ($info as $bookId => $paragraphs) {
                         Log::debug($bookId);
                         foreach ($paragraphs as $paragraph) {
-                            Log::debug($paragraph['book'].'-'.$paragraph['para']);
+                            Log::debug($paragraph['book'] . '-' . $paragraph['para']);
                         }
                     }
                 }
@@ -326,7 +326,7 @@ md;
             ! isset($typeData[$typeName]) ||
             $this->getParagraphNumber($typeData[$typeName]) === 0
         ) {
-            Log::warning($typeName.' data is missing');
+            Log::warning($typeName . ' data is missing');
 
             return false;
         }
@@ -429,8 +429,8 @@ md;
         $originalSn = $this->arrayIndexed($original);
         $commentarySn = $this->arrayIndexed($commentary);
 
-        $originalText = "```jsonl\n".LlmResponseParser::jsonl_encode($originalSn)."\n```";
-        $commentaryText = "```jsonl\n".LlmResponseParser::jsonl_encode($commentarySn)."\n```";
+        $originalText = "```jsonl\n" . LlmResponseParser::jsonl_encode($originalSn) . "\n```";
+        $commentaryText = "```jsonl\n" . LlmResponseParser::jsonl_encode($commentarySn) . "\n```";
 
         Log::debug('ai request', [
             'original' => $originalText,
@@ -440,7 +440,7 @@ md;
         $totalSentences = count($original) + count($commentary);
         $maxTokens = (int) ($this->tokensPerSentence * $totalSentences * 1.5);
         $this->info("requesting…… {$totalSentences} sentences {$this->tokensPerSentence}tokens/sentence set {$maxTokens} max_tokens");
-        Log::debug('requesting…… '.$this->model['model']);
+        Log::debug('requesting…… ' . $this->model['model']);
         $startAt = time();
         $response = $this->openAIService->setApiUrl($this->model['url'])
             ->setModel($this->model['model'])
@@ -453,11 +453,11 @@ md;
         $completeAt = time();
         $answer = $response['choices'][0]['message']['content'] ?? '[]';
         Log::debug('ai response', ['data' => $answer]);
-        $message = ($completeAt - $startAt).'s';
+        $message = ($completeAt - $startAt) . 's';
 
         if (isset($response['usage']['completion_tokens'])) {
             Log::debug('usage', $response['usage']);
-            $message .= ' completion_tokens:'.$response['usage']['completion_tokens'];
+            $message .= ' completion_tokens:' . $response['usage']['completion_tokens'];
             $curr = (int) ($response['usage']['completion_tokens'] / $totalSentences);
             if ($curr > $this->tokensPerSentence) {
                 $this->tokensPerSentence = $curr;
@@ -497,9 +497,9 @@ md;
             ) {
                 $content = array_map(function ($n) {
                     if (is_string($n)) {
-                        return '{{'.$n.'}}';
+                        return '{{' . $n . '}}';
                     } elseif (is_array($n) && isset($n['id']) && is_string($n['id'])) {
-                        return '{{'.$n['id'].'}}';
+                        return '{{' . $n['id'] . '}}';
                     } else {
                         return '';
                     }
@@ -517,7 +517,7 @@ md;
                         'editor_uid' => $this->model['uid'],
                     ]
                 );
-                $this->info($sentence['id'].' saved');
+                $this->info($sentence['id'] . ' saved');
             }
         }
     }
