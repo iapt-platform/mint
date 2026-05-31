@@ -28,7 +28,15 @@ class UpgradeAITranslation extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:ai.translation {type} {channel} {--book=} {--para=} {--resume} {--model=} {--fresh : 清除缓存断点，从头开始}';
+    protected $signature = 'upgrade:ai.translation
+    {type}
+    {channel}
+    {--book=}
+    {--para=}
+    {--resume}
+    {--model=}
+    {--thinking : 开启和关闭deepseek thinking true | false}
+    {--fresh : 清除缓存断点，从头开始}';
 
     // 缓存键前缀：以 type、channel 区分，记录已完成的 "book|para" 集合，中断后重跑自动跳过
     private const CACHE_KEY_PREFIX = 'upgrade:ai.translation:done';
@@ -40,21 +48,15 @@ class UpgradeAITranslation extends Command
      */
     protected $description = 'Command description';
 
-    protected $sentenceService;
-
-    protected $modelService;
-
-    protected $openAIService;
-
-    protected $nissayaTranslateService;
-
     protected AiModelResource $model;
 
-    protected $modelToken;
+    protected string $modelToken;
 
-    protected $workChannel;
+    protected array $workChannel;
 
-    protected $accessToken;
+    protected string $accessToken;
+
+    protected bool $thinking;
 
     /**
      * Create a new command instance.
@@ -62,15 +64,11 @@ class UpgradeAITranslation extends Command
      * @return void
      */
     public function __construct(
-        AIModelService $model,
-        SentenceService $sent,
-        OpenAIService $openAI,
-        NissayaTranslateService $nissayaTranslate
+        protected AIModelService $modelService,
+        protected SentenceService $sentenceService,
+        protected OpenAIService $openAIService,
+        protected NissayaTranslateService $nissayaTranslateService
     ) {
-        $this->modelService = $model;
-        $this->sentenceService = $sent;
-        $this->openAIService = $openAI;
-        $this->nissayaTranslateService = $nissayaTranslate;
         parent::__construct();
     }
 
@@ -89,16 +87,21 @@ class UpgradeAITranslation extends Command
         $this->workChannel = ChannelApi::getById($this->argument('channel'));
         // 需要判断输入channel 与翻译类型是否一致 nissaya -> nissaya channel
         if ($this->workChannel['type'] !== $this->argument('type')) {
-            $this->error('channel type not match request '.$this->argument('type').' input is '.$this->workChannel['type']);
+            $this->error('channel type not match request ' . $this->argument('type') . ' input is ' . $this->workChannel['type']);
 
             return 1;
+        }
+
+        if ($this->option('thinking')) {
+            $this->thinking = $this->option('thinking') === 'true';
+            $this->line('thinking is ' . $this->option('thinking'));
         }
 
         $type = $this->argument('type');
         $channelId = $this->workChannel['id'] ?? '';
 
         // 缓存键：按 type、channel 区分不同任务的断点
-        $cacheKey = self::CACHE_KEY_PREFIX.':'.$type.':'.$channelId;
+        $cacheKey = self::CACHE_KEY_PREFIX . ':' . $type . ':' . $channelId;
 
         if ($this->option('fresh')) {
             Cache::forget($cacheKey);
@@ -118,7 +121,7 @@ class UpgradeAITranslation extends Command
             // 未指定 book 时，若已有断点缓存，从上次处理到的 book 继续，无需从 1 开始
             $startBook = 1;
             if (! empty($done)) {
-                $doneBooks = array_map(fn ($cursor) => (int) explode('|', $cursor)[0], array_keys($done));
+                $doneBooks = array_map(fn($cursor) => (int) explode('|', $cursor)[0], array_keys($done));
                 $startBook = max($doneBooks);
                 $this->info("resume from book {$startBook}");
             }
@@ -132,7 +135,7 @@ class UpgradeAITranslation extends Command
             }
             foreach ($paragraphs as $key => $paragraph) {
                 // 稳定游标：缓存键已含 type、channel，此处仅以 book|para 标识处理单元
-                $cursor = $book.'|'.$paragraph;
+                $cursor = $book . '|' . $paragraph;
                 if (isset($done[$cursor])) {
                     $this->info("skip {$cursor}");
 
@@ -155,7 +158,7 @@ class UpgradeAITranslation extends Command
                         break;
                 }
                 $this->save($data);
-                $this->info($this->argument('type')." {$book}-{$paragraph} ".count($data).' sentences');
+                $this->info($this->argument('type') . " {$book}-{$paragraph} " . count($data) . ' sentences');
                 // 该处理单元全部写库完成后再标记游标，确保中途中断不会误跳过
                 $done[$cursor] = true;
                 Cache::put($cacheKey, $done, now()->addHours(24));
@@ -216,7 +219,7 @@ class UpgradeAITranslation extends Command
     md;
 
         $pali = $this->getPaliContent($book, $para);
-        $originalText = "```json\n".json_encode($pali, JSON_UNESCAPED_UNICODE)."\n```";
+        $originalText = "```json\n" . json_encode($pali, JSON_UNESCAPED_UNICODE) . "\n```";
         Log::debug($originalText);
         if (! $this->model) {
             Log::error('model is invalid');
@@ -224,13 +227,17 @@ class UpgradeAITranslation extends Command
             return [];
         }
         $startAt = time();
-        $response = $this->openAIService->setApiUrl($this->model['url'])
+        $llm = $this->openAIService->setApiUrl($this->model['url'])
             ->setModel($this->model['model'])
             ->setApiKey($this->model['key'])
             ->setSystemPrompt($prompt)
             ->setTemperature(0.0)
-            ->setStream(false)
-            ->send("# pali\n\n{$originalText}\n\n");
+            ->setStream(false);
+        if (isset($this->thinking)) {
+            $llm = $llm->setThinking($this->thinking);
+        }
+
+        $response =    $llm->send("# pali\n\n{$originalText}\n\n");
         $complete = time() - $startAt;
         $translationText = $response['choices'][0]['message']['content'] ?? '[]';
         Log::debug("complete in {$complete}s", ['content' => $translationText]);
@@ -289,16 +296,19 @@ class UpgradeAITranslation extends Command
             $tplText = json_encode($tpl, JSON_UNESCAPED_UNICODE);
             Log::debug($tplText);
             $startAt = time();
-            $response = $this->openAIService->setApiUrl($this->model['url'])
+            $llm = $this->openAIService->setApiUrl($this->model['url'])
                 ->setModel($this->model['model'])
                 ->setApiKey($this->model['key'])
                 ->setSystemPrompt($sysPrompt)
                 ->setTemperature(0.7)
-                ->setStream(false)
-                ->send("```json\n{$tplText}\n```");
+                ->setStream(false);
+            if (isset($this->thinking)) {
+                $llm = $llm->setThinking($this->thinking);
+            }
+            $response = $llm->send("```json\n{$tplText}\n```");
             $complete = time() - $startAt;
             $content = $response['choices'][0]['message']['content'] ?? '[]';
-            Log::debug("ai response in {$complete}s content=".$content);
+            Log::debug("ai response in {$complete}s content=" . $content);
 
             $json = LlmResponseParser::jsonl($content);
 
