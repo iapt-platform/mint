@@ -2,22 +2,27 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+
 use App\Helpers\LlmResponseParser;
 use App\Http\Api\ChannelApi;
 use App\Http\Resources\AiModelResource;
+
 use App\Models\BookTitle;
 use App\Models\PaliSentence;
 use App\Models\PaliText;
 use App\Models\RelatedParagraph;
 use App\Models\Tag;
 use App\Models\TagMap;
+
 use App\Services\AIModelService;
 use App\Services\OpenAIService;
 use App\Services\SearchPaliDataService;
 use App\Services\SentenceService;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+
+
 
 class UpgradeSystemCommentary extends Command
 {
@@ -27,7 +32,7 @@ class UpgradeSystemCommentary extends Command
      *
      * @var string
      */
-    protected $signature = 'upgrade:sys.commentary {--book=} {--para=} {--list} {--model=} {--skip= : 跳过指定的 book_name，逗号分隔，支持前缀通配，如 abhi*,sn2} {--fresh : 清除缓存断点，从头开始}';
+    protected $signature = 'upgrade:sys.commentary {--book=} {--para=} {--list} {--model=} {--thinking=} {--skip= : 跳过指定的 book_name，逗号分隔，支持前缀通配，如 abhi*,sn2} {--fresh : 清除缓存断点，从头开始}';
 
     protected $prompt = <<<'md'
     你是一个注释对照阅读助手。
@@ -75,6 +80,8 @@ class UpgradeSystemCommentary extends Command
     protected AiModelResource $model;
 
     protected $tokensPerSentence = 0;
+
+    protected bool $thinking;
 
     /**
      * Create a new command instance.
@@ -124,6 +131,11 @@ class UpgradeSystemCommentary extends Command
         if ($this->option('fresh')) {
             Cache::forget(self::CACHE_KEY);
             $this->info('Cleared cached cursor.');
+        }
+
+        if ($this->option('thinking')) {
+            $this->thinking = $this->option('thinking') === 'true';
+            $this->line('thinking is ' . $this->option('thinking'));
         }
 
         // 是否为完整遍历（未指定 book/para），仅此情形在结束后清空断点缓存
@@ -442,14 +454,18 @@ class UpgradeSystemCommentary extends Command
         $this->info("requesting…… {$totalSentences} sentences {$this->tokensPerSentence}tokens/sentence set {$maxTokens} max_tokens");
         Log::debug('requesting…… ' . $this->model['model']);
         $startAt = time();
-        $response = $this->openAIService->setApiUrl($this->model['url'])
+        $llm = $this->openAIService->setApiUrl($this->model['url'])
             ->setModel($this->model['model'])
             ->setApiKey($this->model['key'])
             ->setSystemPrompt($this->prompt)
             ->setTemperature(0.0)
             ->setStream(false)
-            ->setMaxToken($maxTokens)
-            ->send("# pali\n\n{$originalText}\n\n# commentary\n\n{$commentaryText}");
+            ->setMaxToken($maxTokens);
+        if (isset($this->thinking)) {
+            $llm = $llm->setThinking($this->thinking);
+        }
+
+        $response = $llm->send("# pali\n\n{$originalText}\n\n# commentary\n\n{$commentaryText}");
         $completeAt = time();
         $answer = $response['choices'][0]['message']['content'] ?? '[]';
         Log::debug('ai response', ['data' => $answer]);
