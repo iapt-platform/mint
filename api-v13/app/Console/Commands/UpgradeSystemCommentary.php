@@ -245,16 +245,25 @@ class UpgradeSystemCommentary extends Command
                     $this->hasData($type, 'aṭṭhakathā') &&
                     $this->hasData($type, 'ṭīkā')
                 ) {
+                    // 独立重建 attaJson，避免依赖上面 pāḷi 块是否执行
+                    $attaJsonForTika = [];
+                    foreach ($type['aṭṭhakathā'] as $keyBook => $attaParas) {
+                        foreach ($attaParas as $paraData) {
+                            $sentData = $this->getParaContent($paraData['book'], $paraData['para']);
+                            $attaJsonForTika = array_merge($attaJsonForTika, $sentData);
+                        }
+                    }
+
                     $tikaResult = [];
-                    foreach ($type['ṭīkā'] as $keyBook => $paragraphs) {
+                    foreach ($type['ṭīkā'] as $keyBook => $tikaParas) {
                         $tikaJson = [];
-                        foreach ($paragraphs as $key => $paraData) {
+                        foreach ($tikaParas as $paraData) {
                             $sentData = $this->getParaContent($paraData['book'], $paraData['para']);
                             $tikaJson = array_merge($tikaJson, $sentData);
                         }
 
                         // llm 对齐
-                        $result = $this->textAlign($attaJson, $tikaJson);
+                        $result = $this->textAlign($attaJsonForTika, $tikaJson);
                         // 将新旧数据合并 如果原来没有，就添加，有，就合并数据
                         foreach ($result as $new) {
                             $found = false;

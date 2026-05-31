@@ -1,7 +1,0 @@
-[[origin]]
-
-[[#translations]]
-[[content]]
-
-[[/translations]]
-
