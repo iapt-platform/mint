@@ -21,7 +21,6 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // API 组中间件（来自原 Laravel 8 Kernel）
         $middleware->api(append: [
-            \App\Http\Middleware\ApiLog::class,
             \App\Http\Middleware\UserOperation::class,
         ]);
 
