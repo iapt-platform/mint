@@ -337,7 +337,7 @@ class MdRender
                 return trim($html);
                 break;
             case 'unity':
-                if ($tplProps) {
+                if (isset($tplProps) && is_array($tplProps)) {
                     return "{{" . "{$tplProps['tpl']}|{$tplProps['props']}" . "}}";
                 } else {
                     return '';
