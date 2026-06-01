@@ -14,7 +14,6 @@
 {{-- 搜索框 --}}
 <div class="wiki-search-bar-wrap">
     <x-ui.search-input
-        :action="route('library.search')"
         :value="$query"
         :placeholder="__('library.search_placeholder')"
         :autofocus="true"

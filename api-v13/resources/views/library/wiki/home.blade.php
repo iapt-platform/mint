@@ -26,7 +26,6 @@
     {{-- 搜索框 --}}
     <div class="wiki-home-search">
         <x-ui.search-input
-            :action="route('library.search')"
             :value="request('q')"
             :placeholder="__('library.wiki_search_placeholder')"
             size="lg"
