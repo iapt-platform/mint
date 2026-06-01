@@ -1,6 +1,6 @@
 {{-- resources/views/components/ui/search-input.blade.php --}}
 @props([
-'action',
+'action' => route('library.search'),
 'value' => '',
 'placeholder' => '搜索…',
 'buttonText' => '搜索',

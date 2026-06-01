@@ -14,7 +14,6 @@
         <p class="hero-subtitle">{{ __('library.portal_hero_subtitle') }}</p>
         <div class="search-box">
             <x-ui.search-input
-                :action="route('library.search')"
                 :placeholder="__('library.search_tipitaka')"
                 size="lg"
             />
