@@ -54,7 +54,6 @@
                 {{-- 搜索 --}}
                 <div class="sb-card" style="padding: .85rem 1.1rem; margin-bottom: 1.1rem;">
                     <x-ui.search-input
-                        :action="route('library.search')"
                         :placeholder="__('library.search_anthology')"
                         :hidden-fields="['resource_type' => 'anthology']" />
                 </div>

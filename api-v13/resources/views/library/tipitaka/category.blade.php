@@ -72,7 +72,6 @@
             {{-- 搜索框 --}}
             <div>
                 <x-ui.search-input
-                    :action="route('library.search')"
                     :value="request('q')"
                     :placeholder="__('library.search_tipitaka')"
                     :hidden-fields="['resource_type' => 'tipitaka']" />

@@ -7,7 +7,6 @@
 {{-- 搜索框组件 --}}
 <div class="wiki-search-wrapper">
     <x-ui.search-input
-        :action="route('library.search')"
         :value="request('q')"
         :placeholder="__('library.wiki_search_placeholder')"
         size="lg"
