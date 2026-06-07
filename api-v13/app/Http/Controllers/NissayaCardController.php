@@ -51,7 +51,7 @@ class NissayaCardController extends Controller
             "_System_Grammar_Term_" . strtolower($request->input('lang')) . "_",
             "_System_Grammar_Term_en_"
         );
-        Log::debug('$localTerm=' . $localTerm);
+
         if (!$localTerm) {
             return $this->error('no term channel');
         }
