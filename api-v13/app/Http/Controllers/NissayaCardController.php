@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\NissayaEnding;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-use mustache\mustache;
+use Illuminate\Support\Facades\App;
+
 use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
-use Illuminate\Support\Facades\App;
 use App\Models\DhammaTerm;
 use App\Models\Relation;
+use App\Models\NissayaEnding;
 
 class NissayaCardController extends Controller
 {
@@ -50,13 +51,15 @@ class NissayaCardController extends Controller
             "_System_Grammar_Term_" . strtolower($request->input('lang')) . "_",
             "_System_Grammar_Term_en_"
         );
+        Log::debug('$localTerm=' . $localTerm);
         if (!$localTerm) {
             return $this->error('no term channel');
         }
-        $termTable = DhammaTerm::where('channal', $localTerm);
 
         $cardData['ending']['word'] = $nissayaEnding;
-        $endingTerm = $termTable->where('word', $nissayaEnding)->first();
+        $endingTerm = DhammaTerm::where('channal', $localTerm)
+            ->where('word', $nissayaEnding)
+            ->first();
         if ($endingTerm) {
             $cardData['ending']['id'] = $endingTerm->guid;
             $cardData['ending']['tag'] = $endingTerm->tag;
@@ -107,7 +110,9 @@ class NissayaCardController extends Controller
                     $localCase  = [];
                     foreach ($cases as $case) {
                         $localCase[] = [
-                            'label' => $termTable->where('word', $case)->value('meaning'),
+                            'label' => DhammaTerm::where('channal', $localTerm)
+                                ->where('word', $case)
+                                ->value('meaning'),
                             'case' => $case,
                             'link' => config('mint.server.dashboard_base_path') . '/term/list/' . $case
                         ];
@@ -124,7 +129,7 @@ class NissayaCardController extends Controller
                     $localTo  = [];
                     foreach ($linkTos->case as $to) {
                         $localTo[] = [
-                            'label' => $termTable->where('word', $to)->value('meaning'),
+                            'label' => DhammaTerm::where('channal', $localTerm)->where('word', $to)->value('meaning'),
                             'case' => $to,
                             'link' => config('mint.server.dashboard_base_path') . '/term/list/' . $to
                         ];
