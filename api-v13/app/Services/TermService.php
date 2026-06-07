@@ -92,7 +92,7 @@ class TermService
             "_System_Grammar_Term_" . strtolower($lang) . "_",
             "_System_Grammar_Term_en_"
         );
-        $result = DhammaTerm::select(['word', 'tag', 'meaning', 'other_meaning'])
+        $result = DhammaTerm::select(['guid', 'word', 'tag', 'meaning', 'other_meaning'])
             ->where('channal', $localTermChannel)
             ->get();
         return ['items' => $result, 'total' => count($result)];
