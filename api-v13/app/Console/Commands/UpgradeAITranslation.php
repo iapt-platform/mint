@@ -357,41 +357,19 @@ class UpgradeAITranslation extends Command
             ->get();
         $result = [];
         foreach ($sentences as $key => $sentence) {
-            $id = "{$sentence->book_id}-{$sentence->paragraph}-{$sentence->word_start}-{$sentence->word_end}";
-            /*
-            $nissaya = [];
-            $rows = explode("\n", $sentence->content);
-            foreach ($rows as $key => $row) {
-                if (strpos('=', $row) >= 0) {
-                    $factors = explode("=", $row);
-                    $nissaya[] = Tools::MyToRm($factors[0]) . ':' . end($factors);
-                } else {
-                    $nissaya[] = $row;
-                }
+            if (!empty($sentence->content)) {
+                $id = "{$sentence->book_id}-{$sentence->paragraph}-{$sentence->word_start}-{$sentence->word_end}";
+
+                $aiNissaya = $this->nissayaTranslateService
+                    ->setModel($this->model)
+                    ->translate($sentence->content, false);
+                Log::debug('ai response ', ['content' => $aiNissaya['data']]);
+                $result[] = [
+                    'id' => $id,
+                    'content' => json_encode($aiNissaya['data'] ?? [], JSON_UNESCAPED_UNICODE),
+                    'content_type' => 'json',
+                ];
             }
-            $nissayaText = json_encode(implode("\n", $nissaya), JSON_UNESCAPED_UNICODE);
-            Log::debug($nissayaText);
-            $startAt = time();
-            $response = $this->openAIService->setApiUrl($this->model['url'])
-                ->setModel($this->model['model'])
-                ->setApiKey($this->model['key'])
-                ->setSystemPrompt($sysPrompt)
-                ->setTemperature(0.7)
-                ->setStream(false)
-                ->send("# nissaya\n\n{$nissayaText}\n\n");
-            $complete = time() - $startAt;
-            $content = $response['choices'][0]['message']['content'] ?? '';
-            Log::debug("ai response in {$complete}s content=" . $content);
-            */
-            $aiNissaya = $this->nissayaTranslateService
-                ->setModel($this->model)
-                ->translate($sentence->content, false);
-            Log::debug('ai response ', ['content' => $aiNissaya['data']]);
-            $result[] = [
-                'id' => $id,
-                'content' => json_encode($aiNissaya['data'] ?? [], JSON_UNESCAPED_UNICODE),
-                'content_type' => 'json',
-            ];
         }
 
         return $result;
