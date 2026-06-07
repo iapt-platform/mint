@@ -45,11 +45,13 @@ export default function TermEditor({
 
   useEffect(() => {
     if (!currUser?.id || !termId) return;
-
+    const paramObj = search
+      ? Object.fromEntries(new URLSearchParams(search))
+      : undefined;
     save({
       type: "term",
       article_id: termId,
-      param: search || undefined,
+      param: JSON.stringify(paramObj),
     });
   }, [currUser?.id, termId, search, save]);
 
