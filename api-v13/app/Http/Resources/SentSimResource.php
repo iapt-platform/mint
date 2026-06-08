@@ -23,7 +23,7 @@ class SentSimResource extends JsonResource
         //获取实际句子信息
         $sent = PaliSentence::find($this->sent2);
         $channels = explode(',', $request->input('channels'));
-        $mode = explode(',', $request->input('mode', 'read'));
+        $mode = $request->input('mode', 'read');
         $sentId = $sent->book . '-' . $sent->paragraph . '-' . $sent->word_begin . '-' . $sent->word_end;
         $Sent = new CorpusController();
         $tpl =

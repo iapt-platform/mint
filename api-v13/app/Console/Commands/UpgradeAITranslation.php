@@ -278,16 +278,19 @@ class UpgradeAITranslation extends Command
             ->get();
         $result = [];
         foreach ($sentences as $key => $sentence) {
-            $id = "{$sentence->book_id}-{$sentence->paragraph}-{$sentence->word_start}-{$sentence->word_end}";
-            $aiNissaya = $this->nissayaTranslateService
-                ->setModel($this->model)
-                ->translate($sentence->content, false);
-            Log::debug('ai response ', ['content' => $aiNissaya['data']]);
-            $result[] = [
-                'id' => $id,
-                'content' => json_encode($aiNissaya['data'] ?? [], JSON_UNESCAPED_UNICODE),
-                'content_type' => 'json',
-            ];
+            if (!empty($sentence->content)) {
+                $id = "{$sentence->book_id}-{$sentence->paragraph}-{$sentence->word_start}-{$sentence->word_end}";
+
+                $aiNissaya = $this->nissayaTranslateService
+                    ->setModel($this->model)
+                    ->translate($sentence->content, false);
+                Log::debug('ai response ', ['content' => $aiNissaya['data']]);
+                $result[] = [
+                    'id' => $id,
+                    'content' => json_encode($aiNissaya['data'] ?? [], JSON_UNESCAPED_UNICODE),
+                    'content_type' => 'json',
+                ];
+            }
         }
 
         return $result;

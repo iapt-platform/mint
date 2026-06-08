@@ -6,28 +6,247 @@ use App\Models\Relation;
 use Illuminate\Http\Request;
 use App\Http\Resources\RelationResource;
 use App\Services\AuthService;
-use Illuminate\Support\Facades\App;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\JsonResponse;
 
 class RelationController extends Controller
 {
     /**
+     * Vocabulary cache key — shared across requests.
+     */
+    private const VOCABULARY_CACHE_KEY = 'relation-vocabulary';
+
+    /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * Supports optional filters: case, search, name, from, to, match, category.
+     * When the `vocabulary` parameter is present, returns the full unfiltered
+     * list from cache (suitable for populating UI dropdowns / autocomplete).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
-        //
-        $key = 'relation-vocabulary';
-        if ($request->has('vocabulary')) {
-            if (Cache::has($key)) {
-                return $this->ok(Cache::get($key));
-            }
+        if ($request->boolean('vocabulary')) {
+            return $this->ok(
+                Cache::remember(
+                    self::VOCABULARY_CACHE_KEY,
+                    config('mint.cache.expire'),
+                    fn() => $this->buildVocabularyPayload()
+                )
+            );
         }
-        $table = Relation::select([
+
+        return $this->ok($this->buildFilteredPayload($request));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * Requires authentication. Invalidates the vocabulary cache on success.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(Request $request): JsonResponse
+    {
+        $user = AuthService::current($request);
+        if (!$user) {
+            return $this->error(__('auth.failed'), [], 401);
+        }
+
+        $validated = $request->validate([
+            'name' => 'required',
+        ]);
+
+        $relation = new Relation();
+        $relation->name      = $validated['name'];
+        $relation->case      = $request->input('case');
+        $relation->category  = $request->input('category');
+        $relation->from      = $this->encodeJsonField($request, 'from');
+        $relation->to        = $this->encodeJsonField($request, 'to');
+        $relation->match     = $this->encodeJsonField($request, 'match');
+        $relation->editor_id = $user['user_uid'];
+        $relation->save();
+
+        Cache::forget(self::VOCABULARY_CACHE_KEY);
+
+        return $this->ok(new RelationResource($relation));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Relation  $relation
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(Relation $relation): JsonResponse
+    {
+        return $this->ok(new RelationResource($relation));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * Requires authentication. Invalidates the vocabulary cache on success.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Relation      $relation
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, Relation $relation): JsonResponse
+    {
+        $user = AuthService::current($request);
+        if (!$user) {
+            return $this->error(__('auth.failed'), [], 401);
+        }
+
+        $relation->name      = $request->input('name');
+        $relation->case      = $request->input('case');
+        $relation->category  = $request->input('category');
+        $relation->from      = $this->encodeJsonField($request, 'from');
+        $relation->to        = $this->encodeJsonField($request, 'to');
+        $relation->match     = $this->encodeJsonField($request, 'match');
+        $relation->editor_id = $user['user_uid'];
+        $relation->save();
+
+        Cache::forget(self::VOCABULARY_CACHE_KEY);
+
+        return $this->ok(new RelationResource($relation));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * Requires authentication. Invalidates the vocabulary cache on success.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Relation      $relation
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(Request $request, Relation $relation): JsonResponse
+    {
+        $user = AuthService::current($request);
+        if (!$user) {
+            return $this->error(__('auth.failed'), [], 401);
+        }
+
+        $deleted = $relation->delete();
+
+        Cache::forget(self::VOCABULARY_CACHE_KEY);
+
+        return $this->ok($deleted);
+    }
+
+    /**
+     * Export all relations as an XLSX file download.
+     *
+     * Streams the spreadsheet directly to the browser via php://output.
+     * Columns: id, name, from, to, match, category.
+     *
+     * @return void
+     */
+    public function export(): void
+    {
+        $spreadsheet     = new Spreadsheet();
+        $activeWorksheet = $spreadsheet->getActiveSheet();
+
+        $activeWorksheet->fromArray(['id', 'name', 'from', 'to', 'match', 'category'], null, 'A1');
+
+        $currLine = 2;
+        foreach (Relation::cursor() as $row) {
+            $activeWorksheet->fromArray(
+                [$row->id, $row->name, $row->from, $row->to, $row->match, $row->category],
+                null,
+                "A{$currLine}"
+            );
+            $currLine++;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename="relation.xlsx"');
+        $writer->save('php://output');
+    }
+
+    /**
+     * Import relations from an uploaded XLSX file.
+     *
+     * Requires authentication. Reads the file path from the `filename` request
+     * parameter. Existing records are matched by id and updated in place;
+     * rows without a matching id are inserted as new records.
+     * Invalidates the vocabulary cache on completion.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function import(Request $request): JsonResponse
+    {
+        $user = AuthService::current($request);
+        if (!$user) {
+            return $this->error(__('auth.failed'), [], 401);
+        }
+
+        $filename = $request->input('filename');
+        $reader   = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        $reader->setReadDataOnly(true);
+        $spreadsheet     = $reader->load($filename);
+        $activeWorksheet = $spreadsheet->getActiveSheet();
+
+        $currLine  = 2;
+        $countFail = 0;
+        $error     = '';
+
+        while (true) {
+            $name = $activeWorksheet->getCell("B{$currLine}")->getValue();
+            if (empty($name)) {
+                break;
+            }
+
+            $id       = $activeWorksheet->getCell("A{$currLine}")->getValue();
+            $from     = $activeWorksheet->getCell("C{$currLine}")->getValue();
+            $to       = $activeWorksheet->getCell("D{$currLine}")->getValue();
+            $match    = $activeWorksheet->getCell("E{$currLine}")->getValue();
+            $category = $activeWorksheet->getCell("F{$currLine}")->getValue();
+
+            $row = (!empty($id) ? Relation::find($id) : null) ?? new Relation();
+
+            $row->name      = $name;
+            $row->from      = empty($from) ? null : $from;
+            $row->to        = $to;
+            $row->match     = $match;
+            $row->category  = $category;
+            $row->editor_id = $user['user_uid'];
+            $row->save();
+
+            $currLine++;
+        }
+
+        Cache::forget(self::VOCABULARY_CACHE_KEY);
+
+        $success = $currLine - 2 - $countFail;
+        return $this->ok(['success' => $success, 'fail' => $countFail], $error);
+    }
+
+    // -------------------------------------------------------------------------
+    // Private helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Build the full vocabulary payload for caching.
+     *
+     * ResourceCollection is resolved to a plain PHP array via toArray() before
+     * being stored, preventing __PHP_Incomplete_Class_Name deserialization
+     * errors when using Redis or file-based cache drivers.
+     *
+     * @return array{rows: array<int, array<string, mixed>>, count: int}
+     */
+    private function buildVocabularyPayload(): array
+    {
+        $rows = Relation::select([
             'id',
             'name',
             'case',
@@ -37,266 +256,98 @@ class RelationController extends Controller
             'editor_id',
             'match',
             'updated_at',
-            'created_at'
+            'created_at',
+        ])->orderBy('updated_at', 'desc')->get();
+
+        return [
+            'rows'  => RelationResource::collection($rows)->toArray(request()),
+            'count' => $rows->count(),
+        ];
+    }
+
+    /**
+     * Build a filtered and paginated payload for standard index requests.
+     *
+     * Supported query parameters:
+     *   - case      (comma-separated)  filter by case values
+     *   - search    (string)           prefix match on name
+     *   - name      (string)           exact match on name
+     *   - from      (string)           JSON contains on from->case
+     *   - to        (string)           JSON contains on to
+     *   - match     (string)           JSON contains on match
+     *   - category  (string)           exact match on category
+     *   - order     (string)           column to sort by  (default: updated_at)
+     *   - dir       (asc|desc)         sort direction     (default: desc)
+     *   - offset    (int)              skip N rows        (default: 0)
+     *   - limit     (int)              max rows returned  (default: 1000)
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array{rows: \Illuminate\Http\Resources\Json\AnonymousResourceCollection, count: int}
+     */
+    private function buildFilteredPayload(Request $request): array
+    {
+        $query = Relation::select([
+            'id',
+            'name',
+            'case',
+            'from',
+            'to',
+            'category',
+            'editor_id',
+            'match',
+            'updated_at',
+            'created_at',
         ]);
-        if (($request->has('case'))) {
-            $table = $table->whereIn('case', explode(",", $request->input('case')));
-        }
-        if (($request->has('search'))) {
-            $table = $table->where('name', 'like', $request->input('search') . "%");
-        }
-        if (($request->has('name'))) {
-            $table = $table->where('name', $request->input('name'));
-        }
-        if (($request->has('from'))) {
-            $table = $table->whereJsonContains('from->case', $request->input('from'));
-        }
-        if (($request->has('to'))) {
-            $table = $table->whereJsonContains('to', $request->input('to'));
-        }
-        if (($request->has('match'))) {
-            $table = $table->whereJsonContains('match', $request->input('match'));
-        }
-        if (($request->has('category'))) {
-            $table = $table->where('category', $request->input('category'));
-        }
-        $table = $table->orderBy($request->input('order', 'updated_at'), $request->input('dir', 'desc'));
-        $count = $table->count();
 
-        $table = $table->skip($request->input("offset", 0))
-            ->take($request->input('limit', 1000));
-        $result = $table->get();
-
-        $output = ["rows" => RelationResource::collection($result), "count" => $count];
-
-        if ($request->has('vocabulary')) {
-            if (!Cache::has($key)) {
-                Cache::put($key, $output, config('mint.cache.expire'));
-            }
+        if ($request->filled('case')) {
+            $query->whereIn('case', explode(',', $request->input('case')));
         }
-        return $this->ok($output);
+        if ($request->filled('search')) {
+            $query->where('name', 'like', $request->input('search') . '%');
+        }
+        if ($request->filled('name')) {
+            $query->where('name', $request->input('name'));
+        }
+        if ($request->filled('from')) {
+            $query->whereJsonContains('from->case', $request->input('from'));
+        }
+        if ($request->filled('to')) {
+            $query->whereJsonContains('to', $request->input('to'));
+        }
+        if ($request->filled('match')) {
+            $query->whereJsonContains('match', $request->input('match'));
+        }
+        if ($request->filled('category')) {
+            $query->where('category', $request->input('category'));
+        }
+
+        $query->orderBy($request->input('order', 'updated_at'), $request->input('dir', 'desc'));
+
+        $count = $query->count();
+        $rows  = $query->skip($request->input('offset', 0))
+            ->take($request->input('limit', 1000))
+            ->get();
+
+        return [
+            'rows'  => RelationResource::collection($rows),
+            'count' => $count,
+        ];
     }
 
-
     /**
-     * Store a newly created resource in storage.
+     * Encode a request field as a JSON string.
+     *
+     * Returns null when the field is absent from the request, preserving the
+     * semantic distinction between "not provided" and an explicit empty value.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  string                    $field
+     * @return string|null
      */
-    public function store(Request $request)
+    private function encodeJsonField(Request $request, string $field): ?string
     {
-        //
-        $user = AuthService::current($request);
-        if (!$user) {
-            return $this->error(__('auth.failed'), [], 401);
-        }
-        //TODO 判断权限
-        $validated = $request->validate([
-            'name' => 'required',
-        ]);
-        $case = $request->input('case', '');
-        $new = new Relation;
-        $new->name = $validated['name'];
-
-        $new->case = $request->input('case');
-        $new->category = $request->input('category');
-
-        if ($request->has('from')) {
-            $new->from = json_encode($request->input('from'), JSON_UNESCAPED_UNICODE);
-        } else {
-            $new->from = null;
-        }
-        if ($request->has('to')) {
-            $new->to = json_encode($request->input('to'), JSON_UNESCAPED_UNICODE);
-        } else {
-            $new->to = null;
-        }
-        if ($request->has('match')) {
-            $new->match = json_encode($request->input('match'), JSON_UNESCAPED_UNICODE);
-        } else {
-            $new->match = null;
-        }
-        $new->editor_id = $user['user_uid'];
-        $new->save();
-        return $this->ok(new RelationResource($new));
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Relation  $relation
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Relation $relation)
-    {
-        //
-        return $this->ok(new RelationResource($relation));
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Relation  $relation
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Relation $relation)
-    {
-        //
-        $user = AuthService::current($request);
-        if (!$user) {
-            return $this->error(__('auth.failed'));
-        }
-
-        $relation->name = $request->input('name');
-        $relation->case = $request->input('case');
-        $relation->category = $request->input('category');
-
-        if ($request->has('from')) {
-            $relation->from = json_encode($request->input('from'), JSON_UNESCAPED_UNICODE);
-        } else {
-            $relation->from = null;
-        }
-        if ($request->has('to')) {
-            $relation->to = json_encode($request->input('to'), JSON_UNESCAPED_UNICODE);
-        } else {
-            $relation->to = null;
-        }
-        if ($request->has('match')) {
-            $relation->match = json_encode($request->input('match'), JSON_UNESCAPED_UNICODE);
-        } else {
-            $relation->match = null;
-        }
-        $relation->editor_id = $user['user_uid'];
-        $relation->save();
-        return $this->ok(new RelationResource($relation));
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Relation  $relation
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request, Relation $relation)
-    {
-        //
-        $user = AuthService::current($request);
-        if (!$user) {
-            return $this->error(__('auth.failed'));
-        }
-        //TODO 判断当前用户是否有权限
-        $delete = 0;
-        $delete = $relation->delete();
-
-        return $this->ok($delete);
-    }
-
-    public function export()
-    {
-        $spreadsheet = new Spreadsheet();
-        $activeWorksheet = $spreadsheet->getActiveSheet();
-        $activeWorksheet->setCellValue('A1', 'id');
-        $activeWorksheet->setCellValue('B1', 'name');
-        $activeWorksheet->setCellValue('C1', 'from');
-        $activeWorksheet->setCellValue('D1', 'to');
-        $activeWorksheet->setCellValue('E1', 'match');
-        $activeWorksheet->setCellValue('F1', 'category');
-
-        $nissaya = Relation::cursor();
-        $currLine = 2;
-        foreach ($nissaya as $key => $row) {
-            # code...
-            $activeWorksheet->setCellValue("A{$currLine}", $row->id);
-            $activeWorksheet->setCellValue("B{$currLine}", $row->name);
-            $activeWorksheet->setCellValue("C{$currLine}", $row->from);
-            $activeWorksheet->setCellValue("D{$currLine}", $row->to);
-            $activeWorksheet->setCellValue("E{$currLine}", $row->match);
-            $activeWorksheet->setCellValue("F{$currLine}", $row->category);
-            $currLine++;
-        }
-        $writer = new Xlsx($spreadsheet);
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment; filename="relation.xlsx"');
-        $writer->save("php://output");
-    }
-
-    public function import(Request $request)
-    {
-        $user = AuthService::current($request);
-        if (!$user) {
-            return $this->error(__('auth.failed'));
-        }
-
-        $filename = $request->input('filename');
-        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-        $reader->setReadDataOnly(true);
-        $spreadsheet = $reader->load($filename);
-        $activeWorksheet = $spreadsheet->getActiveSheet();
-        $currLine = 2;
-        $countFail = 0;
-        $error = "";
-        do {
-            # code...
-            $id = $activeWorksheet->getCell("A{$currLine}")->getValue();
-            $name = $activeWorksheet->getCell("B{$currLine}")->getValue();
-            $from = $activeWorksheet->getCell("C{$currLine}")->getValue();
-            $to = $activeWorksheet->getCell("D{$currLine}")->getValue();
-            $match = $activeWorksheet->getCell("E{$currLine}")->getValue();
-            $category = $activeWorksheet->getCell("F{$currLine}")->getValue();
-            if (!empty($name)) {
-                //查询是否有冲突数据
-                //查询此id是否有旧数据
-                if (!empty($id)) {
-                    $oldRow = Relation::find($id);
-                }
-                //查询是否跟已有数据重复
-                /*
-                $row = Relation::where(['name'=>$name,
-                                        'from'=>json_decode($from,true),
-                                        'to'=>$to,
-                                        'match'=>$match,
-                                        'category'=>$category
-                                        ])->first();
-                */
-                $row = false;
-                if (!$row) {
-                    //不重复
-                    if (isset($oldRow) && $oldRow) {
-                        //有旧的记录-修改旧数据
-                        $row = $oldRow;
-                    } else {
-                        //没找到旧的记录-新建
-                        $row = new Relation();
-                    }
-                } else {
-                    //重复-如果与旧的id不同旧报错
-                    if (isset($oldRow) && $oldRow && $row->id !== $id) {
-                        $error .= "重复的数据：id={$id} -\n";
-                        $currLine++;
-                        $countFail++;
-                        continue;
-                    }
-                }
-                $row->name = $name;
-                if (empty($from)) {
-                    $row->from = null;
-                } else {
-                    $row->from = $from;
-                }
-                $row->to = $to;
-                $row->match = $match;
-                $row->category = $category;
-                $row->editor_id = $user['user_uid'];
-                $row->save();
-            } else {
-                break;
-            }
-            $currLine++;
-        } while (true);
-        return $this->ok(["success" => $currLine - 2 - $countFail, 'fail' => ($countFail)], $error);
+        return $request->has($field)
+            ? json_encode($request->input($field), JSON_UNESCAPED_UNICODE)
+            : null;
     }
 }
