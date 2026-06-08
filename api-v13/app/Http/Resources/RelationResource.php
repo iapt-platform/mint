@@ -31,9 +31,8 @@ class RelationResource extends JsonResource
 
 
         if (!$request->has('vocabulary')) {
-            //TODO 默认英文
+
             $data["editor"] = UserApi::getByUuid($this->editor_id);
-            $lang = $request->input('ui-lang');
 
             $uiLang = strtolower($request->input('ui-lang', 'zh-Hans'));
             $term_channel = ChannelApi::getSysChannel("_System_Grammar_Term_{$uiLang}_");
