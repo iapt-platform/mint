@@ -2,35 +2,29 @@
 
 namespace App\Services\AIAssistant;
 
+use App\Http\Api\ChannelApi;
+use App\Models\CustomBook;
 use App\Services\ArticleService;
+use App\Services\AuthService;
 use App\Services\PaliContentService;
 use App\Services\SentenceService;
-use App\Services\AuthService;
-
-use App\Models\CustomBook;
-
-
 use Illuminate\Support\Facades\Log;
-use App\Http\Api\ChannelApi;
-
 
 class ArticleTranslateService
 {
-    protected ArticleService $articleService;
-    protected PaliContentService $paliContentService;
-    protected TranslateService $translateService;
-    protected SentenceService $sentenceService;
-
-
     protected string $modelId;
+
     protected string $modelToken;
+
     protected array $translation = [];
+
     protected string $outputChannelId;
+
     protected string $currArticleId;
 
     protected bool $thinking;
 
-    protected string $systemPrompt = <<<PROMPT
+    protected string $systemPrompt = <<<'PROMPT'
     请根据提供的原文，翻译为简体中文。
 
     原文为逐句数据，翻译时请依照句子的上下文翻译。
@@ -61,49 +55,42 @@ class ArticleTranslateService
     PROMPT;
 
     public function __construct(
-        ArticleService $article,
-        PaliContentService $paliContent,
-        TranslateService $translateService,
-        SentenceService $sentenceService
-    ) {
-        $this->articleService = $article;
-        $this->paliContentService = $paliContent;
-        $this->translateService = $translateService;
-        $this->sentenceService = $sentenceService;
-    }
+        protected ArticleService $articleService,
+        protected PaliContentService $paliContentService,
+        protected TranslateService $translateService,
+        protected SentenceService $sentenceService
+    ) {}
 
     /**
      * 设置模型配置
-     *
-     * @param string $model
-     * @return self
      */
     public function setModel(string $model): self
     {
         $this->modelId = $model;
         $this->modelToken = app(AuthService::class)->getUserToken($model);
+
         return $this;
     }
+
     /**
      * 设置模型配置
-     *
-     * @param bool $thinking
-     * @return self
      */
     public function setThinking(bool $thinking): self
     {
         $this->thinking = $thinking;
+
         return $this;
     }
+
     /**
      * 设置模型配置
      *
-     * @param string $model
-     * @return self
+     * @param  string  $model
      */
     public function setChannel(string $id): self
     {
         $this->outputChannelId = $id;
+
         return $this;
     }
 
@@ -111,6 +98,7 @@ class ArticleTranslateService
     {
         return $this->currArticleId;
     }
+
     public function translateAnthology(string $anthologyId, ?callable $onEach = null): int
     {
         $articleIds = $this->articleService->articlesInAnthology($anthologyId);
@@ -124,17 +112,19 @@ class ArticleTranslateService
 
         return count($articleIds);
     }
+
     public function translateArticle(string $articleId)
     {
         $this->currArticleId = $articleId;
-        //获取文章中的句子id
+        // 获取文章中的句子id
         $sentenceIds = $this->articleService->sentenceIds($articleId);
-        if (!$sentenceIds || count($sentenceIds) === 0) {
+        if (! $sentenceIds || count($sentenceIds) === 0) {
             $this->translation = [];
+
             return $this;
         }
-        $bookId = (int)explode('-', $sentenceIds[0])[0];
-        //提取原文
+        $bookId = (int) explode('-', $sentenceIds[0])[0];
+        // 提取原文
         $originalChannelId = CustomBook::where('book_id', $bookId)->value('channel_id');
 
         $original = $this->paliContentService->sentences($sentenceIds, [$originalChannelId], 'read');
@@ -144,27 +134,29 @@ class ArticleTranslateService
                 $org = $sent['origin'][0];
                 $orgData[] = [
                     'id' => "{$org['book']}-{$org['para']}-{$org['wordStart']}-{$org['wordEnd']}",
-                    'content' => !empty($org['content']) ? $org['content'] : $org['html'],
+                    'content' => ! empty($org['content']) ? $org['content'] : $org['html'],
                 ];
             }
         }
-        //翻译
+        // 翻译
         $result = $this->translateService->setModel($this->modelId)
             ->setSystemPrompt($this->systemPrompt)
-            ->setTranslatePrompt("# 原文\n\n" .
-                "```json\n" .
-                json_encode($orgData, JSON_UNESCAPED_UNICODE) .
+            ->setTranslatePrompt("# 原文\n\n".
+                "```json\n".
+                json_encode($orgData, JSON_UNESCAPED_UNICODE).
                 "\n```")
             ->translate();
         Log::debug('ai translation', ['data' => $result->toArray()['data']]);
         $this->translation = $result->toArray()['data'];
+
         return $this;
     }
-    //写入结果channel
+
+    // 写入结果channel
     public function save()
     {
         if (
-            !is_array($this->translation) ||
+            ! is_array($this->translation) ||
             count($this->translation) === 0
         ) {
             return 0;
@@ -173,6 +165,7 @@ class ArticleTranslateService
         $sentData = [];
         $sentData = array_map(function ($n) use ($channelInfo) {
             $sId = explode('-', $n['id']);
+
             return [
                 'book_id' => $sId[0],
                 'paragraph' => $sId[1],
@@ -186,16 +179,17 @@ class ArticleTranslateService
                 'editor_uid' => $this->modelId,
             ];
         }, $this->translation);
-        foreach ($sentData as  $value) {
+        foreach ($sentData as $value) {
             $this->sentenceService->save($value);
         }
+
         return count($sentData);
     }
 
     public function saveRpc(string $endpoint, string $accessToken)
     {
         if (
-            !is_array($this->translation) ||
+            ! is_array($this->translation) ||
             count($this->translation) === 0
         ) {
             return 0;
@@ -204,6 +198,7 @@ class ArticleTranslateService
         $sentData = [];
         $sentData = array_map(function ($n) use ($channelInfo, $accessToken) {
             $sId = explode('-', $n['id']);
+
             return [
                 'book_id' => $sId[0],
                 'paragraph' => $sId[1],
@@ -215,9 +210,10 @@ class ArticleTranslateService
                 'access_token' => $accessToken,
             ];
         }, $this->translation);
-        foreach ($sentData as  $value) {
+        foreach ($sentData as $value) {
             $this->sentenceService->saveRpc($endpoint, $value, $this->modelToken);
         }
+
         return count($sentData);
     }
 

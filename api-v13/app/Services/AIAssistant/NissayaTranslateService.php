@@ -2,25 +2,24 @@
 
 namespace App\Services\AIAssistant;
 
+use App\Http\Resources\AiModelResource;
 use App\Services\NissayaParser;
 use App\Services\OpenAIService;
 use App\Services\RomanizeService;
 use Illuminate\Support\Facades\Log;
-use App\Http\Resources\AiModelResource;
-
 
 class NissayaTranslateService
 {
-    protected OpenAIService $openAIService;
-    protected NissayaParser $nissayaParser;
-    protected RomanizeService $romanizeService;
     protected AiModelResource $model;
+
     protected bool $romanize;
+
+    protected bool $thinking;
 
     /**
      * 翻译提示词模板
      */
-    protected string $translatePrompt = <<<PROMPT
+    protected string $translatePrompt = <<<'PROMPT'
 你是一个专业的缅甸语翻译专家。你的任务是将缅文逐词解析(Nissaya)翻译成中文。
 
 输入格式:
@@ -51,58 +50,64 @@ class NissayaTranslateService
 PROMPT;
 
     public function __construct(
-        OpenAIService $openAIService,
-        NissayaParser $nissayaParser,
-        RomanizeService $romanizeService
+        protected OpenAIService $openAIService,
+        protected NissayaParser $nissayaParser,
+        protected RomanizeService $romanizeService
     ) {
-        $this->openAIService = $openAIService;
-        $this->nissayaParser = $nissayaParser;
-        $this->romanizeService = $romanizeService;
         $this->romanize = true;
     }
 
     /**
      * 设置模型配置
-     *
-     * @param \App\Http\Resources\AiModelResource $model
-     * @return self
      */
     public function setModel(AiModelResource $model): self
     {
         $this->model = $model;
+
+        return $this;
+    }
+
+    /**
+     * 设置模型配置
+     */
+    public function setThinking(?bool $thinking): self
+    {
+        if ($thinking === null) {
+            return $this;
+        }
+        $this->thinking = $thinking;
+
         return $this;
     }
 
     /**
      * 设置翻译提示词
-     *
-     * @param string $prompt
-     * @return self
      */
     public function setTranslatePrompt(string $prompt): self
     {
         $this->translatePrompt = $prompt;
+
         return $this;
     }
 
     /**
      * 设置翻译提示词
      *
-     * @param string $prompt
-     * @return self
+     * @param  string  $prompt
      */
     public function setRomanize(bool $romanize): self
     {
         $this->romanize = $romanize;
+
         return $this;
     }
 
     /**
      * 翻译缅文版逐词解析
      *
-     * @param string $text 格式: 巴利文=缅文
-     * @param bool $stream 是否流式输出
-     * @return array
+     * @param  string  $text  格式: 巴利文=缅文
+     * @param  bool  $stream  是否流式输出
+     *
      * @throws \Exception
      */
     public function translate(string $text, bool $stream = false): array
@@ -143,6 +148,7 @@ PROMPT;
                 ->setSystemPrompt($this->translatePrompt)
                 ->setTemperature(0.3)
                 ->setStream($stream)
+                ->setThinking($this->thinking)
                 ->send($jsonlInput);
 
             $complete = time() - $startAt;
@@ -192,14 +198,12 @@ PROMPT;
                 $data[$key]['original'] = $this->romanizeService->myanmarToRoman($value['original']);
             }
         }
+
         return $data;
     }
 
     /**
      * 将数组转换为JSONL格式
-     *
-     * @param array $data
-     * @return string
      */
     protected function arrayToJsonl(array $data): string
     {
@@ -207,14 +211,12 @@ PROMPT;
         foreach ($data as $item) {
             $lines[] = json_encode($item, JSON_UNESCAPED_UNICODE);
         }
+
         return implode("\n", $lines);
     }
 
     /**
      * 将JSONL格式转换为数组
-     *
-     * @param string $jsonl
-     * @return array
      */
     protected function jsonlToArray(string $jsonl): array
     {
@@ -248,9 +250,7 @@ PROMPT;
     /**
      * 批量翻译(将大文本分批处理)
      *
-     * @param string $text
-     * @param int $batchSize 每批处理的条目数
-     * @return array
+     * @param  int  $batchSize  每批处理的条目数
      */
     public function translateInBatches(string $text, int $batchSize = 50): array
     {
@@ -266,7 +266,7 @@ PROMPT;
             ];
 
             foreach ($batches as $index => $batch) {
-                Log::debug("NissayaTranslate: 处理批次 " . ($index + 1) . "/" . count($batches));
+                Log::debug('NissayaTranslate: 处理批次 '.($index + 1).'/'.count($batches));
 
                 $jsonlInput = $this->arrayToJsonl($batch);
                 $response = $this->openAIService
@@ -276,6 +276,7 @@ PROMPT;
                     ->setSystemPrompt($this->translatePrompt)
                     ->setTemperature(0.7)
                     ->setStream(false)
+                    ->setThinking($this->thinking)
                     ->send($jsonlInput);
 
                 $content = $response['choices'][0]['message']['content'] ?? '';
