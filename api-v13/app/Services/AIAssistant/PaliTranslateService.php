@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\Log;
  * - evaluate：质量评估，对照原文找出译文的真实问题，按级别就地用 HTML span 标注译文（颜色=严重程度，title=问题+建议），作为工作流最后一步
  *
  * 单独运行 review / revise / evaluate 时，已有译文从输出 channel 读取。
+ *
+ * 工作流自动提取同段落的 nissaya（巴利逐词缅文释义）注入 translate / review / evaluate
+ * 作为参考资料（见 PaliNissayaReferenceService）；无 nissaya 数据的段落不受影响。
  */
 class PaliTranslateService
 {
@@ -27,6 +30,11 @@ class PaliTranslateService
      * 可用的工作流步骤
      */
     public const STEPS = ['translate', 'review', 'revise', 'evaluate'];
+
+    /**
+     * 支持注入 nissaya 参考资料的步骤（revise 基于 review 意见工作，无需 nissaya）
+     */
+    public const NISSAYA_STEPS = ['translate', 'review', 'evaluate'];
 
     protected AiModelResource $model;
 
@@ -42,12 +50,21 @@ class PaliTranslateService
     protected array $workChannel = [];
 
     /**
+     * 启用 nissaya 参考资料的步骤；默认全部支持的步骤都注入
+     *
+     * @var string[]
+     */
+    protected array $nissayaSteps = self::NISSAYA_STEPS;
+
+    /**
      * translate 步骤的提示词
      */
     protected string $translatePrompt = <<<'md'
         你是一个巴利语翻译助手。
         pali 是巴利原文的一个段落，json格式， 每条记录是一个句子。包括id 和 content 两个字段
         请翻译这个段落为简体中文。
+
+        若用户额外提供 nissaya（巴利原文的逐词缅文释义，与 pali 通过 id 一一对应，按词列出每个巴利词的语法解析与缅文释义，形如「巴利词= 缅文释义」）：它是判断词义、修饰关系、指代关系和句子结构最权威的依据，翻译时应优先参照 nissaya 确定原意，遇到歧义时以 nissaya 为准。
 
         翻译要求
         1. 语言风格为现代汉语书面语，不要使用古汉语或者半文半白。
@@ -74,6 +91,7 @@ class PaliTranslateService
     protected string $reviewPrompt = <<<'md'
         你是一个资深的巴利语翻译审校专家。
         用户会提供巴利原文（pali）以及一份待审校的简体中文译文（translation），两者均为 json，通过 id 一一对应。
+        用户还可能提供 nissaya（巴利原文的逐词缅文释义，与 pali 通过 id 对应，按词列出每个巴利词的语法解析与缅文释义，形如「巴利词= 缅文释义」）：它是判断词义、修饰关系、指代关系和句子结构最权威的依据，审校时应以 nissaya 为准核对译文是否贴合原意，发现译文与 nissaya 冲突的，须在 issues 中指出。
 
         请逐句审校译文，但**不要修改译文**，只输出审校意见。
         审校维度：
@@ -128,6 +146,7 @@ class PaliTranslateService
     protected string $evaluatePrompt = <<<'md'
         你是一位资深的巴利语译文质量检查员，精通巴利原典与注释书传统。
         用户会提供巴利原文（pali）与对应的简体中文译文（translation），两者均为 json，通过 id 一一对应。
+        用户还可能提供 nissaya（巴利原文的逐词缅文释义，与 pali 通过 id 对应，按词列出每个巴利词的语法解析与缅文释义，形如「巴利词= 缅文释义」）：它是判断词义、修饰关系、指代关系和句子结构最权威的依据，审查时应以 nissaya 为准核对译文，凡译文与 nissaya 冲突处即为真实问题，须按级别标注。
 
         你的任务：逐句对照原文审查译文，找出其中**确实存在**的翻译问题，按严重程度分级，并把问题**就地标注在译文上**，最后输出标注后的译文。
 
@@ -173,6 +192,7 @@ class PaliTranslateService
     public function __construct(
         protected OpenAIService $openAIService,
         protected SearchPaliDataService $searchPaliDataService,
+        protected PaliNissayaReferenceService $nissayaReference,
     ) {}
 
     /**
@@ -216,6 +236,19 @@ class PaliTranslateService
     public function setChannel(array $channel): self
     {
         $this->workChannel = $channel;
+
+        return $this;
+    }
+
+    /**
+     * 设置启用 nissaya 参考资料的步骤（可单独开关 translate / review / evaluate）；
+     * 仅保留 NISSAYA_STEPS 支持的步骤，非法值自动忽略。
+     *
+     * @param  string[]  $steps
+     */
+    public function setNissayaSteps(array $steps): self
+    {
+        $this->nissayaSteps = array_values(array_intersect($steps, self::NISSAYA_STEPS));
 
         return $this;
     }
@@ -276,6 +309,10 @@ class PaliTranslateService
 
         $pali = $this->getPaliContent($book, $para);
 
+        // 提取同段落的 nissaya（巴利逐词缅文释义）作为参考资料，按 nissayaSteps 注入对应步骤
+        $nissaya = $this->nissayaReference->forParagraph($book, $para);
+        Log::debug('PaliTranslate: nissaya 参考', ['count' => count($nissaya), 'steps' => $this->nissayaSteps]);
+
         // 工作流不以 translate 开头时，从输出 channel 读取已有译文作为输入
         $translation = in_array('translate', $steps, true)
             ? []
@@ -286,17 +323,17 @@ class PaliTranslateService
         foreach ($steps as $step) {
             switch ($step) {
                 case 'translate':
-                    $translation = $this->translate($pali);
+                    $translation = $this->translate($pali, $this->nissayaFor('translate', $nissaya));
                     break;
                 case 'review':
-                    $review = $this->review($pali, $translation);
+                    $review = $this->review($pali, $translation, $this->nissayaFor('review', $nissaya));
                     Log::debug('PaliTranslate: review 完成', ['review' => $review]);
                     break;
                 case 'revise':
                     $translation = $this->revise($pali, $translation, $review);
                     break;
                 case 'evaluate':
-                    $translation = $this->evaluate($pali, $translation);
+                    $translation = $this->evaluate($pali, $translation, $this->nissayaFor('evaluate', $nissaya));
                     break;
             }
         }
@@ -334,14 +371,15 @@ class PaliTranslateService
      * translate 步骤：根据巴利原文产出译文
      *
      * @param  array<int, array{id: string, content: string}>  $pali
+     * @param  array<int, array{id: string, content: string}>  $nissaya  巴利逐词缅文释义参考资料，可空
      * @return array<int, array{id: string, content: string}>
      */
-    public function translate(array $pali): array
+    public function translate(array $pali, array $nissaya = []): array
     {
-        $originalText = $this->jsonBlock($pali);
-        Log::debug('PaliTranslate: translate', ['pali' => $originalText]);
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n".$this->nissayaSection($nissaya);
+        Log::debug('PaliTranslate: translate', ['input' => $userText]);
 
-        $content = $this->send($this->translatePrompt, "# pali\n\n{$originalText}\n\n");
+        $content = $this->send($this->translatePrompt, $userText);
 
         return LlmResponseParser::jsonl($content);
     }
@@ -351,12 +389,14 @@ class PaliTranslateService
      *
      * @param  array<int, array{id: string, content: string}>  $pali
      * @param  array<int, array{id: string, content: string}>  $translation
+     * @param  array<int, array{id: string, content: string}>  $nissaya  巴利逐词缅文释义参考资料，可空
      * @return array<int, array{id: string, score: int, issues: string}>
      */
-    public function review(array $pali, array $translation): array
+    public function review(array $pali, array $translation, array $nissaya = []): array
     {
         $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
-            ."# translation\n\n".$this->jsonBlock($translation)."\n\n";
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            .$this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: review', ['input' => $userText]);
 
         $content = $this->send($this->reviewPrompt, $userText);
@@ -392,12 +432,14 @@ class PaliTranslateService
      *
      * @param  array<int, array{id: string, content: string}>  $pali
      * @param  array<int, array{id: string, content: string}>  $translation
+     * @param  array<int, array{id: string, content: string}>  $nissaya  巴利逐词缅文释义参考资料，可空
      * @return array<int, array{id: string, content: string}>
      */
-    public function evaluate(array $pali, array $translation): array
+    public function evaluate(array $pali, array $translation, array $nissaya = []): array
     {
         $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
-            ."# translation\n\n".$this->jsonBlock($translation)."\n\n";
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            .$this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: evaluate', ['input' => $userText]);
 
         $content = $this->send($this->evaluatePrompt, $userText);
@@ -456,6 +498,32 @@ class PaliTranslateService
         Log::debug("PaliTranslate: complete in {$complete}s", ['content' => $content]);
 
         return is_string($content) ? $content : '[]';
+    }
+
+    /**
+     * 按开关返回某步骤应使用的 nissaya；未启用该步骤时返回空数组。
+     *
+     * @param  array<int, array{id: string, content: string}>  $nissaya
+     * @return array<int, array{id: string, content: string}>
+     */
+    protected function nissayaFor(string $step, array $nissaya): array
+    {
+        return in_array($step, $this->nissayaSteps, true) ? $nissaya : [];
+    }
+
+    /**
+     * 构造 nissaya 参考资料区块；无数据时返回空串（不污染提示词）。
+     * 与 pali / translation 一致使用 [{id, content}] json，便于模型按 id 对应句子。
+     *
+     * @param  array<int, array{id: string, content: string}>  $nissaya
+     */
+    protected function nissayaSection(array $nissaya): string
+    {
+        if (empty($nissaya)) {
+            return '';
+        }
+
+        return "# nissaya\n\n".$this->jsonBlock($nissaya)."\n\n";
     }
 
     /**

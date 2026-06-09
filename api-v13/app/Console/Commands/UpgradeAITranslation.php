@@ -24,6 +24,16 @@ class UpgradeAITranslation extends Command
      * php artisan upgrade:ai.translation translation --book=131 --para=27
      * php artisan upgrade:ai.translation nissaya --book=207 --para=1247
      *
+     * nissaya 参考资料用法示例（--nissaya 指定哪些步骤注入 nissaya 逐词缅文释义）：
+     * - 默认（不传）            translate/review/evaluate 全部注入 nissaya
+     *   php artisan upgrade:ai.translation translation {channel} --book=131 --para=27 --steps=translate,review,revise,evaluate
+     * - 仅 review 注入
+     *   php artisan upgrade:ai.translation translation {channel} --book=131 --para=27 --steps=translate,review,evaluate --nissaya=review
+     * - review + evaluate 注入，translate 不注入
+     *   php artisan upgrade:ai.translation translation {channel} --book=131 --para=27 --steps=translate,review,evaluate --nissaya=review,evaluate
+     * - 全部不注入
+     *   php artisan upgrade:ai.translation translation {channel} --book=131 --para=27 --steps=translate,review,evaluate --nissaya=
+     *
      * @var string
      */
     protected $signature = 'upgrade:ai.translation
@@ -35,6 +45,7 @@ class UpgradeAITranslation extends Command
     {--model=}
     {--thinking= : 开启和关闭deepseek thinking true | false}
     {--steps=translate : translation 工作流步骤，逗号分隔，可选 translate,review,revise,evaluate（evaluate 为质量评估，须放最后）}
+    {--nissaya=translate,review,evaluate : 启用 nissaya 参考资料的步骤，逗号分隔，可选 translate,review,evaluate；传空字符串则全部不注入}
     {--fresh : 清除缓存断点，从头开始}';
 
     // 缓存键前缀：以 type、channel 区分，记录已完成的 "book|para" 集合，中断后重跑自动跳过
@@ -114,6 +125,15 @@ class UpgradeAITranslation extends Command
             return 1;
         }
 
+        // nissaya 参考资料注入步骤校验（哪些步骤启用 nissaya）
+        $nissayaSteps = array_values(array_filter(array_map('trim', explode(',', (string) $this->option('nissaya')))));
+        $invalidNissaya = array_diff($nissayaSteps, PaliTranslateService::NISSAYA_STEPS);
+        if (! empty($invalidNissaya)) {
+            $this->error('invalid nissaya steps: '.implode(',', $invalidNissaya).'. allowed: '.implode(',', PaliTranslateService::NISSAYA_STEPS));
+
+            return 1;
+        }
+
         $type = $this->argument('type');
         $channelId = $this->workChannel['id'] ?? '';
 
@@ -166,6 +186,7 @@ class UpgradeAITranslation extends Command
                             ->setModel($this->model)
                             ->setChannel($this->workChannel)
                             ->setThinking($this->thinking ?? null)
+                            ->setNissayaSteps($nissayaSteps)
                             ->run($steps, (int) $book, (int) $paragraph);
                         break;
                     case 'nissaya':
@@ -274,7 +295,7 @@ class UpgradeAITranslation extends Command
             ->language('my') // 过滤缅文
             ->where('book_id', $book)
             ->where('paragraph', $para)
-            ->orderBy('strlen')
+            ->orderBy('word_start')
             ->get();
         $result = [];
         foreach ($sentences as $key => $sentence) {
