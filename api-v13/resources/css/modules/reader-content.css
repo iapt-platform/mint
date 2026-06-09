@@ -261,3 +261,16 @@ article.reader-body div.epigraph > blockquote > footer {
     text-align: right;
     font-size: 0.9rem;
 }
+
+article.reader-body.evaluate-fatal {
+    background-color: #8d101db4;
+}
+article.reader-body .evaluate-error {
+    background-color: #ee6c6c;
+}
+article.reader-body .evaluate-warning {
+    background-color: #f3b353;
+}
+article.reader-body .evaluate-suggestion {
+    background-color: #c4f8c6;
+}
