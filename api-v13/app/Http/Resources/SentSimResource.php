@@ -4,11 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\PaliSentence;
-use App\Models\PaliText;
-use App\Http\Api\UserApi;
-use App\Http\Api\ChannelApi;
 use App\Http\Controllers\CorpusController;
-use App\Services\AuthService;
+
 
 class SentSimResource extends JsonResource
 {
