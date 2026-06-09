@@ -161,7 +161,9 @@ class PaliTranslateService
         # 标注方法
         只对译文中**有问题的最小片段**，用如下 span 原地包裹（不改动译文本身的文字与黑体等格式，仅在外层套标签）：
 
-        <span class="evaluate-级别" style="background:颜色" title="类别·级别：问题简述｜建议：修改建议">有问题的译文片段</span>
+        <span class='evaluate-级别' style='background:颜色' title='类别·级别：问题简述｜建议：修改建议'>有问题的译文片段</span>
+
+        **span 的属性一律用单引号**（class='...' style='...' title='...'），不要用双引号——因为 content 整体是 JSON 字符串、本身由双引号包裹，属性再用双引号极易因转义出错导致整行 JSON 解析失败、整句被丢弃。title 等属性值内若要引用文字，请使用中文全角引号「」或‘’，**严禁**出现 ASCII 双引号(")或单引号(')。
 
         级别与背景颜色对应（越暖代表越严重）：
         - fatal      颜色 #ffcdd2
@@ -184,8 +186,8 @@ class PaliTranslateService
 
         直接输出 jsonl 数据，无需解释。
 
-        **输出范例**
-        {"id":"1-2-3-4","content":"他于<span class=\"evaluate-error\" style=\"background:#ffe0b2\" title=\"漏译·error：原文 bhagavā 未译出｜建议：补译为‘世尊’\">那时</span>住在王舍城。"}
+        **输出范例**（注意 span 属性用单引号，整行是合法 JSON）
+        {"id":"1-2-3-4","content":"他于<span class='evaluate-error' style='background:#ffe0b2' title='漏译·error：原文 bhagavā 未译出｜建议：补译为‘世尊’'>那时</span>住在王舍城。"}
         {"id":"2-3-4-5","content":"完全正确的译文原样返回。"}
         md;
 

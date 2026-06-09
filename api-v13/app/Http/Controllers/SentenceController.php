@@ -2,34 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sentence;
-use App\Models\Channel;
-use App\Models\SentHistory;
-use App\Models\WbwAnalysis;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
-
-use App\Http\Resources\SentResource;
-use App\Services\AuthService;
-use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
-use App\Http\Api\PaliTextApi;
 use App\Http\Api\Mq;
+use App\Http\Api\PaliTextApi;
+use App\Http\Api\ShareApi;
+use App\Http\Resources\SentResource;
 use App\Models\AccessToken;
+use App\Models\Channel;
+use App\Models\Sentence;
+use App\Models\WbwAnalysis;
+use App\Services\AuthService;
+use App\Services\SentenceService;
 use App\Tools\OpsLog;
-
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Str;
 
 class SentenceController extends Controller
 {
+    public function __construct(protected SentenceService $sentenceService) {}
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -49,17 +49,17 @@ class SentenceController extends Controller
             'fork_at',
             'acceptor_uid',
             'pr_edit_at',
-            'updated_at'
+            'updated_at',
         ];
 
         switch ($request->input('view')) {
             case 'public':
-                //获取全部公开的译文
-                //首先获取某个类型的 channel 列表
+                // 获取全部公开的译文
+                // 首先获取某个类型的 channel 列表
                 $channels = [];
                 $channel_type = $request->input('channel_type', 'translation');
-                if ($channel_type === "original") {
-                    $pali_channel = ChannelApi::getSysChannel("_System_Pali_VRI_");
+                if ($channel_type === 'original') {
+                    $pali_channel = ChannelApi::getSysChannel('_System_Pali_VRI_');
                     if ($pali_channel !== false) {
                         $channels[] = $pali_channel;
                     }
@@ -68,7 +68,7 @@ class SentenceController extends Controller
                         ->where('status', 30)
                         ->select('uid')->get();
                     foreach ($channelList as $channel) {
-                        # code...
+                        // code...
                         $channels[] = $channel->uid;
                     }
                 }
@@ -82,19 +82,19 @@ class SentenceController extends Controller
                 }
                 $key = $request->input('key');
                 if (empty($key)) {
-                    return $this->error("没有关键词");
+                    return $this->error('没有关键词');
                 }
                 $table = Sentence::select($indexCol)
-                    ->where('content', 'like', '%' . $key . '%')
+                    ->where('content', 'like', '%'.$key.'%')
                     ->where('editor_uid', $userUid);
 
                 break;
             case 'channel':
-                //句子编号列表在某个channel下的全部内容
+                // 句子编号列表在某个channel下的全部内容
                 $sent = explode(',', $request->input('sentence'));
                 $query = [];
                 foreach ($sent as $value) {
-                    # code...
+                    // code...
                     $ids = explode('-', $value);
                     $query[] = $ids;
                 }
@@ -106,21 +106,21 @@ class SentenceController extends Controller
                 /**
                  * 某句的全部译文
                  */
-                //获取用户有阅读权限的所有channel
-                //全网公开
+                // 获取用户有阅读权限的所有channel
+                // 全网公开
                 $type = $request->input('type', 'translation');
-                $channelTable = Channel::where("type", $type)->select(['uid', 'name']);
+                $channelTable = Channel::where('type', $type)->select(['uid', 'name']);
                 $channelPub = $channelTable->where('status', 30)->get();
 
                 $user = AuthService::current($request);
-                $channelShare = array();
-                $channelMy = array();
+                $channelShare = [];
+                $channelMy = [];
                 if ($user) {
-                    //自己的
+                    // 自己的
                     $channelMy = Channel::where('owner_uid', $user['user_uid'])
                         ->where('type', $type)
                         ->get();
-                    //协作
+                    // 协作
                     $channelShare = ShareApi::getResList($user['user_uid'], 2);
                 }
                 $channelCanRead = [];
@@ -139,7 +139,7 @@ class SentenceController extends Controller
                             'name' => $value['res_title'],
                         ];
                         if ($value['power'] >= 20) {
-                            $channelCanRead[$value['res_id']]['role'] = "editor";
+                            $channelCanRead[$value['res_id']]['role'] = 'editor';
                         }
                     }
                 }
@@ -154,8 +154,8 @@ class SentenceController extends Controller
                 $excludeChannels = explode(',', $request->input('excludes'));
 
                 foreach ($channelCanRead as $key => $value) {
-                    # code...
-                    if (!in_array($key, $excludeChannels)) {
+                    // code...
+                    if (! in_array($key, $excludeChannels)) {
                         $channels[] = $key;
                     }
                 }
@@ -169,7 +169,7 @@ class SentenceController extends Controller
                     ->where('word_end', $sent[3]);
                 break;
             case 'chapter':
-                $chapter =  PaliTextApi::getChapterStartEnd($request->input('book'), $request->input('para'));
+                $chapter = PaliTextApi::getChapterStartEnd($request->input('book'), $request->input('para'));
                 $table = Sentence::where('ver', '>', 1)
                     ->where('book_id', $request->input('book'))
                     ->whereBetween('paragraph', $chapter)
@@ -183,19 +183,19 @@ class SentenceController extends Controller
                     ->orderBy('book_id')->orderBy('paragraph')->orderBy('word_start');
                 break;
             case 'my-edit':
-                //我编辑的
-                if (!$user) {
+                // 我编辑的
+                if (! $user) {
                     return $this->error(__('auth.failed'), 401, 401);
                 }
                 $table = Sentence::where('editor_uid', $user['user_uid'])
                     ->where('ver', '>', 1);
                 break;
             default:
-                # code...
+                // code...
                 break;
         }
-        if (!empty($request->input("key"))) {
-            $table = $table->where('content', 'like', '%' . $request->input("key") . '%');
+        if (! empty($request->input('key'))) {
+            $table = $table->where('content', 'like', '%'.$request->input('key').'%');
         }
 
         $count = $table->count();
@@ -209,12 +209,12 @@ class SentenceController extends Controller
             );
         }
 
-        $table = $table->skip($request->input("offset", 0))
+        $table = $table->skip($request->input('offset', 0))
             ->take($request->input('limit', 1000));
         $result = $table->get();
 
         if ($result) {
-            $output = ["count" => $count];
+            $output = ['count' => $count];
             if (
                 $request->input('view') === 'sent-can-read' ||
                 $request->input('view') === 'channel' ||
@@ -222,18 +222,20 @@ class SentenceController extends Controller
                 $request->input('view') === 'paragraph' ||
                 $request->input('view') === 'my-edit'
             ) {
-                $output["rows"] = SentResource::collection($result);
+                $output['rows'] = SentResource::collection($result);
             } else {
-                $output["rows"] = $result;
+                $output['rows'] = $result;
             }
             if (isset($totalStrLen)) {
                 $output['total_strlen'] = $totalStrLen;
             }
+
             return $this->ok($output);
         } else {
             return $this->ok([]);
         }
     }
+
     /**
      * 用channel 和句子编号列表查询句子
      */
@@ -242,7 +244,7 @@ class SentenceController extends Controller
         $sent = $request->input('sentences');
         $query = [];
         foreach ($sent as $value) {
-            # code...
+            // code...
             $ids = explode('-', $value);
             if (count($ids) === 4) {
                 $query[] = $ids;
@@ -253,61 +255,63 @@ class SentenceController extends Controller
             ->whereIns(['book_id', 'paragraph', 'word_start', 'word_end'], $query);
         $result = $table->get();
         if ($result) {
-            return $this->ok(["rows" => $result, "count" => count($result)]);
+            return $this->ok(['rows' => $result, 'count' => count($result)]);
         } else {
-            return $this->error("没有查询到数据");
+            return $this->error('没有查询到数据');
         }
     }
 
     private function UserCanEdit($userId, $channelId, $book, $access_token = null)
     {
         $channel = Channel::where('uid', $channelId)->first();
-        if (!$channel) {
+        if (! $channel) {
             return false;
         }
         if ($channel->owner_uid !== $userId) {
-            //判断是否为协作
+            // 判断是否为协作
             $power = ShareApi::getResPower($userId, $channel->uid, 2);
             if ($power < 20) {
-                //判断token
-                if (!$access_token) {
+                // 判断token
+                if (! $access_token) {
                     return false;
                 }
                 $key = AccessToken::where('res_id', $channelId)->value('token');
-                $jwt = JWT::decode($access_token, new Key($key . $key, 'HS512'));
+                $jwt = JWT::decode($access_token, new Key($key.$key, 'HS512'));
                 if ($jwt->book && $jwt->book !== $book) {
                     return false;
                 }
             }
         }
+
         return true;
     }
+
     /**
      * 新建多个句子
      * 如果句子存在，修改
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function store(Request $request)
     {
-        //鉴权
+        // 鉴权
         $user = AuthService::current($request);
-        if (!$user) {
-            //未登录用户
+        if (! $user) {
+            // 未登录用户
             return $this->error(__('auth.failed'), 401, 401);
         }
-        if (!$request->has('sentences')) {
+        if (! $request->has('sentences')) {
             return $this->error('no date', 200, 200);
         }
         $destChannel = null;
         if ($request->has('channel')) {
             if ($this->UserCanEdit(
-                $user["user_uid"],
+                $user['user_uid'],
                 $request->input('channel'),
                 $request->input('book', 0),
                 $request->input('access_token', null)
             )) {
-                $destChannel = Channel::where('uid', $request->input('channel'))->first();;
+                $destChannel = Channel::where('uid', $request->input('channel'))->first();
             } else {
                 return $this->error(__('auth.failed'), 403, 403);
             }
@@ -315,11 +319,11 @@ class SentenceController extends Controller
         $sentFirst = null;
         $changedSent = [];
         foreach ($request->input('sentences') as $key => $sent) {
-            # 权限
-            if (!$request->has('channel')) {
+            // 权限
+            if (! $request->has('channel')) {
 
                 if ($this->UserCanEdit(
-                    $user["user_uid"],
+                    $user['user_uid'],
                     $sent['channel_uid'],
                     $sent['book_id'],
                     isset($sent['access_token']) ? $sent['access_token'] : null
@@ -354,32 +358,32 @@ class SentenceController extends Controller
                 $sentFirst = $sent;
             }
             $row = Sentence::firstOrNew([
-                "book_id" => $sent['book_id'],
-                "paragraph" => $sent['paragraph'],
-                "word_start" => $sent['word_start'],
-                "word_end" => $sent['word_end'],
-                "channel_uid" => $destChannel->uid,
+                'book_id' => $sent['book_id'],
+                'paragraph' => $sent['paragraph'],
+                'word_start' => $sent['word_start'],
+                'word_end' => $sent['word_end'],
+                'channel_uid' => $destChannel->uid,
             ], [
-                "id" => app('snowflake')->id(),
-                "uid" => Str::uuid(),
+                'id' => app('snowflake')->id(),
+                'uid' => Str::uuid(),
             ]);
             $row->content = $sent['content'];
-            if (isset($sent['content_type']) && !empty($sent['content_type'])) {
+            if (isset($sent['content_type']) && ! empty($sent['content_type'])) {
                 $row->content_type = $sent['content_type'];
             }
-            $row->strlen = mb_strlen($sent['content'], "UTF-8");
+            $row->strlen = mb_strlen($sent['content'], 'UTF-8');
             $row->language = $destChannel->lang;
             $row->status = $destChannel->status;
             if ($request->has('copy')) {
-                //复制句子，保留原作者信息
-                $row->editor_uid = $sent["editor_uid"];
-                $row->acceptor_uid = $user["user_uid"];
-                $row->pr_edit_at = $sent["updated_at"];
+                // 复制句子，保留原作者信息
+                $row->editor_uid = $sent['editor_uid'];
+                $row->acceptor_uid = $user['user_uid'];
+                $row->pr_edit_at = $sent['updated_at'];
                 if ($request->has('fork_from')) {
                     $row->fork_at = now();
                 }
             } else {
-                $row->editor_uid = $user["user_uid"];
+                $row->editor_uid = $user['user_uid'];
                 $row->acceptor_uid = null;
                 $row->pr_edit_at = null;
             }
@@ -389,20 +393,20 @@ class SentenceController extends Controller
 
             $changedSent[] = $row->uid;
 
-            //保存历史记录
+            // 保存历史记录
             if ($request->has('copy')) {
                 $fork_from = $request->input('fork_from', null);
-                $this->saveHistory(
+                $this->sentenceService->saveHistory(
                     $row->uid,
-                    $sent["editor_uid"],
+                    $sent['editor_uid'],
                     $sent['content'],
-                    $user["user_uid"],
+                    $user['user_uid'],
                     $fork_from
                 );
             } else {
-                $this->saveHistory($row->uid, $user["user_uid"], $sent['content'], $user["user_uid"]);
+                $this->sentenceService->saveHistory($row->uid, $user['user_uid'], $sent['content'], $user['user_uid']);
             }
-            //清除缓存
+            // 清除缓存
             $sentId = "{$sent['book_id']}-{$sent['paragraph']}-{$sent['word_start']}-{$sent['word_end']}";
             $hKey = "/sentence/res-count/{$sentId}/";
             Redis::del($hKey);
@@ -416,39 +420,17 @@ class SentenceController extends Controller
         }
 
         $result = Sentence::whereIn('uid', $changedSent)->get();
+
         return $this->ok([
             'rows' => SentResource::collection($result),
-            'count' => count($result)
+            'count' => count($result),
         ]);
     }
 
-    private function saveHistory($uid, $editor, $content, $user_uid = null, $fork_from = null, $pr_from = null)
-    {
-        $newHis = new SentHistory();
-        $newHis->id = app('snowflake')->id();
-        $newHis->sent_uid = $uid;
-        $newHis->user_uid = $editor;
-        if (empty($content)) {
-            $newHis->content = "";
-        } else {
-            $newHis->content = $content;
-        }
-        if ($fork_from) {
-            $newHis->fork_from = $fork_from;
-            $newHis->accepter_uid = $user_uid;
-        }
-        if ($pr_from) {
-            $newHis->pr_from = $pr_from;
-            $newHis->accepter_uid = $user_uid;
-        }
-        $newHis->create_time = time() * 1000;
-        $newHis->save();
-    }
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Sentence  $sentence
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Sentence $sentence)
     {
@@ -456,47 +438,45 @@ class SentenceController extends Controller
         return $this->ok(new SentResource($sentence));
     }
 
-
     /**
      * 修改单个句子
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $id book_para_start_end_channel
-     * @return \Illuminate\Http\Response
+     * @param  string  $id  book_para_start_end_channel
+     * @return Response
      */
-    public function update(Request $request,  $id)
+    public function update(Request $request, $id)
     {
         //
         $param = \explode('_', $id);
 
-        //鉴权
+        // 鉴权
         $user = AuthService::current($request);
-        if (!$user) {
-            //未登录鉴权失败
+        if (! $user) {
+            // 未登录鉴权失败
             return $this->error(__('auth.failed'), 403, 403);
         }
         $channel = Channel::where('uid', $param[4])->first();
-        if (!$channel) {
-            return $this->error("not found channel");
+        if (! $channel) {
+            return $this->error('not found channel');
         }
-        if ($channel->owner_uid !== $user["user_uid"]) {
+        if ($channel->owner_uid !== $user['user_uid']) {
             // 判断是否为协作
-            $power = ShareApi::getResPower($user["user_uid"], $channel->uid, 2);
+            $power = ShareApi::getResPower($user['user_uid'], $channel->uid, 2);
             if ($power < 20) {
                 return $this->error(__('auth.failed'), 403, 403);
             }
         }
 
         $sent = Sentence::firstOrNew([
-            "book_id" => $param[0],
-            "paragraph" => $param[1],
-            "word_start" => $param[2],
-            "word_end" => $param[3],
-            "channel_uid" => $param[4],
+            'book_id' => $param[0],
+            'paragraph' => $param[1],
+            'word_start' => $param[2],
+            'word_end' => $param[3],
+            'channel_uid' => $param[4],
         ], [
-            "id" => app('snowflake')->id(),
-            "uid" => Str::orderedUuid(),
-            "create_time" => time() * 1000,
+            'id' => app('snowflake')->id(),
+            'uid' => Str::orderedUuid(),
+            'create_time' => time() * 1000,
         ]);
         $sent->content = $request->input('content');
         if ($request->has('contentType')) {
@@ -504,15 +484,15 @@ class SentenceController extends Controller
         }
         $sent->language = $channel->lang;
         $sent->status = $channel->status;
-        $sent->strlen = mb_strlen($request->input('content'), "UTF-8");
+        $sent->strlen = mb_strlen($request->input('content'), 'UTF-8');
         $sent->modify_time = time() * 1000;
         if ($request->has('prEditor')) {
             $realEditor = $request->input('prEditor');
-            $sent->acceptor_uid = $user["user_uid"];
+            $sent->acceptor_uid = $user['user_uid'];
             $sent->pr_edit_at = $request->input('prEditAt');
             $sent->pr_id = $request->input('prId');
         } else {
-            $realEditor = $user["user_uid"];
+            $realEditor = $user['user_uid'];
             $sent->acceptor_uid = null;
             $sent->pr_edit_at = null;
             $sent->pr_id = null;
@@ -520,28 +500,28 @@ class SentenceController extends Controller
         $sent->editor_uid = $realEditor;
         $sent->save();
         $sent = $sent->refresh();
-        //清除缓存
+        // 清除缓存
         $sentId = "{$sent['book_id']}-{$sent['paragraph']}-{$sent['word_start']}-{$sent['word_end']}";
         $hKey = "/sentence/res-count/{$sentId}/";
         Redis::del($hKey);
-        OpsLog::debug($user["user_uid"], $sent);
+        OpsLog::debug($user['user_uid'], $sent);
 
-        //清除cache
+        // 清除cache
         $channelId = $param[4];
         $currSentId = "{$param[0]}-{$param[1]}-{$param[2]}-{$param[3]}";
         Cache::forget("/sent/{$channelId}/{$currSentId}");
-        //保存历史记录
+        // 保存历史记录
         if ($request->has('prEditor')) {
-            $this->saveHistory(
+            $this->sentenceService->saveHistory(
                 $sent->uid,
                 $realEditor,
                 $request->input('content'),
-                $user["user_uid"],
+                $user['user_uid'],
                 null,
                 $request->input('prUuid'),
             );
         } else {
-            $this->saveHistory($sent->uid, $realEditor, $request->input('content'));
+            $this->sentenceService->saveHistory($sent->uid, $realEditor, $request->input('content'));
         }
 
         Mq::publish('progress', [
@@ -552,7 +532,7 @@ class SentenceController extends Controller
         Mq::publish('content', new SentResource($sent));
 
         if ($channel->type === 'nissaya' && $sent->content_type === 'json') {
-            $this->updateWbwAnalyses($sent->content, $channel->lang, $user["user_id"]);
+            $this->updateWbwAnalyses($sent->content, $channel->lang, $user['user_id']);
         }
 
         return $this->ok(new SentResource($sent));
@@ -561,8 +541,7 @@ class SentenceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Sentence  $sentence
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Sentence $sentence)
     {
@@ -575,7 +554,7 @@ class SentenceController extends Controller
         $currWbwId = 0;
         $prefix = 'wbw-preference';
         foreach ($wbwData as $key => $word) {
-            # code...
+            // code...
             if (count($word->sn) === 1) {
                 $currWbwId = $word->uid;
                 WbwAnalysis::where('wbw_id', $word->uid)->delete();
@@ -592,10 +571,10 @@ class SentenceController extends Controller
                 'lang' => $lang,
                 'editor_id' => $editorId,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ];
             $newData['type'] = 3;
-            if (!empty($word->meaning->value)) {
+            if (! empty($word->meaning->value)) {
                 $newData['data'] = $word->meaning->value;
                 WbwAnalysis::insert($newData);
                 Cache::put("{$prefix}/{$word->real->value}/3/{$editorId}", $word->meaning->value);
@@ -606,7 +585,7 @@ class SentenceController extends Controller
                 $factorMeaning = explode('+', str_replace('-', '+', $word->factorMeaning->value));
                 foreach ($factors as $key => $factor) {
                     if (isset($factorMeaning[$key])) {
-                        if (!empty($factorMeaning[$key])) {
+                        if (! empty($factorMeaning[$key])) {
                             $newData['wbw_word'] = $factor;
                             $newData['data'] = $factorMeaning[$key];
                             $newData['type'] = 5;
