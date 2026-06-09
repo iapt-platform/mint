@@ -338,7 +338,7 @@ class UpgradeAITranslation extends Command
             ];
         }, $data);
         foreach ($sentData as $key => $value) {
-            $this->sentenceService->save($value);
+            $this->sentenceService->saveWithHistory($value);
         }
     }
 }
