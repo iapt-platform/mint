@@ -13,19 +13,20 @@ use Illuminate\Support\Facades\Log;
 /**
  * 巴利原文 -> 简体中文 的多步骤翻译工作流。
  *
- * 支持三个步骤，可单独运行或按顺序串联：
+ * 支持四个步骤，可单独运行或按顺序串联：
  * - translate：根据巴利原文产出译文
  * - review：对已有译文打分并给出问题清单（不修改译文）
  * - revise：根据 review 的问题清单产出改进后的译文
+ * - evaluate：质量评估，对照原文找出译文的真实问题，按级别就地用 HTML span 标注译文（颜色=严重程度，title=问题+建议），作为工作流最后一步
  *
- * 单独运行 review / revise 时，已有译文从输出 channel 读取。
+ * 单独运行 review / revise / evaluate 时，已有译文从输出 channel 读取。
  */
 class PaliTranslateService
 {
     /**
      * 可用的工作流步骤
      */
-    public const STEPS = ['translate', 'review', 'revise'];
+    public const STEPS = ['translate', 'review', 'revise', 'evaluate'];
 
     protected AiModelResource $model;
 
@@ -121,6 +122,54 @@ class PaliTranslateService
         {"id":"2-3-4-5","content":"译文"}
         md;
 
+    /**
+     * evaluate 步骤的提示词：对照原文找出译文真实问题，按级别就地标注译文。
+     */
+    protected string $evaluatePrompt = <<<'md'
+        你是一位资深的巴利语译文质量检查员，精通巴利原典与注释书传统。
+        用户会提供巴利原文（pali）与对应的简体中文译文（translation），两者均为 json，通过 id 一一对应。
+
+        你的任务：逐句对照原文审查译文，找出其中**确实存在**的翻译问题，按严重程度分级，并把问题**就地标注在译文上**，最后输出标注后的译文。
+
+        # 问题分级（严重程度由高到低）
+        - fatal（严重错误）：会让读者产生邪见或重大误解。例如主语、谓语、宾语等句子核心成分判断错误，或句意违背基本教理。
+        - error（错误，必须修改）：漏译；衍译（多出原文没有的内容）；词义或修饰关系译错；造成误解的表达；义理或用词与注释书不符；代词指代错误。
+        - warning（待提升）：关键词有歧义却未加注释；代词指代不清；不致误解的汉语语病；标点误用；术语标记使用不当；整句逻辑表达不规范。
+        - suggestion（可提升）：语言不够流畅；风格不统一；该用术语标记而未用；嵌套长句对读者不友好等仅影响阅读体验的问题。
+
+        若同一片段存在多重问题，只按其中最严重的一级标注。
+
+        # 标注方法
+        只对译文中**有问题的最小片段**，用如下 span 原地包裹（不改动译文本身的文字与黑体等格式，仅在外层套标签）：
+
+        <span class="evaluate-级别" style="background:颜色" title="类别·级别：问题简述｜建议：修改建议">有问题的译文片段</span>
+
+        级别与背景颜色对应（越暖代表越严重）：
+        - fatal      颜色 #ffcdd2
+        - error      颜色 #ffe0b2
+        - warning    颜色 #fff9c4
+        - suggestion 颜色 #c8e6c9
+
+        title 写法：先写问题类别与级别，再用一句话说清问题是什么，最后给出具体可操作的修改建议，用「｜建议：」分隔。
+
+        # 必须遵守的原则
+        1. 只标注你**确有把握**的真实问题；拿不准就不标。
+        2. 宁缺毋滥：不要为凑数而标注，不要把正确译文误标为问题，严禁过度标注。没有问题的句子，content 与原译文**一字不差**地原样返回，不加任何标签。
+        3. 标注片段尽量短，精准定位到出问题的词或短语，不要整句包裹。
+        4. 完整保留译文原有的文字与格式（黑体 ** **、全角标点等）。
+
+        # 输出格式 jsonl
+        每行对应一个句子，包含两个字段：
+        id：与原文相同的句子 id
+        content：标注后的译文（无问题则与原译文完全一致）
+
+        直接输出 jsonl 数据，无需解释。
+
+        **输出范例**
+        {"id":"1-2-3-4","content":"他于<span class=\"evaluate-error\" style=\"background:#ffe0b2\" title=\"漏译·error：原文 bhagavā 未译出｜建议：补译为‘世尊’\">那时</span>住在王舍城。"}
+        {"id":"2-3-4-5","content":"完全正确的译文原样返回。"}
+        md;
+
     public function __construct(
         protected OpenAIService $openAIService,
         protected SearchPaliDataService $searchPaliDataService,
@@ -202,6 +251,16 @@ class PaliTranslateService
     }
 
     /**
+     * 设置 evaluate 步骤的提示词
+     */
+    public function setEvaluatePrompt(string $prompt): self
+    {
+        $this->evaluatePrompt = $prompt;
+
+        return $this;
+    }
+
+    /**
      * 执行多步骤工作流，返回最终译文（list of ['id' => ..., 'content' => ...]）。
      *
      * @param  string[]  $steps  translate / review / revise 的有序子集
@@ -236,12 +295,15 @@ class PaliTranslateService
                 case 'revise':
                     $translation = $this->revise($pali, $translation, $review);
                     break;
+                case 'evaluate':
+                    $translation = $this->evaluate($pali, $translation);
+                    break;
             }
         }
 
-        // 只有产出译文的步骤（translate / revise）才返回可写库的数据；
-        // 仅 review 时 review 报告已写入日志，无需重新保存原译文
-        $producesTranslation = (bool) array_intersect($steps, ['translate', 'revise']);
+        // 只有产出译文的步骤（translate / revise / evaluate）才返回可写库的数据；
+        // evaluate 写库内容为带 HTML 标注的译文；仅 review 时报告已写入日志，无需重新保存原译文
+        $producesTranslation = (bool) array_intersect($steps, ['translate', 'revise', 'evaluate']);
 
         return $producesTranslation ? $translation : [];
     }
@@ -320,6 +382,26 @@ class PaliTranslateService
 
         $content = $this->send($this->revisePrompt, $userText);
         Log::debug('PaliTranslate: revise', ['output' => $content]);
+
+        return LlmResponseParser::jsonl($content);
+    }
+
+    /**
+     * evaluate 步骤：对照原文找出译文真实问题，按级别就地用 HTML span 标注译文。
+     * 返回标注后的译文（无问题的句子原样返回），作为工作流最后一步写库。
+     *
+     * @param  array<int, array{id: string, content: string}>  $pali
+     * @param  array<int, array{id: string, content: string}>  $translation
+     * @return array<int, array{id: string, content: string}>
+     */
+    public function evaluate(array $pali, array $translation): array
+    {
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n";
+        Log::debug('PaliTranslate: evaluate', ['input' => $userText]);
+
+        $content = $this->send($this->evaluatePrompt, $userText);
+        Log::debug('PaliTranslate: evaluate', ['output' => $content]);
 
         return LlmResponseParser::jsonl($content);
     }

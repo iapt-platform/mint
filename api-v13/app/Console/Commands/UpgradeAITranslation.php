@@ -34,7 +34,7 @@ class UpgradeAITranslation extends Command
     {--resume}
     {--model=}
     {--thinking= : 开启和关闭deepseek thinking true | false}
-    {--steps=translate : translation 工作流步骤，逗号分隔，可选 translate,review,revise}
+    {--steps=translate : translation 工作流步骤，逗号分隔，可选 translate,review,revise,evaluate（evaluate 为质量评估，须放最后）}
     {--fresh : 清除缓存断点，从头开始}';
 
     // 缓存键前缀：以 type、channel 区分，记录已完成的 "book|para" 集合，中断后重跑自动跳过
@@ -278,7 +278,7 @@ class UpgradeAITranslation extends Command
             ->get();
         $result = [];
         foreach ($sentences as $key => $sentence) {
-            if (!empty($sentence->content)) {
+            if (! empty($sentence->content)) {
                 $id = "{$sentence->book_id}-{$sentence->paragraph}-{$sentence->word_start}-{$sentence->word_end}";
 
                 $aiNissaya = $this->nissayaTranslateService
