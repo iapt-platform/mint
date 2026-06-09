@@ -2,76 +2,92 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\RequestException;
 
 class OpenAIService
 {
     protected int $retries = 3;
+
     protected int $delayMs = 2000;
+
     protected string $model = 'gpt-4-1106-preview';
+
     protected string $apiUrl = 'https://api.openai.com/v1/chat/completions';
+
     protected string $apiKey;
+
     protected string $systemPrompt = '你是一个有帮助的助手。';
+
     protected float $temperature = 0.7;
+
     protected bool $stream = false;
+
     protected int $timeout = 600;
+
     protected int $maxTokens = 0;
+
     protected bool $thinking;
 
     public static function withRetry(int $retries = 3, int $delayMs = 2000): static
     {
-        return (new static())->setRetry($retries, $delayMs);
+        return (new static)->setRetry($retries, $delayMs);
     }
 
     public function setRetry(int $retries, int $delayMs): static
     {
         $this->retries = $retries;
         $this->delayMs = $delayMs;
+
         return $this;
     }
 
     public function setModel(string $model): static
     {
         $this->model = $model;
+
         return $this;
     }
 
     /**
      * 设置模型配置
-     *
-     * @param bool $thinking
-     * @return self
      */
-    public function setThinking(bool $thinking): self
+    public function setThinking(?bool $thinking): self
     {
+        if ($thinking === null) {
+            return $this;
+        }
         $this->thinking = $thinking;
+
         return $this;
     }
 
     public function setApiUrl(string $url): static
     {
         $this->apiUrl = $url;
+
         return $this;
     }
 
     public function setApiKey(string $key): static
     {
         $this->apiKey = $key;
+
         return $this;
     }
 
     public function setSystemPrompt(string $prompt): static
     {
         $this->systemPrompt = $prompt;
+
         return $this;
     }
 
     public function setTemperature(float $temperature): static
     {
         $this->temperature = $temperature;
+
         return $this;
     }
 
@@ -90,6 +106,7 @@ class OpenAIService
     public function setMaxToken(int $maxTokens): static
     {
         $this->maxTokens = $maxTokens;
+
         return $this;
     }
 
@@ -113,6 +130,7 @@ class OpenAIService
                 Log::warning("请求被限流（429），等待 {$retryAfter} 秒后重试...（第 {$attempt} 次）");
                 sleep($retryAfter);
                 $lastException = $e;
+
                 continue;
             } catch (ServerErrorException $e) {
                 // 5xx 服务器错误，使用指数退避重试
@@ -121,6 +139,7 @@ class OpenAIService
                     usleep($this->delayMs * 1000 * pow(2, $attempt - 1));
                 }
                 $lastException = $e;
+
                 continue;
             } catch (ConnectionException $e) {
                 // 网络连接错误，使用指数退避重试
@@ -129,6 +148,7 @@ class OpenAIService
                     usleep($this->delayMs * 1000 * pow(2, $attempt - 1));
                 }
                 $lastException = $e;
+
                 continue;
             } catch (NetworkException $e) {
                 // 其他网络错误，使用指数退避重试
@@ -137,6 +157,7 @@ class OpenAIService
                     usleep($this->delayMs * 1000 * pow(2, $attempt - 1));
                 }
                 $lastException = $e;
+
                 continue;
             } catch (ClientErrorException $e) {
                 // 4xx 客户端错误（除429外）不重试，直接抛出
@@ -144,7 +165,7 @@ class OpenAIService
                 throw $e;
             } catch (\Exception $e) {
                 // 其他未知异常，不重试，直接抛出
-                Log::error("GPT 请求异常：" . $e->getMessage());
+                Log::error('GPT 请求异常：'.$e->getMessage());
                 throw $e;
             }
         }
@@ -152,7 +173,7 @@ class OpenAIService
         // 所有重试都失败了
         Log::error("请求多次失败，已重试 {$this->retries} 次");
         throw new \RuntimeException(
-            '请求多次失败或超时，请稍后再试。原因: ' . ($lastException ? $lastException->getMessage() : '未知'),
+            '请求多次失败或超时，请稍后再试。原因: '.($lastException ? $lastException->getMessage() : '未知'),
             504,
             $lastException
         );
@@ -191,7 +212,7 @@ class OpenAIService
 
         // 处理 429 速率限制
         if ($status === 429) {
-            $retryAfter = (int)($response->header('Retry-After') ?? 20);
+            $retryAfter = (int) ($response->header('Retry-After') ?? 20);
             throw new RateLimitException(
                 $body['error']['message'] ?? '请求被限流',
                 $status,
@@ -255,8 +276,8 @@ class OpenAIService
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer {$this->apiKey}",
-                "Content-Type: application/json",
-                "Accept: text/event-stream",
+                'Content-Type: application/json',
+                'Accept: text/event-stream',
             ],
             CURLOPT_POSTFIELDS => json_encode($payload),
             CURLOPT_RETURNTRANSFER => false,
@@ -269,7 +290,7 @@ class OpenAIService
                 foreach ($lines as $line) {
                     $line = trim($line);
 
-                    if (!str_starts_with($line, 'data: ')) {
+                    if (! str_starts_with($line, 'data: ')) {
                         continue;
                     }
 
@@ -280,13 +301,14 @@ class OpenAIService
                     }
 
                     $obj = json_decode($json, true);
-                    if (!is_array($obj)) {
+                    if (! is_array($obj)) {
                         continue;
                     }
 
                     // 检查是否有错误
                     if (isset($obj['error'])) {
                         $errorMessage = $obj['error']['message'] ?? 'Stream error';
+
                         return 0; // 停止接收
                     }
 

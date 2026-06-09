@@ -171,3 +171,16 @@
 .video-js video {
   max-width: 100%;
 }
+
+.pcd_article .evaluate-fatal{
+  background-color: #ffcdd2;
+}
+.pcd_article .evaluate-error{
+  background-color: #ffe0b2;
+}
+.pcd_article .evaluate-warning{
+  background-color: #fff9c4;
+}
+.pcd_article .evaluate-suggestion{
+  background-color: #c8e6c9;
+}

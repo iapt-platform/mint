@@ -27,6 +27,7 @@ import { TaskBuilderChapterModal } from "../task/TaskBuilderChapterModal";
 import type { TTarget } from "../../types";
 import TocPath from "../tipitaka/TocPath";
 import ParagraphNode from "../tipitaka/ParagraphNode";
+import "./article.css";
 
 export interface ISearchParams {
   key: string;
@@ -140,7 +141,7 @@ const TypePali = ({
   };
 
   return (
-    <div>
+    <div className="pcd_article">
       <TaskBuilderChapterModal
         studioName={user?.realName}
         book={parseInt(mBook ?? "0")}
