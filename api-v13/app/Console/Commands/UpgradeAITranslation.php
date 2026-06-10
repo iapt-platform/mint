@@ -215,7 +215,7 @@ class UpgradeAITranslation extends Command
 
             $param = [
                 '--book' => $book,
-                '--channel' => $this->workChannel,
+                '--channel' => $this->workChannel['id'],
             ];
             if ($this->option('para')) {
                 $param['--para'] = $this->option('para');
@@ -225,7 +225,7 @@ class UpgradeAITranslation extends Command
 
             $param = [
                 'book' => $book,
-                '--channel' => $this->workChannel,
+                '--channel' => $this->workChannel['id'],
                 '--summary' => 'off',
                 '--granularity' => 'chapter'
             ];
