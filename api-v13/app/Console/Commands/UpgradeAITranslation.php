@@ -215,7 +215,7 @@ class UpgradeAITranslation extends Command
 
             $param = [
                 '--book' => $book,
-                '--channel' => $this->workChannel,
+                '--channel' => $this->workChannel['id'],
             ];
             if ($this->option('para')) {
                 $param['--para'] = $this->option('para');
@@ -225,7 +225,7 @@ class UpgradeAITranslation extends Command
 
             $param = [
                 'book' => $book,
-                '--channel' => $this->workChannel,
+                '--channel' => $this->workChannel['id'],
                 '--summary' => 'off',
                 '--granularity' => 'chapter'
             ];
@@ -316,7 +316,7 @@ class UpgradeAITranslation extends Command
         return $result;
     }
 
-    private function aiNissayaTranslate($book, $para)
+    private function aiNissayaTranslate(int $book, int $para)
     {
         $sentences = Sentence::nissaya()
             ->language('my') // 过滤缅文
@@ -331,6 +331,7 @@ class UpgradeAITranslation extends Command
 
                 $aiNissaya = $this->nissayaTranslateService
                     ->setModel($this->model)
+                    ->setThinking($this->thinking ?? null)
                     ->translate($sentence->content, false);
                 Log::debug('ai response ', ['content' => $aiNissaya['data']]);
                 $result[] = [
@@ -344,7 +345,7 @@ class UpgradeAITranslation extends Command
         return $result;
     }
 
-    private function save($data)
+    private function save(array $data)
     {
         // 写入句子库
         $sentData = [];
