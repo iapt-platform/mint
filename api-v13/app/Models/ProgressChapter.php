@@ -11,6 +11,7 @@ class ProgressChapter extends Model
     use HasFactory;
     protected $fillable = [
         'book',
+        'para',
         'channel_id',
         'lang',
         'all_trans',
