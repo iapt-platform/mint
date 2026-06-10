@@ -263,13 +263,13 @@ article.reader-body div.epigraph > blockquote > footer {
 }
 
 article.reader-body.evaluate-fatal {
-    background-color: #8d101db4;
+    background-color: rgb(185 34 255 / 50%);
 }
 article.reader-body .evaluate-error {
-    background-color: #ee6c6c;
+    background-color: #ff232393;
 }
 article.reader-body .evaluate-warning {
-    background-color: #f3b353;
+    background-color: #e97a3086;
 }
 article.reader-body .evaluate-suggestion {
     background-color: #c4f8c6;
