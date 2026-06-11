@@ -269,7 +269,7 @@ class SentenceController extends Controller
         }
     }
 
-    private function UserCanEdit($userId, $channelId, $book, $access_token = null)
+    private function UserCanEdit(string $userId, string $channelId, int  $book, $access_token = null)
     {
         $channel = Channel::where('uid', $channelId)->first();
         if (! $channel) {
@@ -285,7 +285,7 @@ class SentenceController extends Controller
                 }
                 $key = AccessToken::where('res_id', $channelId)->value('token');
                 $jwt = JWT::decode($access_token, new Key($key . $key, 'HS512'));
-                if ($jwt->book && $jwt->book !== $book) {
+                if (isset($jwt->book) && $jwt->book !== 0 &&  $jwt->book !== $book) {
                     return false;
                 }
             }
@@ -316,7 +316,7 @@ class SentenceController extends Controller
             if ($this->UserCanEdit(
                 $user['user_uid'],
                 $request->input('channel'),
-                $request->input('book', 0),
+                (int)$request->input('book', 0),
                 $request->input('access_token', null)
             )) {
                 $destChannel = Channel::where('uid', $request->input('channel'))->first();
@@ -333,7 +333,7 @@ class SentenceController extends Controller
                 if ($this->UserCanEdit(
                     $user['user_uid'],
                     $sent['channel_uid'],
-                    $sent['book_id'],
+                    (int)$sent['book_id'],
                     isset($sent['access_token']) ? $sent['access_token'] : null
                 )) {
                     $destChannel = Channel::where('uid', $sent['channel_uid'])->first();
