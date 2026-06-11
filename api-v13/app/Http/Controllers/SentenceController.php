@@ -85,7 +85,7 @@ class SentenceController extends Controller
                     return $this->error('没有关键词');
                 }
                 $table = Sentence::select($indexCol)
-                    ->where('content', 'like', '%'.$key.'%')
+                    ->where('content', 'like', '%' . $key . '%')
                     ->where('editor_uid', $userUid);
 
                 break;
@@ -179,8 +179,16 @@ class SentenceController extends Controller
                 $table = Sentence::where('ver', '>', 1)
                     ->where('book_id', $request->input('book'))
                     ->whereIn('paragraph', explode(',', $request->input('para')))
-                    ->whereIn('channel_uid', explode(',', $request->input('channels')))
                     ->orderBy('book_id')->orderBy('paragraph')->orderBy('word_start');
+                if ($request->has('channels')) {
+                    $table = $table->whereIn('channel_uid', explode(',', $request->input('channels')));
+                }
+                if ($request->has('channel_type')) {
+                    $table = $table->type($request->input('channel_type'));
+                }
+                if ($request->has('lang')) {
+                    $table = $table->language($request->input('lang'));
+                }
                 break;
             case 'my-edit':
                 // 我编辑的
@@ -195,7 +203,7 @@ class SentenceController extends Controller
                 break;
         }
         if (! empty($request->input('key'))) {
-            $table = $table->where('content', 'like', '%'.$request->input('key').'%');
+            $table = $table->where('content', 'like', '%' . $request->input('key') . '%');
         }
 
         $count = $table->count();
@@ -276,7 +284,7 @@ class SentenceController extends Controller
                     return false;
                 }
                 $key = AccessToken::where('res_id', $channelId)->value('token');
-                $jwt = JWT::decode($access_token, new Key($key.$key, 'HS512'));
+                $jwt = JWT::decode($access_token, new Key($key . $key, 'HS512'));
                 if ($jwt->book && $jwt->book !== $book) {
                     return false;
                 }
