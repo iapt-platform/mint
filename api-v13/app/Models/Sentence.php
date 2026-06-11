@@ -48,6 +48,13 @@ class Sentence extends Model
         return $this->belongsTo(Channel::class, 'channel_uid', 'uid');
     }
 
+    public function scopeType($query, $type)
+    {
+        return $query->whereHas('channel', function ($q) use ($type) {
+            $q->where('type', $type);
+        });
+    }
+
     public function scopeNissaya($query)
     {
         return $query->whereHas('channel', function ($q) {
