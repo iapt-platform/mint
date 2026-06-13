@@ -300,6 +300,12 @@ const ChannelMy = ({
                       }),
                       icon: <InfoCircleOutlined />,
                     },
+                    {
+                      key: "library",
+                      label: intl.formatMessage({
+                        id: "buttons.open.in.library",
+                      }),
+                    },
                   ],
                   onClick: (e) => {
                     const ch: IChannel = {
@@ -327,6 +333,13 @@ const ChannelMy = ({
                           articleId,
                         });
                         setTokenOpen(true);
+                        break;
+                      case "library":
+                        window.open(
+                          import.meta.env.VITE_APP_API_SERVER +
+                            `/library/tipitaka?${ch.id}`,
+                          "_blank"
+                        );
                         break;
                     }
                   },
