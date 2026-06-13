@@ -67,7 +67,7 @@ class PaliTranslateService
         若用户额外提供 nissaya（巴利原文的逐词缅文释义，与 pali 通过 id 一一对应，按词列出每个巴利词的语法解析与缅文释义，形如「巴利词= 缅文释义」）：它是判断词义、修饰关系、指代关系和句子结构最权威的依据，翻译时应优先参照 nissaya 确定原意，遇到歧义时以 nissaya 为准。
 
         翻译要求
-        1. 语言风格为现代汉语书面语，不要使用古汉语或者半文半白。
+        1. 语言风格为现代汉语，**绝对不要**使用古汉语或者半文半白。**不要参考**阿含经和元亨寺语言风格。
         2. 译文严谨，完全贴合巴利原文，不要加入自己的理解
         3. 经名、人名、地名等专有名词：有约定俗成的标准译名时优先使用标准译名；没有标准译名的，尽量按词义意译；意译确有困难的再使用音译。同一专有名词在全文中译名须前后一致
         4. 巴利原文中的黑体字在译文中也使用黑体。其他标点符号跟随巴利原文，但应该替换为相应的汉字全角符号
@@ -161,15 +161,15 @@ class PaliTranslateService
         # 标注方法
         只对译文中**有问题的最小片段**，用如下 span 原地包裹（不改动译文本身的文字与黑体等格式，仅在外层套标签）：
 
-        <span class='evaluate-级别' style='background:颜色' title='类别·级别：问题简述｜建议：修改建议'>有问题的译文片段</span>
+        <span class='evaluate evaluate-级别'  title='类别·级别：问题简述｜建议：修改建议'>有问题的译文片段</span>
 
-        **span 的属性一律用单引号**（class='...' style='...' title='...'），不要用双引号——因为 content 整体是 JSON 字符串、本身由双引号包裹，属性再用双引号极易因转义出错导致整行 JSON 解析失败、整句被丢弃。title 等属性值内若要引用文字，请使用中文全角引号「」或‘’，**严禁**出现 ASCII 双引号(")或单引号(')。
+        **span 的属性一律用单引号**（class='...'  title='...'），不要用双引号——因为 content 整体是 JSON 字符串、本身由双引号包裹，属性再用双引号极易因转义出错导致整行 JSON 解析失败、整句被丢弃。title 等属性值内若要引用文字，请使用中文全角引号「」或‘’，**严禁**出现 ASCII 双引号(")或单引号(')。
 
-        级别与背景颜色对应（越暖代表越严重）：
-        - fatal      颜色 #ffcdd2
-        - error      颜色 #ffe0b2
-        - warning    颜色 #fff9c4
-        - suggestion 颜色 #c8e6c9
+        级别：
+        - fatal
+        - error
+        - warning
+        - suggestion
 
         title 写法：先写问题类别与级别，再用一句话说清问题是什么，最后给出具体可操作的修改建议，用「｜建议：」分隔。
 
@@ -187,7 +187,7 @@ class PaliTranslateService
         直接输出 jsonl 数据，无需解释。
 
         **输出范例**（注意 span 属性用单引号，整行是合法 JSON）
-        {"id":"1-2-3-4","content":"他于<span class='evaluate-error' style='background:#ffe0b2' title='漏译·error：原文 bhagavā 未译出｜建议：补译为‘世尊’'>那时</span>住在王舍城。"}
+        {"id":"1-2-3-4","content":"他于<span class='evaluate evaluate-error'  title='漏译·error：原文 bhagavā 未译出｜建议：补译为‘世尊’'>那时</span>住在王舍城。"}
         {"id":"2-3-4-5","content":"完全正确的译文原样返回。"}
         md;
 
@@ -378,7 +378,7 @@ class PaliTranslateService
      */
     public function translate(array $pali, array $nissaya = []): array
     {
-        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n".$this->nissayaSection($nissaya);
+        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n" . $this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: translate', ['input' => $userText]);
 
         $content = $this->send($this->translatePrompt, $userText);
@@ -396,9 +396,9 @@ class PaliTranslateService
      */
     public function review(array $pali, array $translation, array $nissaya = []): array
     {
-        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
-            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
-            .$this->nissayaSection($nissaya);
+        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
+            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
+            . $this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: review', ['input' => $userText]);
 
         $content = $this->send($this->reviewPrompt, $userText);
@@ -417,9 +417,9 @@ class PaliTranslateService
      */
     public function revise(array $pali, array $translation, array $review): array
     {
-        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
-            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
-            ."# review\n\n".$this->jsonBlock($review)."\n\n";
+        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
+            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
+            . "# review\n\n" . $this->jsonBlock($review) . "\n\n";
         Log::debug('PaliTranslate: revise', ['input' => $userText]);
 
         $content = $this->send($this->revisePrompt, $userText);
@@ -439,9 +439,9 @@ class PaliTranslateService
      */
     public function evaluate(array $pali, array $translation, array $nissaya = []): array
     {
-        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
-            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
-            .$this->nissayaSection($nissaya);
+        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
+            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
+            . $this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: evaluate', ['input' => $userText]);
 
         $content = $this->send($this->evaluatePrompt, $userText);
@@ -525,7 +525,7 @@ class PaliTranslateService
             return '';
         }
 
-        return "# nissaya\n\n".$this->jsonBlock($nissaya)."\n\n";
+        return "# nissaya\n\n" . $this->jsonBlock($nissaya) . "\n\n";
     }
 
     /**
@@ -535,6 +535,6 @@ class PaliTranslateService
      */
     protected function jsonBlock(array $data): string
     {
-        return "```json\n".json_encode($data, JSON_UNESCAPED_UNICODE)."\n```";
+        return "```json\n" . json_encode($data, JSON_UNESCAPED_UNICODE) . "\n```";
     }
 }
