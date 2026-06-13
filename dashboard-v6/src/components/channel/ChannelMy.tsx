@@ -337,7 +337,7 @@ const ChannelMy = ({
                       case "library":
                         window.open(
                           import.meta.env.VITE_APP_API_SERVER +
-                            `/library/tipitaka?${ch.id}`,
+                            `/library/tipitaka?channel=${ch.id}`,
                           "_blank"
                         );
                         break;
