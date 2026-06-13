@@ -23,7 +23,7 @@
 <li class="breadcrumb-item active">{{ $breadcrumb['name'] }}</li>
 @else
 <li class="breadcrumb-item">
-    <a href="{{ route('library.tipitaka.category', ['id' => $breadcrumb['id']]) }}">
+    <a href="{{ route('library.tipitaka.category', array_filter(['id' => $breadcrumb['id'], 'channel' => request('channel')])) }}">
         {{ $breadcrumb['name'] }}
     </a>
 </li>
@@ -48,14 +48,14 @@
                 <div class="wiki-sidebar-title">{{ __('library.categories') }}</div>
                 <ul class="wiki-cat-list">
                     <li>
-                        <a href="{{ route('library.tipitaka.index') }}"
+                        <a href="{{ route('library.tipitaka.index', array_filter(['channel' => request('channel')])) }}"
                             class="{{ !$currentCategory['id'] ? 'active' : '' }}">
                             {{ __('library.all') }}
                         </a>
                     </li>
                     @foreach($types as $type)
                     <li>
-                        <a href="{{ route('library.tipitaka.category', ['id' => $type['id']]) }}"
+                        <a href="{{ route('library.tipitaka.category', array_filter(['id' => $type['id'], 'channel' => request('channel')])) }}"
                             class="{{ ($currentCategory['id'] ?? null) == $type['id'] ? 'active' : '' }}">
                             {{ $type['name'] }}
                         </a>
@@ -150,7 +150,7 @@
             <div class="wiki-card tipitaka-subcategories">
                 <div class="tipitaka-subcategory-grid">
                     @foreach($subCategories as $sub)
-                    <a href="{{ route('library.tipitaka.category', array_filter(['id' => $sub['id'], 'book' => $sub['book'] ?? null])) }}"
+                    <a href="{{ route('library.tipitaka.category', array_filter(['id' => $sub['id'], 'book' => $sub['book'] ?? null, 'channel' => request('channel')])) }}"
                         class="tipitaka-subcategory-item">
                         <i class="ti {{ !empty($sub['book']) ? 'ti-book' : 'ti-folder' }} tipitaka-subcategory-icon" aria-hidden="true"></i>
                         <span class="tipitaka-subcategory-name">{{ $sub['name'] }}</span>

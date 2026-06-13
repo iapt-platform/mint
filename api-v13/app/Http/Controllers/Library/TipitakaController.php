@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
 
@@ -118,6 +119,7 @@ class TipitakaController extends Controller
         $selectedLang   = request('lang',   'all');
         $selectedAuthor = request('author', 'all');
         $selectedSort   = request('sort',   'new');
+        $selectedChannel   = request('channel',   'all');
 
         $sortList = [
             ['key' => 'new',         'label' => __('library.badge_updated'),],
@@ -129,6 +131,7 @@ class TipitakaController extends Controller
             'lang'   => $selectedLang,
             'author' => $selectedAuthor,
             'sort'   => $selectedSort,
+            'channel' => $selectedChannel,
         ];
         if ($request->has('book')) {
             $selected['book'] = $request->input('book');
@@ -315,6 +318,10 @@ class TipitakaController extends Controller
 
                 if ($filters['lang'] !== 'all') {
                     $query->where('lang', $filters['lang']);
+                }
+
+                if ($filters['channel'] !== 'all' && Str::isUuid($filters['channel'])) {
+                    $query->where('uid', $filters['channel']);
                 }
             })
             ->whereNotNull('last_chapter_completed_at')
