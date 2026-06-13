@@ -348,25 +348,30 @@ class UpgradeAITranslation extends Command
     private function save(array $data)
     {
         // 写入句子库
-        $sentData = [];
-        $sentData = array_map(function ($n) {
-            $sId = explode('-', $n['id']);
+        try {
+            $sentData = [];
+            $sentData = array_map(function ($n) {
+                $sId = explode('-', $n['id']);
 
-            return [
-                'book_id' => $sId[0],
-                'paragraph' => $sId[1],
-                'word_start' => $sId[2],
-                'word_end' => $sId[3],
-                'channel_uid' => $this->workChannel['id'],
-                'content' => $n['content'],
-                'content_type' => $n['content_type'] ?? 'markdown',
-                'lang' => $this->workChannel['lang'],
-                'status' => $this->workChannel['status'],
-                'editor_uid' => $this->model['uid'],
-            ];
-        }, $data);
-        foreach ($sentData as $key => $value) {
-            $this->sentenceService->saveWithHistory($value);
+                return [
+                    'book_id' => $sId[0],
+                    'paragraph' => $sId[1],
+                    'word_start' => $sId[2],
+                    'word_end' => $sId[3],
+                    'channel_uid' => $this->workChannel['id'],
+                    'content' => $n['content'],
+                    'content_type' => $n['content_type'] ?? 'markdown',
+                    'lang' => $this->workChannel['lang'],
+                    'status' => $this->workChannel['status'],
+                    'editor_uid' => $this->model['uid'],
+                ];
+            }, $data);
+            foreach ($sentData as $key => $value) {
+                $this->sentenceService->saveWithHistory($value);
+            }
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+            throw $e;
         }
     }
 }

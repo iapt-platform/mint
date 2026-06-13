@@ -87,6 +87,7 @@ return [
     'about_anthology' => 'ဤလက်ရွေးစင်စာစုအကြောင်း',
     'anthology_info' => 'လက်ရွေးစင်စာစု သတင်းအချက်အလက်',
     'language' => 'ဘာသာစကား',
+    'current_channel' => 'လက်ရှိချန်နယ်',
     'created' => 'ဖန်တီးသည်',
     'updated' => 'အပ်ဒိတ်လုပ်သည်',
     'related_anthology' => 'ဆက်စပ်သော လက်ရွေးစင်စာစုများ',

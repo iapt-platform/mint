@@ -87,6 +87,7 @@ return [
     'about_anthology' => 'මෙම සංග්‍රහය ගැන',
     'anthology_info' => 'සංග්‍රහ තොරතුරු',
     'language' => 'භාෂාව',
+    'current_channel' => 'වත්මන් නාලිකාව',
     'created' => 'නිර්මිත',
     'updated' => 'යාවත්කාලීන',
     'related_anthology' => 'සම්බන්ධිත සංග්‍රහ',

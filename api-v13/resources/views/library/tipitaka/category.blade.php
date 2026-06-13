@@ -23,7 +23,7 @@
 <li class="breadcrumb-item active">{{ $breadcrumb['name'] }}</li>
 @else
 <li class="breadcrumb-item">
-    <a href="{{ route('library.tipitaka.category', ['id' => $breadcrumb['id']]) }}">
+    <a href="{{ route('library.tipitaka.category', array_filter(['id' => $breadcrumb['id'], 'channel' => request('channel')])) }}">
         {{ $breadcrumb['name'] }}
     </a>
 </li>
@@ -48,14 +48,14 @@
                 <div class="wiki-sidebar-title">{{ __('library.categories') }}</div>
                 <ul class="wiki-cat-list">
                     <li>
-                        <a href="{{ route('library.tipitaka.index') }}"
+                        <a href="{{ route('library.tipitaka.index', array_filter(['channel' => request('channel')])) }}"
                             class="{{ !$currentCategory['id'] ? 'active' : '' }}">
                             {{ __('library.all') }}
                         </a>
                     </li>
                     @foreach($types as $type)
                     <li>
-                        <a href="{{ route('library.tipitaka.category', ['id' => $type['id']]) }}"
+                        <a href="{{ route('library.tipitaka.category', array_filter(['id' => $type['id'], 'channel' => request('channel')])) }}"
                             class="{{ ($currentCategory['id'] ?? null) == $type['id'] ? 'active' : '' }}">
                             {{ $type['name'] }}
                         </a>
@@ -82,6 +82,15 @@
             {{-- 2. 过滤器区 --}}
             <div class="wiki-card tipitaka-filters">
 
+                @if($currentChannel)
+                {{-- 当前频道 --}}
+                <div class="tipitaka-filter-row">
+                    <span class="tipitaka-filter-label">{{ __('library.current_channel') }}</span>
+                    <div class="tipitaka-filter-pills">
+                        <span class="tipitaka-pill tipitaka-pill--active">{{ $currentChannel['name'] }}</span>
+                    </div>
+                </div>
+                @else
                 {{-- 类型 --}}
                 <div class="tipitaka-filter-row">
                     <span class="tipitaka-filter-label">{{ __('library.type') }}</span>
@@ -113,6 +122,7 @@
                         @endforeach
                     </div>
                 </div>
+                @endif
 
                 {{-- 作者 --}}
                 <div class="tipitaka-filter-row" style="display:none">
@@ -132,11 +142,12 @@
                 @php
                 $hasFilter = $selected['type'] !== 'all'
                 || $selected['lang'] !== 'all'
-                || $selected['author'] !== 'all';
+                || $selected['author'] !== 'all'
+                || $selected['channel'] !== 'all';
                 @endphp
                 @if($hasFilter)
                 <div class="tipitaka-filter-clear">
-                    <a href="{{ request()->fullUrlWithQuery(['type' => null, 'lang' => null, 'author' => null, 'page' => null]) }}"
+                    <a href="{{ rtrim(request()->fullUrlWithQuery(['type' => null, 'lang' => null, 'author' => null, 'channel' => null, 'page' => null]), '?') }}"
                         class="tipitaka-clear-btn">
                         <i class="ti ti-x"></i> {{ __('library.clear_filters') }}
                     </a>
@@ -150,7 +161,7 @@
             <div class="wiki-card tipitaka-subcategories">
                 <div class="tipitaka-subcategory-grid">
                     @foreach($subCategories as $sub)
-                    <a href="{{ route('library.tipitaka.category', array_filter(['id' => $sub['id'], 'book' => $sub['book'] ?? null])) }}"
+                    <a href="{{ route('library.tipitaka.category', array_filter(['id' => $sub['id'], 'book' => $sub['book'] ?? null, 'channel' => request('channel')])) }}"
                         class="tipitaka-subcategory-item">
                         <i class="ti {{ !empty($sub['book']) ? 'ti-book' : 'ti-folder' }} tipitaka-subcategory-icon" aria-hidden="true"></i>
                         <span class="tipitaka-subcategory-name">{{ $sub['name'] }}</span>
