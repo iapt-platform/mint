@@ -75,7 +75,7 @@ class TipitakaController extends Controller
         // ── 子分类 ─────────────────────────────────────────────
         $subCategories = array_values(array_filter(
             $categories,
-            fn ($cat) => $cat['parent_id'] == $id
+            fn($cat) => $cat['parent_id'] == $id
         ));
         if (count($subCategories) === 0 && ! $request->has('book')) {
             $paliBooks = $this->getPaliBooks($categories, $id);
@@ -87,7 +87,7 @@ class TipitakaController extends Controller
                 ];
             }
         }
-        $allNames = array_map(fn ($item) => $item['name'], $subCategories);
+        $allNames = array_map(fn($item) => $item['name'], $subCategories);
 
         // 去重
         $allNames = array_values(array_unique($allNames));
@@ -298,14 +298,14 @@ class TipitakaController extends Controller
 
         $table = ProgressChapter::with('channel.owner')
             ->whereHas('channel', function ($query) use ($filters) {
-                $query->where('status', 30);
-
                 if ($filters['type'] !== 'all') {
-                    $query->where('type', $filters['type']);
+                    $query->where('type', $filters['type'])
+                        ->where('status', 30);
                 }
 
                 if ($filters['lang'] !== 'all') {
-                    $query->where('lang', $filters['lang']);
+                    $query->where('lang', $filters['lang'])
+                        ->where('status', 30);
                 }
 
                 if ($filters['channel'] !== 'all' && Str::isUuid($filters['channel'])) {
@@ -356,11 +356,11 @@ class TipitakaController extends Controller
                 'subTitle' => $subTitle,
                 'publisher' => $book->channel->owner,
                 'completed_chapters' => $book->completed_chapters,
-                'type' => __('labels.'.$book->channel->type),
+                'type' => __('labels.' . $book->channel->type),
                 'cover' => $coverUrl,
                 'cover_gradient' => $this->coverGradients[$colorIdx % count($this->coverGradients)],
                 'description' => $book->summary ?? '比库戒律的详细说明',
-                'language' => __('language.'.$book->channel->lang),
+                'language' => __('language.' . $book->channel->lang),
             ];
         });
 
@@ -375,7 +375,7 @@ class TipitakaController extends Controller
         $tags = Tag::whereIn('id', $tagIds)->select('name')->get();
         foreach ($tags as $key => $tag) {
             if (in_array($tag->name, ['pāḷi', 'aṭṭhakathā', 'ṭīkā'])) {
-                return __('library.'.$tag->name);
+                return __('library.' . $tag->name);
             }
         }
 
