@@ -82,6 +82,15 @@
             {{-- 2. 过滤器区 --}}
             <div class="wiki-card tipitaka-filters">
 
+                @if($currentChannel)
+                {{-- 当前频道 --}}
+                <div class="tipitaka-filter-row">
+                    <span class="tipitaka-filter-label">{{ __('library.current_channel') }}</span>
+                    <div class="tipitaka-filter-pills">
+                        <span class="tipitaka-pill tipitaka-pill--active">{{ $currentChannel['name'] }}</span>
+                    </div>
+                </div>
+                @else
                 {{-- 类型 --}}
                 <div class="tipitaka-filter-row">
                     <span class="tipitaka-filter-label">{{ __('library.type') }}</span>
@@ -113,6 +122,7 @@
                         @endforeach
                     </div>
                 </div>
+                @endif
 
                 {{-- 作者 --}}
                 <div class="tipitaka-filter-row" style="display:none">
@@ -132,11 +142,12 @@
                 @php
                 $hasFilter = $selected['type'] !== 'all'
                 || $selected['lang'] !== 'all'
-                || $selected['author'] !== 'all';
+                || $selected['author'] !== 'all'
+                || $selected['channel'] !== 'all';
                 @endphp
                 @if($hasFilter)
                 <div class="tipitaka-filter-clear">
-                    <a href="{{ request()->fullUrlWithQuery(['type' => null, 'lang' => null, 'author' => null, 'page' => null]) }}"
+                    <a href="{{ rtrim(request()->fullUrlWithQuery(['type' => null, 'lang' => null, 'author' => null, 'channel' => null, 'page' => null]), '?') }}"
                         class="tipitaka-clear-btn">
                         <i class="ti ti-x"></i> {{ __('library.clear_filters') }}
                     </a>
