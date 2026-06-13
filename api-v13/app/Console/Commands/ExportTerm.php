@@ -42,11 +42,11 @@ class ExportTerm extends Command
     {
         Log::info('task export offline term-table start');
         $startAt = time();
-        if(\App\Tools\Tools::isStop()){
+        if (\App\Tools\Tools::isStop()) {
             return 0;
         }
-        $exportFile = storage_path('app/public/export/offline/wikipali-offline-'.date("Y-m-d").'.db3');
-        $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $exportFile = storage_path('app/public/export/offline/wikipali-offline-' . date("Y-m-d") . '.db3');
+        $dbh = new \PDO('sqlite:' . $exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
 
@@ -58,42 +58,55 @@ class ExportTerm extends Command
                                             ? , ? , ? , ? ,
                                             ?, ?, ?,
                                             ?, ?, ? )";
-        try{
+        try {
             $stmt = $dbh->prepare($query);
-        }catch(PDOException $e){
+        } catch (\PDOException $e) {
             Log::error($e->getMessage(), ['exception' => $e]);
             return 1;
         }
 
         $bar = $this->output->createProgressBar(DhammaTerm::count());
-        foreach (DhammaTerm::select(['guid','word','word_en','meaning',
-                          'other_meaning','note','tag','channal',
-                          'language',"owner","editor_id",
-                          "created_at","updated_at","deleted_at"
-                          ])
-                          ->cursor() as $row) {
-                $currData = array(
-                            $row->guid,
-                            $row->word,
-                            $row->word_en,
-                            $row->meaning,
-                            $row->other_meaning,
-                            $row->note,
-                            $row->tag,
-                            $row->channal,
-                            $row->language,
-                            $row->owner,
-                            $row->editor_id,
-                            $row->created_at,
-                            $row->updated_at,
-                            $row->deleted_at,
-                            );
+        foreach (
+            DhammaTerm::select([
+                'guid',
+                'word',
+                'word_en',
+                'meaning',
+                'other_meaning',
+                'note',
+                'tag',
+                'channal',
+                'language',
+                "owner",
+                "editor_id",
+                "created_at",
+                "updated_at",
+                "deleted_at"
+            ])
+                ->cursor() as $row
+        ) {
+            $currData = array(
+                $row->guid,
+                $row->word,
+                $row->word_en,
+                $row->meaning,
+                $row->other_meaning,
+                $row->note,
+                $row->tag,
+                $row->channal,
+                $row->language,
+                $row->owner,
+                $row->editor_id,
+                $row->created_at,
+                $row->updated_at,
+                $row->deleted_at,
+            );
             $stmt->execute($currData);
             $bar->advance();
         }
         $dbh->commit();
         $bar->finish();
-        $this->info(' time='.(time()-$startAt).'s');
+        $this->info(' time=' . (time() - $startAt) . 's');
         Log::info('task export offline term-table finished');
         return 0;
     }

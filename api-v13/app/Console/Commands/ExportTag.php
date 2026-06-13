@@ -41,26 +41,26 @@ class ExportTag extends Command
     public function handle()
     {
         Log::debug('task: export offline data tag-table start');
-        if(\App\Tools\Tools::isStop()){
+        if (\App\Tools\Tools::isStop()) {
             return 0;
         }
-        $exportFile = storage_path('app/public/export/offline/'.$this->argument('db').'-'.date("Y-m-d").'.db3');
-        $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $exportFile = storage_path('app/public/export/offline/' . $this->argument('db') . '-' . date("Y-m-d") . '.db3');
+        $dbh = new \PDO('sqlite:' . $exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
 
         $query = "INSERT INTO tag ( id , name ,
                                     description , color , owner_id  )
                                     VALUES ( ? , ? , ? , ? , ?  )";
-        try{
+        try {
             $stmt = $dbh->prepare($query);
-        }catch(PDOException $e){
+        } catch (\PDOException $e) {
             Log::error($e->getMessage(), ['exception' => $e]);
             return 1;
         }
 
         $bar = $this->output->createProgressBar(Tag::count());
-        foreach (Tag::select(['id','name','description','color','owner_id'])->cursor() as $row) {
+        foreach (Tag::select(['id', 'name', 'description', 'color', 'owner_id'])->cursor() as $row) {
             $currData = array(
                 $row->id,
                 $row->name,

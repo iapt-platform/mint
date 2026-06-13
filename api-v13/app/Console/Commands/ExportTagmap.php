@@ -41,29 +41,29 @@ class ExportTagmap extends Command
     public function handle()
     {
         Log::debug('task: export offline tagmap-table start');
-        if(\App\Tools\Tools::isStop()){
+        if (\App\Tools\Tools::isStop()) {
             return 0;
         }
-        $exportFile = storage_path('app/public/export/offline/'.$this->argument('db').'-'.date("Y-m-d").'.db3');
-        $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $exportFile = storage_path('app/public/export/offline/' . $this->argument('db') . '-' . date("Y-m-d") . '.db3');
+        $dbh = new \PDO('sqlite:' . $exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
 
         $query = "INSERT INTO tag_map ( anchor_id , tag_id )
                                     VALUES ( ? , ? )";
-        try{
+        try {
             $stmt = $dbh->prepare($query);
-        }catch(PDOException $e){
+        } catch (\PDOException $e) {
             Log::error($e->getMessage(), ['exception' => $e]);
             return 1;
         }
 
         $bar = $this->output->createProgressBar(TagMap::count());
-        foreach (TagMap::select(['id','table_name','anchor_id','tag_id'])->cursor() as $row) {
+        foreach (TagMap::select(['id', 'table_name', 'anchor_id', 'tag_id'])->cursor() as $row) {
             $currData = array(
-                            $row->anchor_id,
-                            $row->tag_id,
-                            );
+                $row->anchor_id,
+                $row->tag_id,
+            );
             $stmt->execute($currData);
             $bar->advance();
         }
