@@ -41,7 +41,7 @@ class BookController extends Controller
 
         $book = $this->getBookInfo($bookRaw);
         $book['contents'] = $this->getBookToc($bookRaw->book, $bookRaw->para, $channelId);
-
+        $book['book_title'] = $this->getBookTitle($bookRaw->book, $bookRaw->para, $channelId);
         // 获取其他版本
         $others = ProgressChapter::with('channel.owner')
             ->where('book', $bookRaw->book)
@@ -130,6 +130,7 @@ class BookController extends Controller
         $book['author'] = $channel['name'];
         $book['studio'] = $studio;
         $book['tags'] = [];
+        $book['book_title'] = $this->getBookTitle((int) $bookId, (int) $paraId, $channelId);
 
         $book['pagination'] = $this->pagination((int) $bookId, (int) $paraId, $channelId);
 
@@ -188,6 +189,22 @@ class BookController extends Controller
             'description' => $book->summary ?? '',
             'language' => __('language.'.$book->channel->lang),
         ];
+    }
+
+    private function getBookTitle(int $book, int $paragraph, string $channelId)
+    {
+        $bookTopPara = $this->paliTextService->getBookPara($book, $paragraph)->paragraph;
+        $title = $chapters = ProgressChapter::where('book', $book)
+            ->where('para', $bookTopPara)
+            ->where('channel_id', $channelId)
+            ->value('title');
+        if (empty($title)) {
+            $title = PaliText::where('book', $book)
+                ->whereBetween('paragraph', $bookTopPara)
+                ->value('toc');
+        }
+
+        return $title;
     }
 
     private function getBookToc(int $book, int $paragraph, string $channelId, $minLevel = 2, $maxLevel = 2): array
