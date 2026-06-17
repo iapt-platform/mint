@@ -89,6 +89,7 @@ return [
     'about_anthology' => '關於此文集',
     'anthology_info' => '文集資訊',
     'language' => '語言',
+    'current_channel' => '目前頻道',
     'created' => '建立時間',
     'updated' => '更新時間',
     'related_anthology' => '相關文集',

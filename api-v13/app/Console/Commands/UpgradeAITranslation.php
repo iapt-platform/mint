@@ -2,6 +2,10 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+
 use App\Helpers\LlmResponseParser;
 use App\Http\Api\ChannelApi;
 use App\Http\Resources\AiModelResource;
@@ -13,9 +17,8 @@ use App\Services\AIModelService;
 use App\Services\AuthService;
 use App\Services\OpenAIService;
 use App\Services\SentenceService;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+
+use function PHPUnit\Framework\isEmpty;
 
 class UpgradeAITranslation extends Command
 {
@@ -95,10 +98,13 @@ class UpgradeAITranslation extends Command
          */
         if (! $this->option('model')) {
             $this->error('model is request');
-
             return 1;
         }
         $this->model = $this->modelService->getModelById($this->option('model'));
+        if (empty($this->model)) {
+            $this->error('invalid model id ');
+            return 1;
+        }
         $this->info("model:{$this->model['model']}");
         $this->modelToken = AuthService::getUserToken($this->model['uid']);
 
@@ -106,21 +112,21 @@ class UpgradeAITranslation extends Command
         $this->workChannel = ChannelApi::getById($this->argument('channel'));
         // 需要判断输入channel 与翻译类型是否一致 nissaya -> nissaya channel
         if ($this->workChannel['type'] !== $this->argument('type')) {
-            $this->error('channel type not match request '.$this->argument('type').' input is '.$this->workChannel['type']);
+            $this->error('channel type not match request ' . $this->argument('type') . ' input is ' . $this->workChannel['type']);
 
             return 1;
         }
 
         if ($this->option('thinking')) {
             $this->thinking = $this->option('thinking') === 'true';
-            $this->line('thinking is '.$this->option('thinking'));
+            $this->line('thinking is ' . $this->option('thinking'));
         }
 
         // translation 工作流步骤校验
         $steps = array_values(array_filter(array_map('trim', explode(',', (string) $this->option('steps')))));
         $invalid = array_diff($steps, PaliTranslateService::STEPS);
         if (! empty($invalid)) {
-            $this->error('invalid steps: '.implode(',', $invalid).'. allowed: '.implode(',', PaliTranslateService::STEPS));
+            $this->error('invalid steps: ' . implode(',', $invalid) . '. allowed: ' . implode(',', PaliTranslateService::STEPS));
 
             return 1;
         }
@@ -129,7 +135,7 @@ class UpgradeAITranslation extends Command
         $nissayaSteps = array_values(array_filter(array_map('trim', explode(',', (string) $this->option('nissaya')))));
         $invalidNissaya = array_diff($nissayaSteps, PaliTranslateService::NISSAYA_STEPS);
         if (! empty($invalidNissaya)) {
-            $this->error('invalid nissaya steps: '.implode(',', $invalidNissaya).'. allowed: '.implode(',', PaliTranslateService::NISSAYA_STEPS));
+            $this->error('invalid nissaya steps: ' . implode(',', $invalidNissaya) . '. allowed: ' . implode(',', PaliTranslateService::NISSAYA_STEPS));
 
             return 1;
         }
@@ -138,7 +144,7 @@ class UpgradeAITranslation extends Command
         $channelId = $this->workChannel['id'] ?? '';
 
         // 缓存键：按 type、channel 区分不同任务的断点
-        $cacheKey = self::CACHE_KEY_PREFIX.':'.$type.':'.$channelId;
+        $cacheKey = self::CACHE_KEY_PREFIX . ':' . $type . ':' . $channelId;
 
         if ($this->option('fresh')) {
             Cache::forget($cacheKey);
@@ -158,21 +164,21 @@ class UpgradeAITranslation extends Command
             // 未指定 book 时，若已有断点缓存，从上次处理到的 book 继续，无需从 1 开始
             $startBook = 1;
             if (! empty($done)) {
-                $doneBooks = array_map(fn ($cursor) => (int) explode('|', $cursor)[0], array_keys($done));
+                $doneBooks = array_map(fn($cursor) => (int) explode('|', $cursor)[0], array_keys($done));
                 $startBook = max($doneBooks);
                 $this->info("resume from book {$startBook}");
             }
             $books = range($startBook, 217);
         }
-        foreach ($books as $key => $book) {
+        foreach ($books as $book) {
             $maxParagraph = PaliText::where('book', $book)->max('paragraph');
             $paragraphs = range(1, $maxParagraph);
             if ($this->option('para')) {
                 $paragraphs = [$this->option('para')];
             }
-            foreach ($paragraphs as $key => $paragraph) {
+            foreach ($paragraphs as  $paragraph) {
                 // 稳定游标：缓存键已含 type、channel，此处仅以 book|para 标识处理单元
-                $cursor = $book.'|'.$paragraph;
+                $cursor = $book . '|' . $paragraph;
                 if (isset($done[$cursor])) {
                     $this->info("skip {$cursor}");
 
@@ -201,11 +207,32 @@ class UpgradeAITranslation extends Command
                 }
                 $this->save($data);
                 $time = time() - $start;
-                $this->info($this->argument('type')." {$book}-{$paragraph} ".count($data).' sentences time='.$time);
+                $this->info($this->argument('type') . " {$book}-{$paragraph} " . count($data) . ' sentences time=' . $time);
                 // 该处理单元全部写库完成后再标记游标，确保中途中断不会误跳过
                 $done[$cursor] = true;
                 Cache::put($cacheKey, $done, now()->addHours(24));
             }
+
+            $param = [
+                '--book' => $book,
+                '--channel' => $this->workChannel['id'],
+            ];
+            if ($this->option('para')) {
+                $param['--para'] = $this->option('para');
+            }
+            $this->call('upgrade:progress.para', $param);
+            $this->call('upgrade:progress.chapter', $param);
+
+            $param = [
+                'book' => $book,
+                '--channel' => $this->workChannel['id'],
+                '--summary' => 'off',
+                '--granularity' => 'chapter'
+            ];
+            if ($this->option('para')) {
+                $param['--para'] = $this->option('para');
+            }
+            $this->call('opensearch:index-tipitaka', $param);
         }
 
         // 完整遍历正常结束，清空断点缓存
@@ -275,7 +302,7 @@ class UpgradeAITranslation extends Command
             $response = $llm->send("```json\n{$tplText}\n```");
             $complete = time() - $startAt;
             $content = $response['choices'][0]['message']['content'] ?? '[]';
-            Log::debug("ai response in {$complete}s content=".$content);
+            Log::debug("ai response in {$complete}s content=" . $content);
 
             $json = LlmResponseParser::jsonl($content);
 
@@ -289,7 +316,7 @@ class UpgradeAITranslation extends Command
         return $result;
     }
 
-    private function aiNissayaTranslate($book, $para)
+    private function aiNissayaTranslate(int $book, int $para)
     {
         $sentences = Sentence::nissaya()
             ->language('my') // 过滤缅文
@@ -304,6 +331,7 @@ class UpgradeAITranslation extends Command
 
                 $aiNissaya = $this->nissayaTranslateService
                     ->setModel($this->model)
+                    ->setThinking($this->thinking ?? null)
                     ->translate($sentence->content, false);
                 Log::debug('ai response ', ['content' => $aiNissaya['data']]);
                 $result[] = [
@@ -317,28 +345,33 @@ class UpgradeAITranslation extends Command
         return $result;
     }
 
-    private function save($data)
+    private function save(array $data)
     {
         // 写入句子库
-        $sentData = [];
-        $sentData = array_map(function ($n) {
-            $sId = explode('-', $n['id']);
+        try {
+            $sentData = [];
+            $sentData = array_map(function ($n) {
+                $sId = explode('-', $n['id']);
 
-            return [
-                'book_id' => $sId[0],
-                'paragraph' => $sId[1],
-                'word_start' => $sId[2],
-                'word_end' => $sId[3],
-                'channel_uid' => $this->workChannel['id'],
-                'content' => $n['content'],
-                'content_type' => $n['content_type'] ?? 'markdown',
-                'lang' => $this->workChannel['lang'],
-                'status' => $this->workChannel['status'],
-                'editor_uid' => $this->model['uid'],
-            ];
-        }, $data);
-        foreach ($sentData as $key => $value) {
-            $this->sentenceService->saveWithHistory($value);
+                return [
+                    'book_id' => $sId[0],
+                    'paragraph' => $sId[1],
+                    'word_start' => $sId[2],
+                    'word_end' => $sId[3],
+                    'channel_uid' => $this->workChannel['id'],
+                    'content' => $n['content'],
+                    'content_type' => $n['content_type'] ?? 'markdown',
+                    'lang' => $this->workChannel['lang'],
+                    'status' => $this->workChannel['status'],
+                    'editor_uid' => $this->model['uid'],
+                ];
+            }, $data);
+            foreach ($sentData as $key => $value) {
+                $this->sentenceService->saveWithHistory($value);
+            }
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+            throw $e;
         }
     }
 }

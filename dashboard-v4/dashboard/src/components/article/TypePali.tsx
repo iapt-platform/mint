@@ -25,6 +25,7 @@ import { TaskBuilderChapterModal } from "../task/TaskBuilderChapter";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 import { ArticleTplModal } from "../template/Builder/ArticleTpl";
+import "./article.css";
 
 interface IWidget {
   type?: ArticleType;
@@ -239,7 +240,7 @@ const TypePaliWidget = ({
   }
 
   return (
-    <div>
+    <div className="pcd_article">
       {loading ? (
         <ArticleSkeleton />
       ) : errorCode ? (

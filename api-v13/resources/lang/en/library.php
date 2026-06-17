@@ -89,6 +89,7 @@ return [
     'about_anthology' => 'About This Anthology',
     'anthology_info' => 'Anthology Info',
     'language' => 'Language',
+    'current_channel' => 'Current Channel',
     'created' => 'Created',
     'updated' => 'Updated',
     'related_anthology' => 'Related Anthologies',

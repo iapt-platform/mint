@@ -89,6 +89,7 @@ return [
     'about_anthology' => 'เกี่ยวกับรวมบทความนี้',
     'anthology_info' => 'ข้อมูลรวมบทความ',
     'language' => 'ภาษา',
+    'current_channel' => 'ช่องปัจจุบัน',
     'created' => 'วันที่สร้าง',
     'updated' => 'อัปเดต',
     'related_anthology' => 'รวมบทความที่เกี่ยวข้อง',

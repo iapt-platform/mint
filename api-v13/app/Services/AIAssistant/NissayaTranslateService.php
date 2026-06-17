@@ -14,7 +14,7 @@ class NissayaTranslateService
 
     protected bool $romanize;
 
-    protected bool $thinking;
+    protected ?bool $thinking = null;
 
     /**
      * 翻译提示词模板
@@ -266,7 +266,7 @@ PROMPT;
             ];
 
             foreach ($batches as $index => $batch) {
-                Log::debug('NissayaTranslate: 处理批次 '.($index + 1).'/'.count($batches));
+                Log::debug('NissayaTranslate: 处理批次 ' . ($index + 1) . '/' . count($batches));
 
                 $jsonlInput = $this->arrayToJsonl($batch);
                 $response = $this->openAIService

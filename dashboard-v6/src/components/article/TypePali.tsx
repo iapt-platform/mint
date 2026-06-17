@@ -29,6 +29,8 @@ import TocPath from "../tipitaka/TocPath";
 import ParagraphNode from "../tipitaka/ParagraphNode";
 import "./article.css";
 
+import { useIntl } from "react-intl";
+
 export interface ISearchParams {
   key: string;
   value: string;
@@ -68,6 +70,8 @@ const TypePali = ({
   hideNav = false,
   onArticleChange,
 }: IWidget) => {
+  const intl = useIntl();
+
   const user = useAppSelector(currentUser);
   const channels = channelId?.split("_");
 
@@ -177,10 +181,21 @@ const TypePali = ({
               items: [
                 { key: "tpl", label: "获取模板" },
                 { key: "task", label: "生成任务" },
+                {
+                  key: "library",
+                  label: intl.formatMessage({ id: "buttons.open.in.library" }),
+                },
               ],
               onClick: ({ key }) => {
                 if (key === "task") setTaskBuilderModalOpen(true);
                 if (key === "tpl") setTplOpen(true);
+                if (key === "library" && channels) {
+                  window.open(
+                    import.meta.env.VITE_APP_API_SERVER +
+                      `/library/tipitaka/${id}/read?channel=${channels[0]}`,
+                    "_blank"
+                  );
+                }
               },
             }}
             placement="bottomRight"

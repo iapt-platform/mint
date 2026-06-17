@@ -85,7 +85,7 @@ class SentenceController extends Controller
                     return $this->error('没有关键词');
                 }
                 $table = Sentence::select($indexCol)
-                    ->where('content', 'like', '%'.$key.'%')
+                    ->where('content', 'like', '%' . $key . '%')
                     ->where('editor_uid', $userUid);
 
                 break;
@@ -179,8 +179,16 @@ class SentenceController extends Controller
                 $table = Sentence::where('ver', '>', 1)
                     ->where('book_id', $request->input('book'))
                     ->whereIn('paragraph', explode(',', $request->input('para')))
-                    ->whereIn('channel_uid', explode(',', $request->input('channels')))
                     ->orderBy('book_id')->orderBy('paragraph')->orderBy('word_start');
+                if ($request->has('channels')) {
+                    $table = $table->whereIn('channel_uid', explode(',', $request->input('channels')));
+                }
+                if ($request->has('channel_type')) {
+                    $table = $table->type($request->input('channel_type'));
+                }
+                if ($request->has('lang')) {
+                    $table = $table->language($request->input('lang'));
+                }
                 break;
             case 'my-edit':
                 // 我编辑的
@@ -195,7 +203,7 @@ class SentenceController extends Controller
                 break;
         }
         if (! empty($request->input('key'))) {
-            $table = $table->where('content', 'like', '%'.$request->input('key').'%');
+            $table = $table->where('content', 'like', '%' . $request->input('key') . '%');
         }
 
         $count = $table->count();
@@ -261,7 +269,7 @@ class SentenceController extends Controller
         }
     }
 
-    private function UserCanEdit($userId, $channelId, $book, $access_token = null)
+    private function UserCanEdit(string $userId, string $channelId, int  $book, $access_token = null)
     {
         $channel = Channel::where('uid', $channelId)->first();
         if (! $channel) {
@@ -276,8 +284,8 @@ class SentenceController extends Controller
                     return false;
                 }
                 $key = AccessToken::where('res_id', $channelId)->value('token');
-                $jwt = JWT::decode($access_token, new Key($key.$key, 'HS512'));
-                if ($jwt->book && $jwt->book !== $book) {
+                $jwt = JWT::decode($access_token, new Key($key . $key, 'HS512'));
+                if (isset($jwt->book) && $jwt->book !== 0 &&  $jwt->book !== $book) {
                     return false;
                 }
             }
@@ -308,7 +316,7 @@ class SentenceController extends Controller
             if ($this->UserCanEdit(
                 $user['user_uid'],
                 $request->input('channel'),
-                $request->input('book', 0),
+                (int)$request->input('book', 0),
                 $request->input('access_token', null)
             )) {
                 $destChannel = Channel::where('uid', $request->input('channel'))->first();
@@ -325,7 +333,7 @@ class SentenceController extends Controller
                 if ($this->UserCanEdit(
                     $user['user_uid'],
                     $sent['channel_uid'],
-                    $sent['book_id'],
+                    (int)$sent['book_id'],
                     isset($sent['access_token']) ? $sent['access_token'] : null
                 )) {
                     $destChannel = Channel::where('uid', $sent['channel_uid'])->first();
