@@ -65,6 +65,8 @@ return [
     'quality_level' => 'ระดับคุณภาพ',
     'other_versions' => 'เวอร์ชันอื่น',
     'toc' => 'สารบัญ',
+    'expand_all' => 'ขยายทั้งหมด',
+    'collapse_toc' => 'ย่อทั้งหมด',
     'entry_info' => 'ข้อมูลรายการ',
     'category' => 'หมวดหมู่',
     'quality' => 'คุณภาพ',

@@ -65,6 +65,8 @@ return [
     'quality_level' => '品質等級',
     'other_versions' => '其他版本',
     'toc' => '目錄',
+    'expand_all' => '展開全部',
+    'collapse_toc' => '摺疊目錄',
     'entry_info' => '詞條資訊',
     'category' => '分類',
     'quality' => '品質',

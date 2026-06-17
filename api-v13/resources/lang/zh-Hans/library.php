@@ -65,6 +65,8 @@ return [
     'quality_level' => '质量等级',
     'other_versions' => '其他版本',
     'toc' => '目录',
+    'expand_all' => '展开全部',
+    'collapse_toc' => '折叠目录',
     'entry_info' => '条目信息',
     'category' => '分类',
     'quality' => '质量',
@@ -133,5 +135,5 @@ return [
     'no_toc' => '此书没有目录',
     'pāḷi' => '巴利原典',
     'aṭṭhakathā' => '义注',
-    'ṭīkā' => '复注'
+    'ṭīkā' => '复注',
 ];

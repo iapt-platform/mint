@@ -2,6 +2,20 @@
 
 export function initReader() {
     injectCommentaryMarkers();
+    initTocToggle();
+}
+
+// TOC 折叠/展开：点击按钮切换所在 .toc-tree 的 .toc-expanded 类
+// offcanvas 与侧边栏各有一份 toc，故对每个按钮分别绑定
+function initTocToggle() {
+    document.querySelectorAll('[data-toc-toggle]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const tree = btn.closest('[data-toc-tree]');
+            if (tree) {
+                tree.classList.toggle('toc-expanded');
+            }
+        });
+    });
 }
 
 function injectCommentaryMarkers() {
