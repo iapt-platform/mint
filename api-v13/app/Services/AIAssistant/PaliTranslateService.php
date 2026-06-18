@@ -3,8 +3,10 @@
 namespace App\Services\AIAssistant;
 
 use App\Helpers\LlmResponseParser;
+use App\Http\Api\ChannelApi;
 use App\Http\Resources\AiModelResource;
 use App\Models\PaliSentence;
+use App\Models\PaliText;
 use App\Models\Sentence;
 use App\Services\OpenAIService;
 use App\Services\SearchPaliDataService;
@@ -66,6 +68,8 @@ class PaliTranslateService
 
         若用户额外提供 nissaya（巴利原文的逐词缅文释义，与 pali 通过 id 一一对应，按词列出每个巴利词的语法解析与缅文释义，形如「巴利词= 缅文释义」）：它是判断词义、修饰关系、指代关系和句子结构最权威的依据，翻译时应优先参照 nissaya 确定原意，遇到歧义时以 nissaya 为准。
 
+        若用户额外提供 glossary（巴利语术语表，JSON 字符串数组，每个元素是一个巴利语术语原形）：翻译时请在巴利原文中查找这些术语。凡巴利原文中出现了术语表中的词（包括其屈折变化、复合等形式），该词在译文相应位置**不要译为中文**，而是原样输出为 `[[术语原形]]`——即用术语表中给出的那个原形，外加双方括号包裹；其余内容照常翻译为中文。例如原文出现 rājagahe 且术语表含 rājagaha，则译文写作「住在[[rājagaha]]」而非「住在王舍城」。术语表中没有、或原文中并未出现的词，一律按正常翻译处理，不要添加双方括号。
+
         翻译要求
         1. 语言风格为现代汉语，**绝对不要**使用古汉语或者半文半白。**不要参考**阿含经和元亨寺语言风格。
         2. 译文严谨，完全贴合巴利原文，不要加入自己的理解
@@ -92,6 +96,8 @@ class PaliTranslateService
         你是一个资深的巴利语翻译审校专家。
         用户会提供巴利原文（pali）以及一份待审校的简体中文译文（translation），两者均为 json，通过 id 一一对应。
         用户还可能提供 nissaya（巴利原文的逐词缅文释义，与 pali 通过 id 对应，按词列出每个巴利词的语法解析与缅文释义，形如「巴利词= 缅文释义」）：它是判断词义、修饰关系、指代关系和句子结构最权威的依据，审校时应以 nissaya 为准核对译文是否贴合原意，发现译文与 nissaya 冲突的，须在 issues 中指出。
+
+        译文中可能出现 `[[巴利术语]]`（双方括号包裹巴利语原词）形式的标记：这是**有意保留**的术语标记，表示该词按术语表以巴利原形呈现、刻意不译为中文，属于正确处理。审校时**完全忽略**这些 `[[...]]` 标记，**不要**把它当作漏译、未翻译、误译或格式问题，不要因此扣分，也不要在 issues 中提及；只需正常审校其余中文译文。
 
         请逐句审校译文，但**不要修改译文**，只输出审校意见。
         审校维度：
@@ -346,7 +352,10 @@ class PaliTranslateService
         foreach ($steps as $step) {
             switch ($step) {
                 case 'translate':
-                    $translation = $this->translate($pali, $this->nissayaFor('translate', $nissaya));
+                    // 加载本段所属 chapter 的巴利术语表；命中术语时译文输出 [[术语]] 而非中文
+                    $glossary = $this->loadGlossary($book, $para);
+                    Log::debug('PaliTranslate: glossary 术语表', ['count' => count($glossary)]);
+                    $translation = $this->translate($pali, $this->nissayaFor('translate', $nissaya), $glossary);
                     break;
                 case 'review':
                     $review = $this->review($pali, $translation, $this->nissayaFor('review', $nissaya));
@@ -395,11 +404,14 @@ class PaliTranslateService
      *
      * @param  array<int, array{id: string, content: string}>  $pali
      * @param  array<int, array{id: string, content: string}>  $nissaya  巴利逐词缅文释义参考资料，可空
+     * @param  string[]  $glossary  巴利术语表（术语原形列表），命中时译文输出 [[术语]]，可空
      * @return array<int, array{id: string, content: string}>
      */
-    public function translate(array $pali, array $nissaya = []): array
+    public function translate(array $pali, array $nissaya = [], array $glossary = []): array
     {
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n" . $this->nissayaSection($nissaya);
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            .$this->nissayaSection($nissaya)
+            .$this->glossarySection($glossary);
         Log::debug('PaliTranslate: translate', ['input' => $userText]);
 
         $content = $this->send($this->translatePrompt, $userText);
@@ -417,9 +429,9 @@ class PaliTranslateService
      */
     public function review(array $pali, array $translation, array $nissaya = []): array
     {
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
-            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
-            . $this->nissayaSection($nissaya);
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            .$this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: review', ['input' => $userText]);
 
         $content = $this->send($this->reviewPrompt, $userText);
@@ -438,9 +450,9 @@ class PaliTranslateService
      */
     public function revise(array $pali, array $translation, array $review): array
     {
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
-            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
-            . "# review\n\n" . $this->jsonBlock($review) . "\n\n";
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            ."# review\n\n".$this->jsonBlock($review)."\n\n";
         Log::debug('PaliTranslate: revise', ['input' => $userText]);
 
         $content = $this->send($this->revisePrompt, $userText);
@@ -460,9 +472,9 @@ class PaliTranslateService
      */
     public function evaluate(array $pali, array $translation, array $nissaya = []): array
     {
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
-            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
-            . $this->nissayaSection($nissaya);
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            .$this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: evaluate', ['input' => $userText]);
 
         $content = $this->send($this->evaluatePrompt, $userText);
@@ -546,7 +558,66 @@ class PaliTranslateService
             return '';
         }
 
-        return "# nissaya\n\n" . $this->jsonBlock($nissaya) . "\n\n";
+        return "# nissaya\n\n".$this->jsonBlock($nissaya)."\n\n";
+    }
+
+    /**
+     * 加载本段所属 chapter 的巴利术语表。
+     *
+     * 术语表由 extract:pali.term 命令按 chapter 生成，保存在 _system_glossary_ channel，
+     * 以 chapter 起始段落（level 1-7 节点）为 paragraph、word_start/word_end 均为 0、
+     * content 为巴利术语原形的 JSON 字符串数组。这里先把当前段落向下归到所属 chapter，
+     * 再读取该 chapter 的术语表。加载失败或无数据时返回空数组（不影响翻译）。
+     *
+     * @return string[] 巴利术语原形列表
+     */
+    protected function loadGlossary(int $book, int $para): array
+    {
+        $channelId = ChannelApi::getSysChannel('_system_glossary_');
+        if (! $channelId) {
+            return [];
+        }
+
+        // 术语表按 chapter 起始段落存储：向下取 ≤para 的最近 chapter 节点（level 1-7）
+        $chapterStart = PaliText::where('book', $book)
+            ->where('paragraph', '<=', $para)
+            ->whereBetween('level', [1, 7])
+            ->orderBy('paragraph', 'desc')
+            ->value('paragraph');
+        if ($chapterStart === null) {
+            return [];
+        }
+
+        $content = Sentence::where('channel_uid', $channelId)
+            ->where('book_id', $book)
+            ->where('paragraph', $chapterStart)
+            ->where('word_start', 0)
+            ->where('word_end', 0)
+            ->value('content');
+        if (empty($content)) {
+            return [];
+        }
+
+        $words = json_decode($content, true);
+        if (! is_array($words)) {
+            return [];
+        }
+
+        return array_values(array_filter($words, fn ($w) => is_string($w) && $w !== ''));
+    }
+
+    /**
+     * 构造 glossary 术语表区块；无数据时返回空串（不污染提示词）。
+     *
+     * @param  string[]  $glossary
+     */
+    protected function glossarySection(array $glossary): string
+    {
+        if (empty($glossary)) {
+            return '';
+        }
+
+        return "# glossary\n\n```json\n".json_encode(array_values($glossary), JSON_UNESCAPED_UNICODE)."\n```\n\n";
     }
 
     /**
@@ -556,6 +627,6 @@ class PaliTranslateService
      */
     protected function jsonBlock(array $data): string
     {
-        return "```json\n" . json_encode($data, JSON_UNESCAPED_UNICODE) . "\n```";
+        return "```json\n".json_encode($data, JSON_UNESCAPED_UNICODE)."\n```";
     }
 }
