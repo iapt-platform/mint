@@ -194,13 +194,13 @@ class BookController extends Controller
     private function getBookTitle(int $book, int $paragraph, string $channelId)
     {
         $bookTopPara = $this->paliTextService->getBookPara($book, $paragraph)->paragraph;
-        $title = $chapters = ProgressChapter::where('book', $book)
+        $title = ProgressChapter::where('book', $book)
             ->where('para', $bookTopPara)
             ->where('channel_id', $channelId)
             ->value('title');
         if (empty($title)) {
             $title = PaliText::where('book', $book)
-                ->whereBetween('paragraph', $bookTopPara)
+                ->where('paragraph', $bookTopPara)
                 ->value('toc');
         }
 
