@@ -30,8 +30,6 @@ class PaliTextService
         }
     }
 
-    public function getChildrenChapters(int $book, int $para) {}
-
     public function getBookPara(int $book, int $para)
     {
         $paragraph = PaliText::where('book', $book)
