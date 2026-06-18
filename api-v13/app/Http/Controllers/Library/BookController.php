@@ -14,6 +14,7 @@ use App\Services\OpenSearchService;
 use App\Services\PaliTextService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class BookController extends Controller
 {
@@ -326,7 +327,7 @@ class BookController extends Controller
             ->whereBetween('level', [$minLevel, $maxLevel])
             ->orderBy('paragraph')
             ->get();
-
+        // Log::debug('toc', ['toc' => $paliTexts->toArray()]);
         if ($paliTexts->isEmpty()) {
             return [];
         }
@@ -357,22 +358,35 @@ class BookController extends Controller
             $stack[] = ['id' => $id, 'level' => $level];
         }
 
-        // 当前节点的祖先链
-        $ancestorSet = [];
-        $cursor = $currentId;
-        while (! empty($parents[$cursor])) {
-            $cursor = $parents[$cursor];
-            $ancestorSet[$cursor] = true;
+        // 高亮(active)集合：聚合显示时为区间内所有 chapter，否则仅选中段落
+        $activeSet = [];
+        foreach ($paliTexts as $paliText) {
+            $id = "{$paliText->book}-{$paliText->paragraph}";
+            $active = $activeRange !== null
+                ? ($paliText->paragraph >= $activeRange[0] && $paliText->paragraph <= $activeRange[1])
+                : ($id === $currentId);
+            if ($active) {
+                $activeSet[$id] = true;
+            }
         }
 
-        // 需要展开子节点的集合 = 祖先链 + 当前节点
-        $expandParentSet = $ancestorSet;
-        $expandParentSet[$currentId] = true;
+        // 需要展开子节点的集合 = 每个 active 节点及其祖先链。
+        // 聚合显示跨多级时，区间内各级 chapter 都需展开，其子级才能完整显示，
+        // 否则仅围绕单个当前节点展开，最多只能显示两级。
+        $expandParentSet = [];
+        foreach (array_keys($activeSet) as $activeId) {
+            $expandParentSet[$activeId] = true;
+            $cursor = $activeId;
+            while (! empty($parents[$cursor])) {
+                $cursor = $parents[$cursor];
+                $expandParentSet[$cursor] = true;
+            }
+        }
 
         // 顶层 level（列表中最浅的一层，折叠模式下始终可见）
         $topLevel = (int) $paliTexts->min('level');
 
-        return $paliTexts->map(function ($paliText) use ($chaptersIndexed, $channelId, $currentId, $parents, $expandParentSet, $topLevel, $activeRange) {
+        $output = $paliTexts->map(function ($paliText) use ($chaptersIndexed, $channelId, $parents, $expandParentSet, $activeSet, $topLevel) {
             $id = "{$paliText->book}-{$paliText->paragraph}";
             $level = (int) $paliText->level;
             $title = $paliText->toc;
@@ -398,10 +412,7 @@ class BookController extends Controller
             $visible = $level === $topLevel
                 || ($parentId !== null && isset($expandParentSet[$parentId]));
 
-            // 聚合显示时高亮区间内所有 chapter，否则仅高亮选中段落
-            $active = $activeRange !== null
-                ? ($paliText->paragraph >= $activeRange[0] && $paliText->paragraph <= $activeRange[1])
-                : ($id === $currentId);
+            $active = isset($activeSet[$id]);
 
             return [
                 'id' => $id,
@@ -415,6 +426,9 @@ class BookController extends Controller
                 'hide' => ! $visible,
             ];
         })->all();
+
+        // Log::debug('toc output', ['data' => $output]);
+        return $output;
     }
 
     public function getBookCategory($book, $paragraph)
