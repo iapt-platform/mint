@@ -65,6 +65,8 @@ return [
     'quality_level' => 'Quality Level',
     'other_versions' => 'Other Versions',
     'toc' => 'Table of Contents',
+    'expand_all' => 'Expand all',
+    'collapse_toc' => 'Collapse',
     'entry_info' => 'Entry Info',
     'category' => 'Category',
     'quality' => 'Quality',

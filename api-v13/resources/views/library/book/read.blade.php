@@ -135,7 +135,7 @@
 {{-- TOC Offcanvas（mobile） --}}
 <div class="offcanvas offcanvas-start" tabindex="-1" id="tocDrawer">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title">{{ __('library.toc') }}</h5>
+        <h5 class="offcanvas-title">{{ $book['book_title'] }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body">
@@ -150,7 +150,7 @@
         {{-- TOC 侧边栏（tablet+） --}}
         <div class="toc-sidebar card">
             <div class="card-body">
-                <h5>{{ __('library.toc') }}</h5>
+                <h5>{{ $book['book_title'] }}</h5>
                 @include('library.book.toc', ['toc' => $book['toc'] ?? []])
             </div>
         </div>

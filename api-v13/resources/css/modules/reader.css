@@ -233,6 +233,32 @@ body {
     border-left-color: #4dabf7;
 }
 
+/* TOC 折叠模式：默认隐藏 hide 项，.toc-expanded 时全部展开 */
+.toc-tree:not(.toc-expanded) .toc-hidden {
+    display: none;
+}
+
+.toc-toggle-all {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 0 8px;
+    background: none;
+    border: none;
+    color: #206bc4;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.dark-mode .toc-toggle-all {
+    color: #4dabf7;
+}
+
+/* 折叠时显示「展开全部」，展开时显示「折叠」 */
+.toc-tree.toc-expanded .toc-toggle-expand,
+.toc-tree:not(.toc-expanded) .toc-toggle-collapse {
+    display: none;
+}
+
 /* ══════════════════════════════════════════
    六、正文内容
    ══════════════════════════════════════════ */

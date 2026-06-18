@@ -65,6 +65,8 @@ return [
     'quality_level' => '质量等级',
     'other_versions' => '其他版本',
     'toc' => '目录',
+    'expand_all' => '展开全部',
+    'collapse_toc' => '折叠目录',
     'entry_info' => '条目信息',
     'category' => '分类',
     'quality' => '质量',

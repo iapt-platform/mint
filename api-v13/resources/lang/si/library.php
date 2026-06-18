@@ -65,6 +65,8 @@ return [
     'quality_level' => 'ගුණාත්මක මට්ටම',
     'other_versions' => 'අනෙකුත් අනුවාද',
     'toc' => 'පටුනය',
+    'expand_all' => 'සියල්ල විදහන්න',
+    'collapse_toc' => 'හකුළන්න',
     'entry_info' => 'ඇතුළත්කිරීමේ තොරතුරු',
     'category' => 'කාණ්ඩය',
     'quality' => 'ගුණාත්මකභාවය',
