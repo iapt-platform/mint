@@ -5,12 +5,11 @@ namespace App\Console\Commands;
 use App\Helpers\LlmResponseParser;
 use App\Http\Api\ChannelApi;
 use App\Http\Resources\AiModelResource;
-use App\Models\DhammaTerm;
 use App\Models\PaliText;
-use App\Models\UserDict;
 use App\Services\AIModelService;
 use App\Services\OpenAIService;
 use App\Services\SentenceService;
+use App\Services\TermService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -20,14 +19,6 @@ class ExtractPaliTerm extends Command
     // 断点缓存键：记录最后一个已完成的 chapter 游标 ['book'=>int,'paragraph'=>int]，
     // 使命令可重入——中断后重跑自动跳过已完成的 chapter
     private const CURSOR_KEY = 'extract:pali.term:cursor';
-
-    // 术语表额外纳入的 user_dicts 词典 id（其 word 去除连字符与空格后加入）
-    private const USER_DICT_IDS = [
-        'b089de57-f146-4095-b886-057863728c43',
-        '0bfd87ec-f3ac-49a2-985e-28388779078d',
-        '7c7ee287-35ba-4cf3-b87b-30f1fa6e57c9',
-        '4ac8a0d5-9c6f-4b9f-983d-84288d47f993',
-    ];
 
     /**
      * 用 LLM 从巴利文经文中提取术语。
@@ -80,7 +71,8 @@ class ExtractPaliTerm extends Command
     public function __construct(
         protected AIModelService $modelService,
         protected OpenAIService $openAIService,
-        protected SentenceService $sentenceService
+        protected SentenceService $sentenceService,
+        protected TermService $termService
     ) {
         parent::__construct();
     }
@@ -177,27 +169,7 @@ class ExtractPaliTerm extends Command
      */
     private function loadGlossaryJson(): ?string
     {
-        // 1) dhamma_terms 全表 distinct 词条原形（不限 channel），排除 word 含空格的短语条目
-        $dhammaWords = DhammaTerm::query()
-            ->whereNotNull('word')
-            ->where('word', '!=', '')
-            ->where('word', 'not like', '% %')
-            ->distinct()
-            ->pluck('word')
-            ->all();
-
-        // 2) user_dicts 指定词典的词，去除连字符与空格后加入
-        $userWords = UserDict::query()
-            ->whereIn('dict_id', self::USER_DICT_IDS)
-            ->whereNotNull('word')
-            ->where('word', '!=', '')
-            ->pluck('word')
-            ->map(fn ($w) => str_replace(['-', ' '], '', (string) $w))
-            ->all();
-
-        // 合并 + NFC 归一（避免巴利文变音符 NFC/NFD 不一致）+ 去空 + 去重
-        $terms = array_map(fn ($w) => $this->toNfc(trim((string) $w)), array_merge($dhammaWords, $userWords));
-        $terms = array_values(array_unique(array_filter($terms, fn ($w) => $w !== '')));
+        $terms = $this->termService->getGlossary();
 
         if (empty($terms)) {
             $this->error('glossary is empty');
@@ -209,11 +181,6 @@ class ExtractPaliTerm extends Command
         $this->glossarySet = array_fill_keys($terms, true);
 
         $this->info('glossary loaded: '.count($terms).' terms (dhamma_terms + user_dicts)');
-        Log::info('extract:pali.term glossary loaded', [
-            'total' => count($terms),
-            'dhamma_terms' => count($dhammaWords),
-            'user_dicts' => count($userWords),
-        ]);
 
         return json_encode($terms, JSON_UNESCAPED_UNICODE);
     }
@@ -295,21 +262,6 @@ class ExtractPaliTerm extends Command
             ->value('paragraph');
 
         return $next ? (int) $next - 1 : $maxParagraph;
-    }
-
-    /**
-     * Unicode 规范化为 NFC（巴利文变音符匹配需统一 NFC/NFD）。intl 不可用时原样返回。
-     */
-    private function toNfc(string $s): string
-    {
-        if (class_exists(\Normalizer::class)) {
-            $normalized = \Normalizer::normalize($s, \Normalizer::FORM_C);
-            if ($normalized !== false) {
-                return $normalized;
-            }
-        }
-
-        return $s;
     }
 
     /**
