@@ -446,9 +446,7 @@ class PaliTranslateService
             .$this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: translate', ['input' => $userText]);
 
-        $content = $this->send($this->translatePrompt, $userText);
-
-        return LlmResponseParser::jsonl($content);
+        return $this->sendForIds('translate', $this->translatePrompt, $userText, $this->idsOf($pali));
     }
 
     /**
@@ -471,10 +469,7 @@ class PaliTranslateService
             ."# glossary\n\n".$this->jsonBlock($glossary)."\n\n";
         Log::debug('PaliTranslate: term', ['input' => $userText]);
 
-        $content = $this->send($this->termPrompt, $userText);
-        Log::debug('PaliTranslate: term', ['output' => $content]);
-
-        return LlmResponseParser::jsonl($content);
+        return $this->sendForIds('term', $this->termPrompt, $userText, $this->idsOf($translation));
     }
 
     /**
@@ -492,10 +487,7 @@ class PaliTranslateService
             .$this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: review', ['input' => $userText]);
 
-        $content = $this->send($this->reviewPrompt, $userText);
-        Log::debug('PaliTranslate: review', ['output' => $content]);
-
-        return LlmResponseParser::jsonl($content);
+        return $this->sendForIds('review', $this->reviewPrompt, $userText, $this->idsOf($translation));
     }
 
     /**
@@ -513,10 +505,7 @@ class PaliTranslateService
             ."# review\n\n".$this->jsonBlock($review)."\n\n";
         Log::debug('PaliTranslate: revise', ['input' => $userText]);
 
-        $content = $this->send($this->revisePrompt, $userText);
-        Log::debug('PaliTranslate: revise', ['output' => $content]);
-
-        return LlmResponseParser::jsonl($content);
+        return $this->sendForIds('revise', $this->revisePrompt, $userText, $this->idsOf($translation));
     }
 
     /**
@@ -535,10 +524,7 @@ class PaliTranslateService
             .$this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: evaluate', ['input' => $userText]);
 
-        $content = $this->send($this->evaluatePrompt, $userText);
-        Log::debug('PaliTranslate: evaluate', ['output' => $content]);
-
-        return LlmResponseParser::jsonl($content);
+        return $this->sendForIds('evaluate', $this->evaluatePrompt, $userText, $this->idsOf($translation));
     }
 
     /**
@@ -591,6 +577,92 @@ class PaliTranslateService
         Log::debug("PaliTranslate: complete in {$complete}s", ['content' => $content]);
 
         return is_string($content) ? $content : '[]';
+    }
+
+    /**
+     * 调用 LLM 并解析 jsonl；若返回结果缺失部分期望 id（大模型漏句），则整体重试，
+     * 直到全部 id 补齐或达到最大尝试次数；最终仍缺失时返回最后一次（覆盖最全）的结果。
+     *
+     * @param  string  $step  步骤名，仅用于日志
+     * @param  string[]  $expectedIds  期望覆盖的句子 id 列表
+     * @return array<int, array<string, mixed>>
+     */
+    protected function sendForIds(string $step, string $systemPrompt, string $userText, array $expectedIds, int $maxAttempts = 2): array
+    {
+        $best = [];
+        $bestMissing = $expectedIds;
+
+        for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+            $result = LlmResponseParser::jsonl($this->send($systemPrompt, $userText));
+            $missing = $this->missingIds($expectedIds, $result);
+
+            // 保留缺失最少的一次结果，避免重试反而更差
+            if (count($missing) < count($bestMissing)) {
+                $best = $result;
+                $bestMissing = $missing;
+            }
+
+            if (empty($missing)) {
+                return $result;
+            }
+
+            Log::warning('PaliTranslate: LLM 返回缺失 id，重试', [
+                'step' => $step,
+                'attempt' => $attempt,
+                'missing' => $missing,
+            ]);
+        }
+
+        Log::warning('PaliTranslate: 重试后仍缺失 id', [
+            'step' => $step,
+            'missing' => $bestMissing,
+        ]);
+
+        return $best;
+    }
+
+    /**
+     * 提取记录列表中的 id（非空），保持顺序。
+     *
+     * @param  array<int, array<string, mixed>>  $items
+     * @return string[]
+     */
+    protected function idsOf(array $items): array
+    {
+        $ids = [];
+        foreach ($items as $item) {
+            if (isset($item['id']) && $item['id'] !== '') {
+                $ids[] = (string) $item['id'];
+            }
+        }
+
+        return $ids;
+    }
+
+    /**
+     * 返回 expectedIds 中、在 LLM 结果里缺失的 id。
+     *
+     * @param  string[]  $expectedIds
+     * @param  array<int, array<string, mixed>>  $result
+     * @return string[]
+     */
+    protected function missingIds(array $expectedIds, array $result): array
+    {
+        $returned = [];
+        foreach ($result as $item) {
+            if (isset($item['id'])) {
+                $returned[(string) $item['id']] = true;
+            }
+        }
+
+        $missing = [];
+        foreach ($expectedIds as $id) {
+            if (! isset($returned[(string) $id])) {
+                $missing[] = (string) $id;
+            }
+        }
+
+        return $missing;
     }
 
     /**

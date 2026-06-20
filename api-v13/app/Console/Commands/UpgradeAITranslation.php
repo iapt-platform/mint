@@ -346,8 +346,12 @@ class UpgradeAITranslation extends Command
 
     private function save(array $data)
     {
+
         // 写入句子库
         try {
+            // 过滤掉 id 不存在的 item（LLM 输出可能缺失或畸形），避免后续 explode 报错
+            $data = array_filter($data, fn ($n) => ! empty($n['id']));
+
             $sentData = [];
             $sentData = array_map(function ($n) {
                 $sId = explode('-', $n['id']);
@@ -358,7 +362,7 @@ class UpgradeAITranslation extends Command
                     'word_start' => $sId[2],
                     'word_end' => $sId[3],
                     'channel_uid' => $this->workChannel['id'],
-                    'content' => $n['content'],
+                    'content' => $n['content'] ?? '',
                     'content_type' => $n['content_type'] ?? 'markdown',
                     'lang' => $this->workChannel['lang'],
                     'status' => $this->workChannel['status'],
