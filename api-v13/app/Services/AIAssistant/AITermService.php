@@ -2,27 +2,24 @@
 
 namespace App\Services\AIAssistant;
 
-use Illuminate\Support\Facades\Log;
-
-use App\Services\OpenSearchService;
-use App\Services\TermService;
-use App\Services\OpenAIService;
+use App\DTO\Search\SearchDataDTO;
+use App\Http\Resources\AiModelResource;
 use App\Services\AIModelService;
 use App\Services\AuthService;
-
-use App\Http\Resources\AiModelResource;
-use App\DTO\Search\SearchDataDTO;
+use App\Services\OpenAIService;
+use App\Services\OpenSearchService;
+use App\Services\TermService;
+use Illuminate\Support\Facades\Log;
 
 class AITermService
 {
     protected $pageSize = 50;
-    protected AiModelResource $model;
 
+    protected AiModelResource $model;
 
     protected $modelToken;
 
-
-    private $sysPrompt = <<<md
+    private $sysPrompt = <<<'md'
     请根据提供的文献搜素结果，撰写一个巴利术语的简体中文百科词条。
 
     搜素结果是json数组
@@ -41,7 +38,7 @@ class AITermService
     4. 提供完整的参考文献列表
     5. 保持学术中立性和客观性
     6. 请引用我提供的全部内容，不要有任何遗漏
-    7. 请在文档的开头输出一个模板 {{quality|pending}}
+    7. 请在文档的开头输出一个模板 {{quality|pending}}。 这个模板后面不要有空行，直接跟后面的内容。
 
     **观点引用标准格式：**
     《文献中文名》在《章节中文名》中指出/解释/说明："巴利文原文"（中文翻译及必要说明）。[link]
@@ -142,7 +139,7 @@ class AITermService
     {{category|经典与文献}} {{category|经藏}} {{category|中部}} {{category|义注}}
     md;
 
-    private $sysPromptTags = <<<md
+    private $sysPromptTags = <<<'md'
     你是一个巴利语佛教百科词条分类专家。请根据以下分类体系，为给定的词条打上分类标签。
 
     在分类标签的前面添加一个**词条概述**
@@ -193,6 +190,18 @@ class AITermService
     {{category|经典与文献}} {{category|经藏}} {{category|中部}} {{category|义注}}
     md;
 
+    private $sysPromptMeaning = <<<'md'
+    你是一个巴利语佛教术语翻译专家。我会提供一个巴利术语，以及它的百科词条正文。
+
+    请你阅读百科词条正文，为这个巴利术语提炼出一个最恰当、简洁的简体中文释义。
+
+    **输出规则：**
+    - 只输出释义本身，不要任何解释、标点修饰、引号或模板
+    - 释义应为简短的中文词语或短语，通常不超过 15 个字
+    - 优先采用学界通用的标准译法
+    - 不要重复输出巴利原词
+    md;
+
     /**
      * Create a new command instance.
      *
@@ -203,10 +212,12 @@ class AITermService
         protected OpenAIService $openAIService,
         protected TermService $termService
     ) {}
+
     public function setModel($id)
     {
         $this->model = $this->modelService->getModelById($id);
         $this->modelToken = AuthService::getUserToken($id);
+
         return $this;
     }
 
@@ -215,15 +226,15 @@ class AITermService
         $search = app(OpenSearchService::class);
         // 组装搜索参数
         $params = [
-            'query'        => $word,
+            'query' => $word,
             'resourceType' => 'tipitaka',
             'granularity' => 'paragraph',
-            'pageSize'     => $this->pageSize,
+            'pageSize' => $this->pageSize,
         ];
         $result = $search->search($params);
 
         $dto = SearchDataDTO::fromArray($result);
-        $res = array();
+        $res = [];
         foreach ($dto->hits->items as $key => $item) {
 
             $res[] = [
@@ -231,24 +242,53 @@ class AITermService
                 'content' => $item->content,
                 'path' => $item->path,
                 'pid' => $item->getParaId(),
-                'link' => $item->getParaLink()
+                'link' => $item->getParaLink(),
             ];
         }
         Log::debug('query ' . count($res));
+
         return $res;
+    }
+
+    /**
+     * 按 word 查找/新建社区词条（_community_translation_zh-hans_），并用 LLM 生成百科正文写入 note。
+     *
+     * @return string LLM 生成的百科词条正文
+     */
+    public function updateOrCreate(string $channelId, string $word): string
+    {
+
+        $term = $this->termService->findOrCreate($channelId, $word);
+
+        return $this->update($term->guid);
     }
 
     public function update(string $id)
     {
         // 获取术语
         $term = $this->termService->getRaw($id);
+
+        $content = $this->generateNote($term->word);
+        $meaning = $this->generateMeaning($term->word, $content);
+        $this->termService->update($id, ['note' => $content, 'meaning' => $meaning]);
+
+        return $content;
+    }
+
+    /**
+     * 全文搜索 word 命中段落，连同搜索结果发给 LLM 生成巴利术语百科正文，并输出引用自检日志。
+     *
+     * @return string LLM 生成的百科词条正文
+     */
+    private function generateNote(string $word): string
+    {
         // 全文搜索
-        $query = $this->query($term->word);
+        $query = $this->query($word);
 
         $res = json_encode($query, JSON_UNESCAPED_UNICODE);
         $resText = "# 搜索结果\n```json\n{$res}\n```\n";
-        $termText = "# 巴利术语\n\n{$term->word}\n\n";
-        //LLM 生成
+        $termText = "# 巴利术语\n\n{$word}\n\n";
+        // LLM 生成
         $response = $this->openAIService->setApiUrl($this->model['url'])
             ->setModel($this->model['model'])
             ->setApiKey($this->model['key'])
@@ -258,8 +298,8 @@ class AITermService
             ->send($resText . $termText);
 
         $content = $response['choices'][0]['message']['content'] ?? '';
-
-        //输出自检报告
+        $content = str_replace("{{quality|pending}}\n", "{{quality|pending}}", $content);
+        // 输出自检报告
         Log::debug('llm response', ['strlen' => $content]);
         $paraIds = $this->extractAllParaIds($content);
         Log::debug('has paragraph ref ', ['total' => count($paraIds), 'id' => $paraIds]);
@@ -267,8 +307,32 @@ class AITermService
         $diff = array_values(array_diff($paraIds, $searchPid));
         Log::debug('diff', ['total' => count($diff), 'data' => $diff]);
 
-        $this->termService->update($id, ['note' => $content]);
         return $content;
+    }
+
+    /**
+     * 根据已生成的百科词条正文，让 LLM 为巴利术语提炼一个简洁的简体中文释义。
+     *
+     * @return string LLM 提炼的简体中文释义；失败时回退为原词
+     */
+    private function generateMeaning(string $word, string $content): string
+    {
+        $termText = "# 巴利术语\n\n{$word}\n\n";
+        $noteText = "# 百科词条正文\n\n{$content}\n";
+
+        $response = $this->openAIService->setApiUrl($this->model['url'])
+            ->setModel($this->model['model'])
+            ->setApiKey($this->model['key'])
+            ->setSystemPrompt($this->sysPromptMeaning)
+            ->setTemperature(0.3)
+            ->setStream(false)
+            ->send($termText . $noteText);
+
+        $meaning = trim($response['choices'][0]['message']['content'] ?? '');
+
+        Log::debug('llm meaning', ['word' => $word, 'meaning' => $meaning]);
+
+        return $meaning !== '' ? $meaning : $word;
     }
 
     public function create(string $word) {}
@@ -279,7 +343,7 @@ class AITermService
      * Parses a string that may contain multiple "{{para|...}}" templates
      * and returns an array of unique 'id' parameter values found.
      *
-     * @param string $str The input string containing zero or more {{para|...}} templates
+     * @param  string  $str  The input string containing zero or more {{para|...}} templates
      * @return array<int, string> Array of unique extracted ID values (e.g., ['16-1376', 'ABC-123'])
      *                            Returns empty array if no IDs are found
      *
