@@ -2,10 +2,6 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
-
 use App\Helpers\LlmResponseParser;
 use App\Http\Api\ChannelApi;
 use App\Http\Resources\AiModelResource;
@@ -17,8 +13,9 @@ use App\Services\AIModelService;
 use App\Services\AuthService;
 use App\Services\OpenAIService;
 use App\Services\SentenceService;
-
-use function PHPUnit\Framework\isEmpty;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class UpgradeAITranslation extends Command
 {
@@ -47,7 +44,7 @@ class UpgradeAITranslation extends Command
     {--resume}
     {--model=}
     {--thinking= : 开启和关闭deepseek thinking true | false}
-    {--steps=translate : translation 工作流步骤，逗号分隔，可选 translate,review,revise,evaluate（evaluate 为质量评估，须放最后）}
+    {--steps=translate : translation 工作流步骤，逗号分隔，可选 translate,term,review,revise,evaluate（term 为术语标注，可单独运行；evaluate 为质量评估，须放最后）}
     {--nissaya=translate,review,evaluate : 启用 nissaya 参考资料的步骤，逗号分隔，可选 translate,review,evaluate；传空字符串则全部不注入}
     {--fresh : 清除缓存断点，从头开始}';
 
@@ -98,11 +95,13 @@ class UpgradeAITranslation extends Command
          */
         if (! $this->option('model')) {
             $this->error('model is request');
+
             return 1;
         }
         $this->model = $this->modelService->getModelById($this->option('model'));
         if (empty($this->model)) {
             $this->error('invalid model id ');
+
             return 1;
         }
         $this->info("model:{$this->model['model']}");
@@ -112,21 +111,21 @@ class UpgradeAITranslation extends Command
         $this->workChannel = ChannelApi::getById($this->argument('channel'));
         // 需要判断输入channel 与翻译类型是否一致 nissaya -> nissaya channel
         if ($this->workChannel['type'] !== $this->argument('type')) {
-            $this->error('channel type not match request ' . $this->argument('type') . ' input is ' . $this->workChannel['type']);
+            $this->error('channel type not match request '.$this->argument('type').' input is '.$this->workChannel['type']);
 
             return 1;
         }
 
         if ($this->option('thinking')) {
             $this->thinking = $this->option('thinking') === 'true';
-            $this->line('thinking is ' . $this->option('thinking'));
+            $this->line('thinking is '.$this->option('thinking'));
         }
 
         // translation 工作流步骤校验
         $steps = array_values(array_filter(array_map('trim', explode(',', (string) $this->option('steps')))));
         $invalid = array_diff($steps, PaliTranslateService::STEPS);
         if (! empty($invalid)) {
-            $this->error('invalid steps: ' . implode(',', $invalid) . '. allowed: ' . implode(',', PaliTranslateService::STEPS));
+            $this->error('invalid steps: '.implode(',', $invalid).'. allowed: '.implode(',', PaliTranslateService::STEPS));
 
             return 1;
         }
@@ -135,7 +134,7 @@ class UpgradeAITranslation extends Command
         $nissayaSteps = array_values(array_filter(array_map('trim', explode(',', (string) $this->option('nissaya')))));
         $invalidNissaya = array_diff($nissayaSteps, PaliTranslateService::NISSAYA_STEPS);
         if (! empty($invalidNissaya)) {
-            $this->error('invalid nissaya steps: ' . implode(',', $invalidNissaya) . '. allowed: ' . implode(',', PaliTranslateService::NISSAYA_STEPS));
+            $this->error('invalid nissaya steps: '.implode(',', $invalidNissaya).'. allowed: '.implode(',', PaliTranslateService::NISSAYA_STEPS));
 
             return 1;
         }
@@ -144,7 +143,7 @@ class UpgradeAITranslation extends Command
         $channelId = $this->workChannel['id'] ?? '';
 
         // 缓存键：按 type、channel 区分不同任务的断点
-        $cacheKey = self::CACHE_KEY_PREFIX . ':' . $type . ':' . $channelId;
+        $cacheKey = self::CACHE_KEY_PREFIX.':'.$type.':'.$channelId;
 
         if ($this->option('fresh')) {
             Cache::forget($cacheKey);
@@ -164,7 +163,7 @@ class UpgradeAITranslation extends Command
             // 未指定 book 时，若已有断点缓存，从上次处理到的 book 继续，无需从 1 开始
             $startBook = 1;
             if (! empty($done)) {
-                $doneBooks = array_map(fn($cursor) => (int) explode('|', $cursor)[0], array_keys($done));
+                $doneBooks = array_map(fn ($cursor) => (int) explode('|', $cursor)[0], array_keys($done));
                 $startBook = max($doneBooks);
                 $this->info("resume from book {$startBook}");
             }
@@ -176,9 +175,9 @@ class UpgradeAITranslation extends Command
             if ($this->option('para')) {
                 $paragraphs = [$this->option('para')];
             }
-            foreach ($paragraphs as  $paragraph) {
+            foreach ($paragraphs as $paragraph) {
                 // 稳定游标：缓存键已含 type、channel，此处仅以 book|para 标识处理单元
-                $cursor = $book . '|' . $paragraph;
+                $cursor = $book.'|'.$paragraph;
                 if (isset($done[$cursor])) {
                     $this->info("skip {$cursor}");
 
@@ -207,7 +206,7 @@ class UpgradeAITranslation extends Command
                 }
                 $this->save($data);
                 $time = time() - $start;
-                $this->info($this->argument('type') . " {$book}-{$paragraph} " . count($data) . ' sentences time=' . $time);
+                $this->info($this->argument('type')." {$book}-{$paragraph} ".count($data).' sentences time='.$time);
                 // 该处理单元全部写库完成后再标记游标，确保中途中断不会误跳过
                 $done[$cursor] = true;
                 Cache::put($cacheKey, $done, now()->addHours(24));
@@ -227,7 +226,7 @@ class UpgradeAITranslation extends Command
                 'book' => $book,
                 '--channel' => $this->workChannel['id'],
                 '--summary' => 'off',
-                '--granularity' => 'chapter'
+                '--granularity' => 'chapter',
             ];
             if ($this->option('para')) {
                 $param['--para'] = $this->option('para');
@@ -302,7 +301,7 @@ class UpgradeAITranslation extends Command
             $response = $llm->send("```json\n{$tplText}\n```");
             $complete = time() - $startAt;
             $content = $response['choices'][0]['message']['content'] ?? '[]';
-            Log::debug("ai response in {$complete}s content=" . $content);
+            Log::debug("ai response in {$complete}s content=".$content);
 
             $json = LlmResponseParser::jsonl($content);
 
@@ -347,8 +346,12 @@ class UpgradeAITranslation extends Command
 
     private function save(array $data)
     {
+
         // 写入句子库
         try {
+            // 过滤掉 id 不存在的 item（LLM 输出可能缺失或畸形），避免后续 explode 报错
+            $data = array_filter($data, fn ($n) => ! empty($n['id']));
+
             $sentData = [];
             $sentData = array_map(function ($n) {
                 $sId = explode('-', $n['id']);
@@ -359,7 +362,7 @@ class UpgradeAITranslation extends Command
                     'word_start' => $sId[2],
                     'word_end' => $sId[3],
                     'channel_uid' => $this->workChannel['id'],
-                    'content' => $n['content'],
+                    'content' => $n['content'] ?? '',
                     'content_type' => $n['content_type'] ?? 'markdown',
                     'lang' => $this->workChannel['lang'],
                     'status' => $this->workChannel['status'],

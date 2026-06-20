@@ -4,16 +4,18 @@
 
 namespace App\Services;
 
-use OpenSearch\GuzzleClientFactory;
-use Illuminate\Support\Facades\Log;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
-use Exception;
+use Illuminate\Support\Facades\Log;
+use OpenSearch\GuzzleClientFactory;
 
 class OpenSearchService
 {
     protected $client;
+
     protected $http;
+
     protected $openaiApiKey;
 
     /**
@@ -45,24 +47,24 @@ class OpenSearchService
      */
     private $weights = [
         'fuzzy' => [
-            'bold_single'        => 50,
-            'bold_multi'         => 10,
-            'title.text.pali'    => 3,
-            'title.text.zh'      => 3,
-            'summary.text'       => 2,
-            'content.text.pali'  => 1,
-            'content.text.zh'    => 1,
+            'bold_single' => 50,
+            'bold_multi' => 10,
+            'title.text.pali' => 3,
+            'title.text.zh' => 3,
+            'summary.text' => 2,
+            'content.text.pali' => 1,
+            'content.text.zh' => 1,
         ],
         'hybrid' => [
-            'fuzzy_ratio'        => 0.7,
-            'semantic_ratio'     => 0.3,
-            'bold_single'        => 50,
-            'bold_multi'         => 10,
-            'title.text.pali'    => 3,
-            'title.text.zh'      => 3,
-            'summary.text'       => 2,
-            'content.text.pali'  => 1,
-            'content.text.zh'    => 1,
+            'fuzzy_ratio' => 0.7,
+            'semantic_ratio' => 0.3,
+            'bold_single' => 50,
+            'bold_multi' => 10,
+            'title.text.pali' => 3,
+            'title.text.zh' => 3,
+            'summary.text' => 2,
+            'content.text.pali' => 1,
+            'content.text.zh' => 1,
         ],
     ];
 
@@ -105,54 +107,54 @@ class OpenSearchService
                 'analyzer' => [
                     'pali_query_analyzer' => [
                         'tokenizer' => 'standard',
-                        'filter'    => ['lowercase', 'pali_synonyms'],
+                        'filter' => ['lowercase', 'pali_synonyms'],
                     ],
                     'pali_index_analyzer' => [
-                        'type'        => 'custom',
-                        'tokenizer'   => 'standard',
+                        'type' => 'custom',
+                        'tokenizer' => 'standard',
                         'char_filter' => ['markdown_strip'],
-                        'filter'      => ['lowercase'],
+                        'filter' => ['lowercase'],
                     ],
                     'markdown_clean' => [
-                        'type'        => 'custom',
-                        'tokenizer'   => 'standard',
+                        'type' => 'custom',
+                        'tokenizer' => 'standard',
                         'char_filter' => ['markdown_strip'],
-                        'filter'      => ['lowercase'],
+                        'filter' => ['lowercase'],
                     ],
                     // Suggest 专用（忽略大小写 + 变音）
                     'pali_suggest_analyzer' => [
                         'tokenizer' => 'standard',
-                        'filter'    => ['lowercase', 'asciifolding'],
+                        'filter' => ['lowercase', 'asciifolding'],
                     ],
                     'zh_suggest_analyzer' => [
-                        'tokenizer'   => 'ik_max_word',
+                        'tokenizer' => 'ik_max_word',
                         'char_filter' => ['tsconvert'],
                     ],
                     // 中文简繁统一 (繁 -> 简)
                     'zh_index_analyzer' => [
-                        'tokenizer'   => 'ik_max_word',
+                        'tokenizer' => 'ik_max_word',
                         'char_filter' => ['tsconvert'],
                     ],
                     'zh_query_analyzer' => [
-                        'tokenizer'   => 'ik_smart',
+                        'tokenizer' => 'ik_smart',
                         'char_filter' => ['tsconvert'],
                     ],
                 ],
                 'filter' => [
                     'pali_synonyms' => [
-                        'type'           => 'synonym_graph',
-                        'synonyms_path'  => 'analysis/pali_synonyms.txt',
-                        'updateable'     => true,
+                        'type' => 'synonym_graph',
+                        'synonyms_path' => 'analysis/pali_synonyms.txt',
+                        'updateable' => true,
                     ],
                 ],
                 'char_filter' => [
                     'markdown_strip' => [
-                        'type'        => 'pattern_replace',
-                        'pattern'     => '\\*\\*|\\*|_|`|~',
+                        'type' => 'pattern_replace',
+                        'pattern' => '\\*\\*|\\*|_|`|~',
                         'replacement' => '',
                     ],
                     'tsconvert' => [
-                        'type'         => 'stconvert',
+                        'type' => 'stconvert',
                         'convert_type' => 't2s',
                     ],
                 ],
@@ -160,9 +162,9 @@ class OpenSearchService
         ],
         'mappings' => [
             'properties' => [
-                'id'            => ['type' => 'keyword'],
-                'resource_id'   => ['type' => 'keyword'],
-                'resource_type' => ['type' => 'keyword'],
+                'id' => ['type' => 'keyword'],
+                'resource_id' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
+                'resource_type' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
 
                 // ----------------------------------------------------------------
                 // title
@@ -176,40 +178,40 @@ class OpenSearchService
                         'text' => [
                             'properties' => [
                                 'pali' => [
-                                    'type'            => 'text',
-                                    'analyzer'        => 'pali_index_analyzer',
+                                    'type' => 'text',
+                                    'analyzer' => 'pali_index_analyzer',
                                     'search_analyzer' => 'pali_query_analyzer',
                                     'fields' => [
                                         'exact' => [
-                                            'type'     => 'text',
+                                            'type' => 'text',
                                             'analyzer' => 'markdown_clean',
                                         ],
                                     ],
                                 ],
                                 'zh' => [
-                                    'type'            => 'text',
-                                    'analyzer'        => 'zh_index_analyzer',
+                                    'type' => 'text',
+                                    'analyzer' => 'zh_index_analyzer',
                                     'search_analyzer' => 'zh_query_analyzer',
                                 ],
                             ],
                         ],
                         'vector' => [
-                            'type'      => 'knn_vector',
+                            'type' => 'knn_vector',
                             'dimension' => 1536,
-                            'method'    => [
-                                'name'       => 'hnsw',
+                            'method' => [
+                                'name' => 'hnsw',
                                 'space_type' => 'innerproduct',
-                                'engine'     => 'faiss',
+                                'engine' => 'faiss',
                             ],
                         ],
                         'suggest' => [
                             'properties' => [
                                 'pali' => [
-                                    'type'     => 'completion',
+                                    'type' => 'completion',
                                     'analyzer' => 'pali_suggest_analyzer',
                                 ],
                                 'zh' => [
-                                    'type'     => 'completion',
+                                    'type' => 'completion',
                                     'analyzer' => 'zh_suggest_analyzer',
                                 ],
                             ],
@@ -225,17 +227,17 @@ class OpenSearchService
                 'summary' => [
                     'properties' => [
                         'text' => [
-                            'type'            => 'text',
-                            'analyzer'        => 'zh_index_analyzer',
+                            'type' => 'text',
+                            'analyzer' => 'zh_index_analyzer',
                             'search_analyzer' => 'zh_query_analyzer',
                         ],
                         'vector' => [
-                            'type'      => 'knn_vector',
+                            'type' => 'knn_vector',
                             'dimension' => 1536,
-                            'method'    => [
-                                'name'       => 'hnsw',
+                            'method' => [
+                                'name' => 'hnsw',
                                 'space_type' => 'innerproduct',
-                                'engine'     => 'faiss',
+                                'engine' => 'faiss',
                             ],
                         ],
                     ],
@@ -254,86 +256,86 @@ class OpenSearchService
                         'text' => [
                             'properties' => [
                                 'pali' => [
-                                    'type'            => 'text',
-                                    'analyzer'        => 'pali_index_analyzer',
+                                    'type' => 'text',
+                                    'analyzer' => 'pali_index_analyzer',
                                     'search_analyzer' => 'pali_query_analyzer',
                                     'fields' => [
                                         'exact' => [
-                                            'type'     => 'text',
+                                            'type' => 'text',
                                             'analyzer' => 'markdown_clean',
                                         ],
                                     ],
                                 ],
                                 'zh' => [
-                                    'type'            => 'text',
-                                    'analyzer'        => 'zh_index_analyzer',
+                                    'type' => 'text',
+                                    'analyzer' => 'zh_index_analyzer',
                                     'search_analyzer' => 'zh_query_analyzer',
                                 ],
                             ],
                         ],
                         'tokens' => [
-                            'type'       => 'nested',
+                            'type' => 'nested',
                             'properties' => [
-                                'surface'        => ['type' => 'keyword'],
-                                'lemma'          => ['type' => 'keyword'],
+                                'surface' => ['type' => 'keyword'],
+                                'lemma' => ['type' => 'keyword'],
                                 'compound_parts' => ['type' => 'keyword'],
-                                'case'           => ['type' => 'keyword'],
+                                'case' => ['type' => 'keyword'],
                             ],
                         ],
                         'vector' => [
-                            'type'      => 'knn_vector',
+                            'type' => 'knn_vector',
                             'dimension' => 1536,
-                            'method'    => [
-                                'name'       => 'hnsw',
+                            'method' => [
+                                'name' => 'hnsw',
                                 'space_type' => 'innerproduct',
-                                'engine'     => 'faiss',
+                                'engine' => 'faiss',
                             ],
                         ],
                         'suggest' => [
                             'properties' => [
                                 'pali' => [
-                                    'type'     => 'completion',
+                                    'type' => 'completion',
                                     'analyzer' => 'pali_suggest_analyzer',
                                 ],
                                 'zh' => [
-                                    'type'     => 'completion',
+                                    'type' => 'completion',
                                     'analyzer' => 'zh_suggest_analyzer',
                                 ],
                             ],
                         ],
                         // 前端展示用，原始 HTML，不参与索引
                         'display' => [
-                            'type'         => 'text',
-                            'index'        => false,
+                            'type' => 'text',
+                            'index' => false,
                         ],
                     ],
                 ],
 
-                'related_id'  => ['type' => 'keyword'],
+                'related_id' => ['type' => 'keyword'],
                 'bold_single' => [
-                    'type'            => 'text',
-                    'analyzer'        => 'standard',
+                    'type' => 'text',
+                    'analyzer' => 'standard',
                     'search_analyzer' => 'pali_query_analyzer',
                 ],
                 'bold_multi' => [
-                    'type'            => 'text',
-                    'analyzer'        => 'standard',
+                    'type' => 'text',
+                    'analyzer' => 'standard',
                     'search_analyzer' => 'pali_query_analyzer',
                 ],
-                'path'      => ['type' => 'text', 'analyzer' => 'standard'],
+                'path' => ['type' => 'text', 'analyzer' => 'standard'],
                 'page_refs' => ['type' => 'keyword'],
-                'tags'      => ['type' => 'keyword'],
-                'category'  => ['type' => 'keyword'],
-                'author'    => ['type' => 'text'],
-                'language'  => ['type' => 'keyword'],
-                'updated_at'  => ['type' => 'date'],
-                'granularity' => ['type' => 'keyword'],
+                'tags' => ['type' => 'keyword'],
+                'category' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
+                'author' => ['type' => 'text'],
+                'language' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
+                'updated_at' => ['type' => 'date'],
+                'granularity' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
                 'metadata' => [
                     'properties' => [
-                        'APA'     => ['type' => 'text', 'index' => false],
-                        'MLA'     => ['type' => 'text', 'index' => false],
-                        'widget'  => ['type' => 'text', 'index' => false],
-                        'author'  => ['type' => 'text'],
+                        'APA' => ['type' => 'text', 'index' => false],
+                        'MLA' => ['type' => 'text', 'index' => false],
+                        'widget' => ['type' => 'text', 'index' => false],
+                        'author' => ['type' => 'text'],
                         'channel' => ['type' => 'text'],
                     ],
                 ],
@@ -349,28 +351,27 @@ class OpenSearchService
      */
     public function __construct()
     {
-        $config  = config('mint.opensearch.config');
+        $config = config('mint.opensearch.config');
         $hostUrl = "{$config['scheme']}://{$config['host']}:{$config['port']}";
 
-        $this->client = (new GuzzleClientFactory())->create([
+        $this->client = (new GuzzleClientFactory)->create([
             'base_uri' => $hostUrl,
-            'auth'     => [$config['username'], $config['password']],
-            'verify'   => $config['ssl_verification'],
+            'auth' => [$config['username'], $config['password']],
+            'verify' => $config['ssl_verification'],
         ]);
 
         $this->openaiApiKey = env('OPENAI_API_KEY');
         $this->http = new Client([
             'base_uri' => 'https://api.openai.com/v1/',
-            'timeout'  => 15,
+            'timeout' => 15,
         ]);
     }
 
     /**
      * 动态覆盖指定搜索模式的字段权重
      *
-     * @param  string  $mode     搜索模式，支持 'fuzzy' | 'hybrid'
-     * @param  array   $weights  需要覆盖的权重键值对，例如：['title.text.pali' => 5]
-     * @return void
+     * @param  string  $mode  搜索模式，支持 'fuzzy' | 'hybrid'
+     * @param  array  $weights  需要覆盖的权重键值对，例如：['title.text.pali' => 5]
      */
     public function setWeights(string $mode, array $weights): void
     {
@@ -382,30 +383,31 @@ class OpenSearchService
     /**
      * 测试与 OpenSearch 集群的连接状态
      *
-     * @return array{0: bool, 1: string}  [连接是否成功, 描述信息]
+     * @return array{0: bool, 1: string} [连接是否成功, 描述信息]
      */
     public function testConnection(): array
     {
         try {
-            $info    = $this->client->info();
-            $message = 'OpenSearch 连接成功: ' . json_encode($info['version']['number']);
+            $info = $this->client->info();
+            $message = 'OpenSearch 连接成功: '.json_encode($info['version']['number']);
             Log::info($message);
+
             return [true, $message];
-        } catch (\Exception $e) {
-            $message = 'OpenSearch 连接失败: ' . $e->getMessage();
+        } catch (Exception $e) {
+            $message = 'OpenSearch 连接失败: '.$e->getMessage();
             Log::error($message);
+
             return [false, $message];
         }
     }
 
     /**
      * 检查当前索引是否已存在
-     *
-     * @return bool
      */
     public function indexExists(): bool
     {
         $index = config('mint.opensearch.index');
+
         return $this->client->indices()->exists(['index' => $index]);
     }
 
@@ -417,20 +419,20 @@ class OpenSearchService
      *
      * @return array OpenSearch 响应
      *
-     * @throws \Exception 索引已存在时抛出
+     * @throws Exception 索引已存在时抛出
      */
     public function createIndex(): array
     {
-        $index  = config('mint.opensearch.index');
+        $index = config('mint.opensearch.index');
         $exists = $this->client->indices()->exists(['index' => $index]);
 
         if ($exists) {
-            throw new \Exception("Index [$index] already exists.");
+            throw new Exception("Index [$index] already exists.");
         }
 
         return $this->client->indices()->create([
             'index' => $index,
-            'body'  => $this->indexDefinition,
+            'body' => $this->indexDefinition,
         ]);
     }
 
@@ -440,28 +442,28 @@ class OpenSearchService
      * 更新 settings 时会临时关闭索引（close → putSettings → open），
      * 更新 mappings 支持热更新（新增字段），不可修改已有字段类型。
      *
-     * @return array  包含 'settings' 和/或 'mappings' 的响应数组
+     * @return array 包含 'settings' 和/或 'mappings' 的响应数组
      */
     public function updateIndex(): array
     {
-        $index    = config('mint.opensearch.index');
+        $index = config('mint.opensearch.index');
         $settings = $this->indexDefinition['settings'] ?? [];
         $mappings = $this->indexDefinition['mappings'] ?? [];
         $response = [];
 
-        if (!empty($settings)) {
+        if (! empty($settings)) {
             $this->client->indices()->close(['index' => $index]);
             $response['settings'] = $this->client->indices()->putSettings([
                 'index' => $index,
-                'body'  => ['settings' => $settings],
+                'body' => ['settings' => $settings],
             ]);
             $this->client->indices()->open(['index' => $index]);
         }
 
-        if (!empty($mappings)) {
+        if (! empty($mappings)) {
             $response['mappings'] = $this->client->indices()->putMapping([
                 'index' => $index,
-                'body'  => $mappings,
+                'body' => $mappings,
             ]);
         }
 
@@ -476,6 +478,7 @@ class OpenSearchService
     public function deleteIndex(): array
     {
         $index = config('mint.opensearch.index');
+
         return $this->client->indices()->delete(['index' => $index]);
     }
 
@@ -484,10 +487,10 @@ class OpenSearchService
      *
      * @param  array|null  $query  OpenSearch DSL query 子句，为 null 时统计全部文档。
      *                             示例：['term' => ['language' => 'zh']]
-     *                                   ['exists' => ['field' => 'content.vector']]
-     * @return int  文档总数
+     *                             ['exists' => ['field' => 'content.vector']]
+     * @return int 文档总数
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @example
      *   $service->count();
@@ -495,10 +498,10 @@ class OpenSearchService
      */
     public function count(?array $query = null): int
     {
-        $index  = config('mint.opensearch.index');
+        $index = config('mint.opensearch.index');
         $params = ['index' => $index];
 
-        if (!empty($query)) {
+        if (! empty($query)) {
             $params['body'] = ['query' => $query];
         }
 
@@ -510,16 +513,16 @@ class OpenSearchService
     /**
      * 写入或覆盖单条文档
      *
-     * @param  string  $id    文档 ID
-     * @param  array   $body  文档内容，字段结构须与 mappings 一致
-     * @return array   OpenSearch 响应
+     * @param  string  $id  文档 ID
+     * @param  array  $body  文档内容，字段结构须与 mappings 一致
+     * @return array OpenSearch 响应
      */
     public function create(string $id, array $body): array
     {
         return $this->client->index([
             'index' => config('mint.opensearch.index'),
-            'id'    => $id,
-            'body'  => $body,
+            'id' => $id,
+            'body' => $body,
         ]);
     }
 
@@ -527,13 +530,13 @@ class OpenSearchService
      * 删除单条文档
      *
      * @param  string  $id  文档 ID
-     * @return array   OpenSearch 响应
+     * @return array OpenSearch 响应
      */
     public function delete(string $id): array
     {
         return $this->client->delete([
             'index' => config('mint.opensearch.index'),
-            'id'    => $id,
+            'id' => $id,
         ]);
     }
 
@@ -551,36 +554,38 @@ class OpenSearchService
      *   tags, pageRefs, relatedId, author, channel
      *
      * @param  array  $params  {
-     *   @type string      $query              搜索关键词（必填）
-     *   @type string      $searchMode         搜索模式，默认 'fuzzy'
-     *   @type int         $page               页码，默认 1
-     *   @type int         $pageSize           每页条数，默认 20
-     *   @type string      $resourceType       按资源类型过滤
-     *   @type string      $resourceId         按资源 ID 过滤
-     *   @type string      $granularity        按粒度过滤
-     *   @type string      $language           按语言过滤
-     *   @type string      $category           按分类过滤
-     *   @type array       $tags               按标签过滤（terms）
-     *   @type array       $pageRefs           按页码引用过滤（terms）
-     *   @type string      $relatedId          按关联 ID 过滤
-     *   @type string      $author             按作者过滤
-     *   @type string      $channel            按频道过滤
-     *   @type array       $highlight_pre_tags 高亮前置标签，默认 ['<mark>']
-     *   @type array       $highlight_post_tags 高亮后置标签，默认 ['</mark>']
-     * }
-     * @return array  OpenSearch 原始响应
      *
-     * @throws \Exception  semantic / hybrid 模式下 embedding 调用失败时抛出
+     * @type string $query              搜索关键词（必填）
+     * @type string $searchMode         搜索模式，默认 'fuzzy'
+     * @type int $page               页码，默认 1
+     * @type int $pageSize           每页条数，默认 20
+     * @type string $resourceType       按资源类型过滤
+     * @type string $resourceId         按资源 ID 过滤
+     * @type string $granularity        按粒度过滤
+     * @type string $language           按语言过滤
+     * @type string $category           按分类过滤
+     * @type array $tags               按标签过滤（terms）
+     * @type array $pageRefs           按页码引用过滤（terms）
+     * @type string $relatedId          按关联 ID 过滤
+     * @type string $author             按作者过滤
+     * @type string $channel            按频道过滤
+     * @type array $highlight_pre_tags 高亮前置标签，默认 ['<mark>']
+     * @type array $highlight_post_tags 高亮后置标签，默认 ['</mark>']
+     *             }
+     *
+     * @return array OpenSearch 原始响应
+     *
+     * @throws Exception semantic / hybrid 模式下 embedding 调用失败时抛出
      */
     public function search(array $params): array
     {
-        $page     = $params['page'] ?? 1;
+        $page = $params['page'] ?? 1;
         $pageSize = $params['pageSize'] ?? 20;
-        $from     = ($page - 1) * $pageSize;
-        $mode     = $params['searchMode'] ?? 'fuzzy';
+        $from = ($page - 1) * $pageSize;
+        $mode = $params['searchMode'] ?? 'fuzzy';
 
         // 排除字段
-        if (!empty($params['excludes']) && is_array($params['excludes'])) {
+        if (! empty($params['excludes']) && is_array($params['excludes'])) {
             $excludes = array_merge($this->sourceExcludes, $params['excludes']);
         } else {
             $excludes = $this->sourceExcludes;
@@ -589,23 +594,23 @@ class OpenSearchService
         // ---------- 过滤条件 ----------
         $filters = [];
 
-        if (!empty($params['resourceType'])) {
-            $filters[] = ['term' => ['resource_type' => $params['resourceType']]];
+        if (! empty($params['resourceType'])) {
+            $filters[] = ['term' => ['resource_type.keyword' => $params['resourceType']]];
         }
 
-        if (!empty($params['resourceId'])) {
-            $filters[] = ['term' => ['resource_id' => $params['resourceId']]];
+        if (! empty($params['resourceId'])) {
+            $filters[] = ['term' => ['resource_id.keyword' => $params['resourceId']]];
         }
 
-        if (!empty($params['granularity'])) {
-            $filters[] = ['term' => ['granularity' => $params['granularity']]];
+        if (! empty($params['granularity'])) {
+            $filters[] = ['term' => ['granularity.keyword' => $params['granularity']]];
         }
 
-        if (!empty($params['language'])) {
-            $filters[] = ['term' => ['language' => $params['language']]];
+        if (! empty($params['language'])) {
+            $filters[] = ['term' => ['language.keyword' => $params['language']]];
         }
 
-        if (!empty($params['category'])) {
+        if (! empty($params['category'])) {
             if (is_array($params['category'])) {
                 $categories = $params['category'];
             } else {
@@ -614,27 +619,27 @@ class OpenSearchService
 
             // 必须匹配全部：为每个 category 创建一个 term 条件
             foreach ($categories as $category) {
-                $filters[] = ['term' => ['category' => $category]];
+                $filters[] = ['term' => ['category.keyword' => $category]];
             }
         }
 
-        if (!empty($params['tags'])) {
+        if (! empty($params['tags'])) {
             $filters[] = ['terms' => ['tags' => $params['tags']]];
         }
 
-        if (!empty($params['pageRefs'])) {
+        if (! empty($params['pageRefs'])) {
             $filters[] = ['terms' => ['page_refs' => $params['pageRefs']]];
         }
 
-        if (!empty($params['relatedId'])) {
+        if (! empty($params['relatedId'])) {
             $filters[] = ['term' => ['related_id' => $params['relatedId']]];
         }
 
-        if (!empty($params['author'])) {
+        if (! empty($params['author'])) {
             $filters[] = ['match' => ['metadata.author' => $params['author']]];
         }
 
-        if (!empty($params['channel'])) {
+        if (! empty($params['channel'])) {
             $filters[] = ['term' => ['metadata.channel' => $params['channel']]];
         }
 
@@ -642,7 +647,7 @@ class OpenSearchService
         $queryText = trim($params['query'] ?? '');
 
         if ($queryText === '') {
-            $query = ['match_all' => new \stdClass()];
+            $query = ['match_all' => new \stdClass];
         } else {
             switch ($mode) {
                 case 'exact':
@@ -664,34 +669,34 @@ class OpenSearchService
             }
         }
 
-        $highlightPreTags  = $params['highlight_pre_tags'] ?? ['<mark>'];
+        $highlightPreTags = $params['highlight_pre_tags'] ?? ['<mark>'];
         $highlightPostTags = $params['highlight_post_tags'] ?? ['</mark>'];
 
         // ---------- 最终 DSL ----------
         $dsl = [
-            'from'    => $from,
-            'size'    => $pageSize,
+            'from' => $from,
+            'size' => $pageSize,
             '_source' => ['excludes' => $excludes],
-            'query'   => !empty($filters)
+            'query' => ! empty($filters)
                 ? [
                     'bool' => [
-                        'must'   => [$query],
+                        'must' => [$query],
                         'filter' => $filters,
-                    ]
+                    ],
                 ]
                 : $query,
             'aggs' => [
                 'resource_type' => [
-                    'terms' => ['field' => 'resource_type']
+                    'terms' => ['field' => 'resource_type.keyword'],
                 ],
                 'language' => [
-                    'terms' => ['field' => 'language']
+                    'terms' => ['field' => 'language.keyword'],
                 ],
                 'category' => [
-                    'terms' => ['field' => 'category']
+                    'terms' => ['field' => 'category.keyword'],
                 ],
                 'granularity' => [
-                    'terms' => ['field' => 'granularity']
+                    'terms' => ['field' => 'granularity.keyword'],
                 ],
             ],
         ];
@@ -700,17 +705,17 @@ class OpenSearchService
         if ($queryText !== '') {
             $dsl['highlight'] = [
                 'fields' => [
-                    'title.text.pali'   => new \stdClass(),
-                    'title.text.zh'     => new \stdClass(),
-                    'summary.text'      => new \stdClass(),
-                    'content.text.pali' => new \stdClass(),
-                    'content.text.zh'   => new \stdClass(),
+                    'title.text.pali' => new \stdClass,
+                    'title.text.zh' => new \stdClass,
+                    'summary.text' => new \stdClass,
+                    'content.text.pali' => new \stdClass,
+                    'content.text.zh' => new \stdClass,
                 ],
-                'fragmenter'          => 'sentence',
-                'fragment_size'       => 200,
+                'fragmenter' => 'sentence',
+                'fragment_size' => 200,
                 'number_of_fragments' => 1,
-                'pre_tags'            => $highlightPreTags,
-                'post_tags'           => $highlightPostTags,
+                'pre_tags' => $highlightPreTags,
+                'post_tags' => $highlightPostTags,
             ];
         }
 
@@ -721,7 +726,7 @@ class OpenSearchService
 
         return $this->client->search([
             'index' => config('mint.opensearch.index'),
-            'body'  => $dsl,
+            'body' => $dsl,
         ]);
     }
 
@@ -734,13 +739,13 @@ class OpenSearchService
      * 查询字段：title.text.pali.exact, content.text.pali.exact, summary.text
      *
      * @param  string  $query  搜索关键词
-     * @return array   OpenSearch DSL query 片段
+     * @return array OpenSearch DSL query 片段
      */
     protected function buildExactQuery(string $query): array
     {
         return [
             'multi_match' => [
-                'query'  => $query,
+                'query' => $query,
                 'fields' => [
                     'title.text.pali.exact',
                     'content.text.pali.exact',
@@ -759,9 +764,9 @@ class OpenSearchService
      * 使用 bool should 合并结果。
      *
      * @param  string  $query  搜索关键词
-     * @return array   OpenSearch DSL query 片段
+     * @return array OpenSearch DSL query 片段
      *
-     * @throws \Exception  embedding 调用失败时抛出
+     * @throws Exception embedding 调用失败时抛出
      */
     protected function buildSemanticQuery(string $query): array
     {
@@ -772,7 +777,7 @@ class OpenSearchService
                 'should' => [
                     ['knn' => ['content.vector' => ['vector' => $vector, 'k' => 20]]],
                     ['knn' => ['summary.vector' => ['vector' => $vector, 'k' => 10]]],
-                    ['knn' => ['title.vector'   => ['vector' => $vector, 'k' => 5]]],
+                    ['knn' => ['title.vector' => ['vector' => $vector, 'k' => 5]]],
                 ],
                 'minimum_should_match' => 1,
             ],
@@ -786,20 +791,20 @@ class OpenSearchService
      * 字段权重取自 $weights['fuzzy']。
      *
      * @param  string  $query  搜索关键词
-     * @return array   OpenSearch DSL query 片段
+     * @return array OpenSearch DSL query 片段
      */
     protected function buildFuzzyQuery(string $query): array
     {
         $fields = [];
         foreach ($this->weights['fuzzy'] as $field => $weight) {
-            $fields[] = $field . '^' . $weight;
+            $fields[] = $field.'^'.$weight;
         }
 
         return [
             'multi_match' => [
-                'query'  => $query,
+                'query' => $query,
                 'fields' => $fields,
-                'type'   => 'best_fields',
+                'type' => 'best_fields',
             ],
         ];
     }
@@ -812,9 +817,9 @@ class OpenSearchService
      * title.vector 的语义权重略高（×1.2），以提升标题匹配的排名。
      *
      * @param  string  $query  搜索关键词
-     * @return array   OpenSearch DSL query 片段
+     * @return array OpenSearch DSL query 片段
      *
-     * @throws \Exception  embedding 调用失败时抛出
+     * @throws Exception embedding 调用失败时抛出
      */
     protected function buildHybridQuery(string $query): array
     {
@@ -823,19 +828,19 @@ class OpenSearchService
             if (in_array($field, ['fuzzy_ratio', 'semantic_ratio'])) {
                 continue;
             }
-            $fuzzyFields[] = $field . '^' . $weight;
+            $fuzzyFields[] = $field.'^'.$weight;
         }
 
         $fuzzyPart = [
             'multi_match' => [
-                'query'  => $query,
+                'query' => $query,
                 'fields' => $fuzzyFields,
-                'type'   => 'best_fields',
+                'type' => 'best_fields',
             ],
         ];
 
-        $vector        = $this->embedText($query);
-        $fuzzyRatio    = $this->weights['hybrid']['fuzzy_ratio'];
+        $vector = $this->embedText($query);
+        $fuzzyRatio = $this->weights['hybrid']['fuzzy_ratio'];
         $semanticRatio = $this->weights['hybrid']['semantic_ratio'];
 
         return [
@@ -844,15 +849,15 @@ class OpenSearchService
                     [
                         'constant_score' => [
                             'filter' => $fuzzyPart,
-                            'boost'  => $fuzzyRatio,
+                            'boost' => $fuzzyRatio,
                         ],
                     ],
                     [
                         'knn' => [
                             'content.vector' => [
                                 'vector' => $vector,
-                                'k'      => 20,
-                                'boost'  => $semanticRatio * 1.0,
+                                'k' => 20,
+                                'boost' => $semanticRatio * 1.0,
                             ],
                         ],
                     ],
@@ -860,8 +865,8 @@ class OpenSearchService
                         'knn' => [
                             'summary.vector' => [
                                 'vector' => $vector,
-                                'k'      => 10,
-                                'boost'  => $semanticRatio * 0.8,
+                                'k' => 10,
+                                'boost' => $semanticRatio * 0.8,
                             ],
                         ],
                     ],
@@ -869,8 +874,8 @@ class OpenSearchService
                         'knn' => [
                             'title.vector' => [
                                 'vector' => $vector,
-                                'k'      => 5,
-                                'boost'  => $semanticRatio * 1.2, // title 权重略高
+                                'k' => 5,
+                                'boost' => $semanticRatio * 1.2, // title 权重略高
                             ],
                         ],
                     ],
@@ -886,23 +891,23 @@ class OpenSearchService
      * 缓存 key 格式为 "embedding:{md5(text)}"。
      *
      * @param  string  $text  输入文本
-     * @return array   1536 维 float 向量
+     * @return array 1536 维 float 向量
      *
-     * @throws \Exception  未设置 OPENAI_API_KEY 或 API 返回异常时抛出
+     * @throws Exception 未设置 OPENAI_API_KEY 或 API 返回异常时抛出
      */
     protected function embedText(string $text): array
     {
-        if (!$this->openaiApiKey) {
+        if (! $this->openaiApiKey) {
             throw new Exception('请在 .env 设置 OPENAI_API_KEY');
         }
 
-        $cacheKey = 'embedding:' . md5($text);
+        $cacheKey = 'embedding:'.md5($text);
 
         return Cache::remember($cacheKey, now()->addDays(7), function () use ($text) {
             $response = $this->http->post('embeddings', [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $this->openaiApiKey,
-                    'Content-Type'  => 'application/json',
+                    'Authorization' => 'Bearer '.$this->openaiApiKey,
+                    'Content-Type' => 'application/json',
                 ],
                 'json' => [
                     'model' => 'text-embedding-3-small',
@@ -913,7 +918,7 @@ class OpenSearchService
             $json = json_decode((string) $response->getBody(), true);
 
             if (empty($json['data'][0]['embedding'])) {
-                throw new Exception('OpenAI embedding 返回异常: ' . json_encode($json));
+                throw new Exception('OpenAI embedding 返回异常: '.json_encode($json));
             }
 
             return $json['data'][0]['embedding'];
@@ -924,14 +929,15 @@ class OpenSearchService
      * 清除指定文本的 embedding 缓存
      *
      * @param  string  $text  原始文本（与调用 embedText 时一致）
-     * @return bool    缓存是否成功删除
+     * @return bool 缓存是否成功删除
      *
      * @example
      *   $service->clearEmbeddingCache('sabbe dhammā anattā');
      */
     public function clearEmbeddingCache(string $text): bool
     {
-        $cacheKey = 'embedding:' . md5($text);
+        $cacheKey = 'embedding:'.md5($text);
+
         return Cache::forget($cacheKey);
     }
 
@@ -940,7 +946,7 @@ class OpenSearchService
      *
      * 匹配 "embedding:*" 模式的全部键，生产环境请谨慎调用。
      *
-     * @return int  已删除的缓存条数
+     * @return int 已删除的缓存条数
      *
      * @example
      *   $count = $service->clearAllEmbeddingCache();
@@ -948,10 +954,10 @@ class OpenSearchService
      */
     public function clearAllEmbeddingCache(): int
     {
-        $redis   = Cache::getRedis();
-        $keys    = $redis->keys('embedding:*');
+        $redis = Cache::getRedis();
+        $keys = $redis->keys('embedding:*');
 
-        if (!empty($keys)) {
+        if (! empty($keys)) {
             $redis->del($keys);
         }
 
@@ -970,14 +976,14 @@ class OpenSearchService
      *   - 'content_pali'  → content.suggest.pali
      *   - 'content_zh'    → content.suggest.zh
      *
-     * @param  string            $query     查询前缀文本
-     * @param  array|string|null $fields    要查询的字段标识符，null 表示全部字段
-     * @param  string|null       $language  可选的语言过滤（term query）
-     * @param  int               $limit     每个字段返回的建议数量，默认 10
-     * @return array  建议结果列表，每项包含：
-     *                text, source（字段标识符）, score, doc_id, doc_source
+     * @param  string  $query  查询前缀文本
+     * @param  array|string|null  $fields  要查询的字段标识符，null 表示全部字段
+     * @param  string|null  $language  可选的语言过滤（term query）
+     * @param  int  $limit  每个字段返回的建议数量，默认 10
+     * @return array 建议结果列表，每项包含：
+     *               text, source（字段标识符）, score, doc_id, doc_source
      *
-     * @throws \InvalidArgumentException  $fields 中含无效字段标识符时抛出
+     * @throws \InvalidArgumentException $fields 中含无效字段标识符时抛出
      *
      * @example
      *   // 查询所有字段
@@ -997,10 +1003,10 @@ class OpenSearchService
     ): array {
         // 字段标识符 → OpenSearch completion 字段路径
         $fieldMap = [
-            'title_pali'   => 'title.suggest.pali',
-            'title_zh'     => 'title.suggest.zh',
+            'title_pali' => 'title.suggest.pali',
+            'title_zh' => 'title.suggest.zh',
             'content_pali' => 'content.suggest.pali',
-            'content_zh'   => 'content.suggest.zh',
+            'content_zh' => 'content.suggest.zh',
         ];
 
         // 处理字段参数
@@ -1015,7 +1021,7 @@ class OpenSearchService
         // 过滤无效字段
         $searchFields = array_values(array_filter(
             $searchFields,
-            fn($field) => isset($fieldMap[$field])
+            fn ($field) => isset($fieldMap[$field])
         ));
 
         if (empty($searchFields)) {
@@ -1025,12 +1031,12 @@ class OpenSearchService
         // 构建 suggest DSL
         $suggests = [];
         foreach ($searchFields as $field) {
-            $suggests[$field . '_suggest'] = [
-                'prefix'     => $query,
+            $suggests[$field.'_suggest'] = [
+                'prefix' => $query,
                 'completion' => [
-                    'field'            => $fieldMap[$field],
-                    'size'             => $limit,
-                    'skip_duplicates'  => true,
+                    'field' => $fieldMap[$field],
+                    'size' => $limit,
+                    'skip_duplicates' => true,
                 ],
             ];
         }
@@ -1038,32 +1044,32 @@ class OpenSearchService
         $dsl = ['suggest' => $suggests];
 
         if ($language) {
-            $dsl['query'] = ['term' => ['language' => $language]];
+            $dsl['query'] = ['term' => ['language.keyword' => $language]];
         }
 
         $response = $this->client->search([
             'index' => config('mint.opensearch.index'),
-            'body'  => $dsl,
+            'body' => $dsl,
         ]);
 
         // 整理结果，附加来源字段
         $results = [];
         foreach ($searchFields as $field) {
-            $options = $response['suggest'][$field . '_suggest'][0]['options'] ?? [];
+            $options = $response['suggest'][$field.'_suggest'][0]['options'] ?? [];
 
             foreach ($options as $opt) {
                 $results[] = [
-                    'text'       => $opt['text']    ?? '',
-                    'source'     => $field,
-                    'score'      => $opt['_score']  ?? 0,
-                    'doc_id'     => $opt['_id']     ?? null,
+                    'text' => $opt['text'] ?? '',
+                    'source' => $field,
+                    'score' => $opt['_score'] ?? 0,
+                    'doc_id' => $opt['_id'] ?? null,
                     'doc_source' => $opt['_source'] ?? null,
                 ];
             }
         }
 
         // 按分数降序排序
-        usort($results, fn($a, $b) => $b['score'] <=> $a['score']);
+        usort($results, fn ($a, $b) => $b['score'] <=> $a['score']);
 
         return $results;
     }
@@ -1072,13 +1078,13 @@ class OpenSearchService
      * 按文档 ID 获取单条完整文档（包含 content.display）
      *
      * @param  string  $id  文档 ID，例如 "term_{guid}"
-     * @return array   OpenSearch 原始响应
+     * @return array OpenSearch 原始响应
      */
     public function get(string $id): array
     {
         return $this->client->get([
             'index' => config('mint.opensearch.index'),
-            'id'    => $id,
+            'id' => $id,
         ]);
     }
 }
