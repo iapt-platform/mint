@@ -19,6 +19,8 @@ class AITermService
 
     protected $modelToken;
 
+    protected ?bool $thinking = null;
+
     private $sysPrompt = <<<'md'
     请根据提供的文献搜素结果，撰写一个巴利术语的简体中文百科词条。
 
@@ -221,6 +223,16 @@ class AITermService
         return $this;
     }
 
+    /**
+     * 设置 deepseek thinking 开关；null 表示不显式设置，沿用模型默认。
+     */
+    public function setThinking(?bool $thinking): static
+    {
+        $this->thinking = $thinking;
+
+        return $this;
+    }
+
     private function query(string $word): array
     {
         $search = app(OpenSearchService::class);
@@ -245,7 +257,7 @@ class AITermService
                 'link' => $item->getParaLink(),
             ];
         }
-        Log::debug('query ' . count($res));
+        Log::debug('query '.count($res));
 
         return $res;
     }
@@ -289,21 +301,24 @@ class AITermService
         $resText = "# 搜索结果\n```json\n{$res}\n```\n";
         $termText = "# 巴利术语\n\n{$word}\n\n";
         // LLM 生成
-        $response = $this->openAIService->setApiUrl($this->model['url'])
+        $llm = $this->openAIService->setApiUrl($this->model['url'])
             ->setModel($this->model['model'])
             ->setApiKey($this->model['key'])
             ->setSystemPrompt($this->sysPrompt)
             ->setTemperature(0.5)
-            ->setStream(false)
-            ->send($resText . $termText);
+            ->setStream(false);
+        if ($this->thinking !== null) {
+            $llm = $llm->setThinking($this->thinking);
+        }
+        $response = $llm->send($resText.$termText);
 
         $content = $response['choices'][0]['message']['content'] ?? '';
-        $content = str_replace("{{quality|pending}}\n", "{{quality|pending}}", $content);
+        $content = str_replace("{{quality|pending}}\n", '{{quality|pending}}', $content);
         // 输出自检报告
         Log::debug('llm response', ['strlen' => $content]);
         $paraIds = $this->extractAllParaIds($content);
         Log::debug('has paragraph ref ', ['total' => count($paraIds), 'id' => $paraIds]);
-        $searchPid = array_map(fn($item) => $item['pid'], $query);
+        $searchPid = array_map(fn ($item) => $item['pid'], $query);
         $diff = array_values(array_diff($paraIds, $searchPid));
         Log::debug('diff', ['total' => count($diff), 'data' => $diff]);
 
@@ -320,13 +335,16 @@ class AITermService
         $termText = "# 巴利术语\n\n{$word}\n\n";
         $noteText = "# 百科词条正文\n\n{$content}\n";
 
-        $response = $this->openAIService->setApiUrl($this->model['url'])
+        $llm = $this->openAIService->setApiUrl($this->model['url'])
             ->setModel($this->model['model'])
             ->setApiKey($this->model['key'])
             ->setSystemPrompt($this->sysPromptMeaning)
             ->setTemperature(0.3)
-            ->setStream(false)
-            ->send($termText . $noteText);
+            ->setStream(false);
+        if ($this->thinking !== null) {
+            $llm = $llm->setThinking($this->thinking);
+        }
+        $response = $llm->send($termText.$noteText);
 
         $meaning = trim($response['choices'][0]['message']['content'] ?? '');
 
