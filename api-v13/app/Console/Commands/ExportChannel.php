@@ -47,7 +47,7 @@ class ExportChannel extends Command
         if (\App\Tools\Tools::isStop()) {
             return 0;
         }
-        Log::debug('task export offline channel-table start');
+        $this->info('task export offline channel-table start');
         $exportFile = storage_path('app/public/export/offline/' . $this->argument('db') . '-' . date("Y-m-d") . '.db3');
         $dbh = new \PDO('sqlite:' . $exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
@@ -62,10 +62,8 @@ class ExportChannel extends Command
             Log::error($e->getMessage(), ['exception' => $e]);
             return 1;
         }
-
-        $bar = $this->output->createProgressBar(Channel::where('status', 30)->count());
-        foreach (
-            Channel::where('status', 30)
+        $total = Channel::where('status', 30)->count();
+        $channels= Channel::where('status', 30)
                 ->select([
                     'uid',
                     'name',
@@ -76,8 +74,9 @@ class ExportChannel extends Command
                     'setting',
                     'created_at'
                 ])
-                ->cursor() as $row
-        ) {
+                ->cursor();
+
+        foreach ($channels as $key => $row  ) {
             $currData = array(
                 $row->uid,
                 $row->name,
@@ -89,11 +88,14 @@ class ExportChannel extends Command
                 $row->created_at,
             );
             $stmt->execute($currData);
-            $bar->advance();
+
+            if($key % 30 ===0){
+                $precent = (int)($key*100/$total);
+                $this->line("[{$precent}%]");
+            }
         }
         $dbh->commit();
-        $bar->finish();
-        Log::debug('task export offline channel-table finished');
+        $this->info('task export offline channel-table finished');
         return 0;
     }
 }
