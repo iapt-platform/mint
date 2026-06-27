@@ -15,7 +15,7 @@ class ExportOffline extends Command
      * php artisan export:offline lzma
      * @var string
      */
-    protected $signature = 'export:offline {format?  : zip file format 7z,lzma,gz } {--shortcut}  {--driver=str}';
+    protected $signature = 'export:offline {format?  : zip file format 7z,lzma,gz } {--test}  {--driver=str}';
 
     /**
      * The console command description.
@@ -76,11 +76,10 @@ class ExportOffline extends Command
         $this->call('export:term');
 
         //导出channel
-        $this->info('export channel start');
         $this->call('export:channel', ['db' => 'wikipali-offline']);
         $this->call('export:channel', ['db' => 'wikipali-offline-index']);
 
-        if (!$this->option('shortcut')) {
+        if (!$this->option('test')) {
             //tag
             $this->info('export tag start');
             $this->call('export:tag', ['db' => 'wikipali-offline']);
@@ -100,8 +99,7 @@ class ExportOffline extends Command
             $this->call('export:sentence', ['--type' => 'original', '--driver' => $this->option('driver')]);
         }
 
-        $this->info('zip');
-        Log::info('export offline: db写入完毕 开始压缩');
+        $this->info('export offline: db写入完毕 开始压缩');
 
         sleep(5);
         $this->call('export:zip', [
