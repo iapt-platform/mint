@@ -146,7 +146,7 @@ class UpgradeAITranslation extends Command
         $cacheKey = self::CACHE_KEY_PREFIX.':'.$type.':'.$channelId;
 
         if ($this->option('fresh')) {
-            Cache::forget($cacheKey);
+            //Cache::forget($cacheKey);
             $this->info('Cleared cached cursor.');
         }
 
@@ -154,7 +154,7 @@ class UpgradeAITranslation extends Command
         $isFullRun = ! $this->option('book') && ! $this->option('para');
 
         // 从缓存恢复已完成的 (book, para) 集合，作为重入时的稳定游标
-        $done = Cache::get($cacheKey, []);
+        $done = [];// Cache::get($cacheKey, []);
 
         $books = [];
         if ($this->option('book')) {
@@ -209,7 +209,7 @@ class UpgradeAITranslation extends Command
                 $this->info($this->argument('type')." {$book}-{$paragraph} ".count($data).' sentences time='.$time);
                 // 该处理单元全部写库完成后再标记游标，确保中途中断不会误跳过
                 $done[$cursor] = true;
-                Cache::put($cacheKey, $done, now()->addHours(24));
+                //Cache::put($cacheKey, $done, now()->addHours(24));
             }
 
             $param = [
@@ -236,7 +236,7 @@ class UpgradeAITranslation extends Command
 
         // 完整遍历正常结束，清空断点缓存
         if ($isFullRun) {
-            Cache::forget($cacheKey);
+            //Cache::forget($cacheKey);
         }
 
         return 0;
