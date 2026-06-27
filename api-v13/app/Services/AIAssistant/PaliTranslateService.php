@@ -3,23 +3,27 @@
 namespace App\Services\AIAssistant;
 
 use App\Helpers\LlmResponseParser;
+use App\Http\Api\ChannelApi;
 use App\Http\Resources\AiModelResource;
 use App\Models\PaliSentence;
+use App\Models\PaliText;
 use App\Models\Sentence;
 use App\Services\OpenAIService;
 use App\Services\SearchPaliDataService;
+use App\Services\TermService;
 use Illuminate\Support\Facades\Log;
 
 /**
  * 巴利原文 -> 简体中文 的多步骤翻译工作流。
  *
- * 支持四个步骤，可单独运行或按顺序串联：
+ * 支持五个步骤，可单独运行或按顺序串联：
  * - translate：根据巴利原文产出译文
+ * - term：术语标注，根据 channel/社区术语表把译文中的中文术语替换为 [[巴利术语]] 标记
  * - review：对已有译文打分并给出问题清单（不修改译文）
  * - revise：根据 review 的问题清单产出改进后的译文
  * - evaluate：质量评估，对照原文找出译文的真实问题，按级别就地用 HTML span 标注译文（颜色=严重程度，title=问题+建议），作为工作流最后一步
  *
- * 单独运行 review / revise / evaluate 时，已有译文从输出 channel 读取。
+ * 单独运行 term / review / revise / evaluate 时，已有译文从输出 channel 读取。
  *
  * 工作流自动提取同段落的 nissaya（巴利逐词缅文释义）注入 translate / review / evaluate
  * 作为参考资料（见 PaliNissayaReferenceService）；无 nissaya 数据的段落不受影响。
@@ -29,7 +33,7 @@ class PaliTranslateService
     /**
      * 可用的工作流步骤
      */
-    public const STEPS = ['translate', 'review', 'revise', 'evaluate'];
+    public const STEPS = ['translate', 'term', 'review', 'revise', 'evaluate'];
 
     /**
      * 支持注入 nissaya 参考资料的步骤（revise 基于 review 意见工作，无需 nissaya）
@@ -86,12 +90,44 @@ class PaliTranslateService
         md;
 
     /**
+     * term 步骤的提示词：根据术语表把译文中的中文术语替换为 [[巴利术语]] 标记。
+     */
+    protected string $termPrompt = <<<'md'
+        你是一个巴利语佛教术语标注助手。
+        用户会提供：
+        - pali：巴利原文段落，json，每条记录是一个句子，含 id 和 content 两个字段。
+        - translation：已有的简体中文译文，json，与 pali 通过 id 一一对应。
+        - glossary：巴利语术语表，json 数组，每个元素含 word（巴利术语原形）、meaning（该术语的中文释义）、tag（分类标签）三个字段。
+
+        你的任务：在**不改变译文其他内容**的前提下，把 translation 中对应这些术语的中文词语替换为术语标记 `[[巴利术语原形]]`（双方括号包裹 glossary 中给出的 word 原形），其余内容、措辞、标点、黑体等格式**一字不动**地保留。
+
+        判断与替换规则：
+        1. 只有当某个 glossary 术语在该句的巴利原文（pali）中确实出现（包括其屈折变化、变格、复合、连音等形式），且译文中存在与之对应的中文译词时，才进行替换。原文中并未出现的术语，一律不替换。
+        2. **语境判断（最重要）**：必须结合 glossary 中该术语的 meaning，判断它在当前句子语境下是否确实用作该术语义。同一个巴利词在论藏（阿毗达摩）中可能是专门术语，在经藏中却只是普通词汇。若根据 meaning 与上下文判断该词在此处并非用作术语义，则**不要**替换，保持原中文译文。
+        3. 宁缺毋滥：没有十足把握时不要标记。不确定的一律保持原译文，不加双方括号。
+        4. 不要新增术语表中没有的标记，也不要把已经正确翻译的普通词误标为术语。
+        5. 译文中可能已存在 `[[...]]` 术语标记，原样保留即可，不要重复包裹。
+
+        输出格式jsonl，每行对应一个句子，包含两个字段：
+        id：与原文相同的句子id
+        content：标注后的中文译文（无需替换的句子与原译文完全一致）
+
+        直接输出jsonl数据，无需解释
+
+        **输出范例**
+        {"id":"1-2-3-4","content":"住在[[rājagaha]]"}
+        {"id":"2-3-4-5","content":"原样保留的译文"}
+        md;
+
+    /**
      * review 步骤的提示词：对已有译文打分并指出问题，不修改译文。
      */
     protected string $reviewPrompt = <<<'md'
         你是一个资深的巴利语翻译审校专家。
         用户会提供巴利原文（pali）以及一份待审校的简体中文译文（translation），两者均为 json，通过 id 一一对应。
         用户还可能提供 nissaya（巴利原文的逐词缅文释义，与 pali 通过 id 对应，按词列出每个巴利词的语法解析与缅文释义，形如「巴利词= 缅文释义」）：它是判断词义、修饰关系、指代关系和句子结构最权威的依据，审校时应以 nissaya 为准核对译文是否贴合原意，发现译文与 nissaya 冲突的，须在 issues 中指出。
+
+        译文中可能出现 `[[巴利术语]]`（双方括号包裹巴利语原词）形式的标记：这是**有意保留**的术语标记，表示该词按术语表以巴利原形呈现、刻意不译为中文，属于正确处理。审校时**完全忽略**这些 `[[...]]` 标记，**不要**把它当作漏译、未翻译、误译或格式问题，不要因此扣分，也不要在 issues 中提及；只需正常审校其余中文译文。
 
         请逐句审校译文，但**不要修改译文**，只输出审校意见。
         审校维度：
@@ -216,6 +252,7 @@ class PaliTranslateService
         protected OpenAIService $openAIService,
         protected SearchPaliDataService $searchPaliDataService,
         protected PaliNissayaReferenceService $nissayaReference,
+        protected TermService $termService,
     ) {}
 
     /**
@@ -348,6 +385,12 @@ class PaliTranslateService
                 case 'translate':
                     $translation = $this->translate($pali, $this->nissayaFor('translate', $nissaya));
                     break;
+                case 'term':
+                    // 构造 channel + 社区术语表（经系统术语表过滤、channel 优先），按语境把译文中的中文术语替换为 [[巴利术语]]
+                    $glossary = $this->buildTermGlossary($book, $para);
+                    Log::debug('PaliTranslate: term 术语表', ['count' => count($glossary)]);
+                    $translation = $this->markTerms($pali, $translation, $glossary);
+                    break;
                 case 'review':
                     $review = $this->review($pali, $translation, $this->nissayaFor('review', $nissaya));
                     Log::debug('PaliTranslate: review 完成', ['review' => $review]);
@@ -361,9 +404,9 @@ class PaliTranslateService
             }
         }
 
-        // 只有产出译文的步骤（translate / revise / evaluate）才返回可写库的数据；
+        // 只有产出译文的步骤（translate / term / revise / evaluate）才返回可写库的数据；
         // evaluate 写库内容为带 HTML 标注的译文；仅 review 时报告已写入日志，无需重新保存原译文
-        $producesTranslation = (bool) array_intersect($steps, ['translate', 'revise', 'evaluate']);
+        $producesTranslation = (bool) array_intersect($steps, ['translate', 'term', 'revise', 'evaluate']);
 
         return $producesTranslation ? $translation : [];
     }
@@ -399,12 +442,34 @@ class PaliTranslateService
      */
     public function translate(array $pali, array $nissaya = []): array
     {
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n" . $this->nissayaSection($nissaya);
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            .$this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: translate', ['input' => $userText]);
 
-        $content = $this->send($this->translatePrompt, $userText);
+        return $this->sendForIds('translate', $this->translatePrompt, $userText, $this->idsOf($pali));
+    }
 
-        return LlmResponseParser::jsonl($content);
+    /**
+     * term 步骤：根据术语表，把已有译文中对应的中文术语替换为 [[巴利术语]] 标记。
+     * 由大模型结合巴利原文与术语 meaning 做语境判断；译文或术语表为空时原样返回。
+     *
+     * @param  array<int, array{id: string, content: string}>  $pali
+     * @param  array<int, array{id: string, content: string}>  $translation
+     * @param  array<int, array{word: string, meaning: string, tag: string}>  $glossary
+     * @return array<int, array{id: string, content: string}>
+     */
+    public function markTerms(array $pali, array $translation, array $glossary): array
+    {
+        if (empty($translation) || empty($glossary)) {
+            return $translation;
+        }
+
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            ."# glossary\n\n".$this->jsonBlock($glossary)."\n\n";
+        Log::debug('PaliTranslate: term', ['input' => $userText]);
+
+        return $this->sendForIds('term', $this->termPrompt, $userText, $this->idsOf($translation));
     }
 
     /**
@@ -417,15 +482,12 @@ class PaliTranslateService
      */
     public function review(array $pali, array $translation, array $nissaya = []): array
     {
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
-            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
-            . $this->nissayaSection($nissaya);
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            .$this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: review', ['input' => $userText]);
 
-        $content = $this->send($this->reviewPrompt, $userText);
-        Log::debug('PaliTranslate: review', ['output' => $content]);
-
-        return LlmResponseParser::jsonl($content);
+        return $this->sendForIds('review', $this->reviewPrompt, $userText, $this->idsOf($translation));
     }
 
     /**
@@ -438,15 +500,12 @@ class PaliTranslateService
      */
     public function revise(array $pali, array $translation, array $review): array
     {
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
-            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
-            . "# review\n\n" . $this->jsonBlock($review) . "\n\n";
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            ."# review\n\n".$this->jsonBlock($review)."\n\n";
         Log::debug('PaliTranslate: revise', ['input' => $userText]);
 
-        $content = $this->send($this->revisePrompt, $userText);
-        Log::debug('PaliTranslate: revise', ['output' => $content]);
-
-        return LlmResponseParser::jsonl($content);
+        return $this->sendForIds('revise', $this->revisePrompt, $userText, $this->idsOf($translation));
     }
 
     /**
@@ -460,15 +519,12 @@ class PaliTranslateService
      */
     public function evaluate(array $pali, array $translation, array $nissaya = []): array
     {
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
-            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
-            . $this->nissayaSection($nissaya);
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            .$this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: evaluate', ['input' => $userText]);
 
-        $content = $this->send($this->evaluatePrompt, $userText);
-        Log::debug('PaliTranslate: evaluate', ['output' => $content]);
-
-        return LlmResponseParser::jsonl($content);
+        return $this->sendForIds('evaluate', $this->evaluatePrompt, $userText, $this->idsOf($translation));
     }
 
     /**
@@ -524,6 +580,92 @@ class PaliTranslateService
     }
 
     /**
+     * 调用 LLM 并解析 jsonl；若返回结果缺失部分期望 id（大模型漏句），则整体重试，
+     * 直到全部 id 补齐或达到最大尝试次数；最终仍缺失时返回最后一次（覆盖最全）的结果。
+     *
+     * @param  string  $step  步骤名，仅用于日志
+     * @param  string[]  $expectedIds  期望覆盖的句子 id 列表
+     * @return array<int, array<string, mixed>>
+     */
+    protected function sendForIds(string $step, string $systemPrompt, string $userText, array $expectedIds, int $maxAttempts = 2): array
+    {
+        $best = [];
+        $bestMissing = $expectedIds;
+
+        for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+            $result = LlmResponseParser::jsonl($this->send($systemPrompt, $userText));
+            $missing = $this->missingIds($expectedIds, $result);
+
+            // 保留缺失最少的一次结果，避免重试反而更差
+            if (count($missing) < count($bestMissing)) {
+                $best = $result;
+                $bestMissing = $missing;
+            }
+
+            if (empty($missing)) {
+                return $result;
+            }
+
+            Log::warning('PaliTranslate: LLM 返回缺失 id，重试', [
+                'step' => $step,
+                'attempt' => $attempt,
+                'missing' => $missing,
+            ]);
+        }
+
+        Log::warning('PaliTranslate: 重试后仍缺失 id', [
+            'step' => $step,
+            'missing' => $bestMissing,
+        ]);
+
+        return $best;
+    }
+
+    /**
+     * 提取记录列表中的 id（非空），保持顺序。
+     *
+     * @param  array<int, array<string, mixed>>  $items
+     * @return string[]
+     */
+    protected function idsOf(array $items): array
+    {
+        $ids = [];
+        foreach ($items as $item) {
+            if (isset($item['id']) && $item['id'] !== '') {
+                $ids[] = (string) $item['id'];
+            }
+        }
+
+        return $ids;
+    }
+
+    /**
+     * 返回 expectedIds 中、在 LLM 结果里缺失的 id。
+     *
+     * @param  string[]  $expectedIds
+     * @param  array<int, array<string, mixed>>  $result
+     * @return string[]
+     */
+    protected function missingIds(array $expectedIds, array $result): array
+    {
+        $returned = [];
+        foreach ($result as $item) {
+            if (isset($item['id'])) {
+                $returned[(string) $item['id']] = true;
+            }
+        }
+
+        $missing = [];
+        foreach ($expectedIds as $id) {
+            if (! isset($returned[(string) $id])) {
+                $missing[] = (string) $id;
+            }
+        }
+
+        return $missing;
+    }
+
+    /**
      * 按开关返回某步骤应使用的 nissaya；未启用该步骤时返回空数组。
      *
      * @param  array<int, array{id: string, content: string}>  $nissaya
@@ -546,7 +688,117 @@ class PaliTranslateService
             return '';
         }
 
-        return "# nissaya\n\n" . $this->jsonBlock($nissaya) . "\n\n";
+        return "# nissaya\n\n".$this->jsonBlock($nissaya)."\n\n";
+    }
+
+    /**
+     * 加载本段所属 chapter 的巴利术语表。
+     *
+     * 术语表由 extract:pali.term 命令按 chapter 生成，保存在 _system_glossary_ channel，
+     * 以 chapter 起始段落（level 1-7 节点）为 paragraph、word_start/word_end 均为 0、
+     * content 为巴利术语原形的 JSON 字符串数组。这里先把当前段落向下归到所属 chapter，
+     * 再读取该 chapter 的术语表。加载失败或无数据时返回空数组（不影响翻译）。
+     *
+     * @return string[] 巴利术语原形列表
+     */
+    protected function loadGlossary(int $book, int $para): array
+    {
+        $channelId = ChannelApi::getSysChannel('_system_glossary_');
+        if (! $channelId) {
+            return [];
+        }
+
+        // 术语表按 chapter 起始段落存储：向下取 ≤para 的最近 chapter 节点（level 1-7）
+        $chapterStart = PaliText::where('book', $book)
+            ->where('paragraph', '<=', $para)
+            ->whereBetween('level', [1, 7])
+            ->orderBy('paragraph', 'desc')
+            ->value('paragraph');
+        if ($chapterStart === null) {
+            return [];
+        }
+
+        $content = Sentence::where('channel_uid', $channelId)
+            ->where('book_id', $book)
+            ->where('paragraph', $chapterStart)
+            ->where('word_start', 0)
+            ->where('word_end', 0)
+            ->value('content');
+        if (empty($content)) {
+            return [];
+        }
+
+        $words = json_decode($content, true);
+        if (! is_array($words)) {
+            return [];
+        }
+
+        return array_values(array_filter($words, fn ($w) => is_string($w) && $w !== ''));
+    }
+
+    /**
+     * 构造 term 步骤的术语表：channel 术语表 + 同语言社区术语表，
+     * 经本段所属 chapter 的系统术语表（loadGlossary）过滤——只保留系统术语表里存在的术语，
+     * 再合并去重（channel 优先），每项含 word / meaning / tag 三个字段。
+     *
+     * @return array<int, array{word: string, meaning: string, tag: string}>
+     */
+    protected function buildTermGlossary(int $book, int $para): array
+    {
+        $channelId = $this->workChannel['id'] ?? null;
+        if (! $channelId) {
+            Log::warning('PaliTranslate: term 步骤未设置 channel，跳过术语注入');
+
+            return [];
+        }
+        $lang = $this->workChannel['lang'] ?? 'zh-Hans';
+
+        // 系统术语表（本段所属 chapter 命中的巴利术语原形）作为过滤白名单，算法同 loadGlossary
+        $allowed = $this->loadGlossary($book, $para);
+        if (empty($allowed)) {
+            return [];
+        }
+        $allowedSet = [];
+        foreach ($allowed as $word) {
+            $allowedSet[$this->toNfc($word)] = true;
+        }
+
+        // channel 术语表优先，社区术语表（同语言）补充；只保留系统术语表里有的术语
+        $channelTerms = $this->termService->getChannelGlossary($channelId);
+        $communityTerms = $this->termService->getCommunityGlossary($lang)['items'] ?? [];
+
+        $merged = [];
+        foreach ([$channelTerms, $communityTerms] as $source) {
+            foreach ($source as $term) {
+                $word = $this->toNfc(trim((string) (is_array($term) ? ($term['word'] ?? '') : ($term->word ?? ''))));
+                // 系统术语表里没有、word 为空、或 channel 已提供（优先）则跳过
+                if ($word === '' || ! isset($allowedSet[$word]) || isset($merged[$word])) {
+                    continue;
+                }
+                $merged[$word] = [
+                    'word' => $word,
+                    'meaning' => (string) (is_array($term) ? ($term['meaning'] ?? '') : ($term->meaning ?? '')),
+                    'tag' => (string) (is_array($term) ? ($term['tag'] ?? '') : ($term->tag ?? '')),
+                ];
+            }
+        }
+
+        return array_values($merged);
+    }
+
+    /**
+     * Unicode 规范化为 NFC（巴利文变音符匹配需统一 NFC/NFD）。intl 不可用时原样返回。
+     */
+    protected function toNfc(string $s): string
+    {
+        if (class_exists(\Normalizer::class)) {
+            $normalized = \Normalizer::normalize($s, \Normalizer::FORM_C);
+            if ($normalized !== false) {
+                return $normalized;
+            }
+        }
+
+        return $s;
     }
 
     /**
@@ -556,6 +808,6 @@ class PaliTranslateService
      */
     protected function jsonBlock(array $data): string
     {
-        return "```json\n" . json_encode($data, JSON_UNESCAPED_UNICODE) . "\n```";
+        return "```json\n".json_encode($data, JSON_UNESCAPED_UNICODE)."\n```";
     }
 }
