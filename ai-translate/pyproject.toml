@@ -1,11 +1,11 @@
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
 
 [project]
 name = "ai_translate"
-version = "2026.1.16"
-requires-python = ">= 3.12"
+version = "2026.6.28"
+requires-python = ">= 3.14"
 description = "An OpenAI consumer process"
 readme = "README.md"
 license = "MIT"
@@ -15,5 +15,3 @@ dependencies = ["pika", "requests", "redis[hiredis]", "openai"]
 [project.scripts]
 mint-ai-translate-consumer = "ai_translate.__main__:main"
 
-[tool.setuptools]
-py-modules = []

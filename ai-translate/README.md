@@ -2,6 +2,7 @@
 
 ```bash
 # initial python3 virtual env folder
+$ export PYTHON_GIL=0
 $ python3 -m venv $HOME/tmp/python3
 # load virtual env vars
 $ source $HOME/tmp/python3/bin/activate
