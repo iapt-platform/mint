@@ -40,7 +40,7 @@ class ExportTag extends Command
      */
     public function handle()
     {
-        Log::debug('task: export offline data tag-table start');
+        $this->info('task: export offline data tag-table start');
         if (\App\Tools\Tools::isStop()) {
             return 0;
         }
