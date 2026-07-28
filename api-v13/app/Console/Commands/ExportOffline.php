@@ -81,7 +81,6 @@ class ExportOffline extends Command
 
         if (!$this->option('test')) {
             //tag
-            $this->info('export tag start');
             $this->call('export:tag', ['db' => 'wikipali-offline']);
             $this->call('export:tag.map', ['db' => 'wikipali-offline']);
             //

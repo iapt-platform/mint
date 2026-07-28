@@ -40,7 +40,7 @@ class ExportTagmap extends Command
      */
     public function handle()
     {
-        Log::debug('task: export offline tagmap-table start');
+        $this->info('task: export offline tagmap-table start');
         if (\App\Tools\Tools::isStop()) {
             return 0;
         }
