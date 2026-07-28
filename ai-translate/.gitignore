@@ -1,6 +1,7 @@
 /tmp/
 /config.toml
 
+/dist/
 __pycache__/
 ai_translate.egg-info/
 .stop

@@ -65,9 +65,8 @@ class ExportTerm extends Command
             return 1;
         }
 
-        $bar = $this->output->createProgressBar(DhammaTerm::count());
-        foreach (
-            DhammaTerm::select([
+        $total = DhammaTerm::count();
+        $channels = DhammaTerm::select([
                 'guid',
                 'word',
                 'word_en',
@@ -83,8 +82,8 @@ class ExportTerm extends Command
                 "updated_at",
                 "deleted_at"
             ])
-                ->cursor() as $row
-        ) {
+                ->cursor();
+        foreach ($channels as $key => $row) {
             $currData = array(
                 $row->guid,
                 $row->word,
@@ -102,7 +101,11 @@ class ExportTerm extends Command
                 $row->deleted_at,
             );
             $stmt->execute($currData);
-            $bar->advance();
+            
+            if($key % 1000 ===0){
+                $precent = (int)($key*100/$total);
+                $this->line("[{$precent}%]");
+            }
         }
         $dbh->commit();
         $bar->finish();

@@ -1,6 +1,10 @@
+[build-system]
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
+
 [project]
 name = "rhododendron"
-version = "2026.4.19"
+version = "2026.6.28"
 authors = [
     { name = "Visuddhinanda", email = "visuddhinanda@gmail.com" },
     { name = "Kassapa", email = "ven.kassapa@qq.com" },
@@ -20,4 +24,4 @@ Homepage = "https://github.com/iapt-platform/mint/tree/master/langchain-server"
 Issues = "https://github.com/iapt-platform/mint/issues"
 
 [project.scripts]
-rhododendron = "rhododendron:main_cli"
+rhododendron = "rhododendron.__main__:main"

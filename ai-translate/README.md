@@ -1,6 +1,9 @@
 # Usage
 
 ```bash
+# disable gil ONLY for ubuntu
+$ export PYTHON_GIL=0
+
 # initial python3 virtual env folder
 $ python3 -m venv $HOME/tmp/python3
 # load virtual env vars
