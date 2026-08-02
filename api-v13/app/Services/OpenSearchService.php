@@ -471,6 +471,84 @@ class OpenSearchService
     }
 
     /**
+     * 切换 pali 同义词文件版本
+     *
+     * 把 pali_synonyms filter 的 synonyms_path 指向
+     * analysis/pali-synonyms-{$version}.txt（文件须已存在于 OpenSearch
+     * 各节点的 config 目录中，否则索引无法重新打开）。
+     *
+     * synonyms_path 属于静态 settings，必须 close → putSettings → open。
+     * 无论 putSettings 成功与否都会尝试重新打开索引，避免索引停留在 close 状态。
+     *
+     * @param  string  $version  版本号，仅允许 [A-Za-z0-9._-]
+     * @return array{path: string, settings: array} 新路径与 OpenSearch 响应
+     *
+     * @throws Exception 版本号非法、索引不存在或 OpenSearch 拒绝时抛出
+     *
+     * @example
+     *   $service->updatePaliSynonymsPath('20260731');
+     */
+    public function updatePaliSynonymsPath(string $version): array
+    {
+        if (! preg_match('/^[A-Za-z0-9._-]+$/', $version)) {
+            throw new Exception("Invalid synonyms version [$version].");
+        }
+
+        $index = config('mint.opensearch.index');
+
+        if (! $this->client->indices()->exists(['index' => $index])) {
+            throw new Exception("Index [$index] does not exist.");
+        }
+
+        $path = "analysis/pali-synonyms-{$version}.txt";
+
+        // 以代码中的 analysis 定义为准，只替换同义词文件路径
+        $analysis = $this->indexDefinition['settings']['analysis'];
+        $analysis['filter']['pali_synonyms']['synonyms_path'] = $path;
+
+        $this->client->indices()->close(['index' => $index]);
+
+        try {
+            $response = $this->client->indices()->putSettings([
+                'index' => $index,
+                'body' => ['settings' => ['analysis' => $analysis]],
+            ]);
+        } finally {
+            $this->client->indices()->open(['index' => $index]);
+        }
+
+        Log::info('OpenSearchService::updatePaliSynonymsPath', [
+            'index' => $index,
+            'synonyms_path' => $path,
+        ]);
+
+        return ['path' => $path, 'settings' => $response];
+    }
+
+    /**
+     * 读取当前索引使用的 pali 同义词文件路径
+     *
+     * @return string|null 形如 "analysis/pali-synonyms-20260731.txt"，未设置时返回 null
+     */
+    public function getPaliSynonymsPath(): ?string
+    {
+        return $this->getPaliSynonymsSetting()['synonyms_path'] ?? null;
+    }
+
+    /**
+     * 读取当前索引 pali_synonyms filter 的完整设置
+     *
+     * @return array{type?: string, synonyms_path?: string, updateable?: string}|null 未设置时返回 null
+     */
+    public function getPaliSynonymsSetting(): ?array
+    {
+        $index = config('mint.opensearch.index');
+        $settings = $this->client->indices()->getSettings(['index' => $index]);
+
+        return $settings[$index]['settings']['index']['analysis']['filter']['pali_synonyms'] ?? null;
+    }
+
+    /**
      * 删除当前索引
      *
      * @return array OpenSearch 响应

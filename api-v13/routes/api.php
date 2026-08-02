@@ -1,134 +1,132 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\WbwTemplateController;
-use App\Http\Controllers\DhammaTermController;
-use App\Http\Controllers\SentenceController;
-use App\Http\Controllers\ProgressChapterController;
-use App\Http\Controllers\SentenceInfoController;
-use App\Http\Controllers\SentPrController;
-use App\Http\Controllers\TagController;
-use App\Http\Controllers\ViewController;
-use App\Http\Controllers\LikeController;
-use App\Http\Controllers\SentHistoryController;
-use App\Http\Controllers\PaliTextController;
-use App\Http\Controllers\ChannelController;
-use App\Http\Controllers\UserDictController;
-use App\Http\Controllers\CollectionController;
-use App\Http\Controllers\DictController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\GroupController;
-use App\Http\Controllers\CorpusController;
-use App\Http\Controllers\ArticleProgressController;
-use App\Http\Controllers\ExportWbwController;
-use App\Http\Controllers\WbwLookupController;
-use App\Http\Controllers\UploadController;
-use App\Http\Controllers\DiscussionController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\GroupMemberController;
-use App\Http\Controllers\ShareController;
-use App\Http\Controllers\CourseController;
-use App\Http\Controllers\CourseMemberController;
-use App\Http\Controllers\ExerciseController;
-use App\Http\Controllers\ArticleMapController;
-use App\Http\Controllers\VocabularyController;
-use App\Http\Controllers\CaseController;
-use App\Http\Controllers\DictMeaningController;
-use App\Http\Controllers\UserOperationDailyController;
-use App\Http\Controllers\UserStatisticController;
-use App\Http\Controllers\SentSimController;
-use App\Http\Controllers\NissayaEndingController;
-use App\Http\Controllers\RelationController;
-use App\Http\Controllers\TermVocabularyController;
-use App\Http\Controllers\RelatedParagraphController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\WordIndexController;
-use App\Http\Controllers\StudioController;
-use App\Http\Controllers\GrammarGuideController;
-use App\Http\Controllers\WbwController;
-use App\Http\Controllers\AttachmentController;
-use App\Http\Controllers\ApiController;
-use App\Http\Controllers\ProgressImgController;
-use App\Http\Controllers\RecentController;
-use App\Http\Controllers\MilestoneController;
-use App\Http\Controllers\ArticleNavController;
-use App\Http\Controllers\InviteController;
-use App\Http\Controllers\SignUpController;
-use App\Http\Controllers\TermSummaryController;
-use App\Http\Controllers\NissayaCardController;
-use App\Http\Controllers\SentInChannelController;
-use App\Http\Controllers\ChannelIOController;
-use App\Http\Controllers\ChapterIOController;
-use App\Http\Controllers\SentenceIOController;
-use App\Http\Controllers\WebHookController;
-use App\Http\Controllers\DictStatisticController;
-use App\Http\Controllers\SearchTitleController;
-use App\Http\Controllers\TransferController;
-use App\Http\Controllers\HealthCheckController;
-use App\Http\Controllers\OfflineIndexController;
-use App\Http\Controllers\TaskController;
-use App\Http\Controllers\ExportController;
-use App\Http\Controllers\DictVocabularyController;
-use App\Http\Controllers\DictInfoController;
-use App\Http\Controllers\PgPaliDictDownloadController;
-use App\Http\Controllers\SearchPaliDataController;
-use App\Http\Controllers\SearchPaliWbwController;
-use App\Http\Controllers\SearchPageNumberController;
-use App\Http\Controllers\NavPageController;
-use App\Http\Controllers\BookTitleController;
-use App\Http\Controllers\SystemTermController;
-use App\Http\Controllers\TermExportController;
-use App\Http\Controllers\NavArticleController;
-use App\Http\Controllers\NavCSParaController;
-use App\Http\Controllers\SentencesInChapterController;
-use App\Http\Controllers\CompoundController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\InteractiveController;
-use App\Http\Controllers\ChapterIndexController;
-use App\Http\Controllers\WbwSentenceController;
-use App\Http\Controllers\SnowFlakeIdController;
-use App\Http\Controllers\ForgotPasswordController;
-use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\DiscussionCountController;
-use App\Http\Controllers\TagsInChapterCountController;
-use App\Http\Controllers\TagMapController;
-use App\Http\Controllers\EditableSentenceController;
-use App\Http\Controllers\ArticleFtsController;
-use App\Http\Controllers\NissayaCoverController;
-use App\Http\Controllers\AiTranslateController;
-use App\Http\Controllers\DictPreferenceController;
-use App\Http\Controllers\CommandController;
-use App\Http\Controllers\UserMilestoneController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\TaskStatusController;
-use App\Http\Controllers\TaskGroupController;
-use App\Http\Controllers\ChapterController;
-use App\Http\Controllers\ProjectTreeController;
-use App\Http\Controllers\SiteInfoController;
-use App\Http\Controllers\PaliBookCategoryController;
 use App\Http\Controllers\AccessTokenController;
-use App\Http\Controllers\SearchWordSliceController;
-use App\Http\Controllers\AiModelController;
 use App\Http\Controllers\AiAssistantController;
-use App\Http\Controllers\ModelLogController;
-use App\Http\Controllers\SentenceAttachmentController;
-use App\Http\Controllers\EmailCertificationController;
-use App\Http\Controllers\MockOpenAIController;
-use App\Http\Controllers\SysModelController;
+use App\Http\Controllers\AiModelController;
+use App\Http\Controllers\AiTranslateController;
+use App\Http\Controllers\ApiController;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ArticleFtsController;
+use App\Http\Controllers\ArticleMapController;
+use App\Http\Controllers\ArticleNavController;
+use App\Http\Controllers\ArticleProgressController;
+use App\Http\Controllers\AttachmentController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookTitleController;
+use App\Http\Controllers\CaseController;
+use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\ChannelIOController;
+use App\Http\Controllers\ChapterContentController;
+use App\Http\Controllers\ChapterController;
+use App\Http\Controllers\ChapterIndexController;
+use App\Http\Controllers\ChapterIOController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
+use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\CommandController;
+use App\Http\Controllers\CompoundController;
+use App\Http\Controllers\CorpusController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CourseMemberController;
+use App\Http\Controllers\DhammaTermController;
+use App\Http\Controllers\DictController;
+use App\Http\Controllers\DictInfoController;
+use App\Http\Controllers\DictMeaningController;
+use App\Http\Controllers\DictPreferenceController;
+use App\Http\Controllers\DictStatisticController;
+use App\Http\Controllers\DictVocabularyController;
+use App\Http\Controllers\DiscussionController;
+use App\Http\Controllers\DiscussionCountController;
+use App\Http\Controllers\EditableSentenceController;
+use App\Http\Controllers\EmailCertificationController;
+use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ExportWbwController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\GrammarGuideController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupMemberController;
+use App\Http\Controllers\HealthCheckController;
+use App\Http\Controllers\HeartbeatController;
+use App\Http\Controllers\InteractiveController;
+use App\Http\Controllers\InviteController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\MilestoneController;
+use App\Http\Controllers\MockOpenAIController;
+use App\Http\Controllers\ModelLogController;
+use App\Http\Controllers\NavArticleController;
+use App\Http\Controllers\NavCSParaController;
+use App\Http\Controllers\NavPageController;
+use App\Http\Controllers\NissayaCardController;
+use App\Http\Controllers\NissayaCoverController;
+use App\Http\Controllers\NissayaEndingController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OfflineIndexController;
+use App\Http\Controllers\PaliBookCategoryController;
+use App\Http\Controllers\PaliTextController;
+use App\Http\Controllers\ParagraphContentController;
+use App\Http\Controllers\PgPaliDictDownloadController;
+use App\Http\Controllers\ProgressChapterController;
+use App\Http\Controllers\ProgressController;
+use App\Http\Controllers\ProgressImgController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectTreeController;
+use App\Http\Controllers\RecentController;
+use App\Http\Controllers\RelatedParagraphController;
+use App\Http\Controllers\RelationController;
+use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SearchPageNumberController;
+use App\Http\Controllers\SearchPaliDataController;
+use App\Http\Controllers\SearchPaliWbwController;
 use App\Http\Controllers\SearchPlusController;
 use App\Http\Controllers\SearchSuggestController;
+use App\Http\Controllers\SearchTitleController;
+use App\Http\Controllers\SearchWordSliceController;
+use App\Http\Controllers\SentenceAttachmentController;
+use App\Http\Controllers\SentenceController;
+use App\Http\Controllers\SentenceInfoController;
+use App\Http\Controllers\SentenceIOController;
+use App\Http\Controllers\SentencesInChapterController;
+use App\Http\Controllers\SentHistoryController;
+use App\Http\Controllers\SentInChannelController;
+use App\Http\Controllers\SentPrController;
+use App\Http\Controllers\SentSimController;
+use App\Http\Controllers\ShareController;
+use App\Http\Controllers\SignUpController;
+use App\Http\Controllers\SiteInfoController;
+use App\Http\Controllers\SnowFlakeIdController;
+use App\Http\Controllers\StudioController;
+use App\Http\Controllers\SysModelController;
+use App\Http\Controllers\SystemTermController;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\TagMapController;
+use App\Http\Controllers\TagsInChapterCountController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TaskGroupController;
+use App\Http\Controllers\TaskStatusController;
+use App\Http\Controllers\TermExportController;
+use App\Http\Controllers\TermSummaryController;
+use App\Http\Controllers\TermVocabularyController;
+use App\Http\Controllers\TransferController;
+use App\Http\Controllers\UpdatePaliSynonymsController;
 use App\Http\Controllers\UpgradeController;
-use App\Http\Controllers\ChapterContentController;
-use App\Http\Controllers\ParagraphContentController;
-use App\Http\Controllers\HeartbeatController;
-use App\Http\Controllers\ProgressController;
-
-
+use App\Http\Controllers\UploadController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserDictController;
+use App\Http\Controllers\UserMilestoneController;
+use App\Http\Controllers\UserOperationDailyController;
+use App\Http\Controllers\UserStatisticController;
+use App\Http\Controllers\ViewController;
+use App\Http\Controllers\VocabularyController;
+use App\Http\Controllers\WbwController;
+use App\Http\Controllers\WbwLookupController;
+use App\Http\Controllers\WbwSentenceController;
+use App\Http\Controllers\WbwTemplateController;
+use App\Http\Controllers\WebHookController;
+use App\Http\Controllers\WordIndexController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -148,22 +146,21 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/api/sentence/progress/image', [SentenceInfoController::class, 'showprogress']);
 Route::get('/api/sentence/progress/daily/image', [SentenceInfoController::class, 'showprogressdaily']);
 
-
 Route::group([
     'prefix' => 'v2',
-    'as' => 'v2.'
+    'as' => 'v2.',
 ], function () {
     Route::apiResource('wbw_templates', WbwTemplateController::class);
 
     Route::apiResource('terms', DhammaTermController::class);
     Route::apiResource('terms-export', TermExportController::class);
     Route::get('terms-import', [TermExportController::class, 'import']);
-    Route::get('system-term/{lang}/{word}', [SystemTermController::class, "show"]);
+    Route::get('system-term/{lang}/{word}', [SystemTermController::class, 'show']);
 
     Route::apiResource('sentence', SentenceController::class);
     Route::apiResource('sent-in-channel', SentInChannelController::class);
     Route::apiResource('sentpr', SentPrController::class);
-    Route::post('sent-pr-tree', [SentPrController::class, "pr_tree"]);
+    Route::post('sent-pr-tree', [SentPrController::class, 'pr_tree']);
     Route::apiResource('progress', ProgressChapterController::class);
     Route::apiResource('tag', TagController::class);
     Route::apiResource('view', ViewController::class);
@@ -174,10 +171,10 @@ Route::group([
     Route::get('sent_history_contribution', [SentHistoryController::class, 'contribution']);
     Route::apiResource('palitext', PaliTextController::class);
     Route::apiResource('channel', ChannelController::class);
-    Route::patch('channel', [ChannelController::class, "patch"]);
-    Route::get('channel-name/{name}', [ChannelController::class, "showByName"]);
+    Route::patch('channel', [ChannelController::class, 'patch']);
+    Route::get('channel-name/{name}', [ChannelController::class, 'showByName']);
     Route::get('channel-my-number', [ChannelController::class, 'showMyNumber']);
-    Route::post('channel-progress', [ChannelController::class, "progress"]);
+    Route::post('channel-progress', [ChannelController::class, 'progress']);
     Route::delete('userdict', [UserDictController::class, 'delete']);
     Route::apiResource('userdict', UserDictController::class);
 
@@ -206,7 +203,7 @@ Route::group([
     Route::post('export_wbw', [ExportWbwController::class, 'index']);
     Route::apiResource('attachments', UploadController::class);
     Route::apiResource('discussion', DiscussionController::class);
-    Route::post('sent-discussion-tree', [DiscussionController::class, "discussion_tree"]);
+    Route::post('sent-discussion-tree', [DiscussionController::class, 'discussion_tree']);
     Route::get('discussion-anchor/{id}', [DiscussionController::class, 'anchor']);
     Route::apiResource('user', UserController::class);
     Route::apiResource('group-member', GroupMemberController::class);
@@ -217,7 +214,7 @@ Route::group([
     Route::put('course-member_set-channel', [CourseMemberController::class, 'set_channel']);
     Route::get('course-my-course', [CourseController::class, 'showMyCourseNumber']);
     Route::get('course-curr', [CourseMemberController::class, 'curr']);
-    Route::get('course-member-export', [CourseMemberController::class, "export"]);
+    Route::get('course-member-export', [CourseMemberController::class, 'export']);
 
     Route::apiResource('exercise', ExerciseController::class);
     Route::apiResource('article-map', ArticleMapController::class);
@@ -228,13 +225,13 @@ Route::group([
     Route::apiResource('user-statistic', UserStatisticController::class);
     Route::apiResource('sent-sim', SentSimController::class);
     Route::apiResource('nissaya-ending', NissayaEndingController::class);
-    Route::get('nissaya-ending-export', [NissayaEndingController::class, "export"]);
-    Route::get('nissaya-ending-import', [NissayaEndingController::class, "import"]);
-    Route::get('nissaya-ending-vocabulary', [NissayaEndingController::class, "vocabulary"]);
+    Route::get('nissaya-ending-export', [NissayaEndingController::class, 'export']);
+    Route::get('nissaya-ending-import', [NissayaEndingController::class, 'import']);
+    Route::get('nissaya-ending-vocabulary', [NissayaEndingController::class, 'vocabulary']);
     Route::apiResource('nissaya-card', NissayaCardController::class);
     Route::apiResource('relation', RelationController::class);
-    Route::get('relation-export', [RelationController::class, "export"]);
-    Route::get('relation-import', [RelationController::class, "import"]);
+    Route::get('relation-export', [RelationController::class, 'export']);
+    Route::get('relation-import', [RelationController::class, 'import']);
     Route::apiResource('term-vocabulary', TermVocabularyController::class);
     Route::apiResource('related-paragraph', RelatedParagraphController::class);
     Route::apiResource('search', SearchController::class);
@@ -319,10 +316,21 @@ Route::group([
     Route::get('mock/openai/models', [MockOpenAIController::class, 'models']);
 });
 
+/**
+ * 运维接口，Authorization: Bearer <APP_OPS_TOKEN>
+ */
+Route::group([
+    'prefix' => 'ops',
+    'as' => 'ops.',
+    'middleware' => 'ops.token',
+], function () {
+    Route::put('update-pali-synonyms/{version}', [UpdatePaliSynonymsController::class, 'update'])
+        ->where('version', '[A-Za-z0-9._-]+');
+});
 
 Route::group([
     'prefix' => 'v3',
-    'as' => 'v3.'
+    'as' => 'v3.',
 ], function () {
     Route::apiResource('search', SearchPlusController::class);
     Route::apiResource('search-suggest', SearchSuggestController::class);
