@@ -532,10 +532,20 @@ class OpenSearchService
      */
     public function getPaliSynonymsPath(): ?string
     {
+        return $this->getPaliSynonymsSetting()['synonyms_path'] ?? null;
+    }
+
+    /**
+     * 读取当前索引 pali_synonyms filter 的完整设置
+     *
+     * @return array{type?: string, synonyms_path?: string, updateable?: string}|null 未设置时返回 null
+     */
+    public function getPaliSynonymsSetting(): ?array
+    {
         $index = config('mint.opensearch.index');
         $settings = $this->client->indices()->getSettings(['index' => $index]);
 
-        return $settings[$index]['settings']['index']['analysis']['filter']['pali_synonyms']['synonyms_path'] ?? null;
+        return $settings[$index]['settings']['index']['analysis']['filter']['pali_synonyms'] ?? null;
     }
 
     /**
