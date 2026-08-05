@@ -4,7 +4,7 @@
 >
 > 分发路径：在本仓库开发调试，成熟后以**整目录复制**方式装到其他项目（§6.7）。不做独立仓库——API 仍需频繁修改，Skill 契约必须与 `api-v13` 同仓演进。
 >
-> 状态：设计已定案；服务端 P0 已完成（§5.1 端点 + §5.2 abdefg）；Skill P1 已完成（`.claude/skills/wikipali-write/`），端到端实测待服务端部署
+> 状态：设计已定案；服务端 P0 已完成（§5.1 端点 + §5.2 abdefg）；Skill P1 已完成（`.claude/skills/wikipali-write/`）并在开发机上端到端跑通（2026-08-05）；线上四站尚未部署
 > 对应后端：`api-v13`（Laravel 13，路由前缀 `/api/v2`）
 > 决策定案：2026-08-04（见 §9）
 
@@ -136,7 +136,7 @@
   2. 否则查协作权限 `ShareApi::getResPower(...) >= 20` → 放行；
   3. 否则用 `AccessToken.token` 重复两次作为密钥验签 `access_token`，并校验 book 范围。
 - 语义：按 `(book_id, paragraph, word_start, word_end, channel_uid)` 做 `firstOrNew`，**存在即更新，不存在则新建**（天然幂等）
-- 副作用：写入 `sent_history`、清 Redis 缓存、`Mq::publish('progress', ...)`
+- 副作用：写入 `sent_histories`、清 Redis 缓存、`Mq::publish('progress', ...)`
 - 另一种调用形态：把 `channel` / `book` / `access_token` 放在顶层，句子数组内不再重复（`SentenceController.php:315-326`）
 - 现成参考实现：`ai-translate/ai_translate/service.py:429`
 
@@ -525,7 +525,7 @@ ChannelController::index() 的 'user-edit' 分支：
 2. **模型 token 有效期 30 天且可撤销**（§5.1）：泄漏时 owner 调 `DELETE /v2/ai-model-token/{uid}` 即可让该模型全部已签出 token 立刻失效，不必轮换全局 `jwt_secrets_key`（那会踢掉所有用户）。撤销是全量的，不能只废一张。`~/.wikipali/credentials.json` 仍须 `0600`、不进日志/不进对话——撤销是止损手段，不是防线。
 3. **access token 有效期 7 天**（§5.2f 已修）。注意签名密钥是 `access_tokens` 表里按 `res_type + res_id` 存的 uuid，`firstOrNew` 只在首次创建，**同一 channel 的密钥不轮换**——所以 7 天只限制单张 token 的窗口，没有「立即吊销」能力。Skill 仍应把它视为高敏感数据，仅存本地、不进日志、不进对话。
 4. **密码零留存**：不写入任何文件，不进入对话上下文。
-5. **审计**：所有写入都会进 `sent_history`（`SentenceService::saveHistory`），`editor_uid` 为模型 uid，可追溯。
+5. **审计**：所有写入都会进 `sent_histories`（`SentenceService::saveHistory`），`editor_uid` 为模型 uid，可追溯。
 6. **部署前提**：`token_version` 的校验在 `AuthService::current()` 里，故撤销只被跑了该版本代码的站点认账。本轮改动尚未部署到任何服务器，部署时四个站点一起上即可，不存在版本差窗口。若日后单独灰度某个站点，需记得这条。
 
 ---
@@ -545,7 +545,8 @@ ChannelController::index() 的 'user-edit' 分支：
 | P1 | ✅ | Skill：`write`（分批 + 确认 + count 核对 + 401 自动重签一次） | 以上全部 |
 | P2 | ⬜ | 服务端质量修补：§5.2 (c) | — |
 | P1 | ✅ | Skill：`install.sh` + `VERSION`（打包分发，§6.7） | P1 全部跑通 |
-| P1 | ⬜ | **端到端实测：对真实站点跑通登录 → 写入** | **服务端部署** |
+| P1 | ✅ | 端到端实测：开发机（`local`）上跑通登录 → 写入 → 断言署名 | — |
+| P2 | ⬜ | 线上复测（部署后重跑一次，确认线上无差异） | 服务端部署 |
 | P2 | ⬜ | Skill 扩展：读取能力（`GET /v2/sentence`、`sentences-in-chapter`）与 `sentpr` PR 提交 | P1 |
 
 (d)(e) 上提到 P0 的理由：§6.3 第 3 步在 (d) 落地前必须走「POST 创建 → PUT 补齐字段」两步，而 (e) 未修时那个 PUT 会把未传字段一律置 null，两个缺陷叠加使 ensure-model 无法可靠工作。
@@ -575,7 +576,23 @@ Skill 的验证不走 Pest——它是个纯客户端，测的是「对着服务
 
 登录（含密码错）、`ensure-model` 幂等复跑、`channels` 列表、`grant` 缓存命中不重签、`write` 的 dry-run / 分批 / 覆盖警告 / 非交互式无 `-y` 时拒绝写入、部分写入时列出漏掉的句子、`count: 0` 时中止、模型 token 被撤销后自动重签一次再重试、fallback 顺序（同版本另一域名 → 另一版本同域名，且绝不落到 `local`）、`endpoint` 切换与 `--api` 不写回、`install.sh` 装出的副本可独立运行。
 
-**尚未验证的是真实站点上的端到端写入**——四个线上地址目前都还没部署 P0（`POST /api/v2/ai-model-token/x` 返回 404 而非 405，说明路由不存在）。部署后要补跑一次真实写入，并断言 `editor_uid` 落成模型 uid。桩服务不进仓库：它编码的是「我以为服务端是这样」，留着会变成第二份契约来源，与 `references/api.md` 打架。
+桩服务不进仓库：它编码的是「我以为服务端是这样」，留着会变成第二份契约来源，与 `references/api.md` 打架。
+
+#### 开发机上的端到端实测（2026-08-05）
+
+对 `local`（`php artisan serve`，开发库 `visuddhinanda_20260311`）跑了一遍完整链路：用户在真实终端里 `wp_login.py` 登录 → `ensure-model` 建档并取模型 token → `channels` 列出 130 个可编辑 channel → 写 3 条句子到「草稿二」的 `book 1 / paragraph 99901`（事先查过该位置在其所有 channel 里都是空的，只新增不覆盖）。
+
+查库断言的结果：
+
+- 3 条句子的 `editor_uid` = `79bb0934-…`（模型 uid），**不是** `ba5463f3-…`（本人 uid）——署名目标达成；
+- `language` / `status` 继承自 channel（`zh-Hans` / 10），与 `store()` 的逻辑一致；
+- `sent_histories` 每条 1 行，`user_uid` 同为模型 uid，审计链成立；
+- 改一句内容重跑，3 个 `uid` 不变、内容更新、每条历史累积到 2 行——`firstOrNew` 的幂等覆盖语义得到确认；
+- 对一个无编辑权的 channel 跑 `grant`，服务端返回 `count: 0`，客户端按约定中止并报「没有编辑权」。
+
+测试数据（3 条句子 + 6 行历史）已按 uid 精确删除，「草稿二」回到原有的 13 条；`claude-opus-5` 的 `ai_models` 记录保留，它就是日后真实写入要用的模型身份。
+
+**线上仍未验证**：四个线上地址都还没部署 P0（`POST /api/v2/ai-model-token/x` 返回 404 而非 405 —— 已注册的路由用错方法会返回 405，未注册才是 404）。部署后应重跑一次同样的链路。
 
 ---
 

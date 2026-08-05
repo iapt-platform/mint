@@ -114,7 +114,7 @@
 → `data: { rows: [ ... ], count }`
 
 - 语义：按 `(book_id, paragraph, word_start, word_end, channel_uid)` 做 `firstOrNew`——**存在即覆盖，不存在则新建**。天然幂等，但也意味着会静默覆盖别人写的同位置句子，写前必须向用户确认。
-- 副作用：写 `sent_history`（可追溯）、清缓存、发进度消息。
+- 副作用：写 `sent_histories`（可追溯）、清缓存、发进度消息。
 - 返回的 rows 用的是另一套字段名：`book`（不是 `book_id`）、`paragraph`、`word_start`、`word_end`、`channel.uid`、`editor`。核对写入结果要按这套字段匹配。
 - 缺 `sentences` 字段时返回 **HTTP 200** 且 `message: "no date"`——这是客户端 bug，不是成功。
 
