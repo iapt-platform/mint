@@ -326,7 +326,7 @@ public function show(Request $request, AiModel $aiModel)
 │   └── api.md            # 本文 §2 的精简版：端点、字段、陷阱
 ├── scripts/
 │   ├── wp_login.py       # 交互式登录，仅此脚本接触密码
-│   └── wp.py             # 客户端：ensure-model / channels / grant / write
+│   └── wp.py             # 客户端：endpoint / ensure-model / channels / grant / write
 └── install.sh            # 复制自身到目标项目或 ~/.claude/skills/
 ```
 
@@ -362,15 +362,44 @@ public function show(Request $request, AiModel $aiModel)
 
 1. **线上凭据只有一份**。四个地址通用：userToken / modelToken 用同一把密钥签；channel access token 的密钥存在同一张 `access_tokens` 表里；`ai_models` 也是同一张表，模型 uid 在四个地址上都是同一个。§6.2 的凭据文件退化为 `{ online: {...}, local: {...} }` 两桶——`local` 单独一桶是因为开发机是另一个库、另一把密钥。
 2. **任意切换，不需要重新登录、不需要重跑 ensure-model、不需要重签 access token**。换地址只是换一条网络路径 + 换一版服务端代码。
-3. **允许自动 fallback**。四个线上地址之间连不通就换下一个是安全的（同一套数据）。顺序建议：用户选定的 → 同版本的另一域名 → 另一版本的同域名。**唯独不能自动回退到 `local`**，那是另一套库。
+3. **允许自动 fallback，但要出声**。四个线上地址之间连不通就换下一个是安全的（同一套数据）。顺序：用户选定的 → 同版本的另一域名 → 另一版本的同域名。**唯独不能自动回退到 `local`**，那是另一套库。切换时打一行提示（`www.wikipali.org 连接失败，已改用 www.wikipali.cc`）——静默切换会掩盖「你选的站点挂了」，也会让 §6.1.2-4 的契约差异变得无从排查。
 4. **真正的风险不是写错库，是写到不同版本的代码上**。`next` 与 `www` 的 API 契约可能不一致：新端点、新字段、新校验会先上 `next`，`www` 落后一段时间。所以：
    - Skill 依赖的新端点（如 §2.3b 的 `DELETE /v2/ai-model-token/{uid}`）在 `www` 上可能还是 404，遇到 404 要提示「当前站点代码版本较旧，请切到 next 或稍后再试」，而不是当成「模型不存在」；
    - `references/api.md` 记录的契约以 **`www`（稳定版）** 为准，`next` 独有的能力标注出来。Skill 默认连 `www`。
 5. **写入前仍要回显 api_url**，但理由变了：不是怕写错库（写不错），而是出问题时要知道是哪一版代码写的。
 
-地址来源优先级：`--api` 参数 > `WIKIPALI_API_URL` 环境变量 > 凭据文件里的 `online.api_url`（上次选定的）> 默认 `https://www.wikipali.org/api`。开发机地址不做特殊照顾——`http://` 明文只在 `127.0.0.1` 放行，其余一律要求 `https://`。
+#### 用户如何切换（2026-08-05 定案）
 
-上表是**内置的已知站点清单**，与 §6.1.1 第 3 条（地址不硬编码）不冲突：清单只用于交互选择和 fallback 排序；`--api` / 环境变量给出的任意地址仍然接受，只是不在清单里的地址自成一桶，不与线上凭据互通。
+地址来源优先级：
+
+| 优先级 | 来源 | 是否改变默认 |
+|---|---|---|
+| 1 | `--api https://next.wikipali.org/api` | **否**，仅本次调用 |
+| 2 | `WIKIPALI_API_URL` 环境变量 | 否，仅当前 shell |
+| 3 | 凭据文件里的 `online.api_url` | 这就是默认，由 `wp.py endpoint` 写入 |
+| 4 | 都没有 → `https://www.wikipali.org/api` | 首次运行的兜底（稳定版） |
+
+**`--api` 一次性覆盖，不写回凭据文件**。否则「上周试了一次 next」会一直粘着，之后每次写入都落在最新版代码上而用户毫无察觉。改默认必须是显式动作，即下面的子命令。长期用 `next` 的人应该改默认，而不是每次带参数。
+
+**`wp.py endpoint` 是唯一改默认的入口**，让「切站点」成为可见、可回显的动作，而不是手工编辑 JSON：
+
+```
+$ python3 scripts/wp.py endpoint
+  1) https://www.wikipali.org/api   稳定版 · .org  ← 当前
+  2) https://www.wikipali.cc/api    稳定版 · .cc
+  3) https://next.wikipali.org/api  最新版 · .org
+  4) https://next.wikipali.cc/api   最新版 · .cc
+  5) http://127.0.0.1:8000/api      开发机
+
+$ python3 scripts/wp.py endpoint next
+  已切换到 https://next.wikipali.org/api（最新版 · .org）
+```
+
+不带参数时列出清单并标出当前选中；带参数时接受序号、简称（`next` / `www` / `local`）或完整 url，写回 `online.api_url`。切到 `local` 则改用 `local` 桶的凭据（§6.2）。
+
+开发机地址不做特殊照顾——`http://` 明文只在 `127.0.0.1` 放行，其余一律要求 `https://`。
+
+上表是**内置的已知站点清单**，与 §6.1.1 第 3 条（地址不硬编码）不冲突：清单只用于 `endpoint` 子命令的展示与 fallback 排序；`--api` / 环境变量给出的任意地址仍然接受，只是不在清单里的地址自成一桶，不与线上凭据互通。
 
 ### 6.2 凭据存储
 
@@ -544,5 +573,6 @@ sudo -u postgres createdb -O www mint_test
 | 3 | channel uid 如何获取 | **Skill 交互式选择** | 用 `GET /v2/channel?view=user-edit`，见 §6.4 |
 | 4 | Skill 分发形态 | **在本仓库开发，以复制方式分发**；不做独立仓库 | 放仓库根 `.claude/skills/wikipali-write/`，目录自包含、零依赖，可整体复制到其他项目；见 §6.1、§6.7 |
 | 5 | 多站点（4 个线上 + 开发机）如何处理 | 四个线上地址**共享库与 `jwt_secrets_key`**，凭据只存一份（`online` / `local` 两桶），可任意切换与自动 fallback（2026-08-05 补） | 见 §6.1.2、§6.2。`.org`/`.cc` 是地区，`www`/`next` 是**代码版本**不是数据环境；随之而来的是 API 契约版本差，见 §6.1.2-4 |
+| 6 | 用户怎么切 endpoint | `--api` 一次性覆盖**不写回**；改默认只经 `wp.py endpoint` 子命令；fallback **提示后切换**不静默（2026-08-05 补） | 见 §6.1.2「用户如何切换」。三条都指向同一个原则：当前连的是哪个站点，任何时候都应当是用户明确知道的 |
 
 决策 2 原本是「不做」，理由是省掉 `token_version` 可以不动 `ai_models` 表结构、不改 `getUserToken` 的 payload。2026-08-05 推翻：趁 Skill 尚未分发、代码尚未部署、外面一份真实凭据都没有的时候补，代价最小；再往后每多一份副本，「已签出 token 全部失效」的破坏面就大一分。
