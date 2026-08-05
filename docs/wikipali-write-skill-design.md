@@ -429,7 +429,8 @@ $ python3 scripts/wp.py endpoint next
 只有 `online` / `local` 两桶，理由见 §6.1.2：四个线上地址共享库与密钥，凭据通用。`online.api_url` 只记「上次选的是哪个地址」，换地区或在 www / next 之间切换就是改这一个字段，`user` / `model` / `access_tokens` 全部原样沿用。`local` 单独一桶是因为开发机是另一个库、另一把 `jwt_secrets_key`。
 
 原则：
-- **Claude 永不接触明文密码**。登录由用户自己执行 `python scripts/wp_login.py`（`getpass` 读取），或在 Claude Code 中用 `! python .../wp_login.py` 前缀运行；
+- **Claude 永不接触明文密码**。登录由用户自己在**一个真正的终端**里执行 `python3 scripts/wp_login.py`（`getpass` 读取）。
+  ~~或在 Claude Code 中用 `! python .../wp_login.py` 前缀运行~~——2026-08-05 实测推翻：`!` 前缀跑的命令没有交互式终端（`sys.stdin.isatty()` 为假），密码提示无处输入。脚本会明确报错并指路，另提供 `--password-stdin` 供自动化场景从管道读取；密码**不能**经 argv 传（进 `ps` 与 shell history），也不能直接打进对话（进上下文）；
 - Skill 读取凭据文件时只取 token，不回显到对话中（日志里 token 一律打码）；
 - 任一 token 收到 401 → 提示重新登录，而不是自动重试；
 - 缓存的 `model.token` 有效期只有 30 天，且可能被 owner 主动撤销（§2.3b）。两种情况的表现都是 401，处理一致：重跑 §6.3 第 4 步重取，仍 401 才提示重新登录。

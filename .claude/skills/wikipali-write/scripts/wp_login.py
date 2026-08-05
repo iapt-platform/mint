@@ -9,8 +9,15 @@
     python3 wp_login.py --api next            # 只为本次登录换站点
     python3 wp_login.py --username someone    # 免去输用户名一步
 
-在 Claude Code 中请用 `!` 前缀由用户本人执行，不要让模型代跑：
-    ! python3 .claude/skills/wikipali-write/scripts/wp_login.py
+**必须在真正的终端里跑。** Claude Code 的 `!` 前缀没有交互式终端，
+密码提示无处输入；模型也不该代跑此脚本。请另开一个 shell 执行。
+
+确实要在自动化环境里登录时，用 --password-stdin 从管道读密码：
+
+    read -rs PW && printf '%s' "$PW" | python3 wp_login.py --username me --password-stdin
+
+注意别把密码写进命令行参数或直接敲进 Claude Code 的会话——argv 会进
+ps / shell history，会话内容会进对话上下文，两者都留痕。
 """
 
 import argparse
@@ -24,6 +31,10 @@ def main(argv=None):
     parser = argparse.ArgumentParser(prog="wp_login.py", description="登录 WikiPali 并缓存用户 token")
     parser.add_argument("--api", help="本次登录使用的 API 地址（序号/简称/完整 url）")
     parser.add_argument("--username", help="用户名或邮箱；省略则交互输入")
+    parser.add_argument(
+        "--password-stdin", action="store_true",
+        help="从 stdin 读密码（供自动化用；别让密码经过 argv 或对话）",
+    )
     args = parser.parse_args(argv)
 
     try:
@@ -36,21 +47,36 @@ def main(argv=None):
     if client.bucket_name != "online":
         print("注意：该站点的凭据与线上四站不通用。")
 
+    interactive = sys.stdin.isatty()
+    if not interactive and not args.password_stdin:
+        # Claude Code 的 `!` 前缀、CI、管道都会走到这里：密码提示无处输入，
+        # 直接说清楚该怎么办，不要让用户对着一个静默的提示符发愣
+        print(
+            "错误：当前不是交互式终端，无法安全地读取密码。\n"
+            "  · 请另开一个真正的终端执行本脚本（Claude Code 的 `!` 前缀不行）；\n"
+            "  · 或在自动化环境里用管道：... | python3 wp_login.py --username <名字> --password-stdin",
+            file=sys.stderr,
+        )
+        return 1
+
     username = args.username
     if not username:
-        if not sys.stdin.isatty():
-            print("错误：非交互式环境请用 --username 指定用户名。", file=sys.stderr)
+        if not interactive:
+            print("错误：--password-stdin 模式必须同时给 --username。", file=sys.stderr)
             return 1
         username = input("用户名或邮箱：").strip()
     if not username:
         print("错误：用户名为空。", file=sys.stderr)
         return 1
 
-    try:
-        password = getpass.getpass("密码（不会被保存）：")
-    except (EOFError, KeyboardInterrupt):
-        print("\n已取消。", file=sys.stderr)
-        return 130
+    if args.password_stdin:
+        password = sys.stdin.readline().rstrip("\n")
+    else:
+        try:
+            password = getpass.getpass("密码（不会被保存）：")
+        except (EOFError, KeyboardInterrupt):
+            print("\n已取消。", file=sys.stderr)
+            return 130
     if not password:
         print("错误：密码为空。", file=sys.stderr)
         return 1

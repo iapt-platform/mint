@@ -18,8 +18,9 @@ metadata:
 
 ## 铁律
 
-1. **永远不要向用户索要密码，也不要代跑 `wp_login.py`。** 需要登录时，请用户自己在 Claude Code 里执行：
-   `! python3 .claude/skills/wikipali-write/scripts/wp_login.py`
+1. **永远不要向用户索要密码，也不要代跑 `wp_login.py`。** 需要登录时，请用户**另开一个真正的终端**执行
+   `python3 .claude/skills/wikipali-write/scripts/wp_login.py`。
+   不要让他们用 Claude Code 的 `!` 前缀——那里没有交互式终端，密码提示无处输入；也不要建议把密码放进命令行参数或直接打在对话里。
 2. **写入前必须让用户确认。** `wp.py write` 默认会回显目标并等确认；只有用户已经明确同意本次写入时，才可以加 `-y`。
 3. **绝不打印 token 全文**（`~/.wikipali/credentials.json` 里的任何值）。脚本自己会打码，不要 `cat` 那个文件。
 4. **`count` 不等于提交条数就是有句子没写进去**，必须如实报告给用户，不要说「已全部写入」。
@@ -34,8 +35,8 @@ python3 scripts/wp.py whoami          # 先看缺什么
 按缺什么补什么：
 
 ```bash
-# 1) 登录（用户自己跑，带 ! 前缀）
-! python3 .claude/skills/wikipali-write/scripts/wp_login.py
+# 1) 登录（用户自己在另一个终端里跑，不要用 ! 前缀，也不要代跑）
+python3 .claude/skills/wikipali-write/scripts/wp_login.py
 
 # 2) 建立模型身份并取 token；--name 必须是你自己的模型标识
 python3 scripts/wp.py ensure-model --name claude-opus-5
