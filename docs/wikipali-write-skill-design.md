@@ -4,7 +4,7 @@
 >
 > 分发路径：在本仓库开发调试，成熟后以**整目录复制**方式装到其他项目（§6.7）。不做独立仓库——API 仍需频繁修改，Skill 契约必须与 `api-v13` 同仓演进。
 >
-> 状态：设计已定案；服务端 P0 已完成（§5.1 端点 + §5.2 abdefg），Skill 尚未开始
+> 状态：设计已定案；服务端 P0 已完成（§5.1 端点 + §5.2 abdefg）；Skill P1 已完成（`.claude/skills/wikipali-write/`），端到端实测待服务端部署
 > 对应后端：`api-v13`（Laravel 13，路由前缀 `/api/v2`）
 > 决策定案：2026-08-04（见 §9）
 
@@ -326,9 +326,12 @@ public function show(Request $request, AiModel $aiModel)
 │   └── api.md            # 本文 §2 的精简版：端点、字段、陷阱
 ├── scripts/
 │   ├── wp_login.py       # 交互式登录，仅此脚本接触密码
-│   └── wp.py             # 客户端：endpoint / ensure-model / channels / grant / write
+│   └── wp.py             # 客户端：endpoint / whoami / ensure-model / revoke /
+│                         #         channels / grant / write
 └── install.sh            # 复制自身到目标项目或 ~/.claude/skills/
 ```
+
+实现时比原计划多了两个子命令：`whoami`（一屏看清当前站点、三种 token 及其到期时间——排查「为什么 401」的第一步）与 `revoke`（§2.3b 的撤销端点，安全能力做了就该有入口）。`wp_login.py` 通过 `import wp` 复用 HTTP 与凭据代码，两个文件仍在同一目录内，不违反自包含约束。
 
 注意放在**仓库根**而非 `api-v13/.claude/skills/`：后者已有 `laravel-best-practices` 等目录级 skill，只在编辑 `api-v13/` 下文件时激活；而本 Skill 是对线上 API 的客户端操作，与当前编辑哪个子目录无关。
 
@@ -437,8 +440,10 @@ $ python3 scripts/wp.py endpoint next
 
 1. `GET /v2/ai-model?view=studio&name={username}&keyword={modelName}`；
 2. 在 `rows` 中做 `name` **精确**比对；
-3. 命中 → 用其 `uid`；未命中 → `POST` 创建，再 `PUT` 补齐 `model` / `privacy` 等字段（在 §5.2d 落地前必须这么做两步）；
+3. 命中 → 用其 `uid`；未命中 → `POST` 一次即可带全字段（§5.2d 已落地，不再需要「POST 再 PUT」两步）。`POST` 撞 409 → 回查列表取 uid（模糊匹配漏网或并发）；已存在但字段有出入 → `PUT` 增量补；
 4. `GET /v2/ai-model-token/{uid}` 取 modelToken，写入凭据文件缓存。
+
+`--name` 决定署名，故不设默认值：拿不到就报错要求显式指定，避免把句子挂到别的模型名下。
 
 ### 6.4 channel 的交互式选择
 
@@ -509,6 +514,8 @@ ChannelController::index() 的 'user-edit' 分支：
 
 **先后顺序**：先在本仓库把流程跑通（P1 全部完成），再写 `install.sh`。过早打包会把未定型的 API 契约固化到副本里。
 
+2026-08-05 的实际情况：`install.sh` 已写好并验证（装出的副本能独立运行），但**分发要等到服务端部署 + 端到端实测通过之后**。打包机制本身不依赖 API 契约，先写好没有代价；真正会把未定型契约固化出去的是「复制给别的项目」这一步。
+
 ---
 
 ## 7. 安全考量
@@ -530,13 +537,14 @@ ChannelController::index() 的 'user-edit' 分支：
 | P0 | ✅ | 服务端安全修补：§5.2 (a)(b)(f) | — |
 | P0 | ✅ | 服务端：§5.2 (d)(e)(g) —— 从 P2 上提，否则 §6.3 的「POST 建档再 PUT 补字段」会被 (e) 的 null 覆盖打断 | — |
 | P0 | ✅ | 服务端：模型 token TTL 收到 30 天 + `token_version` 撤销机制 + `DELETE /v2/ai-model-token/{uid}`（推翻 §9 决策 2）| — |
-| P1 | ⬜ | Skill：`wp_login.py` + 凭据存储 + `auth/current` 校验 | P0 |
-| P1 | ⬜ | Skill：`ensure-model`（查/建/补字段/取 token） | P0 |
-| P1 | ⬜ | Skill：`channels`（`view=user-edit` 列表 + 交互选择） | P0 |
-| P1 | ⬜ | Skill：`grant`（签 access token，缓存） | `channels` |
-| P1 | ⬜ | Skill：`write`（分批 + 确认 + count 核对） | 以上全部 |
+| P1 | ✅ | Skill：`wp_login.py` + 凭据存储 + `auth/current` 校验 | P0 |
+| P1 | ✅ | Skill：`ensure-model`（查/建/补字段/取 token）、`revoke`、`whoami` | P0 |
+| P1 | ✅ | Skill：`channels`（`view=user-edit` 列表 + 交互选择） | P0 |
+| P1 | ✅ | Skill：`grant`（签 access token，缓存，判 `count: 0`） | `channels` |
+| P1 | ✅ | Skill：`write`（分批 + 确认 + count 核对 + 401 自动重签一次） | 以上全部 |
 | P2 | ⬜ | 服务端质量修补：§5.2 (c) | — |
-| P1 | ⬜ | Skill：`install.sh` + `VERSION`（打包分发，§6.7） | P1 全部跑通 |
+| P1 | ✅ | Skill：`install.sh` + `VERSION`（打包分发，§6.7） | P1 全部跑通 |
+| P1 | ⬜ | **端到端实测：对真实站点跑通登录 → 写入** | **服务端部署** |
 | P2 | ⬜ | Skill 扩展：读取能力（`GET /v2/sentence`、`sentences-in-chapter`）与 `sentpr` PR 提交 | P1 |
 
 (d)(e) 上提到 P0 的理由：§6.3 第 3 步在 (d) 落地前必须走「POST 创建 → PUT 补齐字段」两步，而 (e) 未修时那个 PUT 会把未传字段一律置 null，两个缺陷叠加使 ensure-model 无法可靠工作。
@@ -559,6 +567,14 @@ ChannelController::index() 的 'user-edit' 分支：
 ```bash
 sudo -u postgres createdb -O www mint_test
 ```
+
+#### Skill 的验证方式（2026-08-05）
+
+Skill 的验证不走 Pest——它是个纯客户端，测的是「对着服务端的响应形状与坑，客户端做对了没有」。做法是写一个模拟 API 的桩服务（复刻 `sign-in` 失败返回 400、`keyword` 模糊匹配、`access-token` 无权返回 `count: 0`、`sentence` 逐句静默跳过、返回字段名是 `book` 而非 `book_id` 这几处），把全流程跑一遍，验证点：
+
+登录（含密码错）、`ensure-model` 幂等复跑、`channels` 列表、`grant` 缓存命中不重签、`write` 的 dry-run / 分批 / 覆盖警告 / 非交互式无 `-y` 时拒绝写入、部分写入时列出漏掉的句子、`count: 0` 时中止、模型 token 被撤销后自动重签一次再重试、fallback 顺序（同版本另一域名 → 另一版本同域名，且绝不落到 `local`）、`endpoint` 切换与 `--api` 不写回、`install.sh` 装出的副本可独立运行。
+
+**尚未验证的是真实站点上的端到端写入**——四个线上地址目前都还没部署 P0（`POST /api/v2/ai-model-token/x` 返回 404 而非 405，说明路由不存在）。部署后要补跑一次真实写入，并断言 `editor_uid` 落成模型 uid。桩服务不进仓库：它编码的是「我以为服务端是这样」，留着会变成第二份契约来源，与 `references/api.md` 打架。
 
 ---
 
