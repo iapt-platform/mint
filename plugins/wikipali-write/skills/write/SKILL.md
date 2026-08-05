@@ -14,12 +14,17 @@ metadata:
 - `scripts/wp_login.py` —— 唯一接触密码的脚本，**必须由用户本人执行**
 - `scripts/wp.py` —— 其余全部操作
 
-下面的命令都假设 cwd 在本 Skill 目录（`.claude/skills/wikipali-write/`）。
+下面的命令都写成 `python3 scripts/wp.py …`，其中 `scripts/` 是**本 SKILL.md 同目录下的** `scripts/`。执行前先把它换成实际路径：
+
+- 作为插件安装时：`${CLAUDE_PLUGIN_ROOT}/skills/write/scripts/wp.py`
+- 直接放在项目里时：`<skill 目录>/scripts/wp.py`
+
+拿不准就先 `ls` 确认，不要凭猜测拼路径。
 
 ## 铁律
 
 1. **永远不要向用户索要密码，也不要代跑 `wp_login.py`。** 需要登录时，请用户**另开一个真正的终端**执行
-   `python3 .claude/skills/wikipali-write/scripts/wp_login.py`。
+   `python3 <上面那个 scripts 路径>/wp_login.py`（把完整路径写给他们，别让他们自己找）。
    不要让他们用 Claude Code 的 `!` 前缀——那里没有交互式终端，密码提示无处输入；也不要建议把密码放进命令行参数或直接打在对话里。
 2. **写入前必须让用户确认。** `wp.py write` 默认会回显目标并等确认；只有用户已经明确同意本次写入时，才可以加 `-y`。
 3. **绝不打印 token 全文**（`~/.wikipali/credentials.json` 里的任何值）。脚本自己会打码，不要 `cat` 那个文件。
@@ -36,7 +41,7 @@ python3 scripts/wp.py whoami          # 先看缺什么
 
 ```bash
 # 1) 登录（用户自己在另一个终端里跑，不要用 ! 前缀，也不要代跑）
-python3 .claude/skills/wikipali-write/scripts/wp_login.py
+python3 scripts/wp_login.py
 
 # 2) 建立模型身份并取 token；--name 必须是你自己的模型标识
 python3 scripts/wp.py ensure-model --name claude-opus-5
@@ -102,4 +107,4 @@ python3 scripts/wp.py revoke
 
 ## 更多
 
-端点字段、返回形状与各处陷阱见 `references/api.md`。若脚本行为与该文件对不上，多半是这份 Skill 副本过期了（比对 `VERSION`），请重新安装。
+端点字段、返回形状与各处陷阱见 `references/api.md`。若脚本行为与该文件对不上，多半是这份副本过期了——插件用户跑 `/plugin update`，手工安装的用户重新装一遍。

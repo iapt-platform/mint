@@ -1,0 +1,13 @@
+{
+  "name": "wikipali-write",
+  "description": "以 AI 模型身份把句子写入 WikiPali 句子库：登录、模型身份 token、channel 选择、access token、分批写入与 count 核对。",
+  "version": "0.1.0",
+  "author": {
+    "name": "visuddhinanda",
+    "url": "https://github.com/visuddhinanda"
+  },
+  "homepage": "https://github.com/visuddhinanda/mint/tree/development/.claude/skills/wikipali-write",
+  "repository": "https://github.com/visuddhinanda/mint",
+  "license": "MIT",
+  "keywords": ["wikipali", "pali", "translation", "api-client"]
+}

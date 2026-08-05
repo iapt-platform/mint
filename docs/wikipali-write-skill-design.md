@@ -4,7 +4,7 @@
 >
 > 分发路径：在本仓库开发调试，成熟后以**整目录复制**方式装到其他项目（§6.7）。不做独立仓库——API 仍需频繁修改，Skill 契约必须与 `api-v13` 同仓演进。
 >
-> 状态：设计已定案；服务端 P0 已完成（§5.1 端点 + §5.2 abdefg）；Skill P1 已完成（`.claude/skills/wikipali-write/`）并在开发机上端到端跑通（2026-08-05）；线上四站尚未部署
+> 状态：设计已定案；服务端 P0 已完成（§5.1 端点 + §5.2 abdefg）；Skill P1 已完成（`plugins/wikipali-write/`）并在开发机上端到端跑通（2026-08-05）；线上四站尚未部署
 > 对应后端：`api-v13`（Laravel 13，路由前缀 `/api/v2`）
 > 决策定案：2026-08-04（见 §9）
 
@@ -312,34 +312,43 @@ public function show(Request $request, AiModel $aiModel)
 
 ### 6.1 目录结构
 
-**开发地点：本仓库。分发方式：整目录复制。**（§9 决策 4）
+**开发地点：本仓库。分发方式：Claude Code 插件（marketplace）。**（§9 决策 4、决策 7）
 
 理由：API 尚不完善，Skill 与服务端要同步改（§5 的每一项都会反映到 `references/api.md`）。放在 mint 仓库内，一次提交就能同时改 Laravel 代码和 Skill 契约；独立仓库会让两者版本漂移，且改 API 时无法在同一个 Claude Code 会话里读写后端代码。
 
-放在仓库根的 `.claude/skills/` 下：
+放在仓库根的 `plugins/` 下，本身就是一个合法插件：
 
 ```
-.claude/skills/wikipali-write/
-├── SKILL.md              # 触发条件 + 流程说明（给模型读）
-├── VERSION               # 日历版本号，随 API 契约变更递增
-├── references/
-│   └── api.md            # 本文 §2 的精简版：端点、字段、陷阱
-├── scripts/
-│   ├── wp_login.py       # 交互式登录，仅此脚本接触密码
-│   └── wp.py             # 客户端：endpoint / whoami / ensure-model / revoke /
-│                         #         channels / grant / write
-└── install.sh            # 复制自身到目标项目或 ~/.claude/skills/
+plugins/wikipali-write/
+├── .claude-plugin/
+│   └── plugin.json       # 插件清单，version 是唯一的版本来源
+├── README.md             # 面向安装者：装之前它会动你哪些东西
+├── install.sh            # 不走 marketplace 时的后路
+└── skills/
+    └── write/            # → 调用名 wikipali-write:write
+        ├── SKILL.md      # 触发条件 + 流程说明（给模型读）
+        ├── references/
+        │   └── api.md    # 本文 §2 的精简版：端点、字段、陷阱
+        └── scripts/
+            ├── wp_login.py   # 交互式登录，仅此脚本接触密码
+            └── wp.py         # 客户端：endpoint / whoami / ensure-model /
+                              #         revoke / channels / grant / write
 ```
 
 实现时比原计划多了两个子命令：`whoami`（一屏看清当前站点、三种 token 及其到期时间——排查「为什么 401」的第一步）与 `revoke`（§2.3b 的撤销端点，安全能力做了就该有入口）。`wp_login.py` 通过 `import wp` 复用 HTTP 与凭据代码，两个文件仍在同一目录内，不违反自包含约束。
 
-注意放在**仓库根**而非 `api-v13/.claude/skills/`：后者已有 `laravel-best-practices` 等目录级 skill，只在编辑 `api-v13/` 下文件时激活；而本 Skill 是对线上 API 的客户端操作，与当前编辑哪个子目录无关。
+几个布局上的决定：
+
+- **用 `skills/write/` 而不是把 SKILL.md 放插件根**。后者也合法（单 skill 插件允许），但调用名会变成 `wikipali-write:wikipali-write`；而且 §9 后续规划里还有读取和 sentpr 两个 skill，`skills/` 布局才能容纳。
+- **`VERSION` 文件已删**。版本号只留 `plugin.json` 的 `version` 一处，两处必然漂移；`install.sh` 改为从 manifest 读。
+- **仓库根留一个 symlink** `.claude/skills/wikipali-write → ../../plugins/wikipali-write/skills/write`，这样在 mint 里开发时（无论从哪个子目录启动 Claude Code）skill 仍然自动加载。实测普通 skill 的向上查找会跟随 symlink；插件形态则用 `--plugin-dir ./plugins/wikipali-write` 测。
+- 放在**仓库根**而非 `api-v13/` 下：后者已有 `laravel-best-practices` 等目录级 skill，只在编辑 `api-v13/` 时激活；而本 Skill 是对线上 API 的客户端操作，与当前编辑哪个子目录无关。
 
 ### 6.1.1 可分发性约束
 
 「能复制给别的项目用」是硬需求，因此以下几条是**约束而非偏好**：
 
-1. **目录自包含**——不引用 `.claude/skills/wikipali-write/` 之外的任何路径。SKILL.md 里不能出现 `api-v13/...` 这类仓库内引用；需要的 API 事实全部落在 `references/api.md` 里。
+1. **目录自包含**——不引用 `plugins/wikipali-write/` 之外的任何路径。SKILL.md 里不能出现 `api-v13/...` 这类仓库内引用；需要的 API 事实全部落在 `references/api.md` 里。
 2. **零安装依赖，只用 Python 标准库**——用 `urllib.request` 而非 `requests`，`json` / `getpass` / `argparse` 均为内置。**不跟随 `ai-translate` 的 venv + `pip install -e` 模式**（`ai-translate/pyproject.toml` 依赖 `pika`/`requests`/`redis`/`openai`）：那套在目标项目里要求用户先建虚拟环境，与「复制即用」冲突。代价是要自己处理 `urllib` 的 HTTPError/超时/JSON 编码，比 `requests` 啰嗦，但换来 `python3 scripts/wp.py` 开箱可跑。
 3. **API 地址不硬编码**——见 §6.1.2。复制到别的项目后无需改代码。
 4. **凭据与 Skill 解耦**——凭据在 `~/.wikipali/`（§6.2），多个项目里的 Skill 副本共用同一份登录态，登录一次即可。
@@ -490,30 +499,31 @@ ChannelController::index() 的 'user-edit' 分支：
 
 注意 `SentenceController::store()` 对**逐句失败是静默跳过**的（`:341`），所以「HTTP 200」不等于「全部写入成功」，必须核对 `count`。
 
-### 6.7 打包与分发
+### 6.7 打包与分发（2026-08-05 改为插件，见 §9 决策 7）
 
-目标：Skill 在本仓库调通后，能整体复制给其他项目使用，且不脱离本仓库维护。
+**主路径：Claude Code 插件 + 自建 marketplace。**
 
-**安装方式**——`install.sh` 把自身目录复制到目标位置：
-
-```bash
-# 装到某个项目（项目级，只在该项目激活）
-.claude/skills/wikipali-write/install.sh ~/work/other-project
-
-# 装到用户级（所有项目可用）
-.claude/skills/wikipali-write/install.sh --user
+```
+/plugin marketplace add visuddhinanda/wikipali-plugins
+/plugin install wikipali-write@wikipali
 ```
 
-行为：`cp -r` 自身到 `<target>/.claude/skills/wikipali-write/` 或 `~/.claude/skills/wikipali-write/`；若目标已存在，比对 `VERSION` 并要求 `--force` 才覆盖。不复制 `install.sh` 以外的任何仓库文件。
+桌面版（Claude Desktop 的 **Code** 标签页）点 `+` → Plugins → Add plugin 装同一个 marketplace。注意插件只对本地/SSH 会话生效，Chat 标签页与云会话不加载插件。
 
-**版本与漂移**——`VERSION` 用日历版本（如 `2026.08.04`），**在每次 API 契约变更时递增**（§5 的任何一项落地都算）。副本里的 `VERSION` 是判断「这份拷贝是否过期」的唯一依据。
+**两个仓库的分工**：
 
-这是 copy-based 分发的固有代价：**副本不会自动更新**。API 一改，各处副本就静默过期，直到用户重新 `install.sh --force`。缓解手段：
+| 仓库 | 内容 | 为什么 |
+|---|---|---|
+| `visuddhinanda/wikipali-plugins` | 只有 `.claude-plugin/marketplace.json` + README，8 KB | `/plugin marketplace add` 会**完整克隆** marketplace 仓库，没有稀疏优化 |
+| `visuddhinanda/mint` | 插件本体 `plugins/wikipali-write/` | 与 API 同仓演进（§6.1）。marketplace 用 `git-subdir` 源指过来，Claude Code **稀疏克隆**只取这一个子目录 |
 
-- `wp.py` 启动时调 `GET /v2/auth/current`（或任一轻量端点），若服务端返回的错误形态与 `references/api.md` 记录的不符，提示「Skill 可能已过期，请重新安装」；
-- 不做自动更新——那需要副本知道 mint 仓库的位置，违反 §6.1.1 的自包含约束。
+反过来「mint 自己当 marketplace」是不行的：mint 的 packfile 580 MB、HEAD 快照 212 MB，而 Claude Code 的 git 操作超时是 120 秒，且后台自动更新失败时会整仓重新 clone。
 
-**先后顺序**：先在本仓库把流程跑通（P1 全部完成），再写 `install.sh`。过早打包会把未定型的 API 契约固化到副本里。
+**版本与更新**——版本号只有 `plugin.json` 的 `version` 一处。marketplace 条目里可以再加 `sha` 钉到具体提交，那才是真正的「发版」：用户不会静默拿到 mint 上某个未验证的中间提交。改 API 契约时的动作是：改插件 → 提交 → 推 mint → 更新 marketplace.json 的 `sha`/`version` → 用户 `/plugin update`。
+
+**`install.sh` 降级为后路**：不走 marketplace 时，它把插件目录整个复制到 `<target>/.claude/skills/wikipali-write/`，因为带 `.claude-plugin/plugin.json` 的目录会被当作 `<name>@skills-dir` 插件就地加载。代价是不会自动更新。
+
+**先后顺序**：先在本仓库把流程跑通（P1 全部完成），再打包。过早分发会把未定型的 API 契约固化到别人机器上——所以**线上四站部署 + 线上复测通过之前，不要把 marketplace 地址给别人**。
 
 2026-08-05 的实际情况：`install.sh` 已写好并验证（装出的副本能独立运行），但**分发要等到服务端部署 + 端到端实测通过之后**。打包机制本身不依赖 API 契约，先写好没有代价；真正会把未定型契约固化出去的是「复制给别的项目」这一步。
 
@@ -605,8 +615,9 @@ Skill 的验证不走 Pest——它是个纯客户端，测的是「对着服务
 | 1 | 模型记录挂个人还是 group studio | **个人 studio** | §5.1 用 `canEdit()`，不引入 `StudioApi::userCanManage`；(a) 的遗留项 2 关闭 |
 | 2 | 是否提供 token 撤销机制 | ~~不做~~ → **2026-08-05 推翻，改为做** | 加 `ai_models.token_version`，模型 token payload 增 `typ`/`ver`，TTL 从 365 天收到 30 天；旧模型 token 全部失效（见 §5.1、§7-2） |
 | 3 | channel uid 如何获取 | **Skill 交互式选择** | 用 `GET /v2/channel?view=user-edit`，见 §6.4 |
-| 4 | Skill 分发形态 | **在本仓库开发，以复制方式分发**；不做独立仓库 | 放仓库根 `.claude/skills/wikipali-write/`，目录自包含、零依赖，可整体复制到其他项目；见 §6.1、§6.7 |
+| 4 | Skill 分发形态 | **在本仓库开发，以复制方式分发**；不做独立仓库 | 放仓库根 `plugins/wikipali-write/`，目录自包含、零依赖，可整体复制到其他项目；见 §6.1、§6.7 |
 | 5 | 多站点（4 个线上 + 开发机）如何处理 | 四个线上地址**共享库与 `jwt_secrets_key`**，凭据只存一份（`online` / `local` 两桶），可任意切换与自动 fallback（2026-08-05 补） | 见 §6.1.2、§6.2。`.org`/`.cc` 是地区，`www`/`next` 是**代码版本**不是数据环境；随之而来的是 API 契约版本差，见 §6.1.2-4 |
 | 6 | 用户怎么切 endpoint | `--api` 一次性覆盖**不写回**；改默认只经 `wp.py endpoint` 子命令；fallback **提示后切换**不静默（2026-08-05 补） | 见 §6.1.2「用户如何切换」。三条都指向同一个原则：当前连的是哪个站点，任何时候都应当是用户明确知道的 |
+| 7 | 怎么发布给别人 | **Claude Code 插件 + 自建 marketplace**：目录文件放独立小仓库 `wikipali-plugins`，插件本体留在 mint，用 `git-subdir` 稀疏克隆（2026-08-05 补，修正决策 4 的「整目录复制」） | 见 §6.7。mint 不能直接当 marketplace——marketplace 是整仓 clone，580 MB 撞 120 秒超时。MCP server 形态排在插件跑通之后 |
 
 决策 2 原本是「不做」，理由是省掉 `token_version` 可以不动 `ai_models` 表结构、不改 `getUserToken` 的 payload。2026-08-05 推翻：趁 Skill 尚未分发、代码尚未部署、外面一份真实凭据都没有的时候补，代价最小；再往后每多一份副本，「已签出 token 全部失效」的破坏面就大一分。
