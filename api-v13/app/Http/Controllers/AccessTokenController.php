@@ -2,56 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AccessToken;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-use Illuminate\Support\Facades\Log;
-use App\Services\AuthService;
 use App\Http\Api\ChannelApi;
+use App\Models\AccessToken;
+use App\Services\AuthService;
+use Firebase\JWT\JWT;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class AccessTokenController extends Controller
 {
     /**
+     * 签出的 access token 有效期（秒）。7 天足够一次批量写入作业，
+     * 又能把凭据泄漏的窗口限制在可接受范围内。
+     */
+    private const TOKEN_TTL = 60 * 60 * 24 * 7;
+
+    /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
         //
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), [], 401);
         }
         $payload = $request->input('payload');
-        $result = array();
+        $result = [];
         foreach ($payload as $key => $value) {
-            //鉴权
+            // 鉴权
             switch ($value['res_type']) {
                 case 'channel':
-                    if (!isset($value['power']) || !isset($value['res_id'])) {
+                    if (! isset($value['power']) || ! isset($value['res_id'])) {
                         continue 2;
                     }
                     if ($value['power'] === 'edit') {
-                        if (!ChannelApi::userCanEdit($user['user_uid'], $value['res_id'])) {
+                        if (! ChannelApi::userCanEdit($user['user_uid'], $value['res_id'])) {
                             continue 2;
                         }
                     } else {
-                        if (!ChannelApi::userCanRead($user['user_uid'], $value['res_id'])) {
+                        if (! ChannelApi::userCanRead($user['user_uid'], $value['res_id'])) {
                             continue 2;
                         }
                     }
@@ -60,39 +64,44 @@ class AccessTokenController extends Controller
                     continue 2;
                     break;
             }
-            //获取token
+            // 获取token
             $token = AccessToken::firstOrNew(
                 [
                     'res_type' => $value['res_type'],
-                    'res_id' => $value['res_id']
+                    'res_id' => $value['res_id'],
                 ],
                 [
-                    'token' => (string)Str::uuid()
+                    'token' => (string) Str::uuid(),
                 ]
             );
-            if (!$token->exists) {
+            if (! $token->exists) {
                 $token->save();
             }
 
+            // 有效期：payload 里不注入 exp 的话，签出的 token 永久有效，泄漏后无法失效
+            $value['nbf'] = time();
+            $value['exp'] = time() + self::TOKEN_TTL;
+
             try {
-                $jwt = JWT::encode($value, $token->token . $token->token, 'HS512');
+                $jwt = JWT::encode($value, $token->token.$token->token, 'HS512');
             } catch (\Exception $e) {
                 Log::error('jwt', ['error' => $e]);
+
                 continue;
             }
             $result[] = [
                 'payload' => $value,
-                'token' => $jwt
+                'token' => $jwt,
             ];
         }
+
         return $this->ok(['rows' => $result, 'count' => count($result)]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\AccessToken  $accessToken
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(AccessToken $accessToken)
     {
@@ -102,9 +111,7 @@ class AccessTokenController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\AccessToken  $accessToken
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, AccessToken $accessToken)
     {
@@ -114,8 +121,7 @@ class AccessTokenController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\AccessToken  $accessToken
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(AccessToken $accessToken)
     {
