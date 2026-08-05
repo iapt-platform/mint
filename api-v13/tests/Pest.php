@@ -1,6 +1,13 @@
 <?php
 
+use App\Models\Channel;
+use App\Models\UserInfo;
+use App\Services\AuthService;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /*
@@ -47,4 +54,96 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+/**
+ * 造一个用户 token。
+ *
+ * AuthService::current() 只解 JWT、不查库，所以测试里不必真的建用户；
+ * payload 结构必须与 AuthService::getUserToken() 保持一致。
+ */
+function userToken(string $userUid, int $userId = 1): string
+{
+    return JWT::encode([
+        'nbf' => time(),
+        'exp' => time() + 3600,
+        'uid' => $userUid,
+        'id' => $userId,
+    ], config('mint.app.jwt_secrets_key'), 'HS512');
+}
+
+/**
+ * 解开一个 token 的 payload。
+ */
+function decodeToken(string $token): object
+{
+    return JWT::decode($token, new Key(config('mint.app.jwt_secrets_key'), 'HS512'));
+}
+
+/**
+ * 把 token 交给 AuthService::current() 判定，返回 user_uid，无效则返回 false。
+ *
+ * 所有端点的鉴权都走这里，故用它来断言「token 是否还有效」。
+ *
+ * @return string|false
+ */
+function currentUid(string $token)
+{
+    $request = Request::create('/', 'GET');
+    $request->headers->set('Authorization', 'Bearer '.$token);
+
+    $user = AuthService::current($request);
+
+    return $user ? $user['user_uid'] : false;
+}
+
+/**
+ * 带用户 token 的请求头。
+ */
+function authHeader(string $userUid): array
+{
+    return ['Authorization' => 'Bearer '.userToken($userUid)];
+}
+
+/**
+ * 建一个用户及其个人 studio，返回 user uid。
+ *
+ * StudioApi::getIdByName() 查的是 user_infos.username，所以 studio 名即用户名。
+ */
+function makeStudio(string $username): string
+{
+    $userId = (string) Str::uuid();
+    (new UserInfo)->forceFill([
+        'userid' => $userId,
+        'username' => $username,
+        'nickname' => $username,
+        'password' => 'x',
+        'email' => $username.'@example.test',
+    ])->save();
+
+    return $userId;
+}
+
+/**
+ * 建一个属于指定用户的 channel，返回 channel uid。
+ *
+ * channels.id 不是自增列，必须显式给值。
+ */
+function makeChannel(string $ownerUid, string $name = 'test channel'): string
+{
+    $uid = (string) Str::uuid();
+    (new Channel)->forceFill([
+        'id' => random_int(1, PHP_INT_MAX),
+        'uid' => $uid,
+        'type' => 'translation',
+        'owner_uid' => $ownerUid,
+        'editor_id' => 0,
+        'name' => $name,
+        'lang' => 'zh-Hans',
+        'status' => 30,
+        'create_time' => time() * 1000,
+        'modify_time' => time() * 1000,
+    ])->save();
+
+    return $uid;
 }

@@ -23,8 +23,13 @@
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
         <env name="CACHE_STORE" value="array"/>
-        <env name="DB_CONNECTION" value="sqlite"/>
-        <env name="DB_DATABASE" value=":memory:"/>
+        <!--
+            迁移文件含 Postgres 专有语句（CREATE EXTENSION "uuid-ossp" 等），无法在 sqlite 上跑，
+            故测试也走 pgsql。DB_DATABASE 必须固定为独立的测试库：RefreshDatabase 会清空目标库，
+            指向开发库会直接毁掉数据。
+        -->
+        <env name="DB_CONNECTION" value="pgsql"/>
+        <env name="DB_DATABASE" value="mint_test"/>
         <env name="DB_URL" value=""/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
