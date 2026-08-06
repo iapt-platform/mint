@@ -525,6 +525,24 @@ ChannelController::index() 的 'user-edit' 分支：
 
 **先后顺序**：先在本仓库把流程跑通（P1 全部完成），再打包。过早分发会把未定型的 API 契约固化到别人机器上——所以**线上四站部署 + 线上复测通过之前，不要把 marketplace 地址给别人**。
 
+#### 已发布状态（2026-08-06）
+
+`visuddhinanda/wikipali-plugins` 已上线，`wikipali-write` 钉在 mint 的 `c46cf6400`。实测：
+
+- `/plugin marketplace add visuddhinanda/wikipali-plugins` → `/plugin install wikipali-write@wikipali` 一次通过；
+- 缓存目录 `~/.claude/plugins/cache/wikipali/wikipali-write/0.1.0/` 只有 **84 KB**——`git-subdir` 的稀疏克隆确实只取了那一个子目录，没有拉 mint 的 580 MB；
+- 在与 mint 无关的目录下启动，skill 以 `wikipali-write:write` 加载，缓存里的 `wp.py` 直接可跑；
+- 常驻上下文成本 ~230 tok（就是 SKILL.md 的 description），调用时 ~2k。
+
+**发版流程**（四步，缺一步用户就拿不到新版）：
+
+1. 改插件 → 提交 → **推 mint**；
+2. 有契约变更就 bump `plugins/wikipali-write/.claude-plugin/plugin.json` 的 `version`；
+3. 更新 `wikipali-plugins` 的 `marketplace.json`：`source.sha` 指向新提交，`version` 跟着改；
+4. 用户 `/plugin update wikipali-write@wikipali`。
+
+第 3 步是刻意的手工闸门：不钉 sha 的话用户会静默拿到 `development` 上任何一个中间提交，包括没验证过的。
+
 2026-08-05 的实际情况：`install.sh` 已写好并验证（装出的副本能独立运行），但**分发要等到服务端部署 + 端到端实测通过之后**。打包机制本身不依赖 API 契约，先写好没有代价；真正会把未定型契约固化出去的是「复制给别的项目」这一步。
 
 ---
