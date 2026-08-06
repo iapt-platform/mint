@@ -4,7 +4,7 @@
 >
 > 与写入型 skill（`docs/wikipali-write-skill-design.md`）同属 `wikipali` 插件，共用坐标系、channel 模型与凭据。
 >
-> 状态：需求已定（§1 来自用户的真实工作流），API 盘点完成（§2 均已实测），三个阻塞缺口待决（§3）。**尚未动工**。
+> 状态：需求已定（§1 来自用户的真实工作流），API 盘点完成（§2 均已实测）。**主检索链路无阻塞，可以开工**（§3 修订：原列的三个缺口有两个已证伪）。
 >
 > 日期：2026-08-06
 
@@ -42,16 +42,57 @@
 
 | 步骤 | 端点 | 状态 |
 |---|---|---|
-| 1 词形确认 | `GET /v2/dict?word={词}&lang=zh` | ✅ 可用，且能**词形还原** |
-| 2/5 全文检索 | `GET /v2/search?view=pali&key=&limit=&offset=` | ❌ **500**（§3.1） |
-| 5 出处分布 | `GET /v2/search-book-list?view=pali&key=` | ❌ **500**（同上） |
-| 2' 逐词检索 | `GET /v2/search-pali-wbw?key=&bold=on\|off&book=&limit=` | ⚠️ 可用但只匹配**确切词形**（§3.2） |
-| 2' 逐词分布 | `GET /v2/search-pali-wbw-books?key=` | ⚠️ 同上 |
-| 标题检索 | `GET /v2/search?view=title&key=` | ✅ 可用（纯 DB，不走 gRPC） |
+| 1 词形展开 | `GET /v2/case/{词}` | ✅ **主链路第一步**：猜 lemma + 列出全部实际词形 |
+| 1 释义验证 | `GET /v2/dict?word={词}&lang=zh` | ✅ 可用，附形态分析（形 → 根） |
+| 2/5 检索 | `GET /v2/search-pali-wbw?key={词形,词形,…}&bold=&limit=&offset=&book=` | ✅ **主链路第二步** |
+| 5 出处分布 | `GET /v2/search-pali-wbw-books?key={词形,…}` | ✅ 带 `paliTitle` 与 tags |
+| — 词组全文检索 | `GET /v2/search?view=pali&key=`、`/v2/search-book-list` | ❌ **500**，走 gRPC（§3.1，非阻塞） |
+| — 标题检索 | `GET /v2/search?view=title&key=` | ✅ 可用（纯 DB，不走 gRPC） |
 | 6 取段落 | `GET /v2/sentence?view=paragraph&book=&para=1,2,3&channels=` | ✅ 可用 |
 | 7 取整章 | `GET /v2/sentence?view=chapter&book=&para=&channels=` | ✅ 可用（实测 22 句） |
 | 7 目录导航 | `GET /v2/palitext?view=book-toc\|chapter\|children\|paragraph` | ✅ 可用 |
 | 10 找译本 | `GET /v2/channel?view=public`、`sentence?view=paragraph&lang=` | ⚠️ `lang=` 分支待验 |
+
+### 2.0 主检索链路（用户提供，2026-08-06 实测）
+
+**第一步：`GET /v2/case/{被搜索词}`** —— 输入可以是任意变格形，程序推测可能的词典原型，按可能性排序。
+
+```
+GET /v2/case/parivāsa  →  data: { rows: [ {word, count, case: [...] }, ... ], count }
+```
+
+取 `rows[0]`（可能性最高的 lemma），其 `case` 数组就是该词在语料中出现过的**全部实际词形**，每项带 `count` 与 `bold` 计数：
+
+```
+parivāsa (13 形): parivāsaṃ×221(黑7) · parivāso×170(黑5) · parivāse×22 · parivāsā×7 · parivāsesu×7 …
+```
+
+**第二步：`GET /v2/search-pali-wbw?key={把这些词形用逗号连起来}`**
+
+```
+count: 281 段落。rows 每项：
+{ book, paragraph, rank, path[章节路径,含 level], paliTitle, highlight }
+```
+
+实测细节：
+
+- `limit=200` 正常返回 200 行（步骤 5 取前 200 无碍；本例全库也就 281 段）；
+- `view` 与 `type` 参数**实测无影响**，可省略（源码 `SearchPaliWbwController::index` 也没读它们）；
+- `highlight` 用 `<span class='hl'>` 包命中词，并**保留原文的 `<span class="bld">`**——黑体信息在返回里可见；
+- `rank` = `sum(weight)`，`bold=on|off` 直接按 `style='bld'` 筛。**`bold=on` 让本例命中从 281 降到 13**；
+- 范围限定 `book=<id,id>` 或 `tags=<tag1,tag2;tag3>`（组间 OR、组内 AND）。
+
+**分布**：`GET /v2/search-pali-wbw-books?key={词形,…}` 返回 43 部书，每项带 `paliTitle` 和 **tags**：
+
+| 书 | 命中 | tags |
+|---|---|---|
+| (VN)Cūḷavaggapāḷi | 126 | vinaya, mūla, pāḷi, khandhaka, cūḷavagga |
+| Vinayālaṅkāra-ṭīkā | 40 | ṭīkā, vinaya |
+| (SP) Cūḷavagga-aṭṭhakathā | 28 | vinaya, aṭṭhakathā, samantapāsādikā |
+
+tags 里的 `mūla` / `aṭṭhakathā` / `ṭīkā` 让 agent 能直接区分**本文、义注、复注**——步骤 5 的「分析出处分布」和步骤 8 的分类都要靠它。
+
+**这条链路对步骤 3/4 有个更好的做法**：用户原方案是「取前 50，靠黑体加权让义注的名词解释排前面」。但既然有 `bold=on`，可以直接**只取黑体命中**（本例 13 条），那正是被注释书当作词条标出来的地方——比靠排序精准，而且省 90% 的上下文。
 
 ### 2.1 词典 —— 可用，而且比预想的强
 
@@ -116,9 +157,11 @@ GET /v2/sentence?view=paragraph&book=93&para=757,758&channels=<uid>
 
 ---
 
-## 3. 三个阻塞缺口
+## 3. 缺口（2026-08-06 修订：原先列的三个，两个已被证伪）
 
-### 3.1 全文检索线上返回 500 —— 阻塞步骤 2/5，即整个流程的骨干
+主检索链路（`case` → `search-pali-wbw`）**完全可用，www 与 next 都有**。下面第一条降级为非阻塞，第二条不成立。
+
+### 3.1 词组全文检索返回 500 —— 非阻塞，但确实坏了
 
 实测（www 与 next 均如此）：
 
@@ -129,30 +172,19 @@ GET /v2/search-book-list?view=pali&key=parivāsa         → HTTP 500
 GET /v2/search?view=title&key=parivasa                  → HTTP 200 ✅
 ```
 
-只有走 gRPC 的分支挂，纯 DB 的分支正常 → 指向 `tulip` 服务不可达或 PHP 的 grpc 扩展缺失。**需要先确认线上搜索页现在是否正常**：如果网站上能搜，那是前端走了别的路；如果也不能，这是一个正在影响真实用户的故障，优先级高于本项目。
+只有走 gRPC（`PaliSearch` → `tulip` 服务）的分支挂，纯 DB 的分支正常 → 指向 tulip 不可达或 PHP 的 grpc 扩展缺失。
 
-代码里还留着 `SearchController::pali()`——同样逻辑的纯 SQL 版（直接查 `fts_texts` 表），没有路由指向它。**这是现成的降级路径**：加一条路由或让 `pali_rpc` 在 gRPC 失败时回落到 `pali()`，就能在 tulip 修好前先用起来。
+**为什么不阻塞**：dashboard 只在关键词**含空格**（词组）时才走这条路，单词走 `search-pali-wbw`。研究流程的主链路是后者。所以坏的是「词组/短语检索」这一项能力。
 
-### 3.2 缺「词根 → 全部词形」的展开 —— 决定检索召回率
+**但它确实是坏的**，且影响真实用户。修法有二：修 tulip 服务；或接上代码里已有的 `SearchController::pali()`——同样逻辑的纯 SQL 版（直接查 `fts_texts` 表 + `ts_rank`），目前没有路由指向它，加一条路由或让 `pali_rpc` 在 gRPC 失败时回落即可。
 
-`wbw_templates.real` 存的是**变化形**：
+### 3.2 ~~缺「词根 → 全部词形」的展开~~ —— 已证伪
 
-| real | 出现 | 其中黑体 |
-|---|---|---|
-| parivāsaṃ | 221 | 7 |
-| parivāso | 170 | 5 |
-| parivāre | 174 | 67 |
-| parivasanto | 146 | 0 |
+原判断错在：我只看到 `dict` 能做「形 → 根」，没找到反向的端点，于是以为 agent 会用词典形检索而静默漏掉材料。
 
-所以按词典形 `parivāsa` 去逐词检索，**返回 0 条**（实测如此）。而词典端点只能做「形 → 根」，反过来没有端点。
+实际上 **`GET /v2/case/{词}` 就是反向展开**：给任意形，返回候选 lemma 及每个 lemma 在语料中的全部实际词形（带 count 与 bold 计数）。这条链路是平台既有的，不需要任何服务端改动。
 
-后果：agent 若只用步骤 1 拿到的词典形去检索，会**静默漏掉绝大部分材料**——这是最危险的一类错误，因为它看起来成功了。
-
-三条可能的解法，需要你定：
-
-1. **服务端加端点**：`GET /v2/dict-forms?lemma=parivāsa` → 返回该词根在语料中出现过的全部 `real` 及频次（一条 `GROUP BY` 就够）。最干净；
-2. **客户端前缀展开**：先 `search-pali-wbw?key=` 试几个常见词尾——脆弱，且要客户端懂巴利构词；
-3. **靠全文检索的词干化**：Postgres 的 `pali` tsvector 配置若已做词干还原，则 §3.1 修好后此问题自动消失一半。**需要确认 `pali` 这个 text search configuration 到底做了什么**。
+保留这段记录是因为**结论虽错，风险是真的**：按词典形 `parivāsa` 直接查 `search-pali-wbw` 确实返回 0 条且不报错。所以 skill 规程必须写死「**检索前一律先过 `case` 展开词形**，不得直接拿词典形去搜」——否则 agent 会以为自己搜过了。
 
 ### 3.3 泰文语料未上传
 
@@ -188,13 +220,15 @@ plugins/wikipali/
 
 | 命令 | 对应步骤 | 说明 |
 |---|---|---|
-| `word <词>` | 1 | 词典 + 形态分析；输出词根、词性、语法 |
-| `forms <词根>` | 1→2 | 展开该词根在语料中的全部实际词形（依赖 §3.2） |
-| `search <词...>` | 2、5 | 全文/逐词二选一，回坐标 + 标题 + 路径 + 高亮摘要 |
-| `dist <词...>` | 5 | 出处分布（按书/按部） |
-| `get <坐标...>` | 6 | 按坐标批量取文，可指定 channel |
+| `forms <词>` | 1 | `case` 展开：候选 lemma + 全部实际词形（带 count/bold）。**检索的必经前置** |
+| `word <词>` | 1 | `dict` 释义 + 形态分析（词根、词性、语法），用于确认选对了 lemma |
+| `search <词形…>` | 2、5 | `search-pali-wbw`；`--bold` 只取黑体（定义）、`--book`/`--tags` 限范围 |
+| `dist <词形…>` | 5 | 出处分布，带 tags（`mūla`/`aṭṭhakathā`/`ṭīkā`）便于区分本文与注疏 |
+| `get <坐标…>` | 6 | 按坐标批量取文，可指定 channel |
 | `chapter <book> <para>` | 7 | 展开整章，先报体量再取 |
 | `versions <坐标>` | 10 | 该坐标有哪些语言/译本，明确列出「没有的」 |
+
+一个便利设计：`forms` 的输出可以直接管道进 `search`，或者让 `search` 接受 `--lemma parivāsa` 自动先跑一遍 `case` 再检索。**但不要把展开做成隐式的**——agent 应当看见「我把这 13 个词形搜了」，那是论文方法论的一部分，要能写进正文。
 
 `research` skill 的规程重点不在于怎么调这些命令，而在于**怎么把结果变成可信引用**，以及**什么时候该收窄、什么时候该展开**。
 
@@ -204,10 +238,9 @@ plugins/wikipali/
 
 | 阶段 | 内容 | 依赖 |
 |---|---|---|
-| R0 | 确认 §3.1 线上搜索故障范围；决定是修 tulip 还是先接 `pali()` 降级路径 | 你 |
-| R0 | 决定 §3.2 的词形展开方案（倾向：服务端加 `dict-forms`） | 你 |
-| R1 | `word` / `search` / `dist` / `get` 四个命令 + `research` skill 规程 | R0 |
-| R2 | `chapter` / `versions` / `forms` | R1 |
+| R1 | `forms` / `word` / `search` / `dist` / `get` 五个命令 + `research` skill 规程 | 无（主链路已可用） |
+| R2 | `chapter` / `versions` | R1 |
+| R2 | 词组检索的 500（§3.1）：修 tulip 或接 `pali()` 降级路径 | 你定 |
 | R3 | 用《别住在律藏中的案例分析》做**验收**：agent 独立跑完 11 步，人工核对每条引用的坐标真实性 | R2 |
 | R4 | 视情况把读端改造为 MCP tools（检索链式调用更适合 tool 形态），skill 保留规程部分 | R3 |
 
