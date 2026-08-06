@@ -85,7 +85,7 @@ class SentenceController extends Controller
                     return $this->error('没有关键词');
                 }
                 $table = Sentence::select($indexCol)
-                    ->where('content', 'like', '%' . $key . '%')
+                    ->where('content', 'like', '%'.$key.'%')
                     ->where('editor_uid', $userUid);
 
                 break;
@@ -203,7 +203,7 @@ class SentenceController extends Controller
                 break;
         }
         if (! empty($request->input('key'))) {
-            $table = $table->where('content', 'like', '%' . $request->input('key') . '%');
+            $table = $table->where('content', 'like', '%'.$request->input('key').'%');
         }
 
         $count = $table->count();
@@ -269,7 +269,7 @@ class SentenceController extends Controller
         }
     }
 
-    private function UserCanEdit(string $userId, string $channelId, int  $book, $access_token = null)
+    private function UserCanEdit(string $userId, string $channelId, int $book, $access_token = null)
     {
         $channel = Channel::where('uid', $channelId)->first();
         if (! $channel) {
@@ -284,8 +284,17 @@ class SentenceController extends Controller
                     return false;
                 }
                 $key = AccessToken::where('res_id', $channelId)->value('token');
-                $jwt = JWT::decode($access_token, new Key($key . $key, 'HS512'));
-                if (isset($jwt->book) && $jwt->book !== 0 &&  $jwt->book !== $book) {
+                if (! $key) {
+                    return false;
+                }
+                try {
+                    // access token 现在带 exp，过期会抛 ExpiredException；
+                    // 伪造/损坏的 token 同样抛异常。一律当作无权，不要冒泡成 500。
+                    $jwt = JWT::decode($access_token, new Key($key.$key, 'HS512'));
+                } catch (\Exception $e) {
+                    return false;
+                }
+                if (isset($jwt->book) && $jwt->book !== 0 && $jwt->book !== $book) {
                     return false;
                 }
             }
@@ -316,7 +325,7 @@ class SentenceController extends Controller
             if ($this->UserCanEdit(
                 $user['user_uid'],
                 $request->input('channel'),
-                (int)$request->input('book', 0),
+                (int) $request->input('book', 0),
                 $request->input('access_token', null)
             )) {
                 $destChannel = Channel::where('uid', $request->input('channel'))->first();
@@ -333,7 +342,7 @@ class SentenceController extends Controller
                 if ($this->UserCanEdit(
                     $user['user_uid'],
                     $sent['channel_uid'],
-                    (int)$sent['book_id'],
+                    (int) $sent['book_id'],
                     isset($sent['access_token']) ? $sent['access_token'] : null
                 )) {
                     $destChannel = Channel::where('uid', $sent['channel_uid'])->first();

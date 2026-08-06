@@ -1,0 +1,131 @@
+---
+name: research
+description: "Use this skill to research Pali Buddhist texts with WikiPali's corpus — finding where a term occurs across the Tipiṭaka and its commentaries, reading the Pali source, comparing translations, and producing cited scholarly writing. Trigger whenever the user asks to look up a Pali word or concept, find passages about a topic in the canon, analyse how a term is used, compare mūla / aṭṭhakathā / ṭīkā, check a translation against the Pali, or write a paper or summary grounded in Pali sources. Do not use for writing data into WikiPali (that is the write skill)."
+---
+
+# WikiPali 研究
+
+用 WikiPali 的语料做巴利文献研究：定位 → 取证 → 展开 → 交叉验证 → 成文。
+
+命令是 `wikipali <子命令>`（插件启用时已在 PATH 上）。检索与阅读全部只读，**不需要登录**。
+
+**坐标、引用格式、文献层次、译文来源判定见 `references/conventions.md`——那是所有
+skill 共用的规矩，必须遵守。** 端点细节见 `references/api-read.md`。
+
+## 铁律
+
+1. **每一条写进正文的引用，必须带得回坐标。** 手里没有坐标的内容，一个字都不许写进
+   产出。宁可说"未找到相关段落"，也不要凭印象转述。
+2. **检索前必须先展开词形**（`wikipali forms`，或给 `search --lemma`）。直接拿词典形
+   去搜会**返回 0 条且不报错**。这是本工具最容易犯的错，因为它看起来像"搜过了，没有"。
+3. **0 条结果不等于"没有材料"。** 依次怀疑：词形没展开 → 词根选错 → 范围限太窄 →
+   才是真的没有。把怀疑过程说给用户听。
+4. **本文、义注、复注不能混。** 引用时必须标明层次（见 conventions.md）。
+5. **判断依据是巴利原文，译文只作佐证。** 机器生成的译文必须显式标注。
+6. **不要把整章往上下文里灌。** 先看体量再决定取多少。
+
+## 流程
+
+### 1. 展开词形（永远的第一步）
+
+```bash
+wikipali forms parivāsa
+```
+
+输出候选词根，每个带该词根在语料中出现过的全部词形及频次、黑体数。取可能性最高的
+那个，但**要看一眼其余候选**：若目标概念同时有名词与动词两条线（`parivāsa` /
+`parivāseti`），两条都要展开。
+
+拿不准选哪个候选时：
+
+```bash
+wikipali word parivāsa          # 释义 + 形态分析，确认词根选对了
+```
+
+### 2. 看分布，再决定范围
+
+```bash
+wikipali dist --lemma parivāsa
+```
+
+输出每部书的命中数、`--book` 值和 tags，并按 `mūla` / `aṭṭhakathā` / `ṭīkā` 汇总。
+这一步决定后面所有工作的范围：
+
+- 命中集中在律藏 → 后续加 `--tags vinaya` 收窄；
+- 本文命中少而义注命中多 → 这是个**注释书概念**，论文结构要相应调整；
+- 总量太大 → 先收窄再取证，不要硬取。
+
+⚠ `dist` 数的是**词次**，`search` 数的是**段落数**，两个数不相等。方法论里别写混。
+
+### 3. 取定义：前 50 条，靠排序
+
+```bash
+wikipali search --lemma parivāsa --limit 50
+```
+
+结果按黑体加权排序，**注释书里作为词条解释的段落会自然排在前面**。从前 50 条里挑出
+讲定义和执行流程的，用来写定义部分。
+
+命中总量特别大、前 50 条噪声明显时，可以加 `--bold` 只看黑体命中来收窄——那是收窄
+手段，不是默认做法，因为不加黑体的定义段落会被它漏掉。
+
+### 4. 取案例：全量检索
+
+```bash
+wikipali search --lemma parivāsa --tags vinaya --limit 200
+```
+
+每条给出坐标、章节路径和高亮片段。**先用片段做初筛**，判断该段落属不属于目标案例
+类型，不要一上来就把每段全文取回来。
+
+### 5. 取原文
+
+```bash
+wikipali get 216:35 216:36 216:41
+```
+
+缺省取巴利原文。`--channel <uid>` 可指定别的译本（可重复给多个）。
+
+### 6. 交叉验证
+
+用 `--channel` 取缅文逐词解析（nissaya）或各家译本，核对你基于巴利原文做出的判断。
+某坐标在某 channel 下没有内容时，如实说"该译本在此处无文本"，**不要拿相邻段落或
+别的译本凑**。
+
+## 上下文预算
+
+| 操作 | 默认上限 | 超了怎么办 |
+|---|---|---|
+| `search` 摘要 | 一次不超过 50 条进上下文 | 用 `--tags` / `--book` 收窄，或分页逐批归纳 |
+| `get` 取段落 | 一次不超过 20 段 | 分批，每批处理完先记下结论再取下一批 |
+
+原则：**上下文里应该留下结论和坐标，而不是原文**。取回一批材料 → 归纳出结论并记下
+支撑坐标 → 再取下一批。不要把所有原文堆着等最后一起分析。
+
+`--width` 控制每条摘要的长度，`--json` 输出原始数据（需要自己处理时用）。
+
+## 按任务类型分档
+
+同一套检索，产出的详略要看用户要什么：
+
+| 用户要的 | 产出形态 |
+|---|---|
+| 快速查询（"parivāsa 什么意思"、"哪几处提到 X"） | 结论 + 坐标。**不报告检索方法**，别把查词变成论文 |
+| 综述 / 分析（"X 在律藏里怎么用"） | 结论 + 坐标 + 一句话交代范围 |
+| 论文 / 研究报告（用户明确说要写论文、要发表、要引用） | 完整方法论：展开了哪些词形（连同频次）、检索范围、总命中词次与段落数、实读段数、黑体与非黑体分布 |
+
+判断不了属于哪一档时按中间档走，并问用户要不要完整的检索方法说明。
+
+论文档的方法论不是修辞——"检索 parivāsa 的 13 个词形，得 281 段（449 词次），分布
+于 43 部书，其中律藏本文 159 词次、义注 28、复注 102"这样一句，是读者判断你的检索
+是否穷尽的唯一依据。
+
+## 常见错误
+
+| 现象 | 真正的原因 |
+|---|---|
+| 检索 0 条 | 多半是没展开词形，用了词典形 |
+| 结果全是义注、没有本文 | 正常——注释书解释术语的密度本来就高。用 `dist` 的层次汇总确认，别当成 bug |
+| 某段落取不到译文 | 该 channel 在该段落没有内容。如实报告 |
+| 想按短语检索 | 平台的词组检索目前不可用（服务端 500）。把短语拆成词，分别展开词形再检索 |
+| `get` 报 500 | 忘了 channel。`get` 缺省会带巴利原文的 channel，若你手动传了参数要确保 channel 在内 |

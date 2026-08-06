@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+"""WikiPali 客户端入口。只用 Python 标准库，直接跑，不要建虚拟环境。"""
+
+import os
+import sys
+
+_LIB = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
+sys.path.insert(0, _LIB)
+
+from cli import main  # noqa: E402
+
+if __name__ == '__main__':
+    sys.exit(main())

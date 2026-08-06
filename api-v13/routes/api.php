@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccessTokenController;
 use App\Http\Controllers\AiAssistantController;
 use App\Http\Controllers\AiModelController;
+use App\Http\Controllers\AiModelTokenController;
 use App\Http\Controllers\AiTranslateController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\ArticleController;
@@ -299,6 +300,8 @@ Route::group([
     Route::apiResource('access-token', AccessTokenController::class);
     Route::apiResource('search-word-slice', SearchWordSliceController::class);
     Route::apiResource('ai-model', AiModelController::class);
+    Route::get('ai-model-token/{ai_model}', [AiModelTokenController::class, 'show']);
+    Route::delete('ai-model-token/{ai_model}', [AiModelTokenController::class, 'destroy']);
     Route::apiResource('ai-assistant', AiAssistantController::class);
     Route::apiResource('model-log', ModelLogController::class);
     Route::apiResource('sentence-attachment', SentenceAttachmentController::class);

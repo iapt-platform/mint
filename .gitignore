@@ -9,3 +9,4 @@
 *.md5
 
 /k8s/
+__pycache__/
