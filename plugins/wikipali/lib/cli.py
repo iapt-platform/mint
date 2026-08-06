@@ -1,0 +1,127 @@
+"""命令行装配。
+
+读侧（forms/word/search/dist/get）不需要凭据；写侧（ensure-model/channels/grant/write）
+需要，且写入前有确认闸门。登录是独立的 wikipali-login，本入口不接触密码。
+"""
+
+import argparse
+import sys
+
+import cmd_read
+import cmd_site
+import cmd_write
+from client import DEFAULT_BATCH
+from errors import WpError
+
+
+def build_parser():
+    parser = argparse.ArgumentParser(
+        prog='wikipali',
+        description='WikiPali 客户端：检索、阅读、以 AI 模型身份写入',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='凭据在 ~/.wikipali/credentials.json（0600）。登录请跑 wikipali-login。',
+    )
+    parser.add_argument('--api', help='本次调用使用的 API 地址（序号/简称/完整 url），不写回凭据文件')
+    sub = parser.add_subparsers(dest='command', required=True)
+
+    def add(name, help_text, needs_json=True):
+        p = sub.add_parser(name, help=help_text)
+        if needs_json:
+            p.add_argument('--json', action='store_true', help='输出原始 JSON')
+        return p
+
+    # -- 站点与状态 --------------------------------------------------------
+    p = add('endpoint', '查看 / 切换 API 地址', needs_json=False)
+    p.add_argument('target', nargs='?', help='序号、简称（www/www.cc/next/next.cc/local）或完整 url')
+    p.set_defaults(func=cmd_site.cmd_endpoint)
+
+    p = add('whoami', '显示当前凭据状态', needs_json=False)
+    p.add_argument('--check', action='store_true', help='额外向服务端校验用户 token')
+    p.set_defaults(func=cmd_site.cmd_whoami)
+
+    # -- 读 ----------------------------------------------------------------
+    p = add('forms', '展开词形——一切检索的前置步骤')
+    p.add_argument('word', help='词根或任意变格形')
+    p.add_argument('--limit', type=int, default=3, help='显示几个候选词根，默认 3')
+    p.set_defaults(func=cmd_read.cmd_forms)
+
+    p = add('word', '词典释义与形态分析，用来确认选对了词根')
+    p.add_argument('word')
+    p.add_argument('--lang', default='zh', help='释义语言，默认 zh')
+    p.add_argument('--limit', type=int, default=3, help='最多显示几个词条')
+    p.add_argument('--dicts', type=int, default=3, help='每个词条显示几部词典')
+    p.set_defaults(func=cmd_read.cmd_word)
+
+    p = add('search', '按词形检索段落')
+    p.add_argument('forms', nargs='*', help='逗号或空格分隔的词形；或用 --lemma 自动展开')
+    p.add_argument('--lemma', help='给词根，自动先展开成全部词形再检索')
+    p.add_argument('--bold', action='store_true', help='只要黑体命中（注释书标出的词条）')
+    p.add_argument('--book', help='限定书（用 dist 输出里的 --book 值）')
+    p.add_argument('--tags', help='限定范围，如 vinaya 或 vinaya,mūla;vinaya,aṭṭhakathā')
+    p.add_argument('--limit', type=int, default=50, help='本页条数，默认 50')
+    p.add_argument('--offset', type=int, default=0)
+    p.add_argument('--width', type=int, default=200, help='每条摘要的字符数')
+    p.set_defaults(func=cmd_read.cmd_search)
+
+    p = add('dist', '出处分布：命中散布在哪些书、各多少、什么层次')
+    p.add_argument('forms', nargs='*')
+    p.add_argument('--lemma')
+    p.add_argument('--tags')
+    p.add_argument('--limit', type=int, default=25, help='最多列几部书')
+    p.set_defaults(func=cmd_read.cmd_dist)
+
+    p = add('get', '按坐标取文，如 wikipali get 216:35 216:36')
+    p.add_argument('coords', nargs='+', help='book:paragraph，可给多个')
+    p.add_argument('--channel', action='append',
+                   help='channel uid，可重复；缺省取巴利原文')
+    p.add_argument('--limit', type=int, default=200, help='每次请求最多取几句')
+    p.set_defaults(func=cmd_read.cmd_get)
+
+    # -- 写 ----------------------------------------------------------------
+    p = add('ensure-model', '幂等地建立模型记录并取模型身份 token', needs_json=False)
+    p.add_argument('--name', help='模型标识，如 claude-opus-5（会成为句子作者署名）')
+    p.add_argument('--model', help='底层模型 id')
+    p.add_argument('--url', dest='url', help='模型服务地址')
+    p.add_argument('--description', help='描述')
+    p.add_argument('--privacy', choices=['private', 'public'], default='private')
+    p.set_defaults(func=cmd_write.cmd_ensure_model)
+
+    p = add('revoke', '撤销该模型已签出的全部 token', needs_json=False)
+    p.add_argument('--uid', help='模型 uid，缺省用缓存里的')
+    p.add_argument('-y', '--yes', action='store_true')
+    p.set_defaults(func=cmd_write.cmd_revoke)
+
+    p = add('channels', '列出当前账号可编辑的 channel')
+    p.add_argument('--search', help='按名字过滤')
+    p.set_defaults(func=cmd_write.cmd_channels)
+
+    p = add('grant', '为某个 channel 签发 access token 并缓存', needs_json=False)
+    p.add_argument('channel', nargs='?', help='channel uid / 列表序号 / 名字片段；省略则交互选择')
+    p.add_argument('--book', type=int, default=0, help='限定 book，0 表示不限（默认）')
+    p.add_argument('--force', action='store_true', help='即使缓存未过期也重新签发')
+    p.set_defaults(func=cmd_write.cmd_grant)
+
+    p = add('write', '写入句子', needs_json=False)
+    p.add_argument('file', help='句子 JSON 文件，- 表示从 stdin 读')
+    p.add_argument('--channel', help='目标 channel（uid / 序号 / 名字片段）')
+    p.add_argument('--book', type=int, help='access token 的 book 范围，缺省按句子推断')
+    p.add_argument('--batch', type=int, default=DEFAULT_BATCH, help=f'每批条数，默认 {DEFAULT_BATCH}')
+    p.add_argument('--content-type', default='markdown')
+    p.add_argument('--preview', type=int, default=5, help='确认时预览几条')
+    p.add_argument('--dry-run', action='store_true', help='只做校验与回显，不发请求')
+    p.add_argument('-y', '--yes', action='store_true', help='跳过交互确认（非交互环境必须显式给）')
+    p.set_defaults(func=cmd_write.cmd_write)
+
+    return parser
+
+
+def main(argv=None):
+    args = build_parser().parse_args(argv)
+    try:
+        return args.func(args)
+    except WpError as exc:
+        print(f'错误：{exc}', file=sys.stderr)
+        return 1
+    except KeyboardInterrupt:
+        print('\n已中断。', file=sys.stderr)
+        return 130

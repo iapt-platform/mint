@@ -75,9 +75,10 @@ fi
 mkdir -p "$TARGET"
 cp -R "$SRC" "$DEST"
 find "$DEST" -name __pycache__ -type d -exec rm -rf {} + 2>/dev/null || true
-chmod +x "$DEST/skills/write/scripts/wp.py" "$DEST/skills/write/scripts/wp_login.py" "$DEST/install.sh"
+chmod +x "$DEST/bin/wikipali" "$DEST/bin/wikipali-login" "$DEST/install.sh"
 
 echo "已安装 $NAME $VERSION 到 $DEST"
 echo
 echo "下一步（凭据在 ~/.wikipali/，多个副本共用，通常不必重新登录）："
-echo "  python3 $DEST/skills/write/scripts/wp.py whoami"
+echo "  $DEST/bin/wikipali whoami"
+echo "（把 $DEST/bin 加进 PATH 可以直接用 wikipali 命令）"

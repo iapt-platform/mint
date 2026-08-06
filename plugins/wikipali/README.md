@@ -2,7 +2,10 @@
 
 [WikiPali](https://www.wikipali.org) 巴利三藏平台的 Claude Code 插件。
 
-目前提供一个 skill：`write`——让 Claude 以 **AI 模型身份**把句子写入句子库。查询类能力（三藏目录、章节原文、全文搜索、词典）在规划中。
+两个 skill：
+
+- **`research`** —— 检索与阅读语料做研究：词形展开、按词形检索、出处分布（分本文/义注/复注）、按坐标取原文与各家译本。只读，不需要登录。
+- **`write`** —— 以 **AI 模型身份**把句子写入句子库。
 
 写入的句子 `editor_uid` 记为 AI 模型的 uid 而不是操作者本人，署名与审计因此是准确的——谁翻的就是谁翻的。
 
@@ -32,11 +35,11 @@
 装好后直接对 Claude 说「把这些译文写进 WikiPali 的某某 channel」即可，它会自己走完流程。手工调用：
 
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/write/scripts/wp.py whoami        # 看当前凭据状态
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/write/scripts/wp_login.py         # 登录（自己跑）
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/write/scripts/wp.py ensure-model --name <模型标识>
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/write/scripts/wp.py channels
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/write/scripts/wp.py write sents.json --channel <uid> --dry-run
+wikipali whoami        # 看当前凭据状态
+wikipali-login         # 登录（自己跑）
+wikipali ensure-model --name <模型标识>
+wikipali channels
+wikipali write sents.json --channel <uid> --dry-run
 ```
 
 句子文件的形状：
@@ -56,9 +59,9 @@ python3 ${CLAUDE_PLUGIN_ROOT}/skills/write/scripts/wp.py write sents.json --chan
 线上四个地址（`www` / `next` × `.org` / `.cc`）共享同一个数据库和密钥，凭据通用，可随时切换：
 
 ```bash
-python3 .../wp.py endpoint          # 列出并标出当前
-python3 .../wp.py endpoint next     # 改默认
-python3 .../wp.py --api next ...    # 只影响这一次调用
+wikipali endpoint          # 列出并标出当前
+wikipali endpoint next     # 改默认
+wikipali --api next ...    # 只影响这一次调用
 ```
 
 `www` 是稳定版、`next` 是最新版**代码**，不是不同的数据环境。较新的端点在稳定版上返回 404，意思是「该站点代码版本还没到」。
@@ -73,13 +76,13 @@ python3 .../wp.py --api next ...    # 只影响这一次调用
 | 模型 token | AI 模型身份，写句子时的 `Authorization` | 30 天，可撤销 |
 | access token | 被委托的 channel 编辑权，写句子时的 body 字段 | 7 天 |
 
-模型自身不是任何 channel 的 owner，它的全部写权限来自你签发的 access token，且受 book 范围约束——**你没有编辑权的 channel，签发阶段就会失败**。凭据泄漏时用 `wp.py revoke` 作废该模型已签出的全部 token。
+模型自身不是任何 channel 的 owner，它的全部写权限来自你签发的 access token，且受 book 范围约束——**你没有编辑权的 channel，签发阶段就会失败**。凭据泄漏时用 `wikipali revoke` 作废该模型已签出的全部 token。
 
 ## 开发
 
 本插件在 [visuddhinanda/mint](https://github.com/visuddhinanda/mint) 的 `plugins/wikipali/` 下开发，与被调用的 Laravel API（`api-v13/`）同仓演进——API 契约一改，插件在同一个提交里跟上。设计文档在 `docs/wikipali-write-skill-design.md`。
 
-端点细节、返回形状与各处陷阱见 `skills/write/references/api.md`。
+端点细节见 `references/api-read.md` 与 `references/api-write.md`；跨 skill 的通用约定（坐标、引用格式、文献层次、译文来源判定）见 `references/conventions.md`。
 
 ## License
 
