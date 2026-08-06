@@ -1,6 +1,8 @@
-# wikipali-write
+# wikipali
 
-一个 Claude Code 插件：让 Claude 以 **AI 模型身份**把句子写入 [WikiPali](https://www.wikipali.org) 句子库。
+[WikiPali](https://www.wikipali.org) 巴利三藏平台的 Claude Code 插件。
+
+目前提供一个 skill：`write`——让 Claude 以 **AI 模型身份**把句子写入句子库。查询类能力（三藏目录、章节原文、全文搜索、词典）在规划中。
 
 写入的句子 `editor_uid` 记为 AI 模型的 uid 而不是操作者本人，署名与审计因此是准确的——谁翻的就是谁翻的。
 
@@ -8,12 +10,12 @@
 
 ```
 /plugin marketplace add visuddhinanda/wikipali-plugins
-/plugin install wikipali-write@wikipali
+/plugin install wikipali@wikipali
 ```
 
 桌面版在 **Code** 标签页里点 `+` → **Plugins** → **Add plugin** 也可以装。
 
-不走 marketplace 的话，克隆本仓库后跑 `plugins/wikipali-write/install.sh --user`。
+不走 marketplace 的话，克隆本仓库后跑 `plugins/wikipali/install.sh --user`。
 
 ## 装之前请知道它会做什么
 
@@ -30,11 +32,11 @@
 装好后直接对 Claude 说「把这些译文写进 WikiPali 的某某 channel」即可，它会自己走完流程。手工调用：
 
 ```bash
-python3 <插件目录>/skills/write/scripts/wp.py whoami        # 看当前凭据状态
-python3 <插件目录>/skills/write/scripts/wp_login.py         # 登录（自己跑）
-python3 <插件目录>/skills/write/scripts/wp.py ensure-model --name <模型标识>
-python3 <插件目录>/skills/write/scripts/wp.py channels
-python3 <插件目录>/skills/write/scripts/wp.py write sents.json --channel <uid> --dry-run
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/write/scripts/wp.py whoami        # 看当前凭据状态
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/write/scripts/wp_login.py         # 登录（自己跑）
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/write/scripts/wp.py ensure-model --name <模型标识>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/write/scripts/wp.py channels
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/write/scripts/wp.py write sents.json --channel <uid> --dry-run
 ```
 
 句子文件的形状：
@@ -75,7 +77,7 @@ python3 .../wp.py --api next ...    # 只影响这一次调用
 
 ## 开发
 
-本插件在 [visuddhinanda/mint](https://github.com/visuddhinanda/mint) 的 `plugins/wikipali-write/` 下开发，与被调用的 Laravel API（`api-v13/`）同仓演进——API 契约一改，插件在同一个提交里跟上。设计文档在 `docs/wikipali-write-skill-design.md`。
+本插件在 [visuddhinanda/mint](https://github.com/visuddhinanda/mint) 的 `plugins/wikipali/` 下开发，与被调用的 Laravel API（`api-v13/`）同仓演进——API 契约一改，插件在同一个提交里跟上。设计文档在 `docs/wikipali-write-skill-design.md`。
 
 端点细节、返回形状与各处陷阱见 `skills/write/references/api.md`。
 
