@@ -194,6 +194,37 @@ GET /v2/search?view=title&key=parivasa                  → HTTP 200 ✅
 
 ---
 
+## 3.4 待办：引用格式规范
+
+当前 `research` skill 用的是临时格式（用户 2026-08-06 同意暂用）：
+
+```
+Cūḷavaggapāḷi, Pārivāsikakkhandhaka (VN 216:35)
+Samantapāsādikā, Pārivāsikavattakathā (SP-aṭṭ 141:63)
+```
+
+**⬜ TODO：用户之后会给出正式的引用格式规范**，届时改 `skills/research/SKILL.md` 的「引用格式」一节。这关系到产出能否被同行接受，属于必改项，不是可选优化。
+
+相关线索：库里有 `page_numbers` 表，`type` 分 `M/P/T/V/O`（缅甸版/PTS 等不同版本的页码），正式规范多半要用到其中某一种；`GET /v2/search?view=page&key=<卷.页>&type=<版本>` 是按页码反查段落的现成端点。
+
+## 3.5 待办：channel 的译文来源标识
+
+引用译文必须能区分人译与机译，但**现有数据两个信号都不可靠**（2026-08-06 实测）：
+
+| channel | 句子数 | `editor_uid` 命中 `ai_models` |
+|---|---|---|
+| AI-汉译-Nissaya | 11206 | 11205（模型 `[文本生成]-阿里-deepseek-v3`）|
+| Nissaya的AI翻译 | 967 | 0 |
+| Norbu AI Translations (Nissaya) | 191 | 0 |
+
+后两者是**人工用自己账号上传的机器译文**，`editor_uid` 是人类；只有名字里的 "AI" 泄露了来源。反过来，只靠名字也会漏掉命名里不含 AI 的机器译本。
+
+短期：skill 规程用「两个信号任一命中即按机器译文标注，都不命中时不主动断言是人译」。
+
+**⬜ TODO（服务端）**：给 `channels` 加一个来源字段（如 `provenance`: `human` / `machine` / `mixed`），让判定有据。注意写入型 skill 产生的数据天然带模型署名（`editor_uid` = 模型 uid），所以这个问题只存在于存量数据。
+
+---
+
 ## 4. 设计要点（端点清单看不出来的那些）
 
 1. **引用可信度是第一约束**。论文场景下编造引文是致命错误。因此：任何返回给 agent 的文本片段，都必须携带可验证坐标（`book/paragraph` + channel + 章节路径），且 skill 规程要写死「没有坐标的内容不得写入论文」。这条决定所有命令的返回格式，事后改是全面返工。
