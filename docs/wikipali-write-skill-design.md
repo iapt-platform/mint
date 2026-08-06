@@ -504,18 +504,20 @@ ChannelController::index() 的 'user-edit' 分支：
 **主路径：Claude Code 插件 + 自建 marketplace。**
 
 ```
-/plugin marketplace add visuddhinanda/wikipali-plugins
+/plugin marketplace add iapt-platform/wikipali-plugins
 /plugin install wikipali@wikipali
 ```
 
 桌面版（Claude Desktop 的 **Code** 标签页）点 `+` → Plugins → Add plugin 装同一个 marketplace。注意插件只对本地/SSH 会话生效，Chat 标签页与云会话不加载插件。
 
+**上游是 `iapt-platform`，`visuddhinanda/*` 是 fork。** 开发在 fork 上做，通过 PR 合回上游（仓库既有的工作流，见 `Merge pull request #2427`）。**面向用户的一切地址都必须指向 `iapt-platform`**——指向 fork 会让用户装到某个人的分支上。
+
 **两个仓库的分工**：
 
 | 仓库 | 内容 | 为什么 |
 |---|---|---|
-| `visuddhinanda/wikipali-plugins` | 只有 `.claude-plugin/marketplace.json` + README，8 KB | `/plugin marketplace add` 会**完整克隆** marketplace 仓库，没有稀疏优化 |
-| `visuddhinanda/mint` | 插件本体 `plugins/wikipali/` | 与 API 同仓演进（§6.1）。marketplace 用 `git-subdir` 源指过来，Claude Code **稀疏克隆**只取这一个子目录 |
+| `iapt-platform/wikipali-plugins` | 只有 `.claude-plugin/marketplace.json` + README，8 KB | `/plugin marketplace add` 会**完整克隆** marketplace 仓库，没有稀疏优化 |
+| `iapt-platform/mint` | 插件本体 `plugins/wikipali/` | 与 API 同仓演进（§6.1）。marketplace 用 `git-subdir` 源指过来，Claude Code **稀疏克隆**只取这一个子目录 |
 
 反过来「mint 自己当 marketplace」是不行的：mint 的 packfile 580 MB、HEAD 快照 212 MB，而 Claude Code 的 git 操作超时是 120 秒，且后台自动更新失败时会整仓重新 clone。
 
@@ -527,9 +529,9 @@ ChannelController::index() 的 'user-edit' 分支：
 
 #### 已发布状态（2026-08-06）
 
-`visuddhinanda/wikipali-plugins` 已上线，`wikipali-write` 钉在 mint 的 `c46cf6400`。实测：
+`iapt-platform/wikipali-plugins` 已上线，`wikipali-write` 钉在 mint 的 `c46cf6400`。实测：
 
-- `/plugin marketplace add visuddhinanda/wikipali-plugins` → `/plugin install wikipali@wikipali` 一次通过；
+- `/plugin marketplace add iapt-platform/wikipali-plugins` → `/plugin install wikipali@wikipali` 一次通过；
 - 缓存目录 `~/.claude/plugins/cache/wikipali/wikipali-write/0.1.0/` 只有 **84 KB**——`git-subdir` 的稀疏克隆确实只取了那一个子目录，没有拉 mint 的 580 MB；
 - 在与 mint 无关的目录下启动，skill 以 `wikipali-write:write` 加载，缓存里的 `wp.py` 直接可跑；
 - 常驻上下文成本 ~230 tok（就是 SKILL.md 的 description），调用时 ~2k。

@@ -12,7 +12,7 @@
 ## 安装
 
 ```
-/plugin marketplace add visuddhinanda/wikipali-plugins
+/plugin marketplace add iapt-platform/wikipali-plugins
 /plugin install wikipali@wikipali
 ```
 
@@ -80,7 +80,7 @@ wikipali --api next ...    # 只影响这一次调用
 
 ## 开发
 
-本插件在 [visuddhinanda/mint](https://github.com/visuddhinanda/mint) 的 `plugins/wikipali/` 下开发，与被调用的 Laravel API（`api-v13/`）同仓演进——API 契约一改，插件在同一个提交里跟上。设计文档在 `docs/wikipali-write-skill-design.md`。
+本插件在 [iapt-platform/mint](https://github.com/iapt-platform/mint) 的 `plugins/wikipali/` 下开发，与被调用的 Laravel API（`api-v13/`）同仓演进——API 契约一改，插件在同一个提交里跟上。设计文档在 `docs/wikipali-write-skill-design.md`。
 
 端点细节见 `references/api-read.md` 与 `references/api-write.md`；跨 skill 的通用约定（坐标、引用格式、文献层次、译文来源判定）见 `references/conventions.md`。
 
