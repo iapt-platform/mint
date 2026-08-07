@@ -83,14 +83,33 @@ wikipali search --lemma parivāsa --limit 50
 每个词都有**）。读定义段落时**留意有没有**这种枚举——有，它就是现成的分类框架，比自己
 归纳可靠；没有就跳过，**不要硬造分类**。
 
-发现子类型后，逐个展开数频次：
+**发现子类后，每一个都要单独再查一遍，不得凭名字推测含义。** 巴利复合词看起来像是
+可以拆开理解的（`paṭicchanna-parivāsa` 像"覆藏＋别住"），而这种推测正是编造释义的
+入口——构词法给的是字面拼合，不是该词在律学里的实际所指。
+
+每个子类走一遍完整链路：
 
 ```bash
-wikipali forms samodhānaparivāsa
-wikipali forms paṭicchannaparivāsa
+wikipali forms samodhānaparivāsa                        # 词形与频次
+wikipali search --lemma samodhānaparivāsa --limit 20    # 找它自己的解释段落
+wikipali get <坐标>                                      # 取原文
 ```
 
-**只报数字，不要从频次下判断。** 例如 `parivāsa` 的四个子类：samodhāna 260 次、
+**拿到注疏对该子类的解释原文之前，不要写出它的含义。** 查不到解释就如实说"语料中
+未见对该子类的解释"，不要用构词法去补——这是铁律 1 在子类上的具体化。
+
+**两个实测踩到的陷阱：**
+
+- **不同注疏的枚举可能不一样。** 实测 `parivāsa`：Pācityādiyojanā（202:1882）与
+  Kaṅkhāvitaraṇī-abhinavaṭīkā（212:1134）都说"四种"，但列出的**不是同一组**——后者
+  含 `suddhantaparivāsa`（语料中 86 次），前者没有。所以**不要把某一处的列表当成
+  「标准分类」**：按出处分别记录，各家不一致就如实说明不一致。这本身往往是论文里
+  值得写的一笔。
+- **子类可能还有子类。** `samodhānaparivāsa` 自己又分三种（odhāna / aggha /
+  missaka，见 141:120）。要挖多深由研究问题决定，不必无限递归，但要说明你停在了
+  哪一层。
+
+频次**只报数字，不从中下判断**。例如 `parivāsa` 的四个子类：samodhāna 260 次、
 paṭicchanna 29、titthiya 18、appaṭicchanna 14。把这组数字连同出处交给用户即可——高频
 可能只是某部注疏反复提及，不等于该子类更重要，这个判断该由研究者做。
 
