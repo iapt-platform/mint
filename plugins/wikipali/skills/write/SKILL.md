@@ -97,7 +97,7 @@ wikipali --api next write …  # 只影响这一次调用
 
 | 现象 | 处置 |
 |---|---|
-| 401 | 用户 token 失效 → 请用户重跑 `wp_login.py`；模型 token 失效或被撤销 → 重跑 `ensure-model` |
+| 401 | 用户 token 失效 → 重跑 `wikipali-login`；模型 token 失效或被撤销 → 重跑 `ensure-model` |
 | 403 | 不是 channel 的 owner/协作者，或不是模型 owner。指出缺哪项权限，别换个姿势重试 |
 | `count: 0`（签 access token） | 对该 channel 无编辑权。**中止写入**，不要继续 |
 | `count` 小于提交条数 | 逐条差集已由脚本列出，如实转达 |
