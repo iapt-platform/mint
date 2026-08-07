@@ -173,7 +173,7 @@ def pick_channel(client, given, interactive=True):
         raise WpError(f"找不到 channel：{given}")
 
     if not (interactive and sys.stdin.isatty()):
-        raise WpError("未指定 channel，且当前不是交互式终端。请先跑 `wp.py channels` 再用 --channel 指定。")
+        raise WpError("未指定 channel，且当前不是交互式终端。请先跑 `wikipali channels` 再用 --channel 指定。")
 
     print("可编辑 channel：")
     for idx, ch in enumerate(rows, 1):
@@ -454,7 +454,7 @@ def refresh_model_token(client):
     note("⚠ 模型 token 被拒（过期或已撤销），正在重新签发……")
     model = client.bucket.get("model") or {}
     if not model.get("uid"):
-        raise WpError("缓存里没有模型 uid，无法重签。请跑：python3 wp.py ensure-model --name <模型名>")
+        raise WpError("缓存里没有模型 uid，无法重签。请跑：wikipali ensure-model --name <模型名>")
     try:
         issued = client.call("GET", f"v2/ai-model-token/{model['uid']}", token=client.user_token)
     except ApiError as exc:

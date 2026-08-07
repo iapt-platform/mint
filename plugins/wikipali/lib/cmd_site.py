@@ -22,7 +22,7 @@ def cmd_endpoint(args):
             note(f"注意：当前地址来自 {src}，是一次性覆盖，未写入凭据文件。")
         if current_url not in [s["url"] for s in SITES]:
             print(f"  *) {current_url:<32} 自定义地址  ← 当前")
-        print("\n切换：python3 wp.py endpoint <序号|www|www.cc|next|next.cc|local|完整url>")
+        print("\n切换：wikipali endpoint <序号|www|www.cc|next|next.cc|local|完整url>")
         return 0
 
     url = normalize_api_url(expand_site_alias(args.target))
@@ -49,7 +49,7 @@ def cmd_whoami(args):
         print(f"用户     : {user.get('username', '?')}  uid={user.get('uid', '?')}")
         print(f"           token {mask(user['token'])}  到期 {fmt_ts(exp)}{'  ⚠ 已过期' if expired else ''}")
     else:
-        print("用户     : 未登录（! python3 scripts/wp_login.py）")
+        print("用户     : 未登录（wikipali-login）")
 
     model = client.bucket.get("model") or {}
     if model.get("token"):
@@ -58,7 +58,7 @@ def cmd_whoami(args):
         print(f"模型     : {model.get('name', '?')}  uid={model.get('uid', '?')}")
         print(f"           token {mask(model['token'])}  到期 {fmt_ts(exp)}{'  ⚠ 已过期' if expired else ''}")
     else:
-        print("模型     : 未建立（python3 wp.py ensure-model --name <模型名>）")
+        print("模型     : 未建立（wikipali ensure-model --name <模型名>）")
 
     tokens = client.bucket.get("access_tokens") or {}
     if tokens:
@@ -71,7 +71,7 @@ def cmd_whoami(args):
             name = item.get("channel_name") or ""
             print(f"  {uid[:8]}… {name:<24} {scope:<10} 到期 {fmt_ts(exp)}{'  ⚠ 已过期' if expired else ''}")
     else:
-        print("access token：无（python3 wp.py grant <channel>）")
+        print("access token：无（wikipali grant <channel>）")
 
     if args.check:
         try:

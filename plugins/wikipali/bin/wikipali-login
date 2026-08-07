@@ -33,6 +33,7 @@ from client import fmt_ts, make_client, mask, token_expiry  # noqa: E402
 from creds import CREDS_PATH  # noqa: E402
 from cmd_write import iso_now  # noqa: E402
 from errors import ApiError, WpError  # noqa: E402
+import askpass  # noqa: E402
 
 
 def main(argv=None):
@@ -56,29 +57,42 @@ def main(argv=None):
         print("注意：该站点的凭据与线上四站不通用。")
 
     interactive = sys.stdin.isatty()
-    if not interactive and not args.password_stdin:
-        # Claude Code 的 `!` 前缀、CI、管道都会走到这里：密码提示无处输入，
-        # 直接说清楚该怎么办，不要让用户对着一个静默的提示符发愣
+    use_gui = not interactive and not args.password_stdin and askpass.gui_available()
+
+    if not interactive and not args.password_stdin and not use_gui:
+        # 没有 TTY 也没有图形界面：说清楚该怎么办，别让用户对着静默的提示符发愣
         print(
-            "错误：当前不是交互式终端，无法安全地读取密码。\n"
-            "  · 请另开一个真正的终端执行本脚本（Claude Code 的 `!` 前缀不行）；\n"
-            "  · 或在自动化环境里用管道：... | wikipali-login --username <名字> --password-stdin",
+            "错误：当前既没有交互式终端，也没有可用的图形界面，无法安全地读取密码。\n"
+            "  · Claude Desktop：按 Ctrl+` 打开内置终端，在里面跑 wikipali-login（仅本地会话有）；\n"
+            "  · SSH / 远程开发机：在该机器上另开一个终端执行；\n"
+            "  · 自动化环境：... | wikipali-login --username <名字> --password-stdin。\n"
+            "无论哪种，都不要把密码写进命令行参数，也不要打进与 AI 的对话里。",
             file=sys.stderr,
         )
         return 1
 
     username = args.username
     if not username:
-        if not interactive:
+        if use_gui:
+            print("已弹出系统对话框，请在其中输入用户名与密码（本程序看不到你的输入之外的任何东西）。")
+            username = (askpass.ask("用户名或邮箱", secret=False) or "").strip()
+        elif not interactive:
             print("错误：--password-stdin 模式必须同时给 --username。", file=sys.stderr)
             return 1
-        username = input("用户名或邮箱：").strip()
+        else:
+            username = input("用户名或邮箱：").strip()
     if not username:
         print("错误：用户名为空。", file=sys.stderr)
         return 1
 
     if args.password_stdin:
         password = sys.stdin.readline().rstrip("\n")
+    elif use_gui:
+        # 密码由用户直接输给系统对话框，不经过终端、不经过 argv，调用方看不到
+        password = askpass.ask(f"{username} 的 WikiPali 密码")
+        if password is None:
+            print("已取消（对话框被关闭或超时）。", file=sys.stderr)
+            return 130
     else:
         try:
             password = getpass.getpass("密码（不会被保存）：")
@@ -126,7 +140,7 @@ def main(argv=None):
     exp = token_expiry(token)
     print(f"登录成功：{current.get('nickName')}（realName={current.get('realName')}，用作 studio_name）")
     print(f"token {mask(token)} 到期 {fmt_ts(exp)}，已写入 {CREDS_PATH}（0600）")
-    print("下一步：python3 wp.py ensure-model --name <模型标识>")
+    print("下一步：wikipali ensure-model --name <模型标识>")
     return 0
 
 

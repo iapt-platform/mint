@@ -28,7 +28,13 @@
 - **往 wikipali.org 写数据**。写入是覆盖式的：相同位置（book / paragraph / word_start / word_end / channel）的已有句子会被替换。插件在每次写入前会回显目标并要求确认；
 - **只用 Python 标准库**，不装任何依赖，不建虚拟环境。
 
-它**不会**接触你的密码：登录由 `wp_login.py` 完成，密码经 `getpass` 读入内存，不落盘、不进日志、不进对话。这个脚本必须由你本人在真正的终端里执行，Claude 不代跑。
+它**不会**接触你的密码：登录由 `wikipali-login` 完成，密码只读入内存，不落盘、不进日志、不进对话。
+
+- 有终端时用 `getpass` 读；
+- **没有终端时（Claude Desktop、IDE、AI 代跑）自动弹出操作系统的密码对话框**——你把密码输给系统，AI 全程看不到；
+- 两者都不可用时它会明确报错并给出办法（Claude Desktop 按 <kbd>Ctrl</kbd>+<kbd>`</kbd> 有内置终端，仅本地会话；SSH 场景凭据在远端，要在那台机器上登录）。
+
+登录是一次性的：token 有效期 365 天，同一台机器上所有副本共用 `~/.wikipali/credentials.json`。
 
 ## 用法
 
