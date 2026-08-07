@@ -77,6 +77,36 @@ def build_parser():
     p.add_argument('--limit', type=int, default=200, help='每次请求最多取几句')
     p.set_defaults(func=cmd_read.cmd_get)
 
+    p = add('toc', '章节目录')
+    p.add_argument('coord', help='book:paragraph，任意段号即可，服务端会找到所属丛书')
+    p.add_argument('--depth', type=int, default=4, help='最多显示到第几层，默认 4')
+    p.add_argument('--all', action='store_true', help='显示整套丛书而不只当前这本')
+    p.set_defaults(func=cmd_read.cmd_toc)
+
+    p = add('chapter', '先报体量，再按需取整章')
+    p.add_argument('coord', help='book:paragraph，正文段也行，会自动向上找章节')
+    p.add_argument('--fetch', action='store_true', help='确认要读全文时加这个；不加只报体量')
+    p.add_argument('--channel', action='append', help='channel uid，可重复；缺省取巴利原文')
+    p.add_argument('--warn-at', type=int, default=8000, help='超过多少字符就提示，默认 8000')
+    p.add_argument('--limit', type=int, default=200)
+    p.set_defaults(func=cmd_read.cmd_chapter)
+
+    p = add('versions', '某坐标有哪些译本，以及没有哪些')
+    p.add_argument('coord', help='book:paragraph')
+    p.set_defaults(func=cmd_read.cmd_versions)
+
+    p = add('count', '词频合计（词次，不是段落数）')
+    p.add_argument('words', nargs='+', help='一个或多个词/词根')
+    p.set_defaults(func=cmd_read.cmd_count)
+
+    p = add('terms', '术语表：权威译名对照')
+    p.add_argument('keyword', nargs='?', help='按巴利词形过滤；省略则列全表')
+    p.add_argument('--lang', default='zh-Hans')
+    p.add_argument('--view', default='community')
+    p.add_argument('--limit', type=int, default=30)
+    p.add_argument('--refresh', action='store_true', help='强制重新拉取（全表有缓存）')
+    p.set_defaults(func=cmd_read.cmd_terms)
+
     # -- 写 ----------------------------------------------------------------
     p = add('ensure-model', '幂等地建立模型记录并取模型身份 token', needs_json=False)
     p.add_argument('--name', help='模型标识，如 claude-opus-5（会成为句子作者署名）')
