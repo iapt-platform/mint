@@ -78,4 +78,14 @@ AI-汉译-Nissaya（**AI 生成**，deepseek-v3）(216:35)         ← 机器译
 ## 凭据
 
 `~/.wikipali/credentials.json`（0600）。**任何 skill 都不得打印 token 全文，也不得
-`cat` 这个文件。** 密码只由 `wikipali-login` 接触，且必须由用户本人在真正的终端里跑。
+`cat` 这个文件。**
+
+密码只由 `wikipali-login` 接触，且**只从三个地方进来**：真实终端的 `getpass`、操作系统的
+密码对话框、显式的 `--password-stdin` 管道。它永远不经过命令行参数，也不该经过与 AI 的
+对话——两者都会留痕（`ps` / shell history / 会话记录）。
+
+没有终端时（Claude Desktop、IDE、agent 代跑）`wikipali-login` 会自动弹系统密码框，所以
+**可以直接执行它**；只有既无终端又无图形界面时才需要用户自己开终端。Claude Desktop 的
+内置终端按 <kbd>Ctrl</kbd>+<kbd>`</kbd> 打开（仅本地会话）。
+
+登录是**一次性**的：用户 token 有效期 365 天，同一台机器上所有副本共用这一份凭据。

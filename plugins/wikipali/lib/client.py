@@ -116,8 +116,10 @@ class Client:
         token = (self.bucket.get("user") or {}).get("token")
         if not token:
             raise WpError(
-                "尚未登录。请自己执行（Claude Code 里用 ! 前缀）：\n"
-                "    ! python3 " + os.path.join(os.path.dirname(os.path.abspath(__file__)), "wp_login.py")
+                "尚未登录。执行 wikipali-login 即可——没有终端时它会弹出系统密码框，\n"
+                "密码由你直接输给操作系统，AI 看不到。\n"
+                "（若命令不在 PATH 上，用 ${CLAUDE_PLUGIN_ROOT}/bin/wikipali-login，"
+                "或重启会话让 PATH 生效。）"
             )
         return token
 
@@ -125,7 +127,7 @@ class Client:
     def model(self):
         model = self.bucket.get("model") or {}
         if not model.get("token"):
-            raise WpError("尚未取得模型身份 token。请先跑：python3 wp.py ensure-model --name <模型名>")
+            raise WpError("尚未取得模型身份 token。请先跑：wikipali ensure-model --name <模型名>")
         return model
 
     def save(self):
