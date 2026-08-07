@@ -14,7 +14,9 @@ metadata:
 - `wikipali-login` —— 唯一接触密码的程序，**必须由用户本人在真正的终端里执行**
 - `wikipali` —— 其余全部操作
 
-命令是 `wikipali <子命令>`（插件启用时已在 PATH 上），登录是独立的 `wikipali-login`。
+命令是 `wikipali <子命令>`，登录是独立的 `wikipali-login`。
+
+⚠ **刚装好或刚更新插件时，这两个命令可能还不在 PATH 上**——PATH 注入在会话启动时完成，装完要重启会话。若 `command -v wikipali` 为空，改用 `${CLAUDE_PLUGIN_ROOT}/bin/wikipali`，并提醒用户重启会话。
 
 **坐标、引用格式、译文来源判定、凭据规矩见 `references/conventions.md`——那是所有 skill 共用的，必须遵守。** 端点细节见 `references/api-write.md`。
 
