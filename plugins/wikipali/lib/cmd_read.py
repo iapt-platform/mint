@@ -9,12 +9,18 @@ import re
 import sys
 
 from client import make_client, note
-from coords import fmt_coord, fmt_path, parse_coords, text_layer
+from coords import fmt_coord, fmt_path, parse_coord, parse_coords, text_layer
 from errors import ApiError, WpError, explain_api_error
 
 # 巴利原文本身就是一个 channel（_System_Pali_VRI_）。取原文、取译文、取逐词解析
 # 是同一个调用换 channel。
 PALI_CHANNEL = '00b577c0-13b9-11ee-a05a-b7307efd9ee6'
+
+# 靠 channel 名字判断机器译文很脆弱：库里既有名字含 "AI" 的，也有直接用模型名命名的
+# （deepseek / qwen-max / grok-简体中文 / gemini / 豆包 / ChatGPT），后者不含 "ai"。
+# 这个清单只用来「提醒去核实」，不作为判定依据——权威判定看 get 返回的作者是不是模型。
+MACHINE_HINTS = ('ai', 'gpt', 'chatgpt', 'claude', 'deepseek', 'gemini', 'qwen', 'grok',
+                 'llama', 'mistral', 'kimi', 'norbu', '豆包', '文心', 'ernie', '通义')
 
 # 服务端的 sentence?view=paragraph 不带 channels 会 500，所以永远要给一个默认值。
 READ_TIMEOUT = 60
@@ -281,4 +287,257 @@ def cmd_get(args):
         print(f'\n共 {len(collected)} 句。')
 
     emit(args, collected, render)
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# toc —— 章节目录
+# ---------------------------------------------------------------------------
+
+
+def cmd_toc(args):
+    client = make_client(args)
+    book, para = parse_coord(args.coord)
+    try:
+        data = client.call('GET', 'v2/palitext', query={'view': 'book-toc', 'book': book, 'para': para},
+                           timeout=READ_TIMEOUT)
+    except ApiError as exc:
+        raise explain_api_error(exc, f'取 {book}:{para} 的章节目录')
+    rows = (data or {}).get('rows') or []
+    # 服务端返回的是整套丛书的目录，默认只留当前这本，避免刷屏
+    shown = rows if args.all else [r for r in rows if r.get('book') == book]
+
+    def render():
+        print(f'{len(rows)} 条目录条目'
+              + ('' if args.all else f'，其中 book {book} 有 {len(shown)} 条（--all 看整套丛书）'))
+        for r in shown:
+            level = int(r.get('level') or 1)
+            if level > args.depth:
+                continue
+            print(f'{"  " * (level - 1)}{r.get("book")}:{r.get("paragraph")}  {r.get("toc")}')
+
+    emit(args, shown, render)
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# chapter —— 先报体量，再取整章
+# ---------------------------------------------------------------------------
+
+
+def fetch_meta(client, book, para):
+    try:
+        return client.call('GET', f'v2/palitext/{book}-{para}', timeout=READ_TIMEOUT)
+    except ApiError as exc:
+        raise explain_api_error(exc, f'取 {book}:{para} 的段落元信息')
+
+
+def parse_path(raw):
+    """这个端点的 path 是 JSON 字符串，search 那边却是数组——两边都要能吃。"""
+    if isinstance(raw, str):
+        try:
+            return json.loads(raw)
+        except ValueError:
+            return []
+    return raw or []
+
+
+def resolve_chapter(client, book, para):
+    """给任意段号，向上找到它所属的章节节点。返回 (章节 meta, 走了几层)。
+
+    注意：正文段自己也带 chapter_len（值为 1），所以不能用「有没有这个字段」判断，
+    要看它是不是 > 1。向上一层优先取 path 的末项（那就是直接所属的章节），
+    没有 path 才退回 parent。
+    """
+    meta = fetch_meta(client, book, para)
+    hops = 0
+    while meta and int(meta.get('chapter_len') or 0) <= 1 and hops < 6:
+        up = None
+        path = parse_path(meta.get('path'))
+        if path:
+            last = path[-1]
+            if int(last.get('paragraph', -1)) != int(meta.get('paragraph', -1)):
+                up = int(last['paragraph'])
+        if up is None and meta.get('parent'):
+            up = int(meta['parent'])
+        if up is None:
+            break
+        meta = fetch_meta(client, book, up)
+        hops += 1
+    return meta, hops
+
+
+def cmd_chapter(args):
+    client = make_client(args)
+    book, para = parse_coord(args.coord)
+    meta, hops = resolve_chapter(client, book, para)
+    if not meta or not meta.get('chapter_len'):
+        raise WpError(f'{book}:{para} 向上找不到章节节点，无法确定章节范围。')
+
+    start = int(meta['paragraph'])
+    length = int(meta['chapter_len'])
+    strlen = int(meta.get('chapter_strlen') or 0)
+    end = start + length - 1
+    path = parse_path(meta.get('path'))
+    title = meta.get('toc') or meta.get('title') or (path[-1].get('title') if path else '')
+
+    print(f'章节   : {title}')
+    print(f'路径   : {fmt_path(path)}')
+    print(f'范围   : {book}:{start} – {book}:{end}（{length} 段）'
+          + (f'，约 {strlen} 字符' if strlen else ''))
+    if hops:
+        print(f'（{book}:{para} 是正文段，向上 {hops} 层找到所属章节）')
+    if meta.get('prev_chapter') or meta.get('next_chapter'):
+        print(f'相邻   : 上一章 {book}:{meta.get("prev_chapter")}  下一章 {book}:{meta.get("next_chapter")}')
+
+    if not args.fetch:
+        print(f'\n只报体量，未取文。确认要读再加 --fetch；只要其中几段用：'
+              f'wikipali get {book}:{start} {book}:{start + 1} …')
+        return 0
+
+    if strlen > args.warn_at:
+        note(f'⚠ 本章约 {strlen} 字符，超过 {args.warn_at} 的提示阈值——注意上下文预算。')
+
+    args.coords = [f'{book}:{p}' for p in range(start, end + 1)]
+    args.limit = max(args.limit, length * 20)
+    return cmd_get(args)
+
+
+# ---------------------------------------------------------------------------
+# versions —— 某坐标有哪些译本，以及没有哪些
+# ---------------------------------------------------------------------------
+
+
+def cmd_versions(args):
+    client = make_client(args)
+    book, para = parse_coord(args.coord)
+    try:
+        data = client.call('GET', 'v2/channel',
+                           query={'view': 'paragraphs', 'book_id': book, 'para': para},
+                           timeout=READ_TIMEOUT)
+    except ApiError as exc:
+        if exc.status and exc.status >= 500:
+            raise WpError(
+                f'查 {book}:{para} 的可用译本失败（HTTP {exc.status}）。\n'
+                '稳定版站点上 channel?view=paragraphs 有已知缺陷，修复只在最新版代码上。\n'
+                '请切到最新版再试：wikipali endpoint next，或本次调用加 --api next。'
+            )
+        raise explain_api_error(exc, f'查 {book}:{para} 的可用译本')
+    rows = (data or {}).get('rows') or []
+
+    def render():
+        if not rows:
+            print(f'{book}:{para} 在任何 channel 下都没有内容。')
+            return
+        print(f'{book}:{para} 有 {len(rows)} 个 channel 存有内容：\n')
+        by_type = {}
+        for r in rows:
+            by_type.setdefault(r.get('type') or '?', []).append(r)
+        for typ in sorted(by_type):
+            print(f'  [{typ}]')
+            for r in sorted(by_type[typ], key=lambda x: str(x.get('lang'))):
+                name_l = (r.get('name') or '').lower()
+                ai = ' ⚠疑似机器译' if any(h in name_l for h in MACHINE_HINTS) else ''
+                print(f'    {str(r.get("lang")):<8} {str(r.get("name"))[:36]:<38} {r.get("uid")}{ai}')
+        langs = {str(r.get('lang')) for r in rows}
+        missing = [l for l in ('pali', 'my', 'zh-Hans', 'zh', 'en', 'th') if l not in langs]
+        if missing:
+            print(f'\n该段**没有**这些语言的内容：{", ".join(missing)}')
+            print('如实报告「无」，不要拿相邻段落或别的译本凑。')
+        print('\n标 ⚠疑似机器译 的按机器译文标注引用。**没标的不等于是人译**——'
+              '名字判断很脆弱，权威做法是 wikipali get 看作者是不是模型，见 conventions.md。')
+
+    emit(args, rows, render)
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# count —— 词频合计
+# ---------------------------------------------------------------------------
+
+
+def cmd_count(args):
+    client = make_client(args)
+    out = []
+    for word in args.words:
+        rows = fetch_forms(client, word)
+        if not rows:
+            out.append({'word': word, 'found': False})
+            continue
+        top = rows[0]
+        forms = top.get('case') or []
+        out.append({
+            'word': word, 'found': True, 'lemma': top.get('word'),
+            'forms': len(forms),
+            'total': sum(int(f.get('count') or 0) for f in forms),
+            'bold': sum(int(f.get('bold') or 0) for f in forms),
+        })
+
+    def render():
+        print(f'{"词":<28}{"词根":<24}{"词形":>5}{"词次":>8}{"黑体":>7}')
+        for r in out:
+            if not r['found']:
+                print(f'{r["word"]:<28}{"（语料中未见）":<24}')
+                continue
+            print(f'{r["word"]:<28}{r["lemma"]:<24}{r["forms"]:>5}{r["total"]:>8}{r["bold"]:>7}')
+        print('\n这里数的是**词次**，不是段落数。段落数用 search 的 count。')
+
+    emit(args, out, render)
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# terms —— 术语表（权威译名对照）
+# ---------------------------------------------------------------------------
+
+
+def terms_cache_path(lang, view):
+    import os
+    from creds import CREDS_DIR
+    return os.path.join(CREDS_DIR, 'cache', f'terms-{view}-{lang}.json')
+
+
+def cmd_terms(args):
+    import os
+    client = make_client(args)
+    path = terms_cache_path(args.lang, args.view)
+    rows = None
+    if os.path.exists(path) and not args.refresh:
+        try:
+            with open(path, encoding='utf-8') as fh:
+                rows = json.load(fh)
+        except (OSError, ValueError):
+            rows = None
+    if rows is None:
+        note('正在拉取术语表全表（服务端不支持按词查询，只能整表拉后本地过滤）…')
+        try:
+            data = client.call('GET', 'v2/term-vocabulary',
+                               query={'view': args.view, 'lang': args.lang}, timeout=120)
+        except ApiError as exc:
+            raise explain_api_error(exc, '取术语表')
+        rows = (data or {}).get('rows') or []
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, 'w', encoding='utf-8') as fh:
+            json.dump(rows, fh, ensure_ascii=False)
+        note(f'已缓存 {len(rows)} 条到 {path}（--refresh 可强制更新）')
+
+    kw = (args.keyword or '').lower()
+    hits = [r for r in rows if kw in (r.get('word') or '').lower()] if kw else rows
+
+    def render():
+        if not hits:
+            print(f'术语表（{args.view} / {args.lang}，共 {len(rows)} 条）里没有含「{args.keyword}」的词条。')
+            print('注意：这只说明术语表没收录，不代表语料里没有这个词。')
+            return
+        print(f'{len(hits)} 条（全表 {len(rows)}）：\n')
+        for r in hits[: args.limit]:
+            tag = f'  [{r["tag"]}]' if r.get('tag') else ''
+            other = f'  / {r["other_meaning"]}' if r.get('other_meaning') else ''
+            print(f'  {r.get("word"):<32} {r.get("meaning")}{other}{tag}')
+        if len(hits) > args.limit:
+            print(f'  …… 其余 {len(hits) - args.limit} 条（--limit 调整）')
+        print('\n术语表是**权威译名对照**，写译文或论文时的用词应与它一致；'
+              '与它不一致时要说明理由。')
+
+    emit(args, hits, render)
     return 0

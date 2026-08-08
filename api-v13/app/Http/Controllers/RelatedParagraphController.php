@@ -1,4 +1,5 @@
 <?php
+
 /*
  *查询相关联的书
  *mula->attakhata->tika
@@ -31,16 +32,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\RelatedParagraphResource;
 use App\Models\RelatedParagraph;
 use Illuminate\Http\Request;
-use App\Http\Resources\RelatedParagraphResource;
+use Illuminate\Http\Response;
 
 class RelatedParagraphController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -49,6 +51,11 @@ class RelatedParagraphController extends Controller
             ->where('para', $request->input('para'))
             ->where('cs_para', '>', 0)
             ->first();
+        if (! $first) {
+            // 该段没有 cs6 锚点（约 2% 的段落如此），或 book/para 传错。
+            // 「没有关联段落」是正常结果，不是错误——返回空集，让客户端能与故障区分开
+            return $this->ok(['rows' => [], 'count' => 0]);
+        }
         $result = RelatedParagraph::where('book_name', $first->book_name)
             ->where('cs_para', $first->cs_para)
             ->orderBy('book_id')
@@ -56,22 +63,22 @@ class RelatedParagraphController extends Controller
             ->get();
         $books = [];
         foreach ($result as $value) {
-            # 把段落整合成书。有几本书就有几条输出纪录
-            if (!isset($books[$value->book_id])) {
+            // 把段落整合成书。有几本书就有几条输出纪录
+            if (! isset($books[$value->book_id])) {
                 $books[$value->book_id]['book'] = $value->book;
                 $books[$value->book_id]['book_id'] = $value->book_id;
                 $books[$value->book_id]['cs6_para'] = $value->cs_para;
             }
             $books[$value->book_id]['para'][] = $value->para;
         }
-        return $this->ok(["rows" => RelatedParagraphResource::collection($books), "count" => count($books)]);
+
+        return $this->ok(['rows' => RelatedParagraphResource::collection($books), 'count' => count($books)]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -81,8 +88,7 @@ class RelatedParagraphController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\RelatedParagraph  $relatedParagraph
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(RelatedParagraph $relatedParagraph)
     {
@@ -92,9 +98,7 @@ class RelatedParagraphController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\RelatedParagraph  $relatedParagraph
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, RelatedParagraph $relatedParagraph)
     {
@@ -104,8 +108,7 @@ class RelatedParagraphController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\RelatedParagraph  $relatedParagraph
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(RelatedParagraph $relatedParagraph)
     {

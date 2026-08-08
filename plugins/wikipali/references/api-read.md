@@ -87,6 +87,49 @@ word_start, word_end, editor, channel, updated_at}`。按 `word_start` 排序拼
 `view=book-toc` / `chapter` / `chapter_children` / `children` / `paragraph`，
 参数 `book` / `para` / `series`。
 
+## 7. 章节目录 —— `GET /v2/palitext?view=book-toc&book={book}&para={任意段号}`
+
+`para` 给该书内任意段号即可，服务端自己往上找顶级目录。返回的是**整套丛书**的目录
+（如给 book 216 会连 213/214/… 一起返回，实测 951 条），要按 `book` 自行过滤。
+
+行字段：`book` / `paragraph` / `toc`（巴利标题）/ `level`（1–7，1 为顶层）。
+
+## 8. 段落与章节元信息 —— `GET /v2/palitext/{book}-{paragraph}`
+
+⚠ 是 **path 参数**（`/palitext/216-481`），不是 query。`data` 是**单个对象**，不是 rows。
+
+| 字段 | 说明 |
+|---|---|
+| `class` | `chapter` / `subhead` / `bodytext` … |
+| `chapter_len` | **章节段数**。⚠ 正文段自己也有这个字段且值为 1，所以判断「是不是章节」要看它 **> 1**，不能看有没有 |
+| `chapter_strlen` | 章节字符数——**取整章前报体量就靠它** |
+| `next_chapter` / `prev_chapter` / `parent` | 导航 |
+| `path` | 面包屑。⚠ **这个端点返回的是 JSON 字符串，而 search 返回的是数组**，客户端两种都要能吃 |
+| `pcd_book_id` | 另一套书号，**等于 `search-pali-wbw` 的 `book` 参数值**（实测 216 → 278，与 dist 输出的 `--book 278` 一致）|
+
+从正文段找所属章节：取 `path` 的**末项**，那就是直接父章节；没有 path 才退回 `parent`。
+
+## 9. 某段有哪些译本 —— `GET /v2/channel?view=paragraphs&book_id={book}&para={para}`
+
+返回该坐标下有内容的全部 channel（`uid` / `name` / `type` / `lang` / `status`）。
+
+⚠ **稳定版站点上这个分支会 500**，修复只在最新版代码里（`c392d33c3 :bug: view=paragraphs
+只显示一行`）。客户端遇到 5xx 要提示切到 `next`，不要当成「该段没有译本」。
+
+## 10. 术语表 —— `GET /v2/term-vocabulary?view=community&lang=zh-Hans`
+
+权威译名对照。行字段：`guid` / `word`（巴利词形）/ `tag` / `meaning` / `other_meaning`。
+
+⚠ **不支持按词查询**（带 `word=` 参数返回的不是 JSON），只能拉全表——实测 zh-Hans
+共 **17074 条**，客户端要缓存后本地过滤。
+
+## 其他 channel 视图
+
+`view` 取值：`public`（status=30）/ `studio` / `studio-all` / `user-edit` / `user-in-chapter`
+/ `system` / `paragraphs` / `id`。
+
+`status` 不止 10/30：实测 5（610 个，basic 用户新建的）、30（559，公开）、10（495）、0、1 都在用。
+
 ## 已知故障
 
 | 端点 | 现象 |

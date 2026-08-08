@@ -42,7 +42,11 @@ wikipali forms parivāsa
 
 ```bash
 wikipali word parivāsa          # 释义 + 形态分析，确认词根选对了
+wikipali terms parivāsa         # 术语表：该词的权威中文译名
 ```
+
+**产出里的译名应与术语表一致**，不一致要说明理由。别自己从构词法编译名——实测
+`samodhānaparivāsa` 的权威译名是「合并别住」，凭字面容易写成别的。
 
 ### 2. 看分布，再决定范围
 
@@ -90,7 +94,8 @@ wikipali search --lemma parivāsa --limit 50
 每个子类走一遍完整链路：
 
 ```bash
-wikipali forms samodhānaparivāsa                        # 词形与频次
+wikipali count samodhānaparivāsa paṭicchannaparivāsa …  # 一次看清各子类的词次
+wikipali terms samodhānaparivāsa                        # 权威译名
 wikipali search --lemma samodhānaparivāsa --limit 20    # 找它自己的解释段落
 wikipali get <坐标>                                      # 取原文
 ```
@@ -129,16 +134,30 @@ wikipali search --lemma parivāsa --tags vinaya --limit 200
 ### 5. 取原文
 
 ```bash
-wikipali get 216:35 216:36 216:41
+wikipali get 216:35 216:36 216:41       # 按坐标精确取，缺省是巴利原文
+wikipali toc 216:512                    # 看这本书的章节结构
+wikipali chapter 216:512                # 只报体量：章节范围、段数、字符数
+wikipali chapter 216:512 --fetch        # 确认要读全章时才加 --fetch
 ```
 
-缺省取巴利原文。`--channel <uid>` 可指定别的译本（可重复给多个）。
+`chapter` 给正文段也行，会自动向上找到所属章节。**不加 `--fetch` 就只报体量**——
+这是上下文预算的闸门，先看清多大再决定读不读。
 
 ### 6. 交叉验证
 
-用 `--channel` 取缅文逐词解析（nissaya）或各家译本，核对你基于巴利原文做出的判断。
-某坐标在某 channel 下没有内容时，如实说"该译本在此处无文本"，**不要拿相邻段落或
-别的译本凑**。
+```bash
+wikipali versions 216:512               # 该坐标有哪些译本，以及没有哪些
+wikipali get 216:512 --channel <uid>    # 取指定译本
+```
+
+`versions` 会把该段**没有**的语言明确列出来——某语言无译文时如实说"无"，**不要拿
+相邻段落或别的译本凑**。
+
+⚠ `versions` 依赖的端点在稳定版站点上有缺陷，会提示你切到 `next`（`wikipali endpoint next`）。
+
+⚠ 输出里标 **⚠疑似机器译** 的按机器译文标注引用；但**没标的不等于人译**——很多 channel
+直接用模型名命名（`deepseek`、`qwen-max`、`grok-简体中文`），判定要看 `get` 返回的作者，
+见 `references/conventions.md`。
 
 ## 上下文预算
 
