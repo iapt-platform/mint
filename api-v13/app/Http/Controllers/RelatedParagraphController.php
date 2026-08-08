@@ -51,6 +51,11 @@ class RelatedParagraphController extends Controller
             ->where('para', $request->input('para'))
             ->where('cs_para', '>', 0)
             ->first();
+        if (! $first) {
+            // 该段没有 cs6 锚点（约 2% 的段落如此），或 book/para 传错。
+            // 「没有关联段落」是正常结果，不是错误——返回空集，让客户端能与故障区分开
+            return $this->ok(['rows' => [], 'count' => 0]);
+        }
         $result = RelatedParagraph::where('book_name', $first->book_name)
             ->where('cs_para', $first->cs_para)
             ->orderBy('book_id')
