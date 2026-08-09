@@ -107,6 +107,30 @@ def build_parser():
     p.add_argument('--refresh', action='store_true', help='强制重新拉取（全表有缓存）')
     p.set_defaults(func=cmd_read.cmd_terms)
 
+    p = add('related', '本文 ↔ 义注 ↔ 复注的段落对应')
+    p.add_argument('coord', help='book:paragraph')
+    p.set_defaults(func=cmd_read.cmd_related)
+
+    p = add('articles', '列出 / 搜索文章（二手研究）')
+    p.add_argument('keyword', nargs='?', help='标题关键词')
+    p.add_argument('--lang', help='按语言过滤')
+    p.add_argument('--view', default='public')
+    p.add_argument('--limit', type=int, default=20)
+    p.add_argument('--offset', type=int, default=0)
+    p.set_defaults(func=cmd_read.cmd_articles)
+
+    p = add('article', '读一篇文章的全文')
+    p.add_argument('uid')
+    p.add_argument('--chars', type=int, default=4000, help='最多输出多少字符，0 为不截断')
+    p.set_defaults(func=cmd_read.cmd_article)
+
+    p = add('anthology', '文集：不给 uid 列表，给 uid 看目录')
+    p.add_argument('uid', nargs='?')
+    p.add_argument('--view', default='public')
+    p.add_argument('--limit', type=int, default=30)
+    p.add_argument('--offset', type=int, default=0)
+    p.set_defaults(func=cmd_read.cmd_anthology)
+
     # -- 写 ----------------------------------------------------------------
     p = add('ensure-model', '幂等地建立模型记录并取模型身份 token', needs_json=False)
     p.add_argument('--name', help='模型标识，如 claude-opus-5（会成为句子作者署名）')

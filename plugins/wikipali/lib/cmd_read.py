@@ -541,3 +541,161 @@ def cmd_terms(args):
 
     emit(args, hits, render)
     return 0
+
+
+# ---------------------------------------------------------------------------
+# related —— 本文 ↔ 义注 ↔ 复注的段落对应
+# ---------------------------------------------------------------------------
+
+
+def cmd_related(args):
+    client = make_client(args)
+    book, para = parse_coord(args.coord)
+    try:
+        data = client.call('GET', 'v2/related-paragraph', query={'book': book, 'para': para},
+                           timeout=READ_TIMEOUT)
+    except ApiError as exc:
+        if exc.status and exc.status >= 500:
+            # 服务端在「查无关联」时会抛异常（修复已合并，未部署到稳定版站点）。
+            # 对使用者来说这多半就是「没有关联段落」，但不能替服务端断言，如实说明两种可能。
+            raise WpError(
+                f'查 {book}:{para} 的关联段落失败（HTTP {exc.status}）。\n'
+                '最可能的原因是**该段没有关联段落**——稳定版站点在这种情况下会报 500，\n'
+                '服务端修复已合并但尚未部署。也可能是服务本身有问题。\n'
+                '两者无法从这里区分，**不要据此断言「该段有/没有注释」**；\n'
+                '可以换最新版试试：wikipali --api next related {0}:{1}'.format(book, para)
+            )
+        raise explain_api_error(exc, f'查 {book}:{para} 的关联段落')
+    rows = (data or {}).get('rows') or []
+
+    def render():
+        if not rows:
+            print(f'{book}:{para} 没有关联段落。')
+            print('约 2% 的段落没有 CST 锚点，这是正常结果，不是查询失败——'
+                  '如实报告，不要转而去注释书里搜关键词充数。')
+            return
+        print(f'{book}:{para} 关联到 {len(rows)} 部书：\n')
+        order = {'mūla': 0, 'aṭṭhakathā': 1, 'ṭīkā': 2}
+        rows.sort(key=lambda r: order.get(text_layer(r.get('tags')), 9))
+        for r in rows:
+            layer = text_layer(r.get('tags')) or '未标层次'
+            paras = r.get('para') or []
+            coords = ' '.join(f'{r.get("book")}:{p}' for p in paras[:8])
+            more = f' …共 {len(paras)} 段' if len(paras) > 8 else ''
+            here = '  ← 当前' if int(r.get('book', -1)) == book and para in paras else ''
+            print(f'  [{layer:<11}] {str(r.get("book_title_pali"))[:26]:<28}{here}')
+            print(f'      {coords}{more}')
+        first = rows[0]
+        print(f'\n取文：wikipali get {first.get("book")}:{(first.get("para") or [0])[0]}')
+        print('引用时必须标明层次——把义注的解释当成本文的说法是学术错误。')
+
+    emit(args, rows, render)
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# articles / article / anthology —— 文章与文集
+# ---------------------------------------------------------------------------
+
+
+def cmd_articles(args):
+    client = make_client(args)
+    query = {'view': args.view, 'limit': args.limit, 'offset': args.offset}
+    if args.keyword:
+        query['search'] = args.keyword
+    if args.lang:
+        query['lang'] = args.lang
+    try:
+        data = client.call('GET', 'v2/article', query=query, timeout=READ_TIMEOUT)
+    except ApiError as exc:
+        raise explain_api_error(exc, '列出文章')
+    rows = (data or {}).get('rows') or []
+
+    def render():
+        print(f'共 {(data or {}).get("count")} 篇，本页 {len(rows)}'
+              + (f'（关键词「{args.keyword}」）' if args.keyword else ''))
+        if not rows:
+            return
+        print()
+        for r in rows:
+            who = (r.get('editor') or {}).get('nickName') or ''
+            sub = f'  —— {r["subtitle"]}' if r.get('subtitle') else ''
+            print(f'  {str(r.get("lang")):<8} {str(r.get("title"))[:40]:<42}{sub}')
+            print(f'      {r.get("uid")}   {who}   {str(r.get("updated_at"))[:10]}')
+        print(f'\n读全文：wikipali article {rows[0].get("uid")}')
+
+    emit(args, rows, render)
+    return 0
+
+
+def cmd_article(args):
+    client = make_client(args)
+    try:
+        art = client.call('GET', f'v2/article/{args.uid}', timeout=READ_TIMEOUT)
+    except ApiError as exc:
+        raise explain_api_error(exc, f'读文章 {args.uid}')
+    if not art:
+        raise WpError(f'读不到文章 {args.uid}。')
+
+    def render():
+        who = (art.get('editor') or {}).get('nickName') or ''
+        studio = (art.get('studio') or {}).get('nickName') or ''
+        print(f'# {art.get("title")}')
+        if art.get('subtitle'):
+            print(f'  {art["subtitle"]}')
+        print(f'  {art.get("lang")}  作者 {who}  studio {studio}  更新 {str(art.get("updated_at"))[:10]}')
+        print(f'  uid {art.get("uid")}\n')
+        body = art.get('content') or ''
+        if args.chars and len(body) > args.chars:
+            print(body[: args.chars])
+            print(f'\n……全文 {len(body)} 字符，此处截断（--chars 0 取全文）')
+        else:
+            print(body)
+        print('\n⚠ 文章是**二手研究**，不是原典。引用它的观点要标明作者，'
+              '不要把它的说法当成经律本身的说法。')
+
+    emit(args, art, render)
+    return 0
+
+
+def cmd_anthology(args):
+    client = make_client(args)
+    if args.uid:
+        try:
+            data = client.call('GET', f'v2/anthology/{args.uid}', timeout=READ_TIMEOUT)
+        except ApiError as exc:
+            raise explain_api_error(exc, f'读文集 {args.uid}')
+        arts = (data or {}).get('article_list') or []
+
+        def render():
+            print(f'# {data.get("title")}   {data.get("lang")}')
+            if data.get('summary'):
+                print(f'  {data["summary"]}')
+            print(f'  {len(arts)} 篇文章\n')
+            for a in arts[: args.limit]:
+                if isinstance(a, dict):
+                    print(f'  {str(a.get("title"))[:44]:<46} {a.get("uid")}')
+                else:
+                    print(f'  {a}')
+        emit(args, data, render)
+        return 0
+
+    try:
+        data = client.call('GET', 'v2/anthology',
+                           query={'view': args.view, 'limit': args.limit, 'offset': args.offset},
+                           timeout=READ_TIMEOUT)
+    except ApiError as exc:
+        raise explain_api_error(exc, '列出文集')
+    rows = (data or {}).get('rows') or []
+
+    def render():
+        print(f'共 {(data or {}).get("count")} 个文集，本页 {len(rows)}\n')
+        for r in rows:
+            print(f'  {str(r.get("lang")):<8} {str(r.get("title"))[:40]:<42} '
+                  f'{r.get("childrenNumber")} 篇')
+            print(f'      {r.get("uid")}')
+        if rows:
+            print(f'\n看目录：wikipali anthology {rows[0].get("uid")}')
+
+    emit(args, rows, render)
+    return 0

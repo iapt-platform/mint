@@ -203,6 +203,14 @@ Cūḷavaggapāḷi, Pārivāsikakkhandhaka (VN 216:35)
 Samantapāsādikā, Pārivāsikavattakathā (SP-aṭṭ 141:63)
 ```
 
+**发现（2026-08-09）**：平台自己就有引用格式。用户写的文章《表24：三种别住》里，
+引用巴利原文用的是 `{{141-120-17-40}}` —— 即 `{{book-paragraph-word_start-word_end}}`，
+**精确到句**。实测该坐标正是义注里讲 `odhānasamodhāna` 的那一句。
+
+这比我临时定的格式好：它是平台原生的，写成这样的引用在 wikipali 上能直接解析定位。
+**待用户确认是否采用**——若采用，`conventions.md` 的「引用格式」一节改为这个，
+`research` 规程要求产出中的巴利原文引用一律用它。
+
 **⬜ TODO：用户之后会给出正式的引用格式规范**，届时改 `skills/research/SKILL.md` 的「引用格式」一节。这关系到产出能否被同行接受，属于必改项，不是可选优化。
 
 相关线索：库里有 `page_numbers` 表，`type` 分 `M/P/T/V/O`（缅甸版/PTS 等不同版本的页码），正式规范多半要用到其中某一种；`GET /v2/search?view=page&key=<卷.页>&type=<版本>` 是按页码反查段落的现成端点。
