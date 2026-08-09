@@ -88,6 +88,7 @@ def build_parser():
     p.add_argument('--fetch', action='store_true', help='确认要读全文时加这个；不加只报体量')
     p.add_argument('--channel', action='append', help='channel uid，可重复；缺省取巴利原文')
     p.add_argument('--warn-at', type=int, default=8000, help='超过多少字符就提示，默认 8000')
+    p.add_argument('--text', action='store_true', help='输出纯文本而非 html（黑体转成 **）')
     p.add_argument('--limit', type=int, default=200)
     p.set_defaults(func=cmd_read.cmd_chapter)
 

@@ -398,9 +398,101 @@ def cmd_chapter(args):
     if strlen > args.warn_at:
         note(f'⚠ 本章约 {strlen} 字符，超过 {args.warn_at} 的提示阈值——注意上下文预算。')
 
-    args.coords = [f'{book}:{p}' for p in range(start, end + 1)]
-    args.limit = max(args.limit, length * 20)
-    return cmd_get(args)
+    return fetch_chapter_content(client, book, start, args)
+
+
+def fetch_chapter_content(client, book, para, args):
+    """整章取文：走 chapter-content，一次拿回全章并按句对齐。
+
+    服务端返回的结构极厚（每句都带 channel / studio / editor / 各类计数，
+    24–36 KB），直接丢给模型是浪费。这里只留每句的 id 与 html——id 本身就是
+    可引用的坐标（book-para-wordStart-wordEnd），html 保留了 <strong> 黑体，
+    那是判断「这句是不是词条解释」的依据，不能丢。
+    """
+    query = {}
+    if args.channel:
+        query['channels'] = ','.join(args.channel)
+    try:
+        data = client.call('GET', f'v2/chapter-content/{book}-{para}', query=query,
+                           timeout=READ_TIMEOUT)
+    except ApiError as exc:
+        raise explain_api_error(exc, f'取 {book}:{para} 的整章内容')
+
+    raw = (data or {}).get('content') or '[]'
+    try:
+        paragraphs = json.loads(raw) if isinstance(raw, str) else raw
+    except ValueError:
+        raise WpError('整章内容不是合法 JSON，服务端返回形状可能变了。')
+
+    wanted = set(args.channel or [])
+    out = []
+    placeholders = 0
+    for item in paragraphs:
+        sentences = []
+        for child in item.get('children') or []:
+            body = pick_body(child, wanted)
+            if body is None:
+                continue
+            if not body.strip():
+                # 请求的 channel 在这一句没有内容时，服务端仍返回等量的空占位条目。
+                # 照直输出会让人以为「有译文只是没显示」，必须滤掉并单独报数。
+                placeholders += 1
+                continue
+            sentences.append({
+                'id': child.get('id'),
+                'text': strip_markup(body) if args.text else body,
+            })
+        if sentences:
+            out.append({'para': int(item.get('para')), 'sentences': sentences})
+
+    def render():
+        total = sum(len(x['sentences']) for x in out)
+        src = f'channel {",".join(args.channel)}' if args.channel else '巴利原文'
+        if not total:
+            print(f'\n该 channel 在本章**没有任何内容**'
+                  + (f'（服务端返回了 {placeholders} 条空占位）' if placeholders else '') + '。')
+            print('如实报告「该译本在本章无文本」，不要拿别的版本或相邻章节顶替。')
+            print('用 wikipali versions <坐标> 看这一段实际有哪些译本。')
+            return
+        print(f'\n{len(out)} 段 / {total} 句（{src}）'
+              + (f'　⚠ 另有 {placeholders} 句该 channel 无内容，已略去' if placeholders else ''))
+        for item in out:
+            print(f'\n## {book}:{item["para"]}')
+            for sent in item['sentences']:
+                print(f'  {sent["id"]}  {sent["text"]}')
+        print('\n句子 id 就是引用坐标（book-para-wordStart-wordEnd）。')
+
+    emit(args, out, render)
+    return 0
+
+
+def pick_body(child, wanted_channels):
+    """取这一句要展示的正文：指定了 channel 就取该 channel 的译文，否则取原文。
+
+    **优先 content，为空才回退 html**——两者按 channel 类型互补：
+    - original（巴利原文）的 content 是空的，正文在 html 里（带 <strong> 黑体）；
+    - nissaya 的 content 是 markdown 源码「巴利词= 缅文释义。」，既紧凑又保住了
+      「哪部分是巴利、哪部分是释义」这个区分；其 html 是同样内容的渲染结果，
+      体积十几倍且把两者拼在了一起。
+    """
+    sources = []
+    if wanted_channels:
+        for tran in child.get('translation') or []:
+            if ((tran.get('channel') or {}).get('id')) in wanted_channels:
+                sources.append(tran)
+        if not sources:
+            return None
+    else:
+        sources = child.get('origin') or []
+
+    for src in sources:
+        body = (src.get('content') or '').strip()
+        if body:
+            return body
+        html = (src.get('html') or '').strip()
+        if html:
+            return html
+    return ''  
 
 
 # ---------------------------------------------------------------------------

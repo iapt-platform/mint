@@ -163,10 +163,18 @@ wikipali get 216:35 216:36 216:41       # 按坐标精确取，缺省是巴利�
 wikipali toc 216:512                    # 看这本书的章节结构
 wikipali chapter 216:512                # 只报体量：章节范围、段数、字符数
 wikipali chapter 216:512 --fetch        # 确认要读全章时才加 --fetch
+wikipali chapter 216:512 --fetch --channel <uid>   # 读某一个译本
+wikipali chapter 216:512 --fetch --text            # 纯文本，更省
 ```
 
 `chapter` 给正文段也行，会自动向上找到所属章节。**不加 `--fetch` 就只报体量**——
 这是上下文预算的闸门，先看清多大再决定读不读。
+
+取文时每句只保留 **id + 正文**，服务端原始返回的十分之一左右。**句子 id 就是引用坐标**
+（`139-861-9-12` = book-para-wordStart-wordEnd），读到什么就能直接引用什么。
+
+若指定的 channel 在本章没有内容，命令会明确报「该译本在本章无文本」而不是显示一堆
+空行——服务端在这种情况下会返回等量的空占位条目。
 
 ### 5b. 从本文跳到义注与复注
 
