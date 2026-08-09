@@ -28,7 +28,21 @@ skill 共用的规矩，必须遵守。** 端点细节见 `references/api-read.m
 
 ## 流程
 
-### 0. 先看有没有人写过
+### 0a. 需要浏览语料结构时：先找书，再看章节
+
+```bash
+wikipali books --tag-list                      # 有哪些分类 tag
+wikipali books --tags dīghanikāya,ṭīkā         # 长部的复注有哪些（多个 tag 是「且」）
+wikipali toc 185:3                             # 那本书的章节目录
+```
+
+`books` 按 tag 筛（`mūla` / `aṭṭhakathā` / `ṭīkā` / 各部尼柯耶 / 各种论书），
+输出直接接 `toc` 看章节。适合「我想知道某类文献有哪些」这种起步阶段，
+而不是已经有明确关键词的检索。
+
+⚠ 该功能需要服务端较新版本；旧版会明确报「分类目录功能尚未上线」。
+
+### 0b. 先看有没有人写过
 
 ```bash
 wikipali articles 别住          # 平台上的二手研究

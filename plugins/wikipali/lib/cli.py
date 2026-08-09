@@ -131,6 +131,15 @@ def build_parser():
     p.add_argument('--offset', type=int, default=0)
     p.set_defaults(func=cmd_read.cmd_anthology)
 
+    p = add('books', '分类目录：按 tag 找书，如「长部的复注有哪些」')
+    p.add_argument('keyword', nargs='?', help='按书名/toc 过滤')
+    p.add_argument('--tags', help='按 tag 筛，逗号分隔是**且**，如 dīghanikāya,ṭīkā')
+    p.add_argument('--tag-list', action='store_true', help='列出全部 tag 及各自的书数')
+    p.add_argument('--show-tags', action='store_true', help='每本书都列出它的 tag')
+    p.add_argument('--limit', type=int, default=40)
+    p.add_argument('--refresh', action='store_true', help='强制重新拉取书目清单（有本地缓存）')
+    p.set_defaults(func=cmd_read.cmd_books)
+
     # -- 写 ----------------------------------------------------------------
     p = add('ensure-model', '幂等地建立模型记录并取模型身份 token', needs_json=False)
     p.add_argument('--name', help='模型标识，如 claude-opus-5（会成为句子作者署名）')

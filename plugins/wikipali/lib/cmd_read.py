@@ -699,3 +699,97 @@ def cmd_anthology(args):
 
     emit(args, rows, render)
     return 0
+
+
+# ---------------------------------------------------------------------------
+# books —— 分类目录：按 tag 找书
+# ---------------------------------------------------------------------------
+
+
+def books_cache_path():
+    import os
+    from creds import CREDS_DIR
+    return os.path.join(CREDS_DIR, 'cache', 'book-titles.json')
+
+
+def fetch_books(client, refresh=False):
+    """书目清单整表拉一次缓存在本地。服务端也缓存 24 小时，这里再缓存一层是为了
+    让按 tag 筛选变成本地操作——281 条全量在手，筛什么都不用再请求。"""
+    import os
+    path = books_cache_path()
+    if os.path.exists(path) and not refresh:
+        try:
+            with open(path, encoding='utf-8') as fh:
+                return json.load(fh)
+        except (OSError, ValueError):
+            pass
+    try:
+        data = client.call('GET', 'v2/book-title', timeout=READ_TIMEOUT)
+    except ApiError as exc:
+        raise explain_api_error(exc, '取书目清单')
+    rows = (data or {}).get('rows') or []
+    if rows and 'tags' not in rows[0]:
+        raise WpError(
+            '该站点返回的书目清单里没有 tags/toc 字段——服务端版本较旧，'
+            '分类目录功能尚未上线。\n'
+            '可以换最新版试试：wikipali --api next books …'
+        )
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as fh:
+        json.dump(rows, fh, ensure_ascii=False)
+    return rows
+
+
+def cmd_books(args):
+    client = make_client(args)
+    rows = fetch_books(client, refresh=args.refresh)
+
+    if args.tag_list:
+        counter = {}
+        for r in rows:
+            for t in r.get('tags') or []:
+                counter[t] = counter.get(t, 0) + 1
+
+        def render_tags():
+            print(f'{len(counter)} 个 tag（后面是有该 tag 的书数）：\n')
+            for name, n in sorted(counter.items(), key=lambda kv: (-kv[1], kv[0]))[: args.limit]:
+                print(f'  {n:>4}  {name}')
+            print('\n多个 tag 用逗号连接是**且**的关系：'
+                  'wikipali books --tags dīghanikāya,ṭīkā')
+        emit(args, counter, render_tags)
+        return 0
+
+    hits = rows
+    if args.tags:
+        want = [t.strip() for t in args.tags.split(',') if t.strip()]
+        hits = [r for r in hits if all(t in (r.get('tags') or []) for t in want)]
+    if args.keyword:
+        kw = args.keyword.lower()
+        hits = [r for r in hits
+                if kw in str(r.get('title', '')).lower() or kw in str(r.get('toc', '')).lower()]
+
+    def render():
+        scope = []
+        if args.tags:
+            scope.append(f'tags={args.tags}')
+        if args.keyword:
+            scope.append(f'关键词={args.keyword}')
+        print(f'{len(hits)} 部书（全部 {len(rows)} 部）'
+              + (f'  [{" ".join(scope)}]' if scope else ''))
+        if not hits:
+            print('\n没有匹配的书。用 --tag-list 看有哪些 tag；多个 tag 之间是「且」。')
+            return
+        print()
+        for r in hits[: args.limit]:
+            cs = f'  {r["related_name"]}' if r.get('related_name') else ''
+            print(f'  {r.get("book")}:{r.get("paragraph"):<6} {str(r.get("toc"))[:38]:<40}{cs}')
+            if args.show_tags:
+                print(f'      {" ".join(r.get("tags") or [])}')
+        if len(hits) > args.limit:
+            print(f'  …… 其余 {len(hits) - args.limit} 部（--limit 调整）')
+        if hits:
+            first = hits[0]
+            print(f'\n看某本书的章节：wikipali toc {first.get("book")}:{first.get("paragraph")}')
+
+    emit(args, hits, render)
+    return 0
