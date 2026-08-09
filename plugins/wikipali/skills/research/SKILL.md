@@ -28,7 +28,21 @@ skill 共用的规矩，必须遵守。** 端点细节见 `references/api-read.m
 
 ## 流程
 
-### 0. 先看有没有人写过
+### 0a. 需要浏览语料结构时：先找书，再看章节
+
+```bash
+wikipali books --tag-list                      # 有哪些分类 tag
+wikipali books --tags dīghanikāya,ṭīkā         # 长部的复注有哪些（多个 tag 是「且」）
+wikipali toc 185:3                             # 那本书的章节目录
+```
+
+`books` 按 tag 筛（`mūla` / `aṭṭhakathā` / `ṭīkā` / 各部尼柯耶 / 各种论书），
+输出直接接 `toc` 看章节。适合「我想知道某类文献有哪些」这种起步阶段，
+而不是已经有明确关键词的检索。
+
+⚠ 该功能需要服务端较新版本；旧版会明确报「分类目录功能尚未上线」。
+
+### 0b. 先看有没有人写过
 
 ```bash
 wikipali articles 别住          # 平台上的二手研究
@@ -149,10 +163,18 @@ wikipali get 216:35 216:36 216:41       # 按坐标精确取，缺省是巴利�
 wikipali toc 216:512                    # 看这本书的章节结构
 wikipali chapter 216:512                # 只报体量：章节范围、段数、字符数
 wikipali chapter 216:512 --fetch        # 确认要读全章时才加 --fetch
+wikipali chapter 216:512 --fetch --channel <uid>   # 读某一个译本
+wikipali chapter 216:512 --fetch --text            # 纯文本，更省
 ```
 
 `chapter` 给正文段也行，会自动向上找到所属章节。**不加 `--fetch` 就只报体量**——
 这是上下文预算的闸门，先看清多大再决定读不读。
+
+取文时每句只保留 **id + 正文**，服务端原始返回的十分之一左右。**句子 id 就是引用坐标**
+（`139-861-9-12` = book-para-wordStart-wordEnd），读到什么就能直接引用什么。
+
+若指定的 channel 在本章没有内容，命令会明确报「该译本在本章无文本」而不是显示一堆
+空行——服务端在这种情况下会返回等量的空占位条目。
 
 ### 5b. 从本文跳到义注与复注
 

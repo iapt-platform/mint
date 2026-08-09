@@ -398,9 +398,101 @@ def cmd_chapter(args):
     if strlen > args.warn_at:
         note(f'⚠ 本章约 {strlen} 字符，超过 {args.warn_at} 的提示阈值——注意上下文预算。')
 
-    args.coords = [f'{book}:{p}' for p in range(start, end + 1)]
-    args.limit = max(args.limit, length * 20)
-    return cmd_get(args)
+    return fetch_chapter_content(client, book, start, args)
+
+
+def fetch_chapter_content(client, book, para, args):
+    """整章取文：走 chapter-content，一次拿回全章并按句对齐。
+
+    服务端返回的结构极厚（每句都带 channel / studio / editor / 各类计数，
+    24–36 KB），直接丢给模型是浪费。这里只留每句的 id 与 html——id 本身就是
+    可引用的坐标（book-para-wordStart-wordEnd），html 保留了 <strong> 黑体，
+    那是判断「这句是不是词条解释」的依据，不能丢。
+    """
+    query = {}
+    if args.channel:
+        query['channels'] = ','.join(args.channel)
+    try:
+        data = client.call('GET', f'v2/chapter-content/{book}-{para}', query=query,
+                           timeout=READ_TIMEOUT)
+    except ApiError as exc:
+        raise explain_api_error(exc, f'取 {book}:{para} 的整章内容')
+
+    raw = (data or {}).get('content') or '[]'
+    try:
+        paragraphs = json.loads(raw) if isinstance(raw, str) else raw
+    except ValueError:
+        raise WpError('整章内容不是合法 JSON，服务端返回形状可能变了。')
+
+    wanted = set(args.channel or [])
+    out = []
+    placeholders = 0
+    for item in paragraphs:
+        sentences = []
+        for child in item.get('children') or []:
+            body = pick_body(child, wanted)
+            if body is None:
+                continue
+            if not body.strip():
+                # 请求的 channel 在这一句没有内容时，服务端仍返回等量的空占位条目。
+                # 照直输出会让人以为「有译文只是没显示」，必须滤掉并单独报数。
+                placeholders += 1
+                continue
+            sentences.append({
+                'id': child.get('id'),
+                'text': strip_markup(body) if args.text else body,
+            })
+        if sentences:
+            out.append({'para': int(item.get('para')), 'sentences': sentences})
+
+    def render():
+        total = sum(len(x['sentences']) for x in out)
+        src = f'channel {",".join(args.channel)}' if args.channel else '巴利原文'
+        if not total:
+            print(f'\n该 channel 在本章**没有任何内容**'
+                  + (f'（服务端返回了 {placeholders} 条空占位）' if placeholders else '') + '。')
+            print('如实报告「该译本在本章无文本」，不要拿别的版本或相邻章节顶替。')
+            print('用 wikipali versions <坐标> 看这一段实际有哪些译本。')
+            return
+        print(f'\n{len(out)} 段 / {total} 句（{src}）'
+              + (f'　⚠ 另有 {placeholders} 句该 channel 无内容，已略去' if placeholders else ''))
+        for item in out:
+            print(f'\n## {book}:{item["para"]}')
+            for sent in item['sentences']:
+                print(f'  {sent["id"]}  {sent["text"]}')
+        print('\n句子 id 就是引用坐标（book-para-wordStart-wordEnd）。')
+
+    emit(args, out, render)
+    return 0
+
+
+def pick_body(child, wanted_channels):
+    """取这一句要展示的正文：指定了 channel 就取该 channel 的译文，否则取原文。
+
+    **优先 content，为空才回退 html**——两者按 channel 类型互补：
+    - original（巴利原文）的 content 是空的，正文在 html 里（带 <strong> 黑体）；
+    - nissaya 的 content 是 markdown 源码「巴利词= 缅文释义。」，既紧凑又保住了
+      「哪部分是巴利、哪部分是释义」这个区分；其 html 是同样内容的渲染结果，
+      体积十几倍且把两者拼在了一起。
+    """
+    sources = []
+    if wanted_channels:
+        for tran in child.get('translation') or []:
+            if ((tran.get('channel') or {}).get('id')) in wanted_channels:
+                sources.append(tran)
+        if not sources:
+            return None
+    else:
+        sources = child.get('origin') or []
+
+    for src in sources:
+        body = (src.get('content') or '').strip()
+        if body:
+            return body
+        html = (src.get('html') or '').strip()
+        if html:
+            return html
+    return ''  
 
 
 # ---------------------------------------------------------------------------
@@ -698,4 +790,98 @@ def cmd_anthology(args):
             print(f'\n看目录：wikipali anthology {rows[0].get("uid")}')
 
     emit(args, rows, render)
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# books —— 分类目录：按 tag 找书
+# ---------------------------------------------------------------------------
+
+
+def books_cache_path():
+    import os
+    from creds import CREDS_DIR
+    return os.path.join(CREDS_DIR, 'cache', 'book-titles.json')
+
+
+def fetch_books(client, refresh=False):
+    """书目清单整表拉一次缓存在本地。服务端也缓存 24 小时，这里再缓存一层是为了
+    让按 tag 筛选变成本地操作——281 条全量在手，筛什么都不用再请求。"""
+    import os
+    path = books_cache_path()
+    if os.path.exists(path) and not refresh:
+        try:
+            with open(path, encoding='utf-8') as fh:
+                return json.load(fh)
+        except (OSError, ValueError):
+            pass
+    try:
+        data = client.call('GET', 'v2/book-title', timeout=READ_TIMEOUT)
+    except ApiError as exc:
+        raise explain_api_error(exc, '取书目清单')
+    rows = (data or {}).get('rows') or []
+    if rows and 'tags' not in rows[0]:
+        raise WpError(
+            '该站点返回的书目清单里没有 tags/toc 字段——服务端版本较旧，'
+            '分类目录功能尚未上线。\n'
+            '可以换最新版试试：wikipali --api next books …'
+        )
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as fh:
+        json.dump(rows, fh, ensure_ascii=False)
+    return rows
+
+
+def cmd_books(args):
+    client = make_client(args)
+    rows = fetch_books(client, refresh=args.refresh)
+
+    if args.tag_list:
+        counter = {}
+        for r in rows:
+            for t in r.get('tags') or []:
+                counter[t] = counter.get(t, 0) + 1
+
+        def render_tags():
+            print(f'{len(counter)} 个 tag（后面是有该 tag 的书数）：\n')
+            for name, n in sorted(counter.items(), key=lambda kv: (-kv[1], kv[0]))[: args.limit]:
+                print(f'  {n:>4}  {name}')
+            print('\n多个 tag 用逗号连接是**且**的关系：'
+                  'wikipali books --tags dīghanikāya,ṭīkā')
+        emit(args, counter, render_tags)
+        return 0
+
+    hits = rows
+    if args.tags:
+        want = [t.strip() for t in args.tags.split(',') if t.strip()]
+        hits = [r for r in hits if all(t in (r.get('tags') or []) for t in want)]
+    if args.keyword:
+        kw = args.keyword.lower()
+        hits = [r for r in hits
+                if kw in str(r.get('title', '')).lower() or kw in str(r.get('toc', '')).lower()]
+
+    def render():
+        scope = []
+        if args.tags:
+            scope.append(f'tags={args.tags}')
+        if args.keyword:
+            scope.append(f'关键词={args.keyword}')
+        print(f'{len(hits)} 部书（全部 {len(rows)} 部）'
+              + (f'  [{" ".join(scope)}]' if scope else ''))
+        if not hits:
+            print('\n没有匹配的书。用 --tag-list 看有哪些 tag；多个 tag 之间是「且」。')
+            return
+        print()
+        for r in hits[: args.limit]:
+            cs = f'  {r["related_name"]}' if r.get('related_name') else ''
+            print(f'  {r.get("book")}:{r.get("paragraph"):<6} {str(r.get("toc"))[:38]:<40}{cs}')
+            if args.show_tags:
+                print(f'      {" ".join(r.get("tags") or [])}')
+        if len(hits) > args.limit:
+            print(f'  …… 其余 {len(hits) - args.limit} 部（--limit 调整）')
+        if hits:
+            first = hits[0]
+            print(f'\n看某本书的章节：wikipali toc {first.get("book")}:{first.get("paragraph")}')
+
+    emit(args, hits, render)
     return 0

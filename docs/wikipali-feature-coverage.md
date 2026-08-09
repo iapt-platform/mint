@@ -6,7 +6,9 @@
 > 用途：逐项落实的工作清单。**标 ⬜ 的需要提供一个能跑通的完整 API URL**——
 > 照着反推参数比读控制器快，也不会猜错。
 >
-> 插件版本基准：0.5.0（2026-08-08）
+> 插件版本基准：**0.7.0**（2026-08-09）
+
+**当前进度**：✅ 13 项 · ⬜ 9 项（其中 7 项需要 API URL，2 项是写入侧的文章/文集）
 
 **图例**
 
@@ -39,7 +41,7 @@
 
 | 功能 | 状态 | 实现 / 端点 | 备注 |
 |---|---|---|---|
-| 分类目录（如「长部的复注有哪些」）| ⬜ | `tag` / `tags-in-chapter` / `tag-map`？ | `GET /v2/tag?view=public` → 500。`GET /v2/book-title?view=public` 可用（200）。**缺参数** |
+| 分类目录（如「长部的复注有哪些」）| ✅ | `wikipali books --tags dīghanikāya,ṭīkā` → `GET /v2/book-title` | **服务端已扩展**：book-title 现在返回 toc / tags / related_name 并缓存 24 小时。不再需要 `tag` 端点。⚠ 需要服务端部署这一版 |
 | 某本书的目录 | ✅ | `wikipali toc` → `GET /v2/palitext?view=book-toc&book=&para=` | 返回整套丛书，客户端按 book 过滤 |
 | 章节内容 · 查有哪些版本 | ⚠️ | `wikipali versions` → `GET /v2/channel?view=paragraphs&book_id=&para=` | **只能按段落查**；按章节查目前用章节起始段近似 |
 | 章节内容 · 读某一版本 | ✅ | `wikipali chapter <坐标> --fetch --channel <uid>` | 先报体量（`chapter_strlen`）再取 |
@@ -51,14 +53,14 @@
 
 | 功能 | 状态 | 实现 / 端点 | 备注 |
 |---|---|---|---|
-| 文章 | 🔧 | `GET /v2/article?view=public&limit=` | 实测 200 可用，未封装 |
-| 文集 | 🔧 | `GET /v2/anthology?view=public&limit=` | 实测 200 可用，未封装（控制器是 `CollectionController`）|
+| 文章 | ✅ | `wikipali articles [关键词]` / `wikipali article <uid>` | 列表支持 `search=`；单篇返回 markdown 正文 |
+| 文集 | ✅ | `wikipali anthology [uid]` | 不给 uid 列表，给 uid 看其文章目录 |
 
 ### 5. 相关经文（根本 ↔ 义注 ↔ 复注）
 
 | 功能 | 状态 | 实现 / 端点 | 备注 |
 |---|---|---|---|
-| 相关段落 | 🔧 | `GET /v2/related-paragraph?book=&para=` | 已评估：63 万行 / 217 部书，段落覆盖率 97.9–99.9%，双向可用，带 tags 可标层次。服务端「无关联时 500」已修复。**命令待做（0.6.0）** |
+| 相关段落 | ✅ | `wikipali related <坐标>` | 63 万行 / 217 部书，覆盖率 97.9–99.9%，双向可用，按 mūla→aṭṭhakathā→ṭīkā 排序标层次。⚠ 服务端「无关联时 500」的修复**已合并但线上未部署**，客户端已兜住这个窗口 |
 | 相关章节 | ⬜ | ? | 路由里没找到 |
 | 相关书 | ⬜ | ? | 路由里没找到；`related-paragraph` 的返回里有书级信息，但不确定是否等价 |
 
@@ -80,17 +82,17 @@
 | 术语 | ⬜ | `POST /v2/terms`（`DhammaTermController`）？ | `GET /v2/terms?view=public&key=` → 500。**缺参数** |
 | 评论 · 句子 | ⬜ | `POST /v2/discussion`？ | **缺参数** |
 | 修改建议 | ⬜ | ? | 路由里没找到独立端点；`SentResource` 里有 `suggestionCount`，代码里有 `SuggestionApi` |
-| 文章 | 🔧 | `POST /v2/article` | 端点在，未封装 |
-| 文集 | 🔧 | `POST /v2/anthology` | 端点在，未封装 |
+| 文章 | ⬜ | `POST /v2/article` | 端点在，写入未封装（读已封装）|
+| 文集 | ⬜ | `POST /v2/anthology` | 端点在，写入未封装（读已封装）|
 
 ---
 
-## 三、需要提供 URL 的清单（共 8 项）
+## 三、需要提供 URL 的清单（共 7 项）
 
 按对研究流程的价值排序：
 
 1. **相似句** `sent-sim` —— 对读与校勘的核心能力，数据量最大（3.6 GB）
-2. **分类目录** `tag` 系列 —— 「长部的复注有哪些」这类浏览，是研究的起点
+2. ~~**分类目录**~~ —— **已解决**：扩展 `book-title` 返回 tags 即可，不需要新端点
 3. **单个术语查询** `system-term/{lang}/{word}` —— 现在只能靠全表缓存过滤
 4. **相关章节** —— 有了相关段落，章节级对应能省大量往返
 5. **相关书** —— 同上
@@ -106,11 +108,47 @@
 
 | 版本 | 内容 | 依赖 |
 |---|---|---|
-| 0.6.0 | `related`（相关段落）· `article` / `anthology`（文章与文集读取） | 无，可立即开工 |
-| 待定 | 上面 8 项，收到 URL 后按价值排 | 用户提供 URL |
+| 0.6.0 ✅ | `related`（相关段落）· `articles` / `article` / `anthology`（文章与文集读取）—— **已发布 2026-08-09** | — |
+| 0.7.0 ✅ | `books`（分类目录，按 tag 找书）—— 配套服务端扩展 `book-title` 的返回 | — |
+| 待定 | 上面 7 项，收到 URL 后按价值排 | 用户提供 URL |
 | 待定 | 按章节聚合分布（`dist --by chapter`），方案见 `wikipali-research-agent-design.md` §3.7 | 方案待定 |
 | 待定 | 短语检索改走 `/v3/search`（OpenSearch），见 §3.6 | v3 调试完成 |
 | 待定 | `versions` 支持按章节查（现在只能按段落，章节用起始段近似） | 可能需要服务端支持 |
+
+---
+
+## 四之二、待用户决定的规范问题（TODO）
+
+这两项不阻塞开发，但会影响产出质量，定案后要改 `references/conventions.md`。
+
+### ⬜ 引用格式：是否采用 `{{book-para-start-end}}`
+
+**发现（2026-08-09）**：平台自己就有引用格式。用户所写文章《表24：三种别住（Parivāsa）》
+引用巴利原文用的是：
+
+```
+{{141-120-17-40}}      =  book 141 · paragraph 120 · word_start 17 · word_end 40
+```
+
+**精确到句**，实测该坐标正是义注里讲 `odhānasamodhāna` 的那一句。
+
+采用它的好处：这是平台原生格式，写成这样的引用**在 wikipali 上能直接解析定位**，
+读者点开就能看到原文。比目前临时用的
+`Cūḷavaggapāḷi, Pārivāsikakkhandhaka (VN 216:35)` 强。
+
+待定的点：
+- 是否全面采用？还是巴利原文引用用它、书名章节仍用可读格式（两者并存）？
+- 论文里给人读的场合，纯坐标可读性差，是否需要「可读书名 + `{{坐标}}`」的组合写法？
+
+定案后：改 `conventions.md` 的「引用格式」一节，`research` 规程要求产出中的原文引用一律用它。
+
+### ⬜ 译名分歧：术语表 vs 实际使用
+
+`samodhānaparivāsa` 在术语表（`term-vocabulary`）里是「**合并**别住」，
+而用户所写文章里用的是「**合一**别住」。
+
+规程现在写的是「产出译名应与术语表一致，不一致要说明理由」。若实际研究中术语表并非
+唯一权威，这条要改写——比如改成「优先用术语表，与既有文献用词不一致时并列标出」。
 
 ---
 

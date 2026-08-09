@@ -88,6 +88,7 @@ def build_parser():
     p.add_argument('--fetch', action='store_true', help='确认要读全文时加这个；不加只报体量')
     p.add_argument('--channel', action='append', help='channel uid，可重复；缺省取巴利原文')
     p.add_argument('--warn-at', type=int, default=8000, help='超过多少字符就提示，默认 8000')
+    p.add_argument('--text', action='store_true', help='输出纯文本而非 html（黑体转成 **）')
     p.add_argument('--limit', type=int, default=200)
     p.set_defaults(func=cmd_read.cmd_chapter)
 
@@ -130,6 +131,15 @@ def build_parser():
     p.add_argument('--limit', type=int, default=30)
     p.add_argument('--offset', type=int, default=0)
     p.set_defaults(func=cmd_read.cmd_anthology)
+
+    p = add('books', '分类目录：按 tag 找书，如「长部的复注有哪些」')
+    p.add_argument('keyword', nargs='?', help='按书名/toc 过滤')
+    p.add_argument('--tags', help='按 tag 筛，逗号分隔是**且**，如 dīghanikāya,ṭīkā')
+    p.add_argument('--tag-list', action='store_true', help='列出全部 tag 及各自的书数')
+    p.add_argument('--show-tags', action='store_true', help='每本书都列出它的 tag')
+    p.add_argument('--limit', type=int, default=40)
+    p.add_argument('--refresh', action='store_true', help='强制重新拉取书目清单（有本地缓存）')
+    p.set_defaults(func=cmd_read.cmd_books)
 
     # -- 写 ----------------------------------------------------------------
     p = add('ensure-model', '幂等地建立模型记录并取模型身份 token', needs_json=False)

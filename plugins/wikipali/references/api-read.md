@@ -130,6 +130,60 @@ word_start, word_end, editor, channel, updated_at}`。按 `word_start` 排序拼
 
 `status` 不止 10/30：实测 5（610 个，basic 用户新建的）、30（559，公开）、10（495）、0、1 都在用。
 
+## 11. 整章内容 —— `GET /v2/chapter-content/{book}-{para}`
+
+一次调用返回整章，带 `?channels={uid,…}` 时把译文一并返回，**服务端已按
+`wordStart/wordEnd` 与原文对齐**。比「`palitext` 报体量 + `sentence` 逐段取」少一次
+往返，也省了客户端自己配对。
+
+`data.content` 是**双重编码的 JSON 字符串**（`content_type: "json"`），要二次解析：
+
+```
+data.content → [ {book, para, channels, sentences: [[139,861,2,8], …], mode, children: [
+    { id: "139-861-2-8", book, para, wordStart, wordEnd,
+      origin: [...], translation: [...], commentaries: [...],
+      tranNum, nissayaNum, commNum, originNum, simNum }
+  ]} ]
+```
+
+`children[].id` 就是 `book-para-wordStart-wordEnd`，与平台文章里的引用格式
+`{{141-120-17-40}}` 一致——读到什么就能直接引用什么。
+
+不带 `channels` 时也返回 `tranNum` / `nissayaNum` / `commNum` / `simNum`，等于**免费给出
+章节级的「有哪些资源」**（`versions` 只能按段落查，这里补上了章节粒度）。
+
+### ⚠ content 与 html 按 channel 类型互补，不能只取一个
+
+| channel 类型 | `content` | `html` | 该用哪个 |
+|---|---|---|---|
+| `original`（巴利原文） | **空** | 正文在这里，带 `<strong>` 黑体 | `html` |
+| `nissaya`（缅文逐词） | markdown 源码 `巴利词= 缅文释义。` | 同内容的渲染，**体积十几倍** | **`content`** |
+
+所以取值规则是「**优先 `content`，为空才回退 `html`**」。
+
+nissaya 的 `html` 里每条 gloss 包在 `<MdTpl props="<base64>">` 里，base64 解出来是
+`{"pali": "…", "meaning": ["…"], "lang": "my"}`——**它把巴利词与释义分开标注**，而渲染
+出的 span 只是把两者拼接。这个区分是逐词解析的核心，**不要以为 props 是冗余而删掉**
+（本项目曾犯过这个错）。用 `content` 就天然保留了这个区分，`=` 左右分别是巴利与释义。
+
+### ⚠ 请求的 channel 无内容时会返回等量空占位
+
+指定 `channels=X` 而 X 在本章没有内容时，服务端**仍为每一句返回一条 `content` 与
+`html` 都是空字符串的条目**。照直显示会让人以为「有译文只是没渲染出来」。客户端必须
+滤掉空条目，并明确报告「该译本在本章无文本」——实测同一坐标下 `sentence` 端点返回
+`count: 0`，两处口径一致。
+
+### 体积
+
+整章原始返回 24 KB（仅原文）到 86 KB（带 nissaya）。只保留每句的 `id` 与正文后分别是
+3.3 KB 与 9.0 KB（**14% 与 10%**）。整章直接喂给模型是浪费，务必先过滤。
+
+## 12. 章节元信息的两个等价端点
+
+`GET /v2/chapter/{book}-{para}` 与 `GET /v2/palitext/{book}-{para}` **返回完全一致**
+（实测字段与取值逐一相同，两个版本的站点上都是 200）。本项目用 `palitext`，没有偏好上的
+理由，换用 `chapter` 亦可。
+
 ## 已知故障
 
 | 端点 | 现象 |
