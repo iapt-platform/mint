@@ -583,16 +583,24 @@ def cmd_count(args):
 # ---------------------------------------------------------------------------
 
 
-def terms_cache_path(lang, view):
+def cache_path(client, name):
+    """缓存文件按**站点分桶**存放。
+
+    线上四站共享同一个库，可以共用；但开发机（local）与任何自定义地址是**另一个
+    数据库**。不分桶的话，用过一次 --api local 之后，之后打线上会静默拿到开发机的
+    数据——看起来一切正常，数据却是错的。凭据早就是按桶存的，缓存同理。
+    """
     import os
+    import re as _re
     from creds import CREDS_DIR
-    return os.path.join(CREDS_DIR, 'cache', f'terms-{view}-{lang}.json')
+    bucket = _re.sub(r'[^A-Za-z0-9_.-]', '_', client.bucket_name)
+    return os.path.join(CREDS_DIR, 'cache', bucket, name)
 
 
 def cmd_terms(args):
     import os
     client = make_client(args)
-    path = terms_cache_path(args.lang, args.view)
+    path = cache_path(client, f'terms-{args.view}-{args.lang}.json')
     rows = None
     if os.path.exists(path) and not args.refresh:
         try:
@@ -798,17 +806,11 @@ def cmd_anthology(args):
 # ---------------------------------------------------------------------------
 
 
-def books_cache_path():
-    import os
-    from creds import CREDS_DIR
-    return os.path.join(CREDS_DIR, 'cache', 'book-titles.json')
-
-
 def fetch_books(client, refresh=False):
     """书目清单整表拉一次缓存在本地。服务端也缓存 24 小时，这里再缓存一层是为了
     让按 tag 筛选变成本地操作——281 条全量在手，筛什么都不用再请求。"""
     import os
-    path = books_cache_path()
+    path = cache_path(client, 'book-titles.json')
     if os.path.exists(path) and not refresh:
         try:
             with open(path, encoding='utf-8') as fh:
