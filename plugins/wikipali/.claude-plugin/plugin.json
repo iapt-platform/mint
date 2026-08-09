@@ -1,7 +1,7 @@
 {
   "name": "wikipali",
   "description": "WikiPali 巴利三藏平台的客户端：检索与阅读语料做研究（词形展开、全文检索、出处分布、按坐标取原文与译本），以及以 AI 模型身份写入句子。",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "author": {
     "name": "visuddhinanda",
     "url": "https://github.com/visuddhinanda"
