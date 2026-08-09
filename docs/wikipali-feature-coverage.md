@@ -6,7 +6,9 @@
 > 用途：逐项落实的工作清单。**标 ⬜ 的需要提供一个能跑通的完整 API URL**——
 > 照着反推参数比读控制器快，也不会猜错。
 >
-> 插件版本基准：0.5.0（2026-08-08）
+> 插件版本基准：**0.6.0**（2026-08-09）
+
+**当前进度**：✅ 12 项 · ⬜ 10 项（其中 8 项需要 API URL，2 项是写入侧的文章/文集）
 
 **图例**
 
@@ -51,14 +53,14 @@
 
 | 功能 | 状态 | 实现 / 端点 | 备注 |
 |---|---|---|---|
-| 文章 | 🔧 | `GET /v2/article?view=public&limit=` | 实测 200 可用，未封装 |
-| 文集 | 🔧 | `GET /v2/anthology?view=public&limit=` | 实测 200 可用，未封装（控制器是 `CollectionController`）|
+| 文章 | ✅ | `wikipali articles [关键词]` / `wikipali article <uid>` | 列表支持 `search=`；单篇返回 markdown 正文 |
+| 文集 | ✅ | `wikipali anthology [uid]` | 不给 uid 列表，给 uid 看其文章目录 |
 
 ### 5. 相关经文（根本 ↔ 义注 ↔ 复注）
 
 | 功能 | 状态 | 实现 / 端点 | 备注 |
 |---|---|---|---|
-| 相关段落 | 🔧 | `GET /v2/related-paragraph?book=&para=` | 已评估：63 万行 / 217 部书，段落覆盖率 97.9–99.9%，双向可用，带 tags 可标层次。服务端「无关联时 500」已修复。**命令待做（0.6.0）** |
+| 相关段落 | ✅ | `wikipali related <坐标>` | 63 万行 / 217 部书，覆盖率 97.9–99.9%，双向可用，按 mūla→aṭṭhakathā→ṭīkā 排序标层次。⚠ 服务端「无关联时 500」的修复**已合并但线上未部署**，客户端已兜住这个窗口 |
 | 相关章节 | ⬜ | ? | 路由里没找到 |
 | 相关书 | ⬜ | ? | 路由里没找到；`related-paragraph` 的返回里有书级信息，但不确定是否等价 |
 
@@ -80,8 +82,8 @@
 | 术语 | ⬜ | `POST /v2/terms`（`DhammaTermController`）？ | `GET /v2/terms?view=public&key=` → 500。**缺参数** |
 | 评论 · 句子 | ⬜ | `POST /v2/discussion`？ | **缺参数** |
 | 修改建议 | ⬜ | ? | 路由里没找到独立端点；`SentResource` 里有 `suggestionCount`，代码里有 `SuggestionApi` |
-| 文章 | 🔧 | `POST /v2/article` | 端点在，未封装 |
-| 文集 | 🔧 | `POST /v2/anthology` | 端点在，未封装 |
+| 文章 | ⬜ | `POST /v2/article` | 端点在，写入未封装（读已封装）|
+| 文集 | ⬜ | `POST /v2/anthology` | 端点在，写入未封装（读已封装）|
 
 ---
 
@@ -106,7 +108,7 @@
 
 | 版本 | 内容 | 依赖 |
 |---|---|---|
-| 0.6.0 | `related`（相关段落）· `article` / `anthology`（文章与文集读取） | 无，可立即开工 |
+| 0.6.0 ✅ | `related`（相关段落）· `articles` / `article` / `anthology`（文章与文集读取）—— **已发布 2026-08-09** | — |
 | 待定 | 上面 8 项，收到 URL 后按价值排 | 用户提供 URL |
 | 待定 | 按章节聚合分布（`dist --by chapter`），方案见 `wikipali-research-agent-design.md` §3.7 | 方案待定 |
 | 待定 | 短语检索改走 `/v3/search`（OpenSearch），见 §3.6 | v3 调试完成 |
