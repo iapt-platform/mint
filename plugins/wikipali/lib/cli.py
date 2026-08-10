@@ -32,7 +32,9 @@ def build_parser():
 
     # -- 站点与状态 --------------------------------------------------------
     p = add('endpoint', '查看 / 切换 API 地址', needs_json=False)
-    p.add_argument('target', nargs='?', help='序号、简称（www/www.cc/next/next.cc/local）或完整 url')
+    p.add_argument('target', nargs='?', help='序号、简称（www/www.cc/next/next.cc/staging/local）或完整 url')
+    p.add_argument('-l', '--list', action='store_true',
+                   help='只列出不提示选择（在终端里跑而又不想被追问时用）')
     p.set_defaults(func=cmd_site.cmd_endpoint)
 
     p = add('whoami', '显示当前凭据状态', needs_json=False)

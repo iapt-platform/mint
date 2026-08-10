@@ -23,8 +23,23 @@ def cmd_endpoint(args):
         if current_url not in [s["url"] for s in SITES]:
             print(f"  *) {current_url:<32} 自定义地址  ← 当前")
         keys = "|".join(x["key"] for x in SITES)
-        print(f"\n切换：wikipali endpoint <序号|{keys}|完整url>")
-        return 0
+
+        # 只有在真正的终端里才提示选择。agent 的 Bash 调用、CI、管道都没有 tty，
+        # 那里必须保持纯展示——否则会卡在等输入上，且没人看得到提示符。
+        if args.list or not sys.stdin.isatty():
+            print(f"\n切换：wikipali endpoint <序号|{keys}|完整url>")
+            return 0
+
+        print(f"\n输入序号切换，直接回车不改（也可以 wikipali endpoint <{keys}|完整url>）")
+        try:
+            raw = input("选择：").strip()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            return 0
+        if not raw:
+            print("未改动。")
+            return 0
+        args.target = raw
 
     url = normalize_api_url(expand_site_alias(args.target))
     name = bucket_name_for(url)

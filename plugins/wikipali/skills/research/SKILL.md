@@ -203,6 +203,9 @@ wikipali get 216:512 --channel <uid>    # 取指定译本
 
 ⚠ `versions` 依赖的端点在稳定版站点上有缺陷，会提示你切到 `next`（`wikipali endpoint next`）。
 
+⚠ 用户要切换站点却**没指定目标**时，把站点列表**作为选择题呈现给他**再执行——不要替他挑，
+也不要指望命令行弹选单（agent 没有 tty，永远等不到）。见 `references/conventions.md`。
+
 ⚠ 输出里标 **⚠疑似机器译** 的按机器译文标注引用；但**没标的不等于人译**——很多 channel
 直接用模型名命名（`deepseek`、`qwen-max`、`grok-简体中文`），判定要看 `get` 返回的作者，
 见 `references/conventions.md`。

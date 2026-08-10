@@ -93,6 +93,9 @@ wikipali write sentences.json --channel <uid或名字片段>            # 再真
 ```bash
 wikipali endpoint            # 列出并标出当前
 wikipali endpoint next       # 改默认（唯一会写回凭据的方式）
+
+⚠ 用户要切换站点却**没指定目标**时，把站点列表**作为选择题呈现给他**再执行——不要
+替他挑，也不要指望命令行弹选单（agent 没有 tty，永远等不到）。见 conventions.md。
 wikipali --api next write …  # 只影响这一次调用
 ```
 
