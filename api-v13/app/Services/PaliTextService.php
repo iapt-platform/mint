@@ -16,7 +16,14 @@ class PaliTextService
         return $parent ? PaliText::where('book', $book)
             ->where('paragraph', $parent)->first() : null;
     }
-
+    public function chapterRange(int $book, int $para){
+        $chapter = $this->getCurrChapter($book,$para);
+        if($chapter){
+            return [$book,$chapter->paragraph,$chapter->paragraph+$chapter->chapter_len-1];
+        }else{
+            return null;
+        }
+    }
     public function getCurrChapter(int $book, int $para)
     {
         $paragraph = PaliText::where('book', $book)

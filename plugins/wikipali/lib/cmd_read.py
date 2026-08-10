@@ -37,6 +37,10 @@ def strip_markup(raw, hl='【】', bold='**'):
     text = raw
     text = re.sub(r"<span class='hl'>(.*?)</span>", hl[0] + r'\1' + hl[1], text, flags=re.S)
     text = re.sub(r'<span class="bld">(.*?)</span>', bold + r'\1' + bold, text, flags=re.S)
+    # <code>M1.1</code> 是版本页码（M=缅甸版 V=VRI P=PTS T=泰版），标的是页在正文里
+    # 的起始位置，与段落不是一一对应，所以必须留在原位。直接去标签会让它粘到前一个
+    # 词上（Evaṃ M1.1 → EvaṃM1.1），看着像词形的一部分，加方括号隔开。
+    text = re.sub(r'<code>([^<]*)</code>', r'[\1]', text)
     text = re.sub(r"<MdTpl[^>]*></MdTpl>", '', text)
     text = re.sub(r'<[^>]+>', '', text)
     text = html_mod.unescape(text)
@@ -398,7 +402,78 @@ def cmd_chapter(args):
     if strlen > args.warn_at:
         note(f'⚠ 本章约 {strlen} 字符，超过 {args.warn_at} 的提示阈值——注意上下文预算。')
 
-    return fetch_chapter_content(client, book, start, args)
+    if args.via == 'chapter-content':
+        return fetch_chapter_content(client, book, start, args)
+    return fetch_tipitaka_content(client, book, start, args)
+
+
+# tipitaka-content 返回的是一整串 HTML，每句包在 data-sid 里；sid 就是
+# book-para-wordStart-wordEnd，段落号从 sid 里就能取，不必解析外层的 data-para。
+SENTENCE_RE = re.compile(r"data-sid='([^']+)'\s*>(.*?)</div>", re.S)
+
+
+def fetch_tipitaka_content(client, book, para, args):
+    """整章取文：走 tipitaka-content（OpenSearch 预建文档）。
+
+    与 chapter-content 的区别：一次只取**一个** channel（参数是单数 channel），
+    返回已渲染好的 HTML 串而不是嵌套 JSON。没有该 channel 的预建文档时服务端
+    返回 400 且 message 里带 OpenSearch 的 found=false——那是「这一章没有该版本」，
+    不是服务故障，必须区分开。
+    """
+    query = {}
+    if args.channel:
+        if len(args.channel) > 1:
+            note('⚠ tipitaka-content 一次只接受一个 channel，已取第一个；'
+                 '要对读多个版本请分别调用。')
+        query['channel'] = args.channel[0]
+    try:
+        display = client.call('GET', f'v2/tipitaka-content/{book}-{para}', query=query,
+                              timeout=READ_TIMEOUT)
+    except ApiError as exc:
+        if 'found' in str(exc) and 'false' in str(exc):
+            raise WpError(
+                f'{book}:{para} 这一章没有该版本的预建内容。\n'
+                '这是「该 channel 在本章无文本」，不是服务故障——如实报告，'
+                '不要拿别的版本顶替。\n'
+                f'用 wikipali versions {book}:{para} 看这一段实际有哪些版本。'
+            )
+        raise explain_api_error(exc, f'取 {book}:{para} 的整章内容')
+
+    if not isinstance(display, str):
+        raise WpError('整章内容的返回不是字符串，服务端返回形状可能变了。')
+
+    grouped = {}
+    order = []
+    for sid, body in SENTENCE_RE.findall(display):
+        text = strip_markup(body) if args.text else re.sub(r'\s+', ' ', body).strip()
+        if not text:
+            continue
+        try:
+            para_no = int(sid.split('-')[1])
+        except (IndexError, ValueError):
+            continue
+        if para_no not in grouped:
+            grouped[para_no] = []
+            order.append(para_no)
+        grouped[para_no].append({'id': sid, 'text': text})
+    out = [{'para': n, 'sentences': grouped[n]} for n in order]
+
+    def render():
+        total = sum(len(x['sentences']) for x in out)
+        src = f'channel {args.channel[0]}' if args.channel else '巴利原文'
+        if not total:
+            print(f'\n该版本在本章**没有句子内容**（服务端返回了文档但其中没有句子）。')
+            print(f'用 wikipali versions {book}:{para} 看这一段实际有哪些版本。')
+            return
+        print(f'\n{len(out)} 段 / {total} 句（{src}）')
+        for item in out:
+            print(f'\n## {book}:{item["para"]}')
+            for sent in item['sentences']:
+                print(f'  {sent["id"]}  {sent["text"]}')
+        print('\n句子 id 就是引用坐标（book-para-wordStart-wordEnd）。')
+
+    emit(args, out, render)
+    return 0
 
 
 def fetch_chapter_content(client, book, para, args):
@@ -583,16 +658,24 @@ def cmd_count(args):
 # ---------------------------------------------------------------------------
 
 
-def terms_cache_path(lang, view):
+def cache_path(client, name):
+    """缓存文件按**站点分桶**存放。
+
+    线上四站共享同一个库，可以共用；但开发机（local）与任何自定义地址是**另一个
+    数据库**。不分桶的话，用过一次 --api local 之后，之后打线上会静默拿到开发机的
+    数据——看起来一切正常，数据却是错的。凭据早就是按桶存的，缓存同理。
+    """
     import os
+    import re as _re
     from creds import CREDS_DIR
-    return os.path.join(CREDS_DIR, 'cache', f'terms-{view}-{lang}.json')
+    bucket = _re.sub(r'[^A-Za-z0-9_.-]', '_', client.bucket_name)
+    return os.path.join(CREDS_DIR, 'cache', bucket, name)
 
 
 def cmd_terms(args):
     import os
     client = make_client(args)
-    path = terms_cache_path(args.lang, args.view)
+    path = cache_path(client, f'terms-{args.view}-{args.lang}.json')
     rows = None
     if os.path.exists(path) and not args.refresh:
         try:
@@ -798,17 +881,11 @@ def cmd_anthology(args):
 # ---------------------------------------------------------------------------
 
 
-def books_cache_path():
-    import os
-    from creds import CREDS_DIR
-    return os.path.join(CREDS_DIR, 'cache', 'book-titles.json')
-
-
 def fetch_books(client, refresh=False):
     """书目清单整表拉一次缓存在本地。服务端也缓存 24 小时，这里再缓存一层是为了
     让按 tag 筛选变成本地操作——281 条全量在手，筛什么都不用再请求。"""
     import os
-    path = books_cache_path()
+    path = cache_path(client, 'book-titles.json')
     if os.path.exists(path) and not refresh:
         try:
             with open(path, encoding='utf-8') as fh:

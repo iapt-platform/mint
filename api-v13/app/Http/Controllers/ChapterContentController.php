@@ -242,7 +242,7 @@ class ChapterContentController extends Controller
         if (count($record) === 0) {
             return $this->error("no data");
         }
-        $this->result['content'] = json_encode($paliService->makeContentObj($record, $mode, $indexChannel), JSON_UNESCAPED_UNICODE);
+        $this->result['content'] = json_encode($paliService->makeContentObj($record, $mode, $indexChannel,), JSON_UNESCAPED_UNICODE);
         $this->result['content_type'] = 'json';
         if (!$request->has('from')) {
             //第一次才显示toc

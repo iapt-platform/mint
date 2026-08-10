@@ -1,6 +1,7 @@
 """HTTP 客户端：JSON 请求、线上站点之间出声的 fallback、token 显示辅助。"""
 
 import base64
+import http.client
 import json
 import os
 import sys
@@ -155,7 +156,10 @@ class Client:
         for idx, url in enumerate(urls):
             try:
                 data = http_json(url, method, path, token=token, body=body, query=query, timeout=timeout)
-            except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            except (urllib.error.URLError, TimeoutError, OSError,
+                    http.client.HTTPException) as exc:
+                # IncompleteRead 属于 HTTPException 而非 OSError——大响应（如两百多万
+                # 字符的术语表）传输中断时会走到这里。不捕获的话会抛裸 traceback。
                 # 仅网络层不可达才换站点；HTTP 错误是服务端的明确答复，不该被掩盖
                 last = exc
                 reason = getattr(exc, "reason", exc)

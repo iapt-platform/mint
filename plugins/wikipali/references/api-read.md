@@ -178,6 +178,49 @@ nissaya 的 `html` 里每条 gloss 包在 `<MdTpl props="<base64>">` 里，base6
 整章原始返回 24 KB（仅原文）到 86 KB（带 nissaya）。只保留每句的 `id` 与正文后分别是
 3.3 KB 与 9.0 KB（**14% 与 10%**）。整章直接喂给模型是浪费，务必先过滤。
 
+## 11b. 整章内容（首选）—— `GET /v2/tipitaka-content/{book}-{para}`
+
+**取整章内容用这个，不用 `chapter-content`。** 走 OpenSearch 的预建文档
+（`tipitaka_chapter_{book}-{para}_{channelId}`），返回的 `data` 是一整串渲染好的 HTML。
+
+| | `tipitaka-content` | `chapter-content` |
+|---|---|---|
+| channel 参数 | `channel=<uuid>`（**单数，一次一个**） | `channels=<uuid,…>`（可多个）|
+| 缺省 | 巴利原文 `_System_Pali_VRI_` | 同 |
+| 返回 | 一整串 HTML | 嵌套 JSON，逐句带 origin/translation/各类计数 |
+| 用途 | 读——给人或模型看 | **写入侧要用**（需要逐句的多版本结构）|
+
+HTML 里每句包在 `data-sid='93-6-31-46'` 中，**sid 就是引用坐标**
+`book-para-wordStart-wordEnd`，段落号从 sid 里就能取，不必解析外层的 `data-para`。
+
+### 三种响应都要分开处理
+
+| 情况 | 表现 | 该怎么说 |
+|---|---|---|
+| 正常 | 200，HTML 里有 `data-sid` | — |
+| 有文档但没句子 | 200，但 `data-sid` 数为 0 | 「该版本在本章没有句子内容」 |
+| 没有该版本的预建文档 | **400**，`message` 里带 OpenSearch 的 `found:false` | 「该 channel 在本章无文本」，**不是服务故障** |
+
+第三种要靠 message 里的 `found` + `false` 判断。并非所有 channel 都有预建文档——
+实测 `93-5`：巴利原文、庄春江、北大-法胜、Punnacari 有；wbw 与 deepseek 没有。
+
+### ⚠ `<code>` 是版本页码，必须留在原位
+
+正文里夹着 `<code>M1.1</code><code>V1.1</code><code>P1.1</code><code>T1.1</code>：
+**M=缅甸版、V=VRI、P=PTS、T=泰版**。它标的是页在正文中的**起始位置**，与段落不是
+一一对应，所以**不能抽到单独的字段里**——抽走就丢了位置信息。
+
+去标签时也要留意：直接删会让页码粘到前一个词上（`Evaṃ M1.1` → `EvaṃM1.1`），看着
+像巴利词形的一部分。本项目转成 `[M1.1]` 保持可分辨。
+
+PTS 页码是西方巴利学界的标准引用依据，别丢。
+
+### 体积
+
+`93-5` 一章（7 段 37 句）原始返回 9.7 KB。这个端点的 `display` **本来就精简**，
+只有句子和最小包装，过滤后省不下多少（纯文本 8.7 KB）——与 `chapter-content` 完全
+不同，那边 24 KB 里绝大部分是每句重复的 channel/studio/editor 元数据。
+
 ## 12. 章节元信息的两个等价端点
 
 `GET /v2/chapter/{book}-{para}` 与 `GET /v2/palitext/{book}-{para}` **返回完全一致**

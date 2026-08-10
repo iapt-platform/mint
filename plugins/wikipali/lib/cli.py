@@ -89,6 +89,10 @@ def build_parser():
     p.add_argument('--channel', action='append', help='channel uid，可重复；缺省取巴利原文')
     p.add_argument('--warn-at', type=int, default=8000, help='超过多少字符就提示，默认 8000')
     p.add_argument('--text', action='store_true', help='输出纯文本而非 html（黑体转成 **）')
+    p.add_argument('--via', choices=['tipitaka-content', 'chapter-content'],
+                   default='tipitaka-content',
+                   help='取文走哪个端点。默认 tipitaka-content；chapter-content 返回逐句的'
+                        '多版本结构，写入侧需要它')
     p.add_argument('--limit', type=int, default=200)
     p.set_defaults(func=cmd_read.cmd_chapter)
 
