@@ -72,11 +72,14 @@ def emit(args, payload, render):
 
 
 def fetch_forms(client, word):
+    """展开词形。**0 个词形的候选等同于没找到**——服务端对查无此词会返回一个
+    case 为空的行，若把它当成命中，后续 search 会拿到空 key 而返回整个语料库。"""
     try:
         data = client.call('GET', f'v2/case/{word}', timeout=READ_TIMEOUT)
     except ApiError as exc:
         raise explain_api_error(exc, f'展开词形 {word}')
-    return (data or {}).get('rows') or []
+    rows = (data or {}).get('rows') or []
+    return [r for r in rows if r.get('case')]
 
 
 def cmd_forms(args):
@@ -159,10 +162,13 @@ def resolve_key(client, args):
         if not rows:
             raise WpError(f'「{args.lemma}」展不出任何词形。')
         key = forms_arg(rows[0])
+        if not key:
+            raise WpError(f'「{args.lemma}」展不出任何词形，无法检索。')
         note(f'⚠ 已把词根「{args.lemma}」展开为 {len(key.split(","))} 个词形：{key}')
         return key
     key = ','.join(part.strip() for item in args.forms for part in item.split(',') if part.strip())
     if not key:
+        # 空 key 会被服务端当成「不限」，返回整个语料库——决不能发出去
         raise WpError('没有给出词形。用 --lemma <词根> 自动展开，或直接给逗号分隔的词形。')
     return key
 

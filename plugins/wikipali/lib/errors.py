@@ -26,9 +26,10 @@ def explain_api_error(exc, what):
         return WpError(f"{what}：403 无权限（不是 channel 的 owner/协作者，或不是模型 owner 本人）。")
     if exc.status == 404:
         return WpError(
-            f"{what}：404。若这是较新的端点，可能是当前站点跑的是稳定版代码、端点尚未上线；\n"
-            "  可切到最新版试试：wikipali endpoint next\n"
-            "  否则才是资源真的不存在。"
+            f"{what}：404。三种可能，别只当成「资源不存在」：\n"
+            "  1. 该端点尚未部署到当前站点——各站代码版本不同，用 wikipali endpoint 换一个再试；\n"
+            "  2. **已经在最新版站点上仍 404**，说明它还没部署到任何站点，或本就没有这个端点；\n"
+            "  3. 才是资源真的不存在。"
         )
     if exc.status == 409:
         return WpError(f"{what}：409 同名记录已存在。")
