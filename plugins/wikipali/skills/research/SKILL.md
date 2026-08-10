@@ -163,7 +163,7 @@ wikipali get 216:35 216:36 216:41       # 按坐标精确取，缺省是巴利�
 wikipali toc 216:512                    # 看这本书的章节结构
 wikipali chapter 216:512                # 只报体量：章节范围、段数、字符数
 wikipali chapter 216:512 --fetch        # 确认要读全章时才加 --fetch
-wikipali chapter 216:512 --fetch --channel <uid>   # 读某一个译本
+wikipali chapter 216:512 --fetch --channel <uid>   # 读某一个译本（一次一个）
 wikipali chapter 216:512 --fetch --text            # 纯文本，更省
 ```
 

@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\AccessTokenController;
 use App\Http\Controllers\AiAssistantController;
 use App\Http\Controllers\AiModelController;
@@ -126,8 +129,8 @@ use App\Http\Controllers\WbwSentenceController;
 use App\Http\Controllers\WbwTemplateController;
 use App\Http\Controllers\WebHookController;
 use App\Http\Controllers\WordIndexController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TipitakaContentController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -313,6 +316,7 @@ Route::group([
     Route::apiResource('chapter-content', ChapterContentController::class);
     Route::apiResource('paragraph-content', ParagraphContentController::class);
     Route::apiResource('heartbeat', HeartbeatController::class);
+    Route::apiResource('tipitaka-content', TipitakaContentController::class);
 
     Route::post('mock/openai/chat/completions', [MockOpenAIController::class, 'chatCompletions']);
     Route::post('mock/openai/completions', [MockOpenAIController::class, 'completions']);
