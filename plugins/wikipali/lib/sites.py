@@ -10,16 +10,28 @@ import urllib.parse
 from errors import WpError
 
 
+# bucket 决定两件事：凭据/缓存存哪一桶，以及能不能作为自动 fallback 的目标。
+# 只有 bucket == "online" 的四个地址共享同一个数据库与 jwt 密钥，彼此可以互替。
+# staging 与开发机各是**另一个库**——实测 staging 的公开 channel 数与线上不同，
+# 同名 channel 的 uid 也不同——所以自成一桶，且绝不参与 fallback。
 SITES = [
-    {"key": "www", "url": "https://www.wikipali.org/api", "version": "稳定版", "domain": ".org"},
-    {"key": "www.cc", "url": "https://www.wikipali.cc/api", "version": "稳定版", "domain": ".cc"},
-    {"key": "next", "url": "https://next.wikipali.org/api", "version": "最新版", "domain": ".org"},
-    {"key": "next.cc", "url": "https://next.wikipali.cc/api", "version": "最新版", "domain": ".cc"},
-    {"key": "local", "url": "http://127.0.0.1:8000/api", "version": "开发机", "domain": "本机"},
+    {"key": "www", "url": "https://www.wikipali.org/api",
+     "version": "稳定版", "domain": ".org", "bucket": "online"},
+    {"key": "www.cc", "url": "https://www.wikipali.cc/api",
+     "version": "稳定版", "domain": ".cc", "bucket": "online"},
+    {"key": "next", "url": "https://next.wikipali.org/api",
+     "version": "最新版", "domain": ".org", "bucket": "online"},
+    {"key": "next.cc", "url": "https://next.wikipali.cc/api",
+     "version": "最新版", "domain": ".cc", "bucket": "online"},
+    {"key": "staging", "url": "https://staging.wikipali.org/api",
+     "version": "预发布", "domain": "独立库", "bucket": "staging"},
+    {"key": "local", "url": "http://127.0.0.1:8000/api",
+     "version": "开发机", "domain": "独立库", "bucket": "local"},
 ]
 
-ONLINE_URLS = [s["url"] for s in SITES if s["key"] != "local"]
-LOCAL_URL = SITES[-1]["url"]
+ONLINE_URLS = [s["url"] for s in SITES if s["bucket"] == "online"]
+LOCAL_URL = next(s["url"] for s in SITES if s["key"] == "local")
+BUCKET_BY_URL = {s["url"]: s["bucket"] for s in SITES}
 DEFAULT_API_URL = SITES[0]["url"]
 
 

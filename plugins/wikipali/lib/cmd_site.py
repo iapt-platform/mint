@@ -22,7 +22,8 @@ def cmd_endpoint(args):
             note(f"注意：当前地址来自 {src}，是一次性覆盖，未写入凭据文件。")
         if current_url not in [s["url"] for s in SITES]:
             print(f"  *) {current_url:<32} 自定义地址  ← 当前")
-        print("\n切换：wikipali endpoint <序号|www|www.cc|next|next.cc|local|完整url>")
+        keys = "|".join(x["key"] for x in SITES)
+        print(f"\n切换：wikipali endpoint <序号|{keys}|完整url>")
         return 0
 
     url = normalize_api_url(expand_site_alias(args.target))
@@ -33,7 +34,8 @@ def cmd_endpoint(args):
     save_creds(creds)
     print(f"已切换到 {url}（{site_label(url)}）")
     if name != "online":
-        note("提示：该地址与线上四站不共用数据库/密钥，凭据是独立的一桶，可能需要重新登录。")
+        note("提示：该地址是**另一个数据库**，与线上四站不共用数据与密钥。"
+             "凭据和本地缓存都是独立的一桶，可能需要在该站点重新登录。")
     return 0
 
 
