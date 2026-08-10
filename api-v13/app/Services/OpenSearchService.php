@@ -500,7 +500,12 @@ class OpenSearchService
             throw new Exception("Index [$index] does not exist.");
         }
 
-        $path = "analysis/pali-synonyms-{$version}.txt";
+        $path = "/var/lib/opensearch/analysis/pali_synonyms-{$version}.txt";
+
+        Log::debug('OpenSearchService::updatePaliSynonymsPath', [
+            'index' => $index,
+            'synonyms_path' => $path,
+        ]);
 
         // 以代码中的 analysis 定义为准，只替换同义词文件路径
         $analysis = $this->indexDefinition['settings']['analysis'];
@@ -517,10 +522,7 @@ class OpenSearchService
             $this->client->indices()->open(['index' => $index]);
         }
 
-        Log::info('OpenSearchService::updatePaliSynonymsPath', [
-            'index' => $index,
-            'synonyms_path' => $path,
-        ]);
+
 
         return ['path' => $path, 'settings' => $response];
     }
