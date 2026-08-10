@@ -2,32 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\BookTitle;
-use App\Models\FtsText;
-use App\Models\Tag;
-use App\Models\TagMap;
-use App\Models\PaliText;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\SearchRequest;
+use App\Http\Resources\SearchBookResource;
 use App\Http\Resources\SearchResource;
 use App\Http\Resources\SearchTitleResource;
-use App\Http\Resources\SearchBookResource;
-use App\Tools\Tools;
-use App\Models\WbwTemplate;
+use App\Models\BookTitle;
 use App\Models\PageNumber;
+use App\Models\PaliText;
+use App\Models\Tag;
+use App\Models\TagMap;
 use App\Tools\PaliSearch;
-use Illuminate\Support\Facades\App;
-
+use App\Tools\Tools;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class SearchController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function index(Request $request)
+    public function index(SearchRequest $request)
     {
         switch ($request->input('view', 'pali')) {
             case 'pali':
@@ -50,36 +47,38 @@ class SearchController extends Controller
                             ->orWhere('title', 'like', "%{$key}%");
                     });
                 if ($request->has('tags')) {
-                    //查询搜索范围
+                    // 查询搜索范围
                     $tagItems = explode(';', $request->input('tags'));
                     $bookId = [];
                     foreach ($tagItems as $tagItem) {
-                        # code...
+                        // code...
                         $bookId = array_merge($bookId, $this->getBookIdByTags(explode(',', $tagItem)));
                     }
                     $table = $table->whereIn('pcd_book_id', $bookId);
                 }
                 $count = $table->count();
                 $table = $table->orderBy($request->input('orderby', 'book'), $request->input('dir', 'asc'));
-                $table = $table->skip($request->input("offset", 0))
+                $table = $table->skip($request->input('offset', 0))
                     ->take($request->input('limit', 10));
                 $result = $table->get();
-                return $this->ok(["rows" => SearchTitleResource::collection($result), "count" => $count]);
+
+                return $this->ok(['rows' => SearchTitleResource::collection($result), 'count' => $count]);
                 break;
             default:
-                # code...
+                // code...
                 break;
         }
     }
+
     public function pali(Request $request)
     {
         //
         $bookId = [];
         if ($request->has('book')) {
-            $bookId = [(int)$request->input('book')];
-        } else if ($request->has('tags')) {
-            //查询搜索范围
-            //查询搜索范围
+            $bookId = [(int) $request->input('book')];
+        } elseif ($request->has('tags')) {
+            // 查询搜索范围
+            // 查询搜索范围
             $tagItems = explode(';', $request->input('tags'));
 
             foreach ($tagItems as $tagItem) {
@@ -92,7 +91,7 @@ class SearchController extends Controller
         $searchBookId = [];
         $queryBookId = '';
         if (count($bookId) > 0) {
-            $queryBookId = ' AND pcd_book_id in (' . implode(',', $bookId) . ') ';
+            $queryBookId = ' AND pcd_book_id in ('.implode(',', $bookId).') ';
         }
         $key = explode(';', $request->input('key'));
         $param = [];
@@ -100,7 +99,7 @@ class SearchController extends Controller
         switch ($request->input('match', 'case')) {
             case 'complete':
             case 'case':
-                # code...
+                // code...
                 $querySelect_rank_base = " ts_rank('{0.1, 1, 0.3, 0.2}',
                                                 full_text_search_weighted,
                                                 websearch_to_tsquery('pali', ?)) ";
@@ -114,7 +113,7 @@ class SearchController extends Controller
                 array_push($param, implode(' ', $key));
                 break;
             case 'similar':
-                # 形似，去掉变音符号
+                // 形似，去掉变音符号
                 $key = Tools::getWordEn($key[0]);
                 $querySelect_rank = "
                     ts_rank('{0.1, 1, 0.3, 0.2}',
@@ -133,24 +132,24 @@ class SearchController extends Controller
         $queryWhere = $_queryWhere['query'];
         $param = array_merge($param, $_queryWhere['param']);
 
-        $querySelect_2 = "  book,paragraph,content ";
+        $querySelect_2 = '  book,paragraph,content ';
 
         $queryCount = "SELECT count(*) as co FROM fts_texts WHERE {$queryWhere} {$queryBookId};";
         $resultCount = DB::select($queryCount, $_queryWhere['param']);
 
         $limit = $request->input('limit', 10);
         $offset = $request->input('offset', 0);
-        switch ($request->input('orderby', "rank")) {
+        switch ($request->input('orderby', 'rank')) {
             case 'rank':
-                $orderby = " ORDER BY rank DESC ";
+                $orderby = ' ORDER BY rank DESC ';
                 break;
             case 'paragraph':
-                $orderby = " ORDER BY book,paragraph ";
+                $orderby = ' ORDER BY book,paragraph ';
                 break;
             default:
-                $orderby = "";
+                $orderby = '';
                 break;
-        };
+        }
         $query = "SELECT
             {$querySelect_rank}
             {$querySelect_highlight}
@@ -166,17 +165,18 @@ class SearchController extends Controller
 
         $result = DB::select($query, $param);
 
-        return $this->ok(["rows" => SearchResource::collection($result), "count" => $resultCount[0]->co]);
+        return $this->ok(['rows' => SearchResource::collection($result), 'count' => $resultCount[0]->co]);
     }
+
     public function pali_rpc(Request $request)
     {
         //
         $bookId = [];
         if ($request->has('book')) {
-            $bookId = [(int)$request->input('book')];
-        } else if ($request->has('tags')) {
-            //查询搜索范围
-            //查询搜索范围
+            $bookId = [(int) $request->input('book')];
+        } elseif ($request->has('tags')) {
+            // 查询搜索范围
+            // 查询搜索范围
             $tagItems = explode(';', $request->input('tags'));
 
             foreach ($tagItems as $tagItem) {
@@ -189,7 +189,8 @@ class SearchController extends Controller
         $offset = $request->input('offset', 0);
         $matchMode = $request->input('match', 'case');
         $result = PaliSearch::search($key, $bookId, $matchMode, $offset, $limit);
-        return $this->ok(["rows" => SearchResource::collection(collect($result['rows'])), "count" => $result['total']]);
+
+        return $this->ok(['rows' => SearchResource::collection(collect($result['rows'])), 'count' => $result['total']]);
     }
 
     public function page(Request $request)
@@ -202,12 +203,12 @@ class SearchController extends Controller
         $bookId = [];
         if ($request->has('book')) {
             $bookId[] = $request->input('book');
-        } else if ($request->has('tags')) {
-            //查询搜索范围
-            //查询搜索范围
+        } elseif ($request->has('tags')) {
+            // 查询搜索范围
+            // 查询搜索范围
             $tagItems = explode(';', $request->input('tags'));
             foreach ($tagItems as $tagItem) {
-                # code...
+                // code...
                 $bookId = array_merge($bookId, $this->getBookIdByTags(explode(',', $tagItem)));
             }
         }
@@ -217,30 +218,28 @@ class SearchController extends Controller
         $page = explode('.', $key);
         if (count($page) === 2) {
             $table = PageNumber::where('type', $request->input('type'))
-                ->where('volume', (int)$page[0])
-                ->where('page', (int)$page[1]);
+                ->where('volume', (int) $page[0])
+                ->where('page', (int) $page[1]);
         } else {
             if (is_numeric($key)) {
                 $table = PageNumber::where('type', $request->input('type'))->where('page', $key);
             } else {
-                $table = PageNumber::where('type', $request->input('type'))->where('page', (int)$key);
+                $table = PageNumber::where('type', $request->input('type'))->where('page', (int) $key);
             }
         }
-
-
 
         if (count($bookId) > 0) {
             $table = $table->whereIn('pcd_book_id', $bookId);
         }
         $count = $table->count();
         $table = $table->select(['book', 'paragraph']);
-        $table->skip($request->input("offset", 0))->take($request->input('limit', 10));
+        $table->skip($request->input('offset', 0))->take($request->input('limit', 10));
         $result = $table->get();
 
-        return $this->ok(["rows" => SearchResource::collection($result), "count" => $count]);
+        return $this->ok(['rows' => SearchResource::collection($result), 'count' => $count]);
     }
 
-    public function book_list(Request $request)
+    public function book_list(SearchRequest $request)
     {
         $searchChapters = [];
         $searchBooks = [];
@@ -248,19 +247,19 @@ class SearchController extends Controller
 
         $bookId = [];
         if ($request->has('tags')) {
-            //查询搜索范围
+            // 查询搜索范围
             $tagItems = explode(';', $request->input('tags'));
 
             foreach ($tagItems as $tagItem) {
-                # code...
+                // code...
                 $bookId = array_merge($bookId, $this->getBookIdByTags(explode(',', $tagItem)));
             }
-            $queryBookId = ' AND pcd_book_id in (' . implode(',', $bookId) . ') ';
+            $queryBookId = ' AND pcd_book_id in ('.implode(',', $bookId).') ';
         }
         $key = $request->input('key');
         switch ($request->input('view', 'pali')) {
             case 'pali':
-                # code...
+                // code...
                 $pageHead = ['M', 'P', 'T', 'V', 'O'];
                 if (substr($key, 0, 4) === 'para' || in_array(substr($key, 0, 1), $pageHead)) {
                     $queryWhere = "type='.ctl.' AND word = ?";
@@ -289,21 +288,21 @@ class SearchController extends Controller
                 $result = DB::select($query, [$word]);
                 break;
             case 'title':
-                $keyLike = '%' . $key . '%';
-                $queryWhere = "\"level\" < 8 and (\"title_en\"::text like ? or \"title\"::text like ?)";
+                $keyLike = '%'.$key.'%';
+                $queryWhere = '"level" < 8 and ("title_en"::text like ? or "title"::text like ?)';
                 $query = "SELECT pcd_book_id, count(*) as co FROM pali_texts WHERE {$queryWhere} {$queryBookId} GROUP BY pcd_book_id ORDER BY co DESC;";
                 $result = DB::select($query, [$keyLike, $keyLike]);
                 break;
             default:
-                # code...
+                // code...
                 return $this->error('unknown view');
                 break;
         }
 
         if ($result) {
-            return $this->ok(["rows" => SearchBookResource::collection($result), "count" => count($result)]);
+            return $this->ok(['rows' => SearchBookResource::collection($result), 'count' => count($result)]);
         } else {
-            return $this->ok(["rows" => [], "count" => 0]);
+            return $this->ok(['rows' => [], 'count' => 0]);
         }
     }
 
@@ -315,20 +314,21 @@ class SearchController extends Controller
         switch ($match) {
             case 'complete':
             case 'case':
-                # code...
+                // code...
                 $queryWhereBase = " full_text_search_weighted @@ websearch_to_tsquery('pali', ?) ";
                 $queryWhereBody = implode(' or ', array_fill(0, count($key), $queryWhereBase));
                 $queryWhere = " ({$queryWhereBody}) ";
                 $param = array_merge($param, $key);
                 break;
             case 'similar':
-                # 形似，去掉变音符号
+                // 形似，去掉变音符号
                 $queryWhere = " full_text_search_weighted_unaccent @@ websearch_to_tsquery('pali_unaccent', ?) ";
                 $key = Tools::getWordEn($key[0]);
                 $param = [$key];
                 break;
-        };
-        return (['query' => $queryWhere, 'param' => $param]);
+        }
+
+        return ['query' => $queryWhere, 'param' => $param];
     }
 
     public function getBookIdByTags($tags)
@@ -338,12 +338,12 @@ class SearchController extends Controller
             return $searchBookId;
         }
 
-        //查询搜索范围
+        // 查询搜索范围
         $tagIds = Tag::whereIn('name', $tags)->select('id')->get();
         $paliTextIds = TagMap::where('table_name', 'pali_texts')->whereIn('tag_id', $tagIds)->select('anchor_id')->get();
         $paliPara = [];
         foreach ($paliTextIds as $key => $value) {
-            # code...
+            // code...
             if (isset($paliPara[$value->anchor_id])) {
                 $paliPara[$value->anchor_id]++;
             } else {
@@ -352,7 +352,7 @@ class SearchController extends Controller
         }
         $paliId = [];
         foreach ($paliPara as $key => $value) {
-            # code...
+            // code...
             if ($value === count($tags)) {
                 $paliId[] = $key;
             }
@@ -361,23 +361,23 @@ class SearchController extends Controller
 
         if (count($para) > 0) {
             foreach ($para as $key => $value) {
-                # code...
+                // code...
                 $book_id = BookTitle::where('book', $value['book'])
                     ->where('paragraph', $value['paragraph'])
                     ->value('sn');
-                if (!empty($book_id)) {
+                if (! empty($book_id)) {
                     $searchBookId[] = $book_id;
                 }
             }
         }
+
         return $searchBookId;
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -388,7 +388,7 @@ class SearchController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -398,9 +398,8 @@ class SearchController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -411,7 +410,7 @@ class SearchController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

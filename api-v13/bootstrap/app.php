@@ -37,5 +37,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // api/* 一律回 JSON。默认只在客户端声明 Accept: application/json 时才回 JSON，
+        // 否则校验失败会 302 跳首页——客户端跟随重定向就拿到一张 HTML，
+        // 比拿到错误码更难排查。
+        $exceptions->shouldRenderJsonWhen(
+            fn ($request, Throwable $e): bool => $request->is('api/*') || $request->expectsJson()
+        );
     })->create();
