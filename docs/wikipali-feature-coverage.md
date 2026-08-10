@@ -1,164 +1,229 @@
 # WikiPali 功能覆盖清单
 
-> 人类做佛教研究与翻译时用到的 WikiPali 功能（用户 2026-08-08 给出的清单），
-> 对照 `wikipali` 插件当前的实现状态。
+> `wikipali` 插件对 WikiPali API 的封装进度，按 **Library / Workspace** 两大块组织。
 >
 > 用途：逐项落实的工作清单。**标 ⬜ 的需要提供一个能跑通的完整 API URL**——
 > 照着反推参数比读控制器快，也不会猜错。
 >
-> 插件版本基准：**0.7.0**（2026-08-09）
+> 插件版本基准：**0.8.2**（2026-08-10，未发布；marketplace 上是 0.7.0）
 
-**当前进度**：✅ 13 项 · ⬜ 9 项（其中 7 项需要 API URL，2 项是写入侧的文章/文集）
+## 两大块的分界
 
-**图例**
+| | **Library** | **Workspace** |
+|---|---|---|
+| 身份 | **无需登录** | 需登录，操作自己账号里的数据 |
+| 语义 | 读公共语料与公开内容 | 管理属于你的东西 |
+| 产出去向 | **只能输出到控制台或本地文件** | 写回 WikiPali |
+| 出错的代价 | 读到错的东西 | **改坏别人看得见的数据** |
 
-| 记号 | 含义 |
-|---|---|
-| ✅ | 已实现，有命令 |
-| 🔧 | 端点已确认可用，只差封装成命令 |
-| ⚠️ | 能做，但体验或粒度不到位 |
-| ⬜ | **需要 API URL**（端点可能存在但参数未知，或路由里没找到）|
+这条线不是「读 / 写」——公开文章的阅读属于 Library，而「列出我可编辑的 channel」
+虽然是读，却属于 Workspace，因为它依赖身份。**凡是需要 token 的都在 Workspace。**
+
+**图例**：✅ 已实现 · 🔧 端点可用只差封装 · ⚠️ 能做但不到位 · ⬜ 需要 API URL
 
 ---
 
-## 一、研究（读取）
+## 一、Library（读取，无需登录）
 
 ### 1. 字典
 
-| 功能 | 状态 | 实现 / 端点 | 备注 |
-|---|---|---|---|
-| 词典释义 | ✅ | `wikipali word` → `GET /v2/dict?word=&lang=` | 释义在 `note` 字段，不是 `description` |
-| 词形展开 | ✅ | `wikipali forms` → `GET /v2/case/{词}` | 检索的必经前置；拿词典形直接搜会 0 条且不报错 |
+| 功能 | 状态 | 命令 → 端点 |
+|---|---|---|
+| 词形展开 | ✅ | `forms` → `GET /v2/case/{词}` |
+| 词典释义与形态分析 | ✅ | `word` → `GET /v2/dict?word=&lang=` |
+| 词频合计 | ✅ | `count` → 同 `case` |
 
 ### 2. 术语
 
-| 功能 | 状态 | 实现 / 端点 | 备注 |
-|---|---|---|---|
-| 术语表 | ✅ | `wikipali terms` → `GET /v2/term-vocabulary?view=&lang=` | 全表 17074 条（zh-Hans），本地缓存后过滤 |
-| 单个术语查询 | ⬜ | `GET /v2/system-term/{lang}/{word}`？ | 实测返回 `{"ok":false,"message":"no channel"}` —— **缺参数** |
+| 功能 | 状态 | 命令 → 端点 |
+|---|---|---|
+| 术语表（社区总表） | ✅ | `terms` → `GET /v2/term-vocabulary?view=&lang=`（17074 条，本地缓存后过滤） |
+| **单个术语查询** | 🔧 | `GET /v2/terms?view=word&word={词}` —— **2026-08-10 实测：不需要登录**，返回各 channel 下该词的译义 |
+| **按 tag 查术语** | 🔧 | `GET /v2/terms?view=tag&tag={tag}` —— 同样无需登录（`vinaya` 21 条） |
+| ~~`system-term`~~ | — | `GET /v2/system-term/{lang}/{word}` 实测报 `no channel`；上面两个已够用，不再需要它 |
+
+⚠ `term-vocabulary` 与 `terms` 是**两套东西**：前者是社区总表（一次拉全量），
+后者是 `dhamma_terms`，按 channel / studio / 用户组织，同一个词在不同 channel 下
+可以有不同译义。
 
 ### 3. 三藏
 
-| 功能 | 状态 | 实现 / 端点 | 备注 |
-|---|---|---|---|
-| 分类目录（如「长部的复注有哪些」）| ✅ | `wikipali books --tags dīghanikāya,ṭīkā` → `GET /v2/book-title` | **服务端已扩展**：book-title 现在返回 toc / tags / related_name 并缓存 24 小时。不再需要 `tag` 端点。⚠ 需要服务端部署这一版 |
-| 某本书的目录 | ✅ | `wikipali toc` → `GET /v2/palitext?view=book-toc&book=&para=` | 返回整套丛书，客户端按 book 过滤 |
-| 章节内容 · 查有哪些版本 | ⚠️ | `wikipali versions` → `GET /v2/channel?view=paragraphs&book_id=&para=` | **只能按段落查**；按章节查目前用章节起始段近似 |
-| 章节内容 · 读某一版本 | ✅ | `wikipali chapter <坐标> --fetch --channel <uid>` | 先报体量（`chapter_strlen`）再取 |
-| 段落内容 · 多版本 | ✅ | `wikipali versions` → `wikipali get <坐标> --channel <uid>` | 查存在的版本，一次读一个 |
-| 句子内容 · 多版本 | ✅ | 同上 | 句子是 `get` 的最小返回粒度，带 `word_start`/`word_end` |
-| 相似句 | ⬜ | `GET /v2/sent-sim`？ | 实测 500。库里 `sent_sims` 表约 3.6 GB。**缺参数** |
-
-### 4. 文章
-
-| 功能 | 状态 | 实现 / 端点 | 备注 |
-|---|---|---|---|
-| 文章 | ✅ | `wikipali articles [关键词]` / `wikipali article <uid>` | 列表支持 `search=`；单篇返回 markdown 正文 |
-| 文集 | ✅ | `wikipali anthology [uid]` | 不给 uid 列表，给 uid 看其文章目录 |
-
-### 5. 相关经文（根本 ↔ 义注 ↔ 复注）
-
-| 功能 | 状态 | 实现 / 端点 | 备注 |
-|---|---|---|---|
-| 相关段落 | ✅ | `wikipali related <坐标>` | 63 万行 / 217 部书，覆盖率 97.9–99.9%，双向可用，按 mūla→aṭṭhakathā→ṭīkā 排序标层次。⚠ 服务端「无关联时 500」的修复**已合并但线上未部署**，客户端已兜住这个窗口 |
-| 相关章节 | ⬜ | ? | 路由里没找到 |
-| 相关书 | ⬜ | ? | 路由里没找到；`related-paragraph` 的返回里有书级信息，但不确定是否等价 |
-
-### 6. 评论
-
-| 功能 | 状态 | 实现 / 端点 | 备注 |
-|---|---|---|---|
-| 章节评论 | ⬜ | `discussion` / `discussion-count`？ | **缺参数** |
-| 段落评论 | ⬜ | 同上 | **缺参数** |
-| 句子评论 | ⬜ | `discussion` / `sent-discussion-tree`（POST）/ `discussion-anchor/{id}`？ | `GET /v2/discussion?view=sentence&res_id=x` → 500。**缺参数** |
-
----
-
-## 二、写入
-
-| 功能 | 状态 | 实现 / 端点 | 备注 |
-|---|---|---|---|
-| 句子 | ✅ | `wikipali write` | 模型身份署名、写前确认、count 核对、401 自动重签一次 |
-| 术语 | ⬜ | `POST /v2/terms`（`DhammaTermController`）？ | `GET /v2/terms?view=public&key=` → 500。**缺参数** |
-| 评论 · 句子 | ⬜ | `POST /v2/discussion`？ | **缺参数** |
-| 修改建议 | ⬜ | ? | 路由里没找到独立端点；`SentResource` 里有 `suggestionCount`，代码里有 `SuggestionApi` |
-| 文章 | ⬜ | `POST /v2/article` | 端点在，写入未封装（读已封装）|
-| 文集 | ⬜ | `POST /v2/anthology` | 端点在，写入未封装（读已封装）|
-
----
-
-## 三、需要提供 URL 的清单（共 7 项）
-
-按对研究流程的价值排序：
-
-1. **相似句** `sent-sim` —— 对读与校勘的核心能力，数据量最大（3.6 GB）
-2. ~~**分类目录**~~ —— **已解决**：扩展 `book-title` 返回 tags 即可，不需要新端点
-3. **单个术语查询** `system-term/{lang}/{word}` —— 现在只能靠全表缓存过滤
-4. **相关章节** —— 有了相关段落，章节级对应能省大量往返
-5. **相关书** —— 同上
-6. **句子评论（读）** `discussion` —— 前人对某句的讨论是重要的二手材料
-7. **术语写入** `terms` —— 研究产出的术语能回流
-8. **修改建议** —— 写入侧的协作能力
-
-每项给一个**能跑通的完整 URL**即可（含参数与示例值），我照着反推。
-
----
-
-## 四、已排期
-
-| 版本 | 内容 | 依赖 |
+| 功能 | 状态 | 命令 → 端点 |
 |---|---|---|
-| 0.6.0 ✅ | `related`（相关段落）· `articles` / `article` / `anthology`（文章与文集读取）—— **已发布 2026-08-09** | — |
-| 0.7.0 ✅ | `books`（分类目录，按 tag 找书）—— 配套服务端扩展 `book-title` 的返回 | — |
-| 待定 | 上面 7 项，收到 URL 后按价值排 | 用户提供 URL |
-| 待定 | 按章节聚合分布（`dist --by chapter`），方案见 `wikipali-research-agent-design.md` §3.7 | 方案待定 |
-| 待定 | 短语检索改走 `/v3/search`（OpenSearch），见 §3.6 | v3 调试完成 |
-| 待定 | `versions` 支持按章节查（现在只能按段落，章节用起始段近似） | 可能需要服务端支持 |
+| 分类目录（按 tag 找书） | ✅ | `books` → `GET /v2/book-title`（服务端已扩展返回 toc/tags/related_name） |
+| 某本书的章节目录 | ✅ | `toc` → `GET /v2/palitext?view=book-toc` |
+| 章节体量与导航 | ✅ | `chapter` → `GET /v2/palitext/{book}-{para}` |
+| 整章内容 | ✅ | `chapter --fetch` → `GET /v2/tipitaka-content/{book}-{para}` |
+| 按坐标取句 | ✅ | `get` → `GET /v2/sentence?view=paragraph` |
+| 某坐标有哪些版本 | ✅ | `versions` → `GET /v2/channel?view=paragraphs` |
+| 检索 | ✅ | `search` → `GET /v2/search-pali-wbw` |
+| 出处分布 | ✅ | `dist` → `GET /v2/search-pali-wbw-books` |
+| 短语检索 | ⬜ | `/v3/search`（OpenSearch）调试中 |
+| 相似句 | ⬜ | `GET /v2/sent-sim`？实测 500 |
+
+### 4. 相关经文（根本 ↔ 义注 ↔ 复注）
+
+| 功能 | 状态 | 命令 → 端点 |
+|---|---|---|
+| 相关段落 | ✅ | `related` → `GET /v2/related-paragraph` |
+| 相关章节 | ⬜ | 路由里没找到 |
+| 相关书 | ⬜ | 路由里没找到 |
+
+### 5. 文章（公开）
+
+| 功能 | 状态 | 命令 → 端点 |
+|---|---|---|
+| 文章列表与搜索 | ✅ | `articles` → `GET /v2/article?view=public` |
+| 读单篇 | ✅ | `article <uid>` → `GET /v2/article/{uid}` |
+| 文集 | ✅ | `anthology` → `GET /v2/anthology` |
+
+### 6. 讨论（公开阅读）
+
+| 功能 | 状态 | 命令 → 端点 |
+|---|---|---|
+| 读某句/段/章的讨论 | ⬜ | `GET /v2/discussion`？实测 500，**缺参数** |
 
 ---
 
-## 四之二、待用户决定的规范问题（TODO）
+## 二、Workspace（需登录，管理自己账号里的数据）
 
-这两项不阻塞开发，但会影响产出质量，定案后要改 `references/conventions.md`。
+### 1. auth —— 身份与凭据
+
+| 功能 | 状态 | 命令 → 端点 |
+|---|---|---|
+| 登录 | ✅ | `wikipali-login` → `POST /v2/sign-in` |
+| 当前用户 | ✅ | `whoami --check` → `GET /v2/auth/current` |
+| 建立/更新 AI 模型记录 | ✅ | `ensure-model` → `GET/POST/PUT /v2/ai-model` |
+| 取模型身份 token | ✅ | `ensure-model` → `GET /v2/ai-model-token/{uid}` |
+| 撤销模型全部 token | ✅ | `revoke` → `DELETE /v2/ai-model-token/{uid}` |
+| 忘记/重置密码 | ⬜ | `/v2/auth/forgot-password`、`/v2/auth/reset-password`。**不打算封装**——涉及密码流程，应走网页 |
+
+### 2. channel —— 译本/版本的容器
+
+| 功能 | 状态 | 命令 → 端点 |
+|---|---|---|
+| 列出我可编辑的 channel | ✅ | `channels` → `GET /v2/channel?view=user-edit` |
+| 签发 access token | ✅ | `grant` → `POST /v2/access-token` |
+| 新建 channel | ⬜ | `POST /v2/channel`（源码已读：需 `studio`/`name`/`type`/`lang`） |
+| 修改 channel | ⬜ | `PUT /v2/channel/{uid}`、`PATCH /v2/channel` |
+| 我的 channel 数量 | ⬜ | `GET /v2/channel-my-number` |
+| 按名字查 channel | ⬜ | `GET /v2/channel-name/{name}` |
+| 进度统计 | ⬜ | `POST /v2/channel-progress` |
+| 协作授权 | ⬜ | `/v2/share`（power ≥ 20 即可编辑） |
+
+### 3. tipitaka —— 句子与修改建议
+
+| 功能 | 状态 | 命令 → 端点 |
+|---|---|---|
+| 写入/覆盖句子 | ✅ | `write` → `POST /v2/sentence` |
+| 逐句多版本结构（写入侧用） | ✅ | `chapter --fetch --via chapter-content` → `GET /v2/chapter-content/{id}` |
+| 取自己 channel 的句子 | ✅ | `get --channel` → `GET /v2/sentence?view=paragraph` |
+| 修改建议（sentpr） | ⬜ | `/v2/sentpr`、`POST /v2/sent-pr-tree`。**缺参数** |
+| 逐词标注（wbw） | ⬜ | `/v2/wbw-sentence`、`/v2/editable-sentence` |
+| 章节内句子批量 | ⬜ | `/v2/sentences-in-chapter`、`/v2/sent-in-channel` |
+
+### 4. article —— 自己的文章与文集
+
+| 功能 | 状态 | 命令 → 端点 |
+|---|---|---|
+| 新建/修改/删除文章 | ⬜ | `POST/PUT/DELETE /v2/article` |
+| 新建/修改文集 | ⬜ | `POST/PUT /v2/anthology` |
+| 预览 | ⬜ | `PUT /v2/article-preview/{id}` |
+| 我的文章数量 | ⬜ | `GET /v2/article-my-number`、`/v2/anthology-my-number` |
+| 文章进度 / 导航 / 映射 | ⬜ | `/v2/article-progress`、`/v2/article-nav`、`/v2/article-map` |
+
+### 5. terms —— 自己的术语表
+
+同一个词在不同 channel 下可以有不同译义，所以术语是挂在 channel / studio / 用户上的
+（`dhamma_terms` 表），与 Library 里那张社区总表不是一回事。
+
+| 功能 | 状态 | 命令 → 端点 |
+|---|---|---|
+| 读我的术语 | 🔧 | `GET /v2/terms?view=user&search={关键词}` —— **需登录**，实测 test161 为 0 条 |
+| 读某 studio 的术语 | 🔧 | `GET /v2/terms?view=studio&name={studio}` —— 需登录 |
+| 读某 channel 的术语 | 🔧 | `GET /v2/terms?view=channel&id={channel}` |
+| 新建 / 修改 / 删除术语 | ⬜ | `POST/PUT/DELETE /v2/terms`。**缺字段说明** |
+| 按 channel 批量建术语 | ⬜ | `GET /v2/terms?view=create-by-channel` |
+| 导入 / 导出 | ⬜ | `/v2/terms-export`、`GET /v2/terms-import` |
+| 常用译义统计 | ⬜ | `GET /v2/terms?view=hot-meaning` |
+
+行字段（实测）：`guid` / `word` / `meaning` / `other_meaning` / `note` / `tag` /
+`language` / `channal`（原字段名如此拼写）/ `owner` / `editor_id`。
+
+### 6. discussion —— 讨论
+
+| 功能 | 状态 | 命令 → 端点 |
+|---|---|---|
+| 发表讨论 | ⬜ | `POST /v2/discussion`。**缺参数** |
+| 讨论树 | ⬜ | `POST /v2/sent-discussion-tree` |
+| 定位锚点 | ⬜ | `GET /v2/discussion-anchor/{id}` |
+| 未读 / 计数 | ⬜ | `/v2/discussion-count` |
+
+---
+
+## 三、通往 1.0 的版本规划
+
+原则：**版本号跟着实际能力走**，每个小版本对应一块能独立验收的能力；验收不过就不
+升版本号。1.0 的含义是「Library 与 Workspace 的常用 API 都已封装，且都在生产环境
+验证过」。
+
+| 版本 | 内容 | 验收标准 | 依赖 |
+|---|---|---|---|
+| **0.8.x** ✅ | Library 主体 + Workspace 的 auth / channel 只读 / 写句子 | staging 端到端 15 项全过（2026-08-10） | 合 PR、发版 |
+| **0.8.3** | next 生产环境复测 | 在 next 上重跑 staging 那 15 项，结果一致 | next 部署完成 |
+| **0.9.0** | **discussion** 全套（Library 读 + Workspace 写） | 读到某句的讨论串；发一条并读回 | ⬜ 需要 URL |
+| **0.9.1** | **sentpr 修改建议** | 对他人 channel 的句子提建议；列出收到的建议 | ⬜ 需要 URL |
+| **0.9.2** | **article Workspace** | 建一篇文章 → 编进文集 → 改 → 删，全程可回滚 | 端点已在，需定参数 |
+| **0.9.3** | **channel 管理** | 建一个 channel 并授权他人编辑 | 端点已在 |
+| **0.9.4** | **terms 全套**：Library 的单词/按 tag 查（无需登录）+ Workspace 的我的术语读写 | 查到某词在各 channel 下的译义；建一条自己的术语并读回、改、删 | 端点已确认，写侧需字段说明 |
+| **0.9.5** | **Library 补完**：相似句、相关章节 / 相关书 | 三项各跑通并进 `research` 规程 | ⬜ 需要 URL |
+| **0.9.6** | **短语检索切 `/v3/search`** | 词组检索可用；规程里「拆词绕行」的说明删除 | v3 调试完成 |
+| **0.9.7** | **wbw 逐词标注**（读 + 写） | 读某句的逐词解析；提交一次修改 | 待评估 |
+| **1.0.0** | 全部封装 + **生产环境全量复测** + 文档定稿 | 四个线上站点重跑全部命令；`research` 规程用一篇真实论文任务验收 | 线上部署 |
+
+### 每个版本都要做的三件事
+
+1. **实测每个端点的三种响应**：正常 / 空结果 / 错误。**空结果必须与故障区分开**——
+   这是本项目反复踩到的坑（`access-token` 的 `count: 0`、`chapter-content` 的空占位、
+   `related-paragraph` 查无关联时的 500）。
+2. **契约写进 references**，含踩过的坑。写侧的内容归 `api-write.md`。
+3. **规程只写判断，事实进 references**；SKILL.md 超 150 行就往外搬。
+
+### 1.0 之后
+
+- **MCP server 形态**：读端的链式调用（检索 → 取章 → 对读）更适合 tool 而非 CLI。
+  同一个插件可以同时带 `.mcp.json`——届时读走 MCP、写仍走 skill 规程，因为写入需要
+  的是「确认再动手」的流程约束，那是 skill 的强项而非 tool 的。
+- **新流程（如佛教百科）**：按既定结构加一个 `skills/<name>/SKILL.md` 即可，
+  不复制代码、用户 `/plugin update` 就拿到。
+
+---
+
+## 四、待用户决定的规范问题
 
 ### ⬜ 引用格式：是否采用 `{{book-para-start-end}}`
 
-**发现（2026-08-09）**：平台自己就有引用格式。用户所写文章《表24：三种别住（Parivāsa）》
-引用巴利原文用的是：
+平台原生格式（见用户所写《表24：三种别住》），实测精确到句、能在平台上解析定位。
+待定：是否全面采用？论文里给人读的场合是否需要「可读书名 + `{{坐标}}`」的组合写法？
 
-```
-{{141-120-17-40}}      =  book 141 · paragraph 120 · word_start 17 · word_end 40
-```
-
-**精确到句**，实测该坐标正是义注里讲 `odhānasamodhāna` 的那一句。
-
-采用它的好处：这是平台原生格式，写成这样的引用**在 wikipali 上能直接解析定位**，
-读者点开就能看到原文。比目前临时用的
-`Cūḷavaggapāḷi, Pārivāsikakkhandhaka (VN 216:35)` 强。
-
-待定的点：
-- 是否全面采用？还是巴利原文引用用它、书名章节仍用可读格式（两者并存）？
-- 论文里给人读的场合，纯坐标可读性差，是否需要「可读书名 + `{{坐标}}`」的组合写法？
-
-定案后：改 `conventions.md` 的「引用格式」一节，`research` 规程要求产出中的原文引用一律用它。
+定案后改 `references/conventions.md` 的「引用格式」一节。
 
 ### ⬜ 译名分歧：术语表 vs 实际使用
 
-`samodhānaparivāsa` 在术语表（`term-vocabulary`）里是「**合并**别住」，
-而用户所写文章里用的是「**合一**别住」。
-
-规程现在写的是「产出译名应与术语表一致，不一致要说明理由」。若实际研究中术语表并非
-唯一权威，这条要改写——比如改成「优先用术语表，与既有文献用词不一致时并列标出」。
+`samodhānaparivāsa` 在术语表里是「合并别住」，用户文章里用「合一别住」。规程现在
+要求「与术语表一致，不一致要说明理由」，若术语表并非唯一权威则需改写。
 
 ---
 
-## 五、两个记录在案的判断
+## 五、记录在案的判断
 
-**多版本不做并排对照。** 一度考虑把巴利原文、缅文 nissaya、汉译按 `(book, paragraph,
-word_start, word_end)` 四元组对齐后并排输出。用户 2026-08-09 否定：正确做法是
-**先查有哪些版本，一次只读一个**。理由是上下文预算——一次拉多个完整版本会直接撑爆，
-而研究时本来就是逐个版本读。所以 `versions` → `get/chapter --channel` 这条链就是最终形态。
+**多版本不做并排对照。** 正确做法是先查有哪些版本、一次只读一个——一次拉多个完整
+版本会撑爆上下文，而研究本来就是逐个版本读。`versions` → `get/chapter --channel`
+这条链就是最终形态。
 
-**`versions` 的粒度缺口。** 它按段落查，而用户的用法是「给章节编号，查存在的版本」。
-目前只能用章节起始段近似——同一章内不同段落的版本覆盖可能不同（某译本只译了半章）。
-是否需要章节级的查询，取决于实际使用中这个近似会不会出错。
+**`versions` 的粒度缺口。** 它按段落查，而实际用法常是按章节查，目前用章节起始段
+近似。同一章内不同段落的版本覆盖可能不同（某译本只译半章）。
+
+**站点不是同一个库。** 线上四站共享库与密钥；`staging` 与 `local` 各是另一个库，
+凭据与本地缓存都按桶隔离，自动 fallback 只在线上四站之间发生。**在 staging 上查到
+的坐标不能直接拿到线上引用。**
