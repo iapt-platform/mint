@@ -8,7 +8,7 @@ import os
 import stat
 
 from errors import WpError
-from sites import DEFAULT_API_URL, LOCAL_URL, ONLINE_URLS, expand_site_alias, normalize_api_url
+from sites import BUCKET_BY_URL, DEFAULT_API_URL, LOCAL_URL, expand_site_alias, normalize_api_url
 
 
 CREDS_DIR = os.path.join(os.path.expanduser("~"), ".wikipali")
@@ -46,11 +46,15 @@ def save_creds(creds):
 
 
 def bucket_name_for(api_url):
-    """凭据桶名。线上四地址共用 online 桶；开发机 local；其余地址自成一桶。"""
-    if api_url in ONLINE_URLS:
-        return "online"
-    if api_url == LOCAL_URL:
-        return "local"
+    """凭据（与本地缓存）的桶名。
+
+    只有线上四个地址共享同一个库与密钥，共用 online 桶；staging、开发机、以及任何
+    自定义地址都是**另一个库**，各自一桶——混用会让凭据失效，更糟的是让查询静默
+    落到错误的数据上。
+    """
+    known = BUCKET_BY_URL.get(api_url)
+    if known:
+        return known
     return "site:" + api_url
 
 
