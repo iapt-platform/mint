@@ -31,6 +31,12 @@ class TermVocabularyController extends Controller
         $view = $validated['view'];
         $lang = $validated['lang'] ?? null;
 
+        // TODO: 下面两条 throw 都会变成 500，客户端因此分不清「我传错了参数」和
+        // 「服务端挂了」。2026-08-11 在 next 上实测：view=community / grammar 返回
+        // 200，view=my / all / public / user / studio 一律 500。
+        //   - 无效取值应是 422：把合法值写进上面的 validate（'view' => [..., 'in:grammar,community']），
+        //     由框架拦下，与本控制器已有的 required 校验一致
+        //   - studio / user 尚未实现，应返回 501，而不是与「参数写错」同一个状态码
         // ✅ 使用 match 替代 switch
         $data = match ($view) {
             'grammar'   => $this->termService->getGrammarGlossary($lang),
