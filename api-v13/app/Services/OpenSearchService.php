@@ -163,8 +163,11 @@ class OpenSearchService
         'mappings' => [
             'properties' => [
                 'id' => ['type' => 'keyword'],
-                'resource_id' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
-                'resource_type' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
+                // 分类维度一律 keyword：它们是枚举值，不该被分词。
+                // 若声明成 text，'zh-Hans' 会被切成 zh + hans，查 language=zh 就会把
+                // zh-Hans 的文档一并捞进来（实测 401 vs 410），而且不报错。
+                'resource_id' => ['type' => 'keyword'],
+                'resource_type' => ['type' => 'keyword'],
 
                 // ----------------------------------------------------------------
                 // title
@@ -325,11 +328,11 @@ class OpenSearchService
                 'path' => ['type' => 'text', 'analyzer' => 'standard'],
                 'page_refs' => ['type' => 'keyword'],
                 'tags' => ['type' => 'keyword'],
-                'category' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
+                'category' => ['type' => 'keyword'],
                 'author' => ['type' => 'text'],
-                'language' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
+                'language' => ['type' => 'keyword'],
                 'updated_at' => ['type' => 'date'],
-                'granularity' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
+                'granularity' => ['type' => 'keyword'],
                 'metadata' => [
                     'properties' => [
                         'APA' => ['type' => 'text', 'index' => false],
@@ -675,19 +678,19 @@ class OpenSearchService
         $filters = [];
 
         if (! empty($params['resourceType'])) {
-            $filters[] = ['term' => ['resource_type.keyword' => $params['resourceType']]];
+            $filters[] = ['term' => ['resource_type' => $params['resourceType']]];
         }
 
         if (! empty($params['resourceId'])) {
-            $filters[] = ['term' => ['resource_id.keyword' => $params['resourceId']]];
+            $filters[] = ['term' => ['resource_id' => $params['resourceId']]];
         }
 
         if (! empty($params['granularity'])) {
-            $filters[] = ['term' => ['granularity.keyword' => $params['granularity']]];
+            $filters[] = ['term' => ['granularity' => $params['granularity']]];
         }
 
         if (! empty($params['language'])) {
-            $filters[] = ['term' => ['language.keyword' => $params['language']]];
+            $filters[] = ['term' => ['language' => $params['language']]];
         }
 
         if (! empty($params['category'])) {
@@ -699,7 +702,7 @@ class OpenSearchService
 
             // 必须匹配全部：为每个 category 创建一个 term 条件
             foreach ($categories as $category) {
-                $filters[] = ['term' => ['category.keyword' => $category]];
+                $filters[] = ['term' => ['category' => $category]];
             }
         }
 
@@ -767,16 +770,16 @@ class OpenSearchService
                 : $query,
             'aggs' => [
                 'resource_type' => [
-                    'terms' => ['field' => 'resource_type.keyword'],
+                    'terms' => ['field' => 'resource_type'],
                 ],
                 'language' => [
-                    'terms' => ['field' => 'language.keyword'],
+                    'terms' => ['field' => 'language'],
                 ],
                 'category' => [
-                    'terms' => ['field' => 'category.keyword'],
+                    'terms' => ['field' => 'category'],
                 ],
                 'granularity' => [
-                    'terms' => ['field' => 'granularity.keyword'],
+                    'terms' => ['field' => 'granularity'],
                 ],
             ],
         ];
@@ -1124,7 +1127,7 @@ class OpenSearchService
         $dsl = ['suggest' => $suggests];
 
         if ($language) {
-            $dsl['query'] = ['term' => ['language.keyword' => $language]];
+            $dsl['query'] = ['term' => ['language' => $language]];
         }
 
         $response = $this->client->search([

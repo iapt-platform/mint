@@ -18,7 +18,7 @@ class IndexTipitaka extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan opensearch:index-tipitaka 93 --para=6 --granularity=chapter
+     * php artisan opensearch:index-tipitaka 93 --para=6 --granularity=paragraph
      * @var string
      */
     protected $signature = 'opensearch:index-tipitaka
@@ -253,7 +253,7 @@ class IndexTipitaka extends Command
             'bold_multi' => implode(" ", $bold_multi),
             'related_id' => $related_id,
             'category' => 'pali', // Assuming Pali paragraphs are sutta; adjust as needed
-            'language' => 'pali',
+            'language' => 'pi',
             'updated_at' => now()->toIso8601String(),
             'granularity' => 'session',
             'path' => $this->getPathTitle(json_decode($paraInfo['path'])),
