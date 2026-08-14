@@ -24,7 +24,7 @@ class PaliTextController extends Controller
     {
         //
         $request->validate([
-            'view' => 'required|in:chapter-tag,chapter,chapter_children,children,paragraph,paragraphs-info,book-toc',
+            'view' => 'required|in:chapter-tag,chapter,chapter_children,children,paragraph,book-toc',
         ]);
         $all_count = 0;
         switch ($request->input('view')) {
@@ -241,27 +241,6 @@ class PaliTextController extends Controller
                     return $this->error('no data');
                 }
                 break;
-            case 'paragraphs-info':
-                /**
-                 * 取章节的 pali_texts 全部段落 记录，按 (book, para) 精确匹配。
-                 *
-                 *
-                 * @param  int  $book
-                 * @param  int  $para
-                 */
-                $root = PaliText::where('book', $request->input('book'))
-                    ->where('paragraph', $request->input('para'))
-                    ->first();
-                if (! $root) {
-                    return $this->error('no paragraph');
-                }
-                $chapters = PaliText::where('book', $request->input('book'))
-                    ->whereBetween('paragraph', [$root->paragraph, $root->paragraph + $root->chapter_len - 1])
-                    ->select(['book', 'paragraph', 'toc', 'level', 'lenght', 'chapter_len'])
-                    ->orderBy('paragraph', 'asc')
-                    ->get();
-                $all_count = count($chapters);
-                break;
             case 'book-toc':
                 /**
                  * 获取全书目录
@@ -326,8 +305,7 @@ class PaliTextController extends Controller
                 return $this->error('unknown view', 400, 400);
         }
 
-        if ($request->input('view') !== 'book-toc' &&
-        $request->input('view') !== 'paragraphs-info') {
+        if ($request->input('view') !== 'book-toc') {
             foreach ($chapters as $key => $value) {
                 if (is_object($value)) {
                     // TODO $value->book 可能不存在
