@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class TaskRelation extends Model
 {
     use HasFactory;
-    protected $fillable = ['id','task_id','next_task_id','editor_id'];
 
+    protected $fillable = ['id', 'task_id', 'next_task_id', 'editor_id'];
 }

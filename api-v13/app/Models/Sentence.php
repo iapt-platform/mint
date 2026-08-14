@@ -10,6 +10,7 @@ class Sentence extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
     protected $fillable = [
         'id',
         'uid',
@@ -25,9 +26,11 @@ class Sentence extends Model
         'status',
         'create_time',
         'modify_time',
-        'language'
+        'language',
     ];
+
     protected $primaryKey = 'uid';
+
     protected $casts = [
         'uid' => 'string',
         'channel_uid' => 'string',
@@ -37,7 +40,7 @@ class Sentence extends Model
         'created_at',
         'updated_at',
         'deleted_at',
-        'fork_at'
+        'fork_at',
     ];
 
     /**

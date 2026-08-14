@@ -2,13 +2,14 @@
 
 namespace App\Services\Template;
 
-
 // ================== 词法分析器 ==================
 
 class TemplateTokenizer
 {
     private string $content;
+
     private int $position = 0;
+
     private int $length;
 
     public function __construct(string $content)
@@ -42,12 +43,14 @@ class TemplateTokenizer
             if ($this->position < $this->length) {
                 $text = substr($this->content, $this->position);
                 $this->position = $this->length;
+
                 return [
                     'type' => 'text',
                     'content' => $text,
-                    'position' => ['start' => $this->position - strlen($text), 'end' => $this->position]
+                    'position' => ['start' => $this->position - strlen($text), 'end' => $this->position],
                 ];
             }
+
             return null;
         }
 
@@ -55,10 +58,11 @@ class TemplateTokenizer
         if ($templateStart > $this->position) {
             $text = substr($this->content, $this->position, $templateStart - $this->position);
             $this->position = $templateStart;
+
             return [
                 'type' => 'text',
                 'content' => $text,
-                'position' => ['start' => $this->position - strlen($text), 'end' => $this->position]
+                'position' => ['start' => $this->position - strlen($text), 'end' => $this->position],
             ];
         }
 
@@ -97,18 +101,19 @@ class TemplateTokenizer
         if ($braceCount > 0) {
             // 未闭合的模板，当作普通文本处理
             $this->position = $start + 2;
+
             return [
                 'type' => 'text',
                 'content' => '{{',
-                'position' => ['start' => $start, 'end' => $start + 2]
+                'position' => ['start' => $start, 'end' => $start + 2],
             ];
         }
 
         return [
             'type' => 'template',
             'content' => trim($templateContent),
-            'raw' => '{{' . $templateContent . '}}',
-            'position' => ['start' => $start, 'end' => $this->position]
+            'raw' => '{{'.$templateContent.'}}',
+            'position' => ['start' => $start, 'end' => $this->position],
         ];
     }
 }

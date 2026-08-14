@@ -2,14 +2,15 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Http\Api\Mq;
+use Illuminate\Console\Command;
 
 class TestMqExit extends Command
 {
     /**
      * The name and signature of the console command.
      * php artisan test:mq.exit
+     *
      * @var string
      */
     protected $signature = 'test:mq.exit';
@@ -41,6 +42,7 @@ class TestMqExit extends Command
         for ($i = 0; $i < 10; $i++) {
             Mq::publish('ai_translate', ['hello world']);
         }
+
         return 0;
     }
 }

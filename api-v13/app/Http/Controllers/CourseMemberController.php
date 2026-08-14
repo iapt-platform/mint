@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CourseMember;
-use App\Models\Course;
-use App\Models\UserInfo;
-
-use Illuminate\Http\Request;
-use App\Http\Resources\CourseMemberResource;
-use App\Services\AuthService;
-use Illuminate\Support\Facades\Log;
 use App\Http\Api\UserApi;
+use App\Http\Resources\CourseMemberResource;
+use App\Models\Course;
+use App\Models\CourseMember;
+use App\Models\UserInfo;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -19,16 +18,16 @@ class CourseMemberController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed', [403], 403));
         }
-        //判断当前用户是否有指定的 course 的权限
+        // 判断当前用户是否有指定的 course 的权限
         $role = CourseMember::where('course_id', $request->input('id', $request->input('course')))
             ->where('user_id', $user['user_uid'])
             ->value('role');
@@ -45,11 +44,11 @@ class CourseMemberController extends Controller
             'role',
             'editor_uid',
             'updated_at',
-            'created_at'
+            'created_at',
         ];
         switch ($request->input('view')) {
             case 'course':
-                # 获取 course 内所有 成员
+                // 获取 course 内所有 成员
                 $table = CourseMember::where('course_id', $request->input('id'))
                     ->where('is_current', true);
                 break;
@@ -67,14 +66,14 @@ class CourseMemberController extends Controller
                 return $this->error('无法识别的参数view', 400, 400);
                 break;
         }
-        if (!empty($request->input("role")) && $request->input("role") !== 'all') {
-            $table = $table->where('role', $request->input("role"));
+        if (! empty($request->input('role')) && $request->input('role') !== 'all') {
+            $table = $table->where('role', $request->input('role'));
         }
-        if (!empty($request->input("status"))) {
-            $table = $table->whereIn('status', explode(',', $request->input("status")));
+        if (! empty($request->input('status'))) {
+            $table = $table->whereIn('status', explode(',', $request->input('status')));
         }
-        if (!empty($request->input("search"))) {
-            $usersId = UserInfo::where('nickname', 'like', '%' . $request->input("search") . "%")
+        if (! empty($request->input('search'))) {
+            $usersId = UserInfo::where('nickname', 'like', '%'.$request->input('search').'%')
                 ->select('userid')
                 ->get();
             $table = $table->whereIn('user_id', $usersId);
@@ -92,26 +91,25 @@ class CourseMemberController extends Controller
 
         $result = $table->get();
 
-        //获取当前用户角色
+        // 获取当前用户角色
         $role = CourseMember::where('course_id', $request->input('id'))
             ->where('user_id', $user['user_uid'])
             ->where('is_current', true)
             ->value('role');
 
-        return $this->ok(["rows" => CourseMemberResource::collection($result), 'role' => $role, "count" => $count]);
+        return $this->ok(['rows' => CourseMemberResource::collection($result), 'role' => $role, 'count' => $count]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed', [403], 403));
         }
         $validated = $request->validate([
@@ -120,7 +118,7 @@ class CourseMemberController extends Controller
             'role' => 'required',
             'status' => 'required',
         ]);
-        //查找重复的
+        // 查找重复的
         if ($validated['status'] !== 'invited') {
             if (CourseMember::where('course_id', $validated['course_id'])
                 ->where('user_id', $validated['user_id'])
@@ -140,7 +138,7 @@ class CourseMemberController extends Controller
             ->where('user_id', $userId)
             ->update(['is_current' => false]);
 
-        $newMember = new CourseMember();
+        $newMember = new CourseMember;
         $newMember->course_id = $validated['course_id'];
         $newMember->role = $validated['role'];
         $newMember->editor_uid = $user['user_uid'];
@@ -152,12 +150,12 @@ class CourseMemberController extends Controller
          * open : accepted
          * manual: progressing
          */
-        $course  = Course::find($validated['course_id']);
-        if (!$course) {
+        $course = Course::find($validated['course_id']);
+        if (! $course) {
             return $this->error('invalid course');
         }
         switch ($course->join) {
-            case 'open': //开放学习课程
+            case 'open': // 开放学习课程
                 if (
                     $validated['status'] !== 'joined' &&
                     $validated['status'] !== 'invited'
@@ -165,7 +163,7 @@ class CourseMemberController extends Controller
                     return $this->error('invalid course', [200], 200);
                 }
                 break;
-            case 'manual': //人工审核课程
+            case 'manual': // 人工审核课程
                 if (
                     $validated['status'] !== 'applied' &&
                     $validated['status'] !== 'invited'
@@ -182,19 +180,17 @@ class CourseMemberController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $courseId
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Request $request, string $courseId)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
         $userId = $user['user_uid'];
-        if (!empty($request->input('user_uid'))) {
+        if (! empty($request->input('user_uid'))) {
             $userId = $request->input('user_uid');
         }
         $member = CourseMember::where('course_id', $courseId)
@@ -211,9 +207,7 @@ class CourseMemberController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CourseMember  $courseMember
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, CourseMember $courseMember)
     {
@@ -223,11 +217,11 @@ class CourseMemberController extends Controller
          * 原有记录变为历史记录
          */
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
 
-        $newMember = new CourseMember();
+        $newMember = new CourseMember;
         $newMember->user_id = $courseMember->user_id;
         $newMember->course_id = $courseMember->course_id;
         $newMember->role = $courseMember->role;
@@ -248,13 +242,15 @@ class CourseMemberController extends Controller
             $newMember->status = $request->input('status');
         }
         $newMember->save();
+
         return $this->ok(new CourseMemberResource($newMember));
     }
+
     public function set_channel(Request $request)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
 
@@ -266,6 +262,7 @@ class CourseMemberController extends Controller
             if ($courseMember) {
                 $courseMember->channel_id = $request->input('channel_id');
                 $courseMember->save();
+
                 return $this->ok(new CourseMemberResource($courseMember));
             } else {
                 return $this->error(__('auth.failed'));
@@ -278,70 +275,68 @@ class CourseMemberController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CourseMember  $courseMember
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Request $request, CourseMember $courseMember)
     {
-        //查看删除者有没有删除权限
-        //查询删除者的权限
+        // 查看删除者有没有删除权限
+        // 查询删除者的权限
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
 
-        $isOwner = Course::where('id', $courseMember->course_id)->where('studio_id', $user["user_uid"])->exists();
-        if (!$isOwner) {
+        $isOwner = Course::where('id', $courseMember->course_id)->where('studio_id', $user['user_uid'])->exists();
+        if (! $isOwner) {
             $courseUser = CourseMember::where('course_id', $courseMember->course_id)
-                ->where('user_id', $user["user_uid"])
+                ->where('user_id', $user['user_uid'])
                 ->select('role')->first();
-            //open 课程 可以删除自己
+            // open 课程 可以删除自己
 
-            if (!$courseUser) {
-                //被删除的不是自己
-                if ($courseUser->role === "student") {
-                    //普通成员没有删除权限
+            if (! $courseUser) {
+                // 被删除的不是自己
+                if ($courseUser->role === 'student') {
+                    // 普通成员没有删除权限
                     return $this->error(__('auth.failed'));
                 }
             }
         }
 
         $delete = $courseMember->delete();
+
         return $this->ok($delete);
     }
 
     /**
      * 获取当前用户权限
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function curr(Request $request)
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
-        $courseUser = CourseMember::where('course_id', $request->input("course_id"))
-            ->where('user_id', $user["user_uid"])
+        $courseUser = CourseMember::where('course_id', $request->input('course_id'))
+            ->where('user_id', $user['user_uid'])
             ->where('is_current', true)
             ->select(['role', 'channel_id'])->first();
         if ($courseUser) {
             return $this->ok($courseUser);
         } else {
-            return $this->error("not member");
+            return $this->error('not member');
         }
     }
 
     public function export(Request $request)
     {
 
-        $courseUser = CourseMember::where('course_id', $request->input("course_id"))
+        $courseUser = CourseMember::where('course_id', $request->input('course_id'))
             ->where('is_current', true)
             ->get();
 
-        $spreadsheet = new Spreadsheet();
+        $spreadsheet = new Spreadsheet;
         $activeWorksheet = $spreadsheet->getActiveSheet();
         $activeWorksheet->setCellValue('A1', 'nickname');
         $activeWorksheet->setCellValue('B1', 'username');
@@ -362,6 +357,6 @@ class CourseMemberController extends Controller
         $writer = new Xlsx($spreadsheet);
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment; filename="course_member.xlsx"');
-        $writer->save("php://output");
+        $writer->save('php://output');
     }
 }

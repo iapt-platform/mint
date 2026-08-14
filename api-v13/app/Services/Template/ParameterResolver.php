@@ -2,7 +2,6 @@
 
 namespace App\Services\Template;
 
-
 // ================== 参数解析器 ==================
 
 class ParameterResolver
@@ -17,7 +16,7 @@ class ParameterResolver
     public function resolveParameters(string $templateName, array $rawParams): array
     {
         $template = $this->registry->getTemplate($templateName);
-        if (!$template) {
+        if (! $template) {
             return $rawParams;
         }
 
@@ -41,7 +40,7 @@ class ParameterResolver
 
         // 应用默认值
         foreach ($defaultValues as $key => $value) {
-            if (!isset($resolved[$key])) {
+            if (! isset($resolved[$key])) {
                 $resolved[$key] = $value;
             }
         }

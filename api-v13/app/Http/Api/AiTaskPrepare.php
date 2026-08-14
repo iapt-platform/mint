@@ -2,15 +2,11 @@
 
 namespace App\Http\Api;
 
-use App\Models\Task;
-use App\Models\PaliText;
-use App\Models\PaliSentence;
 use App\Models\AiModel;
+use App\Models\PaliSentence;
+use App\Models\PaliText;
 use App\Models\Sentence;
-
-use App\Http\Api\Mq;
-use App\Http\Api\ChannelApi;
-
+use App\Models\Task;
 use App\Services\AuthService;
 
 class AiTaskPrepare
@@ -18,7 +14,7 @@ class AiTaskPrepare
     /**
      * 读取task信息，将任务拆解为单句小任务
      *
-     * @param  string  $taskId 任务uuid
+     * @param  string  $taskId  任务uuid
      * @return array 拆解后的提示词数组
      */
     public static function translate(string $taskId, bool $send = true)
@@ -33,22 +29,22 @@ class AiTaskPrepare
                 $params[$param[0]] = $param[1];
             }
         }
-        if (!isset($params['type'])) {
+        if (! isset($params['type'])) {
             return false;
         }
 
-        //get sentences in article
-        $sentences = array();
+        // get sentences in article
+        $sentences = [];
         $totalLen = 0;
         switch ($params['type']) {
             case 'sentence':
-                if (!isset($params['id'])) {
+                if (! isset($params['id'])) {
                     return false;
                 }
                 $sentences[] = explode('-', $params['id']);
                 break;
             case 'para':
-                if (!isset($params['book']) || !isset($params['paragraphs'])) {
+                if (! isset($params['book']) || ! isset($params['paragraphs'])) {
                     return false;
                 }
                 $sent = PaliSentence::where('book', $params['book'])
@@ -61,13 +57,13 @@ class AiTaskPrepare
                             $value->word_begin,
                             $value->word_end,
                         ],
-                        'strlen' => $value->length
+                        'strlen' => $value->length,
                     ];
                     $totalLen += $value->length;
                 }
                 break;
             case 'chapter':
-                if (!isset($params['book']) || !isset($params['paragraphs'])) {
+                if (! isset($params['book']) || ! isset($params['paragraphs'])) {
                     return false;
                 }
                 $chapterLen = PaliText::where('book', $params['book'])
@@ -84,7 +80,7 @@ class AiTaskPrepare
                             $value->word_begin,
                             $value->word_end,
                         ],
-                        'strlen' => $value->length
+                        'strlen' => $value->length,
                     ];
                     $totalLen += $value->length;
                 }
@@ -94,20 +90,20 @@ class AiTaskPrepare
                 break;
         }
 
-        //render prompt
+        // render prompt
         $mdRender = new MdRender([
             'format' => 'prompt',
             'footnote' => false,
             'paragraph' => false,
         ]);
-        $m = new \Mustache_Engine(array(
+        $m = new \Mustache_Engine([
             'entity_flags' => ENT_QUOTES,
             'escape' => function ($value) {
                 return $value;
-            }
-        ));
+            },
+        ]);
 
-        # ai model
+        // ai model
         $aiModel = AiModel::findOrFail($task->executor_id);
         $modelToken = AuthService::getUserToken($aiModel->uid);
         $aiModel['token'] = $modelToken;
@@ -119,42 +115,42 @@ class AiTaskPrepare
             $sentChannelInfo = explode('@', $params['channel']);
             $channelId = $sentChannelInfo[0];
             $data = [];
-            $data['origin'] = '{{' . $sid . '}}';
-            $data['translation'] = '{{sent|id=' . $sid;
-            $data['translation'] .= '|channel=' . $channelId;
+            $data['origin'] = '{{'.$sid.'}}';
+            $data['translation'] = '{{sent|id='.$sid;
+            $data['translation'] .= '|channel='.$channelId;
             $data['translation'] .= '|text=translation}}';
-            if (isset($params['nissaya']) && !empty($params['nissaya'])) {
+            if (isset($params['nissaya']) && ! empty($params['nissaya'])) {
                 $nissayaChannel = explode('@', $params['nissaya']);
                 $channelInfo = ChannelApi::getById($nissayaChannel[0]);
                 if ($channelInfo) {
-                    //查看句子是否存在
+                    // 查看句子是否存在
                     $nissayaSent = Sentence::where('book_id', $sentence['id'][0])
                         ->where('paragraph', $sentence['id'][1])
                         ->where('word_start', $sentence['id'][2])
                         ->where('word_end', $sentence['id'][3])
                         ->where('channel_uid', $nissayaChannel[0])->first();
-                    if ($nissayaSent && !empty($nissayaSent->content)) {
+                    if ($nissayaSent && ! empty($nissayaSent->content)) {
                         $nissayaData = [];
                         $nissayaData['channel'] = $channelInfo;
-                        $nissayaData['data'] = '{{sent|id=' . $sid;
-                        $nissayaData['data'] .= '|channel=' . $nissayaChannel[0];
+                        $nissayaData['data'] = '{{sent|id='.$sid;
+                        $nissayaData['data'] .= '|channel='.$nissayaChannel[0];
                         $nissayaData['data'] .= '|text=translation}}';
                         $data['nissaya'] = $nissayaData;
                     }
                 }
             }
 
-            //Log::debug('mustache render', ['tpl' => $description, 'data' => $data]);
+            // Log::debug('mustache render', ['tpl' => $description, 'data' => $data]);
             $content = $m->render($description, $data);
             $prompt = $mdRender->convert($content, []);
-            //gen mq
+            // gen mq
             $aiMqData = [
                 'model' => $aiModel,
                 'task' => [
                     'info' => $task,
                     'progress' => [
                         'current' => $sumLen,
-                        'total' => $totalLen
+                        'total' => $totalLen,
                     ],
                 ],
                 'prompt' => $prompt,
@@ -174,6 +170,7 @@ class AiTaskPrepare
         if ($send) {
             Mq::publish('ai_translate', $mqData);
         }
+
         return $mqData;
     }
 }

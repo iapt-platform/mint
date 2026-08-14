@@ -2,24 +2,26 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\ProgressChapter;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class TocResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array|Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
         $data = [
-            "book" => $this->book,
-            "paragraph" => $this->paragraph,
-            "pali_title" => $this->toc,
-            "level" => $this->level
+            'book' => $this->book,
+            'paragraph' => $this->paragraph,
+            'pali_title' => $this->toc,
+            'level' => $this->level,
         ];
 
         $title = ProgressChapter::where('book', $this->book)
@@ -27,11 +29,11 @@ class TocResource extends JsonResource
             ->where('lang', 'zh')
             ->whereNotNull('title')
             ->value('title');
-        if (!empty($title)) {
+        if (! empty($title)) {
             $data['title'] = $title;
         }
         if ($request->has('channels')) {
-            if (strpos($request->input('channels'), ',') === FALSE) {
+            if (strpos($request->input('channels'), ',') === false) {
                 $channels = explode('_', $request->input('channels'));
             } else {
                 $channels = explode(',', $request->input('channels'));
@@ -41,10 +43,10 @@ class TocResource extends JsonResource
                 ->where('channel_id', $channels[0])
                 ->whereNotNull('title')
                 ->value('title');
-            if (!empty($title)) {
+            if (! empty($title)) {
                 $data['title'] = $title;
             }
-            //查询完成度
+            // 查询完成度
             foreach ($channels as $key => $channel) {
                 $progress = ProgressChapter::where('book', $this->book)
                     ->where('para', $this->paragraph)
@@ -57,6 +59,7 @@ class TocResource extends JsonResource
                 }
             }
         }
+
         return $data;
     }
 }

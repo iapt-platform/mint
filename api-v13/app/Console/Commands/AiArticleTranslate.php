@@ -2,12 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Services\AIAssistant\ArticleTranslateService;
+use App\Services\ArticleService;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-use App\Services\AIAssistant\ArticleTranslateService;
-use App\Services\ArticleService;
-
 
 #[Signature('app:ai-article-translate
 {--article=}
@@ -26,10 +25,11 @@ class AiArticleTranslate extends Command
     public function handle()
     {
         if (
-            !$this->option('model') ||
-            !$this->option('channel')
+            ! $this->option('model') ||
+            ! $this->option('channel')
         ) {
             $this->error('model,article,channel is requested');
+
             return;
         }
         //
@@ -46,7 +46,7 @@ class AiArticleTranslate extends Command
                 $llm = $llm->setThinking($this->option('thinking') === 'true');
             }
 
-            $total =    $llm->translateArticle($this->option('article'))
+            $total = $llm->translateArticle($this->option('article'))
                 ->save();
             $this->info("{$total} sentences saved");
         }
@@ -68,7 +68,7 @@ class AiArticleTranslate extends Command
                 $this->info("{$total} sentences saved");
             }
 
-            $this->info(count($articleIds) . " article saved");
+            $this->info(count($articleIds).' article saved');
         }
     }
 }

@@ -24,7 +24,7 @@ class UpdateChatRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'sometimes|string|max:255'
+            'title' => 'sometimes|string|max:255',
         ];
     }
 }

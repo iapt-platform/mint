@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class UserInfo extends Model
 {
     use HasFactory;
+
     protected $primaryKey = 'id';
-    public  $incrementing = true;
+
+    public $incrementing = true;
 
     // 可选：定义反向关联
     public function channels()

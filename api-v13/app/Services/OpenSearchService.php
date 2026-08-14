@@ -525,8 +525,6 @@ class OpenSearchService
             $this->client->indices()->open(['index' => $index]);
         }
 
-
-
         return ['path' => $path, 'settings' => $response];
     }
 

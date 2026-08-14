@@ -210,6 +210,7 @@ class PaliTranslateService
     {"id":"1-2-3-4","content":"译文"}
     {"id":"2-3-4-5","content":"译文"}
     md;
+
     /**
      * evaluate 步骤的提示词：对照原文找出译文真实问题，按级别就地标注译文。
      */
@@ -436,9 +437,9 @@ class PaliTranslateService
                 case 'revise':
                     $nsy = $this->nissayaFor('revise', $nissaya);
                     Log::debug('PaliTranslate: revise nissaya', ['count' => count($nsy)]);
-                    if (!empty($nsy)) {
+                    if (! empty($nsy)) {
                         $translation = $this->reviseWithNissaya($pali, $translation, $nsy);
-                    } else if (!empty($review)) {
+                    } elseif (! empty($review)) {
                         $translation = $this->revise($pali, $translation, $review);
                     } else {
                         $translation = [];
@@ -488,10 +489,10 @@ class PaliTranslateService
      */
     public function translate(array $pali, array $nissaya = [], array $glossary = []): array
     {
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
-            . $this->nissayaSection($nissaya);
-        if (!empty($glossary)) {
-            $userText .= "# glossary\n\n" . $this->jsonBlock($glossary) . "\n\n";
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            .$this->nissayaSection($nissaya);
+        if (! empty($glossary)) {
+            $userText .= "# glossary\n\n".$this->jsonBlock($glossary)."\n\n";
         }
         Log::debug('PaliTranslate: translate', ['input' => $userText]);
 
@@ -513,9 +514,9 @@ class PaliTranslateService
             return $translation;
         }
 
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
-            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
-            . "# glossary\n\n" . $this->jsonBlock($glossary) . "\n\n";
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            ."# glossary\n\n".$this->jsonBlock($glossary)."\n\n";
         Log::debug('PaliTranslate: term', ['input' => $userText]);
 
         return $this->sendForIds('term', $this->termPrompt, $userText, $this->idsOf($translation));
@@ -531,9 +532,9 @@ class PaliTranslateService
      */
     public function review(array $pali, array $translation, array $nissaya = []): array
     {
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
-            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
-            . $this->nissayaSection($nissaya);
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            .$this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: review', ['input' => $userText]);
 
         return $this->sendForIds('review', $this->reviewPrompt, $userText, $this->idsOf($translation));
@@ -549,9 +550,9 @@ class PaliTranslateService
      */
     public function revise(array $pali, array $translation, array $review): array
     {
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
-            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
-            . "# review\n\n" . $this->jsonBlock($review) . "\n\n";
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            ."# review\n\n".$this->jsonBlock($review)."\n\n";
         Log::debug('PaliTranslate: revise', ['input' => $userText]);
 
         return $this->sendForIds('revise', $this->revisePrompt, $userText, $this->idsOf($translation));
@@ -567,9 +568,9 @@ class PaliTranslateService
      */
     public function reviseWithNissaya(array $pali, array $translation, array $nissaya = []): array
     {
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
-            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
-            . "# nissaya\n\n" . $this->jsonBlock($nissaya) . "\n\n";
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            ."# nissaya\n\n".$this->jsonBlock($nissaya)."\n\n";
         Log::debug('PaliTranslate: revise', ['input' => $userText]);
 
         return $this->sendForIds('revise', $this->reviseWithNissayaPrompt, $userText, $this->idsOf($translation));
@@ -586,9 +587,9 @@ class PaliTranslateService
      */
     public function evaluate(array $pali, array $translation, array $nissaya = []): array
     {
-        $userText = "# pali\n\n" . $this->jsonBlock($pali) . "\n\n"
-            . "# translation\n\n" . $this->jsonBlock($translation) . "\n\n"
-            . $this->nissayaSection($nissaya);
+        $userText = "# pali\n\n".$this->jsonBlock($pali)."\n\n"
+            ."# translation\n\n".$this->jsonBlock($translation)."\n\n"
+            .$this->nissayaSection($nissaya);
         Log::debug('PaliTranslate: evaluate', ['input' => $userText]);
 
         return $this->sendForIds('evaluate', $this->evaluatePrompt, $userText, $this->idsOf($translation));
@@ -755,7 +756,7 @@ class PaliTranslateService
             return '';
         }
 
-        return "# nissaya\n\n" . $this->jsonBlock($nissaya) . "\n\n";
+        return "# nissaya\n\n".$this->jsonBlock($nissaya)."\n\n";
     }
 
     /**
@@ -800,7 +801,7 @@ class PaliTranslateService
             return [];
         }
 
-        return array_values(array_filter($words, fn($w) => is_string($w) && $w !== ''));
+        return array_values(array_filter($words, fn ($w) => is_string($w) && $w !== ''));
     }
 
     /**
@@ -875,6 +876,6 @@ class PaliTranslateService
      */
     protected function jsonBlock(array $data): string
     {
-        return "```json\n" . json_encode($data, JSON_UNESCAPED_UNICODE) . "\n```";
+        return "```json\n".json_encode($data, JSON_UNESCAPED_UNICODE)."\n```";
     }
 }

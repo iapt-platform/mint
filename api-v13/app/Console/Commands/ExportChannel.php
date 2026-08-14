@@ -6,9 +6,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Channel;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class ExportChannel extends Command
@@ -44,40 +44,41 @@ class ExportChannel extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
         $this->info('task export offline channel-table start');
-        $exportFile = storage_path('app/public/export/offline/' . $this->argument('db') . '-' . date("Y-m-d") . '.db3');
-        $dbh = new \PDO('sqlite:' . $exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $exportFile = storage_path('app/public/export/offline/'.$this->argument('db').'-'.date('Y-m-d').'.db3');
+        $dbh = new \PDO('sqlite:'.$exportFile, '', '', [\PDO::ATTR_PERSISTENT => true]);
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
 
-        $query = "INSERT INTO channel ( id , name , type , language ,
+        $query = 'INSERT INTO channel ( id , name , type , language ,
                                     summary , owner_id , setting,created_at )
-                                    VALUES ( ? , ? , ? , ? , ? , ? , ? , ?  )";
+                                    VALUES ( ? , ? , ? , ? , ? , ? , ? , ?  )';
         try {
             $stmt = $dbh->prepare($query);
         } catch (\PDOException $e) {
             Log::error($e->getMessage(), ['exception' => $e]);
+
             return 1;
         }
         $total = Channel::where('status', 30)->count();
-        $channels= Channel::where('status', 30)
-                ->select([
-                    'uid',
-                    'name',
-                    'type',
-                    'lang',
-                    'summary',
-                    'owner_uid',
-                    'setting',
-                    'created_at'
-                ])
-                ->cursor();
+        $channels = Channel::where('status', 30)
+            ->select([
+                'uid',
+                'name',
+                'type',
+                'lang',
+                'summary',
+                'owner_uid',
+                'setting',
+                'created_at',
+            ])
+            ->cursor();
 
-        foreach ($channels as $key => $row  ) {
-            $currData = array(
+        foreach ($channels as $key => $row) {
+            $currData = [
                 $row->uid,
                 $row->name,
                 $row->type,
@@ -86,16 +87,17 @@ class ExportChannel extends Command
                 $row->owner_uid,
                 $row->setting,
                 $row->created_at,
-            );
+            ];
             $stmt->execute($currData);
 
-            if($key % 30 ===0){
-                $precent = (int)($key*100/$total);
+            if ($key % 30 === 0) {
+                $precent = (int) ($key * 100 / $total);
                 $this->line("[{$precent}%]");
             }
         }
         $dbh->commit();
         $this->info('task export offline channel-table finished');
+
         return 0;
     }
 }

@@ -2,25 +2,30 @@
 
 namespace App\Jobs;
 
+use App\Exceptions\TaskFailException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Config;
-use App\Exceptions\TaskFailException;
 
 abstract class BaseRabbitMQJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $queueName;
+
     protected $messageData;
+
     protected $currentRetryCount = 0;
+
     protected $tries = 0;
+
     protected $timeout = 0;
+
     protected $messageId = null;
+
     protected $stop = false;
 
     public function __construct(string $queueName, string $messageId, array $messageData, int $retryCount = 0)
@@ -39,19 +44,19 @@ abstract class BaseRabbitMQJob implements ShouldQueue
     public function handle()
     {
         try {
-            Log::info("开始处理队列消息", [
+            Log::info('开始处理队列消息', [
                 'queue' => $this->queueName,
                 'message_id' => $this->messageId ?? 'unknown',
-                'retry_count' => $this->currentRetryCount
+                'retry_count' => $this->currentRetryCount,
             ]);
 
             // 调用子类的具体业务逻辑
             $result = $this->processMessage($this->messageData);
 
-            Log::info("队列消息处理完成", [
+            Log::info('队列消息处理完成', [
                 'queue' => $this->queueName,
                 'message_id' => $this->messageId ?? 'unknown',
-                'result' => $result
+                'result' => $result,
             ]);
 
             return $result;
@@ -59,12 +64,12 @@ abstract class BaseRabbitMQJob implements ShouldQueue
             $this->handleFinalFailure($this->messageData, $e);
             throw $e;
         } catch (\Exception $e) {
-            Log::error("队列消息处理失败", [
+            Log::error('队列消息处理失败', [
                 'queue' => $this->queueName,
                 'message_id' => $this->messageId ?? 'unknown',
                 'error' => $e->getMessage(),
                 'retry_count' => $this->currentRetryCount,
-                'max_retries' => $this->tries
+                'max_retries' => $this->tries,
             ]);
 
             // 如果达到最大重试次数，处理失败逻辑
@@ -78,11 +83,11 @@ abstract class BaseRabbitMQJob implements ShouldQueue
 
     public function failed(\Exception $exception)
     {
-        Log::error("队列消息最终失败", [
+        Log::error('队列消息最终失败', [
             'queue' => $this->queueName,
             'message_id' => $this->messageId ?? 'unknown',
             'error' => $exception->getMessage(),
-            'retry_count' => $this->currentRetryCount
+            'retry_count' => $this->currentRetryCount,
         ]);
 
         // 发送到死信队列的逻辑将在 Worker 中处理
@@ -95,10 +100,10 @@ abstract class BaseRabbitMQJob implements ShouldQueue
     protected function handleFinalFailure(array $messageData, \Exception $exception)
     {
         // 默认实现：记录日志
-        Log::error("消息处理最终失败，准备发送到死信队列", [
+        Log::error('消息处理最终失败，准备发送到死信队列', [
             'queue' => $this->queueName,
             'message_id' => $this->messageId ?? 'unknown',
-            'error' => $exception->getMessage()
+            'error' => $exception->getMessage(),
         ]);
     }
 
@@ -111,6 +116,7 @@ abstract class BaseRabbitMQJob implements ShouldQueue
     {
         return $this->currentRetryCount;
     }
+
     public function stop()
     {
         $this->stop = true;

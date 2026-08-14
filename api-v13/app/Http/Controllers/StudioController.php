@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Services\AuthService;
-use App\Http\Api\StudioApi;
 use App\Http\Api\ShareApi;
+use App\Http\Api\StudioApi;
 use App\Models\Channel;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class StudioController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
         //
         switch ($request->input('view')) {
             case 'collaboration-channel':
-                //协作channel 拥有者列表
+                // 协作channel 拥有者列表
                 $studioId = StudioApi::getIdByName($request->input('studio_name'));
                 $resList = ShareApi::getResList($studioId, 2);
                 $resId = [];
@@ -33,9 +33,10 @@ class StudioController extends Controller
                     ->groupBy('owner_uid')->get();
                 $output = [];
                 foreach ($owners as $key => $owner) {
-                    # code...
+                    // code...
                     $output[] = StudioApi::getById($owner->owner_uid);
                 }
+
                 return $this->ok(['rows' => $output, 'count' => count($output)]);
                 break;
         }
@@ -44,8 +45,7 @@ class StudioController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -56,7 +56,7 @@ class StudioController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -66,9 +66,8 @@ class StudioController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -79,7 +78,7 @@ class StudioController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

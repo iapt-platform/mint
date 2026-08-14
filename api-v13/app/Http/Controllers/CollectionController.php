@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Collection;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\CollectionResource;
+use App\Models\Collection;
+use App\Services\AuthService;
 use App\Services\CollectionService;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CollectionController extends Controller
 {
@@ -21,22 +22,22 @@ class CollectionController extends Controller
         try {
             $table = match ($request->input('view')) {
                 'studio_list' => $this->service->buildStudioListQuery(),
-                'studio'      => $this->buildStudioIndex($request),
-                'public'      => $this->service->buildPublicQuery(
+                'studio' => $this->buildStudioIndex($request),
+                'public' => $this->service->buildPublicQuery(
                     $request->has('studio')
                         ? StudioApi::getIdByName($request->input('studio'))
                         : null
                 ),
-                default       => throw new \InvalidArgumentException('无法识别的view参数'),
+                default => throw new \InvalidArgumentException('无法识别的view参数'),
             };
-        } catch (\Illuminate\Auth\AuthenticationException $e) {
+        } catch (AuthenticationException $e) {
             return $this->error($e->getMessage(), 403, 403);
         } catch (\InvalidArgumentException $e) {
             return $this->error($e->getMessage(), 200, 200);
         }
 
         if ($request->filled('search')) {
-            $table = $table->where('title', 'like', '%' . $request->input('search') . '%');
+            $table = $table->where('title', 'like', '%'.$request->input('search').'%');
         }
 
         $count = $table->count();
@@ -54,7 +55,7 @@ class CollectionController extends Controller
             ->get();
 
         return $this->ok([
-            'rows'  => CollectionResource::collection($result),
+            'rows' => CollectionResource::collection($result),
             'count' => $count,
         ]);
     }
@@ -63,13 +64,13 @@ class CollectionController extends Controller
     private function buildStudioIndex(Request $request): Builder
     {
         $user = AuthService::current($request);
-        if (!$user) {
-            throw new \Illuminate\Auth\AuthenticationException(__('auth.failed'));
+        if (! $user) {
+            throw new AuthenticationException(__('auth.failed'));
         }
 
         $studioId = StudioApi::getIdByName($request->input('name'));
         if ($user['user_uid'] !== $studioId) {
-            throw new \Illuminate\Auth\AuthenticationException(__('auth.failed'));
+            throw new AuthenticationException(__('auth.failed'));
         }
 
         return $this->service->buildStudioQuery(
@@ -93,7 +94,7 @@ class CollectionController extends Controller
     public function store(Request $request)
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
 
@@ -106,16 +107,16 @@ class CollectionController extends Controller
         }
 
         $newOne = new Collection;
-        $newOne->id           = app('snowflake')->id();
-        $newOne->uid          = Str::uuid();
-        $newOne->title        = $request->input('title');
-        $newOne->lang         = $request->input('lang');
+        $newOne->id = app('snowflake')->id();
+        $newOne->uid = Str::uuid();
+        $newOne->title = $request->input('title');
+        $newOne->lang = $request->input('lang');
         $newOne->article_list = '[]';
-        $newOne->owner        = $user['user_uid'];
-        $newOne->owner_id     = $user['user_id'];
-        $newOne->editor_id    = $user['user_id'];
-        $newOne->create_time  = time() * 1000;
-        $newOne->modify_time  = time() * 1000;
+        $newOne->owner = $user['user_uid'];
+        $newOne->owner_id = $user['user_id'];
+        $newOne->editor_id = $user['user_id'];
+        $newOne->create_time = time() * 1000;
+        $newOne->modify_time = time() * 1000;
         $newOne->save();
 
         return $this->ok(new CollectionResource($newOne));
@@ -124,63 +125,65 @@ class CollectionController extends Controller
     public function show(Request $request, $id)
     {
         $result = Collection::where('uid', $id)->first();
-        if (!$result) {
+        if (! $result) {
             return $this->error("没有查询到数据 id={$id}");
         }
 
         if ($result->status < 30) {
             $user = AuthService::current($request);
-            if (!$user) {
+            if (! $user) {
                 return $this->error(__('auth.failed'), 403, 403);
             }
 
             if ($user['user_uid'] !== $result->owner) {
-                if (!$this->service->userCanRead($user['user_uid'], $result)) {
+                if (! $this->service->userCanRead($user['user_uid'], $result)) {
                     return $this->error(__('auth.failed'), 403, 403);
                 }
             }
         }
 
         $result->fullArticleList = true;
+
         return $this->ok(new CollectionResource($result));
     }
 
     public function update(Request $request, string $id)
     {
         $collection = Collection::find($id);
-        if (!$collection) {
+        if (! $collection) {
             return $this->error('no recorder');
         }
 
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
 
-        if (!$this->service->userCanEdit($user['user_uid'], $collection)) {
+        if (! $this->service->userCanEdit($user['user_uid'], $collection)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
 
-        $collection->title           = $request->input('title');
-        $collection->subtitle        = $request->input('subtitle');
-        $collection->summary         = $request->input('summary');
-        $collection->lang            = $request->input('lang');
-        $collection->status          = $request->input('status');
+        $collection->title = $request->input('title');
+        $collection->subtitle = $request->input('subtitle');
+        $collection->summary = $request->input('summary');
+        $collection->lang = $request->input('lang');
+        $collection->status = $request->input('status');
         $collection->default_channel = $request->input('default_channel');
-        $collection->modify_time     = time() * 1000;
+        $collection->modify_time = time() * 1000;
 
         if ($request->has('aritcle_list')) {
             $collection->article_list = json_encode($request->input('aritcle_list'));
         }
 
         $collection->save();
+
         return $this->ok(new CollectionResource($collection));
     }
 
     public function destroy(Request $request, string $id)
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
 

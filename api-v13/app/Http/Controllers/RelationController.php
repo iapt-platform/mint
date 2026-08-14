@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Relation;
-use Illuminate\Http\Request;
 use App\Http\Resources\RelationResource;
+use App\Models\Relation;
 use App\Services\AuthService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Cache;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Http\JsonResponse;
 
 class RelationController extends Controller
 {
@@ -24,9 +25,6 @@ class RelationController extends Controller
      * Supports optional filters: case, search, name, from, to, match, category.
      * When the `vocabulary` parameter is present, returns the full unfiltered
      * list from cache (suitable for populating UI dropdowns / autocomplete).
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
@@ -35,7 +33,7 @@ class RelationController extends Controller
                 Cache::remember(
                     self::VOCABULARY_CACHE_KEY,
                     config('mint.cache.expire'),
-                    fn() => $this->buildVocabularyPayload()
+                    fn () => $this->buildVocabularyPayload()
                 )
             );
         }
@@ -47,14 +45,11 @@ class RelationController extends Controller
      * Store a newly created resource in storage.
      *
      * Requires authentication. Invalidates the vocabulary cache on success.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), [], 401);
         }
 
@@ -62,13 +57,13 @@ class RelationController extends Controller
             'name' => 'required',
         ]);
 
-        $relation = new Relation();
-        $relation->name      = $validated['name'];
-        $relation->case      = $request->input('case');
-        $relation->category  = $request->input('category');
-        $relation->from      = $this->encodeJsonField($request, 'from');
-        $relation->to        = $this->encodeJsonField($request, 'to');
-        $relation->match     = $this->encodeJsonField($request, 'match');
+        $relation = new Relation;
+        $relation->name = $validated['name'];
+        $relation->case = $request->input('case');
+        $relation->category = $request->input('category');
+        $relation->from = $this->encodeJsonField($request, 'from');
+        $relation->to = $this->encodeJsonField($request, 'to');
+        $relation->match = $this->encodeJsonField($request, 'match');
         $relation->editor_id = $user['user_uid'];
         $relation->save();
 
@@ -79,9 +74,6 @@ class RelationController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\Models\Relation  $relation
-     * @return \Illuminate\Http\JsonResponse
      */
     public function show(Relation $relation): JsonResponse
     {
@@ -92,24 +84,20 @@ class RelationController extends Controller
      * Update the specified resource in storage.
      *
      * Requires authentication. Invalidates the vocabulary cache on success.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Relation      $relation
-     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, Relation $relation): JsonResponse
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), [], 401);
         }
 
-        $relation->name      = $request->input('name');
-        $relation->case      = $request->input('case');
-        $relation->category  = $request->input('category');
-        $relation->from      = $this->encodeJsonField($request, 'from');
-        $relation->to        = $this->encodeJsonField($request, 'to');
-        $relation->match     = $this->encodeJsonField($request, 'match');
+        $relation->name = $request->input('name');
+        $relation->case = $request->input('case');
+        $relation->category = $request->input('category');
+        $relation->from = $this->encodeJsonField($request, 'from');
+        $relation->to = $this->encodeJsonField($request, 'to');
+        $relation->match = $this->encodeJsonField($request, 'match');
         $relation->editor_id = $user['user_uid'];
         $relation->save();
 
@@ -122,15 +110,11 @@ class RelationController extends Controller
      * Remove the specified resource from storage.
      *
      * Requires authentication. Invalidates the vocabulary cache on success.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Relation      $relation
-     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Request $request, Relation $relation): JsonResponse
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), [], 401);
         }
 
@@ -146,12 +130,10 @@ class RelationController extends Controller
      *
      * Streams the spreadsheet directly to the browser via php://output.
      * Columns: id, name, from, to, match, category.
-     *
-     * @return void
      */
     public function export(): void
     {
-        $spreadsheet     = new Spreadsheet();
+        $spreadsheet = new Spreadsheet;
         $activeWorksheet = $spreadsheet->getActiveSheet();
 
         $activeWorksheet->fromArray(['id', 'name', 'from', 'to', 'match', 'category'], null, 'A1');
@@ -179,26 +161,23 @@ class RelationController extends Controller
      * parameter. Existing records are matched by id and updated in place;
      * rows without a matching id are inserted as new records.
      * Invalidates the vocabulary cache on completion.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function import(Request $request): JsonResponse
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), [], 401);
         }
 
         $filename = $request->input('filename');
-        $reader   = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx;
         $reader->setReadDataOnly(true);
-        $spreadsheet     = $reader->load($filename);
+        $spreadsheet = $reader->load($filename);
         $activeWorksheet = $spreadsheet->getActiveSheet();
 
-        $currLine  = 2;
+        $currLine = 2;
         $countFail = 0;
-        $error     = '';
+        $error = '';
 
         while (true) {
             $name = $activeWorksheet->getCell("B{$currLine}")->getValue();
@@ -206,19 +185,19 @@ class RelationController extends Controller
                 break;
             }
 
-            $id       = $activeWorksheet->getCell("A{$currLine}")->getValue();
-            $from     = $activeWorksheet->getCell("C{$currLine}")->getValue();
-            $to       = $activeWorksheet->getCell("D{$currLine}")->getValue();
-            $match    = $activeWorksheet->getCell("E{$currLine}")->getValue();
+            $id = $activeWorksheet->getCell("A{$currLine}")->getValue();
+            $from = $activeWorksheet->getCell("C{$currLine}")->getValue();
+            $to = $activeWorksheet->getCell("D{$currLine}")->getValue();
+            $match = $activeWorksheet->getCell("E{$currLine}")->getValue();
             $category = $activeWorksheet->getCell("F{$currLine}")->getValue();
 
-            $row = (!empty($id) ? Relation::find($id) : null) ?? new Relation();
+            $row = (! empty($id) ? Relation::find($id) : null) ?? new Relation;
 
-            $row->name      = $name;
-            $row->from      = empty($from) ? null : $from;
-            $row->to        = $to;
-            $row->match     = $match;
-            $row->category  = $category;
+            $row->name = $name;
+            $row->from = empty($from) ? null : $from;
+            $row->to = $to;
+            $row->match = $match;
+            $row->category = $category;
             $row->editor_id = $user['user_uid'];
             $row->save();
 
@@ -228,6 +207,7 @@ class RelationController extends Controller
         Cache::forget(self::VOCABULARY_CACHE_KEY);
 
         $success = $currLine - 2 - $countFail;
+
         return $this->ok(['success' => $success, 'fail' => $countFail], $error);
     }
 
@@ -261,7 +241,7 @@ class RelationController extends Controller
         ])->orderBy('updated_at', 'desc')->get();
 
         return [
-            'rows'  => RelationResource::collection($rows)->resolve(),
+            'rows' => RelationResource::collection($rows)->resolve(),
             'count' => $rows->count(),
         ];
     }
@@ -282,8 +262,7 @@ class RelationController extends Controller
      *   - offset    (int)              skip N rows        (default: 0)
      *   - limit     (int)              max rows returned  (default: 1000)
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array{rows: \Illuminate\Http\Resources\Json\AnonymousResourceCollection, count: int}
+     * @return array{rows: AnonymousResourceCollection, count: int}
      */
     private function buildFilteredPayload(Request $request): array
     {
@@ -304,7 +283,7 @@ class RelationController extends Controller
             $query->whereIn('case', explode(',', $request->input('case')));
         }
         if ($request->filled('search')) {
-            $query->where('name', 'like', $request->input('search') . '%');
+            $query->where('name', 'like', $request->input('search').'%');
         }
         if ($request->filled('name')) {
             $query->where('name', $request->input('name'));
@@ -325,12 +304,12 @@ class RelationController extends Controller
         $query->orderBy($request->input('order', 'updated_at'), $request->input('dir', 'desc'));
 
         $count = $query->count();
-        $rows  = $query->skip($request->input('offset', 0))
+        $rows = $query->skip($request->input('offset', 0))
             ->take($request->input('limit', 1000))
             ->get();
 
         return [
-            'rows'  => RelationResource::collection($rows),
+            'rows' => RelationResource::collection($rows),
             'count' => $count,
         ];
     }
@@ -340,10 +319,6 @@ class RelationController extends Controller
      *
      * Returns null when the field is absent from the request, preserving the
      * semantic distinction between "not provided" and an explicit empty value.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string                    $field
-     * @return string|null
      */
     private function encodeJsonField(Request $request, string $field): ?string
     {

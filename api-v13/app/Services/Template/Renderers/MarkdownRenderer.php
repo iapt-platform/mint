@@ -2,15 +2,11 @@
 
 namespace App\Services\Template\Renderers;
 
+use App\Services\Template\ContentNode;
 use App\Services\Template\Contracts\RendererInterface;
 use App\Services\Template\ParsedDocument;
-use App\Services\Template\ContentNode;
-use App\Services\Template\TextNode;
-use App\Services\Template\MarkdownNode;
 use App\Services\Template\TemplateNode;
-
-
-
+use App\Services\Template\TextNode;
 
 // ================== Markdown 渲染器 ==================
 
@@ -65,6 +61,7 @@ class MarkdownRenderer implements RendererInterface
         }
 
         $paramString = implode('|', $params);
-        return "{{" . $template->name . ($paramString ? "|$paramString" : "") . "}}";
+
+        return '{{'.$template->name.($paramString ? "|$paramString" : '').'}}';
     }
 }

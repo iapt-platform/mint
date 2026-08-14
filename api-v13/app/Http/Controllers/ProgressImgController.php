@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class ProgressImgController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -21,8 +21,7 @@ class ProgressImgController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -33,27 +32,28 @@ class ProgressImgController extends Controller
      * Display the specified resource.
      *
      * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
         //
         return response()->stream(function () use ($id) {
             $key = str_replace('-', '/', $id);
-            $svg = Cache::remember('svg/' . $key, config('mint.cache.expire'), function () use ($key) {
+            $svg = Cache::remember('svg/'.$key, config('mint.cache.expire'), function () use ($key) {
                 $viewHeight = 60;
                 $svg = "<svg xmlns='http://www.w3.org/2000/svg'  fill='currentColor' viewBox='0 0 300 60'>";
                 $data = Cache::get($key);
                 if (is_array($data)) {
                     $point = [];
                     foreach ($data as $key => $value) {
-                        $point[] = ($key * 10) . ',' . $viewHeight - ($value / 20) - 3;
+                        $point[] = ($key * 10).','.$viewHeight - ($value / 20) - 3;
                     }
-                    $svg .= '<polyline points="' . implode(' ', $point) . '"';
+                    $svg .= '<polyline points="'.implode(' ', $point).'"';
                     $svg .= ' style="fill:none;stroke:green;stroke-width:3" /></svg>';
                 } else {
                     $svg .= '<polyline points="0,0 1,0" /></svg>';
                 }
+
                 return $svg;
             });
             echo $svg;
@@ -69,9 +69,8 @@ class ProgressImgController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -82,7 +81,7 @@ class ProgressImgController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

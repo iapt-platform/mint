@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Attachment extends Model
 {
     use HasFactory;
+
     protected $primaryKey = 'id';
+
     protected $casts = [
-        'id' => 'string'
+        'id' => 'string',
     ];
-    public  $incrementing = true;
+
+    public $incrementing = true;
 }

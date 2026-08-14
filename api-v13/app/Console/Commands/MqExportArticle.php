@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Http\Api\Mq;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class MqExportArticle extends Command
@@ -11,6 +11,7 @@ class MqExportArticle extends Command
     /**
      * The name and signature of the console command.
      * php artisan mq:export.article
+     *
      * @var string
      */
     protected $signature = 'mq:export.article';
@@ -42,30 +43,31 @@ class MqExportArticle extends Command
         $exchange = 'router';
         $queue = 'export_article';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
-        Log::debug("mq:export_article start.");
-        Mq::worker($exchange,$queue,function ($message){
+        Log::debug('mq:export_article start.');
+        Mq::worker($exchange, $queue, function ($message) {
             $data = [
-                        'id'=>$message->id,
-                        '--format'=>$message->format,
-                        'query_id'=>$message->queryId,
-                        '--origin'=>$message->origin,
-                        '--translation'=>$message->translation,
-                    ];
-            if(isset($message->token) && is_string($message->token)){
+                'id' => $message->id,
+                '--format' => $message->format,
+                'query_id' => $message->queryId,
+                '--origin' => $message->origin,
+                '--translation' => $message->translation,
+            ];
+            if (isset($message->token) && is_string($message->token)) {
                 $data['--token'] = $message->token;
             }
-            if(isset($message->anthology) && is_string($message->anthology)){
+            if (isset($message->anthology) && is_string($message->anthology)) {
                 $data['--anthology'] = $message->anthology;
             }
-            if(isset($message->channel) && is_string($message->channel)){
+            if (isset($message->channel) && is_string($message->channel)) {
                 $data['--channel'] = $message->channel;
             }
-            $ok = $this->call('export:article',$data);
-            if($ok !== 0){
-                Log::error('mq:export.article fail',$data);
-            }else{
-                $this->info("Received article id=".$message->id.' result='.$ok);
-                Log::debug("mq:export.article done ",$data);
+            $ok = $this->call('export:article', $data);
+            if ($ok !== 0) {
+                Log::error('mq:export.article fail', $data);
+            } else {
+                $this->info('Received article id='.$message->id.' result='.$ok);
+                Log::debug('mq:export.article done ', $data);
+
                 return $ok;
             }
         });

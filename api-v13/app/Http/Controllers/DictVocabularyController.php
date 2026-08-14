@@ -2,43 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserDict;
-use App\Models\DictInfo;
-use Illuminate\Http\Request;
 use App\Http\Resources\DictVocabularyResource;
-
+use App\Models\DictInfo;
+use App\Models\UserDict;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class DictVocabularyController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
         //
-        switch ($request->input("view")) {
+        switch ($request->input('view')) {
             case 'dict_name':
-                $id = DictInfo::where('name', $request->input("name"))->value('id');
-                if (!$id) {
-                    return $this->error('name:' . $request->input("name") . ' can not found.', 200, 200);
+                $id = DictInfo::where('name', $request->input('name'))->value('id');
+                if (! $id) {
+                    return $this->error('name:'.$request->input('name').' can not found.', 200, 200);
                 }
                 $table = UserDict::where('dict_id', $id)
                     ->groupBy('word')
                     ->selectRaw('word,count(*)');
                 break;
             case 'dict_short_name':
-                $id = DictInfo::where('shortname', $request->input("name"))->value('id');
-                if (!$id) {
-                    return $this->error('name:' . $request->input("name") . ' can not found.', 200, 200);
+                $id = DictInfo::where('shortname', $request->input('name'))->value('id');
+                if (! $id) {
+                    return $this->error('name:'.$request->input('name').' can not found.', 200, 200);
                 }
                 $table = UserDict::where('dict_id', $id)
                     ->groupBy('word')
                     ->selectRaw('word,count(*)');
                 break;
         }
-        if ($request->input("stream") === 'true') {
+        if ($request->input('stream') === 'true') {
             return response()->streamDownload(function () use ($table) {
                 $result = $table->get();
                 echo json_encode($result);
@@ -51,17 +51,17 @@ class DictVocabularyController extends Controller
             ->take($request->input('limit', 1000));
 
         $result = $table->get();
+
         return $this->ok([
-            "rows" => DictVocabularyResource::collection($result),
-            "count" => $count
+            'rows' => DictVocabularyResource::collection($result),
+            'count' => $count,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -71,8 +71,7 @@ class DictVocabularyController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UserDict  $userDict
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(UserDict $userDict)
     {
@@ -82,9 +81,7 @@ class DictVocabularyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UserDict  $userDict
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, UserDict $userDict)
     {
@@ -94,8 +91,7 @@ class DictVocabularyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserDict  $userDict
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(UserDict $userDict)
     {

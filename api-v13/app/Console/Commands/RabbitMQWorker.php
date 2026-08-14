@@ -2,53 +2,65 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use PhpAmqpLib\Message\AMQPMessage;
-use App\Jobs\ProcessAITranslateJob;
-use App\Jobs\BaseRabbitMQJob;
-use Illuminate\Support\Facades\Log;
-use PhpAmqpLib\Exception\AMQPTimeoutException;
-use PhpAmqpLib\Wire\AMQPTable;
-use App\Services\RabbitMQService;
 use App\Exceptions\SectionTimeoutException;
 use App\Exceptions\TaskFailException;
+use App\Jobs\BaseRabbitMQJob;
+use App\Jobs\ProcessAITranslateJob;
+use App\Services\RabbitMQService;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+use PhpAmqpLib\Exception\AMQPTimeoutException;
+use PhpAmqpLib\Message\AMQPMessage;
+use PhpAmqpLib\Wire\AMQPTable;
 
 class RabbitMQWorker extends Command
 {
     /**
      * The name and signature of the console command.
      * php -d memory_limit=128M artisan rabbitmq:consume ai_translate
+     *
      * @var string
      */
     protected $signature = 'rabbitmq:consume {queue} {--reset-loop-count}';
+
     protected $description = '消费 RabbitMQ 队列消息';
 
     private $connection;
+
     private $channel;
+
     private $processedCount = 0;
+
     private $maxLoopCount = 0;
+
     private $queueName;
+
     private $queueConfig;
+
     private $shouldStop = false;
+
     private $timeout = 15;
+
     private $job = null;
 
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
         $this->queueName = $this->argument('queue');
         $this->queueConfig = config("mint.rabbitmq.queues.{$this->queueName}");
 
-        if (!$this->queueConfig) {
+        if (! $this->queueConfig) {
             $this->error("队列 {$this->queueName} 的配置不存在");
+
             return 1;
         }
 
         $this->maxLoopCount = $this->queueConfig['max_loop_count'];
 
-        $this->info("启动 RabbitMQ Worker");
+        $this->info('启动 RabbitMQ Worker');
         $this->info("队列: {$this->queueName}");
         $this->info("最大循环次数: {$this->maxLoopCount}");
         $this->info("重试次数: {$this->queueConfig['retry_times']}");
@@ -58,11 +70,12 @@ class RabbitMQWorker extends Command
             $this->channel = $consume->getChannel();
             $this->startConsuming();
         } catch (\Exception $e) {
-            $this->error("Worker 启动失败: " . $e->getMessage());
-            Log::error("RabbitMQ Worker 启动失败", [
+            $this->error('Worker 启动失败: '.$e->getMessage());
+            Log::error('RabbitMQ Worker 启动失败', [
                 'queue' => $this->queueName,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return 1;
         } finally {
             $this->cleanup();
@@ -87,7 +100,7 @@ class RabbitMQWorker extends Command
             $callback
         );
 
-        $this->info("开始消费消息... 按 Ctrl+C 退出");
+        $this->info('开始消费消息... 按 Ctrl+C 退出');
 
         // 设置信号处理
         if (extension_loaded('pcntl')) {
@@ -95,16 +108,15 @@ class RabbitMQWorker extends Command
             pcntl_signal(SIGINT, [$this, 'handleSignal']);
         }
 
-        while ($this->channel->is_consuming() && !$this->shouldStop) {
+        while ($this->channel->is_consuming() && ! $this->shouldStop) {
             try {
                 $this->channel->wait(null, false, $this->timeout);
             } catch (AMQPTimeoutException $e) {
-                //忽略
+                // 忽略
             } catch (\Exception $e) {
                 $this->error($e->getMessage());
                 throw $e;
             }
-
 
             if (extension_loaded('pcntl')) {
                 pcntl_signal_dispatch();
@@ -115,8 +127,8 @@ class RabbitMQWorker extends Command
                 $this->info("达到最大循环次数 ({$this->maxLoopCount})，Worker 自动退出");
                 break;
             }
-            if (\App\Tools\Tools::isStop()) {
-                //检测到停止标记
+            if (Tools::isStop()) {
+                // 检测到停止标记
                 break;
             }
         }
@@ -129,10 +141,10 @@ class RabbitMQWorker extends Command
             Log::info('processMessage start', ['message_id' => $msg->get('message_id')]);
 
             $data = json_decode($msg->getBody());
-            $this->info("processMessage start " . $msg->get('message_id') . '[' . count($data) . ']');
+            $this->info('processMessage start '.$msg->get('message_id').'['.count($data).']');
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new \Exception("JSON 解析失败: " . json_last_error_msg());
+                throw new \Exception('JSON 解析失败: '.json_last_error_msg());
             }
 
             // 获取重试次数（从消息头中获取）
@@ -156,26 +168,26 @@ class RabbitMQWorker extends Command
                 $this->info("消息处理成功 [{$this->processedCount}/{$this->maxLoopCount}]");
             } catch (SectionTimeoutException $e) {
                 $msg->nack(true, false);
-                Log::warning('attempt to requeue the message message_id:' . $msg->get('message_id'));
+                Log::warning('attempt to requeue the message message_id:'.$msg->get('message_id'));
             } catch (TaskFailException $e) {
                 $msg->nack(false, false);
             } catch (\Exception $e) {
-                //requeue
+                // requeue
                 $this->handleJobException($msg, $data, $retryCount, $e);
             }
         } catch (\Exception $e) {
-            $this->error("消息处理异常: " . $e->getMessage());
-            Log::error("RabbitMQ 消息处理异常", [
+            $this->error('消息处理异常: '.$e->getMessage());
+            Log::error('RabbitMQ 消息处理异常', [
                 'queue' => $this->queueName,
                 'error' => $e->getMessage(),
-                'message_body' => $msg->getBody()
+                'message_body' => $msg->getBody(),
             ]);
 
             // 拒绝消息并发送到死信队列
-            //$msg->nack(false, false);
+            // $msg->nack(false, false);
             $this->sendToDeadLetterQueue($data, $e);
             $msg->ack(); // 确认原消息以避免重复
-            $this->error("已发送到死信队列");
+            $this->error('已发送到死信队列');
             $this->processedCount++;
         }
     }
@@ -204,13 +216,13 @@ class RabbitMQWorker extends Command
         if ($retryCount < $maxRetries - 1) {
             // 还有重试机会，重新入队
             $this->requeueMessage($msg, $data, $retryCount + 1);
-            $this->info("消息重新入队，重试次数: " . ($retryCount + 1) . "/{$maxRetries}");
+            $this->info('消息重新入队，重试次数: '.($retryCount + 1)."/{$maxRetries}");
         } else {
             // 超过重试次数，发送到死信队列
             $this->sendToDeadLetterQueue($data, $e);
             $msg->ack(); // 确认原消息以避免重复
-            $this->error("消息超过最大重试次数，已发送到死信队列 ");
-            Log::error("消息超过最大重试次数,已发送到死信队列 message_id=" . $msg->get('message_id'));
+            $this->error('消息超过最大重试次数，已发送到死信队列 ');
+            Log::error('消息超过最大重试次数,已发送到死信队列 message_id='.$msg->get('message_id'));
         }
 
         $this->processedCount++;
@@ -223,7 +235,7 @@ class RabbitMQWorker extends Command
         $headers = new AMQPTable([
             'retry_count' => $newRetryCount,
             'original_queue' => $this->queueName,
-            'retry_timestamp' => time()
+            'retry_timestamp' => time(),
         ]);
 
         $newMsg = new AMQPMessage(
@@ -233,7 +245,7 @@ class RabbitMQWorker extends Command
                 'timestamp' => time(),
                 'message_id' => $msg->get('message_id'),
                 'application_headers' => $headers,
-                "content_type" => 'application/json; charset=utf-8'
+                'content_type' => 'application/json; charset=utf-8',
             ]
         );
 
@@ -253,7 +265,7 @@ class RabbitMQWorker extends Command
             'failure_reason' => $e->getMessage(),
             'failed_at' => date('Y-m-d H:i:s'),
             'queue' => $this->queueName,
-            'max_retries' => $this->queueConfig['retry_times']
+            'max_retries' => $this->queueConfig['retry_times'],
         ];
 
         $dlqMsg = new AMQPMessage(
@@ -263,23 +275,23 @@ class RabbitMQWorker extends Command
 
         $this->channel->basic_publish($dlqMsg, '', $dlqName);
 
-        Log::error("消息发送到死信队列", [
+        Log::error('消息发送到死信队列', [
             'original_queue' => $this->queueName,
             'dead_letter_queue' => $dlqName,
-            'error' => $e->getMessage()
+            'error' => $e->getMessage(),
         ]);
     }
 
     /**
      * 处理系统信号
      *
-     * @param int $signal 信号类型
-     * @param int|false $previousExitCode 上一个退出码
+     * @param  int  $signal  信号类型
+     * @param  int|false  $previousExitCode  上一个退出码
      * @return int|false 返回退出码或 false
      */
     public function handleSignal(int $signal, int|false $previousExitCode = 0): int|false
     {
-        $this->info("接收到退出信号，正在优雅关闭...");
+        $this->info('接收到退出信号，正在优雅关闭...');
         $this->shouldStop = true;
 
         if ($this->job) {
@@ -287,7 +299,7 @@ class RabbitMQWorker extends Command
         }
 
         if ($this->channel && $this->channel->is_consuming()) {
-            //$this->channel->basic_cancel_on_shutdown(true);
+            // $this->channel->basic_cancel_on_shutdown(true);
             $this->channel->basic_cancel('');
         }
 
@@ -307,7 +319,7 @@ class RabbitMQWorker extends Command
 
             $this->info("连接已关闭，处理了 {$this->processedCount} 条消息");
         } catch (\Exception $e) {
-            $this->error("清理资源时出错: " . $e->getMessage());
+            $this->error('清理资源时出错: '.$e->getMessage());
         }
     }
 }

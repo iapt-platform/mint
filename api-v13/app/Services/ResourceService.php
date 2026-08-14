@@ -7,25 +7,29 @@ use League\CommonMark\GithubFlavoredMarkdownConverter;
 class ResourceService
 {
     protected $openSearch;
+
     protected $embeddingService;
+
     protected $markdownConverter;
 
     public function __construct(OpenSearchService $openSearch, EmbeddingService $embeddingService)
     {
         $this->openSearch = $openSearch;
         $this->embeddingService = $embeddingService;
-        $this->markdownConverter = new GithubFlavoredMarkdownConverter();
+        $this->markdownConverter = new GithubFlavoredMarkdownConverter;
     }
 
     public function store(array $data)
     {
         $doc = $this->buildDocument($data);
+
         return $this->openSearch->create('wikipali_resources', $doc['id'], $doc);
     }
 
     public function update($uid, array $data)
     {
         $doc = $this->buildDocument(array_merge(['uid' => $uid], $data));
+
         return $this->openSearch->create('wikipali_resources', $doc['id'], $doc); // 使用 create 覆盖更新
     }
 
@@ -53,13 +57,13 @@ class ResourceService
                 [
                     'id' => $data['uid'],
                     'text' => $contentText,
-                    'text_normalized' => $normalizedText
-                ]
+                    'text_normalized' => $normalizedText,
+                ],
             ],
             'confidence' => $data['confidence'] ?? 1.0,
             'content_embedding' => $this->embeddingService->generate($normalizedText),
             'suggest_content' => $this->extractSuggestions($contentText, $data['title']),
-            'metadata' => $data['metadata'] ?? []
+            'metadata' => $data['metadata'] ?? [],
         ];
 
         if (in_array($data['type'], ['sutta', 'paragraph'])) {
@@ -84,6 +88,7 @@ class ResourceService
         $text = strip_tags($html);
         // 简单巴利文规范化（可进一步用 ICU folding）
         $text = str_replace(['ā', 'ī', 'ū'], ['a', 'i', 'u'], strtolower($text));
+
         return $text;
     }
 
@@ -91,7 +96,8 @@ class ResourceService
     {
         $text = $this->normalizeMarkdown($markdown);
         // 提取标题和关键词（简单示例，可用 NLP 优化）
-        $keywords = array_unique(array_filter(explode(' ', $text), fn($word) => strlen($word) > 2));
+        $keywords = array_unique(array_filter(explode(' ', $text), fn ($word) => strlen($word) > 2));
+
         return array_merge([$title], array_slice($keywords, 0, 5));
     }
 }

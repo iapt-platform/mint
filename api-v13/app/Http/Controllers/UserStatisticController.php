@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Api\UserApi;
+use App\Models\DhammaTerm;
+use App\Models\Sentence;
+use App\Models\UserDict;
 use App\Models\UserOperationDaily;
 use App\Models\UserOperationLog;
 use App\Models\Wbw;
-use App\Models\Sentence;
-use App\Models\DhammaTerm;
-use App\Models\UserDict;
 use Illuminate\Http\Request;
-use App\Http\Api\UserApi;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
 class UserStatisticController extends Controller
@@ -17,7 +18,7 @@ class UserStatisticController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -27,7 +28,7 @@ class UserStatisticController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -37,8 +38,7 @@ class UserStatisticController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -48,8 +48,8 @@ class UserStatisticController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UserOperationDaily  $userOperationDaily
-     * @return \Illuminate\Http\Response
+     * @param  UserOperationDaily  $userOperationDaily
+     * @return Response
      */
     public function show(Request $request, string $userName)
     {
@@ -66,8 +66,8 @@ class UserStatisticController extends Controller
         $termCount = 0;
         $termCountWithNote = 0;
         $myDictCount = 0;
-        //总经验值
-        if (!$request->has('view') || $request->input('view') === 'exp-sum') {
+        // 总经验值
+        if (! $request->has('view') || $request->input('view') === 'exp-sum') {
             $expSum = Cache::remember(
                 "user/{$userName}/exp/sum",
                 $cacheExpiry,
@@ -78,8 +78,8 @@ class UserStatisticController extends Controller
             );
         }
 
-        //逐词解析
-        if (!$request->has('view') || $request->input('view') === 'wbw-count') {
+        // 逐词解析
+        if (! $request->has('view') || $request->input('view') === 'wbw-count') {
             $wbwCount = Cache::remember(
                 "user/{$userName}/wbw/count",
                 $cacheExpiry,
@@ -90,8 +90,8 @@ class UserStatisticController extends Controller
             );
         }
 
-        //查字典次数
-        if (!$request->has('view') || $request->input('view') === 'lookup-count') {
+        // 查字典次数
+        if (! $request->has('view') || $request->input('view') === 'lookup-count') {
             $lookupCount = Cache::remember(
                 "user/{$userName}/lookup/count",
                 $cacheExpiry,
@@ -102,9 +102,9 @@ class UserStatisticController extends Controller
                 }
             );
         }
-        //译文
-        //TODO 判断是否是译文channel
-        if (!$request->has('view') || $request->input('view') === 'translation-count') {
+        // 译文
+        // TODO 判断是否是译文channel
+        if (! $request->has('view') || $request->input('view') === 'translation-count') {
             $translationCount = Cache::remember(
                 "user/{$userName}/translation/count",
                 $cacheExpiry,
@@ -123,8 +123,8 @@ class UserStatisticController extends Controller
                 }
             );
         }
-        //术语
-        if (!$request->has('view') || $request->input('view') === 'term-count') {
+        // 术语
+        if (! $request->has('view') || $request->input('view') === 'term-count') {
             $termCount = Cache::remember(
                 "user/{$userName}/term/count",
                 $cacheExpiry,
@@ -138,13 +138,13 @@ class UserStatisticController extends Controller
                 $cacheExpiry,
                 function () use ($queryUserId) {
                     return DhammaTerm::where('editor_id', $queryUserId)
-                        ->where('note', "<>", "")
+                        ->where('note', '<>', '')
                         ->count();
                 }
             );
         }
-        //单词本
-        if (!$request->has('view') || $request->input('view') === 'my-dict-count') {
+        // 单词本
+        if (! $request->has('view') || $request->input('view') === 'my-dict-count') {
             $myDictCount = Cache::remember(
                 "user/{$userName}/dict/count",
                 $cacheExpiry,
@@ -154,27 +154,27 @@ class UserStatisticController extends Controller
                 }
             );
         }
+
         return $this->ok([
-            "exp" => ["sum" => (int)$expSum],
-            "wbw" => ["count" => (int)$wbwCount],
-            "lookup" => ["count" => (int)$lookupCount],
-            "translation" => [
-                "count" => (int)$translationCount,
-                "count_pub" => (int)$translationCountPub
+            'exp' => ['sum' => (int) $expSum],
+            'wbw' => ['count' => (int) $wbwCount],
+            'lookup' => ['count' => (int) $lookupCount],
+            'translation' => [
+                'count' => (int) $translationCount,
+                'count_pub' => (int) $translationCountPub,
             ],
-            "term" => [
-                "count" => (int)$termCount,
-                "count_with_note" => (int)$termCountWithNote
+            'term' => [
+                'count' => (int) $termCount,
+                'count_with_note' => (int) $termCountWithNote,
             ],
-            "dict" => ["count" => (int)$myDictCount],
+            'dict' => ['count' => (int) $myDictCount],
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\UserOperationDaily  $userOperationDaily
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(UserOperationDaily $userOperationDaily)
     {
@@ -184,9 +184,7 @@ class UserStatisticController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UserOperationDaily  $userOperationDaily
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, UserOperationDaily $userOperationDaily)
     {
@@ -196,8 +194,7 @@ class UserStatisticController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserOperationDaily  $userOperationDaily
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(UserOperationDaily $userOperationDaily)
     {

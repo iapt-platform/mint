@@ -3,19 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Api\StudioApi;
-use App\Models\UserInfo;
-use App\Models\Wbw;
-use App\Models\Sentence;
-use App\Models\DhammaTerm;
-use App\Models\Course;
+use Illuminate\Http\Response;
 
 class MilestoneController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -26,8 +21,7 @@ class MilestoneController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -38,7 +32,7 @@ class MilestoneController extends Controller
      * Display the specified resource.
      *
      * @param  string  $studioName
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($studioName)
     {
@@ -49,9 +43,8 @@ class MilestoneController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -62,7 +55,7 @@ class MilestoneController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

@@ -1,11 +1,14 @@
 <?php
+
 namespace App\Http\Api;
 
 use App\Models\Notification;
 use Illuminate\Support\Str;
 
-class NotificationApi{
-    public static function send($data){
+class NotificationApi
+{
+    public static function send($data)
+    {
         $insertData = [];
         foreach ($data as $key => $row) {
             $insertData[] = [
@@ -21,6 +24,7 @@ class NotificationApi{
             ];
         }
         $insert = Notification::insert($insertData);
+
         return $insert;
     }
 }

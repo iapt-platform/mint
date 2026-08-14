@@ -2,27 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
-
+use App\Http\Api\DictApi;
+use App\Http\Resources\DictPreferenceResource;
 use App\Models\UserDict;
 use App\Models\WordIndex;
-use App\Http\Resources\DictPreferenceResource;
-use App\Http\Api\DictApi;
 use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class DictPreferenceController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
         //
         $dict_id = DictApi::getSysDict('system_preference');
-        if (!$dict_id) {
+        if (! $dict_id) {
             return $this->error('没有找到 system_preference 字典', 200, 200);
         }
         $table = WordIndex::where('user_dicts.dict_id', $dict_id)
@@ -37,34 +36,34 @@ class DictPreferenceController extends Controller
                 'user_dicts.confidence',
                 'user_dicts.editor_id',
             ]);
-        //处理搜索
-        if (!empty($request->input("keyword"))) {
-            $table = $table->where('word_indices.word', 'like', "%" . $request->input("keyword") . "%");
+        // 处理搜索
+        if (! empty($request->input('keyword'))) {
+            $table = $table->where('word_indices.word', 'like', '%'.$request->input('keyword').'%');
         }
 
-        //获取记录总条数
+        // 获取记录总条数
         $count = $table->count();
-        //处理排序
+        // 处理排序
         $table = $table->orderBy(
-            $request->input("order", 'word_indices.count'),
-            $request->input("dir", 'desc')
+            $request->input('order', 'word_indices.count'),
+            $request->input('dir', 'desc')
         );
-        //处理分页
-        $table = $table->skip($request->input("offset", 0))
-            ->take($request->input("limit", 200));
-        //获取数据
+        // 处理分页
+        $table = $table->skip($request->input('offset', 0))
+            ->take($request->input('limit', 200));
+        // 获取数据
         $result = $table->get();
+
         return $this->ok([
-            "rows" => DictPreferenceResource::collection($result),
-            "count" => $count
+            'rows' => DictPreferenceResource::collection($result),
+            'count' => $count,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -74,8 +73,7 @@ class DictPreferenceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UserDict  $userDict
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(UserDict $userDict)
     {
@@ -85,14 +83,13 @@ class DictPreferenceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function update(Request $request,  $id)
+    public function update(Request $request, $id)
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), [], 401);
         }
         $newData = $request->all();
@@ -108,14 +105,14 @@ class DictPreferenceController extends Controller
         }
         $word->editor_id = $user['user_uid'];
         $word->save();
+
         return $this->ok(new DictPreferenceResource($word));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserDict  $userDict
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(UserDict $userDict)
     {

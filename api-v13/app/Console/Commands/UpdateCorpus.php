@@ -2,19 +2,16 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Support\Facades\Log;
-
-
+use App\Http\Api\UserApi;
+use App\Models\Channel;
 use App\Services\SentenceService;
 use App\Services\TermService;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
-use App\Models\Channel;
-
-use App\Http\Api\UserApi;
-
+use Illuminate\Support\Facades\Log;
 
 #[Signature('app:update-corpus {--dir=} {--es}')]
 #[Description('Update corpus from JSONL files in corpus directory')]
@@ -22,8 +19,6 @@ class UpdateCorpus extends Command
 {
     /**
      * The SentenceService instance.
-     *
-     * @var SentenceService
      */
     protected SentenceService $sentenceService;
 
@@ -31,8 +26,6 @@ class UpdateCorpus extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @param SentenceService $sentenceService
      */
     public function __construct(SentenceService $sentenceService, TermService $termService)
     {
@@ -43,8 +36,6 @@ class UpdateCorpus extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -57,8 +48,9 @@ class UpdateCorpus extends Command
             $corpusBasePath = config('mint.path.corpus');
         }
 
-        if (!is_dir($corpusBasePath)) {
+        if (! is_dir($corpusBasePath)) {
             $this->error("Corpus directory not found: {$corpusBasePath}");
+
             return self::FAILURE;
         }
 
@@ -67,10 +59,11 @@ class UpdateCorpus extends Command
 
         if (empty($stores)) {
             $this->warn('No subdirectories found in corpus path.');
+
             return self::SUCCESS;
         }
 
-        $this->info("Found " . count($stores) . " subdirectories to process.");
+        $this->info('Found '.count($stores).' subdirectories to process.');
 
         $totalProcessed = 0;
         $totalErrors = 0;
@@ -91,18 +84,18 @@ class UpdateCorpus extends Command
                             'book' => 0,
                             '--channel' => $channelId,
                             '--granularity' => 'chapter',
-                            '--summary' => 'off'
+                            '--summary' => 'off',
                         ]);
                     }
                 }
             } catch (\Exception $e) {
                 $this->error("Failed to process directory {$store}: {$e->getMessage()}");
-                Log::error("Failed to process directory", [
-                    'dir'        => $store,
-                    'message'    => $e->getMessage(),
-                    'file'       => $e->getFile(),
-                    'line'       => $e->getLine(),
-                    'trace'      => $e->getTraceAsString(),
+                Log::error('Failed to process directory', [
+                    'dir' => $store,
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
                 ]);
                 $totalErrors++;
             }
@@ -110,16 +103,11 @@ class UpdateCorpus extends Command
 
         $this->info("Corpus update completed. Total processed: {$totalProcessed}, Total errors: {$totalErrors}");
 
-
-
         return $totalErrors > 0 ? self::FAILURE : self::SUCCESS;
     }
 
     /**
      * Get all subdirectories of a given directory.
-     *
-     * @param string $path
-     * @return array
      */
     protected function getSubdirectories(string $path): array
     {
@@ -131,7 +119,7 @@ class UpdateCorpus extends Command
                 continue;
             }
 
-            $fullPath = $path . DIRECTORY_SEPARATOR . $item;
+            $fullPath = $path.DIRECTORY_SEPARATOR.$item;
             if (is_dir($fullPath)) {
                 $directories[] = $fullPath;
             }
@@ -143,8 +131,6 @@ class UpdateCorpus extends Command
     /**
      * Process a single corpus directory.
      *
-     * @param string $directoryPath
-     * @return array
      * @throws \Exception
      */
     protected function processCorpusDirectory(string $directoryPath): array
@@ -155,17 +141,19 @@ class UpdateCorpus extends Command
         ];
 
         // Read meta.json file
-        $metaFile = $directoryPath . DIRECTORY_SEPARATOR . 'meta.json';
+        $metaFile = $directoryPath.DIRECTORY_SEPARATOR.'meta.json';
 
-        if (!file_exists($metaFile)) {
+        if (! file_exists($metaFile)) {
             $this->warn("meta.json not found in directory: {$directoryPath}");
+
             return $stats;
         }
 
         $metaData = json_decode(file_get_contents($metaFile), true);
 
-        if (!isset($metaData['id'])) {
+        if (! isset($metaData['id'])) {
             $this->error("Invalid meta.json: missing 'id' field in {$directoryPath}");
+
             return $stats;
         }
 
@@ -177,12 +165,13 @@ class UpdateCorpus extends Command
 
         if ($channels->isEmpty()) {
             $this->warn("No channels found with source_id: {$sourceId}");
+
             return $stats;
         }
 
         $this->info("Found {$channels->count()} channel(s) for source ID: {$sourceId}");
 
-        $glossaryFile = $directoryPath . DIRECTORY_SEPARATOR . 'glossary.csv';
+        $glossaryFile = $directoryPath.DIRECTORY_SEPARATOR.'glossary.csv';
 
         if (file_exists($glossaryFile)) {
             $status = $this->processGlossary($glossaryFile, $channels);
@@ -194,7 +183,7 @@ class UpdateCorpus extends Command
 
         foreach ($childDirectories as $childDir) {
             $this->info("Scanning directory for JSONL files: {$childDir}");
-            $jsonlFiles = glob($childDir . DIRECTORY_SEPARATOR . '*.jsonl');
+            $jsonlFiles = glob($childDir.DIRECTORY_SEPARATOR.'*.jsonl');
 
             foreach ($jsonlFiles as $jsonlFile) {
                 $this->line("Processing file: {$jsonlFile}");
@@ -203,35 +192,37 @@ class UpdateCorpus extends Command
                 $stats['errors'] += $fileStats['errors'];
             }
         }
-        $stats['channels'] = array_map(fn($item) => $item['uid'], $channels->toArray());
+        $stats['channels'] = array_map(fn ($item) => $item['uid'], $channels->toArray());
+
         return $stats;
     }
+
     /**
      * Process a glossary csv file and save glossary for each channel.
      *
-     * @param string $filePath
-     * @param \Illuminate\Database\Eloquent\Collection $channels
-     * @return array
+     * @param  Collection  $channels
      */
     protected function processGlossary(string $filePath, $channels): array
     {
         $stats = [
             'processed' => 0,
-            'errors'    => 0,
+            'errors' => 0,
         ];
 
         $handle = fopen($filePath, 'r');
 
-        if (!$handle) {
+        if (! $handle) {
             $this->error("Failed to open file: {$filePath}");
+
             return $stats;
         }
 
         $robotUid = config('mint.admin.robot_uuid');
 
-        if (!$robotUid) {
+        if (! $robotUid) {
             $this->error('robot_uuid not configured in mint.admin.robot_uid');
             fclose($handle);
+
             return $stats;
         }
 
@@ -241,6 +232,7 @@ class UpdateCorpus extends Command
         if ($headers === false) {
             $this->error("Failed to read CSV headers from: {$filePath}");
             fclose($handle);
+
             return $stats;
         }
 
@@ -252,6 +244,7 @@ class UpdateCorpus extends Command
             if (count($row) !== count($headers)) {
                 $this->error("Column count mismatch at line {$lineNumber} in file: {$filePath}");
                 $stats['errors']++;
+
                 continue;
             }
 
@@ -260,14 +253,14 @@ class UpdateCorpus extends Command
             foreach ($channels as $channel) {
                 try {
                     $saveData = [
-                        'word'          => $data['pali_word'],
-                        'tag'           => $data['tag'] ?? null,
-                        'channel_id'    => $channel->uid,
-                        'meaning'       => $data['meaning'],
-                        'redirect'       => $data['redirect'] ?? null,
+                        'word' => $data['pali_word'],
+                        'tag' => $data['tag'] ?? null,
+                        'channel_id' => $channel->uid,
+                        'meaning' => $data['meaning'],
+                        'redirect' => $data['redirect'] ?? null,
                         'other_meaning' => $data['meaning2'] ?: null,
-                        'note'          => $data['note'] ?: null,
-                        'editor_id'     => $editor_id,
+                        'note' => $data['note'] ?: null,
+                        'editor_id' => $editor_id,
                     ];
 
                     DB::transaction(function () use ($saveData) {
@@ -284,14 +277,14 @@ class UpdateCorpus extends Command
 
         fclose($handle);
         $this->line("glossary {$lineNumber} lines processed");
+
         return $stats;
     }
+
     /**
      * Process a single JSONL file and save records for each channel.
      *
-     * @param string $filePath
-     * @param \Illuminate\Database\Eloquent\Collection $channels
-     * @return array
+     * @param  Collection  $channels
      */
     protected function processJsonlFile(string $filePath, $channels): array
     {
@@ -302,17 +295,19 @@ class UpdateCorpus extends Command
 
         $handle = fopen($filePath, 'r');
 
-        if (!$handle) {
+        if (! $handle) {
             $this->error("Failed to open file: {$filePath}");
+
             return $stats;
         }
 
         $lineNumber = 0;
         $robotUid = config('mint.admin.robot_uuid');
 
-        if (!$robotUid) {
+        if (! $robotUid) {
             $this->error('robot_uuid not configured in mint.admin.robot_uuid');
             fclose($handle);
+
             return $stats;
         }
 
@@ -330,6 +325,7 @@ class UpdateCorpus extends Command
             if ($data === null) {
                 $this->error("Failed to parse JSON at line {$lineNumber} in file: {$filePath}");
                 $stats['errors']++;
+
                 continue;
             }
 
@@ -352,7 +348,7 @@ class UpdateCorpus extends Command
                     });
 
                     $stats['processed']++;
-                    //$this->line("Saved record for channel: {$channel->uid}");
+                    // $this->line("Saved record for channel: {$channel->uid}");
                 } catch (\Exception $e) {
                     $this->error("Failed to save record for channel {$channel->uid} at line {$lineNumber}: {$e->getMessage()}");
                     $stats['errors']++;
@@ -362,6 +358,7 @@ class UpdateCorpus extends Command
 
         fclose($handle);
         $this->line("$lineNumber lines write");
+
         return $stats;
     }
 }

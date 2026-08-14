@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Recent extends Model
 {
     use HasFactory;
-    protected $casts = [
-        'id' => 'string'
-    ];
-	protected $fillable = ['id','type','article_id','user_uid'];
 
+    protected $casts = [
+        'id' => 'string',
+    ];
+
+    protected $fillable = ['id', 'type', 'article_id', 'user_uid'];
 }

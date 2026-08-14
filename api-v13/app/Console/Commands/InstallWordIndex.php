@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\WordIndex;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -40,50 +41,51 @@ class InstallWordIndex extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-		$startTime = time();
+        $startTime = time();
 
-		$info = "instert word in palibook ";
-		$this->info($info);
-		Log::info($info);
+        $info = 'instert word in palibook ';
+        $this->info($info);
+        Log::info($info);
 
-		#删除目标数据库中数据
-		WordIndex::where('id', '>',-1)->delete();
+        // 删除目标数据库中数据
+        WordIndex::where('id', '>', -1)->delete();
 
-		$scan = scandir(config("mint.path.paliword_index"));
-		$bar = $this->output->createProgressBar(count($scan));
-		foreach($scan as $filename) {
-			$bar->advance();
-			$filename = config("mint.path.paliword_index")."/".$filename;
-			if (is_file($filename)) {
-				Log::info("doing ".$filename);
-				DB::transaction(function ()use($filename) {
-				if (($fpoutput = fopen($filename, "r")) !== false) {
-						$count = 0;
-						while (($data = fgetcsv($fpoutput, 0, ',')) !== false) {
-							$newData = [
-								'id'=>$data[0],
-								'word'=>$data[1],
-								'word_en'=>$data[2],
-								'normal'=>$data[3],
-								'bold'=>$data[4],
-								'is_base'=>$data[5],
-								'len'=>$data[6],
-							];
-							WordIndex::create($newData);
-							$count++;
-						}
-						Log::info("insert ".$count);
-					}
-				});
-			}
-		}
-		$bar->finish();
-		$msg = "all done in ". time()-$startTime . "s";
-		Log::info($msg);
-		$this->info($msg);
+        $scan = scandir(config('mint.path.paliword_index'));
+        $bar = $this->output->createProgressBar(count($scan));
+        foreach ($scan as $filename) {
+            $bar->advance();
+            $filename = config('mint.path.paliword_index').'/'.$filename;
+            if (is_file($filename)) {
+                Log::info('doing '.$filename);
+                DB::transaction(function () use ($filename) {
+                    if (($fpoutput = fopen($filename, 'r')) !== false) {
+                        $count = 0;
+                        while (($data = fgetcsv($fpoutput, 0, ',')) !== false) {
+                            $newData = [
+                                'id' => $data[0],
+                                'word' => $data[1],
+                                'word_en' => $data[2],
+                                'normal' => $data[3],
+                                'bold' => $data[4],
+                                'is_base' => $data[5],
+                                'len' => $data[6],
+                            ];
+                            WordIndex::create($newData);
+                            $count++;
+                        }
+                        Log::info('insert '.$count);
+                    }
+                });
+            }
+        }
+        $bar->finish();
+        $msg = 'all done in '.time() - $startTime.'s';
+        Log::info($msg);
+        $this->info($msg);
+
         return 0;
     }
 }

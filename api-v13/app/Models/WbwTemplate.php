@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class WbwTemplate extends Model
 {
     use HasFactory;
-	protected $fillable = ['book' , 'paragraph', 'wid' , 'word' , 'real' , 'type' , 'gramma' , 'part' , 'style'];
+
+    protected $fillable = ['book', 'paragraph', 'wid', 'word', 'real', 'type', 'gramma', 'part', 'style'];
 }

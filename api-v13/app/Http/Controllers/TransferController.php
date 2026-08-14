@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transfer;
-use App\Models\Channel;
-use App\Models\Article;
-use Illuminate\Http\Request;
-use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Api\UserApi;
 use App\Http\Resources\TransferResource;
+use App\Models\Article;
+use App\Models\Channel;
+use App\Models\Transfer;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -18,18 +19,18 @@ class TransferController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
         switch ($request->input('view')) {
             case 'studio':
-                # 获取studio内所有channel
+                // 获取studio内所有channel
                 $user = AuthService::current($request);
-                if (!$user) {
+                if (! $user) {
                     return $this->error(__('auth.failed'));
                 }
-                //判断当前用户是否有指定的studio的管理权限
+                // 判断当前用户是否有指定的studio的管理权限
                 $studioId = StudioApi::getIdByName($request->input('name'));
                 if ($user['user_uid'] !== $studioId) {
                     return $this->error(__('auth.failed'));
@@ -53,23 +54,22 @@ class TransferController extends Controller
                     ->count();
                 break;
         }
-        if (!empty($search)) {
-            $table->where('title', 'like', $search . "%");
+        if (! empty($search)) {
+            $table->where('title', 'like', $search.'%');
         }
         $table->orderBy(
             $request->input('order', 'updated_at'),
             $request->input('dir', 'desc')
         );
         $count = $table->count();
-        $table->skip($request->input("offset", 0))
+        $table->skip($request->input('offset', 0))
             ->take($request->input('limit', 100));
 
         $result = $table->get();
 
-
         return $this->ok([
-            "rows" => TransferResource::collection($result),
-            "count" => $count,
+            'rows' => TransferResource::collection($result),
+            'count' => $count,
             'out' => $outNumber,
             'in' => $inNumber,
         ]);
@@ -78,33 +78,30 @@ class TransferController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
         //
         // validate
         // read more on validation at http://laravel.com/docs/validation
 
-
-        $rules = array(
+        $rules = [
             'res_id' => 'required',
             'res_type' => 'required',
             'new_owner' => 'required',
-        );
-
+        ];
 
         $validated = $request->validate($rules);
 
         $resId = $request->input('res_id');
         foreach ($resId as $id) {
             $transfer = new Transfer;
-            //查看权限
+            // 查看权限
             switch ($request->input('res_type')) {
                 case 'channel':
                     $oldRes = Channel::find($id);
@@ -121,10 +118,10 @@ class TransferController extends Controller
                     $transfer->origin_owner = $oldRes->owner;
                     break;
                 default:
-                    # code...
+                    // code...
                     break;
             }
-            //查重
+            // 查重
             if (Transfer::where('res_id', $id)
                 ->where('res_type', $request->input('res_type'))
                 ->where('status', 'transferred')
@@ -146,8 +143,7 @@ class TransferController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Transfer  $transfer
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Transfer $transfer)
     {
@@ -158,17 +154,15 @@ class TransferController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Transfer  $transfer
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Transfer $transfer)
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), [403], 403);
         }
-        //权限
+        // 权限
         switch ($request->input('status')) {
             case 'accept':
             case 'refuse':
@@ -218,13 +212,14 @@ class TransferController extends Controller
                                 ->update($newData);
                             break;
                         default:
-                            # code...
+                            // code...
                             break;
                     }
                 }
             });
         } catch (\Exception $e) {
             Log::error('update.fail', ['error' => $e]);
+
             return $this->error('update.fail', ['message' => $e], 500);
         }
 
@@ -234,8 +229,7 @@ class TransferController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Transfer  $transfer
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Transfer $transfer)
     {

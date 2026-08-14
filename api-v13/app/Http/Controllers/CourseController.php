@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course;
-use App\Models\CourseMember;
-use Illuminate\Http\Request;
-use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\CourseResource;
+use App\Models\Course;
+use App\Models\CourseMember;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -16,7 +17,7 @@ class CourseController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -38,11 +39,11 @@ class CourseController extends Controller
             'publicity',
             'number',
             'updated_at',
-            'created_at'
+            'created_at',
         ];
         switch ($request->input('view')) {
             case 'new':
-                //最新公开课程列表
+                // 最新公开课程列表
                 $table = Course::where('publicity', 30);
                 break;
             case 'open':
@@ -53,7 +54,7 @@ class CourseController extends Controller
                  * 2. 课程开始时间比现在时间晚
                  */
                 $table = Course::where('publicity', 30)
-                    ->whereDate('start_at', ">", date("Y-m-d", strtotime("today")));
+                    ->whereDate('start_at', '>', date('Y-m-d', strtotime('today')));
                 break;
             case 'close':
                 /**
@@ -63,53 +64,53 @@ class CourseController extends Controller
                  * 2. 课程开始时间比现在时间早
                  */
                 $table = Course::where('publicity', 30)
-                    ->whereDate('start_at', "<=", date("Y-m-d", strtotime("today")));
+                    ->whereDate('start_at', '<=', date('Y-m-d', strtotime('today')));
                 break;
             case 'create':
-                # 获取 studio 建立的所有 course
+                // 获取 studio 建立的所有 course
                 $user = AuthService::current($request);
-                if (!$user) {
+                if (! $user) {
                     return $this->error(__('auth.failed'));
                 }
-                //判断当前用户是否有指定的studio的权限
+                // 判断当前用户是否有指定的studio的权限
                 if ($user['user_uid'] !== StudioApi::getIdByName($request->input('studio'))) {
                     return $this->error(__('auth.failed'));
                 }
 
-                $table = Course::where('studio_id', $user["user_uid"]);
+                $table = Course::where('studio_id', $user['user_uid']);
                 break;
             case 'study':
                 $user = AuthService::current($request);
-                if (!$user) {
+                if (! $user) {
                     return $this->error(__('auth.failed'));
                 }
-                //我学习的课程
-                $course = CourseMember::where('user_id', $user["user_uid"])
+                // 我学习的课程
+                $course = CourseMember::where('user_id', $user['user_uid'])
                     ->where('role', 'student')
                     ->where('is_current', true)
                     ->select('course_id')
                     ->get();
                 $courseId = [];
                 foreach ($course as $key => $value) {
-                    # code...
+                    // code...
                     $courseId[] = $value->course_id;
                 }
                 $table = Course::whereIn('id', $courseId);
                 break;
             case 'teach':
-                //我任教的课程
+                // 我任教的课程
                 $user = AuthService::current($request);
-                if (!$user) {
+                if (! $user) {
                     return $this->error(__('auth.failed'));
                 }
-                $course = CourseMember::where('user_id', $user["user_uid"])
+                $course = CourseMember::where('user_id', $user['user_uid'])
                     ->whereIn('role', ['assistant', 'manager', 'teacher'])
                     ->where('is_current', true)
                     ->select('course_id')
                     ->get();
                 $courseId = [];
                 foreach ($course as $key => $value) {
-                    # code...
+                    // code...
                     $courseId[] = $value->course_id;
                 }
                 $table = Course::whereIn('id', $courseId);
@@ -117,7 +118,7 @@ class CourseController extends Controller
         }
         $table = $table->select($indexCol);
         if ($request->has('search')) {
-            $table = $table->where('title', 'like', $request->input('search') . "%");
+            $table = $table->where('title', 'like', $request->input('search').'%');
         }
         $count = $table->count();
         $table = $table->orderBy(
@@ -130,52 +131,54 @@ class CourseController extends Controller
 
         $result = $table->get();
 
-        return $this->ok(["rows" => CourseResource::collection($result), "count" => $count]);
+        return $this->ok(['rows' => CourseResource::collection($result), 'count' => $count]);
     }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function showMyCourseNumber(Request $request)
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
-        //我建立的课程
-        $create = Course::where('studio_id', $user["user_uid"])->count();
-        //我学习的课程
-        $study = CourseMember::where('user_id', $user["user_uid"])
+        // 我建立的课程
+        $create = Course::where('studio_id', $user['user_uid'])->count();
+        // 我学习的课程
+        $study = CourseMember::where('user_id', $user['user_uid'])
             ->where('role', 'student')
             ->where('is_current', true)
             ->count();
-        //我任教的课程
-        $teach = CourseMember::where('user_id', $user["user_uid"])
+        // 我任教的课程
+        $teach = CourseMember::where('user_id', $user['user_uid'])
             ->where('is_current', true)
             ->whereIn('role', ['assistant', 'manager', 'teacher'])
             ->count();
+
         return $this->ok(['create' => $create, 'teach' => $teach, 'study' => $study]);
     }
+
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
-        //判断当前用户是否有指定的studio的权限
+        // 判断当前用户是否有指定的studio的权限
         $studio_id = StudioApi::getIdByName($request->input('studio'));
         if ($user['user_uid'] !== $studio_id) {
             return $this->error(__('auth.failed'));
         }
-        //查询是否重复
+        // 查询是否重复
         if (Course::where('title', $request->input('title'))
             ->where('studio_id', $user['user_uid'])
             ->exists()
@@ -194,8 +197,8 @@ class CourseController extends Controller
                 $course->studio_id = $studio_id;
                 $saveCourse = $course->save();
 
-                //添加owner
-                $newMember = new CourseMember();
+                // 添加owner
+                $newMember = new CourseMember;
                 $newMember->user_id = $user['user_uid'];
                 $newMember->course_id = $course->id;
                 $newMember->role = 'owner';
@@ -211,8 +214,7 @@ class CourseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Course  $course
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Course $course)
     {
@@ -222,7 +224,7 @@ class CourseController extends Controller
 
     private function userCanManage($courseId, $userUid)
     {
-        //判断是否是manager
+        // 判断是否是manager
         $role = CourseMember::where('course_id', $courseId)
             ->where('is_current', true)
             ->where('user_id', $userUid)
@@ -231,30 +233,29 @@ class CourseController extends Controller
         if (in_array($role, $manager)) {
             return true;
         }
+
         return false;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Course  $course
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Course $course)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
-        //判断当前用户是否有指定的studio的权限
+        // 判断当前用户是否有指定的studio的权限
         $canManage = $this->userCanManage($course->id, $user['user_uid']);
-        if (!$canManage) {
+        if (! $canManage) {
             return $this->error(__('auth.failed'), 403, 403);
         }
 
-        //查询标题是否重复
+        // 查询标题是否重复
         if (Course::where('title', $request->input('title'))
             ->where('studio_id', $user['user_uid'])
             ->exists()
@@ -288,29 +289,29 @@ class CourseController extends Controller
         $course->sign_up_end_at = $request->input('sign_up_end_at');
         $course->join = $request->input('join');
         $course->save();
+
         return $this->ok($course);
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Course  $course
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function destroy(Request $request, Course $course)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
-        //判断当前用户是否有指定的studio的权限
+        // 判断当前用户是否有指定的studio的权限
         if ($user['user_uid'] !== $course->studio_id) {
             return $this->error(__('auth.failed'));
         }
         $delete = 0;
         DB::transaction(function () use ($delete, $course) {
-            //删除group member
+            // 删除group member
             $memberDelete = CourseMember::where('course_id', $course->id)->delete();
             $delete = $course->delete();
         });

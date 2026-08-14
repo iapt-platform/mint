@@ -2,10 +2,12 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Api\UserApi;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\UserApi;
 use App\Models\DhammaTerm;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class RelationResource extends JsonResource
 {
@@ -17,34 +19,33 @@ class RelationResource extends JsonResource
      * cache unless they are listed in cache.serializable_classes. Hence the
      * associative json_decode() and the ISO-8601 date strings.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array|Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
         $data = [
-            "id" => $this->id,
-            "name" => $this->name,
-            "case" => $this->case,
-            "from" => json_decode((string) $this->from, true),
-            "to" => json_decode((string) $this->to, true),
-            "match" => json_decode((string) $this->match, true),
-            "category" => $this->category,
-            "created_at" => $this->created_at?->toISOString(),
-            "updated_at" => $this->updated_at?->toISOString(),
+            'id' => $this->id,
+            'name' => $this->name,
+            'case' => $this->case,
+            'from' => json_decode((string) $this->from, true),
+            'to' => json_decode((string) $this->to, true),
+            'match' => json_decode((string) $this->match, true),
+            'category' => $this->category,
+            'created_at' => $this->created_at?->toISOString(),
+            'updated_at' => $this->updated_at?->toISOString(),
         ];
 
+        if (! $request->has('vocabulary')) {
 
-        if (!$request->has('vocabulary')) {
-
-            $data["editor"] = UserApi::getByUuid($this->editor_id);
+            $data['editor'] = UserApi::getByUuid($this->editor_id);
 
             $uiLang = strtolower($request->input('ui-lang', 'zh-Hans'));
             $term_channel = ChannelApi::getSysChannel("_System_Grammar_Term_{$uiLang}_");
             if ($term_channel) {
                 $data['category_channel'] = $term_channel;
-                if (!empty($this->category)) {
-                    $term = DhammaTerm::where("word", $this->category)
+                if (! empty($this->category)) {
+                    $term = DhammaTerm::where('word', $this->category)
                         ->where('channal', $term_channel)
                         ->first();
                     if ($term) {
@@ -55,7 +56,7 @@ class RelationResource extends JsonResource
                     }
                 }
                 $data['name_channel'] = $term_channel;
-                $term_name = DhammaTerm::where("word", $this->name)
+                $term_name = DhammaTerm::where('word', $this->name)
                     ->where('channal', $term_channel)
                     ->first();
                 if ($term_name) {

@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers\Library;
 
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\File;
-
-
 use App\Http\Controllers\Controller;
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
 use App\Services\TermService;
-
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\File;
 
 class HomeController extends Controller
 {
@@ -23,10 +20,9 @@ class HomeController extends Controller
         'linear-gradient(160deg, #1a1a2d,rgb(76, 68, 146))',
         'linear-gradient(160deg, #1a2820,rgb(55, 124, 99))',
     ];
+
     /**
      * 构造函数，注入 TermService
-     *
-     * @param  \App\Services\TermService  $termService
      */
     public function __construct(
         protected TermService $termService,
@@ -75,7 +71,6 @@ class HomeController extends Controller
         });
     }
 
-
     private function getUpdateBooks()
     {
         $books = ProgressChapter::with('channel.owner')
@@ -93,18 +88,17 @@ class HomeController extends Controller
         return $this->getBooksInfo($books);
     }
 
-
     private function getBooksInfo($books)
     {
         $pali = PaliText::where('level', 1)->get();
         // 获取该分类下的书籍
         $categoryBooks = [];
-        $books->each(function ($book) use (&$categoryBooks,  $pali) {
+        $books->each(function ($book) use (&$categoryBooks, $pali) {
             $title = $book->title;
             if (empty($title)) {
                 $title = $pali->firstWhere('book', $book->book)->toc;
             }
-            //Log::debug('getBooksInfo', ['book' => $book->book, 'paragraph' => $book->para]);
+            // Log::debug('getBooksInfo', ['book' => $book->book, 'paragraph' => $book->para]);
             $pcd_book_id = $pali->first(function ($item) use ($book) {
                 return $item->book == $book->book
                     && $item->paragraph == $book->para;
@@ -119,32 +113,35 @@ class HomeController extends Controller
             $colorIdx = $this->colorIndex($book->uid);
 
             $categoryBooks[] = [
-                "id" => $book->uid,
-                "title" => $title,
-                "author" => $book->channel->name,
-                "publisher" => $book->channel->owner,
-                "type" => __('labels.' . $book->channel->type),
-                "cover" => $coverUrl,
+                'id' => $book->uid,
+                'title' => $title,
+                'author' => $book->channel->name,
+                'publisher' => $book->channel->owner,
+                'type' => __('labels.'.$book->channel->type),
+                'cover' => $coverUrl,
                 'cover_gradient' => $this->coverGradients[$colorIdx % count($this->coverGradients)],
-                "description" => $book->summary ?? "比库戒律的详细说明",
-                "language" => __('language.' . $book->channel->lang),
+                'description' => $book->summary ?? '比库戒律的详细说明',
+                'language' => __('language.'.$book->channel->lang),
 
                 'updated_at' => $book->updated_at,
-                'is_new'     => false, //FIXME
-                'category'   => '经藏', //FIXME
+                'is_new' => false, // FIXME
+                'category' => '经藏', // FIXME
             ];
         });
+
         return $categoryBooks;
     }
+
     private function loadCategories()
     {
-        $json = file_get_contents(public_path("data/category/default.json"));
+        $json = file_get_contents(public_path('data/category/default.json'));
         $tree = json_decode($json, true);
         $flat = self::flattenWithIds($tree);
+
         return $flat;
     }
 
-    public static function flattenWithIds(array $tree,  int $parentId = 0, int $level = 1): array
+    public static function flattenWithIds(array $tree, int $parentId = 0, int $level = 1): array
     {
 
         $flat = [];
@@ -157,7 +154,7 @@ class HomeController extends Controller
                 'parent_id' => $parentId,
                 'name' => $node['name'] ?? null,
                 'tag' => $node['tag'] ?? [],
-                "description" => "佛教戒律经典",
+                'description' => '佛教戒律经典',
                 'level' => $level,
             ];
 
@@ -165,7 +162,7 @@ class HomeController extends Controller
 
             if (isset($node['children']) && is_array($node['children'])) {
                 $childrenLevel = $level + 1;
-                $flat = array_merge($flat, self::flattenWithIds($node['children'],  $currentId, $childrenLevel));
+                $flat = array_merge($flat, self::flattenWithIds($node['children'], $currentId, $childrenLevel));
             }
         }
 

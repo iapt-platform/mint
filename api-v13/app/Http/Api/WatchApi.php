@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Api;
 
-use Illuminate\Support\Str;
 use App\Models\Like;
 use App\Models\Notification;
+use Illuminate\Support\Str;
 
 class WatchApi
 {
     public static function change(array $resId, string $from, string $message)
     {
-        //发送站内信
+        // 发送站内信
         $watches = Like::where('type', 'watch')
             ->whereIn('target_id', $resId)
             ->get();
         $notifications = [];
-        foreach ($watches as  $watch) {
+        foreach ($watches as $watch) {
             $notifications[] = [
                 'id' => Str::uuid(),
                 'from' => $from,
@@ -32,6 +32,7 @@ class WatchApi
             ];
         }
         $new = Notification::insert($notifications);
+
         return $new;
     }
 }

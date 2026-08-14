@@ -2,19 +2,22 @@
 
 namespace App\Services;
 
-use PhpAmqpLib\Connection\AMQPStreamConnection;
-use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Message\AMQPMessage;
-use PhpAmqpLib\Wire\AMQPTable;
+use App\Exceptions\TaskFailException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use App\Exceptions\TaskFailException;
+use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
+use PhpAmqpLib\Wire\AMQPTable;
 
 class RabbitMQService
 {
     private $connection;
+
     private $channel;
+
     private array $config;
+
     private array $queues;
 
     public function __construct()
@@ -58,22 +61,22 @@ class RabbitMQService
             $args = [];
 
             // TTL
-            if (!empty($queue['ttl'])) {
+            if (! empty($queue['ttl'])) {
                 $args['x-message-ttl'] = (int) $queue['ttl'];
             }
 
             // max length
-            if (!empty($queue['max_length'])) {
+            if (! empty($queue['max_length'])) {
                 $args['x-max-length'] = (int) $queue['max_length'];
             }
 
             // dead letter exchange
-            if (!empty($queue['dead_letter_exchange'])) {
+            if (! empty($queue['dead_letter_exchange'])) {
                 $args['x-dead-letter-exchange'] = $queue['dead_letter_exchange'];
             }
 
             // dead letter routing key（可选但建议）
-            if (!empty($queue['dead_letter_queue'])) {
+            if (! empty($queue['dead_letter_queue'])) {
                 $args['x-dead-letter-routing-key'] = $queue['dead_letter_queue'];
             }
 
@@ -91,17 +94,16 @@ class RabbitMQService
         return array_keys($this->queues);
     }
 
-
     public function setupQueue(string $queueName): void
     {
         $queueConfig = config("mint.rabbitmq.queues.{$queueName}");
 
         $workerArgs = [];
         if (isset($queueConfig['ttl'])) {
-            $workerArgs['x-message-ttl'] =  $queueConfig['ttl'];
+            $workerArgs['x-message-ttl'] = $queueConfig['ttl'];
         }
         if (isset($queueConfig['max_length'])) {
-            $workerArgs['x-max-length'] =  $queueConfig['max_length'];
+            $workerArgs['x-max-length'] = $queueConfig['max_length'];
         }
 
         // 创建死信交换机
@@ -118,10 +120,10 @@ class RabbitMQService
             $dlqConfig = config("mint.rabbitmq.dead_letter_queues.{$dlqName}", []);
             $dlqArgs = [];
             if (isset($dlqConfig['ttl'])) {
-                $dlqArgs['x-message-ttl'] =  $dlqConfig['ttl'];
+                $dlqArgs['x-message-ttl'] = $dlqConfig['ttl'];
             }
             if (isset($dlqConfig['max_length'])) {
-                $dlqArgs['x-max-length'] =  $dlqConfig['max_length'];
+                $dlqArgs['x-max-length'] = $dlqConfig['max_length'];
             }
             $dlqArguments = new AMQPTable($dlqArgs);
 
@@ -143,8 +145,8 @@ class RabbitMQService
             );
 
             // 主队列，配置死信
-            $workerArgs['x-dead-letter-exchange'] =  $queueConfig['dead_letter_exchange'];
-            $workerArgs['x-dead-letter-routing-key'] =  $queueConfig['dead_letter_queue'];
+            $workerArgs['x-dead-letter-exchange'] = $queueConfig['dead_letter_exchange'];
+            $workerArgs['x-dead-letter-routing-key'] = $queueConfig['dead_letter_queue'];
         }
         $arguments = new AMQPTable($workerArgs);
 
@@ -202,13 +204,14 @@ class RabbitMQService
                     'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
                     'timestamp' => time(),
                     'message_id' => $msgId,
-                    "content_type" => 'application/json; charset=utf-8'
+                    'content_type' => 'application/json; charset=utf-8',
                 ]
             );
 
             $this->channel->basic_publish($message, '', $queueName);
 
             Log::info("Message published to queue: {$queueName} msg id={$msgId}");
+
             return $msgId;
         } catch (\Exception $e) {
             Log::error("Failed to publish message to queue: {$queueName}", [
@@ -218,7 +221,7 @@ class RabbitMQService
         }
     }
 
-    public function consume(string $queueName, callable $callback, int $maxIterations = null): void
+    public function consume(string $queueName, callable $callback, ?int $maxIterations = null): void
     {
         $this->setupQueue($queueName);
         $maxIterations = $maxIterations ?? $this->config['consumer']['max_iterations'];
@@ -233,19 +236,19 @@ class RabbitMQService
                 Log::info("Processing message from queue: {$queueName}", [
                     'data' => $data,
                     'retry_count' => $retryCount,
-                    'delivery_tag' => $msg->getDeliveryTag()
+                    'delivery_tag' => $msg->getDeliveryTag(),
                 ]);
 
                 // 执行回调处理消息
                 $callback($data, $retryCount);
                 // 处理成功，确认消息
                 $msg->ack();
-                Log::info("Message processed successfully", ['delivery_tag' => $msg->getDeliveryTag()]);
+                Log::info('Message processed successfully', ['delivery_tag' => $msg->getDeliveryTag()]);
             } catch (TaskFailException $e) {
-                //no need requeue
-                Log::error("Error processing message", [
+                // no need requeue
+                Log::error('Error processing message', [
                     'error' => $e->getMessage(),
-                    'delivery_tag' => $msg->getDeliveryTag()
+                    'delivery_tag' => $msg->getDeliveryTag(),
                 ]);
                 $msg->nack(false, false);
             } catch (\Exception $e) {
@@ -253,16 +256,16 @@ class RabbitMQService
                 if ($retryCount < $maxRetries) {
                     // 重新入队，延迟处理
                     $this->requeueWithDelay($msg, $queueName, $retryCount + 1);
-                    Log::warning("Message requeued for retry", [
+                    Log::warning('Message requeued for retry', [
                         'delivery_tag' => $msg->getDeliveryTag(),
-                        'retry_count' => $retryCount + 1
+                        'retry_count' => $retryCount + 1,
                     ]);
                 } else {
                     // 超过重试次数，拒绝消息（进入死信队列）
                     $msg->nack(false, false);
-                    Log::error("Message rejected after max retries", [
+                    Log::error('Message rejected after max retries', [
                         'delivery_tag' => $msg->getDeliveryTag(),
-                        'retry_count' => $retryCount
+                        'retry_count' => $retryCount,
                     ]);
                 }
             }
@@ -279,12 +282,13 @@ class RabbitMQService
             $this->channel->wait(null, false, $this->config['consumer']['sleep_between_iterations']);
         }
 
-        Log::info("Consumer stopped", ['iterations_processed' => $iteration]);
+        Log::info('Consumer stopped', ['iterations_processed' => $iteration]);
     }
 
     private function getRetryCount(AMQPMessage $msg): int
     {
         $headers = $msg->get_properties();
+
         return isset($headers['application_headers']['x-retry-count'])
             ? $headers['application_headers']['x-retry-count'] : 0;
     }
@@ -318,8 +322,8 @@ class RabbitMQService
             [
                 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
                 'application_headers' => new AMQPTable([
-                    'x-retry-count' => $retryCount
-                ])
+                    'x-retry-count' => $retryCount,
+                ]),
             ]
         );
 

@@ -2,38 +2,31 @@
 
 namespace App\Services;
 
-use App\Models\Sentence;
+use App\Http\Api\ChannelApi;
+use App\Http\Api\MdRender;
+use App\Http\Resources\TocResource;
 use App\Models\Channel;
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
-
-use Illuminate\Support\Str;
-use App\Http\Api\MdRender;
-use App\Http\Api\ChannelApi;
-
-
-
-use App\Http\Resources\TocResource;
-use App\Services\PaliContentService;
+use App\Models\Sentence;
 use Illuminate\Support\Facades\Log;
-
-
+use Illuminate\Support\Str;
 
 class ChapterService
 {
     protected $result = [
-        "uid" => '',
-        "title" => '',
-        "path" => [],
-        "sub_title" => '',
-        "summary" => '',
-        "content" => '',
-        "content_type" => "html",
-        "toc" => [],
-        "status" => 30,
-        "lang" => "",
-        "created_at" => "",
-        "updated_at" => "",
+        'uid' => '',
+        'title' => '',
+        'path' => [],
+        'sub_title' => '',
+        'summary' => '',
+        'content' => '',
+        'content_type' => 'html',
+        'toc' => [],
+        'status' => 30,
+        'lang' => '',
+        'created_at' => '',
+        'updated_at' => '',
     ];
 
     protected $selectCol = [
@@ -41,7 +34,7 @@ class ChapterService
         'book_id',
         'paragraph',
         'word_start',
-        "word_end",
+        'word_end',
         'channel_uid',
         'content',
         'content_type',
@@ -56,32 +49,36 @@ class ChapterService
     ];
 
     private $MaxStrLen = 3000;
+
     public function setMaxSize(int $size)
     {
         $this->MaxStrLen = $size;
     }
+
     public function chapterWithContent(string $id)
     {
-        //getChannels
+        // getChannels
 
-        //chapter info
+        // chapter info
 
-        //chapter rang
+        // chapter rang
 
-        //chapter content
+        // chapter content
     }
+
     public function paraWithContent(string $id) {}
 
     public function csParaWithContent(string $id) {}
 
     public function paraContent(int $book, int $from, int $to) {}
+
     private function currChapter() {}
 
-    private function getChannels(array|null $input, string $mode)
+    private function getChannels(?array $input, string $mode)
     {
         $channels = [];
         if (is_array($input)) {
-            foreach ($input as  $channel) {
+            foreach ($input as $channel) {
                 if (Str::isUuid($channel)) {
                     $channels[] = $channel;
                 }
@@ -89,29 +86,30 @@ class ChapterService
         }
 
         if ($mode === 'read') {
-            //阅读模式加载html格式原文
+            // 阅读模式加载html格式原文
             $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
         } else {
-            //翻译模式加载json格式原文
+            // 翻译模式加载json格式原文
             $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
         }
 
         if ($channelId !== false) {
             $channels[] = $channelId;
         }
-        #获取channel索引表
+        // 获取channel索引表
         $tranChannels = [];
-        $channelInfo = Channel::whereIn("uid", $channels)
+        $channelInfo = Channel::whereIn('uid', $channels)
             ->select(['uid', 'type', 'lang', 'name'])->get();
         foreach ($channelInfo as $key => $value) {
-            # code...
-            if ($value->type === "translation") {
+            // code...
+            if ($value->type === 'translation') {
                 $tranChannels[] = $value->uid;
             }
         }
         $indexChannel = [];
         $paliService = app(PaliContentService::class);
         $indexChannel = $paliService->getChannelIndex($channels);
+
         return [
             'channels' => $channels,
             'index' => $indexChannel,
@@ -119,22 +117,22 @@ class ChapterService
             'request' => $input,
         ];
     }
+
     private function chapterInfo(int $book, int $para, array $channelInfo)
     {
         $result = [];
         $chapter = PaliText::where('book', $book)->where('paragraph', $para)->first();
-        if (!$chapter) {
-            //FIXME throw
+        if (! $chapter) {
+            // FIXME throw
         }
 
         if (empty($chapter->toc)) {
-            $this->result['title'] = "unknown";
+            $this->result['title'] = 'unknown';
         } else {
             $result['title'] = $chapter->toc;
             $result['sub_title'] = $chapter->toc;
             $result['path'] = json_decode($chapter->path);
         }
-
 
         $title = Sentence::select($this->selectCol)
             ->where('book_id', $book)
@@ -159,19 +157,19 @@ class ChapterService
          * 2. 如果标题和下一级第一个标题之间没有间隔 且 chapter 长度大于10000个字符 且有子目录，只输出子目录
          * 3. 如果二者都不是，lazy load
          */
-        //1. 计算 标题和下一级第一个标题之间 是否有间隔
+        // 1. 计算 标题和下一级第一个标题之间 是否有间隔
         $chapter = PaliText::where('book', $book)->where('paragraph', $para)->first();
 
         $paraFrom = $para;
         $paraTo = $para + $chapter->chapter_len - 1;
-        $nextChapter =  PaliText::where('book', $book)
-            ->where('paragraph', ">", $para)
+        $nextChapter = PaliText::where('book', $book)
+            ->where('paragraph', '>', $para)
             ->where('level', '<', 8)
             ->orderBy('paragraph')
             ->value('paragraph');
         $between = $nextChapter - $para;
 
-        //查找子目录
+        // 查找子目录
         $chapterLen = $chapter->chapter_len;
         $toc = PaliText::where('book', $book)
             ->whereBetween('paragraph', [$paraFrom + 1, $paraFrom + $chapterLen - 1])
@@ -181,25 +179,25 @@ class ChapterService
             ->get();
 
         if ($between > 1) {
-            //有间隔
+            // 有间隔
             $paraTo = $nextChapter - 1;
         } else {
             if ($chapter->chapter_strlen > $this->MaxStrLen) {
                 if (count($toc) > 0) {
-                    //有子目录只输出标题和目录
+                    // 有子目录只输出标题和目录
                     $paraTo = $paraFrom;
                 } else {
-                    //没有子目录 全部输出
+                    // 没有子目录 全部输出
                 }
             } else {
-                //章节小。全部输出 不输出子目录
+                // 章节小。全部输出 不输出子目录
                 $toc = [];
             }
         }
 
         $pFrom = $from ?? $paraFrom;
         $pTo = $to ?? $paraTo;
-        //根据句子的长度找到这次应该加载的段落
+        // 根据句子的长度找到这次应该加载的段落
 
         $paliText = PaliText::select(['paragraph', 'lenght'])
             ->where('book', $book)
@@ -215,12 +213,13 @@ class ChapterService
                 break;
             }
         }
+
         return ['toc' => $toc, 'from' => $pFrom, 'to' => $currTo];
     }
 
     private function subChapterToc($toc)
     {
-        //第一次才显示toc
+        // 第一次才显示toc
         return TocResource::collection($toc);
     }
 
@@ -250,8 +249,9 @@ class ChapterService
             $result['to'] = $para;
             $result['paraId'] = "{$book}-{$para}";
             $result['channels'] = implode(',', $channelInfo['request']);
-            $result['mode'] =  $mode;
+            $result['mode'] = $mode;
         }
+
         return $result;
     }
 
@@ -266,9 +266,10 @@ class ChapterService
             ->select('channel_id')
             ->get();
         $channels = [];
-        foreach ($channelIds as  $channel) {
+        foreach ($channelIds as $channel) {
             $channels[] = ChannelApi::getById($channel->channel_id);
         }
+
         return $channels;
     }
 
@@ -278,6 +279,7 @@ class ChapterService
             ->where('para', $para)
             ->where('channel_id', $channelId)
             ->value('uid');
+
         return $uid;
     }
 }

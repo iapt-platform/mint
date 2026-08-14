@@ -41,7 +41,7 @@ class HitItemDTO
 
         // ---------- highlight ----------
         $highlightArray = [];
-        if (!empty($data['highlight']) && is_array($data['highlight'])) {
+        if (! empty($data['highlight']) && is_array($data['highlight'])) {
             foreach ($data['highlight'] as $fragments) {
                 $highlightArray = array_merge($highlightArray, $fragments);
             }
@@ -52,7 +52,7 @@ class HitItemDTO
         $titleText = $source['title']['text'] ?? [];
         $title = implode('', array_filter(
             is_array($titleText) ? array_values($titleText) : [],
-            fn($v) => is_string($v) && $v !== ''
+            fn ($v) => is_string($v) && $v !== ''
         ));
 
         // ---------- content ----------
@@ -60,7 +60,7 @@ class HitItemDTO
         $contentText = $source['content']['text'] ?? [];
         $content = implode('', array_filter(
             is_array($contentText) ? array_values($contentText) : [],
-            fn($v) => is_string($v) && $v !== ''
+            fn ($v) => is_string($v) && $v !== ''
         ));
 
         // ---------- display ----------
@@ -93,25 +93,23 @@ class HitItemDTO
      * 将 DTO 转为数组（用于 API 响应输出）
      *
      * display 字段仅在有值时输出，避免列表页响应体携带 null 键。
-     *
-     * @return array
      */
     public function toArray(): array
     {
         $data = [
-            'id'        => $this->id,
-            'res_id'    => $this->resId,
-            'score'     => $this->score,
-            'title'     => $this->title,
-            'content'   => $this->content,
-            'path'      => $this->path,
-            'category'  => $this->category,
-            'tags'  => $this->tags,
+            'id' => $this->id,
+            'res_id' => $this->resId,
+            'score' => $this->score,
+            'title' => $this->title,
+            'content' => $this->content,
+            'path' => $this->path,
+            'category' => $this->category,
+            'tags' => $this->tags,
             'highlight' => $this->highlight,
-            'updated'   => $this->updated,
-            'type'      => $this->type,
-            'language'  => $this->language,
-            'para_id'   => $this->getParaId(),
+            'updated' => $this->updated,
+            'type' => $this->type,
+            'language' => $this->language,
+            'para_id' => $this->getParaId(),
             'para_link' => $this->getParaLink(),
         ];
 
@@ -127,26 +125,27 @@ class HitItemDTO
      *
      * 匹配文档 ID 格式 "pali_para_{bookId}_{paraId}"，
      * 返回 "{bookId}-{paraId}" 格式字符串。
-     *
-     * @return string|null
      */
     public function getParaId(): ?string
     {
         if (preg_match('/tipitaka_paragraph_pi_(\d+)-(\d+)/', $this->id, $matches)) {
             return "{$matches[1]}-{$matches[2]}";
         }
+
         return null;
     }
 
     /**
      * 生成 para wiki 模板引用字符串
      *
-     * @return string|null  例如：{{para|id=1-23|title=1-23|style=reference}}
+     * @return string|null 例如：{{para|id=1-23|title=1-23|style=reference}}
      */
     public function getParaLink(): ?string
     {
         $id = $this->getParaId();
-        if (!$id) return null;
+        if (! $id) {
+            return null;
+        }
 
         return "{{para|id={$id}|title={$id}|style=reference}}";
     }

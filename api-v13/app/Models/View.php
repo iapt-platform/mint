@@ -10,9 +10,9 @@ class View extends Model
     use HasFactory;
 
     protected $casts = [
-    'id' => 'string',
-    'target_id' => 'string'
+        'id' => 'string',
+        'target_id' => 'string',
     ];
 
-    protected $fillable = ['target_type' , 'target_id' , 'user_id', 'user_ip'];
+    protected $fillable = ['target_type', 'target_id', 'user_id', 'user_ip'];
 }

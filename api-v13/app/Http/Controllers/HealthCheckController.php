@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use App\Services\RabbitMQService;
 use App\Services\OpenSearchService;
+use App\Services\RabbitMQService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class HealthCheckController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -56,7 +57,9 @@ class HealthCheckController extends Controller
         try {
             $service = app(OpenSearchService::class);
             [$ok, $msg] = $service->testConnection();
-            if (!$ok) throw new \Exception($msg);
+            if (! $ok) {
+                throw new \Exception($msg);
+            }
             $checks['opensearch'] = true;
         } catch (\Throwable $e) {
             $checks['opensearch'] = false;
@@ -80,7 +83,7 @@ class HealthCheckController extends Controller
                 'createdAt' => now(),
                 'services' => $checks,
                 'host' => $_SERVER['HTTP_HOST'],
-                'document-root' => $_SERVER['DOCUMENT_ROOT']
+                'document-root' => $_SERVER['DOCUMENT_ROOT'],
             ],
             $healthy ? 200 : 500,
             ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
@@ -91,8 +94,7 @@ class HealthCheckController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -103,7 +105,7 @@ class HealthCheckController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -113,9 +115,8 @@ class HealthCheckController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -126,7 +127,7 @@ class HealthCheckController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

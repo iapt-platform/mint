@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
-use App\Models\PaliText;
+use App\Http\Resources\PaliTextResource;
 use App\Models\BookTitle;
+use App\Models\PaliText;
 use App\Models\Tag;
 use App\Models\TagMap;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use App\Http\Resources\PaliTextResource;
 use App\Services\PaliTextService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class PaliTextController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -43,21 +44,21 @@ class PaliTextController extends Controller
                 if ($request->input('tags') && $request->input('tags') !== '') {
                     $tags = explode(',', $request->input('tags'));
                     foreach ($tags as $tag) {
-                        # code...
-                        if (!empty($tag)) {
+                        // code...
+                        if (! empty($tag)) {
                             $tagNames[] = $tag;
                         }
                     }
                 }
 
                 if (isset($tagNames)) {
-                    $where1 = " where co = " . count($tagNames);
-                    $a = implode(",", array_fill(0, count($tagNames), '?'));
+                    $where1 = ' where co = '.count($tagNames);
+                    $a = implode(',', array_fill(0, count($tagNames), '?'));
                     $in1 = "and t.name in ({$a})";
-                    $param  = $tagNames;
+                    $param = $tagNames;
                 } else {
-                    $where1 = " ";
-                    $in1 = " ";
+                    $where1 = ' ';
+                    $in1 = ' ';
                 }
                 $query = "
                     select tags.id,tags.name,co as count
@@ -104,8 +105,8 @@ class PaliTextController extends Controller
                 if ($request->input('tags') && $request->input('tags') !== '') {
                     $tags = explode(',', $request->input('tags'));
                     foreach ($tags as $tag) {
-                        # code...
-                        if (!empty($tag)) {
+                        // code...
+                        if (! empty($tag)) {
                             $tagNames[] = $tag;
                         }
                     }
@@ -115,15 +116,15 @@ class PaliTextController extends Controller
                 $tg = (new Tag)->getTable();
                 $pt = (new PaliText)->getTable();
                 if (isset($tagNames)) {
-                    $where1 = " where co = " . count($tagNames);
-                    $a = implode(",", array_fill(0, count($tagNames), '?'));
+                    $where1 = ' where co = '.count($tagNames);
+                    $a = implode(',', array_fill(0, count($tagNames), '?'));
                     $in1 = "and t.name in ({$a})";
                     $param = $tagNames;
-                    $where2 = "where level < 3";
+                    $where2 = 'where level < 3';
                 } else {
-                    $where1 = " ";
-                    $in1 = " ";
-                    $where2 = "where level = 1";
+                    $where1 = ' ';
+                    $in1 = ' ';
+                    $where2 = 'where level = 1';
                 }
                 $query = "
                         select uid as id,book,paragraph,level,toc as title,chapter_strlen,parent,path from (
@@ -182,9 +183,9 @@ class PaliTextController extends Controller
                  * level >= 8 的节点（level 8 是叶子条目、level 100 是正文段落）没有
                  * 下级，直接返回空。
                  *
-                 * @param  string  $id    pali_texts.uid；给了就优先按它定位
-                 * @param  int     $book
-                 * @param  int     $para
+                 * @param  string  $id  pali_texts.uid；给了就优先按它定位
+                 * @param  int  $book
+                 * @param  int  $para
                  */
                 if ($request->has('id')) {
                     $root = PaliText::where('uid', $request->input('id'))
@@ -207,7 +208,7 @@ class PaliTextController extends Controller
                     ->orderBy('level', 'asc')
                     ->first();
                 if ($nextLevelChapter) {
-                    //存在子目录
+                    // 存在子目录
                     $chapters = PaliText::where('book', $root->book)
                         ->whereBetween('paragraph', [$start, $end])
                         ->where('level', $nextLevelChapter->level)
@@ -237,7 +238,7 @@ class PaliTextController extends Controller
                 if ($result) {
                     return $this->ok($result);
                 } else {
-                    return $this->error("no data");
+                    return $this->error('no data');
                 }
                 break;
             case 'paragraphs-info':
@@ -251,13 +252,13 @@ class PaliTextController extends Controller
                 $root = PaliText::where('book', $request->input('book'))
                     ->where('paragraph', $request->input('para'))
                     ->first();
-                if (!$root) {
-                    return $this->error("no paragraph");
+                if (! $root) {
+                    return $this->error('no paragraph');
                 }
                 $chapters = PaliText::where('book', $request->input('book'))
-                    ->whereBetween('paragraph', [$root->paragraph,$root->paragraph+$root->chapter_len-1])
-                    ->select(['book','paragraph','toc','level','lenght','chapter_len'])
-                    ->orderBy('paragraph','asc')
+                    ->whereBetween('paragraph', [$root->paragraph, $root->paragraph + $root->chapter_len - 1])
+                    ->select(['book', 'paragraph', 'toc', 'level', 'lenght', 'chapter_len'])
+                    ->orderBy('paragraph', 'asc')
                     ->get();
                 $all_count = count($chapters);
                 break;
@@ -277,37 +278,35 @@ class PaliTextController extends Controller
                  * 也正因为结构不同，末尾统一补 progress_line 时把 book-toc 排除在外。
                  *
                  * @param  string  $series  丛书名；给了就直接按它取书目列表
-                 * @param  int     $book    未给 series 时，与 para 一起定位所属丛书
-                 * @param  int     $para
+                 * @param  int  $book  未给 series 时，与 para 一起定位所属丛书
+                 * @param  int  $para
                  */
-
                 if ($request->has('series')) {
                     $book_title = $request->input('series');
-                    //获取丛书书目列表
+                    // 获取丛书书目列表
                     $books = BookTitle::where('title', $request->input('series'))->get();
                 } else {
-                    //查询这个目录的顶级目录
-                    //查询书起始段落
+                    // 查询这个目录的顶级目录
+                    // 查询书起始段落
                     $rootPara = app(PaliTextService::class)->getBookPara(
                         $request->input('book'),
                         $request->input('para')
                     );
-                    if (!$rootPara) {
+                    if (! $rootPara) {
                         return $this->error('no book', 404, 404);
                     }
-                    //获取丛书书名
+                    // 获取丛书书名
                     $book_title = BookTitle::where('book', $rootPara->book)
                         ->where('paragraph', $rootPara->paragraph)
                         ->value('title');
-                    //获取丛书书目列表
+                    // 获取丛书书目列表
                     $books = BookTitle::where('title', $book_title)->get();
                 }
 
-
                 $chapters = [];
                 $chapters[] = ['book' => 0, 'paragraph' => 0, 'toc' => $book_title, 'level' => 1];
-                foreach ($books as  $book) {
-                    # code...
+                foreach ($books as $book) {
+                    // code...
                     $rootPara = PaliText::where('book', $book->book)
                         ->where('paragraph', $book->paragraph)
                         ->first();
@@ -316,8 +315,8 @@ class PaliTextController extends Controller
                         ->where('level', '<', 8);
                     $all_count = $table->count();
                     $curr_chapters = $table->select(['book', 'paragraph', 'toc', 'level'])->orderBy('paragraph')->get();
-                    foreach ($curr_chapters as  $chapter) {
-                        # code...
+                    foreach ($curr_chapters as $chapter) {
+                        // code...
                         $chapters[] = ['book' => $chapter->book, 'paragraph' => $chapter->paragraph, 'toc' => $chapter->toc, 'level' => ($chapter->level + 1)];
                     }
                 }
@@ -327,24 +326,24 @@ class PaliTextController extends Controller
                 return $this->error('unknown view', 400, 400);
         }
 
-        if ($request->input('view') !== 'book-toc' && 
+        if ($request->input('view') !== 'book-toc' &&
         $request->input('view') !== 'paragraphs-info') {
             foreach ($chapters as $key => $value) {
                 if (is_object($value)) {
-                    //TODO $value->book 可能不存在
+                    // TODO $value->book 可能不存在
                     $progress_key = "/chapter_dynamic/{$value->book}/{$value->paragraph}/global";
                     $chapters[$key]->progress_line = Cache::get($progress_key);
                 }
             }
         }
-        return $this->ok(["rows" => $chapters, "count" => $all_count]);
+
+        return $this->ok(['rows' => $chapters, 'count' => $all_count]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -354,23 +353,21 @@ class PaliTextController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(string $id)
     {
         //
         $para = explode('-', $id);
         $paragraph = PaliText::where('book', $para[0])->where('paragraph', $para[1])->first();
+
         return $this->ok(new PaliTextResource($paragraph));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\PaliText  $paliText
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, PaliText $paliText)
     {
@@ -380,8 +377,7 @@ class PaliTextController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\PaliText  $paliText
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(PaliText $paliText)
     {

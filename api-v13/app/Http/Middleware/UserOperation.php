@@ -2,24 +2,24 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\UserOperationDaily;
+use App\Models\UserOperationFrame;
+use App\Models\UserOperationLog;
+use App\Services\AuthService;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-
-use App\Models\UserOperationLog;
-use App\Models\UserOperationFrame;
-use App\Models\UserOperationDaily;
-use App\Services\AuthService;
-
 class UserOperation
 {
     private const MAX_INTERVAL = 600_000; // 10 min (ms)
+
     private const MIN_INTERVAL = 60_000;  // 1 min (ms)
+
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -53,15 +53,14 @@ class UserOperation
          * =========================
          */
         UserOperationLog::forceCreate([
-            'id'          => app('snowflake')->id(),
-            'user_id'     => $user['user_id'],
-            'op_type_id'  => $newLog['op_type_id'],
-            'op_type'     => $newLog['op_type'],
-            'content'     => $newLog['content'],
-            'timezone'    => $clientTimezone,
+            'id' => app('snowflake')->id(),
+            'user_id' => $user['user_id'],
+            'op_type_id' => $newLog['op_type_id'],
+            'op_type' => $newLog['op_type'],
+            'content' => $newLog['content'],
+            'timezone' => $clientTimezone,
             'create_time' => $currTime,
         ]);
-
 
         /**
          * =========================
@@ -80,13 +79,13 @@ class UserOperation
 
         if ($isNewFrame) {
             UserOperationFrame::forceCreate([
-                'id'        => app('snowflake')->id(),
-                'user_id'   => $user['user_id'],
-                'op_start'  => $currTime - self::MIN_INTERVAL,
-                'op_end'    => $currTime,
-                'duration'  => self::MIN_INTERVAL,
-                'hit'       => 1,
-                'timezone'  => $clientTimezone,
+                'id' => app('snowflake')->id(),
+                'user_id' => $user['user_id'],
+                'op_start' => $currTime - self::MIN_INTERVAL,
+                'op_end' => $currTime,
+                'duration' => self::MIN_INTERVAL,
+                'hit' => 1,
+                'timezone' => $clientTimezone,
             ]);
 
             $thisActiveTime = self::MIN_INTERVAL;
@@ -94,9 +93,9 @@ class UserOperation
             $thisActiveTime = $currTime - (int) $lastFrame->op_end;
 
             $lastFrame->forceFill([
-                'op_end'   => $currTime,
+                'op_end' => $currTime,
                 'duration' => $currTime - (int) $lastFrame->op_start,
-                'hit'      => $lastFrame->hit + 1,
+                'hit' => $lastFrame->hit + 1,
             ])->save();
         }
 
@@ -105,11 +104,11 @@ class UserOperation
          * 3. Daily 汇总
          * =========================
          */
-        $clientTime     = $currTime + $clientTimezone;
-        $clientDateMs   = strtotime(gmdate('Y-m-d', $clientTime / 1000)) * 1000;
+        $clientTime = $currTime + $clientTimezone;
+        $clientDateMs = strtotime(gmdate('Y-m-d', $clientTime / 1000)) * 1000;
 
         $daily = UserOperationDaily::firstOrNew([
-            'user_id'  => $user['user_id'],
+            'user_id' => $user['user_id'],
             'date_int' => $clientDateMs,
         ]);
 
@@ -119,9 +118,9 @@ class UserOperation
         } else {
             $id = app('snowflake')->id();
             $daily->forceFill([
-                'id'       => $id,
+                'id' => $id,
                 'duration' => self::MIN_INTERVAL,
-                'hit'      => 1,
+                'hit' => 1,
             ])->save();
         }
 
@@ -137,13 +136,13 @@ class UserOperation
             'channel' => match ($method) {
                 'POST' => [
                     'op_type_id' => 11,
-                    'op_type'    => 'channel_create',
-                    'content'    => $request->input('studio') . '/' . $request->input('name'),
+                    'op_type' => 'channel_create',
+                    'content' => $request->input('studio').'/'.$request->input('name'),
                 ],
                 'PUT' => [
                     'op_type_id' => 10,
-                    'op_type'    => 'channel_update',
-                    'content'    => $request->input('name'),
+                    'op_type' => 'channel_update',
+                    'content' => $request->input('name'),
                 ],
                 default => null,
             },
@@ -151,33 +150,33 @@ class UserOperation
             'article' => match ($method) {
                 'POST' => [
                     'op_type_id' => 21,
-                    'op_type'    => 'article_create',
-                    'content'    => $request->input('studio') . '/' . $request->input('title'),
+                    'op_type' => 'article_create',
+                    'content' => $request->input('studio').'/'.$request->input('title'),
                 ],
                 'PUT' => [
                     'op_type_id' => 20,
-                    'op_type'    => 'article_update',
-                    'content'    => $request->input('title'),
+                    'op_type' => 'article_update',
+                    'content' => $request->input('title'),
                 ],
                 default => null,
             },
 
             'dict' => [
                 'op_type_id' => 30,
-                'op_type'    => 'dict_lookup',
-                'content'    => $request->input('word'),
+                'op_type' => 'dict_lookup',
+                'content' => $request->input('word'),
             ],
 
             'terms' => match ($method) {
                 'POST' => [
                     'op_type_id' => 42,
-                    'op_type'    => 'term_create',
-                    'content'    => $request->input('word'),
+                    'op_type' => 'term_create',
+                    'content' => $request->input('word'),
                 ],
                 'PUT' => [
                     'op_type_id' => 40,
-                    'op_type'    => 'term_update',
-                    'content'    => $request->input('word'),
+                    'op_type' => 'term_update',
+                    'content' => $request->input('word'),
                 ],
                 default => null,
             },
@@ -185,13 +184,13 @@ class UserOperation
             'sentence' => match ($method) {
                 'POST' => [
                     'op_type_id' => 71,
-                    'op_type'    => 'sent_create',
-                    'content'    => $request->input('channel'),
+                    'op_type' => 'sent_create',
+                    'content' => $request->input('channel'),
                 ],
                 'PUT' => [
                     'op_type_id' => 70,
-                    'op_type'    => 'sent_update',
-                    'content'    => $request->input('channel'),
+                    'op_type' => 'sent_update',
+                    'content' => $request->input('channel'),
                 ],
                 default => null,
             },
@@ -199,13 +198,13 @@ class UserOperation
             'anthology' => match ($method) {
                 'POST' => [
                     'op_type_id' => 81,
-                    'op_type'    => 'collection_create',
-                    'content'    => $request->input('title'),
+                    'op_type' => 'collection_create',
+                    'content' => $request->input('title'),
                 ],
                 'PUT' => [
                     'op_type_id' => 80,
-                    'op_type'    => 'collection_update',
-                    'content'    => $request->input('title'),
+                    'op_type' => 'collection_update',
+                    'content' => $request->input('title'),
                 ],
                 default => null,
             },
@@ -213,8 +212,8 @@ class UserOperation
             'wbw' => $method === 'POST'
                 ? [
                     'op_type_id' => 60,
-                    'op_type'    => 'wbw_update',
-                    'content'    => implode('_', [
+                    'op_type' => 'wbw_update',
+                    'content' => implode('_', [
                         $request->input('book'),
                         $request->input('para'),
                         $request->input('channel_id'),

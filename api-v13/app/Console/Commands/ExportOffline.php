@@ -2,17 +2,17 @@
 
 namespace App\Console\Commands;
 
+use App\Tools\Tools;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
 
 class ExportOffline extends Command
 {
     /**
      * The name and signature of the console command.
      * php artisan export:offline lzma
+     *
      * @var string
      */
     protected $signature = 'export:offline {format?  : zip file format 7z,lzma,gz } {--test}  {--driver=str}';
@@ -41,60 +41,61 @@ class ExportOffline extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
         $exportDir = storage_path('app/public/export/offline');
-        if (!is_dir($exportDir)) {
+        if (! is_dir($exportDir)) {
             $res = mkdir($exportDir, 0755, true);
-            if (!$res) {
-                Log::error('mkdir fail path=' . $exportDir);
+            if (! $res) {
+                Log::error('mkdir fail path='.$exportDir);
+
                 return 1;
             }
         }
 
-        //清空redis
+        // 清空redis
         Cache::put('/offline/index', []);
 
-        //删除全部的旧文件
+        // 删除全部的旧文件
         foreach (scandir($exportDir) as $key => $file) {
-            if (is_file($exportDir . '/' . $file)) {
-                unlink($exportDir . '/' . $file);
+            if (is_file($exportDir.'/'.$file)) {
+                unlink($exportDir.'/'.$file);
             }
         }
-        //添加 .stop
-        $exportStop = $exportDir . '/.stop';
+        // 添加 .stop
+        $exportStop = $exportDir.'/.stop';
         $file = fopen($exportStop, 'w');
         fclose($file);
 
-        //建表
+        // 建表
         $this->info('create db');
         $this->call('export:create.db');
 
-        //term
+        // term
         $this->info('export term start');
         $this->call('export:term');
 
-        //导出channel
+        // 导出channel
         $this->call('export:channel', ['db' => 'wikipali-offline']);
         $this->call('export:channel', ['db' => 'wikipali-offline-index']);
 
-        if (!$this->option('test')) {
-            //tag
+        if (! $this->option('test')) {
+            // tag
             $this->call('export:tag', ['db' => 'wikipali-offline']);
             $this->call('export:tag.map', ['db' => 'wikipali-offline']);
             //
             $this->info('export pali text start');
             $this->call('export:pali.text');
-            //导出章节索引
+            // 导出章节索引
             $this->info('export chapter start');
             $this->call('export:chapter.index', ['db' => 'wikipali-offline']);
             $this->call('export:chapter.index', ['db' => 'wikipali-offline-index']);
-            //导出译文
+            // 导出译文
             $this->info('export sentence start');
             $this->call('export:sentence', ['--type' => 'translation', '--driver' => $this->option('driver')]);
             $this->call('export:sentence', ['--type' => 'nissaya', '--driver' => $this->option('driver')]);
-            //导出原文
+            // 导出原文
             $this->call('export:sentence', ['--type' => 'original', '--driver' => $this->option('driver')]);
         }
 
@@ -103,13 +104,13 @@ class ExportOffline extends Command
         sleep(5);
         $this->call('export:zip', [
             'id' => 'index',
-            'filename' => 'wikipali-offline-index' . '-' . date("Y-m-d") . '.db3',
+            'filename' => 'wikipali-offline-index'.'-'.date('Y-m-d').'.db3',
             'title' => 'wikipali 离线包索引',
             'format' => $this->argument('format'),
         ]);
         $this->call('export:zip', [
             'id' => 'date-package',
-            'filename' => 'wikipali-offline' . '-' . date("Y-m-d") . '.db3',
+            'filename' => 'wikipali-offline'.'-'.date('Y-m-d').'.db3',
             'title' => 'wikipali 离线包',
             'format' => $this->argument('format'),
         ]);
@@ -117,6 +118,7 @@ class ExportOffline extends Command
         $this->call('export:ai.training.data');
         $this->call('export:ai.pali.word.token');
         unlink($exportStop);
+
         return 0;
     }
 }

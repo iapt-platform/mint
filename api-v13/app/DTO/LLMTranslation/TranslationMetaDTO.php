@@ -4,7 +4,7 @@ namespace App\DTO\LLMTranslation;
 
 use App\DTO\BaseDTO;
 
-readonly class TranslationMetaDTO  extends BaseDTO
+readonly class TranslationMetaDTO extends BaseDTO
 {
     public function __construct(
         public int $duration,

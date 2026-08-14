@@ -2,13 +2,14 @@
 
 namespace App\Http\Api;
 
-use Illuminate\Support\Str;
 use App\Models\Channel;
-use Illuminate\Support\Facades\Log;
 use App\Tools\Markdown;
-//use App\Services\TemplateRender;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
-define("STACK_DEEP", 8);
+// use App\Services\TemplateRender;
+
+define('STACK_DEEP', 8);
 
 class MdRender
 {
@@ -20,7 +21,7 @@ class MdRender
     protected $options = [
         'mode' => 'read',
         'channelType' => 'translation',
-        'contentType' => "markdown",
+        'contentType' => 'markdown',
         'format' => 'react',
         'debug' => [],
         'studioId' => null,
@@ -41,13 +42,13 @@ class MdRender
      */
     private function preprocessingForParagraph($input)
     {
-        if (!$this->options['paragraph']) {
+        if (! $this->options['paragraph']) {
             return $input;
         }
         $paragraphs = explode("\n\n", $input);
         $output = [];
         foreach ($paragraphs as $key => $paragraph) {
-            # 判断是否是纯粹的句子模版
+            // 判断是否是纯粹的句子模版
             $pattern = "/\{\{sent\|id=([0-9].+?)\}\}/";
             $replacement = '';
             $space = preg_replace($pattern, $replacement, $paragraph);
@@ -69,38 +70,38 @@ class MdRender
     private function tplSplit($tpl)
     {
         $before = strpos($tpl, '{{');
-        if ($before === FALSE) {
-            //未找到
+        if ($before === false) {
+            // 未找到
             return ['data' => [$tpl, '', ''], 'error' => 0];
         } else {
             $pointer = $before;
-            $stack = array();
+            $stack = [];
             $stack[] = $pointer;
             $after = substr($tpl, $pointer + 2);
-            while (!empty($after) && count($stack) > 0 && count($stack) < STACK_DEEP) {
-                $nextBegin = strpos($after, "{{");
-                $nextEnd = strpos($after, "}}");
-                if ($nextBegin !== FALSE) {
+            while (! empty($after) && count($stack) > 0 && count($stack) < STACK_DEEP) {
+                $nextBegin = strpos($after, '{{');
+                $nextEnd = strpos($after, '}}');
+                if ($nextBegin !== false) {
                     if ($nextBegin < $nextEnd) {
-                        //有嵌套找到最后一个}}
+                        // 有嵌套找到最后一个}}
                         $pointer = $pointer + 2 + $nextBegin;
                         $stack[] = $pointer;
                         $after = substr($tpl, $pointer + 2);
-                    } else if ($nextEnd !== FALSE) {
-                        //无嵌套有结束
+                    } elseif ($nextEnd !== false) {
+                        // 无嵌套有结束
                         $pointer = $pointer + 2 + $nextEnd;
                         array_pop($stack);
                         $after = substr($tpl, $pointer + 2);
                     } else {
-                        //无结束符 没找到
+                        // 无结束符 没找到
                         break;
                     }
-                } else if ($nextEnd !== FALSE) {
+                } elseif ($nextEnd !== false) {
                     $pointer = $pointer + 2 + $nextEnd;
                     array_pop($stack);
                     $after = substr($tpl, $pointer + 2);
                 } else {
-                    //没找到
+                    // 没找到
                     break;
                 }
             }
@@ -108,18 +109,17 @@ class MdRender
                 if (count($stack) === STACK_DEEP) {
                     return ['data' => [$tpl, '', ''], 'error' => 2];
                 } else {
-                    //未关闭
+                    // 未关闭
                     return ['data' => [$tpl, '', ''], 'error' => 1];
                 }
             } else {
                 return [
-                    'data' =>
-                    [
+                    'data' => [
                         substr($tpl, 0, $before),
                         substr($tpl, $before, $pointer - $before + 2),
-                        substr($tpl, $pointer + 2)
+                        substr($tpl, $pointer + 2),
                     ],
-                    'error' => 0
+                    'error' => 0,
                 ];
             }
         }
@@ -131,56 +131,58 @@ class MdRender
          * 渲染markdown里面的模版
          */
         $remain = $wiki;
-        $buffer = array();
+        $buffer = [];
         do {
             $arrWiki = $this->tplSplit($remain);
             $buffer[] = $arrWiki['data'][0];
             $tpl = $arrWiki['data'][1];
-            if (!empty($tpl)) {
+            if (! empty($tpl)) {
                 /**
                  * 处理模版 提取参数
                  */
-                $tpl = str_replace("|\n", "|", $tpl);
+                $tpl = str_replace("|\n", '|', $tpl);
                 $pattern = "/\{\{(.+?)\|/";
                 $replacement = '<MdTpl class="tpl" name="$1"><param>';
                 $tpl = preg_replace($pattern, $replacement, $tpl);
-                $tpl = str_replace("}}", "</param></MdTpl>", $tpl);
-                $tpl = str_replace("|", "</param><param>", $tpl);
+                $tpl = str_replace('}}', '</param></MdTpl>', $tpl);
+                $tpl = str_replace('|', '</param><param>', $tpl);
                 /**
                  * 替换变量名
                  */
-                $pattern = "/<param>([a-z]+?)=/";
+                $pattern = '/<param>([a-z]+?)=/';
                 $replacement = '<param name="$1">';
                 $tpl = preg_replace($pattern, $replacement, $tpl);
-                //tpl to react
+                // tpl to react
                 $tpl = str_replace('<param', '<span class="param"', $tpl);
                 $tpl = str_replace('</param>', '</span>', $tpl);
                 $tpl = $this->xml2tpl($tpl, $channelId);
                 $buffer[] = $tpl;
             }
             $remain = $arrWiki['data'][2];
-        } while (!empty($remain));
+        } while (! empty($remain));
 
         $html = implode('', $buffer);
 
         return $html;
     }
+
     private function xmlQueryId(string $xml, string $id): string
     {
         try {
             $dom = simplexml_load_string($xml);
         } catch (\Exception $e) {
             Log::error($e);
-            return "<div></div>";
+
+            return '<div></div>';
         }
         $tpl_list = $dom->xpath('//MdTpl');
         foreach ($tpl_list as $key => $tpl) {
-            foreach ($tpl->children() as  $param) {
-                # 处理每个参数
-                if ($param->getName() === "param") {
+            foreach ($tpl->children() as $param) {
+                // 处理每个参数
+                if ($param->getName() === 'param') {
                     foreach ($param->attributes() as $pa => $pa_value) {
                         $pValue = $pa_value->__toString();
-                        if ($pa === "name" && $pValue === "id") {
+                        if ($pa === 'name' && $pValue === 'id') {
                             if ($param->__toString() === $id) {
                                 return $tpl->asXML();
                             }
@@ -189,8 +191,10 @@ class MdRender
                 }
             }
         }
-        return "<div></div>";
+
+        return '<div></div>';
     }
+
     public static function take_sentence(string $xml): array
     {
         $output = [];
@@ -198,18 +202,19 @@ class MdRender
             $dom = simplexml_load_string($xml);
         } catch (\Exception $e) {
             Log::error($e);
+
             return $output;
         }
         $tpl_list = $dom->xpath('//MdTpl');
         foreach ($tpl_list as $key => $tpl) {
             foreach ($tpl->attributes() as $a => $a_value) {
-                if ($a === "name") {
-                    if ($a_value->__toString() === "sent") {
-                        foreach ($tpl->children() as  $param) {
-                            # 处理每个参数
-                            if ($param->getName() === "param") {
+                if ($a === 'name') {
+                    if ($a_value->__toString() === 'sent') {
+                        foreach ($tpl->children() as $param) {
+                            // 处理每个参数
+                            if ($param->getName() === 'param') {
                                 $sent = $param->__toString();
-                                if (!empty($sent)) {
+                                if (! empty($sent)) {
                                     $output[] = $sent;
                                     break;
                                 }
@@ -219,8 +224,10 @@ class MdRender
                 }
             }
         }
+
         return $output;
     }
+
     private function xml2tpl(string $xml, $channelId = []): string
     {
         /**
@@ -229,19 +236,20 @@ class MdRender
          * 生成react 组件参数
          */
         try {
-            //$dom = simplexml_load_string($xml);
-            $doc = new \DOMDocument();
+            // $dom = simplexml_load_string($xml);
+            $doc = new \DOMDocument;
             $xml = str_replace('MdTpl', 'dfn', $xml);
-            $xml = mb_convert_encoding($xml, 'HTML-ENTITIES', "UTF-8");
-            $ok = $doc->loadHTML($xml, LIBXML_NOERROR  | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            $xml = mb_convert_encoding($xml, 'HTML-ENTITIES', 'UTF-8');
+            $ok = $doc->loadHTML($xml, LIBXML_NOERROR | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         } catch (\Exception $e) {
             Log::error($e);
             Log::error($xml);
+
             return "<span>xml解析错误{$e}</span>";
         }
 
-        if (!$ok) {
-            return "<span>xml解析错误</span>";
+        if (! $ok) {
+            return '<span>xml解析错误</span>';
         }
         /*
         if(!$dom){
@@ -259,7 +267,7 @@ class MdRender
             $props = [];
             $tpl_name = '';
             foreach ($tpl->attributes as $a => $a_value) {
-                if ($a_value->nodeName === "name") {
+                if ($a_value->nodeName === 'name') {
                     $tpl_name = $a_value->nodeValue;
                     break;
                 }
@@ -267,12 +275,12 @@ class MdRender
             $param_id = 0;
             $child = $tpl->firstChild;
             while ($child) {
-                # 处理每个参数
-                if ($child->nodeName === "span") {
+                // 处理每个参数
+                if ($child->nodeName === 'span') {
                     $param_id++;
-                    $paramName = "";
+                    $paramName = '';
                     foreach ($child->attributes as $pa => $pa_value) {
-                        if ($pa_value->nodeName === "name") {
+                        if ($pa_value->nodeName === 'name') {
                             $nodeText = $pa_value->nodeValue;
                             $props["{$nodeText}"] = $child->nodeValue;
                             $paramName = $pa_value;
@@ -280,7 +288,7 @@ class MdRender
                     }
                     if (empty($paramName)) {
                         foreach ($child->childNodes as $param_child) {
-                            # code...
+                            // code...
                             if ($param_child->nodeType === 3) {
                                 $props["{$param_id}"] = $param_child->nodeValue;
                             }
@@ -291,7 +299,6 @@ class MdRender
             }
             /**
              * 生成模版参数
-             *
              */
             $channelInfo = [];
             foreach ($channelId as $key => $id) {
@@ -319,10 +326,10 @@ class MdRender
                 ->render();
                 */
             if ($this->options['format'] === 'react' && $tplProps) {
-                $props = $doc->createAttribute("props");
+                $props = $doc->createAttribute('props');
                 $props->nodeValue = $tplProps['props'];
                 $tpl->appendChild($props);
-                $attTpl = $doc->createAttribute("tpl");
+                $attTpl = $doc->createAttribute('tpl');
                 $attTpl->nodeValue = $tplProps['tpl'];
                 $tpl->appendChild($attTpl);
                 $htmlElement = $doc->createElement($tplProps['tag']);
@@ -338,7 +345,7 @@ class MdRender
                 break;
             case 'unity':
                 if (isset($tplProps) && is_array($tplProps)) {
-                    return "{{" . "{$tplProps['tpl']}|{$tplProps['props']}" . "}}";
+                    return '{{'."{$tplProps['tpl']}|{$tplProps['props']}".'}}';
                 } else {
                     return '';
                 }
@@ -357,6 +364,7 @@ class MdRender
                     }
                 } else {
                     Log::error('tplProps undefine');
+
                     return '';
                 }
                 break;
@@ -368,7 +376,7 @@ class MdRender
      */
     private function markdown2wiki(string $markdown): string
     {
-        //$markdown = mb_convert_encoding($markdown,'UTF-8','UTF-8');
+        // $markdown = mb_convert_encoding($markdown,'UTF-8','UTF-8');
         $markdown = iconv('UTF-8', 'UTF-8//IGNORE', $markdown);
         /**
          * nissaya
@@ -376,22 +384,22 @@ class MdRender
          * {{nissaya|aaa|bbb}}
          */
         if ($this->options['channelType'] === 'nissaya') {
-            if ($this->options['contentType'] === "json") {
+            if ($this->options['contentType'] === 'json') {
                 $json = json_decode($markdown);
                 $nissayaWord = [];
                 if (is_array($json)) {
                     foreach ($json as $word) {
                         if (count($word->sn) === 1) {
-                            //只输出第一层级
-                            $str = "{{nissaya|";
+                            // 只输出第一层级
+                            $str = '{{nissaya|';
                             if (isset($word->word->value)) {
                                 $str .= $word->word->value;
                             }
-                            $str .= "|";
+                            $str .= '|';
                             if (isset($word->meaning->value)) {
                                 $str .= $word->meaning->value;
                             }
-                            $str .= "}}";
+                            $str .= '}}';
                             $nissayaWord[] = $str;
                         }
                     }
@@ -400,13 +408,13 @@ class MdRender
                 }
 
                 $markdown = implode('', $nissayaWord);
-            } else if ($this->options['contentType'] === "markdown") {
+            } elseif ($this->options['contentType'] === 'markdown') {
                 $lines = explode("\n", $markdown);
-                $newLines = array();
-                foreach ($lines as  $line) {
+                $newLines = [];
+                foreach ($lines as $line) {
                     if (
-                        strstr($line, '=') === FALSE &&
-                        strstr($line, '$') === FALSE
+                        strstr($line, '=') === false &&
+                        strstr($line, '$') === false
                     ) {
                         $newLines[] = $line;
                     } else {
@@ -420,25 +428,26 @@ class MdRender
                 $markdown = implode("\n", $newLines);
             }
         }
-        //$markdown = preg_replace("/\n\n/","<div></div>",$markdown);
+        // $markdown = preg_replace("/\n\n/","<div></div>",$markdown);
 
         /**
          * 处理 mermaid
          */
-        if (strpos($markdown, "```mermaid") !== false) {
+        if (strpos($markdown, '```mermaid') !== false) {
             $lines = explode("\n", $markdown);
-            $newLines = array();
+            $newLines = [];
             $mermaidBegin = false;
-            $mermaidString = array();
-            foreach ($lines as  $line) {
-                if ($line === "```mermaid") {
+            $mermaidString = [];
+            foreach ($lines as $line) {
+                if ($line === '```mermaid') {
                     $mermaidBegin = true;
                     $mermaidString = [];
+
                     continue;
                 }
                 if ($mermaidBegin) {
-                    if ($line === "```") {
-                        $newLines[] = "{{mermaid|" . base64_encode(\json_encode($mermaidString)) . "}}";
+                    if ($line === '```') {
+                        $newLines[] = '{{mermaid|'.base64_encode(\json_encode($mermaidString)).'}}';
                         $mermaidBegin = false;
                     } else {
                         $mermaidString[] = $line;
@@ -454,7 +463,7 @@ class MdRender
          * 替换换行符
          * react 无法处理 <br> 替换为<div></div>代替换行符作用
          */
-        //$markdown = str_replace('<br>','<div></div>',$markdown);
+        // $markdown = str_replace('<br>','<div></div>',$markdown);
 
         /**
          * markdown -> html
@@ -464,12 +473,12 @@ class MdRender
         $html = MdRender::fixHtml($html);
         */
 
-        #替换术语
+        // 替换术语
         $pattern = "/\[\[(.+?)\]\]/";
         $replacement = '{{term|$1}}';
         $markdown = preg_replace($pattern, $replacement, $markdown);
 
-        #替换句子模版
+        // 替换句子模版
         $pattern = "/\{\{([0-9].+?)\}\}/";
         $replacement = '{{sent|id=$1}}';
         $markdown = preg_replace($pattern, $replacement, $markdown);
@@ -487,22 +496,23 @@ class MdRender
          */
         if (strpos($markdown, "```\n") !== false) {
             $lines = explode("\n", $markdown);
-            $newLines = array();
+            $newLines = [];
             $noteBegin = false;
-            $noteString = array();
-            foreach ($lines as  $line) {
+            $noteString = [];
+            foreach ($lines as $line) {
 
                 if ($noteBegin) {
-                    if ($line === "```") {
-                        $newLines[] = "}}";
+                    if ($line === '```') {
+                        $newLines[] = '}}';
                         $noteBegin = false;
                     } else {
                         $newLines[] = $line;
                     }
                 } else {
-                    if ($line === "```") {
+                    if ($line === '```') {
                         $noteBegin = true;
-                        $newLines[] = "{{note|";
+                        $newLines[] = '{{note|';
+
                         continue;
                     } else {
                         $newLines[] = $line;
@@ -510,7 +520,7 @@ class MdRender
                 }
             }
             if ($noteBegin) {
-                $newLines[] = "}}";
+                $newLines[] = '}}';
             }
             $markdown = implode("\n", $newLines);
         }
@@ -520,7 +530,7 @@ class MdRender
          * `bla bla`
          * {{note|bla}}
          */
-        $pattern = "/`(.+?)`/";
+        $pattern = '/`(.+?)`/';
         $replacement = '{{note|$1}}';
         $markdown = preg_replace($pattern, $replacement, $markdown);
 
@@ -537,17 +547,17 @@ class MdRender
             $html = $this->fixHtml($html);
         }
         $html = str_replace('<hr>', '<hr />', $html);
-        //给H1-6 添加uuid
+        // 给H1-6 添加uuid
         for ($i = 1; $i < 7; $i++) {
             if (strpos($html, "<h{$i}>") === false) {
                 continue;
             }
-            $output = array();
+            $output = [];
             $input = $html;
             $hPos = strpos($input, "<h{$i}>");
             while ($hPos !== false) {
                 $output[] = substr($input, 0, $hPos);
-                $output[] = "<h{$i} id='" . Str::uuid() . "'>";
+                $output[] = "<h{$i} id='".Str::uuid()."'>";
                 $input = substr($input, $hPos + 4);
                 $hPos = strpos($input, "<h{$i}>");
             }
@@ -555,63 +565,70 @@ class MdRender
             $html = implode('', $output);
         }
         $html = str_replace('mdtpl', 'MdTpl', $html);
+
         return $html;
     }
-    private function  fixHtml($html)
+
+    private function fixHtml($html)
     {
-        $doc = new \DOMDocument();
+        $doc = new \DOMDocument;
         libxml_use_internal_errors(true);
-        $html = mb_convert_encoding($html, 'HTML-ENTITIES', "UTF-8");
-        $doc->loadHTML('<span>' . $html . '</span>', LIBXML_NOERROR  | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+        $doc->loadHTML('<span>'.$html.'</span>', LIBXML_NOERROR | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         $fixed = $doc->saveHTML();
-        $fixed = mb_convert_encoding($fixed, "UTF-8", 'HTML-ENTITIES');
+        $fixed = mb_convert_encoding($fixed, 'UTF-8', 'HTML-ENTITIES');
+
         return $fixed;
     }
+
     public static function init()
     {
-        $GLOBALS["MdRenderStack"] = 0;
+        $GLOBALS['MdRenderStack'] = 0;
     }
+
     public function convert($markdown, $channelId = [], $queryId = null)
     {
-        if (isset($GLOBALS["MdRenderStack"]) && is_numeric($GLOBALS["MdRenderStack"])) {
-            $GLOBALS["MdRenderStack"]++;
+        if (isset($GLOBALS['MdRenderStack']) && is_numeric($GLOBALS['MdRenderStack'])) {
+            $GLOBALS['MdRenderStack']++;
         } else {
-            $GLOBALS["MdRenderStack"] = 1;
+            $GLOBALS['MdRenderStack'] = 1;
         }
-        if ($GLOBALS["MdRenderStack"] < 3) {
-            $output  =  $this->_convert($markdown, $channelId, $queryId);
+        if ($GLOBALS['MdRenderStack'] < 3) {
+            $output = $this->_convert($markdown, $channelId, $queryId);
         } else {
-            $output  = $markdown;
+            $output = $markdown;
         }
-        $GLOBALS["MdRenderStack"]--;
+        $GLOBALS['MdRenderStack']--;
+
         return $output;
     }
+
     private function _convert($markdown, $channelId = [], $queryId = null)
     {
         if (empty($markdown)) {
             switch ($this->options['format']) {
                 case 'react':
-                    return "<span></span>";
+                    return '<span></span>';
                     break;
                 default:
-                    return "";
+                    return '';
                     break;
             }
         }
         $wiki = $this->markdown2wiki($markdown);
         $wiki = $this->preprocessingForParagraph($wiki);
         $markdownWithTpl = $this->wiki2xml($wiki, $channelId);
-        if (!is_null($queryId)) {
+        if (! is_null($queryId)) {
             $html = $this->xmlQueryId($markdownWithTpl, $queryId);
         }
         $html = $this->markdownToHtml($markdownWithTpl);
 
-        //后期处理
+        // 后期处理
         $output = '';
         switch ($this->options['format']) {
             case 'react':
-                //生成可展开组件
-                $html = str_replace("<div/>", "<div></div>", $html);
+                // 生成可展开组件
+                $html = str_replace('<div/>', '<div></div>', $html);
                 $pattern = '/<li><div>(.+?)<\/div><\/li>/';
                 $replacement = '<li><MdTpl name="toggle" tpl="toggle" props=""><div>$1</div></MdTpl></li>';
                 $output = preg_replace($pattern, $replacement, $html);
@@ -621,12 +638,12 @@ class MdRender
             case 'prompt':
                 $html = strip_tags($html);
                 $output = htmlspecialchars_decode($html, ENT_QUOTES);
-                //$output = html_entity_decode($html);
+                // $output = html_entity_decode($html);
                 break;
             case 'tex':
                 $html = strip_tags($html);
                 $output = htmlspecialchars_decode($html, ENT_QUOTES);
-                //$output = html_entity_decode($html);
+                // $output = html_entity_decode($html);
                 break;
             case 'unity':
                 $html = str_replace(['<strong>', '</strong>', '<em>', '</em>'], ['[%b%]', '[%/b%]', '[%i%]', '[%/i%]'], $html);
@@ -636,42 +653,42 @@ class MdRender
                 break;
             case 'html':
                 $output = htmlspecialchars_decode($html, ENT_QUOTES);
-                //处理脚注
+                // 处理脚注
                 if ($this->options['footnote'] && isset($GLOBALS['note']) && count($GLOBALS['note']) > 0) {
                     $output .= '<div><h1>endnote</h1>';
                     foreach ($GLOBALS['note'] as $footnote) {
-                        $output .= '<p><a name="footnote-' . $footnote['sn'] . '">[' . $footnote['sn'] . ']</a> ' . $footnote['content'] . '</p>';
+                        $output .= '<p><a name="footnote-'.$footnote['sn'].'">['.$footnote['sn'].']</a> '.$footnote['content'].'</p>';
                     }
                     $output .= '</div>';
                     unset($GLOBALS['note']);
                 }
 
-                //处理图片链接
-                $output = str_replace('<img src="', '<img src="' . config('app.url'), $output);
+                // 处理图片链接
+                $output = str_replace('<img src="', '<img src="'.config('app.url'), $output);
                 $output = $this->replaceSinglePWithSpan($output);
                 break;
             case 'markdown':
-                //处理脚注
-                $footnotes = array();
+                // 处理脚注
+                $footnotes = [];
                 if ($this->options['footnote'] && isset($GLOBALS['note']) && count($GLOBALS['note']) > 0) {
                     foreach ($GLOBALS['note'] as $footnote) {
-                        $footnotes[] = '[^' . $footnote['sn'] . ']: ' . $footnote['content'];
+                        $footnotes[] = '[^'.$footnote['sn'].']: '.$footnote['content'];
                     }
                     unset($GLOBALS['note']);
                 }
-                //处理图片链接
-                $output = str_replace('/attachments/', config('app.url') . "/attachments/", $markdownWithTpl);
-                $output = $output . "\n\n" . implode("\n\n", $footnotes);
+                // 处理图片链接
+                $output = str_replace('/attachments/', config('app.url').'/attachments/', $markdownWithTpl);
+                $output = $output."\n\n".implode("\n\n", $footnotes);
                 break;
         }
+
         return $output;
     }
-
 
     /**
      * string[] $channelId
      */
-    public static function render($markdown, $channelId, $queryId = null, $mode = 'read', $channelType = 'translation', $contentType = "markdown", $format = 'react')
+    public static function render($markdown, $channelId, $queryId = null, $mode = 'read', $channelType = 'translation', $contentType = 'markdown', $format = 'react')
     {
 
         $mdRender = new MdRender(
@@ -679,19 +696,17 @@ class MdRender
                 'mode' => $mode,
                 'channelType' => $channelType,
                 'contentType' => $contentType,
-                'format' => $format
+                'format' => $format,
             ]
         );
 
-        $output  = $mdRender->convert($markdown, $channelId, $queryId);
+        $output = $mdRender->convert($markdown, $channelId, $queryId);
+
         return $output;
     }
 
     /**
      * 如果字符串中只有一对 p 标签，则替换为 span
-     *
-     * @param string $html
-     * @return string
      */
     public static function replaceSinglePWithSpan(string $html): string
     {

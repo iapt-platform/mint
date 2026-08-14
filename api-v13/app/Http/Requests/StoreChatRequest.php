@@ -15,7 +15,7 @@ class StoreChatRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'user_id' => 'required|string|exists:user_infos,userid'
+            'user_id' => 'required|string|exists:user_infos,userid',
         ];
     }
 
@@ -24,7 +24,7 @@ class StoreChatRequest extends FormRequest
         return [
             'title.required' => '聊天标题不能为空',
             'title.max' => '聊天标题不能超过255个字符',
-            'user_id.exists' => '用户不存在'
+            'user_id.exists' => '用户不存在',
         ];
     }
 }

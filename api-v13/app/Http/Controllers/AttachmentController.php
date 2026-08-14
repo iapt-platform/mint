@@ -2,28 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\File;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\App;
-
-use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Resources\AttachmentResource;
 use App\Models\Attachment;
-
-use Intervention\Image\ImageManagerStatic as Image;
+use App\Services\AuthService;
+use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
-
-
+use Illuminate\Http\File;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class AttachmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -31,24 +29,24 @@ class AttachmentController extends Controller
         switch ($request->input('view')) {
             case 'studio':
                 $user = AuthService::current($request);
-                if (!$user) {
+                if (! $user) {
                     return $this->error(__('auth.failed'));
                 }
-                //判断当前用户是否有指定的studio的权限
+                // 判断当前用户是否有指定的studio的权限
                 if ($user['user_uid'] !== StudioApi::getIdByName($request->input('studio'))) {
                     return $this->error(__('auth.failed'));
                 }
-                $table = Attachment::where('owner_uid', $user["user_uid"]);
+                $table = Attachment::where('owner_uid', $user['user_uid']);
                 break;
             default:
-                return $this->error("error view", [], 200);
+                return $this->error('error view', [], 200);
                 break;
         }
         if ($request->has('search')) {
-            $table = $table->where('title', 'like', $request->input('search') . "%");
+            $table = $table->where('title', 'like', $request->input('search').'%');
         }
         if ($request->has('content_type')) {
-            $table = $table->where('content_type', 'like', $request->input('content_type') . "%");
+            $table = $table->where('content_type', 'like', $request->input('content_type').'%');
         }
         $count = $table->count();
         $table = $table->orderBy(
@@ -61,19 +59,18 @@ class AttachmentController extends Controller
 
         $result = $table->get();
 
-        return $this->ok(["rows" => AttachmentResource::collection($result), "count" => $count]);
+        return $this->ok(['rows' => AttachmentResource::collection($result), 'count' => $count]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
 
@@ -84,7 +81,7 @@ class AttachmentController extends Controller
         $isCreate = true;
         if (Str::isUuid($request->input('id'))) {
             $attachment = Attachment::find($request->input('id'));
-            if (!$attachment) {
+            if (! $attachment) {
                 return $this->error('no res');
             }
             $fileId = $attachment->id;
@@ -100,18 +97,18 @@ class AttachmentController extends Controller
 
         if ($request->input('type') === 'avatar') {
             $resize = Image::make($file)->fit(512);
-            Storage::put($bucket . '/' . $fileId . '.jpg', $resize->stream());
+            Storage::put($bucket.'/'.$fileId.'.jpg', $resize->stream());
             $resize = Image::make($file)->fit(256);
-            Storage::put($bucket . '/' . $fileId . '_m.jpg', $resize->stream());
+            Storage::put($bucket.'/'.$fileId.'_m.jpg', $resize->stream());
             $resize = Image::make($file)->fit(128);
-            Storage::put($bucket . '/' . $fileId . '_s.jpg', $resize->stream());
-            $name = $fileId . '.jpg';
+            Storage::put($bucket.'/'.$fileId.'_s.jpg', $resize->stream());
+            $name = $fileId.'.jpg';
         } else {
-            //Move Uploaded File
-            $name = $fileId . '.' . $ext;
-            if (!$isCreate) {
-                //替换模式，先删除旧文件
-                Storage::delete($bucket . '/' . $name);
+            // Move Uploaded File
+            $name = $fileId.'.'.$ext;
+            if (! $isCreate) {
+                // 替换模式，先删除旧文件
+                Storage::delete($bucket.'/'.$name);
             }
             $filename = $file->storeAs($bucket, $name);
         }
@@ -147,42 +144,41 @@ class AttachmentController extends Controller
                 break;
             case 'video':
                 $tmpFile = $file->storeAs($bucket, $name, 'local');
-                $path = storage_path('app/' . $tmpFile);
+                $path = storage_path('app/'.$tmpFile);
                 if (App::environment('local')) {
                     $ffmpeg = FFMpeg::create();
                 } else {
-                    $ffmpeg = FFMpeg::create(array(
+                    $ffmpeg = FFMpeg::create([
                         'ffmpeg.binaries' => '/usr/bin/ffmpeg',
                         'ffprobe.binaries' => '/usr/bin/ffprobe',
                         'timeout' => 3600,
                         'ffmpeg.threads' => 1,
-                    ));
+                    ]);
                 }
 
                 $video = $ffmpeg->open($path);
-                $frame = $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(1));
+                $frame = $video->frame(TimeCode::fromSeconds(1));
                 $screenShot = storage_path("app/tmp/{$fileId}.jpg");
                 $frame->save($screenShot);
                 $thumbnail = Image::make($screenShot);
                 break;
             default:
-                # code...
+                // code...
                 break;
         }
         if (isset($thumbnail)) {
-            //生成缩略图
+            // 生成缩略图
             $thumbnail->resize(256, 256, function ($constraint) {
                 $constraint->aspectRatio();
             });
-            Storage::put($bucket . '/' . $fileId . '_m.jpg', $thumbnail->stream());
+            Storage::put($bucket.'/'.$fileId.'_m.jpg', $thumbnail->stream());
             $thumbnail->resize(128, 128, function ($constraint) {
                 $constraint->aspectRatio();
             });
-            Storage::put($bucket . '/' . $fileId . '_s.jpg', $thumbnail->stream());
-            //销毁图片资源
+            Storage::put($bucket.'/'.$fileId.'_s.jpg', $thumbnail->stream());
+            // 销毁图片资源
             $thumbnail->destroy();
         }
-
 
         return $this->ok(new AttachmentResource($attachment));
     }
@@ -190,8 +186,7 @@ class AttachmentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Attachment  $attachment
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Attachment $attachment)
     {
@@ -202,34 +197,32 @@ class AttachmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Attachment  $attachment
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Attachment $attachment)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
 
         $attachment->title = $request->input('title');
         $attachment->save();
+
         return $this->ok(new AttachmentResource($attachment));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Request $request, string $id)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
         if (Str::isUuid($id)) {
@@ -238,31 +231,32 @@ class AttachmentController extends Controller
             /**
              * 从文件名获取bucket和name
              */
-            $pos = mb_strrpos($request->input('name'), '/', 0, "UTF-8");
+            $pos = mb_strrpos($request->input('name'), '/', 0, 'UTF-8');
             if ($pos === false) {
                 return $this->error('无效的文件名', 500, 500);
             }
             $bucket = mb_substr($request->input('name'), 0, $pos, 'UTF-8');
-            $name = mb_substr($request->input('name'), $pos + 1, NULL, 'UTF-8');
+            $name = mb_substr($request->input('name'), $pos + 1, null, 'UTF-8');
             $res = Attachment::where('bucket', $bucket)
                 ->where('name', $name)
                 ->first();
         }
-        if (!$res) {
+        if (! $res) {
             return $this->error('no res');
         }
         if ($user['user_uid'] !== $res->user_uid) {
             return $this->error(__('auth.failed'), 403, 403);
         }
 
-        //删除文件
-        $filename = $res->bucket . '/' . $res->name;
+        // 删除文件
+        $filename = $res->bucket.'/'.$res->name;
         $path_parts = pathinfo($res->name);
         Storage::delete($filename);
-        Storage::delete($res->bucket . '/' . $path_parts['filename'] . '_m.jpg');
-        Storage::delete($res->bucket . '/' . $path_parts['filename'] . '_s.jpg');
+        Storage::delete($res->bucket.'/'.$path_parts['filename'].'_m.jpg');
+        Storage::delete($res->bucket.'/'.$path_parts['filename'].'_s.jpg');
 
         $del = $res->delete();
+
         return $this->ok($del);
     }
 }

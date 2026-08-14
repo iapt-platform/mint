@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Api\Mq;
+use App\Tools\Tools;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use App\Http\Api\Mq;
 
 class MqEmpty extends Command
 {
@@ -39,7 +40,7 @@ class MqEmpty extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
         $exchange = 'router';
@@ -52,6 +53,7 @@ class MqEmpty extends Command
             function ($message) {
                 $this->info('new message');
                 sleep(3);
+
                 return 0;
             }
         );

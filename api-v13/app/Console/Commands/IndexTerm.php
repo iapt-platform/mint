@@ -163,7 +163,7 @@ class IndexTerm extends Command
 
         if ($this->isTest) {
             $this->info($document['title']['text']['pali']);
-            //$this->info($document['summary']['text']);
+            // $this->info($document['summary']['text']);
         } else {
             $this->openSearchService->create($document['id'], $document);
         }
