@@ -22,6 +22,9 @@ class PaliTextController extends Controller
     public function index(Request $request)
     {
         //
+        $request->validate([
+            'view' => 'required|in:chapter-tag,chapter,chapter_children,children,paragraph,paragraphs-info,book-toc',
+        ]);
         $all_count = 0;
         switch ($request->input('view')) {
             case 'chapter-tag':
@@ -320,6 +323,8 @@ class PaliTextController extends Controller
                 }
 
                 break;
+            default:
+                return $this->error('unknown view', 400, 400);
         }
 
         if ($request->input('view') !== 'book-toc' && 
