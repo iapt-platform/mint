@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Api\DictApi;
+use App\Tools\Tools;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use App\Http\Api\DictApi;
 
 class UpgradeDictId extends Command
 {
@@ -39,24 +40,25 @@ class UpgradeDictId extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
         $this->info($this->description);
         $user_dict_id = DictApi::getSysDict('community');
-        if($user_dict_id){
-            $result = DB::select('UPDATE "user_dicts" set "dict_id"=? where "source"=? ',[$user_dict_id,'_USER_WBW_']);
-        }else{
+        if ($user_dict_id) {
+            $result = DB::select('UPDATE "user_dicts" set "dict_id"=? where "source"=? ', [$user_dict_id, '_USER_WBW_']);
+        } else {
             $this->error('没有找到 community 字典');
         }
 
         $user_dict_extract_id = DictApi::getSysDict('community_extract');
-        if($user_dict_extract_id){
-            $result = DB::select('UPDATE "user_dicts" set "dict_id"=? where "source"=? ',[$user_dict_extract_id,'_SYS_USER_WBW_']);
-        }else{
+        if ($user_dict_extract_id) {
+            $result = DB::select('UPDATE "user_dicts" set "dict_id"=? where "source"=? ', [$user_dict_extract_id, '_SYS_USER_WBW_']);
+        } else {
             $this->error('没有找到 community_extract 字典');
         }
         $this->info('all done');
+
         return 0;
     }
 }

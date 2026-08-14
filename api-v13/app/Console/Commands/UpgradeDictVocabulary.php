@@ -2,16 +2,17 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\Vocabulary;
 use App\Models\UserDict;
+use App\Models\Vocabulary;
 use App\Tools\Tools;
+use Illuminate\Console\Command;
 
 class UpgradeDictVocabulary extends Command
 {
     /**
      * The name and signature of the console command.
      * php artisan upgrade:dict.vocabulary
+     *
      * @var string
      */
     protected $signature = 'upgrade:dict.vocabulary';
@@ -40,25 +41,26 @@ class UpgradeDictVocabulary extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-        $words = UserDict::where('source','_PAPER_')->selectRaw('word,count(*)')->groupBy('word')->cursor();
+        $words = UserDict::where('source', '_PAPER_')->selectRaw('word,count(*)')->groupBy('word')->cursor();
 
-		$bar = $this->output->createProgressBar(230000);
-		foreach ($words as $word) {
-			$update = Vocabulary::firstOrNew(
+        $bar = $this->output->createProgressBar(230000);
+        foreach ($words as $word) {
+            $update = Vocabulary::firstOrNew(
                 ['word' => $word->word],
-                ['word_en'=>Tools::getWordEn($word->word)]
+                ['word_en' => Tools::getWordEn($word->word)]
             );
             $update->count = $word->count;
             $update->flag = 1;
-            $update->strlen = mb_strlen($word->word,"UTF-8");
+            $update->strlen = mb_strlen($word->word, 'UTF-8');
             $update->save();
             $bar->advance();
-		}
+        }
         $bar->finish();
-        Vocabulary::where('flag',0)->delete();
+        Vocabulary::where('flag', 0)->delete();
+
         return 0;
     }
 }

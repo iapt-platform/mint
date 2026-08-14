@@ -2,31 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
-
-use App\Models\Discussion;
-use App\Models\Wbw;
-use App\Models\WbwBlock;
-use App\Models\PaliSentence;
-use App\Models\Sentence;
-use App\Models\Channel;
-use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\WbwSentenceController;
-use App\Http\Resources\DiscussionResource;
-use App\Http\Api\MdRender;
-use App\Services\AuthService;
-use App\Http\Api\Mq;
-use App\Http\Api\UserApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\CourseApi;
+use App\Http\Api\MdRender;
+use App\Http\Api\Mq;
+use App\Http\Api\UserApi;
+use App\Http\Resources\DiscussionResource;
+use App\Models\Channel;
+use App\Models\Discussion;
+use App\Models\PaliSentence;
+use App\Models\Sentence;
+use App\Models\Wbw;
+use App\Models\WbwBlock;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class DiscussionController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -40,8 +37,8 @@ class DiscussionController extends Controller
                 $topic = Discussion::where('id', $request->input('id'));
                 $topic->where('status', $request->input('status', 'active'))
                     ->select('res_id')->first();
-                if (!$topic) {
-                    return $this->error("无效的id");
+                if (! $topic) {
+                    return $this->error('无效的id');
                 }
                 $table = Discussion::where('res_id', $topic->res_id);
                 $activeNumber = Discussion::where('res_id', $topic->res_id)
@@ -56,12 +53,11 @@ class DiscussionController extends Controller
                  * 禁止：
                  * 未注册用户看到任何人发表的discussion
                  * basic用户看到别人在别人channel发表的discussion
-                 *
                  */
-                if (!$user && $request->input('type') === 'discussion') {
+                if (! $user && $request->input('type') === 'discussion') {
                     return $this->ok([
-                        "rows" => [],
-                        "count" => 0,
+                        'rows' => [],
+                        'count' => 0,
                         'active' => 0,
                         'close' => 0,
                         'can_create' => false,
@@ -72,7 +68,7 @@ class DiscussionController extends Controller
                 if ($user) {
                     switch ($resType) {
                         case 'sentence':
-                            # code...
+                            // code...
                             break;
                         case 'wbw':
                             $block_uid = Wbw::where('uid', $request->input('id'))->value('block_uid');
@@ -84,26 +80,25 @@ class DiscussionController extends Controller
                             }
                             break;
                         default:
-                            # code...
+                            // code...
                             break;
                     }
                 }
 
-
                 $resId = [$request->input('id')];
-                if (!empty($request->input('course'))) {
+                if (! empty($request->input('course'))) {
                     //
                     /**
                      * 如果res id 是答案，获取学员提问
                      * 如果是学员
                      */
-                    //获取学员提问
-                    //获取学员channel
+                    // 获取学员提问
+                    // 获取学员channel
                     if ($request->input('show_student') === 'true') {
                         $channelsId = CourseApi::getStudentChannels($request->input('course'));
                         switch ($resType) {
                             case 'wbw':
-                                //获取答案单词编号
+                                // 获取答案单词编号
                                 $wbwWord = Wbw::where('uid', $request->input('id'))
                                     ->first();
                                 $wbwId = WbwSentenceController::getWbwIdByChannels(
@@ -177,9 +172,8 @@ class DiscussionController extends Controller
             case 'topic-by-user':
                 /**
                  * 某用户发表的全部topic
-                 *
                  */
-                if (!$user) {
+                if (! $user) {
                     return $this->error('', 403, 403);
                 }
                 $table = Discussion::where('editor_uid', $user['user_uid'])
@@ -203,13 +197,13 @@ class DiscussionController extends Controller
                     ->where('status', 'close')->count();
                 break;
         }
-        if (!empty($search)) {
-            $table = $table->where('title', 'like', $search . "%");
+        if (! empty($search)) {
+            $table = $table->where('title', 'like', $search.'%');
         }
         $count = $table->count();
 
         $table = $table->orderBy($request->input('order', 'created_at'), $request->input('dir', 'desc'));
-        $table = $table->skip($request->input("offset", 0))
+        $table = $table->skip($request->input('offset', 0))
             ->take($request->input('limit', 100));
 
         $result = $table->get();
@@ -250,8 +244,8 @@ class DiscussionController extends Controller
         }
 
         return $this->ok([
-            "rows" => DiscussionResource::collection($result),
-            "count" => $count,
+            'rows' => DiscussionResource::collection($result),
+            'count' => $count,
             'active' => $activeNumber,
             'close' => $closeNumber,
             'can_create' => $can_create,
@@ -262,9 +256,9 @@ class DiscussionController extends Controller
     public function discussion_tree(Request $request)
     {
         $output = [];
-        $sentences = $request->input("data");
+        $sentences = $request->input('data');
         foreach ($sentences as $key => $sentence) {
-            # 先查句子信息
+            // 先查句子信息
             $sentInfo = Sentence::where('book_id', $sentence['book'])
                 ->where('paragraph', $sentence['paragraph'])
                 ->where('word_start', $sentence['word_start'])
@@ -292,18 +286,19 @@ class DiscussionController extends Controller
                 }
             }
         }
+
         return $this->ok(['rows' => $output, 'count' => count($output)]);
     }
+
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), [401], 401);
         }
         //
@@ -313,15 +308,15 @@ class DiscussionController extends Controller
         if ($request->has('parent')) {
             $rules = [];
             $parentInfo = Discussion::find($request->input('parent'));
-            if (!$parentInfo) {
+            if (! $parentInfo) {
                 return $this->error('no record');
             }
         } else {
-            $rules = array(
+            $rules = [
                 'res_id' => 'required',
                 'res_type' => 'required',
                 'title' => 'required',
-            );
+            ];
         }
 
         $validated = $request->validate($rules);
@@ -338,11 +333,11 @@ class DiscussionController extends Controller
         $discussion->tpl_id = $request->input('tpl_id');
         $discussion->title = $request->input('title', null);
         $discussion->content = $request->input('content', null);
-        $discussion->content_type = $request->input('content_type', "markdown");
+        $discussion->content_type = $request->input('content_type', 'markdown');
         $discussion->parent = $request->input('parent', null);
         $discussion->editor_uid = $user['user_uid'];
         $discussion->save();
-        //更新parent children_count
+        // 更新parent children_count
         if ($request->has('parent')) {
             $parentInfo->increment('children_count', 1);
             $parentInfo->save();
@@ -357,8 +352,7 @@ class DiscussionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Discussion  $discussion
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Discussion $discussion)
     {
@@ -370,7 +364,7 @@ class DiscussionController extends Controller
      * 获取discussion 锚点的数据。以句子为最小单位，逐词解析也要显示单词所在的句子
      *
      * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function anchor($id)
     {
@@ -379,13 +373,13 @@ class DiscussionController extends Controller
         $content = '';
         switch ($discussion->res_type) {
             case 'wbw':
-                # 从逐词解析表获取逐词解析数据
+                // 从逐词解析表获取逐词解析数据
                 $wbw = Wbw::where('uid', $discussion->res_id)->first();
-                if (!$wbw) {
+                if (! $wbw) {
                     return $this->error('no wbw data');
                 }
                 $wbwBlock = WbwBlock::where('uid', $wbw->block_uid)->first();
-                if (!$wbwBlock) {
+                if (! $wbwBlock) {
                     return $this->error('no wbwBlock data');
                 }
                 $sent = PaliSentence::where('book', $wbw->book_id)
@@ -393,32 +387,32 @@ class DiscussionController extends Controller
                     ->where('word_begin', '<=', $wbw->wid)
                     ->where('word_end', '>=', $wbw->wid)
                     ->first();
-                if (!$sent) {
+                if (! $sent) {
                     return $this->error('no sent data');
                 }
                 $sentId = "{$sent['book']}-{$sent['paragraph']}-{$sent['word_begin']}-{$sent['word_end']}";
                 $channel = $wbwBlock->channel_uid;
-                $content = MdRender::render("{{" . $sentId . "}}", [$channel]);
+                $content = MdRender::render('{{'.$sentId.'}}', [$channel]);
                 break;
 
             default:
-                # code...
+                // code...
                 break;
         }
+
         return $this->ok($content);
     }
+
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Discussion  $discussion
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Discussion $discussion)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), [403], 403);
         }
         //
@@ -427,13 +421,13 @@ class DiscussionController extends Controller
         if ($discussion->editor_uid === $user['user_uid']) {
             $isManager = true;
         } else {
-            //查看是否是资源拥有者
+            // 查看是否是资源拥有者
             if ($discussion->res_type === 'sentence') {
                 $res = Sentence::find($discussion->res_id);
                 if ($res) {
                     $channelId = $res->channel_uid;
                 }
-            } else if ($discussion->res_type === 'wbw') {
+            } elseif ($discussion->res_type === 'wbw') {
                 $res = Wbw::where('uid', $discussion->res_id)->first();
                 if ($res) {
                     $block = WbwBlock::where('uid', $res->block_uid)->first();
@@ -449,7 +443,7 @@ class DiscussionController extends Controller
                 }
             }
         }
-        if (!$isManager && !$isResManager) {
+        if (! $isManager && ! $isResManager) {
             return $this->error(__('auth.failed'), [403], 403);
         }
 
@@ -459,29 +453,30 @@ class DiscussionController extends Controller
         if ($request->has('type')) {
             $discussion->type = $request->input('type');
         }
-        //$discussion->editor_uid = $user['user_uid'];
+        // $discussion->editor_uid = $user['user_uid'];
         $discussion->save();
+
         return $this->ok(new DiscussionResource($discussion));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Discussion  $discussion
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Request $request, Discussion $discussion)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), [401], 401);
         }
-        //TODO 其他有权限的人也可以删除
+        // TODO 其他有权限的人也可以删除
         if ($discussion->editor_uid !== $user['user_uid']) {
             return $this->error(__('auth.failed'), [403], 403);
         }
         $delete = $discussion->delete();
+
         return $this->ok($delete);
     }
 }

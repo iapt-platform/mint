@@ -2,22 +2,16 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-
-use App\Models\ProgressChapter;
-use App\Models\Channel;
-use App\Models\PaliText;
-use App\Models\Sentence;
-
 use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
+use App\Models\PaliText;
+use App\Models\ProgressChapter;
+use App\Models\Sentence;
 use App\Tools\Export;
-use Illuminate\Support\Facades\Cache;
 use App\Tools\ExportDownload;
-
+use App\Tools\Tools;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class ExportChapter extends Command
 {
@@ -26,6 +20,7 @@ class ExportChapter extends Command
      * php artisan export:chapter 213 3 a19eaf75-c63f-4b84-8125-1bce18311e23 213-3.html --format=html --origin=true
      * php artisan export:chapter 168 915 7fea264d-7a26-40f8-bef7-bc95102760fb 168-915.html --format=html --debug
      * php artisan export:chapter 168 915 7fea264d-7a26-40f8-bef7-bc95102760fb 168-915.html --format=html --origin=true
+     *
      * @var string
      */
     protected $signature = 'export:chapter {book} {para} {channel} {query_id} {--token=} {--origin=false} {--translation=true} {--debug} {--format=markdown} ';
@@ -56,7 +51,7 @@ class ExportChapter extends Command
     {
         $this->info('task export chapter start');
         Log::debug('task export chapter start');
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
         $book = $this->argument('book');
@@ -66,55 +61,54 @@ class ExportChapter extends Command
             'queryId' => $this->argument('query_id'),
             'format' => $this->option('format'),
             'debug' => $this->option('debug'),
-            'filename' => $book . '-' . $para,
+            'filename' => $book.'-'.$para,
         ]);
 
-        $m = new \Mustache_Engine(array(
+        $m = new \Mustache_Engine([
             'entity_flags' => ENT_QUOTES,
             'delimiters' => '[[ ]]',
             'escape' => function ($value) {
                 return $value;
-            }
-        ));
-        $tplFile = resource_path("mustache/chapter/md/paragraph.md");
+            },
+        ]);
+        $tplFile = resource_path('mustache/chapter/md/paragraph.md');
         $tplParagraph = file_get_contents($tplFile);
 
         MdRender::init();
 
         $renderFormat = 'markdown';
 
-        //获取原文channel
+        // 获取原文channel
         $orgChannelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
 
         $tranChannelsId = explode('_', $this->argument('channel'));
 
         $channelsId = array_merge([$orgChannelId], $tranChannelsId);
 
-        $channels = array();
-        $channelsIndex = array();
+        $channels = [];
+        $channelsIndex = [];
         foreach ($channelsId as $key => $id) {
             $channels[] = ChannelApi::getById($id);
             $channelsIndex[$id] = ChannelApi::getById($id);
         }
 
-        $bookMeta = array();
-        $bookMeta['book_author'] = "";
+        $bookMeta = [];
+        $bookMeta['book_author'] = '';
         foreach ($channels as $key => $channel) {
-            $bookMeta['book_author'] .= $channel['name'] . ' ';
+            $bookMeta['book_author'] .= $channel['name'].' ';
         }
 
         $chapter = PaliText::where('book', $book)
             ->where('paragraph', $para)->first();
-        if (!$chapter) {
-            return $this->error("no data");
+        if (! $chapter) {
+            return $this->error('no data');
         }
 
         $currProgress = 0;
         $this->info($upload->setStatus($currProgress, 'start'));
 
-
         if (empty($chapter->toc)) {
-            $bookMeta['title'] = "unknown";
+            $bookMeta['title'] = 'unknown';
         } else {
             $bookMeta['book_title'] = '';
             foreach ($channelsId as $key => $id) {
@@ -131,7 +125,7 @@ class ExportChapter extends Command
             ->orderBy('paragraph')
             ->get();
         if (count($subChapter) === 0) {
-            //没有子章节
+            // 没有子章节
             $subChapter = PaliText::where('book', $book)->where('paragraph', $para)
                 ->where('level', '<', 8)
                 ->orderBy('paragraph')
@@ -154,9 +148,9 @@ class ExportChapter extends Command
             $outputChannelsId = array_merge($outputChannelsId, $tranChannelsId);
         }
 
-        $sections = array();
+        $sections = [];
         foreach ($subChapter as $key => $sub) {
-            # 看这个章节是否存在译文
+            // 看这个章节是否存在译文
             $hasChapter = false;
             if ($this->option('origin') === 'true') {
                 $hasChapter = true;
@@ -171,11 +165,11 @@ class ExportChapter extends Command
                     }
                 }
             }
-            if (!$hasChapter) {
-                //不存在需要导出的数据
+            if (! $hasChapter) {
+                // 不存在需要导出的数据
                 continue;
             }
-            $filename = "{$sub->paragraph}." . $this->option('format');
+            $filename = "{$sub->paragraph}.".$this->option('format');
             $bookMeta['sections'][] = ['filename' => $filename];
             $paliTitle = PaliText::where('book', $book)
                 ->where('paragraph', $sub->paragraph)
@@ -185,13 +179,12 @@ class ExportChapter extends Command
                 $chapter = ProgressChapter::where('book', $book)->where('para', $sub->paragraph)
                     ->where('channel_id', $tranChannelsId[0])
                     ->first();
-                if ($chapter && !empty($chapter->title)) {
+                if ($chapter && ! empty($chapter->title)) {
                     $sectionTitle = $chapter->title;
                 }
             }
 
-
-            $content = array();
+            $content = [];
 
             $chapterStart = $sub->paragraph + 1;
             $chapterEnd = $sub->paragraph + $sub->chapter_len;
@@ -199,19 +192,17 @@ class ExportChapter extends Command
                 ->whereBetween('paragraph', [$chapterStart, $chapterEnd])
                 ->orderBy('paragraph')->get();
 
-
-
             foreach ($chapterBody as $body) {
                 $currProgress += $step;
-                $this->info($upload->setStatus($currProgress, 'export chapter ' . $body->paragraph));
-                $paraData = array();
-                $paraData['translations'] = array();
+                $this->info($upload->setStatus($currProgress, 'export chapter '.$body->paragraph));
+                $paraData = [];
+                $paraData['translations'] = [];
                 foreach ($outputChannelsId as $key => $channelId) {
                     $translationData = Sentence::where('book_id', $book)
                         ->where('paragraph', $body->paragraph)
                         ->where('channel_uid', $channelId)
                         ->orderBy('word_start')->get();
-                    $sentContent = array();
+                    $sentContent = [];
                     foreach ($translationData as $sent) {
                         $texText = MdRender::render(
                             $sent->content,
@@ -247,9 +238,9 @@ class ExportChapter extends Command
                         $subSessionTitle = $paraData['translations'][0]['content'];
                     }
 
-                    //标题
+                    // 标题
                     $subStr = array_fill(0, $currLevel, '#');
-                    $content[] = implode('', $subStr) . " " . $subSessionTitle;
+                    $content[] = implode('', $subStr).' '.$subSessionTitle;
                 }
                 $content[] = "\n\n";
             }
@@ -258,14 +249,14 @@ class ExportChapter extends Command
                 'name' => $filename,
                 'body' => [
                     'title' => $sectionTitle,
-                    'content' => implode('', $content)
-                ]
+                    'content' => implode('', $content),
+                ],
             ];
         }
 
-        //导出术语表
-        $keyPali = array();
-        $keyMeaning = array();
+        // 导出术语表
+        $keyPali = [];
+        $keyMeaning = [];
         if (isset($GLOBALS['glossary'])) {
             $glossary = $GLOBALS['glossary'];
             foreach ($glossary as $word => $meaning) {
@@ -288,21 +279,21 @@ class ExportChapter extends Command
 
         Log::debug('glossary', ['data' => $glossaryData]);
 
-        $tplFile = resource_path("mustache/chapter/" . $this->option('format') . "/glossary." . $this->option('format'));
+        $tplFile = resource_path('mustache/chapter/'.$this->option('format').'/glossary.'.$this->option('format'));
         $tplGlossary = file_get_contents($tplFile);
 
         $glossaryContent = $m->render($tplGlossary, $glossaryData);
 
         $sections[] = [
-            'name' => 'glossary.' . $this->option('format'),
+            'name' => 'glossary.'.$this->option('format'),
             'body' => [
                 'title' => 'glossary',
-                'content' => $glossaryContent
-            ]
+                'content' => $glossaryContent,
+            ],
         ];
-        $this->info($upload->setStatus($currProgress, 'export glossary ' . count($keyPali)));
+        $this->info($upload->setStatus($currProgress, 'export glossary '.count($keyPali)));
 
-        $this->info($upload->setStatus(0.9, 'export content done sections=' . count($sections)));
+        $this->info($upload->setStatus(0.9, 'export content done sections='.count($sections)));
 
         Log::debug('导出结束', ['sections' => count($sections)]);
 

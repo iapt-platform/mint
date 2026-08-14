@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class ArticleCollection extends Model
 {
     use HasFactory;
+
     protected $casts = [
-        'id' => 'string'
+        'id' => 'string',
     ];
 }

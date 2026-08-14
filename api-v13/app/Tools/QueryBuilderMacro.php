@@ -1,13 +1,16 @@
 <?php
+
 /**
  * 作者：guanguans
  * 链接：https://juejin.cn/post/7116779474783305735
  * 来源：稀土掘金
  * 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
  */
+
 namespace App\Tools;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Builder;
 
 class QueryBuilderMacro
 {
@@ -15,7 +18,7 @@ class QueryBuilderMacro
     {
         /* @var Arrayable|array[] $values */
         return function (array $columns, $values, string $boolean = 'and', bool $not = false) {
-            /** @var \Illuminate\Database\Eloquent\Builder $this */
+            /** @var Builder $this */
             $type = $not ? 'not in' : 'in';
 
             $rawColumns = implode(',', $columns);
@@ -52,7 +55,7 @@ class QueryBuilderMacro
     public function whereNotIns(): callable
     {
         return function (array $columns, $values) {
-            /** @var \Illuminate\Database\Eloquent\Builder $this */
+            /** @var Builder $this */
             return $this->whereIns($columns, $values, 'and', true);
         };
     }
@@ -60,7 +63,7 @@ class QueryBuilderMacro
     public function orWhereIns(): callable
     {
         return function (array $columns, $values) {
-            /** @var \Illuminate\Database\Eloquent\Builder $this */
+            /** @var Builder $this */
             return $this->whereIns($columns, $values, 'or');
         };
     }
@@ -68,9 +71,8 @@ class QueryBuilderMacro
     public function orWhereNotIns(): callable
     {
         return function (array $columns, $values) {
-            /** @var \Illuminate\Database\Eloquent\Builder $this */
+            /** @var Builder $this */
             return $this->whereIns($columns, $values, 'or', true);
         };
     }
 }
-

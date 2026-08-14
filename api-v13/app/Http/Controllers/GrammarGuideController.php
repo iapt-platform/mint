@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DhammaTerm;
 use App\Http\Api\ChannelApi;
+use App\Models\DhammaTerm;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class GrammarGuideController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -21,8 +22,7 @@ class GrammarGuideController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -32,27 +32,27 @@ class GrammarGuideController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\DhammaTerm  $dhammaTerm
-     * @return \Illuminate\Http\Response
+     * @param  DhammaTerm  $dhammaTerm
+     * @return Response
      */
     public function show(string $id)
     {
         //
-        $param = explode('_',$id);
+        $param = explode('_', $id);
 
         $localTermChannel = ChannelApi::getSysChannel(
-            "_System_Grammar_Term_".strtolower($param[1])."_",
-            "_System_Grammar_Term_en_"
+            '_System_Grammar_Term_'.strtolower($param[1]).'_',
+            '_System_Grammar_Term_en_'
         );
-        if(!$localTermChannel){
+        if (! $localTermChannel) {
             return $this->error('no term channel');
         }
-        $result = DhammaTerm::where('word',$param[0])
-                    ->where('channal',$localTermChannel)->first();
+        $result = DhammaTerm::where('word', $param[0])
+            ->where('channal', $localTermChannel)->first();
 
-        if($result){
+        if ($result) {
             return $this->ok("# {$result->meaning}\n {$result->note}");
-        }else{
+        } else {
             return $this->ok("# {$id}\n no record");
         }
 
@@ -61,9 +61,7 @@ class GrammarGuideController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\DhammaTerm  $dhammaTerm
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, DhammaTerm $dhammaTerm)
     {
@@ -73,8 +71,7 @@ class GrammarGuideController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\DhammaTerm  $dhammaTerm
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(DhammaTerm $dhammaTerm)
     {

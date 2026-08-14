@@ -1,28 +1,24 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
-
-use App\Models\SentPr;
-use App\Models\Channel;
-use App\Models\PaliSentence;
-use App\Models\Sentence;
-use App\Models\Notification;
-use App\Http\Resources\SentPrResource;
 use App\Http\Api\Mq;
+use App\Http\Resources\SentPrResource;
+use App\Models\Channel;
+use App\Models\Notification;
+use App\Models\Sentence;
+use App\Models\SentPr;
 use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class SentPrController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -40,10 +36,10 @@ class SentPrController extends Controller
                 break;
         }
         if ($result) {
-            //修改notification 已读状态
+            // 修改notification 已读状态
             $user = AuthService::current($request);
             if ($user) {
-                $id = array();
+                $id = [];
                 foreach ($result as $key => $row) {
                     $id[] = $row->uid;
                 }
@@ -51,21 +47,22 @@ class SentPrController extends Controller
                     ->where('to', $user['user_uid'])
                     ->update(['status' => 'read']);
             }
+
             return $this->ok([
-                "rows" => SentPrResource::collection($result),
-                "count" => $all_count
+                'rows' => SentPrResource::collection($result),
+                'count' => $all_count,
             ]);
         } else {
-            return $this->error("no data");
+            return $this->error('no data');
         }
     }
 
     public function pr_tree(Request $request)
     {
         $output = [];
-        $sentences = $request->input("data");
+        $sentences = $request->input('data');
         foreach ($sentences as $key => $sentence) {
-            # 先查句子信息
+            // 先查句子信息
             $sentInfo = Sentence::where('book_id', $sentence['book'])
                 ->where('paragraph', $sentence['paragraph'])
                 ->where('word_start', $sentence['word_start'])
@@ -83,7 +80,7 @@ class SentPrController extends Controller
                 if ($sentInfo) {
                     $content = $sentInfo->content;
                 } else {
-                    $content = "null";
+                    $content = 'null';
                 }
                 $output[] = [
                     'sentence' => [
@@ -99,28 +96,28 @@ class SentPrController extends Controller
                 ];
             }
         }
+
         return $this->ok(['rows' => $output, 'count' => count($output)]);
     }
+
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
         $user_uid = $user['user_uid'];
 
         $data = $request->all();
 
-
-        #查询是否存在
-        #同样的内容只能提交一次
+        // 查询是否存在
+        // 同样的内容只能提交一次
         $exists = SentPr::where('book_id', $data['book'])
             ->where('paragraph', $data['para'])
             ->where('word_start', $data['begin'])
@@ -129,11 +126,11 @@ class SentPrController extends Controller
             ->where('channel_uid', $data['channel'])
             ->exists();
         if ($exists) {
-            return $this->error("已经存在同样的修改建议", 200, 200);
+            return $this->error('已经存在同样的修改建议', 200, 200);
         }
 
-        #不存在，新建
-        $new = new SentPr();
+        // 不存在，新建
+        $new = new SentPr;
         $new->id = app('snowflake')->id();
         $new->uid = Str::uuid();
         $new->book_id = $data['book'];
@@ -144,13 +141,13 @@ class SentPrController extends Controller
         $new->editor_uid = $user_uid;
         $new->content = $data['text'];
         $new->language = Channel::where('uid', $data['channel'])->value('lang');
-        $new->status = 1; //未处理状态
-        $new->strlen = mb_strlen($data['text'], "UTF-8");
+        $new->status = 1; // 未处理状态
+        $new->strlen = mb_strlen($data['text'], 'UTF-8');
         $new->create_time = time() * 1000;
         $new->modify_time = time() * 1000;
         $new->save();
 
-        $suggestionData =  [
+        $suggestionData = [
             'data' => new SentPrResource($new),
             'token' => AuthService::getToken($request),
             'notification' => $request->input('notification', true),
@@ -162,9 +159,9 @@ class SentPrController extends Controller
         );
 
         $robotMessageOk = true;
-        $webHookMessage = "";
+        $webHookMessage = '';
 
-        #同时返回此句子pr数量
+        // 同时返回此句子pr数量
         $info['book_id'] = $data['book'];
         $info['paragraph'] = $data['para'];
         $info['word_start'] = $data['begin'];
@@ -177,24 +174,23 @@ class SentPrController extends Controller
             ->where('channel_uid', $data['channel'])
             ->count();
 
-        return $this->ok(["new" => $info, "count" => $count, "webhook" => ["message" => $webHookMessage, "ok" => $robotMessageOk]]);
+        return $this->ok(['new' => $info, 'count' => $count, 'webhook' => ['message' => $webHookMessage, 'ok' => $robotMessageOk]]);
     }
 
     /**
      * Display the specified resource.
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $uid
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function show(Request $request, string $uid)
     {
         //
 
         $pr = SentPr::where('uid', $uid)->first();
-        if (!$pr) {
+        if (! $pr) {
             return $this->error('no data', 404, 404);
         }
-        //修改notification 已读状态
+        // 修改notification 已读状态
         $user = AuthService::current($request);
         if ($user) {
             Notification::where('res_id', $uid)
@@ -208,19 +204,18 @@ class SentPrController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\SentPr  $sentPr
-     * @return \Illuminate\Http\Response
+     * @param  SentPr  $sentPr
+     * @return Response
      */
     public function update(Request $request, string $id)
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
 
         $sentPr = SentPr::find($id);
-        if (!$sentPr) {
+        if (! $sentPr) {
             return $this->error('no res');
         }
         if ($sentPr->editor_uid !== $user['user_uid']) {
@@ -229,41 +224,42 @@ class SentPrController extends Controller
         $sentPr->content = $request->input('text');
         $sentPr->modify_time = time() * 1000;
         $sentPr->save();
+
         return $this->ok($sentPr);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  string $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Request $request, string $id)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
         $old = SentPr::where('id', $id)->first();
-        if (!$old) {
+        if (! $old) {
             return $this->error('no res');
         }
-        //鉴权
-        if ($old->editor_uid !== $user["user_uid"]) {
+        // 鉴权
+        if ($old->editor_uid !== $user['user_uid']) {
             return $this->error(__('auth.failed'), 403, 403);
         }
         $result = SentPr::where('id', $id)
-            ->where('editor_uid', $user["user_uid"])
+            ->where('editor_uid', $user['user_uid'])
             ->delete();
         if ($result > 0) {
-            #同时返回此句子pr数量
+            // 同时返回此句子pr数量
             $count = SentPr::where('book_id', $old->book_id)
                 ->where('paragraph', $old->paragraph)
                 ->where('word_start', $old->word_start)
                 ->where('word_end', $old->word_end)
                 ->where('channel_uid', $old->channel_uid)
                 ->count();
+
             return $this->ok($count);
         } else {
             return $this->error('not power', 403, 403);

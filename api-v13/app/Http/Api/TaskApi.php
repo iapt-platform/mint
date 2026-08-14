@@ -4,7 +4,6 @@ namespace App\Http\Api;
 
 use App\Models\Task;
 use App\Models\TaskRelation;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
@@ -12,9 +11,9 @@ class TaskApi
 {
     public static function getById($id)
     {
-        if (!$id) {
+        if (! $id) {
             return null;
-        };
+        }
         $task = Task::where('id', $id)->first();
         if ($task) {
             return [
@@ -29,11 +28,11 @@ class TaskApi
 
     public static function getListByIds($ids)
     {
-        if (!$ids) {
+        if (! $ids) {
             return null;
-        };
+        }
         $tasks = Task::whereIn('id', $ids)->get();
-        $output = array();
+        $output = [];
         foreach ($ids as $key => $id) {
             foreach ($tasks as $task) {
                 if ($task->id === $id) {
@@ -41,12 +40,14 @@ class TaskApi
                         'id' => $id,
                         'title' => $task->title,
                         'description' => $task->description,
-                        "executor" => UserApi::getByUuid($task->executor_id)
+                        'executor' => UserApi::getByUuid($task->executor_id),
                     ];
+
                     continue;
-                };
+                }
             }
         }
+
         return $output;
     }
 
@@ -80,11 +81,12 @@ class TaskApi
         }
         TaskApi::removeTaskRelationRedisKey($taskId, $relation);
     }
+
     public static function getRelationTasks($taskId, $relation = 'pre')
     {
         $key = TaskApi::taskRelationRedisKey($taskId, $relation);
-        //Log::debug('task redis key=' . $key . ' has=' . Cache::has($key));
-        $data = Cache::remember($key,  24 * 3600, function () use ($taskId, $relation) {
+        // Log::debug('task redis key=' . $key . ' has=' . Cache::has($key));
+        $data = Cache::remember($key, 24 * 3600, function () use ($taskId, $relation) {
             if ($relation === 'pre') {
                 $where = 'next_task_id';
                 $select = 'task_id';
@@ -98,8 +100,10 @@ class TaskApi
             foreach ($tasks as $key => $task) {
                 $tasksId[] = $task[$select];
             }
+
             return TaskApi::getListByIds($tasksId);
         });
+
         return $data;
     }
 
@@ -107,13 +111,15 @@ class TaskApi
     {
         return TaskApi::getRelationTasks($taskId, 'next');
     }
+
     public static function getPreTasks($taskId)
     {
         return TaskApi::getRelationTasks($taskId, 'pre');
     }
+
     public static function removeTaskRelationRedisKey($taskId, $relation = 'pre')
     {
-        //查询相关task
+        // 查询相关task
         $relations = TaskRelation::where('task_id', $taskId)
             ->orWhere('next_task_id', $taskId)
             ->select('task_id', 'next_task_id')->get();
@@ -130,6 +136,7 @@ class TaskApi
             Cache::forget($key);
         }
     }
+
     public static function taskRelationRedisKey($taskId, $relation = 'pre')
     {
         return "task/relation/{$relation}/{$taskId}";

@@ -6,20 +6,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Models\ArticleCollection;
 use App\Models\Article;
-use Illuminate\Support\Facades\Log;
+use App\Models\ArticleCollection;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Support\Facades\Log;
 
 class ArticleFtsController extends Controller
 {
     /**
      * Display a listing of the resource.
      * http://127.0.0.1:8000/api/v2/article-fts?id=df6c6609-6fc1-42d0-9ef1-535ef3e702c9&anthology=697c9169-cb9d-4a60-8848-92745e467bab&channesl=7fea264d-7a26-40f8-bef7-bc95102760fb
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -28,13 +28,13 @@ class ArticleFtsController extends Controller
         $pageCurrent = $request->input('from', 0);
 
         $articlesId = [];
-        if (!empty($request->input('anthology'))) {
-            //子节点
+        if (! empty($request->input('anthology'))) {
+            // 子节点
             $node = ArticleCollection::where('article_id', $request->input('id'))
                 ->where('collect_id', $request->input('anthology'))->first();
             if ($node) {
                 $nodeList = ArticleCollection::where('collect_id', $request->input('anthology'))
-                    ->where('id', '>=', (int)$node->id)
+                    ->where('id', '>=', (int) $node->id)
                     ->orderBy('id')
                     ->skip($request->input('from', 0))
                     ->get();
@@ -62,14 +62,14 @@ class ArticleFtsController extends Controller
             }
             $curr = $articlesId[$i];
             foreach ($channels as $channel) {
-                # code...
+                // code...
                 $article = $this->fetch($curr, $channel);
                 if ($article === false) {
                     Log::error('fetch fail');
                 } else {
-                    # code...
+                    // code...
                     $content = $article['html'];
-                    if (!empty($request->input('key'))) {
+                    if (! empty($request->input('key'))) {
                         if (strpos($content, $request->input('key')) !== false) {
                             $output[] = $article;
                         }
@@ -83,7 +83,7 @@ class ArticleFtsController extends Controller
             'page' => [
                 'size' => $pageSize,
                 'current' => $pageCurrent,
-                'total' => $total
+                'total' => $total,
             ],
         ]);
     }
@@ -92,8 +92,8 @@ class ArticleFtsController extends Controller
     {
         try {
             $api = config('mint.server.api.bamboo');
-            $basicUrl = $api . '/v2/article/';
-            $url =  $basicUrl . $articleId;;
+            $basicUrl = $api.'/v2/article/';
+            $url = $basicUrl.$articleId;
 
             $urlParam = [
                 'mode' => 'read',
@@ -107,17 +107,20 @@ class ArticleFtsController extends Controller
             }
 
             if ($response->failed()) {
-                Log::error('http request error' . $response->json('message'));
+                Log::error('http request error'.$response->json('message'));
+
                 return false;
             }
-            if (!$response->json('ok')) {
+            if (! $response->json('ok')) {
                 return false;
             }
             $article = $response->json('data');
+
             return $article;
         } catch (\Throwable $th) {
             // 处理请求过程中抛出的异常
             Log::error('fetch', ['error' => $th]);
+
             return false;
         }
     }
@@ -125,8 +128,7 @@ class ArticleFtsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -137,7 +139,7 @@ class ArticleFtsController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -147,9 +149,8 @@ class ArticleFtsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -160,7 +161,7 @@ class ArticleFtsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

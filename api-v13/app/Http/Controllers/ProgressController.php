@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\ProgressChapter;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ProgressController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -33,15 +35,15 @@ class ProgressController extends Controller
             $request->input('dir', 'desc')
         );
 
-        $table = $table->skip($request->input("offset", 0))
+        $table = $table->skip($request->input('offset', 0))
             ->take($request->input('limit', 10));
 
         $result = $table->get();
 
         return $this->ok(
             [
-                "rows" => $result->toArray(),
-                "total" => $count,
+                'rows' => $result->toArray(),
+                'total' => $count,
             ]
         );
     }

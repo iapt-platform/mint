@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ArticleCollection;
+use App\Http\Resources\ArticleMapResource;
 use App\Models\Article;
+use App\Models\ArticleCollection;
 use App\Models\Collection;
-use App\Http\Api\ShareApi;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
-use App\Http\Resources\ArticleMapResource;
+use Illuminate\Http\Response;
 
 class ArticleMapController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -32,12 +32,12 @@ class ArticleMapController extends Controller
         }
         $count = $table->count();
         $result = [];
-        if (!empty($request->input('parent'))) {
-            //输出某节点的子节点
+        if (! empty($request->input('parent'))) {
+            // 输出某节点的子节点
             $node = $table->where('article_id', $request->input('parent'))->first();
             if ($node) {
                 $nodeList = ArticleCollection::where('collect_id', $request->input('id'))
-                    ->where('id', '>', (int)$node->id)->orderBy('id')->get();
+                    ->where('id', '>', (int) $node->id)->orderBy('id')->get();
                 foreach ($nodeList as $key => $curr) {
                     if ($curr->level <= $node->level) {
                         break;
@@ -64,18 +64,17 @@ class ArticleMapController extends Controller
                 'children',
                 'article_collections.editor_id',
                 'article_collections.deleted_at',
-                'articles.status'
+                'articles.status',
             ])->orderBy('id')->get();
         }
 
-        return $this->ok(["rows" => ArticleMapResource::collection($result), "count" => $count]);
+        return $this->ok(['rows' => ArticleMapResource::collection($result), 'count' => $count]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -83,28 +82,28 @@ class ArticleMapController extends Controller
 
         $validated = $request->validate([
             'anthology_id' => 'required',
-            'operation' => 'required'
+            'operation' => 'required',
         ]);
-        $collection  = Collection::find($request->input('anthology_id'));
-        if (!$collection) {
-            return $this->error("no recorder");
+        $collection = Collection::find($request->input('anthology_id'));
+        if (! $collection) {
+            return $this->error('no recorder');
         }
-        //鉴权
+        // 鉴权
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
-        if (!CollectionController::UserCanEdit($user["user_uid"], $collection)) {
+        if (! CollectionController::UserCanEdit($user['user_uid'], $collection)) {
             return $this->error(__('auth.failed'));
         }
         switch ($validated['operation']) {
             case 'add':
-                # 添加多个文章到文集
+                // 添加多个文章到文集
                 $count = 0;
                 foreach ($request->input('article_id') as $key => $article) {
-                    # code...
+                    // code...
 
-                    if (!ArticleCollection::where('article_id', $article)
+                    if (! ArticleCollection::where('article_id', $article)
                         ->where('collect_id', $request->input('anthology_id'))
                         ->exists()) {
                         $new = new ArticleCollection;
@@ -113,11 +112,12 @@ class ArticleMapController extends Controller
                         $new->collect_id = $request->input('anthology_id');
                         $new->title = Article::find($article)->title;
                         $new->level = 1;
-                        $new->editor_id = $user["user_id"];
+                        $new->editor_id = $user['user_id'];
                         $new->save();
                         $count++;
                     }
                 }
+
                 return $this->ok($count);
                 break;
             default:
@@ -129,8 +129,8 @@ class ArticleMapController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ArticleCollection  $articleCollection
-     * @return \Illuminate\Http\Response
+     * @param  ArticleCollection  $articleCollection
+     * @return Response
      */
     public function show(string $articleCollection)
     {
@@ -149,27 +149,25 @@ class ArticleMapController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, string $id)
     {
         //
         $validated = $request->validate([
-            'operation' => 'required'
+            'operation' => 'required',
         ]);
 
-        $collection  = Collection::find($id);
-        if (!$collection) {
-            return $this->error("no recorder");
+        $collection = Collection::find($id);
+        if (! $collection) {
+            return $this->error('no recorder');
         }
-        //鉴权
+        // 鉴权
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
-        if (!CollectionController::UserCanEdit($user["user_uid"], $collection)) {
+        if (! CollectionController::UserCanEdit($user['user_uid'], $collection)) {
             return $this->error(__('auth.failed'));
         }
 
@@ -178,22 +176,23 @@ class ArticleMapController extends Controller
                 $delete = ArticleCollection::where('collect_id', $id)->delete();
                 $count = 0;
                 foreach ($request->input('data') as $key => $row) {
-                    # code...
+                    // code...
                     $new = new ArticleCollection;
                     $new->id = app('snowflake')->id();
-                    $new->article_id = $row["article_id"];
+                    $new->article_id = $row['article_id'];
                     $new->collect_id = $id;
-                    $new->title = $row["title"];
-                    $new->level = $row["level"];
-                    $new->children = $row["children"];
-                    $new->editor_id = $user["user_id"];
-                    if (isset($row["deleted_at"])) {
-                        $new->deleted_at = $row["deleted_at"];
+                    $new->title = $row['title'];
+                    $new->level = $row['level'];
+                    $new->children = $row['children'];
+                    $new->editor_id = $user['user_id'];
+                    if (isset($row['deleted_at'])) {
+                        $new->deleted_at = $row['deleted_at'];
                     }
                     $new->save();
                     $count++;
                 }
                 ArticleMapController::updateCollection($id);
+
                 return $this->ok($count);
                 break;
         }
@@ -202,8 +201,7 @@ class ArticleMapController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ArticleCollection  $articleCollection
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(ArticleCollection $articleCollection)
     {
@@ -212,29 +210,30 @@ class ArticleMapController extends Controller
 
     public static function deleteArticle(string $articleId)
     {
-        //查找有这个文章的文集
+        // 查找有这个文章的文集
         $collections = ArticleCollection::where('article_id', $articleId)
             ->select('collect_id')
             ->groupBy('collect_id')
             ->get();
-        //设置为删除
+        // 设置为删除
         ArticleCollection::where('article_id', $articleId)
             ->update(['deleted_at' => now()]);
-        //查找没有下级文章的文集
+        // 查找没有下级文章的文集
         $updateCollections = ArticleCollection::where('article_id', $articleId)
             ->where('children', 0)
             ->select('collect_id')
             ->groupBy('collect_id')
             ->get();
-        //真的删除没有下级文章的文集中的文章
+        // 真的删除没有下级文章的文集中的文章
         $count = ArticleCollection::where('article_id', $articleId)
             ->where('children', 0)
             ->delete();
-        //更新改动的文集
-        foreach ($updateCollections as  $collection) {
-            # code...
+        // 更新改动的文集
+        foreach ($updateCollections as $collection) {
+            // code...
             ArticleMapController::updateCollection($collection->collect_id);
         }
+
         return [count($collections), $count];
     }
 
@@ -242,6 +241,7 @@ class ArticleMapController extends Controller
     {
         $count = ArticleCollection::where('collect_id', $collectionId)
             ->delete();
+
         return $count;
     }
 
@@ -255,6 +255,7 @@ class ArticleMapController extends Controller
             ->orderBy('id')->get();
         Collection::where('uid', $collectionId)
             ->update(['article_list' => json_encode($result, JSON_UNESCAPED_UNICODE)]);
+
         return count($result);
     }
 }

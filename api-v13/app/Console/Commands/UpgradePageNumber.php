@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\WbwTemplate;
 use App\Models\PageNumber;
+use App\Models\WbwTemplate;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 
 class UpgradePageNumber extends Command
 {
@@ -39,37 +40,38 @@ class UpgradePageNumber extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-        $table = WbwTemplate::where('type','.ctl.')->orderBy('book')->orderBy('paragraph')->cursor();
-        $pageHead = ['M','P','T','V','O'];
-        $bar = $this->output->createProgressBar(WbwTemplate::where('type','.ctl.')->count());
+        $table = WbwTemplate::where('type', '.ctl.')->orderBy('book')->orderBy('paragraph')->cursor();
+        $pageHead = ['M', 'P', 'T', 'V', 'O'];
+        $bar = $this->output->createProgressBar(WbwTemplate::where('type', '.ctl.')->count());
         foreach ($table as $key => $value) {
-            $type = substr($value->word,0,1);
-            if(in_array($type,$pageHead)){
-                $arrPage = explode('.',$value->word);
-                if(count($arrPage)!==2){
+            $type = substr($value->word, 0, 1);
+            if (in_array($type, $pageHead)) {
+                $arrPage = explode('.', $value->word);
+                if (count($arrPage) !== 2) {
                     continue;
                 }
                 $page = PageNumber::firstOrNew(
                     [
-                        'book'=>$value->book,
-                        'paragraph'=>$value->paragraph,
-                        'wid'=>$value->wid,
+                        'book' => $value->book,
+                        'paragraph' => $value->paragraph,
+                        'wid' => $value->wid,
                     ],
                     [
-                        'type'=>$type,
-                        'volume'=>(int)substr($arrPage[0],1),
-                        'page'=>(int)$arrPage[1],
-                        'pcd_book_id'=>$value->pcd_book_id,
+                        'type' => $type,
+                        'volume' => (int) substr($arrPage[0], 1),
+                        'page' => (int) $arrPage[1],
+                        'pcd_book_id' => $value->pcd_book_id,
                     ]
-                    );
-                    $page->save();
+                );
+                $page->save();
             }
             $bar->advance();
         }
         $bar->finish();
+
         return 0;
     }
 }

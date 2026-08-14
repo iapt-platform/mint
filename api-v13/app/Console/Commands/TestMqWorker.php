@@ -2,15 +2,20 @@
 
 namespace App\Console\Commands;
 
+use App\Tools\Tools;
 use Illuminate\Console\Command;
+use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
+use PhpAmqpLib\Message\AMQPMessage;
 
 class TestMqWorker extends Command
 {
     /**
      * The name and signature of the console command.
      * php artisan test:mq.worker
+     *
      * @var string
      */
     protected $signature = 'test:mq.worker';
@@ -39,17 +44,17 @@ class TestMqWorker extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
         $exchange = 'router';
         $queue = 'hello';
         $consumerTag = 'consumer';
-        $connection = new AMQPStreamConnection(config("queue.connections.rabbitmq.host"),
-                                            config("queue.connections.rabbitmq.port"),
-                                            config("queue.connections.rabbitmq.user"),
-                                            config("queue.connections.rabbitmq.password"),
-                                            config("queue.connections.rabbitmq.virtual_host"));
+        $connection = new AMQPStreamConnection(config('queue.connections.rabbitmq.host'),
+            config('queue.connections.rabbitmq.port'),
+            config('queue.connections.rabbitmq.user'),
+            config('queue.connections.rabbitmq.password'),
+            config('queue.connections.rabbitmq.virtual_host'));
         $channel = $connection->channel();
 
         /*
@@ -80,10 +85,9 @@ class TestMqWorker extends Command
         $channel->queue_bind($queue, $exchange);
 
         /**
-         * @param \PhpAmqpLib\Message\AMQPMessage $message
+         * @param  AMQPMessage  $message
          */
-        $process_message = function ($message)
-        {
+        $process_message = function ($message) {
             echo "\n--------\n";
             echo $message->body;
             echo "\n--------\n";
@@ -109,11 +113,10 @@ class TestMqWorker extends Command
         $channel->basic_consume($queue, $consumerTag, false, false, false, false, $process_message);
 
         /**
-         * @param \PhpAmqpLib\Channel\AMQPChannel $channel
-         * @param \PhpAmqpLib\Connection\AbstractConnection $connection
+         * @param  AMQPChannel  $channel
+         * @param  AbstractConnection  $connection
          */
-        $shutdown = function ($channel, $connection)
-        {
+        $shutdown = function ($channel, $connection) {
             $channel->close();
             $connection->close();
         };
@@ -126,6 +129,7 @@ class TestMqWorker extends Command
             // do something else
             usleep(300000);
         }
+
         return 0;
     }
 }

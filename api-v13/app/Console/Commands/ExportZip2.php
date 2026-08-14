@@ -3,11 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\App;
-
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
 
 class ExportZip2 extends Command
@@ -30,7 +29,7 @@ class ExportZip2 extends Command
         $filename = basename($exportFile);
 
         if ($filename === $exportFile) {
-            $exportFullFileName = $defaultExportPath . '/' . $filename;
+            $exportFullFileName = $defaultExportPath.'/'.$filename;
             $exportPath = $defaultExportPath;
         } else {
             $exportFullFileName = $exportFile;
@@ -39,19 +38,19 @@ class ExportZip2 extends Command
 
         $format = $this->argument('format') ?? 'gz';
 
-        if (!file_exists($exportFullFileName)) {
+        if (! file_exists($exportFullFileName)) {
 
             Log::error('export offline: file not exists', [
-                'file' => $exportFullFileName
+                'file' => $exportFullFileName,
             ]);
 
-            $this->error('file not exists: ' . $exportFullFileName);
+            $this->error('file not exists: '.$exportFullFileName);
 
             return 1;
         }
 
         $zipFile = $this->getZipFileName($filename, $format);
-        $zipFullFileName = $exportPath . '/' . $zipFile;
+        $zipFullFileName = $exportPath.'/'.$zipFile;
 
         if (file_exists($zipFullFileName)) {
             unlink($zipFullFileName);
@@ -60,7 +59,7 @@ class ExportZip2 extends Command
         $this->info("start compress: {$exportFullFileName}");
         Log::debug('export offline zip start', [
             'file' => $exportFullFileName,
-            'format' => $format
+            'format' => $format,
         ]);
 
         $this->compress($exportFullFileName, $zipFullFileName, $format);
@@ -68,7 +67,7 @@ class ExportZip2 extends Command
         $this->info('压缩完成');
 
         Log::debug('zip done', [
-            'zip' => $zipFullFileName
+            'zip' => $zipFullFileName,
         ]);
 
         /*
@@ -78,12 +77,12 @@ class ExportZip2 extends Command
         */
 
         $bucket = config('mint.attachments.bucket_name.temporary');
-        $tmpFile = $bucket . '/' . $zipFile;
+        $tmpFile = $bucket.'/'.$zipFile;
 
-        $this->info('upload file=' . $tmpFile);
+        $this->info('upload file='.$tmpFile);
 
         Log::debug('export offline upload', [
-            'file' => $tmpFile
+            'file' => $tmpFile,
         ]);
 
         Storage::put($tmpFile, fopen($zipFullFileName, 'r'));
@@ -108,14 +107,15 @@ class ExportZip2 extends Command
                 );
             } catch (\Exception $e) {
                 Log::error('temporaryUrl fail', [
-                    'exception' => $e
+                    'exception' => $e,
                 ]);
                 $this->error('generate temporaryUrl fail');
+
                 return 1;
             }
         }
 
-        $this->info('link=' . $link);
+        $this->info('link='.$link);
 
         /*
         |--------------------------------------------------------------------------
@@ -126,14 +126,14 @@ class ExportZip2 extends Command
         $url = [];
         foreach (config('mint.server.cdn_urls') as $key => $cdn) {
             $url[] = [
-                'link' => $cdn . '/' . $zipFile,
-                'hostname' => 'china cdn-' . $key
+                'link' => $cdn.'/'.$zipFile,
+                'hostname' => 'china cdn-'.$key,
             ];
         }
 
         $url[] = [
             'link' => $link,
-            'hostname' => 'Amazon cloud storage(Hongkong)'
+            'hostname' => 'Amazon cloud storage(Hongkong)',
         ];
 
         /*
@@ -143,13 +143,13 @@ class ExportZip2 extends Command
         */
 
         $info = Cache::get('/offline/index', []);
-        if (!is_array($info)) {
+        if (! is_array($info)) {
             $info = [];
         }
         $id = $this->argument('id');
         // 先移除已有相同 id 的记录
         $info = array_values(array_filter($info, function ($item) use ($id) {
-            return !isset($item['id']) || $item['id'] != $id;
+            return ! isset($item['id']) || $item['id'] != $id;
         }));
         // 再追加新数据
         $info[] = [
@@ -158,7 +158,7 @@ class ExportZip2 extends Command
             'filename' => $zipFile,
             'url' => $url,
             'create_at' => now()->toDateTimeString(),
-            'chapter' => Cache::get("/export/chapter/count"),
+            'chapter' => Cache::get('/export/chapter/count'),
             'filesize' => filesize($zipFullFileName),
             'min_app_ver' => '1.3',
         ];
@@ -181,7 +181,7 @@ class ExportZip2 extends Command
             }
         } catch (\Throwable $e) {
             Log::error('delete source fail', [
-                'exception' => $e
+                'exception' => $e,
             ]);
         }
 
@@ -197,9 +197,9 @@ class ExportZip2 extends Command
     protected function getZipFileName(string $filename, string $format): string
     {
         return match ($format) {
-            '7z' => $filename . '.7z',
-            'lzma' => $filename . '.lzma',
-            default => $filename . '.tar.gz'
+            '7z' => $filename.'.7z',
+            'lzma' => $filename.'.lzma',
+            default => $filename.'.tar.gz'
         };
     }
 
@@ -220,20 +220,20 @@ class ExportZip2 extends Command
                     '-t7z',
                     '-mx=9',
                     $target,
-                    $source
+                    $source,
                 ];
                 break;
 
             case 'lzma':
                 if ($isDir) {
-                    $tmpTar = $source . '.tar';
+                    $tmpTar = $source.'.tar';
                     $tar = new Process([
                         'tar',
                         '-cf',
                         $tmpTar,
                         '-C',
                         dirname($source),
-                        basename($source)
+                        basename($source),
                     ]);
                     $tar->run();
                     $source = $tmpTar;
@@ -243,7 +243,7 @@ class ExportZip2 extends Command
                     '-k',
                     '-9',
                     '--format=lzma',
-                    $source
+                    $source,
                 ];
                 break;
 
@@ -254,7 +254,7 @@ class ExportZip2 extends Command
                     $target,
                     '-C',
                     dirname($source),
-                    basename($source)
+                    basename($source),
                 ];
         }
 
@@ -265,10 +265,10 @@ class ExportZip2 extends Command
 
         $this->info($process->getOutput());
 
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
 
             Log::error('compress fail', [
-                'error' => $process->getErrorOutput()
+                'error' => $process->getErrorOutput(),
             ]);
 
             throw new \RuntimeException($process->getErrorOutput());

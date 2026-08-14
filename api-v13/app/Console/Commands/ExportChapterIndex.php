@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
-use App\Models\ProgressChapter;
 use App\Models\Channel;
+use App\Models\ProgressChapter;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -43,28 +43,29 @@ class ExportChapterIndex extends Command
     public function handle()
     {
         Log::debug('task export offline chapter-index-table start');
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
 
-        $exportFile = storage_path('app/public/export/offline/' . $this->argument('db') . '-' . date("Y-m-d") . '.db3');
-        $dbh = new \PDO('sqlite:' . $exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $exportFile = storage_path('app/public/export/offline/'.$this->argument('db').'-'.date('Y-m-d').'.db3');
+        $dbh = new \PDO('sqlite:'.$exportFile, '', '', [\PDO::ATTR_PERSISTENT => true]);
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
 
-        $query = "INSERT INTO chapter ( id , book , paragraph,
+        $query = 'INSERT INTO chapter ( id , book , paragraph,
                                     language , title , channel_id , progress,updated_at  )
-                                    VALUES ( ? , ? , ? , ? , ? , ? , ? , ?  )";
+                                    VALUES ( ? , ? , ? , ? , ? , ? , ? , ?  )';
         try {
             $stmt = $dbh->prepare($query);
         } catch (\PDOException $e) {
             Log::error($e->getMessage(), ['exception' => $e]);
+
             return 1;
         }
 
         $publicChannels = Channel::where('status', 30)->select('uid')->get();
         $rows = ProgressChapter::whereIn('channel_id', $publicChannels)->count();
-        Cache::put("/export/chapter/count", $rows, 3600 * 10);
+        Cache::put('/export/chapter/count', $rows, 3600 * 10);
         $bar = $this->output->createProgressBar($rows);
         foreach (
             ProgressChapter::whereIn('channel_id', $publicChannels)
@@ -76,10 +77,10 @@ class ExportChapterIndex extends Command
                     'title',
                     'channel_id',
                     'progress',
-                    'updated_at'
+                    'updated_at',
                 ])->cursor() as $row
         ) {
-            $currData = array(
+            $currData = [
                 $row->uid,
                 $row->book,
                 $row->para,
@@ -88,13 +89,14 @@ class ExportChapterIndex extends Command
                 $row->channel_id,
                 $row->progress,
                 $row->updated_at,
-            );
+            ];
             $stmt->execute($currData);
             $bar->advance();
         }
         $dbh->commit();
         $bar->finish();
         Log::debug('task export offline chapter-index-table finished');
+
         return 0;
     }
 }

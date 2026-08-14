@@ -6,14 +6,13 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Class LlmResponseParser
- * @package App\Helpers
  */
 class LlmResponseParser
 {
     /**
      * 解析LLM返回的可能包含Markdown格式（如```json...```）或额外文字说明的JSON字符串。
      *
-     * @param string $input LLM返回的原始字符串。
+     * @param  string  $input  LLM返回的原始字符串。
      * @return array|null 解析成功的PHP数组，如果解析失败则返回空数组
      */
     public static function json(string $input): array
@@ -58,6 +57,7 @@ class LlmResponseParser
             'error' => json_last_error_msg(),
             'input_preview' => mb_substr($input, 0, 500),
         ]);
+
         return [];
     }
 
@@ -66,7 +66,7 @@ class LlmResponseParser
      * 支持Markdown代码块包裹、额外说明文字，以及处理截断的JSONL数据。
      * 每一行应为独立的JSON对象，解析时会跳过无效行并返回所有成功解析的数据。
      *
-     * @param string $input LLM返回的原始JSONL字符串。
+     * @param  string  $input  LLM返回的原始JSONL字符串。
      * @return array 解析成功的PHP数组，每个元素对应一行有效的JSON对象。如果完全解析失败则返回空数组。
      */
     public static function jsonl(string $input): array
@@ -109,14 +109,14 @@ class LlmResponseParser
                 // 解析失败，记录错误日志（可选）。
                 // 这里处理了截断的情况：如果某行不是有效 JSON，则跳过它。
                 // 通常最后一行可能因截断而无效，前面的有效行仍会被返回。
-                Log::warning("JSONL解析失败 - 行 " . ($lineNumber + 1) . ": " . $line);
+                Log::warning('JSONL解析失败 - 行 '.($lineNumber + 1).': '.$line);
             }
         }
 
         // 4. 返回解析结果。
         // 即使没有成功解析任何行，也返回空数组而非 null，保持返回类型一致。
         if (empty($result)) {
-            Log::error('JSONL解析失败，未能提取任何有效数据: ' . $input);
+            Log::error('JSONL解析失败，未能提取任何有效数据: '.$input);
         }
 
         return $result;
@@ -128,6 +128,7 @@ class LlmResponseParser
         foreach ($input as $key => $value) {
             $rows[] = json_encode($value, JSON_UNESCAPED_UNICODE);
         }
+
         return implode("\n", $rows);
     }
 }

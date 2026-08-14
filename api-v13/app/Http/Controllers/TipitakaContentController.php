@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\DTO\Search\HitItemDTO;
-use App\Services\OpenSearchService;
 use App\Http\Api\ChannelApi;
-
+use App\Services\OpenSearchService;
+use Illuminate\Http\Request;
 
 class TipitakaContentController extends Controller
 {
@@ -29,16 +28,16 @@ class TipitakaContentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request,string $id)
+    public function show(Request $request, string $id)
     {
         //
-        $channelId = $request->input('channel',ChannelApi::getSysChannel('_System_Pali_VRI_'));
+        $channelId = $request->input('channel', ChannelApi::getSysChannel('_System_Pali_VRI_'));
         $openSearchId = "tipitaka_chapter_{$id}_{$channelId}";
 
         try {
             $doc = HitItemDTO::fromArray(app(OpenSearchService::class)->get($openSearchId))->toArray();
         } catch (\Throwable $th) {
-            
+
             return $this->error('resouce invalid'.$th->getMessage());
         }
 

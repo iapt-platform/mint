@@ -2,16 +2,18 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Api\UserApi;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class DictPreferenceResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array|Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
@@ -26,9 +28,10 @@ class DictPreferenceResource extends JsonResource
             'updated_at' => $this->updated_at,
             'creator_id' => $this->creator_id,
         ];
-        if (!empty($this->editor_id)) {
+        if (! empty($this->editor_id)) {
             $data['editor'] = UserApi::getByUuid($this->editor_id);
         }
+
         return $data;
     }
 }

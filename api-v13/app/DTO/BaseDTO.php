@@ -23,7 +23,7 @@ abstract readonly class BaseDTO implements \JsonSerializable
 
         if (is_array($value)) {
             return array_map(
-                fn($item) => $this->normalizeValue($item),
+                fn ($item) => $this->normalizeValue($item),
                 $value
             );
         }

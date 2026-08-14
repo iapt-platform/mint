@@ -2,14 +2,15 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Sentence;
-use App\Models\Channel;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\MdRender;
+use App\Models\Channel;
+use App\Models\Sentence;
+use App\Tools\Markdown;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use App\Http\Api\MdRender;
 
 class ExportSentence extends Command
 {
@@ -45,10 +46,10 @@ class ExportSentence extends Command
     public function handle()
     {
         Log::debug('task export offline sentence-table start');
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
-        \App\Tools\Markdown::driver($this->option('driver'));
+        Markdown::driver($this->option('driver'));
         $channels = [];
         $channel_id = $this->option('channel');
         if ($channel_id) {
@@ -57,8 +58,8 @@ class ExportSentence extends Command
         } else {
             $channel_type = $this->option('type');
             $file_suf = $channel_type;
-            if ($channel_type === "original") {
-                $pali_channel = ChannelApi::getSysChannel("_System_Pali_VRI_");
+            if ($channel_type === 'original') {
+                $pali_channel = ChannelApi::getSysChannel('_System_Pali_VRI_');
                 if ($pali_channel === false) {
                     return 0;
                 }
@@ -66,19 +67,18 @@ class ExportSentence extends Command
             } else {
                 $nissaya_channel = Channel::where('type', $channel_type)->where('status', 30)->select('uid')->get();
                 foreach ($nissaya_channel as $key => $value) {
-                    # code...
+                    // code...
                     $channels[] = $value->uid;
                 }
             }
         }
 
-
-        $exportFile = storage_path('app/public/export/offline/wikipali-offline-' . date("Y-m-d") . '.db3');
-        $dbh = new \PDO('sqlite:' . $exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $exportFile = storage_path('app/public/export/offline/wikipali-offline-'.date('Y-m-d').'.db3');
+        $dbh = new \PDO('sqlite:'.$exportFile, '', '', [\PDO::ATTR_PERSISTENT => true]);
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
 
-        if ($channel_type === "original") {
+        if ($channel_type === 'original') {
             $table = 'sentence';
         } else {
             $table = 'sentence_translation';
@@ -91,6 +91,7 @@ class ExportSentence extends Command
             $stmt = $dbh->prepare($query);
         } catch (\PDOException $e) {
             Log::error($e->getMessage(), ['exception' => $e]);
+
             return 1;
         }
 
@@ -107,12 +108,12 @@ class ExportSentence extends Command
             'channel_uid',
             'editor_uid',
             'language',
-            'updated_at'
+            'updated_at',
         ])->cursor();
         foreach ($srcDb as $sent) {
             if (Str::isUuid($sent->channel_uid)) {
                 $channel = ChannelApi::getById($sent->channel_uid);
-                $currData = array(
+                $currData = [
                     $sent->book_id,
                     $sent->paragraph,
                     $sent->word_start,
@@ -127,7 +128,7 @@ class ExportSentence extends Command
                         'unity',
                     ),
                     $sent->channel_uid,
-                );
+                ];
                 $stmt->execute($currData);
             }
             $bar->advance();
@@ -135,6 +136,7 @@ class ExportSentence extends Command
         $dbh->commit();
         $bar->finish();
         Log::debug('task export sentence finished');
+
         return 0;
     }
 }

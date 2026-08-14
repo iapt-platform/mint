@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class AccessToken extends Model
 {
     use HasFactory;
+
     protected $fillable = ['res_type', 'res_id', 'token'];
 }

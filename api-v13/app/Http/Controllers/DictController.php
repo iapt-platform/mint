@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\App;
-use App\Models\UserDict;
+use App\Http\Api\DictApi;
 use App\Models\DictInfo;
 use App\Models\GroupMember;
-use Illuminate\Http\Request;
-use App\Tools\CaseMan;
-use App\Http\Api\DictApi;
+use App\Models\UserDict;
 use App\Services\AuthService;
+use App\Tools\CaseMan;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
 
-require_once __DIR__ . "/../../Tools/grm_abbr.php";
-
+require_once __DIR__.'/../../Tools/grm_abbr.php';
 
 class DictController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -36,7 +36,7 @@ class DictController extends Controller
         $word_base = [];
         $searched = [];
         $words[$request->input('word')] = [];
-        $userLang = $request->input('lang', "zh");
+        $userLang = $request->input('lang', 'zh');
 
         /**
          * 临时代码判断是否在缅汉字典群里面。在群里的用户可以产看缅汉字典pdf
@@ -56,27 +56,27 @@ class DictController extends Controller
         $resultCount = 0;
         $MAX_LOOP = 2;
         for ($i = 0; $i < $MAX_LOOP; $i++) {
-            # code...
+            // code...
             $word_base = [];
             $wordDataOutput = [];
             foreach ($words as $word => $case) {
-                # code...
+                // code...
                 $searched[] = $word;
                 $table = UserDict::select($indexCol)
                     ->where('word', $word)
                     ->where('source', '_PAPER_');
-                if (!$inMyHanGroup) {
+                if (! $inMyHanGroup) {
                     $table = $table->where('dict_id', '<>', '8ae6e0f5-f04c-49fc-a355-4885cc08b4b3');
-                    //测试代码
-                    //$table = $table->where('dict_id','<>','ac9b7b73-b9c0-4d31-a5c9-7c6dc5a2c187');
+                    // 测试代码
+                    // $table = $table->where('dict_id','<>','ac9b7b73-b9c0-4d31-a5c9-7c6dc5a2c187');
                 }
                 $result = $table->get();
                 $resultCount += count($result);
                 $anchor = $word;
                 $wordData = [
                     'word' => $word,
-                    'factors' => "",
-                    'parents' => "",
+                    'factors' => '',
+                    'parents' => '',
                     'case' => [],
                     'grammar' => $case,
                     'anchor' => $anchor,
@@ -94,9 +94,8 @@ class DictController extends Controller
                  *    ]
                  * ]
                  */
-
-                foreach (DictApi::langOrder($userLang) as  $langId) {
-                    # code...
+                foreach (DictApi::langOrder($userLang) as $langId) {
+                    // code...
                     $dictContainer = [];
                     foreach (DictApi::dictOrder($langId) as $dictId) {
                         $dictContainer[$dictId] = [];
@@ -104,12 +103,12 @@ class DictController extends Controller
                     $wordDict[$langId] = $dictContainer;
                 }
                 $dictList = [
-                    'href' => '#' . $anchor,
+                    'href' => '#'.$anchor,
                     'title' => $word,
                     'children' => [],
                 ];
                 foreach ($result as $key => $value) {
-                    # code...
+                    // code...
                     $dictInfo = DictInfo::find($value->dict_id);
                     $dict_lang = explode('-', $dictInfo->dest_lang);
                     $anchor = "{$word}-{$dictInfo->shortname}";
@@ -128,7 +127,7 @@ class DictController extends Controller
                         if (isset($wordDict[$dict_lang[0]][$value->dict_id])) {
                             array_push($wordDict[$dict_lang[0]][$value->dict_id], $currData);
                         } else {
-                            array_push($wordDict[$dict_lang[0]]["others"], $currData);
+                            array_push($wordDict[$dict_lang[0]]['others'], $currData);
                         }
                     } else {
                         array_push($wordDict['others']['others'], $currData);
@@ -138,18 +137,18 @@ class DictController extends Controller
                  * 把树状数据变为扁平数据
                  */
                 foreach ($wordDict as $oneLang) {
-                    # code...
+                    // code...
                     foreach ($oneLang as $langId => $dictId) {
-                        # code...
+                        // code...
                         foreach ($dictId as $oneData) {
-                            # code...
+                            // code...
                             $wordData['dict'][] = $oneData;
                             if (isset($dictList['children']) && count($dictList['children']) > 0) {
                                 $lastHref = end($dictList['children'])['href'];
                             } else {
                                 $lastHref = '';
                             }
-                            $currHref = '#' . $oneData['anchor'];
+                            $currHref = '#'.$oneData['anchor'];
                             if ($lastHref !== $currHref) {
                                 $dictList['children'][] = [
                                     'href' => $currHref,
@@ -165,13 +164,12 @@ class DictController extends Controller
                     $dictListOutput[] = $dictList;
                 }
 
-
-                //TODO 加变格查询
-                $case = new CaseMan();
+                // TODO 加变格查询
+                $case = new CaseMan;
                 $parent = $case->WordToBase($word);
                 foreach ($parent as $base => $case) {
-                    # code...
-                    if (!in_array($base, $searched)) {
+                    // code...
+                    if (! in_array($base, $searched)) {
                         $word_base[$base] = $case;
                     }
                 }
@@ -190,18 +188,18 @@ class DictController extends Controller
         }
 
         if ($resultCount < 2 && $request->has('content')) {
-            //查询内文
+            // 查询内文
             $wordDataOutput = [];
             $table = UserDict::select($indexCol)
-                ->where('note', 'like', '%' . $word . '%')
+                ->where('note', 'like', '%'.$word.'%')
                 ->where('language', '<>', 'my')
                 ->take(5)
                 ->get();
             $resultCount += count($table);
             $wordData = [
                 'word' => $word,
-                'factors' => "",
-                'parents' => "",
+                'factors' => '',
+                'parents' => '',
                 'case' => [],
                 'grammar' => [],
                 'anchor' => $anchor,
@@ -227,7 +225,6 @@ class DictController extends Controller
             $wordDataPass[] = ['pass' => 0, 'words' => $wordDataOutput];
         }
 
-
         $output['words'] = $wordDataPass;
         $output['dictlist'] = $dictListOutput;
         $output['caselist'] = $caseListOutput;
@@ -241,8 +238,7 @@ class DictController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -252,8 +248,7 @@ class DictController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UserDict  $userDict
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(UserDict $userDict)
     {
@@ -263,9 +258,7 @@ class DictController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UserDict  $userDict
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, UserDict $userDict)
     {
@@ -275,8 +268,7 @@ class DictController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserDict  $userDict
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(UserDict $userDict)
     {
@@ -286,25 +278,26 @@ class DictController extends Controller
     private function GrmAbbr($input, $dictid)
     {
         $mean = $input;
-        $replaced = array();
+        $replaced = [];
         foreach (GRM_ABBR as $key => $value) {
-            if (in_array($value["abbr"], $replaced)) {
+            if (in_array($value['abbr'], $replaced)) {
                 continue;
             } else {
-                $replaced[] = $value["abbr"];
+                $replaced[] = $value['abbr'];
             }
             if ($dictid !== 0) {
-                if ($value["dictid"] === $dictid && strpos($input, $value["abbr"] . "|") == false) {
-                    $mean = str_ireplace($value["abbr"], "|@{$value["abbr"]}-{$value["replace"]}", $mean);
+                if ($value['dictid'] === $dictid && strpos($input, $value['abbr'].'|') == false) {
+                    $mean = str_ireplace($value['abbr'], "|@{$value['abbr']}-{$value['replace']}", $mean);
                 }
             } else {
-                if (strpos($mean, "|@" . $value["abbr"]) == false) {
-                    $props = base64_encode(\json_encode(['text' => $value["abbr"], 'gid' => $value["replace"]]));
+                if (strpos($mean, '|@'.$value['abbr']) == false) {
+                    $props = base64_encode(\json_encode(['text' => $value['abbr'], 'gid' => $value['replace']]));
                     $tpl = "<MdTpl name='grammar-pop' tpl='grammar-pop' props='{$props}'></MdTpl>";
-                    $mean = str_ireplace($value["abbr"], $tpl, $mean);
+                    $mean = str_ireplace($value['abbr'], $tpl, $mean);
                 }
             }
         }
+
         return $mean;
     }
 }

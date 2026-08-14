@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class WordIndex extends Model
 {
     use HasFactory;
-	protected $fillable = ['id' , 'word' , 'word_en' , 'count' , 'normal' , 'bold' , 'is_base' , 'len'  ];
 
-	
+    protected $fillable = ['id', 'word', 'word_en', 'count', 'normal', 'bold', 'is_base', 'len'];
 }

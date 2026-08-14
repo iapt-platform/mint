@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
-use Illuminate\Support\Facades\Log;
 
 class ProcessDeadLetterQueue extends Command
 {
@@ -19,9 +18,11 @@ class ProcessDeadLetterQueue extends Command
      *
      * 删除死信消息
      * php artisan rabbitmq:process-dlq orders_dlq --delete
+     *
      * @var string
      */
     protected $signature = 'rabbitmq:process-dlq {dlq_name} {--requeue} {--delete}';
+
     protected $description = '处理死信队列中的消息';
 
     public function handle()
@@ -48,7 +49,7 @@ class ProcessDeadLetterQueue extends Command
         while (true) {
             $msg = $channel->basic_get($dlqName, false);
 
-            if (!$msg) {
+            if (! $msg) {
                 break; // 队列为空
             }
 
@@ -56,9 +57,9 @@ class ProcessDeadLetterQueue extends Command
             $data = json_decode($msg->body, true);
 
             $this->info("处理第 {$messageCount} 条死信消息");
-            $this->line("原始队列: " . ($data['queue'] ?? 'unknown'));
-            $this->line("失败原因: " . ($data['failure_reason'] ?? 'unknown'));
-            $this->line("失败时间: " . ($data['failed_at'] ?? 'unknown'));
+            $this->line('原始队列: '.($data['queue'] ?? 'unknown'));
+            $this->line('失败原因: '.($data['failure_reason'] ?? 'unknown'));
+            $this->line('失败时间: '.($data['failed_at'] ?? 'unknown'));
 
             if ($requeue) {
                 // 重新入队到原始队列

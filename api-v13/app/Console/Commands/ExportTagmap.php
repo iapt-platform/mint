@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 use App\Models\TagMap;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class ExportTagmap extends Command
@@ -41,35 +41,37 @@ class ExportTagmap extends Command
     public function handle()
     {
         $this->info('task: export offline tagmap-table start');
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
-        $exportFile = storage_path('app/public/export/offline/' . $this->argument('db') . '-' . date("Y-m-d") . '.db3');
-        $dbh = new \PDO('sqlite:' . $exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $exportFile = storage_path('app/public/export/offline/'.$this->argument('db').'-'.date('Y-m-d').'.db3');
+        $dbh = new \PDO('sqlite:'.$exportFile, '', '', [\PDO::ATTR_PERSISTENT => true]);
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
 
-        $query = "INSERT INTO tag_map ( anchor_id , tag_id )
-                                    VALUES ( ? , ? )";
+        $query = 'INSERT INTO tag_map ( anchor_id , tag_id )
+                                    VALUES ( ? , ? )';
         try {
             $stmt = $dbh->prepare($query);
         } catch (\PDOException $e) {
             Log::error($e->getMessage(), ['exception' => $e]);
+
             return 1;
         }
 
         $bar = $this->output->createProgressBar(TagMap::count());
         foreach (TagMap::select(['id', 'table_name', 'anchor_id', 'tag_id'])->cursor() as $row) {
-            $currData = array(
+            $currData = [
                 $row->anchor_id,
                 $row->tag_id,
-            );
+            ];
             $stmt->execute($currData);
             $bar->advance();
         }
         $dbh->commit();
         $bar->finish();
         Log::debug('task: export offline tagmap-table finished');
+
         return 0;
     }
 }

@@ -3,18 +3,18 @@
 namespace App\Services;
 
 use App\Models\BookTitle;
-use App\Models\WbwTemplate;
-use App\Models\PaliText;
 use App\Models\PaliSentence;
+use App\Models\PaliText;
+use App\Models\WbwTemplate;
 
 class SearchPaliDataService
 {
     /**
      * Retrieve paginated Pali data for search.
      *
-     * @param int $book
-     * @param int $start
-     * @param int $pageSize
+     * @param  int  $book
+     * @param  int  $start
+     * @param  int  $pageSize
      * @return array
      */
     public function getPaliData($book, $start = 1, $pageSize = null)
@@ -27,9 +27,6 @@ class SearchPaliDataService
 
         for ($iPara = $start; $iPara < $endOfPara; $iPara++) {
             $content = $this->getParaContent($book, $iPara);
-
-
-
 
             // Retrieve book ID
             $pcd_book = BookTitle::where('book', $book)
@@ -51,7 +48,7 @@ class SearchPaliDataService
                 'content' => $content['markdown'],
                 'markdown' => $content['markdown'],
                 'text' => $content['text'],
-                'pcd_book_id' => $pcd_book_id
+                'pcd_book_id' => $pcd_book_id,
             ];
         }
 
@@ -61,8 +58,8 @@ class SearchPaliDataService
     /**
      * Generate content string for a given book and paragraph.
      *
-     * @param int $book
-     * @param int $para
+     * @param  int  $book
+     * @param  int  $para
      * @return string
      */
     private function getContent($book, $para)
@@ -84,7 +81,7 @@ class SearchPaliDataService
             } elseif ($word->style === 'note') {
                 $content .= " _{$word->word}_ ";
             } else {
-                $content .= $word->word . ' ';
+                $content .= $word->word.' ';
             }
         }
 
@@ -94,8 +91,8 @@ class SearchPaliDataService
     /**
      * Generate paragraph sentence list for a given book and paragraph.
      *
-     * @param int $book
-     * @param int $para
+     * @param  int  $book
+     * @param  int  $para
      * @return array $sentences
      */
     public function getParaContent($book, $para)
@@ -104,7 +101,7 @@ class SearchPaliDataService
             ->where('paragraph', $para)
             ->orderBy('word_begin')
             ->get();
-        if (!$sentences) {
+        if (! $sentences) {
             return null;
         }
         $markdown = [];
@@ -130,7 +127,7 @@ class SearchPaliDataService
 
         foreach ($words as $word) {
             if ($word->type === '.ctl.') {
-                //检测义注段落号
+                // 检测义注段落号
                 if (preg_match('/^para\d+_[a-zA-Z].*$/', $word->real)) {
                     $commentary = $word->real;
                 }
@@ -153,7 +150,7 @@ class SearchPaliDataService
 
         $data = [
             'markdown' => implode("\n", $markdown),
-            'text' => implode(" ", $text),
+            'text' => implode(' ', $text),
             'words' => $wordList,
             'bold1' => $bold1,
             'bold2' => $bold2,
@@ -162,14 +159,15 @@ class SearchPaliDataService
         if (isset($commentary)) {
             $data['commentary'] = $commentary;
         }
+
         return $data;
     }
 
     /**
      * Generate paragraph sentence list for a given book and paragraph.
      *
-     * @param int $book
-     * @param int $para
+     * @param  int  $book
+     * @param  int  $para
      * @return array $sentence
      */
     public function getSentenceContent($book, $para, $start, $end)
@@ -191,28 +189,30 @@ class SearchPaliDataService
                 if (strpos($word->word, '{') === false) {
                     $markdown .= "**{$word->word}** ";
                 } else {
-                    $markdown .= str_replace(['{', '}'], ['**', '**'], $word->word) . ' ';
+                    $markdown .= str_replace(['{', '}'], ['**', '**'], $word->word).' ';
                 }
             } elseif ($word->style === 'note') {
                 $markdown .= " ~~{$word->word}~~ ";
             } else {
-                $markdown .= $word->word . ' ';
+                $markdown .= $word->word.' ';
             }
         }
 
-        //去掉多于的空格
+        // 去掉多于的空格
 
         $markdown = $this->removeSpace($markdown);
-        //合并连续的黑体
+        // 合并连续的黑体
         $markdown = str_replace(['~~  ~~', '** **'], [' ', ' '], $markdown);
 
         $text = $this->removeSpace(implode(' ', $arrText));
+
         return [
             'markdown' => $this->abbrReplace(trim($markdown)),
             'text' => $this->abbrReplace($text),
             'words' => $wordList,
         ];
     }
+
     private function removeSpace(string $input)
     {
         return str_replace(
@@ -221,10 +221,12 @@ class SearchPaliDataService
             $input
         );
     }
+
     private function abbrReplace($input)
     {
         $abbr = ['sī .', 'syā .', 'kaṃ .', 'pī .'];
         $abbrTo = ['sī.', 'syā.', 'kaṃ.', 'pī.'];
+
         return str_replace($abbr, $abbrTo, $input);
     }
 }

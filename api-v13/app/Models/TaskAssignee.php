@@ -10,8 +10,10 @@ class TaskAssignee extends Model
     use HasFactory;
 
     protected $primaryKey = 'id';
+
     protected $casts = [
-        'id' => 'string'
+        'id' => 'string',
     ];
-    protected $fillable = ['id','task_id','assignee_id','editor_id'];
+
+    protected $fillable = ['id', 'task_id', 'assignee_id', 'editor_id'];
 }

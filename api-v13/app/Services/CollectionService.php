@@ -2,14 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\Collection;
-use App\Services\AuthService;
-use App\Http\Api\StudioApi;
 use App\Http\Api\ShareApi;
-use Illuminate\Http\Request;
+use App\Http\Api\StudioApi;
 use App\Http\Resources\CollectionResource;
-use Illuminate\Support\Facades\Log;
+use App\Models\Collection;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CollectionService
 {
@@ -26,6 +25,7 @@ class CollectionService
         'updated_at',
         'created_at',
     ];
+
     /**
      * 判断用户是否有编辑权限
      */
@@ -56,7 +56,7 @@ class CollectionService
     public function getMyNumber(Request $request): array
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return ['error' => __('auth.failed'), 'code' => 403];
         }
 
@@ -76,7 +76,6 @@ class CollectionService
 
         return ['data' => ['my' => $my, 'collaboration' => $collaboration]];
     }
-
 
     public function buildStudioListQuery(): Builder
     {
@@ -114,7 +113,6 @@ class CollectionService
     public function getPublicList(int $pageSize, int $currPage): array
     {
 
-
         $table = Collection::select($this->indexCol)->where('status', 30);
 
         $count = $table->count();
@@ -124,17 +122,18 @@ class CollectionService
             ->skip(($currPage - 1) * $pageSize)
             ->take($pageSize)
             ->get();
+
         return ['data' => CollectionResource::collection($result), 'total' => $count];
     }
 
     public function getCollection(string $id): array
     {
         $result = Collection::where('uid', $id)->first();
-        if (!$result) {
+        if (! $result) {
             Log::warning("没有查询到数据 id={$id}");
+
             return ['error' => "没有查询到数据 id={$id}", 'code' => 404];
         }
-
 
         $result->fullArticleList = true;
 

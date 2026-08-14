@@ -2,27 +2,26 @@
 
 namespace App\Http\Controllers\Library;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Helpers\WikiContentParser;
-use App\Services\TermService;
-use Illuminate\Support\Str;
+use App\Http\Controllers\Controller;
 use App\Services\OpenSearchService;
-
+use App\Services\TermService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class WikiController extends Controller
 {
     // 质量等级（数值越小等级越高）
-    private  $qualityRank = [
+    private $qualityRank = [
         'featured' => 1,
         'standard' => 2,
-        'draft'    => 3,
-        'pending'  => 4,
+        'draft' => 3,
+        'pending' => 4,
     ];
 
     public function __construct(
-        private TermService    $termService,
-        private OpenSearchService    $searchService
+        private TermService $termService,
+        private OpenSearchService $searchService
     ) {}
 
     // ── Mock 数据 ────────────────────────────────────────────────
@@ -31,14 +30,14 @@ class WikiController extends Controller
     {
         return [
             [
-                'word'      => 'Anicca',
-                'lang'      => 'zh-Hans',
-                'slug'      => 'anicca',
-                'meaning'        => '无常',
-                'quality'   => 'featured',   // featured | stub | review | null
-                'category'  => '法义术语',
-                'tags'      => ['三相', '法义术语', '相应部', '内观', '五蕴'],
-                'langs'     => [
+                'word' => 'Anicca',
+                'lang' => 'zh-Hans',
+                'slug' => 'anicca',
+                'meaning' => '无常',
+                'quality' => 'featured',   // featured | stub | review | null
+                'category' => '法义术语',
+                'tags' => ['三相', '法义术语', '相应部', '内观', '五蕴'],
+                'langs' => [
                     ['lang' => 'zh-Hant', 'label' => '繁体中文',   'word' => '无常'],
                     ['lang' => 'en', 'label' => 'English', 'word' => 'Impermanence'],
                 ],
@@ -48,7 +47,7 @@ class WikiController extends Controller
                     ['word' => 'Vipassanā', 'zh' => '内观', 'lang' => 'pi'],
                     ['word' => 'Ti-lakkhaṇa', 'zh' => '三相', 'lang' => 'pi'],
                 ],
-                'content' => <<<HTML
+                'content' => <<<'HTML'
 <h2>词源与释义</h2>
 
 <blockquote>
@@ -61,8 +60,6 @@ HTML,
         ];
     }
 
-
-
     // ── Actions ──────────────────────────────────────────────────
 
     public function index(Request $request, string $lang)
@@ -74,41 +71,39 @@ HTML,
         $cookie = cookie()->forever('wiki_quality_filter', $quality);
 
         $category = $request->input('category');
-        $subs     = null;
+        $subs = null;
 
         if ($category) {
             $taxNode = collect(config('taxonomy'))->firstWhere('id', $category);
-            $subs    = $taxNode ? $this->subEntries($taxNode['subs'], $lang, $quality) : null;
+            $subs = $taxNode ? $this->subEntries($taxNode['subs'], $lang, $quality) : null;
         }
 
-        $result      = $this->termService->communityTerms($lang);
+        $result = $this->termService->communityTerms($lang);
         $fakeRequest = Request::create('', 'GET', []);
-        $terms       = $result['data']->toArray($fakeRequest);
-        $first       = $terms[0];
+        $terms = $result['data']->toArray($fakeRequest);
+        $first = $terms[0];
 
         $today = [
-            'word'     => $first['word'],
-            'lang'     => $first['language'],
-            'slug'     => $first['word'],
-            'meaning'  => $first['meaning'],
-            'quality'  => 'featured',
+            'word' => $first['word'],
+            'lang' => $first['language'],
+            'slug' => $first['word'],
+            'meaning' => $first['meaning'],
+            'quality' => 'featured',
             'category' => '法义术语',
-            'content'  => $first['summary'],
+            'content' => $first['summary'],
         ];
-
-
 
         return response()
             ->view('library.wiki.index', [
-                'today'         => $request->has('category') ? null : $today,
-                'featured'      => $category ? null : $this->featured($terms),
-                'stats'         => $this->mockStats(),
+                'today' => $request->has('category') ? null : $today,
+                'featured' => $category ? null : $this->featured($terms),
+                'stats' => $this->mockStats(),
                 'recentUpdates' => $this->mockRecentUpdates(),
-                'categories'    => $this->categories(),
-                'lang'          => $lang,
-                'category'      => $category,
-                'subs'          => $subs,   // null | array of subs with entries
-                'quality'   => $quality,
+                'categories' => $this->categories(),
+                'lang' => $lang,
+                'category' => $category,
+                'subs' => $subs,   // null | array of subs with entries
+                'quality' => $quality,
                 'qualities' => $this->qualities(),
             ])->withCookie($cookie);
     }
@@ -121,6 +116,7 @@ HTML,
     {
         return array_map(function ($sub) use ($lang, $quality) {
             $entries = $this->querySubCat($sub['tags'], $lang, $quality);
+
             return array_merge($sub, ['entries' => $entries]);
         }, $subs);
     }
@@ -128,15 +124,13 @@ HTML,
     private function querySubCat(array $cats, string $lang, string $quality): array
     {
         $params = [
-            'pageSize'     => 1000,
+            'pageSize' => 1000,
             'resourceType' => 'term',
-            'language'     => $lang,
-            'tags'         => array_map(fn($n) => "category:{$n}", $cats),
+            'language' => $lang,
+            'tags' => array_map(fn ($n) => "category:{$n}", $cats),
         ];
 
         $result = $this->searchService->search($params);
-
-
 
         // 当前允许的最大等级
         $maxRank = $this->qualityRank[$quality] ?? 4;
@@ -145,7 +139,7 @@ HTML,
 
         foreach ($result['hits']['hits'] as $item) {
             $text = $item['_source']['title']['text'];
-            $id   = $item['_source']['resource_id'];
+            $id = $item['_source']['resource_id'];
 
             if (isset($item['_source']['tags'])) {
                 $itemQuality = $this->getQuality($item['_source']['tags']) ?? 'pending';
@@ -161,24 +155,25 @@ HTML,
             }
 
             $record = [
-                'id'      => $id,
-                'word'    => $text['pali'],
-                'zh'      => $text['zh'],
+                'id' => $id,
+                'word' => $text['pali'],
+                'zh' => $text['zh'],
                 'quality' => $itemQuality,
             ];
 
             // 用 pali + zh 去重
-            $key = mb_strtolower(trim($text['pali']) . '|' . trim($text['zh']));
+            $key = mb_strtolower(trim($text['pali']).'|'.trim($text['zh']));
 
             // 如果不存在，直接保存
-            if (!isset($unique[$key])) {
+            if (! isset($unique[$key])) {
                 $unique[$key] = $record;
+
                 continue;
             }
 
             // 已存在时，保留质量更高的
             $existingQuality = $unique[$key]['quality'];
-            $existingRank    = $this->qualityRank[$existingQuality] ?? 4;
+            $existingRank = $this->qualityRank[$existingQuality] ?? 4;
 
             if ($itemRank < $existingRank) {
                 $unique[$key] = $record;
@@ -194,19 +189,20 @@ HTML,
             return str_contains($tag, 'quality:');
         });
         if ($qualityTag) {
-            return mb_substr($qualityTag, 8, null, "UTF-8");
+            return mb_substr($qualityTag, 8, null, 'UTF-8');
         } else {
             return null;
         }
     }
+
     private function getCategories(array $tags)
     {
         $catTag = array_filter($tags, function ($tag) {
             return str_contains($tag, 'category:');
         });
-        return array_map(fn($item) => mb_substr($item, mb_strlen('category:', 'UTF-8')), $catTag);
-    }
 
+        return array_map(fn ($item) => mb_substr($item, mb_strlen('category:', 'UTF-8')), $catTag);
+    }
 
     public function show(string $lang, string $word)
     {
@@ -230,27 +226,27 @@ HTML,
 
         $cats = $this->getCategories($result['_source']['tags']);
         $entry = [
-            'word'      => $term['word'],
-            'lang'      => $term['language'],
-            'slug'      => $term['word'],
-            'meaning'        => $term['meaning'],
-            'quality'   => $quality,   // featured | standard | draft | pending | null
-            'category'  => '法义术语',
-            'tags'      => $cats,
-            'langs'     => [
+            'word' => $term['word'],
+            'lang' => $term['language'],
+            'slug' => $term['word'],
+            'meaning' => $term['meaning'],
+            'quality' => $quality,   // featured | standard | draft | pending | null
+            'category' => '法义术语',
+            'tags' => $cats,
+            'langs' => [
                 ['lang' => 'zh-Hant', 'label' => '繁体中文',   'word' => '无常'],
                 ['lang' => 'en', 'label' => 'English', 'word' => 'Impermanence'],
             ],
             'related' => $this->related($cats),
-            'content' => $term['html'] ?? ''
+            'content' => $term['html'] ?? '',
         ];
-        $parsed  = WikiContentParser::parse($entry['content']);
+        $parsed = WikiContentParser::parse($entry['content']);
 
         return view('library.wiki.show', [
             'entry' => array_merge($entry, [
                 'content' => $parsed['content'],
-                'toc'     => $parsed['toc'],
-                'edit_url' => config('mint.server.dashboard_base_path') . "/workspace/term/{$term['guid']}/edit",
+                'toc' => $parsed['toc'],
+                'edit_url' => config('mint.server.dashboard_base_path')."/workspace/term/{$term['guid']}/edit",
                 'zh' => '编辑',
                 'other_versions' => $this->otherVersions($term['word']),
             ]),
@@ -263,9 +259,9 @@ HTML,
     private function related(array $tags): array
     {
         $params = [
-            'pageSize'     => 5,
+            'pageSize' => 5,
             'resourceType' => 'term',
-            'tags'         => array_map(fn($n) => "category:{$n}", $tags),
+            'tags' => array_map(fn ($n) => "category:{$n}", $tags),
         ];
 
         $result = $this->searchService->search($params);
@@ -275,9 +271,10 @@ HTML,
             $relates[] = [
                 'word' => $item['_source']['title']['text']['pali'],
                 'zh' => $item['_source']['title']['text']['zh'],
-                'lang' => $item['_source']['language']
+                'lang' => $item['_source']['language'],
             ];
         }
+
         return $relates;
     }
 
@@ -286,7 +283,7 @@ HTML,
     private function categories(): array
     {
         $cats = collect(config('taxonomy'))
-            ->map(fn($cat) => ['id' => $cat['id'], 'label' => $cat['label']])
+            ->map(fn ($cat) => ['id' => $cat['id'], 'label' => $cat['label']])
             ->toArray();
 
         return $cats;
@@ -310,11 +307,11 @@ HTML,
 
         // Mock 统计数据
         $stats = [
-            'total_articles'   => 2847,
-            'total_terms'      => 1256,
-            'languages_count'  => 10,
-            'contributors'     => 328,
-            'today_updates'    => 12,
+            'total_articles' => 2847,
+            'total_terms' => 1256,
+            'languages_count' => 10,
+            'contributors' => 328,
+            'today_updates' => 12,
         ];
 
         // Mock 热门搜索标签
@@ -322,21 +319,20 @@ HTML,
 
         // Mock 每日一词（可选展示）
         $dailyTerm = [
-            'word'      => 'Dhammapada',
-            'zh'        => '法句经',
-            'lang'      => 'pi',
-            'meaning'   => '佛陀的偈颂集，佛教最重要的经典之一',
+            'word' => 'Dhammapada',
+            'zh' => '法句经',
+            'lang' => 'pi',
+            'meaning' => '佛陀的偈颂集，佛教最重要的经典之一',
         ];
 
         return view('library.wiki.home', [
-            'languages'     => $languages,
-            'currentLang'   => $lang,
-            'stats'         => $stats,
-            'hotTags'       => $hotTags,
-            'dailyTerm'     => $dailyTerm,
+            'languages' => $languages,
+            'currentLang' => $lang,
+            'stats' => $stats,
+            'hotTags' => $hotTags,
+            'dailyTerm' => $dailyTerm,
         ]);
     }
-
 
     private function qualities(): array
     {
@@ -358,8 +354,8 @@ HTML,
     private function mockStats(): array
     {
         return [
-            'total'        => 2847,
-            'this_month'   => 43,
+            'total' => 2847,
+            'this_month' => 43,
             'contributors' => 128,
         ];
     }
@@ -374,14 +370,13 @@ HTML,
         ];
     }
 
-
     private function otherVersions(string $word): array
     {
         $params = [
             'query' => $word,
-            'pageSize'     => 10,
+            'pageSize' => 10,
             'resourceType' => 'term',
-            'tags'         => array_map(fn($n) => "quality:{$n}", array_keys($this->qualityRank)),
+            'tags' => array_map(fn ($n) => "quality:{$n}", array_keys($this->qualityRank)),
         ];
 
         $result = $this->searchService->search($params);
@@ -389,18 +384,19 @@ HTML,
 
         foreach ($result['hits']['hits'] as $item) {
             $text = $item['_source']['title']['text'];
-            $id   = $item['_source']['resource_id'];
+            $id = $item['_source']['resource_id'];
             $versions[] = [
-                'type'     => 'term',
-                'id'       => $id,
-                'lang'     => $item['_source']['language'],
-                'title'    => $text['zh'] ?? 'null',
-                'quality'  => $this->getQuality($item['_source']['tags'] ?? 'quality:pending'),
+                'type' => 'term',
+                'id' => $id,
+                'lang' => $item['_source']['language'],
+                'title' => $text['zh'] ?? 'null',
+                'quality' => $this->getQuality($item['_source']['tags'] ?? 'quality:pending'),
                 'category' => '法義術語',
-                'snippet'  => $item['_source']['summary']['text'],
-                'updated'  => $item['_source']['updated_at'],
+                'snippet' => $item['_source']['summary']['text'],
+                'updated' => $item['_source']['updated_at'],
             ];
         }
+
         return $versions;
     }
 }

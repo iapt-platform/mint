@@ -2,14 +2,15 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Tools\PaliSearch;
+use Illuminate\Console\Command;
 
 class TestSearchPali extends Command
 {
     /**
      * The name and signature of the console command.
      * php artisan test:search.pali
+     *
      * @var string
      */
     protected $signature = 'test:search.pali {word?}';
@@ -39,36 +40,36 @@ class TestSearchPali extends Command
     public function handle()
     {
         $word = $this->argument('word');
-        if(empty($word)){
+        if (empty($word)) {
             $word = 'citta';
         }
-        $words = str_replace('_',' ',$word);
-        $words = explode(',',$words);
+        $words = str_replace('_', ' ', $word);
+        $words = explode(',', $words);
         $this->info("searching word={$word} limit=10,offset=0");
-        $result = PaliSearch::search($words,[],'case',0,10);
-        if($result){
+        $result = PaliSearch::search($words, [], 'case', 0, 10);
+        if ($result) {
             $this->info("word={$word} total=".$result['total']);
-        }else{
+        } else {
             $this->error("word={$word} search fail");
         }
 
         $rpc_result = PaliSearch::book_list($words,
-                                            [],
-                                            'case');
+            [],
+            'case');
         $this->info('book list count='.count($rpc_result['rows']));
 
         $this->info("searching word={$word} limit=10,offset=10");
-        $result = PaliSearch::search($words,[],'case',10,10);
-        if($result){
+        $result = PaliSearch::search($words, [], 'case', 10, 10);
+        if ($result) {
             $this->info("word={$word} total=".$result['total']);
-        }else{
+        } else {
             $this->error("word={$word} search fail");
         }
         $this->info("searching word={$word} book=267");
-        $result = PaliSearch::search($words,[267],'case',0,3);
-        if($result){
+        $result = PaliSearch::search($words, [267], 'case', 0, 3);
+        if ($result) {
             $this->info("word={$word} book=267 total=".$result['total']);
-        }else{
+        } else {
             $this->error("word={$word} book=267 search fail");
         }
 

@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sentence;
 use App\Models\Channel;
+use App\Models\Sentence;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class SentenceIOController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -28,7 +29,7 @@ class SentenceIOController extends Controller
             'editor_uid',
             'language',
             'updated_at',
-            'created_at'
+            'created_at',
         ]);
         switch ($request->input('view')) {
             case 'public':
@@ -40,21 +41,21 @@ class SentenceIOController extends Controller
                 break;
         }
         $count = $table->count();
-        //处理排序
+        // 处理排序
         $table->orderBy('updated_at', 'asc');
-        //处理分页
-        $table->skip($request->input("offset", 0))
-            ->take($request->input("limit", 200));
-        //获取数据
+        // 处理分页
+        $table->skip($request->input('offset', 0))
+            ->take($request->input('limit', 200));
+        // 获取数据
         $result = $table->get();
-        return $this->ok(["rows" => $result, "count" => $count]);
+
+        return $this->ok(['rows' => $result, 'count' => $count]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -64,8 +65,7 @@ class SentenceIOController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Sentence  $sentence
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Sentence $sentence)
     {
@@ -75,9 +75,7 @@ class SentenceIOController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Sentence  $sentence
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Sentence $sentence)
     {
@@ -87,8 +85,7 @@ class SentenceIOController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Sentence  $sentence
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Sentence $sentence)
     {

@@ -2,14 +2,12 @@
 
 namespace App\Services\Template\Renderers;
 
-use App\Services\Template\Contracts\RendererInterface;
-use App\Services\Template\ParsedDocument;
 use App\Services\Template\ContentNode;
-use App\Services\Template\TextNode;
+use App\Services\Template\Contracts\RendererInterface;
 use App\Services\Template\MarkdownNode;
+use App\Services\Template\ParsedDocument;
 use App\Services\Template\TemplateNode;
-
-
+use App\Services\Template\TextNode;
 
 // ================== 纯文本渲染器 ==================
 
@@ -37,22 +35,22 @@ class TextRenderer implements RendererInterface
                     default => '[信息]'
                 };
 
-                return $prefix . ($title ? " $title: " : ' ') . $text;
+                return $prefix.($title ? " $title: " : ' ').$text;
             },
 
             'info' => function ($params) {
                 $content = $params['content'] ?? '';
                 $title = $params['title'] ?? '';
 
-                return '[信息]' . ($title ? " $title: " : ' ') . $content;
+                return '[信息]'.($title ? " $title: " : ' ').$content;
             },
 
             'warning' => function ($params) {
                 $message = $params['message'] ?? '';
                 $title = $params['title'] ?? '';
 
-                return '[警告]' . ($title ? " $title: " : ' ') . $message;
-            }
+                return '[警告]'.($title ? " $title: " : ' ').$message;
+            },
         ];
     }
 
@@ -103,10 +101,10 @@ class TextRenderer implements RendererInterface
 
     public function renderTemplate(TemplateNode $template): string
     {
-        if (!isset($this->templateTexts[$template->name])) {
+        if (! isset($this->templateTexts[$template->name])) {
             // 未知模板，返回简化的文本表示
             $text = $template->name;
-            if (!empty($template->parameters)) {
+            if (! empty($template->parameters)) {
                 $paramTexts = [];
                 foreach ($template->parameters as $key => $value) {
                     if (is_array($value)) {
@@ -119,8 +117,9 @@ class TextRenderer implements RendererInterface
                         $paramTexts[] = is_numeric($key) ? $value : "$key: $value";
                     }
                 }
-                $text .= '(' . implode(', ', $paramTexts) . ')';
+                $text .= '('.implode(', ', $paramTexts).')';
             }
+
             return $text;
         }
 

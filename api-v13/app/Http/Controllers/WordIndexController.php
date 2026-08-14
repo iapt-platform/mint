@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\WordIndex;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 class WordIndexController extends Controller
@@ -11,14 +12,14 @@ class WordIndexController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
         //
-        switch ($request->input("view")) {
+        switch ($request->input('view')) {
             case 'key':
-                $key = $request->input("key");
+                $key = $request->input('key');
                 /*
                 $result = Cache::remember("/word_index/{$key}",10,function() use($key){
                     return WordIndex::where('word','like',$key."%")
@@ -33,7 +34,7 @@ class WordIndexController extends Controller
                                    ->take(10);
                 $result = $table->get();
 */
-                $result = DB::select("SELECT * from  word_indices where word like ? or word_en like ? order by len, word_en limit 10", [$key . "%", $key . "%"]);
+                $result = DB::select('SELECT * from  word_indices where word like ? or word_en like ? order by len, word_en limit 10', [$key.'%', $key.'%']);
 
                 return $this->ok(['rows' => $result, 'count' => count($result)]);
                 break;
@@ -46,8 +47,7 @@ class WordIndexController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -57,8 +57,7 @@ class WordIndexController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\WordIndex  $wordIndex
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(WordIndex $wordIndex)
     {
@@ -68,9 +67,7 @@ class WordIndexController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\WordIndex  $wordIndex
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, WordIndex $wordIndex)
     {
@@ -80,8 +77,7 @@ class WordIndexController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\WordIndex  $wordIndex
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(WordIndex $wordIndex)
     {

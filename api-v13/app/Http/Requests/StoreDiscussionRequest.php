@@ -2,12 +2,13 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use App\Services\AuthService;
+use Illuminate\Foundation\Http\FormRequest;
 
 class StoreDiscussionRequest extends FormRequest
 {
     private $user;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -16,17 +17,16 @@ class StoreDiscussionRequest extends FormRequest
     public function authorize()
     {
         $user = AuthService::current($this);
-        if (!$user) {
+        if (! $user) {
             return false;
         }
         $this->user = $user;
+
         return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
     public function rules(): array
     {
