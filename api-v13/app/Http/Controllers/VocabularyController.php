@@ -19,22 +19,32 @@ class VocabularyController extends Controller
         //
         switch ($request->input("view")) {
             case 'key':
-                $key = $request->input("key");
-                $result = Cache::remember(
-                    "/dict_vocabulary/{$key}",
+                $key = (string) $request->input('key', '');
+                if ($key === '') {
+                    return $this->ok(['rows' => [], 'count' => 0]);
+                }
+
+                $payload = Cache::remember(
+                    'v13:dict_vocabulary:' . md5($key),
                     config('mint.cache.expire'),
                     function () use ($key) {
-                        $query = Vocabulary::where('word', 'like', $key . "%")
-                            ->orWhere('word_en', 'like', $key . "%")
+                        $rows = Vocabulary::where('word', 'like', $key . '%')
+                            ->orWhere('word_en', 'like', $key . '%')
                             ->orderBy('strlen')
                             ->orderBy('word')
-                            ->take(50);
-                        return $query->get();
+                            ->take(50)
+                            ->get();
+
+                        return [
+                            'rows'  => VocabularyResource::collection($rows)->resolve(),
+                            'count' => $rows->count(),
+                        ];
                     }
                 );
-                return $this->ok(['rows' => VocabularyResource::collection($result), 'count' => count($result)]);
-                break;
+
+                return $this->ok($payload);
         }
+        return $this->ok(['rows'=>[],'count'=>0]);
     }
 
     /**
