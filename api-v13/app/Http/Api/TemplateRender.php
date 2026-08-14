@@ -757,7 +757,7 @@ class TemplateRender
 
                 if ($PaliText) {
                     $output["pali"] = $PaliText->toc;
-                    $output["paliPath"] = \json_decode($PaliText->path);
+                    $output["paliPath"] = \json_decode((string) $PaliText->path, true);
                     $output["innerString"] = $PaliText->toc;
                 }
                 return $output;

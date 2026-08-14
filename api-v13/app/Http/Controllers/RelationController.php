@@ -238,9 +238,10 @@ class RelationController extends Controller
     /**
      * Build the full vocabulary payload for caching.
      *
-     * ResourceCollection is resolved to a plain PHP array via toArray() before
+     * ResourceCollection is resolved to a plain PHP array via resolve() before
      * being stored, preventing __PHP_Incomplete_Class_Name deserialization
-     * errors when using Redis or file-based cache drivers.
+     * errors when using Redis or file-based cache drivers. RelationResource is
+     * responsible for keeping the nested values object-free.
      *
      * @return array{rows: array<int, array<string, mixed>>, count: int}
      */
@@ -260,7 +261,7 @@ class RelationController extends Controller
         ])->orderBy('updated_at', 'desc')->get();
 
         return [
-            'rows'  => RelationResource::collection($rows)->toArray(request()),
+            'rows'  => RelationResource::collection($rows)->resolve(),
             'count' => $rows->count(),
         ];
     }

@@ -12,6 +12,11 @@ class RelationResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
+     * The payload must contain only scalars and arrays: it is cached by
+     * RelationController, and Laravel 13 refuses to unserialize objects from
+     * cache unless they are listed in cache.serializable_classes. Hence the
+     * associative json_decode() and the ISO-8601 date strings.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
@@ -21,12 +26,12 @@ class RelationResource extends JsonResource
             "id" => $this->id,
             "name" => $this->name,
             "case" => $this->case,
-            "from" => json_decode($this->from),
-            "to" => json_decode($this->to),
-            "match" => json_decode($this->match),
+            "from" => json_decode((string) $this->from, true),
+            "to" => json_decode((string) $this->to, true),
+            "match" => json_decode((string) $this->match, true),
             "category" => $this->category,
-            "created_at" => $this->created_at,
-            "updated_at" => $this->updated_at,
+            "created_at" => $this->created_at?->toISOString(),
+            "updated_at" => $this->updated_at?->toISOString(),
         ];
 
 

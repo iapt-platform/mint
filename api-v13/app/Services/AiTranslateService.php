@@ -595,6 +595,14 @@ class AiTranslateService
         $aiModel = AiModel::findOrFail($aiAssistantId);
         $modelToken = AuthService::getUserToken($aiModel->uid);
         $aiModel['token'] = $modelToken;
+
+        /**
+         * 返回值会被 ProcessAITranslateJob::publish() 写入缓存。Laravel 13 默认
+         * 拒绝从缓存反序列化对象（cache.serializable_classes = false），所以这里
+         * 先把模型摊平成数组。JSON 输出与直接编码模型完全一致。
+         */
+        $aiModelData = $aiModel->toArray();
+        $taskData = $task->toArray();
         $sumLen = 0;
         $mqData = [];
         foreach ($sentences as $key => $sentence) {
@@ -633,9 +641,9 @@ class AiTranslateService
             $prompt = $mdRender->convert($content, []);
             //gen mq
             $aiMqData = [
-                'model' => $aiModel,
+                'model' => $aiModelData,
                 'task' => [
-                    'info' => $task,
+                    'info' => $taskData,
                     'progress' => [
                         'current' => $sumLen,
                         'total' => $totalLen
@@ -657,8 +665,8 @@ class AiTranslateService
         }
 
         $output = [
-            'model' => $aiModel->toArray(),
-            'task' => $task,
+            'model' => $aiModelData,
+            'task' => $taskData,
         ];
         $us = ['openai.com', 'googleapis.com', 'x.ai', 'anthropic.com'];
         $found = array_filter($us, function ($value) use ($output) {
