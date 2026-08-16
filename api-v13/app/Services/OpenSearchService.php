@@ -1168,4 +1168,45 @@ class OpenSearchService
             'id' => $id,
         ]);
     }
+
+    /**
+     * 校验 pali_synonyms 同义词词典是否对指定词生效
+     *
+     * 通过 OpenSearch _analyze API，用当前索引的 pali_query_analyzer
+     * 对输入文本做实时分析，返回展开后的全部 token（含原词与同义词）。
+     * 可用于快速确认 analysis/pali_synonyms.txt 中的某一行是否已生效
+     * （例如 dhamma,dharma,法 => dhamma 是否真的展开出 dharma、法）。
+     *
+     * @param  string  $text  待检测的巴利词，例如 "dhamma"
+     * @return array<int, string> 分析器输出的 token 文本数组（已去重，保留原始顺序）
+     *
+     * @throws Exception 索引不存在或 OpenSearch 调用失败时抛出
+     *
+     * @example
+     *   $service->pali_query_health_check('dhamma');
+     *   // => ['dhamma', 'dharma', '法']
+     */
+    public function pali_query_health_check(string $text): array
+    {
+        $index = config('mint.opensearch.index');
+
+        if (! $this->client->indices()->exists(['index' => $index])) {
+            throw new Exception("Index [$index] does not exist.");
+        }
+
+        $response = $this->client->indices()->analyze([
+            'index' => $index,
+            'body' => [
+                'analyzer' => 'pali_query_analyzer',
+                'text' => $text,
+            ],
+        ]);
+
+        $tokens = array_map(
+            fn ($token) => $token['token'] ?? '',
+            $response['tokens'] ?? []
+        );
+
+        return array_values(array_unique(array_filter($tokens, fn ($t) => $t !== '')));
+    }
 }
