@@ -13,6 +13,8 @@ use App\Services\SummaryService;
 use App\Services\TagService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+
 
 class IndexTipitaka extends Command
 {
@@ -403,8 +405,9 @@ class IndexTipitaka extends Command
             ->where('channel_id', $param['channel'])
             ->first();
         $channel = ChannelApi::getById($param['channel']);
+        $docId = "tipitaka_chapter_{$param['book']}-{$param['para']}_{$param['channel']}";
         $document = [
-            'id' => "tipitaka_chapter_{$param['book']}-{$param['para']}_{$param['channel']}",
+            'id' => $docId,
             'resource_id' => $progress ? $progress->uid : "{$param['book']}-{$param['para']}_{$param['channel']}",
             'resource_type' => 'tipitaka',
             'title' => [],
@@ -430,6 +433,7 @@ class IndexTipitaka extends Command
             $document['title']['text']['pali'] = $title;
         }
         $document['content']['display'] = $param['content'];             // 展示
+        Cache::put($docId,$param['content']);
 
         if ($this->isTest) {
             $this->info($param['content']);

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Library;
 
+use Illuminate\Support\Facades\Cache;
+
 use App\DTO\Search\HitItemDTO;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\StudioApi;
@@ -15,6 +17,7 @@ use App\Services\PaliTextService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+
 
 class BookController extends Controller
 {
@@ -241,13 +244,17 @@ class BookController extends Controller
         foreach ($chapters as $chapter) {
             $openSearchId = "tipitaka_chapter_{$book}-{$chapter->paragraph}_{$channelId}";
 
-            try {
-                $doc = HitItemDTO::fromArray($this->searchService->get($openSearchId))->toArray();
-            } catch (\Throwable $th) {
-                continue;
-            }
-
-            $display .= $doc['display'] ?? '';
+            $conntent = Cache::rememberForever($openSearchId, function () use($openSearchId) {
+                            //Log::debug($openSearchId.' not hit');
+                            $doc = [];
+                            try {
+                                $doc = HitItemDTO::fromArray($this->searchService->get($openSearchId))->toArray();
+                            } catch (\Throwable $th) {
+                            }
+                            return $doc['display'] ?? '';
+                        });
+            
+            $display .= $conntent;
 
             if ("{$book}-{$chapter->paragraph}" === $selectedId) {
                 $title = $doc['title'] ?? '';
