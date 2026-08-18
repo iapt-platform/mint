@@ -8,10 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Collection extends Model
 {
     use HasFactory;
+
     protected $primaryKey = 'uid';
+
     protected $casts = [
-        'uid' => 'string'
+        'uid' => 'string',
     ];
+
     protected $keyType = 'string';
-    public  $incrementing = false;
+
+    public $incrementing = false;
 }

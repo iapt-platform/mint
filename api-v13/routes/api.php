@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\AccessTokenController;
 use App\Http\Controllers\AiAssistantController;
 use App\Http\Controllers\AiModelController;
@@ -69,6 +66,7 @@ use App\Http\Controllers\OfflineIndexController;
 use App\Http\Controllers\PaliBookCategoryController;
 use App\Http\Controllers\PaliTextController;
 use App\Http\Controllers\ParagraphContentController;
+use App\Http\Controllers\ParaInfoController;
 use App\Http\Controllers\PgPaliDictDownloadController;
 use App\Http\Controllers\ProgressChapterController;
 use App\Http\Controllers\ProgressController;
@@ -112,6 +110,7 @@ use App\Http\Controllers\TaskStatusController;
 use App\Http\Controllers\TermExportController;
 use App\Http\Controllers\TermSummaryController;
 use App\Http\Controllers\TermVocabularyController;
+use App\Http\Controllers\TipitakaContentController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\UpdatePaliSynonymsController;
 use App\Http\Controllers\UpgradeController;
@@ -129,8 +128,8 @@ use App\Http\Controllers\WbwSentenceController;
 use App\Http\Controllers\WbwTemplateController;
 use App\Http\Controllers\WebHookController;
 use App\Http\Controllers\WordIndexController;
-use App\Http\Controllers\TipitakaContentController;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -174,6 +173,7 @@ Route::group([
     Route::apiResource('sent_history', SentHistoryController::class);
     Route::get('sent_history_contribution', [SentHistoryController::class, 'contribution']);
     Route::apiResource('palitext', PaliTextController::class);
+    Route::apiResource('para-info', ParaInfoController::class);
     Route::apiResource('channel', ChannelController::class);
     Route::patch('channel', [ChannelController::class, 'patch']);
     Route::get('channel-name/{name}', [ChannelController::class, 'showByName']);

@@ -72,7 +72,7 @@ class TermService
     public function glossaryByLemma(array $words, string $lang)
     {
         $localTermChannel = ChannelApi::getSysChannel(
-            '_community_term_' . strtolower($lang) . '_'
+            '_community_term_'.strtolower($lang).'_'
         );
         if (! $localTermChannel) {
             return null;
@@ -88,7 +88,7 @@ class TermService
     public function getCommunityGlossary(string $lang)
     {
         $localTermChannel = ChannelApi::getSysChannel(
-            '_community_term_' . strtolower($lang) . '_',
+            '_community_term_'.strtolower($lang).'_',
             '_community_term_en_'
         );
         $result = DhammaTerm::select([
@@ -96,7 +96,7 @@ class TermService
             'word',
             'tag',
             'meaning',
-            'other_meaning'
+            'other_meaning',
         ])
             ->where('channal', $localTermChannel)
             ->get();
@@ -112,6 +112,7 @@ class TermService
             ->where('channal', $channelId)
             ->select(['word', 'meaning', 'tag'])
             ->get();
+
         return $terms->toArray();
     }
 
@@ -132,12 +133,12 @@ class TermService
             ->whereNotNull('word')
             ->where('word', '!=', '')
             ->pluck('word')
-            ->map(fn($w) => str_replace(['-', ' '], '', (string) $w))
+            ->map(fn ($w) => str_replace(['-', ' '], '', (string) $w))
             ->all();
 
         // 合并 + NFC 归一（避免巴利文变音符 NFC/NFD 不一致）+ 去空 + 去重
-        $terms = array_map(fn($w) => $this->toNfc(trim((string) $w)), array_merge($dhammaWords, $userWords));
-        $terms = array_values(array_unique(array_filter($terms, fn($w) => $w !== '')));
+        $terms = array_map(fn ($w) => $this->toNfc(trim((string) $w)), array_merge($dhammaWords, $userWords));
+        $terms = array_values(array_unique(array_filter($terms, fn ($w) => $w !== '')));
 
         return $terms;
     }
@@ -160,7 +161,7 @@ class TermService
     public function getGrammarGlossary(string $lang)
     {
         $localTermChannel = ChannelApi::getSysChannel(
-            '_System_Grammar_Term_' . strtolower($lang) . '_',
+            '_System_Grammar_Term_'.strtolower($lang).'_',
             '_System_Grammar_Term_en_'
         );
         $result = DhammaTerm::select(['guid', 'word', 'tag', 'meaning', 'other_meaning'])
@@ -193,7 +194,7 @@ class TermService
     public function communityTerm(string $word, string $lang, string $format)
     {
         $localTermChannel = ChannelApi::getSysChannel(
-            '_community_term_' . strtolower($lang) . '_'
+            '_community_term_'.strtolower($lang).'_'
         );
         $result = DhammaTerm::where('word', $word)
             ->where('channal', $localTermChannel)
@@ -216,7 +217,7 @@ class TermService
     public function communityWiki(string $word, string $lang, string $format)
     {
         $localTermChannel = ChannelApi::getSysChannel(
-            '_community_translation_' . strtolower($lang) . '_'
+            '_community_translation_'.strtolower($lang).'_'
         );
         $result = DhammaTerm::where('word', $word)
             ->where('channal', $localTermChannel)
@@ -239,7 +240,7 @@ class TermService
     public function communityTerms(string $lang)
     {
         $localTermChannel = ChannelApi::getSysChannel(
-            '_community_term_' . strtolower($lang) . '_'
+            '_community_term_'.strtolower($lang).'_'
         );
         $result = DhammaTerm::where('channal', $localTermChannel)
             ->whereNotNull('note')

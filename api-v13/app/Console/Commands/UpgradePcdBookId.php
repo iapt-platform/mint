@@ -2,12 +2,13 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\FtsText;
-use App\Models\WbwTemplate;
 use App\Models\BookTitle;
-use App\Models\PaliText;
+use App\Models\FtsText;
 use App\Models\PageNumber;
+use App\Models\PaliText;
+use App\Models\WbwTemplate;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 
 class UpgradePcdBookId extends Command
 {
@@ -42,33 +43,33 @@ class UpgradePcdBookId extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
         $table = $this->option('table');
         $bookTitles = BookTitle::orderBy('sn')->get();
         $bar = $this->output->createProgressBar(count($bookTitles));
         foreach ($bookTitles as $key => $value) {
-            # code...
-            if($table === 'all' || $table ==='fts'){
-                FtsText::where('book',$value->book)
-                    ->where('paragraph','>=',$value->paragraph)
-                    ->update(['pcd_book_id'=>$value->sn]);
+            // code...
+            if ($table === 'all' || $table === 'fts') {
+                FtsText::where('book', $value->book)
+                    ->where('paragraph', '>=', $value->paragraph)
+                    ->update(['pcd_book_id' => $value->sn]);
             }
-            if($table === 'all' || $table ==='wbw'){
-                WbwTemplate::where('book',$value->book)
-                    ->where('paragraph','>=',$value->paragraph)
-                    ->update(['pcd_book_id'=>$value->sn]);
+            if ($table === 'all' || $table === 'wbw') {
+                WbwTemplate::where('book', $value->book)
+                    ->where('paragraph', '>=', $value->paragraph)
+                    ->update(['pcd_book_id' => $value->sn]);
             }
-            if($table === 'all' || $table ==='pali_text'){
-                PaliText::where('book',$value->book)
-                    ->where('paragraph','>=',$value->paragraph)
-                    ->update(['pcd_book_id'=>$value->sn]);
+            if ($table === 'all' || $table === 'pali_text') {
+                PaliText::where('book', $value->book)
+                    ->where('paragraph', '>=', $value->paragraph)
+                    ->update(['pcd_book_id' => $value->sn]);
             }
-            if($table === 'all' || $table ==='page_number'){
-                PageNumber::where('book',$value->book)
-                    ->where('paragraph','>=',$value->paragraph)
-                    ->update(['pcd_book_id'=>$value->sn]);
+            if ($table === 'all' || $table === 'page_number') {
+                PageNumber::where('book', $value->book)
+                    ->where('paragraph', '>=', $value->paragraph)
+                    ->update(['pcd_book_id' => $value->sn]);
             }
             $bar->advance();
         }

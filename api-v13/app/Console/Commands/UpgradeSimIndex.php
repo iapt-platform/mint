@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\SentSim;
 use App\Models\SentSimIndex;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 class UpgradeSimIndex extends Command
@@ -40,20 +41,21 @@ class UpgradeSimIndex extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
         $result = DB::select('select count(*) from (select sent1 from sent_sims where sim>0.5  group by sent1) T');
         $bar = $this->output->createProgressBar($result[0]->count);
         foreach (SentSim::selectRaw('sent1,count(*)')
-                        ->where('sim','>',0.5)
-                        ->groupBy('sent1')->cursor() as $sent) {
+            ->where('sim', '>', 0.5)
+            ->groupBy('sent1')->cursor() as $sent) {
             SentSimIndex::updateOrInsert(
-                ['sent_id'=>$sent->sent1],
-                ['count'=>$sent->count,]);
+                ['sent_id' => $sent->sent1],
+                ['count' => $sent->count]);
             $bar->advance();
         }
         $bar->finish();
+
         return 0;
     }
 }

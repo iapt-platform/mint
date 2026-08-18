@@ -4,15 +4,16 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
+use Symfony\Component\HttpFoundation\Response;
 
 class SetLocale
 {
     /**
      * Handle an incoming request.
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     *
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -24,17 +25,17 @@ class SetLocale
         $locale = $request->query('lang');
 
         // 2️⃣ Cookie
-        if (!$locale) {
+        if (! $locale) {
             $locale = Cookie::get('language');
         }
 
         // 3️⃣ 浏览器语言
-        if (!$locale) {
+        if (! $locale) {
             $locale = $this->getBrowserLocale($request, $supportedLocales);
         }
 
         // 4️⃣ 校验
-        if (!in_array($locale, $supportedLocales, true)) {
+        if (! in_array($locale, $supportedLocales, true)) {
             $locale = $defaultLocale;
         }
 
@@ -55,13 +56,13 @@ class SetLocale
     {
         $acceptLanguage = $request->header('Accept-Language');
 
-        if (!$acceptLanguage) {
+        if (! $acceptLanguage) {
             return config('app.locale', 'en');
         }
 
         // zh-CN,zh;q=0.9,en;q=0.8
         $languages = array_map(
-            fn($lang) => strtolower(trim(explode(';', $lang)[0])),
+            fn ($lang) => strtolower(trim(explode(';', $lang)[0])),
             explode(',', $acceptLanguage)
         );
 

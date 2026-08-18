@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreChatMessageRequest;
 use App\Http\Requests\UpdateChatMessageRequest;
-use App\Models\ChatMessage;
 use App\Http\Resources\ChatMessageResource;
-use App\Models\Chat;
+use App\Models\ChatMessage;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
 class ChatMessageController extends Controller
@@ -15,7 +15,7 @@ class ChatMessageController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -28,15 +28,14 @@ class ChatMessageController extends Controller
 
         return $this->ok([
             'data' => ChatMessageResource::collection($messages),
-            'total' => $total
+            'total' => $total,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreChatMessageRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(StoreChatMessageRequest $request)
     {
@@ -54,7 +53,7 @@ class ChatMessageController extends Controller
                 $data['session_id'] = (string) Str::uuid();
             }
             // 如果有parent_id但没有session_id，继承父消息的session_id
-            elseif (empty($data['session_id']) && !empty($data['parent_id'])) {
+            elseif (empty($data['session_id']) && ! empty($data['parent_id'])) {
                 $parent = ChatMessage::where('uid', $data['parent_id'])->first();
                 if ($parent) {
                     $data['session_id'] = $parent->session_id;
@@ -73,8 +72,7 @@ class ChatMessageController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ChatMessage  $chatMessage
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(ChatMessage $chatMessage)
     {
@@ -84,9 +82,7 @@ class ChatMessageController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateChatMessageRequest  $request
-     * @param  \App\Models\ChatMessage  $chatMessage
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(UpdateChatMessageRequest $request, ChatMessage $chatMessage)
     {
@@ -96,8 +92,7 @@ class ChatMessageController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ChatMessage  $chatMessage
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(ChatMessage $chatMessage)
     {

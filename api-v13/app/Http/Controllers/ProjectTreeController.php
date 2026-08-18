@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
-use Illuminate\Http\Request;
-use App\Services\AuthService;
-use Illuminate\Support\Str;
 use App\Http\Api\StudioApi;
-use Illuminate\Support\Facades\Log;
+use App\Models\Project;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class ProjectTreeController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -24,18 +24,17 @@ class ProjectTreeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
         $studioId = StudioApi::getIdByName($request->input('studio_name'));
-        if (!ProjectController::canEdit($user['user_uid'], $studioId)) {
+        if (! ProjectController::canEdit($user['user_uid'], $studioId)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
         $newData = [];
@@ -79,10 +78,10 @@ class ProjectTreeController extends Controller
                 } else {
                     $newData[$key]['parent_id'] = null;
                 }
-            } else if (!empty($request->input('parent_id'))) {
+            } elseif (! empty($request->input('parent_id'))) {
                 $pPath = Project::where('uid', $request->input('parent_id'))->value('path');
                 $parentPath = json_decode($pPath);
-                if (!is_array($parentPath)) {
+                if (! is_array($parentPath)) {
                     $parentPath = [];
                 }
                 $newData[$key]['path'] = json_encode([...$parentPath, $request->input('parent_id')], JSON_UNESCAPED_UNICODE);
@@ -115,8 +114,7 @@ class ProjectTreeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Project $project)
     {
@@ -126,9 +124,7 @@ class ProjectTreeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Project $project)
     {
@@ -138,8 +134,7 @@ class ProjectTreeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Project $project)
     {

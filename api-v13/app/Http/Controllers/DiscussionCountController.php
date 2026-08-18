@@ -2,27 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Services\AuthService;
-use App\Http\Api\ChannelApi;
 use App\Http\Resources\DiscussionCountResource;
 use App\Http\Resources\TagMapResource;
-use App\Models\Discussion;
-use App\Models\CourseMember;
 use App\Models\Course;
+use App\Models\CourseMember;
+use App\Models\Discussion;
 use App\Models\Sentence;
-use App\Models\WbwBlock;
-use App\Models\Wbw;
 use App\Models\TagMap;
-
-
+use App\Models\Wbw;
+use App\Models\WbwBlock;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class DiscussionCountController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -50,8 +48,8 @@ class DiscussionCountController extends Controller
      *     myReplied:number
      *     all:number
      *     allReplied:number
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -63,27 +61,27 @@ class DiscussionCountController extends Controller
          * 4. 计算作业channel的结果
          */
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error('auth.failed', 401, 401);
         }
-        $studioIdForTag = $user["user_uid"];
+        $studioIdForTag = $user['user_uid'];
         if ($request->has('course_id')) {
-            //判断我的角色
-            $my = CourseMember::where('user_id', $user["user_uid"])
+            // 判断我的角色
+            $my = CourseMember::where('user_id', $user['user_uid'])
                 ->where('is_current', true)
                 ->where('course_id', $request->input('course_id'))
                 ->first();
-            if (!$my) {
+            if (! $my) {
                 return $this->error('auth.failed', 403, 403);
             }
-            //获取全部成员列表
+            // 获取全部成员列表
             $allMembers = CourseMember::where('is_current', true)
                 ->where('course_id', $request->input('course_id'))
                 ->select('user_id')
                 ->get();
-            //找到全部相关channel
-            $channels = array();
-            //获取答案 channel
+            // 找到全部相关channel
+            $channels = [];
+            // 获取答案 channel
             $answerChannel = Course::where('id', $request->input('course_id'))
                 ->value('channel_id');
             $exerciseChannels = CourseMember::where('is_current', true)
@@ -93,19 +91,19 @@ class DiscussionCountController extends Controller
             if ($answerChannel) {
                 array_push($channels, $answerChannel);
             }
-            $users = array();
+            $users = [];
             if ($my->role === 'student') {
-                //自己的channel + 答案
+                // 自己的channel + 答案
                 if ($my->channel_id) {
                     array_push($channels, $my->channel_id);
                 }
             } else {
-                //找到全部学员channel + 答案
+                // 找到全部学员channel + 答案
 
                 foreach ($exerciseChannels as $key => $value) {
                     array_push($channels, $value->channel_id);
                 }
-                //找到
+                // 找到
                 $courseStudioId = Course::where('id', $request->input('course_id'))
                     ->value('studio_id');
                 if ($courseStudioId) {
@@ -114,10 +112,10 @@ class DiscussionCountController extends Controller
             }
         }
 
-        //获取全部资源列表
-        $resId = array();
+        // 获取全部资源列表
+        $resId = [];
         $querySentId = $request->input('sentences');
-        //译文
+        // 译文
         $table = Sentence::select('uid')
             ->whereIns(['book_id', 'paragraph', 'word_start', 'word_end'], $querySentId);
         if (isset($channels)) {
@@ -128,7 +126,7 @@ class DiscussionCountController extends Controller
         foreach ($sentUid as $key => $value) {
             $resId[] = $value->uid;
         }
-        //wbw
+        // wbw
         $wbwBlockParagraphs = [];
         foreach ($querySentId as $key => $value) {
             $wbwBlockParagraphs[] = [$value[0], $value[1]];
@@ -140,7 +138,7 @@ class DiscussionCountController extends Controller
         }
         $wbwBlock = $table->get();
         if ($wbwBlock) {
-            //找到逐词解析数据
+            // 找到逐词解析数据
             foreach ($querySentId as $key => $value) {
                 $wbwData = Wbw::whereIn('block_uid', $wbwBlock)
                     ->whereBetween('wid', [$value[2], $value[3]])
@@ -151,8 +149,8 @@ class DiscussionCountController extends Controller
                 }
             }
         }
-        //全部资源id获取完毕
-        //获取discussion
+        // 全部资源id获取完毕
+        // 获取discussion
         $table = Discussion::select(['id', 'res_id', 'res_type', 'type', 'editor_uid'])
             ->where('status', 'active')
             ->whereNull('parent')
@@ -164,12 +162,13 @@ class DiscussionCountController extends Controller
         $allDiscussions = $table->get();
         $discussions = DiscussionCountResource::collection($allDiscussions);
 
-        //获取 tag
+        // 获取 tag
         $tags = TagMap::select(['tag_maps.id', 'anchor_id', 'table_name', 'tag_id', 'editor_uid', 'tags.name', 'tags.color'])
             ->whereIn('anchor_id', $resId)
             ->where('owner_uid', $studioIdForTag)
             ->leftJoin('tags', 'tags.id', '=', 'tag_maps.tag_id')
             ->get();
+
         return $this->ok([
             'discussions' => $discussions,
             'tags' => $tags,
@@ -179,10 +178,9 @@ class DiscussionCountController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  string  $resId
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function show(string  $resId)
+    public function show(string $resId)
     {
         //
         $allDiscussions = Discussion::where('status', 'active')
@@ -192,12 +190,13 @@ class DiscussionCountController extends Controller
             ->get();
         $discussions = DiscussionCountResource::collection($allDiscussions);
 
-        //获取 tag
+        // 获取 tag
         $table = TagMap::select(['id', 'anchor_id', 'table_name', 'tag_id', 'editor_uid'])
             ->where('anchor_id', $resId);
 
         $allTags = $table->get();
         $tags = TagMapResource::collection($allTags);
+
         return $this->ok([
             'discussions' => $discussions,
             'tags' => $tags,
@@ -207,9 +206,7 @@ class DiscussionCountController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Discussion  $discussion
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Discussion $discussion)
     {
@@ -219,8 +216,7 @@ class DiscussionCountController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Discussion  $discussion
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Discussion $discussion)
     {

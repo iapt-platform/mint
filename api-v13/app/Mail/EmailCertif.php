@@ -10,8 +10,11 @@ use Illuminate\Support\Facades\Cache;
 class EmailCertif extends Mailable
 {
     use Queueable, SerializesModels;
+
     protected $uuid;
+
     protected $lang;
+
     /**
      * Create a new message instance.
      *
@@ -34,9 +37,10 @@ class EmailCertif extends Mailable
     {
         // 生成一个介于 1000 到 9999 之间的随机整数
         $randomNumber = random_int(1000, 9999);
-        $key = "/email/certification/" . $this->uuid;
-        Cache::put($key, $randomNumber,  30 * 60);
-        return $this->view('emails.certification.' . $this->lang)
+        $key = '/email/certification/'.$this->uuid;
+        Cache::put($key, $randomNumber, 30 * 60);
+
+        return $this->view('emails.certification.'.$this->lang)
             ->with([
                 'code' => $randomNumber,
             ]);

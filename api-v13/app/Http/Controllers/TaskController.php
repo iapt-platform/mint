@@ -2,31 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-
-use App\Models\Task;
-use App\Models\TaskAssignee;
-use App\Models\Project;
-use App\Http\Resources\TaskResource;
-
-use App\Services\AuthService;
 use App\Http\Api\StudioApi;
 use App\Http\Api\TaskApi;
-
+use App\Http\Resources\TaskResource;
+use App\Models\Project;
+use App\Models\Task;
+use App\Models\TaskAssignee;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class TaskController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
 
@@ -48,7 +46,7 @@ class TaskController extends Controller
                 $table = Task::whereIn('project_id', $projects);
                 break;
             default:
-                # code...
+                // code...
                 break;
         }
         if ($request->has('executor_id_includes')) {
@@ -75,7 +73,7 @@ class TaskController extends Controller
                 ->select('task_id')->get();
             $table = $table->whereNotIn('id', $assigneesTasks);
         }
-        //指派给
+        // 指派给
         if ($request->has('assignees_id_null')) {
             $table = $table->doesntHave('task_assignees');
         }
@@ -107,7 +105,7 @@ class TaskController extends Controller
         }
 
         if ($request->has('keyword')) {
-            $table = $table->where('title', 'like', '%' . $request->input('keyword') . '%');
+            $table = $table->where('title', 'like', '%'.$request->input('keyword').'%');
         }
         if ($request->has('status') && $request->input('status') !== 'all') {
             $table = $table->whereIn('status', explode(',', $request->input('status')));
@@ -119,15 +117,15 @@ class TaskController extends Controller
             $request->input('dir', 'asc')
         );
 
-        $table = $table->skip($request->input("offset", 0))
+        $table = $table->skip($request->input('offset', 0))
             ->take($request->input('limit', 1000));
 
         $result = $table->get();
 
         return $this->ok(
             [
-                "rows" => TaskResource::collection(resource: $result),
-                "count" => $count,
+                'rows' => TaskResource::collection(resource: $result),
+                'count' => $count,
             ]
         );
     }
@@ -135,24 +133,23 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
         $studioId = StudioApi::getIdByName($request->input('studio_name'));
 
-        if (!self::canEdit($user['user_uid'], $studioId)) {
+        if (! self::canEdit($user['user_uid'], $studioId)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
         $new = Task::firstOrNew(
             [
-                'id' => $request->input('id')
+                'id' => $request->input('id'),
             ],
             [
                 'owner_id' => $studioId,
@@ -164,13 +161,13 @@ class TaskController extends Controller
         if (Str::isUuid($request->input('id'))) {
             $new->id = $request->input('id');
         } else {
-            $new->id =  Str::uuid();
+            $new->id = Str::uuid();
         }
         $new->title = $request->input('title');
         $new->editor_id = $user['user_uid'];
         $new->parent_id = $request->input('parent_id');
         $new->type = $request->input('type');
-        //处理任务顺序
+        // 处理任务顺序
         if ($request->input('parent_id')) {
             $maxOrder = Task::where('parent_id', $request->input('parent_id'))
                 ->max('order');
@@ -191,8 +188,7 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Task $task)
     {
@@ -203,18 +199,16 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Task $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Task $task)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
-        if (!self::canUpdate($user['user_uid'], $task)) {
+        if (! self::canUpdate($user['user_uid'], $task)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
         if ($request->has('title')) {
@@ -286,17 +280,16 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function destroy(Request $request, Task  $task)
+    public function destroy(Request $request, Task $task)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
-        if (!self::canEdit($user['user_uid'], $task->owner)) {
+        if (! self::canEdit($user['user_uid'], $task->owner)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
         $task->delete();
@@ -316,8 +309,8 @@ class TaskController extends Controller
      * Update the specified resource in storage.
      *
      * @param  string  $user_uid
-     * @param  Task $task
-     * @return boolean
+     * @param  Task  $task
+     * @return bool
      */
     public static function canUpdate($user_uid, $task)
     {

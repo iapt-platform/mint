@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cache;
 use App\Services\AIModelService;
-
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
 
 class SiteInfoController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -23,8 +22,7 @@ class SiteInfoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -35,18 +33,18 @@ class SiteInfoController extends Controller
      * Display the specified resource.
      *
      * @param  string  $language
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($language)
     {
-        if (!in_array($language, ['en', 'zh-Hans', 'zh-Hant'])) {
+        if (! in_array($language, ['en', 'zh-Hans', 'zh-Hant'])) {
             App::setLocale('en');
         } else {
             App::setLocale($language);
         }
         $model = app(AIModelService::class);
         $response = [
-            'logo' => __("site.logo"),
+            'logo' => __('site.logo'),
             'title' => __('site.title'),
             'subhead' => __('site.subhead'),
             'keywords' => __('site.keywords'),
@@ -58,14 +56,15 @@ class SiteInfoController extends Controller
             ],
             'settings' => [
                 'models' => $model->getSysModels(),
-            ]
+            ],
         ];
+
         return response()->json(
             $response,
             200,
             [
                 'Content-Type' => 'application/json;charset=UTF-8',
-                'Charset' => 'utf-8'
+                'Charset' => 'utf-8',
             ],
             JSON_UNESCAPED_UNICODE
         );
@@ -74,9 +73,8 @@ class SiteInfoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -87,7 +85,7 @@ class SiteInfoController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

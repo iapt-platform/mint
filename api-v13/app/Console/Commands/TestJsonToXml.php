@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Tools\Tools;
+use Illuminate\Console\Command;
 
 class TestJsonToXml extends Command
 {
@@ -38,16 +38,17 @@ class TestJsonToXml extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
         $array = [
-            'pali'=>['status'=>'7','value'=>'bārāṇasiyaṃ'],
-            'real'=>['status'=>'7','value'=>'bārāṇasiyaṃ'],
-            'id'=>'p171-2475-10'
+            'pali' => ['status' => '7', 'value' => 'bārāṇasiyaṃ'],
+            'real' => ['status' => '7', 'value' => 'bārāṇasiyaṃ'],
+            'id' => 'p171-2475-10',
         ];
         $xml = Tools::JsonToXml($array);
         $this->info($xml);
+
         return 0;
     }
 }

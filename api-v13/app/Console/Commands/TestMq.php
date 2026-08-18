@@ -2,25 +2,28 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Api\Mq;
+use App\Http\Resources\DiscussionResource;
+use App\Http\Resources\SentPrResource;
+use App\Models\Discussion;
+use App\Models\SentPr;
+use App\Services\RabbitMQService;
+use App\Tools\Tools;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-
-use App\Http\Api\Mq;
-use App\Models\Discussion;
-use App\Http\Resources\DiscussionResource;
-use App\Models\SentPr;
-use App\Http\Resources\SentPrResource;
-use App\Services\RabbitMQService;
 
 class TestMq extends Command
 {
     /**
      * The name and signature of the console command.
      * php artisan test:mq
+     *
      * @var string
      */
     protected $signature = 'test:mq {--discussion=} {--pr=}';
+
     protected $publish;
+
     /**
      * The console command description.
      *
@@ -45,7 +48,7 @@ class TestMq extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
         $publish = app(RabbitMQService::class);

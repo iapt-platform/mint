@@ -24,10 +24,10 @@ class AggregationsDTO
     public function toArray(): array
     {
         return [
-            'granularity'   => $this->granularity->toArray(),
+            'granularity' => $this->granularity->toArray(),
             'resource_type' => $this->resource_type->toArray(),
-            'language'      => $this->language->toArray(),
-            'category'      => $this->category->toArray(),
+            'language' => $this->language->toArray(),
+            'category' => $this->category->toArray(),
         ];
     }
 }

@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\UserInfo;
-use Firebase\JWT\JWT;
 use App\Services\AuthService;
-use Illuminate\Support\Facades\Storage;
+use Firebase\JWT\JWT;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
-
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -25,8 +25,7 @@ class AuthController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -37,7 +36,7 @@ class AuthController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -47,9 +46,8 @@ class AuthController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -60,7 +58,7 @@ class AuthController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
@@ -78,7 +76,7 @@ class AuthController extends Controller
                 $query->where('email', $request->input('username'))
                     ->where('password', md5($request->input('password')));
             });
-        //Log::info($query->toSql());
+        // Log::info($query->toSql());
         $user = $query->first();
         if ($user) {
             $ExpTime = time() + 60 * 60 * 24 * 365;
@@ -90,33 +88,32 @@ class AuthController extends Controller
                 'id' => $user->id,
             ];
             $jwt = JWT::encode($payload, $key, 'HS512');
+
             return $this->ok($jwt);
         } else {
             return $this->error('invalid token');
         }
     }
 
-
-
     public function getUserInfoByToken(Request $request)
     {
         $curr = AuthService::current($request);
-        if (!$curr) {
+        if (! $curr) {
             return $this->error('invalid token', 401, 401);
         }
         $userInfo = UserInfo::where('userid', $curr['user_uid'])
             ->first();
         $user = [
-            "id" => $curr['user_uid'],
-            "nickName" => $userInfo->nickname,
-            "realName" => $userInfo->username,
-            "avatar" => "",
-            "token" => \substr($request->header('Authorization'), 7),
+            'id' => $curr['user_uid'],
+            'nickName' => $userInfo->nickname,
+            'realName' => $userInfo->username,
+            'avatar' => '',
+            'token' => \substr($request->header('Authorization'), 7),
         ];
 
-        //role为空 返回[]
+        // role为空 返回[]
         $user['roles'] = [];
-        if (!empty($userInfo->role)) {
+        if (! empty($userInfo->role)) {
             $roles = json_decode($userInfo->role);
             if (is_array($roles)) {
                 $user['roles'] = $roles;
@@ -134,6 +131,7 @@ class AuthController extends Controller
                 $user['avatar'] = Storage::temporaryUrl($img, now()->addDays(6));
             }
         }
+
         return $this->ok($user);
     }
 }

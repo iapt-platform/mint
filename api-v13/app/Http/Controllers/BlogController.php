@@ -1,19 +1,18 @@
 <?php
+
 // app/Http/Controllers/BlogController.php
+
 namespace App\Http\Controllers;
 
-use App\Models\Post;
-use App\Models\Tag;
-use App\Models\ProgressChapter;
-
 use App\Http\Api\UserApi;
-use Illuminate\Support\Facades\Log;
-
+use App\Models\Post;
+use App\Models\ProgressChapter;
+use App\Models\Tag;
 use App\Services\ProgressChapterService;
 
 class BlogController extends Controller
 {
-    protected         $categories = [
+    protected $categories = [
         ['id' => 'sutta', 'label' => 'suttapiṭaka'],
         ['id' => 'vinaya', 'label' => 'vinayapiṭaka'],
         ['id' => 'abhidhamma', 'label' => 'abhidhammapiṭaka'],
@@ -22,6 +21,7 @@ class BlogController extends Controller
         ['id' => 'aṭṭhakathā', 'label' => 'aṭṭhakathā'],
         ['id' => 'ṭīkā', 'label' => 'ṭīkā'],
     ];
+
     // 首页 - 最新博文列表
     public function index($user)
     {
@@ -35,6 +35,7 @@ class BlogController extends Controller
             ->paginate(10);
 
         $categories = $this->categories;
+
         /*
         $posts = Post::published()
             ->with(['category', 'tags'])
@@ -47,7 +48,7 @@ class BlogController extends Controller
             ->take(5)
             ->get();
 */
-        //return view('blog.index', compact('posts', 'categories', 'popularPosts'));
+        // return view('blog.index', compact('posts', 'categories', 'popularPosts'));
         return view('blog.index', compact('user', 'posts', 'categories'));
     }
 
@@ -105,7 +106,7 @@ class BlogController extends Controller
     ) {
         $user = UserApi::getByName($user);
         $categories = $this->categories;
-        $chapterService = new ProgressChapterService();
+        $chapterService = new ProgressChapterService;
 
         $tags = $this->getCategories($category1, $category2, $category3, $category4, $category5);
         $posts = $chapterService->setProgress(0.9)->setChannelOwnerId($user['id'])
@@ -119,6 +120,7 @@ class BlogController extends Controller
         $tagOptions = $chapterService->setProgress(0.9)->setChannelOwnerId($user['id'])
             ->setTags($tags)
             ->getTags();
+
         return view('blog.category', compact('user', 'categories', 'posts', 'current', 'tagOptions', 'count'));
     }
 
@@ -140,6 +142,7 @@ class BlogController extends Controller
         if ($category5) {
             $category[] = $category5;
         }
+
         return $category;
     }
     /*

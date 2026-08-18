@@ -163,8 +163,11 @@ class OpenSearchService
         'mappings' => [
             'properties' => [
                 'id' => ['type' => 'keyword'],
-                'resource_id' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
-                'resource_type' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
+                // 分类维度一律 keyword：它们是枚举值，不该被分词。
+                // 若声明成 text，'zh-Hans' 会被切成 zh + hans，查 language=zh 就会把
+                // zh-Hans 的文档一并捞进来（实测 401 vs 410），而且不报错。
+                'resource_id' => ['type' => 'keyword'],
+                'resource_type' => ['type' => 'keyword'],
 
                 // ----------------------------------------------------------------
                 // title
@@ -325,11 +328,11 @@ class OpenSearchService
                 'path' => ['type' => 'text', 'analyzer' => 'standard'],
                 'page_refs' => ['type' => 'keyword'],
                 'tags' => ['type' => 'keyword'],
-                'category' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
+                'category' => ['type' => 'keyword'],
                 'author' => ['type' => 'text'],
-                'language' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
+                'language' => ['type' => 'keyword'],
                 'updated_at' => ['type' => 'date'],
-                'granularity' => ['type' => 'text', 'fields' => ['keyword' => ['type' => 'keyword', 'ignore_above' => 256]]],
+                'granularity' => ['type' => 'keyword'],
                 'metadata' => [
                     'properties' => [
                         'APA' => ['type' => 'text', 'index' => false],
@@ -522,8 +525,6 @@ class OpenSearchService
             $this->client->indices()->open(['index' => $index]);
         }
 
-
-
         return ['path' => $path, 'settings' => $response];
     }
 
@@ -675,19 +676,19 @@ class OpenSearchService
         $filters = [];
 
         if (! empty($params['resourceType'])) {
-            $filters[] = ['term' => ['resource_type.keyword' => $params['resourceType']]];
+            $filters[] = ['term' => ['resource_type' => $params['resourceType']]];
         }
 
         if (! empty($params['resourceId'])) {
-            $filters[] = ['term' => ['resource_id.keyword' => $params['resourceId']]];
+            $filters[] = ['term' => ['resource_id' => $params['resourceId']]];
         }
 
         if (! empty($params['granularity'])) {
-            $filters[] = ['term' => ['granularity.keyword' => $params['granularity']]];
+            $filters[] = ['term' => ['granularity' => $params['granularity']]];
         }
 
         if (! empty($params['language'])) {
-            $filters[] = ['term' => ['language.keyword' => $params['language']]];
+            $filters[] = ['term' => ['language' => $params['language']]];
         }
 
         if (! empty($params['category'])) {
@@ -699,7 +700,7 @@ class OpenSearchService
 
             // 必须匹配全部：为每个 category 创建一个 term 条件
             foreach ($categories as $category) {
-                $filters[] = ['term' => ['category.keyword' => $category]];
+                $filters[] = ['term' => ['category' => $category]];
             }
         }
 
@@ -767,16 +768,16 @@ class OpenSearchService
                 : $query,
             'aggs' => [
                 'resource_type' => [
-                    'terms' => ['field' => 'resource_type.keyword'],
+                    'terms' => ['field' => 'resource_type'],
                 ],
                 'language' => [
-                    'terms' => ['field' => 'language.keyword'],
+                    'terms' => ['field' => 'language'],
                 ],
                 'category' => [
-                    'terms' => ['field' => 'category.keyword'],
+                    'terms' => ['field' => 'category'],
                 ],
                 'granularity' => [
-                    'terms' => ['field' => 'granularity.keyword'],
+                    'terms' => ['field' => 'granularity'],
                 ],
             ],
         ];
@@ -1124,7 +1125,7 @@ class OpenSearchService
         $dsl = ['suggest' => $suggests];
 
         if ($language) {
-            $dsl['query'] = ['term' => ['language.keyword' => $language]];
+            $dsl['query'] = ['term' => ['language' => $language]];
         }
 
         $response = $this->client->search([
@@ -1166,5 +1167,46 @@ class OpenSearchService
             'index' => config('mint.opensearch.index'),
             'id' => $id,
         ]);
+    }
+
+    /**
+     * 校验 pali_synonyms 同义词词典是否对指定词生效
+     *
+     * 通过 OpenSearch _analyze API，用当前索引的 pali_query_analyzer
+     * 对输入文本做实时分析，返回展开后的全部 token（含原词与同义词）。
+     * 可用于快速确认 analysis/pali_synonyms.txt 中的某一行是否已生效
+     * （例如 dhamma,dharma,法 => dhamma 是否真的展开出 dharma、法）。
+     *
+     * @param  string  $text  待检测的巴利词，例如 "dhamma"
+     * @return array<int, string> 分析器输出的 token 文本数组（已去重，保留原始顺序）
+     *
+     * @throws Exception 索引不存在或 OpenSearch 调用失败时抛出
+     *
+     * @example
+     *   $service->pali_query_health_check('dhamma');
+     *   // => ['dhamma', 'dharma', '法']
+     */
+    public function pali_query_health_check(string $text): array
+    {
+        $index = config('mint.opensearch.index');
+
+        if (! $this->client->indices()->exists(['index' => $index])) {
+            throw new Exception("Index [$index] does not exist.");
+        }
+
+        $response = $this->client->indices()->analyze([
+            'index' => $index,
+            'body' => [
+                'analyzer' => 'pali_query_analyzer',
+                'text' => $text,
+            ],
+        ]);
+
+        $tokens = array_map(
+            fn ($token) => $token['token'] ?? '',
+            $response['tokens'] ?? []
+        );
+
+        return array_values(array_unique(array_filter($tokens, fn ($t) => $t !== '')));
     }
 }

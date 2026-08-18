@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Tools\Tools;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -39,31 +40,33 @@ class WebhookWechat extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
         $url = $this->argument('url');
-        $title =  $this->argument('title');
+        $title = $this->argument('title');
         $content = $this->argument('message');
         $strMessage = "# {$title}\n\n$content";
         $param = [
-            "msgtype"=>"markdown",
-            "markdown"=> [
-                "content"=> $strMessage,
+            'msgtype' => 'markdown',
+            'markdown' => [
+                'content' => $strMessage,
             ],
         ];
         $this->info("url={$url}");
-        try{
+        try {
             $response = Http::post($url, $param);
-            if($response->successful()){
+            if ($response->successful()) {
                 return 0;
-            }else{
+            } else {
                 return 1;
             }
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             Log::error($e);
+
             return 1;
         }
+
         return 0;
     }
 }

@@ -1,31 +1,42 @@
 <?php
+
 namespace App\Tools;
-use Illuminate\Support\Str;
+
+use Grpc\ChannelCredentials;
 use Illuminate\Support\Facades\Log;
+use Mint\Tulip\V1\SearchClient;
+use Mint\Tulip\V1\SearchRequest;
+use Mint\Tulip\V1\SearchRequest\Page;
+use Mint\Tulip\V1\UpdateRequest;
 
 class PaliSearch
 {
-    public static function connect(){
-        $host = config('mint.server.rpc.tulip.host') . ':' . config('mint.server.rpc.tulip.port');
-        $client = new \Mint\Tulip\V1\SearchClient($host, [
-            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
+    public static function connect()
+    {
+        $host = config('mint.server.rpc.tulip.host').':'.config('mint.server.rpc.tulip.port');
+        $client = new SearchClient($host, [
+            'credentials' => ChannelCredentials::createInsecure(),
         ]);
+
         return $client;
     }
-    public static function search($words,$books,$matchMode='case',$index=0,$size=10){
+
+    public static function search($words, $books, $matchMode = 'case', $index = 0, $size = 10)
+    {
         $client = PaliSearch::connect();
-        $request = new \Mint\Tulip\V1\SearchRequest();
+        $request = new SearchRequest;
         $request->setKeywords($words);
         $request->setBooks($books);
         $request->setMatchMode($matchMode);
-        $page = new \Mint\Tulip\V1\SearchRequest\Page;
+        $page = new Page;
         $page->setIndex($index);
         $page->setSize($size);
         $request->setPage($page);
 
-        list($response, $status) = $client->Pali($request)->wait();
+        [$response, $status] = $client->Pali($request)->wait();
         if ($status->code !== \Grpc\STATUS_OK) {
-            Log::error("ERROR: " . $status->code . ", " . $status->details);
+            Log::error('ERROR: '.$status->code.', '.$status->details);
+
             return false;
         }
         $output = [];
@@ -33,7 +44,7 @@ class PaliSearch
         $output['page'] = $response->getPage();
         $output['rows'] = [];
         foreach ($response->getItems() as $key => $value) {
-            $output['rows'][] = (object)[
+            $output['rows'][] = (object) [
                 'rank' => $value->getRank(),
                 'highlight' => $value->getHighlight(),
                 'book' => $value->getBook(),
@@ -41,43 +52,47 @@ class PaliSearch
                 'content' => $value->getContent(),
             ];
         }
+
         return $output;
     }
 
-    public static function book_list($words,$books,$matchMode='case',$index=0,$size=10){
+    public static function book_list($words, $books, $matchMode = 'case', $index = 0, $size = 10)
+    {
         $client = PaliSearch::connect();
 
-        $request = new \Mint\Tulip\V1\SearchRequest();
+        $request = new SearchRequest;
         $request->setKeywords($words);
         $request->setBooks($books);
         $request->setMatchMode($matchMode);
-        $page = new \Mint\Tulip\V1\SearchRequest\Page;
+        $page = new Page;
         $page->setIndex($index);
         $page->setSize($size);
         $request->setPage($page);
 
-        list($response, $status) = $client->BookList($request)->wait();
+        [$response, $status] = $client->BookList($request)->wait();
         if ($status->code !== \Grpc\STATUS_OK) {
-            Log::error("ERROR: " . $status->code . ", " . $status->details);
+            Log::error('ERROR: '.$status->code.', '.$status->details);
+
             return false;
         }
         $output = [];
         $output['rows'] = [];
         foreach ($response->getItems() as $key => $value) {
-            $output['rows'][] = (object)[
+            $output['rows'][] = (object) [
                 'pcd_book_id' => $value->getBook(),
                 'co' => $value->getCount(),
             ];
         }
+
         return $output;
     }
 
-
-    public static function update($book,$paragraph,
-                                  $bold1,$bold2,$bold3,
-                                  $content,$pcd_book_id){
+    public static function update($book, $paragraph,
+        $bold1, $bold2, $bold3,
+        $content, $pcd_book_id)
+    {
         $client = PaliSearch::connect();
-        $request = new \Mint\Tulip\V1\UpdateRequest();
+        $request = new UpdateRequest;
         $request->setBook($book);
         $request->setParagraph($paragraph);
         $request->setLevel(0);
@@ -87,11 +102,13 @@ class PaliSearch
         $request->setContent($content);
         $request->setPcdBookId($pcd_book_id);
 
-        list($response, $status) = $client->Update($request)->wait();
+        [$response, $status] = $client->Update($request)->wait();
         if ($status->code !== \Grpc\STATUS_OK) {
-            Log::error("ERROR: " . $status->code . ", " . $status->details);
+            Log::error('ERROR: '.$status->code.', '.$status->details);
+
             return false;
         }
+
         return $response->getCount();
     }
 }

@@ -4,12 +4,14 @@
 
 namespace App\Services\Template\Contracts;
 
+use App\Services\Template\ParsedDocument;
+
 interface ParserInterface
 {
-    public function parse(string $content): \App\Services\Template\ParsedDocument;
+    public function parse(string $content): ParsedDocument;
 }
 
 interface RendererInterface
 {
-    public function render(\App\Services\Template\ParsedDocument $document): string;
+    public function render(ParsedDocument $document): string;
 }

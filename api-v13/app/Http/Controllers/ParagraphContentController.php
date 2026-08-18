@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Models\Sentence;
-use App\Models\PaliText;
-use Illuminate\Support\Str;
 use App\Http\Api\ChannelApi;
-
-
-
-
+use App\Models\PaliText;
+use App\Models\Sentence;
 use App\Services\PaliContentService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class ParagraphContentController extends Controller
 {
@@ -39,10 +35,10 @@ class ParagraphContentController extends Controller
 
         $mode = $request->input('mode', 'read');
         if ($mode === 'read') {
-            //阅读模式加载html格式原文
+            // 阅读模式加载html格式原文
             $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
         } else {
-            //翻译模式加载json格式原文
+            // 翻译模式加载json格式原文
             $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
         }
 
@@ -52,11 +48,11 @@ class ParagraphContentController extends Controller
 
         $chapter = PaliText::where('book', $data['book'])
             ->where('paragraph', $data['para'])->first();
-        if (!$chapter) {
-            return $this->error("no data");
+        if (! $chapter) {
+            return $this->error('no data');
         }
 
-        #获取channel索引表
+        // 获取channel索引表
 
         $indexChannel = [];
         $indexChannel = $paliService->getChannelIndex($channels);
@@ -73,7 +69,7 @@ class ParagraphContentController extends Controller
             ->orderBy('word_start')
             ->get();
         if (count($record) === 0) {
-            return $this->error("no data");
+            return $this->error('no data');
         }
         $result = $paliService->makeContentObj($record, $mode, $indexChannel);
 
@@ -82,7 +78,7 @@ class ParagraphContentController extends Controller
             'pagination' => [
                 'page' => 1,
                 'pageSize' => $to - $from + 1,
-                'total' => $to - $from + 1
+                'total' => $to - $from + 1,
             ],
         ]);
     }
@@ -97,9 +93,8 @@ class ParagraphContentController extends Controller
 
     /**
      * Display the specified resource.
-     *      * @param  \Illuminate\Http\Request  $request
-     * @param string $id
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function show(Request $request, string $id) {}
 

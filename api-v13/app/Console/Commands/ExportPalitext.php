@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 use App\Models\PaliText;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class ExportPalitext extends Command
@@ -41,40 +41,41 @@ class ExportPalitext extends Command
     public function handle()
     {
         Log::debug('task export offline palitext-table start');
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-        $exportFile = storage_path('app/public/export/offline/wikipali-offline-'.date("Y-m-d").'.db3');
-        $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $exportFile = storage_path('app/public/export/offline/wikipali-offline-'.date('Y-m-d').'.db3');
+        $dbh = new \PDO('sqlite:'.$exportFile, '', '', [\PDO::ATTR_PERSISTENT => true]);
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
 
-        $query = "INSERT INTO pali_text ( id , book , paragraph, level, toc,
+        $query = 'INSERT INTO pali_text ( id , book , paragraph, level, toc,
                                     chapter_len , parent   )
-                                    VALUES ( ? , ? , ? , ? , ? , ? , ? )";
-        try{
+                                    VALUES ( ? , ? , ? , ? , ? , ? , ? )';
+        try {
             $stmt = $dbh->prepare($query);
-        }catch(PDOException $e){
+        } catch (PDOException $e) {
             Log::error($e->getMessage(), ['exception' => $e]);
+
             return 1;
         }
 
         $bar = $this->output->createProgressBar(PaliText::count());
-        foreach (PaliText::select(['uid','book','paragraph',
-                    'level','toc','lenght','chapter_len',
-                    'next_chapter','prev_chapter','parent','chapter_strlen'])
-                    ->orderBy('book')
-                    ->orderBy('paragraph')
-                    ->cursor() as $chapter) {
-            $currData = array(
-                            $chapter->uid,
-                            $chapter->book,
-                            $chapter->paragraph,
-                            $chapter->level,
-                            $chapter->toc,
-                            $chapter->chapter_len,
-                            $chapter->parent,
-                            );
+        foreach (PaliText::select(['uid', 'book', 'paragraph',
+            'level', 'toc', 'lenght', 'chapter_len',
+            'next_chapter', 'prev_chapter', 'parent', 'chapter_strlen'])
+            ->orderBy('book')
+            ->orderBy('paragraph')
+            ->cursor() as $chapter) {
+            $currData = [
+                $chapter->uid,
+                $chapter->book,
+                $chapter->paragraph,
+                $chapter->level,
+                $chapter->toc,
+                $chapter->chapter_len,
+                $chapter->parent,
+            ];
             $stmt->execute($currData);
             $bar->advance();
         }

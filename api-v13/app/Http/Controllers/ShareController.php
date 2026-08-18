@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Share;
-use App\Models\GroupInfo;
-use Illuminate\Http\Request;
-use App\Http\Resources\ShareResource;
-use App\Services\AuthService;
 use App\Http\Api\ShareApi;
+use App\Http\Resources\ShareResource;
+use App\Models\GroupInfo;
+use App\Models\Share;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
 class ShareController extends Controller
@@ -15,52 +16,52 @@ class ShareController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
         //
         $user = AuthService::current($request);
         $result = false;
-        $role = "member";
+        $role = 'member';
         $indexCol = ['id', 'res_id', 'res_type', 'power', 'updated_at', 'created_at'];
         switch ($request->input('view')) {
             case 'res':
-                if (!$user) {
+                if (! $user) {
                     return $this->error(__('auth.failed'));
                 }
                 $table = Share::where('res_id', $request->input('id'));
                 $power = ShareApi::getResPower($user['user_uid'], $request->input('id'), $table->value('res_type'));
                 switch ($power) {
                     case 10:
-                        $role = "member";
+                        $role = 'member';
                         break;
                     case 20:
-                        $role = "editor";
+                        $role = 'editor';
                         break;
                     case 30:
-                        $role = "owner";
+                        $role = 'owner';
                         break;
                 }
                 break;
             case 'group':
-                if (!$user) {
+                if (! $user) {
                     return $this->error(__('auth.failed'));
                 }
-                //TODO 判断当前用户是否有指定的 group 的权限
+                // TODO 判断当前用户是否有指定的 group 的权限
                 if (GroupInfo::where('uid', $request->input('id'))->where('owner', $user['user_uid'])->exists()) {
-                    $role = "owner";
+                    $role = 'owner';
                 }
                 $table = Share::where('cooperator_id', $request->input('id'));
                 break;
         }
-        if (isset($_GET["search"])) {
-            //TODO 搜索资源标题
-            $table = $table->where('title', 'like', $_GET["search"] . "%");
+        if (isset($_GET['search'])) {
+            // TODO 搜索资源标题
+            $table = $table->where('title', 'like', $_GET['search'].'%');
         }
         $count = $table->count();
-        if (isset($_GET["order"]) && isset($_GET["dir"])) {
-            $table = $table->orderBy($_GET["order"], $_GET["dir"]);
+        if (isset($_GET['order']) && isset($_GET['dir'])) {
+            $table = $table->orderBy($_GET['order'], $_GET['dir']);
         } else {
             $table = $table->orderBy('updated_at', 'desc');
         }
@@ -69,33 +70,31 @@ class ShareController extends Controller
             ->take($request->input('limit', 1000));
 
         $result = $table->get();
-        //TODO 获取当前用户的身份
-
+        // TODO 获取当前用户的身份
 
         if ($result) {
-            return $this->ok(["rows" => ShareResource::collection($result), "count" => $count, 'role' => $role]);
+            return $this->ok(['rows' => ShareResource::collection($result), 'count' => $count, 'role' => $role]);
         } else {
-            return $this->error("没有查询到数据");
+            return $this->error('没有查询到数据');
         }
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         //
         foreach ($request->input('user_id') as $key => $value) {
-            if (!Str::isUuid($value)) {
+            if (! Str::isUuid($value)) {
                 continue;
             }
             $row = Share::where('cooperator_id', $value)
                 ->where('res_id', $request->input('res_id'))->first();
-            if (!$row) {
-                $row = new Share();
+            if (! $row) {
+                $row = new Share;
                 $row->id = app('snowflake')->id();
                 $row->cooperator_id = $value;
                 $row->res_id = $request->input('res_id');
@@ -116,14 +115,14 @@ class ShareController extends Controller
             $row->modify_time = time() * 1000;
             $row->save();
         }
+
         return $this->ok(count($request->input('user_id')));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Share  $share
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Share $share)
     {
@@ -133,21 +132,19 @@ class ShareController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Share  $share
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Share $share)
     {
-        //查询权限
+        // 查询权限
         $currUser = AuthService::current($request);
-        if (!$currUser) {
+        if (! $currUser) {
             return $this->error(__('auth.failed'));
         }
 
         $power = ShareApi::getResPower($currUser['user_uid'], $share->res_id, $share->res_type);
-        if (!$power || $power <= 20) {
-            //普通成员没有删除权限
+        if (! $power || $power <= 20) {
+            // 普通成员没有删除权限
             return $this->error(__('auth.failed'));
         }
         switch ($request->input('role')) {
@@ -161,31 +158,31 @@ class ShareController extends Controller
         }
         $share->modify_time = time() * 1000;
         $share->save();
+
         return $this->ok($share);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Share  $share
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Request $request, Share $share)
     {
-        //查询权限
+        // 查询权限
         $currUser = AuthService::current($request);
-        if (!$currUser) {
+        if (! $currUser) {
             return $this->error(__('auth.failed'));
         }
 
         $power = ShareApi::getResPower($currUser['user_uid'], $share->res_id, $share->res_type);
-        if (!$power || $power <= 20) {
-            //普通成员没有删除权限
+        if (! $power || $power <= 20) {
+            // 普通成员没有删除权限
             return $this->error(__('auth.failed'));
         }
 
         $delete = $share->delete();
+
         return $this->ok($delete);
     }
 }

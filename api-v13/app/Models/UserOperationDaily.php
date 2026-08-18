@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class UserOperationDaily extends Model
 {
     use HasFactory;
+
     protected $fillable = ['user_id', 'date_int'];
 }

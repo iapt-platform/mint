@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TagMap;
-use App\Models\Tag;
-use Illuminate\Http\Request;
-use App\Http\Resources\TagMapResource;
-use App\Http\Resources\TagResource;
-use App\Services\AuthService;
-use App\Http\Api\StudioApi;
 use App\Http\Api\CourseApi;
+use App\Http\Api\StudioApi;
+use App\Http\Resources\TagMapResource;
+use App\Models\TagMap;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
 class TagMapController extends Controller
@@ -17,7 +16,7 @@ class TagMapController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -42,7 +41,7 @@ class TagMapController extends Controller
                         'owner_uid',
                         'editor_uid',
                         'tag_maps.created_at',
-                        'tag_maps.updated_at'
+                        'tag_maps.updated_at',
                     ]);
                 break;
         }
@@ -51,15 +50,15 @@ class TagMapController extends Controller
 
         $table = $table->orderBy($request->input('order', 'created_at'), $request->input('dir', 'desc'));
 
-        $table = $table->skip($request->input("offset", 0))
+        $table = $table->skip($request->input('offset', 0))
             ->take($request->input('limit', 10));
 
         $result = $table->get();
 
         return $this->ok(
             [
-                "rows" => TagMapResource::collection($result),
-                "count" => $count,
+                'rows' => TagMapResource::collection($result),
+                'count' => $count,
             ]
         );
     }
@@ -69,28 +68,28 @@ class TagMapController extends Controller
         if ($userId === $ownerId) {
             return true;
         }
-        if (!empty($courseId)) {
+        if (! empty($courseId)) {
             $role = CourseApi::role($courseId, $userId);
-            if (!empty($role) && $role !== 'student') {
+            if (! empty($role) && $role !== 'student') {
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
-        //判断当前用户是否有指定的studio的权限
+        // 判断当前用户是否有指定的studio的权限
         $studioId = StudioApi::getIdByName($request->input('studio'));
         if ($this->userCanManage(
             $user['user_uid'],
@@ -100,7 +99,7 @@ class TagMapController extends Controller
             return $this->error(__('auth.failed'), 403, 403);
         }
 
-        //查询是否重复
+        // 查询是否重复
         if (TagMap::where('anchor_id', $request->input('anchor_id'))
             ->where('tag_id', $request->input('tag_id'))
             ->where('owner_uid', $studioId)
@@ -110,22 +109,22 @@ class TagMapController extends Controller
         }
         $tag = new TagMap;
         $tag->id = Str::uuid();
-        $tag->table_name = $request->input("table_name");
-        $tag->anchor_id = $request->input("anchor_id");
-        $tag->tag_id = $request->input("tag_id");
+        $tag->table_name = $request->input('table_name');
+        $tag->anchor_id = $request->input('anchor_id');
+        $tag->tag_id = $request->input('tag_id');
         $tag->editor_uid = $user['user_uid'];
         $tag->owner_uid = $studioId;
         $tag->save();
 
-        $tagsMap = TagMap::where('anchor_id', $request->input("anchor_id"))
+        $tagsMap = TagMap::where('anchor_id', $request->input('anchor_id'))
             ->where('owner_uid', $studioId)
             ->select('tag_id')
             ->get();
 
         return $this->ok(
             [
-                "rows" => TagMapResource::collection($tagsMap),
-                "count" => count($tagsMap),
+                'rows' => TagMapResource::collection($tagsMap),
+                'count' => count($tagsMap),
             ]
         );
     }
@@ -133,8 +132,7 @@ class TagMapController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\TagMap  $tagMap
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(TagMap $tagMap)
     {
@@ -144,9 +142,7 @@ class TagMapController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\TagMap  $tagMap
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, TagMap $tagMap)
     {
@@ -156,16 +152,15 @@ class TagMapController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\TagMap  $tagMap
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Request $request, TagMap $tagMap)
     {
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'));
         }
-        //判断当前用户是否有指定的studio的权限
+        // 判断当前用户是否有指定的studio的权限
         if ($this->userCanManage(
             $user['user_uid'],
             $tagMap->owner_uid,

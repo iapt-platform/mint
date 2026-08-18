@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaliText;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use App\Models\PaliText;
 
 class AiTranslateController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index() {}
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -34,24 +34,25 @@ class AiTranslateController extends Controller
         $selected = array_filter($api, function ($value) use ($engin) {
             return $value['name'] === $engin;
         });
-        if (!is_array($selected) || count($selected) === 0) {
+        if (! is_array($selected) || count($selected) === 0) {
             return $this->error('no engin name', 200, 200);
         }
 
         $url = $selected[0]['api_url'];
         $param = [
-            "model" => $selected[0]['model'],
-            "messages" => [
-                ["role" => "system", "content" => "你是翻译人工智能助手，bhikkhu 为专有名词，不可翻译成其他语言。"],
-                ["role" => "user", "content" => "{$prompt_pre}{$origin}\n{$prompt_suf}"],
+            'model' => $selected[0]['model'],
+            'messages' => [
+                ['role' => 'system', 'content' => '你是翻译人工智能助手，bhikkhu 为专有名词，不可翻译成其他语言。'],
+                ['role' => 'user', 'content' => "{$prompt_pre}{$origin}\n{$prompt_suf}"],
             ],
-            "temperature" => 0.3,
+            'temperature' => 0.3,
         ];
         $response = Http::withToken($selected[0]['token'])
             ->post($url, $param);
         if ($response->failed()) {
-            $this->error('http request error' . $response->json('message'));
+            $this->error('http request error'.$response->json('message'));
             Log::error('http request error', ['data' => $response->json()]);
+
             return $this->error($response->json(), 200, 200);
         } else {
             return $this->ok($response->json());
@@ -62,7 +63,7 @@ class AiTranslateController extends Controller
      * Display the specified resource.
      *
      * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Request $request, $id)
     {
@@ -72,7 +73,7 @@ class AiTranslateController extends Controller
             $content = PaliText::where('book', $para[0])
                 ->where('paragraph', $para[1])
                 ->value('text');
-            if (!empty($content)) {
+            if (! empty($content)) {
                 return $this->fetch($content, $request->input('engin', config('mint.ai.default')));
             } else {
                 return $this->error('no content', 200, 200);
@@ -85,9 +86,8 @@ class AiTranslateController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -98,7 +98,7 @@ class AiTranslateController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

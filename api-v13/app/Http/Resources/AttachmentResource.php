@@ -2,32 +2,34 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
 
 class AttachmentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array|Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
-        $filename = $this->bucket . '/' . $this->name;
+        $filename = $this->bucket.'/'.$this->name;
         $data = [
-            "id" => $this->id,
-            "user_uid" => $this->user_uid,
-            "name" => $filename,
-            "filename" => $filename,
-            "title" => $this->title,
-            "size" => $this->size,
-            "content_type" => $this->content_type,
-            "status" => $this->status,
-            "created_at" => $this->created_at,
-            "updated_at" => $this->updated_at,
+            'id' => $this->id,
+            'user_uid' => $this->user_uid,
+            'name' => $filename,
+            'filename' => $filename,
+            'title' => $this->title,
+            'size' => $this->size,
+            'content_type' => $this->content_type,
+            'status' => $this->status,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
 
         if (App::environment('local')) {
@@ -39,8 +41,8 @@ class AttachmentResource extends JsonResource
         $type = explode('/', $this->content_type);
         if ($type[0] === 'image' || $type[0] === 'video') {
             $path_parts = pathinfo($this->name);
-            $small = $this->bucket . '/' . $path_parts['filename'] . '_s.jpg';
-            $middle = $this->bucket . '/' . $path_parts['filename'] . '_m.jpg';
+            $small = $this->bucket.'/'.$path_parts['filename'].'_s.jpg';
+            $middle = $this->bucket.'/'.$path_parts['filename'].'_m.jpg';
             if (App::environment('local')) {
                 $data['thumbnail'] = [
                     'small' => Storage::url($small),
@@ -53,6 +55,7 @@ class AttachmentResource extends JsonResource
                 ];
             }
         }
+
         return $data;
     }
 }

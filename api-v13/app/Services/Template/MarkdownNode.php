@@ -2,7 +2,6 @@
 
 namespace App\Services\Template;
 
-
 class MarkdownNode extends ContentNode
 {
     public string $content;
@@ -19,7 +18,7 @@ class MarkdownNode extends ContentNode
         return [
             'type' => $this->type,
             'content' => $this->content,
-            'position' => $this->position
+            'position' => $this->position,
         ];
     }
 }

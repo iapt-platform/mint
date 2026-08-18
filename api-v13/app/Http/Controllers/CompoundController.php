@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserDict;
-use Illuminate\Http\Request;
 use App\Http\Api\DictApi;
-use App\Tools\TurboSplit;
 use App\Http\Resources\CompoundResource;
+use App\Models\DhammaTerm;
+use App\Models\UserDict;
+use App\Tools\TurboSplit;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CompoundController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
         $dict_id = DictApi::getSysDict('robot_compound');
-        if (!$dict_id) {
+        if (! $dict_id) {
             return $this->error('没有找到 robot_compound 字典');
         }
         switch ($request->input('view')) {
@@ -29,31 +31,28 @@ class CompoundController extends Controller
                 break;
 
             default:
-                # code...
+                // code...
                 break;
         }
+
         return $this->ok([
-            "rows" => CompoundResource::collection($result),
-            "count" => $count
+            'rows' => CompoundResource::collection($result),
+            'count' => $count,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
-        /**
-         *
-         */
         $dict_id = DictApi::getSysDict('robot_compound');
-        if (!$dict_id) {
+        if (! $dict_id) {
             return $this->error('没有找到 robot_compound 字典');
         }
-        //删除旧数据
+        // 删除旧数据
         $del = UserDict::where('dict_id', $dict_id)
             ->whereIn('word', $request->input('index'))
             ->delete();
@@ -64,7 +63,7 @@ class CompoundController extends Controller
             $new->factors = $word['factors'];
             $new->dict_id = $dict_id;
             $new->source = '_ROBOT_';
-            $new->create_time = (int)(microtime(true) * 1000);
+            $new->create_time = (int) (microtime(true) * 1000);
             $new->type = $word['type'];
             $new->grammar = $word['grammar'];
             $new->parent = $word['parent'];
@@ -72,24 +71,25 @@ class CompoundController extends Controller
             $new->note = $word['confidence'];
             $new->language = 'cm';
             $new->creator_id = 1;
-            $new->flag = 0; //标记为维护状态
+            $new->flag = 0; // 标记为维护状态
             $new->save();
         }
+
         return $this->ok(count($request->input('words')));
     }
 
     /**
      * Display the specified resource.
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\DhammaTerm  $dhammaTerm
-     * @return \Illuminate\Http\Response
+     *
+     * @param  DhammaTerm  $dhammaTerm
+     * @return Response
      */
     public function show(Request $request, string $word)
     {
         //
         $start = microtime(true);
         $dict_id = DictApi::getSysDict('robot_compound');
-        if (!$dict_id) {
+        if (! $dict_id) {
             return $this->error('没有找到 robot_compound 字典');
         }
         $result = UserDict::where('dict_id', $dict_id)
@@ -98,10 +98,11 @@ class CompoundController extends Controller
             ->get();
         if (count($result) > 0) {
             return $this->ok(['rows' => $result, 'count' => count($result), 'mode' => 'dict']);
-        } else if (mb_strlen($word, 'UTF-8') < 60) {
-            $ts = new TurboSplit();
+        } elseif (mb_strlen($word, 'UTF-8') < 60) {
+            $ts = new TurboSplit;
             $parts = $ts->splitA($word);
             $time = microtime(true) - $start;
+
             return $this->ok(['rows' => $parts, 'count' => count($parts), 'mode' => 'realtime', 'time' => $time]);
         } else {
             return $this->ok(['rows' => [], 'count' => 0]);
@@ -111,9 +112,7 @@ class CompoundController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UserDict  $word
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, UserDict $word)
     {
@@ -123,8 +122,7 @@ class CompoundController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserDict  $word
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(UserDict $word)
     {

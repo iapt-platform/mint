@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Api\UserApi;
+use App\Http\Resources\SentHistoryResource;
 use App\Models\SentHistory;
 use Illuminate\Http\Request;
-use App\Http\Resources\SentHistoryResource;
-use App\Http\Api\UserApi;
+use Illuminate\Http\Response;
 
 class SentHistoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -33,11 +34,12 @@ class SentHistoryController extends Controller
             $request->input('order', 'created_at'),
             $request->input('dir', 'desc')
         );
-        $table->skip($request->input("offset", 0))
+        $table->skip($request->input('offset', 0))
             ->take($request->input('limit', 100));
 
         $result = $table->get();
-        return $this->ok(["rows" => SentHistoryResource::collection($result), "count" => $count]);
+
+        return $this->ok(['rows' => SentHistoryResource::collection($result), 'count' => $count]);
     }
 
     public function contribution(Request $request)
@@ -56,7 +58,6 @@ class SentHistoryController extends Controller
             ->take(10)
             ->get();
 
-
         foreach ($result as $key => $user) {
             $userInfo = UserApi::getByUuid($user->user_uid);
             $user->username = [
@@ -64,14 +65,14 @@ class SentHistoryController extends Controller
                 'username' => $userInfo['userName'],
             ];
         }
+
         return $this->ok($result);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -81,8 +82,7 @@ class SentHistoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\SentHistory  $sentHistory
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(SentHistory $sentHistory)
     {
@@ -92,9 +92,7 @@ class SentHistoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\SentHistory  $sentHistory
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, SentHistory $sentHistory)
     {
@@ -104,8 +102,7 @@ class SentHistoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\SentHistory  $sentHistory
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(SentHistory $sentHistory)
     {

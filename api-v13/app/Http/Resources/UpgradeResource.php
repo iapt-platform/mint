@@ -11,6 +11,7 @@ class UpgradeResource extends JsonResource
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
+     *
      * @disregard
      */
     public function toArray(Request $request): array

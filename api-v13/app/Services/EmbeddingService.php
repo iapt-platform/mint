@@ -3,12 +3,13 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
-use App\Services\AIModelService;
 
 class EmbeddingService
 {
     protected string $modelId;
+
     protected string $apiUrl = '';
+
     protected int $maxRetries = 3;
 
     /**
@@ -20,7 +21,7 @@ class EmbeddingService
     {
         $models = $aiModels->getSysModels('embedding');
         $this->modelId = $models[0]['uid'];
-        $this->apiUrl = config('mint.ai.proxy') . '/api/openai';
+        $this->apiUrl = config('mint.ai.proxy').'/api/openai';
     }
 
     public function generate($text)
@@ -62,9 +63,9 @@ class EmbeddingService
      * 在 429 或 500+ 错误时重试，最大重试次数为 maxRetries。
      * 其他错误直接返回空字符串。
      *
-     * @param  string  $text       输入文本
-     * @param  int     $maxTokens  每次请求允许的最大 tokens 数
-     * @return string              模型返回的摘要文本
+     * @param  string  $text  输入文本
+     * @param  int  $maxTokens  每次请求允许的最大 tokens 数
+     * @return string 模型返回的摘要文本
      */
     protected function callOpenAI(string $text): string
     {
@@ -83,7 +84,7 @@ class EmbeddingService
                         'Content-Type' => 'application/json',
                     ])->post($this->apiUrl, [
                         'model_id' => $this->modelId,
-                        'payload' => $payload
+                        'payload' => $payload,
                     ]);
 
                 if ($response->successful()) {
@@ -96,7 +97,7 @@ class EmbeddingService
                 }
 
                 if (in_array($response->status(), [429, 500, 502, 503, 504])) {
-                    throw new \Exception("Temporary server error: " . $response->status());
+                    throw new \Exception('Temporary server error: '.$response->status());
                 }
 
                 return false;

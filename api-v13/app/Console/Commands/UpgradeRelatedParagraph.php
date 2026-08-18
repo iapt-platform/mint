@@ -1,13 +1,16 @@
 <?php
+
 /**
  * 更新段落关联数据库
  * 用于找到根本和义注复注的对应段落
  */
+
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\RelatedParagraph;
 use App\Models\BookTitle;
+use App\Models\RelatedParagraph;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class UpgradeRelatedParagraph extends Command
@@ -43,39 +46,39 @@ class UpgradeRelatedParagraph extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-        $this->info("upgrade related.paragraph");
-		$startTime = time();
-        #删除目标数据库中数据
-        RelatedParagraph::where('book','>',0)->delete();
-		// 打开csv文件并读取数据
-        $strFileName = config("mint.path.pali_title") . "/cs6_para.csv";
-        if(!file_exists($strFileName)){
+        $this->info('upgrade related.paragraph');
+        $startTime = time();
+        // 删除目标数据库中数据
+        RelatedParagraph::where('book', '>', 0)->delete();
+        // 打开csv文件并读取数据
+        $strFileName = config('mint.path.pali_title').'/cs6_para.csv';
+        if (! file_exists($strFileName)) {
             return 1;
         }
         $inputRow = 0;
-        $fp = fopen($strFileName, "r");
-        if (!$fp ) {
+        $fp = fopen($strFileName, 'r');
+        if (! $fp) {
             $this->error("can not open csv $strFileName");
             Log::error("can not open csv $strFileName");
         }
-        $bookTitles = BookTitle::orderBy('sn','desc')->get();
+        $bookTitles = BookTitle::orderBy('sn', 'desc')->get();
 
         while (($data = fgetcsv($fp, 0, ',')) !== false) {
-            if($inputRow>0){
-                if(!empty($this->argument('book'))){
-                    if($this->argument('book') !=$data[0] ){
+            if ($inputRow > 0) {
+                if (! empty($this->argument('book'))) {
+                    if ($this->argument('book') != $data[0]) {
                         continue;
                     }
                 }
-                //获取书号
+                // 获取书号
                 $bookId = 0;
                 foreach ($bookTitles as $bookTitle) {
-                    # code...
-                    if((int)$data[0] === $bookTitle->book){
-                        if((int)$data[1] >= $bookTitle->paragraph){
+                    // code...
+                    if ((int) $data[0] === $bookTitle->book) {
+                        if ((int) $data[1] >= $bookTitle->paragraph) {
                             $bookId = $bookTitle->id;
                             break;
                         }
@@ -83,12 +86,12 @@ class UpgradeRelatedParagraph extends Command
                 }
                 $begin = (int) $data[3];
                 $end = (int) $data[4];
-                $arrPara = array();
+                $arrPara = [];
                 for ($i = $begin; $i <= $end; $i++) {
                     $arrPara[] = $i;
                 }
                 foreach ($arrPara as $key => $para) {
-                    $newRow = new RelatedParagraph();
+                    $newRow = new RelatedParagraph;
                     $newRow->book = $data[0];
                     $newRow->para = $data[1];
                     $newRow->book_id = $bookId;
@@ -98,12 +101,13 @@ class UpgradeRelatedParagraph extends Command
                 }
             }
             $inputRow++;
-            if($inputRow % 1000 == 0){
+            if ($inputRow % 1000 == 0) {
                 $this->info($inputRow);
             }
         }
         fclose($fp);
-		$this->info("all done. in ". time()-$startTime . "s" );
+        $this->info('all done. in '.time() - $startTime.'s');
+
         return 0;
     }
 }

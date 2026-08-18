@@ -4,27 +4,28 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-
-use App\Models\Task;
-use App\Models\TaskRelation;
-use App\Models\TaskAssignee;
-use App\Models\AiModel;
-use App\Http\Resources\TaskResource;
-use App\Services\AuthService;
-use App\Http\Api\WatchApi;
 use App\Http\Api\UserApi;
-
-
+use App\Http\Api\WatchApi;
+use App\Http\Resources\TaskResource;
+use App\Jobs\ProcessAITranslateJob;
+use App\Models\AiModel;
+use App\Models\Task;
+use App\Models\TaskAssignee;
+use App\Models\TaskRelation;
+use App\Services\AuthService;
+use App\Services\DiscussionService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class TaskStatusController extends Controller
 {
-    protected $changeTasks = array();
+    protected $changeTasks = [];
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -34,8 +35,7 @@ class TaskStatusController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -45,8 +45,7 @@ class TaskStatusController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Task $task)
     {
@@ -54,46 +53,44 @@ class TaskStatusController extends Controller
     }
 
     /**
-     *
-     *
-     * @param  string  $status
-     * @param  string  $id
      * @return void
      */
     private function pushChange(string $status, string $id)
     {
-        if (!isset($this->changeTasks[$status])) {
-            $this->changeTasks[$status] = array();
+        if (! isset($this->changeTasks[$status])) {
+            $this->changeTasks[$status] = [];
         }
         $this->changeTasks[$status][] = $id;
     }
+
     private function getChange(string $status)
     {
-        if (!isset($this->changeTasks[$status])) {
-            $this->changeTasks[$status] = array();
+        if (! isset($this->changeTasks[$status])) {
+            $this->changeTasks[$status] = [];
         }
+
         return $this->changeTasks[$status];
     }
+
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @param  Task  $task
+     * @return Response
      */
     public function update(Request $request, string $id)
     {
         //
         $task = Task::findOrFail($id);
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
-        if (!TaskController::canUpdate($user['user_uid'], $task)) {
+        if (! TaskController::canUpdate($user['user_uid'], $task)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
 
-        if (!$request->has('status')) {
+        if (! $request->has('status')) {
             return $this->error('no status', 400, 400);
         }
 
@@ -103,15 +100,15 @@ class TaskStatusController extends Controller
         if ($task->type === 'workflow') {
             return $this->ok(
                 [
-                    "rows" => TaskResource::collection(resource: [$task]),
-                    "count" => 1,
+                    'rows' => TaskResource::collection(resource: [$task]),
+                    'count' => 1,
                 ]
             );
         }
         switch ($request->input('status')) {
             case 'published':
                 $this->pushChange('published', $id);
-                # 开启子任务
+                // 开启子任务
                 $children = Task::where('parent_id', $id)
                     ->where('status', 'pending')
                     ->select('id')->get();
@@ -135,19 +132,19 @@ class TaskStatusController extends Controller
                 $this->pushChange('done', $task->id);
                 $task->finished_at = now();
                 $preTask = [$task->id];
-                //开启父任务
+                // 开启父任务
                 if ($task->parent_id) {
                     $notCompleted = Task::where('parent_id', $task->parent_id)
                         ->where('id', '!=', $task->id)
                         ->where('status', '!=', 'done')
                         ->count();
                     if ($notCompleted === 0) {
-                        //父任务已经完成
+                        // 父任务已经完成
                         $preTask[] = $task->parent_id;
                         $this->pushChange('done', $task->parent_id);
                     }
                 }
-                //开启后置任务
+                // 开启后置任务
                 $nextTasks = TaskRelation::whereIn('task_id', $preTask)
                     ->select('next_task_id')->get();
                 foreach ($nextTasks as $key => $value) {
@@ -156,7 +153,7 @@ class TaskStatusController extends Controller
                         $this->pushChange('published', $value->next_task_id);
                     }
                 }
-                //开启后置任务的子任务
+                // 开启后置任务的子任务
                 $nextTasksChildren = Task::whereIn('parent_id', $this->getChange('published'))
                     ->where('status', 'pending')
                     ->select('id')->get();
@@ -169,24 +166,24 @@ class TaskStatusController extends Controller
                 foreach ($nextTasks as $key => $value) {
                     $nextTask = Task::find($value->next_task_id);
                     if ($nextTask->status === 'requested_restart') {
-                        //$runningTask[] = $value->next_task_id;
+                        // $runningTask[] = $value->next_task_id;
                         $this->pushChange('running', $value->next_task_id);
                     }
                 }
                 break;
             case 'requested_restart':
                 $this->pushChange('requested_restart', $task->id);
-                //从新开启前置任务
+                // 从新开启前置任务
                 $preTasks = TaskRelation::where('next_task_id', $task->id)
                     ->select('task_id')->get();
                 foreach ($preTasks as $key => $value) {
-                    //$restartTask[] = $value->task_id;
+                    // $restartTask[] = $value->task_id;
                     $this->pushChange('restarted', $value->task_id);
                 }
                 break;
         }
 
-        # auto start with ai assistant
+        // auto start with ai assistant
         $autoStart = array_merge($this->getChange('published'), $this->getChange('restarted'));
         foreach ($autoStart as $taskId) {
             $taskAssignee = TaskAssignee::where('task_id', $taskId)
@@ -195,7 +192,7 @@ class TaskStatusController extends Controller
             if ($aiAssistant) {
                 $aiTask = Task::find($taskId);
                 try {
-                    $msgId = \App\Jobs\ProcessAITranslateJob::publish($taskId, $aiAssistant->uid);
+                    $msgId = ProcessAITranslateJob::publish($taskId, $aiAssistant->uid);
                     $aiTask->executor_id = $aiAssistant->uid;
                     $aiTask->status = 'queue';
                     $this->pushChange('queue', $taskId);
@@ -203,7 +200,7 @@ class TaskStatusController extends Controller
                     $aiTask->status = 'pending';
                     Log::error('ai assistant start fail', [
                         'task' => $taskId,
-                        'error' => $e->getMessage()
+                        'error' => $e->getMessage(),
                     ]);
                 } finally {
                     $aiTask->save();
@@ -212,10 +209,10 @@ class TaskStatusController extends Controller
         }
 
         $allChanged = [];
-        $discussion = app(\App\Services\DiscussionService::class);
+        $discussion = app(DiscussionService::class);
         foreach ($this->changeTasks as $key => $tasksId) {
             $allChanged = array_merge($allChanged, $tasksId);
-            #change status in related
+            // change status in related
             $data = [
                 'status' => $key,
                 'editor_id' => $user['user_uid'],
@@ -237,7 +234,7 @@ class TaskStatusController extends Controller
                 ->update($data);
 
             try {
-                //发送站内信
+                // 发送站内信
                 $send = WatchApi::change(
                     resId: $tasksId,
                     from: $user['user_uid'],
@@ -258,13 +255,14 @@ class TaskStatusController extends Controller
             }
         }
 
-        //changed tasks
+        // changed tasks
         $result = Task::whereIn('id', $allChanged)
             ->get();
+
         return $this->ok(
             [
-                "rows" => TaskResource::collection(resource: $result),
-                "count" => count($result),
+                'rows' => TaskResource::collection(resource: $result),
+                'count' => count($result),
             ]
         );
     }
@@ -272,15 +270,14 @@ class TaskStatusController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Task $task)
     {
         //
     }
 
-    public  function canEdit(string $user_uid, Task $task)
+    public function canEdit(string $user_uid, Task $task)
     {
         if ($user_uid === $task->owner_id || $user_uid === $task->executor_id) {
             return true;
@@ -290,6 +287,7 @@ class TaskStatusController extends Controller
         if ($has) {
             return true;
         }
+
         return false;
     }
 }

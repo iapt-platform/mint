@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes; // ← 加这行
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model; // ← 加这行
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Chat extends Model
@@ -14,7 +14,7 @@ class Chat extends Model
     protected $fillable = [
         'uid',
         'title',
-        'user_id'
+        'user_id',
     ];
 
     protected $casts = [
@@ -24,7 +24,9 @@ class Chat extends Model
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
     protected $primaryKey = 'uid';
+
     protected static function boot()
     {
         parent::boot();
@@ -51,6 +53,7 @@ class Chat extends Model
             $chat->messages()->withTrashed()->restore();
         });
     }
+
     // 使用 uid 作为路由键
     public function messages()
     {

@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
+use App\Models\ProgressChapter;
 use App\Models\Tag;
 use App\Models\TagMap;
-use App\Models\ProgressChapter;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class TagsInChapterCountController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
         switch ($request->input('view')) {
-            case "chapter":
+            case 'chapter':
                 $progress = $request->input('progress', 0.8);
                 $lang = $request->input('lang');
                 $channelType = $request->input('type', 'translation');
@@ -28,46 +29,46 @@ class TagsInChapterCountController extends Controller
                 $pc = (new ProgressChapter)->getTable();
                 $tg = (new Tag)->getTable();
 
-                //标签过滤
+                // 标签过滤
                 if ($request->input('tags') && $request->input('tags') !== '') {
                     $tags = explode(',', $request->input('tags'));
                     foreach ($tags as $tag) {
-                        # code...
-                        if (!empty($tag)) {
+                        // code...
+                        if (! empty($tag)) {
                             $tagNames[] = $tag;
                         }
                     }
                 }
                 if (isset($tagNames)) {
-                    $where1 = " where co = " . count($tagNames);
-                    $a = implode(",", array_fill(0, count($tagNames), '?'));
+                    $where1 = ' where co = '.count($tagNames);
+                    $a = implode(',', array_fill(0, count($tagNames), '?'));
                     $in1 = "and t.name in ({$a})";
                     $param = $tagNames;
                 } else {
-                    $where1 = " ";
-                    $in1 = " ";
+                    $where1 = ' ';
+                    $in1 = ' ';
                 }
                 if (Str::isUuid($request->input('channel'))) {
-                    $channel = "and channel_id = '" . $request->input('channel') . "' ";
+                    $channel = "and channel_id = '".$request->input('channel')."' ";
                 } else {
-                    $channel = "";
+                    $channel = '';
                 }
-                //完成度过滤
+                // 完成度过滤
                 $param[] = $progress;
 
-                //语言过滤
-                if (!empty($request->input('lang'))) {
-                    $whereLang = " and pc.lang = ? ";
+                // 语言过滤
+                if (! empty($request->input('lang'))) {
+                    $whereLang = ' and pc.lang = ? ';
                     $param[] = $request->input('lang');
                 } else {
-                    $whereLang = "   ";
+                    $whereLang = '   ';
                 }
-                //channel type过滤
-                if ($request->has('channel_type') && !empty($request->input('channel_type'))) {
-                    $channel_type = "and ch.type = ? ";
+                // channel type过滤
+                if ($request->has('channel_type') && ! empty($request->input('channel_type'))) {
+                    $channel_type = 'and ch.type = ? ';
                     $param[] = $request->input('channel_type');
                 } else {
-                    $channel_type = "";
+                    $channel_type = '';
                 }
 
                 $param_count = $param;
@@ -103,6 +104,7 @@ class TagsInChapterCountController extends Controller
 				left join tags t2 on t2.id = TID.tag_id
 				order by count desc";
                 $result = DB::select($query, $param);
+
                 return $this->ok(['rows' => $result, 'count' => count($result)]);
                 break;
         }
@@ -111,8 +113,7 @@ class TagsInChapterCountController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -122,8 +123,7 @@ class TagsInChapterCountController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Tag $tag)
     {
@@ -133,9 +133,7 @@ class TagsInChapterCountController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Tag $tag)
     {
@@ -145,8 +143,7 @@ class TagsInChapterCountController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Tag $tag)
     {

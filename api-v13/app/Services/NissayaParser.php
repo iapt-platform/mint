@@ -6,9 +6,6 @@ class NissayaParser
 {
     /**
      * 解析nissaya巴利文-缅文文本
-     *
-     * @param string $content
-     * @return array
      */
     public function parse(string $content): array
     {
@@ -26,7 +23,7 @@ class NissayaParser
 
             // 检测代码块开始/结束 (支持 ``` 和 ``)
             if (preg_match('/^(```|``)$/', $trimmedLine, $matches)) {
-                if (!$inCodeBlock) {
+                if (! $inCodeBlock) {
                     // 开始代码块
                     $inCodeBlock = true;
                     $codeBlockDelimiter = $matches[1];
@@ -38,12 +35,14 @@ class NissayaParser
                     $codeBlockContent = '';
                     $codeBlockDelimiter = '';
                 }
+
                 continue;
             }
 
             // 在代码块内
             if ($inCodeBlock) {
-                $codeBlockContent .= $line . "\n";
+                $codeBlockContent .= $line."\n";
+
                 continue;
             }
 
@@ -69,11 +68,11 @@ class NissayaParser
                     }
 
                     // 解析新记录
-                    list($original, $translation) = explode('=', $line, 2);
+                    [$original, $translation] = explode('=', $line, 2);
                     $currentRecord = [
                         'original' => trim($original),
                         'translation' => trim($translation),
-                        'notes' => []
+                        'notes' => [],
                     ];
                 }
             } else {
@@ -86,7 +85,7 @@ class NissayaParser
                     $currentRecord = [
                         'original' => trim($line),
                         'translation' => '',
-                        'notes' => []
+                        'notes' => [],
                     ];
                 } else {
                     // 其他情况视为注释内容
@@ -106,17 +105,15 @@ class NissayaParser
 
     /**
      * 解析文件
-     *
-     * @param string $filePath
-     * @return array
      */
     public function parseFile(string $filePath): array
     {
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             throw new \InvalidArgumentException("文件不存在: {$filePath}");
         }
 
         $content = file_get_contents($filePath);
+
         return $this->parse($content);
     }
 }

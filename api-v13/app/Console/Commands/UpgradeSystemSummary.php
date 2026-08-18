@@ -2,11 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Services\SummaryService;
 use App\Models\PaliText;
+use App\Services\SummaryService;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-
 
 class UpgradeSystemSummary extends Command
 {
@@ -25,6 +24,7 @@ class UpgradeSystemSummary extends Command
     protected $description = 'Command description';
 
     protected $summaryService;
+
     private $isTest = false;
 
     /**
@@ -53,7 +53,7 @@ class UpgradeSystemSummary extends Command
             $this->info('test mode');
         }
 
-        if ((int)$book === 0) {
+        if ((int) $book === 0) {
             $maxBookId = PaliText::max('book');
             $booksId = range(1, $maxBookId);
         } else {
@@ -69,7 +69,7 @@ class UpgradeSystemSummary extends Command
     /**
      * Index Pali paragraphs for a given book.
      *
-     * @param int $book
+     * @param  int  $book
      * @return int
      */
     protected function summarize($book, $paragraph = null)
@@ -85,9 +85,8 @@ class UpgradeSystemSummary extends Command
                 ->orderBy('paragraph')->cursor();
         }
 
-
         $commentaryId = '';
-        $chapterContent = array();
+        $chapterContent = [];
         $chapterStart = 0;
         $chapterEnd = 0;
         foreach ($paragraphs as $key => $para) {

@@ -2,17 +2,20 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Http\Api\MdRender;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
+use App\Services\Template\TemplateService;
 use App\Tools\Markdown;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class TestMdRender extends Command
 {
     /**
      * The name and signature of the console command.
      * php artisan test:md.render term --format=unity --driver=str
+     *
      * @var string
      */
     protected $signature = 'test:md.render {item?} {--format=html} {--driver=morus}';
@@ -41,11 +44,11 @@ class TestMdRender extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
 
-        $content = <<<md
+        $content = <<<'md'
         # 测试
         ## 测试
 
@@ -66,30 +69,31 @@ class TestMdRender extends Command
 
         **粗体文本** 和 *斜体文本* 也被支持。
         md;
-        $parser = new \App\Services\Template\TemplateService(false);
+        $parser = new TemplateService(false);
         $render = $parser->parseAndRender($content, 'json');
         var_dump($render);
+
         return 0;
 
-        Log::info('md render start item=' . $this->argument('item'));
-        $data = array();
-        $data['bold'] = <<<md
+        Log::info('md render start item='.$this->argument('item'));
+        $data = [];
+        $data['bold'] = <<<'md'
         **三十位** 经在[中间]六处为**[licchavi]**，在极果为**慧解脱**
         md;
 
-        $data['sentence'] = <<<md
+        $data['sentence'] = <<<'md'
         {{168-916-2-9}}
         md;
 
-        $data['link'] = <<<md
+        $data['link'] = <<<'md'
         aa `[link](wikipali.org/aa.php?view=b&c=d)` bb
         md;
 
-        $data['term'] = <<<md
+        $data['term'] = <<<'md'
         ## term
         [[bhagavantu]]
         md;
-        $data['noteMulti'] = <<<md
+        $data['noteMulti'] = <<<'md'
         ## heading
 
         [点击](http://127.0.0.1:3000/my/article/para/168-876?mode=edit&channel=00ae2c48-c204-4082-ae79-79ba2740d506&book=168&par=876)
@@ -106,15 +110,15 @@ class TestMdRender extends Command
         md;
 
         $data['note'] = '`bla **bold** _em_ bla`';
-        $data['noteTpl'] = <<<md
+        $data['noteTpl'] = <<<'md'
         {{note|trigger=kacayana|text=bla **bold** _em_ bla}}
         md;
 
-        $data['noteTpl2'] = <<<md
+        $data['noteTpl2'] = <<<'md'
         {{note|trigger=kacayana|text={{99-556-8-12}}}}
         md;
 
-        $data['trigger'] = <<<md
+        $data['trigger'] = <<<'md'
         ## heading
         ddd
         - title
@@ -125,7 +129,7 @@ class TestMdRender extends Command
 
         aaa bbb
         md;
-        $data['exercise'] = <<<md
+        $data['exercise'] = <<<'md'
         {{168-916-10-37}}
         {{exercise|1|((168-916-10-37))}}
         {{exercise|
@@ -137,7 +141,7 @@ class TestMdRender extends Command
         content=# ddd}}
         md;
 
-        $data['article'] = <<<md
+        $data['article'] = <<<'md'
         {{article|
         type=article|
         id=27ade9ad-2d0c-4f66-b857-e9335252cc08|
@@ -145,12 +149,12 @@ class TestMdRender extends Command
         style=modal}}
         md;
 
-        $data['footnote'] = <<<md
+        $data['footnote'] = <<<'md'
         # title
         content `note content` `note2 content`
         md;
 
-        $data['paragraph'] = <<<md
+        $data['paragraph'] = <<<'md'
         # title
         content
 
@@ -160,7 +164,7 @@ class TestMdRender extends Command
         the end
         md;
 
-        $data['img'] = <<<md
+        $data['img'] = <<<'md'
         # title
         content
 
@@ -183,7 +187,7 @@ class TestMdRender extends Command
             $this->info("format:{$format}");
             foreach ($data as $key => $value) {
                 $_item = $this->argument('item');
-                if (!empty($_item) && $key !== $_item) {
+                if (! empty($_item) && $key !== $_item) {
                     continue;
                 }
                 $mdRender = new MdRender([
@@ -195,6 +199,7 @@ class TestMdRender extends Command
                 echo $output;
             }
         }
+
         return 0;
     }
 }

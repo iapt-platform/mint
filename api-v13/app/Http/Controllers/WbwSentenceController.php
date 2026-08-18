@@ -2,25 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Wbw;
-use App\Models\WbwBlock;
-use App\Models\Channel;
-use App\Models\CourseMember;
-use App\Models\Course;
-
-use Illuminate\Http\Request;
-use App\Services\AuthService;
-use App\Http\Api\ShareApi;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\CourseApi;
-use App\Models\Sentence;
+use App\Models\Course;
+use App\Models\Wbw;
+use App\Models\WbwBlock;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class WbwSentenceController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -32,9 +28,9 @@ class WbwSentenceController extends Controller
         if ($user) {
             $user_uid = $user['user_uid'];
         }
-        $sentId = $request->input('book') . '-' .
-            $request->input('para') . '-' .
-            $request->input('wordStart') . '-' .
+        $sentId = $request->input('book').'-'.
+            $request->input('para').'-'.
+            $request->input('wordStart').'-'.
             $request->input('wordEnd');
         switch ($request->input('view')) {
             case 'course-answer':
@@ -53,16 +49,15 @@ class WbwSentenceController extends Controller
                     $channels = ChannelApi::getCanReadByUser($user_uid);
                 }
 
-
                 if ($request->has('exclude')) {
-                    //移除无需查询的channel
+                    // 移除无需查询的channel
                     foreach ($channels as $key => $id) {
                         if ($id !== $request->input('exclude')) {
                             $channelsId[] = $id;
                         }
                     }
-                } else if ($request->has('channels')) {
-                    //仅列出指定的channel
+                } elseif ($request->has('channels')) {
+                    // 仅列出指定的channel
                     $include = explode(',', $request->input('channels'));
                     foreach ($channels as $key => $id) {
                         if (in_array($id, $include)) {
@@ -94,6 +89,7 @@ class WbwSentenceController extends Controller
             );
             $result[] = $props;
         }
+
         return $this->ok(['rows' => $result, 'count' => count($result)]);
     }
 
@@ -115,6 +111,7 @@ class WbwSentenceController extends Controller
         foreach ($validBlocks as $key => $block) {
             $blocksId[] = $block->block_uid;
         }
+
         return $blocksId;
     }
 
@@ -131,13 +128,14 @@ class WbwSentenceController extends Controller
         foreach ($wbwId as $key => $value) {
             $id[] = $value->uid;
         }
+
         return $id;
     }
+
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -147,8 +145,7 @@ class WbwSentenceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Wbw  $wbw
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Wbw $wbw)
     {
@@ -158,9 +155,7 @@ class WbwSentenceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Wbw  $wbw
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Wbw $wbw)
     {
@@ -170,20 +165,20 @@ class WbwSentenceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Wbw  $wbw
-     * @return \Illuminate\Http\Response
+     * @param  Wbw  $wbw
+     * @return Response
      */
     public function destroy(Request $request, string $sentId)
     {
         //
-        //鉴权
+        // 鉴权
         $user = AuthService::current($request);
-        if (!$user) {
-            //未登录用户
+        if (! $user) {
+            // 未登录用户
             return $this->error(__('auth.failed'), 401, 401);
         }
         $channelId = $request->input('channel');
-        if (!ChannelApi::canManageByUser($channelId, $user['user_uid'])) {
+        if (! ChannelApi::canManageByUser($channelId, $user['user_uid'])) {
             return $this->error(__('auth.failed'), 403, 403);
         }
         $sent = explode('-', $sentId);
@@ -194,6 +189,7 @@ class WbwSentenceController extends Controller
         $delete = Wbw::where('block_uid', $wbwBlockId)
             ->whereBetween('wid', [$sent[2], $sent[3]])
             ->delete();
+
         return $this->ok($delete);
     }
 }

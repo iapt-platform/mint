@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Notification extends Model
 {
     use HasFactory;
+
     protected $primaryKey = 'id';
-	protected $casts = [
-		'id' => 'string'
-	];
+
+    protected $casts = [
+        'id' => 'string',
+    ];
+
     protected $dates = ['delete_at'];
 }

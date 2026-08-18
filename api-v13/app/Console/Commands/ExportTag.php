@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Tag;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class ExportTag extends Command
@@ -41,33 +41,34 @@ class ExportTag extends Command
     public function handle()
     {
         $this->info('task: export offline data tag-table start');
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
-        $exportFile = storage_path('app/public/export/offline/' . $this->argument('db') . '-' . date("Y-m-d") . '.db3');
-        $dbh = new \PDO('sqlite:' . $exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $exportFile = storage_path('app/public/export/offline/'.$this->argument('db').'-'.date('Y-m-d').'.db3');
+        $dbh = new \PDO('sqlite:'.$exportFile, '', '', [\PDO::ATTR_PERSISTENT => true]);
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
 
-        $query = "INSERT INTO tag ( id , name ,
+        $query = 'INSERT INTO tag ( id , name ,
                                     description , color , owner_id  )
-                                    VALUES ( ? , ? , ? , ? , ?  )";
+                                    VALUES ( ? , ? , ? , ? , ?  )';
         try {
             $stmt = $dbh->prepare($query);
         } catch (\PDOException $e) {
             Log::error($e->getMessage(), ['exception' => $e]);
+
             return 1;
         }
 
         $bar = $this->output->createProgressBar(Tag::count());
         foreach (Tag::select(['id', 'name', 'description', 'color', 'owner_id'])->cursor() as $row) {
-            $currData = array(
+            $currData = [
                 $row->id,
                 $row->name,
                 $row->description,
                 $row->color,
                 $row->owner_id,
-            );
+            ];
             $stmt->execute($currData);
             $bar->advance();
         }

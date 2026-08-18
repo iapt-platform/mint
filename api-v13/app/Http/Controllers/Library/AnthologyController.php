@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Library;
 
 use App\Http\Controllers\Controller;
 use App\Services\CollectionService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AnthologyController extends Controller
 {
@@ -45,15 +47,15 @@ class AnthologyController extends Controller
     // -------------------------------------------------------------------------
     private function formatAuthor(array $studio): array
     {
-        $name     = $studio['nickName'] ?? $studio['studioName'] ?? '未知';
+        $name = $studio['nickName'] ?? $studio['studioName'] ?? '未知';
         $initials = mb_substr($name, 0, 2);
         $colorIdx = $this->colorIndex($studio['id'] ?? '0');
 
         return [
-            'name'     => $name,
+            'name' => $name,
             'initials' => $initials,
-            'color'    => $this->authorColors[$colorIdx % count($this->authorColors)],
-            'avatar'   => $studio['avatar'] ?? null,
+            'color' => $this->authorColors[$colorIdx % count($this->authorColors)],
+            'avatar' => $studio['avatar'] ?? null,
         ];
     }
 
@@ -62,7 +64,7 @@ class AnthologyController extends Controller
     // -------------------------------------------------------------------------
     private function formatForCard(array $item, int $index): array
     {
-        $uid      = $item['uid'];
+        $uid = $item['uid'];
         $colorIdx = $this->colorIndex($uid);
 
         // article_list => 章节标题列表
@@ -71,17 +73,17 @@ class AnthologyController extends Controller
             ->toArray();
 
         return [
-            'id'             => $uid,
-            'title'          => $item['title'],
-            'subtitle'       => $item['subtitle'] ?? null,
-            'description'    => $item['summary'] ?? null,
-            'cover_image'    => null, // 暂无封面图字段，留空走渐变
+            'id' => $uid,
+            'title' => $item['title'],
+            'subtitle' => $item['subtitle'] ?? null,
+            'description' => $item['summary'] ?? null,
+            'cover_image' => null, // 暂无封面图字段，留空走渐变
             'cover_gradient' => $this->coverGradients[$colorIdx % count($this->coverGradients)],
-            'author'         => $this->formatAuthor($item['studio'] ?? []),
-            'chapters'       => $chapters,
+            'author' => $this->formatAuthor($item['studio'] ?? []),
+            'chapters' => $chapters,
             'children_number' => $item['childrenNumber'] ?? count($chapters),
-            'updated_at'     => isset($item['updated_at'])
-                ? \Carbon\Carbon::parse($item['updated_at'])->format('Y-m-d')
+            'updated_at' => isset($item['updated_at'])
+                ? Carbon::parse($item['updated_at'])->format('Y-m-d')
                 : '',
         ];
     }
@@ -91,7 +93,7 @@ class AnthologyController extends Controller
     // =========================================================================
     public function index(Request $request)
     {
-        $perPage     = 10;
+        $perPage = 10;
         $currentPage = (int) $request->input('page', 1);
 
         $result = $this->collectionService->getPublicList($perPage, $currentPage);
@@ -99,14 +101,14 @@ class AnthologyController extends Controller
         // $result['data'] 是 CollectionResource collection，转为数组逐条加工
         $items = collect($result['data'])
             ->values()
-            ->map(fn($item, $i) => $this->formatForCard(
+            ->map(fn ($item, $i) => $this->formatForCard(
                 is_array($item) ? $item : $item->toArray(request()),
                 $i
             ));
 
         $total = $result['total'];
 
-        $paginator = new \Illuminate\Pagination\LengthAwarePaginator(
+        $paginator = new LengthAwarePaginator(
             $items,
             $total,
             $perPage,
@@ -116,20 +118,20 @@ class AnthologyController extends Controller
 
         // 侧边栏作者列表：从当页数据聚合（如需完整列表可单独查询）
         $authors = $items
-            ->groupBy(fn($i) => $i['author']['name'])
-            ->map(fn($group, $name) => [
-                'name'     => $name,
+            ->groupBy(fn ($i) => $i['author']['name'])
+            ->map(fn ($group, $name) => [
+                'name' => $name,
                 'initials' => $group->first()['author']['initials'],
-                'color'    => $group->first()['author']['color'],
-                'avatar'   => $group->first()['author']['avatar'],
-                'count'    => $group->count(),
+                'color' => $group->first()['author']['color'],
+                'avatar' => $group->first()['author']['avatar'],
+                'count' => $group->count(),
             ])
             ->values();
 
         return view('library.anthology.index', [
             'anthologies' => $paginator,
-            'authors'     => $authors,
-            'total'       => $total,
+            'authors' => $authors,
+            'total' => $total,
         ]);
     }
 
@@ -149,65 +151,64 @@ class AnthologyController extends Controller
             : $result['data']->toArray(request());
 
         $colorIdx = $this->colorIndex($raw['uid']);
-        $author   = $this->formatAuthor($raw['studio'] ?? []);
+        $author = $this->formatAuthor($raw['studio'] ?? []);
 
         // 只保留 level=1 的顶级章节
         $articles = collect($raw['article_list'] ?? [])
-            ->filter(fn($a) => ($a['level'] ?? 1) === 1)
+            ->filter(fn ($a) => ($a['level'] ?? 1) === 1)
             ->values()
-            ->map(fn($a, $i) => [
-                'id'    => $a['article_id'],
+            ->map(fn ($a, $i) => [
+                'id' => $a['article_id'],
                 'order' => $i + 1,
                 'title' => $a['title'],
             ])
             ->toArray();
 
         $anthology = [
-            'id'             => $raw['uid'],
-            'title'          => $raw['title'],
-            'subtitle'       => $raw['subtitle'] ?? null,
-            'description'    => $raw['summary'] ?? $raw['subtitle'] ?? null,
-            'about'          => $raw['summary'] ?? null,
-            'cover_image'    => null,
+            'id' => $raw['uid'],
+            'title' => $raw['title'],
+            'subtitle' => $raw['subtitle'] ?? null,
+            'description' => $raw['summary'] ?? $raw['subtitle'] ?? null,
+            'about' => $raw['summary'] ?? null,
+            'cover_image' => null,
             'cover_gradient' => $this->coverGradients[$colorIdx % count($this->coverGradients)],
-            'tags'           => array_filter([$raw['lang'] ?? null]),
-            'language'       => $raw['lang'] ?? null,
-            'category'       => null,
-            'created_at'     => isset($raw['created_at'])
-                ? \Carbon\Carbon::parse($raw['created_at'])->format('Y-m-d')
+            'tags' => array_filter([$raw['lang'] ?? null]),
+            'language' => $raw['lang'] ?? null,
+            'category' => null,
+            'created_at' => isset($raw['created_at'])
+                ? Carbon::parse($raw['created_at'])->format('Y-m-d')
                 : '',
-            'updated_at'     => isset($raw['updated_at'])
-                ? \Carbon\Carbon::parse($raw['updated_at'])->format('Y-m-d')
+            'updated_at' => isset($raw['updated_at'])
+                ? Carbon::parse($raw['updated_at'])->format('Y-m-d')
                 : '',
             'children_number' => $raw['childrenNumber'] ?? 0,
-            'author'         => array_merge($author, [
-                'bio'           => null,
+            'author' => array_merge($author, [
+                'bio' => null,
                 'article_count' => $raw['childrenNumber'] ?? 0,
             ]),
-            'articles'       => $articles,
+            'articles' => $articles,
         ];
 
         // 相关文集：同作者其他文集
         $relatedResult = $this->collectionService->getPublicList(20, 1);
         $related = collect($relatedResult['data'])
-            ->map(fn($item) => is_array($item) ? $item : $item->toArray(request()))
+            ->map(fn ($item) => is_array($item) ? $item : $item->toArray(request()))
             ->filter(
-                fn($item) =>
-                $item['uid'] !== $uid &&
+                fn ($item) => $item['uid'] !== $uid &&
                     ($item['studio']['id'] ?? '') === ($raw['studio']['id'] ?? '')
             )
             ->take(3)
-            ->map(fn($item) => [
-                'id'             => $item['uid'],
-                'title'          => $item['title'],
-                'author_name'    => $item['studio']['nickName'] ?? $item['studio']['studioName'] ?? '',
+            ->map(fn ($item) => [
+                'id' => $item['uid'],
+                'title' => $item['title'],
+                'author_name' => $item['studio']['nickName'] ?? $item['studio']['studioName'] ?? '',
                 'cover_gradient' => $this->coverGradients[$this->colorIndex($item['uid']) % count($this->coverGradients)],
             ])
             ->values();
 
         return view('library.anthology.show', [
             'anthology' => $anthology,
-            'related'   => $related,
+            'related' => $related,
         ]);
     }
 }

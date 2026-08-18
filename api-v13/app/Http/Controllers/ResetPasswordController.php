@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\UserInfo;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ResetPasswordController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -20,8 +21,7 @@ class ResetPasswordController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -29,7 +29,7 @@ class ResetPasswordController extends Controller
         $user = UserInfo::where('reset_password_token', $request->input('token'))
             ->where('username', $request->input('username'))
             ->first();
-        if (!$user) {
+        if (! $user) {
             return $this->error('no token', 404, 404);
         }
         if (mb_strlen($request->input('password'), 'UTF-8') < 6) {
@@ -49,25 +49,24 @@ class ResetPasswordController extends Controller
      * 根据token获取用户名.
      *
      * @param  string  $token
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($token)
     {
         //
         $user = UserInfo::where('reset_password_token', $token)
             ->select(['username'])->first();
-        if (!$user) {
+        if (! $user) {
             return $this->error('no token', 404, 404);
         }
+
         return $this->ok($user);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UserInfo  $userInfo
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, UserInfo $userInfo)
     {
@@ -77,8 +76,7 @@ class ResetPasswordController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserInfo  $userInfo
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(UserInfo $userInfo)
     {

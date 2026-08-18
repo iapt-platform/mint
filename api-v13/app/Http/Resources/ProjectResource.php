@@ -2,18 +2,20 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Api\UserApi;
-use App\Http\Api\StudioApi;
 use App\Http\Api\ProjectApi;
+use App\Http\Api\StudioApi;
+use App\Http\Api\UserApi;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProjectResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array|Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
@@ -28,12 +30,13 @@ class ProjectResource extends JsonResource
             'parent' => ProjectApi::getById($this->parent_id),
             'path' => ProjectApi::getListByIds(json_decode($this->path)),
             'description' => $this->description,
-            "owner" => StudioApi::getById($this->owner_id),
-            "editor" => UserApi::getByUuid($this->editor_id),
+            'owner' => StudioApi::getById($this->owner_id),
+            'editor' => UserApi::getByUuid($this->editor_id),
             'privacy' => $this->privacy,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
+
         return $data;
     }
 }

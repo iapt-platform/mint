@@ -2,23 +2,24 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Services\SearchPaliDataService;
+use App\Http\Api\ChannelApi;
+use App\Models\PaliText;
+use App\Models\ProgressChapter;
+use App\Models\Sentence;
 use App\Services\OpenSearchService;
+use App\Services\PaliContentService;
+use App\Services\SearchPaliDataService;
 use App\Services\SummaryService;
 use App\Services\TagService;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use App\Models\PaliText;
-use App\Models\Sentence;
-use App\Services\PaliContentService;
-use App\Http\Api\ChannelApi;
-use App\Models\ProgressChapter;
 
 class IndexTipitaka extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan opensearch:index-tipitaka 93 --para=6 --granularity=chapter
+     * php artisan opensearch:index-tipitaka 93 --para=6 --granularity=paragraph
+     *
      * @var string
      */
     protected $signature = 'opensearch:index-tipitaka
@@ -37,8 +38,8 @@ class IndexTipitaka extends Command
      */
     protected $description = 'Index Pali data into OpenSearch for a specified book and optional granularity (all granularities if not specified)';
 
-
     private $isTest = false;
+
     private $summary = false;
 
     /**
@@ -63,11 +64,11 @@ class IndexTipitaka extends Command
     public function handle()
     {
         $this->line('index tipitaka start');
-        $book = (int)$this->argument('book');
+        $book = (int) $this->argument('book');
         $paragraph = $this->option('para');
         $channel = $this->option('channel');
         if ($channel) {
-            $this->line('channel=' . $channel);
+            $this->line('channel='.$channel);
         }
         $granularity = $this->option('granularity');
         $this->summary = $this->option('summary') === 'on';
@@ -77,20 +78,20 @@ class IndexTipitaka extends Command
             $this->info('test mode');
         }
 
-
         try {
             // Test OpenSearch connection
             [$connected, $message] = $this->openSearchService->testConnection();
-            if (!$connected) {
+            if (! $connected) {
                 $this->error($message);
                 Log::error($message);
+
                 return 1;
             }
             $overallStatus = 0; // Track overall command status (0 for success, 1 for any failure)
             $maxBookId = PaliText::max('book');
             if ($book === 0) {
                 $booksId = range(1, $maxBookId);
-            } else if ($this->option('resume')) {
+            } elseif ($this->option('resume')) {
                 $booksId = range($book, $maxBookId);
             } else {
                 $booksId = [$book];
@@ -112,8 +113,9 @@ class IndexTipitaka extends Command
 
             return $overallStatus;
         } catch (\Exception $e) {
-            $this->error("Failed to index Pali data: " . $e->getMessage());
-            Log::error("Failed to index Pali data for book: $book, granularity: " . ($granularity ?: 'all'), ['error' => $e]);
+            $this->error('Failed to index Pali data: '.$e->getMessage());
+            Log::error("Failed to index Pali data for book: $book, granularity: ".($granularity ?: 'all'), ['error' => $e]);
+
             return 1;
         }
     }
@@ -121,7 +123,7 @@ class IndexTipitaka extends Command
     /**
      * Index Pali paragraphs for a given book.
      *
-     * @param int $book
+     * @param  int  $book
      * @return int
      */
     protected function indexTipitakaParagraph($book, $paragraph = null)
@@ -152,12 +154,12 @@ class IndexTipitaka extends Command
             }
             $paraContent = $this->searchPaliDataService
                 ->getParaContent($para['book'], $para['paragraph']);
-            if (!empty($commentaryId)) {
+            if (! empty($commentaryId)) {
                 $currSession[] = $paraContent;
             }
             if (isset($paraContent['commentary'])) {
-                if (!empty($commentaryId)) {
-                    //保存 session
+                if (! empty($commentaryId)) {
+                    // 保存 session
                     $this->indexPaliSession($para->toArray(), $currSession, $currChapterTitle, $commentaryId);
                     $currSession = [];
                 }
@@ -172,12 +174,10 @@ class IndexTipitaka extends Command
 
         return 0;
     }
-    /**
-     *
-     */
+
     protected function indexParagraph($paraInfo, $paraContent, $related_id, array $category)
     {
-        $paraId = $paraInfo['book'] . '-' . $paraInfo['paragraph'];
+        $paraId = $paraInfo['book'].'-'.$paraInfo['paragraph'];
         $resource_id = $paraInfo['uid'];
         $path = json_decode($paraInfo['path']);
         if (is_array($path) && count($path) > 0) {
@@ -190,10 +190,10 @@ class IndexTipitaka extends Command
             'resource_id' => $resource_id, // Use uid from getPaliData for resource_id
             'resource_type' => 'tipitaka',
             'title' => [
-                'text' => ['pali' => $title,],
+                'text' => ['pali' => $title],
             ],
             'summary' => [
-                'text' => $this->summary  ? $this->summaryService->summarize($paraContent['markdown']) : ''
+                'text' => $this->summary ? $this->summaryService->summarize($paraContent['markdown']) : '',
             ],
             'content' => [
                 'text' => ['pali' => $paraContent['text']],
@@ -217,12 +217,9 @@ class IndexTipitaka extends Command
         } else {
             $this->openSearchService->create($document['id'], $document);
         }
-        return;
+
     }
 
-    /**
-     *
-     */
     protected function indexPaliSession($paraInfo, $contents, $currChapter, $related_id)
     {
         $markdown = [];
@@ -240,20 +237,20 @@ class IndexTipitaka extends Command
             'resource_id' => $paraInfo['uid'], // Use uid from getPaliData for resource_id
             'resource_type' => 'original_text',
             'title' => [
-                ['text' => ['pali' => "{$currChapter} paragraph {$paraInfo['paragraph']}"]]
+                ['text' => ['pali' => "{$currChapter} paragraph {$paraInfo['paragraph']}"]],
 
             ],
             'summary' => [
-                'text' => $this->summary ? $this->summaryService->summarize($content['markdown']) : ''
+                'text' => $this->summary ? $this->summaryService->summarize($content['markdown']) : '',
             ],
             'content' => [
-                ['text' => ['pali' => implode("\n\n", $markdown)]]
+                ['text' => ['pali' => implode("\n\n", $markdown)]],
             ],
-            'bold_single' => implode(" ", $bold_single),
-            'bold_multi' => implode(" ", $bold_multi),
+            'bold_single' => implode(' ', $bold_single),
+            'bold_multi' => implode(' ', $bold_multi),
             'related_id' => $related_id,
             'category' => 'pali', // Assuming Pali paragraphs are sutta; adjust as needed
-            'language' => 'pali',
+            'language' => 'pi',
             'updated_at' => now()->toIso8601String(),
             'granularity' => 'session',
             'path' => $this->getPathTitle(json_decode($paraInfo['path'])),
@@ -264,16 +261,14 @@ class IndexTipitaka extends Command
         } else {
             $this->openSearchService->create($document['id'], $document);
         }
-        return;
+
     }
-
-
 
     /**
      * Index Pali suttas for a given book (placeholder for future implementation).
      *
-     * @param int $book
-     * @param ?string $channel
+     * @param  int  $book
+     * @param  ?string  $channel
      * @return int
      */
     protected function indexChapter($book, $channelId = null)
@@ -299,7 +294,7 @@ class IndexTipitaka extends Command
             } else {
                 $end = $chapters[$key + 1]->paragraph - 1;
             }
-            //获取这个段落之间的全部channel
+            // 获取这个段落之间的全部channel
             $table = Sentence::where('book_id', $book)
                 ->whereBetween('paragraph', [$start, $end]);
             if ($channelId) {
@@ -314,13 +309,15 @@ class IndexTipitaka extends Command
                 $display = [];
                 $content = [];
                 $channelInfo = ChannelApi::getById($channel->channel_uid);
-                if (!$channelInfo) {
+                if (! $channelInfo) {
                     Log::error('invalid channel', ['id' => $channel->channel_uid]);
+
                     continue;
                 }
-                $this->info('channel =' . $channelInfo['name']);
+                $this->info('channel ='.$channelInfo['name']);
                 if ($channelInfo['type'] === 'wbw') {
                     $this->info('wbw channel skip');
+
                     continue;
                 }
                 $paragraphsData = app(PaliContentService::class)->paragraphs(
@@ -330,20 +327,20 @@ class IndexTipitaka extends Command
                     [$channel->channel_uid],
                     ['mode' => 'read', 'format' => 'html', 'original' => false]
                 );
-                //生成html数据
+                // 生成html数据
 
                 $title = '';
                 foreach ($paragraphsData as $paragraph) {
                     $translation = [];
                     $original = [];
-                    foreach ($paragraph['children'] as  $sent) {
+                    foreach ($paragraph['children'] as $sent) {
                         $sid = "{$sent['book']}-{$sent['para']}-{$sent['wordStart']}-{$sent['wordEnd']}";
                         if (isset($sent['translation'])) {
-                            foreach ($sent['translation'] as  $tran) {
+                            foreach ($sent['translation'] as $tran) {
                                 if ($tran['channel']['id'] === $channel->channel_uid) {
                                     $html = $tran['html'] ?? $tran['content'];
                                     $translation[] = "<div class='sentence' data-sid='{$sid}'>{$html}</div>";
-                                    if ($tran['para'] === $start && !empty($html)) {
+                                    if ($tran['para'] === $start && ! empty($html)) {
                                         $title = $html;
                                     }
                                 }
@@ -354,11 +351,11 @@ class IndexTipitaka extends Command
                             is_array($sent['origin']) ||
                             count($sent['origin']) > 0
                         ) {
-                            foreach ($sent['origin'] as  $origin) {
+                            foreach ($sent['origin'] as $origin) {
                                 if ($origin['channel']['id'] === $channel->channel_uid) {
                                     $html = $origin['html'] ?? $origin['content'];
                                     $original[] = "<div class='sentence origin'  data-sid='{$sid}'>{$html}</div>";
-                                    if (empty($title) && $origin['para'] === $start && !empty($html)) {
+                                    if (empty($title) && $origin['para'] === $start && ! empty($html)) {
                                         $title = $html;
                                     }
                                 }
@@ -391,11 +388,10 @@ class IndexTipitaka extends Command
                     'channel' => $channel->channel_uid,
                     'content' => implode('', $display),
                     'title' => strip_tags($title),
-                    'cat' => $category ?? null
+                    'cat' => $category ?? null,
                 ]);
             }
         }
-
 
         return 0;
     }
@@ -408,18 +404,18 @@ class IndexTipitaka extends Command
             ->first();
         $channel = ChannelApi::getById($param['channel']);
         $document = [
-            'id'            => "tipitaka_chapter_{$param['book']}-{$param['para']}_{$param['channel']}",
-            'resource_id'   => $progress ? $progress->uid : "{$param['book']}-{$param['para']}_{$param['channel']}",
+            'id' => "tipitaka_chapter_{$param['book']}-{$param['para']}_{$param['channel']}",
+            'resource_id' => $progress ? $progress->uid : "{$param['book']}-{$param['para']}_{$param['channel']}",
             'resource_type' => 'tipitaka',
-            'title'         => [],
+            'title' => [],
             'summary' => [
                 'text' => '',
             ],
-            'content'     => [],
-            'related_id'  => "{$param['book']}-{$param['para']}",
-            'category'    => $param['cat'],
-            'language'    => $channel['lang'],
-            'updated_at'  => now()->toIso8601String(),
+            'content' => [],
+            'related_id' => "{$param['book']}-{$param['para']}",
+            'category' => $param['cat'],
+            'language' => $channel['lang'],
+            'updated_at' => now()->toIso8601String(),
             'granularity' => $param['level'] === 1 ? 'book' : 'chapter',
         ];
 
@@ -433,28 +429,29 @@ class IndexTipitaka extends Command
             $document['content']['text']['pali'] = $plainText;
             $document['title']['text']['pali'] = $title;
         }
-        $document['content']['display']    = $param['content'];             // 展示
+        $document['content']['display'] = $param['content'];             // 展示
 
         if ($this->isTest) {
             $this->info($param['content']);
         } else {
             $this->openSearchService->create($document['id'], $document);
-            $this->info("create index {$document['id']} size=" . strlen($param['content']));
+            $this->info("create index {$document['id']} size=".strlen($param['content']));
         }
     }
+
     /**
      * Index Pali sentences for a given book (placeholder for future implementation).
      *
-     * @param int $book
+     * @param  int  $book
      * @return int
      */
     protected function indexPaliSentences($book)
     {
         $this->warn("Sentence indexing is not yet implemented for book: $book");
         Log::warning("Sentence indexing not implemented for book: $book");
+
         return 1;
     }
-
 
     private function getPathTitle(array $input)
     {
@@ -462,6 +459,7 @@ class IndexTipitaka extends Command
         foreach ($input as $key => $node) {
             $output[] = $node->title;
         }
+
         return implode('/', $output);
     }
 }

@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\UserDict;
-use Illuminate\Support\Facades\DB;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class CacheDictPreference extends Command
 {
@@ -40,7 +41,7 @@ class CacheDictPreference extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
         $prefix = 'dict-preference';
@@ -57,15 +58,15 @@ class CacheDictPreference extends Command
                 ->where('source', '_PAPER_RICH_')
                 ->whereNotNull('mean')
                 ->value('mean');
-            $meaning = trim($meaning, " $");
-            if (!empty($meaning)) {
+            $meaning = trim($meaning, ' $');
+            if (! empty($meaning)) {
                 $m = explode('$', $meaning);
                 Cache::put("{$prefix}/{$word->word}/{$word->language}", $m[0]);
             }
             $bar->advance();
             $count++;
             if ($count % 1000 === 0) {
-                if (\App\Tools\Tools::isStop()) {
+                if (Tools::isStop()) {
                     return 0;
                 }
             }

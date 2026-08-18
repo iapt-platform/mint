@@ -2,11 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Exceptions\TaskFailException;
 use App\Services\AiTranslateService;
 use App\Services\RabbitMQService;
-use Illuminate\Support\Facades\Log;
-use App\Exceptions\TaskFailException;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class ProcessAITranslateJob extends BaseRabbitMQJob
 {
@@ -18,6 +18,7 @@ class ProcessAITranslateJob extends BaseRabbitMQJob
         try {
             // Laravel会自动注入
             $this->aiService = app(AiTranslateService::class);
+
             return $this->aiService->processTranslate($this->messageId, $messageData);
         } catch (TaskFailException $e) {
             throw $e;
@@ -38,6 +39,7 @@ class ProcessAITranslateJob extends BaseRabbitMQJob
         // 消息处理最终失败，准备发送到死信队列
         $this->aiService->handleFailedTranslate($this->messageId, $messageData, $exception);
     }
+
     public function stop()
     {
         parent::stop();
@@ -51,6 +53,7 @@ class ProcessAITranslateJob extends BaseRabbitMQJob
         $queue = 'ai_translate_v2';
         $msgId = $mq->publishMessage($queue, []);
         Cache::put("/mq/message/{$msgId}/data", $data);
+
         return $msgId;
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\DhammaTerm;
 use App\Models\Channel;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 
 class RemoveTermCache extends Command
@@ -40,22 +40,23 @@ class RemoveTermCache extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
         $word = $this->argument('word');
         $channels = Channel::select('uid')->get();
-        if(empty($word)){
+        if (empty($word)) {
 
-        }else{
+        } else {
             foreach ($channels as $key => $channel) {
                 $key = "/term/{$channel}/{$word}";
-                if(Cache::has($key)){
+                if (Cache::has($key)) {
                     $this->info('has:'.$key);
                     Cache::forget($key);
                 }
             }
         }
+
         return 0;
     }
 }

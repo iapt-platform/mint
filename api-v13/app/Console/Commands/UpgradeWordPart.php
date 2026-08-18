@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Models\WordPart;
 use App\Models\UserDict;
-
+use App\Models\WordPart;
+use App\Tools\Tools;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UpgradeWordPart extends Command
 {
@@ -42,12 +42,12 @@ class UpgradeWordPart extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-        $delete = WordPart::where('id','>',0)->delete();
-        #载入纸质词典数据
-        $paper = UserDict::selectRaw('word,count(*)')->where("source",'_PAPER_')->groupBy('word')->cursor();
+        $delete = WordPart::where('id', '>', 0)->delete();
+        // 载入纸质词典数据
+        $paper = UserDict::selectRaw('word,count(*)')->where('source', '_PAPER_')->groupBy('word')->cursor();
         $sql = "select
                       count(*) from (
                         select word, count(*) from user_dicts ud where source = '_PAPER_' group by word) as T";
@@ -62,19 +62,20 @@ class UpgradeWordPart extends Command
         }
         $bar->finish();
 
-		#载入csv数据
-		$csvFile = config("mint.path.dict_text") .'/system/part2.csv';
-		if (($fp = fopen($csvFile, "r")) !== false) {
-			Log::info("csv load：" . $csvFile);
-			while (($data = fgetcsv($fp, 0, ',')) !== false) {
-				WordPart::updateOrCreate(['word' => $data[0],],['weight' => $data[1],]);
-			}
-			fclose($fp);
-		} else {
-			$this->error( "can not open csv file. filename=" . $csvFile. PHP_EOL) ;
-			Log::error( "can not open csv file. filename=" . $csvFile) ;
-		}
-		$this->info('ok');
+        // 载入csv数据
+        $csvFile = config('mint.path.dict_text').'/system/part2.csv';
+        if (($fp = fopen($csvFile, 'r')) !== false) {
+            Log::info('csv load：'.$csvFile);
+            while (($data = fgetcsv($fp, 0, ',')) !== false) {
+                WordPart::updateOrCreate(['word' => $data[0]], ['weight' => $data[1]]);
+            }
+            fclose($fp);
+        } else {
+            $this->error('can not open csv file. filename='.$csvFile.PHP_EOL);
+            Log::error('can not open csv file. filename='.$csvFile);
+        }
+        $this->info('ok');
+
         return 0;
     }
 }

@@ -2,27 +2,22 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
-
 use App\Helpers\LlmResponseParser;
 use App\Http\Api\ChannelApi;
 use App\Http\Resources\AiModelResource;
-
 use App\Models\BookTitle;
 use App\Models\PaliSentence;
 use App\Models\PaliText;
 use App\Models\RelatedParagraph;
 use App\Models\Tag;
 use App\Models\TagMap;
-
 use App\Services\AIModelService;
 use App\Services\OpenAIService;
 use App\Services\SearchPaliDataService;
 use App\Services\SentenceService;
-
-
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class UpgradeSystemCommentary extends Command
 {
@@ -112,7 +107,7 @@ class UpgradeSystemCommentary extends Command
                 ->selectRaw('book_name,count(*)')
                 ->get();
             foreach ($result as $key => $value) {
-                $this->info($value['book_name'] . '[' . $value['count'] . ']');
+                $this->info($value['book_name'].'['.$value['count'].']');
             }
 
             return 0;
@@ -121,7 +116,7 @@ class UpgradeSystemCommentary extends Command
             $this->model = $this->modelService->getModelById($this->option('model'));
             // getModelById 始终返回 AiModelResource，未查到时其底层 resource 为 null，需据此判断
             if (empty($this->model->resource)) {
-                $this->error('no model found id=' . $this->option('model'));
+                $this->error('no model found id='.$this->option('model'));
 
                 return 1;
             }
@@ -135,7 +130,7 @@ class UpgradeSystemCommentary extends Command
 
         if ($this->option('thinking')) {
             $this->thinking = $this->option('thinking') === 'true';
-            $this->line('thinking is ' . $this->option('thinking'));
+            $this->line('thinking is '.$this->option('thinking'));
         }
 
         // 是否为完整遍历（未指定 book/para），仅此情形在结束后清空断点缓存
@@ -168,7 +163,7 @@ class UpgradeSystemCommentary extends Command
         foreach ($books as $key => $currBook) {
             // 命中跳过规则时直接处理下一本：即便上次游标停在此书，也跳到下一个有效 book_name
             if ($this->shouldSkipBook($currBook['book_name'], $skipPatterns)) {
-                $this->info('skip book ' . $currBook['book_name']);
+                $this->info('skip book '.$currBook['book_name']);
 
                 continue;
             }
@@ -186,13 +181,13 @@ class UpgradeSystemCommentary extends Command
             }
             foreach ($paragraphs as $key => $paragraph) {
                 // 稳定游标：以 book_name|cs_para 唯一标识一个处理单元
-                $cursor = $currBook['book_name'] . '|' . $paragraph['cs_para'];
+                $cursor = $currBook['book_name'].'|'.$paragraph['cs_para'];
                 // 已完成的单元直接跳过，实现中断后重入续跑
                 if (isset($done[$cursor])) {
                     continue;
                 }
 
-                $message = 'ai commentary ' . $currBook['book_name'] . '-' . $paragraph['cs_para'];
+                $message = 'ai commentary '.$currBook['book_name'].'-'.$paragraph['cs_para'];
                 $this->info($message);
                 $result = RelatedParagraph::where('book_name', $currBook['book_name'])
                     ->where('cs_para', $paragraph['cs_para'])
@@ -220,7 +215,7 @@ class UpgradeSystemCommentary extends Command
                     foreach ($info as $bookId => $paragraphs) {
                         Log::debug($bookId);
                         foreach ($paragraphs as $paragraph) {
-                            Log::debug($paragraph['book'] . '-' . $paragraph['para']);
+                            Log::debug($paragraph['book'].'-'.$paragraph['para']);
                         }
                     }
                 }
@@ -338,7 +333,7 @@ class UpgradeSystemCommentary extends Command
             ! isset($typeData[$typeName]) ||
             $this->getParagraphNumber($typeData[$typeName]) === 0
         ) {
-            Log::warning($typeName . ' data is missing');
+            Log::warning($typeName.' data is missing');
 
             return false;
         }
@@ -441,8 +436,8 @@ class UpgradeSystemCommentary extends Command
         $originalSn = $this->arrayIndexed($original);
         $commentarySn = $this->arrayIndexed($commentary);
 
-        $originalText = "```jsonl\n" . LlmResponseParser::jsonl_encode($originalSn) . "\n```";
-        $commentaryText = "```jsonl\n" . LlmResponseParser::jsonl_encode($commentarySn) . "\n```";
+        $originalText = "```jsonl\n".LlmResponseParser::jsonl_encode($originalSn)."\n```";
+        $commentaryText = "```jsonl\n".LlmResponseParser::jsonl_encode($commentarySn)."\n```";
 
         Log::debug('ai request', [
             'original' => $originalText,
@@ -452,7 +447,7 @@ class UpgradeSystemCommentary extends Command
         $totalSentences = count($original) + count($commentary);
         $maxTokens = (int) ($this->tokensPerSentence * $totalSentences * 1.5);
         $this->info("requesting…… {$totalSentences} sentences {$this->tokensPerSentence}tokens/sentence set {$maxTokens} max_tokens");
-        Log::debug('requesting…… ' . $this->model['model']);
+        Log::debug('requesting…… '.$this->model['model']);
         $startAt = time();
         $llm = $this->openAIService->setApiUrl($this->model['url'])
             ->setModel($this->model['model'])
@@ -469,11 +464,11 @@ class UpgradeSystemCommentary extends Command
         $completeAt = time();
         $answer = $response['choices'][0]['message']['content'] ?? '[]';
         Log::debug('ai response', ['data' => $answer]);
-        $message = ($completeAt - $startAt) . 's';
+        $message = ($completeAt - $startAt).'s';
 
         if (isset($response['usage']['completion_tokens'])) {
             Log::debug('usage', $response['usage']);
-            $message .= ' completion_tokens:' . $response['usage']['completion_tokens'];
+            $message .= ' completion_tokens:'.$response['usage']['completion_tokens'];
             $curr = (int) ($response['usage']['completion_tokens'] / $totalSentences);
             if ($curr > $this->tokensPerSentence) {
                 $this->tokensPerSentence = $curr;
@@ -513,9 +508,9 @@ class UpgradeSystemCommentary extends Command
             ) {
                 $content = array_map(function ($n) {
                     if (is_string($n)) {
-                        return '{{' . $n . '}}';
+                        return '{{'.$n.'}}';
                     } elseif (is_array($n) && isset($n['id']) && is_string($n['id'])) {
-                        return '{{' . $n['id'] . '}}';
+                        return '{{'.$n['id'].'}}';
                     } else {
                         return '';
                     }
@@ -533,7 +528,7 @@ class UpgradeSystemCommentary extends Command
                         'editor_uid' => $this->model['uid'],
                     ]
                 );
-                $this->info($sentence['id'] . ' saved');
+                $this->info($sentence['id'].' saved');
             }
         }
     }
