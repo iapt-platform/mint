@@ -59,6 +59,8 @@ it('creates a channel term attributed to the ai model', function () {
     // 核心断言：署名归模型，而不是发起操作的人类
     expect($saved->editor_uid)->toBe($model->uid);
     expect($saved->editor_uid)->not->toBe($human);
+    // editor_id 存人类的自增 sn，模型没有；0 与「缺省/未知」撞车，故记 -1
+    expect($saved->editor_id)->toBe(-1);
     // owner 仍是 channel 所属 studio
     expect($saved->owner)->toBe($human);
 });
@@ -133,6 +135,7 @@ it('updates a term as the ai model, leaving unsubmitted fields untouched', funct
     expect($saved->note)->toBe('原有的注解');
     expect($saved->tag)->toBe('abhidhamma');
     expect($saved->editor_uid)->toBe($model->uid);
+    expect($saved->editor_id)->toBe(-1);
     // create_time 是创建时刻，改动不该刷新它
     expect($saved->create_time)->toBe($createTime);
 });
@@ -182,6 +185,8 @@ it('refuses a studio term written into someone elses studio', function () {
     ], authHeader($human))->assertOk();
 
     expect(DhammaTerm::where('owner', $human)->count())->toBe(1);
+    // 人类写入不受影响：editor_id 仍是 token 里的用户 sn
+    expect(DhammaTerm::where('owner', $human)->first()->editor_id)->toBe(1);
 });
 
 it('refuses to create a studio-level term as an ai model', function () {

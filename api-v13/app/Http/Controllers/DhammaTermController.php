@@ -295,7 +295,7 @@ class DhammaTermController extends Controller
                 }
                 $term->owner = $studioId;
             }
-            $term->editor_id = $user['user_id'];
+            $term->editor_id = $this->editorId($user);
             $term->editor_uid = $user['user_uid'];
             $term->create_time = time() * 1000;
             $term->modify_time = time() * 1000;
@@ -307,6 +307,18 @@ class DhammaTermController extends Controller
         } else {
             return $this->error('word existed', [], 200);
         }
+    }
+
+    /**
+     * editor_id 存的是人类用户的自增 sn，模型没有。模型 token 里的 id 恒为 0，
+     * 而 0 同时也是「缺省/未知」的值，落库后分不清是模型写的还是数据有问题，
+     * 故模型一律记 -1；模型的真实身份看 editor_uid。
+     *
+     * @param  array<string, mixed>  $user
+     */
+    private function editorId(array $user): int
+    {
+        return $this->isAiModel($user['user_uid']) ? -1 : (int) $user['user_id'];
     }
 
     /**
@@ -398,7 +410,7 @@ class DhammaTermController extends Controller
                 $dhammaTerm->$field = $request->input($field);
             }
         }
-        $dhammaTerm->editor_id = $user['user_id'];
+        $dhammaTerm->editor_id = $this->editorId($user);
         $dhammaTerm->editor_uid = $user['user_uid'];
         // create_time 是创建时刻，改动时不该被刷新
         $dhammaTerm->modify_time = time() * 1000;
