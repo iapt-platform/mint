@@ -226,14 +226,17 @@ class DhammaTermController extends Controller
          * 查询重复的
          * 一个channel下面word+tag+language 唯一
          */
-        $table = DhammaTerm::where('owner', $user['user_uid'])
-            ->where('word', $request->input('word'))
+        $table = DhammaTerm::where('word', $request->input('word'))
             ->where('tag', $request->input('tag'));
         if (! empty($request->input('channel'))) {
+            // channel 内的唯一性只看 channel。此前这里还按 owner 过滤，而
+            // owner 取的是当前身份——AI 模型的 uid 与落库的 owner（channel
+            // 所属 studio）永远不等，查重必然落空，同一个词会被反复插入。
             $isDoesntExist = $table->where('channal', $request->input('channel'))
                 ->doesntExist();
         } else {
-            $isDoesntExist = $table->whereNull('channal')->where('language', $request->input('language'))
+            $isDoesntExist = $table->where('owner', $user['user_uid'])
+                ->whereNull('channal')->where('language', $request->input('language'))
                 ->doesntExist();
         }
 

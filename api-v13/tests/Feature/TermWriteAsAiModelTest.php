@@ -225,3 +225,48 @@ it('refuses to edit a studio-level term as an ai model', function () {
 
     expect(DhammaTerm::find($guid)->meaning)->toBe('念处');
 });
+
+it('rejects a duplicate word+tag in the same channel written by an ai model', function () {
+    $human = makeStudio('tester');
+    $channel = makeChannel($human);
+    $model = AiModel::factory()->ownedBy($human)->create();
+    [$accessToken, $modelToken] = termWriteTokens($this, $human, $channel, $model);
+
+    $payload = [
+        'word' => 'satipaṭṭhāna',
+        'meaning' => '念处',
+        'tag' => 'abhidhamma',
+        'channel' => $channel,
+        'access_token' => $accessToken,
+    ];
+
+    $this->postJson('/api/v2/terms', $payload, ['Authorization' => 'Bearer '.$modelToken])
+        ->assertOk();
+
+    // 查重按 channel，不按 owner——模型的 uid 与落库的 owner 不等，
+    // 按 owner 查会永远查不到重复，同一个词被反复插入。
+    $this->postJson('/api/v2/terms', $payload, ['Authorization' => 'Bearer '.$modelToken])
+        ->assertOk()
+        ->assertJsonPath('message', 'word existed');
+
+    expect(DhammaTerm::where('word', 'satipaṭṭhāna')->count())->toBe(1);
+});
+
+it('exposes the channel of a channel term', function () {
+    $human = makeStudio('tester');
+    $channel = makeChannel($human, 'my channel');
+    $model = AiModel::factory()->ownedBy($human)->create();
+    [$accessToken, $modelToken] = termWriteTokens($this, $human, $channel, $model);
+
+    $guid = $this->postJson('/api/v2/terms', [
+        'word' => 'satipaṭṭhāna',
+        'meaning' => '念处',
+        'channel' => $channel,
+        'access_token' => $accessToken,
+    ], ['Authorization' => 'Bearer '.$modelToken])->json('data.guid');
+
+    // channel 信息取自 channal 列；此前读的是模型上并不存在的 channel_id
+    $this->getJson("/api/v2/terms/{$guid}", authHeader($human))
+        ->assertOk()
+        ->assertJsonPath('data.channel.name', 'my channel');
+});
