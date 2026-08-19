@@ -39,7 +39,11 @@ class TermResource extends JsonResource
             'channel_id' => $this->channal,
             'channal' => $this->channal,
             'studio' => StudioApi::getById($this->owner),
-            'editor' => UserApi::getById($this->editor_id),
+            // editor_uid 装得下 AI 模型的 uuid，getByUuid 查不到人类用户时
+            // 会回落到 AI 模型；老数据没有这一列，仍按 editor_id 解析。
+            'editor' => $this->editor_uid
+                ? UserApi::getByUuid($this->editor_uid)
+                : UserApi::getById($this->editor_id),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

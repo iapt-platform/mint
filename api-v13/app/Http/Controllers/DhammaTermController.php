@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\StudioApi;
+use App\Http\Controllers\Concerns\ChecksChannelEditPower;
 use App\Http\Resources\TermResource;
 use App\Models\Channel;
 use App\Models\DhammaTerm;
@@ -18,6 +19,8 @@ use Illuminate\Support\Str;
 
 class DhammaTermController extends Controller
 {
+    use ChecksChannelEditPower;
+
     /**
      * Display a listing of the resource.
      *
@@ -38,6 +41,7 @@ class DhammaTermController extends Controller
             'channal',
             'owner',
             'editor_id',
+            'editor_uid',
             'created_at',
             'updated_at',
         ];
@@ -250,10 +254,15 @@ class DhammaTermController extends Controller
                 if (! $channelInfo) {
                     return $this->error('channel id failed');
                 } else {
-                    // 查看有没有channel权限
-                    $power = ShareApi::getResPower($user['user_uid'], $request->input('channel'), 2);
-                    if ($power < 20) {
-                        return $this->error(__('auth.failed'));
+                    // 查看有没有channel权限。术语没有 book 概念，access token 的
+                    // book 一律按 0（不限）判定。
+                    if (! $this->userCanEditChannel(
+                        $user['user_uid'],
+                        $request->input('channel'),
+                        0,
+                        $request->input('access_token')
+                    )) {
+                        return $this->error(__('auth.failed'), [], 403);
                     }
                     $term->owner = $channelInfo['studio_id'];
                     $term->language = $channelInfo['lang'];
@@ -264,13 +273,20 @@ class DhammaTermController extends Controller
                 } elseif ($request->has('studioName')) {
                     $studioId = StudioApi::getIdByName($request->input('studioName'));
                 }
-                if (Str::isUuid($studioId)) {
-                    $term->owner = $studioId;
-                } else {
+                if (! isset($studioId) || ! Str::isUuid($studioId)) {
                     return $this->error('not valid studioId');
                 }
+                // studio 级术语（不属于任何 channel）只能由 studio 本人建。
+                // 此前这里不校验归属，任何登录用户都能往别人 studio 名下写。
+                // access token 是 channel 级的，代持不了 studio 权限，所以
+                // AI 模型建 studio 级术语必然走到这里被拒——这是有意的。
+                if ($studioId !== $user['user_uid']) {
+                    return $this->error(__('auth.failed'), [], 403);
+                }
+                $term->owner = $studioId;
             }
             $term->editor_id = $user['user_id'];
+            $term->editor_uid = $user['user_uid'];
             $term->create_time = time() * 1000;
             $term->modify_time = time() * 1000;
             $term->save();
@@ -332,27 +348,37 @@ class DhammaTermController extends Controller
         }
 
         if (empty($dhammaTerm->channal)) {
-            // 查看有没有studio权限
+            // 查看有没有studio权限。access token 是 channel 级的，代持不了
+            // studio 权限，故 studio 级术语只有 owner 本人能改。
             if ($user['user_uid'] !== $dhammaTerm->owner) {
                 return $this->error(__('auth.failed'), [], 403);
             }
         } else {
-            // 查看有没有channel权限
-            $power = ShareApi::getResPower($user['user_uid'], $dhammaTerm->channal, 2);
-            if ($power < 20) {
+            // 查看有没有channel权限（owner / 协作者 / access token）
+            if (! $this->userCanEditChannel(
+                $user['user_uid'],
+                $dhammaTerm->channal,
+                0,
+                $request->input('access_token')
+            )) {
                 return $this->error(__('auth.failed'), [], 403);
             }
         }
 
-        $dhammaTerm->word = $request->input('word');
-        $dhammaTerm->word_en = Tools::getWordEn($request->input('word'));
-        $dhammaTerm->meaning = $request->input('meaning');
-        $dhammaTerm->other_meaning = $request->input('other_meaning');
-        $dhammaTerm->note = $request->input('note');
-        $dhammaTerm->tag = $request->input('tag');
-        $dhammaTerm->language = $request->input('language');
+        // 增量更新：只改提交上来的字段。此前这里无条件赋值，客户端漏提一个
+        // 字段就会把库里的 note/tag 等清成 null。
+        if ($request->has('word')) {
+            $dhammaTerm->word = $request->input('word');
+            $dhammaTerm->word_en = Tools::getWordEn($request->input('word'));
+        }
+        foreach (['meaning', 'other_meaning', 'note', 'tag', 'language'] as $field) {
+            if ($request->has($field)) {
+                $dhammaTerm->$field = $request->input($field);
+            }
+        }
         $dhammaTerm->editor_id = $user['user_id'];
-        $dhammaTerm->create_time = time() * 1000;
+        $dhammaTerm->editor_uid = $user['user_uid'];
+        // create_time 是创建时刻，改动时不该被刷新
         $dhammaTerm->modify_time = time() * 1000;
         $dhammaTerm->save();
         // 删除cache
@@ -380,6 +406,9 @@ class DhammaTermController extends Controller
             // 查看是否有删除权限
             foreach ($request->input('id') as $key => $uuid) {
                 $term = DhammaTerm::find($uuid);
+                if (! $term) {
+                    continue;
+                }
                 if ($term->owner !== $user['user_uid']) {
                     if (! empty($term->channal)) {
                         // 看是否为协作
@@ -400,10 +429,16 @@ class DhammaTermController extends Controller
             foreach ($arrId as $key => $id) {
                 // code...
                 $term = DhammaTerm::where('id', $id)
-                    ->where('owner', $user['user_uid']);
+                    ->where('owner', $user['user_uid'])
+                    ->first();
+                if (! $term) {
+                    continue;
+                }
+                // 先取到模型再删：此前这里把 query builder 传给 deleteCache，
+                // 拿不到 word/channal，缓存根本没被清掉。
                 $result = $term->delete();
-                $this->deleteCache($term);
                 if ($result) {
+                    $this->deleteCache($term);
                     $count++;
                 }
             }
