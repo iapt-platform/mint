@@ -6,6 +6,7 @@ use App\Http\Api\ChannelApi;
 use App\Http\Api\Mq;
 use App\Http\Api\PaliTextApi;
 use App\Http\Api\ShareApi;
+use App\Http\Controllers\Concerns\ChecksChannelEditPower;
 use App\Http\Resources\SentResource;
 use App\Models\AccessToken;
 use App\Models\Channel;
@@ -24,6 +25,8 @@ use Illuminate\Support\Str;
 
 class SentenceController extends Controller
 {
+    use ChecksChannelEditPower;
+
     public function __construct(protected SentenceService $sentenceService) {}
 
     /**
@@ -269,40 +272,6 @@ class SentenceController extends Controller
         }
     }
 
-    private function UserCanEdit(string $userId, string $channelId, int $book, $access_token = null)
-    {
-        $channel = Channel::where('uid', $channelId)->first();
-        if (! $channel) {
-            return false;
-        }
-        if ($channel->owner_uid !== $userId) {
-            // 判断是否为协作
-            $power = ShareApi::getResPower($userId, $channel->uid, 2);
-            if ($power < 20) {
-                // 判断token
-                if (! $access_token) {
-                    return false;
-                }
-                $key = AccessToken::where('res_id', $channelId)->value('token');
-                if (! $key) {
-                    return false;
-                }
-                try {
-                    // access token 现在带 exp，过期会抛 ExpiredException；
-                    // 伪造/损坏的 token 同样抛异常。一律当作无权，不要冒泡成 500。
-                    $jwt = JWT::decode($access_token, new Key($key.$key, 'HS512'));
-                } catch (\Exception $e) {
-                    return false;
-                }
-                if (isset($jwt->book) && $jwt->book !== 0 && $jwt->book !== $book) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
     /**
      * 新建多个句子
      * 如果句子存在，修改
@@ -322,7 +291,7 @@ class SentenceController extends Controller
         }
         $destChannel = null;
         if ($request->has('channel')) {
-            if ($this->UserCanEdit(
+            if ($this->userCanEditChannel(
                 $user['user_uid'],
                 $request->input('channel'),
                 (int) $request->input('book', 0),
@@ -339,7 +308,7 @@ class SentenceController extends Controller
             // 权限
             if (! $request->has('channel')) {
 
-                if ($this->UserCanEdit(
+                if ($this->userCanEditChannel(
                     $user['user_uid'],
                     $sent['channel_uid'],
                     (int) $sent['book_id'],
