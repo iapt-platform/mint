@@ -39,7 +39,11 @@ class TermResource extends JsonResource
             'channel_id' => $this->channal,
             'channal' => $this->channal,
             'studio' => StudioApi::getById($this->owner),
-            'editor' => UserApi::getById($this->editor_id),
+            // editor_uid 装得下 AI 模型的 uuid，getByUuid 查不到人类用户时
+            // 会回落到 AI 模型；老数据没有这一列，仍按 editor_id 解析。
+            'editor' => $this->editor_uid
+                ? UserApi::getByUuid($this->editor_uid)
+                : UserApi::getById($this->editor_id),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
@@ -47,9 +51,11 @@ class TermResource extends JsonResource
         if ($request->has('channel') && ! empty($request->input('channel'))) {
             $channels = explode('_', $request->input('channel'));
         } else {
-            if (! empty($this->channel_id) && Str::isUuid($this->channel_id)) {
-                $channelId = $this->channel_id;
-                $data['channel'] = ChannelApi::getById($this->channel_id);
+            // 列名是 channal；channel_id 只存在于本资源的输出里，模型上取不到，
+            // 于是所有 channel 内的术语都拿不到 channel 信息、还被当成社区术语渲染。
+            if (! empty($this->channal) && Str::isUuid($this->channal)) {
+                $channelId = $this->channal;
+                $data['channel'] = ChannelApi::getById($this->channal);
             } else {
                 $channelId = ChannelApi::getSysChannel('_community_translation_'.$this->language.'_');
                 if (empty($channelId)) {

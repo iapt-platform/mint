@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\StudioApi;
+use App\Http\Controllers\Concerns\ChecksChannelEditPower;
 use App\Http\Resources\TermResource;
+use App\Models\AiModel;
 use App\Models\Channel;
 use App\Models\DhammaTerm;
 use App\Services\AuthService;
@@ -18,6 +20,8 @@ use Illuminate\Support\Str;
 
 class DhammaTermController extends Controller
 {
+    use ChecksChannelEditPower;
+
     /**
      * Display a listing of the resource.
      *
@@ -38,6 +42,7 @@ class DhammaTermController extends Controller
             'channal',
             'owner',
             'editor_id',
+            'editor_uid',
             'created_at',
             'updated_at',
         ];
@@ -221,14 +226,17 @@ class DhammaTermController extends Controller
          * 查询重复的
          * 一个channel下面word+tag+language 唯一
          */
-        $table = DhammaTerm::where('owner', $user['user_uid'])
-            ->where('word', $request->input('word'))
+        $table = DhammaTerm::where('word', $request->input('word'))
             ->where('tag', $request->input('tag'));
         if (! empty($request->input('channel'))) {
+            // channel 内的唯一性只看 channel。此前这里还按 owner 过滤，而
+            // owner 取的是当前身份——AI 模型的 uid 与落库的 owner（channel
+            // 所属 studio）永远不等，查重必然落空，同一个词会被反复插入。
             $isDoesntExist = $table->where('channal', $request->input('channel'))
                 ->doesntExist();
         } else {
-            $isDoesntExist = $table->whereNull('channal')->where('language', $request->input('language'))
+            $isDoesntExist = $table->where('owner', $user['user_uid'])
+                ->whereNull('channal')->where('language', $request->input('language'))
                 ->doesntExist();
         }
 
@@ -250,27 +258,45 @@ class DhammaTermController extends Controller
                 if (! $channelInfo) {
                     return $this->error('channel id failed');
                 } else {
-                    // 查看有没有channel权限
-                    $power = ShareApi::getResPower($user['user_uid'], $request->input('channel'), 2);
-                    if ($power < 20) {
-                        return $this->error(__('auth.failed'));
+                    // 查看有没有channel权限。术语没有 book 概念，access token 的
+                    // book 一律按 0（不限）判定。
+                    if (! $this->userCanEditChannel(
+                        $user['user_uid'],
+                        $request->input('channel'),
+                        0,
+                        $request->input('access_token')
+                    )) {
+                        return $this->error(__('auth.failed'), [], 403);
                     }
                     $term->owner = $channelInfo['studio_id'];
                     $term->language = $channelInfo['lang'];
                 }
             } else {
+                // AI 模型只能在 channel 里建术语。它的权限全部由人类签出的
+                // channel access token 代持，而 access token 是 channel 级的，
+                // 代持不了 studio 权限——没有 channel 就没有任何可核验的授权。
+                if ($this->isAiModel($user['user_uid'])) {
+                    return $this->error('ai model must specify a channel', [], 403);
+                }
                 if ($request->has('studioId')) {
                     $studioId = $request->input('studioId');
                 } elseif ($request->has('studioName')) {
                     $studioId = StudioApi::getIdByName($request->input('studioName'));
                 }
-                if (Str::isUuid($studioId)) {
-                    $term->owner = $studioId;
-                } else {
+                if (! isset($studioId) || ! Str::isUuid($studioId)) {
                     return $this->error('not valid studioId');
                 }
+                // studio 级术语（不属于任何 channel）只能由 studio 本人建。
+                // 此前这里不校验归属，任何登录用户都能往别人 studio 名下写。
+                // access token 是 channel 级的，代持不了 studio 权限，所以
+                // AI 模型建 studio 级术语必然走到这里被拒——这是有意的。
+                if ($studioId !== $user['user_uid']) {
+                    return $this->error(__('auth.failed'), [], 403);
+                }
+                $term->owner = $studioId;
             }
-            $term->editor_id = $user['user_id'];
+            $term->editor_id = $this->editorId($user);
+            $term->editor_uid = $user['user_uid'];
             $term->create_time = time() * 1000;
             $term->modify_time = time() * 1000;
             $term->save();
@@ -281,6 +307,27 @@ class DhammaTermController extends Controller
         } else {
             return $this->error('word existed', [], 200);
         }
+    }
+
+    /**
+     * editor_id 存的是人类用户的自增 sn，模型没有。模型 token 里的 id 恒为 0，
+     * 而 0 同时也是「缺省/未知」的值，落库后分不清是模型写的还是数据有问题，
+     * 故模型一律记 -1；模型的真实身份看 editor_uid。
+     *
+     * @param  array<string, mixed>  $user
+     */
+    private function editorId(array $user): int
+    {
+        return $this->isAiModel($user['user_uid']) ? -1 : (int) $user['user_id'];
+    }
+
+    /**
+     * 当前身份是不是 AI 模型。模型 token 的 user_id 恒为 0，但人类的旧 cookie
+     * 鉴权也可能给出奇怪的值，故直接查表判定，不靠 id。
+     */
+    private function isAiModel(string $userUid): bool
+    {
+        return AiModel::where('uid', $userUid)->exists();
     }
 
     private function deleteCache($term)
@@ -332,27 +379,40 @@ class DhammaTermController extends Controller
         }
 
         if (empty($dhammaTerm->channal)) {
-            // 查看有没有studio权限
+            // studio 级术语（不属于任何 channel）只有 owner 本人能改：
+            // access token 是 channel 级的，代持不了 studio 权限。
+            if ($this->isAiModel($user['user_uid'])) {
+                return $this->error('ai model cannot edit a term outside a channel', [], 403);
+            }
             if ($user['user_uid'] !== $dhammaTerm->owner) {
                 return $this->error(__('auth.failed'), [], 403);
             }
         } else {
-            // 查看有没有channel权限
-            $power = ShareApi::getResPower($user['user_uid'], $dhammaTerm->channal, 2);
-            if ($power < 20) {
+            // 查看有没有channel权限（owner / 协作者 / access token）
+            if (! $this->userCanEditChannel(
+                $user['user_uid'],
+                $dhammaTerm->channal,
+                0,
+                $request->input('access_token')
+            )) {
                 return $this->error(__('auth.failed'), [], 403);
             }
         }
 
-        $dhammaTerm->word = $request->input('word');
-        $dhammaTerm->word_en = Tools::getWordEn($request->input('word'));
-        $dhammaTerm->meaning = $request->input('meaning');
-        $dhammaTerm->other_meaning = $request->input('other_meaning');
-        $dhammaTerm->note = $request->input('note');
-        $dhammaTerm->tag = $request->input('tag');
-        $dhammaTerm->language = $request->input('language');
-        $dhammaTerm->editor_id = $user['user_id'];
-        $dhammaTerm->create_time = time() * 1000;
+        // 增量更新：只改提交上来的字段。此前这里无条件赋值，客户端漏提一个
+        // 字段就会把库里的 note/tag 等清成 null。
+        if ($request->has('word')) {
+            $dhammaTerm->word = $request->input('word');
+            $dhammaTerm->word_en = Tools::getWordEn($request->input('word'));
+        }
+        foreach (['meaning', 'other_meaning', 'note', 'tag', 'language'] as $field) {
+            if ($request->has($field)) {
+                $dhammaTerm->$field = $request->input($field);
+            }
+        }
+        $dhammaTerm->editor_id = $this->editorId($user);
+        $dhammaTerm->editor_uid = $user['user_uid'];
+        // create_time 是创建时刻，改动时不该被刷新
         $dhammaTerm->modify_time = time() * 1000;
         $dhammaTerm->save();
         // 删除cache
@@ -380,6 +440,9 @@ class DhammaTermController extends Controller
             // 查看是否有删除权限
             foreach ($request->input('id') as $key => $uuid) {
                 $term = DhammaTerm::find($uuid);
+                if (! $term) {
+                    continue;
+                }
                 if ($term->owner !== $user['user_uid']) {
                     if (! empty($term->channal)) {
                         // 看是否为协作
@@ -400,10 +463,16 @@ class DhammaTermController extends Controller
             foreach ($arrId as $key => $id) {
                 // code...
                 $term = DhammaTerm::where('id', $id)
-                    ->where('owner', $user['user_uid']);
+                    ->where('owner', $user['user_uid'])
+                    ->first();
+                if (! $term) {
+                    continue;
+                }
+                // 先取到模型再删：此前这里把 query builder 传给 deleteCache，
+                // 拿不到 word/channal，缓存根本没被清掉。
                 $result = $term->delete();
-                $this->deleteCache($term);
                 if ($result) {
+                    $this->deleteCache($term);
                     $count++;
                 }
             }
