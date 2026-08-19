@@ -183,3 +183,45 @@ it('refuses a studio term written into someone elses studio', function () {
 
     expect(DhammaTerm::where('owner', $human)->count())->toBe(1);
 });
+
+it('refuses to create a studio-level term as an ai model', function () {
+    $human = makeStudio('tester');
+    $model = AiModel::factory()->ownedBy($human)->create();
+
+    $modelToken = $this->getJson("/api/v2/ai-model-token/{$model->uid}", authHeader($human))
+        ->json('data.token');
+
+    // 不给 channel：模型没有任何可核验的授权，必须被拒
+    $this->postJson('/api/v2/terms', [
+        'word' => 'satipaṭṭhāna',
+        'meaning' => '念处',
+        'studioName' => 'tester',
+        'language' => 'zh-Hans',
+    ], ['Authorization' => 'Bearer '.$modelToken])
+        ->assertStatus(403);
+
+    expect(DhammaTerm::count())->toBe(0);
+});
+
+it('refuses to edit a studio-level term as an ai model', function () {
+    $human = makeStudio('tester');
+    $model = AiModel::factory()->ownedBy($human)->create();
+
+    // 人类先建一条 studio 级术语
+    $guid = $this->postJson('/api/v2/terms', [
+        'word' => 'satipaṭṭhāna',
+        'meaning' => '念处',
+        'studioName' => 'tester',
+        'language' => 'zh-Hans',
+    ], authHeader($human))->assertOk()->json('data.guid');
+
+    $modelToken = $this->getJson("/api/v2/ai-model-token/{$model->uid}", authHeader($human))
+        ->json('data.token');
+
+    $this->putJson("/api/v2/terms/{$guid}", [
+        'meaning' => '篡改',
+    ], ['Authorization' => 'Bearer '.$modelToken])
+        ->assertStatus(403);
+
+    expect(DhammaTerm::find($guid)->meaning)->toBe('念处');
+});

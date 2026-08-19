@@ -7,6 +7,7 @@ use App\Http\Api\ShareApi;
 use App\Http\Api\StudioApi;
 use App\Http\Controllers\Concerns\ChecksChannelEditPower;
 use App\Http\Resources\TermResource;
+use App\Models\AiModel;
 use App\Models\Channel;
 use App\Models\DhammaTerm;
 use App\Services\AuthService;
@@ -268,6 +269,12 @@ class DhammaTermController extends Controller
                     $term->language = $channelInfo['lang'];
                 }
             } else {
+                // AI 模型只能在 channel 里建术语。它的权限全部由人类签出的
+                // channel access token 代持，而 access token 是 channel 级的，
+                // 代持不了 studio 权限——没有 channel 就没有任何可核验的授权。
+                if ($this->isAiModel($user['user_uid'])) {
+                    return $this->error('ai model must specify a channel', [], 403);
+                }
                 if ($request->has('studioId')) {
                     $studioId = $request->input('studioId');
                 } elseif ($request->has('studioName')) {
@@ -297,6 +304,15 @@ class DhammaTermController extends Controller
         } else {
             return $this->error('word existed', [], 200);
         }
+    }
+
+    /**
+     * 当前身份是不是 AI 模型。模型 token 的 user_id 恒为 0，但人类的旧 cookie
+     * 鉴权也可能给出奇怪的值，故直接查表判定，不靠 id。
+     */
+    private function isAiModel(string $userUid): bool
+    {
+        return AiModel::where('uid', $userUid)->exists();
     }
 
     private function deleteCache($term)
@@ -348,8 +364,11 @@ class DhammaTermController extends Controller
         }
 
         if (empty($dhammaTerm->channal)) {
-            // 查看有没有studio权限。access token 是 channel 级的，代持不了
-            // studio 权限，故 studio 级术语只有 owner 本人能改。
+            // studio 级术语（不属于任何 channel）只有 owner 本人能改：
+            // access token 是 channel 级的，代持不了 studio 权限。
+            if ($this->isAiModel($user['user_uid'])) {
+                return $this->error('ai model cannot edit a term outside a channel', [], 403);
+            }
             if ($user['user_uid'] !== $dhammaTerm->owner) {
                 return $this->error(__('auth.failed'), [], 403);
             }
