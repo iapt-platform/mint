@@ -7,11 +7,14 @@ use App\Models\Article;
 use App\Models\ArticleCollection;
 use App\Models\Collection;
 use App\Services\AuthService;
+use App\Services\CollectionService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ArticleMapController extends Controller
 {
+    public function __construct(protected CollectionService $service) {}
+
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +22,10 @@ class ArticleMapController extends Controller
      */
     public function index(Request $request)
     {
-        //
+        $request->validate([
+            'id' => ['required', 'uuid'],
+        ]);
+
         switch ($request->input('view')) {
             case 'anthology':
                 $table = ArticleCollection::where('collect_id', $request->input('id'))
@@ -29,6 +35,8 @@ class ArticleMapController extends Controller
                 $table = ArticleCollection::where('article_id', $request->input('id'))
                     ->leftJoin('articles', 'articles.uid', '=', 'article_collections.article_id');
                 break;
+            default:
+                return $this->error('unknown view', null, 422);
         }
         $count = $table->count();
         $result = [];
@@ -93,7 +101,7 @@ class ArticleMapController extends Controller
         if (! $user) {
             return $this->error(__('auth.failed'));
         }
-        if (! CollectionController::UserCanEdit($user['user_uid'], $collection)) {
+        if (! $this->service->userCanEdit($user['user_uid'], $collection)) {
             return $this->error(__('auth.failed'));
         }
         switch ($validated['operation']) {
@@ -167,7 +175,7 @@ class ArticleMapController extends Controller
         if (! $user) {
             return $this->error(__('auth.failed'));
         }
-        if (! CollectionController::UserCanEdit($user['user_uid'], $collection)) {
+        if (! $this->service->userCanEdit($user['user_uid'], $collection)) {
             return $this->error(__('auth.failed'));
         }
 
