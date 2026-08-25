@@ -5,12 +5,12 @@ import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
 
 const Widget = () => {
-  const { id } = useParams(); //url 参数
+  const { anthologyId } = useParams(); //url 参数
   const user = useAppSelector(currentUser);
 
   return (
     <>
-      <AnthologyTocEdit id={id} editorStudioName={user?.realName} />
+      <AnthologyTocEdit id={anthologyId} editorStudioName={user?.realName} />
     </>
   );
 };
