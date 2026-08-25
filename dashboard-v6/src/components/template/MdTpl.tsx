@@ -1,3 +1,5 @@
+import { GrammarPopShell } from "../dict/GrammarPop";
+import Article from "./Article";
 import Confidence from "./Confidence";
 import GrammarTermLookup from "./GrammarTermLookup";
 import Mermaid from "./Mermaid";
@@ -7,7 +9,9 @@ import Para from "./Para";
 import ParaHandle from "./ParaHandle";
 import ParaShell from "./ParaShell";
 import Paragraph from "./Paragraph";
+import Qa from "./Qa";
 import Quote from "./Quote";
+import QuoteLink from "./QuoteLink";
 import Reference from "./Reference";
 import SentEdit from "./SentEdit";
 import SentRead from "./SentRead";
@@ -39,6 +43,12 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Wd props={props ? props : ""} />;
     case "quote":
       return <Quote props={props ? props : ""} />;
+    case "article":
+      return <Article props={props ? props : ""} />;
+    case "qa":
+      return <Qa props={props ? props : ""} />;
+    case "quote-link":
+      return <QuoteLink props={props ? props : ""} />;
     case "nissaya":
       return <Nissaya props={props ? props : ""}>{children}</Nissaya>;
     case "toggle":
@@ -53,6 +63,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Video props={props ? props : ""} />;
     case "grammar":
       return <GrammarTermLookup props={props ? props : ""} />;
+    case "grammar-pop":
+      return <GrammarPopShell props={props ? props : ""} />;
     case "reference":
       return <Reference props={props ? props : ""} />;
     case "cf":

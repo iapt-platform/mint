@@ -3,6 +3,7 @@
 import type { IStudio, IStudioApiResponse, IUser, TRole } from "./Auth";
 import type { IChannel } from "./channel";
 import { delete_, get, post, put } from "../request";
+import { bookName } from "./bookName";
 import type { ITocPathNode } from "./pali-text";
 import type { LoaderFunctionArgs } from "react-router";
 import type { ListNodeData } from "../components/article/components/EditableTree";
@@ -573,3 +574,25 @@ export async function articleLoader({ params }: LoaderFunctionArgs) {
 
   return res.data;
 }
+
+/**
+ * 页码导航
+ *
+ * pageId 形如 `M-dīghanikāya-2-10`（页码类型_书名_卷号_页码），
+ * 内部通过 bookName 表把书名 term 反查为 book id 后请求
+ * GET /api/v2/nav-page/{TYPE}-{booksId}-{volume}-{page}
+ */
+export const fetchPageNav = (pageId: string): Promise<IPageNavResponse> => {
+  const pageParam = pageId.split("_");
+  if (pageParam.length < 4) {
+    return Promise.reject(new Error(`invalid page id: ${pageId}`));
+  }
+  const booksId = bookName
+    .filter((value) => value.term === pageParam[1])
+    .map((item) => item.id)
+    .join("_");
+  const url = `/api/v2/nav-page/${pageParam[0].toUpperCase()}-${booksId}-${
+    pageParam[2]
+  }-${pageParam[3]}`;
+  return get<IPageNavResponse>(url);
+};
