@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { App } from "antd";
 import { useEffect, useState } from "react";
 
 import { get } from "../../request";
@@ -27,6 +27,7 @@ const DiscussionTopicInfoWidget = ({
   onClose,
   onConvert,
 }: IWidget) => {
+  const { message } = App.useApp();
   const [data, setData] = useState<IComment | undefined>(topic);
   useEffect(() => {
     setData(topic);
@@ -78,7 +79,7 @@ const DiscussionTopicInfoWidget = ({
       .catch((e) => {
         message.error(e.message);
       });
-  }, [topicId]);
+  }, [message, topicId]);
 
   return (
     <div>

@@ -6,6 +6,7 @@ import {
   FolderOutlined,
   FileOutlined,
   SettingOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useMatches, type UIMatch } from "react-router";
 import {
@@ -24,6 +25,7 @@ import { useRecent } from "../../hooks/useRecent.ts";
 import RecentModal from "../recent/RecentModal.tsx";
 import SettingModal from "../setting/SettingModal.tsx";
 import { useIntl } from "react-intl";
+import { fullUrl } from "../../utils";
 
 /* ================= 类型 ================= */
 
@@ -33,6 +35,8 @@ interface MenuItem {
   icon?: React.ReactNode;
   type?: "divider";
   children?: MenuItem[];
+  /** 菜单项右侧附加内容（例如“+”按钮） */
+  extra?: React.ReactNode;
 
   /** ⭐ 用于高亮匹配 */
   activeId?: string | string[];
@@ -138,6 +142,17 @@ const Widget = ({ onSearch }: Props) => {
       icon: <HomeOutlined />,
       label: "主页",
       activeId: "workspace.home",
+      extra: (
+        <PlusOutlined
+          role="button"
+          aria-label="open-home-new-tab"
+          title="在新标签页打开主页"
+          onClick={(e) => {
+            e.stopPropagation();
+            window.open(fullUrl("workspace"), "_blank");
+          }}
+        />
+      ),
     },
     {
       key: "/workspace/ai",

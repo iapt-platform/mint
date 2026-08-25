@@ -1,6 +1,6 @@
 import { get } from "../../request";
 import type { IVocabularyListResponse } from "../../api/dict";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AutoComplete, Input, Space, Typography } from "antd";
 import { DictIcon } from "../../assets/icon";
 
@@ -31,6 +31,12 @@ const SearchVocabulary = ({
   const [input, setInput] = useState<string | undefined>(value);
   const [factors, setFactors] = useState<string[]>([]);
   const intervalRef = useRef<number | null>(null);
+
+  // 外部 value（点击单词触发的查词）变化时，同步输入框显示。
+  // 仅在 value 真正变化时同步，用户手动输入时 value 不会变，因此不会打断输入。
+  useEffect(() => {
+    setInput(value);
+  }, [value]);
 
   const renderItem = (title: string, count: number, meaning?: string) => ({
     value: title,
