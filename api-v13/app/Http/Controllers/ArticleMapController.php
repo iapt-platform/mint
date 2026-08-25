@@ -19,7 +19,10 @@ class ArticleMapController extends Controller
      */
     public function index(Request $request)
     {
-        //
+        $request->validate([
+            'id' => ['required', 'uuid'],
+        ]);
+
         switch ($request->input('view')) {
             case 'anthology':
                 $table = ArticleCollection::where('collect_id', $request->input('id'))
@@ -29,6 +32,8 @@ class ArticleMapController extends Controller
                 $table = ArticleCollection::where('article_id', $request->input('id'))
                     ->leftJoin('articles', 'articles.uid', '=', 'article_collections.article_id');
                 break;
+            default:
+                return $this->error('unknown view', null, 422);
         }
         $count = $table->count();
         $result = [];
