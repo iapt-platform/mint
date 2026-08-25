@@ -60,6 +60,12 @@ export interface SplitLayoutProps {
    */
   rightTabs?: RightToolbarTab[];
 
+  /**
+   * 外部请求打开某个 tab（业务层通过 redux 等触发）。
+   * `seq` 每次递增代表一次新请求，内部据此去重并打开对应 key 的 tab。
+   */
+  openRequest?: { key: string; seq: number };
+
   /** 右边栏面板默认宽度（px），默认 500 */
   defaultRightSize?: number;
   /** 右边栏面板最小宽度（px），默认 280 */
@@ -77,6 +83,7 @@ export default function SplitLayout({
   sidebar,
   children,
   rightTabs,
+  openRequest,
   defaultRightSize = 500,
   minRightSize = 280,
   maxRightSize = 800,
@@ -132,6 +139,14 @@ export default function SplitLayout({
   }, []);
 
   const closeRightPanel = useCallback(() => setRightActiveKey(null), []);
+
+  // ── 外部打开请求（去重后打开对应 tab）──
+  // 采用 React 官方推荐的「render 阶段调整 state」方式，避免 effect 内同步 setState。
+  const [handledOpenSeq, setHandledOpenSeq] = useState<number | null>(null);
+  if (openRequest && openRequest.seq !== handledOpenSeq) {
+    setHandledOpenSeq(openRequest.seq);
+    setRightActiveKey(openRequest.key);
+  }
 
   // ── Context ──
   const ctx: SplitLayoutContextValue = {

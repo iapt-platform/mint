@@ -1,4 +1,4 @@
-import { List, message, Skeleton } from "antd";
+import { App, List, Skeleton } from "antd";
 
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
@@ -44,6 +44,7 @@ const DiscussionTopicChildrenWidget = ({
   onTopicCreate,
 }: IWidget) => {
   const intl = useIntl();
+  const { message } = App.useApp();
   const [data, setData] = useState<IComment[]>([]);
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<ISentHistoryData[]>([]);
@@ -186,7 +187,7 @@ const DiscussionTopicChildrenWidget = ({
       .catch((e) => {
         message.error(e.message);
       });
-  }, [intl, topicId]);
+  }, [intl, message, topicId]);
   return (
     <div>
       {loading ? (

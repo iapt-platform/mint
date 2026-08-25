@@ -1,11 +1,9 @@
 import { useIntl } from "react-intl";
 import {
+  App,
   Button,
   Card,
   Dropdown,
-  message,
-  Modal,
-  notification,
   Space,
   Tag,
   Typography,
@@ -58,9 +56,10 @@ const DiscussionShowWidget = ({
   onConvert,
 }: IWidget) => {
   const intl = useIntl();
+  const { message, notification, modal } = App.useApp();
   const [closed, setClosed] = useState(data.status);
   const showDeleteConfirm = (id: string, resId: string, title: string) => {
-    Modal.confirm({
+    modal.confirm({
       icon: <ExclamationCircleOutlined />,
       title:
         intl.formatMessage({
