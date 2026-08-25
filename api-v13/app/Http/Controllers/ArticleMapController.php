@@ -7,11 +7,14 @@ use App\Models\Article;
 use App\Models\ArticleCollection;
 use App\Models\Collection;
 use App\Services\AuthService;
+use App\Services\CollectionService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ArticleMapController extends Controller
 {
+    public function __construct(protected CollectionService $service) {}
+
     /**
      * Display a listing of the resource.
      *
@@ -98,7 +101,7 @@ class ArticleMapController extends Controller
         if (! $user) {
             return $this->error(__('auth.failed'));
         }
-        if (! CollectionController::UserCanEdit($user['user_uid'], $collection)) {
+        if (! $this->service->userCanEdit($user['user_uid'], $collection)) {
             return $this->error(__('auth.failed'));
         }
         switch ($validated['operation']) {
@@ -172,7 +175,7 @@ class ArticleMapController extends Controller
         if (! $user) {
             return $this->error(__('auth.failed'));
         }
-        if (! CollectionController::UserCanEdit($user['user_uid'], $collection)) {
+        if (! $this->service->userCanEdit($user['user_uid'], $collection)) {
             return $this->error(__('auth.failed'));
         }
 
