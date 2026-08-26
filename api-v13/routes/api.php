@@ -206,9 +206,12 @@ Route::group([
 
     Route::post('export_wbw', [ExportWbwController::class, 'index']);
     Route::apiResource('attachments', UploadController::class);
+
     Route::apiResource('discussion', DiscussionController::class);
     Route::post('sent-discussion-tree', [DiscussionController::class, 'discussion_tree']);
     Route::get('discussion-anchor/{id}', [DiscussionController::class, 'anchor']);
+    Route::apiResource('discussion-count', DiscussionCountController::class);
+
     Route::apiResource('user', UserController::class);
     Route::apiResource('group-member', GroupMemberController::class);
     Route::apiResource('share', ShareController::class);
@@ -283,7 +286,6 @@ Route::group([
     Route::apiResource('chapter-index', ChapterIndexController::class);
     Route::apiResource('wbw-sentence', WbwSentenceController::class);
     Route::apiResource('snowflake', SnowFlakeIdController::class);
-    Route::apiResource('discussion-count', DiscussionCountController::class);
     Route::apiResource('tags-in-chapter', TagsInChapterCountController::class);
     Route::apiResource('tag-map', TagMapController::class);
     Route::apiResource('editable-sentence', EditableSentenceController::class);
