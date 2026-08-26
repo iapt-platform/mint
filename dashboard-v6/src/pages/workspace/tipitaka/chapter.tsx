@@ -25,9 +25,11 @@ const Widget = () => {
       }}
       onArticleChange={(type, id, target, param) => {
         const url = `workspace/tipitaka/${type}/${id}`;
-        const urlSearch = param
-          ? "?" + param?.map((item) => `${item.key}=${item.value}`).join("&")
-          : search;
+        const urlSearch =
+          param && param.length > 0
+            ? "?" +
+              param.map((item) => `${item.key}=${item.value}`).join("&")
+            : search;
         if (target === "_blank") {
           window.open(
             `${window.location.origin}${import.meta.env.BASE_URL}${url}${urlSearch}`,

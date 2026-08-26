@@ -21,15 +21,15 @@ import zhHant from "./zh-Hant";
 const KEY = "locale";
 
 export const DEFAULT: string =
-  import.meta.env.REACT_APP_DEFAULT_LOCALE || "zh-Hans";
-
-export const detect = (): string => Cookies.get(KEY) || "en-US";
+  import.meta.env.VITE_APP_DEFAULT_LOCALE || "zh-Hans";
 
 export const get = (): string => {
   return localStorage.getItem(KEY) || Cookies.get(KEY) || DEFAULT;
 };
 
-export const set = (locale: string) => {
+export const detect = (): string => get();
+
+const applyDayjsLocale = (locale: string) => {
   switch (locale) {
     case "zh-Hans":
       dayjs.locale("zh-cn");
@@ -41,8 +41,16 @@ export const set = (locale: string) => {
       dayjs.locale("en-us");
       break;
   }
-  Cookies.set(KEY, locale);
 };
+
+export const set = (locale: string) => {
+  applyDayjsLocale(locale);
+  localStorage.setItem(KEY, locale);
+  Cookies.set(KEY, locale, { expires: 365, path: "/" });
+};
+
+// 首次加载时同步 dayjs 语言，避免刷新后时间等格式化仍为英文
+applyDayjsLocale(get());
 
 export const messages = (
   locale: string

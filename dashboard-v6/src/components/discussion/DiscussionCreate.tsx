@@ -1,5 +1,5 @@
 import { useIntl } from "react-intl";
-import { Form, message } from "antd";
+import { App, Form } from "antd";
 import {
   ProForm,
   type ProFormInstance,
@@ -40,6 +40,7 @@ const DiscussionCreateWidget = ({
   onTopicCreated,
 }: IWidget) => {
   const intl = useIntl();
+  const { message } = App.useApp();
   const formRef = useRef<ProFormInstance | undefined>(undefined);
   const _currUser = useAppSelector(_currentUser);
   const [currParent, setCurrParent] = useState(parent);
