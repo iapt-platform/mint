@@ -86,7 +86,7 @@
 
 import { useState } from "react";
 import { Button, Card, Collapse, Modal, Popover, Tag, Typography } from "antd";
-import { CloseOutlined, FileOutlined } from "@ant-design/icons";
+import { CloseOutlined, EditOutlined, FileOutlined } from "@ant-design/icons";
 
 // ---- Types ----
 
@@ -128,7 +128,7 @@ const HoverPopover = ({ triggerNode, title, children }: IHoverPopoverProps) => (
   <Popover
     title={title}
     content={children}
-    styles={{ container: { width: 700 } }}
+    styles={{ container: { width: 700, maxHeight: "90dvh" } }}
     trigger="hover"
     placement="bottom"
   >
@@ -282,14 +282,25 @@ const referenceStyle: React.CSSProperties = {
   color: "inherit",
 };
 
-const ReferenceDisplay = ({ title, children }: IDisplayWrapperProps) => (
-  <HoverPopover
-    title={title}
-    triggerNode={<span style={referenceStyle}>{title}</span>}
-  >
-    {children}
-  </HoverPopover>
-);
+const ReferenceDisplay = ({ title, children }: IDisplayWrapperProps) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <HoverPopover
+        title={title}
+        triggerNode={<span style={referenceStyle}>{title}</span>}
+      >
+        {children}
+      </HoverPopover>
+      <Button
+        type="link"
+        icon={<EditOutlined />}
+        onClick={() => setOpen((v) => !v)}
+      />
+      {open && children}
+    </>
+  );
+};
 
 // ---- DisplayWrapper 主组件 ----
 
