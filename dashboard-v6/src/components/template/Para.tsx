@@ -10,7 +10,7 @@ interface IWidget extends IDisplayWrapperProps {
 const ParaCtl = (props: IWidget) => {
   return (
     <DisplayWrapper {...props}>
-      <TypePali type="para" id={props.id} />
+      <TypePali type="para" id={props.id} hideNav />
     </DisplayWrapper>
   );
 };
