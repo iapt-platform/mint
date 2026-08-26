@@ -34,6 +34,7 @@ export interface IArticleLayout {
   remains?: boolean;
   anthology?: IFirstAnthology;
   hideTitle?: boolean;
+  hideHead?: boolean;
   onEnd?: () => void;
 }
 
@@ -49,7 +50,8 @@ const ArticleLayout = ({
   resList,
   loading,
   errorCode,
-  hideTitle,
+  hideTitle = false,
+  hideHead = false,
   remains,
   onEnd,
 }: IArticleLayout) => {
@@ -63,10 +65,12 @@ const ArticleLayout = ({
         <ErrorResult code={errorCode} />
       ) : (
         <div>
-          <Flex orientation="vertical" gap="middle">
-            {hideTitle ? (
-              <></>
-            ) : (
+          <Flex
+            style={{ display: hideHead ? "none" : "block" }}
+            orientation="vertical"
+            gap="middle"
+          >
+            {!hideTitle && (
               <Title level={4}>
                 <div
                   dangerouslySetInnerHTML={{
