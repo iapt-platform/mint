@@ -18,6 +18,7 @@ use App\Models\SentSimIndex;
 use App\Models\Wbw;
 use App\Models\WbwBlock;
 use App\Services\AuthService;
+use App\Services\PaliContentService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
@@ -356,7 +357,12 @@ class CorpusController extends Controller
         if (count($record) === 0) {
             $this->result['content'] = '<span>No Data</span>';
         } else {
-            $this->result['content'] = $this->makeContent($record, $request->get('mode', 'read'), $indexChannel, $indexedHeading, false, true);
+            $paliService = app(PaliContentService::class);
+            $this->result['content'] = json_encode(
+                $paliService->makeContentObj($record, $request->get('mode', 'read'), $indexChannel),
+                JSON_UNESCAPED_UNICODE
+            );
+            $this->result['content_type'] = 'json';
         }
 
         return $this->ok($this->result);
