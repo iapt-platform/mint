@@ -177,6 +177,10 @@ class TemplateRender
             case 'category':
                 $result = $this->render_category();
                 break;
+            case 'quality':
+                // 质量标签模版：{{quality|pending}}
+                $result = $this->render_quality();
+                break;
             default:
                 if (mb_substr($tpl_name, 0, 4, 'UTF-8') === 'Tpl:') {
                     $result = $this->render_tpl($tpl_name);
@@ -268,6 +272,49 @@ class TemplateRender
                 break;
             default:
                 $output = $props['name'];
+                break;
+        }
+
+        return $output;
+    }
+
+    /**
+     * 渲染质量标签模版：{{quality|pending}}
+     *
+     * 合法的取值只有四个：featured | standard | draft | pending
+     * 非法取值统一回退为 pending，避免渲染出未知样式。
+     */
+    public function render_quality()
+    {
+        // 默认值为 pending，同时支持命名参数 {{quality|value=featured}}
+        $value = $this->get_param($this->param, 'value', 1, 'pending');
+
+        // 校验取值是否合法，不合法则回退到默认值
+        $allowed = ['featured', 'standard', 'draft', 'pending'];
+        if (! in_array($value, $allowed, true)) {
+            $value = 'pending';
+        }
+
+        $props = ['value' => $value];
+
+        $output = [];
+        switch ($this->format) {
+            case 'react':
+                // 前端通过 props 解析，使用 antd Tag 按取值渲染不同颜色
+                $output = [
+                    'props' => base64_encode(\json_encode($props)),
+                    'html' => $value,
+                    'tag' => 'span',
+                    'tpl' => 'quality',
+                ];
+                break;
+            case 'html':
+                // 静态 html 输出，class 包含固定前缀 tag-quality 和具体取值
+                $output = "<span class=\"tag-quality {$value}\">{$value}</span>";
+                break;
+            default:
+                // text / tex / simple 等纯文本格式直接输出取值
+                $output = $value;
                 break;
         }
 
