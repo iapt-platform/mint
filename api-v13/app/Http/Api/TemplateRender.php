@@ -1099,6 +1099,7 @@ class TemplateRender
         }
         if (is_array($props)) {
             $props['show'] = $show;
+            $props['mode'] = $currMode;
         }
 
         // 输出引用

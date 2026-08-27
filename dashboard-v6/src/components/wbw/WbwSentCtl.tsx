@@ -752,64 +752,60 @@ const WbwSentCtl = memo(
             studio={studio}
             readonly={readonly}
             onChange={(e: IWbw, isPublish?: boolean, isPublic?: boolean) => {
-              setWordData((origin) => {
-                const newData = [...origin];
-                const snKey = createSnKey(e.sn);
+              const snKey = createSnKey(e.sn);
+              const newData = [...wordData];
 
-                // 更新当前单词
-                const index = newData.findIndex(
-                  (v) => createSnKey(v.sn) === snKey
+              // 更新当前单词
+              const index = newData.findIndex(
+                (v) => createSnKey(v.sn) === snKey
+              );
+              if (index !== -1) {
+                newData[index] = e;
+              }
+
+              // 如果是拆分后的单词,更新父单词的 factorMeaning
+              if (e.sn.length > 1) {
+                const parentSn = e.sn.slice(0, e.sn.length - 1);
+                const parentSnKey = createSnKey(parentSn);
+
+                const factorMeaning = newData
+                  .filter(
+                    (value) =>
+                      value.sn.length === e.sn.length &&
+                      createSnKey(value.sn.slice(0, e.sn.length - 1)) ===
+                        parentSnKey &&
+                      value.real.value &&
+                      value.real.value.length > 0
+                  )
+                  .map((item) => item.meaning?.value)
+                  .join("+");
+
+                const parentIndex = newData.findIndex(
+                  (v) => createSnKey(v.sn) === parentSnKey
                 );
-                if (index !== -1) {
-                  newData[index] = e;
-                }
+                if (parentIndex !== -1) {
+                  newData[parentIndex] = {
+                    ...newData[parentIndex],
+                    factorMeaning: {
+                      value: factorMeaning,
+                      status: 5,
+                    },
+                  };
 
-                // 如果是拆分后的单词,更新父单词的 factorMeaning
-                if (e.sn.length > 1) {
-                  const parentSn = e.sn.slice(0, e.sn.length - 1);
-                  const parentSnKey = createSnKey(parentSn);
-
-                  const factorMeaning = newData
-                    .filter(
-                      (value) =>
-                        value.sn.length === e.sn.length &&
-                        createSnKey(value.sn.slice(0, e.sn.length - 1)) ===
-                          parentSnKey &&
-                        value.real.value &&
-                        value.real.value.length > 0
-                    )
-                    .map((item) => item.meaning?.value)
-                    .join("+");
-
-                  const parentIndex = newData.findIndex(
-                    (v) => createSnKey(v.sn) === parentSnKey
-                  );
-                  if (parentIndex !== -1) {
-                    newData[parentIndex] = {
-                      ...newData[parentIndex],
-                      factorMeaning: {
-                        value: factorMeaning,
-                        status: 5,
-                      },
+                  if (newData[parentIndex].meaning?.status !== WbwStatus.manual) {
+                    newData[parentIndex].meaning = {
+                      value: factorMeaning.replaceAll("+", " "),
+                      status: 5,
                     };
-
-                    if (
-                      newData[parentIndex].meaning?.status !== WbwStatus.manual
-                    ) {
-                      newData[parentIndex].meaning = {
-                        value: factorMeaning.replaceAll("+", " "),
-                        status: 5,
-                      };
-                    }
                   }
                 }
+              }
 
-                return newData;
-              });
+              setWordData(newData);
 
-              // 延迟保存以批量处理
+              // 延迟保存以批量处理（使用更新后的 newData，避免闭包里的旧 wordData 覆盖用户选择）
               setTimeout(() => {
-                saveWord(wordData, e.sn[0]);
+                saveWord(newData, e.sn[0]);
               }, 100);
 
               if (isPublish === true) {
