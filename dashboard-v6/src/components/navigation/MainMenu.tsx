@@ -19,9 +19,6 @@ import {
   TipitakaIcon,
 } from "../../assets/icon";
 import React, { useState } from "react";
-import { useAppSelector } from "../../hooks";
-import { currentUser } from "../../reducers/current-user";
-import { useRecent } from "../../hooks/useRecent.ts";
 import RecentModal from "../recent/RecentModal.tsx";
 import SettingModal from "../setting/SettingModal.tsx";
 import { useIntl } from "react-intl";
@@ -125,20 +122,9 @@ const Widget = ({ onSearch }: Props) => {
 
   const navigate = useNavigate();
   const routeId = useCurrentRouteId();
-  const currUser = useAppSelector(currentUser);
 
-  const { data } = useRecent(currUser?.id, 5, 0);
   const [recentOpen, setRecentOpen] = useState(false);
   const [openSetting, setOpenSetting] = useState(false);
-
-  const recentList: MenuItem[] = data
-    ? data?.data.rows.map((item) => {
-        return {
-          key: `recent-${item.id}`,
-          label: item.title,
-        };
-      })
-    : [];
 
   /* ================= 菜单配置 ================= */
 
@@ -195,13 +181,6 @@ const Widget = ({ onSearch }: Props) => {
       label: intl.formatMessage({
         id: "columns.studio.recent.title",
       }),
-      children: [
-        ...recentList,
-        {
-          key: "/workspace/recent/list",
-          label: "更多……",
-        },
-      ],
     },
 
     {
@@ -353,17 +332,11 @@ const Widget = ({ onSearch }: Props) => {
     if (key === "search") {
       onSearch?.();
       return;
-    } else if (key === "/workspace/recent/list") {
+    } else if (key === "/workspace/recent") {
       setRecentOpen(true);
       return;
     } else if (key === "/workspace/setting") {
       setOpenSetting(true);
-      return;
-    } else if (key.startsWith("recent-")) {
-      const row = data?.data.rows.find((item) => `recent-${item.id}` === key);
-      if (row) {
-        navigate(recentPath(row.type, row.article_id));
-      }
       return;
     }
     navigate(key);
