@@ -12,6 +12,8 @@
             $table->timestamps();
  */
 
+import type { LoaderFunctionArgs } from "react-router";
+import { get } from "../request";
 import type { TPrivacy } from "./ai";
 import type { IStudio, IUser } from "./Auth";
 
@@ -256,4 +258,20 @@ export interface IProjectTreeResponse {
   ok: boolean;
   message: string;
   data: { rows: IProjectTreeData[]; count: number };
+}
+
+export async function projectLoader({ params }: LoaderFunctionArgs) {
+  const projectId = params.projectId;
+
+  if (!projectId) {
+    throw new Response("Missing projectId", { status: 400 });
+  }
+
+  const res = await get<IProjectResponse>(`/api/v2/project/${projectId}`);
+
+  if (!res.ok) {
+    throw new Response("Project not found", { status: 404 });
+  }
+
+  return res.data;
 }

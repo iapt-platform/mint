@@ -1,6 +1,7 @@
 // src/routes/taskRouters.ts
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
+import { projectLoader } from "../api/task";
 
 // 懒加载页面组件
 const hall = lazy(() => import("../pages/workspace/task/hall"));
@@ -39,6 +40,7 @@ const taskRoutes: RouteObject[] = [
           {
             path: ":projectId",
             Component: project,
+            loader: projectLoader,
             handle: { id: "workspace.task.project", crumb: "project" }, // ✅ 加这里
             children: [
               {

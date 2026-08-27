@@ -1,5 +1,6 @@
 // src/pages/workspace/home.tsx
 import { useEffect, useState, type CSSProperties } from "react";
+import { useIntl } from "react-intl";
 import WorkspaceHero from "../../components/workspace/home/WorkspaceHero";
 import SectionPanel from "../../components/workspace/home/SectionPanel";
 import ModuleGrid from "../../components/workspace/home/ModuleGrid";
@@ -15,6 +16,7 @@ export default function WorkspaceHome() {
   const [recentItems, setRecentItems] = useState<RecentItem[]>([]);
   const user = useAppSelector(currentUser);
   const navigate = useNavigate();
+  const intl = useIntl();
 
   useEffect(() => {
     if (!user) {
@@ -26,7 +28,7 @@ export default function WorkspaceHome() {
 
   return (
     <div style={styles.page}>
-      <title>欢迎来到wikipali</title>
+      <title>{intl.formatMessage({ id: "pages.workspace.home.title" })}</title>
       <WorkspaceHero />
 
       <div style={styles.content}>

@@ -1,5 +1,6 @@
 // src/api/pali-text.ts
 import type { MenuProps } from "antd";
+import type { LoaderFunctionArgs } from "react-router";
 import { get } from "../request";
 import type { ArticleMode, IArticleResponse } from "./article";
 import type { IWidgetSentEditInner } from "../components/sentence/SentEdit";
@@ -202,3 +203,41 @@ export const fetchChapterToc = (
     `/api/v2/chapter?view=toc&book=${book}&para=${para}`
   );
 };
+
+export async function chapterLoader({ params }: LoaderFunctionArgs) {
+  const id = params.id;
+
+  if (!id) {
+    throw new Response("Missing chapter id", { status: 400 });
+  }
+
+  const res = await fetchChapter(id, "read");
+
+  if (!res.ok) {
+    throw new Response("Chapter not found", { status: 404 });
+  }
+
+  return res.data;
+}
+
+export async function paraLoader({ params }: LoaderFunctionArgs) {
+  const id = params.id;
+
+  if (!id) {
+    throw new Response("Missing paragraph id", { status: 400 });
+  }
+
+  const [book, para] = id.split("-");
+
+  if (!book || !para) {
+    throw new Response("Invalid paragraph id", { status: 400 });
+  }
+
+  const res = await fetchPara(book, para, "read");
+
+  if (!res.ok) {
+    throw new Response("Paragraph not found", { status: 404 });
+  }
+
+  return res.data;
+}

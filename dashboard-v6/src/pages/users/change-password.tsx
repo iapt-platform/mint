@@ -1,5 +1,15 @@
+import { useIntl } from "react-intl";
+
 const Widget = () => {
-  return <div>change password</div>;
+  const intl = useIntl();
+  return (
+    <div>
+      <title>
+        {intl.formatMessage({ id: "pages.users.change-password.title" })}
+      </title>
+      change password
+    </div>
+  );
 };
 
 export default Widget;

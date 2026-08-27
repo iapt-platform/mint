@@ -19,6 +19,9 @@ const Widget = () => {
   const { channelId } = useParams(); //url 参数
   const [title, setTitle] = useState<string>();
   const intl = useIntl();
+  const channelTitle = intl.formatMessage({
+    id: "columns.studio.channel.title",
+  });
   // const [articleOpen, setArticleOpen] = useState(false);
   //const [param, setParam] = useState<IArticleParam>();
 
@@ -30,7 +33,7 @@ const Widget = () => {
   }, [channelId]);
   return (
     <>
-      <title>{"channel-" + title}</title>
+      <title>{title ? `${channelTitle}-${title}` : channelTitle}</title>
       <Card
         title={title}
         extra={

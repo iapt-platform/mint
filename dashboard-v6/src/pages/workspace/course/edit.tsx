@@ -18,9 +18,14 @@ const Widget = () => {
   const studioName = user?.realName;
   const [title, setTitle] = useState("loading");
   const [selected, setSelected] = useState<string>();
+  const courseTitle = intl.formatMessage({
+    id: "columns.studio.course.title",
+  });
   return (
     <>
-      <title>{title}</title>
+      <title>
+        {title && title !== "loading" ? `${courseTitle}-${title}` : courseTitle}
+      </title>
       <Card>
         <Tabs
           defaultActiveKey="info"
@@ -34,7 +39,6 @@ const Widget = () => {
                   courseId={courseId}
                   onTitleChange={(title: string) => {
                     setTitle(title);
-                    document.title = `${title}`;
                   }}
                 />
               ),

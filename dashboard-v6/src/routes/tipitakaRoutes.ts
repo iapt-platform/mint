@@ -1,6 +1,7 @@
 // src/routes/tipitakaRoutes.ts
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
+import { chapterLoader, paraLoader } from "../api/pali-text";
 
 const WorkspaceTipitaka = lazy(
   () => import("../pages/workspace/tipitaka/bypath")
@@ -46,6 +47,7 @@ const tipitakaRoutes: RouteObject[] = [
           {
             path: ":id",
             Component: WorkspaceTipitakaChapter,
+            loader: chapterLoader,
             handle: { id: "workspace.tipitaka", crumb: "chapter" },
           },
         ],
@@ -56,6 +58,7 @@ const tipitakaRoutes: RouteObject[] = [
           {
             path: ":id",
             Component: WorkspaceTipitakaPara,
+            loader: paraLoader,
             handle: { id: "workspace.tipitaka", crumb: "para" },
           },
         ],
