@@ -1,4 +1,6 @@
 import { Breadcrumb, Button, Space } from "antd";
+import { useIntl } from "react-intl";
+import { EditOutlined, ShareAltOutlined } from "@ant-design/icons";
 import type { ArticleMode } from "../../api/article";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
@@ -7,6 +9,7 @@ import "./article.css";
 import ArticleHeader from "./components/ArticleHeader";
 import ArticleLayout from "./components/ArticleLayout";
 import { useTerm } from "./hooks/useTerm";
+import TermShare from "../term/TermShare";
 
 interface IWidget {
   id?: string;
@@ -29,6 +32,7 @@ const TypeTermWidget = ({
     mode,
   });
   const currUser = useAppSelector(currentUser);
+  const intl = useIntl();
 
   const path = [
     { title: currUser?.nickName },
@@ -52,9 +56,17 @@ const TypeTermWidget = ({
           </Space>
         }
         action={
-          <Button type="primary" onClick={onEdit}>
-            Edit
-          </Button>
+          <Space>
+            <Button type="primary" icon={<EditOutlined />} onClick={onEdit}>
+              {intl.formatMessage({ id: "buttons.edit" })}
+            </Button>
+            {id ? (
+              <TermShare
+                id={id}
+                trigger={<Button icon={<ShareAltOutlined />} />}
+              />
+            ) : undefined}
+          </Space>
         }
       />
       <ArticleLayout

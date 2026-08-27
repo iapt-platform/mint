@@ -1,5 +1,7 @@
 const items = {
   "flashes.success": "success",
+  "message.copy.success": "Copied to clipboard",
+  "message.copy.fail": "Copy failed",
   "message.irrevocable": "irrevocable",
   "message.delete.confirm": "confirm delete",
   "message.auth.guest.alert": "guest read public resource only.",

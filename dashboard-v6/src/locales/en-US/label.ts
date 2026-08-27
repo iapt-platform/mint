@@ -9,6 +9,10 @@ const items = {
   "labels.collaborators": "collaborators",
   "labels.collaboration": "collaboration",
   "labels.link": "link",
+  "labels.library.access.link": "Library access link",
+  "labels.library.access.tip":
+    "Anyone with this link can read this term in the Library.",
+  "labels.studio.access.link": "Studio access link",
   "labels.upload": "upload",
   "labels.first-term": "first term",
   "labels.sign-in": "sign in",
