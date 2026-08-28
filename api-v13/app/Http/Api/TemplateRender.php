@@ -236,6 +236,9 @@ class TemplateRender
         $props['id'] = $this->get_param($this->param, 'id', 1);
         $props['title'] = $this->get_param($this->param, 'title', 2);
         $props['style'] = $this->get_param($this->param, 'style', 3);
+        if (! empty($this->channel_id)) {
+            $props['channel'] = implode('_', $this->channel_id);
+        }
 
         $output = [];
         switch ($this->format) {
@@ -361,7 +364,7 @@ class TemplateRender
                 $langFamily = 'zh';
             }
             $this->info("term:{$word} 先查属于这个channel 的", 'term');
-            $this->info('channel id' . $channelId, 'term');
+            $this->info('channel id'.$channelId, 'term');
             $table = DhammaTerm::where('word', $word)
                 ->where('channal', $channelId);
             if ($tag && ! empty($tag)) {
@@ -505,13 +508,13 @@ class TemplateRender
                 break;
             case 'markdown':
                 if (isset($props['meaning'])) {
-                    $key = 'term-' . $props['word'];
+                    $key = 'term-'.$props['word'];
                     if (isset($GLOBALS[$key]) && $GLOBALS[$key] === 1) {
                         $GLOBALS[$key]++;
                         $output = $props['meaning'];
                     } else {
                         $GLOBALS[$key] = 1;
-                        $output = $props['meaning'] . '(' . $props['word'] . ')';
+                        $output = $props['meaning'].'('.$props['word'].')';
                     }
                 } else {
                     $output = $props['word'];
@@ -525,7 +528,7 @@ class TemplateRender
                         $GLOBALS['note'] = [];
                     }
                     $content = $props['note'];
-                    $output .= '[^' . $GLOBALS['note_sn'] . ']';
+                    $output .= '[^'.$GLOBALS['note_sn'].']';
                     $GLOBALS['note'][] = [
                         'sn' => $GLOBALS['note_sn'],
                         'trigger' => '',
@@ -600,11 +603,11 @@ class TemplateRender
                     'content' => $noteContent,
                 ];
 
-                $link = "<a href='#footnote-" . $GLOBALS['note_sn'] . "' name='note-" . $GLOBALS['note_sn'] . "'>";
+                $link = "<a href='#footnote-".$GLOBALS['note_sn']."' name='note-".$GLOBALS['note_sn']."'>";
                 if (empty($trigger)) {
-                    $output = $link . '<sup>[' . $GLOBALS['note_sn'] . ']</sup></a>';
+                    $output = $link.'<sup>['.$GLOBALS['note_sn'].']</sup></a>';
                 } else {
-                    $output = $link . $trigger . '</a>';
+                    $output = $link.$trigger.'</a>';
                 }
                 $output = "<label for=\"sn-{$GLOBALS['note_sn']}\"
                 class=\"margin-toggle sidenote-number\" >{$trigger}</label>
@@ -637,7 +640,7 @@ class TemplateRender
                     'markdown',
                     'markdown'
                 );
-                $output = '[^' . $GLOBALS['note_sn'] . ']';
+                $output = '[^'.$GLOBALS['note_sn'].']';
                 $GLOBALS['note'][] = [
                     'sn' => $GLOBALS['note_sn'],
                     'trigger' => $trigger,
@@ -679,10 +682,10 @@ class TemplateRender
                 ];
                 break;
             case 'prompt':
-                $output = Tools::MyToRm($pali) . ':' . end($props['meaning']);
+                $output = Tools::MyToRm($pali).':'.end($props['meaning']);
                 break;
             default:
-                $output = $pali . '၊' . $meaning;
+                $output = $pali.'၊'.$meaning;
                 break;
         }
 
@@ -1161,14 +1164,14 @@ class TemplateRender
                 if ($show === 'both' || $show === 'origin') {
                     if (isset($props['origin']) && is_array($props['origin'])) {
                         foreach ($props['origin'] as $key => $value) {
-                            $output .= '<span class="origin">' . $value['html'] . '</span>';
+                            $output .= '<span class="origin">'.$value['html'].'</span>';
                         }
                     }
                 }
                 if ($show === 'both' || $show === 'translation') {
                     if (isset($props['translation']) && is_array($props['translation'])) {
                         foreach ($props['translation'] as $key => $value) {
-                            $output .= '<span class="translation">' . $value['html'] . '</span>';
+                            $output .= '<span class="translation">'.$value['html'].'</span>';
                         }
                     }
                 }
@@ -1345,7 +1348,7 @@ class TemplateRender
         $props = ['word' => $word];
 
         $localTermChannel = ChannelApi::getSysChannel(
-            '_System_Grammar_Term_' . strtolower($this->lang) . '_',
+            '_System_Grammar_Term_'.strtolower($this->lang).'_',
             '_System_Grammar_Term_en_'
         );
         $term = $this->getTermProps($word, null, $localTermChannel);
@@ -1472,15 +1475,15 @@ class TemplateRender
             case 'markdown':
                 $output = '';
                 foreach ($references as $key => $reference) {
-                    $output .= '[' . $reference['sn'] . '] **' . ucfirst($reference['title']) . '** ';
-                    $output .= $reference['copyright'] . "\n\n";
+                    $output .= '['.$reference['sn'].'] **'.ucfirst($reference['title']).'** ';
+                    $output .= $reference['copyright']."\n\n";
                 }
                 break;
             default:
                 $output = '';
                 foreach ($references as $key => $reference) {
-                    $output .= '[' . $reference['sn'] . '] ' . ucfirst($reference['title']) . ' ';
-                    $output .= $reference['copyright'] . "\n";
+                    $output .= '['.$reference['sn'].'] '.ucfirst($reference['title']).' ';
+                    $output .= $reference['copyright']."\n";
                 }
                 break;
         }

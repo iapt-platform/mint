@@ -6,11 +6,17 @@ import TypePali from "../article/TypePali";
 
 interface IWidget extends IDisplayWrapperProps {
   id?: string;
+  channel?: string;
 }
 const ParaCtl = (props: IWidget) => {
   return (
     <DisplayWrapper {...props}>
-      <TypePali type="para" id={props.id} hideNav />
+      <TypePali
+        type="para"
+        id={props.id}
+        channelId={props.channel}
+        hideNav
+      />
     </DisplayWrapper>
   );
 };
