@@ -11,6 +11,7 @@ const items = {
   "pages.task.project.title": "Project",
   "pages.tipitaka.chapter.title": "Chapter",
   "pages.tipitaka.para.title": "Paragraph",
+  "pages.tipitaka.cs-para.title": "CS Paragraph",
 };
 
 export default items;

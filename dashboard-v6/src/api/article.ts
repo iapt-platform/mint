@@ -596,3 +596,31 @@ export const fetchPageNav = (pageId: string): Promise<IPageNavResponse> => {
   }-${pageParam[3]}`;
   return get<IPageNavResponse>(url);
 };
+
+/**
+ * cs-para 导航
+ *
+ * csParaId 形如 `book_para_page`，例如 `169_3_64`。
+ * GET /api/v2/nav-cs-para/{csParaId}
+ */
+export const fetchCSParaNav = (
+  csParaId: string
+): Promise<ICSParaNavResponse> => {
+  return get<ICSParaNavResponse>(`/api/v2/nav-cs-para/${csParaId}`);
+};
+
+export async function csParaLoader({ params }: LoaderFunctionArgs) {
+  const id = params.id;
+
+  if (!id) {
+    throw new Response("Missing cs-para id", { status: 400 });
+  }
+
+  const res = await fetchCSParaNav(id);
+
+  if (!res.ok) {
+    throw new Response("cs-para not found", { status: 404 });
+  }
+
+  return { title: res.data.curr.content };
+}

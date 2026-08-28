@@ -40,7 +40,7 @@ export default function WorkspaceHome() {
           <RecentList
             items={recentItems}
             onClick={(type, id) => {
-              if (type === "chapter") {
+              if (type === "chapter" || type === "para" || type === "cs-para") {
                 navigate(`/workspace/tipitaka/${type}/${id}`);
               }
             }}
