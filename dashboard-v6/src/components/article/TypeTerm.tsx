@@ -41,7 +41,6 @@ const TypeTermWidget = ({
   ];
   return (
     <div>
-      <title>{articleData?.title}-百科</title>
       <ArticleHeader
         header={
           <Space>
