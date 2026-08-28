@@ -45,7 +45,7 @@ class PaliTextService
         $paragraph = PaliText::where('book', $book)
             ->where('paragraph', '<=', $para)
             ->where('level', 1)
-            ->orderBy('paragraph', 'asc')->first();
+            ->orderBy('paragraph', 'desc')->first();
         if (! $paragraph) {
             Log::warning('not found book ', ['book' => $book, 'para' => $para]);
 
