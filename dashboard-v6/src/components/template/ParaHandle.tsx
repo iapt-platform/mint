@@ -1,6 +1,6 @@
 import { Button, Dropdown, type MenuProps, message, notification } from "antd";
 import { useNavigate, useSearchParams } from "react-router";
-import { fullUrl, scrollToTop } from "../../utils";
+import { articlePath, fullUrl, scrollToTop } from "../../utils";
 import { useIntl } from "react-intl";
 import store from "../../store";
 import { modeChange } from "../../reducers/article-mode";
@@ -124,7 +124,7 @@ export const ParaHandleCtl = ({
      * TODO 临时的解决方案。以后应该从传参获取其他参数，然后reducer 通知更新。
      * 因为如果是Article组件被嵌入其他页面。不能直接更新浏览器，而是应该更新Article组件内部
      */
-    let url = `/article/para/${book}-${para}?book=${book}&par=${para}`;
+    let url = `${articlePath("para", `${book}-${para}`)}?book=${book}&par=${para}`;
     const param: string[] = [];
     searchParams.forEach((value: unknown, key: unknown) => {
       if (key !== "book" && key !== "par") {

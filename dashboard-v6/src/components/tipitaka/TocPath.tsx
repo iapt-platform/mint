@@ -2,7 +2,7 @@ import { useNavigate, useSearchParams } from "react-router";
 import { Breadcrumb, Popover, Tag, Typography } from "antd";
 
 import React, { type JSX } from "react";
-import { fullUrl } from "../../utils";
+import { articlePath, fullUrl } from "../../utils";
 import type { ITocPathNode } from "../../api/pali-text";
 import PaliText from "../general/PaliText";
 
@@ -49,7 +49,7 @@ const TocPathWidget = ({
             : searchParams.get("channel");
           const mode = searchParams.get("mode");
           const urlMode = mode ? mode : "read";
-          let url = `/article/${type}/${item.book}-${item.paragraph}?mode=${urlMode}${param}`;
+          let url = `${articlePath(type, `${item.book}-${item.paragraph}`)}?mode=${urlMode}${param}`;
           url += channel ? `&channel=${channel}` : "";
           if (e.ctrlKey || e.metaKey) {
             window.open(fullUrl(url), "_blank");

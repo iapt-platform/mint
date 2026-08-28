@@ -9,7 +9,7 @@ import TypeArticle from "../article/TypeArticle";
 import TypeAnthology from "../article/TypeAnthology";
 import TypePali from "../article/TypePali";
 import TypePage from "../article/TypePage";
-import { fullUrl } from "../../utils";
+import { articlePath, fullUrl } from "../../utils";
 
 const { Text } = Typography;
 
@@ -175,7 +175,7 @@ export const ArticleCtl = ({
     />
   );
   let output = <></>;
-  let articleLink = `/article/${type}/${id}?mode=${currMode}`;
+  let articleLink = `${articlePath(type ?? "", id ?? "")}?mode=${currMode}`;
   articleLink += channel ? `&channel=${currChannels.join("_")}` : "";
 
   const OpenLink = (

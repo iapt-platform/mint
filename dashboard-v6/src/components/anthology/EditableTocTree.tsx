@@ -17,7 +17,7 @@ import type {
 } from "../../api/article";
 import ArticleListModal from "../article/ArticleListModal";
 
-import { fullUrl, randomString } from "../../utils";
+import { articlePath, fullUrl, randomString } from "../../utils";
 import type {
   ListNodeData,
   TreeNodeData,
@@ -172,7 +172,7 @@ const EditableTocTree = ({
           node: TreeNodeData
         ) => {
           if (e.ctrlKey || e.metaKey) {
-            window.open(fullUrl(`/article/article/${node.id}`), "_blank");
+            window.open(fullUrl(articlePath("article", node.id)), "_blank");
           } else {
             setViewArticle(node);
             setOpenViewer(true);

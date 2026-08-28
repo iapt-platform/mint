@@ -2,7 +2,7 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
 import { chapterLoader, paraLoader } from "../api/pali-text";
-import { csParaLoader } from "../api/article";
+import { csParaLoader, pageLoader } from "../api/article";
 
 const WorkspaceTipitaka = lazy(
   () => import("../pages/workspace/tipitaka/bypath")
@@ -15,6 +15,9 @@ const WorkspaceTipitakaPara = lazy(
 );
 const WorkspaceTipitakaCsPara = lazy(
   () => import("../pages/workspace/tipitaka/cs-para")
+);
+const WorkspaceTipitakaPage = lazy(
+  () => import("../pages/workspace/tipitaka/page")
 );
 
 const tipitakaRoutes: RouteObject[] = [
@@ -75,6 +78,17 @@ const tipitakaRoutes: RouteObject[] = [
             Component: WorkspaceTipitakaCsPara,
             loader: csParaLoader,
             handle: { id: "workspace.tipitaka.cs-para", crumb: "cs-para" },
+          },
+        ],
+      },
+      {
+        path: "page",
+        children: [
+          {
+            path: ":id",
+            Component: WorkspaceTipitakaPage,
+            loader: pageLoader,
+            handle: { id: "workspace.tipitaka.page", crumb: "page" },
           },
         ],
       },

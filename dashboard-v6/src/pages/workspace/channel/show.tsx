@@ -9,7 +9,7 @@ import { get } from "../../../request";
 import ChapterInChannelList from "../../../components/channel/ChapterInChannelList";
 import ShareModal from "../../../components/share/ShareModal";
 
-import { fullUrl } from "../../../utils";
+import { articlePath, fullUrl } from "../../../utils";
 import type { IArticleParam } from "../../../types/article";
 import { EResType } from "../../../components/share/utils";
 import type { IApiResponseChannel } from "../../../api/channel";
@@ -66,7 +66,7 @@ const Widget = () => {
                     chapter: IArticleParam
                   ) => {
                     if (event.ctrlKey || event.metaKey) {
-                      let url = `/article/${chapter.type}/${chapter.articleId}?mode=`;
+                      let url = `${articlePath(chapter.type, chapter.articleId)}?mode=`;
                       url += chapter?.mode ? chapter?.mode : "read";
                       url += chapter?.channelId
                         ? `&channel=${chapter.channelId}`

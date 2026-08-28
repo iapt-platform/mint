@@ -4,7 +4,7 @@ import { useIntl } from "react-intl";
 
 import type { ArticleMode, ArticleType } from "../../api/article";
 import type { TTarget } from "../../types";
-import { fullUrl } from "../../utils";
+import { articlePath, fullUrl } from "../../utils";
 import TypePali from "./TypePali";
 import NavigateButton from "./components/NavigateButton";
 import ArticleSkeleton from "./components/ArticleSkeleton";
@@ -82,7 +82,7 @@ const TypePageWidget = ({
       onArticleChange("page", id, target);
     } else {
       if (target === "_blank") {
-        let url = `/article/page/${id}?mode=${mode}`;
+        let url = `${articlePath("page", id)}?mode=${mode}`;
         if (channelId) {
           url += `&channel=${channelId}`;
         }

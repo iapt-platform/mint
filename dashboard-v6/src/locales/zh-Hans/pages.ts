@@ -12,6 +12,7 @@ const items = {
   "pages.tipitaka.chapter.title": "章节",
   "pages.tipitaka.para.title": "段落",
   "pages.tipitaka.cs-para.title": "CS段落",
+  "pages.tipitaka.page.title": "页码",
 };
 
 export default items;

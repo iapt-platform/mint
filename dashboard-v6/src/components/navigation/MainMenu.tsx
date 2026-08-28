@@ -80,8 +80,8 @@ function findSelectedKey(
 
 /* ================= 最近编辑跳转地址 ================= */
 
-// 巴利三藏文本类型（chapter/para 等）路由位于 /workspace/tipitaka 下
-const TIPITAKA_TYPES = new Set(["chapter", "para"]);
+// 巴利三藏文本类型（chapter/para/cs-para/page 等）路由位于 /workspace/tipitaka 下
+const TIPITAKA_TYPES = new Set(["chapter", "para", "cs-para", "page"]);
 
 function recentPath(type: string, id: string): string {
   return TIPITAKA_TYPES.has(type)

@@ -12,6 +12,7 @@ const items = {
   "pages.tipitaka.chapter.title": "Chapter",
   "pages.tipitaka.para.title": "Paragraph",
   "pages.tipitaka.cs-para.title": "CS Paragraph",
+  "pages.tipitaka.page.title": "Page",
 };
 
 export default items;
