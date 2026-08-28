@@ -22,7 +22,7 @@ import {
   PasteOutLinedIcon,
 } from "../../assets/icon";
 import { useIntl } from "react-intl";
-import { fullUrl } from "../../utils";
+import { articlePath, fullUrl } from "../../utils";
 import SentHistoryModal from "../sentence-history/SentHistoryModal";
 
 interface IWidget {
@@ -67,7 +67,7 @@ const SentEditMenuWidget = ({
         break;
       case "copy-link":
         if (data) {
-          let link = `/article/para/${data.book}-${data.para}?mode=edit`;
+          let link = `${articlePath("para", `${data.book}-${data.para}`)}?mode=edit`;
           link += `&book=${data.book}&par=${data.para}`;
           link += `&channel=${data.channel.id}`;
 

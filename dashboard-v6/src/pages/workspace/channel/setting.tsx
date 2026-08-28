@@ -20,13 +20,16 @@ const Widget = () => {
   const { type } = useParams();
   const { id } = useParams();
   const [title, setTitle] = useState("");
+  const channelTitle = intl.formatMessage({
+    id: "columns.studio.channel.title",
+  });
   const navigate = useNavigate();
   const user = useAppSelector(currentUser);
   const studioName = user?.realName;
 
   return (
     <>
-      <title>{"channel-" + title}</title>
+      <title>{title ? `${channelTitle}-${title}` : channelTitle}</title>
       <Card
         title={title}
         extra={

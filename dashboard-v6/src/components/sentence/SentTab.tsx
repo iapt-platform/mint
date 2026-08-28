@@ -15,7 +15,7 @@ import TocPath from "../../../src/components/tipitaka/TocPath";
 import SentMenu from "./SentMenu";
 
 import SentTabCopy from "./SentTabCopy";
-import { fullUrl } from "../../utils";
+import { articlePath, fullUrl } from "../../utils";
 import SentWbw from "./SentWbw";
 import SentTabButtonWbw from "./SentTabButtonWbw";
 
@@ -177,7 +177,7 @@ const SentTabWidget = ({
                   break;
                 }
                 case "copy-link": {
-                  let link = `/article/para/${book}-${para}?mode=edit`;
+                  let link = `${articlePath("para", `${book}-${para}`)}?mode=edit`;
                   link += `&book=${book}&par=${para}`;
                   if (channelsId) {
                     link += `&channel=` + channelsId?.join("_");

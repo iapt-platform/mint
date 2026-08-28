@@ -61,7 +61,8 @@ return [
         ],
         'assets' => env('ASSETS_SERVER', 'localhost:9999'),
 
-        'dashboard_base_path' => env('DASHBOARD_BASE_PATH', 'http://127.0.0.1:3000/my'),
+        'dashboard_base_path' => env('DASHBOARD_BASE_PATH', 'http://127.0.0.1:4000/pcd-v2026'),
+        'workspace_base_path' => env('DASHBOARD_BASE_PATH', 'http://127.0.0.1:4000/pcd-v2026').'/workspace',
 
         'cdn_urls' => explode(',', env('CDN_URLS', 'https://www.wikipali.cc/downloads')),
 
@@ -176,6 +177,8 @@ return [
             'username' => env('OPENSEARCH_USERNAME', ''),
             'password' => env('OPENSEARCH_PASSWORD', ''),
             'ssl_verification' => env('OPENSEARCH_SSL_VERIFICATION', false),
+            'synonyms_path' => env('APP_OPENSEARCH_SYNONYMS_PATH', '/opt/opensearch/config/analysis'),
+
         ],
 
     ],

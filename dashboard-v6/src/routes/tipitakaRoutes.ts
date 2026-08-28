@@ -1,6 +1,8 @@
 // src/routes/tipitakaRoutes.ts
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
+import { chapterLoader, paraLoader } from "../api/pali-text";
+import { csParaLoader, pageLoader } from "../api/article";
 
 const WorkspaceTipitaka = lazy(
   () => import("../pages/workspace/tipitaka/bypath")
@@ -10,6 +12,12 @@ const WorkspaceTipitakaChapter = lazy(
 );
 const WorkspaceTipitakaPara = lazy(
   () => import("../pages/workspace/tipitaka/para")
+);
+const WorkspaceTipitakaCsPara = lazy(
+  () => import("../pages/workspace/tipitaka/cs-para")
+);
+const WorkspaceTipitakaPage = lazy(
+  () => import("../pages/workspace/tipitaka/page")
 );
 
 const tipitakaRoutes: RouteObject[] = [
@@ -46,6 +54,7 @@ const tipitakaRoutes: RouteObject[] = [
           {
             path: ":id",
             Component: WorkspaceTipitakaChapter,
+            loader: chapterLoader,
             handle: { id: "workspace.tipitaka", crumb: "chapter" },
           },
         ],
@@ -56,7 +65,30 @@ const tipitakaRoutes: RouteObject[] = [
           {
             path: ":id",
             Component: WorkspaceTipitakaPara,
+            loader: paraLoader,
             handle: { id: "workspace.tipitaka", crumb: "para" },
+          },
+        ],
+      },
+      {
+        path: "cs-para",
+        children: [
+          {
+            path: ":id",
+            Component: WorkspaceTipitakaCsPara,
+            loader: csParaLoader,
+            handle: { id: "workspace.tipitaka.cs-para", crumb: "cs-para" },
+          },
+        ],
+      },
+      {
+        path: "page",
+        children: [
+          {
+            path: ":id",
+            Component: WorkspaceTipitakaPage,
+            loader: pageLoader,
+            handle: { id: "workspace.tipitaka.page", crumb: "page" },
           },
         ],
       },

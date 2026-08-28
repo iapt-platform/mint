@@ -19,9 +19,6 @@ import {
   TipitakaIcon,
 } from "../../assets/icon";
 import React, { useState } from "react";
-import { useAppSelector } from "../../hooks";
-import { currentUser } from "../../reducers/current-user";
-import { useRecent } from "../../hooks/useRecent.ts";
 import RecentModal from "../recent/RecentModal.tsx";
 import SettingModal from "../setting/SettingModal.tsx";
 import { useIntl } from "react-intl";
@@ -81,6 +78,17 @@ function findSelectedKey(
   }
 }
 
+/* ================= 最近编辑跳转地址 ================= */
+
+// 巴利三藏文本类型（chapter/para/cs-para/page 等）路由位于 /workspace/tipitaka 下
+const TIPITAKA_TYPES = new Set(["chapter", "para", "cs-para", "page"]);
+
+function recentPath(type: string, id: string): string {
+  return TIPITAKA_TYPES.has(type)
+    ? `/workspace/tipitaka/${type}/${id}`
+    : `/workspace/${type}/${id}`;
+}
+
 /* ================= 找展开父级keys ================= */
 
 function findOpenKeys(
@@ -114,20 +122,9 @@ const Widget = ({ onSearch }: Props) => {
 
   const navigate = useNavigate();
   const routeId = useCurrentRouteId();
-  const currUser = useAppSelector(currentUser);
 
-  const { data } = useRecent(currUser?.id, 5, 0);
   const [recentOpen, setRecentOpen] = useState(false);
   const [openSetting, setOpenSetting] = useState(false);
-
-  const recentList: MenuItem[] = data
-    ? data?.data.rows.map((item, id) => {
-        return {
-          key: `recent-${id}`,
-          label: item.title,
-        };
-      })
-    : [];
 
   /* ================= 菜单配置 ================= */
 
@@ -184,13 +181,6 @@ const Widget = ({ onSearch }: Props) => {
       label: intl.formatMessage({
         id: "columns.studio.recent.title",
       }),
-      children: [
-        ...recentList,
-        {
-          key: "/workspace/recent/list",
-          label: "更多……",
-        },
-      ],
     },
 
     {
@@ -342,7 +332,7 @@ const Widget = ({ onSearch }: Props) => {
     if (key === "search") {
       onSearch?.();
       return;
-    } else if (key === "/workspace/recent/list") {
+    } else if (key === "/workspace/recent") {
       setRecentOpen(true);
       return;
     } else if (key === "/workspace/setting") {
@@ -369,8 +359,9 @@ const Widget = ({ onSearch }: Props) => {
           if (e.ctrlKey || e.metaKey) {
             window.open("");
           } else {
-            navigate(`/workspace/${row.type}/${row.articleId}`);
+            navigate(recentPath(row.type, row.articleId));
           }
+          setRecentOpen(false);
         }}
       />
       <SettingModal open={openSetting} onClose={() => setOpenSetting(false)} />

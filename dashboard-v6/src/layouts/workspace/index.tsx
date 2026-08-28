@@ -9,6 +9,8 @@ import ThemeSwitch from "../../components/theme/ThemeSwitch";
 import { NetworkStatus } from "../../components/general/NetworkStatus";
 import { useAuth } from "../../hooks/useAuth";
 import UiLangSelect from "../../components/general/UiLangSelect";
+import SentCart from "../../components/sentence/SentCart";
+import NotificationIcon from "../../components/notification/NotificationIcon";
 
 const { Sider, Content } = Layout;
 const Widget = () => {
@@ -54,7 +56,9 @@ const Widget = () => {
           }}
         >
           <HeaderBreadcrumb />
-          <Space>
+          <Space size="middle">
+            <SentCart />
+            <NotificationIcon />
             <NetworkStatus />
             <ThemeSwitch />
             <UiLangSelect />

@@ -1,6 +1,22 @@
 import type { SortOrder } from "antd/lib/table/interface";
 import lodash from "lodash";
 
+/**
+ * 巴利三藏文本类型（chapter/para 等）路由位于 /workspace/tipitaka 下。
+ */
+const TIPITAKA_ARTICLE_TYPES = new Set(["chapter", "para", "cs-para", "page"]);
+
+/**
+ * 根据 article 类型和 id 生成 v6 前端路由路径。
+ * - chapter / para → /workspace/tipitaka/:type/:id
+ * - 其余已迁移类型（article / term / anthology / tag ...）→ /workspace/:type/:id
+ */
+export function articlePath(type: string, id: string): string {
+  return TIPITAKA_ARTICLE_TYPES.has(type)
+    ? `/workspace/tipitaka/${type}/${id}`
+    : `/workspace/${type}/${id}`;
+}
+
 export function dashboardBasePath(): string {
   if (import.meta.env.BASE_URL.includes("http")) {
     //for CDN

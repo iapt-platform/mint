@@ -1,4 +1,5 @@
-import { useNavigate, useParams } from "react-router";
+import { useMatches, useNavigate, useParams } from "react-router";
+import { useIntl } from "react-intl";
 
 import ProjectWithTasks from "../../../components/task/ProjectWithTasks";
 import { useAppSelector } from "../../../hooks";
@@ -9,9 +10,17 @@ const Widget = () => {
 
   const { projectId } = useParams();
   const navigate = useNavigate();
+  const intl = useIntl();
+  const matches = useMatches() as {
+    data?: { title?: string; name?: string; word?: string };
+  }[];
+  const data = [...matches].reverse().find((m) => m.data)?.data;
+  const name = data?.title ?? data?.name ?? data?.word;
+  const prefix = intl.formatMessage({ id: "pages.task.project.title" });
+
   return (
     <>
-      <title>project</title>
+      <title>{name ? `${prefix}-${name}` : prefix}</title>
       <ProjectWithTasks
         studioName={currUser?.realName}
         projectId={projectId}

@@ -9,7 +9,7 @@ import { get } from "../../../request";
 import ChapterInChannelList from "../../../components/channel/ChapterInChannelList";
 import ShareModal from "../../../components/share/ShareModal";
 
-import { fullUrl } from "../../../utils";
+import { articlePath, fullUrl } from "../../../utils";
 import type { IArticleParam } from "../../../types/article";
 import { EResType } from "../../../components/share/utils";
 import type { IApiResponseChannel } from "../../../api/channel";
@@ -19,6 +19,9 @@ const Widget = () => {
   const { channelId } = useParams(); //url 参数
   const [title, setTitle] = useState<string>();
   const intl = useIntl();
+  const channelTitle = intl.formatMessage({
+    id: "columns.studio.channel.title",
+  });
   // const [articleOpen, setArticleOpen] = useState(false);
   //const [param, setParam] = useState<IArticleParam>();
 
@@ -30,7 +33,7 @@ const Widget = () => {
   }, [channelId]);
   return (
     <>
-      <title>{"channel-" + title}</title>
+      <title>{title ? `${channelTitle}-${title}` : channelTitle}</title>
       <Card
         title={title}
         extra={
@@ -63,7 +66,7 @@ const Widget = () => {
                     chapter: IArticleParam
                   ) => {
                     if (event.ctrlKey || event.metaKey) {
-                      let url = `/article/${chapter.type}/${chapter.articleId}?mode=`;
+                      let url = `${articlePath(chapter.type, chapter.articleId)}?mode=`;
                       url += chapter?.mode ? chapter?.mode : "read";
                       url += chapter?.channelId
                         ? `&channel=${chapter.channelId}`

@@ -50,9 +50,7 @@ const SentCartWidget = () => {
         placement="bottomRight"
         arrow={{ pointAtCenter: true }}
         destroyOnHidden
-        getTooltipContainer={() =>
-          document.getElementsByClassName("toolbar_center")[0] as HTMLElement
-        }
+        getTooltipContainer={() => document.body}
         content={
           <div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -102,7 +100,14 @@ const SentCartWidget = () => {
         trigger="click"
       >
         <Badge style={{ cursor: "pointer" }} count={count} size="small">
-          <span style={{ color: "white", cursor: "pointer" }}>
+          <span
+            style={{
+              color: "inherit",
+              cursor: "pointer",
+              fontSize: 18,
+              display: "inline-flex",
+            }}
+          >
             <ShoppingCartOutlined />
           </span>
         </Badge>

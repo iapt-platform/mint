@@ -4,6 +4,7 @@
 
 import { useEffect } from "react";
 import type { ArticleMode } from "../../api/article";
+import type { IChannel } from "../../api/channel";
 import TypeTerm from "../../components/article/TypeTerm";
 import Editor from "../../components/editor";
 import { Recent } from "../../components/recent/Recent";
@@ -24,6 +25,9 @@ export interface ArticleEditorProps {
   /** 选择了新的 term 时触发 */
   onTermSelect?: (id: string) => void;
 
+  /** 右边栏「版本」面板选中频道时触发 */
+  onChannelSelect?: (selected: IChannel[]) => void;
+
   onEdit?: () => void;
 }
 
@@ -36,6 +40,7 @@ export default function TermEditor({
   anthologyId,
   mode = "read",
   channelId,
+  onChannelSelect,
   onEdit,
 }: ArticleEditorProps) {
   const currUser = useAppSelector(currentUser);
@@ -65,7 +70,9 @@ export default function TermEditor({
       }
       articleId={termId}
       anthologyId={anthologyId}
+      articleType={"term"}
       channelId={channelId}
+      onChannelSelect={onChannelSelect}
     >
       {({ expandButton }) => (
         <TypeTerm

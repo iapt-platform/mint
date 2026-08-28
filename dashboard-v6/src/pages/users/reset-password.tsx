@@ -9,15 +9,18 @@ const Widget = () => {
   const intl = useIntl();
 
   return (
-    <Card
-      title={intl.formatMessage({
-        id: "buttons.reset.password",
-      })}
-    >
-      <ResetPassword token={token} />
-      <Divider />
-      <NonSignInSharedLinks />
-    </Card>
+    <>
+      <title>{intl.formatMessage({ id: "buttons.reset.password" })}</title>
+      <Card
+        title={intl.formatMessage({
+          id: "buttons.reset.password",
+        })}
+      >
+        <ResetPassword token={token} />
+        <Divider />
+        <NonSignInSharedLinks />
+      </Card>
+    </>
   );
 };
 

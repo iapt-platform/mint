@@ -16,7 +16,7 @@ import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
 
 import { useState } from "react";
-import { fullUrl } from "../../../utils";
+import { articlePath, fullUrl } from "../../../utils";
 
 import type { TRole } from "../../../api/Auth";
 import { useIntl } from "react-intl";
@@ -129,7 +129,7 @@ const TypeArticleReaderToolbarWidget = ({
                 switch (key) {
                   case "open_in_tab":
                     window.open(
-                      fullUrl(`/article/article/${articleId}`),
+                      fullUrl(articlePath("article", articleId ?? "")),
                       "_blank"
                     );
                     break;

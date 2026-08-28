@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Api\DictApi;
+use Illuminate\Console\Command;
+use Illuminate\Support\Str;
+
 use App\Models\DhammaTerm;
 use App\Models\UserDict;
 use App\Services\OpenSearchService;
-use Illuminate\Console\Command;
 
 class ExportPaliSynonyms extends Command
 {
@@ -54,8 +55,8 @@ class ExportPaliSynonyms extends Command
         $dictId[] = DictApi::getSysDict('system_regular');
         $dictId[] = DictApi::getSysDict('robot_compound');
 */
-        $filename = $this->option('output');
-        $fp = fopen($filename, 'w') or exit('Unable to open file!');
+        $filename =  $this->option('output');
+        $fp = fopen(Str::finish(config('mint.opensearch.config.synonyms_path'), '/') . $filename, 'w') or exit('Unable to open file!');
 
         $parents = UserDict::select('parent')
             ->whereNotNull('parent')
@@ -81,7 +82,7 @@ class ExportPaliSynonyms extends Command
             foreach ($teams as $term) {
                 $wordsList[$term->meaning] = 1;
             }
-            $this->info("[{$parent->parent}] ".count($words).' team='.count($teams));
+            $this->info("[{$parent->parent}] " . count($words) . ' team=' . count($teams));
             // 合并 $parent->parent, $words->word, $team->meaning 为一个字符串数组
             $combinedArray = [];
             $combinedArray[] = $parent->parent;
@@ -113,17 +114,15 @@ class ExportPaliSynonyms extends Command
         // 关闭文件
         fclose($fp);
 
-        // 写index.json
-        $info = [
-            'index' => config('mint.opensearch.index'),
-            'pali_synonyms' => app(OpenSearchService::class)->getPaliSynonymsSetting(),
-        ];
-        file_put_contents(
-            $this->changeExtensionToJson($filename),
-            json_encode($info, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-        );
         $this->info("过滤掉非法 term {$droppedTerms} 个，整行丢弃 {$droppedLines} 行。");
+
+        //update opensearch
+        $this->info('update opensearch synonyms');
+        $result = app(OpenSearchService::class)->updatePaliSynonymsPath($filename);
+        $this->info(json_encode($result, JSON_PRETTY_PRINT));
+
         $this->info('done');
+
 
         return 0;
     }
@@ -188,9 +187,9 @@ class ExportPaliSynonyms extends Command
         $filename = $pathInfo['filename'] ?? '';
 
         // 如果目录不是根目录，则添加目录分隔符
-        $dirname = rtrim($dirname, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+        $dirname = rtrim($dirname, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
         // 构建新路径
-        return $dirname.$filename.'.json';
+        return $dirname . $filename . '.json';
     }
 }

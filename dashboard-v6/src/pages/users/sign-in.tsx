@@ -7,6 +7,7 @@ const Widget = () => {
   const intl = useIntl();
   return (
     <div>
+      <title>{intl.formatMessage({ id: "nut.users.sign-in.title" })}</title>
       <Card
         title={intl.formatMessage({
           id: "nut.users.sign-in.title",

@@ -18,6 +18,7 @@ use App\Models\SentSimIndex;
 use App\Models\Wbw;
 use App\Models\WbwBlock;
 use App\Services\AuthService;
+use App\Services\PaliContentService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
@@ -272,21 +273,26 @@ class CorpusController extends Controller
         }
         //
         $channels = [];
-        if ($request->get('mode') === 'edit') {
-            // 翻译模式加载json格式原文
-            $channels[] = ChannelApi::getSysChannel('_System_Wbw_VRI_');
-        } else {
-            // 阅读模式加载html格式原文
-            $channels[] = ChannelApi::getSysChannel('_System_Pali_VRI_');
-        }
-
         if ($request->has('channels')) {
             if (strpos($request->get('channels'), ',') === false) {
                 $getChannel = explode('_', $request->get('channels'));
             } else {
                 $getChannel = explode(',', $request->get('channels'));
             }
-            $channels = array_merge($channels, $getChannel);
+            foreach ($getChannel as $channel) {
+                if (Str::isUuid($channel)) {
+                    $channels[] = $channel;
+                }
+            }
+        }
+
+        // 系统原文channel必须追加在末尾，makeContentObj 依赖此约定剔除它
+        if ($request->get('mode') === 'edit') {
+            // 翻译模式加载json格式原文
+            $channels[] = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+        } else {
+            // 阅读模式加载html格式原文
+            $channels[] = ChannelApi::getSysChannel('_System_Pali_VRI_');
         }
         $para = explode(',', $request->get('par'));
 
@@ -356,7 +362,12 @@ class CorpusController extends Controller
         if (count($record) === 0) {
             $this->result['content'] = '<span>No Data</span>';
         } else {
-            $this->result['content'] = $this->makeContent($record, $request->get('mode', 'read'), $indexChannel, $indexedHeading, false, true);
+            $paliService = app(PaliContentService::class);
+            $this->result['content'] = json_encode(
+                $paliService->makeContentObj($record, $request->get('mode', 'read'), $indexChannel),
+                JSON_UNESCAPED_UNICODE
+            );
+            $this->result['content_type'] = 'json';
         }
 
         return $this->ok($this->result);
@@ -979,6 +990,7 @@ class CorpusController extends Controller
      */
     private function pushSent($result, $sent, $level = 0, $mode = 'read')
     {
+        $sent['mode'] = $mode;
 
         $sentProps = base64_encode(\json_encode($sent));
         if ($mode === 'read') {

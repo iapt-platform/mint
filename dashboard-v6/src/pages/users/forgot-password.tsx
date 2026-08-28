@@ -6,15 +6,20 @@ import { useIntl } from "react-intl";
 const Widget = () => {
   const intl = useIntl();
   return (
-    <Card
-      title={intl.formatMessage({
-        id: "buttons.forgot.password",
-      })}
-    >
-      <ForgotPassword />
-      <Divider />
-      <NonSignInSharedLinks />
-    </Card>
+    <>
+      <title>
+        {intl.formatMessage({ id: "nut.users.forgot-password.title" })}
+      </title>
+      <Card
+        title={intl.formatMessage({
+          id: "buttons.forgot.password",
+        })}
+      >
+        <ForgotPassword />
+        <Divider />
+        <NonSignInSharedLinks />
+      </Card>
+    </>
   );
 };
 

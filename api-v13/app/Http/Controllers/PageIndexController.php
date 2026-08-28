@@ -6,93 +6,60 @@ class PageIndexController extends Controller
 {
     public function index()
     {
-        $nav = [
+        // 首页四个分流栏目：加栏目只需往 $cards 里追加一条，模板无需改动。
+        $cards = [
             [
-                'title' => '最新',
-                'id' => 'new',
-                'link' => config('mint.server.dashboard_base_path').'/community/list',
+                'slug' => 'library',
+                'eyebrow' => 'Library',
+                'title' => '圣典文库',
+                'lead' => '三藏 · 义注 · 复注 · 字典',
+                'image' => 'library',
+                'tint' => '#2E4A63',
+                'align' => 'start',
+                'href' => '/library',
+                'cta' => '进入文库',
+                'available' => true,
             ],
             [
-                'title' => '圣典',
-                'id' => 'pali',
-                'link' => config('mint.server.dashboard_base_path').'/palicanon/list',
+                'slug' => 'course',
+                'eyebrow' => 'Course',
+                'title' => '次第课程',
+                'lead' => '从零开始，逐部研读',
+                'image' => 'course',
+                'tint' => '#2A5257',
+                'align' => 'end',
+                'href' => '/library/course',
+                'cta' => '开始学习',
+                'available' => true,
             ],
             [
-                'title' => '课程',
-                'id' => 'course',
-                'link' => config('mint.server.dashboard_base_path').'/course/list',
+                'slug' => 'workspace',
+                'eyebrow' => 'Workspace',
+                'title' => '翻译工作台',
+                'lead' => '术语、协作、校对、发布',
+                'image' => 'workspace',
+                'tint' => '#2C4A3C',
+                'align' => 'start',
+                'href' => '/pcd-v2026/workspace',
+                'cta' => '进入工作台',
+                'available' => true,
             ],
             [
-                'title' => '字典',
-                'id' => 'dict',
-                'link' => config('mint.server.dashboard_base_path').'/dict/recent',
-            ],
-            [
-                'title' => '文集',
-                'id' => 'anthology',
-                'link' => config('mint.server.dashboard_base_path').'/anthology/list',
-            ],
-            [
-                'title' => '注册/登录',
-                'id' => 'sign_in',
-                'link' => config('mint.server.dashboard_base_path').'/anonymous/users/sign-in',
-            ],
-        ];
-        $wish = [
-            [
-                'title' => '翻译一套三藏',
-                'description' => '我们希望把完整的巴利三藏、义注、复注、nissaya都翻译成为中文。',
-            ],
-            [
-                'title' => '整理一本词典',
-                'description' => '我们希望借助沉淀下来的数据，整理一套完整的巴中字典。这项工作将在整个三藏翻译的过程中逐渐完成。',
-            ],
-            [
-                'title' => '开发一个平台',
-                'description' => '我们会持续开发和维护wikipali平台，并不断发展新的功能，令其越来越方便与巴利翻译和研究。',
-            ],
-        ];
-
-        $Gallery = [
-            [
-                'image' => '/assets/gallery/02.jpg',
-                'title' => '云台翻译中心',
-                'id' => 'desc_01',
-                'description' => '远眺翻译中心',
-            ],
-            [
-                'image' => '/assets/gallery/01.jpg',
-                'title' => '翻译人才培养',
-                'id' => 'desc_02',
-                'description' => '翻译中还不断地培养翻译人才，加入到翻译工作中。',
-            ],
-            [
-                'image' => '/assets/gallery/03.jpg',
-                'title' => '云台翻译中心',
-                'id' => 'desc_03',
-                'description' => '外景',
-            ],
-            [
-                'image' => '/assets/gallery/04.jpg',
-                'title' => '翻译中心接待室',
-                'id' => 'desc_04',
-                'description' => '人工湖畔的接待室，访客活动中心',
-            ],
-            [
-                'image' => '/assets/gallery/05.jpg',
-                'title' => '办公环境',
-                'id' => 'desc_05',
-                'description' => '27寸竖屏保证翻译的效率和质量，站坐交替的升降台，保证翻译者的健康。',
+                'slug' => 'development',
+                'eyebrow' => 'Development',
+                'title' => '二次开发',
+                'lead' => 'API · MCP · GitHub',
+                'image' => 'development',
+                'tint' => '#4A4A48',
+                'align' => 'end',
+                'href' => null,
+                'cta' => '即将上线',
+                'available' => false,
             ],
         ];
 
-        return view('typhoon', [
-            'nav' => $nav,
-            'title' => '巴 利 圣 典 文 库',
-            'subtitle' => '巴利圣典翻译计划欢迎您的参与',
-            'description' => '巴利语学习与翻译工具',
-            'gallery' => $Gallery,
-            'api' => config('app.url').'/api/v2',
+        return view('pages.home', [
+            'cards' => $cards,
         ]);
     }
 }

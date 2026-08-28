@@ -11,16 +11,22 @@ use App\Models\AiModel;
 use App\Models\Channel;
 use App\Models\DhammaTerm;
 use App\Services\AuthService;
+use App\Services\TermIndexService;
 use App\Tools\Tools;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class DhammaTermController extends Controller
 {
     use ChecksChannelEditPower;
+
+    public function __construct(
+        private TermIndexService $termIndexService,
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -302,6 +308,8 @@ class DhammaTermController extends Controller
             $term->save();
             // 删除cache
             $this->deleteCache($term);
+            // 重建 OpenSearch 索引
+            $this->reindex($term);
 
             return $this->ok(new TermResource($term));
         } else {
@@ -340,6 +348,24 @@ class DhammaTermController extends Controller
             }
         } else {
             Cache::forget("/term/{$term->channal}/{$term->word}");
+        }
+    }
+
+    /**
+     * 术语新建/修改后重建 OpenSearch 索引。
+     *
+     * 索引是检索/维基展示的副作用数据，重建失败不应阻断本次写入，
+     * 因此只记录日志、不向上抛异常。
+     */
+    private function reindex(DhammaTerm $term): void
+    {
+        try {
+            $this->termIndexService->index($term->guid);
+        } catch (\Throwable $e) {
+            Log::error('Failed to index term after write', [
+                'guid' => $term->guid,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 
@@ -417,6 +443,8 @@ class DhammaTermController extends Controller
         $dhammaTerm->save();
         // 删除cache
         $this->deleteCache($dhammaTerm);
+        // 重建 OpenSearch 索引
+        $this->reindex($dhammaTerm);
 
         return $this->ok(new TermResource($dhammaTerm));
     }

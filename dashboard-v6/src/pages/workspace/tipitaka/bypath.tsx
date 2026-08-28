@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useIntl } from "react-intl";
 import { Affix, Drawer, Row, Col } from "antd";
 
 import type { IPaliBookListResponse } from "../../../api/Corpus";
@@ -42,6 +43,7 @@ const getTagByPath = (
 const Widget = () => {
   const { root, path } = useParams();
   const navigate = useNavigate();
+  const intl = useIntl();
 
   // 1. 基础数据状态（必须保留的 State）
   const [tocData, setTocData] = useState<IPaliBookListResponse[]>([]);
@@ -73,6 +75,7 @@ const Widget = () => {
 
   return (
     <>
+      <title>{intl.formatMessage({ id: "pages.tipitaka.title" })}</title>
       <Row>
         <Col flex="auto"></Col>
         <Col flex="1260px">

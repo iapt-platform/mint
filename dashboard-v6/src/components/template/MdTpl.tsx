@@ -10,6 +10,7 @@ import ParaHandle from "./ParaHandle";
 import ParaShell from "./ParaShell";
 import Paragraph from "./Paragraph";
 import Qa from "./Qa";
+import Quality from "./Quality";
 import Quote from "./Quote";
 import QuoteLink from "./QuoteLink";
 import Reference from "./Reference";
@@ -75,6 +76,8 @@ const Widget = ({ tpl, props, children }: IWidgetMdTpl) => {
       return <Tpl props={props ? props : ""} />;
     case "para":
       return <Para props={props ? props : ""} />;
+    case "quality":
+      return <Quality props={props ? props : ""} />;
     default:
       return <>未定义模版({tpl})</>;
   }

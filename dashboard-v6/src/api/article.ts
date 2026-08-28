@@ -596,3 +596,47 @@ export const fetchPageNav = (pageId: string): Promise<IPageNavResponse> => {
   }-${pageParam[3]}`;
   return get<IPageNavResponse>(url);
 };
+
+/**
+ * cs-para 导航
+ *
+ * csParaId 形如 `book_para_page`，例如 `169_3_64`。
+ * GET /api/v2/nav-cs-para/{csParaId}
+ */
+export const fetchCSParaNav = (
+  csParaId: string
+): Promise<ICSParaNavResponse> => {
+  return get<ICSParaNavResponse>(`/api/v2/nav-cs-para/${csParaId}`);
+};
+
+export async function csParaLoader({ params }: LoaderFunctionArgs) {
+  const id = params.id;
+
+  if (!id) {
+    throw new Response("Missing cs-para id", { status: 400 });
+  }
+
+  const res = await fetchCSParaNav(id);
+
+  if (!res.ok) {
+    throw new Response("cs-para not found", { status: 404 });
+  }
+
+  // title 使用 `book_para_page` 中的 page（第三段），例如 `169_3_64` -> `64`
+  return { title: id.split("_")[2] ?? id };
+}
+
+/**
+ * 页码引用路由 loader。
+ *
+ * 仅用于提供面包屑标题，页面内容由 TypePage 内部的 usePageNav 解析渲染。
+ */
+export async function pageLoader({ params }: LoaderFunctionArgs) {
+  const id = params.id;
+
+  if (!id) {
+    throw new Response("Missing page id", { status: 400 });
+  }
+
+  return { title: id };
+}

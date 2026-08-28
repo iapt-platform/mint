@@ -47,11 +47,13 @@ interface IWidget {
   active?: boolean;
   focus?: string | null;
   hideNav?: boolean;
+  hideTitle?: boolean;
+  hideHead?: boolean;
   onArticleChange?: (
     type: ArticleType,
     id: string,
     target: TTarget,
-    param?: ISearchParams[]
+    param?: ISearchParams[],
   ) => void;
   onLoad?: (data: IArticleDataResponse) => void;
   onTitle?: (title: string) => void;
@@ -68,6 +70,8 @@ const TypePali = ({
   active = true,
   focus,
   hideNav = false,
+  hideTitle = false,
+  hideHead = false,
   onArticleChange,
 }: IWidget) => {
   const intl = useIntl();
@@ -129,7 +133,7 @@ const TypePali = ({
 
   const handlePathChange = (
     node: ITocPathNode,
-    e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>
+    e: React.MouseEvent<HTMLSpanElement | HTMLAnchorElement, MouseEvent>,
   ) => {
     let newType = type;
     let newArticle = "";
@@ -193,7 +197,7 @@ const TypePali = ({
                   window.open(
                     import.meta.env.VITE_APP_API_SERVER +
                       `/library/tipitaka/${id}/read?channel=${channels[0]}`,
-                    "_blank"
+                    "_blank",
                   );
                 }
               },
@@ -209,7 +213,9 @@ const TypePali = ({
         subTitle={articleData?.subtitle}
         summary={articleData?.summary}
         nodes={nodeData.map((item) => {
-          return <ParagraphNode initData={item} />;
+          return (
+            <ParagraphNode key={`${item.book}-${item.para}`} initData={item} />
+          );
         })}
         html={
           nodeData.length === 0
@@ -221,6 +227,8 @@ const TypePali = ({
         loading={loading}
         errorCode={errorCode}
         remains={remains}
+        hideTitle={hideTitle}
+        hideHead={hideHead}
         onEnd={() => {
           if (type === "chapter") loadNextChunk();
         }}
@@ -248,7 +256,7 @@ const TypePali = ({
         })}
         onClick={(
           id: string,
-          e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+          e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
         ) => {
           if (e.ctrlKey || e.metaKey) {
             onArticleChange?.("chapter", id, "_blank");
@@ -258,33 +266,35 @@ const TypePali = ({
         }}
       />
 
-      <Divider />
-
       {!hideNav && (
-        <Navigate
-          type={type}
-          articleId={id}
-          path={fullPath}
-          onPathChange={(key: string) => {
-            const node = articleData?.path?.find((v) => v.title === key);
-            if (node) {
-              const newType = node.level === 0 ? "series" : "chapter";
-              const newArticle = node.key ?? `${node.book}-${node.paragraph}`;
-              onArticleChange?.(newType, newArticle, "_self");
-            }
-          }}
-          onChange={(
-            event: React.MouseEvent<HTMLElement, MouseEvent>,
-            newId: string
-          ) => {
-            const target = event.ctrlKey || event.metaKey ? "_blank" : "_self";
-            let param: ISearchParams[] = [];
-            if (type === "para" && newId?.split("-").length > 1) {
-              param = [{ key: "par", value: newId.split("-")[1] }];
-            }
-            onArticleChange?.(type as ArticleType, newId, target, param);
-          }}
-        />
+        <>
+          <Divider />
+          <Navigate
+            type={type}
+            articleId={id}
+            path={fullPath}
+            onPathChange={(key: string) => {
+              const node = articleData?.path?.find((v) => v.title === key);
+              if (node) {
+                const newType = node.level === 0 ? "series" : "chapter";
+                const newArticle = node.key ?? `${node.book}-${node.paragraph}`;
+                onArticleChange?.(newType, newArticle, "_self");
+              }
+            }}
+            onChange={(
+              event: React.MouseEvent<HTMLElement, MouseEvent>,
+              newId: string,
+            ) => {
+              const target =
+                event.ctrlKey || event.metaKey ? "_blank" : "_self";
+              let param: ISearchParams[] = [];
+              if (type === "para" && newId?.split("-").length > 1) {
+                param = [{ key: "par", value: newId.split("-")[1] }];
+              }
+              onArticleChange?.(type as ArticleType, newId, target, param);
+            }}
+          />
+        </>
       )}
     </div>
   );
