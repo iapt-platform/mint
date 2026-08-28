@@ -10,6 +10,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/css/app.css', // library/* + blog 列表页
+                'resources/css/home.css', // 首页（next.wikipali.org）
                 'resources/css/library.css', // library/* + blog 列表页
                 'resources/css/modules/library-index.css',
                 'resources/css/modules/wiki.css',
