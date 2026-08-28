@@ -8,7 +8,10 @@ use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
 use OpenSearch\GuzzleClientFactory;
+
 
 class OpenSearchService
 {
@@ -392,12 +395,12 @@ class OpenSearchService
     {
         try {
             $info = $this->client->info();
-            $message = 'OpenSearch 连接成功: '.json_encode($info['version']['number']);
+            $message = 'OpenSearch 连接成功: ' . json_encode($info['version']['number']);
             Log::info($message);
 
             return [true, $message];
         } catch (Exception $e) {
-            $message = 'OpenSearch 连接失败: '.$e->getMessage();
+            $message = 'OpenSearch 连接失败: ' . $e->getMessage();
             Log::error($message);
 
             return [false, $message];
@@ -491,11 +494,9 @@ class OpenSearchService
      * @example
      *   $service->updatePaliSynonymsPath('20260731');
      */
-    public function updatePaliSynonymsPath(string $version): array
+    public function updatePaliSynonymsPath(string $filename): array
     {
-        if (! preg_match('/^[A-Za-z0-9._-]+$/', $version)) {
-            throw new Exception("Invalid synonyms version [$version].");
-        }
+
 
         $index = config('mint.opensearch.index');
 
@@ -503,7 +504,7 @@ class OpenSearchService
             throw new Exception("Index [$index] does not exist.");
         }
 
-        $path = "/var/lib/opensearch/analysis/pali_synonyms-{$version}.txt";
+        $path = Str::finish(config('mint.opensearch.config.synonyms_path'), '/') . $filename;
 
         Log::debug('OpenSearchService::updatePaliSynonymsPath', [
             'index' => $index,
@@ -878,7 +879,7 @@ class OpenSearchService
     {
         $fields = [];
         foreach ($this->weights['fuzzy'] as $field => $weight) {
-            $fields[] = $field.'^'.$weight;
+            $fields[] = $field . '^' . $weight;
         }
 
         return [
@@ -909,7 +910,7 @@ class OpenSearchService
             if (in_array($field, ['fuzzy_ratio', 'semantic_ratio'])) {
                 continue;
             }
-            $fuzzyFields[] = $field.'^'.$weight;
+            $fuzzyFields[] = $field . '^' . $weight;
         }
 
         $fuzzyPart = [
@@ -982,12 +983,12 @@ class OpenSearchService
             throw new Exception('请在 .env 设置 OPENAI_API_KEY');
         }
 
-        $cacheKey = 'embedding:'.md5($text);
+        $cacheKey = 'embedding:' . md5($text);
 
         return Cache::remember($cacheKey, now()->addDays(7), function () use ($text) {
             $response = $this->http->post('embeddings', [
                 'headers' => [
-                    'Authorization' => 'Bearer '.$this->openaiApiKey,
+                    'Authorization' => 'Bearer ' . $this->openaiApiKey,
                     'Content-Type' => 'application/json',
                 ],
                 'json' => [
@@ -999,7 +1000,7 @@ class OpenSearchService
             $json = json_decode((string) $response->getBody(), true);
 
             if (empty($json['data'][0]['embedding'])) {
-                throw new Exception('OpenAI embedding 返回异常: '.json_encode($json));
+                throw new Exception('OpenAI embedding 返回异常: ' . json_encode($json));
             }
 
             return $json['data'][0]['embedding'];
@@ -1017,7 +1018,7 @@ class OpenSearchService
      */
     public function clearEmbeddingCache(string $text): bool
     {
-        $cacheKey = 'embedding:'.md5($text);
+        $cacheKey = 'embedding:' . md5($text);
 
         return Cache::forget($cacheKey);
     }
@@ -1102,7 +1103,7 @@ class OpenSearchService
         // 过滤无效字段
         $searchFields = array_values(array_filter(
             $searchFields,
-            fn ($field) => isset($fieldMap[$field])
+            fn($field) => isset($fieldMap[$field])
         ));
 
         if (empty($searchFields)) {
@@ -1112,7 +1113,7 @@ class OpenSearchService
         // 构建 suggest DSL
         $suggests = [];
         foreach ($searchFields as $field) {
-            $suggests[$field.'_suggest'] = [
+            $suggests[$field . '_suggest'] = [
                 'prefix' => $query,
                 'completion' => [
                     'field' => $fieldMap[$field],
@@ -1136,7 +1137,7 @@ class OpenSearchService
         // 整理结果，附加来源字段
         $results = [];
         foreach ($searchFields as $field) {
-            $options = $response['suggest'][$field.'_suggest'][0]['options'] ?? [];
+            $options = $response['suggest'][$field . '_suggest'][0]['options'] ?? [];
 
             foreach ($options as $opt) {
                 $results[] = [
@@ -1150,7 +1151,7 @@ class OpenSearchService
         }
 
         // 按分数降序排序
-        usort($results, fn ($a, $b) => $b['score'] <=> $a['score']);
+        usort($results, fn($a, $b) => $b['score'] <=> $a['score']);
 
         return $results;
     }
@@ -1203,10 +1204,10 @@ class OpenSearchService
         ]);
 
         $tokens = array_map(
-            fn ($token) => $token['token'] ?? '',
+            fn($token) => $token['token'] ?? '',
             $response['tokens'] ?? []
         );
 
-        return array_values(array_unique(array_filter($tokens, fn ($t) => $t !== '')));
+        return array_values(array_unique(array_filter($tokens, fn($t) => $t !== '')));
     }
 }

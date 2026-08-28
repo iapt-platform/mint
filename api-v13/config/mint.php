@@ -176,6 +176,8 @@ return [
             'username' => env('OPENSEARCH_USERNAME', ''),
             'password' => env('OPENSEARCH_PASSWORD', ''),
             'ssl_verification' => env('OPENSEARCH_SSL_VERIFICATION', false),
+            'synonyms_path' => env('APP_OPENSEARCH_SYNONYMS_PATH', '/opt/opensearch/config/analysis'),
+
         ],
 
     ],
