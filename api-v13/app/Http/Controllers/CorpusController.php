@@ -985,6 +985,7 @@ class CorpusController extends Controller
      */
     private function pushSent($result, $sent, $level = 0, $mode = 'read')
     {
+        $sent['mode'] = $mode;
 
         $sentProps = base64_encode(\json_encode($sent));
         if ($mode === 'read') {
