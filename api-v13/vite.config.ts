@@ -15,6 +15,7 @@ export default defineConfig({
                 'resources/css/modules/wiki.css',
                 'resources/css/modules/tipitaka.css',
                 'resources/css/modules/anthology.css',
+                'resources/css/modules/library-course.css',
                 'resources/css/reader.css', // 全站阅读页（待建）
                 'resources/js/app.js',
                 'resources/js/reader.js',

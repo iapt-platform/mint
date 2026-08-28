@@ -1,19 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\File;
-use App\Http\Controllers\WbwAnalysisController;
-use App\Http\Controllers\PageIndexController;
 use App\Http\Controllers\AssetsController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\Library\AnthologyController;
 use App\Http\Controllers\Library\AnthologyReadController;
 use App\Http\Controllers\Library\BookController;
-use App\Http\Controllers\Library\WikiController;
-use App\Http\Controllers\Library\SearchController;
+use App\Http\Controllers\Library\CourseController;
 use App\Http\Controllers\Library\HomeController;
+use App\Http\Controllers\Library\SearchController;
 use App\Http\Controllers\Library\TipitakaController;
+use App\Http\Controllers\Library\WikiController;
+use App\Http\Controllers\PageIndexController;
+use App\Http\Controllers\WbwAnalysisController;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +39,6 @@ Route::get('/export/wbw', function () {
     return view('export_wbw', ['sentences' => []]);
 });
 
-
 Route::get('/privacy/{file}', function (string $file) {
     $path = base_path("documents/mobile/privacy/{$file}.md");
 
@@ -54,13 +54,10 @@ Route::get('/book/{id}', function ($id) {
 });
 Route::redirect('/privacy', '/privacy/index');
 
-
-
-
 Route::post('/theme/toggle', [BookController::class, 'toggleTheme'])->name('theme.toggle');
 Route::post('/logout', function () {
     // Handle logout
-    //Auth::logout();
+    // Auth::logout();
     return redirect('/login');
 })->name('logout');
 
@@ -76,11 +73,12 @@ Route::prefix('library')->name('library.')->group(function () {
     Route::get('/wiki/{lang}', [WikiController::class, 'index'])->name('wiki.index');
     Route::get('/wiki/{lang}/{word}', [WikiController::class, 'show'])->name('wiki.show');
 
-    Route::get('/course', [DownloadController::class, 'index'])->name('course');
+    Route::get('/course', [CourseController::class, 'index'])->name('course');
+    Route::get('/course/history', [CourseController::class, 'history'])->name('course.history');
     Route::get('/download', [DownloadController::class, 'index'])->name('download');
     // 文集
-    Route::get('/anthology',          [AnthologyController::class, 'index'])->name('anthology.index');
-    Route::get('/anthology/{id}',     [AnthologyController::class, 'show'])->name('anthology.show');
+    Route::get('/anthology', [AnthologyController::class, 'index'])->name('anthology.index');
+    Route::get('/anthology/{id}', [AnthologyController::class, 'show'])->name('anthology.show');
     Route::get(
         '/anthology/{anthology}/read/{article}',
         [AnthologyReadController::class, 'read']

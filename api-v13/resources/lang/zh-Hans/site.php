@@ -23,6 +23,7 @@ return [
         'tipitaka' => '三藏',
         'wiki' => '百科',
         'anthology' => '文集',
+        'course' => '课程',
         'download' => '下载',
 
         'menu' => '导航',

@@ -23,6 +23,7 @@ return [
         'tipitaka' => 'Tipitaka',
         'wiki' => 'Wiki',
         'anthology' => 'Anthology',
+        'course' => 'Courses',
         'download' => 'Download',
 
         'menu' => 'Menu',
