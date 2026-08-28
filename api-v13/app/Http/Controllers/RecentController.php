@@ -21,7 +21,12 @@ class RecentController extends Controller
         //
         switch ($request->view) {
             case 'user':
-                $table = Recent::where('user_uid', $request->input('id'));
+                // recents.user_uid 是 uuid 列，非法值直接拒绝，避免 Postgres 报 22P02。
+                $userUid = $request->input('id');
+                if (! Str::isUuid($userUid)) {
+                    return $this->error('invalid id', [], 422);
+                }
+                $table = Recent::where('user_uid', $userUid);
                 break;
             default:
                 return $this->error('known view');
