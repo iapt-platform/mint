@@ -1,0 +1,264 @@
+/* resources/css/home.css
+   WikiPāli 首页（next.wikipali.org）样式入口。
+   只服务于首页：品牌 hero + 四张通栏分流卡片。
+   平面、哑光、克制，无渐变 / 发光 / 阴影 / 圆角卡片。
+*/
+
+/* 1. Tabler（Bootstrap 5 底座）+ Tabler Icons */
+@import '@tabler/core/dist/css/tabler.min.css';
+@import '@tabler/icons-webfont/dist/tabler-icons.min.css';
+
+/* 2. 设计令牌 */
+:root {
+    --home-bg: #F6F1E7;
+    --home-text: #2B2318;
+    --home-text-secondary: #63594A;
+    --home-text-muted: #6F6555;
+    --home-border-muted: #B6AB98;
+    --home-cta-hover-text: #F6F1E7;
+    --home-hero-tint: #8A6A3C;
+}
+
+/* 3. 页面底色 */
+.home-page {
+    margin: 0;
+    background: var(--home-bg);
+    color: var(--home-text);
+}
+
+.home-page .page {
+    background: var(--home-bg);
+}
+
+/* 4. 品牌 Hero */
+.home-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 44vh;
+    min-height: 280px;
+    padding: 2rem 1.5rem;
+    background: color-mix(in srgb, var(--home-hero-tint) 16%, var(--home-bg));
+}
+
+.home-hero__title {
+    margin: 0 0 .75rem;
+    color: var(--home-text);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: .02em;
+}
+
+.home-hero__lead {
+    margin: 0;
+    color: var(--home-text-secondary);
+    font-size: clamp(.95rem, 1.6vw, 1.125rem);
+    line-height: 1.5;
+}
+
+/* 5. 通栏卡片 */
+.home-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 40vh;
+    min-height: 320px;
+    max-height: 480px;
+    overflow: hidden;
+    color: var(--home-text);
+}
+
+/* 末卡（二次开发）高度略矮 */
+#card-development {
+    height: 36vh;
+    min-height: 280px;
+    max-height: none;
+}
+
+/* 底图：通栏满铺 */
+.home-card__media-wrap {
+    position: absolute;
+    inset: 0;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.home-card__media {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 文字在左 → 图的视觉重心在右；文字在右 → 视觉重心在左 */
+.home-card--start .home-card__media {
+    object-position: 70% center;
+}
+
+.home-card--end .home-card__media {
+    object-position: 30% center;
+}
+
+/* 蒙版：保证文字对比度 ≥ 4.5:1 */
+.home-card__veil {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--card-tint) 16%, rgba(246, 241, 231, .8));
+}
+
+/* 文字块：垂直居中，横向贴边 */
+.home-card__body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 2rem clamp(1.5rem, 6vw, 5rem);
+}
+
+.home-card--start .home-card__body {
+    justify-content: flex-start;
+    padding-left: calc(clamp(1.5rem, 6vw, 5rem) + 300px);
+}
+
+.home-card--end .home-card__body {
+    justify-content: flex-end;
+    padding-right: calc(clamp(1.5rem, 6vw, 5rem) + 300px);
+}
+
+.home-card__text {
+    width: 100%;
+    max-width: 26rem;
+}
+
+.home-card--start .home-card__text {
+    text-align: left;
+}
+
+.home-card--end .home-card__text {
+    text-align: right;
+}
+
+.home-card__eyebrow {
+    margin: 0 0 .5rem;
+    color: var(--home-text-muted);
+    font-size: 12px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+}
+
+.home-card__title {
+    margin: 0 0 .75rem;
+    color: var(--home-text);
+    font-size: clamp(1.5rem, 3.2vw, 2.5rem);
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.home-card__lead {
+    margin: 0 0 1.5rem;
+    color: var(--home-text-secondary);
+    font-size: clamp(.9rem, 1.4vw, 1.0625rem);
+    line-height: 1.5;
+}
+
+/* CTA / 状态角标：胶囊形 */
+.home-card__cta,
+.home-card__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    border-radius: 999px;
+    padding: .55rem 1.25rem;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.home-card__cta {
+    border: 1px solid var(--home-text);
+    color: var(--home-text);
+    text-decoration: none;
+    transition: background-color .2s ease, color .2s ease;
+}
+
+.home-card__cta:hover,
+.home-card__cta:focus {
+    background: var(--home-text);
+    color: var(--home-cta-hover-text);
+    text-decoration: none;
+}
+
+.home-card__cta:focus-visible {
+    outline: 2px solid var(--home-text);
+    outline-offset: 3px;
+}
+
+.home-card__badge {
+    border: 1px solid var(--home-border-muted);
+    color: var(--home-text-muted);
+}
+
+/* 6. 响应式：768–991px（高度不变，文字块收窄） */
+@media (max-width: 991.98px) {
+    .home-card__text {
+        max-width: 20rem;
+    }
+}
+
+/* 7. 响应式：<768px（全部左对齐，换移动端高度，蒙版加深） */
+@media (max-width: 767.98px) {
+    .home-hero {
+        height: 40vh;
+        min-height: 240px;
+    }
+
+    .home-card {
+        height: 52vh;
+        min-height: 300px;
+        max-height: none;
+    }
+
+    #card-development {
+        height: 46vh;
+        min-height: 260px;
+    }
+
+    .home-card__body {
+        justify-content: flex-start;
+        padding: 2rem 1.5rem;
+    }
+
+    .home-card--start .home-card__body,
+    .home-card--end .home-card__body {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .home-card__text {
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .home-card__media {
+        object-position: 75% center;
+    }
+
+    .home-card__veil {
+        background: color-mix(in srgb, var(--card-tint) 20%, rgba(246, 241, 231, .88));
+    }
+
+    .home-card__eyebrow {
+        font-size: 11px;
+    }
+}
+
+/* 8. 尊重减少动态偏好：关闭过渡 */
+@media (prefers-reduced-motion: reduce) {
+    .home-card__cta {
+        transition: none;
+    }
+}
