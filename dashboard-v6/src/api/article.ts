@@ -622,5 +622,6 @@ export async function csParaLoader({ params }: LoaderFunctionArgs) {
     throw new Response("cs-para not found", { status: 404 });
   }
 
-  return { title: res.data.curr.content };
+  // title 使用 `book_para_page` 中的 page（第三段），例如 `169_3_64` -> `64`
+  return { title: id.split("_")[2] ?? id };
 }

@@ -11,7 +11,7 @@ const items = {
   "pages.task.project.title": "项目",
   "pages.tipitaka.chapter.title": "章节",
   "pages.tipitaka.para.title": "段落",
-  "pages.tipitaka.cs-para.title": "对照页",
+  "pages.tipitaka.cs-para.title": "CS段落",
 };
 
 export default items;
