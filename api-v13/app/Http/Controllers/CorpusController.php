@@ -273,21 +273,26 @@ class CorpusController extends Controller
         }
         //
         $channels = [];
-        if ($request->get('mode') === 'edit') {
-            // 翻译模式加载json格式原文
-            $channels[] = ChannelApi::getSysChannel('_System_Wbw_VRI_');
-        } else {
-            // 阅读模式加载html格式原文
-            $channels[] = ChannelApi::getSysChannel('_System_Pali_VRI_');
-        }
-
         if ($request->has('channels')) {
             if (strpos($request->get('channels'), ',') === false) {
                 $getChannel = explode('_', $request->get('channels'));
             } else {
                 $getChannel = explode(',', $request->get('channels'));
             }
-            $channels = array_merge($channels, $getChannel);
+            foreach ($getChannel as $channel) {
+                if (Str::isUuid($channel)) {
+                    $channels[] = $channel;
+                }
+            }
+        }
+
+        // 系统原文channel必须追加在末尾，makeContentObj 依赖此约定剔除它
+        if ($request->get('mode') === 'edit') {
+            // 翻译模式加载json格式原文
+            $channels[] = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+        } else {
+            // 阅读模式加载html格式原文
+            $channels[] = ChannelApi::getSysChannel('_System_Pali_VRI_');
         }
         $para = explode(',', $request->get('par'));
 
