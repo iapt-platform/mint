@@ -149,6 +149,7 @@ const SearchVocabulary = ({
           style={{ width: "100%" }}
           size={compact ? undefined : "large"}
           placeholder="search here"
+          loading={fetching}
           onSearch={(val: string) => {
             onSearch?.(val);
           }}
