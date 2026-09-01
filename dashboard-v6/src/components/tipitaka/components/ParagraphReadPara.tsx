@@ -32,7 +32,7 @@ const ParagraphReadPara = ({ data }: IWidget) => {
   });
 
   return (
-    <Flex vertical={layoutCommentary === "row"}>
+    <Flex vertical={layoutCommentary === "column"}>
       <Flex gap="middle" vertical={direction === "column"} style={{ flex: 5 }}>
         {/**原文区 */}
         <div className="sent_read" style={{ flex: 5, padding: 4 }}>
