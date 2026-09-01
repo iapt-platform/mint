@@ -34,6 +34,7 @@ class BookTitleController extends Controller
             $relatedNames = $this->relatedNames($result);
             foreach ($result as $row) {
                 $key = "{$row->book}-{$row->paragraph}";
+                $row->pcd_book_id = $row->sn;
                 $row->toc = $meta[$key]['toc'] ?? null;
                 $row->tags = $meta[$key]['tags'] ?? [];
                 $row->related_name = $relatedNames[$key] ?? null;

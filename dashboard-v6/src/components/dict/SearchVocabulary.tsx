@@ -3,6 +3,7 @@ import type { IVocabularyListResponse } from "../../api/dict";
 import { useEffect, useRef, useState } from "react";
 import { AutoComplete, Input, Space, Typography } from "antd";
 import { DictIcon } from "../../assets/icon";
+import { useDebouncedCallback } from "./hooks/useDebouncedCallback";
 
 const { Text, Link } = Typography;
 
@@ -30,7 +31,8 @@ const SearchVocabulary = ({
   const [fetching, setFetching] = useState(false);
   const [input, setInput] = useState<string | undefined>(value);
   const [factors, setFactors] = useState<string[]>([]);
-  const intervalRef = useRef<number | null>(null);
+  // 请求序号：用于竞态防护，只保留最新一次请求的结果
+  const seqRef = useRef(0);
 
   // 外部 value（点击单词触发的查词）变化时，同步输入框显示。
   // 仅在 value 真正变化时同步，用户手动输入时 value 不会变，因此不会打断输入。
@@ -55,13 +57,6 @@ const SearchVocabulary = ({
     ),
   });
 
-  const stopLookup = () => {
-    if (intervalRef.current) {
-      window.clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  };
-
   const factorChange = (word?: string) => {
     if (typeof word === "undefined" || word.includes(":")) {
       setFactors([]);
@@ -78,11 +73,14 @@ const SearchVocabulary = ({
   };
 
   const search = (value: string) => {
-    stopLookup();
     if (value === "") return;
+
+    // 记录本次请求序号，响应回来时若已不是最新序号则丢弃（竞态防护）
+    const seq = ++seqRef.current;
 
     get<IVocabularyListResponse>(`/api/v2/${api}?view=key&key=${value}`)
       .then((json) => {
+        if (seq !== seqRef.current) return;
         const words: ValueType[] = json.data.rows
           .map((item) => {
             let weight = item.count / (item.strlen - value.length + 0.1);
@@ -103,9 +101,15 @@ const SearchVocabulary = ({
         setOptions(words);
       })
       .finally(() => {
-        setFetching(false);
+        if (seq === seqRef.current) {
+          setFetching(false);
+        }
       });
   };
+
+  // 输入补全防抖：连续输入 300ms 内只发最后一次请求
+  const { debounced: debouncedSearch, cancel: cancelSearch } =
+    useDebouncedCallback(search, 300);
 
   return (
     <div style={{ width: "100%" }}>
@@ -125,8 +129,16 @@ const SearchVocabulary = ({
         }}
         showSearch={{
           onSearch: (val: string) => {
+            if (val === "") {
+              // 空输入：立即取消挂起请求，并使在途请求失效，清空建议
+              seqRef.current++;
+              cancelSearch();
+              setOptions([]);
+              setFetching(false);
+              return;
+            }
             setFetching(true);
-            search(val);
+            debouncedSearch(val);
           },
         }}
         onSelect={(val: string) => {
@@ -137,6 +149,7 @@ const SearchVocabulary = ({
           style={{ width: "100%" }}
           size={compact ? undefined : "large"}
           placeholder="search here"
+          loading={fetching}
           onSearch={(val: string) => {
             onSearch?.(val);
           }}

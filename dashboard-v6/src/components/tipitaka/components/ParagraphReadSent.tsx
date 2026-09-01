@@ -26,10 +26,10 @@ const ParagraphReadSent = ({ data }: IWidget) => {
     <div>
       {data?.map((item) => {
         return (
-          <Flex vertical={layoutCommentary === "row"}>
+          <Flex vertical={layoutCommentary === "column"}>
             <Flex
               gap="middle"
-              vertical={direction === "row"}
+              vertical={direction === "column"}
               style={{ flex: 5 }}
             >
               {/**原文区 */}

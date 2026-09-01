@@ -578,22 +578,33 @@ export async function articleLoader({ params }: LoaderFunctionArgs) {
 /**
  * 页码导航
  *
- * pageId 形如 `M-dīghanikāya-2-10`（页码类型_书名_卷号_页码），
- * 内部通过 bookName 表把书名 term 反查为 book id 后请求
- * GET /api/v2/nav-page/{TYPE}-{booksId}-{volume}-{page}
+ * pageId 形如 `M-dīghanikāya-2-10`（页码类型_书名_卷号_页码）。
+ * 书名（第 2 段）需按页码类型对应不同版本的书名标题字段反查 book id：
+ * M 缅文版 → m_title，P PTS版 → p_title，V 内观研究所版 → v_title，
+ * 其余类型退回 term（与后端 pageInfoByPara 的映射保持一致），
+ * 之后请求 GET /api/v2/nav-page/{TYPE}-{booksId}-{volume}-{page}。
  */
 export const fetchPageNav = (pageId: string): Promise<IPageNavResponse> => {
   const pageParam = pageId.split("_");
   if (pageParam.length < 4) {
     return Promise.reject(new Error(`invalid page id: ${pageId}`));
   }
+  const type = pageParam[0].toUpperCase();
+  const titleField: "term" | "m_title" | "p_title" | "v_title" =
+    type === "M"
+      ? "m_title"
+      : type === "P"
+        ? "p_title"
+        : type === "V"
+          ? "v_title"
+          : "term";
   const booksId = bookName
-    .filter((value) => value.term === pageParam[1])
+    .filter((value) => value[titleField] === pageParam[1])
     .map((item) => item.id)
     .join("_");
-  const url = `/api/v2/nav-page/${pageParam[0].toUpperCase()}-${booksId}-${
-    pageParam[2]
-  }-${pageParam[3]}`;
+  const url = `/api/v2/nav-page/${type}-${booksId}-${pageParam[2]}-${
+    pageParam[3]
+  }`;
   return get<IPageNavResponse>(url);
 };
 
