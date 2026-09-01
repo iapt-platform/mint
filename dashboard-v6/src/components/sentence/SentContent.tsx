@@ -88,9 +88,19 @@ const SentContentWidget = ({
     if (containerWidth > 0 && containerWidth < 550) return "column";
     if (containerWidth === 0) return layout; // SSR / first render fallback
 
-    const userDirection = GetUserSetting("setting.layout.direction", settings);
-    if (typeof userDirection === "string") {
-      return userDirection as TDirection;
+    // 翻译模式排版方向：优先使用翻译设置，auto（或未设置）时回退到阅读模式
+    const translateDirection = GetUserSetting(
+      "setting.translate.layout.direction",
+      settings
+    );
+    const userDirection =
+      translateDirection === "auto" ||
+      typeof translateDirection === "undefined"
+        ? GetUserSetting("setting.layout.direction", settings)
+        : translateDirection;
+
+    if (userDirection === "row" || userDirection === "column") {
+      return userDirection;
     }
     return layout;
   }, [containerWidth, layout, settings]);

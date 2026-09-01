@@ -5,6 +5,10 @@ const items = {
   "setting.layout.direction.description": "横向或者纵向排版",
   "setting.layout.direction.col.label": "colum",
   "setting.layout.direction.row.label": "row",
+  "setting.translate.layout.direction.label": "direction",
+  "setting.translate.layout.direction.description":
+    "Original & translation layout in translation mode (auto follows reading mode)",
+  "setting.translate.layout.direction.auto.label": "auto",
   "setting.layout.paragraph.label": "对照方式",
   "setting.layout.paragraph.description": "逐段或逐句对照（仅阅读模式）",
   "setting.layout.paragraph.paragraph.label": "逐段",

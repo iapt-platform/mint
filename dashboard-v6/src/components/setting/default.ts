@@ -77,6 +77,30 @@ export const defaultSetting: ISetting[] = [
   },
   {
     /**
+     * 翻译模式排版方向
+     */
+    key: "setting.translate.layout.direction",
+    label: "setting.translate.layout.direction.label",
+    description: "setting.translate.layout.direction.description",
+    defaultValue: "auto",
+    options: [
+      {
+        value: "auto",
+        label: "setting.translate.layout.direction.auto.label",
+      },
+      {
+        value: "column",
+        label: "setting.layout.direction.col.label",
+      },
+      {
+        value: "row",
+        label: "setting.layout.direction.row.label",
+      },
+    ],
+    widget: "select",
+  },
+  {
+    /**
      * commentary排版方向
      */
     key: "setting.layout.commentary",

@@ -122,7 +122,7 @@ const SentReadFrame = ({
       <Flex vertical={layoutCommentary === "row"}>
         <Flex
           gap="middle"
-          vertical={layoutDirection === "row"}
+          vertical={layoutDirection === "column"}
           style={{ flex: 5 }}
         >
           {/* 原文 */}

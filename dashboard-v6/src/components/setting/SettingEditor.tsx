@@ -33,6 +33,9 @@ const SettingEditor = () => {
           id: `buttons.translate`,
         })}
       </Divider>
+      <SettingItem
+        data={SettingFind("setting.translate.layout.direction", settings)}
+      />
 
       <Divider>
         {intl.formatMessage({
