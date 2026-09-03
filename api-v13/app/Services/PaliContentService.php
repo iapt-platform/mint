@@ -642,4 +642,72 @@ class PaliContentService
 
         return $result;
     }
+
+    /**
+     * 阅读模式渲染单个段落。
+     * 直接从 sentences 表取单个 channel 的记录，渲染成 html。
+     * 与 paragraphs() 不同：没有译文的句子不保留占位，有多少句子输出多少句子。
+     *
+     * @param  int  $level  标题级别，大于 0 时段落用 h{level} 包裹
+     * @return array{para: int, display: string, sentences: array<int, array{sid: string, html: string}>}
+     */
+    public function readParagraph(int $book, int $para, string $channelUid, int $level = 0, string $format = 'html'): array
+    {
+        $result = ['para' => $para, 'display' => '', 'sentences' => []];
+        $channel = Channel::where('uid', $channelUid)
+            ->select(['uid', 'type', 'lang', 'name'])->first();
+        if (! $channel) {
+            return $result;
+        }
+        $isOrigin = $channel->type === 'original' || $channel->type === 'wbw';
+        $channelType = $channel->type === 'nissaya' ? 'nissaya' : 'translation';
+
+        $records = Sentence::select($this->selectCol)
+            ->where('book_id', $book)
+            ->where('paragraph', $para)
+            ->where('channel_uid', $channelUid)
+            ->orderBy('word_start')
+            ->get();
+
+        $sentences = [];
+        foreach ($records as $row) {
+            $html = MdRender::render(
+                $row->content,
+                [$row->channel_uid],
+                null,
+                'read',
+                $channelType,
+                $row->content_type,
+                $format
+            );
+            if (empty($html)) {
+                continue;
+            }
+            $sid = "{$row->book_id}-{$row->paragraph}-{$row->word_start}-{$row->word_end}";
+            $result['sentences'][] = ['sid' => $sid, 'html' => $html];
+            if ($format === 'html') {
+                $class = $isOrigin ? 'sentence origin' : 'sentence';
+                $sentences[] = "<div class='{$class}' data-sid='{$sid}'>{$html}</div>";
+            } else {
+                $sentences[] = $html;
+            }
+        }
+
+        if (count($sentences) === 0) {
+            return $result;
+        }
+
+        if ($format === 'html') {
+            // html 格式加段落外壳
+            $area = $isOrigin ? 'original' : 'translation';
+            $content = implode('', $sentences);
+            $inner = $level > 0 ? "<h{$level}>{$content}</h{$level}>" : "<div class='para-block'>{$content}</div>";
+            $result['display'] = "<div class='{$area}' data-para='{$para}'>{$inner}</div>";
+        } else {
+            // 其他格式一行一句
+            $result['display'] = implode("\n", $sentences);
+        }
+
+        return $result;
+    }
 }

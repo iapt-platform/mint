@@ -12,9 +12,8 @@ use App\Services\SearchPaliDataService;
 use App\Services\SummaryService;
 use App\Services\TagService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-
+use Illuminate\Support\Facades\Log;
 
 class IndexTipitaka extends Command
 {
@@ -322,66 +321,31 @@ class IndexTipitaka extends Command
 
                     continue;
                 }
-                $paragraphsData = app(PaliContentService::class)->paragraphs(
-                    $book,
-                    $start,
-                    $end,
-                    [$channel->channel_uid],
-                    ['mode' => 'read', 'format' => 'html', 'original' => false]
-                );
+                $paraList = Sentence::where('book_id', $book)
+                    ->whereBetween('paragraph', [$start, $end])
+                    ->where('channel_uid', $channel->channel_uid)
+                    ->orderBy('paragraph')
+                    ->distinct()->pluck('paragraph');
                 // 生成html数据
 
                 $title = '';
-                foreach ($paragraphsData as $paragraph) {
-                    $translation = [];
-                    $original = [];
-                    foreach ($paragraph['children'] as $sent) {
-                        $sid = "{$sent['book']}-{$sent['para']}-{$sent['wordStart']}-{$sent['wordEnd']}";
-                        if (isset($sent['translation'])) {
-                            foreach ($sent['translation'] as $tran) {
-                                if ($tran['channel']['id'] === $channel->channel_uid) {
-                                    $html = $tran['html'] ?? $tran['content'];
-                                    $translation[] = "<div class='sentence' data-sid='{$sid}'>{$html}</div>";
-                                    if ($tran['para'] === $start && ! empty($html)) {
-                                        $title = $html;
-                                    }
-                                }
-                            }
-                        }
-                        if (
-                            isset($sent['origin']) ||
-                            is_array($sent['origin']) ||
-                            count($sent['origin']) > 0
-                        ) {
-                            foreach ($sent['origin'] as $origin) {
-                                if ($origin['channel']['id'] === $channel->channel_uid) {
-                                    $html = $origin['html'] ?? $origin['content'];
-                                    $original[] = "<div class='sentence origin'  data-sid='{$sid}'>{$html}</div>";
-                                    if (empty($title) && $origin['para'] === $start && ! empty($html)) {
-                                        $title = $html;
-                                    }
-                                }
-                            }
-                        }
+                foreach ($paraList as $para) {
+                    $para = (int) $para;
+                    $level = $para === $start ? $chapter->level : 0;
+                    $paragraph = app(PaliContentService::class)->readParagraph(
+                        $book,
+                        $para,
+                        $channel->channel_uid,
+                        $level,
+                        'html'
+                    );
+                    if (empty($paragraph['display'])) {
+                        continue;
                     }
-
-                    $level = $paragraph['para'] === $start ? $chapter->level : 0;
-                    $strOriginal = implode('', $original);
-                    $strTranslation = implode('', $translation);
-
-                    if ($channelInfo['type'] === 'original') {
-                        $htmlContent = $strOriginal;
-                    } else {
-                        $htmlContent = $strTranslation;
+                    if ($para === $start && empty($title)) {
+                        $title = $paragraph['sentences'][0]['html'];
                     }
-
-                    $area = $channelInfo['type'] === 'original' ? 'original' : 'translation';
-
-                    if ($level > 0) {
-                        $display[] = "<div class='{$area}' data-para='{$paragraph['para']}'><h{$level}>{$htmlContent}</h{$level}></div>";
-                    } else {
-                        $display[] = "<div class='{$area}' data-para='{$paragraph['para']}'><div class='para-block'>{$htmlContent}</div></div>";
-                    }
+                    $display[] = $paragraph['display'];
                 }
                 $this->chapterSave([
                     'book' => $book,
@@ -433,7 +397,7 @@ class IndexTipitaka extends Command
             $document['title']['text']['pali'] = $title;
         }
         $document['content']['display'] = $param['content'];             // 展示
-        Cache::put($docId,$param['content']);
+        Cache::put($docId, $param['content']);
 
         if ($this->isTest) {
             $this->info($param['content']);
