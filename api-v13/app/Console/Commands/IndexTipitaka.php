@@ -331,12 +331,10 @@ class IndexTipitaka extends Command
                 $title = '';
                 foreach ($paraList as $para) {
                     $para = (int) $para;
-                    $level = $para === $start ? $chapter->level : 0;
                     $paragraph = app(PaliContentService::class)->readParagraph(
                         $book,
                         $para,
                         $channel->channel_uid,
-                        $level,
                         'html'
                     );
                     if (empty($paragraph['display'])) {

@@ -48,6 +48,8 @@ class Sentence extends Model
         };
         static::saved($forget);
         static::deleted($forget);
+        static::restored($forget);
+        static::forceDeleted($forget);
     }
 
     protected $dates = [

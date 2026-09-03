@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PaliText;
 use App\Services\PaliContentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -36,7 +35,6 @@ class TipitakaContentParaController extends Controller
                 (int) $data['book'],
                 (int) $para,
                 $data['channel'],
-                $this->paraLevel((int) $data['book'], (int) $para),
                 $format
             );
             if (empty($paragraph['display'])) {
@@ -75,7 +73,6 @@ class TipitakaContentParaController extends Controller
             $book,
             $para,
             $channel,
-            $this->paraLevel($book, $para),
             $request->input('format', 'html')
         );
         if (empty($paragraph['display'])) {
@@ -83,18 +80,5 @@ class TipitakaContentParaController extends Controller
         }
 
         return $this->ok($paragraph);
-    }
-
-    /**
-     * 段落是章节标题时返回标题级别，否则 0
-     */
-    protected function paraLevel(int $book, int $para): int
-    {
-        $level = PaliText::where('book', $book)
-            ->where('paragraph', $para)
-            ->where('level', '<', 8)
-            ->value('level');
-
-        return $level ? (int) $level : 0;
     }
 }

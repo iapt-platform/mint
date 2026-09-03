@@ -648,46 +648,85 @@ class PaliContentService
      * 直接从 sentences 表取单个 channel 的记录，渲染成 html。
      * 与 paragraphs() 不同：没有译文的句子不保留占位，有多少句子输出多少句子。
      *
-     * @param  int  $level  标题级别，大于 0 时段落用 h{level} 包裹
      * @return array{para: int, display: string, sentences: array<int, array{sid: string, html: string}>}
      */
-    public function readParagraph(int $book, int $para, string $channelUid, int $level = 0, string $format = 'html'): array
+    public function readParagraph(int $book, int $para, string $channelUid, string $format = 'html'): array
     {
-        $version = Cache::get(self::paragraphVersionKey($book, $para, $channelUid), 0);
-        $key = "/read-para/{$book}-{$para}/{$channelUid}/{$level}/{$format}/{$version}";
+        $level = $this->paragraphLevel($book, $para);
+        // 缓存句子，段落外壳与标题级别有关，不进缓存
+        $key = self::paragraphCacheKey($book, $para, $channelUid, $format);
+        $cached = Cache::tags([self::paragraphCacheTag($book, $para, $channelUid)])
+            ->rememberForever($key, function () use ($book, $para, $channelUid, $format) {
+                return $this->renderReadSentences($book, $para, $channelUid, $format);
+            });
 
-        return Cache::rememberForever($key, function () use ($book, $para, $channelUid, $level, $format) {
-            return $this->renderReadParagraph($book, $para, $channelUid, $level, $format);
-        });
+        $result = [
+            'para' => $para,
+            'display' => '',
+            'sentences' => $cached['sentences'],
+        ];
+        if (count($cached['display']) === 0) {
+            return $result;
+        }
+
+        if ($format === 'html') {
+            // html 格式加段落外壳
+            $content = implode('', $cached['display']);
+            $inner = $level > 0 ? "<h{$level}>{$content}</h{$level}>" : "<div class='para-block'>{$content}</div>";
+            $result['display'] = "<div class='{$cached['area']}' data-para='{$para}'>{$inner}</div>";
+        } else {
+            // 其他格式一行一句
+            $result['display'] = implode("\n", $cached['display']);
+        }
+
+        return $result;
     }
 
     /**
-     * 段落缓存版本号的 key。句子有增改删时版本号加一，相关缓存自然失效。
+     * 段落是章节标题时返回标题级别，否则 0
      */
-    public static function paragraphVersionKey(int $book, int $para, string $channelUid): string
+    public function paragraphLevel(int $book, int $para): int
     {
-        return "/read-para/version/{$book}-{$para}/{$channelUid}";
+        $level = PaliText::where('book', $book)
+            ->where('paragraph', $para)
+            ->where('level', '<', 8)
+            ->value('level');
+
+        return $level ? (int) $level : 0;
     }
 
     /**
-     * 使某个段落的阅读模式缓存失效
+     * 段落阅读模式缓存的 key
+     */
+    public static function paragraphCacheKey(int $book, int $para, string $channelUid, string $format): string
+    {
+        return "/read-para/{$book}-{$para}/{$channelUid}/{$format}";
+    }
+
+    /**
+     * 段落缓存的 tag。一个段落一个 channel 的全部格式共用一个 tag
+     */
+    public static function paragraphCacheTag(int $book, int $para, string $channelUid): string
+    {
+        return "read-para:{$book}-{$para}:{$channelUid}";
+    }
+
+    /**
+     * 删除某个段落的阅读模式缓存。句子有增改删时调用，下次 readParagraph 自动重建。
      */
     public static function forgetParagraph(int $book, int $para, string $channelUid): void
     {
-        $key = self::paragraphVersionKey($book, $para, $channelUid);
-        if (Cache::has($key)) {
-            Cache::increment($key);
-        } else {
-            Cache::forever($key, 1);
-        }
+        Cache::tags([self::paragraphCacheTag($book, $para, $channelUid)])->flush();
     }
 
     /**
-     * @return array{para: int, display: string, sentences: array<int, array{sid: string, html: string}>}
+     * 渲染段落里的句子。不含段落外壳，可直接缓存。
+     *
+     * @return array{area: string, display: array<int, string>, sentences: array<int, array{sid: string, html: string}>}
      */
-    protected function renderReadParagraph(int $book, int $para, string $channelUid, int $level, string $format): array
+    protected function renderReadSentences(int $book, int $para, string $channelUid, string $format): array
     {
-        $result = ['para' => $para, 'display' => '', 'sentences' => []];
+        $result = ['area' => 'translation', 'display' => [], 'sentences' => []];
         $channel = Channel::where('uid', $channelUid)
             ->select(['uid', 'type', 'lang', 'name'])->first();
         if (! $channel) {
@@ -695,6 +734,7 @@ class PaliContentService
         }
         $isOrigin = $channel->type === 'original' || $channel->type === 'wbw';
         $channelType = $channel->type === 'nissaya' ? 'nissaya' : 'translation';
+        $result['area'] = $isOrigin ? 'original' : 'translation';
 
         $records = Sentence::select($this->selectCol)
             ->where('book_id', $book)
@@ -703,7 +743,6 @@ class PaliContentService
             ->orderBy('word_start')
             ->get();
 
-        $sentences = [];
         foreach ($records as $row) {
             $html = MdRender::render(
                 $row->content,
@@ -721,25 +760,10 @@ class PaliContentService
             $result['sentences'][] = ['sid' => $sid, 'html' => $html];
             if ($format === 'html') {
                 $class = $isOrigin ? 'sentence origin' : 'sentence';
-                $sentences[] = "<div class='{$class}' data-sid='{$sid}'>{$html}</div>";
+                $result['display'][] = "<div class='{$class}' data-sid='{$sid}'>{$html}</div>";
             } else {
-                $sentences[] = $html;
+                $result['display'][] = $html;
             }
-        }
-
-        if (count($sentences) === 0) {
-            return $result;
-        }
-
-        if ($format === 'html') {
-            // html 格式加段落外壳
-            $area = $isOrigin ? 'original' : 'translation';
-            $content = implode('', $sentences);
-            $inner = $level > 0 ? "<h{$level}>{$content}</h{$level}>" : "<div class='para-block'>{$content}</div>";
-            $result['display'] = "<div class='{$area}' data-para='{$para}'>{$inner}</div>";
-        } else {
-            // 其他格式一行一句
-            $result['display'] = implode("\n", $sentences);
         }
 
         return $result;
