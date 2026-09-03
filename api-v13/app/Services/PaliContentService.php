@@ -653,6 +653,40 @@ class PaliContentService
      */
     public function readParagraph(int $book, int $para, string $channelUid, int $level = 0, string $format = 'html'): array
     {
+        $version = Cache::get(self::paragraphVersionKey($book, $para, $channelUid), 0);
+        $key = "/read-para/{$book}-{$para}/{$channelUid}/{$level}/{$format}/{$version}";
+
+        return Cache::rememberForever($key, function () use ($book, $para, $channelUid, $level, $format) {
+            return $this->renderReadParagraph($book, $para, $channelUid, $level, $format);
+        });
+    }
+
+    /**
+     * 段落缓存版本号的 key。句子有增改删时版本号加一，相关缓存自然失效。
+     */
+    public static function paragraphVersionKey(int $book, int $para, string $channelUid): string
+    {
+        return "/read-para/version/{$book}-{$para}/{$channelUid}";
+    }
+
+    /**
+     * 使某个段落的阅读模式缓存失效
+     */
+    public static function forgetParagraph(int $book, int $para, string $channelUid): void
+    {
+        $key = self::paragraphVersionKey($book, $para, $channelUid);
+        if (Cache::has($key)) {
+            Cache::increment($key);
+        } else {
+            Cache::forever($key, 1);
+        }
+    }
+
+    /**
+     * @return array{para: int, display: string, sentences: array<int, array{sid: string, html: string}>}
+     */
+    protected function renderReadParagraph(int $book, int $para, string $channelUid, int $level, string $format): array
+    {
         $result = ['para' => $para, 'display' => '', 'sentences' => []];
         $channel = Channel::where('uid', $channelUid)
             ->select(['uid', 'type', 'lang', 'name'])->first();

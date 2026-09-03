@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\PaliContentService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -35,6 +36,19 @@ class Sentence extends Model
         'uid' => 'string',
         'channel_uid' => 'string',
     ];
+
+    protected static function booted(): void
+    {
+        $forget = function (Sentence $sentence) {
+            PaliContentService::forgetParagraph(
+                (int) $sentence->book_id,
+                (int) $sentence->paragraph,
+                (string) $sentence->channel_uid
+            );
+        };
+        static::saved($forget);
+        static::deleted($forget);
+    }
 
     protected $dates = [
         'created_at',

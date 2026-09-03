@@ -111,6 +111,7 @@ use App\Http\Controllers\TermExportController;
 use App\Http\Controllers\TermSummaryController;
 use App\Http\Controllers\TermVocabularyController;
 use App\Http\Controllers\TipitakaContentController;
+use App\Http\Controllers\TipitakaContentParaController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\UpdatePaliSynonymsController;
 use App\Http\Controllers\UpgradeController;
@@ -319,6 +320,7 @@ Route::group([
     Route::apiResource('paragraph-content', ParagraphContentController::class);
     Route::apiResource('heartbeat', HeartbeatController::class);
     Route::apiResource('tipitaka-content', TipitakaContentController::class);
+    Route::apiResource('tipitaka-content-para', TipitakaContentParaController::class);
 
     Route::post('mock/openai/chat/completions', [MockOpenAIController::class, 'chatCompletions']);
     Route::post('mock/openai/completions', [MockOpenAIController::class, 'completions']);
