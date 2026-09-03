@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class TipitakaContentParaController extends Controller
+class TipitakaReadParaController extends Controller
 {
     /**
      * 阅读模式段落内容列表。指定 book 段落区间和 channel
