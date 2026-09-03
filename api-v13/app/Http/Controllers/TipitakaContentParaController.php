@@ -20,6 +20,7 @@ class TipitakaContentParaController extends Controller
             'to' => 'integer',
             'channel' => 'required|uuid',
             'format' => 'string|in:html,markdown,react,text',
+            'view' => 'string|in:display,sentences,all',
         ]);
 
         $from = $data['para'];
@@ -28,6 +29,7 @@ class TipitakaContentParaController extends Controller
             return $this->error('invalid paragraph range');
         }
         $format = $data['format'] ?? 'html';
+        $view = $data['view'] ?? 'display';
 
         $items = [];
         foreach (range($from, $to) as $para) {
@@ -40,7 +42,7 @@ class TipitakaContentParaController extends Controller
             if (empty($paragraph['display'])) {
                 continue;
             }
-            $items[] = $paragraph;
+            $items[] = $this->filterView($paragraph, $view);
         }
 
         return $this->ok([
@@ -79,6 +81,20 @@ class TipitakaContentParaController extends Controller
             return $this->error('no data');
         }
 
-        return $this->ok($paragraph);
+        return $this->ok($this->filterView($paragraph, $request->input('view', 'display')));
+    }
+
+    /**
+     * 按 view 裁剪输出。display 只要段落 html，sentences 只要句子列表，all 两者都要。
+     *
+     * @param  array{para: int, display: string, sentences: array}  $paragraph
+     */
+    protected function filterView(array $paragraph, string $view): array
+    {
+        return match ($view) {
+            'sentences' => ['para' => $paragraph['para'], 'sentences' => $paragraph['sentences']],
+            'all' => $paragraph,
+            default => ['para' => $paragraph['para'], 'display' => $paragraph['display']],
+        };
     }
 }

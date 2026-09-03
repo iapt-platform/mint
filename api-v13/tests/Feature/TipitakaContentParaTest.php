@@ -37,20 +37,28 @@ function makeSentence(string $channelUid, int $book, int $para, int $wordStart, 
     return $sentence;
 }
 
-beforeEach(function () {
-    $this->channel = makeChannel(makeStudio('para-owner'), 'para channel');
-    makeSentence($this->channel, 9001, 1, 1, 'first sentence');
-    makeSentence($this->channel, 9001, 1, 2, 'second sentence');
-    makeSentence($this->channel, 9001, 2, 1, 'other paragraph');
-});
+/**
+ * 建测试用的 channel 和句子：book 9001 的第 1 段两句，第 2 段一句。返回 channel uid
+ */
+function makeParagraphFixture(): string
+{
+    $channel = makeChannel(makeStudio('para-owner'), 'para channel');
+    makeSentence($channel, 9001, 1, 1, 'first sentence');
+    makeSentence($channel, 9001, 1, 2, 'second sentence');
+    makeSentence($channel, 9001, 2, 1, 'other paragraph');
+
+    return $channel;
+}
 
 it('renders every sentence of a paragraph wrapped in divs', function () {
-    $data = $this->getJson("/api/v2/tipitaka-content-para/9001-1?channel={$this->channel}")
+    $channel = makeParagraphFixture();
+    $data = $this->getJson("/api/v2/tipitaka-content-para/9001-1?channel={$channel}")
         ->assertOk()
         ->json('data');
 
     expect($data['para'])->toBe(1);
-    expect($data['sentences'])->toHaveCount(2);
+    // 默认只输出 display
+    expect($data)->not->toHaveKey('sentences');
     expect($data['display'])
         ->toContain("<div class='translation' data-para='1'>")
         ->toContain("<div class='sentence' data-sid='9001-1-1-1'>")
@@ -59,6 +67,7 @@ it('renders every sentence of a paragraph wrapped in divs', function () {
 });
 
 it('wraps a chapter title paragraph in a heading', function () {
+    $channel = makeParagraphFixture();
     (new PaliText)->forceFill([
         'book' => 9001,
         'paragraph' => 1,
@@ -71,15 +80,37 @@ it('wraps a chapter title paragraph in a heading', function () {
         'uid' => (string) Str::uuid(),
     ])->save();
 
-    $display = $this->getJson("/api/v2/tipitaka-content-para/9001-1?channel={$this->channel}")
+    $display = $this->getJson("/api/v2/tipitaka-content-para/9001-1?channel={$channel}")
         ->assertOk()
         ->json('data.display');
 
     expect($display)->toContain('<h2>')->not->toContain('para-block');
 });
 
+it('can output only the sentences or both', function () {
+    $channel = makeParagraphFixture();
+    $sentences = $this->getJson("/api/v2/tipitaka-content-para/9001-1?channel={$channel}&view=sentences")
+        ->assertOk()
+        ->json('data');
+    expect($sentences)->not->toHaveKey('display');
+    expect($sentences['sentences'])->toHaveCount(2);
+    expect($sentences['sentences'][0])->toHaveKeys(['sid', 'html']);
+
+    $all = $this->getJson("/api/v2/tipitaka-content-para/9001-1?channel={$channel}&view=all")
+        ->assertOk()
+        ->json('data');
+    expect($all)->toHaveKeys(['para', 'display', 'sentences']);
+
+    $items = $this->getJson("/api/v2/tipitaka-content-para?book=9001&para=1&channel={$channel}&view=sentences")
+        ->assertOk()
+        ->json('data.items');
+    expect($items[0])->not->toHaveKey('display');
+    expect($items[0]['sentences'])->toHaveCount(2);
+});
+
 it('lists the paragraphs of a range and skips empty ones', function () {
-    $items = $this->getJson("/api/v2/tipitaka-content-para?book=9001&para=1&to=3&channel={$this->channel}")
+    $channel = makeParagraphFixture();
+    $items = $this->getJson("/api/v2/tipitaka-content-para?book=9001&para=1&to=3&channel={$channel}")
         ->assertOk()
         ->json('data.items');
 
@@ -87,7 +118,8 @@ it('lists the paragraphs of a range and skips empty ones', function () {
 });
 
 it('outputs one line per sentence for non html formats', function () {
-    $display = $this->getJson("/api/v2/tipitaka-content-para/9001-1?channel={$this->channel}&format=text")
+    $channel = makeParagraphFixture();
+    $display = $this->getJson("/api/v2/tipitaka-content-para/9001-1?channel={$channel}&format=text")
         ->assertOk()
         ->json('data.display');
 
@@ -95,20 +127,22 @@ it('outputs one line per sentence for non html formats', function () {
 });
 
 it('rejects an invalid id or channel', function () {
-    $this->getJson("/api/v2/tipitaka-content-para/bad-id?channel={$this->channel}")
+    $channel = makeParagraphFixture();
+    $this->getJson("/api/v2/tipitaka-content-para/bad-id?channel={$channel}")
         ->assertJsonPath('ok', false);
     $this->getJson('/api/v2/tipitaka-content-para/9001-1?channel=not-a-uuid')
         ->assertJsonPath('ok', false);
-    $this->getJson("/api/v2/tipitaka-content-para/9001-9?channel={$this->channel}")
+    $this->getJson("/api/v2/tipitaka-content-para/9001-9?channel={$channel}")
         ->assertJsonPath('ok', false);
 });
 
 it('caches the paragraph and drops the cache when a sentence changes', function () {
-    $url = "/api/v2/tipitaka-content-para/9001-1?channel={$this->channel}";
+    $channel = makeParagraphFixture();
+    $url = "/api/v2/tipitaka-content-para/9001-1?channel={$channel}";
     $this->getJson($url)->assertOk();
 
-    $tag = PaliContentService::paragraphCacheTag(9001, 1, $this->channel);
-    $key = PaliContentService::paragraphCacheKey(9001, 1, $this->channel, 'html');
+    $tag = PaliContentService::paragraphCacheTag(9001, 1, $channel);
+    $key = PaliContentService::paragraphCacheKey(9001, 1, $channel, 'html');
     expect(Cache::tags([$tag])->has($key))->toBeTrue();
 
     $sentence = Sentence::where('book_id', 9001)->where('paragraph', 1)->orderBy('word_start')->first();
@@ -120,12 +154,13 @@ it('caches the paragraph and drops the cache when a sentence changes', function 
 });
 
 it('drops the cache when a sentence is added or deleted', function () {
-    $url = "/api/v2/tipitaka-content-para/9001-1?channel={$this->channel}";
+    $channel = makeParagraphFixture();
+    $url = "/api/v2/tipitaka-content-para/9001-1?channel={$channel}";
     $this->getJson($url)->assertOk();
 
-    makeSentence($this->channel, 9001, 1, 3, 'third sentence');
-    expect($this->getJson($url)->json('data.sentences'))->toHaveCount(3);
+    makeSentence($channel, 9001, 1, 3, 'third sentence');
+    expect($this->getJson($url.'&view=sentences')->json('data.sentences'))->toHaveCount(3);
 
     Sentence::where('book_id', 9001)->where('paragraph', 1)->where('word_start', 3)->first()->delete();
-    expect($this->getJson($url)->json('data.sentences'))->toHaveCount(2);
+    expect($this->getJson($url.'&view=sentences')->json('data.sentences'))->toHaveCount(2);
 });
