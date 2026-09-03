@@ -642,4 +642,130 @@ class PaliContentService
 
         return $result;
     }
+
+    /**
+     * 阅读模式渲染单个段落。
+     * 直接从 sentences 表取单个 channel 的记录，渲染成 html。
+     * 与 paragraphs() 不同：没有译文的句子不保留占位，有多少句子输出多少句子。
+     *
+     * @return array{para: int, display: string, sentences: array<int, array{sid: string, html: string}>}
+     */
+    public function readParagraph(int $book, int $para, string $channelUid, string $format = 'html'): array
+    {
+        $level = $this->paragraphLevel($book, $para);
+        // 缓存句子，段落外壳与标题级别有关，不进缓存
+        $key = self::paragraphCacheKey($book, $para, $channelUid, $format);
+        $cached = Cache::tags([self::paragraphCacheTag($book, $para, $channelUid)])
+            ->rememberForever($key, function () use ($book, $para, $channelUid, $format) {
+                return $this->renderReadSentences($book, $para, $channelUid, $format);
+            });
+
+        $result = [
+            'para' => $para,
+            'display' => '',
+            'sentences' => $cached['sentences'],
+        ];
+        if (count($cached['display']) === 0) {
+            return $result;
+        }
+
+        if ($format === 'html') {
+            // html 格式加段落外壳
+            $content = implode('', $cached['display']);
+            $inner = $level > 0 ? "<h{$level}>{$content}</h{$level}>" : "<div class='para-block'>{$content}</div>";
+            $result['display'] = "<div class='{$cached['area']}' data-para='{$para}'>{$inner}</div>";
+        } else {
+            // 其他格式一行一句
+            $result['display'] = implode("\n", $cached['display']);
+        }
+
+        return $result;
+    }
+
+    /**
+     * 段落是章节标题时返回标题级别，否则 0
+     */
+    public function paragraphLevel(int $book, int $para): int
+    {
+        $level = PaliText::where('book', $book)
+            ->where('paragraph', $para)
+            ->where('level', '<', 8)
+            ->value('level');
+
+        return $level ? (int) $level : 0;
+    }
+
+    /**
+     * 段落阅读模式缓存的 key
+     */
+    public static function paragraphCacheKey(int $book, int $para, string $channelUid, string $format): string
+    {
+        return "/read-para/{$book}-{$para}/{$channelUid}/{$format}";
+    }
+
+    /**
+     * 段落缓存的 tag。一个段落一个 channel 的全部格式共用一个 tag
+     */
+    public static function paragraphCacheTag(int $book, int $para, string $channelUid): string
+    {
+        return "read-para:{$book}-{$para}:{$channelUid}";
+    }
+
+    /**
+     * 删除某个段落的阅读模式缓存。句子有增改删时调用，下次 readParagraph 自动重建。
+     */
+    public static function forgetParagraph(int $book, int $para, string $channelUid): void
+    {
+        Cache::tags([self::paragraphCacheTag($book, $para, $channelUid)])->flush();
+    }
+
+    /**
+     * 渲染段落里的句子。不含段落外壳，可直接缓存。
+     *
+     * @return array{area: string, display: array<int, string>, sentences: array<int, array{sid: string, html: string}>}
+     */
+    protected function renderReadSentences(int $book, int $para, string $channelUid, string $format): array
+    {
+        $result = ['area' => 'translation', 'display' => [], 'sentences' => []];
+        $channel = Channel::where('uid', $channelUid)
+            ->select(['uid', 'type', 'lang', 'name'])->first();
+        if (! $channel) {
+            return $result;
+        }
+        $isOrigin = $channel->type === 'original' || $channel->type === 'wbw';
+        $channelType = $channel->type === 'nissaya' ? 'nissaya' : 'translation';
+        $result['area'] = $isOrigin ? 'original' : 'translation';
+
+        $records = Sentence::select($this->selectCol)
+            ->where('book_id', $book)
+            ->where('paragraph', $para)
+            ->where('channel_uid', $channelUid)
+            ->orderBy('word_start')
+            ->get();
+
+        foreach ($records as $row) {
+            $html = MdRender::render(
+                $row->content,
+                [$row->channel_uid],
+                null,
+                'read',
+                $channelType,
+                $row->content_type,
+                $format
+            );
+            if (empty($html)) {
+                continue;
+            }
+            $sid = "{$row->book_id}-{$row->paragraph}-{$row->word_start}-{$row->word_end}";
+            $result['sentences'][] = ['sid' => $sid, 'html' => $html];
+            if ($format === 'html') {
+                $class = $isOrigin ? 'sentence origin' : 'sentence';
+                $result['display'][] = "<div class='{$class}' data-sid='{$sid}'>{$html}</div>";
+            } else {
+                $result['display'][] = $html;
+            }
+        }
+
+        return $result;
+    }
 }
