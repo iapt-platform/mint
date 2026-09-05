@@ -54,7 +54,7 @@ interface IWidget {
   onArticleChange?: (
     type: ArticleType,
     id: string,
-    target: string,
+    target?: TTarget,
     param?: ISearchParams[]
   ) => void;
 }
