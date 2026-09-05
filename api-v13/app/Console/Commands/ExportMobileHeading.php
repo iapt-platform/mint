@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\DB;
  *  - length：段落字符数（源表列名 `lenght` 为拼写错误，导出时纠正）
  *
  *  - tags：pali_texts.uid 经 tag_maps / tags 取到的标签名，逗号分隔
- *  - related_paragraphs：cs_para + book_name，用于由根本章节定位
- *    对应的义注 / 复注章节起始位置
+ *  - cs_para + book_name：来自 related_paragraphs，用于由段落定位对应的
+ *    义注 / 复注章节起始位置（已合并进同一张表，输出只有 pali_text 一张表）
  */
 class ExportMobileHeading extends Command
 {
@@ -46,13 +46,11 @@ class ExportMobileHeading extends Command
         $this->createSchema($dbh);
 
         $texts = $this->exportPaliTexts($dbh);
-        $related = $this->exportRelated($dbh);
 
         $this->writeMeta($dbh, [
             'generated_at' => date('c'),
             'source' => config('app.url', ''),
             'pali_text_rows' => (string) $texts,
-            'related_rows' => (string) $related,
         ]);
 
         // 建索引放在插入之后，避免边插边维护索引
@@ -62,11 +60,10 @@ class ExportMobileHeading extends Command
 
         $this->newLine();
         $this->info(sprintf(
-            '导出完成：%s（%s，pali_text %d 行，related %d 行）',
+            '导出完成：%s（%s，pali_text %d 行）',
             $out,
             $this->humanSize(filesize($out)),
-            $texts,
-            $related
+            $texts
         ));
 
         $copyTo = $this->option('copy-to');
@@ -84,7 +81,9 @@ class ExportMobileHeading extends Command
 
     private function createSchema(\PDO $dbh): void
     {
-        // 全量段落（不只是章节标题行）：下载功能需要非章节段落的字符数
+        // 全量段落（不只是章节标题行）：下载功能需要非章节段落的字符数。
+        // 关联注释书（cs_para / book_name）已合并进本表 —— 每个段落至多对应
+        // 一部注释书，无对应时为 NULL。
         $dbh->exec('CREATE TABLE pali_text (
             book INTEGER NOT NULL,
             paragraph INTEGER NOT NULL,
@@ -94,18 +93,10 @@ class ExportMobileHeading extends Command
             chapter_len INTEGER,
             chapter_strlen INTEGER,
             parent INTEGER,
-            uid TEXT,
             tags TEXT,
-            PRIMARY KEY (book, paragraph)
-        )');
-
-        // 一个根本章节可关联多部义注 / 复注，故独立成表
-        $dbh->exec('CREATE TABLE related_paragraph (
-            book INTEGER NOT NULL,
-            para INTEGER NOT NULL,
-            book_id INTEGER,
             cs_para INTEGER,
-            book_name TEXT
+            book_name TEXT,
+            PRIMARY KEY (book, paragraph)
         )');
 
         $dbh->exec('CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT)');
@@ -115,8 +106,7 @@ class ExportMobileHeading extends Command
     {
         $dbh->exec('CREATE INDEX idx_pali_text_book_level ON pali_text (book, level)');
         $dbh->exec('CREATE INDEX idx_pali_text_parent ON pali_text (book, parent)');
-        $dbh->exec('CREATE INDEX idx_related_src ON related_paragraph (book, para)');
-        $dbh->exec('CREATE INDEX idx_related_dst ON related_paragraph (book_name, cs_para)');
+        $dbh->exec('CREATE INDEX idx_pali_text_related ON pali_text (book_name, cs_para)');
     }
 
     private function exportPaliTexts(\PDO $dbh): int
@@ -126,12 +116,14 @@ class ExportMobileHeading extends Command
         $bar = $this->output->createProgressBar($total);
         $bar->setRedrawFrequency(5000);
 
-        // uid -> 标签名列表。tag_maps.table_name 对 pali_texts 使用复数表名。
+        // uid 只用于 join 标签，不写入结果表
         $tagsByUid = $this->loadTags();
+        $related = $this->loadRelated();
 
         $stmt = $dbh->prepare('INSERT INTO pali_text
-            (book, paragraph, level, toc, length, chapter_len, chapter_strlen, parent, uid, tags)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            (book, paragraph, level, toc, length, chapter_len, chapter_strlen,
+             parent, tags, cs_para, book_name)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
         $dbh->beginTransaction();
         $n = 0;
@@ -142,6 +134,7 @@ class ExportMobileHeading extends Command
                 ->orderBy('paragraph')
                 ->cursor() as $row
         ) {
+            $rel = $related[$row->book.'-'.$row->paragraph] ?? null;
             $stmt->execute([
                 $row->book,
                 $row->paragraph,
@@ -152,8 +145,9 @@ class ExportMobileHeading extends Command
                 $row->chapter_len,
                 $row->chapter_strlen,
                 $row->parent,
-                $row->uid,
                 isset($tagsByUid[$row->uid]) ? implode(',', $tagsByUid[$row->uid]) : null,
+                $rel[0] ?? null,
+                $rel[1] ?? null,
             ]);
             $n++;
             $bar->advance();
@@ -163,6 +157,36 @@ class ExportMobileHeading extends Command
         $this->newLine();
 
         return $n;
+    }
+
+    /**
+     * 关联注释书：由段落 (book, para) 找到对应义注 / 复注的起始位置。
+     *
+     * related_paragraphs 中同一段落会有多行，映射到一段连续的 cs_para 区间，
+     * 但 book_name 唯一，因此这里取 min(cs_para) 作为起始位置合并成一行。
+     * book_name 为空表示该段落没有对应的注释书，直接跳过（结果列留 NULL）。
+     *
+     * @return array<string, array{0:int,1:string}> "book-para" => [cs_para, book_name]
+     */
+    private function loadRelated(): array
+    {
+        $this->line('载入 related_paragraphs …');
+        $out = [];
+        DB::table('related_paragraphs')
+            ->select(['book', 'para', 'book_name', DB::raw('min(cs_para) as cs_para')])
+            ->whereNotNull('book_name')
+            ->where('book_name', '<>', '')
+            ->groupBy('book', 'para', 'book_name')
+            ->orderBy('book')
+            ->orderBy('para')
+            ->chunk(50000, function ($rows) use (&$out) {
+                foreach ($rows as $r) {
+                    $out[$r->book.'-'.$r->para] = [(int) $r->cs_para, $r->book_name];
+                }
+            });
+        $this->line('  有注释书的段落：'.count($out));
+
+        return $out;
     }
 
     /** @return array<string, string[]> uid => tag names */
@@ -183,44 +207,6 @@ class ExportMobileHeading extends Command
         $this->line('  标签锚点：'.count($out));
 
         return $out;
-    }
-
-    /**
-     * 关联段落：由根本章节 (book, para) 找到对应义注 / 复注的 (book_name, cs_para)。
-     *
-     * `book_name` 为空表示该段落没有对应的注释书，导出为 NULL。
-     */
-    private function exportRelated(\PDO $dbh): int
-    {
-        $query = DB::table('related_paragraphs')
-            ->select(['book', 'para', 'book_id', 'cs_para', 'book_name']);
-
-        $total = $query->count();
-        $this->line("导出 related_paragraph：{$total} 行");
-        $bar = $this->output->createProgressBar($total);
-        $bar->setRedrawFrequency(5000);
-
-        $stmt = $dbh->prepare('INSERT INTO related_paragraph
-            (book, para, book_id, cs_para, book_name) VALUES (?, ?, ?, ?, ?)');
-
-        $dbh->beginTransaction();
-        $n = 0;
-        foreach ($query->orderBy('book')->orderBy('para')->cursor() as $row) {
-            $stmt->execute([
-                $row->book,
-                $row->para,
-                $row->book_id,
-                $row->cs_para,
-                $row->book_name !== '' ? $row->book_name : null,
-            ]);
-            $n++;
-            $bar->advance();
-        }
-        $dbh->commit();
-        $bar->finish();
-        $this->newLine();
-
-        return $n;
     }
 
     private function writeMeta(\PDO $dbh, array $meta): void
