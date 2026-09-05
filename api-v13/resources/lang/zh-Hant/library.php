@@ -138,7 +138,7 @@ return [
     // course (course/index.blade.php + course/history.blade.php)
     'course' => '課程',
     'course_hero_title' => '課程',
-    'course_hero_subtitle' => '跟隨世界各地的巴利專家研讀聖典',
+    'course_hero_subtitle' => '跟隨世界各地的巴利專家研讀典籍',
     'course_search_placeholder' => '搜尋課程、講師…',
     'course_stat_total' => '公開課程',
     'course_stat_open' => '開放報名',
