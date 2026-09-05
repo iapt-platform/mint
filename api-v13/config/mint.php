@@ -20,6 +20,8 @@ return [
         'my' => 'မြန်မာဘာသာ',
         'th' => 'ภาษาไทย',
         'si' => 'සිංහල',
+        'vi' => 'Tiếng Việt',
+        'lo' => 'ພາສາລາວ',
     ],
     'default_language' => 'en',
     'library' => [
