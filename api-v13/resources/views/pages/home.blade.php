@@ -4,7 +4,7 @@
 --}}
 @extends('layouts.base')
 
-@section('title', 'WikiPāli · 巴利佛典百科')
+@section('title', __('home.title'))
 
 @push('styles')
 @vite(['resources/css/home.css'])
@@ -15,10 +15,15 @@
 @section('page')
 <main class="home">
 
+    {{-- 右上角语言选择，复用 library 的切换组件 --}}
+    <div class="home-lang">
+        <x-language-switcher />
+    </div>
+
     {{-- 品牌 Hero：站名 + 一行说明，居中 --}}
     <header class="home-hero">
-        <h1 class="home-hero__title">WikiPāli</h1>
-        <p class="home-hero__lead">巴利佛典百科 —— 由浅入深，进入巴利圣典的世界</p>
+        <h1 class="home-hero__title">{{ __('home.hero_title') }}</h1>
+        <p class="home-hero__lead">{{ __('home.hero_lead') }}</p>
     </header>
 
     {{-- 四张通栏卡片，纵向排列 --}}

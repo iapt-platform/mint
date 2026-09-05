@@ -30,6 +30,55 @@
     background: var(--home-bg);
 }
 
+/* 3.5 右上角语言选择（复用 x-language-switcher，改为浅底深字） */
+.home {
+    position: relative;
+}
+
+.home-lang {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    z-index: 10;
+}
+
+.home-lang .language-link,
+.home-lang .language-link:hover {
+    color: var(--home-text);
+}
+
+@media (max-width: 768px) {
+    .home-lang {
+        top: .75rem;
+        right: 1rem;
+    }
+
+    /* 组件移动端默认展开为静态列表，首页仍保持下拉 */
+    .home-lang .language-switcher {
+        width: auto;
+    }
+
+    .home-lang .language-dropdown {
+        position: absolute;
+        right: 0;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        background: rgba(0, 0, 0, .85);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, .1);
+        margin-top: .5rem;
+        padding: .5rem 0;
+    }
+
+    .home-lang .language-switcher:hover .language-dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
+
 /* 4. 品牌 Hero */
 .home-hero {
     display: flex;

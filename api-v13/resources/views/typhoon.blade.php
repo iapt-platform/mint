@@ -159,13 +159,13 @@ Read the documentation
 <div class="xl:container xl:mx-auto md:px-6 px-4">
 <div class="w-5/6 md:w-3/4 lg:w-2/3 xl:w-1/2 text-center mx-auto mb-16">
 <div class="text-xs md:text-sm opacity-75 font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
-让学习圣典变得更容易
+让学习典籍变得更容易
 </div>
 <h2 class="mt-1 tracking-tight leading-tighter text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-gray-100">
 我们的愿景
 </h2>
 <div class="mt-3 text-base md:text-lg lg:text-xl prose">
-<p>打造一个公共的巴利圣典学习平台。</p>
+<p>打造一个公共的巴利典籍学习平台。</p>
 </div>
 </div>
 <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-y-8 gap-x-8 ">

@@ -141,7 +141,7 @@ return [
     // course (course/index.blade.php + course/history.blade.php)
     'course' => '课程',
     'course_hero_title' => '课程',
-    'course_hero_subtitle' => '跟随世界各地的巴利专家研读圣典',
+    'course_hero_subtitle' => '跟随世界各地的巴利专家研读典籍',
     'course_search_placeholder' => '搜索课程、讲师…',
     'course_stat_total' => '公开课程',
     'course_stat_open' => '开放报名',
