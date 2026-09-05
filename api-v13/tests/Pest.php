@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Channel;
+use App\Models\Sentence;
 use App\Models\UserInfo;
 use App\Services\AuthService;
 use Firebase\JWT\JWT;
@@ -146,4 +147,32 @@ function makeChannel(string $ownerUid, string $name = 'test channel'): string
     ])->save();
 
     return $uid;
+}
+
+/**
+ * 建一个句子，返回模型
+ */
+function makeSentence(string $channelUid, int $book, int $para, int $wordStart, string $content): Sentence
+{
+    $sentence = new Sentence;
+    $sentence->forceFill([
+        // sentences.id 不是自增列，必须显式给值
+        'id' => random_int(1, PHP_INT_MAX),
+        'uid' => (string) Str::uuid(),
+        'book_id' => $book,
+        'paragraph' => $para,
+        'word_start' => $wordStart,
+        'word_end' => $wordStart,
+        'channel_uid' => $channelUid,
+        'editor_uid' => (string) Str::uuid(),
+        'content' => $content,
+        'content_type' => 'markdown',
+        'strlen' => mb_strlen($content),
+        'status' => 30,
+        'create_time' => time() * 1000,
+        'modify_time' => time() * 1000,
+        'language' => 'zh-Hans',
+    ])->save();
+
+    return $sentence;
 }

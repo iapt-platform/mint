@@ -8,7 +8,7 @@
  *
  * pageId 形如 `M-dīghanikāya-2-10`（页码类型_书名_卷号_页码）。
  * 内部调用 fetchPageNav 请求 /api/v2/nav-page，并把返回的
- * curr.paragraph → next.paragraph 区间转换为 TypePali 需要的参数。
+ * prev.paragraph → curr.paragraph 区间转换为 TypePali 需要的参数。
  *
  * @returns
  *   - nav        页码导航数据（curr/prev/next），失败时为 undefined
@@ -77,14 +77,16 @@ export const usePageNav = (
         const data = res.data;
         setNav(data);
 
-        const begin = data.curr.paragraph;
-        const end = data.next.paragraph;
+        // 页标记录的是「该页起始于哪一段」，所以当前页的正文区间是
+        // 上一页页标所在段 → 当前页页标所在段，例如 prev=53、curr=62 → 53..62。
+        const begin = data.prev?.paragraph ?? data.curr.paragraph;
+        const end = data.curr.paragraph;
         const para: number[] = [];
         for (let index = begin; index <= end; index++) {
           para.push(index);
         }
         setParamPali({
-          id: `${data.curr.book}-${data.curr.paragraph}`,
+          id: `${data.curr.book}-${begin}-${end}`,
           book: data.curr.book.toString(),
           para: para.join(),
           mode: mode,

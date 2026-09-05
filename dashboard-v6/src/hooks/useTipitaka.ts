@@ -73,18 +73,28 @@ const useTipitaka = ({
         if (type === "chapter") {
           response = await fetchChapter(id, srcDataMode, channelId);
         } else if (type === "para") {
-          const [book, pFrom, pTo] = id
+          const [idBook, pFrom, pTo] = id
             .split("-")
             .map((item) => parseInt(item));
-          const _to = pTo ?? pFrom;
 
-          const pList: number[] = [];
-          for (let index = pFrom; index <= _to; index++) {
-            pList.push(index);
+          // para/book prop 优先：调用方（如页码导航）可直接指定段落列表，
+          // 否则退回从 id（`book-from[-to]`）反解出的区间。
+          let reqBook = idBook.toString();
+          let reqPara: string;
+          if (para) {
+            reqBook = book ? book : reqBook;
+            reqPara = para;
+          } else {
+            const _to = pTo ?? pFrom;
+            const pList: number[] = [];
+            for (let index = pFrom; index <= _to; index++) {
+              pList.push(index);
+            }
+            reqPara = pList.join(",");
           }
           response = await fetchPara(
-            book.toString(),
-            pList.join(","),
+            reqBook,
+            reqPara,
             srcDataMode,
             channelId
           );
