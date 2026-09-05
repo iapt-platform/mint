@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\DB;
  * 导出移动端离线目录库（SQLite）。
  *
  * 替代 wikipali-mobile 仓库里的 src/data/tipitaka_heading.json（5.5MB，
- * 全量载入内存）。除原有目录字段外，额外带上：
+ * 全量载入内存）。导出 pali_texts 全部段落（不只是章节行，下载功能需要
+ * 非章节段落的字符数），除原有目录字段外额外带上：
+
+ *  - length：段落字符数（源表列名 `lenght` 为拼写错误，导出时纠正）
  *
  *  - tags：pali_texts.uid 经 tag_maps / tags 取到的标签名，逗号分隔
  *  - related_paragraphs：cs_para + book_name，用于由根本章节定位
@@ -20,15 +23,12 @@ class ExportMobileHeading extends Command
 {
     protected $signature = 'export:mobile.heading
         {--out= : 输出文件路径，默认 storage/app/public/export/mobile/tipitaka-heading-<date>.db3}
-        {--max-level=7 : 只导出 level <= 该值的行（与现有 tipitaka_heading.json 口径一致）}
         {--copy-to= : 导出后额外复制一份到该路径（例如移动端仓库的 assets/db/tipitaka.db3）}';
 
     protected $description = '导出移动端离线目录 SQLite（含 tags 与义注复注关联段落）';
 
     public function handle(): int
     {
-        $maxLevel = (int) $this->option('max-level');
-
         $out = $this->option('out');
         if (! $out) {
             $dir = storage_path('app/public/export/mobile');
@@ -45,14 +45,13 @@ class ExportMobileHeading extends Command
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->createSchema($dbh);
 
-        $headings = $this->exportHeadings($dbh, $maxLevel);
-        $related = $this->exportRelated($dbh, $maxLevel);
+        $texts = $this->exportPaliTexts($dbh);
+        $related = $this->exportRelated($dbh);
 
         $this->writeMeta($dbh, [
             'generated_at' => date('c'),
             'source' => config('app.url', ''),
-            'max_level' => (string) $maxLevel,
-            'heading_rows' => (string) $headings,
+            'pali_text_rows' => (string) $texts,
             'related_rows' => (string) $related,
         ]);
 
@@ -63,10 +62,10 @@ class ExportMobileHeading extends Command
 
         $this->newLine();
         $this->info(sprintf(
-            '导出完成：%s（%s，heading %d 行，related %d 行）',
+            '导出完成：%s（%s，pali_text %d 行，related %d 行）',
             $out,
             $this->humanSize(filesize($out)),
-            $headings,
+            $texts,
             $related
         ));
 
@@ -85,11 +84,13 @@ class ExportMobileHeading extends Command
 
     private function createSchema(\PDO $dbh): void
     {
-        $dbh->exec('CREATE TABLE heading (
+        // 全量段落（不只是章节标题行）：下载功能需要非章节段落的字符数
+        $dbh->exec('CREATE TABLE pali_text (
             book INTEGER NOT NULL,
             paragraph INTEGER NOT NULL,
             level INTEGER NOT NULL,
             toc TEXT,
+            length INTEGER,
             chapter_len INTEGER,
             chapter_strlen INTEGER,
             parent INTEGER,
@@ -112,31 +113,31 @@ class ExportMobileHeading extends Command
 
     private function createIndexes(\PDO $dbh): void
     {
-        $dbh->exec('CREATE INDEX idx_heading_book_level ON heading (book, level)');
-        $dbh->exec('CREATE INDEX idx_heading_parent ON heading (book, parent)');
+        $dbh->exec('CREATE INDEX idx_pali_text_book_level ON pali_text (book, level)');
+        $dbh->exec('CREATE INDEX idx_pali_text_parent ON pali_text (book, parent)');
         $dbh->exec('CREATE INDEX idx_related_src ON related_paragraph (book, para)');
         $dbh->exec('CREATE INDEX idx_related_dst ON related_paragraph (book_name, cs_para)');
     }
 
-    private function exportHeadings(\PDO $dbh, int $maxLevel): int
+    private function exportPaliTexts(\PDO $dbh): int
     {
-        $total = PaliText::where('level', '<=', $maxLevel)->count();
-        $this->line("导出 heading（level <= {$maxLevel}）：{$total} 行");
+        $total = PaliText::count();
+        $this->line("导出 pali_text（全量段落）：{$total} 行");
         $bar = $this->output->createProgressBar($total);
+        $bar->setRedrawFrequency(5000);
 
         // uid -> 标签名列表。tag_maps.table_name 对 pali_texts 使用复数表名。
         $tagsByUid = $this->loadTags();
 
-        $stmt = $dbh->prepare('INSERT INTO heading
-            (book, paragraph, level, toc, chapter_len, chapter_strlen, parent, uid, tags)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt = $dbh->prepare('INSERT INTO pali_text
+            (book, paragraph, level, toc, length, chapter_len, chapter_strlen, parent, uid, tags)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
         $dbh->beginTransaction();
         $n = 0;
         foreach (
-            PaliText::where('level', '<=', $maxLevel)
-                ->select(['uid', 'book', 'paragraph', 'level', 'toc',
-                    'chapter_len', 'chapter_strlen', 'parent'])
+            PaliText::select(['uid', 'book', 'paragraph', 'level', 'toc',
+                'lenght', 'chapter_len', 'chapter_strlen', 'parent'])
                 ->orderBy('book')
                 ->orderBy('paragraph')
                 ->cursor() as $row
@@ -145,7 +146,9 @@ class ExportMobileHeading extends Command
                 $row->book,
                 $row->paragraph,
                 $row->level,
-                $row->toc,
+                $row->toc !== '' ? $row->toc : null,
+                // 源表列名 `lenght` 是拼写错误，导出时纠正为 `length`
+                $row->lenght,
                 $row->chapter_len,
                 $row->chapter_strlen,
                 $row->parent,
@@ -183,32 +186,33 @@ class ExportMobileHeading extends Command
     }
 
     /**
-     * 只导出「源段落本身是被导出的 heading」的关联行 ——
-     * 移动端是按章节查关联，非章节段落的关联行用不到。
+     * 关联段落：由根本章节 (book, para) 找到对应义注 / 复注的 (book_name, cs_para)。
+     *
+     * `book_name` 为空表示该段落没有对应的注释书，导出为 NULL。
      */
-    private function exportRelated(\PDO $dbh, int $maxLevel): int
+    private function exportRelated(\PDO $dbh): int
     {
-        $sub = DB::table('pali_texts')
-            ->select(['book', 'paragraph'])
-            ->where('level', '<=', $maxLevel);
-
-        $query = DB::table('related_paragraphs as r')
-            ->joinSub($sub, 'h', function ($join) {
-                $join->on('h.book', '=', 'r.book')->on('h.paragraph', '=', 'r.para');
-            })
-            ->select(['r.book', 'r.para', 'r.book_id', 'r.cs_para', 'r.book_name']);
+        $query = DB::table('related_paragraphs')
+            ->select(['book', 'para', 'book_id', 'cs_para', 'book_name']);
 
         $total = $query->count();
         $this->line("导出 related_paragraph：{$total} 行");
         $bar = $this->output->createProgressBar($total);
+        $bar->setRedrawFrequency(5000);
 
         $stmt = $dbh->prepare('INSERT INTO related_paragraph
             (book, para, book_id, cs_para, book_name) VALUES (?, ?, ?, ?, ?)');
 
         $dbh->beginTransaction();
         $n = 0;
-        foreach ($query->orderBy('r.book')->orderBy('r.para')->cursor() as $row) {
-            $stmt->execute([$row->book, $row->para, $row->book_id, $row->cs_para, $row->book_name]);
+        foreach ($query->orderBy('book')->orderBy('para')->cursor() as $row) {
+            $stmt->execute([
+                $row->book,
+                $row->para,
+                $row->book_id,
+                $row->cs_para,
+                $row->book_name !== '' ? $row->book_name : null,
+            ]);
             $n++;
             $bar->advance();
         }
