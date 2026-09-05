@@ -16,7 +16,7 @@ return [
     'hero_lead' => 'Pali Buddhist Encyclopedia — step by step into the world of the Pali canon',
     'cards' => [
         'library' => [
-            'title' => 'Canon Library',
+            'title' => 'Tipiṭaka Library',
             'lead' => 'Tipiṭaka · Commentary · Subcommentary · Dictionary',
             'cta' => 'Enter the library',
         ],

@@ -17,27 +17,25 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // 支持的语言（Laravel 推荐小写 + 标准化）
+        // 支持的语言（config 里是 en / zh-Hans 这类带大小写的写法）
         $supportedLocales = array_keys(config('mint.languages'));
         $defaultLocale = config('app.locale', 'en');
 
         // 1️⃣ URL 参数 ?lang=
-        $locale = $request->query('lang');
+        $locale = $this->matchLocale($request->query('lang'), $supportedLocales);
 
         // 2️⃣ Cookie
         if (! $locale) {
-            $locale = Cookie::get('language');
+            $locale = $this->matchLocale(Cookie::get('language'), $supportedLocales);
         }
 
-        // 3️⃣ 浏览器语言
+        // 3️⃣ 浏览器 / 操作系统语言（Accept-Language 由浏览器按系统界面语言生成）
         if (! $locale) {
             $locale = $this->getBrowserLocale($request, $supportedLocales);
         }
 
-        // 4️⃣ 校验
-        if (! in_array($locale, $supportedLocales, true)) {
-            $locale = $defaultLocale;
-        }
+        // 4️⃣ 兜底
+        $locale = $locale ?? $defaultLocale;
 
         // 5️⃣ 应用语言
         App::setLocale($locale);
@@ -51,32 +49,84 @@ class SetLocale
 
     /**
      * 从 Accept-Language 头中解析浏览器语言
+     *
+     * @param  string[]  $supportedLocales
      */
-    protected function getBrowserLocale(Request $request, array $supportedLocales): string
+    protected function getBrowserLocale(Request $request, array $supportedLocales): ?string
     {
         $acceptLanguage = $request->header('Accept-Language');
 
         if (! $acceptLanguage) {
-            return config('app.locale', 'en');
+            return null;
         }
 
-        // zh-CN,zh;q=0.9,en;q=0.8
-        $languages = array_map(
-            fn ($lang) => strtolower(trim(explode(';', $lang)[0])),
-            explode(',', $acceptLanguage)
-        );
+        // zh-CN,zh;q=0.9,en;q=0.8 → 按 q 值从高到低排序
+        $languages = [];
 
-        foreach ($languages as $lang) {
-            // zh-cn → zh-hans / zh-hant
-            if (str_starts_with($lang, 'zh')) {
-                return str_contains($lang, 'hant') ? 'zh-hant' : 'zh-hans';
+        foreach (explode(',', $acceptLanguage) as $part) {
+            $pieces = explode(';', trim($part));
+            $tag = strtolower(trim($pieces[0]));
+
+            if ($tag === '' || $tag === '*') {
+                continue;
             }
 
-            if (in_array($lang, $supportedLocales, true)) {
-                return $lang;
+            $quality = 1.0;
+
+            if (isset($pieces[1]) && preg_match('/q=([0-9.]+)/', $pieces[1], $matches)) {
+                $quality = (float) $matches[1];
+            }
+
+            $languages[] = ['tag' => $tag, 'quality' => $quality];
+        }
+
+        usort($languages, fn ($a, $b) => $b['quality'] <=> $a['quality']);
+
+        foreach ($languages as $language) {
+            if ($locale = $this->matchLocale($language['tag'], $supportedLocales)) {
+                return $locale;
             }
         }
 
-        return config('app.locale', 'en');
+        return null;
+    }
+
+    /**
+     * 把一个语言标签匹配到受支持的语言，匹配不上返回 null。
+     * 大小写不敏感；zh-CN / zh-SG 归为简体，zh-TW / zh-HK / zh-MO 归为繁体；
+     * 其余按主语言回退，如 th-TH → th。
+     *
+     * @param  string[]  $supportedLocales
+     */
+    protected function matchLocale(?string $tag, array $supportedLocales): ?string
+    {
+        if (! $tag) {
+            return null;
+        }
+
+        $tag = strtolower(str_replace('_', '-', trim($tag)));
+
+        // lowercase => 原始写法，便于大小写不敏感匹配
+        $lookup = array_combine(array_map('strtolower', $supportedLocales), $supportedLocales);
+
+        // 精确匹配：en、zh-hans……
+        if (isset($lookup[$tag])) {
+            return $lookup[$tag];
+        }
+
+        // 中文按地区码判断简繁
+        if (str_starts_with($tag, 'zh')) {
+            $traditional = str_contains($tag, 'hant')
+                || (bool) preg_match('/\-(tw|hk|mo)\b/', $tag);
+
+            $chinese = $traditional ? 'zh-hant' : 'zh-hans';
+
+            return $lookup[$chinese] ?? null;
+        }
+
+        // 主语言回退：th-th → th
+        $primary = explode('-', $tag)[0];
+
+        return $lookup[$primary] ?? null;
     }
 }
