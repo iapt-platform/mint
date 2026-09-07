@@ -14,6 +14,7 @@ return [
     'title' => 'WikiPāli · Pali Buddhist Encyclopedia',
     'hero_title' => 'WikiPāli',
     'hero_lead' => 'Pali Buddhist Encyclopedia — step by step into the world of the Pali canon',
+    'legacy' => 'Legacy version',
     'cards' => [
         'library' => [
             'title' => 'Tipiṭaka Library',

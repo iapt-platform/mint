@@ -20,7 +20,7 @@ class TipitakaReadParaController extends Controller
             'to' => 'integer',
             'channel' => 'required|uuid',
             'format' => 'string|in:html,markdown,react,text',
-            'view' => 'string|in:display,sentences,all',
+            'view' => 'string|in:display,sentences,all', // display:整段合并 sentences：逐句
         ]);
 
         $from = $data['para'];

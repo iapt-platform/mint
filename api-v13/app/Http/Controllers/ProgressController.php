@@ -16,9 +16,11 @@ class ProgressController extends Controller
     public function index(Request $request)
     {
         //
+        $select = ['book', 'para', 'lang', 'progress', 'channel_id', 'title', 'last_chapter_completed_at', 'updated_at'];
         switch ($request->input('view')) {
             case 'channel':
-                $table = ProgressChapter::whereIn('channel_id', explode('_', $request->input('channels', '')));
+                $table = ProgressChapter::select($select)
+                    ->whereIn('channel_id', explode('_', $request->input('channels', '')));
                 break;
             default:
                 return $this->error('invalid view', 400, 400);
@@ -27,6 +29,9 @@ class ProgressController extends Controller
 
         if ($request->has('lang')) {
             $table = $table->where('lang', $request->input('lang'));
+        }
+        if ($request->has('book')) {
+            $table = $table->where('book', $request->input('book'));
         }
         $count = $table->count();
 

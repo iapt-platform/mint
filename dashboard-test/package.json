@@ -1,0 +1,19 @@
+{
+  "name": "dashboard-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "dashboard-v6 的 Playwright 端到端测试",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:channel": "playwright test channel",
+    "report": "playwright show-report",
+    "codegen": "playwright codegen http://127.0.0.1:4000/pcd-v2026"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^24.10.1"
+  }
+}

@@ -1,7 +1,7 @@
 /* resources/css/home.css
    WikiPāli 首页（next.wikipali.org）样式入口。
-   只服务于首页：品牌 hero + 四张通栏分流卡片。
-   平面、哑光、克制，无渐变 / 发光 / 阴影 / 圆角卡片。
+   只服务于首页：顶部导航 + 品牌 hero + 2×2 分流卡片。
+   平面、哑光、克制，无渐变 / 发光 / 大面积投影。
 */
 
 /* 1. Tabler（Bootstrap 5 底座）+ Tabler Icons */
@@ -14,9 +14,11 @@
     --home-text: #2B2318;
     --home-text-secondary: #63594A;
     --home-text-muted: #6F6555;
-    --home-border-muted: #B6AB98;
+    --home-border: #E4DCCD;
+    --home-card-bg: #FFFDF9;
+    --home-brand: #C8860A;
+    --home-brand-dark: #9A6508;
     --home-cta-hover-text: #F6F1E7;
-    --home-hero-tint: #8A6A3C;
 }
 
 /* 3. 页面底色 */
@@ -30,284 +32,315 @@
     background: var(--home-bg);
 }
 
-/* 3.5 右上角语言选择（复用 x-language-switcher，改为浅底深字） */
 .home {
     position: relative;
 }
 
-.home-lang {
-    position: absolute;
-    top: 1rem;
-    right: 1.5rem;
-    z-index: 10;
+/* 4. 顶部导航：浅底、深色 logo / 文案；内容限宽与下方一致 */
+.home-nav {
+    color: var(--home-text);
 }
 
-.home-lang .language-link,
-.home-lang .language-link:hover {
+.home-nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+}
+
+.home-nav__brand {
+    display: inline-flex;
+    align-items: center;
+    color: var(--home-text);
+}
+
+.home-nav__logo {
+    display: block;
+    height: 64px;
+    width: auto;
+}
+
+.home-nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* “旧版入口”显著按钮：品牌金填充 */
+.home-nav__legacy {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    background: var(--home-brand);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease;
+}
+
+.home-nav__legacy:hover,
+.home-nav__legacy:focus {
+    background: var(--home-brand-dark);
+    color: #fff;
+    text-decoration: none;
+}
+
+.home-nav__legacy:focus-visible {
+    outline: 2px solid var(--home-text);
+    outline-offset: 2px;
+}
+
+/* 语言切换在浅色导航下保持深字、深色下拉 */
+.home-nav__lang .language-link,
+.home-nav__lang .language-link:hover {
     color: var(--home-text);
 }
 
 @media (max-width: 768px) {
-    .home-lang {
-        top: .75rem;
-        right: 1rem;
+    .home-nav__inner {
+        padding: 0.75rem 1rem;
+    }
+
+    .home-nav__logo {
+        height: 52px;
+    }
+
+    .home-nav__actions {
+        gap: 0.75rem;
+    }
+
+    .home-nav__legacy {
+        min-height: 32px;
+        padding: 0.5rem 1rem;
     }
 
     /* 组件移动端默认展开为静态列表，首页仍保持下拉 */
-    .home-lang .language-switcher {
+    .home-nav__lang .language-switcher {
         width: auto;
     }
 
-    .home-lang .language-dropdown {
+    .home-nav__lang .language-dropdown {
         position: absolute;
         right: 0;
         opacity: 0;
         visibility: hidden;
         transform: translateY(-10px);
-        background: rgba(0, 0, 0, .85);
+        background: rgba(0, 0, 0, 0.85);
         -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, .1);
-        margin-top: .5rem;
-        padding: .5rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 0.5rem;
+        padding: 0.5rem 0;
     }
 
-    .home-lang .language-switcher:hover .language-dropdown {
+    .home-nav__lang .language-switcher:hover .language-dropdown {
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
     }
 }
 
-/* 4. 品牌 Hero */
+/* 5. 品牌 Hero */
 .home-hero {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    height: 44vh;
-    min-height: 280px;
-    padding: 2rem 1.5rem;
-    background: color-mix(in srgb, var(--home-hero-tint) 16%, var(--home-bg));
+    padding: 4rem 1.5rem 3rem;
 }
 
 .home-hero__title {
-    margin: 0 0 .75rem;
+    margin: 0 0 0.75rem;
     color: var(--home-text);
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 500;
     line-height: 1.2;
-    letter-spacing: .02em;
+    letter-spacing: 0.02em;
 }
 
 .home-hero__lead {
     margin: 0;
+    max-width: 36rem;
     color: var(--home-text-secondary);
-    font-size: clamp(.95rem, 1.6vw, 1.125rem);
+    font-size: clamp(0.95rem, 1.6vw, 1.125rem);
     line-height: 1.5;
 }
 
-/* 5. 通栏卡片 */
+/* 6. 2×2 卡片网格 */
+.home-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+}
+
+/* 7. 卡片：浅底、细边框、圆角，克制投影仅用于 hover */
 .home-card {
-    position: relative;
     display: flex;
-    align-items: center;
-    height: 40vh;
-    min-height: 320px;
-    max-height: 480px;
-    overflow: hidden;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: var(--home-card-bg);
+    border: 1px solid var(--home-border);
+    border-radius: 12px;
     color: var(--home-text);
+    text-decoration: none;
 }
 
-/* 末卡（二次开发）高度略矮 */
-#card-development {
-    height: 36vh;
-    min-height: 280px;
-    max-height: none;
+.home-card--link {
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* 底图：通栏满铺 */
-.home-card__media-wrap {
-    position: absolute;
-    inset: 0;
-    display: block;
-    margin: 0;
-    padding: 0;
+.home-card--link:hover,
+.home-card--link:focus-visible {
+    border-color: var(--home-brand);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(43, 35, 24, 0.08);
+    color: var(--home-text);
+    text-decoration: none;
 }
 
-.home-card__media {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.home-card--link:focus-visible {
+    outline: 2px solid var(--home-brand);
+    outline-offset: 3px;
 }
 
-/* 文字在左 → 图的视觉重心在右；文字在右 → 视觉重心在左 */
-.home-card--start .home-card__media {
-    object-position: 70% center;
-}
-
-.home-card--end .home-card__media {
-    object-position: 30% center;
-}
-
-/* 蒙版：保证文字对比度 ≥ 4.5:1 */
-.home-card__veil {
-    position: absolute;
-    inset: 0;
-    background: color-mix(in srgb, var(--card-tint) 16%, rgba(246, 241, 231, .8));
-}
-
-/* 文字块：垂直居中，横向贴边 */
-.home-card__body {
-    position: relative;
-    z-index: 1;
-    display: flex;
+/* 图标：卡片 tint 的低饱和底色 + 同色图标 */
+.home-card__icon {
+    display: inline-flex;
     align-items: center;
-    width: 100%;
-    padding: 2rem clamp(1.5rem, 6vw, 5rem);
-}
-
-.home-card--start .home-card__body {
-    justify-content: flex-start;
-    padding-left: calc(clamp(1.5rem, 6vw, 5rem) + 300px);
-}
-
-.home-card--end .home-card__body {
-    justify-content: flex-end;
-    padding-right: calc(clamp(1.5rem, 6vw, 5rem) + 300px);
-}
-
-.home-card__text {
-    width: 100%;
-    max-width: 26rem;
-}
-
-.home-card--start .home-card__text {
-    text-align: left;
-}
-
-.home-card--end .home-card__text {
-    text-align: right;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--card-tint) 12%, #fff);
+    color: var(--card-tint);
+    font-size: 22px;
+    line-height: 1;
 }
 
 .home-card__eyebrow {
-    margin: 0 0 .5rem;
+    margin: 0;
     color: var(--home-text-muted);
     font-size: 12px;
-    letter-spacing: .22em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
 }
 
 .home-card__title {
-    margin: 0 0 .75rem;
+    margin: 0;
     color: var(--home-text);
-    font-size: clamp(1.5rem, 3.2vw, 2.5rem);
-    font-weight: 500;
+    font-size: 1.25rem;
+    font-weight: 600;
     line-height: 1.3;
 }
 
 .home-card__lead {
-    margin: 0 0 1.5rem;
+    margin: 0;
+    flex: 1;
     color: var(--home-text-secondary);
-    font-size: clamp(.9rem, 1.4vw, 1.0625rem);
+    font-size: 0.9375rem;
     line-height: 1.5;
 }
 
-/* CTA / 状态角标：胶囊形 */
 .home-card__cta,
 .home-card__badge {
     display: inline-flex;
     align-items: center;
-    gap: .5rem;
-    border-radius: 999px;
-    padding: .55rem 1.25rem;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
     font-size: 14px;
     line-height: 1;
 }
 
 .home-card__cta {
-    border: 1px solid var(--home-text);
-    color: var(--home-text);
-    text-decoration: none;
-    transition: background-color .2s ease, color .2s ease;
+    color: var(--home-brand);
+    font-weight: 600;
 }
 
-.home-card__cta:hover,
-.home-card__cta:focus {
-    background: var(--home-text);
-    color: var(--home-cta-hover-text);
-    text-decoration: none;
+.home-card__cta .ti {
+    transition: transform 0.2s ease;
 }
 
-.home-card__cta:focus-visible {
-    outline: 2px solid var(--home-text);
-    outline-offset: 3px;
+.home-card--link:hover .home-card__cta .ti {
+    transform: translateX(3px);
 }
 
 .home-card__badge {
-    border: 1px solid var(--home-border-muted);
     color: var(--home-text-muted);
 }
 
-/* 6. 响应式：768–991px（高度不变，文字块收窄） */
-@media (max-width: 991.98px) {
-    .home-card__text {
-        max-width: 20rem;
-    }
-}
-
-/* 7. 响应式：<768px（全部左对齐，换移动端高度，蒙版加深） */
+/* 8. 响应式：<768px 单列 */
 @media (max-width: 767.98px) {
     .home-hero {
-        height: 40vh;
-        min-height: 240px;
+        padding: 3rem 1.5rem 2rem;
     }
 
-    .home-card {
-        height: 52vh;
-        min-height: 300px;
-        max-height: none;
-    }
-
-    #card-development {
-        height: 46vh;
-        min-height: 260px;
-    }
-
-    .home-card__body {
-        justify-content: flex-start;
-        padding: 2rem 1.5rem;
-    }
-
-    .home-card--start .home-card__body,
-    .home-card--end .home-card__body {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-    }
-
-    .home-card__text {
-        max-width: 100%;
-        text-align: left;
-    }
-
-    .home-card__media {
-        object-position: 75% center;
-    }
-
-    .home-card__veil {
-        background: color-mix(in srgb, var(--card-tint) 20%, rgba(246, 241, 231, .88));
-    }
-
-    .home-card__eyebrow {
-        font-size: 11px;
+    .home-grid {
+        grid-template-columns: 1fr;
+        padding-bottom: 3rem;
     }
 }
 
-/* 8. 尊重减少动态偏好：关闭过渡 */
+/* 9. Footer：备案号（ICP / 公安备案） */
+.home-footer {
+    border-top: 1px solid var(--home-border);
+    color: var(--home-text-muted);
+}
+
+.home-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem 1.5rem;
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 1.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.home-footer__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.home-footer__icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+.home-footer a {
+    color: var(--home-text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.home-footer a:hover {
+    color: var(--home-text);
+    text-decoration: underline;
+}
+
+/* 10. 尊重减少动态偏好：关闭过渡 */
 @media (prefers-reduced-motion: reduce) {
-    .home-card__cta {
+    .home-card--link,
+    .home-card__cta .ti {
         transition: none;
     }
 }

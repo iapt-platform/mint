@@ -14,11 +14,12 @@ return [
     'title' => 'WikiPāli · 巴利典籍百科',
     'hero_title' => 'WikiPāli',
     'hero_lead' => '巴利典籍百科 —— 由淺入深，進入巴利典籍的世界',
+    'legacy' => '進入舊版',
     'cards' => [
         'library' => [
             'title' => '典籍文庫',
             'lead' => '三藏 · 義註 · 複註 · 字典',
-            'cta' => '進入文庫',
+            'cta' => '我要讀經',
         ],
         'course' => [
             'title' => '次第課程',
