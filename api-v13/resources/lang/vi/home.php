@@ -14,6 +14,7 @@ return [
     'title' => 'WikiPāli · Bách khoa Thánh điển Pāli',
     'hero_title' => 'WikiPāli',
     'hero_lead' => 'Bách khoa Thánh điển Pāli — từ dễ đến khó, bước vào thế giới kinh điển Pāli',
+    'legacy' => 'Phiên bản cũ',
     'cards' => [
         'library' => [
             'title' => 'Thư viện Tam Tạng',
