@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Library;
 
-use Illuminate\Support\Facades\Cache;
-
-use App\DTO\Search\HitItemDTO;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\StudioApi;
 use App\Http\Controllers\Controller;
@@ -12,12 +9,10 @@ use App\Models\PaliText;
 use App\Models\ProgressChapter;
 use App\Models\Sentence;
 use App\Services\ChapterService;
-use App\Services\OpenSearchService;
+use App\Services\PaliContentService;
 use App\Services\PaliTextService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-
 
 class BookController extends Controller
 {
@@ -34,11 +29,11 @@ class BookController extends Controller
     protected $minChapterLen = 100;
 
     /**
-     * 构造函数，注入 OpenSearchService
+     * 构造函数，注入文本与段落内容服务
      */
     public function __construct(
-        protected OpenSearchService $searchService,
-        protected PaliTextService $paliTextService
+        protected PaliTextService $paliTextService,
+        protected PaliContentService $paliContentService
     ) {}
 
     public function show(string $id)
@@ -113,10 +108,10 @@ class BookController extends Controller
         $bookId = (int) $bookId;
         $paraId = (int) $paraId;
 
-        // 解析选中 chapter 的实际显示区间，并聚合区间内全部 chapter 节点的 ES 内容，
+        // 解析选中 chapter 的实际显示区间（起始/终止段落号），再按段落号聚合 HTML，
         // 避免选中父 chapter 时仅显示一个标题。
         $range = $this->resolveDisplayRange($bookId, $paraId);
-        $chapter = $this->fetchRangeContent($bookId, $channelId, $range['chapters'], $id);
+        $chapter = $this->fetchRangeContent($bookId, $channelId, $range['start'], $range['end'], $paraId);
 
         if ($request->has('comm')) {
             // 注释范围与显示区间保持一致（聚合后可能跨多个段落）
@@ -165,17 +160,17 @@ class BookController extends Controller
     }
 
     /**
-     * 解析选中 chapter 的实际显示区间。
+     * 解析选中 chapter 的实际显示区间，返回区间的起始与终止段落号。
      *
      * ES 中每个 chapter 节点仅保存「本节点 → 下一节点」之间的正文，因此选中含
-     * 子 chapter 的父节点时其自身文档往往只有标题。为完整呈现内容，这里把选中
-     * chapter 覆盖区间内的所有 chapter 节点聚合为一个显示单元：
-     *  - 选中节点 chapter_strlen 不超过阈值：直接使用其覆盖区间
-     *    [paragraph, paragraph + chapter_len - 1]；
+     * 子 chapter 的父节点时其自身文档往往只有标题。为完整呈现内容，这里按阈值
+     * 决定显示区间终点：
+     *  - 选中节点 chapter_strlen 不超过阈值：终点为
+     *    [paragraph + chapter_len - 1]；
      *  - 否则向后下钻，找到第一个不超过阈值的子 chapter，以该子 chapter 的结束
      *    段落作为区间终点（起点仍为选中段落，保留上层标题作为阅读上下文）。
      *
-     * @return array{current: PaliText, start: int, end: int, chapters: Collection<int, PaliText>}
+     * @return array{start: int, end: int}
      */
     private function resolveDisplayRange(int $book, int $para): array
     {
@@ -191,7 +186,6 @@ class BookController extends Controller
             ->get();
 
         $curr = $paragraphs->firstWhere('paragraph', $para);
-        $current = $curr;
         $endParagraph = $curr->paragraph + $curr->chapter_len - 1;
 
         if ($curr->chapter_strlen > $this->maxChapterStrlen) {
@@ -202,67 +196,57 @@ class BookController extends Controller
                 }
                 if ($paragraph->chapter_strlen <= $this->maxChapterStrlen) {
                     $endParagraph = $paragraph->paragraph + $paragraph->chapter_len - 1;
-                    $current = $paragraph;
                     break;
                 }
                 if ($paragraph->level <= $curr->level) {
                     // 已离开选中节点的子树，无法继续下钻，止步于上一个节点
                     $endParagraph = $paragraphs[$key - 1]->paragraph + $paragraphs[$key - 1]->chapter_len - 1;
-                    $current = $paragraph;
                     break;
                 }
             }
         }
 
-        $start = $curr->paragraph;
-        $end = $endParagraph;
-
-        // 区间内的全部 chapter 节点，用于聚合 ES 内容
-        $chapters = $paragraphs->filter(function ($paragraph) use ($start, $end) {
-            return $paragraph->paragraph >= $start && $paragraph->paragraph <= $end;
-        })->values();
-
-        return compact('current', 'start', 'end', 'chapters');
+        return [
+            'start' => $curr->paragraph,
+            'end' => $endParagraph,
+        ];
     }
 
     /**
-     * 聚合区间内全部 chapter 节点的 ES 内容。
+     * 聚合区间内全部段落的阅读模式 HTML。
      *
-     * 逐个按 ES 文档 id（tipitaka_chapter_{book}-{paragraph}_{channel}）获取并按段落
-     * 顺序拼接 display；缺失或获取失败的节点跳过。选中（即传入 $selectedId 的）
-     * 节点同时提供页面标题与分类。
+     * 与 TipitakaReadParaController 一致，逐段调用 PaliContentService::readParagraph
+     * 获取 HTML 并按段落顺序拼接；缺失或获取失败的段落跳过。章节标题优先取
+     * ProgressChapter.title，回退到 PaliText.toc。
      *
-     * @param  Collection<int, PaliText>  $chapters
      * @return array{display: string, title: string, category: array}
      */
-    private function fetchRangeContent(int $book, string $channelId, $chapters, string $selectedId): array
+    private function fetchRangeContent(int $book, string $channelId, int $start, int $end, int $selectedPara): array
     {
         $display = '';
-        $title = '';
-        $category = [];
-
-        foreach ($chapters as $chapter) {
-            $openSearchId = "tipitaka_chapter_{$book}-{$chapter->paragraph}_{$channelId}";
-
-            $conntent = Cache::rememberForever($openSearchId, function () use($openSearchId) {
-                            //Log::debug($openSearchId.' not hit');
-                            $doc = [];
-                            try {
-                                $doc = HitItemDTO::fromArray($this->searchService->get($openSearchId))->toArray();
-                            } catch (\Throwable $th) {
-                            }
-                            return $doc['display'] ?? '';
-                        });
-            
-            $display .= $conntent;
-
-            if ("{$book}-{$chapter->paragraph}" === $selectedId) {
-                $title = $doc['title'] ?? '';
-                $category = $doc['category'] ?? [];
+        foreach (range($start, $end) as $para) {
+            $paragraph = $this->paliContentService->readParagraph($book, $para, $channelId, 'html');
+            if (empty($paragraph['display'])) {
+                continue;
             }
+            $display .= $paragraph['display'];
         }
 
-        return compact('display', 'title', 'category');
+        $title = ProgressChapter::where('book', $book)
+            ->where('para', $selectedPara)
+            ->where('channel_id', $channelId)
+            ->value('title');
+        if (empty($title)) {
+            $title = PaliText::where('book', $book)
+                ->where('paragraph', $selectedPara)
+                ->value('toc');
+        }
+
+        return [
+            'display' => $display,
+            'title' => $title ?? '',
+            'category' => [],
+        ];
     }
 
     private function loadBook(string $id)
