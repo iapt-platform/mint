@@ -16,27 +16,44 @@ class ProgressController extends Controller
     public function index(Request $request)
     {
         //
-        $select = ['book', 'para', 'lang', 'progress', 'channel_id', 'title', 'last_chapter_completed_at', 'updated_at'];
+        $select = [
+            'progress_chapters.book',
+            'progress_chapters.para',
+            'progress_chapters.lang',
+            'progress_chapters.progress',
+            'progress_chapters.channel_id',
+            'progress_chapters.title',
+            'progress_chapters.last_chapter_completed_at',
+            'progress_chapters.completed_at',
+            'progress_chapters.updated_at',
+        ];
         switch ($request->input('view')) {
             case 'channel':
                 $table = ProgressChapter::select($select)
-                    ->whereIn('channel_id', explode('_', $request->input('channels', '')));
+                    ->whereIn('progress_chapters.channel_id', explode('_', $request->input('channels', '')));
                 break;
             default:
                 return $this->error('invalid view', 400, 400);
                 break;
         }
 
+        if ($request->filled('level')) {
+            $table = $table->leftJoin('pali_texts', function ($join) {
+                $join->on('progress_chapters.book', '=', 'pali_texts.book')
+                    ->on('progress_chapters.para', '=', 'pali_texts.paragraph');
+            })->where('pali_texts.level', '<=', (int) $request->input('level'));
+        }
+
         if ($request->has('lang')) {
-            $table = $table->where('lang', $request->input('lang'));
+            $table = $table->where('progress_chapters.lang', $request->input('lang'));
         }
         if ($request->has('book')) {
-            $table = $table->where('book', $request->input('book'));
+            $table = $table->where('progress_chapters.book', $request->input('book'));
         }
         $count = $table->count();
 
         $table = $table->orderBy(
-            $request->input('order', 'completed_at'),
+            'progress_chapters.'.$request->input('order', 'completed_at'),
             $request->input('dir', 'desc')
         );
 
