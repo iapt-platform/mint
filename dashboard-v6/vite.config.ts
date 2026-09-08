@@ -11,5 +11,17 @@ export default defineConfig({
       "/api": "http://127.0.0.1:8000",
     },
   },
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            return "vendor";
+          }
+        },
+      },
+    },
+  },
   plugins: [react()],
 });

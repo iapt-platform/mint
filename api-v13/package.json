@@ -51,6 +51,7 @@
         "jsdom": "^29.1.1",
         "laravel-vite-plugin": "^3.0.0",
         "marked": "^18.0.4",
+        "qrcode": "^1.5.4",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "tailwind-merge": "^3.0.1",
