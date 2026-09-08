@@ -38,7 +38,7 @@ class ProgressController extends Controller
         }
 
         if ($request->filled('level')) {
-            $table = $table->leftJoin('pali_texts', function ($join) {
+            $table = $table->join('pali_texts', function ($join) {
                 $join->on('progress_chapters.book', '=', 'pali_texts.book')
                     ->on('progress_chapters.para', '=', 'pali_texts.paragraph');
             })->where('pali_texts.level', '<=', (int) $request->input('level'));
