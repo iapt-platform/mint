@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./style.css";
 import TermTextAreaMenu from "./TermTextAreaMenu";
 
@@ -21,18 +21,18 @@ const TermTextAreaWidget = ({
   const [shadowHeight, setShadowHeight] = useState<number>();
   const [menuFocusIndex, setMenuFocusIndex] = useState(0);
   const [menuDisplay, setMenuDisplay] = useState("none");
-  const [menuTop, setMenuTop] = useState(0);
-  const [menuLeft, setMenuLeft] = useState(0);
+  /** 光标位置，菜单实际坐标由它再做边界钳制 */
+  const [cursorPos, setCursorPos] = useState({ top: 0, left: 0 });
+  const [menuItemCount, setMenuItemCount] = useState(0);
   const [menuSelected, setMenuSelected] = useState<string>();
 
   const [textAreaValue, setTextAreaValue] = useState(value);
   const [textAreaHeight, setTextAreaHeight] = useState(100);
   const [termSearch, setTermSearch] = useState<string>();
 
-  const _term_max_menu = 10;
-
   const refTextArea = useRef<HTMLTextAreaElement>(null);
   const refShadow = useRef<HTMLDivElement>(null);
+  const refMenu = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!refTextArea.current) return;
@@ -47,6 +47,41 @@ const TermTextAreaWidget = ({
 
     return () => observer.disconnect();
   }, []);
+
+  /**
+   * 菜单显示后按容器和视口做边界钳制，避免超出可视区域
+   */
+  useLayoutEffect(() => {
+    if (menuDisplay !== "block" || !refMenu.current || !refTextArea.current) {
+      return;
+    }
+    const menu = refMenu.current;
+    const container = refTextArea.current;
+    const menuWidth = menu.offsetWidth;
+    const menuHeight = menu.offsetHeight;
+
+    let left = cursorPos.left;
+    const maxLeft = container.clientWidth - menuWidth;
+    if (left > maxLeft) {
+      left = maxLeft;
+    }
+    if (left < 0) {
+      left = 0;
+    }
+
+    let top = cursorPos.top + 20;
+    // 菜单底部若超出视口，改为显示在光标上方
+    const containerTop = container.getBoundingClientRect().top;
+    if (containerTop + top + menuHeight > window.innerHeight) {
+      const above = cursorPos.top - menuHeight;
+      if (containerTop + above > 0) {
+        top = above;
+      }
+    }
+
+    menu.style.top = `${top}px`;
+    menu.style.left = `${left}px`;
+  }, [menuDisplay, cursorPos, termSearch]);
 
   function term_at_menu_hide() {
     setMenuDisplay("none");
@@ -83,8 +118,13 @@ const TermTextAreaWidget = ({
   return (
     <div className="text_input">
       <div
+        ref={refMenu}
         className="menu"
-        style={{ display: menuDisplay, top: menuTop, left: menuLeft }}
+        style={{
+          display: menuDisplay,
+          top: cursorPos.top + 20,
+          left: cursorPos.left,
+        }}
       >
         <TermTextAreaMenu
           currIndex={menuFocusIndex}
@@ -97,6 +137,7 @@ const TermTextAreaWidget = ({
           onChange={(value: string) => {
             setMenuSelected(value);
           }}
+          onCount={setMenuItemCount}
         />
       </div>
       <div
@@ -120,7 +161,7 @@ const TermTextAreaWidget = ({
           switch (event.key) {
             case "ArrowDown":
               if (menuDisplay === "block") {
-                if (menuFocusIndex < _term_max_menu) {
+                if (menuFocusIndex < menuItemCount - 1) {
                   setMenuFocusIndex((value) => ++value);
                 }
                 event.preventDefault();
@@ -201,8 +242,7 @@ const TermTextAreaWidget = ({
             if (menuDisplay !== "block") {
               setMenuFocusIndex(0);
               setMenuDisplay("block");
-              setMenuTop(cursor.offsetTop + 20);
-              setMenuLeft(cursor.offsetLeft);
+              setCursorPos({ top: cursor.offsetTop, left: cursor.offsetLeft });
               //menu.innerHTML = TermAtRenderMenu({ focus: 0 });
               //term_at_menu_show(cursor);
             }
@@ -228,7 +268,11 @@ const TermTextAreaWidget = ({
               if (pos2 === -1 || pos2 < pos1) {
                 //光标
                 const term_input = str1.slice(str1.lastIndexOf("[[") + 2);
-                setTermSearch(term_input);
+                if (term_input !== termSearch) {
+                  //候选列表变了，焦点回到第一项
+                  setMenuFocusIndex(0);
+                  setTermSearch(term_input);
+                }
               }
             }
           }
