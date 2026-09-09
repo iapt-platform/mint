@@ -27,12 +27,14 @@ export function dashboardBasePath(): string {
 }
 
 export function fullUrl(url: string): string {
-  if (import.meta.env.BASE_URL.includes("http")) {
-    //for CDN
-    return import.meta.env.BASE_URL + url;
-  } else {
-    return window.location.origin + import.meta.env.BASE_URL + url;
-  }
+  // BASE_URL 通常以 "/" 结尾，而调用方传入的 url 有的带前导 "/" 有的不带，
+  // 这里统一去掉重复的斜杠，避免拼出 ".../pcd-v2026//workspace/..." 这种地址
+  const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+  const path = url.replace(/^\/+/, "");
+  const prefix = base.includes("http")
+    ? base //for CDN
+    : window.location.origin + base;
+  return path ? `${prefix}/${path}` : `${prefix}/`;
 }
 
 export function PaliToEn(pali: string): string {

@@ -355,12 +355,9 @@ const Widget = ({ onSearch }: Props) => {
       <RecentModal
         open={recentOpen}
         onOpenChange={() => setRecentOpen(false)}
-        onSelect={(e, row) => {
-          if (e.ctrlKey || e.metaKey) {
-            window.open("");
-          } else {
-            navigate(recentPath(row.type, row.articleId));
-          }
+        onSelect={(_e, row) => {
+          // 弹窗中的链接一律新标签页打开，避免弹窗被原地跳转关掉
+          window.open(fullUrl(recentPath(row.type, row.articleId)), "_blank");
           setRecentOpen(false);
         }}
       />
