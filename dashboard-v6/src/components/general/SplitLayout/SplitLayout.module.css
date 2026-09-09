@@ -79,6 +79,18 @@
 .centerPanel {
   overflow: hidden;
   height: 100%;
+  /* 让内容区居中，两侧留白；右边栏弹出时正文宽度不变，避免重排 */
+  display: flex;
+  justify-content: center;
+}
+
+/* 正文容器：限制最大宽度，宽屏时两侧留白 */
+.centerInner {
+  flex: 1;
+  min-width: 0;
+  max-width: var(--split-layout-content-max-width, 1000px);
+  height: 100%;
+  overflow: hidden;
 }
 
 /* 展开按钮（由中间内容区组件放置） */
