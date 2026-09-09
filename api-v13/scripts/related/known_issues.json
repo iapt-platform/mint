@@ -1,0 +1,347 @@
+{
+  "version": 1,
+  "purpose": "related_paragraphs 重建工程的已知错误登记表：每条一个可机检的探测器，带旧表实测基线与各阶段目标。check.php 按此表给任意一张 related 表打分，用来回答『这一轮错误是不是变少了』。",
+  "doc_ref": "api-v13/documents/related-paragraphs-redesign.md",
+  "baseline_table": "related_paragraphs_bak_20260909",
+  "baseline_database": "visuddhinanda_20260311",
+  "baseline_measured_at": "2026-09-09",
+  "params": {
+    "cs_garbage_threshold": 5000,
+    "cs_observed_max_legit": 3183,
+    "flat_min_rows": 200,
+    "flat_max_distinct_ratio": 50
+  },
+  "notes": [
+    "cs6_para.csv 并未丢失（github.com/iapt-platform/clove/pali_title/cs6_para.csv，523283 行），与设计文档 §6.1 的表述不符。它是现表的来源，含全部历史错误，因此不作生成源，只作 baseline 与 book 129 的回填源。",
+    "逐本比对 csv 非零行 vs wbw 标记数：只有 book 129 是『csv 有 6580 非零行、wbw 零标记』。E9 其余 15 本 csv 里也是全零，源头就没有。",
+    "基线数字取自旧表实测，与文档 §4.3/§8 的差异已在各条 baseline_note 注明。",
+    "E8 判据在实测中收窄，详见该条 baseline_note；旧的「cs 值种类少」判法会把章回绕误报成污染。",
+    "MarkerParser 全库实跑：330267 个锚点 100% 归类，零 unknown。新发现两类文档未记录的形态——倒序区间 3 行（para504-407 / para706-608，高位笔误，按低位补齐还原为 504-507 / 706-708，已由前后邻标记验证）与多级章标记 247 行（an5_1_1 型，13 本，义注书 100-102 与 mūla 书 82-92 共用同一套编号，是跨文件章界对齐的抓手）。",
+    "para504-407 丢段的完整链路已查清：cs6_para.csv 原样写了 begin=504,end=407，旧 Laravel 命令的 for ($i=$begin; $i<=$end; $i++) 一圈没进——是导入环节静默吞掉的，不是生成环节。"
+  ],
+  "detectors": [
+    {
+      "id": "E1_cs_garbage",
+      "title": "cs 乱码值",
+      "doc_ref": "§4.3 E1",
+      "severity": "blocker",
+      "baseline": {
+        "rows": 1242,
+        "books": 24
+      },
+      "target_v1": {
+        "rows": 0
+      },
+      "target_final": {
+        "rows": 0
+      },
+      "root_cause": "旧生成器解析无后缀区间标记 para7-10 产生废值（如 44022）",
+      "fix_stage": "batch1 导出器：超值域拒绝输出 + issue"
+    },
+    {
+      "id": "E2_chapter_wrap",
+      "title": "章回绕（cs 从 1 重新计数）",
+      "doc_ref": "§4.3 E2",
+      "severity": "blocker",
+      "baseline": {
+        "wrap_points": 429,
+        "books": 70
+      },
+      "baseline_note": "文档写 430，实测 429，差异来自并列排序的 tie-break，不影响结论",
+      "target_v1": {
+        "wrap_points": "unchanged"
+      },
+      "target_final": {
+        "wrap_points": 0
+      },
+      "root_cause": "VRI 标记是章内局部编号，章界处重置，旧生成器照搬",
+      "fix_stage": "batch3 章后缀；v1 不处理，先让确定性规则跑干净"
+    },
+    {
+      "id": "E3_kn10_missing",
+      "title": "kn10 家族命名错乱，apadāna 注释链断裂",
+      "doc_ref": "§4.3 E3",
+      "severity": "blocker",
+      "baseline": {
+        "kn10_rows": 0,
+        "kn10_a_rows": 16787,
+        "kn10_b_rows": 12407
+      },
+      "baseline_note": "kn10_A/kn10_B 行数取自 csv album 统计，旧表同源",
+      "target_v1": {
+        "kn10_rows": ">6000"
+      },
+      "target_final": {
+        "kn10_rows": ">6000"
+      },
+      "root_cause": "therā/therī（book 143/144）被赋 kn10_A/kn10_B 且归属互相矛盾；wbw 中 paraN_kn10 标记 6533 行在 related 中映射丢失",
+      "fix_stage": "batch1 书级配置表"
+    },
+    {
+      "id": "E4_empty_book_name",
+      "title": "空 book_name（无注释体系书）",
+      "doc_ref": "§4.3 E4",
+      "severity": "expected",
+      "baseline": {
+        "rows": 112965
+      },
+      "target_v1": {
+        "rows": "~112965"
+      },
+      "target_final": {
+        "rows": "~112965"
+      },
+      "root_cause": "nīti/语法/词典类书无 cs 标记体系，不参与注释关系",
+      "fix_stage": "不修，维持现状（§6.7）"
+    },
+    {
+      "id": "E5_book_id_zero",
+      "title": "book_id 未赋值",
+      "doc_ref": "§4.3 E5",
+      "severity": "minor",
+      "baseline": {
+        "rows": 354,
+        "books": 201
+      },
+      "target_v1": {
+        "rows": "<=354"
+      },
+      "target_final": {
+        "rows": "<=354"
+      },
+      "root_cause": "各文件 para 1-2 书前页，语义正确；另 sn 280/281 整段归错前册",
+      "fix_stage": "batch1 book_id 层按 book_titles 重跑"
+    },
+    {
+      "id": "E6_coverage_gap",
+      "title": "覆盖缺口（wbw 有段落但 related 无行）",
+      "doc_ref": "§4.3 E6",
+      "severity": "major",
+      "baseline": {
+        "segments": 3466
+      },
+      "target_v1": {
+        "segments": "<500"
+      },
+      "target_final": {
+        "segments": "<100"
+      },
+      "root_cause": "主体为缩写区间丢失（E7），其余为 wbw_templates 整段缺失",
+      "fix_stage": "batch1 + batch4"
+    },
+    {
+      "id": "E7_abbrev_interval_lost",
+      "title": "缩写区间丢失（para292-3 型）",
+      "doc_ref": "§4.3 E7",
+      "severity": "blocker",
+      "baseline": {
+        "marker_segments": 1517,
+        "books": 44,
+        "segments_without_rows": 1292,
+        "segments_with_garbage": 225
+      },
+      "target_v1": {
+        "segments_without_rows": 0,
+        "segments_with_garbage": 0
+      },
+      "target_final": {
+        "segments_without_rows": 0,
+        "segments_with_garbage": 0
+      },
+      "root_cause": "VRI 缩写语法 para292-3（=292-293）旧生成器不识别：多数跳过，少数误解析为废值",
+      "fix_stage": "batch1 导出器缩写补齐规则"
+    },
+    {
+      "id": "E8_flat_pollution",
+      "title": "书边界污染平铺",
+      "doc_ref": "§4.3 E8",
+      "severity": "blocker",
+      "baseline": {
+        "groups": 1,
+        "rows": 1499
+      },
+      "baseline_note": "实测复核后收窄了判据：污染的准确签名是「整段零 cs 标记却被写进非零 cs」。按此判全库只有 book 207 / book_id 259 kaṅkhāvitaraṇī 一段（1499 行恒 cs=75）。文档 §4.3 原列的另外几组里，book 212/273（669 行）、book 180/213、book 209/261 都是 cs 恒 0，0 是「未赋值」不是编造值，不算污染；book 152/46/116/154/204 则是章回绕（E2）被误判——book 152 有 516 个标记却只 24 个 cs 值，正是 22 次回绕造成的。",
+      "target_v1": {
+        "groups": 0
+      },
+      "target_final": {
+        "groups": 0
+      },
+      "root_cause": "换书（book_id 切换）后无标记，旧生成器无限沿用上一个 cs 值",
+      "fix_stage": "batch1 留空 + batch4 LLM"
+    },
+    {
+      "id": "E9_no_marker_books",
+      "title": "全书无标记（related 有行但 wbw 零标记）",
+      "doc_ref": "§4.3 E9",
+      "severity": "major",
+      "baseline": {
+        "books": 16,
+        "book_list": [
+          8,
+          15,
+          16,
+          25,
+          37,
+          39,
+          40,
+          41,
+          42,
+          44,
+          45,
+          47,
+          48,
+          56,
+          61,
+          129
+        ]
+      },
+      "target_v1": {
+        "books": 16,
+        "note": "v1 只按 wbw 重放，这些书自然无行"
+      },
+      "target_final": {
+        "books": 15,
+        "note": "book 129 用 csv 回填（csv 有 6580 非零行），其余 15 本 csv 也是全零，源头没有"
+      },
+      "root_cause": "VRI 源文件无锚点",
+      "fix_stage": "batch4：129 用 csv，其余维持现状",
+      "baseline_note": ""
+    },
+    {
+      "id": "E10_selfmade_names",
+      "title": "自造名体系（NK / subo / dict）",
+      "doc_ref": "§4.3 E10",
+      "severity": "expected",
+      "baseline": {
+        "nk_rows": 985,
+        "subo_rows": 4256,
+        "dict_rows": 6646
+      },
+      "baseline_note": "行数为 csv album 口径的近似值，check.php 会实测回填",
+      "target_v1": {
+        "note": "保留不动，架构正确"
+      },
+      "target_final": {
+        "note": "保留不动"
+      },
+      "root_cause": "非 SC 体系书对的自造 album 名，与 dn1/dn1_A 同构",
+      "fix_stage": "不改名，仅修其中的乱码/缩写（§6.7）"
+    },
+    {
+      "id": "D_continuity",
+      "title": "同 (book, book_name, cs_para) 的 para 不连续",
+      "doc_ref": "§4.2 正确性判据",
+      "severity": "watch",
+      "baseline": {
+        "broken_groups": 9026,
+        "books": 69,
+        "extra_segments": 30204
+      },
+      "target_v1": {
+        "broken_groups": "decrease"
+      },
+      "target_final": {
+        "broken_groups": "decrease"
+      },
+      "root_cause": "部分为合法的回指补充（cs 小幅回退），部分为章回绕与污染导致的真错",
+      "fix_stage": "观察项，不做硬断言；batch3 后应显著下降"
+    },
+    {
+      "id": "D_mirror_alignment",
+      "title": "镜像型书对两侧 max(cs_para) 一致",
+      "doc_ref": "§4.2 / §8",
+      "severity": "blocker",
+      "baseline": {
+        "aligned": {
+          "dn1": 559,
+          "kn6": 1289,
+          "kn9": 524,
+          "abhi5": 918
+        },
+        "misaligned": [
+          "abhi3",
+          "abhi4",
+          "abhi6",
+          "abhi7"
+        ]
+      },
+      "target_v1": {
+        "note": "aligned 四组必须保持相等；misaligned 四组 batch3 处理"
+      },
+      "target_final": {
+        "note": "全部对齐"
+      },
+      "root_cause": "义注/复注段的标记即被注书段落号；abhidhamma 系自有编号导致跨侧错位",
+      "fix_stage": "batch1 出口断言 + batch3 补丁后缀"
+    },
+    {
+      "id": "D_interval_expansion",
+      "title": "区间标记展开行数 == M − N + 1",
+      "doc_ref": "§6.3 验收断言",
+      "severity": "blocker",
+      "baseline": {
+        "note": "旧表未做此断言，check.php 首跑回填实测值"
+      },
+      "target_v1": {
+        "mismatched_markers": 0
+      },
+      "target_final": {
+        "mismatched_markers": 0
+      },
+      "root_cause": "旧生成器对 151-152 型一对多展开不完整",
+      "fix_stage": "batch1"
+    },
+    {
+      "id": "D_book_regression",
+      "title": "基线合格书回归",
+      "doc_ref": "§5 汇总",
+      "severity": "blocker",
+      "baseline": {
+        "note": "首跑生成 baseline.json，冻结旧表中零错误信号的书"
+      },
+      "target_v1": {
+        "regressed_books": 0
+      },
+      "target_final": {
+        "regressed_books": 0
+      },
+      "root_cause": "重建可能破坏本来正确的书",
+      "fix_stage": "每轮必检"
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "date": "2026-09-09",
+      "table": "related_paragraphs_v1",
+      "rows": 638076,
+      "scripts": "build_markers.php → build_book_config.php → export.php → check.php → diff.php",
+      "result": {
+        "E1_cs_garbage": "1242 → 0",
+        "E3_kn10_missing": "0 → 25506（kn10_A/kn10_B 清零）",
+        "E6_coverage_gap": "3464 → 1（仅 book 11 para 1577 的截断标记）",
+        "E7_abbrev_interval_lost": "1292 段无行 + 225 段废值 → 0 + 0",
+        "E8_flat_pollution": "1499 行 → 0",
+        "D_interval_expansion": "1611 个区间标记展开不符 → 0",
+        "D_mirror_alignment": "四组镜像判据保持（dn1 559 / kn6 1289 / kn9 524 / abhi5 918）",
+        "clean_books": "128 → 148",
+        "E2_chapter_wrap": "429 → 677（未处理，留给章后缀批次；旧表的乱码与污染此前掩盖了部分真回绕）"
+      },
+      "diff_vs_old": {
+        "same": "480290 段 / 91.8%",
+        "only_in_old": "1 段（截断标记）",
+        "only_in_new": "3466 段（区间展开补回，与旧表的覆盖缺口数一致）",
+        "cs_changed": "10371 段 —— 8600 段新归零（防污染/防越界沿用）、528 段新赋值、1290 段两侧都非零而边界不同",
+        "name_changed": "29156 段 —— 29146 段是 kn10 家族修复（books 143/144/107），其余 10 段是各文件 book_tag 所在段本身"
+      },
+      "open": [
+        "book 129（6605 段）现为 cs=0 占位，待用 cs6_para.csv 回填（csv 有 6580 非零行）",
+        "20 段 segment_without_markers 已输出 cs=0 占位，待 LLM 归属",
+        "book 11 para 1577 的 para179- 截断标记待人工定",
+        "E2 章回绕 677 处未处理",
+        "1290 段两侧都非零而边界不同，需抽样复核（book 110 已查：旧表把 cs=5 边界提前 7 段，wbw 无依据，新值站得住）"
+      ]
+    }
+  ]
+}
