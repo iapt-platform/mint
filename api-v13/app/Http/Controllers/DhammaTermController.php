@@ -42,7 +42,6 @@ class DhammaTermController extends Controller
             'word',
             'meaning',
             'other_meaning',
-            'note',
             'tag',
             'language',
             'channal',
@@ -198,9 +197,9 @@ class DhammaTermController extends Controller
         $search = $request->input('search');
         if (! empty($search)) {
             $table = $table->where(function ($query) use ($search) {
-                $query->where('word', 'like', $search.'%')
-                    ->orWhere('word_en', 'like', $search.'%')
-                    ->orWhere('meaning', 'like', '%'.$search.'%');
+                $query->where('word', 'like', $search . '%')
+                    ->orWhere('word_en', 'like', $search . '%')
+                    ->orWhere('meaning', 'like', '%' . $search . '%');
             });
         }
         $count = $table->count();
