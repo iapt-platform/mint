@@ -1,5 +1,5 @@
 {
-    "frozen_at": "2026-09-09T12:45:03+00:00",
+    "frozen_at": "2026-09-09T15:17:04+00:00",
     "source_table": "related_paragraphs_bak_20260909",
     "database": "visuddhinanda_20260311",
     "purpose": "旧表的实测基线。clean_books 是零错误信号的书，重建后这些书一本都不许掉出来；detectors 是各探测器的旧表读数，用于回答「错误是否减少」。",
@@ -86,6 +86,8 @@
         94,
         95,
         99,
+        101,
+        102,
         105,
         106,
         110,
@@ -139,8 +141,8 @@
             "books": 24
         },
         "E2_chapter_wrap": {
-            "wrap_points": 429,
-            "books": 70
+            "wrap_points": 395,
+            "books": 64
         },
         "E3_kn10_missing": {
             "kn10_rows": 0,
@@ -156,8 +158,8 @@
             "books": 201
         },
         "E6_coverage_gap": {
-            "segments": 3464,
-            "books": 44
+            "segments": 3466,
+            "books": 45
         },
         "E7_abbrev_interval_lost": {
             "marker_segments": 1519,
@@ -208,6 +210,17 @@
             "interval_markers": 3615,
             "mismatched_markers": 1611,
             "empty_markers": 1611
+        },
+        "D_pairing": {
+            "keys": 41525,
+            "keys_cross_book": 27853,
+            "rows_paired": 432110,
+            "rows_paired_trusted": 177016,
+            "rows_total": 507795,
+            "mean_books_per_key": 2.079,
+            "keys_bloated": 6671,
+            "keys_bloated_bad": 1413,
+            "worst_paras_in_one_book": 1578
         }
     },
     "scorecard": [
@@ -1479,11 +1492,11 @@
             "garbage_rows": 40,
             "no_book_id_rows": 3,
             "empty_name_rows": 0,
-            "wrap_points": 17,
+            "wrap_points": 12,
             "abbrev_lost": 0,
             "gap_segments": 0,
             "flat_groups": 0,
-            "signals": 57
+            "signals": 52
         },
         {
             "book": 99,
@@ -1518,11 +1531,11 @@
             "garbage_rows": 0,
             "no_book_id_rows": 2,
             "empty_name_rows": 0,
-            "wrap_points": 1,
+            "wrap_points": 0,
             "abbrev_lost": 0,
             "gap_segments": 0,
             "flat_groups": 0,
-            "signals": 1
+            "signals": 0
         },
         {
             "book": 102,
@@ -1531,11 +1544,11 @@
             "garbage_rows": 0,
             "no_book_id_rows": 2,
             "empty_name_rows": 0,
-            "wrap_points": 1,
+            "wrap_points": 0,
             "abbrev_lost": 0,
             "gap_segments": 0,
             "flat_groups": 0,
-            "signals": 1
+            "signals": 0
         },
         {
             "book": 103,
@@ -1986,11 +1999,11 @@
             "garbage_rows": 0,
             "no_book_id_rows": 2,
             "empty_name_rows": 0,
-            "wrap_points": 5,
+            "wrap_points": 0,
             "abbrev_lost": 9,
             "gap_segments": 52,
             "flat_groups": 0,
-            "signals": 66
+            "signals": 61
         },
         {
             "book": 138,
@@ -2467,11 +2480,11 @@
             "garbage_rows": 39,
             "no_book_id_rows": 3,
             "empty_name_rows": 0,
-            "wrap_points": 12,
+            "wrap_points": 10,
             "abbrev_lost": 2,
             "gap_segments": 6,
             "flat_groups": 0,
-            "signals": 59
+            "signals": 57
         },
         {
             "book": 175,
@@ -2493,11 +2506,11 @@
             "garbage_rows": 43,
             "no_book_id_rows": 3,
             "empty_name_rows": 0,
-            "wrap_points": 13,
+            "wrap_points": 10,
             "abbrev_lost": 0,
             "gap_segments": 3,
             "flat_groups": 0,
-            "signals": 59
+            "signals": 56
         },
         {
             "book": 177,
@@ -2571,11 +2584,11 @@
             "garbage_rows": 0,
             "no_book_id_rows": 2,
             "empty_name_rows": 0,
-            "wrap_points": 3,
+            "wrap_points": 0,
             "abbrev_lost": 10,
             "gap_segments": 46,
             "flat_groups": 0,
-            "signals": 59
+            "signals": 56
         },
         {
             "book": 183,
@@ -2584,11 +2597,11 @@
             "garbage_rows": 0,
             "no_book_id_rows": 2,
             "empty_name_rows": 0,
-            "wrap_points": 4,
+            "wrap_points": 2,
             "abbrev_lost": 10,
             "gap_segments": 45,
             "flat_groups": 0,
-            "signals": 59
+            "signals": 57
         },
         {
             "book": 184,
@@ -2597,11 +2610,11 @@
             "garbage_rows": 0,
             "no_book_id_rows": 2,
             "empty_name_rows": 0,
-            "wrap_points": 5,
+            "wrap_points": 0,
             "abbrev_lost": 1,
             "gap_segments": 4,
             "flat_groups": 0,
-            "signals": 10
+            "signals": 5
         },
         {
             "book": 185,
@@ -2792,11 +2805,11 @@
             "garbage_rows": 0,
             "no_book_id_rows": 2,
             "empty_name_rows": 0,
-            "wrap_points": 7,
+            "wrap_points": 0,
             "abbrev_lost": 7,
             "gap_segments": 28,
             "flat_groups": 0,
-            "signals": 42
+            "signals": 35
         },
         {
             "book": 200,

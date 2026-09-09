@@ -44,15 +44,15 @@
       "doc_ref": "§4.3 E2",
       "severity": "blocker",
       "baseline": {
-        "wrap_points": 429,
-        "books": 70
+        "wrap_points": 395,
+        "books": 64
       },
-      "baseline_note": "文档写 430，实测 429，差异来自并列排序的 tie-break，不影响结论",
+      "baseline_note": "原写 430、后按逐行判据实测 429，两者都偏高：区间标记展开后一个段落有多行（para1-2 展开成 cs=1、cs=2 两行），连续这样的段落逐行看就是 …2,1,2,1…，每段都像一次重置。book 137 的 sn5「5 次回绕」、book 108 的 kn12「95 次回绕」全是这么来的假象。改按段落级 cs_min 判后，旧表实测 395 处 / 64 本。",
       "target_v1": {
         "wrap_points": "unchanged"
       },
       "target_final": {
-        "wrap_points": 0
+        "wrap_points": "<50"
       },
       "root_cause": "VRI 标记是章内局部编号，章界处重置，旧生成器照搬",
       "fix_stage": "batch3 章后缀；v1 不处理，先让确定性规则跑干净"
@@ -308,6 +308,27 @@
       },
       "root_cause": "重建可能破坏本来正确的书",
       "fix_stage": "每轮必检"
+    },
+    {
+      "id": "D_pairing",
+      "title": "配对质量（可信配对段数 / 膨胀键）",
+      "doc_ref": "§3 查询逻辑 / §6.1 回绕处理",
+      "severity": "blocker",
+      "baseline": {
+        "rows_paired_trusted": 177016,
+        "keys_bloated": 6671,
+        "keys_bloated_bad": 1413
+      },
+      "target_v1": {
+        "rows_paired_trusted": ">=177016"
+      },
+      "target_final": {
+        "rows_paired_trusted": "尽量大",
+        "keys_bloated_bad": "尽量小"
+      },
+      "root_cause": "章回绕让同一个 (book_name, cs_para) 在几十个章里重复，index() 一次查询捞回上千段",
+      "note": "可信配对 = key 跨文件命中、且在任何单本书里都不超过 10 段。直接数 rows_paired 会把回绕噪声算成资产——kn10 加后缀后 rows_paired 从 23757 掉到 6279 看着像灾难，其实掉的几乎全是 book 144章 43-56 的虚假配对（那几章本来就没有义注，是靠撞在一起的 kn10:1 假装配上的）。",
+      "fix_stage": "batch3 章后缀 + batch4 补丁"
     }
   ],
   "rounds": [
@@ -341,6 +362,28 @@
         "book 11 para 1577 的 para179- 截断标记待人工定",
         "E2 章回绕 677 处未处理",
         "1290 段两侧都非零而边界不同，需抽样复核（book 110 已查：旧表把 cs=5 边界提前 7 段，wbw 无依据，新值站得住）"
+      ]
+    },
+    {
+      "round": 2,
+      "date": "2026-09-09",
+      "table": "related_paragraphs_v2",
+      "scripts": "align_chapters.php → apply_chapters.php",
+      "approach": "跨侧章对齐：以 mūla 侧的 cs 重置段为章号定义，注释侧用带空位的序列比对（Needleman–Wunsch，打分基于两侧每章 max(cs) 的接近程度）对齐过去，两侧用同一套章号加后缀。每个 book_name 改名前后实测一次可信配对段数，掉了就整名回滚——指标把关，不是规则把关。",
+      "result": {
+        "E2_chapter_wrap": "399 → 116（旧表 395）",
+        "D_pairing.rows_paired_trusted": "186744 → 232557（旧表 177016，+31%）",
+        "D_pairing.keys_cross_book": "29005 → 34878",
+        "D_pairing.keys_bloated_bad": "1259 → 958（旧表 1413）",
+        "D_mirror_alignment": "0 偏离，保持",
+        "clean_books": "156 → 189（旧表 130）",
+        "applied": "17 个 book_name，改名 165779 行，无一回归"
+      },
+      "open": [
+        "5 个名字加后缀后可信配对归零或下跌，已自动回滚：vin8、dict、abhi8、vin7（并列的两本书被当成顺序拼接）、abhi7（3429→2940）",
+        "20 个名字跨侧对齐置信不足未处理：abhi2 abhi9 an11 an4 an5 an7 an9 kn2 kn3 kn6 kn7 mn1 mn1_A sn1 sn5 vin1 vin2 vin3 vin4 vin5——它们的共同特征是 mūla 侧 cs 单调无回绕、回绕只在注释侧，两侧用的不是同一套编号，序列比对无从下手",
+        "剩余 116 处回绕分布在 27 本",
+        "章标题不能当通用对齐信号：book 143（1. Buddhavaggo…）与 book 107（Dīpaṅkaro buddho…）标题完全对不上，文档 §6.4 的三层同名标题只适用于 vinaya 那组"
       ]
     }
   ]

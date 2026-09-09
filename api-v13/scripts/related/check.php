@@ -64,14 +64,22 @@ $record('E1_cs_garbage', $one(
 ));
 
 // ── E2 章回绕：同 (book, book_name) 内 cs 从大值回到 1 ────────────────────
+// 必须按段落级 cs_min 判，不能逐行比。区间标记展开后一个段落有多行（para1-2 展开
+// 成 cs=1、cs=2 两行），连续这样的段落逐行看就是 …2,1,2,1… ——每段都像一次重置。
+// book 137 的 sn5「5 次回绕」、book 108 的 kn12「95 次回绕」都是这么来的假象。
 $record('E2_chapter_wrap', $one("
-    with s as (
-        select book, book_name, cs_para,
-               lag(cs_para) over (partition by book, book_name order by para, cs_para) as prev
-        from $table where cs_para > 0 and book_name <> ''
+    with p as (
+        select book, book_name, para, min(cs_para) as cs_min
+        from {$table} where cs_para > 0 and book_name <> ''
+        group by book, book_name, para
+    ),
+    s as (
+        select book, book_name, para, cs_min,
+               lag(cs_min) over (partition by book, book_name order by para) as prev_min
+        from p
     )
     select count(*)::int as wrap_points, count(distinct book)::int as books
-    from s where cs_para = 1 and prev > 1
+    from s where cs_min = 1 and prev_min > 1
 "));
 
 // ── E3 kn10 家族 ─────────────────────────────────────────────────────────
@@ -249,6 +257,37 @@ $record('D_interval_expansion', $one("
     from got
 "));
 
+// ── D 配对质量：章后缀方案到底有没有帮上忙，只有这把尺子能回答 ────────────
+// index() 拿 (book_name, cs_para) 全表取行。回绕让同一个 key 在几十个章里重复，
+// 一次查询就把几十章的段落全捞回来——召回没问题，精度崩了。所以要同时看两头：
+//   可信配对：key 跨文件命中、且在任何单本书里都不超过 10 段——这才是真配对。
+//     直接数 rows_paired 会把回绕造成的噪声算成资产（kn10:1 在 56 个章里重复，
+//     一次查询捞回上千段，那不是配对）。加对章后缀时可信配对会涨，加错才会掉。
+//   膨胀键：某本书里命中超过 10 / 30 段的 key，回绕的直接症状
+$record('D_pairing', $one("
+    with per_book as (
+        select book_name, cs_para, book, count(distinct para)::int as paras
+        from {$table} where cs_para > 0 and book_name <> ''
+        group by book_name, cs_para, book
+    ),
+    k as (
+        select book_name, cs_para, count(*)::int as books,
+               sum(paras)::int as rows, max(paras)::int as max_paras
+        from per_book group by book_name, cs_para
+    )
+    select
+        count(*)::int                                            as keys,
+        count(*) filter (where books >= 2)::int                  as keys_cross_book,
+        sum(rows) filter (where books >= 2)::int                 as rows_paired,
+        sum(rows) filter (where books >= 2 and max_paras <= 10)::int as rows_paired_trusted,
+        sum(rows)::int                                           as rows_total,
+        round(avg(books), 3)::float                              as mean_books_per_key,
+        count(*) filter (where max_paras > 10)::int              as keys_bloated,
+        count(*) filter (where max_paras > 30)::int              as keys_bloated_bad,
+        max(max_paras)::int                                      as worst_paras_in_one_book
+    from k
+"));
+
 // ── 逐本记分卡：把 book 级错误信号汇总，零信号的书即基线冻结对象 ─────────────
 $log->info('生成逐本记分卡…');
 $scorecard = $all("
@@ -263,10 +302,11 @@ $scorecard = $all("
     ),
     wrap as (
         select book, count(*)::int as wrap_points from (
-            select book, book_name, cs_para,
-                   lag(cs_para) over (partition by book, book_name order by para, cs_para) as prev
-            from $table where cs_para > 0 and book_name <> ''
-        ) s where cs_para = 1 and prev > 1 group by 1
+            select book, book_name, para, min(cs_para) as cs_min,
+                   lag(min(cs_para)) over (partition by book, book_name order by para) as prev_min
+            from {$table} where cs_para > 0 and book_name <> ''
+            group by book, book_name, para
+        ) s where cs_min = 1 and prev_min > 1 group by 1
     ),
     abbrev as (
         select s.book, count(*) filter (where h.rows = 0)::int as abbrev_lost from (
