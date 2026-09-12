@@ -287,11 +287,24 @@ class MdRender
                         }
                     }
                     if (empty($paramName)) {
+                        /**
+                         * 位置参数。多个文本节点要拼接，不能互相覆盖。
+                         * 如果参数里含有嵌套模版（元素节点），纯文本是残缺的，
+                         * 此时不设置该参数，交给渲染结果的子节点（children）显示。
+                         * TODO: html / markdown 格式下嵌套模版仍会丢失外层模版结构，
+                         * 因为 dfn 是按文档顺序遍历的，外层先于内层渲染。
+                         */
+                        $paramText = '';
+                        $hasNestedTpl = false;
                         foreach ($child->childNodes as $param_child) {
-                            // code...
                             if ($param_child->nodeType === 3) {
-                                $props["{$param_id}"] = $param_child->nodeValue;
+                                $paramText .= $param_child->nodeValue;
+                            } elseif ($param_child->nodeType === 1) {
+                                $hasNestedTpl = true;
                             }
+                        }
+                        if (! $hasNestedTpl) {
+                            $props["{$param_id}"] = $paramText;
                         }
                     }
                 }

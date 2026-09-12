@@ -56,7 +56,8 @@ class ExportPaliSynonyms extends Command
         $dictId[] = DictApi::getSysDict('robot_compound');
 */
         $filename =  $this->option('output');
-        $fp = fopen(Str::finish(config('mint.opensearch.config.synonyms_path'), '/') . $filename, 'w') or exit('Unable to open file!');
+        $BASE_PATH = '/srv/opensearch/synonyms/pali/';
+        $fp = fopen($BASE_PATH . $filename, 'w') or exit('Unable to open file!');
 
         $parents = UserDict::select('parent')
             ->whereNotNull('parent')

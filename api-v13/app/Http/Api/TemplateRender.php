@@ -681,6 +681,14 @@ class TemplateRender
                     'tpl' => 'nissaya',
                 ];
                 break;
+            case 'html':
+                if ($this->lang === 'my') {
+                    $output = "<span lang='pi-Mymr'>{$pali}</span>၊ ";
+                } else {
+                    $output = "<span lang='pi-Latn'>{$pali}</span> ";
+                }
+                $output .= "<span lang='{$this->lang}'>{$meaning}</span>";
+                break;
             case 'prompt':
                 $output = Tools::MyToRm($pali).':'.end($props['meaning']);
                 break;
