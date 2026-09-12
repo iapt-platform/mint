@@ -8,15 +8,12 @@ use App\Http\Api\PaliTextApi;
 use App\Http\Api\ShareApi;
 use App\Http\Controllers\Concerns\ChecksChannelEditPower;
 use App\Http\Resources\SentResource;
-use App\Models\AccessToken;
 use App\Models\Channel;
 use App\Models\Sentence;
 use App\Models\WbwAnalysis;
 use App\Services\AuthService;
 use App\Services\SentenceService;
 use App\Tools\OpsLog;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
@@ -88,7 +85,7 @@ class SentenceController extends Controller
                     return $this->error('没有关键词');
                 }
                 $table = Sentence::select($indexCol)
-                    ->where('content', 'like', '%'.$key.'%')
+                    ->where('content', 'like', '%' . $key . '%')
                     ->where('editor_uid', $userUid);
 
                 break;
@@ -206,7 +203,7 @@ class SentenceController extends Controller
                 break;
         }
         if (! empty($request->input('key'))) {
-            $table = $table->where('content', 'like', '%'.$request->input('key').'%');
+            $table = $table->where('content', 'like', '%' . $request->input('key') . '%');
         }
 
         $count = $table->count();
