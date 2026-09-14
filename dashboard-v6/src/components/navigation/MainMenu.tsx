@@ -132,18 +132,24 @@ const Widget = ({ onSearch }: Props) => {
     {
       key: "search",
       icon: <SearchOutlined />,
-      label: "搜索",
+      label: intl.formatMessage({ id: "labels.search" }),
     },
     {
       key: "/workspace",
       icon: <HomeOutlined />,
-      label: "主页",
+      label: intl.formatMessage({ id: "labels.home" }),
       activeId: "workspace.home",
       extra: (
         <PlusOutlined
           role="button"
-          aria-label="open-home-new-tab"
-          title="在新标签页打开主页"
+          aria-label={intl.formatMessage(
+            { id: "buttons.open.in.new.tab" },
+            { item: intl.formatMessage({ id: "labels.home" }) }
+          )}
+          title={intl.formatMessage(
+            { id: "buttons.open.in.new.tab" },
+            { item: intl.formatMessage({ id: "labels.home" }) }
+          )}
           onClick={(e) => {
             e.stopPropagation();
             window.open(fullUrl("workspace"), "_blank");
@@ -186,7 +192,7 @@ const Widget = ({ onSearch }: Props) => {
     {
       key: "/workspace/doc",
       icon: <DocumentIcon />,
-      label: "文档",
+      label: intl.formatMessage({ id: "labels.documents" }),
       children: [
         {
           key: "/workspace/article",
@@ -242,7 +248,7 @@ const Widget = ({ onSearch }: Props) => {
       children: [
         {
           key: "/workspace/task/pending",
-          label: "Pending",
+          label: intl.formatMessage({ id: "labels.task.pending" }),
           activeId: "workspace.task.pending",
         },
         {
@@ -254,7 +260,7 @@ const Widget = ({ onSearch }: Props) => {
         },
         {
           key: "/workspace/task/list",
-          label: "To-Do List",
+          label: intl.formatMessage({ id: "labels.task.mine" }),
           activeId: "workspace.task.list",
         },
         {
@@ -276,7 +282,7 @@ const Widget = ({ onSearch }: Props) => {
     {
       key: "/workspace/tools",
       icon: <CourseOutLinedIcon />,
-      label: "tools",
+      label: intl.formatMessage({ id: "labels.tools" }),
       children: [
         {
           key: "/workspace/tag",
@@ -287,12 +293,16 @@ const Widget = ({ onSearch }: Props) => {
         },
         {
           key: "/workspace/driver",
-          label: "driver",
+          label: intl.formatMessage({
+            id: "columns.studio.attachment.title",
+          }),
           activeId: "workspace.driver",
         },
         {
           key: "/workspace/dict",
-          label: "dict",
+          label: intl.formatMessage({
+            id: "columns.studio.userdict.title",
+          }),
           activeId: "workspace.dict",
         },
       ],
@@ -304,23 +314,28 @@ const Widget = ({ onSearch }: Props) => {
       children: [
         {
           key: "/workspace/team",
-          label: "team",
+          label: intl.formatMessage({
+            id: "columns.studio.group.title",
+          }),
           activeId: "workspace.team",
         },
         {
           key: "/workspace/invite",
-          label: "invite",
+          label: intl.formatMessage({
+            id: "columns.studio.invite.title",
+          }),
           activeId: "workspace.invite",
         },
         {
           key: "/workspace/transfer",
-          label: "transfer",
+          label: intl.formatMessage({
+            id: "columns.studio.transfer.title",
+          }),
           activeId: "workspace.transfer",
         },
       ],
     },
   ];
-  console.log("nav", routeId);
   /** 当前选中 */
   const selectedKey = findSelectedKey(items, routeId);
 
