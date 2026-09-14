@@ -8,6 +8,10 @@ const items = {
   "labels.week.6": "Sat",
   "labels.collaborators": "collaborators",
   "labels.collaboration": "collaboration",
+  "labels.search": "Search",
+  "labels.home": "Home",
+  "labels.documents": "Documents",
+  "labels.tools": "Tools",
   "labels.link": "link",
   "labels.library.access.link": "Library access link",
   "labels.library.access.tip":
@@ -59,6 +63,7 @@ const items = {
   "labels.task": "task",
   "labels.task.hall": "task hall",
   "labels.task.mine": "my task",
+  "labels.task.pending": "Pending",
   "labels.task.my.project": "my projects",
   "labels.all": "all",
   "labels.mention.me": "mention",
