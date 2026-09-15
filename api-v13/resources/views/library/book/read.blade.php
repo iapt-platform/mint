@@ -170,6 +170,24 @@
                     @endif
                 </p>
 
+                {{-- 未选择版本时的提示条：默认展示巴利原文，并提供版本切换入口 --}}
+                @if(!empty($isDefaultChannel))
+                <div class="alert alert-info d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4" role="alert">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="ti ti-info-circle" aria-hidden="true"></i>
+                        <span>{{ __('library.default_version_notice') }}</span>
+                    </div>
+                    @if(!empty($channels))
+                    <button type="button"
+                        class="btn btn-info btn-sm"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#channelDrawer">
+                        <i class="ti ti-stack-2 me-1" aria-hidden="true"></i>{{ __('library.select_version') }}
+                    </button>
+                    @endif
+                </div>
+                @endif
+
                 {{-- ↓ 正文内容用 article 包裹，隔离排版作用域 ── --}}
                 <article class="reader-body">
                     @if(isset($book['content']))
@@ -361,7 +379,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const showOrigin = getCookie('show_origin') === 'true';
+        const isOriginalChannel = {{ !empty($book['is_original']) ? 'true' : 'false' }};
+        const showOrigin = isOriginalChannel || getCookie('show_origin') === 'true';
         document.getElementById('showOrigin').checked = showOrigin;
         document.getElementById('uiLanguage').value = getCookie('ui_language') || 'auto';
         document.getElementById('paliScript').value = getCookie('pali_script') || 'auto';
